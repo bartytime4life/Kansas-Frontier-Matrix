@@ -36,7 +36,7 @@
 .atlas-source-card a { color: var(--river); }
 .atlas-muted { color: var(--muted); line-height: 1.55; }
 .atlas-map-stage { position: relative; min-width: 0; overflow: hidden; background: #071517; }
-.atlas-map-canvas { position: absolute; inset: 0; }
+.atlas-map-stage .atlas-map-canvas { position: absolute; inset: 0; }
 .atlas-map-canvas canvas { outline: none; }
 .atlas-representation-bar { position: absolute; z-index: 5; top: .65rem; left: .65rem; flex-wrap: wrap; border: 1px solid var(--line); border-radius: .78rem; padding: .3rem; background: rgb(7 21 23 / 88%); backdrop-filter: blur(12px); }
 .atlas-representation-bar button { min-height: 2.1rem; }

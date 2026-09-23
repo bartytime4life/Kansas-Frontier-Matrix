@@ -9,6 +9,13 @@ const inspect = (page: Page, name = "Generalized Kansas extent") =>
 async function openLayers(page: Page): Promise<void> {
   await page.goto("/");
   await expect(workspace(page).getByRole("status").filter({ hasText: "Renderer READY" })).toBeVisible();
+  const stage = await workspace(page).locator(".atlas-map-stage").boundingBox();
+  const host = await workspace(page).locator("#kfm-living-atlas-map").boundingBox();
+  const canvas = await workspace(page).locator("#kfm-living-atlas-map canvas").boundingBox();
+  expect(host!.height).toBeGreaterThan(250);
+  expect(host).toEqual(stage);
+  expect(canvas!.width).toBeCloseTo(stage!.width, 0);
+  expect(canvas!.height).toBeCloseTo(stage!.height, 0);
   await workspace(page).getByRole("button", { name: "Layers", exact: true }).click();
   await expect(workspace(page).getByRole("region", { name: "Local evidence service demonstration" })).toBeVisible();
 }

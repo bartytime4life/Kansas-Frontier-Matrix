@@ -18,6 +18,17 @@ test("mounts the map-first Living Atlas without external requests", async ({
   await expect(workspace.locator(".atlas-view-list > button")).toHaveCount(18);
   await expect(workspace.locator("#kfm-living-atlas-map canvas")).toHaveCount(1);
   await expect(workspace.getByRole("status").filter({ hasText: "Renderer" })).toContainText("READY");
+  const stage = workspace.locator(".atlas-map-stage");
+  const mapHost = workspace.locator("#kfm-living-atlas-map");
+  const canvas = mapHost.locator("canvas");
+  const stageBounds = await stage.boundingBox();
+  const hostBounds = await mapHost.boundingBox();
+  const canvasBounds = await canvas.boundingBox();
+  expect(stageBounds!.height).toBeGreaterThan(250);
+  expect(hostBounds).toEqual(stageBounds);
+  expect(canvasBounds!.width).toBeCloseTo(stageBounds!.width, 0);
+  expect(canvasBounds!.height).toBeCloseTo(stageBounds!.height, 0);
+
   expect(externalRequests).toEqual([]);
 });
 
