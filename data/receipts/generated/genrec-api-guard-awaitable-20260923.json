@@ -1,0 +1,145 @@
+{
+  "receipt_id": "genrec-api-guard-awaitable-20260923",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/governed-api/src/governed_api/stub.py",
+    "apps/governed-api/tests/fixtures/api_failure_fixture_evidence.md",
+    "apps/governed-api/tests/test_api_failure_fixtures.py"
+  ],
+  "artifact_hashes": {
+    "apps/governed-api/src/governed_api/stub.py": "sha256:8e8e492a0a6e8e88cc8cc55fadb5d1092cc5f69e1ca1fc151b3fd9deb35e8c57",
+    "apps/governed-api/tests/fixtures/api_failure_fixture_evidence.md": "sha256:bafb2e5b0156ad61be759ba4d51aecb335ca1bb83d1fd20c3b788b22c3f197b9",
+    "apps/governed-api/tests/test_api_failure_fixtures.py": "sha256:958a93a0be1a9a941e9ec1491338e36d519e6b560a5cb913f8e685e03ee0d204"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "UNKNOWN: exact served model revision is not exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local source inspection and editing",
+      "local Python validation",
+      "independent agent source review"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "CONTRIBUTING.md",
+      "SECURITY.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "docs/doctrine/directory-rules.md",
+      "docs/doctrine/ai-build-operating-contract.md",
+      "data/receipts/generated/README.md",
+      "contracts/runtime/runtime_response_envelope.md",
+      "schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"
+    ],
+    "evidence_refs": [
+      "git:8cb6cb247f4962996d00d3d526cb7a9ed4b89884:CONTRIBUTING.md",
+      "git:8cb6cb247f4962996d00d3d526cb7a9ed4b89884:SECURITY.md",
+      "git:8cb6cb247f4962996d00d3d526cb7a9ed4b89884:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "git:8cb6cb247f4962996d00d3d526cb7a9ed4b89884:docs/doctrine/directory-rules.md",
+      "git:8cb6cb247f4962996d00d3d526cb7a9ed4b89884:docs/doctrine/ai-build-operating-contract.md",
+      "git:8cb6cb247f4962996d00d3d526cb7a9ed4b89884:data/receipts/generated/README.md",
+      "git:8cb6cb247f4962996d00d3d526cb7a9ed4b89884:contracts/runtime/runtime_response_envelope.md",
+      "git:8cb6cb247f4962996d00d3d526cb7a9ed4b89884:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json",
+      "git:8cb6cb247f4962996d00d3d526cb7a9ed4b89884:apps/governed-api/src/governed_api/main.py",
+      "git:8cb6cb247f4962996d00d3d526cb7a9ed4b89884:apps/governed-api/src/governed_api/stub.py",
+      "git:8cb6cb247f4962996d00d3d526cb7a9ed4b89884:apps/governed-api/tests/fixtures/api_failure_fixture_evidence.md",
+      "git:8cb6cb247f4962996d00d3d526cb7a9ed4b89884:apps/governed-api/tests/test_api_failure_fixtures.py"
+    ],
+    "evidence_hashes": [
+      "sha256:d3ae16c44739f492ca1832c95b185b4ac9857110a6d26f11761b533f0dd26935",
+      "sha256:8145578416ed3d0c31df4c751d4d78fcd2b666e9f18805fdcd11ecd8bf7e0e82",
+      "sha256:c778036b62bf8e619fea4466b22d24ef67ee869cab06d3d80d8a4f1c223bda9f",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:1d2073f3f34d1d8a246e3ff4feaf9105f95585ae78e217796872726aec4cedb1",
+      "sha256:ebfa833bdaf02ec40fea54291d83daece2156e25bd5ca3953814d5fe4414ddc6",
+      "sha256:b137eeb489145cd58941e59280467d4370aa7e7dcdfe3a5833922fbbd9ac00f8"
+    ]
+  },
+  "truth_labels": {
+    "apps/governed-api/src/governed_api/stub.py": "CONFIRMED",
+    "apps/governed-api/tests/fixtures/api_failure_fixture_evidence.md": "CONFIRMED",
+    "apps/governed-api/tests/test_api_failure_fixtures.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "regressions-before-fix",
+      "outcome": "FAIL",
+      "reason": "Expected negative control: the final expanded failure-fixture suite on unchanged base source returned 16 failures and 35 passes. Failures cover result inspection, cleanup lookup and native coroutine cleanup across synchronous/WSGI boundaries."
+    },
+    {
+      "gate": "focused-failure-fixtures",
+      "outcome": "PASS",
+      "reason": "51 tests passed after repair. Includes ordinary cleanup errors, TimeoutError and asyncio.CancelledError retaining INVALID_RESPONSE; safe/unsafe correlation; fixed no-echo JSON/status/headers; unstarted coroutine disposal; and process-control propagation."
+    },
+    {
+      "gate": "complete-governed-api-suite",
+      "outcome": "PASS",
+      "reason": "python -m pytest -q -p no:cacheprovider apps/governed-api/tests: 63 passed on Python 3.12.3 and pytest 9.1.1. No network installation or live server was used; environment flags do not constitute an OS-level egress proof."
+    },
+    {
+      "gate": "independent-agent-source-review",
+      "outcome": "PASS",
+      "reason": "Non-author parent agent reviewed the final three-path source/test/document diff with no actionable introduced finding. This is agent review, not accountable human acceptance."
+    },
+    {
+      "gate": "syntax-documentation-and-whitespace",
+      "outcome": "PASS",
+      "reason": "Both Python files parsed; owning evidence note has one H1, final newline and resolving local links; git diff --check passed."
+    },
+    {
+      "gate": "post-emission-receipt-integrity",
+      "outcome": "SKIPPED",
+      "reason": "The repository receipt validator is run after emission; its exact result is retained separately in the local validation log. The receipt does not hash itself."
+    },
+    {
+      "gate": "hosted-and-full-repository-validation",
+      "outcome": "SKIPPED",
+      "reason": "No push, PR, hosted CI, full repository suite, browser or production recovery test is claimed."
+    },
+    {
+      "gate": "human-acceptance-and-operational-effects",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending. No public positive resolver, telemetry authority, deployment, source admission, lifecycle, release or publication effect is authorized or established."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "existing-finite-envelope-contract",
+      "validated": true,
+      "evidence_ref": "git:8cb6cb247f4962996d00d3d526cb7a9ed4b89884:contracts/runtime/runtime_response_envelope.md"
+    },
+    {
+      "id": "existing-envelope-schema",
+      "validated": true,
+      "evidence_ref": "git:8cb6cb247f4962996d00d3d526cb7a9ed4b89884:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"
+    },
+    {
+      "id": "accepted-placement",
+      "validated": true,
+      "evidence_ref": "git:8cb6cb247f4962996d00d3d526cb7a9ed4b89884:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-09-23T05:30:49.582564+00:00",
+  "emitter": "OpenAI Codex desktop bounded API guard follow-up",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Issue4416 prerequisite fix. Exact base 8cb6cb247f4962996d00d3d526cb7a9ed4b89884; branch codex/api-guard-followup-20260923. Complete authored inventory is these three existing app-owned artifacts and this new generated receipt. Directory Rules sections7.2,10.1,14.1 preserve the API source/test/evidence-note homes; section11.3 preserves data/receipts/generated as process memory, not approval. Invalid synchronous result inspection/disposal errors retain existing ERROR/INVALID_RESPONSE and sanitized correlation. Operation exception mapping remains unchanged. Explicit asyncio.CancelledError containment is separate from Exception; KeyboardInterrupt, SystemExit and GeneratorExit reaching the guard propagate. Python native coroutine-close may consume GeneratorExit itself; final control-signal probes use explicit cleanup methods. An initial test-development expectation about native GeneratorExit was corrected before the final baseline replay, and its initial log remains preserved separately. No deadline for arbitrary synchronous cleanup is established. Existing routes, schemas, synthetic fixture payloads, status vocabulary, workflows, historical receipts, dependencies and f69 transport candidate are unchanged. No existing receipt binding is replaced. Revert the complete four-file packet for rollback, noting that it restores the invalid-result cleanup gap; prefer a bounded forward fix. This receipt grants no human review, merge or release authority."
+}
