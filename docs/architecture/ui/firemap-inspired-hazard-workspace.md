@@ -1,19 +1,19 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/architecture/ui/firemap-inspired-hazard-workspace
 title: Firemap-inspired hazard workspace
-type: architecture
-version: v0.1.0
+type: spec
+version: v0.1.1
 status: proposed; review-pending; no-live-activation
 owners: ["@bartytime4life"]
 created: 2026-09-22
-updated: 2026-09-22
+updated: 2026-09-23
 policy_label: public; context-only; no-source-admission; no-release
+responsibility: Describe proposed hazard-workspace behavior, scientific source distinctions, and acceptance without authorizing runtime or source activation.
 owning_root: docs/
 current_path: docs/architecture/ui/firemap-inspired-hazard-workspace.md
 truth_posture: CONFIRMED bounded source inspection; PROPOSED integration; NEEDS VERIFICATION hosted acceptance
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  base_commit: 0305c98702cb7b48dfaa9598b3625cb027860855
+evidence_repository: bartytime4life/Kansas-Frontier-Matrix
+evidence_base_commit: 0305c98702cb7b48dfaa9598b3625cb027860855
 [/KFM_META_BLOCK_V2] -->
 
 # Firemap-inspired hazard workspace

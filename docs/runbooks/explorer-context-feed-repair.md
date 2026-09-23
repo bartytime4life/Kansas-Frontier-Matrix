@@ -2,18 +2,18 @@
 doc_id: kfm://doc/runbooks/explorer-context-feed-repair
 title: Explorer context-feed repair and acceptance
 type: runbook
-version: v0.1.0
+version: v0.1.1
 status: proposed; review-pending; no-live-activation
 owners: ["@bartytime4life"]
 created: 2026-09-22
-updated: 2026-09-22
+updated: 2026-09-23
 policy_label: public; context-only; no-source-admission; no-release
+responsibility: Guide exact-source diagnosis, bounded repair, and separate provider-to-render acceptance for existing Explorer context feeds.
 owning_root: docs/
 current_path: docs/runbooks/explorer-context-feed-repair.md
 truth_posture: CONFIRMED bounded source inspection; PROPOSED integration; NEEDS VERIFICATION hosted acceptance
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  base_commit: 0305c98702cb7b48dfaa9598b3625cb027860855
+evidence_repository: bartytime4life/Kansas-Frontier-Matrix
+evidence_base_commit: 0305c98702cb7b48dfaa9598b3625cb027860855
 [/KFM_META_BLOCK_V2] -->
 
 # Explorer context-feed repair and acceptance
