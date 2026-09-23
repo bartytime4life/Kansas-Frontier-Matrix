@@ -7,6 +7,7 @@ on:
       - 'fixtures/domains/soil/soil_component/**'
       - 'tools/validators/domains/soil/validate_soil_component.py'
       - 'tests/validators/domains/soil/test_soil_component.py'
+      - 'tests/validators/domains/soil/test_soil_cli_fail_closed.py'
       - '.github/workflows/soil-component-profile.yml'
   workflow_dispatch:
 
@@ -36,7 +37,7 @@ jobs:
       - name: Replay exact fixtures
         run: python tools/validators/domains/soil/validate_soil_component.py --fixtures
       - name: Run deterministic tests
-        run: python -m unittest -q tests.validators.domains.soil.test_soil_component
+        run: python -m unittest -q tests.validators.domains.soil.test_soil_component tests.validators.domains.soil.test_soil_cli_fail_closed
       - name: Record trust boundary
         if: always()
         run: |

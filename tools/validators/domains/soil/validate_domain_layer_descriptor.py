@@ -36,7 +36,7 @@ def canonical_hash(candidate: dict) -> str:
     return hashlib.sha256(raw).hexdigest()
 
 
-def evaluate(candidate: dict) -> tuple[str, list[str]]:
+def _evaluate(candidate: dict) -> tuple[str, list[str]]:
     findings: list[str] = []
     if candidate.get("profile") != PROFILE or candidate.get("status") != "PROPOSED_INACTIVE":
         findings.append("PROFILE_MISMATCH")
@@ -80,6 +80,28 @@ def evaluate(candidate: dict) -> tuple[str, list[str]]:
     return "PASS", []
 
 
+def evaluate(candidate):
+    """Fail closed on non-object or structurally malformed candidates.
+
+    Unhashable or mutually unorderable JSON values (for example a list where a
+    string is expected) would otherwise escape as TypeError tracebacks.
+    """
+    if not isinstance(candidate, dict):
+        return "ERROR", ["CANDIDATE_MALFORMED"]
+    try:
+        return _evaluate(candidate)
+    except TypeError:
+        return "ERROR", ["CANDIDATE_MALFORMED"]
+
+
+def load_candidate(path):
+    """Read one JSON candidate; return None when it cannot be read or parsed."""
+    try:
+        return json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, ValueError):
+        return None
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("path", nargs="?")
@@ -95,7 +117,8 @@ def main() -> None:
         raise SystemExit(1 if failures else 0)
     if not args.path:
         parser.error("path or --fixtures required")
-    outcome, findings = evaluate(json.loads(Path(args.path).read_text(encoding="utf-8")))
+    candidate = load_candidate(args.path)
+    outcome, findings = ("ERROR", ["INPUT_UNREADABLE"]) if candidate is None else evaluate(candidate)
     print(json.dumps({"outcome": outcome, "findings": findings}, sort_keys=True))
     raise SystemExit(0 if outcome == "PASS" else 1)
 
