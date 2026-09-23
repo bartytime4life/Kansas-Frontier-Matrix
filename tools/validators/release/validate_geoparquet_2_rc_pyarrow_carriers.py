@@ -179,38 +179,41 @@ def validate(root: Path, manifest_path: Path) -> Result:
         if any(entry["sha256"] != _digest(path) for entry, path in zip(entries, paths)):
             reasons.append("CARRIER_DIGEST_MISMATCH")
         files = tuple(pq.ParquetFile(path) for path in paths)
-        tables = tuple(pq.read_table(path) for path in paths)
+        # The fixed four-row probe does not need threaded column decoding;
+        # PyArrow 25 can otherwise abort at CLI exit after a malformed read.
+        tables = tuple(pq.read_table(path, use_threads=False) for path in paths)
+        # Footer/Arrow metadata inspection can fail after Parquet decoding
+        # succeeds. Keep malformed carrier shape inside the same finite boundary.
+        baseline, rc = files
+        baseline_col = baseline.schema.column(baseline.schema.names.index("geometry"))
+        rc_col = rc.schema.column(rc.schema.names.index("geometry"))
+        if baseline_col.physical_type != "BYTE_ARRAY" or str(baseline_col.logical_type) not in {"None", "NONE"}:
+            reasons.append("BASELINE_TYPE_MISMATCH")
+        if rc_col.physical_type != "BYTE_ARRAY" or "Geometry" not in str(rc_col.logical_type):
+            reasons.append("RC_GEOMETRY_LOGICAL_TYPE_MISSING")
+        if not all(_declared(entry, path, file) for entry, path, file in zip(entries, paths, files)):
+            reasons.append("CARRIER_DECLARATION_MISMATCH")
+        if any(
+            entry["geo_metadata"] != _metadata(file)[0]
+            for entry, file in zip(entries, files)
+        ):
+            reasons.append("CARRIER_METADATA_DECLARATION_MISMATCH")
+        if any(file.metadata.num_row_groups != 2 for file in files):
+            reasons.append("ROW_GROUP_LAYOUT_MISMATCH")
+        if any(table.column("feature_id").to_pylist() != IDS for table in tables):
+            reasons.append("IDENTITY_MISMATCH")
+        if any(_storage(table) != WKB for table in tables):
+            reasons.append("WKB_MISMATCH")
+
+        baseline_geo, _ = _metadata(baseline)
+        rc_geo, _ = _metadata(rc)
+        if baseline_geo.get("version") != "1.1.0" or rc_geo.get("version") != "2.0.0-rc.1":
+            reasons.append("GEOPARQUET_VERSION_METADATA_MISMATCH")
+        crs_values = [geo["columns"]["geometry"].get("crs") for geo in (baseline_geo, rc_geo)]
+        if [_crs(value) for value in crs_values] != ["OGC:CRS84", "OGC:CRS84"]:
+            reasons.append("CRS_SEMANTIC_CONFLICT")
     except Exception:
         return Result("ERROR", tuple(sorted(set([*reasons, "CARRIER_UNREADABLE"]))))
-
-    baseline, rc = files
-    baseline_col = baseline.schema.column(baseline.schema.names.index("geometry"))
-    rc_col = rc.schema.column(rc.schema.names.index("geometry"))
-    if baseline_col.physical_type != "BYTE_ARRAY" or str(baseline_col.logical_type) not in {"None", "NONE"}:
-        reasons.append("BASELINE_TYPE_MISMATCH")
-    if rc_col.physical_type != "BYTE_ARRAY" or "Geometry" not in str(rc_col.logical_type):
-        reasons.append("RC_GEOMETRY_LOGICAL_TYPE_MISSING")
-    if not all(_declared(entry, path, file) for entry, path, file in zip(entries, paths, files)):
-        reasons.append("CARRIER_DECLARATION_MISMATCH")
-    if any(
-        entry["geo_metadata"] != _metadata(file)[0]
-        for entry, file in zip(entries, files)
-    ):
-        reasons.append("CARRIER_METADATA_DECLARATION_MISMATCH")
-    if any(file.metadata.num_row_groups != 2 for file in files):
-        reasons.append("ROW_GROUP_LAYOUT_MISMATCH")
-    if any(table.column("feature_id").to_pylist() != IDS for table in tables):
-        reasons.append("IDENTITY_MISMATCH")
-    if any(_storage(table) != WKB for table in tables):
-        reasons.append("WKB_MISMATCH")
-
-    baseline_geo, _ = _metadata(baseline)
-    rc_geo, _ = _metadata(rc)
-    if baseline_geo.get("version") != "1.1.0" or rc_geo.get("version") != "2.0.0-rc.1":
-        reasons.append("GEOPARQUET_VERSION_METADATA_MISMATCH")
-    crs_values = [geo["columns"]["geometry"].get("crs") for geo in (baseline_geo, rc_geo)]
-    if [_crs(value) for value in crs_values] != ["OGC:CRS84", "OGC:CRS84"]:
-        reasons.append("CRS_SEMANTIC_CONFLICT")
 
     checks = manifest["checks"]
     if checks["geospatial_row_group_statistics"] != "NOT_SUPPORTED":

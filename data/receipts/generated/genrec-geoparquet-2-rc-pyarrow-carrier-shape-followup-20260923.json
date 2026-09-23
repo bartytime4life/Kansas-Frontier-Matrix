@@ -1,0 +1,123 @@
+{
+  "receipt_id": "genrec-geoparquet-2-rc-pyarrow-carrier-shape-followup-20260923",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/release/README.md",
+    "tests/release/test_geoparquet_2_rc_pyarrow_carriers.py",
+    "tools/validators/release/validate_geoparquet_2_rc_pyarrow_carriers.py"
+  ],
+  "artifact_hashes": {
+    "tests/release/README.md": "sha256:5c493d1092dbe48fbd27b895f7e992c5a1286d391281260d629cd07d9edbc1da",
+    "tests/release/test_geoparquet_2_rc_pyarrow_carriers.py": "sha256:fc0f60895cc21874ef078ca174459f3f57f8c9b2d11d4ae77fba690bf14bb28e",
+    "tools/validators/release/validate_geoparquet_2_rc_pyarrow_carriers.py": "sha256:3edb9699f0545e8220989dba690910454e5e005495153bd5e35cbbd8fe9152be"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "runtime build UNKNOWN"
+  },
+  "prompt_or_contract": "sha256:d5cd4799f23132aa4df56fef6ae79034c1848fbcb501950fd513cb3be0c11580",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "Codex local tools",
+      "GitHub read-only issue inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:d5cd4799f23132aa4df56fef6ae79034c1848fbcb501950fd513cb3be0c11580",
+      "sha256:af5e4ecdfb11672b6bf2ecf65ecf56206fc774e7a87af8e5484ba40e65a1a425",
+      "sha256:3448392e420d16cfbfdf233f714b30e0452ae818147fbdb4faf760065eec41b1",
+      "sha256:b1b8d048fc9c76c3524e845da342fda0c23b7dac6247129cada31a938c91b709",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:c778036b62bf8e619fea4466b22d24ef67ee869cab06d3d80d8a4f1c223bda9f"
+    ],
+    "evidence_refs": [
+      "repository://e6fe871ae2b7efb23ee266dc5cedb02956e10b3b/contracts/release/geoparquet_2_rc_pyarrow_carrier_probe.md",
+      "repository://e6fe871ae2b7efb23ee266dc5cedb02956e10b3b/schemas/contracts/v1/release/geoparquet_2_rc_pyarrow_carrier_probe.schema.json",
+      "repository://e6fe871ae2b7efb23ee266dc5cedb02956e10b3b/tools/ci/geoparquet-pyarrow-25.lock",
+      "repository://e6fe871ae2b7efb23ee266dc5cedb02956e10b3b/.github/workflows/geoparquet-2-rc-pyarrow-carrier-probe.yml",
+      "repository://e6fe871ae2b7efb23ee266dc5cedb02956e10b3b/docs/doctrine/directory-rules.md",
+      "repository://e6fe871ae2b7efb23ee266dc5cedb02956e10b3b/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3386",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2907"
+    ]
+  },
+  "truth_labels": {
+    "tests/release/README.md": "CONFIRMED",
+    "tests/release/test_geoparquet_2_rc_pyarrow_carriers.py": "CONFIRMED",
+    "tools/validators/release/validate_geoparquet_2_rc_pyarrow_carriers.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "pinned-pyarrow-toolchain",
+      "outcome": "PASS",
+      "reason": "Exact PyArrow 25.0.0 hash-locked cp312 wheel installed in disposable Python 3.12.14 environment; no production wheel substitution."
+    },
+    {
+      "gate": "actual-carrier-replay",
+      "outcome": "PASS",
+      "reason": "Generated both synthetic 1.1.0 and 2.0.0-rc.1 carrier bytes and validated actual manifest, metadata and content; finite PARTIAL with only cross-engine and pruning gaps."
+    },
+    {
+      "gate": "malformed-carrier-regression",
+      "outcome": "PASS",
+      "reason": "Readable missing geometry previously raised uncaught ValueError; both readable carriers with missing geometry or feature_id and eight malformed metadata forms now return finite ERROR/CARRIER_UNREADABLE."
+    },
+    {
+      "gate": "focused-and-adjacent-tests",
+      "outcome": "PASS",
+      "reason": "44 tests and 22 subtests passed across PyArrow carrier, GDAL consumer classifier, compatibility assessment and geospatial readiness modules."
+    },
+    {
+      "gate": "cli-negative-boundary",
+      "outcome": "PASS",
+      "reason": "Malformed carrier subprocess exits 1 with exact JSON ERROR/CARRIER_UNREADABLE and empty stderr; digest mismatch remains present when both integrity and shape fail."
+    },
+    {
+      "gate": "diff-integrity",
+      "outcome": "PASS",
+      "reason": "Git diff --check passed; only same-root validator, executable tests and nearest inventory documentation changed."
+    },
+    {
+      "gate": "cross-engine-gdal-proof",
+      "outcome": "SKIPPED",
+      "reason": "Docker daemon unavailable to this local task; no actual GDAL consumer interoperability conclusion is claimed."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "No hosted run at this local successor head yet."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Accountable human review is pending; this receipt grants no adoption, release or publication authority."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "carrier-contract",
+      "validated": true,
+      "evidence_ref": "repository://e6fe871ae2b7efb23ee266dc5cedb02956e10b3b/contracts/release/geoparquet_2_rc_pyarrow_carrier_probe.md"
+    },
+    {
+      "id": "directory-placement",
+      "validated": true,
+      "evidence_ref": "repository://e6fe871ae2b7efb23ee266dc5cedb02956e10b3b/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-23T06:22:27.699165Z",
+  "emitter": "OpenAI Codex desktop",
+  "notes": "Bounded issue #3386/#2907 follow-up on frozen integration base. Existing probe contract, schema, generator, lock, workflow, fixtures and historical receipts remain unchanged. Footer and Arrow shape errors now stay inside finite ERROR; fixed four-row read disables threaded decoding after observed malformed CLI shutdown abort under PyArrow 25. GeoParquet 1.1 remains default. No GDAL interoperability, 2.0 RC adoption, source admission, review approval, release, deployment or publication claim. Revert these three authored files and this receipt to restore prior behavior, recognizing the uncaught malformed-carrier error would return."
+}
