@@ -818,7 +818,7 @@ test("keeps every top-level external map carrier in a display-only disclosure re
   assert.match(page, /NO REQUEST FROM CURRENT VIEW/);
 });
 
-test("connects fifteen bounded official Kansas context sources without admitting evidence", async () => {
+test("connects sixteen bounded official Kansas context sources without admitting evidence", async () => {
   const ts = await import("typescript");
   const registrySource = await readFile(new URL("../app/live-context.ts", import.meta.url), "utf8");
   const radarSource = await readFile(new URL("../app/noaa-radar.ts", import.meta.url), "utf8");
@@ -846,13 +846,14 @@ test("connects fifteen bounded official Kansas context sources without admitting
     "usgs-earthquakes",
     "noaa-hms-smoke",
     "nasa-firms-active-fire",
+    "nasa-gibs-fire-points",
     "raspberry-shake-stations",
     "usgs-3dep-hillshade",
     "usgs-3dep-slope",
     "nws-alerts",
     "nws-radar",
   ]);
-  assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.filter((record) => record.defaultVisibility).map((record) => record.id), ["census-counties", "usgs-streamflow", "usgs-3dhp-hydrography"]);
+  assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.filter((record) => record.defaultVisibility).map((record) => record.id), ["census-counties", "usgs-streamflow", "usgs-3dhp-hydrography", "nasa-gibs-fire-points"]);
   assert.equal(registry.OFFICIAL_CONTEXT_SOURCES.every((record) => record.evidenceRole === "EXTERNAL_CONTEXT_ONLY"), true);
   assert.equal(registry.OFFICIAL_CONTEXT_SOURCES.filter((record) => record.domain === "Living waters").length, 6);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["usgs-streamflow"].serviceUrl, /^https:\/\/api\.waterdata\.usgs\.gov\/ogcapi\/v1\//);

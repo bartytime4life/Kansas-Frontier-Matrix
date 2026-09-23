@@ -3,6 +3,7 @@ import type { OfficialContextId } from "./live-context";
 const nationalMap = "https://apps.nationalmap.gov/downloader/";
 export const SOURCE_DOWNLOADS: Record<OfficialContextId, { href: string; label: string }> = {
   "nasa-firms-active-fire": { href: "https://gibs.earthdata.nasa.gov/layer-metadata/v1.0/VIIRS_NOAA20_Thermal_Anomalies_375m_All.json", label: "NASA GIBS image source metadata" },
+  "nasa-gibs-fire-points": { href: "https://gibs.earthdata.nasa.gov/vector-metadata/v1.0/FIRMS_VIIRS_Thermal_Anomalies.json", label: "NASA GIBS detection field metadata" },
   "census-counties": { href: "/api/source-download?source=census-counties", label: "Download county baseline · GeoJSON" },
   "usgs-streamflow": { href: "/api/source-download?source=usgs-streamflow", label: "Download current observations · JSON" },
   "noaa-nwps-gauges": { href: "https://water.noaa.gov/about/api", label: "NOAA gauge data & API downloads" },

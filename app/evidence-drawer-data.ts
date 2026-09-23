@@ -8,6 +8,7 @@ const FIELDS: Readonly<Record<OfficialContextId | "registry" | "basemap", readon
   "noaa-nwps-gauges": [["lid", "NOAA gauge"], ["observedValue", "Observed value"], ["observedUnit", "Observed unit"], ["observedAt", "Observed at"], ["forecastValue", "Forecast value"], ["forecastUnit", "Forecast unit"], ["forecastAt", "Forecast valid at"], ["floodCategory", "Provider flood category"]],
   "usgs-earthquakes": [["magnitude", "Magnitude"], ["magnitudeType", "Magnitude type"], ["depthKilometers", "Depth · km"], ["observedAt", "Event time"], ["updatedAt", "Provider update"], ["reviewStatus", "Review status"], ["eventType", "Event type"], ["place", "Place"]],
   "noaa-hms-smoke": [["density", "Smoke density category"], ["start", "Valid from"], ["end", "Valid through"], ["satellite", "Satellite"], ["artifact", "Provider artifact"]],
+  "nasa-gibs-fire-points": [["acquiredAt", "Acquired · UTC"], ["sourceDay", "NASA image day · UTC"], ["latitude", "Latitude · degrees"], ["longitude", "Longitude · degrees"], ["frpMw", "Fire radiative power · MW"], ["confidence", "Detection confidence"], ["hotSpotType", "Inferred hot-spot type"], ["brightnessI4Kelvin", "Brightness I-4 · K"], ["brightnessI5Kelvin", "Brightness I-5 · K"], ["scanKm", "Along-scan pixel · km"], ["trackKm", "Along-track pixel · km"], ["dayNight", "Day or night"], ["satellite", "Satellite"], ["instrument", "Instrument"], ["processingVersion", "Processing version"], ["providerUid", "Provider UID"], ["retrievedAt", "Retrieved · UTC"]],
   "raspberry-shake-stations": [["network", "Network"], ["station", "Station"], ["elevationMeters", "Elevation · m"], ["startTime", "Station start"], ["endTime", "Station end"], ["dataRole", "Data role"], ["waveformAvailability", "Waveform availability"]],
   "nws-alerts": [["event", "Event"], ["severity", "Severity"], ["urgency", "Urgency"], ["certainty", "Certainty"], ["headline", "Headline"], ["zoneName", "Zone"], ["effective", "Effective"], ["expires", "Expires"], ["senderName", "Issuer"]],
   "usgs-3dhp-hydrography": [], "usgs-wbd-watersheds": [], "noaa-nwm-analysis": [], "noaa-nwm-short-range": [], "nasa-firms-active-fire": [], "usgs-3dep-hillshade": [], "usgs-3dep-slope": [], "nws-radar": [],
@@ -23,7 +24,7 @@ export const drawerArtifactAttributes = (source: OfficialContextId | "registry" 
     const raw = record[key];
     const value = typeof raw === "number" && Number.isFinite(raw) ? raw.toLocaleString("en-US", { maximumFractionDigits: 3 })
       : typeof raw === "string" ? raw.trim().slice(0, 240) : "";
-    return value ? [{ label, value }] : [];
+    return value !== "" ? [{ label, value }] : [];
   });
 };
 

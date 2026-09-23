@@ -3,8 +3,8 @@ import type { GeoJSONSource, LayerSpecification, Map as MapLibreMap, RasterTileS
 import { noaaRadarTileUrl } from "./noaa-radar";
 import { rememberGeoJSON, updateGeoJSON, setVisibleIfChanged, setPaintIfChanged } from "./map-performance";
 
-export type OfficialContextId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar";
-export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "raspberry-shake-stations";
+export type OfficialContextId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar";
+export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "raspberry-shake-stations";
 export type OfficialContextState = "idle" | "loading" | "ready" | "empty" | "partial" | "error";
 
 export type OfficialContextPayload = Readonly<{
@@ -289,6 +289,30 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     fallback: "Unavailable or blank tiles remain transparent. A blank tile can mean no detection, incomplete coverage, delayed publication, or a service gap; the Site never converts it into no fire, no smoke, containment, or an all-clear.",
   }),
   Object.freeze({
+    id: "nasa-gibs-fire-points",
+    title: "NASA GIBS selectable NOAA-20 thermal detections",
+    shortTitle: "Fire detections · details",
+    organization: "NASA GIBS · VIIRS NOAA-20",
+    domain: "Fire, smoke & hazards",
+    kind: "OPERATIONAL_GEOJSON",
+    sourceId: "external-nasa-gibs-fire-points",
+    layerIds: Object.freeze(["external-nasa-gibs-fire-points-halo", "external-nasa-gibs-fire-points-circle"]),
+    interactiveLayerIds: Object.freeze(["external-nasa-gibs-fire-points-halo", "external-nasa-gibs-fire-points-circle"]),
+    apiPath: "/api/live-context?feed=nasa-gibs-fire-points",
+    endpointLabel: "gibs.earthdata.nasa.gov · dated VIIRS NOAA-20 vector tiles",
+    sourceUrl: "https://gibs.earthdata.nasa.gov/vector-metadata/v1.0/FIRMS_VIIRS_Thermal_Anomalies.json",
+    serviceUrl: "https://nasa-gibs.github.io/gibs-api-docs/access-advanced-topics/#vector-visualizations",
+    cadence: "Daily UTC detection records; satellite pass and publication may lag",
+    freshness: "Exact UTC acquisition date and time carried by each returned detection",
+    defaultVisibility: true,
+    defaultOpacity: 1,
+    color: "#ff6a32",
+    attribution: "NASA GIBS · VIIRS NOAA-20 thermal anomalies",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    boundary: "Selectable points come from NASA GIBS NOAA-20 VIIRS daily vector tiles and retain provider acquisition time, confidence, radiative power, brightness temperatures, scan/track pixel dimensions, and hot-spot type when supplied. A thermal detection can be a non-vegetation heat source; it is not a verified wildfire, ignition point, fire perimeter, burned area, incident status, evacuation zone, or safety guidance. These points are external display context, not KFM evidence or release.",
+    fallback: "If either Kansas tile is unavailable or malformed, the response is unavailable rather than presenting a partial state as complete. A zero-point response does not establish no fire or full satellite coverage.",
+  }),
+  Object.freeze({
     id: "raspberry-shake-stations",
     title: "Raspberry Shake AM station network",
     shortTitle: "Raspberry Shake stations",
@@ -479,6 +503,11 @@ export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextI
     supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
     limitation: "The provider-default daily NOAA-20 image is available only at the operational-present atlas frame. The Site does not resolve its exact UTC image date or provide an incident history, perimeter archive, or KFM observation. Blank tiles are not an all-clear.",
   }),
+  "nasa-gibs-fire-points": Object.freeze({
+    axis: "rolling-retrieval-window",
+    supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
+    limitation: "One explicitly dated NASA GIBS NOAA-20 UTC day is queried at a time, with acquisition timestamps on each point. This is not a continuous fire history or a rolling 24-hour FIRMS feed; blank coverage is not an all-clear.",
+  }),
   "raspberry-shake-stations": Object.freeze({
     axis: "rolling-retrieval-window",
     supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
@@ -590,6 +619,17 @@ export const applyOfficialContextState = (
   const smokeColor = ["match", ["get", "density"], "Heavy", "#df6b51", "Medium", "#d79862", "Light", "#b9c47b", "#8b9aa0"] as unknown as string;
   ensureLayer(map, { id: smoke.layerIds[0], type: "fill", source: smoke.sourceId, paint: { "fill-color": smokeColor, "fill-opacity": 0.32 } });
   ensureLayer(map, { id: smoke.layerIds[1], type: "line", source: smoke.sourceId, paint: { "line-color": smokeColor, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 0.7, 9, 1.8], "line-opacity": 0.74 } });
+
+  const firePoints = OFFICIAL_CONTEXT_BY_ID["nasa-gibs-fire-points"];
+  ensureGeoJsonSource(map, firePoints, payloads["nasa-gibs-fire-points"]?.data ?? emptyCollection());
+  ensureLayer(map, { id: firePoints.layerIds[0], type: "circle", source: firePoints.sourceId, paint: {
+    "circle-color": "#ffb667", "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 14, 10, 20], "circle-blur": 0.55, "circle-opacity": 0.3,
+  } });
+  ensureLayer(map, { id: firePoints.layerIds[1], type: "circle", source: firePoints.sourceId, paint: {
+    "circle-color": ["match", ["get", "confidence"], "high", "#ff3757", "low", "#ffc46c", "#ff713b"],
+    "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 6.5, 10, 10],
+    "circle-opacity": 1, "circle-stroke-color": "#201b1e", "circle-stroke-width": 2.5,
+  } });
 
   const raspberryShake = OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"];
   ensureGeoJsonSource(map, raspberryShake, payloads["raspberry-shake-stations"]?.data ?? emptyCollection());

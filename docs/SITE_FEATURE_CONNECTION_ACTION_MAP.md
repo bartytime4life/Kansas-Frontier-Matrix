@@ -22,7 +22,7 @@ data, KFM evidence, policy, release, or deployment.
 |---|---|---|---|
 | Earthquakes + seismic context | `earthquake-seismic-context`, `priority-context-deck` | `usgs-earthquakes`, `raspberry-shake-stations` | toggle, refresh, opacity, provider source |
 | Hydrology + water systems | `hydrology-river-pulse`, `priority-context-deck` | USGS streamflow, NWPS, 3DHP, WBD, NWM analysis, NWM short-range | range, exact observation, refresh, toggle, opacity |
-| Smoke + weather | `smoke-weather-context`, `date-bound-observatory`, `priority-context-deck` | NASA GIBS daily NOAA-20 thermal-anomaly image, HMS smoke, NWS alerts, NOAA radar | exact frame for supported feeds, radar manifest refresh/playback, toggle, opacity |
+| Fire + smoke + weather | `smoke-weather-context`, `date-bound-observatory`, `priority-context-deck` | NASA GIBS dated NOAA-20 selectable thermal detections and separate provider-default image, HMS smoke, NWS alerts, NOAA radar | select and inspect detection properties, check UTC day, radar manifest refresh/playback, toggle, opacity |
 | LiDAR + terrain | `lidar-terrain-context`, `held-lidar-lineage` | 3DEP hillshade, 3DEP slope | toggle, opacity, provider source, intake draft |
 | Reports + decisions | `evidence-drawer-and-trust`, `report-story-workspaces`, `bounded-focus-mode` | none; context remains excluded or explicitly labeled | inspect, Focus, local save, report, intake |
 
