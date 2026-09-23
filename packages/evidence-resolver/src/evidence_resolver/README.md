@@ -73,6 +73,16 @@ pass evidence-authority, rights, sensitivity, policy, review, release,
 citation, and correction checks. Non-resolved candidates cannot carry a
 `bundle_id`; inconsistent shapes fail closed with `ValueError`.
 
+Resolved carriers must also have a string bundle identity matching the existing
+core and result-schema grammar, `^[a-z][a-z0-9_:.-]*$`. The projection reuses the
+core predicate and checks the complete string; empty, malformed, and non-string
+identities raise the fixed, non-echoing `candidate/resolved-bundle-invalid`
+error. `None` retains `candidate/resolved-bundle-missing`. This rejects malformed
+internal carriers before continuation; it does not authenticate a well-formed
+identity, bind a new subject or digest, or create a public consumer. Existing
+evaluator and fixture-adapter results retain their finite outcomes and remaining
+governed checks.
+
 These modules do not fetch remotely, cache, infer, sign, persist, activate,
 review, release, deploy, or publish anything. They do not evaluate claim scope,
 citations, rights, sensitivity, policy, or evidence truth. Shape checks for

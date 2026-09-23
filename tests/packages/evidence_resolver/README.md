@@ -46,6 +46,13 @@ absolute/traversal/outside-root/non-allowlisted paths, symlinks, caller-bundle
 injection, no negative fall-through, and active denial of network, URL, and
 process access. Static imports exclude model clients.
 
+The runtime projection tests also inject malformed resolved bundle identities
+into the internal carrier: empty/invalid strings, a number, a boolean, a list,
+and an object must raise a fixed `ValueError` before continuation. Valid identity
+grammar controls remain non-authoritative and non-renderable. This proves the
+local carrier guard, not bundle authenticity or API/UI/AI consumer closure;
+the existing fixture-to-runtime tests separately replay real evaluator results.
+
 The timestamp boundary regressions reject overflowing numeric UTC offsets before
 Python can normalize them. They exercise direct candidates, every existing policy
 posture, and the manifest adapter after a matching test-only digest, while

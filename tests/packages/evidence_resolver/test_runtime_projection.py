@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
 import sys
 import unittest
 from pathlib import Path
@@ -33,6 +34,41 @@ def _candidate(status: str, bundle_id: str | None) -> ResolutionCandidate:
 
 
 class RuntimeProjectionTests(unittest.TestCase):
+    def test_malformed_resolved_bundle_identity_is_rejected_without_echo(self) -> None:
+        candidate = _candidate("RESOLVED", "bundle:test")
+        invalid_identities = (
+            "",
+            "BAD ID",
+            42,
+            False,
+            [],
+            {},
+            " bundle:test",
+            "bundle:test\n",
+            "Bundle:test",
+            "bundle:secret/identity",
+        )
+        for bundle_id in invalid_identities:
+            with self.subTest(bundle_id=bundle_id):
+                malformed = replace(candidate, bundle_id=bundle_id)
+                with self.assertRaises(ValueError) as rejected:
+                    project_runtime_posture(malformed)
+                self.assertEqual(
+                    "candidate/resolved-bundle-invalid", str(rejected.exception)
+                )
+                self.assertEqual("bundle:test", candidate.bundle_id)
+
+    def test_valid_bundle_identity_grammar_is_preserved(self) -> None:
+        for bundle_id in ("a", "bundle:test", "b_1:revision.2-3"):
+            with self.subTest(bundle_id=bundle_id):
+                candidate = _candidate("RESOLVED", bundle_id)
+                payload = project_runtime_posture(candidate).as_dict()
+                self.assertEqual(bundle_id, payload["bundle_id"])
+                self.assertEqual("CONTINUE_GOVERNED_CHECKS", payload["disposition"])
+                self.assertEqual(list(REQUIRED_NEXT_CHECKS), payload["required_next_checks"])
+                self.assertFalse(payload["authoritative"])
+                self.assertFalse(payload["renderable"])
+
     def test_resolved_continues_checks_without_becoming_answer(self) -> None:
         posture = project_runtime_posture(_candidate("RESOLVED", "bundle:test"))
         payload = posture.as_dict()

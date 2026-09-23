@@ -1,0 +1,134 @@
+{
+  "receipt_id": "genrec-evidence-projection-identity-20260923",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "packages/evidence-resolver/src/evidence_resolver/README.md",
+    "packages/evidence-resolver/src/evidence_resolver/runtime_projection.py",
+    "tests/packages/evidence_resolver/README.md",
+    "tests/packages/evidence_resolver/test_runtime_projection.py"
+  ],
+  "artifact_hashes": {
+    "packages/evidence-resolver/src/evidence_resolver/README.md": "sha256:98e5cd72b9c1dc102c631467037ae2baf998816d446de304a4377ef090b9c3d2",
+    "packages/evidence-resolver/src/evidence_resolver/runtime_projection.py": "sha256:453d1b9dcd7ac3ec284305eca48ebd8492cd9e81fe1b59bcc1908970f34a395e",
+    "tests/packages/evidence_resolver/README.md": "sha256:d8a1ac4844b6a2141395d02e930fe657f0973696197179824dd77bb97b5c6ac4",
+    "tests/packages/evidence_resolver/test_runtime_projection.py": "sha256:ed95ad2ca05515234a43f6ebd15f0078abc3fd2f030f68f01152fd30bc85a9b9"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "runtime build UNKNOWN"
+  },
+  "prompt_or_contract": "sha256:9d1a8d7161cbbc405a60ef3ec20257ae1727baa2dbbde9400b70f9f0623ac00f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "Codex local tools",
+      "GitHub read-only overlap audit",
+      "independent agent review"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:9d1a8d7161cbbc405a60ef3ec20257ae1727baa2dbbde9400b70f9f0623ac00f",
+      "sha256:9240b0d192c5b115f6cd67becfd24abce9e8dc3141878d51f32f08fc878c0785",
+      "sha256:bbfe7be58abbb85a68f23497d6ddf2538ab76af0c752c32ae59b83ce8e42e0f6",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:c778036b62bf8e619fea4466b22d24ef67ee869cab06d3d80d8a4f1c223bda9f",
+      "sha256:4bad7b275906f2c4aadb3106802f9c41e2b9a97273dda3c7c2e2bfbf867c82c4",
+      "sha256:d3ae16c44739f492ca1832c95b185b4ac9857110a6d26f11761b533f0dd26935"
+    ],
+    "evidence_refs": [
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/contracts/evidence/runtime_evidence_resolution.md",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/schemas/contracts/v1/evidence/runtime_evidence_resolution.schema.json",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/packages/evidence-resolver/src/evidence_resolver/core.py",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/docs/doctrine/directory-rules.md",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/fixtures/packages/evidence_resolver/v1alpha1/repository/hydrology_bundle_manifest.json",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/CONTRIBUTING.md",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/packages/evidence-resolver/src/evidence_resolver/README.md",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/packages/evidence-resolver/src/evidence_resolver/runtime_projection.py",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/tests/packages/evidence_resolver/README.md",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/tests/packages/evidence_resolver/test_runtime_projection.py"
+    ]
+  },
+  "truth_labels": {
+    "packages/evidence-resolver/src/evidence_resolver/README.md": "PROPOSED",
+    "packages/evidence-resolver/src/evidence_resolver/runtime_projection.py": "PROPOSED",
+    "tests/packages/evidence_resolver/README.md": "PROPOSED",
+    "tests/packages/evidence_resolver/test_runtime_projection.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "regressions-on-unmodified-source",
+      "outcome": "FAIL",
+      "reason": "Expected negative control: expanded runtime projection suite ran six methods and produced ten assertion failures, one for each malformed resolved bundle identity; prior source did not raise ValueError."
+    },
+    {
+      "gate": "focused-runtime-projection",
+      "outcome": "PASS",
+      "reason": "All six methods pass after the guard, including ten malformed identity subcases, three valid grammar controls, unchanged None and inconsistent-issues errors, all finite negative postures, safe diagnostics and non-authority."
+    },
+    {
+      "gate": "evidence-resolver-make",
+      "outcome": "PASS",
+      "reason": "make evidence-resolver replayed all21 existing fixtures with exact outcomes/reasons:2 RESOLVED,13 UNRESOLVED,1 DENIED,5 ERROR; then all67 package tests passed."
+    },
+    {
+      "gate": "evidence-resolver-deny-make",
+      "outcome": "PASS",
+      "reason": "make evidence-resolver-deny replayed all19 existing negative fixtures with exact outcomes/reasons and all67 package tests passed. The repeated package run is not additional unique coverage."
+    },
+    {
+      "gate": "protected-byte-preservation",
+      "outcome": "PASS",
+      "reason": "Schemas, contracts, core evaluator, fixture matrix and manifest, workflow, historical receipts, source and governance roots remain unchanged against the exact base. The existing workflow retains both Make targets and already discovers the changed test module."
+    },
+    {
+      "gate": "diff-whitespace",
+      "outcome": "PASS",
+      "reason": "git diff --check passed."
+    },
+    {
+      "gate": "post-emission-integrity",
+      "outcome": "SKIPPED",
+      "reason": "Native receipt verification is performed after emission and recorded in the accompanying local validation log; no self-referential receipt artifact hash is claimed."
+    },
+    {
+      "gate": "hosted-and-full-repository-validation",
+      "outcome": "SKIPPED",
+      "reason": "No push, PR, hosted execution, browser replay or whole-repository suite run for this isolated packet. Prior inherited topology holds are not waived or called passing."
+    },
+    {
+      "gate": "accountable-human-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending. Agent review does not grant acceptance, source admission, release or publication authority."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "existing-runtime-carrier-contract",
+      "validated": true,
+      "evidence_ref": "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/contracts/evidence/runtime_evidence_resolution.md"
+    },
+    {
+      "id": "existing-identity-grammar",
+      "validated": true,
+      "evidence_ref": "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/schemas/contracts/v1/evidence/runtime_evidence_resolution.schema.json"
+    },
+    {
+      "id": "accepted-placement",
+      "validated": true,
+      "evidence_ref": "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-23T05:28:03.577191+00:00",
+  "emitter": "OpenAI Codex desktop",
+  "notes": "Issues3367 and3392 prerequisite hardening only. Exact base8cb6cb247f4962996d00d3d526cb7a9ed4b89884; branch codex/evidence-projection-followup-20260923. Complete authored inventory is the four artifact_paths plus this new receipt; the receipt does not hash itself. Reuses the existing core bundle-ID predicate, rejects malformed resolved identities via fixed candidate/resolved-bundle-invalid ValueError, retains the None-specific error and finite outcomes. The malformed carriers were injected into an internal dataclass; no malformed evaluator output or public-authentication bypass was established. Well-formed different identities are not authenticated by this guard. No new contract, schema, API, fixture, source, store, authority, lifecycle or dependency boundary. Existing package/test homes own behavior and proof; existing data/receipts/generated owns provenance. This additive receipt binds only this packet and does not rewrite or upgrade older receipt claims. No workflow receipt binding was removed. Initial authoring status is local branch only. Abandon the unaccepted branch to roll back; after separately authorized integration revert the complete five-file packet, noting that reversion restores the malformed-carrier gap. Independent human review, server-owned evidence/policy/review/release/correction authentication and API/UI/AI closure remain outstanding."
+}
