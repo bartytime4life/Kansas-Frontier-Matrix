@@ -452,6 +452,23 @@ into inferred facts.
   deploy a version, or publish the Site.
 - `/api/qwen` remains unavailable until a server-reachable endpoint is
   configured. No hosted Qwen variables are currently required for the map.
+- On this PC, the owner-private Site can use `scripts/local-qwen-bridge.mjs`
+  while that process is running. Start it with `node scripts/local-qwen-bridge.mjs`
+  from the Explorer checkout, then open the Site on the same PC. It binds only
+  `127.0.0.1:8768`, accepts the exact Site origin, and calls only the installed
+  `qwen2.5:7b-instruct-fp16` model on loopback Ollama. Other devices need their
+  own approved connection; a browser may ask for local-network permission.
+  The Qwen panel checks local health when opened, reports availability, and
+  preserves the existing copy-prompt and hosted `/api/qwen` paths. The map
+  remains usable if the bridge or model is unavailable.
+- Qwen receives the current map, time, selected feature, nearby context,
+  registered layers, all 15 official context source states, and redacted
+  renderer/source/radar/streamflow diagnostics. This is a bounded, interpretive
+  snapshot of Site state, not a telemetry ingest, source admission, model
+  registry, evidence bundle, or publication path. A camera derived from device
+  location is replaced by the Kansas overview center before it leaves the
+  browser for local inference. The bridge does not read files, ingest raw
+  logs, publish data, or expose Ollama to the hosted Worker.
 - The hosting manifest declares existing D1 `DB` and R2 `BUCKET` bindings for
   the intake capability. Reports, stories, places, and investigation workspaces
   remain device-local drafts; those bindings do not make them server-persisted.

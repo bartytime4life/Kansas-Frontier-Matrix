@@ -340,7 +340,7 @@ type MapQueryCandidate = Readonly<{
 }>;
 type ScenePresetId = "overview-2d" | "globe-overview" | "water-systems" | "smoke-context" | "elevation-3d" | "tile-grid";
 type QwenMessage = Readonly<{ role: "user" | "assistant"; content: string }>;
-type QwenBridgeState = "ready" | "not-configured" | "error";
+type QwenBridgeState = "checking" | "ready" | "not-configured" | "error";
 type RepositoryConnection = Readonly<{
   state: "idle" | "loading" | "ready" | "error";
   liveCommit?: string;
@@ -677,6 +677,7 @@ const QWEN_QUICK_PROMPTS = Object.freeze([
   "What changes when I move the time slider?",
   "Which visible layers need verification?",
 ]);
+const LOCAL_QWEN_BRIDGE = "http://127.0.0.1:8768";
 
 const inspectGovernedRoute = (method: GovernedMethod, path: GovernedRoute) => {
   const registered = governedRoutes.has(path);
@@ -1324,11 +1325,11 @@ export default function Home() {
   const [qwenOpen, setQwenOpen] = useState(false);
   const [qwenQuestion, setQwenQuestion] = useState("");
   const [qwenBusy, setQwenBusy] = useState(false);
-  const [qwenBridgeState, setQwenBridgeState] = useState<QwenBridgeState>("not-configured");
+  const [qwenBridgeState, setQwenBridgeState] = useState<QwenBridgeState>("checking");
   const [qwenMessages, setQwenMessages] = useState<readonly QwenMessage[]>([
     {
       role: "assistant",
-      content: "Ask Qwen about the current map view. The bridge sends only the selected map context; no inference endpoint is connected to this Site yet, so you can copy a grounded prompt for local Qwen/Ollama.",
+      content: "Ask Qwen about the current map view. The local bridge uses the selected map context and redacted connection health; model answers do not establish evidence or release authority.",
     },
   ]);
   const [toast, setToast] = useState("");
@@ -1859,7 +1860,10 @@ export default function Home() {
   }, [mapEvidenceFilter, nearbyRadiusMiles, nearbyVisibleLayersOnly, selected, selectedTimeMismatch, temporalQuery, visibility]);
   const qwenContext = useMemo<QwenMapContext>(() => ({
     camera: {
-      center: [Number(view.center[0].toFixed(5)), Number(view.center[1].toFixed(5))],
+      center: locationCameraRedacted || locationDerivedViewRef.current
+        ? KANSAS_VIEW.center
+        : [Number(view.center[0].toFixed(5)), Number(view.center[1].toFixed(5))],
+      locationRedacted: locationCameraRedacted || locationDerivedViewRef.current,
       zoom: Number(view.zoom.toFixed(2)),
       bearing: Number(view.bearing.toFixed(1)),
       pitch: Number(view.pitch.toFixed(1)),
@@ -1877,6 +1881,29 @@ export default function Home() {
       publicStatus: layer.publicStatus,
       freshnessState: layer.freshnessState,
     })),
+    officialSources: officialContextConnections.map((connection) => ({
+      id: connection.source.id,
+      title: connection.source.shortTitle,
+      selected: Boolean(connection.visible),
+      displayed: Boolean(connection.activeAtFrame),
+      state: connection.state,
+      featureCount: connection.featureCount ?? null,
+      retrievedAt: connection.retrievedAt ?? null,
+      evidenceRole: "EXTERNAL_CONTEXT_ONLY" as const,
+    })),
+    telemetry: {
+      authority: "SITE_LOCAL_REDACTED_DIAGNOSTIC",
+      renderer: {
+        state: runtime.kind,
+        styleLoaded: maplibreProbe.styleLoaded,
+        canvasReady: maplibreProbe.canvasReady,
+        tilesLoaded: maplibreProbe.tilesLoaded,
+        failedChecks: maplibreProbe.failedChecks,
+      },
+      registry: { total: LAYER_REGISTRY.length, ...sourceStateCounts },
+      radar: { state: noaaRadarDisplayState, frameTime: noaaRadarFrameTime, manifestFresh: noaaRadarManifestFresh },
+      streamflow: { state: streamflowState, frameTime: streamflowFrameTime },
+    },
     selection: selected && !selectedTimeMismatch ? {
       featureId: selected.featureId,
       title: selected.properties.title,
@@ -1895,7 +1922,7 @@ export default function Home() {
       distanceMiles: Number(row.distanceMiles.toFixed(1)),
       evidenceState: row.feature.properties.evidenceState,
     })),
-  }), [activeLayers, basemap, mapRepresentationLabel, nearbyContext, projection, selected, selectedTimeMismatch, temporalMode, temporalQuery.frame, temporalScopeLabel, view]);
+  }), [activeLayers, basemap, locationCameraRedacted, mapRepresentationLabel, maplibreProbe.canvasReady, maplibreProbe.failedChecks, maplibreProbe.styleLoaded, maplibreProbe.tilesLoaded, nearbyContext, noaaRadarDisplayState, noaaRadarFrameTime, noaaRadarManifestFresh, officialContextConnections, projection, runtime.kind, selected, selectedTimeMismatch, sourceStateCounts, streamflowFrameTime, streamflowState, temporalMode, temporalQuery.frame, temporalScopeLabel, view]);
   const qwenPrompt = useMemo(() => buildQwenPrompt(qwenQuestion, qwenContext), [qwenContext, qwenQuestion]);
   const analysisAreaRecordCount = useMemo(() => analysisArea
     ? LAYER_REGISTRY.reduce((count, layer) => count + layer.data.features.filter((feature) => (
@@ -2985,6 +3012,19 @@ export default function Home() {
     }
   }, [dismissMapUtilityWithoutFocus, isCompact]);
 
+  useEffect(() => {
+    if (!qwenOpen) return;
+    const controller = new AbortController();
+    setQwenBridgeState("checking");
+    void fetch(`${LOCAL_QWEN_BRIDGE}/health`, { cache: "no-store", credentials: "omit", redirect: "error", signal: controller.signal })
+      .then(async (response) => {
+        const payload = await response.json() as { status?: string };
+        if (!controller.signal.aborted) setQwenBridgeState(response.ok && payload.status === "ready" ? "ready" : "not-configured");
+      })
+      .catch(() => { if (!controller.signal.aborted) setQwenBridgeState("not-configured"); });
+    return () => controller.abort();
+  }, [qwenOpen]);
+
   const closeQwenCompanion = useCallback(() => {
     setQwenOpen(false);
     window.setTimeout(() => mapContainerRef.current?.focus(), 0);
@@ -3006,10 +3046,13 @@ export default function Home() {
     setQwenMessages((current) => [...current, { role: "user" as const, content: question }].slice(-8));
     setQwenQuestion("");
     try {
-      const response = await fetch("/api/qwen", {
+      const response = await fetch(qwenBridgeState === "ready" ? `${LOCAL_QWEN_BRIDGE}/ask` : "/api/qwen", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ question, context: qwenContext }),
+        cache: "no-store",
+        credentials: "omit",
+        redirect: "error",
       });
       const payload = await response.json().catch(() => null) as { status?: string; answer?: string; message?: string } | null;
       if (!response.ok || payload?.status !== "ok" || !payload.answer) {
@@ -3034,7 +3077,7 @@ export default function Home() {
     } finally {
       setQwenBusy(false);
     }
-  }, [qwenBusy, qwenContext, qwenQuestion]);
+  }, [qwenBridgeState, qwenBusy, qwenContext, qwenQuestion]);
 
   const stopSceneOrbit = useCallback((notify = true) => {
     if (sceneOrbitTimerRef.current !== null) {
@@ -7413,7 +7456,7 @@ export default function Home() {
             <div className="qwen-context-strip" aria-label="Qwen context scope">
               <span><small>VIEW</small><strong>{mapRepresentationLabel}</strong></span>
               <span><small>TIME</small><strong>{temporalScopeLabel}</strong></span>
-              <span><small>LAYERS</small><strong>{visibleCount}</strong></span>
+              <span><small>LAYERS</small><strong>{visibleCount + visibleOfficialCount}</strong></span>
               <span><small>SELECTION</small><strong>{selected ? "1" : "0"}</strong></span>
             </div>
             <div className="qwen-messages" aria-live="polite">
@@ -7425,7 +7468,7 @@ export default function Home() {
             </div>
             <form className="qwen-form" onSubmit={(event) => { event.preventDefault(); void askQwen(); }}>
               <label><span className="sr-only">Ask Qwen about the map</span><textarea value={qwenQuestion} onChange={(event) => setQwenQuestion(event.target.value)} placeholder="Ask about this place, time, or layer context…" rows={3} maxLength={1200} /></label>
-              <div><span data-bridge-state={qwenBridgeState}>{qwenBridgeState === "ready" ? "BRIDGE CONNECTED" : qwenBridgeState === "error" ? "BRIDGE UNAVAILABLE" : "LOCAL BRIDGE NOT CONFIGURED"}</span><button type="submit" disabled={!qwenQuestion.trim() || qwenBusy}>{qwenBusy ? "Thinking…" : "Ask Qwen"}</button></div>
+              <div><span data-bridge-state={qwenBridgeState}>{qwenBridgeState === "ready" ? "LOCAL QWEN READY" : qwenBridgeState === "checking" ? "CHECKING LOCAL QWEN" : qwenBridgeState === "error" ? "BRIDGE UNAVAILABLE" : "LOCAL QWEN UNAVAILABLE"}</span><button type="submit" disabled={!qwenQuestion.trim() || qwenBusy || qwenBridgeState === "checking"}>{qwenBusy ? "Thinking…" : "Ask Qwen"}</button></div>
             </form>
             <footer className="qwen-panel-footer"><p>Qwen is interpretive only. It cannot establish evidence, policy, release, or publication authority.</p><button type="button" onClick={() => void copyQwenPrompt()}>Copy grounded prompt</button></footer>
           </aside>}
