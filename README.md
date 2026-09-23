@@ -348,6 +348,17 @@ their feed state and response clocks. These are provider display observations;
 the drawer keeps KFM EvidenceBundle, admission, review, and release status
 separate. Site telemetry does not establish a KFM evidence claim.
 
+Every selectable map record now has a bounded data view drawn from explicitly
+allowed source fields. Provider records follow the latest loaded response when
+their stable feature ID remains present; otherwise the drawer labels their
+fields as a captured map snapshot. Site-local fixtures show only their declared
+display attributes. Provider raster pixels have no selectable record-level
+metadata and are not turned into inferred measurements. For a selected USGS
+gauge, the drawer also requests the existing fixed adapter's seven-day gauge-
+height (`00065`) series and monitoring-location metadata. Gauge height stays
+separate from discharge (`00060`); a gap at the selected discharge frame does
+not erase dated station history or imply a current value.
+
 The fixed `/api/hydrology/noaa` adapter establishes three distinct NWPS modes:
 a Kansas gauge-status network, one-gauge observed and official NWS forecast
 series, and one-reach National Water Model analysis-assimilation and short-range

@@ -202,6 +202,7 @@ import {
   type StreamflowFrame,
 } from "./streamflow";
 import { riverDrawerObservation } from "./evidence-drawer-observation";
+import { drawerArtifactAttributes, parseUsgsStageDetail, type DrawerAttribute, type UsgsStageDetail } from "./evidence-drawer-data";
 import { HydrologyObservatory,
   type HydrologyObservatoryState,
   type HydrologyPlaybackSpeed,
@@ -375,7 +376,11 @@ type SelectedContext = {
   properties: FeatureProperties;
   geometry: Feature<Geometry>;
   externalStationId?: string | null;
+  externalFeatureId?: string | null;
+  externalAttributes?: readonly DrawerAttribute[];
 };
+
+type StageDrawerLoad = { stationId: string; status: "loading" | "ready" | "error"; detail?: UsgsStageDetail };
 
 const officialContextIdForSelection = (selection: SelectedContext | null): OfficialContextId | null => {
   if (!selection?.featureId.startsWith("official-context:")) return null;
@@ -539,9 +544,9 @@ const visibleFocusableElements = (container: HTMLElement) => Array.from(containe
 );
 const drawerViews = ["evidence", "metadata", "lineage", "focus"] as const satisfies readonly DrawerView[];
 const drawerViewLabels: Record<DrawerView, string> = {
-  evidence: "Evidence",
-  metadata: "Summary",
-  lineage: "Methods",
+  evidence: "Data",
+  metadata: "Metadata",
+  lineage: "Trace",
   focus: "Focus",
 };
 const mapUtilityViews = ["report", "inspect", "navigate", "places", "scene", "connections", "import", "compare", "display", "measure", "export", "diagnostics"] as const satisfies readonly MapUtilityView[];
@@ -882,6 +887,8 @@ const buildBasemapContext = (candidate: BasemapFeatureCandidate, longitude: numb
     externalStationId: officialSource?.id === "usgs-streamflow"
       ? normalizeUsgsStationId(String(properties.stationId ?? properties.monitoringLocationId ?? ""))
       : null,
+    externalFeatureId: typeof properties.featureId === "string" ? properties.featureId : null,
+    externalAttributes: drawerArtifactAttributes(officialSource?.id ?? "basemap", properties),
     properties: {
       fid: featureId,
       title,
@@ -1141,6 +1148,7 @@ export default function Home() {
   const [noaaRadarClock, setNoaaRadarClock] = useState(() => Date.now());
   const [radarArchiveDraftDay, setRadarArchiveDraftDay] = useState(currentUtcDay);
   const [streamflowBundle, setStreamflowBundle] = useState<StreamflowBundle | null>(null);
+  const [stageDrawerLoad, setStageDrawerLoad] = useState<StageDrawerLoad | null>(null);
   const [streamflowState, setStreamflowState] = useState<HydrologyObservatoryState>("idle");
   const [streamflowError, setStreamflowError] = useState<string | null>(null);
   const [streamflowFrameIndex, setStreamflowFrameIndex] = useState(-1);
@@ -2069,6 +2077,40 @@ export default function Home() {
   const selectedRiverObservation = useMemo(() => selectedOfficialContextId === "usgs-streamflow"
     ? riverDrawerObservation(selected?.externalStationId ?? null, streamflowBundle, streamflowFrame, streamflowFrameTime, streamflowDisplayState)
     : null, [selectedOfficialContextId, selected?.externalStationId, streamflowBundle, streamflowFrame, streamflowFrameTime, streamflowDisplayState]);
+  const selectedOfficialFeature = selected?.externalFeatureId && selectedOfficialPayload?.data.features.find((feature) =>
+    feature.properties?.featureId === selected.externalFeatureId);
+  const selectedArtifactAttributes = selected?.kind === "registry"
+    ? drawerArtifactAttributes("registry", selected.properties)
+    : selectedOfficialContextId && selectedOfficialFeature
+      ? drawerArtifactAttributes(selectedOfficialContextId, selectedOfficialFeature.properties)
+      : selected?.externalAttributes ?? [];
+  const selectedAttributesCurrent = Boolean(selectedOfficialFeature);
+  const selectedDischargeHistory = useMemo(() => streamflowBundle && selectedOfficialContextId === "usgs-streamflow" && selected?.externalStationId
+    ? streamflowBundle.observations.filter((item) => item.stationId === selected.externalStationId).slice(-8).reverse()
+    : [], [selected?.externalStationId, selectedOfficialContextId, streamflowBundle]);
+  const latestLoadedDischarge = useMemo(() => streamflowBundle && selectedOfficialContextId === "usgs-streamflow" && selected?.externalStationId
+    ? streamflowBundle.observations.findLast((item) => item.stationId === selected.externalStationId && item.value !== null)
+    : null, [selected?.externalStationId, selectedOfficialContextId, streamflowBundle]);
+  const selectedStageDetail = stageDrawerLoad?.stationId === selected?.externalStationId ? stageDrawerLoad : null;
+  useEffect(() => {
+    const stationId = selectedOfficialContextId === "usgs-streamflow" && rightOpen ? selected?.externalStationId : null;
+    if (!stationId) return;
+    const controller = new AbortController();
+    setStageDrawerLoad({ stationId, status: "loading" });
+    const load = async () => {
+      try {
+        const path = `/api/hydrology/streamflow?mode=station&range=7d&station=${encodeURIComponent(stationId)}&parameter=00065&resolution=continuous`;
+        const response = await fetch(path, { cache: "no-store", headers: { Accept: "application/json" }, signal: controller.signal });
+        if (!response.ok) throw new Error(`USGS gauge-height request returned HTTP ${response.status}.`);
+        const detail = parseUsgsStageDetail(await readBoundedJson(response, 8 * 1024 * 1024), stationId);
+        if (!controller.signal.aborted) setStageDrawerLoad({ stationId, status: "ready", detail });
+      } catch {
+        if (!controller.signal.aborted) setStageDrawerLoad({ stationId, status: "error" });
+      }
+    };
+    void load();
+    return () => controller.abort();
+  }, [rightOpen, selected?.externalStationId, selectedOfficialContextId]);
   const selectedLabel = selected?.properties.title ?? "Statewide Kansas";
   const selectedEvidence = selected ? evidenceLabels[selected.properties.evidenceState] : null;
   const selectedLayerHidden = Boolean(selected && !selectionCarrierIsVisible(selected, visibility, officialVisibility, temporalQuery.frame));
@@ -8091,6 +8133,7 @@ export default function Home() {
               <header><span>OFFICIAL SOURCE · {selectedOfficialConnection.source.shortTitle}</span><strong>{selectedRiverObservation?.status === "observation" ? "OBSERVATION LOADED" : selectedRiverObservation?.status === "gap" ? "NO SAMPLE AT FRAME" : selectedRiverObservation?.status === "stale" ? "LAST RESPONSE · CHECK SOURCE" : selectedRiverObservation?.status === "error" ? "SOURCE UNAVAILABLE" : selectedRiverObservation?.status === "loading" ? "REFRESHING" : selectedOfficialConnection.state.toUpperCase()}</strong></header>
               {selectedRiverObservation ? <>
                 <div className="drawer-live-reading"><span>Discharge · USGS station {selectedRiverObservation.stationId.slice(5)}</span><strong>{selectedRiverObservation.displayValue ?? "No sample at this frame"}</strong><small>{selectedRiverObservation.observedAt ? `Observed ${drawerTimestamp(selectedRiverObservation.observedAt)}` : "The selected frame has no usable discharge observation."}</small></div>
+                {!selectedRiverObservation.displayValue && latestLoadedDischarge && <p className="drawer-prior-reading">Latest loaded discharge: {latestLoadedDischarge.value?.toLocaleString("en-US")} {latestLoadedDischarge.unit} · {drawerTimestamp(latestLoadedDischarge.observedAt)}. This is not the selected frame.</p>}
                 <p>Frame {drawerTimestamp(selectedRiverObservation.frameTime)} · Retrieved {drawerTimestamp(selectedRiverObservation.retrievedAt)}</p>
                 <a href={selectedRiverObservation.sourceUrl} target="_blank" rel="noreferrer">Open this gauge at USGS ↗</a>
               </> : <>
@@ -8108,6 +8151,19 @@ export default function Home() {
             <div className="drawer-scroll">
               {drawerView === "evidence" && <section role="tabpanel" id="drawer-panel-evidence" aria-labelledby="drawer-tab-evidence" className="drawer-section">
                 <p className="summary">{selectedRiverObservation ? `${selectedRiverObservation.stationName ?? selected.properties.title} is a USGS monitoring location. The observation follows the selected map frame; a missing frame remains a gap.` : selectedOfficialConnection ? `Selected map snapshot: ${selected.properties.summary} Re-select this feature after a feed update to refresh its mapped properties.` : selected.properties.summary}</p>
+                {!selectedRiverObservation && <section className="drawer-data-block" aria-label="Selected artifact data"><header><h3>Selected artifact data</h3><small>{selected.kind === "registry" ? "Site-local record" : selectedAttributesCurrent ? "Current loaded provider response" : "Captured map properties"}</small></header>
+                  {selectedArtifactAttributes.length > 0 ? <dl className="drawer-attribute-list">{selectedArtifactAttributes.map((attribute) => <div key={attribute.label}><dt>{attribute.label}</dt><dd>{attribute.value}</dd></div>)}</dl> : <p>No measured feature attributes are available in this map carrier. Source and trust metadata are available below.</p>}
+                </section>}
+                {selectedRiverObservation && <section className="drawer-data-block" aria-label="USGS gauge height data"><header><h3>Gauge height · USGS 00065</h3><small>Separate seven-day station request</small></header>
+                  {selectedStageDetail?.status === "loading" && <p role="status">Loading station metadata and gauge-height observations…</p>}
+                  {selectedStageDetail?.status === "error" && <p role="status">Gauge-height data are unavailable. The discharge frame and its history remain separate.</p>}
+                  {selectedStageDetail?.status === "ready" && selectedStageDetail.detail && <>
+                    <p>{selectedStageDetail.detail.latest ? `Latest returned value: ${selectedStageDetail.detail.latest.value?.toLocaleString("en-US")} ${selectedStageDetail.detail.latest.unit} · ${drawerTimestamp(selectedStageDetail.detail.latest.observedAt)}` : "No measured gauge-height value was returned in this seven-day request."} {selectedStageDetail.detail.partial ? "The response is partial." : ""}</p>
+                    <p>Checked {drawerTimestamp(selectedStageDetail.detail.queryStart)} to {drawerTimestamp(selectedStageDetail.detail.queryEnd)} · {selectedStageDetail.detail.observationCount.toLocaleString("en-US")} returned samples · retrieved {drawerTimestamp(selectedStageDetail.detail.retrievedAt)}.</p>
+                    {selectedStageDetail.detail.recent.length > 0 && <ol className="drawer-sample-list" aria-label="Recent gauge-height samples">{selectedStageDetail.detail.recent.map((item) => <li key={item.observedAt}><time dateTime={item.observedAt}>{drawerTimestamp(item.observedAt)}</time><strong>{item.value === null ? "No value" : `${item.value.toLocaleString("en-US")} ${item.unit}`}</strong><small>{item.approvalStatus ?? "Status unavailable"}{item.qualifiers.length ? ` · ${item.qualifiers.join(", ")}` : ""}</small></li>)}</ol>}
+                  </>}
+                  <a href={`https://waterdata.usgs.gov/monitoring-location/${selectedRiverObservation.stationId}/#dataTypeId=continuous-00065-0&period=P7D&showFieldMeasurements=true`} target="_blank" rel="noreferrer">Open gauge-height data at USGS ↗</a>
+                </section>}
                 {selectedRiverObservation && <><h3>Gauge and feed telemetry</h3><dl className="evidence-facts">
                   <div><dt>Feed state</dt><dd>{selectedRiverObservation.connectionState.toUpperCase()}{selectedRiverObservation.isPartial ? " · partial response" : ""}</dd></div>
                   <div><dt>Selected frame</dt><dd>{drawerTimestamp(selectedRiverObservation.frameTime)}</dd></div>
@@ -8118,6 +8174,11 @@ export default function Home() {
                   <div><dt>Qualifiers</dt><dd>{selectedRiverObservation.qualifiers.length > 0 ? selectedRiverObservation.qualifiers.join(", ") : "None reported"}</dd></div>
                   <div><dt>Trend at frame</dt><dd>{selectedRiverObservation.trend && selectedRiverObservation.trend !== "unknown" ? selectedRiverObservation.trend : "Not available"}</dd></div>
                 </dl></>}
+                {selectedRiverObservation && <section className="drawer-data-block" aria-label="Loaded discharge data"><header><h3>Loaded discharge · USGS 00060</h3><small>{streamflowBundle?.query.mode === "historical-series" ? "Selected historical range" : "Bounded network window"}</small></header>
+                  {selectedDischargeHistory.length > 0 ? <ol className="drawer-sample-list">{selectedDischargeHistory.map((item) => <li key={item.observedAt}><time dateTime={item.observedAt}>{drawerTimestamp(item.observedAt)}</time><strong>{item.value === null ? "No value" : `${item.value.toLocaleString("en-US")} ${item.unit}`}</strong><small>{item.approvalStatus ?? "Status unavailable"}{item.qualifiers.length ? ` · ${item.qualifiers.join(", ")}` : ""}</small></li>)}</ol> : <p>No discharge samples were returned for this station in the loaded request.</p>}
+                  <p>The selected frame above is independent of this recent-sample list. No value is carried into a missing frame.</p>
+                </section>}
+                <details className="drawer-context-details"><summary>Context, provenance and claim fields</summary>
                 <dl className="evidence-facts">
                   <div><dt>Layer / domain</dt><dd>{selected.layer.title} · {selected.layer.domain}</dd></div>
                   <div><dt>Source role</dt><dd>{selected.properties.sourceRole}</dd></div>
@@ -8130,6 +8191,7 @@ export default function Home() {
                   <div><dt>Official source</dt><dd>{selectedOfficialConnection ? <a href={selectedRiverObservation?.sourceUrl ?? selectedOfficialConnection.source.sourceUrl} target="_blank" rel="noreferrer">{selectedOfficialConnection.source.organization} record ↗</a> : selectedSourceCandidate ? <a href={selectedSourceCandidate.sourceUrl} target="_blank" rel="noreferrer">{selectedSourceCandidate.organization} portal ↗</a> : "Not available for this site-local record"}</dd></div>
                   <div><dt>Source admission</dt><dd>{selectedOfficialConnection ? "External context · not KFM admitted" : selectedSourceCandidate ? `${(SOURCE_ADMISSION_BY_ID[selectedSourceCandidate.id] ?? "candidate").replaceAll("-", " ")} · checked ${selectedSourceCandidate.checkedAt}` : selected.kind === "basemap" ? "External display context" : "Site-local demonstration fixture"}</dd></div>
                 </dl>
+                </details>
                 <div className="notice"><strong>Limitations</strong><p>{selectedRiverObservation?.status === "stale" ? "The source is stale or unavailable. A prior sample is shown only with its original time; no new observation is inferred. " : ""}{selectedOfficialPayload?.limitation ?? selected.properties.uncertainty}</p></div>
                 <div className="notice"><strong>Generalization / rights</strong><p>{selected.properties.generalizationNote} {selected.properties.rights}</p></div>
                 {selected.properties.correctionState !== "NONE" && <div className="notice correction"><strong>Correction state</strong><p>{selected.properties.correctionState}</p></div>}
@@ -8138,7 +8200,17 @@ export default function Home() {
               {drawerView === "metadata" && <section role="tabpanel" id="drawer-panel-metadata" aria-labelledby="drawer-tab-metadata" className="drawer-section">
                 {selectedOfficialConnection ? <><h3>Official source details</h3><dl className="evidence-facts">
                   <div><dt>Provider</dt><dd>{selectedOfficialConnection.source.organization}</dd></div><div><dt>Feed</dt><dd>{selectedOfficialConnection.source.endpointLabel}</dd></div><div><dt>Cadence</dt><dd>{selectedOfficialConnection.source.cadence}</dd></div><div><dt>Response state</dt><dd>{selectedOfficialConnection.state.toUpperCase()}{selectedOfficialPayload?.truncated ? " · truncated" : ""}</dd></div><div><dt>Retrieved</dt><dd>{drawerTimestamp(selectedOfficialConnection.retrievedAt)}</dd></div><div><dt>Provider time</dt><dd>{drawerTimestamp(selectedOfficialPayload?.upstreamUpdatedAt)}</dd></div><div><dt>Evidence role</dt><dd>External context only</dd></div><div><dt>Attribution</dt><dd>{selectedOfficialConnection.source.attribution}</dd></div>
-                </dl><div className="notice"><strong>Source boundary</strong><p>{selectedOfficialConnection.source.boundary}</p></div></> : <><h3>Registry-driven layer metadata</h3><dl className="evidence-facts">
+                </dl>{selectedRiverObservation && streamflowCoverage?.station === selectedRiverObservation.stationId && <div className="notice"><strong>Provider-declared discharge record span</strong><p>{streamflowCoverage.continuous ? `${drawerTimestamp(streamflowCoverage.continuous.start)} to ${drawerTimestamp(streamflowCoverage.continuous.end)} continuous` : "No continuous span declared"}{streamflowCoverage.daily ? ` · daily ${drawerTimestamp(streamflowCoverage.daily.start)} to ${drawerTimestamp(streamflowCoverage.daily.end)}` : ""}{streamflowCoverage.partial ? " · partial metadata" : ""}. Gaps may occur within these dates.</p></div>}{selectedRiverObservation && selectedStageDetail?.status === "ready" && selectedStageDetail.detail && <><h3>USGS monitoring location</h3><dl className="evidence-facts">
+                  <div><dt>Station</dt><dd>{selectedStageDetail.detail.name} · {selectedStageDetail.detail.stationId}</dd></div>
+                  <div><dt>Site type</dt><dd>{selectedStageDetail.detail.siteTypeCode ?? "Not reported"}</dd></div>
+                  <div><dt>County</dt><dd>{selectedStageDetail.detail.county ?? "Not reported"}</dd></div>
+                  <div><dt>Hydrologic unit</dt><dd>{selectedStageDetail.detail.huc ?? "Not reported"}</dd></div>
+                  <div><dt>Drainage area</dt><dd>{selectedStageDetail.detail.drainageArea === null ? "Not reported" : `${selectedStageDetail.detail.drainageArea.toLocaleString("en-US")} sq mi`}</dd></div>
+                  <div><dt>Contributing area</dt><dd>{selectedStageDetail.detail.contributingDrainageArea === null ? "Not reported" : `${selectedStageDetail.detail.contributingDrainageArea.toLocaleString("en-US")} sq mi`}</dd></div>
+                  <div><dt>WGS84 point</dt><dd>{selectedStageDetail.detail.latitude.toFixed(5)}, {selectedStageDetail.detail.longitude.toFixed(5)} · provider coordinates, not survey precision</dd></div>
+                  <div><dt>Stage response</dt><dd>{selectedStageDetail.detail.partial ? "Partial" : "Complete within request"}{selectedStageDetail.detail.truncated ? " · truncated" : ""}</dd></div>
+                </dl></>}
+                <div className="notice"><strong>Source boundary</strong><p>{selectedOfficialConnection.source.boundary}</p></div></> : selected.kind === "basemap" ? <><h3>External display metadata</h3><dl className="evidence-facts"><div><dt>Provider</dt><dd>{selected.properties.sourceOrganization}</dd></div><div><dt>Rendered layer</dt><dd>{selected.layer.title}</dd></div><div><dt>Feature ID</dt><dd>{selected.featureId}</dd></div><div><dt>Role</dt><dd>Orientation context only · no KFM source admission</dd></div></dl></> : <><h3>Registry-driven layer metadata</h3><dl className="evidence-facts">
                   <div><dt>Dataset</dt><dd>{selected.layer.datasetName}</dd></div><div><dt>Source / geometry</dt><dd>{selected.layer.sourceType} · {selected.layer.geometryType}</dd></div><div><dt>Zoom support</dt><dd>{selected.layer.minZoom}–{selected.layer.maxZoom}</dd></div><div><dt>Units</dt><dd>{selected.layer.units}</dd></div><div><dt>Valid time extent</dt><dd>{selected.layer.validTimeExtent}</dd></div><div><dt>Source time</dt><dd>{selected.layer.sourceTime}</dd></div><div><dt>Release time</dt><dd>{selected.layer.releaseTime}</dd></div><div><dt>Attribution</dt><dd>{selected.layer.attribution}</dd></div></dl><div className="legend-detail"><strong>Legend</strong>{selected.layer.legend.map((item) => <p key={item.label}><i className={`legend-swatch ${item.shape}`} style={{ "--swatch": item.color } as React.CSSProperties} />{item.label}</p>)}</div></>}
               </section>}
               {drawerView === "lineage" && <section role="tabpanel" id="drawer-panel-lineage" aria-labelledby="drawer-tab-lineage" className="drawer-section">
