@@ -486,8 +486,8 @@ const PRIORITY_CONTEXT_GROUPS: readonly PriorityContextGroup[] = Object.freeze([
   Object.freeze({
     id: "fire-smoke",
     title: "Fire + smoke context",
-    description: "NASA GIBS daily VIIRS NOAA-20 thermal anomalies and NOAA HMS smoke footprints, with NWS alerts and exact-time radar kept as separate source roles.",
-    sourceIds: Object.freeze(["nasa-firms-active-fire", "noaa-hms-smoke", "nws-alerts", "nws-radar"] as const),
+    description: "Selectable NOAA-20 thermal detections, separate NASA image tiles, and NOAA smoke footprints. Alerts and radar retain their distinct roles.",
+    sourceIds: Object.freeze(["nasa-gibs-fire-points", "nasa-firms-active-fire", "noaa-hms-smoke", "nws-alerts", "nws-radar"] as const),
   }),
 ]);
 
@@ -568,6 +568,7 @@ const mapUtilityLabels: Record<MapUtilityView, string> = {
 const QUICK_LIVE_CONTEXT_IDS = [
   "usgs-streamflow",
   "usgs-earthquakes",
+  "nasa-gibs-fire-points",
   "noaa-hms-smoke",
   "nws-radar",
 ] as const satisfies readonly OfficialContextId[];
@@ -804,6 +805,13 @@ const officialContextSummary = (source: OfficialContextId, title: string, proper
     const satellite = stringContextProperty(properties, "satellite");
     return `${title} · ${density}${satellite ? ` · ${satellite}` : ""}${start && end ? ` · ${new Date(start).toLocaleString()}–${new Date(end).toLocaleString()}` : ""}. NOAA HMS analyst context is not surface PM2.5, plume altitude, measured transport, a fire perimeter, warning, health advisory, or all-clear.`;
   }
+  if (source === "nasa-gibs-fire-points") {
+    const acquiredAt = stringContextProperty(properties, "acquiredAt");
+    const frp = numberContextProperty(properties, "frpMw");
+    const confidence = stringContextProperty(properties, "confidence");
+    const hotSpotType = stringContextProperty(properties, "hotSpotType");
+    return `${title}${acquiredAt ? ` · acquired ${new Date(acquiredAt).toLocaleString()}` : ""}${frp === null ? "" : ` · ${frp.toFixed(2)} MW radiative power`}${confidence ? ` · ${confidence} confidence` : ""}${hotSpotType && hotSpotType !== "Not supplied" ? ` · ${hotSpotType}` : ""}. This NOAA-20 thermal-anomaly pixel is not a verified wildfire, perimeter, incident, or safety alert. Provider attributes are external context, not KFM evidence.`;
+  }
   if (source === "raspberry-shake-stations") {
     const network = stringContextProperty(properties, "network") ?? "AM";
     const station = stringContextProperty(properties, "station") ?? "station";
@@ -837,6 +845,7 @@ const officialContextTime = (source: OfficialContextId, properties: Record<strin
     const end = stringContextProperty(properties, "end");
     return start && end ? `${start} through ${end}` : fallback;
   }
+  if (source === "nasa-gibs-fire-points") return stringContextProperty(properties, "acquiredAt") ?? fallback;
   if (source === "raspberry-shake-stations") return fallback;
   return fallback;
 };
@@ -2828,11 +2837,12 @@ export default function Home() {
   }, [announce]);
 
   const loadOfficialArchiveDay = useCallback(async (feed: OfficialContextFeedId, day: string) => {
-    if (!["usgs-earthquakes", "noaa-hms-smoke", "raspberry-shake-stations"].includes(feed)
+    if (!["usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(feed)
       || !/^\d{4}-\d{2}-\d{2}$/.test(day)
       || !Number.isFinite(Date.parse(`${day}T00:00:00.000Z`))
       || new Date(`${day}T00:00:00.000Z`).toISOString().slice(0, 10) !== day
       || day > currentUtcDay()
+      || (feed === "nasa-gibs-fire-points" && day < "2018-01-01")
       || (feed === "noaa-hms-smoke" && day < "2005-08-05")) return;
     officialRequestsRef.current.get(feed)?.abort();
     const controller = new AbortController();
@@ -4224,9 +4234,11 @@ export default function Home() {
             } : null);
           }
           const availableLayers = interactiveLayerIds.filter((id) => map.getLayer(id));
-          const candidate = (availableLayers.length ? map.queryRenderedFeatures(event.point, { layers: availableLayers }) : [])[0];
           const availableOfficialLayers = OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS.filter((id) => map.getLayer(id));
-          const officialCandidate = candidate || !availableOfficialLayers.length ? null : map.queryRenderedFeatures(event.point, { layers: availableOfficialLayers })[0];
+          const officialFeatures = availableOfficialLayers.length ? map.queryRenderedFeatures(event.point, { layers: availableOfficialLayers }) : [];
+          const fireCandidate = officialFeatures.find((feature) => feature.source === "external-nasa-gibs-fire-points");
+          const candidate = fireCandidate ? undefined : (availableLayers.length ? map.queryRenderedFeatures(event.point, { layers: availableLayers }) : [])[0];
+          const officialCandidate = candidate ? null : fireCandidate ?? officialFeatures[0];
           const externalCandidate = candidate ? null : officialCandidate ?? map.queryRenderedFeatures(event.point).find((feature) => {
             const sourceId = typeof feature.source === "string" ? feature.source : "";
             const isSiteLocal = sourceId.startsWith("kfm-") || LAYER_REGISTRY.some((layer) => layer.sourceId === sourceId);
@@ -4310,11 +4322,13 @@ export default function Home() {
 
           const availableLayers = interactiveLayerIds.filter((id) => map.getLayer(id));
           const renderedCandidates = availableLayers.length ? map.queryRenderedFeatures(event.point, { layers: availableLayers }) : [];
-          const candidate = renderedCandidates[0];
+          const availableOfficialLayers = OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS.filter((id) => map.getLayer(id));
+          const officialFeatures = availableOfficialLayers.length ? map.queryRenderedFeatures(event.point, { layers: availableOfficialLayers }) : [];
+          const fireCandidate = officialFeatures.find((feature) => feature.source === "external-nasa-gibs-fire-points");
+          const candidate = fireCandidate ? undefined : renderedCandidates[0];
           if (!candidate) {
             setMapQueryCandidates([]);
-            const availableOfficialLayers = OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS.filter((id) => map.getLayer(id));
-            const officialCandidate = availableOfficialLayers.length ? map.queryRenderedFeatures(event.point, { layers: availableOfficialLayers })[0] : undefined;
+            const officialCandidate = fireCandidate ?? officialFeatures[0];
             const externalCandidate = officialCandidate ?? map.queryRenderedFeatures(event.point).find((feature) => {
               const sourceId = typeof feature.source === "string" ? feature.source : "";
               const isSiteLocal = sourceId.startsWith("kfm-") || LAYER_REGISTRY.some((layer) => layer.sourceId === sourceId);
@@ -7244,11 +7258,11 @@ export default function Home() {
                     <div className="source-time-actions"><label>Older UTC day<input type="date" min="1995-01-01" max={currentUtcDay()} value={radarArchiveDraftDay} onChange={(event) => setRadarArchiveDraftDay(event.target.value)} /></label><Link href={`/observatory?start=${encodeURIComponent(`${radarArchiveDraftDay || currentUtcDay()}T00:00`)}&hours=24&layers=radar,counties`}>Check in Observatory ↗</Link></div>
                     <ArchiveDaySlider sourceLabel="NOAA radar" minDay="1995-01-01" maxDay={currentUtcDay()} day={radarArchiveDraftDay} onSelect={setRadarArchiveDraftDay} nextAction="Check in Observatory" />
                     <small>1995 is the archive adapter’s earliest query bound, not proof that every day has radar imagery. The selected older day opens a separate map.</small>
-                  </> : ["usgs-earthquakes", "noaa-hms-smoke", "raspberry-shake-stations"].includes(source.id) ? <>
-                    <p>{source.id === "usgs-earthquakes" ? "Event timestamps; a checked day can be swept event by event." : source.id === "noaa-hms-smoke" ? "Daily publication with source validity intervals; no measured second-by-second smoke frames." : "Station metadata valid for a checked date; no waveform time series on this map."}</p>
-                    <div className="source-time-actions"><label>UTC archive day<input type="date" min={source.id === "noaa-hms-smoke" ? "2005-08-05" : undefined} max={currentUtcDay()} value={officialArchiveDraftDays[source.id as OfficialContextFeedId] ?? ""} onChange={(event) => setOfficialArchiveDraftDays((current) => ({ ...current, [source.id]: event.target.value }))} /></label><button type="button" disabled={!officialArchiveDraftDays[source.id as OfficialContextFeedId] || state === "loading" || heldAtFrame} onClick={() => void loadOfficialArchiveDay(source.id as OfficialContextFeedId, officialArchiveDraftDays[source.id as OfficialContextFeedId]!)}>Check day on map</button>{officialArchiveDays[source.id as OfficialContextFeedId] && <button type="button" onClick={() => returnOfficialSourceToCurrent(source.id as OfficialContextFeedId)}>Current</button>}<Link href={`/observatory?start=${encodeURIComponent(`${officialArchiveDraftDays[source.id as OfficialContextFeedId] || officialArchiveDays[source.id as OfficialContextFeedId] || currentUtcDay()}T00:00`)}&hours=24&layers=${source.id === "usgs-earthquakes" ? "earthquakes" : source.id === "noaa-hms-smoke" ? "smoke" : "shake"},counties`}>Open separate archive map ↗</Link></div>
+                  </> : ["usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(source.id) ? <>
+                    <p>{source.id === "usgs-earthquakes" ? "Event timestamps; a checked day can be swept event by event." : source.id === "noaa-hms-smoke" ? "Daily publication with source validity intervals; no measured second-by-second smoke frames." : source.id === "nasa-gibs-fire-points" ? "Selectable thermal detections for one exact UTC day; each point carries its own acquisition time. This is separate from the provider-default image layer." : "Station metadata valid for a checked date; no waveform time series on this map."}</p>
+                    <div className="source-time-actions"><label>UTC archive day<input type="date" min={source.id === "noaa-hms-smoke" ? "2005-08-05" : source.id === "nasa-gibs-fire-points" ? "2018-01-01" : undefined} max={currentUtcDay()} value={officialArchiveDraftDays[source.id as OfficialContextFeedId] ?? ""} onChange={(event) => setOfficialArchiveDraftDays((current) => ({ ...current, [source.id]: event.target.value }))} /></label><button type="button" disabled={!officialArchiveDraftDays[source.id as OfficialContextFeedId] || state === "loading" || heldAtFrame} onClick={() => void loadOfficialArchiveDay(source.id as OfficialContextFeedId, officialArchiveDraftDays[source.id as OfficialContextFeedId]!)}>Check day on map</button>{officialArchiveDays[source.id as OfficialContextFeedId] && <button type="button" onClick={() => returnOfficialSourceToCurrent(source.id as OfficialContextFeedId)}>Current</button>}{source.id !== "nasa-gibs-fire-points" && <Link href={`/observatory?start=${encodeURIComponent(`${officialArchiveDraftDays[source.id as OfficialContextFeedId] || officialArchiveDays[source.id as OfficialContextFeedId] || currentUtcDay()}T00:00`)}&hours=24&layers=${source.id === "usgs-earthquakes" ? "earthquakes" : source.id === "noaa-hms-smoke" ? "smoke" : "shake"},counties`}>Open separate archive map ↗</Link>}</div>
                     {source.id === "noaa-hms-smoke" && <ArchiveDaySlider sourceLabel="NOAA HMS smoke" minDay="2005-08-05" maxDay={currentUtcDay()} day={officialArchiveDraftDays["noaa-hms-smoke"] ?? ""} onSelect={(day) => setOfficialArchiveDraftDays((current) => ({ ...current, "noaa-hms-smoke": day }))} nextAction="Check day on map" />}
-                    <output>{officialArchiveDays[source.id as OfficialContextFeedId] ? state === "loading" ? "Checking day · old map features cleared" : state === "error" ? "Archive unavailable · map source empty" : `${datedSourceDisplayStatus(officialArchivePayloadsRef.current[source.id as OfficialContextFeedId]?.featureCount ?? 0, officialPayloads[source.id as OfficialContextFeedId]?.featureCount ?? 0, officialArchiveDays[source.id as OfficialContextFeedId]!, officialVisibility[source.id], effectiveOfficialVisibility[source.id], styleReady)}${state === "partial" || officialPayloads[source.id as OfficialContextFeedId]?.truncated ? " · partial; missing coverage cannot be ruled out" : ""}` : !officialVisibility[source.id] ? "Current source off · Turn on layer to display. Earliest available day is checked per request." : heldAtFrame ? "Source held by atlas year · Return to Present to display." : "Current source clock · earliest available day is checked per request."}</output>
+                    <output>{officialArchiveDays[source.id as OfficialContextFeedId] ? state === "loading" ? "Checking day · old map features cleared" : state === "error" ? "Archive unavailable · map source empty" : `${datedSourceDisplayStatus(officialArchivePayloadsRef.current[source.id as OfficialContextFeedId]?.featureCount ?? 0, officialPayloads[source.id as OfficialContextFeedId]?.featureCount ?? 0, officialArchiveDays[source.id as OfficialContextFeedId]!, officialVisibility[source.id], effectiveOfficialVisibility[source.id], styleReady)}${state === "partial" || officialPayloads[source.id as OfficialContextFeedId]?.truncated ? " · partial; missing coverage cannot be ruled out" : ""}` : !officialVisibility[source.id] ? "Current source off · Turn on layer to display." : heldAtFrame ? "Source held by atlas year · Return to Present to display." : source.id === "nasa-gibs-fire-points" ? `Current UTC day${officialPayloads["nasa-gibs-fire-points"] ? ` · ${officialPayloads["nasa-gibs-fire-points"]!.featureCount} detections loaded` : " · check source"}; missing detections are not an all-clear.` : "Current source clock · earliest available day is checked per request."}</output>
                     {source.id === "usgs-earthquakes" && officialArchiveDays["usgs-earthquakes"] && <><input type="range" min="0" max={Math.max(0, earthquakeArchiveFrames.length - 1)} value={Math.max(0, earthquakeArchiveFrameIndex)} disabled={earthquakeArchiveFrames.length < 2 || state === "loading" || !officialVisibility[source.id] || heldAtFrame} onChange={(event) => seekEarthquakeArchiveFrame(Number(event.target.value))} aria-label="Earthquakes through exact event time on selected UTC day" aria-valuetext={earthquakeArchiveFrames[earthquakeArchiveFrameIndex] ?? "No event frame"} /><small>{earthquakeArchiveFrames.length ? `Events through ${earthquakeArchiveFrames[Math.max(0, earthquakeArchiveFrameIndex)].slice(11, 19)} UTC · ${Math.max(0, earthquakeArchiveFrameIndex + 1)}/${earthquakeArchiveFrames.length} returned event times. Empty intervals remain empty.` : "No returned event times for this checked day; no slider frame invented."}</small></>}
                     {source.id === "noaa-hms-smoke" && officialArchiveDays["noaa-hms-smoke"] && <><input type="range" min="0" max={Math.max(0, smokeArchiveFrames.length - 1)} value={Math.max(0, smokeArchiveFrameIndex)} disabled={smokeArchiveFrames.length < 2 || state === "loading" || !officialVisibility[source.id] || heldAtFrame} onChange={(event) => seekSmokeArchiveFrame(Number(event.target.value))} aria-label="HMS smoke provider validity boundary on selected UTC day" aria-valuetext={smokeArchiveFrames[smokeArchiveFrameIndex] ?? "No interval boundary"} /><small>{smokeArchiveFrames.length ? `Provider interval boundary ${smokeArchiveFrames[Math.max(0, smokeArchiveFrameIndex)]?.slice(11, 19) ?? "00:00:00"} UTC · ${Math.max(0, smokeArchiveFrameIndex + 1)}/${smokeArchiveFrames.length}. Polygons appear only while their declared intervals contain the cursor.` : "No returned smoke intervals for this checked day; no intraday frame invented."}</small></>}
                   </> : <p>{OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id].limitation} No selectable observation sweep is connected for this carrier.</p>}

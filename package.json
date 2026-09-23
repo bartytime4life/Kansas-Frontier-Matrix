@@ -17,8 +17,10 @@
     "lint": "bash scripts/sites-env.sh -- eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern public/maplibre"
   },
   "dependencies": {
+    "@mapbox/vector-tile": "2.0.4",
     "maplibre-gl": "6.9.0",
     "next": "16.3.3",
+    "pbf": "4.0.1",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },

@@ -4,6 +4,8 @@ import type { Feature, FeatureCollection, Geometry, GeoJsonProperties } from "ge
 import { EVENT_BOUNDS, eventDay, advanceEventDay, intervalDays, parseSmokeKml, smokeUrl } from "../../event-atlas";
 import { boundedFetch } from "../event-atlas/upstream";
 import { countyBaseline } from "../../county-baseline";
+import { VectorTile } from "@mapbox/vector-tile";
+import Pbf from "pbf";
 
 export const dynamic = "force-dynamic";
 
@@ -17,8 +19,39 @@ const MAX_NWS_ZONE_REQUESTS = 36;
 const MAX_NWS_FEATURES = 160;
 const MAX_EARTHQUAKE_FEATURES = 250;
 const MAX_RASPBERRY_SHAKE_STATIONS = 250;
+const GIBS_FIRE_LAYER = "VIIRS_NOAA20_Thermal_Anomalies_375m_All";
+const GIBS_FIRE_SOURCE_LAYER = `${GIBS_FIRE_LAYER}_v2_NRT`;
+const GIBS_FIRE_TILE_COLUMNS = [8, 9] as const; // EPSG:4326 500m matrix 5; Kansas lies in row 5.
+const GIBS_FIRE_TILE_ROW = 5;
+const MAX_GIBS_FIRE_TILE_BYTES = 1024 * 1024;
+const MAX_GIBS_FIRE_FEATURES = 5000;
 
-type Feed = "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "raspberry-shake-stations";
+const readBoundedTile = async (response: Response): Promise<Uint8Array> => {
+  if (!response.body) throw new UpstreamError("NASA GIBS tile body was missing.");
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let length = 0;
+  try {
+    while (true) {
+      const chunk = await reader.read();
+      if (chunk.done) break;
+      length += chunk.value.byteLength;
+      if (length > MAX_GIBS_FIRE_TILE_BYTES) throw new UpstreamError("NASA GIBS tile exceeded the response limit.");
+      chunks.push(chunk.value);
+    }
+  } catch (error) {
+    void reader.cancel().catch(() => undefined);
+    throw error;
+  } finally {
+    reader.releaseLock();
+  }
+  const bytes = new Uint8Array(length);
+  let offset = 0;
+  for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
+  return bytes;
+};
+
+type Feed = "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "raspberry-shake-stations";
 type JsonRecord = Record<string, unknown>;
 
 class UpstreamError extends Error {
@@ -441,17 +474,102 @@ const raspberryShakeStations = async (day: string | null = null) => {
   );
 };
 
-const cacheSeconds: Record<Feed, number> = { "census-counties": 86_400, "usgs-streamflow": 120, "usgs-earthquakes": 300, "nws-alerts": 30, "noaa-hms-smoke": 900, "raspberry-shake-stations": 900 };
+/** Two official geographic WMTS tiles cover the Kansas window at matrix 5.
+ * MVT coordinates are geographic, so use NASA's explicit LATITUDE/LONGITUDE
+ * properties rather than a Web Mercator toGeoJSON projection. */
+const nasaGibsFirePoints = async (requestedDay: string | null = null) => {
+  const day = requestedDay ?? new Date().toISOString().slice(0, 10);
+  const retrievedAt = new Date().toISOString();
+  const tiles = await Promise.all(GIBS_FIRE_TILE_COLUMNS.map(async (column) => {
+    const url = `https://gibs.earthdata.nasa.gov/wmts/epsg4326/best/${GIBS_FIRE_LAYER}/default/${day}/500m/5/${GIBS_FIRE_TILE_ROW}/${column}.mvt`;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+    try {
+      const response = await fetch(url, { cache: "no-store", redirect: "manual", signal: controller.signal });
+      if (!response.ok || response.redirected) throw new UpstreamError(`NASA GIBS tile ${column} returned HTTP ${response.status}.`);
+      const declaredSize = Number(response.headers.get("content-length"));
+      if (declaredSize > MAX_GIBS_FIRE_TILE_BYTES) throw new UpstreamError("NASA GIBS tile exceeded the response limit.");
+      const bytes = await readBoundedTile(response);
+      const tile = new VectorTile(new Pbf(bytes));
+      const layer = tile.layers[GIBS_FIRE_SOURCE_LAYER];
+      if (!layer && Object.keys(tile.layers).length > 0) throw new UpstreamError("NASA GIBS returned an unexpected fire tile layer.");
+      return { column, layer };
+    } catch (error) {
+      if (error instanceof UpstreamError) throw error;
+      throw new UpstreamError(`NASA GIBS tile ${column} was unavailable or malformed.`, controller.signal.aborted);
+    } finally {
+      clearTimeout(timeout);
+    }
+  }));
+  const features: Feature<Geometry, GeoJsonProperties>[] = [];
+  const seen = new Set<string>();
+  let skipped = 0;
+  let newestTimestamp: string | null = null;
+  for (const { column, layer } of tiles) {
+    if (!layer) continue;
+    for (let index = 0; index < layer.length; index += 1) {
+      const row = layer.feature(index).properties;
+      const latitude = asNumber(row.LATITUDE);
+      const longitude = asNumber(row.LONGITUDE);
+      if (latitude === null || longitude === null || latitude < EVENT_BOUNDS[1] || latitude > EVENT_BOUNDS[3] || longitude < EVENT_BOUNDS[0] || longitude > EVENT_BOUNDS[2]) continue;
+      const acquiredDate = asString(row.ACQ_DATE);
+      const acquiredTime = asString(row.ACQ_TIME);
+      const acquiredAt = acquiredDate === day && acquiredTime && /^\d{2}:\d{2}$/.test(acquiredTime)
+        ? `${acquiredDate}T${acquiredTime}:00Z` : null;
+      if (!acquiredAt || !Number.isFinite(Date.parse(acquiredAt))) { skipped += 1; continue; }
+      const satellite = asString(row.SATELLITE);
+      if (satellite !== "N20") { skipped += 1; continue; }
+      const uid = asNumber(row.UID);
+      const featureId = `nasa-gibs-${day}-${uid ?? `${column}-${index}`}`;
+      if (seen.has(featureId)) continue;
+      seen.add(featureId);
+      if (features.length >= MAX_GIBS_FIRE_FEATURES) { skipped += 1; continue; }
+      const frpMw = asNumber(row.FRP);
+      const confidence = asString(row.CONFIDENCE)?.toLowerCase() ?? null;
+      const dayNight = row.DAYNIGHT === "D" ? "Day" : row.DAYNIGHT === "N" ? "Night" : null;
+      const typeCode = asString(row.TYPE) ?? (asNumber(row.TYPE) === null ? null : String(row.TYPE));
+      const hotSpotType = typeCode === "0" ? "Presumed vegetation fire" : typeCode === "1" ? "Active volcano" : typeCode === "2" ? "Other static land source" : typeCode === "3" ? "Offshore detection" : null;
+      features.push({
+        type: "Feature", id: featureId,
+        geometry: { type: "Point", coordinates: [longitude, latitude] },
+        properties: {
+          featureId,
+          name: `Thermal detection${frpMw === null ? "" : ` · ${frpMw.toFixed(1)} MW`}`,
+          acquiredAt, sourceDay: day, latitude, longitude,
+          satellite: "NOAA-20", instrument: "VIIRS 375 m", confidence,
+          frpMw, brightnessI4Kelvin: asNumber(row.BRIGHT_TI4), brightnessI5Kelvin: asNumber(row.BRIGHT_TI5),
+          scanKm: asNumber(row.SCAN), trackKm: asNumber(row.TRACK), dayNight,
+          hotSpotType: hotSpotType ?? "Not supplied", typeCode, providerUid: uid,
+          processingVersion: asString(row.VERSION), retrievedAt,
+          evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+        },
+      });
+      if (!newestTimestamp || acquiredAt > newestTimestamp) newestTimestamp = acquiredAt;
+    }
+  }
+  return envelope(
+    "nasa-gibs-fire-points",
+    { type: "FeatureCollection", features },
+    `NASA GIBS WMTS ${GIBS_FIRE_LAYER}, EPSG:4326 500m matrix 5, UTC ${day}`,
+    `NOAA-20 VIIRS thermal detections within the bounded Kansas window for ${day} UTC. ${skipped ? `${skipped} malformed, mismatched, or over-cap records were withheld; this response is partial. ` : ""}Each point is a satellite thermal-anomaly pixel, not a confirmed wildfire, incident, ignition point, perimeter, burn area, or safety guidance. Missing detections do not establish no fire or full coverage.`,
+    retrievedAt,
+    newestTimestamp,
+    skipped > 0,
+    features.length >= MAX_GIBS_FIRE_FEATURES,
+  );
+};
+
+const cacheSeconds: Record<Feed, number> = { "census-counties": 86_400, "usgs-streamflow": 120, "usgs-earthquakes": 300, "nws-alerts": 30, "noaa-hms-smoke": 900, "nasa-gibs-fire-points": 900, "raspberry-shake-stations": 900 };
 
 export async function GET(request: NextRequest) {
   const feed = request.nextUrl.searchParams.get("feed");
   const day = request.nextUrl.searchParams.get("day");
-  if (request.nextUrl.searchParams.has("day") && (!day || !eventDay(day) || day < "1800-01-01" || day > new Date().toISOString().slice(0, 10) || !["usgs-earthquakes", "noaa-hms-smoke", "raspberry-shake-stations"].includes(feed ?? "")) || [...request.nextUrl.searchParams.keys()].some((key) => !["feed", "day"].includes(key) || request.nextUrl.searchParams.getAll(key).length !== 1)) return NextResponse.json({ error: "Choose an exact supported calendar date and source." }, { status: 400 });
-  if (feed !== "census-counties" && feed !== "usgs-streamflow" && feed !== "usgs-earthquakes" && feed !== "nws-alerts" && feed !== "noaa-hms-smoke" && feed !== "raspberry-shake-stations") {
+  if (request.nextUrl.searchParams.has("day") && (!day || !eventDay(day) || day < (feed === "nasa-gibs-fire-points" ? "2018-01-01" : "1800-01-01") || day > new Date().toISOString().slice(0, 10) || !["usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(feed ?? "")) || [...request.nextUrl.searchParams.keys()].some((key) => !["feed", "day"].includes(key) || request.nextUrl.searchParams.getAll(key).length !== 1)) return NextResponse.json({ error: "Choose an exact supported calendar date and source." }, { status: 400 });
+  if (feed !== "census-counties" && feed !== "usgs-streamflow" && feed !== "usgs-earthquakes" && feed !== "nws-alerts" && feed !== "noaa-hms-smoke" && feed !== "nasa-gibs-fire-points" && feed !== "raspberry-shake-stations") {
     return NextResponse.json({ error: "Unknown live-context feed. The adapter accepts only its fixed allowlist." }, { status: 400, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } });
   }
   try {
-    const result = feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes(day) : feed === "nws-alerts" ? await activeNwsAlerts() : feed === "noaa-hms-smoke" ? await currentHmsSmoke(day) : await raspberryShakeStations(day);
+    const result = feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes(day) : feed === "nws-alerts" ? await activeNwsAlerts() : feed === "noaa-hms-smoke" ? await currentHmsSmoke(day) : feed === "nasa-gibs-fire-points" ? await nasaGibsFirePoints(day) : await raspberryShakeStations(day);
     return NextResponse.json(result, { headers: { "Cache-Control": `public, max-age=0, s-maxage=${cacheSeconds[feed]}, stale-while-revalidate=${cacheSeconds[feed]}`, "X-KFM-Context-State": result.state, "X-Content-Type-Options": "nosniff" } });
   } catch (error) {
     const timeout = error instanceof UpstreamError && error.timeout;
