@@ -149,9 +149,14 @@ The [registry](src/governed_api/routes/registry.py) and [dispatcher](src/governe
 | `GET /bootstrap` | `200 OK` | `ABSTAIN / NOT_IMPLEMENTED` | No runtime configuration or feature flags are supplied. |
 | `GET /layers` | `200 OK` | `ABSTAIN / NOT_IMPLEMENTED` | No layer catalog, geometry, tiles, or manifests are supplied. |
 | `GET /evidence` | `200 OK` | `ABSTAIN / NOT_IMPLEMENTED` | No EvidenceBundle or Evidence Drawer lookup occurs. |
+| Registered GET handler returns a valid `DENY` or `ABSTAIN` envelope | `200 OK` | Handler outcome, unchanged | Intentional negative outcomes are not converted into server failures. |
+| Registered GET handler raises `TimeoutError` | `504 Gateway Timeout` | `ERROR / REQUEST_TIMEOUT` | Expected dependency timeout; not reported as a generic defect. |
+| Registered GET handler is cancelled (`asyncio.CancelledError`) | `503 Service Unavailable` | `ABSTAIN / REQUEST_CANCELLED` | Cancellation stays an abstention and is never transported as `500`. |
 | Registered GET handler raises, returns `ERROR`, or returns an invalid/awaitable value | `500 Internal Server Error` | Handler-safe `ERROR`, `ERROR / SAFE_RUNTIME_ERROR`, or `ERROR / INVALID_RESPONSE` | Exception details and invalid payload content are not reflected; accepted `ERROR` bodies are never transported as HTTP success. |
-| Non-GET on any registered path | `405 Method Not Allowed` | `ERROR / SAFE_RUNTIME_ERROR` | `id=stub:error:method-not-allowed`. |
+| Non-GET on any registered path | `405 Method Not Allowed` + `Allow: GET` | `ERROR / SAFE_RUNTIME_ERROR` | `id=stub:error:method-not-allowed`. |
 | Any unregistered path | `404 Not Found` | `ERROR / SAFE_RUNTIME_ERROR` | `id=stub:error:route-not-found`. |
+
+Every response carries `Cache-Control: no-store` and `X-Content-Type-Options: nosniff`; negative envelopes are request-specific and must not be cached by intermediaries.
 
 Paths are exact: `/layers/`, `/evidence/example`, and `/runtime/bootstrap` are not registered. `HEAD` and `OPTIONS` do not have special support. The checked-in method test explicitly covers `POST`, `PUT`, and `DELETE`; the dispatch condition rejects every non-GET method on a registered path.
 
@@ -164,6 +169,7 @@ Current bounded implementation
 
 WSGI request -> exact route + method dispatch
                 |-- registered GET -> handler guard -> 200 + closed negative envelope
+                |                                |-> 504 ERROR on timeout, 503 ABSTAIN on cancellation
                 |                                `-> 500 + safe ERROR on exception/invalid output
                 |-- registered non-GET ------------> 405 + ERROR
                 `-- unknown path ------------------> 404 + ERROR
