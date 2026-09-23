@@ -361,7 +361,7 @@ This file is evaluated against the accepted Directory Rules v2 `ROOT_FULL` profi
 | `make test` | `python -m pytest tests/schemas tests/contracts -q` | Narrow schema/contract aggregate only |
 | `make schemas` | `python tools/validators/_common/run_all.py` | Configured shared-validator aggregate; not all validators or semantics |
 | `make validate` | `make schemas` then `make test` | Partial aggregate, not full suite |
-| `make hazards-validate` | Bounded synthetic USDM materiality unit tests and fixture validator with no-network environment | Hazards slice only |
+| `make hazards-validate` | Bounded synthetic USDM materiality and drought-family validator unit tests plus both fixture validators with no-network environment | Hazards slice only |
 | `make publish-check` | ReviewRecord and PromotionGate fixtures plus direct release tests with deterministic environment | Candidate prerequisite checks; no promotion or publication |
 | `make evidence-resolver` | Candidate validator plus package tests | Internal candidate profile; not public evidence authority |
 | `make evidence-resolver-deny` | Negative-only candidate fixtures plus package tests | Fail-closed profile; not complete resolver assurance |
@@ -563,7 +563,7 @@ This inventory is selective and evidence-bounded. It confirms representative exe
 | [`Makefile`](../Makefile) `test` | `python -m pytest tests/schemas tests/contracts -q` | Narrow |
 | `schemas` | Shared validator aggregate | Fixture-based, bounded |
 | `validate` | `schemas` then `test` | Partial aggregate |
-| `hazards-validate` | Synthetic USDM materiality tests and validator | Domain slice only |
+| `hazards-validate` | Synthetic USDM materiality and drought-family tests and validators | Domain slice only |
 | `publish-check` | ReviewRecord/PromotionGate fixtures and tests | No promotion or release |
 | `evidence-resolver` / `evidence-resolver-deny` | Candidate positive/negative resolver profiles | Internal candidate, no publication |
 | `boundary-guards` / `boundary-guards-ci` | Policy/API boundary tests; optional JUnit output | Structural/bounded |
