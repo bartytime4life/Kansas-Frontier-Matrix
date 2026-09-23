@@ -816,7 +816,8 @@ export default function Home() {
     const query = sourceQuery.trim().toLowerCase();
     return SOURCE_CANDIDATES.filter((source) => {
       const matchesDomain = sourceDomain === "ALL" || source.domain === sourceDomain;
-      const matchesQuery = !query || `${source.title} ${source.organization} ${source.domain} ${source.sourceRole} ${source.value} ${source.nextGate}`.toLowerCase().includes(query);
+      const pageTitles = source.officialPages?.map((page) => `${page.family} ${page.title}`).join(" ") ?? "";
+      const matchesQuery = !query || `${source.title} ${source.organization} ${source.domain} ${source.sourceRole} ${source.value} ${source.nextGate} ${pageTitles}`.toLowerCase().includes(query);
       return matchesDomain && matchesQuery;
     });
   }, [sourceDomain, sourceQuery]);
@@ -2694,6 +2695,7 @@ export default function Home() {
         dataModes: source.dataModes,
         officialPortal: source.sourceUrl ?? null,
         portalCheckedAt: source.checkedAt ?? null,
+        officialPages: source.officialPages ?? [],
       },
       proposedValue: source.value,
       cannotProve: source.cannotProve,
@@ -3241,6 +3243,11 @@ export default function Home() {
                     <h4>{source.title}</h4><p className="source-organization">{source.organization} · {source.cadence}{source.checkedAt && <> · official portal checked <time dateTime={source.checkedAt}>{source.checkedAt}</time></>}</p>
                     <dl><div><dt>Source role</dt><dd>{source.sourceRole}</dd></div><div><dt>Candidate value</dt><dd>{source.value}</dd></div><div><dt>Cannot prove</dt><dd>{source.cannotProve}</dd></div><div><dt>Next gate</dt><dd>{source.nextGate}</dd></div></dl>
                     <div className="source-modes">{source.dataModes.map((mode) => <span key={mode}>{mode}</span>)}</div>
+                    {source.officialPages && <details className="source-official-pages">
+                      <summary>Browse official pages ({source.officialPages.length})</summary>
+                      <p>These links open the operator’s site. KFM does not retrieve or display its data here.</p>
+                      <ul>{source.officialPages.map((page) => <li key={page.url}><span>{page.family}</span><a href={page.url} target="_blank" rel="noreferrer">{page.title} ↗</a></li>)}</ul>
+                    </details>}
                     <footer>{source.sourceUrl && <a href={source.sourceUrl} target="_blank" rel="noreferrer">Open official source ↗</a>}<button type="button" onClick={() => copySourceIntakeDraft(source)}>Copy bounded intake draft</button>{source.layerId && source.featureId && <button type="button" onClick={() => { setRepositoryOpen(false); selectStoredFeature(source.layerId!, source.featureId!); }}>Inspect local analogue</button>}</footer>
                   </article>)}
                 </div>

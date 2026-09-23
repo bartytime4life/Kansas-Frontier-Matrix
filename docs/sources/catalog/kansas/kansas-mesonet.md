@@ -2,11 +2,11 @@
 doc_id: kfm://doc/docs-sources-catalog-kansas-kansas-mesonet
 title: Kansas Mesonet
 type: product-page
-version: v0.2
+version: v0.3
 status: draft
 owners: <PLACEHOLDER — Docs steward + Source steward for kansas>
 created: 2026-05-21
-updated: 2026-05-21
+updated: 2026-09-23
 policy_label: public
 related:
   - docs/sources/catalog/kansas/README.md
@@ -68,25 +68,43 @@ notes:
 
 <!-- Badge row — Shields.io placeholders; replace targets once owners/CI/policies land -->
 ![status](https://img.shields.io/badge/status-draft-orange)
-![doc-version](https://img.shields.io/badge/doc--version-v0.2-blue)
+![doc-version](https://img.shields.io/badge/doc--version-v0.3-blue)
 ![family](https://img.shields.io/badge/family-kansas%20%C2%A77.3%20canonical-success)
 ![source-role](https://img.shields.io/badge/source__role-observed%20(in--situ)-success)
 ![cadence](https://img.shields.io/badge/cadence-5%E2%80%93min%20%2F%20hourly%20%2F%20daily-blue)
 ![station-health](https://img.shields.io/badge/station__health-MUST%20precede%20analytics-orange)
 ![operator-consent](https://img.shields.io/badge/operator%20consent-REQUIRED-orange)
-![soil-depths](https://img.shields.io/badge/soil%20depths-5%2F10%2F20%2F50%20cm-informational)
+![soil-depths](https://img.shields.io/badge/soil%20depths-station%20specific-orange)
 ![activation](https://img.shields.io/badge/activation-NOT%20ACTIVATED-red)
-![last-updated](https://img.shields.io/badge/last--updated-2026--05--21-blue)
+![last-updated](https://img.shields.io/badge/last--updated-2026--09--23-blue)
 
 | Status | Owners | Last reviewed |
 |---|---|---|
-| Draft — PROPOSED scaffold, no admission decision; operator consent NEEDS VERIFICATION | `<Docs steward + Source steward for kansas — TODO assign>` | 2026-05-21 |
+| Draft — PROPOSED scaffold, no admission decision; operator consent NEEDS VERIFICATION | `<Docs steward + Source steward for kansas — TODO assign>` | 2026-09-23 |
 
 > [!IMPORTANT]
 > **Observed, not modelled.** Kansas Mesonet is `source_role = observed` (Atlas §24.1.3): real-time, in-situ sensor data at known point-station locations. **Native temporal resolution preserved** per `KFM-P2-IDEA-0023` (5-minute / hourly / daily — CONFIRMED). Per `KFM-P21-PROG-0006`, Mesonet feeds **MUST produce `station_health` metadata before downstream analytics use them**. Treating Mesonet point observations as a gridded surface — or silently merging with SMAP L4 / SoilGrids modelled grids — is a source-role collapse and resolution-mismatch violation.
 
 > [!CAUTION]
 > **Operator consent floor.** Per the v0.1 scaffold subtitle, admission requires **written consent from the network operator** (Kansas Mesonet, Kansas State University — operator identity to be confirmed in the `SourceDescriptor`). Until the consent record is captured in the descriptor's `rights` block, KFM treats this as a runtime gate — unknown rights default to DENY (`KFM-P6-PROG-0001` posture).
+
+## Official page-family map — 2026-09-23 review
+
+The [KFM source observatory page list](../../../../apps/kansas-frontier-matrix-explorer/app/source-intelligence.ts) is a set of outbound navigation links. It does not copy Mesonet measurements, run a connector, admit a source, or claim a complete inventory of every dynamic page and report. These families need separate product and upstream-source review before any KFM data use:
+
+| Family | Official pages reviewed | KFM interpretation |
+|---|---|---|
+| Map and station | [Current map](https://mesonet.k-state.edu/), [station metadata](https://mesonet.k-state.edu/metadata/) | Point observations and station/instrument context; map pixels do not establish a statewide field. |
+| Weather | [Historical weather](https://mesonet.k-state.edu/weather/historical/), [wind gust and high/low](https://mesonet.k-state.edu/weather/maxmin/), [heat index](https://mesonet.k-state.edu/weather/heat/), [wind chill](https://mesonet.k-state.edu/weather/windchill/) | Separate measured and calculated variables, observation times, quality states, and advisory language. |
+| Agriculture | [Soil moisture](https://mesonet.k-state.edu/agriculture/soilmoist), [soil temperature](https://mesonet.k-state.edu/agriculture/soiltemp/), [inversion](https://mesonet.k-state.edu/agriculture/inversion/), [degree days](https://mesonet.k-state.edu/agriculture/degreedays/), [evapotranspiration](https://mesonet.k-state.edu/agriculture/et/) | Soil readings are station and sensor specific; inversion, degree days, and evapotranspiration are derived products. |
+| Climate | [Climate portal](https://mesonet.k-state.edu/climate/), [basics](https://mesonet.k-state.edu/climate/basics/), [extremes](https://mesonet.k-state.edu/climate/extremes/), [precipitation probability](https://mesonet.k-state.edu/climate/precip/probability/) | Long-period climate context needs its own baseline, method, vintage, and source identity; it is not current weather. |
+| Derived hazard context | [Precipitation recurrence](https://mesonet.k-state.edu/precip/recur/), [fire conditions](https://mesonet.k-state.edu/fire/rh/) | These are contextual products, not KFM flood or fire warnings. Any official alert issuer remains separate. |
+| Access and methods | [REST service documentation](https://mesonet.k-state.edu/rest/), [network quality assessment](https://mesonet.k-state.edu/about/network/), [weather parameters](https://mesonet.k-state.edu/about/parameters/), [daily precipitation methods](https://mesonet.k-state.edu/about/dailytotals/), [normals and records](https://mesonet.k-state.edu/about/normals/) | The REST page describes CSV observations and limits, but public endpoints do not grant automated-ingest permission. Daily precipitation maps can incorporate National Weather Service estimates, requiring distinct attribution and role. |
+| Rights | [Data usage policy](https://mesonet.k-state.edu/about/usage/) | Public use and download require citation; automated page scraping or data ingestion requires written Kansas Mesonet consent. Data is preliminary and may change after quality review. |
+
+**Current correction point.** This document's older 5/10/20/50 cm soil-depth statements are planning lineage, not a verified universal network specification. The current [station metadata page](https://mesonet.k-state.edu/metadata/) shows 2/4/8/16 inch instrument rows, while the [network architecture page](https://mesonet.k-state.edu/about/network/) says soil-moisture probes are installed at selected stations. Exact depths, sensors, and availability must be verified for each admitted station and vintage before a schema or layer uses them.
+
+**Activation hold.** The [current usage policy](https://mesonet.k-state.edu/about/usage/) explicitly prohibits automated scraping and ingest without written consent. A future connector also needs a reconciled canonical path and SourceDescriptor identity, per the existing [Mesonet connector contract](../../../../connectors/kansas/mesonet/README.md). No endpoint in the page list is an active KFM feed.
 
 ---
 
@@ -115,23 +133,23 @@ notes:
 
 ## 1. Overview
 
-The Kansas Mesonet is a **point-station sensor network** operated by Kansas State University that provides real-time **in-situ atmospheric and soil observations for Kansas** (CONFIRMED per `KFM-P2-IDEA-0023`). Within the KFM soil stack (`C10-01`), Mesonet is the **station-level ground-truth** layer at 5/10/20/50-centimeter depths, complementary to NASA SMAP L4 (1 km satellite-derived), ISRIC SoilGrids (250 m global ML-modelled), and NRCS SSURGO/gNATSGO (10 m / 30 m static survey).
+The Kansas Mesonet is a **point-station sensor network** operated by Kansas State University that provides real-time **in-situ atmospheric and soil observations for Kansas** (CONFIRMED per `KFM-P2-IDEA-0023`). Within the KFM soil stack (`C10-01`), Mesonet is a candidate station-level comparison source, complementary to NASA SMAP L4, ISRIC SoilGrids, and NRCS SSURGO/gNATSGO. Sensor depth and availability require station-specific verification against current operator metadata.
 
 > [!NOTE]
 > **What this page is:** the product-page surface for the Kansas Mesonet station network — its admission posture (observed in-situ), native-temporal-resolution rule, `station_health` precondition, point-station catalog encoding, and consent-from-operator rights floor. It points at the authoritative `SourceDescriptor` rather than restating it.
 > **What it is not:** the kansas family landing page (see [`./README.md`](./README.md)), a connector spec, or a release manifest.
 
-**CONFIRMED facts** (Pass-10 `C10-01`, idea cards `KFM-P2-IDEA-0023`, `KFM-P23-PROG-0039`, `KFM-P21-PROG-0006`):
+**Planning lineage and current source checks** (Pass-10 `C10-01`, idea cards `KFM-P2-IDEA-0023`, `KFM-P23-PROG-0039`, `KFM-P21-PROG-0006`, and current official pages). Planning claims still require product-specific verification:
 
 | Attribute | Value | Citation |
 |---|---|---|
 | Coverage | Kansas (in-state) | `KFM-P2-IDEA-0023` |
 | Production method | **In-situ sensor observations** (point stations) | `KFM-P2-IDEA-0023` |
-| Soil-moisture sensor depths | **5 / 10 / 20 / 50 cm** | `C10-01` Soil Stack |
+| Soil-moisture sensor depths | Station-specific; older `C10-01` planning values are not verified network-wide | [Station metadata](https://mesonet.k-state.edu/metadata/); [network architecture](https://mesonet.k-state.edu/about/network/) |
 | Native temporal cadences | **5-minute / hourly / daily** (preserved) | `KFM-P23-PROG-0039`; `KFM-P2-IDEA-0023` |
 | Required pre-analytics metadata | **`station_health`** must be produced before downstream analytics use the feed | `KFM-P21-PROG-0006` |
-| KFM lane role | Station-level ground-truth in the multi-source soil stack; in-situ atmospheric authority for Kansas | `KFM-P2-IDEA-0023` |
-| Waterbody crosswalk membership | Part of NHDPlus + NWIS + KGS + Kansas Mesonet waterbody crosswalk | `KFM-P2-PROG-0017` |
+| KFM lane role | Candidate point-station comparator in the multi-source soil stack and atmospheric observations lane | `KFM-P2-IDEA-0023` (planning) |
+| Waterbody crosswalk membership | Proposed NHDPlus + NWIS + KGS + Kansas Mesonet relationship; no admitted crosswalk verified here | `KFM-P2-PROG-0017` (planning) |
 
 [Back to top](#quick-jump)
 
@@ -144,13 +162,13 @@ flowchart TB
     subgraph SOILSTACK["Soil source stack — C10-01 (CONFIRMED)"]
         SSURGO["NRCS SSURGO / gNATSGO<br/>10 m / 30 m static survey"]
         SG["ISRIC SoilGrids<br/>250 m global · MODELLED"]
-        MESO["Kansas Mesonet<br/>POINT-STATION · in-situ observed<br/>5/10/20/50 cm soil depths<br/>5-min / hourly / daily"]
+        MESO["Kansas Mesonet<br/>POINT-STATION · in-situ observed<br/>station-specific soil depths<br/>5-min / hourly / daily"]
         SMAP["NASA SMAP L4<br/>1 km daily satellite"]
     end
 
     subgraph KMRESERV["Reservoir feeds"]
         ATM["Atmospheric: temperature,<br/>humidity, wind, precip, radiation,<br/>barometric pressure"]
-        SOIL["Soil: moisture + temperature<br/>at 5/10/20/50 cm"]
+        SOIL["Soil: moisture + temperature<br/>depths vary by station and sensor"]
         AG["Ag-weather indicators<br/>(derived from atmospheric)"]
     end
 
@@ -176,7 +194,7 @@ flowchart TB
 | Source family | `kansas/` — CONFIRMED §7.3 canonical at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7` | CONFIRMED family lane |
 | Operator | Kansas Mesonet, Kansas State University (operator identity in descriptor: NEEDS VERIFICATION — likely K-State Climate Office / Department of Agronomy) | INFERRED organization; PROPOSED descriptor value |
 | Coverage | Kansas | CONFIRMED — `KFM-P2-IDEA-0023` |
-| Soil depths | 5 / 10 / 20 / 50 cm | CONFIRMED — `C10-01` |
+| Soil depths | Station-specific; verify before use | [Station metadata](https://mesonet.k-state.edu/metadata/); [network architecture](https://mesonet.k-state.edu/about/network/) |
 | Cadences | 5-minute / hourly / daily (native, preserved) | CONFIRMED — `KFM-P23-PROG-0039`, `KFM-P2-IDEA-0023` |
 | KFM `source_role` | `observed` | PROPOSED per Atlas §24.1.3 source-role enum (in-situ sensor = observed) |
 | Anchor domains | Weather-atmospheric · Soil (`station_soil_moisture` term) · Agriculture · Hydrology | CONFIRMED per Domains Atlas §soil + `C10-01` + `KFM-P2-PROG-0017` |
@@ -320,11 +338,11 @@ PROPOSED — confirm CRS and per-station geometry against the Mesonet API and pe
 | Geometry per Item | `Point` (station coordinates) | Standard for point-station time-series |
 | Stations | Variable count across Kansas (NEEDS VERIFICATION — Mesonet adds and retires stations over time) | `KFM-P23-PROG-0039` ("station lists") |
 | Variable support per station | NEEDS VERIFICATION — not every station supports every variable; descriptor MUST record `variables[]` per station | `KFM-P23-PROG-0039` ("variable support") |
-| Soil-moisture sensor depths | **5 / 10 / 20 / 50 cm** (CONFIRMED) | `C10-01` Soil Stack |
+| Soil-moisture sensor depths | Station-specific; `C10-01` values are planning lineage | [Station metadata](https://mesonet.k-state.edu/metadata/); [network architecture](https://mesonet.k-state.edu/about/network/) |
 | STAC `proj` fields | `proj:code`, `proj:bbox`, `proj:geometry`, `proj:shape`, `proj:transform` validated by front-matter schema | `KFM-P27-PROG-0011` (PROPOSED) |
 
 > [!CAUTION]
-> **Station location vs private-land joins.** Most Mesonet stations are sited on cooperator land (some on private agricultural land). The station-coordinate fields themselves are **public, sensor-network metadata** (CC-by-default-attribution posture per most state mesonets); however, any KFM derivative that **joins** Mesonet readings with parcel-level private-land ownership data crosses the trust membrane and inherits the most-restrictive joined posture per Atlas §16 private-land assertions. The Mesonet feed alone is non-sensitive at family level; **joined products are not**.
+> **Station location vs private-land joins.** The [operator's overview](https://mesonet.k-state.edu/about/) says most stations are on private land with cooperating owners' permission. Station coordinates appear on the public [metadata page](https://mesonet.k-state.edu/metadata/), but public visibility is not a Creative Commons license or KFM reuse decision. Review rights, location precision, and sensitivity per station. Any derivative that joins readings with parcel-level private-land ownership data crosses the trust membrane and inherits the most-restrictive joined posture per Atlas §16 private-land assertions.
 
 [Back to top](#quick-jump)
 
@@ -338,10 +356,10 @@ NEEDS VERIFICATION per release — see [`policy/sensitivity/`](../../../../polic
 |---|---|
 | **License / consent floor** | **Admission requires written consent from the network operator** (preserved verbatim from v0.1 scaffold subtitle); unknown → DENY (`KFM-P6-PROG-0001` posture) |
 | Attribution | Required — KFM citation template must preserve Kansas Mesonet + K-State + (where applicable) the cooperator-station identifier |
-| Sensitivity rank (`C6-01`) | Default **0–1** (atmospheric / soil sensor data are non-sensitive at family level) |
-| Geoprivacy | Not applicable — point-station network with publicly known station locations |
+| Sensitivity rank (`C6-01`) | PROPOSED low at family level; exact station, location precision, and joined products require review |
+| Geoprivacy | Public station metadata exists, but KFM location precision and any private-land joins require separate sensitivity review |
 | CARE / `kfm:care` extension | Not expected at family level |
-| Cross-join sensitivity | Joining Mesonet with **private-land parcels** inherits the most-restrictive joined posture; Mesonet alone does not introduce sensitivity |
+| Cross-join sensitivity | Joining Mesonet with **private-land parcels** inherits the most-restrictive joined posture; standalone station sensitivity still requires review |
 | Operator-consent-record artifact | MUST be present in the descriptor's `rights` block before activation; flagged as OPEN-MESO-02 in §16 |
 
 > [!WARNING]

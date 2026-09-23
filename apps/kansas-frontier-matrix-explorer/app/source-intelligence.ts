@@ -21,9 +21,37 @@ export type SourceCandidate = Readonly<{
   nextGate: string;
   sourceUrl?: string;
   checkedAt?: string;
+  officialPages?: readonly Readonly<{ family: string; title: string; url: string }>[];
   layerId?: string;
   featureId?: string;
 }>;
+
+// Human navigation only. These links do not fetch, cache, admit, or publish Mesonet data.
+export const MESONET_OFFICIAL_PAGES = Object.freeze([
+  { family: "Maps and stations", title: "Current station map", url: "https://mesonet.k-state.edu/" },
+  { family: "Maps and stations", title: "Station metadata and instruments", url: "https://mesonet.k-state.edu/metadata/" },
+  { family: "Weather", title: "Historical weather", url: "https://mesonet.k-state.edu/weather/historical/" },
+  { family: "Weather", title: "Wind gust and high/low", url: "https://mesonet.k-state.edu/weather/maxmin/" },
+  { family: "Weather", title: "Heat index", url: "https://mesonet.k-state.edu/weather/heat/" },
+  { family: "Weather", title: "Wind chill", url: "https://mesonet.k-state.edu/weather/windchill/" },
+  { family: "Agriculture", title: "Soil moisture", url: "https://mesonet.k-state.edu/agriculture/soilmoist" },
+  { family: "Agriculture", title: "Soil temperature", url: "https://mesonet.k-state.edu/agriculture/soiltemp/" },
+  { family: "Agriculture", title: "Temperature inversion", url: "https://mesonet.k-state.edu/agriculture/inversion/" },
+  { family: "Agriculture", title: "Degree days", url: "https://mesonet.k-state.edu/agriculture/degreedays/" },
+  { family: "Agriculture", title: "Evapotranspiration", url: "https://mesonet.k-state.edu/agriculture/et/" },
+  { family: "Climate", title: "Kansas climate", url: "https://mesonet.k-state.edu/climate/" },
+  { family: "Climate", title: "Climate basics", url: "https://mesonet.k-state.edu/climate/basics/" },
+  { family: "Climate", title: "Kansas extremes", url: "https://mesonet.k-state.edu/climate/extremes/" },
+  { family: "Climate", title: "Precipitation probability", url: "https://mesonet.k-state.edu/climate/precip/probability/" },
+  { family: "Derived context", title: "Precipitation recurrence", url: "https://mesonet.k-state.edu/precip/recur/" },
+  { family: "Derived context", title: "Fire conditions", url: "https://mesonet.k-state.edu/fire/rh/" },
+  { family: "Methods and access", title: "REST service documentation", url: "https://mesonet.k-state.edu/rest/" },
+  { family: "Methods and access", title: "Network and quality assessment", url: "https://mesonet.k-state.edu/about/network/" },
+  { family: "Methods and access", title: "Weather parameters", url: "https://mesonet.k-state.edu/about/parameters/" },
+  { family: "Methods and access", title: "Daily precipitation methods", url: "https://mesonet.k-state.edu/about/dailytotals/" },
+  { family: "Methods and access", title: "Normals and records", url: "https://mesonet.k-state.edu/about/normals/" },
+  { family: "Methods and access", title: "Data usage policy", url: "https://mesonet.k-state.edu/about/usage/" },
+] as const);
 
 export type SourceGap = Readonly<{
   id: string;
@@ -190,7 +218,7 @@ export const SOURCE_CANDIDATES: readonly SourceCandidate[] = Object.freeze([
   Object.freeze({ id: "SRC-CAND-USGS-TOPO", title: "Historical Topographic Map Collection", organization: "U.S. Geological Survey", domain: "Historical geography", cadence: "Static archive", sourceRole: "Historical cartographic evidence", dataModes: ["GeoTIFF", "Map services"], value: "Versioned historical basemap evidence for change and place-context comparison.", cannotProve: "A historical map symbol is not present condition, surveyed boundary truth, or an unqualified historical claim.", nextGate: "Verify quadrangle identity, edition/date, georeferencing uncertainty, scale, attribution, and comparison accessibility." }),
   Object.freeze({ id: "SRC-CAND-KS-GIS", title: "State of Kansas government GIS family", organization: "Kansas agencies / KDOT", domain: "Roads & infrastructure", cadence: "Dataset-specific", sourceRole: "Governing + operational context", dataModes: ["Vector", "Services"], value: "State-maintained transportation and public-administration context.", cannotProve: "A service layer cannot establish ownership, legal status, operational condition, routing safety, or unrestricted infrastructure detail.", nextGate: "Inventory each service, resolve agency authority, terms, versioning, sensitivity, field meaning, and offline failure behavior.", layerId: "transport-context", featureId: "transport-i70-context" }),
   Object.freeze({ id: "SRC-CAND-KS-DASC", title: "Kansas Geoportal (DASC) live ArcGIS catalog", organization: "Kansas Data Access and Support Center / University of Kansas", domain: "Cross-domain Kansas sources", cadence: "Dataset-specific; live catalog", sourceRole: "Discovery carrier; authority remains with each publisher and item", dataModes: ["ArcGIS Hub", "Feature Service", "Map Service", "Downloads"], value: "A verified live statewide discovery surface for Kansas administrative and PLSS boundaries, hydrography, imagery, elevation, geology, habitat, and other public GIS items. ArcGIS REST compatibility is confirmed; end-to-end ingestion reuse remains unproven.", cannotProve: "Portal presence, a public query response, or a layer title does not prove statewide completeness, legal parcel or title truth, currentness, rights clearance, safe precision, publisher authority, KFM admission, or release. Parcel-owner and infrastructure-sensitive fields remain deny-by-default.", nextGate: "Item-specific descriptor fixtures and metadata profiles prepared for HUC12, historical streams, and PLSS; two ID-only pages probed per candidate. The sampled parcel item is REJECTED_SCOPE because its extent is outside Kansas. Canonical placement, rights/sensitivity decisions, complete capture, consumer tests and independent release review remain HOLD.", sourceUrl: "https://hub.kansasgis.org/", checkedAt: "2026-09-20" }),
-  Object.freeze({ id: "SRC-CAND-MESONET", title: "Kansas Mesonet observations", organization: "Kansas State University", domain: "Atmosphere", cadence: "Near-real-time", sourceRole: "Observation", dataModes: ["API", "Time series"], value: "Kansas-specific station context for time-aware environmental observation patterns.", cannotProve: "A station value is not an official alert, statewide condition, forecast, or life-safety instruction.", nextGate: "Verify access terms, quality flags, station identity, latency, outage behavior, redistribution rights, and stale thresholds." }),
+  Object.freeze({ id: "SRC-CAND-MESONET", title: "Kansas Mesonet pages and products", organization: "Kansas State University", domain: "Atmosphere", cadence: "Product-specific; observations can be preliminary", sourceRole: "Station observation, derived context, and documentation are distinct", dataModes: ["Official pages", "REST documentation"], value: "Official links cover station maps, weather history, agriculture, climate, derived conditions, methods, and source policy. KFM displays links only.", cannotProve: "A page or station value is not an admitted KFM observation, statewide condition, official alert, forecast, or life-safety instruction. Derived products and NOAA material need separate source identities.", nextGate: "Obtain and record written Kansas Mesonet consent before automated scraping or ingestion; then review each product's role, station identity, quality flags, time, rights, attribution, sensitivity, and release path.", sourceUrl: "https://mesonet.k-state.edu/", checkedAt: "2026-09-23", officialPages: MESONET_OFFICIAL_PAGES }),
   Object.freeze({ id: "SRC-CAND-KDHE-WQ", title: "Kansas water-quality information family", organization: "Kansas Department of Health and Environment", domain: "Hydrology", cadence: "Program-specific", sourceRole: "Regulatory + observational context", dataModes: ["Reports", "Tables", "Services"], value: "State regulatory and monitoring context for water-quality evidence lanes.", cannotProve: "A program page or monitoring result cannot establish current safety for an unscoped location or use.", nextGate: "Separate regulatory designations, monitoring results, advisory products, dates, parameters, methods, and geographic scope." }),
 ]);
 
