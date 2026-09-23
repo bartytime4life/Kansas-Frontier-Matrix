@@ -35,6 +35,7 @@ const CONNECTION_CODE_PATHS: Record<OfficialContextId, readonly string[]> = {
   "noaa-hms-smoke": ["app/live-context.ts", "app/api/live-context/route.ts", "app/event-atlas.ts", "app/page.tsx"],
   "nasa-firms-active-fire": ["app/live-context.ts", "app/map-runtime.ts", "app/page.tsx"],
   "nasa-gibs-fire-points": ["app/live-context.ts", "app/api/live-context/route.ts", "app/evidence-drawer-data.ts", "app/page.tsx"],
+  "nifc-fire-reports": ["app/live-context.ts", "app/api/live-context/route.ts", "app/fire-report-analysis.ts", "app/evidence-drawer-data.ts", "app/page.tsx"],
   "raspberry-shake-stations": ["app/live-context.ts", "app/api/live-context/route.ts", "app/page.tsx"],
   "usgs-3dep-hillshade": ["app/live-context.ts", "app/terrain-sources.ts", "app/map-runtime.ts", "app/page.tsx"],
   "usgs-3dep-slope": ["app/live-context.ts", "app/terrain-sources.ts", "app/map-runtime.ts", "app/page.tsx"],
@@ -49,6 +50,7 @@ const CONNECTION_FEEDS: Partial<Record<OfficialContextId, OfficialContextFeedId>
   "usgs-earthquakes": "usgs-earthquakes",
   "noaa-hms-smoke": "noaa-hms-smoke",
   "nasa-gibs-fire-points": "nasa-gibs-fire-points",
+  "nifc-fire-reports": "nifc-fire-reports",
   "raspberry-shake-stations": "raspberry-shake-stations",
   "nws-alerts": "nws-alerts",
 };
@@ -65,6 +67,7 @@ const CONNECTION_ACTIONS: Record<OfficialContextId, readonly SiteActionId[]> = {
   "noaa-hms-smoke": ["toggle-context-connection", "refresh-visible-context", "step-exact-observation", "set-context-opacity", "open-provider-source"],
   "nasa-firms-active-fire": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
   "nasa-gibs-fire-points": ["toggle-context-connection", "refresh-visible-context", "set-context-opacity", "open-provider-source"],
+  "nifc-fire-reports": ["toggle-context-connection", "refresh-visible-context", "set-context-opacity", "open-provider-source"],
   "raspberry-shake-stations": ["toggle-context-connection", "refresh-visible-context", "set-context-opacity", "open-provider-source"],
   "usgs-3dep-hillshade": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
   "usgs-3dep-slope": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],

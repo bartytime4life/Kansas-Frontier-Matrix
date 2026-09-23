@@ -498,7 +498,7 @@ into inferred facts.
   preserves the existing copy-prompt and hosted `/api/qwen` paths. The map
   remains usable if the bridge or model is unavailable.
 - Qwen receives the current map, time, selected feature, nearby context,
-  registered layers, all 16 official context source states, and redacted
+  registered layers, all 17 official context source states, and redacted
   renderer/source/radar/streamflow diagnostics. This is a bounded, interpretive
   snapshot of Site state, not a telemetry ingest, source admission, model
   registry, evidence bundle, or publication path. A camera derived from device

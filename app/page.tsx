@@ -144,6 +144,7 @@ import {
 } from "./places-trail";
 import ReportStoryWorkspaces from "./report-story-workspaces";
 import { SynchronizedComparison } from "./snapshot-map";
+import { nearbyFireContext } from "./fire-report-analysis";
 import { readDraftSnapshot } from "./workspace-storage";
 import {
   policyDecisionFromEvidenceState,
@@ -486,8 +487,8 @@ const PRIORITY_CONTEXT_GROUPS: readonly PriorityContextGroup[] = Object.freeze([
   Object.freeze({
     id: "fire-smoke",
     title: "Fire + smoke context",
-    description: "Selectable NOAA-20 thermal detections, separate NASA image tiles, and NOAA smoke footprints. Alerts and radar retain their distinct roles.",
-    sourceIds: Object.freeze(["nasa-gibs-fire-points", "nasa-firms-active-fire", "noaa-hms-smoke", "nws-alerts", "nws-radar"] as const),
+    description: "NIFC incident reports, selectable NOAA-20 thermal detections, separate NASA image tiles, and NOAA smoke footprints. Incident reports and satellite signals retain distinct roles.",
+    sourceIds: Object.freeze(["nifc-fire-reports", "nasa-gibs-fire-points", "nasa-firms-active-fire", "noaa-hms-smoke", "nws-alerts", "nws-radar"] as const),
   }),
 ]);
 
@@ -569,6 +570,7 @@ const QUICK_LIVE_CONTEXT_IDS = [
   "usgs-streamflow",
   "usgs-earthquakes",
   "nasa-gibs-fire-points",
+  "nifc-fire-reports",
   "noaa-hms-smoke",
   "nws-radar",
 ] as const satisfies readonly OfficialContextId[];
@@ -767,6 +769,12 @@ const numberContextProperty = (properties: Record<string, unknown>, key: string)
 };
 
 const officialContextSummary = (source: OfficialContextId, title: string, properties: Record<string, unknown>) => {
+  if (source === "nifc-fire-reports") {
+    const type = stringContextProperty(properties, "incidentType") ?? "incident";
+    const discoveryAt = stringContextProperty(properties, "discoveryAt");
+    const reportState = stringContextProperty(properties, "reportState") ?? "Current activity unverified";
+    return `${title} is a ${type.toLowerCase()} in the NIFC WFIGS/IRWIN working incident feed${discoveryAt ? `, discovered ${new Date(discoveryAt).toLocaleString()}` : ""}. ${reportState}. This confirms a provider incident record, not current activity, perimeter, exact point location, or independent satellite corroboration.`;
+  }
   if (source === "census-counties") {
     const population = numberContextProperty(properties, "populationEstimate");
     const estimate = population === null
@@ -846,6 +854,7 @@ const officialContextTime = (source: OfficialContextId, properties: Record<strin
     return start && end ? `${start} through ${end}` : fallback;
   }
   if (source === "nasa-gibs-fire-points") return stringContextProperty(properties, "acquiredAt") ?? fallback;
+  if (source === "nifc-fire-reports") return stringContextProperty(properties, "discoveryAt") ?? fallback;
   if (source === "raspberry-shake-stations") return fallback;
   return fallback;
 };
@@ -2090,6 +2099,10 @@ export default function Home() {
     : null, [selectedOfficialContextId, selected?.externalStationId, streamflowBundle, streamflowFrame, streamflowFrameTime, streamflowDisplayState]);
   const selectedOfficialFeature = selected?.externalFeatureId && selectedOfficialPayload?.data.features.find((feature) =>
     feature.properties?.featureId === selected.externalFeatureId);
+  const selectedFireComparisonId = selectedOfficialContextId === "nifc-fire-reports" ? "nasa-gibs-fire-points" : selectedOfficialContextId === "nasa-gibs-fire-points" ? "nifc-fire-reports" : null;
+  const selectedFireComparisonPayload = selectedFireComparisonId ? officialPayloads[selectedFireComparisonId] : undefined;
+  const selectedFireNeighbors = selectedFireComparisonId && selectedOfficialFeature && selectedFireComparisonPayload
+    ? nearbyFireContext(selectedOfficialFeature, selectedFireComparisonPayload.data.features, selectedFireComparisonId === "nifc-fire-reports" ? "discoveryAt" : "acquiredAt") : [];
   const selectedArtifactAttributes = selected?.kind === "registry"
     ? drawerArtifactAttributes("registry", selected.properties)
     : selectedOfficialContextId && selectedOfficialFeature
@@ -4236,7 +4249,7 @@ export default function Home() {
           const availableLayers = interactiveLayerIds.filter((id) => map.getLayer(id));
           const availableOfficialLayers = OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS.filter((id) => map.getLayer(id));
           const officialFeatures = availableOfficialLayers.length ? map.queryRenderedFeatures(event.point, { layers: availableOfficialLayers }) : [];
-          const fireCandidate = officialFeatures.find((feature) => feature.source === "external-nasa-gibs-fire-points");
+          const fireCandidate = officialFeatures.find((feature) => feature.source === "external-nifc-fire-reports") ?? officialFeatures.find((feature) => feature.source === "external-nasa-gibs-fire-points");
           const candidate = fireCandidate ? undefined : (availableLayers.length ? map.queryRenderedFeatures(event.point, { layers: availableLayers }) : [])[0];
           const officialCandidate = candidate ? null : fireCandidate ?? officialFeatures[0];
           const externalCandidate = candidate ? null : officialCandidate ?? map.queryRenderedFeatures(event.point).find((feature) => {
@@ -4324,7 +4337,7 @@ export default function Home() {
           const renderedCandidates = availableLayers.length ? map.queryRenderedFeatures(event.point, { layers: availableLayers }) : [];
           const availableOfficialLayers = OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS.filter((id) => map.getLayer(id));
           const officialFeatures = availableOfficialLayers.length ? map.queryRenderedFeatures(event.point, { layers: availableOfficialLayers }) : [];
-          const fireCandidate = officialFeatures.find((feature) => feature.source === "external-nasa-gibs-fire-points");
+          const fireCandidate = officialFeatures.find((feature) => feature.source === "external-nifc-fire-reports") ?? officialFeatures.find((feature) => feature.source === "external-nasa-gibs-fire-points");
           const candidate = fireCandidate ? undefined : renderedCandidates[0];
           if (!candidate) {
             setMapQueryCandidates([]);
@@ -7258,6 +7271,10 @@ export default function Home() {
                     <div className="source-time-actions"><label>Older UTC day<input type="date" min="1995-01-01" max={currentUtcDay()} value={radarArchiveDraftDay} onChange={(event) => setRadarArchiveDraftDay(event.target.value)} /></label><Link href={`/observatory?start=${encodeURIComponent(`${radarArchiveDraftDay || currentUtcDay()}T00:00`)}&hours=24&layers=radar,counties`}>Check in Observatory ↗</Link></div>
                     <ArchiveDaySlider sourceLabel="NOAA radar" minDay="1995-01-01" maxDay={currentUtcDay()} day={radarArchiveDraftDay} onSelect={setRadarArchiveDraftDay} nextAction="Check in Observatory" />
                     <small>1995 is the archive adapter’s earliest query bound, not proof that every day has radar imagery. The selected older day opens a separate map.</small>
+                  </> : source.id === "nifc-fire-reports" ? <>
+                    <p>Interagency working incident reports discovered in Kansas during the last 30 days. A record confirms provider reporting; status, area, and cause can change. Satellite detections are compared only by proximity.</p>
+                    <output>{!officialVisibility[source.id] ? "Report layer off." : heldAtFrame ? "Held by atlas year · Return to Present." : state === "loading" ? "Checking NIFC reports…" : state === "error" ? "NIFC reports unavailable · no substitute claims." : `${officialPayloads["nifc-fire-reports"]?.featureCount ?? 0} reports in the loaded response${state === "partial" ? " · partial" : ""}. No report is not an all-clear.`}</output>
+                    <div className="source-time-actions"><a href="https://inciweb.wildfire.gov/" target="_blank" rel="noreferrer">Browse InciWeb incident updates ↗</a><a href="https://www.nifc.gov/fire-information" target="_blank" rel="noreferrer">National fire news ↗</a></div>
                   </> : ["usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(source.id) ? <>
                     <p>{source.id === "usgs-earthquakes" ? "Event timestamps; a checked day can be swept event by event." : source.id === "noaa-hms-smoke" ? "Daily publication with source validity intervals; no measured second-by-second smoke frames." : source.id === "nasa-gibs-fire-points" ? "Selectable thermal detections for one exact UTC day; each point carries its own acquisition time. This is separate from the provider-default image layer." : "Station metadata valid for a checked date; no waveform time series on this map."}</p>
                     <div className="source-time-actions"><label>UTC archive day<input type="date" min={source.id === "noaa-hms-smoke" ? "2005-08-05" : source.id === "nasa-gibs-fire-points" ? "2018-01-01" : undefined} max={currentUtcDay()} value={officialArchiveDraftDays[source.id as OfficialContextFeedId] ?? ""} onChange={(event) => setOfficialArchiveDraftDays((current) => ({ ...current, [source.id]: event.target.value }))} /></label><button type="button" disabled={!officialArchiveDraftDays[source.id as OfficialContextFeedId] || state === "loading" || heldAtFrame} onClick={() => void loadOfficialArchiveDay(source.id as OfficialContextFeedId, officialArchiveDraftDays[source.id as OfficialContextFeedId]!)}>Check day on map</button>{officialArchiveDays[source.id as OfficialContextFeedId] && <button type="button" onClick={() => returnOfficialSourceToCurrent(source.id as OfficialContextFeedId)}>Current</button>}{source.id !== "nasa-gibs-fire-points" && <Link href={`/observatory?start=${encodeURIComponent(`${officialArchiveDraftDays[source.id as OfficialContextFeedId] || officialArchiveDays[source.id as OfficialContextFeedId] || currentUtcDay()}T00:00`)}&hours=24&layers=${source.id === "usgs-earthquakes" ? "earthquakes" : source.id === "noaa-hms-smoke" ? "smoke" : "shake"},counties`}>Open separate archive map ↗</Link>}</div>
@@ -8171,6 +8188,17 @@ export default function Home() {
                 <p className="summary">{selectedRiverObservation ? `${selectedRiverObservation.stationName ?? selected.properties.title} is a USGS monitoring location. The observation follows the selected map frame; a missing frame remains a gap.` : selectedOfficialConnection ? `Selected map snapshot: ${selected.properties.summary} Re-select this feature after a feed update to refresh its mapped properties.` : selected.properties.summary}</p>
                 {!selectedRiverObservation && <section className="drawer-data-block" aria-label="Selected artifact data"><header><h3>Selected artifact data</h3><small>{selected.kind === "registry" ? "Site-local record" : selectedAttributesCurrent ? "Current loaded provider response" : "Captured map properties"}</small></header>
                   {selectedArtifactAttributes.length > 0 ? <dl className="drawer-attribute-list">{selectedArtifactAttributes.map((attribute) => <div key={attribute.label}><dt>{attribute.label}</dt><dd>{attribute.value}</dd></div>)}</dl> : <p>No measured feature attributes are available in this map carrier. Source and trust metadata are available below.</p>}
+                </section>}
+                {selectedFireComparisonId && <section className="drawer-data-block" aria-label="Fire news and report analysis"><header><h3>Fire news & report analysis</h3><small>Source report and satellite signal kept separate</small></header>
+                  <p><strong>{selectedOfficialContextId === "nifc-fire-reports" ? "NIFC incident record reported" : "NASA thermal signal observed"}.</strong> {selectedOfficialContextId === "nifc-fire-reports" ? "The incident identity and attributes come from the interagency working record; live activity is not independently established." : "A thermal anomaly is not by itself a wildfire incident report."}</p>
+                  <p>{selectedFireComparisonPayload?.state === "ready" || selectedFireComparisonPayload?.state === "empty" || selectedFireComparisonPayload?.state === "partial"
+                    ? selectedFireNeighbors.length ? `${selectedFireNeighbors.length} nearby ${selectedFireComparisonId === "nifc-fire-reports" ? "NIFC report" : "NASA detection"}${selectedFireNeighbors.length === 1 ? "" : "s"} within 10 km in the loaded ${selectedFireComparisonId === "nifc-fire-reports" ? "30-day report window" : "UTC image day"}. Proximity does not establish that these records describe the same event.` : `No ${selectedFireComparisonId === "nifc-fire-reports" ? "NIFC report" : "NASA detection"} within 10 km in the loaded response. This is not evidence of absence.`
+                    : `Comparison source ${selectedFireComparisonId === "nifc-fire-reports" ? "NIFC reports" : "NASA detections"} is not loaded; no corroboration check is available.`}</p>
+                  {selectedFireNeighbors.length > 0 && <ol className="drawer-sample-list">{selectedFireNeighbors.map((neighbor) => <li key={`${neighbor.name}-${neighbor.distanceKm}`}><strong>{neighbor.name}</strong><small>{neighbor.distanceKm.toFixed(1)} km from reported point · {neighbor.eventTime ? drawerTimestamp(neighbor.eventTime) : "time not supplied"}</small></li>)}</ol>}
+                  {selectedFireComparisonPayload?.state === "partial" && <p>Comparison feed is partial; additional nearby records may be missing.</p>}
+                  <a href="https://data-nifc.opendata.arcgis.com/pages/d6ef1367fadc4405b5f09c98e52ed972" target="_blank" rel="noreferrer">How NIFC distinguishes working and certified fire data ↗</a>
+                  <p>Official incident updates and national fire news can add context, but no article is automatically matched to this record.</p>
+                  <div className="source-time-actions"><a href="https://inciweb.wildfire.gov/" target="_blank" rel="noreferrer">Browse InciWeb ↗</a><a href="https://www.nifc.gov/fire-information" target="_blank" rel="noreferrer">NIFC fire news ↗</a></div>
                 </section>}
                 {selectedRiverObservation && <section className="drawer-data-block" aria-label="USGS gauge height data"><header><h3>Gauge height · USGS 00065</h3><small>Separate seven-day station request</small></header>
                   {selectedStageDetail?.status === "loading" && <p role="status">Loading station metadata and gauge-height observations…</p>}
