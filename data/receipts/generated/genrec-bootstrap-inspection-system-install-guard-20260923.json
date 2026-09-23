@@ -1,0 +1,107 @@
+{
+  "receipt_id": "genrec-bootstrap-inspection-system-install-guard-20260923",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "scripts/dev/README.md",
+    "scripts/dev/bootstrap.md",
+    "scripts/dev/bootstrap.sh",
+    "tests/scripts/test_dev_bootstrap.py"
+  ],
+  "artifact_hashes": {
+    "scripts/dev/README.md": "sha256:3932b7caf519012a27902d8e53e16fceb3273f2aaf53b227a025f93863330028",
+    "scripts/dev/bootstrap.md": "sha256:d820fdac9593f305c0c84fe0a563c4bb7c98f4bb3f2c718004cd8dd0ecc12336",
+    "scripts/dev/bootstrap.sh": "sha256:2ae51ee3260615794b69c1e02b60f06a1807e5a2bb3eecdadb57cf05ad5a6178",
+    "tests/scripts/test_dev_bootstrap.py": "sha256:67e1bbdbe7405ee5194795e000404a6c61091d638908e2ec2f88d47398cc73f9"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "runtime build UNKNOWN"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "Codex local tools",
+      "independent agent security review"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "evidence_refs": [
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/CONTRIBUTING.md",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/docs/doctrine/directory-rules.md",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/scripts/dev/bootstrap.sh",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/tests/scripts/test_dev_bootstrap.py",
+      "repository://79c0120019730db6b426460de28ed7bb29962739/data/receipts/generated/genrec-bootstrap-guide-lowercase-path-20260923.json"
+    ]
+  },
+  "truth_labels": {
+    "scripts/dev/README.md": "PROPOSED",
+    "scripts/dev/bootstrap.md": "PROPOSED",
+    "scripts/dev/bootstrap.sh": "PROPOSED",
+    "tests/scripts/test_dev_bootstrap.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "failing-before-regression",
+      "outcome": "PASS",
+      "reason": "Against original script bytes, the eight new check/install-system conflict cases all failed by reaching source/tool sentinels (exit99); original 3 tests passed. No real installer was invoked."
+    },
+    {
+      "gate": "focused-bootstrap-tests",
+      "outcome": "PASS",
+      "reason": "11 passed: syntax/help/unknown-option plus 8 check/install-system order/offline/json cases. New cases assert exact exit2 stderr, empty stdout and no host-operation marker."
+    },
+    {
+      "gate": "scoped-markdown-qa",
+      "outcome": "PASS",
+      "reason": "Existing owning lane and guide explain early flag rejection, source pin, scoped test evidence, unrun real install behavior and unresolved package-manager launcher acquisition; README historical claims explicitly superseded."
+    },
+    {
+      "gate": "diff-whitespace",
+      "outcome": "PASS",
+      "reason": "git diff --check passed."
+    },
+    {
+      "gate": "real-installation-and-offline-behavior",
+      "outcome": "SKIPPED",
+      "reason": "No apt, package install, hooks, runtime provisioning, full check, or host mutation executed. Package-manager shim acquisition side effects remain unverified and unresolved."
+    },
+    {
+      "gate": "repository-topology",
+      "outcome": "FAIL",
+      "reason": "Four inherited finding classes remain; path correction only removed one uppercase member. No baseline, catalog, doctrine, ADR or historical conformance artifact changed."
+    },
+    {
+      "gate": "exact-head-hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Local branch-only delivery; no push/PR/hosted workflow."
+    },
+    {
+      "gate": "human-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Human review pending. Agent review cannot provide accountable approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "existing-helper-boundary",
+      "validated": true,
+      "evidence_ref": "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/scripts/dev/bootstrap.sh"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-23T05:07:50.997247Z",
+  "emitter": "OpenAI Codex desktop",
+  "notes": "A separate runtime correction follows the byte-preserving guide rename. The original flag path could reach explicit system installation during check mode; this patch rejects conflicting flags immediately after parsing, before OS/tool/root checks. Existing apply behavior remains unchanged. Scripts owns the existing helper, tests owns regression proof, and data/receipts/generated owns process provenance. This receipt supersedes the earlier rename receipt for current README/bootstrap.md bytes. The earlier receipt remains immutable historical provenance for exact commit 79c0120019730db6b426460de28ed7bb29962739 and must be integrity-validated against that ancestor; it is not a claim about later bytes. Reverting this guard commit restores the unsafe conflict; prefer same-path forward fix. No general network-free/write-free inspection guarantee, source admission, CI compatibility, independent approval, issue closure, release or publication authority is claimed."
+}

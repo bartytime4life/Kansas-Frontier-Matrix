@@ -1,12 +1,15 @@
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
+import socket
 import sys
 import unittest
 from copy import deepcopy
 from datetime import datetime, timezone
 from pathlib import Path
+from unittest import mock
 
 from jsonschema import Draft202012Validator, FormatChecker
 
@@ -35,6 +38,34 @@ def load(path: Path) -> dict[str, object]:
     value = json.loads(path.read_text(encoding="utf-8"))
     assert isinstance(value, dict)
     return value
+
+
+def correction_replay_cases() -> dict[str, dict[str, object]]:
+    """Test-local variants; no migration, storage, or lineage resolver is implied."""
+    original = load(LEGACY_ROOT / "valid/current_observation.json")
+    corrected = deepcopy(original)
+    corrected["times"] = {
+        "observed_at": "2026-08-08T00:00:00Z",
+        "valid_from": "2026-08-07T23:00:00Z",
+        "valid_to": "2026-08-08T01:00:00Z",
+        "source_updated_at": "2026-08-08T00:05:00Z",
+        "retrieved_at": "2026-08-08T00:06:00Z",
+        "released_at": "2026-08-08T00:07:00Z",
+        "corrected_at": "2026-08-08T00:08:00Z",
+    }
+    corrected["lineage_refs"] = ["fixture:synthetic", "correction:synthetic:1"]
+    superseded = deepcopy(corrected)
+    superseded["temporal_posture"] = "SUPERSEDED"
+    superseded["supersedes_ref"] = "kfm:temporal-authority:synthetic-predecessor"
+    withdrawn = deepcopy(corrected)
+    withdrawn["temporal_posture"] = "WITHDRAWN"
+    withdrawn["withdrawal_ref"] = "withdrawal:synthetic:1"
+    return {
+        "original": original,
+        "corrected": corrected,
+        "superseded": superseded,
+        "withdrawn": withdrawn,
+    }
 
 
 class EvidenceTemporalPostureAssessmentTests(unittest.TestCase):
@@ -73,6 +104,89 @@ class EvidenceTemporalPostureAssessmentTests(unittest.TestCase):
         self.assertTrue(str(candidate["envelope_id"]).startswith("kfm:temporal-authority:"))
         self.assertEqual([], CANONICAL.validate_doc(candidate, now=NOW))
         self.assertEqual([], LEGACY.validate_doc(candidate, now=NOW))
+
+    def test_correction_replay_and_legacy_fallback_preserve_every_clock(self) -> None:
+        cases = correction_replay_cases()
+        baseline = deepcopy(cases)
+        fixture_path = LEGACY_ROOT / "valid/current_observation.json"
+        persisted_bytes = fixture_path.read_bytes()
+        expected_id = "kfm:temporal-authority:mesonet.demo.1"
+        # Legacy -> successor -> legacy is validator fallback, not a data rollback.
+        with mock.patch.object(socket, "socket", side_effect=AssertionError("network denied")):
+            for engine in (LEGACY, CANONICAL, LEGACY):
+                for name, record in cases.items():
+                    with self.subTest(engine=engine.__name__, case=name):
+                        self.assertEqual([], engine.validate_doc(record, now=NOW))
+                        self.assertEqual(expected_id, record["envelope_id"])
+                        self.assertEqual(baseline[name], record)
+        self.assertEqual(persisted_bytes, fixture_path.read_bytes())
+        self.assertEqual(load(fixture_path), cases["original"])
+
+    def test_replayed_negative_cases_keep_exact_diagnostics(self) -> None:
+        base = correction_replay_cases()["corrected"]
+        mutations = (
+            ("times", "source_updated_at", "2026-08-08T00:09:00Z",
+             "source_updated_at must not exceed retrieved_at"),
+            ("times", "valid_from", "2026-08-08T02:00:00Z",
+             "valid_from must not exceed valid_to"),
+            ("times", "released_at", "2026-08-08T00:05:30Z",
+             "released_at must not precede retrieved_at"),
+            ("times", "corrected_at", "2026-08-08T00:06:30Z",
+             "corrected_at requires and must not precede released_at"),
+            (None, "temporal_posture", "SUPERSEDED", "SUPERSEDED requires supersedes_ref"),
+            (None, "temporal_posture", "WITHDRAWN", "WITHDRAWN requires withdrawal_ref"),
+            (None, "freshness_deadline", "2026-08-16T23:59:59Z",
+             "CURRENT envelope freshness_deadline is elapsed"),
+        )
+        with mock.patch.object(socket, "socket", side_effect=AssertionError("network denied")):
+            for section, field, value, expected in mutations:
+                candidate = deepcopy(base)
+                target = candidate[section] if section else candidate
+                target[field] = value
+                before = deepcopy(candidate)
+                for engine in (LEGACY, CANONICAL, LEGACY):
+                    with self.subTest(engine=engine.__name__, field=field, value=value):
+                        self.assertEqual([expected], engine.validate_doc(candidate, now=NOW))
+                        self.assertEqual(before, candidate)
+
+    def test_replay_uses_the_supplied_validation_instant(self) -> None:
+        candidate = correction_replay_cases()["corrected"]
+        candidate["freshness_deadline"] = "2026-08-17T00:00:00Z"
+        elapsed = datetime(2026, 8, 17, 0, 0, 1, tzinfo=timezone.utc)
+        with mock.patch.object(socket, "socket", side_effect=AssertionError("network denied")):
+            for engine in (LEGACY, CANONICAL, LEGACY):
+                self.assertEqual([], engine.validate_doc(candidate, now=NOW))
+                self.assertEqual(
+                    ["CURRENT envelope freshness_deadline is elapsed"],
+                    engine.validate_doc(candidate, now=elapsed),
+                )
+                self.assertEqual([], engine.validate_doc(candidate, now=NOW))
+
+    def test_replay_preserves_legacy_namespace_and_receipt_lineage(self) -> None:
+        receipt_root = ROOT / "data/receipts/generated"
+        predecessor = receipt_root / "genrec-evidence-temporal-posture-split-phase1-20260817.json"
+        successor = receipt_root / "genrec-evidence-temporal-posture-split-reconciliation-20260827.json"
+        receipt = load(successor)
+        predecessor_digest = "sha256:" + hashlib.sha256(predecessor.read_bytes()).hexdigest()
+        self.assertIn(predecessor_digest, receipt["inputs"]["evidence_hashes"])
+        self.assertIn(
+            "repository://" + predecessor.relative_to(ROOT).as_posix(),
+            receipt["inputs"]["evidence_refs"],
+        )
+        # Only these unchanged replay inputs are bound; historical check results
+        # and changed test/workflow bytes are not claimed as current evidence.
+        for path in (CANONICAL_ROOT / "valid/current_observation.json", CANONICAL.CANONICAL_SCHEMA):
+            self.assertEqual(
+                receipt["artifact_hashes"][path.relative_to(ROOT).as_posix()],
+                "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest(),
+            )
+        candidate = correction_replay_cases()["corrected"]
+        candidate["envelope_id"] = "kfm:evidence-temporal-posture:mesonet.demo.1"
+        with mock.patch.object(socket, "socket", side_effect=AssertionError("network denied")):
+            legacy = LEGACY.validate_doc(candidate, now=NOW)
+            self.assertEqual(legacy, CANONICAL.validate_doc(candidate, now=NOW))
+        self.assertEqual(1, len(legacy))
+        self.assertIn("does not match", legacy[0])
 
     def test_common_and_evidence_shapes_reject_each_other(self) -> None:
         common_schema = load(ROOT / "schemas/contracts/v1/common/temporal_authority_envelope.schema.json")

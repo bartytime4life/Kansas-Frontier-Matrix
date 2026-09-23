@@ -19,7 +19,7 @@ usage() {
 Usage: scripts/dev/bootstrap.sh [options]
 
 Options:
-  --check             Verify prerequisites without writing or installing.
+  --check             Inspect prerequisites; incompatible with --install-system.
   --python-only       Configure only the Python environment.
   --node-only         Configure only the Node/pnpm environment.
   --offline           Forbid network-backed dependency resolution.
@@ -31,7 +31,7 @@ Options:
 Default apply mode creates/updates .venv, installs repository-pinned Python and
 Node dependencies, and installs pre-commit hooks when pre-commit is available.
 This script never invokes sudo. System packages change only when --install-system
-is supplied from an already-root shell.
+is supplied from an already-root shell in apply mode.
 EOF
 }
 
@@ -88,6 +88,8 @@ while (($#)); do
   esac
   shift
 done
+
+[[ "$MODE" != "check" || "$INSTALL_SYSTEM" -eq 0 ]] || die "--check is incompatible with --install-system"
 
 [[ "$PYTHON_ENABLED" -eq 1 || "$NODE_ENABLED" -eq 1 ]] || die "no runtime selected"
 cd "$ROOT"

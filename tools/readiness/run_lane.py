@@ -13,6 +13,7 @@ import sys
 from typing import Any
 
 from jsonschema import Draft202012Validator
+from jsonschema.exceptions import SchemaError
 
 ROOT = Path(__file__).resolve().parents[2]
 REGISTRY = ROOT / "control_plane" / "readiness" / "lanes.json"
@@ -35,13 +36,17 @@ class ReadinessError(ValueError):
 def read_json(path: Path) -> Any:
     try:
         return json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
         raise ReadinessError(f"unreadable registry input: {path}") from exc
 
 
 def load_registry() -> dict[str, Any]:
     registry = read_json(REGISTRY)
     schema = read_json(SCHEMA)
+    try:
+        Draft202012Validator.check_schema(schema)
+    except SchemaError as exc:
+        raise ReadinessError("invalid registry schema") from exc
     errors = sorted(
         Draft202012Validator(schema).iter_errors(registry),
         key=lambda error: tuple(str(part) for part in error.absolute_path),

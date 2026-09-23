@@ -1,0 +1,114 @@
+{
+  "receipt_id": "genrec-issue-progress-finite-errors-temporal-replay-20260923",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/readiness-lanes.md",
+    "fixtures/contracts/v1/evidence/evidence_temporal_posture_assessment/README.md",
+    "tests/ci/test_readiness_lanes.py",
+    "tests/evidence/test_evidence_temporal_posture_assessment.py",
+    "tests/validators/test_validate_release_proof_pack_closure.py",
+    "tools/readiness/run_lane.py",
+    "tools/validators/release/README.md",
+    "tools/validators/release/validate_release_proof_pack_closure.py"
+  ],
+  "artifact_hashes": {
+    "docs/readiness-lanes.md": "sha256:d4ba4fafcbf803969a40eaecea62a723bcff15859adc66cf520205a5505f0e2c",
+    "fixtures/contracts/v1/evidence/evidence_temporal_posture_assessment/README.md": "sha256:bc6a7c43d1968735a62f47fd5ccc0a29e6a16e5fe9b65668d7e48eb6e5aa6c67",
+    "tests/ci/test_readiness_lanes.py": "sha256:e6881735878d46b06bfc06b79b3ed8c0c005e4401492e10d0011d08791354dc5",
+    "tests/evidence/test_evidence_temporal_posture_assessment.py": "sha256:dad67bd8624bc688dfc90dacab021905b3719cd5de9832f9a690580a95db2d68",
+    "tests/validators/test_validate_release_proof_pack_closure.py": "sha256:c838b94e696ff37dd87e347c658b85c15c0c297b5e3355fd827335eb5adf0b40",
+    "tools/readiness/run_lane.py": "sha256:3c5c4757ff086a50bbf12e8a3213568bbe7b49a62cdeb504f32be52849ad57a1",
+    "tools/validators/release/README.md": "sha256:5e78a1fb0734709379bcbd01dd8fc659e3c37e08026d4418b077e0dc5dd58aee",
+    "tools/validators/release/validate_release_proof_pack_closure.py": "sha256:859cc0db198fe47968f5ece676a82abd8d6e50d6a6a5c62bf80d2d1df0eba4b2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "runtime build UNKNOWN"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "Codex local tools",
+      "GitHub",
+      "Notion",
+      "Google Drive",
+      "Sites",
+      "Codex Security",
+      "delegated review"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "evidence_refs": [
+      "repository://9dcdaec2cacbbf9880bd613b546a7314a2673ac5/CONTRIBUTING.md",
+      "repository://9dcdaec2cacbbf9880bd613b546a7314a2673ac5/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repository://9dcdaec2cacbbf9880bd613b546a7314a2673ac5/docs/doctrine/directory-rules.md",
+      "repository://9dcdaec2cacbbf9880bd613b546a7314a2673ac5/schemas/contracts/v1/governance/readiness_lanes.schema.json",
+      "repository://9dcdaec2cacbbf9880bd613b546a7314a2673ac5/contracts/release/release_proof_pack_closure.md",
+      "repository://9dcdaec2cacbbf9880bd613b546a7314a2673ac5/contracts/evidence/evidence_temporal_posture_assessment.md"
+    ]
+  },
+  "truth_labels": {
+    "docs/readiness-lanes.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/evidence_temporal_posture_assessment/README.md": "PROPOSED",
+    "tests/ci/test_readiness_lanes.py": "PROPOSED",
+    "tests/evidence/test_evidence_temporal_posture_assessment.py": "PROPOSED",
+    "tests/validators/test_validate_release_proof_pack_closure.py": "PROPOSED",
+    "tools/readiness/run_lane.py": "PROPOSED",
+    "tools/validators/release/README.md": "PROPOSED",
+    "tools/validators/release/validate_release_proof_pack_closure.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-python-regressions",
+      "outcome": "PASS",
+      "reason": "76 tests and 114 subtests passed on final implementation bytes; readiness, release proof pack closure, temporal assessment/legacy/common/conflict modules."
+    },
+    {
+      "gate": "release-proof-pack-fixtures",
+      "outcome": "PASS",
+      "reason": "All 3 synthetic expected-outcome cases replayed. Denied fixtures remain denied."
+    },
+    {
+      "gate": "diff-whitespace",
+      "outcome": "PASS",
+      "reason": "git diff --check against pinned base passed."
+    },
+    {
+      "gate": "exact-head-hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Branch-only delivery under issue 4024; no PR or manual hosted run requested."
+    },
+    {
+      "gate": "full-repository-suite",
+      "outcome": "SKIPPED",
+      "reason": "Only changed-area acceptance is claimed. An exploratory broader validator/CI survey is non-comparable because authoring continued during execution; its failures require isolated base/head attribution."
+    },
+    {
+      "gate": "human-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; agent review and synthetic tests are not approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "accepted-directory-placement",
+      "validated": true,
+      "evidence_ref": "repository://9dcdaec2cacbbf9880bd613b546a7314a2673ac5/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-23T04:55:11Z",
+  "emitter": "OpenAI Codex desktop",
+  "notes": "Refs issues 4416, 3366, 3370, 3383 and 3394. Dependency-closed batch: existing tools own finite checker behavior, tests own regressions, docs and fixture README explain existing paths, and data/receipts/generated owns generation provenance under ADR-0029. No authority/schema/policy/catalog/baseline changes. No merge, PR readiness, release, source admission, deployment or publication. Temporal proof is entrypoint compatibility and fallback only; persisted-history migration/rollback and external consumers remain unverified. Preserve historical receipts. Drop the unmerged branch to abandon; if later integrated, prefer forward fixes for the two crash repairs and revert the test-only temporal commit independently."
+}

@@ -55,6 +55,44 @@ notes:
 
 # `scripts/dev/` — Local Development Helper Boundary
 
+## Superseding bootstrap currentness and guide path — 2026-09-23
+
+This dated note supersedes the bootstrap-placeholder and unknown-dependency
+claims in the historical metadata and July 2026 inventory below. At source pin
+`8cb6cb247f4962996d00d3d526cb7a9ed4b89884`, [`bootstrap.sh`](./bootstrap.sh)
+contains a setup implementation added by PR #4656, including Ubuntu 24.04 and
+Python/Node/pnpm version checks, Python environment and dependency installation,
+Node dependency installation, optional hooks, and an explicit system-install
+option. These are source-observed capabilities, not a verified installation.
+[`regen_fixtures.sh`](./regen_fixtures.sh) still prints `TODO`; generator and
+fixture admission remain unverified.
+
+Eleven tests in `tests/scripts/test_dev_bootstrap.py` passed on 2026-09-23:
+shell syntax, help text, unknown-option rejection, and eight option-order cases
+that reject `--check --install-system` before host checks or mutation-command
+sentinels, including `--offline` and `--json` combinations. All eight new cases
+failed before the early guard was added. Apply mode, real dependency/system
+installation, and package-manager offline behavior were not run. Installed
+tool launchers such as Corepack can have their own acquisition side effects;
+their version queries are not proved universally write-free by this packet.
+
+The bootstrap usage guide is now [`bootstrap.md`](./bootstrap.md), renamed from
+`scripts/dev/BOOTSTRAP.md` with its original contents preserved by the rename;
+the follow-up guard correction updates its inspection boundary. Accepted ADR-0029 and
+Directory Rules §13.2 require lowercase governed path segments unless an
+external standard or repository entrypoint fixes the spelling; this guide is
+ordinary usage documentation owned by the existing `scripts/dev/` lane.
+
+No tracked references to the prior guide path were found at
+`8cb6cb247f4962996d00d3d526cb7a9ed4b89884`. External bookmarks are unverified.
+For rollback, revert the rename, this note, and its generated authoring receipt
+together. The separate early-guard correction is independently reversible;
+reverting it would restore the inspection/system-install conflict.
+
+The older lane inventory and implementation statements below describe the
+explicitly pinned July 2026 snapshot; they are historical, not a current
+bootstrap implementation assessment. Current usage is described in the guide.
+
 > **One-line purpose.** Hold small, explicit, reviewable local-development wrappers while they remain non-authoritative, reversible, and too immature for long-lived tooling, pipelines, reusable packages, formal tests, or governed artifact generation.
 
 <p>

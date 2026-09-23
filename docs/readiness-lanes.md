@@ -29,9 +29,13 @@ runner emits a structured result and fixes source admission, reviewed-fixture
 overwrite, catalog publication, release authorization, and deployment effects
 to false.
 
-The existing readiness workflows intentionally inspect the old Makefile marker
-bodies. Removing those markers is therefore expected to make the draft PR's
-wiring checks fail until the workflow assertions are separately reviewed and
-updated. A green lane result is bounded execution evidence only; it does not
+Registry and schema inputs must be readable UTF-8 JSON, and the schema must be
+valid Draft 2020-12. Missing files, malformed JSON, invalid encoding, and invalid
+schema shapes return one structured `ERROR` result with exit code 2 before any
+lane executes. The same checks apply to `--describe`; these input failures never
+become a `PASS` or a named readiness `HOLD`.
+
+The policy workflow checks the registered bounded Rego command and the Makefile
+delegation to this runner. A green lane result is bounded execution evidence only; it does not
 establish repository-wide policy evaluation, source admission, EvidenceBundle
 acceptance, release, deployment, or publication.

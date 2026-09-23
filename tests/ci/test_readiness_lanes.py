@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import stat
+import sys
 
 import pytest
 
@@ -66,3 +67,58 @@ def test_policy_registry_never_uses_repository_wide_policy_directory() -> None:
     assert "policy/rego/release_gate_v1.rego" in command
     assert "policy/rego/release_gate_v1_test.rego" in command
     assert "opa test policy/ -v" not in command
+
+
+@pytest.mark.parametrize("describe", [False, True])
+@pytest.mark.parametrize("input_name", ["REGISTRY", "SCHEMA"])
+@pytest.mark.parametrize("contents", [b"\xff", b"{", None])
+def test_unreadable_inputs_return_finite_error_before_execution(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    describe: bool,
+    input_name: str,
+    contents: bytes | None,
+) -> None:
+    path = tmp_path / "unreadable.json"
+    if contents is not None:
+        path.write_bytes(contents)
+    monkeypatch.setattr(TOOL, input_name, path)
+    monkeypatch.setattr(sys, "argv", [str(TOOL_PATH), "policy", *(["--describe"] if describe else [])])
+    monkeypatch.setattr(TOOL, "run_lane", lambda _: pytest.fail("invalid input reached execution"))
+
+    assert TOOL.main() == 2
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    assert json.loads(captured.out) == {
+        "schema_version": "kfm.readiness-lane-result/v1",
+        "lane": "policy",
+        "status": "ERROR",
+        "reason": f"unreadable registry input: {path}",
+    }
+
+
+@pytest.mark.parametrize("describe", [False, True])
+@pytest.mark.parametrize("schema", [None, [], {"type": "not-a-json-type"}, {"properties": []}])
+def test_malformed_schema_returns_finite_error_before_execution(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    describe: bool,
+    schema: object,
+) -> None:
+    path = tmp_path / "invalid-schema.json"
+    path.write_text(json.dumps(schema), encoding="utf-8")
+    monkeypatch.setattr(TOOL, "SCHEMA", path)
+    monkeypatch.setattr(sys, "argv", [str(TOOL_PATH), "policy", *(["--describe"] if describe else [])])
+    monkeypatch.setattr(TOOL, "run_lane", lambda _: pytest.fail("invalid schema reached execution"))
+
+    assert TOOL.main() == 2
+    captured = capsys.readouterr()
+    assert captured.err == ""
+    assert json.loads(captured.out) == {
+        "schema_version": "kfm.readiness-lane-result/v1",
+        "lane": "policy",
+        "status": "ERROR",
+        "reason": "invalid registry schema",
+    }

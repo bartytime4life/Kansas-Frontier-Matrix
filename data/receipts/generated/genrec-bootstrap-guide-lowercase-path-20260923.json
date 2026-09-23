@@ -1,0 +1,113 @@
+{
+  "receipt_id": "genrec-bootstrap-guide-lowercase-path-20260923",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "scripts/dev/README.md",
+    "scripts/dev/bootstrap.md"
+  ],
+  "artifact_hashes": {
+    "scripts/dev/README.md": "sha256:751d4a52080bc6390a5e182b51fdb44b6da8b486f80b5b29115c6355c1c3669d",
+    "scripts/dev/bootstrap.md": "sha256:c6a3f5dd0d66b7211d9ee8b63b68d1ac0049bcf7a439b1cc9f3064c4ba827ae6"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "runtime build UNKNOWN"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "Codex local tools"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "evidence_refs": [
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/CONTRIBUTING.md",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/docs/doctrine/directory-rules.md",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/scripts/dev/BOOTSTRAP.md",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/scripts/dev/README.md",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/tools/validators/directory_governance/validate_repository_topology.py",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/scripts/dev/bootstrap.sh",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/scripts/dev/regen_fixtures.sh",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/tests/scripts/test_dev_bootstrap.py"
+    ]
+  },
+  "truth_labels": {
+    "scripts/dev/README.md": "PROPOSED",
+    "scripts/dev/bootstrap.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "guide-content-identity",
+      "outcome": "PASS",
+      "reason": "The lowercase guide bytes exactly match scripts/dev/BOOTSTRAP.md at base 8cb6cb247f4962996d00d3d526cb7a9ed4b89884."
+    },
+    {
+      "gate": "tracked-reference-audit",
+      "outcome": "PASS",
+      "reason": "No tracked textual references to the original guide filename were found in the base checkout; external bookmarks remain unverified."
+    },
+    {
+      "gate": "scoped-markdown-qa",
+      "outcome": "PASS",
+      "reason": "One H1 retained in each document, new relative links resolve, path owner and rollback recorded. Dated source-pinned note supersedes historical bootstrap claims, distinguishes 3 tested paths from unrun installers, retains regen_fixtures TODO, and discloses the separate check/system-install guard limitation."
+    },
+    {
+      "gate": "topology-delta-attribution",
+      "outcome": "PASS",
+      "reason": "Exact main 9dcdaec2 and progress base had identical findings. Candidate removes only scripts/dev/BOOTSTRAP.md from uppercase evidence (868 to 867), adds no evidence member, and leaves all other findings identical."
+    },
+    {
+      "gate": "repository-topology",
+      "outcome": "FAIL",
+      "reason": "126 findings: 122 baselined warnings and 4 new-drift findings remain. Baseline entries were removed by 1cb881905b; this patch does not restore waivers or suppress holds."
+    },
+    {
+      "gate": "protected-path-identity",
+      "outcome": "PASS",
+      "reason": "Catalog, topology baseline, doctrine, ADRs, and milestone-1 historical QA artifact paths have no diff against the exact base."
+    },
+    {
+      "gate": "diff-whitespace",
+      "outcome": "PASS",
+      "reason": "Staged diff --check passed."
+    },
+    {
+      "gate": "execution-tests",
+      "outcome": "PASS",
+      "reason": "3 existing tests passed: bash syntax, --help, unknown-argument rejection. Apply, dependency/system install, offline and --check execution not run; no installer success is claimed."
+    },
+    {
+      "gate": "exact-head-hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Branch-only delivery; no push, PR or hosted run."
+    },
+    {
+      "gate": "human-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Independent accountable review remains pending; local verification is not approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "accepted-lowercase-path-grammar",
+      "validated": true,
+      "evidence_ref": "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/docs/doctrine/directory-rules.md#132-safe-path-grammar"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-23T05:04:20.245606Z",
+  "emitter": "OpenAI Codex desktop",
+  "notes": "Refs issue 3361. Existing scripts/dev owns this helper usage guide and path migration note; existing data/receipts/generated owns authoring provenance under ADR-0029. Guide content sha256:c6a3f5dd0d66b7211d9ee8b63b68d1ac0049bcf7a439b1cc9f3064c4ba827ae6 is unchanged. No new executable behavior, root, canonical authority, or path alias register is introduced. Rollback reverts the rename, scoped README note and this receipt together. External bookmarks are unverified and the lowercase path is a branch-only candidate. No catalog/baseline/ADR/doctrine/historical conformance changes and no issue closure, governance acceptance, release or publication authority. Separate uncorrected source-observed limitation: --check combined with --install-system can reach apt-get for missing tools in a root shell before the apply guard; this path was not executed."
+}
