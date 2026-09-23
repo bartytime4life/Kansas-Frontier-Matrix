@@ -2692,10 +2692,13 @@ export default function Home() {
     if (id === "nws-radar" && !visible) setNoaaRadarPlaying(false);
     if (id === "usgs-streamflow" && !visible) setStreamflowPlaying(false);
     const map = mapRef.current;
-    if (map && styleGenerationReadyRef.current) {
+    const rasterPending = visible && !source.apiPath && !source.managedAdapterPath && id !== "nws-radar" && !officialRasterFailuresRef.current.has(id);
+    if (rasterPending) setOfficialStates((current) => ({ ...current, [id]: "loading" }));
+    // A failed global runtime proof must not leave a selected source at IDLE
+    // when MapLibre's style is already loaded and can accept this layer.
+    if (map?.isStyleLoaded()) {
       try {
         applyOfficialContextState(map, officialContextRuntimeVisibility(next, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
-        if (visible && !source.apiPath && !source.managedAdapterPath && id !== "nws-radar" && !officialRasterFailuresRef.current.has(id)) setOfficialStates((current) => ({ ...current, [id]: "loading" }));
       } catch (error) {
         setOfficialStates((current) => ({ ...current, [id]: "error" }));
         setOfficialErrors((current) => ({ ...current, [id]: error instanceof Error ? error.message : "Raster context could not be applied." }));
