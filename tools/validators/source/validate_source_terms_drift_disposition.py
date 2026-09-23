@@ -357,7 +357,14 @@ def _semantic_findings(value: Mapping[str, Any]) -> set[Finding]:
     expected_status, expected_reasons = _expected_disposition(
         value, classification, propagation_missing
     )
-    if value["disposition"]["status"] != expected_status:
+    unsupported_no_action = (
+        value["disposition"]["status"] == "NO_ACTION"
+        and any(
+            posture in {"UNKNOWN", "PROHIBITED"}
+            for posture in current["use_posture"].values()
+        )
+    )
+    if value["disposition"]["status"] != expected_status or unsupported_no_action:
         findings.add(Finding("TERMS_DRIFT_DISPOSITION_MISMATCH", "/disposition/status"))
     if value["disposition"]["reason_codes"] != expected_reasons:
         findings.add(Finding("TERMS_DRIFT_REASON_CODES_MISMATCH", "/disposition/reason_codes"))

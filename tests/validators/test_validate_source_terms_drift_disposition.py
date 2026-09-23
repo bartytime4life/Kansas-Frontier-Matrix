@@ -62,6 +62,91 @@ class SourceTermsDriftDispositionTests(unittest.TestCase):
         self.assertFalse(value["boundary"]["withdrawal_executed"])
         self.assertFalse(value["boundary"]["publication_authorized"])
 
+    def test_unchanged_unknown_or_prohibited_posture_cannot_return_no_action(self) -> None:
+        for field, postures in (
+            ("attribution", ("UNKNOWN",)),
+            ("redistribution", ("UNKNOWN", "PROHIBITED")),
+            ("commercial_use", ("UNKNOWN", "PROHIBITED")),
+            ("derivative_use", ("UNKNOWN", "PROHIBITED")),
+            ("retention", ("UNKNOWN", "PROHIBITED")),
+            ("access", ("UNKNOWN",)),
+        ):
+            for posture in postures:
+                with self.subTest(field=field, posture=posture):
+                    case = {
+                        "mutations": [
+                            {
+                                "path": f"/{snapshot}/use_posture/{field}",
+                                "value": posture,
+                            }
+                            for snapshot in ("prior_snapshot", "current_snapshot")
+                        ]
+                    }
+                    value = validator.materialize_case(self.manifest, case)
+                    self.assertEqual([], validator.changed_fields(
+                        value["prior_snapshot"], value["current_snapshot"]
+                    ))
+                    self.assertEqual("NO_CHANGE", validator.expected_classification(value))
+                    self.assertEqual(
+                        (value["spec_hash"], value["assessment_id"]),
+                        validator.canonical_identity(value),
+                    )
+                    for snapshot in ("prior_snapshot", "current_snapshot"):
+                        self.assertEqual(
+                            value[snapshot]["snapshot_hash"],
+                            validator.snapshot_hash(value[snapshot]),
+                        )
+                    result = validator.validate_payload(value)
+                    self.assertEqual("DENY", result.outcome)
+                    self.assertIsNone(result.state)
+                    self.assertEqual(
+                        (validator.Finding("TERMS_DRIFT_DISPOSITION_MISMATCH", "/disposition/status"),),
+                        result.findings,
+                    )
+
+    def test_unchanged_resolved_restrictions_keep_no_action(self) -> None:
+        for field, posture in (
+            ("attribution", "REQUIRED"),
+            ("redistribution", "ALLOWED"),
+            ("redistribution", "RESTRICTED"),
+            ("commercial_use", "RESTRICTED"),
+            ("derivative_use", "RESTRICTED"),
+            ("retention", "RESTRICTED"),
+            ("access", "KEYED"),
+            ("access", "AGREEMENT_REQUIRED"),
+            ("access", "RESTRICTED"),
+        ):
+            with self.subTest(field=field, posture=posture):
+                case = {
+                    "mutations": [
+                        {"path": f"/{snapshot}/use_posture/{field}", "value": posture}
+                        for snapshot in ("prior_snapshot", "current_snapshot")
+                    ]
+                }
+                value = validator.materialize_case(self.manifest, case)
+                result = validator.validate_payload(value)
+                self.assertEqual("PASS", result.outcome, result.findings)
+                self.assertEqual("NO_ACTION", result.state)
+                self.assertEqual([], value["drift"]["changed_fields"])
+
+    def test_explicit_error_keeps_precedence_over_unchanged_unknown_posture(self) -> None:
+        case = next(
+            item for item in self.manifest["cases"]
+            if item["case_id"] == "valid_explicit_assessment_error"
+        )
+        case = dict(case, mutations=[
+            *case.get("mutations", []),
+            *[
+                {"path": f"/{snapshot}/use_posture/redistribution", "value": "UNKNOWN"}
+                for snapshot in ("prior_snapshot", "current_snapshot")
+            ],
+        ])
+        value = validator.materialize_case(self.manifest, case)
+        result = validator.validate_payload(value)
+        self.assertEqual("PASS", result.outcome, result.findings)
+        self.assertEqual("ERROR", result.state)
+        self.assertEqual(["ASSESSMENT_ERROR"], value["disposition"]["reason_codes"])
+
     def test_restrictive_change_routes_review_without_execution(self) -> None:
         case = next(
             item

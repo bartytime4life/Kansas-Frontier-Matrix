@@ -1,0 +1,144 @@
+{
+  "receipt_id": "genrec-source-terms-currentness-no-action-20260923",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/source-terms-drift-disposition.yml",
+    "contracts/source/source_terms_drift_disposition.md",
+    "docs/intake/exploratory/source-terms-drift-disposition-source-map.md",
+    "fixtures/contracts/v1/source/source_terms_drift_disposition/cases.json",
+    "schemas/contracts/v1/source/source_terms_drift_disposition.schema.json",
+    "tests/validators/test_validate_source_terms_drift_disposition.py",
+    "tools/validators/source/validate_source_terms_drift_disposition.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/source-terms-drift-disposition.yml": "sha256:9ca162561eba010cd97910b74538abbdbf4027dab9e1d7f31d83c05946633bc7",
+    "contracts/source/source_terms_drift_disposition.md": "sha256:6ba0ce4df1c7bf172dde738ebb8bc50b7ac2e158a587642d07524c09a7dbfc2a",
+    "docs/intake/exploratory/source-terms-drift-disposition-source-map.md": "sha256:0b7a4b768ce23be292328ab6444dee39804ecc60a29f550458058fd26f680c35",
+    "fixtures/contracts/v1/source/source_terms_drift_disposition/cases.json": "sha256:5f35cdd78f3dc5eb53f321a86ddf110b0ddd0fc92a22c9fae783824a2145ea61",
+    "schemas/contracts/v1/source/source_terms_drift_disposition.schema.json": "sha256:f21bab833f00a9c11f37e6304f98e015f5c8cd3da20ad894a2d396582078be2f",
+    "tests/validators/test_validate_source_terms_drift_disposition.py": "sha256:719e6c0338e5eb4762553926697162ad96e228c1ff714eb381ae97868a46824f",
+    "tools/validators/source/validate_source_terms_drift_disposition.py": "sha256:a6d7d903857d7096f5a9b194c77e3a16f6a397b6daf09e6da3049ae3f976bde9"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "runtime build UNKNOWN"
+  },
+  "prompt_or_contract": "sha256:6ba0ce4df1c7bf172dde738ebb8bc50b7ac2e158a587642d07524c09a7dbfc2a",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "Codex local tools",
+      "GitHub read-only issue and overlap inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:2e8eb117926ab4a7b3a11bd4903f1dca602048519da4c8e229f13f3b7cdce28a",
+      "sha256:0b7a4b768ce23be292328ab6444dee39804ecc60a29f550458058fd26f680c35",
+      "sha256:5f35cdd78f3dc5eb53f321a86ddf110b0ddd0fc92a22c9fae783824a2145ea61",
+      "sha256:f21bab833f00a9c11f37e6304f98e015f5c8cd3da20ad894a2d396582078be2f"
+    ],
+    "evidence_refs": [
+      "repository://e6fe871ae2b7efb23ee266dc5cedb02956e10b3b/.github/workflows/source-terms-drift-disposition.yml",
+      "repository://e6fe871ae2b7efb23ee266dc5cedb02956e10b3b/contracts/source/source_terms_drift_disposition.md",
+      "repository://e6fe871ae2b7efb23ee266dc5cedb02956e10b3b/docs/intake/exploratory/source-terms-drift-disposition-source-map.md",
+      "repository://e6fe871ae2b7efb23ee266dc5cedb02956e10b3b/fixtures/contracts/v1/source/source_terms_drift_disposition/cases.json",
+      "repository://e6fe871ae2b7efb23ee266dc5cedb02956e10b3b/schemas/contracts/v1/source/source_terms_drift_disposition.schema.json",
+      "repository://e6fe871ae2b7efb23ee266dc5cedb02956e10b3b/tests/validators/test_validate_source_terms_drift_disposition.py",
+      "repository://e6fe871ae2b7efb23ee266dc5cedb02956e10b3b/tools/validators/source/validate_source_terms_drift_disposition.py",
+      "repository://e6fe871ae2b7efb23ee266dc5cedb02956e10b3b/data/receipts/generated/genrec-source-terms-drift-disposition-20260810.json",
+      "repository://e6fe871ae2b7efb23ee266dc5cedb02956e10b3b/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repository://e6fe871ae2b7efb23ee266dc5cedb02956e10b3b/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3384",
+      "repository://f1a0f1a62d48ada04e893364a9a16b3401496a92/tools/validators/source/validate_source_rights_currentness_assessment.py",
+      "repository://b8b51372787859a30e02a8a2ff6db553c14bd01a/tests/source/test_source_rights_currentness_assessment.py"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/source-terms-drift-disposition.yml": "CONFIRMED",
+    "contracts/source/source_terms_drift_disposition.md": "PROPOSED",
+    "docs/intake/exploratory/source-terms-drift-disposition-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_terms_drift_disposition/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/source/source_terms_drift_disposition.schema.json": "PROPOSED",
+    "tests/validators/test_validate_source_terms_drift_disposition.py": "CONFIRMED",
+    "tools/validators/source/validate_source_terms_drift_disposition.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "regression-before",
+      "outcome": "PASS",
+      "reason": "Original validator produced 10 failing equal UNKNOWN/PROHIBITED subcases, with 12 test methods and 28 other subtests passing; all negative packets carried recomputed snapshot and assessment identities."
+    },
+    {
+      "gate": "focused-terms-tests",
+      "outcome": "PASS",
+      "reason": "12 test methods and 38 subtests passed. Ten forbidden no-action postures are denied with existing TERMS_DRIFT_DISPOSITION_MISMATCH; resolved unchanged restrictions and explicit ERROR precedence retain original behavior."
+    },
+    {
+      "gate": "adjacent-source-lifecycle-suite",
+      "outcome": "PASS",
+      "reason": "59 tests and 118 subtests passed across source rights/currentness, health, terms drift, obligation propagation, polling checkpoint and availability watchlist. Includes offline withdrawal/recompute review, missing propagation, underreacting consumer and withdrawal-execution denial checks."
+    },
+    {
+      "gate": "historical-fixture-replay",
+      "outcome": "PASS",
+      "reason": "19 original terms-drift cases matched exact outcomes, states and findings. Fixture bytes and predecessor digest are unchanged."
+    },
+    {
+      "gate": "historical-receipt",
+      "outcome": "PASS",
+      "reason": "Original generated receipt validates all seven bindings at original commit095444beb8b941a86d57ecd83a5dc4ba266715d7, with pending human review. It remains byte-identical and is not claimed as a current-byte receipt."
+    },
+    {
+      "gate": "retained-dependency-integrity",
+      "outcome": "PASS",
+      "reason": "Unchanged fixture, schema and source-map bytes exactly match both frozen base and their three predecessor receipt digests. Successor inventory preserves all seven prior bindings."
+    },
+    {
+      "gate": "workflow-shape-and-diff",
+      "outcome": "PASS",
+      "reason": "YAML parsed as a mapping; git diff --check passed. Workflow only adds the successor receipt trigger and replaces current-byte receipt validation target; no permission, runner, command-scope or event expansion."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "No push, PR, workflow dispatch or hosted execution in this packet."
+    },
+    {
+      "gate": "full-repository-suite",
+      "outcome": "SKIPPED",
+      "reason": "Bounded changed-area and adjacent offline lifecycle checks only; inherited topology and unrelated holds remain separate."
+    },
+    {
+      "gate": "independent-human-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "No accountable human or governance acceptance is asserted."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "existing-no-action-prohibition",
+      "validated": true,
+      "evidence_ref": "repository://e6fe871ae2b7efb23ee266dc5cedb02956e10b3b/contracts/source/source_terms_drift_disposition.md#fail-closed-invariants"
+    },
+    {
+      "id": "accepted-placement",
+      "validated": true,
+      "evidence_ref": "repository://e6fe871ae2b7efb23ee266dc5cedb02956e10b3b/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-23T05:52:13.766644Z",
+  "emitter": "OpenAI Codex desktop",
+  "notes": "Refs issue3384. Frozen integration base e6fe871ae2b7efb23ee266dc5cedb02956e10b3b. Bounded finite-denial correction only: unchanged current UNKNOWN/PROHIBITED use posture cannot validate as NO_ACTION. The factual NO_CHANGE classification and empty changed_fields remain unchanged; no replacement HOLD packet, new finite vocabulary, legal interpretation or automatic review action is invented. Existing explicit ERROR, real-change routing and non-execution boundaries remain unchanged. tools owns the guard, tests own synthetic conformance, contracts/source owns clarification, .github owns read-only verification, and data/receipts/generated owns provenance under accepted ADR-0029. The successor replaces current-byte binding from genrec-source-terms-drift-disposition-20260810; original receipt remains verifiable at095444beb8b941a86d57ecd83a5dc4ba266715d7. The three unchanged schema/fixture/source-map entries are retained byte dependencies, not newly authored artifacts. Historical fixture/receipt, source registry, policy, doctrine, ADR, catalog, baseline, source activation, scheduler, lifecycle, release, deployment, withdrawal execution and publication state remain unchanged. Named source/rights/watcher stewards remain OWNER_TBD; CODEOWNERS is a review route only. The separate f1a0f1 reader hardening and b8b5137 Copilot branch do not change this consumer and are not integrated here. Ordinary focused revert of this packet rolls back the guard and current receipt binding but restores the false NO_ACTION acceptance; prefer a forward fix."
+}

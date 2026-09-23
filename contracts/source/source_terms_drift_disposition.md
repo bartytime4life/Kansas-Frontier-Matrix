@@ -2,11 +2,11 @@
 doc_id: kfm://contract/source/source-terms-drift-disposition
 title: Source Terms Drift Disposition
 type: semantic-contract
-version: v0.1.0
+version: v0.1.1
 status: proposed; inactive; fixture-only; no-network; non-authoritative
 owners: OWNER_TBD — Source steward · Rights reviewer · Policy steward · Release steward
 created: 2026-08-10
-updated: 2026-08-10
+updated: 2026-09-23
 policy_label: internal; source; rights; terms-drift; review-required
 owning_root: contracts/
 responsibility: Define a deterministic comparison seam for evidence-backed source-terms snapshots and downstream review proposals.
@@ -79,6 +79,20 @@ signals only; the contract cannot execute them.
 - All legal, activation, lifecycle-write, hold, recomputation, withdrawal,
   release, and publication effects remain false.
 
+The no-action boundary applies even when the prior and current declarations
+contain the same `UNKNOWN` or `PROHIBITED` use posture. Such a packet is denied
+with the existing `TERMS_DRIFT_DISPOSITION_MISMATCH` finding at
+`/disposition/status`; the validator returns no accepted state. It retains the
+factual `NO_CHANGE` classification and empty changed-field list instead of
+inventing a restrictive change or a new rights decision. This guard does not
+construct a replacement `HOLD` packet or choose its review semantics.
+
+Resolved unchanged restrictions keep their existing comparison behavior.
+Explicit assessment errors, verified changes, expiry, evidence/scope holds,
+downstream review routing, and all non-execution boundaries remain unchanged.
+`NO_ACTION` still describes only this terms comparison; it never permits use
+under the declared restrictions.
+
 ## Directory Rules basis
 
 | Responsibility | Home |
@@ -102,9 +116,24 @@ python -m unittest -v tests.validators.test_validate_source_terms_drift_disposit
 python tools/validators/source/validate_source_terms_drift_disposition.py --fixtures
 ```
 
+The current no-action regressions cover every schema-permitted `UNKNOWN` and
+`PROHIBITED` posture with equal prior/current snapshots, recomputed snapshot and
+assessment hashes, resolved unchanged controls, and explicit-error precedence.
+The historical 19-case fixture matrix remains byte-identical. Existing tests
+continue to prove withdrawal/recomputation review routing and denial of missing
+propagation, underreacting downstream actions, and claimed withdrawal execution.
+
 ## Non-effects and rollback
 
 A green result does not authenticate source terms, approve a license, change
 source admission, mutate a lifecycle object, place a real product on hold,
 recompute or withdraw an artifact, or authorize release or publication.
 Rollback is an ordinary revert of this additive fixture-only packet.
+
+Rollback of the no-action correction is a focused revert of its validator,
+tests, contract clarification, successor receipt, and workflow receipt binding.
+That restores the unsupported `NO_ACTION` result; prefer a forward correction.
+Historical fixtures and receipts remain intact. The successor receipt retains
+all seven prior artifact bindings, including unchanged schema, fixture, and
+source-map dependencies; the prior receipt remains verifiable at its original
+commit rather than claiming to bind later file revisions.

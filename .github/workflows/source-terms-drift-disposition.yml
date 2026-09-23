@@ -15,6 +15,7 @@ name: source-terms-drift-disposition
       - "packages/hashing/**"
       - "pyproject.toml"
       - "data/receipts/generated/genrec-source-terms-drift-disposition-20260810.json"
+      - "data/receipts/generated/genrec-source-terms-currentness-no-action-20260923.json"
   push:
     branches: [main]
     paths:
@@ -29,6 +30,7 @@ name: source-terms-drift-disposition
       - "packages/hashing/**"
       - "pyproject.toml"
       - "data/receipts/generated/genrec-source-terms-drift-disposition-20260810.json"
+      - "data/receipts/generated/genrec-source-terms-currentness-no-action-20260923.json"
   workflow_dispatch:
 
 permissions:
@@ -72,7 +74,7 @@ jobs:
       - name: Validate generated authoring receipt integrity
         run: |
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-source-terms-drift-disposition-20260810.json \
+            data/receipts/generated/genrec-source-terms-currentness-no-action-20260923.json \
             --repo-root .
       - name: Record trust boundary
         if: always()
