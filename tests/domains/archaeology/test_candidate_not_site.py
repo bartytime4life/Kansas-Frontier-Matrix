@@ -491,6 +491,25 @@ class CandidateFeatureSafetyTests(unittest.TestCase):
         self.assertIn("PASS", result.stdout)
         self.assertIn("EXPECTED_FAIL", result.stdout)
 
+    def test_unreadable_paths_fail_without_traceback(self) -> None:
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            truncated = Path(tmp) / "truncated.json"
+            truncated.write_text('{"candidate_type": ', encoding="utf-8")
+            missing = Path(tmp) / "missing.json"
+            result = subprocess.run(
+                [sys.executable, str(VALIDATOR_PATH), str(truncated), str(missing)],
+                cwd=REPO_ROOT,
+                check=False,
+                capture_output=True,
+                text=True,
+                timeout=20,
+            )
+        self.assertEqual(result.returncode, 1)
+        self.assertNotIn("Traceback", result.stderr)
+        self.assertEqual(2, result.stdout.count("input is not readable JSON"))
+
 
 if __name__ == "__main__":
     unittest.main()

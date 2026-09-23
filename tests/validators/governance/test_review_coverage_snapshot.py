@@ -75,3 +75,23 @@ def test_duplicate_review_refs_are_denied() -> None:
     result = validate_document(finalize(candidate))
     assert result.status == "DENY"
     assert any(item.code == "DUPLICATE_REVIEW_REF" for item in result.findings)
+
+
+def test_unreadable_document_is_finite_error(tmp_path) -> None:
+    import subprocess
+
+    validator = VALIDATOR_DIR / "validate_review_coverage_snapshot.py"
+    truncated = tmp_path / "truncated.json"
+    truncated.write_text('{"review_refs": ', encoding="utf-8")
+    for path in (truncated, tmp_path / "missing.json"):
+        result = subprocess.run(
+            [sys.executable, str(validator), str(path)],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert result.returncode == 1
+        assert "Traceback" not in result.stderr
+        payload = json.loads(result.stdout)
+        assert payload["status"] == "ERROR"
+        assert payload["findings"] == [{"code": "INPUT_UNREADABLE", "path": "$"}]

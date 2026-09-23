@@ -406,7 +406,13 @@ def main(argv: list[str] | None = None) -> int:
 
     failed = False
     for path in args.paths:
-        errors = validate_candidate_feature(_load(path))
+        try:
+            candidate = _load(path)
+        except (OSError, UnicodeError, ValueError):
+            failed = True
+            print(f"FAIL {path}: input is not readable JSON")
+            continue
+        errors = validate_candidate_feature(candidate)
         if errors:
             failed = True
             print(f"FAIL {path}: {'; '.join(errors)}")

@@ -31,6 +31,12 @@ def main():
             raise SystemExit(1)
         print("PASS spatial transform receipt fixtures"); return
     if not a.path: p.error("path required unless --fixtures")
-    print(validate(json.loads(Path(a.path).read_text())))
+    try:
+        record=json.loads(Path(a.path).read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, ValueError):
+        record=None
+    outcome=validate(record)
+    print(outcome)
+    raise SystemExit(0 if outcome == "PASS" else 1)
 
 if __name__=="__main__": main()
