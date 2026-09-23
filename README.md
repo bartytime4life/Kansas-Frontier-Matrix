@@ -455,7 +455,8 @@ into inferred facts.
 - On this PC, the owner-private Site can use `scripts/local-qwen-bridge.mjs`
   while that process is running. Start it with `node scripts/local-qwen-bridge.mjs`
   from the Explorer checkout, then open the Site on the same PC. It binds only
-  `127.0.0.1:8768`, accepts the exact Site origin, and calls only the installed
+  `127.0.0.1:8768`, accepts the exact hosted Site origin or the local preview
+  origin `http://127.0.0.1:5173`, and calls only the installed
   `qwen2.5:7b-instruct-fp16` model on loopback Ollama. Other devices need their
   own approved connection; a browser may ask for local-network permission.
   The Qwen panel checks local health when opened, reports availability, and

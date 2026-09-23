@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createLocalQwenBridge, LOCAL_QWEN_MODEL, SITE_ORIGIN } from "../scripts/local-qwen-bridge.mjs";
+import { createLocalQwenBridge, LOCAL_PREVIEW_ORIGIN, LOCAL_QWEN_MODEL, SITE_ORIGIN } from "../scripts/local-qwen-bridge.mjs";
 
 const context = {
   camera: { center: [-98, 38.5], zoom: 5, locationRedacted: true },
@@ -41,8 +41,18 @@ test("local bridge grants the exact Site origin and fixed installed model", asyn
     const answer = await fetch(`${base}/ask`, { method: "POST", headers: { origin: SITE_ORIGIN, "content-type": "application/json" }, body: JSON.stringify({ question: "What is visible?", context }) });
     assert.equal(answer.status, 200);
     assert.equal((await answer.json()).status, "ok");
+    const localHealth = await fetch(`${base}/health`, { headers: { origin: LOCAL_PREVIEW_ORIGIN } });
+    assert.equal(localHealth.status, 200);
+    assert.equal(localHealth.headers.get("access-control-allow-origin"), LOCAL_PREVIEW_ORIGIN);
+    const localPreflight = await fetch(`${base}/ask`, { method: "OPTIONS", headers: { origin: LOCAL_PREVIEW_ORIGIN, "access-control-request-private-network": "true" } });
+    assert.equal(localPreflight.status, 204);
+    assert.equal(localPreflight.headers.get("access-control-allow-origin"), LOCAL_PREVIEW_ORIGIN);
+    const localAnswer = await fetch(`${base}/ask`, { method: "POST", headers: { origin: LOCAL_PREVIEW_ORIGIN, "content-type": "application/json" }, body: JSON.stringify({ question: "What is visible?", context }) });
+    assert.equal(localAnswer.status, 200);
+    assert.equal(localAnswer.headers.get("access-control-allow-origin"), LOCAL_PREVIEW_ORIGIN);
+    assert.equal((await localAnswer.json()).status, "ok");
   });
-  assert.equal(calls.length, 2);
+  assert.equal(calls.length, 4);
   assert.equal(calls[1].url, "http://127.0.0.1:11434/api/chat");
   const sent = JSON.parse(calls[1].options.body);
   assert.equal(sent.model, LOCAL_QWEN_MODEL);

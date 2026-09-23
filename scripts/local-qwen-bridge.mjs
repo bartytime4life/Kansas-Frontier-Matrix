@@ -2,6 +2,7 @@ import { createServer } from "node:http";
 import { fileURLToPath } from "node:url";
 
 export const SITE_ORIGIN = "https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site";
+export const LOCAL_PREVIEW_ORIGIN = "http://127.0.0.1:5173";
 export const LOCAL_BRIDGE_PORT = 8768;
 export const LOCAL_QWEN_MODEL = "qwen2.5:7b-instruct-fp16";
 const OLLAMA_URL = "http://127.0.0.1:11434";
@@ -77,17 +78,18 @@ function promptFor(question, context) {
   ].join("\n\n");
 }
 
-export function createLocalQwenBridge({ fetcher = fetch, ollamaUrl = OLLAMA_URL, model = LOCAL_QWEN_MODEL, siteOrigin = SITE_ORIGIN } = {}) {
+export function createLocalQwenBridge({ fetcher = fetch, ollamaUrl = OLLAMA_URL, model = LOCAL_QWEN_MODEL, siteOrigin = SITE_ORIGIN, localPreviewOrigin = LOCAL_PREVIEW_ORIGIN } = {}) {
   let busy = false;
   return createServer(async (req, res) => {
     const origin = req.headers.origin;
     const path = req.url?.split("?", 1)[0];
-    if (origin !== siteOrigin || !["/health", "/ask"].includes(path) || req.url !== path) {
+    const allowedOrigin = origin === siteOrigin || origin === localPreviewOrigin ? origin : null;
+    if (!allowedOrigin || !["/health", "/ask"].includes(path) || req.url !== path) {
       send(res, siteOrigin, 403, { status: "error", message: "This bridge accepts only the Explorer Site." });
       return;
     }
     if (req.method === "OPTIONS") {
-      res.writeHead(204, responseHeaders(siteOrigin));
+      res.writeHead(204, responseHeaders(allowedOrigin));
       res.end();
       return;
     }
@@ -97,29 +99,29 @@ export function createLocalQwenBridge({ fetcher = fetch, ollamaUrl = OLLAMA_URL,
         if (!upstream.ok) throw new Error("OLLAMA_UNAVAILABLE");
         const tags = await boundedJson(upstream, MAX_REPLY_BYTES);
         const installed = Array.isArray(tags?.models) && tags.models.some((item) => item?.name === model);
-        send(res, siteOrigin, installed ? 200 : 503, { status: installed ? "ready" : "not_configured", model: installed ? model : null });
+        send(res, allowedOrigin, installed ? 200 : 503, { status: installed ? "ready" : "not_configured", model: installed ? model : null });
       } catch {
-        send(res, siteOrigin, 503, { status: "unavailable", message: "Local Ollama is unavailable." });
+        send(res, allowedOrigin, 503, { status: "unavailable", message: "Local Ollama is unavailable." });
       }
       return;
     }
     if (req.method !== "POST" || path !== "/ask" || req.headers["content-type"]?.split(";", 1)[0] !== "application/json") {
-      send(res, siteOrigin, 415, { status: "error", message: "Use a JSON map question." });
+      send(res, allowedOrigin, 415, { status: "error", message: "Use a JSON map question." });
       return;
     }
     if (busy) {
-      send(res, siteOrigin, 429, { status: "error", message: "A local Qwen request is already running." });
+      send(res, allowedOrigin, 429, { status: "error", message: "A local Qwen request is already running." });
       return;
     }
     let body;
     try { body = await boundedBody(req); } catch {
-      send(res, siteOrigin, 413, { status: "error", message: "The map question is invalid or too large." });
+      send(res, allowedOrigin, 413, { status: "error", message: "The map question is invalid or too large." });
       return;
     }
     if (!isRecord(body) || Object.keys(body).some((key) => key !== "question" && key !== "context")
       || typeof body.question !== "string" || !body.question.trim() || body.question.length > 1200
       || !validContext(body.context)) {
-      send(res, siteOrigin, 400, { status: "error", message: "The map question has an invalid shape." });
+      send(res, allowedOrigin, 400, { status: "error", message: "The map question has an invalid shape." });
       return;
     }
     busy = true;
@@ -143,9 +145,9 @@ export function createLocalQwenBridge({ fetcher = fetch, ollamaUrl = OLLAMA_URL,
       const payload = await boundedJson(upstream, MAX_REPLY_BYTES);
       const answer = payload?.message?.content;
       if (typeof answer !== "string" || !answer.trim()) throw new Error("EMPTY_ANSWER");
-      send(res, siteOrigin, 200, { status: "ok", model, answer: answer.trim() });
+      send(res, allowedOrigin, 200, { status: "ok", model, answer: answer.trim() });
     } catch {
-      send(res, siteOrigin, 502, { status: "error", message: "Local Qwen could not answer. The map remains available." });
+      send(res, allowedOrigin, 502, { status: "error", message: "Local Qwen could not answer. The map remains available." });
     } finally {
       busy = false;
     }
