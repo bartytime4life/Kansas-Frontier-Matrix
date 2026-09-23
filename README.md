@@ -3,6 +3,20 @@
 A map-first Kansas explorer with real provider baselines, dated archive replay,
 source downloads, and private data contribution and steward review workflows.
 
+## Optional Kansas wind field
+
+The map's **Wind flow** control opens an opt-in, Earth-inspired animated display
+with explicit forecast hours, playback, a source link, and a link to
+[earth.nullschool.net](https://earth.nullschool.net/). It requests nine fixed
+Kansas 10 m wind speed/direction forecast samples through a bounded Open-Meteo
+adapter. Streamlines between those points are visual interpolation, not measured
+trajectories. Animation starts only on request; reduced-motion users see still
+arrows and can step through hours. A failed or incomplete response draws no
+replacement vectors. This is third-party model display context, not an official
+observation, warning, admitted KFM source, EvidenceBundle, or release. The
+existing NOAA radar, river telemetry, timelines, evidence drawer, and source
+states remain independent.
+
 ## Embedded shell recovery and data path — September 15, 2026
 
 The private Sites panel could render the server shell and then leave only its dark
@@ -339,6 +353,26 @@ values are not directly comparable across differently sized basins and are
 never painted onto 3DHP reaches or generalized into WBD watershed conditions.
 Flood categories are displayed only when NOAA supplies them.
 
+The Evidence Drawer resolves a selected USGS gauge against the current River
+Pulse frame and response. It shows the discharge, observation/frame/retrieval
+times, connection state, sample count, provider status and qualifiers, and a
+station link. A frame gap clears the reading, and a failed refresh labels any
+retained sample as a prior response. Other official context selections show
+their feed state and response clocks. These are provider display observations;
+the drawer keeps KFM EvidenceBundle, admission, review, and release status
+separate. Site telemetry does not establish a KFM evidence claim.
+
+Every selectable map record now has a bounded data view drawn from explicitly
+allowed source fields. Provider records follow the latest loaded response when
+their stable feature ID remains present; otherwise the drawer labels their
+fields as a captured map snapshot. Site-local fixtures show only their declared
+display attributes. Provider raster pixels have no selectable record-level
+metadata and are not turned into inferred measurements. For a selected USGS
+gauge, the drawer also requests the existing fixed adapter's seven-day gauge-
+height (`00065`) series and monitoring-location metadata. Gauge height stays
+separate from discharge (`00060`); a gap at the selected discharge frame does
+not erase dated station history or imply a current value.
+
 The fixed `/api/hydrology/noaa` adapter establishes three distinct NWPS modes:
 a Kansas gauge-status network, one-gauge observed and official NWS forecast
 series, and one-reach National Water Model analysis-assimilation and short-range
@@ -410,7 +444,7 @@ requests cannot supply an arbitrary upstream URL.
 | NOAA NWM high-flow analysis | Off | Provider-current modeled analysis-guidance snapshot | Not a gauge observation or warning; the map service advertises no selectable historical time axis |
 | NOAA NWM 18-hour outlook | Off | Provider-current maximum modeled high-flow guidance for the next-18-hour window | Not an official RFC forecast or deterministic outcome; the map service advertises no selectable historical time axis |
 | USGS earthquakes | Off | Bounded 30-day Kansas-area event catalog with magnitude and depth | Catalog values can change; not an alert or hazard forecast |
-| NASA FIRMS active fire | Off | Rolling VIIRS 24-hour active-fire detection raster | Near-real-time detection context only; not a fire perimeter, incident status, evacuation product, or all-clear |
+| NASA GIBS daily VIIRS NOAA-20 thermal anomalies | Off | Provider-default daily thermal-anomaly image; exact UTC image date is not resolved by the Site | Display context only; not a rolling 24-hour FIRMS feed, fire perimeter, incident status, evacuation product, or all-clear. Blank tiles may reflect coverage or publication gaps |
 | NOAA HMS smoke footprints | Off | Dated qualitative smoke polygons from the rolling 24-hour provider window | Not surface PM2.5, plume altitude, measured transport, a fire perimeter, warning, health advisory, or all-clear |
 | Raspberry Shake stations | Off | Kansas-bounded FDSN AM station metadata with StationView handoff | Not realtime waveforms, an event catalog, alert, calibrated measurement, or KFM evidence |
 | USGS 3DEP LiDAR hillshade | Off | Dynamic multidirectional hillshade from the current 3DEP elevation mosaic | Rendered relief only; no work-unit, point-cloud, datum, pulse-spacing, or accuracy claim |
@@ -452,6 +486,24 @@ into inferred facts.
   deploy a version, or publish the Site.
 - `/api/qwen` remains unavailable until a server-reachable endpoint is
   configured. No hosted Qwen variables are currently required for the map.
+- On this PC, the owner-private Site can use `scripts/local-qwen-bridge.mjs`
+  while that process is running. Start it with `node scripts/local-qwen-bridge.mjs`
+  from the Explorer checkout, then open the Site on the same PC. It binds only
+  `127.0.0.1:8768`, accepts the exact hosted Site origin or the local preview
+  origin `http://127.0.0.1:5173`, and calls only the installed
+  `qwen2.5:7b-instruct-fp16` model on loopback Ollama. Other devices need their
+  own approved connection; a browser may ask for local-network permission.
+  The Qwen panel checks local health when opened, reports availability, and
+  preserves the existing copy-prompt and hosted `/api/qwen` paths. The map
+  remains usable if the bridge or model is unavailable.
+- Qwen receives the current map, time, selected feature, nearby context,
+  registered layers, all 15 official context source states, and redacted
+  renderer/source/radar/streamflow diagnostics. This is a bounded, interpretive
+  snapshot of Site state, not a telemetry ingest, source admission, model
+  registry, evidence bundle, or publication path. A camera derived from device
+  location is replaced by the Kansas overview center before it leaves the
+  browser for local inference. The bridge does not read files, ingest raw
+  logs, publish data, or expose Ollama to the hosted Worker.
 - The hosting manifest declares existing D1 `DB` and R2 `BUCKET` bindings for
   the intake capability. Reports, stories, places, and investigation workspaces
   remain device-local drafts; those bindings do not make them server-persisted.
@@ -477,7 +529,7 @@ changed; tests use mocked responses only. Repository status responses now enforc
 their 512 KiB limit while streaming, rather than after buffering the entire body.
 Canonical social metadata uses the registered Site origin, not forwarded headers.
 
-The UI repair supplies the missing NASA FIRMS source handoff, preserves domain ID
+The UI repair supplies the NASA fire-image source handoff, preserves domain ID
 literal types, initializes the contribution source from server-validated routing
 input, discards superseded/aborted submission-list responses, and keeps calendar
 updates with the actions that change dates. Context loading messages are keyed

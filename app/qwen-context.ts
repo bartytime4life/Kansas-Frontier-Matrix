@@ -24,6 +24,7 @@ export type QwenSelectionContext = Readonly<{
 export type QwenMapContext = Readonly<{
   camera: Readonly<{
     center: readonly [number, number];
+    locationRedacted?: boolean;
     zoom: number;
     bearing: number;
     pitch: number;
@@ -33,6 +34,23 @@ export type QwenMapContext = Readonly<{
   basemap: Readonly<{ key: string; title: string; note: string }>;
   time: Readonly<{ value: number; label: string; era: string }>;
   visibleLayers: readonly QwenLayerContext[];
+  officialSources?: readonly Readonly<{
+    id: string;
+    title: string;
+    selected: boolean;
+    displayed: boolean;
+    state: string;
+    featureCount: number | null;
+    retrievedAt: string | null;
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY";
+  }>[];
+  telemetry?: Readonly<{
+    authority: "SITE_LOCAL_REDACTED_DIAGNOSTIC";
+    renderer: Readonly<{ state: string; styleLoaded: boolean; canvasReady: boolean; tilesLoaded: boolean; failedChecks: readonly string[] }>;
+    registry: Readonly<{ total: number; ready: number; loading: number; error: number }>;
+    radar: Readonly<{ state: string; frameTime: string | null; manifestFresh: boolean }>;
+    streamflow: Readonly<{ state: string; frameTime: string | null }>;
+  }>;
   selection: QwenSelectionContext | null;
   nearbyContext: readonly Readonly<{
     title: string;

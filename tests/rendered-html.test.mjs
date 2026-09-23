@@ -682,6 +682,7 @@ test("imports the complete repository feature catalog without maturity inflation
 test("keeps the MapLibre Workbench complete, bounded, and responsive", async () => {
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const mapInterface = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
+  const mapPerformance = await readFile(new URL("../app/map-performance.ts", import.meta.url), "utf8");
   const exportCenter = await readFile(new URL("../app/export-center.ts", import.meta.url), "utf8");
   const explorerData = await readFile(new URL("../app/explorer-data.ts", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
@@ -713,8 +714,9 @@ test("keeps the MapLibre Workbench complete, bounded, and responsive", async () 
   assert.match(source, /MAPLIBRE_RUNTIME_ASSET_URLS/);
   assert.match(source, /if \(!response\.ok\) throw new Error/);
   assert.match(source, /map\.on\("idle"/);
-  assert.match(source, /map\.areTilesLoaded\(\)/);
-  assert.match(source, /map\.isSourceLoaded\(layer\.sourceId\)/);
+  assert.match(source, /sampleMapRuntimeHealth\(/);
+  assert.match(mapPerformance, /map\.areTilesLoaded\(\)/);
+  assert.match(mapPerformance, /map\.getSource\(id\)\?\.loaded\(\)/);
   assert.match(source, /MapLibre \{EXPECTED_MAPLIBRE_VERSION\} runtime proof/);
   assert.match(source, /SAME_ORIGIN_CONFIGURED/);
   assert.match(prepareMapLibreAssets, /maplibre-gl-worker\.mjs/);
@@ -860,8 +862,11 @@ test("connects fifteen bounded official Kansas context sources without admitting
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"].boundary, /modeled maximum over a forecast window/i);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["noaa-hms-smoke"].apiPath, /feed=noaa-hms-smoke/);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["noaa-hms-smoke"].boundary, /fire perimeter[\s\S]*surface PM2\.5/i);
-  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"].mapUrl, /firms\.modaps\.eosdis\.nasa\.gov[\s\S]*fires_viirs_24/);
-  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"].boundary, /not a mapped perimeter/i);
+  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"].mapUrl, /^https:\/\/gibs\.earthdata\.nasa\.gov\/wms\/epsg3857\/best\/wms\.cgi\?[\s\S]*LAYERS=VIIRS_NOAA20_Thermal_Anomalies_375m_All/);
+  assert.doesNotMatch(registry.OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"].mapUrl, /firms\.modaps\.eosdis\.nasa\.gov/);
+  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"].boundary, /not a rolling 24-hour FIRMS feed[\s\S]*not a mapped perimeter/i);
+  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"].fallback, /blank tile[\s\S]*never[\s\S]*all-clear/i);
+  assert.equal(registry.OFFICIAL_CONTEXT_TEMPORAL_SUPPORT["nasa-firms-active-fire"].axis, "provider-current-mosaic");
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"].serviceUrl, /stationview\.raspberryshake\.org/);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"].boundary, /not realtime/i);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"].mapUrl, /^\/api\/terrain-tile\?kind=slope&z=\{z\}&x=\{x\}&y=\{y\}$/);

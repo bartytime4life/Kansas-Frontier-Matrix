@@ -9,7 +9,7 @@ type D1Statement = {
 
 type D1Database = {
   prepare(query: string): D1Statement;
-  batch(statements: D1Statement[]): Promise<unknown[]>;
+  batch(statements: D1Statement[]): Promise<Array<{ meta?: { changes?: number } }>>;
 };
 
 export function getRawDb() {

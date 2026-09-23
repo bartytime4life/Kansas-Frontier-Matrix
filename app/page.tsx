@@ -8,6 +8,7 @@ import { parseSavedWorkspaceList } from "./saved-workspaces";
 import { BASELINE_STACKS, currentUtcDay } from "./daily-baseline";
 import { SourceQualityRow } from "./source-quality-row";
 import { ArchiveDaySlider } from "./archive-day-slider";
+import { WindFlow } from "./wind-flow";
 import { DataNotices, RenderQualityControl, TerrainQuickControls } from "./map-toolbar";
 import { browserRenderBudget, readRenderQuality, sampleMapRuntimeHealth, QUALITY_STORAGE_KEY, type MapRuntimeCheckFailure, type RenderQuality } from "./map-performance";
 import type { Feature, Geometry } from "geojson";
@@ -201,6 +202,8 @@ import {
   type StreamflowBundle,
   type StreamflowFrame,
 } from "./streamflow";
+import { riverDrawerObservation } from "./evidence-drawer-observation";
+import { drawerArtifactAttributes, parseUsgsStageDetail, type DrawerAttribute, type UsgsStageDetail } from "./evidence-drawer-data";
 import { HydrologyObservatory,
   type HydrologyObservatoryState,
   type HydrologyPlaybackSpeed,
@@ -340,7 +343,7 @@ type MapQueryCandidate = Readonly<{
 }>;
 type ScenePresetId = "overview-2d" | "globe-overview" | "water-systems" | "smoke-context" | "elevation-3d" | "tile-grid";
 type QwenMessage = Readonly<{ role: "user" | "assistant"; content: string }>;
-type QwenBridgeState = "ready" | "not-configured" | "error";
+type QwenBridgeState = "checking" | "ready" | "not-configured" | "error";
 type RepositoryConnection = Readonly<{
   state: "idle" | "loading" | "ready" | "error";
   liveCommit?: string;
@@ -373,7 +376,12 @@ type SelectedContext = {
   layer: LayerRecord;
   properties: FeatureProperties;
   geometry: Feature<Geometry>;
+  externalStationId?: string | null;
+  externalFeatureId?: string | null;
+  externalAttributes?: readonly DrawerAttribute[];
 };
+
+type StageDrawerLoad = { stationId: string; status: "loading" | "ready" | "error"; detail?: UsgsStageDetail };
 
 const officialContextIdForSelection = (selection: SelectedContext | null): OfficialContextId | null => {
   if (!selection?.featureId.startsWith("official-context:")) return null;
@@ -478,7 +486,7 @@ const PRIORITY_CONTEXT_GROUPS: readonly PriorityContextGroup[] = Object.freeze([
   Object.freeze({
     id: "fire-smoke",
     title: "Fire + smoke context",
-    description: "NASA FIRMS near-real-time active-fire detections and NOAA HMS smoke footprints, with NWS alerts and exact-time radar kept as separate source roles.",
+    description: "NASA GIBS daily VIIRS NOAA-20 thermal anomalies and NOAA HMS smoke footprints, with NWS alerts and exact-time radar kept as separate source roles.",
     sourceIds: Object.freeze(["nasa-firms-active-fire", "noaa-hms-smoke", "nws-alerts", "nws-radar"] as const),
   }),
 ]);
@@ -537,9 +545,9 @@ const visibleFocusableElements = (container: HTMLElement) => Array.from(containe
 );
 const drawerViews = ["evidence", "metadata", "lineage", "focus"] as const satisfies readonly DrawerView[];
 const drawerViewLabels: Record<DrawerView, string> = {
-  evidence: "Evidence",
-  metadata: "Summary",
-  lineage: "Methods",
+  evidence: "Data",
+  metadata: "Metadata",
+  lineage: "Trace",
   focus: "Focus",
 };
 const mapUtilityViews = ["report", "inspect", "navigate", "places", "scene", "connections", "import", "compare", "display", "measure", "export", "diagnostics"] as const satisfies readonly MapUtilityView[];
@@ -677,6 +685,7 @@ const QWEN_QUICK_PROMPTS = Object.freeze([
   "What changes when I move the time slider?",
   "Which visible layers need verification?",
 ]);
+const LOCAL_QWEN_BRIDGE = "http://127.0.0.1:8768";
 
 const inspectGovernedRoute = (method: GovernedMethod, path: GovernedRoute) => {
   const registered = governedRoutes.has(path);
@@ -832,6 +841,13 @@ const officialContextTime = (source: OfficialContextId, properties: Record<strin
   return fallback;
 };
 
+const drawerTimestamp = (value: string | null | undefined) => {
+  if (!value || !Number.isFinite(Date.parse(value))) return "Not available";
+  return new Intl.DateTimeFormat(undefined, {
+    year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZoneName: "short",
+  }).format(new Date(value));
+};
+
 const buildBasemapContext = (candidate: BasemapFeatureCandidate, longitude: number, latitude: number): SelectedContext | null => {
   if (!candidate.geometry) return null;
   const properties = candidate.properties ?? {};
@@ -869,6 +885,11 @@ const buildBasemapContext = (candidate: BasemapFeatureCandidate, longitude: numb
     featureId,
     layerId: contextLayer.id,
     layer: contextLayer,
+    externalStationId: officialSource?.id === "usgs-streamflow"
+      ? normalizeUsgsStationId(String(properties.stationId ?? properties.monitoringLocationId ?? ""))
+      : null,
+    externalFeatureId: typeof properties.featureId === "string" ? properties.featureId : null,
+    externalAttributes: drawerArtifactAttributes(officialSource?.id ?? "basemap", properties),
     properties: {
       fid: featureId,
       title,
@@ -1128,6 +1149,7 @@ export default function Home() {
   const [noaaRadarClock, setNoaaRadarClock] = useState(() => Date.now());
   const [radarArchiveDraftDay, setRadarArchiveDraftDay] = useState(currentUtcDay);
   const [streamflowBundle, setStreamflowBundle] = useState<StreamflowBundle | null>(null);
+  const [stageDrawerLoad, setStageDrawerLoad] = useState<StageDrawerLoad | null>(null);
   const [streamflowState, setStreamflowState] = useState<HydrologyObservatoryState>("idle");
   const [streamflowError, setStreamflowError] = useState<string | null>(null);
   const [streamflowFrameIndex, setStreamflowFrameIndex] = useState(-1);
@@ -1222,6 +1244,7 @@ export default function Home() {
   const [leftOpen, setLeftOpen] = useState(false);
   const [sourceStatusOpen, setSourceStatusOpen] = useState(false);
   const [instrumentOpen, setInstrumentOpen] = useState(false);
+  const [windOpen, setWindOpen] = useState(false);
   const [leftPanelMode, setLeftPanelMode] = useState<LeftPanelMode>("layers");
   const [rightOpen, setRightOpen] = useState(false);
   const [timelineOpen, setTimelineOpen] = useState(false);
@@ -1324,11 +1347,11 @@ export default function Home() {
   const [qwenOpen, setQwenOpen] = useState(false);
   const [qwenQuestion, setQwenQuestion] = useState("");
   const [qwenBusy, setQwenBusy] = useState(false);
-  const [qwenBridgeState, setQwenBridgeState] = useState<QwenBridgeState>("not-configured");
+  const [qwenBridgeState, setQwenBridgeState] = useState<QwenBridgeState>("checking");
   const [qwenMessages, setQwenMessages] = useState<readonly QwenMessage[]>([
     {
       role: "assistant",
-      content: "Ask Qwen about the current map view. The bridge sends only the selected map context; no inference endpoint is connected to this Site yet, so you can copy a grounded prompt for local Qwen/Ollama.",
+      content: "Ask Qwen about the current map view. The local bridge uses the selected map context and redacted connection health; model answers do not establish evidence or release authority.",
     },
   ]);
   const [toast, setToast] = useState("");
@@ -1859,7 +1882,10 @@ export default function Home() {
   }, [mapEvidenceFilter, nearbyRadiusMiles, nearbyVisibleLayersOnly, selected, selectedTimeMismatch, temporalQuery, visibility]);
   const qwenContext = useMemo<QwenMapContext>(() => ({
     camera: {
-      center: [Number(view.center[0].toFixed(5)), Number(view.center[1].toFixed(5))],
+      center: locationCameraRedacted || locationDerivedViewRef.current
+        ? KANSAS_VIEW.center
+        : [Number(view.center[0].toFixed(5)), Number(view.center[1].toFixed(5))],
+      locationRedacted: locationCameraRedacted || locationDerivedViewRef.current,
       zoom: Number(view.zoom.toFixed(2)),
       bearing: Number(view.bearing.toFixed(1)),
       pitch: Number(view.pitch.toFixed(1)),
@@ -1877,6 +1903,29 @@ export default function Home() {
       publicStatus: layer.publicStatus,
       freshnessState: layer.freshnessState,
     })),
+    officialSources: officialContextConnections.map((connection) => ({
+      id: connection.source.id,
+      title: connection.source.shortTitle,
+      selected: Boolean(connection.visible),
+      displayed: Boolean(connection.activeAtFrame),
+      state: connection.state,
+      featureCount: connection.featureCount ?? null,
+      retrievedAt: connection.retrievedAt ?? null,
+      evidenceRole: "EXTERNAL_CONTEXT_ONLY" as const,
+    })),
+    telemetry: {
+      authority: "SITE_LOCAL_REDACTED_DIAGNOSTIC",
+      renderer: {
+        state: runtime.kind,
+        styleLoaded: maplibreProbe.styleLoaded,
+        canvasReady: maplibreProbe.canvasReady,
+        tilesLoaded: maplibreProbe.tilesLoaded,
+        failedChecks: maplibreProbe.failedChecks,
+      },
+      registry: { total: LAYER_REGISTRY.length, ...sourceStateCounts },
+      radar: { state: noaaRadarDisplayState, frameTime: noaaRadarFrameTime, manifestFresh: noaaRadarManifestFresh },
+      streamflow: { state: streamflowState, frameTime: streamflowFrameTime },
+    },
     selection: selected && !selectedTimeMismatch ? {
       featureId: selected.featureId,
       title: selected.properties.title,
@@ -1895,7 +1944,7 @@ export default function Home() {
       distanceMiles: Number(row.distanceMiles.toFixed(1)),
       evidenceState: row.feature.properties.evidenceState,
     })),
-  }), [activeLayers, basemap, mapRepresentationLabel, nearbyContext, projection, selected, selectedTimeMismatch, temporalMode, temporalQuery.frame, temporalScopeLabel, view]);
+  }), [activeLayers, basemap, locationCameraRedacted, mapRepresentationLabel, maplibreProbe.canvasReady, maplibreProbe.failedChecks, maplibreProbe.styleLoaded, maplibreProbe.tilesLoaded, nearbyContext, noaaRadarDisplayState, noaaRadarFrameTime, noaaRadarManifestFresh, officialContextConnections, projection, runtime.kind, selected, selectedTimeMismatch, sourceStateCounts, streamflowFrameTime, streamflowState, temporalMode, temporalQuery.frame, temporalScopeLabel, view]);
   const qwenPrompt = useMemo(() => buildQwenPrompt(qwenQuestion, qwenContext), [qwenContext, qwenQuestion]);
   const analysisAreaRecordCount = useMemo(() => analysisArea
     ? LAYER_REGISTRY.reduce((count, layer) => count + layer.data.features.filter((feature) => (
@@ -2024,6 +2073,46 @@ export default function Home() {
   const planningScenarioReview = PLANNING_SCENARIO_REVIEWS[scenarioReviewMode];
   const activeStoryStep = KFM_STORY_TRAIL[storyStepIndex] ?? KFM_STORY_TRAIL[0];
 
+  const selectedOfficialContextId = officialContextIdForSelection(selected);
+  const selectedOfficialConnection = officialContextConnections.find((connection) => connection.source.id === selectedOfficialContextId);
+  const selectedOfficialPayload = selectedOfficialContextId ? officialPayloads[selectedOfficialContextId as OfficialContextFeedId] : undefined;
+  const selectedRiverObservation = useMemo(() => selectedOfficialContextId === "usgs-streamflow"
+    ? riverDrawerObservation(selected?.externalStationId ?? null, streamflowBundle, streamflowFrame, streamflowFrameTime, streamflowDisplayState)
+    : null, [selectedOfficialContextId, selected?.externalStationId, streamflowBundle, streamflowFrame, streamflowFrameTime, streamflowDisplayState]);
+  const selectedOfficialFeature = selected?.externalFeatureId && selectedOfficialPayload?.data.features.find((feature) =>
+    feature.properties?.featureId === selected.externalFeatureId);
+  const selectedArtifactAttributes = selected?.kind === "registry"
+    ? drawerArtifactAttributes("registry", selected.properties)
+    : selectedOfficialContextId && selectedOfficialFeature
+      ? drawerArtifactAttributes(selectedOfficialContextId, selectedOfficialFeature.properties)
+      : selected?.externalAttributes ?? [];
+  const selectedAttributesCurrent = Boolean(selectedOfficialFeature);
+  const selectedDischargeHistory = useMemo(() => streamflowBundle && selectedOfficialContextId === "usgs-streamflow" && selected?.externalStationId
+    ? streamflowBundle.observations.filter((item) => item.stationId === selected.externalStationId).slice(-8).reverse()
+    : [], [selected?.externalStationId, selectedOfficialContextId, streamflowBundle]);
+  const latestLoadedDischarge = useMemo(() => streamflowBundle && selectedOfficialContextId === "usgs-streamflow" && selected?.externalStationId
+    ? streamflowBundle.observations.findLast((item) => item.stationId === selected.externalStationId && item.value !== null)
+    : null, [selected?.externalStationId, selectedOfficialContextId, streamflowBundle]);
+  const selectedStageDetail = stageDrawerLoad?.stationId === selected?.externalStationId ? stageDrawerLoad : null;
+  useEffect(() => {
+    const stationId = selectedOfficialContextId === "usgs-streamflow" && rightOpen ? selected?.externalStationId : null;
+    if (!stationId) return;
+    const controller = new AbortController();
+    setStageDrawerLoad({ stationId, status: "loading" });
+    const load = async () => {
+      try {
+        const path = `/api/hydrology/streamflow?mode=station&range=7d&station=${encodeURIComponent(stationId)}&parameter=00065&resolution=continuous`;
+        const response = await fetch(path, { cache: "no-store", headers: { Accept: "application/json" }, signal: controller.signal });
+        if (!response.ok) throw new Error(`USGS gauge-height request returned HTTP ${response.status}.`);
+        const detail = parseUsgsStageDetail(await readBoundedJson(response, 8 * 1024 * 1024), stationId);
+        if (!controller.signal.aborted) setStageDrawerLoad({ stationId, status: "ready", detail });
+      } catch {
+        if (!controller.signal.aborted) setStageDrawerLoad({ stationId, status: "error" });
+      }
+    };
+    void load();
+    return () => controller.abort();
+  }, [rightOpen, selected?.externalStationId, selectedOfficialContextId]);
   const selectedLabel = selected?.properties.title ?? "Statewide Kansas";
   const selectedEvidence = selected ? evidenceLabels[selected.properties.evidenceState] : null;
   const selectedLayerHidden = Boolean(selected && !selectionCarrierIsVisible(selected, visibility, officialVisibility, temporalQuery.frame));
@@ -2985,6 +3074,19 @@ export default function Home() {
     }
   }, [dismissMapUtilityWithoutFocus, isCompact]);
 
+  useEffect(() => {
+    if (!qwenOpen) return;
+    const controller = new AbortController();
+    setQwenBridgeState("checking");
+    void fetch(`${LOCAL_QWEN_BRIDGE}/health`, { cache: "no-store", credentials: "omit", redirect: "error", signal: controller.signal })
+      .then(async (response) => {
+        const payload = await response.json() as { status?: string };
+        if (!controller.signal.aborted) setQwenBridgeState(response.ok && payload.status === "ready" ? "ready" : "not-configured");
+      })
+      .catch(() => { if (!controller.signal.aborted) setQwenBridgeState("not-configured"); });
+    return () => controller.abort();
+  }, [qwenOpen]);
+
   const closeQwenCompanion = useCallback(() => {
     setQwenOpen(false);
     window.setTimeout(() => mapContainerRef.current?.focus(), 0);
@@ -3006,10 +3108,13 @@ export default function Home() {
     setQwenMessages((current) => [...current, { role: "user" as const, content: question }].slice(-8));
     setQwenQuestion("");
     try {
-      const response = await fetch("/api/qwen", {
+      const response = await fetch(qwenBridgeState === "ready" ? `${LOCAL_QWEN_BRIDGE}/ask` : "/api/qwen", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ question, context: qwenContext }),
+        cache: "no-store",
+        credentials: "omit",
+        redirect: "error",
       });
       const payload = await response.json().catch(() => null) as { status?: string; answer?: string; message?: string } | null;
       if (!response.ok || payload?.status !== "ok" || !payload.answer) {
@@ -3034,7 +3139,7 @@ export default function Home() {
     } finally {
       setQwenBusy(false);
     }
-  }, [qwenBusy, qwenContext, qwenQuestion]);
+  }, [qwenBridgeState, qwenBusy, qwenContext, qwenQuestion]);
 
   const stopSceneOrbit = useCallback((notify = true) => {
     if (sceneOrbitTimerRef.current !== null) {
@@ -7163,7 +7268,7 @@ export default function Home() {
 
           <div className="basemap-control">
             <div className="catalog-filter-grid"><label><span>Basemap style</span><select value={basemap} onChange={(event) => setBasemap(event.target.value as BasemapKey)}>{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title} · {BASEMAPS[key].note}</option>)}</select></label><label><span>Domain lens</span><select value={layerDomain} onChange={(event) => applyDomainLens(event.target.value as (typeof layerDomains)[number])}>{layerDomains.map((domain) => <option key={domain} value={domain}>{domain === "ALL" ? "No domain lens" : domain}</option>)}</select></label></div>
-            <div className="catalog-lens-status" data-active={layerDomain !== "ALL"}><strong>{layerDomain === "ALL" ? "No domain lens selected" : `${layerDomain} lens is on the map`}</strong><span>{layerDomain === "Fire" ? "Historical fire context plus NASA FIRMS active-fire detections and NOAA HMS smoke footprints at the operational-present frame." : layerDomain === "ALL" ? "Choose a domain to add that perspective without filtering the catalog or hiding other layers." : "The lens adds matching layers as an additional perspective; current-source context remains separate and time-bounded."}</span>{layerDomain !== "ALL" && <button type="button" onClick={() => applyDomainLens("ALL")}>Remove lens</button>}</div>
+            <div className="catalog-lens-status" data-active={layerDomain !== "ALL"}><strong>{layerDomain === "ALL" ? "No domain lens selected" : `${layerDomain} lens is on the map`}</strong><span>{layerDomain === "Fire" ? "Historical fire context plus NASA GIBS daily NOAA-20 thermal anomalies and NOAA HMS smoke footprints at the operational-present frame." : layerDomain === "ALL" ? "Choose a domain to add that perspective without filtering the catalog or hiding other layers." : "The lens adds matching layers as an additional perspective; current-source context remains separate and time-bounded."}</span>{layerDomain !== "ALL" && <button type="button" onClick={() => applyDomainLens("ALL")}>Remove lens</button>}</div>
             <div className="catalog-evidence-filter"><label><span>Map evidence filter</span><select value={mapEvidenceFilter} onChange={(event) => updateMapEvidenceFilter(event.target.value as RegistryEvidenceFilter)}><option value="ALL">All evidence states</option>{(Object.keys(evidenceLabels) as EvidenceState[]).map((state) => <option key={state} value={state}>{state.replaceAll("_", " ")}</option>)}</select></label><output>{mapCompatibleFeatureCount} compatible records</output>{mapEvidenceFilter !== "ALL" && <button type="button" onClick={() => updateMapEvidenceFilter("ALL")}>Clear filter</button>}</div>
             <div className="catalog-filter-actions"><span>{layerQuery.trim() || mapEvidenceFilter !== "ALL" ? "Catalog filters are active" : "Showing every local domain"}</span><button type="button" disabled={!layerQuery.trim() && mapEvidenceFilter === "ALL"} onClick={() => { setLayerQuery(""); updateMapEvidenceFilter("ALL"); }}>Clear filters</button></div>
           </div>
@@ -7270,7 +7375,8 @@ export default function Home() {
             <label className="map-basemap-select"><span>Basemap</span><select value={basemap} onChange={(event) => setBasemap(event.target.value as BasemapKey)} aria-label="Choose basemap style">{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title}</option>)}</select></label>
             <button className="map-control-launch" type="button" onClick={() => openMapUtility("navigate")}><span aria-hidden="true">⌖</span><strong>Controls</strong></button>
             <button className="map-control-launch" type="button" onClick={() => { setSourceStatusOpen((open) => !open); setLeftOpen(false); }} aria-expanded={sourceStatusOpen} aria-controls="map-source-status"><strong>Source status</strong></button>
-            <button className="map-control-launch" type="button" onClick={() => setInstrumentOpen((open) => !open)} aria-pressed={instrumentOpen}><strong>Charts</strong></button>
+            <button className="map-control-launch" type="button" onClick={() => { if (!instrumentOpen) setWindOpen(false); setInstrumentOpen((open) => !open); }} aria-pressed={instrumentOpen}><strong>Charts</strong></button>
+            <button className="map-control-launch map-control-launch-wind" type="button" onClick={() => { if (!windOpen) { setInstrumentOpen(false); setNoaaRadarPlaying(false); setStreamflowPlaying(false); } setWindOpen((open) => !open); }} aria-pressed={windOpen}><strong>Wind flow</strong><b>Model</b></button>
             <button className="map-control-launch" type="button" onClick={() => window.location.assign("/")} title={`Open a fresh baseline for ${baselineDay} UTC`}><strong>Today’s baseline</strong></button>
             <Link className="map-control-launch" href="/data"><strong>Contribute data</strong></Link>
           </nav>
@@ -7413,7 +7519,7 @@ export default function Home() {
             <div className="qwen-context-strip" aria-label="Qwen context scope">
               <span><small>VIEW</small><strong>{mapRepresentationLabel}</strong></span>
               <span><small>TIME</small><strong>{temporalScopeLabel}</strong></span>
-              <span><small>LAYERS</small><strong>{visibleCount}</strong></span>
+              <span><small>LAYERS</small><strong>{visibleCount + visibleOfficialCount}</strong></span>
               <span><small>SELECTION</small><strong>{selected ? "1" : "0"}</strong></span>
             </div>
             <div className="qwen-messages" aria-live="polite">
@@ -7425,11 +7531,12 @@ export default function Home() {
             </div>
             <form className="qwen-form" onSubmit={(event) => { event.preventDefault(); void askQwen(); }}>
               <label><span className="sr-only">Ask Qwen about the map</span><textarea value={qwenQuestion} onChange={(event) => setQwenQuestion(event.target.value)} placeholder="Ask about this place, time, or layer context…" rows={3} maxLength={1200} /></label>
-              <div><span data-bridge-state={qwenBridgeState}>{qwenBridgeState === "ready" ? "BRIDGE CONNECTED" : qwenBridgeState === "error" ? "BRIDGE UNAVAILABLE" : "LOCAL BRIDGE NOT CONFIGURED"}</span><button type="submit" disabled={!qwenQuestion.trim() || qwenBusy}>{qwenBusy ? "Thinking…" : "Ask Qwen"}</button></div>
+              <div><span data-bridge-state={qwenBridgeState}>{qwenBridgeState === "ready" ? "LOCAL QWEN READY" : qwenBridgeState === "checking" ? "CHECKING LOCAL QWEN" : qwenBridgeState === "error" ? "BRIDGE UNAVAILABLE" : "LOCAL QWEN UNAVAILABLE"}</span><button type="submit" disabled={!qwenQuestion.trim() || qwenBusy || qwenBridgeState === "checking"}>{qwenBusy ? "Thinking…" : "Ask Qwen"}</button></div>
             </form>
             <footer className="qwen-panel-footer"><p>Qwen is interpretive only. It cannot establish evidence, policy, release, or publication authority.</p><button type="button" onClick={() => void copyQwenPrompt()}>Copy grounded prompt</button></footer>
           </aside>}
           <div id="map-canvas" ref={mapContainerRef} className="map-canvas" tabIndex={0} role="application" aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Map Workbench Inspect or the Layer Catalog for a keyboard feature alternative." />
+          {windOpen && <WindFlow map={styleReady ? mapRef.current : null} reducedMotion={reducedMotion} onClose={() => setWindOpen(false)} />}
           {hoverSummary && <aside className="map-hover-summary" style={{ left: hoverSummary.x, top: hoverSummary.y }} aria-hidden="true">
             <span>{hoverSummary.subtitle}</span><strong>{hoverSummary.title}</strong><small>{hoverSummary.state}</small>
           </aside>}
@@ -8026,9 +8133,19 @@ export default function Home() {
             <button className="icon-close" type="button" onClick={closeRightPanel} aria-label="Close Evidence Drawer">×</button>
           </div>
           {!selected ? <div className="drawer-empty"><span aria-hidden="true">⌖</span><h3>No feature selected</h3><p>Choose a map feature or use a Layer Catalog “Features” action. The map identifies a candidate; the registry supplies the stable context.</p></div> : <>
-            <div className="drawer-state"><span className="state-icon" aria-hidden="true">{["ANSWER", "CORRECTED"].includes(selected.properties.evidenceState) ? "✓" : ["DENIED_BY_POLICY", "RESTRICTED_ACCESS", "ERROR"].includes(selected.properties.evidenceState) ? "!" : "○"}</span><span><small>{selected.properties.evidenceState}</small><strong>{selectedEvidence?.label}</strong></span></div>
-            <p className="state-explanation">{selectedEvidence?.explanation}</p>
-            {selected.kind === "basemap" && <div className="notice external-context-notice"><strong>Basemap context only</strong><p>This is real geographic context from the selected external display provider. It is not a KFM EvidenceBundle, released layer, source admission, scientific validation, or citation for a claim.</p></div>}
+            {selectedOfficialConnection && <section className="drawer-live-source" data-state={selectedRiverObservation?.status ?? selectedOfficialConnection.state} aria-label="Selected external source and telemetry">
+              <header><span>OFFICIAL SOURCE · {selectedOfficialConnection.source.shortTitle}</span><strong>{selectedRiverObservation?.status === "observation" ? "OBSERVATION LOADED" : selectedRiverObservation?.status === "gap" ? "NO SAMPLE AT FRAME" : selectedRiverObservation?.status === "stale" ? "LAST RESPONSE · CHECK SOURCE" : selectedRiverObservation?.status === "error" ? "SOURCE UNAVAILABLE" : selectedRiverObservation?.status === "loading" ? "REFRESHING" : selectedOfficialConnection.state.toUpperCase()}</strong></header>
+              {selectedRiverObservation ? <>
+                <div className="drawer-live-reading"><span>Discharge · USGS station {selectedRiverObservation.stationId.slice(5)}</span><strong>{selectedRiverObservation.displayValue ?? "No sample at this frame"}</strong><small>{selectedRiverObservation.observedAt ? `Observed ${drawerTimestamp(selectedRiverObservation.observedAt)}` : "The selected frame has no usable discharge observation."}</small></div>
+                {!selectedRiverObservation.displayValue && latestLoadedDischarge && <p className="drawer-prior-reading">Latest loaded discharge: {latestLoadedDischarge.value?.toLocaleString("en-US")} {latestLoadedDischarge.unit} · {drawerTimestamp(latestLoadedDischarge.observedAt)}. This is not the selected frame.</p>}
+                <p>Frame {drawerTimestamp(selectedRiverObservation.frameTime)} · Retrieved {drawerTimestamp(selectedRiverObservation.retrievedAt)}</p>
+                <a href={selectedRiverObservation.sourceUrl} target="_blank" rel="noreferrer">Open this gauge at USGS ↗</a>
+              </> : <>
+                <p>{selectedOfficialConnection.source.organization} · {selectedOfficialConnection.featureCount ?? "Unknown"} features in response · Retrieved {drawerTimestamp(selectedOfficialConnection.retrievedAt)}</p>
+                <a href={selectedOfficialConnection.source.sourceUrl} target="_blank" rel="noreferrer">Open official source ↗</a>
+              </>}
+            </section>}
+            {selected.kind === "basemap" ? <div className="drawer-claim-boundary"><span>CLAIM EVIDENCE</span><strong>No KFM EvidenceBundle attached</strong><p>{selectedOfficialConnection ? "Provider data is source context. KFM admission, review, and release have not occurred." : "This basemap feature is orientation context from an external display provider, not KFM evidence."}</p></div> : <><div className="drawer-state"><span className="state-icon" aria-hidden="true">{["ANSWER", "CORRECTED"].includes(selected.properties.evidenceState) ? "✓" : ["DENIED_BY_POLICY", "RESTRICTED_ACCESS", "ERROR"].includes(selected.properties.evidenceState) ? "!" : "○"}</span><span><small>{selected.properties.evidenceState}</small><strong>{selectedEvidence?.label}</strong></span></div><p className="state-explanation">{selectedEvidence?.explanation}</p></>}
             {selectedTimeMismatch && <div className="drawer-time-warning" role="status"><strong>Selection is outside active time</strong><span>{selectedIsHeldOfficialContext ? `Current official context is held outside ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : `Source ${formatTimelineStep(selected.properties.year)} · active ${temporalScopeLabel}`}. The normal map halo is hidden while the record stays available for inspection.</span></div>}
             {selectedLayerHidden && <div className="drawer-time-warning" role="status"><strong>Selected layer is hidden</strong><span>{selected.layer.title} remains available for inspection, but its normal map halo is hidden until the layer is visible again.</span></div>}
             {selectedEvidenceFiltered && <div className="drawer-time-warning" role="status"><strong>Selection is outside the map evidence filter</strong><span>The record remains available for inspection, but its map geometry and halo stay hidden until the {mapEvidenceFilter.replaceAll("_", " ")} filter is cleared or changed.</span></div>}
@@ -8037,31 +8154,71 @@ export default function Home() {
             </div>
             <div className="drawer-scroll">
               {drawerView === "evidence" && <section role="tabpanel" id="drawer-panel-evidence" aria-labelledby="drawer-tab-evidence" className="drawer-section">
-                <p className="summary">{selected.properties.summary}</p>
+                <p className="summary">{selectedRiverObservation ? `${selectedRiverObservation.stationName ?? selected.properties.title} is a USGS monitoring location. The observation follows the selected map frame; a missing frame remains a gap.` : selectedOfficialConnection ? `Selected map snapshot: ${selected.properties.summary} Re-select this feature after a feed update to refresh its mapped properties.` : selected.properties.summary}</p>
+                {!selectedRiverObservation && <section className="drawer-data-block" aria-label="Selected artifact data"><header><h3>Selected artifact data</h3><small>{selected.kind === "registry" ? "Site-local record" : selectedAttributesCurrent ? "Current loaded provider response" : "Captured map properties"}</small></header>
+                  {selectedArtifactAttributes.length > 0 ? <dl className="drawer-attribute-list">{selectedArtifactAttributes.map((attribute) => <div key={attribute.label}><dt>{attribute.label}</dt><dd>{attribute.value}</dd></div>)}</dl> : <p>No measured feature attributes are available in this map carrier. Source and trust metadata are available below.</p>}
+                </section>}
+                {selectedRiverObservation && <section className="drawer-data-block" aria-label="USGS gauge height data"><header><h3>Gauge height · USGS 00065</h3><small>Separate seven-day station request</small></header>
+                  {selectedStageDetail?.status === "loading" && <p role="status">Loading station metadata and gauge-height observations…</p>}
+                  {selectedStageDetail?.status === "error" && <p role="status">Gauge-height data are unavailable. The discharge frame and its history remain separate.</p>}
+                  {selectedStageDetail?.status === "ready" && selectedStageDetail.detail && <>
+                    <p>{selectedStageDetail.detail.latest ? `Latest returned value: ${selectedStageDetail.detail.latest.value?.toLocaleString("en-US")} ${selectedStageDetail.detail.latest.unit} · ${drawerTimestamp(selectedStageDetail.detail.latest.observedAt)}` : "No measured gauge-height value was returned in this seven-day request."} {selectedStageDetail.detail.partial ? "The response is partial." : ""}</p>
+                    <p>Checked {drawerTimestamp(selectedStageDetail.detail.queryStart)} to {drawerTimestamp(selectedStageDetail.detail.queryEnd)} · {selectedStageDetail.detail.observationCount.toLocaleString("en-US")} returned samples · retrieved {drawerTimestamp(selectedStageDetail.detail.retrievedAt)}.</p>
+                    {selectedStageDetail.detail.recent.length > 0 && <ol className="drawer-sample-list" aria-label="Recent gauge-height samples">{selectedStageDetail.detail.recent.map((item) => <li key={item.observedAt}><time dateTime={item.observedAt}>{drawerTimestamp(item.observedAt)}</time><strong>{item.value === null ? "No value" : `${item.value.toLocaleString("en-US")} ${item.unit}`}</strong><small>{item.approvalStatus ?? "Status unavailable"}{item.qualifiers.length ? ` · ${item.qualifiers.join(", ")}` : ""}</small></li>)}</ol>}
+                  </>}
+                  <a href={`https://waterdata.usgs.gov/monitoring-location/${selectedRiverObservation.stationId}/#dataTypeId=continuous-00065-0&period=P7D&showFieldMeasurements=true`} target="_blank" rel="noreferrer">Open gauge-height data at USGS ↗</a>
+                </section>}
+                {selectedRiverObservation && <><h3>Gauge and feed telemetry</h3><dl className="evidence-facts">
+                  <div><dt>Feed state</dt><dd>{selectedRiverObservation.connectionState.toUpperCase()}{selectedRiverObservation.isPartial ? " · partial response" : ""}</dd></div>
+                  <div><dt>Selected frame</dt><dd>{drawerTimestamp(selectedRiverObservation.frameTime)}</dd></div>
+                  <div><dt>Observed</dt><dd>{drawerTimestamp(selectedRiverObservation.observedAt)}</dd></div>
+                  <div><dt>Retrieved</dt><dd>{drawerTimestamp(selectedRiverObservation.retrievedAt)}</dd></div>
+                  <div><dt>Station samples</dt><dd>{selectedRiverObservation.observationCount.toLocaleString("en-US")} in loaded response</dd></div>
+                  <div><dt>USGS status</dt><dd>{selectedRiverObservation.approvalStatus ?? "Not available"}</dd></div>
+                  <div><dt>Qualifiers</dt><dd>{selectedRiverObservation.qualifiers.length > 0 ? selectedRiverObservation.qualifiers.join(", ") : "None reported"}</dd></div>
+                  <div><dt>Trend at frame</dt><dd>{selectedRiverObservation.trend && selectedRiverObservation.trend !== "unknown" ? selectedRiverObservation.trend : "Not available"}</dd></div>
+                </dl></>}
+                {selectedRiverObservation && <section className="drawer-data-block" aria-label="Loaded discharge data"><header><h3>Loaded discharge · USGS 00060</h3><small>{streamflowBundle?.query.mode === "historical-series" ? "Selected historical range" : "Bounded network window"}</small></header>
+                  {selectedDischargeHistory.length > 0 ? <ol className="drawer-sample-list">{selectedDischargeHistory.map((item) => <li key={item.observedAt}><time dateTime={item.observedAt}>{drawerTimestamp(item.observedAt)}</time><strong>{item.value === null ? "No value" : `${item.value.toLocaleString("en-US")} ${item.unit}`}</strong><small>{item.approvalStatus ?? "Status unavailable"}{item.qualifiers.length ? ` · ${item.qualifiers.join(", ")}` : ""}</small></li>)}</ol> : <p>No discharge samples were returned for this station in the loaded request.</p>}
+                  <p>The selected frame above is independent of this recent-sample list. No value is carried into a missing frame.</p>
+                </section>}
+                <details className="drawer-context-details"><summary>Context, provenance and claim fields</summary>
                 <dl className="evidence-facts">
                   <div><dt>Layer / domain</dt><dd>{selected.layer.title} · {selected.layer.domain}</dd></div>
                   <div><dt>Source role</dt><dd>{selected.properties.sourceRole}</dd></div>
                   <div><dt>Source organization</dt><dd>{selected.properties.sourceOrganization}</dd></div>
                   <div><dt>Spatial scope</dt><dd>{selected.properties.spatialScope}</dd></div>
-                  <div><dt>Temporal scope</dt><dd>{selected.properties.temporalScope}</dd></div>
-                  <div><dt>Last update / freshness</dt><dd>{selected.properties.lastUpdate} · {selected.properties.freshnessState}</dd></div>
-                  <div><dt>Review / release</dt><dd>{selected.properties.reviewState} · {selected.properties.releaseState}</dd></div>
+                  <div><dt>Temporal scope</dt><dd>{selectedRiverObservation ? drawerTimestamp(selectedRiverObservation.frameTime) : selected.properties.temporalScope}</dd></div>
+                  <div><dt>Last update / freshness</dt><dd>{selectedOfficialConnection ? `${drawerTimestamp(selectedOfficialConnection.retrievedAt)} · ${selectedOfficialConnection.state.toUpperCase()}` : `${selected.properties.lastUpdate} · ${selected.properties.freshnessState}`}</dd></div>
+                  <div><dt>Review / release</dt><dd>{selectedOfficialConnection ? "Not KFM reviewed · not KFM released" : `${selected.properties.reviewState} · ${selected.properties.releaseState}`}</dd></div>
                   <div><dt>Evidence reference</dt><dd><code>{selected.properties.citation}</code></dd></div>
-                  <div><dt>Official source</dt><dd>{selectedSourceCandidate ? <a href={selectedSourceCandidate.sourceUrl} target="_blank" rel="noreferrer">{selectedSourceCandidate.organization} portal ↗</a> : "Not available for this site-local record"}</dd></div>
-                  <div><dt>Source admission</dt><dd>{selectedSourceCandidate ? `${(SOURCE_ADMISSION_BY_ID[selectedSourceCandidate.id] ?? "candidate").replaceAll("-", " ")} · checked ${selectedSourceCandidate.checkedAt}` : selected.kind === "basemap" ? "External display context" : "Site-local demonstration fixture"}</dd></div>
+                  <div><dt>Official source</dt><dd>{selectedOfficialConnection ? <a href={selectedRiverObservation?.sourceUrl ?? selectedOfficialConnection.source.sourceUrl} target="_blank" rel="noreferrer">{selectedOfficialConnection.source.organization} record ↗</a> : selectedSourceCandidate ? <a href={selectedSourceCandidate.sourceUrl} target="_blank" rel="noreferrer">{selectedSourceCandidate.organization} portal ↗</a> : "Not available for this site-local record"}</dd></div>
+                  <div><dt>Source admission</dt><dd>{selectedOfficialConnection ? "External context · not KFM admitted" : selectedSourceCandidate ? `${(SOURCE_ADMISSION_BY_ID[selectedSourceCandidate.id] ?? "candidate").replaceAll("-", " ")} · checked ${selectedSourceCandidate.checkedAt}` : selected.kind === "basemap" ? "External display context" : "Site-local demonstration fixture"}</dd></div>
                 </dl>
-                <div className="notice"><strong>Limitations</strong><p>{selected.properties.uncertainty}</p></div>
+                </details>
+                <div className="notice"><strong>Limitations</strong><p>{selectedRiverObservation?.status === "stale" ? "The source is stale or unavailable. A prior sample is shown only with its original time; no new observation is inferred. " : ""}{selectedOfficialPayload?.limitation ?? selected.properties.uncertainty}</p></div>
                 <div className="notice"><strong>Generalization / rights</strong><p>{selected.properties.generalizationNote} {selected.properties.rights}</p></div>
                 {selected.properties.correctionState !== "NONE" && <div className="notice correction"><strong>Correction state</strong><p>{selected.properties.correctionState}</p></div>}
                 <div className="drawer-actions"><button type="button" onClick={() => activateDrawerView("focus", true)}>Open Focus Mode</button><button type="button" onClick={() => openPrimaryWorkspace("reports", true)}>Add to report</button><button type="button" onClick={() => openPrimaryWorkspace("stories", true)}>Add to story</button><button type="button" onClick={(event) => openMapUtility("export", event.currentTarget)}>Review public-safe export</button></div>
               </section>}
               {drawerView === "metadata" && <section role="tabpanel" id="drawer-panel-metadata" aria-labelledby="drawer-tab-metadata" className="drawer-section">
-                <h3>Registry-driven layer metadata</h3><dl className="evidence-facts">
-                  <div><dt>Dataset</dt><dd>{selected.layer.datasetName}</dd></div><div><dt>Source / geometry</dt><dd>{selected.layer.sourceType} · {selected.layer.geometryType}</dd></div><div><dt>Zoom support</dt><dd>{selected.layer.minZoom}–{selected.layer.maxZoom}</dd></div><div><dt>Units</dt><dd>{selected.layer.units}</dd></div><div><dt>Valid time extent</dt><dd>{selected.layer.validTimeExtent}</dd></div><div><dt>Source time</dt><dd>{selected.layer.sourceTime}</dd></div><div><dt>Release time</dt><dd>{selected.layer.releaseTime}</dd></div><div><dt>Attribution</dt><dd>{selected.layer.attribution}</dd></div></dl>
-                <div className="legend-detail"><strong>Legend</strong>{selected.layer.legend.map((item) => <p key={item.label}><i className={`legend-swatch ${item.shape}`} style={{ "--swatch": item.color } as React.CSSProperties} />{item.label}</p>)}</div>
+                {selectedOfficialConnection ? <><h3>Official source details</h3><dl className="evidence-facts">
+                  <div><dt>Provider</dt><dd>{selectedOfficialConnection.source.organization}</dd></div><div><dt>Feed</dt><dd>{selectedOfficialConnection.source.endpointLabel}</dd></div><div><dt>Cadence</dt><dd>{selectedOfficialConnection.source.cadence}</dd></div><div><dt>Response state</dt><dd>{selectedOfficialConnection.state.toUpperCase()}{selectedOfficialPayload?.truncated ? " · truncated" : ""}</dd></div><div><dt>Retrieved</dt><dd>{drawerTimestamp(selectedOfficialConnection.retrievedAt)}</dd></div><div><dt>Provider time</dt><dd>{drawerTimestamp(selectedOfficialPayload?.upstreamUpdatedAt)}</dd></div><div><dt>Evidence role</dt><dd>External context only</dd></div><div><dt>Attribution</dt><dd>{selectedOfficialConnection.source.attribution}</dd></div>
+                </dl>{selectedRiverObservation && streamflowCoverage?.station === selectedRiverObservation.stationId && <div className="notice"><strong>Provider-declared discharge record span</strong><p>{streamflowCoverage.continuous ? `${drawerTimestamp(streamflowCoverage.continuous.start)} to ${drawerTimestamp(streamflowCoverage.continuous.end)} continuous` : "No continuous span declared"}{streamflowCoverage.daily ? ` · daily ${drawerTimestamp(streamflowCoverage.daily.start)} to ${drawerTimestamp(streamflowCoverage.daily.end)}` : ""}{streamflowCoverage.partial ? " · partial metadata" : ""}. Gaps may occur within these dates.</p></div>}{selectedRiverObservation && selectedStageDetail?.status === "ready" && selectedStageDetail.detail && <><h3>USGS monitoring location</h3><dl className="evidence-facts">
+                  <div><dt>Station</dt><dd>{selectedStageDetail.detail.name} · {selectedStageDetail.detail.stationId}</dd></div>
+                  <div><dt>Site type</dt><dd>{selectedStageDetail.detail.siteTypeCode ?? "Not reported"}</dd></div>
+                  <div><dt>County</dt><dd>{selectedStageDetail.detail.county ?? "Not reported"}</dd></div>
+                  <div><dt>Hydrologic unit</dt><dd>{selectedStageDetail.detail.huc ?? "Not reported"}</dd></div>
+                  <div><dt>Drainage area</dt><dd>{selectedStageDetail.detail.drainageArea === null ? "Not reported" : `${selectedStageDetail.detail.drainageArea.toLocaleString("en-US")} sq mi`}</dd></div>
+                  <div><dt>Contributing area</dt><dd>{selectedStageDetail.detail.contributingDrainageArea === null ? "Not reported" : `${selectedStageDetail.detail.contributingDrainageArea.toLocaleString("en-US")} sq mi`}</dd></div>
+                  <div><dt>WGS84 point</dt><dd>{selectedStageDetail.detail.latitude.toFixed(5)}, {selectedStageDetail.detail.longitude.toFixed(5)} · provider coordinates, not survey precision</dd></div>
+                  <div><dt>Stage response</dt><dd>{selectedStageDetail.detail.partial ? "Partial" : "Complete within request"}{selectedStageDetail.detail.truncated ? " · truncated" : ""}</dd></div>
+                </dl></>}
+                <div className="notice"><strong>Source boundary</strong><p>{selectedOfficialConnection.source.boundary}</p></div></> : selected.kind === "basemap" ? <><h3>External display metadata</h3><dl className="evidence-facts"><div><dt>Provider</dt><dd>{selected.properties.sourceOrganization}</dd></div><div><dt>Rendered layer</dt><dd>{selected.layer.title}</dd></div><div><dt>Feature ID</dt><dd>{selected.featureId}</dd></div><div><dt>Role</dt><dd>Orientation context only · no KFM source admission</dd></div></dl></> : <><h3>Registry-driven layer metadata</h3><dl className="evidence-facts">
+                  <div><dt>Dataset</dt><dd>{selected.layer.datasetName}</dd></div><div><dt>Source / geometry</dt><dd>{selected.layer.sourceType} · {selected.layer.geometryType}</dd></div><div><dt>Zoom support</dt><dd>{selected.layer.minZoom}–{selected.layer.maxZoom}</dd></div><div><dt>Units</dt><dd>{selected.layer.units}</dd></div><div><dt>Valid time extent</dt><dd>{selected.layer.validTimeExtent}</dd></div><div><dt>Source time</dt><dd>{selected.layer.sourceTime}</dd></div><div><dt>Release time</dt><dd>{selected.layer.releaseTime}</dd></div><div><dt>Attribution</dt><dd>{selected.layer.attribution}</dd></div></dl><div className="legend-detail"><strong>Legend</strong>{selected.layer.legend.map((item) => <p key={item.label}><i className={`legend-swatch ${item.shape}`} style={{ "--swatch": item.color } as React.CSSProperties} />{item.label}</p>)}</div></>}
               </section>}
               {drawerView === "lineage" && <section role="tabpanel" id="drawer-panel-lineage" aria-labelledby="drawer-tab-lineage" className="drawer-section">
-                <h3>Selection-to-evidence trace</h3><ol className="lineage-list"><li><span>01</span><div><strong>MapLibre candidate</strong><small>queryRenderedFeatures identified a candidate only</small></div></li><li><span>02</span><div><strong>{selected.kind === "basemap" ? "External display context" : "Stable registry context"}</strong><small>{selected.featureId}</small></div></li><li><span>03</span><div><strong>{selected.kind === "basemap" ? "No KFM evidence resolution" : "Evidence resolution"}</strong><small>{selected.properties.citation}</small></div></li><li><span>04</span><div><strong>Policy / rights</strong><small>{selected.properties.evidenceState}</small></div></li><li><span>05</span><div><strong>Public-safe view</strong><small>{selected.kind === "basemap" ? "Context only · no claim support" : "Drawer + bounded Focus Mode"}</small></div></li></ol>
+                {selectedOfficialConnection ? <><h3>Source-to-drawer trace</h3><ol className="lineage-list"><li><span>01</span><div><strong>{selectedOfficialConnection.source.organization}</strong><small>{selectedOfficialConnection.source.endpointLabel}</small></div></li><li><span>02</span><div><strong>Bounded Site connection</strong><small>{selectedOfficialConnection.source.managedAdapterPath ?? selectedOfficialConnection.source.apiPath ?? "Provider display layer"} · {selectedOfficialConnection.state.toUpperCase()}</small></div></li><li><span>03</span><div><strong>Retrieved response</strong><small>{drawerTimestamp(selectedOfficialConnection.retrievedAt)} · {selectedOfficialConnection.featureCount ?? "unknown"} displayed features</small></div></li><li><span>04</span><div><strong>Map selection</strong><small>{selected.featureId}</small></div></li><li><span>05</span><div><strong>KFM claim boundary</strong><small>No EvidenceBundle, source admission, review, or release established by this selection.</small></div></li></ol></> : <><h3>Selection-to-evidence trace</h3><ol className="lineage-list"><li><span>01</span><div><strong>MapLibre candidate</strong><small>queryRenderedFeatures identified a candidate only</small></div></li><li><span>02</span><div><strong>{selected.kind === "basemap" ? "External display context" : "Stable registry context"}</strong><small>{selected.featureId}</small></div></li><li><span>03</span><div><strong>{selected.kind === "basemap" ? "No KFM evidence resolution" : "Evidence resolution"}</strong><small>{selected.properties.citation}</small></div></li><li><span>04</span><div><strong>Policy / rights</strong><small>{selected.properties.evidenceState}</small></div></li><li><span>05</span><div><strong>Public-safe view</strong><small>{selected.kind === "basemap" ? "Context only · no claim support" : "Drawer + bounded Focus Mode"}</small></div></li></ol></>}
                 <div className="boundary-law"><span>Renderer</span><b>≠</b><span>truth store</span><b>·</b><span>pixel</span><b>≠</b><span>proof</span></div>
               </section>}
               {drawerView === "focus" && <section role="tabpanel" id="drawer-panel-focus" aria-labelledby="drawer-tab-focus" className="drawer-section focus-mode">
