@@ -4,7 +4,7 @@
 24.04. It does not establish CI compatibility, policy approval, evidence
 closure, source admission, release readiness, deployment, or publication.
 
-## Safe inspection
+## Prerequisite inspection
 
 ```bash
 scripts/dev/bootstrap.sh --check --json
@@ -18,7 +18,14 @@ Inspection verifies the repository runtime envelope:
 - Git; and
 - Ubuntu 24.04.
 
-The command is write-free unless the operator explicitly chooses apply mode.
+`--check` combined with `--install-system` is rejected with exit code 2 before
+host or dependency checks, regardless of option order. Adding `--offline` or
+`--json` does not permit the combination or produce a success receipt.
+
+Inspection still invokes installed tool version commands. Whether a local pnpm
+launcher is a provisioned binary or a Corepack shim needs verification: a shim
+may acquire its package-manager runtime when invoked. A universal write-free or
+network-free guarantee for those launchers is not established by these checks.
 
 ## Apply mode
 
@@ -39,7 +46,8 @@ remain an error.
 
 The script never invokes `sudo`. System package installation is disabled
 unless `--install-system` is supplied from an already-root shell. That mode is
-incompatible with `--offline` and is intentionally separate from normal use.
+incompatible with `--check` and `--offline` and is intentionally separate from
+normal use.
 
 Use `--python-only`, `--node-only`, or `--no-hooks` to narrow the operation.
 Use `--json` to emit the machine-readable

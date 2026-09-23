@@ -67,16 +67,18 @@ option. These are source-observed capabilities, not a verified installation.
 [`regen_fixtures.sh`](./regen_fixtures.sh) still prints `TODO`; generator and
 fixture admission remain unverified.
 
-The three existing tests in `tests/scripts/test_dev_bootstrap.py` passed on
-2026-09-23: shell syntax, help text, and unknown-option rejection. Apply mode,
-dependency installation, offline behavior, and system installation were not
-run. A source-observed limitation remains: with missing base tools in a root
-shell, `--check --install-system` can reach `apt-get` before the apply-mode guard.
-Do not treat that combination as write-free inspection; it requires a separate
-guard correction and regression proof.
+Eleven tests in `tests/scripts/test_dev_bootstrap.py` passed on 2026-09-23:
+shell syntax, help text, unknown-option rejection, and eight option-order cases
+that reject `--check --install-system` before host checks or mutation-command
+sentinels, including `--offline` and `--json` combinations. All eight new cases
+failed before the early guard was added. Apply mode, real dependency/system
+installation, and package-manager offline behavior were not run. Installed
+tool launchers such as Corepack can have their own acquisition side effects;
+their version queries are not proved universally write-free by this packet.
 
 The bootstrap usage guide is now [`bootstrap.md`](./bootstrap.md), renamed from
-`scripts/dev/BOOTSTRAP.md` without changing its contents. Accepted ADR-0029 and
+`scripts/dev/BOOTSTRAP.md` with its original contents preserved by the rename;
+the follow-up guard correction updates its inspection boundary. Accepted ADR-0029 and
 Directory Rules §13.2 require lowercase governed path segments unless an
 external standard or repository entrypoint fixes the spelling; this guide is
 ordinary usage documentation owned by the existing `scripts/dev/` lane.
@@ -84,7 +86,8 @@ ordinary usage documentation owned by the existing `scripts/dev/` lane.
 No tracked references to the prior guide path were found at
 `8cb6cb247f4962996d00d3d526cb7a9ed4b89884`. External bookmarks are unverified.
 For rollback, revert the rename, this note, and its generated authoring receipt
-together. The script and its runtime behavior are unchanged by this correction.
+together. The separate early-guard correction is independently reversible;
+reverting it would restore the inspection/system-install conflict.
 
 The older lane inventory and implementation statements below describe the
 explicitly pinned July 2026 snapshot; they are historical, not a current
