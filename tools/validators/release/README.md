@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-validators-release-readme
 title: tools/validators/release README
 type: README
-version: v0.1
+version: v0.2
 status: draft
 owner: TODO-tooling-qa-owner-plus-release-steward-plus-promotion-steward-plus-policy-steward-plus-evidence-steward-plus-correction-steward-plus-rollback-steward
 created: 2026-07-08
-updated: 2026-07-08
+updated: 2026-09-23
 policy_label: repository-facing; release-validator-index; release-manifest-aware; promotion-decision-aware; rollback-aware; correction-aware; withdrawal-aware; signed-release-aware; evidence-bound; policy-bound; fail-closed; non-authoritative
 owning_root: tools/
 responsibility: parent release validator routing README under tools/validators; documents release validation expectations for ReleaseManifest readiness, PromotionDecision linkage, rollback-card support, correction and withdrawal posture, release artifact reference integrity, evidence/proof/receipt linkage, policy/review posture, lifecycle boundary preservation, post-release supersession and rollback propagation, public-surface denial, schema/fixture/test routing, and finite outcomes while deferring release object meaning, canonical schemas, policy decisions, evidence records, receipts, lifecycle data, release records, release tooling helpers, public runtime code, and release authority to their owning roots
@@ -41,7 +41,7 @@ related:
   - ../../../fixtures/release/
   - ../../../tests/
 notes:
-  - "This README replaces an empty placeholder at tools/validators/release/README.md. It does not confirm executable release validators, registry wiring, release storage, policy bundles, receipt emission, or CI behavior."
+  - "v0.2 documents the bounded ReleaseProofPackClosure validator and malformed-field outcomes; broader release storage, policy execution, receipt emission, and hosted enforcement remain unverified."
   - "Release validators check release-governance readiness. They do not store release records, approve release, publish artifacts, write ReleaseManifests, write PromotionDecisions, execute rollback, or authorize public surfaces."
   - "ReleaseManifest is the release-facing trust spine for published KFM artifacts, but it is not sovereign truth, not policy approval, not proof closure by itself, and not an artifact store."
   - "PromotionDecision is a governed transition decision, not a file move, release manifest, or public-surface permission by itself."
@@ -87,11 +87,42 @@ The answer should be a deterministic validation result or routing decision. This
 | `tools/release/README.md` | **CONFIRMED tooling README / executable behavior NEEDS VERIFICATION** | Release-support helpers may prepare dry-run reports and review scaffolds; they do not approve release. |
 | `docs/architecture/publication/RELEASE_GATES.md` | **CONFIRMED architecture doc / implementation NEEDS VERIFICATION** | Defines release gates at `CATALOG / TRIPLET -> PUBLISHED` and public-trust membrane constraints. |
 | `tools/validators/promotion_gate/README.md` | **CONFIRMED bounded executable specialization** | Checks declared A-G readiness with synthetic fixtures; release validation remains broader than this profile. |
+| `validate_release_proof_pack_closure.py` | **CONFIRMED bounded executable checker** | Checks declared candidate pack completeness and finite outcomes; malformed field types cannot escape as set/sort errors. It does not resolve or authenticate the references. |
 | Broader release validator scripts, registry wiring, policy execution, release storage, receipt emission, runtime behavior, and end-to-end enforcement | **NEEDS VERIFICATION** | The promotion-gate thin slice does not close these surfaces. |
 
 [Back to top](#top)
 
 ---
+
+## Release proof pack closure validation
+
+[`validate_release_proof_pack_closure.py`](validate_release_proof_pack_closure.py)
+implements the bounded
+[`ReleaseProofPackClosure` contract](../../../contracts/release/release_proof_pack_closure.md).
+Its `validate(record)` function returns `ERROR` for a non-object record or an
+invalid declared outcome, and `DENY` for invalid candidate states or malformed
+reference lists. Reference members must be non-empty strings before the checker
+tests uniqueness and sorted order. Valid `PASS`, `ABSTAIN`, `DENY`, and `ERROR`
+declarations retain their existing meaning after completeness and governance
+checks. No reference resolution, policy approval, or release authority follows.
+
+The existing
+[focused tests](../../../tests/validators/test_validate_release_proof_pack_closure.py)
+exercise malformed container values, mixed-type reference members, ordering,
+duplicates, and intentional outcomes. Run them and the synthetic fixture replay
+from the repository root:
+
+```bash
+python -m unittest tests.validators.test_validate_release_proof_pack_closure -v
+python tools/validators/release/validate_release_proof_pack_closure.py --fixtures
+```
+
+The `--fixtures` command checks expected fixture outcomes; a successful replay
+is not approval of its intentionally denied fixture records. Raw fixture-file
+read/parse errors and complete schema validation remain outside this bounded
+field-type repair. The existing
+[workflow](../../../.github/workflows/release-proof-pack-closure.yml) invokes both
+commands; hosted execution and independent acceptance require separate evidence.
 
 ## Placement decision
 
@@ -304,4 +335,5 @@ Future implementation is not complete until:
 
 | Date | Change | Status |
 |---|---|---|
+| 2026-09-23 | Documented release proof pack closure field-type handling and focused validation. | **CONFIRMED bounded local behavior / broader release acceptance unverified** |
 | 2026-07-08 | Replaced empty placeholder with release validator parent README. | **CONFIRMED README / implementation NEEDS VERIFICATION** |

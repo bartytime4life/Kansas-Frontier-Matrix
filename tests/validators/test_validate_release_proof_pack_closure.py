@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
 from pathlib import Path
 import unittest
@@ -24,6 +25,46 @@ orchestrator_spec.loader.exec_module(orchestrator)
 
 
 class ReleaseProofPackClosureTests(unittest.TestCase):
+    def complete_fixture(self):
+        return json.loads(mod.FIXTURES.read_text(encoding="utf-8"))["cases"][0]["record"]
+
+    def test_malformed_candidate_states_are_denied(self):
+        for value in ([], {}, None, True, 1, "PUBLISHED"):
+            with self.subTest(value=value):
+                record = self.complete_fixture()
+                record["candidate_state"] = value
+                self.assertEqual("DENY", mod.validate(record))
+
+    def test_malformed_reference_members_are_denied(self):
+        for field in mod.REF_LISTS:
+            for values in ([[]], [{}], ["ref:1", 1], [None], [True], [""]):
+                with self.subTest(field=field, values=values):
+                    record = self.complete_fixture()
+                    record[field] = values
+                    self.assertEqual("DENY", mod.validate(record))
+
+    def test_unsorted_or_duplicate_references_still_denied(self):
+        for field in mod.REF_LISTS:
+            for values in (["ref:2", "ref:1"], ["ref:1", "ref:1"]):
+                with self.subTest(field=field, values=values):
+                    record = self.complete_fixture()
+                    record[field] = values
+                    self.assertEqual("DENY", mod.validate(record))
+
+    def test_malformed_outcomes_are_errors(self):
+        for value in ([], {}, None, True, 1, "UNKNOWN"):
+            with self.subTest(value=value):
+                record = self.complete_fixture()
+                record["outcome"] = value
+                self.assertEqual("ERROR", mod.validate(record))
+
+    def test_finite_declared_outcomes_are_preserved(self):
+        for outcome in ("PASS", "ABSTAIN", "DENY", "ERROR"):
+            with self.subTest(outcome=outcome):
+                record = self.complete_fixture()
+                record["outcome"] = outcome
+                self.assertEqual(outcome, mod.validate(record))
+
     def test_complete_candidate_passes(self):
         record = {
             "object_type": "ReleaseProofPackClosure",

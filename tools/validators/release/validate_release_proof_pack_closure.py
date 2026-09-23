@@ -13,16 +13,19 @@ def validate(record):
         return "ERROR"
     if record.get("object_type") != "ReleaseProofPackClosure":
         return "DENY"
-    if record.get("candidate_state") not in {"CANDIDATE", "HELD"}:
+    candidate_state = record.get("candidate_state")
+    if not isinstance(candidate_state, str) or candidate_state not in {"CANDIDATE", "HELD"}:
         return "DENY"
     for key in ("release_manifest_ref", "correction_ref", "rollback_ref"):
         if not isinstance(record.get(key), str) or not record[key].strip():
             return "DENY"
     for key in REF_LISTS:
         values = record.get(key)
-        if not isinstance(values, list) or not values or values != sorted(set(values)):
+        if not isinstance(values, list) or not values:
             return "DENY"
         if not all(isinstance(v, str) and v.strip() for v in values):
+            return "DENY"
+        if values != sorted(set(values)):
             return "DENY"
     governance = record.get("governance")
     if not isinstance(governance, dict) or set(governance) != AUTHORITY_FLAGS:
@@ -30,7 +33,7 @@ def validate(record):
     if any(governance[k] is not False for k in AUTHORITY_FLAGS):
         return "DENY"
     outcome = record.get("outcome")
-    if outcome not in {"PASS", "ABSTAIN", "DENY", "ERROR"}:
+    if not isinstance(outcome, str) or outcome not in {"PASS", "ABSTAIN", "DENY", "ERROR"}:
         return "ERROR"
     if outcome == "PASS" and record["candidate_state"] != "CANDIDATE":
         return "DENY"
