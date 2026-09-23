@@ -1279,6 +1279,21 @@ input[type="range"] { accent-color: var(--gold); }
 .evidence-drawer[data-state="DENIED_BY_POLICY"] .drawer-state, .evidence-drawer[data-state="RESTRICTED_ACCESS"] .drawer-state, .evidence-drawer[data-state="ERROR"] .drawer-state { border-color: rgba(255,155,136,.3); background: rgba(255,155,136,.04); }
 .evidence-drawer[data-state="DENIED_BY_POLICY"] .state-icon, .evidence-drawer[data-state="RESTRICTED_ACCESS"] .state-icon, .evidence-drawer[data-state="ERROR"] .state-icon { border-color: var(--red); color: var(--red); }
 .state-explanation { margin: 0 15px 12px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.drawer-live-source { display: grid; gap: 7px; margin: 12px 12px 8px; border: 1px solid rgba(85,217,236,.38); border-radius: 14px; background: linear-gradient(145deg, rgba(15,66,73,.56), rgba(10,30,35,.82)); padding: 12px; }
+.drawer-live-source > header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 5px 9px; }
+.drawer-live-source > header span { color: var(--water); font-size: 11px; font-weight: 900; letter-spacing: .1em; }
+.drawer-live-source > header strong { border: 1px solid rgba(85,217,236,.3); border-radius: 999px; color: var(--water); padding: 4px 7px; font-size: 10px; letter-spacing: .06em; }
+.drawer-live-source[data-state="stale"] > header strong, .drawer-live-source[data-state="error"] > header strong, .drawer-live-source[data-state="gap"] > header strong { border-color: rgba(224,186,109,.45); color: var(--gold-soft); }
+.drawer-live-reading { display: grid; gap: 3px; border-top: 1px solid rgba(85,217,236,.19); padding-top: 9px; }
+.drawer-live-reading > span { color: var(--muted); font-size: 12px; }
+.drawer-live-reading > strong { color: var(--ink); font-size: clamp(22px, 3vw, 30px); font-weight: 750; line-height: 1.12; font-variant-numeric: tabular-nums; }
+.drawer-live-reading > small { color: var(--water); font-size: 12px; }
+.drawer-live-source > a { justify-self: start; color: var(--water); font-size: 12px; font-weight: 750; text-underline-offset: 3px; }
+.drawer-live-source > p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
+.drawer-claim-boundary { display: grid; gap: 3px; margin: 0 12px 11px; border-left: 3px solid var(--gold); border-radius: 4px 9px 9px 4px; background: rgba(224,186,109,.075); padding: 9px 11px; }
+.drawer-claim-boundary > span { color: var(--gold); font-size: 10px; font-weight: 900; letter-spacing: .1em; }
+.drawer-claim-boundary > strong { color: var(--gold-soft); font-size: 13px; }
+.drawer-claim-boundary > p { margin: 2px 0 0; color: var(--muted); font-size: 11px; line-height: 1.4; }
 .drawer-time-warning { display: grid; gap: 4px; margin: 0 12px 12px; border: 1px solid rgba(224,186,109,.4); border-radius: 9px; background: rgba(224,186,109,.07); padding: 10px; }
 .drawer-time-warning strong { color: var(--gold-soft); font-size: 12px; }
 .drawer-time-warning span { color: var(--muted); font-size: 12px; line-height: 1.45; }
@@ -2761,7 +2776,7 @@ body { font-size: 14px; }
 .layer-panel, .evidence-drawer { position: absolute; z-index: 31; grid-column: auto; grid-row: auto; border: 1px solid rgba(72, 177, 193, .35); border-radius: 8px; background: rgba(3, 22, 28, .94); box-shadow: 0 18px 56px rgba(0, 0, 0, .48); backdrop-filter: blur(14px); }
 .layer-panel { top: 12px; bottom: auto; left: 74px; width: var(--left); height: min(560px, calc(100% - 96px)); transform: translateX(calc(-100% - 90px)); }
 .explorer-shell[data-left="true"] .layer-panel { transform: translateX(0); }
-.evidence-drawer { top: 210px; right: 12px; bottom: auto; width: var(--right); max-height: min(610px, calc(100% - 236px)); transform: translateX(calc(100% + 20px)); }
+.evidence-drawer { top: 72px; right: 12px; bottom: auto; width: min(430px, calc(100% - 24px)); max-height: calc(100% - 96px); transform: translateX(calc(100% + 20px)); }
 .explorer-shell[data-right="true"] .evidence-drawer { transform: translateX(0); }
 .panel-heading { padding: 13px 13px 9px; }
 .panel-heading h1, .panel-heading h2 { margin-top: 3px; font-size: 18px; }

@@ -339,6 +339,15 @@ values are not directly comparable across differently sized basins and are
 never painted onto 3DHP reaches or generalized into WBD watershed conditions.
 Flood categories are displayed only when NOAA supplies them.
 
+The Evidence Drawer resolves a selected USGS gauge against the current River
+Pulse frame and response. It shows the discharge, observation/frame/retrieval
+times, connection state, sample count, provider status and qualifiers, and a
+station link. A frame gap clears the reading, and a failed refresh labels any
+retained sample as a prior response. Other official context selections show
+their feed state and response clocks. These are provider display observations;
+the drawer keeps KFM EvidenceBundle, admission, review, and release status
+separate. Site telemetry does not establish a KFM evidence claim.
+
 The fixed `/api/hydrology/noaa` adapter establishes three distinct NWPS modes:
 a Kansas gauge-status network, one-gauge observed and official NWS forecast
 series, and one-reach National Water Model analysis-assimilation and short-range
