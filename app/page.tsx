@@ -8,6 +8,7 @@ import { parseSavedWorkspaceList } from "./saved-workspaces";
 import { BASELINE_STACKS, currentUtcDay } from "./daily-baseline";
 import { SourceQualityRow } from "./source-quality-row";
 import { ArchiveDaySlider } from "./archive-day-slider";
+import { WindFlow } from "./wind-flow";
 import { DataNotices, RenderQualityControl, TerrainQuickControls } from "./map-toolbar";
 import { browserRenderBudget, readRenderQuality, sampleMapRuntimeHealth, QUALITY_STORAGE_KEY, type MapRuntimeCheckFailure, type RenderQuality } from "./map-performance";
 import type { Feature, Geometry } from "geojson";
@@ -1243,6 +1244,7 @@ export default function Home() {
   const [leftOpen, setLeftOpen] = useState(false);
   const [sourceStatusOpen, setSourceStatusOpen] = useState(false);
   const [instrumentOpen, setInstrumentOpen] = useState(false);
+  const [windOpen, setWindOpen] = useState(false);
   const [leftPanelMode, setLeftPanelMode] = useState<LeftPanelMode>("layers");
   const [rightOpen, setRightOpen] = useState(false);
   const [timelineOpen, setTimelineOpen] = useState(false);
@@ -7374,6 +7376,7 @@ export default function Home() {
             <button className="map-control-launch" type="button" onClick={() => openMapUtility("navigate")}><span aria-hidden="true">⌖</span><strong>Controls</strong></button>
             <button className="map-control-launch" type="button" onClick={() => { setSourceStatusOpen((open) => !open); setLeftOpen(false); }} aria-expanded={sourceStatusOpen} aria-controls="map-source-status"><strong>Source status</strong></button>
             <button className="map-control-launch" type="button" onClick={() => setInstrumentOpen((open) => !open)} aria-pressed={instrumentOpen}><strong>Charts</strong></button>
+            <button className="map-control-launch map-control-launch-wind" type="button" onClick={() => { setWindOpen((open) => !open); setInstrumentOpen(false); setNoaaRadarPlaying(false); setStreamflowPlaying(false); }} aria-pressed={windOpen}><strong>Wind flow</strong><b>Model</b></button>
             <button className="map-control-launch" type="button" onClick={() => window.location.assign("/")} title={`Open a fresh baseline for ${baselineDay} UTC`}><strong>Today’s baseline</strong></button>
             <Link className="map-control-launch" href="/data"><strong>Contribute data</strong></Link>
           </nav>
@@ -7533,6 +7536,7 @@ export default function Home() {
             <footer className="qwen-panel-footer"><p>Qwen is interpretive only. It cannot establish evidence, policy, release, or publication authority.</p><button type="button" onClick={() => void copyQwenPrompt()}>Copy grounded prompt</button></footer>
           </aside>}
           <div id="map-canvas" ref={mapContainerRef} className="map-canvas" tabIndex={0} role="application" aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Map Workbench Inspect or the Layer Catalog for a keyboard feature alternative." />
+          {windOpen && <WindFlow map={styleReady ? mapRef.current : null} reducedMotion={reducedMotion} onClose={() => setWindOpen(false)} />}
           {hoverSummary && <aside className="map-hover-summary" style={{ left: hoverSummary.x, top: hoverSummary.y }} aria-hidden="true">
             <span>{hoverSummary.subtitle}</span><strong>{hoverSummary.title}</strong><small>{hoverSummary.state}</small>
           </aside>}

@@ -833,6 +833,24 @@ input[type="range"] { accent-color: var(--gold); }
 
 .map-stage { position: relative; z-index: 1; grid-column: 2; grid-row: 1; min-width: 0; min-height: 0; overflow: hidden; background: #07171a; }
 .map-canvas { position: absolute; inset: 0; }
+.wind-flow-canvas { position: absolute; z-index: 4; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.wind-flow-dock { position: absolute; z-index: 24; left: 50%; bottom: 16px; width: min(560px, calc(100% - 32px)); transform: translateX(-50%); display: grid; gap: 8px; border: 1px solid rgba(130, 220, 224, .5); border-top: 3px solid #8ce2e7; border-radius: 13px; background: rgba(4, 23, 29, .96); box-shadow: 0 20px 54px rgba(0,0,0,.5); padding: 12px 14px; backdrop-filter: blur(16px); }
+.wind-flow-dock header, .wind-flow-controls, .wind-flow-dock footer { display: flex; align-items: center; gap: 8px; }
+.wind-flow-dock header { justify-content: space-between; color: #9edfe5; font-size: 11px; font-weight: 900; letter-spacing: .12em; }
+.wind-flow-dock h2 { margin: 0; color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-size: 21px; }
+.wind-flow-dock p { margin: 0; color: var(--muted); font-size: 13px; }
+.wind-flow-dock button, .wind-flow-dock a { min-height: 31px; border: 1px solid rgba(130,220,224,.35); border-radius: 8px; background: rgba(130,220,224,.08); color: #c7f6f7; padding: 5px 8px; font-size: 12px; text-decoration: none; }
+.wind-flow-dock button:hover, .wind-flow-dock a:hover, .wind-flow-dock button:focus-visible, .wind-flow-dock a:focus-visible { border-color: #8ce2e7; outline: 2px solid #8ce2e7; outline-offset: 2px; }
+.wind-flow-dock button:disabled { opacity: .5; cursor: not-allowed; }
+.wind-flow-controls input { min-width: 40px; flex: 1; accent-color: #8ce2e7; }
+.wind-flow-controls span { color: #b3d9dc; font-size: 12px; }
+.wind-flow-scale { display: flex; align-items: center; gap: 7px; color: var(--dim); font-size: 11px; }
+.wind-flow-scale i { width: 100px; height: 7px; border-radius: 99px; background: linear-gradient(90deg, #72bed8, #93e9e8, #ffd68f); }
+.wind-flow-scale b { margin-left: auto; color: var(--muted); font-weight: 700; }
+.wind-flow-dock footer { flex-wrap: wrap; border-top: 1px solid rgba(130,220,224,.18); padding-top: 8px; }
+.wind-flow-dock footer span { flex: 1 1 100%; color: var(--dim); font-size: 11px; line-height: 1.4; }
+.map-control-launch-wind[aria-pressed="true"] { border-color: #8ce2e7; color: #c7f6f7; }
+@media (max-width: 700px) { .wind-flow-dock { bottom: calc(56px + env(safe-area-inset-bottom)); width: calc(100% - 18px); max-height: 42dvh; overflow-y: auto; } .wind-flow-dock h2 { font-size: 18px; } }
 .map-canvas:focus-visible { outline-offset: -5px; }
 .mission-band { position: absolute; z-index: 12; top: 10px; left: 50%; display: flex; align-items: center; gap: 14px; max-width: min(680px, calc(100% - 150px)); transform: translateX(-50%); border: 1px solid var(--line-strong); border-radius: 999px; background: rgba(7,25,27,.86); backdrop-filter: blur(12px); padding: 8px 14px; box-shadow: 0 12px 30px rgba(0,0,0,.2); }
 .mission-band span { display: flex; align-items: center; gap: 7px; flex: none; color: var(--green); font-size: 12px; font-weight: 950; letter-spacing: .1em; }
