@@ -59,7 +59,8 @@ def test_tracked_projection_is_a_v2_observed_base_held_checkpoint() -> None:
     )
     assert state["base"]["observed_at"] == "2026-08-03T16:39:56Z"
     assert state["base"]["open_pull_requests"] == []
-    assert state["projection_status"] == "CONFIRMED"
+    # Superseded by #4658: the recorded base no longer matches current main.
+    assert state["projection_status"] == "SUPERSEDED"
     assert state["claim"]["state"] == "HELD"
     assert state["permissions"]["merge"] is False
     assert "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1791" in (
