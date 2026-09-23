@@ -21,7 +21,11 @@ test('inventory has 15 unique logical layers but only 10 same-origin probes', ()
 });
 test('import and invocation without CLI origin do not contact any source', () => {
   const moduleUrl = new URL('../scripts/probe-context-connections.mjs', import.meta.url).href;
-  const imported = spawnSync(process.execPath, ['--input-type=module', '-e', `globalThis.fetch=()=>{throw Error('unexpected fetch')}; await import(${JSON.stringify(moduleUrl)});`]);
+  const imported = spawnSync(
+    process.execPath,
+    ['--input-type=module', '-e', "globalThis.fetch=()=>{throw Error('unexpected fetch')}; await import(process.env.PROBE_MODULE_URL);"],
+    { env: { ...process.env, PROBE_MODULE_URL: moduleUrl } }
+  );
   assert.equal(imported.status, 0);
   const cli = spawnSync(process.execPath, [fileURLToPath(moduleUrl)]);
   assert.equal(cli.status, 2); assert.match(cli.stderr.toString(), /Usage:/);
