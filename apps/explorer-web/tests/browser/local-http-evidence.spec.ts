@@ -107,17 +107,119 @@ test("clears selected evidence on committed time and does not persist negative s
   expect(draft.snapshot.evidenceRefs).toEqual([]);
 });
 
-test("fails closed when the service is unavailable and retries against the real service", async ({ page, context }) => {
+test("keyboard retry preserves safe workspace state and recovers visible focus after failure and recovery", async ({ page, context }) => {
+  await openLayers(page);
+  await workspace(page).getByRole("slider", { name: "Preview atlas time" }).fill("10");
+  await workspace(page).getByRole("button", { name: "Apply time", exact: true }).click();
+  await inspect(page).click();
+  await expect(drawer(page)).toContainText("ANSWER / SUPPORTED");
+  const readWorkspaceState = () => workspace(page).evaluate((node) => ({
+    time: node.querySelector<HTMLInputElement>('[aria-label="Preview atlas time"]')!.value,
+    selectedControls: Array.from(node.querySelectorAll('[aria-pressed="true"][data-atlas-action]'))
+      .map((control) => control.getAttribute("data-atlas-action")),
+    layers: Array.from(node.querySelectorAll<HTMLInputElement>("[data-layer-toggle]"))
+      .map((control) => ({ id: control.dataset.layerToggle, checked: control.checked, disabled: control.disabled })),
+  }));
+  const before = await readWorkspaceState();
+  const retry = workspace(page).getByRole("button", { name: "Retry local evidence" });
+  const trigger = workspace(page).getByRole("button", { name: "Open Evidence Drawer", exact: true });
+  const closeAndReopen = async () => {
+    await expect(drawer(page).getByRole("heading", { level: 2 })).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(drawer(page)).toBeHidden();
+    await expect(trigger).toBeVisible();
+    await expect(trigger).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(drawer(page).getByRole("heading", { level: 2 })).toBeFocused();
+  };
+  await context.setOffline(true);
+  await retry.focus();
+  await page.keyboard.press("Enter");
+  await expect(drawer(page)).toContainText("ERROR / UPSTREAM_ERROR");
+  await expect(drawer(page).getByRole("link")).toHaveCount(0);
+  expect(await readWorkspaceState()).toEqual(before);
+  await closeAndReopen();
+  await context.setOffline(false);
+  const response = page.waitForResponse((entry) => new URL(entry.url()).pathname === endpoint);
+  await retry.focus();
+  await page.keyboard.press("Enter");
+  expect((await response).status()).toBe(200);
+  await expect(drawer(page)).toContainText("ANSWER / SUPPORTED");
+  expect(await readWorkspaceState()).toEqual(before);
+  await closeAndReopen();
+  await workspace(page).getByRole("button", { name: "New from map", exact: true }).click();
+  await workspace(page).getByRole("button", { name: "Create report draft", exact: true }).click();
+  const draft = await page.evaluate(() => JSON.parse(localStorage.getItem("kfm.explorer.report-drafts.v2") ?? "[]")[0]);
+  expect(draft.snapshot).toMatchObject({
+    committedTimeId: "time:1900s",
+    selectedLayerId: "layer:kansas-frame",
+    activeViewId: before.selectedControls.find((action) => action?.startsWith("view:"))!.slice("view:".length),
+    representation: "2D",
+    basemap: "SITE_LOCAL_ATLAS",
+    publicSafe: true,
+    draftOnly: true,
+    evidenceRefs: ["kfm:evidence:site-local:kansas-frame"],
+  });
+  expect(draft.snapshot.layers.map((layer: { id: string; visible: boolean }) => ({ id: layer.id, visible: layer.visible })))
+    .toEqual(before.layers.map((layer) => ({ id: layer.id, visible: layer.checked })));
+  expect(draft.includedEvidenceRefs).toEqual(draft.snapshot.evidenceRefs);
+});
+
+test("scenario replacement returns to the retained selector and avoids hidden return targets", async ({ page }) => {
   await openLayers(page);
   await inspect(page).click();
   await expect(drawer(page)).toContainText("ANSWER / SUPPORTED");
-  await context.setOffline(true);
-  await workspace(page).getByRole("button", { name: "Retry local evidence" }).click();
-  await expect(drawer(page)).toContainText("ERROR / UPSTREAM_ERROR");
-  await expect(drawer(page).getByRole("link")).toHaveCount(0);
-  await context.setOffline(false);
-  await workspace(page).getByRole("button", { name: "Retry local evidence" }).click();
+  const scenario = workspace(page).getByLabel("Synthetic service scenario", { exact: true });
+  await scenario.focus();
+  await scenario.selectOption("stale");
+  await expect(drawer(page)).toContainText("ABSTAIN / STALE_EVIDENCE");
+  await expect(drawer(page).getByRole("heading", { level: 2 })).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(scenario).toBeFocused();
+  await scenario.selectOption("current");
   await expect(drawer(page)).toContainText("ANSWER / SUPPORTED");
+  // Moving to another rail hides the original selector while the drawer stays open.
+  await workspace(page).getByRole("button", { name: "Sources", exact: true }).click();
+  await expect(scenario).toBeHidden();
+  await drawer(page).getByRole("heading", { level: 2 }).focus();
+  await page.keyboard.press("Escape");
+  await expect(drawer(page)).toBeHidden();
+  const trigger = workspace(page).getByRole("button", { name: "Open Evidence Drawer", exact: true });
+  await expect(trigger).toBeVisible();
+  await expect(trigger).toBeFocused();
+});
+
+test("a completed retry does not take focus after the user moves elsewhere", async ({ page }) => {
+  await openLayers(page);
+  await inspect(page).click();
+  await expect(drawer(page)).toContainText("ANSWER / SUPPORTED");
+  let releaseResponse!: () => void;
+  const responseGate = new Promise<void>((resolve) => { releaseResponse = resolve; });
+  let backendResponded!: () => void;
+  const backendReady = new Promise<void>((resolve) => { backendResponded = resolve; });
+  await page.route("**/__local__/evidence", async (route) => {
+    const response = await route.fetch();
+    expect(response.status()).toBe(200);
+    backendResponded();
+    await responseGate;
+    await route.fulfill({ response });
+  }, { times: 1 });
+  await workspace(page).getByRole("button", { name: "Retry local evidence" }).focus();
+  await page.keyboard.press("Enter");
+  await backendReady;
+  const sources = workspace(page).getByRole("button", { name: "Sources", exact: true });
+  await sources.click();
+  releaseResponse();
+  const trigger = workspace(page).getByRole("button", { name: "Open Evidence Drawer", exact: true });
+  await expect(trigger).toBeVisible();
+  await expect(drawer(page)).toBeHidden();
+  await expect(sources).toBeFocused();
+  await trigger.focus();
+  await page.keyboard.press("Enter");
+  await expect(drawer(page)).toContainText("ANSWER / SUPPORTED");
+  await expect(drawer(page).getByRole("heading", { level: 2 })).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(trigger).toBeFocused();
 });
 
 test("keeps unsupported and protected selections local and non-claim-bearing", async ({ page }) => {

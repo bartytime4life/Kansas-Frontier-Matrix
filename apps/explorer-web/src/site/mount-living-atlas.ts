@@ -542,6 +542,16 @@ export function mountLivingAtlasWorkspace(
 
   const evidence = el(document, options.localEvidenceResolver ? "div" : "aside", "atlas-evidence-drawer");
   if (!options.localEvidenceResolver) evidence.setAttribute("aria-label", "Evidence Drawer");
+  let pendingLocalFocus: {
+    origin: Element | null;
+    replaced: boolean;
+    moved: boolean;
+  } | null = null;
+  const handleLocalFocusChange = (event: FocusEvent): void => {
+    if (pendingLocalFocus && event.target !== pendingLocalFocus.origin) {
+      pendingLocalFocus.moved = true;
+    }
+  };
   const revealLocalEvidenceStart = (): void => {
     const heading = evidence.querySelector<HTMLHeadingElement>('[data-component="evidence-drawer"] h2');
     if (!heading) return;
@@ -552,16 +562,25 @@ export function mountLivingAtlasWorkspace(
     evidence.scrollTop = 0;
     evidence.scrollIntoView({ block: "nearest", inline: "nearest" });
   };
-  const mountLocalDrawer = (drawerHost: HTMLElement, input: unknown): void => {
+  const mountLocalDrawer = (drawerHost: HTMLElement, input: unknown, autoOpen = true): void => {
     localDrawer = mountEvidenceDrawer(drawerHost, input);
     // The same initial position applies when the ordinary drawer trigger reopens it.
     drawerHost.querySelector<HTMLButtonElement>("button[aria-controls]")
       ?.addEventListener("click", revealLocalEvidenceStart);
-    localDrawer.open();
-    revealLocalEvidenceStart();
+    if (autoOpen) {
+      localDrawer.open();
+      revealLocalEvidenceStart();
+    }
   };
   const localSession = options.localEvidenceResolver
     ? createLocalEvidenceSession(options.localEvidenceResolver, (resolution) => {
+        const focus = pendingLocalFocus;
+        pendingLocalFocus = null;
+        // Replacement may remove the retry button and leave focus on body.
+        // A later deliberate focus move belongs to the user, not this response.
+        const autoOpen = focus !== null && !focus.moved && document.hasFocus()
+          && (document.activeElement === focus.origin
+            || (focus.replaced && document.activeElement === document.body));
         snapshot = cloneSnapshot(snapshot, {
           evidenceRefs: resolution.drawer.outcome === "ANSWER"
             ? resolution.drawer.evidenceRefs
@@ -573,12 +592,13 @@ export function mountLivingAtlasWorkspace(
         );
         const drawerHost = el(document, "div");
         evidence.append(drawerHost);
-        mountLocalDrawer(drawerHost, resolution.drawerInput);
+        mountLocalDrawer(drawerHost, resolution.drawerInput, autoOpen);
         evidence.append(button(document, "Retry local evidence", "evidence:retry"));
       })
     : null;
   const invalidateLocalEvidence = (): void => {
     if (!localSession) return;
+    pendingLocalFocus = null;
     localSession.invalidate();
     localDrawer?.destroy();
     localDrawer = null;
@@ -603,6 +623,8 @@ export function mountLivingAtlasWorkspace(
     });
   };
   const renderEvidence = (layerId: string | null): void => {
+    const origin = document.activeElement;
+    const replaced = origin !== null && evidence.contains(origin);
     invalidateLocalEvidence();
     if (layerId === null) {
       evidence.replaceChildren(
@@ -624,6 +646,7 @@ export function mountLivingAtlasWorkspace(
       status.setAttribute("aria-live", "polite");
       evidence.setAttribute("aria-busy", "true");
       evidence.replaceChildren(status);
+      pendingLocalFocus = { origin, replaced, moved: false };
       void localSession.select(selection);
       return;
     }
@@ -1366,6 +1389,10 @@ export function mountLivingAtlasWorkspace(
   mapCanvas.addEventListener("pointerdown", handleMapPointerDown);
   document.addEventListener("visibilitychange", handleVisibility);
   document.addEventListener("keydown", handleKeydown);
+  if (localSession) {
+    document.addEventListener("focusin", handleLocalFocusChange);
+    cleanup.push(() => document.removeEventListener("focusin", handleLocalFocusChange));
+  }
   cleanup.push(
     () => workspace.removeEventListener("click", handleClick),
     () => workspace.removeEventListener("change", handleChange),

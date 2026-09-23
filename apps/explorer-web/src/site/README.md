@@ -22,6 +22,16 @@ The composition:
 
 The retained illustrative map is a fixed browser composition, not an HTML template. It creates SVG nodes in the SVG namespace, sets attributes individually, and assigns visible labels through text content. Keep dynamic trust-bearing material out of this helper; evidence and state continue through typed, text-first projections. This legacy laboratory does not establish a governed data path.
 
+## Local evidence recovery focus
+
+The opt-in [local synthetic HTTP composition](../../README.md#0-current-evidence-snapshot) retains focus ownership across retry and scenario replacement. If the user remains at the initiating control, the completed outcome opens at its heading. Escape returns to a still-visible initiating control, or to the new **Open Evidence Drawer** button when replacement removed that control. The shared drawer also rejects hidden, inert, disabled, detached, and non-focusable return targets.
+
+If the user moves focus elsewhere while a request is pending, its completed drawer stays closed with its opener available; the response does not move focus or scroll the workspace. Retry changes the evidence outcome without resetting committed time, the active view, representation, or layer controls. Negative support remains cleared, and a later successful retry uses the same bounded service adapter.
+
+The [local HTTP browser regressions](../../tests/browser/local-http-evidence.spec.ts) exercise keyboard failure/recovery, Escape/reopen, scenario replacement, a hidden original control, and a delayed real service response after focus moves. This is local synthetic interaction evidence, not production accessibility, source admission, public resolver, or hosted acceptance proof. Rollback the focus changes and associated regressions together; no data, dependency, or contract migration is involved.
+
+Placement remains app-owned under accepted [ADR-0029](../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) and [Directory Rules](../../../../docs/doctrine/directory-rules.md) §§7.2, 10.1 and 14.1. This composition consumes the existing drawer and transport boundaries.
+
 ## Unified Workspace UI-01 bounded slice
 
 The first Unified Workspace implementation slice is intentionally public, no-network, and composition-owned:

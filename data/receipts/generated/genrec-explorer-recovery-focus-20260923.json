@@ -1,0 +1,156 @@
+{
+  "receipt_id": "genrec-explorer-recovery-focus-20260923",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/features/evidence_drawer/README.md",
+    "apps/explorer-web/src/features/evidence_drawer/index.tsx",
+    "apps/explorer-web/src/site/README.md",
+    "apps/explorer-web/src/site/mount-living-atlas.ts",
+    "apps/explorer-web/tests/browser/local-http-evidence.spec.ts"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/features/evidence_drawer/README.md": "sha256:f815e0912a50f14cc002baab010ad417c1f6cb591b1d809acfb0c02acc48588c",
+    "apps/explorer-web/src/features/evidence_drawer/index.tsx": "sha256:a10c6b06166907b3af73e68a6a358c3a726a9bfde9938391961604c2c2f695eb",
+    "apps/explorer-web/src/site/README.md": "sha256:ced9ead3e229c32ac48c2d0f422eba34af388ebad1ffe5adbbc0726fd5961bf9",
+    "apps/explorer-web/src/site/mount-living-atlas.ts": "sha256:e5392bf5d3e07ff0d600c474a6a9777fe99f3e4dd59da07fd70552fa8a799909",
+    "apps/explorer-web/tests/browser/local-http-evidence.spec.ts": "sha256:cbaf61e96a51249b372da798b26ab66d8f7a7c7ea0cf39f590dc3d6b0c5bc2f0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "UNKNOWN: exact served model revision is not exposed to this agent"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local source inspection and editing",
+      "local Node and Python validation",
+      "local HTTP Playwright browser tests"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "CONTRIBUTING.md",
+      "SECURITY.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "docs/doctrine/directory-rules.md",
+      "docs/doctrine/ai-build-operating-contract.md",
+      "data/receipts/generated/README.md"
+    ],
+    "evidence_refs": [
+      "git:30a6bf03d4f35d463f4adac5624cb31e41461277",
+      "git:30a6bf03d4f35d463f4adac5624cb31e41461277:apps/explorer-web/src/site/mount-living-atlas.ts",
+      "git:30a6bf03d4f35d463f4adac5624cb31e41461277:apps/explorer-web/src/features/evidence_drawer/index.tsx",
+      "github-issue:bartytime4life/Kansas-Frontier-Matrix#4416"
+    ],
+    "evidence_hashes": [
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/features/evidence_drawer/README.md": "CONFIRMED",
+    "apps/explorer-web/src/features/evidence_drawer/index.tsx": "CONFIRMED",
+    "apps/explorer-web/src/site/README.md": "CONFIRMED",
+    "apps/explorer-web/src/site/mount-living-atlas.ts": "CONFIRMED",
+    "apps/explorer-web/tests/browser/local-http-evidence.spec.ts": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-focused-browser-regressions",
+      "outcome": "FAIL",
+      "reason": "Expected before-fix evidence: all three initial regression checks failed against predecessor source (retry return focus, hidden scenario return target, and delayed-response focus theft). A later draft-state assertion was added before final validation."
+    },
+    {
+      "gate": "local-http-browser",
+      "outcome": "PASS",
+      "reason": "pnpm --filter explorer-web test:local-evidence: 9 passed, including actual local HTTP recovery, keyboard Escape/reopen, safe workspace controls and draft state, and focus moved before delayed real response."
+    },
+    {
+      "gate": "focused-unit",
+      "outcome": "PASS",
+      "reason": "pnpm --filter explorer-web exec vitest run tests/local-http-evidence.test.ts tests/evidence-drawer.test.ts: 45 passed."
+    },
+    {
+      "gate": "shared-drawer-browser",
+      "outcome": "PASS",
+      "reason": "Playwright evidence-drawer, map-evidence-drawer, trust-surface and focus-composed-claim specs: 29 passed."
+    },
+    {
+      "gate": "ordinary-browser-initial",
+      "outcome": "FAIL",
+      "reason": "Initial complete ordinary browser run: 149 passed, one unchanged temporal-status assertion failed at living-atlas.spec.ts:145. The status may compete with renderer updates; inherited failure was not established."
+    },
+    {
+      "gate": "ordinary-browser-comparison-and-replay",
+      "outcome": "PASS",
+      "reason": "Exact predecessor executable source passed the full 150-test suite and 10 targeted temporal repetitions. Restored successor source passed the complete 150-test suite on replay without code or assertion changes. Initial intermittent failure remains recorded, not erased or labeled proved inherited."
+    },
+    {
+      "gate": "production-build",
+      "outcome": "PASS",
+      "reason": "pnpm --filter explorer-web build: TypeScript and Vite production build passed; bundle-size advisory retained. No deployment performed."
+    },
+    {
+      "gate": "explorer-adapter-boundary",
+      "outcome": "PASS",
+      "reason": "python -m pytest -q tests/policy/test_explorer_web_adapter_boundary.py: 2 passed."
+    },
+    {
+      "gate": "changed-markdown-qa-and-whitespace",
+      "outcome": "PASS",
+      "reason": "Both owning READMEs have one H1, final newline, balanced fences, and resolving changed local links/anchors; existing ownership/maturity placeholders preserved. git diff --check passed."
+    },
+    {
+      "gate": "receipt-integrity",
+      "outcome": "PASS",
+      "reason": "Repository GeneratedReceipt validator replayed all five final SHA-256 bindings; human review remains pending."
+    },
+    {
+      "gate": "hosted-human-and-production-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "No hosted CI, human approval, public resolver graduation, deployment, release or publication is asserted. Inert/disabled/non-focusable and document-focus branches were source-reviewed, not individually browser-exercised."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "local-recovery-composition",
+      "validated": true,
+      "evidence_ref": "apps/explorer-web/src/site/mount-living-atlas.ts@sha256:e5392bf5d3e07ff0d600c474a6a9777fe99f3e4dd59da07fd70552fa8a799909"
+    },
+    {
+      "id": "shared-drawer-focus-return",
+      "validated": true,
+      "evidence_ref": "apps/explorer-web/src/features/evidence_drawer/index.tsx@sha256:a10c6b06166907b3af73e68a6a358c3a726a9bfde9938391961604c2c2f695eb"
+    },
+    {
+      "id": "browser-regression-evidence",
+      "validated": true,
+      "evidence_ref": "apps/explorer-web/tests/browser/local-http-evidence.spec.ts@sha256:cbaf61e96a51249b372da798b26ab66d8f7a7c7ea0cf39f590dc3d6b0c5bc2f0"
+    },
+    {
+      "id": "accepted-directory-rules-owner-basis",
+      "validated": true,
+      "evidence_ref": "git:30a6bf03d4f35d463f4adac5624cb31e41461277:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-23T05:15:50.640644Z",
+  "emitter": "Codex bounded Explorer recovery follow-up",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Scope: five modified app-owned source, browser-test and owning README paths based exactly on 30a6bf03d4f35d463f4adac5624cb31e41461277. Original sibling branch and worktree remain unchanged. This receipt binds current final bytes and this bounded follow-up; it does not reconstruct the predecessor author's original generation parameters or attest the remaining inherited inventory. App ownership follows accepted Directory Rules sections 7.2, 10.1 and 14.1; receipt ownership remains the existing data/receipts/generated process-memory lane. No transport, projection, finite error code, policy, source, topology, release, or dependency changes. Runtime: Node 22.13.1, pnpm 11.17.0, Python 3.12.14, existing Chromium 147.0.7727.57 headless shell. Unknown model revision and generation parameters are explicit. Rollback by reverting this bounded follow-up commit, preserving the predecessor lineage and receipt history. Receipt is not human review or merge/release authority."
+}

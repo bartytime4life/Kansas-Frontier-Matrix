@@ -393,8 +393,16 @@ export function mountEvidenceDrawer(
     if (drawer.hidden) return;
     drawer.hidden = true;
     trigger.setAttribute("aria-expanded", "false");
-    const focusTarget = returnFocus?.isConnected ? returnFocus : trigger;
+    const focusTarget = returnFocus?.isConnected
+      && returnFocus !== document.body && returnFocus !== document.documentElement
+      && !returnFocus.closest("[hidden], [inert]") && !returnFocus.matches(":disabled")
+      && returnFocus.getClientRects().length > 0
+      && document.defaultView?.getComputedStyle(returnFocus).visibility === "visible"
+      ? returnFocus : trigger;
     focusTarget.focus();
+    // A connected element can still be non-focusable (for example body after
+    // an asynchronous retry replaces its button). Keep Escape recoverable.
+    if (document.activeElement !== focusTarget) trigger.focus();
     returnFocus = null;
   }
 

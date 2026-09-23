@@ -2,11 +2,11 @@
 doc_id: kfm://app/explorer-web/src/features/evidence_drawer/readme
 title: Explorer Web Evidence Drawer Feature README
 type: app-readme
-version: v0.4
+version: v0.5
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Evidence steward · Governed API steward · Policy steward · Accessibility steward · Docs steward
 created: 2026-06-16
-updated: 2026-08-03
+updated: 2026-09-23
 policy_label: public
 related:
   - ../README.md
@@ -269,6 +269,7 @@ The repository now implements the first non-network subset of this slice:
 - `src/adapters/GovernedClient.ts` validates a closed, fixture-only public-safe projection profile and performs no fetch or lifecycle-store read;
 - `src/features/evidence_drawer/index.tsx` maps valid projections to explicit finite view states and replaces malformed input with a fixed `ERROR` state;
 - the same app-local module mounts a native trigger and labeled complementary landmark, moves focus to the close control, handles Escape, and restores focus to the opener;
+- focus return uses the visible drawer trigger when the opener was removed, hidden, made inert or disabled, or cannot receive focus; local retry and scenario-replacement coverage is recorded in the [composition notes](../../site/README.md#local-evidence-recovery-focus);
 - denied and error projections never reflect supplied title, summary, evidence, citation, or diagnostic text;
 - the app shell mounts the no-response `ABSTAIN` state through that keyboard-operable controller;
 - `tests/fixtures/ui/evidence_drawer/` supplies synthetic `ANSWER`, stale `ABSTAIN`, sensitive `DENY`, upstream `ERROR`, and invalid cases;
