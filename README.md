@@ -2,11 +2,11 @@
 doc_id: kfm://doc/root-readme
 title: Kansas Frontier Matrix — Project Home
 type: repository-readme
-version: v3.2.1
+version: v3.3.0
 status: repository-grounded draft
 owners: ["@bartytime4life"]
 created: 2026-05-11
-updated: 2026-09-21
+updated: 2026-09-23
 policy_label: public
 current_path: README.md
 owning_root: repository-root
@@ -15,7 +15,7 @@ truth_posture: cite-or-abstain; implementation claims require pinned repository 
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 6c5be18cf8448654be95a6db688d98546cd5276e
+  base_commit: 9dcdaec2cacbbf9880bd613b546a7314a2673ac5
 related:
   - docs/doctrine/directory-rules.md
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
@@ -28,10 +28,11 @@ related:
   - .github/README.md
   - docs/runbooks/local-pc-data-store.md
 notes:
-  - "The 2026-09-21 working-path readback below is bounded to main@32ab26478b7186bd1a0983951c1a4fbf5adf33aa and the named repository files; it does not replace the historical product maturity snapshot."
-  - "Local-PC setup and packaging guidance updated against main@91aeee1ca163bcb3f007577a541a825f60dcddc2 plus this change; the earlier product maturity snapshot below is historical."
+  - "The 2026-09-23 reconciliation pins current source to main@9dcdaec2cacbbf9880bd613b546a7314a2673ac5 and Sites metadata to v53; earlier test and design checkpoints remain historical."
+  - "Historical lineage: the 2026-09-21 working-path readback used main@32ab26478b7186bd1a0983951c1a4fbf5adf33aa; the current table supersedes its currentness claim."
+  - "Historical lineage: local-PC setup and packaging guidance used main@91aeee1ca163bcb3f007577a541a825f60dcddc2; local custody remains distinct from source admission."
   - "Adds a visitor-first project orientation while preserving the governed root README identity."
-  - "The product maturity snapshot remains bounded to the earlier exact GitHub snapshot recorded above; local-PC changes use the separate checkpoint in these notes."
+  - "Earlier product maturity and execution checkpoints are historical; the current source-level table names its own exact baseline."
   - "The public Explorer address is linked as a project entry point; hosted availability and version state remain separately verifiable runtime claims."
   - "The Science Pack section is an explicitly proposed north-star profile; it does not claim installation, source admission, model validity, release, deployment, or publication."
 [/KFM_META_BLOCK_V2] -->
@@ -62,7 +63,7 @@ notes:
 </p>
 
 > [!NOTE]
-> KFM is an active build. The repository contains real applications, contracts, schemas, policy, validators, fixtures, tests, and workflows. Some production-facing transitions—live renderer admission, live governed transport, release, deployment, and publication—remain explicitly held or unknown.
+> KFM is an active build. The repository contains real applications, contracts, schemas, policy, validators, fixtures, tests, and workflows. The local Living Atlas has a bounded MapLibre adapter, and the private Site has its own deployment history. Live governed transport, released layers, source equivalence, and end-to-end acceptance remain separate checks.
 
 **New here?** Start with [Why KFM](#why-kfm), [Explore](#start-here), [The KFM experience](#the-kfm-experience), [the Science Pack north star](#a-finished-kfm-with-a-science-pack), or [Current posture](#current-posture). Contributors can jump to [the working path](#a-working-path-through-the-repository), [Run locally](#run-locally), [Validation](#validation), and [Contributing](#contributing).
 
@@ -86,9 +87,9 @@ KFM’s public value is not a larger pile of layers. It is a more trustworthy pa
 
 | If you want to… | Start with… |
 |---|---|
-| **See the project’s public-facing Explorer** | [KFM Explorer](https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site) — the repository records this OpenAI Sites/Vinext project, slug, and public address. Hosted availability and version state require current runtime verification. |
-| **Understand the current site application** | [`apps/kansas-frontier-matrix-explorer/`](apps/kansas-frontier-matrix-explorer/) — the single-route Vinext site, synthetic/generalized catalog surface, renderer-neutral shell, fail-closed evidence behavior, and public-safe export boundary. |
-| **Study the browser workbench** | [`apps/explorer-web/`](apps/explorer-web/) — a Vite/TypeScript local composition with bounded Map, Knowledge, Features, Trust, Focus, Story, Evidence Drawer, and validation slices. |
+| **Open the hosted Explorer** | [KFM Explorer](https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site) — owner-private at the 2026-09-23 Sites readback; the URL does not grant public access. Version and acceptance boundaries are recorded in the [Site alignment note](apps/kansas-frontier-matrix-explorer/docs/sites-source-alignment.md). |
+| **Understand the current site application** | [`apps/kansas-frontier-matrix-explorer/`](apps/kansas-frontier-matrix-explorer/) — the Vite/React monorepo app with Explorer and About views, synthetic/generalized catalog metadata, a renderer-neutral shell, fail-closed evidence behavior, and public-safe export boundary. |
+| **Study the browser workbench** | [`apps/explorer-web/`](apps/explorer-web/) — a Vite/TypeScript Living Atlas with a package-owned inline MapLibre adapter and a retained renderer-neutral laboratory; external sources and release remain separate. |
 | **Learn the project’s rules** | [`docs/doctrine/`](docs/doctrine/), [`docs/architecture/`](docs/architecture/), and [`docs/adr/`](docs/adr/). |
 | **Make a change safely** | [`CONTRIBUTING.md`](CONTRIBUTING.md), [`Directory Rules`](docs/doctrine/directory-rules.md), and the README nearest the path you will touch. |
 | **Understand evidence and public boundaries** | [`Trust Membrane`](docs/doctrine/trust-membrane.md), [`Truth Posture`](docs/doctrine/truth-posture.md), [`Lifecycle Law`](docs/doctrine/lifecycle-law.md), and [`SECURITY.md`](SECURITY.md). |
@@ -96,13 +97,14 @@ KFM’s public value is not a larger pile of layers. It is a more trustworthy pa
 
 ## A working path through the repository
 
-This source-level readback is for `main@32ab26478b7186bd1a0983951c1a4fbf5adf33aa` on 2026-09-21. It identifies useful implemented entry points; it is not a hosted runtime or current CI result. The [maturity table](#current-posture) below remains a separately pinned historical review.
+This source-level readback is for `main@9dcdaec2cacbbf9880bd613b546a7314a2673ac5` on 2026-09-23 UTC (2026-09-22 in America/Chicago). It identifies implemented entry points; it is not a hosted runtime or current CI result. See the [maturity table](#current-posture) for the separate implementation and authority boundaries.
 
 | Goal | Start here | What the repository currently establishes |
 |---|---|---|
 | Explore a place and inspect its limits | [Explorer site source](apps/kansas-frontier-matrix-explorer/README.md) or the [local Explorer Web workbench](apps/explorer-web/README.md) | Application and synthetic/fixture surfaces exist. A site address or successful local build does not establish the hosted version, live source data, or a released layer. |
 | Preserve files you already downloaded | [Local PC runbook](docs/runbooks/local-pc-data-store.md) and [`tools/local_data/`](tools/local_data/README.md) | `doctor`, `init`, `plan`, `sync`, and `verify` support a bounded offline workflow. `sync` captures selected bytes into a private, external, source-first **QUARANTINE** store and writes process receipts; it does not populate this repository's [`data/raw/`](data/raw/README.md) lane or admit a source. |
-| Check a change | [`Makefile`](Makefile), [validator profiles](tools/validators/README.md), and [contribution guide](CONTRIBUTING.md) | Focused commands and fixtures cover declared boundaries. Some targets are `TODO` markers; topology correction and repository-control readiness require their own governed evidence. |
+| Plan earthquake history offline | [USGS runbook](docs/runbooks/usgs-earthquake-live-history.md) and [candidate parser](connectors/usgs/src/usgs/earthquake.py) | Merged request planning and parsing accept already obtained bytes, retain immutable candidates, and keep `NOT_ADMITTED` / `NOT_ESTABLISHED`. They do not fetch, schedule, persist, release, or connect data to the map. |
+| Check a change | [`Makefile`](Makefile), [validator profiles](tools/validators/README.md), and [contribution guide](CONTRIBUTING.md) | Focused commands and fixtures cover declared boundaries. The bounded readiness lanes run declared checks or return a named `HOLD` with exit 3; root JavaScript aggregate scripts still fail with `WORKFLOW_HOLD`. A narrow pass does not close broader readiness. |
 
 For a concrete first local exercise, use the [committed 24-byte synthetic capture](docs/runbooks/local-pc-data-store.md#try-one-small-synthetic-capture) after initializing a private `KFM_DATA_ROOT` outside the checkout. Its receipt proves a bounded local capture, not evidence closure, promotion, release, or publication. For a new source or public claim, begin with the [source and lifecycle rules](docs/doctrine/lifecycle-law.md) and [trust membrane](docs/doctrine/trust-membrane.md).
 
@@ -183,19 +185,20 @@ The existing domain lanes, Explorer workbenches, contracts, schemas, policies, f
 
 ## Current posture
 
-The table below is the honest maturity snapshot for the repository inspected at `main@6c5be18cf8448654be95a6db688d98546cd5276e`. Execution evidence remains bounded to the exact revisions and runs named in each row.
+The table below is a **source-level checkpoint** at `main@9dcdaec2cacbbf9880bd613b546a7314a2673ac5`, checked on 2026-09-23 UTC. Connected Sites metadata has its own version identity. Historical test results are not rerun results for this revision.
 
-| Surface | Current repository evidence | Boundary |
+| Surface | Confirmed evidence in this review | Boundary |
 |---|---|---|
-| **Repository foundation** | Responsibility roots for apps, contracts, schemas, policy, data, pipelines, runtime, docs, tests, tools, and release are present. | A path’s presence does not make it truth, policy, release, or publication authority. |
-| **Repository validation evidence** | The earlier exact-main `validator-suite` run [34645138385](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34645138385) passed its ordinary validator, documentation, workflow-security, and aggregate lanes but remained `FAIL_INVARIANT` at repository-topology because six current drift fingerprints replaced six stale baseline fingerprints. | The topology baseline was not rewritten; this inherited governance hold remains tracked by [#4228](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228) and [#3366](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3366). |
-| **KFM Explorer site app** | `apps/kansas-frontier-matrix-explorer/` contains a Vinext application, a renderer-neutral `NullMapRuntime` composition, synthetic/generalized catalog metadata, fail-closed evidence behavior, public-safe export guidance, Sites identity metadata, and a sanitized root UI error boundary with retry/reset. | This proves tracked implementation slices. It does not prove a live renderer, live data, hosted health, release, or publication. |
-| **Explorer Web workbench** | `apps/explorer-web/` contains a Vite/TypeScript workspace with a repository-grounded local site composition, public navigation/context, shared trust surface, synthetic Focus workspace, Evidence Drawer behavior, Story Player and map-selection slices, and tests. | The production shell decision, admitted MapLibre dependency, live governed transport, and released layers remain separate gates. |
-| **MapLibre path** | Renderer-neutral ports, package/adaptor surfaces, performance governance, and synthetic validation support exist in the repository. | Functional renderer admission and a live map boot are held until their dependency, compatibility, accessibility, performance, and rollback evidence is closed. |
-| **Evidence and trust path** | Contracts, finite outcomes, defensive adapters, fail-closed fixtures, negative cases, and policy-boundary tests are present in bounded slices. | End-to-end EvidenceBundle resolution, source admission, live transport, and public release are not established by this README. |
-| **Science Pack path** | Repository domain lanes, Explorer workbenches, contracts, schemas, policies, fixtures, and validators provide partial building blocks for governed scientific exploration. | No single installable, configured, admitted, released, or operational cross-domain Science Pack was established by this review. |
-| **AI path** | KFM treats AI as interpretive and downstream of evidence, policy, review, release, correction, and rollback. | Browser code must not become a model provider, internal-store reader, evidence authority, or publication path. A model response is never evidence by itself. |
-| **Hosting** | The repository records the OpenAI Sites/Vinext project identity and preserves the existing Explorer slug and public address. | Hosted version history, availability, authentication, CSP/CORS, observability, and production operation require current runtime evidence. |
+| **Repository foundation** | Existing responsibility roots and adopted [Directory Rules](docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md). | A path does not grant evidence, policy, release, or publication authority. |
+| **KFM Explorer monorepo app** | [Vite/React app](apps/kansas-frontier-matrix-explorer/README.md), `NullMapRuntime`, synthetic/generalized catalog, finite evidence states, and local waveform preview. | This is distinct from the standalone hosted Site source. The UI error component is not automatically mounted by Vite; browser acceptance remains open. |
+| **Explorer Web Living Atlas** | [Normal page](apps/explorer-web/src/site/README.md) uses the package-owned MapLibre adapter with inline, network-free style; the retained laboratory uses `NullMapRuntime`. | No external tile/source admission, live governed transport, released layers, or full browser readiness follows from this source inspection. |
+| **MapLibre package** | [`packages/maplibre/package.json`](packages/maplibre/package.json) pins `maplibre-gl` 6.9.0; [the adapter](packages/maplibre/src/maplibre-adapter.ts) implements bounded renderer behavior. | Historical compatibility probes and readiness candidates retain their original versions; broader acceptance is separate. |
+| **Offline earthquake candidates** | [Merged #4674](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4674) adds URL/history-window planning, bounded parsing and immutable candidate selection. | No transport, complete-catalog claim, source admission, map integration, release, or deployment. Newer seismic work recorded in coordination pages must be checked at its own branch. |
+| **Live-feed startup diagnostics** | [Merged #4675](apps/kansas-frontier-matrix-explorer/docs/live-feed-startup.md) makes missing repository APIs return HTTP 503 JSON `KFM_API_NOT_CONFIGURED`; a diagnostic and provenance-aware startup selector exist. | The selector/demo remain unmounted; no live API, real snapshot, hosted repair, or release is established. |
+| **Evidence and trust** | Contracts, finite outcomes, defensive adapters, fixtures and negative cases exist in bounded slices. | End-to-end EvidenceBundle closure and public release are not proved here. |
+| **Validation entry points** | [Makefile](Makefile) uses implemented commands and bounded [readiness lanes](tools/readiness/run_lane.py). Root workspace aggregate scripts explicitly fail with `WORKFLOW_HOLD`. | No aggregate run was executed by this documentation review. Older topology/validator run results remain historical, not current pass/fail claims. |
+| **Hosted Site** | Connected [v53 readback](apps/kansas-frontier-matrix-explorer/docs/sites-source-alignment.md): platform deployment `succeeded`, owner-private audience, separate source commit. | Full source equivalence, authenticated browser behavior, release acceptance, and recovery rehearsal remain unverified. |
+| **Science Pack, hazard workspace and AI** | [Science Pack](#a-finished-kfm-with-a-science-pack) and [Firemap-inspired hazard workspace](docs/architecture/ui/firemap-inspired-hazard-workspace.md) describe proposed experiences. AI remains downstream of evidence and policy. | These designs do not establish installable packs, a completed hazard workspace, model authority, or permission to publish. |
 
 ### How to read KFM status
 
@@ -224,7 +227,7 @@ Promotion is a governed state transition, not a file move. Public clients use go
 
 ## Repository map
 
-This is the verified direct-child snapshot of the repository at the evidence commit above. Child READMEs own deeper detail.
+This orientation map retains the earlier repository-root overview; it is not an exhaustive current inventory. Child READMEs and the current tree own deeper detail.
 
 ```text
 Kansas-Frontier-Matrix/
@@ -380,7 +383,7 @@ make maplibre-govern
 make maplibre-proof
 ```
 
-Some Make targets are readiness markers that intentionally print `TODO`, and the root JavaScript `lint`, `test`, and `build` scripts intentionally report `WORKFLOW_HOLD`. A zero exit status from a marker is not validation evidence; a workflow pass proves only its declared job for its exact revision and inputs.
+The Makefile now delegates bounded readiness checks to `tools/readiness/run_lane.py`; a named `HOLD` exits 3. The root JavaScript `lint`, `test`, and `build` scripts still exit nonzero with `WORKFLOW_HOLD`. Run the owning lane and report its exact result; neither a bounded pass nor a workflow badge proves repository-wide readiness.
 
 ## Contributing
 
@@ -429,7 +432,7 @@ This README does not:
 - establish rights, cultural authority, stewardship, consent, review approval, or public-use permission;
 - replace a contract, schema, policy, evidence bundle, receipt, proof, release record, or rollback card.
 
-The most important open edges are the exact packaging mismatch noted above, hosted Explorer runtime/version verification, the integrated Explorer route and transport contract, renderer admission for the held path, end-to-end evidence closure, complete accessibility and operational evidence, and governed release/publication proof. The repository-topology ratchet is also held at this snapshot pending the separate governed correction; this PR does not reset its baseline.
+Open verification includes hosted/source equivalence, authenticated browser acceptance and recovery, integrated live transport, external renderer resources, end-to-end evidence closure, accessibility, and governed release. Current aggregate topology and repository-control outcomes were not rerun here; consult exact current checks rather than inheriting a historical hold or pass.
 
 ## Project references
 
@@ -453,10 +456,10 @@ The most important open edges are the exact packaging mismatch noted above, host
 | Field | Value |
 |---|---|
 | Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Evidence snapshot | `main@6c5be18cf8448654be95a6db688d98546cd5276e` |
-| Open pull requests at review time | `0` |
-| Reviewed | Current root README, repository head and open-PR state, Directory Rules, the verification backlog, current topology-governance issue posture, and supplied KFM science, domain, pipeline, MapLibre, and atlas planning sources |
-| Change class | Root README showcase refresh: proposed Science Pack north star and maturity clarification |
+| Evidence snapshot | `main@9dcdaec2cacbbf9880bd613b546a7314a2673ac5`; 2026-09-23 UTC |
+| Open pull requests at final base refresh | Zero observed. [#4675](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4675) merged while this review was in progress; the new base was fast-forwarded with the documentation patch preserved. |
+| Reviewed | Exact GitHub base, affected source and manifests, accepted Directory Rules, open-PR paths, connected Sites version/deployment/access metadata, and KFM Notion/Drive design and coordination documents |
+| Change class | Documentation reconciliation: current source, hosted metadata, historical evidence, and proposed design kept distinct |
 | No mutation implied | No source activation, settings change, release, deployment, promotion, publication, or lifecycle transition |
 | Not proved | Full repository correctness, current aggregate validation, an installable or configured Science Pack, scientific validity, source admission, hosted runtime health, live data, rights clearance, human approval, release readiness, or public operation |
 

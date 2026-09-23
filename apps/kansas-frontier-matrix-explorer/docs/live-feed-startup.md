@@ -2,8 +2,8 @@
 doc_id: kfm://doc/explorer/live-feed-startup
 title: Live-feed runtime diagnostics and starter-data selection
 type: note
-version: v0.1.0
-status: proposed; branch-only; hosted-integration-held
+version: v0.1.1
+status: merged-repository-slice; hosted-integration-held
 owners: ["@bartytime4life"]
 created: 2026-09-23
 updated: 2026-09-23
@@ -19,6 +19,13 @@ evidence_base_commit: 21eee8dab4637da4771267078fe963f6525b045f
 # Live-feed runtime diagnostics and starter-data selection
 
 **REPOSITORY WORKER REPAIR + RUNNABLE DIAGNOSTIC / STARTER SELECTOR NOT MOUNTED IN THE SITE.**
+
+Currentness reconciliation, 2026-09-23 UTC: [PR #4675](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4675)
+is merged at `main@9dcdaec2cacbbf9880bd613b546a7314a2673ac5`. The Worker and
+diagnostic are repository implementation; the selector/demo are still unmounted.
+The test counts and source-mirror observations below retain their authoring
+scope and were not rerun by this documentation reconciliation. Current Site
+metadata is recorded separately in the [alignment record](sites-source-alignment.md).
 
 This change does not claim that the user's deployed Explorer has been repaired.
 The active Site editor and authenticated application were not accessible in the
@@ -202,9 +209,10 @@ repository's pinned TypeScript 6.0.2 toolchain or a complete app build. The exis
 Full pinned-toolchain build, repository validators, hosted CI, independent review,
 provider calls, authenticated Site browser acceptance and deployment are NOT_RUN.
 
-Delivery remains branch-only while the implicated delivery path's #4024
-containment is unproved. No PR, ready transition, merge, rule change, topology or
-baseline rewrite, source admission, release, publication, or Site save/deployment
-is authorized by this note. #4228 Stage 1A accepted / Stage 1B HOLD / Stage 2
+At authoring, this work was branch-only while the implicated delivery path's
+#4024 containment was unproved. The later #4675 merge is a repository-state
+observation, not containment acceptance. This note grants no future PR-state,
+rule, topology/baseline, source-admission, release, publication, or Site
+save/deployment authority. #4228 Stage 1A accepted / Stage 1B HOLD / Stage 2
 unauthorized boundaries remain separate. Discard the unaccepted branch to abandon
 this candidate; any later integrated rollback is a separately reviewed inverse.
