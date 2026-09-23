@@ -8,10 +8,12 @@
   },
   "scripts": {
     "dev": "vite",
+    "dev:local-evidence": "VITE_KFM_LOCAL_EVIDENCE=1 vite --host 127.0.0.1 --port 4173 --strictPort",
     "build": "tsc --noEmit -p tsconfig.json && vite build",
     "test": "pnpm run test:unit && pnpm run test:browser",
     "test:unit": "vitest run tests/*.test.ts",
-    "test:browser": "playwright test --config=playwright.config.ts"
+    "test:browser": "playwright test --config=playwright.config.ts",
+    "test:local-evidence": "playwright test --config=playwright.local-evidence.config.ts"
   },
   "dependencies": {
     "@kfm/maplibre": "workspace:*"

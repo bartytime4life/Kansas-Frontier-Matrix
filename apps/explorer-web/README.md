@@ -2,11 +2,11 @@
 doc_id: kfm://app/explorer-web/readme
 title: Explorer Web App README
 type: app-readme
-version: v0.9
+version: v0.10
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Accessibility steward · Docs steward
 created: 2026-06-16
-updated: 2026-09-10
+updated: 2026-09-23
 policy_label: public
 owning_root: apps/
 responsibility: "Orient maintainers to the existing Explorer Web application, its actual composition, package boundaries, local commands, validation, and remaining graduation gates."
@@ -46,6 +46,7 @@ notes:
   - "v0.8 preserves the established app and package responsibility roots while changing the normal composition, code-owned catalog, package adapter input boundary, tests, and documentation; source admission and authority decisions remain unchanged."
   - "The branch candidate extends the repository catalog/preflight surface to 15 non-loadable connection cards, visible tool holds, 10 workbench links, matching-panel search, and stale-evidence clearing; it does not fulfill the held real-data acceptance slice."
   - "v0.9 re-pins the repository snapshot after PR #4459 merged and records the forward temporal-policy and persisted-draft corrections separately; the merge is not human review, release, deployment, or publication evidence."
+  - "v0.10 documents the opt-in local synthetic HTTP evidence composition; the older evidence_snapshot remains historical and is not a current-head or validation claim."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -70,6 +71,44 @@ notes:
 - [12. Inspection path](#12-inspection-path) · [13. Validation expectations](#13-validation-expectations) · [14. Definition of done](#14-definition-of-done) · [15. Open verification items](#15-open-verification-items)
 
 ## 0. Current evidence snapshot
+
+### Local synthetic HTTP composition — 2026-09-23
+
+This branch adds an **opt-in local development path** over `main@9dcdaec2cacbbf9880bd613b546a7314a2673ac5`. The Living Atlas can send a bounded synthetic selection through HTTP and display the response in the existing Evidence Drawer. The ordinary development page and production build retain their offline composition; the default governed API remains negative-only.
+
+The [local transport](./src/adapters/local-http-evidence.ts) reuses the existing map-selection and Evidence Drawer projection profiles. The separate [Python fixture application](../governed-api/src/governed_api/local_fixture.py) supplies fixed synthetic outcomes for the Kansas frame and county locators: current, stale, withdrawn, missing, denied, and error. `ANSWER`, review and release labels in this path are simulated UI states, not evidence resolution or actual decisions. There is no provider retrieval, internal-store access, resolver graduation, source admission, or production activation.
+
+Use Python **3.11 or newer** and the pinned Node/pnpm setup described in [Run locally](#12-inspection-path). From the repository root, start the backend in one terminal:
+
+```bash
+PYTHONPATH=apps/governed-api/src python -m governed_api.local_fixture
+```
+
+Then start the opted-in UI in another terminal:
+
+```bash
+pnpm --filter explorer-web dev:local-evidence
+```
+
+Open `http://127.0.0.1:4173`. The backend binds `127.0.0.1:8765`; the [development proxy](./vite.config.ts) forwards only the local evidence path from the UI's origin. The client has no configurable remote endpoint and omits credentials. Stop both processes with Ctrl+C; ordinary `dev` starts without this integration when `VITE_KFM_LOCAL_EVIDENCE` is unset.
+
+In Layers, **Local evidence service · synthetic** exposes the **Synthetic service scenario** selector, initially `current`. Inspect **Generalized Kansas extent** or **County locator starter points** to load the corresponding response in the Evidence Drawer. Change the scenario to inspect a finite negative outcome, then use **Retry local evidence** when appropriate. Other layers remain unavailable or denied in this mode without making an HTTP request. Existing citation links and textual trust states remain inspectable without treating map pixels as evidence.
+
+To run the dedicated actual-HTTP browser suite, stop both manual servers and run:
+
+```bash
+pnpm --filter explorer-web test:local-evidence
+```
+
+The [test configuration](./playwright.local-evidence.config.ts) owns both loopback servers and refuses to reuse an unrelated service. It requires the supported Python executable on `PATH` and the browser prerequisites below. This command is separate from the ordinary offline browser suite. Its existence is not a passing result; record exact-head build, unit, browser and hosted outcomes separately.
+
+The transport bounds responses and deadlines, validates the existing projection before display, and preserves finite negative states. New selections, changed context and disposal invalidate earlier requests; a late response cannot restore superseded evidence. Transport failure does not fall back to a positive inline fixture. The [adapter notes](./src/adapters/README.md#local-synthetic-http-evidence) describe the boundary.
+
+Placement follows accepted [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) and [Directory Rules](../../docs/doctrine/directory-rules.md) §§7.2, 10.1 and 14.1: app-local composition and HTTP boundaries stay in the existing `apps/` owners, reuse existing profiles, and do not create a schema, policy, source or release home. The [preserved negative-only integration candidate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/f69a21a14ce3df54d91c78adb2fb62e72dc345c1) remains separate overlap evidence; this local fixture path does not adopt the held Atlas resolver/profile proposals. [Issue #4024](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024) still governs delivery independently.
+
+### Historical source snapshot — 2026-09-10
+
+The following table and maturity summary retain their original source scope. They do not describe the current branch's complete inventory or test results; the local-HTTP checkpoint above supersedes only its bounded integration claims.
 
 **Implementation base:** `main@976935b8b55c66976a028b7880d1cbc57c0c3582`, 2026-09-10. This is the immutable merge of PR #4459; the pin is not a green-build, authorized-transition, human-review, release, deployment, or public-operation claim. The corrections described in v0.9 remain a separate reviewable change over that base.
 

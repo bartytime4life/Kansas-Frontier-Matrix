@@ -28,6 +28,7 @@ import {
 import {
   mountLivingAtlasWorkspace,
   type LivingAtlasController,
+  type LivingAtlasOptions,
 } from "./mount-living-atlas";
 
 export type ExplorerSiteController = Readonly<{ destroy: () => void }>;
@@ -284,7 +285,7 @@ function featureCard(document: Document, entry: FeatureEntry): HTMLElement {
   return article;
 }
 
-export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
+export function mountExplorerSite(root: HTMLElement, options: LivingAtlasOptions = {}): ExplorerSiteController {
   const document = root.ownerDocument;
   const baseline = resolveBaselineShell();
   const cleanup: Array<() => void> = [];
@@ -466,7 +467,7 @@ export function mountExplorerSite(root: HTMLElement): ExplorerSiteController {
   const footer = el(document, "footer", "site-footer");
   footer.append(text(document, "p", "Kansas Frontier Matrix · governed synthetic Explorer composition"), text(document, "p", "Not for emergency, legal-title, regulatory, or life-safety decisions."));
   root.replaceChildren(skip, header, main, footer);
-  livingAtlas = mountLivingAtlasWorkspace(livingAtlasHost);
+  livingAtlas = mountLivingAtlasWorkspace(livingAtlasHost, options);
 
   return Object.freeze({
     destroy: () => {

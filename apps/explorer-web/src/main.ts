@@ -7,6 +7,7 @@ import "./site/site-trust.css";
 import "./site/site-living-atlas.css";
 import "./site/site-responsive.css";
 import { mountExplorerSite } from "./site/mount-explorer-site";
+import { fetchLocalEvidenceProjection } from "./adapters/local-http-evidence";
 import { mountTerrainSourceLedger } from "./site/mount-terrain-source-ledger";
 import { mountSyntheticFocusWorkspace } from "./site/mount-synthetic-focus-workspace";
 import { mountPublicTrustSurface } from "./site/trust-surface";
@@ -45,7 +46,11 @@ if (root === null) {
   throw new Error("Explorer Web root element is missing.");
 }
 
-const site = mountExplorerSite(root);
+const site = mountExplorerSite(root,
+  import.meta.env.DEV && import.meta.env.VITE_KFM_LOCAL_EVIDENCE === "1"
+    ? { localEvidenceResolver: fetchLocalEvidenceProjection }
+    : {},
+);
 mountTerrainSourceLedger(root);
 const navigation = root.querySelector<HTMLElement>(".site-nav");
 const trustSection = root.querySelector<HTMLElement>("#trust");

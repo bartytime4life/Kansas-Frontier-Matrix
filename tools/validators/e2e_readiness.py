@@ -2,8 +2,8 @@
 """Validate the bounded KFM E2E readiness hold without running live systems.
 
 This standard-library checker confirms that the implemented Explorer Web
-baseline and its separate build/test workflow remain present while the
-repository-wide browser/API E2E suite remains deliberately unimplemented.  It
+baseline and its opt-in synthetic HTTP test lane remain wired while the
+repository-wide production E2E suite remains deliberately unimplemented. It
 does not start services, install dependencies, make network requests, validate
 claims, or grant evidence, policy, release, deployment, or publication status.
 """
@@ -39,10 +39,12 @@ EXPECTED_ROOT_HOLDS = {
 
 EXPECTED_EXPLORER_SCRIPTS = {
     "dev": "vite",
+    "dev:local-evidence": "VITE_KFM_LOCAL_EVIDENCE=1 vite --host 127.0.0.1 --port 4173 --strictPort",
     "build": "tsc --noEmit -p tsconfig.json && vite build",
     "test": "pnpm run test:unit && pnpm run test:browser",
     "test:unit": "vitest run tests/*.test.ts",
     "test:browser": "playwright test --config=playwright.config.ts",
+    "test:local-evidence": "playwright test --config=playwright.local-evidence.config.ts",
 }
 
 # Playwright config files that have been deliberately accepted at the named
@@ -53,6 +55,7 @@ EXPECTED_EXPLORER_SCRIPTS = {
 ACCEPTED_PLAYWRIGHT_CONFIGS: frozenset[str] = frozenset(
     {
         "apps/explorer-web/playwright.config.ts",
+        "apps/explorer-web/playwright.local-evidence.config.ts",
     }
 )
 
@@ -74,6 +77,12 @@ REQUIRED_TEXT_PATHS = {
     "apps/explorer-web/src/features/shell/index.tsx",
     "apps/explorer-web/src/main.ts",
     "apps/explorer-web/tests/shell-baseline.test.ts",
+    "apps/explorer-web/vite.config.ts",
+    "apps/explorer-web/playwright.local-evidence.config.ts",
+    "apps/explorer-web/src/adapters/local-http-evidence.ts",
+    "apps/explorer-web/tests/browser/local-http-evidence.spec.ts",
+    "apps/governed-api/src/governed_api/local_fixture.py",
+    "apps/governed-api/tests/test_local_fixture.py",
     "apps/governed-api/README.md",
     "package.json",
     "pnpm-lock.yaml",
@@ -325,6 +334,13 @@ def _check_text_markers(
             "UI_WORKSPACE: explorer-web",
             'run: pnpm --filter "${UI_WORKSPACE}" build',
             'run: pnpm --filter "${UI_WORKSPACE}" test',
+            'run: pnpm --filter "${UI_WORKSPACE}" test:local-evidence',
+        ),
+        "apps/explorer-web/playwright.local-evidence.config.ts": (
+            'testMatch: "local-http-evidence.spec.ts"',
+            'command: "python -m governed_api.local_fixture"',
+            'command: "pnpm run dev:local-evidence"',
+            "reuseExistingServer: false",
         ),
         ".github/workflows/api-test.yml": ("run: make governed-api-smoke",),
         ".github/workflows/e2e-smoke.yml": (
@@ -492,7 +508,7 @@ def _check_surfaced_e2e_files(
                     "e2e" in parts
                     or "e2e" in lower_name
                     or (
-                        lower_name.startswith("playwright.config.")
+                        lower_name.startswith("playwright.") and ".config." in lower_name
                         and relative not in ACCEPTED_PLAYWRIGHT_CONFIGS
                     )
                 ):
@@ -551,10 +567,11 @@ def render_report(report: ReadinessReport) -> tuple[str, ...]:
         return (
             "E2E_READINESS_CONFIRMED "
             "explorer_baseline=implemented e2e_suite=not-established "
+            "local_synthetic_http=configured "
             f"inspected_files={len(report.inspected_files)}",
             "WORKFLOW_SKIPPED_EXPLICIT: run-e2e-smoke",
-            "WORKFLOW_HOLD: no accepted Explorer Web plus Governed API E2E "
-            "command or deterministic fixture suite",
+            "WORKFLOW_HOLD: repository-wide production E2E is not established; "
+            "the local synthetic HTTP lane grants no source or release authority",
         )
     lines = tuple(
         "E2E_READINESS_INVALID "

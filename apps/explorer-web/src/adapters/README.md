@@ -2,11 +2,11 @@
 doc_id: kfm://app/explorer-web/src/adapters/readme
 title: Explorer Web Adapters README
 type: app-readme
-version: v0.4
+version: v0.5
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Docs steward
 created: 2026-06-16
-updated: 2026-09-10
+updated: 2026-09-23
 policy_label: public
 owning_root: apps/
 responsibility: define Explorer Web app-local adapter boundaries and record verified bounded adapter implementations
@@ -40,6 +40,7 @@ notes:
   - "Live governed API transport, canonical schema binding, renderer wrappers, runtime wiring, and deployment behavior remain NEEDS VERIFICATION."
   - "Adapters may translate between Explorer Web UI code and governed API envelopes, renderer ports, evidence payloads, layer manifests, export requests, and diagnostics; they must not become source truth, policy authority, release authority, lifecycle storage, schema/contract authority, direct model surface, or renderer authority."
   - "Claim-bearing UI state must come from governed API envelopes, released or bounded-safe layer artifacts, EvidenceBundle-derived payloads, and finite states; adapters must not directly read RAW/WORK/QUARANTINE/PROCESSED/CATALOG/TRIPLET/PUBLISHED data roots or canonical/internal stores."
+  - "v0.5 adds an opt-in local synthetic HTTP adapter using the existing map-selection and Evidence Drawer profiles; production/default activation and resolver authority remain held."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -119,6 +120,24 @@ Bounded Evidence Drawer, planning-scenario, and ACS population fixture parsers a
 ---
 
 ## 2. Current repo evidence
+
+### Local synthetic HTTP evidence
+
+The current branch, based on `main@9dcdaec2cacbbf9880bd613b546a7314a2673ac5`, adds [`local-http-evidence.ts`](./local-http-evidence.ts) as app-local development transport. It converts only the fixed Kansas-frame and county-locator selections through the existing [`map_runtime_evidence_adapter.ts`](./map_runtime_evidence_adapter.ts), posts to the same-origin `/__local__/evidence` path, and validates the returned `kfm.explorer.evidence-drawer.public-safe.v1` projection with [`GovernedClient.ts`](./GovernedClient.ts). The existing map-evidence resolver checks selection/support continuity before the Drawer consumes it. This is reusable transport/session handling for synthetic fixtures, not an EvidenceRef-to-EvidenceBundle resolver or canonical schema adoption.
+
+The [opted-in entrypoint](../main.ts) injects this resolver only during development with `VITE_KFM_LOCAL_EVIDENCE=1`. [Vite](../../vite.config.ts) then proxies the local evidence path to the separately started Python fixture server at `127.0.0.1:8765`; the UI uses `127.0.0.1:4173`. The ordinary development page and production build do not activate this integration. The browser imports no backend application internals.
+
+The request uses fixed identities and omits credentials, redirects, cache storage and arbitrary endpoint overrides. Responses are limited to 16 KiB and 256 chunks with a five-second total deadline covering fetch and body reads; malformed, oversized or unexpected responses fail closed. The request session aborts superseded work and rejects late results after selection/context changes or disposal, including readers that ignore cancellation. A transport failure never supplies a positive inline fallback.
+
+The backend returns current, stale, withdrawn, missing, denied and error **synthetic presentation states**. Positive citations identify the repository fixture declaration; review/release labels do not authenticate evidence or authorize a real source. Existing finite-outcome, correction/history and no-leak parsing stays in `GovernedClient.ts`; the default governed API remains negative-only.
+
+Run `pnpm --filter explorer-web dev:local-evidence` with the Python 3.11+ fixture server, or `pnpm --filter explorer-web test:local-evidence` for the dedicated browser suite that owns both servers. See the [app instructions](../../README.md#local-synthetic-http-composition--2026-09-23) for the exact backend command and browser prerequisites. These commands describe the verification path, not executed results or hosted acceptance.
+
+Accepted [ADR-0029](../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) and [Directory Rules](../../../../docs/doctrine/directory-rules.md) §§7.2, 10.1 and 14.1 place app-local UI and service boundaries under `apps/`, forbid production use of test fixtures, and preserve the existing contract/schema/policy owners. This explicitly local fixture mode creates no parallel authority or production data home. The [older negative-only HTTP candidate](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/f69a21a14ce3df54d91c78adb2fb62e72dc345c1) remains a separate preserved branch; its held Atlas profile and authority context are not consumed here.
+
+### Historical adapter inventory — v0.4
+
+The table below retains the prior documentation snapshot. Its broader unknowns are not fresh execution results; the local-only HTTP implementation above is the bounded addition in v0.5.
 
 | Surface | Status | What it proves | What it does **not** prove |
 |---|---|---|---|

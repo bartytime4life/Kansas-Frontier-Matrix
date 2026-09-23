@@ -49,6 +49,8 @@ notes:
 
 `apps/governed-api/` contains KFM's **bounded Python WSGI scaffold** for the governed API. It runs locally and registers three GET routes. Each returns `ABSTAIN / NOT_IMPLEMENTED`; unknown routes and unsupported methods return safe `ERROR` envelopes. It is **not yet a production evidence, policy, or release service**.
 
+An explicitly started [local synthetic transport](#16-opt-in-local-synthetic-explorer-transport) also exercises the existing Explorer selection and Evidence Drawer profiles over real loopback HTTP. It is a separate application: the default route registry and public abstention behavior are unchanged.
+
 [Local quick start](#111-local-quick-start) · [Actual routes](#7-route-family-map) · [Envelope](#9-runtime-outcome-contract) · [Tests and CI](#12-validation-expectations) · [Open gates](#15-open-verification-items)
 
 | Status axis | Evidence at the pinned base |
@@ -328,6 +330,43 @@ Before **runtime graduation**, the following remain required:
 | Verify authentication, resource limits, operational isolation, logging, and safe errors | Public or role-gated exposure. |
 | Obtain exact-head CI and qualified review for each change | Integration of that change; not retroactive runtime proof. |
 | Verify deployment and rollback rehearsal separately | Public operation, release, promotion, and publication. |
+
+## 16. Opt-in local synthetic Explorer transport
+
+`src/governed_api/local_fixture.py` is a separate loopback WSGI application for the local Explorer demonstration. It uses the existing `kfm.explorer.map-feature-selection.v1` request shape and `kfm.explorer.evidence-drawer.public-safe.v1` response shape; it introduces no contract, schema, policy, evidence, release, or authority family. Directory Rules `DIR-EXEC-001` places this application composition under the existing `apps/governed-api/` source tree. Its focused tests belong to the existing app-local test lane.
+
+Start it explicitly from the repository root with Python 3.11 or newer:
+
+```bash
+PYTHONPATH=apps/governed-api/src python -m governed_api.local_fixture
+```
+
+The listener is fixed to `127.0.0.1`, defaults to port `8765`, and permits data requests only from the exact trusted local UI origin `http://127.0.0.1:4173`. Trusted startup options `--port` and `--ui-origin` can select other numeric loopback ports; request fields cannot configure these values. The shipped UI proxy and browser tests use the default ports; custom service ports require matching trusted UI configuration. This server is a local fixture tool, not a production hosting command. The Explorer development proxy forwards `/__local__/evidence` to this listener; health checks address the backend directly. An ordinary frontend build does not activate the transport.
+
+| Local request | Behavior |
+|---|---|
+| `GET /__local__/health` | Empty `204` with the synthetic-only marker. A non-browser readiness probe may omit Origin; a supplied incorrect Origin is denied. |
+| `POST /__local__/evidence` | Closed JSON selection mapped to one fixed synthetic projection. No request path, URL, trust state, provider, or fixture name selects external input. |
+| `current` scenario | `200`, fixture `ANSWER / SUPPORTED`, fixed commit-pinned repository citation. |
+| `stale` or `withdrawn` scenario | `200`, `ABSTAIN`; stale references are historical scope, and withdrawn history is never resolvable as current. |
+| `missing` or `denied` scenario | `200`, `ABSTAIN / MISSING_EVIDENCE` or `DENY / POLICY_DENIED`, without references, citations, or history. |
+| `error` scenario | `503`, safe `ERROR / UPSTREAM_ERROR`. |
+| Well-formed but unbound selection | `404`, safe `ABSTAIN / MISSING_EVIDENCE`; caller values are not echoed. |
+| Invalid boundary/input | Finite safe error with `400`, `403`, `405`, `411`, `413`, or `415` as appropriate. |
+
+The allowlist contains only the existing Living Atlas layer slugs `kansas-frame` and `county-locators`. Each scenario uses `selection:local-http:<slug>:<scenario>`, `layer:<slug>`, and `feature:local-http:<slug>`. Current, missing, denied, and error requests carry `kfm:evidence:site-local:<slug>` in `evidence_refs`; stale and withdrawn requests carry that reference only in `history_evidence_refs`, with an empty current list. These are fixed demonstration identities, not EvidenceBundle lookup keys. The response identifier binds the same tuple as `kfm:ui:evidence-drawer:local-http:<slug>:<scenario>`.
+
+Requests require an exact loopback peer, Host, and UI Origin. Cookies, authorization headers, cross-site requests, alternate media types, compression/transfer encodings, duplicate JSON keys, numeric values, extra fields, malformed identities, duplicate references, and more than 16 combined references are rejected. Bodies and responses are capped at 16 KiB. The development server applies both a three-second socket idle timeout and a three-second total connection deadline covering headers, body, execution, and response writes. Expiry shuts down that connection; completion cancels its timer. Trickle traffic cannot indefinitely occupy the single development worker. Request logging and connection-error tracebacks are suppressed. Responses carry `no-store`, `nosniff`, and `X-KFM-Local-Fixture: synthetic-only`; no CORS allowance is provided.
+
+Responses are immutable, preassembled bytes from a closed server-owned set. Every member is checked against the existing EvidenceDrawer schema and semantic validator in `tests/test_local_fixture.py`; arbitrary client or provider objects never enter response serialization. Negative responses use fixed safe text instead of diagnostic-bearing fixtures. `REVIEWED`, `RELEASED`, and `ALLOW` in the positive fixture are explicitly simulated UI states: every payload carries a synthetic-only limitation. No source is activated, no evidence closure or policy evaluation occurs, and the reusable evidence resolver's non-renderable result is not converted to an answer.
+
+Focused validation:
+
+```bash
+python -m pytest -q apps/governed-api/tests
+```
+
+The local suite exercises the twelve layer/scenario combinations, canonical schema and semantic checks, mismatched and malformed requests, transport denial, real loopback HTTP delivery, and unchanged default route abstention. Passing these checks proves this local transport boundary only. Public API integration, authentication, real evidence/policy/release closure, and deployment remain open. Rollback removes the opt-in module and its frontend integration together; it requires no data migration and leaves the default API available.
 
 ### Appendix A — preservation and rollback
 

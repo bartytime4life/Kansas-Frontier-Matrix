@@ -57,6 +57,11 @@ def _build_repository(root: Path) -> None:
         "apps/explorer-web/src/main.ts",
         "apps/explorer-web/tests/shell-baseline.test.ts",
         "apps/governed-api/README.md",
+        "apps/explorer-web/vite.config.ts",
+        "apps/explorer-web/src/adapters/local-http-evidence.ts",
+        "apps/explorer-web/tests/browser/local-http-evidence.spec.ts",
+        "apps/governed-api/src/governed_api/local_fixture.py",
+        "apps/governed-api/tests/test_local_fixture.py",
         "tests/e2e/README.md",
         "tests/e2e/__init__.py",
         "tests/e2e/agriculture/.gitkeep",
@@ -74,7 +79,15 @@ def _build_repository(root: Path) -> None:
         "UI_MANIFEST: apps/explorer-web/package.json\n"
         "UI_WORKSPACE: explorer-web\n"
         'run: pnpm --filter "${UI_WORKSPACE}" build\n'
-        'run: pnpm --filter "${UI_WORKSPACE}" test\n',
+        'run: pnpm --filter "${UI_WORKSPACE}" test\n'
+        'run: pnpm --filter "${UI_WORKSPACE}" test:local-evidence\n',
+    )
+    _write(
+        root / "apps/explorer-web/playwright.local-evidence.config.ts",
+        'testMatch: "local-http-evidence.spec.ts"\n'
+        'command: "python -m governed_api.local_fixture"\n'
+        'command: "pnpm run dev:local-evidence"\n'
+        "reuseExistingServer: false\n",
     )
     _write(
         root / ".github/workflows/api-test.yml",
@@ -107,8 +120,8 @@ class E2EReadinessTests(unittest.TestCase):
             render_report(report)[1:],
             (
                 "WORKFLOW_SKIPPED_EXPLICIT: run-e2e-smoke",
-                "WORKFLOW_HOLD: no accepted Explorer Web plus Governed API E2E "
-                "command or deterministic fixture suite",
+                "WORKFLOW_HOLD: repository-wide production E2E is not established; "
+                "the local synthetic HTTP lane grants no source or release authority",
             ),
         )
 
@@ -187,6 +200,29 @@ class E2EReadinessTests(unittest.TestCase):
         )
 
         self.assertIn("REQUIRED_MARKER_MISSING", self._codes())
+
+    def test_local_http_lane_without_ci_invocation_fails_closed(self) -> None:
+        path = self.root / ".github/workflows/ui-build.yml"
+        path.write_text(
+            path.read_text().replace(
+                'run: pnpm --filter "${UI_WORKSPACE}" test:local-evidence\n', ""
+            ),
+            encoding="utf-8",
+        )
+        self.assertIn("REQUIRED_MARKER_MISSING", self._codes())
+
+    def test_local_http_lane_without_owned_service_fails_closed(self) -> None:
+        path = self.root / "apps/explorer-web/playwright.local-evidence.config.ts"
+        path.write_text(path.read_text().replace("reuseExistingServer: false", "reuseExistingServer: true"))
+        self.assertIn("REQUIRED_MARKER_MISSING", self._codes())
+
+    def test_local_http_lane_without_backend_implementation_fails_closed(self) -> None:
+        (self.root / "apps/governed-api/src/governed_api/local_fixture.py").unlink()
+        self.assertIn("REQUIRED_PATH_MISSING", self._codes())
+
+    def test_other_named_playwright_config_still_fails_closed(self) -> None:
+        _write(self.root / "apps/explorer-web/playwright.other.config.ts", "// unbound\n")
+        self.assertIn("E2E_IMPLEMENTATION_SURFACED", self._codes())
 
     def test_missing_workflow_invocation_fails_closed(self) -> None:
         _write(self.root / ".github/workflows/e2e-smoke.yml", "run: echo hold\n")

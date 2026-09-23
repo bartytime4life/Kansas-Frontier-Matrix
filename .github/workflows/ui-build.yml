@@ -222,6 +222,14 @@ jobs:
       - name: Test Explorer Web
         run: pnpm --filter "${UI_WORKSPACE}" test
 
+      - name: Set up Python for local evidence service
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Exercise Explorer against the local synthetic HTTP service
+        run: pnpm --filter "${UI_WORKSPACE}" test:local-evidence
+
       - name: Record Explorer Web test scope
         if: always()
         run: |
@@ -231,6 +239,7 @@ jobs:
             echo
             echo "- Result: \`${{ job.status }}\`"
             echo "- Command: \`pnpm --filter ${UI_WORKSPACE} test\`"
+            echo "- Local HTTP command: \`pnpm --filter ${UI_WORKSPACE} test:local-evidence\`"
             echo "- Readiness: real test script, exact pnpm pin, and pnpm-lock.yaml"
             echo "- Authority: CI signal only; not evidence, policy, release, publication, or deployment approval"
           } >> "${GITHUB_STEP_SUMMARY}"

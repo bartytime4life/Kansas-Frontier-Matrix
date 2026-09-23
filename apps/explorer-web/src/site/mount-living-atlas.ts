@@ -1,4 +1,4 @@
-import type { MapRuntimePort } from "@kfm/maplibre";
+import { isMapRuntimeTrustState, type MapRuntimePort } from "@kfm/maplibre";
 import { createViteMapLibreAdapter } from "@kfm/maplibre/vite-adapter";
 import {
   ATLAS_WORKBENCH_TOOLS,
@@ -45,8 +45,18 @@ import {
 import { repositoryUrl } from "./catalog";
 import { KANSAS_COUNTY_REFERENCE_CANDIDATE } from "./reference-geography-source-registry";
 import livingWatersFixturePacket from "../../../../fixtures/contracts/v1/domains/hydrology/living_waters_fixture_packet/valid/first_proof.json";
+import {
+  createLocalEvidenceSession,
+  localEvidenceSelection,
+  LOCAL_EVIDENCE_SCENARIOS,
+  type LocalEvidenceResolver,
+  type LocalEvidenceScenario,
+} from "../adapters/local-http-evidence";
+import { EVIDENCE_DRAWER_PROJECTION_PROFILE } from "../adapters/GovernedClient";
+import { mountEvidenceDrawer, type EvidenceDrawerController } from "../features/evidence_drawer";
 
 export type LivingAtlasController = Readonly<{ destroy: () => void }>;
+export type LivingAtlasOptions = Readonly<{ localEvidenceResolver?: LocalEvidenceResolver }>;
 
 const DISPLAY_TIMES = TEMPORAL_EXTENTS.filter(
   (entry) => entry.kind === "INTERVAL",
@@ -214,10 +224,13 @@ function writeDrafts<T>(key: string, drafts: readonly T[]): void {
 
 export function mountLivingAtlasWorkspace(
   host: HTMLElement,
+  options: LivingAtlasOptions = {},
 ): LivingAtlasController {
   const document = host.ownerDocument;
   const cleanup: Array<() => void> = [];
   let snapshot = createInitialSnapshot();
+  let localScenario: LocalEvidenceScenario = "current";
+  let localDrawer: EvidenceDrawerController | null = null;
   let previewTimeId = snapshot.committedTimeId;
   let playback = createInitialPlayback(
     DISPLAY_TIME_IDS,
@@ -297,6 +310,28 @@ export function mountLivingAtlasWorkspace(
     text(document, "h2", "Layer catalog"),
     text(document, "p", `${LAYER_RECORDS.length} bounded runtime records · ${REPOSITORY_LAYER_CONNECTIONS.length} repository candidates`, "atlas-muted"),
   );
+  if (options.localEvidenceResolver) {
+    const localCard = el(document, "section", "atlas-fixture-card");
+    localCard.setAttribute("aria-label", "Local evidence service demonstration");
+    const label = text(document, "label", "Synthetic service scenario");
+    label.htmlFor = "atlas-local-evidence-scenario";
+    const scenarios = el(document, "select", "atlas-fixture-select");
+    scenarios.id = label.htmlFor;
+    scenarios.dataset.localEvidenceScenario = "true";
+    LOCAL_EVIDENCE_SCENARIOS.forEach((scenario) => {
+      const choice = el(document, "option");
+      choice.value = scenario;
+      choice.textContent = scenario[0].toUpperCase() + scenario.slice(1);
+      scenarios.append(choice);
+    });
+    localCard.append(
+      text(document, "strong", "Local evidence service · synthetic"),
+      text(document, "p", "Inspect Generalized Kansas extent or County locator starter points to request a bounded fixture from the local service. Other layers remain unavailable here; no source, review, or release is activated."),
+      label,
+      scenarios,
+    );
+    layersPanel.append(localCard);
+  }
   const layerList = el(document, "div", "atlas-layer-list");
   LAYER_RECORDS.forEach((record) => {
     const state = snapshot.layers.find((entry) => entry.id === record.id)!;
@@ -505,15 +540,91 @@ export function mountLivingAtlasWorkspace(
   );
   mapStage.append(representationBar, interactionBar, mapCanvas, mapNotice);
 
-  const evidence = el(document, "aside", "atlas-evidence-drawer");
-  evidence.setAttribute("aria-label", "Evidence Drawer");
+  const evidence = el(document, options.localEvidenceResolver ? "div" : "aside", "atlas-evidence-drawer");
+  if (!options.localEvidenceResolver) evidence.setAttribute("aria-label", "Evidence Drawer");
+  const revealLocalEvidenceStart = (): void => {
+    const heading = evidence.querySelector<HTMLHeadingElement>('[data-component="evidence-drawer"] h2');
+    if (!heading) return;
+    // open() has already captured the original return-focus target. Start at
+    // the finite outcome, preserving that target and the drawer's Escape path.
+    heading.tabIndex = -1;
+    heading.focus({ preventScroll: true });
+    evidence.scrollTop = 0;
+    evidence.scrollIntoView({ block: "nearest", inline: "nearest" });
+  };
+  const mountLocalDrawer = (drawerHost: HTMLElement, input: unknown): void => {
+    localDrawer = mountEvidenceDrawer(drawerHost, input);
+    // The same initial position applies when the ordinary drawer trigger reopens it.
+    drawerHost.querySelector<HTMLButtonElement>("button[aria-controls]")
+      ?.addEventListener("click", revealLocalEvidenceStart);
+    localDrawer.open();
+    revealLocalEvidenceStart();
+  };
+  const localSession = options.localEvidenceResolver
+    ? createLocalEvidenceSession(options.localEvidenceResolver, (resolution) => {
+        snapshot = cloneSnapshot(snapshot, {
+          evidenceRefs: resolution.drawer.outcome === "ANSWER"
+            ? resolution.drawer.evidenceRefs
+            : Object.freeze([]),
+        });
+        evidence.removeAttribute("aria-busy");
+        evidence.replaceChildren(
+          text(document, "p", "Local HTTP fixture · synthetic review and release states only. No Kansas factual claim or actual release is established.", "atlas-muted"),
+        );
+        const drawerHost = el(document, "div");
+        evidence.append(drawerHost);
+        mountLocalDrawer(drawerHost, resolution.drawerInput);
+        evidence.append(button(document, "Retry local evidence", "evidence:retry"));
+      })
+    : null;
+  const invalidateLocalEvidence = (): void => {
+    if (!localSession) return;
+    localSession.invalidate();
+    localDrawer?.destroy();
+    localDrawer = null;
+    evidence.removeAttribute("aria-busy");
+    snapshot = cloneSnapshot(snapshot, { evidenceRefs: Object.freeze([]) });
+  };
+  const showLocalUnavailable = (denied: boolean): void => {
+    const outcome = denied ? "DENY" : "ABSTAIN";
+    evidence.replaceChildren(text(document, "p", "Local demonstration boundary · this selection does not call the service.", "atlas-muted"));
+    const drawerHost = el(document, "div");
+    evidence.append(drawerHost);
+    mountLocalDrawer(drawerHost, {
+      profile: EVIDENCE_DRAWER_PROJECTION_PROFILE,
+      id: "kfm:ui:evidence-drawer:local-http:unavailable",
+      outcome,
+      reason_code: denied ? "POLICY_DENIED" : "MISSING_EVIDENCE",
+      title: "Local evidence not available",
+      summary: "This selection is outside the bounded local service demonstration.",
+      evidence_refs: [], citations: [], limitations: ["No unsupported claim is shown."],
+      trust_state: { source_role: "context", policy: outcome, review: "NOT_APPLICABLE", release: "UNRELEASED", freshness: "UNKNOWN", correction: "NONE" },
+      history: { negative_outcomes: [], corrections: [] },
+    });
+  };
   const renderEvidence = (layerId: string | null): void => {
+    invalidateLocalEvidence();
     if (layerId === null) {
       evidence.replaceChildren(
         text(document, "p", "Evidence Drawer", "eyebrow"),
         text(document, "h2", "Inspect before interpretation"),
         text(document, "p", "Choose Inspect on a layer. Rendered pixels and properties never become evidence authority."),
       );
+      return;
+    }
+    if (localSession) {
+      const policy = evaluateFocusSelection(layerId, false, snapshot.activeViewId);
+      const selection = localEvidenceSelection(layerId, localScenario);
+      if (!selection || policy.outcome !== "ANSWER") {
+        showLocalUnavailable(policy.outcome === "DENY");
+        return;
+      }
+      const status = text(document, "p", "Requesting synthetic evidence from the local service…");
+      status.setAttribute("role", "status");
+      status.setAttribute("aria-live", "polite");
+      evidence.setAttribute("aria-busy", "true");
+      evidence.replaceChildren(status);
+      void localSession.select(selection);
       return;
     }
     const record = findLayerRecord(layerId);
@@ -546,6 +657,7 @@ export function mountLivingAtlasWorkspace(
   renderEvidence(null);
 
   const renderConnection = (connectionId: string): void => {
+    invalidateLocalEvidence();
     const candidate = findRepositoryLayerConnection(connectionId);
     if (candidate === null) return;
     const links = el(document, "div", "atlas-artifact-links");
@@ -569,6 +681,7 @@ export function mountLivingAtlasWorkspace(
   };
 
   const renderReferenceGeography = (candidateId: string): void => {
+    invalidateLocalEvidence();
     const candidate = KANSAS_COUNTY_REFERENCE_CANDIDATE;
     if (candidateId !== candidate.id) return;
     const links = el(document, "div", "atlas-artifact-links");
@@ -864,6 +977,7 @@ export function mountLivingAtlasWorkspace(
   };
 
   const initializeRuntime = (): void => {
+    if (localSession) renderEvidence(null);
     const generation = ++runtimeGeneration;
     unsubscribeRuntime?.();
     unsubscribeRuntime = null;
@@ -886,6 +1000,8 @@ export function mountLivingAtlasWorkspace(
       runtimeState.textContent = `Renderer ${state.state}${state.reason === null ? "" : ` · ${state.reason}`}`;
       if (state.state === "READY") {
         snapshot = cloneSnapshot(snapshot, { camera: state.camera });
+      } else if ((isMapRuntimeTrustState(state.state) || state.state === "DISPOSED") && localSession) {
+        renderEvidence(null);
       }
     });
     void nextRuntime.initialize(snapshot.camera).catch(() => {
@@ -1012,6 +1128,7 @@ export function mountLivingAtlasWorkspace(
   };
 
   const activateMode = (mode: string): void => {
+    if (localSession) renderEvidence(null);
     workspace.querySelectorAll<HTMLElement>("[data-atlas-mode]").forEach((panel) => {
       panel.hidden = panel.dataset.atlasMode !== mode;
     });
@@ -1140,9 +1257,10 @@ export function mountLivingAtlasWorkspace(
       snapshot = commitSnapshotTime(snapshot, previewTimeId);
       timeDetail.textContent = `Committed to map snapshot · ${new Date(snapshot.capturedAt).toLocaleTimeString()}`;
       refreshLayerControls();
-      renderEvidence(snapshot.selectedLayerId);
       initializeRuntime();
-    } else if (action === "composer:open") composer.hidden = false;
+      renderEvidence(snapshot.selectedLayerId);
+    } else if (action === "evidence:retry") renderEvidence(snapshot.selectedLayerId);
+    else if (action === "composer:open") composer.hidden = false;
     else if (action === "composer:close") composer.hidden = true;
     else if (action === "create:report") createReport();
     else if (action === "create:story") createStory();
@@ -1164,6 +1282,14 @@ export function mountLivingAtlasWorkspace(
 
   const handleChange = (event: Event): void => {
     const target = event.target as HTMLInputElement | HTMLSelectElement;
+    if (target.dataset.localEvidenceScenario === "true") {
+      const scenario = target.value as LocalEvidenceScenario;
+      if (LOCAL_EVIDENCE_SCENARIOS.includes(scenario)) {
+        localScenario = scenario;
+        renderEvidence(snapshot.selectedLayerId);
+      }
+      return;
+    }
     if (target.dataset.livingWatersScenario === "true") {
       const scenarioId = target.value as LivingWatersScenarioId;
       if (LIVING_WATERS_SCENARIO_IDS.includes(scenarioId)) {
@@ -1257,6 +1383,8 @@ export function mountLivingAtlasWorkspace(
 
   return Object.freeze({
     destroy: () => {
+      localSession?.destroy();
+      localDrawer?.destroy();
       cleanup.forEach((fn) => fn());
       runtimeGeneration += 1;
       unsubscribeRuntime?.();

@@ -189,12 +189,14 @@ jobs:
 
           `WORKFLOW_SKIPPED_EXPLICIT: run-e2e-smoke`
 
-          `WORKFLOW_HOLD: no accepted Explorer Web plus Governed API E2E command or deterministic fixture suite`
+          `WORKFLOW_HOLD: repository-wide production E2E is not established; the local synthetic HTTP lane grants no source or release authority`
 
           The Governed API has a separate repository-owned smoke workflow. Root
           lint/test/build remain exact fail-closed `WORKFLOW_HOLD` commands.
-          Explorer Web has implemented build and unit-test commands validated
-          separately by `ui-build`; the composed E2E surface remains absent.
+          Explorer Web has build, unit, browser and opt-in local synthetic HTTP
+          commands exercised separately by `ui-build`. The local HTTP lane
+          composes an explicit fixture service and the existing drawer profile;
+          it does not graduate the production API or mock-model runtime.
           This job verifies that boundary and fails closed on newly surfaced E2E
           commands, files, or changes to the locked readiness inputs.
 

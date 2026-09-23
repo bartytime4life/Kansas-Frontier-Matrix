@@ -148,7 +148,7 @@ standard-library readiness validator:
 ```yaml
 - python tools/validators/e2e_readiness.py
 - WORKFLOW_SKIPPED_EXPLICIT: run-e2e-smoke
-- WORKFLOW_HOLD: no accepted Explorer Web plus Governed API E2E command or deterministic fixture suite
+- WORKFLOW_HOLD: repository-wide production E2E is not established; the local synthetic HTTP lane grants no source or release authority
 ```
 
 Current Makefile:
@@ -158,9 +158,14 @@ test:
 	python -m pytest tests/schemas tests/contracts -q
 ```
 
-A green readiness hold is not E2E proof. Explorer Web build and unit-test
-commands are implemented and separately exercised by `ui-build`; this does not
-establish a composed Governed API/browser journey.
+A green readiness hold is not E2E proof. Explorer Web's separate
+`test:local-evidence` command now runs the actual loopback synthetic fixture
+service and browser together under `ui-build`; its configuration owns both
+processes and rejects reuse of unrelated servers. See the
+[local HTTP inspection instructions](../../apps/explorer-web/README.md).
+This bounded test lane belongs with its app-owned browser tests under `apps/`
+and does not graduate this repository-wide production suite, the Hydrology
+placeholder, the default negative-only API, or source/release authority.
 
 [Back to top](#top)
 
