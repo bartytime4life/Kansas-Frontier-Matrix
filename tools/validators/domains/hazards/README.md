@@ -142,7 +142,7 @@ python -m unittest -v tests.domains.hazards.test_hazards_smoke
 make hazards-validate
 ```
 
-The Make target runs the USDM materiality unit tests and `validate_usdm_materiality.py --fixtures` with deterministic no-network environment controls.
+The Make target runs the USDM materiality unit tests and `validate_usdm_materiality.py --fixtures`, then the drought-family CLI negative-path tests and `../../hazards/validate_drought_families.py --fixtures`, with deterministic no-network environment controls.
 
 Two additional substantive profiles are already hosted through dedicated workflows rather than through `domain-hazards`:
 
