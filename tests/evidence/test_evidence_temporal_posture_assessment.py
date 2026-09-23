@@ -117,6 +117,18 @@ class EvidenceTemporalPostureAssessmentTests(unittest.TestCase):
             advisory["properties"]["temporal_authority"]["$ref"],
         )
 
+    def test_unreadable_inputs_are_finite_errors(self) -> None:
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            truncated = Path(tmp) / "truncated.json"
+            truncated.write_text('{"time": ', encoding="utf-8")
+            missing = Path(tmp) / "missing.json"
+            for module in (CANONICAL, LEGACY):
+                for path in (truncated, missing):
+                    with self.subTest(module=module.__name__, path=path.name):
+                        self.assertEqual(["input is not readable JSON"], module.validate_file(path))
+
     def test_no_third_same_named_semantic_family(self) -> None:
         schemas = [
             load(ROOT / "schemas/contracts/v1/common/temporal_authority_envelope.schema.json"),

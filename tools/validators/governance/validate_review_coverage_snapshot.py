@@ -185,7 +185,15 @@ def main() -> int:
         print("PASS review-coverage-snapshot fixtures")
         return 0
 
-    document = json.loads(args.document.read_text(encoding="utf-8"))
+    try:
+        document = json.loads(args.document.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, ValueError):
+        print(json.dumps({
+            "status": "ERROR",
+            "coverage_outcome": None,
+            "findings": [{"code": "INPUT_UNREADABLE", "path": "$"}],
+        }, sort_keys=True))
+        return 1
     result = validate_document(document)
     print(json.dumps({
         "status": result.status,

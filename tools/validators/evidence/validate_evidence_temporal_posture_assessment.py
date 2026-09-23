@@ -88,7 +88,10 @@ def validate_doc(
 
 
 def validate_file(path: Path, *, now: datetime | None = None) -> list[str]:
-    value = json.loads(path.read_text(encoding="utf-8"))
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, ValueError):
+        return ["input is not readable JSON"]
     if not isinstance(value, dict):
         return ["input root must be an object"]
     return validate_doc(value, now=now)
