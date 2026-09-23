@@ -2,14 +2,18 @@ name: usgs-earthquake-offline
 on:
   pull_request:
     paths:
-      - 'connectors/usgs/src/usgs/earthquake.py'
-      - 'connectors/usgs/tests/test_earthquake.py'
+      - 'connectors/usgs/src/usgs/earthquake*.py'
+      - 'connectors/usgs/tests/test_earthquake*.py'
+      - 'tools/ingest/inspect_seismic_workbook.py'
+      - 'tests/ingest/test_seismic_workbook.py'
       - '.github/workflows/usgs-earthquake-offline.yml'
   push:
-    branches: [main]
+    branches: [main, 'agent/kfm-seismic-integration-20260923']
     paths:
-      - 'connectors/usgs/src/usgs/earthquake.py'
-      - 'connectors/usgs/tests/test_earthquake.py'
+      - 'connectors/usgs/src/usgs/earthquake*.py'
+      - 'connectors/usgs/tests/test_earthquake*.py'
+      - 'tools/ingest/inspect_seismic_workbook.py'
+      - 'tests/ingest/test_seismic_workbook.py'
       - '.github/workflows/usgs-earthquake-offline.yml'
 permissions:
   contents: read
@@ -30,9 +34,11 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: '3.11'
-      - name: Run standard-library-only synthetic tests
-        run: python -m unittest discover -s connectors/usgs/tests -p 'test_earthquake.py' -v
+      - name: Run standard-library-only USGS synthetic tests
+        run: python -m unittest discover -s connectors/usgs/tests -p 'test_earthquake*.py' -v
+      - name: Run synthetic workbook inspection tests
+        run: python -m unittest discover -s tests/ingest -p 'test_seismic_workbook.py' -v
       - name: Record evidence boundary
         if: always()
         run: |
-          echo 'Offline synthetic query/parser checks only. No provider fetch, source admission, catalog completeness, active Site integration, release, or deployment proof.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Offline synthetic query/parser/history/workbook checks only. No provider fetch, source admission, catalog completeness, active Site integration, release, or deployment proof. Browser-local preview tests remain in the existing Explorer npm test command.' >> "$GITHUB_STEP_SUMMARY"

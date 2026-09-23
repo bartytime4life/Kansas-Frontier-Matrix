@@ -1,0 +1,137 @@
+{
+  "receipt_id": "genrec-kfm-seismic-integration-20260923",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/usgs-earthquake-offline.yml",
+    "apps/kansas-frontier-matrix-explorer/app/seismic-snapshot-panel.tsx",
+    "apps/kansas-frontier-matrix-explorer/app/seismic-snapshot-preview.ts",
+    "apps/kansas-frontier-matrix-explorer/app/waveform-preview-panel.tsx",
+    "apps/kansas-frontier-matrix-explorer/tests/seismic-snapshot-preview.test.mjs",
+    "connectors/usgs/src/usgs/earthquake_history.py",
+    "connectors/usgs/tests/test_earthquake_history.py",
+    "docs/runbooks/seismic-integration-acceptance.md",
+    "tests/ingest/test_seismic_workbook.py",
+    "tools/ingest/inspect_seismic_workbook.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/usgs-earthquake-offline.yml": "sha256:410239ff19601a54719a97d1d2be98c8d79b12494d9b3da616d98638259440be",
+    "apps/kansas-frontier-matrix-explorer/app/seismic-snapshot-panel.tsx": "sha256:af88d8c309b3d3b680b5dd41b44498774a167f87b9674b4efba6dd0b1c41ae7b",
+    "apps/kansas-frontier-matrix-explorer/app/seismic-snapshot-preview.ts": "sha256:24850d521185fffb705a737f5d107223a0028a2b936a22d5018f48f0333a6b62",
+    "apps/kansas-frontier-matrix-explorer/app/waveform-preview-panel.tsx": "sha256:ec65e14336f203cd89c70f1cee07c6e7e53aab2c5eb7385391284b8f373ccfef",
+    "apps/kansas-frontier-matrix-explorer/tests/seismic-snapshot-preview.test.mjs": "sha256:f0e395857aab798b6cc56c472b1b0a627418c5b96e03460e0caae914da019b12",
+    "connectors/usgs/src/usgs/earthquake_history.py": "sha256:f913433f2ad54e7a7973fe8f56fe87d965dc49a74672317512071b4a9c6f000b",
+    "connectors/usgs/tests/test_earthquake_history.py": "sha256:c726a74bde8cf2f960ec7aee8124eddbf9b87ed70b211acac0ced30a4270b193",
+    "docs/runbooks/seismic-integration-acceptance.md": "sha256:c3ef5e6c5ac955a3776725cc1c3b1a72db0e026875843e1b220c14a2d1add4b1",
+    "tests/ingest/test_seismic_workbook.py": "sha256:a30ad09046e04aabe93c6f4e3941eaab7d09b20fe606802f52586d582409a4d3",
+    "tools/ingest/inspect_seismic_workbook.py": "sha256:9849816666111fb16f1f074cf262f8d06598b3e9636ede25abac6c476a1efbf2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:14cabd5b111dfdb01f59e7a56ad6a0978b18f5a493122efacd0ac6332380468b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/21eee8dab4637da4771267078fe963f6525b045f",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/21eee8dab4637da4771267078fe963f6525b045f/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/21eee8dab4637da4771267078fe963f6525b045f/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",
+      "https://earthquake.usgs.gov/fdsnws/event/1/",
+      "https://www.kgs.ku.edu/Geophysics/Earthquakes/historic.html"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent.md",
+      "KFM_Data_Placement_and_Site_Realization_Decision_2026-09-10(1).pdf"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/usgs-earthquake-offline.yml": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/app/seismic-snapshot-panel.tsx": "NEEDS VERIFICATION",
+    "apps/kansas-frontier-matrix-explorer/app/seismic-snapshot-preview.ts": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/app/waveform-preview-panel.tsx": "NEEDS VERIFICATION",
+    "apps/kansas-frontier-matrix-explorer/tests/seismic-snapshot-preview.test.mjs": "CONFIRMED",
+    "connectors/usgs/src/usgs/earthquake_history.py": "CONFIRMED",
+    "connectors/usgs/tests/test_earthquake_history.py": "CONFIRMED",
+    "docs/runbooks/seismic-integration-acceptance.md": "PROPOSED",
+    "tests/ingest/test_seismic_workbook.py": "CONFIRMED",
+    "tools/ingest/inspect_seismic_workbook.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "History driver synthetic tests",
+      "outcome": "PASS",
+      "reason": "31 unittest methods passed on Python 3.13.5, zero failures/skips; exercises the exact unchanged earthquake.py blob b8e7897e7ad7fc716500b2216a62658ea8255e68. No network reader or source admission."
+    },
+    {
+      "gate": "Workbook preflight synthetic tests",
+      "outcome": "PASS",
+      "reason": "17 unittest methods passed on Python 3.13.5, zero failures/skips, including CLI exit polarity and Linux leaf-symlink refusal. No real KGS bytes or schema qualification."
+    },
+    {
+      "gate": "Browser-local preview module and source composition",
+      "outcome": "PASS",
+      "reason": "36 Node tests passed on Node 22.16.0 with TypeScript 5.8.3, zero failures/skips. Includes actual bounded JSON decoding/hash, recovery/selection state and syntax/composition checks. No React DOM or browser acceptance."
+    },
+    {
+      "gate": "Strict preview-module types",
+      "outcome": "PASS",
+      "reason": "tsc 5.8.3 strict no-emit passed for seismic-snapshot-preview.ts and unchanged bounded-json.ts. Declared repository TypeScript 6.0.2 and React/application build not run."
+    },
+    {
+      "gate": "Artifact hash and path parity",
+      "outcome": "PASS",
+      "reason": "SHA-256 recomputed from final authored files. Artifact, digest and truth-label keys match. This is a process receipt, not independent review."
+    },
+    {
+      "gate": "KGS workbook retrieval",
+      "outcome": "SKIPPED",
+      "reason": "Official page links were read. Both linked workbook web retrievals failed, and the container download attempt did not yield usable workbook bytes. No headers, rows, dates or rights assumptions invented."
+    },
+    {
+      "gate": "Full native validation, exact-head CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Partial local projection only; GitHub DNS prevented full checkout. Native generated-receipt validator, full docs/topology/security suites, original 25 USGS tests and locked Explorer build not run locally. Read any delivered-head hosted outcomes separately."
+    },
+    {
+      "gate": "Live source-to-map and deployment acceptance",
+      "outcome": "SKIPPED",
+      "reason": "No active Site source equivalence, HTTP/custody binding, KGS exact-schema importer, SourceDescriptor activation, public API/map/EvidenceBundle integration, release or deployment is established."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/21eee8dab4637da4771267078fe963f6525b045f"
+    },
+    {
+      "id": "usgs-query-contract",
+      "validated": true,
+      "evidence_ref": "https://earthquake.usgs.gov/fdsnws/event/1/"
+    },
+    {
+      "id": "kgs-history-discovery",
+      "validated": true,
+      "evidence_ref": "https://www.kgs.ku.edu/Geophysics/Earthquakes/historic.html"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-23T03:18:10Z",
+  "emitter": "ChatGPT repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "VALIDATED_BRANCH_ONLY under the inspected #4024 incident. No PR-state mutation, owner bypass, ready/merge/release/deployment/source activation, KGS form/email submission, provider subscription, new storage/schema/policy/registry authority or old receipt rewrite. Source-specific reader is injected; no HTTP client/scheduler is created. Browser-local preview is connected to the existing Import utility, not to the map or Evidence Drawer. Preserve #4228 Stage 1A accepted / Stage 1B HOLD / Stage 2 unauthorized. The existing waveform implementation remains unchanged apart from three composition edits. Source tests and locally available tools do not establish hosted acceptance."
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import SeismicSnapshotPanel from "./seismic-snapshot-panel";
 import {
   buildLocalWaveformPreview,
   WAVEFORM_PREVIEW_MAX_BYTES,
@@ -105,7 +106,9 @@ export default function WaveformPreviewPanel() {
 
   const lines = preview ? chartLines(preview) : { low: "", high: "" };
 
-  return <section className="waveform-preview-panel" aria-labelledby="waveform-preview-title">
+  return <>
+    <SeismicSnapshotPanel />
+    <section className="waveform-preview-panel" aria-labelledby="waveform-preview-title">
     <div className="waveform-preview-heading">
       <span>WAVEFORM PREVIEW · HOLD</span>
       <h4 id="waveform-preview-title">Inspect a local MiniSEED + StationXML pair</h4>
@@ -157,5 +160,6 @@ export default function WaveformPreviewPanel() {
       <div className="map-utility-actions waveform-actions"><button type="button" onClick={() => void copyAudit()}>Copy inspection</button><button type="button" onClick={clear}>Clear</button></div>
       <aside className="map-utility-boundary" data-tone="warning"><strong>HOLD means no source activation.</strong><p>Exact bytes and sample arrays remain transient. The audit includes a digest and bounded metadata only; it is not evidence of provider permission, freshness, correction state, release, or deployment.</p></aside>
     </div>}
-  </section>;
+  </section>
+  </>;
 }
