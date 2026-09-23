@@ -444,7 +444,7 @@ requests cannot supply an arbitrary upstream URL.
 | NOAA NWM high-flow analysis | Off | Provider-current modeled analysis-guidance snapshot | Not a gauge observation or warning; the map service advertises no selectable historical time axis |
 | NOAA NWM 18-hour outlook | Off | Provider-current maximum modeled high-flow guidance for the next-18-hour window | Not an official RFC forecast or deterministic outcome; the map service advertises no selectable historical time axis |
 | USGS earthquakes | Off | Bounded 30-day Kansas-area event catalog with magnitude and depth | Catalog values can change; not an alert or hazard forecast |
-| NASA FIRMS active fire | Off | Rolling VIIRS 24-hour active-fire detection raster | Near-real-time detection context only; not a fire perimeter, incident status, evacuation product, or all-clear |
+| NASA GIBS daily VIIRS NOAA-20 thermal anomalies | Off | Provider-default daily thermal-anomaly image; exact UTC image date is not resolved by the Site | Display context only; not a rolling 24-hour FIRMS feed, fire perimeter, incident status, evacuation product, or all-clear. Blank tiles may reflect coverage or publication gaps |
 | NOAA HMS smoke footprints | Off | Dated qualitative smoke polygons from the rolling 24-hour provider window | Not surface PM2.5, plume altitude, measured transport, a fire perimeter, warning, health advisory, or all-clear |
 | Raspberry Shake stations | Off | Kansas-bounded FDSN AM station metadata with StationView handoff | Not realtime waveforms, an event catalog, alert, calibrated measurement, or KFM evidence |
 | USGS 3DEP LiDAR hillshade | Off | Dynamic multidirectional hillshade from the current 3DEP elevation mosaic | Rendered relief only; no work-unit, point-cloud, datum, pulse-spacing, or accuracy claim |
@@ -529,7 +529,7 @@ changed; tests use mocked responses only. Repository status responses now enforc
 their 512 KiB limit while streaming, rather than after buffering the entire body.
 Canonical social metadata uses the registered Site origin, not forwarded headers.
 
-The UI repair supplies the missing NASA FIRMS source handoff, preserves domain ID
+The UI repair supplies the NASA fire-image source handoff, preserves domain ID
 literal types, initializes the contribution source from server-validated routing
 input, discards superseded/aborted submission-list responses, and keeps calendar
 updates with the actions that change dates. Context loading messages are keyed
