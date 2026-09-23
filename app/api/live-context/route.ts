@@ -307,7 +307,11 @@ const currentHmsSmoke = async (day: string | null = null) => {
   const startMs = endMs - 24 * 60 * 60 * 1000;
   const start = new Date(startMs).toISOString();
   const end = new Date(endMs).toISOString();
-  const days = intervalDays(start, end);
+  // A polygon valid after midnight can originate in the prior day's KML.
+  // Keep the rolling-current window unchanged; dated requests check both publications.
+  const priorDay = day ? advanceEventDay(day, -1) : null;
+  const priorOutsideConnectedArchive = Boolean(priorDay && priorDay < "2005-08-05");
+  const days = day ? [...(priorDay && !priorOutsideConnectedArchive ? [priorDay] : []), day] : intervalDays(start, end);
   const results = await Promise.all(days.map(async (day) => {
     const artifact = smokeUrl(day);
     try {
@@ -342,10 +346,10 @@ const currentHmsSmoke = async (day: string | null = null) => {
     "noaa-hms-smoke",
     data,
     "NOAA HMS Smoke Polygons KML (daily publications)",
-    `NOAA HMS satellite-analyzed smoke polygons intersecting Kansas during the rolling 24-hour window ${start} through ${end}. ${failures.length ? `Unavailable daily publication${failures.length === 1 ? "" : "s"}: ${failures.join("; ")}. ` : ""}Density and Start/End are provider fields. A polygon is not a fire perimeter, plume altitude, surface PM2.5, exposure, measured transport, health guidance, warning, or all-clear; missing polygons do not prove clear air.`,
+    `NOAA HMS satellite-analyzed smoke polygons intersecting Kansas during the ${day ? "selected UTC day" : "rolling 24-hour window"} ${start} through ${end}. ${failures.length ? `Unavailable daily publication${failures.length === 1 ? "" : "s"}: ${failures.join("; ")}. ` : ""}${priorOutsideConnectedArchive ? "A prior-day publication falls before the connected archive start, so midnight overlap cannot be fully checked. " : ""}Density and Start/End are provider fields. A polygon is not a fire perimeter, plume altitude, surface PM2.5, exposure, measured transport, health guidance, warning, or all-clear; missing polygons do not prove clear air.`,
     retrievedAt,
     newestTimestamp,
-    failures.length > 0,
+    failures.length > 0 || priorOutsideConnectedArchive,
   );
 };
 

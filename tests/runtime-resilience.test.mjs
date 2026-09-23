@@ -61,6 +61,65 @@ test("automatic embedded rendering uses the smallest bounded GPU budget", () => 
   assert.equal(perf.renderBudget("detail", 3, false, false, true).pixelRatio, 2);
 });
 
+test("map health keeps a rendering failure finite and excludes sensitive exception text", () => {
+  const enabled = { isEnabled: () => true };
+  let legacySourceChecks = 0;
+  const map = {
+    isStyleLoaded: () => true,
+    getSource: () => ({ loaded: () => { throw new Error("https://private.example/?token=secret"); } }),
+    isSourceLoaded: () => { legacySourceChecks++; throw new Error("missing tile manager"); },
+    getCanvas: () => ({ width: 400, height: 300, getBoundingClientRect: () => ({ width: 400, height: 300 }) }),
+    getProjection: () => ({ type: "mercator" }),
+    loaded: () => true,
+    areTilesLoaded: () => true,
+    dragPan: enabled, scrollZoom: enabled, keyboard: enabled, touchZoomRotate: enabled,
+  };
+  const health = perf.sampleMapRuntimeHealth(map, ["local-fixture"], true, true);
+  assert.equal(health.sourceReadyById["local-fixture"], false);
+  assert.deepEqual(health.failedChecks, ["SOURCE_CHECK_FAILED"]);
+  assert.equal(health.canvasReady, true);
+  assert.equal(health.tilesLoaded, true);
+  assert.equal(legacySourceChecks, 0);
+  assert.doesNotMatch(JSON.stringify(health), /private\.example|secret/);
+});
+
+test("map health treats a local source awaiting style installation as pending", () => {
+  const enabled = { isEnabled: () => true };
+  const map = {
+    isStyleLoaded: () => false,
+    getSource: () => { throw new Error("source should not be read before style load"); },
+    getCanvas: () => ({ width: 400, height: 300, getBoundingClientRect: () => ({ width: 400, height: 300 }) }),
+    getProjection: () => ({ type: "mercator" }),
+    loaded: () => false,
+    areTilesLoaded: () => false,
+    dragPan: enabled, scrollZoom: enabled, keyboard: enabled, touchZoomRotate: enabled,
+  };
+  const health = perf.sampleMapRuntimeHealth(map, ["local-fixture"], true, true);
+  assert.equal(health.sourceReadyById["local-fixture"], false);
+  assert.deepEqual(health.failedChecks, []);
+});
+
+test("map health accepts an implicit Mercator projection and recognizes globe", () => {
+  const enabled = { isEnabled: () => true };
+  let explicitProjection;
+  const map = {
+    isStyleLoaded: () => true,
+    getSource: () => ({ loaded: () => true }),
+    getCanvas: () => ({ width: 400, height: 300, getBoundingClientRect: () => ({ width: 400, height: 300 }) }),
+    getProjection: () => explicitProjection,
+    loaded: () => true,
+    areTilesLoaded: () => true,
+    dragPan: enabled, scrollZoom: enabled, keyboard: enabled, touchZoomRotate: enabled,
+  };
+  const defaultHealth = perf.sampleMapRuntimeHealth(map, ["local-fixture"], true, true);
+  assert.equal(defaultHealth.projection, "mercator");
+  assert.deepEqual(defaultHealth.failedChecks, []);
+  explicitProjection = { type: "globe" };
+  const globeHealth = perf.sampleMapRuntimeHealth(map, ["local-fixture"], true, true);
+  assert.equal(globeHealth.projection, "globe");
+  assert.deepEqual(globeHealth.failedChecks, []);
+});
+
 test("route and global error surfaces keep client failures visible", async () => {
   const [routeError, globalError, page, snapshot] = await Promise.all([
     readFile(new URL("../app/error.tsx", import.meta.url), "utf8"),

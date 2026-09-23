@@ -25,6 +25,7 @@ export type HydrologyObservatoryProps = Readonly<{
   speed: HydrologyPlaybackSpeed;
   range: HydrologyRange;
   selectedStationId: string | null;
+  frameTimes?: readonly string[];
   reducedMotion: boolean;
   onRefresh: () => void;
   onTogglePlay: () => void;
@@ -163,6 +164,7 @@ export function HydrologyObservatory({
   speed,
   range,
   selectedStationId,
+  frameTimes,
   reducedMotion,
   onRefresh,
   onTogglePlay,
@@ -180,8 +182,8 @@ export function HydrologyObservatory({
     [bundle],
   );
   const observationTimes = useMemo(
-    () => bundle ? streamflowDisplayFrames(bundle) : [],
-    [bundle],
+    () => frameTimes ?? (bundle ? streamflowDisplayFrames(bundle) : []),
+    [bundle, frameTimes],
   );
   const selectedStation = useMemo(
     () => stationOptions.find((station) => station.stationId === selectedStationId) ?? null,

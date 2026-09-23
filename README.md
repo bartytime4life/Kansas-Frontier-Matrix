@@ -219,6 +219,32 @@ synthetic atlas/evidence clock, so no current-only atlas context can leak into
 historical replay. `/observatory/sources` contains the cited source and coverage
 research from primary providers, Drive, Notion, GitHub and supplied references.
 
+The map catalog now places a source time control beneath each official connection
+and each expanded registry layer. The bottom Time Sweep remains the shared atlas
+year/era axis. Registry controls commit only declared feature years; untimed
+fixtures and pinned/current image carriers have no invented slider. River Pulse
+can check one selected-station UTC day on the main map and exposes every returned
+observation timestamp for that day, while its ordinary rolling playback remains
+bounded. A station-specific coverage query reports provider-declared continuous
+and daily extents; those spans can contain gaps, and older daily means are not
+intraday observations. The main-map NOAA radar slider uses its fresh rolling
+manifest; an older radar calendar date opens the separate Observatory map.
+Older-day sliders stay synced with those calendars for a selected River Pulse
+station with complete continuous coverage, radar from its 1995 query bound,
+and HMS smoke from its 2005-08-05 publication bound. Moving an older-day slider
+only drafts a date; the adjacent check or Observatory action queries it, and
+the bounds do not assert that every intervening day has records.
+
+USGS earthquake events and NOAA HMS smoke can be checked for one UTC archive day
+on the main map. Earthquake stops are returned event times and show that day's
+events through the selected stop. HMS stops are provider Start/End boundaries and
+show only polygons valid at the selected cursor; the dated adapter checks the
+prior day's publication for intervals crossing midnight. Raspberry Shake's
+dated connection remains station metadata, without a waveform slider. Empty,
+partial, truncated, and failed queries do not carry previous map features into
+the checked day. These source clocks do not change the shared atlas year or imply
+KFM admission, release, or publication.
+
 The event clock supports 1/6/24-hour intervals since 1995, starts paused, uses
 actual radar artifacts and observation/interval boundaries, shows coverage gaps,
 and provides layer opacity/order, stepping, speed, loop, Central/UTC labels,

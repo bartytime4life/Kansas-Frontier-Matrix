@@ -7,8 +7,9 @@ import { replaceExplorerHistory } from "./embed-runtime";
 import { parseSavedWorkspaceList } from "./saved-workspaces";
 import { BASELINE_STACKS, currentUtcDay } from "./daily-baseline";
 import { SourceQualityRow } from "./source-quality-row";
+import { ArchiveDaySlider } from "./archive-day-slider";
 import { DataNotices, RenderQualityControl, TerrainQuickControls } from "./map-toolbar";
-import { browserRenderBudget, readRenderQuality, QUALITY_STORAGE_KEY, type RenderQuality } from "./map-performance";
+import { browserRenderBudget, readRenderQuality, sampleMapRuntimeHealth, QUALITY_STORAGE_KEY, type MapRuntimeCheckFailure, type RenderQuality } from "./map-performance";
 import type { Feature, Geometry } from "geojson";
 import type { GeoJSONSource, Map as MapLibreMap, MapSourceDataEvent, Popup, ScaleControl } from "maplibre-gl";
 import {
@@ -195,6 +196,8 @@ import {
   normalizeUsgsStationId,
   parseStreamflowBundle,
   streamflowDisplayFrames,
+  streamflowExactFrames,
+  streamflowBundleForUtcDay,
   type StreamflowBundle,
   type StreamflowFrame,
 } from "./streamflow";
@@ -203,6 +206,7 @@ import { HydrologyObservatory,
   type HydrologyPlaybackSpeed,
   type HydrologyRange,
 } from "./hydrology-observatory";
+import { boundedUtcDay, datedSourceDisplayStatus, earthquakeEventTimes, earthquakesThroughEvent, smokeValidityTimes, smokeValidAt } from "./source-time";
 import {
   NOAA_HYDROLOGY_NETWORK_API_PATH,
   noaaGaugeNetworkGeoJson,
@@ -255,6 +259,7 @@ type MapLibreRuntimeProbe = {
   sourcesReady: number;
   projection: "mercator" | "globe";
   error: string | null;
+  failedChecks: readonly MapRuntimeCheckFailure[];
 };
 type DrawerView = "evidence" | "metadata" | "lineage" | "focus";
 type LeftPanelMode = "views" | "layers" | "live" | "places" | "stories";
@@ -1022,6 +1027,8 @@ export default function Home() {
   const officialVisibilityRef = useRef(defaultOfficialVisibility);
   const officialOpacityRef = useRef(defaultOfficialOpacity);
   const officialPayloadsRef = useRef<Partial<Record<OfficialContextFeedId, OfficialContextPayload>>>({});
+  const officialArchiveDaysRef = useRef<Partial<Record<OfficialContextFeedId, string>>>({});
+  const officialArchivePayloadsRef = useRef<Partial<Record<OfficialContextFeedId, OfficialContextPayload>>>({});
   const officialRequestsRef = useRef(new Map<OfficialContextFeedId, AbortController>());
   const officialRasterFailuresRef = useRef(new Set<OfficialContextId>());
   const failedTerrainSourceRef = useRef<unknown>(null);
@@ -1038,6 +1045,7 @@ export default function Home() {
   const streamflowRequestRef = useRef<AbortController | null>(null);
   const streamflowRequestGenerationRef = useRef(0);
   const streamflowBundleRef = useRef<StreamflowBundle | null>(null);
+  const streamflowArchiveDayRef = useRef<string | null>(null);
   const streamflowRequestedTimeRef = useRef<string | null>(null);
   const noaaHydrologyRequestRef = useRef<AbortController | null>(null);
   const orderRef = useRef(defaultOrder);
@@ -1102,6 +1110,10 @@ export default function Home() {
   const [officialOpacity, setOfficialOpacity] = useState<Record<OfficialContextId, number>>(defaultOfficialOpacity);
   const [officialStates, setOfficialStates] = useState<Record<OfficialContextId, OfficialContextState>>(defaultOfficialStates);
   const [officialPayloads, setOfficialPayloads] = useState<Partial<Record<OfficialContextFeedId, OfficialContextPayload>>>({});
+  const [officialArchiveDays, setOfficialArchiveDays] = useState<Partial<Record<OfficialContextFeedId, string>>>({});
+  const [officialArchiveDraftDays, setOfficialArchiveDraftDays] = useState<Partial<Record<OfficialContextFeedId, string>>>(() => ({ "noaa-hms-smoke": currentUtcDay() }));
+  const [earthquakeArchiveFrameIndex, setEarthquakeArchiveFrameIndex] = useState(-1);
+  const [smokeArchiveFrameIndex, setSmokeArchiveFrameIndex] = useState(-1);
   const [officialErrors, setOfficialErrors] = useState<Partial<Record<OfficialContextId, string>>>({});
   const [noaaRadarManifestState, setNoaaRadarManifestState] = useState<NoaaRadarManifestState>("idle");
   const [noaaRadarManifest, setNoaaRadarManifest] = useState<NoaaRadarManifest | null>(null);
@@ -1114,6 +1126,7 @@ export default function Home() {
   const [noaaRadarFollowLatest, setNoaaRadarFollowLatest] = useState(true);
   const [noaaRadarFrameLoadState, setNoaaRadarFrameLoadState] = useState<NoaaRadarFrameLoadState>("idle");
   const [noaaRadarClock, setNoaaRadarClock] = useState(() => Date.now());
+  const [radarArchiveDraftDay, setRadarArchiveDraftDay] = useState(currentUtcDay);
   const [streamflowBundle, setStreamflowBundle] = useState<StreamflowBundle | null>(null);
   const [streamflowState, setStreamflowState] = useState<HydrologyObservatoryState>("idle");
   const [streamflowError, setStreamflowError] = useState<string | null>(null);
@@ -1122,6 +1135,10 @@ export default function Home() {
   const [streamflowPlaybackSpeed, setStreamflowPlaybackSpeed] = useState<HydrologyPlaybackSpeed>(1);
   const [streamflowRange, setStreamflowRange] = useState<HydrologyRange>("24h");
   const [streamflowSelectedStationId, setStreamflowSelectedStationId] = useState<string | null>(null);
+  const [streamflowArchiveDay, setStreamflowArchiveDay] = useState<string | null>(null);
+  const [streamflowArchiveDraftDay, setStreamflowArchiveDraftDay] = useState(currentUtcDay);
+  const [streamflowCoverage, setStreamflowCoverage] = useState<{ station: string; continuous: { start: string; end: string } | null; daily: { start: string; end: string } | null; partial: boolean } | null>(null);
+  const [streamflowCoverageMessage, setStreamflowCoverageMessage] = useState("Choose a station to check its provider-declared record span.");
   const [liveInstrument, setLiveInstrument] = useState<"river" | "radar">("river");
   const [layerOrder, setLayerOrder] = useState<string[]>(defaultOrder);
   const [basemap, setBasemap] = useState<BasemapKey>("standard");
@@ -1166,16 +1183,17 @@ export default function Home() {
     sourcesReady: 0,
     projection: "mercator",
     error: null,
+    failedChecks: [],
   });
   const runMapMutation = useCallback((operation: string, mutation: () => void): boolean => {
     try {
       mutation();
       return true;
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "unknown renderer failure";
-      mapMutationErrorRef.current = `${operation}: ${message}`;
+    } catch {
+      const code = `MAP_${operation.toUpperCase().replace(/[^A-Z0-9]+/g, "_")}_FAILED`;
+      mapMutationErrorRef.current = code;
       setMaplibreProbe((current) => ({ ...current, error: mapMutationErrorRef.current }));
-      setRuntime({ kind: "degraded", message: `${operation} failed; the Explorer shell and data controls remain available. ${message}` });
+      setRuntime({ kind: "degraded", message: `${operation} failed (${code}); the Explorer shell and data controls remain available.` });
       return false;
     }
   }, []);
@@ -1497,7 +1515,20 @@ export default function Home() {
     .concat(noaaRadarManifest?.retrievedAt ?? [])
     .sort()
     .at(-1) ?? null, [noaaRadarManifest?.retrievedAt, officialPayloads]);
-  const streamflowFrames = useMemo(() => streamflowBundle ? streamflowDisplayFrames(streamflowBundle) : [], [streamflowBundle]);
+  const earthquakeArchiveFrames = useMemo(() => {
+    const day = officialArchiveDays["usgs-earthquakes"];
+    const payload = officialArchivePayloadsRef.current["usgs-earthquakes"];
+    if (!day || !payload) return [];
+    return earthquakeEventTimes(payload, day);
+  }, [officialArchiveDays, officialPayloads]);
+  const smokeArchiveFrames = useMemo(() => {
+    const day = officialArchiveDays["noaa-hms-smoke"];
+    const payload = officialArchivePayloadsRef.current["noaa-hms-smoke"];
+    return day && payload ? smokeValidityTimes(payload, day) : [];
+  }, [officialArchiveDays, officialPayloads]);
+  const streamflowFrames = useMemo(() => streamflowBundle
+    ? streamflowArchiveDay ? streamflowExactFrames(streamflowBundle) : streamflowDisplayFrames(streamflowBundle)
+    : [], [streamflowArchiveDay, streamflowBundle]);
   const safeStreamflowFrameIndex = streamflowFrames.length === 0 ? -1 : clamp(streamflowFrameIndex, 0, streamflowFrames.length - 1);
   const streamflowFrameTime = safeStreamflowFrameIndex >= 0 ? streamflowFrames[safeStreamflowFrameIndex] : null;
   const streamflowFrame = useMemo<StreamflowFrame | null>(() => {
@@ -1739,6 +1770,7 @@ export default function Home() {
   const maplibreCapabilityChecks = useMemo(() => {
     const state = (ready: boolean, failed = false): "READY" | "CHECKING" | "ERROR" => failed ? "ERROR" : ready ? "READY" : "CHECKING";
     const startupFailed = Boolean(maplibreProbe.error);
+    const checkFailed = (...codes: MapRuntimeCheckFailure[]) => codes.some((code) => maplibreProbe.failedChecks.includes(code));
     return [
       {
         id: "module-worker",
@@ -1756,31 +1788,31 @@ export default function Home() {
         id: "canvas",
         label: "Map + canvas",
         detail: maplibreProbe.canvasReady ? "Map constructed with a non-zero render surface" : "Waiting for the render surface",
-        state: state(maplibreProbe.mapConstructed && maplibreProbe.canvasReady, startupFailed && !maplibreProbe.mapConstructed),
+        state: state(maplibreProbe.mapConstructed && maplibreProbe.canvasReady, checkFailed("CANVAS_CHECK_FAILED") || startupFailed && !maplibreProbe.mapConstructed),
       },
       {
         id: "style",
         label: "Style Specification v8",
         detail: `${BASEMAPS[basemap].title} · ${maplibreProbe.styleLoaded ? "style loaded" : "style pending"}`,
-        state: state(maplibreProbe.styleLoaded, startupFailed),
+        state: state(maplibreProbe.styleLoaded, checkFailed("STYLE_CHECK_FAILED") || startupFailed),
       },
       {
         id: "sources",
         label: "Bounded local sources",
         detail: `${maplibreProbe.sourcesReady}/${LAYER_REGISTRY.length} GeoJSON sources · ${maplibreProbe.idle ? "idle" : "working"} · ${maplibreProbe.tilesLoaded ? "tiles settled" : "tiles pending"}`,
-        state: state(maplibreProbe.sourcesReady === LAYER_REGISTRY.length && maplibreProbe.idle && maplibreProbe.tilesLoaded, startupFailed || sourceStateCounts.error > 0),
+        state: state(maplibreProbe.sourcesReady === LAYER_REGISTRY.length && maplibreProbe.idle && maplibreProbe.tilesLoaded, checkFailed("SOURCE_CHECK_FAILED", "IDLE_CHECK_FAILED", "TILE_CHECK_FAILED") || startupFailed || sourceStateCounts.error > 0),
       },
       {
         id: "interaction",
         label: "Controls + interactions",
         detail: "Unified KFM dock, scale, pan, zoom, keyboard, hover, selection, cluster expansion, measurement, camera history, and analysis-area handlers",
-        state: state(maplibreProbe.controlsReady && maplibreProbe.interactionsReady, startupFailed),
+        state: state(maplibreProbe.controlsReady && maplibreProbe.interactionsReady, checkFailed("INTERACTION_CHECK_FAILED") || startupFailed),
       },
       {
         id: "projection",
         label: "Projection + fallback",
         detail: maplibreProbe.mapConstructed ? `${maplibreProbe.projection} active · Mercator remains the explicit 2D fallback` : "Renderer unavailable · catalog and evidence interfaces remain active",
-        state: state(maplibreProbe.mapConstructed, startupFailed),
+        state: state(maplibreProbe.mapConstructed, checkFailed("PROJECTION_CHECK_FAILED") || startupFailed),
       },
     ] as const;
   }, [basemap, maplibreProbe, sourceStateCounts.error]);
@@ -2450,12 +2482,13 @@ export default function Home() {
     requestedRange: HydrologyRange,
     requestedStationId: string | null,
     quiet = false,
+    archiveDay: string | null = null,
   ) => {
     if (temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) {
       if (!quiet) announce("River Pulse remains held outside the operational-present atlas frame");
       return;
     }
-    if (requestedRange !== "24h" && !requestedStationId) {
+    if ((requestedRange !== "24h" || archiveDay) && !requestedStationId) {
       setStreamflowError("Select a USGS station before requesting a longer historical range.");
       if (!quiet) announce("A selected USGS station is required for longer streamflow history");
       return;
@@ -2464,6 +2497,23 @@ export default function Home() {
     if (requestedStationId && !stationId) {
       setStreamflowError("The selected USGS station identifier is invalid.");
       return;
+    }
+    const archiveEndMilliseconds = archiveDay ? Math.min(Date.now(), Date.parse(`${archiveDay}T00:00:00.000Z`) + 86_400_000) : null;
+    if (archiveDay && (!/^\d{4}-\d{2}-\d{2}$/.test(archiveDay)
+      || !Number.isFinite(archiveEndMilliseconds)
+      || new Date(Date.parse(`${archiveDay}T00:00:00.000Z`)).toISOString().slice(0, 10) !== archiveDay
+      || archiveEndMilliseconds! > Date.now()
+      || archiveEndMilliseconds! < Date.parse("1800-01-01T00:00:00.000Z"))) {
+      setStreamflowError("Choose a valid past UTC calendar day.");
+      return;
+    }
+    streamflowArchiveDayRef.current = archiveDay;
+    setStreamflowArchiveDay(archiveDay);
+    if (archiveDay) {
+      streamflowBundleRef.current = null;
+      setStreamflowBundle(null);
+      officialPayloadsRef.current = { ...officialPayloadsRef.current, "usgs-streamflow": undefined };
+      setOfficialPayloads(officialPayloadsRef.current);
     }
     streamflowRequestRef.current?.abort();
     const controller = new AbortController();
@@ -2474,7 +2524,9 @@ export default function Home() {
     setStreamflowError(null);
     setOfficialStates((current) => ({ ...current, "usgs-streamflow": "loading" }));
     setOfficialErrors((current) => ({ ...current, "usgs-streamflow": undefined }));
-    const path = requestedRange === "24h"
+    const path = archiveDay
+      ? `/api/hydrology/streamflow?mode=station&range=24h&station=${encodeURIComponent(stationId!)}&parameter=00060&end=${encodeURIComponent(new Date(archiveEndMilliseconds!).toISOString().replace(".000Z", "Z"))}&resolution=continuous`
+      : requestedRange === "24h"
       ? "/api/hydrology/streamflow?mode=network&range=24h"
       : `/api/hydrology/streamflow?mode=station&range=${requestedRange}&station=${encodeURIComponent(stationId!)}&parameter=00060`;
     try {
@@ -2486,9 +2538,10 @@ export default function Home() {
           : `HTTP ${response.status}`;
         throw new Error(message);
       }
-      const bundle = parseStreamflowBundle(candidate);
+      const parsedBundle = parseStreamflowBundle(candidate);
       if (generation !== streamflowRequestGenerationRef.current) return;
-      const frames = streamflowDisplayFrames(bundle);
+      const bundle = archiveDay ? streamflowBundleForUtcDay(parsedBundle, archiveDay) : parsedBundle;
+      const frames = archiveDay ? streamflowExactFrames(bundle) : streamflowDisplayFrames(bundle);
       const requestedTime = streamflowRequestedTimeRef.current;
       const restoredIndex = requestedTime
         ? frames.reduce((matched, frame, index) => Date.parse(frame) <= Date.parse(requestedTime) ? index : matched, -1)
@@ -2626,6 +2679,14 @@ export default function Home() {
     setStreamflowPlaying(false);
     setStreamflowSelectedStationId(normalized);
     setLiveInstrument("river");
+    if (streamflowArchiveDayRef.current && normalized) {
+      void refreshStreamflow("24h", normalized, false, streamflowArchiveDayRef.current);
+      return;
+    }
+    if (streamflowArchiveDayRef.current && !normalized) {
+      void refreshStreamflow("24h", null);
+      return;
+    }
     if (!normalized && streamflowRange !== "24h") {
       setStreamflowRange("24h");
       void refreshStreamflow("24h", null);
@@ -2634,7 +2695,13 @@ export default function Home() {
     if (normalized && streamflowRange !== "24h") void refreshStreamflow(streamflowRange, normalized);
   }, [refreshStreamflow, streamflowRange]);
 
+  const loadStreamflowArchiveDay = useCallback(() => {
+    if (!streamflowArchiveDraftDay || !streamflowSelectedStationId) return;
+    void refreshStreamflow("24h", streamflowSelectedStationId, false, streamflowArchiveDraftDay);
+  }, [refreshStreamflow, streamflowArchiveDraftDay, streamflowSelectedStationId]);
+
   const refreshOfficialContext = useCallback(async (feed: OfficialContextFeedId) => {
+    if (officialArchiveDaysRef.current[feed]) return;
     if (officialRequestsRef.current.has(feed)) return;
     const source = OFFICIAL_CONTEXT_BY_ID[feed];
     const controller = new AbortController();
@@ -2670,6 +2737,95 @@ export default function Home() {
       if (officialRequestsRef.current.get(feed) === controller) officialRequestsRef.current.delete(feed);
     }
   }, [announce]);
+
+  const loadOfficialArchiveDay = useCallback(async (feed: OfficialContextFeedId, day: string) => {
+    if (!["usgs-earthquakes", "noaa-hms-smoke", "raspberry-shake-stations"].includes(feed)
+      || !/^\d{4}-\d{2}-\d{2}$/.test(day)
+      || !Number.isFinite(Date.parse(`${day}T00:00:00.000Z`))
+      || new Date(`${day}T00:00:00.000Z`).toISOString().slice(0, 10) !== day
+      || day > currentUtcDay()
+      || (feed === "noaa-hms-smoke" && day < "2005-08-05")) return;
+    officialRequestsRef.current.get(feed)?.abort();
+    const controller = new AbortController();
+    officialRequestsRef.current.set(feed, controller);
+    officialArchiveDaysRef.current = { ...officialArchiveDaysRef.current, [feed]: day };
+    setOfficialArchiveDays(officialArchiveDaysRef.current);
+    officialArchivePayloadsRef.current = { ...officialArchivePayloadsRef.current, [feed]: undefined };
+    officialPayloadsRef.current = { ...officialPayloadsRef.current, [feed]: undefined };
+    setOfficialPayloads(officialPayloadsRef.current);
+    setOfficialStates((current) => ({ ...current, [feed]: "loading" }));
+    setOfficialErrors((current) => ({ ...current, [feed]: undefined }));
+    if (feed === "usgs-earthquakes") setEarthquakeArchiveFrameIndex(-1);
+    if (feed === "noaa-hms-smoke") setSmokeArchiveFrameIndex(-1);
+    try {
+      const source = OFFICIAL_CONTEXT_BY_ID[feed];
+      const response = await fetch(`${source.apiPath!}&day=${encodeURIComponent(day)}`, { cache: "no-store", signal: controller.signal, headers: { Accept: "application/json" } });
+      const candidate = await readBoundedJson(response, 8 * 1024 * 1024) as Partial<OfficialContextPayload> & { error?: string };
+      const validState = candidate.state === "ready" || candidate.state === "empty" || candidate.state === "partial";
+      if (!response.ok || candidate.feed !== feed || !validState || typeof candidate.featureCount !== "number"
+        || !candidate.data || candidate.data.type !== "FeatureCollection" || !Array.isArray(candidate.data.features)) {
+        throw new Error(candidate.error ?? `Dated source adapter returned HTTP ${response.status}.`);
+      }
+      if (officialRequestsRef.current.get(feed) !== controller) return;
+      const payload = candidate as OfficialContextPayload;
+      officialArchivePayloadsRef.current = { ...officialArchivePayloadsRef.current, [feed]: payload };
+      const smokeTimes = feed === "noaa-hms-smoke" ? smokeValidityTimes(payload, day) : [];
+      const visiblePayload = feed === "noaa-hms-smoke" && smokeTimes.length ? smokeValidAt(payload, day, smokeTimes[0]) : payload;
+      officialPayloadsRef.current = { ...officialPayloadsRef.current, [feed]: visiblePayload };
+      setOfficialPayloads(officialPayloadsRef.current);
+      setOfficialStates((current) => ({ ...current, [feed]: payload.state }));
+      if (feed === "noaa-hms-smoke") setSmokeArchiveFrameIndex(smokeTimes.length ? 0 : -1);
+      if (feed === "usgs-earthquakes") {
+        const times = earthquakeEventTimes(payload, day);
+        setEarthquakeArchiveFrameIndex(times.length - 1);
+      }
+      announce(payload.featureCount
+        ? `${source.shortTitle}: ${payload.featureCount} dated source records loaded for ${day} UTC`
+        : `${source.shortTitle}: no mapped records returned for ${day} UTC; no earlier day was carried forward`);
+    } catch (error) {
+      if (controller.signal.aborted || officialRequestsRef.current.get(feed) !== controller) return;
+      const message = error instanceof Error ? error.message : "Dated source request failed.";
+      setOfficialStates((current) => ({ ...current, [feed]: "error" }));
+      setOfficialErrors((current) => ({ ...current, [feed]: message }));
+      announce(`${OFFICIAL_CONTEXT_BY_ID[feed].shortTitle}: archive day unavailable; the map is empty for this source`);
+    } finally {
+      if (officialRequestsRef.current.get(feed) === controller) officialRequestsRef.current.delete(feed);
+    }
+  }, [announce]);
+
+  const returnOfficialSourceToCurrent = useCallback((feed: OfficialContextFeedId) => {
+    officialRequestsRef.current.get(feed)?.abort();
+    officialRequestsRef.current.delete(feed);
+    officialArchiveDaysRef.current = { ...officialArchiveDaysRef.current, [feed]: undefined };
+    setOfficialArchiveDays(officialArchiveDaysRef.current);
+    officialArchivePayloadsRef.current = { ...officialArchivePayloadsRef.current, [feed]: undefined };
+    officialPayloadsRef.current = { ...officialPayloadsRef.current, [feed]: undefined };
+    setOfficialPayloads(officialPayloadsRef.current);
+    if (feed === "usgs-earthquakes") setEarthquakeArchiveFrameIndex(-1);
+    if (feed === "noaa-hms-smoke") setSmokeArchiveFrameIndex(-1);
+    void refreshOfficialContext(feed);
+  }, [refreshOfficialContext]);
+
+  const seekEarthquakeArchiveFrame = useCallback((index: number) => {
+    const day = officialArchiveDaysRef.current["usgs-earthquakes"];
+    const original = officialArchivePayloadsRef.current["usgs-earthquakes"];
+    const time = earthquakeArchiveFrames[index];
+    if (!day || !original || !time) return;
+    const payload = earthquakesThroughEvent(original, day, time);
+    officialPayloadsRef.current = { ...officialPayloadsRef.current, "usgs-earthquakes": payload };
+    setOfficialPayloads(officialPayloadsRef.current);
+    setEarthquakeArchiveFrameIndex(index);
+  }, [earthquakeArchiveFrames]);
+
+  const seekSmokeArchiveFrame = useCallback((index: number) => {
+    const day = officialArchiveDaysRef.current["noaa-hms-smoke"];
+    const original = officialArchivePayloadsRef.current["noaa-hms-smoke"];
+    const cursor = smokeArchiveFrames[index];
+    if (!day || !original || !cursor) return;
+    officialPayloadsRef.current = { ...officialPayloadsRef.current, "noaa-hms-smoke": smokeValidAt(original, day, cursor) };
+    setOfficialPayloads(officialPayloadsRef.current);
+    setSmokeArchiveFrameIndex(index);
+  }, [smokeArchiveFrames]);
 
   const setOfficialContextVisible = useCallback((id: OfficialContextId, visible: boolean) => {
     if (id === "nws-radar" && visible) {
@@ -2765,7 +2921,7 @@ export default function Home() {
     }
     feeds.forEach((source) => { void refreshOfficialContext(source.id as OfficialContextFeedId); });
     if (radarRefreshable) void refreshNoaaRadarManifest(true);
-    if (streamflowRefreshable) void refreshStreamflow(streamflowRange, streamflowSelectedStationId, true);
+    if (streamflowRefreshable && !streamflowArchiveDayRef.current) void refreshStreamflow(streamflowRange, streamflowSelectedStationId, true);
     if (noaaHydrologyRefreshable) void refreshNoaaHydrologyNetwork(true);
     const connectionCount = feeds.length + (radarRefreshable ? 1 : 0) + (streamflowRefreshable ? 1 : 0) + (noaaHydrologyRefreshable ? 1 : 0);
     if (connectionCount === 0) {
@@ -3851,33 +4007,31 @@ export default function Home() {
         const failedSourceIds = new Set<string>();
 
         const refreshMaplibreProbe = () => {
+          const health = sampleMapRuntimeHealth(
+            map,
+            LAYER_REGISTRY.map((layer) => layer.sourceId),
+            interactionHandlersBound,
+            nativeControlsBound && Boolean(scaleControlRef.current),
+          );
           const nextSourceStates = Object.fromEntries(LAYER_REGISTRY.map((layer) => {
-            const sourceReady = Boolean(map.getSource(layer.sourceId)) && map.isSourceLoaded(layer.sourceId);
+            const sourceReady = health.sourceReadyById[layer.sourceId];
             return [layer.id, sourceReady ? "ready" : failedSourceIds.has(layer.sourceId) ? "error" : "loading"];
           })) as Record<string, "loading" | "ready" | "error">;
           const sourcesReady = Object.values(nextSourceStates).filter((state) => state === "ready").length;
-          const styleLoaded = Boolean(map.isStyleLoaded());
-          const canvasBounds = map.getCanvas().getBoundingClientRect();
-          const canvasReady = canvasBounds.width > 0 && canvasBounds.height > 0 && map.getCanvas().width > 0 && map.getCanvas().height > 0;
-          const projectionType = map.getProjection().type === "globe" ? "globe" : "mercator";
-          const interactionsReady = interactionHandlersBound
-            && map.dragPan.isEnabled()
-            && map.scrollZoom.isEnabled()
-            && map.keyboard.isEnabled()
-            && map.touchZoomRotate.isEnabled();
           const nextProbe = {
-            styleLoaded,
-            canvasReady,
-            idle: map.loaded(),
-            tilesLoaded: map.areTilesLoaded(),
-            controlsReady: nativeControlsBound && Boolean(scaleControlRef.current),
-            interactionsReady,
+            styleLoaded: health.styleLoaded,
+            canvasReady: health.canvasReady,
+            idle: health.idle,
+            tilesLoaded: health.tilesLoaded,
+            controlsReady: health.controlsReady,
+            interactionsReady: health.interactionsReady,
             sourcesReady,
-            projection: projectionType,
+            projection: health.projection,
+            failedChecks: health.failedChecks,
             error: runtimeError ?? mapMutationErrorRef.current,
           } satisfies Partial<MapLibreRuntimeProbe>;
           setSourceStates(nextSourceStates);
-          setStyleReady(styleLoaded);
+          setStyleReady(health.styleLoaded);
           setMaplibreProbe((current) => ({ ...current, ...nextProbe }));
           return nextProbe;
         };
@@ -3885,22 +4039,30 @@ export default function Home() {
         const syncStyle = (): boolean => {
           styleGenerationReadyRef.current = false;
           mapMutationErrorRef.current = null;
+          let styleStep = "LOCAL_REGISTRY";
           const synced = runMapMutation("Map style synchronization", () => {
             hoveredRef.current = null;
             map.getCanvas().style.cursor = "";
             applyRegistryState(map, visibilityRef.current, opacityRef.current, yearRef.current, orderRef.current, mapEvidenceFilterRef.current, temporalQueryRef.current);
+            styleStep = "OFFICIAL_CONTEXT";
             noaaRadarReadyRef.current = Boolean(
               noaaRadarFrameTimeRef.current
               && noaaRadarManifestIsFresh(noaaRadarManifestRef.current, Date.now()),
             );
             applyOfficialContextState(map, officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
+            styleStep = "ELEVATION_SCALE";
             setElevationExaggeration(map, verticalExaggerationRef.current);
+            styleStep = "PROJECTION";
             map.setProjection({ type: projectionRef.current });
+            styleStep = "SCENE_ENVIRONMENT";
             applySceneEnvironment(map, atmospherePresetRef.current, lightAzimuthRef.current);
+            styleStep = "FIELD_OF_VIEW";
             map.setVerticalFieldOfView(fieldOfViewRef.current);
+            styleStep = "TERRAIN";
             setTerrainState(setTerrainPresentation(map, scenePresetRef.current === "elevation-3d", verticalExaggerationRef.current));
             setTerrainHeightOverlay(map, scenePresetRef.current === "elevation-3d" && topographicOverlayRef.current);
             setStructures3DState(setStructureExtrusions(map, structures3DRef.current));
+            styleStep = "SELECTION";
             const currentSelection = selectedRef.current;
             if (currentSelection) {
               const mismatch = (currentSelection.featureId.startsWith("official-context:") && temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME)
@@ -3909,11 +4071,20 @@ export default function Home() {
               const filtered = !selectionPassesEvidenceFilter(currentSelection, mapEvidenceFilterRef.current);
               updateSelectionSource(map, mismatch || !layerVisible || filtered ? null : currentSelection.geometry);
             }
+            styleStep = "MEASUREMENT";
             updateMeasurementSource(map, buildMeasurementData(measureCoordinatesRef.current, measurementGeometryModeRef.current));
+            styleStep = "ANALYSIS_AREA";
             updateAnalysisAreaSource(map, analysisAreaRef.current);
+            styleStep = "IMPORT_PREVIEW";
             updateImportPreviewSource(map, importPreviewVisibleRef.current ? importPreviewRef.current?.featureCollection : null);
           });
-          if (!synced) return false;
+          if (!synced) {
+            const code = `MAP_STYLE_${styleStep}_FAILED`;
+            mapMutationErrorRef.current = code;
+            setMaplibreProbe((current) => ({ ...current, error: code }));
+            setRuntime({ kind: "degraded", message: `${code}; the Explorer shell and data controls remain available.` });
+            return false;
+          }
           styleGenerationReadyRef.current = true;
           if (!runMapMutation("Map runtime proof refresh", () => { refreshMaplibreProbe(); })) {
             styleGenerationReadyRef.current = false;
@@ -4268,11 +4439,13 @@ export default function Home() {
               && probe.tilesLoaded
               && probe.sourcesReady === LAYER_REGISTRY.length
               && probe.interactionsReady
+              && probe.failedChecks.length === 0
               && !runtimeError
               && !degradedReason
               && !mutationError;
             if (!ready) {
-              setRuntime({ kind: runtimeError || degradedReason || mutationError ? "degraded" : "loading", message: runtimeError ? `MapLibre runtime proof is incomplete: ${runtimeError}` : degradedReason ?? mutationError ?? "MapLibre is waiting for all admitted local capabilities to settle…" });
+              const failedCheckMessage = probe.failedChecks.length ? `Map health checks need attention: ${probe.failedChecks.join(", ")}.` : null;
+              setRuntime({ kind: runtimeError || degradedReason || mutationError || failedCheckMessage ? "degraded" : "loading", message: failedCheckMessage ?? (runtimeError ? `MapLibre runtime proof is incomplete: ${runtimeError}` : degradedReason ?? mutationError ?? "MapLibre is waiting for all admitted local capabilities to settle…") });
               return;
             }
             setRuntime({ kind: "ready", message: `MapLibre ${version} ready · ${LAYER_REGISTRY.length} local sources · interactions proven` });
@@ -4538,12 +4711,44 @@ export default function Home() {
       return;
     }
     const refresh = () => {
-      if (!document.hidden && !streamflowRequestRef.current) void refreshStreamflow(streamflowRange, streamflowSelectedStationId, true);
+      if (!document.hidden && !streamflowRequestRef.current && !streamflowArchiveDayRef.current) void refreshStreamflow(streamflowRange, streamflowSelectedStationId, true);
     };
     refresh();
     const timer = window.setInterval(refresh, 300_000);
     return () => window.clearInterval(timer);
   }, [refreshStreamflow, streamflowRange, streamflowSelectedAtPresent, streamflowSelectedStationId]);
+
+  useEffect(() => {
+    const station = streamflowSelectedStationId;
+    setStreamflowCoverage(null);
+    if (!station) {
+      setStreamflowCoverageMessage("Choose a station to check its provider-declared record span.");
+      return;
+    }
+    const controller = new AbortController();
+    setStreamflowCoverageMessage("Checking station record span…");
+    const timer = window.setTimeout(async () => {
+      try {
+        const response = await fetch(`/api/hydrology/coverage?station=${encodeURIComponent(station)}`, { signal: controller.signal, headers: { Accept: "application/json" } });
+        const candidate = await readBoundedJson(response, 1024 * 1024) as { station?: string; continuous?: { start?: string; end?: string } | null; daily?: { start?: string; end?: string } | null; partial?: boolean; message?: string };
+        if (!response.ok || candidate.station !== station) throw new Error(candidate.message ?? "Station coverage unavailable.");
+        const validSpan = (span: typeof candidate.continuous) => span && typeof span.start === "string" && typeof span.end === "string" && Number.isFinite(Date.parse(span.start)) && Number.isFinite(Date.parse(span.end)) && span.start <= span.end ? { start: span.start, end: span.end } : null;
+        if (controller.signal.aborted) return;
+        const continuous = validSpan(candidate.continuous);
+        setStreamflowCoverage({ station, continuous, daily: validSpan(candidate.daily), partial: candidate.partial === true });
+        if (continuous && candidate.partial !== true) {
+          const minDay = continuous.start.slice(0, 10);
+          const maxDay = [currentUtcDay(), continuous.end.slice(0, 10)].sort()[0];
+          setStreamflowArchiveDraftDay((current) => boundedUtcDay(current, minDay, maxDay) ?? current);
+        }
+        setStreamflowCoverageMessage(candidate.message ?? "Provider-declared span; gaps may occur within it.");
+      } catch (error) {
+        if (controller.signal.aborted) return;
+        setStreamflowCoverageMessage(error instanceof Error ? error.message : "Station coverage unavailable.");
+      }
+    }, 350);
+    return () => { window.clearTimeout(timer); controller.abort(); };
+  }, [streamflowSelectedStationId]);
 
   useEffect(() => {
     if (!noaaHydrologySelectedAtPresent) return;
@@ -4648,7 +4853,7 @@ export default function Home() {
     if (!openPanel) return;
     const focusable = () => visibleFocusableElements(openPanel);
     const items = focusable();
-    items[0]?.focus();
+    items[0]?.focus({ preventScroll: true });
     const handleKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         if (mapUtilityOpen) closeMapUtility(); else if (rightOpen) closeRightPanel(); else if (leftOpen) closeLeftPanel(); else closeTimelinePanel();
@@ -5258,7 +5463,7 @@ export default function Home() {
 
   const probeSourceConnection = (layer: LayerRecord) => {
     const map = mapRef.current;
-    if (!map?.isStyleLoaded() || !map.getSource(layer.sourceId) || !map.isSourceLoaded(layer.sourceId)) {
+    if (!map?.isStyleLoaded() || map.getSource(layer.sourceId)?.loaded() !== true) {
       announce(`${layer.title} is not ready for a MapLibre source query`);
       return;
     }
@@ -6027,6 +6232,7 @@ export default function Home() {
         interactions_ready: maplibreProbe.interactionsReady,
         projection: maplibreProbe.projection,
         error_class: maplibreProbe.error ? "FINITE_MAP_RUNTIME_ERROR" : null,
+        failed_checks: maplibreProbe.failedChecks,
       },
       repository_boundary: {
         snapshot: REPOSITORY_SNAPSHOT.commit,
@@ -6909,9 +7115,40 @@ export default function Home() {
               const state = officialStates[source.id];
               const heldAtFrame = officialVisibility[source.id] && !effectiveOfficialVisibility[source.id];
               const needsCloserView = officialVisibility[source.id] && !heldAtFrame && state !== "error" && view.zoom < TERRAIN_DISPLAY_MIN_ZOOM && (source.id === "usgs-3dep-hillshade" || source.id === "usgs-3dep-slope");
+              const riverArchiveSpan = streamflowCoverage?.station === streamflowSelectedStationId && !streamflowCoverage.partial ? streamflowCoverage.continuous : null;
+              const riverArchiveMinDay = riverArchiveSpan?.start.slice(0, 10);
+              const riverArchiveMaxDay = riverArchiveSpan ? [currentUtcDay(), riverArchiveSpan.end.slice(0, 10)].sort()[0] : undefined;
               return <article key={source.id} className="official-context-row" data-state={state} data-visible={officialVisibility[source.id]} data-held={heldAtFrame}>
                 <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.shortTitle}</strong><small>{source.organization}{heldAtFrame ? ` · held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : needsCloserView ? ` · view at zoom ${TERRAIN_DISPLAY_MIN_ZOOM}+` : source.id === "census-counties" && officialVisibility[source.id] && state === "ready" ? " · select a county for its 2020 population" : ""}</small></div><b>{!officialVisibility[source.id] ? "OFF" : heldAtFrame ? "HELD" : needsCloserView ? "ZOOM IN" : state.toUpperCase()}</b></div>
                 <label className="opacity-control"><span>Opacity <b>{Math.round(officialOpacity[source.id] * 100)}%</b></span><input aria-label={`${source.shortTitle} opacity`} type="range" min="0" max="100" value={Math.round(officialOpacity[source.id] * 100)} onChange={(event) => setOfficialContextOpacity(source.id, Number(event.target.value) / 100)} /></label>
+                <section className="source-time-control" aria-label={`${source.shortTitle} time controls`}>
+                  <header><span>TIME · {source.id === "usgs-streamflow" || source.id === "nws-radar" ? "EXACT SOURCE FRAMES" : source.id === "census-counties" ? "2020 EDITION" : "SOURCE CLOCK"}</span><strong>{source.id === "usgs-streamflow" && streamflowArchiveDay ? `${streamflowArchiveDay} UTC` : officialArchiveDays[source.id as OfficialContextFeedId] ? `${officialArchiveDays[source.id as OfficialContextFeedId]} UTC` : source.id === "nws-radar" ? "RECENT LOOP" : "CURRENT / PINNED"}</strong></header>
+                  {source.id === "usgs-streamflow" ? <>
+                    <p>{streamflowArchiveDay ? "Selected UTC day · every returned observation time" : "Loaded River Pulse window · bounded sample of exact times. Station points may use a prior sample within the declared 30-minute tolerance."}{streamflowBundle ? ` · ${streamflowBundle.observations.length.toLocaleString("en-US")} observations${streamflowBundle.truncated ? " · PARTIAL / TRUNCATED" : ""}` : streamflowState === "loading" ? " · checking source" : " · no loaded frame"}</p>
+                    <input type="range" min="0" max={Math.max(0, streamflowFrames.length - 1)} value={Math.max(0, safeStreamflowFrameIndex)} disabled={streamflowFrames.length < 2 || streamflowState === "loading" || !officialVisibility[source.id] || heldAtFrame} onChange={(event) => seekStreamflow(Number(event.target.value))} aria-label="River Pulse exact observation time" aria-valuetext={streamflowFrameTime ? `${streamflowFrameTime} UTC observation cursor` : "No confirmed observation"} />
+                    <output>{streamflowFrameTime ? `${streamflowFrameTime.slice(0, 19).replace("T", " ")} UTC · frame ${safeStreamflowFrameIndex + 1}/${streamflowFrames.length}` : streamflowState === "error" ? "Source unavailable · no archive point displayed" : "No observed frame loaded"}</output>
+                    <small>{streamflowBundle ? `Loaded ${streamflowBundle.query.start.slice(0, 10)} → ${streamflowBundle.query.end.slice(0, 10)} UTC; this is the checked request window, not the station’s full record.` : "Choose a station to check an older day. Provider coverage differs by station."}</small>
+                    <small>{streamflowCoverage?.continuous ? `Station continuous record: ${streamflowCoverage.continuous.start.slice(0, 10)} → ${streamflowCoverage.continuous.end.slice(0, 10)} UTC${streamflowCoverage.partial ? " · partial metadata" : ""}. Gaps may occur within this span.${streamflowCoverage.daily ? ` Daily means start ${streamflowCoverage.daily.start.slice(0, 10)}; inspect that older resolution in Observatory.` : ""}` : streamflowCoverage?.daily ? `No continuous span declared in this response. Daily mean record starts ${streamflowCoverage.daily.start.slice(0, 10)}; daily values are not intraday frames.` : streamflowCoverageMessage}</small>
+                    <div className="source-time-actions"><label>Station<select value={streamflowSelectedStationId ?? ""} onChange={(event) => selectStreamflowStation(event.target.value || null)}><option value="">Choose a loaded station</option>{streamflowSelectedStationId && !(streamflowBundle?.stations ?? []).some((station) => station.stationId === streamflowSelectedStationId) && <option value={streamflowSelectedStationId}>{streamflowSelectedStationId} · selected</option>}{(streamflowBundle?.stations ?? []).map((station) => <option key={station.stationId} value={station.stationId}>{station.name} · {station.stationId}</option>)}</select></label><label>Older UTC day<input type="date" value={streamflowArchiveDraftDay} min={riverArchiveMinDay} max={riverArchiveMaxDay ?? currentUtcDay()} onChange={(event) => setStreamflowArchiveDraftDay(event.target.value)} /></label><button type="button" disabled={!streamflowSelectedStationId || !streamflowArchiveDraftDay || streamflowState === "loading" || heldAtFrame} onClick={loadStreamflowArchiveDay}>Check day on map</button>{streamflowArchiveDay && <button type="button" onClick={() => void refreshStreamflow("24h", null)}>Recent network</button>}<Link href={`/observatory?start=${encodeURIComponent(`${streamflowArchiveDraftDay || streamflowArchiveDay || currentUtcDay()}T00:00`)}&hours=24&layers=river,counties${streamflowSelectedStationId ? `&station=${encodeURIComponent(streamflowSelectedStationId)}` : ""}`}>Full station archive ↗</Link></div>
+                    {riverArchiveMinDay && riverArchiveMaxDay && <ArchiveDaySlider sourceLabel="River Pulse" minDay={riverArchiveMinDay} maxDay={riverArchiveMaxDay} day={streamflowArchiveDraftDay} onSelect={setStreamflowArchiveDraftDay} nextAction="Check day on map" />}
+                  </> : source.id === "nws-radar" ? <>
+                    <p>{noaaRadarManifest ? `${noaaRadarLoopFrames.length} exact scans in the selected ${noaaRadarLoopSpan}-minute loop · ${noaaRadarManifest.gapCount} detected gaps` : noaaRadarManifestState === "loading" ? "Checking NOAA frames" : "No verified radar manifest loaded"}</p>
+                    <input type="range" min="0" max={Math.max(0, noaaRadarLoopFrames.length - 1)} value={Math.max(0, noaaRadarFrameIndex)} disabled={!noaaRadarRenderable || noaaRadarLoopFrames.length < 2 || noaaRadarFrameLoadState === "loading" || !officialVisibility[source.id] || heldAtFrame} onChange={(event) => { const index = Number(event.target.value); const frame = noaaRadarLoopFrames[index]; if (!frame) return; setNoaaRadarPlaying(false); setNoaaRadarFollowLatest(index === noaaRadarLoopFrames.length - 1); applyNoaaRadarFrame(frame); }} aria-label="NOAA radar exact scan time" aria-valuetext={noaaRadarActiveFrame ?? "No confirmed radar scan"} />
+                    <output>{noaaRadarFrameTime ? `${noaaRadarFrameTime.slice(0, 19).replace("T", " ")} UTC · ${noaaRadarFrameLoadState === "loading" ? "loading" : noaaRadarDisplayState.toLowerCase()}` : "No confirmed scan rendered"}</output>
+                    <small>Rolling confirmed scans only. Older radar days open in the separate Event Observatory map; they are not replayed on this map.</small>
+                    <div className="source-time-actions"><label>Older UTC day<input type="date" min="1995-01-01" max={currentUtcDay()} value={radarArchiveDraftDay} onChange={(event) => setRadarArchiveDraftDay(event.target.value)} /></label><Link href={`/observatory?start=${encodeURIComponent(`${radarArchiveDraftDay || currentUtcDay()}T00:00`)}&hours=24&layers=radar,counties`}>Check in Observatory ↗</Link></div>
+                    <ArchiveDaySlider sourceLabel="NOAA radar" minDay="1995-01-01" maxDay={currentUtcDay()} day={radarArchiveDraftDay} onSelect={setRadarArchiveDraftDay} nextAction="Check in Observatory" />
+                    <small>1995 is the archive adapter’s earliest query bound, not proof that every day has radar imagery. The selected older day opens a separate map.</small>
+                  </> : ["usgs-earthquakes", "noaa-hms-smoke", "raspberry-shake-stations"].includes(source.id) ? <>
+                    <p>{source.id === "usgs-earthquakes" ? "Event timestamps; a checked day can be swept event by event." : source.id === "noaa-hms-smoke" ? "Daily publication with source validity intervals; no measured second-by-second smoke frames." : "Station metadata valid for a checked date; no waveform time series on this map."}</p>
+                    <div className="source-time-actions"><label>UTC archive day<input type="date" min={source.id === "noaa-hms-smoke" ? "2005-08-05" : undefined} max={currentUtcDay()} value={officialArchiveDraftDays[source.id as OfficialContextFeedId] ?? ""} onChange={(event) => setOfficialArchiveDraftDays((current) => ({ ...current, [source.id]: event.target.value }))} /></label><button type="button" disabled={!officialArchiveDraftDays[source.id as OfficialContextFeedId] || state === "loading" || heldAtFrame} onClick={() => void loadOfficialArchiveDay(source.id as OfficialContextFeedId, officialArchiveDraftDays[source.id as OfficialContextFeedId]!)}>Check day on map</button>{officialArchiveDays[source.id as OfficialContextFeedId] && <button type="button" onClick={() => returnOfficialSourceToCurrent(source.id as OfficialContextFeedId)}>Current</button>}<Link href={`/observatory?start=${encodeURIComponent(`${officialArchiveDraftDays[source.id as OfficialContextFeedId] || officialArchiveDays[source.id as OfficialContextFeedId] || currentUtcDay()}T00:00`)}&hours=24&layers=${source.id === "usgs-earthquakes" ? "earthquakes" : source.id === "noaa-hms-smoke" ? "smoke" : "shake"},counties`}>Open separate archive map ↗</Link></div>
+                    {source.id === "noaa-hms-smoke" && <ArchiveDaySlider sourceLabel="NOAA HMS smoke" minDay="2005-08-05" maxDay={currentUtcDay()} day={officialArchiveDraftDays["noaa-hms-smoke"] ?? ""} onSelect={(day) => setOfficialArchiveDraftDays((current) => ({ ...current, "noaa-hms-smoke": day }))} nextAction="Check day on map" />}
+                    <output>{officialArchiveDays[source.id as OfficialContextFeedId] ? state === "loading" ? "Checking day · old map features cleared" : state === "error" ? "Archive unavailable · map source empty" : `${datedSourceDisplayStatus(officialArchivePayloadsRef.current[source.id as OfficialContextFeedId]?.featureCount ?? 0, officialPayloads[source.id as OfficialContextFeedId]?.featureCount ?? 0, officialArchiveDays[source.id as OfficialContextFeedId]!, officialVisibility[source.id], effectiveOfficialVisibility[source.id], styleReady)}${state === "partial" || officialPayloads[source.id as OfficialContextFeedId]?.truncated ? " · partial; missing coverage cannot be ruled out" : ""}` : !officialVisibility[source.id] ? "Current source off · Turn on layer to display. Earliest available day is checked per request." : heldAtFrame ? "Source held by atlas year · Return to Present to display." : "Current source clock · earliest available day is checked per request."}</output>
+                    {source.id === "usgs-earthquakes" && officialArchiveDays["usgs-earthquakes"] && <><input type="range" min="0" max={Math.max(0, earthquakeArchiveFrames.length - 1)} value={Math.max(0, earthquakeArchiveFrameIndex)} disabled={earthquakeArchiveFrames.length < 2 || state === "loading" || !officialVisibility[source.id] || heldAtFrame} onChange={(event) => seekEarthquakeArchiveFrame(Number(event.target.value))} aria-label="Earthquakes through exact event time on selected UTC day" aria-valuetext={earthquakeArchiveFrames[earthquakeArchiveFrameIndex] ?? "No event frame"} /><small>{earthquakeArchiveFrames.length ? `Events through ${earthquakeArchiveFrames[Math.max(0, earthquakeArchiveFrameIndex)].slice(11, 19)} UTC · ${Math.max(0, earthquakeArchiveFrameIndex + 1)}/${earthquakeArchiveFrames.length} returned event times. Empty intervals remain empty.` : "No returned event times for this checked day; no slider frame invented."}</small></>}
+                    {source.id === "noaa-hms-smoke" && officialArchiveDays["noaa-hms-smoke"] && <><input type="range" min="0" max={Math.max(0, smokeArchiveFrames.length - 1)} value={Math.max(0, smokeArchiveFrameIndex)} disabled={smokeArchiveFrames.length < 2 || state === "loading" || !officialVisibility[source.id] || heldAtFrame} onChange={(event) => seekSmokeArchiveFrame(Number(event.target.value))} aria-label="HMS smoke provider validity boundary on selected UTC day" aria-valuetext={smokeArchiveFrames[smokeArchiveFrameIndex] ?? "No interval boundary"} /><small>{smokeArchiveFrames.length ? `Provider interval boundary ${smokeArchiveFrames[Math.max(0, smokeArchiveFrameIndex)]?.slice(11, 19) ?? "00:00:00"} UTC · ${Math.max(0, smokeArchiveFrameIndex + 1)}/${smokeArchiveFrames.length}. Polygons appear only while their declared intervals contain the cursor.` : "No returned smoke intervals for this checked day; no intraday frame invented."}</small></>}
+                  </> : <p>{OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id].limitation} No selectable observation sweep is connected for this carrier.</p>}
+                  {heldAtFrame && <small>Selected source is held by the global atlas year. Return that axis to Present to display its source clock.</small>}
+                </section>
                 <div className="official-context-actions"><button type="button" onClick={() => { setSourceStatusOpen(true); setLeftOpen(false); }}>Source details & quality</button>{needsCloserView && <button type="button" onClick={() => { mapRef.current?.easeTo({ zoom: TERRAIN_DISPLAY_MIN_ZOOM + 0.25, duration: motionDuration(600) }); announce(`${source.shortTitle}: zoomed in to its display range`); }}>Zoom to view</button>}{["usgs-streamflow", "noaa-hms-smoke", "raspberry-shake-stations", "usgs-earthquakes", "nws-radar", "census-counties"].includes(source.id) && <Link href={`/observatory?layers=${({ "usgs-streamflow": "river", "noaa-hms-smoke": "smoke", "raspberry-shake-stations": "shake", "usgs-earthquakes": "earthquakes", "nws-radar": "radar", "census-counties": "counties" } as Record<string,string>)[source.id]},counties`}>Explore dated records ↗</Link>}</div>
               </article>;
             })}</div>
@@ -6945,6 +7182,8 @@ export default function Home() {
               return <section className="catalog-group" key={category} id={`catalog-category-${catalogCategorySlug(category)}`} tabIndex={-1} aria-labelledby={`catalog-category-${catalogCategorySlug(category)}-title`}><header className="catalog-group-heading"><h2 id={`catalog-category-${catalogCategorySlug(category)}-title`}>{category} <span>{layers.length}/{categoryLayers.length}</span></h2><div><button type="button" onClick={() => setLayerGroupVisibility(layers.map((layer) => layer.id), true)}>Show all</button><button type="button" onClick={() => setLayerGroupVisibility(layers.map((layer) => layer.id), false)}>Hide all</button></div></header>{layers.map((layer) => {
                 const noData = Boolean(layer.temporal && !layer.data.features.some((feature) => isFeatureAvailableForTemporalQuery(layer, feature.properties.year, temporalQuery)));
                 const expanded = expandedLayers.has(layer.id);
+                const declaredFrames = (layer.temporal?.years ?? []).filter((frame) => layer.data.features.some((feature) => feature.properties.year === frame));
+                const declaredFrameIndex = Math.max(0, declaredFrames.reduce((matched, frame, index) => frame <= year ? index : matched, -1));
                 return <article className="layer-row" key={layer.id} data-active={visibility[layer.id]} data-state={sourceStates[layer.id]} data-time-state={noData ? "unavailable" : "available"}>
                   <div className="layer-primary">
                     <label className="visibility-switch"><input type="checkbox" aria-label={`${visibility[layer.id] ? "Hide" : "Show"} ${layer.title}`} checked={visibility[layer.id]} onChange={(event) => setVisibility((current) => ({ ...current, [layer.id]: event.target.checked }))} /><span aria-hidden="true" /></label>
@@ -6956,6 +7195,7 @@ export default function Home() {
                   {expanded && <div className="layer-detail">
                     <p>{layer.description}</p>
                     <dl><div><dt>Format</dt><dd>{layer.sourceType}</dd></div><div><dt>Scale</dt><dd>{layer.scaleNote}</dd></div><div><dt>Time</dt><dd>{layer.validTimeExtent}</dd></div><div><dt>Freshness</dt><dd>{layer.freshnessState}</dd></div></dl>
+                    <section className="layer-time-control" aria-label={`${layer.title} time sweep`}><header><span>TIME · {layer.temporal ? layer.temporal.label.toUpperCase() : "STATIC LAYER"}</span><strong>{layer.temporal ? `${declaredFrames.length} declared ${declaredFrames.length === 1 ? "frame" : "frames"}` : "NO SWEEP"}</strong></header>{declaredFrames.length > 0 ? <><p>{layer.temporal?.mode === "exact" ? "Exact synthetic feature years; intervening years are empty." : "Declared illustrative vintages persist according to this layer’s through rule."} Map and evidence context use the global atlas year.</p><input type="range" min="0" max={Math.max(0, declaredFrames.length - 1)} value={declaredFrameIndex} disabled={declaredFrames.length < 2} onChange={(event) => { const frame = declaredFrames[Number(event.target.value)]; if (frame === undefined) return; setPlaying(false); setTemporalMode("snapshot"); commitTemporalFrame(frame, `${layer.title}: committed declared ${frame} frame; other layer clocks remain source-specific`); }} aria-label={`${layer.title} declared-year sweep`} aria-valuetext={`${declaredFrames[declaredFrameIndex]} declared feature year; atlas committed at ${year}`} /><div className="layer-time-ticks">{declaredFrames.map((frame) => <button key={frame} type="button" aria-pressed={year === frame} onClick={() => { setPlaying(false); setTemporalMode("snapshot"); commitTemporalFrame(frame, `${layer.title}: committed declared ${frame} frame`); }}>{frame}</button>)}</div><output>Atlas: {formatTimelineStep(year)} · {noData ? "no compatible records at this frame" : !visibility[layer.id] ? "compatible fixture records available · Turn on layer to display" : !styleReady || sourceStates[layer.id] !== "ready" ? "compatible fixture records available · Waiting for map source" : "compatible fixture records displayed"}</output></> : <p>Static or untimed {layer.releaseState.toLowerCase()} context. This layer has no declared temporal feature frames, so no time sweep is available.</p>}</section>
                     <label className="opacity-control"><span>Opacity <b>{Math.round((opacity[layer.id] ?? layer.defaultOpacity) * 100)}%</b></span><input type="range" min="10" max="100" value={Math.round((opacity[layer.id] ?? layer.defaultOpacity) * 100)} onChange={(event) => setOpacity((current) => ({ ...current, [layer.id]: Number(event.target.value) / 100 }))} /></label>
                     <div className="layer-actions"><button type="button" onClick={() => zoomToLayer(layer)}>Zoom</button><button type="button" onClick={(event) => inspectLayer(layer, event.currentTarget)}>Features</button><button type="button" onClick={() => isolateLayer(layer)}>Solo</button><button type="button" onClick={() => moveLayer(layer.id, -1)} aria-label={`Move ${layer.title} down in draw order`}>↓</button><button type="button" onClick={() => moveLayer(layer.id, 1)} aria-label={`Move ${layer.title} up in draw order`}>↑</button></div>
                     <p className="layer-note">{layer.sensitivityNote}</p>
@@ -7096,8 +7336,9 @@ export default function Home() {
             speed={streamflowPlaybackSpeed}
             range={streamflowRange}
             selectedStationId={streamflowSelectedStationId}
+            frameTimes={streamflowFrames}
             reducedMotion={reducedMotion}
-            onRefresh={() => { void refreshStreamflow(streamflowRange, streamflowSelectedStationId); }}
+            onRefresh={() => { void refreshStreamflow(streamflowRange, streamflowSelectedStationId, false, streamflowArchiveDayRef.current); }}
             onTogglePlay={toggleStreamflowPlayback}
             onStep={stepStreamflow}
             onSeek={seekStreamflow}
@@ -7884,7 +8125,7 @@ export default function Home() {
             <button className="timeline-toggle" type="button" aria-expanded={timelineOpen} onClick={() => { if (timelineOpen) { closeTimelinePanel(); return; } setTimelineOpen(true); if (isCompact) { dismissMapUtilityWithoutFocus(); setLeftOpen(false); setRightOpen(false); } }}>
               <span>TIME SWEEP</span>
               <strong>{temporalScopeLabel}</strong>
-              <small>{previewYear === year ? `${temporalMode.replaceAll("-", " ")} · ${timelineEraLabel(year)}` : `Previewing ${formatTimelineStep(previewYear)}`}</small>
+              <small>{previewYear === year ? `Atlas years · ${temporalMode.replaceAll("-", " ")} · ${timelineEraLabel(year)}` : `Atlas year preview ${formatTimelineStep(previewYear)}`}</small>
             </button>
             <div className="timeline-controls">
               <button type="button" disabled={temporalMode === "comparison" || previousSweepFrame === null} onClick={() => stepTemporalSweep("reverse")} aria-label="Previous sweep frame">‹</button>

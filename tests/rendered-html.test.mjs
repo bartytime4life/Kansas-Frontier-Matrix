@@ -682,6 +682,7 @@ test("imports the complete repository feature catalog without maturity inflation
 test("keeps the MapLibre Workbench complete, bounded, and responsive", async () => {
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const mapInterface = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
+  const mapPerformance = await readFile(new URL("../app/map-performance.ts", import.meta.url), "utf8");
   const exportCenter = await readFile(new URL("../app/export-center.ts", import.meta.url), "utf8");
   const explorerData = await readFile(new URL("../app/explorer-data.ts", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
@@ -713,8 +714,9 @@ test("keeps the MapLibre Workbench complete, bounded, and responsive", async () 
   assert.match(source, /MAPLIBRE_RUNTIME_ASSET_URLS/);
   assert.match(source, /if \(!response\.ok\) throw new Error/);
   assert.match(source, /map\.on\("idle"/);
-  assert.match(source, /map\.areTilesLoaded\(\)/);
-  assert.match(source, /map\.isSourceLoaded\(layer\.sourceId\)/);
+  assert.match(source, /sampleMapRuntimeHealth\(/);
+  assert.match(mapPerformance, /map\.areTilesLoaded\(\)/);
+  assert.match(mapPerformance, /map\.getSource\(id\)\?\.loaded\(\)/);
   assert.match(source, /MapLibre \{EXPECTED_MAPLIBRE_VERSION\} runtime proof/);
   assert.match(source, /SAME_ORIGIN_CONFIGURED/);
   assert.match(prepareMapLibreAssets, /maplibre-gl-worker\.mjs/);

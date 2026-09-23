@@ -99,6 +99,31 @@ test("station and time validators reject ambiguous identifiers, offsets, and cal
   }
 });
 
+test("selected UTC day preserves every returned second and clears an empty day", () => {
+  const day = "2026-09-10";
+  const observations = Array.from({ length: 120 }, (_, index) => observation(
+    "USGS-06864500",
+    new Date(Date.parse(`${day}T12:00:00.000Z`) + index * 1000).toISOString(),
+    index,
+  ));
+  const bundle = streamflow.parseStreamflowBundle(payload({
+    query: { mode: "historical-series", start: "2026-09-09T23:59:59Z", end: "2026-09-11T00:00:00Z", parameterCode: "00060" },
+    observations: [observation("USGS-06864500", "2026-09-09T23:59:59Z", 999), ...observations, observation("USGS-06864500", "2026-09-11T00:00:00Z", 999)],
+  }));
+  const selected = streamflow.streamflowBundleForUtcDay(bundle, day);
+  assert.equal(selected.observations.length, 120);
+  assert.equal(streamflow.streamflowExactFrames(selected).length, 120);
+  assert.equal(streamflow.streamflowDisplayFrames(selected).length, 96, "the ordinary playback is visibly bounded");
+  assert.equal(streamflow.buildStreamflowFrame(selected, selected.observations[40].observedAt, 0).features[0].properties.value, 40);
+  const empty = streamflow.streamflowBundleForUtcDay(bundle, "2026-09-08");
+  assert.equal(empty.state, "empty");
+  assert.equal(empty.observations.length, 0);
+  assert.deepEqual(streamflow.streamflowExactFrames(empty), []);
+  const capped = streamflow.streamflowBundleForUtcDay({ ...bundle, truncated: true, state: "partial" }, "2026-09-08");
+  assert.equal(capped.state, "partial", "a capped response cannot certify an empty archive day");
+  assert.equal(capped.observations.length, 0);
+});
+
 test("strict bundle validation fails closed for malformed contracts and cross-station ambiguity", () => {
   const invalidCases = [
     payload({ feed: "other-feed" }),

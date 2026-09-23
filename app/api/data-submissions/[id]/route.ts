@@ -33,7 +33,7 @@ export async function PATCH(request: Request, context: Context) {
       db.prepare("UPDATE data_submissions SET status = ?, version = version + 1, updated_at = ? WHERE id = ? AND version = ?").bind(review.status, now, id, row.version),
       db.prepare("INSERT INTO data_submission_reviews (id, submission_id, reviewer_key, reviewer_name, previous_status, status, note, version, created_at) SELECT ?, ?, ?, ?, ?, ?, ?, ?, ? WHERE changes() = 1").bind(reviewId, id, user.key, user.name, row.status, review.status, review.note, row.version + 1, now),
     ]);
-    if (result[0].meta.changes !== 1) throw new IntakeError("Another steward updated this submission. Reload it before reviewing.", 409);
+    if (result[0]?.meta?.changes !== 1) throw new IntakeError("Another steward updated this submission. Reload it before reviewing.", 409);
     return Response.json({ status: review.status, version: row.version + 1 }, { headers: intakeHeaders });
   } catch (error) { return intakeFailure(error); }
 }

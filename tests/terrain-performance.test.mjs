@@ -72,9 +72,10 @@ test("unchanged GeoJSON frames skip worker uploads but changed observations and 
   assert.equal(perf.updateGeoJSON({setData:()=>uploads++},data),true); assert.equal(uploads,3);
 });
 test("opacity changes do not re-upload provider data or create disabled raster services", () => {
-  const sources=new Map(),layers=new Map(); let uploads=0,paintWrites=0,layoutWrites=0;
+  const sources=new Map(),layers=new Map(); let uploads=0,paintWrites=0,layoutWrites=0,activeProjection;
   const map={
     getSource:id=>sources.get(id),getLayer:id=>layers.get(id),getStyle:()=>({layers:[...layers.values()]}),
+    getProjection:()=>activeProjection,
     addSource:(id,spec)=>sources.set(id,{...spec,setData:()=>uploads++}),addLayer:layer=>layers.set(layer.id,structuredClone(layer)),
     getLayoutProperty:(id,key)=>layers.get(id)?.layout?.[key],getPaintProperty:(id,key)=>layers.get(id)?.paint?.[key],
     setLayoutProperty:(id,key,value)=>{layoutWrites++;const layer=layers.get(id);layer.layout={...layer.layout,[key]:value};},
@@ -94,4 +95,7 @@ test("opacity changes do not re-upload provider data or create disabled raster s
   context.applyOfficialContextState(map,{...visibility,"usgs-3dep-hillshade":true},opacity,payloads);
   const source=sources.get("external-usgs-3dep-hillshade");assert.equal(source.minzoom,context.TERRAIN_DISPLAY_MIN_ZOOM);assert.equal(source.maxzoom,context.TERRAIN_DISPLAY_MAX_ZOOM);assert.match(source.tiles[0],/^\/api\/terrain-tile\?/);
   const terrainLayer=layers.get("external-usgs-3dep-hillshade-raster");assert.equal(terrainLayer.minzoom,context.TERRAIN_DISPLAY_MIN_ZOOM);assert.equal(terrainLayer.paint["raster-fade-duration"],0);
+  activeProjection={type:"globe"};
+  context.applyOfficialContextState(map,{...visibility,"usgs-3dep-hillshade":true},opacity,payloads);
+  assert.equal(terrainLayer.layout.visibility,"none");
 });

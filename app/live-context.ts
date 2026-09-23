@@ -467,12 +467,12 @@ export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextI
   "usgs-earthquakes": Object.freeze({
     axis: "rolling-retrieval-window",
     supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
-    limitation: "The Explorer shows a rolling 30-day catalog; select a day in the Event Observatory for the connected historical catalog. Events may be revised.",
+    limitation: "The Explorer can check one UTC archive day and step through returned event timestamps on this map. The default view remains a rolling 30-day catalog. Provider record limits, revisions, and empty days remain explicit; historical coverage is not presumed continuous.",
   }),
   "noaa-hms-smoke": Object.freeze({
     axis: "rolling-retrieval-window",
     supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
-    limitation: "Daily NOAA HMS publications are intersected with a rolling 24-hour window; provider Start/End intervals are retained, but no historical smoke archive or model/transport series is connected.",
+    limitation: "A selected UTC daily NOAA HMS publication can be checked on this map. Provider Start/End intervals remain validity metadata, not second-by-second measurements or a plume model. Missing and partial daily publications remain visible.",
   }),
   "nasa-firms-active-fire": Object.freeze({
     axis: "rolling-retrieval-window",
@@ -482,7 +482,7 @@ export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextI
   "raspberry-shake-stations": Object.freeze({
     axis: "rolling-retrieval-window",
     supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
-    limitation: "FDSN station metadata is retrieved on demand. Archived waveforms have provider latency and realtime inspection belongs to StationView/separate services; the atlas clock is not a seismic waveform history.",
+    limitation: "FDSN station metadata can be checked for one UTC date on this map. Those records are station inventory, not waveform frames. Archived waveforms have provider latency and realtime inspection belongs to StationView/separate services; the atlas clock is not a seismic waveform history.",
   }),
   "usgs-3dep-hillshade": Object.freeze({
     axis: "provider-current-mosaic",
@@ -625,7 +625,7 @@ export const applyOfficialContextState = (
     }, firstRegistryLayer(map));
   }
 
-  const globeView = map.getProjection?.().type === "globe";
+  const globeView = map.getProjection?.()?.type === "globe";
   for (const source of OFFICIAL_CONTEXT_SOURCES) {
     for (const layerId of source.layerIds) {
       if (!map.getLayer(layerId)) continue;

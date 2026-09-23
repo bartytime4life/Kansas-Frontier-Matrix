@@ -387,6 +387,25 @@ export const streamflowDisplayFrames = (
   )));
 };
 
+/** Every distinct observation timestamp in an accepted response. Use this for a
+ * selected archive day so a dense day is never silently reduced to playback samples. */
+export const streamflowExactFrames = (
+  bundle: Pick<StreamflowBundle, "observations">,
+): readonly string[] => Object.freeze([...new Set(bundle.observations.map((observation) => observation.observedAt))]
+  .sort((left, right) => Date.parse(left) - Date.parse(right)));
+
+/** Keep only the selected UTC day after a bounded upstream request. The server's
+ * 24-hour query may include an adjacent-day boundary sample. */
+export const streamflowBundleForUtcDay = (bundle: StreamflowBundle, day: string): StreamflowBundle => {
+  const observations = bundle.observations.filter((observation) => observation.observedAt.slice(0, 10) === day);
+  return {
+    ...bundle,
+    observations,
+    state: observations.length ? bundle.state : bundle.truncated || bundle.state === "partial" ? "partial" : "empty",
+    limitation: `${bundle.limitation} Map frames are limited to observations dated ${day} UTC; the request window may also contain adjacent-day records.`,
+  };
+};
+
 export const buildStreamflowDisplayFrames = streamflowDisplayFrames;
 
 const rounded = (value: number, digits = 2) => {
