@@ -1,6 +1,7 @@
 import asyncio
 import json
 import os
+import types
 from pathlib import Path
 
 import pytest
@@ -212,3 +213,118 @@ def test_provider_defined_object_behavior_cannot_cross_json_guard() -> None:
 def test_plain_negative_json_envelopes_remain_unchanged(outcome) -> None:
     expected = {**make_abstain_envelope("evidence"), "outcome": outcome}
     assert invoke_sync_fixture_operation(lambda: expected, "fixture-negative-001") == (expected, None)
+
+
+def _pending_coroutine_with_cleanup_failure(error_type):
+    @types.coroutine
+    def suspend():
+        yield
+
+    async def pending():
+        try:
+            await suspend()
+        finally:
+            raise error_type("synthetic-cleanup-detail")
+
+    result = pending()
+    result.send(None)
+    return result
+
+
+def _assert_invalid_sync_result(operation, surface, correlation_id, monkeypatch) -> None:
+    if surface == "sync":
+        payload, failure_kind = invoke_sync_fixture_operation(operation, correlation_id)
+        assert failure_kind == "invalid_response"
+    else:
+        monkeypatch.setitem(ROUTES, "/evidence", operation)
+        response = {}
+
+        def start_response(status, headers):
+            response["status"] = status
+            response["headers"] = dict(headers)
+
+        body = b"".join(app({
+            "PATH_INFO": "/evidence",
+            "REQUEST_METHOD": "GET",
+            "kfm.correlation_id": correlation_id,
+        }, start_response))
+        payload = json.loads(body)
+        assert response["status"] == "500 Internal Server Error"
+        assert response["headers"]["Content-Type"] == "application/json"
+        assert int(response["headers"]["Content-Length"]) == len(body)
+        assert response["headers"]["Cache-Control"] == "no-store"
+        assert response["headers"]["X-Content-Type-Options"] == "nosniff"
+
+    safe_id = correlation_id if correlation_id == "fixture-cleanup-001" else "unavailable"
+    assert payload["id"] == f"fixture:failure:invalid_response:{safe_id}"
+    assert payload["outcome"] == "ERROR"
+    assert payload["reason_code"] == "INVALID_RESPONSE"
+    assert payload["evidence_refs"] == []
+    rendered = json.dumps(payload)
+    assert "synthetic-cleanup-detail" not in rendered
+    assert "synthetic-correlation-secret" not in rendered
+    assert_jsonschema_subset(payload, json.loads(SCHEMA.read_text(encoding="utf-8")))
+
+
+@pytest.mark.parametrize("surface", ["sync", "wsgi"])
+@pytest.mark.parametrize("error_type", [RuntimeError, TimeoutError, asyncio.CancelledError])
+@pytest.mark.parametrize("correlation_id", ["fixture-cleanup-001", "synthetic-correlation-secret/path"])
+def test_invalid_coroutine_cleanup_retains_safe_response(
+    surface, error_type, correlation_id, monkeypatch
+) -> None:
+    result = _pending_coroutine_with_cleanup_failure(error_type)
+    _assert_invalid_sync_result(lambda: result, surface, correlation_id, monkeypatch)
+    assert result.cr_frame is None
+
+
+@pytest.mark.parametrize("surface", ["sync", "wsgi"])
+@pytest.mark.parametrize("stage", ["inspection", "close_lookup"])
+def test_invalid_result_inspection_and_cleanup_lookup_fail_closed(surface, stage, monkeypatch) -> None:
+    class InspectionFailure:
+        @property
+        def __class__(self):
+            raise RuntimeError("synthetic-cleanup-detail")
+
+    class CleanupLookupFailure:
+        def __await__(self):
+            raise AssertionError("a synchronous route must not await the result")
+
+        @property
+        def close(self):
+            raise RuntimeError("synthetic-cleanup-detail")
+
+    result = InspectionFailure() if stage == "inspection" else CleanupLookupFailure()
+    _assert_invalid_sync_result(lambda: result, surface, "fixture-cleanup-001", monkeypatch)
+
+
+def test_unstarted_coroutine_is_closed_without_executing_it() -> None:
+    async def unexpected():
+        raise AssertionError("a synchronous route must not execute the coroutine")
+
+    result = unexpected()
+    try:
+        payload, failure_kind = invoke_sync_fixture_operation(lambda: result, "fixture-cleanup-001")
+        assert failure_kind == "invalid_response"
+        assert payload["reason_code"] == "INVALID_RESPONSE"
+        assert result.cr_frame is None
+    finally:
+        result.close()
+
+
+@pytest.mark.parametrize("error_type", [KeyboardInterrupt, SystemExit, GeneratorExit])
+@pytest.mark.parametrize("stage", ["operation", "cleanup"])
+def test_process_control_exceptions_are_not_converted_to_responses(error_type, stage) -> None:
+    class InterruptedCleanup:
+        def __await__(self):
+            raise AssertionError("a synchronous route must not await the result")
+
+        def close(self):
+            raise error_type("synthetic-cleanup-detail")
+
+    def operation():
+        if stage == "operation":
+            raise error_type("synthetic-cleanup-detail")
+        return InterruptedCleanup()
+
+    with pytest.raises(error_type):
+        invoke_sync_fixture_operation(operation, "fixture-cleanup-001")

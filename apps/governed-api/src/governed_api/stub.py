@@ -187,12 +187,17 @@ def invoke_sync_fixture_operation(operation, correlation_id: str) -> tuple[dict,
     except Exception:
         return make_fixture_failure_envelope("internal_defect", correlation_id), "internal_defect"
 
-    if inspect.isawaitable(result):
+    try:
+        if not inspect.isawaitable(result):
+            return _resolve_fixture_result(result, correlation_id)
         close = getattr(result, "close", None)
         if callable(close):
             close()
-        return make_fixture_failure_envelope("invalid_response", correlation_id), "invalid_response"
-    return _resolve_fixture_result(result, correlation_id)
+    except (Exception, asyncio.CancelledError):
+        # Inspection or disposal cannot make an invalid return a timeout or
+        # cancellation outcome. Process-control BaseExceptions still propagate.
+        pass
+    return make_fixture_failure_envelope("invalid_response", correlation_id), "invalid_response"
 
 
 async def invoke_fixture_operation(operation, correlation_id: str) -> tuple[dict, str | None]:
