@@ -1,0 +1,28 @@
+{
+  "type": "FeatureCollection",
+  "name": "SYNTHETIC DEMO — not observed Kansas conditions",
+  "properties": {
+    "artifactId": "demo:kansas-startup-v1",
+    "sourceId": "synthetic:starter",
+    "scopeKey": "demo:kansas",
+    "synthetic": true,
+    "dataTime": "2020-01-01T00:00:00.000Z",
+    "retrievedAt": null,
+    "purpose": "Test point and polygon rendering without upstream access.",
+    "limitation": "Invented geometry. Not radar, smoke, earthquakes, streamflow, elevation, an official boundary, or a hazard assessment. No measured values."
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "demo:point-1",
+      "properties": {"synthetic": true, "label": "SYNTHETIC example point — not an observation"},
+      "geometry": {"type": "Point", "coordinates": [-98.0, 38.5]}
+    },
+    {
+      "type": "Feature",
+      "id": "demo:polygon-1",
+      "properties": {"synthetic": true, "label": "SYNTHETIC example area — not a hazard or boundary"},
+      "geometry": {"type": "Polygon", "coordinates": [[[-99.0, 38.0], [-98.5, 38.0], [-98.5, 38.3], [-99.0, 38.3], [-99.0, 38.0]]]}
+    }
+  ]
+}
