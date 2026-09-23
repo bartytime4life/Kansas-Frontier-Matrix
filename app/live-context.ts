@@ -3,8 +3,8 @@ import type { GeoJSONSource, LayerSpecification, Map as MapLibreMap, RasterTileS
 import { noaaRadarTileUrl } from "./noaa-radar";
 import { rememberGeoJSON, updateGeoJSON, setVisibleIfChanged, setPaintIfChanged } from "./map-performance";
 
-export type OfficialContextId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar";
-export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "raspberry-shake-stations";
+export type OfficialContextId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar";
+export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations";
 export type OfficialContextState = "idle" | "loading" | "ready" | "empty" | "partial" | "error";
 
 export type OfficialContextPayload = Readonly<{
@@ -313,6 +313,30 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     fallback: "If either Kansas tile is unavailable or malformed, the response is unavailable rather than presenting a partial state as complete. A zero-point response does not establish no fire or full satellite coverage.",
   }),
   Object.freeze({
+    id: "nifc-fire-reports",
+    title: "NIFC Kansas fire reports and news context",
+    shortTitle: "Fire news · reports",
+    organization: "National Interagency Fire Center · WFIGS",
+    domain: "Fire, smoke & hazards",
+    kind: "OPERATIONAL_GEOJSON",
+    sourceId: "external-nifc-fire-reports",
+    layerIds: Object.freeze(["external-nifc-fire-reports-halo", "external-nifc-fire-reports-point"]),
+    interactiveLayerIds: Object.freeze(["external-nifc-fire-reports-halo", "external-nifc-fire-reports-point"]),
+    apiPath: "/api/live-context?feed=nifc-fire-reports",
+    endpointLabel: "NIFC WFIGS/IRWIN · incident locations year to date",
+    sourceUrl: "https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Incident_Locations_YearToDate/FeatureServer/0",
+    serviceUrl: "https://data-nifc.opendata.arcgis.com/pages/d6ef1367fadc4405b5f09c98e52ed972",
+    cadence: "Working incident records; queried for Kansas discoveries in the last 30 days",
+    freshness: "Provider discovery and last-modified times, not a live fire status",
+    defaultVisibility: true,
+    defaultOpacity: 1,
+    color: "#ffd37e",
+    attribution: "NIFC WFIGS · IRWIN incident locations",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    boundary: "This layer reports incident records in the NIFC WFIGS/IRWIN working dataset, including wildfire, prescribed fire, and incident complex. Its point is an approximate reported location, not a perimeter. A missing out date does not establish that a fire remains active. Reported size, containment, and cause can be absent or revised. Nearby satellite thermal detections are spatial context only and do not independently confirm the same incident. Official news pages are linked for further reporting, but articles are not ingested or automatically matched to a specific record. These reports are not KFM EvidenceBundles or certified occurrence records.",
+    fallback: "A failed or partial query stays labeled. Missing incident records or thermal matches are never presented as no fire or an all-clear.",
+  }),
+  Object.freeze({
     id: "raspberry-shake-stations",
     title: "Raspberry Shake AM station network",
     shortTitle: "Raspberry Shake stations",
@@ -508,6 +532,11 @@ export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextI
     supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
     limitation: "One explicitly dated NASA GIBS NOAA-20 UTC day is queried at a time, with acquisition timestamps on each point. This is not a continuous fire history or a rolling 24-hour FIRMS feed; blank coverage is not an all-clear.",
   }),
+  "nifc-fire-reports": Object.freeze({
+    axis: "rolling-retrieval-window",
+    supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
+    limitation: "The Site checks Kansas WFIGS/IRWIN incident discoveries in the preceding 30 days. It does not reconstruct historical report snapshots, infer ongoing activity, or treat proximity to a satellite thermal detection as incident confirmation.",
+  }),
   "raspberry-shake-stations": Object.freeze({
     axis: "rolling-retrieval-window",
     supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
@@ -629,6 +658,17 @@ export const applyOfficialContextState = (
     "circle-color": ["match", ["get", "confidence"], "high", "#ff3757", "low", "#ffc46c", "#ff713b"],
     "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 6.5, 10, 10],
     "circle-opacity": 1, "circle-stroke-color": "#201b1e", "circle-stroke-width": 2.5,
+  } });
+
+  const fireReports = OFFICIAL_CONTEXT_BY_ID["nifc-fire-reports"];
+  ensureGeoJsonSource(map, fireReports, payloads["nifc-fire-reports"]?.data ?? emptyCollection());
+  ensureLayer(map, { id: fireReports.layerIds[0], type: "circle", source: fireReports.sourceId, paint: {
+    "circle-color": fireReports.color, "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 18, 10, 26], "circle-blur": 0.65, "circle-opacity": 0.3,
+  } });
+  ensureLayer(map, { id: fireReports.layerIds[1], type: "circle", source: fireReports.sourceId, paint: {
+    "circle-color": ["match", ["get", "incidentType"], "Prescribed fire", "#ffcb6a", "Incident complex", "#b9a4ff", "#ff4e67"],
+    "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 7.5, 10, 12],
+    "circle-stroke-color": "#fff1d1", "circle-stroke-width": 2.6,
   } });
 
   const raspberryShake = OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"];

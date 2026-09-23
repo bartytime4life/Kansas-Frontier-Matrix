@@ -13,12 +13,14 @@ const USGS_URL = "https://api.waterdata.usgs.gov/ogcapi/v1/collections/latest-co
 const USGS_EARTHQUAKE_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query";
 const NWS_ALERTS_URL = "https://api.weather.gov/alerts/active?area=KS";
 const RASPBERRY_SHAKE_STATION_URL = "https://data.raspberryshake.org/fdsnws/station/1/query";
+const NIFC_INCIDENT_URL = "https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Incident_Locations_YearToDate/FeatureServer/0/query";
 const NWS_USER_AGENT = "KansasFrontierMatrixExplorer/1.0 (https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site)";
 const MAX_RESPONSE_BYTES = 8 * 1024 * 1024;
 const MAX_NWS_ZONE_REQUESTS = 36;
 const MAX_NWS_FEATURES = 160;
 const MAX_EARTHQUAKE_FEATURES = 250;
 const MAX_RASPBERRY_SHAKE_STATIONS = 250;
+const MAX_NIFC_INCIDENTS = 250;
 const GIBS_FIRE_LAYER = "VIIRS_NOAA20_Thermal_Anomalies_375m_All";
 const GIBS_FIRE_SOURCE_LAYER = `${GIBS_FIRE_LAYER}_v2_NRT`;
 const GIBS_FIRE_TILE_COLUMNS = [8, 9] as const; // EPSG:4326 500m matrix 5; Kansas lies in row 5.
@@ -51,7 +53,7 @@ const readBoundedTile = async (response: Response): Promise<Uint8Array> => {
   return bytes;
 };
 
-type Feed = "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "raspberry-shake-stations";
+type Feed = "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations";
 type JsonRecord = Record<string, unknown>;
 
 class UpstreamError extends Error {
@@ -559,17 +561,72 @@ const nasaGibsFirePoints = async (requestedDay: string | null = null) => {
   );
 };
 
-const cacheSeconds: Record<Feed, number> = { "census-counties": 86_400, "usgs-streamflow": 120, "usgs-earthquakes": 300, "nws-alerts": 30, "noaa-hms-smoke": 900, "nasa-gibs-fire-points": 900, "raspberry-shake-stations": 900 };
+/** Recent interagency incident reports. The IRWIN working record is an official
+ * report of an incident; it is not a certified fire occurrence or news article. */
+const nifcFireReports = async () => {
+  const retrievedAt = new Date().toISOString();
+  const windowStart = new Date(Date.now() - 30 * 86_400_000).toISOString();
+  const url = new URL(NIFC_INCIDENT_URL);
+  url.searchParams.set("where", `POOState='US-KS' AND IncidentTypeCategory IN ('WF','RX','CX') AND FireDiscoveryDateTime >= TIMESTAMP '${windowStart.slice(0, 10)} 00:00:00'`);
+  url.searchParams.set("outFields", "IncidentName,IncidentTypeCategory,IncidentSize,FireDiscoveryDateTime,ModifiedOnDateTime_dt,FireOutDateTime,PercentContained,FireCause,POOCounty,POOState,UniqueFireIdentifier,IrwinID,ActiveFireCandidate,POOJurisdictionalAgency,POOProtectingAgency");
+  url.searchParams.set("returnGeometry", "true");
+  url.searchParams.set("outSR", "4326");
+  url.searchParams.set("orderByFields", "FireDiscoveryDateTime DESC");
+  url.searchParams.set("resultRecordCount", String(MAX_NIFC_INCIDENTS + 1));
+  url.searchParams.set("f", "geojson");
+  const payload = await fetchBoundedJson(url.toString(), 12_000);
+  if (!Array.isArray(payload.features)) throw new UpstreamError("NIFC incident response had no feature array.");
+  const features: Feature<Geometry, GeoJsonProperties>[] = [];
+  let skipped = 0;
+  let newestTimestamp: string | null = null;
+  for (const candidate of payload.features) {
+    if (features.length >= MAX_NIFC_INCIDENTS) break;
+    if (!isRecord(candidate) || !isRecord(candidate.geometry) || candidate.geometry.type !== "Point" || !Array.isArray(candidate.geometry.coordinates)) { skipped += 1; continue; }
+    const properties = isRecord(candidate.properties) ? candidate.properties : {};
+    const longitude = asNumber(candidate.geometry.coordinates[0]);
+    const latitude = asNumber(candidate.geometry.coordinates[1]);
+    const identifier = asString(properties.UniqueFireIdentifier);
+    const category = asString(properties.IncidentTypeCategory);
+    const discoveryMs = asNumber(properties.FireDiscoveryDateTime);
+    if (longitude === null || latitude === null || longitude < EVENT_BOUNDS[0] || longitude > EVENT_BOUNDS[2] || latitude < EVENT_BOUNDS[1] || latitude > EVENT_BOUNDS[3]
+      || !identifier || !["WF", "RX", "CX"].includes(category ?? "") || discoveryMs === null || discoveryMs < Date.parse(windowStart) - 86_400_000 || discoveryMs > Date.now()) { skipped += 1; continue; }
+    const modifiedMs = asNumber(properties.ModifiedOnDateTime_dt);
+    const outMs = asNumber(properties.FireOutDateTime);
+    const discoveryAt = new Date(discoveryMs).toISOString();
+    const modifiedAt = modifiedMs === null ? null : new Date(modifiedMs).toISOString();
+    const reportedOutAt = outMs === null ? null : new Date(outMs).toISOString();
+    const featureId = `nifc-${identifier}`;
+    const name = asString(properties.IncidentName)?.trim().slice(0, 120) || "Unnamed incident";
+    features.push({ type: "Feature", id: featureId, geometry: { type: "Point", coordinates: [longitude, latitude] }, properties: {
+      featureId, name, incidentType: category === "WF" ? "Wildfire" : category === "RX" ? "Prescribed fire" : "Incident complex",
+      reportState: reportedOutAt ? "Out date reported" : "No out date in record; current activity unverified",
+      discoveryAt, modifiedAt, reportedOutAt, county: asString(properties.POOCounty), state: "Kansas",
+      reportedAcres: asNumber(properties.IncidentSize), percentContained: asNumber(properties.PercentContained),
+      reportedCause: asString(properties.FireCause), jurisdiction: asString(properties.POOJurisdictionalAgency),
+      protectingAgency: asString(properties.POOProtectingAgency), uniqueFireIdentifier: identifier,
+      irwinId: asString(properties.IrwinID), latitude, longitude, retrievedAt,
+      dataRole: "NIFC WFIGS/IRWIN working incident report", evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    } });
+    if (!newestTimestamp || modifiedAt && modifiedAt > newestTimestamp) newestTimestamp = modifiedAt;
+  }
+  const truncated = payload.features.length > MAX_NIFC_INCIDENTS;
+  return envelope("nifc-fire-reports", { type: "FeatureCollection", features },
+    "NIFC WFIGS Wildland Fire Incident Locations Year to Date · IRWIN working records",
+    `Interagency reports discovered in the last 30 days in Kansas; ${skipped} invalid or out-of-bounds records withheld${truncated ? `; capped at ${MAX_NIFC_INCIDENTS}` : ""}. A report establishes that an incident was recorded by the provider, not its current activity, exact perimeter, location precision, independent satellite confirmation, or KFM evidence. The absence of a report is not an all-clear. IRWIN working records may change; certified occurrence data are separate.`,
+    retrievedAt, newestTimestamp, skipped > 0 || truncated, truncated);
+};
+
+const cacheSeconds: Record<Feed, number> = { "census-counties": 86_400, "usgs-streamflow": 120, "usgs-earthquakes": 300, "nws-alerts": 30, "noaa-hms-smoke": 900, "nasa-gibs-fire-points": 900, "nifc-fire-reports": 900, "raspberry-shake-stations": 900 };
 
 export async function GET(request: NextRequest) {
   const feed = request.nextUrl.searchParams.get("feed");
   const day = request.nextUrl.searchParams.get("day");
   if (request.nextUrl.searchParams.has("day") && (!day || !eventDay(day) || day < (feed === "nasa-gibs-fire-points" ? "2018-01-01" : "1800-01-01") || day > new Date().toISOString().slice(0, 10) || !["usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(feed ?? "")) || [...request.nextUrl.searchParams.keys()].some((key) => !["feed", "day"].includes(key) || request.nextUrl.searchParams.getAll(key).length !== 1)) return NextResponse.json({ error: "Choose an exact supported calendar date and source." }, { status: 400 });
-  if (feed !== "census-counties" && feed !== "usgs-streamflow" && feed !== "usgs-earthquakes" && feed !== "nws-alerts" && feed !== "noaa-hms-smoke" && feed !== "nasa-gibs-fire-points" && feed !== "raspberry-shake-stations") {
+  if (feed !== "census-counties" && feed !== "usgs-streamflow" && feed !== "usgs-earthquakes" && feed !== "nws-alerts" && feed !== "noaa-hms-smoke" && feed !== "nasa-gibs-fire-points" && feed !== "nifc-fire-reports" && feed !== "raspberry-shake-stations") {
     return NextResponse.json({ error: "Unknown live-context feed. The adapter accepts only its fixed allowlist." }, { status: 400, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } });
   }
   try {
-    const result = feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes(day) : feed === "nws-alerts" ? await activeNwsAlerts() : feed === "noaa-hms-smoke" ? await currentHmsSmoke(day) : feed === "nasa-gibs-fire-points" ? await nasaGibsFirePoints(day) : await raspberryShakeStations(day);
+    const result = feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes(day) : feed === "nws-alerts" ? await activeNwsAlerts() : feed === "noaa-hms-smoke" ? await currentHmsSmoke(day) : feed === "nasa-gibs-fire-points" ? await nasaGibsFirePoints(day) : feed === "nifc-fire-reports" ? await nifcFireReports() : await raspberryShakeStations(day);
     return NextResponse.json(result, { headers: { "Cache-Control": `public, max-age=0, s-maxage=${cacheSeconds[feed]}, stale-while-revalidate=${cacheSeconds[feed]}`, "X-KFM-Context-State": result.state, "X-Content-Type-Options": "nosniff" } });
   } catch (error) {
     const timeout = error instanceof UpstreamError && error.timeout;
