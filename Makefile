@@ -200,6 +200,8 @@ ci-conformance-report:
 hazards-validate:
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest discover --start-directory tests/domains/hazards --pattern 'test_validate_usdm_materiality.py' --verbose
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python tools/validators/domains/hazards/validate_usdm_materiality.py --fixtures
+	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest discover --start-directory tests/domains/hazards --top-level-directory . --pattern 'test_validate_drought_families.py' --verbose
+	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python tools/validators/hazards/validate_drought_families.py --fixtures
 
 # Bounded readiness lanes. Policy executes only the accepted Pass 12 pair.
 # Unimplemented producers return a named HOLD with exit status 3.

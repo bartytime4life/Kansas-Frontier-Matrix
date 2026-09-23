@@ -70,8 +70,12 @@ def validate_file(path: Path) -> str:
         _outcome("ERROR", str(path), f"JSON parse error: {exc}")
         return "ERROR"
 
+    if not isinstance(doc, dict):
+        _outcome("ERROR", str(path), f"JSON root must be an object, got {type(doc).__name__}")
+        return "ERROR"
+
     object_type = doc.get("object_type")
-    if object_type not in OBJECT_TYPE_TO_SCHEMA:
+    if not isinstance(object_type, str) or object_type not in OBJECT_TYPE_TO_SCHEMA:
         _outcome("DENY", str(path), f"Unknown or missing object_type: {object_type!r}")
         return "DENY"
 
@@ -117,6 +121,10 @@ def run_fixtures(fixture_dir: Path, *, label: str) -> bool:
 
     if not valid_files:
         print(f"FAIL {valid_dir}: no valid fixtures found")
+        ok = False
+    # An empty negative lane would let every rejection rule regress silently.
+    if not invalid_files:
+        print(f"FAIL {invalid_dir}: no invalid fixtures found")
         ok = False
 
     for fp in valid_files:
