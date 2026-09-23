@@ -1,0 +1,143 @@
+{
+  "receipt_id": "genrec-explorer-predecessor-byte-inventory-20260923",
+  "contract_version": "3.0.0",
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "UNKNOWN (original Codex authoring run)",
+    "version": "UNKNOWN"
+  },
+  "prompt_or_contract": "sha256:cd18d8f7dcbdd0845fdf469c0684050c306212c331c7d85a82374647463d6b61",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "original_generation_parameters": "UNKNOWN; retrospective inventory only"
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repository://30a6bf03d4f35d463f4adac5624cb31e41461277",
+      "codex-task://01a0cc73-b0c9-75c1-9cf2-c30529ba2e14"
+    ],
+    "evidence_hashes": [
+      "sha256:cd18d8f7dcbdd0845fdf469c0684050c306212c331c7d85a82374647463d6b61"
+    ]
+  },
+  "validation_gates": [
+    {
+      "gate": "retained-predecessor-bytes",
+      "outcome": "PASS",
+      "reason": "Every listed current artifact is byte-identical to exact predecessor 30a6bf03d4f35d463f4adac5624cb31e41461277; files modified by the recovery follow-up have a separate current authoring receipt."
+    },
+    {
+      "gate": "original-generation-metadata",
+      "outcome": "SKIPPED",
+      "reason": "No contemporaneous generated receipt exists for the predecessor. Original model build, generation parameters and complete original inputs were not recovered; this record does not fabricate them."
+    },
+    {
+      "gate": "original-test-and-security-claims",
+      "outcome": "SKIPPED",
+      "reason": "Predecessor handoff was inspected as historical evidence. Its counts are not recast as current execution, and its sealed security scan retains partial/working-tree coverage limitations."
+    },
+    {
+      "gate": "hosted-ci-and-human-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "No exact successor hosted acceptance or accountable human review is established by this retrospective inventory."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "retained-document-1",
+      "validated": true,
+      "evidence_ref": "repository://30a6bf03d4f35d463f4adac5624cb31e41461277/apps/explorer-web/README.md"
+    },
+    {
+      "id": "retained-document-2",
+      "validated": true,
+      "evidence_ref": "repository://30a6bf03d4f35d463f4adac5624cb31e41461277/apps/explorer-web/src/adapters/README.md"
+    },
+    {
+      "id": "retained-document-3",
+      "validated": true,
+      "evidence_ref": "repository://30a6bf03d4f35d463f4adac5624cb31e41461277/apps/governed-api/README.md"
+    },
+    {
+      "id": "retained-document-4",
+      "validated": true,
+      "evidence_ref": "repository://30a6bf03d4f35d463f4adac5624cb31e41461277/tests/e2e/README.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "emitter": "OpenAI Codex desktop; retrospective byte inventory",
+  "notes": "Additive inventory for unchanged files inherited from e58bc54957ab698b53095d4881a53758d482d794 and 30a6bf03d4f35d463f4adac5624cb31e41461277. It fills byte traceability without reconstructing missing original-generation facts. The retained local tranche contract hash is observed now; the prior task record establishes its association. Original authoring model remains UNKNOWN. Existing apps/tests/tools/.github responsibility roots and accepted ADR-0029 govern placement; this record belongs in data/receipts/generated. Pending review, not policy, source admission, approval, deployment, publication or issue closure. No previous receipt is rewritten. The original implementation worktree is preserved; abandon this unmerged successor to reverse its additive inventory. Current recovery changes are bound separately by genrec-explorer-recovery-focus-20260923 at 87a8346186b35b8590f949ec100d38b3483b957e.",
+  "artifact_paths": [
+    ".github/workflows/e2e-smoke.yml",
+    ".github/workflows/ui-build.yml",
+    "apps/explorer-web/README.md",
+    "apps/explorer-web/package.json",
+    "apps/explorer-web/playwright.config.ts",
+    "apps/explorer-web/playwright.local-evidence.config.ts",
+    "apps/explorer-web/src/adapters/README.md",
+    "apps/explorer-web/src/adapters/local-http-evidence.ts",
+    "apps/explorer-web/src/main.ts",
+    "apps/explorer-web/src/site/mount-explorer-site.ts",
+    "apps/explorer-web/src/site/site-living-atlas.css",
+    "apps/explorer-web/tests/browser/living-atlas.spec.ts",
+    "apps/explorer-web/tests/local-http-evidence.test.ts",
+    "apps/explorer-web/vite.config.ts",
+    "apps/governed-api/README.md",
+    "apps/governed-api/src/governed_api/local_fixture.py",
+    "apps/governed-api/tests/test_local_fixture.py",
+    "tests/e2e/README.md",
+    "tests/validators/test_e2e_readiness.py",
+    "tools/validators/e2e_readiness.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/e2e-smoke.yml": "sha256:0ff5f4f3d93695c43c282729af378f695d28b7ed0a6b01f22eb13f2f431398bc",
+    ".github/workflows/ui-build.yml": "sha256:61f4532e554c06351ceb76b8914b5ec17da652733ae12671d977d71ce5daddaa",
+    "apps/explorer-web/README.md": "sha256:732840958e2a94bb91dc37322812b85b71497290abcd7b4c1f38cb5169be5af9",
+    "apps/explorer-web/package.json": "sha256:9abfd3497fd86ddb9a71c307a18654705ea8b144129816954579f428a114d2e0",
+    "apps/explorer-web/playwright.config.ts": "sha256:4e8f89a6e0a56ed040085aa1025f03a14eb4ffe97ef0e508fda09a35e5c83a25",
+    "apps/explorer-web/playwright.local-evidence.config.ts": "sha256:e7a0e53674864229e08dc753f358354778a6dff740178f1c2675e9583dac14f6",
+    "apps/explorer-web/src/adapters/README.md": "sha256:3c51bd0448d89e02768a173340570c91cec0a36ea2198d3939002b7021423a4c",
+    "apps/explorer-web/src/adapters/local-http-evidence.ts": "sha256:1eab987cb8122cd857e1ba610bec4fd5834ed621125d4d35e85c8c67c11fa55e",
+    "apps/explorer-web/src/main.ts": "sha256:c877e9e21a02ece12914c0cc3eafa27cf826b02d86af861d3672119d3ede6923",
+    "apps/explorer-web/src/site/mount-explorer-site.ts": "sha256:a6bb957595dcb29f4d09ab0aa19ba5ee0e11e44eb0443cc4cddd01a3ac236018",
+    "apps/explorer-web/src/site/site-living-atlas.css": "sha256:eb01d22997ce34681e2cb780de88f9f1a703061e87f8dd018a912f595e70ccb8",
+    "apps/explorer-web/tests/browser/living-atlas.spec.ts": "sha256:58e0626f24ca82090a822f72a7d65002dd6d5ef320df5471673252f2f18819ff",
+    "apps/explorer-web/tests/local-http-evidence.test.ts": "sha256:07e56bd85b701225ded69fa146e074d3a43a5e435f52954e725ba3316c7b7acc",
+    "apps/explorer-web/vite.config.ts": "sha256:31c93302f11d074b936a1f2da89f67e7f97e38922efafb2bba19907f19c688c2",
+    "apps/governed-api/README.md": "sha256:5d52bf6e742df19da3b61f7a7eda5c8d220451aa68a0180a72279db6fa004136",
+    "apps/governed-api/src/governed_api/local_fixture.py": "sha256:620d14f2d0fd838b32a56c242b12289a08c72f76f0021e8ad79da85098a2e48c",
+    "apps/governed-api/tests/test_local_fixture.py": "sha256:9b421d85aa05517592e3989f524a2b07d9d3972b0f77444c3f66e3531788e8c2",
+    "tests/e2e/README.md": "sha256:dfdd67c19344c8d578a7a61e72f18adfc1a69b36ed5d03c212dcc9d1420341fc",
+    "tests/validators/test_e2e_readiness.py": "sha256:a34fc21046486b02453d8169df957294bc1d72b9168bcfa059c4cc91f87a32fd",
+    "tools/validators/e2e_readiness.py": "sha256:22380348b3394eea7b7d5ec6ce76a0cf3cc431656efa4f2e12232b980d63e750"
+  },
+  "truth_labels": {
+    ".github/workflows/e2e-smoke.yml": "PROPOSED",
+    ".github/workflows/ui-build.yml": "PROPOSED",
+    "apps/explorer-web/README.md": "PROPOSED",
+    "apps/explorer-web/package.json": "PROPOSED",
+    "apps/explorer-web/playwright.config.ts": "PROPOSED",
+    "apps/explorer-web/playwright.local-evidence.config.ts": "PROPOSED",
+    "apps/explorer-web/src/adapters/README.md": "PROPOSED",
+    "apps/explorer-web/src/adapters/local-http-evidence.ts": "PROPOSED",
+    "apps/explorer-web/src/main.ts": "PROPOSED",
+    "apps/explorer-web/src/site/mount-explorer-site.ts": "PROPOSED",
+    "apps/explorer-web/src/site/site-living-atlas.css": "PROPOSED",
+    "apps/explorer-web/tests/browser/living-atlas.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/local-http-evidence.test.ts": "PROPOSED",
+    "apps/explorer-web/vite.config.ts": "PROPOSED",
+    "apps/governed-api/README.md": "PROPOSED",
+    "apps/governed-api/src/governed_api/local_fixture.py": "PROPOSED",
+    "apps/governed-api/tests/test_local_fixture.py": "PROPOSED",
+    "tests/e2e/README.md": "PROPOSED",
+    "tests/validators/test_e2e_readiness.py": "PROPOSED",
+    "tools/validators/e2e_readiness.py": "PROPOSED"
+  },
+  "created_at": "2026-09-23T05:16:43Z"
+}
