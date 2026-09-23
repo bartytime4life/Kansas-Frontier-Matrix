@@ -7375,8 +7375,8 @@ export default function Home() {
             <label className="map-basemap-select"><span>Basemap</span><select value={basemap} onChange={(event) => setBasemap(event.target.value as BasemapKey)} aria-label="Choose basemap style">{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title}</option>)}</select></label>
             <button className="map-control-launch" type="button" onClick={() => openMapUtility("navigate")}><span aria-hidden="true">⌖</span><strong>Controls</strong></button>
             <button className="map-control-launch" type="button" onClick={() => { setSourceStatusOpen((open) => !open); setLeftOpen(false); }} aria-expanded={sourceStatusOpen} aria-controls="map-source-status"><strong>Source status</strong></button>
-            <button className="map-control-launch" type="button" onClick={() => setInstrumentOpen((open) => !open)} aria-pressed={instrumentOpen}><strong>Charts</strong></button>
-            <button className="map-control-launch map-control-launch-wind" type="button" onClick={() => { setWindOpen((open) => !open); setInstrumentOpen(false); setNoaaRadarPlaying(false); setStreamflowPlaying(false); }} aria-pressed={windOpen}><strong>Wind flow</strong><b>Model</b></button>
+            <button className="map-control-launch" type="button" onClick={() => { if (!instrumentOpen) setWindOpen(false); setInstrumentOpen((open) => !open); }} aria-pressed={instrumentOpen}><strong>Charts</strong></button>
+            <button className="map-control-launch map-control-launch-wind" type="button" onClick={() => { if (!windOpen) { setInstrumentOpen(false); setNoaaRadarPlaying(false); setStreamflowPlaying(false); } setWindOpen((open) => !open); }} aria-pressed={windOpen}><strong>Wind flow</strong><b>Model</b></button>
             <button className="map-control-launch" type="button" onClick={() => window.location.assign("/")} title={`Open a fresh baseline for ${baselineDay} UTC`}><strong>Today’s baseline</strong></button>
             <Link className="map-control-launch" href="/data"><strong>Contribute data</strong></Link>
           </nav>
