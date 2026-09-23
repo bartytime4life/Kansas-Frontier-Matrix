@@ -163,3 +163,4 @@ def test_registered_route_invalid_or_error_response_uses_500(monkeypatch) -> Non
     assert payload["outcome"] == "ERROR"
     assert payload["reason_code"] == "DEPENDENCY_UNAVAILABLE"
     assert_jsonschema_subset(payload, json.loads(SCHEMA_PATH.read_text(encoding="utf-8")))
+
