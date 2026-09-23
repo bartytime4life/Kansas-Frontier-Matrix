@@ -19,7 +19,7 @@ SUPPORT_ROLES={
 def canonical_hash(c):
  p=dict(c);p.pop('id',None);p.pop('spec_hash',None)
  return hashlib.sha256(json.dumps(p,sort_keys=True,separators=(',',':'),ensure_ascii=True).encode()).hexdigest()
-def evaluate(c):
+def _evaluate(c):
  f=[]
  if c.get('profile')!=PROFILE or c.get('status')!='PROPOSED_INACTIVE':f.append('PROFILE_MISMATCH')
  if c.get('domain')!='soil' or c.get('version')!='1.0.0':f.append('IDENTITY_PROFILE_MISMATCH')
@@ -42,6 +42,30 @@ def evaluate(c):
  if c.get('id')!=f'soil-identity:{d[:24]}':f.append('ID_MISMATCH')
  f=sorted(set(f)); authority={'SUPPORT_ROLE_COLLAPSE','PUBLIC_USE_OVERCLAIM','EFFECT_OVERCLAIM'}
  return ('DENY' if any(x in authority for x in f) else 'ERROR',f) if f else ('PASS',[])
+
+
+def evaluate(candidate):
+    """Fail closed on non-object or structurally malformed candidates.
+
+    Unhashable or mutually unorderable JSON values (for example a list where a
+    string is expected) would otherwise escape as TypeError tracebacks.
+    """
+    if not isinstance(candidate, dict):
+        return "ERROR", ["CANDIDATE_MALFORMED"]
+    try:
+        return _evaluate(candidate)
+    except TypeError:
+        return "ERROR", ["CANDIDATE_MALFORMED"]
+
+
+def load_candidate(path):
+    """Read one JSON candidate; return None when it cannot be read or parsed."""
+    try:
+        return json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, ValueError):
+        return None
+
+
 def main():
  p=argparse.ArgumentParser();p.add_argument('path',nargs='?');p.add_argument('--fixtures',action='store_true');a=p.parse_args()
  if a.fixtures:
@@ -50,5 +74,7 @@ def main():
    got=evaluate(case['candidate']);print(json.dumps({'name':case['name'],'outcome':got[0],'findings':got[1]},sort_keys=True));bad+=got!=(case['expected_outcome'],case['expected_findings'])
   raise SystemExit(1 if bad else 0)
  if not a.path:p.error('path or --fixtures required')
- o,f=evaluate(json.loads(Path(a.path).read_text()));print(json.dumps({'outcome':o,'findings':f},sort_keys=True));raise SystemExit(0 if o=='PASS' else 1)
+ candidate=load_candidate(a.path)
+ o,f=('ERROR',['INPUT_UNREADABLE']) if candidate is None else evaluate(candidate)
+ print(json.dumps({'outcome':o,'findings':f},sort_keys=True));raise SystemExit(0 if o=='PASS' else 1)
 if __name__=='__main__':main()

@@ -13,7 +13,7 @@ def expected_id(c):
     raw=json.dumps(x,sort_keys=True,separators=(",",":"),ensure_ascii=True).encode()
     return "kfm:soil-catalog-closure:"+hashlib.sha256(raw).hexdigest()
 
-def derive(c):
+def _derive(c):
     if c.get("profile") != PROFILE or c.get("effects") != FALSE_EFFECTS: return "ERROR"
     dims=c.get("dimensions")
     if not isinstance(dims,list) or len(dims)!=11: return "ERROR"
@@ -29,6 +29,25 @@ def derive(c):
     if c.get("assessment_id") != expected_id(c): return "ERROR"
     return expected
 
+
+def derive(c):
+    """Fail closed on non-object or structurally malformed candidates."""
+    if not isinstance(c, dict):
+        return "ERROR"
+    try:
+        return _derive(c)
+    except (TypeError, AttributeError):
+        return "ERROR"
+
+
+def load_candidate(path):
+    """Read one JSON candidate; return None when it cannot be read or parsed."""
+    try:
+        return json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, ValueError):
+        return None
+
+
 def main():
     p=argparse.ArgumentParser(); p.add_argument("path",nargs="?"); p.add_argument("--fixtures",action="store_true"); a=p.parse_args()
     if a.fixtures:
@@ -38,5 +57,8 @@ def main():
             bad += got != case["expected"]
         raise SystemExit(1 if bad else 0)
     if not a.path: p.error("path or --fixtures required")
-    print(derive(json.loads(Path(a.path).read_text())))
+    candidate=load_candidate(a.path)
+    outcome="ERROR" if candidate is None else derive(candidate)
+    print(outcome)
+    raise SystemExit(1 if outcome=="ERROR" else 0)
 if __name__ == "__main__": main()

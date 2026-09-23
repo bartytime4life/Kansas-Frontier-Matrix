@@ -13,7 +13,7 @@ def expected_identity(c):
     h=hashlib.sha256(raw).hexdigest()
     return "sha256:"+h,"soil-map-unit:"+h[:24]
 
-def evaluate(c):
+def _evaluate(c):
     findings=[]
     if c.get("profile")!="kfm.domains.soil.soil-map-unit.v1" or c.get("status")!="PROPOSED_INACTIVE": findings.append("PROFILE_INVALID")
     if c.get("effects")!=FALSE_EFFECTS: findings.append("EFFECT_OVERCLAIM")
@@ -33,6 +33,29 @@ def evaluate(c):
     if findings: return "DENY",sorted(set(findings))
     return "PASS",[]
 
+
+def evaluate(candidate):
+    """Fail closed on non-object or structurally malformed candidates.
+
+    Unhashable or mutually unorderable JSON values (for example a list where a
+    string is expected) would otherwise escape as TypeError tracebacks.
+    """
+    if not isinstance(candidate, dict):
+        return "ERROR", ["CANDIDATE_MALFORMED"]
+    try:
+        return _evaluate(candidate)
+    except TypeError:
+        return "ERROR", ["CANDIDATE_MALFORMED"]
+
+
+def load_candidate(path):
+    """Read one JSON candidate; return None when it cannot be read or parsed."""
+    try:
+        return json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, ValueError):
+        return None
+
+
 def main():
     p=argparse.ArgumentParser(); p.add_argument("path",nargs="?"); p.add_argument("--fixtures",action="store_true"); a=p.parse_args()
     if a.fixtures:
@@ -43,5 +66,8 @@ def main():
             bad += out!=row["expected_outcome"] or find!=row["expected_findings"]
         raise SystemExit(1 if bad else 0)
     if not a.path: p.error("path or --fixtures required")
-    out,find=evaluate(json.loads(Path(a.path).read_text())); print(json.dumps({"outcome":out,"findings":find},sort_keys=True))
+    candidate=load_candidate(a.path)
+    out,find=("ERROR",["INPUT_UNREADABLE"]) if candidate is None else evaluate(candidate)
+    print(json.dumps({"outcome":out,"findings":find},sort_keys=True))
+    raise SystemExit(0 if out=="PASS" else 1)
 if __name__=="__main__": main()

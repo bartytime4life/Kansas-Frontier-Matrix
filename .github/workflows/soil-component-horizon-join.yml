@@ -7,6 +7,7 @@ on:
       - 'fixtures/domains/soil/component_horizon_join/**'
       - 'tools/validators/domains/soil/validate_component_horizon_join.py'
       - 'tests/validators/domains/soil/test_component_horizon_join.py'
+      - 'tests/validators/domains/soil/test_soil_cli_fail_closed.py'
       - '.github/workflows/soil-component-horizon-join.yml'
   workflow_dispatch:
 
@@ -36,7 +37,7 @@ jobs:
       - name: Replay exact fixtures
         run: python tools/validators/domains/soil/validate_component_horizon_join.py --fixtures
       - name: Run deterministic tests
-        run: python -m unittest -q tests.validators.domains.soil.test_component_horizon_join
+        run: python -m unittest -q tests.validators.domains.soil.test_component_horizon_join tests.validators.domains.soil.test_soil_cli_fail_closed
       - name: Record trust boundary
         if: always()
         run: |
