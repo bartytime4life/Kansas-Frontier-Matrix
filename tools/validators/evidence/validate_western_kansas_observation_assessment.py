@@ -53,6 +53,7 @@ ABSTAIN_CODES = frozenset(
         "BOUNDARY_CANNOT_PROVE_CONDITION",
         "COUNTY_INTERSECTION_NOT_UNIFORM",
         "SOURCE_FAMILY_CANNOT_DIRECTLY_SUPPORT_CLAIM",
+        "SOURCE_SUPPORT_MISMATCH",
     }
 )
 
@@ -214,6 +215,12 @@ def _claim_reasons(candidate: Mapping[str, Any]) -> list[str]:
         if not families or not families.issubset(supported):
             if not any(code in reasons for code in ABSTAIN_CODES):
                 reasons.append("SOURCE_FAMILY_CANNOT_DIRECTLY_SUPPORT_CLAIM")
+        elif not reasons and any(
+            (source["support_kind"], source["support_id"])
+            != (claim["support_kind"], claim["support_id"])
+            for source in candidate["sources"]
+        ):
+            reasons.append("SOURCE_SUPPORT_MISMATCH")
     return reasons
 
 

@@ -1,0 +1,130 @@
+{
+  "receipt_id": "genrec-observation-support-identity-20260923",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/western-kansas-observation-assessment.yml",
+    "contracts/domains/hydrology/western_kansas_observation_assessment.md",
+    "tests/validators/test_western_kansas_observation_assessment.py",
+    "tools/validators/evidence/validate_western_kansas_observation_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/western-kansas-observation-assessment.yml": "sha256:5c44f1bd0a9b2f9008aaa3aa66931d6dd9ec913ba3c2d6d79d45a32d42070c05",
+    "contracts/domains/hydrology/western_kansas_observation_assessment.md": "sha256:ef43bde9fab17e6075c16e93a51e161348437760895d32141d0e6fc049bb2f83",
+    "tests/validators/test_western_kansas_observation_assessment.py": "sha256:84791794c44141711d5211eb1a487d5a39e1a742fc588b32d003545f6daa2b73",
+    "tools/validators/evidence/validate_western_kansas_observation_assessment.py": "sha256:9485ce0db0ba4da6aa5ee30c772ab414bb96069251a6a6b3be7bb1e7e5eabc77"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "runtime build UNKNOWN"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "Codex local tools",
+      "GitHub read-only overlap comparison",
+      "independent agent review"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:4a67a5dd445ef5d3473a3353d2a20bd207acde9f8baf27f8ae7bd0c4e80ae4cf",
+      "sha256:576a579b41fe0420d2106c5e96a2a779d22f4d4921d53773e13ab4ed9bb1e2d2"
+    ],
+    "evidence_refs": [
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/.github/workflows/western-kansas-observation-assessment.yml",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/contracts/domains/hydrology/western_kansas_observation_assessment.md",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/tests/validators/test_western_kansas_observation_assessment.py",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/tools/validators/evidence/validate_western_kansas_observation_assessment.py",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/docs/doctrine/directory-rules.md",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/fixtures/domains/hydrology/western_kansas_observation_assessment/cases.json",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/data/receipts/generated/genrec-issue-2899-invalid-timestamp-boundary-20260906.json",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/schemas/contracts/v1/domains/hydrology/western_kansas_observation_assessment.schema.json",
+      "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/CONTRIBUTING.md",
+      "repository://833f42ded442ddc0ed896fea9d61dadefcaac7b9/.github/workflows/western-kansas-observation-assessment.yml",
+      "repository://3b91c05885ff5668b9e3a9b2965d4986d9661c54/.github/workflows/western-kansas-observation-assessment.yml"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/western-kansas-observation-assessment.yml": "PROPOSED",
+    "contracts/domains/hydrology/western_kansas_observation_assessment.md": "PROPOSED",
+    "tests/validators/test_western_kansas_observation_assessment.py": "PROPOSED",
+    "tools/validators/evidence/validate_western_kansas_observation_assessment.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "regression-before",
+      "outcome": "PASS",
+      "reason": "With original validator bytes, the expanded support suite returned 26 failures and 21 passes. Mismatched direct supports had been OBSERVED or lacked the new abstention reason."
+    },
+    {
+      "gate": "focused-assessment-and-registry-tests",
+      "outcome": "PASS",
+      "reason": "51 tests and 12 subtests passed after repair, including every existing direct-family mapping, kind/ID mismatch, caller flags, declared outcome, multiple supports, correction/stale precedence and unchanged derivation."
+    },
+    {
+      "gate": "historical-fixture-polarity",
+      "outcome": "PASS",
+      "reason": "All 16 existing synthetic cases replayed with exact original outcomes and reason codes. The fixture matrix bytes are unchanged."
+    },
+    {
+      "gate": "historical-authoring-provenance",
+      "outcome": "PASS",
+      "reason": "Previous receipt validates against exact ancestor 8cb6cb247f4962996d00d3d526cb7a9ed4b89884; historical receipt bytes are retained and do not claim to bind this successor implementation."
+    },
+    {
+      "gate": "overlap-comparison",
+      "outcome": "PASS",
+      "reason": "Compared registry-selection833f42de and registry-repin3b91c058 workflow blob7bb69cc7: their broader registry trigger/test/receipt work remains separate. This successor retains current-main execution scope and changes only its new receipt triggers/current binding."
+    },
+    {
+      "gate": "scoped-documentation-qa",
+      "outcome": "PASS",
+      "reason": "Existing owning contract documents additive finite reason, exact support identity, derived exclusion, precedence, compatibility effects and rollback; status remains PROPOSED_INACTIVE."
+    },
+    {
+      "gate": "diff-whitespace",
+      "outcome": "PASS",
+      "reason": "git diff --check passed."
+    },
+    {
+      "gate": "exact-head-hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "No push, PR or hosted run; delivery remains branch-only."
+    },
+    {
+      "gate": "full-repository-suite",
+      "outcome": "SKIPPED",
+      "reason": "Only bounded changed-area verification claimed. Existing topology and unrelated holds remain unresolved."
+    },
+    {
+      "gate": "human-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Accountable human review remains pending. Agent review does not grant approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "recorded-support-contract",
+      "validated": true,
+      "evidence_ref": "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/contracts/domains/hydrology/western_kansas_observation_assessment.md#finite-outcomes"
+    },
+    {
+      "id": "accepted-placement",
+      "validated": true,
+      "evidence_ref": "repository://8cb6cb247f4962996d00d3d526cb7a9ed4b89884/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-23T05:17:40.584616Z",
+  "emitter": "OpenAI Codex desktop",
+  "notes": "Refs issues3390,3391 and2899. Existing tools owns the predicate, tests the regressions, contracts/domains/hydrology the profile semantics, .github the read-only CI wiring, and data/receipts/generated the authoring provenance. Additive SOURCE_SUPPORT_MISMATCH is an ABSTAIN reason only for otherwise-supported direct claims; existing earlier claim failures retain their specific reasons, and ERROR/ABSTAIN/STALE/CONFLICT precedence remains unchanged. A matching source family is insufficient if any direct source kind/ID differs from claim support. CROSS_SOURCE_STRESS continues to use its existing explicit transformation behavior. No schema, historical fixture/receipt, policy, source, seam register, catalog, baseline, doctrine or ADR changes. This receipt supersedes current-byte binding from genrec-issue-2899-invalid-timestamp-boundary-20260906 only for the four listed artifacts; that receipt remains historical at exact base 8cb6cb247f4962996d00d3d526cb7a9ed4b89884. Broader multi-clock successor/forecast proof, rights/sensitivity joins, source admission, public join, independent review, release and publication remain unproved or unauthorized. Future integration with the two registry branches must reconcile their additional workflow receipt scopes. Revert this bounded packet to roll back, but that restores the support gap; prefer a same-family forward fix."
+}
