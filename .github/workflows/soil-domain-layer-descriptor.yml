@@ -7,6 +7,7 @@ on:
       - 'fixtures/domains/soil/domain_layer_descriptor/**'
       - 'tools/validators/domains/soil/validate_domain_layer_descriptor.py'
       - 'tests/validators/domains/soil/test_domain_layer_descriptor.py'
+      - 'tests/validators/domains/soil/test_soil_cli_fail_closed.py'
       - '.github/workflows/soil-domain-layer-descriptor.yml'
   workflow_dispatch:
 
@@ -36,7 +37,7 @@ jobs:
       - name: Replay exact fixture matrix
         run: python tools/validators/domains/soil/validate_domain_layer_descriptor.py --fixtures
       - name: Run deterministic no-network tests
-        run: python -m unittest -q tests.validators.domains.soil.test_domain_layer_descriptor
+        run: python -m unittest -q tests.validators.domains.soil.test_domain_layer_descriptor tests.validators.domains.soil.test_soil_cli_fail_closed
       - name: Record trust boundary
         if: always()
         run: |

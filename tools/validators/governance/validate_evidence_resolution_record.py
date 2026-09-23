@@ -36,7 +36,7 @@ def expected_record_id(record):
     return "kfm:evidence-resolution:" + hashlib.sha256(canonical_bytes(payload)).hexdigest()
 
 
-def derive(record):
+def _derive(record):
     findings = []
     if record.get("profile") != PROFILE:
         findings.append("PROFILE_INVALID")
@@ -109,6 +109,16 @@ def derive(record):
     if record.get("outcome") != outcome:
         return "ERROR", ["OUTCOME_DRIFT"]
     return outcome, []
+
+
+def derive(record):
+    """Fail closed on non-object records and unhashable or unorderable refs."""
+    if not isinstance(record, dict):
+        return "ERROR", ["RECORD_NOT_OBJECT"]
+    try:
+        return _derive(record)
+    except TypeError:
+        return "ERROR", ["RECORD_MALFORMED"]
 
 
 def load(path):

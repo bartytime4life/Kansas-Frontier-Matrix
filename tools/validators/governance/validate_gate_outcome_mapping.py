@@ -252,7 +252,19 @@ def main(argv: Sequence[str] | None = None) -> int:
         return _run_fixtures()
     if args.path is None:
         raise SystemExit("path is required unless --fixtures is used")
-    result = validate_payload(_load_document(args.path))
+    try:
+        document = _load_document(args.path)
+    except (OSError, UnicodeError, ValueError):
+        # ValueError covers JSONDecodeError and a non-object root.
+        print(
+            json.dumps(
+                {"outcome": "ERROR", "findings": [{"code": "INPUT_UNREADABLE", "path": "$"}]},
+                sort_keys=True,
+                separators=(",", ":"),
+            )
+        )
+        return 1
+    result = validate_payload(document)
     print(
         json.dumps(
             {

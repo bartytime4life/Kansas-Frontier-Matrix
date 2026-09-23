@@ -30,7 +30,8 @@ Options:
 
 Default apply mode creates/updates .venv, installs repository-pinned Python and
 Node dependencies, and installs pre-commit hooks when pre-commit is available.
-No sudo or system package mutation occurs unless --install-system is supplied.
+This script never invokes sudo. System packages change only when --install-system
+is supplied from an already-root shell.
 EOF
 }
 
