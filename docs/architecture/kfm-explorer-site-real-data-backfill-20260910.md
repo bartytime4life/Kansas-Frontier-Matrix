@@ -2,8 +2,10 @@
 doc_id: kfm://doc/architecture/kfm-explorer-site-real-data-backfill-20260910
 title: KFM Explorer Site Real-Data Backfill — 2026-09-10
 type: architecture-reference
-version: v1.0.0-draft
-status: draft; documentation-only; not-merged; not-released; not-for-life-safety
+version: v1.1.0-draft
+created: 2026-09-10
+updated: 2026-09-23
+status: draft; documentation-only; historical-source-record; not-released; not-for-life-safety
 owners:
   - "@bartytime4life — verified CODEOWNERS review route"
   - "Site, source, evidence, hazards, release, and documentation stewardship NEEDS VERIFICATION"
@@ -19,11 +21,60 @@ truth_posture: cite-or-abstain
 
 # KFM Explorer Site Real-Data Backfill — 2026-09-10
 
-> **Status:** documentation-only, draft, not merged, not released, not deployed, and not for life-safety use.
+> **Status:** documentation reconciliation; historical Site capabilities and current source/platform checkpoints are separate. This edit performs no release or deployment and does not establish life-safety fitness.
 
-This record backfills the governed real-data work completed in the existing Kansas Frontier Matrix Explorer Site. It is a convergence note between the Site source history and the Kansas Frontier Matrix repository. It does not copy the Site source tree into this repository and does not change source admission, contracts, schemas, policy, evidence, release, or publication state.
+This record preserves the 2026-09-10 account of bounded real-data context work in the existing Kansas Frontier Matrix Explorer Site. It is a convergence note between the Site source history and the Kansas Frontier Matrix repository. It does not copy the Site source tree into this repository and does not change source admission, contracts, schemas, policy, evidence, release, or publication state.
+
+## Resource reconciliation — 2026-09-23 UTC
+
+**CONFIRMED:** source inspected at
+[`main@9dcdaec2cacbbf9880bd613b546a7314a2673ac5`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/9dcdaec2cacbbf9880bd613b546a7314a2673ac5).
+The observation falls on 2026-09-22 in America/Chicago. Repository source,
+connected Site metadata, coordination records, and design proposals answer
+different questions; their dates do not make them interchangeable authorities.
+
+| Resource / feature | Reconciled status | Evidence and next boundary |
+|---|---|---|
+| Existing hosted Explorer | Sites reports v53, source `22ac19960c2f72f11f5e4e9b87c7e12f62074d6e`, successful deployment, owner-private audience. | [Exact IDs, digest, previous saved v52 and method](../../apps/kansas-frontier-matrix-explorer/docs/sites-source-alignment.md). Browser acceptance, full source equivalence and recovery were not tested. |
+| Explorer Web Living Atlas | Package-owned inline MapLibre composition exists; `maplibre-gl` is pinned to 6.9.0. The retained laboratory still uses `NullMapRuntime`. | [Consumer source boundary](../../apps/explorer-web/src/site/README.md), [package](../../packages/maplibre/package.json). External resources, source admission and release remain separate. |
+| Monorepo Sites app | Vite/React with Explorer and About views; renderer-neutral `NullMapRuntime` and synthetic/generalized catalog. | [App guide](../../apps/kansas-frontier-matrix-explorer/README.md). This is not a mirror-equivalence claim about the standalone Site. |
+| Local source custody | Offline local-data tools support an external private quarantine store. | [Runbook](../runbooks/local-pc-data-store.md). Capturing bytes and process receipts does not admit a source or show it on the map. |
+| USGS earthquake work | Merged [#4674](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4674) contains offline request/history planning and bounded immutable candidates. | [Source](../../connectors/usgs/src/usgs/earthquake.py), [runbook](../runbooks/usgs-earthquake-live-history.md). No transport, scheduler, complete catalog, persisted release, or map integration is established. |
+| Raspberry Shake | Browser-local MiniSEED/StationXML preview exists as `UNADMITTED_BROWSER_PREVIEW`; its resulting posture stays `HOLD`. | [App guide](../../apps/kansas-frontier-matrix-explorer/README.md#browser-local-waveform-preview). It is not a provider waveform service, evidence handoff or released observation. |
+| Live-feed startup | [#4675](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4675) merged during this review. The repository Worker returns HTTP 503 JSON `KFM_API_NOT_CONFIGURED`; diagnostic and startup-selection slices exist. | [Integration boundary](../../apps/kansas-frontier-matrix-explorer/docs/live-feed-startup.md). Selector/demo remain unmounted; no live API, supplied real snapshot, hosted repair or deployment is established. |
+| Later seismic work | History-driver, local GeoJSON and workbook-preflight claims remain coordination/branch checkpoints. | [Notion backfill](https://app.notion.com/p/3d7a92021bf681a4ae8cc75930b302f2), [Drive backfill](https://docs.google.com/document/d/1uROL1Hkgr15oe2nH-9B2MUXdmzt2KSBo6ay1jt5dh4s/edit). Inspect those exact branches before treating them as main or hosted behavior; reported tests are not rerun here. |
+| Hazard workspace, atlas views and Science Pack | **PROPOSED** integration/design direction, with bounded implementation slices documented separately. | [Hazard workspace](ui/firemap-inspired-hazard-workspace.md), [Living Atlas design](https://docs.google.com/document/d/1aivNyfMjQ8urQO6vjt4YvkT1ltF1t7fxCahEcnGV4Dw/edit), [Science Pack](../../README.md#a-finished-kfm-with-a-science-pack). A design list is not an installed, admitted, released product. |
+
+### Authority, placement and source preservation
+
+GitHub exact refs establish implementation. Notion coordinates current work and
+open verification. Drive and the synced project PDFs/Markdown/DOCX retain
+research, design and doctrine lineage unless expressly adopted; this update
+does not rewrite those read-only synced files. The older checkpoints below
+remain historical even when their original text uses “now” or “current.”
+
+Placement follows accepted [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+and [Directory Rules](../doctrine/directory-rules.md): `docs/` owns human
+explanation; existing `apps/` documentation explains its application boundary;
+the root README owns repository orientation. The rules' internally proposed
+label is part of the adopted pinned artifact and is not edited here. No new
+contract, schema, policy, source registry, proof, release or compatibility root
+is created.
+
+The security review here is documentation-boundary review, using the existing
+[security policy](../../SECURITY.md), not a vulnerability scan or certification.
+Preserve governed APIs/released artifacts, fail-closed evidence behavior,
+source-role separation, rights and sensitivity checks, review, correction and
+rollback. Neither newer prose nor a successful platform deployment clears
+those controls.
 
 ## Exact checkpoints
+
+### Historical authoring checkpoint — 2026-09-10
+
+The v21 baseline, branch statement and validation counts below are retained
+from the original authoring record. They do not describe current main, current
+Site version, or validation performed by this documentation reconciliation.
 
 | Surface | Checkpoint |
 |---|---|
@@ -37,6 +88,10 @@ This record backfills the governed real-data work completed in the existing Kans
 The Site checkpoint passed `npm run build`, `npm test` (35 tests), and scoped ESLint for all changed files with zero errors. Full-project lint remains blocked by two pre-existing React effect errors in `app/observatory/workspace.tsx`; this change did not broaden that lint debt. Browser QA was not performed.
 
 ## Site capability map
+
+Historical v21 feature account follows. These provider routes and reliability
+claims were not exercised against v53 in this session and are not current
+monorepo API claims.
 
 ### Smoke and atmosphere
 
@@ -63,6 +118,9 @@ The Site preserves role separation across NWS alerts, NOAA radar, NOAA/NWM model
 The Site does not issue, interpret, confirm, rescind, or replace emergency, health, engineering, regulatory, or life-safety instructions. Synthetic hazard fixtures and historical frames remain distinguishable from provider context.
 
 ## Reliability controls
+
+The following describes the historical Site-side design and checkpoint, not
+a fresh verification of the hosted adapters.
 
 The Site-side adapters use fixed provider allowlists, bounded geographic/time queries, response-size limits, strict parsers, caps on features/vertices/stations, finite cache windows, explicit provider/source identity, and no silent fallback from real context to synthetic data. The UI preserves the distinction between a provider's current context, a historical frame, a model output, and an unavailable source.
 
@@ -98,8 +156,8 @@ Provider links document the source boundary; they are not an authorization to by
 2. Add a Raspberry Shake waveform/response bridge only with StationXML response handling, miniSEED validation, bounded time windows, provider limits, evidence identity, and a reviewed correction/rollback path.
 3. Bind LiDAR products to exact 3DEP work-unit metadata, acquisition, native CRS/datum, units, point spacing, accuracy, nodata, processing, resampling, and derivative parameters.
 4. Complete hazard lifecycle, evidence, expiry, correction, release, and rollback checks before any public or actionable claim.
-5. Re-run repository validation and independent review before merging this documentation or changing any source/release state.
+5. Re-run the checks appropriate to the candidate and obtain independent review before a future merge or source/release transition; retained historical counts do not satisfy that step.
 
 ## Rollback
 
-Close or revert the documentation pull request if the checkpoint, provider boundary, or repository baseline is found to be inaccurate. No Site deployment or provider-side mutation is part of this backfill.
+Revert this documentation revision if its checkpoint or interpretation is inaccurate; retain the historical authoring record. Any future correction should carry its own dated evidence. No Site deployment, provider-side mutation, authority transition or source-data migration is part of this reconciliation.

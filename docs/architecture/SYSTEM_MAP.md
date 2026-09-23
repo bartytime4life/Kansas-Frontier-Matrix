@@ -2,12 +2,12 @@
 doc_id: kfm://doc/architecture/system-map
 title: KFM System Map
 type: architecture-orientation
-version: v2
+version: v2.1
 status: repository-grounded draft
 owners:
   - "@bartytime4life"
 created: 2026-05-14
-updated: 2026-08-18
+updated: 2026-09-23
 policy_label: public
 current_path: docs/architecture/SYSTEM_MAP.md
 owning_root: docs/
@@ -20,17 +20,16 @@ truth_posture: >-
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 70d2f1da3a480e14a19573ebec55258fc64e5f8e
-  target_prior_blob: 6f760580bda6c23a6c227b3dd36edeaa7d34d9e0
+  base_commit: 21eee8dab4637da4771267078fe963f6525b045f
+  target_prior_blob: aabb553e8fc05fff32f303bcb2662c9bc86b8c71
   directory_rules_decision: ADR-0029 accepted
   root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
-  current_open_prs_touching_target: 0
 prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
 prompt_hash: sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb
 notes:
   - Same-path modernization; no root, contract, schema, policy, runtime, release, deployment, or publication transition.
-  - ADR-0029 is the only accepted numbered ADR in the current ADR index; all other numbered ADRs remain proposed.
+  - The current ADR index records ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 as accepted within their stated scopes; ADR-0039 and ADR-0041 remain proposed.
   - The seven planes are an explanatory responsibility projection aligned with the current Skeleton Map and accepted root classes, not a new governance decision.
 [/KFM_META_BLOCK_V2] -->
 
@@ -41,7 +40,7 @@ notes:
 > **One-line purpose.** Orient maintainers and reviewers to how Kansas Frontier Matrix responsibilities, lifecycle states, trust objects, implementation surfaces, release decisions, governed interfaces, and correction paths fit together—without treating this page as truth, policy, review, release, or publication authority.
 
 [![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-d29922?style=flat-square)](#status-and-evidence-boundary)
-[![Base: main@70d2f1d](https://img.shields.io/badge/base-main%4070d2f1d-0969da?style=flat-square)](#status-and-evidence-boundary)
+[![Base: main@21eee8d](https://img.shields.io/badge/base-main%4021eee8d-0969da?style=flat-square)](#status-and-evidence-boundary)
 [![Directory Rules: accepted](https://img.shields.io/badge/Directory%20Rules-v2%20accepted-1a7f37?style=flat-square)](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
 [![Publication authority: none](https://img.shields.io/badge/publication%20authority-none-b42318?style=flat-square)](#status-and-evidence-boundary)
 
@@ -55,13 +54,15 @@ notes:
 | Document role | Human-readable whole-system architecture orientation |
 | Repository location | **CONFIRMED:** `docs/architecture/SYSTEM_MAP.md` |
 | Owning responsibility root | **CONFIRMED:** `docs/` — human-readable explanation |
-| Evidence base | **CONFIRMED:** `main@70d2f1da3a480e14a19573ebec55258fc64e5f8e` |
+| Evidence base | **CONFIRMED:** `main@21eee8dab4637da4771267078fe963f6525b045f` |
 | Placement authority | **CONFIRMED:** Directory Rules v2 adopted by accepted ADR-0029 |
-| Numbered ADR posture | **CONFIRMED:** ADR-0029 accepted; the other numbered ADRs remain proposed in the current index |
+| Numbered ADR posture | **CONFIRMED:** the [canonical index](../adr/INDEX.md) records ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 as accepted within their scopes; the other 36 numbered records remain proposed |
 | Verified GitHub owner route | **CONFIRMED:** `@bartytime4life`; specialist stewardship remains `NEEDS VERIFICATION` |
 | Implementation posture | **MIXED:** bounded fixture-first slices exist; live service, renderer, deployment, and operational-release claims remain held or unknown |
 | Public or release authority | None |
-| Change effect | Documentation plus paired generated provenance receipt; no executable or lifecycle state transition |
+| Change effect | Documentation refresh; no executable or lifecycle state transition |
+
+The 2026-09-23 refresh rechecked ADR status, renderer package and consumer source, and their adjacent documentation at this base. Existing lifecycle and trust doctrine remains explanatory; no application or browser tests were rerun for this documentation change. Earlier execution evidence retains its original revision scope.
 
 ### Truth split used throughout
 
@@ -103,7 +104,7 @@ It does **not** replace [Directory Rules](../doctrine/directory-rules.md), the [
 
 ### Placement basis
 
-The file already exists under `docs/architecture/`, explains the system to humans, and does not change authority. Same-path modernization therefore preserves the `docs/` responsibility root under accepted Directory Rules. The paired AI provenance record belongs under `data/receipts/generated/`, not beside this document and not under `artifacts/` or `release/`.
+The file already exists under `docs/architecture/`, explains the system to humans, and does not change authority. Same-path modernization therefore preserves the `docs/` responsibility root under accepted Directory Rules. The refresh creates no new authority home and does not rewrite existing provenance records.
 
 [Back to top](#top)
 
@@ -276,9 +277,9 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 ### Current implementation checkpoints
 
 - [`packages/evidence-resolver/README.md`](../../packages/evidence-resolver/README.md) documents a bounded deterministic no-network candidate resolver with synthetic fixtures and tests. It is explicitly non-authoritative and not a public production resolver.
-- [`packages/maplibre/README.md`](../../packages/maplibre/README.md) documents a package scaffold and admission holds, not a functional admitted renderer adapter.
+- [`packages/maplibre/package.json`](../../packages/maplibre/package.json) selects exact `maplibre-gl@6.9.0`. The [package-owned adapter](../../packages/maplibre/src/maplibre-adapter.ts) implements inline-only style construction, camera synchronization, bounded rendered-feature selection projection, finite failures, and teardown. Source admission, evidence resolution, broader browser readiness, and release remain separate.
 - [`apps/governed-api/README.md`](../../apps/governed-api/README.md) establishes an app boundary; current routes, DTOs, middleware, deployment, and operational behavior remain `NEEDS VERIFICATION`.
-- [`apps/explorer-web/README.md`](../../apps/explorer-web/README.md) documents a real workspace and bounded fixture-first projections; live transport, admitted renderer, deployment, release, and public availability remain held or unknown.
+- [`apps/explorer-web/README.md`](../../apps/explorer-web/README.md) documents the network-free inline Living Atlas composition using the package-owned MapLibre adapter and the retained `NullMapRuntime` trust-state laboratory. The separate [monorepo Sites app](../../apps/kansas-frontier-matrix-explorer/README.md) still uses `NullMapRuntime`; the hosted Site has its own [identity and source-alignment record](../../apps/kansas-frontier-matrix-explorer/docs/sites-source-alignment.md). Neither local composition proves hosted source equality, live evidence, or release.
 
 [Back to top](#top)
 
@@ -352,8 +353,8 @@ See [trust membrane](../doctrine/trust-membrane.md), [governed API](./governed-a
 | Data lifecycle | **CONFIRMED:** canonical lanes and root contract exist | Live source activation, full promotion, public release, storage operations |
 | Evidence resolver | **CONFIRMED BOUNDED:** no-network candidate slice with fixtures/tests | Accountable production authority, canonical lookup, public contract, runtime service |
 | Governed API | **CONFIRMED BOUNDARY:** app root and README exist | Current route graph, authn/authz, policy/evidence binding, deployment, health |
-| Explorer Web | **CONFIRMED BOUNDED:** workspace and fixture-first projections exist | Live governed transport, admitted renderer, full shell, deployment, publication |
-| MapLibre package | **CONFIRMED SCAFFOLD:** placeholder package surface exists | Functional adapter, pinned dependencies, consumer, renderer admission |
+| Explorer Web | **CONFIRMED BOUNDED:** Living Atlas mounts the package-owned MapLibre adapter with inline local data; the trust-state laboratory retains `NullMapRuntime` | Live governed transport, released source/layer closure, full browser acceptance, deployment, publication |
+| MapLibre package | **CONFIRMED BOUNDED:** exact `6.9.0` dependency, concrete inline-style/lifecycle/camera/selection adapter, Vite worker seam, and fixture/test sources exist | Authenticated broader runtime probes, external-source admission, performance acceptance, release |
 | Release | **CONFIRMED CONTROL ROOT:** append-only decision root and fixture-first profiles exist | Authenticated operational promotion, signing custody, public release, rollback drill |
 | Deployment and operations | **UNKNOWN / NEEDS VERIFICATION** | Hosting, secrets, network exposure, logs, SLOs, backups, incident response, public availability |
 
@@ -402,7 +403,7 @@ A green test, attractive map, draft PR, generated receipt, or documentation badg
 | Q1 | Independent stewardship and separation of duties | Current accountable owner/reviewer assignments tied to executable repository routes |
 | Q2 | Governed API runtime closure | Route tree, DTOs, middleware, authn/authz, policy/evidence bindings, tests, logs, deployment, health |
 | Q3 | Explorer live composition | Governed transport, route tree, map boot, released layer flow, Evidence Drawer continuity, Focus Mode, deployment proof |
-| Q4 | Renderer admission | Accepted decision, dependency/lock policy, supply-chain evidence, adapter tests, consumer and export proof |
+| Q4 | Broader renderer readiness | Current supply-chain disposition, authenticated browser/CSP/accessibility/performance evidence, governed source and export proof; accepted ADR-0006/0007 and bounded adapter presence do not close these gates |
 | Q5 | Evidence resolver graduation | Accountable ownership, accepted contracts, authoritative repository lookup and digest binding, governed consumer |
 | Q6 | Root and lifecycle convergence | Recursive closure for deprecated `catalog/`, conditional `src/`, triplet variants, and recorded drift |
 | Q7 | Operational release and correction | Authenticated release authority, review separation, signing custody, correction propagation, cache invalidation, rollback drill |
@@ -444,10 +445,10 @@ Record unresolved items in the [drift register](../registers/DRIFT_REGISTER.md),
 
 ## Rollback
 
-This update changes one architecture document and its paired generated provenance receipt. Rollback is to revert the feature-branch commit, restore the prior `SYSTEM_MAP.md` blob `6f760580bda6c23a6c227b3dd36edeaa7d34d9e0`, remove the paired receipt through the same reviewed revert, and rerun the same documentation and hosted checks. No source, lifecycle, release, deployment, or public artifact depends on this documentation change by itself.
+This update changes architecture documentation. Rollback is to revert its documentation diff or restore the prior `SYSTEM_MAP.md` blob `aabb553e8fc05fff32f303bcb2662c9bc86b8c71` and rerun the affected documentation checks. Historical provenance records remain unchanged. No source, lifecycle, release, deployment, or public artifact depends on this documentation change by itself.
 
 ---
 
-<sub>**Last reviewed:** `2026-08-18` · **Document version:** `v2` · **Role:** architecture orientation · **Base:** `main@70d2f1da3a480e14a19573ebec55258fc64e5f8e` · **Publication authority:** none</sub>
+<sub>**Last reviewed:** `2026-09-23` · **Document version:** `v2.1` · **Role:** architecture orientation · **Base:** `main@21eee8dab4637da4771267078fe963f6525b045f` · **Publication authority:** none</sub>
 
 [Back to top](#top)

@@ -6,6 +6,10 @@ fit together.
 
 ## Current public scope
 
+Source checkpoint: `main@9dcdaec2cacbbf9880bd613b546a7314a2673ac5`, reviewed
+2026-09-23 UTC. “Public scope” describes the intended release boundary; the
+connected Site is owner-private at this readback.
+
 This directory is the monorepo implementation. The working Site is preserved in
 a standalone-root source history, while this application retains the monorepo
 layout and package boundaries. Do not merge a standalone Site mirror into
@@ -39,10 +43,10 @@ TypeScript-transpile regression checks.
 |---|---|
 | OpenAI Sites project | `appgprj_6aa0b1c41bc08191bfd86003920f1631` from [`.openai/hosting.json`](./.openai/hosting.json) |
 | Existing slug | `kansas-frontier-matrix-explorer` |
-| Existing public URL | <https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site> |
+| Existing Site URL | <https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site> |
 | Authoritative host | OpenAI Sites; [issue #4232](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4232) records the adapter decision |
 | Current evidence | [Identity and source-alignment hold](./docs/sites-source-alignment.md); the older replacement handoff and v1 receipt are historical |
-| Hosted version state | The 2026-09-17 Sites readback records a successful v45 deployment, but v45 mirror equality, production-browser acceptance, and recovery remain `HOLD` |
+| Hosted version state | The 2026-09-23 readback records successful v53 deployment and an owner-private audience; source equivalence, production-browser acceptance, and recovery remain `HOLD` |
 
 The staged 2026-09-03 replacement ZIP is an external, digest-bound Sites execution
 input. It is not the canonical repository source and must not be copied over this
@@ -68,7 +72,8 @@ The repository application uses Vite and React, with `/` and `/about` selected
 in `main.tsx`, through the package-owned
 `NullMapRuntime`. TypeScript and Vite resolve the `@kfm/maplibre` facade to the
 accepted workspace package root, following the same renderer-neutral pattern as
-`explorer-web`; the child manifest acquires no renderer or internal package by
+the retained `explorer-web` laboratory; the normal Living Atlas also mounts
+the package-owned inline MapLibre adapter. In this Sites app, the child manifest acquires no renderer or internal package by
 an external or `file:` dependency. Styles, sources, layers, workers, hit
 testing, and screen measurement remain held pending a dependency-closed
 consumer migration. D1 and R2 are intentionally unbound in this monorepo
@@ -114,6 +119,24 @@ change those controls.
 The Import utility includes a bounded Raspberry Shake-compatible **local file** preview. It accepts one MiniSEED file plus matching StationXML, one NSLC channel, a 10-minute/100,000-sample limit, and only the uncompressed encodings listed in `app/waveform-preview.ts`.
 
 The preview is deliberately `UNADMITTED_BROWSER_PREVIEW`: no provider URL, FDSN query, proxy, cache, upload, download, source registry entry, evidence/release handoff, response correction, event detection, or deployment is present. Matching response metadata and visible attribution are blocking checks; the resulting state remains `HOLD` even when the raw-value sparkline is available. See [`docs/sources/catalog/raspberry-shake-waveforms.md`](../../docs/sources/catalog/raspberry-shake-waveforms.md) for the provider-term and rollback gate.
+
+## Earthquake candidates and next integration
+
+[The response decoder](docs/usgs-earthquake-response-candidate.md) is a
+candidate with synthetic tests, and the merged [offline USGS planner and
+parser](../../connectors/usgs/src/usgs/earthquake.py) produces unadmitted
+candidates from already obtained bytes. Neither establishes a working live feed,
+cache, map selection, or evidence-backed report. [PR #4675](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4675)
+is merged at this checkpoint. The [Worker](worker/index.ts) now returns HTTP
+503 JSON `KFM_API_NOT_CONFIGURED` for missing API adapters instead of the SPA
+shell. Its [diagnostic and startup selector](docs/live-feed-startup.md) are
+repository slices; the selector/demo remain unmounted and no live feed or
+hosted repair is established.
+
+The [Firemap-inspired workspace](../../docs/architecture/ui/firemap-inspired-hazard-workspace.md)
+remains a proposed integration design. Read the [resource reconciliation](../../docs/architecture/kfm-explorer-site-real-data-backfill-20260910.md)
+for the boundary between repository implementation, historical Site features,
+and Notion/Drive coordination.
 
 ## Diagnostic Commands
 
