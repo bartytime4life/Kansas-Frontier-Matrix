@@ -1,0 +1,38 @@
+name: usgs-earthquake-offline
+on:
+  pull_request:
+    paths:
+      - 'connectors/usgs/src/usgs/earthquake.py'
+      - 'connectors/usgs/tests/test_earthquake.py'
+      - '.github/workflows/usgs-earthquake-offline.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'connectors/usgs/src/usgs/earthquake.py'
+      - 'connectors/usgs/tests/test_earthquake.py'
+      - '.github/workflows/usgs-earthquake-offline.yml'
+permissions:
+  contents: read
+concurrency:
+  group: usgs-earthquake-offline-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  synthetic-candidates:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONHASHSEED: '0'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.11'
+      - name: Run standard-library-only synthetic tests
+        run: python -m unittest discover -s connectors/usgs/tests -p 'test_earthquake.py' -v
+      - name: Record evidence boundary
+        if: always()
+        run: |
+          echo 'Offline synthetic query/parser checks only. No provider fetch, source admission, catalog completeness, active Site integration, release, or deployment proof.' >> "$GITHUB_STEP_SUMMARY"
