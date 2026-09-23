@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 
-from .core import PROFILE, ResolutionCandidate
+from .core import PROFILE, ResolutionCandidate, _BUNDLE_ID
 
 
 STATUS_TO_DISPOSITION = {
@@ -80,6 +80,11 @@ def project_runtime_posture(result: ResolutionCandidate) -> RuntimePosture:
     if result.status == "RESOLVED":
         if result.bundle_id is None:
             raise ValueError("candidate/resolved-bundle-missing")
+        if (
+            not isinstance(result.bundle_id, str)
+            or _BUNDLE_ID.fullmatch(result.bundle_id) is None
+        ):
+            raise ValueError("candidate/resolved-bundle-invalid")
         if result.issues:
             raise ValueError("candidate/resolved-issues-present")
         next_checks = REQUIRED_NEXT_CHECKS
