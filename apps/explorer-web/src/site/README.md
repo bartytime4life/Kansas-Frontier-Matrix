@@ -32,6 +32,14 @@ The [local HTTP browser regressions](../../tests/browser/local-http-evidence.spe
 
 Placement remains app-owned under accepted [ADR-0029](../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) and [Directory Rules](../../../../docs/doctrine/directory-rules.md) §§7.2, 10.1 and 14.1. This composition consumes the existing drawer and transport boundaries.
 
+## Action outcomes and renderer readiness
+
+The [Living Atlas status controller](./living-atlas-runtime-status.ts) distinguishes the current command's explanation from the renderer's latest status. An out-of-time selection keeps its `ABSTAIN` explanation when a later renderer `READY` notification arrives, including after a keyboard pan. Readiness does not make an ineligible selection eligible, and the existing empty-evidence and disabled-layer behavior stays in force.
+
+A new Atlas command releases the previous explanation. Runtime initialization and non-ready states also release it, so an actual runtime failure remains visible and later recovery cannot resurrect an old command outcome. Messages still use the existing text and finite-state vocabulary; this presentation change adds no policy, error-code, correlation, or source authority. The existing held-tool guard remains compatible with the controller.
+
+The [browser regression](../../tests/browser/living-atlas-runtime-status.spec.ts) waits for the actual adapter notification after a keyboard camera move before asserting the retained abstention, then verifies a supported selection clears that explanation. [Ordered unit cases](../../tests/living-atlas-runtime-status.test.ts) cover initialization, readiness, non-ready outcomes, recovery, and a newer command. This bounded local proof supports issues [#4416](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4416) and [#3397](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3397); it does not close their hosted, human accessibility, public evidence, or production acceptance requirements. Rollback this controller, composition wiring, tests and section together while retaining historical generated receipts at their recorded revisions.
+
 ## Unified Workspace UI-01 bounded slice
 
 The first Unified Workspace implementation slice is intentionally public, no-network, and composition-owned:

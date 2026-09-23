@@ -54,6 +54,7 @@ import {
 } from "../adapters/local-http-evidence";
 import { EVIDENCE_DRAWER_PROJECTION_PROFILE } from "../adapters/GovernedClient";
 import { mountEvidenceDrawer, type EvidenceDrawerController } from "../features/evidence_drawer";
+import { createLivingAtlasStatusController } from "./living-atlas-runtime-status";
 
 export type LivingAtlasController = Readonly<{ destroy: () => void }>;
 export type LivingAtlasOptions = Readonly<{ localEvidenceResolver?: LocalEvidenceResolver }>;
@@ -533,6 +534,9 @@ export function mountLivingAtlasWorkspace(
   const runtimeState = text(document, "p", "Map runtime initializing…", "atlas-runtime-state");
   runtimeState.setAttribute("role", "status");
   runtimeState.setAttribute("aria-live", "polite");
+  const statusController = createLivingAtlasStatusController((message) => {
+    runtimeState.textContent = message;
+  });
   mapNotice.append(
     text(document, "strong", "Generalized synthetic geometry"),
     text(document, "span", "No external tiles, live observations, legal boundaries, or precise sensitive locations."),
@@ -1006,7 +1010,7 @@ export function mountLivingAtlasWorkspace(
     unsubscribeRuntime = null;
     runtime?.dispose();
     mapCanvas.replaceChildren();
-    runtimeState.textContent = "Map runtime initializing…";
+    statusController.showRuntime("Map runtime initializing…");
     const nextRuntime = createViteMapLibreAdapter({
       containerId: mapCanvas.id,
       interactive: true,
@@ -1020,7 +1024,10 @@ export function mountLivingAtlasWorkspace(
     runtime = nextRuntime;
     unsubscribeRuntime = nextRuntime.subscribeSnapshot((state) => {
       if (generation !== runtimeGeneration || runtime !== nextRuntime) return;
-      runtimeState.textContent = `Renderer ${state.state}${state.reason === null ? "" : ` · ${state.reason}`}`;
+      statusController.showRuntime(
+        `Renderer ${state.state}${state.reason === null ? "" : ` · ${state.reason}`}`,
+        state.state === "READY",
+      );
       if (state.state === "READY") {
         snapshot = cloneSnapshot(snapshot, { camera: state.camera });
       } else if ((isMapRuntimeTrustState(state.state) || state.state === "DISPOSED") && localSession) {
@@ -1029,7 +1036,7 @@ export function mountLivingAtlasWorkspace(
     });
     void nextRuntime.initialize(snapshot.camera).catch(() => {
       if (generation !== runtimeGeneration || runtime !== nextRuntime) return;
-      runtimeState.textContent = "Renderer ERROR · no factual fallback";
+      statusController.showRuntime("Renderer ERROR · no factual fallback");
     });
   };
 
@@ -1056,7 +1063,7 @@ export function mountLivingAtlasWorkspace(
         selectedLayerId,
         evidenceRefs: decision.evidenceRefs,
       });
-      runtimeState.textContent = `HELD · ${view.statusReason}`;
+      statusController.showAction(`HELD · ${view.statusReason}`);
       renderEvidence(selectedLayerId);
       viewList.querySelectorAll<HTMLButtonElement>("button").forEach((node) => {
         node.setAttribute(
@@ -1099,7 +1106,7 @@ export function mountLivingAtlasWorkspace(
     renderEvidence(null);
     initializeRuntime();
     if (requestedRepresentation !== usableRepresentation) {
-      runtimeState.textContent = `${requestedRepresentation} composition held · inspectable layers loaded in 2D`;
+      statusController.showAction(`${requestedRepresentation} composition held · inspectable layers loaded in 2D`);
     }
   };
 
@@ -1181,7 +1188,7 @@ export function mountLivingAtlasWorkspace(
       '[aria-label="Filter by maturity"]',
     );
     if (!section || !featureSearch || !featureArea || !featureMaturity) {
-      runtimeState.textContent = `ERROR · ${tool.name} catalog target is unavailable`;
+      statusController.showAction(`ERROR · ${tool.name} catalog target is unavailable`);
       return;
     }
     featureArea.value = "ALL";
@@ -1190,7 +1197,7 @@ export function mountLivingAtlasWorkspace(
     featureSearch.dispatchEvent(new Event("input", { bubbles: true }));
     section.scrollIntoView({ block: "start" });
     featureSearch.focus();
-    runtimeState.textContent = `Opened ${tool.name} in the repository feature catalog`;
+    statusController.showAction(`Opened ${tool.name} in the repository feature catalog`);
   };
 
   const exportReport = (id: string): void => {
@@ -1208,6 +1215,7 @@ export function mountLivingAtlasWorkspace(
     const target = (event.target as Element | null)?.closest<HTMLButtonElement>("[data-atlas-action]");
     if (!target) return;
     const action = target.dataset.atlasAction ?? "";
+    statusController.showAction(null);
     if (action.startsWith("mode:")) activateMode(action.slice(5));
     else if (action.startsWith("rail:")) {
       activateRail(action.slice(5));
@@ -1225,7 +1233,7 @@ export function mountLivingAtlasWorkspace(
           evidenceRefs: Object.freeze([]),
         });
         renderEvidence(null);
-        runtimeState.textContent = "ABSTAIN · Layer is outside the committed time bucket";
+        statusController.showAction("ABSTAIN · Layer is outside the committed time bucket");
         return;
       }
       snapshot = cloneSnapshot(snapshot, {
@@ -1252,14 +1260,14 @@ export function mountLivingAtlasWorkspace(
       if (!tool) return;
       if (tool.id === "select") {
         activateRail("layers");
-        runtimeState.textContent = "Select ready · choose Inspect on a bounded layer or repository connection";
+        statusController.showAction("Select ready · choose Inspect on a bounded layer or repository connection");
       } else {
-        runtimeState.textContent = `${tool.name} HELD · ${tool.statusReason}`;
+        statusController.showAction(`${tool.name} HELD · ${tool.statusReason}`);
       }
     } else if (action.startsWith("representation:")) {
       const requested = action.slice(15) as MapRepresentation;
       if (requested === "TERRAIN_3D" || requested === "COMPARE") {
-        runtimeState.textContent = `${representationLabels[requested]} HELD · required admitted data/composition is unavailable`;
+        statusController.showAction(`${representationLabels[requested]} HELD · required admitted data/composition is unavailable`);
       } else {
         snapshot = cloneSnapshot(snapshot, { representation: requested });
         representationBar.querySelectorAll<HTMLButtonElement>("button").forEach((node) => node.setAttribute("aria-pressed", String(node === target)));
@@ -1323,9 +1331,10 @@ export function mountLivingAtlasWorkspace(
     const control = target as HTMLInputElement;
     const layerId = control.dataset.layerToggle;
     if (!layerId) return;
+    statusController.showAction(null);
     if (!layerMatchesCommittedTime(layerId)) {
       control.checked = false;
-      runtimeState.textContent = "ABSTAIN · Layer is outside the committed time bucket";
+      statusController.showAction("ABSTAIN · Layer is outside the committed time bucket");
       return;
     }
     snapshot = cloneSnapshot(snapshot, { layers: Object.freeze(snapshot.layers.map((state) => state.id === layerId ? Object.freeze({ ...state, visible: control.checked }) : state)) });

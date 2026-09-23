@@ -1,5 +1,42 @@
 import { expect, test } from "playwright/test";
 
+test("keeps temporal abstention after a later real renderer camera update", async ({ page }) => {
+  await page.goto("/");
+  const workspace = page.locator('[data-component="living-atlas-workspace"]');
+  const status = workspace.locator('.atlas-runtime-state[role="status"]');
+  await expect(status).toContainText("Renderer READY");
+  await workspace.getByRole("button", { name: "Layers", exact: true }).click();
+  await workspace.getByRole("slider", { name: "Preview atlas time" }).fill("10");
+  await workspace.getByRole("button", { name: "Apply time", exact: true }).click();
+  await expect(status).toContainText("Renderer READY");
+  const county = workspace.locator(".atlas-layer-row", { hasText: "County locator starter points" });
+  await county.getByRole("button", { name: "Inspect", exact: true }).click();
+  await expect(status).toContainText("ABSTAIN · Layer is outside the committed time bucket");
+
+  // Camera movement causes the real adapter's moveend subscriber to publish a
+  // later READY snapshot. Observe its status update before checking precedence;
+  // an immediate assertion alone could pass before the asynchronous overwrite.
+  await status.evaluate((node) => {
+    const observer = new MutationObserver(() => {
+      node.setAttribute("data-observed-camera-status", "true");
+      observer.disconnect();
+    });
+    observer.observe(node, { childList: true, characterData: true, subtree: true });
+  });
+  await workspace.locator("#kfm-living-atlas-map canvas").press("ArrowRight");
+  await expect(status).toHaveAttribute("data-observed-camera-status", "true");
+  await expect(status).toContainText("ABSTAIN · Layer is outside the committed time bucket");
+  await expect(workspace.getByRole("complementary", { name: "Evidence Drawer" }))
+    .toContainText("Inspect before interpretation");
+  await expect(county.getByRole("checkbox")).toBeDisabled();
+  await expect(county.getByRole("checkbox")).not.toBeChecked();
+  await workspace.locator(".atlas-layer-row", { hasText: "Generalized Kansas extent" })
+    .getByRole("button", { name: "Inspect", exact: true }).click();
+  await expect(status).toHaveText("Renderer READY");
+  await expect(workspace.getByRole("complementary", { name: "Evidence Drawer" }))
+    .toContainText("Generalized Kansas extent");
+});
+
 test("keeps held-tool guidance above late readiness chatter in the mounted workspace", async ({
   page,
 }) => {

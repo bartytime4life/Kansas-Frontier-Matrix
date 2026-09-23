@@ -15,6 +15,29 @@ const READY_STATUS_PREFIX = "Renderer READY";
 const STATUS_SELECTOR = '.atlas-runtime-state[role="status"]';
 const GUARD_DATASET_KEY = "livingAtlasRuntimeStatusGuard";
 
+export function createLivingAtlasStatusController(
+  render: (message: string) => void,
+): Readonly<{
+  showRuntime: (message: string, ready?: boolean) => void;
+  showAction: (message: string | null) => void;
+}> {
+  let runtimeMessage = "Map runtime initializing…";
+  let actionMessage: string | null = null;
+  return Object.freeze({
+    showRuntime: (message: string, ready = false): void => {
+      runtimeMessage = message;
+      // Readiness (including camera updates) cannot undo a command's finite
+      // outcome. A real runtime transition releases it, including failures.
+      if (!ready) actionMessage = null;
+      render(actionMessage ?? runtimeMessage);
+    },
+    showAction: (message: string | null): void => {
+      actionMessage = message;
+      render(actionMessage ?? runtimeMessage);
+    },
+  });
+}
+
 export function resolveHeldInteractionStatus(
   action: string | undefined,
 ): string | null {

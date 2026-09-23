@@ -1,0 +1,168 @@
+{
+  "receipt_id": "genrec-explorer-status-ownership-20260923",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/site/README.md",
+    "apps/explorer-web/src/site/living-atlas-runtime-status.ts",
+    "apps/explorer-web/src/site/mount-living-atlas.ts",
+    "apps/explorer-web/tests/browser/living-atlas-runtime-status.spec.ts",
+    "apps/explorer-web/tests/living-atlas-runtime-status.test.ts"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/site/README.md": "sha256:ccd63d57f6493178d81df1c064be1c3812c4b9d0484ffcc44f80075b1480c52b",
+    "apps/explorer-web/src/site/living-atlas-runtime-status.ts": "sha256:e2cb5bcef025404073f6647ccce8d27b6f8222b4f64368393c30c0e1d511856c",
+    "apps/explorer-web/src/site/mount-living-atlas.ts": "sha256:7548380b3420d28a5599919e80fa3ebf640969413bc5f0b2390dc0a719c1d354",
+    "apps/explorer-web/tests/browser/living-atlas-runtime-status.spec.ts": "sha256:d36cccf23e00c6a7de729d989fb09735316553a3ef1a860b18c302a64ff314ee",
+    "apps/explorer-web/tests/living-atlas-runtime-status.test.ts": "sha256:a384387c19ba43476739b0c6417e8d4832b4c917eaf937e39c8886f5f83e2304"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "UNKNOWN: exact served model revision is not exposed to this agent"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local source inspection and editing",
+      "read-only GitHub issue inspection",
+      "local Node and Python validation",
+      "local browser tests with real MapLibre camera and bounded HTTP fixture"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "CONTRIBUTING.md",
+      "SECURITY.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "docs/doctrine/directory-rules.md",
+      "docs/doctrine/ai-build-operating-contract.md",
+      "data/receipts/generated/README.md"
+    ],
+    "evidence_refs": [
+      "git:6d9281c2e34a731ee2bdee9e151f96106e66ddb0",
+      "git:6d9281c2e34a731ee2bdee9e151f96106e66ddb0:apps/explorer-web/src/site/mount-living-atlas.ts",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4416",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3397",
+      "git:6d9281c2e34a731ee2bdee9e151f96106e66ddb0:data/receipts/generated/genrec-explorer-recovery-focus-20260923.json",
+      "git:6d9281c2e34a731ee2bdee9e151f96106e66ddb0:data/receipts/generated/genrec-explorer-predecessor-byte-inventory-20260923.json",
+      "git:6d9281c2e34a731ee2bdee9e151f96106e66ddb0:data/receipts/generated/genrec-runtime-status-browser-race-20260920.json"
+    ],
+    "evidence_hashes": [
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:71410ab5be5bb5168d72ed68b73e1cf0594d1d848a9e53ac0eb149f3467c409e",
+      "sha256:0b37b5e555f6fa8e969358e4e7f657ebb9c832d6c0f2ededd1594c22ca866f9f",
+      "sha256:645b9bddf4058ee884774ed205d142129a5e809e3faee262048b702b04f5f272"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/site/README.md": "CONFIRMED",
+    "apps/explorer-web/src/site/living-atlas-runtime-status.ts": "CONFIRMED",
+    "apps/explorer-web/src/site/mount-living-atlas.ts": "CONFIRMED",
+    "apps/explorer-web/tests/browser/living-atlas-runtime-status.spec.ts": "CONFIRMED",
+    "apps/explorer-web/tests/living-atlas-runtime-status.test.ts": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "controlled-predecessor-browser-reproduction",
+      "outcome": "FAIL",
+      "reason": "Expected before-fix evidence at predecessor source: wait time-change READY, inspect out-of-time county, keyboard-pan the real map, observe its later status mutation. Browser received Renderer READY instead of the still-applicable ABSTAIN. No repeated flake hunting, sleep, or injected status string was used."
+    },
+    {
+      "gate": "focused-browser",
+      "outcome": "PASS",
+      "reason": "Playwright living-atlas-runtime-status.spec.ts and living-atlas.spec.ts: 14 passed. New controlled-order regression retains abstention and cleared support after the real camera update, then verifies a supported selection clears the prior explanation."
+    },
+    {
+      "gate": "explorer-unit",
+      "outcome": "PASS",
+      "reason": "pnpm --filter explorer-web test:unit: 683 passed in 66 files, including ordered status initialization, READY, ERROR, DENIED, ABSTAINED, DEGRADED, WITHDRAWN, DISPOSED, recovery and newer-command cases."
+    },
+    {
+      "gate": "ordinary-browser",
+      "outcome": "PASS",
+      "reason": "pnpm --filter explorer-web test:browser: 151 passed; original temporal assertion retained."
+    },
+    {
+      "gate": "local-http-browser",
+      "outcome": "PASS",
+      "reason": "pnpm --filter explorer-web test:local-evidence: 9 passed, preserving predecessor keyboard failure/recovery and safe workspace assertions."
+    },
+    {
+      "gate": "production-build",
+      "outcome": "PASS",
+      "reason": "pnpm --filter explorer-web build: TypeScript and Vite passed with the existing large-chunk advisory; no deployment performed."
+    },
+    {
+      "gate": "explorer-adapter-boundary",
+      "outcome": "PASS",
+      "reason": "python -m pytest -q tests/policy/test_explorer_web_adapter_boundary.py: 2 passed."
+    },
+    {
+      "gate": "historical-receipt-preservation",
+      "outcome": "PASS",
+      "reason": "Three consulted predecessor receipts remain byte-identical. Ancestor-bound validation at 6d9281c2e34a731ee2bdee9e151f96106e66ddb0 passed for recovery-focus (5 artifacts), predecessor-byte-inventory (20 artifacts), and runtime-status-browser-race (1 artifact). Current changed bytes are rebound only by this new receipt; historical receipts are not rewritten."
+    },
+    {
+      "gate": "changed-markdown-and-whitespace",
+      "outcome": "PASS",
+      "reason": "Owning README has one H1, balanced fences, final newline and resolving changed local links; existing metadata/ownership convention preserved. git diff --check passed."
+    },
+    {
+      "gate": "receipt-integrity",
+      "outcome": "PASS",
+      "reason": "Repository GeneratedReceipt validation replayed the five final SHA-256 bindings; human review is pending."
+    },
+    {
+      "gate": "hosted-human-and-production-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "No hosted CI, human accessibility acceptance, public resolver graduation, deployment, release or publication asserted. This controlled reproduction establishes a concrete mechanism at the predecessor; it does not retroactively prove the exact cause of the earlier uninstrumented 149/150 run."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "explicit-status-ownership",
+      "validated": true,
+      "evidence_ref": "apps/explorer-web/src/site/living-atlas-runtime-status.ts@sha256:e2cb5bcef025404073f6647ccce8d27b6f8222b4f64368393c30c0e1d511856c"
+    },
+    {
+      "id": "composition-status-wiring",
+      "validated": true,
+      "evidence_ref": "apps/explorer-web/src/site/mount-living-atlas.ts@sha256:7548380b3420d28a5599919e80fa3ebf640969413bc5f0b2390dc0a719c1d354"
+    },
+    {
+      "id": "controlled-real-camera-regression",
+      "validated": true,
+      "evidence_ref": "apps/explorer-web/tests/browser/living-atlas-runtime-status.spec.ts@sha256:d36cccf23e00c6a7de729d989fb09735316553a3ef1a860b18c302a64ff314ee"
+    },
+    {
+      "id": "ordered-negative-recovery-tests",
+      "validated": true,
+      "evidence_ref": "apps/explorer-web/tests/living-atlas-runtime-status.test.ts@sha256:a384387c19ba43476739b0c6417e8d4832b4c917eaf937e39c8886f5f83e2304"
+    },
+    {
+      "id": "accepted-directory-owner-basis",
+      "validated": true,
+      "evidence_ref": "git:6d9281c2e34a731ee2bdee9e151f96106e66ddb0:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-23T05:29:59.936934Z",
+  "emitter": "Codex bounded Explorer status ownership follow-up",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Scope: five existing app-owned paths based exactly on 6d9281c2e34a731ee2bdee9e151f96106e66ddb0. The delivered Explorer recovery worktree is unchanged. Explicit command status survives READY camera notifications; new commands and genuine non-ready runtime transitions release it. Existing finite messages, empty evidence, disabled layer controls, contracts, transport, topology, dependencies and source/release authority remain unchanged. Placement follows accepted Directory Rules sections 7.2, 10.1 and 14.1; this receipt stays in the existing data/receipts/generated process-memory lane. Runtime: Node 22.13.1, pnpm 11.17.0, Python 3.12.14, existing Chromium 147.0.7727.57 headless shell. Prior receipt files retain their historical hashes and can be replayed at the listed ancestor; this receipt supplies current bindings for the modified artifacts. Unknown model revision and generation parameters are explicit. Rollback by reverting this bounded commit while retaining prior receipt and validation history. No remote push, PR, approval, merge, settings, deployment, release or publication action. Receipt is not human review or merge authority."
+}
