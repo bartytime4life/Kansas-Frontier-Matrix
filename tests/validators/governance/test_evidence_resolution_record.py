@@ -42,3 +42,24 @@ def test_effect_overreach_is_denied():
     decision, findings = derive(candidate)
     assert decision == "ERROR"
     assert "AUTHORITY_EFFECT_FORBIDDEN" in findings
+
+
+def test_non_object_record_is_finite_error():
+    for value in ([], None, 1, "record"):
+        assert derive(value) == ("ERROR", ["RECORD_NOT_OBJECT"])
+
+
+def test_unhashable_or_mixed_refs_are_finite_error():
+    base = _cases()[0]["candidate"]
+    mutations = (
+        lambda c: c.__setitem__("requested_refs", [[1]]),
+        lambda c: c.__setitem__("requested_refs", [1, "a"]),
+        lambda c: c["resolutions"][0].__setitem__("evidence_ref", {}),
+        lambda c: c["resolutions"][0].__setitem__("status", []),
+    )
+    for mutate in mutations:
+        candidate = json.loads(json.dumps(base))
+        mutate(candidate)
+        decision, findings = derive(candidate)
+        assert decision == "ERROR"
+        assert findings

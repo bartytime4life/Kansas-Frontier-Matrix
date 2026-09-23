@@ -76,6 +76,27 @@ class GateOutcomeMappingTests(unittest.TestCase):
         self.assertEqual(0, completed.returncode, completed.stderr)
         self.assertIn('"suite_match":true', completed.stdout)
 
+    def test_unreadable_path_inputs_are_finite_errors(self) -> None:
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            inputs = {"list_root.json": "[]", "truncated.json": '{"mapped": ', "missing.json": None}
+            for name, text in inputs.items():
+                path = Path(tmp) / name
+                if text is not None:
+                    path.write_text(text, encoding="utf-8")
+                with self.subTest(case=name):
+                    completed = subprocess.run(
+                        [sys.executable, str(Path(validator.__file__)), str(path)],
+                        cwd=ROOT,
+                        check=False,
+                        capture_output=True,
+                        text=True,
+                    )
+                    self.assertEqual(1, completed.returncode)
+                    self.assertNotIn("Traceback", completed.stderr)
+                    self.assertEqual("ERROR", json.loads(completed.stdout)["outcome"])
+
     def test_validator_has_no_host_or_network_client(self) -> None:
         source = Path(validator.__file__).read_text(encoding="utf-8")
         for token in ("requests", "urllib.request", "httpx", "aiohttp", "PyGithub", "github.Github"):
