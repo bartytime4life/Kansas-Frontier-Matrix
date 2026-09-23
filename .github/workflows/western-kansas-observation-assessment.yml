@@ -11,6 +11,7 @@ name: western-kansas-observation-assessment
       - "tests/validators/test_western_kansas_observation_assessment.py"
       - "data/receipts/generated/genrec-western-kansas-observation-assessment-current-binding-20260815.json"
       - "data/receipts/generated/genrec-issue-2899-invalid-timestamp-boundary-20260906.json"
+      - "data/receipts/generated/genrec-observation-support-identity-20260923.json"
   push:
     branches: [main]
     paths:
@@ -22,6 +23,7 @@ name: western-kansas-observation-assessment
       - "tests/validators/test_western_kansas_observation_assessment.py"
       - "data/receipts/generated/genrec-western-kansas-observation-assessment-current-binding-20260815.json"
       - "data/receipts/generated/genrec-issue-2899-invalid-timestamp-boundary-20260906.json"
+      - "data/receipts/generated/genrec-observation-support-identity-20260923.json"
   workflow_dispatch:
 
 permissions:
@@ -62,8 +64,9 @@ jobs:
         run: python tools/validators/evidence/validate_western_kansas_observation_assessment.py --cases
       - name: Verify generated authoring receipt integrity
         run: |
+          # Prior receipts remain immutable historical process evidence.
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-issue-2899-invalid-timestamp-boundary-20260906.json \
+            data/receipts/generated/genrec-observation-support-identity-20260923.json \
             --repo-root .
       - name: Record trust boundary
         if: always()

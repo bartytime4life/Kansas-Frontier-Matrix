@@ -85,6 +85,22 @@ failures.
 Every source records support kind, support identifier, CRS, method, unit, and
 resolution where meaningful. A claim records its requested support separately.
 
+For a directly supporting source family, every source's `support_kind` and
+`support_id` must exactly match the direct claim's recorded support. An otherwise
+eligible direct claim at a different support returns `ABSTAIN` with
+`SOURCE_SUPPORT_MISMATCH`. Caller declarations of preserved support, resampling,
+or a transformation reference do not override that identity check. A packet that
+still declares `OBSERVED` additionally receives `DECLARED_OUTCOME_MISMATCH` and
+returns `ERROR` under the existing outcome-consistency rule.
+
+This check does not apply direct-observation identity rules to
+`CROSS_SOURCE_STRESS`: its explicit transformation may combine differing source
+supports under the existing derived-claim rules. Existing family-role,
+county-intersection and support-erasure failures keep their specific reasons;
+the support mismatch is reported only when those earlier claim checks permit a
+direct claim. Finite precedence remains `ERROR` before `ABSTAIN`, then `STALE`,
+`CONFLICT`, and the supported result.
+
 The profile denies:
 
 - county-wide uniformity inferred only from polygon/county intersection;
@@ -133,6 +149,21 @@ review.
 
 The focused workflow runs the validator's exact case matrix, focused unit tests,
 schema meta-validation, and generated-receipt integrity with networking disabled.
+
+The support-identity repair retains the historical fixture matrix and receipts
+unchanged. Its added tests cover all direct source families, same-kind/different-ID
+and different-kind claims, caller flags, corrected and stale observations,
+multiple source supports, declared outcomes, and unchanged explicit derivation.
+The new receipt binds current changed bytes; prior receipts remain evidence of
+their pinned historical revisions. Packets previously accepted as `OBSERVED`
+despite mismatched direct support must now narrow the claim to the recorded
+support or abstain. No existing matching direct claim or fixture outcome is
+reclassified, and no source, schema, seam or public-join authority is introduced.
+
+Rollback of the support-identity repair is a focused revert of its validator,
+tests, contract clarification, workflow receipt binding, and successor receipt.
+That revert would restore the unsupported-observation gap; prefer a same-family
+forward fix. Historical receipts and fixtures must remain intact in either case.
 
 Rollback is an ordinary revert of the additive contract, schema, fixtures,
 validator, tests, workflow, and receipt. No live source, data store, release, or
