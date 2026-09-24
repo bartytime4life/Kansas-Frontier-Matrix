@@ -3,20 +3,6 @@
 A map-first Kansas explorer with real provider baselines, dated archive replay,
 source downloads, and private data contribution and steward review workflows.
 
-## Optional Kansas wind field
-
-The map's **Wind flow** control opens an opt-in, Earth-inspired animated display
-with explicit forecast hours, playback, a source link, and a link to
-[earth.nullschool.net](https://earth.nullschool.net/). It requests nine fixed
-Kansas 10 m wind speed/direction forecast samples through a bounded Open-Meteo
-adapter. Streamlines between those points are visual interpolation, not measured
-trajectories. Animation starts only on request; reduced-motion users see still
-arrows and can step through hours. A failed or incomplete response draws no
-replacement vectors. This is third-party model display context, not an official
-observation, warning, admitted KFM source, EvidenceBundle, or release. The
-existing NOAA radar, river telemetry, timelines, evidence drawer, and source
-states remain independent.
-
 ## Embedded shell recovery and data path — September 15, 2026
 
 The private Sites panel could render the server shell and then leave only its dark
