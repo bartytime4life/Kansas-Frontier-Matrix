@@ -1,3 +1,5 @@
+import { EARTH_ENGINE_CHECKED_AT, EARTH_ENGINE_DATASETS, EARTH_ENGINE_REVIEW, earthEngineUrl } from "./earth-engine-data";
+
 export type CorpusSource = Readonly<{
   id: string;
   title: string;
@@ -23,6 +25,7 @@ export type SourceCandidate = Readonly<{
   checkedAt: string;
   layerId?: string;
   featureId?: string;
+  discoveryPath?: string;
 }>;
 
 export type SourceAdmissionState = "candidate" | "context-only" | "admitted" | "held" | "quarantined" | "denied";
@@ -188,6 +191,13 @@ export const CORPUS_SOURCES: readonly CorpusSource[] = Object.freeze([
 ]);
 
 export const SOURCE_CANDIDATES: readonly SourceCandidate[] = Object.freeze([
+  ...EARTH_ENGINE_DATASETS.map((dataset) => Object.freeze({
+    id: dataset.id, title: `${dataset.title} · Earth Engine`, organization: dataset.provider,
+    domain: dataset.topic, cadence: dataset.cadence, sourceRole: "Catalog discovery · not connected or admitted",
+    dataModes: ["Catalog metadata", "Exploratory recipe"], value: dataset.use,
+    cannotProve: dataset.limitation, nextGate: EARTH_ENGINE_REVIEW,
+    sourceUrl: earthEngineUrl(dataset), checkedAt: EARTH_ENGINE_CHECKED_AT, discoveryPath: "/earth-engine",
+  })),
   Object.freeze({"id":"SRC-CAND-NOAA-NORMALS-1991-2020","title":"U.S. Climate Normals · 1991–2020","organization":"NOAA / NCEI","domain":"Atmosphere","cadence":"Decadal baseline; corrections between editions","sourceRole":"Official station climatology; long-term baseline context","dataModes":["Public S3","Station CSV"],"value":"Kansas station temperature and precipitation averages for the 1991–2020 baseline. Public AWS bucket: s3://noaa-normals-pds/ (us-east-1; no AWS account required).","cannotProve":"Not current weather, a forecast, a county-wide measurement, or a released KFM climate layer. Cloud hosting does not establish COG or other cloud-optimized encoding. Station values must not be presented as continuous statewide coverage.","nextGate":"Pin exact monthly 1991–2020 object keys and product revision; review station inventory, units, quality flags, missing values, Kansas selection, rights and sensitivity; validate bounded downloads and correction receipts, then EvidenceBundle and release review. CDO period and endpoint parity remain unverified.","sourceUrl":"https://registry.opendata.aws/noaa-climate-normals/","checkedAt":"2026-09-20"}),
   Object.freeze({ id: "SRC-CAND-USGS-HYDRO", title: "WBD / NWIS hydrology family", organization: "U.S. Geological Survey", domain: "Hydrology", cadence: "Versioned + continuous", sourceRole: "Governing context + observation", dataModes: ["Vector", "API", "Time series"], value: "Watersheds, stream context, gauges, and time-aware observations for a bounded proof lane.", cannotProve: "A rendered flowline is not current flow, flood risk, water quality, or a regulatory boundary.", nextGate: "Verify exact product versions, provisional-data rules, rights, identifiers, and geometry generalization.", sourceUrl: "https://waterdata.usgs.gov/nwis", checkedAt: "2026-09-08", layerId: "water-context", featureId: "water-smoky-hill" }),
   Object.freeze({ id: "SRC-CAND-FEMA-NFHL", title: "National Flood Hazard Layer", organization: "FEMA", domain: "Hazards", cadence: "Periodic", sourceRole: "Regulatory context", dataModes: ["Vector", "Services"], value: "Versioned flood-hazard context with explicit regulatory character.", cannotProve: "It is not a live flood observation, emergency warning, engineering determination, or property-specific advice.", nextGate: "Resolve service/version identity, effective dates, attribution, update cadence, and public carrier design.", sourceUrl: "https://www.fema.gov/flood-maps/national-flood-hazard-layer", checkedAt: "2026-09-08" }),

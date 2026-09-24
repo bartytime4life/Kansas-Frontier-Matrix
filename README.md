@@ -3,6 +3,29 @@
 A map-first Kansas explorer with real provider baselines, dated archive replay,
 source downloads, and private data contribution and steward review workflows.
 
+## Earth Engine discovery and Kansas recipes — September 24, 2026
+
+The Explorer's **Earth Engine** control opens `/earth-engine`: eight curated
+dataset records, text/topic search, a three-dataset metadata comparison, and
+downloadable JavaScript recipes and JSON review drafts. The same records feed
+Source observatory and the existing private contribution source selector.
+Coverage, processing choices, terms, source links and limitations remain visible.
+There is no Earth Engine connection, credential, imagery import, map-layer
+activation, automatic export, source admission or data release in this change.
+
+Recipes use the Census TIGER 2018 Kansas study boundary, complete calendar years
+where applicable, product-specific quality masks and scaling, and explicit
+empty/error states. CHIRPS and TerraClimate additionally check unique expected
+dates and per-pixel completeness. JRC's fixed historical summary and the 3DEP
+source mosaic cannot be relabeled as annual observations. Recipes are generated
+locally and must be executed and scientifically validated in an authorized Earth
+Engine project. Full source-asset provenance remains a review requirement.
+
+Placement reuses the standalone Site's `app/`, `tests/` and `docs/` responsibilities,
+following its existing separation from the monorepo and Directory Rules v2 /
+ADR-0029. These display records are not a parallel canonical source registry.
+See [scope, sources, validation and rollback](docs/EARTH_ENGINE_DISCOVERY.md).
+
 ## Embedded shell recovery and data path — September 15, 2026
 
 The private Sites panel could render the server shell and then leave only its dark
