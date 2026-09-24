@@ -158,6 +158,7 @@ import { STRUCTURE_3D_SOURCE, TERRAIN_SOURCES } from "./terrain-sources";
 import { EXTERNAL_CONTEXT_SOURCES } from "./external-context-sources";
 import {
   applyOfficialContextState,
+  clearNoaaSatelliteFrame,
   defaultOfficialContextOpacity,
   defaultOfficialContextVisibility,
   OFFICIAL_CONTEXT_BY_ID,
@@ -170,6 +171,7 @@ import {
   noaaRadarObservationTimeIsApplied,
   officialContextVisibilityForFrame,
   setNoaaRadarObservationTime,
+  setNoaaSatelliteFrame,
   type OfficialContextFeedId,
   type OfficialContextId,
   type OfficialContextPayload,
@@ -192,6 +194,7 @@ import {
   type NoaaRadarManifestState,
   type NoaaRadarPlaybackSpeed,
 } from "./noaa-radar";
+import { isNoaaSatelliteManifest, NOAA_SATELLITE_FRAMES_PATH, type NoaaSatelliteFrame, type NoaaSatelliteManifest } from "./noaa-satellite";
 import {
   buildStreamflowFrame,
   streamflowContextPayload,
@@ -487,8 +490,8 @@ const PRIORITY_CONTEXT_GROUPS: readonly PriorityContextGroup[] = Object.freeze([
   Object.freeze({
     id: "fire-smoke",
     title: "Fire + smoke context",
-    description: "NIFC incident reports, selectable NOAA-20 thermal detections, separate NASA image tiles, and NOAA smoke footprints. Incident reports and satellite signals retain distinct roles.",
-    sourceIds: Object.freeze(["nifc-fire-reports", "nasa-gibs-fire-points", "nasa-firms-active-fire", "noaa-hms-smoke", "nws-alerts", "nws-radar"] as const),
+    description: "NIFC incident reports, NASA thermal detections, NOAA GOES GeoColor imagery, smoke footprints, alerts, and radar. Each keeps its own source time and meaning.",
+    sourceIds: Object.freeze(["nifc-fire-reports", "nasa-gibs-fire-points", "nasa-firms-active-fire", "noaa-goes-geocolor", "noaa-hms-smoke", "nws-alerts", "nws-radar"] as const),
   }),
 ]);
 
@@ -571,6 +574,7 @@ const QUICK_LIVE_CONTEXT_IDS = [
   "usgs-earthquakes",
   "nasa-gibs-fire-points",
   "nifc-fire-reports",
+  "noaa-goes-geocolor",
   "noaa-hms-smoke",
   "nws-radar",
 ] as const satisfies readonly OfficialContextId[];
@@ -1081,6 +1085,10 @@ export default function Home() {
   const noaaRadarFollowLatestRef = useRef(true);
   const noaaRadarFrameLoadCleanupRef = useRef<(() => void) | null>(null);
   const noaaRadarFrameFailureRef = useRef<((message: string) => void) | null>(null);
+  const noaaSatelliteRequestRef = useRef<AbortController | null>(null);
+  const noaaSatelliteManifestRef = useRef<NoaaSatelliteManifest | null>(null);
+  const noaaSatelliteFrameRef = useRef<NoaaSatelliteFrame | null>(null);
+  const noaaSatelliteFollowLatestRef = useRef(true);
   const streamflowRequestRef = useRef<AbortController | null>(null);
   const streamflowRequestGenerationRef = useRef(0);
   const streamflowBundleRef = useRef<StreamflowBundle | null>(null);
@@ -1165,6 +1173,8 @@ export default function Home() {
   const [noaaRadarFollowLatest, setNoaaRadarFollowLatest] = useState(true);
   const [noaaRadarFrameLoadState, setNoaaRadarFrameLoadState] = useState<NoaaRadarFrameLoadState>("idle");
   const [noaaRadarClock, setNoaaRadarClock] = useState(() => Date.now());
+  const [noaaSatelliteManifest, setNoaaSatelliteManifest] = useState<NoaaSatelliteManifest | null>(null);
+  const [noaaSatelliteFrame, setNoaaSatelliteSelectedFrame] = useState<NoaaSatelliteFrame | null>(null);
   const [radarArchiveDraftDay, setRadarArchiveDraftDay] = useState(currentUtcDay);
   const [streamflowBundle, setStreamflowBundle] = useState<StreamflowBundle | null>(null);
   const [stageDrawerLoad, setStageDrawerLoad] = useState<StageDrawerLoad | null>(null);
@@ -1547,15 +1557,16 @@ export default function Home() {
     && (selectedIsHeldOfficialContext || !isFeatureAvailableForTemporalQuery(selected.layer, selected.properties.year, temporalQuery)),
   );
   const officialFeatureCount = useMemo(() => Object.values(officialPayloads).reduce((total, payload) => total + (payload?.featureCount ?? 0), 0), [officialPayloads]);
-  const visibleRefreshableOfficialCount = useMemo(() => visibleOfficialSources.filter((source) => source.apiPath || source.managedAdapterPath || source.id === "nws-radar").length, [visibleOfficialSources]);
+  const visibleRefreshableOfficialCount = useMemo(() => visibleOfficialSources.filter((source) => source.apiPath || source.managedAdapterPath || source.id === "nws-radar" || source.id === "noaa-goes-geocolor").length, [visibleOfficialSources]);
   const officialReadyCount = useMemo(() => Object.values(officialStates).filter((state) => state === "ready" || state === "partial" || state === "empty").length, [officialStates]);
   const officialLoadingCount = useMemo(() => Object.values(officialStates).filter((state) => state === "loading").length, [officialStates]);
   const officialLatestRetrievedAt = useMemo(() => Object.values(officialPayloads)
     .map((payload) => payload?.retrievedAt)
     .filter((value): value is string => Boolean(value))
     .concat(noaaRadarManifest?.retrievedAt ?? [])
+    .concat(noaaSatelliteManifest?.retrievedAt ?? [])
     .sort()
-    .at(-1) ?? null, [noaaRadarManifest?.retrievedAt, officialPayloads]);
+    .at(-1) ?? null, [noaaRadarManifest?.retrievedAt, noaaSatelliteManifest?.retrievedAt, officialPayloads]);
   const earthquakeArchiveFrames = useMemo(() => {
     const day = officialArchiveDays["usgs-earthquakes"];
     const payload = officialArchivePayloadsRef.current["usgs-earthquakes"];
@@ -1770,11 +1781,11 @@ export default function Home() {
       activeAtFrame: effectiveOfficialVisibility[source.id],
       state: officialStates[source.id],
       featureCount: payload?.featureCount,
-      retrievedAt: payload?.retrievedAt,
-      limitation: payload?.limitation,
+      retrievedAt: source.id === "noaa-goes-geocolor" ? noaaSatelliteManifest?.retrievedAt : payload?.retrievedAt,
+      limitation: source.id === "noaa-goes-geocolor" ? noaaSatelliteManifest?.limitation : payload?.limitation,
       temporalSupport: OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id],
     };
-  }), [effectiveOfficialVisibility, officialPayloads, officialStates, officialVisibility]);
+  }), [effectiveOfficialVisibility, noaaSatelliteManifest, officialPayloads, officialStates, officialVisibility]);
   const filteredOfficialContextConnections = useMemo(() => {
     const query = connectionQuery.trim().toLowerCase();
     return officialContextConnections.filter((connection) => {
@@ -2549,6 +2560,62 @@ export default function Home() {
     }
   }, [announce, applyNoaaRadarFrame]);
 
+  const selectNoaaSatelliteFrame = useCallback((frame: NoaaSatelliteFrame) => {
+    const manifest = noaaSatelliteManifestRef.current;
+    if (!manifest?.frames.some((candidate) => candidate.objectId === frame.objectId)) return;
+    noaaSatelliteFollowLatestRef.current = frame.objectId === manifest.frames.at(-1)?.objectId;
+    noaaSatelliteFrameRef.current = frame;
+    setNoaaSatelliteSelectedFrame(frame);
+    officialRasterFailuresRef.current.delete("noaa-goes-geocolor");
+    setOfficialStates((current) => ({ ...current, "noaa-goes-geocolor": "loading" }));
+    const map = mapRef.current;
+    if (map?.isStyleLoaded()) {
+      try {
+        setNoaaSatelliteFrame(map, frame.objectId,
+          officialVisibilityRef.current["noaa-goes-geocolor"] && temporalQueryRef.current.frame === OFFICIAL_CONTEXT_PRESENT_FRAME,
+          officialOpacityRef.current["noaa-goes-geocolor"]);
+      } catch (error) {
+        setOfficialStates((current) => ({ ...current, "noaa-goes-geocolor": "error" }));
+        setOfficialErrors((current) => ({ ...current, "noaa-goes-geocolor": error instanceof Error ? error.message : "NOAA image could not be selected." }));
+      }
+    }
+  }, []);
+
+  const refreshNoaaSatelliteFrames = useCallback(async (quiet = false) => {
+    if (noaaSatelliteRequestRef.current || temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) return;
+    const controller = new AbortController();
+    noaaSatelliteRequestRef.current = controller;
+    setOfficialStates((current) => ({ ...current, "noaa-goes-geocolor": "loading" }));
+    setOfficialErrors((current) => ({ ...current, "noaa-goes-geocolor": undefined }));
+    try {
+      const response = await fetch(NOAA_SATELLITE_FRAMES_PATH, { cache: "no-store", signal: controller.signal, headers: { Accept: "application/json" } });
+      const candidate = await readBoundedJson(response, 512 * 1024) as unknown;
+      if (!response.ok || !isNoaaSatelliteManifest(candidate)) throw new Error("NOAA did not provide a valid dated GeoColor frame list.");
+      noaaSatelliteManifestRef.current = candidate;
+      setNoaaSatelliteManifest(candidate);
+      const prior = noaaSatelliteFrameRef.current;
+      const selectedFrame = noaaSatelliteFollowLatestRef.current
+        ? candidate.frames.at(-1)!
+        : candidate.frames.find((frame) => frame.objectId === prior?.objectId) ?? candidate.frames.at(-1)!;
+      selectNoaaSatelliteFrame(selectedFrame);
+      if (!quiet) announce(`${candidate.frameCount} dated NOAA GeoColor images checked; newest ${drawerTimestamp(candidate.frames.at(-1)!.observedAt)}`);
+    } catch (error) {
+      if (controller.signal.aborted) return;
+      const message = error instanceof Error ? error.message : "NOAA satellite frames are unavailable.";
+      noaaSatelliteManifestRef.current = null;
+      noaaSatelliteFrameRef.current = null;
+      setNoaaSatelliteManifest(null);
+      setNoaaSatelliteSelectedFrame(null);
+      const map = mapRef.current;
+      if (map?.isStyleLoaded()) clearNoaaSatelliteFrame(map);
+      setOfficialStates((current) => ({ ...current, "noaa-goes-geocolor": "error" }));
+      setOfficialErrors((current) => ({ ...current, "noaa-goes-geocolor": message }));
+      if (!quiet) announce("NOAA GeoColor unavailable; no undated satellite image was substituted");
+    } finally {
+      if (noaaSatelliteRequestRef.current === controller) noaaSatelliteRequestRef.current = null;
+    }
+  }, [announce, selectNoaaSatelliteFrame]);
+
   const stepNoaaRadar = useCallback((direction: "forward" | "reverse") => {
     if (!noaaRadarManifestFresh || noaaRadarLoopFrames.length < 2) return;
     const currentIndex = Math.max(0, noaaRadarFrameIndex);
@@ -2980,6 +3047,7 @@ export default function Home() {
     if (id === "usgs-streamflow") { void refreshStreamflow(streamflowRange, streamflowSelectedStationId); return; }
     if (id === "noaa-nwps-gauges") { void refreshNoaaHydrologyNetwork(); return; }
     if (id === "nws-radar") { void refreshNoaaRadarManifest(); return; }
+    if (id === "noaa-goes-geocolor") { void refreshNoaaSatelliteFrames(); return; }
     const map = mapRef.current;
     if (!map || !styleGenerationReadyRef.current) return;
     officialRasterFailuresRef.current.delete(id);
@@ -3024,24 +3092,27 @@ export default function Home() {
   const refreshVisibleOfficialContext = useCallback(() => {
     const feeds = OFFICIAL_CONTEXT_SOURCES.filter((source) => source.apiPath && officialVisibilityRef.current[source.id]);
     const radarSelected = officialVisibilityRef.current["nws-radar"];
+    const satelliteSelected = officialVisibilityRef.current["noaa-goes-geocolor"];
+    const satelliteRefreshable = satelliteSelected && temporalQueryRef.current.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
     const radarRefreshable = radarSelected && temporalQueryRef.current.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
     const streamflowRefreshable = officialVisibilityRef.current["usgs-streamflow"] && temporalQueryRef.current.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
     const noaaHydrologyRefreshable = officialVisibilityRef.current["noaa-nwps-gauges"] && temporalQueryRef.current.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
-    if (feeds.length === 0 && !radarSelected && !streamflowRefreshable && !noaaHydrologyRefreshable) {
+    if (feeds.length === 0 && !radarSelected && !satelliteSelected && !streamflowRefreshable && !noaaHydrologyRefreshable) {
       announce("Turn on an official data layer before refreshing");
       return;
     }
     feeds.forEach((source) => { void refreshOfficialContext(source.id as OfficialContextFeedId); });
     if (radarRefreshable) void refreshNoaaRadarManifest(true);
+    if (satelliteRefreshable) void refreshNoaaSatelliteFrames(true);
     if (streamflowRefreshable && !streamflowArchiveDayRef.current) void refreshStreamflow(streamflowRange, streamflowSelectedStationId, true);
     if (noaaHydrologyRefreshable) void refreshNoaaHydrologyNetwork(true);
-    const connectionCount = feeds.length + (radarRefreshable ? 1 : 0) + (streamflowRefreshable ? 1 : 0) + (noaaHydrologyRefreshable ? 1 : 0);
+    const connectionCount = feeds.length + (radarRefreshable ? 1 : 0) + (satelliteRefreshable ? 1 : 0) + (streamflowRefreshable ? 1 : 0) + (noaaHydrologyRefreshable ? 1 : 0);
     if (connectionCount === 0) {
       announce("NOAA radar remains held outside Present; no visible official connection was refreshed");
       return;
     }
     announce(`Refreshing ${connectionCount} visible official connection${connectionCount === 1 ? "" : "s"}`);
-  }, [announce, refreshNoaaHydrologyNetwork, refreshNoaaRadarManifest, refreshOfficialContext, refreshStreamflow, streamflowRange, streamflowSelectedStationId]);
+  }, [announce, refreshNoaaHydrologyNetwork, refreshNoaaRadarManifest, refreshNoaaSatelliteFrames, refreshOfficialContext, refreshStreamflow, streamflowRange, streamflowSelectedStationId]);
 
   const hideAllOfficialContext = useCallback(() => {
     const next = Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, false])) as Record<OfficialContextId, boolean>;
@@ -4182,6 +4253,9 @@ export default function Home() {
             setElevationExaggeration(map, verticalExaggerationRef.current);
             styleStep = "PROJECTION";
             map.setProjection({ type: projectionRef.current });
+            if (noaaSatelliteFrameRef.current) setNoaaSatelliteFrame(map, noaaSatelliteFrameRef.current.objectId,
+              officialVisibilityRef.current["noaa-goes-geocolor"] && temporalQueryRef.current.frame === OFFICIAL_CONTEXT_PRESENT_FRAME,
+              officialOpacityRef.current["noaa-goes-geocolor"]);
             styleStep = "SCENE_ENVIRONMENT";
             applySceneEnvironment(map, atmospherePresetRef.current, lightAzimuthRef.current);
             styleStep = "FIELD_OF_VIEW";
@@ -4553,7 +4627,8 @@ export default function Home() {
           if (!event.sourceId) return;
           const officialSource = OFFICIAL_CONTEXT_BY_SOURCE_ID[event.sourceId];
           if (officialSource && officialSource.id !== "nws-radar" && !officialSource.apiPath && !officialSource.managedAdapterPath && event.isSourceLoaded && !officialRasterFailuresRef.current.has(officialSource.id)) {
-            setOfficialStates(current => current[officialSource.id] === "ready" ? current : ({ ...current, [officialSource.id]: "ready" }));
+            const nextState = officialSource.id === "noaa-goes-geocolor" && (noaaSatelliteManifestRef.current?.partial || noaaSatelliteManifestRef.current?.freshness === "delayed") ? "partial" : "ready";
+            setOfficialStates(current => current[officialSource.id] === nextState ? current : ({ ...current, [officialSource.id]: nextState }));
           }
           const layer = LAYER_REGISTRY.find((candidate) => candidate.sourceId === event.sourceId);
           if (!layer) return;
@@ -4813,6 +4888,13 @@ export default function Home() {
     const timer = window.setInterval(() => { void refreshNoaaRadarManifest(true); }, 240_000);
     return () => window.clearInterval(timer);
   }, [noaaRadarSelectedAtPresent, refreshNoaaRadarManifest, runMapMutation]);
+
+  useEffect(() => {
+    if (!officialVisibility["noaa-goes-geocolor"] || temporalQuery.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) return;
+    void refreshNoaaSatelliteFrames(true);
+    const timer = window.setInterval(() => { void refreshNoaaSatelliteFrames(true); }, 300_000);
+    return () => window.clearInterval(timer);
+  }, [officialVisibility, refreshNoaaSatelliteFrames, temporalQuery.frame]);
 
   useEffect(() => {
     if (!noaaRadarSelectedAtPresent || noaaRadarPendingFrameTime || noaaRadarFrameLoadState === "error" || noaaRadarLoopFrames.length === 0 || noaaRadarFrameIndex >= 0) return;
@@ -7254,7 +7336,7 @@ export default function Home() {
                 <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.shortTitle}</strong><small>{source.organization}{heldAtFrame ? ` · held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : needsCloserView ? ` · view at zoom ${TERRAIN_DISPLAY_MIN_ZOOM}+` : source.id === "census-counties" && officialVisibility[source.id] && state === "ready" ? " · select a county for its 2020 population" : ""}</small></div><b>{!officialVisibility[source.id] ? "OFF" : heldAtFrame ? "HELD" : needsCloserView ? "ZOOM IN" : state.toUpperCase()}</b></div>
                 <label className="opacity-control"><span>Opacity <b>{Math.round(officialOpacity[source.id] * 100)}%</b></span><input aria-label={`${source.shortTitle} opacity`} type="range" min="0" max="100" value={Math.round(officialOpacity[source.id] * 100)} onChange={(event) => setOfficialContextOpacity(source.id, Number(event.target.value) / 100)} /></label>
                 <section className="source-time-control" aria-label={`${source.shortTitle} time controls`}>
-                  <header><span>TIME · {source.id === "usgs-streamflow" || source.id === "nws-radar" ? "EXACT SOURCE FRAMES" : source.id === "census-counties" ? "2020 EDITION" : "SOURCE CLOCK"}</span><strong>{source.id === "usgs-streamflow" && streamflowArchiveDay ? `${streamflowArchiveDay} UTC` : officialArchiveDays[source.id as OfficialContextFeedId] ? `${officialArchiveDays[source.id as OfficialContextFeedId]} UTC` : source.id === "nws-radar" ? "RECENT LOOP" : "CURRENT / PINNED"}</strong></header>
+                  <header><span>TIME · {source.id === "usgs-streamflow" || source.id === "nws-radar" || source.id === "noaa-goes-geocolor" ? "EXACT SOURCE FRAMES" : source.id === "census-counties" ? "2020 EDITION" : "SOURCE CLOCK"}</span><strong>{source.id === "usgs-streamflow" && streamflowArchiveDay ? `${streamflowArchiveDay} UTC` : officialArchiveDays[source.id as OfficialContextFeedId] ? `${officialArchiveDays[source.id as OfficialContextFeedId]} UTC` : source.id === "nws-radar" ? "RECENT LOOP" : source.id === "noaa-goes-geocolor" ? "ROLLING 24 HOURS" : "CURRENT / PINNED"}</strong></header>
                   {source.id === "usgs-streamflow" ? <>
                     <p>{streamflowArchiveDay ? "Selected UTC day · every returned observation time" : "Loaded River Pulse window · bounded sample of exact times. Station points may use a prior sample within the declared 30-minute tolerance."}{streamflowBundle ? ` · ${streamflowBundle.observations.length.toLocaleString("en-US")} observations${streamflowBundle.truncated ? " · PARTIAL / TRUNCATED" : ""}` : streamflowState === "loading" ? " · checking source" : " · no loaded frame"}</p>
                     <input type="range" min="0" max={Math.max(0, streamflowFrames.length - 1)} value={Math.max(0, safeStreamflowFrameIndex)} disabled={streamflowFrames.length < 2 || streamflowState === "loading" || !officialVisibility[source.id] || heldAtFrame} onChange={(event) => seekStreamflow(Number(event.target.value))} aria-label="River Pulse exact observation time" aria-valuetext={streamflowFrameTime ? `${streamflowFrameTime} UTC observation cursor` : "No confirmed observation"} />
@@ -7263,6 +7345,12 @@ export default function Home() {
                     <small>{streamflowCoverage?.continuous ? `Station continuous record: ${streamflowCoverage.continuous.start.slice(0, 10)} → ${streamflowCoverage.continuous.end.slice(0, 10)} UTC${streamflowCoverage.partial ? " · partial metadata" : ""}. Gaps may occur within this span.${streamflowCoverage.daily ? ` Daily means start ${streamflowCoverage.daily.start.slice(0, 10)}; inspect that older resolution in Observatory.` : ""}` : streamflowCoverage?.daily ? `No continuous span declared in this response. Daily mean record starts ${streamflowCoverage.daily.start.slice(0, 10)}; daily values are not intraday frames.` : streamflowCoverageMessage}</small>
                     <div className="source-time-actions"><label>Station<select value={streamflowSelectedStationId ?? ""} onChange={(event) => selectStreamflowStation(event.target.value || null)}><option value="">Choose a loaded station</option>{streamflowSelectedStationId && !(streamflowBundle?.stations ?? []).some((station) => station.stationId === streamflowSelectedStationId) && <option value={streamflowSelectedStationId}>{streamflowSelectedStationId} · selected</option>}{(streamflowBundle?.stations ?? []).map((station) => <option key={station.stationId} value={station.stationId}>{station.name} · {station.stationId}</option>)}</select></label><label>Older UTC day<input type="date" value={streamflowArchiveDraftDay} min={riverArchiveMinDay} max={riverArchiveMaxDay ?? currentUtcDay()} onChange={(event) => setStreamflowArchiveDraftDay(event.target.value)} /></label><button type="button" disabled={!streamflowSelectedStationId || !streamflowArchiveDraftDay || streamflowState === "loading" || heldAtFrame} onClick={loadStreamflowArchiveDay}>Check day on map</button>{streamflowArchiveDay && <button type="button" onClick={() => void refreshStreamflow("24h", null)}>Recent network</button>}<Link href={`/observatory?start=${encodeURIComponent(`${streamflowArchiveDraftDay || streamflowArchiveDay || currentUtcDay()}T00:00`)}&hours=24&layers=river,counties${streamflowSelectedStationId ? `&station=${encodeURIComponent(streamflowSelectedStationId)}` : ""}`}>Full station archive ↗</Link></div>
                     {riverArchiveMinDay && riverArchiveMaxDay && <ArchiveDaySlider sourceLabel="River Pulse" minDay={riverArchiveMinDay} maxDay={riverArchiveMaxDay} day={streamflowArchiveDraftDay} onSelect={setStreamflowArchiveDraftDay} nextAction="Check day on map" />}
+                  </> : source.id === "noaa-goes-geocolor" ? <>
+                    <p>{noaaSatelliteManifest ? `${noaaSatelliteManifest.frameCount} dated GOES GeoColor images · latest ${drawerTimestamp(noaaSatelliteManifest.frames.at(-1)!.observedAt)}${noaaSatelliteManifest.freshness === "delayed" ? " · DELAYED" : ""}${noaaSatelliteManifest.partial ? " · PARTIAL CATALOG" : ""}` : state === "loading" ? "Checking NOAA image times…" : "No dated NOAA image catalog loaded."}</p>
+                    <input type="range" min="0" max={Math.max(0, (noaaSatelliteManifest?.frameCount ?? 0) - 1)} value={Math.max(0, noaaSatelliteManifest?.frames.findIndex((frame) => frame.objectId === noaaSatelliteFrame?.objectId) ?? 0)} disabled={!noaaSatelliteManifest || noaaSatelliteManifest.frameCount < 2 || state === "loading" || !officialVisibility[source.id] || heldAtFrame} onChange={(event) => { const frame = noaaSatelliteManifest?.frames[Number(event.target.value)]; if (frame) selectNoaaSatelliteFrame(frame); }} aria-label="NOAA GeoColor exact image frame" aria-valuetext={noaaSatelliteFrame ? `${noaaSatelliteFrame.observedAt} image start` : "No dated image selected"} />
+                    <output>{noaaSatelliteFrame ? `Selected image: ${drawerTimestamp(noaaSatelliteFrame.observedAt)} → ${drawerTimestamp(noaaSatelliteFrame.validThrough)} · raster ${noaaSatelliteFrame.objectId} · ${state.toUpperCase()}` : "No image selected"}</output>
+                    <small>{noaaSatelliteManifest ? `Catalog checked ${drawerTimestamp(noaaSatelliteManifest.retrievedAt)}. Source time describes the selected image; older selected frames are not live. This is visual cloud context, not a fire or smoke finding.` : "A dated source image is required before any tile is shown. NOAA imagery is informational."}</small>
+                    <div className="source-time-actions"><button type="button" disabled={!noaaSatelliteManifest || state === "loading"} onClick={() => { const latest = noaaSatelliteManifest?.frames.at(-1); if (latest) selectNoaaSatelliteFrame(latest); }}>Newest image</button><button type="button" disabled={state === "loading" || heldAtFrame} onClick={() => void refreshNoaaSatelliteFrames()}>Refresh frames</button><a href="https://www.nesdis.noaa.gov/imagery/satellite-maps/earth-real-time" target="_blank" rel="noreferrer">NOAA Earth in Real-Time ↗</a><a href="https://satellitemaps.nesdis.noaa.gov/arcgis/rest/services/MERGEDGC_Last_24hr/ImageServer" target="_blank" rel="noreferrer">Image catalog ↗</a></div>
                   </> : source.id === "nws-radar" ? <>
                     <p>{noaaRadarManifest ? `${noaaRadarLoopFrames.length} exact scans in the selected ${noaaRadarLoopSpan}-minute loop · ${noaaRadarManifest.gapCount} detected gaps` : noaaRadarManifestState === "loading" ? "Checking NOAA frames" : "No verified radar manifest loaded"}</p>
                     <input type="range" min="0" max={Math.max(0, noaaRadarLoopFrames.length - 1)} value={Math.max(0, noaaRadarFrameIndex)} disabled={!noaaRadarRenderable || noaaRadarLoopFrames.length < 2 || noaaRadarFrameLoadState === "loading" || !officialVisibility[source.id] || heldAtFrame} onChange={(event) => { const index = Number(event.target.value); const frame = noaaRadarLoopFrames[index]; if (!frame) return; setNoaaRadarPlaying(false); setNoaaRadarFollowLatest(index === noaaRadarLoopFrames.length - 1); applyNoaaRadarFrame(frame); }} aria-label="NOAA radar exact scan time" aria-valuetext={noaaRadarActiveFrame ?? "No confirmed radar scan"} />

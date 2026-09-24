@@ -120,6 +120,13 @@ export const SITE_ROUTE_CONTRACTS = Object.freeze([
     trustBoundary: "Unknown feeds and arbitrary upstream URLs are rejected; response failures remain explicit.",
   },
   {
+    id: "noaa-satellite-frames-route",
+    route: "/api/noaa-satellite/frames",
+    owner: "app/api/noaa-satellite/frames/route.ts",
+    purpose: "Bounded dated frame catalog for NOAA GOES GeoColor display imagery.",
+    trustBoundary: "One fixed NOAA ImageServer query, bounded response and frame count, source timestamps, explicit stale and error states; no evidence admission.",
+  },
+  {
     id: "hydrology-routes",
     route: "/api/hydrology/*",
     owner: "app/api/hydrology/",

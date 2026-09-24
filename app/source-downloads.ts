@@ -14,6 +14,7 @@ export const SOURCE_DOWNLOADS: Record<OfficialContextId, { href: string; label: 
   "noaa-nwm-short-range": { href: "https://nomads.ncep.noaa.gov/pub/data/nccf/com/nwm/prod/", label: "Download National Water Model files" },
   "usgs-earthquakes": { href: "/api/source-download?source=usgs-earthquakes", label: "Download catalog records · GeoJSON" },
   "noaa-hms-smoke": { href: "https://satepsanone.nesdis.noaa.gov/pub/FIRE/web/HMS/Smoke_Polygons/KML/", label: "Download dated NOAA smoke · KML" },
+  "noaa-goes-geocolor": { href: "https://satellitemaps.nesdis.noaa.gov/arcgis/rest/services/MERGEDGC_Last_24hr/ImageServer", label: "NOAA dated GeoColor image catalog" },
   "raspberry-shake-stations": { href: "/api/source-download?source=raspberry-shake-stations", label: "Download station metadata · GeoJSON" },
   "usgs-3dep-hillshade": { href: nationalMap, label: "Download source elevation data" },
   "usgs-3dep-slope": { href: nationalMap, label: "Download source elevation data" },
