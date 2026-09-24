@@ -4182,3 +4182,29 @@ body { font-size: 14px; }
   .timeline-frame-picker { gap: 0; font-size: 0; }
   .timeline-frame-picker select { max-width: 66px; }
 }
+
+.road-year-study { display: grid; gap: 11px; margin: 12px 0 18px; padding: 14px; border: 1px solid rgba(115,199,210,.35); border-radius: 12px; background: rgba(115,199,210,.045); }
+.road-year-study header { display: flex; align-items: start; justify-content: space-between; gap: 10px; }
+.road-year-study header span { color: var(--water); font-size: 10px; font-weight: 900; letter-spacing: .1em; }
+.road-year-study header h4 { margin: 4px 0 0; color: var(--ink); font-size: 17px; }
+.road-year-study header > strong { color: var(--gold); white-space: nowrap; }
+.road-year-study p, .road-year-study footer, .road-year-study > small { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.road-year-study a { color: var(--water); }
+.road-study-import { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.4fr); gap: 9px; }
+.road-study-import label { display: grid; gap: 5px; min-width: 0; color: var(--muted); font-size: 12px; font-weight: 800; }
+.road-study-import select, .road-study-import input { width: 100%; min-width: 0; min-height: 36px; border: 1px solid var(--line-strong); border-radius: 7px; background: #0a2227; color: var(--ink); padding: 5px; font: inherit; }
+.road-study-error { border-left: 3px solid var(--red); padding: 6px 9px; background: rgba(189,93,85,.08); }
+.road-study-layers { display: grid; gap: 7px; }
+.road-study-layers article { display: grid; grid-template-columns: minmax(0,1.2fr) auto minmax(85px,1fr) auto auto; align-items: center; gap: 8px; padding: 9px; border: 1px solid var(--line); border-radius: 8px; }
+.road-study-layers article > div { display: grid; gap: 2px; min-width: 0; }
+.road-study-layers article strong { color: var(--ink); }
+.road-study-layers article small { overflow-wrap: anywhere; color: var(--dim); }
+.road-study-layers label { display: grid; gap: 3px; color: var(--muted); font-size: 11px; }
+.road-study-color input { width: 39px; height: 30px; border: 1px solid var(--line); background: transparent; }
+.road-study-opacity input { width: 100%; }
+.road-study-layers button { min-height: 32px; border: 1px solid var(--line-strong); border-radius: 7px; background: rgba(255,255,255,.03); color: var(--ink); padding: 0 8px; font-size: 11px; font-weight: 800; }
+@media (max-width: 760px) {
+  .road-study-import { grid-template-columns: 1fr; }
+  .road-study-layers article { grid-template-columns: minmax(0,1fr) auto auto; }
+  .road-study-layers article > div, .road-study-opacity { grid-column: 1 / -1; }
+}
