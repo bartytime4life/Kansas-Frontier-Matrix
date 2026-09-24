@@ -842,6 +842,8 @@ input[type="range"] { accent-color: var(--gold); }
 .wind-flow-dock button, .wind-flow-dock a { min-height: 31px; border: 1px solid rgba(130,220,224,.35); border-radius: 8px; background: rgba(130,220,224,.08); color: #c7f6f7; padding: 5px 8px; font-size: 12px; text-decoration: none; }
 .wind-flow-dock button:hover, .wind-flow-dock a:hover, .wind-flow-dock button:focus-visible, .wind-flow-dock a:focus-visible { border-color: #8ce2e7; outline: 2px solid #8ce2e7; outline-offset: 2px; }
 .wind-flow-dock button:disabled { opacity: .5; cursor: not-allowed; }
+.wind-flow-levels { display: flex; flex-wrap: wrap; gap: 7px; }
+.wind-flow-levels button[aria-pressed="true"] { border-color: #8ce2e7; background: rgba(140,226,231,.22); color: #fff; }
 .wind-flow-controls input { min-width: 40px; flex: 1; accent-color: #8ce2e7; }
 .wind-flow-controls span { color: #b3d9dc; font-size: 12px; }
 .wind-flow-scale { display: flex; align-items: center; gap: 7px; color: var(--dim); font-size: 11px; }

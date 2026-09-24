@@ -5,17 +5,23 @@ source downloads, and private data contribution and steward review workflows.
 
 ## Optional Kansas wind field
 
-The map's **Wind flow** control opens an opt-in, Earth-inspired animated display
-with explicit forecast hours, playback, a source link, and a link to
-[earth.nullschool.net](https://earth.nullschool.net/). It requests nine fixed
-Kansas 10 m wind speed/direction forecast samples through a bounded Open-Meteo
-adapter. Streamlines between those points are visual interpolation, not measured
-trajectories. Animation starts only on request; reduced-motion users see still
-arrows and can step through hours. A failed or incomplete response draws no
-replacement vectors. This is third-party model display context, not an official
-observation, warning, admitted KFM source, EvidenceBundle, or release. The
-existing NOAA radar, river telemetry, timelines, evidence drawer, and source
-states remain independent.
+The map's **Wind flow** control opens an opt-in animated display with explicit
+forecast hours, playback, model and retrieval labels, and source links. The
+existing 10 m above-ground view remains the default. A selectable 1000 hPa view
+matches the pressure level in the [Earth Nullschool wind reference](https://earth.nullschool.net/#current/wind/isobaric/1000hPa/winkel3).
+Both views request nine fixed Kansas forecast samples through a bounded
+Open-Meteo adapter; the 1000 hPa request explicitly selects [NCEP GFS
+Seamless](https://open-meteo.com/en/docs/gfs-api), the same underlying model
+family Nullschool identifies for weather. These are independent data deliveries
+and may have different model cycles, processing, and valid frames. A 1000 hPa
+pressure surface can lie below Kansas terrain, so that view must not be read as
+near-surface conditions. Streamlines between samples are visual interpolation,
+not measured trajectories. Animation starts only on request; reduced-motion
+users see still arrows and can step through hours. A failed or incomplete
+response draws no replacement vectors. This is third-party model display
+context, not an official observation, warning, admitted KFM source,
+EvidenceBundle, or release. The existing NOAA radar, river telemetry,
+timelines, evidence drawer, and source states remain independent.
 
 ## Embedded shell recovery and data path — September 15, 2026
 

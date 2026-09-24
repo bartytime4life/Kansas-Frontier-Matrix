@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Map as MapLibreMap } from "maplibre-gl";
 import { readBoundedJson } from "./bounded-json";
-import { interpolateWind, isWindField, WIND_API_PATH, WIND_REFERENCE_URL, WIND_SOURCE_URL, windVector, type WindField, type WindFrame } from "./wind-field";
+import { interpolateWind, isWindField, WIND_API_PATH, WIND_GFS_SOURCE_URL, WIND_REFERENCE_URL, WIND_SOURCE_URL, windVector, type WindField, type WindFrame, type WindLevel } from "./wind-field";
 
 type Particle = { longitude: number; latitude: number; age: number };
 const LIMITS = { west: -101.8, east: -95, south: 37.3, north: 39.8 };
@@ -84,6 +84,7 @@ function WindCanvas({ map, frame, playing }: { map: MapLibreMap | null; frame: W
 }
 
 export function WindFlow({ map, reducedMotion, onClose }: { map: MapLibreMap | null; reducedMotion: boolean; onClose: () => void }) {
+  const [level, setLevel] = useState<WindLevel>("10m");
   const [field, setField] = useState<WindField | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -93,17 +94,17 @@ export function WindFlow({ map, reducedMotion, onClose }: { map: MapLibreMap | n
   const load = useCallback(async () => {
     requestRef.current?.abort();
     const controller = new AbortController(); requestRef.current = controller;
-    setLoading(true); setError(""); setPlaying(false);
+    setLoading(true); setError(""); setPlaying(false); setField(null);
     try {
-      const response = await fetch(WIND_API_PATH, { signal: controller.signal, cache: "no-store" });
+      const response = await fetch(`${WIND_API_PATH}?level=${level}`, { signal: controller.signal, cache: "no-store" });
       if (!response.ok) throw new Error("Wind forecast is unavailable.");
       const value = await readBoundedJson(response, 96 * 1024);
-      if (!isWindField(value)) throw new Error("Wind forecast response was incomplete.");
+      if (!isWindField(value) || value.level !== level) throw new Error("Wind forecast response was incomplete.");
       setField(value); setFrameIndex(0);
     } catch (cause) {
       if (!controller.signal.aborted) { setField(null); setError(cause instanceof Error ? cause.message : "Wind forecast is unavailable."); }
     } finally { if (!controller.signal.aborted) setLoading(false); }
-  }, []);
+  }, [level]);
   useEffect(() => { void load(); return () => requestRef.current?.abort(); }, [load]);
   useEffect(() => { if (reducedMotion) setPlaying(false); }, [reducedMotion]);
   useEffect(() => {
@@ -111,23 +112,28 @@ export function WindFlow({ map, reducedMotion, onClose }: { map: MapLibreMap | n
     const timer = window.setInterval(() => setFrameIndex((current) => (current + 1) % field.frames.length), 1350);
     return () => window.clearInterval(timer);
   }, [playing, field, reducedMotion]);
-  const frame = field?.frames[Math.min(frameIndex, field.frames.length - 1)];
+  const activeField = field?.level === level ? field : null;
+  const frame = activeField?.frames[Math.min(frameIndex, activeField.frames.length - 1)];
   return <>
     {frame && <WindCanvas map={map} frame={frame} playing={playing && !reducedMotion} />}
     <aside className="wind-flow-dock" aria-label="Kansas modeled wind display">
       <header><span>WIND FIELD · EXTERNAL MODEL</span><button type="button" onClick={onClose} aria-label="Close wind field">×</button></header>
       <h2>Follow the Kansas wind</h2>
-      <p>{loading ? "Loading model samples…" : frame ? `${new Date(frame.validAt).toLocaleString()} · 10 m above ground · forecast` : "No wind field displayed"}</p>
+      <div className="wind-flow-levels" role="group" aria-label="Wind model level">
+        <button type="button" aria-pressed={level === "10m"} onClick={() => setLevel("10m")}>10 m above ground</button>
+        <button type="button" aria-pressed={level === "1000hPa"} onClick={() => setLevel("1000hPa")}>1000 hPa · GFS</button>
+      </div>
+      <p>{loading ? "Loading model samples…" : frame ? `${frame.validAt.replace("T", " ").replace(":00.000Z", " UTC")} · ${level === "1000hPa" ? "1000 hPa pressure level" : "10 m above ground"} · forecast` : "No wind field displayed"}</p>
       {frame && <div className="wind-flow-controls">
         <button type="button" onClick={() => setPlaying((value) => !value)} disabled={reducedMotion} aria-pressed={playing}>{playing ? "Ⅱ Pause" : "▶ Animate"}</button>
         <button type="button" onClick={() => { setPlaying(false); setFrameIndex((current) => Math.max(0, current - 1)); }} disabled={frameIndex === 0} aria-label="Previous forecast hour">‹</button>
-        <input type="range" min="0" max={field!.frames.length - 1} value={frameIndex} onChange={(event) => { setPlaying(false); setFrameIndex(Number(event.target.value)); }} aria-label="Wind forecast hour" aria-valuetext={frame.validAt} />
-        <button type="button" onClick={() => { setPlaying(false); setFrameIndex((current) => Math.min(field!.frames.length - 1, current + 1)); }} disabled={frameIndex === field!.frames.length - 1} aria-label="Next forecast hour">›</button>
-        <span>{frameIndex + 1}/{field!.frames.length}</span>
+        <input type="range" min="0" max={activeField!.frames.length - 1} value={frameIndex} onChange={(event) => { setPlaying(false); setFrameIndex(Number(event.target.value)); }} aria-label="Wind forecast hour" aria-valuetext={frame.validAt} />
+        <button type="button" onClick={() => { setPlaying(false); setFrameIndex((current) => Math.min(activeField!.frames.length - 1, current + 1)); }} disabled={frameIndex === activeField!.frames.length - 1} aria-label="Next forecast hour">›</button>
+        <span>{frameIndex + 1}/{activeField!.frames.length}</span>
       </div>}
-      {frame && <div className="wind-flow-scale" aria-label="Wind speed color guide"><i /> <span>Slower</span><b>10 m wind speed · km/h</b><span>Faster</span></div>}
+      {frame && <div className="wind-flow-scale" aria-label="Wind speed color guide"><i /> <span>Slower</span><b>{level === "1000hPa" ? "1000 hPa" : "10 m"} wind speed · km/h</b><span>Faster</span></div>}
       {error && <p role="alert">{error} No wind animation is shown.</p>}
-      <footer><span>{field ? `Retrieved ${new Date(field.retrievedAt).toLocaleString()}. ` : ""}{reducedMotion ? "Reduced motion: still arrows only. " : ""}Nine model samples; intervening paths are visual interpolation. Not observations, warnings, or KFM evidence.</span><a href={WIND_SOURCE_URL} target="_blank" rel="noreferrer">Forecast source ↗</a><a href={WIND_REFERENCE_URL} target="_blank" rel="noreferrer">Explore Earth ↗</a><button type="button" onClick={() => void load()} disabled={loading}>Refresh</button></footer>
+      <footer><span>{activeField ? `${activeField.model} via Open-Meteo · retrieved ${activeField.retrievedAt}. ` : ""}{reducedMotion ? "Reduced motion: still arrows only. " : ""}{activeField?.method ?? (level === "1000hPa" ? "1000 hPa may be below local terrain. Forecast context only; not near-surface observations or KFM evidence." : "Forecast context only; not observations or KFM evidence.")}</span><a href={level === "1000hPa" ? WIND_GFS_SOURCE_URL : WIND_SOURCE_URL} target="_blank" rel="noreferrer">Data and model ↗</a><a href={WIND_REFERENCE_URL} target="_blank" rel="noreferrer">Compare with Earth ↗</a><button type="button" onClick={() => void load()} disabled={loading}>Refresh</button></footer>
     </aside>
   </>;
 }

@@ -6,14 +6,27 @@ export const WIND_GRID = Object.freeze([
 ] as const);
 
 export const WIND_SOURCE_URL = "https://open-meteo.com/en/docs";
-export const WIND_REFERENCE_URL = "https://earth.nullschool.net/";
+export const WIND_GFS_SOURCE_URL = "https://open-meteo.com/en/docs/gfs-api";
+export const WIND_REFERENCE_URL = "https://earth.nullschool.net/#current/wind/isobaric/1000hPa/winkel3";
 export const WIND_API_PATH = "/api/weather/wind";
+export type WindLevel = "10m" | "1000hPa";
+
+const windVariables = (level: WindLevel) => level === "1000hPa"
+  ? { speed: "wind_speed_1000hPa", direction: "wind_direction_1000hPa" } as const
+  : { speed: "wind_speed_10m", direction: "wind_direction_10m" } as const;
+
+export function windRequest(level: WindLevel): Readonly<{ variables: string; model: string | null }> {
+  const fields = windVariables(level);
+  return { variables: `${fields.speed},${fields.direction}`, model: level === "1000hPa" ? "ncep_gfs_seamless" : null };
+}
 
 export type WindSample = Readonly<{ longitude: number; latitude: number; speedKmh: number; fromDegrees: number }>;
 export type WindFrame = Readonly<{ validAt: string; samples: readonly WindSample[] }>;
 export type WindField = Readonly<{
   source: "Open-Meteo forecast API";
   role: "EXTERNAL_MODEL_DISPLAY_ONLY";
+  level: WindLevel;
+  model: "Best match forecast" | "NCEP GFS Seamless";
   retrievedAt: string;
   frames: readonly WindFrame[];
   method: string;
@@ -27,21 +40,23 @@ const date = (value: unknown): string | null => {
   return Number.isFinite(ms) ? new Date(ms).toISOString() : null;
 };
 
-export function parseWindForecast(payload: unknown, retrievedAt: string): WindField {
+export function parseWindForecast(payload: unknown, retrievedAt: string, level: WindLevel = "10m"): WindField {
+  if (level !== "10m" && level !== "1000hPa") throw new Error("Wind level is unsupported.");
   if (!Array.isArray(payload) || payload.length !== WIND_GRID.length || !Number.isFinite(Date.parse(retrievedAt))) {
     throw new Error("Wind forecast grid is incomplete.");
   }
+  const variables = windVariables(level);
   let times: string[] | null = null;
   const locations = payload.map((entry, index) => {
     if (!record(entry) || !record(entry.hourly) || !record(entry.hourly_units)) throw new Error("Wind forecast location is invalid.");
     const [longitude, latitude] = WIND_GRID[index];
     if (typeof entry.longitude !== "number" || typeof entry.latitude !== "number"
       || Math.abs(entry.longitude - longitude) > 0.35 || Math.abs(entry.latitude - latitude) > 0.35
-      || entry.utc_offset_seconds !== 0 || entry.hourly_units.wind_speed_10m !== "km/h"
-      || entry.hourly_units.wind_direction_10m !== "°") throw new Error("Wind forecast location or units changed.");
+      || entry.utc_offset_seconds !== 0 || entry.hourly_units[variables.speed] !== "km/h"
+      || entry.hourly_units[variables.direction] !== "°") throw new Error("Wind forecast location or units changed.");
     const hourly = entry.hourly;
-    const values = hourly.wind_speed_10m;
-    const directions = hourly.wind_direction_10m;
+    const values = hourly[variables.speed];
+    const directions = hourly[variables.direction];
     if (!Array.isArray(hourly.time) || !Array.isArray(values) || !Array.isArray(directions)
       || hourly.time.length < 2 || hourly.time.length > 8 || values.length !== hourly.time.length
       || directions.length !== hourly.time.length) throw new Error("Wind forecast series is incomplete.");
@@ -67,18 +82,27 @@ export function parseWindForecast(payload: unknown, retrievedAt: string): WindFi
   return Object.freeze({
     source: "Open-Meteo forecast API",
     role: "EXTERNAL_MODEL_DISPLAY_ONLY",
+    level,
+    model: level === "1000hPa" ? "NCEP GFS Seamless" : "Best match forecast",
     retrievedAt: new Date(retrievedAt).toISOString(),
     frames: Object.freeze(frames),
-    method: "Nine forecast grid samples; visual streamlines are bilinearly interpolated between samples. They are illustrative model display, not measured wind or a KFM EvidenceBundle.",
+    method: level === "1000hPa"
+      ? "Nine NCEP GFS Seamless pressure-level forecast samples served by Open-Meteo. The 1000 hPa surface may be below Kansas terrain. Streamlines are bilinear visual interpolation, not observed wind, an exact Nullschool frame, or a KFM EvidenceBundle."
+      : "Nine forecast grid samples; visual streamlines are bilinearly interpolated between samples. They are illustrative model display, not measured wind or a KFM EvidenceBundle.",
   });
 }
 
 export function isWindField(value: unknown): value is WindField {
-  if (!record(value) || value.role !== "EXTERNAL_MODEL_DISPLAY_ONLY" || !Array.isArray(value.frames)
+  if (!record(value) || value.source !== "Open-Meteo forecast API" || value.role !== "EXTERNAL_MODEL_DISPLAY_ONLY"
+    || (value.level !== "10m" && value.level !== "1000hPa")
+    || value.model !== (value.level === "1000hPa" ? "NCEP GFS Seamless" : "Best match forecast")
+    || !Array.isArray(value.frames)
     || value.frames.length < 2 || value.frames.length > 8 || !Number.isFinite(Date.parse(String(value.retrievedAt)))) return false;
   return value.frames.every((frame) => record(frame) && typeof frame.validAt === "string" && Number.isFinite(Date.parse(frame.validAt))
     && Array.isArray(frame.samples) && frame.samples.length === WIND_GRID.length
-    && frame.samples.every((sample: unknown) => record(sample) && typeof sample.speedKmh === "number"
+    && frame.samples.every((sample: unknown, index: number) => record(sample)
+      && sample.longitude === WIND_GRID[index][0] && sample.latitude === WIND_GRID[index][1]
+      && typeof sample.speedKmh === "number"
       && Number.isFinite(sample.speedKmh) && sample.speedKmh >= 0 && sample.speedKmh <= 250
       && typeof sample.fromDegrees === "number" && Number.isFinite(sample.fromDegrees)
       && sample.fromDegrees >= 0 && sample.fromDegrees <= 360));
