@@ -6,7 +6,7 @@ export type SiteFeatureStatus = "LIVE_UI" | "ACTIVE_CONTEXT" | "BOUNDED_PROOF" |
 export type SiteFeatureRecord = Readonly<{
   id: string;
   title: string;
-  domain: "map" | "connections" | "earthquakes" | "hydrology" | "smoke" | "terrain" | "temporal" | "evidence" | "workspaces" | "focus" | "sources" | "alignment";
+  domain: "map" | "connections" | "earthquakes" | "hydrology" | "smoke" | "atmosphere" | "terrain" | "temporal" | "evidence" | "workspaces" | "focus" | "sources" | "alignment";
   status: SiteFeatureStatus;
   surface: string;
   userOutcome: string;
@@ -92,6 +92,18 @@ export const SITE_FEATURES = Object.freeze([
     actionIds: ["toggle-context-connection", "refresh-visible-context", "refresh-radar-frames", "play-exact-radar-loop", "step-exact-observation", "set-context-opacity", "open-provider-source"],
     codePaths: ["app/api/live-context/route.ts", "app/api/noaa-radar/frames/route.ts", "app/noaa-radar.ts", "app/event-atlas.ts", "app/page.tsx"],
     boundary: "Footprints and pixels are not surface PM2.5, plume altitude/transport, fire perimeter, warning, forecast, or all-clear products.",
+  },
+  {
+    id: "airflow-forecast-context",
+    title: "Airflow forecast context",
+    domain: "atmosphere",
+    status: "ACTIVE_CONTEXT",
+    surface: "Domains + live data and NWS forecast wind barbs",
+    userOutcome: "Show provider forecast wind speed and direction as barbs over Kansas with source and time limits visible.",
+    sourceIds: ["nws-forecast-wind"],
+    actionIds: ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+    codePaths: ["app/live-context.ts", "app/airflow-tiles.ts", "app/api/airflow-tile/route.ts", "app/page.tsx"],
+    boundary: "This is a provider-default 10 m wind forecast image without an exact valid-time readout, not observed airflow, gusts, smoke transport, historical data, or KFM evidence.",
   },
   {
     id: "lidar-terrain-context",

@@ -289,10 +289,13 @@ samples for a May 2024 station interval. No browser visual QA was performed.
 
 The shared map clock now supports committed snapshot, moving-window,
 event-stepping, accumulation, and A/B comparison modes. A user can bound the
-sweep range, choose event dates or every atlas tick, step forward or backward,
+sweep range, choose event dates or every calendar year from 1800 onward, step forward or backward,
 set playback speed and boundary behavior, and capture the committed frame in a
 report, workspace, URL, or story draft. The frame readout lists entered and
 exited records and describes cross-domain co-presence as an association only.
+The compact ruler represents each year, and its Year selector can choose one
+directly. Earlier eras remain coarse capacity markers. A selectable year does
+not imply that the Site holds a record for that year.
 
 `app/temporal-sweep.ts` owns the pure sequence, interval, accumulation,
 playback, and frame-summary rules. `app/map-runtime.ts` translates the same
@@ -308,6 +311,11 @@ history. MapLibre hides those layers but preserves the user's visibility
 choices so the same sources return on Present. This prevents a USGS observation
 from being relabeled as an atlas edition merely because their calendar years
 match.
+
+One Domains + live data control opens both the site-local layer catalog and
+the separate official context controls. The Atmosphere domain includes an
+optional Airflow forecast wind-barb image; its provider clock and evidence
+boundary remain in the official context section.
 
 Each adapter keeps the clocks it can support distinct: observation or forecast
 valid time, provider publication or last-modified time, Site retrieval time,
@@ -437,6 +445,7 @@ requests cannot supply an arbitrary upstream URL.
 | USGS 3DEP LiDAR hillshade | Off | Dynamic multidirectional hillshade from the current 3DEP elevation mosaic | Rendered relief only; no work-unit, point-cloud, datum, pulse-spacing, or accuracy claim |
 | USGS 3DEP LiDAR slope | Off | Dynamic slope visualization from the same 3DEP service | Image context only; no numeric slope/elevation or source-artifact claim |
 | NWS alert areas | Off | Active Kansas alerts and bounded affected-zone geometry | Not a warning-delivery service or an all-clear |
+| NWS forecast wind barbs · Airflow | Off | Provider-default NDFD forecast 10 m sustained wind speed and direction, shown as wind barbs over Kansas | Forecast image, not measured airflow, gusts, smoke transport, or a historical frame. The Site does not resolve the exact forecast valid time |
 | NOAA nowCOAST radar | Off | Recent CONUS base-reflectivity observations at exact NOAA-advertised times, with 30-minute, 1-hour, and 2-hour loop views | Context only; pixels do not establish rainfall rate, storm motion, warning status, forecast, or an emergency all-clear |
 
 Every connection is `EXTERNAL_CONTEXT_ONLY`. It is excluded from KFM reports,

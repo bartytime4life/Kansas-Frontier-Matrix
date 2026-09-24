@@ -13,6 +13,7 @@ const compileModuleUrl = async (name, transform = (source) => source) => {
 };
 
 const temporal = await import(await compileModuleUrl("temporal-sweep"));
+const atlasData = await import(await compileModuleUrl("explorer-data"));
 const radarModuleUrl = await compileModuleUrl("noaa-radar");
 const satelliteModuleUrl = await compileModuleUrl("noaa-satellite");
 const performanceModuleUrl = await compileModuleUrl("map-performance");
@@ -41,6 +42,22 @@ const exactB = layer("fire", "Fire", "exact", [2024, 2026]);
 const through = layer("history", "History", "through", [1885, 1910]);
 const layers = [exactA, exactB, through];
 const atlas = [1885, 1910, 1950, 2022, 2024, 2026];
+
+test("every calendar year from 1800 has a selectable frame without inventing records", () => {
+  const latest = Math.max(2026, new Date().getUTCFullYear());
+  for (let year = 1800; year <= latest; year += 1) assert.ok(atlasData.TIME_STEPS.includes(year), `missing ${year}`);
+  const sequence = temporal.buildTemporalSequence([exactA], atlasData.TIME_STEPS, 2022, 2026, "regular-calendar");
+  assert.deepEqual(sequence, [2022, 2023, 2024, 2025, 2026]);
+  assert.equal(temporal.temporalRecordsForQuery([exactA], temporal.buildTemporalQuery("snapshot", 2025, 2022, 2026, sequence), true).length, 0);
+});
+
+test("Airflow stays external forecast context and is held outside the present atlas frame", () => {
+  const wind = official.OFFICIAL_CONTEXT_BY_ID["nws-forecast-wind"];
+  assert.equal(wind.domain, "Atmosphere");
+  assert.equal(wind.evidenceRole, "EXTERNAL_CONTEXT_ONLY");
+  assert.equal(wind.defaultVisibility, false);
+  assert.deepEqual(official.OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[wind.id].supportedFrames, [2026]);
+});
 
 test("event stepping uses only bounded layer event dates plus bounded endpoints", () => {
   assert.deepEqual(

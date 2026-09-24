@@ -467,7 +467,7 @@ const DOMAIN_HOLDS = Object.freeze([
 ] as const);
 
 type PriorityContextGroup = Readonly<{
-  id: "seismic" | "hydrology" | "fire-smoke";
+  id: "seismic" | "hydrology" | "fire-smoke" | "airflow";
   title: string;
   description: string;
   sourceIds: readonly OfficialContextId[];
@@ -491,6 +491,12 @@ const PRIORITY_CONTEXT_GROUPS: readonly PriorityContextGroup[] = Object.freeze([
     title: "Fire + smoke context",
     description: "NIFC incident reports, NASA thermal detections, NOAA GOES GeoColor imagery, smoke footprints, alerts, and radar. Each keeps its own source time and meaning.",
     sourceIds: Object.freeze(["nifc-fire-reports", "nasa-gibs-fire-points", "nasa-firms-active-fire", "noaa-goes-geocolor", "noaa-hms-smoke", "nws-alerts", "nws-radar"] as const),
+  }),
+  Object.freeze({
+    id: "airflow",
+    title: "Airflow · forecast wind",
+    description: "NWS 10 m sustained wind speed and direction barbs. Provider-default forecast image; exact valid time is not resolved here.",
+    sourceIds: Object.freeze(["nws-forecast-wind"] as const),
   }),
 ]);
 
@@ -539,7 +545,7 @@ const DOMAIN_LIVE_CONTEXT: Readonly<Partial<Record<(typeof layerDomains)[number]
   Fire: Object.freeze(["nasa-firms-active-fire", "noaa-hms-smoke"] as const),
   Hydrology: Object.freeze(["usgs-streamflow", "noaa-nwps-gauges", "usgs-3dhp-hydrography", "usgs-wbd-watersheds"] as const),
   Geology: Object.freeze(["usgs-earthquakes"] as const),
-  Atmosphere: Object.freeze(["noaa-hms-smoke"] as const),
+  Atmosphere: Object.freeze(["noaa-hms-smoke", "nws-forecast-wind"] as const),
 });
 const catalogCategorySlug = (category: string) => category.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const FOCUSABLE_SELECTOR = "button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), summary, a[href], [tabindex]:not([tabindex='-1'])";
@@ -991,7 +997,7 @@ const timelineEraLabel = (value: number) => {
   return "Modern record";
 };
 
-const TIMELINE_MAJOR_STEPS = new Set<number>([-4_540_000_000, -541_000_000, -2_580_000, -11_700, 1885, 2026]);
+const TIMELINE_MAJOR_STEPS = new Set<number>([-4_540_000_000, 1800, 1850, 1900, 1950, 2000, Math.max(2026, new Date().getUTCFullYear())]);
 const TIMELINE_JUMPS = Object.freeze([
   Object.freeze({ label: "Earth", year: -4_540_000_000 }),
   Object.freeze({ label: "Paleozoic", year: -541_000_000 }),
@@ -1290,7 +1296,7 @@ export default function Home() {
   const [mapEvidenceFilter, setMapEvidenceFilter] = useState<RegistryEvidenceFilter>("ALL");
   const [playing, setPlaying] = useState(false);
   const [temporalMode, setTemporalMode] = useState<TemporalSweepMode>("snapshot");
-  const [temporalStepRule, setTemporalStepRule] = useState<TemporalStepRule>("available-events");
+  const [temporalStepRule, setTemporalStepRule] = useState<TemporalStepRule>("regular-calendar");
   const [playbackSpeed, setPlaybackSpeed] = useState<PlaybackSpeed>(1);
   const [playbackDirection, setPlaybackDirection] = useState<TemporalPlaybackDirection>("forward");
   const [playbackLoopMode, setPlaybackLoopMode] = useState<TemporalLoopMode>("stop");
@@ -3505,8 +3511,9 @@ export default function Home() {
   }, [debouncedLayerQuery, pendingCatalogTarget, reducedMotion]);
 
   const openLiveContextCatalog = useCallback(() => {
-    openAtlasPanel("live");
-    announce("Opened live operational context controls");
+    openAtlasPanel("layers");
+    setPendingCatalogTarget("official-context-catalog");
+    announce("Opened live operational context in Domains and live data");
   }, [announce, openAtlasPanel]);
 
   const activateMapUtilityView = useCallback((nextView: MapUtilityView, focusTab = false) => {
@@ -3783,7 +3790,7 @@ export default function Home() {
     setPreviewYear(sceneFrame);
     setPlaying(false);
     setTemporalMode(sceneSweepMode);
-    setTemporalStepRule(snapshotSweep?.stepRule ?? "available-events");
+    setTemporalStepRule(snapshotSweep?.stepRule ?? "regular-calendar");
     setSweepRangeStart(snapshotSweep?.rangeStart ?? Math.min(snapshot.committedTime.start, sceneFrame));
     setSweepRangeEnd(snapshotSweep?.rangeEnd ?? Math.max(snapshot.committedTime.end, sceneFrame));
     setMovingWindowFrames(snapshotSweep?.windowFrames ?? 3);
@@ -3959,7 +3966,7 @@ export default function Home() {
       const restoredTemporalMode = params.get("tm");
       const nextTemporalMode: TemporalSweepMode = restoredTemporalMode === "moving-window" || restoredTemporalMode === "event-stepping" || restoredTemporalMode === "accumulation" || restoredTemporalMode === "comparison" ? restoredTemporalMode : "snapshot";
       setTemporalMode(nextTemporalMode);
-      setTemporalStepRule(params.get("tstep") === "regular-calendar" ? "regular-calendar" : "available-events");
+      setTemporalStepRule(params.get("tstep") === "available-events" ? "available-events" : "regular-calendar");
       const restoredSweepRange = params.get("trange")?.split(",").map(Number) ?? [];
       const validSweepRange = restoredSweepRange.length === 2
         && restoredSweepRange.every((value) => TIME_STEPS.includes(value as (typeof TIME_STEPS)[number]))
@@ -5928,7 +5935,7 @@ export default function Home() {
     const savedSweepMode = savedSweep?.mode;
     const nextSavedSweepMode: TemporalSweepMode = savedSweepMode === "moving-window" || savedSweepMode === "event-stepping" || savedSweepMode === "accumulation" || savedSweepMode === "comparison" ? savedSweepMode : "snapshot";
     setTemporalMode(nextSavedSweepMode);
-    setTemporalStepRule(savedSweep?.stepRule === "regular-calendar" ? "regular-calendar" : "available-events");
+    setTemporalStepRule(savedSweep?.stepRule === "available-events" ? "available-events" : "regular-calendar");
     const savedSweepRangeValid = savedSweep
       && TIME_STEPS.includes(savedSweep.rangeStart as (typeof TIME_STEPS)[number])
       && TIME_STEPS.includes(savedSweep.rangeEnd as (typeof TIME_STEPS)[number])
@@ -6214,7 +6221,7 @@ export default function Home() {
     setYear(2026);
     setPreviewYear(2026);
     setTemporalMode("snapshot");
-    setTemporalStepRule("available-events");
+    setTemporalStepRule("regular-calendar");
     setPlaybackSpeed(1);
     setPlaybackDirection("forward");
     setPlaybackLoopMode("stop");
@@ -7183,15 +7190,14 @@ export default function Home() {
       <main inert={primaryWorkspace !== "map"} className="explorer-shell" data-left={leftOpen} data-right={rightOpen} data-timeline={timelineOpen}>
         <aside ref={leftPanelRef} className="layer-panel" data-panel-mode={leftPanelMode} aria-label="Living Atlas navigation" aria-hidden={!leftOpen} inert={!leftOpen} aria-modal={isCompact && leftOpen || undefined} role={isCompact && leftOpen ? "dialog" : undefined}>
           <div className="panel-heading">
-            <div><p className="panel-kicker">{leftPanelMode === "views" ? "LIVING ATLAS" : leftPanelMode === "live" ? "LIVE LAYER DATA" : leftPanelMode === "layers" ? "DOMAIN LAYERS" : leftPanelMode === "places" ? "PLACES" : "STORY ATLAS"}</p><h1>{leftPanelMode === "views" ? "Investigate Kansas" : leftPanelMode === "live" ? "Live layer data" : leftPanelMode === "layers" ? "Domain layers" : leftPanelMode === "places" ? "Places + trails" : "Guided stories"}</h1></div>
+            <div><p className="panel-kicker">{leftPanelMode === "views" ? "LIVING ATLAS" : leftPanelMode === "live" || leftPanelMode === "layers" ? "MAP LAYERS" : leftPanelMode === "places" ? "PLACES" : "STORY ATLAS"}</p><h1>{leftPanelMode === "views" ? "Investigate Kansas" : leftPanelMode === "live" || leftPanelMode === "layers" ? "Domains + live data" : leftPanelMode === "places" ? "Places + trails" : "Guided stories"}</h1></div>
             <button className="icon-close" type="button" onClick={closeLeftPanel} aria-label="Close Explorer navigation">×</button>
           </div>
-          <p className="panel-intro">{leftPanelMode === "views" ? "Start from a named question, then inspect the map, time, evidence, and report together." : leftPanelMode === "live" ? "Manage bounded current-source context and see its freshness, availability, and historical-frame hold state." : leftPanelMode === "layers" ? "Browse KFM domain layers against the committed map time frame. A missing frame stays unavailable; it is never carried forward." : leftPanelMode === "places" ? "Save complete, device-local investigations and revisit them as a trail." : "Pause on a site-local chapter, inspect its evidence state, and keep the boundary visible."}</p>
+          <p className="panel-intro">{leftPanelMode === "views" ? "Start from a named question, then inspect the map, time, evidence, and report together." : leftPanelMode === "live" || leftPanelMode === "layers" ? "Browse site-local domain layers and separate official source context. Missing years stay empty; current sources stay held in historical frames." : leftPanelMode === "places" ? "Save complete, device-local investigations and revisit them as a trail." : "Pause on a site-local chapter, inspect its evidence state, and keep the boundary visible."}</p>
           <Link className="event-sidebar-link" href="/observatory">Event Observatory · 24-hour archive calendar, radar, smoke & rivers ↗</Link>
           <nav className="left-panel-tabs" aria-label="Living Atlas sections">
             <button type="button" aria-current={leftPanelMode === "views" ? "page" : undefined} data-active={leftPanelMode === "views"} onClick={() => setLeftPanelMode("views")}>Views <b>{LIVING_ATLAS_VIEWS.length}</b></button>
-            <button type="button" aria-current={leftPanelMode === "live" ? "page" : undefined} data-active={leftPanelMode === "live"} onClick={() => setLeftPanelMode("live")}>Live data <b>{visibleOfficialCount}/{OFFICIAL_CONTEXT_SOURCES.length}</b></button>
-            <button type="button" aria-current={leftPanelMode === "layers" ? "page" : undefined} data-active={leftPanelMode === "layers"} onClick={() => setLeftPanelMode("layers")}>Domains <b>{visibleCount}/{LAYER_REGISTRY.length}</b></button>
+            <button type="button" aria-current={leftPanelMode === "layers" || leftPanelMode === "live" ? "page" : undefined} data-active={leftPanelMode === "layers" || leftPanelMode === "live"} onClick={() => setLeftPanelMode("layers")}>Domains + live <b>{visibleCount} + {visibleOfficialCount}</b></button>
             <button type="button" aria-current={leftPanelMode === "places" ? "page" : undefined} data-active={leftPanelMode === "places"} onClick={() => setLeftPanelMode("places")}>Places <b>{savedWorkspaces.length}</b></button>
             <button type="button" aria-current={leftPanelMode === "stories" ? "page" : undefined} data-active={leftPanelMode === "stories"} onClick={() => setLeftPanelMode("stories")}>Stories <b>1</b></button>
           </nav>
@@ -7230,7 +7236,7 @@ export default function Home() {
           </section>
 
           <div className="layer-catalog-body" hidden={leftPanelMode !== "layers" && leftPanelMode !== "live"}>
-          <div hidden={leftPanelMode !== "layers"}>
+          <div hidden={leftPanelMode !== "layers" && leftPanelMode !== "live"}>
           <label className="catalog-search"><span aria-hidden="true">⌕</span><span className="sr-only">Search Layer Catalog</span><input type="search" value={layerQuery} onChange={(event) => setLayerQuery(event.target.value)} placeholder="Filter layers and datasets" /></label>
 
           <section className="catalog-time-anchor" id="catalog-time-anchor" data-historical={year !== OFFICIAL_CONTEXT_PRESENT_FRAME} aria-labelledby="catalog-time-anchor-title">
@@ -7249,6 +7255,7 @@ export default function Home() {
           <nav className="catalog-section-jump" aria-label="Layer Catalog shortcuts">
             <a href="#catalog-time-anchor"><span>Map time frame</span><b>{temporalScopeLabel}</b></a>
             <a href="#catalog-domain-index-title"><span>All domains</span><b>{CATEGORY_ORDER.length} layer groups</b></a>
+            <a href="#official-context-catalog"><span>Live data</span><b>{visibleOfficialCount} selected</b></a>
             <a href="#catalog-layer-stack" onClick={() => revealLegacyLayerControls("catalog-layer-stack")}><span>Layer controls</span><b>{visibleCount} active</b></a>
           </nav>
 
@@ -7268,19 +7275,20 @@ export default function Home() {
               })}
             </div>
             <p>These are the site-local domain layers. A domain lens adds its matching historical layer(s) to the map without hiding the rest of the catalog; where available, it also adds clearly separated live operational context for the present frame.</p>
+            <div className="catalog-airflow-entry"><div><strong>Airflow</strong><small>NWS forecast wind barbs · external context, not a measured flow or historical record</small></div><button type="button" aria-pressed={officialVisibility["nws-forecast-wind"]} onClick={() => setOfficialContextVisible("nws-forecast-wind", !officialVisibility["nws-forecast-wind"])}>{officialVisibility["nws-forecast-wind"] ? "Hide forecast wind" : "Show forecast wind"}</button></div>
           </section>
 
           </div>
-          <section className="official-context-catalog" id="official-context-catalog" hidden={leftPanelMode !== "live"} aria-labelledby="official-context-title">
+          <section className="official-context-catalog" id="official-context-catalog" tabIndex={-1} hidden={leftPanelMode !== "live" && leftPanelMode !== "layers"} aria-labelledby="official-context-title">
             <header><div><span>OFFICIAL OPERATIONAL CONTEXT</span><h2 id="official-context-title">Real Kansas source connections</h2><small className="official-context-registry-summary">{SITE_REGISTRY_COUNTS.features} features · {SITE_REGISTRY_COUNTS.connections} connections · {SITE_REGISTRY_COUNTS.actions} actions</small></div><strong>{withheldOfficialCount > 0 ? `${visibleOfficialCount} SELECTED · HELD` : `${visibleOfficialCount}/${OFFICIAL_CONTEXT_SOURCES.length} ON`}</strong></header>
             <p>{year === OFFICIAL_CONTEXT_PRESENT_FRAME ? "Live and current official sources may be drawn for orientation. They stay outside KFM admission, reports, exports, and EvidenceBundles." : `The map is committed to ${temporalScopeLabel}; selected current-only sources are held until the operational-present frame instead of being relabeled as historical data.`}</p>
             <div className="official-context-pulse" aria-label="Official data connection status">
               <div><span><small>LOADED FEATURES</small><strong>{officialFeatureCount.toLocaleString("en-US")}</strong></span><span><small>CONNECTIONS</small><strong>{officialReadyCount}/{OFFICIAL_CONTEXT_SOURCES.length} checked</strong></span><span><small>LAST RETRIEVAL</small><strong>{officialLatestRetrievedAt ? new Date(officialLatestRetrievedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "Not yet"}</strong></span></div>
               <nav aria-label="Official data actions"><button type="button" disabled={visibleRefreshableOfficialCount === 0 || officialLoadingCount > 0} onClick={refreshVisibleOfficialContext}>{officialLoadingCount > 0 ? "Refreshing…" : "Refresh visible"}</button><button type="button" disabled={visibleOfficialCount === 0} onClick={hideAllOfficialContext}>Hide all</button></nav>
             </div>
-            <details className="source-layer-groups"><summary>Layer groups · earthquakes, water, fire & smoke</summary><section className="priority-context-deck" aria-labelledby="priority-context-title">
+            <details className="source-layer-groups"><summary>Layer groups · earthquakes, water, fire, smoke & airflow</summary><section className="priority-context-deck" aria-labelledby="priority-context-title">
               <header>
-                <div><span>PRIORITY CONNECTIONS</span><h3 id="priority-context-title">Earthquakes, water, fire + smoke</h3></div>
+                <div><span>PRIORITY CONNECTIONS</span><h3 id="priority-context-title">Earthquakes, water, fire, smoke + airflow</h3></div>
                 <small>Toggle a source directly</small>
               </header>
               <p className="priority-context-intro">The controls below keep the most actionable map connections visible. Open a source row for opacity, freshness, limits, and provider links.</p>
@@ -7371,7 +7379,7 @@ export default function Home() {
                   </> : <p>{OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id].limitation} No selectable observation sweep is connected for this carrier.</p>}
                   {heldAtFrame && <small>Selected source is held by the global atlas year. Return that axis to Present to display its source clock.</small>}
                 </section>
-                <div className="official-context-actions"><button type="button" onClick={() => { setSourceStatusOpen(true); setLeftOpen(false); }}>Source details & quality</button>{needsCloserView && <button type="button" onClick={() => { mapRef.current?.easeTo({ zoom: TERRAIN_DISPLAY_MIN_ZOOM + 0.25, duration: motionDuration(600) }); announce(`${source.shortTitle}: zoomed in to its display range`); }}>Zoom to view</button>}{["usgs-streamflow", "noaa-hms-smoke", "raspberry-shake-stations", "usgs-earthquakes", "nws-radar", "census-counties"].includes(source.id) && <Link href={`/observatory?layers=${({ "usgs-streamflow": "river", "noaa-hms-smoke": "smoke", "raspberry-shake-stations": "shake", "usgs-earthquakes": "earthquakes", "nws-radar": "radar", "census-counties": "counties" } as Record<string,string>)[source.id]},counties`}>Explore dated records ↗</Link>}</div>
+                <div className="official-context-actions"><button type="button" onClick={() => { setSourceStatusOpen(true); setLeftOpen(false); }}>Source details & quality</button>{source.id === "nws-forecast-wind" && <button type="button" disabled={!officialVisibility[source.id] || heldAtFrame || state === "loading"} onClick={() => retryOfficialLayer(source.id)}>Reload forecast tiles</button>}{needsCloserView && <button type="button" onClick={() => { mapRef.current?.easeTo({ zoom: TERRAIN_DISPLAY_MIN_ZOOM + 0.25, duration: motionDuration(600) }); announce(`${source.shortTitle}: zoomed in to its display range`); }}>Zoom to view</button>}{["usgs-streamflow", "noaa-hms-smoke", "raspberry-shake-stations", "usgs-earthquakes", "nws-radar", "census-counties"].includes(source.id) && <Link href={`/observatory?layers=${({ "usgs-streamflow": "river", "noaa-hms-smoke": "smoke", "raspberry-shake-stations": "shake", "usgs-earthquakes": "earthquakes", "nws-radar": "radar", "census-counties": "counties" } as Record<string,string>)[source.id]},counties`}>Explore dated records ↗</Link>}</div>
               </article>;
             })}</div>
             <footer><code>OFFICIAL SOURCE → FIXED ADAPTER / WMS → MAPLIBRE</code><span>Evidence held at admission, release, and EvidenceBundle gates · <a href="https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3393" target="_blank" rel="noreferrer">governance issue #3393 ↗</a></span></footer>
@@ -7451,7 +7459,7 @@ export default function Home() {
               <span data-runtime={runtime.kind}><i /> {runtime.kind === "ready" ? "MAP READY" : runtime.kind === "loading" ? "MAP STARTING" : runtime.kind === "degraded" ? "MAP DEGRADED" : runtime.kind === "unsupported" ? "MAP UNSUPPORTED" : "MAP UNAVAILABLE"}</span>
               <small>{BASEMAPS[basemap].title} · {mapRepresentationLabel}</small>
             </div>
-            <div className="map-command-actions"><Link className="event-entry-link" href="/observatory">24-hour archive ↗</Link><button type="button" onClick={() => openAtlasPanel("layers")}>Domains</button><button type="button" onClick={openLiveContextCatalog}>Live data</button><button type="button" onClick={() => openMapUtility("navigate")}>Map controls</button><button type="button" onClick={saveCurrentWorkspace}>Save view</button><button type="button" onClick={() => openPrimaryWorkspace("reports", true)}>Build report</button></div>
+            <div className="map-command-actions"><Link className="event-entry-link" href="/observatory">24-hour archive ↗</Link><button type="button" onClick={() => openAtlasPanel("layers")}>Domains + live data</button><button type="button" onClick={() => openMapUtility("navigate")}>Map controls</button><button type="button" onClick={saveCurrentWorkspace}>Save view</button><button type="button" onClick={() => openPrimaryWorkspace("reports", true)}>Build report</button></div>
           </div>
           <nav className="map-view-mode-strip" aria-label="Map representation">
             <span className="map-view-mode-heading">MAP REPRESENTATION <small>{mapRepresentationLabel}</small></span>
@@ -7466,10 +7474,7 @@ export default function Home() {
             <button className="map-control-launch" type="button" aria-pressed={timelineOpen} onClick={() => setTimelineOpen((open) => !open)}><strong>Time</strong><b>{formatTimelineStep(year)}</b></button>
             <Link className="map-control-launch" href="/observatory">Daily archive ↗</Link>
             <button className="map-control-launch" type="button" onClick={() => openAtlasPanel("layers")} aria-pressed={leftOpen && leftPanelMode === "layers"}>
-              <span aria-hidden="true">≡</span><strong>Domains</strong><b>{visibleCount}</b>
-            </button>
-            <button className="map-control-launch map-control-launch-live" type="button" onClick={openLiveContextCatalog} aria-pressed={visibleOfficialCount > 0}>
-              <span aria-hidden="true">⌁</span><strong>Live data</strong><b>{visibleOfficialCount}</b>
+              <span aria-hidden="true">≡</span><strong>Domains + live data</strong><b>{visibleCount} + {visibleOfficialCount}</b>
             </button>
             <div className="quick-live-toggle-list" aria-label="Quick live data layer toggles">
               {QUICK_LIVE_CONTEXT_IDS.map((sourceId) => {
@@ -7708,8 +7713,7 @@ export default function Home() {
             <div className="map-tool-group map-tool-group-workbench" aria-label="KFM workbench shortcuts">
               <span className="map-tool-group-label">WORKBENCH</span>
               <button type="button" onClick={() => openAtlasPanel("views")} aria-pressed={leftOpen && leftPanelMode === "views"} aria-label="Open Living Atlas views" data-tooltip="Views"><span className="map-tool-glyph" aria-hidden="true">▦</span><span className="map-tool-label">Views</span></button>
-              <button type="button" onClick={() => openAtlasPanel("layers")} aria-pressed={leftOpen && leftPanelMode === "layers"} aria-label="Open domain layers" data-tooltip="Domains"><span className="map-tool-glyph" aria-hidden="true">≡</span><span className="map-tool-label">Domains</span></button>
-              <button type="button" onClick={openLiveContextCatalog} aria-pressed={visibleOfficialCount > 0} aria-label="Open live data controls" data-tooltip="Live data"><span className="map-tool-glyph" aria-hidden="true">⌁</span><span className="map-tool-label">Live data</span></button>
+              <button type="button" onClick={() => openAtlasPanel("layers")} aria-pressed={leftOpen && (leftPanelMode === "layers" || leftPanelMode === "live")} aria-label="Open domains and live data" data-tooltip="Domains + live data"><span className="map-tool-glyph" aria-hidden="true">≡</span><span className="map-tool-label">Domains + live data</span></button>
               <button type="button" onClick={(event) => mapUtilityOpen && mapUtilityView === "inspect" ? closeMapUtility() : openMapUtility("inspect", event.currentTarget)} aria-expanded={mapUtilityOpen && mapUtilityView === "inspect"} aria-controls="map-utility-panel" aria-label="Open feature inspection" data-tooltip="Inspect"><span className="map-tool-glyph" aria-hidden="true">⌖</span><span className="map-tool-label">Inspect</span></button>
               <button type="button" onClick={(event) => mapUtilityOpen && mapUtilityView === "scene" ? closeMapUtility() : openMapUtility("scene", event.currentTarget)} aria-expanded={mapUtilityOpen && mapUtilityView === "scene"} aria-controls="map-utility-panel" aria-label="Open scene and tile lab" data-tooltip="Scene"><span className="map-tool-glyph" aria-hidden="true">3D</span><span className="map-tool-label">Scene</span></button>
               <button type="button" onClick={(event) => mapUtilityOpen && mapUtilityView === "measure" ? closeMapUtility() : openMapUtility("measure", event.currentTarget)} aria-expanded={mapUtilityOpen && mapUtilityView === "measure"} aria-controls="map-utility-panel" aria-label="Open measurement tools" data-tooltip="Measure"><span className="map-tool-glyph" aria-hidden="true">⌗</span><span className="map-tool-label">Measure</span></button>
@@ -8232,8 +8236,7 @@ export default function Home() {
           {measurementGeometryMode && <div className="measurement-readout" role="region" aria-label="Active screen measurement"><span>{measurementGeometryMode.toUpperCase()} · {measureMode ? "ACTIVE" : "COMPLETE"}</span><strong aria-live="polite">{measurement}</strong><div><button type="button" onClick={undoMeasurementPoint}>Undo</button><button type="button" onClick={finishMeasurement} disabled={!measureMode}>Finish</button><button type="button" onClick={clearMeasurement}>Clear</button></div></div>}
 
           <nav className="map-mobile-actions" aria-label="Mobile map actions">
-            <button type="button" onClick={() => openAtlasPanel("layers")}>Domains <b>{visibleCount}</b></button>
-            <button type="button" onClick={openLiveContextCatalog}>Live data <b>{visibleOfficialCount}</b></button>
+            <button type="button" onClick={() => openAtlasPanel("layers")}>Domains + live <b>{visibleCount} + {visibleOfficialCount}</b></button>
             <button type="button" onClick={() => { setSourceStatusOpen(true); setLeftOpen(false); setRightOpen(false); setTimelineOpen(false); }}>Sources</button>
             <button type="button" onClick={() => { setCurrentWorkspace("explore"); dismissMapUtilityWithoutFocus(); setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); }}>Time <b>{temporalScopeLabel}</b></button>
             <button type="button" onClick={() => openMapUtility("display")}>Style</button>
@@ -8414,10 +8417,11 @@ export default function Home() {
               <button type="button" disabled={temporalMode === "comparison" || previousSweepFrame === null} onClick={() => stepTemporalSweep("reverse")} aria-label="Previous sweep frame">‹</button>
               <button type="button" aria-pressed={playing} disabled={reducedMotion || temporalMode === "snapshot" || temporalMode === "comparison" || temporalSequence.length < 2} onClick={toggleTemporalPlayback} aria-label={playing ? "Pause time sweep" : "Play time sweep"}>{playing ? "Ⅱ" : "▶"}</button>
               <button type="button" disabled={temporalMode === "comparison" || nextSweepFrame === null} onClick={() => stepTemporalSweep("forward")} aria-label="Next sweep frame">›</button>
+              <label className="timeline-frame-picker">Year<select value={previewYear} onChange={(event) => { setPreviewYear(Number(event.target.value)); setPlaying(false); }} aria-label="Preview year or earlier era">{timelineSteps.map((step) => <option key={step} value={step}>{formatTimelineStep(step)}</option>)}</select></label>
             </div>
             <div className="timeline-track">
-              <input type="range" min="0" max={timelineSteps.length - 1} value={Math.max(0, timelineSteps.indexOf(previewYear))} onChange={(event) => { setPreviewYear(timelineSteps[Number(event.target.value)]); setPlaying(false); }} aria-label="Preview demonstration time before committing" aria-valuetext={`Preview ${formatTimelineStep(previewYear)}; committed ${temporalScopeLabel}`} />
-              <div className="timeline-ticks" style={{ "--timeline-columns": timelineSteps.length } as React.CSSProperties}>{timelineSteps.map((step) => <button key={step} type="button" aria-current={step === temporalQuery.frame ? "step" : undefined} aria-pressed={step === previewYear} data-active={step === previewYear} data-committed={step === temporalQuery.frame} data-major={TIMELINE_MAJOR_STEPS.has(step as (typeof TIME_STEPS)[number])} data-in-range={step >= sweepRangeStart && step <= sweepRangeEnd} onClick={() => { setPreviewYear(step); setPlaying(false); }} aria-label={`Preview ${formatTimelineStep(step)}; ${timelineEraLabel(step)}${step === temporalQuery.frame ? "; committed frame" : ""}${step < sweepRangeStart || step > sweepRangeEnd ? "; outside sweep range and will expand it if committed" : ""}`} title={`${formatTimelineStep(step)} · ${timelineEraLabel(step)}`}>{TIMELINE_MAJOR_STEPS.has(step as (typeof TIME_STEPS)[number]) ? <span>{formatTimelineStep(step)}</span> : <i aria-hidden="true" />}</button>)}</div>
+              <input type="range" min="0" max={timelineSteps.length - 1} value={Math.max(0, timelineSteps.indexOf(previewYear))} onChange={(event) => { setPreviewYear(timelineSteps[Number(event.target.value)]); setPlaying(false); }} aria-label="Preview time before committing; every year from 1800 is selectable" aria-valuetext={`Preview ${formatTimelineStep(previewYear)}; committed ${temporalScopeLabel}`} />
+              <div className="timeline-ticks" style={{ "--timeline-columns": timelineSteps.length } as React.CSSProperties} aria-hidden="true">{timelineSteps.map((step) => <span key={step} className="timeline-tick" data-active={step === previewYear} data-committed={step === temporalQuery.frame} data-major={TIMELINE_MAJOR_STEPS.has(step)} data-in-range={step >= sweepRangeStart && step <= sweepRangeEnd} title={`${formatTimelineStep(step)} · ${timelineEraLabel(step)}`}>{TIMELINE_MAJOR_STEPS.has(step) ? <b>{formatTimelineStep(step)}</b> : <i />}</span>)}</div>
             </div>
             <div className="timeline-commit-actions">
               <button type="button" disabled={previewYear === temporalQuery.frame} onClick={() => { setPlaying(false); commitTemporalFrame(previewYear, `Committed ${formatTimelineStep(previewYear)} to the map, evidence, report, and story context`); }}>Commit</button>
@@ -8431,7 +8435,7 @@ export default function Home() {
               <p>Preview is harmless; Commit changes the shared map clock. Exact features are filtered atomically and are never interpolated or carried forward; “through” layers retain their declared persistence rule. Gaps remain gaps.</p>
               <div className="timeline-semantic-controls">
                 <label>Mode<select value={temporalMode} onChange={(event) => { const nextMode = event.target.value as TemporalSweepMode; setPlaying(false); setTemporalMode(nextMode); if (nextMode === "comparison") { commitTemporalFrame(compareTimeB); setMapUtilityView("compare"); setMapUtilityOpen(true); setMapContextOpen(false); } }}><option value="snapshot">Snapshot</option><option value="moving-window">Moving window</option><option value="event-stepping">Event stepping</option><option value="accumulation">Accumulation</option><option value="comparison">A / B comparison</option></select></label>
-                <label>Step<select value={temporalStepRule} onChange={(event) => { setPlaying(false); setTemporalStepRule(event.target.value as TemporalStepRule); }}><option value="available-events">Event dates + bounds</option><option value="regular-calendar">All atlas ticks</option></select></label>
+                <label>Step<select value={temporalStepRule} onChange={(event) => { setPlaying(false); setTemporalStepRule(event.target.value as TemporalStepRule); }}><option value="regular-calendar">Every year from 1800</option><option value="available-events">Event dates + bounds</option></select></label>
                 <label>Frame cadence<select value={playbackSpeed} onChange={(event) => setPlaybackSpeed(Number(event.target.value) as PlaybackSpeed)}><option value={0.5}>Slow · 2.6 s</option><option value={1}>Normal · 1.3 s</option><option value={2}>Fast · 0.65 s</option></select></label>
                 <label>Direction<select value={playbackDirection} onChange={(event) => { setPlaying(false); setPlaybackDirection(event.target.value as TemporalPlaybackDirection); }}><option value="forward">Forward</option><option value="reverse">Reverse</option></select></label>
                 <label>At boundary<select value={playbackLoopMode} onChange={(event) => setPlaybackLoopMode(event.target.value as TemporalLoopMode)}><option value="stop">Stop</option><option value="loop">Loop</option></select></label>
@@ -8443,7 +8447,7 @@ export default function Home() {
                 <label><span>End</span><select value={sweepRangeEnd} onChange={(event) => { const next = Number(event.target.value); setPlaying(false); if (next >= year) setSweepRangeEnd(next); }}>{TIME_STEPS.map((step) => <option key={`end:${step}`} value={step} disabled={step < year}>{formatTimelineStep(step)}</option>)}</select></label>
                 <strong>{temporalSequence.length} frame{temporalSequence.length === 1 ? "" : "s"}</strong>
               </div>
-              <p className="timeline-axis-note"><strong>FULL TEMPORAL CAPACITY · 4.54 GA BP TO 2026</strong> · Deep-time and intermediate ticks are capacity markers, not claims. Frame spacing and cadence are ordinal, not proportional to elapsed time. The active query uses each layer’s declared feature-year axis; source, retrieval, release, review, and correction clocks remain separate metadata.</p>
+              <p className="timeline-axis-note"><strong>YEAR BY YEAR · 1800 TO {TIME_STEPS.at(-1)}</strong> · Every calendar year is selectable; a year with no compatible records stays empty. Earlier eras are separate capacity markers, not claims of data. Frame spacing and cadence are ordinal, not proportional to elapsed time. The active query uses each layer’s declared feature-year axis; source, retrieval, release, review, and correction clocks remain separate metadata.</p>
               <div className="timeline-motion-controls">
                 <label><input type="checkbox" checked={dynamicEffects && !reducedMotion} disabled={reducedMotion} onChange={(event) => setDynamicEffects(event.target.checked)} /> Ambient layer motion</label>
                 <small>{reducedMotion ? "System reduced-motion is active: autoplay and ambient movement are off; stepping remains available." : "Synthetic water, smoke, fire, rail, and place motion is presentation only. Live HMS smoke remains tied to provider Start/End intervals; no visual motion encodes velocity, intensity, or measured change."}</small>
