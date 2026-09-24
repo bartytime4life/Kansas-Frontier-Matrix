@@ -3,6 +3,10 @@
 A map-first Kansas explorer with real provider baselines, dated archive replay,
 source downloads, and private data contribution and steward review workflows.
 
+The owner-preserved application baseline is Site version 68. See
+[preservation and recovery](docs/SITE_PRESERVATION.md) and root `AGENTS.md`
+before importing, replacing, synchronizing or publishing other Site copies.
+
 ## Earth Engine discovery and Kansas recipes — September 24, 2026
 
 **Globe integration:** Earth Engine now sits next to Globe in the representation
@@ -12,7 +16,7 @@ source-time/recipe-year boundaries. Global display movement does not expand the
 Kansas recipe area or activate Earth Engine data. The full discovery page remains
 available for metadata comparisons and review drafts.
 
-The Explorer's **Earth Engine** control opens `/earth-engine`: eight curated
+The **Full catalog & comparison** link opens `/earth-engine`: eight curated
 dataset records, text/topic search, a three-dataset metadata comparison, and
 downloadable JavaScript recipes and JSON review drafts. The same records feed
 Source observatory and the existing private contribution source selector.
