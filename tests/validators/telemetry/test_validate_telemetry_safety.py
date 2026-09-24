@@ -1,0 +1,64 @@
+"""The telemetry entry point selects only reviewed, bounded validators."""
+
+from __future__ import annotations
+
+import contextlib
+import importlib.util
+import io
+import json
+import unittest
+from pathlib import Path
+from unittest.mock import patch
+
+SOURCE = (
+    Path(__file__).resolve().parents[3]
+    / "tools/validators/validate_telemetry_safety.py"
+)
+SPEC = importlib.util.spec_from_file_location("kfm_telemetry_dispatch", SOURCE)
+assert SPEC is not None and SPEC.loader is not None
+MODULE = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(MODULE)
+
+
+class TelemetryDispatchTests(unittest.TestCase):
+    def test_fixture_replay_covers_exact_registered_profiles(self) -> None:
+        output = io.StringIO()
+        with patch.object(MODULE, "_run", return_value="PASS") as run:
+            with contextlib.redirect_stdout(output):
+                self.assertEqual(MODULE.main(["--fixtures"]), 0)
+        self.assertEqual(
+            [call.args for call in run.call_args_list],
+            [(profile, None) for profile in MODULE.PROFILES],
+        )
+        report = json.loads(output.getvalue())
+        self.assertEqual(report["authority"], "NONE")
+        self.assertEqual(report["outcome"], "PASS")
+
+    def test_failed_profile_fails_aggregate_without_candidate_echo(self) -> None:
+        output = io.StringIO()
+        with patch.object(
+            MODULE, "_run",
+            side_effect=lambda name, _: "DENY" if name == "trace_receipt_link" else "PASS",
+        ):
+            with contextlib.redirect_stdout(output):
+                self.assertEqual(MODULE.main(["--fixtures"]), 1)
+        self.assertEqual(json.loads(output.getvalue())["outcome"], "DENY")
+
+    def test_candidate_requires_known_explicit_profile(self) -> None:
+        with contextlib.redirect_stderr(io.StringIO()):
+            with self.assertRaises(SystemExit):
+                MODULE.main(["--candidate", "private.json"])
+            with self.assertRaises(SystemExit):
+                MODULE.main(["--candidate", "private.json", "--profile", "other"])
+        output = io.StringIO()
+        with patch.object(MODULE, "_run", return_value="DENY") as run:
+            with contextlib.redirect_stdout(output):
+                self.assertEqual(MODULE.main([
+                    "--candidate", "private.json", "--profile", "trace_receipt_link"
+                ]), 1)
+        run.assert_called_once_with("trace_receipt_link", Path("private.json"))
+        self.assertNotIn("private.json", output.getvalue())
+
+
+if __name__ == "__main__":
+    unittest.main()

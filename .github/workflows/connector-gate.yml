@@ -78,6 +78,14 @@ jobs:
           --strict-config
           --strict-markers
 
+      - name: Run bounded connector gate entry point and negative cases
+        run: |
+          python -m unittest discover \
+            --start-directory tests/validators \
+            --pattern 'test_validate_connector_gate_entrypoint.py' \
+            --verbose
+          python tools/validators/validate_connector_gate.py --scan-repository
+
       - name: Run focused IngestReceipt validator tests
         id: ingest-validator-tests
         if: always()
@@ -103,6 +111,7 @@ jobs:
             echo
             echo "- Connectors-core tests: tests/packages/connectors_core"
             echo "- Configured test: tests/policy/test_pipeline_connector_non_publisher.py"
+            echo "- Bounded entry point: tools/validators/validate_connector_gate.py --scan-repository"
             echo "- IngestReceipt tests: tests/validators/test_validate_ingest_receipt.py"
             echo "- IngestReceipt fixtures: tools/validators/validate_ingest_receipt.py --fixtures"
             echo "- Connectors-core scope: internal source-agnostic ETag/source-head, bounded retry, exact streaming SHA-256, response metadata, secret-safe diagnostics, SourceAdapter protocol/value objects, caller-injected transport, exact captured-byte validation, and retrieval-to-SourceArtifact candidate handoff behavior."

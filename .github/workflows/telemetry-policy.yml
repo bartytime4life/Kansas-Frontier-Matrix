@@ -96,6 +96,11 @@ jobs:
             --verbose
           python tools/validators/telemetry/validate_map_build_sustainability.py \
             --fixtures
+          python -m unittest discover \
+            --start-directory tests/validators/telemetry \
+            --pattern 'test_validate_telemetry_safety.py' \
+            --verbose
+          python tools/validators/validate_telemetry_safety.py --fixtures
           python - <<'PY'
           from pathlib import Path
           import json
@@ -296,10 +301,8 @@ jobs:
           )
           assert remote_sensing_schema["properties"]["authority"]["const"] == "NONE"
 
-          validator_path = Path("tools/validators/validate_telemetry_safety.py")
-          validator = validator_path.read_text(encoding="utf-8")
-          assert "# Greenfield validator stub: telemetry_safety" in validator
-          assert 'raise NotImplementedError("Greenfield placeholder")' in validator
+          # The bounded dispatcher runs above. Operational UI telemetry remains
+          # held; this fixture replay cannot establish a general safety policy.
 
           policy = Path("policy/ui/no_raw_in_telemetry.rego").read_text(
               encoding="utf-8"
@@ -382,7 +385,7 @@ jobs:
             echo "### Raw evidence in telemetry"
             echo
             echo "- Admitted fixture-only telemetry profile checks: ${{ job.status }}."
-            echo "- Operational boundary remains **WORKFLOW_HOLD**: the named raw-evidence Rego policy and general telemetry safety validator remain proposed placeholders; no emitter, sink, or operational telemetry receipt was evaluated."
+            echo "- Operational boundary remains **WORKFLOW_HOLD**: the raw-evidence Rego policy remains a proposed placeholder; the bounded local validator dispatcher is not a general telemetry safety policy. No emitter, sink, or operational telemetry receipt was evaluated."
             echo "- No telemetry, redaction, policy decision, receipt instance, proof, release record, promotion, deployment, or publication authority was emitted."
           } >> "$GITHUB_STEP_SUMMARY"
 
