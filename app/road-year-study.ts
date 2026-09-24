@@ -31,6 +31,13 @@ export function inspectRoadStudyFile(input: Readonly<{
   if (!edition || edition.localPdfState === "BLANK") throw new Error("Choose a usable map edition.");
   if (!/\.geojson$|\.json$/i.test(input.fileName)) throw new Error("Choose a road-only GeoJSON file, not a whole map PDF.");
   if (input.fileSizeBytes > IMPORT_PREVIEW_MAX_BYTES) throw new Error("Road study files must be no larger than 2 MB.");
+  let payload: { metadata?: { source_edition?: unknown; source_sha256?: unknown } };
+  try { payload = JSON.parse(input.text); }
+  catch { throw new Error("Choose a valid GeoJSON road study file."); }
+  const sourceEdition = payload?.metadata?.source_edition;
+  const sourceHash = payload?.metadata?.source_sha256;
+  if (sourceEdition !== undefined && sourceEdition !== edition.id) throw new Error("The file's source edition does not match the selected map edition.");
+  if (sourceHash !== undefined && sourceHash !== edition.sha256) throw new Error("The file's source PDF hash does not match this map edition.");
   const preview = buildLocalImportPreview({
     fileName: input.fileName,
     fileSizeBytes: input.fileSizeBytes,

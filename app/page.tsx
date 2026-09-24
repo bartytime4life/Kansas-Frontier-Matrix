@@ -5338,7 +5338,7 @@ export default function Home() {
     setRoadStudyError("");
     try {
       if (roadStudyLayers.length >= ROAD_STUDY_MAX_LAYERS && !roadStudyLayers.some((layer) => layer.editionId === editionId)) throw new Error(`Compare at most ${ROAD_STUDY_MAX_LAYERS} editions at once. Remove one to add another.`);
-      if (file.size > IMPORT_PREVIEW_MAX_BYTES) throw new Error("Choose a change-only road GeoJSON file no larger than 2 MB.");
+      if (file.size > IMPORT_PREVIEW_MAX_BYTES) throw new Error("Choose a road-line GeoJSON file no larger than 2 MB.");
       const text = await file.text();
       if (generation !== roadStudyImportGenerationRef.current) return;
       const existing = roadStudyLayers.find((layer) => layer.editionId === editionId);
@@ -7327,7 +7327,7 @@ export default function Home() {
             </div>
             <p>These are the site-local domain layers. A domain lens adds its matching historical layer(s) to the map without hiding the rest of the catalog; where available, it also adds clearly separated live operational context for the present frame.</p>
             <div className="catalog-airflow-entry"><div><strong>Airflow</strong><small>NWS forecast wind barbs · external context, not a measured flow or historical record</small></div><button type="button" aria-pressed={officialVisibility["nws-forecast-wind"]} onClick={() => setOfficialContextVisible("nws-forecast-wind", !officialVisibility["nws-forecast-wind"])}>{officialVisibility["nws-forecast-wind"] ? "Hide forecast wind" : "Show forecast wind"}</button></div>
-            <div className="catalog-airflow-entry"><div><strong>Historical roads · map editions</strong><small>{ROAD_MAP_EDITIONS.length} local PDF identities inventoried; candidate change-only lines can be previewed separately in browser memory.</small></div><button type="button" onClick={(event) => openMapUtility("compare", event.currentTarget)}>Compare road years</button></div>
+            <div className="catalog-airflow-entry"><div><strong>Historical roads · map editions</strong><small>{ROAD_MAP_EDITIONS.length} local PDF identities inventoried; candidate road graphics can be compared in browser memory.</small></div><button type="button" onClick={(event) => openMapUtility("compare", event.currentTarget)}>Compare road years</button></div>
           </section>
 
           </div>
@@ -8169,11 +8169,11 @@ export default function Home() {
               {mapUtilityView === "compare" && <section id="map-utility-view-compare" role="tabpanel" aria-labelledby="map-utility-tab-compare" className="map-utility-section layer-compare-section">
                 <div className="map-utility-section-heading"><span>COMPARE</span><h3>Time + layer investigation</h3><p>Compare catalog availability across two times, then inspect two registry layers without flattening source role, release posture, or sensitivity into a single score.</p></div>
                 <section className="road-year-study" aria-labelledby="road-year-study-title">
-                  <header><div><span>HISTORICAL ROAD STUDY · LOCAL PREVIEW</span><h4 id="road-year-study-title">Candidate road changes by map edition</h4></div><strong>{roadStudyLayers.length}/{ROAD_STUDY_MAX_LAYERS} loaded</strong></header>
-                  <p>Prepare a GeoJSON file containing only candidate changed road segments for each comparison, then overlay editions with separate colors and opacity. This preview does not detect or verify changes. The source PDFs are <strong>not</strong> drawn as full-page maps. A printed edition identifies when a road was mapped, not the year it opened, closed, or changed. Missing years stay unknown.</p>
+                  <header><div><span>HISTORICAL ROAD STUDY · LOCAL PREVIEW</span><h4 id="road-year-study-title">Candidate road linework by map edition</h4></div><strong>{roadStudyLayers.length}/{ROAD_STUDY_MAX_LAYERS} loaded</strong></header>
+                  <p>Choose local GeoJSON linework for each map edition, then compare up to four editions with separate colors and opacity. The available derived files trace colored marks printed on maps; they are incomplete and approximately positioned. This preview does not detect or verify road changes. Missing years remain unknown.</p>
                   <div className="road-study-import">
                     <label>Map edition<select value={roadStudyEditionId} onChange={(event) => setRoadStudyEditionId(event.target.value)}>{ROAD_MAP_EDITIONS.map((edition) => <option key={edition.id} value={edition.id} disabled={edition.localPdfState === "BLANK"}>{edition.label}{edition.localPdfState === "BLANK" ? " · blank local PDF" : ""}</option>)}</select></label>
-                    <label>Candidate change-only GeoJSON<input ref={roadStudyInputRef} type="file" accept=".geojson,.json,application/geo+json" disabled={roadStudyBusy} onChange={(event) => void inspectRoadStudyFile(event.target.files?.[0])} /></label>
+                    <label>Candidate road-line GeoJSON<input ref={roadStudyInputRef} type="file" accept=".geojson,.json,application/geo+json" disabled={roadStudyBusy} onChange={(event) => void inspectRoadStudyFile(event.target.files?.[0])} /></label>
                   </div>
                   <small>Line geometry only · up to 2 MB and 2,500 lines per edition · browser memory only · no upload, saved workspace, report, or release effect.</small>
                   {roadStudyError && <p className="road-study-error" role="alert">{roadStudyError}</p>}
@@ -8183,7 +8183,7 @@ export default function Home() {
                     <label className="road-study-opacity">Opacity <output>{Math.round(layer.opacity * 100)}%</output><input type="range" min="0" max="100" value={Math.round(layer.opacity * 100)} onChange={(event) => setRoadStudyLayers((current) => current.map((entry) => entry.editionId === layer.editionId ? { ...entry, opacity: Number(event.target.value) / 100 } : entry))} aria-label={`${layer.editionLabel} road opacity`} /></label>
                     <button type="button" onClick={() => setRoadStudyLayers((current) => current.map((entry) => entry.editionId === layer.editionId ? { ...entry, visible: !entry.visible } : entry))}>{layer.visible ? "Hide" : "Show"}</button>
                     <button type="button" onClick={() => setRoadStudyLayers((current) => current.filter((entry) => entry.editionId !== layer.editionId))}>Remove</button>
-                  </article>)}{roadStudyLayers.length === 0 && <div className="map-utility-empty"><strong>No candidate road changes loaded</strong><p>The 55 PDF identities are inventoried, but the scans are not road geometry. Use georeferenced, traced change-only GeoJSON for a private comparison.</p></div>}</div>
+                  </article>)}{roadStudyLayers.length === 0 && <div className="map-utility-empty"><strong>No road linework loaded</strong><p>Choose local candidate GeoJSON files to compare printed map editions. The Site does not bundle or publish the quarantined road traces.</p></div>}</div>
                   <footer>Source leads: <a href={KDOT_HISTORIC_STATE_MAPS_URL} target="_blank" rel="noreferrer">KDOT historic state maps ↗</a> · <a href={KDOT_PAST_COUNTY_MAPS_URL} target="_blank" rel="noreferrer">KDOT county map archive ↗</a>. Written permission was reported by the project owner; its exact terms and each map-to-line transform still need review before repository admission or publication.</footer>
                 </section>
                 <SynchronizedComparison snapshot={comparisonSnapshot} layerA={compareLeft.id} layerB={compareRight.id} timeA={compareTimeA} timeB={compareTimeB} />

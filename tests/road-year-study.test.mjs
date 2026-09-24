@@ -38,6 +38,18 @@ test("road study accepts only local Kansas lines and strips properties", () => {
   assert.throws(() => study.inspectRoadStudyFile(input("1941", geojson({ type: "LineString", coordinates: [[-80, 38], [-79, 38]] }))), /inside the Kansas study area/);
 });
 
+test("source-bound graphic traces must match the selected map edition", () => {
+  const text = JSON.stringify({
+    type: "FeatureCollection",
+    metadata: { source_edition: "1941", source_sha256: editions.ROAD_MAP_EDITION_BY_ID["1941"].sha256 },
+    features: [{ type: "Feature", geometry: { type: "LineString", coordinates: [[-99, 38], [-98, 38.2]] }, properties: {} }],
+  });
+  assert.equal(study.inspectRoadStudyFile(input("1941", text)).featureCount, 1);
+  assert.throws(() => study.inspectRoadStudyFile(input("1945", text)), /source edition does not match/);
+  const wrongHash = text.replace(editions.ROAD_MAP_EDITION_BY_ID["1941"].sha256, "0".repeat(64));
+  assert.throws(() => study.inspectRoadStudyFile(input("1941", wrongHash)), /source PDF hash does not match/);
+});
+
 test("road editions retain independent color and opacity through map updates", () => {
   const text = geojson({ type: "LineString", coordinates: [[-99, 38], [-98, 38.2]] });
   const first = study.inspectRoadStudyFile(input("1941", text));
