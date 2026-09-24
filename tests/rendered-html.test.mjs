@@ -818,10 +818,11 @@ test("keeps every top-level external map carrier in a display-only disclosure re
   assert.match(page, /NO REQUEST FROM CURRENT VIEW/);
 });
 
-test("connects seventeen bounded official Kansas context sources without admitting evidence", async () => {
+test("connects eighteen bounded official Kansas context sources without admitting evidence", async () => {
   const ts = await import("typescript");
   const registrySource = await readFile(new URL("../app/live-context.ts", import.meta.url), "utf8");
   const radarSource = await readFile(new URL("../app/noaa-radar.ts", import.meta.url), "utf8");
+  const satelliteSource = await readFile(new URL("../app/noaa-satellite.ts", import.meta.url), "utf8");
   const route = await readFile(new URL("../app/api/live-context/route.ts", import.meta.url), "utf8");
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
@@ -830,9 +831,10 @@ test("connects seventeen bounded official Kansas context sources without admitti
     fileName,
   }).outputText;
   const radarUrl = `data:text/javascript;base64,${Buffer.from(compile(radarSource, "noaa-radar.ts")).toString("base64")}`;
+  const satelliteUrl = `data:text/javascript;base64,${Buffer.from(compile(satelliteSource, "noaa-satellite.ts")).toString("base64")}`;
   const performanceSource = await readFile(new URL("../app/map-performance.ts", import.meta.url), "utf8");
   const performanceUrl = `data:text/javascript;base64,${Buffer.from(compile(performanceSource, "map-performance.ts")).toString("base64")}`;
-  const javascript = compile(registrySource.replace('from "./noaa-radar";', `from "${radarUrl}";`).replace('from "./map-performance";', `from "${performanceUrl}";`), "live-context.ts");
+  const javascript = compile(registrySource.replace('from "./noaa-radar";', `from "${radarUrl}";`).replace('from "./noaa-satellite";', `from "${satelliteUrl}";`).replace('from "./map-performance";', `from "${performanceUrl}";`), "live-context.ts");
   const registry = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
 
   assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.map((record) => record.id), [
@@ -848,6 +850,7 @@ test("connects seventeen bounded official Kansas context sources without admitti
     "nasa-firms-active-fire",
     "nasa-gibs-fire-points",
     "nifc-fire-reports",
+    "noaa-goes-geocolor",
     "raspberry-shake-stations",
     "usgs-3dep-hillshade",
     "usgs-3dep-slope",

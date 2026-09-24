@@ -1,9 +1,10 @@
 import type { FeatureCollection } from "geojson";
 import type { GeoJSONSource, LayerSpecification, Map as MapLibreMap, RasterTileSource } from "maplibre-gl";
 import { noaaRadarTileUrl } from "./noaa-radar";
+import { noaaSatelliteTileUrl } from "./noaa-satellite";
 import { rememberGeoJSON, updateGeoJSON, setVisibleIfChanged, setPaintIfChanged } from "./map-performance";
 
-export type OfficialContextId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar";
+export type OfficialContextId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar";
 export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations";
 export type OfficialContextState = "idle" | "loading" | "ready" | "empty" | "partial" | "error";
 
@@ -337,6 +338,29 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     fallback: "A failed or partial query stays labeled. Missing incident records or thermal matches are never presented as no fire or an all-clear.",
   }),
   Object.freeze({
+    id: "noaa-goes-geocolor",
+    title: "NOAA Earth in Real-Time GOES GeoColor",
+    shortTitle: "NOAA satellite · GeoColor",
+    organization: "NOAA NESDIS Satellite Maps",
+    domain: "Fire, smoke & hazards",
+    kind: "OPERATIONAL_WMS",
+    sourceId: "external-noaa-goes-geocolor",
+    layerIds: Object.freeze(["external-noaa-goes-geocolor-raster"]),
+    interactiveLayerIds: Object.freeze([]),
+    endpointLabel: "satellitemaps.nesdis.noaa.gov · MERGEDGC_Last_24hr ImageServer",
+    sourceUrl: "https://www.nesdis.noaa.gov/imagery/satellite-maps/earth-real-time",
+    serviceUrl: "https://satellitemaps.nesdis.noaa.gov/arcgis/rest/services/MERGEDGC_Last_24hr/ImageServer",
+    cadence: "Provider GOES East/West GeoColor images, commonly every 10–15 minutes; gaps may occur",
+    freshness: "Exact start and end times from the selected NOAA image catalog record",
+    defaultVisibility: false,
+    defaultOpacity: 0.58,
+    color: "#72d8f2",
+    attribution: "NOAA NESDIS Satellite Maps · GOES GeoColor",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    boundary: "This is NOAA's time-enabled GOES East/West GeoColor imagery, with a bounded 24-hour frame list and each displayed tile locked to one catalog raster ID. GeoColor is a visual composite of satellite channels. Cloud appearance is not a surface measurement, smoke observation, fire detection, storm forecast, warning, or safety guidance. NOAA describes this satellite map as informational, not operational. No KFM EvidenceBundle or release is established.",
+    fallback: "If the dated frame catalog or tiles fail, the image layer remains unavailable. The Site does not substitute the separate cached current service, whose image time is not bound to the selected frame.",
+  }),
+  Object.freeze({
     id: "raspberry-shake-stations",
     title: "Raspberry Shake AM station network",
     shortTitle: "Raspberry Shake stations",
@@ -537,6 +561,11 @@ export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextI
     supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
     limitation: "The Site checks Kansas WFIGS/IRWIN incident discoveries in the preceding 30 days. It does not reconstruct historical report snapshots, infer ongoing activity, or treat proximity to a satellite thermal detection as incident confirmation.",
   }),
+  "noaa-goes-geocolor": Object.freeze({
+    axis: "provider-observation-loop",
+    supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
+    limitation: "NOAA's rolling 24-hour GeoColor catalog supplies explicitly dated image frames. Select one provider frame; an older or delayed image remains labeled by its source time. No undated tile cache is used.",
+  }),
   "raspberry-shake-stations": Object.freeze({
     axis: "rolling-retrieval-window",
     supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
@@ -723,6 +752,30 @@ export const applyOfficialContextState = (
       if (layer?.type === "symbol") setPaintIfChanged(map, layerId, "text-opacity", safeOpacity);
     }
   }
+};
+
+/** Select one provider catalog raster. No service-default or undated tile is used. */
+export const setNoaaSatelliteFrame = (map: MapLibreMap, objectId: number, visible: boolean, opacity: number): void => {
+  const satellite = OFFICIAL_CONTEXT_BY_ID["noaa-goes-geocolor"];
+  const tileUrl = noaaSatelliteTileUrl(objectId);
+  let source = map.getSource(satellite.sourceId) as RasterTileSource | undefined;
+  if (!source) {
+    map.addSource(satellite.sourceId, { type: "raster", tiles: [tileUrl], tileSize: 256, attribution: satellite.attribution,
+      bounds: [-104.8, 34.8, -92, 42.2], minzoom: 3, maxzoom: 11 });
+    source = map.getSource(satellite.sourceId) as RasterTileSource | undefined;
+  } else if (typeof source.setTiles === "function" && source.serialize().tiles?.[0] !== tileUrl) source.setTiles([tileUrl]);
+  const beforeId = map.getLayer(OFFICIAL_CONTEXT_BY_ID["census-counties"].layerIds[0])
+    ? OFFICIAL_CONTEXT_BY_ID["census-counties"].layerIds[0] : firstRegistryLayer(map);
+  ensureLayer(map, { id: satellite.layerIds[0], type: "raster", source: satellite.sourceId,
+    paint: { "raster-opacity": Math.max(0, Math.min(1, opacity)), "raster-fade-duration": 0 } }, beforeId);
+  setVisibleIfChanged(map, satellite.layerIds[0], visible && map.getProjection?.()?.type !== "globe");
+  setPaintIfChanged(map, satellite.layerIds[0], "raster-opacity", Math.max(0, Math.min(1, opacity)));
+};
+
+export const clearNoaaSatelliteFrame = (map: MapLibreMap): void => {
+  const satellite = OFFICIAL_CONTEXT_BY_ID["noaa-goes-geocolor"];
+  if (map.getLayer(satellite.layerIds[0])) map.removeLayer(satellite.layerIds[0]);
+  if (map.getSource(satellite.sourceId)) map.removeSource(satellite.sourceId);
 };
 
 /** Checks the renderer source without mutating or reloading it. */

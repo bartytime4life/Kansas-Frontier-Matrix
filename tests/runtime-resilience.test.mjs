@@ -159,6 +159,6 @@ test("partial map degradation stays clear of the primary map controls", async ()
 });
 
 test("every official connection has feature-level traceability", () => {
-  assert.equal(registry.SITE_REGISTRY_COUNTS.connections, 17);
+  assert.equal(registry.SITE_REGISTRY_COUNTS.connections, 18);
   assert.deepEqual(registry.SITE_REGISTRY_VALIDATION, { ok: true, errors: [] });
 });
