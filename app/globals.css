@@ -1,6 +1,18 @@
 @import "tailwindcss";
 @import "maplibre-gl/dist/maplibre-gl.css";
 
+/* Earth Engine shares the globe camera; its discovery panel keeps the canvas visible. */
+.globe-mode-controls { display:flex; gap:2px; border:1px solid #507e7b; border-radius:6px; }
+.map-view-mode-strip .globe-mode-controls button { min-width:auto; }
+.globe-mode-controls[data-active="true"] { border-color:#68c6c6; background:#143b414d; }
+.map-stage[data-earth-engine="true"] .map-canvas { top:104px; right:384px; }
+@media(max-width:760px) {
+  .map-stage[data-earth-engine="true"] .map-canvas { right:0; bottom:46%; }
+}
+@media(max-width:620px) {
+  .map-stage[data-earth-engine="true"] .map-canvas { top:60px; }
+}
+
 /* Event Observatory: one map, an explicit event clock, and independently
    dated source tracks. These selectors do not restyle the atlas workspace. */
 .event-entry-link { display: inline-flex; align-items: center; padding: 8px 12px; border: 1px solid #7acbb18c; border-radius: 6px; color: #a7eed7; font-size: 12px; text-decoration: none; white-space: nowrap; }

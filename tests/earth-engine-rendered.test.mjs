@@ -14,5 +14,8 @@ test("production worker serves discoverable Earth Engine workspace with honest a
   assert.match(html, /No satellite data has been imported/);
   const home = await worker.fetch(new Request("http://localhost/", { headers: { accept: "text/html" } }), env, ctx);
   assert.equal(home.status, 200);
-  assert.match(await home.text(), /href="\/earth-engine"/);
+  const homeHtml = await home.text();
+  assert.match(homeHtml, /href="\/earth-engine"/);
+  assert.match(homeHtml, /aria-label="Globe and Earth Engine"/);
+  assert.match(homeHtml, /aria-controls="earth-engine-globe-panel"/);
 });

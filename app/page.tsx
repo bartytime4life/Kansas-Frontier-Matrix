@@ -9,6 +9,8 @@ import { BASELINE_STACKS, currentUtcDay } from "./daily-baseline";
 import { SourceQualityRow } from "./source-quality-row";
 import { ArchiveDaySlider } from "./archive-day-slider";
 import { DataNotices, RenderQualityControl, TerrainQuickControls } from "./map-toolbar";
+import { EarthEngineGlobe } from "./earth-engine-globe";
+import { applyProjectionNavigationLimits, GLOBE_VIEWPOINTS, readGlobeCamera, REGIONAL_NAVIGATION_BOUNDS, type GlobeCameraReading, type GlobeViewpoint } from "./globe-context";
 import { browserRenderBudget, readRenderQuality, sampleMapRuntimeHealth, QUALITY_STORAGE_KEY, type MapRuntimeCheckFailure, type RenderQuality } from "./map-performance";
 import type { Feature, Geometry } from "geojson";
 import type { GeoJSONSource, Map as MapLibreMap, MapSourceDataEvent, Popup, ScaleControl } from "maplibre-gl";
@@ -1203,6 +1205,11 @@ export default function Home() {
   const [layerOrder, setLayerOrder] = useState<string[]>(defaultOrder);
   const [basemap, setBasemap] = useState<BasemapKey>("standard");
   const [view, setView] = useState<ViewState>(KANSAS_VIEW);
+  const [earthEngineOpen, setEarthEngineOpen] = useState(false);
+  const [globeCamera, setGlobeCamera] = useState<GlobeCameraReading | null>(null);
+  const [globeCameraMoving, setGlobeCameraMoving] = useState(false);
+  const regionalViewRef = useRef<ViewState>(KANSAS_VIEW);
+  const earthEngineTriggerRef = useRef<HTMLButtonElement>(null);
   const [scenePreset, setScenePreset] = useState<ScenePresetId>("overview-2d");
   const [terrainState, setTerrainState] = useState<TerrainPresentationState>("OFF");
   const [topographicOverlay, setTopographicOverlay] = useState(false);
@@ -3815,6 +3822,7 @@ export default function Home() {
     setMapUtilityView(snapshot.representation === "Compare" ? "compare" : "navigate");
     setMapUtilityOpen(snapshot.representation === "Compare");
     setPrimaryWorkspace("map");
+    if (mapRef.current) applyProjectionNavigationLimits(mapRef.current, snapshot.projection);
     if (snapshot.camera.center !== "WITHHELD_BROWSER_LOCATION") {
       mapRef.current?.easeTo({
         center: [...snapshot.camera.center] as [number, number],
@@ -3868,13 +3876,14 @@ export default function Home() {
 
   const restoreExplorerFromUrl = useCallback(() => {
       const params = new URLSearchParams(window.location.search);
+      const restoringGlobe = params.get("proj") === "globe";
       const centerParam = params.get("c")?.split(",").map((token) => token.trim() === "" ? Number.NaN : Number(token));
       const center: [number, number] = centerParam?.length === 2 && centerParam.every(Number.isFinite)
-        ? [clamp(centerParam[0], -104.8, -92), clamp(centerParam[1], 34.8, 42.2)]
+        ? [clamp(centerParam[0], restoringGlobe ? -180 : -104.8, restoringGlobe ? 180 : -92), clamp(centerParam[1], restoringGlobe ? -85 : 34.8, restoringGlobe ? 85 : 42.2)]
         : KANSAS_VIEW.center;
       const restoredView: ViewState = {
         center,
-        zoom: clamp(parseNumber(params.get("z"), KANSAS_VIEW.zoom), 4, 16),
+        zoom: clamp(parseNumber(params.get("z"), KANSAS_VIEW.zoom), restoringGlobe ? 0 : 4, 16),
         bearing: clamp(parseNumber(params.get("b"), KANSAS_VIEW.bearing), -180, 180),
         pitch: clamp(parseNumber(params.get("p"), KANSAS_VIEW.pitch), 0, 85),
       };
@@ -3887,6 +3896,7 @@ export default function Home() {
       cameraHistoryIndexRef.current = 0;
       setCameraHistoryIndex(0);
       setCameraHistoryLength(1);
+      if (mapRef.current) applyProjectionNavigationLimits(mapRef.current, restoringGlobe ? "globe" : "mercator");
       mapRef.current?.jumpTo(restoredView);
       const analysisTokens = params.get("aoi")?.split(",").map((token) => token.trim() === "" ? Number.NaN : Number(token));
       const restoredAnalysisArea = !restoredCameraRedaction && analysisTokens?.length === 4 && analysisTokens.every(Number.isFinite)
@@ -4144,9 +4154,9 @@ export default function Home() {
           maxTileCacheSize: renderBudget.tileCache,
           maxPitch: 60,
           renderWorldCopies: false,
-          minZoom: 4,
+          minZoom: projectionRef.current === "globe" ? 0 : 4,
           maxZoom: 16,
-          maxBounds: [[-104.8, 34.8], [-92.0, 42.2]],
+          maxBounds: projectionRef.current === "globe" ? undefined : REGIONAL_NAVIGATION_BOUNDS,
           attributionControl: { compact: true },
           cooperativeGestures: gestureModeRef.current === "cooperative",
           boxZoom: {
@@ -4266,6 +4276,7 @@ export default function Home() {
             styleStep = "ELEVATION_SCALE";
             setElevationExaggeration(map, verticalExaggerationRef.current);
             styleStep = "PROJECTION";
+            applyProjectionNavigationLimits(map, projectionRef.current);
             map.setProjection({ type: projectionRef.current });
             if (noaaSatelliteFrameRef.current) setNoaaSatelliteFrame(map, noaaSatelliteFrameRef.current.objectId,
               officialVisibilityRef.current["noaa-goes-geocolor"] && temporalQueryRef.current.frame === OFFICIAL_CONTEXT_PRESENT_FRAME,
@@ -4548,10 +4559,13 @@ export default function Home() {
         interactionHandlersBound = true;
 
         map.on("movestart", () => {
+          setGlobeCameraMoving(true);
           const center = map.getCenter();
           lastKnownGoodViewRef.current = { center: [center.lng, center.lat], zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch() };
         });
         map.on("moveend", () => {
+          setGlobeCameraMoving(false);
+          setGlobeCamera(readGlobeCamera(map));
           const center = map.getCenter();
           const nextView: ViewState = { center: [center.lng, center.lat], zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch() };
           const bounds = map.getBounds();
@@ -4571,6 +4585,9 @@ export default function Home() {
               setCameraHistoryLength(nextHistory.length);
             }
           }
+        });
+        map.on("idle", () => {
+          if (projectionRef.current === "globe") setGlobeCamera(readGlobeCamera(map));
         });
         map.on("error", (event) => {
           const message = event.error?.message || "The map reported an unknown rendering error.";
@@ -4827,12 +4844,14 @@ export default function Home() {
     const map = mapRef.current;
     if (!map || !styleGenerationReadyRef.current) return;
     runMapMutation("Projection update", () => {
+      applyProjectionNavigationLimits(map, projection);
       map.setProjection({ type: projection });
       // Current WMS overlays are regional Mercator tile carriers. Re-apply their
       // visibility after a projection change so globe mode cannot retain a
       // stretched or color-shifted raster from the prior 2D view.
       applyOfficialContextState(map, effectiveOfficialVisibility, officialOpacity, officialPayloads);
       setMaplibreProbe((current) => ({ ...current, projection }));
+      setGlobeCamera(readGlobeCamera(map));
     });
   }, [effectiveOfficialVisibility, officialOpacity, officialPayloads, projection, runMapMutation]);
 
@@ -5560,11 +5579,16 @@ export default function Home() {
     map?.stop();
     const currentBearing = map?.getBearing() ?? view.bearing;
     const currentPitch = map?.getPitch() ?? view.pitch;
+    const wasGlobe = projectionRef.current === "globe";
+    if (mode === "globe" && !wasGlobe) {
+      const center = map?.getCenter();
+      regionalViewRef.current = center ? { center: [center.lng, center.lat], zoom: map!.getZoom(), bearing: currentBearing, pitch: currentPitch } : view;
+    }
     const nextProjection = mode === "globe" ? "globe" : "mercator";
     const nextScenePreset: ScenePresetId = mode === "terrain" ? "elevation-3d" : mode === "globe" ? "globe-overview" : "overview-2d";
     const nextAtmosphere: AtmospherePreset = mode === "terrain" ? "dusk" : mode === "globe" ? "clear" : "night";
     const nextFieldOfView = mode === "terrain" ? 44 : mode === "globe" ? 42 : 36;
-    const nextPitch = mode === "terrain" ? Math.max(48, currentPitch) : mode === "globe" ? Math.max(22, currentPitch) : 0;
+    const nextPitch = mode === "terrain" ? Math.max(48, currentPitch) : 0;
     const nextBearing = mode === "2d" ? 0 : currentBearing;
 
     projectionRef.current = nextProjection;
@@ -5573,6 +5597,7 @@ export default function Home() {
     atmospherePresetRef.current = nextAtmosphere;
     lightAzimuthRef.current = mode === "terrain" ? 235 : mode === "globe" ? 225 : 210;
     fieldOfViewRef.current = nextFieldOfView;
+    if (map) applyProjectionNavigationLimits(map, nextProjection);
 
     // Commit renderer state as one transaction before scheduling React's
     // presentation updates. This makes repeated 2D ↔ terrain ↔ globe changes
@@ -5612,8 +5637,31 @@ export default function Home() {
         return next;
       });
     }
-    map?.easeTo({ pitch: nextPitch, bearing: nextBearing, duration: motionDuration(420), essential: false });
+    const cameraTarget = mode === "globe" && !wasGlobe ? GLOBE_VIEWPOINTS.earth
+      : mode !== "globe" && wasGlobe ? { ...regionalViewRef.current, pitch: nextPitch, bearing: nextBearing }
+        : { pitch: nextPitch, bearing: nextBearing };
+    if (!map && "center" in cameraTarget) pendingViewRef.current = cameraTarget;
+    map?.easeTo({ ...cameraTarget, duration: motionDuration(420), essential: false });
+    setEarthEngineOpen(mode === "globe");
+    if (mode === "globe") { setLeftOpen(false); setRightOpen(false); setSourceStatusOpen(false); setMapUtilityOpen(false); }
     announce(`${mode === "terrain" ? "Terrain 3D display" : mode === "globe" ? "Globe display" : "2D evidence display"} applied · active time and selection preserved`);
+  };
+
+  const chooseGlobeViewpoint = (viewpoint: GlobeViewpoint) => {
+    const map = mapRef.current;
+    if (!map || projectionRef.current !== "globe") { announce("Globe camera is not ready yet"); return; }
+    stopSceneOrbit(false);
+    runMapMutation("Globe viewpoint", () => {
+      map.stop();
+      applyProjectionNavigationLimits(map, "globe");
+      map.easeTo({ ...GLOBE_VIEWPOINTS[viewpoint], duration: motionDuration(700), essential: false });
+    });
+    announce(`${GLOBE_VIEWPOINTS[viewpoint].label} viewpoint · recipe study area remains Kansas`);
+  };
+
+  const closeEarthEngineGlobe = () => {
+    setEarthEngineOpen(false);
+    earthEngineTriggerRef.current?.focus();
   };
 
   const startTerrainInvestigation = () => {
@@ -5785,6 +5833,7 @@ export default function Home() {
     setLocationCameraRedacted(false);
     clearSelectionState();
     const map = mapRef.current;
+    if (map) applyProjectionNavigationLimits(map, profile.projection);
     if (map?.isStyleLoaded()) {
       if (nextScenePreset !== "elevation-3d") {
         setTerrainState(setTerrainPresentation(map, false, 1));
@@ -6050,6 +6099,7 @@ export default function Home() {
     setReportEvidenceFilter(savedEvidenceFilter === "ALL" || (savedEvidenceFilter && savedEvidenceFilter in evidenceLabels) ? savedEvidenceFilter : "ALL");
     setReportGeneratedAt(new Date().toISOString());
     const savedView = snapshot.view;
+    if (mapRef.current) applyProjectionNavigationLimits(mapRef.current, nextProjection);
     if (savedView && Array.isArray(savedView.center) && savedView.center.length === 2) {
       locationDerivedViewRef.current = restoredLocationCameraRedaction;
       setLocationCameraRedacted(restoredLocationCameraRedaction);
@@ -7495,7 +7545,7 @@ export default function Home() {
           </div>
         </aside>
 
-        <section className="map-stage" data-live-dock={liveDockVisible} data-radar-loop={showRadarDock} aria-label="Kansas MapLibre Explorer">
+        <section className="map-stage" data-earth-engine={earthEngineOpen && projection === "globe"} data-live-dock={liveDockVisible} data-radar-loop={showRadarDock} aria-label="Kansas MapLibre Explorer">
           <div className="mission-band map-command-bar">
             <div className="map-command-identity">
               <span className="map-command-eyebrow">ACTIVE INVESTIGATION</span>
@@ -7517,7 +7567,10 @@ export default function Home() {
             <span className="map-view-mode-heading">MAP REPRESENTATION <small>{mapRepresentationLabel}</small></span>
             <button type="button" aria-pressed={projection === "mercator" && scenePreset !== "elevation-3d"} data-active={projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => activateMapRepresentation("2d")}><b>2D</b><span>Map</span></button>
             <button type="button" aria-pressed={scenePreset === "elevation-3d"} data-active={scenePreset === "elevation-3d"} onClick={() => activateMapRepresentation("terrain")}><b>Terrain 3D</b><span>{verticalExaggeration.toFixed(1)}×</span></button>
-            <button type="button" aria-pressed={projection === "globe"} data-active={projection === "globe"} onClick={() => activateMapRepresentation("globe")}><b>Globe</b><span>◎</span></button>
+            <div className="globe-mode-controls" role="group" aria-label="Globe and Earth Engine" data-active={projection === "globe"}>
+              <button type="button" aria-pressed={projection === "globe"} data-active={projection === "globe"} onClick={() => activateMapRepresentation("globe")}><b>Globe</b><span>◎</span></button>
+              <button ref={earthEngineTriggerRef} type="button" aria-expanded={earthEngineOpen && projection === "globe"} aria-controls="earth-engine-globe-panel" onClick={() => earthEngineOpen && projection === "globe" ? closeEarthEngineGlobe() : activateMapRepresentation("globe")}><b>Earth Engine</b><span>⌄</span></button>
+            </div>
             <button type="button" aria-pressed={mapUtilityOpen && mapUtilityView === "compare"} data-active={mapUtilityOpen && mapUtilityView === "compare"} onClick={() => mapUtilityOpen && mapUtilityView === "compare" ? closeMapUtility() : activateMapRepresentation("compare")}><b>Compare</b><span>A/B</span></button>
             <TerrainQuickControls active={scenePreset === "elevation-3d"} state={terrainState} exaggeration={verticalExaggeration} lighting={atmospherePreset} azimuth={lightAzimuth} heightOverlay={topographicOverlay} onPreset={applyTerrainLook} onExaggeration={value => { verticalExaggerationRef.current = value; setVerticalExaggeration(value); }} onLighting={value => { atmospherePresetRef.current = value; setAtmospherePreset(value); }} onAzimuth={value => { lightAzimuthRef.current = value; setLightAzimuth(value); }} onHeight={toggleTopographicHeightOverlay} onRetry={retryTerrain} />
           </nav>
@@ -7551,9 +7604,9 @@ export default function Home() {
             <button className="map-control-launch" type="button" onClick={() => { setSourceStatusOpen((open) => !open); setLeftOpen(false); }} aria-expanded={sourceStatusOpen} aria-controls="map-source-status"><strong>Source status</strong></button>
             <button className="map-control-launch" type="button" onClick={() => setInstrumentOpen((open) => !open)} aria-pressed={instrumentOpen}><strong>Charts</strong></button>
             <button className="map-control-launch" type="button" onClick={() => window.location.assign("/")} title={`Open a fresh baseline for ${baselineDay} UTC`}><strong>Today’s baseline</strong></button>
-            <Link className="map-control-launch" href="/earth-engine"><strong>Earth Engine</strong></Link>
             <Link className="map-control-launch" href="/data"><strong>Contribute data</strong></Link>
           </nav>
+          {earthEngineOpen && projection === "globe" && <EarthEngineGlobe camera={globeCamera} moving={globeCameraMoving} rendererState={runtime.kind} basemap={BASEMAPS[basemap].title} mapYear={year} mapTime={temporalScopeLabel} onViewpoint={chooseGlobeViewpoint} onClose={closeEarthEngineGlobe} />}
           {sourceStatusOpen && <aside id="map-source-status" className="map-source-status" aria-label="Source status and data quality">
             <header><h2>Sources & data quality</h2><button type="button" onClick={() => setSourceStatusOpen(false)} aria-label="Close source status">×</button></header>
             <p>Today · {baselineDay} UTC. Live observations refresh as providers publish. County counts keep their Census edition, and historical gaps remain visible.</p>

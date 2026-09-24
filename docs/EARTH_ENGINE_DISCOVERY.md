@@ -62,6 +62,47 @@ no automatic export or write operation.
 
 ## Validation and rollback
 
+### Globe attachment follow-up
+
+Earth Engine now opens beside the Globe representation without leaving the map.
+Whole Earth, North America and Kansas viewpoint controls adjust only the camera.
+Globe mode removes the regional movement bounds and lowers minimum zoom from 4
+to 0; returning to 2D or terrain restores the regional limits and the prior
+regional center/zoom. Style changes reapply the correct navigation constraints.
+Globe URL restoration accepts its wider view instead of clamping it to Kansas.
+Saved workspace and story cameras apply navigation limits before moving, so a
+regional view cannot clamp a restored globe camera during the transition.
+
+The panel reports sampled renderer center, zoom, bearing, pitch, projection
+configuration, style/tile status and sample time. It labels movement as a last
+settled reading and preserves missing telemetry as unavailable. These values
+are map-camera telemetry, not orbital position, sensor data or Earth Engine
+connectivity. At close zoom the globe renderer transitions toward a local map;
+projection configuration is not a claim of visible whole-Earth curvature.
+
+Dataset selection, source coverage/resolution, map time and recipe year remain
+distinct. Use map year is available only within the product's supported complete
+years; a same-year recipe still represents an annual summary. Fixed products
+retain their own time span. Recipes continue to use only the Kansas study area,
+regardless of globe viewpoint. No Earth Engine raster is fetched or overlaid.
+This follow-up reuses the same standalone app/tests/docs ownership. The original
+full discovery page remains available for comparisons and review-draft downloads.
+
+MapLibre behavior basis: installed 6.9.0 API/type declarations and the official
+[globe zoom example](https://maplibre.org/maplibre-gl-js/docs/examples/zoom-and-planet-size-relation-on-globe/).
+Follow-up rollback is Site version 67 / commit
+`bc14501cdfb1e364150d5c3fc44efd26a381fb0f`; no database or source-data migration.
+
+Follow-up validation: production build, TypeScript checking and lint of the new
+modules passed. All 143 tests passed, including repeated projection limits,
+observed camera readings, invalid/missing readings and production route output.
+The existing share-state assertion was updated to retain zoom 4 for regional
+views and allow zoom 0 only for explicit globe URLs. Interactive/visual QA is
+still unverified: the browser tool again denied the local preview because its
+admin-enforced policy could not be verified. No alternate browser was used.
+
+### Original discovery validation
+
 Changed-area tests cover invalid and out-of-range requests, leap-year and missing
 period behavior, empty/error results, duplicate periods, product-specific
 processing, recipe syntax, and non-admitting review drafts. Worker-rendered route

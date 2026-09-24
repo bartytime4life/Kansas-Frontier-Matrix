@@ -514,7 +514,8 @@ test("keeps Focus Mode fail closed and share state complete", async () => {
   assert.match(source, /params\.get\("privacy"\) === "location-camera-redacted"/);
   assert.match(source, /window\.addEventListener\("popstate", handlePopState\)/);
   assert.match(source, /WebGL2 is unavailable in this browser/);
-  assert.match(source, /clamp\(parseNumber\(params\.get\("z"\), KANSAS_VIEW\.zoom\), 4, 16\)/);
+  assert.match(source, /const restoringGlobe = params\.get\("proj"\) === "globe"/);
+  assert.match(source, /clamp\(parseNumber\(params\.get\("z"\), KANSAS_VIEW\.zoom\), restoringGlobe \? 0 : 4, 16\)/);
   assert.match(source, /value === null \|\| value\.trim\(\) === ""/);
   assert.match(source, /params\.has\("l"\)/);
   assert.match(source, /LAYER_REGISTRY\.map\(\(layer\) => `\$\{layer\.id\}:\$\{\(opacity/);

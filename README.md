@@ -5,6 +5,13 @@ source downloads, and private data contribution and steward review workflows.
 
 ## Earth Engine discovery and Kansas recipes — September 24, 2026
 
+**Globe integration:** Earth Engine now sits next to Globe in the representation
+controls and opens in a panel alongside the map. Whole Earth, North America and
+Kansas viewpoints share the map camera, with sampled camera readings and explicit
+source-time/recipe-year boundaries. Global display movement does not expand the
+Kansas recipe area or activate Earth Engine data. The full discovery page remains
+available for metadata comparisons and review drafts.
+
 The Explorer's **Earth Engine** control opens `/earth-engine`: eight curated
 dataset records, text/topic search, a three-dataset metadata comparison, and
 downloadable JavaScript recipes and JSON review drafts. The same records feed
