@@ -163,7 +163,7 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   assert.match(page, /PRIORITY_CONTEXT_GROUPS/);
   assert.match(page, /Provider heights only/);
   assert.match(page, /role="switch" aria-checked=\{structures3DEnabled\}/);
-  assert.match(page, /Earthquakes, water, fire \+ smoke/);
+  assert.match(page, /Earthquakes, water, fire, smoke \+ airflow/);
   assert.match(page, /setPriorityContextGroupVisible/);
   assert.match(page, /priority-context-source/);
   assert.match(css, /\.priority-context-deck/);
@@ -514,7 +514,8 @@ test("keeps Focus Mode fail closed and share state complete", async () => {
   assert.match(source, /params\.get\("privacy"\) === "location-camera-redacted"/);
   assert.match(source, /window\.addEventListener\("popstate", handlePopState\)/);
   assert.match(source, /WebGL2 is unavailable in this browser/);
-  assert.match(source, /clamp\(parseNumber\(params\.get\("z"\), KANSAS_VIEW\.zoom\), 4, 16\)/);
+  assert.match(source, /const restoringGlobe = params\.get\("proj"\) === "globe"/);
+  assert.match(source, /clamp\(parseNumber\(params\.get\("z"\), KANSAS_VIEW\.zoom\), restoringGlobe \? 0 : 4, 16\)/);
   assert.match(source, /value === null \|\| value\.trim\(\) === ""/);
   assert.match(source, /params\.has\("l"\)/);
   assert.match(source, /LAYER_REGISTRY\.map\(\(layer\) => `\$\{layer\.id\}:\$\{\(opacity/);
@@ -724,8 +725,8 @@ test("keeps the MapLibre Workbench complete, bounded, and responsive", async () 
   assert.match(buildScript, /exec bash "\$\{script_dir\}\/sites-env\.sh"/);
   assert.match(installScript, /exec bash "\$\{script_dir\}\/sites-env\.sh"/);
   assert.match(tsconfig, /"target": "ES2022"/);
-  assert.match(source, /FULL TEMPORAL CAPACITY · 4\.54 GA BP TO 2026/);
-  assert.match(source, /Deep-time and intermediate ticks are capacity markers, not claims/);
+  assert.match(source, /YEAR BY YEAR · 1800 TO/);
+  assert.match(source, /Every calendar year is selectable; a year with no compatible records stays empty/);
   assert.match(source, /TIMELINE_JUMPS/);
   assert.match(explorerData, /-4_540_000_000/);
   assert.match(explorerData, /-541_000_000/);
@@ -818,7 +819,7 @@ test("keeps every top-level external map carrier in a display-only disclosure re
   assert.match(page, /NO REQUEST FROM CURRENT VIEW/);
 });
 
-test("connects eighteen bounded official Kansas context sources without admitting evidence", async () => {
+test("connects nineteen bounded official Kansas context sources without admitting evidence", async () => {
   const ts = await import("typescript");
   const registrySource = await readFile(new URL("../app/live-context.ts", import.meta.url), "utf8");
   const radarSource = await readFile(new URL("../app/noaa-radar.ts", import.meta.url), "utf8");
@@ -855,6 +856,7 @@ test("connects eighteen bounded official Kansas context sources without admittin
     "usgs-3dep-hillshade",
     "usgs-3dep-slope",
     "nws-alerts",
+    "nws-forecast-wind",
     "nws-radar",
   ]);
   assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.filter((record) => record.defaultVisibility).map((record) => record.id), ["census-counties", "usgs-streamflow", "usgs-3dhp-hydrography", "nasa-gibs-fire-points", "nifc-fire-reports"]);
@@ -1244,7 +1246,8 @@ test("binds a governed temporal sweep to map filters, live-source holds, compari
   assert.match(page, /setTemporalMode\("snapshot"\)[\s\S]+selectStoredFeature\(example\.layerId/);
   assert.match(page, /selection\.kind !== "registry"[\s\S]+filter === "ALL"/);
   assert.match(page, /officialContextIdForSelection/);
-  assert.match(page, /aria-current=\{step === temporalQuery\.frame \? "step" : undefined\}/);
+  assert.match(page, /data-committed=\{step === temporalQuery\.frame\}/);
+  assert.match(page, /aria-label="Preview time before committing; every year from 1800 is selectable"/);
   assert.match(runtime, /map\.setFilter\(renderer\.id, filter \?\? null\)/);
   assert.match(liveContext, /OFFICIAL_CONTEXT_TEMPORAL_SUPPORT/);
   assert.match(liveContext, /supportedFrames\.includes\(frame\)/);
@@ -1325,15 +1328,17 @@ test("keeps the feature, connection, action, and coding registries aligned", asy
   assert.match(docs, /Held ideas intentionally scaffolded/);
 });
 
-test("keeps live data and domain layers in separate, time-aware menus", async () => {
+test("opens domains and live data together while preserving separate source clocks", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
   assert.match(page, /type LeftPanelMode = "views" \| "layers" \| "live"/);
-  assert.match(page, /Live data <b>\{visibleOfficialCount\}\/\{OFFICIAL_CONTEXT_SOURCES\.length\}<\/b>/);
-  assert.match(page, /Domains <b>\{visibleCount\}\/\{LAYER_REGISTRY\.length\}<\/b>/);
-  assert.match(page, /openAtlasPanel\("live"\)/);
-  assert.match(page, /hidden=\{leftPanelMode !== "live"\}/);
+  assert.match(page, /Domains \+ live data/);
+  assert.match(page, /Domains \+ live <b>\{visibleCount\} \+ \{visibleOfficialCount\}<\/b>/);
+  assert.match(page, /openAtlasPanel\("layers"\);\s+setPendingCatalogTarget\("official-context-catalog"\)/);
+  assert.match(page, /hidden=\{leftPanelMode !== "live" && leftPanelMode !== "layers"\}/);
+  assert.match(page, /id="official-context-catalog" tabIndex=\{-1\}/);
+  assert.match(page, /catalog-airflow-entry/);
   assert.match(page, /id="catalog-time-anchor"/);
   assert.match(page, /COMMITTED MAP TIME/);
   assert.match(page, /Incompatible records stay unavailable/);
@@ -1354,7 +1359,7 @@ test("keeps live data and domain layers in separate, time-aware menus", async ()
   assert.match(page, /ref=\{legacyLayerControlsRef\} id="legacy-layer-controls"/);
   assert.match(page, /Registered layers <span>\{filteredLayerIds\.size\}\/\{LAYER_REGISTRY\.length\}<\/span>/);
   assert.match(css, /\.layer-catalog-body \{[^}]*overflow-y: auto/);
-  assert.match(css, /\.left-panel-tabs \{[^}]*grid-template-columns: repeat\(5,/);
+  assert.match(css, /\.left-panel-tabs \{[^}]*grid-template-columns: repeat\(4,/);
   assert.match(css, /\.catalog-time-anchor/);
   assert.match(css, /\.catalog-groups \{ flex: none; min-height: auto; overflow: visible;/);
   assert.match(css, /\.official-context-catalog \{ flex: none; min-height: 0; overflow: hidden;/);

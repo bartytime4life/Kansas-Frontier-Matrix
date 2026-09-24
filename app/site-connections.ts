@@ -42,6 +42,7 @@ const CONNECTION_CODE_PATHS: Record<OfficialContextId, readonly string[]> = {
   "usgs-3dep-slope": ["app/live-context.ts", "app/terrain-sources.ts", "app/map-runtime.ts", "app/page.tsx"],
   "nws-alerts": ["app/live-context.ts", "app/api/live-context/route.ts", "app/page.tsx"],
   "nws-radar": ["app/live-context.ts", "app/noaa-radar.ts", "app/api/noaa-radar/frames/route.ts", "app/page.tsx"],
+  "nws-forecast-wind": ["app/live-context.ts", "app/airflow-tiles.ts", "app/api/airflow-tile/route.ts", "app/page.tsx"],
 };
 
 const CONNECTION_FEEDS: Partial<Record<OfficialContextId, OfficialContextFeedId>> = {
@@ -75,6 +76,7 @@ const CONNECTION_ACTIONS: Record<OfficialContextId, readonly SiteActionId[]> = {
   "usgs-3dep-slope": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
   "nws-alerts": ["toggle-context-connection", "refresh-visible-context", "set-context-opacity", "open-provider-source"],
   "nws-radar": ["toggle-context-connection", "refresh-radar-frames", "play-exact-radar-loop", "step-exact-observation", "set-context-opacity", "open-provider-source"],
+  "nws-forecast-wind": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
 };
 
 const connectionKind = (source: (typeof OFFICIAL_CONTEXT_SOURCES)[number]): SiteConnectionKind => {

@@ -38,7 +38,7 @@ export const SITE_CODE_SURFACES = Object.freeze([
     id: "official-context-adapters",
     title: "Official context allowlist and adapters",
     role: "Keeps source identity, provider URLs, feed bounds, caps, error states, and evidence exclusion together.",
-    paths: ["app/live-context.ts", "app/api/live-context/route.ts", "app/external-context-sources.ts"],
+    paths: ["app/live-context.ts", "app/api/live-context/route.ts", "app/airflow-tiles.ts", "app/api/airflow-tile/route.ts", "app/external-context-sources.ts"],
     handles: ["Census", "USGS", "NOAA", "NWS", "Raspberry Shake"],
     verification: ["tests/rendered-html.test.mjs", "fixed route allowlists", "source-state readback"],
   },
@@ -91,6 +91,7 @@ export const SITE_ROUTE_CONTRACTS = Object.freeze([
   { id: "data-review-route", route: "/api/data-submissions/:id", owner: "app/api/data-submissions/[id]/route.ts", purpose: "Private download, detail, and version-checked steward decisions.", trustBoundary: "Contributor ownership or server-authorized steward for reads; steward and matching version for writes. Review never activates a layer." },
   { id: "source-download-route", route: "/api/source-download", owner: "app/api/source-download/route.ts", purpose: "Download bounded real source snapshots with dates and provenance.", trustBoundary: "Fixed source allowlist, no arbitrary URL and no candidate-data access." },
   { id: "terrain-tile-route", route: "/api/terrain-tile", owner: "app/api/terrain-tile/route.ts", purpose: "Cache and coalesce bounded USGS hillshade and slope display tiles.", trustBoundary: "Fixed USGS origin, functions, 256-pixel PNGs, Kansas bounds, zoom 3–14, 18-second timeout and 1 MB response limit. Only successful source tiles are cached, for at most six hours." },
+  { id: "airflow-tile-route", route: "/api/airflow-tile", owner: "app/api/airflow-tile/route.ts", purpose: "Display bounded NWS NDFD forecast wind-barb tiles over Kansas.", trustBoundary: "Fixed NWS origin and layer, Kansas-intersecting tiles at zoom 3–11, 256-pixel PNG validation, 12-second timeout and 512 KB limit. Provider-default valid time is unresolved; failures are not replaced with invented airflow." },
   {
     id: "explorer-route",
     route: "/",

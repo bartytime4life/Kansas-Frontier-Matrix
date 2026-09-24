@@ -3,19 +3,39 @@
 A map-first Kansas explorer with real provider baselines, dated archive replay,
 source downloads, and private data contribution and steward review workflows.
 
-## Optional Kansas wind field
+The owner-preserved application baseline is Site version 68. See
+[preservation and recovery](docs/SITE_PRESERVATION.md) and root `AGENTS.md`
+before importing, replacing, synchronizing or publishing other Site copies.
 
-The map's **Wind flow** control opens an opt-in, Earth-inspired animated display
-with explicit forecast hours, playback, a source link, and a link to
-[earth.nullschool.net](https://earth.nullschool.net/). It requests nine fixed
-Kansas 10 m wind speed/direction forecast samples through a bounded Open-Meteo
-adapter. Streamlines between those points are visual interpolation, not measured
-trajectories. Animation starts only on request; reduced-motion users see still
-arrows and can step through hours. A failed or incomplete response draws no
-replacement vectors. This is third-party model display context, not an official
-observation, warning, admitted KFM source, EvidenceBundle, or release. The
-existing NOAA radar, river telemetry, timelines, evidence drawer, and source
-states remain independent.
+## Earth Engine discovery and Kansas recipes — September 24, 2026
+
+**Globe integration:** Earth Engine now sits next to Globe in the representation
+controls and opens in a panel alongside the map. Whole Earth, North America and
+Kansas viewpoints share the map camera, with sampled camera readings and explicit
+source-time/recipe-year boundaries. Global display movement does not expand the
+Kansas recipe area or activate Earth Engine data. The full discovery page remains
+available for metadata comparisons and review drafts.
+
+The **Full catalog & comparison** link opens `/earth-engine`: eight curated
+dataset records, text/topic search, a three-dataset metadata comparison, and
+downloadable JavaScript recipes and JSON review drafts. The same records feed
+Source observatory and the existing private contribution source selector.
+Coverage, processing choices, terms, source links and limitations remain visible.
+There is no Earth Engine connection, credential, imagery import, map-layer
+activation, automatic export, source admission or data release in this change.
+
+Recipes use the Census TIGER 2018 Kansas study boundary, complete calendar years
+where applicable, product-specific quality masks and scaling, and explicit
+empty/error states. CHIRPS and TerraClimate additionally check unique expected
+dates and per-pixel completeness. JRC's fixed historical summary and the 3DEP
+source mosaic cannot be relabeled as annual observations. Recipes are generated
+locally and must be executed and scientifically validated in an authorized Earth
+Engine project. Full source-asset provenance remains a review requirement.
+
+Placement reuses the standalone Site's `app/`, `tests/` and `docs/` responsibilities,
+following its existing separation from the monorepo and Directory Rules v2 /
+ADR-0029. These display records are not a parallel canonical source registry.
+See [scope, sources, validation and rollback](docs/EARTH_ENGINE_DISCOVERY.md).
 
 ## Embedded shell recovery and data path — September 15, 2026
 
@@ -303,10 +323,13 @@ samples for a May 2024 station interval. No browser visual QA was performed.
 
 The shared map clock now supports committed snapshot, moving-window,
 event-stepping, accumulation, and A/B comparison modes. A user can bound the
-sweep range, choose event dates or every atlas tick, step forward or backward,
+sweep range, choose event dates or every calendar year from 1800 onward, step forward or backward,
 set playback speed and boundary behavior, and capture the committed frame in a
 report, workspace, URL, or story draft. The frame readout lists entered and
 exited records and describes cross-domain co-presence as an association only.
+The compact ruler represents each year, and its Year selector can choose one
+directly. Earlier eras remain coarse capacity markers. A selectable year does
+not imply that the Site holds a record for that year.
 
 `app/temporal-sweep.ts` owns the pure sequence, interval, accumulation,
 playback, and frame-summary rules. `app/map-runtime.ts` translates the same
@@ -322,6 +345,11 @@ history. MapLibre hides those layers but preserves the user's visibility
 choices so the same sources return on Present. This prevents a USGS observation
 from being relabeled as an atlas edition merely because their calendar years
 match.
+
+One Domains + live data control opens both the site-local layer catalog and
+the separate official context controls. The Atmosphere domain includes an
+optional Airflow forecast wind-barb image; its provider clock and evidence
+boundary remain in the official context section.
 
 Each adapter keeps the clocks it can support distinct: observation or forecast
 valid time, provider publication or last-modified time, Site retrieval time,
@@ -451,6 +479,7 @@ requests cannot supply an arbitrary upstream URL.
 | USGS 3DEP LiDAR hillshade | Off | Dynamic multidirectional hillshade from the current 3DEP elevation mosaic | Rendered relief only; no work-unit, point-cloud, datum, pulse-spacing, or accuracy claim |
 | USGS 3DEP LiDAR slope | Off | Dynamic slope visualization from the same 3DEP service | Image context only; no numeric slope/elevation or source-artifact claim |
 | NWS alert areas | Off | Active Kansas alerts and bounded affected-zone geometry | Not a warning-delivery service or an all-clear |
+| NWS forecast wind barbs · Airflow | Off | Provider-default NDFD forecast 10 m sustained wind speed and direction, shown as wind barbs over Kansas | Forecast image, not measured airflow, gusts, smoke transport, or a historical frame. The Site does not resolve the exact forecast valid time |
 | NOAA nowCOAST radar | Off | Recent CONUS base-reflectivity observations at exact NOAA-advertised times, with 30-minute, 1-hour, and 2-hour loop views | Context only; pixels do not establish rainfall rate, storm motion, warning status, forecast, or an emergency all-clear |
 
 Every connection is `EXTERNAL_CONTEXT_ONLY`. It is excluded from KFM reports,

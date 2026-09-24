@@ -4,7 +4,7 @@ import { noaaRadarTileUrl } from "./noaa-radar";
 import { noaaSatelliteTileUrl } from "./noaa-satellite";
 import { rememberGeoJSON, updateGeoJSON, setVisibleIfChanged, setPaintIfChanged } from "./map-performance";
 
-export type OfficialContextId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar";
+export type OfficialContextId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar" | "nws-forecast-wind";
 export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations";
 export type OfficialContextState = "idle" | "loading" | "ready" | "empty" | "partial" | "error";
 
@@ -457,6 +457,30 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     fallback: "Any alert or zone lookup failure is shown as unavailable or partial. Zero returned features is time-stamped and never labeled safe or all-clear.",
   }),
   Object.freeze({
+    id: "nws-forecast-wind",
+    title: "NWS forecast wind barbs · airflow",
+    shortTitle: "Airflow · forecast wind",
+    organization: "NOAA National Weather Service",
+    domain: "Atmosphere",
+    kind: "OPERATIONAL_WMS",
+    sourceId: "external-nws-forecast-wind",
+    layerIds: Object.freeze(["external-nws-forecast-wind-raster"]),
+    interactiveLayerIds: Object.freeze([]),
+    mapUrl: "/api/airflow-tile?z={z}&x={x}&y={y}",
+    endpointLabel: "NDFD CONUS 10 m sustained wind speed + direction barbs",
+    sourceUrl: "https://www.weather.gov/gis/NDFD_metadata.html",
+    serviceUrl: "https://digital.weather.gov/ndfd/wms",
+    cadence: "Provider-issued forecast frames; the Site requests the provider-default image",
+    freshness: "Tile responses cache for five minutes; already visible tiles are not automatically refreshed and exact forecast valid time is not resolved",
+    defaultVisibility: false,
+    defaultOpacity: 0.85,
+    color: "#92d8e5",
+    attribution: "NOAA National Weather Service NDFD",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    boundary: "Wind barbs depict NWS forecast sustained wind at 10 m, not observed airflow, gusts, upper-level wind, smoke transport, or particle trajectories. The provider-default valid time is not exposed here; consult NWS for its exact time and decisions. This is external context, not admitted KFM evidence.",
+    fallback: "If the NDFD image is unavailable or empty, the layer stays unavailable or blank. No synthetic wind field or historical frame is substituted.",
+  }),
+  Object.freeze({
     id: "nws-radar",
     title: "NOAA nowCOAST CONUS radar reflectivity loop",
     shortTitle: "NOAA radar loop",
@@ -585,6 +609,11 @@ export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextI
     axis: "rolling-retrieval-window",
     supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
     limitation: "Active-alert snapshot at retrieval time; expired historical alerts are not requested.",
+  }),
+  "nws-forecast-wind": Object.freeze({
+    axis: "provider-forecast-series",
+    supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
+    limitation: "The NDFD wind barbs use the provider-default forecast image. The exact valid time is not resolved and no historical wind sweep is connected; the layer is held outside the operational-present atlas frame.",
   }),
   "nws-radar": Object.freeze({
     axis: "provider-observation-loop",
@@ -718,14 +747,15 @@ export const applyOfficialContextState = (
   ensureLayer(map, { id: alerts.layerIds[0], type: "fill", source: alerts.sourceId, paint: { "fill-color": severityColor, "fill-opacity": 0.34 } });
   ensureLayer(map, { id: alerts.layerIds[1], type: "line", source: alerts.sourceId, paint: { "line-color": severityColor, "line-width": 2.4, "line-opacity": 0.94 } });
 
-  for (const raster of [OFFICIAL_CONTEXT_BY_ID["usgs-3dhp-hydrography"], OFFICIAL_CONTEXT_BY_ID["usgs-wbd-watersheds"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-analysis"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"], OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"]]) {
+  for (const raster of [OFFICIAL_CONTEXT_BY_ID["usgs-3dhp-hydrography"], OFFICIAL_CONTEXT_BY_ID["usgs-wbd-watersheds"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-analysis"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"], OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"], OFFICIAL_CONTEXT_BY_ID["nws-forecast-wind"]]) {
     // Disabled services should not download tiles during startup or style swaps.
     if (!visibility[raster.id] && !map.getSource(raster.sourceId)) continue;
     const terrainDisplay = raster.id === "usgs-3dep-hillshade" || raster.id === "usgs-3dep-slope";
     if (!map.getSource(raster.sourceId)) map.addSource(raster.sourceId, {
-      type: "raster", tiles: [raster.mapUrl!], tileSize: 256, attribution: raster.attribution, bounds: [-104.8, 34.8, -92, 42.2],
+      type: "raster", tiles: [raster.mapUrl!], tileSize: 256, attribution: raster.attribution,
+      bounds: raster.id === "nws-forecast-wind" ? [-102.1, 36.9, -94.5, 40.1] : [-104.8, 34.8, -92, 42.2],
       minzoom: terrainDisplay ? TERRAIN_DISPLAY_MIN_ZOOM : 3,
-      maxzoom: terrainDisplay ? TERRAIN_DISPLAY_MAX_ZOOM : 16,
+      maxzoom: terrainDisplay ? TERRAIN_DISPLAY_MAX_ZOOM : raster.id === "nws-forecast-wind" ? 11 : 16,
     });
     ensureLayer(map, {
       id: raster.layerIds[0], type: "raster", source: raster.sourceId,

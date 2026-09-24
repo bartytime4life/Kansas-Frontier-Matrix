@@ -20,4 +20,5 @@ export const SOURCE_DOWNLOADS: Record<OfficialContextId, { href: string; label: 
   "usgs-3dep-slope": { href: nationalMap, label: "Download source elevation data" },
   "nws-alerts": { href: "/api/source-download?source=nws-alerts", label: "Download current alerts · GeoJSON" },
   "nws-radar": { href: "https://www.ncei.noaa.gov/products/radar/next-generation-weather-radar", label: "NOAA radar archive & downloads" },
+  "nws-forecast-wind": { href: "https://digital.weather.gov/", label: "NWS graphical wind forecast" },
 };

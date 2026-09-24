@@ -1271,17 +1271,8 @@ export const TIME_STEPS = [
   1,
   1000,
   1541,
-  1800,
-  1854,
-  1885,
-  1910,
-  1950,
-  2000,
-  2019,
-  2022,
-  2024,
-  2026,
-  ...(new Date().getUTCFullYear() > 2026 ? [new Date().getUTCFullYear()] : []),
+  // Annual selection is a time capacity, not a claim of data in every year.
+  ...Array.from({ length: Math.max(2026, new Date().getUTCFullYear()) - 1800 + 1 }, (_, index) => 1800 + index),
 ] as const;
 
 export type SearchItem = {
