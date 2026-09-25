@@ -1,0 +1,117 @@
+{
+  "receipt_id": "genrec-kfm-local-curation-repo-review-20260925",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/local-curation-candidate-review.md",
+    "docs/runbooks/local-pc-data-store.md",
+    "tests/local_data/test_review_curation.py",
+    "tools/local_data/README.md",
+    "tools/local_data/review_curation.py"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/local-curation-candidate-review.md": "sha256:b641700d863bf2a2962d5877284f7ec0cd11bb5f1e29ac9fe91e5e3366208050",
+    "docs/runbooks/local-pc-data-store.md": "sha256:10b95a95fc8f7c091d5fff190efe7034c400aae6ee158aeffc8f022ba107acc0",
+    "tests/local_data/test_review_curation.py": "sha256:5fdd6aac74082d060694760b278ab7815980ed46bcdc875b4d46aaacbae5c422",
+    "tools/local_data/README.md": "sha256:3a1411589c5b6a232957d7e986588e2c414fe533c987d4dcf040201d0114436e",
+    "tools/local_data/review_curation.py": "sha256:6d0553096d387a1e914b7552144244b00accb403d6332eabab7510a29dd8bcdb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "not-exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "repository inspection",
+      "local package integrity review",
+      "local tests",
+      "GitHub branch push"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:c778036b62bf8e619fea4466b22d24ef67ee869cab06d3d80d8a4f1c223bda9f",
+      "sha256:ebcab6e8b18557d984bfec4e46977f56015120b289d1d3e1620315fe78511912",
+      "sha256:dae8527c429bb1c778dff292780f2f53ff02bc2993f3cc3757ef2fdb7474d98a",
+      "sha256:ded6910369899dc5c5def53f085c9411f169b89345cf069d3625897a55954e3c"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "main@13f66982ef1db9dc733ed3588d42bf1b92e19e8d",
+      "docs/doctrine/ai-build-operating-contract.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "device-local kfm-store-reconciliation-20260925 review package",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/local-curation-candidate-review.md": "PROPOSED",
+    "docs/runbooks/local-pc-data-store.md": "CONFIRMED",
+    "tests/local_data/test_review_curation.py": "CONFIRMED",
+    "tools/local_data/README.md": "CONFIRMED",
+    "tools/local_data/review_curation.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "offline local-data test suite",
+      "outcome": "PASS",
+      "reason": "97 tests and 16 subtests passed in the repository validation environment."
+    },
+    {
+      "gate": "actual device-local reconciliation package review",
+      "outcome": "PASS",
+      "reason": "39 package files and linked PRISM layer artifact checked; five local candidate/review layers reported."
+    },
+    {
+      "gate": "focused documentation structure and staged diff whitespace",
+      "outcome": "PASS",
+      "reason": "New runbook passed the critical-structure validator and git diff --cached --check passed."
+    },
+    {
+      "gate": "hosted CI and independent human review",
+      "outcome": "SKIPPED",
+      "reason": "No pull request; #4024 branch-only delivery hold remains open. Human approval is pending."
+    },
+    {
+      "gate": "source admission, release, deployment, publication, full raw rescan",
+      "outcome": "SKIPPED",
+      "reason": "Outside this code-only, read-only integration. The package snapshot does not prove current raw source state."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "local-curation-bundle-validation",
+      "validated": true,
+      "evidence_ref": "device-local kfm-store-reconciliation-20260925/validation.json sha256:ebcab6e8b18557d984bfec4e46977f56015120b289d1d3e1620315fe78511912"
+    },
+    {
+      "id": "local-curation-layer-manifest",
+      "validated": true,
+      "evidence_ref": "device-local kfm-store-reconciliation-20260925/layers/layer_manifest.json sha256:dae8527c429bb1c778dff292780f2f53ff02bc2993f3cc3757ef2fdb7474d98a"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-25T15:19:04Z",
+  "emitter": "Codex GPT-6 local curation integration",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "VALIDATED_BRANCH_ONLY. Binds authored repo files and local validation evidence. Does not upload source data, approve review, admit sources, release, deploy, publish, or resolve the repository delivery hold. The generated receipt excludes itself from artifact hashes to avoid circularity."
+}
