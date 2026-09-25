@@ -3,6 +3,11 @@
 A map-first Kansas explorer with real provider baselines, dated archive replay,
 source downloads, and private data contribution and steward review workflows.
 
+The Layer Catalog has an exact-label source-role selector for site-local fixture
+layers. It shows a layer when at least one feature carries the selected role;
+mixed-role layers may also contain features with other roles. It does not filter
+rendered geometry or live provider feeds and does not assert source admission.
+
 The owner-preserved application baseline is Site version 68. See
 [preservation and recovery](docs/SITE_PRESERVATION.md) and root `AGENTS.md`
 before importing, replacing, synchronizing or publishing other Site copies.
