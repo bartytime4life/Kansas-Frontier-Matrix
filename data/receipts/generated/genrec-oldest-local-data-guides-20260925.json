@@ -1,0 +1,110 @@
+{
+  "receipt_id": "genrec-oldest-local-data-guides-20260925",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "README.md",
+    "data/raw/README.md",
+    "docs/runbooks/local-pc-data-store.md",
+    "docs/sources/catalog/local_upload.md",
+    "tools/local_data/README.md"
+  ],
+  "artifact_hashes": {
+    "README.md": "sha256:4c4ee04e9ca7938c00d9d824e522b5736f75fcc31676cd7a1721266921c394d9",
+    "data/raw/README.md": "sha256:b076359f4ef891755d42aeb6a5385706b97aae4101ec54487d70b701a29d3e13",
+    "docs/runbooks/local-pc-data-store.md": "sha256:97c61bda0a027846c2064b0af5b08ca0dc99fc382fbc5553f36bfbb5882dd2e8",
+    "docs/sources/catalog/local_upload.md": "sha256:38b9c937aa5345eb32ed4a76ec6167ebe3fbb3f95a9e714c3fc0009905d91966",
+    "tools/local_data/README.md": "sha256:8a6ca7b53ec989e4b2535927f29b86083bb3d23adaab1bb76561218af7a96eb9"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "not-exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "repository inspection",
+      "GitHub issue readback",
+      "documentation validators"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "main@3dfc5deb8b2253696f7cb422c862a361166f3b37",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4613",
+      "data/receipts/generated/genrec-local-pc-data-policy-decision-20260917.json",
+      "docs/doctrine/ai-build-operating-contract.md"
+    ]
+  },
+  "truth_labels": {
+    "README.md": "CONFIRMED",
+    "data/raw/README.md": "CONFIRMED",
+    "docs/runbooks/local-pc-data-store.md": "CONFIRMED",
+    "docs/sources/catalog/local_upload.md": "CONFIRMED",
+    "tools/local_data/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused documentation link check",
+      "outcome": "PASS",
+      "reason": "All five Markdown files passed local-target checks; external targets are outside the check's scope."
+    },
+    {
+      "gate": "required metadata blocks",
+      "outcome": "PASS",
+      "reason": "All five blocks valid with no fail findings; inherited unsupported-nesting warnings remain."
+    },
+    {
+      "gate": "bounded stale-document scan",
+      "outcome": "PASS",
+      "reason": "The focused scan returned no fail findings; unsupported nested metadata produced advisory warnings."
+    },
+    {
+      "gate": "owner decision and exact schema binding",
+      "outcome": "PASS",
+      "reason": "Issue #4613 was read directly and current manifest schema and semantic-contract SHA-256 values match the append-only successor receipt."
+    },
+    {
+      "gate": "exact-head hosted checks",
+      "outcome": "SKIPPED",
+      "reason": "Pending branch push and pull request."
+    },
+    {
+      "gate": "independent human review",
+      "outcome": "SKIPPED",
+      "reason": "Pending reviewer action; no approval is inferred from generation or validation."
+    }
+  ],
+  "policy_decisions": [
+    "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4613"
+  ],
+  "citations": [
+    {
+      "id": "local-data-quarantine-owner-decision",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4613"
+    },
+    {
+      "id": "local-data-append-only-successor",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-local-pc-data-policy-decision-20260917.json"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-25T04:10:54Z",
+  "emitter": "Codex GPT-6 documentation reconciliation",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documents the integrated private offline quarantine capture scope and corrects stale operator guidance. This receipt binds authored Markdown bytes only; it is not review, source admission, release, deployment, or publication authority."
+}
