@@ -187,6 +187,29 @@ def scan_repository(root: Path) -> ReadinessResult:
     tsconfig, ts_error = _load_json(root / "apps/explorer-web/tsconfig.json")
     package_error = None if package_error == "FILE_NOT_FOUND" else package_error
     if (
+        explorer_error == "FILE_NOT_FOUND"
+        and ts_error == "FILE_NOT_FOUND"
+        and root_error is None
+    ):
+        selected_version = (
+            _dependency_version(package_manifest)
+            if package_manifest is not None
+            else None
+        )
+        probes, probe_error = _probe_results(root)
+        if probe_error or package_error:
+            errors = tuple(sorted({code for code in (probe_error, package_error) if code}))
+            return ReadinessResult(
+                Outcome.ERROR, errors, selected_version, None, None, probes
+            )
+        reasons = ["EXPLORER_APP_RETIRED"]
+        reasons.extend(_version_reasons(selected_version))
+        if any(status == "FAIL" for status in probes.values()):
+            reasons.append("RUNTIME_PROBE_FAILED")
+        if any(status == "NOT_RUN" for status in probes.values()):
+            reasons.append("RUNTIME_PROBES_PENDING")
+        return ReadinessResult(Outcome.HOLD, tuple(sorted(set(reasons))), selected_version, None, None, probes)
+    if (
         root_error
         or explorer_error
         or package_error

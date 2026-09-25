@@ -62,12 +62,6 @@ class FrontierRouteTrustStatusValidatorTests(unittest.TestCase):
         self.assertEqual(0, completed.returncode, completed.stderr + completed.stdout)
         self.assertIn("FRONTIER_ROUTE_TRUST_FIXTURES_VALID", completed.stdout)
 
-    def test_ui_adapter_preserves_public_steward_boundary(self) -> None:
-        source = (REPO_ROOT / "apps/explorer-web/src/features/domains/roads_rail_trade/layers.ts").read_text(encoding="utf-8")
-        self.assertIn("PUBLIC_PAYLOAD_REQUIRED", source)
-        self.assertIn("visible_in_public_catalog", source)
-        self.assertIn("buildTrustOverlay", source)
-        self.assertNotIn("fetch(", source)
 
 if __name__ == "__main__":
     unittest.main()

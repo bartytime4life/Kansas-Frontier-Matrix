@@ -105,7 +105,6 @@ LANE_SPECS: dict[str, tuple[str, str, tuple[str, ...] | None]] = {
             "--strict-config",
             "--strict-markers",
             "tests/policy/test_control_plane_register_meta_contract.py",
-            "tests/policy/test_explorer_web_adapter_boundary.py",
             "tests/policy/test_pipeline_connector_non_publisher.py",
             "apps/governed-api/tests/test_boundary_guards.py",
         ),

@@ -106,10 +106,9 @@ pytest collection or execution results.
 | Module | Source-defined tests | Bounded responsibility |
 |---|---:|---|
 | [`test_control_plane_register_meta_contract.py`](test_control_plane_register_meta_contract.py) | 9 | Required register presence plus selected metadata, date, status, owner, doctrine-reference, and object-family schema/validator checks. |
-| [`test_explorer_web_adapter_boundary.py`](test_explorer_web_adapter_boundary.py) | 2 | Static renderer-import placement and forbidden internal-store path literals in Explorer Web source. |
 | [`test_pipeline_connector_non_publisher.py`](test_pipeline_connector_non_publisher.py) | 2 | Selected connector output allowlists and bounded connector/pipeline publication-target canaries. |
 
-These 13 tests are structural or static. They do not prove complete YAML meaning,
+These 11 remaining tests are structural or static. They do not prove complete YAML meaning,
 runtime filesystem or network confinement, deployed client behavior, or publication
 safety.
 
@@ -176,7 +175,6 @@ Focused commands:
 ```bash
 python -m pytest -q \
   tests/policy/test_control_plane_register_meta_contract.py \
-  tests/policy/test_explorer_web_adapter_boundary.py \
   tests/policy/test_pipeline_connector_non_publisher.py
 
 python -m pytest -q tests/policy/test_doctrine_artifact*.py
@@ -202,7 +200,7 @@ collection of this lane.
 
 | Workflow | Direct binding at the pinned revision | Limit |
 |---|---|---|
-| [`policy-boundary-guards.yml`](../../.github/workflows/policy-boundary-guards.yml) | Runs the three boundary modules plus the governed-API companion through `make boundary-guards-ci`; its reviewed four-module inventory is 18 tests. | Does not collect the 15 doctrine/preflight modules or evaluate a policy bundle. |
+| [`policy-boundary-guards.yml`](../../.github/workflows/policy-boundary-guards.yml) | Runs the two remaining boundary modules plus the governed-API companion through `make boundary-guards-ci`; its revised three-module inventory is 18 tests. | Does not collect the 15 doctrine/preflight modules or evaluate a policy bundle. |
 | [`promotion-gate.yml`](../../.github/workflows/promotion-gate.yml) | Directly runs `test_doctrine_artifact_required.py` before promotion-readiness checks. | A pass proves the known missing-artifact condition fails closed; it does not satisfy the prerequisite. |
 | [`policy-test.yml`](../../.github/workflows/policy-test.yml) | Performs policy-readiness and PolicyDecision-fixture drift checks and recognizes a separately governed release-gate Rego lane. | It does not run `python -m pytest tests/policy`, establish a repository-wide bundle/evaluator, or emit a PolicyDecision. |
 

@@ -7,10 +7,6 @@ name: census-county-reference-candidate
   pull_request:
     paths:
       - ".github/workflows/census-county-reference-candidate.yml"
-      - "apps/explorer-web/src/site/mount-living-atlas.ts"
-      - "apps/explorer-web/src/site/reference-geography-source-registry.ts"
-      - "apps/explorer-web/tests/reference-geography-source-registry.test.ts"
-      - "apps/explorer-web/tests/browser/reference-geography.spec.ts"
       - "data/registry/sources/settlements-infrastructure/census_cartographic_boundary_counties_2025_500k.source.json"
       - "data/receipts/generated/genrec-census-county-reference-candidate-20260910.json"
       - "docs/sources/catalog/census/**"
@@ -21,10 +17,6 @@ name: census-county-reference-candidate
       - main
     paths:
       - ".github/workflows/census-county-reference-candidate.yml"
-      - "apps/explorer-web/src/site/mount-living-atlas.ts"
-      - "apps/explorer-web/src/site/reference-geography-source-registry.ts"
-      - "apps/explorer-web/tests/reference-geography-source-registry.test.ts"
-      - "apps/explorer-web/tests/browser/reference-geography.spec.ts"
       - "data/registry/sources/settlements-infrastructure/census_cartographic_boundary_counties_2025_500k.source.json"
       - "data/receipts/generated/genrec-census-county-reference-candidate-20260910.json"
       - "docs/sources/catalog/census/**"

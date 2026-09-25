@@ -16,11 +16,6 @@ name: DEM Source Asset Candidate
       - "packages/maplibre/tests/map-runtime-terrain-fallback.test.ts"
       - "packages/maplibre/tests/terrain-elevation-sample.test.ts"
       - "tests/maplibre/test_package_exports.py"
-      - "apps/explorer-web/src/features/living_atlas/connections.ts"
-      - "apps/explorer-web/src/site/mount-terrain-source-ledger.ts"
-      - "apps/explorer-web/src/site/terrain-source-registry.ts"
-      - "apps/explorer-web/tests/living-atlas.test.ts"
-      - "apps/explorer-web/tests/terrain-source-registry.test.ts"
       - "data/receipts/generated/genrec-dem-source-asset-candidate-20260909.json"
   push:
     branches: [main]
@@ -38,11 +33,6 @@ name: DEM Source Asset Candidate
       - "packages/maplibre/tests/map-runtime-terrain-fallback.test.ts"
       - "packages/maplibre/tests/terrain-elevation-sample.test.ts"
       - "tests/maplibre/test_package_exports.py"
-      - "apps/explorer-web/src/features/living_atlas/connections.ts"
-      - "apps/explorer-web/src/site/mount-terrain-source-ledger.ts"
-      - "apps/explorer-web/src/site/terrain-source-registry.ts"
-      - "apps/explorer-web/tests/living-atlas.test.ts"
-      - "apps/explorer-web/tests/terrain-source-registry.test.ts"
       - "data/receipts/generated/genrec-dem-source-asset-candidate-20260909.json"
   workflow_dispatch:
 
@@ -98,19 +88,10 @@ jobs:
         run: |
           set -euo pipefail
           corepack enable
-          pnpm install --frozen-lockfile --filter @kfm/maplibre... --filter explorer-web...
+          pnpm install --frozen-lockfile --filter @kfm/maplibre...
 
       - name: Verify fixture-only terrain sampling
         run: pnpm --filter @kfm/maplibre test
-
-      - name: Verify Living Atlas held readback
-        run: >-
-          pnpm --filter explorer-web exec vitest run
-          tests/living-atlas.test.ts
-          tests/terrain-source-registry.test.ts
-
-      - name: Type-check held Explorer integration
-        run: pnpm --filter explorer-web exec tsc --noEmit -p tsconfig.json
 
       - name: Verify renderer-neutral package exports
         env:

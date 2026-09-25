@@ -1,6 +1,6 @@
 # Validate the proposed EvidenceDrawerPayload public-safe projection profile.
-# The workflow is read-only, fixture-only, and non-publishing. The existing
-# ui-build workflow separately exercises Explorer build, unit, and browser paths.
+# The workflow is read-only, fixture-only, and non-publishing.
+# The retired Explorer app and its browser checks are outside this scope.
 name: evidence-drawer-payload
 
 "on":
@@ -12,10 +12,6 @@ name: evidence-drawer-payload
       - "fixtures/ui/evidence_drawer_payload/**"
       - "tools/validators/ui/**"
       - "tests/validators/test_validate_evidence_drawer_payload.py"
-      - "apps/explorer-web/src/adapters/GovernedClient.ts"
-      - "apps/explorer-web/src/features/evidence_drawer/**"
-      - "apps/explorer-web/tests/evidence-drawer.test.ts"
-      - "apps/explorer-web/tests/browser/evidence-drawer.*"
       - "data/receipts/generated/genrec-evidence-drawer-payload-*.json"
   push:
     branches:
@@ -27,10 +23,6 @@ name: evidence-drawer-payload
       - "fixtures/ui/evidence_drawer_payload/**"
       - "tools/validators/ui/**"
       - "tests/validators/test_validate_evidence_drawer_payload.py"
-      - "apps/explorer-web/src/adapters/GovernedClient.ts"
-      - "apps/explorer-web/src/features/evidence_drawer/**"
-      - "apps/explorer-web/tests/evidence-drawer.test.ts"
-      - "apps/explorer-web/tests/browser/evidence-drawer.*"
       - "data/receipts/generated/genrec-evidence-drawer-payload-*.json"
   workflow_dispatch:
 
@@ -88,7 +80,8 @@ jobs:
         run: |
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-evidence-drawer-payload-derived-disclosure-20260902.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref 13f66982ef1db9dc733ed3588d42bf1b92e19e8d
 
       - name: Record trust boundary
         if: always()

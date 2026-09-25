@@ -1,6 +1,8 @@
+> **Retired guidance (2026-09-25):** This runbook describes the removed `apps/explorer-web/` workbench. For local hosting, use the [standalone Site v71 source](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/codex/live-site-v71-source-20260925). Commands below are historical and do not apply to this branch.
+
 # Explorer Web validation
 
-**Status:** CONFIRMED for the repository-local Explorer Web checks described below. Whole-system end-to-end coverage, automated axe coverage, WCAG conformance, live service integration, deployment, release, and publication remain unproven or explicitly held.
+**Historical status:** CONFIRMED for the former repository-local Explorer Web checks described below. Whole-system end-to-end coverage, automated axe coverage, WCAG conformance, live service integration, deployment, release, and publication remain unproven or explicitly held.
 
 Use this runbook to choose, execute, and interpret validation for changes affecting `apps/explorer-web/`. Run commands from the repository root after completing the setup in [Explorer Web local development](./ui_LOCAL_DEV.md).
 
@@ -127,9 +129,9 @@ The original scaffold cited the Agriculture and Fauna map/UI contracts. Preserve
 - [Agriculture map and UI contract](../domains/agriculture/MAP_UI_CONTRACTS.md)
 - [Fauna map and UI contract](../domains/fauna/MAP_UI_CONTRACTS.md)
 - [Explorer Web local development](./ui_LOCAL_DEV.md)
-- [Explorer Web app boundary and maturity](../../apps/explorer-web/README.md)
-- [Explorer Web package scripts](../../apps/explorer-web/package.json)
-- [Explorer build and test workflow](../../.github/workflows/ui-build.yml)
-- [Accessibility workflow and explicit holds](../../.github/workflows/accessibility.yml)
+- [Explorer Web app boundary and maturity](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/apps/explorer-web/README.md)
+- [Explorer Web package scripts](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/apps/explorer-web/package.json)
+- [Explorer build and test workflow](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/.github/workflows/ui-build.yml)
+- [Accessibility workflow and explicit holds](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/.github/workflows/accessibility.yml)
 - [End-to-end readiness workflow](../../.github/workflows/e2e-smoke.yml)
-- [Explorer renderer and internal-store boundary test](../../tests/policy/test_explorer_web_adapter_boundary.py)
+- [Explorer renderer and internal-store boundary test](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/tests/policy/test_explorer_web_adapter_boundary.py)

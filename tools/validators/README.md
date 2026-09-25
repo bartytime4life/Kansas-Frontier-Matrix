@@ -6,7 +6,7 @@ version: v0.7
 status: draft; shared-ci-readiness-checker-confirmed; e2e-readiness-checker-confirmed; pnpm-audit-readiness-checker-confirmed; generated-receipt-validator-confirmed; review-record-candidate-validator-confirmed
 owner: TODO-tooling-qa-owner-plus-validator-steward-plus-domain-stewards-plus-schema-steward-plus-policy-steward-plus-evidence-steward-plus-release-steward
 created: NEEDS VERIFICATION — file existed before this expansion as a two-line stub
-updated: 2026-08-03
+updated: 2026-09-25
 policy_label: repository-facing; validator-root-index; fail-closed; evidence-aware; policy-aware; sensitivity-aware; source-aware; domain-aware; release-gated; non-authoritative
 owning_root: tools/
 responsibility: parent validator routing README under tools/validators; indexes KFM validation lanes, validator authority boundaries, fail-closed posture, responsibility-root separation, source/evidence/policy/lifecycle/release gates, domain and cross-domain validator families, public-surface denial, fixture/test routing, executable-claim verification, correction and rollback expectations, and finite outcomes while deferring domain meaning, canonical schemas, policy decisions, source registry records, evidence records, receipts, lifecycle data, release records, public runtime code, and release authority to their owning roots
@@ -158,10 +158,10 @@ python tools/validators/ci_readiness.py \
 
 `e2e_readiness.py` is a Python 3.11-compatible, standard-library-only checker
 for the current composed-E2E boundary. It reads a fixed set of repository-owned
-manifests, workflows, UI/API boundary files, and the exact `tests/e2e/`
-inventory. It confirms the implemented Explorer Web `dev`, `build`, and `test`
-mapping and its separate `ui-build` orchestration while requiring the root
-workspace holds and the absence of a repository-owned composed E2E command.
+manifests, workflows, API boundary files, and the exact `tests/e2e/`
+inventory. It records that the two monorepo Explorer apps are retired while
+requiring the root workspace holds and the absence of a repository-owned
+composed E2E command.
 
 The checker fails closed when a required file is missing, unsafe, unreadable,
 too large, or malformed; when the locked package/workflow markers drift; when
@@ -181,7 +181,7 @@ python -m unittest discover \
   --verbose
 ```
 
-A zero exit means only that the locked implemented-UI-plus-absent-composed-E2E
+A zero exit means only that the retired-app and absent-composed-E2E
 boundary still matches the reviewed snapshot. It deliberately prints
 `WORKFLOW_SKIPPED_EXPLICIT` and `WORKFLOW_HOLD`.
 

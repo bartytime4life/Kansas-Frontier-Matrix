@@ -19,8 +19,6 @@
 # - Configured labels are advisory routing only. GitHub ignores a configured
 #   label that does not already exist; labels never establish compatibility,
 #   security, approval, or merge readiness.
-# - The payload-free Explorer image override package is monitored separately
-#   because it is outside the root npm workspaces and owns an independent lock.
 # - Docker base-image updates are monitored from /infra/docker. Dependabot's
 #   Docker fetcher discovers case-insensitive filenames containing Dockerfile,
 #   including the current Dockerfile.* placeholders. Each image update remains
@@ -130,44 +128,7 @@ updates:
           - "minor"
           - "patch"
 
-  # The payload-free Explorer image's hash-locked npm overrides are outside the
-  # root workspaces. Keep this lockfile lane separate from application updates;
-  # major override changes remain individual for focused image-build review.
-  - package-ecosystem: "npm"
-    directory: "/infra/docker/explorer-web"
-    schedule:
-      interval: "weekly"
-      day: "thursday"
-      time: "06:00"
-      timezone: "America/Chicago"
-    cooldown:
-      semver-major-days: 30
-      semver-minor-days: 7
-      semver-patch-days: 3
-    open-pull-requests-limit: 2
-    assignees:
-      - "bartytime4life"
-    labels:
-      - "dependencies"
-      - "javascript"
-      - "ci"
-      - "needs-review"
-    commit-message:
-      prefix: "deps(container-node)"
-      include: "scope"
-    pull-request-branch-name:
-      separator: "-"
-    groups:
-      container-node-minor-patch:
-        applies-to: "version-updates"
-        dependency-type: "production"
-        patterns:
-          - "*"
-        update-types:
-          - "minor"
-          - "patch"
-
-  # Digest-pinned base images in the two repository Dockerfile.* placeholders.
+  # Digest-pinned base image in the remaining Dockerfile.* placeholder.
   # Dependabot's Docker fetcher recognizes these custom filenames. Keep each
   # proposal isolated so the affected image, digest, and compatibility boundary
   # remain independently reviewable.

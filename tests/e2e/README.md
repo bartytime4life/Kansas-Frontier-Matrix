@@ -11,7 +11,7 @@ supersedes: v0.3 documentation at the same path; no test, validator, workflow, r
 policy_label: repository-facing; tests; e2e; governed-composition; synthetic; no-network-readiness; fail-closed; non-publisher
 owning_root: tests/
 responsibility: document the bounded end-to-end test inventory, composition requirements, readiness hold, and authority limits without becoming application, contract, schema, policy, evidence, lifecycle, release, or publication authority
-truth_posture: CONFIRMED exact five-file lane inventory, one non-substantive assert-true placeholder, README-only Agriculture child, 14 focused readiness-validator tests, all-PR e2e-smoke readiness workflow, explicit composed-suite hold, and Makefile exclusion at the pinned snapshot / PROPOSED deterministic composed harness and substantive E2E suite / UNKNOWN dynamic collection, required-check status, production parity, pass rates, accountable stewardship, correction propagation, and operational rollback
+truth_posture: CONFIRMED exact five-file lane inventory, one non-substantive assert-true placeholder, README-only Agriculture child, 4 focused readiness-validator tests, all-PR e2e-smoke readiness workflow, explicit composed-suite hold, and Makefile exclusion at the pinned snapshot / PROPOSED deterministic composed harness and substantive E2E suite / UNKNOWN dynamic collection, required-check status, production parity, pass rates, accountable stewardship, correction propagation, and operational rollback
 evidence_repository: bartytime4life/Kansas-Frontier-Matrix
 evidence_base_ref: main
 evidence_base_commit: 5d835798e09a4dd14735779cb44206a8a3e8b2d3
@@ -19,7 +19,7 @@ evidence_prior_blob: e4b1ab7fa5a55813c5557b3c706abbaacda337d7
 direct_lane_file_count: 5
 direct_test_module_count: 1
 source_defined_test_count: 1
-readiness_validator_test_count: 14
+readiness_validator_test_count: 4
 related:
   - ../README.md
   - agriculture/README.md
@@ -27,7 +27,6 @@ related:
   - ../../tools/validators/e2e_readiness.py
   - ../validators/test_e2e_readiness.py
   - ../../.github/workflows/e2e-smoke.yml
-  - ../../.github/workflows/ui-build.yml
   - ../../Makefile
 notes:
   - "The direct test is an exact assert-true placeholder and is not substantive E2E coverage."
@@ -35,6 +34,8 @@ notes:
   - "The Makefile test target excludes tests/e2e."
   - "Passing readiness checks do not establish source truth, evidence closure, policy approval, review, release, deployment, promotion, publication, or operational rollback."
 [/KFM_META_BLOCK_V2] -->
+
+> **2026-09-25 update:** The two legacy monorepo Explorer apps were retired. The E2E readiness validator now confirms their absence and continues to hold any composed Site and Governed API E2E claim. Older inventory descriptions below are historical.
 
 # `tests/e2e/` — Governed End-to-End Enforceability Root
 

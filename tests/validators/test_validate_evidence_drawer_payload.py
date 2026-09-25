@@ -183,15 +183,6 @@ class EvidenceDrawerPayloadValidatorTests(unittest.TestCase):
         self.assertEqual(0, completed.returncode, completed.stderr + completed.stdout)
         self.assertIn("EVIDENCE_DRAWER_FIXTURES_VALID", completed.stdout)
 
-    def test_typescript_adapter_tracks_schema_profile_and_history(self) -> None:
-        source = (
-            REPO_ROOT / "apps/explorer-web/src/adapters/GovernedClient.ts"
-        ).read_text(encoding="utf-8")
-        self.assertIn("kfm.explorer.evidence-drawer.public-safe.v1", source)
-        self.assertIn("SUPERSEDED_EVIDENCE", source)
-        self.assertIn("correctionPriorRefs", source)
-        self.assertIn("correctionsContainCycle", source)
-        self.assertIn("resolvable_as_current", source)
 
 
 if __name__ == "__main__":

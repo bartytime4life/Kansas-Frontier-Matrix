@@ -6,10 +6,10 @@ version: v0.3
 status: proposed; executable-validator; focused-tests; fail-closed; non-authoritative
 owner: OWNER_TBD — Supply-chain reviewer · Validator steward · CI steward
 created: 2026-07-29
-updated: 2026-08-29
-policy_label: repository-facing; dependency-audit; pnpm; npm; deterministic-readiness; network-classification; fail-closed; non-release
+updated: 2026-09-25
+policy_label: repository-facing; dependency-audit; pnpm; deterministic-readiness; network-classification; fail-closed; non-release
 owning_root: tools/
-responsibility: validate repository-local dependency-audit preconditions and classify external pnpm and npm audit output without owning manifests, lockfiles, advisories, dependency admission, release, deployment, or publication
+responsibility: validate repository-local dependency-audit preconditions and classify external pnpm audit output without owning manifests, lockfiles, advisories, dependency admission, release, deployment, or publication
 truth_posture: CONFIRMED implementation and focused no-network tests / PROPOSED workflow execution / NEEDS VERIFICATION exact-head remote audit result
 related:
   - ../README.md
@@ -20,9 +20,9 @@ related:
   - ../../../pnpm-workspace.yaml
   - ../../../pnpm-lock.yaml
 notes:
-  - "Repository readiness is no-network and deterministic; the pnpm and npm audits are point-in-time registry queries."
+  - "Repository readiness is no-network and deterministic; the pnpm audit is a point-in-time registry query."
   - "PASS means only that declared checks passed for the inspected revision and configured advisory response."
-  - "The stable workflow job id remains npm-audit; root coordination uses pnpm while the Explorer installed graph uses npm."
+  - "The stable workflow job id remains npm-audit; the remaining root workspace graph uses pnpm."
   - "Audit classification emits a bounded package/advisory identity projection; it never echoes the complete registry response."
 [/KFM_META_BLOCK_V2] -->
 
@@ -93,13 +93,13 @@ The `dependency-scan` workflow:
 
 1. runs the no-network readiness command;
 2. activates the exact manager through Corepack;
-3. executes `pnpm audit --audit-level high --json` for the root coordination
-   graph;
-4. executes `npm --prefix apps/kansas-frontier-matrix-explorer audit
-   --package-lock-only --workspaces=false --audit-level high --json` for the
-   Explorer graph actually installed by its `npm ci` helper; and
-5. passes both reports and command exit codes to the classifier, then fails if
-   either graph reports a regression or error.
+3. executes `pnpm audit --audit-level high --json` for the remaining root
+   workspace graph; and
+4. passes that report and command exit code to the classifier, then fails if
+   the graph reports a regression or error.
+
+The retired monorepo Explorer graph is no longer audited here. The standalone
+Site source has its own dependency graph and requires its own review.
 
 The workflow does not use `--ignore-registry-errors`. An unavailable registry,
 unparseable response, command failure without qualifying findings, or

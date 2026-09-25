@@ -641,7 +641,7 @@ At `main@57d153cd6b55`, the tracked direct children of `scripts/` remain the two
 | `make local-data-doctor` | [`tools/local_data/`](../tools/local_data/README.md) | Read-only local-PC prerequisite report. |
 | `make local-data-check` | [`tests/local_data/`](../tests/local_data/README.md) | Synthetic offline capture, manifest, recovery, and boundary test results. |
 | `make offline-pipeline-check` | [`tests/pipelines/`](../tests/pipelines/README.md) and Hydrology no-network test | Named synthetic pipeline behavior under a bounded network guard. |
-| `make native-explorer-check` | `apps/kansas-frontier-matrix-explorer/` and [`tests/ui/`](../tests/ui/README.md) | Repository-mirror build and Node tests; no Site save or deployment. |
+| `make native-explorer-check` | Retired monorepo Explorer app | Explicit `WORKFLOW_HOLD`; current source is on the separate Site v71 branch. |
 | `make normalized-summary-check` | Doctrine-summary validator and focused policy/source/CI tests | Summary structure and failure-propagation checks. |
 | `make repository-topology` | Directory-governance validator and tests | Exact-head topology diagnostic; inherited drift needs base/head comparison. |
 

@@ -1,8 +1,4 @@
 # Build only the declared payload-free review-image inputs.
 *
-!Dockerfile.explorer-web
 !Dockerfile.governed-api
 !governed-api-requirements.lock
-!explorer-web/
-!explorer-web/package.json
-!explorer-web/package-lock.json

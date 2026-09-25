@@ -3,27 +3,25 @@ doc_id: kfm://doc/runbooks/explorer-web-local-development
 title: Explorer Web local development
 type: runbook
 version: v1.1
-status: draft; repository-grounded; dependency-policy-aligned
+status: retired historical guidance
 owners:
   - "@bartytime4life — verified GitHub review route"
 created: 2026-09-06
-updated: 2026-09-15
+updated: 2026-09-25
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "Describe the supported locked-install, local-development, and focused-validation path for the repository-local Explorer Web workspace without granting deployment, source-admission, release, or publication authority."
 truth_posture: "CONFIRMED repository configuration / candidate exact-head validation / NEEDS VERIFICATION hosted and human acceptance; cite-or-abstain"
 related:
-  - apps/explorer-web/README.md
   - pnpm-workspace.yaml
   - pnpm-lock.yaml
-  - .github/workflows/ui-build.yml
-  - .github/workflows/accessibility.yml
-  - apps/kansas-frontier-matrix-explorer/docs/esbuild-security-remediation.md
 [/KFM_META_BLOCK_V2] -->
+
+> **Retired guidance (2026-09-25):** This runbook describes the removed `apps/explorer-web/` workbench. For local hosting, use the [standalone Site v71 source](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/codex/live-site-v71-source-20260925). Commands below are historical and do not apply to this branch.
 
 # Explorer Web local development
 
-**Status:** CONFIRMED for the repository-local Explorer Web workspace at `apps/explorer-web/`; candidate-aligned for the current exact-version Workerd denial; `HOLD` for any dependency build script not explicitly decided by the committed version-specific policy. Live API integration, deployment, release, and publication remain outside this runbook.
+**Historical status:** CONFIRMED for the former repository-local Explorer Web workspace at `apps/explorer-web/`; candidate-aligned for the current exact-version Workerd denial; `HOLD` for any dependency build script not explicitly decided by the committed version-specific policy. Live API integration, deployment, release, and publication remain outside this runbook.
 
 Use this runbook to inspect the locked JavaScript workspace, verify the current installation policy, start the local Explorer Web development server only after a successful locked install, and run the checks that directly cover the app. Run all commands from the repository root unless a step says otherwise.
 
@@ -107,8 +105,8 @@ For a failing check, preserve the exact command, exit code, relevant output, and
 
 ## Related repository evidence
 
-- [Explorer Web app boundary and maturity](../../apps/explorer-web/README.md)
-- [Explorer Web scripts and engine range](../../apps/explorer-web/package.json)
-- [Locked CI build and test lane](../../.github/workflows/ui-build.yml)
-- [Explorer renderer and internal-store boundary test](../../tests/policy/test_explorer_web_adapter_boundary.py)
+- [Explorer Web app boundary and maturity](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/apps/explorer-web/README.md)
+- [Explorer Web scripts and engine range](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/apps/explorer-web/package.json)
+- [Locked CI build and test lane](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/.github/workflows/ui-build.yml)
+- [Explorer renderer and internal-store boundary test](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/tests/policy/test_explorer_web_adapter_boundary.py)
 - [Accepted Directory Rules adoption](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)

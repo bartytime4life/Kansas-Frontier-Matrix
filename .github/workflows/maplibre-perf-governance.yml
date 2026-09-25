@@ -65,7 +65,6 @@ name: MapLibre Perf Governance
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
       - "yarn.lock"
-      - "apps/explorer-web/**"
       - "apps/web/**"
       - "artifacts/perf/**"
       - "configs/maplibre/**"
@@ -97,7 +96,6 @@ name: MapLibre Perf Governance
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
       - "yarn.lock"
-      - "apps/explorer-web/**"
       - "apps/web/**"
       - "artifacts/perf/**"
       - "configs/maplibre/**"
@@ -234,7 +232,6 @@ jobs:
             "Makefile"
             ".github/workflows/maplibre-acquisition-inventory.yml"
             ".github/workflows/briefing-implementation-campaign.yml"
-            "apps/explorer-web"
             "configs/maplibre/README.md"
             "configs/maplibre/perf-envelope.v1.json"
             "docs/doctrine/directory-rules.md"
@@ -318,20 +315,19 @@ jobs:
           for workspace_marker in ('  - "apps/*"', '  - "packages/*"'):
               if workspace_marker not in workspace_text:
                   raise SystemExit(
-                      "The accepted pnpm workspace boundary changed. Reconcile Explorer and "
+                      "The accepted pnpm workspace boundary changed. Reconcile package and "
                       f"package ownership before changing CI; missing: {workspace_marker}"
                   )
 
           lock_text = Path("pnpm-lock.yaml").read_text(encoding="utf-8")
           for lock_marker in (
               "lockfileVersion: '9.0'",
-              "  apps/explorer-web:",
               "  packages/maplibre:",
           ):
               if lock_marker not in lock_text:
                   raise SystemExit(
-                      "The reviewed pnpm lockfile boundary changed. Reconcile the Explorer "
-                      "importer and MapLibre dependency posture before changing CI; "
+                      "The reviewed pnpm lockfile boundary changed. Reconcile the package "
+                      "MapLibre dependency posture before changing CI; "
                       f"missing: {lock_marker}"
                   )
 
@@ -534,8 +530,8 @@ jobs:
 
           if Path("apps/web").exists():
               raise SystemExit(
-                  "Legacy apps/web surfaced. Resolve it against the accepted "
-                  "apps/explorer-web responsibility root before changing workflow scope."
+                  "Legacy apps/web surfaced. Resolve it against the current "
+                  "separate Site source before changing workflow scope."
               )
           for future_root in (
               Path("packages/maplibre-runtime"),

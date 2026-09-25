@@ -204,7 +204,7 @@ The current filenames show these broad orchestration families. The grouping is n
 | Source, evidence, and identity | `source-descriptor-validate.yml`, `source-event-envelope.yml`, `evidence-resolver.yml`, `spec-hash.yml`, `trace-receipt-link.yml` | Source authority, deterministic identity, evidence closure, no live-source overreach. |
 | Policy, review, and obligations | `policy-test.yml`, `policy-obligation-set.yml`, `review-authority-binding.yml`, `implementation-decision-review.yml` | Policy inputs, reviewer identity, self-review denial, obligation reduction, fail-closed behavior. |
 | Promotion, release, proof, and rollback | `promotion-gate.yml`, `promotion-receipt.yml`, `release-dry-run.yml`, `proof-pack-closure.yml`, `rollback-drill.yml` | State-transition boundaries, synthetic-vs-live distinction, signatures, correction and rollback. |
-| Map, runtime, UI, and delivery carriers | `maplibre-perf-governance.yml`, `map-context-envelope.yml`, `runtime-evidence-resolution.yml`, `ui-build.yml`, `pmtiles-attestation.yml` | Governed API boundary, renderer-as-carrier, artifact integrity, performance and public exposure. |
+| Map, runtime, and delivery carriers | `maplibre-perf-governance.yml`, `map-context-envelope.yml`, `runtime-evidence-resolution.yml`, `pmtiles-attestation.yml` | Governed API boundary, renderer-as-carrier, artifact integrity, performance and public exposure. |
 | Artifact and catalog projections | `artifact-delta-receipt.yml`, `catalog-closure-packet.yml`, `catalog-trust-extension.yml`, `openlineage-run-event-projection.yml` | Candidate-vs-authority separation, provenance, catalog closure, receipt/proof distinctions. |
 
 `repository-control.yml` is retained source for a retired workflow. GitHub workflow

@@ -6,7 +6,7 @@ version: v3.2.1
 status: repository-grounded draft
 owners: ["@bartytime4life"]
 created: 2026-05-11
-updated: 2026-09-24
+updated: 2026-09-25
 policy_label: public
 current_path: README.md
 owning_root: repository-root
@@ -57,7 +57,7 @@ notes:
 
 <p align="center">
   <a href="https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site">Open the Explorer</a> ·
-  <a href="apps/kansas-frontier-matrix-explorer/README.md">Read the site guide</a> ·
+  <a href="https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/codex/live-site-v71-source-20260925">Get the Site source</a> ·
   <a href="CONTRIBUTING.md">Contribute</a> ·
   <a href="SECURITY.md">Report a security concern</a>
 </p>
@@ -88,8 +88,7 @@ KFM’s public value is not a larger pile of layers. It is a more trustworthy pa
 | If you want to… | Start with… |
 |---|---|
 | **See the project’s public-facing Explorer** | [KFM Explorer](https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site) — the repository records this OpenAI Sites/Vinext project, slug, and public address. Hosted availability and version state require current runtime verification. |
-| **Understand the current site application** | [`apps/kansas-frontier-matrix-explorer/`](apps/kansas-frontier-matrix-explorer/) — the single-route Vinext site, synthetic/generalized catalog surface, renderer-neutral shell, fail-closed evidence behavior, and public-safe export boundary. |
-| **Study the browser workbench** | [`apps/explorer-web/`](apps/explorer-web/) — a Vite/TypeScript local composition with bounded Map, Knowledge, Features, Trust, Focus, Story, Evidence Drawer, and validation slices. |
+| **Get the current Site source** | [Standalone Site v71 branch](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/codex/live-site-v71-source-20260925) — the exact source snapshot mirrored from the live Site for local hosting. The former monorepo Site copy and Explorer Web workbench have been retired. |
 | **Learn the project’s rules** | [`docs/doctrine/`](docs/doctrine/), [`docs/architecture/`](docs/architecture/), and [`docs/adr/`](docs/adr/). |
 | **Make a change safely** | [`CONTRIBUTING.md`](CONTRIBUTING.md), [`Directory Rules`](docs/doctrine/directory-rules.md), and the README nearest the path you will touch. |
 | **Understand evidence and public boundaries** | [`Trust Membrane`](docs/doctrine/trust-membrane.md), [`Truth Posture`](docs/doctrine/truth-posture.md), [`Lifecycle Law`](docs/doctrine/lifecycle-law.md), and [`SECURITY.md`](SECURITY.md). |
@@ -101,7 +100,7 @@ This source-level readback is for `main@32ab26478b7186bd1a0983951c1a4fbf5adf33aa
 
 | Goal | Start here | What the repository currently establishes |
 |---|---|---|
-| Explore a place and inspect its limits | [Explorer site source](apps/kansas-frontier-matrix-explorer/README.md) or the [local Explorer Web workbench](apps/explorer-web/README.md) | Application and synthetic/fixture surfaces exist. A site address or successful local build does not establish the hosted version, live source data, or a released layer. |
+| Explore a place and inspect its limits | [Live Explorer](https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site/) and [standalone Site v71 source](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/codex/live-site-v71-source-20260925) | The source snapshot is available for local hosting. A local build does not prove current hosted availability, provider data completeness, or source admission. |
 | Preserve files you already downloaded | [Local PC runbook](docs/runbooks/local-pc-data-store.md) and [`tools/local_data/`](tools/local_data/README.md) | `doctor`, `init`, `plan`, `sync`, and `verify` support a bounded offline workflow. `sync` captures selected bytes into a private, external, source-first **QUARANTINE** store and writes process receipts; it does not populate this repository's [`data/raw/`](data/raw/README.md) lane or admit a source. |
 | Check a change | [`Makefile`](Makefile), [validator profiles](tools/validators/README.md), and [contribution guide](CONTRIBUTING.md) | Focused commands and fixtures cover declared boundaries. Some targets are `TODO` markers; topology correction and later release decisions require their own governed evidence. |
 
@@ -192,8 +191,7 @@ The table below is the honest maturity snapshot for the repository inspected at 
 |---|---|---|
 | **Repository foundation** | Responsibility roots for apps, contracts, schemas, policy, data, pipelines, runtime, docs, tests, tools, and release are present. | A path’s presence does not make it truth, policy, release, or publication authority. |
 | **Repository validation evidence** | The earlier exact-main `validator-suite` run [34645138385](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34645138385) passed its ordinary validator, documentation, workflow-security, and aggregate lanes but remained `FAIL_INVARIANT` at repository-topology because six current drift fingerprints replaced six stale baseline fingerprints. | The topology baseline was not rewritten; this inherited governance hold remains tracked by [#4228](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228) and [#3366](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3366). |
-| **KFM Explorer site app** | `apps/kansas-frontier-matrix-explorer/` contains a Vite/React application, a renderer-neutral `NullMapRuntime` composition, synthetic/generalized catalog metadata, fail-closed evidence behavior, public-safe export guidance, Sites identity metadata, and a mounted React error boundary with sanitized diagnostics and explicit retry. | This proves tracked implementation slices. It does not prove a live renderer, live data, hosted health, release, or publication. |
-| **Explorer Web workbench** | `apps/explorer-web/` contains a Vite/TypeScript workspace with a repository-grounded local site composition, public navigation/context, shared trust surface, synthetic Focus workspace, Evidence Drawer behavior, Story Player and map-selection slices, and tests. | The production shell decision, admitted MapLibre dependency, live governed transport, and released layers remain separate gates. |
+| **Explorer Site source** | The exact Site v71 source is preserved on the separate `codex/live-site-v71-source-20260925` branch. The two older monorepo app directories are retired in this change. | The historical snapshot at the start of this section predates the retirement. Local builds and tests do not prove hosted health, complete provider data, source admission, release, or publication. |
 | **MapLibre path** | Renderer-neutral ports, package/adaptor surfaces, performance governance, and synthetic validation support exist in the repository. | Functional renderer admission and a live map boot are held until their dependency, compatibility, accessibility, performance, and rollback evidence is closed. |
 | **Evidence and trust path** | Contracts, finite outcomes, defensive adapters, fail-closed fixtures, negative cases, and policy-boundary tests are present in bounded slices. | End-to-end EvidenceBundle resolution, source admission, live transport, and public release are not established by this README. |
 | **Science Pack path** | Repository domain lanes, Explorer workbenches, contracts, schemas, policies, fixtures, and validators provide partial building blocks for governed scientific exploration. | No single installable, configured, admitted, released, or operational cross-domain Science Pack was established by this review. |
@@ -312,35 +310,23 @@ Follow the [local PC data-store runbook](docs/runbooks/local-pc-data-store.md) t
 
 The local-data tools use the Python standard library and need no package installation. The root Python package supplies dependency metadata; it does not bundle the applications, data store, or datasets. The current Compose images are security-review placeholders without application payloads and are not a complete local deployment.
 
-### Choose an application development lane
+### Host the current Site locally
 
-The repository pins Node `>=22.13 <23` and `pnpm@11.17.0` for its private JavaScript workspace. Use the lane that matches what you are inspecting.
-
-### Explorer Web workbench
+The current Explorer source is on the separate [Site v71 source branch](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/codex/live-site-v71-source-20260925), at commit `62c6ef9da35bdcd11929502a386f4f9da07448ac`. Use a separate checkout so this monorepo and the Site are not mixed:
 
 ```bash
-corepack enable
-pnpm install --frozen-lockfile
-pnpm --filter explorer-web build
-pnpm --filter explorer-web test
-pnpm --filter explorer-web dev
-```
-
-The workbench’s local composition and fixture-first tests are useful for inspecting trust-visible UI, bounded Focus and Story behavior, map-selection handoffs, accessibility paths, and negative states. They do not establish a deployed product or live data path.
-
-### KFM Explorer Sites application
-
-The Sites application targets Node `>=22.13.0` and Linux helpers such as `flock`, `curl`, and GNU `timeout` for its bounded install/build scripts.
-
-```bash
-cd apps/kansas-frontier-matrix-explorer
+git clone --branch codex/live-site-v71-source-20260925 --single-branch \
+  https://github.com/bartytime4life/Kansas-Frontier-Matrix.git KFM-Site-local
+cd KFM-Site-local
 npm run install:ci
 npm run build
-npm test
 npm run dev
 ```
 
-The project’s Sites identity, replacement, version, and rollback boundaries are documented in [`apps/kansas-frontier-matrix-explorer/README.md`](apps/kansas-frontier-matrix-explorer/README.md) and [`apps/kansas-frontier-matrix-explorer/docs/openai-sites-in-place-replacement.md`](apps/kansas-frontier-matrix-explorer/docs/openai-sites-in-place-replacement.md). A repository checkout does not deploy or restore a Site version.
+The Site requires Node `>=22.13.0`. Its source includes the application and checked-in static assets; live provider responses, private workspace records, and separately stored local data are not bundled. Follow the Site branch's README for its current behavior and limits. The former `apps/kansas-frontier-matrix-explorer/` mirror and `apps/explorer-web/` workbench are no longer local-hosting entry points.
+
+App-only CI workflows and the Explorer review image were retired with the old code. Independent repository validators remain scoped to their own data, policy, MapLibre, and Governed API surfaces; they do not validate the standalone Site.
+Dated architecture and runbook records may still name the retired paths. Their former files remain inspectable at [the pre-retirement commit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/13f66982ef1db9dc733ed3588d42bf1b92e19e8d); those references are historical, not local run instructions.
 
 ### Python and repository validators
 
@@ -378,7 +364,6 @@ make boundary-guards
 make deny-test
 make governed-api-smoke
 make governed-api-verify
-make ui-build
 make maplibre-govern
 make maplibre-proof
 ```
@@ -441,8 +426,7 @@ The most important open edges are the exact packaging mismatch noted above, host
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | Contribution, branch, pull-request, evidence, validation, and rollback discipline |
 | [`SECURITY.md`](SECURITY.md) | Vulnerability reporting and sensitive-disclosure boundary |
 | [`docs/`](docs/) | Human-readable doctrine, architecture, decisions, standards, source guidance, and runbooks |
-| [`apps/kansas-frontier-matrix-explorer/`](apps/kansas-frontier-matrix-explorer/) | Public-facing Sites application source and hosting boundary |
-| [`apps/explorer-web/`](apps/explorer-web/) | Renderer-neutral, fixture-first Explorer Web workbench |
+| [Standalone Site v71 source](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/codex/live-site-v71-source-20260925) | Current Explorer application source and local-hosting entry point |
 | [`apps/governed-api/`](apps/governed-api/) | Governed API implementation boundary |
 | [`packages/maplibre/`](packages/maplibre/) | MapLibre-facing package and adapter seam |
 | [`contracts/`](contracts/) and [`schemas/`](schemas/) | Meaning and machine-checkable shape |
