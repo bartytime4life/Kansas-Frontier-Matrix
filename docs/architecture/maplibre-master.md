@@ -9,7 +9,7 @@ owners:
   - "@bartytime4life — verified default repository review route"
   - "NEEDS VERIFICATION — architecture, map-runtime, Explorer, security, accessibility, release, and independent-review stewardship"
 created: 2026-05-25
-updated: 2026-09-23
+updated: 2026-09-24
 policy_label: "repository-facing; architecture; maplibre; renderer-boundary; public"
 owning_root: docs/
 current_path: docs/architecture/maplibre-master.md
@@ -31,8 +31,8 @@ truth_posture: >
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 21eee8dab4637da4771267078fe963f6525b045f
-  target_prior_blob: 8491fad510496417d573ceb29dd1a4dbc87de52e
+  base_commit: bb08d3e9b92e9251c193debab6567be843136070
+  original_authoring_prior_blob: 8491fad510496417d573ceb29dd1a4dbc87de52e
   directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
   directory_rules_adr_blob: 4c1ef5f7f812d58fbdde9898acc96bb4c9280b2c
   adr_index_blob: a937b4c5a81e0b36b44a2fc14d7df046db388fe2
@@ -115,7 +115,7 @@ notes:
 
 | Axis | Current bounded result |
 |---|---|
-| **Evidence snapshot** | `main@21eee8dab4637da4771267078fe963f6525b045f` |
+| **Evidence snapshot** | `main@bb08d3e9b92e9251c193debab6567be843136070` |
 | **Placement** | `PLACE` at the existing `docs/architecture/maplibre-master.md`; accepted ADR-0029 assigns human architecture guidance to `docs/` |
 | **Decision authority** | ADR-0029, ADR-0006, and ADR-0007 are accepted in their stated scopes |
 | **Architecture disposition** | ADR-0006 binds the package-owned port/adapter and acquisition seam; ADR-0007 binds MapLibre GL JS as the sole normal browser renderer family; neither decision grants runtime, source, release, deployment, or publication authority |

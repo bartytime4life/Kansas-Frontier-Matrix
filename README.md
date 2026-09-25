@@ -6,7 +6,7 @@ version: v3.3.0
 status: repository-grounded draft
 owners: ["@bartytime4life"]
 created: 2026-05-11
-updated: 2026-09-23
+updated: 2026-09-24
 policy_label: public
 current_path: README.md
 owning_root: repository-root
@@ -15,7 +15,7 @@ truth_posture: cite-or-abstain; implementation claims require pinned repository 
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 9dcdaec2cacbbf9880bd613b546a7314a2673ac5
+  base_commit: bb08d3e9b92e9251c193debab6567be843136070
 related:
   - docs/doctrine/directory-rules.md
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
@@ -28,7 +28,7 @@ related:
   - .github/README.md
   - docs/runbooks/local-pc-data-store.md
 notes:
-  - "The 2026-09-23 reconciliation pins current source to main@9dcdaec2cacbbf9880bd613b546a7314a2673ac5 and Sites metadata to v53; earlier test and design checkpoints remain historical."
+  - "The 2026-09-23 reconciliation pins source to main@bb08d3e9b92e9251c193debab6567be843136070; superseded Site observations remain historical; earlier test and design checkpoints remain historical."
   - "Historical lineage: the 2026-09-21 working-path readback used main@32ab26478b7186bd1a0983951c1a4fbf5adf33aa; the current table supersedes its currentness claim."
   - "Historical lineage: local-PC setup and packaging guidance used main@91aeee1ca163bcb3f007577a541a825f60dcddc2; local custody remains distinct from source admission."
   - "Adds a visitor-first project orientation while preserving the governed root README identity."
@@ -97,7 +97,7 @@ KFM’s public value is not a larger pile of layers. It is a more trustworthy pa
 
 ## A working path through the repository
 
-This source-level readback is for `main@9dcdaec2cacbbf9880bd613b546a7314a2673ac5` on 2026-09-23 UTC (2026-09-22 in America/Chicago). It identifies implemented entry points; it is not a hosted runtime or current CI result. See the [maturity table](#current-posture) for the separate implementation and authority boundaries.
+This source-level readback is for `main@bb08d3e9b92e9251c193debab6567be843136070` on 2026-09-24 America/Chicago. It identifies implemented entry points; it is not a hosted runtime or current CI result. See the [maturity table](#current-posture) for the separate implementation and authority boundaries.
 
 | Goal | Start here | What the repository currently establishes |
 |---|---|---|
@@ -183,9 +183,12 @@ A Science Pack therefore succeeds only when the full path is inspectable:
 
 The existing domain lanes, Explorer workbenches, contracts, schemas, policies, fixtures, and validators are building blocks toward that direction. Their presence is not proof that this cross-domain pack exists. The current gaps and safest next slices remain tracked in the [verification backlog](docs/registers/VERIFICATION_BACKLOG.md).
 
+
+Current cross-location reconciliation and validation limits: [project alignment register](docs/registers/project-alignment-20260924.md).
+
 ## Current posture
 
-The table below is a **source-level checkpoint** at `main@9dcdaec2cacbbf9880bd613b546a7314a2673ac5`, checked on 2026-09-23 UTC. Connected Sites metadata has its own version identity. Historical test results are not rerun results for this revision.
+The table below is a **source-level checkpoint** at `main@bb08d3e9b92e9251c193debab6567be843136070`, checked on 2026-09-24 America/Chicago. Connected Sites metadata has its own version identity. Historical test results are not rerun results for this revision.
 
 | Surface | Confirmed evidence in this review | Boundary |
 |---|---|---|
@@ -197,7 +200,7 @@ The table below is a **source-level checkpoint** at `main@9dcdaec2cacbbf9880bd61
 | **Live-feed startup diagnostics** | [Merged #4675](apps/kansas-frontier-matrix-explorer/docs/live-feed-startup.md) makes missing repository APIs return HTTP 503 JSON `KFM_API_NOT_CONFIGURED`; a diagnostic and provenance-aware startup selector exist. | The selector/demo remain unmounted; no live API, real snapshot, hosted repair, or release is established. |
 | **Evidence and trust** | Contracts, finite outcomes, defensive adapters, fixtures and negative cases exist in bounded slices. | End-to-end EvidenceBundle closure and public release are not proved here. |
 | **Validation entry points** | [Makefile](Makefile) uses implemented commands and bounded [readiness lanes](tools/readiness/run_lane.py). Root workspace aggregate scripts explicitly fail with `WORKFLOW_HOLD`. | No aggregate run was executed by this documentation review. Older topology/validator run results remain historical, not current pass/fail claims. |
-| **Hosted Site** | Connected [v53 readback](apps/kansas-frontier-matrix-explorer/docs/sites-source-alignment.md): platform deployment `succeeded`, owner-private audience, separate source commit. | Full source equivalence, authenticated browser behavior, release acceptance, and recovery rehearsal remain unverified. |
+| **Hosted Site** | Connected [current readback](apps/kansas-frontier-matrix-explorer/docs/sites-source-alignment.md): platform deployment `succeeded`, owner-private audience, separate source commit. | Full source equivalence, authenticated browser behavior, release acceptance, and recovery rehearsal remain unverified. |
 | **Science Pack, hazard workspace and AI** | [Science Pack](#a-finished-kfm-with-a-science-pack) and [Firemap-inspired hazard workspace](docs/architecture/ui/firemap-inspired-hazard-workspace.md) describe proposed experiences. AI remains downstream of evidence and policy. | These designs do not establish installable packs, a completed hazard workspace, model authority, or permission to publish. |
 
 ### How to read KFM status
@@ -456,7 +459,7 @@ Open verification includes hosted/source equivalence, authenticated browser acce
 | Field | Value |
 |---|---|
 | Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Evidence snapshot | `main@9dcdaec2cacbbf9880bd613b546a7314a2673ac5`; 2026-09-23 UTC |
+| Evidence snapshot | `main@bb08d3e9b92e9251c193debab6567be843136070`; 2026-09-23 UTC |
 | Open pull requests at final base refresh | Zero observed. [#4675](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4675) merged while this review was in progress; the new base was fast-forwarded with the documentation patch preserved. |
 | Reviewed | Exact GitHub base, affected source and manifests, accepted Directory Rules, open-PR paths, connected Sites version/deployment/access metadata, and KFM Notion/Drive design and coordination documents |
 | Change class | Documentation reconciliation: current source, hosted metadata, historical evidence, and proposed design kept distinct |

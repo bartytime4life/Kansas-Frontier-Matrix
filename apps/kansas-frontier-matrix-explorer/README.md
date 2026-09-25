@@ -6,7 +6,7 @@ fit together.
 
 ## Current public scope
 
-Source checkpoint: `main@9dcdaec2cacbbf9880bd613b546a7314a2673ac5`, reviewed
+Source checkpoint: `main@bb08d3e9b92e9251c193debab6567be843136070`, reviewed
 2026-09-23 UTC. “Public scope” describes the intended release boundary; the
 connected Site is owner-private at this readback.
 
@@ -46,7 +46,7 @@ TypeScript-transpile regression checks.
 | Existing Site URL | <https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site> |
 | Authoritative host | OpenAI Sites; [issue #4232](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4232) records the adapter decision |
 | Current evidence | [Identity and source-alignment hold](./docs/sites-source-alignment.md); the older replacement handoff and v1 receipt are historical |
-| Hosted version state | The 2026-09-23 readback records successful v53 deployment and an owner-private audience; source equivalence, production-browser acceptance, and recovery remain `HOLD` |
+| Hosted version state | The alignment readback records successful v70 deployment and an owner-private audience; source equivalence, production-browser acceptance, and recovery remain `HOLD` |
 
 The staged 2026-09-03 replacement ZIP is an external, digest-bound Sites execution
 input. It is not the canonical repository source and must not be copied over this

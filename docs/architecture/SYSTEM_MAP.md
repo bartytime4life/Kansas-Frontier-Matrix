@@ -7,7 +7,7 @@ status: repository-grounded draft
 owners:
   - "@bartytime4life"
 created: 2026-05-14
-updated: 2026-09-23
+updated: 2026-09-24
 policy_label: public
 current_path: docs/architecture/SYSTEM_MAP.md
 owning_root: docs/
@@ -20,8 +20,8 @@ truth_posture: >-
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 21eee8dab4637da4771267078fe963f6525b045f
-  target_prior_blob: aabb553e8fc05fff32f303bcb2662c9bc86b8c71
+  base_commit: bb08d3e9b92e9251c193debab6567be843136070
+  original_authoring_prior_blob: aabb553e8fc05fff32f303bcb2662c9bc86b8c71
   directory_rules_decision: ADR-0029 accepted
   root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
   codeowners_blob: dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61
@@ -40,7 +40,7 @@ notes:
 > **One-line purpose.** Orient maintainers and reviewers to how Kansas Frontier Matrix responsibilities, lifecycle states, trust objects, implementation surfaces, release decisions, governed interfaces, and correction paths fit together—without treating this page as truth, policy, review, release, or publication authority.
 
 [![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-d29922?style=flat-square)](#status-and-evidence-boundary)
-[![Base: main@21eee8d](https://img.shields.io/badge/base-main%4021eee8d-0969da?style=flat-square)](#status-and-evidence-boundary)
+[![Base: main@bb08d3e](https://img.shields.io/badge/base-main%40bb08d3e-0969da?style=flat-square)](#status-and-evidence-boundary)
 [![Directory Rules: accepted](https://img.shields.io/badge/Directory%20Rules-v2%20accepted-1a7f37?style=flat-square)](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
 [![Publication authority: none](https://img.shields.io/badge/publication%20authority-none-b42318?style=flat-square)](#status-and-evidence-boundary)
 
@@ -54,7 +54,7 @@ notes:
 | Document role | Human-readable whole-system architecture orientation |
 | Repository location | **CONFIRMED:** `docs/architecture/SYSTEM_MAP.md` |
 | Owning responsibility root | **CONFIRMED:** `docs/` — human-readable explanation |
-| Evidence base | **CONFIRMED:** `main@21eee8dab4637da4771267078fe963f6525b045f` |
+| Evidence base | **CONFIRMED:** `main@bb08d3e9b92e9251c193debab6567be843136070` |
 | Placement authority | **CONFIRMED:** Directory Rules v2 adopted by accepted ADR-0029 |
 | Numbered ADR posture | **CONFIRMED:** the [canonical index](../adr/INDEX.md) records ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 as accepted within their scopes; the other 36 numbered records remain proposed |
 | Verified GitHub owner route | **CONFIRMED:** `@bartytime4life`; specialist stewardship remains `NEEDS VERIFICATION` |
@@ -449,6 +449,6 @@ This update changes architecture documentation. Rollback is to revert its docume
 
 ---
 
-<sub>**Last reviewed:** `2026-09-23` · **Document version:** `v2.1` · **Role:** architecture orientation · **Base:** `main@21eee8dab4637da4771267078fe963f6525b045f` · **Publication authority:** none</sub>
+<sub>**Last reviewed:** `2026-09-23` · **Document version:** `v2.1` · **Role:** architecture orientation · **Base:** `main@bb08d3e9b92e9251c193debab6567be843136070` · **Publication authority:** none</sub>
 
 [Back to top](#top)

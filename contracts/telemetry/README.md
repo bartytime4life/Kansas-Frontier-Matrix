@@ -6,7 +6,7 @@ version: v0.2
 status: draft; PROPOSED; semantic-contract-lane; observability-carrier; redaction-required; no-sovereign-truth
 owners: OWNER_TBD — Observability steward · Runtime steward · Security/Privacy reviewer · Contracts steward · Schema steward · Policy steward · Release steward · Docs steward
 created: NEEDS VERIFICATION — stub existed before v0.1 expansion
-updated: 2026-08-11
+updated: 2026-09-24
 policy_label: public; contracts; telemetry; observability; semantic-contracts; redaction; sensitivity; rights; receipts; release-gated; no-truth-authority
 tags: [kfm, contracts, telemetry, observability, traces, metrics, logs, events, receipts, opentelemetry, openlineage, redaction, sensitivity, rights, trust-membrane, release-gates]
 related:
@@ -53,10 +53,10 @@ notes:
 **Status:** draft / PROPOSED  
 **Path:** `contracts/telemetry/README.md`  
 **Owning root:** `contracts/` — semantic meaning only  
-**Schema home:** `schemas/contracts/v1/telemetry/` or `schemas/contracts/v1/receipts/` — PROPOSED / NEEDS VERIFICATION  
+**Schema home:** `schemas/contracts/v1/telemetry/` for the four existing bounded profiles; other objects remain proposed
 **Policy homes:** `policy/runtime/`, `policy/sensitivity/`, `policy/rights/`, `policy/promotion/`  
 **Operational docs:** `docs/standards/TELEMETRY_MINIMUMS.md`, dashboards docs, runbooks, ADRs  
-**Truth posture:** CONFIRMED target was a short stub · CONFIRMED telemetry standards and telemetry redaction ADR exist · CONFIRMED telemetry is treated as carrier/process memory rather than truth · CONFIRMED telemetry emissions are subject to sensitivity, rights, and policy posture · NEEDS VERIFICATION for telemetry schema family, validators, fixtures, policy enforcement, sink implementation, dashboards, runtime probes, retention, and release-gate wiring
+**Truth posture:** CONFIRMED target was a short stub · CONFIRMED telemetry standards and telemetry redaction ADR exist · CONFIRMED telemetry is treated as carrier/process memory rather than truth · CONFIRMED telemetry emissions are subject to sensitivity, rights, and policy posture · CONFIRMED four local fixture profiles; NEEDS VERIFICATION for operational policy enforcement, sinks, dashboards, runtime probes, retention, and release-gate wiring
 
 ## Quick jumps
 
@@ -120,6 +120,21 @@ Telemetry does not answer:
 | Release gates | `contracts/release/`, `release/`, policy/promotion roots | Telemetry informs gates; it does not publish. |
 
 ---
+
+## Existing bounded profiles
+
+| Contract | Executable validation |
+|---|---|
+| [TraceReceiptLink](trace_receipt_link.md) | `tools/validators/validate_trace_receipt_link.py` |
+| [OpenLineage projection](openlineage_run_event_projection.md) | `tools/validators/telemetry/validate_openlineage_run_event_projection.py` |
+| [Remote-sensing lineage](remote_sensing_lineage_activity.md) | `tools/validators/telemetry/validate_remote_sensing_lineage_activity.py` |
+| [Map-build sustainability](map_build_sustainability.md) | `tools/validators/telemetry/validate_map_build_sustainability.py` |
+
+Each has a paired schema under `schemas/contracts/v1/telemetry/` and repository
+fixtures. [Validator documentation](../../tools/validators/telemetry/README.md)
+owns invocation and bounded behavior. The general validator and raw/prompt Rego
+modules remain placeholders; no operational collector, sink, or redaction
+acceptance is established by these profiles.
 
 ## Candidate object families
 
@@ -202,8 +217,8 @@ PROPOSED semantic invariants:
 
 NEEDS VERIFICATION in implementation:
 
-- accepted telemetry schema home and object names;
-- validators for telemetry object contracts;
+- additional telemetry families beyond the four existing fixture profiles;
+- operational consumers of the existing local validators;
 - fixtures for public-safe, restricted, redacted, sampled, partial, failed, degraded, and sink-export cases;
 - policy enforcement for telemetry redaction, rights, sensitivity, and promotion gates;
 - collector/exporter implementation and sink redaction guarantees;
@@ -216,7 +231,7 @@ NEEDS VERIFICATION in implementation:
 
 ## Open questions
 
-- Should telemetry semantic contracts live under `contracts/telemetry/`, `contracts/runtime/`, `contracts/receipts/`, or a split by object type?
+- Which additional semantic objects are needed beyond the existing `contracts/telemetry/` profiles? Existing runtime receipts retain their own home.
 - Should `runtime_probe_result.md` be telemetry, runtime, release, or dashboard contract family?
 - Which telemetry events require signed receipts versus ordinary observability signals?
 - Which telemetry attributes are safe for public dashboards?

@@ -4,7 +4,7 @@ title: KFM Explorer Site Real-Data Backfill — 2026-09-10
 type: architecture-reference
 version: v1.1.0-draft
 created: 2026-09-10
-updated: 2026-09-23
+updated: 2026-09-24
 status: draft; documentation-only; historical-source-record; not-released; not-for-life-safety
 owners:
   - "@bartytime4life — verified CODEOWNERS review route"
@@ -28,14 +28,14 @@ This record preserves the 2026-09-10 account of bounded real-data context work i
 ## Resource reconciliation — 2026-09-23 UTC
 
 **CONFIRMED:** source inspected at
-[`main@9dcdaec2cacbbf9880bd613b546a7314a2673ac5`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/9dcdaec2cacbbf9880bd613b546a7314a2673ac5).
+[`main@bb08d3e9b92e9251c193debab6567be843136070`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/bb08d3e9b92e9251c193debab6567be843136070).
 The observation falls on 2026-09-22 in America/Chicago. Repository source,
 connected Site metadata, coordination records, and design proposals answer
 different questions; their dates do not make them interchangeable authorities.
 
 | Resource / feature | Reconciled status | Evidence and next boundary |
 |---|---|---|
-| Existing hosted Explorer | Sites reports v53, source `22ac19960c2f72f11f5e4e9b87c7e12f62074d6e`, successful deployment, owner-private audience. | [Exact IDs, digest, previous saved v52 and method](../../apps/kansas-frontier-matrix-explorer/docs/sites-source-alignment.md). Browser acceptance, full source equivalence and recovery were not tested. |
+| Existing hosted Explorer | Sites reports v70, source `c402b063c60dc7ec8f23a497715d01cff6f7ffa5`, successful deployment, owner-private audience. | [Exact IDs, digest, preserved baseline v68 and prior v69 and method](../../apps/kansas-frontier-matrix-explorer/docs/sites-source-alignment.md). Browser acceptance, full source equivalence and recovery were not tested. |
 | Explorer Web Living Atlas | Package-owned inline MapLibre composition exists; `maplibre-gl` is pinned to 6.9.0. The retained laboratory still uses `NullMapRuntime`. | [Consumer source boundary](../../apps/explorer-web/src/site/README.md), [package](../../packages/maplibre/package.json). External resources, source admission and release remain separate. |
 | Monorepo Sites app | Vite/React with Explorer and About views; renderer-neutral `NullMapRuntime` and synthetic/generalized catalog. | [App guide](../../apps/kansas-frontier-matrix-explorer/README.md). This is not a mirror-equivalence claim about the standalone Site. |
 | Local source custody | Offline local-data tools support an external private quarantine store. | [Runbook](../runbooks/local-pc-data-store.md). Capturing bytes and process receipts does not admit a source or show it on the map. |

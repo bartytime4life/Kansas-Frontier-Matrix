@@ -2,20 +2,46 @@
 
 Status: **IDENTITY_TARGET_RECONCILED / SOURCE_EQUIVALENCE_HOLD / ACCEPTANCE_HOLD**
 
-Latest observation: **2026-09-23 UTC** (2026-09-22 America/Chicago). This
+Latest observation: **2026-09-24 America/Chicago** (deployment readback
+2026-09-25 UTC). The selected project remains owner-private. Source history,
+platform deployment, browser acceptance, and KFM release authority are separate.
+
+## Current verified platform checkpoint
+
+| Surface | Connected readback |
+|---|---|
+| Active project | `appgprj_6aa0b1c41bc08191bfd86003920f1631` |
+| Site | [Kansas Frontier Matrix Explorer](https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site) |
+| Saved/deployed version | `70`; `appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_33fa6b129ffc8191bf0ef31aabbf4e75` |
+| Source commit | `c402b063c60dc7ec8f23a497715d01cff6f7ffa5` |
+| Archive | `sha256:89ecb57e3f444f0cfd554fcc9e9a20200db84f8b303ad80a3589da6e9e206cae`; 66 files; 11,847,680 bytes |
+| Deployment | `appgdep_6ab5bc4f8ee48191961be0efe341dd5f`; `succeeded`; 2026-09-25T00:12:10.583477+00:00 |
+| Repository comparison | `main@bb08d3e9b92e9251c193debab6567be843136070` |
+| Recovery | v69 source `2eb77dbef8d64080af1b7ccfc150b44dd973e400`; protected v68 baseline retained; restoration not exercised |
+
+The Site workflow pushed the exact source and packaged its successful local build.
+Native private deployment and version readback confirmed the values above. The
+archive digest is platform reported. Local build, typecheck, and 147 tests passed;
+no authenticated browser/WebGL, external source admission, operational telemetry,
+or KFM release acceptance is inferred. The same project ID in the monorepo hosting
+manifest does not make its Vite/React source or null storage bindings equivalent
+to the separately maintained Vinext Site. See the
+[project alignment register](../../../docs/registers/project-alignment-20260924.md).
+
+Historical observation: **2026-09-23 UTC** (2026-09-22 America/Chicago). This
 record distinguishes connected platform metadata from source equivalence and
 application acceptance. The 2026-09-17 readback is retained below as history. [Issue #4418](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4418)
 remains the coordination tracker. This record does not claim that the Site
 source, a GitHub mirror, or this monorepo application are equivalent.
 
-## Verified platform checkpoint — 2026-09-23 UTC
+## Historical platform checkpoint — 2026-09-23 UTC
 
 | Surface | Connected readback |
 |---|---|
 | Active project / slug | `appgprj_6aa0b1c41bc08191bfd86003920f1631` / `kansas-frontier-matrix-explorer` |
 | Site URL | [Kansas Frontier Matrix Explorer](https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site) |
 | Audience | Owner-private custom access; revision 1; no external visitors. A reachable URL is not public-access authorization. |
-| Latest saved version | `53`; `appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_20f1bb51899c81919c92077dbcd04672` |
+| Saved version at that observation | `53`; `appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_20f1bb51899c81919c92077dbcd04672` |
 | Exact Site source | `22ac19960c2f72f11f5e4e9b87c7e12f62074d6e` |
 | Saved archive digest | `sha256:9ed44c87d4099eb5ddf26c93bc9357203bae44d1a5e42b093848b3ef3a8572fa` |
 | Deployment | `appgdep_6aaf81da36008191a8654bd97f4addac`; `publish`; `succeeded`; updated `2026-09-20T06:50:01.739476+00:00`; bound to the exact v53 ID above |
@@ -108,7 +134,7 @@ evidence.
 1. Read back the active Site project, saved/deployed version, access policy,
    exact source commit, archive digest, and immediately preceding recovery target.
 2. Advance the existing standalone mirror without rewriting history, then prove
-   its complete Git tree equals the exact candidate Site source tree (v53 at
+   its complete Git tree equals the exact candidate Site source tree (the named version at
    this observation; re-read before any later operation). A shared-path or
    file-count comparison is insufficient.
 3. Record a reviewed current-project receipt that binds the candidate, archive,
