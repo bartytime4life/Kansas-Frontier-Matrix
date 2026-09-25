@@ -222,9 +222,9 @@
       "fixture_paths": ["fixtures/data/layer_manifest", "fixtures/runtime/layer_manifest_admission"],
       "validator_paths": ["tools/validators/data/validate_layer_manifest.py", "tools/validators/validate_layer_manifest.py"],
       "test_paths": ["tests/validators/test_validate_layer_manifest.py"],
-      "workflow_paths": [".github/workflows/layer-manifest-admission.yml", ".github/workflows/layer-manifest.yml"],
-      "emitter_paths": ["apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts"],
-      "surface_status": {"contracts": "CONFLICTED", "schemas": "CONFLICTED", "policy": "IMPLEMENTED", "fixtures": "IMPLEMENTED", "validators": "IMPLEMENTED", "tests": "IMPLEMENTED", "workflows": "IMPLEMENTED", "emitters": "IMPLEMENTED"},
+      "workflow_paths": [".github/workflows/layer-manifest.yml"],
+      "emitter_paths": [],
+      "surface_status": {"contracts": "CONFLICTED", "schemas": "CONFLICTED", "policy": "IMPLEMENTED", "fixtures": "IMPLEMENTED", "validators": "IMPLEMENTED", "tests": "IMPLEMENTED", "workflows": "IMPLEMENTED", "emitters": "ABSENT"},
       "identity": {"status": "CONFLICTED", "rule_refs": ["contracts/data/layer_manifest.md", "contracts/map/layer_manifest/README.md", "contracts/release/layer_manifest.md", "contracts/runtime/layer_manifest.md", "schemas/contracts/v1/data/layer_manifest.schema.json", "schemas/contracts/v1/layers/layer_manifest.schema.json", "schemas/contracts/v1/map/layer_manifest.schema.json", "schemas/contracts/v1/runtime/layer_manifest.schema.json"], "notes": "Identity and role boundaries differ across data, map, release, and runtime candidates."},
       "compatibility": {"posture": "multiple_candidates_unresolved", "candidate_paths": ["contracts/data/layer_manifest.md", "contracts/map/layer_manifest/README.md", "contracts/release/layer_manifest.md", "contracts/runtime/layer_manifest.md", "schemas/contracts/v1/data/layer_manifest.schema.json", "schemas/contracts/v1/layers/layer_manifest.schema.json", "schemas/contracts/v1/map/layer_manifest.schema.json", "schemas/contracts/v1/runtime/layer_manifest.schema.json"], "reason_codes": ["multiple_contract_candidates", "multiple_schema_candidates"], "notes": "The catalog records every inspected repository-wide candidate and chooses none."},
       "dependency_family_ids": ["evidence_ref", "policy_decision", "source_descriptor"],
@@ -232,7 +232,7 @@
       "release_family_ids": ["release_manifest"],
       "correction_family_ids": ["correction_notice"],
       "rollback_family_ids": ["rollback_card"],
-      "notes": "File presence and an Explorer adapter do not prove layer admission, release, deployment, or publication."
+      "notes": "The former Explorer adapter was retired; no current emitter is recorded. File presence does not prove layer admission, release, deployment, or publication."
     },
     {
       "family_id": "policy_decision",

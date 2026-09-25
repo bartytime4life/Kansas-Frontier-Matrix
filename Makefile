@@ -20,12 +20,10 @@ VALIDATOR_ORCHESTRATOR := python tools/validate_all.py
 offline-pipeline-check:
 	$(KFM_VALIDATION_ENV) PROJ_NETWORK=OFF PYTHONPATH="$(CURDIR)/tools/ci/kfm_no_network:$(CURDIR)" python -m pytest -q -p no:cacheprovider --strict-config --strict-markers tests/pipelines tests/domains/hydrology/test_no_network_proof.py
 
-# Build from the complete workspace, then use the declared compiler/test helpers.
-# This targets the repository mirror; it neither saves nor deploys a Site version.
+# Retired repository mirror. Keep a fail-closed compatibility target so a
+# request for the old app check cannot report a passing result.
 native-explorer-check:
-	pnpm --filter kansas-frontier-matrix-explorer build
-	node --test apps/kansas-frontier-matrix-explorer/tests/*.test.mjs
-	node --test tests/ui/test_explorer_lint_compat.mjs
+	@echo "WORKFLOW_HOLD: the legacy monorepo Explorer app was retired; use the separate live Site source branch"; exit 3
 
 local-data-check:
 	$(KFM_VALIDATION_ENV) PYTHONPATH="$(CURDIR)/tools/ci/kfm_no_network:$(CURDIR)" python -m pytest -q -p no:cacheprovider --strict-config --strict-markers tests/local_data
@@ -51,7 +49,7 @@ help:
 	@echo "  local-data-doctor     Inspect local-PC prerequisites without installing or starting services"
 	@echo "  local-data-check      Test offline local-data capture, safety, and recovery"
 	@echo "  offline-pipeline-check Test synthetic ingestion, normalization, replay and rollback boundaries"
-	@echo "  native-explorer-check Build and test the native Explorer repository mirror without deploying"
+	@echo "  native-explorer-check Retired app check (explicit HOLD)"
 	@echo "  docs-critical-structure Test and run the critical-document structure sentinel"
 	@echo "  workflow-security     Test and run the 20-rule workflow-security ratchet"
 	@echo "  repository-topology  Test and run the 20-rule directory-topology ratchet"
@@ -68,7 +66,7 @@ help:
 	@echo "  boundary-guards       Run policy/API boundary tests"
 	@echo "  boundary-guards-ci    Run boundary tests with JUnit output"
 	@echo "  deny-test             Run bounded public route, store, and runtime-import guards"
-	@echo "  ui-build              Build the Explorer Web baseline"
+	@echo "  ui-build              Retired workbench check (explicit HOLD)"
 	@echo "  maplibre-perf         Run MapLibre performance smoke and build artifacts"
 	@echo "  maplibre-govern       Validate MapLibre performance governance"
 	@echo "  maplibre-proof        Build and validate the MapLibre performance ProofPack"
@@ -240,7 +238,7 @@ deny-test:
 	PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC PYTHONPATH=apps/governed-api/src python -m pytest -q --strict-config --strict-markers apps/governed-api/tests/test_boundary_guards.py
 
 ui-build:
-	pnpm --filter explorer-web build
+	@echo "WORKFLOW_HOLD: the legacy Explorer Web workbench was retired; use the separate live Site source branch"; exit 3
 
 api-run: governed-api-dev
 
@@ -262,11 +260,11 @@ governed-api-verify:
 	fi
 
 boundary-guards:
-	python -m pytest -q tests/policy/test_control_plane_register_meta_contract.py tests/policy/test_explorer_web_adapter_boundary.py tests/policy/test_pipeline_connector_non_publisher.py apps/governed-api/tests/test_boundary_guards.py
+	python -m pytest -q tests/policy/test_control_plane_register_meta_contract.py tests/policy/test_pipeline_connector_non_publisher.py apps/governed-api/tests/test_boundary_guards.py
 
 boundary-guards-ci:
 	mkdir -p artifacts/qa
-	python -m pytest -q --junitxml=artifacts/qa/policy-boundary-guards.xml tests/policy/test_control_plane_register_meta_contract.py tests/policy/test_explorer_web_adapter_boundary.py tests/policy/test_pipeline_connector_non_publisher.py apps/governed-api/tests/test_boundary_guards.py
+	python -m pytest -q --junitxml=artifacts/qa/policy-boundary-guards.xml tests/policy/test_control_plane_register_meta_contract.py tests/policy/test_pipeline_connector_non_publisher.py apps/governed-api/tests/test_boundary_guards.py
 
 maplibre-perf:
 	node scripts/maplibre-smoke-perf.mjs

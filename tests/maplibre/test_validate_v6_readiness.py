@@ -57,6 +57,19 @@ def write_repo(
 
 
 class MapLibreV69ReadinessTests(unittest.TestCase):
+    def test_retired_explorer_keeps_repository_scan_on_hold(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            write_repo(root)
+            for relative in (
+                "apps/explorer-web/package.json",
+                "apps/explorer-web/tsconfig.json",
+            ):
+                (root / relative).unlink()
+            result = scan_repository(root)
+            self.assertEqual(result.outcome, Outcome.HOLD)
+            self.assertIn("EXPLORER_APP_RETIRED", result.reasons)
+
     def test_ready_repository_accepts_exact_package_owned_6_9_candidate(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

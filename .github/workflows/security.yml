@@ -98,9 +98,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - component: explorer-web
-            dockerfile: infra/docker/Dockerfile.explorer-web
-            image: kfm/explorer-web:security-scan
           - component: governed-api
             dockerfile: infra/docker/Dockerfile.governed-api
             image: kfm/governed-api:security-scan

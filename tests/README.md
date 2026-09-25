@@ -373,7 +373,7 @@ This file is evaluated against the accepted Directory Rules v2 `ROOT_FULL` profi
 | `make governed-api-verify` | App tests plus blocking forbidden renderer/model import scan | Import/source boundary, not runtime isolation |
 | `make local-data-check` | Offline `tests/local_data` capture, manifest, recovery, and boundary tests | Synthetic/local test scope; no source admission or host acceptance |
 | `make offline-pipeline-check` | `tests/pipelines` plus the Hydrology no-network proof test under Python and PROJ network guards | Named synthetic pipeline scope; no live connector or full-suite claim |
-| `make native-explorer-check` | Build and Node tests for `apps/kansas-frontier-matrix-explorer/`, plus the root UI compatibility test | Repository mirror only; no Site save, deployment, or browser acceptance |
+| `make native-explorer-check` | Retired monorepo Explorer check | Explicit `WORKFLOW_HOLD`; use the standalone Site source branch for app validation |
 | `make normalized-summary-check` | Doctrine-summary validator fixtures and focused policy/source/CI tests | Summary structure and failure propagation only; no cutover authority |
 | `make docs-critical-structure` | Sentinel tests and the `CONTRIBUTING.md` structure check | Critical document structure only |
 | `make workflow-security` | Workflow-security tests and static ratchet | Workflow source check, not hosted behavior or ruleset state |
@@ -465,7 +465,7 @@ Current [CODEOWNERS](../.github/CODEOWNERS) routes `/tests/` and `/fixtures/` to
 | [`policy/`](../policy/README.md) | Admissibility rules and obligations tests exercise |
 | [`tools/validators/`](../tools/validators/README.md) | Reusable validators whose mechanics require direct tests |
 | [`apps/governed-api/`](../apps/governed-api/README.md) | App-owned governed API tests and boundary checks |
-| [`apps/explorer-web/`](../apps/explorer-web/README.md) | Canonical public shell; browser/UI/a11y depth remains bounded |
+| [Standalone Site v71 source](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/codex/live-site-v71-source-20260925) | Current Explorer application and its own tests |
 | [`pipelines/`](../pipelines/README.md) | Lifecycle and non-publisher behavior under test |
 | [`release/`](../release/README.md) | Promotion, correction, withdrawal, and rollback authority tests must not replace |
 | [`data/receipts/`](../data/receipts/README.md) | Canonical process-memory records; test reports are not receipts by location |
@@ -931,7 +931,6 @@ make governed-api-smoke
 make governed-api-verify
 make local-data-check
 make offline-pipeline-check
-make native-explorer-check
 make normalized-summary-check
 make docs-critical-structure
 make workflow-security

@@ -1,8 +1,7 @@
 # KFM end-to-end smoke readiness workflow.
-# Status: CONFIRMED bounded readiness checks plus explicit holds; Explorer Web
-# has a separately validated build/test baseline, while an accepted executable
-# Explorer Web + Governed API + deterministic mock-runtime E2E suite is not
-# established in current repository evidence.
+# Status: CONFIRMED bounded readiness checks plus explicit holds. The retired
+# monorepo Explorer apps are absent; a composed Site + Governed API + mock-runtime
+# E2E suite is not established in this repository.
 #
 # Responsibility:
 # - Preserve the existing mock-runtime and E2E check names while making the
@@ -17,14 +16,13 @@
 # Network:
 # - Readiness checks are no-network after checkout and action setup.
 # Inputs:
-# - Repository-owned runtime/UI READMEs, package manifests, Makefile, example
-#   environment, neighboring mock/API/UI workflow definitions, the bounded E2E
-#   inventory, and repository-owned readiness validators.
+# - Repository-owned runtime/API boundaries, Makefile, example environment,
+#   bounded E2E inventory, and repository-owned readiness validator.
 # Outputs:
 # - GitHub job conclusions, logs, and step summaries only; no receipt, proof,
 #   release record, deployment, or published artifact is emitted.
 # Outcome:
-# - The implemented Explorer baseline plus current composed-suite absence
+# - The retired Explorer baseline and current composed-suite absence
 #   produce an explicit WORKFLOW_HOLD.
 # - Newly surfaced implementation fails the readiness check until an accepted,
 #   deterministic, no-live-source E2E command and negative fixtures are wired.
@@ -189,14 +187,14 @@ jobs:
 
           `WORKFLOW_SKIPPED_EXPLICIT: run-e2e-smoke`
 
-          `WORKFLOW_HOLD: no accepted Explorer Web plus Governed API E2E command or deterministic fixture suite`
+          `WORKFLOW_HOLD: no accepted composed Site plus Governed API E2E command or deterministic fixture suite`
 
           The Governed API has a separate repository-owned smoke workflow. Root
           lint/test/build remain exact fail-closed `WORKFLOW_HOLD` commands.
-          Explorer Web has implemented build and unit-test commands validated
-          separately by `ui-build`; the composed E2E surface remains absent.
-          This job verifies that boundary and fails closed on newly surfaced E2E
-          commands, files, or changes to the locked readiness inputs.
+          The retired monorepo Explorer applications and their checks are absent.
+          The current Site source is maintained on a separate branch. This job
+          verifies the composed-suite hold and fails closed on newly surfaced E2E
+          files or changes to the placeholder test.
 
           No E2E browser journey ran. Graduate this hold only with deterministic
           valid and negative fixtures covering `ANSWER`, `ABSTAIN`, `DENY`, and

@@ -19,10 +19,10 @@ class ComposeStaticBoundaryTests(unittest.TestCase):
     def test_build_context_and_dockerfiles_resolve(self):
         contexts = re.findall(r"^\s+context:\s*(\S+)\s*$", self.text, re.MULTILINE)
         dockerfiles = re.findall(r"^\s+dockerfile:\s*(\S+)\s*$", self.text, re.MULTILINE)
-        self.assertEqual(contexts, ["../docker", "../docker"])
+        self.assertEqual(contexts, ["../docker"])
         self.assertEqual(
             dockerfiles,
-            ["Dockerfile.governed-api", "Dockerfile.explorer-web"],
+            ["Dockerfile.governed-api"],
         )
         for context, dockerfile in zip(contexts, dockerfiles, strict=True):
             context_path = (self.compose_dir / context).resolve()
@@ -44,7 +44,7 @@ class ComposeStaticBoundaryTests(unittest.TestCase):
 
     def test_published_ports_are_loopback_only(self):
         port_specs = re.findall(r'ports:\s*\["([^"]+)"\]', self.text)
-        self.assertEqual(len(port_specs), 2)
+        self.assertEqual(len(port_specs), 1)
         for port_spec in port_specs:
             self.assertTrue(port_spec.startswith("127.0.0.1:"), port_spec)
 

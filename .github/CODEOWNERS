@@ -46,7 +46,6 @@
 
 # Public delivery, runtime, configuration, validation, and automation boundaries
 /apps/governed-api/ @bartytime4life
-/apps/explorer-web/ @bartytime4life
 /infra/ @bartytime4life
 /runtime/ @bartytime4life
 /configs/ @bartytime4life

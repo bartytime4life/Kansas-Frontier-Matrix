@@ -179,7 +179,7 @@ advance a lifecycle state.
 | Target | Scope | Continuous workflow |
 |---|---|---|
 | `make offline-pipeline-check` | Synthetic KanPlan capture, geometry conversion, evidence resolution, refresh and rollback checks; WBD HUC12 candidates; Mesonet normalization and station health; the people/DNA/land assessment adapter; Python egress-denial proof | [offline-pipeline-check](../../.github/workflows/offline-pipeline-check.yml), Python 3.11 and 3.12 |
-| `make native-explorer-check` | Build and existing Node/lint-compatibility tests for `apps/kansas-frontier-matrix-explorer` using the complete repository workspace | [native-explorer-check](../../.github/workflows/native-explorer-check.yml), Node 22 |
+| `make native-explorer-check` | Retired monorepo Explorer app | Explicit `WORKFLOW_HOLD` for a retired target |
 
 Prepare the pipeline dependencies before enabling the test-process network guard:
 
@@ -197,22 +197,10 @@ The Make target injects the existing Python startup guard and sets
 `PROJ_NETWORK=OFF` to prevent native PROJ grid downloads. This is bounded
 process-level protection, not a host firewall or proof of all native-code egress.
 
-For the native app, use Node 22 and the root's exact package-manager pin:
-
-```bash
-corepack enable
-pnpm install --frozen-lockfile
-make native-explorer-check
-```
-
-The native workflow is continuous PR/main validation of the repository mirror.
-The historical `earth-layer-library-app-validation` workflow keeps its pinned
-comparison role. The separate `ui-build` workflow still owns `apps/explorer-web`.
-Neither is relabeled as proof of the live Sites source. Build products remain
-on the ephemeral runner and are not uploaded or deployed. The two new workflows
-also admit the single authoring branch for hosted evidence. Current draft-PR
-delivery follows [CONTRIBUTING](../../CONTRIBUTING.md); no scheduler,
-required-check setting, or PR-state mutation is added by those workflows.
+The former native app and Explorer Web workbench have been removed from this
+branch. Their app-only CI workflows were retired; the Make target remains an explicit
+hold for old command callers. Build and test the current application
+from the [standalone Site v71 source branch](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/codex/live-site-v71-source-20260925).
 
 The existing local-data, inactive-spec, WBD-ingest, Mesonet-normalizer and
 Mesonet-health workflows now react to their Python bootstrap/lock and shared

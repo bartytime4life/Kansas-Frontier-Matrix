@@ -307,18 +307,14 @@ def test_unsupported_audit_manager_is_error(tmp_path: Path) -> None:
     assert report["reason_codes"] == ["AUDIT_MANAGER_INVALID"]
 
 
-def test_dependency_workflow_audits_both_locked_node_graphs() -> None:
+def test_dependency_workflow_audits_remaining_locked_node_graph() -> None:
     workflow = (REPO_ROOT / ".github/workflows/dependency-scan.yml").read_text(
         encoding="utf-8"
     )
 
     assert 'pnpm audit \\' in workflow
-    assert 'npm --prefix apps/kansas-frontier-matrix-explorer audit \\' in workflow
-    assert '--package-lock-only' in workflow
-    assert '--workspaces=false' in workflow
-    assert 'apps/kansas-frontier-matrix-explorer' in workflow
     assert '--manager "pnpm"' in workflow
-    assert '--manager "npm"' in workflow
+    assert 'apps/kansas-frontier-matrix-explorer' not in workflow
 
 
 @pytest.mark.parametrize(

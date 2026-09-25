@@ -1,6 +1,8 @@
+> **Retired guidance (2026-09-25):** This runbook describes the removed `apps/explorer-web/` workbench. For local hosting, use the [standalone Site v71 source](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/codex/live-site-v71-source-20260925). Commands below are historical and do not apply to this branch.
+
 # Explorer Web change rollback and recovery
 
-**Status:** Repository-grounded draft for source-control recovery in
+**Historical status:** Repository-grounded draft for source-control recovery in
 `apps/explorer-web/`. Deployment and operational release rollback are `UNKNOWN`
 and outside this procedure.
 
@@ -175,10 +177,10 @@ recovered.
 
 ## Related repository evidence
 
-- [Explorer Web app boundary and maturity](../../apps/explorer-web/README.md)
+- [Explorer Web app boundary and maturity](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/apps/explorer-web/README.md)
 - [Explorer Web local development](./ui_LOCAL_DEV.md)
-- [Locked Explorer build-and-test workflow](../../.github/workflows/ui-build.yml)
-- [Explorer renderer and internal-store boundary test](../../tests/policy/test_explorer_web_adapter_boundary.py)
+- [Locked Explorer build-and-test workflow](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/.github/workflows/ui-build.yml)
+- [Explorer renderer and internal-store boundary test](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/tests/policy/test_explorer_web_adapter_boundary.py)
 - [Cross-cutting release rollback procedure](./ROLLBACK_RUNBOOK.md)
 - [Synthetic release rollback rehearsal](./rollback-rehearsal.md)
 - [`release/` authority and operational holds](../../release/README.md)

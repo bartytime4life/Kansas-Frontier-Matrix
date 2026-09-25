@@ -1,10 +1,10 @@
 # KFM policy and trust-membrane boundary guards.
 # Status: command-bearing structural/static suite with a non-authoritative JUnit
-# report. The four test modules currently collect 20 tests.
+# report. The three remaining test modules collect 18 tests.
 #
 # Responsibility:
-# - Enforce the implemented control-plane meta contract, explorer adapter/store
-#   boundary, connector/pipeline non-publisher rule, and governed API boundary.
+# - Enforce the implemented control-plane meta contract, connector/pipeline
+#   non-publisher rule, and governed API boundary.
 # Trigger:
 # - Path-scoped pull requests and pushes to main cover the exact code, tests,
 #   doctrine references, command/dependency manifests, and this workflow.
@@ -18,8 +18,8 @@
 # Command:
 # - `make boundary-guards-ci` is the repository-native orchestration surface.
 # Inputs:
-# - Four named test modules plus the control-plane registers, related doctrine,
-#   explorer/app code, connectors, pipelines, constants, Makefile, and pyproject.
+# - Three named test modules plus the control-plane registers, related doctrine,
+#   governed API code, connectors, pipelines, constants, Makefile, and pyproject.
 # Outputs:
 # - GitHub job conclusion, logs, step summary, and a 14-day JUnit QA artifact.
 #   The report is not a receipt, proof, policy decision, or release record.
@@ -45,7 +45,6 @@ name: policy-boundary-guards
       - "pyproject.toml"
       - "apps/governed-api/src/**"
       - "apps/governed-api/tests/**"
-      - "apps/explorer-web/src/**"
       - "connectors/**"
       - "control_plane/**"
       - "docs/doctrine/**"
@@ -60,7 +59,6 @@ name: policy-boundary-guards
       - "pyproject.toml"
       - "apps/governed-api/src/**"
       - "apps/governed-api/tests/**"
-      - "apps/explorer-web/src/**"
       - "connectors/**"
       - "control_plane/**"
       - "docs/doctrine/**"
@@ -114,14 +112,12 @@ jobs:
             "apps/governed-api/src/governed_api/main.py"
             "apps/governed-api/tests/conftest.py"
             "apps/governed-api/tests/test_boundary_guards.py"
-            "apps/explorer-web/src"
             "connectors"
             "control_plane"
             "docs/doctrine/directory-rules.md"
             "pipelines"
             "tests/policy/boundary_constants.py"
             "tests/policy/test_control_plane_register_meta_contract.py"
-            "tests/policy/test_explorer_web_adapter_boundary.py"
             "tests/policy/test_pipeline_connector_non_publisher.py"
           )
 
@@ -140,7 +136,6 @@ jobs:
 
           test_paths = (
               Path("tests/policy/test_control_plane_register_meta_contract.py"),
-              Path("tests/policy/test_explorer_web_adapter_boundary.py"),
               Path("tests/policy/test_pipeline_connector_non_publisher.py"),
               Path("apps/governed-api/tests/test_boundary_guards.py"),
           )
@@ -157,9 +152,9 @@ jobs:
                   raise SystemExit(f"Boundary test module collected no tests: {path}")
               discovered.extend(f"{path}:{name}" for name in functions)
 
-          if len(discovered) != 20:
+          if len(discovered) != 18:
               raise SystemExit(
-                  "Boundary-suite inventory changed from the reviewed 20 tests. "
+                  "Boundary-suite inventory changed from the reviewed 18 tests. "
                   "Update scope, documentation, and JUnit expectations deliberately:\n"
                   + "\n".join(discovered)
               )
@@ -177,7 +172,6 @@ jobs:
               "python -m pytest -q",
               "--junitxml=artifacts/qa/policy-boundary-guards.xml",
               "tests/policy/test_control_plane_register_meta_contract.py",
-              "tests/policy/test_explorer_web_adapter_boundary.py",
               "tests/policy/test_pipeline_connector_non_publisher.py",
               "apps/governed-api/tests/test_boundary_guards.py",
           )
@@ -198,7 +192,7 @@ jobs:
                   "dependency policy before running the suite."
               )
 
-          print("Boundary-suite wiring is complete and non-vacuous: 20 tests in four modules.")
+          print("Boundary-suite wiring is complete and non-vacuous: 18 tests in three modules.")
           print("The Make target and JUnit output path match the reviewed contract.")
           print("The workflow pin is compatible with the repository pytest constraint.")
           PY

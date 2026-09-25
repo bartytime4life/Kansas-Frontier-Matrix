@@ -1,5 +1,5 @@
 # KFM dependency vulnerability scanning workflow.
-# Status: PROPOSED executable Python audit plus locked pnpm and npm audits.
+# Status: executable Python audit plus locked pnpm audit.
 #
 # Authority boundary:
 # - This workflow queries public vulnerability advisory services and reports
@@ -121,13 +121,11 @@ jobs:
           corepack enable
           pnpm --version
 
-      - name: Audit the locked Node graphs
+      - name: Audit the locked Node graph
         run: |
           set -euo pipefail
           pnpm_report_path="${RUNNER_TEMP}/pnpm-audit.json"
           pnpm_classification_path="${RUNNER_TEMP}/pnpm-audit-classification.json"
-          npm_report_path="${RUNNER_TEMP}/explorer-npm-audit.json"
-          npm_classification_path="${RUNNER_TEMP}/explorer-npm-audit-classification.json"
 
           set +e
           pnpm audit \
@@ -146,26 +144,7 @@ jobs:
             | tee "${pnpm_classification_path}"
           pnpm_classification_status=${PIPESTATUS[0]}
 
-          npm --prefix apps/kansas-frontier-matrix-explorer audit \
-            --package-lock-only \
-            --workspaces=false \
-            --audit-level "${PNPM_AUDIT_LEVEL}" \
-            --json > "${npm_report_path}"
-          npm_audit_status=$?
-          set -e
-
-          set +e
-          python tools/validators/dependencies/pnpm_audit_readiness.py \
-            classify-audit \
-            --report "${npm_report_path}" \
-            --command-exit-code "${npm_audit_status}" \
-            --audit-level "${PNPM_AUDIT_LEVEL}" \
-            --manager "npm" \
-            | tee "${npm_classification_path}"
-          npm_classification_status=${PIPESTATUS[0]}
-          set -e
-
-          if (( pnpm_classification_status != 0 || npm_classification_status != 0 )); then
+          if (( pnpm_classification_status != 0 )); then
             exit 1
           fi
 
@@ -174,11 +153,8 @@ jobs:
         run: |
           set -euo pipefail
           pnpm_classification_path="${RUNNER_TEMP}/pnpm-audit-classification.json"
-          npm_classification_path="${RUNNER_TEMP}/explorer-npm-audit-classification.json"
           pnpm_classification="$(tr -d '\n' < "${pnpm_classification_path}" 2>/dev/null || true)"
-          npm_classification="$(tr -d '\n' < "${npm_classification_path}" 2>/dev/null || true)"
           [[ -n "${pnpm_classification}" ]] || pnpm_classification='{"outcome":"ERROR","reason_codes":["CLASSIFICATION_NOT_PRODUCED"]}'
-          [[ -n "${npm_classification}" ]] || npm_classification='{"outcome":"ERROR","reason_codes":["CLASSIFICATION_NOT_PRODUCED"]}'
           {
             echo "### Node dependency audit boundaries"
             echo
@@ -186,9 +162,6 @@ jobs:
             echo "- Root coordination graph: \`pnpm@11.17.0\` via Corepack"
             echo "- Root command: \`pnpm audit --audit-level ${PNPM_AUDIT_LEVEL} --json\`"
             echo "- Root classifier: \`${pnpm_classification}\`"
-            echo "- Explorer installed graph: \`apps/kansas-frontier-matrix-explorer/package-lock.json\`"
-            echo "- Explorer command: \`npm --prefix apps/kansas-frontier-matrix-explorer audit --package-lock-only --workspaces=false --audit-level ${PNPM_AUDIT_LEVEL} --json\`"
-            echo "- Explorer classifier: \`${npm_classification}\`"
             echo "- Network: point-in-time queries to the configured Node package registry advisory services"
             echo "- Failure posture: threshold findings, registry errors, malformed reports, and command/report polarity mismatches fail closed"
             echo "- Authority: dependency CI signal only; not vulnerability absence, provenance, compatibility, rights, release, deployment, or publication approval"

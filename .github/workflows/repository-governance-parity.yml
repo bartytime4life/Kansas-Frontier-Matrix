@@ -24,7 +24,6 @@ name: repository-governance-parity
       - "schemas/contracts/v1/governance/repository_governance_parity.schema.json"
       - "fixtures/contracts/v1/governance/repository_governance_parity/**"
       - "tests/policy/test_control_plane_register_meta_contract.py"
-      - "tests/policy/test_explorer_web_adapter_boundary.py"
       - "tests/policy/test_pipeline_connector_non_publisher.py"
       - "tests/validators/directory_governance/test_validate_repository_governance_parity.py"
       - "tools/validators/control_plane/**"
