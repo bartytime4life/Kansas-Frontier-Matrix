@@ -32,6 +32,8 @@ export type StartupDecision = Readonly<{
 const codes = new Set(["ROUTE_MISSING", "AUTH_REQUIRED", "TIMEOUT", "NETWORK_ERROR",
   "INVALID_RESPONSE", "UPSTREAM_ERROR", "INVALID_LIVE_RESULT",
   "API_NOT_CONFIGURED", "RATE_LIMITED", "UNEXPECTED_MEDIA_TYPE"]);
+const phases = new Set<FeedPhase>(["idle", "loading", "ready", "empty", "partial", "error"]);
+const rendererStates = new Set<RendererState>(["unverified", "loading", "rendered", "error", "unavailable"]);
 const time = (value: string | null): number => {
   if (typeof value !== "string" || !/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z$/.test(value)) return NaN;
   const n = Date.parse(value);
@@ -60,14 +62,17 @@ const structurallyEligible = (a: Artifact | undefined, now: number): a is Artifa
  * never URLs or raw coordinates. An expired artifact is usable only as stale. */
 export function resolveFeedStartup(input: StartupInput): StartupDecision {
   const now = time(input.now);
-  let phase = input.phase;
-  let failure = phase === "error"
+  const validPhase = phases.has(input.phase);
+  let phase: FeedPhase = validPhase ? input.phase : "error";
+  let failure = !validPhase ? "INVALID_RESPONSE" : phase === "error"
     ? (codes.has(input.failureCode ?? "") ? input.failureCode! : "UPSTREAM_ERROR") : null;
+  const rendererState: RendererState = rendererStates.has(input.rendererState ?? "unverified")
+    ? input.rendererState ?? "unverified" : "unverified";
   const result = (display: Display, artifact: Artifact | null, reason: string): StartupDecision => {
     const liveAvailable = display === "LIVE" || display === "LIVE_EMPTY";
     return Object.freeze({ display, artifact, phase, reason, connectionFailure: failure,
-      liveAvailable, rendererState: input.rendererState ?? "unverified",
-      renderedLive: input.rendererState === "rendered" && liveAvailable && artifact !== null && artifact.featureCount > 0
+      liveAvailable, rendererState,
+      renderedLive: rendererState === "rendered" && liveAvailable && artifact !== null && artifact.featureCount > 0
         && input.renderedArtifactId === artifact.id && input.renderedScopeKey === artifact.scopeKey,
       disclosure: display === "SYNTHETIC_DEMO"
         ? "SYNTHETIC DEMO — not observations, not live, not a hazard assessment."
@@ -78,6 +83,7 @@ export function resolveFeedStartup(input: StartupInput): StartupDecision {
   if (!Number.isFinite(now)) return result("NONE", null, "INVALID_CLOCK");
   if (!safeId(input.sourceId) || !safeId(input.scopeKey)) return result("NONE", null, "INVALID_SCOPE");
   if (input.access !== "allowed") return result("NONE", null, "ACCESS_BLOCKED");
+  if (!validPhase) return result("NONE", null, "INVALID_PHASE");
   if (!input.enabled) return result("NONE", null, "DISABLED");
   if (!input.timeSupported) return result("NONE", null, "OUTSIDE_SELECTED_TIME");
   if (!input.zoomSupported) return result("NONE", null, "OUTSIDE_SUPPORTED_ZOOM");

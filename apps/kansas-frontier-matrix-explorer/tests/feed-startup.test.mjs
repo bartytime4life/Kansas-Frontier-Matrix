@@ -36,6 +36,22 @@ test('arbitrary error text is never projected into diagnostics', () => {
   const r = resolve(input({ phase: 'error', failureCode: 'https://private.invalid/?token=secret' }));
   assert.equal(r.connectionFailure, 'UPSTREAM_ERROR'); assert.doesNotMatch(JSON.stringify(r), /token|secret|private/);
 });
+test('invalid runtime phase fails closed without echoing a diagnostic or showing fallback data', () => {
+  const r = resolve(input({ phase: 'https://private.invalid/?token=secret', snapshots: [snapshot()] }));
+  assert.equal(r.display, 'NONE'); assert.equal(r.phase, 'error');
+  assert.equal(r.connectionFailure, 'INVALID_RESPONSE'); assert.equal(r.reason, 'INVALID_PHASE');
+  assert.doesNotMatch(JSON.stringify(r), /token|secret|private/);
+});
+test('invalid renderer status is finite and cannot establish a rendered live result', () => {
+  const r = resolve(input({ phase: 'ready', live: artifact(), rendererState: 'token=secret',
+    renderedArtifactId: 'live:1', renderedScopeKey: 'ks:quakes:30d' }));
+  assert.equal(r.display, 'LIVE'); assert.equal(r.rendererState, 'unverified');
+  assert.equal(r.renderedLive, false); assert.doesNotMatch(JSON.stringify(r), /token|secret/);
+});
+test('access denial takes precedence over a malformed runtime phase', () => {
+  const r = resolve(input({ access: 'restricted', phase: 'unknown', snapshots: [snapshot()] }));
+  assert.equal(r.display, 'NONE'); assert.equal(r.reason, 'ACCESS_BLOCKED');
+});
 test('eligible real snapshot precedes demo but never becomes live', () => {
   const s = snapshot(), r = resolve(input({ snapshots: [s] }));
   assert.equal(r.display, 'SNAPSHOT'); assert.equal(r.artifact, s); assert.equal(r.liveAvailable, false);

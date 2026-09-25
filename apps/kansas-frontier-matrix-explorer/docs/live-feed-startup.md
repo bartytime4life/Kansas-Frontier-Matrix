@@ -2,11 +2,11 @@
 doc_id: kfm://doc/explorer/live-feed-startup
 title: Live-feed runtime diagnostics and starter-data selection
 type: note
-version: v0.1.0
-status: proposed; branch-only; hosted-integration-held
+version: v0.1.1
+status: repository-implemented; hosted-integration-held
 owners: ["@bartytime4life"]
 created: 2026-09-23
-updated: 2026-09-23
+updated: 2026-09-25
 policy_label: public; synthetic-fixture; no-source-admission; no-release
 responsibility: Explain the repository Worker API-boundary repair, bounded connection probe, synthetic baseline, and held active-Site integration.
 owning_root: apps/
@@ -19,6 +19,17 @@ evidence_base_commit: 21eee8dab4637da4771267078fe963f6525b045f
 # Live-feed runtime diagnostics and starter-data selection
 
 **REPOSITORY WORKER REPAIR + RUNNABLE DIAGNOSTIC / STARTER SELECTOR NOT MOUNTED IN THE SITE.**
+
+## Currentness on 2026-09-25
+
+The Worker, probe, and starter selector described below are present on
+`main@817074f5d04798bc29c14e68ced6589a1d8ce094`. The original base below
+is historical implementation evidence, not current hosted Site acceptance.
+This follow-up bounds runtime phase and renderer-state strings before returning
+them in a presentation decision: an invalid phase yields no data and the finite
+`INVALID_RESPONSE` connection failure; an invalid renderer state becomes
+`unverified` and cannot establish `renderedLive`. Access denial still takes
+precedence. The selector remains unmounted in the separately hosted Site.
 
 This change does not claim that the user's deployed Explorer has been repaired.
 The active Site editor and authenticated application were not accessible in the
