@@ -23,15 +23,35 @@ hold](docs/sites-source-alignment.md).
 
 ## Safe UI failure fallback
 
-The reusable fail-closed component at [`app/error.tsx`](app/error.tsx) exposes
-only the stable code `KFM-UI-UNEXPECTED-ERROR` and a sanitized correlation digest.
-The Vite entrypoint does not automatically mount file-based route boundaries.
-Runtime error-boundary composition and browser acceptance therefore remain open
-under [issue #4416](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4416).
-Source tests do not prove that this component catches errors in the running app.
+[`main.tsx`](main.tsx) mounts the React recovery boundary from
+[`app/error.tsx`](app/error.tsx) around the Explorer, About route, and auxiliary
+UI. A child render or lifecycle failure replaces that tree with an alert and
+focuses its heading. **Try again** remounts the view once per user action; a
+persistent failure returns to the fallback. Saved browser-local workspaces are
+not cleared, but unsaved component state may be lost. **Return to Explorer**
+opens `/` when retry cannot recover the current view.
 
-Run `node --test tests/error-boundary.test.mjs` for the focused source and
-TypeScript-transpile regression checks.
+The fallback and React root diagnostics expose only `KFM-UI-UNEXPECTED-ERROR`
+and a bounded, sanitized own-data correlation digest. Raw exceptions, component
+stacks, and request data are not passed to the diagnostic logger. A missing or
+unsafe digest is reported as `unavailable`; recovery never invokes digest getters.
+
+This catches React child rendering/lifecycle failures. It does not catch module
+load failures before mounting, event-handler errors, arbitrary asynchronous
+callbacks, or errors in the fallback itself. Expected evidence denial, stale,
+and abstention states retain their existing UI. Full cross-surface and hosted
+acceptance remain open under [issue #4416](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4416).
+
+Run `node --test tests/error-boundary.test.mjs` for composition, transpilation,
+and diagnostic-negative checks. Run `node tests/error-boundary.browser.mjs`
+from this directory and open its printed loopback URL for a mounted React
+regression. The page reports PASS/FAIL and its assertions. Repeat with `/about`,
+`/?surface=spine`, `/?surface=repair`, and `/?kind=effect` (also `null`,
+`undefined`, `string`, and `unsafe-digest`). Stop the server with Ctrl+C.
+The browser fixture uses the real entrypoint and boundary with synthetic child
+components and no styles or network data; it checks cleanup, repeated failure,
+retry, focus, stored workspace bytes, provenance labels, and safe diagnostics.
+It does not establish full application, WebGL, hosted, or independent acceptance.
 
 ## Authoritative hosting and in-place replacement
 
@@ -92,7 +112,8 @@ Scripts that need writable project-scoped home, npm, XDG, and temporary paths us
 
 ## Implementation shape
 
-- `main.tsx` composes the React client and selects the Explorer or About view.
+- `main.tsx` composes the React client, sanitized root diagnostics, and recovery
+  boundary, then selects the Explorer or About view.
 - `app/` contains the Explorer UI, local fixtures, and finite evidence behavior.
 - `vite.config.ts` builds the client and Worker and resolves the sibling map package.
 - `.openai/hosting.json` preserves the existing Sites identity; D1/R2 are unbound here.
