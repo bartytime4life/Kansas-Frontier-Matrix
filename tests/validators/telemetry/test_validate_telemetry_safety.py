@@ -6,6 +6,8 @@ import contextlib
 import importlib.util
 import io
 import json
+import os
+import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -58,6 +60,25 @@ class TelemetryDispatchTests(unittest.TestCase):
                 ]), 1)
         run.assert_called_once_with("trace_receipt_link", Path("private.json"))
         self.assertNotIn("private.json", output.getvalue())
+
+    def test_relative_candidate_is_bound_before_validator_changes_directory(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            previous = Path.cwd()
+            try:
+                os.chdir(directory)
+                Path("candidate.json").write_text("{}", encoding="utf-8")
+                output = io.StringIO()
+                with contextlib.redirect_stdout(output):
+                    code = MODULE.main([
+                        "--candidate", "candidate.json",
+                        "--profile", "map_build_sustainability",
+                    ])
+            finally:
+                os.chdir(previous)
+        # A parsed, schema-invalid candidate is DENY; a wrong-path read is ERROR.
+        self.assertEqual(code, 1)
+        self.assertEqual(json.loads(output.getvalue())["outcome"], "DENY")
+        self.assertNotIn(directory, output.getvalue())
 
 
 if __name__ == "__main__":
