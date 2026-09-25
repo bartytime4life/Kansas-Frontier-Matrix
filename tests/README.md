@@ -2,12 +2,12 @@
 doc_id: kfm://doc/tests-readme
 title: tests/ — Canonical Enforceability Root and Mixed-Maturity Test Matrix
 type: README
-version: v1.5
+version: v1.6
 status: draft; repository-grounded; canonical test root; mixed-maturity; no-full-suite-established; non-authoritative
 owner: "@bartytime4life — CONFIRMED CODEOWNERS review route; independent QA/test stewardship and separation-of-duties enforcement remain NEEDS VERIFICATION"
-created: NEEDS VERIFICATION — file predates the v1.2 repository-grounded rewrite
-updated: 2026-08-09
-supersedes: v1.4 documentation at the same path; no executable behavior, fixture, workflow, release object, or public surface is superseded
+created: 2025-09-22
+updated: 2026-09-24
+supersedes: v1.5 documentation at the same path; no executable behavior, fixture, workflow, release object, or public surface is superseded
 policy_label: repository-facing; canonical-root; enforceability-proof; deterministic; no-network-default; fail-closed; public-safe; non-publisher
 owning_root: tests/
 responsibility: executable conformance, boundary, negative, integration, and end-to-end evidence for bounded KFM claims and behavior
@@ -29,9 +29,10 @@ evidence_snapshot:
 notes:
   - "v1.5 is a same-path documentation refresh. It changes no tests, fixtures, validators, workflows, policy, release state, or public surface."
   - "The accepted Directory Rules authority is docs/doctrine/directory-rules.md through ADR-0029; the older architecture copy is a compatibility surface and is no longer cited as canonical."
-  - "The direct-child map is exact for the pinned tests tree. Deeper module inventories are selective and must not be read as a complete recursive audit."
-  - "The prior 41-workflow snapshot and later 191-workflow snapshot are historical evidence only; current-main workflow count and complete behavior remain NEEDS VERIFICATION."
+  - "The direct-child map is refreshed against the tracked tree at main@57d153cd6b55. Deeper module inventories are selective and must not be read as a complete recursive audit."
+  - "The prior 41-, 191-, and 486-workflow snapshots are historical evidence only; current-main workflow count and complete behavior remain NEEDS VERIFICATION."
   - "No root-wide full-suite command, complete collected-case inventory, coverage report, mutation score, flake report, branch-protection mapping, or production-parity proof is established by this README."
+  - "v1.6 corrects the readiness and release-dry-run command descriptions against main@57d153cd6b55 and indexes six newer direct test lanes."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -156,12 +157,12 @@ The existing path `tests/README.md` is correctly placed because it documents the
 
 ## Status
 
-Snapshot: `main@3a9715582adf17a682920ca98f15aa3582ee8cdc`, tests tree `48a0b599f93d5fef55e42ee3337dd0677e449773`, inspected for this documentation revision on 2026-08-09.
+Current bounded command and direct-child readback: `main@57d153cd6b5572f9bda8536a79831b232f0326b6` on 2026-09-24. The deeper maturity assessment below remains the earlier `main@3a9715582adf17a682920ca98f15aa3582ee8cdc` / tests tree `48a0b599f93d5fef55e42ee3337dd0677e449773` snapshot from 2026-08-09.
 
-### Confirmed at the pinned snapshot
+### Confirmed at the bounded readback
 
-- `tests/README.md` exists at prior blob `e639801cdda9a4e4df3ef01303103adc3aa556a4`.
-- `tests/` has 28 direct child directories, listed in [Direct-child directory map](#direct-child-directory-map).
+- `tests/README.md` exists at prior blob `8c12cd85f3d0e18f1a5d7ad8a0dd1db0729b3494`; the older `e639801c…` blob belongs to the August review lineage.
+- `tests/` has 34 tracked direct child directories, listed in [Direct-child directory map](#direct-child-directory-map); the prior 28-child count is historical.
 - Root Python test configuration and dependency bounds are present in [`pyproject.toml`](../pyproject.toml).
 - The current [`Makefile`](../Makefile) exposes narrow aggregate targets plus bounded source, policy-boundary, release-prerequisite, evidence-resolver, hazards, governed-API, and MapLibre checks.
 - `tests/contracts/` contains executable contract-fixture-manifest and identity-token-wiring tests.
@@ -182,7 +183,7 @@ Snapshot: `main@3a9715582adf17a682920ca98f15aa3582ee8cdc`, tests tree `48a0b599f
 | Default no-network enforcement | `PARTIAL / NEEDS VERIFICATION` | Several Make targets set deterministic environment variables; no universal socket/network deny harness is proven |
 | Policy evaluator and accepted bundle | `UNKNOWN` | Readiness and boundary tests do not establish active policy authority |
 | UI, accessibility, browser, and composed E2E depth | `MIXED / NEEDS VERIFICATION` | Directory/workflow presence is not browser behavior proof |
-| Current workflow count and complete workflow behavior | `NEEDS VERIFICATION` | The 41- and 191-workflow counts belong to older pinned snapshots; no current-main full audit is claimed |
+| Current workflow count and complete workflow behavior | `NEEDS VERIFICATION` | The 41-, 191-, and 486-workflow counts belong to older pinned snapshots; no current-main full audit is claimed |
 | Required checks and branch protection | `UNKNOWN` | Repository ruleset evidence was not inspected for this revision |
 | Production parity, release, publication | `DENIED as inference` | Tests, commits, workflows, and PRs do not establish those states |
 
@@ -197,7 +198,7 @@ Snapshot: `main@3a9715582adf17a682920ca98f15aa3582ee8cdc`, tests tree `48a0b599f
 - Added the exact direct-child directory map required by Directory Rules v2's `ROOT_FULL` README profile.
 - Preserved the no-full-suite, no-network-default, fail-closed, public-safe, non-publisher, and “passing does not prove” boundaries.
 
-No test result, pass rate, source activation, policy approval, review completion, release readiness, deployment, or publication state is claimed by this README.
+The v1.5 assessment claimed no test result or pass rate. The focused v1.6 checks below establish only their named synthetic and documentation outcomes; they do not establish source activation, policy approval, review completion, release readiness, deployment, or publication.
 
 [Back to top](#top)
 
@@ -350,7 +351,7 @@ This file is evaluated against the accepted Directory Rules v2 `ROOT_FULL` profi
 - one H1, logical heading order, stable custom anchors, balanced fences, tables, alerts, and final newline;
 - `kfm://doc/tests-readme`, the same path, the H1, and maintained compatibility anchors preserved;
 - repository-relative links and named current commands checked against the pinned sources;
-- current direct-child map derived from the pinned `tests/` tree;
+- current direct-child map derived from the tracked `tests/` tree at `main@57d153cd6b55`;
 - stale workflow counts and outdated lane-maturity claims removed or bounded;
 - no secrets, real sensitive values, unsupported owners, pass rates, coverage, release, or production claims introduced.
 
@@ -370,25 +371,40 @@ This file is evaluated against the accepted Directory Rules v2 `ROOT_FULL` profi
 | `make boundary-guards-ci` | Same suite plus JUnit under `artifacts/qa/` | QA report, not proof or release authority |
 | `make governed-api-smoke` | App-owned governed API tests | App scope; not production parity |
 | `make governed-api-verify` | App tests plus blocking forbidden renderer/model import scan | Import/source boundary, not runtime isolation |
+| `make local-data-check` | Offline `tests/local_data` capture, manifest, recovery, and boundary tests | Synthetic/local test scope; no source admission or host acceptance |
+| `make offline-pipeline-check` | `tests/pipelines` plus the Hydrology no-network proof test under Python and PROJ network guards | Named synthetic pipeline scope; no live connector or full-suite claim |
+| `make native-explorer-check` | Build and Node tests for `apps/kansas-frontier-matrix-explorer/`, plus the root UI compatibility test | Repository mirror only; no Site save, deployment, or browser acceptance |
+| `make normalized-summary-check` | Doctrine-summary validator fixtures and focused policy/source/CI tests | Summary structure and failure propagation only; no cutover authority |
+| `make docs-critical-structure` | Sentinel tests and the `CONTRIBUTING.md` structure check | Critical document structure only |
+| `make workflow-security` | Workflow-security tests and static ratchet | Workflow source check, not hosted behavior or ruleset state |
+| `make repository-topology` | Contract tests, topology tests, correction-register test, and live topology diagnostic | Fail-closed topology result; compare base and head before assigning drift to a change |
+| `make release-dry-run` | Five synthetic publication-denial cases plus focused release tests | Denial proof only; no release assembled or approved |
 | `make maplibre-perf` / `maplibre-govern` / `maplibre-proof` | MapLibre smoke, governance, and proof-shaped artifact checks | May generate artifacts; not root suite or release authority |
 
-The following Make targets remain readiness markers that print `TODO` and return zero; they are not validation evidence: `policy`, `fixtures`, `proof-slice`, `catalog`, and `release-dry-run`.
+`make policy` runs only the configured Pass 12 policy pair when its prerequisites exist; it otherwise reports `HOLD`. `make fixtures`, `make proof-slice`, and `make catalog` are unimplemented producer lanes that report a named `HOLD` with exit status 3. None of these outcomes is a passing full-suite or publication result. `make release-dry-run` is a separate implemented denial check, as shown above.
 
-### Documentation validation for v1.5
+### Documentation validation for v1.5 (historical)
 
-Performed for this update:
+Recorded for the 2026-08-09 update; these steps are not claimed as rerun for v1.6:
 
 - complete prior-file read and material no-loss review;
 - current main, target blob, tests tree, accepted Directory Rules, ADR-0029, root registry, CODEOWNERS, Makefile, pyproject, workflow README, and selected direct test trees inspected;
 - stable-anchor and navigation review;
 - Markdown structure, fence, link-target, stale-claim, and sensitive-content checks;
-- remote byte and changed-path readback required after repository mutation.
+- remote byte and changed-path readback required after that repository mutation.
 
-Not performed by this documentation update:
+Not performed by that documentation update:
 
 - no repository test, validator, browser suite, policy engine, source connector, release dry run, rollback drill, deployment, or live endpoint was executed;
 - no branch-protection setting, required-check mapping, production log, dashboard, coverage report, mutation score, or runtime trace was inspected;
 - no executable behavior changed.
+
+### Bounded v1.6 verification
+
+- Local link, metadata, and freshness checks cover this README and the companion `scripts/README.md`; metadata and freshness validators retain advisory warnings for the existing nested snapshot blocks.
+- `tools/readiness/run_lane.py fixtures` returned `HOLD` with exit status 3 and reported the missing fixture producer and digest manifest.
+- `make release-dry-run` completed five synthetic publication-denial cases; its four `unittest` cases and two focused `pytest` cases passed locally.
+- The current Makefile and tracked direct-child inventory were inspected at `main@57d153cd6b55`. App builds, browser behavior, live policy execution, and the root-wide full suite were not evaluated by this documentation refresh.
 
 ### Full-suite status
 
@@ -476,7 +492,7 @@ Current [CODEOWNERS](../.github/CODEOWNERS) routes `/tests/` and `/fixtures/` to
 | `tests/maplibre/` versus owner-local renderer tests | **NEEDS VERIFICATION** | Preserve current bounded coverage; resolve before broad expansion |
 | Runtime and policy outcome vocabularies | **CONFLICTED / NEEDS VERIFICATION** | Every test must name the profile it exercises |
 
-No migration, alias, rename, deletion, or compatibility writer is introduced by v1.5. The path, document ID, H1, and custom compatibility anchors are preserved.
+No migration, alias, rename, deletion, or compatibility writer is introduced by v1.6. The path, document ID, H1, and custom compatibility anchors are preserved.
 
 [Back to top](#top)
 
@@ -490,9 +506,12 @@ The map below is exact for `tests/` at the pinned tree and intentionally shows d
 tests/
 ├── api/             # Governed API routing and boundary tests
 ├── ci/              # CI helper, summary, and synchronization contract tests
+├── connectors/      # Source-specific connector capture tests
 ├── contracts/       # Contract manifest, identity, and bounded semantic tests
 ├── cross_domain/    # Cross-domain boundary tests; namespace status needs verification
+├── data/            # Synthetic data-product contract and assessment tests
 ├── diff/            # Stable-diff and review-handoff tests
+├── docs/            # Documentation contract-navigation tests
 ├── domains/         # Domain-specific test lanes
 ├── e2e/             # Composed-path and end-to-end tests or readiness surfaces
 ├── evidence/        # Evidence, temporal, reality-boundary, and representation tests
@@ -503,6 +522,8 @@ tests/
 ├── infra/           # Infrastructure and exposure-boundary tests
 ├── ingest/          # Ingest, watcher, materiality, and preflight tests
 ├── invalid/         # Generic invalid compatibility/routing lane
+├── joins/           # Cross-lane role and historical-network join assessments
+├── local_data/      # Local-PC readiness, capture, and recovery tests
 ├── map/             # Map, geometry, and georeference tests
 ├── maplibre/        # MapLibre renderer and performance-governance tests
 ├── packages/        # Shared-package test lanes
@@ -512,6 +533,7 @@ tests/
 ├── release/         # Review, promotion, release-prerequisite, and rollback tests
 ├── runtime_proof/   # Finite-outcome and runtime-mapping tests
 ├── schemas/         # Schema, identity, resolver, and fixture-binding tests
+├── scripts/         # Thin-script and dev-helper boundary tests
 ├── source/          # Source identity, role, descriptor, intake, and activation tests
 ├── ui/              # UI trust-state, interaction, and accessibility tests/readiness
 ├── valid/           # Generic valid compatibility/routing lane
@@ -528,11 +550,11 @@ A child directory name proves only that the path exists. It does not establish o
 
 | Field | Value |
 |---|---|
-| **Date** | 2026-08-09 |
-| **Repository snapshot** | `main@3a9715582adf17a682920ca98f15aa3582ee8cdc` |
-| **Tests tree** | `48a0b599f93d5fef55e42ee3337dd0677e449773` |
-| **Prior README blob** | `e639801cdda9a4e4df3ef01303103adc3aa556a4` |
-| **Review class** | Documentation-only, repository-grounded, same-path semantic refresh |
+| **Date** | 2026-09-24 |
+| **Repository snapshot** | `main@57d153cd6b5572f9bda8536a79831b232f0326b6` for Make target and tracked-lane refresh; earlier full review remains recorded above |
+| **Tests tree** | Direct tracked child inventory refreshed at the snapshot; prior full-review tree `48a0b599f93d5fef55e42ee3337dd0677e449773` retained as historical evidence |
+| **Prior README blob** | `8c12cd85f3d0e18f1a5d7ad8a0dd1db0729b3494` at the current bounded snapshot; `e639801cdda9a4e4df3ef01303103adc3aa556a4` was the August review's prior blob |
+| **Review class** | Documentation-only, bounded command and direct-child reconciliation |
 | **Implementation changes** | None |
 | **Review trigger** | Re-review when root/lane ownership, direct children, commands, aggregate membership, fixture authority, workflow maturity, required checks, outcome vocabularies, exposure, or correction/rollback behavior changes materially |
 
@@ -541,6 +563,7 @@ A child directory name proves only that the path exists. It does not establish o
 | Date | Version | Change | Status |
 |---|---:|---|---|
 | 2026-08-09 | v1.5 | Re-pinned the README to current main; adopted the canonical Directory Rules v2 path and ADR-0029 status; added the exact 28-child root map; corrected contracts, cross-domain, release, runtime-proof, evidence, governance, proof-pack, and ingest maturity; removed stale workflow-count claims; and preserved the non-authoritative test contract. | **CONFIRMED documentation change / executable maturity bounded** |
+| 2026-09-24 | v1.6 | Corrected readiness and release dry-run semantics, added the current 34-child map and changed-area commands, and retained the deeper August assessment as historical evidence. | **CONFIRMED bounded repository readback and focused local execution** |
 | 2026-07-31 | v1.4 | Reconciled the policy-boundary inventory with PR #1860's additional security regression test. | **LINEAGE / prior bounded correction** |
 | 2026-07-23 | v1.3 | Reordered and refreshed the repository-grounded root contract. | **LINEAGE / prior repository-grounded edition** |
 | 2026-07-16 | v1.2 | Replaced broad scaffold claims with a mixed-maturity test matrix and trust-spine contract. | **LINEAGE** |
@@ -906,6 +929,14 @@ make boundary-guards
 make boundary-guards-ci
 make governed-api-smoke
 make governed-api-verify
+make local-data-check
+make offline-pipeline-check
+make native-explorer-check
+make normalized-summary-check
+make docs-critical-structure
+make workflow-security
+make repository-topology
+make release-dry-run
 ```
 
 MapLibre commands are also implemented but may create QA/performance artifacts and should be run only when that changed area is in scope.
@@ -932,7 +963,7 @@ A future command taxonomy should separate fast, standard, extended, browser, int
 
 ## Workflow and CI maturity
 
-The current workflow tree is broader than the historical inventories documented in prior README editions. The `.github/workflows/README.md` records an exact 191-workflow count only for its pinned 2026-08-08 snapshot, not for the current main commit used here. This README therefore makes no current workflow-count claim.
+The current workflow tree is broader than the historical inventories documented in prior README editions. [`.github/workflows/README.md`](../.github/workflows/README.md) records an exact 486-workflow count for its pinned 2026-09-06 snapshot, following older 41- and 191-workflow snapshots. This README makes no current workflow-count claim.
 
 ### Safe workflow conclusions
 

@@ -1,0 +1,121 @@
+{
+  "receipt_id": "genrec-oldest-script-test-guides-20260925",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "scripts/README.md",
+    "tests/README.md"
+  ],
+  "artifact_hashes": {
+    "scripts/README.md": "sha256:5c3126799a846c91530ec7d9a3088d823f8b568a363b842bc04877915045f7b0",
+    "tests/README.md": "sha256:148e90237593801fa248cab85ffa6fed8fbc986c6eaad550bb75e339f4d76eaa"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "not-exposed"
+  },
+  "prompt_or_contract": "sha256:e3859543e5d387330c56aa969ee5d0c09c3e5d89ba2bef4ad9be5ffa652a3ef5",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "repository inspection",
+      "documentation validators",
+      "focused readiness and release checks"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "main@57d153cd6b5572f9bda8536a79831b232f0326b6",
+      "Makefile",
+      "tools/readiness/run_lane.py",
+      "tools/release/release_dry_run.py",
+      "tests/local_data/README.md",
+      "tests/joins/README.md"
+    ]
+  },
+  "truth_labels": {
+    "scripts/README.md": "CONFIRMED",
+    "tests/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused documentation link check",
+      "outcome": "PASS",
+      "reason": "Both Markdown files passed 192 local targets; external badge targets were not requested."
+    },
+    {
+      "gate": "required metadata blocks",
+      "outcome": "PASS",
+      "reason": "Both blocks were valid with no fail findings; inherited unsupported-nesting warnings remain."
+    },
+    {
+      "gate": "bounded stale-document scan",
+      "outcome": "PASS",
+      "reason": "No fail findings; inherited nested metadata produced advisory warnings."
+    },
+    {
+      "gate": "direct-child map comparison",
+      "outcome": "PASS",
+      "reason": "The 34 listed test lanes exactly matched the 34 tracked direct child directories."
+    },
+    {
+      "gate": "fixture readiness lane",
+      "outcome": "PASS",
+      "reason": "The command returned the expected HOLD result with exit status 3; it was not counted as a successful fixture producer."
+    },
+    {
+      "gate": "synthetic release dry run",
+      "outcome": "PASS",
+      "reason": "Five denial cases passed; four unittest and two pytest cases passed locally."
+    },
+    {
+      "gate": "hosted exact-head checks",
+      "outcome": "SKIPPED",
+      "reason": "Pending branch push and pull request."
+    },
+    {
+      "gate": "independent human review",
+      "outcome": "SKIPPED",
+      "reason": "Pending reviewer action; no approval is inferred from generation or validation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-make-targets",
+      "validated": true,
+      "evidence_ref": "main@57d153cd6b5572f9bda8536a79831b232f0326b6:Makefile"
+    },
+    {
+      "id": "held-readiness-semantics",
+      "validated": true,
+      "evidence_ref": "tools/readiness/run_lane.py"
+    },
+    {
+      "id": "synthetic-publication-denial",
+      "validated": true,
+      "evidence_ref": "tools/release/release_dry_run.py"
+    },
+    {
+      "id": "tracked-tests-tree",
+      "validated": true,
+      "evidence_ref": "main@57d153cd6b5572f9bda8536a79831b232f0326b6:tests/"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-25T04:48:56Z",
+  "emitter": "Codex GPT-6 documentation reconciliation",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Corrects old operator guidance and current test navigation. This receipt binds documentation bytes only and creates no source, policy, review, release, deployment, or publication authority."
+}
