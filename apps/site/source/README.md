@@ -3,6 +3,11 @@
 A map-first Kansas explorer with real provider baselines, dated archive replay,
 source downloads, and private data contribution and steward review workflows.
 
+Pointer hover gives brief map orientation. Restricted or denied local records
+show a generic title, and external basemap labels are bounded display context,
+not evidence. Keyboard users can browse the map feature index and open the
+Evidence Drawer; a standalone keyboard hover tooltip is not implemented.
+
 The owner-preserved application baseline is Site version 68. See
 [preservation and recovery](docs/SITE_PRESERVATION.md) and root `AGENTS.md`
 before importing, replacing, synchronizing or publishing other Site copies.

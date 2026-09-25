@@ -1279,7 +1279,7 @@ test("keeps the complete function inventory three-axis and runtime seam fail clo
   assert.equal(registry.FUNCTION_REGISTRY.length, 35);
   assert.equal(new Set(registry.FUNCTION_REGISTRY.map((record) => record.id)).size, 35);
   assert.equal(registry.MAP_FUNCTIONS.every((record) => record.inventory === "MAP FUNCTION MATRIX"), true);
-  assert.equal(registry.MAP_FUNCTIONS.some((record) => record.id === "hover-summary" && record.maturity === "NOT IMPLEMENTED"), true);
+  assert.equal(registry.MAP_FUNCTIONS.some((record) => record.id === "hover-summary" && record.maturity === "PARTIAL"), true);
   assert.equal(registry.MAP_FUNCTIONS.some((record) => record.id === "story-node" && record.state === "BOUNDED"), true);
   assert.equal(registry.functionsForGroup("OPERATIONAL_HANDOFF").every((record) => record.action === "COPY_HANDOFF"), true);
   assert.equal(seam.runtimeSeamStepForSelection(null).state, "ABSTAINED");
