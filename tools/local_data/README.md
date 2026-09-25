@@ -2,23 +2,25 @@
 doc_id: kfm://doc/tools-local-data-readme
 title: Local PC data tools
 type: readme
-version: v1.1
-status: repository-integrated; quarantine-only
+version: v1.2
+status: repository-integrated; quarantine capture and read-only candidate review
 owners: ["@bartytime4life"]
 created: 2026-09-17
-updated: 2026-09-24
+updated: 2026-09-25
 policy_label: public
 owning_root: tools/
-responsibility: Describe bounded workstation inspection and offline quarantine capture tools.
-truth_posture: CONFIRMED main@bb08d3e9b9 implementation and exact-schema policy decision; hosted validation and native host acceptance need verification.
+responsibility: Describe bounded workstation inspection, offline quarantine capture, and local candidate review tools.
+truth_posture: Local code and tests; no source admission, hosted validation, or native host acceptance claim.
 [/KFM_META_BLOCK_V2] -->
 
 # Local PC data tools
 
-These Python 3 standard-library tools prepare a local checkout and preserve
-explicitly selected, already downloaded files in a private external QUARANTINE
-store. They do not download, interpret, extract, normalize, activate, promote,
-publish, or serve data. See the [local-PC runbook](../../docs/runbooks/local-pc-data-store.md)
+The capture tools prepare a local checkout and preserve explicitly selected,
+already downloaded files in a private external QUARANTINE store. The separate
+`review_curation.py` command reads one explicit local `processed/` candidate
+package and checks its evidence without changing the store. These standard-library
+tools do not download, activate, promote, publish, or serve data. See the
+[local-PC runbook](../../docs/runbooks/local-pc-data-store.md)
 for the complete setup and update sequence.
 
 The repository records [owner decision #4613](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4613)
@@ -48,6 +50,19 @@ python3 tools/local_data/manage.py plan --root "$HOME/KFM-Data" --manifest confi
 python3 tools/local_data/manage.py sync --root "$HOME/KFM-Data" --manifest configs/local/capture.json --downloads "$HOME/Downloads"
 python3 tools/local_data/manage.py verify --root "$HOME/KFM-Data" --manifest configs/local/capture.json
 ```
+
+For the existing KFM curation package, use the separate
+[candidate review guide](../../docs/runbooks/local-curation-candidate-review.md)
+and run:
+
+```bash
+python3 tools/local_data/review_curation.py --root "$HOME/Projects/KFM-data" \
+  --bundle kfm-store-reconciliation-20260925
+```
+
+This reads only the named, external review package and its linked PRISM
+artifact. A passing package check does not rescan `raw/`, admit a source,
+or create a map layer.
 
 `doctor` only inspects the checkout and local tool availability. It does not
 install dependencies, start services, or fetch anything. `plan` also writes

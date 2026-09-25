@@ -2,15 +2,15 @@
 doc_id: kfm://doc/runbooks/local-pc-data-store
 title: Prepare a local PC and maintain its data store
 type: runbook
-version: v0.3
-status: repository-integrated; private offline quarantine only
+version: v0.4
+status: repository-integrated; private offline quarantine and candidate review
 owners: ["@bartytime4life"]
 created: 2026-09-17
-updated: 2026-09-24
+updated: 2026-09-25
 policy_label: public-documentation
 owning_root: docs/
-responsibility: Guide private local setup, offline quarantine capture, verification, backup, and update without granting downstream authority.
-truth_posture: CONFIRMED main@bb08d3e9b9 source and exact-schema policy receipt; independent implementation and native-host acceptance need verification.
+responsibility: Guide private local setup, offline quarantine capture, candidate review, verification, backup, and update without granting downstream authority.
+truth_posture: Local code and tests; independent implementation, source admission, and native-host acceptance need verification.
 notes: ["Directory Rules ADR-0029 and the bounded owner decision in issue #4613 apply. No source admission, release, deployment, or publication authority."]
 [/KFM_META_BLOCK_V2] -->
 
@@ -267,6 +267,11 @@ An older program may not understand a newer manifest version; keep exact source
 revision and manifest together. Recovery is not a release or publication action.
 
 ## What remains before the local map is production-ready
+
+The [local curation candidate review](local-curation-candidate-review.md)
+documents the ten external source collections, the source-specific candidate
+layers and temporal meanings, and a read-only package check. It neither changes
+the quarantine capture contract nor activates a layer.
 
 The GitHub source checkout and the hosted Explorer have separate histories.
 The earlier v0.2 readback recorded Explorer v44. The [Site application guide](../../apps/kansas-frontier-matrix-explorer/README.md)
