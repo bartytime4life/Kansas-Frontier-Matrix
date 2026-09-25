@@ -1,43 +1,71 @@
 "use client";
 
-import { useEffect } from "react";
-
-type BoundaryError = globalThis.Error & { digest?: string };
+import { Component, useEffect, useRef, type ReactNode } from "react";
 
 export const UI_ERROR_CODE = "KFM-UI-UNEXPECTED-ERROR";
 const SAFE_CORRELATION_ID = /^[A-Za-z0-9_-]{1,128}$/;
 
-export const correlationIdForError = (error: BoundaryError): string => {
-  const digest = typeof error?.digest === "string" ? error.digest.trim() : "";
-  return SAFE_CORRELATION_ID.test(digest) ? digest : "unavailable";
+export const correlationIdForError = (error: unknown): string => {
+  // JavaScript can throw any value. Never invoke a digest getter during recovery.
+  try {
+    if (typeof error !== "object" || error === null) return "unavailable";
+    const value: unknown = Object.getOwnPropertyDescriptor(error, "digest")?.value;
+    const digest = typeof value === "string" ? value.trim() : "";
+    return SAFE_CORRELATION_ID.test(digest) ? digest : "unavailable";
+  } catch {
+    return "unavailable";
+  }
 };
 
-export default function ErrorBoundary({
+export const reportUiError = (error: unknown): void => {
+  // Root callbacks replace React's default raw exception/component-stack logging.
+  console.error("[KFM UI error boundary]", {
+    code: UI_ERROR_CODE,
+    correlationId: correlationIdForError(error),
+  });
+};
+
+type RecoveryState = { failure: { digest: string } | null };
+
+export class ExplorerErrorBoundary extends Component<{ children: ReactNode }, RecoveryState> {
+  state: RecoveryState = { failure: null };
+
+  static getDerivedStateFromError(error: unknown): RecoveryState {
+    return { failure: { digest: correlationIdForError(error) } };
+  }
+
+  private reset = () => this.setState({ failure: null });
+
+  render() {
+    return this.state.failure
+      ? <ErrorFallback error={this.state.failure} reset={this.reset} />
+      : this.props.children;
+  }
+}
+
+export default function ErrorFallback({
   error,
   reset,
 }: {
-  error: BoundaryError;
+  error: unknown;
   reset: () => void;
 }) {
   const correlationId = correlationIdForError(error);
+  const titleRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
-    // Keep diagnostics useful without exposing the exception, stack, or request data.
-    console.error("[KFM UI error boundary]", {
-      code: UI_ERROR_CODE,
-      correlationId,
-    });
-  }, [correlationId]);
+    titleRef.current?.focus();
+  }, []);
 
   return (
     <main className="kfm-error-boundary" aria-labelledby="kfm-error-title">
       <section className="kfm-error-boundary__card" role="alert">
         <p className="kfm-error-boundary__eyebrow">Explorer safeguard</p>
-        <h1 id="kfm-error-title">This workspace could not be loaded.</h1>
+        <h1 id="kfm-error-title" ref={titleRef} tabIndex={-1}>This workspace could not be loaded.</h1>
         <p>
-          The Explorer stopped this view before it could show an unsupported
-          result. Try again, or return to the map and continue with any saved
-          browser-local workspace.
+          An unexpected error interrupted this view. Try again to reopen it.
+          Saved browser-local workspaces remain available; unsaved changes may
+          be lost. If the error continues, return to Explorer.
         </p>
         <div className="kfm-error-boundary__actions">
           <button type="button" onClick={reset}>
