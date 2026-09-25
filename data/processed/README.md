@@ -1,14 +1,17 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-processed-readme
 title: data/processed/ — Normalized Candidate Products
-type: README; data-parent-contract; canonical-lane; authority-boundary
-version: v0.2.0
+type: data-lifecycle-readme
+version: v0.3.0
 status: repository-grounded draft; payload/runtime enforcement unverified
 owners: NEEDS VERIFICATION — data, validation, evidence, pipeline, and domain stewards
-updated: 2026-07-24
+created: 2025-09-27
+updated: 2026-09-24
 supersedes: prior README at the same path; no payload, lifecycle, release, runtime, or publication state
 prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
 policy_label: "restricted-review; no-direct-public-path; release-gated"
+owning_root: data/
+responsibility: Own the PROCESSED lifecycle boundary for normalized domain candidates while keeping catalog, proof, release, and public serving separate.
 current_path: data/processed/README.md
 review_packet_id: kfm-data-parent-wave-20260724
 truth_posture: >
@@ -65,12 +68,14 @@ This path does not own object meaning, machine shape, policy, release decisions,
 | Field | Bounded result |
 |---|---|
 | Path | `data/processed/` |
-| Version | `v0.2.0` |
+| Version | `v0.3.0` |
 | Prior blob | `9cb4d4d35aa2878f02b4a6536ea5e674728c98e5` |
 | Evidence base | `main@b125a21e83f727c45a2d36709bbb594d38a904ad`; parent branch `0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f` |
 | Recursive payload inventory | `UNKNOWN` |
 | Active writers/consumers | `UNKNOWN` |
 | Public readiness | `DENY BY DEFAULT` |
+
+The evidence base and prior blob above record the **2026-07-24 review**, not a claim that main is still at that commit. A bounded refresh at `main@57d153cd6b55` (2026-09-24) confirmed the tracked Hydrology processed subtree and its repository-side candidate tooling. It did not inspect ignored or external data, deployed consumers, source admission, or release instances.
 
 ## What belongs here
 
@@ -127,10 +132,10 @@ Relevant proposed decisions include ADR-0001 (schema home), ADR-0011 (receipt/pr
 
 ## Last reviewed
 
-- **Date:** 2026-07-24
-- **Evidence boundary:** `main@b125a21e83f727c45a2d36709bbb594d38a904ad` and parent branch `0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f`
-- **Review type:** exact parent README plus Directory Rules and carried-forward child/path evidence
-- **Recursive payload/runtime inspection:** not performed
+- **Date:** 2026-09-24
+- **Evidence boundary:** `main@57d153cd6b55` for the bounded Hydrology tracked-tree refresh; the original 2026-07-24 review remains recorded above
+- **Review type:** same-path parent guide, Hydrology child guide, tracked file inventory, and fixture-only WBD candidate implementation
+- **Recursive payload/runtime inspection:** not performed; ignored and external data remain outside this Git inventory
 - **Owners, independent review, retention, and operational rollback:** needs verification
 
 Re-review on authority/topology, writer, policy, release, public-consumer, correction, or rollback changes—or within six months.
@@ -145,7 +150,14 @@ Processed placement proves only lifecycle disposition. It does not prove Evidenc
 
 ## Current bounded child-lane index
 
-A complete recursive child inventory was not established. Existing children are not retired or reclassified by omission.
+A complete recursive payload or external-store inventory was not established. The following is a **tracked-path navigation slice**, not a register of admitted data or a complete index of the many domain guides under `data/processed/`.
+
+| Start here | Current tracked evidence | Boundary |
+|---|---|---|
+| [Hydrology processed guide](hydrology/README.md) | Its subtree contains the parent guide and [WBD child guide](hydrology/wbd/README.md) at `main@57d153cd6b55`. | No tracked processed Hydrology payload; source and release state still require review. |
+| [WBD HUC12 candidate producer](../../pipelines/domains/hydrology/ingest_wbd_huc/produce_wbd_huc12_candidate.py) | Fixture-only code produces reviewable no-change or RAW candidates and rejects malformed inputs. | Candidate generation does not write to `data/processed/`, activate a source, or publish. |
+
+For other domain lanes, follow their own child README and verify the current tree before inferring that a proposed path or documented contract has bytes behind it. Omission from this navigation slice does not retire a child lane.
 
 ## Open verification register
 
@@ -156,6 +168,7 @@ A complete recursive child inventory was not established. Existing children are 
 | Contract/schema/policy enforcement | `UNKNOWN` | Accepted versions, fixtures, validators, decisions, CI and negative cases |
 | Receipt/proof/catalog/release closure | `UNKNOWN` | Emitted instances, identity agreement, review, release and rollback links |
 | Public serving/invalidation | `UNKNOWN` | Governed routes, hosting, access, caches, stale/correction/withdrawal, drills |
+| Ignored or external Hydrology payloads | `UNKNOWN` | Local inventory with rights, source role, digest, owner, and admission state; keep unadmitted material held |
 
 Unknowns narrow claims and block higher-risk transitions; they do not invite plausible defaults.
 
@@ -172,6 +185,12 @@ Unknowns narrow claims and block higher-risk transitions; they do not invite pla
 | Payload, move, deletion, redirect, migration, or public-state change | None |
 
 ### Change history
+
+#### v0.3.0 — 2026-09-24
+
+- added a current, bounded Hydrology path from the processed parent guide;
+- distinguished the tracked guide and fixture-only candidate code from data admission, promotion, and publication;
+- preserved the 2026-07-24 snapshot as historical evidence.
 
 #### v0.2.0 — 2026-07-24
 
