@@ -37,6 +37,13 @@ TraceReceiptLink validator in its existing location). Run `--fixtures` to replay
 all four profiles, or `--candidate FILE --profile PROFILE` to select one. An
 unknown or omitted candidate profile is refused. It emits only profile names
 and a bounded outcome; the owning validator keeps its own detailed findings.
+The dispatcher checks the child's declared profile scope and, for modern
+fixture suites, a nonempty set of successful case reports. The legacy trace
+receipt fixture runner must produce its positive/negative polarity summary.
+A zero exit code with missing, empty, or mismatched output becomes `ERROR`;
+candidate reports from another profile or without the expected authority
+marker are also rejected. This is a local handoff check, not an attestation
+that the validator or its inputs are independently trusted.
 Relative candidate paths are bound to the invoker's working directory before
 the dispatcher starts a validator with repository-root working directory. The
 installed developer CLI at `packages/kfm-cli/` exposes this same bounded

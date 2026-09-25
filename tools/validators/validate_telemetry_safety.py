@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -28,6 +29,47 @@ PROFILES = {
         "tools/validators/telemetry/validate_map_build_sustainability.py"
     ),
 }
+SCOPES = {
+    "trace_receipt_link": "trace-receipt-evidence-linkage-only",
+    "openlineage_run_event_projection": "telemetry.openlineage_run_event_projection",
+    "remote_sensing_lineage_activity": "telemetry.remote_sensing_lineage_activity",
+    "map_build_sustainability": "telemetry.map_build_sustainability.fixture",
+}
+
+
+def _fixture_report_ok(profile: str, output: str) -> bool:
+    if profile == "trace_receipt_link":
+        # This older validator emits one JSON line per case and a final summary.
+        lines = output.splitlines()
+        summary = re.fullmatch(
+            r"CONFIRMED: [1-9]\d* valid and [1-9]\d* invalid trace receipt link fixtures passed exact polarity\.",
+            lines[-1] if lines else "",
+        )
+        if len(lines) < 3 or summary is None:
+            return False
+        try:
+            reports = [json.loads(line) for line in lines[:-1]]
+        except (ValueError, TypeError):
+            return False
+        if not all(isinstance(report, dict) and report.get("scope") == SCOPES[profile]
+                   and report.get("outcome") in {"PASS", "FAIL"} for report in reports):
+            return False
+        counts = {outcome: sum(r["outcome"] == outcome for r in reports)
+                  for outcome in ("PASS", "FAIL")}
+        return (counts["PASS"] > 0 and counts["FAIL"] > 0
+                and lines[-1] == (f"CONFIRMED: {counts['PASS']} valid and {counts['FAIL']} "
+                                  "invalid trace receipt link fixtures passed exact polarity."))
+    try:
+        report = json.loads(output)
+    except (ValueError, TypeError):
+        return False
+    return (isinstance(report, dict) and report.get("scope") == SCOPES[profile]
+            and report.get("ok") is True and isinstance(report.get("cases"), list)
+            and bool(report["cases"])
+            and all(isinstance(case, dict) and case.get("ok") is True
+                    for case in report["cases"])
+            and (profile != "map_build_sustainability"
+                 or (report.get("authority") == "NONE" and report.get("outcome") == "PASS")))
 
 
 def _run(profile: str, candidate: Path | None) -> str:
@@ -53,9 +95,13 @@ def _run(profile: str, candidate: Path | None) -> str:
     except (OSError, subprocess.TimeoutExpired):
         return "ERROR"
     if candidate is None:
-        return "PASS" if result.returncode == 0 else "ERROR"
+        return "PASS" if result.returncode == 0 and _fixture_report_ok(profile, result.stdout) else "ERROR"
     try:
         report = json.loads(result.stdout)
+        if not isinstance(report, dict) or report.get("scope") != SCOPES[profile]:
+            return "ERROR"
+        if profile != "trace_receipt_link" and report.get("authority") != "NONE":
+            return "ERROR"
         outcome = report["outcome"]
     except (ValueError, KeyError, TypeError):
         return "ERROR"

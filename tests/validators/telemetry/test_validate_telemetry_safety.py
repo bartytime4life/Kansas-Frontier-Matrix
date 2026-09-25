@@ -7,6 +7,7 @@ import importlib.util
 import io
 import json
 import os
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -79,6 +80,32 @@ class TelemetryDispatchTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertEqual(json.loads(output.getvalue())["outcome"], "DENY")
         self.assertNotIn(directory, output.getvalue())
+
+    def test_success_exit_without_verified_fixture_cases_is_error(self) -> None:
+        for body in ('', '{"scope":"telemetry.openlineage_run_event_projection","ok":true,"cases":[]}',
+                     '{"scope":"telemetry.remote_sensing_lineage_activity","ok":true,"cases":[{"ok":true}]}'):
+            with self.subTest(body=body), patch.object(
+                MODULE.subprocess, "run",
+                return_value=subprocess.CompletedProcess([], 0, body, ""),
+            ):
+                self.assertEqual(MODULE._run("openlineage_run_event_projection", None), "ERROR")
+
+    def test_legacy_trace_fixture_needs_its_polarity_summary(self) -> None:
+        with patch.object(
+            MODULE.subprocess, "run",
+            return_value=subprocess.CompletedProcess([], 0, '{"scope":"trace-receipt-evidence-linkage-only","outcome":"PASS"}', ""),
+        ):
+            self.assertEqual(MODULE._run("trace_receipt_link", None), "ERROR")
+
+    def test_candidate_cannot_claim_another_validator_scope(self) -> None:
+        with patch.object(
+            MODULE.subprocess, "run",
+            return_value=subprocess.CompletedProcess([], 0, json.dumps({
+                "authority": "NONE", "outcome": "PASS",
+                "scope": "telemetry.remote_sensing_lineage_activity",
+            }), ""),
+        ):
+            self.assertEqual(MODULE._run("openlineage_run_event_projection", Path("candidate.json")), "ERROR")
 
 
 if __name__ == "__main__":
