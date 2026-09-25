@@ -202,8 +202,8 @@ repository's pinned TypeScript 6.0.2 toolchain or a complete app build. The exis
 Full pinned-toolchain build, repository validators, hosted CI, independent review,
 provider calls, authenticated Site browser acceptance and deployment are NOT_RUN.
 
-Delivery remains branch-only while the implicated delivery path's #4024
-containment is unproved. No PR, ready transition, merge, rule change, topology or
+Follow current [contributor guidance](../../../CONTRIBUTING.md) for authorized
+branch and draft-PR delivery. No ready transition, merge, rule change, topology or
 baseline rewrite, source admission, release, publication, or Site save/deployment
 is authorized by this note. #4228 Stage 1A accepted / Stage 1B HOLD / Stage 2
 unauthorized boundaries remain separate. Discard the unaccepted branch to abandon

@@ -6,7 +6,7 @@ version: v0.18
 status: draft; repository-grounded workflow governance reference; exact filename inventory; static and hosted behavior bounded
 owners: ["@bartytime4life"]
 created: 2026-07-08
-updated: 2026-09-06
+updated: 2026-09-25
 policy_label: public; github-actions; workflow-governance; fail-closed; non-publisher
 owning_root: .github/
 responsibility: GitHub Actions orchestration, trigger and permission boundaries, check-name stability, CI maturity disclosure, and workflow inventory accountability
@@ -199,13 +199,18 @@ The current filenames show these broad orchestration families. The grouping is n
 
 | Family | Examples visible in the pinned tree | Review focus |
 |---|---|---|
-| Repository and documentation control | `repository-control.yml`, `docs-control-plane.yml`, `docs-meta-block.yml`, `docs-document-graph.yml`, `docs-stale-scan.yml`, `link-check.yml` | Trusted base, metadata scope, freshness semantics, local-only checks, ruleset coupling. |
+| Documentation control | `docs-control-plane.yml`, `docs-meta-block.yml`, `docs-document-graph.yml`, `docs-stale-scan.yml`, `link-check.yml` | Trusted base, metadata scope, freshness semantics, local-only checks, ruleset coupling. |
 | Domain lanes | `domain-hydrology.yml`, `domain-soil.yml`, `domain-fauna.yml`, `domain-geology.yml`, and other `domain-*` workflows | Fixture polarity, source-role boundaries, domain-specific holds, public-safety limits. |
 | Source, evidence, and identity | `source-descriptor-validate.yml`, `source-event-envelope.yml`, `evidence-resolver.yml`, `spec-hash.yml`, `trace-receipt-link.yml` | Source authority, deterministic identity, evidence closure, no live-source overreach. |
 | Policy, review, and obligations | `policy-test.yml`, `policy-obligation-set.yml`, `review-authority-binding.yml`, `implementation-decision-review.yml` | Policy inputs, reviewer identity, self-review denial, obligation reduction, fail-closed behavior. |
 | Promotion, release, proof, and rollback | `promotion-gate.yml`, `promotion-receipt.yml`, `release-dry-run.yml`, `proof-pack-closure.yml`, `rollback-drill.yml` | State-transition boundaries, synthetic-vs-live distinction, signatures, correction and rollback. |
 | Map, runtime, UI, and delivery carriers | `maplibre-perf-governance.yml`, `map-context-envelope.yml`, `runtime-evidence-resolution.yml`, `ui-build.yml`, `pmtiles-attestation.yml` | Governed API boundary, renderer-as-carrier, artifact integrity, performance and public exposure. |
 | Artifact and catalog projections | `artifact-delta-receipt.yml`, `catalog-closure-packet.yml`, `catalog-trust-extension.yml`, `openlineage-run-event-projection.yml` | Candidate-vs-authority separation, provenance, catalog closure, receipt/proof distinctions. |
+
+`repository-control.yml` is retained source for a retired workflow. GitHub workflow
+`324077182` is disabled and its required check was removed at the owner's request
+on 2026-09-25. Its presence in the tree is not an active contributor gate. See the
+[retirement record](../../docs/governance/repository_transition_control_source.md).
 
 Review the exact workflow before relying on any example above. Similar names do not imply equivalent triggers, permissions, commands, or maturity.
 

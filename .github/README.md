@@ -6,7 +6,7 @@ version: v1.7
 status: draft; repository-grounded; current tree counted; workflow maturity bounded
 owners: ["@bartytime4life"]
 created: 2026-05-11
-updated: 2026-09-04
+updated: 2026-09-25
 policy_label: public
 owning_root: .github/
 responsibility: GitHub-platform governance hooks, review routing, dependency intake, issue and pull-request intake, and CI orchestration
@@ -133,7 +133,7 @@ This edition is pinned to `main@38ba9349dc9740babb60d14c9383e5b0162d940b`, root 
 
 GitHub at the pinned ref is the current implementation and platform-configuration evidence surface. Notion coordinates work, ownership, stale pointers, and verification; Google Drive and attached/reference material provide proposal, research, and lineage input. Neither coordination nor lineage material overrides repository bytes, GitHub settings, review state, release, deployment, promotion, or publication authority.
 
-GitHub object state—not README prose, labels, generated receipts, or tool intent—controls pull-request draft, review, check, conflict, merge, and closed state. The open [issue #4024](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024) remains the controlling delivery-state incident boundary at this snapshot; it constrains PR-state mutation paths but does not freeze ordinary authoring. Follow [`CONTRIBUTING.md`](../CONTRIBUTING.md) for the current branch-first and stop-condition contract.
+GitHub object state—not README prose, labels, generated receipts, or tool intent—controls pull-request draft, review, check, conflict, merge, and closed state. Follow [`CONTRIBUTING.md`](../CONTRIBUTING.md) for current branch and draft-PR guidance. The owner retired the transition-check delivery requirement on 2026-09-25; the [retirement record](../docs/governance/repository_transition_control_source.md) separates that decision from historical incident evidence.
 
 ## Confirmed inventory
 

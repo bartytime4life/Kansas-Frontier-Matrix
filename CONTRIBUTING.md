@@ -13,10 +13,10 @@ This guide explains how to contribute code, documentation, schemas, policies, fi
 | Directory-governance authority reverified | `main@87099f58986e9795e7152eaea0b27d9568754ccb`; accepted [`ADR-0029`](docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts the exact pinned bytes at [`docs/doctrine/directory-rules.md`](docs/doctrine/directory-rules.md) |
 | Document role | Root contribution guide |
 | Truth posture | Cite-or-abstain; report truth posture and capability maturity separately for material capability claims |
-| Review route | Focused branch and draft pull request when the delivery path is eligible |
+| Review route | Focused branch and draft pull request |
 | Verified review-routing file | [`.github/CODEOWNERS`](.github/CODEOWNERS) |
-| GitHub protection snapshot | Ruleset `15484585` (`Protect`) is active on the default branch; pull requests, review-thread resolution, and the exact `authorize-ready-and-merge` GitHub Actions check are required; strict currentness is enabled and enforcement on branch creation is not waived (read-only observation) |
-| Review-routing limitation | `CODEOWNERS` routes `@bartytime4life`; required-check configuration is confirmed, while independent negative/positive canaries and bypass-resistant enforcement remain **NEEDS VERIFICATION** |
+| GitHub protection snapshot | 2026-09-25 readback: ruleset `15484585` (`Protect`) retains deletion, non-fast-forward, pull-request and review-thread-resolution protection; the owner-requested transition-check retirement removes its required-status-check rule |
+| Review-routing limitation | `CODEOWNERS` routes `@bartytime4life`; routing is not independent review. The ruleset still has zero required approvals and an owner always-bypass entry |
 | Local validation surface | [`Makefile`](Makefile), [`pyproject.toml`](pyproject.toml), [`.pre-commit-config.yaml`](.pre-commit-config.yaml), [`package.json`](package.json), and targeted package or subsystem commands |
 | Implementation limit | A documented rule, planned path, stub workflow, or passing check is not automatically proof of runtime behavior or release authority |
 
@@ -44,12 +44,12 @@ When an operational contributor rule changes, update GitHub first. Update Notion
 
 GitHub's actual pull-request fields and timeline are authoritative for `Draft`/`Ready`, review, check, closed, merged, and base/merge state. Body prose, comments, generated receipts, badges, and tool intent may support the record but cannot override GitHub metadata.
 
-> [!CAUTION]
-> **Current delivery-control boundary (`main@87099f58986e9795e7152eaea0b27d9568754ccb`, 2026-09-04).** [Issue #4024](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024) remains open after repeated owner-authenticated, null-GitHub-App ready-to-merge or ready-to-close transitions whose exact client remains unresolved.
->
-> The incident scope is the implicated PR-state mutation path; it does not impose a global authoring freeze. If a delivery path is incident-quarantined, stop at `VALIDATED_BRANCH_ONLY`, preserve the branch and exact head, do not create a same-path successor PR, and separate writer, one-shot draft creator, and observer duties. Unrelated collision-free branch work still requires its own current-base and overlap checks.
->
-> This boundary grants no ready, approval, merge, settings, release, deployment, promotion, publication, or source-admission authority.
+The owner retired the repository transition check and its incident-specific
+branch-only delivery requirement on 2026-09-25. The workflow is disabled in
+GitHub and the corresponding required status rule is removed. Authorized branch
+work may proceed to draft pull requests. Ready, approval, merge, settings,
+release, deployment, publication and source admission still require their own
+applicable authorization. See the [retirement record](docs/governance/repository_transition_control_source.md).
 
 ## Quick navigation
 

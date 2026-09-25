@@ -235,18 +235,18 @@ def test_workflow_runs_draft_and_holds_both_non_draft_entry_paths() -> None:
         )
 
 
-def test_binding_note_names_selected_source_without_rewriting_history() -> None:
+def test_retired_binding_preserves_history_and_offline_validation() -> None:
     binding = BINDING_PATH.read_text(encoding="utf-8").lower()
-    assert "issue #4024" in binding
-    assert "issue #4233" not in binding
+    assert "status: retired by owner" in binding
+    assert "disabled_manually" in binding
+    assert "no longer requires `authorize-ready-and-merge`" in binding
+    assert "not active contributor gates" in binding
+    assert "validation semantics are unchanged" in binding
+    assert "issue #4024 remains open" in binding
     assert "deleted issue #1675" in binding
     assert "historical evidence" in binding
     assert "pr #4234" in binding
     assert "pr #4235" in binding
     assert "ruleset `15484585`" in binding
-    assert '"context": "authorize-ready-and-merge"' in binding
-    assert '"integration_id": 15368' in binding
-    assert '"strict_required_status_checks_policy": true' in binding
-    assert "skipped-success" in binding
-    assert "observed as applied" in binding
-    assert "does not authorize" in binding
+    assert "7e25a287eaeb080bf18a743ae2518147b08b7e2a" in binding
+    assert "no other required check is removed" in binding

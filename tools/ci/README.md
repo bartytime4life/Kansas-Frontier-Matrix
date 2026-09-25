@@ -10,7 +10,7 @@ owners:
   - OWNER_TBD - QA steward
   - OWNER_TBD - Governance steward
 created: 2026-07-07
-updated: 2026-09-17
+updated: 2026-09-25
 policy_label: public-doc; tools; ci; qa; reviewer-summary; no-network-default; workflow-support
 owning_root: tools/
 responsibility: Long-lived CI support helpers for deterministic dependency bootstrap, bounded process controls, and reviewer-readable signals; never workflow, policy, test, proof, or release authority.
@@ -210,8 +210,9 @@ The historical `earth-layer-library-app-validation` workflow keeps its pinned
 comparison role. The separate `ui-build` workflow still owns `apps/explorer-web`.
 Neither is relabeled as proof of the live Sites source. Build products remain
 on the ephemeral runner and are not uploaded or deployed. The two new workflows
-also admit the single authoring branch for hosted evidence while #4024 holds PR
-delivery; no scheduler, required-check setting, or PR-state mutation is added.
+also admit the single authoring branch for hosted evidence. Current draft-PR
+delivery follows [CONTRIBUTING](../../CONTRIBUTING.md); no scheduler,
+required-check setting, or PR-state mutation is added by those workflows.
 
 The existing local-data, inactive-spec, WBD-ingest, Mesonet-normalizer and
 Mesonet-health workflows now react to their Python bootstrap/lock and shared

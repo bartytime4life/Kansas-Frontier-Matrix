@@ -86,7 +86,8 @@ last event time. No-data is not an all-clear.
 
 Main/source mirror refs, Site identity/audience/bindings, terrain, radar, smoke,
 source admission, policy, topology, release, deployment and publication are unchanged.
-Keep #4024 containment and #4228 authority boundaries; draft creation is not ready or
+Follow current [contributor guidance](../../../CONTRIBUTING.md) and keep #4228
+authority boundaries; draft creation is not ready or
 merge authorization. Roll back this unintegrated candidate by abandoning its branch
 or a reviewed inverse of these added files after integration, preserving the receipt
 as historical process memory. Do not change the live Site to undo a local candidate.

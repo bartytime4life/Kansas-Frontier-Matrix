@@ -7,7 +7,7 @@ status: draft; repository-grounded; documentation-only; non-authoritative; non-p
 owners: ["@bartytime4life — CODEOWNERS review route only"]
 stewardship: "NEEDS VERIFICATION — configuration, Atmosphere, scientific-method, rights, policy, and release responsibilities are not assigned by review routing"
 created: 2026-07-13
-updated: 2026-09-04
+updated: 2026-09-25
 policy_label: "public; non-secret; non-authoritative; no-live-binding; source-role-preserving; time-aware; non-alert; not-for-life-safety; no-release-authority"
 current_path: configs/domains/atmosphere/README.md
 owning_root: configs/
@@ -230,9 +230,8 @@ station, temporal, rights/sensitivity, schema/policy, and rollback reviewers.
 Do not allow a config author to self-certify policy-significant source approval,
 release, or rollback. Record any bootstrap review limitation explicitly.
 
-Current contributor controls and [issue #4024][INCIDENT] distinguish branch
-writing, independent one-shot draft creation, and observation for an
-incident-quarantined delivery path. A README update grants no ready, approval,
+Follow the current [contribution guide](../../../CONTRIBUTING.md) for branch
+and draft-PR delivery. A README update grants no ready, approval,
 merge, settings, scheduler, source-admission, deployment, or release authority.
 
 ## Related folders
@@ -681,5 +680,4 @@ API, model, scheduler, release, deployment, or published artifact is modified.
 [VALIDATOR]: https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/700570cbcf191038aa20a030174c2dd08cf93675/tools/validators/domains/atmosphere/validate_observed_modeled_separation.py
 [VALIDATOR-INDEX]: https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/700570cbcf191038aa20a030174c2dd08cf93675/tools/validators/domains/atmosphere/README.md
 [OWNERS]: https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/700570cbcf191038aa20a030174c2dd08cf93675/.github/CODEOWNERS
-[INCIDENT]: https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024
 [PDF]: https://drive.google.com/file/d/1gHk6Jp3fGfrPTgvczwxyNXxvNopiKgRw/view

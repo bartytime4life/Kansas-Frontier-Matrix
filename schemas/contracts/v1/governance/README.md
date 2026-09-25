@@ -16,7 +16,7 @@ owners:
   - OWNER_TBD — Validation steward
   - OWNER_TBD — Docs steward
 created: NEEDS VERIFICATION — short stub existed before v0.2 expansion
-updated: 2026-07-30
+updated: 2026-09-25
 policy_label: public; schemas; contracts-v1; governance; review-record; stewardship-assignment; promotion-decision; redaction-receipt; separation-of-duties; auditability; release-adjacent; no-parallel-authority
 tags: [kfm, schemas, contracts, v1, governance, ReviewRecord, StewardshipAssignment, PromotionDecision, RedactionReceipt, RepositoryControlState, RepositoryTransitionAuthorization, review, stewardship, separation-of-duties, drift, verification, release-gates, auditability, rollback]
 related:
@@ -50,7 +50,7 @@ notes:
   - "review_record.schema.json has concrete required fields and additionalProperties false, but remains x-kfm.status PROPOSED."
   - "steward_assignment.schema.json is a permissive PROPOSED stub requiring only id."
   - "promotion_decision.schema.json and redaction_receipt.schema.json are permissive PROPOSED scaffolds with empty properties and additionalProperties true."
-  - "The repository-control state, context, CI outcome, and transition-authorization schemas are strict PROPOSED shapes with focused executable tests; the transition check remains advisory until separately required by the main ruleset."
+  - "The repository-control state, context, CI outcome, and transition-authorization schemas are strict PROPOSED shapes with focused executable tests; the transition-check integration is retired; offline schemas and validators remain available."
   - "PromotionDecision and RedactionReceipt are release/policy/evidence-adjacent; this folder must not become a parallel release, policy, evidence, or receipt authority without ADR/migration notes."
 [/KFM_META_BLOCK_V2] -->
 
@@ -173,7 +173,7 @@ The current mounted-checkout inventory contains the following nine files. Path p
 | `ci_outcome.schema.json` | Strict finite repository-control check outcome shape. | `contracts/governance/repository_control_state.md`. | **PROPOSED / focused validation present** |
 | `repository_control_context.schema.json` | Strict prepared PR/platform evidence shape. | `contracts/governance/repository_control_state.md`. | **PROPOSED / focused validation present** |
 | `repository_control_state.schema.json` | Strict observation-time projection, claim, permission, settings, and digest shape. | `contracts/governance/repository_control_state.md`. | **PROPOSED / focused validation present** |
-| `repository_transition_authorization.schema.json` | Strict short-lived repository/issue/PR/base/head/owner/decision/expiry shape. | `contracts/governance/repository_control_state.md`. | **PROPOSED / advisory workflow until ruleset coupling** |
+| `repository_transition_authorization.schema.json` | Strict short-lived repository/issue/PR/base/head/owner/decision/expiry shape. | `contracts/governance/repository_control_state.md`. | **PROPOSED shape / retired workflow integration** |
 
 > [!NOTE]
 > These files confirm path presence and scaffold intent. They do not confirm final field shape, validator behavior, fixture coverage, policy enforcement, release readiness, or public-safe behavior.
@@ -321,7 +321,7 @@ Rollback for future governance schema changes requires checking every downstream
 | Should `redaction_receipt.schema.json` live under governance, evidence, policy, receipts, or domain lanes? | **NEEDS VERIFICATION / ADR-sensitive** | Governance steward + evidence steward + policy steward |
 | Which governance schemas are field-complete and fixture-tested? | **NEEDS VERIFICATION** | Validation steward |
 | Which governance records are required for publication gates? | **NEEDS VERIFICATION / release-gated** | Release steward + governance steward |
-| Is `repository-control / authorize-ready-and-merge` configured as a strict required check, and can the owner-account credential boundary distinguish a human from installed apps? | **NEEDS VERIFICATION / platform-controlled** | Repository administrator + security reviewer |
+| Can the owner-account credential boundary distinguish a human from installed apps? | **NEEDS VERIFICATION / platform-controlled**; the transition check was retired, see the [retirement record](../../../../docs/governance/repository_transition_control_source.md) | Repository administrator + security reviewer |
 
 ---
 

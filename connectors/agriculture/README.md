@@ -6,7 +6,7 @@ version: v0.3
 status: draft; repository-grounded; documentation-only; non-publisher
 owners: OWNER_TBD — Agriculture steward · Source steward · Connector steward · Data steward · Policy steward · Validation steward · Docs steward
 created: 2026-06-16
-updated: 2026-09-05
+updated: 2026-09-25
 owning_root: connectors/
 responsibility: Explain the agriculture source-edge boundary without creating provider, registry, capture, schema, policy, or release authority
 truth_posture: CONFIRMED pinned subtree and governing documents; PROPOSED unimplemented connector behavior; UNKNOWN live source and runtime state
@@ -388,7 +388,7 @@ Before relying on a future agriculture connector, verify:
 
 For a documentation-only edit, live source activation is not a prerequisite: verify the guidance and keep unproved behavior explicit. For new connector behavior, the admission, ownership, fixture and sink requirements below must close before their corresponding operational transition.
 
-Follow current [CONTRIBUTING](../../CONTRIBUTING.md) and the live delivery-control record in issue #4024. Branch authoring, PR creation, ready, approval and merge are distinct. When the PR mutation path is held, retain a validated branch and exact handoff for an eligible independent creator; do not bypass the hold or treat prose saying `DRAFT` as protection.
+Follow current [CONTRIBUTING](../../CONTRIBUTING.md). Branch authoring, draft PR creation, ready, approval and merge are distinct; verify GitHub state after each authorized action.
 
 For changes under `connectors/agriculture/`:
 

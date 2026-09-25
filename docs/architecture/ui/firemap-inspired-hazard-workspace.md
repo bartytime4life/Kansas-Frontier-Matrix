@@ -6,7 +6,7 @@ version: v0.1.1
 status: proposed; review-pending; no-live-activation
 owners: ["@bartytime4life"]
 created: 2026-09-22
-updated: 2026-09-23
+updated: 2026-09-25
 policy_label: public; context-only; no-source-admission; no-release
 responsibility: Describe proposed hazard-workspace behavior, scientific source distinctions, and acceptance without authorizing runtime or source activation.
 owning_root: docs/
@@ -179,8 +179,8 @@ positives, waive validators, or treat a build/HTTP 200/PR merge as hosted accept
 ## Review and rollback
 
 The owner request authorizes repository authoring and draft-PR delivery, not ready,
-merge, deployment or source admission. Preserve issue #4024's path-specific containment
-and #4228's Stage 1A accepted / Stage 1B HOLD / Stage 2 unauthorized boundaries.
+merge, deployment or source admission. Follow current
+[contributor guidance](../../../CONTRIBUTING.md) and preserve #4228's Stage 1A accepted / Stage 1B HOLD / Stage 2 unauthorized boundaries.
 Human implementation, domain and accessibility review remain pending. Abandon the
 unmerged branch or use a separately reviewed inverse after integration; do not
 rewrite source history or change the Site to roll back a documentation proposal.
