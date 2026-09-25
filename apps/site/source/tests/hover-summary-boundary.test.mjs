@@ -24,6 +24,9 @@ test("external display labels are bounded and controls cannot become text", () =
   assert.equal(externalHoverTitle({ name: "untrusted" }), "Basemap feature");
   assert.equal(externalHoverTitle("\n \t"), "Basemap feature");
   assert.equal(externalHoverTitle("  Kansas\n river\t"), "Kansas river");
+  assert.equal(externalHoverTitle("Kansas\u202e fake"), "Kansas fake");
+  assert.equal(externalHoverTitle("Kansas\u2066 site\u2069"), "Kansas site");
+  assert.equal(externalHoverTitle(Number.POSITIVE_INFINITY), "Basemap feature");
   assert.equal(externalHoverTitle("x".repeat(200)).length, 90);
 });
 
