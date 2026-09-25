@@ -7,6 +7,7 @@ name: kfm-cli-doctor
       - ".github/workflows/kfm-cli-doctor.yml"
       - "packages/kfm-cli/**"
       - "tests/packages/kfm_cli/**"
+      - "tools/diff/stable_diff.py"
       - "tests/ci/test_install_kfm_cli.py"
       - "tools/ci/install_kfm_cli.py"
       - "tools/ci/python-cli.lock"
@@ -19,6 +20,7 @@ name: kfm-cli-doctor
       - ".github/workflows/kfm-cli-doctor.yml"
       - "packages/kfm-cli/**"
       - "tests/packages/kfm_cli/**"
+      - "tools/diff/stable_diff.py"
       - "tests/ci/test_install_kfm_cli.py"
       - "tools/ci/install_kfm_cli.py"
       - "tools/ci/python-cli.lock"
@@ -83,9 +85,10 @@ jobs:
 
       - name: Validate CLI doctor and bounded telemetry handoff
         run: |
-          python -m pytest tests/packages/kfm_cli/test_doctor.py tests/packages/kfm_cli/test_telemetry.py -q --strict-config --strict-markers
+          python -m pytest tests/packages/kfm_cli/test_doctor.py tests/packages/kfm_cli/test_telemetry.py tests/packages/kfm_cli/test_diff.py -q --strict-config --strict-markers
           python -m unittest discover --start-directory tests/validators/telemetry --pattern 'test_validate_telemetry_safety.py' --verbose
           python -m kfm_cli doctor
           kfm doctor
           kfm telemetry --fixtures
+          kfm diff --left tests/diff/fixtures/same/left.json --right tests/diff/fixtures/same/right.json
           python -m pip check
