@@ -2,12 +2,12 @@
 doc_id: kfm://doc/scripts-readme
 title: scripts/ — Thin Operational Wrappers and Graduation Boundary
 type: README
-version: v0.5
+version: v0.6
 status: draft; repository-grounded; canonical-thin-script-root; mixed-maturity; two-governed-planner-wrappers-confirmed; maplibre-runtime-held; trust-shaped-builders-present; non-authoritative
 owner: "@bartytime4life — current root-registry owner, permitted writer, reviewer, and default CODEOWNERS route; independent review separation remains NEEDS VERIFICATION"
-created: NEEDS VERIFICATION — a short root stub existed before v0.2
-updated: 2026-08-09
-supersedes: v0.4 documentation at the same path; no script, workflow, command, validator, package, schema, contract, artifact, receipt, proof, release, runtime, deployment, or publication behavior is superseded
+created: 2025-09-22
+updated: 2026-09-24
+supersedes: v0.5 documentation at the same path; no script, workflow, command, validator, package, schema, contract, artifact, receipt, proof, release, runtime, deployment, or publication behavior is superseded
 policy_label: repository-facing; thin-script; operational-helpers; dev; maintenance; one-off; planning-only; dry-run-first; no-hidden-authority; no-direct-public-path; no-secrets; graduation-required; correction-aware; rollback-aware
 owning_root: scripts/
 root_class: canonical
@@ -76,6 +76,7 @@ notes:
   - "The current MapLibre workflow validates syntax, selected negative paths, and hold assumptions only; it does not execute a browser or emit artifacts."
   - "The maintenance child README still contains a stale direct-caller statement about promotion-gate; this parent records the discrepancy without expanding the requested path scope."
   - "No executable behavior, generated lifecycle object, release state, deployment, or public surface is changed by this README update."
+  - "v0.6 adds a current Makefile command-routing map so newer local-data, offline-pipeline, and native-Explorer checks are not mistaken for scripts/ implementations."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -91,7 +92,7 @@ notes:
 
 > **One-line purpose.** `scripts/` exposes thin, explicit, reversible command wrappers around governed implementation while keeping reusable logic, trust decisions, lifecycle orchestration, proof, release, and publication authority in their owning roots.
 
-**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Does not belong](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related roots](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Inventory](#confirmed-current-inventory) · [Child lanes](#child-lane-contracts) · [Planner wrappers](#governed-planning-wrappers) · [MapLibre](#root-level-maplibre-performance-chain) · [Execution](#safe-execution-contract) · [Artifact boundary](#generated-artifact-and-trust-object-boundary) · [Outcomes](#finite-outcomes-and-failure-semantics) · [Graduation](#graduation-and-promotion-rules) · [Rollback](#correction-and-rollback) · [Open verification](#open-verification-register)
+**Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Does not belong](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related roots](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Command routing](#current-command-routing) · [Inventory](#confirmed-current-inventory) · [Child lanes](#child-lane-contracts) · [Planner wrappers](#governed-planning-wrappers) · [MapLibre](#root-level-maplibre-performance-chain) · [Execution](#safe-execution-contract) · [Artifact boundary](#generated-artifact-and-trust-object-boundary) · [Outcomes](#finite-outcomes-and-failure-semantics) · [Graduation](#graduation-and-promotion-rules) · [Rollback](#correction-and-rollback) · [Open verification](#open-verification-register)
 
 > [!IMPORTANT]
 > A script may execute work, but successful execution grants no KFM authority. Output is not automatically evidence, proof, policy approval, lifecycle promotion, release approval, correction authority, rollback authorization, or public truth.
@@ -197,7 +198,7 @@ Public clients and normal UI surfaces must never execute arbitrary repository sc
 
 ### Repository-grounded maturity summary
 
-| Surface | Current evidence at `main@3a971558…` | Safe conclusion |
+| Surface | Evidence at the 2026-08-09 `main@3a971558…` snapshot | Safe conclusion |
 |---|---:|---|
 | `scripts/README.md` | **CONFIRMED v0.4 baseline** | Strong guardrails exist, but the inventory predates two planner CLIs and still cites pre-adoption Directory Rules numbering. |
 | ADR-0029 and Directory Rules v2 | **CONFIRMED accepted decision and pinned doctrine path** | Same-path README update is placement-safe; `scripts/` is governed as a canonical thin-script root. |
@@ -602,9 +603,9 @@ No path is moved and no ADR is created, amended, or accepted by this README upda
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-08-09 |
-| Evidence base | `main@3a9715582adf17a682920ca98f15aa3582ee8cdc` |
-| Target prior blob | `8ab7b3f740f21822310fa8bf40a18527bf2057a1` |
+| Last reviewed | 2026-09-24 bounded command-routing refresh; 2026-08-09 deeper script review |
+| Evidence base | `main@57d153cd6b5572f9bda8536a79831b232f0326b6` for current Makefile routing and tracked direct-child inventory; prior `main@3a9715582adf17a682920ca98f15aa3582ee8cdc` for deeper script assessment |
+| Target prior blob | `053cec0d3732362636970a0e38fb48544868e292` at `main@57d153cd6b55`; earlier v0.4 baseline blob `8ab7b3f740f21822310fa8bf40a18527bf2057a1` remains in the historical evidence ledger |
 | Governing decision | Accepted `ADR-0029` |
 | Root projection | `control_plane/root_registry.yaml` blob `024f668b…` |
 | Review mode | Complete-baseline, same-path, repository-grounded documentation modernization |
@@ -626,6 +627,25 @@ Re-review when:
 - maintenance output homes or workflow callers change;
 - network, dependency, secret, logging, retention, correction, or rollback posture changes;
 - Directory Rules, the root registry, the drift register, or an accepted ADR changes placement.
+
+[Back to top](#top)
+
+---
+
+## Current command routing
+
+At `main@57d153cd6b55`, the tracked direct children of `scripts/` remain the two planning CLIs, seven MapLibre candidate builders, the three child directories, and this README. Newer root commands live in the [`Makefile`](../Makefile) and route to their responsibility owners; their presence does not expand `scripts/` authority.
+
+| Entry point | Implementation or test owner | What the command can establish |
+|---|---|---|
+| `make local-data-doctor` | [`tools/local_data/`](../tools/local_data/README.md) | Read-only local-PC prerequisite report. |
+| `make local-data-check` | [`tests/local_data/`](../tests/local_data/README.md) | Synthetic offline capture, manifest, recovery, and boundary test results. |
+| `make offline-pipeline-check` | [`tests/pipelines/`](../tests/pipelines/README.md) and Hydrology no-network test | Named synthetic pipeline behavior under a bounded network guard. |
+| `make native-explorer-check` | `apps/kansas-frontier-matrix-explorer/` and [`tests/ui/`](../tests/ui/README.md) | Repository-mirror build and Node tests; no Site save or deployment. |
+| `make normalized-summary-check` | Doctrine-summary validator and focused policy/source/CI tests | Summary structure and failure-propagation checks. |
+| `make repository-topology` | Directory-governance validator and tests | Exact-head topology diagnostic; inherited drift needs base/head comparison. |
+
+Choose the command by the changed responsibility, inspect its declared writes and dependencies, and report the observed result at the tested revision. The [test-root guide](../tests/README.md#current-local-execution-surfaces) gives the broader command map. A Make target, a `scripts/` wrapper, and a hosted check are separate evidence surfaces.
 
 [Back to top](#top)
 
@@ -1160,5 +1180,6 @@ Until MapLibre placement is resolved, treat `artifacts/perf/` as ephemeral stagi
 | v0.3 | 2026-07-16 | Added detailed child lanes, MapLibre chain, artifact boundary, finite outcomes, graduation, review, and rollback | Restore prior v0.2 blob recorded in v0.3 |
 | v0.4 | 2026-07-23 | Reordered to the then-current Directory Rules README profile, refreshed workflow evidence, corrected MapLibre CI claims, and added no-loss/evidence ledgers | Restore the v0.3 blob recorded in v0.4 |
 | v0.5 | 2026-08-09 | Aligned the same-path README with accepted ADR-0029 and the active root registry; documented two compliant package-backed planner wrappers; refreshed the direct-child map, pnpm-aware MapLibre hold, validation, graduation, evidence, and rollback boundaries | Restore blob `8ab7b3f740f21822310fa8bf40a18527bf2057a1` |
+| v0.6 | 2026-09-24 | Added the current Makefile command-routing map while preserving the deeper August script assessment as historical evidence | Revert this documentation packet |
 
 <p align="right"><a href="#top">Back to top</a></p>
