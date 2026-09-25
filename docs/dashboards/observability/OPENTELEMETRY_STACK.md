@@ -6,7 +6,7 @@ version: v0.2
 status: draft
 owners: OWNER_TBD  # NEEDS VERIFICATION: observability steward + docs steward + platform/infra owner
 created: 2026-05-20
-updated: 2026-06-12
+updated: 2026-09-24
 policy_label: public
 related:
   - docs/dashboards/README.md
@@ -465,3 +465,37 @@ If this spec and the running stack disagree:
 ---
 
 <sub>Specification only. Telemetry is a carrier, not truth. The running stack, collector config, backend stores, dashboards, alert rules, retention windows, and signal contracts remain **NEEDS VERIFICATION** until confirmed from repo, infra, CI, runtime, or emitted telemetry evidence.</sub>
+
+## 17. Consolidated stack-health proposal and implementation boundary
+
+This is the primary authored stack specification. The lowercase compatibility
+path points here; its unique proposed signal thresholds are preserved below.
+The shared document identity remains on this file. This consolidation changes
+no policy, root, source admission, or release authority (owning root: `docs/`).
+
+| Signal | What it carries | Healthy posture | Emitting adapter / path |
+|:---|:---|:---|:---|
+| `otel.collector.spans_received` | Spans ingested by Collector (per second) | > 0 during active CI; non-zero during business hours | OTel Collector self-telemetry |
+| `otel.collector.queue_depth` | Receiver queue depth | p95 < 50% of configured limit | OTel Collector self-telemetry |
+| `otel.collector.dropped_spans` | Spans dropped due to queue overflow or processor failure | 0 over 1h window | OTel Collector self-telemetry |
+| `tempo.query.p95_latency_ms` | Tempo trace lookup p95 | < 500ms | Tempo self-telemetry |
+| `mimir.query.p95_latency_ms` | Mimir metric query p95 | < 1000ms | Mimir self-telemetry |
+| `loki.query.p95_latency_ms` | Loki log query p95 | < 2000ms | Loki self-telemetry |
+| `otel.runners.agent_shape_conformance` | % of CI runners reporting the canonical agent shape | 100% | runner-fleet inventory + Collector handshake |
+
+
+All thresholds and adapters in that table are **PROPOSED**. Corpus inclusion is
+not deployment evidence. A Grafana page, collector endpoint, retention policy,
+agent-shape enforcement, and public rollup require separate implementation and
+acceptance. A proposed T0 label or self-telemetry label does not waive sensitivity
+review or emission redaction: labels can contain protected values.
+
+Current repository evidence comprises the four fixture profiles listed in
+[contracts/telemetry](../../../contracts/telemetry/README.md), the
+[local validators](../../../tools/validators/telemetry/README.md), and the
+[telemetry-policy workflow](../../../.github/workflows/telemetry-policy.yml).
+The general validator raises `NotImplementedError`; raw/prompt policies remain
+proposed stubs. No running OTel, Tempo, Mimir, Loki, or Grafana service was verified.
+`OPEN-DASH-OBS-STACK-01` is resolved as documentation consolidation;
+`OPEN-DASH-OBS-STACK-02` (public rollup placement and approval) remains proposed.
+Rollback: revert both documentation edits; retain all operational holds.
