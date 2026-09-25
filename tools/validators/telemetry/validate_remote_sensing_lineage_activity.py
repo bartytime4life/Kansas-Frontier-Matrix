@@ -19,7 +19,7 @@ for import_path in (REPO_ROOT, PACKAGE_SRC):
     if str(import_path) not in sys.path:
         sys.path.insert(0, str(import_path))
 
-from hashing import JsonInputError, load_json_file  # noqa: E402
+from hashing import CanonicalizationFailure, JsonInputError, canonicalize_json, load_json_file  # noqa: E402
 
 
 def _load_module(name: str, path: Path) -> Any:
@@ -114,6 +114,16 @@ def _schema_findings(document: object) -> list[Finding]:
 
 
 def validate_document(document: object) -> ValidationResult:
+    # Validate the canonical JSON domain before schema traversal or derived IDs.
+    # Never serialize rejected candidate values or exception diagnostics.
+    try:
+        canonicalize_json(document)
+        return _validate_document(document)
+    except CanonicalizationFailure:
+        return ValidationResult("ERROR", (Finding("CANONICALIZATION_ERROR", "$"),))
+
+
+def _validate_document(document: object) -> ValidationResult:
     schema_findings = _schema_findings(document)
     if schema_findings or not isinstance(document, dict):
         return ValidationResult("DENY", tuple(sorted(set(schema_findings))))
@@ -218,6 +228,8 @@ def run_fixture_suite() -> tuple[bool, dict[str, object]]:
         return False, {"cases": [], "ok": False, "scope": SCOPE}
 
     entries = suite.get("cases", []) if isinstance(suite, dict) else []
+    if not isinstance(entries, list) or not entries:
+        return False, {"cases": [], "ok": False, "scope": SCOPE}
     cases: list[dict[str, object]] = []
     ok = True
     for case in entries:

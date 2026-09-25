@@ -9,6 +9,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 from typing import Any
 
@@ -280,6 +281,31 @@ class OpenLineageRunEventProjectionTests(unittest.TestCase):
             "OPENLINEAGE_ENDPOINT",
         ):
             self.assertNotIn(forbidden, workflow_text)
+
+
+    def test_canonicalization_rejection_has_finite_redacted_result(self) -> None:
+        document = BUILDER.build_document()
+        document["request"]["namespace"] = "PRIVATE_SENTINEL_\ud800"
+        result = VALIDATOR.validate_document(document)
+        self.assertEqual(result.outcome, "ERROR")
+        self.assertEqual([finding.code for finding in result.findings], ["CANONICALIZATION_ERROR"])
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "candidate.json"
+            path.write_text(json.dumps(document), encoding="utf-8")
+            self.assertEqual(VALIDATOR.validate_file(path), result)
+            run = subprocess.run([sys.executable, str(VALIDATOR_PATH), "--candidate", str(path)], capture_output=True, text=True, check=False)
+        self.assertNotEqual(run.returncode, 0)
+        self.assertEqual(run.stderr, "")
+        self.assertNotIn("PRIVATE_SENTINEL", run.stdout)
+        self.assertNotIn(str(2**53), run.stdout)
+        self.assertEqual(json.loads(run.stdout)["outcome"], "ERROR")
+
+    def test_empty_or_malformed_fixture_inventory_cannot_pass(self) -> None:
+        for suite in ({}, {"cases": []}, {"cases": None}, {"cases": "invalid"}, []):
+            with self.subTest(suite=suite), patch.object(VALIDATOR, "load_json_file", return_value=suite):
+                ok, report = VALIDATOR.run_fixture_suite()
+                self.assertFalse(ok)
+                self.assertFalse(report["ok"])
 
 
 if __name__ == "__main__":

@@ -13,6 +13,8 @@ import argparse
 import hashlib
 import json
 import math
+import os
+import stat
 import re
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -83,21 +85,56 @@ def _finite_float(value: str) -> float:
     return parsed
 
 
+class InputReadError(ValueError):
+    pass
+
+
+def _file_signature(value: os.stat_result) -> tuple[int, ...]:
+    return (value.st_dev, value.st_ino, value.st_mode, value.st_size,
+            value.st_mtime_ns, value.st_ctime_ns)
+
+
+def _read_bounded(path: Path) -> bytes:
+    """Descriptor-bound local admission; ancestor ownership remains external."""
+    if not hasattr(os, "O_NOFOLLOW") or not hasattr(os, "O_NONBLOCK"):
+        raise InputReadError("INPUT_SAFE_OPEN_UNAVAILABLE")
+    before = path.lstat()
+    if stat.S_ISLNK(before.st_mode):
+        raise InputReadError("INPUT_SYMLINK_DENIED")
+    if not stat.S_ISREG(before.st_mode):
+        raise InputReadError("FILE_NOT_FOUND")
+    if before.st_size > MAX_FILE_BYTES:
+        raise InputReadError("FILE_TOO_LARGE")
+    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    try:
+        opened = os.fstat(descriptor)
+        if _file_signature(opened) != _file_signature(before):
+            raise InputReadError("INPUT_CHANGED")
+        with open(descriptor, "rb", closefd=False) as stream:
+            payload = stream.read(MAX_FILE_BYTES + 1)
+        if len(payload) > MAX_FILE_BYTES:
+            raise InputReadError("FILE_TOO_LARGE")
+        if (len(payload) != opened.st_size
+                or _file_signature(os.fstat(descriptor)) != _file_signature(opened)
+                or _file_signature(path.lstat()) != _file_signature(opened)):
+            raise InputReadError("INPUT_CHANGED")
+        return payload
+    finally:
+        os.close(descriptor)
+
+
 def _read_object(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
     try:
-        if path.is_symlink():
-            return None, [Finding("INPUT_SYMLINK_DENIED", "/")]
-        if not path.is_file():
-            return None, [Finding("FILE_NOT_FOUND", "/")]
-        if path.stat().st_size > MAX_FILE_BYTES:
-            return None, [Finding("FILE_TOO_LARGE", "/")]
-        with path.open("r", encoding="utf-8") as stream:
-            value = json.load(
-                stream,
-                object_pairs_hook=_unique_object,
-                parse_constant=_reject_nonfinite,
-                parse_float=_finite_float,
-            )
+        value = json.loads(
+            _read_bounded(path).decode("utf-8"),
+            object_pairs_hook=_unique_object,
+            parse_constant=_reject_nonfinite,
+            parse_float=_finite_float,
+        )
+    except InputReadError as exc:
+        return None, [Finding(str(exc), "/")]
+    except FileNotFoundError:
+        return None, [Finding("FILE_NOT_FOUND", "/")]
     except UnicodeDecodeError:
         return None, [Finding("JSON_NOT_UTF8", "/")]
     except DuplicateKeyError:

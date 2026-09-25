@@ -8,7 +8,7 @@ owners:
   - TODO-validation-steward
   - TODO-observability-steward
 created: 2026-08-07
-updated: 2026-09-22
+updated: 2026-09-24
 policy_label: repository-facing; tools; validators; telemetry
 owning_root: tools/
 responsibility: validate bounded telemetry profile shape identity binding arithmetic uncertainty and finite decision semantics without contacting external systems or granting operational authority
@@ -61,6 +61,21 @@ The map-build sustainability validator checks:
 - energy-to-carbon arithmetic within declared rounding tolerance capped at `0.001 gCO2e` for fixture consistency;
 - consistent safe abstention when measurement or factor evidence is unavailable; and
 - exact non-effects, including no measurement, provider call, threshold, release decision, or mapped-truth claim.
+
+## Lineage and trace-link admission
+
+Lineage validators check the complete candidate against the bounded RFC 8785
+canonicalization domain before schema and identity work. Invalid Unicode,
+unsafe integers, and unsupported values return `ERROR / CANONICALIZATION_ERROR`
+without candidate values or exception chains. Missing, empty, or non-list fixture
+inventories fail the fixture command instead of producing an empty success.
+
+The sibling `../validate_trace_receipt_link.py` reads at most 1,048,577 bytes
+from one regular-file descriptor (1 MiB plus a sentinel). It checks descriptor
+and path identity, mode, size, and change timestamps; observed replacement or
+mutation returns a stable error. Platforms without no-follow/nonblocking opens
+fail closed. This is local input admission, not an atomic filesystem snapshot
+or protection against hostile parent-directory owners.
 
 ## Map-build input safety boundary
 

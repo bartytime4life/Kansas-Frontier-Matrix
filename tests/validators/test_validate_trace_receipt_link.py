@@ -4,10 +4,12 @@ import contextlib
 import importlib.util
 import io
 import json
+import os
 import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -165,6 +167,35 @@ class TraceReceiptLinkTests(unittest.TestCase):
         self.assertNotEqual(0, invalid.returncode)
         self.assertIn('"outcome":"PASS"', valid.stdout)
         self.assertIn('"outcome":"FAIL"', invalid.stdout)
+
+
+    def test_growth_and_replacement_are_rejected_on_consumed_descriptor(self) -> None:
+        original_open = os.open
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "candidate.json"
+            other = Path(directory) / "replacement.json"
+            for mode in ("grow", "replace", "symlink", "fifo"):
+                if path.exists() or path.is_symlink():
+                    path.unlink()
+                path.write_text("{}", encoding="utf-8")
+                other.write_text("{}", encoding="utf-8")
+                def race(candidate, flags):
+                    if mode == "grow":
+                        path.write_bytes(b" " * (validator.MAX_FILE_BYTES + 1))
+                    elif mode == "replace":
+                        other.replace(path)
+                    else:
+                        path.unlink()
+                        if mode == "symlink":
+                            path.symlink_to(other)
+                        else:
+                            os.mkfifo(path)
+                    return original_open(candidate, flags)
+                with self.subTest(mode=mode), patch.object(validator.os, "open", side_effect=race):
+                    result = validator.validate_link(path)
+                self.assertFalse(result.ok)
+                self.assertTrue(result.error)
+                path.unlink()
 
 
 if __name__ == "__main__":

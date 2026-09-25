@@ -37,25 +37,25 @@ describe("Explorer repository catalog", () => {
     );
     expect(runtime?.maturity).toBe("HOLD");
     expect(REPOSITORY_SNAPSHOT).toMatchObject({
-      commit: "d25a4c046892aa826ca04da29215f8ae4aae8e51",
-      commitRecordedAt: "2026-09-12T01:19:24Z",
+      commit: "bb08d3e9b92e9251c193debab6567be843136070",
+      commitRecordedAt: "2026-09-23T20:00:13Z",
       mapLibre: {
-        readinessCandidate: "6.7.0",
+        readinessCandidate: "6.9.0",
         readinessState: "HOLD",
         packagePresent: true,
         adapterImplemented: true,
-        browserRuntimeActivated: false,
+        browserRuntimeActivated: true,
         browserEvidenceComplete: false,
       },
     });
     expect(CURRENT_MAPLIBRE_READINESS).toMatchObject({
-      evidenceCommit: "033103a0afe80f85a823973951b3b7d15abb7a8b",
-      evidenceRecordedAt: "2026-09-09T02:12:08Z",
-      readinessCandidate: "6.7.0",
+      evidenceCommit: "bb08d3e9b92e9251c193debab6567be843136070",
+      evidenceRecordedAt: "2026-09-23T20:00:13Z",
+      readinessCandidate: "6.9.0",
       readinessState: "HOLD",
       packagePresent: true,
       adapterImplemented: true,
-      browserRuntimeActivated: false,
+      browserRuntimeActivated: true,
       browserEvidenceComplete: false,
     });
     expect(repositoryUrl("apps/explorer-web")).toContain(
