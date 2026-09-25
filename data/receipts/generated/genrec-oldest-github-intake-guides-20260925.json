@@ -1,0 +1,112 @@
+{
+  "receipt_id": "genrec-oldest-github-intake-guides-20260925",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/PULL_REQUEST_TEMPLATE.md",
+    ".github/ISSUE_TEMPLATE/README.md"
+  ],
+  "artifact_hashes": {
+    ".github/PULL_REQUEST_TEMPLATE.md": "sha256:3c4ed28a1299785fa7aa14e6cb843ad4625c1eee3fe9e35f8b04297fbacc809f",
+    ".github/ISSUE_TEMPLATE/README.md": "sha256:06c616297cfb544424da65909e979daf2b326009efa2bc64428cf73407837803"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "not-exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "repository inspection",
+      "GitHub repository and ruleset readback",
+      "documentation validators"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "main@89f83d38aad66e4b9369d33fa7d99aa38316009f",
+      ".github/PULL_REQUEST_TEMPLATE.md",
+      ".github/ISSUE_TEMPLATE/README.md",
+      "CONTRIBUTING.md",
+      "docs/governance/repository_transition_control_source.md",
+      "GitHub ruleset 15484585 readback 2026-09-25",
+      "GitHub workflow 324077182 readback 2026-09-25"
+    ]
+  },
+  "truth_labels": {
+    ".github/PULL_REQUEST_TEMPLATE.md": "CONFIRMED",
+    ".github/ISSUE_TEMPLATE/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused documentation link check",
+      "outcome": "PASS",
+      "reason": "Both Markdown files passed 46 local targets; four external badge targets were not requested."
+    },
+    {
+      "gate": "present metadata blocks",
+      "outcome": "PASS",
+      "reason": "One metadata block was valid; the PR template has no metadata block."
+    },
+    {
+      "gate": "bounded stale-document scan",
+      "outcome": "PASS",
+      "reason": "The issue-intake README had zero findings as of 2026-09-25."
+    },
+    {
+      "gate": "GitHub platform readback",
+      "outcome": "PASS",
+      "reason": "Current repository, label, template inventory, ruleset, and disabled workflow states were read on 2026-09-25; private vulnerability reporting and live chooser rendering remain unverified."
+    },
+    {
+      "gate": "hosted exact-head checks",
+      "outcome": "SKIPPED",
+      "reason": "Pending branch push and pull request."
+    },
+    {
+      "gate": "independent human review",
+      "outcome": "SKIPPED",
+      "reason": "Pending reviewer action; generation and local validation do not supply approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-contribution-contract",
+      "validated": true,
+      "evidence_ref": "main@89f83d38aad66e4b9369d33fa7d99aa38316009f:CONTRIBUTING.md"
+    },
+    {
+      "id": "transition-control-retirement",
+      "validated": true,
+      "evidence_ref": "main@89f83d38aad66e4b9369d33fa7d99aa38316009f:docs/governance/repository_transition_control_source.md"
+    },
+    {
+      "id": "active-protect-ruleset",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/rules/15484585"
+    },
+    {
+      "id": "repository-control-workflow",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/repository-control.yml"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-25T05:06:45Z",
+  "emitter": "Codex GPT-6 documentation reconciliation",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Reconciles early GitHub intake guidance with current repository evidence. The receipt binds authored documentation bytes only and grants no review, merge, settings, source, release, deployment, or publication authority."
+}

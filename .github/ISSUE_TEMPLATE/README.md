@@ -2,16 +2,17 @@
 doc_id: kfm://doc/github-issue-template-readme
 title: .github/ISSUE_TEMPLATE README
 type: README
-version: v0.5
+version: v0.6
 status: draft; repository-grounded issue-intake governance; live settings selectively verified
 owners: ["@bartytime4life"]
 created: 2026-07-17
-updated: 2026-08-27
+updated: 2026-09-25
 policy_label: public; issue-intake; governance; security-aware; non-authoritative
 owning_root: .github/
 responsibility: GitHub public issue chooser templates and routing into governed KFM work
 truth_posture: CONFIRMED repository evidence / NEEDS VERIFICATION live rendering and enforcement / issue intake is non-authoritative
 evidence_snapshot: bartytime4life/Kansas-Frontier-Matrix main@ef7f2fbd523af5d803fadf92504d7f734c82c2ca
+current_bounded_readback: bartytime4life/Kansas-Frontier-Matrix main@89f83d38aad66e4b9369d33fa7d99aa38316009f; repository and ruleset read 2026-09-25
 evidence_root_tree: 989b76bea75e30d275a7cd515ea3f6cab4f6adec
 evidence_github_tree: 245bd98cf05ac3f5afd9765db34ef0c9393639b6
 evidence_issue_template_tree: 7a0dfe35ba99fb1eb6eafac16e0b8410c3510107
@@ -29,6 +30,7 @@ related:
   - ../CODEOWNERS
   - ../PULL_REQUEST_TEMPLATE.md
   - ../../CONTRIBUTING.md
+  - ../../docs/governance/repository_transition_control_source.md
   - ../../SECURITY.md
   - ../../docs/doctrine/directory-rules.md
   - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
@@ -43,6 +45,7 @@ notes:
   - "Repository Issues, Discussions, the six-template inventory, chooser configuration, current assignee routing, and the needs-review label were checked at the pinned baseline on 2026-08-27."
   - "Private vulnerability reporting was last confirmed enabled on 2026-08-10; the current setting could not be read through the connected capability and remains NEEDS VERIFICATION."
   - "This edition changes this README and a generated provenance receipt; it does not change a chooser template, label, assignee, setting, workflow, policy, ADR state, source state, release, deployment, promotion, or publication."
+  - "v0.6 adds a bounded current readback and aligns issue-to-PR handoff with the retired transition-check requirement; the 2026-08-27 evidence fields remain historical."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -105,7 +108,14 @@ Reporter-provided prose, links, logs, screenshots, attachments, generated conten
 
 ## Status
 
-Baseline: `main@ef7f2fbd523af5d803fadf92504d7f734c82c2ca`, inspected and reconciled 2026-08-27.
+The detailed baseline below is `main@ef7f2fbd523af5d803fadf92504d7f734c82c2ca`, inspected on 2026-08-27. Its tree and blob IDs remain historical evidence. A bounded 2026-09-25 readback at `main@89f83d38aad66e4b9369d33fa7d99aa38316009f` confirmed:
+
+| Surface | Current bounded observation | Limit |
+|---|---|---|
+| Tracked chooser files | Six Markdown templates; no issue-form YAML or `config.yml` under this subtree. | No live chooser rendering was exercised. |
+| Repository metadata | Issues enabled; Discussions disabled; `needs-review` label exists. | Label existence does not prove automatic application. |
+| PR handoff control | Ruleset `15484585` has a pull-request rule and review-thread resolution, zero required approvals, owner bypass, and no required-status-check rule. Workflow `324077182` is `disabled_manually`; see the [retirement record](../../docs/governance/repository_transition_control_source.md). | Dated GitHub settings; recheck before making a current enforcement claim. A red check still needs attribution. |
+| Private vulnerability reporting | Current state unavailable from this readback. | Follow [`SECURITY.md`](../../SECURITY.md); do not disclose sensitive detail in a public issue. |
 
 | Surface | Confirmed state | Evidence boundary |
 |---|---|---|
@@ -271,6 +281,8 @@ An issue is ready for bounded implementation planning only when current evidence
 
 A current, directly authored implementation request may authorize scoped repository work within its stated boundary. Without that separate request, the issue remains intake and coordination only. Even with authorization, default delivery is reviewable and unmerged: do not infer ready-for-review, approval, merge, release, deployment, promotion, publication, source activation, or repository-settings authority.
 
+The [retired transition-check record](../../docs/governance/repository_transition_control_source.md) removes its former issue-comment authorization prerequisite for branch work and draft PR creation. Follow the current user request and [`CONTRIBUTING.md`](../../CONTRIBUTING.md) for the actual scope; an issue's text alone does not supply later review, merge, source admission, or release authority. If a hosted check fails, the [PR template](../PULL_REQUEST_TEMPLATE.md#failing-check-attribution-when-applicable) asks for an exact-head and base comparison before assigning the finding to the proposed change.
+
 Keep three state dimensions distinct:
 
 - truth state: `CONFIRMED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION`;
@@ -367,6 +379,7 @@ Do not rewrite historical generated receipts during rollback. Preserve them as p
 
 | Date | Version | Change |
 |---|---|---|
+| 2026-09-25 | v0.6 | Added a current six-template and platform readback, kept unavailable private-reporting state explicit, and aligned issue-to-draft-PR guidance with transition-check retirement and exact-head failure attribution. |
 | 2026-08-27 | v0.5 | Repinned the README to current `main`; preserved the six-template inventory and current Issues/Discussions/label evidence; narrowed private vulnerability reporting to its last verified state; added a dependency-closed triage-to-implementation handoff contract; and updated rollback and provenance boundaries without changing chooser behavior. |
 | 2026-08-10 | v0.4 | Reconciled the merged v0.3 README with the ADR chooser implementation: replaced absent ADR label references with the verified `needs-review` label, preserved live Issues/Discussions/private-reporting evidence, clarified non-activation and governance-to-implementation ordering, and updated rollback and provenance boundaries. |
 | 2026-08-10 | v0.3 | Repinned the subtree to current `main`; confirmed six Markdown templates, no issue forms or chooser config, Issues enabled, Discussions disabled, and private vulnerability reporting enabled; confirmed the ADR template's two requested labels are absent; added a chooser contract matrix, dependency discipline, validation commands, and rollback guidance without changing live chooser behavior. |
