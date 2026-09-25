@@ -2,11 +2,11 @@
 doc_id: kfm://doc/runbooks/local-pc-data-store
 title: Prepare a local PC and maintain its data store
 type: runbook
-version: v0.3
+version: v0.4
 status: repository-integrated; private offline quarantine only
 owners: ["@bartytime4life"]
 created: 2026-09-17
-updated: 2026-09-24
+updated: 2026-09-25
 policy_label: public-documentation
 owning_root: docs/
 responsibility: Guide private local setup, offline quarantine capture, verification, backup, and update without granting downstream authority.
@@ -45,6 +45,35 @@ locations. It does not install software, start services, access the network, or
 claim that JavaScript dependencies or your storage are ready. Windows users can
 use these Linux commands inside WSL; native Windows and WSL acceptance have not
 been established by the Linux tests.
+
+## Keep the Site and reference material separate
+
+The standalone Kansas Frontier Matrix Explorer Site has its own source and
+hosting identity. Keep a newly extracted Site source in a separate, empty
+directory such as `~/Projects/KFM-Explorer-Site-v74`; do not unpack it over
+this KFM checkout. Its `.openai/hosting.json` identifies the existing Site,
+but the checkout does not contain hosted D1/R2 content, browser-local
+workspaces, or credentials. At the 2026-09-25 readback, owner-private Site
+version 74 used source commit `99bf1af2deea0ef343807db96a432dbfeb2ae7a6`.
+That is a dated Site checkpoint, not a KFM release or repository source.
+
+The Site source provides `node scripts/prepare-local-pc.mjs --apply` (Node.js
+22.13 or newer). Run it **from the separate Site source checkout** to prepare
+private `~/Downloads/KFM`, `~/KFM-references`, and
+`~/KFM-site-recovery` folders. Inspect with the same command without
+`--apply` first. It checks destination symlinks and permissions and does
+not scan or move existing files. This KFM checkout's
+`tools/local_data/manage.py init` separately owns `~/KFM-data`.
+
+Keep books, research reports, and architecture PDFs under
+`~/KFM-references` with original title, edition, publisher, rights, and
+acquisition notes. Put actual provider maps, imagery, observations, or scans
+in source-first subdirectories under `~/Downloads/KFM` for explicit
+manifest review and quarantine capture below. File extension does not decide
+whether a PDF is a study reference or source data. Neither folder is a Site
+asset or a release decision; never copy either into the Site's public
+directory. Preserve source archives and recovery manifests outside both Git
+trees.
 
 ## Initialize storage outside Git
 
