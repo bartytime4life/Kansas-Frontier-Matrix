@@ -6,7 +6,7 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Docs steward
 created: 2026-06-16
-updated: 2026-07-09
+updated: 2026-09-25
 policy_label: public
 related:
   - ../README.md
@@ -32,7 +32,7 @@ related:
 tags: [kfm, apps, explorer-web, diagnostics, feature, telemetry, trust-status, finite-outcomes, safe-observability, trust-membrane, no-raw-dump, no-direct-data-root]
 notes:
   - "v0.2 updates the uploaded Diagnostics feature README into a current repo-aware feature contract."
-  - "apps/explorer-web/src/features/diagnostics/README.md, apps/explorer-web/src/features/README.md, apps/explorer-web/src/adapters/README.md, apps/explorer-web/src/README.md, and apps/explorer-web/README.md were verified through the GitHub app in this update. Feature implementation files, route wiring, diagnostics panels, tests, fixtures, telemetry envelopes, diagnostics payloads, package scripts, runtime integration, accessibility behavior, and deployment behavior remain NEEDS VERIFICATION."
+  - "A bounded renderer status formatter is implemented and connected to the Living Atlas runtime snapshot subscription; other Diagnostics panels, routes, telemetry envelopes, export, and deployment behavior remain unverified."
   - "Diagnostics is a safe observability surface; it must not expose secrets, raw evidence, prompts, exact restricted coordinates, model outputs, export contents, lifecycle payloads, canonical/internal stores, full logs, stack dumps, token values, or protected source details."
   - "Telemetry and diagnostics are not EvidenceBundle substitutes. They may inform safe status, health, and finite-state display only when classified, redacted, audience-scoped, and policy-bounded."
 [/KFM_META_BLOCK_V2] -->
@@ -61,11 +61,11 @@ notes:
 ---
 
 > [!IMPORTANT]
-> **Status:** draft / current README surface confirmed / implementation behavior `NEEDS VERIFICATION`  
+> **Status:** draft / renderer status formatting implemented locally / broader Diagnostics feature `NEEDS VERIFICATION`
 > **Owners:** `OWNER_TBD` — Apps steward · UI steward · Map steward · Governed API steward · Policy steward · Docs steward  
 > **Path:** `apps/explorer-web/src/features/diagnostics/README.md`  
 > **Responsibility root:** `apps/` — deployable application surfaces  
-> **Truth posture:** CONFIRMED README path and parent Explorer Web feature/adapter/source/app READMEs / PROPOSED Diagnostics feature contract / UNKNOWN implementation files, route wiring, diagnostics panels, tests, fixtures, telemetry envelopes, diagnostics payloads, package scripts, runtime integration, accessibility behavior, and deployment behavior
+> **Truth posture:** CONFIRMED bounded renderer status formatter, Living Atlas subscription connection, and focused tests / PROPOSED broader Diagnostics feature / UNKNOWN routes, panels, telemetry transport, and deployment behavior
 
 > [!CAUTION]
 > Diagnostics is observability, not evidence, truth, policy, release, or source authority. It may show safe status signals, finite outcomes, envelope health, version metadata, and redacted diagnostics, but it must not leak raw evidence, prompts, secrets, exact restricted coordinates, model outputs, export contents, lifecycle payloads, canonical/internal store details, full logs, stack dumps, token values, or protected source details.
@@ -126,7 +126,8 @@ Diagnostics should explain what the UI can safely know and why a state is unavai
 | `apps/explorer-web/src/README.md` | **CONFIRMED parent source README** | The Explorer Web source tree denies direct lifecycle/canonical/model reads and requires governed API envelopes for claim-bearing UI. | That diagnostics routes, adapters, renderer wiring, or tests are implemented. |
 | `apps/explorer-web/README.md` | **CONFIRMED parent app README** | The Explorer Web app lane is a map-first public/semi-public shell that must use governed API envelopes and avoid direct lifecycle/canonical/internal-store reads. | That app routes, clients, diagnostics panels, tests, or deployment exist. |
 | Uploaded Diagnostics Markdown | **CONFIRMED source text for this update** | Provided the base Diagnostics feature contract updated here. | Does not prove live implementation. |
-| Implementation beyond README | **NEEDS VERIFICATION** | Checkable by repo scan, route inventory, fixtures, tests, package scripts, telemetry/diagnostics envelopes, accessibility checks, and runtime evidence. | Not claimed by this README. |
+| Renderer status formatter | **IMPLEMENTED, bounded** | `index.tsx` accepts only the MapRuntimePort profile, finite state and finite reason codes; `mount-living-atlas.ts` uses it for runtime snapshots; `tests/diagnostics.test.ts` covers malformed and throwing inputs. | Live source health, API envelope status, telemetry transport, operational monitoring, or a complete Diagnostics panel. |
+| Other implementation | **NEEDS VERIFICATION** | Checkable by route inventory, fixtures, telemetry envelopes, accessibility checks, and runtime evidence. | Not claimed by this README. |
 
 [Back to top](#top)
 
@@ -178,7 +179,7 @@ Safe interpretation:
 
 - **CONFIRMED:** this README surface and parent Explorer Web feature/adapter/source/app READMEs exist.
 - **PROPOSED:** Diagnostics modules may live here when they preserve safe observability, governed API, telemetry, redaction, finite-state, accessibility, release, and public-boundary constraints.
-- **NEEDS VERIFICATION:** Diagnostics modules, route wiring, panel inventory, telemetry/diagnostics envelopes, adapter dependencies, fixtures, tests, package scripts, accessibility behavior, runtime integration, and deployment behavior.
+- **NEEDS VERIFICATION:** Diagnostics routes and panels, telemetry/diagnostics envelopes, other adapter dependencies, accessibility of a future panel, and deployment behavior. The renderer status formatting slice is bounded and implemented.
 - **DENY:** using Diagnostics as evidence, source truth, policy authority, release authority, telemetry authority, lifecycle store, direct canonical/internal store client, schema/contract home, raw log viewer, direct model-output surface, renderer authority, or public-data shortcut.
 
 [Back to top](#top)
@@ -249,7 +250,7 @@ A diagnostics panel should not render a status field when any of these are unres
 
 ## 8. Diagnostics panel map
 
-Exact modules remain `NEEDS VERIFICATION`. Candidate panels should be introduced only with fixtures, route inventory, allowlists/denylists, and tests.
+Other modules remain `NEEDS VERIFICATION`. The renderer status formatter is implemented; candidate panels should be introduced only with fixtures, route inventory, allowlists/denylists, and tests.
 
 | Candidate panel | Purpose | Required safeguards | Status |
 |---|---|---|---|
@@ -332,7 +333,7 @@ Every Diagnostics route, panel, hook, or adapter should document or encode:
 
 ## 12. Inspection path
 
-Diagnostics implementation files, route wiring, tests, fixtures, telemetry envelopes, diagnostics payloads, package scripts, accessibility behavior, and runtime integration remain `NEEDS VERIFICATION`.
+The renderer status formatter, its focused tests, and Living Atlas subscription handoff are implemented. Diagnostics route wiring, panels, fixtures for other profiles, telemetry envelopes, accessibility of future panels, and deployed behavior remain `NEEDS VERIFICATION`.
 
 ```bash
 find apps/explorer-web/src/features/diagnostics -maxdepth 5 -type f | sort

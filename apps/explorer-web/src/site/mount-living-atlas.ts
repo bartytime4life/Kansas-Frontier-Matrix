@@ -1,5 +1,6 @@
 import type { MapRuntimePort } from "@kfm/maplibre";
 import { createViteMapLibreAdapter } from "@kfm/maplibre/vite-adapter";
+import { formatRendererDiagnostic } from "../features/diagnostics";
 import {
   ATLAS_WORKBENCH_TOOLS,
   ATLAS_VIEWS,
@@ -883,7 +884,7 @@ export function mountLivingAtlasWorkspace(
     runtime = nextRuntime;
     unsubscribeRuntime = nextRuntime.subscribeSnapshot((state) => {
       if (generation !== runtimeGeneration || runtime !== nextRuntime) return;
-      runtimeState.textContent = `Renderer ${state.state}${state.reason === null ? "" : ` · ${state.reason}`}`;
+      runtimeState.textContent = formatRendererDiagnostic(state);
       if (state.state === "READY") {
         snapshot = cloneSnapshot(snapshot, { camera: state.camera });
       }
