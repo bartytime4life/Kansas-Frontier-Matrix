@@ -3,9 +3,12 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/schemas-contracts-v1-governance-readme
 title: schemas/contracts/v1/governance/ — Governance Schema Family Index
-type: readme; schema-family-index; governance-boundary; review-stewardship-shape
+type: schema-family-index
+owning_root: schemas/
+responsibility: Index governance machine schemas and their semantic owners without creating policy or review authority.
+truth_posture: PROPOSED schema family; inventory is historical; transition-check integration retired
 authority_class: schema-family-index
-version: v0.3
+version: v0.3.1
 status: draft; nine-schema-current-inventory; mixed-maturity; repository-transition-authorization-PROPOSED; overlap-sensitive; release-adjacent; NEEDS VERIFICATION before promotion
 owners:
   - OWNER_TBD — Governance steward
@@ -15,7 +18,7 @@ owners:
   - OWNER_TBD — Release steward
   - OWNER_TBD — Validation steward
   - OWNER_TBD — Docs steward
-created: NEEDS VERIFICATION — short stub existed before v0.2 expansion
+created: 2026-05-08
 updated: 2026-09-25
 policy_label: public; schemas; contracts-v1; governance; review-record; stewardship-assignment; promotion-decision; redaction-receipt; separation-of-duties; auditability; release-adjacent; no-parallel-authority
 tags: [kfm, schemas, contracts, v1, governance, ReviewRecord, StewardshipAssignment, PromotionDecision, RedactionReceipt, RepositoryControlState, RepositoryTransitionAuthorization, review, stewardship, separation-of-duties, drift, verification, release-gates, auditability, rollback]
@@ -46,6 +49,7 @@ related:
   - ../../../../docs/registers/VERIFICATION_BACKLOG.md
 notes:
   - "Expanded from a short stub at schemas/contracts/v1/governance/README.md."
+  - "Created date follows first tracked addition f556967f361405d44c82766822bc67a8bfaf582e; it is not the later expansion date."
   - "The 2026-07-30 mounted-checkout inventory contains nine schema files under this folder."
   - "review_record.schema.json has concrete required fields and additionalProperties false, but remains x-kfm.status PROPOSED."
   - "steward_assignment.schema.json is a permissive PROPOSED stub requiring only id."

@@ -1,7 +1,11 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://contract/governance/repository-control-state
 title: RepositoryControlState semantic contract
-version: v0.4.0
+type: semantic-contract
+owning_root: contracts/
+responsibility: Define offline repository-control observation and transition-record semantics without granting platform authority.
+truth_posture: PROPOSED semantic contract; CONFIRMED retained validators; transition-check integration retired
+version: v0.4.1
 status: proposed
 owner: OWNER_TBD — governance steward and repository-control steward
 created: 2026-07-26
