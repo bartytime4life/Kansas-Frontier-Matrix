@@ -1,0 +1,5 @@
+# Preserve four trailing blank lines from the exact GPT Site v71 source snapshot.
+source/app/county-starter-points.json whitespace=-blank-at-eof
+source/app/county-starter-slice.ts whitespace=-blank-at-eof
+source/app/feature-catalog.ts whitespace=-blank-at-eof
+source/app/temporal-comparison.ts whitespace=-blank-at-eof

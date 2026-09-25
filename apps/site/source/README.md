@@ -1,0 +1,753 @@
+# Kansas Frontier Matrix Explorer
+
+A map-first Kansas explorer with real provider baselines, dated archive replay,
+source downloads, and private data contribution and steward review workflows.
+
+The owner-preserved application baseline is Site version 68. See
+[preservation and recovery](docs/SITE_PRESERVATION.md) and root `AGENTS.md`
+before importing, replacing, synchronizing or publishing other Site copies.
+
+## Documentation and telemetry alignment — September 24, 2026
+
+This source starts from the same-Site v69 preservation follow-up. The current
+repository reference is `main@bb08d3e9b92e9251c193debab6567be843136070`.
+The standalone Site and monorepo remain different applications, even though
+both manifests name the same project and both pin MapLibre 6.9.0.
+
+Use the [feature, connection and telemetry map](docs/SITE_FEATURE_CONNECTION_ACTION_MAP.md)
+for implementation pointers and verification limits. The repository briefing
+now expires read-only GitHub observations after one minute, derives inventory
+counts from records and labels older cards as dated history. It does not infer
+that a different commit is a descendant or that a successful check proves runtime
+health. Older dated sections below record the behavior and tests observed in
+those sessions; they are not fresh acceptance results.
+
+## Earth Engine discovery and Kansas recipes — September 24, 2026
+
+**Globe integration:** Earth Engine now sits next to Globe in the representation
+controls and opens in a panel alongside the map. Whole Earth, North America and
+Kansas viewpoints share the map camera, with sampled camera readings and explicit
+source-time/recipe-year boundaries. Global display movement does not expand the
+Kansas recipe area or activate Earth Engine data. The full discovery page remains
+available for metadata comparisons and review drafts.
+
+The **Full catalog & comparison** link opens `/earth-engine`: eight curated
+dataset records, text/topic search, a three-dataset metadata comparison, and
+downloadable JavaScript recipes and JSON review drafts. The same records feed
+Source observatory and the existing private contribution source selector.
+Coverage, processing choices, terms, source links and limitations remain visible.
+There is no Earth Engine connection, credential, imagery import, map-layer
+activation, automatic export, source admission or data release in this change.
+
+Recipes use the Census TIGER 2018 Kansas study boundary, complete calendar years
+where applicable, product-specific quality masks and scaling, and explicit
+empty/error states. CHIRPS and TerraClimate additionally check unique expected
+dates and per-pixel completeness. JRC's fixed historical summary and the 3DEP
+source mosaic cannot be relabeled as annual observations. Recipes are generated
+locally and must be executed and scientifically validated in an authorized Earth
+Engine project. Full source-asset provenance remains a review requirement.
+
+Placement reuses the standalone Site's `app/`, `tests/` and `docs/` responsibilities,
+following its existing separation from the monorepo and Directory Rules v2 /
+ADR-0029. These display records are not a parallel canonical source registry.
+See [scope, sources, validation and rollback](docs/EARTH_ENGINE_DISCOVERY.md).
+
+## Embedded shell recovery and data path — September 15, 2026
+
+The private Sites panel could render the server shell and then leave only its dark
+page background. The repaired startup validates and bounds device-local workspace
+records before React renders them, removes passive URL rewriting from ordinary map
+changes, and reserves full state serialization for the explicit Share action. It
+also removes deliberate WebGL context loss from main, report, story, and comparison
+maps; applies the smallest automatic GPU/worker budget inside embedded panels; and
+resizes MapLibre when a previously hidden container becomes visible.
+
+Map mutations now fail into a visible degraded state instead of escaping an effect.
+Route and global recovery surfaces keep navigation, data status, and a lighter retry
+available if another client error occurs. The normal test command runs the complete
+test inventory rather than only the rendered-shell file.
+
+The next admitted-data sequence is recorded in
+`docs/KFM_SOURCE_GAP_REGISTER.md`: first complete a WebGL-capable GeoJSON/raster/
+selection/empty-refresh acceptance, then use a pinned generalized KGS GeMS layer as
+the first end-to-end SourceDescriptor → EvidenceBundle → LayerManifest pilot. A
+one-county SSURGO slice, then a separately permissioned two-depth Mesonet slice,
+and a two-county × two-year Frontier Matrix follow that pattern. Policy/rights
+review and a ReleaseManifest decision remain explicit gates; API availability
+remains separate from evidence admission and release.
+
+## Map connection repair — September 15, 2026
+
+Accepted USGS responses now replace the displayed payload even when no observations
+remain, so old gauges cannot survive a successful empty refresh. Selected USGS and
+NOAA water layers request data immediately when returning to Present; an in-flight
+request is retained and hidden tabs do not start periodic water refreshes. The
+initial loader no longer cancels a concurrent managed-water request.
+
+Official GeoJSON requests have a 30-second browser timeout and cancel on unmount.
+JSON and radar XML are streamed through byte limits rather than buffered before
+checking their size. Qwen and repository-status requests use Workers-supported
+manual redirects and reject redirect responses. No model endpoint is configured or
+invoked by these checks. The Present label keeps source-specific clocks, and the
+legend distinguishes domain layers from selected official context sources.
+
+The pre-change private v38 endpoints returned all 105 Census counties, a partial
+bounded USGS network of 72 gauges / 6,605 observations, 222 NOAA gauges, 105 radar
+timestamps, seven smoke features, 16 Raspberry Shake station records, 22 mapped
+alert geometries, and an explicit empty earthquake result. These are dated API
+readbacks, not complete source coverage, map-render proof, life-safety evidence, or
+admission of released KFM data. Counts change as providers update.
+
+Browser QA verified timeline commit, historical holds, immediate NOAA loading on
+return to Present, and source status / retry controls. The cloud test browser has
+no WebGL2 and preview upstream requests fail; rendered 2D/3D/globe and actual
+click-to-evidence acceptance remain unproved there. Authenticated read-only checks
+of the deployed Site are recorded separately from that preview limitation.
+
+Regression coverage includes populated → empty → populated streamflow geometry,
+bounded streaming, and rejected model redirects. The existing suites retain
+intake/authentication, temporal, map-connection, export, terrain, and snapshot checks.
+No dependency, data-admission, sharing, D1/R2, monorepo main, PR lifecycle, or release
+boundary changes are part of this repair. Waveforms, admitted LiDAR lineage,
+release-scoped PMTiles/offline, and governed live-model activation remain held.
+
+Placement reuses this standalone Site's `app/`, `tests/`, and `README.md` homes under
+the established Directory Rules / ADR-0029 responsibility boundary. It creates no
+parallel canonical contract or policy authority. Rollback candidate: previous v38
+source `b6aaa23e11dbc412bc9ed9e178fd788b290361d2`, archive
+`sha256:fc3ccb1598112c99dc4c6c31f2111b9b41addaecac3c1493b8e7136f2efbf367`.
+A rollback requires a same-Site deployment and fresh readback; no rollback was run.
+
+## Terrain, source recovery, and loading — September 12, 2026
+
+The visible **3D settings** control offers Natural terrain (imagery + 1× relief),
+Topographic relief, and mapped 3D buildings. Scene lighting and vertical scale
+are adjustable without changing scientific time or the map center. Building
+heights come from the provider's mapped attributes; no heights are invented.
+Comparison maps also use a physical 1× default.
+
+**Data & downloads** stays on the top bar in Explorer and Event Observatory.
+It links to original LiDAR/elevation, historical maps, NOAA weather/radar
+archives, and National Water Model files, with source-specific proposal links.
+Selected-source errors have Retry, Hide, and Source data actions. Optional tile
+failures no longer produce a map-wide degradation banner. Full renderer and
+basemap failures still retain their explicit recovery states.
+
+The 3DEP service generates its visualization tiles dynamically. The fixed
+`/api/terrain-tile` adapter requests the advertised Hillshade Multidirectional
+or Slope Map function, coalesces duplicate requests, and caches successful tiles
+for at most six hours. Requests are restricted to Kansas map bounds, zoom 3–14,
+256-pixel PNGs, an 18-second timeout and a 1 MB response limit. The memory cache
+is limited to 64 entries / 8 MB; the platform edge cache is also used when
+available. Errors are not cached as successful or transparent tiles. Retrieval
+timestamps remain attached, and browser cache lifetimes cannot extend the
+six-hour source-age limit. These are display mosaics, not raw LiDAR admission.
+
+Rendering modes are device-local preferences: Balanced caps pixel ratio at
+1.5, Battery saver at 1, and High detail at 2; browser data-saving preferences
+are respected in Balanced mode. Parallel image requests and tile retention
+are bounded. Disabled raster services are created only when selected. Repeated
+opacity changes do not resend unchanged GeoJSON to workers, and unchanged
+archive geometry does not re-upload on every playback frame. Decorative
+effects pause while panning or hidden, and do not run with no relevant layers
+or in Battery saver. Hover sampling is bounded to protect the main UI thread.
+
+Validation: `node --test tests/terrain-performance.test.mjs` covers request
+boundaries, cache coalescing/expiry, retryable failures, pixel budgets, and
+renderer update counts. These checks establish avoided work, not a measured
+browser FPS or universal speedup. Source research:
+[USGS 3DEP service](https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer),
+[MapLibre performance guide](https://maplibre.org/maplibre-gl-js/docs/guides/large-data/).
+
+## Daily baseline and data commons — September 12, 2026
+
+The initial map enables actual Census county boundaries/counts, USGS streamflow,
+and hydrography. Synthetic interaction examples remain explicitly labeled in
+collapsed legacy controls and do not start enabled. The archive defaults to
+today in UTC, selects the latest available frame, and refreshes every five
+minutes while following today. Choosing historical time pauses following.
+All 24 hours remain visible; historical gaps and the older deep-time axis remain.
+Population and housing retain their independent 2010/2020 Census edition.
+
+Sources & data quality includes direct downloads and source-specific update
+links. `/data` accepts authenticated proposals (up to 10 MB per file), stores
+original bytes privately in R2 and metadata in D1, and shows contributor status.
+`/stewards` exposes the review queue only to the server-configured steward
+allowlist. Every decision requires a note and matching version; D1 atomically
+records the decision and audit history. Acceptance means preparation candidate,
+not automatic source admission or publication on the map. Unknown rights or
+non-public sensitivity prevent acceptance.
+
+`KFM_STEWARD_EMAILS` and optional `KFM_STEWARD_USER_IDS` are comma-separated
+Sites runtime settings; never commit their values. The initial allowlist is
+configured through Sites for the verified Site owner. No uploaded files or
+contributor records are included in source control.
+
+The hosted feed failure reported September 12 was an unsupported
+`redirect: "error"` option in Cloudflare Workers. The bounded adapters now use
+`manual` and reject redirect responses, retaining the fixed-provider boundary.
+
+Verification: `node --test tests/data-intake.test.mjs tests/intake-worker.test.mjs`
+checks real D1/R2 emulation, authentication, ownership, CSRF, uploads, download
+integrity, review history, conflicting decisions, and unknown-rights holds.
+
+This checkout is also the exact standalone Site source intended for the GitHub
+mirror branch `agent/kfm-site-source-sync-20260912`. That branch is a Site source
+snapshot, not a merge candidate for the distinct monorepo root. The monorepo's
+package-owned renderer and newer dependency work retain their own history.
+
+## Current public scope
+
+- Real USGS, NOAA, Census, NWS, and Raspberry Shake connections provide attributed
+  source context. Legacy synthetic examples are separately labeled and opt-in.
+- The default Kansas Overview may show an attributed OpenStreetMap context basemap; it is display context, not evidence.
+- Nothing in this build is a released operational KFM dataset.
+- Evidence resolution fails closed: missing, stale, restricted, denied, and
+  error states never become unsupported answers.
+- Public-safe exports preserve evidence context and withhold protected geometry.
+- “New from map” carries the current extent or selection, visible layers, time,
+  representation, and evidence posture into the report or guided-story workflow.
+- The repository and source briefing reports implementation boundaries; it does
+  not release or publish data. When opened, it performs a bounded read-only
+  current-main check against the fixed public GitHub repository endpoint and
+  keeps the separately versioned Site source explicit.
+- Candidate source records link to their checked official portals, while keeping
+  source discovery explicitly separate from admission, activation, and release.
+
+## Site, repository, and domain checkpoint
+
+- The active runtime authority is OpenAI Sites / Vinext, Site slug
+  `kansas-frontier-matrix-explorer`, project `appgprj_6aa0b1c41bc08191bfd86003920f1631`.
+- Its canonical host is
+  `https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site`; no custom
+  domain was attached when this checkpoint was checked on 2026-09-17.
+- The independently read GitHub checkpoint is
+  `bartytime4life/Kansas-Frontier-Matrix@91aeee1ca163bcb3f007577a541a825f60dcddc2`
+  (`main`, merged PR #4609). The Site also offers a
+  separate read-only current-main lookup.
+- The Site and GitHub repository retain separate source histories. This Site’s
+  `.openai/hosting.json` is authoritative for its current binding; the GitHub
+  child manifest still names legacy project `appgprj_6a870a079c1c8191abb7401ef092a181`
+  and is not used by this Site; that project returned `NOT_FOUND` in the Sites
+  readback.
+- The repository MapLibre package pins `6.9.0`; this Site runs `6.6.0`. That
+  difference remains an explicit compatibility hold, not an inferred upgrade.
+- No automatic source sync, release, deployment, or publication follows from
+  a repository currentness check.
+
+The application runs as a Vinext site with MapLibre GL JS. `DB` and `BUCKET`
+are declared in `.openai/hosting.json` for durable data intake and review.
+
+## Site capability registry
+
+The map-first UI, official context adapters, and workbench actions are kept
+aligned through a small typed registry layer:
+
+- `app/site-features.ts` maps user-facing features to status, source ids, action
+  ids, owning code paths, and boundaries.
+- `app/site-connections.ts` normalizes the fixed official context allowlist into
+  provider, adapter, freshness, action, and evidence-boundary records.
+- `app/site-actions.ts` describes visible control and handoff contracts without
+  replacing the handlers that own behavior.
+- `app/site-architecture.ts` maps coding surfaces and routes to verification
+  paths.
+- `app/site-registry.ts` validates cross-file references and exposes counts used
+  by the Layer Catalog.
+
+The companion map is `docs/SITE_FEATURE_CONNECTION_ACTION_MAP.md`. It is a
+traceability surface, not a new source authority: alignment with the repository,
+Drive, and Notion preserves separate version histories and does not activate
+held integrations, release external context, merge repository code, or deploy
+the Site.
+
+## Date-bound Event Observatory
+
+`/observatory` is the real-data animation workspace within this existing Site,
+linked from the map command bar and navigation drawer. It is separate from the
+synthetic atlas/evidence clock, so no current-only atlas context can leak into
+historical replay. `/observatory/sources` contains the cited source and coverage
+research from primary providers, Drive, Notion, GitHub and supplied references.
+
+The map catalog now places a source time control beneath each official connection
+and each expanded registry layer. The bottom Time Sweep remains the shared atlas
+year/era axis. Registry controls commit only declared feature years; untimed
+fixtures and pinned/current image carriers have no invented slider. River Pulse
+can check one selected-station UTC day on the main map and exposes every returned
+observation timestamp for that day, while its ordinary rolling playback remains
+bounded. A station-specific coverage query reports provider-declared continuous
+and daily extents; those spans can contain gaps, and older daily means are not
+intraday observations. The main-map NOAA radar slider uses its fresh rolling
+manifest; an older radar calendar date opens the separate Observatory map.
+Older-day sliders stay synced with those calendars for a selected River Pulse
+station with complete continuous coverage, radar from its 1995 query bound,
+and HMS smoke from its 2005-08-05 publication bound. Moving an older-day slider
+only drafts a date; the adjacent check or Observatory action queries it, and
+the bounds do not assert that every intervening day has records.
+
+USGS earthquake events and NOAA HMS smoke can be checked for one UTC archive day
+on the main map. Earthquake stops are returned event times and show that day's
+events through the selected stop. HMS stops are provider Start/End boundaries and
+show only polygons valid at the selected cursor; the dated adapter checks the
+prior day's publication for intervals crossing midnight. Raspberry Shake's
+dated connection remains station metadata, without a waveform slider. Empty,
+partial, truncated, and failed queries do not carry previous map features into
+the checked day. These source clocks do not change the shared atlas year or imply
+KFM admission, release, or publication.
+
+The event clock supports 1/6/24-hour intervals since 1995, starts paused, uses
+actual radar artifacts and observation/interval boundaries, shows coverage gaps,
+and provides layer opacity/order, stepping, speed, loop, Central/UTC labels,
+reduced-motion controls and query replay links. Live access is an explicit Recent
+hour refresh, not an automatically refreshing/follow-latest stream. Replay links
+do not freeze provider revisions and are not KFM EvidenceBundles.
+
+Connected external-only carriers:
+
+- NOAA/NWS-derived IEM N0R/N0Q mosaics, admitted by exact archive filenames before
+  WMS rendering. TIME is mandatory; no latest or nearest-frame fallback. Upstream
+  data are rendered in Mercator to match the fixed Kansas image-source bounds.
+- NOAA HMS actual KML polygons, filtered by Start/End and Kansas intersection;
+  actual footprint changes, not invented wind vectors or surface PM2.5.
+- USGS API v1 selected-station continuous discharge with an absolute historical
+  end time, a 30-minute bounded hold and a gap-aware hydrograph.
+- NASA Terra MODIS daily satellite backgrounds; both advertised date and tile
+  actual-time header are verified. These are not historical boundary maps.
+- KGS cached surface-geology raster and its actual unit legend; cache edition
+  remains unconfirmed, and the cache is not relabeled as newer GeMS data.
+- GBIF annual Plantae/Animalia record-density hexagons. Source zoom is capped at
+  six before delivery; no exact occurrence points or sensitive-taxon drilldown.
+- USGS historical mine-map symbols grouped by county upstream, then joined to
+  modern Census county geometry. The independent 1934–1996 edition control is
+  not an operating-date or reserve claim. This is an older source compilation.
+
+HRRR modeled smoke transport, surface air-quality observations, native NOAA scan
+decoding, georeferenced historical cartographic editions, qualified
+habitat/migration products, and Raspberry Shake waveform retrieval remain
+explicit next integrations. HMS smoke polygons, station metadata, and dynamic
+3DEP LiDAR-derived hillshade/slope are context connections only; they do not
+create a KFM release, alert, measurement, or evidence answer.
+
+Validation: `node --test tests/event-atlas.test.mjs tests/streamflow.test.mjs
+tests/rendered-html.test.mjs` plus the standard Sites build and TypeScript check.
+Live route checks on 2026-09-10 confirmed a June 7, 2023 manifest (72 radar frames,
+two Kansas-intersecting smoke intervals), a May 5, 2007 radar image, dated NASA
+and GBIF tiles, the 1984 county aggregate (26 symbols), and 97 USGS continuous
+samples for a May 2024 station interval. No browser visual QA was performed.
+
+## Temporal sweep
+
+The shared map clock now supports committed snapshot, moving-window,
+event-stepping, accumulation, and A/B comparison modes. A user can bound the
+sweep range, choose event dates or every calendar year from 1800 onward, step forward or backward,
+set playback speed and boundary behavior, and capture the committed frame in a
+report, workspace, URL, or story draft. The frame readout lists entered and
+exited records and describes cross-domain co-presence as an association only.
+The compact ruler represents each year, and its Year selector can choose one
+directly. Earlier eras remain coarse capacity markers. A selectable year does
+not imply that the Site holds a record for that year.
+
+`app/temporal-sweep.ts` owns the pure sequence, interval, accumulation,
+playback, and frame-summary rules. `app/map-runtime.ts` translates the same
+query into MapLibre filters, while every catalog, evidence, nearby, report, and
+selection surface uses that query rather than a separate display-only clock.
+No mode interpolates geometry or values, carries an exact observation forward,
+or treats co-presence as correlation or causation.
+
+The atlas timeline and provider observation clocks are separate. Operational
+context therefore fails closed outside the committed 2026 operational-present
+atlas frame, even when a provider can return recent or station-specific
+history. MapLibre hides those layers but preserves the user's visibility
+choices so the same sources return on Present. This prevents a USGS observation
+from being relabeled as an atlas edition merely because their calendar years
+match.
+
+One Domains + live data control opens both the site-local layer catalog and
+the separate official context controls. The Atmosphere domain includes an
+optional Airflow forecast wind-barb image; its provider clock and evidence
+boundary remain in the official context section.
+
+Each adapter keeps the clocks it can support distinct: observation or forecast
+valid time, provider publication or last-modified time, Site retrieval time,
+and KFM release time. A missing clock remains missing. Spatial overlap between
+radar, gauges, modeled guidance, watersheds, and other domains is an inspection
+cue only; it does not establish correlation, lag, direction, or causation.
+
+### River Pulse and temporal hydrology
+
+River Pulse uses the fixed `/api/hydrology/streamflow` adapter for the USGS
+Water Data APIs' OGC API v1 collections. The statewide view requests discharge
+parameter `00060` for a rolling 24-hour window and deterministically samples at
+most 72 geographically distributed Kansas stream gauges. Selected-station
+views provide 7-day and 30-day continuous series; the 1-year view uses daily
+mean statistic `00003`. These ranges are bounded displays, not an all-stations
+inventory or a permanent local archive.
+
+The display sequence is sampled from actual returned observation timestamps;
+it inserts no synthetic frame times. At a frame cursor, a station's most recent
+sample is usable only within the declared tolerance, with its true observation
+time and age retained. Outside that tolerance the marker becomes explicitly
+missing. Hydrograph paths break at nulls and large time gaps. No linear, spline,
+spatial, or cross-source interpolation is performed, and provisional USGS
+values remain labeled as subject to revision.
+
+Marker size uses a bounded logarithmic display of discharge to keep low and
+high flows legible together. It is not flood severity: raw cubic-feet-per-second
+values are not directly comparable across differently sized basins and are
+never painted onto 3DHP reaches or generalized into WBD watershed conditions.
+Flood categories are displayed only when NOAA supplies them.
+
+The Evidence Drawer resolves a selected USGS gauge against the current River
+Pulse frame and response. It shows the discharge, observation/frame/retrieval
+times, connection state, sample count, provider status and qualifiers, and a
+station link. A frame gap clears the reading, and a failed refresh labels any
+retained sample as a prior response. Other official context selections show
+their feed state and response clocks. These are provider display observations;
+the drawer keeps KFM EvidenceBundle, admission, review, and release status
+separate. Site telemetry does not establish a KFM evidence claim.
+
+Every selectable map record now has a bounded data view drawn from explicitly
+allowed source fields. Provider records follow the latest loaded response when
+their stable feature ID remains present; otherwise the drawer labels their
+fields as a captured map snapshot. Site-local fixtures show only their declared
+display attributes. Provider raster pixels have no selectable record-level
+metadata and are not turned into inferred measurements. For a selected USGS
+gauge, the drawer also requests the existing fixed adapter's seven-day gauge-
+height (`00065`) series and monitoring-location metadata. Gauge height stays
+separate from discharge (`00060`); a gap at the selected discharge frame does
+not erase dated station history or imply a current value.
+
+The fixed `/api/hydrology/noaa` adapter establishes three distinct NWPS modes:
+a Kansas gauge-status network, one-gauge observed and official NWS forecast
+series, and one-reach National Water Model analysis-assimilation and short-range
+series. The latter are modeled guidance, not gauge observations or official
+River Forecast Center forecasts. NWPS is an operational service rather than a
+durable general history archive, so all valid, issue, generation, and retrieval
+times remain explicit and gaps are not backfilled.
+
+### NOAA observed-radar loop
+
+The optional radar control uses the NOAA nowCOAST WMS endpoint
+`https://nowcoast.noaa.gov/geoserver/weather_radar/wms` and its NWS/OAR MRMS
+`conus_base_reflectivity_mosaic` product. The fixed server adapter at
+`/api/noaa-radar/frames` reads the product's WMS capabilities document and
+accepts only its explicit advertised ISO observation times. MapLibre then asks
+for each selected image with that exact `TIME`; the Site does not invent
+intermediate times, interpolate imagery, or make an untimed “latest” request.
+
+The dock can step or play up to 32 available observations from a rolling
+30-minute, 1-hour, or 2-hour view. Its default is 1 hour. Availability,
+retention, and cadence remain controlled by NOAA and can change; the interface
+reports the discovered median cadence and gaps rather than promising a fixed
+archive. The frame manifest is checked every four minutes while radar is
+selected, with retries bounded to no more than once per minute.
+
+An upstream, contract, or tile failure pauses the loop and either freezes the
+last still-valid exact observation with a visible error or withholds radar.
+Radar is also withheld once NOAA's newest advertised observation is more than
+15 minutes old. No synthetic image, nearest-time substitution, or prior frame
+relabeled as current is used. This layer is observational display context only:
+rendered colors are not converted to rainfall, storm motion, warning status, or
+forecast, and the loop is not an emergency or warning-delivery service. Use
+official NWS products for weather decisions.
+
+## External network disclosure
+
+The map can request five external display carriers. Their endpoints,
+activation rules, attribution, fallbacks, and evidence exclusions live in one
+typed registry: `app/external-context-sources.ts`. The Sources workbench shows
+the same registry and distinguishes the carrier selected by the current view
+from site-local GeoJSON sources.
+
+| Carrier | Activation | Purpose | KFM evidence effect |
+|---|---|---|---|
+| OpenFreeMap Liberty | Default Standard basemap | Vector geography and provider-supplied building heights | Display context only; attribution only in outward artifacts |
+| Esri World Imagery | User selects Satellite imagery | Raster imagery reference | Display context only; no acquisition or change claim |
+| OpenStreetMap raster | User selects OpenStreetMap context | Normal interactive raster navigation reference; no offline or bulk fetching | Display context only; no routing or legal-status claim |
+| USGS National Map Topo | User selects USGS topo | Raster topographic reference | Display context only; no feature, contour, or legal-status claim |
+| AWS / Mapzen Terrarium | User selects Terrain 3D | Raster DEM terrain and hillshade | Display context only; no sampled elevation or KFM release claim |
+
+The local Midnight and Prairie styles make no basemap request. A failed
+external carrier preserves the site-local layers, evidence text, and report
+path; terrain failure returns to the 2D evidence path.
+
+## Official Kansas context adapters
+
+The Layer Catalog also exposes sixteen fixed, source-specific connections. Search
+finds these sources directly, the Data action opens their controls, and the
+connection pulse reports loaded feature counts and retrieval time. Browser
+requests cannot supply an arbitrary upstream URL.
+
+| Connection | Default | Added context | Explicit boundary |
+|---|---:|---|---|
+| Census counties + decennial population | On | 2020 TIGERweb geometry with 2020 `POP100` population and `HU100` housing counts | Decennial baseline only; not a current population estimate or EvidenceBundle |
+| USGS River Pulse | On | Bounded Kansas discharge `00060` observations from USGS Water Data API v1, with exact-frame playback and selected-station history | Samples may be provisional, qualified, delayed, revised, missing, or truncated; not flood guidance or an all-stations inventory |
+| NOAA NWPS gauges + forecast | Off | Operational Kansas gauge status plus separately labeled observations and forecasts | NWPS is not a durable general archive or warning-delivery service; flood categories appear only when supplied by NOAA |
+| USGS 3DHP hydrography | On | Provider-rendered flowlines and waterbodies for network orientation | Transitional/current image carrier, not queryable analysis topology; gauge values are never extended along it |
+| USGS/NRCS WBD watersheds | Off | Scale-dependent HUC8, HUC10, and HUC12 boundary context from the published legacy service | USGS no longer maintains WBD as a current product; image carrier, not selected-vector geometry or a basin condition estimate |
+| NOAA NWM high-flow analysis | Off | Provider-current modeled analysis-guidance snapshot | Not a gauge observation or warning; the map service advertises no selectable historical time axis |
+| NOAA NWM 18-hour outlook | Off | Provider-current maximum modeled high-flow guidance for the next-18-hour window | Not an official RFC forecast or deterministic outcome; the map service advertises no selectable historical time axis |
+| USGS earthquakes | Off | Bounded 30-day Kansas-area event catalog with magnitude and depth | Catalog values can change; not an alert or hazard forecast |
+| NASA GIBS daily VIIRS NOAA-20 thermal anomalies | Off | Provider-default daily thermal-anomaly image; exact UTC image date is not resolved by the Site | Display context only; not a rolling 24-hour FIRMS feed, fire perimeter, incident status, evacuation product, or all-clear. Blank tiles may reflect coverage or publication gaps |
+| NASA GIBS selectable NOAA-20 thermal detections | On | Dated Kansas-window vector records with per-point acquisition time, confidence, radiative power, temperatures, pixel dimensions, and provider ID in the Evidence Drawer | Thermal anomalies include possible non-fire heat sources; records are external context, not verified wildfires, perimeters, alerts, KFM evidence, or an all-clear. The separate image layer may show a different provider-default day |
+| NOAA HMS smoke footprints | Off | Dated qualitative smoke polygons from the rolling 24-hour provider window | Not surface PM2.5, plume altitude, measured transport, a fire perimeter, warning, health advisory, or all-clear |
+| Raspberry Shake stations | Off | Kansas-bounded FDSN AM station metadata with StationView handoff | Not realtime waveforms, an event catalog, alert, calibrated measurement, or KFM evidence |
+| USGS 3DEP LiDAR hillshade | Off | Dynamic multidirectional hillshade from the current 3DEP elevation mosaic | Rendered relief only; no work-unit, point-cloud, datum, pulse-spacing, or accuracy claim |
+| USGS 3DEP LiDAR slope | Off | Dynamic slope visualization from the same 3DEP service | Image context only; no numeric slope/elevation or source-artifact claim |
+| NWS alert areas | Off | Active Kansas alerts and bounded affected-zone geometry | Not a warning-delivery service or an all-clear |
+| NWS forecast wind barbs · Airflow | Off | Provider-default NDFD forecast 10 m sustained wind speed and direction, shown as wind barbs over Kansas | Forecast image, not measured airflow, gusts, smoke transport, or a historical frame. The Site does not resolve the exact forecast valid time |
+| NOAA nowCOAST radar | Off | Recent CONUS base-reflectivity observations at exact NOAA-advertised times, with 30-minute, 1-hour, and 2-hour loop views | Context only; pixels do not establish rainfall rate, storm motion, warning status, forecast, or an emergency all-clear |
+
+Every connection is `EXTERNAL_CONTEXT_ONLY`. It is excluded from KFM reports,
+exports, source admission, release state, and EvidenceBundle resolution. Failed,
+partial, empty, and refreshed states remain visible instead of being converted
+into inferred facts.
+
+## Backend connection posture
+
+- `/api/hydrology/streamflow` is the fixed, read-only USGS Water Data API v1
+  adapter for bounded statewide discharge and selected-station history. It
+  allowlists OGC collection paths and query shapes, limits response size and
+  records, validates station identifiers, and returns no synthetic, zero-flow,
+  or stale fallback.
+- `/api/hydrology/noaa` is the fixed, read-only NOAA NWPS adapter for Kansas
+  network, validated gauge, and validated NWM reach modes. Observed, official
+  forecast, analysis-assimilation, and short-range model records retain distinct
+  roles and valid times; sentinel values are normalized to missing.
+- `/api/live-context` remains an allowlisted adapter for five registry-used JSON
+  feeds, including bounded NOAA HMS smoke and Raspberry Shake station connections;
+  a sixth `usgs-streamflow` path remains for compatibility, while River Pulse uses
+  the dedicated USGS v1 route above. USGS 3DHP, WBD, 3DEP
+  LiDAR-derived hillshade/slope, and NOAA NWM raster products are requested by
+  MapLibre only when selected.
+- `/api/noaa-radar/frames` is a fixed, read-only NOAA nowCOAST capabilities
+  adapter. It accepts no caller-supplied endpoint, bounds time and response
+  size, and returns no synthetic or untimed fallback. Exact-time WMS radar
+  images are requested by MapLibre only when the user selects the layer.
+- `/api/repository-status` reads only the public `main` branch identity for
+  `bartytime4life/Kansas-Frontier-Matrix`. It accepts no caller-supplied URL,
+  bounds response size and time, caches briefly, and fails closed.
+- The GitHub repository and this Site have separate source histories. The
+  currentness check does not synchronize trees, write issues, mutate data,
+  deploy a version, or publish the Site.
+- `/api/qwen` remains unavailable until a server-reachable endpoint is
+  configured. No hosted Qwen variables are currently required for the map.
+- On this PC, the owner-private Site can use `scripts/local-qwen-bridge.mjs`
+  while that process is running. Start it with `node scripts/local-qwen-bridge.mjs`
+  from the Explorer checkout, then open the Site on the same PC. It binds only
+  `127.0.0.1:8768`, accepts the exact hosted Site origin or the local preview
+  origin `http://127.0.0.1:5173`, and calls only the installed
+  `qwen2.5:7b-instruct-fp16` model on loopback Ollama. Other devices need their
+  own approved connection; a browser may ask for local-network permission.
+  The Qwen panel checks local health when opened, reports availability, and
+  preserves the existing copy-prompt and hosted `/api/qwen` paths. The map
+  remains usable if the bridge or model is unavailable.
+- Qwen receives the current map, time, selected feature, nearby context,
+  registered layers, all 18 official context source states, and redacted
+  renderer/source/radar/streamflow diagnostics. This is a bounded, interpretive
+  snapshot of Site state, not a telemetry ingest, source admission, model
+  registry, evidence bundle, or publication path. A camera derived from device
+  location is replaced by the Kansas overview center before it leaves the
+  browser for local inference. The bridge does not read files, ingest raw
+  logs, publish data, or expose Ollama to the hosted Worker.
+- The hosting manifest declares existing D1 `DB` and R2 `BUCKET` bindings for
+  the intake capability. Reports, stories, places, and investigation workspaces
+  remain device-local drafts; those bindings do not make them server-persisted.
+
+## Security and progress checkpoint — 17 September 2026
+
+The repository briefing is pinned to `main@91aeee1ca163bcb3f007577a541a825f60dcddc2`.
+It distinguishes the merged GitHub API redirect hardening from
+open milestone acceptance, missing strict merge-check enforcement, the unresolved
+Sites target mismatch, and the next same-candidate evidence/API/Explorer/recovery goal.
+Older feature cards retain their historical source links. The supplied Atlas
+seed cards and MapLibre/pipeline manuals are planning inputs, not runtime proof.
+
+The Qwen route rejects non-object JSON, unknown request keys, malformed context,
+questions longer than 1200 characters, cross-origin requests and non-JSON content.
+It bounds actual streamed request bytes at 32 KiB and upstream JSON at 64 KiB,
+disables redirects, and withholds upstream error details. Owner-configured model
+URLs must use HTTPS, or HTTP on local loopback, without URL credentials, query
+strings or fragments. The existing 25-second upstream timeout remains. This is
+transport hardening, not evidence resolution, model-registry admission, a global
+rate limit or a verified Qwen/Focus transaction. No hosted model setting is
+changed; tests use mocked responses only. Repository status responses now enforce
+their 512 KiB limit while streaming, rather than after buffering the entire body.
+Canonical social metadata uses the registered Site origin, not forwarded headers.
+
+The UI repair supplies the NASA fire-image source handoff, preserves domain ID
+literal types, initializes the contribution source from server-validated routing
+input, discards superseded/aborted submission-list responses, and keeps calendar
+updates with the actions that change dates. Context loading messages are keyed
+by the requested date so an earlier response is not shown as the current status.
+Existing imagery/unused-variable lint warnings and full-baseline reload guidance
+remain visible; they are not waived or reported as errors.
+
+React, React DOM and RSC are pinned to 19.2.8 for
+[GHSA-wx67-qw84-cm4g](https://github.com/advisories/GHSA-wx67-qw84-cm4g).
+Scoped dependency overrides install patched bytes: `vinext -> image-size@2.0.4`,
+`miniflare -> sharp@0.35.4`, and `@esbuild-kit/core-utils -> esbuild@0.25.12`
+([esbuild advisory](https://github.com/advisories/GHSA-67mh-4wv8-2f99)).
+Other vulnerable transitive packages are updated within their existing ranges.
+These are package replacements, not audit suppressions. Revisit overrides when
+upstream dependency ranges incorporate these fixes. The Site uses a checked-in
+runtime tarball that removes an unused social-image generator dependency while
+retaining the existing Worker runtime. D1 queries use the platform binding
+directly; migrations remain plain SQL. Retain the existing Cloudflare plugin,
+Wrangler and MapLibre direct versions.
+
+Placement follows the established standalone Site source surface: runtime helpers
+under `app/`, regression tests under `tests/`, and this operational explanation in
+`README.md`. Its existing GitHub source mirror is not the monorepo root. ADR-0029
+and the adopted Directory Rules keep app implementation separate from canonical
+contracts, policy and lifecycle proofs. No parallel authority root is introduced.
+
+Rollback for this maintenance deployment is a coherent restoration of the
+pre-change v44 source `b893683c33ef1a85d75f88db58e27e361c7e01a0`, archive
+`sha256:0653b89744b7ff44fa08570dcf75055b80d6c5449322cff655a550eb6043c637`,
+followed by a fresh same-Site readback. The saved version is a recovery candidate,
+not a rehearsed rollback; no restoration is claimed here.
+
+## Prerequisites
+
+- Node.js `>=22.13.0`
+- Linux with `flock`, `curl`, and GNU `timeout`
+
+## Sites Lifecycle
+
+The Sites lifecycle CLI runs the locked dependency install before returning this checkout. Edit the source under `app/`, then checkpoint when a coherent milestone is ready to inspect or share. The remote Sites builder runs `npm run build` against the pushed commit. Do not repeat install or build as a normal pre-checkpoint step.
+
+This project does not use `wrangler.jsonc`.
+
+`install:ci` is intentionally a single, non-retrying `npm ci`. It refuses a concurrent install for the same project, consumes a matching image-seeded npm cache with `--prefer-offline` while retaining registry fallback for a missing cache object, otherwise downloads and verifies the complete vinext tarball recorded in `package-lock.json`, limits npm to one socket, and terminates a stalled install. `build` applies a short timeout. These helpers target Linux and use GNU `timeout`; they are not native macOS scripts.
+
+Scripts that need writable project-scoped home, npm, XDG, and temporary paths use `scripts/sites-env.sh`. The `dev` and `start` scripts honor the caller's runtime environment and keep Wrangler logs inside the checkout. The generated `.sites-runtime/` directory is disposable and ignored by Git.
+
+## Implementation shape
+
+- edit site code under `app/`
+- `app/external-context-sources.ts` is the single inventory for every
+  browser-requested basemap and terrain carrier
+- `app/api/live-context/route.ts` contains the fixed official-context adapter
+- `app/streamflow.ts` validates USGS bundles, selects actual frame times, builds
+  tolerance-bounded map frames, and breaks hydrographs across gaps
+- `app/hydrology-observatory.tsx` owns the accessible River Pulse transport,
+  completeness readout, legends, station selection, and hydrograph
+- `app/api/hydrology/streamflow/route.ts` exposes bounded USGS Water Data API v1
+  network and selected-station queries
+- `app/noaa-hydrology.ts` validates the bounded NOAA Kansas gauge network for
+  MapLibre
+- `app/api/hydrology/noaa/route.ts` exposes bounded NWPS network, gauge, and NWM
+  reach modes without caller-supplied upstream URLs
+- `app/noaa-radar.ts` owns the NOAA nowCOAST product contract, explicit-time
+  parsing, recent-window selection, and exact-time WMS request construction
+- `app/api/noaa-radar/frames/route.ts` exposes the bounded radar frame manifest
+- `app/api/repository-status/route.ts` contains the fixed read-only GitHub
+  currentness check
+- `app/chatgpt-auth.ts` provides optional dispatch-owned ChatGPT sign-in helpers
+- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
+- `vite.config.ts` simulates declared bindings for local development
+- `db/index.ts` reads the D1 binding from the Cloudflare Worker environment
+- `drizzle/*.sql` contains the ordered D1 migrations applied by the Site lifecycle
+- `docs/KFM_SOURCE_GAP_REGISTER.md` records implemented, context-only, and held
+  source boundaries; it is not a release ledger
+
+Generated TypeScript build state, prepared MapLibre assets, and platform build
+output are ignored. The tracked source tree contains only the Explorer's active
+application, runtime, migration, documentation, and verification surfaces; the
+unused starter D1 example and starter icon assets are intentionally absent.
+
+## Workspace Auth Headers
+
+OpenAI workspace sites can read the current user's email from
+`oai-authenticated-user-email`.
+
+SIWC-authenticated workspace sites may also receive
+`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
+`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
+`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
+
+Treat the full name as optional and fall back to email when it is absent:
+
+```tsx
+import { headers } from "next/headers";
+
+export default async function Home() {
+  const requestHeaders = await headers();
+  const email = requestHeaders.get("oai-authenticated-user-email");
+  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
+  const fullName =
+    encodedFullName &&
+    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
+      "percent-encoded-utf-8"
+      ? decodeURIComponent(encodedFullName)
+      : null;
+
+  const displayName = fullName ?? email;
+  // ...
+}
+```
+
+## Optional Dispatch-Owned ChatGPT Sign-In
+
+Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
+optional or required ChatGPT sign-in:
+
+- Use `getChatGPTUser()` for optional signed-in UI.
+- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
+  anonymous visitors through Sign in with ChatGPT.
+- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
+  browser links or actions.
+- Pass a same-origin relative `returnTo` path for the destination after sign-in
+  or sign-out. The helper validates and safely encodes it.
+- Mark protected pages with `export const dynamic = "force-dynamic"` because
+  they depend on per-request identity headers.
+
+Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
+OAuth cookies, and identity header injection. Do not implement app routes for
+those reserved paths. Routes that do not import and call the helper remain
+anonymous-compatible.
+
+SIWC establishes identity only; it does not prove workspace membership. Use the
+Sites hosting platform's access policy controls for workspace-wide restrictions,
+or enforce explicit server-side membership or allowlist checks.
+
+Use SIWC for account pages, user-specific dashboards, saved records, and write
+actions tied to the current ChatGPT user. Leave public content anonymous.
+
+## Diagnostic Commands
+
+- `npm run install:ci`: perform the one bounded lockfile install
+- `npm run dev`: start the Vite/Vinext development server
+- `npm run build`: build the deployable Sites artifact
+- `npm run start`: start the built Vinext application
+- `npm test`: build the deployable artifact and run the complete `tests/*.test.mjs` inventory
+
+Use build commands for targeted diagnosis after a remote failure, not as part of the normal checkpoint path.
+
+The timeout defaults can be overridden for a controlled canary with `SITES_INSTALL_TIMEOUT`, `SITES_INSTALL_KILL_AFTER`, `SITES_BUILD_TIMEOUT`, and `SITES_BUILD_KILL_AFTER`. A timeout fails the command; the helpers never retry an unchanged install or build.
+
+## Learn More
+
+- [vinext Documentation](https://github.com/cloudflare/vinext)
+
+## Current map-to-draft work
+
+The React Explorer includes inherited map snapshots, validated device-local report
+and story drafts, attributed print and Markdown exports, and synchronized A/B
+snapshot maps. Synthetic ANSWER/CORRECTED fixtures retain their demonstration
+trust label. Source-backed counts do not count synthetic support states.
+
+This replacement packages the Vinext Worker output (`dist/server` and
+`dist/client`). Legacy static build files are excluded. Source dependencies,
+package manager, feature registries, and unbound D1/R2 settings are preserved.
+
+The user authorized this replacement on 2026-09-09 after the original project
+was inaccessible to Sites. The original local checkout and its project binding
+remain unchanged. The replacement has its own Sites identity in its manifest.
+
+Verification: TypeScript and 29 existing/focused checks passed before transfer.
+Browser checks verified draft reload, story stepping, Escape, the comparison
+fallback, and desktop overflow. The test browser lacked WebGL2; terrain, globe,
+and rendered comparison remain unverified by this session.
+
+KML import admission also checks actual UTF-8 bytes and bounds XML depth (64) and elements (20,000). Balanced namespaced geometry and ExtendedData remain supported; malformed markup returns a local error. The focused input regressions, full 147-test suite, build, and TypeScript check passed locally for this alignment. Hosted interaction and telemetry acceptance require separate evidence.
