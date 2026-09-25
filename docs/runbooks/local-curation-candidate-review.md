@@ -2,7 +2,7 @@
 doc_id: kfm://doc/runbooks/local-curation-candidate-review
 title: Review the local KFM curation candidate bundle
 type: runbook
-version: v0.1
+version: v0.2
 status: repository-integrated; device-local candidates only
 owners: ["@bartytime4life"]
 created: 2026-09-25
@@ -44,6 +44,25 @@ stopped changing. `HELD` with a reason and a nonzero exit means the package must
 be inspected before reuse. No source bytes or local absolute paths are printed.
 The command makes no writes or network requests.
 
+To compare the current `raw/` tree with that verified snapshot, run:
+
+```bash
+python3 -m tools.local_data.audit_curation_drift \
+  --root "$HOME/Projects/KFM-data" \
+  --bundle kfm-store-reconciliation-20260925
+```
+
+The default output summarizes every collection and shows up to 20 changed
+paths; `--full` prints all changed paths for a private, local review file. This
+check hashes new or stat-changed nonmutable files. An unchanged size and
+modification time is only a quick comparison, not renewed byte proof. Active
+PRISM work files and symlinks have separate states; no source is changed.
+The device-local `data/catalog/KFM-LOCAL-DATA-CATALOG.md` is outside this
+repository and must be opened from the external store, not
+served as a public asset. Its dated drift and PRISM review packages document
+later snapshots; the reconciliation manifest remains pinned to its original
+PRISM artifact.
+
 ## Source and layer routing
 
 All ten raw collections remain external to Git. Read the corresponding local
@@ -73,6 +92,12 @@ date indicates that the edition depicts a feature, not when the feature opened
 or disappeared. Weather observations, archive availability, and modeled climate
 products need independent filters, units, legends, missing-value treatment,
 and provenance displays.
+
+The external catalog also holds a two-edition visual metadata review for the
+1918 Kansas road map and 1936 Allen County sheet. It records printed scale,
+date, projection and legend clues, with no historical feature geometry. The
+Allen legend includes sensitive cultural-site symbols, so exact locations stay
+out of candidate exports pending review.
 
 ## Steps before a KFM map adapter
 

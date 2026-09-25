@@ -1,0 +1,119 @@
+{
+  "receipt_id": "genrec-kfm-local-curation-drift-check-20260925",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/local-curation-candidate-review.md",
+    "tests/local_data/test_audit_curation_drift.py",
+    "tools/local_data/README.md",
+    "tools/local_data/audit_curation_drift.py"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/local-curation-candidate-review.md": "sha256:614912d01a94ca95155d49c4056d1df3e6a16ee6a36d7aa6a5f3c56122125cee",
+    "tests/local_data/test_audit_curation_drift.py": "sha256:a694a8fe92ad70cfce0a9b27cd19bc1a19b58237e1ccb4eb101f861ad4c69c8c",
+    "tools/local_data/README.md": "sha256:f9072f627abaed345a044bd9d161d08114b8b68e3b679a5edb7b30f14f8a5a7d",
+    "tools/local_data/audit_curation_drift.py": "sha256:bbceaf83bdd79f498b8940344efd9ebe4518f8076bf124bab3b333adcdad64d7"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "not-exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "repository inspection",
+      "read-only local source scan",
+      "local tests",
+      "visual PDF review"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:c778036b62bf8e619fea4466b22d24ef67ee869cab06d3d80d8a4f1c223bda9f",
+      "sha256:b1f8e40936da25e4c6641aee800730a9a3024bf86d7aa76dfbc45770c6d6a79e",
+      "sha256:6fa55e97bce75314b097ebf2d91163b64b9e775c73abee32797d45d17039c752",
+      "sha256:037a2daabbba9196ce48f9321d83d3cd07a7503d8398518641573ff7bbd62fa9"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "codex/local-curation-integration-20260925@b8fd73801ef68d31bd1cf88a719704da851b5439",
+      "docs/doctrine/ai-build-operating-contract.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "device-local source drift, PRISM, and historic map review packages",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/local-curation-candidate-review.md": "PROPOSED",
+    "tests/local_data/test_audit_curation_drift.py": "CONFIRMED",
+    "tools/local_data/README.md": "CONFIRMED",
+    "tools/local_data/audit_curation_drift.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "offline local-data test suite",
+      "outcome": "PASS",
+      "reason": "101 tests and 16 subtests passed, including source drift behavior and negative paths."
+    },
+    {
+      "gate": "actual device-local source drift audit",
+      "outcome": "PASS",
+      "reason": "Read-only current raw scan completed without scan errors; PRISM additions and held symlinks were reported distinctly."
+    },
+    {
+      "gate": "device-local PRISM and historical map package integrity",
+      "outcome": "PASS",
+      "reason": "Dated package checksum manifests verified. New PRISM snapshot has 5,749 completed grids and 603,645 county rows; two map PDFs were source-hash checked."
+    },
+    {
+      "gate": "focused documentation structure and diff whitespace",
+      "outcome": "PASS",
+      "reason": "Curation guide passed critical-structure validation; git diff --check passed."
+    },
+    {
+      "gate": "hosted CI, independent human review, source admission and deployment",
+      "outcome": "SKIPPED",
+      "reason": "No PR under open #4024 delivery hold; human review and downstream decisions remain pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "source-drift-review-validation",
+      "validated": true,
+      "evidence_ref": "device-local kfm-source-drift-review-20260925T152719Z/validation.json sha256:b1f8e40936da25e4c6641aee800730a9a3024bf86d7aa76dfbc45770c6d6a79e"
+    },
+    {
+      "id": "prism-review-validation",
+      "validated": true,
+      "evidence_ref": "device-local kfm-prism-review-20260925T152744Z/validation.json sha256:6fa55e97bce75314b097ebf2d91163b64b9e775c73abee32797d45d17039c752"
+    },
+    {
+      "id": "historic-map-review-validation",
+      "validated": true,
+      "evidence_ref": "device-local kfm-historic-map-legend-review-20260925T153655Z/validation.json sha256:037a2daabbba9196ce48f9321d83d3cd07a7503d8398518641573ff7bbd62fa9"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-25T15:39:31Z",
+  "emitter": "Codex GPT-6 local source drift integration",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "APPEND_ONLY_SUCCESSOR to genrec-kfm-local-curation-repo-review-20260925 at its original artifact commit. Read-only source currentness and two-edition map metadata work; no georeferenced historical features, source admission, deletion, PR, release, deployment or publication. The receipt excludes itself from its artifact hashes."
+}

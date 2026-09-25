@@ -2,14 +2,14 @@
 doc_id: kfm://doc/tools-local-data-readme
 title: Local PC data tools
 type: readme
-version: v1.2
+version: v1.3
 status: repository-integrated; quarantine capture and read-only candidate review
 owners: ["@bartytime4life"]
 created: 2026-09-17
 updated: 2026-09-25
 policy_label: public
 owning_root: tools/
-responsibility: Describe bounded workstation inspection, offline quarantine capture, and local candidate review tools.
+responsibility: Describe bounded workstation inspection, offline quarantine capture, and read-only candidate and drift review tools.
 truth_posture: Local code and tests; no source admission, hosted validation, or native host acceptance claim.
 [/KFM_META_BLOCK_V2] -->
 
@@ -63,6 +63,17 @@ python3 tools/local_data/review_curation.py --root "$HOME/Projects/KFM-data" \
 This reads only the named, external review package and its linked PRISM
 artifact. A passing package check does not rescan `raw/`, admit a source,
 or create a map layer.
+
+To compare that snapshot with source folders that may still be updating:
+
+```bash
+python3 -m tools.local_data.audit_curation_drift \
+  --root "$HOME/Projects/KFM-data" --bundle kfm-store-reconciliation-20260925
+```
+
+This command verifies the baseline package, scans current paths, hashes only
+new or stat-changed nonmutable files, and reports source-specific drift. It
+does not refresh the package or turn a candidate into a layer.
 
 `doctor` only inspects the checkout and local tool availability. It does not
 install dependencies, start services, or fetch anything. `plan` also writes
