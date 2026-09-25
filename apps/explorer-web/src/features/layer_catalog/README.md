@@ -31,7 +31,7 @@ tags: [kfm, apps, explorer-web, features, layer-catalog, layers, layer-manifest,
 notes:
   - "Replaces the greenfield Layer Catalog feature stub with a governed feature README."
   - "Layer Catalog UI features may render released or bounded-safe layer listings and trust badges, but they must not publish layers, load unreleased tiles, hide sensitive geometry with style filters, or treat renderer/source properties as truth."
-  - "Feature implementation files, route wiring, tests, fixtures, governed API envelopes, layer schema bindings, policy/layers wiring, accessibility behavior, telemetry, and package scripts remain NEEDS VERIFICATION."
+  - "A site-local row projection and focused tests are implemented; governed catalog routes, API envelopes, layer schema bindings, policy/layers wiring, accessibility behavior, and telemetry transport remain NEEDS VERIFICATION."
   - "policy/layers/README.md currently exists as a greenfield bundle stub; executable layer policy remains NEEDS VERIFICATION."
   - "v0.2 refreshes the evidence basis, aligns truth posture with current GitHub evidence, adds a minimum safe implementation slice, adds runtime anti-bypass checks, and strengthens renderer-boundary, style-redaction, accessibility, and telemetry review gates without claiming runtime maturity."
 [/KFM_META_BLOCK_V2] -->
@@ -64,7 +64,7 @@ notes:
 > **Path:** `apps/explorer-web/src/features/layer_catalog/README.md`  
 > **Responsibility root:** `apps/` — deployable application surfaces  
 > **Directory Rules basis:** deployable application feature code belongs under `apps/`; Layer Catalog is an app-local UI composition surface, not a publication gate, evidence resolver, policy home, schema home, contract home, renderer authority, tile host, source registry, release home, or lifecycle-data lane.  
-> **Truth posture:** CONFIRMED current GitHub README path / CONFIRMED parent feature-boundary README posture / CONFIRMED Layering architecture doc exists / CONFIRMED Evidence Drawer and Compare/Export docs exist / CONFIRMED `policy/layers/README.md` exists as greenfield stub / PROPOSED feature contract / UNKNOWN implementation files, route wiring, tests, fixtures, schemas, package scripts, governed API envelopes, layer policy wiring, accessibility behavior, telemetry, and runtime behavior
+> **Truth posture:** CONFIRMED site-local row projection and Living Atlas control wiring / CONFIRMED focused tests / CONFIRMED `policy/layers/README.md` exists as greenfield stub / PROPOSED governed catalog contract / UNKNOWN governed routes, schemas, API envelopes, layer policy wiring, telemetry transport, and release behavior
 
 > [!CAUTION]
 > The Layer Catalog is a discovery and selection surface, not a publication gate, evidence resolver, policy engine, style-based redaction system, renderer authority, tile host, or AI authority. A layer may be listed or toggled only when its governed release, manifest, evidence, rights, sensitivity, review, freshness, correction, and rollback posture allow that surface.
@@ -96,6 +96,17 @@ notes:
 
 ## 0. Evidence basis for this revision
 
+### Current site-local implementation (2026-09-25)
+
+`index.tsx` now projects a bounded layer row from the existing Living Atlas fixture
+registry. The Living Atlas catalog uses this projection for initial controls and
+subsequent time changes. Held, missing, and time-incompatible records have an
+unchecked disabled control and a finite `data-catalog-status` code; the code
+contains no source payload or telemetry transport. `tests/layer-catalog.test.ts`
+covers these gates. The registry and projection do not confer release or tile
+authority. Governed layer manifests, policy wiring, and live API envelopes remain
+unverified.
+
 This README is a documentation boundary, not runtime proof. The 2026-07-09 revision updates an existing README and keeps implementation maturity bounded while aligning the feature contract with current repository evidence.
 
 | Evidence item | Status | What it supports | What it does not prove |
@@ -125,7 +136,7 @@ It may eventually hold route modules, panels, view models, hooks, finite-state r
 - handing selected released layer state to Compare, Export, Story, and Focus Mode without bypassing the trust membrane;
 - preserving accessibility for search, filters, badge labels, keyboard layer toggles, legends, reduced motion, and non-color trust indicators.
 
-This directory is not proof that any Layer Catalog component, route, hook, adapter, schema, fixture, test, package script, governed API route, layer policy gate, telemetry behavior, accessibility behavior, renderer integration, or downstream handoff is implemented.
+The site-local row projection is not proof that a governed Layer Catalog route, hook, adapter, schema, API route, layer policy gate, telemetry transport, or downstream handoff is implemented.
 
 [Back to top](#top)
 

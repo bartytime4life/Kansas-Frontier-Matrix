@@ -1,6 +1,7 @@
 import type { MapRuntimePort } from "@kfm/maplibre";
 import { createViteMapLibreAdapter } from "@kfm/maplibre/vite-adapter";
 import { formatRendererDiagnostic } from "../features/diagnostics";
+import { projectLayerCatalogRow } from "../features/layer_catalog";
 import {
   ATLAS_WORKBENCH_TOOLS,
   ATLAS_VIEWS,
@@ -300,13 +301,18 @@ export function mountLivingAtlasWorkspace(
   );
   const layerList = el(document, "div", "atlas-layer-list");
   LAYER_RECORDS.forEach((record) => {
-    const state = snapshot.layers.find((entry) => entry.id === record.id)!;
+    const rowState = projectLayerCatalogRow(
+      record,
+      snapshot.layers.find((entry) => entry.id === record.id)?.visible ?? false,
+      isLayerTemporallyCompatible(record.temporalExtentId, snapshot.committedTimeId),
+    );
     const row = el(document, "article", "atlas-layer-row");
+    row.dataset.catalogStatus = rowState.status;
     row.dataset.searchText = `${record.name} ${record.domain}`.toLowerCase();
     const toggle = el(document, "input");
     toggle.type = "checkbox";
-    toggle.checked = state.visible;
-    toggle.disabled = record.availability !== "AVAILABLE";
+    toggle.checked = rowState.checked;
+    toggle.disabled = rowState.disabled;
     toggle.dataset.layerToggle = record.id;
     toggle.setAttribute("aria-label", `Show ${record.name}`);
     const copy = el(document, "div");
@@ -857,10 +863,15 @@ export function mountLivingAtlasWorkspace(
     layerList.querySelectorAll<HTMLInputElement>("[data-layer-toggle]").forEach((control) => {
       const layerId = control.dataset.layerToggle ?? "";
       const record = findLayerRecord(layerId);
-      const temporallyCompatible = layerMatchesCommittedTime(layerId);
-      control.checked = temporallyCompatible &&
-        (snapshot.layers.find((entry) => entry.id === layerId)?.visible ?? false);
-      control.disabled = record?.availability !== "AVAILABLE" || !temporallyCompatible;
+      const rowState = projectLayerCatalogRow(
+        record,
+        snapshot.layers.find((entry) => entry.id === layerId)?.visible ?? false,
+        layerMatchesCommittedTime(layerId),
+      );
+      control.checked = rowState.checked;
+      control.disabled = rowState.disabled;
+      const row = control.closest<HTMLElement>(".atlas-layer-row");
+      if (row !== null) row.dataset.catalogStatus = rowState.status;
     });
   };
 
