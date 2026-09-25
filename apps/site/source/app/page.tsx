@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { readBoundedJson } from "./bounded-json";
+import { catalogSourceRoles, layerHasSourceRole } from "./catalog-source-roles";
 import { parseRepositoryObservation, type RepositoryConnection } from "./repository-status";
 import { replaceExplorerHistory } from "./embed-runtime";
 import { parseSavedWorkspaceList } from "./saved-workspaces";
@@ -1297,6 +1298,7 @@ export default function Home() {
   const [focusIntent, setFocusIntent] = useState<FocusIntentId>("explain");
   const [pendingFocusAction, setPendingFocusAction] = useState<FocusActionProposal | null>(null);
   const [layerQuery, setLayerQuery] = useState("");
+  const [catalogSourceRole, setCatalogSourceRole] = useState("ALL");
   const [pendingCatalogTarget, setPendingCatalogTarget] = useState<string | null>(null);
   const [atlasViewQuery, setAtlasViewQuery] = useState("");
   const [layerDomain, setLayerDomain] = useState<(typeof layerDomains)[number]>("ALL");
@@ -2060,9 +2062,9 @@ export default function Home() {
     const query = debouncedLayerQuery.trim().toLowerCase();
     return new Set(LAYER_REGISTRY.filter((layer) => {
       const matchesQuery = !query || `${layer.title} ${layer.description} ${layer.category} ${layer.datasetName} ${layer.domain}`.toLowerCase().includes(query);
-      return matchesQuery;
+      return matchesQuery && layerHasSourceRole(layer, catalogSourceRole);
     }).map((layer) => layer.id));
-  }, [debouncedLayerQuery]);
+  }, [debouncedLayerQuery, catalogSourceRole]);
   const searchResults = useMemo<GlobalSearchItem[]>(() => {
     const query = debouncedGlobalQuery.trim().toLowerCase();
     if (!query) return [];
@@ -7490,10 +7492,11 @@ export default function Home() {
           </section>
 
           <div className="basemap-control">
-            <div className="catalog-filter-grid"><label><span>Basemap style</span><select value={basemap} onChange={(event) => setBasemap(event.target.value as BasemapKey)}>{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title} · {BASEMAPS[key].note}</option>)}</select></label><label><span>Domain lens</span><select value={layerDomain} onChange={(event) => applyDomainLens(event.target.value as (typeof layerDomains)[number])}>{layerDomains.map((domain) => <option key={domain} value={domain}>{domain === "ALL" ? "No domain lens" : domain}</option>)}</select></label></div>
+            <div className="catalog-filter-grid"><label><span>Basemap style</span><select value={basemap} onChange={(event) => setBasemap(event.target.value as BasemapKey)}>{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title} · {BASEMAPS[key].note}</option>)}</select></label><label><span>Domain lens</span><select value={layerDomain} onChange={(event) => applyDomainLens(event.target.value as (typeof layerDomains)[number])}>{layerDomains.map((domain) => <option key={domain} value={domain}>{domain === "ALL" ? "No domain lens" : domain}</option>)}</select></label><label><span>Catalog source role</span><select value={catalogSourceRole} onChange={(event) => setCatalogSourceRole(event.target.value)}><option value="ALL">All declared roles</option>{catalogSourceRoles(LAYER_REGISTRY).map((role) => <option key={role} value={role}>{role}</option>)}</select></label></div>
+            <p>Source roles filter site-local catalog rows by exact declared feature label. Mixed-role layers can include records with other roles; this does not filter map geometry or live context.</p>
             <div className="catalog-lens-status" data-active={layerDomain !== "ALL"}><strong>{layerDomain === "ALL" ? "No domain lens selected" : `${layerDomain} lens is on the map`}</strong><span>{layerDomain === "Fire" ? "Historical fire context plus NASA GIBS daily NOAA-20 thermal anomalies and NOAA HMS smoke footprints at the operational-present frame." : layerDomain === "ALL" ? "Choose a domain to add that perspective without filtering the catalog or hiding other layers." : "The lens adds matching layers as an additional perspective; current-source context remains separate and time-bounded."}</span>{layerDomain !== "ALL" && <button type="button" onClick={() => applyDomainLens("ALL")}>Remove lens</button>}</div>
             <div className="catalog-evidence-filter"><label><span>Map evidence filter</span><select value={mapEvidenceFilter} onChange={(event) => updateMapEvidenceFilter(event.target.value as RegistryEvidenceFilter)}><option value="ALL">All evidence states</option>{(Object.keys(evidenceLabels) as EvidenceState[]).map((state) => <option key={state} value={state}>{state.replaceAll("_", " ")}</option>)}</select></label><output>{mapCompatibleFeatureCount} compatible records</output>{mapEvidenceFilter !== "ALL" && <button type="button" onClick={() => updateMapEvidenceFilter("ALL")}>Clear filter</button>}</div>
-            <div className="catalog-filter-actions"><span>{layerQuery.trim() || mapEvidenceFilter !== "ALL" ? "Catalog filters are active" : "Showing every local domain"}</span><button type="button" disabled={!layerQuery.trim() && mapEvidenceFilter === "ALL"} onClick={() => { setLayerQuery(""); updateMapEvidenceFilter("ALL"); }}>Clear filters</button></div>
+            <div className="catalog-filter-actions"><span>{layerQuery.trim() || catalogSourceRole !== "ALL" || mapEvidenceFilter !== "ALL" ? "Catalog filters are active" : "Showing every local domain"}</span><button type="button" disabled={!layerQuery.trim() && catalogSourceRole === "ALL" && mapEvidenceFilter === "ALL"} onClick={() => { setLayerQuery(""); setCatalogSourceRole("ALL"); updateMapEvidenceFilter("ALL"); }}>Clear filters</button></div>
           </div>
 
           <details ref={legacyLayerControlsRef} id="legacy-layer-controls" className="legacy-layer-index"><summary>Legacy example layer controls · {visibleCount} on</summary>
