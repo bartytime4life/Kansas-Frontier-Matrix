@@ -2,15 +2,15 @@
 doc_id: kfm://doc/tools-local-data-readme
 title: Local PC data tools
 type: readme
-version: v1
-status: implementation-candidate
+version: v1.1
+status: repository-integrated; quarantine-only
 owners: ["@bartytime4life"]
 created: 2026-09-17
-updated: 2026-09-17
+updated: 2026-09-24
 policy_label: public
 owning_root: tools/
 responsibility: Describe bounded workstation inspection and offline quarantine capture tools.
-truth_posture: Branch-local implementation; hosted validation and native host acceptance remain separate.
+truth_posture: CONFIRMED main@bb08d3e9b9 implementation and exact-schema policy decision; hosted validation and native host acceptance need verification.
 [/KFM_META_BLOCK_V2] -->
 
 # Local PC data tools
@@ -20,6 +20,12 @@ explicitly selected, already downloaded files in a private external QUARANTINE
 store. They do not download, interpret, extract, normalize, activate, promote,
 publish, or serve data. See the [local-PC runbook](../../docs/runbooks/local-pc-data-store.md)
 for the complete setup and update sequence.
+
+The repository records [owner decision #4613](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4613)
+for the exact manifest schema and contract used by private, offline quarantine
+capture. Its [successor receipt](../../data/receipts/generated/genrec-local-pc-data-policy-decision-20260917.json)
+leaves independent implementation and native-PC acceptance open. It does not
+admit a source or authorize a public map, release, deployment, or publication.
 
 `tools/` owns the operator interface, checks, and bounded local-byte capture in
 [`file_io.py`](file_io.py). These helpers prepare caller-owned external stores,

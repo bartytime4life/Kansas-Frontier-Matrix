@@ -6,7 +6,7 @@ version: v3.2.1
 status: repository-grounded draft
 owners: ["@bartytime4life"]
 created: 2026-05-11
-updated: 2026-09-21
+updated: 2026-09-24
 policy_label: public
 current_path: README.md
 owning_root: repository-root
@@ -28,6 +28,7 @@ related:
   - .github/README.md
   - docs/runbooks/local-pc-data-store.md
 notes:
+  - "A 2026-09-24 readback at main@bb08d3e9b9 reconciles the local-PC guide with integrated source and the exact-schema quarantine-only owner decision; the broader product snapshot below remains historical."
   - "The 2026-09-21 working-path readback below is bounded to main@32ab26478b7186bd1a0983951c1a4fbf5adf33aa and the named repository files; it does not replace the historical product maturity snapshot."
   - "Local-PC setup and packaging guidance updated against main@91aeee1ca163bcb3f007577a541a825f60dcddc2 plus this change; the earlier product maturity snapshot below is historical."
   - "Adds a visitor-first project orientation while preserving the governed root README identity."
@@ -105,6 +106,8 @@ This source-level readback is for `main@32ab26478b7186bd1a0983951c1a4fbf5adf33aa
 | Check a change | [`Makefile`](Makefile), [validator profiles](tools/validators/README.md), and [contribution guide](CONTRIBUTING.md) | Focused commands and fixtures cover declared boundaries. Some targets are `TODO` markers; topology correction and later release decisions require their own governed evidence. |
 
 For a concrete first local exercise, use the [committed 24-byte synthetic capture](docs/runbooks/local-pc-data-store.md#try-one-small-synthetic-capture) after initializing a private `KFM_DATA_ROOT` outside the checkout. Its receipt proves a bounded local capture, not evidence closure, promotion, release, or publication. For a new source or public claim, begin with the [source and lifecycle rules](docs/doctrine/lifecycle-law.md) and [trust membrane](docs/doctrine/trust-membrane.md).
+
+The local-PC guide now starts from `main` rather than its historical review branch. The repository records [owner decision #4613](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4613) for the exact private, offline, operator-selected quarantine-capture schema and contract. Independent implementation review, native-PC acceptance, source admission, live map integration, and public release remain separate checks; see the [runbook's decision boundary](docs/runbooks/local-pc-data-store.md#bounded-policy-decision-and-remaining-review).
 
 ## The KFM experience
 

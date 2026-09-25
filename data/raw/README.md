@@ -2,12 +2,12 @@
 doc_id: kfm://data/raw/readme
 title: data/raw/ — Immutable Source Capture
 type: data-lifecycle-readme
-version: v0.2.2
-prior_version: v0.2.1
+version: v0.2.3
+prior_version: v0.2.2
 status: repository-grounded draft; source-first identity required; physical placement and payload/runtime enforcement unverified
 owners: NEEDS VERIFICATION — source and data stewards
 created: 2025-09-17
-updated: 2026-09-21
+updated: 2026-09-24
 supersedes: prior README at the same path; no payload, lifecycle, release, runtime, or publication state
 prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
 policy_label: "restricted-review; no-direct-public-path; release-gated"
@@ -40,6 +40,7 @@ reconciliation_snapshot:
   adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
   scope: "Same-path correction of the RAW operating contract and domain-lane interpretation only; no path, payload, writer, descriptor, lifecycle object, runtime, or public state changes."
 notes:
+  - "The 2026-09-24 readback adds the exact-schema quarantine-only owner decision and corrects the displayed version; it does not authorize RAW placement or promotion."
   - "The 2026-09-21 readback distinguishes the external local-data QUARANTINE capture from this repository's held RAW placement; it does not admit a source or select a physical RAW home."
   - "The first twelve H2 sections follow Directory Rules section 15 exactly."
   - "Markdown-only parent-lane convergence; no payload or operational state changed."
@@ -83,9 +84,9 @@ Accepted Directory Rules rule `DIR-SOURCE-001` governs capture identity: one sou
 | Field | Bounded result |
 |---|---|
 | Path | `data/raw/` |
-| Version | `v0.2.1` |
+| Version | `v0.2.3` |
 | Prior blob | `771a4684341622aa684a3724f0c1a95b900f7335` |
-| Evidence base | Original v0.2.0 snapshot retained in metadata; source-first reconciliation at `main@8739edbfecabbde6367a2084740b6c94f07a0425` |
+| Evidence base | Original v0.2.0 snapshot retained in metadata; source-first reconciliation at `main@8739edbfecabbde6367a2084740b6c94f07a0425`; external quarantine decision readback at `main@bb08d3e9b9` |
 | Recursive payload inventory | `UNKNOWN` |
 | Active writers/consumers | `UNKNOWN` |
 | Public readiness | `DENY BY DEFAULT` |
@@ -95,6 +96,8 @@ Accepted Directory Rules rule `DIR-SOURCE-001` governs capture identity: one sou
 At `main@32ab26478b7186bd1a0983951c1a4fbf5adf33aa` (2026-09-21), [`tools/local_data/`](../../tools/local_data/README.md) provides `doctor`, `init`, `plan`, `sync`, and `verify` for explicitly selected files already on an operator's computer. Its store is private and **outside** the Git checkout. `init` prepares empty lifecycle destinations there, including `data/raw/`; `sync` writes source-first objects and immutable bindings under the external `data/quarantine/<source>/` and process receipts under external `data/receipts/`. It does not write this tracked `data/raw/` tree, activate the `local_upload` connector, or promote captured bytes into RAW.
 
 The [local-PC runbook](../../docs/runbooks/local-pc-data-store.md) supplies a synthetic exercise and backup/readback procedure. Local capture identity and integrity are useful prerequisites, but its source URI, domain label, and receipt do not settle source admission, rights, sensitivity, evidence, release, or a future physical RAW placement. Keep the source-first placement and domain-lane migration **HOLD** until their separate decision and writer contracts exist.
+
+[Owner decision #4613](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4613) accepts the exact manifest schema and contract for private, offline capture into the **external QUARANTINE store**. It does not authorize writing to this tracked RAW lane or promoting captured bytes into RAW.
 
 ## What belongs here
 

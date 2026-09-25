@@ -2,15 +2,16 @@
 doc_id: kfm://doc/runbooks/local-pc-data-store
 title: Prepare a local PC and maintain its data store
 type: runbook
-version: v0.2
-status: proposed; branch-review; quarantine-only
+version: v0.3
+status: repository-integrated; private offline quarantine only
 owners: ["@bartytime4life"]
 created: 2026-09-17
-updated: 2026-09-17
+updated: 2026-09-24
 policy_label: public-documentation
 owning_root: docs/
-truth_posture: implementation and tests are branch evidence; independent acceptance pending
-notes: ["Directory Rules ADR-0029 applies. No source admission, release, deployment, or publication authority."]
+responsibility: Guide private local setup, offline quarantine capture, verification, backup, and update without granting downstream authority.
+truth_posture: CONFIRMED main@bb08d3e9b9 source and exact-schema policy receipt; independent implementation and native-host acceptance need verification.
+notes: ["Directory Rules ADR-0029 and the bounded owner decision in issue #4613 apply. No source admission, release, deployment, or publication authority."]
 [/KFM_META_BLOCK_V2] -->
 
 # Prepare a local PC and maintain its data store
@@ -27,17 +28,16 @@ For a new checkout:
 
 ```bash
 mkdir -p "$HOME/Projects"
-git clone --branch agent/local-pc-data-store-20260917 --single-branch \
-  https://github.com/bartytime4life/Kansas-Frontier-Matrix.git \
+git clone https://github.com/bartytime4life/Kansas-Frontier-Matrix.git \
   "$HOME/Projects/Kansas-Frontier-Matrix"
 cd "$HOME/Projects/Kansas-Frontier-Matrix"
 python3 tools/local_data/doctor.py
 ```
 
-This branch is the review candidate; use `main` after this change is separately
-accepted and integrated. For an existing checkout, inspect `git status` and fetch
-the candidate branch without discarding local work. A GitHub source ZIP also
-works: extract the whole archive and run the same doctor from its root. A Python
+The quarantine-capture implementation is integrated into `main` in the repository
+snapshot checked at `bb08d3e9b9` (2026-09-24). For an existing checkout, inspect
+`git status` before updating and preserve any local changes. A GitHub source ZIP
+also works: extract the whole archive and run the same doctor from its root. A Python
 wheel alone does not contain the repository tools, apps, or datasets.
 
 The doctor's JSON reports essential interpreter/source checks and optional tool
@@ -240,7 +240,7 @@ Then run the earlier `plan`, `sync`, and `verify` commands with
 `configs/local/my-downloads-v2.json`. Their byte checks remain necessary even
 when the metadata comparison reports no change.
 
-Update code separately from bytes. On a clean checkout of the accepted branch,
+Update code separately from bytes. On a clean checkout of `main`,
 `git pull --ff-only` preserves history and refuses divergent source updates.
 Inspect the changes, run the doctor and changed-area checks, then verify a saved
 manifest. Do not use `git reset --hard` or `git clean` to repair a data problem.
@@ -261,17 +261,18 @@ rights, and legal holds first. Do not delete a stale lock until you have
 established that no writer is active. Prefer local disks; network filesystems
 and hostile concurrent modification are outside the accepted operating scope.
 
-Rollback of unintegrated code means abandoning the branch. After separately
-approved integration, revert the focused change without deleting captured data.
+Rollback of an unintegrated code change means abandoning its branch. For an
+integrated change, revert the focused commit without deleting captured data.
 An older program may not understand a newer manifest version; keep exact source
 revision and manifest together. Recovery is not a release or publication action.
 
 ## What remains before the local map is production-ready
 
 The GitHub source checkout and the hosted Explorer have separate histories.
-Session readback found Explorer v44 at source `b893683c33ef1a85d75f88db58e27e361c7e01a0`;
-this local-store change does not establish byte parity, replace the Site, or
-connect its browser to your PC's filesystem. Compose remains a placeholder.
+The earlier v0.2 readback recorded Explorer v44. The [Site application guide](../../apps/kansas-frontier-matrix-explorer/README.md)
+records a later v45 deployment. Neither historical observation establishes the
+currently active Site version, source parity, or a browser connection to this PC's
+files. Compose remains a placeholder.
 
 The next integration work is source-by-source: registered descriptor and rights
 review; admitted RAW capture; normalization and spatial/temporal validation;
@@ -284,8 +285,10 @@ locations and unclear rights stay held. No store path alone makes a layer visibl
 
 Run `make local-data-check` after installing the repository's declared test
 dependencies. The dedicated `local-data-store` workflow runs the same target on
-relevant pull requests, main changes, and the exact candidate branch. It has a
-read-only token, uses temporary test directories, and transfers no provider data.
+pull requests affecting its declared paths, matching pushes to `main`, and manual
+dispatch. Its configuration also retains the historical review-branch trigger.
+The job has a read-only token, uses temporary test directories, and transfers
+no provider data.
 Hosted results and independent acceptance remain separate from local test output.
 
 Accepted [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) and
@@ -295,32 +298,24 @@ meaning in `contracts/`, shape in `schemas/`, tests/fixtures in their own roots,
 and this guide in `docs/runbooks/`. Physical disk separation preserves logical
 lifecycle ownership; it creates no new registry or release authority.
 
-## Proposed policy decision handoff — PENDING
+## Bounded policy decision and remaining review
 
 The [initial implementation receipt](../../data/receipts/generated/genrec-local-pc-data-store-20260917.json)
 records `POLICY_DECISION_REQUIRED` for
-`schemas/contracts/v1/source/local_data_manifest.schema.json`. A passing local
-data test or a nonempty reference string does not establish policy acceptance.
-ADR-0029 supplies placement authority; it does not evaluate this capture policy.
+`schemas/contracts/v1/source/local_data_manifest.schema.json`. That is an immutable
+historical result. A later [owner decision #4613](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4613)
+and [append-only successor receipt](../../data/receipts/generated/genrec-local-pc-data-policy-decision-20260917.json)
+record policy acceptance for the exact candidate and private, offline,
+operator-selected **QUARANTINE** capture only. The current schema SHA-256 is
+`0f08e21698ff786b4da1cd110791a79accc6d080d865a21269c08c6b697fcf59`,
+matching that receipt at this repository snapshot. A material schema or contract
+change needs a new applicable decision.
 
-The owner or authorized policy decision must bind the exact candidate revision
-and schema digest to a bounded disposition covering:
-
-- The manifest contract and operator-selected capture of already downloaded files
-  into private, source-first quarantine; unknown rights and sensitivity stay unknown.
-- Immutable version bindings, finite acquisition limits, explicit metadata
-  comparison, and preservation of omitted files and prior versions.
-- The supporting test results, remaining acceptance gaps, reviewer authority,
-  obligations, and rollback that retains already captured data.
-- The boundary that this disposition grants no source admission, automated
-  provider retrieval, lifecycle promotion, map exposure, release, or publication.
-
-Record the actual disposition and its durable evidence reference when it exists;
-do not guess a decision ID, approver, timestamp, or favorable outcome. Reference
-an applicable authenticated decision in a subsequent receipt without rewriting
-the historical claim that review was pending. Until then, policy acceptance and
-human review remain **PENDING**, while branch-level implementation and validation
-can continue within their existing scope.
+The successor receipt leaves independent human implementation review and native-PC
+acceptance unverified. It grants no provider retrieval, source admission or
+activation, lifecycle promotion, map exposure, release, deployment, or publication.
+Keep the historical receipt's original result and cite the later decision for its
+exact bounded scope; a local test or merged change cannot expand that scope.
 
 See the [generated-receipt contract's validation gates](../doctrine/ai-build-operating-contract.md),
 the [PolicyDecision semantics](../../contracts/policy/policy_decision.md), and the
