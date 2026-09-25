@@ -5,10 +5,10 @@ type: root-readme
 subtype: canonical-root-landing-page
 version: v0.9
 prior_version: v0.8
-status: draft; repository-grounded; mixed-maturity
-owner: "NEEDS VERIFICATION — CODEOWNERS routes repository review to @bartytime4life and explicitly covers apps/governed-api/ and apps/explorer-web/; no accepted application-steward assignment, required independent-review rule, or release authority was verified"
+status: historical snapshot; current app placement noted below
+owner: "NEEDS VERIFICATION — CODEOWNERS routes repository review to @bartytime4life and explicitly covers apps/governed-api/; no accepted application-steward assignment, required independent-review rule, or release authority was verified"
 created: 2026-05-10
-updated: 2026-08-29
+updated: 2026-09-25
 policy_label: public
 current_path: apps/README.md
 owning_root: apps/
@@ -51,10 +51,7 @@ related:
   - ../docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md
   - ../docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md
   - governed-api/README.md
-  - explorer-web/README.md
-  - kansas-frontier-matrix-explorer/README.md
-  - explorer-web/src/README.md
-  - explorer-web/src/features/README.md
+  - site/README.md
   - review-console/README.md
   - cli/README.md
   - workers/README.md
@@ -75,6 +72,13 @@ notes:
   - "Exact maplibre-gl 6.6.0, the package-owned adapter, and Vite worker seam are implemented; full consumer capabilities, broader runtime proof, and public release remain held or separately governed."
   - "The Sites code and dependency edge change only to fail closed; no source, deployment, policy, release, promotion, or publication authority is created."
 [/KFM_META_BLOCK_V2] -->
+
+> **Current placement (2026-09-25):** The GPT Site v71 source is in
+> [`site/`](site/README.md). The former `apps/explorer-web/` and
+> `apps/kansas-frontier-matrix-explorer/` implementations were removed. The
+> evidence ledger and older narrative below describe a pinned 2026-08-28
+> snapshot; their retired paths and commands are historical.
+> `apps/governed-api/` remains here.
 
 <a id="top"></a>
 
@@ -114,11 +118,10 @@ notes:
 
 `apps/` owns independently deployable processes and user-facing service boundaries for Kansas Frontier Matrix. It is where app-local entry points, routes, user interfaces, operator commands, background runners, app-local tests, and deployable composition belong.
 
-The current root contains eight direct lanes:
+The current root contains seven direct lanes:
 
 - [`governed-api/`](governed-api/README.md) — bounded executable public trust membrane;
-- [`explorer-web/`](explorer-web/README.md) — map-first public and semi-public browser client;
-- [`kansas-frontier-matrix-explorer/`](kansas-frontier-matrix-explorer/README.md) — Sites-derived Explorer application retained as a separately tracked deployable and reconciliation surface;
+- [`site/`](site/README.md) — exact GPT Site v71 source snapshot under `site/source/` for local hosting;
 - [`review-console/`](review-console/README.md) — role-gated steward review surface;
 - [`cli/`](cli/README.md) — restricted operator command surface;
 - [`workers/`](workers/README.md) — non-publishing background runner lane;
@@ -383,8 +386,7 @@ Source-derived ideas advance only through the normal sequence: classify the clai
 | Lane | Current implementation truth | Verified entrypoint or check | Failure-safe posture |
 |---|---|---|---|
 | [`governed-api/`](governed-api/README.md) | Bounded executable WSGI, three fail-closed routes, route/envelope tests | `make governed-api-smoke`; `make governed-api-verify`; `api-test` | `ABSTAIN`, 404, or 405; no renderer/model/internal-store shortcut |
-| [`explorer-web/`](explorer-web/README.md) | Mounted local site, public workspace navigation, renderer-neutral synthetic map/status and map/evidence fixtures, bounded synthetic Focus workspace, shared trust surface, and many independently tested projections | `make ui-build`; `pnpm --filter explorer-web test`; `ui-build` | Missing or unsafe support resolves to bounded `ABSTAIN`, `DENY`, or `ERROR`; the normal entrypoint does not activate the package-owned renderer or a released layer and establishes no deployment or publication path |
-| [`kansas-frontier-matrix-explorer/`](kansas-frontier-matrix-explorer/README.md) | Sites-derived Vinext/Vite app with package-root `NullMapRuntime`, deterministic repository-backed demonstration data, and restricted-export negatives | child `npm run build`, `npm test`, acquisition profile v14, and child README lineage | Full renderer capability and the parallel-shell relationship remain HOLD; child evidence does not release repository data or establish repo-wide readiness |
+| [`site/`](site/README.md) | Exact source snapshot of the deployed GPT Site v71 under `site/source/`, including checked-in static assets and D1 migration | From `apps/site/source/`: `npm run install:ci`, `npm run build`, `node --test tests/*.test.mjs`, `npm run dev` | Private D1 records, R2 uploads, and live provider responses are not bundled; local success does not establish source admission or release |
 | [`review-console/`](review-console/README.md) | README-led feature boundaries and a minimal package manifest | No accepted executable review flow | No review, promotion, correction, or rollback mutation is proven |
 | [`cli/`](cli/README.md) | Python package skeleton with an explicit greenfield placeholder entrypoint and placeholder command modules | `apps/cli/src/kfm_cli/__main__.py` | No operator shortcut is review, release, or publication authority |
 | [`workers/`](workers/README.md) | Named worker directories with explicit greenfield placeholder entrypoints | No accepted queue, schedule, worker behavior, or worker test suite | Watcher and worker outputs remain candidates or receipts, never publication |
