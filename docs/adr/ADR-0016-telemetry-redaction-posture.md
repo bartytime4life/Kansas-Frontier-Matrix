@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr/0016-telemetry-redaction-posture
 title: "ADR-0016 — Telemetry Redaction Posture"
 type: adr
 adr_id: ADR-0016
-version: v1.4
+version: v1.4.1
 status: proposed
 owners:
   - "NEEDS VERIFICATION — architecture decision owner"
@@ -24,7 +24,7 @@ reviewers_required:
   - Infrastructure and operations reviewer
   - Governed API and public-surface maintainers
 created: 2026-05-11
-updated: 2026-09-13
+updated: 2026-09-25
 policy_label: public
 truth_posture: cite-or-abstain
 owning_root: docs/
@@ -91,14 +91,26 @@ notes:
   - "v1.3 is a same-path repository-grounded evidence refresh. It preserves status `proposed`; it does not accept ADR-0016, emit telemetry, activate policy, create a sink, change retention, or publish anything."
   - "ADR-0029 is the only accepted numbered ADR and adopts Directory Rules v2; that decision confirms the responsibility-root split used here without accepting this telemetry decision."
   - "Four closed, synthetic, fixture-only telemetry profiles now have paired contracts, schemas, fixtures, focused validators, tests, and workflow coverage. They remain non-authoritative and do not constitute a general telemetry event, redaction, policy-input, or receipt profile."
-  - "The general telemetry-safety validator remains a NotImplementedError placeholder, the three inspected Rego modules remain allow-by-default greenfield stubs, and operational emitter, redactor, sink, receipt, retention, and incident integration remain held or unknown."
+  - "At the pinned v1.4 evidence snapshot, the general telemetry-safety validator was a NotImplementedError placeholder; current main has a bounded four-profile dispatcher. The three inspected Rego modules remain allow-by-default greenfield stubs, and operational emitter, redactor, sink, receipt, retention, and incident integration remain held or unknown."
   - "The successful telemetry-policy run at the previously pinned SHA proves bounded repository-local profile checks and explicit holds only; this v1.4 refresh does not claim a current hosted run."
   - "v1.4 is a same-path currentness refresh against main@21dcad05435bc5e5227905ba1747aa616a6f3713. It retains `proposed` status and records only direct source readback of telemetry contracts, schemas, receipt documentation, policy stubs, the general validator placeholder, and the bounded workflow. No telemetry, logger, validator, workflow, collector, export, sink, release, deployment, or publication operation was executed."
+  - "v1.4.1 records the current bounded four-profile dispatcher at main@f6a42fdddc2c2afee2ca129b9edd20598eaee623, preserving historical evidence snapshots and proposed decision status."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # ADR-0016 — Telemetry Redaction Posture
+
+> **Currentness addendum (2026-09-25, `main@f6a42fdddc2c2afee2ca129b9edd20598eaee623`).**
+> The older `evidence_snapshot` and historical tables below preserve their
+> pinned readbacks. The once-empty
+> [`validate_telemetry_safety.py`](../../tools/validators/validate_telemetry_safety.py)
+> now dispatches four explicit fixture-only profiles, verifies child scope and
+> successful fixture reports, and refuses unknown or implicit candidate profiles.
+> Its [validator README](../../tools/validators/telemetry/README.md) describes
+> the bounded handoff. This does not implement a general UI event policy,
+> redaction, emitter, receipt, sink, or operational enforcement. The three
+> Rego modules remain non-enforcing stubs; this ADR remains `proposed`.
 
 > **Proposed decision.** Telemetry that crosses a process, persistence, transport, trust, or display boundary is a **governed emission** and a security/privacy egress event. KFM minimizes and classifies telemetry before emission, applies policy-bound redaction or suppression at the earliest controlled boundary, and fails closed when the field, profile, destination, rights posture, or sensitivity posture is unresolved. Telemetry remains process memory and operational evidence; it does not become source truth, an `EvidenceBundle`, release authority, or a `PUBLISHED` artifact merely because it was emitted.
 
@@ -114,7 +126,7 @@ notes:
 > **Identity is confirmed; acceptance is not.** [`docs/adr/INDEX.md`](./INDEX.md) uniquely assigns `ADR-0016` to this exact file with source and effective status `proposed`. ADR-0029 is accepted and governs directory placement; it does not accept ADR-0016. A commit, merge, schema pass, validator pass, workflow pass, dashboard, policy-shaped file, or telemetry record does not accept this decision.
 
 > [!CAUTION]
-> **Profile proof has advanced; operational enforcement remains held.** Four bounded telemetry profiles now have paired contracts, schemas, synthetic fixtures, focused validators, tests, and no-network workflow coverage. The general telemetry-safety validator still raises `NotImplementedError`, the three inspected Rego modules still use `default deny := false`, no operational emitter or redactor is established, and no telemetry receipt instance or governed sink was proven.
+> **Profile proof has advanced; operational enforcement remains held.** Four bounded telemetry profiles now have paired contracts, schemas, synthetic fixtures, focused validators, tests, and no-network workflow coverage. The general validator path now dispatches only those four fixture profiles; it does not evaluate general telemetry events. The three inspected Rego modules still use `default deny := false`, no operational emitter or redactor is established, and no telemetry receipt instance or governed sink was proven.
 
 > [!WARNING]
 > **A green telemetry workflow is not a safe telemetry runtime.** The successful `telemetry-policy` run at the pinned main SHA proves the admitted fixture-only profiles passed repository-local checks and that explicit operational holds remain visible. It does not prove that an external collector, SDK, sink, dashboard, alert, retention system, or deployed producer prevents disclosure.
@@ -760,7 +772,7 @@ Dashboards and alerts are new emissions. Queries, panels, screenshots, CSV expor
 
 <a id="current-repository-evidence"></a>
 
-## Current Repository Evidence
+## Pinned Repository Evidence (v1.4)
 
 | Surface | Truth status | Current bounded finding |
 |---|---|---|
@@ -772,7 +784,7 @@ Dashboards and alerts are new emissions. Queries, panels, screenshots, CSV expor
 | Telemetry fixtures | **CONFIRMED partial** | Exactly four fixture profile directories exist under `fixtures/contracts/v1/telemetry/`. |
 | Profile validators | **CONFIRMED partial** | Trace linkage plus OpenLineage, remote-sensing lineage, and map-build sustainability validators exist and are exercised. |
 | Focused tests | **CONFIRMED partial** | The workflow invokes focused tests for all four admitted profiles. |
-| General telemetry validator | **CONFIRMED placeholder** | `validate_telemetry_safety.py` raises `NotImplementedError("Greenfield placeholder")`. |
+| General telemetry validator at pinned v1.4 SHA | **CONFIRMED historical placeholder** | At `main@21dcad05435bc5e5227905ba1747aa616a6f3713`, `validate_telemetry_safety.py` raised `NotImplementedError("Greenfield placeholder")`; see currentness addendum for the later dispatcher. |
 | Telemetry receipt lane | **CONFIRMED parent README** | The parent README exists; the readiness workflow asserts no receipt payload file beneath it. |
 | Telemetry policy root | **CONFIRMED documented stub lane** | `policy/telemetry/README.md` describes one non-enforcing restricted-coordinate module and the current profile boundary. |
 | Raw-evidence policy | **CONFIRMED allow-by-default scaffold** | `policy/ui/no_raw_in_telemetry.rego` has no real rules and `default deny := false`. |
@@ -794,12 +806,12 @@ This is a repository file-content readback at `main@21dcad05435bc5e5227905ba1747
 | [Telemetry semantic lane](../../contracts/telemetry/README.md) and [schema lane](../../schemas/contracts/v1/telemetry/README.md) | Both describe draft/proposed, profile-specific shapes and explicitly separate telemetry carriage from truth, runtime maturity, policy authority, and release authority. | Documentation and schema boundaries only; no general operational telemetry event or redaction envelope is established. |
 | [Telemetry receipt lane](../../data/receipts/telemetry/README.md) | The parent README describes an internal, redaction-first process-memory lane and says README presence does not prove emitted receipts, a redactor, sink, validator, CI check, or release integration. | Receipt-lane documentation only; no receipt instance or operational receipt pipeline is evidenced by this readback. |
 | [Telemetry policy lane](../../policy/telemetry/README.md), [raw-evidence](../../policy/ui/no_raw_in_telemetry.rego), [prompt](../../policy/ui/no_prompt_in_telemetry.rego), and [restricted-coordinate](../../policy/telemetry/no_restricted_coords.rego) modules | The policy README identifies one non-enforcing `default deny := false` stub; the three inspected modules remain allow-by-default scaffolds without operative denial rules. | Candidate policy source, not fail-closed runtime redaction or enforcement. |
-| [General safety validator](../../tools/validators/validate_telemetry_safety.py) | The file raises `NotImplementedError("Greenfield placeholder")`. | No general telemetry-safety validation is implemented by this file. |
+| [General safety validator at pinned v1.4 SHA](../../tools/validators/validate_telemetry_safety.py) | At the historical `main@21dcad0` readback, the file raised `NotImplementedError("Greenfield placeholder")`; the current path is a bounded dispatcher. | Neither state proves general telemetry-event safety validation. |
 | [Telemetry workflow](../../.github/workflows/telemetry-policy.yml) | The workflow declares read-only repository access, repository fixtures, no operational telemetry or secrets, no collector/exporter/sink/dashboard/public-API connection, and says a green result proves repository-local contract checks only. | Bounded CI definition and explicit holds, not proof of a hosted run or operational telemetry enforcement. |
 
 ### Current safe conclusion
 
-KFM now has a meaningful fixture-first telemetry profile lane and current CI evidence for that lane. It still does not prove a fail-closed operational telemetry redaction system. The strongest executable evidence is that bounded profiles pass their declared checks while CI continues to expose the general policy, validator, emitter, receipt, and sink holds.
+KFM now has a meaningful fixture-first telemetry profile lane and a bounded local dispatcher for those profiles. Historical CI evidence for that lane remains pinned to its tested SHA; this addendum does not claim a new hosted run. It still does not prove a fail-closed operational telemetry redaction system. General policy evaluation, emitter, receipt, and sink remain held.
 
 [Back to top](#top)
 
@@ -988,7 +1000,7 @@ This ADR changes no implementation. Follow-on work should use small, reversible 
 
 ### Wave 4 — general validator and policy proof
 
-- replace `validate_telemetry_safety.py` placeholder;
+- implement a separately specified general telemetry-event validator or evolve the bounded dispatcher only after an accepted input contract and review;
 - implement fail-closed Rego or equivalent policy;
 - add static and runtime negative cases;
 - verify secrets and protected values never appear in test output;
@@ -1386,7 +1398,7 @@ Rollback MUST NOT restore raw prompt, evidence, coordinate, secret, or payload l
 - [Raw-evidence telemetry policy stub](../../policy/ui/no_raw_in_telemetry.rego)
 - [Prompt telemetry policy stub](../../policy/ui/no_prompt_in_telemetry.rego)
 - [Restricted-coordinate telemetry policy stub](../../policy/telemetry/no_restricted_coords.rego)
-- [General telemetry validator placeholder](../../tools/validators/validate_telemetry_safety.py)
+- [Bounded telemetry validator dispatcher](../../tools/validators/validate_telemetry_safety.py)
 - [Trace receipt-link validator](../../tools/validators/validate_trace_receipt_link.py)
 - [Telemetry validator lane](../../tools/validators/telemetry/README.md)
 - [OpenLineage projection validator](../../tools/validators/telemetry/validate_openlineage_run_event_projection.py)
