@@ -31,7 +31,16 @@ notes:
 
 This lane validates admitted local telemetry projection profiles. It is downstream of semantic contracts and schemas and does not replace policy, evidence review, release decisions, or runtime authorization.
 
-## Current validator
+The existing `tools/validators/validate_telemetry_safety.py` entry point now
+dispatches explicitly to the four reviewed profile validators (including the
+TraceReceiptLink validator in its existing location). Run `--fixtures` to replay
+all four profiles, or `--candidate FILE --profile PROFILE` to select one. An
+unknown or omitted candidate profile is refused. It emits only profile names
+and a bounded outcome; the owning validator keeps its own detailed findings.
+This dispatcher does not implement a general UI telemetry event contract,
+redaction policy, emitter, transport, sink, or operational safety decision.
+
+## Current validators
 
 | File | Profile | Finite validator outcomes |
 |---|---|---|
@@ -95,8 +104,8 @@ existing eleven-case `PASS` / `ABSTAIN` / `DENY` semantics and schema are unchan
 
 This is not a filesystem sandbox or an atomic snapshot: parent-directory
 ownership, malicious privileged writers, and changes outside the observed read
-remain outside the proof. It does not implement the general telemetry-safety
-placeholder, accept the Rego stubs, enable an emitter/sink, or release the
+remain outside the proof. The dispatcher does not implement a general telemetry
+safety policy, accept the Rego stubs, enable an emitter/sink, or release the
 operational telemetry HOLD.
 
 The dedicated workflow runs current profile and input-boundary tests separately
@@ -107,6 +116,12 @@ receipt success is not current-head conformance or independent security review.
 ## Run
 
 ```bash
+python tools/validators/validate_telemetry_safety.py --fixtures
+
+python tools/validators/validate_telemetry_safety.py \
+  --candidate /path/to/candidate.json \
+  --profile trace_receipt_link
+
 python tools/validators/telemetry/validate_openlineage_run_event_projection.py \
   --fixtures
 

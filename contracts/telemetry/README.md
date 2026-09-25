@@ -132,9 +132,10 @@ Telemetry does not answer:
 
 Each has a paired schema under `schemas/contracts/v1/telemetry/` and repository
 fixtures. [Validator documentation](../../tools/validators/telemetry/README.md)
-owns invocation and bounded behavior. The general validator and raw/prompt Rego
-modules remain placeholders; no operational collector, sink, or redaction
-acceptance is established by these profiles.
+owns invocation and bounded behavior. The general validator entry point dispatches
+only to these four explicit profiles; it does not implement general UI event
+safety. Raw/prompt Rego modules remain proposed stubs; no operational collector,
+sink, or redaction acceptance is established by these profiles.
 
 ## Candidate object families
 

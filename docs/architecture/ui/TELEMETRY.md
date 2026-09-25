@@ -8,7 +8,7 @@ owners:
   - "@bartytime4life — verified CODEOWNERS review route"
   - "NEEDS VERIFICATION — independent UI, observability, security/privacy, policy, runtime, receipt, and release stewardship"
 created: 2026-05-14
-updated: 2026-08-19
+updated: 2026-09-24
 policy_label: public; architecture; ui; telemetry; no-release; no-publication
 owning_root: docs/
 responsibility: "Explain the current UI telemetry boundary, repository-present profile evidence, explicit holds, and operational graduation requirements without becoming contract, schema, policy, runtime, receipt, release, or publication authority."
@@ -32,7 +32,6 @@ evidence_snapshot:
 related:
   - docs/architecture/ui/README.md
   - docs/architecture/ui/BOUNDARIES.md
-  - docs/architecture/ui/STATE_OWNERSHIP.md
   - docs/architecture/ui/MAP_RUNTIME_BOUNDARY.md
   - docs/architecture/governed-api/README.md
   - docs/architecture/governed-ai/README.md
@@ -60,7 +59,7 @@ notes:
   - "v1.0-draft is a same-path documentation-only reconciliation against current repository evidence."
   - "ADR-0029 is accepted and confirms the existing docs/architecture/ui/ lane as placement-safe; ADR-0016 remains proposed."
   - "Four bounded telemetry profiles have paired semantic contracts, schemas, fixtures, validators, tests, and no-network workflow coverage; none is a general UI TelemetryEvent or operational emitter/sink contract."
-  - "The general telemetry safety validator and three inspected Rego modules remain non-enforcing placeholders; operational telemetry remains on explicit hold."
+  - "Current follow-up: the general validator path dispatches only to four existing bounded local validators. It is not an operational UI telemetry safety policy; three Rego modules remain stubs and operational telemetry remains on HOLD. The pinned August evidence snapshot below is retained as history."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -71,7 +70,7 @@ notes:
 > **Operating rule.** UI telemetry may record bounded operational and governance signals. It must never become a side channel for raw evidence, prompts, identities, protected locations, policy internals, release authority, or public truth.
 
 > [!IMPORTANT]
-> **Current result: fixture-first evidence exists; operational UI telemetry does not.** At the pinned repository snapshot, KFM has four bounded telemetry profiles, paired machine shapes, focused local validators and tests, and a no-network readiness workflow. It does **not** have a general `TelemetryEvent` contract or schema, an implemented general telemetry-safety validator, operative fail-closed telemetry Rego, an established UI emitter, a governed ingestion route, a sink, a retention regime, or emitted telemetry receipt instances.
+> **Current result: fixture-first evidence exists; operational UI telemetry does not.** Four bounded telemetry profiles have local validators, tests, and a no-network readiness workflow. The former general validator stub is now a dispatcher to those four profile validators. KFM still has no general `TelemetryEvent` contract or schema, operational safety policy, operative fail-closed telemetry Rego, established UI emitter, governed ingestion route, sink, retention regime, or emitted telemetry receipt instances. The August snapshot below documents the prior state.
 
 | Field | Current evidence-backed result |
 |---|---|
@@ -81,7 +80,7 @@ notes:
 | **Admitted telemetry profiles** | Four bounded, synthetic, fixture-first profiles; none is a general UI event envelope |
 | **General UI event schema** | **ABSENT / HOLD** — `schemas/contracts/v1/telemetry/ui_event.schema.json` is not in the inspected schema inventory |
 | **General telemetry policy** | **WORKFLOW_HOLD** — three inspected Rego modules are proposed stubs with `default deny := false` and no operative denial rule |
-| **General telemetry validator** | **PLACEHOLDER** — `validate_telemetry_safety.py` raises `NotImplementedError` |
+| **General telemetry validator** | **BOUNDED DISPATCH ONLY** — `validate_telemetry_safety.py` replays four named local profile validators; general UI event safety remains HOLD |
 | **UI emitter / API route / sink** | **NOT ESTABLISHED** — no operational producer, governed route, collector, exporter, sink, or dashboard binding is proved |
 | **Telemetry receipt instances** | **ZERO CONFIRMED** — `data/receipts/telemetry/` contains its boundary README only |
 | **Release / publication effect** | None |
@@ -172,7 +171,7 @@ This document does not emit telemetry, validate a live event, execute policy, cr
 | Semantic meaning | [`contracts/telemetry/`](../../../contracts/telemetry/README.md) | Four bounded profiles; general telemetry-event semantics remain proposed |
 | Machine shape | [`schemas/contracts/v1/telemetry/`](../../../schemas/contracts/v1/telemetry/README.md) | Four bounded schemas; no `ui_event.schema.json` |
 | Admissibility and redaction | [`policy/telemetry/`](../../../policy/telemetry/README.md) and [`policy/ui/`](../../../policy/ui/README.md) | Source stubs and boundary documentation; no operative general policy |
-| Deterministic validation | [`tools/validators/telemetry/`](../../../tools/validators/telemetry/README.md) and [`validate_telemetry_safety.py`](../../../tools/validators/validate_telemetry_safety.py) | Focused profile validators exist; general validator is a placeholder |
+| Deterministic validation | [`tools/validators/telemetry/`](../../../tools/validators/telemetry/README.md) and [`validate_telemetry_safety.py`](../../../tools/validators/validate_telemetry_safety.py) | Focused profile validators exist; general path dispatches to named profiles only |
 | Synthetic examples and tests | `fixtures/contracts/v1/telemetry/` and `tests/validators/telemetry/` | Bounded local profiles only |
 | Telemetry receipt instances | [`data/receipts/telemetry/`](../../../data/receipts/telemetry/README.md) | Boundary README only; no instance proved |
 | Producer, transport, collector, sink | `apps/`, `packages/`, `runtime/`, `infra/`, or another accepted implementation root | Not established for UI telemetry |
@@ -228,7 +227,7 @@ A telemetry profile may carry safe references to a run, receipt, evidence bundle
 | `policy/telemetry/no_restricted_coords.rego` | Proposed stub; `default deny := false`; no operative rule | Does not deny an input |
 | `policy/ui/no_raw_in_telemetry.rego` | Proposed stub; `default deny := false`; no operative rule | Does not prevent raw-evidence emission |
 | `policy/ui/no_prompt_in_telemetry.rego` | Proposed stub; `default deny := false`; no operative rule | Does not prevent prompt emission |
-| General safety validator | Raises `NotImplementedError("Greenfield placeholder")` | General telemetry safety is not implemented |
+| General safety validator path | Dispatches to four explicit bounded profile validators | General UI telemetry safety is not implemented |
 | Telemetry receipt lane | Boundary README only | No emitted telemetry receipt instance is proved |
 | Explorer Web | Bounded fixture-first shell; no production telemetry established by current UI evidence | No UI telemetry producer may be inferred |
 | Governed API | Current architecture evidence establishes negative scaffold route families, not a telemetry ingestion route | `POST /api/v1/telemetry/ui` remains unverified and must not be documented as live |
@@ -413,7 +412,7 @@ flowchart LR
 
     UI["Explorer / UI"] -. "no established telemetry emitter" .-> H
     P["3 Rego stubs\ndefault deny := false"] -. "no operative policy" .-> H
-    G["General safety validator\nNotImplementedError"] -. "not implemented" .-> H
+    G["Bounded profile dispatcher"] -. "no general policy" .-> H
     R["Telemetry receipt lane\nREADME only"] -. "no receipt instances" .-> H
 ```
 
@@ -451,7 +450,7 @@ Every box in the proposed flow remains **PROPOSED** until current code, contract
 | Focused profile validators | Deterministic local checks for shape, identity, binding, arithmetic, uncertainty, non-effects, and finite outcomes | Do not contact external systems or prove operational telemetry |
 | Profile fixtures | Positive and negative synthetic cases under `fixtures/contracts/v1/telemetry/` | No production payloads, emitters, collectors, or sinks |
 | `telemetry-policy` workflow | Read-only checkout, no-network posture, exact profile inventory, raw/prompt/coordinate key checks, explicit stub-state assertions | Does not run an operative general telemetry policy or deployed producer |
-| General safety validator | File presence only | Raises `NotImplementedError`; no safety decision is produced |
+| General safety validator path | Runs the four bounded profile validators for fixture replay, or one explicitly selected candidate profile | No general UI safety decision is produced |
 | Rego source | File/package/default-state presence | No operative rules or native policy tests prove denial |
 
 ### Minimum negative test families for graduation
@@ -578,7 +577,6 @@ No one gate may be inferred from another. A schema does not prove policy; policy
 |---|---|
 | [`UI architecture README`](./README.md) | Parent UI architecture boundary and current implementation summary |
 | [`UI Boundaries`](./BOUNDARIES.md) | Browser trust membrane, current Explorer/Governed API evidence, and negative states |
-| [`State Ownership`](./STATE_OWNERSHIP.md) | UI state ownership and non-authority boundaries |
 | [`Map Runtime Boundary`](./MAP_RUNTIME_BOUNDARY.md) | Renderer/runtime seam and map-selection limits |
 | [`Governed API architecture`](../governed-api/README.md) | Dynamic trust-membrane architecture; route maturity must be verified separately |
 | [`Governed AI README`](../governed-ai/README.md) | Focus/AI boundary, finite outcomes, and no prompt/model-output leakage |
@@ -592,7 +590,7 @@ No one gate may be inferred from another. A schema does not prove policy; policy
 | [`Telemetry policy`](../../../policy/telemetry/README.md) | Repository-grounded current policy-source boundary and explicit operational hold |
 | [`UI policy`](../../../policy/ui/README.md) | Adjacent raw-evidence and prompt-content policy-source stubs |
 | [`Telemetry validators`](../../../tools/validators/telemetry/README.md) | Bounded local validator behavior and commands |
-| [`General telemetry validator`](../../../tools/validators/validate_telemetry_safety.py) | Current placeholder state |
+| [`General telemetry validator path`](../../../tools/validators/validate_telemetry_safety.py) | Bounded local profile dispatch; no general safety policy |
 | [`Telemetry receipts`](../../../data/receipts/telemetry/README.md) | Receipt-family boundary; no instance proved |
 | [`telemetry-policy workflow`](../../../.github/workflows/telemetry-policy.yml) | No-network readiness checks and explicit workflow hold |
 | [`Explorer Web README`](../../../apps/explorer-web/README.md) | Current UI deployable boundary; no production telemetry inferred |
@@ -615,7 +613,7 @@ The prior edition contained useful safety intent but mixed future design with cu
 | `POST /api/v1/telemetry/ui` is the governed route | No current route implementation or deployment proof was established | Removed as current flow; may return only through a future implementation slice |
 | `policy/telemetry/` fail-closes unsafe events | Current Rego source is non-enforcing and allow-by-default | Corrected to `WORKFLOW_HOLD` |
 | Raw/prompt/restricted-coordinate policy is operational | Three source stubs exist; no operative rules, evaluator, or native policy tests proved | Corrected to source-presence only |
-| General schema validator exists | General safety validator raises `NotImplementedError` | Corrected to `PLACEHOLDER` |
+| General schema validator exists | No general UI event schema exists; current entry point dispatches only to bounded profile validators | Corrected to `BOUNDED DISPATCH / GENERAL HOLD` |
 | Negative runtime fixture tree exists for all UI events | Four profile-specific fixture families exist; no general UI event fixtures | Replaced with exact current profile register and future graduation matrix |
 | A governed telemetry sink feeds release-gate evidence | No producer, route, collector, sink, retention, or receipt instance proved | Removed from current-state diagram |
 | Proposed JSON field and enum examples are normative | No accepted general schema exists | Removed; architecture classes remain non-normative |

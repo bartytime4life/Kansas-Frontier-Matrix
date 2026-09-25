@@ -494,8 +494,9 @@ Current repository evidence comprises the four fixture profiles listed in
 [contracts/telemetry](../../../contracts/telemetry/README.md), the
 [local validators](../../../tools/validators/telemetry/README.md), and the
 [telemetry-policy workflow](../../../.github/workflows/telemetry-policy.yml).
-The general validator raises `NotImplementedError`; raw/prompt policies remain
-proposed stubs. No running OTel, Tempo, Mimir, Loki, or Grafana service was verified.
+The general validator entry point dispatches to those four local profiles;
+it does not implement a general UI telemetry safety policy. Raw/prompt policies
+remain proposed stubs. No running OTel, Tempo, Mimir, Loki, or Grafana service was verified.
 `OPEN-DASH-OBS-STACK-01` is resolved as documentation consolidation;
 `OPEN-DASH-OBS-STACK-02` (public rollup placement and approval) remains proposed.
 Rollback: revert both documentation edits; retain all operational holds.

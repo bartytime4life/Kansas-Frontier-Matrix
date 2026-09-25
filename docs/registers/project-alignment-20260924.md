@@ -12,6 +12,12 @@ responsibility: Reconcile implementation, current coordination pointers, duplica
 
 This register records the extensive alignment against repository base
 `bb08d3e9b92e9251c193debab6567be843136070` and owner-private Site version **70**.
+During final readback, upstream main advanced to
+`7e25a287eaeb080bf18a743ae2518147b08b7e2a` through #4677. That change was
+integrated into this alignment branch, preserving its bounded telemetry
+dispatcher, connector entry point, tests, workflows and authoring receipts.
+Earlier base pins and the Site's baked snapshot remain dated observations;
+the live Site repository-status response has its own explicit observation time.
 Repository changes remain on `codex/project-alignment-20260924`. Main integration,
 source admission, release, and production acceptance are separate decisions.
 
@@ -41,7 +47,8 @@ link to it when useful. This register is explanatory, not a new machine registry
 | Live repository status | Standalone `app/api/repository-status/route.ts`, `app/repository-status.ts`, `app/page.tsx` | Read-only fixed GitHub metadata; bounded body; no-store HTTP responses; observation expires after 60 seconds and then requires refresh. A differing hash does not prove ancestry. |
 | Local KML/GeoJSON import | Both applications' `app/import-preview.ts` | Unadmitted browser preview; actual UTF-8 size limit, bounded KML depth/elements, balanced extraction, no external entity or network execution. |
 | Telemetry | Four schemas under `schemas/contracts/v1/telemetry/`, local validators and `.github/workflows/telemetry-policy.yml` | Fixture-only trace linkage, OpenLineage, remote-sensing lineage and sustainability validation. No operational emitter, redactor, collector, sink, retention or dashboard acceptance. |
-| General telemetry safety | `tools/validators/validate_telemetry_safety.py`; raw/prompt Rego modules | Explicit placeholders remain held. They are not disclosure-prevention controls. |
+| General telemetry safety | `tools/validators/validate_telemetry_safety.py`; raw/prompt Rego modules | Entry point dispatches only to four named local profile validators. Raw/prompt policies remain stubs; general safety and operational telemetry remain held. |
+| Connector entry point | `tools/validators/validate_connector_gate.py`; `tools/validators/connector_gate/output_paths.py` | Static repository output-path scan only; no network, source admission, or connector activation. |
 | Governed API | `apps/governed-api/src/governed_api/main.py`, `stub.py`, `routes/registry.py` | Loopback negative-envelope scaffold with fixed routes; no authenticated production data service established. |
 | Model and service deployment | `runtime/model_adapters/OllamaAdapter.py`; `infra/docker/` Dockerfiles | Placeholder adapter and payload-free images; naming and configuration examples do not prove a running service. |
 | External map context / Earth Engine | Standalone Site preservation record and adapters | Display context or disconnected discovery/recipes. No KFM EvidenceBundle, source admission, warning authority or executed Earth Engine pipeline inferred. |
@@ -63,14 +70,23 @@ Observed local validation for the final changed code:
 
 | Check | Result |
 |---|---|
-| Telemetry directory unit tests | 66 passed |
+| Telemetry directory unit tests | 69 passed after upstream integration |
 | TraceReceiptLink unit tests | 14 passed |
+| Connector entry-point unit tests | 3 passed |
+| Telemetry dispatcher fixture replay | All four profiles passed |
+| Connector static scan | 99 source files; zero findings; no source admission |
 | Explorer Web unit tests | 648 passed across 65 files |
 | Explorer Web build/typecheck | Passed; large-bundle advisory remains |
 | Repository Sites app build/typecheck/tests | 288 passed, 2 existing skips; 5 lint-compatibility tests passed |
 | Standalone Site build/typecheck/tests | 147 passed |
 | Documentation local links | 25 changed documents; 347 local targets resolve; external URLs not network-tested by the checker |
 | Site platform deployment | Version 70 succeeded; owner-private access preserved |
+
+The final upstream integration touched no application source. Its affected
+telemetry/connector suites and the four telemetry fixture replays were rerun;
+application results remain bound to the unchanged application code. The final
+contract, stack, validator and register follow-up passed local link and diff
+checks. Original August authoring receipts remain bound to their original commits.
 
 These are local changed-area results, not a claim that every repository test,
 hosted workflow, browser interaction, source endpoint, or production service was
