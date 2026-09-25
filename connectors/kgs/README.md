@@ -2,14 +2,16 @@
 doc_id: kfm://doc/connectors-kgs-readme
 title: connectors/kgs/ — KGS Source-First Compatibility and Migration Boundary
 type: readme
-version: v0.2
+version: v0.3
 status: draft
 owners: OWNER_TBD — Connector steward · Package maintainer · KGS source steward · Geology steward · Hydrology steward · Hazards steward · Rights reviewer · Privacy/sensitivity reviewer · Security reviewer · Validation steward · Test steward · Docs steward
 created: 2026-06-19
-updated: 2026-07-13
+updated: 2026-09-25
 policy_label: public-doctrine; source-first-connector; documentation-only; compatibility-path; path-and-slug-conflict; product-and-role-separation; rights-fail-closed; sensitive-location-fail-closed; no-network; no-activation; no-publication
 current_path: connectors/kgs/README.md
-truth_posture: CONFIRMED README-only source-first candidate at connectors/kgs, live non-operational 0.0.0 scaffold at connectors/ksgs, documentation-only pointer at connectors/geology/kgs, product-specific compatibility READMEs, absent named package/test children below connectors/kgs, absent catalog-proposed connectors/kansas/kgs child, empty source-authority register, conflicted SourceDescriptor schema authority, and TODO-only connector workflows / CONFLICTED final connector path, kgs-versus-ksgs distribution and import identity, package migration, product decomposition, descriptor authority, role mapping, registry placement, fixture routing, and test ownership / PROPOSED fail-closed compatibility and migration contract / UNKNOWN differently named files, package runtime, live source access, current rights and terms, activation, substantive CI, deployment, and release readiness
+owning_root: connectors/
+responsibility: Preserve KGS source-first path and product-migration boundaries while reporting current generic CI without implying source activation.
+truth_posture: CONFIRMED historical KGS path and package-scaffold inspection at the pinned base; current generic connector gate and SourceDescriptor workflows run bounded no-network checks / CONFLICTED final connector path, kgs-versus-ksgs identity, product decomposition, descriptor authority, registry placement, fixture routing, and test ownership / PROPOSED fail-closed compatibility and migration contract / UNKNOWN KGS-specific executable source behavior, live source access, current rights and terms, activation, connector-run receipts, deployment, and release readiness
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
@@ -63,6 +65,7 @@ notes:
   - "Product-specific top-level KGS READMEs exist for surficial, bedrock, oil-and-gas wells, WWC5, and LAS. Their presence is migration and product-scope evidence, not proof of executable connectors or activation."
   - "KGS publisher, product, dataset, file, well, log, curve, picked-top, map-unit, completion, production, regulatory, and modeled identities must remain distinct. KGS records must not collapse into KCC regulatory determinations, KDHE environmental conclusions, or generated truth."
   - "Only this Markdown file is in scope. No path, package, code, descriptor, registry record, fixture, test, workflow, schema, contract, policy, source payload, credential, lifecycle artifact, evidence object, release object, or public artifact is created or changed."
+  - "v0.3 reconciles generic workflow currentness at main@817074f5d04798bc29c14e68ced6589a1d8ce094 without accepting a KGS-specific connector, receipt, activation, or release."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -82,6 +85,8 @@ notes:
 
 > [!CAUTION]
 > The repository has not accepted a final KGS connector path or `kgs` versus `ksgs` identity. Do not create runtime behavior, aliases, product dispatch, descriptors, fixtures, or lifecycle writers here merely because this source-first name is attractive. Placement and migration require an accepted ADR or explicit migration plan.
+
+> **Currentness correction (2026-09-25):** The pinned July evidence below is historical. At `main@817074f5d04798bc29c14e68ced6589a1d8ce094`, the generic [`connector-gate.yml`](../../.github/workflows/connector-gate.yml) executes connector-core, non-publisher, connector-gate, and IngestReceipt checks, and [`source-descriptor-validate.yml`](../../.github/workflows/source-descriptor-validate.yml) runs bounded fixture and schema checks. These are repository-wide prerequisites; neither workflow runs a KGS product adapter or proves a KGS receipt, approved descriptor, source activation, or live feed. The connector-run receipt-presence job remains an explicit hold.
 
 **Quick links:** [Purpose](#purpose) · [Authority](#authority-level) · [Current state](#current-repository-state) · [Placement conflict](#placement-package-and-slug-conflict) · [What belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Products](#kgs-product-and-record-boundaries) · [Roles](#source-role-and-authority-anti-collapse) · [Descriptor conflict](#descriptor-registry-and-activation-boundary) · [Rights and sensitivity](#rights-sensitivity-privacy-and-location-boundary) · [Inputs](#inputs) · [Outputs](#outputs) · [Failure contract](#failure-contract) · [Lifecycle](#lifecycle-and-publication-boundary) · [Validation](#validation) · [Evidence](#evidence-basis) · [Review and migration](#review-migration-and-rollback) · [Definition of done](#definition-of-done) · [Backlog](#verification-backlog)
 
@@ -191,7 +196,7 @@ These absence statements are limited to the pinned commit and named paths. Diffe
 | `fetch.py` / `admit.py` | Comment-only. | No transport, parsing, validation, decision, receipt, or handoff behavior. |
 | Local `descriptor.yaml` | `name: ksgs`, `role: TBD`, `rights: TBD`, `sensitivity_floor: public`. | Invalid as source authority, activation, rights clearance, sensitivity clearance, or release evidence. |
 | Connector-local tests | README-only at conventional named probes documented by the sibling lane. | Discovery count, coverage, pass state, and negative-case enforcement are unknown. |
-| Connector workflows | TODO echo steps. | Green completion proves workflow execution only, not connector behavior. |
+| Generic connector workflows (2026-09-25) | Bounded repository-owned validation commands; connector-run receipt presence explicitly held. | Generic checks do not prove KGS-specific source behavior or activation. |
 
 [Back to top](#top)
 
@@ -555,7 +560,7 @@ A retained implementation must prove:
 - [ ] outputs are caller-owned candidates and no package code selects or writes lifecycle sinks;
 - [ ] no EvidenceBundle, proof, catalog, release, or public artifact is emitted;
 - [ ] zero-test discovery and unexpected skips fail CI;
-- [ ] workflows execute substantive commands rather than TODO echo steps;
+- [ ] a KGS-specific workflow executes substantive product checks, beyond the generic repository gate;
 - [ ] replay produces deterministic identity, checksum, findings, and reason codes for fixed inputs.
 
 A green workflow is not sufficient unless the executed jobs and logs prove the relevant behavior.
@@ -578,7 +583,7 @@ A green workflow is not sufficient unless the executed jobs and logs prove the r
 | `control_plane/source_authority_register.yaml` | **CONFIRMED** | Register is `PROPOSED` with `entries: []`. | No KGS source authority or activation established. |
 | Singular SourceDescriptor schema | **CONFIRMED** | Rich required contract and metadata declaring plural canonical/this path legacy. | Its own authority metadata conflicts with the plural scaffold. |
 | Plural SourceDescriptor schema | **CONFIRMED** | Empty permissive `PROPOSED` scaffold. | Not sufficient for governed source validation. |
-| Connector workflows | **CONFIRMED TODO-ONLY** | Current named workflows execute placeholder echo steps. | Green status cannot prove connector behavior. |
+| Generic connector workflows | **CONFIRMED PARTIAL ENFORCEMENT** | Current named workflows execute bounded repository validation, with connector-run receipt presence held. | Green status cannot prove KGS-specific connector behavior. |
 
 When documents conflict, current-session direct file reads and newer repository-grounded boundaries constrain claims about present implementation. An accepted ADR is still required to settle architecture.
 
@@ -663,7 +668,7 @@ An executable KGS connector is not ready until:
 - [ ] rights and sensitivity policy is executable for KGS product classes;
 - [ ] safe synthetic or reviewed fixtures exist in the accepted fixture home;
 - [ ] package-local and root-level tests execute substantive negative and positive cases;
-- [ ] connector workflows run observable enforcement rather than TODO stubs;
+- [ ] KGS-specific connector behavior and receipt presence run observable enforcement beyond the generic gate;
 - [ ] deterministic finite outcomes and reason codes are accepted;
 - [ ] lifecycle candidate and receipt contracts are accepted;
 - [ ] migration, deprecation, correction, supersession, and rollback drills pass;
@@ -687,7 +692,7 @@ An executable KGS connector is not ready until:
 | Verify KCC, KDHE, KDA-DWR, and KGS cross-agency role boundaries. | **NEEDS VERIFICATION** | Source-role matrix, contracts, descriptors, policy tests, steward review. |
 | Establish safe fixture strategy. | **NEEDS VERIFICATION** | Fixture home decision, provenance/rights/sensitivity records, negative fixtures. |
 | Establish executable package tests and root trust-spine tests. | **NOT FOUND / UNKNOWN** | Test files, runner, collection logs, coverage, and observed CI. |
-| Replace connector workflow TODO steps with substantive gates. | **PROPOSED** | Workflow implementation, commands, logs, and failure evidence. |
+| Extend the substantive generic connector gate to KGS-specific product and receipt checks. | **HOLD** | Approved product identity and descriptor, synthetic positive/negative fixtures, executable adapter tests, actual connector-run receipt binding, and exact-head logs. |
 | Verify geometry, PLSS, depth, units, uncertainty, and sensitive-location transforms. | **NEEDS VERIFICATION** | Contracts, validators, fixtures, policy decisions, review records. |
 | Define finite connector outcomes and receipt candidates. | **PROPOSED** | Accepted contract/schema, reason-code registry, tests, orchestration integration. |
 | Assign owners and CODEOWNERS coverage. | **UNKNOWN** | Maintainer and governance decision. |
