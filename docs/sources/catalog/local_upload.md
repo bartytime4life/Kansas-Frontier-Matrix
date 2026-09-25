@@ -2,15 +2,16 @@
 doc_id: kfm://doc/sources/local-upload
 title: Local upload: downloaded files and private captures
 type: source-guide
-version: v0.1
-status: proposed; branch-review; quarantine-only
+version: v0.2
+status: repository-integrated; private offline quarantine only
 owners: ["@bartytime4life"]
 created: 2026-09-17
-updated: 2026-09-17
+updated: 2026-09-24
 policy_label: public-documentation
 owning_root: docs/
-truth_posture: implementation and tests are branch evidence; independent acceptance pending
-notes: ["Directory Rules ADR-0029 applies. No source admission, release, deployment, or publication authority."]
+responsibility: Explain the local upload transport and quarantine boundary without treating capture as source admission.
+truth_posture: CONFIRMED main@bb08d3e9b9 source and exact-schema policy decision; independent implementation and native-host acceptance need verification.
+notes: ["Directory Rules ADR-0029 and owner decision #4613 apply only to private offline capture. No source admission, release, deployment, or publication authority."]
 [/KFM_META_BLOCK_V2] -->
 
 # Local upload: downloaded files and private captures
@@ -22,6 +23,12 @@ The operator previews changes, verifies exact size and SHA-256, copies bounded
 regular files, retains capture metadata and process receipts, and reuses verified
 objects on later runs. It never extracts archives, fetches a remote URI, or
 publishes a file.
+
+The [owner decision #4613](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4613)
+accepts the exact manifest schema and contract for private, offline,
+operator-selected `QUARANTINE` capture. The [successor receipt](../../../data/receipts/generated/genrec-local-pc-data-policy-decision-20260917.json)
+records that bounded decision while leaving independent implementation review,
+native-PC acceptance, and all downstream source and public gates separate.
 
 ## Implementation and source identity
 
