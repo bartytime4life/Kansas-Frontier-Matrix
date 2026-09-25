@@ -1,10 +1,12 @@
 # GPT Site source
 
-`source/` is the exact 187-file source snapshot of Kansas Frontier Matrix
-Explorer Site version 71, saved from commit
-`62c6ef9da35bdcd11929502a386f4f9da07448ac`. The deployed Site's saved
-version points to that commit. The repository-local `.gitattributes` file sits
-outside `source/` so every imported source file retains its original bytes.
+`source/` imports the 187-file Kansas Frontier Matrix Explorer Site version 71,
+saved from commit `62c6ef9da35bdcd11929502a386f4f9da07448ac`. The deployed
+Site's saved version points to that commit. One security correction was made in
+this repository: `scripts/earth-engine/requirements.txt` pins Pillow 12.3.0
+instead of the vulnerable 11.3.0. The other 186 imported files retain their
+original bytes. The repository-local `.gitattributes` file sits outside
+`source/` to preserve the imported formatting.
 
 ## Run locally
 
