@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -17,6 +19,11 @@ OPTIONAL_CLI_MODULES = {
     "shellingham",
     "typer",
 }
+TELEMETRY_PROFILES = {
+    "trace_receipt_link", "openlineage_run_event_projection",
+    "remote_sensing_lineage_activity", "map_build_sustainability",
+}
+TELEMETRY_OUTCOMES = {"PASS", "ABSTAIN", "DENY", "ERROR"}
 
 
 def build_app() -> Any:
@@ -82,6 +89,66 @@ def build_app() -> Any:
         Console().print(table)
         if failed:
             raise typer.Exit(code=1)
+
+    @app.command()
+    def telemetry(
+        fixtures: bool = typer.Option(False, "--fixtures", help="Replay bounded local fixtures."),
+        candidate: Path | None = typer.Option(None, "--candidate", help="Local candidate JSON file."),
+        profile: str | None = typer.Option(None, "--profile", help="Explicit reviewed telemetry profile."),
+    ) -> None:
+        """Run the repository's bounded telemetry validator without enabling telemetry."""
+
+        if fixtures == (candidate is not None) or (candidate is not None and profile is None):
+            raise typer.BadParameter("select --fixtures or --candidate with --profile")
+        repo = Path(__file__).resolve().parents[4]
+        validator = repo / "tools/validators/validate_telemetry_safety.py"
+        if not validator.is_file():
+            Console(stderr=True).print("Telemetry validator unavailable in this checkout.")
+            raise typer.Exit(code=1)
+        command = [sys.executable, str(validator)]
+        if fixtures:
+            command.append("--fixtures")
+        else:
+            assert candidate is not None
+            command.extend(("--candidate", str(candidate.absolute())))
+        if profile is not None:
+            command.extend(("--profile", profile))
+        try:
+            result = subprocess.run(
+                command, cwd=repo, capture_output=True, text=True,
+                check=False, timeout=300,
+            )
+            report = json.loads(result.stdout)
+            if (
+                not isinstance(report, dict)
+                or set(report) != {"authority", "execution_mode", "outcome", "profiles", "scope"}
+                or not isinstance(report.get("outcome"), str)
+                or report["outcome"] not in TELEMETRY_OUTCOMES
+                or report.get("authority") != "NONE"
+                or report.get("execution_mode") != "FIXTURE_ONLY_NO_NETWORK"
+                or report.get("scope") != "bounded_telemetry_profile_validation_only"
+                or not isinstance(report.get("profiles"), dict)
+                or not report["profiles"]
+                or set(report["profiles"]) != ({profile} if profile else TELEMETRY_PROFILES)
+                or any(
+                    not isinstance(value, str) or value not in TELEMETRY_OUTCOMES
+                    for value in report["profiles"].values()
+                )
+                or report["outcome"] != next(
+                    (value for value in ("ERROR", "DENY", "ABSTAIN")
+                     if value in report["profiles"].values()), "PASS"
+                )
+                or result.returncode not in (0, 1)
+                or (report["outcome"] in {"PASS", "ABSTAIN"}) != (result.returncode == 0)
+            ):
+                raise ValueError("invalid bounded validator report")
+        except (OSError, subprocess.TimeoutExpired, ValueError):
+            report = {"authority": "NONE", "outcome": "ERROR", "scope": "bounded_telemetry_profile_validation_only"}
+            result_code = 1
+        else:
+            result_code = result.returncode
+        print(json.dumps(report, sort_keys=True, separators=(",", ":")))
+        raise typer.Exit(code=result_code)
 
     return app
 

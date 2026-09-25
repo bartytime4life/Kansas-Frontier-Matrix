@@ -37,6 +37,11 @@ TraceReceiptLink validator in its existing location). Run `--fixtures` to replay
 all four profiles, or `--candidate FILE --profile PROFILE` to select one. An
 unknown or omitted candidate profile is refused. It emits only profile names
 and a bounded outcome; the owning validator keeps its own detailed findings.
+Relative candidate paths are bound to the invoker's working directory before
+the dispatcher starts a validator with repository-root working directory. The
+installed developer CLI at `packages/kfm-cli/` exposes this same bounded
+dispatcher through `kfm telemetry --fixtures` or an explicit `--candidate`
+and `--profile`; no additional telemetry authority is introduced.
 This dispatcher does not implement a general UI telemetry event contract,
 redaction policy, emitter, transport, sink, or operational safety decision.
 

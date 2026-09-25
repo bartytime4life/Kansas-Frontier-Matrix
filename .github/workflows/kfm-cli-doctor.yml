@@ -10,6 +10,8 @@ name: kfm-cli-doctor
       - "tests/ci/test_install_kfm_cli.py"
       - "tools/ci/install_kfm_cli.py"
       - "tools/ci/python-cli.lock"
+      - "tools/validators/validate_telemetry_safety.py"
+      - "tests/validators/telemetry/test_validate_telemetry_safety.py"
   push:
     branches:
       - main
@@ -20,6 +22,8 @@ name: kfm-cli-doctor
       - "tests/ci/test_install_kfm_cli.py"
       - "tools/ci/install_kfm_cli.py"
       - "tools/ci/python-cli.lock"
+      - "tools/validators/validate_telemetry_safety.py"
+      - "tests/validators/telemetry/test_validate_telemetry_safety.py"
   workflow_dispatch:
 
 permissions:
@@ -75,9 +79,11 @@ jobs:
           python -m unittest tests/ci/test_install_python_ci.py -v
           python -m unittest tests/ci/test_install_kfm_cli.py -v
 
-      - name: Validate configuration doctor
+      - name: Validate CLI doctor and bounded telemetry handoff
         run: |
-          python -m pytest tests/packages/kfm_cli/test_doctor.py -q --strict-config --strict-markers
+          python -m pytest tests/packages/kfm_cli/test_doctor.py tests/packages/kfm_cli/test_telemetry.py -q --strict-config --strict-markers
+          python -m unittest discover --start-directory tests/validators/telemetry --pattern 'test_validate_telemetry_safety.py' --verbose
           python -m kfm_cli doctor
           kfm doctor
+          kfm telemetry --fixtures
           python -m pip check

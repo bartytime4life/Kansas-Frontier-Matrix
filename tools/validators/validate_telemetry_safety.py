@@ -35,9 +35,11 @@ def _run(profile: str, candidate: Path | None) -> str:
     if candidate is None:
         command.append("--fixtures")
     elif profile == "trace_receipt_link":
-        command.extend(("--", str(candidate)))
+        # The subprocess runs from ROOT. Bind relative paths to the caller's
+        # working directory before that change, without following symlinks.
+        command.extend(("--", str(candidate.absolute())))
     else:
-        command.extend(("--candidate", str(candidate)))
+        command.extend(("--candidate", str(candidate.absolute())))
     # Fixed, reviewed validator paths only; no shell or caller-supplied program.
     try:
         result = subprocess.run(
