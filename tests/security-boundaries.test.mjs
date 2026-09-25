@@ -100,7 +100,7 @@ test("Qwen configuration, redirects, upstream errors and replies remain bounded"
 });
 
 test("the repository status route rejects oversized chunked responses", async () => {
-  const { GET } = await import(await compile("api/repository-status/route.ts", { "../../bounded-json": boundedUrl }));
+  const { GET } = await import(await compile("api/repository-status/route.ts", { "../../bounded-json": boundedUrl, "../../repository-status": await compile("repository-status.ts") }));
   const originalFetch = globalThis.fetch;
   let canceled = false;
   globalThis.fetch = async () => new Response(new ReadableStream({

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { readBoundedJson } from "./bounded-json";
+import { parseRepositoryObservation, type RepositoryConnection } from "./repository-status";
 import { replaceExplorerHistory } from "./embed-runtime";
 import { parseSavedWorkspaceList } from "./saved-workspaces";
 import { BASELINE_STACKS, currentUtcDay } from "./daily-baseline";
@@ -351,14 +352,6 @@ type MapQueryCandidate = Readonly<{
 type ScenePresetId = "overview-2d" | "globe-overview" | "water-systems" | "smoke-context" | "elevation-3d" | "tile-grid";
 type QwenMessage = Readonly<{ role: "user" | "assistant"; content: string }>;
 type QwenBridgeState = "checking" | "ready" | "not-configured" | "error";
-type RepositoryConnection = Readonly<{
-  state: "idle" | "loading" | "ready" | "error";
-  liveCommit?: string;
-  shortCommit?: string;
-  commitDate?: string | null;
-  message?: string | null;
-  observedAt?: string;
-}>;
 type HoverSummary = Readonly<{
   id: string;
   title: string;
@@ -5056,27 +5049,23 @@ export default function Home() {
   useEffect(() => {
     if (!repositoryOpen) return;
     const controller = new AbortController();
+    let expiryTimer: ReturnType<typeof setTimeout> | undefined;
     setRepositoryConnection({ state: "loading" });
     void fetch("/api/repository-status", { cache: "no-store", signal: controller.signal })
       .then(async (response) => {
-        const payload = await response.json().catch(() => null) as Record<string, unknown> | null;
-        if (!response.ok || payload?.state !== "ready" || typeof payload.commit !== "string" || !/^[0-9a-f]{40}$/i.test(payload.commit)) {
-          throw new Error("Repository status was unavailable");
-        }
-        setRepositoryConnection({
-          state: "ready",
-          liveCommit: payload.commit.toLowerCase(),
-          shortCommit: typeof payload.shortCommit === "string" ? payload.shortCommit : payload.commit.slice(0, 7),
-          commitDate: typeof payload.commitDate === "string" ? payload.commitDate : null,
-          message: typeof payload.message === "string" ? payload.message : null,
-          observedAt: typeof payload.observedAt === "string" ? payload.observedAt : undefined,
-        });
+        if (!response.ok) throw new Error("Repository status was unavailable");
+        const observation = parseRepositoryObservation(await readBoundedJson(response, 8 * 1024));
+        if (controller.signal.aborted) return;
+        setRepositoryConnection(observation);
+        if (observation.state === "ready") expiryTimer = setTimeout(() => {
+          if (!controller.signal.aborted) setRepositoryConnection({ ...observation, state: "stale" });
+        }, Math.max(0, observation.expiresAt! - Date.now()));
       })
       .catch((error) => {
-        if (error instanceof DOMException && error.name === "AbortError") return;
+        if (controller.signal.aborted || (error instanceof DOMException && error.name === "AbortError")) return;
         setRepositoryConnection({ state: "error" });
       });
-    return () => controller.abort();
+    return () => { controller.abort(); clearTimeout(expiryTimer); };
   }, [repositoryOpen, repositoryRefreshKey]);
 
   useEffect(() => {
@@ -7026,7 +7015,7 @@ export default function Home() {
               <div><dt>Domains</dt><dd>{REPOSITORY_SNAPSHOT.counts.knowledgeDomains}</dd></div>
               <div><dt>Feature families</dt><dd>{REPOSITORY_SNAPSHOT.counts.explorerFeatureFamilies}</dd></div>
               <div><dt>Map functions</dt><dd>{REPOSITORY_SNAPSHOT.counts.mapFunctions}</dd></div>
-              <div><dt>Current signals</dt><dd>{REPOSITORY_SNAPSHOT.counts.repositoryUpdates}</dd></div>
+              <div><dt>Dated records</dt><dd>{REPOSITORY_SNAPSHOT.counts.repositoryUpdates}</dd></div>
             </dl>
             <div className="site-identity-strip" aria-label="Site identity and domain status">
               <div>
@@ -7042,23 +7031,25 @@ export default function Home() {
               <div data-state="warning">
                 <span>REPOSITORY IDENTITY</span>
                 <strong>{SITE_IDENTITY.sourceRelation.replaceAll("_", " ")}</strong>
-                <small>{SITE_IDENTITY.repositoryManifestStatus.replaceAll("_", " ")} · {SITE_IDENTITY.repositoryManifestProjectId}; this Site binding is authoritative.</small>
+                <small>{SITE_IDENTITY.repositoryManifestStatus.replaceAll("_", " ")} · {SITE_IDENTITY.repositoryManifestProjectId}; inspect each source and its storage bindings separately.</small>
               </div>
             </div>
             <div className="repository-connection" data-state={repositoryConnection.state} role="status" aria-live="polite">
               <div>
                 <span>LIVE READ-ONLY GITHUB CHECK</span>
-                <strong>{repositoryConnection.state === "ready" ? `main@${repositoryConnection.shortCommit}` : repositoryConnection.state === "loading" ? "Checking current main…" : repositoryConnection.state === "error" ? "Live check unavailable" : "Check available"}</strong>
+                <strong>{repositoryConnection.state === "ready" ? `main@${repositoryConnection.shortCommit}` : repositoryConnection.state === "stale" ? `Last checked main@${repositoryConnection.shortCommit} · refresh needed` : repositoryConnection.state === "loading" ? "Checking current main…" : repositoryConnection.state === "error" ? "Live check unavailable" : "Check available"}</strong>
                 <p>{repositoryConnection.state === "ready"
                   ? repositoryConnection.liveCommit === REPOSITORY_SNAPSHOT.commit
                     ? "GitHub main matches the Site reference snapshot."
-                    : `GitHub main has advanced; this Site remains referenced to main@${REPOSITORY_SNAPSHOT.shortCommit}.`
+                    : `GitHub main differs from this Site’s reference snapshot main@${REPOSITORY_SNAPSHOT.shortCommit}.`
+                  : repositoryConnection.state === "stale"
+                    ? "This observation is over one minute old. Refresh before using it as current status."
                   : repositoryConnection.state === "error"
                     ? "The pinned snapshot remains available; no currentness claim is inferred."
                     : "Reads fixed public repository metadata only when this briefing opens."}</p>
               </div>
               <button type="button" onClick={() => setRepositoryRefreshKey((current) => current + 1)} disabled={repositoryConnection.state === "loading"}>Refresh</button>
-              {repositoryConnection.state === "ready" && <small>{repositoryConnection.message ?? "Current main commit"}{repositoryConnection.observedAt ? ` · checked ${new Date(repositoryConnection.observedAt).toLocaleString()}` : ""}</small>}
+              {(repositoryConnection.state === "ready" || repositoryConnection.state === "stale") && <small>{repositoryConnection.message ?? "Current main commit"}{repositoryConnection.observedAt ? ` · checked ${new Date(repositoryConnection.observedAt).toLocaleString()}` : ""}</small>}
               <footer>Read-only metadata · separate Site and GitHub source histories · no automatic code sync or mutation</footer>
             </div>
           </section>

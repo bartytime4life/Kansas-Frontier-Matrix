@@ -7,6 +7,21 @@ The owner-preserved application baseline is Site version 68. See
 [preservation and recovery](docs/SITE_PRESERVATION.md) and root `AGENTS.md`
 before importing, replacing, synchronizing or publishing other Site copies.
 
+## Documentation and telemetry alignment — September 24, 2026
+
+This source starts from the same-Site v69 preservation follow-up. The current
+repository reference is `main@bb08d3e9b92e9251c193debab6567be843136070`.
+The standalone Site and monorepo remain different applications, even though
+both manifests name the same project and both pin MapLibre 6.9.0.
+
+Use the [feature, connection and telemetry map](docs/SITE_FEATURE_CONNECTION_ACTION_MAP.md)
+for implementation pointers and verification limits. The repository briefing
+now expires read-only GitHub observations after one minute, derives inventory
+counts from records and labels older cards as dated history. It does not infer
+that a different commit is a descendant or that a successful check proves runtime
+health. Older dated sections below record the behavior and tests observed in
+those sessions; they are not fresh acceptance results.
+
 ## Earth Engine discovery and Kansas recipes — September 24, 2026
 
 **Globe integration:** Earth Engine now sits next to Globe in the representation
@@ -734,3 +749,5 @@ Verification: TypeScript and 29 existing/focused checks passed before transfer.
 Browser checks verified draft reload, story stepping, Escape, the comparison
 fallback, and desktop overflow. The test browser lacked WebGL2; terrain, globe,
 and rendered comparison remain unverified by this session.
+
+KML import admission also checks actual UTF-8 bytes and bounds XML depth (64) and elements (20,000). Balanced namespaced geometry and ExtendedData remain supported; malformed markup returns a local error. The focused input regressions, full 147-test suite, build, and TypeScript check passed locally for this alignment. Hosted interaction and telemetry acceptance require separate evidence.

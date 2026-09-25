@@ -202,10 +202,51 @@ const decodeXmlText = (value: string) => value
   .replace(/&apos;/gi, "'")
   .replace(/&amp;/gi, "&");
 
-const tagFragments = (text: string, name: string) => {
-  const pattern = new RegExp(`<(?:(?:[\\w.-]+):)?${name}\\b[^>]*>([\\s\\S]*?)<\\/(?:(?:[\\w.-]+):)?${name}\\s*>`, "gi");
-  return Array.from(text.matchAll(pattern), (match) => match[1]);
+// Scan each character once per extraction. Depth and element limits bound
+// malformed input and nested fragments without regex suffix backtracking.
+const kmlElements = (text: string, wanted: string) => {
+  const elements: { attributes: string; content: string }[] = [];
+  const stack: { name: string; localName: string; start: number; attributes: string }[] = [];
+  let cursor = 0;
+  let count = 0;
+  while (cursor < text.length) {
+    const start = text.indexOf("<", cursor);
+    if (start < 0) break;
+    let end = start + 1;
+    let quote: string | null = null;
+    for (; end < text.length; end += 1) {
+      const char = text[end];
+      if (quote !== null) {
+        if (char === quote) quote = null;
+      } else if (char === '"' || char === "'") quote = char;
+      else if (char === ">") break;
+      else if (char === "<") throw new Error("KML tag markup is malformed.");
+    }
+    if (end === text.length) throw new Error("KML tag markup is incomplete.");
+    const tag = text.slice(start + 1, end);
+    cursor = end + 1;
+    if (tag.startsWith("?") && tag.endsWith("?")) continue;
+    const match = /^(\/?)([\w.-]+(?::[\w.-]+)?)([\s\S]*)$/.exec(tag);
+    if (!match || (match[3] && !/^[\s/]/.test(match[3]))) throw new Error("KML tag markup is malformed.");
+    const name = match[2].toLowerCase();
+    const localName = name.split(":").at(-1)!;
+    if (match[1]) {
+      const open = stack.pop();
+      if (!open || open.name !== name || match[3].trim()) throw new Error("KML elements must be balanced.");
+      if (localName === wanted.toLowerCase()) elements.push({ attributes: open.attributes, content: text.slice(open.start, start) });
+    } else {
+      count += 1;
+      if (count > 20_000 || stack.length >= 64) throw new Error("KML exceeds the preview complexity limit.");
+      if (/\/\s*$/.test(match[3])) {
+        if (localName === wanted.toLowerCase()) elements.push({ attributes: match[3], content: "" });
+      } else stack.push({ name, localName, start: cursor, attributes: match[3] });
+    }
+  }
+  if (stack.length) throw new Error("KML elements must be balanced.");
+  return elements;
 };
+
+const tagFragments = (text: string, name: string) => kmlElements(text, name).map((element) => element.content);
 
 const firstTagText = (text: string, name: string) => decodeXmlText(tagFragments(text, name)[0] ?? "")
   .replace(/<[^>]*>/g, " ")
@@ -238,15 +279,13 @@ const geometryFromKmlFragment = (kind: "Point" | "LineString" | "Polygon", fragm
 };
 
 const extendedDataForPlacemark = (placemark: string): Record<string, string> => {
-  const dataPattern = /<(?:(?:[\w.-]+):)?Data\b([^>]*)>([\s\S]*?)<\/(?:(?:[\w.-]+):)?Data\s*>/gi;
-  const simpleDataPattern = /<(?:(?:[\w.-]+):)?SimpleData\b([^>]*)>([\s\S]*?)<\/(?:(?:[\w.-]+):)?SimpleData\s*>/gi;
-  const dataEntries = Array.from(placemark.matchAll(dataPattern), (match) => {
-    const key = decodeXmlText(match[1].match(/\bname\s*=\s*(["'])(.*?)\1/i)?.[2] ?? "").trim();
-    return [key, firstTagText(match[2], "value")];
+  const dataEntries = kmlElements(placemark, "Data").map(({ attributes, content }) => {
+    const key = decodeXmlText(attributes.match(/\bname\s*=\s*(["'])(.*?)\1/i)?.[2] ?? "").trim();
+    return [key, firstTagText(content, "value")];
   });
-  const simpleDataEntries = Array.from(placemark.matchAll(simpleDataPattern), (match) => {
-    const key = decodeXmlText(match[1].match(/\bname\s*=\s*(["'])(.*?)\1/i)?.[2] ?? "").trim();
-    const value = decodeXmlText(match[2]).replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  const simpleDataEntries = kmlElements(placemark, "SimpleData").map(({ attributes, content }) => {
+    const key = decodeXmlText(attributes.match(/\bname\s*=\s*(["'])(.*?)\1/i)?.[2] ?? "").trim();
+    const value = decodeXmlText(content).replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
     return [key, value];
   });
   return Object.fromEntries([...dataEntries, ...simpleDataEntries].filter(([key]) => key));
@@ -342,7 +381,7 @@ export const buildLocalImportPreview = (input: Readonly<{
   inspectedAt: string;
   supportedBounds: SupportedBounds;
 }>): LocalImportPreview => {
-  if (input.fileSizeBytes > IMPORT_PREVIEW_MAX_BYTES) throw new Error("The preview is limited to files no larger than 2 MB.");
+  if (!Number.isFinite(input.fileSizeBytes) || input.fileSizeBytes < 0 || input.fileSizeBytes > IMPORT_PREVIEW_MAX_BYTES || new TextEncoder().encode(input.text).byteLength > IMPORT_PREVIEW_MAX_BYTES) throw new Error("The preview is limited to files no larger than 2 MB.");
   const trimmed = input.text.trim();
   if (!trimmed) throw new Error("The selected file is empty.");
   const looksLikeKml = /\.kml$/i.test(input.fileName) || /^<\?xml|^<kml[\s>]/i.test(trimmed);

@@ -47,7 +47,7 @@ data, KFM evidence, policy, release, or deployment.
 | System | Authority in this alignment | What is synchronized |
 |---|---|---|
 | Sites | Current runtime and saved Site source | Registry files, UI wiring, tests, and saved version |
-| GitHub | Repository implementation and architecture authority | Documentation-only traceability record against `main@91aeee1ca163bcb3f007577a541a825f60dcddc2` |
+| GitHub | Repository implementation and architecture authority | Documentation-only traceability record against `main@bb08d3e9b92e9251c193debab6567be843136070` |
 | Google Drive | Design/reference and handoff record | Current Site checkpoint, registry file map, validation result, and next gates |
 | Notion | Coordination and knowledge capture | Current checkpoint, implementation boundaries, and follow-up ownership |
 
@@ -63,15 +63,37 @@ repository `main`, activate held integrations, merge a PR, or deploy the Site.
   `https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site`.
 - No custom domain was attached when checked on 2026-09-17. The canonical
   `chatgpt.site` host is the only domain currently represented here.
-- The current independently read repository checkpoint is
-  `bartytime4life/Kansas-Frontier-Matrix@91aeee1ca163bcb3f007577a541a825f60dcddc2` on `main`.
-- The Site checkout’s `.openai/hosting.json` is authoritative for this Site.
-  The repository child manifest still points at legacy project
-  `appgprj_6a870a079c1c8191abb7401ef092a181`; that mismatch is surfaced as
-  identity drift, not silently reconciled or used for deployment. The project
-  returned `NOT_FOUND` in the current Sites readback.
-- Repository MapLibre `6.9.0` and Site MapLibre `6.6.0` remain a named
-  compatibility difference pending exact-candidate validation and rollback proof.
+- The repository checkpoint inspected on 2026-09-24 is
+  `bartytime4life/Kansas-Frontier-Matrix@bb08d3e9b92e9251c193debab6567be843136070` on `main`.
+- Both manifests name this same Site project. The standalone manifest binds
+  `DB` and `BUCKET`; the monorepo consumer has null D1/R2 bindings and a separate
+  Vite/React fixture implementation. A matching project ID does not make that
+  consumer safe to publish over this application.
+- Both source manifests pin MapLibre `6.9.0`; identical dependency versions do
+  not establish source equivalence or WebGL acceptance.
+- The read-only repository check preserves the server observation timestamp,
+  expires after 60 seconds and labels old observations as requiring refresh.
+  Responses use `no-store` so another HTTP cache cannot extend that validity.
+  A differing commit is described as different, without inferring ancestry.
+- Feature-family and map-function counts are derived from their inventories.
+  Repository cards retain their own dated evidence; they are not runtime metrics.
+
+## Telemetry boundaries
+
+| Signal | Actual producer and meaning | Verification limit |
+|---|---|---|
+| Renderer checks | `app/map-performance.ts` samples style, canvas and tile state | No measured FPS, complete layer visibility or source admission implied |
+| Provider state | Fixed adapters and observation timestamps | Retrieval, observation and display times remain separate; empty is not an all-clear |
+| GitHub currentness | Fixed public branch metadata, one-minute validity | No synchronization, CI result, merge/release acceptance or health inference |
+| Qwen context | `app/page.tsx` builds a bounded diagnostic snapshot; `app/qwen-context.ts` labels it | Model availability requires a separate endpoint/bridge check; generated text is interpretation |
+| Earth Engine camera | `app/globe-context.ts` samples the map camera | No Earth Engine connection or sensor telemetry |
+| Monorepo telemetry | Fixture validators and projection generators at the pinned repository | General telemetry-safety and Rego emission policies are placeholders; no collector or sink acceptance |
+
+The executable local validation is `npm test` (build, then the complete test
+inventory). `tests/repository-status.test.mjs` covers timestamp/identity rejection,
+expiry, cache age, redirect cancellation and failure after expiry. Production
+provider/browser acceptance is separate. Rollback is a same-Site source revert;
+retain the preserved v68 recovery baseline and storage bindings.
 
 ## Held ideas intentionally scaffolded
 

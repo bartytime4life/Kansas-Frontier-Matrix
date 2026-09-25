@@ -1,3 +1,5 @@
+import { FEATURE_CATALOG } from "./feature-catalog";
+import { MAP_FUNCTIONS } from "./function-registry";
 import { SITE_IDENTITY } from "./site-identity";
 
 export type RepositoryUpdateState =
@@ -32,11 +34,11 @@ export const REPOSITORY_SNAPSHOT = Object.freeze({
   ref: SITE_IDENTITY.repositoryRef,
   commit: SITE_IDENTITY.repositoryCommit,
   shortCommit: SITE_IDENTITY.repositoryCommit.slice(0, 7),
-  inspectedAt: "17 Sep 2026 · GitHub and Sites readback",
+  inspectedAt: "24 Sep 2026 · GitHub and Sites readback",
   counts: Object.freeze({
     knowledgeDomains: 13,
-    explorerFeatureFamilies: 38,
-    mapFunctions: 20,
+    explorerFeatureFamilies: FEATURE_CATALOG.length,
+    mapFunctions: MAP_FUNCTIONS.length,
     countyPlanningLanes: 105,
     get repositoryUpdates() { return REPOSITORY_UPDATES.length; },
     transitionBoundaries: 4,
@@ -50,16 +52,16 @@ const repoAtSnapshot = `https://github.com/${REPOSITORY_SNAPSHOT.repository}/blo
 export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
   Object.freeze({
     id: "current-main-live-readback",
-    area: "Repository control plane",
-    title: "Main includes GitHub API redirect hardening",
-    state: "NEEDS VERIFICATION",
+    area: "Repository and telemetry",
+    title: "Repository checkpoint and runtime boundaries reconciled",
+    state: "BOUNDED PROOF",
     maturity: "PARTIAL",
-    date: "17 Sep 2026",
+    date: "24 Sep 2026",
     summary:
-      "Main is pinned to 91aeee1, the merge of PR #4609. The repository API probe now rejects HTTP redirects before a token-bearing follow-up can occur. Zero open pull requests were returned at this readback. The Site also offers a separate read-only current-main lookup.",
+      "Inspected main is bb08d3e. The repository Site consumer uses Vite/React with NullMapRuntime and an unavailable API guard; Explorer Web uses the package-owned MapLibre adapter. Telemetry profile validators exist, while general emission safety and collector operation remain held or unverified.",
     boundary:
-      "The GitHub repository and this Site retain separate source histories. A successful currentness check does not synchronize code, prove tree equivalence, admit data, approve a review, deploy a version, or authorize publication.",
-    sourceLabel: "Exact current main commit",
+      "The GitHub repository and this Site retain separate source histories. Their manifests name the same project but have different storage bindings. The read-only main check expires after one minute; it does not synchronize source, verify CI, admit data or establish release acceptance. Older cards below are dated evidence, not current telemetry.",
+    sourceLabel: "Inspected main commit",
     sourceUrl: `https://github.com/${REPOSITORY_SNAPSHOT.repository}/commit/${REPOSITORY_SNAPSHOT.commit}`,
   }),
   Object.freeze({
@@ -80,8 +82,8 @@ export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
     "title": "Live Site identity is confirmed; repository retargeting remains held",
     "state": "BOUNDED PROOF",
     "maturity": "PARTIAL",
-    "summary": "A 17 September pre-change Sites readback confirmed owner-private v44 on project appgprj_6aa0b1c41bc08191bfd86003920f1631 with a succeeded provider deployment. The saved-version history remains the current deployment authority; this source records that dated checkpoint instead of presenting a mutable version number as perpetual current state. Repository main still names legacy project appgprj_6a870a079c1c8191abb7401ef092a181, which returned NOT_FOUND.",
-    "boundary": "Next goal: independently reconcile source trees, D1/R2 bindings, MapLibre and framework versions, archive parity, authenticated browser behavior, and rollback before changing the repository target. Repository metadata is not deployment authority.",
+    "summary": "A 17 September pre-change Sites readback confirmed owner-private v44 on project appgprj_6aa0b1c41bc08191bfd86003920f1631 with a succeeded provider deployment. The saved-version history remains the current deployment authority; this source records that dated checkpoint instead of presenting a mutable version number as perpetual current state. At that dated checkpoint, repository main named legacy project appgprj_6a870a079c1c8191abb7401ef092a181, which returned NOT_FOUND.",
+    "boundary": "The September 24 check found the same project ID in both manifests, with different source trees and D1/R2 bindings. The old NOT_FOUND observation is historical. Source equality and deployment acceptance are not inferred.",
     "sourceLabel": "Repository manifest at pinned main",
     "sourceUrl": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/91aeee1ca163bcb3f007577a541a825f60dcddc2/apps/kansas-frontier-matrix-explorer/.openai/hosting.json",
     "date": "17 Sep 2026"
@@ -92,7 +94,7 @@ export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
     "title": "Five trust-spine items retain named acceptance holds",
     "state": "NEEDS VERIFICATION",
     "maturity": "PARTIAL",
-    "summary": "Milestone 1 remains due September 17 at 7 p.m. America/Chicago (September 18 at 00:00 UTC). Issues #3359, #3360, #3361, #3363 and #3364 remain open under the recorded named HOLD disposition.",
+    "summary": "At the September 15 checkpoint, Milestone 1 was due September 17 at 7 p.m. America/Chicago (September 18 at 00:00 UTC). Issues #3359, #3360, #3361, #3363 and #3364 remain open under the recorded named HOLD disposition.",
     "boundary": "Next goal: obtain current conformance and independent acceptance for each item. Topology Stage 1B remains HOLD and Stage 2 UNAUTHORIZED; successful fixture tests do not close milestones.",
     "sourceLabel": "Trust-spine deadline",
     "sourceUrl": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/milestone/1",
@@ -104,7 +106,7 @@ export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
     "title": "Strict merge-check enforcement remains unproved",
     "state": "NEEDS VERIFICATION",
     "maturity": "PARTIAL",
-    "summary": "Ruleset 15484585 is active but has no required_status_checks rule. The authorize-ready-and-merge addition is prepared; incident #4024 remains open.",
+    "summary": "The September 15 ruleset readback lacked a required_status_checks rule; current settings have not been rechecked here. The authorize-ready-and-merge addition is prepared; incident #4024 remains open.",
     "boundary": "Next goal: complete fresh owner authorization, enforcement readback and the separate canary decision. This Site cannot change rulesets, PR lifecycle or merge authority.",
     "sourceLabel": "Repository control incident",
     "sourceUrl": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",

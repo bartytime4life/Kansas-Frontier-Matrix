@@ -1,4 +1,5 @@
 import { readBoundedJson } from "../../bounded-json";
+import { REPOSITORY_STATUS_TTL_MS } from "../../repository-status";
 
 export const dynamic = "force-dynamic";
 
@@ -6,7 +7,6 @@ const REPOSITORY = "bartytime4life/Kansas-Frontier-Matrix";
 const REF = "main";
 const BRANCH_URL = `https://api.github.com/repos/${REPOSITORY}/branches/${REF}`;
 const MAX_RESPONSE_BYTES = 512 * 1024;
-const CACHE_TTL_MS = 60_000;
 
 type JsonRecord = Record<string, unknown>;
 type CachedRepositoryStatus = Readonly<{
@@ -34,7 +34,7 @@ const asString = (value: unknown) => typeof value === "string" ? value : null;
 export async function GET() {
   if (cachedStatus && cachedStatus.expiresAt > Date.now()) {
     return Response.json(cachedStatus.payload, {
-      headers: { "cache-control": "public, max-age=60, stale-while-revalidate=300" },
+      headers: { "cache-control": "no-store" },
     });
   }
 
@@ -52,7 +52,10 @@ export async function GET() {
       },
       signal: controller.signal,
     });
-    if (!response.ok) throw new Error(`GitHub returned HTTP ${response.status}.`);
+    if (!response.ok) {
+      void response.body?.cancel().catch(() => undefined);
+      throw new Error(`GitHub returned HTTP ${response.status}.`);
+    }
 
     const parsed = await readBoundedJson(response, MAX_RESPONSE_BYTES);
     const commit = isRecord(parsed) && isRecord(parsed.commit) ? parsed.commit : null;
@@ -76,9 +79,9 @@ export async function GET() {
       mode: "READ_ONLY_PUBLIC_METADATA",
       synchronization: "SITE_SOURCE_SEPARATE",
     };
-    cachedStatus = { expiresAt: Date.now() + CACHE_TTL_MS, payload };
+    cachedStatus = { expiresAt: Date.parse(payload.observedAt) + REPOSITORY_STATUS_TTL_MS, payload };
     return Response.json(payload, {
-      headers: { "cache-control": "public, max-age=60, stale-while-revalidate=300" },
+      headers: { "cache-control": "no-store" },
     });
   } catch (error) {
     const timedOut = error instanceof Error && error.name === "AbortError";
