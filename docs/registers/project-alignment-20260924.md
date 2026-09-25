@@ -119,6 +119,33 @@ schema family, or lifecycle location is created. Existing application code,
 validator code, tests, and contract documentation stay in their responsibility
 roots. Review remains required before repository integration.
 
+## External alignment readback
+
+Eight Notion pages were updated and fetched again: the project hub, Repository
+Workbench, alignment register, Explorer roadmap, real-data backfill, Living Atlas
+design, Knowledge Workspace, and Cross-System Authority & Intake Model. The
+alignment register owns the current coordination checkpoint; other pages use
+native page mentions. The exact duplicate v69 checkpoint was removed from the
+roadmap and retained in the backfill history.
+
+Six existing native Google Docs were edited in place with fresh revision guards
+and connector readback:
+
+- [Master Reference](https://docs.google.com/document/d/1H3unk1ks0RM8zy28uoWpCoAjwg_CYjetFbB02GJMyUk): current source, Site, telemetry, validation and limitations.
+- [Explorer roadmap](https://docs.google.com/document/d/1L8zsQgam1bdP7uUbX2zxOkTA01enXXu_tlHLKZRPvzQ): duplicate title and repeated status blocks consolidated into native Master/Backfill links; unique local preview record retained.
+- [Real-data backfill](https://docs.google.com/document/d/1uROL1Hkgr15oe2nH-9B2MUXdmzt2KSBo6ay1jt5dh4s): current pointer and explicit historical scope.
+- [Living Atlas design](https://docs.google.com/document/d/1aivNyfMjQ8urQO6vjt4YvkT1ltF1t7fxCahEcnGV4Dw): duplicate currentness prose replaced by the shared reference; proposed design remains intact.
+- [Workspace Charter](https://docs.google.com/document/d/1WCjGPXvvvSoWLno9anUKzFlaKlR1aLh0u14_1oz61oI): stale current repository/custody language scoped as historical and linked to the current reference.
+- [System Chronicle](https://docs.google.com/document/d/1fBOUDqrcsHaPJiEfM5HmtJL7fBMKFr-rgoN2ge_uVrI): new dated alignment record and explicit historical scope for earlier entries.
+
+Native document tabs, dated records outside replaced duplicate sections, and
+unrelated content were preserved. Newly added semantic dates use date chips;
+new Google document links use native rich links. Connector reads verified the
+edited content, headings, chips and target identities. Rendered page layout was
+not visually inspected. Drive PDFs, imported source documents, Knowledge Ledger
+rows and frozen source-correction packages were not deleted or relabeled as
+current implementation. Similar titles are not evidence of byte equivalence.
+
 ## Deliberate preservation and open verification
 
 - Frozen doctrine, source PDFs, synced project `sources/`, historical receipts,
