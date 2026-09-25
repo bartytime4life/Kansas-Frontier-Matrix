@@ -1,5 +1,11 @@
 # Earth Engine discovery and recipes
 
+2026-09-25 follow-up: the owner-only processed display pipeline is described in
+[EARTH_ENGINE_CONTEXT.md](EARTH_ENGINE_CONTEXT.md). This document preserves the
+earlier discovery baseline and its historical validation statements. A display
+snapshot exists only after private review, tile installation, and active-manifest
+selection; discovery recipes alone still display no Earth Engine pixels.
+
 Metadata checked: 2026-09-24. Scope: existing standalone Sites project
 `appgprj_6aa0b1c41bc08191bfd86003920f1631`, opened at
 `d31c6ca6bd32b9ed50a34679b936568f1585e489` (version 66).

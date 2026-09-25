@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { useState } from "react";
 import { EARTH_ENGINE_ACCESS, EARTH_ENGINE_CATALOG, EARTH_ENGINE_CHECKED_AT, EARTH_ENGINE_DATASETS, buildEarthEngineRecipe, earthEngineReviewPacket, earthEngineUrl, findEarthEngineDatasets } from "../earth-engine-data";
+import { EARTH_ENGINE_CONTEXT_LAYERS, type EarthEngineContextLayerId } from "../earth-engine-context";
+import { useEarthEngineContext } from "../earth-engine-context-client";
+import { buildEarthEngineExportRecipe } from "../earth-engine-export";
 import styles from "./workspace.module.css";
 
 const topics = ["All", ...new Set(EARTH_ENGINE_DATASETS.map((d) => d.topic))];
@@ -15,6 +18,7 @@ function download(text: string, name: string, type: string) {
 }
 
 export default function EarthEngineWorkspace() {
+  const context = useEarthEngineContext();
   const [query, setQuery] = useState("");
   const [topic, setTopic] = useState("All");
   const [selectedId, setSelectedId] = useState(EARTH_ENGINE_DATASETS[0].id);
@@ -29,6 +33,7 @@ export default function EarthEngineWorkspace() {
   let error = "";
   try { recipe = buildEarthEngineRecipe(selected.id, year); } catch (cause) { error = cause instanceof Error ? cause.message : "Check the selected recipe."; }
   const comparison = EARTH_ENGINE_DATASETS.filter((d) => compared.includes(d.id));
+  const exportable = EARTH_ENGINE_CONTEXT_LAYERS.some((layer) => layer.id === selected.id) && (!annual || year === 2024);
 
   function choose(id: string) {
     const dataset = EARTH_ENGINE_DATASETS.find((d) => d.id === id)!;
@@ -49,6 +54,13 @@ export default function EarthEngineWorkspace() {
       setNotice(kind === "recipe" ? "Recipe download prepared. It has not been run." : "Review draft download prepared. It contains metadata and unresolved checks, not imagery or admitted data.");
     } catch { setNotice("Download unavailable. Copy the recipe or try again."); }
   }
+  function saveExport(scope: "sample" | "statewide") {
+    try {
+      const script = buildEarthEngineExportRecipe(selected.id as EarthEngineContextLayerId, scope);
+      download(script, `kfm-${selected.id}-${scope}-drive-export.js`, "text/javascript");
+      setNotice(`${scope === "sample" ? "Small-area" : "Statewide"} Drive export recipe prepared. It has not been run; check source counts and review the output before approval.`);
+    } catch { setNotice("This dataset or year is outside the reviewed 2024 display set."); }
+  }
 
   return <main className={styles.page}>
     <header className={styles.header}>
@@ -57,7 +69,7 @@ export default function EarthEngineWorkspace() {
     </header>
     <section className={styles.intro} aria-labelledby="earth-engine-title">
       <div><p className={styles.eyebrow}>KANSAS / SOURCE DISCOVERY</p><h1 id="earth-engine-title">Earth Engine datasets & recipes</h1><p>Find a dataset, compare its limits, and prepare a Kansas analysis for review.</p></div>
-      <div className={styles.access}><strong>Discovery available · Earth Engine not connected</strong><p>Recipes run in your own Earth Engine project. No satellite data has been imported into KFM.</p><a href={EARTH_ENGINE_ACCESS} target="_blank" rel="noreferrer">Set up Earth Engine access ↗</a></div>
+      <div className={styles.access}><strong>{context.manifest ? "Processed snapshots available · live Earth Engine disconnected" : "Discovery available · Earth Engine not connected"}</strong><p>{context.manifest ? "Reviewed visual snapshots are available in the map layer controls. They are not KFM claim evidence." : "Recipes run in the owner's registered Earth Engine project. No reviewed Earth Engine display set is installed in this Site."}</p><a href={EARTH_ENGINE_ACCESS} target="_blank" rel="noreferrer">Earth Engine access guide ↗</a></div>
     </section>
     <div className={styles.layout}>
       <section aria-label="Earth Engine dataset discovery" className={styles.discovery}>
@@ -88,6 +100,8 @@ export default function EarthEngineWorkspace() {
         <p id="recipe-error" className={styles.error} role="alert">{error}</p>
         <div className={styles.limit}><strong>Interpret with care</strong><p>{selected.limitation}</p></div>
         <div className={styles.recipeActions}><button type="button" className={styles.primary} disabled={Boolean(error)} onClick={() => save("recipe")}>Download recipe · .js</button><button type="button" disabled={Boolean(error)} onClick={() => void copyRecipe()}>Copy recipe</button><button type="button" disabled={Boolean(error)} onClick={() => save("review")}>Download review draft · .json</button></div>
+        {exportable && <div className={styles.recipeActions}><button type="button" onClick={() => saveExport("sample")}>Download small-area Drive export</button><button type="button" onClick={() => saveExport("statewide")}>Download statewide Drive export</button></div>}
+        {exportable && <p className={styles.footnote}>Run the small-area export first. Keep task IDs, source image IDs, projection, masks, coverage, terms and file hashes in the external private review store. Statewide execution waits for the sample review and Drive capacity check.</p>}
         <p role="status" className={styles.notice}>{notice}</p>
         <details className={styles.instructions}><summary>How to run and review</summary><ol><li><a href={EARTH_ENGINE_ACCESS} target="_blank" rel="noreferrer">Register an Earth Engine project</a> with the access appropriate to your use.</li><li>Copy the script into the <a href="https://code.earthengine.google.com/" target="_blank" rel="noreferrer">Earth Engine Code Editor</a>. Review it, then run it there.</li><li>Inspect source IDs, coverage, quality flags and missing pixels. Keep the complete inputs and processing record before exporting any data.</li><li>Prepare source files and provenance for KFM review. Acceptance for preparation is separate from admission and release.</li></ol><p>These generated recipes have not been executed against Earth Engine. They do not automatically export files, publish layers, or write back to KFM.</p></details>
         <details className={styles.code}><summary>Inspect generated script</summary><pre tabIndex={0} aria-label="Generated Earth Engine JavaScript"><code>{recipe || "Choose a valid year to generate the recipe."}</code></pre></details>

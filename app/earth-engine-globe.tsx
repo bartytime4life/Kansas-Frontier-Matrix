@@ -5,10 +5,11 @@ import { useEffect, useRef, useState } from "react";
 import { EARTH_ENGINE_ACCESS, EARTH_ENGINE_DATASETS, buildEarthEngineRecipe, earthEngineUrl } from "./earth-engine-data";
 import { GLOBE_VIEWPOINTS, type GlobeCameraReading, type GlobeViewpoint } from "./globe-context";
 import styles from "./earth-engine-globe.module.css";
+import type { EarthEngineContextManifest } from "./earth-engine-context";
 
-export function EarthEngineGlobe({ camera, moving, rendererState, basemap, mapYear, mapTime, onViewpoint, onClose }: {
+export function EarthEngineGlobe({ camera, moving, rendererState, basemap, mapYear, mapTime, contextManifest, onViewpoint, onClose }: {
   camera: GlobeCameraReading | null; moving: boolean; rendererState: string; basemap: string;
-  mapYear: number; mapTime: string; onViewpoint: (viewpoint: GlobeViewpoint) => void; onClose: () => void;
+  mapYear: number; mapTime: string; contextManifest: EarthEngineContextManifest | null; onViewpoint: (viewpoint: GlobeViewpoint) => void; onClose: () => void;
 }) {
   const [datasetId, setDatasetId] = useState("ee-sentinel2");
   const [yearText, setYearText] = useState("2025");
@@ -45,7 +46,7 @@ export function EarthEngineGlobe({ camera, moving, rendererState, basemap, mapYe
       {camera ? <><dl><div><dt>Center · lon, lat</dt><dd>{camera.longitude.toFixed(3)}°, {camera.latitude.toFixed(3)}°</dd></div><div><dt>Zoom</dt><dd>{camera.zoom.toFixed(2)}</dd></div><div><dt>Bearing / pitch</dt><dd>{camera.bearing.toFixed(1)}° / {camera.pitch.toFixed(1)}°</dd></div><div><dt>Projection</dt><dd>{camera.projection === "globe" ? "Globe requested from renderer" : camera.projection === "mercator" ? "Mercator · globe not yet applied" : "Unverified"}</dd></div><div><dt>Style / visible tiles</dt><dd>{camera.styleLoaded ? "Style loaded" : "Style loading"} / {camera.tilesLoaded ? "loaded" : "pending"}</dd></div></dl><small>Sampled {camera.sampledAt.replace("T", " ").replace(/\.\d+Z$/, " UTC")}. Map readings, not satellite telemetry.</small></> : <p>Camera readings unavailable until the map can be sampled.</p>}
       <p className={styles.runtime}>Map: {rendererState}. Basemap: {basemap}. At close zooms the globe transitions toward a local map.</p>
     </section>
-    <div className={styles.connection}><strong>Earth Engine not connected</strong><p>No Earth Engine imagery or sensor telemetry is displayed. The globe shows the attributed basemap and selected KFM context layers.</p></div>
+    <div className={styles.connection}><strong>{contextManifest ? "Processed snapshots available · live Earth Engine disconnected" : "Earth Engine not connected"}</strong><p>{contextManifest ? "Approved snapshots can be switched on in Domains + live data, including this Globe view. Pixel colors are visual context, not evidence claims." : "No Earth Engine imagery or sensor telemetry is displayed. The globe shows the attributed basemap and selected KFM context layers."}</p></div>
     <label className={styles.field}>Dataset<select value={datasetId} onChange={(event) => choose(event.target.value)}>{EARTH_ENGINE_DATASETS.map((item) => <option key={item.id} value={item.id}>{item.title}</option>)}</select></label>
     <p>{dataset.use}</p><code className={styles.asset}>{dataset.asset}</code>
     <dl className={styles.metadata}><div><dt>Provider</dt><dd>{dataset.provider}</dd></div><div><dt>Pixel size</dt><dd>{dataset.resolution}</dd></div><div><dt>Source time</dt><dd>{dataset.coverage} · {dataset.cadence}</dd></div><div><dt>Map time</dt><dd>{mapTime}</dd></div><div><dt>Recipe area</dt><dd>Kansas · TIGER 2018 boundary. Changing the viewpoint does not change the analysis area.</dd></div></dl>

@@ -11,6 +11,8 @@ import { SourceQualityRow } from "./source-quality-row";
 import { ArchiveDaySlider } from "./archive-day-slider";
 import { DataNotices, RenderQualityControl, TerrainQuickControls } from "./map-toolbar";
 import { EarthEngineGlobe } from "./earth-engine-globe";
+import { EarthEngineDisplayControls } from "./earth-engine-display";
+import { useEarthEngineContext } from "./earth-engine-context-client";
 import { applyProjectionNavigationLimits, GLOBE_VIEWPOINTS, readGlobeCamera, REGIONAL_NAVIGATION_BOUNDS, type GlobeCameraReading, type GlobeViewpoint } from "./globe-context";
 import { browserRenderBudget, readRenderQuality, sampleMapRuntimeHealth, QUALITY_STORAGE_KEY, type MapRuntimeCheckFailure, type RenderQuality } from "./map-performance";
 import type { Feature, Geometry } from "geojson";
@@ -1062,6 +1064,7 @@ const anchorDistanceMiles = (left: Pick<FeatureProperties, "focusLng" | "focusLa
 export default function Home() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
+  const earthEngineContext = useEarthEngineContext();
   const styleGenerationReadyRef = useRef(false);
   const mapMutationErrorRef = useRef<string | null>(null);
   const popupRef = useRef<Popup | null>(null);
@@ -7337,6 +7340,8 @@ export default function Home() {
             <dl><div><dt>TIME MODE</dt><dd>{temporalMode.replaceAll("-", " ")}</dd></div><div><dt>LIVE CONTEXT</dt><dd>{withheldOfficialCount > 0 ? `${withheldOfficialCount} selected source${withheldOfficialCount === 1 ? "" : "s"} held` : "Operational present available"}</dd></div></dl>
           </section>
 
+          <EarthEngineDisplayControls key={earthEngineContext.manifest?.setId ?? "no-display-set"} map={styleReady ? mapRef.current : null} mapYear={temporalMode === "snapshot" ? year : -1} manifest={earthEngineContext.manifest} loading={earthEngineContext.loading} error={earthEngineContext.error} onReload={earthEngineContext.reload} />
+
           <details className="legacy-layer-index"><summary>Legacy examples & diagnostics</summary><p>These older interaction examples are separate from today’s real source baseline.</p>
           <section className="active-layers" aria-labelledby="active-title">
             <div className="section-row"><h2 id="active-title">Active local layers <span>{visibleCount}/{LAYER_REGISTRY.length}</span></h2><div className="active-layer-actions"><button type="button" onClick={() => { setVisibility(defaultVisibility); setOpacity(defaultOpacity); }}>Reset defaults</button><button type="button" onClick={() => setVisibility(Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, false])))}>Hide all</button></div></div>
@@ -7597,7 +7602,7 @@ export default function Home() {
             <button className="map-control-launch" type="button" onClick={() => window.location.assign("/")} title={`Open a fresh baseline for ${baselineDay} UTC`}><strong>Today’s baseline</strong></button>
             <Link className="map-control-launch" href="/data"><strong>Contribute data</strong></Link>
           </nav>
-          {earthEngineOpen && projection === "globe" && <EarthEngineGlobe camera={globeCamera} moving={globeCameraMoving} rendererState={runtime.kind} basemap={BASEMAPS[basemap].title} mapYear={year} mapTime={temporalScopeLabel} onViewpoint={chooseGlobeViewpoint} onClose={closeEarthEngineGlobe} />}
+          {earthEngineOpen && projection === "globe" && <EarthEngineGlobe camera={globeCamera} moving={globeCameraMoving} rendererState={runtime.kind} basemap={BASEMAPS[basemap].title} mapYear={year} mapTime={temporalScopeLabel} contextManifest={earthEngineContext.manifest} onViewpoint={chooseGlobeViewpoint} onClose={closeEarthEngineGlobe} />}
           {sourceStatusOpen && <aside id="map-source-status" className="map-source-status" aria-label="Source status and data quality">
             <header><h2>Sources & data quality</h2><button type="button" onClick={() => setSourceStatusOpen(false)} aria-label="Close source status">×</button></header>
             <p>Today · {baselineDay} UTC. Live observations refresh as providers publish. County counts keep their Census edition, and historical gaps remain visible.</p>

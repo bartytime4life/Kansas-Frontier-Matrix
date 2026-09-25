@@ -11,7 +11,7 @@ test("production worker serves discoverable Earth Engine workspace with honest a
   const html = await response.text();
   for (const label of ["Earth Engine datasets", "Earth Engine not connected", "Cropland Data Layer", "TerraClimate drought index", "Analysis year", "Download recipe", "Compare datasets"]) assert.ok(html.includes(label), label);
   assert.match(html, /href="\/data\?source=ee-cdl"/);
-  assert.match(html, /No satellite data has been imported/);
+  assert.match(html, /No reviewed Earth Engine display set is installed in this Site/);
   const home = await worker.fetch(new Request("http://localhost/", { headers: { accept: "text/html" } }), env, ctx);
   assert.equal(home.status, 200);
   const homeHtml = await home.text();
