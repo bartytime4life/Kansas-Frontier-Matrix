@@ -24,6 +24,7 @@ TELEMETRY_PROFILES = {
     "remote_sensing_lineage_activity", "map_build_sustainability",
 }
 TELEMETRY_OUTCOMES = {"PASS", "ABSTAIN", "DENY", "ERROR"}
+DIFF_STATUSES = {"same", "changed", "error"}
 
 
 def build_app() -> Any:
@@ -89,6 +90,64 @@ def build_app() -> Any:
         Console().print(table)
         if failed:
             raise typer.Exit(code=1)
+
+    @app.command()
+    def diff(
+        left: Path = typer.Option(..., "--left", help="Local JSON object before the change."),
+        right: Path = typer.Option(..., "--right", help="Local JSON object after the change."),
+        fail_on_change: bool = typer.Option(False, "--fail-on-change"),
+    ) -> None:
+        """Compare two local JSON objects without assigning policy authority."""
+
+        repo = Path(__file__).resolve().parents[4]
+        comparator = repo / "tools/diff/stable_diff.py"
+        if not comparator.is_file():
+            print(json.dumps({"tool": "stable-diff", "status": "error", "blocking": True,
+                              "error": {"code": "COMPARATOR_UNAVAILABLE"}}, sort_keys=True))
+            raise typer.Exit(code=2)
+        command = [sys.executable, str(comparator), "--left", str(left.absolute()),
+                   "--right", str(right.absolute())]
+        if fail_on_change:
+            command.append("--fail-on-change")
+        try:
+            result = subprocess.run(command, cwd=repo, capture_output=True,
+                                    text=True, check=False, timeout=60)
+            report = json.loads(result.stdout)
+            if (not isinstance(report, dict)
+                or set(report) != ({"tool", "status", "blocking", "left", "right", "summary"}
+                    | ({"error"} if report.get("status") == "error" else set()))
+                or report.get("tool") != "stable-diff"
+                or report.get("status") not in DIFF_STATUSES
+                or not isinstance(report.get("blocking"), bool)
+                or not isinstance(report.get("summary"), dict)
+                or set(report["summary"]) != {"added", "removed", "changed"}
+                or any(not isinstance(report["summary"][key], list)
+                       or any(not isinstance(item, str) for item in report["summary"][key])
+                       for key in ("added", "removed", "changed"))
+                or (report["status"] == "same" and any(report["summary"].values()))
+                or (report["status"] == "changed" and not any(report["summary"].values()))
+                or (report["status"] == "error" and
+                    (any(report["summary"].values()) or not isinstance(report.get("error"), dict)
+                     or set(report["error"]) != {"code", "message"}
+                     or not all(isinstance(value, str) for value in report["error"].values())))
+                or report.get("left") != str(left.absolute())
+                or report.get("right") != str(right.absolute())
+                or result.returncode not in (0, 1, 2)
+                or (report["status"] == "error") != (result.returncode == 2)
+                or (result.returncode == 1) != (report["status"] == "changed" and fail_on_change)
+                or report["blocking"] != (report["status"] == "error" or
+                    (report["status"] == "changed" and fail_on_change))):
+                raise ValueError("invalid comparator report")
+        except (OSError, subprocess.TimeoutExpired, ValueError):
+            report = {"tool": "stable-diff", "status": "error", "blocking": True,
+                      "error": {"code": "COMPARATOR_ERROR"}}
+            result_code = 2
+        else:
+            result_code = result.returncode
+        # The upstream report includes local input paths by contract; unlike
+        # telemetry this is an explicitly operator-local comparison surface.
+        print(json.dumps(report, sort_keys=True, separators=(",", ":")))
+        raise typer.Exit(code=result_code)
 
     @app.command()
     def telemetry(
