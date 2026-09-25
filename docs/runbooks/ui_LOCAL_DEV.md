@@ -13,12 +13,8 @@ owning_root: docs/
 responsibility: "Describe the supported locked-install, local-development, and focused-validation path for the repository-local Explorer Web workspace without granting deployment, source-admission, release, or publication authority."
 truth_posture: "CONFIRMED repository configuration / candidate exact-head validation / NEEDS VERIFICATION hosted and human acceptance; cite-or-abstain"
 related:
-  - apps/explorer-web/README.md
   - pnpm-workspace.yaml
   - pnpm-lock.yaml
-  - .github/workflows/ui-build.yml
-  - .github/workflows/accessibility.yml
-  - apps/kansas-frontier-matrix-explorer/docs/esbuild-security-remediation.md
 [/KFM_META_BLOCK_V2] -->
 
 > **Retired guidance (2026-09-25):** This runbook describes the removed `apps/explorer-web/` workbench. For local hosting, use the [standalone Site v71 source](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/codex/live-site-v71-source-20260925). Commands below are historical and do not apply to this branch.
