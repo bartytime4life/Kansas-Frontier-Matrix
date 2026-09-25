@@ -76,7 +76,7 @@ operational telemetry.
 | Raw-evidence module | [`no_raw_in_telemetry.rego`](./no_raw_in_telemetry.rego) is marked `PROPOSED greenfield stub` | It defines `deny` as `false` and executes no denial rule. |
 | Prompt module | [`no_prompt_in_telemetry.rego`](./no_prompt_in_telemetry.rego) is marked `PROPOSED greenfield stub` | It defines `deny` as `false` and executes no denial rule. |
 | Commented examples | Each module contains a commented `deny[reason]` sketch | Comments are neither executable logic nor an accepted input, reason, or outcome contract. |
-| General validator | [`validate_telemetry_safety.py`](../../tools/validators/validate_telemetry_safety.py) raises `NotImplementedError("Greenfield placeholder")` | No general telemetry-safety validator is implemented. |
+| Telemetry validator entry point | [`validate_telemetry_safety.py`](../../tools/validators/validate_telemetry_safety.py) dispatches four explicit fixture-only profiles and requires valid child output | A bounded local dispatcher exists; no general telemetry-event safety policy, redactor, or operational consumer is implemented. |
 | Readiness workflow | [`telemetry-policy`](../../.github/workflows/telemetry-policy.yml) checks admitted fixture-only profiles and asserts the stub states | It proves bounded repository-local absence checks and records `WORKFLOW_HOLD`; it does not evaluate these modules with OPA or inspect an operational event. |
 | Architecture and decision posture | [UI Telemetry Architecture](../../docs/architecture/ui/TELEMETRY.md) is draft; [ADR-0016](../../docs/adr/ADR-0016-telemetry-redaction-posture.md) remains proposed | Their target posture is design evidence, not accepted runtime behavior. |
 | Evaluator and consumer | No accepted bundle selector, general evaluator, emitter, sink, or production consumer was established in the reviewed evidence | Operational enforcement remains unproven and must fail closed outside any explicitly accepted baseline. |
@@ -276,7 +276,7 @@ establish that sequence.
 | [UI Telemetry Architecture](../../docs/architecture/ui/TELEMETRY.md) | Draft target architecture for UI telemetry | Several paths and interfaces remain proposed; verify before implementation. |
 | [ADR-0016](../../docs/adr/ADR-0016-telemetry-redaction-posture.md) | Proposed redaction, minimization, sink, receipt, and correction posture | Decision status remains `proposed`. |
 | [Telemetry policy sibling](../telemetry/README.md) | Current adjacent lane containing the restricted-coordinate stub | Boundary ownership and consolidation remain unresolved. |
-| [Telemetry safety validator](../../tools/validators/validate_telemetry_safety.py) | Named general validation surface | Placeholder only; raises `NotImplementedError`. |
+| [Telemetry validator dispatcher](../../tools/validators/validate_telemetry_safety.py) | Selects four explicit local profiles and checks their reported scope and outcome | No general telemetry safety decision or policy evaluation. |
 | [Telemetry readiness workflow](../../.github/workflows/telemetry-policy.yml) | Bounded fixture checks and explicit operational holds | Does not run OPA against these modules or prove production safety. |
 | [Telemetry receipt lane](../../data/receipts/telemetry/README.md) | Accountability home for future accepted telemetry receipt instances | No operational receipt instance is established by this README. |
 | [Release root](../../release/README.md) | Owns release, correction, withdrawal, and rollback decisions | Policy cannot self-release or self-publish. |
