@@ -198,22 +198,13 @@ def test_strict_serializer_rejects_non_finite_values(value: float) -> None:
     assert caught.value.reason_code == "CONTROL_SOURCE_SERIALIZATION_INVALID"
 
 
-def test_binding_note_records_integrated_hardening_and_observed_enforcement() -> None:
-    binding = BINDING_PATH.read_text(encoding="utf-8")
-    lowered = binding.lower()
-
-    assert "current-main bounded-capture workflow active" in lowered
-    assert "authorization-output hardening integrated" in lowered
-    assert "pr #4237" in lowered
-    assert "uses three trusted-base helpers" in lowered
-    assert "authorization-output hardening is integrated" in lowered
-    assert "fetch_bounded_issue_comments.py" in binding
-    assert "classification output contract" in lowered
-    assert "result_serialization_invalid" in lowered
-    assert "16 mib" in lowered
-    assert "1,000,000 json nodes" in lowered
-    assert "allow_nan=false" in lowered
-    assert "exact required-status-check installed" in lowered
-    assert "observed as applied" in lowered
-    assert "does not authorize" in lowered
-    assert "proposed; branch-only; exact-main-reconciled; not workflow-active" not in lowered
+def test_binding_note_distinguishes_retirement_from_validation_bypass() -> None:
+    binding = BINDING_PATH.read_text(encoding="utf-8").lower()
+    assert "required status rule removed" in binding
+    assert "strict authorization" in binding
+    assert "invalid records still fail" in binding
+    assert "not replaced with a green" in binding
+    assert "previous binding at the inspected base" in binding
+    assert "does not claim stronger containment" in binding
+    assert "no ready, approval, merge" in binding
+    assert "later owner-authorized restoration" in binding

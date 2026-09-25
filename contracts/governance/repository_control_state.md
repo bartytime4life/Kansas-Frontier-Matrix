@@ -1,11 +1,15 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://contract/governance/repository-control-state
 title: RepositoryControlState semantic contract
-version: v0.4.0
+type: semantic-contract
+owning_root: contracts/
+responsibility: Define offline repository-control observation and transition-record semantics without granting platform authority.
+truth_posture: PROPOSED semantic contract; CONFIRMED retained validators; transition-check integration retired
+version: v0.4.1
 status: proposed
 owner: OWNER_TBD — governance steward and repository-control steward
 created: 2026-07-26
-updated: 2026-07-30
+updated: 2026-09-25
 policy_label: repository-facing; governance; fail-closed; non-authoritative
 related:
   - ../../docs/doctrine/directory-rules.md
@@ -86,6 +90,11 @@ A required check satisfies the merge-readiness evaluation only with `PASS`. `EXP
 
 ## Head-bound transition records
 
+The workflow integration was retired at the owner's request on 2026-09-25.
+The format and offline validators below remain available for historical replay;
+they are not a current draft-PR or merge prerequisite. See the
+[retirement record](../../docs/governance/repository_transition_control_source.md).
+
 The proposed `RepositoryTransitionAuthorization` is a separate, short-lived record embedded as strict JSON in a comment intended to remain append-only on the repository-control issue. It exists to make a Model B ready-and-merge decision explicit and exact-head bound when independent review is unavailable.
 
 An accepted record must match:
@@ -97,9 +106,9 @@ An accepted record must match:
 - the finite decision `ALLOW_READY_AND_MERGE`; and
 - an expiry after comment creation and no more than four hours later.
 
-The trusted-base workflow rejects draft PRs, edited comments, duplicate or unknown JSON fields, stale or overlong records, and base/head mismatches. Comment bodies are treated as untrusted bounded data and are never executed or echoed.
+The retained offline validator rejects draft PRs, edited comments, duplicate or unknown JSON fields, stale or overlong records, and base/head mismatches. Comment bodies are treated as untrusted bounded data and are never executed or echoed.
 
-Post each authorization as a new comment on issue #1675 after the PR base and head are frozen. Do not edit it; post a replacement for any correction or new head. This synthetic example shows the exact marker and shape:
+No issue comment is required for current contributor delivery. The following historical synthetic example retains the original marker, issue identity and shape for compatibility:
 
 ```html
 <!-- KFM_REPOSITORY_TRANSITION_AUTHORIZATION_V1
@@ -107,13 +116,12 @@ Post each authorization as a new comment on issue #1675 after the PR base and he
 -->
 ```
 
-Keep the PR draft until that separate transition decision exists, then mark it ready to trigger the check. If an already-ready PR needs reevaluation, an `edited`, `labeled`, or `unlabeled` PR event can request a new run; none of those events supplies authority without a matching unedited #1675 record.
+The retained validator evaluates expiry and comment state at invocation time. A
+record identifies an owner-account decision, not whether a human, app, token or
+other client initiated it. Historical results do not create current authority.
 
-The expiry and unedited-comment condition are evaluated at workflow run time. GitHub does not automatically turn an already-recorded successful check into a failure when the timestamp later passes or the issue comment is later edited or deleted. Therefore the record is an exact-head point-in-time transition decision, not a continuously enforced time lease or immutable ledger: post it only when the ready-and-merge transition is actually intended, preserve it, and request a fresh run before relying on it after expiry or any comment mutation. A later head or base change invalidates the exact binding and causes a new run to hold.
-
-This control closes an auditability gap, not an identity-separation gap. An owner login observed on a GitHub comment establishes the authenticated account identity exposed by the API. It does **not** establish whether a human browser, OAuth token, GitHub App, PAT, or another client initiated the action. If an app acts through the same owner identity, this record cannot distinguish it from the human owner. Security-log evidence, app/token restriction, and future Model A independent review remain separate controls.
-
-The workflow check name is `repository-control / authorize-ready-and-merge`. It is advisory until GitHub ruleset `15484585` separately requires that exact check with strict/up-to-date behavior. A workflow file cannot make itself required, and this contract does not authorize a ruleset mutation.
+The workflow remains disabled in GitHub. Its source and parser tests are retained;
+no skipped-success substitute or unconditional passing check replaces it.
 
 ## Failure behavior
 

@@ -95,8 +95,8 @@ installed version does not prove installation-byte integrity.
 
 ## Next safe integration action
 
-Re-pin main and this branch; inspect overlapping work and current #4024/#4228
-controls before editing. Do not apply the original ZIP's void `onChange` snippet:
+Re-pin main and this branch; inspect overlapping work, current
+[contributor guidance](../../../CONTRIBUTING.md) and #4228 controls before editing. Do not apply the original ZIP's void `onChange` snippet:
 it does not implement the new acknowledged protocol.
 
 The previously inspected preimages were:
@@ -167,8 +167,6 @@ under its existing `apps/` lane. Types are UI interfaces, not new canonical
 contracts or schemas. Generated-work accountability stays in the existing
 `data/receipts/generated/` collection. No new root or parallel authority is created.
 
-#4024 closed metadata is not qualifying evidence that its PR-state control path
-is safe. Stop at branch-only delivery absent an independent permitted creator.
 #4228 Stage 1B and Stage 2 remain held/unauthorized; `catalog/`, the correction
 register and baseline are unchanged. No independent human approval is claimed.
 

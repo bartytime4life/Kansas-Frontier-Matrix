@@ -6,7 +6,7 @@ version: v0.1.0
 status: proposed; offline-implemented; source-activation-held
 owners: ["@bartytime4life"]
 created: 2026-09-23
-updated: 2026-09-23
+updated: 2026-09-25
 policy_label: public; context-only; not-alerting; no-source-admission
 owning_root: docs/
 responsibility: Explain the bounded offline USGS query and snapshot helpers and the remaining transport, reconciliation, source, and Site acceptance gates.
@@ -164,7 +164,8 @@ provider subscription follows from this work.
 
 Before acceptance: run exact-candidate CI, independent source/security review,
 authenticated browser/WebGL checks, correction and rollback rehearsal. Keep
-#4024's path-specific containment and #4228's Stage 1A accepted / Stage 1B HOLD /
+the current [contributor guidance](../../CONTRIBUTING.md) and #4228's
+Stage 1A accepted / Stage 1B HOLD /
 Stage 2 unauthorized boundaries. No merge, release or deployment is authorized
 by this runbook.
 

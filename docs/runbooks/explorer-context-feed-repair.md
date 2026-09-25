@@ -6,7 +6,7 @@ version: v0.1.1
 status: proposed; review-pending; no-live-activation
 owners: ["@bartytime4life"]
 created: 2026-09-22
-updated: 2026-09-23
+updated: 2026-09-25
 policy_label: public; context-only; no-source-admission; no-release
 responsibility: Guide exact-source diagnosis, bounded repair, and separate provider-to-render acceptance for existing Explorer context feeds.
 owning_root: docs/
@@ -45,7 +45,8 @@ Preserve project `appgprj_6aa0b1c41bc08191bfd86003920f1631`, slug
 Do not use that older dated alignment document as a live version readback either.
 
 Recheck main, open PRs, candidate heads, path overlap and applicable AGENTS/README
-instructions. Preserve #4024 delivery containment and #4228 topology decisions.
+instructions and current [contributor guidance](../../CONTRIBUTING.md). Preserve
+#4228 topology decisions.
 Do not bypass rules, rewrite baselines, mark ready, merge or deploy under a request
 that only authorizes repository files and draft PRs.
 
