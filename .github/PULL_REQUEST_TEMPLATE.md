@@ -1,8 +1,9 @@
 <!--
 KFM Pull Request Template
-Template version: v1.6
+Template version: v1.7
 Pinned contract: CONTRACT_VERSION = "3.0.0"
-Evidence snapshot used for this revision: main@858842359642d8edf5ba0c4112b7999298a17fde
+Bounded repository readback for this revision: main@89f83d38aad66e4b9369d33fa7d99aa38316009f
+Historical v1.6 evidence snapshot: main@858842359642d8edf5ba0c4112b7999298a17fde
 Alignment inputs:
 - Google Drive "KFM Repository Build-Out & Markdown Modernization
   Implementation Agent" v7.0.0, observed 2026-08-26.
@@ -46,6 +47,12 @@ The visible headings `Goal:`, `Status labels:`, `Directory Rules basis:`,
 Use a bounded overlap search before the first commit and immediately before the
 final remote mutation. Record plausible path or behavior overlap; unrelated or
 historical work is not a blanket authoring blocker.
+
+As of the 2026-09-25 platform readback, the retired repository-transition
+workflow is not a required status context. Ruleset 15484585 retains PR and
+review-thread protection with zero required approvals, an owner bypass, and no
+required-status-check rule. Re-read GitHub settings before relying on that
+snapshot. A red check remains a red check even when GitHub does not require it.
 -->
 
 ## Goal:
@@ -62,6 +69,8 @@ historical work is not a blanket authoring blocker.
 - [ ] `DRAFT_REVIEWABLE` — the diff and review-grade validation are present; later gates may remain pending.
 - [ ] `READY_PR` — explicitly authorized for ready-for-review and applicable readiness gates are satisfied.
 - [ ] `HOLD` — a concrete blocker and its affected transition are recorded.
+
+GitHub's actual Draft/Ready field, reviews, checks, base, and merge timeline govern delivery state. A selection here is a review aid and cannot override those records.
 
 | Field | Current value |
 |---|---|
@@ -229,6 +238,18 @@ transition. Hosted results must belong to the exact current head.
 |---|---|---|
 | | | |
 
+### Failing-check attribution, when applicable
+
+For each failing hosted check, record the exact head SHA and job, then compare
+its finding with the pinned base or a recent merged run. Keep an inherited
+failure visible; do not mark it passing, refresh a baseline, or weaken a
+validator to make this PR green. Check current GitHub required-status settings
+separately from the technical finding.
+
+| Failing context and exact head | Same finding on base or prior merged head? | Introduced by this diff? | Required by current ruleset? | Affected transition and owner |
+|---|---|---|---|---|
+| N/A — no failing check, or link to exact run | Evidence ref or UNKNOWN | YES / NO / UNKNOWN | YES / NO / UNKNOWN with readback date | Review, fix, or scoped hold |
+
 ### Interpretation
 
 - [ ] The complete diff was reviewed for accuracy, unintended deletion, and unrelated churn.
@@ -348,7 +369,12 @@ NEEDS VERIFICATION unless current exact-head platform evidence establishes them.
 A completed template, green check, receipt, review, merge, release, deployment,
 promotion, and publication are separate states.
 
-Template v1.6 keeps the core evidence boundary and trust-sensitive gates while
-making routine documentation review proportional and reducing repetitive
-preflight ceremony.
+At the 2026-09-25 platform readback, the former transition-check requirement
+is retired; the current `Protect` ruleset has no required-status-check rule.
+This is a dated observation, not a waiver of a failing check or human review.
+See `CONTRIBUTING.md` and the repository transition retirement record for
+the source and recheck boundary.
+
+Template v1.7 adds exact-head failure attribution and a dated platform-state
+boundary while preserving the core evidence and trust-sensitive gates.
 </sub>
