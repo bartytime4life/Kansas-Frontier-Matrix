@@ -6,10 +6,10 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — Connector steward · GBIF source steward · Biodiversity steward · Flora steward · Fauna steward · Habitat steward · Taxonomy steward · Rights reviewer · Privacy/sensitivity reviewer · Security reviewer · Packaging steward · Validation steward · Docs steward
 created: 2026-06-18
-updated: 2026-07-11
+updated: 2026-09-26
 policy_label: public-doctrine; source-admission; greenfield; source-first; per-dataset-rights; geoprivacy-gated; product-specific-roles; no-live-by-default; no-secrets; no-persistence-default; plants-child-compatibility-only; raw-or-quarantine-candidate-only; no-publication
 proposed_path: connectors/gbif/README.md
-truth_posture: CONFIRMED greenfield connector scaffold / executable connector behavior ABSENT / supported installation and import UNPROVED / package-local public sensitivity placeholder INVALID / product and dataset descriptors UNRESOLVED / source NOT ACTIVATED / executable tests ABSENT / live testing NOT APPROVED / CI UNKNOWN
+truth_posture: CONFIRMED greenfield connector scaffold / offline occurrence-search planner and supplied-page parser PRESENT (src/gbif/occurrence_api.py, synthetic tests) / network client ABSENT / supported installation and import UNPROVED / package-local public sensitivity placeholder INVALID / product and dataset descriptors UNRESOLVED / source NOT ACTIVATED / executable tests SYNTHETIC-ONLY / live testing NOT APPROVED / CI UNKNOWN
 related:
   - ../README.md
   - pyproject.toml
@@ -73,6 +73,9 @@ notes:
 
 > [!IMPORTANT]
 > **Confirmed state:** this connector lane contains documentation, incomplete package metadata, one package-shaped placeholder scaffold, a README-only connector test lane, and a README-only plant-consumer compatibility child. No implemented configuration model, product dispatcher, supplied-input reader, HTTP client, async-download worker, dataset-metadata reader, Darwin Core or DwC-A parser, Backbone resolver, rights adapter, sensitivity detector, handoff contract, executable test, source activation, live account path, or passing CI result is confirmed. Treat every proposed interface, filename, command, product key, result name, endpoint, and lifecycle target below as a requirement—not current behavior.
+
+> [!NOTE]
+> **Offline occurrence-search surface (2026-09-26).** `src/gbif/occurrence_api.py` plans bounded Kansas occurrence-search pages (≤300 rows, 100,000-row paging ceiling) and parses *already supplied* page bytes into frozen candidates. It never opens a socket. Every record carries `sensitivity: NOT_EVALUATED` and `admission: NOT_ADMITTED`; unresolved licence, missing dataset key, withheld or generalized information, absent coordinates, or unknown basis/status route a record to `QUARANTINE_CANDIDATE`, and CC BY-NC terms and `ABSENT` assertions are carried as flags. `reconcile()` returns `CAPTURE_CANDIDATE` only for contiguous, duplicate-free pages that reach `endOfRecords` with a matching count, `INCOMPLETE_CAPTURE` otherwise, and `HOLD` above the paging ceiling (async download required). Synthetic tests live in `tests/test_occurrence_api.py` and run in `.github/workflows/gbif-occurrence-offline.yml`. This is not source activation, rights review, sensitivity evaluation, or admission; `fetch.py`, `admit.py`, and the `TBD` descriptor remain placeholders tracked by `tools/qa/scaffold_baseline.json`.
 
 > [!CAUTION]
 > `src/gbif/descriptor.yaml` contains `role: TBD`, `rights: TBD`, and `sensitivity_floor: public`. GBIF records inherit rights from originating datasets and may carry restricted-use, obscured, rare-species, culturally sensitive, private-location, or precise-location concerns. **The local `public` value is an unsafe placeholder. It must not activate the source, supply runtime defaults, authorize RAW admission, lower record sensitivity, be inherited by Flora/Fauna/Habitat candidates, or become an accepted test expectation.**

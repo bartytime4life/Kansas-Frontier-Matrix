@@ -1,0 +1,38 @@
+name: gbif-occurrence-offline
+on:
+  pull_request:
+    paths:
+      - 'connectors/gbif/src/gbif/occurrence_api.py'
+      - 'connectors/gbif/tests/test_occurrence_api.py'
+      - '.github/workflows/gbif-occurrence-offline.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'connectors/gbif/src/gbif/occurrence_api.py'
+      - 'connectors/gbif/tests/test_occurrence_api.py'
+      - '.github/workflows/gbif-occurrence-offline.yml'
+permissions:
+  contents: read
+concurrency:
+  group: gbif-occurrence-offline-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  synthetic-candidates:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONHASHSEED: '0'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.11'
+      - name: Run standard-library-only synthetic tests
+        run: python -m unittest discover -s connectors/gbif/tests -p 'test_occurrence_api.py' -v
+      - name: Record evidence boundary
+        if: always()
+        run: |
+          echo 'Offline synthetic GBIF occurrence-search planner/parser checks only. No provider fetch, source activation, dataset rights review, sensitivity evaluation, source admission, capture completeness, active Site integration, release, or deployment proof.' >> "$GITHUB_STEP_SUMMARY"

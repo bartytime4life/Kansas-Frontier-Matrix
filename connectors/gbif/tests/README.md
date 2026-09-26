@@ -6,10 +6,10 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — Connector steward · GBIF source steward · Biodiversity steward · Flora steward · Fauna steward · Habitat steward · Taxonomy steward · Rights reviewer · Privacy/sensitivity reviewer · Security reviewer · Packaging steward · Validation steward · Docs steward
 created: 2026-06-18
-updated: 2026-07-11
+updated: 2026-09-26
 policy_label: public-doctrine; connector-local-tests; greenfield; per-dataset-rights; geoprivacy-gated; product-specific-roles; synthetic-fixtures-only; no-network-default; no-secrets; no-live-tests-approved; raw-or-quarantine-candidate-only; no-publication
 proposed_path: connectors/gbif/tests/README.md
-truth_posture: CONFIRMED README-only test lane / executable tests ABSENT / fixtures ABSENT / package importability UNPROVED / package-local public sensitivity placeholder INVALID / product descriptors and activation ABSENT / plants child COMPATIBILITY-ONLY / live testing NOT APPROVED / CI UNKNOWN
+truth_posture: CONFIRMED synthetic occurrence-API test module (test_occurrence_api.py) / other executable tests ABSENT / file fixtures ABSENT / package importability UNPROVED / package-local public sensitivity placeholder INVALID / product descriptors and activation ABSENT / plants child COMPATIBILITY-ONLY / live testing NOT APPROVED / CI UNKNOWN
 related:
   - ../README.md
   - ../pyproject.toml
@@ -70,7 +70,7 @@ notes:
 `connectors/gbif/tests/`
 
 > [!IMPORTANT]
-> **Confirmed state:** this directory contains this README only. No executable test module, local fixture, `conftest.py`, test dependency, package build configuration, collection configuration, live-test directory, CI job, coverage report, or passing result is confirmed. The adjacent GBIF package is not yet a supported installable implementation. Treat all proposed test filenames, fixture shapes, result names, commands, markers, and coverage statements below as requirements—not current evidence.
+> **Confirmed state (2026-09-26):** this directory contains this README and `test_occurrence_api.py`, a standard-library synthetic suite for `src/gbif/occurrence_api.py` (request planning, URL allowlist, rights/precision quarantine routing, malformed-page rejection, page reconciliation, no-socket guard) run by `.github/workflows/gbif-occurrence-offline.yml`. Beyond that module, no other executable test module, local fixture, `conftest.py`, test dependency, package build configuration, collection configuration, live-test directory, CI job, coverage report, or passing result is confirmed. The adjacent GBIF package is not yet a supported installable implementation. Treat all proposed test filenames, fixture shapes, result names, commands, markers, and coverage statements below as requirements—not current evidence.
 
 > [!CAUTION]
 > `../src/gbif/descriptor.yaml` contains `role: TBD`, `rights: TBD`, and `sensitivity_floor: public`. GBIF records inherit rights from originating datasets and may carry rare-species, obscured, culturally sensitive, private-location, or additional-use restrictions. **A future suite must reject the local `public` value. It must never become an activation signal, provider-wide sensitivity default, RAW-admission decision, or accepted public-safety result.**
