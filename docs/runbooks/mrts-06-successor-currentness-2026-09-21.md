@@ -1,4 +1,31 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://runbook/governance/mrts-06-successor-currentness-2026-09-21
+title: MRTS-06 successor currentness — 2026-09-21
+type: runbook
+version: v1.0
+status: historical-checkpoint; blocked; non-authoritative
+owner: "@bartytime4life — CODEOWNERS review route; independent acceptance pending"
+created: 2026-09-21
+updated: 2026-09-25
+policy_label: repository-facing; public; non-release
+owning_root: docs/
+current_path: docs/runbooks/mrts-06-successor-currentness-2026-09-21.md
+responsibility: Preserve the authored MRTS-06 handoff and its exact historical repository observation without treating it as generated QA output or current conformance proof.
+truth_posture: CONFIRMED historical source bytes / HOLD current final-head conformance / NEEDS VERIFICATION independent acceptance; no release or publication authority
+source_path: artifacts/qa/validation/milestone-1/mrts06_successor_currentness_2026-09-21.md
+source_commit: 4f303aa6a11be9b5fbd5a3122d193357c1db16c2
+source_blob: 28073ca772bb5db42941cf8dd099938926174013
+related:
+  - docs/runbooks/mrts-06-ci-conformance-handoff.md
+  - artifacts/qa/validation/milestone-1/ci_conformance_report.json
+[/KFM_META_BLOCK_V2] -->
+
 # MRTS-06 successor currentness — 2026-09-21
+
+This authored record was relocated from the generated QA payload tree. The
+original Markdown remains available at the pinned source commit and blob above.
+Its 2026-09-21 observations are historical; current acceptance requires a new
+exact-head readback.
 
 ## Scope
 
