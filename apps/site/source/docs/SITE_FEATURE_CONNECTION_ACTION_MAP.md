@@ -82,7 +82,7 @@ repository `main`, activate held integrations, merge a PR, or deploy the Site.
 
 | Signal | Actual producer and meaning | Verification limit |
 |---|---|---|
-| Renderer checks | `app/map-performance.ts` samples style, canvas and tile state | No measured FPS, complete layer visibility or source admission implied |
+| Renderer checks | `app/map-performance.ts` samples style, canvas and tile state; the main and snapshot map show finite failure classes instead of MapLibre exception text | No measured FPS, complete layer visibility, provider response detail or source admission implied |
 | Provider state | Fixed adapters and observation timestamps | Retrieval, observation and display times remain separate; empty is not an all-clear |
 | GitHub currentness | Fixed public branch metadata, one-minute validity | No synchronization, CI result, merge/release acceptance or health inference |
 | Qwen context | `app/page.tsx` builds a bounded diagnostic snapshot; `app/qwen-context.ts` labels it | Model availability requires a separate endpoint/bridge check; generated text is interpretation |

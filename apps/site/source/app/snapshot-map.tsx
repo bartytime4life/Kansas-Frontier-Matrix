@@ -51,9 +51,8 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
     try {
       mutation();
       return true;
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "unknown renderer failure";
-      setStatus(`${operation} is unavailable. Scene details and evidence remain readable. ${message}`);
+    } catch {
+      setStatus(`${operation} is unavailable. Scene details and evidence remain readable. MAP_RENDER_FAILED`);
       return false;
     }
   }, []);
