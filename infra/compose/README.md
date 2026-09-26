@@ -12,8 +12,8 @@ Explorer Web placeholder service was removed with the old monorepo app.
 
 No tracked Compose override, volume, secret, health check, application command,
 or deployment target is defined here. A successful render or build is not a
-service startup or reachability test. The current Explorer source and local-host
-instructions are in the [Site v74-derived source mirror](../../apps/site/README.md).
+service startup or reachability test. Historical v74-derived local-mirror source and hosting
+instructions are in the [Site mirror record](../../apps/site/README.md).
 
 ## Validation
 
