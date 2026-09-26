@@ -8,11 +8,15 @@ owners: OWNER_TBD — Apps steward · CLI steward · Release steward · Pipeline
 created: 2026-06-16
 updated: 2026-07-09
 policy_label: restricted
+owning_root: apps/
+responsibility: operator CLI app and governed command boundary
+truth_posture: cite-or-abstain; implementation claims require current repo evidence
 related:
   - ../README.md
   - src/README.md
   - src/kfm_cli/README.md
   - src/kfm_cli/commands/README.md
+  - DIFF_COMMAND.md
   - ../governed-api/README.md
   - ../admin/README.md
   - ../review-console/README.md
@@ -67,7 +71,9 @@ notes:
 > **Owners:** `OWNER_TBD` — Apps steward · CLI steward · Release steward · Pipeline steward · Policy steward · Docs steward  
 > **Path:** `apps/cli/README.md`  
 > **Responsibility root:** `apps/` — deployable application surfaces  
-> **Truth posture:** CONFIRMED CLI README path, source-tree README, child module READMEs, and empty child `__init__.py` / PROPOSED operator CLI contract / UNKNOWN implementation commands, framework, tests, CI, package metadata, workflows, and deployment state
+> **Truth posture:** CONFIRMED checkout-local read-only diff entry point and tests / PROPOSED broader operator CLI contract / other commands, packaging, CI, workflows, and deployment remain unverified or placeholders
+
+**Current implementation update (2026-09-25):** [`DIFF_COMMAND.md`](DIFF_COMMAND.md) documents the verified checkout-local `diff json` and `diff release` routes, their entry point and CLI tests. The evidence table below records the earlier README survey; other command families, packaged installation, CI wiring, and governance flows remain unverified or placeholders.
 
 > [!CAUTION]
 > `apps/cli/` is not a public client, not a publication authority, and not a shortcut around lifecycle gates. CLI commands may support validation, dry-runs, reports, diffs, and maintenance, but public-impacting transitions still require policy decisions, evidence closure, release records, correction paths, rollback targets, and auditable receipts.
