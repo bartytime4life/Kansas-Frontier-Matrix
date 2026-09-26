@@ -334,6 +334,7 @@ This ADR favors consistency with the repository's proven, already-scaled convent
 | `screen_living_persons.py` | Only real implementation currently at the disputed path | `tools/validators/domains/people-dna-land/screen_living_persons.py` | Re-run `python tools/validators/domains/people-dna-land/screen_living_persons.py --fixtures` at the new path |
 | `test_screen_living_persons.py` | Pins the validator's path today | `tests/validators/test_screen_living_persons.py` (content updated to new `SCRIPT` path) | `python -m pytest tests/validators/test_screen_living_persons.py -q` |
 | `tools/validators/genealogy/README.md` | Documents the lane being retired | Merge relevant content into `tools/validators/domains/people-dna-land/README.md` | Manual review; no automated check known |
+| `.github/workflows/domain-people-dna-land.yml` | Its `validate-people-dna-land` job pins the old `tools/validators/genealogy/` path in its required-path check, accepted-validator allowlist, validator-roots tuple, and execution command | Update all four to the migrated `tools/validators/domains/people-dna-land/screen_living_persons.py` path in the same migration PR | Re-run the `validate-people-dna-land` job against the migration commit |
 
 ### 7.4 Deferred work
 

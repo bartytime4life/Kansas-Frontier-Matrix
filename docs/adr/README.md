@@ -34,7 +34,7 @@ notes:
   - "ADR-0039 is newly registered as proposed and selects no LayerManifest/LayerFrame migration or implementation."
   - "ADR-0040 accepts only seven exact catalog redirect-document target blobs; it does not bind or consume corrections or authorize a topology-baseline transition."
   - "ADR-0037, ADR-0036, and ADR-0035 remain proposed; their registration does not accept their candidate decisions."
-  - "File presence does not accept a decision. ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 are accepted in their stated scopes; the other 36 numbered ADRs remain proposed."
+  - "File presence does not accept a decision. ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 are accepted in their stated scopes; the other 37 numbered ADRs remain proposed."
   - "This README is the operating contract; docs/adr/INDEX.md is the canonical human inventory."
 [/KFM_META_BLOCK_V2] -->
 

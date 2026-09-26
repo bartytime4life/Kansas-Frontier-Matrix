@@ -47,7 +47,7 @@ notes:
 This file is the canonical human inventory for direct ADR records and unassigned ADR scaffolds under `docs/adr/`. It records what exists and how each record is classified; it cannot accept or promote a decision independently.
 
 > [!IMPORTANT]
-> ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 have effective status `accepted`. The other 36 numbered records remain `proposed`; no numbered record is `superseded` or `rejected`. ADR-0006 and ADR-0007 accept architecture only—their status does not admit `maplibre-gl`, prove implementation or browser readiness, or authorize release, deployment, or publication. ADR-0038 accepts only the trusted-base correction mechanism. ADR-0040 accepts only seven exact target catalog redirect-document blobs; every register entry remains proposed and unbound, Stage 1B remains held, and Stage 2 remains unauthorized. ADR-0041 remains a proposal and changes no check behavior.
+> ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 have effective status `accepted`. The other 37 numbered records remain `proposed`; no numbered record is `superseded` or `rejected`. ADR-0006 and ADR-0007 accept architecture only—their status does not admit `maplibre-gl`, prove implementation or browser readiness, or authorize release, deployment, or publication. ADR-0038 accepts only the trusted-base correction mechanism. ADR-0040 accepts only seven exact target catalog redirect-document blobs; every register entry remains proposed and unbound, Stage 1B remains held, and Stage 2 remains unauthorized. ADR-0041 remains a proposal and changes no check behavior. ADR-0042 remains a proposal and changes no validator-tooling placement.
 
 ## Status interpretation
 
