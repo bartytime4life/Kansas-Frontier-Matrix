@@ -1,0 +1,10 @@
+{
+  "note": "Structural-only fixture proving connectivity reference hygiene: sorted, unique, grammar-bounded, and free of internal-lifecycle prefixes. Neither ref is resolved to a real ConnectivityEdge or Corridor object.",
+  "connectivity_edge_refs": [
+    "evidence:connectivity-edge:candidate-001",
+    "evidence:connectivity-edge:candidate-002"
+  ],
+  "corridor_refs": [
+    "evidence:corridor:candidate-001"
+  ]
+}

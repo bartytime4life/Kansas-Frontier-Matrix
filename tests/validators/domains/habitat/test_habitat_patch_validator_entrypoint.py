@@ -2,10 +2,14 @@
 """Regression proof for the HabitatPatch validator entrypoint.
 
 HabitatPatch has no field-level schema yet (see
-``fixtures/domains/habitat/patch/README.md``); this suite proves only the
+``fixtures/domains/habitat/patch/README.md``); this suite proves the
 structural properties the current scaffold and shared JSON Schema runner
-actually enforce. It does not assert any HabitatPatch field name, source
-role, or enum value as settled shape.
+actually enforce, plus the one additional rule the validator adds:
+reference-string hygiene (sorted, unique, grammar-bounded, no
+internal-lifecycle prefixes) on the optional ``connectivity_edge_refs`` and
+``corridor_refs`` fields. It does not assert any other HabitatPatch field
+name, source role, or enum value as settled shape, and it never resolves
+those references to a real ConnectivityEdge or Corridor object.
 """
 
 from __future__ import annotations
@@ -105,6 +109,57 @@ class HabitatPatchEntrypointTests(unittest.TestCase):
 
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn(f"OK {path}", result.stdout)
+
+    def test_connectivity_refs_are_optional(self) -> None:
+        """A candidate with neither connectivity field is unaffected by the hygiene check."""
+
+        result = self._run(str(FIXTURE_ROOT / "valid/valid_1.json"))
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_well_formed_connectivity_refs_pass(self) -> None:
+        result = self._run(str(FIXTURE_ROOT / "valid/valid_3.json"))
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_unsorted_or_duplicate_connectivity_edge_refs_fail_closed(self) -> None:
+        path = FIXTURE_ROOT / "invalid/invalid_connectivity_edge_refs_unsorted.json"
+        result = self._run(str(path))
+
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("must be sorted and unique", result.stdout)
+
+    def test_internal_lifecycle_prefix_in_corridor_refs_fails_closed(self) -> None:
+        path = FIXTURE_ROOT / "invalid/invalid_corridor_refs_internal_prefix.json"
+        result = self._run(str(path))
+
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("lifecycle-private reference", result.stdout)
+
+    def test_ungrammatical_connectivity_edge_ref_fails_closed(self) -> None:
+        path = FIXTURE_ROOT / "invalid/invalid_connectivity_edge_refs_bad_grammar.json"
+        result = self._run(str(path))
+
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("violates the bounded grammar", result.stdout)
+
+    def test_empty_connectivity_ref_array_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            candidate = Path(directory) / "empty-connectivity-edge-refs.json"
+            candidate.write_text('{"connectivity_edge_refs": []}', encoding="utf-8")
+            result = self._run(str(candidate))
+
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("must be a non-empty array of strings", result.stdout)
+
+    def test_non_string_connectivity_ref_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            candidate = Path(directory) / "non-string-corridor-refs.json"
+            candidate.write_text('{"corridor_refs": [1, 2]}', encoding="utf-8")
+            result = self._run(str(candidate))
+
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("must be a non-empty array of strings", result.stdout)
 
 
 if __name__ == "__main__":
