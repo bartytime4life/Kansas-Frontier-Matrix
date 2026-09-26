@@ -18,7 +18,9 @@ created: 2026-09-26
 updated: 2026-09-26
 policy_label: public
 truth_posture: cite-or-abstain
+owning_root: docs/
 responsibility_root: docs/
+responsibility: "Propose a canonical tools/validators/ home for People/DNA/Land genealogy validator tooling and a bounded migration/review path for the existing implementation and pending stubs, without accepting the decision or authorizing migration by itself."
 current_path: docs/adr/ADR-0042-people-dna-land-genealogy-validator-tooling-home.md
 supersedes: []
 superseded_by: null
