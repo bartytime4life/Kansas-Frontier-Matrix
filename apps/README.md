@@ -73,12 +73,13 @@ notes:
   - "The Sites code and dependency edge change only to fail closed; no source, deployment, policy, release, promotion, or publication authority is created."
 [/KFM_META_BLOCK_V2] -->
 
-> **Current placement (2026-09-25):** The GPT Site v74-derived source mirror is in
+> **Mirror placement (2026-09-25):** The historical GPT Site v74-derived source mirror is in
 > [`site/`](site/README.md). The former `apps/explorer-web/` and
 > `apps/kansas-frontier-matrix-explorer/` implementations were removed. The
 > evidence ledger and older narrative below describe a pinned 2026-08-28
 > snapshot; their retired paths and commands are historical.
-> `apps/governed-api/` remains here.
+> `apps/governed-api/` remains here. Sites reports Explorer v87 successfully
+> published as of 2026-09-26; this mirror is not verified as v87 source.
 
 <a id="top"></a>
 
