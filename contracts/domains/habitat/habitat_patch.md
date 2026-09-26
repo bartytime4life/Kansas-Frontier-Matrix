@@ -155,6 +155,7 @@ A patch is the spatial carrier for Habitat reasoning. It may carry class, qualit
 | Source doc | `docs/domains/habitat/MISSING_OR_PLANNED_FILES.md` |
 | Contract doc pointer | `contracts/domains/habitat/habitat_patch.md` |
 | Field-level validation | NEEDS VERIFICATION |
+| Structural-only validation | `tools/validators/domains/habitat/validate_habitat_patch.py` now delegates to the shared JSON Schema runner against this scaffold: it enforces valid JSON, a JSON-object root, no duplicate keys, and no non-finite numbers, and nothing else. See `fixtures/domains/habitat/patch/README.md`. |
 
 Until schema fields are added and the sibling-path conflict is resolved, this file is semantic guidance and review vocabulary only.
 

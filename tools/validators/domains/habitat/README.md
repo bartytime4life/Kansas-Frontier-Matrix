@@ -80,8 +80,8 @@ The answer should be a navigable validator index and deterministic validation ou
 | Habitat domain doctrine | **CONFIRMED in repo evidence / draft** | `docs/domains/habitat/README.md` defines Habitat as landscape/suitability/connectivity lane, not species-record ownership, with source-role anti-collapse and lifecycle boundaries. |
 | Over-precise geometry quarantine | **CONFIRMED in repo evidence / draft** | `data/quarantine/habitat/over_precise_geometry/README.md` defines fail-closed hold posture for Habitat geometry that is too precise for sensitivity, source-role, evidence, review, release, or public-surface posture. |
 | Subdirectories | **NONE** | Current validator implementations are direct children of this directory. |
-| Substantive executables | **EIGHT CONFIRMED** | Cover-class crosswalk, EvidenceBundle projection, land-cover materiality, model-run receipt, critical-habitat source-role, JSON Schema document, CatalogMatrix closure, and SourceDescriptor validators are implemented with focused tests. |
-| Placeholder executables | **TWO CONFIRMED** | HabitatPatch and suitability-model files remain inert placeholders and must not be cited as enforcement. |
+| Substantive executables | **TEN CONFIRMED** | Cover-class crosswalk, EvidenceBundle projection, land-cover materiality, model-run receipt, critical-habitat source-role, JSON Schema document, CatalogMatrix closure, SourceDescriptor, HabitatPatch, and SuitabilityModel validators are implemented with focused tests. The HabitatPatch and SuitabilityModel validators are structural-only: their paired schemas remain empty `PROPOSED` scaffolds, so they enforce no field-level semantics. |
+| Placeholder executables | **NONE** | Every direct-child validator file now has an implementation, though structural-only ones assert no field-level Habitat meaning. |
 | Focused CI | **CONFIRMED / bounded** | Five focused workflows cover crosswalk, EvidenceBundle convergence, materiality, model-run receipt, and critical-habitat source-role validation; `domain-habitat` also runs the materiality slice and explicit proof/release holds. |
 
 [Back to top](#top)
@@ -90,7 +90,7 @@ The answer should be a navigable validator index and deterministic validation ou
 
 ## Executable inventory
 
-The reviewed task branch establishes five substantive direct-child validators:
+The reviewed task branch establishes ten substantive direct-child validators:
 
 | Validator | Bounded responsibility | Test / fixture evidence | Focused workflow |
 |---|---|---|---|
@@ -101,8 +101,10 @@ The reviewed task branch establishes five substantive direct-child validators:
 | `validate_schema.py` | Structural Draft 2020-12 validation of every Habitat JSON Schema document under the canonical schema root (or explicit file arguments); fails closed on symlinked paths, oversized files, duplicate JSON members, and non-finite numbers. | `tests/validators/domains/habitat/test_domain_schema_validator.py` | none yet configured |
 | `validate_catalog_matrix.py` | Bounded domain-side adapter delegating unchanged to the shared CatalogMatrix closure validator (`tools/validators/validate_catalog_matrix_closure.py`); adds no independent catalog, evidence, rights, or lifecycle semantics. | `tests/validators/domains/habitat/test_habitat_catalog_matrix_validator_entrypoint.py` | none yet configured |
 | `validate_source_descriptor.py` | Bounded domain-side adapter delegating unchanged to the shared canonical SourceDescriptor validator (`tools/validators/validate_source_descriptor.py`); adds no independent source-admission, rights, sensitivity, or policy semantics. | `tests/validators/domains/habitat/test_habitat_source_descriptor_validator_entrypoint.py` | none yet configured |
+| `validate_habitat_patch.py` | Structural-only: delegates to the shared JSON Schema runner against the still-empty `habitat_patch.schema.json` scaffold (root must be a JSON object; no duplicate keys or non-finite numbers). Asserts no HabitatPatch identity, source-role, geometry, evidence, or release semantics, which remain `NEEDS VERIFICATION` pending a domain-steward schema expansion. | `tests/validators/domains/habitat/test_habitat_patch_validator_entrypoint.py`; `fixtures/domains/habitat/patch/` | none yet configured |
+| `validate_suitability_model.py` | Structural-only: delegates to the shared JSON Schema runner against the still-empty `suitability_model.schema.json` scaffold (root must be a JSON object; no duplicate keys or non-finite numbers). Asserts no SuitabilityModel model-card, source-role, uncertainty, or release semantics, which remain `NEEDS VERIFICATION` pending a domain-steward schema expansion. | `tests/validators/domains/habitat/test_suitability_model_validator_entrypoint.py`; `fixtures/domains/habitat/suitability_model/` | none yet configured |
 
-The following direct-child files remain placeholders: `validate_habitat_patch.py` and `validate_suitability_model.py`. Their existence proves no validation behavior.
+No direct-child validator file in this lane remains an inert placeholder at the pinned tree.
 
 Habitat EvidenceBundle projection validation remains declared at the historical top-level entry point `tools/validators/validate_habitat_evidence_bundle_projection.py`. That compatibility command now delegates unchanged arguments to the path-independent domain implementation `tools/validators/domains/habitat/validate_evidence_bundle.py`, which uses the adopted projection schema, shared JSON Schema runner, and synthetic fixture family. Neither path adds independent evidence semantics or authority. Focused workflow `habitat-evidence-bundle-convergence.yml` exercises both paths, and the entrypoint suite proves identical fixture, explicit-file, and usage-error results.
 
@@ -132,7 +134,7 @@ No child directory is established below this index. Add one only when a distinct
 Safe interpretation:
 
 - **CONFIRMED:** this README exists.
-- **CONFIRMED:** the five substantive direct-child validators, their cited focused tests/fixtures, and the cited workflow files exist on the reviewed task branch.
+- **CONFIRMED:** the ten substantive direct-child validators, their cited focused tests/fixtures, and the cited workflow files exist on the reviewed task branch.
 - **BOUNDED:** passing fixtures prove only the declared validator behavior; they do not establish source truth, rights, sensitivity clearance, evidence closure, policy approval, human review, lifecycle promotion, release, deployment, or publication.
 - **NEEDS VERIFICATION:** placeholder behavior, policy bundle execution, live source descriptors, production report destinations, operational receipts, runtime behavior, and any uncited CI coupling.
 - **DENY:** using this folder as habitat doctrine, species-record authority, regulatory-designation authority, contract home, schema home, policy home, source registry, evidence store, lifecycle data store, receipt store, release record store, public map product surface, or domain-meaning authority.

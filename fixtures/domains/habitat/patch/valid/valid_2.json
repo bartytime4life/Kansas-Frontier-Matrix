@@ -1,0 +1,3 @@
+{
+  "note": "Structural-only fixture. HabitatPatch has no field-level schema yet; schemas/contracts/v1/domains/habitat/habitat_patch.schema.json is a PROPOSED scaffold with empty properties and additionalProperties: true (see contracts/domains/habitat/habitat_patch.md). This object is accepted only because the scaffold currently permits any JSON object; it is not a proposed HabitatPatch field shape."
+}
