@@ -140,13 +140,13 @@ scripts/dev/
 | Path | Confirmed content | Safe conclusion |
 |---|---|---|
 | `README.md` | Prior v0.1 guardrail | Documentation exists. |
-| `bootstrap.sh` | Bash, `set -euo pipefail`, one TODO echo | Placeholder only; no setup behavior. |
-| `regen_fixtures.sh` | Bash, `set -euo pipefail`, one TODO echo | Placeholder only; no regeneration behavior. |
+| `bootstrap.sh` | Bounded Ubuntu 24.04 bootstrap with `--check`, `--offline`, `--json` | Local convenience only; no policy, release, or publication authority. |
+| `regen_fixtures.sh` | Delegates to `tools/readiness/run_lane.py fixtures` | Exits 3 with the named `fixtures` HOLD until an accepted producer exists; never a false success. |
 
 | Capability | Status | Consequence |
 |---|---:|---|
 | Bootstrap implementation | **NOT IMPLEMENTED** | Do not advertise a working installer. |
-| Fixture regeneration | **NOT IMPLEMENTED** | Do not infer generator or fixture authority. |
+| Fixture regeneration | **NAMED HOLD (exit 3)** | Wrapper routes to the readiness registry; do not infer generator or fixture authority. |
 | Dependency manager | **UNKNOWN** | Python, Node, pre-commit, and platform strategy require evidence. |
 | Supported platforms | **UNKNOWN** | No compatibility claim is made. |
 | Secret handling | **NOT AUTHORIZED** | No real secret may be stored or printed. |
@@ -246,14 +246,15 @@ It does not detect an operating system, verify runtimes, choose a package manage
 
 ### `regen_fixtures.sh`
 
-```bash
-#!/usr/bin/env bash
-# Regenerate deterministic fixtures — greenfield placeholder.
-set -euo pipefail
-echo 'TODO'
-```
+The wrapper accepts no arguments (exit 2 otherwise) and `exec`s
+`tools/readiness/run_lane.py fixtures` with `KFM_NO_NETWORK=1`. That lane is a
+named HOLD in `control_plane/readiness/lanes.json` until
+`tools/fixtures/regenerate.py` and `control_plane/readiness/fixture-regeneration-manifest.json`
+are accepted, so the script prints the lane's HOLD JSON and exits 3.
 
-It does not identify fixture families, invoke a generator, compare output, protect hand-authored fixtures, update manifests, validate contracts/schemas, run tests, emit receipts, or stage changes.
+It does not identify fixture families, invoke a generator, overwrite reviewed fixtures,
+update manifests, emit receipts, or stage changes. The earlier placeholder echoed `TODO`
+and exited 0, which a caller could mistake for a successful regeneration.
 
 [Back to top](#top)
 
@@ -376,8 +377,8 @@ Current placeholder checks:
 bash -n scripts/dev/bootstrap.sh
 bash -n scripts/dev/regen_fixtures.sh
 
-test "$(bash scripts/dev/bootstrap.sh)" = "TODO: install Python and Node deps, set up pre-commit"
-test "$(bash scripts/dev/regen_fixtures.sh)" = "TODO"
+bash scripts/dev/bootstrap.sh --help >/dev/null
+set +e; bash scripts/dev/regen_fixtures.sh >/dev/null; test $? -eq 3; set -e
 ```
 
 These prove only current syntax and output.

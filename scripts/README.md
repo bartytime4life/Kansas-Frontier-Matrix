@@ -206,7 +206,7 @@ Public clients and normal UI surfaces must never execute arbitrary repository sc
 | `plan_backfill_window.py` | **CONFIRMED substantive thin wrapper** | Validates bounded JSON and delegates deterministic planning to `packages/pipelines-core`; no network or writes. |
 | `plan_pipeline_resilience.py` | **CONFIRMED substantive thin wrapper** | Validates bounded JSON, delegates to package logic, emits an operator-safe projection, and grants no write authority. |
 | Planner contracts, schemas, fixtures, and tests | **CONFIRMED present** | Shape and focused behavior surfaces exist; adoption breadth and production consumers remain `NEEDS VERIFICATION`. |
-| [`scripts/dev/`](./dev/) | **CONFIRMED placeholder-only** | `bootstrap.sh` and `regen_fixtures.sh` do not implement setup or fixture regeneration. |
+| [`scripts/dev/`](./dev/) | **CONFIRMED bounded helpers** | `bootstrap.sh` implements bounded local setup; `regen_fixtures.sh` delegates to the `fixtures` readiness lane and exits 3 (HOLD) until a producer is accepted. |
 | [`scripts/maintenance/`](./maintenance/) | **CONFIRMED mixed maturity** | Substantive maintenance commands exist; command-by-command ownership, output homes, and graduation remain unsettled. |
 | [`scripts/one_off/`](./one_off/) | **CONFIRMED README-only in bounded evidence** | Deletion-first temporary lane; no direct executable was established by inspected evidence. |
 | Seven root-level MapLibre scripts | **CONFIRMED substantive candidate builders** | They remain command-exposed and trust-adjacent; final placement and canonical handoff remain unresolved. |
@@ -705,8 +705,8 @@ This inventory does not prove absence of:
 
 Current posture:
 
-- `bootstrap.sh` and `regen_fixtures.sh` are TODO placeholders;
-- no dependency installation or fixture regeneration is implemented;
+- `bootstrap.sh` performs bounded local setup; `regen_fixtures.sh` fails closed through the `fixtures` readiness HOLD (exit 3);
+- no fixture regeneration producer is implemented;
 - no CI or production authority is established;
 - future mutation must be explicit, dry-run capable, tested, and reversible.
 
