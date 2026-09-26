@@ -6,10 +6,10 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — Connector steward · Source steward · Python/package steward · Test steward · Fauna steward · Flora steward · Biodiversity/taxonomy steward · Rights reviewer · Sensitivity/geoprivacy reviewer · Validation steward · Docs steward
 created: 2026-06-19
-updated: 2026-07-12
+updated: 2026-09-26
 policy_label: public-doctrine; source-family-connector; repository-present; implementation-placeholder; no-network-by-default; descriptor-and-activation-gated; product-explicit; rights-gated; geoprivacy-preserving; sensitivity-fail-closed; raw-quarantine-receipts-only; no-publication
 path: connectors/inaturalist/README.md
-truth_posture: CONFIRMED repository scaffold and current child contracts / PROPOSED family API, product routing, implementation sequence, and finite outcomes / CONFLICTED descriptor, registry, schema, and adjacent documentation details / UNKNOWN package installability, executable tests, activation, source access, runtime behavior, and public-client coupling
+truth_posture: CONFIRMED repository scaffold and current child contracts / PROPOSED family API, product routing, implementation sequence, and finite outcomes / CONFLICTED descriptor, registry, schema, and adjacent documentation details / CONFIRMED offline observation cursor planner/parser with synthetic tests (src/inaturalist/observations_api.py) / UNKNOWN package installability, other executable tests, activation, source access, runtime behavior, and public-client coupling
 related:
   - ../README.md
   - ./pyproject.toml
@@ -143,6 +143,9 @@ Directory Rules basis:
 
 ## Current repository state
 
+> [!NOTE]
+> **Offline observation-search surface (2026-09-26).** `src/inaturalist/observations_api.py` plans bounded observation-search cursor pages (≤200 rows, ascending `id_above`, Kansas context bbox or explicit `place_id`) and parses *already supplied* page bytes into frozen candidates. It never opens a socket. The more restrictive of observer geoprivacy, taxon geoprivacy, and the `obscured` flag governs `geoprivacy_status`; obscured or private records keep their supplied coordinates unmodified and route to `QUARANTINE_CANDIDATE`, as do unresolved licences (including null/all-rights-reserved), missing attribution, missing taxon, or missing coordinates. NC/SA/ND terms, non-research grade, and captive state are carried as flags. User profile data is minimized to `id` and `login`. Every candidate is `sensitivity: NOT_EVALUATED`, `admission: NOT_ADMITTED`. `reconcile()` returns `CAPTURE_CANDIDATE` only for an unbroken cursor chain from `id_above=0` to a short final page with no remaining-count drift, else `INCOMPLETE_CAPTURE`; HTTP 429 raises `RATE_LIMITED`. Synthetic tests: `tests/test_observations_api.py`, run by `.github/workflows/inaturalist-observations-offline.yml`. This is not activation, taxonomy reconciliation, KFM sensitivity ranking, redaction, or admission; `fetch.py`, `admit.py`, and the descriptor remain placeholders tracked by `tools/qa/scaffold_baseline.json`.
+
 This snapshot is bounded to base commit `61fe6cb90249f8504609644d96ff03560b21910b`, the direct paths inspected, and the repository documents cited here.
 
 ```text
@@ -162,10 +165,12 @@ connectors/
     │       ├── README.md                     # v0.2 package contract
     │       ├── __init__.py                   # empty
     │       ├── fetch.py                      # one-line placeholder
+│       ├── observations_api.py           # offline cursor planner + supplied-page parser
     │       ├── admit.py                      # one-line placeholder
     │       └── descriptor.yaml               # unresolved local placeholder; not authority
     └── tests/
-        └── README.md                         # v0.2 test contract; tests unverified
+        ├── README.md                         # v0.2 test contract
+        └── test_observations_api.py          # synthetic observations_api suite
 
 docs/sources/catalog/inaturalist/
 ├── README.md                                 # v2 source-family profile
