@@ -17,6 +17,7 @@ related:
   - ../../schemas/contracts/v1/governance/ci_conformance_report.schema.json
   - ../../artifacts/qa/validation/milestone-1/ci_conformance_report.json
   - ../../artifacts/qa/validation/milestone-1/mrts_reconciliation_status_2026-08-23.json
+  - ./mrts-06-successor-currentness-2026-09-21.md
   - ../../tools/validators/governance/validate_ci_conformance_report.py
   - ../../tools/validators/validate_generated_receipt.py
   - ../../data/receipts/generated/genrec-ci-conformance-report-mrts-06-20260822.json
@@ -31,6 +32,10 @@ notes:
 # MRTS-06 CI conformance and closure handoff
 
 ## Current handoff
+
+The [2026-09-21 successor currentness record](mrts-06-successor-currentness-2026-09-21.md)
+is an authored historical checkpoint. It was moved from `artifacts/qa/` to this
+documentation lane; it does not supply a current final-head conformance result.
 
 The canonical report is a deterministic `BLOCKED` checkpoint bound to
 `c653d573c1641503215844c5c4fc85bc15060ced`. It records merged MRTS-01
