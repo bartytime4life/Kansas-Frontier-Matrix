@@ -89,7 +89,8 @@ notes:
 > **Expanded sibling path:** `contracts/domains/habitat/SuitabilityModel.md` — already expanded and unresolved as an alias.  
 > **Schema path:** `schemas/contracts/v1/domains/habitat/suitability_model.schema.json`  
 > **Schema posture:** paired schema exists, but is still a `PROPOSED` scaffold with empty `properties` and `additionalProperties: true`.  
-> **Truth posture:** Habitat doctrine names `SuitabilityModel` as a canonical Habitat object family and requires modeled-vs-observed-vs-regulatory separation. Field-level schema shape, fixtures, validators, policy runtime, release artifacts, map/UI behavior, Focus Mode behavior, and CI/test coverage remain **NEEDS VERIFICATION**.
+> **Truth posture:** Habitat doctrine names `SuitabilityModel` as a canonical Habitat object family and requires modeled-vs-observed-vs-regulatory separation. Field-level schema shape, fixtures, validators, policy runtime, release artifacts, map/UI behavior, Focus Mode behavior, and CI/test coverage remain **NEEDS VERIFICATION**.  
+> **Structural-only validation:** `tools/validators/domains/habitat/validate_suitability_model.py` now delegates to the shared JSON Schema runner against this scaffold: it enforces valid JSON, a JSON-object root, no duplicate keys, and no non-finite numbers, and nothing else. See `fixtures/domains/habitat/suitability_model/README.md`.
 
 > [!CAUTION]
 > `SuitabilityModel` is modeled Habitat. It is not observed land cover, not species/plant occurrence truth, not regulatory critical habitat, not a public layer, not a management instruction, not a PolicyDecision, and not a ReleaseManifest. A suitability surface presented as regulatory critical habitat is a deny-level source-role collapse.
