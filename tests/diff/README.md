@@ -6,13 +6,15 @@ version: v2
 status: active
 owner: TODO-tooling-qa-owner
 created: 2026-07-29
-updated: 2026-08-30
+updated: 2026-09-25
 policy_label: public
 owning_root: tests/
 responsibility: Executable conformance evidence for deterministic repository diff tools
+truth_posture: cite-or-abstain; tests support only the exact inspected revision and inputs
 related:
   - ../../tools/diff/README.md
   - ../../tools/diff/stable_diff.py
+  - ../../tools/diff/release_diff.py
   - ../../tools/ci/render_stable_diff_summary.py
   - ../../tools/ci/build_stable_diff_review_handoff.py
   - ../../.github/workflows/stable-diff-review-summary.yml
@@ -46,10 +48,11 @@ is derived review material, not sovereign truth or a release decision.
 | Test module | Implementation under test | Confirmed coverage |
 |---|---|---|
 | [`test_stable_diff.py`](test_stable_diff.py) | [`tools/diff/stable_diff.py`](../../tools/diff/stable_diff.py) | Top-level JSON comparison; deterministic key ordering and report bytes; changed, blocking, malformed, missing, duplicate-key, non-finite-number, non-object, and CLI paths |
+| [`test_release_diff.py`](test_release_diff.py) | [`tools/diff/release_diff.py`](../../tools/diff/release_diff.py) | Typed candidate manifests; sorted artifact-ref changes; ambiguous legacy/duplicate denial; malformed and non-finite inputs; deterministic CLI output without input mutation |
 | [`test_render_stable_diff_summary.py`](test_render_stable_diff_summary.py) | [`tools/ci/render_stable_diff_summary.py`](../../tools/ci/render_stable_diff_summary.py) | Deterministic bounded Markdown; report-shape and status consistency; basename-only path display; escaping; blocking and error exit behavior |
 | [`test_build_stable_diff_review_handoff.py`](test_build_stable_diff_review_handoff.py) | [`tools/ci/build_stable_diff_review_handoff.py`](../../tools/ci/build_stable_diff_review_handoff.py) | Exact input, report, summary, and context binding; deterministic hashes; finite handoff dispositions; policy-key declaration handling; tamper and stale-report rejection |
 
-Direct children are limited to this README, the three test modules, and
+Direct children are limited to this README, the four test modules, and
 `fixtures/`.
 
 ## Fixture posture

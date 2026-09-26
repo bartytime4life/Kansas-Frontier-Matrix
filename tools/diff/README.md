@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-diff-readme
 title: tools/diff README
 type: README
-version: v0.2
+version: v0.3
 status: draft
 owner: TODO-tooling-qa-owner
 created: 2026-07-07
-updated: 2026-07-29
+updated: 2026-09-25
 policy_label: public
 owning_root: tools/
 responsibility: repo-wide diff helpers for deterministic reviewer and CI comparisons
@@ -78,6 +78,8 @@ The lane is intentionally narrow:
 | `tools/diff/README.md` | **CONFIRMED** | This file documents the lane boundary and expected thin-slice contract. |
 | `tools/diff/stable_diff.py` | **IMPLEMENTED / REVIEW REQUIRED** | Offline top-level JSON object comparator with deterministic finite output. |
 | `tests/diff/test_stable_diff.py` | **IMPLEMENTED / REVIEW REQUIRED** | Executable proof for same, changed, malformed, missing, duplicate-key, non-finite-number, and non-object inputs. |
+| `tools/diff/release_diff.py` | **IMPLEMENTED / REVIEW REQUIRED** | Read-only ReleaseManifest candidate comparison with artifact-ref membership and content changes. |
+| `tests/diff/test_release_diff.py` | **IMPLEMENTED / REVIEW REQUIRED** | Synthetic valid, ambiguous, malformed and deterministic CLI cases. |
 | `tests/diff/fixtures/...` | **IMPLEMENTED / PUBLIC-SAFE** | Synthetic same, changed, and malformed inputs. |
 | Nested semantic diff | **OUT OF SCOPE for first slice** | The first contract should compare top-level JSON keys only unless an ADR or test expands it. |
 | Policy interpretation | **DENY here** | Policy meaning belongs in `policy/` and promotion/release validators, not this helper. |
@@ -195,6 +197,36 @@ The helper does not attempt:
 - release approval;
 - reviewer Markdown rendering;
 - automatic writes into `data/receipts/`, `data/proofs/`, `release/`, or `artifacts/`.
+
+[Back to top](#top)
+
+---
+
+## ReleaseManifest candidate comparison
+
+[`release_diff.py`](release_diff.py) replaces the one-line placeholder with an
+offline comparator for two JSON files that declare `object_type: ReleaseManifest`
+and each contain 1–10,000 artifacts with unique, bounded `artifact_ref` strings.
+It reuses the stable comparator's strict JSON parser: duplicate keys, non-finite
+numbers, malformed JSON, missing files and non-object roots fail closed. Each
+input is capped at 8 MiB. The report lists sorted top-level field changes and
+sorted added, removed and changed artifact references; it never copies artifact
+object contents or payloads. An array reorder alone can change the top-level `artifacts`
+field without changing the artifact-reference summary.
+
+```bash
+python tools/diff/release_diff.py --left old.json --right candidate.json \
+  --output /tmp/release-diff.json --fail-on-change
+```
+
+The optional report path must not be an input path, hard-link alias, or symbolic
+link. Exit `0` means equal or changed without `--fail-on-change`; `1` means changed
+with that flag; `2` means an input or output error. This compares candidate
+structure only. It does not validate either file against the ReleaseManifest
+schema, resolve an artifact, interpret rights or policy, or authorize a release.
+The schema's permissive legacy profile is intentionally rejected here because
+it has no unambiguous artifact set to compare. Output may include local paths
+and artifact references; keep reports in the appropriate private review area.
 
 [Back to top](#top)
 
