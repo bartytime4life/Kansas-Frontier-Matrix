@@ -73,7 +73,7 @@ notes:
   - "The Sites code and dependency edge change only to fail closed; no source, deployment, policy, release, promotion, or publication authority is created."
 [/KFM_META_BLOCK_V2] -->
 
-> **Current placement (2026-09-25):** The GPT Site v71 source is in
+> **Current placement (2026-09-25):** The GPT Site v74-derived source mirror is in
 > [`site/`](site/README.md). The former `apps/explorer-web/` and
 > `apps/kansas-frontier-matrix-explorer/` implementations were removed. The
 > evidence ledger and older narrative below describe a pinned 2026-08-28
@@ -121,7 +121,7 @@ notes:
 The current root contains seven direct lanes:
 
 - [`governed-api/`](governed-api/README.md) — bounded executable public trust membrane;
-- [`site/`](site/README.md) — exact GPT Site v71 source snapshot under `site/source/` for local hosting;
+- [`site/`](site/README.md) — GPT Site v74-derived source mirror under `site/source/` for local hosting;
 - [`review-console/`](review-console/README.md) — role-gated steward review surface;
 - [`cli/`](cli/README.md) — restricted operator command surface;
 - [`workers/`](workers/README.md) — non-publishing background runner lane;
@@ -386,7 +386,7 @@ Source-derived ideas advance only through the normal sequence: classify the clai
 | Lane | Current implementation truth | Verified entrypoint or check | Failure-safe posture |
 |---|---|---|---|
 | [`governed-api/`](governed-api/README.md) | Bounded executable WSGI, three fail-closed routes, route/envelope tests | `make governed-api-smoke`; `make governed-api-verify`; `api-test` | `ABSTAIN`, 404, or 405; no renderer/model/internal-store shortcut |
-| [`site/`](site/README.md) | Exact source snapshot of the deployed GPT Site v71 under `site/source/`, including checked-in static assets and D1 migration | From `apps/site/source/`: `npm run install:ci`, `npm run build`, `node --test tests/*.test.mjs`, `npm run dev` | Private D1 records, R2 uploads, and live provider responses are not bundled; local success does not establish source admission or release |
+| [`site/`](site/README.md) | Reconciled source mirror of the deployed GPT Site v74 under `site/source/`, including checked-in static assets and D1 migration | From `apps/site/source/`: `npm run install:ci`, `npm run build`, `node --test tests/*.test.mjs`, `npm run dev` | Private D1 records, R2 uploads, and live provider responses are not bundled; local success does not establish source admission or release |
 | [`review-console/`](review-console/README.md) | README-led feature boundaries and a minimal package manifest | No accepted executable review flow | No review, promotion, correction, or rollback mutation is proven |
 | [`cli/`](cli/README.md) | Python package skeleton with an explicit greenfield placeholder entrypoint and placeholder command modules | `apps/cli/src/kfm_cli/__main__.py` | No operator shortcut is review, release, or publication authority |
 | [`workers/`](workers/README.md) | Named worker directories with explicit greenfield placeholder entrypoints | No accepted queue, schedule, worker behavior, or worker test suite | Watcher and worker outputs remain candidates or receipts, never publication |

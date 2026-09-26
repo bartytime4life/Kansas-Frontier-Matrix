@@ -465,7 +465,7 @@ Current [CODEOWNERS](../.github/CODEOWNERS) routes `/tests/` and `/fixtures/` to
 | [`policy/`](../policy/README.md) | Admissibility rules and obligations tests exercise |
 | [`tools/validators/`](../tools/validators/README.md) | Reusable validators whose mechanics require direct tests |
 | [`apps/governed-api/`](../apps/governed-api/README.md) | App-owned governed API tests and boundary checks |
-| [Standalone Site v71 source](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/codex/live-site-v71-source-20260925) | Current Explorer application and its own tests |
+| [Site v74-derived source mirror](../apps/site/README.md) | Current Explorer application and its own tests |
 | [`pipelines/`](../pipelines/README.md) | Lifecycle and non-publisher behavior under test |
 | [`release/`](../release/README.md) | Promotion, correction, withdrawal, and rollback authority tests must not replace |
 | [`data/receipts/`](../data/receipts/README.md) | Canonical process-memory records; test reports are not receipts by location |

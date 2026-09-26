@@ -200,7 +200,7 @@ process-level protection, not a host firewall or proof of all native-code egress
 The former native app and Explorer Web workbench have been removed from this
 branch. Their app-only CI workflows were retired; the Make target remains an explicit
 hold for old command callers. Build and test the current application
-from the [standalone Site v71 source branch](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/codex/live-site-v71-source-20260925).
+from the [Site v74-derived source mirror](../../apps/site/README.md).
 
 The existing local-data, inactive-spec, WBD-ingest, Mesonet-normalizer and
 Mesonet-health workflows now react to their Python bootstrap/lock and shared

@@ -1,4 +1,4 @@
-> **Retired guidance (2026-09-25):** This runbook describes the removed `apps/explorer-web/` workbench. For local hosting, use the [standalone Site v71 source](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/codex/live-site-v71-source-20260925). Commands below are historical and do not apply to this branch.
+> **Retired guidance (2026-09-25):** This runbook describes the removed `apps/explorer-web/` workbench. For local hosting, use the [Site v74-derived source mirror](../../apps/site/README.md). Commands below are historical and do not apply to this branch.
 
 # Explorer Web change rollback and recovery
 

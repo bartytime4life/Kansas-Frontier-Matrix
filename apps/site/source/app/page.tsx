@@ -16,7 +16,7 @@ import { EarthEngineGlobe } from "./earth-engine-globe";
 import { EarthEngineDisplayControls } from "./earth-engine-display";
 import { useEarthEngineContext } from "./earth-engine-context-client";
 import { applyProjectionNavigationLimits, GLOBE_VIEWPOINTS, readGlobeCamera, REGIONAL_NAVIGATION_BOUNDS, type GlobeCameraReading, type GlobeViewpoint } from "./globe-context";
-import { browserRenderBudget, readRenderQuality, sampleMapRuntimeHealth, QUALITY_STORAGE_KEY, type MapRuntimeCheckFailure, type RenderQuality } from "./map-performance";
+import { browserRenderBudget, mapRuntimeErrorCode, readRenderQuality, sampleMapRuntimeHealth, QUALITY_STORAGE_KEY, type MapRuntimeCheckFailure, type RenderQuality } from "./map-performance";
 import type { Feature, Geometry } from "geojson";
 import type { GeoJSONSource, Map as MapLibreMap, MapSourceDataEvent, Popup, ScaleControl } from "maplibre-gl";
 import {
@@ -4589,8 +4589,10 @@ export default function Home() {
           if (projectionRef.current === "globe") setGlobeCamera(readGlobeCamera(map));
         });
         map.on("error", (event) => {
-          const message = event.error?.message || "The map reported an unknown rendering error.";
           const sourceId = (event as typeof event & { sourceId?: string }).sourceId;
+          // MapLibre error text can contain a provider URL or a query token.
+          // Only the finite class and already registered source title enter UI state.
+          const message = mapRuntimeErrorCode("event", sourceId);
           const affectedLayer = sourceId ? LAYER_REGISTRY.find((layer) => layer.sourceId === sourceId) : undefined;
           const affectedOfficialContext = sourceId ? OFFICIAL_CONTEXT_BY_SOURCE_ID[sourceId] : undefined;
           if (basemapRef.current === "standard" && !styleFallbackAttempted && (!sourceId || (!affectedLayer && !affectedOfficialContext && sourceId !== TERRAIN_SOURCE_ID && sourceId !== TERRAIN_COLOR_SOURCE_ID))) {
@@ -4690,13 +4692,13 @@ export default function Home() {
             setRuntime({ kind: "ready", message: `MapLibre ${version} ready · ${LAYER_REGISTRY.length} local sources · interactions proven` });
           });
         });
-      } catch (error) {
-        const message = error instanceof Error ? error.message : "unknown failure";
+      } catch {
+        const message = mapRuntimeErrorCode("start");
         setMaplibreProbe((current) => ({ ...current, error: message }));
         setRuntime({ kind: "error", message: `MapLibre could not start: ${message}` });
       }
-    }).catch((error: unknown) => {
-      const message = error instanceof Error ? error.message : "unknown failure";
+    }).catch(() => {
+      const message = mapRuntimeErrorCode("load");
       setMaplibreProbe((current) => ({ ...current, error: message }));
       setRuntime({ kind: "error", message: `MapLibre could not load: ${message}` });
     });
@@ -6258,8 +6260,8 @@ export default function Home() {
         ? { kind: "degraded", message: "Renderer state reapplied; known source errors remain visible for diagnosis" }
         : { kind: "ready", message: "MapLibre renderer state reapplied from the site registry" });
       announce(hasKnownSourceError ? "Reapplied renderer state without clearing known source errors" : "Reapplied local style, layers, time, selection, measurement, and analysis-area state");
-    } catch (error) {
-      setRuntime({ kind: "degraded", message: `Registry reapply failed safely: ${error instanceof Error ? error.message : "unknown failure"}` });
+    } catch {
+      setRuntime({ kind: "degraded", message: `Registry reapply failed safely: ${mapRuntimeErrorCode("start")}` });
       announce("Renderer state could not be fully reapplied; diagnostics remain available");
     }
   };

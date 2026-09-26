@@ -17,6 +17,8 @@ The owner-preserved application baseline is Site version 68. See
 [preservation and recovery](docs/SITE_PRESERVATION.md) and root `AGENTS.md`
 before importing, replacing, synchronizing or publishing other Site copies.
 
+For an Ubuntu PC, follow the [Site file layout and private data handoff](docs/LOCAL_PC_SITE_FILES.md).
+
 ## Documentation and telemetry alignment — September 24, 2026
 
 This source starts from the same-Site v69 preservation follow-up. The current
@@ -240,8 +242,11 @@ package-owned renderer and newer dependency work retain their own history.
   child manifest still names legacy project `appgprj_6a870a079c1c8191abb7401ef092a181`
   and is not used by this Site; that project returned `NOT_FOUND` in the Sites
   readback.
-- The repository MapLibre package pins `6.9.0`; this Site runs `6.6.0`. That
-  difference remains an explicit compatibility hold, not an inferred upgrade.
+- This Site and the repository manifest both pin MapLibre `6.9.0`. Matching
+  versions remove one drift item; browser, worker, terrain, and release
+  acceptance still require their own evidence. The Site reports only finite
+  MapLibre error classes in browser status and copied diagnostics; provider
+  exception text is not used as telemetry.
 - No automatic source sync, release, deployment, or publication follows from
   a repository currentness check.
 
