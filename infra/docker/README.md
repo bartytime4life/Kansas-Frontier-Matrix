@@ -11,8 +11,8 @@ non-root final user. It does not package or start the API or the Explorer Site.
 | [`.dockerignore`](.dockerignore) | Allowlist for the Docker build context |
 
 The former Explorer Web placeholder Dockerfile and npm overlay were retired with
-the old monorepo app. The current Site source is maintained in the
-[Site v74-derived source mirror](../../apps/site/README.md).
+the old monorepo app. The historical local Site source mirror is documented in the
+[v74-derived mirror record](../../apps/site/README.md).
 
 ## Validation
 
