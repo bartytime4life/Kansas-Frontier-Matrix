@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { readBoundedJson } from "./bounded-json";
+import { externalHoverTitle, localHoverTitle } from "./hover-summary-boundary";
 import { catalogSourceRoles, layerHasSourceRole } from "./catalog-source-roles";
 import { parseRepositoryObservation, type RepositoryConnection } from "./repository-status";
 import { replaceExplorerHistory } from "./embed-runtime";
@@ -4367,7 +4368,7 @@ export default function Home() {
           if (!candidate) {
             if (hoveredRef.current) map.setFeatureState(hoveredRef.current, { hover: false });
             hoveredRef.current = null;
-            const externalTitle = String(externalCandidate?.properties?.name ?? externalCandidate?.properties?.name_en ?? externalCandidate?.properties?.event ?? externalCandidate?.properties?.monitoringLocationId ?? externalCandidate?.properties?.class ?? "Basemap feature");
+            const externalTitle = externalHoverTitle(externalCandidate?.properties?.name ?? externalCandidate?.properties?.name_en ?? externalCandidate?.properties?.event ?? externalCandidate?.properties?.monitoringLocationId ?? externalCandidate?.properties?.class);
             const officialSource = externalCandidate?.source ? OFFICIAL_CONTEXT_BY_SOURCE_ID[externalCandidate.source] : undefined;
             setHoverSummary({
               id: `external:${externalCandidate?.source ?? "context"}:${externalTitle}`,
@@ -4386,7 +4387,7 @@ export default function Home() {
             id: `${candidate.source}:${hoverFeatureId || candidate.properties?.cluster_id || candidate.layer.id}`,
             title: candidate.properties?.cluster
               ? `${candidate.properties.point_count ?? "Multiple"} nearby place records`
-              : hoverRecord?.feature.properties.title ?? hoverLayer?.title ?? "Map feature",
+              : hoverRecord ? localHoverTitle(hoverRecord.feature.properties, hoverLayer?.publicStatus) : hoverLayer?.title ?? "Map feature",
             subtitle: candidate.properties?.cluster ? "Select to expand the cluster" : hoverLayer?.title ?? "Site-local map layer",
             state: candidate.properties?.cluster ? "Generalized cluster" : hoverRecord ? evidenceLabels[hoverRecord.feature.properties.evidenceState].label : "Inspect for details",
             x: Math.max(8, Math.min(event.point.x + 18, map.getCanvas().clientWidth - 270)),
