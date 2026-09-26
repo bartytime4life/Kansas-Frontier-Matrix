@@ -70,15 +70,24 @@ The answer should be a navigable validator index and deterministic validation ou
 
 ## Status
 
+The `validate_domain_feature_identity.py` candidate now runs against explicit
+JSON files. It checks the bounded identity envelope and returns nonzero on
+findings or unreadable input. Run
+`python -m unittest discover -s tests/validators/domains/settlements-infrastructure -p 'test_*.py'`
+for its synthetic valid and invalid fixtures. The paired JSON Schema is still
+permissive; this command does not resolve evidence, decide sensitivity or
+policy, validate object-family payloads, or approve release.
+
 | Surface | Status | Notes |
 |---|---|---|
 | `tools/validators/domains/settlements-infrastructure/README.md` | **CONFIRMED** | This README replaces the previous greenfield stub. |
+| `validate_domain_feature_identity.py` | **BOUNDED CANDIDATE** | Identity-envelope checks with synthetic tests; no policy or release authority. |
 | Parent per-domain validators README | **CONFIRMED stub** | `tools/validators/domains/README.md` currently says only `# Per-domain validators`; this file keeps its own boundary explicit. |
 | Broad `tools/validators/settlements-infrastructure/README.md` | **NOT FOUND in this task** | This path currently serves as the inspected Settlements/Infrastructure validator index. |
 | Settlements/Infrastructure domain doctrine | **CONFIRMED in repo evidence / draft** | `docs/domains/settlements-infrastructure/README.md` defines scope, object families, sensitivity default, non-ownership boundaries, and responsibility-root split. |
 | Sensitive infrastructure doctrine | **CONFIRMED in repo evidence / draft** | ADR-0010 draft includes critical infrastructure among deny-by-default sensitivity classes and requires fail-closed policy gates for exact or identifying release when support is incomplete. |
 | Child README lanes | **NONE CONFIRMED IN THIS TASK** | No child Settlements/Infrastructure validator README was verified while writing this index. |
-| Executables, schemas, fixtures, policy bundles, and CI wiring | **NEEDS VERIFICATION** | No script names, test paths, schema maturity, policy bundles, receipts, runtime behavior, or CI behavior are claimed as implemented here. |
+| Other executables, schema hardening, policy bundles, and CI wiring | **NEEDS VERIFICATION** | This candidate does not establish domain-wide validation or hosted enforcement. |
 
 [Back to top](#top)
 
