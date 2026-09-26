@@ -147,7 +147,7 @@ notes:
 
 `docs/domains/people-dna-land/sublanes/dna.md` names `policy/domains/people-dna-land/` as the domain-lane home for People/DNA/Land policy (§12 lane form). A code-generation pass later created a genealogy publication-policy stub not at that path, but at a flat `policy/genealogy/` segment, citing this same document as its source. `policy/genealogy/README.md` already recognizes the resulting conflict explicitly in its own status and truth-posture metadata — but that recognition was never carried into `docs/registers/DRIFT_REGISTER.md`, and no ADR previously existed to resolve it.
 
-This is the exact same shape of conflict `ADR-0042` already resolved for `tools/validators/genealogy/` versus `tools/validators/domains/people-dna-land/`, in the same domain, one responsibility root over (`policy/` instead of `tools/validators/`). Unlike that case, neither candidate policy path yet holds working rule logic — `policy/domains/people-dna-land/`'s other six files are themselves still scaffolds — so the evidence for "already-established convention" here rests on the domain doc's own naming and the already-reserved `genealogy/.gitkeep` subdirectory, not on existing substantive implementations.
+This is the exact same shape of conflict `ADR-0042` already proposed a resolution for — `tools/validators/genealogy/` versus `tools/validators/domains/people-dna-land/`, in the same domain, one responsibility root over (`policy/` instead of `tools/validators/`) — though `ADR-0042` itself remains `proposed`, not accepted, so it is precedent-in-waiting rather than binding authority. Unlike that case, neither candidate policy path yet holds working rule logic — `policy/domains/people-dna-land/`'s other six files are themselves still scaffolds — so the evidence for "already-established convention" here rests on the domain doc's own naming and the already-reserved `genealogy/.gitkeep` subdirectory, not on existing substantive implementations.
 
 ### 3.1 Decision drivers
 
@@ -178,15 +178,14 @@ This is the exact same shape of conflict `ADR-0042` already resolved for `tools/
 
 ## 4. Decision
 
-> **Decision:** KFM will treat `policy/domains/people-dna-land/` as the sole canonical home for genealogy-concern policy scaffolding, retire `policy/genealogy/` as a policy home through a reviewed migration, and place any future genealogy publication-policy implementation under `policy/domains/people-dna-land/genealogy/` (the already-reserved subdirectory) or directly under `policy/domains/people-dna-land/`, per steward preference at implementation time.
+> **Decision:** KFM will treat `policy/domains/people-dna-land/` as the sole canonical home for genealogy-concern policy scaffolding, retire `policy/genealogy/` as a policy home through a reviewed migration, and place any future genealogy publication-policy implementation under the already-reserved `policy/domains/people-dna-land/genealogy/` subdirectory.
 
 ### 4.1 Normative rules
 
-1. **MUST** — New genealogy-concern policy files for the People/DNA/Land domain are added only under `policy/domains/people-dna-land/` (optionally its reserved `genealogy/` subdirectory).
+1. **MUST** — New genealogy-concern policy files for the People/DNA/Land domain are added only under `policy/domains/people-dna-land/genealogy/`.
 2. **MUST NOT** — No new file is added under `policy/genealogy/` after this ADR's acceptance.
-3. **SHOULD** — `publication.rego` is migrated to `policy/domains/people-dna-land/` (or its `genealogy/` subdirectory) in a dedicated, reviewed follow-up change once this decision is accepted, preserving its current placeholder content exactly (no logic is added as part of the move).
+3. **SHOULD** — `publication.rego` is migrated to `policy/domains/people-dna-land/genealogy/` in a dedicated, reviewed follow-up change once this decision is accepted, preserving its current placeholder content exactly (no logic is added as part of the move).
 4. **SHOULD** — `policy/genealogy/README.md`'s substantive compatibility-boundary content (self-aware conflict documentation, safe-input/output boundaries, sensitive-data exclusions) is merged into or cross-linked from `policy/domains/people-dna-land/README.md` as part of the same migration, so its analysis is not lost.
-5. **MAY** — A steward may choose `policy/domains/people-dna-land/genealogy/publication.rego` over a flat `policy/domains/people-dna-land/publication.rego`, given the already-reserved subdirectory; this ADR does not mandate one over the other.
 
 ### 4.2 Responsibility and placement
 
@@ -199,7 +198,7 @@ This is the exact same shape of conflict `ADR-0042` already resolved for `tools/
 | `scope_kind` / `scope_id` | `domain` / `people-dna-land` |
 | `exposure` | internal (no operative rule, no evaluator binding, no public route) |
 | `mutability` / `retention` | versioned; durable |
-| Candidate path | `policy/domains/people-dna-land/{genealogy/}publication.rego` |
+| Candidate path | `policy/domains/people-dna-land/genealogy/publication.rego` |
 | Governing rule IDs / accepted ADRs | Directory Rules §12.2 (via accepted `ADR-0029`); `ADR-0042` precedent for the same domain |
 | Placement outcome | `MIGRATE` |
 | Parallel-authority posture | Explicitly denies a second, permanent genealogy-scoped policy lane; `policy/genealogy/` becomes a migration-only, non-authoritative path pending retirement |
@@ -257,7 +256,7 @@ This ADR favors consistency with the domain's own stated lane convention and wit
 | Risk | Likelihood / impact | Mitigation | Residual risk / owner |
 |---|---|---|---|
 | Migration loses `policy/genealogy/README.md`'s self-documented conflict analysis | Low / low | Explicitly require content reconciliation, not deletion, in §4.1 rule 4 | Residual: reviewer discretion on what counts as "substantive"; owner: migration PR author |
-| Decision stalls without a confirmed steward | Medium / low | Acceptance can proceed on architecture-steward review alone per the bootstrap pattern used by `ADR-0029`/`ADR-0042` | Residual: bootstrap-exception style acceptance; owner: whoever accepts this ADR |
+| Decision stalls without a confirmed steward | Medium / low | This record's required reviewers (§1) — architecture steward, docs steward, People/DNA/Land domain steward, genealogy/consent steward — must all act before acceptance; `ADR-0029`'s single-owner bootstrap exception was an explicit, disclosed, case-specific action and not a standing waiver, and `ADR-0042` remains itself `proposed`, so neither establishes a reusable shortcut around this record's own reviewer requirement. Acceptance holds until the named reviewers act or a repository owner records an equally explicit, disclosed exception here | Residual: any future bootstrap exception must be explicit and recorded at acceptance time, not assumed from precedent; owner: whoever accepts this ADR |
 | Confused with the broader `policy/domains/` vs. `policy/sensitivity/` question | Low / medium | §3.3 and §4.4 explicitly exclude that question | Residual: a reviewer conflating the two; owner: reviewing steward |
 
 [Back to top](#top)
@@ -301,12 +300,12 @@ This ADR favors consistency with the domain's own stated lane convention and wit
 |---:|---|---|---|---:|
 | 1 | Record this proposed ADR and update `INDEX.md`/`README.md` | Current authority (this change) | Decision review | yes |
 | 2 | Explicit reviewed acceptance transition | Owner/steward review | Status review | yes |
-| 3 | Migrate `publication.rego` to `policy/domains/people-dna-land/` (or its `genealogy/` subdirectory); update any inbound references | Accepted ADR | Implementation review | yes (git revert) |
+| 3 | Migrate `publication.rego` to `policy/domains/people-dna-land/genealogy/`; update any inbound references | Accepted ADR | Implementation review | yes (git revert) |
 | 4 | Reconcile `policy/genealogy/README.md`'s content into `policy/domains/people-dna-land/README.md`; retire the empty `policy/genealogy/` directory | Step 3 | Docs review | yes |
 
 ### 7.2 Migration and compatibility plan
 
-- **Old → new mapping:** `policy/genealogy/publication.rego` → `policy/domains/people-dna-land/publication.rego` or `policy/domains/people-dna-land/genealogy/publication.rego` (steward's choice per §4.1 rule 5).
+- **Old → new mapping:** `policy/genealogy/publication.rego` → `policy/domains/people-dna-land/genealogy/publication.rego`.
 - **Migration manifest/note:** Not applicable — a single-file `git mv`, described in the migration PR description.
 - **Producer cutover:** N/A (no producer writes this file at runtime; no evaluator currently binds it).
 - **Consumer migration:** None known — no test, workflow, or bundle reference to `policy/genealogy/publication.rego` was found at this snapshot.
@@ -321,7 +320,7 @@ This ADR favors consistency with the domain's own stated lane convention and wit
 
 | Artifact | Why directly required | Planned path | Validation |
 |---|---|---|---|
-| `publication.rego` | Only scaffold currently at the disputed path | `policy/domains/people-dna-land/{genealogy/}publication.rego` | Confirm package name and `default allow := false` are byte-identical after the move |
+| `publication.rego` | Only scaffold currently at the disputed path | `policy/domains/people-dna-land/genealogy/publication.rego` | Confirm package name and `default allow := false` are byte-identical after the move |
 | `policy/genealogy/README.md` | Documents the lane being retired | Merge relevant content into `policy/domains/people-dna-land/README.md` | Manual review; no automated check known |
 
 ### 7.4 Deferred work
@@ -435,8 +434,7 @@ Unknown or unresolved high-risk handling returns `HOLD` or `DENY`; it is not sol
 
 | Item | Status | Why unresolved | Owner / next evidence | Blocks |
 |---|---|---|---|---|
-| Should genealogy policy live directly under `policy/domains/people-dna-land/` or its reserved `genealogy/` subdirectory? | `NEEDS VERIFICATION` | This ADR permits either (§4.1 rule 5) rather than mandating one | Steward, at migration time | Nothing; recorded for clarity |
-| Who is the verified People/DNA/Land domain steward and genealogy/consent steward? | `NEEDS VERIFICATION` | No verified individual found in this session's evidence | Repository owner / CODEOWNERS update | Formal acceptance review |
+| Who is the verified People/DNA/Land domain steward and genealogy/consent steward? | `NEEDS VERIFICATION` | No verified individual found in this session's evidence | Repository owner / CODEOWNERS update | Formal acceptance review; §1's four required reviewers cannot all act until identified |
 | Does this decision have any bearing on `OQ-PEOPLE-SUB-01`/`OQ-PEOPLE-SUB-02`/`OQ-PEOPLE-DNA-11`/`OQ-GEN-12`, or the cross-domain `policy/sensitivity/` question? | `CONFIRMED` — no, by design (§3.3, §4.4) | Explicitly scoped out | — | Nothing; recorded for clarity |
 
 Do not hide unresolved acceptance blockers in prose. Track the steward-identity gap through the repository's normal ownership process, not through a second ADR.
