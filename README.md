@@ -29,7 +29,7 @@ related:
   - docs/runbooks/local-pc-data-store.md
   - apps/site/README.md
 notes:
-  - "The apps/site/source/ subtree is a byte-for-byte copy of the 187 tracked files in deployed Site v71 source commit 62c6ef9da35bdcd11929502a386f4f9da07448ac; private D1/R2 records are excluded."
+  - "The apps/site/source/ subtree contains all 190 tracked files of deployed Site v74 source commit 99bf1af2deea0ef343807db96a432dbfeb2ae7a6, plus two GitHub-only catalog-role files; five shared paths retain repository-specific changes. Private D1/R2 records are excluded."
   - "A 2026-09-24 readback at main@bb08d3e9b9 reconciles the local-PC guide with integrated source and the exact-schema quarantine-only owner decision; the broader product snapshot below remains historical."
   - "The 2026-09-21 working-path readback below is bounded to main@32ab26478b7186bd1a0983951c1a4fbf5adf33aa and the named repository files; it does not replace the historical product maturity snapshot."
   - "Local-PC setup and packaging guidance updated against main@91aeee1ca163bcb3f007577a541a825f60dcddc2 plus this change; the earlier product maturity snapshot below is historical."
@@ -90,7 +90,7 @@ KFM’s public value is not a larger pile of layers. It is a more trustworthy pa
 | If you want to… | Start with… |
 |---|---|
 | **See the project’s public-facing Explorer** | [KFM Explorer](https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site) — the repository records this OpenAI Sites/Vinext project, slug, and public address. Hosted availability and version state require current runtime verification. |
-| **Get the current Site source** | [`apps/site/`](apps/site/README.md) — the exact Site v71 source snapshot is under `apps/site/source/`, including checked-in assets and local development scripts. The former monorepo Site copy and Explorer Web workbench have been retired. |
+| **Get the current Site source** | [`apps/site/`](apps/site/README.md) — the Site v74-derived GitHub mirror is under `apps/site/source/`, including checked-in assets and local development scripts. The former monorepo Site copy and Explorer Web workbench have been retired. |
 | **Learn the project’s rules** | [`docs/doctrine/`](docs/doctrine/), [`docs/architecture/`](docs/architecture/), and [`docs/adr/`](docs/adr/). |
 | **Make a change safely** | [`CONTRIBUTING.md`](CONTRIBUTING.md), [`Directory Rules`](docs/doctrine/directory-rules.md), and the README nearest the path you will touch. |
 | **Understand evidence and public boundaries** | [`Trust Membrane`](docs/doctrine/trust-membrane.md), [`Truth Posture`](docs/doctrine/truth-posture.md), [`Lifecycle Law`](docs/doctrine/lifecycle-law.md), and [`SECURITY.md`](SECURITY.md). |
@@ -102,7 +102,7 @@ This source-level readback is for `main@32ab26478b7186bd1a0983951c1a4fbf5adf33aa
 
 | Goal | Start here | What the repository currently establishes |
 |---|---|---|
-| Explore a place and inspect its limits | [Live Explorer](https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site/) and [`apps/site/`](apps/site/README.md) | The Site v71 source snapshot is available for local hosting. A local build does not prove current hosted availability, provider data completeness, or source admission. |
+| Explore a place and inspect its limits | [Live Explorer](https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site/) and [`apps/site/`](apps/site/README.md) | The Site v74-derived source mirror is available for local hosting. A local build does not prove current hosted availability, provider data completeness, or source admission. |
 | Preserve files you already downloaded | [Local PC runbook](docs/runbooks/local-pc-data-store.md) and [`tools/local_data/`](tools/local_data/README.md) | `doctor`, `init`, `plan`, `sync`, and `verify` support a bounded offline workflow. `sync` captures selected bytes into a private, external, source-first **QUARANTINE** store and writes process receipts; it does not populate this repository's [`data/raw/`](data/raw/README.md) lane or admit a source. |
 | Check a change | [`Makefile`](Makefile), [validator profiles](tools/validators/README.md), and [contribution guide](CONTRIBUTING.md) | Focused commands and fixtures cover declared boundaries. Some targets are `TODO` markers; topology correction and later release decisions require their own governed evidence. |
 
@@ -193,7 +193,7 @@ The table below is the honest maturity snapshot for the repository inspected at 
 |---|---|---|
 | **Repository foundation** | Responsibility roots for apps, contracts, schemas, policy, data, pipelines, runtime, docs, tests, tools, and release are present. | A path’s presence does not make it truth, policy, release, or publication authority. |
 | **Repository validation evidence** | The earlier exact-main `validator-suite` run [34645138385](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34645138385) passed its ordinary validator, documentation, workflow-security, and aggregate lanes but remained `FAIL_INVARIANT` at repository-topology because six current drift fingerprints replaced six stale baseline fingerprints. | The topology baseline was not rewritten; this inherited governance hold remains tracked by [#4228](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228) and [#3366](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3366). |
-| **Explorer Site source** | The exact Site v71 source is included under [`apps/site/source/`](apps/site/README.md), copied from commit `62c6ef9da35bdcd11929502a386f4f9da07448ac`. The two older monorepo app directories remain retired. | The historical snapshot at the start of this section predates the import. Local builds and tests do not prove hosted health, complete provider data, source admission, release, or publication. |
+| **Explorer Site source** | The Site v74-derived source mirror is included under [`apps/site/source/`](apps/site/README.md), reconciled from commit `99bf1af2deea0ef343807db96a432dbfeb2ae7a6`. The two older monorepo app directories remain retired. | The historical snapshot at the start of this section predates the import. Local builds and tests do not prove hosted health, complete provider data, source admission, release, or publication. |
 | **MapLibre path** | Renderer-neutral ports, package/adaptor surfaces, performance governance, and synthetic validation support exist in the repository. | Functional renderer admission and a live map boot are held until their dependency, compatibility, accessibility, performance, and rollback evidence is closed. |
 | **Evidence and trust path** | Contracts, finite outcomes, defensive adapters, fail-closed fixtures, negative cases, and policy-boundary tests are present in bounded slices. | End-to-end EvidenceBundle resolution, source admission, live transport, and public release are not established by this README. |
 | **Science Pack path** | Repository domain lanes, Explorer workbenches, contracts, schemas, policies, fixtures, and validators provide partial building blocks for governed scientific exploration. | No single installable, configured, admitted, released, or operational cross-domain Science Pack was established by this review. |
@@ -314,7 +314,7 @@ The local-data tools use the Python standard library and need no package install
 
 ### Host the current Site locally
 
-The [`apps/site/source/`](apps/site/README.md) directory contains all 187 tracked files from the deployed Site v71 source commit `62c6ef9da35bdcd11929502a386f4f9da07448ac`. Run its npm commands from that directory; the root pnpm workspace does not include it:
+The [`apps/site/source/`](apps/site/README.md) directory contains all 190 tracked files from the deployed Site v74 source commit `99bf1af2deea0ef343807db96a432dbfeb2ae7a6` plus the two GitHub-only catalog-role files. Five shared files have repository-specific changes; see the [mirror record](apps/site/README.md). Run its npm commands from that directory; the root pnpm workspace does not include it:
 
 ```bash
 cd apps/site/source
