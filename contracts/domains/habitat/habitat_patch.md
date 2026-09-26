@@ -155,7 +155,7 @@ A patch is the spatial carrier for Habitat reasoning. It may carry class, qualit
 | Source doc | `docs/domains/habitat/MISSING_OR_PLANNED_FILES.md` |
 | Contract doc pointer | `contracts/domains/habitat/habitat_patch.md` |
 | Field-level validation | NEEDS VERIFICATION |
-| Structural-only validation | `tools/validators/domains/habitat/validate_habitat_patch.py` now delegates to the shared JSON Schema runner against this scaffold: it enforces valid JSON, a JSON-object root, no duplicate keys, and no non-finite numbers, and nothing else. See `fixtures/domains/habitat/patch/README.md`. |
+| Structural validation, plus reference hygiene | `tools/validators/domains/habitat/validate_habitat_patch.py` enforces valid JSON, a JSON-object root, no duplicate keys, and no non-finite numbers against this scaffold, and nothing else field-wise. It additionally checks that the optional `connectivity_edge_refs` and `corridor_refs` fields, if declared, are sorted, unique, grammar-bounded reference arrays free of internal-lifecycle prefixes — reusing the shared CatalogMatrix closure validator's ref-hygiene rule unchanged, without resolving either field to a real `ConnectivityEdge` or `Corridor` (both are themselves empty `PROPOSED` scaffolds; see `connectivity_edge.md`, `corridor.md`). See `fixtures/domains/habitat/patch/README.md`. |
 
 Until schema fields are added and the sibling-path conflict is resolved, this file is semantic guidance and review vocabulary only.
 

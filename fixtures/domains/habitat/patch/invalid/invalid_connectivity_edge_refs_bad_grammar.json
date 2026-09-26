@@ -1,0 +1,6 @@
+{
+  "note": "connectivity_edge_refs contains a reference with an embedded space, which violates the bounded reference grammar.",
+  "connectivity_edge_refs": [
+    "bad ref with spaces"
+  ]
+}

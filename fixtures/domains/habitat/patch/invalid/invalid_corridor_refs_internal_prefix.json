@@ -1,0 +1,6 @@
+{
+  "note": "corridor_refs contains a lifecycle-private (internal:) reference, which is denied.",
+  "corridor_refs": [
+    "internal:corridor:candidate-001"
+  ]
+}
