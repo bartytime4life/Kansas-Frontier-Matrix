@@ -176,6 +176,10 @@ jobs:
 
           python -m pytest -q tests/schemas/test_corridor_route_contract.py
           python tools/validators/domains/roads-rail-trade/validate_corridor_route.py --fixtures
+          python -m unittest discover \
+            --start-directory tests/domains/roads-rail-trade \
+            --pattern 'test_roads_rail_trade_smoke.py' \
+            --verbose
 
           if ! grep -Fq "PROPOSED (greenfield scaffold)" "policy/domains/roads-rail-trade/README.md"; then
             echo "::error::The Roads/Rail/Trade policy posture changed. Verify executable rules, fixtures, tests, ownership, and activation before accepting this workflow."

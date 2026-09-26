@@ -83,6 +83,10 @@ jobs:
             --pattern 'test_land_cover_materiality.py' \
             --verbose
           python tools/validators/domains/habitat/validate_land_cover_materiality.py --fixtures
+          python -m unittest discover \
+            --start-directory tests/domains/habitat \
+            --pattern 'test_habitat_smoke.py' \
+            --verbose
 
       - name: Record bounded Habitat validation scope
         if: always()

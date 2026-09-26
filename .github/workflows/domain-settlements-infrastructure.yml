@@ -223,9 +223,20 @@ jobs:
                   )
               assert_only_python_or_docs(root, f"Settlements/Infrastructure {root_name}")
 
+          accepted_tests = {
+              Path(
+                  "tests/domains/settlements-infrastructure/"
+                  "test_settlements_infrastructure_smoke.py"
+              ),
+          }
           for path in sorted(Path("tests/domains/settlements-infrastructure").rglob("*.py")):
               classification = classify_test_source(path.read_text(encoding="utf-8"))
-              if not classification.placeholder:
+              if path in accepted_tests:
+                  if classification.placeholder:
+                      raise SystemExit(
+                          f"Accepted Settlements/Infrastructure test regressed: {path}"
+                      )
+              elif not classification.placeholder:
                   raise SystemExit(
                       f"Unwired Settlements/Infrastructure test became substantive: {path}"
                   )
@@ -268,7 +279,8 @@ jobs:
             tests/validators/domains/settlements-infrastructure/test_settlements_infrastructure_evidence_bundle_validator_entrypoint.py \
             tests/validators/domains/settlements-infrastructure/test_settlements_infrastructure_evidence_bundle_schema_convergence.py \
             tests/validators/domains/settlements-infrastructure/test_settlements_infrastructure_schema_validator.py \
-            tests/validators/domains/settlements-infrastructure/test_settlements_infrastructure_source_descriptor_validator_entrypoint.py
+            tests/validators/domains/settlements-infrastructure/test_settlements_infrastructure_source_descriptor_validator_entrypoint.py \
+            tests/domains/settlements-infrastructure/test_settlements_infrastructure_smoke.py
 
           python tools/validators/domains/settlements-infrastructure/validate_catalog_matrix.py --fixtures
           python tools/validators/domains/settlements-infrastructure/validate_evidence_bundle.py --fixtures

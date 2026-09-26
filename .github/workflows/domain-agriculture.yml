@@ -143,6 +143,7 @@ jobs:
           if not test_paths:
               raise SystemExit("Agriculture test inventory contains no Python modules.")
           expected_dedicated_tests = {
+              "test_agriculture_smoke.py",
               "test_ndvi_delta_computation.py",
               "test_public_safe_agricultural_economy_observation.py",
               "test_public_safe_conservation_practice_context.py",
@@ -302,7 +303,8 @@ jobs:
             tests/validators/domains/agriculture/test_agriculture_catalog_matrix_validator_entrypoint.py \
             tests/validators/domains/agriculture/test_agriculture_evidence_bundle_validator_entrypoint.py \
             tests/validators/domains/agriculture/test_evidence_bundle_schema_convergence.py \
-            tests/validators/domains/agriculture/test_domain_schema_validator.py
+            tests/validators/domains/agriculture/test_domain_schema_validator.py \
+            tests/domains/agriculture/test_agriculture_smoke.py
 
       - name: Run bounded CDL material-change watcher proof
         env:
