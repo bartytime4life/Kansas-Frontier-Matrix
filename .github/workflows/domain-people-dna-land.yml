@@ -81,6 +81,9 @@ jobs:
             "fixtures/domains/people-dna-land/consent_overlay/revocation_manifest.json"
             "fixtures/domains/people-dna-land/consent_revocation_propagation/README.md"
             "fixtures/domains/people-dna-land/consent_revocation_propagation/cases.json"
+            "fixtures/domains/people-dna-land/source_descriptor/README.md"
+            "fixtures/domains/people-dna-land/source_descriptor/valid/valid_1.json"
+            "fixtures/domains/people-dna-land/source_descriptor/invalid/invalid_domain_scope_mismatch.json"
             "policy/domains/people-dna-land/README.md"
             "policy/consent/people-dna-land/README.md"
             "tests/domains/people-dna-land/README.md"
@@ -91,6 +94,7 @@ jobs:
             "tests/validators/domains/people-dna-land/test_domain_evidence_bundle_validator_entrypoint.py"
             "tests/validators/domains/people-dna-land/test_domain_schema_validator.py"
             "tests/validators/domains/people-dna-land/test_people_dna_land_evidence_bundle_schema_convergence.py"
+            "tests/validators/domains/people-dna-land/test_people_dna_land_source_descriptor_validator_entrypoint.py"
             "tests/validators/test_screen_living_persons.py"
             "tools/validators/domains/people-dna-land/README.md"
             "tools/validators/domains/people-dna-land/validate_consent_overlay.py"
@@ -98,6 +102,7 @@ jobs:
             "tools/validators/domains/people-dna-land/validate_catalog_matrix.py"
             "tools/validators/domains/people-dna-land/validate_evidence_bundle.py"
             "tools/validators/domains/people-dna-land/validate_schema.py"
+            "tools/validators/domains/people-dna-land/validate_source_descriptor.py"
             "tools/validators/validate_catalog_matrix_closure.py"
             "tools/validators/validate_historical_person_place_event_resolution.py"
             "tools/validators/genealogy/README.md"
@@ -152,6 +157,10 @@ jobs:
                   "tools/validators/domains/people-dna-land/"
                   "validate_schema.py"
               ),
+              Path(
+                  "tools/validators/domains/people-dna-land/"
+                  "validate_source_descriptor.py"
+              ),
               Path("tools/validators/genealogy/screen_living_persons.py"),
           }
 
@@ -190,6 +199,7 @@ jobs:
           accepted_fixture_roots = {
               fixture_root / "consent_overlay",
               fixture_root / "consent_revocation_propagation",
+              fixture_root / "source_descriptor",
           }
           expected_markers = {
               fixture_root / "golden/PLACEHOLDER.md":
@@ -267,11 +277,13 @@ jobs:
             tests/validators/domains/people-dna-land/test_domain_evidence_bundle_validator_entrypoint.py \
             tests/validators/domains/people-dna-land/test_domain_schema_validator.py \
             tests/validators/domains/people-dna-land/test_people_dna_land_evidence_bundle_schema_convergence.py \
+            tests/validators/domains/people-dna-land/test_people_dna_land_source_descriptor_validator_entrypoint.py \
             tests/validators/test_screen_living_persons.py
 
           python tools/validators/domains/people-dna-land/validate_schema.py
           python tools/validators/domains/people-dna-land/validate_evidence_bundle.py --fixtures
           python tools/validators/domains/people-dna-land/validate_catalog_matrix.py --fixtures
+          python tools/validators/domains/people-dna-land/validate_source_descriptor.py --fixtures
           python tools/validators/genealogy/screen_living_persons.py --fixtures
 
           echo "WORKFLOW_CHECK_EXECUTED: people-dna-land-exact-option-adapters"
@@ -334,14 +346,14 @@ jobs:
           `WORKFLOW_HOLD: broader People/DNA/Land semantics, policy runtime, evidence closure, proof, and release remain unestablished`
 
           When green, this job has validated the retained domain schemas and
-          exact-option EvidenceBundle and CatalogMatrix adapter seams, replayed
-          the already-merged bounded living-person screen, then executed two
-          frozen, synthetic, no-network consent fixture profiles: a consent-safe
-          genealogy-overlay candidate and a consent-revocation propagation
-          assessment. The structural adapter and screen regressions reject every
-          strict prefix of `--fixtures` before delegation and keep fixture mode
-          mutually exclusive with explicit files. The consent profiles check
-          active consent
+          exact-option EvidenceBundle, CatalogMatrix, and SourceDescriptor adapter
+          seams, replayed the already-merged bounded living-person screen, then
+          executed two frozen, synthetic, no-network consent fixture profiles: a
+          consent-safe genealogy-overlay candidate and a consent-revocation
+          propagation assessment. The structural adapter and screen regressions
+          reject every strict prefix of `--fixtures` before delegation and keep
+          fixture mode mutually exclusive with explicit files. The consent
+          profiles check active consent
           for living-person and DNA-derived summaries,
           expiry and revocation precedence, manifest-root and membership checks,
           deterministic hashes, fixture EvidenceRefs, coarse synthetic place and
@@ -355,10 +367,13 @@ jobs:
           real people, identity, kinship,
           DNA, consent legal sufficiency, source rights, EvidenceBundle closure,
           policy approval, public-safe transforms, release readiness, withdrawal
-          execution, cache invalidation, or publication. SourceDescriptor remains
-          a greenfield placeholder; DomainLayerDescriptor and DomainFeatureIdentity
-          adapters remain absent. Other People/DNA/Land test and validator modules
-          remain explicit placeholders or documentation-only lanes.
+          execution, cache invalidation, or publication. The SourceDescriptor
+          adapter delegates to the shared, non-domain-specific SourceDescriptor
+          schema plus one domain_scope membership check; it does not admit a
+          source, resolve rights or sensitivity, or activate connectors.
+          DomainLayerDescriptor and DomainFeatureIdentity adapters remain absent.
+          Other People/DNA/Land test and validator modules remain explicit
+          placeholders or documentation-only lanes.
           EOF
 
   build-proof-people-dna-land:

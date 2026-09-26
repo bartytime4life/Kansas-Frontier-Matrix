@@ -1,7 +1,9 @@
 # KFM Settlements/Infrastructure domain CI readiness workflow.
-# Status: PROPOSED bounded static readiness checks plus explicit holds; accepted
-# executable semantic validation, proof, and release-dry-run producers are not
-# established in current repository evidence.
+# Status: PROPOSED bounded static readiness checks plus explicit holds; the
+# shared CatalogMatrix/DomainFeatureIdentity/EvidenceBundle/schema/
+# SourceDescriptor adapters are executable; broader semantic validation,
+# proof, and release-dry-run producers are not established in current
+# repository evidence.
 #
 # Authority boundary:
 # - This workflow performs no live source requests and does not provide legal
@@ -69,6 +71,21 @@ jobs:
             "tools/validators/hazard-exposure/README.md"
             "data/registry/sources/settlements-infrastructure/README.md"
             "release/candidates/settlements-infrastructure/README.md"
+            "tests/validators/domains/settlements-infrastructure/test_settlements_infrastructure_catalog_matrix_validator_entrypoint.py"
+            "tests/validators/domains/settlements-infrastructure/test_domain_feature_identity.py"
+            "tests/validators/domains/settlements-infrastructure/test_settlements_infrastructure_evidence_bundle_validator_entrypoint.py"
+            "tests/validators/domains/settlements-infrastructure/test_settlements_infrastructure_schema_validator.py"
+            "tests/validators/domains/settlements-infrastructure/test_settlements_infrastructure_source_descriptor_validator_entrypoint.py"
+            "tools/validators/domains/settlements-infrastructure/validate_catalog_matrix.py"
+            "tools/validators/domains/settlements-infrastructure/validate_domain_feature_identity.py"
+            "tools/validators/domains/settlements-infrastructure/validate_evidence_bundle.py"
+            "tools/validators/domains/settlements-infrastructure/validate_schema.py"
+            "tools/validators/domains/settlements-infrastructure/validate_source_descriptor.py"
+            "fixtures/domains/settlements-infrastructure/source_descriptor/valid/valid_1.json"
+            "fixtures/domains/settlements-infrastructure/source_descriptor/invalid/invalid_domain_scope_mismatch.json"
+            "fixtures/domains/settlements-infrastructure/domain_feature_identity/valid_settlement.json"
+            "fixtures/domains/settlements-infrastructure/domain_feature_identity/valid_infrastructure_asset.json"
+            "fixtures/domains/settlements-infrastructure/domain_feature_identity/invalid_collapsed_object_family.json"
           )
 
           for required_path in "${required_paths[@]}"; do
@@ -120,12 +137,60 @@ jobs:
           print(f"Parsed {len(json_fixtures)} JSON fixtures; statuses={dict(fixture_statuses)}")
           PY
 
-          python tools/validators/ci_readiness.py \
-            --label "Settlements/Infrastructure" \
-            --test-root tests/domains/settlements-infrastructure \
-            --validator-root tools/validators/domains/settlements-infrastructure \
-            --validator-root tools/validators/facilities \
-            --validator-root tools/validators/hazard-exposure
+          python - <<'PY'
+          from pathlib import Path
+
+          from tools.validators.ci_readiness import (
+              classify_test_source,
+              classify_validator_source,
+          )
+
+          accepted_validators = {
+              Path("tools/validators/domains/settlements-infrastructure/validate_catalog_matrix.py"),
+              Path("tools/validators/domains/settlements-infrastructure/validate_domain_feature_identity.py"),
+              Path("tools/validators/domains/settlements-infrastructure/validate_evidence_bundle.py"),
+              Path("tools/validators/domains/settlements-infrastructure/validate_schema.py"),
+              Path("tools/validators/domains/settlements-infrastructure/validate_source_descriptor.py"),
+          }
+
+          for path in sorted(Path("tools/validators/domains/settlements-infrastructure").rglob("*.py")):
+              classification = classify_validator_source(path.read_text(encoding="utf-8"))
+              if path in accepted_validators:
+                  if classification.placeholder:
+                      raise SystemExit(
+                          f"Accepted Settlements/Infrastructure validator regressed: {path}"
+                      )
+              elif not classification.placeholder:
+                  raise SystemExit(
+                      f"Unwired Settlements/Infrastructure validator became substantive: {path}"
+                  )
+
+          # facilities/ and hazard-exposure/ are documentation-only placeholder
+          # roots (README.md only, no Python) and remain fully held.
+          for root_name in ("facilities", "hazard-exposure"):
+              root = Path("tools/validators") / root_name
+              substantive = sorted(
+                  path.as_posix()
+                  for path in root.rglob("*.py")
+              )
+              if substantive:
+                  raise SystemExit(
+                      f"Settlements/Infrastructure {root_name} lane gained Python "
+                      f"sources; review and wire it deliberately: {substantive}"
+                  )
+
+          for path in sorted(Path("tests/domains/settlements-infrastructure").rglob("*.py")):
+              classification = classify_test_source(path.read_text(encoding="utf-8"))
+              if not classification.placeholder:
+                  raise SystemExit(
+                      f"Unwired Settlements/Infrastructure test became substantive: {path}"
+                  )
+
+          print(
+              "Settlements/Infrastructure domain-adapter inventory is explicit: "
+              f"{len(accepted_validators)} accepted, remainder placeholder."
+          )
+          PY
 
           if ! grep -Fq "PROPOSED (greenfield scaffold)" "policy/domains/settlements-infrastructure/README.md"; then
             echo "::error::The Settlements/Infrastructure policy posture changed. Verify executable rules, sensitivity topology, fixtures, tests, ownership, and activation before accepting this workflow."
@@ -138,7 +203,42 @@ jobs:
           fi
 
           echo "WORKFLOW_CHECK_EXECUTED: settlements-infrastructure-readiness"
-          echo "WORKFLOW_HOLD: semantic Settlements/Infrastructure validation is not established"
+          echo "WORKFLOW_HOLD: broader semantic Settlements/Infrastructure validation is not established"
+
+      - name: Run retained Settlements/Infrastructure exact-option adapters
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONHASHSEED: "0"
+        run: |
+          set -euo pipefail
+
+          python -m pytest -q \
+            tests/validators/domains/settlements-infrastructure/test_settlements_infrastructure_catalog_matrix_validator_entrypoint.py \
+            tests/validators/domains/settlements-infrastructure/test_domain_feature_identity.py \
+            tests/validators/domains/settlements-infrastructure/test_settlements_infrastructure_evidence_bundle_validator_entrypoint.py \
+            tests/validators/domains/settlements-infrastructure/test_settlements_infrastructure_evidence_bundle_schema_convergence.py \
+            tests/validators/domains/settlements-infrastructure/test_settlements_infrastructure_schema_validator.py \
+            tests/validators/domains/settlements-infrastructure/test_settlements_infrastructure_source_descriptor_validator_entrypoint.py
+
+          python tools/validators/domains/settlements-infrastructure/validate_catalog_matrix.py --fixtures
+          python tools/validators/domains/settlements-infrastructure/validate_evidence_bundle.py --fixtures
+          python tools/validators/domains/settlements-infrastructure/validate_schema.py
+          python tools/validators/domains/settlements-infrastructure/validate_source_descriptor.py --fixtures
+
+          python tools/validators/domains/settlements-infrastructure/validate_domain_feature_identity.py \
+            fixtures/domains/settlements-infrastructure/domain_feature_identity/valid_settlement.json \
+            fixtures/domains/settlements-infrastructure/domain_feature_identity/valid_infrastructure_asset.json
+
+          if python tools/validators/domains/settlements-infrastructure/validate_domain_feature_identity.py \
+            fixtures/domains/settlements-infrastructure/domain_feature_identity/invalid_collapsed_object_family.json; then
+            echo "::error::Known-invalid Settlements/Infrastructure DomainFeatureIdentity fixture was accepted."
+            exit 1
+          fi
+
+          echo "EXPECTED_REJECTION: invalid Settlements/Infrastructure DomainFeatureIdentity fixture"
+          echo "WORKFLOW_CHECK_EXECUTED: settlements-infrastructure-exact-option-adapters"
 
       - name: Record Settlements Infrastructure validation hold
         if: always()
@@ -149,15 +249,23 @@ jobs:
 
           `WORKFLOW_CHECK_EXECUTED: settlements-infrastructure-readiness`
 
-          `WORKFLOW_HOLD: semantic Settlements/Infrastructure validation is not established`
+          `WORKFLOW_CHECK_EXECUTED: settlements-infrastructure-exact-option-adapters`
 
-          Recognized placeholder inventory is not validation. This readiness
-          check does not execute domain tests or validator implementations.
+          `WORKFLOW_HOLD: broader semantic Settlements/Infrastructure validation is not established`
+
+          Recognized placeholder inventory is not validation. This job additionally
+          replays the retained exact-option CatalogMatrix, DomainFeatureIdentity,
+          EvidenceBundle, schema, and SourceDescriptor adapters against the shared
+          fixture corpus; these delegate to shared, non-domain-specific validators
+          and do not admit a source, resolve rights or sensitivity, or close
+          evidence. All other Settlements/Infrastructure validator and test
+          modules remain explicit placeholders and are checked as such.
 
           This job verifies responsibility boundaries, parses current JSON Schemas
           and any JSON fixtures for structural integrity, recognizes docstring-only
           tests and exact `main(): raise NotImplementedError` validator scaffolds,
-          and fails closed when substantive tests or validator bodies appear.
+          and fails closed when an unreviewed substantive test or validator body
+          appears.
 
           It does not establish place, municipal, census, townsite, facility,
           operator, condition, service-area, dependency, critical-infrastructure,

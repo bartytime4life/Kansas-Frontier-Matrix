@@ -95,6 +95,14 @@ jobs:
             "data/registry/sources/geology/README.md"
             "data/registry/sensitivity/geology/README.md"
             "release/candidates/geology/README.md"
+            "tests/validators/domains/geology/test_geology_catalog_matrix_validator_entrypoint.py"
+            "tests/validators/domains/geology/test_geology_evidence_bundle_validator_entrypoint.py"
+            "tests/validators/domains/geology/test_geology_source_descriptor_validator_entrypoint.py"
+            "tools/validators/domains/geology/validate_catalog_matrix.py"
+            "tools/validators/domains/geology/validate_evidence_bundle.py"
+            "tools/validators/domains/geology/validate_source_descriptor.py"
+            "fixtures/domains/geology/source_descriptor/valid/valid_1.json"
+            "fixtures/domains/geology/source_descriptor/invalid/invalid_domain_scope_mismatch.json"
           )
 
           for required_path in "${required_paths[@]}"; do
@@ -142,6 +150,18 @@ jobs:
               Path(
                   "tools/validators/geology/public_safe_geometry/"
                   "validate_public_safe_geometry.py"
+              ),
+              Path(
+                  "tools/validators/domains/geology/"
+                  "validate_catalog_matrix.py"
+              ),
+              Path(
+                  "tools/validators/domains/geology/"
+                  "validate_evidence_bundle.py"
+              ),
+              Path(
+                  "tools/validators/domains/geology/"
+                  "validate_source_descriptor.py"
               ),
           }
 
@@ -198,6 +218,27 @@ jobs:
             tests/validators/domains/geology/test_schema_contract_doc_links.py
 
           echo "WORKFLOW_CHECK_EXECUTED: geology-schema-contract-links"
+
+      - name: Run retained Geology CatalogMatrix, EvidenceBundle, and SourceDescriptor adapters
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+          PYTHONHASHSEED: "0"
+        run: |
+          set -euo pipefail
+
+          python -m pytest -q -p no:cacheprovider \
+            tests/validators/domains/geology/test_geology_catalog_matrix_validator_entrypoint.py \
+            tests/validators/domains/geology/test_geology_evidence_bundle_validator_entrypoint.py \
+            tests/validators/domains/geology/test_geology_source_descriptor_validator_entrypoint.py \
+            tests/validators/domains/geology/test_evidence_bundle_schema_convergence.py
+
+          python tools/validators/domains/geology/validate_catalog_matrix.py --fixtures
+          python tools/validators/domains/geology/validate_evidence_bundle.py --fixtures
+          python tools/validators/domains/geology/validate_source_descriptor.py --fixtures
+
+          echo "WORKFLOW_CHECK_EXECUTED: geology-exact-option-adapters"
 
       - name: Prove shared Geology Python no-network startup guard
         shell: bash
@@ -303,6 +344,8 @@ jobs:
           cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
           ### Geology validation status
 
+          `WORKFLOW_CHECK_EXECUTED: geology-exact-option-adapters`
+
           `WORKFLOW_CHECK_EXECUTED: geology-python-no-network-startup-guard`
 
           `WORKFLOW_CHECK_EXECUTED: geology-resource-class-fixture`
@@ -314,6 +357,12 @@ jobs:
           `WORKFLOW_CHECK_EXECUTED: geology-production-material-change`
 
           `WORKFLOW_HOLD: broader Geology semantics, evidence closure, proof, and release remain unestablished`
+
+          This job also replays the retained exact-option CatalogMatrix,
+          EvidenceBundle, and SourceDescriptor adapter seams against the shared
+          fixture corpus. These adapters delegate unchanged to the shared,
+          non-domain-specific validators; they do not admit a source, resolve
+          rights or sensitivity, close evidence, or grant release authority.
 
           Fresh Python subprocesses prove that the shared startup guard is
           inactive without the explicit posture, activates for the four bounded

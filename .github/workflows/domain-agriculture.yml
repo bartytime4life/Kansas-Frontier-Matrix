@@ -1,7 +1,8 @@
 # KFM Agriculture domain CI readiness workflow.
 # Status: one bounded fixture-only CDL watcher proof is executable in this lane;
 # four dedicated Agriculture validator suites, one deterministic NDVI
-# computation suite, and the public-safe map carrier suite are governed;
+# computation suite, the public-safe map carrier suite, and the shared
+# SourceDescriptor/CatalogMatrix/EvidenceBundle/schema adapters are governed;
 # broader domain validation, proof, and release-dry-run producers remain held.
 #
 # Authority boundary:
@@ -86,6 +87,16 @@ jobs:
             "schemas/contracts/v1/domains/agriculture/vegetation_connectivity_gate.schema.json"
             "tests/domains/agriculture/test_ndvi_delta_computation.py"
             "tools/validators/domains/agriculture/validate_public_safe_map_feature.py"
+            "tests/validators/domains/agriculture/test_agriculture_source_descriptor_validator_entrypoint.py"
+            "tools/validators/domains/agriculture/validate_source_descriptor.py"
+            "fixtures/domains/agriculture/source_descriptor/valid/valid_1.json"
+            "fixtures/domains/agriculture/source_descriptor/invalid/invalid_domain_scope_mismatch.json"
+            "tests/validators/domains/agriculture/test_agriculture_catalog_matrix_validator_entrypoint.py"
+            "tools/validators/domains/agriculture/validate_catalog_matrix.py"
+            "tests/validators/domains/agriculture/test_agriculture_evidence_bundle_validator_entrypoint.py"
+            "tools/validators/domains/agriculture/validate_evidence_bundle.py"
+            "tests/validators/domains/agriculture/test_domain_schema_validator.py"
+            "tools/validators/domains/agriculture/validate_schema.py"
             "release/agriculture/README.md"
           )
 
@@ -188,18 +199,17 @@ jobs:
 
           domain_validator_root = Path("tools/validators/domains/agriculture")
           assert_no_symlinks(domain_validator_root, "Agriculture domain validator")
-          expected_placeholder_validators = {
-              "validate_catalog_matrix.py",
-              "validate_evidence_bundle.py",
-              "validate_schema.py",
-              "validate_source_descriptor.py",
-          }
+          expected_placeholder_validators = set()
           expected_dedicated_validator_files = {
               "hls_ndvi_zonal_materiality/README.md",
               "hls_ndvi_zonal_materiality/validate_hls_ndvi_zonal_materiality.py",
               "ndvi_readiness/README.md",
               "ndvi_readiness/validate_ndvi_readiness.py",
+              "validate_catalog_matrix.py",
+              "validate_evidence_bundle.py",
               "validate_public_safe_map_feature.py",
+              "validate_schema.py",
+              "validate_source_descriptor.py",
               "vegetation_connectivity_gate/validate_connectivity_gate.py",
           }
           expected_domain_inventory = {
@@ -261,13 +271,15 @@ jobs:
               f"dedicated_validators={len(dedicated_validator_paths)}"
           )
           print(
-              "Dedicated public-safe map carrier validation executes in this workflow. "
-              "NDVI delta computation, HLS NDVI materiality, NDVI readiness, and "
-              "vegetation connectivity remain owned by their path-filtered workflows."
+              "Dedicated public-safe map carrier validation, plus the shared "
+              "SourceDescriptor/CatalogMatrix/EvidenceBundle/schema adapters, "
+              "execute in this workflow. NDVI delta computation, HLS NDVI "
+              "materiality, NDVI readiness, and vegetation connectivity remain "
+              "owned by their path-filtered workflows."
           )
           PY
 
-          echo "WORKFLOW_PARTIAL_EXECUTION: public-safe map carrier validation is established"
+          echo "WORKFLOW_PARTIAL_EXECUTION: public-safe map carrier and shared domain-adapter validation is established"
           echo "WORKFLOW_HOLD: broader Agriculture executable validation remains unestablished"
 
       - name: Run public-safe map feature carrier validation
@@ -279,6 +291,18 @@ jobs:
           set -euo pipefail
           python tools/validators/domains/agriculture/validate_public_safe_map_feature.py --fixtures
           python -m pytest -q tests/domains/agriculture/test_public_safe*.py
+
+          python tools/validators/domains/agriculture/validate_source_descriptor.py --fixtures
+          python -m pytest -q tests/validators/domains/agriculture/test_agriculture_source_descriptor_validator_entrypoint.py
+
+          python tools/validators/domains/agriculture/validate_catalog_matrix.py --fixtures
+          python tools/validators/domains/agriculture/validate_evidence_bundle.py --fixtures
+          python tools/validators/domains/agriculture/validate_schema.py
+          python -m pytest -q \
+            tests/validators/domains/agriculture/test_agriculture_catalog_matrix_validator_entrypoint.py \
+            tests/validators/domains/agriculture/test_agriculture_evidence_bundle_validator_entrypoint.py \
+            tests/validators/domains/agriculture/test_evidence_bundle_schema_convergence.py \
+            tests/validators/domains/agriculture/test_domain_schema_validator.py
 
       - name: Run bounded CDL material-change watcher proof
         env:
