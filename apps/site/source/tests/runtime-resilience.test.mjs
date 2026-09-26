@@ -83,6 +83,22 @@ test("map health keeps a rendering failure finite and excludes sensitive excepti
   assert.doesNotMatch(JSON.stringify(health), /private\.example|secret/);
 });
 
+test("MapLibre event and startup telemetry uses finite classes without reading provider errors", async () => {
+  assert.equal(perf.mapRuntimeErrorCode("event", "private-token-source"), "MAP_SOURCE_FAILED");
+  assert.equal(perf.mapRuntimeErrorCode("event"), "MAP_RENDER_FAILED");
+  assert.equal(perf.mapRuntimeErrorCode("start"), "MAP_START_FAILED");
+  assert.equal(perf.mapRuntimeErrorCode("load"), "MAP_LOAD_FAILED");
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const eventHandler = page.slice(page.indexOf('map.on("error", (event) => {'));
+  assert.ok(eventHandler.startsWith('map.on("error", (event) => {'));
+  assert.doesNotMatch(eventHandler.slice(0, 1200), /event\.error|\.message/);
+  assert.match(page, /catch \{\s*const message = mapRuntimeErrorCode\("start"\)/);
+  assert.match(page, /catch\(\(\) => \{\s*const message = mapRuntimeErrorCode\("load"\)/);
+  const snapshot = await readFile(new URL("../app/snapshot-map.tsx", import.meta.url), "utf8");
+  assert.doesNotMatch(snapshot, /error\.message|unknown renderer failure/);
+  assert.match(snapshot, /MAP_RENDER_FAILED/);
+});
+
 test("map health treats a local source awaiting style installation as pending", () => {
   const enabled = { isEnabled: () => true };
   const map = {

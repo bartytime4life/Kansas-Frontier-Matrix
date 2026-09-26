@@ -37,6 +37,15 @@ export function browserRenderBudget(quality = readRenderQuality()) {
 
 // Browser diagnostics use finite check IDs. MapLibre errors may contain source
 // URLs or request details, so neither exception messages nor stacks leave here.
+export type MapRuntimeErrorCode = "MAP_SOURCE_FAILED" | "MAP_RENDER_FAILED" | "MAP_START_FAILED" | "MAP_LOAD_FAILED";
+
+/** Classify the failure without reading an exception, URL, or provider payload. */
+export function mapRuntimeErrorCode(stage: "event" | "start" | "load", sourceId?: string): MapRuntimeErrorCode {
+  if (stage === "start") return "MAP_START_FAILED";
+  if (stage === "load") return "MAP_LOAD_FAILED";
+  return sourceId ? "MAP_SOURCE_FAILED" : "MAP_RENDER_FAILED";
+}
+
 export type MapRuntimeCheckFailure =
   | "STYLE_CHECK_FAILED" | "SOURCE_CHECK_FAILED" | "CANVAS_CHECK_FAILED"
   | "PROJECTION_CHECK_FAILED" | "INTERACTION_CHECK_FAILED"

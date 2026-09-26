@@ -80,7 +80,8 @@ const fetchBoundedJsonValue = async (url: string, timeoutMs: number, init?: Requ
   } catch (error) {
     if (error instanceof UpstreamError) throw error;
     if (error instanceof Error && error.name === "AbortError") throw new UpstreamError("Official upstream request timed out.", true);
-    throw new UpstreamError(error instanceof Error ? error.message : "Official upstream request failed.");
+    // Native fetch failures can include the full provider URL and query string.
+    throw new UpstreamError("Official upstream request failed.");
   } finally {
     clearTimeout(timeout);
   }
@@ -352,8 +353,8 @@ const currentHmsSmoke = async (day: string | null = null) => {
     try {
       const response = await boundedFetch(artifact, 2 * 1024 * 1024);
       return { day, artifact, collection: parseSmokeKml(response.text(), artifact), error: null };
-    } catch (error) {
-      return { day, artifact, collection: null, error: error instanceof Error ? error.message : "NOAA HMS publication unavailable." };
+    } catch {
+      return { day, artifact, collection: null, error: "NOAA HMS publication unavailable." };
     }
   }));
   const failures = results.filter((result) => result.error).map((result) => `${result.day}: ${result.error}`);

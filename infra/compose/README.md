@@ -13,7 +13,7 @@ Explorer Web placeholder service was removed with the old monorepo app.
 No tracked Compose override, volume, secret, health check, application command,
 or deployment target is defined here. A successful render or build is not a
 service startup or reachability test. The current Explorer source and local-host
-instructions are on the separate [Site v71 branch](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/codex/live-site-v71-source-20260925).
+instructions are in the [Site v74-derived source mirror](../../apps/site/README.md).
 
 ## Validation
 
