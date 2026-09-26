@@ -63,6 +63,7 @@ name: hydrology-proof-slice
       - "Makefile"
       - "contracts/data/catalog_matrix.md"
       - "contracts/domains/hydrology/**"
+      - "control_plane/readiness/lanes.json"
       - "data/catalog/domain/hydrology/**"
       - "data/proofs/hydrology/**"
       - "docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md"
@@ -72,9 +73,17 @@ name: hydrology-proof-slice
       - "pipelines/domains/hydrology/**"
       - "policy/domains/hydrology/**"
       - "schemas/contracts/v1/domains/hydrology/**"
+      - "schemas/contracts/v1/governance/readiness_lanes.schema.json"
+      - "tests/ci/test_readiness_lanes.py"
       - "tests/domains/hydrology/**"
       - "tests/e2e/test_hydrology_proof_slice.py"
+      - "tests/validators/domains/hydrology/**"
+      - "tools/ci/install_python_ci.py"
+      - "tools/ci/python-test.lock"
+      - "tools/readiness/run_lane.py"
+      - "tools/validators/ci_readiness.py"
       - "tools/validators/domains/hydrology/**"
+      - "tools/validators/validate_catalog_matrix_closure.py"
   push:
     branches: [main]
     paths:
@@ -82,6 +91,7 @@ name: hydrology-proof-slice
       - "Makefile"
       - "contracts/data/catalog_matrix.md"
       - "contracts/domains/hydrology/**"
+      - "control_plane/readiness/lanes.json"
       - "data/catalog/domain/hydrology/**"
       - "data/proofs/hydrology/**"
       - "docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md"
@@ -91,9 +101,17 @@ name: hydrology-proof-slice
       - "pipelines/domains/hydrology/**"
       - "policy/domains/hydrology/**"
       - "schemas/contracts/v1/domains/hydrology/**"
+      - "schemas/contracts/v1/governance/readiness_lanes.schema.json"
+      - "tests/ci/test_readiness_lanes.py"
       - "tests/domains/hydrology/**"
       - "tests/e2e/test_hydrology_proof_slice.py"
+      - "tests/validators/domains/hydrology/**"
+      - "tools/ci/install_python_ci.py"
+      - "tools/ci/python-test.lock"
+      - "tools/readiness/run_lane.py"
+      - "tools/validators/ci_readiness.py"
       - "tools/validators/domains/hydrology/**"
+      - "tools/validators/validate_catalog_matrix_closure.py"
   workflow_dispatch:
 
 permissions:
