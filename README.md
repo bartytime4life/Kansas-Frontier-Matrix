@@ -89,8 +89,8 @@ KFM’s public value is not a larger pile of layers. It is a more trustworthy pa
 
 | If you want to… | Start with… |
 |---|---|
-| **See the project’s public-facing Explorer** | [KFM Explorer](https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site) — the repository records this OpenAI Sites/Vinext project, slug, and public address. Hosted availability and version state require current runtime verification. |
-| **Get the current Site source** | [`apps/site/`](apps/site/README.md) — the Site v74-derived GitHub mirror is under `apps/site/source/`, including checked-in assets and local development scripts. The former monorepo Site copy and Explorer Web workbench have been retired. |
+| **See the project’s public-facing Explorer** | [KFM Explorer](https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site) — the repository records this OpenAI Sites/Vinext project, slug, and public address. Sites reported version 87 published successfully on 2026-09-25 (22:19 PDT); check Sites for a newer version after that date. |
+| **Use the historical local Site mirror** | [`apps/site/`](apps/site/README.md) — the v74-derived GitHub mirror is under `apps/site/source/`, including checked-in assets and local development scripts. It is not the published v87 source. The former monorepo Site copy and Explorer Web workbench have been retired. |
 | **Learn the project’s rules** | [`docs/doctrine/`](docs/doctrine/), [`docs/architecture/`](docs/architecture/), and [`docs/adr/`](docs/adr/). |
 | **Make a change safely** | [`CONTRIBUTING.md`](CONTRIBUTING.md), [`Directory Rules`](docs/doctrine/directory-rules.md), and the README nearest the path you will touch. |
 | **Understand evidence and public boundaries** | [`Trust Membrane`](docs/doctrine/trust-membrane.md), [`Truth Posture`](docs/doctrine/truth-posture.md), [`Lifecycle Law`](docs/doctrine/lifecycle-law.md), and [`SECURITY.md`](SECURITY.md). |
@@ -312,7 +312,7 @@ Follow the [local PC data-store runbook](docs/runbooks/local-pc-data-store.md) t
 
 The local-data tools use the Python standard library and need no package installation. The root Python package supplies dependency metadata; it does not bundle the applications, data store, or datasets. The current Compose images are security-review placeholders without application payloads and are not a complete local deployment.
 
-### Host the current Site locally
+### Host the historical Site mirror locally
 
 The [`apps/site/source/`](apps/site/README.md) directory contains all 190 tracked files from the deployed Site v74 source commit `99bf1af2deea0ef343807db96a432dbfeb2ae7a6` plus the two GitHub-only catalog-role files. Five shared files have repository-specific changes; see the [mirror record](apps/site/README.md). Run its npm commands from that directory; the root pnpm workspace does not include it:
 
