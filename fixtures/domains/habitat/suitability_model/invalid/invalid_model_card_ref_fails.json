@@ -1,0 +1,4 @@
+{
+  "note": "model_card_ref resolves to a real file, but that file independently fails ModelCardEnvelope validation.",
+  "model_card_ref": "fixtures/domains/habitat/suitability_model/support/model_card_fail.json"
+}

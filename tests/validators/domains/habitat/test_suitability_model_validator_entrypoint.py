@@ -4,8 +4,11 @@
 SuitabilityModel has no field-level schema yet (see
 ``fixtures/domains/habitat/suitability_model/README.md``); this suite proves
 only the structural properties the current scaffold and shared JSON Schema
-runner actually enforce. It does not assert any SuitabilityModel field name,
-model-card topic, or enum value as settled shape.
+runner actually enforce, plus the one additional, well-grounded rule the
+validator adds: optional ``model_card_ref`` linkage to the real,
+already-implemented governance ModelCardEnvelope validator. It does not
+assert any other SuitabilityModel field name, model-card topic, or enum
+value as settled shape.
 """
 
 from __future__ import annotations
@@ -105,6 +108,56 @@ class SuitabilityModelEntrypointTests(unittest.TestCase):
 
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn(f"OK {path}", result.stdout)
+
+    def test_model_card_ref_is_optional(self) -> None:
+        """A candidate with no model_card_ref at all is unaffected by the linkage check."""
+
+        result = self._run(str(FIXTURE_ROOT / "valid/valid_1.json"))
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_model_card_ref_pointing_at_a_passing_envelope_passes(self) -> None:
+        result = self._run(str(FIXTURE_ROOT / "valid/valid_3.json"))
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_model_card_ref_pointing_at_a_failing_envelope_fails_closed(self) -> None:
+        path = FIXTURE_ROOT / "invalid/invalid_model_card_ref_fails.json"
+        result = self._run(str(path))
+
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("ModelCardEnvelope validation", result.stdout)
+        self.assertIn("SPEC_HASH_MISMATCH", result.stdout)
+
+    def test_model_card_ref_pointing_at_a_missing_file_fails_closed(self) -> None:
+        path = FIXTURE_ROOT / "invalid/invalid_model_card_ref_missing.json"
+        result = self._run(str(path))
+
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("does not resolve to a regular file", result.stdout)
+
+    def test_model_card_ref_with_wrong_type_fails_closed(self) -> None:
+        path = FIXTURE_ROOT / "invalid/invalid_model_card_ref_wrong_type.json"
+        result = self._run(str(path))
+
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("must be a non-empty string path", result.stdout)
+
+    def test_model_card_ref_rejects_symlinked_target(self) -> None:
+        target = FIXTURE_ROOT / "support/model_card_pass.json"
+
+        with tempfile.TemporaryDirectory() as directory:
+            link = Path(directory) / "linked.json"
+            link.symlink_to(target)
+            candidate = Path(directory) / "candidate.json"
+            candidate.write_text(
+                f'{{"model_card_ref": "{link}"}}',
+                encoding="utf-8",
+            )
+            result = self._run(str(candidate))
+
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("does not resolve to a regular file", result.stdout)
 
 
 if __name__ == "__main__":
