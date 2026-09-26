@@ -6,7 +6,7 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — Source steward · Connector steward · NOAA steward · Hazards steward · Rights reviewer · Sensitivity reviewer · Validation steward · Docs steward
 created: 2026-06-19
-updated: 2026-07-14
+updated: 2026-09-26
 policy_label: public-doctrine; connector-boundary; noaa; storm-events; historical-event; narrative-sensitive; placement-conflicted; not-life-safety; no-publication
 truth_posture: CONFIRMED README-only hyphenated sibling / CONFLICTED placement and source identity / INACTIVE source authority / IMPLEMENTATION NEEDS VERIFICATION
 evidence_snapshot: main@8fad3427a5f8ca6a8093217c1fa0a6fcc6a74401
@@ -51,6 +51,9 @@ notes:
   <img alt="Alert authority: denied" src="https://img.shields.io/badge/alert__authority-denied-red">
   <img alt="Lifecycle: RAW or QUARANTINE only" src="https://img.shields.io/badge/lifecycle-RAW%20%7C%20QUARANTINE%20only-orange">
 </p>
+
+> [!NOTE]
+> **Implementation placed in the NOAA family package (2026-09-26), following the USGS earthquake precedent. This lane stays README-only; the placement conflict is not resolved by this code.** `connectors/noaa/src/noaa/storm_events.py` validates NCEI details-file URLs and vintages (`StormEvents_details-ftp_v1.0_dYYYY_cYYYYMMDD.csv.gz`) and parses *already supplied* gzip bytes into frozen per-event candidates without opening a socket. It rejects a file whole on header drift, duplicate columns or event IDs, ragged rows, rows outside the data year, malformed identity/time/coordinates, and gzip corruption or decompression beyond the byte bound. Damage strings (`10.00K`) parse exactly to nominal event-year USD beside the verbatim source string; blank stays unreported, distinct from zero. UTC times are derived only when `CZ_TIMEZONE` carries an offset. Magnitude and F/EF scale stay source strings. Unreadable damage or casualty values and end-before-begin route to `QUARANTINE_CANDIDATE`; missing episode IDs, pre-directive event labels, zone-only support, and unknown offsets are flags. Every narrative is `unreviewed`, `finalized_state` is `NOT_DETERMINED`, and nothing is admitted. `select_state()` filters on NCEI's `STATE_FIPS` (Kansas = 20) and is not a spatial join; `compare_vintages()` names added, removed, and changed event IDs between two vintages of a data year so corrections become new source states, never overwrites. Synthetic tests: `connectors/noaa/tests/test_storm_events.py`, run by `.github/workflows/noaa-storm-events-offline.yml`. This is not source activation, finalization review, narrative sensitivity review, or admission.
 
 > [!IMPORTANT]
 > **Truth posture:** `CONFIRMED` README-only hyphenated sibling · `CONFLICTED` hyphen/underscore/nested placement and dotted/underscored source identity · source authority `INACTIVE / NOT ESTABLISHED` · product runtime `NEEDS VERIFICATION`.
