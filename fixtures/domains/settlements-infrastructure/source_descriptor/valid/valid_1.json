@@ -1,0 +1,123 @@
+{
+  "object_type": "SourceDescriptor",
+  "schema_version": "v1",
+  "source_id": "src:dasc-plss",
+  "descriptor_version": "0.1.0",
+  "title": "PLSS Township Range — KGS edited reference candidate",
+  "description": "Noncanonical metadata-grounded contract fixture; no live connector or release. USGS-derived township/range polygons clipped to Kansas and edited to fit county data in March 2024. T_R is a display label, not proven unique. No sections, parcels, title, ownership, or surveyed boundary truth.",
+  "domain_scope": [
+    "settlements-infrastructure"
+  ],
+  "source_type": "web_service_endpoint",
+  "source_role": "candidate_signal",
+  "authority_rank": "candidate_only",
+  "authority_notes": "USGS-derived township/range polygons clipped to Kansas and edited to fit county data in March 2024. T_R is a display label, not proven unique. No sections, parcels, title, ownership, or surveyed boundary truth.",
+  "publisher": {
+    "name": "Kansas Geological Survey (item owner KS_Geological_Survey)",
+    "contact": {
+      "contact_status": "unknown",
+      "contact_url": "https://www.arcgis.com/sharing/rest/content/items/b9fcc1196a6e4201b0d356b4836104f7?f=json"
+    }
+  },
+  "owner_or_steward": {
+    "name": "KFM steward assignment pending",
+    "contact": {
+      "contact_status": "unknown",
+      "contact_url": "https://hub.kansasgis.org/"
+    }
+  },
+  "rights": {
+    "rights_status": "unknown",
+    "license_or_terms": "Provider text: None. Users can determine if this data fits their purposes. Scope of reuse permission needs steward review; do not infer public domain.",
+    "terms_url": "https://www.arcgis.com/sharing/rest/content/items/b9fcc1196a6e4201b0d356b4836104f7?f=json",
+    "attribution_required": true,
+    "attribution_text": "Kansas Geological Survey; underlying USGS lineage.",
+    "redistribution_allowed": "unknown",
+    "commercial_use_allowed": "unknown",
+    "last_verified_at": "2026-09-20T03:56:32.964619+00:00",
+    "verified_by": "metadata-only technical inspection; not rights approval",
+    "rights_notes": "Timestamp records checking provider metadata, not legal clearance."
+  },
+  "sensitivity_default": "restricted",
+  "sensitivity_notes": "Candidate field allowlist only; no sensitive cross-dataset joins or public geometry pending review.",
+  "cadence": {
+    "update_cadence": "unknown",
+    "freshness_expectation": "USGS-derived township/range polygons clipped to Kansas and edited to fit county data in March 2024. T_R is a display label, not proven unique. No sections, parcels, title, ownership, or surveyed boundary truth.",
+    "staleness_policy": "deny_publication"
+  },
+  "access": {
+    "access_method": "arcgis_rest",
+    "access_posture": "restricted",
+    "endpoints": [
+      {
+        "label": "Exact item metadata",
+        "uri": "https://www.arcgis.com/sharing/rest/content/items/b9fcc1196a6e4201b0d356b4836104f7?f=json",
+        "purpose": "metadata"
+      },
+      {
+        "label": "Exact layer metadata",
+        "uri": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/Townships/FeatureServer/0?f=json",
+        "purpose": "metadata"
+      }
+    ],
+    "rate_limit_notes": "Proposed: 200 records/page; order by actual object ID ASC, offsets advance by returned count; maximum 250 pages/50000 rows/2 MiB per response; 30 s timeout; at most 3 attempts, Retry-After respected. Missing/duplicate/out-of-order IDs, schema/CRS/epoch changes, upstream errors and partial final counts HOLD. Only two 2-row ID-only pages were probed; full capture NOT_RUN.",
+    "format_targets": [
+      "ArcGIS JSON"
+    ]
+  },
+  "citation": {
+    "citation_required": true,
+    "citation_template": "PLSS Township Range — KGS edited reference candidate (b9fcc1196a6e4201b0d356b4836104f7, layer 0), source_id={source_id}, accessed_at={accessed_at}.",
+    "citation_guidance": "USGS-derived township/range polygons clipped to Kansas and edited to fit county data in March 2024. T_R is a display label, not proven unique. No sections, parcels, title, ownership, or surveyed boundary truth.",
+    "preferred_link": "https://hub.kansasgis.org/datasets/b9fcc1196a6e4201b0d356b4836104f7"
+  },
+  "source_head": {
+    "observed_at": "2026-09-20T03:56:32.964619+00:00",
+    "method": "api_metadata",
+    "content_identity": {
+      "content_sha256": "c6df32742f64cc6da26b9e4831fd5d8e215031c958289e5ba1cc4c69a4535146",
+      "revision_id": "1789059239000",
+      "source_head_uri": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/Townships/FeatureServer/0?f=json"
+    },
+    "source_head_notes": "SHA-256 binds the observed raw layer metadata response only, not feature data. Item modified milliseconds are a drift signal, not observation time or a dataset release."
+  },
+  "admissibility_limits": {
+    "allowed_claim_roles": [
+      "candidate_signal"
+    ],
+    "prohibited_claim_roles": [
+      "map_display",
+      "legal_status",
+      "observation",
+      "operational_context"
+    ],
+    "limitations": "USGS-derived township/range polygons clipped to Kansas and edited to fit county data in March 2024. T_R is a display label, not proven unique. No sections, parcels, title, ownership, or surveyed boundary truth.",
+    "confidence_posture": "fixture_only",
+    "review_required_before_use": true,
+    "review_required_before_publication": true
+  },
+  "public_release": {
+    "allowed": false,
+    "requires_review": true,
+    "redaction_required": true,
+    "release_conditions": [
+      "Accepted canonical record placement and writer",
+      "Named item steward and independent review",
+      "Rights and sensitivity decisions covering cache, transform, redistribute and export",
+      "Immutable bounded capture, schema/geometry/epoch validation and correction/rollback evidence",
+      "EvidenceBundle, policy decision and separately authorized release"
+    ],
+    "deny_reason_if_not_allowed": "HOLD: fixture-only; canonical placement, rights, sensitivity, evidence and release review unresolved."
+  },
+  "connectors": {
+    "activation_state": "disabled",
+    "activation_notes": "No network, scheduler, registry writer or map runtime added."
+  },
+  "review_state": "needs_review",
+  "release_state": "not_released",
+  "lifecycle": {
+    "registry_state": "proposed",
+    "created_at": "2026-09-20T03:56:32.964619+00:00",
+    "updated_at": "2026-09-20T03:56:32.964619+00:00"
+  }
+}
