@@ -1,121 +1,103 @@
+#!/usr/bin/env python3
+"""Regression proof for the Archaeology SourceDescriptor validator entrypoint.
+
+The shared SourceDescriptor schema and its structural/fail-closed behavior
+are already proven exhaustively by
+``tests/validators/test_validate_source_descriptor_entrypoints.py`` and the
+People/DNA/Land-style entrypoint tests elsewhere in this repo. This suite
+proves only what this domain adapter adds: the optional ``domain_scope``
+membership check.
+"""
+
 from __future__ import annotations
 
-import importlib.util
+import subprocess
 import sys
+import tempfile
+import unittest
 from pathlib import Path
-from types import SimpleNamespace
+import json as _json
 
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
-MODULE_PATH = (
-    REPO_ROOT / "tools/validators/domains/archaeology/validate_source_descriptor.py"
-)
+VALIDATOR = REPO_ROOT / "tools/validators/domains/archaeology/validate_source_descriptor.py"
+FIXTURE_ROOT = REPO_ROOT / "fixtures/domains/archaeology/source_descriptor"
+VALID_FIXTURE = FIXTURE_ROOT / "valid/valid_1.json"
+MISMATCH_FIXTURE = FIXTURE_ROOT / "invalid/invalid_domain_scope_mismatch.json"
 
 
-def _load_module():
-    spec = importlib.util.spec_from_file_location(
-        "archaeology_source_descriptor_validator", MODULE_PATH
-    )
-    assert spec is not None and spec.loader is not None
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+class ArchaeologySourceDescriptorEntrypointTests(unittest.TestCase):
+    def _run(self, *arguments: str) -> subprocess.CompletedProcess[str]:
+        with tempfile.TemporaryDirectory() as directory:
+            return subprocess.run(
+                [sys.executable, str(VALIDATOR), *arguments],
+                cwd=directory,
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+
+    def test_shared_fixture_profile_preserves_positive_and_negative_polarity(self) -> None:
+        result = self._run("--fixtures")
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("OK ", result.stdout)
+        self.assertIn("EXPECTED_FAIL ", result.stdout)
+
+    def test_fixture_profile_cannot_ignore_an_explicit_file(self) -> None:
+        result = self._run("--fixtures", str(MISMATCH_FIXTURE))
+
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        self.assertEqual(result.stdout, "")
+        self.assertIn("Cannot combine --fixtures with explicit files", result.stderr)
+
+    def test_missing_arguments_is_usage_error(self) -> None:
+        result = self._run()
+
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        self.assertEqual(result.stdout, "")
+        self.assertIn("No files provided", result.stderr)
+
+    def test_in_scope_candidate_passes(self) -> None:
+        result = self._run(str(VALID_FIXTURE))
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn(f"OK {VALID_FIXTURE}", result.stdout)
+
+    def test_out_of_scope_candidate_fails_closed(self) -> None:
+        result = self._run(str(MISMATCH_FIXTURE))
+
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("domain_scope does not include", result.stdout)
+        self.assertIn("'archaeology'", result.stdout)
+
+    def test_missing_domain_scope_is_not_a_failure(self) -> None:
+        """domain_scope remains optional; its absence alone must not fail closed."""
+
+        with tempfile.TemporaryDirectory() as directory:
+            candidate = Path(directory) / "no-scope-declared.json"
+            base = VALID_FIXTURE.read_text(encoding="utf-8")
+            document = _json.loads(base)
+            document.pop("domain_scope", None)
+            candidate.write_text(_json.dumps(document), encoding="utf-8")
+            result = self._run(str(candidate))
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn(f"OK {candidate}", result.stdout)
+
+    def test_legacy_domain_alias_mismatch_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            candidate = Path(directory) / "legacy-domain-mismatch.json"
+            base = VALID_FIXTURE.read_text(encoding="utf-8")
+            document = _json.loads(base)
+            document.pop("domain_scope", None)
+            document["domain"] = "not-a-real-domain"
+            candidate.write_text(_json.dumps(document), encoding="utf-8")
+            result = self._run(str(candidate))
+
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("legacy domain", result.stdout)
 
 
-def test_delegates_fixture_replay_without_network_or_rewrite(monkeypatch):
-    module = _load_module()
-    calls = []
-
-    def fake_run(command, *, cwd, check):
-        calls.append((command, cwd, check))
-        return SimpleNamespace(returncode=0)
-
-    monkeypatch.setattr(module.subprocess, "run", fake_run)
-
-    assert module.main(["--fixtures"]) == 0
-    assert calls == [
-        (
-            [sys.executable, str(module.SHARED_VALIDATOR), "--fixtures"],
-            module.REPO_ROOT,
-            False,
-        )
-    ]
-
-
-def test_delegates_candidate_path_exactly(monkeypatch):
-    module = _load_module()
-    seen = {}
-
-    def fake_run(command, *, cwd, check):
-        seen["command"] = command
-        seen["cwd"] = cwd
-        seen["check"] = check
-        return SimpleNamespace(returncode=0)
-
-    monkeypatch.setattr(module.subprocess, "run", fake_run)
-
-    assert module.main(["synthetic-source-descriptor.json"]) == 0
-    assert seen == {
-        "command": [
-            sys.executable,
-            str(module.SHARED_VALIDATOR),
-            "synthetic-source-descriptor.json",
-        ],
-        "cwd": module.REPO_ROOT,
-        "check": False,
-    }
-
-
-def test_preserves_shared_validator_failure(monkeypatch):
-    module = _load_module()
-    monkeypatch.setattr(
-        module.subprocess,
-        "run",
-        lambda *args, **kwargs: SimpleNamespace(returncode=1),
-    )
-
-    assert module.main(["synthetic-source-descriptor.json"]) == 1
-
-
-def test_missing_shared_validator_fails_closed(monkeypatch, tmp_path):
-    module = _load_module()
-    monkeypatch.setattr(module, "SHARED_VALIDATOR", tmp_path / "missing.py")
-
-    def should_not_run(*args, **kwargs):
-        raise AssertionError("subprocess must not run for a missing validator")
-
-    monkeypatch.setattr(module.subprocess, "run", should_not_run)
-
-    assert module.main(["--fixtures"]) == 2
-
-
-def test_fixture_mode_rejects_explicit_candidates(monkeypatch, capsys):
-    module = _load_module()
-
-    def should_not_run(*args, **kwargs):
-        raise AssertionError("subprocess must not run for mixed validation modes")
-
-    monkeypatch.setattr(module.subprocess, "run", should_not_run)
-
-    assert module.main(["--fixtures", "explicit-candidate.json"]) == 2
-    assert (
-        "Cannot combine --fixtures with explicit SourceDescriptor files"
-        in capsys.readouterr().err
-    )
-
-
-def test_abbreviated_fixture_options_fail_closed(monkeypatch, capsys):
-    module = _load_module()
-
-    def should_not_run(*args, **kwargs):
-        raise AssertionError("subprocess must not run for abbreviated fixture options")
-
-    monkeypatch.setattr(module.subprocess, "run", should_not_run)
-
-    for length in range(3, len("--fixtures")):
-        abbreviation = "--fixtures"[:length]
-        assert module.main([abbreviation, "explicit-candidate.json"]) == 2
-        assert (
-            f"Abbreviated --fixtures option is not allowed: {abbreviation}"
-            in capsys.readouterr().err
-        )
+if __name__ == "__main__":
+    unittest.main()
