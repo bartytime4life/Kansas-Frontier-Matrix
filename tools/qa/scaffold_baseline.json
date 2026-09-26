@@ -2,10 +2,10 @@
  "schema_version": "kfm.scaffold-inventory/v1",
  "summary": {
   "by_kind": {
-   "PLACEHOLDER_MARKER": 938,
+   "PLACEHOLDER_MARKER": 931,
    "STUB_MODULE": 347,
    "UNRESOLVED_DESCRIPTOR": 24,
-   "VACUOUS_TEST": 8
+   "VACUOUS_TEST": 1
   },
   "by_surface": {
    "apps": 34,
@@ -16,11 +16,11 @@
    "policy": 112,
    "schemas": 389,
    "scripts": 2,
-   "tests": 202,
+   "tests": 188,
    "tools": 51
   },
-  "files": 940,
-  "total": 1317
+  "files": 933,
+  "total": 1303
  },
  "findings": [
   {"kind": "PLACEHOLDER_MARKER", "path": "apps/cli/pyproject.toml"},
@@ -1087,8 +1087,6 @@
   {"kind": "PLACEHOLDER_MARKER", "path": "schemas/governance/overlay_pointer.schema.json"},
   {"kind": "PLACEHOLDER_MARKER", "path": "scripts/maintenance/audit_published_aliases.py"},
   {"kind": "STUB_MODULE", "path": "scripts/maintenance/audit_published_aliases.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/agriculture/test_agriculture_smoke.py"},
-  {"kind": "VACUOUS_TEST", "path": "tests/domains/agriculture/test_agriculture_smoke.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/agriculture/test_catalog_closure.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/agriculture/test_catalog_closure.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/agriculture/test_farm_operator_join_deny.py"},
@@ -1103,8 +1101,6 @@
   {"kind": "STUB_MODULE", "path": "tests/domains/agriculture/test_vegetation_index_mask_time.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/archaeology/test_ai_exact_location_denial.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/archaeology/test_ai_exact_location_denial.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/archaeology/test_archaeology_smoke.py"},
-  {"kind": "VACUOUS_TEST", "path": "tests/domains/archaeology/test_archaeology_smoke.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/archaeology/test_catalog_closure.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/archaeology/test_catalog_closure.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/archaeology/test_evidence_bundle_required.py"},
@@ -1189,14 +1185,10 @@
   {"kind": "STUB_MODULE", "path": "tests/domains/geology/test_catalog_closure.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/geology/test_evidence_before_ai.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/geology/test_evidence_before_ai.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/geology/test_geology_smoke.py"},
-  {"kind": "VACUOUS_TEST", "path": "tests/domains/geology/test_geology_smoke.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/habitat/test_catalog_closure.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/habitat/test_catalog_closure.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/habitat/test_habitat_fauna_thin_slice.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/habitat/test_habitat_fauna_thin_slice.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/habitat/test_habitat_smoke.py"},
-  {"kind": "VACUOUS_TEST", "path": "tests/domains/habitat/test_habitat_smoke.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/habitat/test_modeled_as_critical_denied.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/habitat/test_modeled_as_critical_denied.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/habitat/test_occurrence_geoprivacy.py"},
@@ -1235,8 +1227,6 @@
   {"kind": "STUB_MODULE", "path": "tests/domains/hydrology/test_reach_identity_ambiguity.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/hydrology/test_usgs_water_normalizer.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/hydrology/test_usgs_water_normalizer.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/people-dna-land/test_people_dna_land_smoke.py"},
-  {"kind": "VACUOUS_TEST", "path": "tests/domains/people-dna-land/test_people_dna_land_smoke.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/roads-rail-trade/test_evidence_bundle_closure.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/roads-rail-trade/test_evidence_bundle_closure.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/roads-rail-trade/test_gcis_hiflid_coords_disagreement.py"},
@@ -1251,8 +1241,6 @@
   {"kind": "STUB_MODULE", "path": "tests/domains/roads-rail-trade/test_public_generalization_receipt.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/roads-rail-trade/test_release_manifest_present.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/roads-rail-trade/test_release_manifest_present.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/roads-rail-trade/test_roads_rail_trade_smoke.py"},
-  {"kind": "VACUOUS_TEST", "path": "tests/domains/roads-rail-trade/test_roads_rail_trade_smoke.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/roads-rail-trade/test_route_designation_separation.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/roads-rail-trade/test_route_designation_separation.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/roads-rail-trade/test_stb_snapshot_dedup.py"},
@@ -1271,8 +1259,6 @@
   {"kind": "STUB_MODULE", "path": "tests/domains/settlements-infrastructure/test_condition_observed_at.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/settlements-infrastructure/test_restricted_geometry_no_leak.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/settlements-infrastructure/test_restricted_geometry_no_leak.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/settlements-infrastructure/test_settlements_infrastructure_smoke.py"},
-  {"kind": "VACUOUS_TEST", "path": "tests/domains/settlements-infrastructure/test_settlements_infrastructure_smoke.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/settlements-infrastructure/test_stale_census_place.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/settlements-infrastructure/test_stale_census_place.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/settlements-infrastructure/test_topology.py"},

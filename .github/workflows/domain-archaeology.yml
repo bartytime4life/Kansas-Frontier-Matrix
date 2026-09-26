@@ -83,6 +83,10 @@ jobs:
             --verbose
           python tools/validators/domains/archaeology/validate_three_d_documentation.py \
             --fixtures
+          python -m unittest discover \
+            --start-directory tests/domains/archaeology \
+            --pattern 'test_archaeology_smoke.py' \
+            --verbose
 
       - name: Record bounded Archaeology validation scope
         if: always()

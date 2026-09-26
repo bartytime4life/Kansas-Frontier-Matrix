@@ -135,6 +135,7 @@ jobs:
                   "tests/domains/people-dna-land/consent/revocation/"
                   "test_consent_revocation_propagation_assessment.py"
               ),
+              Path("tests/domains/people-dna-land/test_people_dna_land_smoke.py"),
           }
           accepted_validators = {
               Path(
@@ -278,7 +279,8 @@ jobs:
             tests/validators/domains/people-dna-land/test_domain_schema_validator.py \
             tests/validators/domains/people-dna-land/test_people_dna_land_evidence_bundle_schema_convergence.py \
             tests/validators/domains/people-dna-land/test_people_dna_land_source_descriptor_validator_entrypoint.py \
-            tests/validators/test_screen_living_persons.py
+            tests/validators/test_screen_living_persons.py \
+            tests/domains/people-dna-land/test_people_dna_land_smoke.py
 
           python tools/validators/domains/people-dna-land/validate_schema.py
           python tools/validators/domains/people-dna-land/validate_evidence_bundle.py --fixtures
