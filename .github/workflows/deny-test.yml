@@ -129,3 +129,34 @@ jobs:
             echo "Checks governed API Python source for direct MapLibre, Cesium, and Ollama import prefixes."
             echo "It does not prove complete dependency isolation, subprocess isolation, network denial, or model policy enforcement."
           } >> "$GITHUB_STEP_SUMMARY"
+
+  aggregate-deny-suites:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out tested revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install test dependencies
+        run: python tools/ci/install_python_ci.py project-test
+
+      - name: Run registered deny suites
+        run: python tools/qa/deny_test_runner.py
+
+      - name: Record aggregate deny scope
+        if: always()
+        run: |
+          {
+            echo "## aggregate-deny-suites"
+            echo
+            echo "Runs the closed suite registry in tools/qa/deny_test_runner.py; an empty suite fails."
+            echo "It does not prove complete policy coverage, authorization, sensitivity, or publication safety."
+          } >> "$GITHUB_STEP_SUMMARY"
