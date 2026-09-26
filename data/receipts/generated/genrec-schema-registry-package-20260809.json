@@ -15,10 +15,10 @@
     "packages/schema-registry/src/schema_registry/cli.py",
     "packages/schema-registry/src/schema_registry/core.py",
     "packages/schema-registry/src/schema_registry/py.typed",
-    "tests/packages/schema_registry/test_core.py"
+    "tests/packages/schema_registry/test_schema_registry_core.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/schema-registry-package.yml": "sha256:3419a43f2bd3cba066ecc7aae8b97988dbcc09bdd1ac79d994824ff08109bae1",
+    ".github/workflows/schema-registry-package.yml": "sha256:9ac444345c8776cff70e5d8ad5958123b938b1e8a9c6ab697926b3cbe5db29e4",
     "fixtures/packages/schema-registry/duplicate/one.schema.json": "sha256:83711552e8245bde65faa4f75185a453f4ca5c3d427333cd159df99f8d55e02f",
     "fixtures/packages/schema-registry/duplicate/two.schema.json": "sha256:ec833360d4885a642f51948f965c2c6083862d6ba4b5307865c4be3689df2919",
     "fixtures/packages/schema-registry/invalid/duplicate-key.schema.json": "sha256:358aa5e567886961619dc7e33a36f94b371773f5dca7bdac7067127742d2636b",
@@ -31,7 +31,7 @@
     "packages/schema-registry/src/schema_registry/cli.py": "sha256:0ab34493d9ad376148548f24a29f4f4790d539426c866bc06edb450505c7852a",
     "packages/schema-registry/src/schema_registry/core.py": "sha256:599c044684918a504f30627a0c2f80a3d94bfb3bd21da55f279f1e26925dc1b3",
     "packages/schema-registry/src/schema_registry/py.typed": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "tests/packages/schema_registry/test_core.py": "sha256:fe9a327c9d928bd0a94bc539c4a5d2648995f9221d0d00432b1c75a03c933001"
+    "tests/packages/schema_registry/test_schema_registry_core.py": "sha256:fe9a327c9d928bd0a94bc539c4a5d2648995f9221d0d00432b1c75a03c933001"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -76,7 +76,7 @@
     "packages/schema-registry/src/schema_registry/cli.py": "CONFIRMED",
     "packages/schema-registry/src/schema_registry/core.py": "CONFIRMED",
     "packages/schema-registry/src/schema_registry/py.typed": "CONFIRMED",
-    "tests/packages/schema_registry/test_core.py": "CONFIRMED"
+    "tests/packages/schema_registry/test_schema_registry_core.py": "CONFIRMED"
   },
   "validation_gates": [
     {

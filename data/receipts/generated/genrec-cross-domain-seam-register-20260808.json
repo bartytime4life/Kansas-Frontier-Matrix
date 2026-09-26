@@ -13,14 +13,14 @@
     "tools/validators/directory_governance/validate_cross_domain_seam_register.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/cross-domain-seam-register.yml": "sha256:ff7d9aaa263a3d6849f45bf49a007d356557c51db93973ae1f1bf80619a5d039",
+    ".github/workflows/cross-domain-seam-register.yml": "sha256:9a5907668b3f4393af7ae1b5a0c47dd9dce4c5c54e7acf6f743afeb28d14792f",
     "contracts/governance/cross_domain_seam_register.md": "sha256:a6aed0013baf5bc59ef3157120676970820f6dd51ee5fca904e470c301ba5f49",
     "control_plane/cross_domain_seam_register.yaml": "sha256:3d70e251f3b84cc7600c58f4abb3201568b0882dafb1cf5d4d7d59cd41eccea3",
     "fixtures/contracts/v1/governance/cross_domain_seam_register/invalid/expected_findings.json": "sha256:4739473007f77fb13fce995816471281817285fbee5d85bc76b3c5c04db48736",
     "fixtures/contracts/v1/governance/cross_domain_seam_register/invalid/unknown_domain.json": "sha256:feec95e274d3ba599d4511046ff42d21ddae322f7f7d545bcf3e75209cc09883",
     "fixtures/contracts/v1/governance/cross_domain_seam_register/valid/initial_hold.json": "sha256:3d70e251f3b84cc7600c58f4abb3201568b0882dafb1cf5d4d7d59cd41eccea3",
     "schemas/contracts/v1/governance/cross_domain_seam_register.schema.json": "sha256:69b420100f0b67f71dce812eedd014b4497d0ef82a698809ac188a14818f1a55",
-    "tests/validators/directory_governance/test_validate_cross_domain_seam_register.py": "sha256:fdb61166239a43eb91531e97e6e57e8acde828b0e2a42b7dab8e166cc3d34deb",
+    "tests/validators/directory_governance/test_validate_cross_domain_seam_register.py": "sha256:ae2d99e14fd72c1280e6271bcb4589b91221fb03f17048fb3e1e035160a0d3e4",
     "tools/validators/directory_governance/validate_cross_domain_seam_register.py": "sha256:1a07c31aaec8bb9761c48d7547cc09f2e712728bfc04fd46e182147ae9339afc"
   },
   "model_identity": {

@@ -14,9 +14,9 @@
     "tools/validators/governance/validate_query_run_record.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/query-run-record.yml": "sha256:705a4d86e21c41bf57efffae6836161c315773504e032a491627562da00dd042",
+    ".github/workflows/query-run-record.yml": "sha256:6b64c09c99ce8ac4e6fcf7771435e2b8dfee0c0ed9426d57b64d83913c68417c",
     "contracts/governance/query_run_record.md": "sha256:e723aecc576a052a3cd000537755265135a7ea9df4f4e878977101fa59d9414d",
-    "docs/intake/exploratory/query-save-recompile-query-run-record-source-map.md": "sha256:d295581a88011d88ddac2ec00decf86dc8fd48e51ae5e7b3af13540fb5e946c5",
+    "docs/intake/exploratory/query-save-recompile-query-run-record-source-map.md": "sha256:cfabbaceedc03f9712c7d805c12674f57615bc77fab2e17a73017e9679d76f37",
     "fixtures/contracts/v1/governance/query_run_record/schema_invalid_cases.json": "sha256:f2b5816a204669a15885823facabfc1f50e41486c5d8c161386d58eee7e78f4d",
     "fixtures/contracts/v1/governance/query_run_record/semantic_identity_cases.json": "sha256:b7187a2adbf5b3f5b0a31eee0de712a226577c12eede97244e88d18e6ec11308",
     "fixtures/contracts/v1/governance/query_run_record/semantic_resolution_cases.json": "sha256:f91e249cd7c1e181e05ec6bc7008aba0d784a09001d9a26cb0a0eaf31dab8cb7",
@@ -84,7 +84,18 @@
   "policy_decisions": [
     "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
   ],
-  "citations": [],
+  "citations": [
+    {
+      "id": "repo-ai-change-proposal-contract",
+      "validated": true,
+      "evidence_ref": "repo:main@ead1250f2923d1532257ec50cb44729be6f6c751/contracts/governance/ai_change_proposal.md"
+    },
+    {
+      "id": "repo-directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:main@ead1250f2923d1532257ec50cb44729be6f6c751/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
   "human_review": {
     "reviewer_ids": [],
     "state": "pending",
