@@ -1,7 +1,12 @@
 # KFM Hydrology proof-slice readiness gate.
 # Status: explicit governed hold. The repository does not yet contain an
-# accepted Hydrology proof producer, EvidenceBundle closure command, or
-# CatalogMatrix implementation that this workflow can execute truthfully.
+# accepted Hydrology proof producer or EvidenceBundle closure command that
+# this workflow can execute truthfully. The CatalogMatrix job now replays the
+# accepted exact-option adapter (tools/validators/domains/hydrology/
+# validate_catalog_matrix.py, delegating unchanged to the shared CatalogMatrix
+# closure validator) against its own test and fixture suite; this proves the
+# adapter's shape and shared-schema behavior, not domain-specific catalog
+# closure, promotion, or release authority, which remain held.
 #
 # Downstream compatibility sentinel consumed by domain-hydrology while the
 # proof-producing lane remains held; this comment is never executed:
@@ -18,8 +23,12 @@
 # - Pull requests execute submitted repository text with read-only contents
 #   permission and no secrets, write scopes, OIDC, deployment, or publication.
 # Runner and network:
-# - GitHub-hosted Ubuntu and Python 3.12 are used. No dependencies are installed;
-#   checks are standard-library-only and no-network after action bootstrap.
+# - GitHub-hosted Ubuntu and Python 3.12 are used. The build-proof-slice and
+#   verify-catalog-matrix jobs install pinned Python dependencies via
+#   tools/ci/install_python_ci.py (pytest, jsonschema) to replay the accepted
+#   readiness-lane and CatalogMatrix adapter test suites; verify-evidence-bundle-closure
+#   remains standard-library-only. All checks run with KFM_NO_NETWORK=1 and
+#   perform no live source, catalog, proof, or release network access.
 # Commands:
 # - No Hydrology proof, closure, or catalog command is accepted yet. This file
 #   runs repository-readiness inspection only and deliberately does not invoke
@@ -116,8 +125,13 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install declared validation dependencies
+        run: python tools/ci/install_python_ci.py project-test
+
       - name: Evaluate proof-producer readiness
         shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
         run: |
           set -euo pipefail
 
@@ -138,6 +152,10 @@ jobs:
             "pipelines/domains/hydrology/validate.py"
             "release/candidates/hydrology/README.md"
             "tests/e2e/test_hydrology_proof_slice.py"
+            "control_plane/readiness/lanes.json"
+            "tools/readiness/run_lane.py"
+            "schemas/contracts/v1/governance/readiness_lanes.schema.json"
+            "tests/ci/test_readiness_lanes.py"
           )
 
           for required_path in "${required_paths[@]}"; do
@@ -149,7 +167,10 @@ jobs:
 
           python - <<'PY'
           import ast
+          import json
           import re
+          import subprocess
+          import sys
           from pathlib import Path
 
           proof_root = Path("data/proofs/hydrology")
@@ -229,17 +250,67 @@ jobs:
           target = re.search(
               r"(?ms)^proof-slice:\s*\n(?P<body>(?:^[ \t].*\n?)*)", makefile
           )
-          if target is None or "TODO: pipelines/hydrology proof slice" not in target.group("body"):
+          if target is None or "tools/readiness/run_lane.py proof-slice" not in target.group("body"):
               raise SystemExit(
                   "The proof-slice Make target changed. Review its inputs, outputs, "
                   "network posture, proof semantics, and rollback before invoking it in CI."
               )
 
+          registry_path = Path("control_plane/readiness/lanes.json")
+          registry = json.loads(registry_path.read_text(encoding="utf-8"))
+          lane = next(item for item in registry["lanes"] if item["id"] == "proof-slice")
+          if lane["status"] != "HOLD" or lane["command"] is not None:
+              raise SystemExit(
+                  "The proof-slice readiness lane is no longer HOLD. Review the accepted "
+                  "producer, evidence closure, policy, receipts, release, and rollback "
+                  "before retaining this workflow as a bare readiness gate."
+              )
+          expected_lane_required_paths = [
+              "pipelines/domains/hydrology/proof_slice.py",
+              "control_plane/readiness/hydrology-proof-slice-profile.json",
+          ]
+          if lane["required_paths"] != expected_lane_required_paths:
+              raise SystemExit(
+                  "The proof-slice readiness lane's required paths changed. Review "
+                  "before changing CI."
+              )
+          for path in expected_lane_required_paths:
+              if Path(path).exists():
+                  raise SystemExit(
+                      f"A Hydrology proof-slice implementation artifact surfaced at "
+                      f"{path}. Wire it deliberately with review before relying on "
+                      "this hold."
+                  )
+
+          completed = subprocess.run(
+              [sys.executable, "tools/readiness/run_lane.py", "proof-slice"],
+              capture_output=True,
+              text=True,
+              check=False,
+          )
+          if completed.returncode != 3:
+              raise SystemExit(
+                  "tools/readiness/run_lane.py proof-slice exited "
+                  f"{completed.returncode}, expected 3 (HOLD). "
+                  f"stdout={completed.stdout!r} stderr={completed.stderr!r}"
+              )
+          lane_result = json.loads(completed.stdout)
+          if lane_result.get("status") != "HOLD":
+              raise SystemExit(
+                  "proof-slice lane reported status "
+                  f"{lane_result.get('status')!r}, expected HOLD."
+              )
+
           print("Hydrology proof storage contains no proof payloads.")
           print("The proof pipeline and E2E test remain explicit placeholders.")
-          print("The Make target remains TODO-only.")
+          print(
+              "The proof-slice Make target delegates to the shared readiness-lane "
+              "runner, which reports HOLD from a fresh subprocess."
+          )
           print("The promotion stub was inspected as text and was not executed.")
           PY
+
+          python -m pytest -q tests/ci/test_readiness_lanes.py
 
       - name: Record explicit proof-build hold
         shell: bash
@@ -413,8 +484,14 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install declared validation dependencies
+        run: python tools/ci/install_python_ci.py project-test
+
       - name: Evaluate CatalogMatrix readiness
         shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
         run: |
           set -euo pipefail
 
@@ -426,6 +503,7 @@ jobs:
             "pipelines/domains/hydrology/catalog/README.md"
             "schemas/contracts/v1/domains/hydrology/catalog_matrix.schema.json"
             "tools/validators/domains/hydrology/validate_catalog_matrix.py"
+            "tests/validators/domains/hydrology/test_hydrology_catalog_matrix_validator_entrypoint.py"
           )
 
           for required_path in "${required_paths[@]}"; do
@@ -475,31 +553,29 @@ jobs:
                   "surfaced. Review its semantics and wire deterministic validation deliberately."
               )
 
+          from tools.validators.ci_readiness import classify_validator_source
+
           validator_path = Path(
               "tools/validators/domains/hydrology/validate_catalog_matrix.py"
           )
-          validator_module = ast.parse(
-              validator_path.read_text(encoding="utf-8"), filename=str(validator_path)
-          )
-          functions = [
-              node for node in validator_module.body if isinstance(node, ast.FunctionDef)
-          ]
-          if len(functions) != 1 or functions[0].name != "main":
+          validator_text = validator_path.read_text(encoding="utf-8")
+          ast.parse(validator_text, filename=str(validator_path))
+          classification = classify_validator_source(validator_text)
+          if classification.placeholder:
               raise SystemExit(
-                  "Hydrology CatalogMatrix validator changed. Review the accepted "
-                  "entrypoint and validation contract before invoking it in CI."
+                  "Hydrology CatalogMatrix validator regressed to a placeholder. "
+                  "Restore the accepted exact-option delegating adapter."
               )
-          body = functions[0].body
-          if (
-              len(body) != 1
-              or not isinstance(body[0], ast.Raise)
-              or not isinstance(body[0].exc, ast.Name)
-              or body[0].exc.id != "NotImplementedError"
+          for marker in (
+              "tools/validators/validate_catalog_matrix_closure.py",
+              "def run_shared(",
+              "def main(",
           ):
-              raise SystemExit(
-                  "Hydrology CatalogMatrix validator is no longer the exact "
-                  "NotImplementedError placeholder. Wire fixtures and semantic tests deliberately."
-              )
+              if marker not in validator_text:
+                  raise SystemExit(
+                      "Hydrology CatalogMatrix validator entrypoint changed. Review "
+                      f"the accepted delegating-adapter shape; missing: {marker}"
+                  )
 
           catalog_path = Path("pipelines/domains/hydrology/catalog.py")
           if catalog_path.read_text(encoding="utf-8").strip() != (
@@ -525,9 +601,16 @@ jobs:
 
           print("The Hydrology CatalogMatrix schema remains permissive and PROPOSED.")
           print("Its declared domain contract and fixture lane remain absent.")
-          print("The validator and catalog pipeline remain explicit placeholders.")
+          print(
+              "The validator is the accepted exact-option delegating adapter; "
+              "the catalog pipeline itself remains an explicit placeholder."
+          )
           print("Hydrology catalog storage contains no machine catalog payloads.")
           PY
+
+          python -m pytest -q \
+            tests/validators/domains/hydrology/test_hydrology_catalog_matrix_validator_entrypoint.py
+          python tools/validators/domains/hydrology/validate_catalog_matrix.py --fixtures
 
       - name: Record explicit CatalogMatrix hold
         shell: bash
@@ -537,7 +620,7 @@ jobs:
             echo "### Hydrology CatalogMatrix"
             echo "- Outcome: WORKFLOW_SKIPPED_EXPLICIT"
             echo "- Gate: WORKFLOW_HOLD"
-            echo "- Reason: the domain schema is permissive, its declared contract/fixtures are absent, and the validator raises NotImplementedError."
+            echo "- Reason: the domain schema is permissive and its declared contract/fixtures are absent; the validator is a tested exact-option adapter delegating to the shared CatalogMatrix closure validator, not domain-specific closure authority."
             echo "- Safety: no catalog closure, promotion, publication, or release decision was asserted."
           } >> "$GITHUB_STEP_SUMMARY"
           echo "::notice::WORKFLOW_HOLD — Hydrology CatalogMatrix verification is not implemented."
