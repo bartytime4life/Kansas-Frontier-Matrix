@@ -169,9 +169,19 @@ def test_workflow_runs_living_waters_with_pytest_and_reaches_later_checks(tmp_pa
         "test_hydro_identity_bridge.py", "test_streamflow_qc_context_assessment.py",
         "test_living_waters_fixture_packet.py",
     ]
-    assert pytest_calls[0] == ["-m", "pytest", "-q", "-p", "no:cacheprovider"] + [
-        f"tests/domains/hydrology/{name}" for name in expected_modules
+    expected_exact_option_adapter_modules = [
+        "test_hydrology_catalog_matrix_validator_entrypoint.py",
+        "test_hydrology_source_descriptor_validator_entrypoint.py",
+        "test_domain_schema_validator.py",
     ]
+    assert pytest_calls[0] == (
+        ["-m", "pytest", "-q", "-p", "no:cacheprovider"]
+        + [f"tests/domains/hydrology/{name}" for name in expected_modules]
+        + [
+            f"tests/validators/domains/hydrology/{name}"
+            for name in expected_exact_option_adapter_modules
+        ]
+    )
     assert ["tests/domains/hydrology/test_public_safe_flow_fixture.py", "--verbose"] in calls
     assert ["tests/domains/hydrology/test_public_safe_water_level_fixture.py", "--verbose"] in calls
     assert ["tests/cross_domain/test_environmental_observation_boundaries.py", "--verbose"] in calls
