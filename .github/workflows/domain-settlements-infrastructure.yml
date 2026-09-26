@@ -144,6 +144,8 @@ jobs:
           from pathlib import Path
 
           from tools.validators.ci_readiness import (
+              PLACEHOLDER_DOCUMENT_NAMES,
+              PLACEHOLDER_DOCUMENT_SUFFIXES,
               classify_test_source,
               classify_validator_source,
           )
@@ -156,6 +158,40 @@ jobs:
               Path("tools/validators/domains/settlements-infrastructure/validate_source_descriptor.py"),
           }
 
+
+          def assert_only_python_or_docs(root: Path, label: str) -> None:
+              """Mirror ci_readiness.py's own path-type discipline for this root:
+              only .py files, documentation, .gitkeep, or empty extensionless
+              files are allowed; symlinks and any other substantive file type
+              (shell, JS, etc.) fail closed instead of being silently ignored by
+              a bare rglob("*.py"))."""
+
+              if not root.exists():
+                  return
+              for path in sorted(root.rglob("*")):
+                  if path.is_symlink():
+                      raise SystemExit(f"{label} inventory contains a symlink: {path}")
+                  if path.is_dir():
+                      continue
+                  if not path.is_file():
+                      raise SystemExit(
+                          f"{label} inventory contains an unsupported path type: {path}"
+                      )
+                  if path.suffix == ".py":
+                      continue
+                  if (
+                      path.name in PLACEHOLDER_DOCUMENT_NAMES
+                      or path.suffix.lower() in PLACEHOLDER_DOCUMENT_SUFFIXES
+                  ):
+                      continue
+                  if not path.suffix and not path.read_text(encoding="utf-8").strip():
+                      continue
+                  raise SystemExit(
+                      f"{label} roots allow only Python placeholders, documentation, "
+                      f".gitkeep, or empty extensionless files; found {path}"
+                  )
+
+
           for path in sorted(Path("tools/validators/domains/settlements-infrastructure").rglob("*.py")):
               classification = classify_validator_source(path.read_text(encoding="utf-8"))
               if path in accepted_validators:
@@ -167,6 +203,10 @@ jobs:
                   raise SystemExit(
                       f"Unwired Settlements/Infrastructure validator became substantive: {path}"
                   )
+          assert_only_python_or_docs(
+              Path("tools/validators/domains/settlements-infrastructure"),
+              "Settlements/Infrastructure domain validator",
+          )
 
           # facilities/ and hazard-exposure/ are documentation-only placeholder
           # roots (README.md only, no Python) and remain fully held.
@@ -181,6 +221,7 @@ jobs:
                       f"Settlements/Infrastructure {root_name} lane gained Python "
                       f"sources; review and wire it deliberately: {substantive}"
                   )
+              assert_only_python_or_docs(root, f"Settlements/Infrastructure {root_name}")
 
           for path in sorted(Path("tests/domains/settlements-infrastructure").rglob("*.py")):
               classification = classify_test_source(path.read_text(encoding="utf-8"))
@@ -188,6 +229,10 @@ jobs:
                   raise SystemExit(
                       f"Unwired Settlements/Infrastructure test became substantive: {path}"
                   )
+          assert_only_python_or_docs(
+              Path("tests/domains/settlements-infrastructure"),
+              "Settlements/Infrastructure test",
+          )
 
           print(
               "Settlements/Infrastructure domain-adapter inventory is explicit: "
