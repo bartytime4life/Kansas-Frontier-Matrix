@@ -47,6 +47,9 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install declared validation dependencies
+        run: python tools/ci/install_python_ci.py project-test
+
       - name: Evaluate Settlements Infrastructure validation readiness
         shell: bash
         run: |
