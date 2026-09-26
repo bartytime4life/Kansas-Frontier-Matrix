@@ -11,10 +11,10 @@
     "tools/validators/validate_identity_token.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/identity-token-validation.yml": "sha256:cd3fa777ccb3f0057f6b1db63041d4bb112aeb5b0b17df8575920bb3ea5eb5d1",
+    ".github/workflows/identity-token-validation.yml": "sha256:a3a828c29e980fbebc01083d08228d8013f998e08cbce215a597b9969c2f774a",
     "fixtures/contracts/v1/common/identity_token/README.md": "sha256:e5c2d0db9b39d212fdf658d36161e9ca0a893e65a9f2072d4acfc126700fbcc9",
     "fixtures/contracts/v1/common/identity_token/invalid/bad-issued-at.json": "sha256:e6112b97019a638b6da5d53e1e7818b98eee5124ad341eca1a3984c9669428ee",
-    "pyproject.toml": "sha256:1e82cd3252c858c21b13a9790882b45457c3d59644340162393f7bf6b2e8605f",
+    "pyproject.toml": "sha256:2cf9c52261d0e7c28466fd1810f21b1c74826745b6ce2254a1465d9367ac3084",
     "tests/validators/test_jsonschema_runner.py": "sha256:545bd428f518648fe513d47ed40b8f36dd2442595c5e3901ca63edbdfd53334c",
     "tools/validators/_common/jsonschema_runner.py": "sha256:b4e83ef7fbbfc054b9b39543672b7b33ef1ddcc8aa6c87f62430a203af455ace",
     "tools/validators/validate_identity_token.py": "sha256:58f8b370106e4ed4ce5e758c85a5bca9f151501ae5977e65694cf37dcebe9a45"

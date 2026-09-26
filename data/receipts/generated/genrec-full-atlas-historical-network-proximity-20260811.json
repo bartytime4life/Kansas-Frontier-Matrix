@@ -13,8 +13,8 @@
     "tools/joins/historical_network_proximity.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/historical-network-proximity-assessment.yml": "sha256:dbb15e6c874f2fe74a4815b2981a138b5edd9d2278aa33cdcbd4236559a95f30",
-    "contracts/joins/README.md": "sha256:b975d562eb61aed6eb39bdbb245d76668e58ceb3f6a44a1848bbe4838aba5178",
+    ".github/workflows/historical-network-proximity-assessment.yml": "sha256:c012b851ebf2a10bc44d2dd62ba42d4ea006ad78b1b293440094a2c7232ce0c6",
+    "contracts/joins/README.md": "sha256:0a91c1c699cbaa8cadee09dea378861cedc9c6fdb9aab6ba25655899d6abb821",
     "contracts/joins/historical_network_proximity_assessment.md": "sha256:a3dd11df4ee69818a78ccac37b0825178a2faf473c3bec00f14539f7b4616946",
     "docs/intake/exploratory/full-atlas-historical-network-proximity-source-map.md": "sha256:9575175e59d68e7ef0a8916ec95770ee0ad2a777e7c043c7e16d9f409fea8bc6",
     "fixtures/contracts/v1/joins/historical_network_proximity_assessment/README.md": "sha256:d479e702b6839c65b1bf55d401a5acdf1ab1ff08b1b71bf393ca8f1440ee18a2",
