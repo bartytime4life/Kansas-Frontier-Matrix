@@ -19,7 +19,7 @@ related:
   - ../proof_pack/README.md
   - ../../tests/
 notes:
-  - "This README documents the QA tooling lane. It does not confirm executable files."
+  - "This README documents the QA tooling lane. scaffold_inventory.py and deny_test_runner.py are the confirmed executables; reports remain review aids."
   - "QA reports support review and do not replace validators, tests, source records, proof records, or release review."
 [/KFM_META_BLOCK_V2] -->
 
@@ -51,7 +51,9 @@ A QA report is a review aid. It is not final acceptance by itself.
 | Surface | Status | Notes |
 |---|---|---|
 | `tools/qa/README.md` | **CONFIRMED** | This README replaces the previous stub. |
-| QA executables | **PROPOSED / NEEDS VERIFICATION** | No script is claimed here. |
+| `scaffold_inventory.py` + `scaffold_baseline.json` | **CONFIRMED** | Inventories placeholder, stub, blank, vacuous-test, TODO-echo, and TBD-descriptor files across scripting, automation, data-processing, and contract surfaces; `--check` (`make scaffold-inventory`, `.github/workflows/scaffold-ratchet.yml`) fails on new scaffolding and on resolved entries left in the baseline, so the count only goes down. |
+| `deny_test_runner.py` | **CONFIRMED** | Runs a closed registry of deny suites (`make deny-suites`, `deny-test.yml` job `aggregate-deny-suites`); a failing, missing, timed-out, or empty suite fails the run. |
+| Other QA executables | **PROPOSED / NEEDS VERIFICATION** | No other script is claimed here. |
 | `tools/` root authority | **CONFIRMED in repo evidence** | Parent README names `tools/qa/` as QA tooling. |
 
 ---

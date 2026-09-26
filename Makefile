@@ -15,6 +15,16 @@ VALIDATOR_ORCHESTRATOR := python tools/validate_all.py
 
 .PHONY: offline-pipeline-check native-explorer-check
 
+.PHONY: scaffold-inventory deny-suites
+
+# Ratchet: tracked placeholder/stub/blank/vacuous files must match the reviewed baseline.
+scaffold-inventory:
+	$(KFM_VALIDATION_ENV) python tools/qa/scaffold_inventory.py --check
+
+# Every registered deny suite; a suite that collects no tests fails.
+deny-suites:
+	python tools/qa/deny_test_runner.py
+
 # Existing synthetic pipeline implementations only. The injected guard covers
 # named Python egress APIs; PROJ disables native grid retrieval separately.
 offline-pipeline-check:
@@ -66,6 +76,8 @@ help:
 	@echo "  boundary-guards       Run policy/API boundary tests"
 	@echo "  boundary-guards-ci    Run boundary tests with JUnit output"
 	@echo "  deny-test             Run bounded public route, store, and runtime-import guards"
+	@echo "  deny-suites           Run every registered deny suite and fail on empty suites"
+	@echo "  scaffold-inventory    Ratchet placeholder, stub, blank, and vacuous files against the baseline"
 	@echo "  ui-build              Retired workbench check (explicit HOLD)"
 	@echo "  maplibre-perf         Run MapLibre performance smoke and build artifacts"
 	@echo "  maplibre-govern       Validate MapLibre performance governance"
