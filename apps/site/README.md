@@ -1,5 +1,11 @@
 # GPT Site source
 
+> **Published Explorer:** Sites reports v87 as the latest successfully published
+> version as of 2026-09-26, at
+> [the stable Explorer address](https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site).
+> This directory is a historical v74-derived local mirror with five recorded
+> differences; it has not been verified as identical to the v87 source.
+
 `source/` tracks the Kansas Frontier Matrix Explorer Site version 74, deployed
 from Site source commit `99bf1af2deea0ef343807db96a432dbfeb2ae7a6`.
 All 190 tracked Site source paths are present here. This is a reconciled GitHub
