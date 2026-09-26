@@ -2,11 +2,11 @@
 doc_id: kfm://doc/domains/habitat/readme
 title: Habitat Domain — Lane README
 type: standard
-version: v1.4
+version: v1.4.1
 status: draft
 owners: [NEEDS_VERIFICATION — habitat domain steward, docs steward]
 created: 2026-05-17
-updated: 2026-08-30
+updated: 2026-09-25
 policy_label: public
 owning_root: docs/
 responsibility: Human-readable Habitat scope, domain boundaries, repository fit, safety posture, implementation status, and navigation
@@ -430,6 +430,16 @@ The following items remain **NEEDS VERIFICATION** until resolved against mounted
 ## 15. Changelog & definition of done
 
 ### 15.1 Changelog
+
+The [standalone changelog](CHANGELOG.md) indexes dated documentation changes;
+this section preserves the detailed version notes. Git remains the exact byte
+history, and neither page is a release or source-admission record.
+
+#### v1.4.1 — 2026-09-25
+
+| Change | Type (per contract §37) | Reason |
+|---|---|---|
+| Linked the new repository-grounded Habitat documentation changelog and bumped this README's patch version. | housekeeping | The former one-line changelog was a placeholder. This documentation-only change does not revise Habitat source roles, implementation, admission, or release status. |
 
 #### v1.4 — 2026-08-30
 
