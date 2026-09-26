@@ -1,7 +1,7 @@
 {
   "id": "kfm://fixture/synthetic/settlements-infrastructure/asset-001",
   "version": "v0",
-  "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000d4",
+  "spec_hash": "sha256:00000000000000000000000000000000000000000000000000000000000000d4",
   "object_family": "InfrastructureAsset",
   "feature_role": "asset",
   "source_id": "kfm://source/synthetic/infra-gen-002",
@@ -15,8 +15,8 @@
     "observed_time": "2025-05-01T00:00:00Z",
     "retrieval_time": "2026-01-01T00:00:00Z"
   },
-  "source_record_digest": "sha256:0000000000000000000000000000000000000000000000000000000000e5",
-  "normalized_digest": "sha256:0000000000000000000000000000000000000000000000000000000000f6",
+  "source_record_digest": "sha256:00000000000000000000000000000000000000000000000000000000000000e5",
+  "normalized_digest": "sha256:00000000000000000000000000000000000000000000000000000000000000f6",
   "evidence_ref": "kfm://evidence/synthetic/infra-gen-002",
   "policy_decision_ref": "kfm://fixture/synthetic/review-record/infra-gen-002",
   "review_ref": "kfm://fixture/synthetic/review-record/infra-gen-002",

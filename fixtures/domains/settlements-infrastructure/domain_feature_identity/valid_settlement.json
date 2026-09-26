@@ -1,7 +1,7 @@
 {
   "id": "kfm://fixture/synthetic/settlements-infrastructure/settlement-ghosttown-001",
   "version": "v0",
-  "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000a1",
+  "spec_hash": "sha256:00000000000000000000000000000000000000000000000000000000000000a1",
   "object_family": "Settlement",
   "feature_role": "historic_place",
   "source_id": "kfm://source/synthetic/settlements-infrastructure-001",
@@ -17,8 +17,8 @@
     "source_time": "1880-06-15",
     "retrieval_time": "2026-01-01T00:00:00Z"
   },
-  "source_record_digest": "sha256:0000000000000000000000000000000000000000000000000000000000b2",
-  "normalized_digest": "sha256:0000000000000000000000000000000000000000000000000000000000c3",
+  "source_record_digest": "sha256:00000000000000000000000000000000000000000000000000000000000000b2",
+  "normalized_digest": "sha256:00000000000000000000000000000000000000000000000000000000000000c3",
   "evidence_ref": "kfm://evidence/synthetic/settlements-infrastructure-001",
   "policy_decision_ref": null,
   "review_ref": null,
