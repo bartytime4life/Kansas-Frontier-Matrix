@@ -108,25 +108,20 @@ The Hazards boundary remains fail-closed:
 | [`validate_nfhl_nld_nid_source_role_profile.py`](./validate_nfhl_nld_nid_source_role_profile.py) | Fail-closed NFHL/NLD/NID source-role separation profile | [`test_validate_nfhl_nld_nid_source_role_profile.py`](../../../../tests/validators/domains/hazards/test_validate_nfhl_nld_nid_source_role_profile.py) | Hosted by dedicated [`nfhl-nld-nid-source-role-profile.yml`](../../../../.github/workflows/nfhl-nld-nid-source-role-profile.yml), which runs the focused deterministic no-network suite and exact fixture replay; exact-head hosted result is required before claiming PASS |
 | [`validate_usdm_materiality.py`](./validate_usdm_materiality.py) | Deterministic, no-network USDM material-change evaluation over committed synthetic cases | [`test_validate_usdm_materiality.py`](../../../../tests/domains/hazards/test_validate_usdm_materiality.py) and [`usdm_materiality/cases.json`](../../../../fixtures/domains/hazards/usdm_materiality/cases.json) | Executed by `make hazards-validate`, which is invoked by [`domain-hazards.yml`](../../../../.github/workflows/domain-hazards.yml) |
 | [`validate_catalog_matrix.py`](./validate_catalog_matrix.py) | Bounded domain-side adapter delegating unchanged to the shared CatalogMatrix closure validator (`tools/validators/validate_catalog_matrix_closure.py`); adds no independent catalog, evidence, rights, or lifecycle semantics | [`test_hazards_catalog_matrix_validator_entrypoint.py`](../../../../tests/validators/domains/hazards/test_hazards_catalog_matrix_validator_entrypoint.py) | Not separately hosted at this boundary; local focused proof is required |
+| [`validate_source_descriptor.py`](./validate_source_descriptor.py) | Bounded domain-side adapter delegating unchanged to the shared canonical SourceDescriptor validator (`tools/validators/validate_source_descriptor.py`); adds no independent source-admission, rights, sensitivity, or policy semantics | [`test_hazards_source_descriptor_validator_entrypoint.py`](../../../../tests/validators/domains/hazards/test_hazards_source_descriptor_validator_entrypoint.py) | Not separately hosted at this boundary; local focused proof is required |
 
 These relationships prove only their tested profiles and fixture polarity. They do not prove live retrieval, source admission, rights, sensitivity, currentness, complete EvidenceRef resolution, policy activation, release, or public safety.
 
 ### Explicit placeholders
 
-The following tracked scripts contain only a placeholder comment, `main()`, and `raise NotImplementedError`:
-
-| Placeholder | Current disposition |
-|---|---|
-| [`validate_source_descriptor.py`](./validate_source_descriptor.py) | **PROPOSED / NOT EXECUTABLE**; source admission and registry validation remain separate |
-
-Placeholder presence is **CONFIRMED**. Behavior, fixture polarity, registry wiring, consumers, and activation are absent or **NEEDS VERIFICATION**. Do not invoke these scripts as successful validators or add them to CI merely to make the inventory look complete.
+No direct-child script in this lane remains an inert placeholder at the pinned tree; the previous `validate_source_descriptor.py` placeholder was replaced by the bounded adapter listed above.
 
 ## Current test and fixture map
 
 The direct Hazards test surface is mixed maturity:
 
 - [`tests/domains/hazards/`](../../../../tests/domains/hazards/README.md) contains the bounded smoke, drinking-water advisory, USDM materiality, and synthetic rollback suites plus additional small boundary tests and child lanes.
-- `tests/validators/domains/hazards/` contains the NFHL/NLD/NID source-role test, the KDHE HAB temporal-validator test, an EvidenceBundle schema-convergence test, and the CatalogMatrix closure delegation entrypoint test. It has no README at the pinned tree.
+- `tests/validators/domains/hazards/` contains the NFHL/NLD/NID source-role test, the KDHE HAB temporal-validator test, an EvidenceBundle schema-convergence test, and the CatalogMatrix closure and SourceDescriptor delegation entrypoint tests. It has no README at the pinned tree.
 - [`fixtures/domains/hazards/`](../../../../fixtures/domains/hazards/README.md) contains committed drought, advisory, USDM, rollback, and supporting fixture families. A folder name is not proof that every contained object family has complete valid/invalid/golden coverage.
 
 The EvidenceBundle convergence test checks schema relationships directly, enforces the schema-declared repository-root projection validator, and confirms shared-fixture polarity. No domain-local EvidenceBundle validator alias remains.
