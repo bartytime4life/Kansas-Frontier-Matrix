@@ -33,7 +33,7 @@
     "fixtures/contracts/v1/evidence/runtime_evidence_resolution/valid/resolved.json": "sha256:5f636d00e8218f96943da27ca4d5de80763d5c7d00e083c562d84f2db6da99e0",
     "fixtures/contracts/v1/evidence/runtime_evidence_resolution/valid/unresolved.json": "sha256:73e1e4ef46cac05f38c34834415684d67a403d4b2897a5c75cdd83ff068a70b3",
     "schemas/contracts/v1/evidence/runtime_evidence_resolution.schema.json": "sha256:9240b0d192c5b115f6cd67becfd24abce9e8dc3141878d51f32f08fc878c0785",
-    "tests/packages/evidence_resolver/test_result_schema.py": "sha256:717f93929d40c2f170941ec0648ca84447481d7b7e6730c60eeed7b4e9d203b2"
+    "tests/packages/evidence_resolver/test_result_schema.py": "sha256:a43c7994c22638d6097635e4ab9ebb2fb35477658076f37c1334fb1fa30c615a"
   },
   "model_identity": {
     "provider": "OpenAI",
