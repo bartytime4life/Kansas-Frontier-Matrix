@@ -102,6 +102,14 @@ jobs:
             "tools/validators/hydro/README.md"
             "data/registry/sources/hydrology/README.md"
             "release/candidates/hydrology/README.md"
+            "tests/validators/domains/hydrology/test_hydrology_catalog_matrix_validator_entrypoint.py"
+            "tests/validators/domains/hydrology/test_hydrology_source_descriptor_validator_entrypoint.py"
+            "tests/validators/domains/hydrology/test_domain_schema_validator.py"
+            "tools/validators/domains/hydrology/validate_catalog_matrix.py"
+            "tools/validators/domains/hydrology/validate_schema.py"
+            "tools/validators/domains/hydrology/validate_source_descriptor.py"
+            "fixtures/domains/hydrology/source_descriptor/valid/valid_1.json"
+            "fixtures/domains/hydrology/source_descriptor/invalid/invalid_domain_scope_mismatch.json"
           )
 
           for required_path in "${required_paths[@]}"; do
@@ -230,11 +238,7 @@ jobs:
                   )
 
           domain_validator_root = Path("tools/validators/domains/hydrology")
-          expected_placeholder_validators = {
-              "validate_catalog_matrix.py",
-              "validate_schema.py",
-              "validate_source_descriptor.py",
-          }
+          expected_placeholder_validators = set()
           expected_schema_wrappers = {
               "validate_aquifer_context_link.py": (
                   "schemas/contracts/v1/domains/hydrology/aquifer_context_link.schema.json",
@@ -265,6 +269,9 @@ jobs:
               "validate_hydro_identity_bridge.py",
               "validate_streamflow_qc_context_assessment.py",
               "validate_living_waters_fixture_packet.py",
+              "validate_catalog_matrix.py",
+              "validate_schema.py",
+              "validate_source_descriptor.py",
           }
           expected_dedicated_validator_files = {
               "usgs_water_api_cutover/README.md",
@@ -572,6 +579,15 @@ jobs:
           python tools/validators/domains/hydrology/validate_nhdplus_waterbody_crosswalk.py \
             --fixtures
 
+          python tools/validators/domains/hydrology/validate_catalog_matrix.py --fixtures
+          python tools/validators/domains/hydrology/validate_schema.py
+          python tools/validators/domains/hydrology/validate_source_descriptor.py --fixtures
+          python -m pytest -q -p no:cacheprovider \
+            tests/validators/domains/hydrology/test_hydrology_catalog_matrix_validator_entrypoint.py \
+            tests/validators/domains/hydrology/test_hydrology_source_descriptor_validator_entrypoint.py \
+            tests/validators/domains/hydrology/test_domain_schema_validator.py
+
+          echo "WORKFLOW_CHECK_EXECUTED: hydrology-exact-option-adapters"
           echo "WORKFLOW_CHECK_EXECUTED: hydrology-evidence-bundle-alias-shape"
           echo "WORKFLOW_CHECK_EXECUTED: hydrology-python-process-egress-denial"
           echo "WORKFLOW_CHECK_EXECUTED: hydrology-aquifer-separated-pair-shape"
