@@ -2,7 +2,7 @@
 doc_id: kfm://doc/adr-index
 title: Architecture Decision Record Index
 type: register-index
-version: v1.16
+version: v1.17
 status: draft; repository-grounded
 owners:
   - Architecture steward
@@ -15,7 +15,7 @@ responsibility_root: docs/
 owning_root: docs/
 responsibility: canonical human ADR file inventory and decision-status crosswalk without independent acceptance or implementation authority
 canonical_for: human ADR file inventory and decision-status crosswalk
-numbered_records: 42
+numbered_records: 43
 unassigned_scaffolds: 11
 related:
   - docs/adr/README.md
@@ -25,6 +25,7 @@ related:
   - tools/validators/validate_adr_index.py
 tags: [kfm, adr, index, governance, decisions]
 notes:
+  - "ADR-0043 is registered as proposed; registration assigns inventory identity only and does not accept the People/DNA/Land genealogy policy tooling-placement decision or authorize any migration."
   - "ADR-0042 is registered as proposed; registration assigns inventory identity only and does not accept the People/DNA/Land genealogy validator tooling-placement decision or authorize any migration."
   - "ADR-0006 and ADR-0007 transition to accepted together with their source records under the binding maintainer disposition in issue #2957; this records architecture only and does not admit MapLibre, implement a runtime, or change release, deployment, or publication state."
   - "ADR-0029 remains accepted as the Directory Governance Standard v2 decision."
@@ -39,15 +40,15 @@ notes:
 
 # Architecture Decision Record Index
 
-[![numbered records](https://img.shields.io/badge/numbered_records-42-0969da)](#numbered-records)
-[![effective status](https://img.shields.io/badge/effective_status-5_accepted_%7C_37_proposed-1a7f37)](#status-interpretation)
+[![numbered records](https://img.shields.io/badge/numbered_records-43-0969da)](#numbered-records)
+[![effective status](https://img.shields.io/badge/effective_status-5_accepted_%7C_38_proposed-1a7f37)](#status-interpretation)
 [![scaffolds](https://img.shields.io/badge/unassigned_scaffolds-11-6e7781)](#unassigned-scaffolds)
 [![coherence](https://img.shields.io/badge/coherence-machine_checked-1a7f37)](../../tools/validators/validate_adr_index.py)
 
 This file is the canonical human inventory for direct ADR records and unassigned ADR scaffolds under `docs/adr/`. It records what exists and how each record is classified; it cannot accept or promote a decision independently.
 
 > [!IMPORTANT]
-> ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 have effective status `accepted`. The other 36 numbered records remain `proposed`; no numbered record is `superseded` or `rejected`. ADR-0006 and ADR-0007 accept architecture only—their status does not admit `maplibre-gl`, prove implementation or browser readiness, or authorize release, deployment, or publication. ADR-0038 accepts only the trusted-base correction mechanism. ADR-0040 accepts only seven exact target catalog redirect-document blobs; every register entry remains proposed and unbound, Stage 1B remains held, and Stage 2 remains unauthorized. ADR-0041 remains a proposal and changes no check behavior.
+> ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 have effective status `accepted`. The other 38 numbered records remain `proposed`; no numbered record is `superseded` or `rejected`. ADR-0006 and ADR-0007 accept architecture only—their status does not admit `maplibre-gl`, prove implementation or browser readiness, or authorize release, deployment, or publication. ADR-0038 accepts only the trusted-base correction mechanism. ADR-0040 accepts only seven exact target catalog redirect-document blobs; every register entry remains proposed and unbound, Stage 1B remains held, and Stage 2 remains unauthorized. ADR-0041 remains a proposal and changes no check behavior. ADR-0042 remains a proposal and changes no validator-tooling placement. ADR-0043 remains a proposal and changes no policy-tooling placement.
 
 ## Status interpretation
 
@@ -61,7 +62,7 @@ This file is the canonical human inventory for direct ADR records and unassigned
 
 ## Numbered records
 
-The numbered sequence is complete and unique from `ADR-0001` through `ADR-0042`. ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 are `accepted`; all other numbered records remain effectively `proposed`.
+The numbered sequence is complete and unique from `ADR-0001` through `ADR-0043`. ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 are `accepted`; all other numbered records remain effectively `proposed`.
 
 <!-- ADR_INDEX_TABLE_START -->
 | ID | Record | Effective status | Source metadata | Supersedes | Superseded by |
@@ -108,6 +109,7 @@ The numbered sequence is complete and unique from `ADR-0001` through `ADR-0042`.
 | `ADR-0040` | [Exact Catalog Redirect Metadata Corrections](./ADR-0040-catalog-redirect-metadata-corrections.md) | `accepted` | `accepted` | — | — |
 | `ADR-0041` | [Proportional Handling of Inherited Repository Holds](./ADR-0041-proportional-handling-of-inherited-repository-holds.md) | `proposed` | `proposed` | — | — |
 | `ADR-0042` | [People/DNA/Land genealogy validator tooling uses `tools/validators/domains/people-dna-land/`, not a genealogy sublane](./ADR-0042-people-dna-land-genealogy-validator-tooling-home.md) | `proposed` | `proposed` | — | — |
+| `ADR-0043` | [People/DNA/Land genealogy policy scaffolding uses `policy/domains/people-dna-land/`, not a genealogy sublane](./ADR-0043-people-dna-land-genealogy-policy-tooling-home.md) | `proposed` | `proposed` | — | — |
 <!-- ADR_INDEX_TABLE_END -->
 
 ## Unassigned scaffolds
@@ -168,6 +170,7 @@ The validator rejects collisions, missing or extra rows, mismatched filename/H1 
 - Proposed ADR-0037 does not select `EvidenceDrawerPayload` authority or authorize contract/schema compatibility migration until explicit acceptance and a separate implementation change.
 - Accepted ADR-0038 authorizes only the trusted-base exact-transition mechanism. It does not authorize topology-validator consumption or a baseline transition until a later exact register binding is present in the trusted base and Stage 2 is separately implemented.
 - Proposed ADR-0042 does not select the People/DNA/Land genealogy validator tooling home or authorize migrating `screen_living_persons.py` or implementing the three pending genealogy validator stubs until explicit acceptance and a separate implementation change.
+- Proposed ADR-0043 does not select the People/DNA/Land genealogy policy tooling home or authorize migrating `publication.rego` until explicit acceptance and a separate implementation change.
 - It does not accept [`ADR-0011`](./ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md) or authorize migration of `artifacts/release/` or `artifacts/perf/`.
 - It treats current `draft` and `legacy-proposed` metadata conservatively as `proposed`; metadata cleanup remains separate work.
 

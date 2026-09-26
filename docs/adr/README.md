@@ -2,7 +2,7 @@
 doc_id: kfm://doc/adr-readme
 title: docs/adr — Architecture Decision Records
 type: standard
-version: v2.4
+version: v2.5
 status: draft; repository-grounded
 owners:
   - Architecture steward
@@ -27,6 +27,7 @@ related:
   - .github/workflows/docs-control-plane.yml
 tags: [kfm, governance, adr, decisions, audit, control-plane]
 notes:
+  - "v2.5 registers ADR-0043 as a proposed People/DNA/Land genealogy policy tooling-placement decision, the policy-root sibling of ADR-0042, raised from a same-day DRIFT_REGISTER.md entry; registration does not accept the decision or authorize any migration."
   - "v2.4 registers ADR-0042 as a proposed People/DNA/Land genealogy validator tooling-placement decision, raised from a same-day DRIFT_REGISTER.md entry; registration does not accept the decision or authorize any migration."
   - "v2.3 registers ADR-0041 as a proposed, non-authorizing inherited-hold classification after normalizing the extensionless source path introduced by PR #4632."
   - "v2.2 records the explicit bounded owner acceptance of ADR-0040 while preserving proposed, unbound register entries, the Stage 1B hold, and Stage 2 prohibition."
@@ -34,22 +35,22 @@ notes:
   - "ADR-0039 is newly registered as proposed and selects no LayerManifest/LayerFrame migration or implementation."
   - "ADR-0040 accepts only seven exact catalog redirect-document target blobs; it does not bind or consume corrections or authorize a topology-baseline transition."
   - "ADR-0037, ADR-0036, and ADR-0035 remain proposed; their registration does not accept their candidate decisions."
-  - "File presence does not accept a decision. ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 are accepted in their stated scopes; the other 36 numbered ADRs remain proposed."
+  - "File presence does not accept a decision. ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 are accepted in their stated scopes; the other 38 numbered ADRs remain proposed."
   - "This README is the operating contract; docs/adr/INDEX.md is the canonical human inventory."
 [/KFM_META_BLOCK_V2] -->
 
 # `docs/adr/` — Architecture Decision Records
 
 [![authority](https://img.shields.io/badge/authority-canonical-1f6feb)](../doctrine/directory-rules.md)
-[![inventory](https://img.shields.io/badge/numbered_ADRs-42-0969da)](./INDEX.md)
-[![decision status](https://img.shields.io/badge/decisions-5_accepted_%7C_37_proposed-1a7f37)](./INDEX.md)
+[![inventory](https://img.shields.io/badge/numbered_ADRs-43-0969da)](./INDEX.md)
+[![decision status](https://img.shields.io/badge/decisions-5_accepted_%7C_38_proposed-1a7f37)](./INDEX.md)
 [![validation](https://img.shields.io/badge/index_coherence-enforced-1a7f37)](../../tools/validators/validate_adr_index.py)
 [![review route](https://img.shields.io/badge/CODEOWNERS-%40bartytime4life-8250df)](../../.github/CODEOWNERS)
 
 Architecture Decision Records preserve why KFM made—or is considering—a consequential architectural choice. They are append-only governance memory: one decision per record, explicit status, evidence, consequences, alternatives, migration impact, validation, correction, and rollback.
 
 > [!IMPORTANT]
-> A tracked ADR is not automatically accepted. ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 carry matching accepted source/index status in their stated scopes; the other 37 numbered records remain proposed. This summary does not independently promote any decision.
+> A tracked ADR is not automatically accepted. ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 carry matching accepted source/index status in their stated scopes; the other 38 numbered records remain proposed. This summary does not independently promote any decision.
 
 **Quick links:** [Verified snapshot](#verified-snapshot) · [Authority](#authority-and-boundaries) · [Inventory](#inventory-contract) · [Lifecycle](#decision-lifecycle) · [ADR triggers](#when-an-adr-is-required) · [Naming](#naming-and-numbering) · [Authoring](#authoring-workflow) · [Validation](#validation) · [Review](#review-and-supersession) · [Open work](#open-governance-work)
 
@@ -57,13 +58,13 @@ Architecture Decision Records preserve why KFM made—or is considering—a cons
 
 ## Verified snapshot
 
-The current inventory snapshot is prepared against `main@b3540bc39aa58748057b08eafc27aa8c7567a953` plus this bounded ADR-0042 registration.
+The current inventory snapshot is prepared against `main@a920352e420229078ddc242602779c0a74986c47` plus this bounded ADR-0043 registration.
 
 | Surface | Verified state | Meaning |
 |---|---:|---|
-| Direct Markdown files | 58 | Complete direct-child inventory in the proposed tree |
-| Numbered records | 42 | Unique, contiguous IDs `ADR-0001` through `ADR-0042` |
-| Numbered source metadata | 26 `proposed`; 11 `draft`; 5 `accepted` | `draft` normalizes to `proposed`; accepted source and index status agree for five records |
+| Direct Markdown files | 59 | Complete direct-child inventory in the proposed tree |
+| Numbered records | 43 | Unique, contiguous IDs `ADR-0001` through `ADR-0043` |
+| Numbered source metadata | 27 `proposed`; 11 `draft`; 5 `accepted` | `draft` normalizes to `proposed`; accepted source and index status agree for five records |
 | Verified accepted decisions | 5 | ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 carry matching source/index `accepted` status in their stated scopes |
 | Explicit `NNNN` / `XXXX` placeholders | 4 | Unassigned scaffolds; not ADR numbers |
 | Slug-only ADR scaffolds | 8 | Unassigned scaffolds; not accepted decision records |
@@ -177,6 +178,7 @@ Rules:
 - Accepted [`ADR-0040`](./ADR-0040-catalog-redirect-metadata-corrections.md) selects seven exact catalog redirect-document target blobs while keeping every register entry proposed and unbound, Stage 1B held, and Stage 2 unauthorized.
 - Proposed [`ADR-0041`](./ADR-0041-proportional-handling-of-inherited-repository-holds.md) would classify only byte-identical inherited holds for unrelated changes; it remains under review and changes no validator, workflow, or merge authority.
 - Proposed [`ADR-0042`](./ADR-0042-people-dna-land-genealogy-validator-tooling-home.md) would make `tools/validators/domains/people-dna-land/` the sole home for People/DNA/Land genealogy validator tooling and retire `tools/validators/genealogy/`; it remains under review and authorizes no migration or implementation.
+- Proposed [`ADR-0043`](./ADR-0043-people-dna-land-genealogy-policy-tooling-home.md) would make `policy/domains/people-dna-land/` the sole home for People/DNA/Land genealogy policy scaffolding and retire `policy/genealogy/`, the policy-root sibling of ADR-0042; it remains under review and authorizes no migration or implementation.
 
 Two numbered records use legacy filenames containing spaces and an em dash (`ADR-0007` and `ADR-0028`). Renaming them remains deferred pending inbound-link and history analysis.
 
@@ -227,7 +229,7 @@ The read-only [`docs-control-plane` workflow](../../.github/workflows/docs-contr
 
 ## Open governance work
 
-- Human acceptance review for the remaining 37 proposed numbered ADRs; accepted records retain any explicit later-review triggers in their own scopes.
+- Human acceptance review for the remaining 38 proposed numbered ADRs; accepted records retain any explicit later-review triggers in their own scopes.
 - Metadata normalization for 11 `draft` records without changing conservative `proposed` status.
 - Migration analysis for the two legacy space/em-dash filenames.
 - Disposition of 12 unassigned placeholder or slug-only scaffolds.
@@ -238,6 +240,7 @@ The read-only [`docs-control-plane` workflow](../../.github/workflows/docs-contr
 - Separate review of ADR-0040 Stage 1B batch semantics before any machine binding; topology-baseline transition remains a later unauthorized Stage 2.
 - Acceptance or rejection of ADR-0041 before any inherited-hold classifier or required-check behavior changes.
 - Acceptance or rejection of ADR-0042 before any migration of `screen_living_persons.py` or implementation of the three pending genealogy validator stubs.
+- Acceptance or rejection of ADR-0043 before any migration of `policy/genealogy/publication.rego`.
 - Review of [`ADR-0011`](./ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md) before `artifacts/release/` migration.
 - Resolution of `OPEN-DR-09-b` and the `artifacts/perf/` placement conflict.
 
