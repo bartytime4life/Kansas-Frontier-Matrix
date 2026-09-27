@@ -17,9 +17,10 @@ admission, establishes coverage, relays an alert, or persists material.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from email.utils import format_datetime
 from pathlib import Path
+import re
 
 from connectors_core import descriptor_gate, retrieval_episode
 
@@ -31,6 +32,7 @@ NAME = "noaa"
 RAW = "RAW_CANDIDATE"
 QUARANTINE = "QUARANTINE_CANDIDATE"
 HOLD = "HOLD"
+LAST_MODIFIED = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z")
 PRODUCTS = {fetch.STORM_SOURCE_ID: fetch.STORM_RETRIEVAL_PROFILE,
             fetch.USCRN_SOURCE_ID: fetch.USCRN_RETRIEVAL_PROFILE,
             fetch.NWS_SOURCE_ID: fetch.NWS_RETRIEVAL_PROFILE}
@@ -79,8 +81,16 @@ def _cache_headers(transport: dict) -> dict[str, str]:
     headers = {}
     if isinstance(transport.get("etag"), str):
         headers["ETag"] = transport["etag"]
-    if isinstance(transport.get("last_modified"), str):
-        instant = datetime.fromisoformat(transport["last_modified"].replace("Z", "+00:00"))
+    recorded = transport.get("last_modified")
+    if recorded is not None:
+        # The recorder writes UTC seconds (``...Z``); anything else is a forged episode.
+        try:
+            if not isinstance(recorded, str) or not LAST_MODIFIED.fullmatch(recorded):
+                raise ValueError
+            instant = datetime.strptime(recorded, "%Y-%m-%dT%H:%M:%SZ").replace(
+                tzinfo=timezone.utc)
+        except ValueError:
+            raise fetch.FetchInputError("EPISODE_LAST_MODIFIED") from None
         headers["Last-Modified"] = format_datetime(instant, usegmt=True)
     return headers
 
