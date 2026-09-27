@@ -3,6 +3,7 @@ import type { GeoJSONSource, LayerSpecification, Map as MapLibreMap, RasterTileS
 import { noaaRadarTileUrl } from "./noaa-radar";
 import { noaaSatelliteTileUrl } from "./noaa-satellite";
 import { rememberGeoJSON, updateGeoJSON, setVisibleIfChanged, setPaintIfChanged } from "./map-performance";
+import { balanceMapFills, balanceMapRasters, composeMapLayers, requestFillOpacity, requestRasterOpacity } from "./map-layer-composition";
 
 export type OfficialContextId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar" | "nws-forecast-wind";
 export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations";
@@ -249,7 +250,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     domain: "Fire, smoke & hazards",
     kind: "OPERATIONAL_GEOJSON",
     sourceId: "external-noaa-hms-smoke",
-    layerIds: Object.freeze(["external-noaa-hms-smoke-fill", "external-noaa-hms-smoke-line"]),
+    layerIds: Object.freeze(["external-noaa-hms-smoke-fill", "external-noaa-hms-smoke-glow", "external-noaa-hms-smoke-line"]),
     interactiveLayerIds: Object.freeze(["external-noaa-hms-smoke-fill"]),
     apiPath: "/api/live-context?feed=noaa-hms-smoke",
     endpointLabel: "satepsanone.nesdis.noaa.gov · HMS Smoke_Polygons KML",
@@ -386,8 +387,8 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
   }),
   Object.freeze({
     id: "usgs-3dep-hillshade",
-    title: "USGS 3DEP LiDAR-derived multidirectional hillshade",
-    shortTitle: "3DEP LiDAR hillshade",
+    title: "USGS 3DEP multidirectional hillshade",
+    shortTitle: "3DEP hillshade",
     organization: "U.S. Geological Survey",
     domain: "Terrain & landforms",
     kind: "OPERATIONAL_WMS",
@@ -410,7 +411,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
   }),
   Object.freeze({
     id: "usgs-3dep-slope",
-    title: "USGS 3DEP LiDAR-derived slope context",
+    title: "USGS 3DEP slope context",
     shortTitle: "3DEP slope",
     organization: "U.S. Geological Survey",
     domain: "Terrain & landforms",
@@ -471,7 +472,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     sourceUrl: "https://www.weather.gov/gis/NDFD_metadata.html",
     serviceUrl: "https://digital.weather.gov/ndfd/wms",
     cadence: "Provider-issued forecast frames; the Site requests the provider-default image",
-    freshness: "Tile responses cache for five minutes; already visible tiles are not automatically refreshed and exact forecast valid time is not resolved",
+    freshness: "Tile responses cache for five minutes; selected visible tiles revalidate after that window while the tab is active. Exact forecast valid time is not resolved",
     defaultVisibility: false,
     defaultOpacity: 0.85,
     color: "#92d8e5",
@@ -705,7 +706,8 @@ export const applyOfficialContextState = (
   ensureGeoJsonSource(map, smoke, payloads["noaa-hms-smoke"]?.data ?? emptyCollection());
   const smokeColor = ["match", ["get", "density"], "Heavy", "#df6b51", "Medium", "#d79862", "Light", "#b9c47b", "#8b9aa0"] as unknown as string;
   ensureLayer(map, { id: smoke.layerIds[0], type: "fill", source: smoke.sourceId, paint: { "fill-color": smokeColor, "fill-opacity": 0.32 } });
-  ensureLayer(map, { id: smoke.layerIds[1], type: "line", source: smoke.sourceId, paint: { "line-color": smokeColor, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 0.7, 9, 1.8], "line-opacity": 0.74 } });
+  ensureLayer(map, { id: smoke.layerIds[1], type: "line", source: smoke.sourceId, paint: { "line-color": smokeColor, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 3, 9, 7], "line-blur": 3, "line-opacity": 0.18 } });
+  ensureLayer(map, { id: smoke.layerIds[2], type: "line", source: smoke.sourceId, paint: { "line-color": smokeColor, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 0.7, 9, 1.8], "line-opacity": 0.74 } });
 
   const firePoints = OFFICIAL_CONTEXT_BY_ID["nasa-gibs-fire-points"];
   ensureGeoJsonSource(map, firePoints, payloads["nasa-gibs-fire-points"]?.data ?? emptyCollection());
@@ -776,12 +778,15 @@ export const applyOfficialContextState = (
       const layer = map.getLayer(layerId);
       if (layer?.type === "circle") setPaintIfChanged(map, layerId, "circle-opacity", layerId.endsWith("-glow") || layerId.endsWith("-halo") ? safeOpacity * 0.3 : safeOpacity);
       if (layer?.type === "circle") setPaintIfChanged(map, layerId, "circle-stroke-opacity", safeOpacity);
-      if (layer?.type === "fill") setPaintIfChanged(map, layerId, "fill-opacity", source.id === "census-counties" ? safeOpacity * 0.18 : safeOpacity);
-      if (layer?.type === "line") setPaintIfChanged(map, layerId, "line-opacity", safeOpacity);
-      if (layer?.type === "raster") setPaintIfChanged(map, layerId, "raster-opacity", safeOpacity);
+      if (layer?.type === "fill") requestFillOpacity(map, layerId, source.id === "census-counties" ? safeOpacity * 0.18 : safeOpacity);
+      if (layer?.type === "line") setPaintIfChanged(map, layerId, "line-opacity", layerId.endsWith("-glow") ? safeOpacity * 0.3 : source.id === "census-counties" ? safeOpacity * 0.58 : safeOpacity);
+      if (layer?.type === "raster") requestRasterOpacity(map, layerId, safeOpacity);
       if (layer?.type === "symbol") setPaintIfChanged(map, layerId, "text-opacity", safeOpacity);
     }
   }
+  balanceMapFills(map);
+  balanceMapRasters(map);
+  composeMapLayers(map);
 };
 
 /** Select one provider catalog raster. No service-default or undated tile is used. */
@@ -799,7 +804,9 @@ export const setNoaaSatelliteFrame = (map: MapLibreMap, objectId: number, visibl
   ensureLayer(map, { id: satellite.layerIds[0], type: "raster", source: satellite.sourceId,
     paint: { "raster-opacity": Math.max(0, Math.min(1, opacity)), "raster-fade-duration": 0 } }, beforeId);
   setVisibleIfChanged(map, satellite.layerIds[0], visible && map.getProjection?.()?.type !== "globe");
-  setPaintIfChanged(map, satellite.layerIds[0], "raster-opacity", Math.max(0, Math.min(1, opacity)));
+  requestRasterOpacity(map, satellite.layerIds[0], opacity);
+  balanceMapRasters(map);
+  composeMapLayers(map);
 };
 
 export const clearNoaaSatelliteFrame = (map: MapLibreMap): void => {
@@ -831,6 +838,9 @@ export const setNoaaRadarObservationTime = (map: MapLibreMap, observedAt: string
     changed = true;
   }
   ensureLayer(map, { id: radar.layerIds[0], type: "raster", source: radar.sourceId, paint: { "raster-opacity": radar.defaultOpacity, "raster-fade-duration": 0 } }, firstRegistryLayer(map));
+  requestRasterOpacity(map, radar.layerIds[0], radar.defaultOpacity);
+  balanceMapRasters(map);
+  composeMapLayers(map);
   if (!source) return null;
   return changed ? "changed" : "unchanged";
 };

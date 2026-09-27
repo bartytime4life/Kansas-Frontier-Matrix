@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SITE_IDENTITY } from "./site-identity";
 import "./globals.css";
+import "./map-layers.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   // Canonical metadata is deployment identity, never caller-controlled routing input.

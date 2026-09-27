@@ -59,18 +59,25 @@ export function EarthEngineInstaller() {
     let next = 0, completed = 0;
     try {
       let firstError: Error | null = null;
-      const workers = Array.from({ length: Math.min(4, prepared.files.length) }, async () => {
+      const workers = Array.from({ length: Math.min(16, prepared.files.length) }, async () => {
         while (next < prepared.files.length && !firstError) {
           const entry = prepared.files[next++];
           try {
             const bytes = await entry.file.arrayBuffer();
             const sha256 = await digest(bytes);
             const contentType = entry.key.endsWith(".png") ? "image/png" : "application/json";
-            const response = await fetch(`/api/earth-engine-context/stage?key=${encodeURIComponent(entry.key)}`, {
-              method: "PUT", headers: { "content-type": contentType, "x-kfm-ee-sha256": sha256 }, body: bytes,
-            });
-            if (!response.ok) throw new Error(`${entry.key}: ${response.status} ${(await response.json().catch(() => ({}))).error ?? "upload failed"}`);
-            completed++; setProgress(completed);
+            for (let attempt = 0; attempt < 3; attempt++) {
+              const response = await fetch(`/api/earth-engine-context/stage?key=${encodeURIComponent(entry.key)}`, {
+                method: "PUT", headers: { "content-type": contentType, "x-kfm-ee-sha256": sha256 }, body: bytes,
+              });
+              if (response.ok) break;
+              if (![429, 502, 503, 504].includes(response.status) || attempt === 2) {
+                throw new Error(`${entry.key}: ${response.status} ${(await response.json().catch(() => ({}))).error ?? "upload failed"}`);
+              }
+              await new Promise((resolve) => setTimeout(resolve, 500 * (attempt + 1)));
+            }
+            completed++;
+            if (completed % 64 === 0 || completed === prepared.files.length) setProgress(completed);
           } catch (error) { firstError ??= error instanceof Error ? error : new Error("Upload failed."); }
         }
       });

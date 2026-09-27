@@ -75,6 +75,7 @@ test("opacity changes do not re-upload provider data or create disabled raster s
   const sources=new Map(),layers=new Map(); let uploads=0,paintWrites=0,layoutWrites=0,activeProjection;
   const map={
     getSource:id=>sources.get(id),getLayer:id=>layers.get(id),getStyle:()=>({layers:[...layers.values()]}),
+    moveLayer:id=>{const layer=layers.get(id);layers.delete(id);layers.set(id,layer);},
     getProjection:()=>activeProjection,
     addSource:(id,spec)=>sources.set(id,{...spec,setData:()=>uploads++}),addLayer:layer=>layers.set(layer.id,structuredClone(layer)),
     getLayoutProperty:(id,key)=>layers.get(id)?.layout?.[key],getPaintProperty:(id,key)=>layers.get(id)?.paint?.[key],

@@ -49,19 +49,15 @@ test("camera readings use observed renderer values and fail closed when they can
   assert.equal(globe.readGlobeCamera({ ...map, getProjection: () => ({ type: "unknown" }) }).projection, "unknown");
 });
 
-test("globe viewpoints are distinct, while the recipe study area remains explicitly Kansas", async () => {
+test("globe viewpoints remain distinct while Earth Engine opens installed map layers", async () => {
   assert.ok(globe.GLOBE_VIEWPOINTS.earth.zoom < globe.GLOBE_VIEWPOINTS.continent.zoom);
   assert.ok(globe.GLOBE_VIEWPOINTS.continent.zoom < globe.GLOBE_VIEWPOINTS.kansas.zoom);
   for (const preset of Object.values(globe.GLOBE_VIEWPOINTS)) {
     assert.equal(preset.pitch, 0); assert.equal(preset.bearing, 0);
   }
-  const panel = await readFile(new URL("../app/earth-engine-globe.tsx", import.meta.url), "utf8");
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
-  assert.match(panel, /Changing the viewpoint does not change the analysis area/);
-  assert.match(panel, /Map readings, not satellite telemetry/);
-  assert.match(panel, /No Earth Engine imagery or sensor telemetry is displayed/);
-  assert.match(panel, /recipe summarizes the full year, not the selected map instant/);
-  assert.match(page, /role="group" aria-label="Globe and Earth Engine"/);
-  assert.match(page, /earthEngineOpen && projection === "globe" && <EarthEngineGlobe/);
+  assert.match(page, /onClick={\(\) => activateMapRepresentation\("globe"\)}/);
+  assert.match(page, /aria-controls="earth-engine-context-controls" onClick={openEarthEngineLayers}/);
+  assert.doesNotMatch(page, /<EarthEngineGlobe/);
   assert.match(page, /restoringGlobe \? 0 : 4/);
 });

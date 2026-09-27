@@ -8,7 +8,8 @@ import type {
 } from "maplibre-gl";
 import { externalContextSource } from "./external-context-sources";
 import { LAYER_REGISTRY, type EvidenceState } from "./explorer-data";
-import { ACTIVE_TERRAIN_SOURCE } from "./terrain-sources";
+import { balanceMapFills, composeMapLayers, requestFillOpacity } from "./map-layer-composition";
+import { ACTIVE_TERRAIN_SOURCE, type TerrainSourceRecord } from "./terrain-sources";
 import type { TemporalSweepQuery } from "./temporal-sweep";
 
 export type BasemapKey = "standard" | "imagery" | "midnight" | "prairie" | "streets" | "topo";
@@ -225,6 +226,7 @@ const mergeFilters = (...filters: Array<FilterSpecification | undefined>): Filte
 export type RegistryEvidenceFilter = EvidenceState | "ALL";
 
 export const TERRAIN_SOURCE_ID = "kfm-terrain-dem";
+export const TERRAIN_HILLSHADE_SOURCE_ID = "kfm-terrain-shadow-dem";
 export const TERRAIN_HILLSHADE_LAYER_ID = "kfm-terrain-hillshade";
 export const TERRAIN_COLOR_SOURCE_ID = "kfm-terrain-color-dem";
 export const TERRAIN_COLOR_RELIEF_LAYER_ID = "kfm-terrain-color-relief";
@@ -241,6 +243,7 @@ export const setTerrainPresentation = (
   map: MapLibreMap,
   enabled: boolean,
   exaggeration: number,
+  source: TerrainSourceRecord = ACTIVE_TERRAIN_SOURCE,
 ): TerrainPresentationState => {
   if (!enabled) {
     if (map.getLayer(TERRAIN_HILLSHADE_LAYER_ID)) {
@@ -251,22 +254,26 @@ export const setTerrainPresentation = (
   }
 
   try {
+    const demSource = () => ({
+      type: "raster-dem" as const,
+      tiles: [source.tileTemplate!],
+      tileSize: source.tileSize!,
+      ...(source.minZoom === undefined ? {} : { minzoom: source.minZoom }),
+      maxzoom: source.maxZoom!,
+      ...(source.bounds === undefined ? {} : { bounds: [...source.bounds] as [number, number, number, number] }),
+      encoding: source.encoding,
+      attribution: source.attribution,
+    });
     if (!map.getSource(TERRAIN_SOURCE_ID)) {
-      map.addSource(TERRAIN_SOURCE_ID, {
-        type: "raster-dem",
-        tiles: [ACTIVE_TERRAIN_SOURCE.tileTemplate!],
-        tileSize: ACTIVE_TERRAIN_SOURCE.tileSize!,
-        maxzoom: ACTIVE_TERRAIN_SOURCE.maxZoom!,
-        encoding: ACTIVE_TERRAIN_SOURCE.encoding,
-        attribution: ACTIVE_TERRAIN_SOURCE.attribution,
-      });
+      map.addSource(TERRAIN_SOURCE_ID, demSource());
     }
+    if (!map.getSource(TERRAIN_HILLSHADE_SOURCE_ID)) map.addSource(TERRAIN_HILLSHADE_SOURCE_ID, demSource());
     if (!map.getLayer(TERRAIN_HILLSHADE_LAYER_ID)) {
       const overlay = map.getStyle().layers?.find(layer => layer.id !== "kfm-background" && (layer.id.startsWith("kfm-") || layer.id.startsWith("external-") || layer.type === "symbol"))?.id;
       map.addLayer({
         id: TERRAIN_HILLSHADE_LAYER_ID,
         type: "hillshade",
-        source: TERRAIN_SOURCE_ID,
+        source: TERRAIN_HILLSHADE_SOURCE_ID,
         layout: { visibility: "visible" },
         paint: {
           "hillshade-shadow-color": "#163337",
@@ -290,7 +297,7 @@ export const setTerrainPresentation = (
 
 /** Adds a quantitative color ramp over the active terrain using unexaggerated
  * DEM elevations. The ramp is a visual reading aid, not analytical evidence. */
-export const setTerrainHeightOverlay = (map: MapLibreMap, enabled: boolean): boolean => {
+export const setTerrainHeightOverlay = (map: MapLibreMap, enabled: boolean, source: TerrainSourceRecord = ACTIVE_TERRAIN_SOURCE): boolean => {
   try {
     if (!enabled) {
       if (map.getLayer(TERRAIN_COLOR_RELIEF_LAYER_ID)) {
@@ -301,11 +308,13 @@ export const setTerrainHeightOverlay = (map: MapLibreMap, enabled: boolean): boo
     if (!map.getSource(TERRAIN_COLOR_SOURCE_ID)) {
       map.addSource(TERRAIN_COLOR_SOURCE_ID, {
         type: "raster-dem",
-        tiles: [ACTIVE_TERRAIN_SOURCE.tileTemplate!],
-        tileSize: ACTIVE_TERRAIN_SOURCE.tileSize!,
-        maxzoom: ACTIVE_TERRAIN_SOURCE.maxZoom!,
-        encoding: ACTIVE_TERRAIN_SOURCE.encoding,
-        attribution: ACTIVE_TERRAIN_SOURCE.attribution,
+        tiles: [source.tileTemplate!],
+        tileSize: source.tileSize!,
+        ...(source.minZoom === undefined ? {} : { minzoom: source.minZoom }),
+        maxzoom: source.maxZoom!,
+        ...(source.bounds === undefined ? {} : { bounds: [...source.bounds] as [number, number, number, number] }),
+        encoding: source.encoding,
+        attribution: source.attribution,
       });
     }
     if (!map.getLayer(TERRAIN_COLOR_RELIEF_LAYER_ID)) {
@@ -420,12 +429,14 @@ export const applyRegistryState = (
       map.setFilter(renderer.id, filter ?? null);
 
       for (const property of renderer.opacityProperties ?? []) {
-        map.setPaintProperty(renderer.id, property, opacity[record.id] ?? record.defaultOpacity);
+        if (property === "fill-opacity") requestFillOpacity(map, renderer.id, opacity[record.id] ?? record.defaultOpacity);
+        else map.setPaintProperty(renderer.id, property, opacity[record.id] ?? record.defaultOpacity);
       }
     }
   }
 
   addSystemLayers(map);
+  balanceMapFills(map);
   reorderRegistryLayers(map, order);
 };
 
@@ -554,6 +565,7 @@ export const reorderRegistryLayers = (map: MapLibreMap, order: string[]) => {
     }
   }
   for (const id of SYSTEM_LAYER_IDS) if (map.getLayer(id)) map.moveLayer(id);
+  composeMapLayers(map);
 };
 
 export const updateSelectionSource = (map: MapLibreMap, selection?: Feature<Geometry> | null) => {
