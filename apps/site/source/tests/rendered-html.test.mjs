@@ -880,7 +880,7 @@ test("connects nineteen bounded official Kansas context sources without admittin
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"].mapUrl, /^\/api\/terrain-tile\?kind=slope&z=\{z\}&x=\{x\}&y=\{y\}$/);
   assert.match(page, /<h2 id="official-context-title">Official sources<\/h2>/);
   assert.match(page, /Official sources provide current map context/);
-  assert.match(page, /Refresh visible/);
+  assert.match(page, /Refresh \$\{officialRefreshPlan\.count\} selected/);
   assert.match(page, /Search current places, layers, features, and official data sources/);
   assert.match(page, /params\.set\("ctx"/);
   assert.match(page, /params\.set\("ctxo"/);

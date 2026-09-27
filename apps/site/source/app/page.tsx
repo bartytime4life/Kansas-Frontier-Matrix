@@ -9,6 +9,7 @@ import { replaceExplorerHistory } from "./embed-runtime";
 import { parseSavedWorkspaceList } from "./saved-workspaces";
 import { BASELINE_STACKS, currentUtcDay } from "./daily-baseline";
 import { SourceQualityRow } from "./source-quality-row";
+import { planOfficialRefresh } from "./official-refresh-plan";
 import { ArchiveDaySlider } from "./archive-day-slider";
 import { DataNotices, RenderQualityControl, TerrainQuickControls } from "./map-toolbar";
 import { EarthEngineGlobe } from "./earth-engine-globe";
@@ -1578,9 +1579,9 @@ export default function Home() {
     && (selectedIsHeldOfficialContext || !isFeatureAvailableForTemporalQuery(selected.layer, selected.properties.year, temporalQuery)),
   );
   const officialFeatureCount = useMemo(() => Object.values(officialPayloads).reduce((total, payload) => total + (payload?.featureCount ?? 0), 0), [officialPayloads]);
-  const visibleRefreshableOfficialCount = useMemo(() => visibleOfficialSources.filter((source) => source.apiPath || source.managedAdapterPath || source.id === "nws-radar" || source.id === "noaa-goes-geocolor").length, [visibleOfficialSources]);
   const officialReadyCount = useMemo(() => Object.values(officialStates).filter((state) => state === "ready" || state === "partial" || state === "empty").length, [officialStates]);
   const officialLoadingCount = useMemo(() => Object.values(officialStates).filter((state) => state === "loading").length, [officialStates]);
+  const officialRefreshPlan = planOfficialRefresh(OFFICIAL_CONTEXT_SOURCES, officialVisibility, temporalQuery.frame, OFFICIAL_CONTEXT_PRESENT_FRAME, Boolean(streamflowArchiveDay), officialArchiveDays);
   const officialLatestRetrievedAt = useMemo(() => Object.values(officialPayloads)
     .map((payload) => payload?.retrievedAt)
     .filter((value): value is string => Boolean(value))
@@ -2907,7 +2908,7 @@ export default function Home() {
   }, [refreshStreamflow, streamflowArchiveDraftDay, streamflowSelectedStationId]);
 
   const refreshOfficialContext = useCallback(async (feed: OfficialContextFeedId) => {
-    if (officialArchiveDaysRef.current[feed]) return;
+    if (temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME || officialArchiveDaysRef.current[feed]) return;
     if (officialRequestsRef.current.has(feed)) return;
     const source = OFFICIAL_CONTEXT_BY_ID[feed];
     const controller = new AbortController();
@@ -3118,28 +3119,21 @@ export default function Home() {
   }, []);
 
   const refreshVisibleOfficialContext = useCallback(() => {
-    const feeds = OFFICIAL_CONTEXT_SOURCES.filter((source) => source.apiPath && officialVisibilityRef.current[source.id]);
-    const radarSelected = officialVisibilityRef.current["nws-radar"];
-    const satelliteSelected = officialVisibilityRef.current["noaa-goes-geocolor"];
-    const satelliteRefreshable = satelliteSelected && temporalQueryRef.current.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
-    const radarRefreshable = radarSelected && temporalQueryRef.current.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
-    const streamflowRefreshable = officialVisibilityRef.current["usgs-streamflow"] && temporalQueryRef.current.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
-    const noaaHydrologyRefreshable = officialVisibilityRef.current["noaa-nwps-gauges"] && temporalQueryRef.current.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
-    if (feeds.length === 0 && !radarSelected && !satelliteSelected && !streamflowRefreshable && !noaaHydrologyRefreshable) {
-      announce("Turn on an official data layer before refreshing");
+    const plan = planOfficialRefresh(OFFICIAL_CONTEXT_SOURCES, officialVisibilityRef.current, temporalQueryRef.current.frame, OFFICIAL_CONTEXT_PRESENT_FRAME, Boolean(streamflowArchiveDayRef.current), officialArchiveDaysRef.current);
+    if (plan.reason === "historical") {
+      announce(`Current sources are held at ${formatTimelineStep(temporalQueryRef.current.frame)}; switch to Present to refresh`);
       return;
     }
-    feeds.forEach((source) => { void refreshOfficialContext(source.id as OfficialContextFeedId); });
-    if (radarRefreshable) void refreshNoaaRadarManifest(true);
-    if (satelliteRefreshable) void refreshNoaaSatelliteFrames(true);
-    if (streamflowRefreshable && !streamflowArchiveDayRef.current) void refreshStreamflow(streamflowRange, streamflowSelectedStationId, true);
-    if (noaaHydrologyRefreshable) void refreshNoaaHydrologyNetwork(true);
-    const connectionCount = feeds.length + (radarRefreshable ? 1 : 0) + (satelliteRefreshable ? 1 : 0) + (streamflowRefreshable ? 1 : 0) + (noaaHydrologyRefreshable ? 1 : 0);
-    if (connectionCount === 0) {
-      announce("NOAA radar remains held outside Present; no visible official connection was refreshed");
+    if (plan.reason === "none") {
+      announce("Select a refreshable current source before refreshing");
       return;
     }
-    announce(`Refreshing ${connectionCount} visible official connection${connectionCount === 1 ? "" : "s"}`);
+    plan.feeds.forEach((feed) => { void refreshOfficialContext(feed as OfficialContextFeedId); });
+    if (plan.radar) void refreshNoaaRadarManifest(true);
+    if (plan.satellite) void refreshNoaaSatelliteFrames(true);
+    if (plan.streamflow) void refreshStreamflow(streamflowRange, streamflowSelectedStationId, true);
+    if (plan.hydrology) void refreshNoaaHydrologyNetwork(true);
+    announce(`Refreshing ${plan.count} selected official connection${plan.count === 1 ? "" : "s"}`);
   }, [announce, refreshNoaaHydrologyNetwork, refreshNoaaRadarManifest, refreshNoaaSatelliteFrames, refreshOfficialContext, refreshStreamflow, streamflowRange, streamflowSelectedStationId]);
 
   const hideAllOfficialContext = useCallback(() => {
@@ -3169,13 +3163,16 @@ export default function Home() {
   }, [refreshOfficialContext]);
 
   useEffect(() => {
+    if (temporalQuery.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) return;
+    // Hydrate selected current sources on first entry and when returning from history.
+    // Archived and historical frames never initiate a current-source request.
     const timer = window.setTimeout(() => {
       for (const source of OFFICIAL_CONTEXT_SOURCES) {
         if (source.apiPath && officialVisibilityRef.current[source.id]) void refreshOfficialContext(source.id as OfficialContextFeedId);
       }
     }, 40);
     return () => window.clearTimeout(timer);
-  }, [refreshOfficialContext]);
+  }, [refreshOfficialContext, temporalQuery.frame]);
 
   const dismissMapUtilityWithoutFocus = useCallback(() => {
     mapUtilityReturnRef.current = null;
@@ -7407,7 +7404,7 @@ export default function Home() {
             <details className="official-context-boundary"><summary>About these sources and their map states</summary><p>{year === OFFICIAL_CONTEXT_PRESENT_FRAME ? "Official sources provide current map context. Selection does not confirm display, and these sources do not enter KFM evidence, reports, or exports." : `At ${temporalScopeLabel}, selected current-only sources stay held until the operational-present frame.`}</p><small>{SITE_REGISTRY_COUNTS.features} registry features · {SITE_REGISTRY_COUNTS.connections} connections · {SITE_REGISTRY_COUNTS.actions} actions</small></details>
             <div className="official-context-pulse" aria-label="Official data connection status">
               <div><span><small>LOADED FEATURES</small><strong>{officialFeatureCount.toLocaleString("en-US")}</strong></span><span><small>CONNECTIONS</small><strong>{officialReadyCount}/{OFFICIAL_CONTEXT_SOURCES.length} checked</strong></span><span><small>LAST RETRIEVAL</small><strong>{officialLatestRetrievedAt ? new Date(officialLatestRetrievedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "Not yet"}</strong></span></div>
-              <nav aria-label="Official data actions"><button type="button" disabled={visibleRefreshableOfficialCount === 0 || officialLoadingCount > 0} onClick={refreshVisibleOfficialContext}>{officialLoadingCount > 0 ? "Refreshing…" : "Refresh visible"}</button><button type="button" disabled={visibleOfficialCount === 0} onClick={hideAllOfficialContext}>Hide all</button></nav>
+              <nav aria-label="Official data actions"><button type="button" disabled={officialRefreshPlan.count === 0 || officialLoadingCount > 0} onClick={refreshVisibleOfficialContext}>{officialRefreshPlan.reason === "historical" ? `Held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : officialLoadingCount > 0 ? "Refreshing…" : `Refresh ${officialRefreshPlan.count} selected`}</button><button type="button" disabled={visibleOfficialCount === 0} onClick={hideAllOfficialContext}>Hide all</button></nav>
             </div>
             <details className="source-layer-groups"><summary>Layer groups · earthquakes, water, fire, smoke & airflow</summary><section className="priority-context-deck" aria-labelledby="priority-context-title">
               <header>
@@ -7638,7 +7635,7 @@ export default function Home() {
             <header><h2>Sources & data quality</h2><button type="button" onClick={() => setSourceStatusOpen(false)} aria-label="Close source status">×</button></header>
             <p>Today · {baselineDay} UTC. Live observations refresh as providers publish. County counts keep their Census edition, and historical gaps remain visible.</p>
             <div className="source-quality-actions"><Link href="/earth-engine">Earth Engine datasets & recipes</Link><Link href="/data">Propose data for KFM</Link><Link href="/stewards">Steward review desk</Link></div>
-            <button type="button" onClick={refreshVisibleOfficialContext} disabled={officialLoadingCount > 0}>Refresh selected sources</button>
+            <button type="button" onClick={refreshVisibleOfficialContext} disabled={officialRefreshPlan.count === 0 || officialLoadingCount > 0}>{officialRefreshPlan.reason === "historical" ? `Current sources held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : officialLoadingCount > 0 ? "Refreshing selected sources…" : officialRefreshPlan.count === 0 ? "Select a current source to refresh" : `Refresh ${officialRefreshPlan.count} selected source${officialRefreshPlan.count === 1 ? "" : "s"}`}</button>
             {OFFICIAL_CONTEXT_SOURCES.map((source) => <SourceQualityRow key={source.id} source={source} state={officialStates[source.id]} payload={officialPayloads[source.id as OfficialContextFeedId]} error={officialErrors[source.id]} selected={officialVisibility[source.id]} held={officialVisibility[source.id] && !effectiveOfficialVisibility[source.id]} onToggle={(selected) => setOfficialContextVisible(source.id, selected)} onRetry={() => retryOfficialLayer(source.id)} />)}
             <Link href="/observatory/sources">Historical coverage & sources ↗</Link>
           {sourceStatusOpen && scenePreset === "elevation-3d" && <aside className="terrain-scene-passport" data-state={terrainState.toLowerCase()} aria-label="Terrain scene passport">
