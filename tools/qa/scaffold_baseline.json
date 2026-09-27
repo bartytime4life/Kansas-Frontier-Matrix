@@ -2,14 +2,14 @@
  "schema_version": "kfm.scaffold-inventory/v1",
  "summary": {
   "by_kind": {
-   "PLACEHOLDER_MARKER": 910,
-   "STUB_MODULE": 336,
+   "PLACEHOLDER_MARKER": 907,
+   "STUB_MODULE": 334,
    "UNRESOLVED_DESCRIPTOR": 24,
    "VACUOUS_TEST": 1
   },
   "by_surface": {
    "apps": 34,
-   "connectors": 131,
+   "connectors": 126,
    "contracts": 3,
    "packages": 122,
    "pipelines": 236,
@@ -19,8 +19,8 @@
    "tests": 188,
    "tools": 54
   },
-  "files": 912,
-  "total": 1271
+  "files": 909,
+  "total": 1266
  },
  "findings": [
   {"kind": "PLACEHOLDER_MARKER", "path": "apps/cli/pyproject.toml"},
@@ -64,13 +64,8 @@
   {"kind": "UNRESOLVED_DESCRIPTOR", "path": "connectors/ahgp/src/ahgp/descriptor.yaml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/ahgp/src/ahgp/fetch.py"},
   {"kind": "STUB_MODULE", "path": "connectors/ahgp/src/ahgp/fetch.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "connectors/blm/pyproject.toml"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "connectors/blm/src/blm/admit.py"},
-  {"kind": "STUB_MODULE", "path": "connectors/blm/src/blm/admit.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/blm/src/blm/descriptor.yaml"},
   {"kind": "UNRESOLVED_DESCRIPTOR", "path": "connectors/blm/src/blm/descriptor.yaml"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "connectors/blm/src/blm/fetch.py"},
-  {"kind": "STUB_MODULE", "path": "connectors/blm/src/blm/fetch.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/census/src/census/descriptor.yaml"},
   {"kind": "UNRESOLVED_DESCRIPTOR", "path": "connectors/census/src/census/descriptor.yaml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/ebird/pyproject.toml"},
