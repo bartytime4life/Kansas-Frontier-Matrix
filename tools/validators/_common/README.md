@@ -273,6 +273,7 @@ Located in `jsonschema_runner.py`.
 Observed behavior:
 
 - parses the requested schema as UTF-8 JSON;
+- rejects a permissive object placeholder that has no object-content assertions, so it cannot report a validation pass;
 - resolves repository root from `Path(__file__).resolve().parents[3]`;
 - builds the full local registry;
 - returns `Draft202012Validator(schema, registry=registry)`.
@@ -296,6 +297,7 @@ Observed behavior:
 - accepts positional files;
 - accepts `--fixtures`;
 - returns `2` before schema loading when neither explicit files nor fixture mode is supplied;
+- returns `1` with `FAIL schema` when the selected schema is a permissive object placeholder with no content assertions;
 - delegates explicit files to `validate_files`;
 - in fixture mode, discovers sorted `valid/*.json` followed by sorted `invalid/*.json`;
 - requires at least one JSON fixture in each lane;

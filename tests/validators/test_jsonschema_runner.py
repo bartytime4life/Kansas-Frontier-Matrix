@@ -155,6 +155,31 @@ class JsonSchemaRunnerTests(unittest.TestCase):
             format_checker=checker,
         )
 
+    def test_permissive_placeholder_schema_cannot_report_success(self) -> None:
+        schema_path = self.root / "placeholder.schema.json"
+        schema_path.write_text(
+            json.dumps({
+                "type": "object",
+                "properties": {},
+                "additionalProperties": True,
+                "x-kfm": {"status": "PROPOSED"},
+            }),
+            encoding="utf-8",
+        )
+        with mock.patch.object(jsonschema_runner, "build_registry") as registry:
+            with self.assertRaisesRegex(
+                jsonschema_runner.PlaceholderSchemaError,
+                "permissive placeholder schema",
+            ):
+                jsonschema_runner.load_validator(schema_path)
+        registry.assert_not_called()
+
+        stdout = io.StringIO()
+        with contextlib.redirect_stdout(stdout):
+            code = jsonschema_runner.run(schema_path, None, ["candidate.json"])
+        self.assertEqual(code, 1)
+        self.assertIn("FAIL schema:", stdout.getvalue())
+
     def test_fixture_mode_is_sorted_and_labels_expected_invalids(self) -> None:
         valid_z = self._write_json("valid", "z.json", {"valid": True})
         valid_a = self._write_json("valid", "a.json", {"valid": True})

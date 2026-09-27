@@ -13,6 +13,30 @@ class DuplicateKeyError(ValueError):
     """Raised when an input object repeats a member name."""
 
 
+class PlaceholderSchemaError(ValueError):
+    """Raised when a schema cannot check any object content."""
+
+
+_OBJECT_ASSERTION_KEYWORDS = frozenset(
+    {
+        "$ref", "$dynamicRef", "allOf", "anyOf", "oneOf", "not", "if",
+        "then", "else", "const", "enum", "required", "patternProperties",
+        "propertyNames", "minProperties", "maxProperties", "dependentRequired",
+        "dependentSchemas", "unevaluatedProperties",
+    }
+)
+
+
+def _is_placeholder_object_schema(schema):
+    return (
+        isinstance(schema, dict)
+        and schema.get("type") == "object"
+        and schema.get("additionalProperties") is True
+        and not schema.get("properties")
+        and not (_OBJECT_ASSERTION_KEYWORDS & schema.keys())
+    )
+
+
 def _unique_object(pairs):
     candidate = {}
     for key, value in pairs:
@@ -44,6 +68,10 @@ def _load_instance(path):
 
 def load_validator(schema_path: Path, *, check_formats: bool = False):
     schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    if _is_placeholder_object_schema(schema):
+        raise PlaceholderSchemaError(
+            f"{schema_path}: permissive placeholder schema cannot validate object content"
+        )
     repo_root = Path(__file__).resolve().parents[3]
     registry = build_registry(repo_root)
     kwargs = {"registry": registry}
@@ -110,7 +138,11 @@ def run(
         print("No files provided", file=sys.stderr)
         return 2
 
-    v = load_validator(schema_path, check_formats=check_formats)
+    try:
+        v = load_validator(schema_path, check_formats=check_formats)
+    except PlaceholderSchemaError as exc:
+        print(f"FAIL schema: {exc}")
+        return 1
     if ns.fixtures:
         if fixtures_dir is None:
             print("FAIL fixture configuration: no fixture directory configured")
