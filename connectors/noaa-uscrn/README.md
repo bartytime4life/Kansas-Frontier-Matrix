@@ -6,7 +6,7 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — Source steward · Connector steward · NOAA steward · Atmosphere steward · Soil steward · Agriculture liaison · Rights reviewer · Validation steward · Docs steward
 created: 2026-06-19
-updated: 2026-07-14
+updated: 2026-09-27
 policy_label: public-doctrine; connector-boundary; noaa; uscrn; station-observation; depth-aware; placement-open; not-life-safety; no-publication
 truth_posture: CONFIRMED README-only sibling / PROPOSED placement / INACTIVE source authority / IMPLEMENTATION NEEDS VERIFICATION
 evidence_snapshot: main@92ddac60a5dd7ec4c1f4704c651bd173423afbaf
@@ -51,6 +51,9 @@ notes:
   <img alt="Area truth: denied" src="https://img.shields.io/badge/area__truth-denied-red">
   <img alt="Lifecycle: RAW or QUARANTINE only" src="https://img.shields.io/badge/lifecycle-RAW%20%7C%20QUARANTINE%20only-orange">
 </p>
+
+> [!NOTE]
+> **Offline USCRN hourly02 parser (2026-09-27); this flat lane stays README-only.** `connectors/noaa/src/noaa/uscrn_hourly.py` parses *supplied* USCRN hourly02 station-year files under one versioned profile (`uscrn-hourly02-v1`, 38 columns). It never fetches. A line with a different field count is `SCHEMA_DRIFT` and rejects the file, as do mixed stations, out-of-order or duplicate hours, records outside the file year, and malformed values. Each measurement keeps its source token beside an exact `Decimal`, its unit, its derivation (`calculated_last_5_min`, `hourly_average`, `hourly_max`, `hourly_min`, `hourly_total`), its soil depth in cm, and its raw QC flag. Missing sentinels (`-9999.0`; `-99.000` for soil moisture only) stay missing, never zero. Unknown QC flags or surface-temperature types quarantine the record; missing hours are counted, not filled. Synthetic tests: `connectors/noaa/tests/test_uscrn_hourly.py`, run by `.github/workflows/noaa-uscrn-offline.yml`. Code sits in the central NOAA package per this lane's recommended reversible posture; the nested-vs-flat placement ADR remains open and this is not source activation, station-metadata review, or admission.
 
 > [!IMPORTANT]
 > **Truth posture:** `CONFIRMED` README-only sibling · `PROPOSED` placement · source authority `INACTIVE / NOT ESTABLISHED` · product-specific runtime `NEEDS VERIFICATION`.

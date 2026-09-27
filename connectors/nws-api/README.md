@@ -6,7 +6,7 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — Connector steward · Source steward · NOAA steward · NWS steward · Hazards steward · Atmosphere steward · Data steward · Rights reviewer · Sensitivity reviewer · Safety reviewer · Validation steward · Migration steward · CI steward · Docs steward
 created: 2026-06-20
-updated: 2026-07-15
+updated: 2026-09-27
 policy_label: public-doctrine; life-safety-sensitive; contextual-only; source-admission-only; not-alert-authority; no-network-by-default; descriptor-gated; rights-gated; sensitivity-gated; raw-quarantine-receipts-only; no-publication
 current_path: connectors/nws-api/README.md
 truth_posture: CONFIRMED target README and current path, Directory Rules connector responsibility, connectors root boundary, NOAA family boundary, broader NWS sibling boundary, NWS API product page, official api.weather.gov documentation and FAQ checked 2026-07-15, API base URL, required User-Agent, content negotiation, cache guidance, linked point-to-grid discovery, unpublished reasonable rate limits, seven-day alert query window, OpenAPI surfaces, and current official documentation update date / CONFLICTED canonical implementation topology across connectors/noaa, connectors/nws, and connectors/nws-api / UNKNOWN executable connector code, package imports, active SourceDescriptors, accepted adapter home, endpoint allowlist, approved User-Agent configuration, tests, fixtures, schedules, emitted receipts, CI enforcement, deployment, and downstream release state / NEEDS VERIFICATION owners, topology ADR or migration note, source activation, current endpoint schemas and feature flags, rights and attribution, rate-limit behavior, parser contracts, fixture approval, validation bindings, correction propagation, deactivation, and rollback automation
@@ -82,6 +82,9 @@ notes:
 ---
 
 ## Status and evidence boundary
+
+> [!NOTE]
+> **Offline NWS alert-collection parser (2026-09-27).** `connectors/noaa/src/noaa/nws_alerts.py` parses *supplied* `api.weather.gov` alert collections (`/alerts/active?area=XX` or the seven-day `/alerts?area=XX`) as NWS-issued context only. It never fetches. Every candidate carries `authority: NWS_ISSUED_CONTEXT_ONLY` and `life_safety_authority: false`. Instruction text is never surfaced as a field (only `has_instruction`); it stays in the source-faithful raw feature. Freshness is computed at a caller-supplied `as_of` (not earlier than retrieval) as `WITHIN_SOURCE_WINDOW_AT_AS_OF`, `NOT_YET_EFFECTIVE`, `EXPIRED`, `ENDED`, `SUPERSEDED_IN_COLLECTION`, `CANCELLATION_MESSAGE`, or `UNKNOWN_NO_END_TIME`; nothing is ever labelled current. Non-`Actual` status, no UGC code in the requested area, expiry before sent, or updates/cancels without references quarantine the message. A `304` is `NO_OP`; only allow-listed cache headers are kept; further pages and the seven-day window are flagged as partial, not archive. Synthetic tests: `connectors/noaa/tests/test_nws_alerts.py`, run by `.github/workflows/nws-alerts-offline.yml`. Placed under README Option A (NOAA family package); the `noaa`/`nws`/`nws-api` topology decision remains open.
 
 > [!IMPORTANT]
 > **Document lifecycle:** `draft`  
