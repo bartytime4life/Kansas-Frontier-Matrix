@@ -19,6 +19,7 @@ for path in (ROOT / "connectors/usgs/src", ROOT / "packages/connectors-core/src"
         sys.path.insert(0, str(path))
 
 from connectors_core import core as cc  # noqa: E402
+from connectors_core import retrieval_episode  # noqa: E402
 from connectors_core import transport as ct  # noqa: E402
 from usgs import admit, earthquake, fetch  # noqa: E402
 
@@ -176,7 +177,7 @@ class RetrievalTests(unittest.TestCase):
         episode = retrieve(response(), url=plan.query_url)[0].episode
         self.assertEqual(episode["redacted_locator"],
                          "https://earthquake.usgs.gov/fdsnws/event/1/query")
-        self.assertEqual(episode["governance"], fetch.GOVERNANCE)
+        self.assertEqual(episode["governance"], retrieval_episode.GOVERNANCE)
         self.assertEqual(episode["episode_id"],
                          "kfm:source-retrieval-episode:" + episode["spec_hash"][7:31])
 
@@ -249,79 +250,24 @@ class AdmissionTests(unittest.TestCase):
                 self.assertIn("DESCRIPTOR_RIGHTS_UNRESOLVED", decision.reasons)
                 self.assertIn("DESCRIPTOR_ROLE_UNRESOLVED", decision.reasons)
 
-    def test_descriptor_parsing_is_strict(self):
-        root = Path(self._testMethodName)
-        cases = {"name: usgs\nrole: a\nrights: b\n": ("name", "role", "rights"),
-                 "name: usgs\nrole: a\nrole: b\n": (),
-                 "name: usgs\nnested:\n  key: v\n": (),
-                 "name: usgs\n  role: a\n": (),
-                 "name: other\nrole: a\nrights: b\n": ("name", "role", "rights")}
-        for text, keys in cases.items():
-            with self.subTest(text=text), patch.object(Path, "read_bytes",
-                                                       return_value=text.encode()):
-                self.assertEqual(tuple(admit.load_descriptor(root)), keys)
-        self.assertEqual(admit.descriptor_blockers({"name": "other", "role": "a", "rights": "b"}),
+    def test_descriptor_gate_is_shared(self):
+        # Strict parsing and spelling normalization are covered in
+        # tests/packages/connectors_core/test_descriptor_gate.py.
+        self.assertEqual(admit.descriptor_blockers({"name": "fema", "role": "a", "rights": "b"}),
                          ("DESCRIPTOR_INVALID",))
-        self.assertEqual(admit.descriptor_blockers({"name": "usgs", "role": "a", "rights": "tbd"}),
-                         ("DESCRIPTOR_RIGHTS_UNRESOLVED",))
-        oversized = b"name: usgs\n" + b"# pad\n" * admit.MAX_DESCRIPTOR_BYTES
-        with patch.object(Path, "read_bytes", return_value=oversized):
-            self.assertEqual(admit.load_descriptor(root), {})
-        with patch.object(Path, "read_bytes", return_value=b"name: \xff\n"):
-            self.assertEqual(admit.load_descriptor(root), {})
-        with patch.object(Path, "read_bytes", side_effect=OSError):
-            self.assertEqual(admit.load_descriptor(root), {})
-        self.assertEqual(admit.descriptor_blockers({}), ("DESCRIPTOR_INVALID",))
-
-    def test_documented_unresolved_spellings_stay_blocked(self):
-        for value in ("NEEDS VERIFICATION", "needs-verification", " TBD ", "'TBD'", "_TBD_",
-                      "Needs_Verification", "PROPOSED", "OWNER_TBD", ""):
-            with self.subTest(value=value):
-                self.assertEqual(admit.descriptor_blockers(
-                    {"name": "usgs", "role": value, "rights": value}),
-                    ("DESCRIPTOR_ROLE_UNRESOLVED", "DESCRIPTOR_RIGHTS_UNRESOLVED"))
         self.assertEqual(admit.descriptor_blockers(
-            {"name": "usgs", "role": "needs verification by steward", "rights": "x"}), ())
+            {"name": "usgs", "role": "NEEDS VERIFICATION", "rights": "b"}),
+            ("DESCRIPTOR_ROLE_UNRESOLVED",))
 
-    def test_episode_cannot_be_mutated_after_recording(self):
-        retrieval = retrieve(response())[0]
-        retrieval.episode["transport"]["body_digest"] = "sha256:" + "0" * 64
-        self.assertEqual(retrieval.episode["transport"]["body_digest"],
-                         "sha256:" + sha256(retrieval.body).hexdigest())
-
-    def test_inconsistent_retrievals_are_refused(self):
+    def test_tampered_retrieval_cannot_be_constructed(self):
+        # Full integrity matrix: tests/packages/connectors_core/test_retrieval_episode.py.
         good = retrieve(response())[0]
-        held = retrieve(response(403, b"no"))[0]
-        episode = good.episode
-        forged_id = dict(episode, episode_id="kfm:source-retrieval-episode:" + "0" * 24)
-        forged_category = json.loads(good.episode_json)
-        forged_category["transport"]["category"] = "RATE_LIMITED"
-        forged_length = json.loads(good.episode_json)
-        forged_length["transport"]["body_bytes"] += 1
-        cases = {
-            "RETRIEVAL_INTEGRITY": fetch.Retrieval(good.source_url, good.episode_json,
-                                                   body(2)),
-            "RETRIEVAL_STATE": fetch.Retrieval(held.source_url, held.episode_json, body()),
-            "RETRIEVAL_IDENTITY": fetch.Retrieval(good.source_url, json.dumps(forged_id),
-                                                  good.body),
-        }
-        for code, retrieval in cases.items():
-            with self.subTest(code=code), self.assertRaises(admit.AdmissionInputError) as ctx:
-                admit.admit(retrieval, descriptor=RESOLVED)
-            self.assertEqual(ctx.exception.args[0], code)
-        cases = {
-            "RETRIEVAL_STATE": fetch.Retrieval(good.source_url, json.dumps(forged_category),
-                                               good.body),
-            "RETRIEVAL_INTEGRITY": fetch.Retrieval(good.source_url, json.dumps(forged_length),
-                                                   good.body),
-        }
-        for code, retrieval in cases.items():
-            with self.subTest(code=code), self.assertRaises(admit.AdmissionInputError) as ctx:
-                admit.admit(retrieval, descriptor=RESOLVED)
-            self.assertEqual(ctx.exception.args[0], code)
-        missing_body = fetch.Retrieval(good.source_url, good.episode_json, None)
-        with self.assertRaises(admit.AdmissionInputError):
-            admit.admit(missing_body, descriptor=RESOLVED)
+        with self.assertRaises(fetch.FetchInputError) as ctx:
+            fetch.Retrieval(good.source_url, good.episode_json, body(2))
+        self.assertEqual(ctx.exception.args[0], "EPISODE_INTEGRITY")
+        good.episode["transport"]["body_digest"] = "sha256:" + "0" * 64
+        self.assertEqual(good.episode["transport"]["body_digest"],
+                         "sha256:" + sha256(good.body).hexdigest())
 
     def test_requires_recorded_retrieval(self):
         with self.assertRaises(TypeError):

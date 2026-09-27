@@ -13,6 +13,7 @@ async function moduleUrl(file) {
 const intake = await import(await moduleUrl("app/data-intake.ts"));
 const daily = await import(await moduleUrl("app/daily-baseline.ts"));
 const upstream = await import(await moduleUrl("app/api/event-atlas/upstream.ts"));
+const eventAtlas = await import(await moduleUrl("app/event-atlas.ts"));
 test("intake rejects malformed dates, credential URLs, duplicate file paths and unsupported payloads", () => {
   const fields = { title: "A real source", sourceId: "general", sourceUrl: "https://example.gov/data", description: "Historical public county records", license: "Unknown", sensitivity: "unknown", startDate: "1900-01-01", endDate: "1900-12-31" };
   assert.equal(intake.validateSubmission(fields).startDate, "1900-01-01");
@@ -34,4 +35,45 @@ test("provider redirects are rejected without using the redirect mode unsupporte
   globalThis.fetch = async (_url, init) => { calls++; assert.equal(init.redirect,"manual"); return new Response(null,{status:302,headers:{Location:"https://untrusted.test/data"}}); };
   try { await assert.rejects(upstream.boundedFetch("https://tigerweb.geo.census.gov/query",1000),/HTTP 302/); assert.equal(calls,1); }
   finally { globalThis.fetch = original; }
+});
+
+test("bounded upstream requests use only approved HTTPS origins and the validated URL", async () => {
+  const original = globalThis.fetch;
+  const calls = [];
+  globalThis.fetch = async (input, init) => {
+    calls.push(String(input));
+    assert.equal(init.redirect, "manual");
+    return new Response("ok");
+  };
+  try {
+    for (const url of [
+      "http://tigerweb.geo.census.gov/query",
+      "https://tigerweb.geo.census.gov:8443/query",
+      "https://user@tigerweb.geo.census.gov/query",
+      "https://tigerweb.geo.census.gov.evil.test/query",
+      "https://tigerweb.geo.census.gov/query#fragment",
+    ]) await assert.rejects(upstream.boundedFetch(url, 1000), /Non-allowlisted source/);
+    assert.equal(calls.length, 0);
+    const result = await upstream.boundedFetch("https://tigerweb.geo.census.gov/query?state=20", 1000);
+    assert.equal(result.text(), "ok");
+    assert.deepEqual(calls, ["https://tigerweb.geo.census.gov/query?state=20"]);
+  } finally { globalThis.fetch = original; }
+});
+
+test("bounded upstream responses preserve empty tiles and reject oversized bodies", async () => {
+  const original = globalThis.fetch;
+  try {
+    globalThis.fetch = async () => new Response(null, { status: 204 });
+    const empty = await upstream.boundedFetch("https://gibs.earthdata.nasa.gov/tile", 1000);
+    assert.equal(empty.bytes.length, 0);
+    globalThis.fetch = async () => new Response("too large", { headers: { "content-length": "1001" } });
+    await assert.rejects(upstream.boundedFetch("https://gibs.earthdata.nasa.gov/tile", 1000), /response budget/);
+  } finally { globalThis.fetch = original; }
+});
+
+test("NOAA smoke archive paths accept only exact calendar days", () => {
+  assert.equal(eventAtlas.smokeUrl("2026-09-26"), "https://satepsanone.nesdis.noaa.gov/pub/FIRE/web/HMS/Smoke_Polygons/KML/2026/09/hms_smoke20260926.kml");
+  for (const day of ["2026-02-30", "2026-09-26/../../private", "2026-09-26%2Fprivate", "//other.test"]) {
+    assert.throws(() => eventAtlas.smokeUrl(day), /exact calendar date/);
+  }
 });
