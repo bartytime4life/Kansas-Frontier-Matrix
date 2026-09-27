@@ -1,0 +1,98 @@
+{
+  "receipt_id": "genrec-fema-openfema-declarations-20260927",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/fema-openfema-declarations-offline.yml",
+    "connectors/fema-openfema/README.md",
+    "connectors/fema/README.md",
+    "connectors/fema/src/fema/openfema_declarations.py",
+    "connectors/fema/tests/README.md",
+    "connectors/fema/tests/test_openfema_declarations.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/fema-openfema-declarations-offline.yml": "sha256:8d6ca892cd3fab57847183de16bf1b85affe4bbe16ffb00ba0bd72eb09942d08",
+    "connectors/fema-openfema/README.md": "sha256:faa2b58b224e037bff69ecf96d5e4989f4c6e820786f3c6ad1c3cb0fee8a8c02",
+    "connectors/fema/README.md": "sha256:ee8196a0f8c03bd4aed7bc4bae2eb029d260231f936015feb8061928dc1de1ae",
+    "connectors/fema/src/fema/openfema_declarations.py": "sha256:78b089eec36c779a9f7d7e48f370db50fd125dbeb438ec240d159e5b67b73e63",
+    "connectors/fema/tests/README.md": "sha256:d9952bbaf1eb6644fd9dbe6e37029391f0ae22c87ab218f2cfe233145902a7a0",
+    "connectors/fema/tests/test_openfema_declarations.py": "sha256:c40a1162558c09fbc99cf79a947611f5437cc14c4bad6edaae2ff975ff7c5823"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:2e8dcf33440de0c5e45e3f3797677ae84dab9ebbbc71c5cf0e6428601fb25689",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/ddfb45c6aeca82d3c2cb909c945c6d0de73f26d3",
+      "connectors/fema-openfema/README.md",
+      "docs/sources/catalog/fema/openfema-disaster-declarations.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/fema-openfema-declarations-offline.yml": "PROPOSED",
+    "connectors/fema-openfema/README.md": "PROPOSED",
+    "connectors/fema/README.md": "PROPOSED",
+    "connectors/fema/src/fema/openfema_declarations.py": "CONFIRMED",
+    "connectors/fema/tests/README.md": "PROPOSED",
+    "connectors/fema/tests/test_openfema_declarations.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Offline standard-library synthetic tests",
+      "outcome": "PASS",
+      "reason": "Python 3.11: 9 unittest methods for openfema_declarations pass."
+    },
+    {
+      "gate": "Targeted mutation testing",
+      "outcome": "PASS",
+      "reason": "Metadata echo, id ordering, page gap, incident ordering, state scope, $orderby, and required-field checks each fail a test when disabled; a weak URL-allowlist test was found and tightened to assert the exact code."
+    },
+    {
+      "gate": "Repository guardrails",
+      "outcome": "PASS",
+      "reason": "scaffold_inventory --check, deny_test_runner, make workflow-security (485 workflows), make docs-critical-structure all pass."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation."
+    },
+    {
+      "gate": "Table activation, rights review, admission",
+      "outcome": "SKIPPED",
+      "reason": "No network transport, activation, lifecycle write, or publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/ddfb45c6aeca82d3c2cb909c945c6d0de73f26d3"
+    },
+    {
+      "id": "fema-family-placement",
+      "validated": true,
+      "evidence_ref": "repo:connectors/fema-openfema/README.md@ddfb45c6aeca82d3c2cb909c945c6d0de73f26d3"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-27T01:23:13Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Offline OpenFEMA Disaster Declarations Summaries (v2) planner/parser in the FEMA family package, per the per-table admission contract. Administrative role only; no activation, admission, or publication."
+}
