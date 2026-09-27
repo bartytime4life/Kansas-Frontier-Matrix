@@ -150,6 +150,16 @@ connectors/usgs-earthquake/
 
 ---
 
+### Current tests (2026-09-27)
+
+| File | Scope | Dependencies |
+|---|---|---|
+| `test_earthquake.py` | Request planning and snapshot parsing. | Standard library. |
+| `test_fetch_admit.py` | Retrieval classification, candidate routing, strict descriptor reading, no-socket guard. | Standard library. |
+| `test_retrieval_episode_conformance.py` | Every emitted episode category passes `tools/validators/source/validate_source_retrieval_episode.py` with the expected outcome, and the result table matches the validator. | Root project dependencies (`jsonschema`, `rfc8785`). |
+
+All three run in `.github/workflows/usgs-earthquake-offline.yml`.
+
 ## CI posture
 
 Default CI should run only offline deterministic tests.

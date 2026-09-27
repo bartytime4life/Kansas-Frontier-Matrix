@@ -1,4 +1,19 @@
-# connectors/usgs pyproject — greenfield placeholder
+# Package metadata for the USGS connector source tree under src/usgs.
+# Standard-library-only at runtime; no distribution or release is implied.
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "kfm-connector-usgs"
 version = "0.0.0"
+description = "Offline USGS earthquake request planning, retrieval-episode classification, and candidate routing"
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["usgs"]
+
+[tool.setuptools.package-data]
+usgs = ["descriptor.yaml"]

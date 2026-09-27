@@ -147,6 +147,16 @@ No package helper should claim that a source is activated, published, or authori
 
 ---
 
+### Implemented modules (2026-09-27)
+
+| Module | Behavior | Boundary |
+|---|---|---|
+| `earthquake.py` | Plans official summary-feed and FDSN query URLs; parses supplied GeoJSON bytes into immutable snapshot candidates. | Never fetches. |
+| `fetch.py` | Classifies one supplied response (status, headers, bytes, timing) into a `SourceRetrievalEpisode` that the repository contract validator accepts; keeps the body only when captured. The query string is dropped from `redacted_locator`. | No transport. The episode contract fixes `execution_mode: FIXTURE_ONLY` and `network_attempted: false`. An FDSN `204` with an empty body cannot be represented yet and is refused (`EMPTY_SUCCESS_UNREPRESENTABLE`). |
+| `admit.py` | Routes a classified retrieval to `RAW_CANDIDATE` (parsed), `QUARANTINE_CANDIDATE` (parser rejected), or `HOLD` (not captured). The final route is `HOLD` while `descriptor.yaml` leaves `role` or `rights` unresolved; the provisional lane is reported separately. | Never writes, never admits (`admission: NOT_ADMITTED`), never establishes coverage. |
+
+`descriptor.yaml` is unchanged: its `role` and `rights` values are steward decisions and are **NEEDS VERIFICATION**.
+
 ## Source-role discipline
 
 USGS is a multi-product source family. Package helpers must preserve source-role separation across sub-products:
