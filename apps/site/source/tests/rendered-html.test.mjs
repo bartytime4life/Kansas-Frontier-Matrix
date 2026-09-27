@@ -1130,15 +1130,19 @@ test("the built official-context adapter joins dated Census population and bound
   globalThis.fetch = async (input) => {
     const url = String(input);
     upstreamCalls.push(url);
-    if (url.includes("tigerweb.geo.census.gov")) return new Response(JSON.stringify({
+    let hostname = "";
+    try {
+      hostname = new URL(url).hostname;
+    } catch {}
+    if (hostname === "tigerweb.geo.census.gov") return new Response(JSON.stringify({
       type: "FeatureCollection",
       features: Array.from({ length: 105 }, (_, i) => ({ type: "Feature", geometry: { type: "Polygon", coordinates: [[[-98, 38], [-97, 38], [-97, 39], [-98, 39], [-98, 38]]] }, properties: { GEOID: `20${String(i * 2 + 1).padStart(3, "0")}`, BASENAME: `Fixture county ${i}`, STATE: "20", POP100: 6118, HU100: 2400, AREALAND: 2589988.110336, AREAWATER: 0 } })),
     }), { headers: { "content-type": "application/json" } });
-    if (url.includes("api.census.gov")) return new Response(JSON.stringify([
+    if (hostname === "api.census.gov") return new Response(JSON.stringify([
       ["NAME", "DP05_0001E", "state", "county"],
       ["Ellsworth County, Kansas", "6118", "20", "053"],
     ]), { headers: { "content-type": "application/json" } });
-    if (url.includes("earthquake.usgs.gov")) return new Response(JSON.stringify({
+    if (hostname === "earthquake.usgs.gov") return new Response(JSON.stringify({
       type: "FeatureCollection",
       metadata: { count: 1 },
       features: [{ type: "Feature", id: "us-test", geometry: { type: "Point", coordinates: [-98.1, 38.7, 5.4] }, properties: { title: "M 2.1 - central Kansas", place: "central Kansas", mag: 2.1, magType: "ml", time: 1789000000000, updated: 1789000300000, status: "reviewed", type: "earthquake", url: "https://earthquake.usgs.gov/earthquakes/eventpage/us-test" } }],
