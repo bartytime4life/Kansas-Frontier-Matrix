@@ -75,8 +75,8 @@ class Transport:
         return outcome
 
 
-def response(status=200, payload=b"", media="application/gzip"):
-    headers = {"Content-Type": media, "Content-Length": str(len(payload))}
+def response(status=200, payload=b"", media="application/gzip", extra=None):
+    headers = {"Content-Type": media, "Content-Length": str(len(payload)), **(extra or {})}
     return ct.TransportResponse(status_code=status, headers=headers,
                                 body_chunks=(payload,) if payload else ())
 
@@ -96,9 +96,9 @@ def uscrn(payload=USCRN_BODY, url=USCRN_URL, status=200):
                                                                "text/plain; charset=us-ascii")))
 
 
-def nws(payload=NWS_BODY, url=NWS_URL, status=200):
+def nws(payload=NWS_BODY, url=NWS_URL, status=200, extra=None):
     return fetch.retrieve_nws_alerts(url, **effects(response(status, payload,
-                                                             "application/geo+json")))
+                                                             "application/geo+json", extra)))
 
 
 class RetrievalTests(unittest.TestCase):
@@ -195,14 +195,27 @@ class AdmissionTests(unittest.TestCase):
                          ("SEVEN_DAY_WINDOW_NOT_ARCHIVE",))
 
     def test_parser_rejection_is_quarantine_candidate(self):
+        impossible_date = (uscrn_fixtures.line(1, date="20231301") + "\n").encode()
+        enum_object = nws_fixtures.collection([nws_fixtures.alert(status={"x": 1})])
         for retrieval, code in ((storm(b"not gzip"), "PARSE_NOT_GZIP"),
                                 (uscrn(b"1 2 3\n"), "PARSE_SCHEMA_DRIFT"),
-                                (nws(b"{}"), "PARSE_COLLECTION_SHAPE")):
+                                (uscrn(impossible_date), "PARSE_TIME_FORMAT"),
+                                (nws(b"{}"), "PARSE_COLLECTION_SHAPE"),
+                                (nws(enum_object), "PARSE_ALERT_ENUM")):
             with self.subTest(code=code):
                 decision = admit.admit(retrieval, descriptor=RESOLVED)
                 self.assertEqual((decision.route, decision.reasons), (admit.QUARANTINE, (code,)))
                 self.assertIsNone(decision.details_file or decision.station_year
                                   or decision.alerts)
+
+    def test_recorded_nws_cache_headers_reach_the_parser(self):
+        retrieval = nws(extra={"ETag": '"v7"', "Last-Modified": "Fri, 01 May 2026 11:59:00 GMT",
+                               "Cache-Control": "public, max-age=30"})
+        decision = admit.admit(retrieval, descriptor=RESOLVED)
+        # Cache-Control is not a SourceRetrievalEpisode field, so it cannot survive recording.
+        self.assertEqual(decision.alerts.cache_headers,
+                         (("Last-Modified", "Fri, 01 May 2026 11:59:00 GMT"), ("ETag", '"v7"')))
+        self.assertEqual(admit.admit(nws(), descriptor=RESOLVED).alerts.cache_headers, ())
 
     def test_uncaptured_retrievals_are_held(self):
         for retrieval in (storm(status=404, payload=b"no"), uscrn(status=403, payload=b"no"),
@@ -229,7 +242,8 @@ class AdmissionTests(unittest.TestCase):
                           "source_descriptor_ref": "kfm://source/other.source"},
                          {"retrieval_profile_ref": fetch.NWS_RETRIEVAL_PROFILE},
                          {"source_id": fetch.USCRN_SOURCE_ID,
-                          "source_descriptor_ref": f"kfm://source/{fetch.USCRN_SOURCE_ID}"}):
+                          "source_descriptor_ref": f"kfm://source/{fetch.USCRN_SOURCE_ID}"},
+                         {"source_id": [fetch.STORM_SOURCE_ID]}):
             with self.subTest(override=override):
                 forged = fetch.Retrieval(good.source_url, json.dumps({**base, **override}),
                                          good.body)
