@@ -97,6 +97,18 @@ class ClassifyTests(unittest.TestCase):
         self.assertIn('"user":{"id":7,"login":"synthetic_observer"}', candidate.raw_record_json)
         self.assertIn('"unknown_field":{"retained":true}', candidate.raw_record_json)
 
+    def test_nested_user_profiles_minimized(self):
+        profile = {"id": 9, "login": "synthetic_identifier", "name": "Nested Private Name",
+                   "orcid": "0000-0000-0000-0000"}
+        (candidate,) = parse([record(
+            identifications=[{"id": 1, "user": profile, "taxon": {"id": 1}}],
+            comments=[{"id": 2, "body": "synthetic", "user": dict(profile, id=10)}],
+            project_observations=[{"project": {"user": dict(profile, id=11)}}])]).records
+        self.assertNotIn("Nested Private Name", candidate.raw_record_json)
+        self.assertNotIn("orcid", candidate.raw_record_json)
+        self.assertEqual(candidate.raw_record_json.count('"login":"synthetic_identifier"'), 3)
+        self.assertIn('"body":"synthetic"', candidate.raw_record_json)
+
     def test_most_restrictive_geoprivacy_governs(self):
         cases = [({"geoprivacy": "obscured"}, "obscured", "obscured_randomized"),
                  ({"taxon_geoprivacy": "obscured"}, "obscured", "obscured_randomized"),
