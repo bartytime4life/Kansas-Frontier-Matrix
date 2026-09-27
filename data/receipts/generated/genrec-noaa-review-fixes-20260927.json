@@ -1,0 +1,107 @@
+{
+  "receipt_id": "genrec-noaa-review-fixes-20260927",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "connectors/census/src/census/admit.py",
+    "connectors/census/tests/test_fetch_admit.py",
+    "connectors/noaa/README.md",
+    "connectors/noaa/src/noaa/README.md",
+    "connectors/noaa/src/noaa/admit.py",
+    "connectors/noaa/src/noaa/nws_alerts.py",
+    "connectors/noaa/src/noaa/uscrn_hourly.py",
+    "connectors/noaa/tests/README.md",
+    "connectors/noaa/tests/test_fetch_admit.py",
+    "connectors/noaa/tests/test_nws_alerts.py",
+    "connectors/noaa/tests/test_uscrn_hourly.py"
+  ],
+  "artifact_hashes": {
+    "connectors/census/src/census/admit.py": "sha256:2d58e2a461fe922ef341ab1e848a6d06fb42f830c4da2acdd08da95587c2d21c",
+    "connectors/census/tests/test_fetch_admit.py": "sha256:009182cd291563fe31413f037925611d1f9d3c591d6b0275e63f24c1c006f4fd",
+    "connectors/noaa/README.md": "sha256:3543febd04af576d425d0e1d1810882c0f10c12761c5e17842c6147701cb7f44",
+    "connectors/noaa/src/noaa/README.md": "sha256:fe00170de36ac8fe90ddee1b3fbd5f61be07e68b114f541a0fbadeb4542375f0",
+    "connectors/noaa/src/noaa/admit.py": "sha256:8916da80b42ce59d3bd432d75425b9bdba8d5b3d27f52a89033ef7c6b3643caa",
+    "connectors/noaa/src/noaa/nws_alerts.py": "sha256:bb1e23c59aa10da6c93b4a3e12fdda6df991fbddcc197ee0c47bb933bbe91ebc",
+    "connectors/noaa/src/noaa/uscrn_hourly.py": "sha256:8a81126308dd19a73d0352e2de763c082e78141f48658f980e0fca12c5a4dc17",
+    "connectors/noaa/tests/README.md": "sha256:f76482c074b946b1b781262550f9a7b4804044026d932c0a9d932a04409196cb",
+    "connectors/noaa/tests/test_fetch_admit.py": "sha256:02a7d84c4f1d2f18cd9b43e65d456864451278961b5be7d0d375b7e1caa37cf4",
+    "connectors/noaa/tests/test_nws_alerts.py": "sha256:3bc832a1214a2e2b62a915e43b2fba2393285fffc7c2a85e4b4156fb86c13f48",
+    "connectors/noaa/tests/test_uscrn_hourly.py": "sha256:cbb72e80fd85a31a2b223507ca49bcf60f89158cee944b1ee6f908bc6fac0cc4"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:94f98813156b476fc094ad4c3c793c5cfb8bade69162e56b9ac373a588bc2000",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/d863afcef95bc3a6fc198edceba5e5823734c531",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4758"
+    ]
+  },
+  "truth_labels": {
+    "connectors/census/src/census/admit.py": "CONFIRMED",
+    "connectors/census/tests/test_fetch_admit.py": "CONFIRMED",
+    "connectors/noaa/README.md": "PROPOSED",
+    "connectors/noaa/src/noaa/README.md": "PROPOSED",
+    "connectors/noaa/src/noaa/admit.py": "CONFIRMED",
+    "connectors/noaa/src/noaa/nws_alerts.py": "CONFIRMED",
+    "connectors/noaa/src/noaa/uscrn_hourly.py": "CONFIRMED",
+    "connectors/noaa/tests/README.md": "PROPOSED",
+    "connectors/noaa/tests/test_fetch_admit.py": "CONFIRMED",
+    "connectors/noaa/tests/test_nws_alerts.py": "CONFIRMED",
+    "connectors/noaa/tests/test_uscrn_hourly.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Connector suites",
+      "outcome": "PASS",
+      "reason": "NOAA (44 tests) and Census suites pass with regressions for impossible USCRN dates, non-string NWS enums, recorded NWS ETag/Last-Modified reaching the parser, and non-string episode source ids; USGS/FEMA/GBIF/iNaturalist suites pass."
+    },
+    {
+      "gate": "Targeted mutation testing",
+      "outcome": "PASS",
+      "reason": "Reverting each of the five fixes (USCRN date bound, NWS enum type, NWS cache-header pass-through, NOAA and Census source_id type guard) makes a test fail; files verified restored. A 3000-iteration field fuzz of the three NOAA parsers raised only their bounded error types."
+    },
+    {
+      "gate": "Shared and repository checks",
+      "outcome": "PASS",
+      "reason": "tests/packages/connectors_core and tests/qa pass (157); scaffold_inventory --check; deny_test_runner PASS; docs-critical-structure 0 findings; ruff clean; committed-tree repository-topology findings identical to base."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation."
+    },
+    {
+      "gate": "Source activation, admission, release",
+      "outcome": "SKIPPED",
+      "reason": "No network library, descriptor or contract change, lifecycle write, alert relay, admission, or publication; routes stay HOLD."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/d863afcef95bc3a6fc198edceba5e5823734c531"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-27T14:25:11Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Follow-up to #4758, which merged before its Codex review fixes were pushed. Cache-Control, Date and Expires remain uncarried because they are not SourceRetrievalEpisode fields."
+}
