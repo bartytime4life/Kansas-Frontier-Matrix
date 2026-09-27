@@ -15,6 +15,7 @@ from connectors_core.descriptor_gate import (  # noqa: E402
     MAX_BYTES,
     descriptor_blockers,
     load_descriptor,
+    sensitivity_floor_blockers,
 )
 
 
@@ -71,3 +72,21 @@ def test_every_checked_in_connector_descriptor_still_holds():
         if not descriptor_blockers(descriptor, name=name):
             opened.append(str(path.relative_to(ROOT)))
     assert opened == []
+
+
+@pytest.mark.parametrize("floor", ["generalized", "Restricted", "QUARANTINE", " restricted "])
+def test_reviewed_non_public_floors_pass(floor):
+    assert sensitivity_floor_blockers({"sensitivity_floor": floor}) == ()
+
+
+@pytest.mark.parametrize("floor", ["public", "PUBLIC", "TBD", "", "publc", "internal",
+                                   "unknown", "needs verification", "restricted-ish"])
+def test_other_floors_block(floor):
+    assert sensitivity_floor_blockers({"sensitivity_floor": floor}) == (
+        "DESCRIPTOR_SENSITIVITY_FLOOR_UNREVIEWED",)
+
+
+def test_missing_or_malformed_descriptor_blocks():
+    assert sensitivity_floor_blockers({}) == ("DESCRIPTOR_SENSITIVITY_FLOOR_UNREVIEWED",)
+    assert sensitivity_floor_blockers("sensitivity_floor: restricted") == (
+        "DESCRIPTOR_SENSITIVITY_FLOOR_UNREVIEWED",)
