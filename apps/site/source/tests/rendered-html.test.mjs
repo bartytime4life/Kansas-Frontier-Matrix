@@ -1155,7 +1155,13 @@ test("the built official-context adapter joins dated Census population and bound
     assert.equal(countyPayload.data.features[0].properties.populationEstimateYear, 2020);
     assert.equal(countyPayload.data.features.length, 105);
     assert.equal(countyPayload.data.features[0].properties.housingUnits, 2400);
-    assert.equal(upstreamCalls.some((url) => url.includes("api.census.gov")), false);
+    assert.equal(upstreamCalls.some((url) => {
+      try {
+        return new URL(url).hostname === "api.census.gov";
+      } catch {
+        return false;
+      }
+    }), false);
 
     const earthquakeResponse = await worker.fetch(new Request("http://localhost/api/live-context?feed=usgs-earthquakes"), {}, { waitUntil() {}, passThroughOnException() {} });
     assert.equal(earthquakeResponse.status, 200);
