@@ -4,6 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { readBoundedJson } from "./bounded-json";
 import { catalogSourceRoles, layerHasSourceRole } from "./catalog-source-roles";
+import { buildAvailabilityBins } from "./timeline-availability";
+import { deriveMapSignals } from "./map-signals";
 import { parseRepositoryObservation, type RepositoryConnection } from "./repository-status";
 import { replaceExplorerHistory } from "./embed-runtime";
 import { parseSavedWorkspaceList } from "./saved-workspaces";
@@ -11,11 +13,11 @@ import { BASELINE_STACKS, currentUtcDay } from "./daily-baseline";
 import { SourceQualityRow } from "./source-quality-row";
 import { planOfficialRefresh } from "./official-refresh-plan";
 import { ArchiveDaySlider } from "./archive-day-slider";
-import { DataNotices, RenderQualityControl, TerrainQuickControls } from "./map-toolbar";
-import { EarthEngineGlobe } from "./earth-engine-globe";
+import { DataNotices, LayerSceneControls, RenderQualityControl } from "./map-toolbar";
 import { EarthEngineDisplayControls } from "./earth-engine-display";
+import { EarthEngineRasterFallback, type EarthEngineDisplayState } from "./earth-engine-raster-fallback";
 import { useEarthEngineContext } from "./earth-engine-context-client";
-import { applyProjectionNavigationLimits, GLOBE_VIEWPOINTS, readGlobeCamera, REGIONAL_NAVIGATION_BOUNDS, type GlobeCameraReading, type GlobeViewpoint } from "./globe-context";
+import { applyProjectionNavigationLimits, GLOBE_VIEWPOINTS, REGIONAL_NAVIGATION_BOUNDS } from "./globe-context";
 import { browserRenderBudget, mapRuntimeErrorCode, readRenderQuality, sampleMapRuntimeHealth, QUALITY_STORAGE_KEY, type MapRuntimeCheckFailure, type RenderQuality } from "./map-performance";
 import type { Feature, Geometry } from "geojson";
 import type { GeoJSONSource, Map as MapLibreMap, MapSourceDataEvent, Popup, ScaleControl } from "maplibre-gl";
@@ -42,10 +44,11 @@ import {
   distanceMiles,
   reorderRegistryLayers,
   setStructureExtrusions,
-  setTerrainHeightOverlay,
-  setTerrainPresentation,
+  setTerrainHeightOverlay as applyTerrainHeightOverlay,
+  setTerrainPresentation as applyTerrainPresentation,
   setElevationExaggeration,
   TERRAIN_HILLSHADE_LAYER_ID,
+  TERRAIN_HILLSHADE_SOURCE_ID,
   TERRAIN_COLOR_SOURCE_ID,
   TERRAIN_SOURCE_ID,
   type Structures3DState,
@@ -162,7 +165,7 @@ import {
   type StoryScene,
   type TrustState,
 } from "./workspace-model";
-import { STRUCTURE_3D_SOURCE, TERRAIN_SOURCES } from "./terrain-sources";
+import { STRUCTURE_3D_SOURCE, TERRAIN_SOURCES, terrainSourceFor, type TerrainProvider } from "./terrain-sources";
 import { EXTERNAL_CONTEXT_SOURCES } from "./external-context-sources";
 import {
   applyOfficialContextState,
@@ -185,7 +188,6 @@ import {
   type OfficialContextPayload,
   type OfficialContextState,
 } from "./live-context";
-import { SITE_REGISTRY_COUNTS } from "./site-registry";
 import {
   isNoaaRadarManifest,
   nextNoaaRadarFrameIndex,
@@ -226,6 +228,7 @@ import {
   NOAA_HYDROLOGY_NETWORK_API_PATH,
   noaaGaugeNetworkGeoJson,
   parseNoaaGaugeNetwork,
+  type NoaaGaugeFeatureProperties,
 } from "./noaa-hydrology";
 
 if (!LAYER_REGISTRY.some((layer) => layer.id === COUNTY_STARTER_LAYER.id)) {
@@ -463,43 +466,9 @@ const DOMAIN_HOLDS = Object.freeze([
   { domain: "Archaeology", state: "RESTRICTED", detail: "No precise archaeology layer is exposed; generalized story seams remain the safe extension point." },
   { domain: "Historical Geography", state: "HELD", detail: "No admitted historical boundary or archival map layer is connected." },
   { domain: "People / Land", state: "RESTRICTED", detail: "The Site does not expose person-level, parcel-level, or sensitive land detail." },
-  { domain: "Terrain / Elevation", state: "PUBLIC-SAFE", detail: "External DEM terrain plus optional USGS 3DEP LiDAR-derived hillshade and slope are display context only; raw point clouds and governed KFM elevation evidence remain held." },
+  { domain: "Terrain / Elevation", state: "PUBLIC-SAFE", detail: "External DEM terrain plus optional USGS 3DEP mosaic hillshade and slope are display context only; raw point clouds and governed KFM elevation evidence remain held." },
   { domain: "Imagery", state: "PUBLIC-SAFE", detail: "Optional attributed imagery is display context only; it is never KFM evidence." },
 ] as const);
-
-type PriorityContextGroup = Readonly<{
-  id: "seismic" | "hydrology" | "fire-smoke" | "airflow";
-  title: string;
-  description: string;
-  sourceIds: readonly OfficialContextId[];
-}>;
-
-const PRIORITY_CONTEXT_GROUPS: readonly PriorityContextGroup[] = Object.freeze([
-  Object.freeze({
-    id: "seismic",
-    title: "Earthquakes + seismic context",
-    description: "USGS recent catalog events and Raspberry Shake station locations. Neither connection is an alert or warning.",
-    sourceIds: Object.freeze(["usgs-earthquakes", "raspberry-shake-stations"] as const),
-  }),
-  Object.freeze({
-    id: "hydrology",
-    title: "Hydrology + water systems",
-    description: "Gauge observations, NOAA NWPS status, hydrography, watershed boundaries, and clearly labeled NWM model context.",
-    sourceIds: Object.freeze(["usgs-streamflow", "noaa-nwps-gauges", "usgs-3dhp-hydrography", "usgs-wbd-watersheds", "noaa-nwm-analysis", "noaa-nwm-short-range"] as const),
-  }),
-  Object.freeze({
-    id: "fire-smoke",
-    title: "Fire + smoke context",
-    description: "NIFC incident reports, NASA thermal detections, NOAA GOES GeoColor imagery, smoke footprints, alerts, and radar. Each keeps its own source time and meaning.",
-    sourceIds: Object.freeze(["nifc-fire-reports", "nasa-gibs-fire-points", "nasa-firms-active-fire", "noaa-goes-geocolor", "noaa-hms-smoke", "nws-alerts", "nws-radar"] as const),
-  }),
-  Object.freeze({
-    id: "airflow",
-    title: "Airflow · forecast wind",
-    description: "NWS 10 m sustained wind speed and direction barbs. Provider-default forecast image; exact valid time is not resolved here.",
-    sourceIds: Object.freeze(["nws-forecast-wind"] as const),
-  }),
-]);
 
 const officialContextStateLabel = (state: OfficialContextState) => ({
   idle: "NOT LOADED",
@@ -1076,6 +1045,7 @@ export default function Home() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const earthEngineContext = useEarthEngineContext();
+  const [earthEngineDisplay, setEarthEngineDisplay] = useState<EarthEngineDisplayState>({ visible: {}, opacity: {} });
   const styleGenerationReadyRef = useRef(false);
   const mapMutationErrorRef = useRef<string | null>(null);
   const popupRef = useRef<Popup | null>(null);
@@ -1124,6 +1094,9 @@ export default function Home() {
   const basemapRef = useRef<BasemapKey>("standard");
   const projectionRef = useRef<"mercator" | "globe">("mercator");
   const scenePresetRef = useRef<ScenePresetId>("overview-2d");
+  const terrainProviderRef = useRef<TerrainProvider>("mapzen");
+  const setTerrainPresentation = (map: MapLibreMap, enabled: boolean, scale: number) => applyTerrainPresentation(map, enabled, scale, terrainSourceFor(terrainProviderRef.current));
+  const setTerrainHeightOverlay = (map: MapLibreMap, enabled: boolean) => applyTerrainHeightOverlay(map, enabled, terrainSourceFor(terrainProviderRef.current));
   const verticalExaggerationRef = useRef(1);
   const topographicOverlayRef = useRef(false);
   const atmospherePresetRef = useRef<AtmospherePreset>("night");
@@ -1160,7 +1133,6 @@ export default function Home() {
   const mapUtilityButtonRef = useRef<HTMLButtonElement>(null);
   const globalSearchInputRef = useRef<HTMLInputElement>(null);
   const mapUtilityPanelRef = useRef<HTMLElement>(null);
-  const legacyLayerControlsRef = useRef<HTMLDetailsElement>(null);
   const mapUtilityReturnRef = useRef<HTMLElement | null>(null);
   const drawerTabRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const pendingViewRef = useRef<ViewState | null>(null);
@@ -1211,12 +1183,9 @@ export default function Home() {
   const [layerOrder, setLayerOrder] = useState<string[]>(defaultOrder);
   const [basemap, setBasemap] = useState<BasemapKey>("standard");
   const [view, setView] = useState<ViewState>(KANSAS_VIEW);
-  const [earthEngineOpen, setEarthEngineOpen] = useState(false);
-  const [globeCamera, setGlobeCamera] = useState<GlobeCameraReading | null>(null);
-  const [globeCameraMoving, setGlobeCameraMoving] = useState(false);
   const regionalViewRef = useRef<ViewState>(KANSAS_VIEW);
-  const earthEngineTriggerRef = useRef<HTMLButtonElement>(null);
   const [scenePreset, setScenePreset] = useState<ScenePresetId>("overview-2d");
+  const [terrainProvider, setTerrainProvider] = useState<TerrainProvider>("mapzen");
   const [terrainState, setTerrainState] = useState<TerrainPresentationState>("OFF");
   const [topographicOverlay, setTopographicOverlay] = useState(false);
   const [terrainElevationReading, setTerrainElevationReading] = useState<TerrainElevationReading | null>(null);
@@ -1300,8 +1269,7 @@ export default function Home() {
   const [sourceStatusOpen, setSourceStatusOpen] = useState(false);
   const [instrumentOpen, setInstrumentOpen] = useState(false);
   const [leftPanelMode, setLeftPanelMode] = useState<LeftPanelMode>("layers");
-  const [showAllOfficialSources, setShowAllOfficialSources] = useState(false);
-  const [layerCatalogView, setLayerCatalogView] = useState<"official" | "local">("official");
+  const [layerCatalogView, setLayerCatalogView] = useState<"local" | "official">("official");
   const [officialSourceQuery, setOfficialSourceQuery] = useState("");
   const [rightOpen, setRightOpen] = useState(false);
   const [timelineOpen, setTimelineOpen] = useState(false);
@@ -1576,6 +1544,9 @@ export default function Home() {
     () => officialContextRuntimeVisibility(officialVisibility, temporalQuery.frame, noaaRadarRenderable, noaaRadarFrameTime),
     [noaaRadarFrameTime, noaaRadarRenderable, officialVisibility, temporalQuery.frame],
   );
+  const composedSurfaceCount = activeLayers.filter((layer) => layer.renderers.some((renderer) => renderer.spec.type === "fill")).length
+    + visibleOfficialSources.filter((source) => effectiveOfficialVisibility[source.id] && (source.kind === "OPERATIONAL_WMS" || source.layerIds.some((id) => id.endsWith("-fill")))).length
+    + Object.entries(earthEngineDisplay.visible).filter(([id, shown]) => shown && (id === "ee-3dep" || year === 2024)).length;
   const withheldOfficialCount = temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME ? 0 : visibleOfficialCount;
   const selectedIsHeldOfficialContext = Boolean(
     selected
@@ -1628,6 +1599,13 @@ export default function Home() {
     : streamflowState;
   const streamflowSelectedAtPresent = officialVisibility["usgs-streamflow"] && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
   const noaaHydrologySelectedAtPresent = officialVisibility["noaa-nwps-gauges"] && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
+  const mapSignals = useMemo(() => deriveMapSignals({
+    streamflow: streamflowSelectedAtPresent && (streamflowState === "ready" || streamflowState === "partial") ? streamflowFrame : null,
+    gauges: noaaHydrologySelectedAtPresent && ["ready", "partial"].includes(officialStates["noaa-nwps-gauges"])
+      ? officialPayloads["noaa-nwps-gauges"]?.data.features.map((feature) => feature.properties as NoaaGaugeFeatureProperties) : undefined,
+    entered: temporalFrameSummary.entered.length,
+    exited: temporalFrameSummary.exited.length,
+  }), [noaaHydrologySelectedAtPresent, officialPayloads, officialStates, streamflowFrame, streamflowSelectedAtPresent, streamflowState, temporalFrameSummary]);
   const noaaRadarLoopFrames = useMemo(
     () => selectNoaaRadarLoopFrames(noaaRadarManifest?.frames ?? [], noaaRadarLoopSpan, NOAA_RADAR_MAX_LOOP_FRAMES),
     [noaaRadarLoopSpan, noaaRadarManifest?.frames],
@@ -1771,6 +1749,8 @@ export default function Home() {
     const query = buildTemporalQuery(temporalMode, step, sweepRangeStart, sweepRangeEnd, temporalSequence, movingWindowFrames);
     return [step, temporalRecordsForQuery(temporalMetricLayers, query, true).length];
   })), [movingWindowFrames, sweepRangeEnd, sweepRangeStart, temporalMetricLayers, temporalMode, temporalSequence, timelineSteps]);
+  const availabilityBins = useMemo(() => buildAvailabilityBins(timelineSteps, availabilityByStep), [timelineSteps, availabilityByStep]);
+  const hasTimelineRecords = availabilityBins.some((bin) => bin.peak > 0);
   const sourceStateCounts = useMemo(() => ({
     ready: Object.values(sourceStates).filter((state) => state === "ready").length,
     loading: Object.values(sourceStates).filter((state) => state === "loading").length,
@@ -2076,14 +2056,12 @@ export default function Home() {
       const matchesQuery = !query || `${layer.title} ${layer.description} ${layer.category} ${layer.datasetName} ${layer.domain}`.toLowerCase().includes(query);
       return matchesQuery && layerHasSourceRole(layer, catalogSourceRole);
     }).map((layer) => layer.id));
-  }, [debouncedLayerQuery, catalogSourceRole]);
+  }, [catalogSourceRole, debouncedLayerQuery]);
   const listedOfficialSources = useMemo(() => {
     const query = officialSourceQuery.trim().toLowerCase();
-    return OFFICIAL_CONTEXT_SOURCES.filter((source) =>
-      (query || showAllOfficialSources || officialVisibility[source.id]) &&
-      (!query || `${source.title} ${source.shortTitle} ${source.organization} ${source.domain} ${source.endpointLabel}`.toLowerCase().includes(query))
-    ).sort((a, b) => Number(officialVisibility[b.id]) - Number(officialVisibility[a.id]));
-  }, [officialSourceQuery, officialVisibility, showAllOfficialSources]);
+    return OFFICIAL_CONTEXT_SOURCES.filter((source) => !query || `${source.title} ${source.shortTitle} ${source.organization} ${source.domain}`.toLowerCase().includes(query))
+      .sort((a, b) => Number(b.defaultVisibility) - Number(a.defaultVisibility));
+  }, [officialSourceQuery]);
   const searchResults = useMemo<GlobalSearchItem[]>(() => {
     const query = debouncedGlobalQuery.trim().toLowerCase();
     if (!query) return [];
@@ -3053,10 +3031,14 @@ export default function Home() {
       setLiveInstrument("radar");
     }
     if (id === "usgs-streamflow" && visible) setLiveInstrument("river");
+    const source = OFFICIAL_CONTEXT_BY_ID[id];
+    if (visible && !source.apiPath && !source.managedAdapterPath && id !== "nws-radar") {
+      officialRasterFailuresRef.current.delete(id);
+      setOfficialErrors(current => current[id] ? ({ ...current, [id]: undefined }) : current);
+    }
     const next = { ...officialVisibilityRef.current, [id]: visible };
     officialVisibilityRef.current = next;
     setOfficialVisibility(next);
-    const source = OFFICIAL_CONTEXT_BY_ID[id];
     if (source.apiPath && visible && !officialPayloadsRef.current[id as OfficialContextFeedId]) void refreshOfficialContext(id as OfficialContextFeedId);
     if (id === "usgs-streamflow" && visible && !streamflowBundleRef.current) void refreshStreamflow(streamflowRange, streamflowSelectedStationId);
     if (id === "noaa-nwps-gauges" && visible && !officialPayloadsRef.current["noaa-nwps-gauges"]) void refreshNoaaHydrologyNetwork();
@@ -3094,11 +3076,6 @@ export default function Home() {
     else setOfficialContextVisible(id, true);
     announce(`Retrying ${source.shortTitle}`);
   };
-
-  const setPriorityContextGroupVisible = useCallback((sourceIds: readonly OfficialContextId[], visible: boolean) => {
-    sourceIds.forEach((sourceId) => setOfficialContextVisible(sourceId, visible));
-    announce(`${visible ? "Showing" : "Hiding"} ${sourceIds.length} connected context layers`);
-  }, [announce, setOfficialContextVisible]);
 
   const applyDomainLens = useCallback((domain: (typeof layerDomains)[number]) => {
     setLayerDomain(domain);
@@ -3169,6 +3146,43 @@ export default function Home() {
     document.addEventListener("visibilitychange", visible);
     return () => { clearInterval(timer); document.removeEventListener("visibilitychange", visible); };
   }, [refreshOfficialContext]);
+
+  useEffect(() => {
+    // Fixed provider URLs otherwise stay in MapLibre's tile cache for the
+    // whole visit. Revalidate only selected current rasters at their display
+    // cadence; exact radar and GeoColor frames have separate dated schedulers.
+    const cadence = {
+      "nws-forecast-wind": 5 * 60_000,
+      "noaa-nwm-analysis": 15 * 60_000,
+      "noaa-nwm-short-range": 15 * 60_000,
+      "nasa-firms-active-fire": 60 * 60_000,
+      "usgs-3dhp-hydrography": 60 * 60_000,
+      "usgs-3dep-hillshade": 6 * 60 * 60_000,
+      "usgs-3dep-slope": 6 * 60 * 60_000,
+    } satisfies Partial<Record<OfficialContextId, number>>;
+    const last = new Map<OfficialContextId, number>();
+    const refresh = () => {
+      const map = mapRef.current;
+      if (document.hidden || !map || !styleGenerationReadyRef.current || !map.isStyleLoaded()
+        || projectionRef.current === "globe" || temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) return;
+      const now = Date.now();
+      for (const [id, milliseconds] of Object.entries(cadence) as [OfficialContextId, number][]) {
+        const source = OFFICIAL_CONTEXT_BY_ID[id];
+        if (!officialVisibilityRef.current[id] || !map.getSource(source.sourceId) || officialRasterFailuresRef.current.has(id)) {
+          last.delete(id);
+          continue;
+        }
+        const previous = last.get(id);
+        if (previous === undefined) { last.set(id, now); continue; }
+        if (now - previous < milliseconds) continue;
+        last.set(id, now);
+        map.refreshTiles(source.sourceId);
+      }
+    };
+    const timer = window.setInterval(refresh, 60_000);
+    document.addEventListener("visibilitychange", refresh);
+    return () => { window.clearInterval(timer); document.removeEventListener("visibilitychange", refresh); };
+  }, []);
 
   useEffect(() => {
     if (temporalQuery.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) return;
@@ -3516,47 +3530,43 @@ export default function Home() {
     setMapContextOpen(false);
     setCurrentWorkspace("knowledge");
     setLeftPanelMode(mode);
-    if (mode === "layers" || mode === "live") setLayerCatalogView("official");
+    if (mode === "live") setLayerCatalogView("official");
     setLeftOpen(true);
     setRightOpen(false);
     dismissMapUtilityWithoutFocus();
     if (isCompact) setTimelineOpen(false);
-    // The panel stays mounted while closed; a fresh open should start at discovery.
-    const body = leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body");
-    if (body) body.scrollTo({ top: 0, behavior: "instant" });
   }, [dismissMapUtilityWithoutFocus, isCompact]);
 
   const openMapSettings = useCallback(() => {
     openAtlasPanel("layers");
     setLayerCatalogView("local");
     window.setTimeout(() => {
-      const settings = leftPanelRef.current?.querySelector<HTMLElement>("#map-settings");
-      settings?.focus();
-      settings?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+      const settings = leftPanelRef.current?.querySelector<HTMLDetailsElement>("#map-settings");
+      if (!settings) return;
+      settings.open = true;
+      settings.querySelector<HTMLElement>("summary")?.focus();
+      settings.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
     }, 0);
   }, [openAtlasPanel, reducedMotion]);
 
-  const revealLegacyLayerControls = useCallback((targetId: string) => {
-    setLayerCatalogView("local");
-    if (legacyLayerControlsRef.current) legacyLayerControlsRef.current.open = true;
-    setPendingCatalogTarget(targetId);
-  }, []);
-
   useEffect(() => {
-    if (!pendingCatalogTarget) return;
+    if (!pendingCatalogTarget || debouncedLayerQuery.trim()) return;
     const frame = window.requestAnimationFrame(() => {
+      if (pendingCatalogTarget === "earth-engine-context-controls") leftPanelRef.current?.querySelector<HTMLDetailsElement>(".map-layer-advanced")?.setAttribute("open", "");
       const target = document.getElementById(pendingCatalogTarget);
       target?.focus({ preventScroll: true });
       target?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
       setPendingCatalogTarget(null);
     });
     return () => window.cancelAnimationFrame(frame);
-  }, [pendingCatalogTarget, reducedMotion]);
+  }, [debouncedLayerQuery, pendingCatalogTarget, reducedMotion]);
 
-  const openLiveContextCatalog = useCallback(() => {
+  const openEarthEngineLayers = useCallback(() => {
+    setLayerQuery("");
     openAtlasPanel("layers");
-    setPendingCatalogTarget("official-context-catalog");
-    announce("Opened live operational context in Domains and live data");
+    setLayerCatalogView("local");
+    setPendingCatalogTarget("earth-engine-context-controls");
+    announce("Opened installed Earth Engine layers");
   }, [announce, openAtlasPanel]);
 
   useEffect(() => {
@@ -4074,7 +4084,7 @@ export default function Home() {
         setLeftPanelMode("layers");
         setLayerCatalogView("local");
         setLeftOpen(true);
-        window.setTimeout(() => leftPanelRef.current?.querySelector<HTMLElement>("#map-settings")?.scrollIntoView({ behavior: "auto", block: "start" }), 0);
+        window.setTimeout(() => { const settings = leftPanelRef.current?.querySelector<HTMLDetailsElement>("#map-settings"); if (settings) settings.open = true; }, 0);
       }
       if (restoredMapUtilityOpen && compactRef.current) {
         setLeftOpen(false);
@@ -4140,6 +4150,10 @@ export default function Home() {
   useEffect(() => {
     let disposed = false;
     let resizeObserver: ResizeObserver | null = null;
+    const rasterRetryTimers = new Map<OfficialContextId, number>();
+    const rasterRetryCounts = new Map<OfficialContextId, number>();
+    let terrainRetryTimer: number | null = null;
+    let terrainRetryCount = 0;
     const mapContainer = mapContainerRef.current;
     if (!mapContainer) return;
 
@@ -4575,13 +4589,10 @@ export default function Home() {
         interactionHandlersBound = true;
 
         map.on("movestart", () => {
-          setGlobeCameraMoving(true);
           const center = map.getCenter();
           lastKnownGoodViewRef.current = { center: [center.lng, center.lat], zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch() };
         });
         map.on("moveend", () => {
-          setGlobeCameraMoving(false);
-          setGlobeCamera(readGlobeCamera(map));
           const center = map.getCenter();
           const nextView: ViewState = { center: [center.lng, center.lat], zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch() };
           const bounds = map.getBounds();
@@ -4601,9 +4612,6 @@ export default function Home() {
               setCameraHistoryLength(nextHistory.length);
             }
           }
-        });
-        map.on("idle", () => {
-          if (projectionRef.current === "globe") setGlobeCamera(readGlobeCamera(map));
         });
         map.on("error", (event) => {
           const sourceId = (event as typeof event & { sourceId?: string }).sourceId;
@@ -4634,9 +4642,28 @@ export default function Home() {
             return;
           }
           if (affectedOfficialContext) {
-            officialRasterFailuresRef.current.add(affectedOfficialContext.id);
-            setOfficialStates(current => current[affectedOfficialContext.id] === "error" ? current : ({ ...current, [affectedOfficialContext.id]: "error" }));
-            setOfficialErrors(current => current[affectedOfficialContext.id] ? current : ({ ...current, [affectedOfficialContext.id]: message }));
+            const id = affectedOfficialContext.id;
+            officialRasterFailuresRef.current.add(id);
+            setOfficialStates(current => ({ ...current, [id]: current[id] === "ready" || current[id] === "partial" ? "partial" : "error" }));
+            setOfficialErrors(current => ({ ...current, [id]: message }));
+            // A single failed display tile does not invalidate the tiles already
+            // on screen. Retry the selected current source twice, then leave its
+            // explicit Retry control available if the upstream is still down.
+            if (id !== "noaa-goes-geocolor" && !rasterRetryTimers.has(id) && (rasterRetryCounts.get(id) ?? 0) < 2) {
+              const attempt = (rasterRetryCounts.get(id) ?? 0) + 1;
+              rasterRetryCounts.set(id, attempt);
+              const timer = window.setTimeout(() => {
+                rasterRetryTimers.delete(id);
+                if (disposed || document.hidden || mapRef.current !== map || !styleGenerationReadyRef.current
+                  || !officialVisibilityRef.current[id] || temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME
+                  || !map.getSource(affectedOfficialContext.sourceId)) return;
+                officialRasterFailuresRef.current.delete(id);
+                setOfficialStates(current => ({ ...current, [id]: current[id] === "partial" ? "partial" : "loading" }));
+                setOfficialErrors(current => ({ ...current, [id]: undefined }));
+                map.refreshTiles(affectedOfficialContext.sourceId);
+              }, attempt * 6000);
+              rasterRetryTimers.set(id, timer);
+            }
             return;
           }
           runtimeError = message;
@@ -4646,6 +4673,25 @@ export default function Home() {
             setTerrainState("ERROR");
             degradedReason = `Terrain DEM is unavailable; the 2D map remains usable. ${message}`;
             setRuntime({ kind: "degraded", message: degradedReason });
+            if (terrainRetryTimer === null && terrainRetryCount < 2) {
+              terrainRetryCount += 1;
+              terrainRetryTimer = window.setTimeout(() => {
+                terrainRetryTimer = null;
+                if (disposed || document.hidden || mapRef.current !== map || !styleGenerationReadyRef.current
+                  || scenePresetRef.current !== "elevation-3d" || !map.getSource(TERRAIN_SOURCE_ID)) return;
+                failedTerrainSourceRef.current = null;
+                failedSourceIds.delete(TERRAIN_SOURCE_ID);
+                runtimeError = null;
+                degradedReason = null;
+                setTerrainState("LOADING");
+                map.refreshTiles(TERRAIN_SOURCE_ID);
+              }, terrainRetryCount * 6000);
+            }
+            return;
+          }
+          if (sourceId === TERRAIN_HILLSHADE_SOURCE_ID) {
+            if (map.getLayer(TERRAIN_HILLSHADE_LAYER_ID)) map.setLayoutProperty(TERRAIN_HILLSHADE_LAYER_ID, "visibility", "none");
+            announce("Terrain shadows are unavailable; the elevation surface remains active");
             return;
           }
           if (sourceId === TERRAIN_COLOR_SOURCE_ID) {
@@ -4673,13 +4719,17 @@ export default function Home() {
           if (event.sourceId === TERRAIN_SOURCE_ID && event.isSourceLoaded && failedTerrainSourceRef.current !== map.getSource(TERRAIN_SOURCE_ID)) {
             setTerrainState("READY");
             failedSourceIds.delete(TERRAIN_SOURCE_ID);
+            if (terrainRetryTimer !== null) { window.clearTimeout(terrainRetryTimer); terrainRetryTimer = null; }
             if (degradedReason?.startsWith("Terrain DEM is unavailable")) { degradedReason = null; runtimeError = null; }
           }
           if (!event.sourceId) return;
           const officialSource = OFFICIAL_CONTEXT_BY_SOURCE_ID[event.sourceId];
           if (officialSource && officialSource.id !== "nws-radar" && !officialSource.apiPath && !officialSource.managedAdapterPath && event.isSourceLoaded && !officialRasterFailuresRef.current.has(officialSource.id)) {
+            const pendingRetry = rasterRetryTimers.get(officialSource.id);
+            if (pendingRetry !== undefined) { window.clearTimeout(pendingRetry); rasterRetryTimers.delete(officialSource.id); }
             const nextState = officialSource.id === "noaa-goes-geocolor" && (noaaSatelliteManifestRef.current?.partial || noaaSatelliteManifestRef.current?.freshness === "delayed") ? "partial" : "ready";
             setOfficialStates(current => current[officialSource.id] === nextState ? current : ({ ...current, [officialSource.id]: nextState }));
+            setOfficialErrors(current => current[officialSource.id] ? ({ ...current, [officialSource.id]: undefined }) : current);
           }
           const layer = LAYER_REGISTRY.find((candidate) => candidate.sourceId === event.sourceId);
           if (!layer) return;
@@ -4690,6 +4740,10 @@ export default function Home() {
         });
         map.on("idle", () => {
           runMapMutation("Map readiness check", () => {
+            if (scenePresetRef.current === "elevation-3d" && map.getTerrain()?.source === TERRAIN_SOURCE_ID
+              && map.isSourceLoaded(TERRAIN_SOURCE_ID) && failedTerrainSourceRef.current !== map.getSource(TERRAIN_SOURCE_ID)) {
+              setTerrainState("READY");
+            }
             const probe = refreshMaplibreProbe();
             const mutationError = mapMutationErrorRef.current;
             const ready = probe.styleLoaded
@@ -4722,6 +4776,8 @@ export default function Home() {
 
     return () => {
       disposed = true;
+      for (const timer of rasterRetryTimers.values()) window.clearTimeout(timer);
+      if (terrainRetryTimer !== null) window.clearTimeout(terrainRetryTimer);
       popupRef.current?.remove();
       resizeObserver?.disconnect();
       styleGenerationReadyRef.current = false;
@@ -4789,7 +4845,11 @@ export default function Home() {
       setTerrainState(scenePreset === "elevation-3d" ? "LOADING" : "OFF");
       return;
     }
-    runMapMutation("Terrain presentation update", () => setTerrainState(setTerrainPresentation(map, scenePreset === "elevation-3d", verticalExaggeration)));
+    runMapMutation("Terrain presentation update", () => {
+      const state = setTerrainPresentation(map, scenePreset === "elevation-3d", verticalExaggeration);
+      setTerrainState(state === "LOADING" && map.isSourceLoaded(TERRAIN_SOURCE_ID)
+        && failedTerrainSourceRef.current !== map.getSource(TERRAIN_SOURCE_ID) ? "READY" : state);
+    });
   }, [runMapMutation, scenePreset, styleReady, verticalExaggeration]);
 
   useEffect(() => {
@@ -4807,16 +4867,34 @@ export default function Home() {
     let animationFrame = 0;
     let lastFrame = 0;
     const budget = browserRenderBudget(renderQuality);
-    const effectsActive = projection !== "globe" && dynamicEffects && !reducedMotion && !budget.efficient && ["water-context", "smoke-context", "fire-context", "hazards-context", "habitat-connectivity", "transport-context", "communities"].some(id => visibility[id]);
+    const liveWaterSelected = temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME
+      && (officialVisibility["usgs-streamflow"] || officialVisibility["noaa-nwps-gauges"]);
+    // Paint animation keeps MapLibre from becoming idle. Let the style and
+    // source readiness check finish before starting ambient motion, including
+    // after a basemap swap.
+    const effectsActive = runtime.kind === "ready" && projection !== "globe" && dynamicEffects && !reducedMotion && !budget.efficient
+      && (liveWaterSelected || ["water-context", "smoke-context", "fire-context", "hazards-context", "habitat-connectivity", "transport-context", "communities"].some(id => visibility[id]));
+
+    // A soft marker halo is presentation only. The provider's observation,
+    // forecast, trend, magnitude, and timestamp remain fixed between fetches.
+    const emphasizeWaterStations = (timestamp: number, active: boolean) => {
+      const pulse = active ? 0.76 + 0.24 * (Math.sin(timestamp / 760) + 1) / 2 : 1;
+      for (const id of ["usgs-streamflow", "noaa-nwps-gauges"] as const) {
+        const layerId = OFFICIAL_CONTEXT_BY_ID[id].layerIds[0];
+        if (!map.getLayer(layerId)) continue;
+        const target = (officialOpacityRef.current[id] ?? OFFICIAL_CONTEXT_BY_ID[id].defaultOpacity) * 0.3 * pulse;
+        if (map.getPaintProperty(layerId, "circle-opacity") !== target) map.setPaintProperty(layerId, "circle-opacity", target);
+      }
+    };
 
     if (!effectsActive) {
-      runMapMutation("Map-effect reset", () => applyDynamicMapEffects(map, 0, opacity, false));
+      runMapMutation("Map-effect reset", () => { applyDynamicMapEffects(map, 0, opacity, false); emphasizeWaterStations(0, false); });
       return;
     }
 
     const renderEffects = (timestamp: number) => {
       if (!document.hidden && !map.isMoving() && timestamp - lastFrame >= 80 && styleGenerationReadyRef.current) {
-        if (!runMapMutation("Dynamic map effect", () => applyDynamicMapEffects(map, timestamp, opacity, true))) return;
+        if (!runMapMutation("Dynamic map effect", () => { applyDynamicMapEffects(map, timestamp, opacity, true); emphasizeWaterStations(timestamp, liveWaterSelected); })) return;
         lastFrame = timestamp;
       }
       if (!document.hidden) animationFrame = window.requestAnimationFrame(renderEffects);
@@ -4826,9 +4904,9 @@ export default function Home() {
     return () => {
       window.cancelAnimationFrame(animationFrame);
       document.removeEventListener("visibilitychange", resume);
-      if (styleGenerationReadyRef.current) runMapMutation("Map-effect cleanup", () => applyDynamicMapEffects(map, 0, opacity, false));
+      if (styleGenerationReadyRef.current) runMapMutation("Map-effect cleanup", () => { applyDynamicMapEffects(map, 0, opacity, false); emphasizeWaterStations(0, false); });
     };
-  }, [dynamicEffects, opacity, projection, reducedMotion, renderQuality, runMapMutation, styleReady, visibility]);
+  }, [dynamicEffects, officialVisibility, opacity, projection, reducedMotion, renderQuality, runMapMutation, runtime.kind, styleReady, temporalQuery.frame, visibility]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -4838,14 +4916,14 @@ export default function Home() {
     noaaRadarFrameLoadCleanupRef.current = null;
     noaaRadarFrameFailureRef.current = null;
     if (pendingRadarFrame) setNoaaRadarFrameLoadState("idle");
-    if (!runMapMutation("Basemap style update", () => map.setStyle(BASEMAPS[basemap].style))) return;
+    if (!runMapMutation("Basemap style update", () => map.setStyle(BASEMAPS[basemap].style, { diff: false }))) return;
     styleGenerationReadyRef.current = false;
     setPlaying(false);
     setStyleReady(false);
     setTerrainState(scenePresetRef.current === "elevation-3d" ? "LOADING" : "OFF");
     setMaplibreProbe((current) => ({ ...current, styleLoaded: false, idle: false, tilesLoaded: false, sourcesReady: 0 }));
     setRuntime({ kind: "loading", message: `Applying ${BASEMAPS[basemap].title} style…` });
-  }, [basemap, runMapMutation]);
+  }, [basemap, terrainProvider, runMapMutation]);
 
   useEffect(() => {
     const selectionVisible = Boolean(selected && !selectedTimeMismatch && !selectedLayerHidden && !selectedEvidenceFiltered);
@@ -4869,7 +4947,6 @@ export default function Home() {
       // stretched or color-shifted raster from the prior 2D view.
       applyOfficialContextState(map, effectiveOfficialVisibility, officialOpacity, officialPayloads);
       setMaplibreProbe((current) => ({ ...current, projection }));
-      setGlobeCamera(readGlobeCamera(map));
     });
   }, [effectiveOfficialVisibility, officialOpacity, officialPayloads, projection, runMapMutation]);
 
@@ -5656,26 +5733,8 @@ export default function Home() {
         : { pitch: nextPitch, bearing: nextBearing };
     if (!map && "center" in cameraTarget) pendingViewRef.current = cameraTarget;
     map?.easeTo({ ...cameraTarget, duration: motionDuration(420), essential: false });
-    setEarthEngineOpen(mode === "globe");
     if (mode === "globe") { setLeftOpen(false); setRightOpen(false); setSourceStatusOpen(false); setMapUtilityOpen(false); }
     announce(`${mode === "terrain" ? "Terrain 3D display" : mode === "globe" ? "Globe display" : "2D evidence display"} applied · active time and selection preserved`);
-  };
-
-  const chooseGlobeViewpoint = (viewpoint: GlobeViewpoint) => {
-    const map = mapRef.current;
-    if (!map || projectionRef.current !== "globe") { announce("Globe camera is not ready yet"); return; }
-    stopSceneOrbit(false);
-    runMapMutation("Globe viewpoint", () => {
-      map.stop();
-      applyProjectionNavigationLimits(map, "globe");
-      map.easeTo({ ...GLOBE_VIEWPOINTS[viewpoint], duration: motionDuration(700), essential: false });
-    });
-    announce(`${GLOBE_VIEWPOINTS[viewpoint].label} viewpoint · recipe study area remains Kansas`);
-  };
-
-  const closeEarthEngineGlobe = () => {
-    setEarthEngineOpen(false);
-    earthEngineTriggerRef.current?.focus();
   };
 
   const startTerrainInvestigation = () => {
@@ -5744,9 +5803,10 @@ export default function Home() {
     }
     if (map.getLayer(TERRAIN_HILLSHADE_LAYER_ID)) map.removeLayer(TERRAIN_HILLSHADE_LAYER_ID);
     map.setTerrain(null);
+    if (map.getSource(TERRAIN_HILLSHADE_SOURCE_ID)) map.removeSource(TERRAIN_HILLSHADE_SOURCE_ID);
     if (map.getSource(TERRAIN_SOURCE_ID)) map.removeSource(TERRAIN_SOURCE_ID);
     setTerrainState(setTerrainPresentation(map, true, verticalExaggerationRef.current));
-    setRuntime({ kind: "loading", message: "Retrying the attributed AWS Terrain Tiles DEM…" });
+    setRuntime({ kind: "loading", message: `Retrying ${terrainProviderRef.current === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} elevation tiles…` });
     announce("Terrain source retry started; the 2D evidence path remains available");
   };
 
@@ -6179,16 +6239,6 @@ export default function Home() {
     persistSavedWorkspaces(savedWorkspaces.filter((candidate) => candidate.id !== snapshot.id));
     if (activePlaceId === snapshot.id) setActivePlaceId(null);
     announce(`${snapshot.name} removed from this device`);
-  };
-
-  const setLayerGroupVisibility = (layerIds: readonly string[], nextVisible: boolean) => {
-    setVisibility((current) => {
-      const next = { ...current };
-      layerIds.forEach((id) => { next[id] = nextVisible; });
-      visibilityRef.current = next;
-      return next;
-    });
-    announce(`${nextVisible ? "Shown" : "Hidden"} ${layerIds.length} catalog layer${layerIds.length === 1 ? "" : "s"}`);
   };
 
   const updateMapEvidenceFilter = (nextFilter: RegistryEvidenceFilter) => {
@@ -7306,19 +7356,18 @@ export default function Home() {
       </div>
 
       <main inert={primaryWorkspace !== "map"} className="explorer-shell" data-left={leftOpen} data-right={rightOpen} data-timeline={timelineOpen}>
-        <aside ref={leftPanelRef} className="layer-panel" data-panel-mode={leftPanelMode} aria-label="Living Atlas navigation" aria-hidden={!leftOpen} inert={!leftOpen} aria-modal={isCompact && leftOpen || undefined} role={isCompact && leftOpen ? "dialog" : undefined}>
+        <aside ref={leftPanelRef} className="layer-panel" data-panel-mode={leftPanelMode} aria-label={leftPanelMode === "layers" || leftPanelMode === "live" ? "Map layers" : "Living Atlas navigation"} aria-hidden={!leftOpen} inert={!leftOpen} aria-modal={isCompact && leftOpen || undefined} role={isCompact && leftOpen ? "dialog" : undefined}>
           <div className="panel-heading">
-            <div><p className="panel-kicker">{leftPanelMode === "views" ? "LIVING ATLAS" : leftPanelMode === "live" || leftPanelMode === "layers" ? "MAP LAYERS" : leftPanelMode === "places" ? "PLACES" : "STORY ATLAS"}</p><h1>{leftPanelMode === "views" ? "Investigate Kansas" : leftPanelMode === "live" || leftPanelMode === "layers" ? "Map layers" : leftPanelMode === "places" ? "Places + trails" : "Guided stories"}</h1></div>
+            <div><p className="panel-kicker">{leftPanelMode === "views" ? "LIVING ATLAS" : leftPanelMode === "live" || leftPanelMode === "layers" ? "KANSAS FRONTIER MATRIX" : leftPanelMode === "places" ? "PLACES" : "STORY ATLAS"}</p><h1>{leftPanelMode === "views" ? "Investigate Kansas" : leftPanelMode === "live" || leftPanelMode === "layers" ? <>Map layers <span className="layer-panel-count">{visibleCount + visibleOfficialCount} selected</span></> : leftPanelMode === "places" ? "Places + trails" : "Guided stories"}</h1></div>
             <button className="icon-close" type="button" onClick={closeLeftPanel} aria-label="Close Explorer navigation">×</button>
           </div>
-          <p className="panel-intro">{leftPanelMode === "views" ? "Start from a named question, then inspect the map, time, evidence, and report together." : leftPanelMode === "live" || leftPanelMode === "layers" ? "Browse site-local domain layers and separate official source context. Missing years stay empty; current sources stay held in historical frames." : leftPanelMode === "places" ? "Save complete, device-local investigations and revisit them as a trail." : "Pause on a site-local chapter, inspect its evidence state, and keep the boundary visible."}</p>
-          <Link className="event-sidebar-link" href="/observatory"><strong>Event Observatory</strong><span>Explore dated radar, smoke, rivers and events <span aria-hidden="true">↗</span></span></Link>
-          <nav className="left-panel-tabs" aria-label="Living Atlas sections">
-            <button type="button" aria-current={leftPanelMode === "views" ? "page" : undefined} data-active={leftPanelMode === "views"} onClick={() => setLeftPanelMode("views")}>Views</button>
-            <button type="button" aria-current={leftPanelMode === "layers" || leftPanelMode === "live" ? "page" : undefined} data-active={leftPanelMode === "layers" || leftPanelMode === "live"} onClick={() => setLeftPanelMode("layers")}>Layers</button>
-            <button type="button" aria-current={leftPanelMode === "places" ? "page" : undefined} data-active={leftPanelMode === "places"} onClick={() => setLeftPanelMode("places")}>Places</button>
-            <button type="button" aria-current={leftPanelMode === "stories" ? "page" : undefined} data-active={leftPanelMode === "stories"} onClick={() => setLeftPanelMode("stories")}>Stories</button>
-          </nav>
+          {leftPanelMode !== "layers" && leftPanelMode !== "live" && <p className="panel-intro">{leftPanelMode === "views" ? "Start from a named question, then inspect the map, time, evidence, and report together." : leftPanelMode === "places" ? "Save complete, device-local investigations and revisit them as a trail." : "Pause on a site-local chapter, inspect its evidence state, and keep the boundary visible."}</p>}
+          {leftPanelMode !== "layers" && leftPanelMode !== "live" && <nav className="left-panel-tabs" aria-label="Living Atlas sections">
+            <button type="button" aria-current={leftPanelMode === "views" ? "page" : undefined} data-active={leftPanelMode === "views"} onClick={() => setLeftPanelMode("views")}>Views <b>{LIVING_ATLAS_VIEWS.length}</b></button>
+            <button type="button" onClick={() => { setLayerCatalogView("local"); setLeftPanelMode("layers"); }}>Map layers <b>{visibleCount + visibleOfficialCount}</b></button>
+            <button type="button" aria-current={leftPanelMode === "places" ? "page" : undefined} data-active={leftPanelMode === "places"} onClick={() => setLeftPanelMode("places")}>Places <b>{savedWorkspaces.length}</b></button>
+            <button type="button" aria-current={leftPanelMode === "stories" ? "page" : undefined} data-active={leftPanelMode === "stories"} onClick={() => setLeftPanelMode("stories")}>Stories <b>1</b></button>
+          </nav>}
 
           <section className="atlas-view-library" hidden={leftPanelMode !== "views"} aria-labelledby="atlas-view-library-title">
             <div className="atlas-library-heading"><div><span className="panel-kicker">DEFAULT INVESTIGATIONS</span><h2 id="atlas-view-library-title">Choose a starting question</h2></div><small>{filteredAtlasViews.length} of {LIVING_ATLAS_VIEWS.length}</small></div>
@@ -7372,116 +7421,34 @@ export default function Home() {
             <div className="story-mode-steps"><span>01 · County locator</span><span>02 · Water context</span><span>03 · Time boundary</span><span>04 · Evidence outcome</span></div>
           </section>
 
+          <div className="layer-panel-controls" hidden={leftPanelMode !== "layers" && leftPanelMode !== "live"}>
+            <nav className="layer-source-switch" aria-label="Layer sources">
+              <button type="button" aria-pressed={layerCatalogView === "local"} data-active={layerCatalogView === "local"} onClick={() => { setLayerCatalogView("local"); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body")?.scrollTo(0, 0); }}>Map layers <span>{visibleCount} on</span></button>
+              <button type="button" aria-pressed={layerCatalogView === "official"} data-active={layerCatalogView === "official"} onClick={() => { setLayerCatalogView("official"); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body")?.scrollTo(0, 0); }}>Live context <span>{visibleOfficialCount} selected</span></button>
+            </nav>
+            <label className="catalog-search"><span aria-hidden="true">⌕</span><span className="sr-only">{layerCatalogView === "local" ? "Find a map layer" : "Find a live source"}</span><input type="search" value={layerCatalogView === "local" ? layerQuery : officialSourceQuery} onChange={(event) => layerCatalogView === "local" ? setLayerQuery(event.target.value) : setOfficialSourceQuery(event.target.value)} placeholder={layerCatalogView === "local" ? "Find a layer" : "Find a live source"} /></label>
+          </div>
+
           <div className="layer-catalog-body" hidden={leftPanelMode !== "layers" && leftPanelMode !== "live"}>
-          <div className="layer-source-switch" role="group" aria-label="Choose layer source type">
-            <button type="button" data-active={layerCatalogView === "official"} aria-pressed={layerCatalogView === "official"} onClick={() => { setLayerCatalogView("official"); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body")?.scrollTo(0, 0); }}>Official sources <span>{visibleOfficialCount} selected</span></button>
-            <button type="button" data-active={layerCatalogView === "local"} aria-pressed={layerCatalogView === "local"} onClick={() => { setLayerCatalogView("local"); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body")?.scrollTo(0, 0); }}>Local layers <span>{visibleCount} on</span></button>
+          <div className="layer-map-time" data-historical={year !== OFFICIAL_CONTEXT_PRESENT_FRAME}>
+            <span><span aria-hidden="true">◷</span> Map time · <strong>{temporalScopeLabel}</strong>{withheldOfficialCount > 0 ? ` · ${withheldOfficialCount} current source${withheldOfficialCount === 1 ? "" : "s"} held` : ""}</span>
+            <button type="button" onClick={() => { setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); dismissMapUtilityWithoutFocus(); announce(`Opened the map timeline at ${temporalScopeLabel}`); }}>Change time</button>
           </div>
-          <div className="local-layer-overview" hidden={layerCatalogView !== "local"}>
-          <div className="local-layer-search"><label className="catalog-search"><span aria-hidden="true">⌕</span><span className="sr-only">Search registered local layers</span><input type="search" value={layerQuery} onChange={(event) => setLayerQuery(event.target.value)} placeholder="Search registered local layers" /></label><button type="button" onClick={() => revealLegacyLayerControls("catalog-layer-stack")}>View {filteredLayerIds.size} matching layers ↓</button></div>
-
-          <section className="catalog-domain-index" aria-labelledby="catalog-domain-index-title">
-            <div className="section-row"><h2 id="catalog-domain-index-title">All layer domains <span>{LAYER_REGISTRY.length} layers</span></h2><small>Jump to a complete group</small></div>
-            <div className="catalog-domain-grid">
-              {CATEGORY_ORDER.map((category) => {
-                const categoryLayers = LAYER_REGISTRY.filter((layer) => layer.category === category);
-                const activeCategoryCount = categoryLayers.filter((layer) => visibility[layer.id]).length;
-                return <button key={category} type="button" data-active={activeCategoryCount > 0} onClick={() => {
-                  setLayerDomain("ALL");
-                  setLayerQuery("");
-                  revealLegacyLayerControls(`catalog-category-${catalogCategorySlug(category)}`);
-                }} aria-label={`Open ${category} controls: ${activeCategoryCount} of ${categoryLayers.length} active`}>
-                  <strong>{category}</strong><small>{activeCategoryCount}/{categoryLayers.length} active</small>
-                </button>;
-              })}
-            </div>
-            <details className="catalog-domain-help"><summary>How local domain layers work</summary><p>These are site-local domain layers. A domain lens adds matching historical layers without hiding the rest of the catalog. Current official context remains separate.</p></details>
-          </section>
-
-          <details className="local-time-details" id="catalog-time-anchor"><summary>Map time · {temporalScopeLabel}{withheldOfficialCount > 0 ? ` · ${withheldOfficialCount} current source${withheldOfficialCount === 1 ? "" : "s"} held` : ""}</summary><section className="catalog-time-anchor" data-historical={year !== OFFICIAL_CONTEXT_PRESENT_FRAME} aria-labelledby="catalog-time-anchor-title">
-            <header><div><span>COMMITTED MAP TIME</span><h2 id="catalog-time-anchor-title">{temporalScopeLabel}</h2></div><button type="button" onClick={() => { setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); dismissMapUtilityWithoutFocus(); announce(`Opened the map timeline at ${temporalScopeLabel}`); }}>Open timeline</button></header>
-            <p>{year === OFFICIAL_CONTEXT_PRESENT_FRAME ? "Domain layers resolve against the current committed map frame. Each layer keeps its own declared time rule and source clock." : "Domain layers resolve only against this historical map frame. Incompatible records stay unavailable; the map does not carry a current or prior record into the selected time."}</p>
-            <dl><div><dt>TIME MODE</dt><dd>{temporalMode.replaceAll("-", " ")}</dd></div><div><dt>LIVE CONTEXT</dt><dd>{withheldOfficialCount > 0 ? `${withheldOfficialCount} selected source${withheldOfficialCount === 1 ? "" : "s"} held` : "Operational present available"}</dd></div></dl>
-          </section></details>
-
-          <div className="catalog-airflow-entry"><div><strong>Historical roads · map editions</strong><small>{ROAD_MAP_EDITIONS.length} local PDF identities inventoried; candidate road graphics can be compared in browser memory.</small></div><button type="button" onClick={(event) => openMapUtility("compare", event.currentTarget)}>Compare road years</button></div>
-
-          <details className="owner-display-details"><summary>Owner display snapshots · {earthEngineContext.manifest ? "catalog available" : "not connected"}</summary><EarthEngineDisplayControls key={earthEngineContext.manifest?.setId ?? "no-display-set"} map={styleReady ? mapRef.current : null} mapYear={temporalMode === "snapshot" ? year : -1} manifest={earthEngineContext.manifest} loading={earthEngineContext.loading} error={earthEngineContext.error} onReload={earthEngineContext.reload} /></details>
-
-          <details className="legacy-layer-index"><summary>Legacy examples & diagnostics</summary><p>These older interaction examples are separate from today’s real source baseline.</p>
-          <section className="active-layers" aria-labelledby="active-title">
-            <div className="section-row"><h2 id="active-title">Active local layers <span>{visibleCount}/{LAYER_REGISTRY.length}</span></h2><div className="active-layer-actions"><button type="button" onClick={() => { setVisibility(defaultVisibility); setOpacity(defaultOpacity); }}>Reset defaults</button><button type="button" onClick={() => setVisibility(Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, false])))}>Hide all</button></div></div>
-            <div className="active-chips">{activeLayers.map((layer) => <button key={layer.id} type="button" onClick={() => zoomToLayer(layer)}>{layer.title}<span>↗</span></button>)}</div>
-          </section>
+          <details className="layer-scene-entry">
+            <summary>Terrain &amp; 3D appearance <span>{scenePreset === "elevation-3d" ? terrainState === "READY" ? "On" : terrainState === "ERROR" ? "Needs attention" : "Loading" : "Off"}</span></summary>
+            <LayerSceneControls active={scenePreset === "elevation-3d"} selectedLook={scenePreset !== "elevation-3d" ? null : structures3DEnabled ? "buildings" : basemap === "topo" ? "topographic" : basemap === "imagery" ? "natural" : null} terrainProvider={terrainProvider} state={terrainState} exaggeration={verticalExaggeration} lighting={atmospherePreset} azimuth={lightAzimuth} heightOverlay={topographicOverlay} onPreset={applyTerrainLook} onTerrainProvider={provider => { terrainProviderRef.current = provider; setTerrainProvider(provider); setTerrainState("LOADING"); }} on2D={() => activateMapRepresentation("2d")} onExaggeration={value => { verticalExaggerationRef.current = value; setVerticalExaggeration(value); }} onLighting={value => { atmospherePresetRef.current = value; setAtmospherePreset(value); }} onAzimuth={value => { lightAzimuthRef.current = value; setLightAzimuth(value); }} onHeight={toggleTopographicHeightOverlay} onRetry={retryTerrain} />
           </details>
-
-          <nav className="catalog-section-jump" aria-label="Layer Catalog shortcuts">
-            <a href="#catalog-time-anchor"><span>Map time frame</span><b>{temporalScopeLabel}</b></a>
-            <a href="#catalog-domain-index-title"><span>All domains</span><b>{CATEGORY_ORDER.length} layer groups</b></a>
-            <button type="button" onClick={() => { setLayerCatalogView("official"); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body")?.scrollTo({ top: 0, behavior: "instant" }); }}><span>Official sources</span><b>{visibleOfficialCount} selected</b></button>
-            <a href="#catalog-layer-stack" onClick={() => revealLegacyLayerControls("catalog-layer-stack")}><span>Layer controls</span><b>{visibleCount} active</b></a>
-          </nav>
-
-
-
-          </div>
+          {layerCatalogView === "local" && <button className="map-catalog-launch" type="button" onClick={(event) => openMapUtility("import", event.currentTarget)}>Preview local KML or GeoJSON</button>}
+          {composedSurfaceCount > 1 && <p className="layer-balance-note">Multiple surfaces are active. The map balances their opacity so boundaries and points stay readable; each slider keeps your selected value.</p>}
+          {mapSignals.length > 0 && <section className="map-signal-panel" aria-label="Patterns supported by selected data"><strong>Signals in selected data</strong>{mapSignals.map((signal) => <article key={`${signal.kind}:${signal.title}`}><span>{signal.kind === "forecast" ? "PROVIDER FORECAST" : signal.kind === "observed" ? "OBSERVED" : "CATALOG TIME"}</span><b>{signal.title}</b><small>{signal.detail}</small></article>)}</section>}
           <section className="official-context-catalog" id="official-context-catalog" tabIndex={-1} hidden={layerCatalogView !== "official"} aria-labelledby="official-context-title">
-            <header><div><h2 id="official-context-title">Official sources</h2></div><strong>{visibleOfficialCount} selected{withheldOfficialCount > 0 ? ` · ${withheldOfficialCount} held` : ""}</strong></header>
-            <details className="official-context-boundary"><summary>About these sources and their map states</summary><p>{year === OFFICIAL_CONTEXT_PRESENT_FRAME ? "Official sources provide current map context. Selection does not confirm display, and these sources do not enter KFM evidence, reports, or exports." : `At ${temporalScopeLabel}, selected current-only sources stay held until the operational-present frame.`}</p><small>{SITE_REGISTRY_COUNTS.features} registry features · {SITE_REGISTRY_COUNTS.connections} connections · {SITE_REGISTRY_COUNTS.actions} actions</small></details>
+            <header><div><h2 id="official-context-title">Official current context</h2><small className="official-context-registry-summary">{visibleOfficialCount} selected · {officialReadyCount} checked</small></div></header>
+            <p>{year === OFFICIAL_CONTEXT_PRESENT_FRAME ? "Current sources have their own clocks and are for map context only." : `Current sources selected for the map are held at ${temporalScopeLabel}; choose Present to display them.`}</p>
             <div className="official-context-pulse" aria-label="Official data connection status">
               <div><span><small>LOADED FEATURES</small><strong>{officialFeatureCount.toLocaleString("en-US")}</strong></span><span><small>CONNECTIONS</small><strong>{officialReadyCount}/{OFFICIAL_CONTEXT_SOURCES.length} checked</strong></span><span><small>LAST RETRIEVAL</small><strong>{officialLatestRetrievedAt ? new Date(officialLatestRetrievedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "Not yet"}</strong></span></div>
               <nav aria-label="Official data actions"><button type="button" disabled={officialRefreshPlan.count === 0 || officialLoadingCount > 0} onClick={refreshVisibleOfficialContext}>{officialRefreshPlan.reason === "historical" ? `Held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : officialLoadingCount > 0 ? "Refreshing…" : `Refresh ${officialRefreshPlan.count} selected`}</button><button type="button" disabled={visibleOfficialCount === 0} onClick={hideAllOfficialContext}>Hide all</button></nav>
             </div>
-            <details className="source-layer-groups"><summary>Layer groups · earthquakes, water, fire, smoke & airflow</summary><section className="priority-context-deck" aria-labelledby="priority-context-title">
-              <header>
-                <div><span>PRIORITY CONNECTIONS</span><h3 id="priority-context-title">Earthquakes, water, fire, smoke + airflow</h3></div>
-                <small>Toggle a source directly</small>
-              </header>
-              <p className="priority-context-intro">The controls below keep the most actionable map connections visible. Open a source row for opacity, freshness, limits, and provider links.</p>
-              <div className="priority-context-groups">
-                {PRIORITY_CONTEXT_GROUPS.map((group) => {
-                  const visibleSources = group.sourceIds.filter((sourceId) => officialVisibility[sourceId]);
-                  const featureCount = group.sourceIds.reduce((total, sourceId) => total + (officialPayloads[sourceId as OfficialContextFeedId]?.featureCount ?? 0), 0);
-                  const allVisible = visibleSources.length === group.sourceIds.length;
-                  return <article className="priority-context-group" key={group.id} data-active={visibleSources.length > 0}>
-                    <header>
-                      <div><strong>{group.title}</strong><small>{visibleSources.length}/{group.sourceIds.length} selected{featureCount > 0 ? ` · ${featureCount.toLocaleString("en-US")} loaded` : ""}</small></div>
-                      <span>{allVisible ? "FULL" : visibleSources.length ? "PARTIAL" : "OFF"}</span>
-                    </header>
-                    <p>{group.description}</p>
-                    <div className="priority-context-source-list">
-                      {group.sourceIds.map((sourceId) => {
-                        const source = OFFICIAL_CONTEXT_BY_ID[sourceId];
-                        const state = officialStates[sourceId];
-                        const heldAtFrame = officialVisibility[sourceId] && !effectiveOfficialVisibility[sourceId];
-                        return <button
-                          className="priority-context-source"
-                          key={sourceId}
-                          type="button"
-                          aria-pressed={officialVisibility[sourceId]}
-                          data-active={officialVisibility[sourceId]}
-                          data-state={state}
-                          onClick={() => setOfficialContextVisible(sourceId, !officialVisibility[sourceId])}
-                          title={`${officialVisibility[sourceId] ? "Hide" : "Show"} ${source.title}`}
-                        >
-                          <i aria-hidden="true" />
-                          <span><strong>{source.shortTitle}</strong><small>{!officialVisibility[sourceId] ? "OFF" : heldAtFrame ? "HELD" : officialContextStateLabel(state)}</small></span>
-                        </button>;
-                      })}
-                    </div>
-                    <footer>
-                      <button type="button" onClick={() => setPriorityContextGroupVisible(group.sourceIds, true)} disabled={allVisible}>Show all</button>
-                      <button type="button" onClick={() => setPriorityContextGroupVisible(group.sourceIds, false)} disabled={visibleSources.length === 0}>Hide all</button>
-                    </footer>
-                  </article>;
-                })}
-              </div>
-            </section></details>
-            <label className="official-source-search"><span aria-hidden="true">⌕</span><span className="sr-only">Search official sources</span><input type="search" value={officialSourceQuery} onChange={(event) => setOfficialSourceQuery(event.target.value)} placeholder="Find an official source" /></label>
-            <div className="official-source-list-heading"><strong>{officialSourceQuery.trim() ? `${listedOfficialSources.length} matching sources` : showAllOfficialSources ? "All source connections · selected first" : "Selected sources"}</strong><button type="button" aria-expanded={showAllOfficialSources} aria-controls="official-context-list" onClick={() => { setShowAllOfficialSources((current) => !current); setOfficialSourceQuery(""); }}>{showAllOfficialSources ? "Show selected" : `Browse all ${OFFICIAL_CONTEXT_SOURCES.length}`}</button></div>
-            {visibleOfficialCount === 0 && !showAllOfficialSources && !officialSourceQuery.trim() && <p className="official-source-empty">No sources selected. Browse all to add one.</p>}
-            {officialSourceQuery.trim() && listedOfficialSources.length === 0 && <p className="official-source-empty">No official sources match. Try a provider or source name.</p>}
-            <div className="official-context-list" id="official-context-list">{listedOfficialSources.map((source) => {
+            <div className="official-context-list">{listedOfficialSources.map((source) => {
               const state = officialStates[source.id];
               const heldAtFrame = officialVisibility[source.id] && !effectiveOfficialVisibility[source.id];
               const needsCloserView = officialVisibility[source.id] && !heldAtFrame && state !== "error" && view.zoom < TERRAIN_DISPLAY_MIN_ZOOM && (source.id === "usgs-3dep-hillshade" || source.id === "usgs-3dep-slope");
@@ -7489,8 +7456,8 @@ export default function Home() {
               const riverArchiveMinDay = riverArchiveSpan?.start.slice(0, 10);
               const riverArchiveMaxDay = riverArchiveSpan ? [currentUtcDay(), riverArchiveSpan.end.slice(0, 10)].sort()[0] : undefined;
               return <article key={source.id} className="official-context-row" data-state={state} data-visible={officialVisibility[source.id]} data-held={heldAtFrame}>
-                <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.shortTitle}</strong><small>{source.organization}{heldAtFrame ? ` · held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : needsCloserView ? ` · view at zoom ${TERRAIN_DISPLAY_MIN_ZOOM}+` : source.id === "census-counties" && officialVisibility[source.id] && state === "ready" ? " · select a county for its 2020 population" : ""}</small></div><b>{!officialVisibility[source.id] ? "OFF" : heldAtFrame ? "HELD" : needsCloserView ? "ZOOM IN" : state.toUpperCase()}</b></div>
-                <details className="official-context-settings"><summary>Time, opacity & source details</summary>
+                <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.shortTitle}</strong><small>{source.organization} · {!officialVisibility[source.id] ? "off" : heldAtFrame ? "held for this map time" : needsCloserView ? `zoom to ${TERRAIN_DISPLAY_MIN_ZOOM}+` : officialContextStateLabel(state).toLowerCase()}</small></div></div>
+                <details className="official-context-options"><summary>Options</summary><div className="official-context-option-body">
                 <label className="opacity-control"><span>Opacity <b>{Math.round(officialOpacity[source.id] * 100)}%</b></span><input aria-label={`${source.shortTitle} opacity`} type="range" min="0" max="100" value={Math.round(officialOpacity[source.id] * 100)} onChange={(event) => setOfficialContextOpacity(source.id, Number(event.target.value) / 100)} /></label>
                 <section className="source-time-control" aria-label={`${source.shortTitle} time controls`}>
                   <header><span>TIME · {source.id === "usgs-streamflow" || source.id === "nws-radar" || source.id === "noaa-goes-geocolor" ? "EXACT SOURCE FRAMES" : source.id === "census-counties" ? "2020 EDITION" : "SOURCE CLOCK"}</span><strong>{source.id === "usgs-streamflow" && streamflowArchiveDay ? `${streamflowArchiveDay} UTC` : officialArchiveDays[source.id as OfficialContextFeedId] ? `${officialArchiveDays[source.id as OfficialContextFeedId]} UTC` : source.id === "nws-radar" ? "RECENT LOOP" : source.id === "noaa-goes-geocolor" ? "ROLLING 24 HOURS" : "CURRENT / PINNED"}</strong></header>
@@ -7530,40 +7497,21 @@ export default function Home() {
                   </> : <p>{OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id].limitation} No selectable observation sweep is connected for this carrier.</p>}
                   {heldAtFrame && <small>Selected source is held by the global atlas year. Return that axis to Present to display its source clock.</small>}
                 </section>
-                <div className="official-context-actions"><button type="button" onClick={() => { setSourceStatusOpen(true); setLeftOpen(false); }}>Source details & quality</button>{source.id === "nws-forecast-wind" && <button type="button" disabled={!officialVisibility[source.id] || heldAtFrame || state === "loading"} onClick={() => retryOfficialLayer(source.id)}>Reload forecast tiles</button>}{needsCloserView && <button type="button" onClick={() => { mapRef.current?.easeTo({ zoom: TERRAIN_DISPLAY_MIN_ZOOM + 0.25, duration: motionDuration(600) }); announce(`${source.shortTitle}: zoomed in to its display range`); }}>Zoom to view</button>}{["usgs-streamflow", "noaa-hms-smoke", "raspberry-shake-stations", "usgs-earthquakes", "nws-radar", "census-counties"].includes(source.id) && <Link href={`/observatory?layers=${({ "usgs-streamflow": "river", "noaa-hms-smoke": "smoke", "raspberry-shake-stations": "shake", "usgs-earthquakes": "earthquakes", "nws-radar": "radar", "census-counties": "counties" } as Record<string,string>)[source.id]},counties`}>Explore dated records ↗</Link>}</div></details>
+                <div className="official-context-actions"><button type="button" onClick={() => { setSourceStatusOpen(true); setLeftOpen(false); }}>Source details & quality</button>{source.id === "nws-forecast-wind" && <button type="button" disabled={!officialVisibility[source.id] || heldAtFrame || state === "loading"} onClick={() => retryOfficialLayer(source.id)}>Reload forecast tiles</button>}{needsCloserView && <button type="button" onClick={() => { mapRef.current?.easeTo({ zoom: TERRAIN_DISPLAY_MIN_ZOOM + 0.25, duration: motionDuration(600) }); announce(`${source.shortTitle}: zoomed in to its display range`); }}>Zoom to view</button>}{["usgs-streamflow", "noaa-hms-smoke", "raspberry-shake-stations", "usgs-earthquakes", "nws-radar", "census-counties"].includes(source.id) && <Link href={`/observatory?layers=${({ "usgs-streamflow": "river", "noaa-hms-smoke": "smoke", "raspberry-shake-stations": "shake", "usgs-earthquakes": "earthquakes", "nws-radar": "radar", "census-counties": "counties" } as Record<string,string>)[source.id]},counties`}>Explore dated records ↗</Link>}</div>
+                </div></details>
               </article>;
-            })}</div>
+            })}{listedOfficialSources.length === 0 && <div className="catalog-empty"><strong>No sources found</strong><p>Try a provider or source name.</p></div>}</div>
             <footer><code>OFFICIAL SOURCE → FIXED ADAPTER / WMS → MAPLIBRE</code><span>Evidence held at admission, release, and EvidenceBundle gates · <a href="https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3393" target="_blank" rel="noreferrer">governance issue #3393 ↗</a></span></footer>
           </section>
 
-          <div className="local-layer-settings" hidden={layerCatalogView !== "local" || leftPanelMode !== "layers"}>
-          <button className="map-catalog-launch" type="button" onClick={(event) => openMapUtility("import", event.currentTarget)}>Preview local KML or GeoJSON</button>
-          <section className="catalog-quick-lenses" aria-labelledby="quick-lenses-title">
-            <div className="section-row"><h2 id="quick-lenses-title">Quick lenses</h2><span>Layers + time + style</span></div>
-            <div>{MAP_VIEW_PROFILES.map((profile) => <button key={profile.id} type="button" aria-pressed={activeViewProfileId === profile.id} onClick={() => applyViewProfile(profile)}><strong>{profile.title}</strong><small>{profile.visibleLayerIds.length} layers · {profile.year}</small></button>)}</div>
-          </section>
-
-          <div className="basemap-control" id="map-settings" tabIndex={-1}>
-            <div className="map-control-group"><header><strong>Rendering quality</strong><span>Applies to this map</span></header><RenderQualityControl value={renderQuality} onChange={chooseRenderQuality} /></div>
-            <div className="catalog-filter-grid"><label><span>Basemap style</span><select value={basemap} onChange={(event) => setBasemap(event.target.value as BasemapKey)}>{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title} · {BASEMAPS[key].note}</option>)}</select></label><label><span>Domain lens</span><select value={layerDomain} onChange={(event) => applyDomainLens(event.target.value as (typeof layerDomains)[number])}>{layerDomains.map((domain) => <option key={domain} value={domain}>{domain === "ALL" ? "No domain lens" : domain}</option>)}</select></label><label><span>Catalog source role</span><select value={catalogSourceRole} onChange={(event) => setCatalogSourceRole(event.target.value)}><option value="ALL">All declared roles</option>{catalogSourceRoles(LAYER_REGISTRY).map((role) => <option key={role} value={role}>{role}</option>)}</select></label></div>
-            <p>Source roles filter site-local catalog rows by exact declared feature label. Mixed-role layers can include records with other roles; this does not filter map geometry or live context.</p>
-            <div className="catalog-lens-status" data-active={layerDomain !== "ALL"}><strong>{layerDomain === "ALL" ? "No domain lens selected" : `${layerDomain} lens is on the map`}</strong><span>{layerDomain === "Fire" ? "Historical fire context plus NASA GIBS daily NOAA-20 thermal anomalies and NOAA HMS smoke footprints at the operational-present frame." : layerDomain === "ALL" ? "Choose a domain to add that perspective without filtering the catalog or hiding other layers." : "The lens adds matching layers as an additional perspective; current-source context remains separate and time-bounded."}</span>{layerDomain !== "ALL" && <button type="button" onClick={() => applyDomainLens("ALL")}>Remove lens</button>}</div>
-            <div className="catalog-evidence-filter"><label><span>Map evidence filter</span><select value={mapEvidenceFilter} onChange={(event) => updateMapEvidenceFilter(event.target.value as RegistryEvidenceFilter)}><option value="ALL">All evidence states</option>{(Object.keys(evidenceLabels) as EvidenceState[]).map((state) => <option key={state} value={state}>{state.replaceAll("_", " ")}</option>)}</select></label><output>{mapCompatibleFeatureCount} compatible records</output>{mapEvidenceFilter !== "ALL" && <button type="button" onClick={() => updateMapEvidenceFilter("ALL")}>Clear filter</button>}</div>
-            <div className="catalog-filter-actions"><span>{layerQuery.trim() || catalogSourceRole !== "ALL" || mapEvidenceFilter !== "ALL" ? "Catalog filters are active" : "Showing every local domain"}</span><button type="button" disabled={!layerQuery.trim() && catalogSourceRole === "ALL" && mapEvidenceFilter === "ALL"} onClick={() => { setLayerQuery(""); setCatalogSourceRole("ALL"); updateMapEvidenceFilter("ALL"); }}>Clear filters</button></div>
-          </div>
-
-          <details ref={legacyLayerControlsRef} id="legacy-layer-controls" className="legacy-layer-index"><summary>Legacy example layer controls · {visibleCount} on</summary>
-          <section className="catalog-layer-stack" id="catalog-layer-stack" tabIndex={-1} aria-labelledby="catalog-layer-stack-title">
-            <div className="section-row"><h2 id="catalog-layer-stack-title">Registered layers <span>{filteredLayerIds.size}/{LAYER_REGISTRY.length}</span></h2><div className="catalog-layer-stack-actions"><button type="button" disabled={filteredLayerIds.size === 0} onClick={() => setLayerGroupVisibility(Array.from(filteredLayerIds), true)}>Show all</button><button type="button" disabled={filteredLayerIds.size === 0} onClick={() => setLayerGroupVisibility(Array.from(filteredLayerIds), false)}>Hide all</button></div></div>
-            <p>Every site-local layer remains available below. Toggle visibility directly or open a row for opacity, features, zoom, and draw order.</p>
-          </section>
-
+          <div className="local-layer-settings" hidden={layerCatalogView !== "local"}>
+            <div className="layer-list-heading"><strong>Browse map layers</strong><span>{filteredLayerIds.size} available</span></div>
           <div className="catalog-groups">
-            {CATEGORY_ORDER.map((category) => {
+            {CATEGORY_ORDER.map((category, categoryIndex) => {
               const categoryLayers = LAYER_REGISTRY.filter((layer) => layer.category === category);
               const layers = layerOrder.map((id) => LAYER_REGISTRY.find((layer) => layer.id === id)).filter((layer): layer is LayerRecord => Boolean(layer && layer.category === category && filteredLayerIds.has(layer.id)));
               if (!layers.length) return null;
-              return <section className="catalog-group" key={category} id={`catalog-category-${catalogCategorySlug(category)}`} tabIndex={-1} aria-labelledby={`catalog-category-${catalogCategorySlug(category)}-title`}><header className="catalog-group-heading"><h2 id={`catalog-category-${catalogCategorySlug(category)}-title`}>{category} <span>{layers.length}/{categoryLayers.length}</span></h2><div><button type="button" onClick={() => setLayerGroupVisibility(layers.map((layer) => layer.id), true)}>Show all</button><button type="button" onClick={() => setLayerGroupVisibility(layers.map((layer) => layer.id), false)}>Hide all</button></div></header>{layers.map((layer) => {
+              return <details className="catalog-group" key={category} open={categoryIndex === 0 || Boolean(layerQuery.trim())} id={`catalog-category-${catalogCategorySlug(category)}`}><summary className="catalog-group-heading"><strong>{category}</strong><small>{categoryLayers.filter((layer) => visibility[layer.id]).length} on · {layers.length} {layers.length === 1 ? "layer" : "layers"}</small><span aria-hidden="true">⌄</span></summary>{layers.map((layer) => {
                 const noData = Boolean(layer.temporal && !layer.data.features.some((feature) => isFeatureAvailableForTemporalQuery(layer, feature.properties.year, temporalQuery)));
                 const expanded = expandedLayers.has(layer.id);
                 const declaredFrames = (layer.temporal?.years ?? []).filter((frame) => layer.data.features.some((feature) => feature.properties.year === frame));
@@ -7572,10 +7520,8 @@ export default function Home() {
                   <div className="layer-primary">
                     <label className="visibility-switch"><input type="checkbox" aria-label={`${visibility[layer.id] ? "Hide" : "Show"} ${layer.title}`} checked={visibility[layer.id]} onChange={(event) => setVisibility((current) => ({ ...current, [layer.id]: event.target.checked }))} /><span aria-hidden="true" /></label>
                     <i className={`legend-swatch ${layer.legend[0].shape}`} style={{ "--swatch": layer.legend[0].color } as React.CSSProperties} aria-hidden="true" />
-                    <button className="layer-title" type="button" onClick={() => setExpandedLayers((current) => { const next = new Set(current); if (next.has(layer.id)) next.delete(layer.id); else next.add(layer.id); return next; })} aria-expanded={expanded} title={`${expanded ? "Hide" : "Show"} controls for ${layer.title}`}><strong>{layer.title}</strong><small>{noData ? `No ${layer.temporal?.label.toLowerCase()} data for ${temporalScopeLabel}` : `${layer.releaseState} · ${layer.releaseTime}`}</small><em>{expanded ? "Hide controls" : "Controls"} <span aria-hidden="true">{expanded ? "⌃" : "⌄"}</span></em></button>
-                    <span className={`trust-badge state-${layer.releaseState.toLowerCase()}`}>{layer.releaseState}</span>
+                    <button className="layer-title" type="button" onClick={() => setExpandedLayers((current) => { const next = new Set(current); if (next.has(layer.id)) next.delete(layer.id); else next.add(layer.id); return next; })} aria-expanded={expanded} title={`${expanded ? "Hide" : "Show"} options for ${layer.title}`}><strong>{layer.title}</strong><small>{noData ? `No ${layer.temporal?.label.toLowerCase()} data for ${temporalScopeLabel}` : `${layer.releaseState.toLowerCase()} · ${visibility[layer.id] ? "selected" : "off"}`}</small><em>{expanded ? "Close" : "Options"}</em></button>
                   </div>
-                  <label className="opacity-control layer-direct-opacity"><span>Opacity <b>{Math.round((opacity[layer.id] ?? layer.defaultOpacity) * 100)}%</b></span><input type="range" min="0" max="100" value={Math.round((opacity[layer.id] ?? layer.defaultOpacity) * 100)} aria-label={`${layer.title} opacity`} onChange={(event) => setOpacity((current) => ({ ...current, [layer.id]: Number(event.target.value) / 100 }))} /></label>
                   {expanded && <div className="layer-detail">
                     <p>{layer.description}</p>
                     <dl><div><dt>Format</dt><dd>{layer.sourceType}</dd></div><div><dt>Scale</dt><dd>{layer.scaleNote}</dd></div><div><dt>Time</dt><dd>{layer.validTimeExtent}</dd></div><div><dt>Freshness</dt><dd>{layer.freshnessState}</dd></div></dl>
@@ -7585,19 +7531,53 @@ export default function Home() {
                     <p className="layer-note">{layer.sensitivityNote}</p>
                   </div>}
                 </article>;
-              })}</section>;
+              })}</details>;
             })}
             {layerDomain !== "ALL" && DOMAIN_HOLDS.some((hold) => hold.domain === layerDomain) && <section className="catalog-domain-hold" aria-label={`${layerDomain} readiness`}><header><span>{layerDomain}</span><strong>{DOMAIN_HOLDS.find((hold) => hold.domain === layerDomain)?.state}</strong></header><p>{DOMAIN_HOLDS.find((hold) => hold.domain === layerDomain)?.detail}</p><small>Map context, if visible from a basemap, is not an admitted KFM layer. Use the Sources and About surfaces for the current boundary.</small></section>}
             {filteredLayerIds.size === 0 && <div className="catalog-empty"><strong>No layers found</strong><p>Try a dataset or geometry term.</p></div>}
           </div>
 
+            <details className="map-layer-advanced" id="map-settings">
+              <summary>Map settings and other layers</summary>
+              <div className="map-layer-advanced-body">
+                <p>These map layers are site-local context. Source time and evidence limits remain specific to each layer.</p>
+                <div className="map-control-group"><header><strong>Rendering quality</strong><span>Applies to this map</span></header><RenderQualityControl value={renderQuality} onChange={chooseRenderQuality} /></div>
+          <section className="catalog-quick-lenses" aria-labelledby="quick-lenses-title">
+            <div className="section-row"><h2 id="quick-lenses-title">Quick lenses</h2><span>Layers + time + style</span></div>
+            <div>{MAP_VIEW_PROFILES.map((profile) => <button key={profile.id} type="button" aria-pressed={activeViewProfileId === profile.id} onClick={() => applyViewProfile(profile)}><strong>{profile.title}</strong><small>{profile.visibleLayerIds.length} layers · {profile.year}</small></button>)}</div>
+          </section>
+
+          <div className="basemap-control">
+            <div className="catalog-filter-grid"><label><span>Basemap style</span><select value={basemap} onChange={(event) => setBasemap(event.target.value as BasemapKey)}>{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title} · {BASEMAPS[key].note}</option>)}</select></label><label><span>Domain lens</span><select value={layerDomain} onChange={(event) => applyDomainLens(event.target.value as (typeof layerDomains)[number])}>{layerDomains.map((domain) => <option key={domain} value={domain}>{domain === "ALL" ? "No domain lens" : domain}</option>)}</select></label><label><span>Catalog source role</span><select value={catalogSourceRole} onChange={(event) => setCatalogSourceRole(event.target.value)}><option value="ALL">All declared roles</option>{catalogSourceRoles(LAYER_REGISTRY).map((role) => <option key={role} value={role}>{role}</option>)}</select></label></div>
+            <div className="catalog-lens-status" data-active={layerDomain !== "ALL"}><strong>{layerDomain === "ALL" ? "No domain lens selected" : `${layerDomain} lens is on the map`}</strong><span>{layerDomain === "Fire" ? "Historical fire context plus NASA GIBS daily NOAA-20 thermal anomalies and NOAA HMS smoke footprints at the operational-present frame." : layerDomain === "ALL" ? "Choose a domain to add that perspective without filtering the catalog or hiding other layers." : "The lens adds matching layers as an additional perspective; current-source context remains separate and time-bounded."}</span>{layerDomain !== "ALL" && <button type="button" onClick={() => applyDomainLens("ALL")}>Remove lens</button>}</div>
+            <div className="catalog-evidence-filter"><label><span>Map evidence filter</span><select value={mapEvidenceFilter} onChange={(event) => updateMapEvidenceFilter(event.target.value as RegistryEvidenceFilter)}><option value="ALL">All evidence states</option>{(Object.keys(evidenceLabels) as EvidenceState[]).map((state) => <option key={state} value={state}>{state.replaceAll("_", " ")}</option>)}</select></label><output>{mapCompatibleFeatureCount} compatible records</output>{mapEvidenceFilter !== "ALL" && <button type="button" onClick={() => updateMapEvidenceFilter("ALL")}>Clear filter</button>}</div>
+            <div className="catalog-filter-actions"><span>{layerQuery.trim() || catalogSourceRole !== "ALL" || mapEvidenceFilter !== "ALL" ? "Catalog filters are active" : "Showing every local domain"}</span><button type="button" disabled={!layerQuery.trim() && catalogSourceRole === "ALL" && mapEvidenceFilter === "ALL"} onClick={() => { setLayerQuery(""); setCatalogSourceRole("ALL"); updateMapEvidenceFilter("ALL"); }}>Clear filters</button></div>
+          </div>
+
+
+                <div className="map-layer-bulk-actions"><button type="button" onClick={() => { setVisibility(defaultVisibility); setOpacity(defaultOpacity); }}>Reset layer defaults</button><button type="button" onClick={() => setVisibility(Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, false])))}>Hide local layers</button></div>
+                <div className="earth-engine-layer-section"><h3>Earth Engine display layers</h3>
+                <EarthEngineDisplayControls key={earthEngineContext.manifest?.setId ?? "no-display-set"} map={styleReady ? mapRef.current : null} mapYear={temporalMode === "snapshot" ? year : -1} manifest={earthEngineContext.manifest} loading={earthEngineContext.loading} error={earthEngineContext.error} rendererState={runtime.kind} onDisplayChange={setEarthEngineDisplay} onReload={earthEngineContext.reload} onSelect2024={() => { setPlaying(false); setTemporalMode("snapshot"); commitTemporalFrame(2024, "Showing installed Earth Engine layers at the 2024 map year"); }} />
+                </div>
+                <div className="panel-footer-actions"><button type="button" onClick={resetExplorer}>Reset map</button><Link href="/earth-engine">Earth Engine datasets</Link><Link href="/data">Propose a dataset</Link></div>
+              </div>
+            </details>
+          </div>
+          </div>
+          <details className="layer-panel-explore" hidden={leftPanelMode !== "layers" && leftPanelMode !== "live"}>
+            <summary>Explore <span>Other map tools</span></summary>
+            <nav aria-label="Other map tools">
+              <button type="button" onClick={() => setLeftPanelMode("views")}>Views</button>
+              <button type="button" onClick={() => setLeftPanelMode("places")}>Places</button>
+              <button type="button" onClick={() => setLeftPanelMode("stories")}>Stories</button>
+              <Link href="/observatory">Event Observatory</Link>
+              <button type="button" onClick={openEarthEngineLayers}>Earth Engine layers</button>
+              <button type="button" onClick={() => { setLeftOpen(false); openMapUtility("navigate"); }}>Map controls</button>
+            </nav>
           </details>
-          <div className="panel-footer-actions"><button type="button" onClick={resetExplorer}>Reset map</button><Link href="/earth-engine">Earth Engine datasets & recipes</Link><Link href="/data">Propose a dataset</Link></div>
-          </div>
-          </div>
         </aside>
 
-        <section className="map-stage" data-earth-engine={earthEngineOpen && projection === "globe"} data-live-dock={liveDockVisible} data-radar-loop={showRadarDock} aria-label="Kansas MapLibre Explorer">
+        <section className="map-stage" data-live-dock={liveDockVisible} data-radar-loop={showRadarDock} data-raster-fallback={runtime.kind === "unsupported" && Boolean(earthEngineContext.manifest)} aria-label="Kansas MapLibre Explorer">
           <div className="mission-band map-command-bar">
             <div className="map-command-identity">
               <span className="map-command-eyebrow">ACTIVE INVESTIGATION</span>
@@ -7613,27 +7593,24 @@ export default function Home() {
               <span data-runtime={runtime.kind}><i /> {runtime.kind === "ready" ? "MAP READY" : runtime.kind === "loading" ? "MAP STARTING" : runtime.kind === "degraded" ? "MAP DEGRADED" : runtime.kind === "unsupported" ? "MAP UNSUPPORTED" : "MAP UNAVAILABLE"}</span>
               <small>{BASEMAPS[basemap].title} · {mapRepresentationLabel}</small>
             </div>
-            <div className="map-command-actions"><Link className="event-entry-link" href="/observatory">24-hour archive ↗</Link><button type="button" onClick={() => openAtlasPanel("layers")}>Domains + live data</button><button type="button" onClick={() => openMapUtility("navigate")}>Map controls</button><button type="button" onClick={() => openAtlasPanel("places")}>Save view</button><button type="button" onClick={() => openPrimaryWorkspace("reports", true)}>Build report</button></div>
+            <div className="map-command-actions"><Link className="event-entry-link" href="/observatory">24-hour archive ↗</Link><button type="button" onClick={() => openAtlasPanel("layers")}>Map layers</button><button type="button" onClick={() => openMapUtility("navigate")}>Map controls</button><button type="button" onClick={() => openAtlasPanel("places")}>Save view</button><button type="button" onClick={() => openPrimaryWorkspace("reports", true)}>Build report</button></div>
           </div>
           <nav className="map-view-mode-strip" aria-label="Map representation">
             <span className="map-view-mode-heading">MAP REPRESENTATION <small>{mapRepresentationLabel}</small></span>
             <button type="button" aria-pressed={projection === "mercator" && scenePreset !== "elevation-3d"} data-active={projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => activateMapRepresentation("2d")}><b>2D</b><span>Map</span></button>
             <button type="button" aria-pressed={scenePreset === "elevation-3d"} data-active={scenePreset === "elevation-3d"} onClick={() => activateMapRepresentation("terrain")}><b>Terrain 3D</b><span>{verticalExaggeration.toFixed(1)}×</span></button>
-            <div className="globe-mode-controls" role="group" aria-label="Globe and Earth Engine" data-active={projection === "globe"}>
-              <button type="button" aria-pressed={projection === "globe"} data-active={projection === "globe"} onClick={() => activateMapRepresentation("globe")}><b>Globe</b><span>◎</span></button>
-              <button ref={earthEngineTriggerRef} type="button" aria-expanded={earthEngineOpen && projection === "globe"} aria-controls="earth-engine-globe-panel" onClick={() => earthEngineOpen && projection === "globe" ? closeEarthEngineGlobe() : activateMapRepresentation("globe")}><b>Earth Engine</b><span>⌄</span></button>
-            </div>
+            <button type="button" aria-pressed={projection === "globe"} data-active={projection === "globe"} onClick={() => activateMapRepresentation("globe")}><b>Globe</b><span>◎</span></button>
             <button type="button" aria-pressed={mapUtilityOpen && mapUtilityView === "compare"} data-active={mapUtilityOpen && mapUtilityView === "compare"} onClick={() => mapUtilityOpen && mapUtilityView === "compare" ? closeMapUtility() : activateMapRepresentation("compare")}><b>Compare</b><span>A/B</span></button>
-            <TerrainQuickControls active={scenePreset === "elevation-3d"} state={terrainState} exaggeration={verticalExaggeration} lighting={atmospherePreset} azimuth={lightAzimuth} heightOverlay={topographicOverlay} onPreset={applyTerrainLook} onExaggeration={value => { verticalExaggerationRef.current = value; setVerticalExaggeration(value); }} onLighting={value => { atmospherePresetRef.current = value; setAtmospherePreset(value); }} onAzimuth={value => { lightAzimuthRef.current = value; setLightAzimuth(value); }} onHeight={toggleTopographicHeightOverlay} onRetry={retryTerrain} />
           </nav>
           <nav className="map-control-strip" aria-label="Quick map controls">
             <RenderQualityControl value={renderQuality} onChange={chooseRenderQuality} />
             <button className="map-control-launch" type="button" aria-pressed={timelineOpen} onClick={() => setTimelineOpen((open) => !open)}><strong>Time</strong><b>{formatTimelineStep(year)}</b></button>
             <Link className="map-control-launch" href="/observatory">Daily archive ↗</Link>
             <button className="map-control-launch" type="button" onClick={() => openAtlasPanel("layers")} aria-pressed={leftOpen && leftPanelMode === "layers"}>
-              <span aria-hidden="true">≡</span><strong>Domains + live data</strong><b>{visibleCount} + {visibleOfficialCount}</b>
+              <span aria-hidden="true">≡</span><strong>Map layers</strong><b>{visibleCount} + {visibleOfficialCount}</b>
             </button>
             <button className="map-control-launch" type="button" onClick={() => openAtlasPanel("places")} aria-pressed={leftOpen && leftPanelMode === "places"}><strong>Places</strong><b>{savedWorkspaces.length}</b></button>
+            <button className="map-control-launch" type="button" aria-label="Open installed Earth Engine layers" aria-expanded={leftOpen && leftPanelMode === "layers"} aria-controls="earth-engine-context-controls" onClick={openEarthEngineLayers}><strong>Earth Engine layers</strong><span aria-hidden="true">⌄</span></button>
             <div className="quick-live-toggle-list" aria-label="Quick live data layer toggles">
               {QUICK_LIVE_CONTEXT_IDS.map((sourceId) => {
                 const source = OFFICIAL_CONTEXT_BY_ID[sourceId];
@@ -7659,7 +7636,6 @@ export default function Home() {
             <button className="map-control-launch" type="button" onClick={() => window.location.assign("/")} title={`Open a fresh baseline for ${baselineDay} UTC`}><strong>Today’s baseline</strong></button>
             <Link className="map-control-launch" href="/data"><strong>Contribute data</strong></Link>
           </nav>
-          {earthEngineOpen && projection === "globe" && <EarthEngineGlobe camera={globeCamera} moving={globeCameraMoving} rendererState={runtime.kind} basemap={BASEMAPS[basemap].title} mapYear={year} mapTime={temporalScopeLabel} contextManifest={earthEngineContext.manifest} onViewpoint={chooseGlobeViewpoint} onClose={closeEarthEngineGlobe} />}
           {sourceStatusOpen && <aside id="map-source-status" className="map-source-status" aria-label="Source status and data quality">
             <header><h2>Sources & data quality</h2><button type="button" onClick={() => setSourceStatusOpen(false)} aria-label="Close source status">×</button></header>
             <p>Today · {baselineDay} UTC. Live observations refresh as providers publish. County counts keep their Census edition, and historical gaps remain visible.</p>
@@ -7816,12 +7792,13 @@ export default function Home() {
             </form>
             <footer className="qwen-panel-footer"><p>Qwen is interpretive only. It cannot establish evidence, policy, release, or publication authority.</p><button type="button" onClick={() => void copyQwenPrompt()}>Copy grounded prompt</button></footer>
           </aside>}
-          <div id="map-canvas" ref={mapContainerRef} className="map-canvas" tabIndex={0} role="application" aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." />
+          <div id="map-canvas" ref={mapContainerRef} className="map-canvas" tabIndex={runtime.kind === "unsupported" ? -1 : 0} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." />
           {hoverSummary && <aside className="map-hover-summary" style={{ left: hoverSummary.x, top: hoverSummary.y }} aria-hidden="true">
             <span>{hoverSummary.subtitle}</span><strong>{hoverSummary.title}</strong><small>{hoverSummary.state}</small>
           </aside>}
 
-          {(runtime.kind === "loading" || runtime.kind === "error" || runtime.kind === "unsupported") && <div className={`runtime-overlay ${runtime.kind}`} role="status" aria-live="assertive"><span className="runtime-spinner" aria-hidden="true" /><strong>{runtime.kind === "loading" ? "Preparing spatial explorer" : runtime.kind === "unsupported" ? "Map runtime unsupported" : "Map runtime unavailable"}</strong><p>{runtime.message}</p>{runtime.kind === "error" && <button type="button" onClick={() => window.location.reload()}>Reload map</button>}</div>}
+          {runtime.kind === "unsupported" && earthEngineContext.manifest && <EarthEngineRasterFallback manifest={earthEngineContext.manifest} mapYear={temporalMode === "snapshot" ? year : -1} display={earthEngineDisplay} onOpenLayers={openEarthEngineLayers} />}
+          {(runtime.kind === "loading" || runtime.kind === "error" || (runtime.kind === "unsupported" && !earthEngineContext.manifest)) && <div className={`runtime-overlay ${runtime.kind}`} role="status" aria-live="assertive"><span className="runtime-spinner" aria-hidden="true" /><strong>{runtime.kind === "loading" ? "Preparing spatial explorer" : runtime.kind === "unsupported" ? "Map runtime unsupported" : "Map runtime unavailable"}</strong><p>{runtime.message}</p>{runtime.kind === "error" && <button type="button" onClick={() => window.location.reload()}>Reload map</button>}</div>}
           {runtime.kind === "degraded" && <div className="runtime-degraded-banner" role="status" aria-live="polite"><strong>Partial map degradation</strong><span>{runtime.message}</span></div>}
           {temporalNoData.length > 0 && <div className="no-time-data" role="status"><strong>No compatible record for {temporalScopeLabel} in {temporalNoData.map((layer) => layer.title).join(", ")}</strong><span>Other active layers remain visible; choose an available frame or change the sweep semantics.</span></div>}
 
@@ -7873,7 +7850,7 @@ export default function Home() {
             <div className="map-tool-group map-tool-group-workbench" aria-label="Map tool shortcuts">
               <span className="map-tool-group-label">TOOLS</span>
               <button type="button" onClick={() => openAtlasPanel("views")} aria-pressed={leftOpen && leftPanelMode === "views"} aria-label="Open Living Atlas views" data-tooltip="Views"><span className="map-tool-glyph" aria-hidden="true">▦</span><span className="map-tool-label">Views</span></button>
-              <button type="button" onClick={() => openAtlasPanel("layers")} aria-pressed={leftOpen && (leftPanelMode === "layers" || leftPanelMode === "live")} aria-label="Open domains and live data" data-tooltip="Domains + live data"><span className="map-tool-glyph" aria-hidden="true">≡</span><span className="map-tool-label">Domains + live data</span></button>
+              <button type="button" onClick={() => openAtlasPanel("layers")} aria-pressed={leftOpen && (leftPanelMode === "layers" || leftPanelMode === "live")} aria-label="Open map layers" data-tooltip="Map layers"><span className="map-tool-glyph" aria-hidden="true">≡</span><span className="map-tool-label">Domains + live data</span></button>
               <button type="button" onClick={(event) => mapUtilityOpen && mapUtilityView === "inspect" ? closeMapUtility() : openMapUtility("inspect", event.currentTarget)} aria-expanded={mapUtilityOpen && mapUtilityView === "inspect"} aria-controls="map-utility-panel" aria-label="Open feature inspection" data-tooltip="Inspect"><span className="map-tool-glyph" aria-hidden="true">⌖</span><span className="map-tool-label">Inspect</span></button>
               <button type="button" onClick={(event) => mapUtilityOpen && mapUtilityView === "scene" ? closeMapUtility() : openMapUtility("scene", event.currentTarget)} aria-expanded={mapUtilityOpen && mapUtilityView === "scene"} aria-controls="map-utility-panel" aria-label="Open scene and tile lab" data-tooltip="Scene"><span className="map-tool-glyph" aria-hidden="true">3D</span><span className="map-tool-label">Scene</span></button>
               <button type="button" onClick={(event) => mapUtilityOpen && mapUtilityView === "measure" ? closeMapUtility() : openMapUtility("measure", event.currentTarget)} aria-expanded={mapUtilityOpen && mapUtilityView === "measure"} aria-controls="map-utility-panel" aria-label="Open measurement tools" data-tooltip="Measure"><span className="map-tool-glyph" aria-hidden="true">⌗</span><span className="map-tool-label">Measure</span></button>
@@ -8135,7 +8112,7 @@ export default function Home() {
                 <section className="terrain-source-ledger" aria-labelledby="terrain-source-ledger-title">
                   <header><div><span>3D SOURCE LEDGER</span><h4 id="terrain-source-ledger-title">Terrain, structures, authoritative candidate + renderer contract</h4></div><strong>{scenePreset === "elevation-3d" ? terrainState : "ROLE-SEPARATED"}</strong></header>
                   {scenePreset === "elevation-3d" && <div className="terrain-runtime-actions" role="status" aria-live="polite">
-                    <p><strong>Live terrain:</strong> {terrainState === "READY" ? `DEM ready at ${verticalExaggeration.toFixed(2)}×` : terrainState === "ERROR" ? "DEM request failed; the 2D evidence path remains usable." : "Requesting attributed Terrarium elevation tiles…"}</p>
+                    <p><strong>Live terrain:</strong> {terrainState === "READY" ? `${terrainProvider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} DEM ready at ${verticalExaggeration.toFixed(2)}×` : terrainState === "ERROR" ? "DEM request failed; the 2D evidence path remains usable." : `Requesting ${terrainProvider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} elevation tiles…`}</p>
                     {terrainState === "ERROR" && <button type="button" onClick={retryTerrain}>Retry terrain source</button>}
                   </div>}
                   <div>{[...TERRAIN_SOURCES, STRUCTURE_3D_SOURCE].map((source) => <article key={source.id} data-status={source.status}>
@@ -8364,7 +8341,7 @@ export default function Home() {
           {measurementGeometryMode && <div className="measurement-readout" role="region" aria-label="Active screen measurement"><span>{measurementGeometryMode.toUpperCase()} · {measureMode ? "ACTIVE" : "COMPLETE"}</span><strong aria-live="polite">{measurement}</strong><div><button type="button" onClick={undoMeasurementPoint}>Undo</button><button type="button" onClick={finishMeasurement} disabled={!measureMode}>Finish</button><button type="button" onClick={clearMeasurement}>Clear</button></div></div>}
 
           <nav className="map-mobile-actions" aria-label="Mobile map actions">
-            <button type="button" onClick={() => openAtlasPanel("layers")}>Domains + live <b>{visibleCount} + {visibleOfficialCount}</b></button>
+            <button type="button" onClick={() => openAtlasPanel("layers")}>Map layers <b>{visibleCount} + {visibleOfficialCount}</b></button>
             <button type="button" onClick={() => openAtlasPanel("places")}>Places <b>{savedWorkspaces.length}</b></button>
             <button type="button" onClick={() => { setSourceStatusOpen(true); setLeftOpen(false); setRightOpen(false); setTimelineOpen(false); }}>Sources</button>
             <button type="button" onClick={() => { setCurrentWorkspace("explore"); dismissMapUtilityWithoutFocus(); setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); }}>Time <b>{temporalScopeLabel}</b></button>
@@ -8560,20 +8537,14 @@ export default function Home() {
 
           {timelineOpen && <div className="timeline-detail">
             <section className="timeline-sweep-setup" aria-labelledby="timeline-sweep-title">
-              <header><span>EXPLORE TIME</span><strong id="timeline-sweep-title">See how the selected layers change</strong></header>
-              <p>Choose a mode, preview a year, then Commit to update the map. Empty years stay empty.</p>
+              <header><span>TIME SWEEP</span><strong id="timeline-sweep-title">Explore the map by year</strong><small>Preview a year, then Commit to update the map.</small></header>
               <div className="timeline-semantic-controls">
                 <label>Mode<select value={temporalMode} onChange={(event) => { const nextMode = event.target.value as TemporalSweepMode; setPlaying(false); setTemporalMode(nextMode); if (nextMode === "comparison") { commitTemporalFrame(compareTimeB); setMapUtilityView("compare"); setMapUtilityOpen(true); setMapContextOpen(false); } }}><option value="snapshot">Snapshot</option><option value="moving-window">Moving window</option><option value="event-stepping">Event stepping</option><option value="accumulation">Accumulation</option><option value="comparison">A / B comparison</option></select></label>
               </div>
               <p className="timeline-mode-hint">{temporalMode === "snapshot" ? "Snapshot shows one year. Choose a sweep mode to enable Play." : temporalMode === "comparison" ? "Comparison holds two frames. Open the comparison view to inspect them." : reducedMotion ? "Automatic playback is off for reduced motion. Use previous and next to step through frames." : "Play advances through declared frames; gaps and source dates remain visible."}</p>
-              <details className="timeline-playback-options">
-                <summary>Playback, range & display options</summary>
+              <details className="timeline-advanced"><summary>Playback, range & interpretation</summary>
                 <div className="timeline-semantic-controls">
-                <label>Step<select value={temporalStepRule} onChange={(event) => { setPlaying(false); setTemporalStepRule(event.target.value as TemporalStepRule); }}><option value="regular-calendar">Every year from 1800</option><option value="available-events">Event dates + bounds</option></select></label>
-                <label>Frame cadence<select value={playbackSpeed} onChange={(event) => setPlaybackSpeed(Number(event.target.value) as PlaybackSpeed)}><option value={0.5}>Slow · 2.6 s</option><option value={1}>Normal · 1.3 s</option><option value={2}>Fast · 0.65 s</option></select></label>
-                <label>Direction<select value={playbackDirection} onChange={(event) => { setPlaying(false); setPlaybackDirection(event.target.value as TemporalPlaybackDirection); }}><option value="forward">Forward</option><option value="reverse">Reverse</option></select></label>
-                <label>At boundary<select value={playbackLoopMode} onChange={(event) => setPlaybackLoopMode(event.target.value as TemporalLoopMode)}><option value="stop">Stop</option><option value="loop">Loop</option></select></label>
-                <label>Window<select value={movingWindowFrames} disabled={temporalMode !== "moving-window"} onChange={(event) => setMovingWindowFrames(Number(event.target.value))}><option value={2}>2 frames</option><option value={3}>3 frames</option><option value={5}>5 frames</option></select></label>
+                <label>Step<select value={temporalStepRule} onChange={(event) => { setPlaying(false); setTemporalStepRule(event.target.value as TemporalStepRule); }}><option value="regular-calendar">Every year</option><option value="available-events">Event dates + bounds</option></select></label>
               </div>
               <div className="timeline-range-controls" aria-label="Sweep range">
                 <label><span>Start</span><select value={sweepRangeStart} onChange={(event) => { const next = Number(event.target.value); setPlaying(false); if (next <= year) setSweepRangeStart(next); }}>{TIME_STEPS.map((step) => <option key={`start:${step}`} value={step} disabled={step > year}>{formatTimelineStep(step)}</option>)}</select></label>
@@ -8581,13 +8552,19 @@ export default function Home() {
                 <label><span>End</span><select value={sweepRangeEnd} onChange={(event) => { const next = Number(event.target.value); setPlaying(false); if (next >= year) setSweepRangeEnd(next); }}>{TIME_STEPS.map((step) => <option key={`end:${step}`} value={step} disabled={step < year}>{formatTimelineStep(step)}</option>)}</select></label>
                 <strong>{temporalSequence.length} frame{temporalSequence.length === 1 ? "" : "s"}</strong>
               </div>
+                <div className="timeline-semantic-controls">
+                <label>Frame cadence<select value={playbackSpeed} onChange={(event) => setPlaybackSpeed(Number(event.target.value) as PlaybackSpeed)}><option value={0.5}>Slow · 2.6 s</option><option value={1}>Normal · 1.3 s</option><option value={2}>Fast · 0.65 s</option></select></label>
+                <label>Direction<select value={playbackDirection} onChange={(event) => { setPlaying(false); setPlaybackDirection(event.target.value as TemporalPlaybackDirection); }}><option value="forward">Forward</option><option value="reverse">Reverse</option></select></label>
+                <label>At boundary<select value={playbackLoopMode} onChange={(event) => setPlaybackLoopMode(event.target.value as TemporalLoopMode)}><option value="stop">Stop</option><option value="loop">Loop</option></select></label>
+                <label>Window<select value={movingWindowFrames} disabled={temporalMode !== "moving-window"} onChange={(event) => setMovingWindowFrames(Number(event.target.value))}><option value={2}>2 frames</option><option value={3}>3 frames</option><option value={5}>5 frames</option></select></label>
+              </div>
               <p className="timeline-axis-note"><strong>YEAR BY YEAR · 1800 TO {TIME_STEPS.at(-1)}</strong> · Every calendar year is selectable; a year with no compatible records stays empty. Earlier eras are separate capacity markers, not claims of data. Frame spacing and cadence are ordinal, not proportional to elapsed time. The active query uses each layer’s declared feature-year axis; source, retrieval, release, review, and correction clocks remain separate metadata.</p>
               <div className="timeline-motion-controls">
                 <label><input type="checkbox" checked={dynamicEffects && !reducedMotion} disabled={reducedMotion} onChange={(event) => setDynamicEffects(event.target.checked)} /> Ambient layer motion</label>
-                <small>{reducedMotion ? "System reduced-motion is active: autoplay and ambient movement are off; stepping remains available." : "Synthetic water, smoke, fire, rail, and place motion is presentation only. Live HMS smoke remains tied to provider Start/End intervals; no visual motion encodes velocity, intensity, or measured change."}</small>
+                <small>{reducedMotion ? "System reduced-motion is active: autoplay and ambient movement are off; stepping remains available." : "Local layer motion and live gauge halos are presentation only. HMS smoke stays tied to provider Start/End intervals; visual motion does not encode velocity, intensity, or measured change."}</small>
               </div>
-              </details>
               <div className="timeline-era-jumps" aria-label="Preview named time ranges">{TIMELINE_JUMPS.map((jump) => <button key={jump.label} type="button" data-active={jump.year === previewYear} onClick={() => { setPreviewYear(jump.year); setPlaying(false); }}>{jump.label}<small>{formatTimelineStep(jump.year)}</small></button>)}</div>
+              </details>
               <div className="timeline-primary-actions"><button type="button" onClick={loadTemporalEventStack}>Load event stack</button><button type="button" onClick={() => openPrimaryWorkspace("stories", true)}>Capture frame for story</button></div>
             </section>
 
@@ -8599,19 +8576,20 @@ export default function Home() {
                 <article><span>ENTERED</span><strong>{temporalFrameSummary.entered.length}</strong></article>
                 <article><span>EXITED</span><strong>{temporalFrameSummary.exited.length}</strong></article>
               </div>
-              <div className="timeline-change-list">
+              {(temporalFrameSummary.entered.length > 0 || temporalFrameSummary.exited.length > 0) && <div className="timeline-change-list">
                 <div><span>{comparisonTemporalFrame === null ? "NO ADJACENT REFERENCE FRAME" : `ENTERED FROM ${formatTimelineStep(comparisonTemporalFrame)}`}</span>{temporalFrameSummary.entered.slice(0, 3).map((record) => <small key={`in:${record.id}`}>+ {record.title} · {record.domain}</small>)}{temporalFrameSummary.entered.length === 0 && <small>No entered records</small>}</div>
                 <div><span>EXITED</span>{temporalFrameSummary.exited.slice(0, 3).map((record) => <small key={`out:${record.id}`}>− {record.title} · {record.domain}</small>)}{temporalFrameSummary.exited.length === 0 && <small>No exited records</small>}</div>
-              </div>
-              <div className="timeline-domain-links"><span>VISIBLE REGISTRY CO-PRESENCE</span>{temporalFrameSummary.domainPairs.slice(0, 4).map((pair) => <small key={pair.id}>{pair.leftDomain} ({pair.leftRecordCount}) ↔ {pair.rightDomain} ({pair.rightRecordCount})</small>)}{temporalFrameSummary.domainPairs.length === 0 && <small>Show time-aware layers from at least two domains to form a shared-frame link.</small>}<p>Counts use visible registry layers and the evidence filter, not viewport or zoom. Shared frame is not spatial overlap, correlation, direction, lag, or causation.</p></div>
-              <div className="availability-bars" style={{ "--availability-columns": timelineSteps.length } as React.CSSProperties} aria-label={`Time-aware record pattern across ${timelineSteps.length} ordinal frames. Preview ${formatTimelineStep(previewYear)} has ${availabilityByStep[previewYear]} compatible records; select a year for its exact count.`}>{timelineSteps.map((step) => <i key={step} aria-hidden="true" data-active={step === previewYear} data-committed={step === temporalQuery.frame} data-in-range={step >= sweepRangeStart && step <= sweepRangeEnd} data-has-records={availabilityByStep[step] > 0} title={`${formatTimelineStep(step)} · ${availabilityByStep[step]} compatible time-aware record${availabilityByStep[step] === 1 ? "" : "s"}`} style={{ height: `${Math.min(52, Math.max(2, availabilityByStep[step] * 5))}px` }} />)}</div>
+              </div>}
+              {temporalFrameSummary.domainPairs.length > 0 && <div className="timeline-domain-links"><span>DOMAINS IN THIS FRAME</span>{temporalFrameSummary.domainPairs.slice(0, 4).map((pair) => <small key={pair.id}>{pair.leftDomain} ({pair.leftRecordCount}) ↔ {pair.rightDomain} ({pair.rightRecordCount})</small>)}<p>Co-presence is a catalog pattern, not spatial overlap or causation.</p></div>}
+              {hasTimelineRecords ? <div className="availability-bars" aria-label="Peak compatible record count in each labeled range; missing years are not filled">{availabilityBins.map((bin) => <i key={bin.start} data-active={previewYear >= bin.start && previewYear <= bin.end} data-committed={temporalQuery.frame >= bin.start && temporalQuery.frame <= bin.end} title={`${formatTimelineStep(bin.start)}–${formatTimelineStep(bin.end)} · peak ${bin.peak} compatible records`} style={{ height: `${Math.min(52, 12 + bin.peak * 5)}px` }}><b>{bin.peak || ""}</b></i>)}</div> : <p className="timeline-empty">No compatible time-aware records in this range. The map keeps the year selectable without implying data.</p>}
             </section>
 
             <section className="timeline-live-context" data-held={withheldOfficialCount > 0} aria-labelledby="timeline-live-title">
               <header><span>REAL OFFICIAL CONTEXT</span><strong id="timeline-live-title">{withheldOfficialCount > 0 ? `${withheldOfficialCount} current source${withheldOfficialCount === 1 ? "" : "s"} held` : `${visibleOfficialCount} selected · ${officialFeatureCount} loaded features`}</strong></header>
               {withheldOfficialCount > 0
-                ? <p>Selected current-only official overlays do not rewind. They are temporarily hidden from this historical frame and will return at {formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)} without changing your source choices.</p>
-                : <p>{officialReadyCount}/{OFFICIAL_CONTEXT_SOURCES.length} official adapters have a settled state. Latest Site retrieval: {officialLatestRetrievedAt ? `${officialLatestRetrievedAt.slice(0, 19).replace("T", " ")} UTC` : "not yet retrieved"}.</p>}
+                ? <p>Current-only sources are hidden at this year. They return at {formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}; your choices are saved.</p>
+                : <p>{officialReadyCount}/{OFFICIAL_CONTEXT_SOURCES.length} sources settled · latest retrieval {officialLatestRetrievedAt ? `${officialLatestRetrievedAt.slice(0, 19).replace("T", " ")} UTC` : "pending"}.</p>}
+              <details className="timeline-context-details"><summary>Source clocks and limits</summary>
               <dl>
                 <div><dt>Phenomenon clock</dt><dd>{temporalScopeLabel}</dd></div>
                 <div><dt>Live-source clock</dt><dd>{year === OFFICIAL_CONTEXT_PRESENT_FRAME ? "Operational present only" : "WITHHELD FROM HISTORICAL FRAME"}</dd></div>
@@ -8620,6 +8598,7 @@ export default function Home() {
               </dl>
               <p className="timeline-reference-note">Untimed registry layers, the selected basemap, and interactive terrain remain present-day orientation context across frames; they are excluded from entered/exited metrics and cannot prove historical persistence. Choose Midnight or Prairie to avoid an external basemap request.</p>
               <p className="timeline-trust-note">A time sweep changes renderer filters and captured context. It cannot admit, correct, approve, release, deploy, or publish data.</p>
+              </details>
             </section>
             <button className="icon-close timeline-close" type="button" onClick={closeTimelinePanel} aria-label="Close timeline">×</button>
           </div>}

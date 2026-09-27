@@ -107,7 +107,7 @@ export const SITE_FEATURES = Object.freeze([
   },
   {
     id: "lidar-terrain-context",
-    title: "3DEP LiDAR-derived terrain context",
+    title: "3DEP terrain mosaic context",
     domain: "terrain",
     status: "ACTIVE_CONTEXT",
     surface: "Dynamic USGS 3DEP hillshade and slope carriers",

@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import Link from "next/link";
 import type { AtmospherePreset, TerrainPresentationState } from "./map-runtime";
 import type { OfficialContextId } from "./live-context";
@@ -43,24 +42,33 @@ export function RenderQualityControl({ value, onChange }: { value: RenderQuality
   return <label className="render-quality-control"><span>Rendering</span><select aria-label="Map rendering quality" value={value} onChange={e => onChange(e.target.value as RenderQuality)}>{Object.entries(QUALITY_LABELS).map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select></label>;
 }
 
-export function TerrainQuickControls({ active, state, exaggeration, lighting, azimuth, heightOverlay, onPreset, onExaggeration, onLighting, onAzimuth, onHeight, onRetry }: {
-  active: boolean; state: TerrainPresentationState; exaggeration: number; lighting: AtmospherePreset; azimuth: number; heightOverlay: boolean;
-  onPreset: (preset: "natural" | "topographic" | "buildings") => void; onExaggeration: (value: number) => void; onLighting: (value: AtmospherePreset) => void; onAzimuth: (value: number) => void; onHeight: () => void; onRetry: () => void;
+export function LayerSceneControls({ active, state, selectedLook, terrainProvider, exaggeration, lighting, azimuth, heightOverlay, onPreset, onTerrainProvider, on2D, onExaggeration, onLighting, onAzimuth, onHeight, onRetry }: {
+  active: boolean; state: TerrainPresentationState; selectedLook: "natural" | "topographic" | "buildings" | null; terrainProvider: "mapzen" | "usgs-3dep"; exaggeration: number; lighting: AtmospherePreset; azimuth: number; heightOverlay: boolean;
+  onPreset: (preset: "natural" | "topographic" | "buildings") => void; onTerrainProvider: (provider: "mapzen" | "usgs-3dep") => void; on2D: () => void; onExaggeration: (value: number) => void; onLighting: (value: AtmospherePreset) => void; onAzimuth: (value: number) => void; onHeight: () => void; onRetry: () => void;
 }) {
-  const [open, setOpen] = useState(false); const ref = useRef<HTMLDivElement>(null); const panel = useRef<HTMLElement>(null);
-  useEffect(() => { if (open) panel.current?.querySelector<HTMLButtonElement>("button")?.focus(); }, [open]);
-  useEffect(() => { if (!open) return; const close = (e: PointerEvent) => { if (!ref.current?.contains(e.target as Node) && !panel.current?.contains(e.target as Node)) setOpen(false); }; document.addEventListener("pointerdown", close); return () => document.removeEventListener("pointerdown", close); }, [open]);
-  return <div className="terrain-quick-controls" ref={ref} onKeyDown={e => { if (e.key === "Escape") { e.stopPropagation(); setOpen(false); ref.current?.querySelector<HTMLButtonElement>("button")?.focus(); } }}>
-    <button type="button" aria-expanded={open} aria-controls="terrain-quick-panel" onClick={() => setOpen(!open)}><b>3D settings</b><span aria-hidden="true">⌄</span></button>
-    {open && createPortal(<aside id="terrain-quick-panel" ref={panel} className="terrain-quick-panel" role="dialog" aria-modal="false" aria-labelledby="terrain-quick-title"><header><h2 id="terrain-quick-title">Explore in 3D</h2><button type="button" onClick={() => { setOpen(false); ref.current?.querySelector<HTMLButtonElement>("button")?.focus(); }} aria-label="Close 3D settings">×</button></header>
-      <div className="terrain-look-presets"><button type="button" onClick={() => onPreset("natural")}><strong>Natural terrain</strong><small>Imagery + physical relief</small></button><button type="button" onClick={() => onPreset("topographic")}><strong>Topographic relief</strong><small>USGS map + terrain</small></button><button type="button" onClick={() => onPreset("buildings")}><strong>3D buildings</strong><small>Mapped heights · zoom in</small></button></div>
-      <p>{active ? state === "READY" ? "Display terrain ready" : state === "ERROR" ? "Elevation tiles need attention" : "Loading display terrain…" : "Choose a 3D view to start."}</p>
-      {active && state === "ERROR" && <button type="button" onClick={onRetry}>Retry elevation tiles</button>}
-      <label><span>Vertical scale <output>{exaggeration.toFixed(1)}×{exaggeration === 1 ? " · physical" : " · exaggerated"}</output></span><input aria-label="Quick terrain vertical scale" type="range" min="0.5" max="2" step="0.1" disabled={!active} value={exaggeration} onChange={e => onExaggeration(Number(e.target.value))} /></label>
-      <label><span>Scene light</span><select aria-label="Quick terrain scene light" value={lighting} onChange={e => onLighting(e.target.value as AtmospherePreset)}><option value="clear">Daylight</option><option value="dusk">Dusk</option><option value="night">Low glare</option></select></label>
-      <label><span>Light direction <output>{Math.round(azimuth)}°</output></span><input aria-label="Quick terrain light direction" type="range" min="0" max="360" step="5" value={azimuth} onChange={e => onAzimuth(Number(e.target.value))} /></label>
-      <button type="button" aria-pressed={heightOverlay} disabled={!active || state === "ERROR"} onClick={onHeight}>{heightOverlay ? "Hide" : "Show"} elevation colors</button>
-      <small className="terrain-look-note">Lighting is illustrative. Relief and imagery keep their own source dates; neither reconstructs the selected historical day.</small>
-    </aside>, document.body)}
-  </div>;
+  const demStatus = !active || state === "OFF" ? "Off" : state === "READY" ? "Ready" : state === "ERROR" ? "Unavailable" : "Loading";
+  return <section className="layer-scene-controls" aria-label="3D map appearance" data-dem-state={demStatus.toLowerCase()}>
+    <div className="layer-scene-presets" role="group" aria-label="3D view presets">
+      <button type="button" aria-pressed={selectedLook === "natural"} onClick={() => onPreset("natural")}><strong>Natural terrain</strong><small>Imagery + relief</small></button>
+      <button type="button" aria-pressed={selectedLook === "topographic"} onClick={() => onPreset("topographic")}><strong>Topographic relief</strong><small>Topo map + relief</small></button>
+      <button type="button" aria-pressed={selectedLook === "buildings"} onClick={() => onPreset("buildings")}><strong>3D buildings</strong><small>Mapped heights</small></button>
+    </div>
+    <div className="layer-scene-dem" role="status" aria-live="polite">
+      <span className="layer-scene-dem-dot" aria-hidden="true" />
+      <span>{terrainProvider === "usgs-3dep" ? "USGS 3DEP DEM" : "Display DEM"} <strong>{demStatus}</strong></span>
+    </div>
+    {active && <div className="layer-scene-actions">{state === "ERROR" && <button className="layer-scene-retry" type="button" onClick={onRetry}>Retry elevation tiles</button>}<button className="layer-scene-2d" type="button" onClick={on2D}>Return to 2D</button></div>}
+    <small className="layer-scene-source-note">{terrainProvider === "usgs-3dep" ? "USGS 3DEP uses a mixed-resolution bare-earth DEM mosaic. LiDAR-derived areas vary; exact work-unit accuracy is not established here." : "3DEP hillshade is a separate official layer. Its source date may differ from this Mapzen display DEM."}</small>
+    <details className="layer-scene-details">
+      <summary>Fine tune 3D <span aria-hidden="true">⌄</span></summary>
+      <div className="layer-scene-settings">
+        <label htmlFor="layer-scene-source"><span>Terrain elevation source</span><select id="layer-scene-source" disabled={!active} value={terrainProvider} onChange={e => onTerrainProvider(e.target.value as "mapzen" | "usgs-3dep")}><option value="mapzen">Fast global DEM · Mapzen</option><option value="usgs-3dep">USGS 3DEP · Kansas detail</option></select></label>
+        <label htmlFor="layer-scene-scale"><span>Vertical scale <output>{exaggeration.toFixed(1)}×{exaggeration === 1 ? " · physical" : " · exaggerated"}</output></span><input id="layer-scene-scale" type="range" min="0.5" max="2" step="0.1" disabled={!active || state === "ERROR"} value={exaggeration} onChange={e => onExaggeration(Number(e.target.value))} /></label>
+        <label htmlFor="layer-scene-light"><span>Scene light</span><select id="layer-scene-light" disabled={!active} value={lighting} onChange={e => onLighting(e.target.value as AtmospherePreset)}><option value="clear">Daylight</option><option value="dusk">Dusk</option><option value="night">Low glare</option></select></label>
+        <label htmlFor="layer-scene-direction"><span>Light direction <output>{Math.round(azimuth)}°</output></span><input id="layer-scene-direction" type="range" min="0" max="360" step="5" disabled={!active} value={azimuth} onChange={e => onAzimuth(Number(e.target.value))} /></label>
+        <button type="button" className="layer-scene-height" aria-pressed={heightOverlay} disabled={!active || state === "ERROR"} onClick={onHeight}>{heightOverlay ? "Hide" : "Show"} elevation colors</button>
+        <p>Lighting and elevation colors are illustrative. Imagery and relief keep their own source dates; neither reconstructs the selected historical day.</p>
+      </div>
+    </details>
+  </section>;
 }

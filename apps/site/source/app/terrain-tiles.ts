@@ -31,7 +31,20 @@ type Entry = { bytes: Uint8Array; retrievedAt: string; expires: number };
 type Options = { fetchBytes?: (url: string) => Promise<Uint8Array>; now?: () => number; edgeCache?: () => Cache | undefined };
 export function createTerrainTileService(options: Options = {}) {
   const now = options.now ?? Date.now;
-  const fetchBytes = options.fetchBytes ?? (async (url) => (await boundedFetch(url, 1_048_576)).bytes);
+  const fetchBytes = options.fetchBytes ?? (async (url: string) => {
+    let lastError: unknown;
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        const bytes = (await boundedFetch(url, 1_048_576, { timeoutMs: 12_000 })).bytes;
+        validateTerrainPNG(bytes);
+        return bytes;
+      } catch (error) {
+        lastError = error;
+        if (attempt === 0) await new Promise((resolve) => setTimeout(resolve, 300));
+      }
+    }
+    throw lastError;
+  });
   const memory = new Map<string, Entry>(), pending = new Map<string, Promise<Entry>>(); let memoryBytes = 0;
   const cacheControl = (expires: number) => { const remaining = Math.max(0, Math.floor((expires - now()) / 1000)); return `public, max-age=${Math.min(3600, remaining)}, s-maxage=${remaining}`; };
   const response = (entry: Entry, state: string) => new Response(new Uint8Array(entry.bytes), { headers: {

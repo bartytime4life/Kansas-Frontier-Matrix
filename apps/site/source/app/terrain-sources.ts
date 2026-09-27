@@ -15,7 +15,9 @@ export type TerrainSourceRecord = Readonly<{
   tileTemplate?: string;
   encoding?: "terrarium" | "mapbox";
   tileSize?: number;
+  minZoom?: number;
   maxZoom?: number;
+  bounds?: readonly [number, number, number, number];
   attribution: string;
   boundary: string;
 }>;
@@ -55,6 +57,25 @@ export const TERRAIN_SOURCES: readonly TerrainSourceRecord[] = Object.freeze([
     maxZoom: TERRARIUM_RENDER_MAX_ZOOM,
     attribution: activeTerrainContext.attribution,
     boundary: `${activeTerrainContext.boundary} High-zoom upstream discontinuities are excluded by a renderer safety cap; closer views overzoom the inspected continuous DEM level instead.`,
+  }),
+  Object.freeze({
+    id: "terrain-usgs-3dep-live-dem",
+    title: "USGS 3DEP bare-earth terrain display",
+    organization: "U.S. Geological Survey",
+    status: "ACTIVE_CONTEXT",
+    role: "Optional Kansas 3D relief from the provider's dynamic DEM mosaic",
+    resolution: "Mixed source resolutions and dates; rendered at 256 px per tile, through map zoom 15",
+    format: "USGS F32 LERC elevation converted to Terrarium PNG for MapLibre",
+    coverage: "Kansas map area; source mosaics vary by location",
+    sourceUrl: "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer",
+    tileTemplate: "/api/3dep-dem-tile?z={z}&x={x}&y={y}",
+    encoding: "terrarium",
+    tileSize: 256,
+    minZoom: 6,
+    maxZoom: 15,
+    bounds: [-104.8, 34.8, -92, 42.2] as const,
+    attribution: "U.S. Geological Survey 3D Elevation Program · dynamic DEM mosaic",
+    boundary: "This is a live visual carrier for the USGS mixed-resolution DEM mosaic, which can include LiDAR-derived work units where published. It does not identify an exact work unit, acquisition date, horizontal resolution, vertical datum, quality level, or certified accuracy for any rendered tile. The conversion quantizes elevation to 1/256 m for MapLibre but cannot improve source accuracy. Unavailable tiles remain unavailable rather than being replaced with inferred topography.",
   }),
   Object.freeze({
     id: "terrain-usgs-3dep-13arc",
@@ -98,6 +119,8 @@ export const TERRAIN_SOURCES: readonly TerrainSourceRecord[] = Object.freeze([
 ]);
 
 export const ACTIVE_TERRAIN_SOURCE = TERRAIN_SOURCES[0];
+export type TerrainProvider = "mapzen" | "usgs-3dep";
+export const terrainSourceFor = (provider: TerrainProvider): TerrainSourceRecord => provider === "usgs-3dep" ? TERRAIN_SOURCES[1] : ACTIVE_TERRAIN_SOURCE;
 
 export const STRUCTURE_3D_SOURCE: TerrainSourceRecord = Object.freeze({
   id: "structures-openfreemap-liberty",
