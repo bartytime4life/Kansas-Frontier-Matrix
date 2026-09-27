@@ -1386,7 +1386,7 @@ test("carries governed map context into creation workflows and checked source po
     assert.match(sources, new RegExp(`"${state}"`));
   }
   assert.match(sources, /(?:^|[^A-Za-z0-9._~:/?#\[\]@!$&'()*+,;=%-])https:\/\/kgs\.ku\.edu\/data-and-maps(?:$|[^A-Za-z0-9._~:/?#\[\]@!$&'()*+,;=%-])/);
-  assert.match(sources, /https:\/\/www\.ksdot\.gov\/about\/our-organization\/divisions\/planning-and-development\/kansas-maps-and-gis-resources/);
+  assert.match(sources, /(?:^|[^A-Za-z0-9._~:/?#\[\]@!$&'()*+,;=%-])https:\/\/www\.ksdot\.gov\/about\/our-organization\/divisions\/planning-and-development\/kansas-maps-and-gis-resources(?:$|[^A-Za-z0-9._~:/?#\[\]@!$&'()*+,;=%-])/);
   for (const type of ["SourceDescriptor", "EvidenceRecord", "TemporalExtent", "MapSnapshot", "ReportDraft", "StoryScene", "PolicyDecision", "TrustState"]) {
     assert.match(workspaceModel, new RegExp(`(?:interface|type) ${type}`));
   }
