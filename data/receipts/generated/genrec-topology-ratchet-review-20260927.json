@@ -1,10 +1,10 @@
 {
   "artifact_hashes": {
-    "docs/intake/exploratory/README.md": "sha256:36d99e6b1ca3ebf6782ea10acb5d005135983656b1adc2b1f0f574aff9359041",
+    "docs/intake/README.md": "sha256:f0b7fe9a2e979e24e276f7826f6720bc0344d79a0ece0cc4098dfa174cfb1871",
     "docs/intake/exploratory/repository-topology-ratchet-review-20260927.md": "sha256:9172d51262654a497b2bd98704fce2310cad7e9d9a09fb31d1c1dd9947a6df18"
   },
   "artifact_paths": [
-    "docs/intake/exploratory/README.md",
+    "docs/intake/README.md",
     "docs/intake/exploratory/repository-topology-ratchet-review-20260927.md"
   ],
   "citations": [
@@ -58,7 +58,7 @@
   "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
   "receipt_id": "genrec-topology-ratchet-review-20260927",
   "truth_labels": {
-    "docs/intake/exploratory/README.md": "CONFIRMED",
+    "docs/intake/README.md": "CONFIRMED",
     "docs/intake/exploratory/repository-topology-ratchet-review-20260927.md": "PROPOSED"
   },
   "validation_gates": [
