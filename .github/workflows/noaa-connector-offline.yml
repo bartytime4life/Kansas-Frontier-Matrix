@@ -1,0 +1,51 @@
+name: noaa-connector-offline
+on:
+  pull_request:
+    paths:
+      - 'connectors/noaa/src/noaa/fetch.py'
+      - 'connectors/noaa/src/noaa/admit.py'
+      - 'connectors/noaa/src/noaa/descriptor.yaml'
+      - 'connectors/noaa/src/noaa/storm_events.py'
+      - 'connectors/noaa/src/noaa/uscrn_hourly.py'
+      - 'connectors/noaa/src/noaa/nws_alerts.py'
+      - 'connectors/noaa/tests/test_*.py'
+      - 'packages/connectors-core/src/connectors_core/**'
+      - '.github/workflows/noaa-connector-offline.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'connectors/noaa/src/noaa/fetch.py'
+      - 'connectors/noaa/src/noaa/admit.py'
+      - 'connectors/noaa/src/noaa/descriptor.yaml'
+      - 'connectors/noaa/src/noaa/storm_events.py'
+      - 'connectors/noaa/src/noaa/uscrn_hourly.py'
+      - 'connectors/noaa/src/noaa/nws_alerts.py'
+      - 'connectors/noaa/tests/test_*.py'
+      - 'packages/connectors-core/src/connectors_core/**'
+      - '.github/workflows/noaa-connector-offline.yml'
+permissions:
+  contents: read
+concurrency:
+  group: noaa-connector-offline-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  synthetic-candidates:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      KFM_NO_NETWORK: '1'
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONHASHSEED: '0'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.11'
+      - name: Run standard-library synthetic tests (connectors-core imported from source)
+        run: python -m unittest discover -s connectors/noaa/tests -p 'test_*.py' -v
+      - name: Record evidence boundary
+        if: always()
+        run: |
+          echo 'Offline synthetic NOAA Storm Events, USCRN hourly02, and NWS alert parser, injected-transport retrieval-episode, and routing checks only; routes stay HOLD while descriptor role/rights are unresolved. KFM is not an alerting system. No NOAA fetch, source activation, lane-placement decision, finalization or narrative review, alert relay, source admission, capture completeness, active Site integration, release, or deployment proof.' >> "$GITHUB_STEP_SUMMARY"

@@ -66,6 +66,19 @@ notes:
 
 > Import-package boundary for NOAA source fetch, parse, provenance, and admission helpers. This package may prepare product-specific NOAA material for governed **RAW** or **QUARANTINE** handoff; it does not establish NOAA truth, issue alerts, approve publication, or bypass KFM governance.
 
+> [!NOTE]
+> **Retrieval and routing (2026-09-27; supersedes the placeholder statements for `fetch.py`, `admit.py`, and `pyproject.toml`; lane placement is still open).**
+> - **`fetch.retrieve_storm_events(url)`:** accepts only the exact URL `storm_events.details_url(year, created)` emits for the vintage it names; `application/gzip` or `application/x-gzip`.
+> - **`fetch.retrieve_uscrn_hourly(url)`:** accepts only the exact URL `uscrn_hourly.hourly_url(year, station)` emits; `text/plain`.
+> - **`fetch.retrieve_nws_alerts(url)`:** accepts only the exact URL `nws_alerts.alerts_url(area, active=...)` emits; `application/geo+json` or `application/json`. No identifying `User-Agent` is invented; a real client must supply one.
+> - All three run through `connectors_core.transport` with caller-injected effects and are recorded with `connectors_core.retrieval_episode` under separate source ids (`noaa.storm-events`, `noaa.uscrn-hourly02`, `noaa.nws-alerts`) and profiles.
+> - **`admit.admit()`:** selects the parser from the episode's own source identity and re-applies fetch's URL rule. Unknown or mismatched sources are refused. It routes as follows:
+>   - a parsed file or collection becomes `RAW_CANDIDATE`, flagged `RECORD_QUARANTINE_CANDIDATES`, `MISSING_HOURS_PRESENT` (USCRN gaps), or the NWS collection's own reasons when they apply;
+>   - parser rejections become `QUARANTINE_CANDIDATE`;
+>   - uncaptured retrievals become `HOLD`.
+> - **Holds:** the final route is `HOLD` while `role` or `rights` is unresolved. NWS freshness is as of the retrieval instant only; KFM relays no alert.
+> - **Scope:** no network library, write, or admission. Tests: `connectors/noaa/tests/test_fetch_admit.py`, run by `.github/workflows/noaa-connector-offline.yml`.
+
 ![status](https://img.shields.io/badge/status-draft-yellow)
 ![version](https://img.shields.io/badge/version-v0.1-informational)
 ![maturity](https://img.shields.io/badge/maturity-empty__package__shell-lightgrey)

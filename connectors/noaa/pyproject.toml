@@ -1,4 +1,20 @@
-# connectors/noaa pyproject — greenfield placeholder
+# Package metadata for the NOAA connector source tree under src/noaa.
+# Runtime needs only the standard library and the in-repository connectors-core
+# package (packages/connectors-core); no distribution or release is implied.
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "kfm-connector-noaa"
 version = "0.0.0"
+description = "NOAA Storm Events, USCRN hourly02 and NWS alert planning, injected-transport retrieval episodes, and candidate routing"
+requires-python = ">=3.11"
+dependencies = ["kfm-connectors-core"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["noaa"]
+
+[tool.setuptools.package-data]
+noaa = ["descriptor.yaml"]
