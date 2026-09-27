@@ -3,13 +3,29 @@ on:
   pull_request:
     paths:
       - 'connectors/usgs/src/usgs/earthquake.py'
+      - 'connectors/usgs/src/usgs/fetch.py'
+      - 'connectors/usgs/src/usgs/admit.py'
+      - 'connectors/usgs/src/usgs/descriptor.yaml'
       - 'connectors/usgs/tests/test_earthquake.py'
+      - 'connectors/usgs/tests/test_fetch_admit.py'
+      - 'connectors/usgs/tests/test_retrieval_episode_conformance.py'
+      - 'schemas/contracts/v1/source/source_retrieval_episode.schema.json'
+      - 'tools/validators/source/validate_source_retrieval_episode.py'
+      - 'packages/hashing/**'
       - '.github/workflows/usgs-earthquake-offline.yml'
   push:
     branches: [main]
     paths:
       - 'connectors/usgs/src/usgs/earthquake.py'
+      - 'connectors/usgs/src/usgs/fetch.py'
+      - 'connectors/usgs/src/usgs/admit.py'
+      - 'connectors/usgs/src/usgs/descriptor.yaml'
       - 'connectors/usgs/tests/test_earthquake.py'
+      - 'connectors/usgs/tests/test_fetch_admit.py'
+      - 'connectors/usgs/tests/test_retrieval_episode_conformance.py'
+      - 'schemas/contracts/v1/source/source_retrieval_episode.schema.json'
+      - 'tools/validators/source/validate_source_retrieval_episode.py'
+      - 'packages/hashing/**'
       - '.github/workflows/usgs-earthquake-offline.yml'
 permissions:
   contents: read
@@ -21,6 +37,9 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     env:
+      KFM_NO_NETWORK: '1'
+      PIP_DISABLE_PIP_VERSION_CHECK: '1'
+      PIP_NO_INPUT: '1'
       PYTHONDONTWRITEBYTECODE: '1'
       PYTHONHASHSEED: '0'
     steps:
@@ -31,8 +50,14 @@ jobs:
         with:
           python-version: '3.11'
       - name: Run standard-library-only synthetic tests
-        run: python -m unittest discover -s connectors/usgs/tests -p 'test_earthquake.py' -v
+        run: |
+          python -m unittest discover -s connectors/usgs/tests -p 'test_earthquake.py' -v
+          python -m unittest discover -s connectors/usgs/tests -p 'test_fetch_admit.py' -v
+      - name: Install declared validation dependencies
+        run: python tools/ci/install_python_ci.py project-test
+      - name: Check emitted retrieval episodes against the contract validator
+        run: python -m unittest discover -s connectors/usgs/tests -p 'test_retrieval_episode_conformance.py' -v
       - name: Record evidence boundary
         if: always()
         run: |
-          echo 'Offline synthetic query/parser checks only. No provider fetch, source admission, catalog completeness, active Site integration, release, or deployment proof.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Offline synthetic query/parser, retrieval-episode classification, and candidate-routing checks only. Fixture-only episodes; routes stay HOLD while descriptor role/rights are unresolved. No provider fetch, source admission, catalog completeness, active Site integration, release, or deployment proof.' >> "$GITHUB_STEP_SUMMARY"

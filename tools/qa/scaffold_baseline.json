@@ -2,14 +2,14 @@
  "schema_version": "kfm.scaffold-inventory/v1",
  "summary": {
   "by_kind": {
-   "PLACEHOLDER_MARKER": 931,
-   "STUB_MODULE": 350,
+   "PLACEHOLDER_MARKER": 928,
+   "STUB_MODULE": 348,
    "UNRESOLVED_DESCRIPTOR": 24,
    "VACUOUS_TEST": 1
   },
   "by_surface": {
    "apps": 34,
-   "connectors": 166,
+   "connectors": 161,
    "contracts": 3,
    "packages": 122,
    "pipelines": 236,
@@ -19,8 +19,8 @@
    "tests": 188,
    "tools": 54
   },
-  "files": 933,
-  "total": 1306
+  "files": 930,
+  "total": 1301
  },
  "findings": [
   {"kind": "PLACEHOLDER_MARKER", "path": "apps/cli/pyproject.toml"},
@@ -216,13 +216,8 @@
   {"kind": "UNRESOLVED_DESCRIPTOR", "path": "connectors/openstreetmap/src/openstreetmap/descriptor.yaml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/openstreetmap/src/openstreetmap/fetch.py"},
   {"kind": "STUB_MODULE", "path": "connectors/openstreetmap/src/openstreetmap/fetch.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "connectors/usgs/pyproject.toml"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "connectors/usgs/src/usgs/admit.py"},
-  {"kind": "STUB_MODULE", "path": "connectors/usgs/src/usgs/admit.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/usgs/src/usgs/descriptor.yaml"},
   {"kind": "UNRESOLVED_DESCRIPTOR", "path": "connectors/usgs/src/usgs/descriptor.yaml"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "connectors/usgs/src/usgs/fetch.py"},
-  {"kind": "STUB_MODULE", "path": "connectors/usgs/src/usgs/fetch.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "contracts/atmosphere/air-observation.schema.json"},
   {"kind": "PLACEHOLDER_MARKER", "path": "contracts/domains/habitat/habitat_patch.schema.json"},
   {"kind": "PLACEHOLDER_MARKER", "path": "contracts/people-dna-land/land_ownership_assertion.schema.json"},
