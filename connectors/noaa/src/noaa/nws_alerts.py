@@ -256,4 +256,8 @@ def parse_alerts(body: bytes, *, status: int, source_url: str, retrieved_at: str
         reasons.append("SEVEN_DAY_WINDOW_NOT_ARCHIVE")
     return AlertCollectionCandidate(source_url, area, path.endswith("active"), stamp, 200,
                                     cache, "sha256:" + sha256(body).hexdigest(),
-                                    tuple(alerts), "CAPTURE_CANDIDATE", tuple(reasons))
+                                    tuple(alerts),
+                                    # A known further page means this capture is partial.
+                                    "INCOMPLETE_CAPTURE"
+                                    if "PARTIAL_COLLECTION_MORE_PAGES" in reasons
+                                    else "CAPTURE_CANDIDATE", tuple(reasons))

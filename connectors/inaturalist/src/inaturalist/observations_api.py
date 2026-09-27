@@ -187,6 +187,21 @@ class ObservationCandidate:
     admission: str = "NOT_ADMITTED"
 
 
+def _minimize_users(value: object) -> object:
+    """Project every nested ``user`` object (observer, identifiers, commenters) to id/login."""
+    if isinstance(value, list):
+        return [_minimize_users(item) for item in value]
+    if not isinstance(value, dict):
+        return value
+    result = {}
+    for key, item in value.items():
+        if key == "user" and isinstance(item, dict):
+            result[key] = {field: item[field] for field in USER_FIELDS if field in item}
+        else:
+            result[key] = _minimize_users(item)
+    return result
+
+
 def _point(record: dict[str, object]) -> tuple[float | None, float | None]:
     geojson = record.get("geojson")
     if geojson is None:
@@ -264,9 +279,7 @@ def _classify(record: dict[str, object]) -> ObservationCandidate:
         reasons.append("TAXON_ABSENT")
     if record.get("captive") is True:
         reasons.append("CAPTIVE_OR_CULTIVATED")
-    minimized = dict(record)
-    if user is not None:
-        minimized["user"] = {key: user[key] for key in USER_FIELDS if key in user}
+    minimized = _minimize_users(record)
     try:
         raw_json = json.dumps(minimized, sort_keys=True, ensure_ascii=True,
                               separators=(",", ":"), allow_nan=False)

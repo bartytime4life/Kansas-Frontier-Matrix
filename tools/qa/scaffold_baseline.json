@@ -3,7 +3,7 @@
  "summary": {
   "by_kind": {
    "PLACEHOLDER_MARKER": 931,
-   "STUB_MODULE": 347,
+   "STUB_MODULE": 350,
    "UNRESOLVED_DESCRIPTOR": 24,
    "VACUOUS_TEST": 1
   },
@@ -17,10 +17,10 @@
    "schemas": 389,
    "scripts": 2,
    "tests": 188,
-   "tools": 51
+   "tools": 54
   },
   "files": 933,
-  "total": 1303
+  "total": 1306
  },
  "findings": [
   {"kind": "PLACEHOLDER_MARKER", "path": "apps/cli/pyproject.toml"},
@@ -1324,7 +1324,10 @@
   {"kind": "PLACEHOLDER_MARKER", "path": "tools/validators/validate_attestation_ref.py"},
   {"kind": "STUB_MODULE", "path": "tools/validators/validate_attestation_ref.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tools/validators/validate_catalog_matrix.py"},
+  {"kind": "STUB_MODULE", "path": "tools/validators/validate_catalog_matrix.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tools/validators/validate_focus_envelope.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tools/validators/validate_story_continuity.py"}
+  {"kind": "STUB_MODULE", "path": "tools/validators/validate_focus_envelope.py"},
+  {"kind": "PLACEHOLDER_MARKER", "path": "tools/validators/validate_story_continuity.py"},
+  {"kind": "STUB_MODULE", "path": "tools/validators/validate_story_continuity.py"}
  ]
 }

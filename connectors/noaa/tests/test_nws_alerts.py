@@ -117,6 +117,8 @@ class ParseTests(unittest.TestCase):
         paged = nws.parse_alerts(collection([alert()], pagination={"next": "https://x"}),
                                  status=200, source_url=nws.alerts_url(active=False),
                                  retrieved_at=RETRIEVED)
+        self.assertEqual(paged.outcome, "INCOMPLETE_CAPTURE")
+        self.assertEqual(parse().outcome, "CAPTURE_CANDIDATE")
         self.assertEqual(paged.reasons, ("PARTIAL_COLLECTION_MORE_PAGES",
                                          "SEVEN_DAY_WINDOW_NOT_ARCHIVE"))
         not_modified = nws.parse_alerts(b"", status=304, source_url=URL, retrieved_at=RETRIEVED,

@@ -7,7 +7,8 @@ workflows) and the schema, contract, and policy surfaces they validate against f
 * ``EMPTY_FILE``            zero-byte file other than ``__init__.py``/``.gitkeep``/``py.typed``
 * ``PLACEHOLDER_MARKER``    non-Markdown file whose header declares a greenfield/PROPOSED
                             placeholder, scaffold, or stub
-* ``STUB_MODULE``           Python module (not ``__init__``/``conftest``) with no statements
+* ``STUB_MODULE``           Python module (not ``__init__``/``conftest``) with no statements,
+                            or only ``pass``/``...``/``raise NotImplementedError`` bodies
 * ``VACUOUS_TEST``          test module whose every test only asserts a constant or passes
 * ``TODO_ECHO_SCRIPT``      shell script whose only action is echoing a TODO (false success)
 * ``UNRESOLVED_DESCRIPTOR`` connector descriptor with ``TBD`` field values
@@ -60,6 +61,48 @@ def _is_constant_test(node: ast.FunctionDef | ast.AsyncFunctionDef) -> bool:
                for stmt in body)
 
 
+_INTERFACE_BASES = frozenset({"Protocol", "ABC", "ABCMeta", "TypedDict", "NamedTuple"})
+
+
+def _is_docstring(stmt: ast.stmt) -> bool:
+    return isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Constant)
+
+
+def _is_empty_statement(stmt: ast.stmt) -> bool:
+    """``pass``, ``...``, a docstring, or ``raise NotImplementedError[(...)]``."""
+    if isinstance(stmt, ast.Pass) or _is_docstring(stmt):
+        return True
+    if isinstance(stmt, ast.Raise) and stmt.exc is not None:
+        target = stmt.exc.func if isinstance(stmt.exc, ast.Call) else stmt.exc
+        return isinstance(target, ast.Name) and target.id == "NotImplementedError"
+    return False
+
+
+def _is_stub_definition(stmt: ast.stmt) -> bool:
+    if isinstance(stmt, (ast.FunctionDef, ast.AsyncFunctionDef)):
+        return all(_is_empty_statement(inner) for inner in stmt.body)
+    if isinstance(stmt, ast.ClassDef):
+        bases = {base.id if isinstance(base, ast.Name) else getattr(base, "attr", "")
+                 for base in stmt.bases}
+        if bases & _INTERFACE_BASES:
+            return False  # Interface declarations legitimately use ``...`` bodies.
+        return all(_is_empty_statement(inner) or _is_stub_definition(inner)
+                   for inner in stmt.body)
+    return _is_empty_statement(stmt)
+
+
+def _is_main_guard(stmt: ast.stmt) -> bool:
+    return (isinstance(stmt, ast.If) and isinstance(stmt.test, ast.Compare)
+            and isinstance(stmt.test.left, ast.Name) and stmt.test.left.id == "__name__")
+
+
+def _is_pass_only_module(body: list[ast.stmt]) -> bool:
+    """True when every non-import, non-guard statement is an empty body or stub definition."""
+    remaining = [stmt for stmt in body
+                 if not isinstance(stmt, (ast.Import, ast.ImportFrom)) and not _is_main_guard(stmt)]
+    return bool(remaining) and all(_is_stub_definition(stmt) for stmt in remaining)
+
+
 def _python_kinds(path: str, text: str) -> list[str]:
     name = Path(path).name
     try:
@@ -68,7 +111,7 @@ def _python_kinds(path: str, text: str) -> list[str]:
         return []
     body = [stmt for stmt in module.body
             if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Constant))]
-    if not body:
+    if not body or _is_pass_only_module(body):
         return [] if name in {"__init__.py", "conftest.py"} else ["STUB_MODULE"]
     if name.startswith("test_") or name.endswith("_test.py"):
         tests = [node for node in ast.walk(module)
