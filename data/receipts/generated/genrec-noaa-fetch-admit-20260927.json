@@ -97,7 +97,7 @@
   "created_at": "2026-09-27T14:14:55Z",
   "emitter": "Claude Code repository-authoring session",
   "links": {
-    "pr_number": null,
+    "pr_number": 4758,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
   },
   "notes": "Replaces NOAA fetch.py/admit.py/pyproject.toml placeholders: planner-canonical Storm Events, USCRN hourly02 and NWS alert URLs through the injected transport; admission bound to the episode's own source identity with the URL rule re-applied. Descriptor and lane placement unchanged; KFM relays no alert."
