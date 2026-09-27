@@ -6,7 +6,7 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — Connector steward · FEMA source steward · NFHL product steward · OpenFEMA product steward · Test steward · Hazards steward · Hydrology steward · Settlements/Infrastructure steward · Privacy/sensitivity reviewer · Rights reviewer · Security reviewer · Validation steward · Docs steward
 created: 2026-06-18
-updated: 2026-07-11
+updated: 2026-09-27
 policy_label: public-context-only; connector-local-tests; greenfield; synthetic-fixtures-only; no-network-default; no-secret-tests; source-role-preserving; per-product-admission; per-table-openfema-admission; raw-or-quarantine-only; not-for-life-safety; no-publication
 proposed_path: connectors/fema/tests/README.md
 truth_posture: CONFIRMED README-only test lane / executable tests ABSENT / FEMA package NOT IMPORTABLE / sources NOT ACTIVATED / CI UNKNOWN
@@ -68,6 +68,9 @@ notes:
 </p>
 
 `connectors/fema/tests/`
+
+> [!NOTE]
+> **Disaster Declarations synthetic suite (2026-09-27).** `connectors/fema/src/fema/openfema_declarations.py` covers exactly one OpenFEMA table, **Disaster Declarations Summaries (v2)**. It never fetches. It plans Kansas-scoped OData pages (`state eq 'KS'`, optional half-open declaration-date window, `$orderby=id`, `$count=true`, `$top` ≤ 10,000, `$skip` paging) and parses *supplied* pages. A page is rejected whole unless its `metadata` echoes the requested filter/skip/top and carries a count, every required field is present, `id`s are unique UUIDs in ascending order, and each row is in Kansas (`state`/`fipsStateCode`). Extra fields are preserved and flagged `SCHEMA_DRIFT_ADDITIONAL_FIELD`. Every record is `source_role: administrative`, `role_authority: FEMA`, `geography_semantics: DESIGNATED_JURISDICTION_NOT_HAZARD_FOOTPRINT`, and `NOT_ADMITTED`. Declaration, incident begin/end, closeout, and refresh times stay separate; an inconsistent declaration identity, incident end before begin, or closeout before declaration routes to `QUARANTINE_CANDIDATE`. `reconcile()` returns `CAPTURE_CANDIDATE` only for contiguous skips to a short final page with a stable count equal to the unique records received, else `INCOMPLETE_CAPTURE`. Synthetic tests: `connectors/fema/tests/test_openfema_declarations.py`, run by `.github/workflows/fema-openfema-declarations-offline.yml`. This is not table activation, rights review, or admission; other OpenFEMA tables have no implementation, and `fetch.py`, `admit.py`, and the `TBD` descriptor remain placeholders tracked by `tools/qa/scaffold_baseline.json`.
 
 > [!IMPORTANT]
 > **Confirmed state:** this directory contains this README and no confirmed executable tests or fixtures. The adjacent FEMA package is also README-only and not import-proven. No test runner, dependency, marker, live-test flag, local command, CI job, coverage result, source activation, or passing test evidence is confirmed. Treat all test files, commands, fixtures, and outcomes below as required future contracts—not current capability.
