@@ -111,7 +111,7 @@
   "created_at": "2026-09-27T02:38:49Z",
   "emitter": "Claude Code repository-authoring session",
   "links": {
-    "pr_number": null,
+    "pr_number": 4729,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
   },
   "notes": "Replaces the USGS connector fetch.py/admit.py/pyproject.toml placeholders. fetch.py classifies supplied response material into fixture-only SourceRetrievalEpisode records (no transport); admit.py routes to RAW/QUARANTINE candidate or HOLD and holds all routes while descriptor role/rights are TBD. descriptor.yaml unchanged (steward decision). FDSN 204 empty success is not representable under the current contract and is refused."
