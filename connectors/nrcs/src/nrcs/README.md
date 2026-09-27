@@ -57,6 +57,18 @@ notes:
 
 > Repository-present Python namespace for future shared USDA NRCS connector implementation. Current evidence establishes an empty initializer and documentation—not an installable, exported, tested, source-activated, or CI-enforced connector package.
 
+> [!NOTE]
+> **SCAN (AWDB) retrieval and routing (2026-09-27; supersedes the placeholder statements for `fetch.py`, `admit.py`, and `pyproject.toml`; lane placement and activation are still open).**
+> - **`scan_awdb.data_url(station_ids, elements, duration=, begin_date=, end_date=)`:** plans one canonical AWDB `services/v1/data` GET for Kansas `SCAN`-network station triplets only (Tribal SCAN is out of scope until tribal review). It is bounded: ≤10 stations, ≤12 elements, `DAILY` ≤366 days or `HOURLY` ≤31 days, from 1980 on.
+> - **`scan_awdb.parse_data(...)`:** parses a *supplied* JSON response into per-series candidates. It keeps element code, ordinal, depth token, duration and unit verbatim; values stay exact `Decimal`s with their QC/QA flags; a missing value stays missing, never zero. Any station, element, duration, date or shape outside the request rejects the whole response. The AWDB layout, units, depth sign convention and flag vocabularies are **NEEDS VERIFICATION** against current NWCC documentation.
+> - **`fetch.retrieve(url)`:** accepts only the planner's exact URL (`application/json`), runs through `connectors_core.transport` with caller-injected effects, and records under `nrcs.scan-awdb`. Soil Data Access is not planned, because it is a POST query surface and the shared transport is GET/HEAD only.
+> - **`admit.admit()`:** re-applies the URL rule, then routes:
+>   - a parsed response becomes `RAW_CANDIDATE`, flagged `RECORD_QUARANTINE_CANDIDATES`, `MISSING_VALUES_PRESENT`, `EMPTY_SERIES_PRESENT` or `DEPTH_NOT_STATED` when they apply;
+>   - parser rejections become `QUARANTINE_CANDIDATE`;
+>   - uncaptured retrievals become `HOLD`.
+> - **Holds:** the final route is `HOLD` while `role` or `rights` is unresolved. A SCAN value is a station observation, never area truth.
+> - **Scope:** no network library, write, or admission. Tests: `connectors/nrcs/tests/test_scan_awdb.py`, `test_fetch_admit.py`, run by `.github/workflows/nrcs-connector-offline.yml`.
+
 ![status](https://img.shields.io/badge/status-draft-yellow)
 ![version](https://img.shields.io/badge/version-v0.2-informational)
 ![maturity](https://img.shields.io/badge/maturity-empty__namespace-lightgrey)
