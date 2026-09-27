@@ -1,0 +1,130 @@
+{
+  "receipt_id": "genrec-scripting-data-audit-followup-20260927",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/domain-geology.yml",
+    "connectors/inaturalist/README.md",
+    "connectors/inaturalist/src/inaturalist/observations_api.py",
+    "connectors/inaturalist/tests/test_observations_api.py",
+    "connectors/noaa/src/noaa/nws_alerts.py",
+    "connectors/noaa/tests/test_nws_alerts.py",
+    "connectors/nws-api/README.md",
+    "connectors/nws/README.md",
+    "tests/qa/test_scaffold_inventory.py",
+    "tools/qa/scaffold_baseline.json",
+    "tools/qa/scaffold_inventory.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/domain-geology.yml": "sha256:57c870a3259e06685f2c4178f6e86a7fa9a0ff5d419f8ed8fb55986b7a4a1d6c",
+    "connectors/inaturalist/README.md": "sha256:770eb3221449ea000eaabd4ec824fb73409809120e06b7281000e6f79dc55489",
+    "connectors/inaturalist/src/inaturalist/observations_api.py": "sha256:663d03cdd9a71181211b740b7efd117daf62bfcadfcc277ae5eb02157b05ac53",
+    "connectors/inaturalist/tests/test_observations_api.py": "sha256:09c438c6319040296941427289a300cc8071e6cf8e92a90692578de9037283a4",
+    "connectors/noaa/src/noaa/nws_alerts.py": "sha256:434a642fc0138678bab9ee51863cf40b94001e6d04b5eae6f192369bf07d66ef",
+    "connectors/noaa/tests/test_nws_alerts.py": "sha256:599e4beb7bd57d0c6dcbf0da2b412a0da0694a952f536f443a24aa3b31cd2764",
+    "connectors/nws-api/README.md": "sha256:552d2ff54d75964547ca90972fe4bab03fbe33c26c4ea9c00068d676621627ef",
+    "connectors/nws/README.md": "sha256:f2cf8f08f1c8784fcd2035d7845ecd70273ef5e4cbdd556056a8698240b673af",
+    "tests/qa/test_scaffold_inventory.py": "sha256:dc9ed8d49411b6a2377e1e677d263adf971a3547481e5d39b05f3a73f5158069",
+    "tools/qa/scaffold_baseline.json": "sha256:4625da429507047672d737c78a43e1a1a5cfc2ccd8e6be711f53408c7167b370",
+    "tools/qa/scaffold_inventory.py": "sha256:a268898eda2ab6ecf44fae05d5fa4b00c3164253ba8e399cb197173ceced47bd"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:7066f03ac56e79e9a4358dc76b3342688aae57ed8f7f3b005423900f6509ce27",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/d9c05c9270d18cb197633e201aca861ca2c99aed",
+      "connectors/usgs/src/usgs/earthquake.py",
+      "connectors/census/tiger-line-2025-kansas-core.source-reference.json",
+      "docs/sources/catalog/noaa/storm-events.md",
+      "docs/sources/catalog/inaturalist/README.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/domain-geology.yml": "PROPOSED",
+    "connectors/inaturalist/README.md": "PROPOSED",
+    "connectors/inaturalist/src/inaturalist/observations_api.py": "CONFIRMED",
+    "connectors/inaturalist/tests/test_observations_api.py": "CONFIRMED",
+    "connectors/noaa/src/noaa/nws_alerts.py": "CONFIRMED",
+    "connectors/noaa/tests/test_nws_alerts.py": "CONFIRMED",
+    "connectors/nws-api/README.md": "PROPOSED",
+    "connectors/nws/README.md": "PROPOSED",
+    "tests/qa/test_scaffold_inventory.py": "CONFIRMED",
+    "tools/qa/scaffold_baseline.json": "CONFIRMED",
+    "tools/qa/scaffold_inventory.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Offline standard-library synthetic connector tests",
+      "outcome": "PASS",
+      "reason": "Python 3.11: GBIF 14, iNaturalist 16, Census 24, NOAA Storm Events 13, USCRN 9, NWS alerts 9 unittest methods pass; each module checked by targeted mutations (every applied mutation caught)."
+    },
+    {
+      "gate": "QA tooling and domain smoke tests",
+      "outcome": "PASS",
+      "reason": "tests/qa 25 pass; seven domain smoke suites (5 tests each) pass under unittest and pytest; a valid fixture copied into invalid/ fails the habitat suite as intended."
+    },
+    {
+      "gate": "Scaffold ratchet and deny suites",
+      "outcome": "PASS",
+      "reason": "tools/qa/scaffold_inventory.py --check matches the 1303-finding baseline; tools/qa/deny_test_runner.py reports PASS for all four registered suites."
+    },
+    {
+      "gate": "Workflow security, docs critical structure, domain workflow guard blocks",
+      "outcome": "PASS",
+      "reason": "make workflow-security PASS (484 workflows, 0 new drift); make docs-critical-structure 0 findings; inline Python guard blocks of the seven edited domain workflows executed locally and pass."
+    },
+    {
+      "gate": "Regression comparison against base",
+      "outcome": "PASS",
+      "reason": "Failing test sets across tests/ci, scripts, docs, connectors, pipelines, domains, validators, policy, source are identical with and without this diff (pre-existing environment and shallow-clone failures)."
+    },
+    {
+      "gate": "Repository topology ratchet",
+      "outcome": "FAIL",
+      "reason": "make repository-topology fails identically on the base commit (pre-existing KFM-TOPO-001/004/009 drift); not introduced here."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation; no earlier-head hosted result transferred."
+    },
+    {
+      "gate": "Source activation, admission, release",
+      "outcome": "SKIPPED",
+      "reason": "No descriptor activation, network transport, lifecycle write, publication, or alerting behavior is added."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/d9c05c9270d18cb197633e201aca861ca2c99aed"
+    },
+    {
+      "id": "usgs-earthquake-precedent",
+      "validated": true,
+      "evidence_ref": "repo:connectors/usgs/src/usgs/earthquake.py@d9c05c9270d18cb197633e201aca861ca2c99aed"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-27T00:24:07Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Follow-up to merged #4726: second geology receipt replay pinned; Codex review findings fixed (nested iNaturalist user minimization, NWS pagination outcome, pass-only stub detection). Original scope: scripting/automation/raw-data audit: fail-closed replacements for false-green placeholders, scaffold inventory ratchet, deny-suite runner, offline planners/parsers for GBIF, iNaturalist, Census (TIGER package, ACS), NOAA (Storm Events, USCRN hourly02, NWS alerts as context only), and real domain smoke tests. No live fetch, activation, admission, alerting, publication, or required-check change. Placement ADRs for NOAA sub-product lanes remain open."
+}
