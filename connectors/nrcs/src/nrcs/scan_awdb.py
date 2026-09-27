@@ -17,7 +17,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import date, datetime, timezone
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from hashlib import sha256
 import json
 import re
@@ -49,8 +49,28 @@ class _SourceNumber(Decimal):
         return number
 
 
+class _SourceInt(int):
+    """A decoded JSON integer that remembers its exact source token (e.g. ``-0``)."""
+
+    def __new__(cls, token: str) -> "_SourceInt":
+        number = super().__new__(cls, token)
+        number.token = token
+        return number
+
+
 def _token(number: int | Decimal) -> str:
     return getattr(number, "token", None) or str(number)
+
+
+def _plain(value: object) -> object:
+    """Replace decoded numbers whose token ``json.dumps`` would not reproduce by the token."""
+    if isinstance(value, dict):
+        return {key: _plain(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [_plain(item) for item in value]
+    if isinstance(value, _SourceInt):
+        return int(value) if value.token == str(int(value)) else value.token
+    return value
 
 
 class ScanInputError(ValueError):
@@ -192,8 +212,9 @@ class ScanDataCandidate:
 
 
 def _dump(value: object) -> str:
-    """Canonical JSON for verbatim storage; Decimal tokens are kept exact, as strings."""
-    return json.dumps(value, sort_keys=True, ensure_ascii=True, separators=(",", ":"),
+    """Canonical JSON for verbatim storage; tokens JSON cannot re-emit exactly (non-integer
+    decimals, ``-0``) are kept as strings."""
+    return json.dumps(_plain(value), sort_keys=True, ensure_ascii=True, separators=(",", ":"),
                       allow_nan=False, default=_decimal_text)
 
 
@@ -258,7 +279,8 @@ def _series(station: dict, element: object, request: DataRequest) -> tuple[ScanS
     if header.get("durationName") != request.duration:
         raise ScanInputError("DURATION_MISMATCH")
     ordinal = header.get("ordinal")
-    if ordinal is not None and (type(ordinal) is not int or not 0 <= ordinal <= 99):
+    if ordinal is not None and (isinstance(ordinal, bool) or not isinstance(ordinal, int)
+                                or not 0 <= ordinal <= 99):
         raise ScanInputError("ELEMENT_SHAPE")
     depth = header.get("heightDepth")
     if depth is not None and (isinstance(depth, bool) or not isinstance(depth, (int, Decimal))):
@@ -276,7 +298,8 @@ def _series(station: dict, element: object, request: DataRequest) -> tuple[ScanS
     if depth is None and code.startswith(("SMS", "STO")):
         reasons.append("DEPTH_NOT_STATED")
     raw_json = _dump(header)
-    return ScanSeries(station["stationTriplet"], code, ordinal,
+    return ScanSeries(station["stationTriplet"], code,
+                      None if ordinal is None else int(ordinal),
                       None if depth is None else _token(depth), request.duration,
                       _text(header.get("storedUnitCode"), "ELEMENT_SHAPE", 16), parsed,
                       tuple(reasons), raw_json,
@@ -300,8 +323,9 @@ def parse_data(body: bytes, *, status: int, source_url: str, retrieved_at: str,
         raise ScanInputError("HTTP_STATUS")
     try:
         payload = json.loads(body.decode("utf-8"), parse_float=_SourceNumber,
-                             parse_constant=_reject_constant)
-    except (UnicodeError, ValueError, RecursionError):
+                             parse_int=_SourceInt, parse_constant=_reject_constant)
+    except (UnicodeError, ValueError, RecursionError, InvalidOperation):
+        # InvalidOperation: an exponent outside Decimal's range is not a readable value.
         raise ScanInputError("INVALID_JSON") from None
     if not isinstance(payload, list):
         raise ScanInputError("RESPONSE_SHAPE")

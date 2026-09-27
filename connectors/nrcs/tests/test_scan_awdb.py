@@ -140,6 +140,32 @@ class ParserTests(unittest.TestCase):
         self.assertIn('"heightDepth":"-2.0"', series.raw_element_json)
         self.assertEqual(values[2].raw, "7")
 
+    def test_integer_tokens_are_kept_including_negative_zero(self):
+        raw = ('[{"stationTriplet": "99901:KS:SCAN", "data": [{"stationElement":'
+               ' {"elementCode": "SMS", "ordinal": 1, "heightDepth": -2,'
+               ' "durationName": "DAILY"}, "values": [{"date": "2023-06-01", "value": -0},'
+               ' {"date": "2023-06-02", "value": 12}]}, {"stationElement":'
+               ' {"elementCode": "STO", "ordinal": 1, "heightDepth": -0,'
+               ' "durationName": "DAILY"}, "values": []}]}]')
+        url = sa.data_url(STATIONS, ("SMS:-2", "STO"), duration="DAILY",
+                          begin_date="2023-06-01", end_date="2023-06-03")
+        sms, sto = parse(body(raw=raw), url=url).series
+        self.assertEqual([(v.raw, str(v.value)) for v in sms.values],
+                         [("-0", "-0"), ("12", "12")])
+        self.assertIs(type(sms.ordinal), int)
+        self.assertEqual(sto.height_depth_raw, "-0")
+        self.assertIn('"heightDepth":"-0"', sto.raw_element_json)
+        self.assertIn('"heightDepth":-2', sms.raw_element_json)
+
+    def test_numbers_outside_decimal_range_reject_as_invalid_json(self):
+        for token in ("1e" + "9" * 100, "1" * 5000):
+            raw = ('[{"stationTriplet": "99901:KS:SCAN", "data": [{"stationElement":'
+                   ' {"elementCode": "SMS", "durationName": "DAILY"}, "values":'
+                   ' [{"date": "2023-06-01", "value": ' + token + '}]}]}]')
+            with self.subTest(token=token[:12]), self.assertRaises(sa.ScanInputError) as ctx:
+                parse(body(raw=raw))
+            self.assertEqual(str(ctx.exception), "INVALID_JSON")
+
     def test_value_level_quarantine_and_series_flags(self):
         candidate = parse(body([element(values=[{"date": "2023-06-01", "value": "25.4"}]),
                                 element("STO", depth=None, values=[])]), url=LOOSE_URL)
