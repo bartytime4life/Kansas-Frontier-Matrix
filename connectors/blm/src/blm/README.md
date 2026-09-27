@@ -36,6 +36,18 @@ notes:
 
 > Importable implementation support for governed Bureau of Land Management source admission. This package may help fetch, parse, identify, and stage BLM source material; it does not establish land truth, legal interpretation, access rights, cadastral authority, policy, proof closure, or publication state.
 
+> [!NOTE]
+> **PLSS (CadNSDI) retrieval and routing (2026-09-27; supersedes the placeholder statements for `fetch.py`, `admit.py`, and `pyproject.toml`; other BLM products and activation are still open).**
+> - **`plss_cadnsdi.query_url(layer, offset=, count=)`:** plans one canonical, paged ArcGIS REST `query` GET on `BLM_Natl_PLSS_CadNSDI/MapServer` for Kansas features (`STATEABBR='KS'`) of the `township` or `first_division` layer. It fixes the parameter order, orders by `OBJECTID`, and returns GeoJSON in WGS84, at ≤1000 features per page.
+> - **`plss_cadnsdi.parse_page(...)`:** parses a *supplied* GeoJSON page into per-feature candidates with properties verbatim (number tokens kept exact, never via `float`), `source_role: REFERENCE_GEOMETRY_CANDIDATE` and `title_authority: False`. An open ring or geometry outside the Kansas extent makes the feature a quarantine candidate. A non-Kansas feature, an unordered or duplicate id, an ArcGIS error body, or any shape drift rejects the whole page. The service path, layer ids (`1`, `2`) and fields (`PLSSID`, `FRSTDIVID`, `STATEABBR`, `OBJECTID`) are **NEEDS VERIFICATION** against current BLM service metadata.
+> - **`fetch.retrieve(url)`:** accepts only the planner's exact URL (`application/geo+json` or `application/json`), runs through `connectors_core.transport` with caller-injected effects, and records under `blm.plss-cadnsdi`. Issuing the next page is the caller's decision.
+> - **`admit.admit()`:** re-applies the URL rule, then routes:
+>   - a parsed page becomes `RAW_CANDIDATE`, flagged `RECORD_QUARANTINE_CANDIDATES` or `MORE_PAGES` (the ArcGIS `exceededTransferLimit`, top-level or under the collection's `properties`, or a full page) when they apply;
+>   - parser rejections become `QUARANTINE_CANDIDATE`;
+>   - uncaptured retrievals become `HOLD`.
+> - **Holds:** the final route is `HOLD` while `role` or `rights` is unresolved. PLSS geometry is never parcel ownership, legal title, deed, or access authority.
+> - **Scope:** no network library, write, or admission. Tests: `connectors/blm/tests/test_plss_cadnsdi.py`, `test_fetch_admit.py`, run by `.github/workflows/blm-connector-offline.yml`.
+
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
   <img alt="Owner: OWNER_TBD" src="https://img.shields.io/badge/owner-OWNER__TBD-lightgrey">
