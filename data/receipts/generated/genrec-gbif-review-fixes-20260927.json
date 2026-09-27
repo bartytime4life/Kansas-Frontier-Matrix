@@ -1,0 +1,94 @@
+{
+  "receipt_id": "genrec-gbif-review-fixes-20260927",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "connectors/gbif/README.md",
+    "connectors/gbif/src/gbif/README.md",
+    "connectors/gbif/src/gbif/admit.py",
+    "connectors/gbif/src/gbif/fetch.py",
+    "connectors/gbif/tests/README.md",
+    "connectors/gbif/tests/test_fetch_admit.py"
+  ],
+  "artifact_hashes": {
+    "connectors/gbif/README.md": "sha256:d2c0f9fd02e9f5edb86eccf7eeb7b1f0c7a96343a14235eaf810fbb2e0705b27",
+    "connectors/gbif/src/gbif/README.md": "sha256:aea90ed6edf675fc527a0e601bb007ea4fd52185590b68d3fae5ccc423f45265",
+    "connectors/gbif/src/gbif/admit.py": "sha256:09a901e06c1672f0fe1865983518aca415c2c123d5e57c57cdc4a2f28ecd01f4",
+    "connectors/gbif/src/gbif/fetch.py": "sha256:156ad58b86ec4bf0ad55d3eae78df18618a8a765cc9a26d98f6b2f157fe0e217",
+    "connectors/gbif/tests/README.md": "sha256:74927b036cb4c6a3792a847c11923753d01099c0d117df7037ff6483c4874e36",
+    "connectors/gbif/tests/test_fetch_admit.py": "sha256:004e9c41ab1ff3d9fc9eacd370082145a9c3bf6c2785701fb23ba4e5785c8e03"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:cc8c4c1326f78c4060f47e4d8597e83a7986e635c1fb9a24b3b037c918414bd3",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/211033759b94ca9a19c48241be3ef8add6e5716d",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4749#discussion_r4114247856",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4749#discussion_r4114247858",
+      "schemas/contracts/v1/source/source_descriptor.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "connectors/gbif/README.md": "PROPOSED",
+    "connectors/gbif/src/gbif/README.md": "PROPOSED",
+    "connectors/gbif/src/gbif/admit.py": "CONFIRMED",
+    "connectors/gbif/src/gbif/fetch.py": "CONFIRMED",
+    "connectors/gbif/tests/README.md": "PROPOSED",
+    "connectors/gbif/tests/test_fetch_admit.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "GBIF connector suites",
+      "outcome": "PASS",
+      "reason": "test_occurrence_api.py (14) and test_fetch_admit.py (15) pass, including unscoped/non-canonical URL rejection (SOURCE_URL_SCOPE) and allowlisted sensitivity floors."
+    },
+    {
+      "gate": "Targeted mutation testing",
+      "outcome": "PASS",
+      "reason": "New URL-scope and floor-allowlist checks mutated and verified restored; all non-equivalent mutants caught."
+    },
+    {
+      "gate": "Repository checks",
+      "outcome": "PASS",
+      "reason": "scaffold_inventory --check, docs-critical-structure 0 findings, connectors_core suite 105 passed, committed-tree repository-topology identical to base."
+    },
+    {
+      "gate": "Historical receipt replay",
+      "outcome": "PASS",
+      "reason": "genrec-gbif-fetch-admit-20260927.json left unchanged; validates with --artifact-git-ref at the #4749 merge commit."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/211033759b94ca9a19c48241be3ef8add6e5716d"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-27T05:49:11Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Lands the two Codex review fixes that missed the #4749 merge: planner-canonical GBIF search URLs and an allowlisted non-public sensitivity floor."
+}
