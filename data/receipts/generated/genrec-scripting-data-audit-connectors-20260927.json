@@ -67,7 +67,7 @@
     ".github/workflows/deny-test.yml": "sha256:a3ca9ca5f27fa403efbb794c979009f6d534132b6f1beb4d8eb1a5dc517dc115",
     ".github/workflows/domain-agriculture.yml": "sha256:d296ca57f49e5111b510264a8c554747fda1430c22c43f9d137695b0dff3d695",
     ".github/workflows/domain-archaeology.yml": "sha256:a28ece4182852f83325c1d621f35d925d6606fcf6f6c1ca2182c5c2fb5f104ee",
-    ".github/workflows/domain-geology.yml": "sha256:1081875363782539b956572ef446fd44374060c452874fd0c576740db1fb9e03",
+    ".github/workflows/domain-geology.yml": "sha256:41c03aec2611c234d466842c5796801eefd940a9e9e1993dbabe7107ddc9f3a4",
     ".github/workflows/domain-habitat.yml": "sha256:777114dfc3e9d596f751b6063dc79252e7149729692e590b948d3963083ac1c5",
     ".github/workflows/domain-people-dna-land.yml": "sha256:18c722d6f1ed220387e660a4ac35955e239ab57239171b264044eb3ec7ad90ae",
     ".github/workflows/domain-roads-rail-trade.yml": "sha256:2a4791e4bcbe6fa13f8869fb690877d779e2d2b71a90afd8ab9843c23da03b0a",
@@ -264,10 +264,10 @@
     "state": "pending",
     "timestamp": null
   },
-  "created_at": "2026-09-27T00:11:09Z",
+  "created_at": "2026-09-27T00:17:23Z",
   "emitter": "Claude Code repository-authoring session",
   "links": {
-    "pr_number": null,
+    "pr_number": 4726,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
   },
   "notes": "Scripting/automation/raw-data audit: fail-closed replacements for false-green placeholders, scaffold inventory ratchet, deny-suite runner, offline planners/parsers for GBIF, iNaturalist, Census (TIGER package, ACS), NOAA (Storm Events, USCRN hourly02, NWS alerts as context only), and real domain smoke tests. No live fetch, activation, admission, alerting, publication, or required-check change. Placement ADRs for NOAA sub-product lanes remain open."
