@@ -1,0 +1,116 @@
+{
+  "receipt_id": "genrec-nrcs-scan-awdb-20260927",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/nrcs-connector-offline.yml",
+    "connectors/nrcs/README.md",
+    "connectors/nrcs/pyproject.toml",
+    "connectors/nrcs/scan/README.md",
+    "connectors/nrcs/src/nrcs/README.md",
+    "connectors/nrcs/src/nrcs/admit.py",
+    "connectors/nrcs/src/nrcs/fetch.py",
+    "connectors/nrcs/src/nrcs/scan_awdb.py",
+    "connectors/nrcs/tests/README.md",
+    "connectors/nrcs/tests/test_fetch_admit.py",
+    "connectors/nrcs/tests/test_scan_awdb.py",
+    "tools/qa/scaffold_baseline.json"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/nrcs-connector-offline.yml": "sha256:500282091e48ab6d9f0ca6df9ed9aced31f7c5989aed5ca09828e4babc6cbff9",
+    "connectors/nrcs/README.md": "sha256:230e34464d9e356016e7a2eef3ab20b686b2487f7119001fa15f7e58deb04564",
+    "connectors/nrcs/pyproject.toml": "sha256:1366432c9b504339ccb2d99e7fde19df9b50b9c3edb540d7ddb96a933a32224e",
+    "connectors/nrcs/scan/README.md": "sha256:da16a977f516302e25f979d6da685ee3ffec280de63f01cf0aad7c9af2e29793",
+    "connectors/nrcs/src/nrcs/README.md": "sha256:7bfa71e03e33e184c4c19d6c7d2003128d050f99dec8b45a845173fe1f63216d",
+    "connectors/nrcs/src/nrcs/admit.py": "sha256:4b4045e30e5c802fcc3278f667e7ca496805df39043a225a2d14cb9608352bac",
+    "connectors/nrcs/src/nrcs/fetch.py": "sha256:91db42264c28271139233317e1a44aed4d846b43f85dcf5d34d84cf7475534cc",
+    "connectors/nrcs/src/nrcs/scan_awdb.py": "sha256:d123ad4e0e84a288831cbb75fb69bff43ed266c74d856f369a9b085bc9f7d60b",
+    "connectors/nrcs/tests/README.md": "sha256:fa6e0da9f580bab376b0df71081a3197b81fa555bfdb8af4a381dd56779fe173",
+    "connectors/nrcs/tests/test_fetch_admit.py": "sha256:b00b17eaf5194ecce25d32684bceb1a47ef0d490f0a56e9b3d663d28dd22b30a",
+    "connectors/nrcs/tests/test_scan_awdb.py": "sha256:2a9a7ba66e3e901eeeaa401ce44ef3e12e9d0c98973a0d50345cd43e67c4eee7",
+    "tools/qa/scaffold_baseline.json": "sha256:9ee0c902d0d3da8c46a7010b4f53a8897b558a4c0dbcdc63983243830ecda1c6"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:599467cc15fb7e07634809e4e928519c6d3794159b9e24a3667739978a5ff8bc",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/2e027913f0302333f64fb4b23f7ac1906580757c",
+      "connectors/nrcs/scan/README.md",
+      "connectors/noaa/src/noaa/fetch.py"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/nrcs-connector-offline.yml": "PROPOSED",
+    "connectors/nrcs/README.md": "PROPOSED",
+    "connectors/nrcs/pyproject.toml": "CONFIRMED",
+    "connectors/nrcs/scan/README.md": "PROPOSED",
+    "connectors/nrcs/src/nrcs/README.md": "PROPOSED",
+    "connectors/nrcs/src/nrcs/admit.py": "CONFIRMED",
+    "connectors/nrcs/src/nrcs/fetch.py": "CONFIRMED",
+    "connectors/nrcs/src/nrcs/scan_awdb.py": "PROPOSED",
+    "connectors/nrcs/tests/README.md": "PROPOSED",
+    "connectors/nrcs/tests/test_fetch_admit.py": "CONFIRMED",
+    "connectors/nrcs/tests/test_scan_awdb.py": "PROPOSED",
+    "tools/qa/scaffold_baseline.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "NRCS connector suites",
+      "outcome": "PASS",
+      "reason": "test_scan_awdb (11) and test_fetch_admit (10) pass under the nrcs-connector-offline discover pattern, including strict per-duration value dates, exact element depth/ordinal matching, duplicate-series rejection and unreturned-series flags."
+    },
+    {
+      "gate": "Targeted mutation testing",
+      "outcome": "PASS",
+      "reason": "19 planner/parser/admission mutations applied, all caught, files restored; a 5000-iteration field fuzz raised only ScanInputError."
+    },
+    {
+      "gate": "Shared and repository checks",
+      "outcome": "PASS",
+      "reason": "tests/packages/connectors_core and tests/qa pass (157); all seven connector suites pass; scaffold_inventory --check at 1271 (5 NRCS findings resolved); deny_test_runner PASS; connector gate scan PASS; non-publisher static test PASS; workflow-security PASS (487); docs-critical-structure 0 findings; ruff clean; committed-tree repository-topology keeps 4 inherited drift findings, with KFM-TOPO-009 reduced by one leaf (connectors/nrcs/tests) and nothing added."
+    },
+    {
+      "gate": "AWDB contract verification",
+      "outcome": "SKIPPED",
+      "reason": "NWCC documentation and endpoints are blocked by the session egress proxy; response layout, units, depth convention and flags remain NEEDS VERIFICATION and the parser fails closed on drift."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation."
+    },
+    {
+      "gate": "Source activation, admission, release",
+      "outcome": "SKIPPED",
+      "reason": "No network library, descriptor change, lane-placement or Tribal SCAN decision, lifecycle write, admission, or publication; routes stay HOLD."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/2e027913f0302333f64fb4b23f7ac1906580757c"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-27T14:45:56Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "New NRCS SCAN (AWDB) planner/parser plus fetch/admit replacing placeholders. Kansas SCAN network only; Tribal SCAN, Soil Data Access (POST), lane placement and activation remain open. Descriptor unchanged."
+}
