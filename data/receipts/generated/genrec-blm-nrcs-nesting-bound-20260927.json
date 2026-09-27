@@ -1,0 +1,81 @@
+{
+  "receipt_id": "genrec-blm-nrcs-nesting-bound-20260927",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "connectors/blm/src/blm/plss_cadnsdi.py",
+    "connectors/blm/tests/test_plss_cadnsdi.py",
+    "connectors/nrcs/src/nrcs/scan_awdb.py",
+    "connectors/nrcs/tests/test_scan_awdb.py"
+  ],
+  "artifact_hashes": {
+    "connectors/blm/src/blm/plss_cadnsdi.py": "sha256:bd263905d294f0905fe1120f295fd8c5c99f7b6a9c1eadee51d0ebbe610f21d9",
+    "connectors/blm/tests/test_plss_cadnsdi.py": "sha256:f8b653daed44edd88c14e31b6fa6ff75667e0a6fda826ca60c95e27ed5e912ca",
+    "connectors/nrcs/src/nrcs/scan_awdb.py": "sha256:acc2aff18b12c82c31379e051f725fd5086e07a9c5e6b0795075c23b4bd10612",
+    "connectors/nrcs/tests/test_scan_awdb.py": "sha256:705c0aa11924d93974a9f537c578c8cc32a4766469b5d1b36e731638d5f73f95"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:a157b33245347176d20f3469b8e9cf70a36d9b36ec5284a80cd0cdc5de627a9d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/09a9aa41081c64a42ced18a3673f953b594f9446",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4767"
+    ]
+  },
+  "truth_labels": {
+    "connectors/blm/src/blm/plss_cadnsdi.py": "CONFIRMED",
+    "connectors/blm/tests/test_plss_cadnsdi.py": "CONFIRMED",
+    "connectors/nrcs/src/nrcs/scan_awdb.py": "CONFIRMED",
+    "connectors/nrcs/tests/test_scan_awdb.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "BLM and NRCS suites across interpreters",
+      "outcome": "PASS",
+      "reason": "Both suites pass on Python 3.11, 3.12 and 3.13; on the base commit the nesting regressions fail on 3.12 (NRCS 2, BLM 1)."
+    },
+    {
+      "gate": "Targeted mutation testing",
+      "outcome": "PASS",
+      "reason": "Removing the explicit nesting bound makes a regression fail on 3.11 and 3.12; files restored."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation."
+    },
+    {
+      "gate": "Source activation, admission, release",
+      "outcome": "SKIPPED",
+      "reason": "No network library, descriptor or contract change, lifecycle write, admission, or publication; routes stay HOLD."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/09a9aa41081c64a42ced18a3673f953b594f9446"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-27T15:20:08Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Follow-up to #4767, which merged before this Codex review fix was pushed; main's nesting regressions fail on Python 3.12+ until this lands."
+}
