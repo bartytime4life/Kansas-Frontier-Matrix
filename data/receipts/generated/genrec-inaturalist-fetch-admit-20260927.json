@@ -113,7 +113,7 @@
   "created_at": "2026-09-27T05:56:34Z",
   "emitter": "Claude Code repository-authoring session",
   "links": {
-    "pr_number": null,
+    "pr_number": 4751,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
   },
   "notes": "Replaces iNaturalist fetch.py/admit.py/pyproject.toml placeholders; extracts the sensitivity-floor allowlist into connectors_core.descriptor_gate (second consumer) and switches GBIF to it. Observed: observations_api DATE accepts impossible calendar dates (format-only check) \u2014 not changed here."
