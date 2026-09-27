@@ -3128,6 +3128,7 @@ body { font-size: 14px; }
 }
 .timeline-detail > section {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   align-content: start;
   gap: 9px;
   min-width: 0;
@@ -3148,6 +3149,11 @@ body { font-size: 14px; }
 }
 .timeline-semantic-controls label { min-width: 0; font-size: 10px; }
 .timeline-semantic-controls select { width: 100%; min-width: 0; }
+.timeline-mode-hint { color: var(--water) !important; }
+.timeline-playback-options { min-width: 0; border: 1px solid var(--line); border-radius: 8px; background: rgba(255, 255, 255, .018); padding: 8px 10px; }
+.timeline-playback-options summary { cursor: pointer; color: var(--gold-soft); font-size: 11px; font-weight: 850; }
+.timeline-playback-options[open] { display: grid; gap: 9px; }
+.timeline-playback-options[open] summary { margin-bottom: 2px; }
 .timeline-range-controls {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto;
@@ -3217,8 +3223,9 @@ body { font-size: 14px; }
 .timeline-track button span { top: 6px; }
 .timeline-track button[data-in-range="false"],
 .availability-bars i[data-in-range="false"] { opacity: .2; }
-.availability-bars { height: 58px; }
-.availability-bars i { max-width: none; }
+.availability-bars { display: grid; grid-template-columns: repeat(var(--availability-columns), minmax(0, 1fr)); align-items: end; gap: 0; width: 100%; min-width: 0; height: 58px; overflow: hidden; }
+.availability-bars i { min-width: 0; min-height: 0; max-width: none; border: 0; border-radius: 0; }
+.availability-bars i[data-has-records="false"]:not([data-active="true"]):not([data-committed="true"]) { background: transparent; }
 
 /* Exact NOAA observation loop. This subordinate clock never replaces the
    atlas year and never turns an external display carrier into KFM evidence. */
