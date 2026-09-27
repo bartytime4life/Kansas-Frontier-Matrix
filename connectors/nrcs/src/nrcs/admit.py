@@ -7,7 +7,8 @@ would not have issued. A response that was not captured is held; captured bytes 
 candidate, flagged ``RECORD_QUARANTINE_CANDIDATES`` when any value is a quarantine
 candidate, ``MISSING_VALUES_PRESENT`` when any value is missing (never zero),
 ``EMPTY_SERIES_PRESENT`` when a series has no values (not absence), and
-``DEPTH_NOT_STATED`` when a soil series states no depth. The final route is HOLD while the
+``DEPTH_NOT_STATED`` when a soil series states no depth, and
+``REQUESTED_SERIES_NOT_RETURNED`` when a requested station/element has no series. The final route is HOLD while the
 connector descriptor leaves ``role`` or ``rights`` unresolved. A SCAN value is a station
 observation, never area truth; nothing here grants admission, establishes coverage, or
 persists material.
@@ -63,6 +64,8 @@ def _flags(data: scan_awdb.ScanDataCandidate) -> tuple[str, ...]:
         flags.append("EMPTY_SERIES_PRESENT")
     if "DEPTH_NOT_STATED" in series_reasons:
         flags.append("DEPTH_NOT_STATED")
+    if data.unreturned:
+        flags.append("REQUESTED_SERIES_NOT_RETURNED")
     return tuple(flags)
 
 

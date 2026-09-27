@@ -36,6 +36,9 @@ STATION_ID = re.compile(r"[1-9]\d{0,5}\Z")
 ELEMENT = re.compile(r"[A-Z][A-Z0-9]{1,5}(?::-?\d{1,4}){0,2}\Z")
 DAY = re.compile(r"\d{4}-\d{2}-\d{2}\Z")
 PARAMS = ("stationTriplets", "elements", "duration", "beginDate", "endDate")
+# Value timestamp layout per duration (NEEDS VERIFICATION against NWCC documentation).
+STAMP_FORMATS = {"DAILY": ("%Y-%m-%d", re.compile(r"\d{4}-\d{2}-\d{2}\Z")),
+                 "HOURLY": ("%Y-%m-%d %H:%M", re.compile(r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}\Z"))}
 
 
 class ScanInputError(ValueError):
@@ -168,6 +171,9 @@ class ScanDataCandidate:
     retrieved_at: str
     body_sha256: str
     series: tuple[ScanSeries, ...]
+    # Requested ``triplet|element`` pairs with no series in the response; absence of a
+    # series is not absence of the phenomenon and is never filled.
+    unreturned: tuple[str, ...]
     # Parsing proves neither station-metadata validity nor completeness of the period.
     coverage: str = "NOT_ESTABLISHED"
     admission: str = "NOT_ADMITTED"
@@ -186,10 +192,13 @@ def _value(item: object, request: DataRequest) -> ScanValue:
         raise ScanInputError("VALUE_SHAPE")
     stamp = item["date"]
     try:
-        day = datetime.strptime(stamp[:10], "%Y-%m-%d").date()
+        layout, pattern = STAMP_FORMATS[request.duration]
+        if not pattern.fullmatch(stamp):
+            raise ValueError
+        day = datetime.strptime(stamp, layout).date()
     except ValueError:
         raise ScanInputError("VALUE_DATE") from None
-    if not _day(request.begin_date) <= day <= _day(request.end_date) or len(stamp) > 20:
+    if not _day(request.begin_date) <= day <= _day(request.end_date):
         raise ScanInputError("VALUE_DATE")
     qc = _text(item.get("qcFlag"), "FLAG_SHAPE", 8)
     qa = _text(item.get("qaFlag"), "FLAG_SHAPE", 8)
@@ -208,23 +217,37 @@ def _value(item: object, request: DataRequest) -> ScanValue:
     return ScanValue(stamp, token, parsed, False, qc, qa, "RAW_CANDIDATE", ())
 
 
-def _series(station: dict, element: object, request: DataRequest) -> ScanSeries:
+def _matches(spec: str, code: str, depth: object, ordinal: object) -> bool:
+    """Whether a series header satisfies one requested ``CODE[:heightDepth[:ordinal]]``."""
+    parts = spec.split(":")
+    if parts[0] != code:
+        return False
+    if len(parts) > 1 and (depth is None or depth != int(parts[1])):
+        return False
+    return len(parts) < 3 or ordinal == int(parts[2])
+
+
+def _series(station: dict, element: object, request: DataRequest) -> tuple[ScanSeries, str]:
     if not isinstance(element, dict):
         raise ScanInputError("ELEMENT_SHAPE")
     header, values = element.get("stationElement"), element.get("values")
     if not isinstance(header, dict) or not isinstance(values, list):
         raise ScanInputError("ELEMENT_SHAPE")
     code = header.get("elementCode")
-    if not isinstance(code, str) or code not in {e.split(":")[0] for e in request.elements}:
-        raise ScanInputError("ELEMENT_NOT_REQUESTED")
     if header.get("durationName") != request.duration:
         raise ScanInputError("DURATION_MISMATCH")
     ordinal = header.get("ordinal")
     if ordinal is not None and (type(ordinal) is not int or not 0 <= ordinal <= 99):
         raise ScanInputError("ELEMENT_SHAPE")
     depth = header.get("heightDepth")
-    if depth is not None and (isinstance(depth, bool) or not isinstance(depth, (int, float))):
+    if depth is not None and (isinstance(depth, bool) or not isinstance(depth, (int, float))
+                              or not math.isfinite(depth)):
         raise ScanInputError("ELEMENT_SHAPE")
+    specs = [spec for spec in request.elements
+             if isinstance(code, str) and _matches(spec, code, depth, ordinal)]
+    if len(specs) != 1:
+        # Unrequested code, a different depth or ordinal, or an ambiguous match.
+        raise ScanInputError("ELEMENT_NOT_REQUESTED")
     parsed = tuple(_value(item, request) for item in values)
     stamps = [value.date for value in parsed]
     if len(set(stamps)) != len(stamps):
@@ -238,7 +261,7 @@ def _series(station: dict, element: object, request: DataRequest) -> ScanSeries:
                       None if depth is None else json.dumps(depth), request.duration,
                       _text(header.get("storedUnitCode"), "ELEMENT_SHAPE", 16), parsed,
                       tuple(reasons), raw_json,
-                      "sha256:" + sha256(raw_json.encode("ascii")).hexdigest())
+                      "sha256:" + sha256(raw_json.encode("ascii")).hexdigest()), specs[0]
 
 
 def _reject_constant(token: str) -> None:
@@ -264,6 +287,7 @@ def parse_data(body: bytes, *, status: int, source_url: str, retrieved_at: str,
         raise ScanInputError("RESPONSE_SHAPE")
     series: list[ScanSeries] = []
     seen_stations: set[str] = set()
+    returned: set[str] = set()
     try:
         for station in payload:
             if not isinstance(station, dict) or not isinstance(station.get("data"), list):
@@ -275,12 +299,19 @@ def parse_data(body: bytes, *, status: int, source_url: str, retrieved_at: str,
                 raise ScanInputError("DUPLICATE_STATION")
             seen_stations.add(triplet)
             for element in station["data"]:
-                series.append(_series(station, element, request))
+                item, spec = _series(station, element, request)
+                key = f"{triplet}|{spec}"
+                if key in returned:
+                    raise ScanInputError("DUPLICATE_SERIES")
+                returned.add(key)
+                series.append(item)
     except (TypeError, ValueError) as error:
         if isinstance(error, ScanInputError):
             raise
         raise ScanInputError("RESPONSE_SHAPE") from None
     if sum(len(item.values) for item in series) > max_values:
         raise ScanInputError("VALUE_BOUND")
+    unreturned = tuple(f"{triplet}|{spec}" for triplet in request.triplets
+                       for spec in request.elements if f"{triplet}|{spec}" not in returned)
     return ScanDataCandidate(source_url, request, retrieved,
-                             "sha256:" + sha256(body).hexdigest(), tuple(series))
+                             "sha256:" + sha256(body).hexdigest(), tuple(series), unreturned)

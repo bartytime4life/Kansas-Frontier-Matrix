@@ -128,10 +128,16 @@ class AdmissionTests(unittest.TestCase):
             decision.route = admit.HOLD
         flagged = fixtures.body([fixtures.element(values=[{"date": "2023-06-01", "value": "x"}]),
                                  fixtures.element("STO", depth=None, values=[])])
-        self.assertEqual(admit.admit(scan(flagged), descriptor=RESOLVED).reasons,
+        self.assertEqual(admit.admit(scan(flagged, url=fixtures.LOOSE_URL),
+                                     descriptor=RESOLVED).reasons,
                          ("RECORD_QUARANTINE_CANDIDATES", "EMPTY_SERIES_PRESENT",
                           "DEPTH_NOT_STATED"))
-        clean = fixtures.body([fixtures.element(values=[{"date": "2023-06-01", "value": 1}])])
+        partial = fixtures.body([fixtures.element(values=[{"date": "2023-06-01", "value": 1}])])
+        self.assertEqual(admit.admit(scan(partial), descriptor=RESOLVED).reasons,
+                         ("REQUESTED_SERIES_NOT_RETURNED",))
+        clean = fixtures.body([
+            fixtures.element(values=[{"date": "2023-06-01", "value": 1}]),
+            fixtures.element("STO", values=[{"date": "2023-06-01", "value": 20.5}])])
         self.assertEqual(admit.admit(scan(clean), descriptor=RESOLVED).reasons, ())
 
     def test_parser_rejection_is_quarantine_candidate(self):

@@ -19,6 +19,9 @@ ELEMENTS = ("SMS:-2", "STO:-2")
 URL = sa.data_url(STATIONS, ELEMENTS, duration="DAILY", begin_date="2023-06-01",
                   end_date="2023-06-03")
 TRIPLET = "99901:KS:SCAN"
+# Request with one depth-free element, for series that state no depth.
+LOOSE_URL = sa.data_url(STATIONS, ("SMS:-2", "STO"), duration="DAILY",
+                        begin_date="2023-06-01", end_date="2023-06-03")
 
 
 def element(code="SMS", depth=-2, values=None, **header):
@@ -35,7 +38,9 @@ def element(code="SMS", depth=-2, values=None, **header):
 
 def body(elements=None, triplet=TRIPLET, raw=None):
     payload = [{"stationTriplet": triplet,
-                "data": [element()] if elements is None else elements}]
+                "data": [element(), element("STO", values=[{"date": "2023-06-01", "value": 20.5}])]
+                if elements is None
+                else elements}]
     return (json.dumps(payload) if raw is None else raw).encode()
 
 
@@ -112,11 +117,42 @@ class ParserTests(unittest.TestCase):
         self.assertTrue(series.element_sha256.startswith("sha256:"))
 
     def test_value_level_quarantine_and_series_flags(self):
-        series = parse(body([element(values=[{"date": "2023-06-01", "value": "25.4"}]),
-                             element("STO", depth=None, values=[])])).series
+        candidate = parse(body([element(values=[{"date": "2023-06-01", "value": "25.4"}]),
+                                element("STO", depth=None, values=[])]), url=LOOSE_URL)
+        series = candidate.series
         self.assertEqual(series[0].values[0].route, "QUARANTINE_CANDIDATE")
         self.assertEqual(series[0].values[0].reasons, ("VALUE_NOT_NUMERIC",))
         self.assertEqual(series[1].reasons, ("EMPTY_SERIES_NOT_ABSENCE", "DEPTH_NOT_STATED"))
+        self.assertEqual(candidate.unreturned, ())
+
+    def test_unreturned_requested_series_are_listed_not_filled(self):
+        self.assertEqual(parse(body([element()])).unreturned, (f"{TRIPLET}|STO:-2",))
+        self.assertEqual(parse(body(raw="[]")).unreturned,
+                         (f"{TRIPLET}|SMS:-2", f"{TRIPLET}|STO:-2"))
+
+    def test_series_must_match_requested_depth_and_ordinal(self):
+        ordinal_url = sa.data_url(STATIONS, ("SMS:-2:1",), duration="DAILY",
+                                  begin_date="2023-06-01", end_date="2023-06-03")
+        self.assertEqual(parse(body([element()]), url=ordinal_url).series[0].ordinal, 1)
+        for url, header in ((URL, {"depth": -8}), (URL, {"depth": None}),
+                            (ordinal_url, {"ordinal": 2})):
+            with self.subTest(header=header), self.assertRaises(sa.ScanInputError) as ctx:
+                parse(body([element(**header)]), url=url)
+            self.assertEqual(str(ctx.exception), "ELEMENT_NOT_REQUESTED")
+
+    def test_value_dates_follow_the_duration_layout(self):
+        for stamp in ("2023-06-01garbage", "2023-06-01 01:00", "2023-6-1", "2023-06-01T00:00"):
+            with self.subTest(stamp=stamp), self.assertRaises(sa.ScanInputError) as ctx:
+                parse(body([element(values=[{"date": stamp, "value": 1}])]))
+            self.assertEqual(str(ctx.exception), "VALUE_DATE")
+        hourly = sa.data_url(STATIONS, ("SMS:-2",), duration="HOURLY",
+                             begin_date="2023-06-01", end_date="2023-06-01")
+        values = parse(body([element(durationName="HOURLY", values=[
+            {"date": "2023-06-01 01:00", "value": 1}])]), url=hourly).series[0].values
+        self.assertEqual(values[0].date, "2023-06-01 01:00")
+        with self.assertRaises(sa.ScanInputError):
+            parse(body([element(durationName="HOURLY", values=[
+                {"date": "2023-06-01", "value": 1}])]), url=hourly)
 
     def test_scope_and_shape_drift_reject_whole_response(self):
         cases = {
@@ -131,6 +167,7 @@ class ParserTests(unittest.TestCase):
             "RESPONSE_SHAPE": body(raw='{"stationTriplet": "x"}'),
             "STATION_SHAPE": body(raw='[{"stationTriplet": "99901:KS:SCAN"}]'),
             "DUPLICATE_STATION": body(raw=json.dumps([{"stationTriplet": TRIPLET, "data": []}] * 2)),
+            "DUPLICATE_SERIES": body([element(), element()]),
             "INVALID_JSON": body(raw='[{"stationTriplet": "99901:KS:SCAN", "data": NaN}]'),
             "VALUE_SHAPE": body([element(values=[{"value": 1}])]),
         }
