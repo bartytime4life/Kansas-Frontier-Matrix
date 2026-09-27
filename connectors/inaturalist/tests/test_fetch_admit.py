@@ -241,6 +241,16 @@ class AdmissionTests(unittest.TestCase):
                     admit.admit(forged, descriptor=RESOLVED)
                 self.assertEqual(ctx.exception.args[0], "EPISODE_SOURCE_MISMATCH")
 
+    def test_reconstructed_episode_with_non_planner_url_is_refused(self):
+        from connectors_core.core import redact_url
+        good = retrieve(response())[0]
+        for url in ("https://api.inaturalist.org/v1/observations?per_page=2&order=asc&order_by=id&id_above=0",):
+            episode = {**good.episode, "redacted_locator": redact_url(url)}
+            forged = fetch.Retrieval(url, json.dumps(episode), good.body)
+            with self.subTest(url=url), self.assertRaises(obs.ObservationInputError) as ctx:
+                admit.admit(forged, descriptor=RESOLVED)
+            self.assertEqual(ctx.exception.args[0], "SOURCE_URL_SCOPE")
+
 
 class NoNetworkTests(unittest.TestCase):
     def test_recording_and_routing_open_no_socket(self):

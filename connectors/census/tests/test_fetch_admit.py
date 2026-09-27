@@ -243,6 +243,24 @@ class AdmissionTests(unittest.TestCase):
         with self.assertRaises(TypeError):
             admit.admit({"episode": {}})
 
+    def test_reconstructed_episode_with_non_planner_url_is_refused(self):
+        from connectors_core.core import redact_url
+        reordered = (ACS_URL.split("?")[0] + "?for=county%3A%2A&get=NAME%2CB01001_001E"
+                     "%2CB01001_001M&in=state%3A20")
+        evil_tiger = TIGER_URL.replace("www2.census.gov", "evil.example")
+        for good, url, error, code in (
+                (acs(), reordered, acs_api.AcsInputError, "SOURCE_URL_SCOPE"),
+                (tiger()[0], evil_tiger, tiger_package.TigerPackageError, "SOURCE_URL_SCOPE"),
+                (tiger(status=404, payload=b"no")[0], evil_tiger,
+                 tiger_package.TigerPackageError, "SOURCE_URL_SCOPE"),
+                (tiger()[0], TIGER_URL.replace("tl_2025_20_tract", "tl_2025_20_county"),
+                 tiger_package.TigerPackageError, "NOT_IN_MANIFEST")):
+            episode = {**good.episode, "redacted_locator": redact_url(url)}
+            forged = fetch.Retrieval(url, json.dumps(episode), good.body)
+            with self.subTest(url=url), self.assertRaises(error) as ctx:
+                admit.admit(forged, descriptor=RESOLVED, manifest=MANIFEST)
+            self.assertEqual(ctx.exception.args[0], code)
+
 
 class NoNetworkTests(unittest.TestCase):
     def test_recording_and_routing_open_no_socket(self):

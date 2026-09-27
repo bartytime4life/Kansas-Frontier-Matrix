@@ -113,6 +113,10 @@ class ObservationQuery:
             if value is not None:
                 if not isinstance(value, str) or not DATE.fullmatch(value):
                     raise ObservationInputError("OBSERVED_DATE")
+                try:
+                    datetime.strptime(value, "%Y-%m-%d")  # reject 2020-13-01, 2021-02-29
+                except ValueError:
+                    raise ObservationInputError("OBSERVED_DATE") from None
                 params[key] = value
         if "d1" in params and "d2" in params and params["d1"] > params["d2"]:
             raise ObservationInputError("OBSERVED_DATE_ORDER")
