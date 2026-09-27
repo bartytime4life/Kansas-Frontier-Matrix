@@ -481,6 +481,8 @@ const raspberryShakeStations = async (day: string | null = null) => {
  * MVT coordinates are geographic, so use NASA's explicit LATITUDE/LONGITUDE
  * properties rather than a Web Mercator toGeoJSON projection. */
 const nasaGibsFirePoints = async (requestedDay: string | null = null) => {
+  const dayPattern = /^\d{4}-\d{2}-\d{2}$/;
+  if (requestedDay !== null && !dayPattern.test(requestedDay)) throw new UpstreamError("NASA GIBS day must be an exact calendar date.");
   const day = requestedDay ?? new Date().toISOString().slice(0, 10);
   const retrievedAt = new Date().toISOString();
   const tiles = await Promise.all(GIBS_FIRE_TILE_COLUMNS.map(async (column) => {
