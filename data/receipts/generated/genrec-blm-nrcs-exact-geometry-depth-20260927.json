@@ -10,8 +10,8 @@
   "artifact_hashes": {
     "connectors/blm/src/blm/plss_cadnsdi.py": "sha256:5032aab38393c3a4d421130cd6b284affbfd032a491dcebff4b6ca4f6529693f",
     "connectors/blm/tests/test_plss_cadnsdi.py": "sha256:e3a226aea557a1f99f0d7a73f297973e68072fa2d8f82bd31e6c92e08af4af78",
-    "connectors/nrcs/src/nrcs/scan_awdb.py": "sha256:af1d2136127b8ebbb20ea7ef165598b423384ae73a50ed0b355b820e2cb38622",
-    "connectors/nrcs/tests/test_scan_awdb.py": "sha256:c205a7ec148f1d5bdc48e4b2c4429e951254b122a1cf0ea2305d759eae3cb9ae"
+    "connectors/nrcs/src/nrcs/scan_awdb.py": "sha256:e5bd1e70adfab3abad5cc909eeb08ee77331e82db79f35fb369a9cc1538f3585",
+    "connectors/nrcs/tests/test_scan_awdb.py": "sha256:449db1d4808b7e798193e7133d5c15c10af37208e3abaaa5f4c26ee0661ccaf0"
   },
   "model_identity": {
     "provider": "Anthropic",
@@ -40,12 +40,12 @@
     {
       "gate": "BLM and NRCS suites",
       "outcome": "PASS",
-      "reason": "BLM (22) and NRCS (25) tests pass, including exact-Decimal ring closure and extent regressions and 700-deep nesting regressions."
+      "reason": "BLM (22) and NRCS (26) tests pass, including exact-Decimal ring closure and extent regressions and 700-deep nesting regressions for BLM properties/geometry and NRCS headers and values."
     },
     {
       "gate": "Targeted mutation testing",
       "outcome": "PASS",
-      "reason": "Reverting coordinates to floats or removing either RecursionError bound makes a regression fail; files restored."
+      "reason": "Reverting coordinates to floats or removing any RecursionError bound (BLM feature, NRCS header, NRCS response loop) makes a regression fail; files restored."
     },
     {
       "gate": "Hosted CI and independent review",
@@ -71,7 +71,7 @@
     "state": "pending",
     "timestamp": null
   },
-  "created_at": "2026-09-27T15:12:52Z",
+  "created_at": "2026-09-27T15:14:20Z",
   "emitter": "Claude Code repository-authoring session",
   "links": {
     "pr_number": null,
