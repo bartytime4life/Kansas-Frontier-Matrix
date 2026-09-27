@@ -100,7 +100,7 @@
   "created_at": "2026-09-27T14:25:11Z",
   "emitter": "Claude Code repository-authoring session",
   "links": {
-    "pr_number": null,
+    "pr_number": 4760,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
   },
   "notes": "Follow-up to #4758, which merged before its Codex review fixes were pushed. Cache-Control, Date and Expires remain uncarried because they are not SourceRetrievalEpisode fields."
