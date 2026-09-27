@@ -116,6 +116,29 @@ class ParserTests(unittest.TestCase):
                          ("NOT_ESTABLISHED", "NOT_ADMITTED"))
         self.assertTrue(series.element_sha256.startswith("sha256:"))
 
+    def test_numbers_never_pass_through_float(self):
+        values = parse(body([element(values=[
+            {"date": "2023-06-01", "value": 0.1234567890123456789},
+            {"date": "2023-06-02", "value": 25.40}, {"date": "2023-06-03", "value": 7}])]),
+            url=sa.data_url(STATIONS, ("SMS:-2",), duration="DAILY",
+                            begin_date="2023-06-01", end_date="2023-06-03")).series[0].values
+        # json.dumps writes the float 0.1234567890123456789 as its shortest repr, so feed
+        # the exact token through raw JSON instead.
+        exact = parse(body(raw='[{"stationTriplet": "99901:KS:SCAN", "data": [{"stationElement":'
+                           ' {"elementCode": "SMS", "ordinal": 1, "heightDepth": -2.0,'
+                           ' "durationName": "DAILY"}, "values": [{"date": "2023-06-01",'
+                           ' "value": 0.1234567890123456789}, {"date": "2023-06-02",'
+                           ' "value": 25.40}]}]}]'),
+                      url=sa.data_url(STATIONS, ("SMS:-2",), duration="DAILY",
+                                      begin_date="2023-06-01", end_date="2023-06-03"))
+        series = exact.series[0]
+        self.assertEqual([(v.raw, v.value) for v in series.values],
+                         [("0.1234567890123456789", Decimal("0.1234567890123456789")),
+                          ("25.40", Decimal("25.40"))])
+        self.assertEqual(series.height_depth_raw, "-2.0")
+        self.assertIn('"heightDepth":"-2.0"', series.raw_element_json)
+        self.assertEqual(values[2].raw, "7")
+
     def test_value_level_quarantine_and_series_flags(self):
         candidate = parse(body([element(values=[{"date": "2023-06-01", "value": "25.4"}]),
                                 element("STO", depth=None, values=[])]), url=LOOSE_URL)

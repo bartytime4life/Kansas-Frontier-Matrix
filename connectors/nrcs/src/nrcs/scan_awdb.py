@@ -17,10 +17,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import date, datetime, timezone
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal
 from hashlib import sha256
 import json
-import math
 import re
 from urllib.parse import parse_qsl, urlencode, urlsplit
 
@@ -179,6 +178,18 @@ class ScanDataCandidate:
     admission: str = "NOT_ADMITTED"
 
 
+def _dump(value: object) -> str:
+    """Canonical JSON for verbatim storage; Decimal tokens are kept exact, as strings."""
+    return json.dumps(value, sort_keys=True, ensure_ascii=True, separators=(",", ":"),
+                      allow_nan=False, default=_decimal_text)
+
+
+def _decimal_text(value: object) -> str:
+    if isinstance(value, Decimal):
+        return str(value)
+    raise TypeError(type(value).__name__)
+
+
 def _text(value: object, code: str, limit: int = 64) -> str | None:
     if value is None:
         return None
@@ -205,16 +216,12 @@ def _value(item: object, request: DataRequest) -> ScanValue:
     raw_value = item.get("value")
     if raw_value is None:
         return ScanValue(stamp, None, None, True, qc, qa, "RAW_CANDIDATE", ("VALUE_MISSING",))
-    if isinstance(raw_value, bool) or not isinstance(raw_value, (int, float)) or (
-            isinstance(raw_value, float) and not math.isfinite(raw_value)):
-        return ScanValue(stamp, json.dumps(raw_value)[:32], None, False, qc, qa,
+    if isinstance(raw_value, bool) or not isinstance(raw_value, (int, Decimal)):
+        return ScanValue(stamp, _dump(raw_value)[:32], None, False, qc, qa,
                          "QUARANTINE_CANDIDATE", ("VALUE_NOT_NUMERIC",))
-    token = json.dumps(raw_value)
-    try:
-        parsed = Decimal(token)
-    except InvalidOperation:  # pragma: no cover - json numbers are always Decimal-safe
-        raise ScanInputError("VALUE_FORMAT") from None
-    return ScanValue(stamp, token, parsed, False, qc, qa, "RAW_CANDIDATE", ())
+    # JSON numbers are decoded straight to int/Decimal, so the source token is exact.
+    token = str(raw_value)
+    return ScanValue(stamp, token, Decimal(token), False, qc, qa, "RAW_CANDIDATE", ())
 
 
 def _matches(spec: str, code: str, depth: object, ordinal: object) -> bool:
@@ -240,8 +247,7 @@ def _series(station: dict, element: object, request: DataRequest) -> tuple[ScanS
     if ordinal is not None and (type(ordinal) is not int or not 0 <= ordinal <= 99):
         raise ScanInputError("ELEMENT_SHAPE")
     depth = header.get("heightDepth")
-    if depth is not None and (isinstance(depth, bool) or not isinstance(depth, (int, float))
-                              or not math.isfinite(depth)):
+    if depth is not None and (isinstance(depth, bool) or not isinstance(depth, (int, Decimal))):
         raise ScanInputError("ELEMENT_SHAPE")
     specs = [spec for spec in request.elements
              if isinstance(code, str) and _matches(spec, code, depth, ordinal)]
@@ -255,10 +261,9 @@ def _series(station: dict, element: object, request: DataRequest) -> tuple[ScanS
     reasons = ["EMPTY_SERIES_NOT_ABSENCE"] if not parsed else []
     if depth is None and code.startswith(("SMS", "STO")):
         reasons.append("DEPTH_NOT_STATED")
-    raw_json = json.dumps(header, sort_keys=True, ensure_ascii=True, separators=(",", ":"),
-                          allow_nan=False)
+    raw_json = _dump(header)
     return ScanSeries(station["stationTriplet"], code, ordinal,
-                      None if depth is None else json.dumps(depth), request.duration,
+                      None if depth is None else str(depth), request.duration,
                       _text(header.get("storedUnitCode"), "ELEMENT_SHAPE", 16), parsed,
                       tuple(reasons), raw_json,
                       "sha256:" + sha256(raw_json.encode("ascii")).hexdigest()), specs[0]
@@ -280,7 +285,8 @@ def parse_data(body: bytes, *, status: int, source_url: str, retrieved_at: str,
     if status != 200:
         raise ScanInputError("HTTP_STATUS")
     try:
-        payload = json.loads(body.decode("utf-8"), parse_constant=_reject_constant)
+        payload = json.loads(body.decode("utf-8"), parse_float=Decimal,
+                             parse_constant=_reject_constant)
     except (UnicodeError, ValueError, RecursionError):
         raise ScanInputError("INVALID_JSON") from None
     if not isinstance(payload, list):
