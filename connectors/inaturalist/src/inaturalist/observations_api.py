@@ -34,6 +34,8 @@ QUERY_KEYS = frozenset({"swlat", "swlng", "nelat", "nelng", "place_id", "taxon_i
 DATE = re.compile(r"\d{4}-\d{2}-\d{2}\Z")
 # Personal data minimization: only these user fields are carried, as attribution.
 USER_FIELDS = ("id", "login")
+# Observation records are shallow; deeper nesting is malformed input, not data.
+MAX_RECORD_DEPTH = 64
 
 
 class ObservationInputError(ValueError):
@@ -187,10 +189,12 @@ class ObservationCandidate:
     admission: str = "NOT_ADMITTED"
 
 
-def _minimize_users(value: object) -> object:
+def _minimize_users(value: object, depth: int = 0) -> object:
     """Project every nested ``user`` object (observer, identifiers, commenters) to id/login."""
+    if depth > MAX_RECORD_DEPTH:
+        raise ObservationInputError("RECORD_DEPTH")
     if isinstance(value, list):
-        return [_minimize_users(item) for item in value]
+        return [_minimize_users(item, depth + 1) for item in value]
     if not isinstance(value, dict):
         return value
     result = {}
@@ -198,7 +202,7 @@ def _minimize_users(value: object) -> object:
         if key == "user" and isinstance(item, dict):
             result[key] = {field: item[field] for field in USER_FIELDS if field in item}
         else:
-            result[key] = _minimize_users(item)
+            result[key] = _minimize_users(item, depth + 1)
     return result
 
 

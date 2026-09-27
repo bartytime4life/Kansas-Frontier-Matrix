@@ -92,14 +92,40 @@ def _is_stub_definition(stmt: ast.stmt) -> bool:
 
 
 def _is_main_guard(stmt: ast.stmt) -> bool:
-    return (isinstance(stmt, ast.If) and isinstance(stmt.test, ast.Compare)
-            and isinstance(stmt.test.left, ast.Name) and stmt.test.left.id == "__name__")
+    """Exactly ``if __name__ == "__main__":`` with no ``else`` branch."""
+    test = stmt.test if isinstance(stmt, ast.If) else None
+    return (isinstance(test, ast.Compare) and not stmt.orelse
+            and isinstance(test.left, ast.Name) and test.left.id == "__name__"
+            and len(test.ops) == 1 and isinstance(test.ops[0], ast.Eq)
+            and isinstance(test.comparators[0], ast.Constant)
+            and test.comparators[0].value == "__main__")
+
+
+def _is_entry_invocation(stmt: ast.stmt) -> bool:
+    """``main()`` or ``raise SystemExit(main())`` style entry calls."""
+    if isinstance(stmt, ast.Expr):
+        return isinstance(stmt.value, ast.Call)
+    return (isinstance(stmt, ast.Raise) and isinstance(stmt.exc, ast.Call)
+            and isinstance(stmt.exc.func, ast.Name) and stmt.exc.func.id == "SystemExit")
 
 
 def _is_pass_only_module(body: list[ast.stmt]) -> bool:
-    """True when every non-import, non-guard statement is an empty body or stub definition."""
-    remaining = [stmt for stmt in body
-                 if not isinstance(stmt, (ast.Import, ast.ImportFrom)) and not _is_main_guard(stmt)]
+    """True when every non-import statement is an empty body or stub definition.
+
+    Only a genuine entry-point guard that just invokes code is ignored; a guard
+    whose body is itself empty (``pass``, ``raise NotImplementedError``) counts
+    as stub content, and any other conditional counts as real code.
+    """
+    remaining: list[ast.stmt] = []
+    for stmt in body:
+        if isinstance(stmt, (ast.Import, ast.ImportFrom)):
+            continue
+        if _is_main_guard(stmt):
+            if all(_is_entry_invocation(inner) for inner in stmt.body):
+                continue
+            remaining.extend(stmt.body)
+            continue
+        remaining.append(stmt)
     return bool(remaining) and all(_is_stub_definition(stmt) for stmt in remaining)
 
 
