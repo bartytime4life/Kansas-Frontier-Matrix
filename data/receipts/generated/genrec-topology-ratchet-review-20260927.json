@@ -1,7 +1,7 @@
 {
   "artifact_hashes": {
     "docs/intake/exploratory/README.md": "sha256:36d99e6b1ca3ebf6782ea10acb5d005135983656b1adc2b1f0f574aff9359041",
-    "docs/intake/exploratory/repository-topology-ratchet-review-20260927.md": "sha256:213bd1216ef008802e6f6101926e5e9522d0a8cce314a32514550204d1318aaa"
+    "docs/intake/exploratory/repository-topology-ratchet-review-20260927.md": "sha256:9172d51262654a497b2bd98704fce2310cad7e9d9a09fb31d1c1dd9947a6df18"
   },
   "artifact_paths": [
     "docs/intake/exploratory/README.md",
