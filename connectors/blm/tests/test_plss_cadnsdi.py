@@ -131,12 +131,14 @@ class ParserTests(unittest.TestCase):
                          ("GEOMETRY_OUTSIDE_KANSAS_EXTENT",))
 
     def test_pathologically_nested_properties_are_a_bounded_rejection(self):
-        # Deep enough to decode but not to re-serialize recursively.
-        nested = '{"a":' * 700 + "1" + "}" * 700
-        raw = body([feature(NOTE=0)]).decode().replace('"NOTE": 0', '"NOTE": ' + nested)
-        with self.assertRaises(pl.PlssInputError) as ctx:
-            parse(raw.encode())
-        self.assertEqual(str(ctx.exception), "FEATURE_SHAPE")
+        # Deep enough to exceed the explicit bound on every supported Python version.
+        for depth in (25, 700):
+            nested = '{"a":' * depth + "1" + "}" * depth
+            raw = body([feature(NOTE=0)]).decode().replace('"NOTE": 0', '"NOTE": ' + nested)
+            with self.subTest(depth=depth), self.assertRaises(pl.PlssInputError) as ctx:
+                parse(raw.encode())
+            self.assertEqual(str(ctx.exception), "NESTING_DEPTH")
+        self.assertEqual(pl.MAX_NESTING, 20)
 
     def test_more_pages(self):
         self.assertTrue(parse(body(exceededTransferLimit=True)).more_pages)
