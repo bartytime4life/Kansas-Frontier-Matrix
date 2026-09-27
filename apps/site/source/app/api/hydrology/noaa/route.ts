@@ -102,12 +102,28 @@ const readBoundedBody = async (response: Response, maxBytes: number) => {
   return new TextDecoder().decode(body);
 };
 
-const fetchFixedJson = async (url: string | URL, maxBytes: number): Promise<JsonRecord> => {
-  const parsedUrl = new URL(String(url));
-  if (parsedUrl.origin !== NOAA_ORIGIN || parsedUrl.username || parsedUrl.password || parsedUrl.hash || !parsedUrl.pathname.startsWith("/nwps/v1/")) {
-    throw new AdapterError("The requested upstream is outside the fixed NOAA allowlist.", "NOAA_UPSTREAM_DENIED");
-  }
+type NwpsEndpoint =
+  | { kind: "network" }
+  | { kind: "gauge"; lid: string; series: "metadata" | "observed" | "forecast" }
+  | { kind: "reach"; reachId: string; series: "analysis_assimilation" | "short_range" };
 
+const fixedNwpsUrl = (endpoint: NwpsEndpoint): URL => {
+  if (endpoint.kind === "network") return new URL(KANSAS_GAUGES_URL);
+  const url = new URL(NOAA_ORIGIN);
+  if (endpoint.kind === "gauge") {
+    if (!LID_PATTERN.test(endpoint.lid)) throw new AdapterError("Invalid NOAA gauge identifier.", "NOAA_UPSTREAM_DENIED");
+    url.pathname = `/nwps/v1/gauges/${endpoint.lid}`;
+    if (endpoint.series !== "metadata") url.pathname += `/stageflow/${endpoint.series}`;
+  } else {
+    if (!REACH_PATTERN.test(endpoint.reachId)) throw new AdapterError("Invalid NOAA reach identifier.", "NOAA_UPSTREAM_DENIED");
+    url.pathname = `/nwps/v1/reaches/${endpoint.reachId}/streamflow`;
+    url.searchParams.set("series", endpoint.series);
+  }
+  return url;
+};
+
+const fetchFixedJson = async (endpoint: NwpsEndpoint, maxBytes: number): Promise<JsonRecord> => {
+  const parsedUrl = fixedNwpsUrl(endpoint);
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
   try {
@@ -541,7 +557,7 @@ const result = (
 });
 
 const networkResponse = async (retrievedAt: string) => {
-  const payload = await fetchFixedJson(KANSAS_GAUGES_URL, MAX_NETWORK_BYTES);
+  const payload = await fetchFixedJson({ kind: "network" }, MAX_NETWORK_BYTES);
   if (!Array.isArray(payload.gauges)) {
     throw new AdapterError("NOAA gauge network response omitted its gauges array.", "NOAA_CONTRACT_MISMATCH");
   }
@@ -566,11 +582,10 @@ const networkResponse = async (retrievedAt: string) => {
 
 const gaugeResponse = async (lid: string, retrievedAt: string) => {
   const links = gaugeLinks(lid);
-  const endpoints = gaugeEndpointUrls(lid);
   const [metadataPayload, observedPayload, forecastPayload] = await Promise.all([
-    fetchFixedJson(endpoints.metadata, MAX_METADATA_BYTES),
-    fetchFixedJson(endpoints.observed, MAX_STAGEFLOW_BYTES),
-    fetchFixedJson(endpoints.forecast, MAX_STAGEFLOW_BYTES),
+    fetchFixedJson({ kind: "gauge", lid, series: "metadata" }, MAX_METADATA_BYTES),
+    fetchFixedJson({ kind: "gauge", lid, series: "observed" }, MAX_STAGEFLOW_BYTES),
+    fetchFixedJson({ kind: "gauge", lid, series: "forecast" }, MAX_STAGEFLOW_BYTES),
   ]);
   const metadata = normalizeGaugeMetadata(metadataPayload);
   const observed = normalizeStageFlow(observedPayload, "observed");
@@ -589,8 +604,8 @@ const gaugeResponse = async (lid: string, retrievedAt: string) => {
 const reachResponse = async (reachId: string, retrievedAt: string) => {
   const links = reachLinks(reachId);
   const [analysisPayload, shortRangePayload] = await Promise.all([
-    fetchFixedJson(links[0].href, MAX_REACH_BYTES),
-    fetchFixedJson(links[1].href, MAX_REACH_BYTES),
+    fetchFixedJson({ kind: "reach", reachId, series: "analysis_assimilation" }, MAX_REACH_BYTES),
+    fetchFixedJson({ kind: "reach", reachId, series: "short_range" }, MAX_REACH_BYTES),
   ]);
   const reach = normalizeReachHeader(analysisPayload, reachId);
   normalizeReachHeader(shortRangePayload, reachId);

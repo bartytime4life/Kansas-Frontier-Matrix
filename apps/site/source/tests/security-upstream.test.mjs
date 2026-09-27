@@ -53,3 +53,31 @@ test("malformed NASA fire dates cannot reach an upstream", async () => {
     assert.equal(calls, 0);
   } finally { globalThis.fetch = originalFetch; }
 });
+
+test("NOAA hydrology resolves only named endpoints from validated identifiers", async () => {
+  const originalFetch = globalThis.fetch;
+  const calls = [];
+  globalThis.fetch = async (input, init) => {
+    calls.push(String(input));
+    assert.equal(init.redirect, "manual");
+    return Response.json({});
+  };
+  const request = (query) => ({ nextUrl: new URL(`http://localhost/api/hydrology/noaa?${query}`) });
+  try {
+    for (const query of ["mode=gauge&lid=ABC%2F..%2Fprivate", "mode=gauge&lid=ABC%40evil.test", "mode=reach&reach=12%2F..%2Fprivate"]) {
+      assert.equal((await noaaGet(request(query))).status, 400);
+    }
+    assert.deepEqual(calls, []);
+    await noaaGet(request("mode=gauge&lid=ABCD"));
+    assert.deepEqual(calls.splice(0), [
+      "https://api.water.noaa.gov/nwps/v1/gauges/ABCD",
+      "https://api.water.noaa.gov/nwps/v1/gauges/ABCD/stageflow/observed",
+      "https://api.water.noaa.gov/nwps/v1/gauges/ABCD/stageflow/forecast",
+    ]);
+    await noaaGet(request("mode=reach&reach=12345"));
+    assert.deepEqual(calls, [
+      "https://api.water.noaa.gov/nwps/v1/reaches/12345/streamflow?series=analysis_assimilation",
+      "https://api.water.noaa.gov/nwps/v1/reaches/12345/streamflow?series=short_range",
+    ]);
+  } finally { globalThis.fetch = originalFetch; }
+});
