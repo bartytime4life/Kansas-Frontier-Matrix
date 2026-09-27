@@ -261,6 +261,40 @@ class RepositoryTopologyTests(unittest.TestCase):
         )
         self.assertNotEqual(first_path.fingerprint, executable_path.fingerprint)
 
+    def test_site_api_route_brackets_are_scoped(self) -> None:
+        paths = (
+            "apps/site/source/app/api/data-submissions/[id]/route.ts",
+            "apps/site/source/app/api/earth-engine-context/[setId]/[layerId]/[...tile]/route.ts",
+            "apps/site/source/app/api/unsafe/[bad-name!]/route.ts",
+            "docs/[id].md",
+        )
+        modes = {path: "100644" for path in paths}
+        blobs = {
+            "control_plane/root_registry.yaml": _root_registry(
+                {"path": "apps/"}, {"path": "docs/"}
+            )
+        }
+        object_ids = {path: "a" * 40 for path in paths}
+
+        findings = module._path_findings(paths, modes, object_ids, blobs)
+        punctuation = next(
+            finding
+            for finding in findings
+            if (finding.rule_id, finding.subject)
+            == ("KFM-TOPO-001", "path-grammar:nonportable-punctuation")
+        )
+        self.assertEqual(
+            ("apps/site/source/app/api/unsafe/[bad-name!]/route.ts", "docs/[id].md"),
+            punctuation.evidence_members,
+        )
+        uppercase = next(
+            finding
+            for finding in findings
+            if (finding.rule_id, finding.subject)
+            == ("KFM-TOPO-001", "path-grammar:uppercase")
+        )
+        self.assertEqual((paths[1],), uppercase.evidence_members)
+
     def test_conventional_readme_does_not_expand_populated_alias_drift(
         self,
     ) -> None:

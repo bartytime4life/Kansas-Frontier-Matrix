@@ -520,6 +520,15 @@ def _is_conventional_uppercase_path(path: str) -> bool:
     )
 
 
+def _is_site_api_route_parameter(path: str, segment: str) -> bool:
+    """Next route parameter brackets are portable, required path syntax."""
+    return bool(
+        path.startswith("apps/site/source/app/api/")
+        and path.endswith("/route.ts")
+        and re.fullmatch(r"\[(?:\.\.\.)?[A-Za-z][A-Za-z0-9]*\]", segment)
+    )
+
+
 def _path_findings(
     paths: Sequence[str],
     modes: Mapping[str, str],
@@ -560,7 +569,9 @@ def _path_findings(
                 and any(character.isupper() for character in segment)
             ):
                 grammar_groups["uppercase"].append(path)
-            if not re.fullmatch(r"[A-Za-z0-9._()-]+", segment):
+            if not re.fullmatch(
+                r"[A-Za-z0-9._()-]+", segment
+            ) and not _is_site_api_route_parameter(path, segment):
                 grammar_groups["nonportable-punctuation"].append(path)
             if any(ord(char) < 32 or ord(char) == 127 for char in segment):
                 unsafe.append("control-character")
