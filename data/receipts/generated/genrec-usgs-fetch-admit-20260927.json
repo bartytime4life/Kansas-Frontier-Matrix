@@ -15,11 +15,11 @@
   "artifact_hashes": {
     ".github/workflows/usgs-earthquake-offline.yml": "sha256:f46faed8993dfdb87d8a77258b69633434890a32d2940dfdc365b647b8f54593",
     "connectors/usgs/pyproject.toml": "sha256:fa9b8361fcfd10cb79ea4ae342f90ae0f7613b3533860122449292f108dda2ed",
-    "connectors/usgs/src/usgs/README.md": "sha256:7e601a3e4f310fe2f585fe4f5c1f90accd1301c6769da86e33597e50e808299b",
-    "connectors/usgs/src/usgs/admit.py": "sha256:0ab94b31c3d06819027dd1eefed7b6c8c544975a79cd9db0f915a3706b7a8e3b",
-    "connectors/usgs/src/usgs/fetch.py": "sha256:b9e3cd7abe38e92c667cfc2b8658d0b73cc54de5c633e854bc15ff7017ae52ef",
+    "connectors/usgs/src/usgs/README.md": "sha256:c7cad1024c832f1ed2872df863e14a26996ed5e4453ca0c8ba2c542659b00556",
+    "connectors/usgs/src/usgs/admit.py": "sha256:7c2c6f3347b031b81c77421d6a2616626aea6caac8c2ccf702dbce902d698e1c",
+    "connectors/usgs/src/usgs/fetch.py": "sha256:411a3e6250718acfb11d77a20a323c085cd9420b841a65e4666722f7e3fdb913",
     "connectors/usgs/tests/README.md": "sha256:333a57d79efb1a316ece51e168d2f95c7460300914eb6a5182d62b472f5587d6",
-    "connectors/usgs/tests/test_fetch_admit.py": "sha256:5a5ec5a5e62367687f1e908832e21b44749100905dae357256942f3be6e4a3eb",
+    "connectors/usgs/tests/test_fetch_admit.py": "sha256:6d53962e3a82b7f319e2c5f46a83db3406c9c5b33991ed3ff0dfa01e60f8275c",
     "connectors/usgs/tests/test_retrieval_episode_conformance.py": "sha256:bf2274472212f5558e5a2cccdf2ff7e08aded6509b8d5e56a516b59d8c49aaaf",
     "tools/qa/scaffold_baseline.json": "sha256:275e350c86a0314b1fd2ad94c58b1711748f4aa5a7913565d972ca739fe3b04a"
   },
@@ -58,7 +58,7 @@
     {
       "gate": "Offline standard-library connector tests",
       "outcome": "PASS",
-      "reason": "Python 3.11: test_earthquake.py (25) and test_fetch_admit.py (16) pass under unittest discover as run by the workflow; retrieval runs through connectors_core.transport.execute_retrieval with a synthetic transport."
+      "reason": "Python 3.11: test_earthquake.py (25) and test_fetch_admit.py (19) pass under unittest discover as run by the workflow; retrieval runs through connectors_core.transport.execute_retrieval with a synthetic transport."
     },
     {
       "gate": "Contract conformance",
@@ -68,7 +68,7 @@
     {
       "gate": "Targeted mutation testing",
       "outcome": "PASS",
-      "reason": "12 fetch.py and 9 admit.py mutations applied and verified restored; all caught except one equivalent mutant (body retention keyed on payload presence, which connectors_core restricts to SUCCESS)."
+      "reason": "12 fetch.py and 17 admit.py mutations (including the review-driven descriptor normalization and retrieval re-verification) applied and verified restored; all caught except one equivalent mutant (body retention keyed on payload presence, which connectors_core restricts to SUCCESS)."
     },
     {
       "gate": "Scaffold ratchet, deny suites, QA tests",
