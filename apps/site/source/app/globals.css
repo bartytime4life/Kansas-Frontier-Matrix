@@ -3844,9 +3844,13 @@ body { font-size: 14px; }
 .event-workspace .event-range-labels > span:nth-child(2) { display: none; }
 .event-workspace .event-kicker { font-size: 12px; }
 @media (max-width: 760px) {
-  .map-control-strip { left: 8px; right: 8px; top: 60px; }
-  .map-control-strip .map-basemap-select { display: none; }
+  /* The thumb dock is the primary action path at this width. Do not leave a
+     second, clipped toolbar above the map. */
+  .map-control-strip { display: none; }
+  .map-stage:has(.map-control-strip) .terrain-scene-passport { top: 56px; }
   .map-source-status { top: 106px; }
+  .data-notices-trigger { min-width: 42px !important; width: 42px; padding-inline: 0 !important; justify-content: center; }
+  .data-notices-trigger > span:nth-child(2) { display: none; }
   .event-workspace .event-header>div>span, .event-workspace .event-source-link { display: none; }
   .event-workspace .event-header>div>a { grid-row: auto; }
   .event-workspace .event-query { flex-wrap: nowrap; overflow-x: auto; padding: 7px 10px; }
