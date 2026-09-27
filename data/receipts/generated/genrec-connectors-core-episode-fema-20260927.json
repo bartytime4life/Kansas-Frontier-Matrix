@@ -1,0 +1,155 @@
+{
+  "receipt_id": "genrec-connectors-core-episode-fema-20260927",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/connector-gate.yml",
+    ".github/workflows/fema-openfema-declarations-offline.yml",
+    "connectors/fema/README.md",
+    "connectors/fema/pyproject.toml",
+    "connectors/fema/src/fema/admit.py",
+    "connectors/fema/src/fema/fetch.py",
+    "connectors/fema/tests/README.md",
+    "connectors/fema/tests/test_fetch_admit.py",
+    "connectors/usgs/src/usgs/README.md",
+    "connectors/usgs/src/usgs/admit.py",
+    "connectors/usgs/src/usgs/fetch.py",
+    "connectors/usgs/tests/test_fetch_admit.py",
+    "connectors/usgs/tests/test_retrieval_episode_conformance.py",
+    "packages/connectors-core/src/connectors_core/DESCRIPTOR_GATE.md",
+    "packages/connectors-core/src/connectors_core/RETRIEVAL_EPISODE.md",
+    "packages/connectors-core/src/connectors_core/descriptor_gate.py",
+    "packages/connectors-core/src/connectors_core/retrieval_episode.py",
+    "tests/packages/connectors_core/test_descriptor_gate.py",
+    "tests/packages/connectors_core/test_import_surface.py",
+    "tests/packages/connectors_core/test_retrieval_episode.py",
+    "tools/qa/scaffold_baseline.json"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/connector-gate.yml": "sha256:e33d6c5d5b219308426882fbc02ecbf6ca268490184755ff36624af575044ba0",
+    ".github/workflows/fema-openfema-declarations-offline.yml": "sha256:3e1145a0e16770ee079d68d36fb111ae91cd072b454211d75470ead264b8a0d9",
+    "connectors/fema/README.md": "sha256:24201761ff7838a447a9e3b20974b7eda6fb6c27f1eaa8ab383d8a4a3b725be6",
+    "connectors/fema/pyproject.toml": "sha256:aec6f7a4d76fa62be44e5f2c8b3e75469bcdf2e51593a4684d4acfff49de4dee",
+    "connectors/fema/src/fema/admit.py": "sha256:965c16ffdef6b0e797cd26d101adeda5e12146108ff98fa48dd1a7f98cf92cc2",
+    "connectors/fema/src/fema/fetch.py": "sha256:e6e4d4da605824ad6b442f56bca83f1e9cbb633239bd41e4d73697fda99da646",
+    "connectors/fema/tests/README.md": "sha256:66ace3cc653ff2690cc1bc308e250d18ef40ae388f098b680e0d1f950c457c49",
+    "connectors/fema/tests/test_fetch_admit.py": "sha256:828bc7dae98c3c1b9181ca5cfa6948ec1a2f67b08e844cd670f2f3515f1bfbe1",
+    "connectors/usgs/src/usgs/README.md": "sha256:1280786001f06cad390129e3a59a4434d3872cda6f275ed011ee95a1ccd154ae",
+    "connectors/usgs/src/usgs/admit.py": "sha256:b3352826116bcf3304d0cd89a099e47678869db89d3a2e5d79d7c610f9fce5ab",
+    "connectors/usgs/src/usgs/fetch.py": "sha256:e41ed583ac11ce1d43b87fe93019085fd61c037c1d0101fe933951f283661148",
+    "connectors/usgs/tests/test_fetch_admit.py": "sha256:e6319817604945c072f4ac4c19323468b1f1b571ba0478667abcee9468fc0f26",
+    "connectors/usgs/tests/test_retrieval_episode_conformance.py": "sha256:1a460726f245352dea4ced001de46f3337c28775868a266014cbb9993f3d4d34",
+    "packages/connectors-core/src/connectors_core/DESCRIPTOR_GATE.md": "sha256:d64297d2af80708464e24f2ad0e36ff78c4ea31887bad3e18fea80657ffaea7b",
+    "packages/connectors-core/src/connectors_core/RETRIEVAL_EPISODE.md": "sha256:54fb5376517416effb9e93a5ba867bad183a765c5f5925b9a8dd089f59c22674",
+    "packages/connectors-core/src/connectors_core/descriptor_gate.py": "sha256:60532d1efda635dafbedfd4ba6393637840e977980179cf8c02d185efc0d5ee9",
+    "packages/connectors-core/src/connectors_core/retrieval_episode.py": "sha256:20cdc4924d41aa066903a951d5168d09729ff3ddd92e1f333571846b6c079caf",
+    "tests/packages/connectors_core/test_descriptor_gate.py": "sha256:7dbc1706ce35e077fa6590443d7cf9b75c43484205c1646f76b838107254f051",
+    "tests/packages/connectors_core/test_import_surface.py": "sha256:f6335f4d2253cbcf34e57f13146848e904a7c817643b0525297eafce5d89a535",
+    "tests/packages/connectors_core/test_retrieval_episode.py": "sha256:6fcd00705013b6e2a6da51ebe760b2e45aa3f063b599e0005c624122ed843ca4",
+    "tools/qa/scaffold_baseline.json": "sha256:b2ec4b022d938f905680a71d5395b4e81db3adf2a1fcd21dfd097fdfbfbfce02"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:c9e7eee28adee7b1096abcc1dd4099ba7c9efdecaeb2cdec6d02fa41c01edd0d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/99ca2e3be3cc55250783796d163dba425a9faf93",
+      "packages/connectors-core/src/connectors_core/ARTIFACT_HANDOFF.md",
+      "packages/connectors-core/src/connectors_core/TRANSPORT.md",
+      "schemas/contracts/v1/source/source_retrieval_episode.schema.json",
+      "connectors/fema/src/fema/openfema_declarations.py"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/connector-gate.yml": "PROPOSED",
+    ".github/workflows/fema-openfema-declarations-offline.yml": "PROPOSED",
+    "connectors/fema/README.md": "PROPOSED",
+    "connectors/fema/pyproject.toml": "CONFIRMED",
+    "connectors/fema/src/fema/admit.py": "CONFIRMED",
+    "connectors/fema/src/fema/fetch.py": "CONFIRMED",
+    "connectors/fema/tests/README.md": "PROPOSED",
+    "connectors/fema/tests/test_fetch_admit.py": "CONFIRMED",
+    "connectors/usgs/src/usgs/README.md": "PROPOSED",
+    "connectors/usgs/src/usgs/admit.py": "CONFIRMED",
+    "connectors/usgs/src/usgs/fetch.py": "CONFIRMED",
+    "connectors/usgs/tests/test_fetch_admit.py": "CONFIRMED",
+    "connectors/usgs/tests/test_retrieval_episode_conformance.py": "CONFIRMED",
+    "packages/connectors-core/src/connectors_core/DESCRIPTOR_GATE.md": "PROPOSED",
+    "packages/connectors-core/src/connectors_core/RETRIEVAL_EPISODE.md": "PROPOSED",
+    "packages/connectors-core/src/connectors_core/descriptor_gate.py": "CONFIRMED",
+    "packages/connectors-core/src/connectors_core/retrieval_episode.py": "CONFIRMED",
+    "tests/packages/connectors_core/test_descriptor_gate.py": "CONFIRMED",
+    "tests/packages/connectors_core/test_import_surface.py": "CONFIRMED",
+    "tests/packages/connectors_core/test_retrieval_episode.py": "CONFIRMED",
+    "tools/qa/scaffold_baseline.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "connectors_core suite",
+      "outcome": "PASS",
+      "reason": "python -m pytest tests/packages/connectors_core (includes new test_retrieval_episode.py with repository-validator conformance for every reachable category, direct-construction integrity cases, and test_descriptor_gate.py) passes with tests/qa and the retrieval-episode validator tests: 154 passed."
+    },
+    {
+      "gate": "Connector suites",
+      "outcome": "PASS",
+      "reason": "USGS test_earthquake, test_fetch_admit, test_retrieval_episode_conformance and FEMA test_openfema_declarations, test_fetch_admit pass under unittest discover as run by their workflows."
+    },
+    {
+      "gate": "Targeted mutation testing",
+      "outcome": "PASS",
+      "reason": "19 mutations across retrieval_episode.py, descriptor_gate.py and fema/admit.py applied and verified restored; all caught (retry-count mutation caught after adding a core assertion)."
+    },
+    {
+      "gate": "Scaffold ratchet, deny suites, connector gate",
+      "outcome": "PASS",
+      "reason": "scaffold_inventory --check passes against the 1296-finding baseline (5 FEMA findings resolved); deny_test_runner PASS; validate_connector_gate --scan-repository PASS; connector non-publisher policy and gate entrypoint tests pass."
+    },
+    {
+      "gate": "Workflow security, docs structure, topology comparison",
+      "outcome": "PASS",
+      "reason": "make workflow-security PASS (485 workflows, 0 new drift); make docs-critical-structure 0 findings; make repository-topology findings identical to base (pre-existing KFM-TOPO-001/004/009 drift, not introduced)."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation."
+    },
+    {
+      "gate": "Source activation, admission, release",
+      "outcome": "SKIPPED",
+      "reason": "No network library, descriptor change, lifecycle write, admission, or publication; all routes stay HOLD while descriptors are TBD."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/99ca2e3be3cc55250783796d163dba425a9faf93"
+    },
+    {
+      "id": "retrieval-episode-contract",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/source/source_retrieval_episode.schema.json@99ca2e3be3cc55250783796d163dba425a9faf93"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-27T04:43:52Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 4745,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Extracts source-agnostic retrieval-episode recording and connector descriptor gating into connectors_core (second consumer: FEMA), refactors USGS onto them, and replaces FEMA fetch.py/admit.py/pyproject.toml placeholders. Descriptors unchanged (steward decisions)."
+}
