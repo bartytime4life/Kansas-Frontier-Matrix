@@ -353,7 +353,8 @@ def parse_data(body: bytes, *, status: int, source_url: str, retrieved_at: str,
                     raise ScanInputError("DUPLICATE_SERIES")
                 returned.add(key)
                 series.append(item)
-    except (TypeError, ValueError) as error:
+    except (TypeError, ValueError, RecursionError) as error:
+        # RecursionError: nesting that decodes but cannot be walked or re-serialized.
         if isinstance(error, ScanInputError):
             raise
         raise ScanInputError("RESPONSE_SHAPE") from None

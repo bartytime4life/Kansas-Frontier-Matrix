@@ -167,6 +167,15 @@ class ParserTests(unittest.TestCase):
             parse(body(raw=raw))
         self.assertEqual(str(ctx.exception), "ELEMENT_SHAPE")
 
+    def test_pathologically_nested_values_are_a_bounded_rejection(self):
+        nested = '{"a":' * 700 + "1" + "}" * 700
+        raw = ('[{"stationTriplet": "99901:KS:SCAN", "data": [{"stationElement":'
+               ' {"elementCode": "SMS", "heightDepth": -2, "durationName": "DAILY"},'
+               ' "values": [{"date": "2023-06-01", "value": ' + nested + '}]}]}]')
+        with self.assertRaises(sa.ScanInputError) as ctx:
+            parse(body(raw=raw))
+        self.assertEqual(str(ctx.exception), "RESPONSE_SHAPE")
+
     def test_numbers_outside_decimal_range_reject_as_invalid_json(self):
         for token in ("1e" + "9" * 100, "1" * 5000):
             raw = ('[{"stationTriplet": "99901:KS:SCAN", "data": [{"stationElement":'
