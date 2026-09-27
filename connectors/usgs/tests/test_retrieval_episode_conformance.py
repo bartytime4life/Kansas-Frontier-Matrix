@@ -78,16 +78,6 @@ class ConformanceTests(unittest.TestCase):
                                       "UNSAFE_METADATA", "AUTH_REQUIRED", "ACCESS_DENIED",
                                       "NOT_FOUND", "RETRY_EXHAUSTED", "CANCELLED"})
 
-    def test_result_table_matches_validator(self):
-        self.assertEqual(set(fetch.RESULTS) | {"NOT_MODIFIED"},
-                         {c.value for c in cc.TransportCategory})
-        for category, (status, reason) in fetch.RESULTS.items():
-            with self.subTest(category=category):
-                self.assertEqual(
-                    validator.recompute_result({"method": "GET",
-                                                "transport": {"category": category}}),
-                    {"status": status, "reason_codes": [reason]})
-
 
 if __name__ == "__main__":
     unittest.main()

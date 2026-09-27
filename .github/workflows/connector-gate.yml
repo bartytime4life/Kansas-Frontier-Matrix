@@ -60,7 +60,7 @@ jobs:
       - name: Compile and import connectors-core without runtime effects
         run: |
           python -m compileall -q packages/connectors-core/src/connectors_core
-          python -c "import connectors_core.core; import connectors_core.transport; import connectors_core.artifact_handoff; import connectors_core.source_adapter"
+          python -c "import connectors_core.core; import connectors_core.transport; import connectors_core.artifact_handoff; import connectors_core.source_adapter; import connectors_core.retrieval_episode; import connectors_core.descriptor_gate"
 
       - name: Run connectors-core deterministic no-network tests
         run: >-

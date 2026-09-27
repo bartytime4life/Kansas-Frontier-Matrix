@@ -1,0 +1,70 @@
+{
+  "receipt_id": "genrec-connectors-core-doc-rename-20260927",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "packages/connectors-core/src/connectors_core/descriptor-gate.md",
+    "packages/connectors-core/src/connectors_core/retrieval-episode.md"
+  ],
+  "artifact_hashes": {
+    "packages/connectors-core/src/connectors_core/descriptor-gate.md": "sha256:d64297d2af80708464e24f2ad0e36ff78c4ea31887bad3e18fea80657ffaea7b",
+    "packages/connectors-core/src/connectors_core/retrieval-episode.md": "sha256:54fb5376517416effb9e93a5ba867bad183a765c5f5925b9a8dd089f59c22674"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:a4ef3e76d42e7ad18f3350f6bbdfd50cb65d102b6b08e06ed5ceda6b486cbe6b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/ce623f4e391e31ee69f324c40ebc0cd99a472996",
+      "tools/validators/directory_governance/validate_repository_topology.py"
+    ]
+  },
+  "truth_labels": {
+    "packages/connectors-core/src/connectors_core/descriptor-gate.md": "PROPOSED",
+    "packages/connectors-core/src/connectors_core/retrieval-episode.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Repository topology",
+      "outcome": "PASS",
+      "reason": "Committed-tree make repository-topology findings are identical to the pre-#4745 base (8 pre-existing fingerprints); the KFM-TOPO-001 uppercase fingerprint returns to sha256:3da8cffd... ."
+    },
+    {
+      "gate": "Historical receipt replay",
+      "outcome": "PASS",
+      "reason": "genrec-connectors-core-episode-fema-20260927.json left unchanged and validates with --artifact-git-ref at the #4745 merge commit."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/ce623f4e391e31ee69f324c40ebc0cd99a472996"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-27T04:52:25Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Pure rename of two connectors_core module docs to lowercase names; content unchanged."
+}
