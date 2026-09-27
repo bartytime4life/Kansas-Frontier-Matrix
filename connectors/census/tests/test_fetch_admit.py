@@ -233,7 +233,8 @@ class AdmissionTests(unittest.TestCase):
                           "source_descriptor_ref": "kfm://source/other.source"},
                          {"retrieval_profile_ref": fetch.TIGER_RETRIEVAL_PROFILE},
                          {"source_id": fetch.TIGER_SOURCE_ID,
-                          "source_descriptor_ref": f"kfm://source/{fetch.TIGER_SOURCE_ID}"}):
+                          "source_descriptor_ref": f"kfm://source/{fetch.TIGER_SOURCE_ID}"},
+                         {"source_id": [fetch.ACS_SOURCE_ID]}):
             with self.subTest(override=override):
                 forged = fetch.Retrieval(good.source_url, json.dumps({**base, **override}),
                                          good.body)
