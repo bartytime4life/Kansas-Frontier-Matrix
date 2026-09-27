@@ -102,8 +102,11 @@ const readBoundedBody = async (response: Response, maxBytes: number) => {
   return new TextDecoder().decode(body);
 };
 
-const fetchFixedJson = async (url: string | URL, maxBytes: number): Promise<JsonRecord> => {
-  const parsedUrl = new URL(String(url));
+const fetchFixedJsonPath = async (pathWithQuery: string, maxBytes: number): Promise<JsonRecord> => {
+  if (!pathWithQuery.startsWith("/") || pathWithQuery.startsWith("//") || pathWithQuery.includes("..")) {
+    throw new AdapterError("The requested upstream is outside the fixed NOAA allowlist.", "NOAA_UPSTREAM_DENIED");
+  }
+  const parsedUrl = new URL(`${NWPS_BASE}${pathWithQuery}`);
   if (parsedUrl.origin !== NOAA_ORIGIN || parsedUrl.username || parsedUrl.password || parsedUrl.hash || !parsedUrl.pathname.startsWith("/nwps/v1/")) {
     throw new AdapterError("The requested upstream is outside the fixed NOAA allowlist.", "NOAA_UPSTREAM_DENIED");
   }
@@ -509,8 +512,8 @@ const gaugeLinks = (lid: string): SourceLink[] => {
 };
 
 const reachLinks = (reachId: string): SourceLink[] => [
-  { rel: "upstream", title: "NOAA NWM analysis and assimilation streamflow", href: `${NWPS_BASE}/reaches/${reachId}/streamflow?series=analysis_assimilation` },
-  { rel: "upstream", title: "NOAA NWM short-range streamflow guidance", href: `${NWPS_BASE}/reaches/${reachId}/streamflow?series=short_range` },
+  { rel: "upstream", title: "NOAA NWM analysis and assimilation streamflow", href: `/reaches/${reachId}/streamflow?series=analysis_assimilation` },
+  { rel: "upstream", title: "NOAA NWM short-range streamflow guidance", href: `/reaches/${reachId}/streamflow?series=short_range` },
   { rel: "documentation", title: "NOAA NWPS API documentation", href: NWPS_DOCS_URL },
   { rel: "service", title: "NOAA National Water Model information", href: NWM_INFO_URL },
 ];
@@ -589,8 +592,8 @@ const gaugeResponse = async (lid: string, retrievedAt: string) => {
 const reachResponse = async (reachId: string, retrievedAt: string) => {
   const links = reachLinks(reachId);
   const [analysisPayload, shortRangePayload] = await Promise.all([
-    fetchFixedJson(links[0].href, MAX_REACH_BYTES),
-    fetchFixedJson(links[1].href, MAX_REACH_BYTES),
+    fetchFixedJsonPath(links[0].href, MAX_REACH_BYTES),
+    fetchFixedJsonPath(links[1].href, MAX_REACH_BYTES),
   ]);
   const reach = normalizeReachHeader(analysisPayload, reachId);
   normalizeReachHeader(shortRangePayload, reachId);
