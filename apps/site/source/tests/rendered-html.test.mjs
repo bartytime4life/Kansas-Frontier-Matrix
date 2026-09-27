@@ -892,7 +892,7 @@ test("connects nineteen bounded official Kansas context sources without admittin
   assert.match(countySource, /POP100,HU100/);
   assert.match(route, /state_code/);
   assert.match(route, /datetime/);
-  assert.match(route, /earthquake\.usgs\.gov\/fdsnws\/event\/1\/query/);
+  assert.match(route, /(?:^|[\s"'`])https?:\/\/earthquake\.usgs\.gov\/fdsnws\/event\/1\/query(?:[/?#][^\s"'`]*)?(?:$|[\s"'`])/);
   assert.match(route, /NOAA HMS smoke publications/);
   assert.match(route, /data\.raspberryshake\.org\/fdsnws\/station\/1\/query/);
   assert.match(route, /MAX_RASPBERRY_SHAKE_STATIONS = 250/);
