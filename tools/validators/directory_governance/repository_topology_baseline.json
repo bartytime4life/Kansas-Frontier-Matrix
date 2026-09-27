@@ -52,25 +52,11 @@
       "subject": "release/manifests/hazards-r0001.yaml"
     },
     {
-      "evidence_sha256": "sha256:3a18c4f73fa5b26d7d7db0217eeba23bf805d6b8deb6cc682764f19761d8e2f0",
-      "evidence_zlib_base64": "eNrz9AtxDfJz9IkPDvEPco0PcnVzDXL1c3YFAFuFBzg=",
-      "fingerprint": "sha256:11840bf3c9b8412a4c2519cf7614786c6595908e5f492274437292606b7020bc",
-      "rule_id": "KFM-TOPO-014",
-      "subject": "test-reference:apps/explorer-web/tests/view-registry-inspector.test.ts"
-    },
-    {
       "evidence_sha256": "sha256:b102250ac3782bb725316819a375bf3e0b3faf707e474f061a2e954ccf0a604f",
       "evidence_zlib_base64": "eNpLSSxJ1C8pyizISS3RD3J1dPF11ctNYUhBFs5ITMosSUSSBgD5YxJf",
       "fingerprint": "sha256:16104f8c90303c06a19d7938d34fbddf6ae0388381ec670f46f466432386d3bc",
       "rule_id": "KFM-TOPO-008",
       "subject": "data/triplet/->data/triplets/"
-    },
-    {
-      "evidence_sha256": "sha256:3a18c4f73fa5b26d7d7db0217eeba23bf805d6b8deb6cc682764f19761d8e2f0",
-      "evidence_zlib_base64": "eNrz9AtxDfJz9IkPDvEPco0PcnVzDXL1c3YFAFuFBzg=",
-      "fingerprint": "sha256:16a9104697ea6869d8898dd4b13a85bd611e9a3218891cb53af105968456b7fe",
-      "rule_id": "KFM-TOPO-014",
-      "subject": "test-reference:apps/explorer-web/tests/streamflow-qc-dashboard.test.ts"
     },
     {
       "evidence_sha256": "sha256:4d035c8dc503fb9d8d3963141113abaae2f330d878b57e0579e275b75b2033db",
@@ -827,13 +813,6 @@
       "fingerprint": "sha256:f8793931ca840da4b7b2b59b09c47a313262a24c95ecb4089dc47457a3ffe5dd",
       "rule_id": "KFM-TOPO-016",
       "subject": "doc-id:kfm://doc/geology-sublane-bedrock"
-    },
-    {
-      "evidence_sha256": "sha256:3a18c4f73fa5b26d7d7db0217eeba23bf805d6b8deb6cc682764f19761d8e2f0",
-      "evidence_zlib_base64": "eNrz9AtxDfJz9IkPDvEPco0PcnVzDXL1c3YFAFuFBzg=",
-      "fingerprint": "sha256:f9a306d0980a6f00bd20b5ea1dd6a2ce3178cfd2cac2a78dc3a16549d447dc46",
-      "rule_id": "KFM-TOPO-014",
-      "subject": "test-reference:apps/explorer-web/tests/evidence-drawer-drift-integrity.test.ts"
     },
     {
       "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
