@@ -459,9 +459,11 @@ const nasaGibsFirePoints = async (requestedDay: string | null = null) => {
   const dayPattern = /^\d{4}-\d{2}-\d{2}$/;
   if (requestedDay !== null && !dayPattern.test(requestedDay)) throw new UpstreamError("NASA GIBS day must be an exact calendar date.");
   const day = requestedDay ?? new Date().toISOString().slice(0, 10);
+  if (!dayPattern.test(day)) throw new UpstreamError("NASA GIBS day must be an exact calendar date.");
+  const safeDay = encodeURIComponent(day);
   const retrievedAt = new Date().toISOString();
   const tiles = await Promise.all(GIBS_FIRE_TILE_COLUMNS.map(async (column) => {
-    const url = `https://gibs.earthdata.nasa.gov/wmts/epsg4326/best/${GIBS_FIRE_LAYER}/default/${day}/500m/5/${GIBS_FIRE_TILE_ROW}/${column}.mvt`;
+    const url = `https://gibs.earthdata.nasa.gov/wmts/epsg4326/best/${GIBS_FIRE_LAYER}/default/${safeDay}/500m/5/${GIBS_FIRE_TILE_ROW}/${column}.mvt`;
     try {
       const response = await boundedFetch(url, MAX_GIBS_FIRE_TILE_BYTES, { timeoutMs: 8000, cache: "no-store" });
       if (response.bytes.length === 0) throw new UpstreamError("NASA GIBS tile body was missing.");
