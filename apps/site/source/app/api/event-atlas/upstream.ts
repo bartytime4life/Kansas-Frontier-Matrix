@@ -1,7 +1,5 @@
 const ORIGINS = new Set(["https://mesonet.agron.iastate.edu", "https://satepsanone.nesdis.noaa.gov", "https://gibs.earthdata.nasa.gov", "https://api.gbif.org", "https://services.arcgis.com", "https://tigerweb.geo.census.gov", "https://tiles.arcgis.com", "https://data.raspberryshake.org", "https://api.waterdata.usgs.gov", "https://www.ncei.noaa.gov", "https://elevation.nationalmap.gov"]);
-const APPROVED_URL = /^https:\/\/(?:mesonet\.agron\.iastate\.edu|satepsanone\.nesdis\.noaa\.gov|gibs\.earthdata\.nasa\.gov|api\.gbif\.org|services\.arcgis\.com|tigerweb\.geo\.census\.gov|tiles\.arcgis\.com|data\.raspberryshake\.org|api\.waterdata\.usgs\.gov|www\.ncei\.noaa\.gov|elevation\.nationalmap\.gov)(?:\/[^#\s]*)?$/;
 export async function boundedFetch(url: string, limit: number, options: { timeoutMs?: number; cache?: RequestCache } = {}) {
-  if (!APPROVED_URL.test(url)) throw new Error("Non-allowlisted source.");
   const parsed = new URL(url);
   if (!ORIGINS.has(parsed.origin) || parsed.username || parsed.password || parsed.hash) throw new Error("Non-allowlisted source.");
   const controller = new AbortController();

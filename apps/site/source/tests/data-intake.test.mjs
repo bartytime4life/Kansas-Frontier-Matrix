@@ -13,6 +13,7 @@ async function moduleUrl(file) {
 const intake = await import(await moduleUrl("app/data-intake.ts"));
 const daily = await import(await moduleUrl("app/daily-baseline.ts"));
 const upstream = await import(await moduleUrl("app/api/event-atlas/upstream.ts"));
+const eventAtlas = await import(await moduleUrl("app/event-atlas.ts"));
 test("intake rejects malformed dates, credential URLs, duplicate file paths and unsupported payloads", () => {
   const fields = { title: "A real source", sourceId: "general", sourceUrl: "https://example.gov/data", description: "Historical public county records", license: "Unknown", sensitivity: "unknown", startDate: "1900-01-01", endDate: "1900-12-31" };
   assert.equal(intake.validateSubmission(fields).startDate, "1900-01-01");
@@ -68,4 +69,11 @@ test("bounded upstream responses preserve empty tiles and reject oversized bodie
     globalThis.fetch = async () => new Response("too large", { headers: { "content-length": "1001" } });
     await assert.rejects(upstream.boundedFetch("https://gibs.earthdata.nasa.gov/tile", 1000), /response budget/);
   } finally { globalThis.fetch = original; }
+});
+
+test("NOAA smoke archive paths accept only exact calendar days", () => {
+  assert.equal(eventAtlas.smokeUrl("2026-09-26"), "https://satepsanone.nesdis.noaa.gov/pub/FIRE/web/HMS/Smoke_Polygons/KML/2026/09/hms_smoke20260926.kml");
+  for (const day of ["2026-02-30", "2026-09-26/../../private", "2026-09-26%2Fprivate", "//other.test"]) {
+    assert.throws(() => eventAtlas.smokeUrl(day), /exact calendar date/);
+  }
 });
