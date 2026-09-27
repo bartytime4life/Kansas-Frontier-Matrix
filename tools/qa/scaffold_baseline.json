@@ -2,14 +2,14 @@
  "schema_version": "kfm.scaffold-inventory/v1",
  "summary": {
   "by_kind": {
-   "PLACEHOLDER_MARKER": 928,
-   "STUB_MODULE": 348,
+   "PLACEHOLDER_MARKER": 925,
+   "STUB_MODULE": 346,
    "UNRESOLVED_DESCRIPTOR": 24,
    "VACUOUS_TEST": 1
   },
   "by_surface": {
    "apps": 34,
-   "connectors": 161,
+   "connectors": 156,
    "contracts": 3,
    "packages": 122,
    "pipelines": 236,
@@ -19,8 +19,8 @@
    "tests": 188,
    "tools": 54
   },
-  "files": 930,
-  "total": 1301
+  "files": 927,
+  "total": 1296
  },
  "findings": [
   {"kind": "PLACEHOLDER_MARKER", "path": "apps/cli/pyproject.toml"},
@@ -99,13 +99,8 @@
   {"kind": "UNRESOLVED_DESCRIPTOR", "path": "connectors/familysearch/src/familysearch/descriptor.yaml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/familysearch/src/familysearch/fetch.py"},
   {"kind": "STUB_MODULE", "path": "connectors/familysearch/src/familysearch/fetch.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "connectors/fema/pyproject.toml"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "connectors/fema/src/fema/admit.py"},
-  {"kind": "STUB_MODULE", "path": "connectors/fema/src/fema/admit.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/fema/src/fema/descriptor.yaml"},
   {"kind": "UNRESOLVED_DESCRIPTOR", "path": "connectors/fema/src/fema/descriptor.yaml"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "connectors/fema/src/fema/fetch.py"},
-  {"kind": "STUB_MODULE", "path": "connectors/fema/src/fema/fetch.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/ftDNA/pyproject.toml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/ftDNA/src/ftDNA/admit.py"},
   {"kind": "STUB_MODULE", "path": "connectors/ftDNA/src/ftDNA/admit.py"},

@@ -3,13 +3,23 @@ on:
   pull_request:
     paths:
       - 'connectors/fema/src/fema/openfema_declarations.py'
+      - 'connectors/fema/src/fema/fetch.py'
+      - 'connectors/fema/src/fema/admit.py'
+      - 'connectors/fema/src/fema/descriptor.yaml'
       - 'connectors/fema/tests/test_openfema_declarations.py'
+      - 'connectors/fema/tests/test_fetch_admit.py'
+      - 'packages/connectors-core/src/connectors_core/**'
       - '.github/workflows/fema-openfema-declarations-offline.yml'
   push:
     branches: [main]
     paths:
       - 'connectors/fema/src/fema/openfema_declarations.py'
+      - 'connectors/fema/src/fema/fetch.py'
+      - 'connectors/fema/src/fema/admit.py'
+      - 'connectors/fema/src/fema/descriptor.yaml'
       - 'connectors/fema/tests/test_openfema_declarations.py'
+      - 'connectors/fema/tests/test_fetch_admit.py'
+      - 'packages/connectors-core/src/connectors_core/**'
       - '.github/workflows/fema-openfema-declarations-offline.yml'
 permissions:
   contents: read
@@ -21,6 +31,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     env:
+      KFM_NO_NETWORK: '1'
       PYTHONDONTWRITEBYTECODE: '1'
       PYTHONHASHSEED: '0'
     steps:
@@ -30,9 +41,11 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: '3.11'
-      - name: Run standard-library-only synthetic tests
-        run: python -m unittest discover -s connectors/fema/tests -p 'test_openfema_declarations.py' -v
+      - name: Run standard-library synthetic tests (connectors-core imported from source)
+        run: |
+          python -m unittest discover -s connectors/fema/tests -p 'test_openfema_declarations.py' -v
+          python -m unittest discover -s connectors/fema/tests -p 'test_fetch_admit.py' -v
       - name: Record evidence boundary
         if: always()
         run: |
-          echo 'Offline synthetic OpenFEMA Disaster Declarations Summaries planner/parser checks only. Administrative records, not observed hazards. No provider fetch, table activation, rights review, source admission, capture completeness, active Site integration, release, or deployment proof.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Offline synthetic OpenFEMA Disaster Declarations Summaries planner/parser, injected-transport retrieval-episode, and page-routing checks only; routes stay HOLD while descriptor role/rights are unresolved. Administrative records, not observed hazards. No provider fetch, table activation, rights review, source admission, capture completeness, active Site integration, release, or deployment proof.' >> "$GITHUB_STEP_SUMMARY"
