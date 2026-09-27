@@ -1,6 +1,6 @@
 import type { LayerRecord } from "./explorer-data";
 
-export type MapUtilityView = "report" | "inspect" | "navigate" | "places" | "scene" | "connections" | "import" | "compare" | "display" | "measure" | "export" | "diagnostics";
+export type MapUtilityView = "report" | "inspect" | "navigate" | "scene" | "connections" | "import" | "compare" | "measure" | "export" | "diagnostics";
 export type MeasureUnit = "imperial" | "metric";
 
 export type MapViewProfile = Readonly<{

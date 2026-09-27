@@ -12,8 +12,9 @@ test("mobile map keeps layers, live data, sources, time, and style reachable wit
 
   assert.match(page, /<nav className="map-mobile-actions" aria-label="Mobile map actions">/);
   for (const label of ["Layers", "Live", "Sources", "Time", "Style"]) assert.match(page, new RegExp(`>${label}(?:\\s|<)`));
-  assert.match(page, /openMapUtility\("display"\)/);
-  assert.match(page, /map-render-quality-choice/);
+  assert.match(page, /onClick=\{openMapSettings\}>Style<\/button>/);
+  assert.match(page, /id="map-settings"/);
+  assert.match(page, /<RenderQualityControl value=\{renderQuality\} onChange=\{chooseRenderQuality\} \/>/);
   assert.match(toolbar, /aria-label="Open data and download notices"/);
   assert.match(css, /safe-area-inset-bottom/);
   assert.match(css, /\.map-control-strip \{ display: none; \}/);
@@ -21,9 +22,9 @@ test("mobile map keeps layers, live data, sources, time, and style reachable wit
   assert.match(css, /\.event-workspace \.event-calendar-cell \{ min-height: 32px/);
   assert.match(dataWorkspace, /\.page input,\.page select,\.page textarea\{min-height:48px;font-size:16px\}/);
 
-  const finalWorkbenchOverride = css.lastIndexOf(".map-utility-panel[data-view]");
-  assert.ok(finalWorkbenchOverride > css.lastIndexOf(".map-utility-panel { top: 62px; right: 68px; }"));
-  assert.match(css.slice(finalWorkbenchOverride), /\.map-utility-panel\[data-view\] \{\s*inset: auto 0 0;\s*width: 100%;\s*height: min\(86dvh, 820px, 100%\);/);
+  const finalToolSheetOverride = css.lastIndexOf(".map-utility-panel[data-view]");
+  assert.ok(finalToolSheetOverride > css.lastIndexOf(".map-utility-panel { top: 62px; right: 68px; }"));
+  assert.match(css.slice(finalToolSheetOverride), /\.map-utility-panel\[data-view\] \{\s*inset: auto 0 0;\s*width: 100%;\s*height: min\(86dvh, 820px, 100%\);/);
 
   assert.match(page, /const visibleFocusableElements = \(container: HTMLElement\) =>/);
   assert.match(page, /textarea:not\(\[disabled\]\), summary/);

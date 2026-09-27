@@ -54,7 +54,7 @@ test("centers the primary workflow on map-scoped custom reports", async () => {
 
   assert.match(mapInterface, /"report"/);
   assert.match(source, /kfm-custom-map-report-v1/);
-  assert.match(source, /Custom report builder/);
+  assert.match(source, /report: "Build a report from the current map, time, layers, and selection\."/);
   assert.match(source, /Build from the map you are using/);
   assert.match(source, /Map extent/);
   assert.match(source, /Visible layers/);
@@ -535,8 +535,11 @@ test("adds device-local Places trails and faster layer isolation controls", asyn
   }).outputText;
   const places = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
 
-  assert.match(mapInterface, /"places"/);
-  assert.match(page, /Places \+ investigation trails/);
+  assert.match(page, /leftPanelMode !== "places"/);
+  assert.match(page, /<div className="place-trail-list" aria-label="Saved investigation places">/);
+  assert.doesNotMatch(page, /MAP WORKBENCH|Map Workbench|className="map-utility-tabs"/);
+  assert.match(page, /Preview local KML or GeoJSON/);
+  assert.match(page, /onClick=\{openMapSettings\}>Style/);
   assert.match(page, /Google Earth–inspired, KFM-governed/);
   assert.match(page, /locationCameraRedacted \|\| locationDerivedViewRef\.current/);
   assert.match(page, /setLayerGroupVisibility/);
