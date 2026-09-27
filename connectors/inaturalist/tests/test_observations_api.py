@@ -109,6 +109,14 @@ class ClassifyTests(unittest.TestCase):
         self.assertEqual(candidate.raw_record_json.count('"login":"synthetic_identifier"'), 3)
         self.assertIn('"body":"synthetic"', candidate.raw_record_json)
 
+    def test_deep_nesting_is_a_bounded_error(self):
+        nested = {}
+        for _ in range(900):
+            nested = {"child": nested}
+        with self.assertRaises(obs.ObservationInputError) as caught:
+            parse([record(extra=nested)])
+        self.assertEqual(str(caught.exception), "RECORD_DEPTH")
+
     def test_most_restrictive_geoprivacy_governs(self):
         cases = [({"geoprivacy": "obscured"}, "obscured", "obscured_randomized"),
                  ({"taxon_geoprivacy": "obscured"}, "obscured", "obscured_randomized"),

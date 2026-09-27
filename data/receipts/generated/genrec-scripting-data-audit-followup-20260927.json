@@ -17,15 +17,15 @@
   "artifact_hashes": {
     ".github/workflows/domain-geology.yml": "sha256:57c870a3259e06685f2c4178f6e86a7fa9a0ff5d419f8ed8fb55986b7a4a1d6c",
     "connectors/inaturalist/README.md": "sha256:770eb3221449ea000eaabd4ec824fb73409809120e06b7281000e6f79dc55489",
-    "connectors/inaturalist/src/inaturalist/observations_api.py": "sha256:663d03cdd9a71181211b740b7efd117daf62bfcadfcc277ae5eb02157b05ac53",
-    "connectors/inaturalist/tests/test_observations_api.py": "sha256:09c438c6319040296941427289a300cc8071e6cf8e92a90692578de9037283a4",
+    "connectors/inaturalist/src/inaturalist/observations_api.py": "sha256:8eaea61e361f57a7f76c7854f617dbfc510ad9a6590288c5237575fe791b8731",
+    "connectors/inaturalist/tests/test_observations_api.py": "sha256:bbd6175e4b22e25fe6c22915201f4a8aeee986ef423761d4997c17bf4cadf5f1",
     "connectors/noaa/src/noaa/nws_alerts.py": "sha256:434a642fc0138678bab9ee51863cf40b94001e6d04b5eae6f192369bf07d66ef",
     "connectors/noaa/tests/test_nws_alerts.py": "sha256:599e4beb7bd57d0c6dcbf0da2b412a0da0694a952f536f443a24aa3b31cd2764",
     "connectors/nws-api/README.md": "sha256:552d2ff54d75964547ca90972fe4bab03fbe33c26c4ea9c00068d676621627ef",
     "connectors/nws/README.md": "sha256:f2cf8f08f1c8784fcd2035d7845ecd70273ef5e4cbdd556056a8698240b673af",
-    "tests/qa/test_scaffold_inventory.py": "sha256:dc9ed8d49411b6a2377e1e677d263adf971a3547481e5d39b05f3a73f5158069",
+    "tests/qa/test_scaffold_inventory.py": "sha256:9a1e547bc53cce260f84711b470f6208f356e7090bf679a1436996bca0379753",
     "tools/qa/scaffold_baseline.json": "sha256:4625da429507047672d737c78a43e1a1a5cfc2ccd8e6be711f53408c7167b370",
-    "tools/qa/scaffold_inventory.py": "sha256:a268898eda2ab6ecf44fae05d5fa4b00c3164253ba8e399cb197173ceced47bd"
+    "tools/qa/scaffold_inventory.py": "sha256:99c93021d024fb67f61074353f8ba1d42f96a18ea931f8a86fc18fb83b5b0d4d"
   },
   "model_identity": {
     "provider": "Anthropic",
@@ -120,10 +120,10 @@
     "state": "pending",
     "timestamp": null
   },
-  "created_at": "2026-09-27T00:24:07Z",
+  "created_at": "2026-09-27T00:35:04Z",
   "emitter": "Claude Code repository-authoring session",
   "links": {
-    "pr_number": null,
+    "pr_number": 4727,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
   },
   "notes": "Follow-up to merged #4726: second geology receipt replay pinned; Codex review findings fixed (nested iNaturalist user minimization, NWS pagination outcome, pass-only stub detection). Original scope: scripting/automation/raw-data audit: fail-closed replacements for false-green placeholders, scaffold inventory ratchet, deny-suite runner, offline planners/parsers for GBIF, iNaturalist, Census (TIGER package, ACS), NOAA (Storm Events, USCRN hourly02, NWS alerts as context only), and real domain smoke tests. No live fetch, activation, admission, alerting, publication, or required-check change. Placement ADRs for NOAA sub-product lanes remain open."
