@@ -128,13 +128,14 @@ class ParserTests(unittest.TestCase):
                            ' {"elementCode": "SMS", "ordinal": 1, "heightDepth": -2.0,'
                            ' "durationName": "DAILY"}, "values": [{"date": "2023-06-01",'
                            ' "value": 0.1234567890123456789}, {"date": "2023-06-02",'
-                           ' "value": 25.40}]}]}]'),
+                           ' "value": 25.40}, {"date": "2023-06-03", "value": 2.5e-3}]}]}]'),
                       url=sa.data_url(STATIONS, ("SMS:-2",), duration="DAILY",
                                       begin_date="2023-06-01", end_date="2023-06-03"))
         series = exact.series[0]
         self.assertEqual([(v.raw, v.value) for v in series.values],
                          [("0.1234567890123456789", Decimal("0.1234567890123456789")),
-                          ("25.40", Decimal("25.40"))])
+                          ("25.40", Decimal("25.40")), ("2.5e-3", Decimal("0.0025"))])
+        self.assertIs(type(series.values[0].value), Decimal)
         self.assertEqual(series.height_depth_raw, "-2.0")
         self.assertIn('"heightDepth":"-2.0"', series.raw_element_json)
         self.assertEqual(values[2].raw, "7")

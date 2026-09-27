@@ -40,6 +40,19 @@ STAMP_FORMATS = {"DAILY": ("%Y-%m-%d", re.compile(r"\d{4}-\d{2}-\d{2}\Z")),
                  "HOURLY": ("%Y-%m-%d %H:%M", re.compile(r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}\Z"))}
 
 
+class _SourceNumber(Decimal):
+    """A decoded JSON non-integer number that remembers its exact source token."""
+
+    def __new__(cls, token: str) -> "_SourceNumber":
+        number = super().__new__(cls, token)
+        number.token = token
+        return number
+
+
+def _token(number: int | Decimal) -> str:
+    return getattr(number, "token", None) or str(number)
+
+
 class ScanInputError(ValueError):
     """Bounded, non-payload-bearing diagnostic for rejected candidate input."""
 
@@ -186,7 +199,7 @@ def _dump(value: object) -> str:
 
 def _decimal_text(value: object) -> str:
     if isinstance(value, Decimal):
-        return str(value)
+        return _token(value)
     raise TypeError(type(value).__name__)
 
 
@@ -219,8 +232,9 @@ def _value(item: object, request: DataRequest) -> ScanValue:
     if isinstance(raw_value, bool) or not isinstance(raw_value, (int, Decimal)):
         return ScanValue(stamp, _dump(raw_value)[:32], None, False, qc, qa,
                          "QUARANTINE_CANDIDATE", ("VALUE_NOT_NUMERIC",))
-    # JSON numbers are decoded straight to int/Decimal, so the source token is exact.
-    token = str(raw_value)
+    # JSON numbers are decoded straight to int/Decimal, never float; the source token
+    # (including exponent notation such as ``2.5e-3``) is kept verbatim.
+    token = _token(raw_value)
     return ScanValue(stamp, token, Decimal(token), False, qc, qa, "RAW_CANDIDATE", ())
 
 
@@ -263,7 +277,7 @@ def _series(station: dict, element: object, request: DataRequest) -> tuple[ScanS
         reasons.append("DEPTH_NOT_STATED")
     raw_json = _dump(header)
     return ScanSeries(station["stationTriplet"], code, ordinal,
-                      None if depth is None else str(depth), request.duration,
+                      None if depth is None else _token(depth), request.duration,
                       _text(header.get("storedUnitCode"), "ELEMENT_SHAPE", 16), parsed,
                       tuple(reasons), raw_json,
                       "sha256:" + sha256(raw_json.encode("ascii")).hexdigest()), specs[0]
@@ -285,7 +299,7 @@ def parse_data(body: bytes, *, status: int, source_url: str, retrieved_at: str,
     if status != 200:
         raise ScanInputError("HTTP_STATUS")
     try:
-        payload = json.loads(body.decode("utf-8"), parse_float=Decimal,
+        payload = json.loads(body.decode("utf-8"), parse_float=_SourceNumber,
                              parse_constant=_reject_constant)
     except (UnicodeError, ValueError, RecursionError):
         raise ScanInputError("INVALID_JSON") from None
