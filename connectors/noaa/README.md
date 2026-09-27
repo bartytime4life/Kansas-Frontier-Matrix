@@ -108,6 +108,19 @@ notes:
 > [!NOTE]
 > **Storm Events offline parser (2026-09-26), placed in the family package following the `connectors/usgs/src/usgs/earthquake.py` precedent; the flat `noaa-storm-events/` and `noaa_storm_events/` lanes remain README-only and their consolidation is still migration work.** `connectors/noaa/src/noaa/storm_events.py` validates NCEI details-file URLs and vintages (`StormEvents_details-ftp_v1.0_dYYYY_cYYYYMMDD.csv.gz`) and parses *already supplied* gzip bytes into frozen per-event candidates without opening a socket. It rejects a file whole on header drift, duplicate columns or event IDs, ragged rows, rows outside the data year, malformed identity/time/coordinates, and gzip corruption or decompression beyond the byte bound. Damage strings (`10.00K`) parse exactly to nominal event-year USD beside the verbatim source string; blank stays unreported, distinct from zero. UTC times are derived only when `CZ_TIMEZONE` carries an offset. Magnitude and F/EF scale stay source strings. Unreadable damage or casualty values and end-before-begin route to `QUARANTINE_CANDIDATE`; missing episode IDs, pre-directive event labels, zone-only support, and unknown offsets are flags. Every narrative is `unreviewed`, `finalized_state` is `NOT_DETERMINED`, and nothing is admitted. `select_state()` filters on NCEI's `STATE_FIPS` (Kansas = 20) and is not a spatial join; `compare_vintages()` names added, removed, and changed event IDs between two vintages of a data year so corrections become new source states, never overwrites. Synthetic tests: `connectors/noaa/tests/test_storm_events.py`, run by `.github/workflows/noaa-storm-events-offline.yml`. This is not source activation, finalization review, narrative sensitivity review, or admission.
 
+> [!NOTE]
+> **Retrieval and routing (2026-09-27; supersedes the placeholder statements for `fetch.py`, `admit.py`, and `pyproject.toml`; lane placement is still open).**
+> - **`fetch.retrieve_storm_events(url)`:** accepts only the exact URL `storm_events.details_url(year, created)` emits for the vintage it names; `application/gzip` or `application/x-gzip`.
+> - **`fetch.retrieve_uscrn_hourly(url)`:** accepts only the exact URL `uscrn_hourly.hourly_url(year, station)` emits; `text/plain`.
+> - **`fetch.retrieve_nws_alerts(url)`:** accepts only the exact URL `nws_alerts.alerts_url(area, active=...)` emits; `application/geo+json` or `application/json`. No identifying `User-Agent` is invented; a real client must supply one.
+> - All three run through `connectors_core.transport` with caller-injected effects and are recorded with `connectors_core.retrieval_episode` under separate source ids (`noaa.storm-events`, `noaa.uscrn-hourly02`, `noaa.nws-alerts`) and profiles.
+> - **`admit.admit()`:** selects the parser from the episode's own source identity and re-applies fetch's URL rule. Unknown or mismatched sources are refused. It routes as follows:
+>   - a parsed file or collection becomes `RAW_CANDIDATE`, flagged `RECORD_QUARANTINE_CANDIDATES`, `MISSING_HOURS_PRESENT` (USCRN gaps), or the NWS collection's own reasons when they apply;
+>   - parser rejections become `QUARANTINE_CANDIDATE`;
+>   - uncaptured retrievals become `HOLD`.
+> - **Holds:** the final route is `HOLD` while `role` or `rights` is unresolved. NWS freshness is as of the retrieval instant only; KFM relays no alert.
+> - **Scope:** no network library, write, or admission. Tests: `connectors/noaa/tests/test_fetch_admit.py`, run by `.github/workflows/noaa-connector-offline.yml`.
+
 > [!IMPORTANT]
 > **The family README is an implementation boundary, not source activation or source authority.** A NOAA product may be mentioned, documented, or represented by a connector lane and still remain inactive. Live retrieval requires an accepted source descriptor, rights and sensitivity posture, product-specific configuration, validation, review, and explicit activation evidence.
 
