@@ -13,6 +13,9 @@ import re
 
 KEYS = frozenset({"name", "role", "rights", "sensitivity_floor"})
 UNRESOLVED = frozenset({"", "TBD", "UNKNOWN", "NEEDS_VERIFICATION", "PROPOSED", "OWNER_TBD"})
+# Non-public values of the SourceDescriptor sensitivity_floor enum
+# (schemas/contracts/v1/source/source_descriptor.schema.json).
+REVIEWED_SENSITIVITY_FLOORS = frozenset({"GENERALIZED", "RESTRICTED", "QUARANTINE"})
 MAX_BYTES = 16 * 1024
 
 
@@ -52,3 +55,16 @@ def descriptor_blockers(descriptor: dict[str, str], *, name: str) -> tuple[str, 
         return ("DESCRIPTOR_INVALID",)
     return tuple(f"DESCRIPTOR_{key.upper()}_UNRESOLVED" for key in ("role", "rights")
                  if normalized(str(descriptor.get(key, ""))) in UNRESOLVED)
+
+
+def sensitivity_floor_blockers(descriptor: dict[str, str]) -> tuple[str, ...]:
+    """For sources whose records may be sensitive: only a reviewed non-public floor passes.
+
+    Public, unresolved, unknown, or misspelled floors all block, so a connector-local
+    ``public`` placeholder can never authorize a candidate route.
+    """
+    floor = normalized(str(descriptor.get("sensitivity_floor", ""))) if isinstance(
+        descriptor, dict) else ""
+    if floor in REVIEWED_SENSITIVITY_FLOORS:
+        return ()
+    return ("DESCRIPTOR_SENSITIVITY_FLOOR_UNREVIEWED",)

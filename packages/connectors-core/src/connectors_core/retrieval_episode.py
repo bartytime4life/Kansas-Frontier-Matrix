@@ -173,3 +173,20 @@ def build_retrieval_episode(result: RetrievalResult, *, source_url: str, source_
     body = b"".join(result.payload.chunks) if category == "SUCCESS" else None
     return RetrievalEpisode(source_url,
                             json.dumps(episode, sort_keys=True, separators=(",", ":")), body)
+
+
+def require_source(record: object, *, source_id: str,
+                   retrieval_profile_ref: str) -> RetrievalEpisode:
+    """Return ``record`` only if it was recorded for this connector's source and profile.
+
+    Every connector shares the ``RetrievalEpisode`` type, so a type check alone would let
+    an episode recorded for one source be routed as another's data.
+    """
+    if not isinstance(record, RetrievalEpisode):
+        raise TypeError("retrieval must be a recorded RetrievalEpisode")
+    episode = record.episode
+    if (episode.get("source_id") != source_id
+            or episode.get("source_descriptor_ref") != f"kfm://source/{source_id}"
+            or episode.get("retrieval_profile_ref") != retrieval_profile_ref):
+        raise EpisodeInputError("EPISODE_SOURCE_MISMATCH")
+    return record

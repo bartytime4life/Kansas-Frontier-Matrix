@@ -1,4 +1,4 @@
-"""Deterministic synthetic tests for GBIF page retrieval recording and routing.
+"""Deterministic synthetic tests for iNaturalist page retrieval recording and routing.
 
 No provider access, rights review, sensitivity evaluation, or admission claim. Imports
 connectors_core from packages/connectors-core/src (standard library only).
@@ -16,21 +16,20 @@ from unittest.mock import patch
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
-for path in (HERE, ROOT / "connectors/gbif/src", ROOT / "packages/connectors-core/src"):
+for path in (HERE, ROOT / "connectors/inaturalist/src", ROOT / "packages/connectors-core/src"):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
 from connectors_core import core as cc  # noqa: E402
 from connectors_core import retrieval_episode  # noqa: E402
 from connectors_core import transport as ct  # noqa: E402
-from gbif import admit, fetch  # noqa: E402
-from gbif import occurrence_api as occ  # noqa: E402
-import test_occurrence_api as fixtures  # noqa: E402
+from inaturalist import admit, fetch  # noqa: E402
+from inaturalist import observations_api as obs  # noqa: E402
+import test_observations_api as fixtures  # noqa: E402
 
-RESOLVED = {"name": "gbif", "role": "synthetic-role", "rights": "synthetic-rights",
+RESOLVED = {"name": "inaturalist", "role": "synthetic-role", "rights": "synthetic-rights",
             "sensitivity_floor": "restricted"}
-URL = fixtures.url()
-NC = "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+URL = obs.page_url(fixtures.QUERY, per_page=2)
 
 
 def stub_hash(value):
@@ -70,7 +69,7 @@ class Transport:
 
 
 def page(records=None, **kwargs):
-    return fixtures.page_body([fixtures.record()] if records is None else records, **kwargs)
+    return fixtures.body([fixtures.record()] if records is None else records, **kwargs)
 
 
 def response(status=200, payload=None, headers=None):
@@ -89,8 +88,8 @@ def retrieve(*outcomes, url=URL, **kwargs):
                           spec_hash=stub_hash, **kwargs), transport
 
 
-def decide(payload=None, descriptor=RESOLVED):
-    return admit.admit(retrieve(response(payload=payload))[0], descriptor=descriptor)
+def decide(payload=None, descriptor=RESOLVED, url=URL):
+    return admit.admit(retrieve(response(payload=payload), url=url)[0], descriptor=descriptor)
 
 
 class RetrievalTests(unittest.TestCase):
@@ -100,61 +99,57 @@ class RetrievalTests(unittest.TestCase):
         episode = retrieval.episode
         self.assertEqual((retrieval.captured, retrieval.body), (True, data))
         self.assertEqual(episode["source_id"], fetch.SOURCE_ID)
-        self.assertEqual(episode["redacted_locator"], "https://api.gbif.org/v1/occurrence/search")
+        self.assertEqual(episode["redacted_locator"], "https://api.inaturalist.org/v1/observations")
         self.assertEqual(episode["governance"], retrieval_episode.GOVERNANCE)
         request, timeout, budget, redirects = transport.calls[0]
         self.assertEqual((request.url, timeout, budget, redirects),
                          (URL, 60.0, fetch.MAX_BYTES, False))
 
-    def test_profile_admits_only_gbif_json(self):
+    def test_profile_admits_only_inaturalist_json(self):
         profile = fetch.profile()
-        self.assertEqual(profile.allowed_hosts, frozenset({"api.gbif.org"}))
+        self.assertEqual(profile.allowed_hosts, frozenset({"api.inaturalist.org"}))
         self.assertEqual(profile.allowed_media_types, frozenset({"application/json"}))
         self.assertEqual(profile.allowed_ports, frozenset({443}))
         with self.assertRaises(fetch.FetchInputError):
             fetch.profile(fetch.MAX_BYTES + 1)
 
-    def test_only_planner_urls_are_retrieved(self):
-        base = "https://api.gbif.org/v1/occurrence/search?"
+    def test_only_planner_canonical_urls_are_retrieved(self):
+        base = "https://api.inaturalist.org/v1/observations?"
+        tail = "per_page=2&order=asc&order_by=id&id_above=0"
         cases = {
-            "SOURCE_URL": ("https://api.gbif.org/v1/occurrence/search",
-                           URL.replace("api.gbif.org", "example.org"), URL + "&download=true"),
+            "SOURCE_URL": ("https://api.inaturalist.org/v1/observations",
+                           URL.replace("api.inaturalist.org", "example.org"),
+                           URL + "&user_id=7"),
             "SOURCE_URL_SCOPE": (
-                base + "limit=2&offset=0",
-                base + "country=US&limit=2&offset=0",
-                base + "stateProvince=Kansas&limit=2&offset=0",
-                base + "country=us&stateProvince=Kansas&limit=2&offset=0",
-                base + "limit=2&offset=0&country=US&stateProvince=Kansas",
-                fixtures.url(taxon_key=7).replace("taxonKey=7", "taxonKey=007"),
-                fixtures.url().replace("stateProvince=Kansas",
-                                       "stateProvince=Kansas&basisOfRecord=ALIEN"),
-                fixtures.url().replace("stateProvince=Kansas",
-                                       "stateProvince=Kansas&hasCoordinate=yes"),
+                base + tail,
+                base + "swlat=36.9&swlng=-102.1&" + tail,
+                base + "place_id=38&swlat=36.9&swlng=-102.1&nelat=40.1&nelng=-94.5&" + tail,
+                base + "place_id=038&" + tail,
+                base + "swlat=36.90&swlng=-102.1&nelat=40.1&nelng=-94.5&" + tail,
+                URL.replace("per_page=2", "per_page=2&quality_grade=best"),
+                URL.replace("per_page=2", "per_page=2&d1=2020-1-01"),
             ),
         }
         for code, urls in cases.items():
             for url in urls:
-                with self.subTest(url=url), self.assertRaises(occ.OccurrenceInputError) as ctx:
+                with self.subTest(url=url), self.assertRaises(obs.ObservationInputError) as ctx:
                     retrieve(response(), url=url)
                 self.assertEqual(ctx.exception.args[0], code)
-        # Windows plan_pages can never emit (review finding on #4750).
-        for offset, limit in ((1, 300), (301, 300), (150, 200), (7, 299), (299, 300)):
-            window = base + f"country=US&stateProvince=Kansas&limit={limit}&offset={offset}"
-            with self.subTest(window=window), self.assertRaises(occ.OccurrenceInputError) as ctx:
-                retrieve(response(), url=window)
-            self.assertEqual(ctx.exception.args[0], "SOURCE_URL_SCOPE")
-        planned = [plan.url for plan in occ.plan_pages(occ.OccurrenceQuery(), max_records=650)]
-        planned += [plan.url for plan in occ.plan_pages(occ.OccurrenceQuery(), max_records=7,
-                                                        page_size=3)]
-        for url in planned:
-            with self.subTest(planned=url):
-                fetch._require_planned(url)
-        for url in (fixtures.url(taxon_key=7, year="1990,2000", basis_of_record="PRESERVED_SPECIMEN",
-                                 has_coordinate=True),
-                    fixtures.url(offset=4)):
+        place = obs.ObservationQuery(bounds=None, place_id=38, taxon_id=5,
+                                     quality_grade="research", observed_from="2020-01-01",
+                                     observed_to="2020-12-31")
+        second = obs.next_page_url(obs.parse_page(
+            page([fixtures.record(1), fixtures.record(2)]), status=200, source_url=URL,
+            retrieved_at=fixtures.NOW))
+        for url in (obs.page_url(place, per_page=2),
+                    obs.page_url(fixtures.QUERY, id_above=41, per_page=2),
+                    second,
+                    base + "nelat=40.1&nelng=-94.5&swlat=36.9&swlng=-102.1&" + tail):
             with self.subTest(url=url):
-                self.assertEqual(retrieve(response(payload=page(offset=4) if "offset=4" in url
-                                                   else page()), url=url)[0].source_url, url)
+                self.assertEqual(retrieve(response(payload=page([fixtures.record(50)])),
+                                          url=url)[0].source_url, url)
+        # The module's own cursor continuation must be accepted by fetch.
+        self.assertNotEqual(second, obs.page_url(fixtures.QUERY, id_above=2, per_page=2))
 
     def test_failures_drop_body(self):
         for status, category in ((403, "ACCESS_DENIED"), (404, "NOT_FOUND"),
@@ -170,62 +165,56 @@ class AdmissionTests(unittest.TestCase):
         decision = decide(page([fixtures.record(1), fixtures.record(2)]))
         self.assertEqual((decision.route, decision.reasons),
                          (admit.RAW, ("SENSITIVITY_NOT_EVALUATED",)))
-        self.assertEqual(len(decision.page.records), 2)
+        next_url = obs.next_page_url(decision.page)
+        self.assertEqual(retrieve(response(payload=page([fixtures.record(3)])),
+                                  url=next_url)[0].source_url, next_url)
         self.assertEqual((decision.admission, decision.coverage, decision.sensitivity,
                           decision.write_performed),
                          ("NOT_ADMITTED", "NOT_ESTABLISHED", "NOT_EVALUATED", False))
         with self.assertRaises(FrozenInstanceError):
             decision.route = admit.RAW
 
-    def test_record_level_flags_surface_on_the_page(self):
-        records = [fixtures.record(1, license=NC, occurrenceStatus="ABSENT"),
-                   fixtures.record(2, datasetKey=None)]
+    def test_record_level_reasons_surface_as_page_flags(self):
+        records = [fixtures.record(1, geoprivacy="obscured", obscured=True, license_code="cc-by-nc"),
+                   fixtures.record(2, quality_grade="needs_id", captive=True)]
         decision = decide(page(records))
         self.assertEqual(decision.route, admit.RAW)
         self.assertEqual(decision.reasons, ("SENSITIVITY_NOT_EVALUATED",
                                             "RECORD_QUARANTINE_CANDIDATES",
-                                            "NONCOMMERCIAL_TERMS_PRESENT",
-                                            "ABSENCE_ASSERTIONS_PRESENT"))
+                                            "GEOPRIVACY_RESTRICTED_PRESENT",
+                                            "LICENSE_OBLIGATIONS_PRESENT",
+                                            "NOT_RESEARCH_GRADE_PRESENT",
+                                            "CAPTIVE_OR_CULTIVATED_PRESENT"))
 
-    def test_empty_terminal_page_carries_no_sensitivity_flag(self):
-        self.assertEqual(decide(page([])).reasons, ())
-
-    def test_paging_ceiling_is_flagged(self):
-        decision = decide(page([fixtures.record(1), fixtures.record(2)],
-                               count=occ.PAGING_CEILING + 1, end=False))
-        self.assertIn("PAGING_CEILING_USE_ASYNC_DOWNLOAD", decision.reasons)
+    def test_empty_terminal_page_carries_no_flags(self):
+        self.assertEqual(decide(page([], total=0)).reasons, ())
 
     def test_page_rejection_is_quarantine_candidate(self):
-        decision = decide(page([fixtures.record(1), fixtures.record(1)]))
+        decision = decide(page([fixtures.record(2), fixtures.record(1)]))
         self.assertEqual((decision.route, decision.reasons),
-                         (admit.QUARANTINE, ("PARSE_DUPLICATE_OCCURRENCE_KEY",)))
+                         (admit.QUARANTINE, ("PARSE_CURSOR_ORDER",)))
         self.assertIsNone(decision.page)
 
     def test_uncaptured_page_is_held_with_contract_reason(self):
         decision = admit.admit(retrieve(response(403, b"no"))[0], descriptor=RESOLVED)
         self.assertEqual((decision.route, decision.reasons), (admit.HOLD, ("ACCESS_DENIED",)))
 
-    def test_public_or_unresolved_sensitivity_floor_holds(self):
-        for floor in ("public", "PUBLIC", "TBD", "needs verification", "", "publc",
-                      "internal", "synthetic-restricted", "unknown"):
+    def test_sensitivity_floor_must_be_reviewed_non_public(self):
+        for floor in ("public", "TBD", "", "publc", "internal", "unknown"):
             with self.subTest(floor=floor):
                 decision = decide(descriptor={**RESOLVED, "sensitivity_floor": floor})
                 self.assertEqual((decision.route, decision.provisional_route),
                                  (admit.HOLD, admit.RAW))
                 self.assertEqual(decision.reasons[-1], "DESCRIPTOR_SENSITIVITY_FLOOR_UNREVIEWED")
-        self.assertEqual(admit.descriptor_blockers({**RESOLVED, "name": "fema"}),
-                         ("DESCRIPTOR_INVALID",))
-        self.assertEqual(admit.descriptor_blockers({"name": "fema", "sensitivity_floor": "public"}),
-                         ("DESCRIPTOR_INVALID",))
-
-    def test_recognized_non_public_floors_open_the_route(self):
         for floor in ("generalized", "Restricted", "QUARANTINE"):
             with self.subTest(floor=floor):
-                decision = decide(descriptor={**RESOLVED, "sensitivity_floor": floor})
-                self.assertEqual(decision.route, admit.RAW)
+                self.assertEqual(decide(descriptor={**RESOLVED, "sensitivity_floor": floor}).route,
+                                 admit.RAW)
+        self.assertEqual(admit.descriptor_blockers({"name": "gbif", "sensitivity_floor": "public"}),
+                         ("DESCRIPTOR_INVALID",))
 
     def test_checked_in_descriptor_holds_every_route(self):
-        self.assertEqual(admit.load_descriptor().get("name"), "gbif")
+        self.assertEqual(admit.load_descriptor().get("name"), "inaturalist")
         decision = admit.admit(retrieve(response())[0])
         self.assertEqual((decision.route, decision.provisional_route), (admit.HOLD, admit.RAW))
         self.assertEqual(decision.reasons[-3:], ("DESCRIPTOR_ROLE_UNRESOLVED",
