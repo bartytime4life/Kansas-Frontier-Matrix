@@ -14,6 +14,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
+import json
 import re
 from typing import Callable
 
@@ -73,10 +74,18 @@ def _iso(value: datetime) -> str:
 
 @dataclass(frozen=True)
 class Retrieval:
-    """A recorded episode; ``body`` is retained only when the episode was captured."""
+    """A recorded episode; ``body`` is retained only when the episode was captured.
+
+    The episode is held as canonical JSON so it cannot be mutated after recording;
+    ``episode`` returns a fresh copy on every access.
+    """
     source_url: str
-    episode: dict
+    episode_json: str
     body: bytes | None
+
+    @property
+    def episode(self) -> dict:
+        return json.loads(self.episode_json)
 
     @property
     def captured(self) -> bool:
@@ -156,4 +165,5 @@ def retrieve(source_url: str, *, transport: ct.Transport, clock: ct.Clock,
     episode["spec_hash"] = digest
     episode["episode_id"] = "kfm:source-retrieval-episode:" + digest[7:31]
     body = b"".join(result.payload.chunks) if category == "SUCCESS" else None
-    return Retrieval(source_url, episode, body)
+    return Retrieval(source_url, json.dumps(episode, sort_keys=True, separators=(",", ":")),
+                     body)

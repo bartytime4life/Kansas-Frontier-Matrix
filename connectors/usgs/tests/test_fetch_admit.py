@@ -273,6 +273,56 @@ class AdmissionTests(unittest.TestCase):
             self.assertEqual(admit.load_descriptor(root), {})
         self.assertEqual(admit.descriptor_blockers({}), ("DESCRIPTOR_INVALID",))
 
+    def test_documented_unresolved_spellings_stay_blocked(self):
+        for value in ("NEEDS VERIFICATION", "needs-verification", " TBD ", "'TBD'", "_TBD_",
+                      "Needs_Verification", "PROPOSED", "OWNER_TBD", ""):
+            with self.subTest(value=value):
+                self.assertEqual(admit.descriptor_blockers(
+                    {"name": "usgs", "role": value, "rights": value}),
+                    ("DESCRIPTOR_ROLE_UNRESOLVED", "DESCRIPTOR_RIGHTS_UNRESOLVED"))
+        self.assertEqual(admit.descriptor_blockers(
+            {"name": "usgs", "role": "needs verification by steward", "rights": "x"}), ())
+
+    def test_episode_cannot_be_mutated_after_recording(self):
+        retrieval = retrieve(response())[0]
+        retrieval.episode["transport"]["body_digest"] = "sha256:" + "0" * 64
+        self.assertEqual(retrieval.episode["transport"]["body_digest"],
+                         "sha256:" + sha256(retrieval.body).hexdigest())
+
+    def test_inconsistent_retrievals_are_refused(self):
+        good = retrieve(response())[0]
+        held = retrieve(response(403, b"no"))[0]
+        episode = good.episode
+        forged_id = dict(episode, episode_id="kfm:source-retrieval-episode:" + "0" * 24)
+        forged_category = json.loads(good.episode_json)
+        forged_category["transport"]["category"] = "RATE_LIMITED"
+        forged_length = json.loads(good.episode_json)
+        forged_length["transport"]["body_bytes"] += 1
+        cases = {
+            "RETRIEVAL_INTEGRITY": fetch.Retrieval(good.source_url, good.episode_json,
+                                                   body(2)),
+            "RETRIEVAL_STATE": fetch.Retrieval(held.source_url, held.episode_json, body()),
+            "RETRIEVAL_IDENTITY": fetch.Retrieval(good.source_url, json.dumps(forged_id),
+                                                  good.body),
+        }
+        for code, retrieval in cases.items():
+            with self.subTest(code=code), self.assertRaises(admit.AdmissionInputError) as ctx:
+                admit.admit(retrieval, descriptor=RESOLVED)
+            self.assertEqual(ctx.exception.args[0], code)
+        cases = {
+            "RETRIEVAL_STATE": fetch.Retrieval(good.source_url, json.dumps(forged_category),
+                                               good.body),
+            "RETRIEVAL_INTEGRITY": fetch.Retrieval(good.source_url, json.dumps(forged_length),
+                                                   good.body),
+        }
+        for code, retrieval in cases.items():
+            with self.subTest(code=code), self.assertRaises(admit.AdmissionInputError) as ctx:
+                admit.admit(retrieval, descriptor=RESOLVED)
+            self.assertEqual(ctx.exception.args[0], code)
+        missing_body = fetch.Retrieval(good.source_url, good.episode_json, None)
+        with self.assertRaises(admit.AdmissionInputError):
+            admit.admit(missing_body, descriptor=RESOLVED)
+
     def test_requires_recorded_retrieval(self):
         with self.assertRaises(TypeError):
             admit.admit({"episode": {}})
