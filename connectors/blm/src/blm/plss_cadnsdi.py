@@ -31,6 +31,9 @@ MAX_OFFSET = 1_000_000
 # Kansas extent (WGS84) with a small tolerance for boundary-straddling survey polygons.
 BBOX = (Decimal("-102.10"), Decimal("36.95"), Decimal("-94.55"), Decimal("40.05"))
 IDENTIFIER = re.compile(r"[A-Za-z0-9._-]{1,64}\Z")
+# Legitimate payloads nest about 8 containers deep; anything past this is rejected
+# before any recursive walk, independent of the interpreter's recursion limit.
+MAX_NESTING = 20
 
 
 class _SourceNumber(Decimal):
@@ -226,6 +229,18 @@ def _feature(item: object, id_field: str) -> PlssFeature:
                        "sha256:" + sha256(raw_feature.encode("ascii")).hexdigest())
 
 
+def _nesting_depth(value: object) -> int:
+    """Maximum container nesting depth, computed iteratively (no recursion)."""
+    deepest, stack = 0, [(value, 1)]
+    while stack:
+        item, depth = stack.pop()
+        if isinstance(item, (dict, list)):
+            deepest = max(deepest, depth)
+            children = item.values() if isinstance(item, dict) else item
+            stack.extend((child, depth + 1) for child in children)
+    return deepest
+
+
 def _reject_constant(token: str) -> None:
     raise ValueError(token)
 
@@ -244,6 +259,8 @@ def parse_page(body: bytes, *, status: int, source_url: str, retrieved_at: str,
                              parse_int=_SourceInt, parse_constant=_reject_constant)
     except (UnicodeError, ValueError, RecursionError, InvalidOperation):
         raise PlssInputError("INVALID_JSON") from None
+    if _nesting_depth(payload) > MAX_NESTING:
+        raise PlssInputError("NESTING_DEPTH")
     if not isinstance(payload, dict):
         raise PlssInputError("COLLECTION_SHAPE")
     if "error" in payload:

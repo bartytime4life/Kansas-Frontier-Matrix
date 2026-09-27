@@ -35,6 +35,9 @@ STATION_ID = re.compile(r"[1-9]\d{0,5}\Z")
 ELEMENT = re.compile(r"[A-Z][A-Z0-9]{1,5}(?::-?\d{1,4}){0,2}\Z")
 DAY = re.compile(r"\d{4}-\d{2}-\d{2}\Z")
 PARAMS = ("stationTriplets", "elements", "duration", "beginDate", "endDate")
+# Legitimate payloads nest about 6 containers deep; anything past this is rejected
+# before any recursive walk, independent of the interpreter's recursion limit.
+MAX_NESTING = 16
 # Value timestamp layout per duration (NEEDS VERIFICATION against NWCC documentation).
 STAMP_FORMATS = {"DAILY": ("%Y-%m-%d", re.compile(r"\d{4}-\d{2}-\d{2}\Z")),
                  "HOURLY": ("%Y-%m-%d %H:%M", re.compile(r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}\Z"))}
@@ -310,6 +313,18 @@ def _series(station: dict, element: object, request: DataRequest) -> tuple[ScanS
                       "sha256:" + sha256(raw_json.encode("ascii")).hexdigest()), specs[0]
 
 
+def _nesting_depth(value: object) -> int:
+    """Maximum container nesting depth, computed iteratively (no recursion)."""
+    deepest, stack = 0, [(value, 1)]
+    while stack:
+        item, depth = stack.pop()
+        if isinstance(item, (dict, list)):
+            deepest = max(deepest, depth)
+            children = item.values() if isinstance(item, dict) else item
+            stack.extend((child, depth + 1) for child in children)
+    return deepest
+
+
 def _reject_constant(token: str) -> None:
     # NaN/Infinity are not JSON; they must never read as a missing or numeric value.
     raise ValueError(token)
@@ -331,6 +346,8 @@ def parse_data(body: bytes, *, status: int, source_url: str, retrieved_at: str,
     except (UnicodeError, ValueError, RecursionError, InvalidOperation):
         # InvalidOperation: an exponent outside Decimal's range is not a readable value.
         raise ScanInputError("INVALID_JSON") from None
+    if _nesting_depth(payload) > MAX_NESTING:
+        raise ScanInputError("NESTING_DEPTH")
     if not isinstance(payload, list):
         raise ScanInputError("RESPONSE_SHAPE")
     series: list[ScanSeries] = []

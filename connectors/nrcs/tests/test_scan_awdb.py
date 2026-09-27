@@ -158,23 +158,34 @@ class ParserTests(unittest.TestCase):
         self.assertIn('"heightDepth":-2', sms.raw_element_json)
 
     def test_pathologically_nested_headers_are_a_bounded_rejection(self):
-        # Deep enough to decode but not to re-serialize recursively.
+        # Deep enough to exceed the explicit bound on every supported Python version.
         nested = '{"a":' * 700 + "1" + "}" * 700
         raw = ('[{"stationTriplet": "99901:KS:SCAN", "data": [{"stationElement":'
                ' {"elementCode": "SMS", "heightDepth": -2, "durationName": "DAILY",'
                ' "extra": ' + nested + '}, "values": []}]}]')
         with self.assertRaises(sa.ScanInputError) as ctx:
             parse(body(raw=raw))
-        self.assertEqual(str(ctx.exception), "ELEMENT_SHAPE")
+        self.assertEqual(str(ctx.exception), "NESTING_DEPTH")
 
     def test_pathologically_nested_values_are_a_bounded_rejection(self):
+        # Deep enough to exceed the explicit bound on every supported Python version.
         nested = '{"a":' * 700 + "1" + "}" * 700
         raw = ('[{"stationTriplet": "99901:KS:SCAN", "data": [{"stationElement":'
                ' {"elementCode": "SMS", "heightDepth": -2, "durationName": "DAILY"},'
                ' "values": [{"date": "2023-06-01", "value": ' + nested + '}]}]}]')
         with self.assertRaises(sa.ScanInputError) as ctx:
             parse(body(raw=raw))
-        self.assertEqual(str(ctx.exception), "RESPONSE_SHAPE")
+        self.assertEqual(str(ctx.exception), "NESTING_DEPTH")
+
+    def test_modest_excess_nesting_is_rejected_by_the_explicit_bound(self):
+        nested = '{"a":' * 25 + "1" + "}" * 25
+        raw = ('[{"stationTriplet": "99901:KS:SCAN", "data": [{"stationElement":'
+               ' {"elementCode": "SMS", "heightDepth": -2, "durationName": "DAILY",'
+               ' "extra": ' + nested + '}, "values": []}]}]')
+        with self.assertRaises(sa.ScanInputError) as ctx:
+            parse(body(raw=raw))
+        self.assertEqual(str(ctx.exception), "NESTING_DEPTH")
+        self.assertEqual(sa.MAX_NESTING, 16)
 
     def test_numbers_outside_decimal_range_reject_as_invalid_json(self):
         for token in ("1e" + "9" * 100, "1" * 5000):
