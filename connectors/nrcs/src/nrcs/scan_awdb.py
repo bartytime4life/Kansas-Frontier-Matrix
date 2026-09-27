@@ -313,16 +313,24 @@ def _series(station: dict, element: object, request: DataRequest) -> tuple[ScanS
                       "sha256:" + sha256(raw_json.encode("ascii")).hexdigest()), specs[0]
 
 
-def _nesting_depth(value: object) -> int:
-    """Maximum container nesting depth, computed iteratively (no recursion)."""
-    deepest, stack = 0, [(value, 1)]
+def _exceeds_nesting(value: object, limit: int) -> bool:
+    """Whether containers nest deeper than ``limit``; iterative, early-exit, and holding
+    at most one iterator per level, so wide payloads cost no extra memory."""
+    if not isinstance(value, (dict, list)):
+        return False
+    stack = [iter(value.values() if isinstance(value, dict) else value)]
+    if len(stack) > limit:
+        return True
     while stack:
-        item, depth = stack.pop()
-        if isinstance(item, (dict, list)):
-            deepest = max(deepest, depth)
-            children = item.values() if isinstance(item, dict) else item
-            stack.extend((child, depth + 1) for child in children)
-    return deepest
+        for child in stack[-1]:
+            if isinstance(child, (dict, list)):
+                if len(stack) + 1 > limit:
+                    return True
+                stack.append(iter(child.values() if isinstance(child, dict) else child))
+                break
+        else:
+            stack.pop()
+    return False
 
 
 def _reject_constant(token: str) -> None:
@@ -346,7 +354,7 @@ def parse_data(body: bytes, *, status: int, source_url: str, retrieved_at: str,
     except (UnicodeError, ValueError, RecursionError, InvalidOperation):
         # InvalidOperation: an exponent outside Decimal's range is not a readable value.
         raise ScanInputError("INVALID_JSON") from None
-    if _nesting_depth(payload) > MAX_NESTING:
+    if _exceeds_nesting(payload, MAX_NESTING):
         raise ScanInputError("NESTING_DEPTH")
     if not isinstance(payload, list):
         raise ScanInputError("RESPONSE_SHAPE")

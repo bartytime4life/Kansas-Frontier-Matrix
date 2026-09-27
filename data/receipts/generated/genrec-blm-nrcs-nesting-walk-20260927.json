@@ -1,0 +1,81 @@
+{
+  "receipt_id": "genrec-blm-nrcs-nesting-walk-20260927",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "connectors/blm/src/blm/plss_cadnsdi.py",
+    "connectors/blm/tests/test_plss_cadnsdi.py",
+    "connectors/nrcs/src/nrcs/scan_awdb.py",
+    "connectors/nrcs/tests/test_scan_awdb.py"
+  ],
+  "artifact_hashes": {
+    "connectors/blm/src/blm/plss_cadnsdi.py": "sha256:5577347cb8a0b166a10dcba5a35d499b7131a2679f9cd0995ab8148e4e0567d3",
+    "connectors/blm/tests/test_plss_cadnsdi.py": "sha256:bba78323e53afc81bef0271554bdc457d3648c9d04846dc9b10e65491c9acf70",
+    "connectors/nrcs/src/nrcs/scan_awdb.py": "sha256:3ead500562c6df82df26c1aac23512d8f53a6c2b0d5dc5afeda7e3e57f5b4597",
+    "connectors/nrcs/tests/test_scan_awdb.py": "sha256:1699ebe91d5f456438fafd79a44fd4a61f684ed19347b3b05018b4d3e7edb8eb"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:cc638e034d30d52484c0da5d41e5e1d0e39a65f4c7bb5bf8c760d3e294988f04",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/efaad6ea98efca34937bf402a09db1ce25da8199",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4768"
+    ]
+  },
+  "truth_labels": {
+    "connectors/blm/src/blm/plss_cadnsdi.py": "CONFIRMED",
+    "connectors/blm/tests/test_plss_cadnsdi.py": "CONFIRMED",
+    "connectors/nrcs/src/nrcs/scan_awdb.py": "CONFIRMED",
+    "connectors/nrcs/tests/test_scan_awdb.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "BLM and NRCS suites across interpreters",
+      "outcome": "PASS",
+      "reason": "Both suites pass on Python 3.11, 3.12 and 3.13, including exact-boundary, wide-payload and early-exit tests of _exceeds_nesting."
+    },
+    {
+      "gate": "Targeted mutation testing",
+      "outcome": "PASS",
+      "reason": "Off-by-one bound, no-descend, and removed-check mutations are caught in both connectors on 3.12; files restored. A 5,000,000-element array is checked in ~0.5 s with no measurable tracemalloc peak."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation."
+    },
+    {
+      "gate": "Source activation, admission, release",
+      "outcome": "SKIPPED",
+      "reason": "No network library, descriptor or contract change, lifecycle write, admission, or publication; routes stay HOLD."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/efaad6ea98efca34937bf402a09db1ce25da8199"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-27T19:02:54Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Follow-up to #4768, which merged before this Codex P1 fix was pushed."
+}
