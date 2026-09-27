@@ -878,10 +878,10 @@ test("connects nineteen bounded official Kansas context sources without admittin
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"].serviceUrl, /^https:\/\/stationview\.raspberryshake\.org(?:\/|$)/);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"].boundary, /not realtime/i);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"].mapUrl, /^\/api\/terrain-tile\?kind=slope&z=\{z\}&x=\{x\}&y=\{y\}$/);
-  assert.match(page, /OFFICIAL OPERATIONAL CONTEXT/);
-  assert.match(page, /Real Kansas source connections/);
+  assert.match(page, /<h2 id="official-context-title">Official sources<\/h2>/);
+  assert.match(page, /Official sources provide current map context/);
   assert.match(page, /Refresh visible/);
-  assert.match(page, /Search places, layers, official data/);
+  assert.match(page, /Search current places, layers, features, and official data sources/);
   assert.match(page, /params\.set\("ctx"/);
   assert.match(page, /params\.set\("ctxo"/);
   assert.match(page, /zero mapped features[\s\S]*not an all-clear/i);
@@ -1340,7 +1340,7 @@ test("opens domains and live data together while preserving separate source cloc
   assert.match(page, /Domains \+ live data/);
   assert.match(page, /Domains \+ live <b>\{visibleCount\} \+ \{visibleOfficialCount\}<\/b>/);
   assert.match(page, /openAtlasPanel\("layers"\);\s+setPendingCatalogTarget\("official-context-catalog"\)/);
-  assert.match(page, /hidden=\{leftPanelMode !== "live" && leftPanelMode !== "layers"\}/);
+  assert.match(page, /hidden=\{leftPanelMode !== "layers" && leftPanelMode !== "live"\}/);
   assert.match(page, /id="official-context-catalog" tabIndex=\{-1\}/);
   assert.match(page, /catalog-airflow-entry/);
   assert.match(page, /id="catalog-time-anchor"/);
@@ -1354,7 +1354,7 @@ test("opens domains and live data together while preserving separate source cloc
   const legacyExamplesEnd = page.indexOf("</details>", legacyExamplesStart);
   const domainIndexStart = page.indexOf('<section className="catalog-domain-index"');
   assert.ok(legacyExamplesStart >= 0 && legacyExamplesEnd > legacyExamplesStart);
-  assert.ok(domainIndexStart > legacyExamplesEnd, "the domain index must remain visible outside the closed legacy examples disclosure");
+  assert.ok(domainIndexStart >= 0 && domainIndexStart < legacyExamplesStart, "the domain index must remain visible before the closed legacy examples disclosure");
   assert.match(page, /const revealLegacyLayerControls = useCallback/);
   assert.match(page, /legacyLayerControlsRef\.current\.open = true/);
   assert.match(page, /revealLegacyLayerControls\("catalog-layer-stack"\)/);

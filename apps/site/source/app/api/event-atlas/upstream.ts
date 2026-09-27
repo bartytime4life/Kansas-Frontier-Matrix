@@ -1,16 +1,16 @@
-const HOSTS = new Set(["mesonet.agron.iastate.edu", "satepsanone.nesdis.noaa.gov", "gibs.earthdata.nasa.gov", "api.gbif.org", "services.arcgis.com", "tigerweb.geo.census.gov", "tiles.arcgis.com", "data.raspberryshake.org", "api.waterdata.usgs.gov", "www.ncei.noaa.gov", "elevation.nationalmap.gov"]);
-export async function boundedFetch(url: string, limit: number) {
+const ORIGINS = new Set(["https://mesonet.agron.iastate.edu", "https://satepsanone.nesdis.noaa.gov", "https://gibs.earthdata.nasa.gov", "https://api.gbif.org", "https://services.arcgis.com", "https://tigerweb.geo.census.gov", "https://tiles.arcgis.com", "https://data.raspberryshake.org", "https://api.waterdata.usgs.gov", "https://www.ncei.noaa.gov", "https://elevation.nationalmap.gov"]);
+export async function boundedFetch(url: string, limit: number, options: { timeoutMs?: number; cache?: RequestCache } = {}) {
   const parsed = new URL(url);
-  if (parsed.protocol !== "https:" || !HOSTS.has(parsed.hostname) || parsed.username || parsed.password) throw new Error("Non-allowlisted source.");
-  const sourceUrl = parsed.toString();
+  if (!ORIGINS.has(parsed.origin) || parsed.username || parsed.password || parsed.hash) throw new Error("Non-allowlisted source.");
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 18_000);
+  const timer = setTimeout(() => controller.abort(), options.timeoutMs ?? 18_000);
   try {
     // Workers implements manual/follow, but rejects redirect:"error" before I/O.
     // Manual keeps redirects inside the same fail-closed source boundary.
-    const response = await fetch(sourceUrl, { signal: controller.signal, redirect: "manual", headers: { "User-Agent": "KansasFrontierMatrixExplorer/1.0" } });
+    const response = await fetch(parsed, { signal: controller.signal, redirect: "manual", cache: options.cache, headers: { "User-Agent": "KansasFrontierMatrixExplorer/1.0" } });
     if (response.status === 204) return { bytes: new Uint8Array(), text: () => "", headers: response.headers };
-    if (!response.ok || !response.body) throw new Error(`Source unavailable (HTTP ${response.status}).`);
+    if (!response.ok) throw new Error(`Source unavailable (HTTP ${response.status}).`);
+    if (!response.body) throw new Error("Source response body was missing.");
     if (Number(response.headers.get("content-length")) > limit) throw new Error("Source exceeded the response budget.");
     const reader = response.body.getReader();
     const chunks: Uint8Array[] = []; let total = 0;
