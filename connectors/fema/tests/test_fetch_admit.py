@@ -191,6 +191,16 @@ class AdmissionTests(unittest.TestCase):
                     admit.admit(forged, descriptor=RESOLVED)
                 self.assertEqual(ctx.exception.args[0], "EPISODE_SOURCE_MISMATCH")
 
+    def test_reconstructed_episode_with_non_planner_url_is_refused(self):
+        from connectors_core.core import redact_url
+        good = retrieve(response())[0]
+        for url in (URL.replace("www.fema.gov", "evil.example"),):
+            episode = {**good.episode, "redacted_locator": redact_url(url)}
+            forged = fetch.Retrieval(url, json.dumps(episode), good.body)
+            with self.subTest(url=url), self.assertRaises(of.OpenFemaInputError) as ctx:
+                admit.admit(forged, descriptor=RESOLVED)
+            self.assertEqual(ctx.exception.args[0], "SOURCE_URL")
+
 
 class NoNetworkTests(unittest.TestCase):
     def test_recording_and_routing_open_no_socket(self):

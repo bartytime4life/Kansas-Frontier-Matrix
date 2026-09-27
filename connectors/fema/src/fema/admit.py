@@ -53,6 +53,7 @@ def admit(retrieval: Retrieval, *, descriptor: dict[str, str] | None = None) -> 
     """Decide a candidate lane for one recorded page retrieval."""
     retrieval_episode.require_source(retrieval, source_id=fetch.SOURCE_ID,
                                      retrieval_profile_ref=fetch.RETRIEVAL_PROFILE)
+    declarations._request(retrieval.source_url)  # re-apply fetch's URL rule
     episode = retrieval.episode
     page = None
     if not retrieval.captured:

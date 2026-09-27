@@ -89,6 +89,13 @@ def admit(retrieval: Retrieval, *, descriptor: dict[str, str] | None = None,
         raise fetch.FetchInputError("EPISODE_SOURCE_MISMATCH")
     retrieval_episode.require_source(retrieval, source_id=source_id,
                                      retrieval_profile_ref=PRODUCTS[source_id])
+    # Re-apply fetch's product-specific URL rule: stored or reconstructed episodes must
+    # carry exactly the URL the planner or the manifest would have issued.
+    if source_id == fetch.ACS_SOURCE_ID:
+        fetch._require_planned_acs(retrieval.source_url)
+    elif fetch.tiger_entry(retrieval.source_url.rsplit("/", 1)[-1],
+                           manifest)["source_url"] != retrieval.source_url:
+        raise tiger_package.TigerPackageError("SOURCE_URL_SCOPE")
     episode = retrieval.episode
     table = package = None
     if not retrieval.captured:
