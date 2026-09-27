@@ -112,9 +112,31 @@ class ParserTests(unittest.TestCase):
             self.assertEqual(str(ctx.exception), "INVALID_JSON")
         overflow = body([feature(ring=[[-98.0, 38.0], [-97.9, 38.0], [1e400, 38.1],
                                        [-98.0, 38.0]])]).decode()
+        # 1e400 is an exact (huge) Decimal, so the feature is out of extent, not coerced.
+        huge = parse(overflow.replace("Infinity", "1e400").encode()).features[0]
+        self.assertEqual(huge.reasons, ("GEOMETRY_OUTSIDE_KANSAS_EXTENT",))
+
+    def test_geometry_checks_use_exact_coordinates(self):
+        # Endpoints that differ only beyond float precision are still an open ring.
+        raw = body([feature(ring=[[-98.5, 38.0], [-97.9, 38.0], [-97.9, 38.1],
+                                  [-98.25, 38.0]])]).decode()
+        raw = raw.replace("-98.5", "-98.000000000000000001").replace(
+            "-98.25", "-98.000000000000000002")
+        self.assertEqual(parse(raw.encode()).features[0].reasons, ("RING_NOT_CLOSED",))
+        # A coordinate just past the extent edge must not round onto it.
+        edge = body([feature(ring=[[-98.0, 38.0], [-97.9, 38.0], [-97.9, 40.5],
+                                   [-98.0, 38.0]])]).decode().replace(
+            "40.5", "40.050000000000000001")
+        self.assertEqual(parse(edge.encode()).features[0].reasons,
+                         ("GEOMETRY_OUTSIDE_KANSAS_EXTENT",))
+
+    def test_pathologically_nested_properties_are_a_bounded_rejection(self):
+        # Deep enough to decode but not to re-serialize recursively.
+        nested = '{"a":' * 700 + "1" + "}" * 700
+        raw = body([feature(NOTE=0)]).decode().replace('"NOTE": 0', '"NOTE": ' + nested)
         with self.assertRaises(pl.PlssInputError) as ctx:
-            parse(overflow.replace("Infinity", "1e400").encode())
-        self.assertEqual(str(ctx.exception), "GEOMETRY_SHAPE")
+            parse(raw.encode())
+        self.assertEqual(str(ctx.exception), "FEATURE_SHAPE")
 
     def test_more_pages(self):
         self.assertTrue(parse(body(exceededTransferLimit=True)).more_pages)

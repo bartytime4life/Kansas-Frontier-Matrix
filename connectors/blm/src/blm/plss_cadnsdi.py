@@ -18,7 +18,6 @@ from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 from hashlib import sha256
 import json
-import math
 import re
 from urllib.parse import parse_qsl, urlencode, urlsplit
 
@@ -30,7 +29,7 @@ LAYERS = {"township": (1, "PLSSID"), "first_division": (2, "FRSTDIVID")}
 MAX_PAGE = 1000
 MAX_OFFSET = 1_000_000
 # Kansas extent (WGS84) with a small tolerance for boundary-straddling survey polygons.
-BBOX = (-102.10, 36.95, -94.55, 40.05)
+BBOX = (Decimal("-102.10"), Decimal("36.95"), Decimal("-94.55"), Decimal("40.05"))
 IDENTIFIER = re.compile(r"[A-Za-z0-9._-]{1,64}\Z")
 
 
@@ -50,6 +49,10 @@ class _SourceInt(int):
         number = super().__new__(cls, token)
         number.token = token
         return number
+
+
+def _token(number: int | Decimal) -> str:
+    return getattr(number, "token", None) or str(number)
 
 
 def _plain(value: object) -> object:
@@ -165,14 +168,13 @@ class PlssPageCandidate:
     admission: str = "NOT_ADMITTED"
 
 
-def _position(value: object) -> tuple[float, float]:
+def _position(value: object) -> tuple[Decimal, Decimal]:
+    # Exact Decimal comparison: ring closure and the extent check must not collapse
+    # coordinates that differ only beyond binary float precision.
     if (not isinstance(value, list) or len(value) not in (2, 3)
             or any(isinstance(n, bool) or not isinstance(n, (int, Decimal)) for n in value)):
         raise PlssInputError("GEOMETRY_SHAPE")
-    x, y = float(value[0]), float(value[1])
-    if not (math.isfinite(x) and math.isfinite(y)):
-        raise PlssInputError("GEOMETRY_SHAPE")
-    return x, y
+    return Decimal(_token(value[0])), Decimal(_token(value[1]))
 
 
 def _rings(geometry: object) -> tuple[str, list[list[tuple[float, float]]]]:
@@ -213,7 +215,11 @@ def _feature(item: object, id_field: str) -> PlssFeature:
     west, south, east, north = BBOX
     if any(not (west <= x <= east and south <= y <= north) for ring in rings for x, y in ring):
         reasons.append("GEOMETRY_OUTSIDE_KANSAS_EXTENT")
-    raw_properties, raw_feature = _dump(properties), _dump(item)
+    try:
+        raw_properties, raw_feature = _dump(properties), _dump(item)
+    except RecursionError:
+        # Pathologically nested properties decode but cannot be re-serialized safely.
+        raise PlssInputError("FEATURE_SHAPE") from None
     return PlssFeature(int(object_id), identifier, geometry_type, len(rings),
                        "QUARANTINE_CANDIDATE" if reasons else "RAW_CANDIDATE",
                        tuple(reasons), raw_properties,

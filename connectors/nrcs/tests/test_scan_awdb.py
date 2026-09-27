@@ -157,6 +157,16 @@ class ParserTests(unittest.TestCase):
         self.assertIn('"heightDepth":"-0"', sto.raw_element_json)
         self.assertIn('"heightDepth":-2', sms.raw_element_json)
 
+    def test_pathologically_nested_headers_are_a_bounded_rejection(self):
+        # Deep enough to decode but not to re-serialize recursively.
+        nested = '{"a":' * 700 + "1" + "}" * 700
+        raw = ('[{"stationTriplet": "99901:KS:SCAN", "data": [{"stationElement":'
+               ' {"elementCode": "SMS", "heightDepth": -2, "durationName": "DAILY",'
+               ' "extra": ' + nested + '}, "values": []}]}]')
+        with self.assertRaises(sa.ScanInputError) as ctx:
+            parse(body(raw=raw))
+        self.assertEqual(str(ctx.exception), "ELEMENT_SHAPE")
+
     def test_numbers_outside_decimal_range_reject_as_invalid_json(self):
         for token in ("1e" + "9" * 100, "1" * 5000):
             raw = ('[{"stationTriplet": "99901:KS:SCAN", "data": [{"stationElement":'

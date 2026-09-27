@@ -297,7 +297,11 @@ def _series(station: dict, element: object, request: DataRequest) -> tuple[ScanS
     reasons = ["EMPTY_SERIES_NOT_ABSENCE"] if not parsed else []
     if depth is None and code.startswith(("SMS", "STO")):
         reasons.append("DEPTH_NOT_STATED")
-    raw_json = _dump(header)
+    try:
+        raw_json = _dump(header)
+    except RecursionError:
+        # Pathologically nested headers decode but cannot be re-serialized safely.
+        raise ScanInputError("ELEMENT_SHAPE") from None
     return ScanSeries(station["stationTriplet"], code,
                       None if ordinal is None else int(ordinal),
                       None if depth is None else _token(depth), request.duration,
