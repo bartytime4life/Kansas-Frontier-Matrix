@@ -3,6 +3,7 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { currentDayStart, currentUtcDay, latestSafeCursor } from "../daily-baseline";
+import { shouldRefreshFollowToday } from "./follow-today";
 import { replaceExplorerHistory } from "../embed-runtime";
 import { browserRenderBudget, updateGeoJSON } from "../map-performance";
 import { DataNotices } from "../map-toolbar";
@@ -85,6 +86,7 @@ export default function EventObservatory() {
   const [mapReady, setMapReady] = useState(false), [mapMessage, setMapMessage] = useState("Opening the Kansas map…");
   const [start, setStart] = useState(currentDayStart), [hours, setHours] = useState(24), [station, setStation] = useState("USGS-06889000");
   const initialLoad = useRef(false), followTodayRef = useRef(true);
+  const lastFollowRefreshAtRef = useRef(0);
   const [followToday, setFollowToday] = useState(true);
   const [manifest, setManifest] = useState<EventManifest | null>(null), [river, setRiver] = useState<StreamflowBundle | null>(null), [riverMessage, setRiverMessage] = useState("Not loaded");
   const [loading, setLoading] = useState(false), [error, setError] = useState(""), [index, setIndex] = useState(0), [cursor, setCursor] = useState<string | null>(null), [committed, setCommitted] = useState<string | null>(null), [buffering, setBuffering] = useState(false), [playing, setPlaying] = useState(false);
@@ -404,6 +406,7 @@ export default function EventObservatory() {
   const loadToday = useCallback(() => {
     const today = currentDayStart(); updateStart(today); setCalendarAnchor(today.slice(0,10)); setHours(24);
     setFollowToday(true); followTodayRef.current = true;
+    lastFollowRefreshAtRef.current = Date.now();
     void load(today, 24, latestSafeCursor(), riverResolution, true);
   }, [load, riverResolution, updateStart]);
 
@@ -415,10 +418,13 @@ export default function EventObservatory() {
   }, [mapReady, load, loadToday]);
 
   useEffect(() => {
-    const refresh = () => { if (followTodayRef.current && !document.hidden && !loading && !playing) loadToday(); };
-    const timer = window.setInterval(refresh, 300_000);
-    const visible = () => { if (start.slice(0,10) !== currentUtcDay()) refresh(); };
+    const refresh = () => {
+      if (shouldRefreshFollowToday({ following: followTodayRef.current, hidden: document.hidden, busy: loading || playing, lastRefreshAt: lastFollowRefreshAtRef.current, now: Date.now(), displayedDay: start.slice(0,10), today: currentUtcDay() })) loadToday();
+    };
+    const timer = window.setInterval(refresh, 60_000);
+    const visible = () => { if (!document.hidden) refresh(); };
     document.addEventListener("visibilitychange", visible);
+    refresh();
     return () => { clearInterval(timer); document.removeEventListener("visibilitychange", visible); };
   }, [loadToday, loading, playing, start]);
 
