@@ -17,16 +17,16 @@
   ],
   "artifact_hashes": {
     ".github/workflows/nrcs-connector-offline.yml": "sha256:500282091e48ab6d9f0ca6df9ed9aced31f7c5989aed5ca09828e4babc6cbff9",
-    "connectors/nrcs/README.md": "sha256:ab0581977eb6676020c8b5f660310be9b38f8321679e1f68491ce0281506cb0a",
+    "connectors/nrcs/README.md": "sha256:230e34464d9e356016e7a2eef3ab20b686b2487f7119001fa15f7e58deb04564",
     "connectors/nrcs/pyproject.toml": "sha256:1366432c9b504339ccb2d99e7fde19df9b50b9c3edb540d7ddb96a933a32224e",
-    "connectors/nrcs/scan/README.md": "sha256:330972685fd4426cda44bfd671d77103fdedf35b2336c7fe3f2997c113e22b48",
-    "connectors/nrcs/src/nrcs/README.md": "sha256:73855ad4355de11ef6d7d8eb7ccb3eae7c086bd2d024eb4454b12e8afc149669",
-    "connectors/nrcs/src/nrcs/admit.py": "sha256:60cc8530ba0e1e3d2b956ba2d43ac302f7ec3b5836bd6de6862d79447b1587db",
+    "connectors/nrcs/scan/README.md": "sha256:da16a977f516302e25f979d6da685ee3ffec280de63f01cf0aad7c9af2e29793",
+    "connectors/nrcs/src/nrcs/README.md": "sha256:7bfa71e03e33e184c4c19d6c7d2003128d050f99dec8b45a845173fe1f63216d",
+    "connectors/nrcs/src/nrcs/admit.py": "sha256:4b4045e30e5c802fcc3278f667e7ca496805df39043a225a2d14cb9608352bac",
     "connectors/nrcs/src/nrcs/fetch.py": "sha256:91db42264c28271139233317e1a44aed4d846b43f85dcf5d34d84cf7475534cc",
-    "connectors/nrcs/src/nrcs/scan_awdb.py": "sha256:e30d38676257e23a427147f7aec4f6599f4941b615272c5fdb5d3c74727f21c2",
-    "connectors/nrcs/tests/README.md": "sha256:9e676bb111273c87cd5b037df2f0868a6dee9b1a20a146edd03db58f00a20c8c",
-    "connectors/nrcs/tests/test_fetch_admit.py": "sha256:6e690e7bc59195d755ee06373129dbbf12b79434b52f3f7e54fb68b4fabf15f0",
-    "connectors/nrcs/tests/test_scan_awdb.py": "sha256:666849851c1a2ef3d2e6dc5a0d248fa87da8106ba0cd370701df997acc9ceb7d",
+    "connectors/nrcs/src/nrcs/scan_awdb.py": "sha256:d123ad4e0e84a288831cbb75fb69bff43ed266c74d856f369a9b085bc9f7d60b",
+    "connectors/nrcs/tests/README.md": "sha256:fa6e0da9f580bab376b0df71081a3197b81fa555bfdb8af4a381dd56779fe173",
+    "connectors/nrcs/tests/test_fetch_admit.py": "sha256:b00b17eaf5194ecce25d32684bceb1a47ef0d490f0a56e9b3d663d28dd22b30a",
+    "connectors/nrcs/tests/test_scan_awdb.py": "sha256:2a9a7ba66e3e901eeeaa401ce44ef3e12e9d0c98973a0d50345cd43e67c4eee7",
     "tools/qa/scaffold_baseline.json": "sha256:9ee0c902d0d3da8c46a7010b4f53a8897b558a4c0dbcdc63983243830ecda1c6"
   },
   "model_identity": {
@@ -65,12 +65,12 @@
     {
       "gate": "NRCS connector suites",
       "outcome": "PASS",
-      "reason": "test_scan_awdb (8) and test_fetch_admit (10) pass under the nrcs-connector-offline discover pattern."
+      "reason": "test_scan_awdb (11) and test_fetch_admit (10) pass under the nrcs-connector-offline discover pattern, including strict per-duration value dates, exact element depth/ordinal matching, duplicate-series rejection and unreturned-series flags."
     },
     {
       "gate": "Targeted mutation testing",
       "outcome": "PASS",
-      "reason": "13 planner/parser/admission mutations (URL re-check, descriptor hold, network scope, parameter order, canonical URL, station/duration/value-date scope, duplicate dates, missing-not-zero, NaN rejection, date range, missing flag) applied, all caught, files restored; a 4000-iteration field fuzz raised only ScanInputError."
+      "reason": "19 planner/parser/admission mutations applied, all caught, files restored; a 5000-iteration field fuzz raised only ScanInputError."
     },
     {
       "gate": "Shared and repository checks",
@@ -106,7 +106,7 @@
     "state": "pending",
     "timestamp": null
   },
-  "created_at": "2026-09-27T14:41:36Z",
+  "created_at": "2026-09-27T14:45:56Z",
   "emitter": "Claude Code repository-authoring session",
   "links": {
     "pr_number": null,
