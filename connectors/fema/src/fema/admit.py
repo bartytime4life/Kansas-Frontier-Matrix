@@ -14,9 +14,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from connectors_core import descriptor_gate
+from connectors_core import descriptor_gate, retrieval_episode
 
 from . import openfema_declarations as declarations
+from . import fetch
 from .fetch import Retrieval
 
 DESCRIPTOR = Path(__file__).resolve().with_name("descriptor.yaml")
@@ -50,8 +51,8 @@ class AdmissionDecision:
 
 def admit(retrieval: Retrieval, *, descriptor: dict[str, str] | None = None) -> AdmissionDecision:
     """Decide a candidate lane for one recorded page retrieval."""
-    if not isinstance(retrieval, Retrieval):
-        raise TypeError("retrieval must be a recorded RetrievalEpisode")
+    retrieval_episode.require_source(retrieval, source_id=fetch.SOURCE_ID,
+                                     retrieval_profile_ref=fetch.RETRIEVAL_PROFILE)
     episode = retrieval.episode
     page = None
     if not retrieval.captured:

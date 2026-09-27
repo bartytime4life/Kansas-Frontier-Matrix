@@ -24,6 +24,7 @@ from connectors_core.retrieval_episode import (  # noqa: E402
     EpisodeInputError,
     RetrievalEpisode,
     build_retrieval_episode,
+    require_source,
 )
 from hashing import compute_spec_hash  # noqa: E402
 from tools.validators.source import validate_source_retrieval_episode as validator  # noqa: E402
@@ -204,3 +205,22 @@ def test_attempted_and_completed_are_utc_seconds():
     assert episode["attempted_at"].endswith("Z") and episode["completed_at"].endswith("Z")
     start = datetime.fromisoformat(episode["attempted_at"].replace("Z", "+00:00"))
     assert start.tzinfo == timezone.utc
+
+
+def test_require_source_binds_connector_identity():
+    good = record(response())
+    assert require_source(good, source_id="synthetic.ks.source",
+                          retrieval_profile_ref="kfm:source-profile:synthetic-retrieval-v1") is good
+    for source_id, profile_ref in (("other.source", "kfm:source-profile:synthetic-retrieval-v1"),
+                                   ("synthetic.ks.source", "kfm:source-profile:other-v1")):
+        with pytest.raises(EpisodeInputError) as info:
+            require_source(good, source_id=source_id, retrieval_profile_ref=profile_ref)
+        assert info.value.args[0] == "EPISODE_SOURCE_MISMATCH"
+    forged = json.loads(good.episode_json)
+    forged["source_descriptor_ref"] = "kfm://source/other.source"
+    with pytest.raises(EpisodeInputError):
+        require_source(RetrievalEpisode(URL, json.dumps(forged), good.body),
+                       source_id="synthetic.ks.source",
+                       retrieval_profile_ref="kfm:source-profile:synthetic-retrieval-v1")
+    with pytest.raises(TypeError):
+        require_source({"episode": {}}, source_id="x", retrieval_profile_ref="y")

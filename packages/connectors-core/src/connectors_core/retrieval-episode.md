@@ -44,6 +44,10 @@ Outcomes the current contract cannot represent are refused rather than re-labell
 
 It cannot recompute `spec_hash`, because that needs the injected canonical hasher. The contract validator does recompute it.
 
+## Source binding
+
+`require_source(record, source_id=..., retrieval_profile_ref=...)` returns the record only if it was recorded for that connector's source id, descriptor ref and retrieval profile. Otherwise it raises `EPISODE_SOURCE_MISMATCH`. Every connector's `admit()` calls it before routing, because all connectors share the `RetrievalEpisode` type and a type check alone would let one source's episode be routed as another's.
+
 ## Directory Rules basis
 
 The code is reusable, source-agnostic implementation, so it lives in `packages/connectors-core/src/connectors_core/`. Source-specific profiles, allowlists and routing stay under `connectors/<source>/`, and the semantic contract stays under `schemas/` and `tools/validators/source/`.

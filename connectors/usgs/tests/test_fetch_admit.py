@@ -273,6 +273,19 @@ class AdmissionTests(unittest.TestCase):
         with self.assertRaises(TypeError):
             admit.admit({"episode": {}})
 
+    def test_episode_from_another_source_is_refused(self):
+        good = retrieve(response())[0]
+        base = good.episode
+        for override in ({"source_id": "other.source",
+                          "source_descriptor_ref": "kfm://source/other.source"},
+                         {"retrieval_profile_ref": "kfm:source-profile:other-profile-v1"}):
+            with self.subTest(override=override):
+                forged = fetch.Retrieval(good.source_url, json.dumps({**base, **override}),
+                                         good.body)
+                with self.assertRaises(fetch.FetchInputError) as ctx:
+                    admit.admit(forged, descriptor=RESOLVED)
+                self.assertEqual(ctx.exception.args[0], "EPISODE_SOURCE_MISMATCH")
+
 
 class NoNetworkTests(unittest.TestCase):
     def test_recording_and_routing_open_no_socket(self):
