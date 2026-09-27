@@ -28,7 +28,7 @@ from gbif import occurrence_api as occ  # noqa: E402
 import test_occurrence_api as fixtures  # noqa: E402
 
 RESOLVED = {"name": "gbif", "role": "synthetic-role", "rights": "synthetic-rights",
-            "sensitivity_floor": "synthetic-restricted"}
+            "sensitivity_floor": "restricted"}
 URL = fixtures.url()
 NC = "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
 
@@ -115,11 +115,34 @@ class RetrievalTests(unittest.TestCase):
             fetch.profile(fetch.MAX_BYTES + 1)
 
     def test_only_planner_urls_are_retrieved(self):
-        for url in ("https://api.gbif.org/v1/occurrence/search",
-                    URL.replace("api.gbif.org", "example.org"),
-                    URL + "&download=true"):
-            with self.subTest(url=url), self.assertRaises(occ.OccurrenceInputError):
-                retrieve(response(), url=url)
+        base = "https://api.gbif.org/v1/occurrence/search?"
+        cases = {
+            "SOURCE_URL": ("https://api.gbif.org/v1/occurrence/search",
+                           URL.replace("api.gbif.org", "example.org"), URL + "&download=true"),
+            "SOURCE_URL_SCOPE": (
+                base + "limit=2&offset=0",
+                base + "country=US&limit=2&offset=0",
+                base + "stateProvince=Kansas&limit=2&offset=0",
+                base + "country=us&stateProvince=Kansas&limit=2&offset=0",
+                base + "limit=2&offset=0&country=US&stateProvince=Kansas",
+                fixtures.url(taxon_key=7).replace("taxonKey=7", "taxonKey=007"),
+                fixtures.url().replace("stateProvince=Kansas",
+                                       "stateProvince=Kansas&basisOfRecord=ALIEN"),
+                fixtures.url().replace("stateProvince=Kansas",
+                                       "stateProvince=Kansas&hasCoordinate=yes"),
+            ),
+        }
+        for code, urls in cases.items():
+            for url in urls:
+                with self.subTest(url=url), self.assertRaises(occ.OccurrenceInputError) as ctx:
+                    retrieve(response(), url=url)
+                self.assertEqual(ctx.exception.args[0], code)
+        for url in (fixtures.url(taxon_key=7, year="1990,2000", basis_of_record="PRESERVED_SPECIMEN",
+                                 has_coordinate=True),
+                    fixtures.url(offset=4)):
+            with self.subTest(url=url):
+                self.assertEqual(retrieve(response(payload=page(offset=4) if "offset=4" in url
+                                                   else page()), url=url)[0].source_url, url)
 
     def test_failures_drop_body(self):
         for status, category in ((403, "ACCESS_DENIED"), (404, "NOT_FOUND"),
@@ -171,7 +194,8 @@ class AdmissionTests(unittest.TestCase):
         self.assertEqual((decision.route, decision.reasons), (admit.HOLD, ("ACCESS_DENIED",)))
 
     def test_public_or_unresolved_sensitivity_floor_holds(self):
-        for floor in ("public", "PUBLIC", "TBD", "needs verification", ""):
+        for floor in ("public", "PUBLIC", "TBD", "needs verification", "", "publc",
+                      "internal", "synthetic-restricted", "unknown"):
             with self.subTest(floor=floor):
                 decision = decide(descriptor={**RESOLVED, "sensitivity_floor": floor})
                 self.assertEqual((decision.route, decision.provisional_route),
@@ -181,6 +205,12 @@ class AdmissionTests(unittest.TestCase):
                          ("DESCRIPTOR_INVALID",))
         self.assertEqual(admit.descriptor_blockers({"name": "fema", "sensitivity_floor": "public"}),
                          ("DESCRIPTOR_INVALID",))
+
+    def test_recognized_non_public_floors_open_the_route(self):
+        for floor in ("generalized", "Restricted", "QUARANTINE"):
+            with self.subTest(floor=floor):
+                decision = decide(descriptor={**RESOLVED, "sensitivity_floor": floor})
+                self.assertEqual(decision.route, admit.RAW)
 
     def test_checked_in_descriptor_holds_every_route(self):
         self.assertEqual(admit.load_descriptor().get("name"), "gbif")
