@@ -3,7 +3,11 @@
   "contract_version": "3.0.0",
   "artifact_paths": [
     ".github/workflows/inaturalist-observations-offline.yml",
+    "connectors/gbif/src/gbif/README.md",
     "connectors/gbif/src/gbif/admit.py",
+    "connectors/gbif/src/gbif/fetch.py",
+    "connectors/gbif/tests/README.md",
+    "connectors/gbif/tests/test_fetch_admit.py",
     "connectors/inaturalist/README.md",
     "connectors/inaturalist/pyproject.toml",
     "connectors/inaturalist/src/inaturalist/README.md",
@@ -18,7 +22,11 @@
   ],
   "artifact_hashes": {
     ".github/workflows/inaturalist-observations-offline.yml": "sha256:56b68bdd36e07b600450f1164f96a3ed735de78b856dba8875c5c6373aa64309",
+    "connectors/gbif/src/gbif/README.md": "sha256:7743f6886882731ba7dd383de22b92c09f7b89402a98d02a9e11e90574db9f65",
     "connectors/gbif/src/gbif/admit.py": "sha256:4d3f86e911d887780cf245057d755a0b38aea42048d266b0c482390e932b9c30",
+    "connectors/gbif/src/gbif/fetch.py": "sha256:46577a5ed28f3e4418ec79c6b5145bd5660b06df440480aed511292106af3efc",
+    "connectors/gbif/tests/README.md": "sha256:29f9db3f66d6433bfb38dbe1ddf04bb80cbc0f8638dddb14966ac602856ec37f",
+    "connectors/gbif/tests/test_fetch_admit.py": "sha256:4c6d31cdffb06737fd942805ab0324e66d2353b1d689086cfddce0c0a92ef5e0",
     "connectors/inaturalist/README.md": "sha256:348199e0dc8e52257eb57c68f872376b4962b6668bdbbdc23d6dab18ed7f06c1",
     "connectors/inaturalist/pyproject.toml": "sha256:e57c404c5f742a9a7052faa4d1e903b6552ac385786529575b9e8824651f8254",
     "connectors/inaturalist/src/inaturalist/README.md": "sha256:afe4ef6e0f0a989106f13e43e520e4a8d013112f0013ff74af3a0c220997a83b",
@@ -52,7 +60,11 @@
   },
   "truth_labels": {
     ".github/workflows/inaturalist-observations-offline.yml": "PROPOSED",
+    "connectors/gbif/src/gbif/README.md": "PROPOSED",
     "connectors/gbif/src/gbif/admit.py": "CONFIRMED",
+    "connectors/gbif/src/gbif/fetch.py": "CONFIRMED",
+    "connectors/gbif/tests/README.md": "PROPOSED",
+    "connectors/gbif/tests/test_fetch_admit.py": "CONFIRMED",
     "connectors/inaturalist/README.md": "PROPOSED",
     "connectors/inaturalist/pyproject.toml": "CONFIRMED",
     "connectors/inaturalist/src/inaturalist/README.md": "PROPOSED",
@@ -75,6 +87,11 @@
       "gate": "Targeted mutation testing",
       "outcome": "PASS",
       "reason": "14 mutations across inaturalist fetch/admit and descriptor_gate applied and verified restored; all non-equivalent mutants caught (the floor-allowlist mutant re-verified in isolation after a stale loop result)."
+    },
+    {
+      "gate": "GBIF page-window fix (review finding on #4750)",
+      "outcome": "PASS",
+      "reason": "Non-planner windows (offset=1/limit=300, 301/300, 150/200, 7/299, 299/300) raise SOURCE_URL_SCOPE; every plan_pages window, including short final pages, is accepted; three mutations of the window check caught."
     },
     {
       "gate": "Shared and repository checks",
@@ -116,5 +133,5 @@
     "pr_number": 4751,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
   },
-  "notes": "Replaces iNaturalist fetch.py/admit.py/pyproject.toml placeholders; extracts the sensitivity-floor allowlist into connectors_core.descriptor_gate (second consumer) and switches GBIF to it. Observed: observations_api DATE accepts impossible calendar dates (format-only check) \u2014 not changed here."
+  "notes": "Replaces iNaturalist fetch.py/admit.py/pyproject.toml placeholders; extracts the sensitivity-floor allowlist into connectors_core.descriptor_gate (second consumer) and switches GBIF to it. Observed: observations_api DATE accepts impossible calendar dates (format-only check) \u2014 not changed here. Also carries the GBIF offset/limit window check from the post-merge review finding on #4750."
 }
