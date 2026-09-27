@@ -1241,7 +1241,9 @@ test("binds a governed temporal sweep to map filters, live-source holds, compari
   const snapshotMap = await readFile(new URL("../app/snapshot-map.tsx", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
-  assert.match(page, /SEMANTIC TIME SWEEP/);
+  assert.match(page, /EXPLORE TIME/);
+  assert.match(page, /Playback, range & display options/);
+  assert.match(css, /grid-template-columns: minmax\(0, 1fr\);[\s\S]+align-content: start/);
   assert.match(page, /applyTemporalRegistryFilters/);
   assert.match(page, /setTemporalMode\("snapshot"\)[\s\S]+selectStoredFeature\(example\.layerId/);
   assert.match(page, /selection\.kind !== "registry"[\s\S]+filter === "ALL"/);
