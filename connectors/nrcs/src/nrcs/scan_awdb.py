@@ -297,7 +297,11 @@ def _series(station: dict, element: object, request: DataRequest) -> tuple[ScanS
     reasons = ["EMPTY_SERIES_NOT_ABSENCE"] if not parsed else []
     if depth is None and code.startswith(("SMS", "STO")):
         reasons.append("DEPTH_NOT_STATED")
-    raw_json = _dump(header)
+    try:
+        raw_json = _dump(header)
+    except RecursionError:
+        # Pathologically nested headers decode but cannot be re-serialized safely.
+        raise ScanInputError("ELEMENT_SHAPE") from None
     return ScanSeries(station["stationTriplet"], code,
                       None if ordinal is None else int(ordinal),
                       None if depth is None else _token(depth), request.duration,
@@ -349,7 +353,8 @@ def parse_data(body: bytes, *, status: int, source_url: str, retrieved_at: str,
                     raise ScanInputError("DUPLICATE_SERIES")
                 returned.add(key)
                 series.append(item)
-    except (TypeError, ValueError) as error:
+    except (TypeError, ValueError, RecursionError) as error:
+        # RecursionError: nesting that decodes but cannot be walked or re-serialized.
         if isinstance(error, ScanInputError):
             raise
         raise ScanInputError("RESPONSE_SHAPE") from None

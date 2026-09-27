@@ -1,0 +1,81 @@
+{
+  "receipt_id": "genrec-blm-nrcs-exact-geometry-depth-20260927",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "connectors/blm/src/blm/plss_cadnsdi.py",
+    "connectors/blm/tests/test_plss_cadnsdi.py",
+    "connectors/nrcs/src/nrcs/scan_awdb.py",
+    "connectors/nrcs/tests/test_scan_awdb.py"
+  ],
+  "artifact_hashes": {
+    "connectors/blm/src/blm/plss_cadnsdi.py": "sha256:5032aab38393c3a4d421130cd6b284affbfd032a491dcebff4b6ca4f6529693f",
+    "connectors/blm/tests/test_plss_cadnsdi.py": "sha256:e3a226aea557a1f99f0d7a73f297973e68072fa2d8f82bd31e6c92e08af4af78",
+    "connectors/nrcs/src/nrcs/scan_awdb.py": "sha256:e5bd1e70adfab3abad5cc909eeb08ee77331e82db79f35fb369a9cc1538f3585",
+    "connectors/nrcs/tests/test_scan_awdb.py": "sha256:449db1d4808b7e798193e7133d5c15c10af37208e3abaaa5f4c26ee0661ccaf0"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:5488dff1490a936f9081a04ac3dc1b1aa948eeb1b6e80bbf3b372970d9411cad",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/2a532681f7d5ae38fb04f3f9fcd1186d7946e75f",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4766"
+    ]
+  },
+  "truth_labels": {
+    "connectors/blm/src/blm/plss_cadnsdi.py": "CONFIRMED",
+    "connectors/blm/tests/test_plss_cadnsdi.py": "CONFIRMED",
+    "connectors/nrcs/src/nrcs/scan_awdb.py": "CONFIRMED",
+    "connectors/nrcs/tests/test_scan_awdb.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "BLM and NRCS suites",
+      "outcome": "PASS",
+      "reason": "BLM (22) and NRCS (26) tests pass, including exact-Decimal ring closure and extent regressions and 700-deep nesting regressions for BLM properties/geometry and NRCS headers and values."
+    },
+    {
+      "gate": "Targeted mutation testing",
+      "outcome": "PASS",
+      "reason": "Reverting coordinates to floats or removing any RecursionError bound (BLM feature, NRCS header, NRCS response loop) makes a regression fail; files restored."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation."
+    },
+    {
+      "gate": "Source activation, admission, release",
+      "outcome": "SKIPPED",
+      "reason": "No network library, descriptor or contract change, lifecycle write, admission, or publication; routes stay HOLD."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/2a532681f7d5ae38fb04f3f9fcd1186d7946e75f"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-27T15:14:20Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Follow-up to #4766, which merged before these Codex review fixes were pushed."
+}
