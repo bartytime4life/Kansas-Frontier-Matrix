@@ -6,7 +6,7 @@ version: v0.2
 status: draft
 owners: OWNER_TBD — Source steward · Connector steward · Frontier Matrix steward · Data steward · Validation steward · Docs steward
 created: 2026-06-16
-updated: 2026-07-10
+updated: 2026-09-26
 policy_label: public; implementation-root; source-admission; aggregate-data; vintage-aware; uncertainty-aware
 related:
   - ../README.md
@@ -58,6 +58,14 @@ notes:
 ---
 
 ## Status
+
+> [!NOTE]
+> **Offline Census surfaces (2026-09-26).** Two standard-library modules now exist, neither of which fetches, activates, or admits anything:
+>
+> - `src/census/tiger_package.py` inspects one *supplied* TIGER/Line package against its entry in `../tiger-line-2025-kansas-core.source-reference.json` (byte length and SHA-256), then reads the zip in memory with member-path, duplicate-member, size, and compression-ratio bounds. It checks the `.shp`/`.shx` headers (shape type, bbox, feature count agreement), the `.prj` CRS (NAD83 geographic), and the `.dbf` attributes (identity uniqueness via `GEOID`/`GEOID20`/`LINEARID`/`HYDROID`, `STATEFP` and `COUNTYFP` scope against the file name). Geometry is never decoded. National packages are flagged as needing spatial or attribute selection. Candidates carry `source_role: REFERENCE_GEOMETRY_CANDIDATE` and are not legal-boundary, cadastral, or road authority.
+> - `src/census/acs_api.py` plans Kansas-scoped ACS data-API URLs (detailed, profile, and subject tables; estimates auto-paired with MOEs; API keys are never part of a provenance URL and are rejected if present) and parses supplied responses. Numbers become exact `Decimal`s; ACS annotation (jam) values such as `-666666666` become named annotations with no numeric value; nulls stay null; HTTP 204 is `EMPTY_RESULT_NOT_ABSENCE`. Nothing is converted to zero. Unrecognized negatives quarantine the row; header, width, geography-code, state-scope, or duplicate-GEOID problems reject the table.
+>
+> Synthetic tests: `tests/test_tiger_package.py`, `tests/test_acs_api.py`, run by `.github/workflows/census-offline.yml`. `fetch.py`, `admit.py`, and the `TBD` descriptor remain placeholders tracked by `tools/qa/scaffold_baseline.json`.
 
 > [!IMPORTANT]
 > **Status:** `draft` / `NEEDS VERIFICATION`  
