@@ -71,6 +71,16 @@ notes:
 > [!IMPORTANT]
 > **Confirmed state:** this package contains this README, an empty `__init__.py`, a one-line `fetch.py` placeholder, and a placeholder `descriptor.yaml`. No implemented configuration model, product dispatcher, HTTP client, async-job worker, dataset-metadata reader, DwC-A reader, occurrence parser, Backbone resolver, rights adapter, sensitivity detector, handoff builder, error taxonomy, executable package tests, or passing CI evidence is confirmed. The adjacent `pyproject.toml` is incomplete. Treat every proposed module, interface, product key, outcome, command, and lifecycle target below as a future requirement—not current behavior.
 
+> **Page retrieval and routing (2026-09-27, supersedes the placeholder statements above for `fetch.py`, `admit.py`, and `pyproject.toml`).**
+> - **`fetch.retrieve()`:** runs one planner-issued occurrence-search page GET through `connectors_core.transport.execute_retrieval`, with the caller's transport, clock and sleeper, under an `api.gbif.org` / `application/json` profile. It records the result with `connectors_core.retrieval_episode` as a fixture-only `SourceRetrievalEpisode`.
+> - **`admit.admit()`:** routes the page:
+>   - a parsed page becomes `RAW_CANDIDATE`, flagged `SENSITIVITY_NOT_EVALUATED` when it has records, plus `RECORD_QUARANTINE_CANDIDATES`, `NONCOMMERCIAL_TERMS_PRESENT`, `ABSENCE_ASSERTIONS_PRESENT` and `PAGING_CEILING_USE_ASYNC_DOWNLOAD` as they apply;
+>   - a page the parser rejects becomes `QUARANTINE_CANDIDATE` with a `PARSE_<code>` reason;
+>   - an uncaptured page becomes `HOLD`.
+> - **Holds:** the final route is `HOLD` while `role` or `rights` is unresolved, and also while `sensitivity_floor` is unresolved **or `public`** (`DESCRIPTOR_SENSITIVITY_FLOOR_UNREVIEWED`). The public floor therefore cannot authorize a candidate route.
+> - **Continuity:** still requires `reconcile()` over all pages.
+> - **Scope:** no network library, write, sensitivity evaluation, or admission. Tests: `connectors/gbif/tests/test_fetch_admit.py`.
+
 > [!CAUTION]
 > `descriptor.yaml` contains `role: TBD`, `rights: TBD`, and `sensitivity_floor: public`. GBIF records inherit rights from originating datasets, can carry restricted-use conditions, and can expose rare or otherwise sensitive locations. **The local `public` value is an unsafe placeholder. It must not be loaded as source authority, used as a permissive runtime default, inherited by plant or animal records, or asserted in tests as a valid public-safety result.**
 

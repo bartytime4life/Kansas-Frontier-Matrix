@@ -1,0 +1,108 @@
+{
+  "receipt_id": "genrec-gbif-fetch-admit-20260927",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/gbif-occurrence-offline.yml",
+    "connectors/gbif/README.md",
+    "connectors/gbif/pyproject.toml",
+    "connectors/gbif/src/gbif/README.md",
+    "connectors/gbif/src/gbif/admit.py",
+    "connectors/gbif/src/gbif/fetch.py",
+    "connectors/gbif/tests/README.md",
+    "connectors/gbif/tests/test_fetch_admit.py",
+    "tools/qa/scaffold_baseline.json"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/gbif-occurrence-offline.yml": "sha256:49901b7747dbd5d37fed2b2f4bdb169b277b83166f77cb3fb7c5e7c43e271911",
+    "connectors/gbif/README.md": "sha256:e887a51fd37f2f63e14a962ebdd74b3b0177d0555c5aa2cc0c4fc558564b73c3",
+    "connectors/gbif/pyproject.toml": "sha256:3f4e6edb9668026d9ade86a7972b12b13c74bbe093124fadf68eca543b43576f",
+    "connectors/gbif/src/gbif/README.md": "sha256:74997f92ea50b2b174a9b1bb42e06109b080df5ead2835309badf9fb8dfc6e10",
+    "connectors/gbif/src/gbif/admit.py": "sha256:71af7d578f8d947fa0885e5e371bc27c15f3069d8356d597728100948473e44b",
+    "connectors/gbif/src/gbif/fetch.py": "sha256:6f68f79a7999d7b9c6ca4e0492c404526c014dacf2c41967b4a41c1b2d5939be",
+    "connectors/gbif/tests/README.md": "sha256:43b15ca1e270243282761b300ec509521fa0bcf6d8e618f9b902eb014fac5c90",
+    "connectors/gbif/tests/test_fetch_admit.py": "sha256:c38e7c9f73f67c1d993602b38cb229cdf3d9724209d3f8eab7900407aa3d48d1",
+    "tools/qa/scaffold_baseline.json": "sha256:bf4f5a86ee0dc9bf0e962c2b46fff4d23357644d221904176b06ac10be374698"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:3739c1465a30145842f8e147e222972e372f34d657851ded0ae5e79bb8ee485b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/83ae57181390f4ad2ddaa4e52f8290f1ea068124",
+      "connectors/gbif/README.md",
+      "connectors/gbif/src/gbif/occurrence_api.py",
+      "packages/connectors-core/src/connectors_core/retrieval-episode.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/gbif-occurrence-offline.yml": "PROPOSED",
+    "connectors/gbif/README.md": "PROPOSED",
+    "connectors/gbif/pyproject.toml": "CONFIRMED",
+    "connectors/gbif/src/gbif/README.md": "PROPOSED",
+    "connectors/gbif/src/gbif/admit.py": "CONFIRMED",
+    "connectors/gbif/src/gbif/fetch.py": "CONFIRMED",
+    "connectors/gbif/tests/README.md": "PROPOSED",
+    "connectors/gbif/tests/test_fetch_admit.py": "CONFIRMED",
+    "tools/qa/scaffold_baseline.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "GBIF connector suites",
+      "outcome": "PASS",
+      "reason": "test_occurrence_api.py (14) and test_fetch_admit.py (14) pass under unittest discover as run by the workflow; USGS and FEMA fetch/admit suites still pass."
+    },
+    {
+      "gate": "Targeted mutation testing",
+      "outcome": "PASS",
+      "reason": "12 gbif/admit.py mutations applied and verified restored; all caught after adding an invalid-descriptor-with-public-floor case."
+    },
+    {
+      "gate": "Shared and repository checks",
+      "outcome": "PASS",
+      "reason": "tests/packages/connectors_core and tests/qa pass (142); scaffold_inventory --check at 1291 (5 GBIF findings resolved); deny_test_runner PASS; validate_connector_gate --scan-repository PASS; make workflow-security PASS; make docs-critical-structure 0 findings; committed-tree repository-topology findings identical to base."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation."
+    },
+    {
+      "gate": "Source activation, admission, sensitivity, release",
+      "outcome": "SKIPPED",
+      "reason": "No network library, descriptor change, sensitivity evaluation, lifecycle write, admission, or publication; routes stay HOLD."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/83ae57181390f4ad2ddaa4e52f8290f1ea068124"
+    },
+    {
+      "id": "gbif-public-floor-unsafe",
+      "validated": true,
+      "evidence_ref": "repo:connectors/gbif/README.md@83ae57181390f4ad2ddaa4e52f8290f1ea068124"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-27T05:40:57Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 4749,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Replaces GBIF fetch.py/admit.py/pyproject.toml placeholders using connectors_core.retrieval_episode and descriptor_gate. GBIF additionally holds while sensitivity_floor is unresolved or public. Descriptor unchanged."
+}
