@@ -1,0 +1,113 @@
+{
+  "receipt_id": "genrec-connector-admission-url-rules-20260927",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "connectors/census/src/census/admit.py",
+    "connectors/census/tests/test_fetch_admit.py",
+    "connectors/fema/src/fema/admit.py",
+    "connectors/fema/tests/test_fetch_admit.py",
+    "connectors/gbif/src/gbif/admit.py",
+    "connectors/gbif/tests/test_fetch_admit.py",
+    "connectors/inaturalist/src/inaturalist/admit.py",
+    "connectors/inaturalist/src/inaturalist/observations_api.py",
+    "connectors/inaturalist/tests/test_fetch_admit.py",
+    "connectors/inaturalist/tests/test_observations_api.py",
+    "connectors/usgs/src/usgs/admit.py",
+    "connectors/usgs/tests/test_fetch_admit.py",
+    "packages/connectors-core/src/connectors_core/retrieval-episode.md"
+  ],
+  "artifact_hashes": {
+    "connectors/census/src/census/admit.py": "sha256:980656c2a73aad495a3d553bfbbf0ddf123a2c57a6af71ae8e22102ce7fa4031",
+    "connectors/census/tests/test_fetch_admit.py": "sha256:c83290b19c7fe5cac0b1f32e5388e52131a25f689c76f37939488dcc56353ef3",
+    "connectors/fema/src/fema/admit.py": "sha256:d904041e7f53cfa6382be4c50181ee307dfbb5a64e11f8c0319030e920a1b5cd",
+    "connectors/fema/tests/test_fetch_admit.py": "sha256:3bb5e8b21f746b272346733f2168da99f0b66779d80e7e9f74f332b0b66f3b8d",
+    "connectors/gbif/src/gbif/admit.py": "sha256:7117dc672e976d4e7e4971ab37dc5467673db3cefcd6ce68a0c826ba454491eb",
+    "connectors/gbif/tests/test_fetch_admit.py": "sha256:2268855705ac499f08a6d936fa0bbb48cadac2484c35b488d8fdc3478d9cdfc4",
+    "connectors/inaturalist/src/inaturalist/admit.py": "sha256:3f1dbd9e4efb64b983b75784494a944a3af591027d1f7af1e599e2ce09efd80e",
+    "connectors/inaturalist/src/inaturalist/observations_api.py": "sha256:287bb008431310897022ad0198670c5e1f43f899289195c0938f7d37678eecd6",
+    "connectors/inaturalist/tests/test_fetch_admit.py": "sha256:a74228dea254575c237c0b0d65be253e69c75fa00f3b10dc5bebf4c6a0910c9c",
+    "connectors/inaturalist/tests/test_observations_api.py": "sha256:825cc28d5e457702da985201a0eacc752f0e874bf635d005603fcb99100bd542",
+    "connectors/usgs/src/usgs/admit.py": "sha256:5e62c47469128bf21a24ce5c172a0f4e16b2bb5b77be15584055b055ebac31eb",
+    "connectors/usgs/tests/test_fetch_admit.py": "sha256:2bb3472729e7f16f637dc015008a722097a6384c59795d9aa611de3d77361dd6",
+    "packages/connectors-core/src/connectors_core/retrieval-episode.md": "sha256:fad95b5b18470ee9d2e8c11877d0333a8747f544e9bcb964f3d920aa647273a6"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:aac5d45c60b12e6fa02f11972c6e6b6b9edd71e4e7f2e92093c64ad7ed47ff60",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/df2e9d136c4f2360c1eb7545b37358d1499e0d87",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4754"
+    ]
+  },
+  "truth_labels": {
+    "connectors/census/src/census/admit.py": "CONFIRMED",
+    "connectors/census/tests/test_fetch_admit.py": "CONFIRMED",
+    "connectors/fema/src/fema/admit.py": "CONFIRMED",
+    "connectors/fema/tests/test_fetch_admit.py": "CONFIRMED",
+    "connectors/gbif/src/gbif/admit.py": "CONFIRMED",
+    "connectors/gbif/tests/test_fetch_admit.py": "CONFIRMED",
+    "connectors/inaturalist/src/inaturalist/admit.py": "CONFIRMED",
+    "connectors/inaturalist/src/inaturalist/observations_api.py": "CONFIRMED",
+    "connectors/inaturalist/tests/test_fetch_admit.py": "CONFIRMED",
+    "connectors/inaturalist/tests/test_observations_api.py": "CONFIRMED",
+    "connectors/usgs/src/usgs/admit.py": "CONFIRMED",
+    "connectors/usgs/tests/test_fetch_admit.py": "CONFIRMED",
+    "packages/connectors-core/src/connectors_core/retrieval-episode.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Connector suites",
+      "outcome": "PASS",
+      "reason": "USGS, FEMA, GBIF, iNaturalist and Census suites pass, each with a new reconstructed-episode test proving a non-planner or non-manifest URL is refused at admission; iNaturalist planner rejects 2020-13-01, 2021-02-29, 2020-04-31 and 2020-00-10 and accepts 2020-02-29."
+    },
+    {
+      "gate": "Targeted mutation testing",
+      "outcome": "PASS",
+      "reason": "Removing each of the six admission URL re-checks (USGS, FEMA, GBIF, iNaturalist, Census ACS, Census TIGER) makes the new tests fail; files verified restored."
+    },
+    {
+      "gate": "Shared and repository checks",
+      "outcome": "PASS",
+      "reason": "tests/packages/connectors_core and tests/qa pass (157); scaffold_inventory --check at baseline; deny_test_runner PASS; connector gate scan PASS; docs-critical-structure 0 findings; committed-tree repository-topology identical to base."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation."
+    },
+    {
+      "gate": "Source activation, admission, release",
+      "outcome": "SKIPPED",
+      "reason": "No network library, descriptor change, lifecycle write, admission, or publication; routes stay HOLD."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/df2e9d136c4f2360c1eb7545b37358d1499e0d87"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-27T06:17:12Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Follow-up to the #4754 review finding: admission now re-applies fetch's URL rule so persisted or externally supplied episodes cannot corrupt source provenance. Also rejects calendar-impossible iNaturalist observed dates. Descriptors unchanged."
+}
