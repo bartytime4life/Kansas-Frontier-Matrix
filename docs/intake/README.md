@@ -8,7 +8,7 @@ owners:
   - "@bartytime4life"
 owner_status: "Verified GitHub review route only; no independent stewardship assignment, approval, canonicalization, source admission, release authority, or separation of duties is implied."
 created: 2026-05-08
-updated: 2026-08-14
+updated: 2026-09-27
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "Provide the human-facing landing page for exploratory documentation intake, source-map lineage, packet triage, carry-forward material, canonicalization guidance, and promotion-packet routing without becoming a source, contract, schema, policy, evidence, release, or publication authority."
@@ -370,6 +370,8 @@ docs/intake/
 | [`carry-forward/`](carry-forward/README.md) | Carry-forward lane guidance | README-only at snapshot; proposed internal layout not implemented |
 | [`exploratory/`](exploratory/README.md) | Active non-canonical source-map and adaptation lane | Populated with many `*-source-map.md` records |
 | [`promotions/`](promotions/README.md) | Human-reviewable promotion-packet bridge | Substantive parent and four state-lane READMEs; no actual packet files at snapshot |
+
+Current exploratory review: [repository topology ratchet and catalog hold](exploratory/repository-topology-ratchet-review-20260927.md). This packet proposes a review sequence; it does not change the ratchet or lift the catalog hold.
 
 ### 6.2 Promotion state lanes
 
