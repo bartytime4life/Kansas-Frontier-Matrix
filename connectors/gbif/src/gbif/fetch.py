@@ -13,6 +13,7 @@ Requires ``packages/connectors-core/src`` on the import path (see pyproject.toml
 from __future__ import annotations
 
 from typing import Callable
+from urllib.parse import urlencode
 
 from connectors_core import core as cc
 from connectors_core import transport as ct
@@ -42,6 +43,30 @@ def profile(max_bytes: int = MAX_BYTES, timeout_seconds: float = 60.0) -> ct.Tra
                                timeout_seconds=timeout_seconds, max_response_bytes=max_bytes)
 
 
+def _require_planned(source_url: str) -> None:
+    """Accept only a URL ``plan_pages`` could emit: scoped, canonical, and bounded.
+
+    ``occurrence_api._request`` checks host, path, key names and the page window; this
+    also rebuilds the ``OccurrenceQuery`` so the required country and state filters are
+    present and valid, and requires the URL to equal the planner's canonical encoding.
+    """
+    params, offset, limit = occurrence_api._request(source_url)
+    try:
+        query = occurrence_api.OccurrenceQuery(
+            country=params["country"], state_province=params["stateProvince"],
+            taxon_key=int(params["taxonKey"]) if "taxonKey" in params else None,
+            year=params.get("year"), basis_of_record=params.get("basisOfRecord"),
+            has_coordinate={"true": True, "false": False}[params["hasCoordinate"]]
+            if "hasCoordinate" in params else None)
+        expected = query.params()
+    except (KeyError, ValueError, TypeError, occurrence_api.OccurrenceInputError):
+        raise occurrence_api.OccurrenceInputError("SOURCE_URL_SCOPE") from None
+    canonical = (f"{occurrence_api.HOST}{occurrence_api.SEARCH_PATH}?"
+                 + urlencode(dict(expected, limit=limit, offset=offset)))
+    if canonical != source_url:
+        raise occurrence_api.OccurrenceInputError("SOURCE_URL_SCOPE")
+
+
 def retrieve(source_url: str, *, transport: ct.Transport, clock: ct.Clock,
              sleeper: ct.Sleeper, spec_hash: Callable[[dict], str],
              retry_policy: cc.RetryPolicy | None = None,
@@ -49,7 +74,7 @@ def retrieve(source_url: str, *, transport: ct.Transport, clock: ct.Clock,
              cancellation: ct.CancellationToken | None = None,
              max_bytes: int = MAX_BYTES) -> Retrieval:
     """Execute one page GET with caller-supplied effects and record it as an episode."""
-    occurrence_api._request(source_url)
+    _require_planned(source_url)
     request = ct.TransportRequest(ct.TransportMethod.GET, source_url,
                                   {"Accept": "application/json"})
     attempted = clock.now()

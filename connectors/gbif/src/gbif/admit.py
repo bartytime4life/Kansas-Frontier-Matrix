@@ -6,7 +6,8 @@ Every page with records is flagged ``SENSITIVITY_NOT_EVALUATED``: this connector
 judge taxon or location sensitivity, and coordinates are carried exactly as supplied.
 
 The final route is HOLD while the connector descriptor leaves ``role`` or ``rights``
-unresolved, and also while ``sensitivity_floor`` is unresolved or ``public``: GBIF
+unresolved, and also unless ``sensitivity_floor`` is a recognized non-public value
+(``generalized``, ``restricted``, ``quarantine``): GBIF
 occurrences can carry rare-species or precise-location concerns, so a public floor is an
 unsafe placeholder that must not authorize a candidate route (see connectors/gbif/README.md).
 A page is one step of an offset capture; continuity is established only by
@@ -28,7 +29,10 @@ NAME = "gbif"
 RAW = "RAW_CANDIDATE"
 QUARANTINE = "QUARANTINE_CANDIDATE"
 HOLD = "HOLD"
-UNSAFE_SENSITIVITY_FLOORS = descriptor_gate.UNRESOLVED | {"PUBLIC"}
+# Non-public values of the SourceDescriptor sensitivity_floor enum
+# (schemas/contracts/v1/source/source_descriptor.schema.json). Anything else, including
+# public, unresolved, unknown, or misspelled values, keeps every route at HOLD.
+REVIEWED_SENSITIVITY_FLOORS = frozenset({"GENERALIZED", "RESTRICTED", "QUARANTINE"})
 
 
 def load_descriptor(path: Path = DESCRIPTOR) -> dict[str, str]:
@@ -40,7 +44,7 @@ def descriptor_blockers(descriptor: dict[str, str]) -> tuple[str, ...]:
     if blockers == ("DESCRIPTOR_INVALID",):
         return blockers
     floor = descriptor_gate.normalized(str(descriptor.get("sensitivity_floor", "")))
-    if floor in UNSAFE_SENSITIVITY_FLOORS:
+    if floor not in REVIEWED_SENSITIVITY_FLOORS:
         blockers += ("DESCRIPTOR_SENSITIVITY_FLOOR_UNREVIEWED",)
     return blockers
 
