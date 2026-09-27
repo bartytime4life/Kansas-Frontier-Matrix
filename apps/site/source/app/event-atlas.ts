@@ -125,7 +125,14 @@ export function hmsTime(value: string): string | null {
   return new Date(Date.UTC(year,0,ordinal,Number(hour),Number(minute))).toISOString();
 }
 
-export function smokeUrl(day: string): string { return `https://satepsanone.nesdis.noaa.gov/pub/FIRE/web/HMS/Smoke_Polygons/KML/${day.slice(0,4)}/${day.slice(5,7)}/hms_smoke${day.replaceAll("-", "")}.kml`; }
+export function smokeUrl(day: string): string {
+  const exactDay = eventDay(day);
+  if (!exactDay) throw new Error("NOAA HMS day must be an exact calendar date.");
+  const year = encodeURIComponent(exactDay.slice(0, 4));
+  const month = encodeURIComponent(exactDay.slice(5, 7));
+  const stamp = encodeURIComponent(exactDay.replaceAll("-", ""));
+  return `https://satepsanone.nesdis.noaa.gov/pub/FIRE/web/HMS/Smoke_Polygons/KML/${year}/${month}/hms_smoke${stamp}.kml`;
+}
 
 // Deliberately not a general KML renderer. Never execute description HTML,
 // external styles, NetworkLinks, icons, or overlays from upstream KML.
