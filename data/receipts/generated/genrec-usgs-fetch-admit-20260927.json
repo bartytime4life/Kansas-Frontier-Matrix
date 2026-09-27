@@ -1,0 +1,118 @@
+{
+  "receipt_id": "genrec-usgs-fetch-admit-20260927",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/usgs-earthquake-offline.yml",
+    "connectors/usgs/pyproject.toml",
+    "connectors/usgs/src/usgs/README.md",
+    "connectors/usgs/src/usgs/admit.py",
+    "connectors/usgs/src/usgs/fetch.py",
+    "connectors/usgs/tests/README.md",
+    "connectors/usgs/tests/test_fetch_admit.py",
+    "connectors/usgs/tests/test_retrieval_episode_conformance.py",
+    "tools/qa/scaffold_baseline.json"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/usgs-earthquake-offline.yml": "sha256:efea9db4b86df4a6ce631790e915e69e1b8162857c794e7c6999c569256edb05",
+    "connectors/usgs/pyproject.toml": "sha256:d7ae5f4ce309a6bd7e983a373240808c427019ca27627c4ad36e864224dcb684",
+    "connectors/usgs/src/usgs/README.md": "sha256:afb25a418199bccc69a3e7818be10ef3600ef828e6c4077331920ab22faf9619",
+    "connectors/usgs/src/usgs/admit.py": "sha256:0ab94b31c3d06819027dd1eefed7b6c8c544975a79cd9db0f915a3706b7a8e3b",
+    "connectors/usgs/src/usgs/fetch.py": "sha256:df142a3dce66752c44882e9148614ab850248adb23e2b90121ed7123bb15faec",
+    "connectors/usgs/tests/README.md": "sha256:bf07e427b147da5aaf7841b1269bfb3fd37840b8a8bdccae70de4aa3e4c78296",
+    "connectors/usgs/tests/test_fetch_admit.py": "sha256:6e80246e0a957e6c8d0fcdcc0bcd7a7eebcc5423ba4bb839d00843448299e770",
+    "connectors/usgs/tests/test_retrieval_episode_conformance.py": "sha256:d5a0404fd8628fded76b049fd04e5c754c0c3e6b1573b1b30e2bb1fbd4833b73",
+    "tools/qa/scaffold_baseline.json": "sha256:275e350c86a0314b1fd2ad94c58b1711748f4aa5a7913565d972ca739fe3b04a"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:2724902e1932120eb67bce8ca480129f51d0f15520e878d0746fd9ea270c11ab",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/3836a483043c684d8a14d5a00b1c7bc16ffc55aa",
+      "schemas/contracts/v1/source/source_retrieval_episode.schema.json",
+      "tools/validators/source/validate_source_retrieval_episode.py",
+      "connectors/usgs/src/usgs/earthquake.py"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/usgs-earthquake-offline.yml": "PROPOSED",
+    "connectors/usgs/pyproject.toml": "CONFIRMED",
+    "connectors/usgs/src/usgs/README.md": "PROPOSED",
+    "connectors/usgs/src/usgs/admit.py": "CONFIRMED",
+    "connectors/usgs/src/usgs/fetch.py": "CONFIRMED",
+    "connectors/usgs/tests/README.md": "PROPOSED",
+    "connectors/usgs/tests/test_fetch_admit.py": "CONFIRMED",
+    "connectors/usgs/tests/test_retrieval_episode_conformance.py": "CONFIRMED",
+    "tools/qa/scaffold_baseline.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Offline standard-library connector tests",
+      "outcome": "PASS",
+      "reason": "Python 3.11: test_earthquake.py and test_fetch_admit.py pass (39 methods) under unittest discover, as run by the workflow."
+    },
+    {
+      "gate": "Contract conformance",
+      "outcome": "PASS",
+      "reason": "Every emitted episode category passes tools/validators/source/validate_source_retrieval_episode.py with its expected outcome and exact reason findings; the result table matches recompute_result()."
+    },
+    {
+      "gate": "Targeted mutation testing",
+      "outcome": "PASS",
+      "reason": "8 fetch.py and 8 admit.py mutations applied and verified restored; all caught after adding a descriptor size-cap test."
+    },
+    {
+      "gate": "Scaffold ratchet, deny suites, QA tests",
+      "outcome": "PASS",
+      "reason": "scaffold_inventory --check passes against the 1301-finding baseline (5 resolved); deny_test_runner PASS; tests/qa and the retrieval-episode validator tests pass (49)."
+    },
+    {
+      "gate": "Workflow security and docs critical structure",
+      "outcome": "PASS",
+      "reason": "make workflow-security PASS (485 workflows, 0 new drift); make docs-critical-structure 0 findings."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation."
+    },
+    {
+      "gate": "Source activation, admission, release",
+      "outcome": "SKIPPED",
+      "reason": "No network transport, descriptor change, lifecycle write, admission, or publication is added; routes stay HOLD while descriptor role/rights are unresolved."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/3836a483043c684d8a14d5a00b1c7bc16ffc55aa"
+    },
+    {
+      "id": "retrieval-episode-contract",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/source/source_retrieval_episode.schema.json@3836a483043c684d8a14d5a00b1c7bc16ffc55aa"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-27T02:38:49Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Replaces the USGS connector fetch.py/admit.py/pyproject.toml placeholders. fetch.py classifies supplied response material into fixture-only SourceRetrievalEpisode records (no transport); admit.py routes to RAW/QUARANTINE candidate or HOLD and holds all routes while descriptor role/rights are TBD. descriptor.yaml unchanged (steward decision). FDSN 204 empty success is not representable under the current contract and is refused."
+}
