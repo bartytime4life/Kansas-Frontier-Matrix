@@ -274,6 +274,27 @@ class ParserTests(unittest.TestCase):
                     pass
 
 
+class NestingBoundTests(unittest.TestCase):
+    def test_bound_is_exact_and_early_exiting(self):
+        def nest(depth):
+            value = 1
+            for _ in range(depth):
+                value = {"a": value} if depth % 2 else [value]
+            return value
+        limit = sa.MAX_NESTING
+        self.assertFalse(sa._exceeds_nesting(nest(limit), limit))
+        self.assertTrue(sa._exceeds_nesting(nest(limit + 1), limit))
+        self.assertFalse(sa._exceeds_nesting(1, limit))
+        # Wide and shallow is fine however many children it has.
+        self.assertFalse(sa._exceeds_nesting([None] * 200_000, limit))
+        self.assertFalse(sa._exceeds_nesting([[None] * 1000] * 1000, limit))
+        # Stops at the first too-deep branch without visiting what follows.
+        class Untouchable(dict):
+            def values(self):
+                raise AssertionError("walked past the first too-deep branch")
+        self.assertTrue(sa._exceeds_nesting([nest(limit + 5), Untouchable()], limit))
+
+
 class NoNetworkTests(unittest.TestCase):
     def test_module_never_opens_sockets(self):
         with patch.object(socket, "socket", side_effect=AssertionError("network")), \
