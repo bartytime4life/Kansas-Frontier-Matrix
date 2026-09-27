@@ -29,10 +29,6 @@ NAME = "gbif"
 RAW = "RAW_CANDIDATE"
 QUARANTINE = "QUARANTINE_CANDIDATE"
 HOLD = "HOLD"
-# Non-public values of the SourceDescriptor sensitivity_floor enum
-# (schemas/contracts/v1/source/source_descriptor.schema.json). Anything else, including
-# public, unresolved, unknown, or misspelled values, keeps every route at HOLD.
-REVIEWED_SENSITIVITY_FLOORS = frozenset({"GENERALIZED", "RESTRICTED", "QUARANTINE"})
 
 
 def load_descriptor(path: Path = DESCRIPTOR) -> dict[str, str]:
@@ -43,10 +39,7 @@ def descriptor_blockers(descriptor: dict[str, str]) -> tuple[str, ...]:
     blockers = descriptor_gate.descriptor_blockers(descriptor, name=NAME)
     if blockers == ("DESCRIPTOR_INVALID",):
         return blockers
-    floor = descriptor_gate.normalized(str(descriptor.get("sensitivity_floor", "")))
-    if floor not in REVIEWED_SENSITIVITY_FLOORS:
-        blockers += ("DESCRIPTOR_SENSITIVITY_FLOOR_UNREVIEWED",)
-    return blockers
+    return blockers + descriptor_gate.sensitivity_floor_blockers(descriptor)
 
 
 def _page_flags(page: occurrence_api.PageCandidate) -> tuple[str, ...]:
