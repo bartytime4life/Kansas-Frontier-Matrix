@@ -101,7 +101,7 @@
   "created_at": "2026-09-27T05:40:57Z",
   "emitter": "Claude Code repository-authoring session",
   "links": {
-    "pr_number": null,
+    "pr_number": 4749,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
   },
   "notes": "Replaces GBIF fetch.py/admit.py/pyproject.toml placeholders using connectors_core.retrieval_episode and descriptor_gate. GBIF additionally holds while sensitivity_floor is unresolved or public. Descriptor unchanged."
