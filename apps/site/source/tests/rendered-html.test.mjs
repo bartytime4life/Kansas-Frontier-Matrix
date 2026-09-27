@@ -875,7 +875,7 @@ test("connects nineteen bounded official Kansas context sources without admittin
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"].boundary, /not a rolling 24-hour FIRMS feed[\s\S]*not a mapped perimeter/i);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"].fallback, /blank tile[\s\S]*never[\s\S]*all-clear/i);
   assert.equal(registry.OFFICIAL_CONTEXT_TEMPORAL_SUPPORT["nasa-firms-active-fire"].axis, "provider-current-mosaic");
-  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"].serviceUrl, /stationview\.raspberryshake\.org/);
+  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"].serviceUrl, /^https:\/\/stationview\.raspberryshake\.org(?:\/|$)/);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"].boundary, /not realtime/i);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"].mapUrl, /^\/api\/terrain-tile\?kind=slope&z=\{z\}&x=\{x\}&y=\{y\}$/);
   assert.match(page, /OFFICIAL OPERATIONAL CONTEXT/);
