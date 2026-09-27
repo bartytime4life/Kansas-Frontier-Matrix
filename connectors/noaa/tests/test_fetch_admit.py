@@ -216,6 +216,15 @@ class AdmissionTests(unittest.TestCase):
         self.assertEqual(decision.alerts.cache_headers,
                          (("Last-Modified", "Fri, 01 May 2026 11:59:00 GMT"), ("ETag", '"v7"')))
         self.assertEqual(admit.admit(nws(), descriptor=RESOLVED).alerts.cache_headers, ())
+        # A reconstructed episode with a malformed recorded Last-Modified is refused, bounded.
+        for bad in ("yesterday", "2026-05-01T11:59:00", "2026-05-01T11:59:00+02:00",
+                    "2026-13-01T11:59:00Z", 5):
+            episode = retrieval.episode
+            episode["transport"]["last_modified"] = bad
+            forged = fetch.Retrieval(retrieval.source_url, json.dumps(episode), retrieval.body)
+            with self.subTest(bad=bad), self.assertRaises(fetch.FetchInputError) as ctx:
+                admit.admit(forged, descriptor=RESOLVED)
+            self.assertEqual(ctx.exception.args[0], "EPISODE_LAST_MODIFIED")
 
     def test_uncaptured_retrievals_are_held(self):
         for retrieval in (storm(status=404, payload=b"no"), uscrn(status=403, payload=b"no"),
