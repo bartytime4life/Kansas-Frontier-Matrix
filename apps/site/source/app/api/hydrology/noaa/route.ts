@@ -102,8 +102,7 @@ const readBoundedBody = async (response: Response, maxBytes: number) => {
   return new TextDecoder().decode(body);
 };
 
-const fetchFixedJson = async (url: string, maxBytes: number): Promise<JsonRecord> => {
-  const parsedUrl = new URL(url);
+const fetchFixedJson = async (parsedUrl: URL, maxBytes: number): Promise<JsonRecord> => {
   if (parsedUrl.origin !== NOAA_ORIGIN || !parsedUrl.pathname.startsWith("/nwps/v1/")) {
     throw new AdapterError("The requested upstream is outside the fixed NOAA allowlist.", "NOAA_UPSTREAM_DENIED");
   }
@@ -487,13 +486,25 @@ const networkLinks: SourceLink[] = [
   { rel: "service", title: "NOAA Office of Water Prediction API information", href: NWPS_API_INFO_URL },
 ];
 
-const gaugeLinks = (lid: string): SourceLink[] => [
-  { rel: "upstream", title: "NOAA NWPS gauge metadata", href: `${NWPS_BASE}/gauges/${lid}` },
-  { rel: "upstream", title: "NOAA NWPS observed stage/flow", href: `${NWPS_BASE}/gauges/${lid}/stageflow/observed` },
-  { rel: "upstream", title: "NOAA NWPS forecast stage/flow", href: `${NWPS_BASE}/gauges/${lid}/stageflow/forecast` },
-  { rel: "documentation", title: "NOAA NWPS API documentation", href: NWPS_DOCS_URL },
-  { rel: "service", title: "NOAA NWPS gauge page", href: `https://water.noaa.gov/gauges/${lid}` },
-];
+const gaugeEndpointUrls = (lid: string) => {
+  const encodedLid = encodeURIComponent(lid);
+  return {
+    metadata: new URL(`/nwps/v1/gauges/${encodedLid}`, NOAA_ORIGIN),
+    observed: new URL(`/nwps/v1/gauges/${encodedLid}/stageflow/observed`, NOAA_ORIGIN),
+    forecast: new URL(`/nwps/v1/gauges/${encodedLid}/stageflow/forecast`, NOAA_ORIGIN),
+  };
+};
+
+const gaugeLinks = (lid: string): SourceLink[] => {
+  const endpoints = gaugeEndpointUrls(lid);
+  return [
+    { rel: "upstream", title: "NOAA NWPS gauge metadata", href: endpoints.metadata.toString() },
+    { rel: "upstream", title: "NOAA NWPS observed stage/flow", href: endpoints.observed.toString() },
+    { rel: "upstream", title: "NOAA NWPS forecast stage/flow", href: endpoints.forecast.toString() },
+    { rel: "documentation", title: "NOAA NWPS API documentation", href: NWPS_DOCS_URL },
+    { rel: "service", title: "NOAA NWPS gauge page", href: `https://water.noaa.gov/gauges/${encodeURIComponent(lid)}` },
+  ];
+};
 
 const reachLinks = (reachId: string): SourceLink[] => [
   { rel: "upstream", title: "NOAA NWM analysis and assimilation streamflow", href: `${NWPS_BASE}/reaches/${reachId}/streamflow?series=analysis_assimilation` },
@@ -553,10 +564,11 @@ const networkResponse = async (retrievedAt: string) => {
 
 const gaugeResponse = async (lid: string, retrievedAt: string) => {
   const links = gaugeLinks(lid);
+  const endpoints = gaugeEndpointUrls(lid);
   const [metadataPayload, observedPayload, forecastPayload] = await Promise.all([
-    fetchFixedJson(links[0].href, MAX_METADATA_BYTES),
-    fetchFixedJson(links[1].href, MAX_STAGEFLOW_BYTES),
-    fetchFixedJson(links[2].href, MAX_STAGEFLOW_BYTES),
+    fetchFixedJson(endpoints.metadata, MAX_METADATA_BYTES),
+    fetchFixedJson(endpoints.observed, MAX_STAGEFLOW_BYTES),
+    fetchFixedJson(endpoints.forecast, MAX_STAGEFLOW_BYTES),
   ]);
   const metadata = normalizeGaugeMetadata(metadataPayload);
   const observed = normalizeStageFlow(observedPayload, "observed");
