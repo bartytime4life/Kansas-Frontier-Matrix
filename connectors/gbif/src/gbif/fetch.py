@@ -61,6 +61,12 @@ def _require_planned(source_url: str) -> None:
         expected = query.params()
     except (KeyError, ValueError, TypeError, occurrence_api.OccurrenceInputError):
         raise occurrence_api.OccurrenceInputError("SOURCE_URL_SCOPE") from None
+    # plan_pages advances offsets by a fixed page size and only the final page may be
+    # shorter, so the window must fit that sequence: a full page sits on a multiple of
+    # its own limit; a short final page sits on a multiple of some larger page size.
+    if offset % limit and not any(offset % size == 0
+                                  for size in range(limit + 1, occurrence_api.MAX_PAGE + 1)):
+        raise occurrence_api.OccurrenceInputError("SOURCE_URL_SCOPE")
     canonical = (f"{occurrence_api.HOST}{occurrence_api.SEARCH_PATH}?"
                  + urlencode(dict(expected, limit=limit, offset=offset)))
     if canonical != source_url:

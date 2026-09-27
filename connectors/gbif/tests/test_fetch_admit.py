@@ -137,6 +137,18 @@ class RetrievalTests(unittest.TestCase):
                 with self.subTest(url=url), self.assertRaises(occ.OccurrenceInputError) as ctx:
                     retrieve(response(), url=url)
                 self.assertEqual(ctx.exception.args[0], code)
+        # Windows plan_pages can never emit (review finding on #4750).
+        for offset, limit in ((1, 300), (301, 300), (150, 200), (7, 299), (299, 300)):
+            window = base + f"country=US&stateProvince=Kansas&limit={limit}&offset={offset}"
+            with self.subTest(window=window), self.assertRaises(occ.OccurrenceInputError) as ctx:
+                retrieve(response(), url=window)
+            self.assertEqual(ctx.exception.args[0], "SOURCE_URL_SCOPE")
+        planned = [plan.url for plan in occ.plan_pages(occ.OccurrenceQuery(), max_records=650)]
+        planned += [plan.url for plan in occ.plan_pages(occ.OccurrenceQuery(), max_records=7,
+                                                        page_size=3)]
+        for url in planned:
+            with self.subTest(planned=url):
+                fetch._require_planned(url)
         for url in (fixtures.url(taxon_key=7, year="1990,2000", basis_of_record="PRESERVED_SPECIMEN",
                                  has_coordinate=True),
                     fixtures.url(offset=4)):
