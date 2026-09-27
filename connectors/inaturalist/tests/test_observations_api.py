@@ -59,11 +59,15 @@ class QueryTests(unittest.TestCase):
                 ({"bounds": None}, {}), ({"place_id": 5}, {}),
                 ({"bounds": (1, 1, 0, 2)}, {}), ({"quality_grade": "gold"}, {}),
                 ({"observed_from": "2020-5-1"}, {}),
+                ({"observed_from": "2020-13-01"}, {}), ({"observed_to": "2021-02-29"}, {}),
+                ({"observed_from": "2020-04-31"}, {}), ({"observed_to": "2020-00-10"}, {}),
                 ({"observed_from": "2021-01-01", "observed_to": "2020-01-01"}, {}),
                 ({}, {"per_page": 201}), ({}, {"id_above": -1})):
             with self.subTest(kwargs=kwargs, url=url_kwargs), \
                     self.assertRaises(obs.ObservationInputError):
                 obs.page_url(obs.ObservationQuery(**kwargs), **url_kwargs)
+        leap = obs.ObservationQuery(observed_from="2020-02-29", observed_to="2020-12-31")
+        self.assertIn("d1=2020-02-29", obs.page_url(leap))
         place = obs.ObservationQuery(bounds=None, place_id=5)
         self.assertIn("place_id=5", obs.page_url(place))
 
