@@ -141,6 +141,11 @@ class ParseTests(unittest.TestCase):
             with self.subTest(code=code), self.assertRaises(nws.NwsInputError) as caught:
                 parse(features)
             self.assertEqual(str(caught.exception), code)
+        # Non-string enum values are bounded diagnostics, not TypeError leaks.
+        for props in ({"status": {"x": 1}}, {"status": ["Actual"]}, {"messageType": ["Alert"]}):
+            with self.subTest(props=props), self.assertRaises(nws.NwsInputError) as caught:
+                parse([alert(**props)])
+            self.assertEqual(str(caught.exception), "ALERT_ENUM")
         for status, code in ((429, "RATE_LIMITED"), (503, "HTTP_STATUS")):
             with self.assertRaises(nws.NwsInputError) as caught:
                 nws.parse_alerts(b"", status=status, source_url=URL, retrieved_at=RETRIEVED)

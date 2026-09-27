@@ -17,6 +17,8 @@ admission, establishes coverage, relays an alert, or persists material.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime
+from email.utils import format_datetime
 from pathlib import Path
 
 from connectors_core import descriptor_gate, retrieval_episode
@@ -68,6 +70,21 @@ def _flags(records) -> tuple[str, ...]:
             if any(record.route == QUARANTINE for record in records) else ())
 
 
+def _cache_headers(transport: dict) -> dict[str, str]:
+    """Rebuild the NWS cache headers the episode contract records (ETag, Last-Modified).
+
+    ``Cache-Control``, ``Date`` and ``Expires`` are not SourceRetrievalEpisode fields, so
+    they cannot survive recording and are never invented here.
+    """
+    headers = {}
+    if isinstance(transport.get("etag"), str):
+        headers["ETag"] = transport["etag"]
+    if isinstance(transport.get("last_modified"), str):
+        instant = datetime.fromisoformat(transport["last_modified"].replace("Z", "+00:00"))
+        headers["Last-Modified"] = format_datetime(instant, usegmt=True)
+    return headers
+
+
 def _parse(source_id: str, retrieval: Retrieval, episode: dict):
     """Return (route, reasons, parsed) for one captured episode."""
     common = dict(status=episode["transport"]["http_status"],
@@ -80,7 +97,8 @@ def _parse(source_id: str, retrieval: Retrieval, episode: dict):
             parsed = uscrn_hourly.parse_station_year(retrieval.body, **common)
             gaps = ("MISSING_HOURS_PRESENT",) if parsed.missing_hours else ()
             return RAW, _flags(parsed.records) + gaps, parsed
-        parsed = nws_alerts.parse_alerts(retrieval.body, **common)
+        parsed = nws_alerts.parse_alerts(retrieval.body, **common,
+                                         headers=_cache_headers(episode["transport"]))
         return RAW, _flags(parsed.alerts) + tuple(parsed.reasons), parsed
     except (storm_events.StormEventsInputError, uscrn_hourly.UscrnInputError,
             nws_alerts.NwsInputError) as error:
@@ -93,7 +111,7 @@ def admit(retrieval: Retrieval, *,
     if not isinstance(retrieval, Retrieval):
         raise TypeError("retrieval must be a recorded RetrievalEpisode")
     source_id = retrieval.episode.get("source_id")
-    if source_id not in PRODUCTS:
+    if not isinstance(source_id, str) or source_id not in PRODUCTS:
         raise fetch.FetchInputError("EPISODE_SOURCE_MISMATCH")
     retrieval_episode.require_source(retrieval, source_id=source_id,
                                      retrieval_profile_ref=PRODUCTS[source_id])

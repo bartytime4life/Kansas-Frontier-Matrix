@@ -149,7 +149,8 @@ def _feature(feature: object, area: str) -> tuple[AlertCandidate, datetime | Non
             or canonical != f"{HOST}/alerts/{alert_id}"):
         raise NwsInputError("ALERT_IDENTITY")
     status, message_type = props.get("status"), props.get("messageType")
-    if status not in STATUSES or message_type not in MESSAGE_TYPES:
+    if (not isinstance(status, str) or not isinstance(message_type, str)
+            or status not in STATUSES or message_type not in MESSAGE_TYPES):
         raise NwsInputError("ALERT_ENUM")
     event = props.get("event")
     if not isinstance(event, str) or not event or len(event) > 256:

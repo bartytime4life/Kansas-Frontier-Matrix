@@ -179,7 +179,10 @@ def _decimal(token: str) -> Decimal:
 def _time(date: str, hhmm: str) -> datetime:
     if not (re.fullmatch(r"\d{8}", date) and re.fullmatch(r"\d{4}", hhmm)):
         raise UscrnInputError("TIME_FORMAT")
-    base = datetime.strptime(date, "%Y%m%d").replace(tzinfo=timezone.utc)
+    try:
+        base = datetime.strptime(date, "%Y%m%d").replace(tzinfo=timezone.utc)
+    except ValueError:
+        raise UscrnInputError("TIME_FORMAT") from None
     hours, minutes = int(hhmm[:2]), int(hhmm[2:])
     # Accept a midnight interval end written as 2400 on the prior date or 0000 on the
     # next; both resolve to the same instant, so a file using both fails TIME_ORDER.

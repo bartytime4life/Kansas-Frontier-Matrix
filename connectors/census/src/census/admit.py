@@ -85,7 +85,7 @@ def admit(retrieval: Retrieval, *, descriptor: dict[str, str] | None = None,
     if not isinstance(retrieval, Retrieval):
         raise TypeError("retrieval must be a recorded RetrievalEpisode")
     source_id = retrieval.episode.get("source_id")
-    if source_id not in PRODUCTS:
+    if not isinstance(source_id, str) or source_id not in PRODUCTS:
         raise fetch.FetchInputError("EPISODE_SOURCE_MISMATCH")
     retrieval_episode.require_source(retrieval, source_id=source_id,
                                      retrieval_profile_ref=PRODUCTS[source_id])

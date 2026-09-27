@@ -118,7 +118,7 @@ notes:
 >   - a parsed file or collection becomes `RAW_CANDIDATE`, flagged `RECORD_QUARANTINE_CANDIDATES`, `MISSING_HOURS_PRESENT` (USCRN gaps), or the NWS collection's own reasons when they apply;
 >   - parser rejections become `QUARANTINE_CANDIDATE`;
 >   - uncaptured retrievals become `HOLD`.
-> - **Holds:** the final route is `HOLD` while `role` or `rights` is unresolved. NWS freshness is as of the retrieval instant only; KFM relays no alert.
+> - **Holds:** the final route is `HOLD` while `role` or `rights` is unresolved. NWS freshness is as of the retrieval instant only; KFM relays no alert. The NWS parser receives the `ETag` and `Last-Modified` the episode records; `Cache-Control`, `Date` and `Expires` are not episode-contract fields and are not carried.
 > - **Scope:** no network library, write, or admission. Tests: `connectors/noaa/tests/test_fetch_admit.py`, run by `.github/workflows/noaa-connector-offline.yml`.
 
 > [!IMPORTANT]

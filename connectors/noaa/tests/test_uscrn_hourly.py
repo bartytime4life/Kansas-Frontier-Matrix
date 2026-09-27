@@ -135,6 +135,11 @@ class ParseTests(unittest.TestCase):
             with self.subTest(code=code), self.assertRaises(us.UscrnInputError) as caught:
                 parse(lines)
             self.assertEqual(str(caught.exception), code)
+        # Numeric but impossible calendar dates are bounded diagnostics, not ValueError leaks.
+        for date in ("20231301", "20230229", "20230431", "20230000"):
+            with self.subTest(date=date), self.assertRaises(us.UscrnInputError) as caught:
+                parse([line(1, date=date)])
+            self.assertEqual(str(caught.exception), "TIME_FORMAT")
         with self.assertRaises(us.UscrnInputError):
             parse([line(1), line(2)], max_records=1)
         with self.assertRaises(us.UscrnInputError):
