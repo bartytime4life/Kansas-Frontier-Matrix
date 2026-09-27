@@ -57,34 +57,87 @@ def _iso(value: datetime | None) -> str | None:
     return None if value is None else value.isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
+def _calendar_date(value: object) -> str:
+    if not isinstance(value, str) or not DATE.fullmatch(value):
+        raise OpenFemaInputError("DATE_BOUND")
+    try:
+        datetime.strptime(value, "%Y-%m-%d")
+    except ValueError:
+        raise OpenFemaInputError("DATE_BOUND") from None
+    return value
+
+
 def declaration_filter(*, declared_from: str | None = None, declared_to: str | None = None) -> str:
     """Kansas filter, optionally bounded by a half-open declaration-date window."""
     clauses = [f"state eq '{KANSAS[0]}'"]
-    for op, value in (("ge", declared_from), ("lt", declared_to)):
-        if value is not None:
-            if not isinstance(value, str) or not DATE.fullmatch(value):
-                raise OpenFemaInputError("DATE_BOUND")
-            clauses.append(f"declarationDate {op} '{value}T00:00:00.000Z'")
-    if declared_from and declared_to and declared_from >= declared_to:
+    if declared_from is not None:
+        clauses.append(f"declarationDate ge '{_calendar_date(declared_from)}T00:00:00.000Z'")
+    if declared_to is not None:
+        clauses.append(f"declarationDate lt '{_calendar_date(declared_to)}T00:00:00.000Z'")
+    if declared_from is not None and declared_to is not None and declared_from >= declared_to:
         raise OpenFemaInputError("DATE_ORDER")
     return " and ".join(clauses)
 
 
-def page_url(odata_filter: str, *, skip: int = 0, top: int = 1000) -> str:
-    """One deterministic page: ordered by record id, counted, never cache-busted."""
-    if not isinstance(odata_filter, str) or not odata_filter.startswith(f"state eq '{KANSAS[0]}'"):
-        raise OpenFemaInputError("FILTER_SCOPE")
-    if type(skip) is not int or skip < 0 or type(top) is not int or not 1 <= top <= MAX_TOP:
-        raise OpenFemaInputError("PAGE_BOUND")
-    return f"{HOST}{PATH}?" + urlencode({"$filter": odata_filter, "$orderby": "id",
-                                         "$top": top, "$skip": skip, "$count": "true"})
+# The only filter grammar this profile emits or accepts: Kansas, an optional
+# half-open declaration window, and an optional keyset cursor on the record id.
+FILTER = re.compile(
+    r"state eq 'KS'"
+    r"(?: and declarationDate ge '(?P<start>\d{4}-\d{2}-\d{2})T00:00:00\.000Z')?"
+    r"(?: and declarationDate lt '(?P<stop>\d{4}-\d{2}-\d{2})T00:00:00\.000Z')?"
+    r"(?: and id gt '(?P<after>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})')?"
+    r"\Z")
 
 
 @dataclass(frozen=True)
 class PageRequest:
-    odata_filter: str
-    skip: int
+    base_filter: str
+    after_id: str | None
     top: int
+    declared_from: datetime | None
+    declared_to: datetime | None
+
+    @property
+    def odata_filter(self) -> str:
+        if self.after_id is None:
+            return self.base_filter
+        return f"{self.base_filter} and id gt '{self.after_id}'"
+
+
+def _parse_filter(odata_filter: object, top: object) -> PageRequest:
+    match = FILTER.fullmatch(odata_filter) if isinstance(odata_filter, str) else None
+    if match is None:
+        raise OpenFemaInputError("FILTER_SCOPE")
+    if type(top) is not int or not 1 <= top <= MAX_TOP:
+        raise OpenFemaInputError("PAGE_BOUND")
+    bounds = []
+    for key in ("start", "stop"):
+        value = match.group(key)
+        bounds.append(None if value is None else
+                      datetime.strptime(_calendar_date(value), "%Y-%m-%d").replace(tzinfo=timezone.utc))
+    if bounds[0] is not None and bounds[1] is not None and bounds[0] >= bounds[1]:
+        raise OpenFemaInputError("DATE_ORDER")
+    after = match.group("after")
+    base = odata_filter if after is None else odata_filter[: -len(f" and id gt '{after}'")]
+    return PageRequest(base, after, top, bounds[0], bounds[1])
+
+
+def page_url(odata_filter: str, *, after_id: str | None = None, top: int = 1000) -> str:
+    """One keyset page: ``id gt`` the previous page's last id, ordered by id, counted.
+
+    Keyset paging is used instead of ``$skip`` so that rows inserted or deleted
+    between requests cannot shift offsets and silently drop a record; each page's
+    count is the number of rows remaining past the cursor, which ``reconcile``
+    checks for consistency.
+    """
+    request = _parse_filter(odata_filter, top)
+    if request.after_id is not None:
+        raise OpenFemaInputError("FILTER_SCOPE")  # pass the cursor via after_id only
+    if after_id is not None and not (isinstance(after_id, str) and RECORD_ID.fullmatch(after_id)):
+        raise OpenFemaInputError("RECORD_ID")
+    full = odata_filter if after_id is None else f"{odata_filter} and id gt '{after_id}'"
+    return f"{HOST}{PATH}?" + urlencode({"$filter": full, "$orderby": "id", "$top": top,
+                                         "$count": "true"})
 
 
 def _request(url: object) -> PageRequest:
@@ -96,17 +149,15 @@ def _request(url: object) -> PageRequest:
         raise OpenFemaInputError("SOURCE_URL")
     try:
         raw = parse_qs(parsed.query, strict_parsing=True)
-        if set(raw) != {"$filter", "$orderby", "$top", "$skip", "$count"}:
+        if set(raw) != {"$filter", "$orderby", "$top", "$count"}:
             raise ValueError
         if any(len(v) != 1 for v in raw.values()):
             raise ValueError
         if raw["$orderby"][0] != "id" or raw["$count"][0] != "true":
             raise ValueError
-        request = PageRequest(raw["$filter"][0], int(raw["$skip"][0]), int(raw["$top"][0]))
-    except (KeyError, ValueError):
+        return _parse_filter(raw["$filter"][0], int(raw["$top"][0]))
+    except (KeyError, ValueError, OpenFemaInputError):
         raise OpenFemaInputError("SOURCE_URL") from None
-    page_url(request.odata_filter, skip=request.skip, top=request.top)  # re-validate bounds
-    return request
 
 
 @dataclass(frozen=True)
@@ -270,7 +321,7 @@ def parse_page(body: bytes, *, status: int, source_url: str, retrieved_at: str,
     count = metadata.get("count")
     if type(count) is not int or count < 0:
         raise OpenFemaInputError("COUNT_ABSENT")
-    if (metadata.get("skip") != request.skip or metadata.get("top") != request.top
+    if (metadata.get("skip") not in (None, 0) or metadata.get("top") != request.top
             or metadata.get("filter") != request.odata_filter
             or metadata.get("entityname") not in (None, ENTITY)):
         raise OpenFemaInputError("METADATA_REQUEST_MISMATCH")
@@ -281,8 +332,14 @@ def parse_page(body: bytes, *, status: int, source_url: str, retrieved_at: str,
     ids = [record.record_id for record in records]
     if len(set(ids)) != len(ids):
         raise OpenFemaInputError("DUPLICATE_RECORD_ID")
-    if ids != sorted(ids):
+    if ids != sorted(ids) or (request.after_id is not None and ids and ids[0] <= request.after_id):
         raise OpenFemaInputError("ORDER_NOT_DETERMINISTIC")
+    for record in records:
+        declared = _instant(record.declaration_date)
+        # The provider or a saved response may not have honored the filter.
+        if ((request.declared_from is not None and declared < request.declared_from)
+                or (request.declared_to is not None and declared >= request.declared_to)):
+            raise OpenFemaInputError("ROW_OUTSIDE_REQUESTED_WINDOW")
     run_date = metadata.get("rundate")
     return PageCandidate(source_url, request, count,
                          _iso(_instant(run_date)) if isinstance(run_date, str) else None,
@@ -294,7 +351,7 @@ def next_page_url(page: PageCandidate) -> str | None:
         raise OpenFemaInputError("PAGE_TYPE")
     if page.is_last:
         return None
-    return page_url(page.request.odata_filter, skip=page.request.skip + page.request.top,
+    return page_url(page.request.base_filter, after_id=page.records[-1].record_id,
                     top=page.request.top)
 
 
@@ -310,23 +367,31 @@ class CaptureCandidate:
 
 
 def reconcile(pages: tuple[PageCandidate, ...] | list[PageCandidate]) -> CaptureCandidate:
-    """``CAPTURE_CANDIDATE`` only for contiguous skips from 0 to a short final page,
-    a stable reported count equal to the unique records received, and no id
-    repeated across pages; anything else is ``INCOMPLETE_CAPTURE``."""
+    """Join a keyset walk into one finite outcome.
+
+    ``CAPTURE_CANDIDATE`` requires an unbroken cursor chain from the uncursored
+    first page to a short final page, where every page's count equals the first
+    page's count minus the records already seen. Any insertion or deletion
+    during the walk breaks that equation and yields ``INCOMPLETE_CAPTURE``.
+    """
     if not pages or any(not isinstance(page, PageCandidate) for page in pages):
         raise OpenFemaInputError("NO_PAGES" if not pages else "PAGE_TYPE")
-    ordered = sorted(pages, key=lambda page: page.request.skip)
-    if len({(p.request.odata_filter, p.request.top) for p in ordered}) != 1:
+    if len({(p.request.base_filter, p.request.top) for p in pages}) != 1:
         raise OpenFemaInputError("MIXED_QUERY")
+    ordered = sorted(pages, key=lambda page: page.request.after_id or "")
     reasons: list[str] = []
-    expected = 0
-    for page in ordered:
-        if page.request.skip != expected:
-            reasons.append("PAGE_GAP_OR_OVERLAP")
+    if ordered[0].request.after_id is not None:
+        reasons.append("CURSOR_NOT_FROM_START")
+    seen = 0
+    for previous, page in zip([None, *ordered], ordered):
+        if previous is not None and (
+                not previous.records or page.request.after_id != previous.records[-1].record_id):
+            reasons.append("CURSOR_GAP_OR_OVERLAP")
             break
-        expected += page.request.top
-    if len({page.reported_count for page in ordered}) != 1:
-        reasons.append("COUNT_DRIFT")
+        if page.reported_count != ordered[0].reported_count - seen:
+            reasons.append("COUNT_DRIFT")
+            break
+        seen += len(page.records)
     if not ordered[-1].is_last:
         reasons.append("END_NOT_REACHED")
     if any(page.is_last for page in ordered[:-1]):

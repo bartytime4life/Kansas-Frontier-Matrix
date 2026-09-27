@@ -38,44 +38,55 @@ def record(n=1, **overrides):
     return {k: v for k, v in base.items() if v is not ...}
 
 
-def body(rows, *, skip=0, top=2, count=None, odata_filter=FILTER, **meta):
-    metadata = {"skip": skip, "top": top, "filter": odata_filter, "count":
+def full_filter(after_id=None, base=FILTER):
+    return base if after_id is None else f"{base} and id gt '{after_id}'"
+
+
+def body(rows, *, after_id=None, top=2, count=None, odata_filter=None, skip=0, **meta):
+    metadata = {"skip": skip, "top": top, "filter": odata_filter or full_filter(after_id), "count":
                 len(rows) if count is None else count, "entityname": of.ENTITY,
                 "rundate": "2026-09-27T00:00:00.000Z", **meta}
     return json.dumps({"metadata": metadata, of.ENTITY: rows}).encode()
 
 
-def parse(rows=None, *, skip=0, top=2, count=None, **meta):
-    url = of.page_url(FILTER, skip=skip, top=top)
-    return of.parse_page(body([record()] if rows is None else rows, skip=skip, top=top,
-                              count=count, **meta), status=200, source_url=url,
-                         retrieved_at=NOW)
+def parse(rows=None, *, after_id=None, top=2, count=None, base=FILTER, **meta):
+    url = of.page_url(base, after_id=after_id, top=top)
+    return of.parse_page(body([record()] if rows is None else rows, after_id=after_id, top=top,
+                              count=count, odata_filter=full_filter(after_id, base), **meta),
+                         status=200, source_url=url, retrieved_at=NOW)
 
 
 class PlanTests(unittest.TestCase):
-    def test_url_is_deterministic_and_counted(self):
-        params = parse_qs(urlsplit(of.page_url(FILTER, skip=20, top=10)).query)
-        self.assertEqual(params["$filter"], ["state eq 'KS'"])
+    def test_url_is_keyset_ordered_and_counted(self):
+        params = parse_qs(urlsplit(of.page_url(FILTER, after_id=rid(7), top=10)).query)
+        self.assertEqual(params["$filter"], [f"state eq 'KS' and id gt '{rid(7)}'"])
         self.assertEqual((params["$orderby"], params["$count"]), (["id"], ["true"]))
-        self.assertEqual((params["$skip"], params["$top"]), (["20"], ["10"]))
+        self.assertEqual(params["$top"], ["10"])
+        self.assertNotIn("$skip", params)
 
     def test_filter_window_and_rejections(self):
         self.assertEqual(of.declaration_filter(declared_from="2000-01-01", declared_to="2010-01-01"),
                          "state eq 'KS' and declarationDate ge '2000-01-01T00:00:00.000Z' "
                          "and declarationDate lt '2010-01-01T00:00:00.000Z'")
-        for kwargs in ({"declared_from": "2000-1-1"},
+        for kwargs in ({"declared_from": "2000-1-1"}, {"declared_from": "2026-02-31"},
+                       {"declared_to": "2026-99-99"},
                        {"declared_from": "2010-01-01", "declared_to": "2000-01-01"}):
             with self.subTest(kwargs=kwargs), self.assertRaises(of.OpenFemaInputError):
                 of.declaration_filter(**kwargs)
-        for args in (("state eq 'OK'",), (FILTER,)):
-            with self.assertRaises(of.OpenFemaInputError):
-                of.page_url(*args, top=10_001) if args == (FILTER,) else of.page_url(*args)
+        for bad in ("state eq 'OK'", "state eq 'KS' or 1 eq 1",
+                    FILTER + f" and id gt '{rid(1)}'"):
+            with self.subTest(bad=bad), self.assertRaises(of.OpenFemaInputError):
+                of.page_url(bad)
+        for kwargs in ({"top": 10_001}, {"after_id": "not-a-uuid"}):
+            with self.subTest(kwargs=kwargs), self.assertRaises(of.OpenFemaInputError):
+                of.page_url(FILTER, **kwargs)
 
     def test_source_url_allowlist(self):
         good = of.page_url(FILTER)
         for bad in (good.replace("https", "http"), good.replace("www.fema.gov", "evil.gov"),
                     good.replace("orderby=id", "orderby=declarationDate"),
                     good.replace("count=true", "count=false"), good + "&$select=id",
+                    good + "&$skip=5",
                     good.replace("/v2/", "/v1/")):
             # Body metadata matches the good request, so only the URL can be the reason.
             with self.subTest(bad=bad), self.assertRaises(of.OpenFemaInputError) as caught:
@@ -133,6 +144,7 @@ class ParseTests(unittest.TestCase):
             self.assertEqual(str(caught.exception), code)
         url = of.page_url(FILTER, top=2)
         for raw, code in ((body([], skip=5), "METADATA_REQUEST_MISMATCH"),
+                          (body([], top=3), "METADATA_REQUEST_MISMATCH"),
                           (body([], odata_filter="state eq 'OK'"), "METADATA_REQUEST_MISMATCH"),
                           (b'{"DisasterDeclarationsSummaries": []}', "METADATA_ABSENT"),
                           (b'{"metadata": {"count": NaN}}', "NONSTANDARD_JSON_NUMBER"),
@@ -146,17 +158,30 @@ class ParseTests(unittest.TestCase):
             self.assertEqual(str(caught.exception), code)
 
 
+class WindowTests(unittest.TestCase):
+    def test_rows_outside_requested_window_reject_page(self):
+        base = of.declaration_filter(declared_from="2020-01-01", declared_to="2021-01-01")
+        (inside,) = parse([record()], base=base).records
+        self.assertEqual(inside.declaration_date, "2020-05-01T00:00:00Z")
+        for when in ("2000-05-01T00:00:00.000Z", "2021-01-01T00:00:00.000Z"):
+            with self.subTest(when=when), self.assertRaises(of.OpenFemaInputError) as caught:
+                parse([record(declarationDate=when)], base=base)
+            self.assertEqual(str(caught.exception), "ROW_OUTSIDE_REQUESTED_WINDOW")
+
+
 class ReconcileTests(unittest.TestCase):
-    def walk(self, total=5, top=2, count=None):
-        pages, skip = [], 0
+    def walk(self, ids=(1, 2, 3, 4, 5), top=2):
+        """Simulate a keyset walk over a source holding ``ids``."""
+        pages, cursor = [], None
         while True:
-            rows = [record(n) for n in range(skip + 1, min(skip + top, total) + 1)]
-            page = parse(rows, skip=skip, top=top, count=total if count is None else count)
+            remaining = [n for n in ids if cursor is None or rid(n) > cursor]
+            page = parse([record(n) for n in remaining[:top]], after_id=cursor, top=top,
+                         count=len(remaining))
             pages.append(page)
             nxt = of.next_page_url(page)
             if nxt is None:
                 return pages
-            skip += top
+            cursor = page.records[-1].record_id
 
     def test_complete_capture(self):
         capture = of.reconcile(list(reversed(self.walk())))
@@ -166,16 +191,31 @@ class ReconcileTests(unittest.TestCase):
 
     def test_incomplete_captures(self):
         pages = self.walk()
-        self.assertIn("PAGE_GAP_OR_OVERLAP", of.reconcile([pages[0], pages[2]]).reasons)
+        self.assertIn("CURSOR_GAP_OR_OVERLAP", of.reconcile([pages[0], pages[2]]).reasons)
         self.assertIn("END_NOT_REACHED", of.reconcile(pages[:2]).reasons)
-        drifted = parse([record(3), record(4)], skip=2, count=9)
+        self.assertIn("CURSOR_NOT_FROM_START", of.reconcile(pages[1:]).reasons)
+        drifted = parse([record(3), record(4)], after_id=rid(2), count=9)
         self.assertIn("COUNT_DRIFT", of.reconcile([pages[0], drifted, pages[2]]).reasons)
-        self.assertIn("COUNT_MISMATCH", of.reconcile(self.walk(count=7)).reasons)
-        repeated = parse([record(2), record(3)], skip=2, count=5)
-        self.assertIn("DUPLICATE_ACROSS_PAGES",
-                      of.reconcile([pages[0], repeated, pages[2]]).reasons)
         with self.assertRaises(of.OpenFemaInputError):
             of.reconcile([])
+
+    def test_source_change_between_pages_is_detected(self):
+        # Page one reads [1, 2] from {1, 2, 4, 5}; then 2 is deleted and 6 inserted.
+        first = parse([record(1), record(2)], count=4)
+        later_source = (1, 4, 5, 6)
+        remaining = [n for n in later_source if rid(n) > rid(2)]
+        second = parse([record(n) for n in remaining[:2]], after_id=rid(2), count=len(remaining))
+        third = parse([record(6)], after_id=rid(5), count=1)
+        capture = of.reconcile([first, second, third])
+        self.assertEqual(capture.outcome, "INCOMPLETE_CAPTURE")
+        self.assertIn("COUNT_DRIFT", capture.reasons)
+        # An unchanged source over the same ids reconciles cleanly.
+        self.assertEqual(of.reconcile(self.walk(ids=(1, 2, 4, 5))).outcome, "CAPTURE_CANDIDATE")
+
+    def test_cursor_must_advance(self):
+        with self.assertRaises(of.OpenFemaInputError) as caught:
+            parse([record(1)], after_id=rid(1))
+        self.assertEqual(str(caught.exception), "ORDER_NOT_DETERMINISTIC")
 
 
 class NoNetworkTests(unittest.TestCase):

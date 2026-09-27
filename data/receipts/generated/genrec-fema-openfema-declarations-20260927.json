@@ -11,11 +11,11 @@
   ],
   "artifact_hashes": {
     ".github/workflows/fema-openfema-declarations-offline.yml": "sha256:8d6ca892cd3fab57847183de16bf1b85affe4bbe16ffb00ba0bd72eb09942d08",
-    "connectors/fema-openfema/README.md": "sha256:faa2b58b224e037bff69ecf96d5e4989f4c6e820786f3c6ad1c3cb0fee8a8c02",
-    "connectors/fema/README.md": "sha256:ee8196a0f8c03bd4aed7bc4bae2eb029d260231f936015feb8061928dc1de1ae",
-    "connectors/fema/src/fema/openfema_declarations.py": "sha256:78b089eec36c779a9f7d7e48f370db50fd125dbeb438ec240d159e5b67b73e63",
-    "connectors/fema/tests/README.md": "sha256:d9952bbaf1eb6644fd9dbe6e37029391f0ae22c87ab218f2cfe233145902a7a0",
-    "connectors/fema/tests/test_openfema_declarations.py": "sha256:c40a1162558c09fbc99cf79a947611f5437cc14c4bad6edaae2ff975ff7c5823"
+    "connectors/fema-openfema/README.md": "sha256:9b1fcfe42031cdb5d113eda3cf17e8ae22c49dac5604d71d9b67dd0ff16efb1d",
+    "connectors/fema/README.md": "sha256:4545de3b88ea92faf556be211605ab49a37ac8e8fdaa5a9d4504103921483f0d",
+    "connectors/fema/src/fema/openfema_declarations.py": "sha256:abb222ed42630547efcc6942e064ad08f894b8e0b75f8657e38d3bb2ab77d14e",
+    "connectors/fema/tests/README.md": "sha256:8f35198949814fc3d1632ee02f35bcf59e3880e5eb5c674f9e838d4c4da51cd6",
+    "connectors/fema/tests/test_openfema_declarations.py": "sha256:db7b71c200e5a2164f0593a0392bc752b512f5d01df7c05eacb7ac8aa21fa381"
   },
   "model_identity": {
     "provider": "Anthropic",
@@ -47,12 +47,12 @@
     {
       "gate": "Offline standard-library synthetic tests",
       "outcome": "PASS",
-      "reason": "Python 3.11: 9 unittest methods for openfema_declarations pass."
+      "reason": "Python 3.11: 12 unittest methods for openfema_declarations pass, including the keyset source-change scenario from review."
     },
     {
       "gate": "Targeted mutation testing",
       "outcome": "PASS",
-      "reason": "Metadata echo, id ordering, page gap, incident ordering, state scope, $orderby, and required-field checks each fail a test when disabled; a weak URL-allowlist test was found and tightened to assert the exact code."
+      "reason": "Metadata echo, id ordering, page gap, incident ordering, state scope, $orderby, and required-field checks each fail a test when disabled; a weak URL-allowlist test was found and tightened to assert the exact code. Review round: count-drift, window enforcement, calendar-date, cursor-advance, and cursor-chain checks each fail a test when disabled (mutation application verified)."
     },
     {
       "gate": "Repository guardrails",
@@ -91,8 +91,8 @@
   "created_at": "2026-09-27T01:23:13Z",
   "emitter": "Claude Code repository-authoring session",
   "links": {
-    "pr_number": null,
+    "pr_number": 4728,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
   },
-  "notes": "Offline OpenFEMA Disaster Declarations Summaries (v2) planner/parser in the FEMA family package, per the per-table admission contract. Administrative role only; no activation, admission, or publication."
+  "notes": "Offline OpenFEMA Disaster Declarations Summaries (v2) planner/parser in the FEMA family package, per the per-table admission contract. Administrative role only; no activation, admission, or publication. Review fixes: keyset paging with remaining-count reconciliation, calendar-validated bounds, per-row window enforcement."
 }
