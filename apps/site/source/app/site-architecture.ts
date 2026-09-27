@@ -96,7 +96,7 @@ export const SITE_ROUTE_CONTRACTS = Object.freeze([
     id: "explorer-route",
     route: "/",
     owner: "app/page.tsx",
-    purpose: "Map-first investigation, visible layer and official-context controls, evidence drawer, and workbench handoffs.",
+    purpose: "Map-first investigation, visible layer and official-context controls, evidence drawer, and direct task tools.",
     trustBoundary: "Site-local demonstration layers and external operational context stay distinct from released KFM evidence.",
   },
   {
