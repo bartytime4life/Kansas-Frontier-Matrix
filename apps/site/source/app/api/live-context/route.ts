@@ -28,31 +28,6 @@ const GIBS_FIRE_TILE_ROW = 5;
 const MAX_GIBS_FIRE_TILE_BYTES = 1024 * 1024;
 const MAX_GIBS_FIRE_FEATURES = 5000;
 
-const readBoundedTile = async (response: Response): Promise<Uint8Array> => {
-  if (!response.body) throw new UpstreamError("NASA GIBS tile body was missing.");
-  const reader = response.body.getReader();
-  const chunks: Uint8Array[] = [];
-  let length = 0;
-  try {
-    while (true) {
-      const chunk = await reader.read();
-      if (chunk.done) break;
-      length += chunk.value.byteLength;
-      if (length > MAX_GIBS_FIRE_TILE_BYTES) throw new UpstreamError("NASA GIBS tile exceeded the response limit.");
-      chunks.push(chunk.value);
-    }
-  } catch (error) {
-    void reader.cancel().catch(() => undefined);
-    throw error;
-  } finally {
-    reader.releaseLock();
-  }
-  const bytes = new Uint8Array(length);
-  let offset = 0;
-  for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
-  return bytes;
-};
-
 type Feed = "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations";
 type JsonRecord = Record<string, unknown>;
 
@@ -270,7 +245,7 @@ const allowedZoneUrl = (value: unknown): string | null => {
   if (typeof value !== "string") return null;
   try {
     const url = new URL(value);
-    if (url.protocol !== "https:" || url.hostname !== "api.weather.gov") return null;
+    if (url.origin !== "https://api.weather.gov" || url.username || url.password || url.search || url.hash) return null;
     return /^\/zones\/(forecast|county|fire)\/(KSZ|KSC)\d{3}$/.test(url.pathname) ? url.toString() : null;
   } catch {
     return null;
@@ -487,23 +462,20 @@ const nasaGibsFirePoints = async (requestedDay: string | null = null) => {
   const retrievedAt = new Date().toISOString();
   const tiles = await Promise.all(GIBS_FIRE_TILE_COLUMNS.map(async (column) => {
     const url = `https://gibs.earthdata.nasa.gov/wmts/epsg4326/best/${GIBS_FIRE_LAYER}/default/${day}/500m/5/${GIBS_FIRE_TILE_ROW}/${column}.mvt`;
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
     try {
-      const response = await fetch(url, { cache: "no-store", redirect: "manual", signal: controller.signal });
-      if (!response.ok || response.redirected) throw new UpstreamError(`NASA GIBS tile ${column} returned HTTP ${response.status}.`);
-      const declaredSize = Number(response.headers.get("content-length"));
-      if (declaredSize > MAX_GIBS_FIRE_TILE_BYTES) throw new UpstreamError("NASA GIBS tile exceeded the response limit.");
-      const bytes = await readBoundedTile(response);
-      const tile = new VectorTile(new Pbf(bytes));
+      const response = await boundedFetch(url, MAX_GIBS_FIRE_TILE_BYTES, { timeoutMs: 8000, cache: "no-store" });
+      if (response.bytes.length === 0) throw new UpstreamError("NASA GIBS tile body was missing.");
+      const tile = new VectorTile(new Pbf(response.bytes));
       const layer = tile.layers[GIBS_FIRE_SOURCE_LAYER];
       if (!layer && Object.keys(tile.layers).length > 0) throw new UpstreamError("NASA GIBS returned an unexpected fire tile layer.");
       return { column, layer };
     } catch (error) {
       if (error instanceof UpstreamError) throw error;
-      throw new UpstreamError(`NASA GIBS tile ${column} was unavailable or malformed.`, controller.signal.aborted);
-    } finally {
-      clearTimeout(timeout);
+      if (error instanceof Error && error.message === "Source response body was missing.") throw new UpstreamError("NASA GIBS tile body was missing.");
+      if (error instanceof Error && error.message === "Source exceeded the response budget.") throw new UpstreamError("NASA GIBS tile exceeded the response limit.");
+      const status = error instanceof Error ? /^Source unavailable \(HTTP (\d{3})\)\.$/.exec(error.message)?.[1] : null;
+      if (status) throw new UpstreamError(`NASA GIBS tile ${column} returned HTTP ${status}.`);
+      throw new UpstreamError(`NASA GIBS tile ${column} was unavailable or malformed.`, error instanceof Error && error.name === "AbortError");
     }
   }));
   const features: Feature<Geometry, GeoJsonProperties>[] = [];

@@ -104,7 +104,7 @@ const readBoundedBody = async (response: Response, maxBytes: number) => {
 
 const fetchFixedJson = async (url: string, maxBytes: number): Promise<JsonRecord> => {
   const parsedUrl = new URL(url);
-  if (parsedUrl.origin !== NOAA_ORIGIN || !parsedUrl.pathname.startsWith("/nwps/v1/")) {
+  if (parsedUrl.origin !== NOAA_ORIGIN || parsedUrl.username || parsedUrl.password || parsedUrl.hash || !parsedUrl.pathname.startsWith("/nwps/v1/")) {
     throw new AdapterError("The requested upstream is outside the fixed NOAA allowlist.", "NOAA_UPSTREAM_DENIED");
   }
 
@@ -113,6 +113,7 @@ const fetchFixedJson = async (url: string, maxBytes: number): Promise<JsonRecord
   try {
     const response = await fetch(parsedUrl, {
       cache: "no-store",
+      redirect: "manual",
       signal: controller.signal,
       headers: {
         Accept: "application/json",

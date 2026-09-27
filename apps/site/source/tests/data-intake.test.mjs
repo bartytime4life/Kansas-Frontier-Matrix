@@ -35,3 +35,37 @@ test("provider redirects are rejected without using the redirect mode unsupporte
   try { await assert.rejects(upstream.boundedFetch("https://tigerweb.geo.census.gov/query",1000),/HTTP 302/); assert.equal(calls,1); }
   finally { globalThis.fetch = original; }
 });
+
+test("bounded upstream requests use only approved HTTPS origins and the validated URL", async () => {
+  const original = globalThis.fetch;
+  const calls = [];
+  globalThis.fetch = async (input, init) => {
+    calls.push(String(input));
+    assert.equal(init.redirect, "manual");
+    return new Response("ok");
+  };
+  try {
+    for (const url of [
+      "http://tigerweb.geo.census.gov/query",
+      "https://tigerweb.geo.census.gov:8443/query",
+      "https://user@tigerweb.geo.census.gov/query",
+      "https://tigerweb.geo.census.gov.evil.test/query",
+      "https://tigerweb.geo.census.gov/query#fragment",
+    ]) await assert.rejects(upstream.boundedFetch(url, 1000), /Non-allowlisted source/);
+    assert.equal(calls.length, 0);
+    const result = await upstream.boundedFetch("https://tigerweb.geo.census.gov/query?state=20", 1000);
+    assert.equal(result.text(), "ok");
+    assert.deepEqual(calls, ["https://tigerweb.geo.census.gov/query?state=20"]);
+  } finally { globalThis.fetch = original; }
+});
+
+test("bounded upstream responses preserve empty tiles and reject oversized bodies", async () => {
+  const original = globalThis.fetch;
+  try {
+    globalThis.fetch = async () => new Response(null, { status: 204 });
+    const empty = await upstream.boundedFetch("https://gibs.earthdata.nasa.gov/tile", 1000);
+    assert.equal(empty.bytes.length, 0);
+    globalThis.fetch = async () => new Response("too large", { headers: { "content-length": "1001" } });
+    await assert.rejects(upstream.boundedFetch("https://gibs.earthdata.nasa.gov/tile", 1000), /response budget/);
+  } finally { globalThis.fetch = original; }
+});
