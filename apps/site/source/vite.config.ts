@@ -44,6 +44,11 @@ export default defineConfig(async () => {
   const { cloudflare } = await import("@cloudflare/vite-plugin");
 
   return {
+    // Use one year in the Worker render and the hydrated browser bundle.
+    // Workerd's module clock can be at its epoch before the first request.
+    define: {
+      __KFM_BUILD_UTC_YEAR__: JSON.stringify(Math.max(2026, new Date().getUTCFullYear())),
+    },
     server: {
       host: "0.0.0.0",
       allowedHosts: ["terminal.local"],

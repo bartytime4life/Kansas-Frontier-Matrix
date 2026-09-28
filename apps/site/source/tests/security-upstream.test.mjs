@@ -54,6 +54,67 @@ test("malformed NASA fire dates cannot reach an upstream", async () => {
   } finally { globalThis.fetch = originalFetch; }
 });
 
+test("current NASA fire points use only a labeled previous UTC day when new-day tiles are missing", async () => {
+  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
+  workerUrl.searchParams.set("test", `gibs-day-boundary-${process.pid}-${Date.now()}`);
+  const { default: worker } = await import(workerUrl.href);
+  const originalFetch = globalThis.fetch;
+  const today = new Date().toISOString().slice(0, 10);
+  const yesterday = new Date(Date.parse(`${today}T00:00:00Z`) - 86_400_000).toISOString().slice(0, 10);
+  const calls = [];
+  const context = { waitUntil() {}, passThroughOnException() {} };
+  try {
+    globalThis.fetch = async (input) => {
+      const url = String(input);
+      calls.push(url);
+      assert.match(url, /^https:\/\/gibs\.earthdata\.nasa\.gov\/wmts\/epsg4326\/best\//);
+      if (url.includes(`/default/${today}/`)) return new Response("Not published", { status: 404 });
+      if (url.includes(`/default/${yesterday}/`)) return new Response(new Uint8Array([0]), { headers: { "Content-Type": "application/octet-stream" } });
+      throw new Error(`Unexpected NASA day in ${url}`);
+    };
+    const current = await worker.fetch(new Request("http://localhost/api/live-context?feed=nasa-gibs-fire-points"), {}, context);
+    assert.equal(current.status, 200);
+    const payload = await current.json();
+    assert.equal(payload.state, "partial");
+    assert.equal(payload.sourceDay, yesterday);
+    assert.equal(payload.featureCount, 0);
+    assert.match(payload.limitation, new RegExp(`current UTC day ${today} returned a missing tile`));
+    assert.ok(calls.some((url) => url.includes(`/default/${today}/`)));
+    assert.ok(calls.some((url) => url.includes(`/default/${yesterday}/`)));
+
+    calls.length = 0;
+    const download = await worker.fetch(new Request("http://localhost/api/source-download?source=nasa-gibs-fire-points"), {}, context);
+    assert.equal(download.status, 200);
+    assert.equal(download.headers.get("content-disposition"), `attachment; filename="kfm-nasa-gibs-fire-points-${yesterday}.geojson"`);
+    const geojson = await download.json();
+    assert.equal(geojson.kfm.sourceDay, yesterday);
+    assert.equal(geojson.kfm.state, "partial");
+    assert.equal(geojson.features.length, 0);
+
+    calls.length = 0;
+    const archivedDownload = await worker.fetch(new Request(`http://localhost/api/source-download?source=nasa-gibs-fire-points&day=${yesterday}`), {}, context);
+    assert.equal(archivedDownload.status, 200);
+    assert.equal(archivedDownload.headers.get("content-disposition"), `attachment; filename="kfm-nasa-gibs-fire-points-${yesterday}.geojson"`);
+    const archiveGeojson = await archivedDownload.json();
+    assert.equal(archiveGeojson.kfm.requestedDay, yesterday);
+    assert.equal(archiveGeojson.kfm.sourceDay, yesterday);
+    assert.equal(archiveGeojson.kfm.state, "empty");
+    assert.ok(calls.length > 0 && calls.every((url) => url.includes(`/default/${yesterday}/`)));
+
+    calls.length = 0;
+    for (const query of [`source=census-counties&day=${yesterday}`, "source=nasa-gibs-fire-points&day=2026-02-30", `source=nasa-gibs-fire-points&day=${yesterday}&day=${today}`, "source=nasa-gibs-fire-points&day=9999-01-01"]) {
+      const rejected = await worker.fetch(new Request(`http://localhost/api/source-download?${query}`), {}, context);
+      assert.equal(rejected.status, 400, query);
+    }
+    assert.deepEqual(calls, []);
+
+    calls.length = 0;
+    const exact = await worker.fetch(new Request(`http://localhost/api/live-context?feed=nasa-gibs-fire-points&day=${today}`), {}, context);
+    assert.equal(exact.status, 502);
+    assert.ok(calls.length > 0 && calls.every((url) => url.includes(`/default/${today}/`)));
+  } finally { globalThis.fetch = originalFetch; }
+});
+
 test("NOAA hydrology resolves only named endpoints from validated identifiers", async () => {
   const originalFetch = globalThis.fetch;
   const calls = [];

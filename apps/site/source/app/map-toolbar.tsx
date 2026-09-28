@@ -15,7 +15,7 @@ export const DOWNLOAD_NOTICES = [
   { id: "noaa-storm-events", title: "Tornado, flood, snow & ice history", format: "Annual CSV.gz", detail: "Download NOAA Storm Events details, locations and fatalities. Event narratives and county records still need spatial review before map admission.", href: "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/" },
   { id: "historical-networks", title: "Historical cities, roads & trade routes", format: "Map editions / shapefiles", detail: "Use dated USGS/Library of Congress map editions for historical interpretation; use TIGER/Line only as a labeled modern or vintage reference.", href: "https://ngmdb.usgs.gov/topoview/" },
 ] as const;
-export type SourceIssue = { id: OfficialContextId; title: string };
+export type SourceIssue = { id: OfficialContextId; title: string; detail?: string; downloadHref?: string };
 export function DataNotices({ issues = [], onRetry, onHide }: { issues?: SourceIssue[]; onRetry?: (id: OfficialContextId) => void; onHide?: (id: OfficialContextId) => void }) {
   const [open, setOpen] = useState(false); const root = useRef<HTMLDivElement>(null); const trigger = useRef<HTMLButtonElement>(null);
   useEffect(() => {
@@ -30,7 +30,7 @@ export function DataNotices({ issues = [], onRetry, onHide }: { issues?: SourceI
     <span className="sr-only" role="status">{issues.length > 0 ? `${issues.length} selected source${issues.length === 1 ? " needs" : "s need"} attention. Open Data and downloads for recovery options.` : ""}</span>
     {open && <aside id="data-notices-panel" className="data-notices-panel" aria-label="Data downloads and source notifications">
       <header><div><small>SOURCE NOTICES</small><h2>Data & downloads</h2></div><button type="button" onClick={() => { setOpen(false); trigger.current?.focus(); }} aria-label="Close data notifications">×</button></header>
-      {issues.length > 0 && <section className="source-issue-list" aria-label="Sources needing attention">{issues.map(issue => <article key={issue.id}><strong>{issue.title}</strong><p>Some data or tiles could not load. Other layers remain available.</p><div>{onRetry && <button type="button" onClick={() => onRetry(issue.id)}>Retry layer</button>}{onHide && <button type="button" onClick={() => onHide(issue.id)}>Hide layer</button>}<a href={SOURCE_DOWNLOADS[issue.id].href} target="_blank" rel="noreferrer">Source data ↗</a></div></article>)}</section>}
+      {issues.length > 0 && <section className="source-issue-list" aria-label="Sources needing attention">{issues.map(issue => <article key={issue.id}><strong>{issue.title}</strong><p>{issue.detail ?? "Some data or tiles could not load. Other layers remain available."}</p><div>{onRetry && <button type="button" onClick={() => onRetry(issue.id)}>Retry layer</button>}{onHide && <button type="button" onClick={() => onHide(issue.id)}>Hide layer</button>}<a href={issue.downloadHref ?? SOURCE_DOWNLOADS[issue.id].href} target="_blank" rel="noreferrer">Source data ↗</a></div></article>)}</section>}
       <p className="download-intro">Original files and older archives need a provider download. Some sources also offer live map services.</p>
       {DOWNLOAD_NOTICES.map(item => <article className="download-notice" key={item.id}><div><h3>{item.title}</h3><small>{item.format}</small></div><p>{item.detail}</p><div className="download-notice-actions"><a href={item.href} target="_blank" rel="noreferrer">Open downloads ↗</a><Link href={`/data?source=${item.id}`}>Propose an update</Link></div></article>)}
       <footer><Link href="/data">Upload data for KFM</Link><Link href="/stewards">Steward review</Link></footer>
@@ -50,14 +50,14 @@ export function LayerSceneControls({ active, state, selectedLook, terrainProvide
   return <section className="layer-scene-controls" aria-label="3D map appearance" data-dem-state={demStatus.toLowerCase()}>
     <div className="layer-scene-presets" role="group" aria-label="3D view presets">
       <button type="button" aria-pressed={selectedLook === "natural"} onClick={() => onPreset("natural")}><strong>Natural terrain</strong><small>Imagery + relief</small></button>
-      <button type="button" aria-pressed={selectedLook === "topographic"} onClick={() => onPreset("topographic")}><strong>Topographic relief</strong><small>Topo map + relief</small></button>
+      <button type="button" aria-pressed={selectedLook === "topographic"} onClick={() => onPreset("topographic")}><strong>Topographic relief</strong><small>Topo map + DEM shading</small></button>
       <button type="button" aria-pressed={selectedLook === "buildings"} onClick={() => onPreset("buildings")}><strong>3D buildings</strong><small>Mapped heights</small></button>
     </div>
     <div className="layer-scene-dem" role="status" aria-live="polite">
       <span className="layer-scene-dem-dot" aria-hidden="true" />
-      <span>{terrainProvider === "usgs-3dep" ? "USGS 3DEP DEM" : "Display DEM"} <strong>{demStatus}</strong></span>
+      <span>{terrainProvider === "usgs-3dep" ? "USGS 3DEP DEM" : "Display DEM"} <strong>{demStatus}</strong>{active && <small> · {exaggeration.toFixed(1)}× display</small>}</span>
     </div>
-    {active && <div className="layer-scene-actions">{state === "ERROR" && <button className="layer-scene-retry" type="button" onClick={onRetry}>Retry elevation tiles</button>}<button className="layer-scene-2d" type="button" onClick={on2D}>Return to 2D</button></div>}
+    {active && <div className="layer-scene-actions">{state === "ERROR" && <><button className="layer-scene-retry" type="button" onClick={onRetry}>Retry elevation tiles</button>{terrainProvider === "usgs-3dep" && <button className="layer-scene-retry" type="button" onClick={() => onTerrainProvider("mapzen")}>Use fast display terrain</button>}</>}<button className="layer-scene-2d" type="button" onClick={on2D}>Return to 2D</button></div>}
     <small className="layer-scene-source-note">{terrainProvider === "usgs-3dep" ? "USGS 3DEP uses a mixed-resolution bare-earth DEM mosaic. LiDAR-derived areas vary; exact work-unit accuracy is not established here." : "3DEP hillshade is a separate official layer. Its source date may differ from this Mapzen display DEM."}</small>
     <details className="layer-scene-details">
       <summary>Fine tune 3D <span aria-hidden="true">⌄</span></summary>

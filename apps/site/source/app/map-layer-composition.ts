@@ -18,6 +18,7 @@ const rasterFamily = (id: string): RasterFamily => {
   if (id.includes("3dep-") || id.includes("goes-geocolor") || id.startsWith("kfm-ee-context-layer-")) return "surface";
   if (id.includes("3dhp-") || id.includes("wbd-") || id.includes("nwm-")) return "water";
   if (id.includes("firms-active-fire")) return "fire";
+  if (id.includes("lightning")) return "air";
   if (id.includes("forecast-wind")) return "air";
   if (id.includes("nws-radar")) return "radar";
   return "other";

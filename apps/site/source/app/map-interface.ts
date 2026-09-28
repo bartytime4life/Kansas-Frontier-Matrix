@@ -1,4 +1,5 @@
 import type { LayerRecord } from "./explorer-data";
+import { BUILD_UTC_YEAR } from "./build-clock";
 
 export type MapUtilityView = "report" | "inspect" | "navigate" | "scene" | "connections" | "import" | "compare" | "measure" | "export" | "diagnostics";
 export type MeasureUnit = "imperial" | "metric";
@@ -19,7 +20,7 @@ export const MAP_VIEW_PROFILES: readonly MapViewProfile[] = Object.freeze([
     title: "Kansas overview",
     summary: "Real Census county boundaries and baseline counts, USGS stream observations, and mapped hydrography. Current sources refresh when you open the map.",
     visibleLayerIds: Object.freeze([]),
-    year: new Date().getUTCFullYear(),
+    year: BUILD_UTC_YEAR,
     basemap: "streets",
     projection: "mercator",
   }),

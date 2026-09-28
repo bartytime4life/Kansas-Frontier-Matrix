@@ -455,11 +455,7 @@ const raspberryShakeStations = async (day: string | null = null) => {
 /** Two official geographic WMTS tiles cover the Kansas window at matrix 5.
  * MVT coordinates are geographic, so use NASA's explicit LATITUDE/LONGITUDE
  * properties rather than a Web Mercator toGeoJSON projection. */
-const nasaGibsFirePoints = async (requestedDay: string | null = null) => {
-  const dayPattern = /^\d{4}-\d{2}-\d{2}$/;
-  if (requestedDay !== null && !dayPattern.test(requestedDay)) throw new UpstreamError("NASA GIBS day must be an exact calendar date.");
-  const day = requestedDay ?? new Date().toISOString().slice(0, 10);
-  if (!dayPattern.test(day)) throw new UpstreamError("NASA GIBS day must be an exact calendar date.");
+const nasaGibsFirePointsForDay = async (day: string, unavailableCurrentDay: string | null = null) => {
   const safeDay = encodeURIComponent(day);
   const retrievedAt = new Date().toISOString();
   const tiles = await Promise.all(GIBS_FIRE_TILE_COLUMNS.map(async (column) => {
@@ -526,16 +522,32 @@ const nasaGibsFirePoints = async (requestedDay: string | null = null) => {
       if (!newestTimestamp || acquiredAt > newestTimestamp) newestTimestamp = acquiredAt;
     }
   }
-  return envelope(
+  return { ...envelope(
     "nasa-gibs-fire-points",
     { type: "FeatureCollection", features },
     `NASA GIBS WMTS ${GIBS_FIRE_LAYER}, EPSG:4326 500m matrix 5, UTC ${day}`,
-    `NOAA-20 VIIRS thermal detections within the bounded Kansas window for ${day} UTC. ${skipped ? `${skipped} malformed, mismatched, or over-cap records were withheld; this response is partial. ` : ""}Each point is a satellite thermal-anomaly pixel, not a confirmed wildfire, incident, ignition point, perimeter, burn area, or safety guidance. Missing detections do not establish no fire or full coverage.`,
+    `NOAA-20 VIIRS thermal detections within the bounded Kansas window for ${day} UTC. ${unavailableCurrentDay ? `The current UTC day ${unavailableCurrentDay} returned a missing tile when checked; this is the previous day's snapshot, not current-day coverage. ` : ""}${skipped ? `${skipped} malformed, mismatched, or over-cap records were withheld; this response is partial. ` : ""}Each point is a satellite thermal-anomaly pixel, not a confirmed wildfire, incident, ignition point, perimeter, burn area, or safety guidance. Missing detections do not establish no fire or full coverage.`,
     retrievedAt,
     newestTimestamp,
-    skipped > 0,
+    skipped > 0 || unavailableCurrentDay !== null,
     features.length >= MAX_GIBS_FIRE_FEATURES,
-  );
+  ), sourceDay: day };
+};
+
+const nasaGibsFirePoints = async (requestedDay: string | null = null) => {
+  const dayPattern = /^\d{4}-\d{2}-\d{2}$/;
+  if (requestedDay !== null && !dayPattern.test(requestedDay)) throw new UpstreamError("NASA GIBS day must be an exact calendar date.");
+  const day = requestedDay ?? new Date().toISOString().slice(0, 10);
+  if (!dayPattern.test(day)) throw new UpstreamError("NASA GIBS day must be an exact calendar date.");
+  try {
+    return await nasaGibsFirePointsForDay(day);
+  } catch (error) {
+    // New UTC days can precede the provider's first published tile. Only the
+    // implicit current-day view may use one dated previous-day snapshot.
+    if (requestedDay !== null || !(error instanceof UpstreamError) || !/^NASA GIBS tile (8|9) returned HTTP 404\.$/.test(error.message)) throw error;
+    const previousDay = new Date(Date.parse(`${day}T00:00:00.000Z`) - 86_400_000).toISOString().slice(0, 10);
+    return nasaGibsFirePointsForDay(previousDay, day);
+  }
 };
 
 /** Recent interagency incident reports. The IRWIN working record is an official

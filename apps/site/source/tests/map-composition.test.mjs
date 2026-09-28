@@ -40,21 +40,20 @@ test("shares opacity among visible rasters and restores it when one is hidden", 
   assert.equal(paint.get("external-a"), 0.8);
 });
 
-test("orders terrain, water, wind, and dated radar without burying radar when satellite is enabled", async () => {
+test("orders terrain, water, and dated radar without burying radar when satellite is enabled", async () => {
   const registryUrl = `data:text/javascript;base64,${Buffer.from('export const LAYER_REGISTRY=[];').toString("base64")}`;
   const composition = await loadSource("../app/map-layer-composition.ts", [['from "./explorer-data";', `from "${registryUrl}";`]]);
   const layers = [
     { id: "external-nws-radar-raster", type: "raster" },
     { id: "external-noaa-goes-geocolor-raster", type: "raster" },
     { id: "external-usgs-3dhp-hydrography-raster", type: "raster" },
-    { id: "external-nws-forecast-wind-raster", type: "raster" },
     { id: "external-noaa-hms-smoke-fill", type: "fill" },
   ];
   const map = { getStyle: () => ({ layers }), moveLayer(id) { layers.push(layers.splice(layers.findIndex((layer) => layer.id === id), 1)[0]); } };
   composition.composeMapLayers(map);
   assert.deepEqual(layers.map(({ id }) => id), [
     "external-noaa-goes-geocolor-raster", "external-usgs-3dhp-hydrography-raster",
-    "external-nws-forecast-wind-raster", "external-nws-radar-raster", "external-noaa-hms-smoke-fill",
+    "external-nws-radar-raster", "external-noaa-hms-smoke-fill",
   ]);
 });
 

@@ -80,7 +80,7 @@ export const COUNTY_STARTER_LAYER: LayerRecord = {
   title: "County starter points",
   description: `One representative internal point for each of Kansas's ${COUNTY_STARTER_FEATURE_COUNT} counties, ready for search, selection, evidence inspection, and report scoping.`,
   domain: "Boundaries",
-  category: "Boundaries & places",
+  category: "Reference boundaries & locators",
   sourceType: "GeoJSON",
   sourceId: "kfm-county-starters",
   datasetName: "2025 Census Gazetteer Kansas county internal points · site-local starter slice",
@@ -138,6 +138,7 @@ export const COUNTY_STARTER_LAYER: LayerRecord = {
         minzoom: 7.5,
         maxzoom: 16,
         layout: {
+          "text-font": ["Noto Sans Regular"],
           "text-field": ["get", "countyLabel"],
           "text-size": 10,
           "text-offset": [0, 1.05],
@@ -155,4 +156,3 @@ export const COUNTY_STARTER_LAYER: LayerRecord = {
     },
   ],
 };
-

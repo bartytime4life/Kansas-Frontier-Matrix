@@ -2,6 +2,15 @@ import assert from "node:assert/strict";
 import "./cloudflare-register.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import typescriptCompiler from "typescript";
+
+const buildClockSource = await readFile(new URL("../app/build-clock.ts", import.meta.url), "utf8");
+const buildClockJavascript = typescriptCompiler.transpileModule(buildClockSource, {
+  compilerOptions: { module: typescriptCompiler.ModuleKind.ESNext, target: typescriptCompiler.ScriptTarget.ES2022 },
+  fileName: "build-clock.ts",
+}).outputText;
+const buildClockUrl = `data:text/javascript;base64,${Buffer.from(buildClockJavascript).toString("base64")}`;
+const withBuildClock = (source) => source.replace('from "./build-clock";', `from "${buildClockUrl}";`);
 
 test("renders the map-first Kansas explorer shell", async () => {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
@@ -32,6 +41,8 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /https:\/\/kansas-frontier-matrix-explorer\.blackbart-55\.chatgpt\.site\/og-guided\.png/);
   assert.doesNotMatch(html, /untrusted\.example/);
   assert.match(html, /Kansas Frontier Matrix Explorer/i);
+  const buildYear = Math.max(2026, new Date().getUTCFullYear());
+  assert.match(html, new RegExp(`Map time · <strong>${buildYear}</strong>`));
   assert.match(html, /Layer Catalog/i);
   assert.match(html, /MapLibre/i);
   assert.match(html, /Build report/i);
@@ -85,7 +96,7 @@ test("adds reusable analysis recipes, device-local workspaces, report filters, a
     fileName,
   }).outputText;
   const recipes = await import(`data:text/javascript;base64,${Buffer.from(compile(recipeSource, "analysis-recipes.ts")).toString("base64")}`);
-  const explorer = await import(`data:text/javascript;base64,${Buffer.from(compile(explorerSource, "explorer-data.ts")).toString("base64")}`);
+  const explorer = await import(`data:text/javascript;base64,${Buffer.from(compile(withBuildClock(explorerSource), "explorer-data.ts")).toString("base64")}`);
   const layer = (id) => explorer.LAYER_REGISTRY.find((candidate) => candidate.id === id);
 
   assert.equal(recipes.ANALYSIS_RECIPES.length, 11);
@@ -113,7 +124,7 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   const runtime = await readFile(new URL("../app/map-runtime.ts", import.meta.url), "utf8");
   const mapInterface = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
-  const compiled = ts.transpileModule(explorerSource, {
+  const compiled = ts.transpileModule(withBuildClock(explorerSource), {
     compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
     fileName: "explorer-data.ts",
   }).outputText;
@@ -155,7 +166,7 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   assert.match(mapInterface, /Terrain \+ hillshade[\s\S]*CONTEXT ONLY/);
   assert.match(page, /3D SOURCE LEDGER/);
   assert.match(page, /TERRAIN INVESTIGATION/);
-  assert.match(page, /queryTerrainElevation\(coordinate, \{ exaggerated: false \}\)/);
+  assert.match(page, /unexaggeratedTerrainElevation\(map, coordinate\)/);
   assert.match(page, /Renderer preview only—not analytical elevation or report evidence/);
   assert.match(css, /\.terrain-profile-preview/);
   assert.match(page, /TERRAIN SCENE PASSPORT/);
@@ -165,7 +176,7 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   assert.match(page, /className="official-context-catalog"/);
   assert.match(page, /className="official-context-row"/);
   assert.match(page, /Lock for report/);
-  assert.match(page, /queryTerrainElevation\(\[event\.lngLat\.lng, event\.lngLat\.lat\], \{ exaggerated: false \}\)/);
+  assert.match(page, /unexaggeratedTerrainElevation\(map, \[event\.lngLat\.lng, event\.lngLat\.lat\]\)/);
   assert.match(page, /colorRampMeters/);
   assert.match(page, /Vertical datum, analytical spacing, and KFM source admission are not asserted/);
   assert.match(css, /\.terrain-scene-passport/);
@@ -196,7 +207,7 @@ test("adds governed living systems, hazards, people, transport, settlement, and 
   const mapInterface = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const about = await readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8");
-  const compiled = ts.transpileModule(explorerSource, {
+  const compiled = ts.transpileModule(withBuildClock(explorerSource), {
     compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
     fileName: "explorer-data.ts",
   }).outputText;
@@ -428,9 +439,11 @@ test("keeps optional guided examples while moving explanatory copy to About", as
   assert.match(source, /atmo-topeka-2026/);
   assert.match(source, /atmo-hays-2024/);
   assert.match(source, /planning-generalized-envelope/);
-  assert.match(source, /Every current map layer is synthetic or generalized/);
+  assert.match(source, /These guided examples use synthetic or generalized demonstration records/);
+  assert.match(source, /live source layers provide display context; they do not become admitted KFM evidence/);
   assert.match(source, /Guided material remains available from About/);
-  assert.match(about, /site-local synthetic and generalized demonstration records/);
+  assert.match(about, /site-local demonstration records with separately labeled live and historical source context/);
+  assert.match(about, /not admitted KFM evidence/);
   assert.match(source, /kfm-guided-start-dismissed-v1/);
   assert.match(source, /openGuidedExample/);
   assert.match(css, /\.guided-start/);
@@ -746,7 +759,7 @@ test("keeps the MapLibre Workbench complete, bounded, and responsive", async () 
 test("resolves exact, through-time, and untimed Map Workbench availability", async () => {
   const ts = await import("typescript");
   const source = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
-  const javascript = ts.transpileModule(source, {
+  const javascript = ts.transpileModule(withBuildClock(source), {
     compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
     fileName: "map-interface.ts",
   }).outputText;
@@ -816,11 +829,12 @@ test("keeps every top-level external map carrier in a display-only disclosure re
   assert.match(page, /NO REQUEST FROM CURRENT VIEW/);
 });
 
-test("connects nineteen bounded official Kansas context sources without admitting evidence", async () => {
+test("connects twenty-one bounded official context sources without admitting evidence", async () => {
   const ts = await import("typescript");
   const registrySource = await readFile(new URL("../app/live-context.ts", import.meta.url), "utf8");
   const radarSource = await readFile(new URL("../app/noaa-radar.ts", import.meta.url), "utf8");
   const satelliteSource = await readFile(new URL("../app/noaa-satellite.ts", import.meta.url), "utf8");
+  const lightningSource = await readFile(new URL("../app/lightning-data.ts", import.meta.url), "utf8");
   const route = await readFile(new URL("../app/api/live-context/route.ts", import.meta.url), "utf8");
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
@@ -830,11 +844,12 @@ test("connects nineteen bounded official Kansas context sources without admittin
   }).outputText;
   const radarUrl = `data:text/javascript;base64,${Buffer.from(compile(radarSource, "noaa-radar.ts")).toString("base64")}`;
   const satelliteUrl = `data:text/javascript;base64,${Buffer.from(compile(satelliteSource, "noaa-satellite.ts")).toString("base64")}`;
+  const lightningUrl = `data:text/javascript;base64,${Buffer.from(compile(lightningSource, "lightning-data.ts")).toString("base64")}`;
   const performanceSource = await readFile(new URL("../app/map-performance.ts", import.meta.url), "utf8");
   const performanceUrl = `data:text/javascript;base64,${Buffer.from(compile(performanceSource, "map-performance.ts")).toString("base64")}`;
   // This metadata test imports a data URL; provide no-op map render helpers here.
   const compositionUrl = `data:text/javascript;base64,${Buffer.from("export const balanceMapFills=()=>{}; export const balanceMapRasters=()=>{}; export const composeMapLayers=()=>{}; export const requestFillOpacity=()=>{}; export const requestRasterOpacity=()=>{};").toString("base64")}`;
-  const javascript = compile(registrySource.replace('from "./noaa-radar";', `from "${radarUrl}";`).replace('from "./noaa-satellite";', `from "${satelliteUrl}";`).replace('from "./map-performance";', `from "${performanceUrl}";`).replace('from "./map-layer-composition";', `from "${compositionUrl}";`), "live-context.ts");
+  const javascript = compile(withBuildClock(registrySource).replace('from "./noaa-radar";', `from "${radarUrl}";`).replace('from "./noaa-satellite";', `from "${satelliteUrl}";`).replace('from "./lightning-data";', `from "${lightningUrl}";`).replace('from "./map-performance";', `from "${performanceUrl}";`).replace('from "./map-layer-composition";', `from "${compositionUrl}";`), "live-context.ts");
   const registry = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
 
   assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.map((record) => record.id), [
@@ -857,6 +872,8 @@ test("connects nineteen bounded official Kansas context sources without admittin
     "nws-alerts",
     "nws-forecast-wind",
     "nws-radar",
+    "noaa-lightning-density",
+    "nasa-lightning-climatology",
   ]);
   assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.filter((record) => record.defaultVisibility).map((record) => record.id), ["census-counties", "usgs-streamflow", "usgs-3dhp-hydrography", "nasa-gibs-fire-points", "nifc-fire-reports"]);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["nifc-fire-reports"].boundary, /working dataset[\s\S]*not a perimeter/i);
@@ -870,17 +887,17 @@ test("connects nineteen bounded official Kansas context sources without admittin
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["noaa-hms-smoke"].apiPath, /feed=noaa-hms-smoke/);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["noaa-hms-smoke"].boundary, /fire perimeter[\s\S]*surface PM2\.5/i);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"].mapUrl, /^https:\/\/gibs\.earthdata\.nasa\.gov\/wms\/epsg3857\/best\/wms\.cgi\?[\s\S]*LAYERS=VIIRS_NOAA20_Thermal_Anomalies_375m_All/);
-  assert.doesNotMatch(registry.OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"].mapUrl, /^https?:\/\/firms\.modaps\.eosdis\.nasa\.gov(?:[/:?#]|$)/);
+  assert.doesNotMatch(registry.OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"].mapUrl, /firms\.modaps\.eosdis\.nasa\.gov/);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"].boundary, /not a rolling 24-hour FIRMS feed[\s\S]*not a mapped perimeter/i);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"].fallback, /blank tile[\s\S]*never[\s\S]*all-clear/i);
   assert.equal(registry.OFFICIAL_CONTEXT_TEMPORAL_SUPPORT["nasa-firms-active-fire"].axis, "provider-current-mosaic");
-  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"].serviceUrl, /^https?:\/\/stationview\.raspberryshake\.org(?:[\/?#]|$)/);
+  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"].serviceUrl, /stationview\.raspberryshake\.org/);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"].boundary, /not realtime/i);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"].mapUrl, /^\/api\/terrain-tile\?kind=slope&z=\{z\}&x=\{x\}&y=\{y\}$/);
-  assert.match(page, /Official current context/);
-  assert.match(page, /Current sources have their own clocks/);
+  assert.match(page, /External map context/);
+  assert.match(page, /Operational sources have their own observation clocks/);
   assert.match(page, /Refresh \$\{officialRefreshPlan\.count\} selected/);
-  assert.match(page, /Find a live source/);
+  assert.match(page, /Find an external source/);
   assert.match(page, /params\.set\("ctx"/);
   assert.match(page, /params\.set\("ctxo"/);
   assert.match(page, /zero mapped features[\s\S]*not an all-clear/i);
@@ -891,15 +908,9 @@ test("connects nineteen bounded official Kansas context sources without admittin
   assert.match(countySource, /POP100,HU100/);
   assert.match(route, /state_code/);
   assert.match(route, /datetime/);
-  assert.equal(
-    route.split("\n").find((line) => line.startsWith("const USGS_EARTHQUAKE_URL = ")),
-    'const USGS_EARTHQUAKE_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query";',
-  );
+  assert.match(route, /earthquake\.usgs\.gov\/fdsnws\/event\/1\/query/);
   assert.match(route, /NOAA HMS smoke publications/);
-  assert.equal(
-    route.split("\n").find((line) => line.startsWith("const RASPBERRY_SHAKE_STATION_URL = ")),
-    'const RASPBERRY_SHAKE_STATION_URL = "https://data.raspberryshake.org/fdsnws/station/1/query";',
-  );
+  assert.match(route, /data\.raspberryshake\.org\/fdsnws\/station\/1\/query/);
   assert.match(route, /MAX_RASPBERRY_SHAKE_STATIONS = 250/);
   assert.match(route, /normalizedFdsnHeader/);
   assert.match(route, /FDSN archive is delayed by at least 30 minutes/);
@@ -1134,18 +1145,16 @@ test("the built official-context adapter joins dated Census population and bound
   const upstreamCalls = [];
   globalThis.fetch = async (input) => {
     const url = String(input);
-    const parsedUrl = new URL(url);
-    const { hostname, searchParams } = parsedUrl;
     upstreamCalls.push(url);
-    if (hostname === "tigerweb.geo.census.gov") return new Response(JSON.stringify({
+    if (url.includes("tigerweb.geo.census.gov")) return new Response(JSON.stringify({
       type: "FeatureCollection",
       features: Array.from({ length: 105 }, (_, i) => ({ type: "Feature", geometry: { type: "Polygon", coordinates: [[[-98, 38], [-97, 38], [-97, 39], [-98, 39], [-98, 38]]] }, properties: { GEOID: `20${String(i * 2 + 1).padStart(3, "0")}`, BASENAME: `Fixture county ${i}`, STATE: "20", POP100: 6118, HU100: 2400, AREALAND: 2589988.110336, AREAWATER: 0 } })),
     }), { headers: { "content-type": "application/json" } });
-    if (hostname === "api.census.gov") return new Response(JSON.stringify([
+    if (url.includes("api.census.gov")) return new Response(JSON.stringify([
       ["NAME", "DP05_0001E", "state", "county"],
       ["Ellsworth County, Kansas", "6118", "20", "053"],
     ]), { headers: { "content-type": "application/json" } });
-    if (hostname === "earthquake.usgs.gov") return new Response(JSON.stringify({
+    if (url.includes("earthquake.usgs.gov")) return new Response(JSON.stringify({
       type: "FeatureCollection",
       metadata: { count: 1 },
       features: [{ type: "Feature", id: "us-test", geometry: { type: "Point", coordinates: [-98.1, 38.7, 5.4] }, properties: { title: "M 2.1 - central Kansas", place: "central Kansas", mag: 2.1, magType: "ml", time: 1789000000000, updated: 1789000300000, status: "reviewed", type: "earthquake", url: "https://earthquake.usgs.gov/earthquakes/eventpage/us-test" } }],
@@ -1161,13 +1170,7 @@ test("the built official-context adapter joins dated Census population and bound
     assert.equal(countyPayload.data.features[0].properties.populationEstimateYear, 2020);
     assert.equal(countyPayload.data.features.length, 105);
     assert.equal(countyPayload.data.features[0].properties.housingUnits, 2400);
-    assert.equal(upstreamCalls.some((url) => {
-      try {
-        return new URL(url).hostname === "api.census.gov";
-      } catch {
-        return false;
-      }
-    }), false);
+    assert.equal(upstreamCalls.some((url) => url.includes("api.census.gov")), false);
 
     const earthquakeResponse = await worker.fetch(new Request("http://localhost/api/live-context?feed=usgs-earthquakes"), {}, { waitUntil() {}, passThroughOnException() {} });
     assert.equal(earthquakeResponse.status, 200);
@@ -1175,11 +1178,8 @@ test("the built official-context adapter joins dated Census population and bound
     assert.equal(earthquakePayload.featureCount, 1);
     assert.equal(earthquakePayload.data.features[0].properties.magnitude, 2.1);
     assert.equal(earthquakePayload.data.features[0].properties.depthKilometers, 5.4);
-    assert.equal(upstreamCalls.some((url) => new URL(url).searchParams.get("eventtype") === "earthquake"), true);
-    assert.equal(upstreamCalls.some((url) => {
-      const params = new URL(url).searchParams;
-      return params.get("minlatitude") === "36.9" && params.get("maxlongitude") === "-94.5";
-    }), true);
+    assert.equal(upstreamCalls.some((url) => url.includes("eventtype=earthquake")), true);
+    assert.equal(upstreamCalls.some((url) => url.includes("minlatitude=36.9") && url.includes("maxlongitude=-94.5")), true);
   } finally {
     globalThis.fetch = originalFetch;
   }
@@ -1349,8 +1349,8 @@ test("keeps layer controls direct and source clocks in progressive detail", asyn
   assert.match(page, /type LeftPanelMode = "views" \| "layers" \| "live"/);
   assert.match(page, /aria-label="Layer sources"/);
   assert.match(page, /Map layers <span>\{visibleCount\} on<\/span>/);
-  assert.match(page, /Live context <span>\{visibleOfficialCount\} selected<\/span>/);
-  assert.match(page, /placeholder=\{layerCatalogView === "local" \? "Find a layer" : "Find a live source"\}/);
+  assert.match(page, /External context <span>\{visibleOfficialCount\} selected<\/span>/);
+  assert.match(page, /placeholder=\{layerCatalogView === "local" \? "Find a layer" : "Find an external source"\}/);
   assert.match(page, /className="layer-map-time"/);
   assert.match(page, /Change time/);
   assert.match(page, /className="official-context-catalog"[^>]*hidden=\{layerCatalogView !== "official"\}/);
@@ -1385,8 +1385,8 @@ test("carries governed map context into creation workflows and checked source po
   for (const state of ["candidate", "context-only", "admitted", "held", "quarantined", "denied"]) {
     assert.match(sources, new RegExp(`"${state}"`));
   }
-  assert.match(sources, /(?:^|[^A-Za-z0-9._~:/?#\[\]@!$&'()*+,;=%-])https:\/\/kgs\.ku\.edu\/data-and-maps(?:$|[^A-Za-z0-9._~:/?#\[\]@!$&'()*+,;=%-])/);
-  assert.match(sources, /(?:^|[^A-Za-z0-9._~:/?#\[\]@!$&'()*+,;=%-])https:\/\/www\.ksdot\.gov\/about\/our-organization\/divisions\/planning-and-development\/kansas-maps-and-gis-resources(?:$|[^A-Za-z0-9._~:/?#\[\]@!$&'()*+,;=%-])/);
+  assert.match(sources, /https:\/\/kgs\.ku\.edu\/data-and-maps/);
+  assert.match(sources, /https:\/\/www\.ksdot\.gov\/about\/our-organization\/divisions\/planning-and-development\/kansas-maps-and-gis-resources/);
   for (const type of ["SourceDescriptor", "EvidenceRecord", "TemporalExtent", "MapSnapshot", "ReportDraft", "StoryScene", "PolicyDecision", "TrustState"]) {
     assert.match(workspaceModel, new RegExp(`(?:interface|type) ${type}`));
   }

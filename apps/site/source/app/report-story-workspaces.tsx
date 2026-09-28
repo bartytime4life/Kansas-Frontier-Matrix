@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   createReportDraft,
   createTrustStory,
+  terrainSnapshotDescription,
   type EvidenceRecord,
   type MapSnapshot,
   type ReportDraft,
@@ -59,6 +60,7 @@ const trustTone = (state: string) => state.toLowerCase().replaceAll(" ", "-");
 
 const reportMarkdown = (draft: ReportDraft, evidence: readonly EvidenceRecord[]) => {
   const selectedEvidence = evidence.filter((record) => draft.includedEvidenceIds.includes(record.id));
+  const terrainDescription = terrainSnapshotDescription(draft.snapshot);
   const layerLines = draft.snapshot.visibleLayers.map((layer) =>
     `- ${layer.order + 1}. ${layer.title} (${layer.domain}; ${Math.round(layer.opacity * 100)}%; ${layer.trustState})`,
   );
@@ -76,7 +78,7 @@ const reportMarkdown = (draft: ReportDraft, evidence: readonly EvidenceRecord[])
     `**Representation:** ${draft.snapshot.representation}`,
     `**Basemap:** ${draft.snapshot.basemap} (display context)` ,
     "**Map attribution:** " + (draft.snapshot.basemap === "standard" ? "OpenFreeMap · OpenMapTiles · © OpenStreetMap contributors" : draft.snapshot.basemap === "imagery" ? "Tiles © Esri" : draft.snapshot.basemap === "streets" ? "© OpenStreetMap contributors" : "KFM local background style"),
-    ...(draft.snapshot.representation === "Terrain 3D" ? ["**Display terrain:** AWS Terrain Tiles · Mapzen; not an admitted evidence source."] : []),
+    ...(terrainDescription ? [`**Display terrain:** ${terrainDescription}`] : []),
     "",
     "## Visible layer stack",
     "",

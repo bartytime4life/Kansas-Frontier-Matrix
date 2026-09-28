@@ -33,7 +33,7 @@ const referenceSources = [
   ["MapLibre GL JS — 3D terrain", "https://www.maplibre.org/maplibre-gl-js/docs/examples/3d-terrain/", "Renderer pattern for raster DEM terrain; implementation guidance, not data authority."],
   ["MapLibre GL JS — globe vector map", "https://www.maplibre.org/maplibre-gl-js/docs/examples/display-a-globe-with-a-vector-map/", "Projection and interaction reference for the optional globe context."],
   ["USGS — The National Map data delivery", "https://www.usgs.gov/the-national-map-data-delivery/gis-data-download", "Authoritative discovery path for elevation, hydrography, boundaries, transportation, structures, imagery, and web services."],
-  ["USGS — 3DEP 1 m DEM catalog", "https://data.usgs.gov/datacatalog/data/USGS%3A77ae0551-c61e-4979-aedd-d797abdcde0e", "High-resolution elevation candidate; coverage and product identity must be resolved before admission."],
+  ["USGS — 3DEP one-meter DEM catalog", "https://data.usgs.gov/datacatalog/data/USGS%3A77ae0551-c61e-4979-aedd-d797abdcde0e", "High-resolution elevation candidate; coverage and product identity must be resolved before admission."],
   ["KDOT — Kansas maps and GIS resources", "https://www.ksdot.gov/about/our-organization/divisions/planning-and-development/kansas-maps-and-gis-resources", "Official transportation maps, GIS applications, functional classes, traffic counts, and historical map discovery."],
   ["KDOT — LiDAR project data portal", "https://www.ksdot.gov/about/our-organization/divisions/planning-and-development/kdot-lidar-project-data-portal", "2021 and 2023 mobile-LiDAR project extracts, dictionaries, maps, and layer-specific discovery."],
   ["AirNow — AQI basics", "https://www.airnow.gov/aqi/aqi-basics", "Official AQI meaning and category semantics; monitor concentration, AQI, and reporting areas must remain distinct."],
@@ -52,7 +52,7 @@ export default function AboutPage() {
     <main className="about-content">
       <header className="about-hero">
         <div><span>ABOUT THE EXPLORER</span><h1>A map-first Living Atlas for seeing Kansas in context.</h1><p>The Explorer opens on a real MapLibre Kansas vector map with time, layers, and place context. Start with a view, then bring in evidence, reports, and Qwen interpretation only when they help answer the question.</p></div>
-        <aside><strong>Current data posture</strong><p>The map currently uses site-local synthetic and generalized demonstration records. It demonstrates the interface and trust behavior; it is not a released operational KFM data service.</p></aside>
+        <aside><strong>Current data posture</strong><p>The map combines site-local demonstration records with separately labeled live and historical source context. External map layers and model views are display context, not admitted KFM evidence. This is not a released operational KFM data service.</p></aside>
       </header>
 
       <section className="about-section">
@@ -68,7 +68,7 @@ export default function AboutPage() {
       <section className="about-section">
         <div className="about-section-heading"><span>MAP CAPABILITIES</span><h2>The main interface is built for action, not presentation.</h2></div>
         <div className="about-capability-grid">
-          <article><h3>Real map + context</h3><p>The default view is a real attributed Kansas vector basemap with counties, places, roads, rail, water, and labels. Satellite imagery and OpenStreetMap raster context remain optional display modes; local KFM overlays stay visibly separate from all basemaps.</p></article>
+          <article><h3>Real map + context</h3><p>The default view is an attributed Kansas vector basemap with counties, places, roads, rail, water, and labels. Satellite imagery, terrain, and live source layers are optional display context; local KFM demonstration overlays remain separately labeled.</p></article>
           <article><h3>Views + layers + time</h3><p>Start from a named Living Atlas investigation, then control visibility, opacity, order, temporal steps, evidence filters, and basemap treatments across the domain atlas.</p></article>
           <article><h3>Search + inspect</h3><p>Search layers, feature IDs, evidence states, and places. From a committed feature, discover nearby cross-domain records using generalized anchors and fit or reveal the represented layers.</p></article>
           <article><h3>Qwen map companion</h3><p>Ask Qwen about the active place, time, visible layers, or selected record. The bridge receives a bounded map-context packet; it never becomes the evidence authority and stays usable with local Qwen/Ollama when the Site endpoint is not configured.</p></article>
@@ -95,7 +95,7 @@ export default function AboutPage() {
       <section className="about-section">
         <div className="about-section-heading"><span>TRUST BOUNDARY</span><h2>Useful spatial work without turning the renderer into an authority.</h2></div>
         <div className="about-boundary">
-          <article><h3>What the Explorer can do</h3><ul><li>Display admitted site fixtures on MapLibre.</li><li>Filter and summarize visible, selected, or viewport-scoped records.</li><li>Preview supported local KML or GeoJSON geometry without upload or external fetch.</li><li>Carry citations, attribution, uncertainty, corrections, and limitations into reports.</li><li>Withhold a browser-location-derived camera from shares, receipts, exports, and diagnostics.</li></ul></article>
+          <article><h3>What the Explorer can do</h3><ul><li>Display site demonstration fixtures and labeled external context on MapLibre.</li><li>Filter and summarize visible, selected, or viewport-scoped records.</li><li>Preview supported local KML or GeoJSON geometry without upload or external fetch.</li><li>Carry citations, attribution, uncertainty, corrections, and limitations into reports.</li><li>Withhold a browser-location-derived camera from shares, receipts, exports, and diagnostics.</li></ul></article>
           <article><h3>What it does not claim</h3><ul><li>A map pixel, overlap, or proximity is not evidence.</li><li>A generated report or local-file preview cannot release, publish, admit, approve, or authorize data.</li><li>Screen measurements are not survey, cadastral, engineering, legal, or navigational results.</li><li>Protected geometry and unsupported claims are not reconstructed or inferred.</li></ul></article>
         </div>
       </section>
@@ -104,7 +104,7 @@ export default function AboutPage() {
         <div className="about-section-heading"><span>PROJECT CONTEXT</span><h2>Repository evidence and site behavior remain distinguishable.</h2></div>
         <div className="about-boundary">
           <article><h3>Repository checkpoint</h3><ul><li>{REPOSITORY_SNAPSHOT.repository}</li><li>Inspected main@{REPOSITORY_SNAPSHOT.shortCommit}</li><li>{REPOSITORY_SNAPSHOT.inspectedAt}</li><li>Architecture, functions, feature maturity, and transition records are read-only context in this Site.</li></ul></article>
-          <article><h3>Site-local runtime</h3><ul><li>MapLibre GL JS 6.9.0 with same-origin worker assets</li><li>OpenFreeMap / OpenMapTiles / OpenStreetMap vector context plus optional attributed raster basemaps; not evidence</li><li>Local GeoJSON demonstration sources</li><li>Optional AWS Terrain Tiles DEM display context; source elevation remains external and non-authoritative</li><li>Optional Qwen/Ollama bridge; no inference endpoint is configured by default</li><li>No release, deployment, promotion, or publication authority</li></ul></article>
+          <article><h3>Site-local runtime</h3><ul><li>MapLibre GL JS 6.9.0 with same-origin worker assets</li><li>OpenFreeMap / OpenMapTiles / OpenStreetMap vector context plus optional attributed raster basemaps; not evidence</li><li>Local GeoJSON demonstration sources and separately labeled external source layers</li><li>Optional Mapzen or USGS 3DEP DEM terrain display; source elevation remains external and non-authoritative</li><li>Optional Qwen/Ollama bridge; no inference endpoint is configured by default</li><li>No release, deployment, promotion, or publication authority</li></ul></article>
           <article><h3>Sites identity + domain</h3><ul><li>{SITE_IDENTITY.provider} · {SITE_IDENTITY.slug}</li><li>Canonical host: <a href={SITE_IDENTITY.canonicalUrl} target="_blank" rel="noreferrer">{SITE_IDENTITY.canonicalUrl.replace("https://", "")}</a></li><li>{SITE_IDENTITY.customDomainStatus.replaceAll("_", " ")} as checked {SITE_IDENTITY.checkedAt}</li><li>GitHub child manifest status: {SITE_IDENTITY.repositoryManifestStatus.replaceAll("_", " ")} · {SITE_IDENTITY.repositoryManifestProjectId}. Source histories remain separate.</li></ul></article>
         </div>
       </section>

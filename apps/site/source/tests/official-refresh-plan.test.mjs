@@ -11,6 +11,7 @@ const sources = [
   { id: "census-counties", apiPath: "/api/live-context?feed=census-counties" },
   { id: "usgs-streamflow" },
   { id: "nws-radar" },
+  { id: "noaa-lightning-density" },
   { id: "noaa-goes-geocolor" },
   { id: "noaa-nwps-gauges" },
   { id: "static-map" },
@@ -19,16 +20,17 @@ const selected = Object.fromEntries(sources.map(({ id }) => [id, true]));
 
 test("historical frames cannot schedule current-only provider requests", () => {
   const plan = planOfficialRefresh(sources, selected, 2025, 2026, false);
-  assert.deepEqual(plan, { feeds: [], radar: false, satellite: false, streamflow: false, hydrology: false, count: 0, reason: "historical" });
+  assert.deepEqual(plan, { feeds: [], radar: false, satellite: false, lightning: false, streamflow: false, hydrology: false, count: 0, reason: "historical" });
 });
 
 test("present refresh counts only actual request paths and respects archive selection", () => {
   const plan = planOfficialRefresh(sources, selected, 2026, 2026, true);
   assert.deepEqual(plan.feeds, ["census-counties"]);
-  assert.equal(plan.count, 4);
+  assert.equal(plan.count, 5);
   assert.equal(plan.streamflow, false);
   assert.equal(plan.radar, true);
   assert.equal(plan.satellite, true);
+  assert.equal(plan.lightning, true);
   assert.equal(plan.hydrology, true);
   assert.deepEqual(planOfficialRefresh(sources, selected, 2026, 2026, false, { "census-counties": "2025-01-01" }).feeds, []);
   assert.equal(planOfficialRefresh(sources, {}, 2026, 2026, false).reason, "none");

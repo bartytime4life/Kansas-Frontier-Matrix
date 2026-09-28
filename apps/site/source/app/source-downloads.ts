@@ -20,5 +20,13 @@ export const SOURCE_DOWNLOADS: Record<OfficialContextId, { href: string; label: 
   "usgs-3dep-slope": { href: nationalMap, label: "Download source elevation data" },
   "nws-alerts": { href: "/api/source-download?source=nws-alerts", label: "Download current alerts · GeoJSON" },
   "nws-radar": { href: "https://www.ncei.noaa.gov/products/radar/next-generation-weather-radar", label: "NOAA radar archive & downloads" },
-  "nws-forecast-wind": { href: "https://digital.weather.gov/", label: "NWS graphical wind forecast" },
+  "nws-forecast-wind": { href: "https://open-meteo.com/en/docs/gfs-api", label: "GFS model forecast documentation" },
+  "nasa-lightning-climatology": { href: "https://gibs.earthdata.nasa.gov/layer-metadata/v1.0/LIS_High_Resolution_Full_Climatology_Combined_Flash_Rate_Climatology.json", label: "NASA climatology source metadata" },
+  "noaa-lightning-density": { href: "https://nowcoast.noaa.gov/geoserver/observations/lightning_detection/ows?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities", label: "NOAA lightning density capabilities" },
 };
+
+const ARCHIVE_DOWNLOAD_SOURCES = new Set<OfficialContextId>(["usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"]);
+export function sourceDownloadHref(id: OfficialContextId, archiveDay?: string) {
+  const href = SOURCE_DOWNLOADS[id].href;
+  return archiveDay && ARCHIVE_DOWNLOAD_SOURCES.has(id) ? `${href}&day=${encodeURIComponent(archiveDay)}` : href;
+}

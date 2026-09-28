@@ -1,21 +1,16 @@
 # GPT Site source
 
-> **Published Explorer:** Sites reports v87 as the latest successfully published
-> version as of 2026-09-26, at
+> **Published Explorer:** Sites version 101 was privately published on 2026-09-28
+> from source commit `f45ce944390c44942e27c3619cf737a770b37f53`, at
 > [the stable Explorer address](https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site).
-> This directory is a historical v74-derived local mirror with five recorded
-> differences; it has not been verified as identical to the v87 source.
+> This directory mirrors the 224 tracked source files from that exact commit.
+> The Site project and this GitHub repository retain separate Git histories.
 
-`source/` tracks the Kansas Frontier Matrix Explorer Site version 74, deployed
-from Site source commit `99bf1af2deea0ef343807db96a432dbfeb2ae7a6`.
-All 190 tracked Site source paths are present here. This is a reconciled GitHub
-mirror, not a byte-for-byte archive: the repository also carries two files for
-its catalog source-role filter and preserves that filter in its README, page,
-and function registry. Its About page uses "1 m" instead of "one-meter" for a
-static USGS title, and `scripts/earth-engine/requirements.txt` pins Pillow
-12.3.0 instead of 11.3.0. These five files differ from the Site source; the
-other 185 shared files retain their Site v74 bytes. The repository-local
-`.gitattributes` file sits outside `source/` to preserve imported formatting.
+`source/` is the GitHub source mirror for the private Explorer Site. It carries
+the same application source as version 101, including terrain, animated wind,
+lightning, and the MapLibre acquisition seam. The repository-local
+`.gitattributes` remains outside `source/`; private hosted D1/R2 records and
+local development state are excluded.
 
 ## Run locally
 

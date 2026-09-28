@@ -1,11 +1,13 @@
 import type { FeatureCollection } from "geojson";
 import type { GeoJSONSource, LayerSpecification, Map as MapLibreMap, RasterTileSource } from "./maplibre-seam";
 import { noaaRadarTileUrl } from "./noaa-radar";
+import { lightningTilePath, NASA_LIGHTNING_METADATA_URL, NASA_LIGHTNING_TILES } from "./lightning-data";
 import { noaaSatelliteTileUrl } from "./noaa-satellite";
 import { rememberGeoJSON, updateGeoJSON, setVisibleIfChanged, setPaintIfChanged } from "./map-performance";
 import { balanceMapFills, balanceMapRasters, composeMapLayers, requestFillOpacity, requestRasterOpacity } from "./map-layer-composition";
+import { BUILD_UTC_YEAR } from "./build-clock";
 
-export type OfficialContextId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar" | "nws-forecast-wind";
+export type OfficialContextId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar" | "nws-forecast-wind" | "nasa-lightning-climatology" | "noaa-lightning-density";
 export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations";
 export type OfficialContextState = "idle" | "loading" | "ready" | "empty" | "partial" | "error";
 
@@ -14,6 +16,7 @@ export type OfficialContextPayload = Readonly<{
   state: "ready" | "empty" | "partial";
   retrievedAt: string;
   upstreamUpdatedAt: string | null;
+  sourceDay?: string;
   featureCount: number;
   data: FeatureCollection;
   source: string;
@@ -27,7 +30,7 @@ export type OfficialContextSource = Readonly<{
   shortTitle: string;
   organization: string;
   domain: string;
-  kind: "SNAPSHOT_GEOJSON" | "OPERATIONAL_GEOJSON" | "OPERATIONAL_WMS";
+  kind: "SNAPSHOT_GEOJSON" | "OPERATIONAL_GEOJSON" | "OPERATIONAL_WMS" | "HISTORICAL_RASTER" | "MODEL_CANVAS";
   sourceId: string;
   layerIds: readonly string[];
   interactiveLayerIds: readonly string[];
@@ -48,14 +51,14 @@ export type OfficialContextSource = Readonly<{
   fallback: string;
 }>;
 
-/** Fixed allowlist of public, official context. These sources never enter KFM evidence, reports, exports, or admission state. */
+/** Fixed allowlist of public external context. These sources never enter KFM evidence, reports, exports, or admission state. */
 export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object.freeze([
   Object.freeze({
     id: "census-counties",
     title: "Census Kansas counties + population",
     shortTitle: "Counties + population",
     organization: "U.S. Census Bureau",
-    domain: "Boundaries & places",
+    domain: "Reference boundaries & locators",
     kind: "SNAPSHOT_GEOJSON",
     sourceId: "external-census-counties",
     layerIds: Object.freeze(["external-census-counties-fill", "external-census-counties-line"]),
@@ -139,7 +142,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     cadence: "Provider-current transitional 3DHP/NHD service",
     freshness: "Current published service mosaic; feature vintages vary by collection area",
     defaultVisibility: true,
-    defaultOpacity: 0.78,
+    defaultOpacity: 0.20,
     color: "#5bd6e7",
     attribution: "USGS The National Map · 3D Hydrography Program",
     evidenceRole: "EXTERNAL_CONTEXT_ONLY",
@@ -312,7 +315,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     attribution: "NASA GIBS · VIIRS NOAA-20 thermal anomalies",
     evidenceRole: "EXTERNAL_CONTEXT_ONLY",
     boundary: "Selectable points come from NASA GIBS NOAA-20 VIIRS daily vector tiles and retain provider acquisition time, confidence, radiative power, brightness temperatures, scan/track pixel dimensions, and hot-spot type when supplied. A thermal detection can be a non-vegetation heat source; it is not a verified wildfire, ignition point, fire perimeter, burned area, incident status, evacuation zone, or safety guidance. These points are external display context, not KFM evidence or release.",
-    fallback: "If either Kansas tile is unavailable or malformed, the response is unavailable rather than presenting a partial state as complete. A zero-point response does not establish no fire or full satellite coverage.",
+    fallback: "If a current UTC-day Kansas tile is missing, the Site checks only the previous day and labels that dated snapshot partial. Explicit archive days and other tile failures remain unavailable; no substitute or complete-coverage claim is inferred. A zero-point response does not establish no fire or full satellite coverage.",
   }),
   Object.freeze({
     id: "nifc-fire-reports",
@@ -426,7 +429,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     cadence: "USGS dynamic 3DEP service; provider-controlled refresh",
     freshness: "Provider-current 3DEP Slope Map; validated display tiles cached for up to 6 hours. It does not provide numerical slope measurements.",
     defaultVisibility: false,
-    defaultOpacity: 0.34,
+    defaultOpacity: 0.56,
     color: "#e0a56c",
     attribution: "USGS 3D Elevation Program",
     evidenceRole: "EXTERNAL_CONTEXT_ONLY",
@@ -459,27 +462,26 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
   }),
   Object.freeze({
     id: "nws-forecast-wind",
-    title: "NWS forecast wind barbs · airflow",
-    shortTitle: "Airflow · forecast wind",
-    organization: "NOAA National Weather Service",
+    title: "GFS directional wind forecast · flowing wisps",
+    shortTitle: "Airflow · wind flow",
+    organization: "Open-Meteo · NCEP GFS",
     domain: "Atmosphere",
-    kind: "OPERATIONAL_WMS",
-    sourceId: "external-nws-forecast-wind",
-    layerIds: Object.freeze(["external-nws-forecast-wind-raster"]),
+    kind: "MODEL_CANVAS",
+    sourceId: "external-gfs-wind-flow",
+    layerIds: Object.freeze([]),
     interactiveLayerIds: Object.freeze([]),
-    mapUrl: "/api/airflow-tile?z={z}&x={x}&y={y}",
-    endpointLabel: "NDFD CONUS 10 m sustained wind speed + direction barbs",
-    sourceUrl: "https://www.weather.gov/gis/NDFD_metadata.html",
-    serviceUrl: "https://digital.weather.gov/ndfd/wms",
-    cadence: "Provider-issued forecast frames; the Site requests the provider-default image",
-    freshness: "Tile responses cache for five minutes; selected visible tiles revalidate after that window while the tab is active. Exact forecast valid time is not resolved",
+    endpointLabel: "Open-Meteo NCEP GFS 10 m wind grid · animated flow canvas",
+    sourceUrl: "https://open-meteo.com/en/docs/gfs-api",
+    serviceUrl: "https://api.open-meteo.com/v1/gfs",
+    cadence: "Forecast grid fetched for the visible Kansas map area and refreshed while selected",
+    freshness: "The selected model valid time and retrieval time are shown with the flow",
     defaultVisibility: false,
-    defaultOpacity: 0.85,
+    defaultOpacity: 1,
     color: "#92d8e5",
-    attribution: "NOAA National Weather Service NDFD",
+    attribution: "Open-Meteo · NCEP GFS",
     evidenceRole: "EXTERNAL_CONTEXT_ONLY",
-    boundary: "Wind barbs depict NWS forecast sustained wind at 10 m, not observed airflow, gusts, upper-level wind, smoke transport, or particle trajectories. The provider-default valid time is not exposed here; consult NWS for its exact time and decisions. This is external context, not admitted KFM evidence.",
-    fallback: "If the NDFD image is unavailable or empty, the layer stays unavailable or blank. No synthetic wind field or historical frame is substituted.",
+    boundary: "Animated wisps depict NCEP GFS forecast 10 m wind supplied by Open-Meteo at sampled grid points. Motion and curl illustrate direction, not observed airflow, gusts, smoke transport, or particle trajectories. Forecast values between grid points are not measured here. This is external context, not admitted KFM evidence.",
+    fallback: "If the model grid is unavailable or incomplete, no wind flow is drawn. No static barbs, synthetic wind field, or historical frame are substituted.",
   }),
   Object.freeze({
     id: "nws-radar",
@@ -504,12 +506,37 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     boundary: "Observed 1 km CONUS base-reflectivity mosaics are shown at exact NOAA-advertised frame times. The Site does not infer values from rendered colors, interpolate frames, resolve beam blockage or quality flags, convert reflectivity to rainfall, predict motion, determine warning status, or create KFM evidence support.",
     fallback: "If the frame manifest or requested WMS tiles fail, the radar is frozen or withheld with a visible error; no prior frame is relabeled as current and no synthetic radar is substituted. Consult official NWS products for decisions.",
   }),
+  Object.freeze({
+    id: "noaa-lightning-density", title: "NOAA nowCOAST 15-minute lightning density", shortTitle: "Lightning · 15-min density",
+    organization: "NOAA nowCOAST", domain: "Weather & hazards", kind: "OPERATIONAL_WMS",
+    sourceId: "external-noaa-lightning-density", layerIds: Object.freeze(["external-noaa-lightning-density-raster", "external-noaa-lightning-density-glow"]), interactiveLayerIds: Object.freeze([]),
+    managedAdapterPath: "/api/lightning/frames", endpointLabel: "nowcoast.noaa.gov · ldn_lightning_strike_density",
+    sourceUrl: "https://nowcoast.noaa.gov/geoserver/observations/lightning_detection/ows?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities",
+    serviceUrl: "https://nowcoast.noaa.gov/geoserver/observations/lightning_detection/ows",
+    cadence: "Exact NOAA-advertised 15-minute observation intervals", freshness: "Current advertised frame; retrieval and observation times shown separately",
+    defaultVisibility: false, defaultOpacity: 0.68, color: "#a890f7", attribution: "NOAA nowCOAST · ground-based detection networks",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    boundary: "Provider-rendered 8 × 8 km 15-minute lightning strike density from ground-based networks. Image cells do not identify individual strike coordinates, types, safety status, or a complete local event inventory. Empty image pixels do not establish an all-clear. Not KFM evidence.",
+    fallback: "When capabilities, a selected image, or a current-view preview fails, no untimed or synthetic flashes are substituted. Playback stops and the frame remains labeled by its provider UTC time.",
+  }),
+  Object.freeze({
+    id: "nasa-lightning-climatology", title: "NASA LIS/OTD historical lightning flash-rate climatology", shortTitle: "Lightning · 1995–2014 climate",
+    organization: "NASA Earthdata · GIBS", domain: "Weather & hazards", kind: "HISTORICAL_RASTER",
+    sourceId: "external-nasa-lightning-climatology", layerIds: Object.freeze(["external-nasa-lightning-climatology-raster"]), interactiveLayerIds: Object.freeze([]),
+    mapUrl: NASA_LIGHTNING_TILES, endpointLabel: "NASA GIBS · LIS/OTD full flash-rate climatology",
+    sourceUrl: NASA_LIGHTNING_METADATA_URL, serviceUrl: "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/wmts.cgi",
+    cadence: "Fixed multi-year composite, 1995–2014", freshness: "Historical climate field, not a 2026 observation",
+    defaultVisibility: false, defaultOpacity: 0.27, color: "#8779c9", attribution: "NASA GIBS · LIS/OTD lightning climatology",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    boundary: "1995–2014 LIS/OTD combined flash-rate climatology at 0.5° resolution, rendered as a broad historical composite. The WMTS date key is a carrier identifier, not a single strike date. No fine local variation, current detection, local warning, or KFM evidence is inferred.",
+    fallback: "If GIBS tiles fail, the historical field is unavailable. There is no substitute live lightning or invented flash-rate surface.",
+  }),
 ]);
 
 export const OFFICIAL_CONTEXT_BY_ID = Object.freeze(Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, source])) as Record<OfficialContextId, OfficialContextSource>);
 export const OFFICIAL_CONTEXT_BY_SOURCE_ID = Object.freeze(Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.sourceId, source])) as Record<string, OfficialContextSource>);
 export const OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS = Object.freeze(OFFICIAL_CONTEXT_SOURCES.flatMap((source) => source.interactiveLayerIds));
-export const OFFICIAL_CONTEXT_PRESENT_FRAME = new Date().getUTCFullYear();
+export const OFFICIAL_CONTEXT_PRESENT_FRAME = BUILD_UTC_YEAR;
 /** Keep dynamic 3DEP image-service requests within the Kansas inspection scale.
  * The upstream adapter still validates its own broader tile range; this client
  * cap prevents overview and high-detail camera changes from flooding it. */
@@ -517,7 +544,7 @@ export const TERRAIN_DISPLAY_MIN_ZOOM = 7;
 export const TERRAIN_DISPLAY_MAX_ZOOM = 12;
 
 export type OfficialContextTemporalSupport = Readonly<{
-  axis: "joined-source-snapshot" | "rolling-retrieval-window" | "provider-current-mosaic" | "provider-observation-loop" | "provider-observation-history" | "provider-forecast-series";
+  axis: "joined-source-snapshot" | "rolling-retrieval-window" | "provider-current-mosaic" | "provider-observation-loop" | "provider-observation-history" | "provider-forecast-series" | "fixed-historical-composite";
   supportedFrames: readonly number[];
   limitation: string;
 }>;
@@ -614,12 +641,20 @@ export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextI
   "nws-forecast-wind": Object.freeze({
     axis: "provider-forecast-series",
     supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
-    limitation: "The NDFD wind barbs use the provider-default forecast image. The exact valid time is not resolved and no historical wind sweep is connected; the layer is held outside the operational-present atlas frame.",
+    limitation: "GFS wind wisps use an explicitly labeled model valid time. They are held outside the operational-present atlas frame; no historical wind sweep is connected.",
   }),
   "nws-radar": Object.freeze({
     axis: "provider-observation-loop",
     supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
     limitation: "A bounded recent observation-time loop is available only inside the operational-present atlas frame. It is not a historical archive or a released KFM time series.",
+  }),
+  "noaa-lightning-density": Object.freeze({
+    axis: "provider-observation-loop", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
+    limitation: "An exact 15-minute NOAA density frame is selected independently of the atlas year. No individual bolt positions or historical archive are inferred.",
+  }),
+  "nasa-lightning-climatology": Object.freeze({
+    axis: "fixed-historical-composite", supportedFrames: Object.freeze([]),
+    limitation: "Fixed 1995–2014 climatology independent of the atlas year, never a current observation. This composite has no daily or 15-minute playback.",
   }),
 });
 
@@ -632,9 +667,10 @@ export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextI
 export const officialContextVisibilityForFrame = (
   visibility: Record<OfficialContextId, boolean>,
   frame: number,
+  buildYearCurrent = true,
 ): Record<OfficialContextId, boolean> => Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [
   source.id,
-  OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id].supportedFrames.includes(frame) && visibility[source.id] === true,
+  visibility[source.id] === true && (source.id === "nasa-lightning-climatology" || buildYearCurrent && OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id].supportedFrames.includes(frame)),
 ])) as Record<OfficialContextId, boolean>;
 
 export const defaultOfficialContextVisibility = (): Record<OfficialContextId, boolean> => Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, source.defaultVisibility])) as Record<OfficialContextId, boolean>;
@@ -651,6 +687,10 @@ const ensureGeoJsonSource = (map: MapLibreMap, source: OfficialContextSource, da
     rememberGeoJSON(map.getSource(source.sourceId) as GeoJSONSource, data);
   }
 };
+/** Remove a failed current feed's old features without waiting for unrelated
+ * raster-frame transitions to finish before React reapplies map state. */
+export const clearOfficialContextFeed = (map: MapLibreMap, feed: OfficialContextFeedId): boolean =>
+  updateGeoJSON(map.getSource(OFFICIAL_CONTEXT_BY_ID[feed].sourceId) as GeoJSONSource | undefined, EMPTY_CONTEXT);
 const ensureLayer = (map: MapLibreMap, specification: LayerSpecification, beforeId?: string) => {
   if (!map.getLayer(specification.id)) map.addLayer(specification, beforeId);
 };
@@ -681,7 +721,7 @@ export const applyOfficialContextState = (
     "circle-stroke-width": ["case", ["==", ["get", "selected"], true], 3.4, ["==", ["get", "missing"], true], 2.2, 1.4],
   } });
   ensureLayer(map, { id: streamflow.layerIds[2], type: "symbol", source: streamflow.sourceId, minzoom: 8.5, layout: {
-    "text-field": ["coalesce", ["get", "stationName"], ["get", "name"], ["get", "monitoringLocationId"]], "text-size": 10.5, "text-offset": [0, 1.25], "text-anchor": "top", "text-optional": true,
+    "text-font": ["Noto Sans Regular"], "text-field": ["coalesce", ["get", "stationName"], ["get", "name"], ["get", "monitoringLocationId"]], "text-size": 10.5, "text-offset": [0, 1.25], "text-anchor": "top", "text-optional": true,
   }, paint: { "text-color": "#d8f7f7", "text-halo-color": "#04171b", "text-halo-width": 1.5, "text-opacity": 0.86 } });
 
   const nwps = OFFICIAL_CONTEXT_BY_ID["noaa-nwps-gauges"];
@@ -740,7 +780,7 @@ export const applyOfficialContextState = (
     "circle-color": raspberryShake.color, "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 3.8, 10, 7.2, 14, 9], "circle-opacity": 0.94, "circle-stroke-color": "#271d3f", "circle-stroke-width": 1.4,
   } });
   ensureLayer(map, { id: raspberryShake.layerIds[2], type: "symbol", source: raspberryShake.sourceId, minzoom: 8.5, layout: {
-    "text-field": ["coalesce", ["get", "name"], ["get", "station"]], "text-size": 10.5, "text-offset": [0, 1.25], "text-anchor": "top", "text-optional": true,
+    "text-font": ["Noto Sans Regular"], "text-field": ["coalesce", ["get", "name"], ["get", "station"]], "text-size": 10.5, "text-offset": [0, 1.25], "text-anchor": "top", "text-optional": true,
   }, paint: { "text-color": "#eadfff", "text-halo-color": "#100d1d", "text-halo-width": 1.5, "text-opacity": 0.86 } });
 
   const alerts = OFFICIAL_CONTEXT_BY_ID["nws-alerts"];
@@ -749,15 +789,15 @@ export const applyOfficialContextState = (
   ensureLayer(map, { id: alerts.layerIds[0], type: "fill", source: alerts.sourceId, paint: { "fill-color": severityColor, "fill-opacity": 0.34 } });
   ensureLayer(map, { id: alerts.layerIds[1], type: "line", source: alerts.sourceId, paint: { "line-color": severityColor, "line-width": 2.4, "line-opacity": 0.94 } });
 
-  for (const raster of [OFFICIAL_CONTEXT_BY_ID["usgs-3dhp-hydrography"], OFFICIAL_CONTEXT_BY_ID["usgs-wbd-watersheds"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-analysis"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"], OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"], OFFICIAL_CONTEXT_BY_ID["nws-forecast-wind"]]) {
+  for (const raster of [OFFICIAL_CONTEXT_BY_ID["usgs-3dhp-hydrography"], OFFICIAL_CONTEXT_BY_ID["usgs-wbd-watersheds"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-analysis"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"], OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"], OFFICIAL_CONTEXT_BY_ID["nasa-lightning-climatology"]]) {
     // Disabled services should not download tiles during startup or style swaps.
     if (!visibility[raster.id] && !map.getSource(raster.sourceId)) continue;
     const terrainDisplay = raster.id === "usgs-3dep-hillshade" || raster.id === "usgs-3dep-slope";
     if (!map.getSource(raster.sourceId)) map.addSource(raster.sourceId, {
       type: "raster", tiles: [raster.mapUrl!], tileSize: 256, attribution: raster.attribution,
-      bounds: raster.id === "nws-forecast-wind" ? [-102.1, 36.9, -94.5, 40.1] : [-104.8, 34.8, -92, 42.2],
-      minzoom: terrainDisplay ? TERRAIN_DISPLAY_MIN_ZOOM : 3,
-      maxzoom: terrainDisplay ? TERRAIN_DISPLAY_MAX_ZOOM : raster.id === "nws-forecast-wind" ? 11 : 16,
+      ...(raster.id === "nasa-lightning-climatology" ? {} : { bounds: [-104.8, 34.8, -92, 42.2] as [number, number, number, number] }),
+      minzoom: raster.id === "nasa-lightning-climatology" ? 0 : terrainDisplay ? TERRAIN_DISPLAY_MIN_ZOOM : 3,
+      maxzoom: raster.id === "nasa-lightning-climatology" ? 6 : terrainDisplay ? TERRAIN_DISPLAY_MAX_ZOOM : 16,
     });
     ensureLayer(map, {
       id: raster.layerIds[0], type: "raster", source: raster.sourceId,
@@ -772,7 +812,7 @@ export const applyOfficialContextState = (
       if (!map.getLayer(layerId)) continue;
       // Regional rasters use a Mercator tile grid. Hiding them in globe mode
       // prevents stretched imagery and false-looking color fields at global scale.
-      const globeSafeVisibility = source.kind === "OPERATIONAL_WMS" && globeView ? false : visibility[source.id];
+      const globeSafeVisibility = (source.kind === "OPERATIONAL_WMS" || source.kind === "HISTORICAL_RASTER") && globeView ? false : visibility[source.id];
       setVisibleIfChanged(map, layerId, globeSafeVisibility);
       const safeOpacity = Math.max(0, Math.min(1, opacity[source.id] ?? source.defaultOpacity));
       const layer = map.getLayer(layerId);
@@ -780,7 +820,7 @@ export const applyOfficialContextState = (
       if (layer?.type === "circle") setPaintIfChanged(map, layerId, "circle-stroke-opacity", safeOpacity);
       if (layer?.type === "fill") requestFillOpacity(map, layerId, source.id === "census-counties" ? safeOpacity * 0.18 : safeOpacity);
       if (layer?.type === "line") setPaintIfChanged(map, layerId, "line-opacity", layerId.endsWith("-glow") ? safeOpacity * 0.3 : source.id === "census-counties" ? safeOpacity * 0.58 : safeOpacity);
-      if (layer?.type === "raster") requestRasterOpacity(map, layerId, safeOpacity);
+      if (layer?.type === "raster") requestRasterOpacity(map, layerId, source.id === "noaa-lightning-density" && layerId.endsWith("-glow") ? 0 : safeOpacity);
       if (layer?.type === "symbol") setPaintIfChanged(map, layerId, "text-opacity", safeOpacity);
     }
   }
@@ -843,4 +883,32 @@ export const setNoaaRadarObservationTime = (map: MapLibreMap, observedAt: string
   composeMapLayers(map);
   if (!source) return null;
   return changed ? "changed" : "unchanged";
+};
+
+/** Both paints use the same verified NOAA pixels. The glow cannot create a
+ * strike location where the transparent provider image has no coverage. */
+export const setNoaaLightningObservationTime = (map: MapLibreMap, observedAt: string, opacity: number, visible: boolean): void => {
+  const lightning = OFFICIAL_CONTEXT_BY_ID["noaa-lightning-density"];
+  const tileUrl = lightningTilePath(observedAt);
+  let source = map.getSource(lightning.sourceId) as RasterTileSource | undefined;
+  if (!source) {
+    map.addSource(lightning.sourceId, { type: "raster", tiles: [tileUrl], tileSize: 256, maxzoom: 10, attribution: lightning.attribution });
+    source = map.getSource(lightning.sourceId) as RasterTileSource | undefined;
+  } else if (source.serialize().tiles?.[0] !== tileUrl) {
+    source.setTiles([tileUrl]);
+  }
+  ensureLayer(map, { id: lightning.layerIds[0], type: "raster", source: lightning.sourceId, paint: { "raster-opacity": opacity, "raster-fade-duration": 180, "raster-saturation": 0.2, "raster-contrast": 0.12 } }, firstRegistryLayer(map));
+  ensureLayer(map, { id: lightning.layerIds[1], type: "raster", source: lightning.sourceId, paint: { "raster-opacity": 0, "raster-fade-duration": 0, "raster-saturation": 0.45, "raster-contrast": 0.3, "raster-brightness-max": 1 } }, firstRegistryLayer(map));
+  for (const id of lightning.layerIds) setVisibleIfChanged(map, id, visible && map.getProjection?.()?.type !== "globe");
+  requestRasterOpacity(map, lightning.layerIds[0], opacity);
+  requestRasterOpacity(map, lightning.layerIds[1], 0);
+  balanceMapRasters(map);
+  composeMapLayers(map);
+};
+
+export const setNoaaLightningGlow = (map: MapLibreMap, amount: number): void => {
+  const id = OFFICIAL_CONTEXT_BY_ID["noaa-lightning-density"].layerIds[1];
+  if (!map.getLayer(id)) return;
+  requestRasterOpacity(map, id, Math.max(0, Math.min(0.28, amount)));
+  balanceMapRasters(map);
 };

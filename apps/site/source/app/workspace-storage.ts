@@ -1,5 +1,6 @@
 import { LAYER_REGISTRY } from "./explorer-data";
 import { BASEMAPS } from "./map-runtime";
+import { BUILD_UTC_YEAR } from "./build-clock";
 import type { MapSnapshot, ReportDraft, StoryDraft } from "./workspace-model";
 
 export const REPORT_STORAGE_KEY = "kfm-report-draft-v2";
@@ -28,6 +29,12 @@ export function validMapSnapshot(value: unknown): value is MapSnapshot {
     || Math.abs(camera.center[0]) > 180 || Math.abs(camera.center[1]) > 85 || !number(camera.zoom) || camera.zoom < 0 || camera.zoom > 22
     || !number(camera.bearing) || Math.abs(camera.bearing) > 360 || !number(camera.pitch) || camera.pitch < 0 || camera.pitch > 85) return false;
   if (!["2D", "Terrain 3D", "Globe", "Compare"].includes(String(value.representation)) || !["mercator", "globe"].includes(String(value.projection)) || !Object.hasOwn(BASEMAPS, String(value.basemap))) return false;
+  const hasTerrainProvider = value.terrainProvider !== undefined;
+  const hasTerrainExaggeration = value.terrainExaggeration !== undefined;
+  if (hasTerrainProvider !== hasTerrainExaggeration) return false;
+  if (hasTerrainProvider && (value.representation !== "Terrain 3D"
+    || !["mapzen", "usgs-3dep"].includes(String(value.terrainProvider))
+    || !number(value.terrainExaggeration) || value.terrainExaggeration < 0.1 || value.terrainExaggeration > 2)) return false;
   if (value.evidenceFilter !== undefined && !["ALL", "ANSWER", "MISSING_EVIDENCE", "SOURCE_STALE", "GENERALIZED_GEOMETRY", "RESTRICTED_ACCESS", "DENIED_BY_POLICY", "CORRECTED", "SUPERSEDED", "ERROR"].includes(String(value.evidenceFilter))) return false;
   if (value.comparison !== undefined && (!object(value.comparison) || !layerIds.has(String(value.comparison.layerA)) || !layerIds.has(String(value.comparison.layerB)) || !number(value.comparison.timeA) || !number(value.comparison.timeB))) return false;
   if (value.temporalSweep !== undefined) {
@@ -40,7 +47,7 @@ export function validMapSnapshot(value: unknown): value is MapSnapshot {
       || !Number.isInteger(sweep.windowFrames) || sweep.windowFrames < 1 || sweep.windowFrames > 8 || sweep.interpolation !== false) return false;
   }
   const time = value.committedTime;
-  if (!number(time.start) || !number(time.end) || time.start > time.end || time.start < -4540000000 || time.end > new Date().getFullYear() || !text(time.label) || !["instant", "interval", "cumulative", "timeless", "unknown"].includes(String(time.mode))) return false;
+  if (!number(time.start) || !number(time.end) || time.start > time.end || time.start < -4540000000 || time.end > BUILD_UTC_YEAR || !text(time.label) || !["instant", "interval", "cumulative", "timeless", "unknown"].includes(String(time.mode))) return false;
   if (!Array.isArray(value.visibleLayers) || value.visibleLayers.length > LAYER_REGISTRY.length || !value.visibleLayers.every((layer) => object(layer) && layerIds.has(String(layer.id)) && text(layer.title) && text(layer.domain) && number(layer.order) && number(layer.opacity) && layer.opacity >= 0 && layer.opacity <= 1 && text(layer.trustState))) return false;
   if (new Set(value.visibleLayers.map((layer) => layer.id)).size !== value.visibleLayers.length) return false;
   if (!strings(value.evidenceRefs) || !value.evidenceRefs.every((ref) => evidenceRefs.has(ref))) return false;

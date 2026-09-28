@@ -6,13 +6,6 @@ earlier discovery baseline and its historical validation statements. A display
 snapshot exists only after private review, tile installation, and active-manifest
 selection; discovery recipes alone still display no Earth Engine pixels.
 
-2026-09-28 catalog re-check: the eight asset IDs, band names, scale factors
-(Landsat 2.75e-05/−0.2, Sentinel-2 1e-4, TerraClimate PDSI 0.01), CDL's 134
-cropland classes and temporal extents (CDL through 2024, CHIRPS through
-2026-08-31, TerraClimate through 2024-12, GSW 1984–2021) were compared with
-Google's published Earth Engine STAC records; none is deprecated. Recipe year
-bounds are unchanged.
-
 Metadata checked: 2026-09-24. Scope: existing standalone Sites project
 `appgprj_6aa0b1c41bc08191bfd86003920f1631`, opened at
 `d31c6ca6bd32b9ed50a34679b936568f1585e489` (version 66).

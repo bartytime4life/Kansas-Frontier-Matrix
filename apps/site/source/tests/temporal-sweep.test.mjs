@@ -3,9 +3,17 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import ts from "typescript";
 
+const buildClockSource = await readFile(new URL("../app/build-clock.ts", import.meta.url), "utf8");
+const buildClockJavascript = ts.transpileModule(buildClockSource, {
+  compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+  fileName: "build-clock.ts",
+}).outputText;
+const buildClockUrl = `data:text/javascript;base64,${Buffer.from(buildClockJavascript).toString("base64")}`;
+const withBuildClock = (source) => source.replace('from "./build-clock";', `from "${buildClockUrl}";`);
+
 const compileModuleUrl = async (name, transform = (source) => source) => {
   const source = await readFile(new URL(`../app/${name}.ts`, import.meta.url), "utf8");
-  const output = ts.transpileModule(transform(source), {
+  const output = ts.transpileModule(withBuildClock(transform(source)), {
     compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
     fileName: `${name}.ts`,
   }).outputText;
@@ -16,11 +24,13 @@ const temporal = await import(await compileModuleUrl("temporal-sweep"));
 const atlasData = await import(await compileModuleUrl("explorer-data"));
 const radarModuleUrl = await compileModuleUrl("noaa-radar");
 const satelliteModuleUrl = await compileModuleUrl("noaa-satellite");
+const lightningModuleUrl = await compileModuleUrl("lightning-data");
 const performanceModuleUrl = await compileModuleUrl("map-performance");
 const compositionModuleUrl = `data:text/javascript;base64,${Buffer.from("export const balanceMapFills=()=>{}; export const balanceMapRasters=()=>{}; export const composeMapLayers=()=>{}; export const requestFillOpacity=()=>{}; export const requestRasterOpacity=()=>{};").toString("base64")}`;
 const official = await import(await compileModuleUrl("live-context", (source) => source
   .replace('from "./noaa-radar";', `from "${radarModuleUrl}";`)
   .replace('from "./noaa-satellite";', `from "${satelliteModuleUrl}";`)
+  .replace('from "./lightning-data";', `from "${lightningModuleUrl}";`)
   .replace('from "./map-performance";', `from "${performanceModuleUrl}";`)
   .replace('from "./map-layer-composition";', `from "${compositionModuleUrl}";`)));
 
@@ -58,6 +68,10 @@ test("Airflow stays external forecast context and is held outside the present at
   assert.equal(wind.domain, "Atmosphere");
   assert.equal(wind.evidenceRole, "EXTERNAL_CONTEXT_ONLY");
   assert.equal(wind.defaultVisibility, false);
+  assert.equal(wind.kind, "MODEL_CANVAS");
+  assert.deepEqual(wind.layerIds, []);
+  assert.equal(wind.mapUrl, undefined);
+  assert.match(wind.organization, /GFS/);
   assert.deepEqual(official.OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[wind.id].supportedFrames, [2026]);
 });
 
@@ -126,8 +140,13 @@ test("playback obeys direction and explicit stop or loop boundaries", () => {
   assert.equal(temporal.nearestTemporalFrame(sequence, 2023), 2022);
 });
 
-test("current official sources fail closed outside the operational-present frame", () => {
+test("operational context fails closed outside the present frame while static climatology remains historical", () => {
   const selected = Object.fromEntries(official.OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, true]));
-  assert.equal(Object.values(official.officialContextVisibilityForFrame(selected, 1910)).every((value) => value === false), true);
+  const historic = official.officialContextVisibilityForFrame(selected, 1910);
+  assert.equal(historic["nasa-lightning-climatology"], true);
+  assert.equal(Object.entries(historic).filter(([id]) => id !== "nasa-lightning-climatology").every(([, value]) => value === false), true);
   assert.equal(Object.values(official.officialContextVisibilityForFrame(selected, official.OFFICIAL_CONTEXT_PRESENT_FRAME)).every((value) => value === true), true);
+  const staleBuild = official.officialContextVisibilityForFrame(selected, official.OFFICIAL_CONTEXT_PRESENT_FRAME, false);
+  assert.equal(staleBuild["nasa-lightning-climatology"], true);
+  assert.equal(Object.entries(staleBuild).filter(([id]) => id !== "nasa-lightning-climatology").every(([, value]) => value === false), true);
 });
