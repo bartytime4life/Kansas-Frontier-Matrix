@@ -62,7 +62,7 @@ Searches also found duplicate retained artifacts, including two identical Pass 1
 
 - MapLibre GL JS `6.6.0` is the installed browser renderer, with same-origin worker assets.
 - The MapLibre instance stays mounted while the Layer Catalog, Evidence Drawer, timeline, tools, and responsive sheets change state.
-- Twenty-two registry-driven, site-local GeoJSON layers cover public-safe demonstration categories: boundaries/places, hydrology, ecology, geology, agriculture, atmosphere, fire and hazards, people/DNA governance, communities, transport, historical geography, generalized planning, and diagnostics. This count includes the 105-record county starter locator layer.
+- Twenty registry-driven, site-local GeoJSON layers cover public-safe demonstration categories: hydrology, ecology, geology, agriculture, atmosphere, fire and hazards, people/DNA governance, communities, transport, historical geography, generalized planning, and diagnostics. The demonstration extent and county starter locator layers have been retired; real Census county boundaries remain separate external context.
 - Stable source, layer, renderer, and feature IDs are used; GeoJSON sources use `promoteId: "fid"`.
 - Style switching restores custom sources, layers, selection, measurement state, and draw order.
 - Layer search, visibility, opacity, legends, metadata, attribution, zoom, draw order, valid-time notes, freshness, release labels, sensitivity notes, and unavailable-time explanations are working.

@@ -153,17 +153,16 @@ export const REPOSITORY_UPDATES: readonly RepositoryUpdate[] = Object.freeze([
   Object.freeze({
     id: "county-starter-slice",
     area: "MapLibre and search",
-    title: "All 105 Kansas counties now have public locator starters",
-    state: "ACCEPTED",
-    maturity: "IMPLEMENTED",
+    title: "Historical county starter slice retired from the Site",
+    state: "CORRECTED",
+    maturity: "DOCUMENTED",
     date: "30 Aug 2026",
     summary:
-      "The earlier inspected snapshot adds one 2025 U.S. Census Gazetteer representative internal point for each Kansas county, with stable GEOIDs and registry metadata for search, selection, evidence inspection, report scoping, and future governed county slices.",
+      "An earlier inspected snapshot added one 2025 U.S. Census Gazetteer representative internal point for each Kansas county. The starter layer and its fixture are no longer mounted in the current Site; the live Census county boundary source remains separate.",
     boundary:
-      "These are public reference locators, not county boundaries, centroids, county seats, parcels, conditions, protected geometry, jurisdictional determinations, source admission, or a KFM data release.",
+      "The historical starter points were reference locators, not county boundaries, centroids, county seats, parcels, conditions, protected geometry, jurisdictional determinations, source admission, or a KFM data release.",
     sourceLabel: "County starter slice",
     sourceUrl: `${repoAtSnapshot}/apps/kansas-frontier-matrix-explorer/src/county-starter-slice.ts`,
-    layerId: "county-starter-points",
   }),
   Object.freeze({
     id: "temporal-catalog-comparison",

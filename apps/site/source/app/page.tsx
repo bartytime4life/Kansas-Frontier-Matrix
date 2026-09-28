@@ -146,7 +146,6 @@ import {
   type TemporalSweepMode,
   type TemporalSweepQuery,
 } from "./temporal-sweep";
-import { COUNTY_STARTER_LAYER } from "./county-starter-slice";
 import { buildQwenPrompt, type QwenMapContext } from "./qwen-context";
 import {
   buildLocalImportPreview,
@@ -243,29 +242,6 @@ import {
   parseNoaaGaugeNetwork,
   type NoaaGaugeFeatureProperties,
 } from "./noaa-hydrology";
-
-if (!LAYER_REGISTRY.some((layer) => layer.id === COUNTY_STARTER_LAYER.id)) {
-  const extentIndex = LAYER_REGISTRY.findIndex((layer) => layer.id === "kansas-extent");
-  LAYER_REGISTRY.splice(extentIndex >= 0 ? extentIndex + 1 : 0, 0, COUNTY_STARTER_LAYER);
-}
-if (!SEARCH_INDEX.some((item) => item.id === `layer:${COUNTY_STARTER_LAYER.id}`)) {
-  SEARCH_INDEX.push({
-    id: `layer:${COUNTY_STARTER_LAYER.id}`,
-    kind: "layer",
-    title: COUNTY_STARTER_LAYER.title,
-    subtitle: `${COUNTY_STARTER_LAYER.category} · ${COUNTY_STARTER_LAYER.datasetName}`,
-    layerId: COUNTY_STARTER_LAYER.id,
-  });
-  SEARCH_INDEX.push(...COUNTY_STARTER_LAYER.data.features.map((item) => ({
-    id: `feature:${item.properties.fid}`,
-    kind: "feature" as const,
-    title: item.properties.title,
-    subtitle: `${COUNTY_STARTER_LAYER.title} · ${item.properties.fid}`,
-    layerId: COUNTY_STARTER_LAYER.id,
-    featureId: item.properties.fid,
-    focus: [item.properties.focusLng, item.properties.focusLat] as [number, number],
-  })));
-}
 
 const KNOWN_TEMPORAL_FRAMES = new Set<number>([
   ...TIME_STEPS,
@@ -4684,8 +4660,7 @@ export default function Home() {
               sourceYear: match.feature.properties.year,
             });
           }
-          let candidateStack = [...stableCandidates.values()];
-          if (candidateStack.some((item) => item.layerId !== "kansas-extent")) candidateStack = candidateStack.filter((item) => item.layerId !== "kansas-extent");
+          const candidateStack = [...stableCandidates.values()];
           if (candidateStack.length > 1) {
             popupRef.current?.remove();
             mapUtilityReturnRef.current = mapContainerRef.current;
@@ -5842,7 +5817,7 @@ export default function Home() {
       return;
     }
     mapRef.current?.fitBounds([[-102.1, 36.95], [-94.55, 40.05]], { padding: 48, duration: motionDuration(600) });
-    announce("Fit the generalized Kansas demonstration extent");
+    announce("Fit the Kansas overview");
   };
 
   const captureAnalysisArea = () => {
