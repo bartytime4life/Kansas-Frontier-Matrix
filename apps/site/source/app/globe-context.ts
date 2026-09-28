@@ -1,4 +1,4 @@
-import type { Map as GLMap } from "maplibre-gl";
+import type { Map as GLMap } from "./maplibre-seam";
 
 export type GlobeViewpoint = "earth" | "continent" | "kansas";
 export const GLOBE_VIEWPOINTS = {

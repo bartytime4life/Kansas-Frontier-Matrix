@@ -5,7 +5,7 @@ import type {
   LayerSpecification,
   Map as MapLibreMap,
   StyleSpecification,
-} from "maplibre-gl";
+} from "./maplibre-seam";
 import { externalContextSource } from "./external-context-sources";
 import { LAYER_REGISTRY, type EvidenceState } from "./explorer-data";
 import { balanceMapFills, composeMapLayers, requestFillOpacity } from "./map-layer-composition";

@@ -1,4 +1,4 @@
-import type { Map as MapLibreMap } from "maplibre-gl";
+import type { Map as MapLibreMap } from "./maplibre-seam";
 import { LAYER_REGISTRY } from "./explorer-data";
 
 const registryIds = new Set(LAYER_REGISTRY.flatMap((record) => record.renderers.map((renderer) => renderer.id)));

@@ -1,0 +1,2 @@
+/* The Site's single MapLibre stylesheet acquisition (pairs with maplibre-seam.ts). */
+@import "maplibre-gl/dist/maplibre-gl.css";

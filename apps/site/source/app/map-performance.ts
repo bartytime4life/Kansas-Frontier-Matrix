@@ -1,5 +1,5 @@
 import type { FeatureCollection } from "geojson";
-import type { GeoJSONSource, Map as GLMap } from "maplibre-gl";
+import type { GeoJSONSource, Map as GLMap } from "./maplibre-seam";
 
 export type RenderQuality = "auto" | "efficient" | "detail";
 export const QUALITY_LABELS = { auto: "Balanced", efficient: "Battery saver", detail: "High detail" } as const;

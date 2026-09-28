@@ -143,8 +143,8 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   assert.match(page, /setVerticalFieldOfView/);
   assert.match(page, /Started a reversible 90° MapLibre camera orbit/);
   assert.match(page, /External DEM; not KFM evidence/);
-  assert.match(page, /new maplibregl\.NavigationControl/);
-  assert.match(page, /new maplibregl\.FullscreenControl/);
+  assert.match(page, /new mapLibre\.NavigationControl/);
+  assert.match(page, /new mapLibre\.FullscreenControl/);
   assert.match(page, /aria-label="Unified map controls"/);
   assert.match(page, /SOURCE CONNECTIONS/);
   assert.match(page, /querySourceFeatures/);

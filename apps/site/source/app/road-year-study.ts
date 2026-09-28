@@ -1,5 +1,5 @@
 import type { FeatureCollection, LineString, MultiLineString } from "geojson";
-import type { GeoJSONSource, Map as MapLibreMap } from "maplibre-gl";
+import type { GeoJSONSource, Map as MapLibreMap } from "./maplibre-seam";
 import { buildLocalImportPreview, IMPORT_PREVIEW_MAX_BYTES } from "./import-preview";
 import { ROAD_MAP_EDITIONS } from "./road-map-editions";
 

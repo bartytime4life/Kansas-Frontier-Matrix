@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { Map as MapLibreMap } from "maplibre-gl";
+import { loadMapLibre, type Map as MapLibreMap } from "./maplibre-seam";
 import { LAYER_REGISTRY } from "./explorer-data";
 import { applyRegistryState, BASEMAPS, setTerrainPresentation, updateAnalysisAreaSource, updateSelectionSource } from "./map-runtime";
 import { isFeatureAvailableForTemporalQuery, type TemporalSweepQuery } from "./temporal-sweep";
@@ -82,7 +82,7 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
       updateAnalysisAreaSource(map, state.area.kind === "aoi" ? state.area.bounds : undefined);
       updateSelectionSource(map, selectionForSnapshot(state, query));
     });
-    import("maplibre-gl").then((lib) => {
+    loadMapLibre().then((lib) => {
       if (disposed || !container.current) return;
       const probe = document.createElement("canvas").getContext("webgl2");
       if (!probe) {

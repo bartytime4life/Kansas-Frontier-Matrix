@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "maplibre-gl/dist/maplibre-gl.css";
+@import "./maplibre-seam.css";
 
 /* Event Observatory: one map, an explicit event clock, and independently
    dated source tracks. These selectors do not restyle the atlas workspace. */

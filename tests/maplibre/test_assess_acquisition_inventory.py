@@ -86,6 +86,61 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertEqual(result.findings[0].kind, "STATIC_IMPORT")
         self.assertTrue(result.findings[0].candidate_seam)
 
+    def test_site_seam_files_are_hold_and_consumers_are_not_acquisition(self) -> None:
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(
+                root,
+                "apps/site/source/app/maplibre-seam.ts",
+                'export type * from "maplibre-gl";\n'
+                'export const loadMapLibre = () => import("maplibre-gl");\n',
+            )
+            self._write(
+                root,
+                "apps/site/source/app/maplibre-seam.css",
+                '@import "maplibre-gl/dist/maplibre-gl.css";\n',
+            )
+            self._write(
+                root,
+                "apps/site/source/package.json",
+                json.dumps({"dependencies": {"maplibre-gl": "6.9.0"}}),
+            )
+            self._write(
+                root,
+                "apps/site/source/app/page.tsx",
+                'import { loadMapLibre, type Map } from "./maplibre-seam";\n'
+                "const mapLibre = await loadMapLibre();\nnew mapLibre.Map({});\n",
+            )
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.HOLD)
+        self.assertEqual(result.reasons, ("RENDERER_ACQUISITION_PRESENT",))
+        self.assertEqual(
+            {finding.path for finding in result.findings},
+            {
+                "apps/site/source/app/maplibre-seam.ts",
+                "apps/site/source/app/maplibre-seam.css",
+                "apps/site/source/package.json",
+            },
+        )
+        self.assertTrue(all(finding.candidate_seam for finding in result.findings))
+
+    def test_site_acquisition_outside_its_exact_seam_files_fails(self) -> None:
+        for path, content in (
+            ("apps/site/source/app/page.tsx", 'const gl = await import("maplibre-gl");\n'),
+            ("apps/site/source/app/globals.css", '@import "maplibre-gl/dist/maplibre-gl.css";\n'),
+            ("apps/site/source/app/maplibre-seam.tsx", 'import { Map } from "maplibre-gl";\n'),
+            ("apps/site/source/app/nested/maplibre-seam.ts", 'import { Map } from "maplibre-gl";\n'),
+            ("apps/site/other/maplibre-seam.ts", 'import { Map } from "maplibre-gl";\n'),
+            ("apps/site/source/app/page.tsx", "maplibregl.setWorkerUrl('/worker.mjs');\n"),
+        ):
+            with self.subTest(path=path, content=content), self._root() as tmp:
+                root = Path(tmp)
+                self._write(root, path, content)
+                result = MODULE.scan(root)
+                self.assertEqual(result.outcome, MODULE.Outcome.FAIL)
+                self.assertIn("ACQUISITION_OUTSIDE_CANDIDATE_SEAM", result.reasons)
+                self.assertFalse(any(finding.candidate_seam for finding in result.findings))
+
     def test_package_local_maplibre_filename_is_not_raw_acquisition(self) -> None:
         with self._root() as tmp:
             root = Path(tmp)
