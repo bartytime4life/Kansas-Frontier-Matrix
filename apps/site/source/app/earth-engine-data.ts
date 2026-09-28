@@ -1,5 +1,5 @@
 // Site-local discovery metadata, not a canonical KFM SourceDescriptor or admission record.
-export const EARTH_ENGINE_CHECKED_AT = "2026-09-24";
+export const EARTH_ENGINE_CHECKED_AT = "2026-09-28";
 export const EARTH_ENGINE_CATALOG = "https://developers.google.com/earth-engine/datasets/catalog";
 export const EARTH_ENGINE_ACCESS = "https://developers.google.com/earth-engine/guides/access";
 export const KANSAS_BOUNDARY = "TIGER/2018/States";
@@ -25,6 +25,41 @@ export const EARTH_ENGINE_DATASETS: readonly EarthEngineDataset[] = Object.freez
 ].map((item) => Object.freeze(item)) as EarthEngineDataset[]);
 
 export const earthEngineUrl = (dataset: EarthEngineDataset) => `${EARTH_ENGINE_CATALOG}/${dataset.catalogSlug}`;
+
+// Display ramps shared by Code Editor previews, the map legend and the tile renderer
+// (scripts/earth-engine/prepare_display_set.py keeps an identical copy; a test compares them).
+export type EarthEngineRamp = Readonly<{ stops: readonly number[]; colors: readonly string[] }>;
+export const EARTH_ENGINE_DISPLAY_RAMPS: Readonly<Record<string, EarthEngineRamp>> = Object.freeze({
+  "ee-chirps": { stops: [0, 600, 1200], colors: ["#fff4c2", "#79c9bc", "#235ca8"] },
+  "ee-terraclimate": { stops: [-5, 0, 5], colors: ["#a63603", "#f6eedb", "#0868ac"] },
+  "ee-3dep": { stops: [200, 600, 900, 1300], colors: ["#28594e", "#c4c98a", "#a67e54", "#efe7d4"] },
+});
+// Natural-color stretch used by the tile renderer: reflectance 0–0.3 with gamma 1.2.
+export const EARTH_ENGINE_REFLECTANCE_VIS = "{min: 0, max: 0.3, gamma: 1.2}";
+
+const gcd = (a: number, b: number): number => b ? gcd(b, a % b) : a;
+const hexChannels = (color: string) => [1, 3, 5].map((i) => parseInt(color.slice(i, i + 2), 16));
+// Earth Engine spaces palette colors evenly between min and max. Sampling the
+// piecewise ramp at the common stop spacing reproduces unevenly spaced stops exactly.
+export function earthEnginePalette(ramp: EarthEngineRamp): string[] {
+  const first = ramp.stops[0], last = ramp.stops[ramp.stops.length - 1];
+  const step = ramp.stops.slice(1).reduce((value, stop, i) => gcd(value, stop - ramp.stops[i]), 0);
+  const palette: string[] = [];
+  for (let value = first; value <= last; value += step) {
+    const segment = Math.max(0, ramp.stops.findIndex((stop, i) => i > 0 && value <= stop) - 1);
+    const t = (value - ramp.stops[segment]) / (ramp.stops[segment + 1] - ramp.stops[segment]);
+    const [a, b] = [hexChannels(ramp.colors[segment]), hexChannels(ramp.colors[segment + 1])];
+    palette.push(a.map((channel, i) => Math.round(channel + (b[i] - channel) * t).toString(16).padStart(2, "0")).join(""));
+  }
+  return palette;
+}
+export function earthEngineVisParams(ramp: EarthEngineRamp): string {
+  return `{min: ${ramp.stops[0]}, max: ${ramp.stops[ramp.stops.length - 1]}, palette: ${JSON.stringify(earthEnginePalette(ramp)).replaceAll('"', "'").replaceAll(",", ", ")}}`;
+}
+export function earthEngineLegendGradient(ramp: EarthEngineRamp): string {
+  const first = ramp.stops[0], span = ramp.stops[ramp.stops.length - 1] - first;
+  return `linear-gradient(90deg, ${ramp.colors.map((color, i) => `${color} ${Math.round((ramp.stops[i] - first) / span * 1000) / 10}%`).join(", ")})`;
+}
 export function findEarthEngineDatasets(query: string, topic = "All") {
   const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   return EARTH_ENGINE_DATASETS.filter((d) => (topic === "All" || d.topic === topic) && words.every((word) => `${d.title} ${d.asset} ${d.provider} ${d.topic} ${d.use}`.toLowerCase().includes(word)));
@@ -101,7 +136,7 @@ export function buildEarthEngineRecipe(id: string, year?: number): string {
         "    return image.select(['SR_B4', 'SR_B3', 'SR_B2']).multiply(0.0000275).add(-0.2).updateMask(mask);");
       else lines.push("    var scl = image.select('SCL');", "    var mask = scl.eq(4).or(scl.eq(5)).or(scl.eq(6));",
         "    return image.select(['B4', 'B3', 'B2']).multiply(0.0001).updateMask(mask);");
-      lines.push("  });", ...addLayer("clean.median()", "{min: 0, max: 0.3}"),
+      lines.push("  });", ...addLayer("clean.median()", d.id === "ee-sentinel2" ? EARTH_ENGINE_REFLECTANCE_VIS : "{min: 0, max: 0.3}"),
         "  Map.addLayer(clean.select(0).count().clip(kansas), {min: 0, max: 50}, 'Retained observations per pixel', false);");
     } else if (d.id === "ee-chirps" || d.id === "ee-terraclimate") {
       const daily = d.id === "ee-chirps";
@@ -112,11 +147,11 @@ export function buildEarthEngineRecipe(id: string, year?: number): string {
         "    if (dateError || count !== expected || periods !== expected) { print('INCOMPLETE OR DUPLICATE TIME COVERAGE — no annual result', dateError || periods); return; }",
         `    var values = collection.select('${daily ? "precipitation" : "pdsi"}');`,
         `    var result = values.${daily ? "sum()" : "mean().multiply(0.01)"}.updateMask(values.count().eq(expected));`,
-        `    Map.addLayer(result.clip(kansas), ${daily ? "{min: 0, max: 1200, palette: ['fff4c2', '79c9bc', '235ca8']}" : "{min: -5, max: 5, palette: ['a63603', 'f6eedb', '0868ac']}"}, '${daily ? "Annual precipitation sum (mm)" : "Annual mean PDSI"} · ${year} · exploratory');`,
+        `    Map.addLayer(result.clip(kansas), ${earthEngineVisParams(EARTH_ENGINE_DISPLAY_RAMPS[d.id])}, '${daily ? "Annual precipitation sum (mm)" : "Annual mean PDSI"} · ${year} · exploratory');`,
         "    print('Only pixels with every expected observation are displayed.');", "  });");
     } else if (d.id === "ee-3dep") {
       lines.push("  // Order is deterministic, not a claim that the last tile is newest.", "  // Mixed source dates: inspect source metadata and datum before analysis.",
-        ...addLayer("collection.select('elevation').mosaic()", "{min: 200, max: 1300, palette: ['28594e', 'c4c98a', 'a67e54', 'efe7d4']}"));
+        ...addLayer("collection.select('elevation').mosaic()", earthEngineVisParams(EARTH_ENGINE_DISPLAY_RAMPS[d.id])));
     }
     lines.push("});");
   }
