@@ -1,0 +1,53 @@
+name: epa-connector-offline
+on:
+  pull_request:
+    paths:
+      - 'connectors/epa/src/epa/fetch.py'
+      - 'connectors/epa/src/epa/admit.py'
+      - 'connectors/epa/src/epa/descriptor.yaml'
+      - 'connectors/epa/src/epa/aqs_airdata.py'
+      - 'connectors/epa/tests/test_*.py'
+      - 'packages/connectors-core/src/connectors_core/**'
+      - '.github/workflows/epa-connector-offline.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'connectors/epa/src/epa/fetch.py'
+      - 'connectors/epa/src/epa/admit.py'
+      - 'connectors/epa/src/epa/descriptor.yaml'
+      - 'connectors/epa/src/epa/aqs_airdata.py'
+      - 'connectors/epa/tests/test_*.py'
+      - 'packages/connectors-core/src/connectors_core/**'
+      - '.github/workflows/epa-connector-offline.yml'
+permissions:
+  contents: read
+concurrency:
+  group: epa-connector-offline-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  synthetic-candidates:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        # The interpreters tools/ci/python-test.lock declares; the stdlib json decoder's
+        # depth behavior (and so parser routing) differs between them.
+        python: ['3.11', '3.12']
+    env:
+      KFM_NO_NETWORK: '1'
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONHASHSEED: '0'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Run standard-library synthetic tests (connectors-core imported from source)
+        run: python -m unittest discover -s connectors/epa/tests -p 'test_*.py' -v
+      - name: Record evidence boundary
+        if: always()
+        run: |
+          echo 'Offline synthetic EPA AQS AirData daily-summary planner, archive/CSV parser, injected-transport retrieval-episode, and routing checks only; routes stay HOLD while descriptor role/rights are unresolved. AirData archive layout, column set, event-type vocabulary and row identity are NEEDS VERIFICATION. No EPA fetch, AQS API use, source activation, family-placement (OPEN-DSC-09) or epa/epa_aqs lane decision, exceptional-event or monitor review, source admission, capture completeness, attainment or exposure claim, release, or deployment proof.' >> "$GITHUB_STEP_SUMMARY"

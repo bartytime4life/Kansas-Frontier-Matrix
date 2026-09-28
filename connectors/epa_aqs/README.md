@@ -113,6 +113,9 @@ release/                                  # release, correction, withdrawal, and
 > [!CAUTION]
 > The existence of both `connectors/epa/` and `connectors/epa_aqs/` must not create two competing homes for EPA source identity, rights, activation state, shared transport behavior, or release decisions.
 
+> [!NOTE]
+> **2026-09-28:** offline AirData daily-summary planning, parsing, retrieval recording and routing now live in `connectors/epa/src/epa/` (`aqs_airdata.py`, `fetch.py`, `admit.py`), as `docs/sources/catalog/epa/aqs-airdata.md` names `connectors/epa/` as the AQS connector. This lane stays documentation-only; that placement does not resolve the ownership question above, `OPEN-DSC-09`, or activation.
+
 ---
 
 ## Confirmed current state

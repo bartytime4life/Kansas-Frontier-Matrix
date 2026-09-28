@@ -2,14 +2,14 @@
  "schema_version": "kfm.scaffold-inventory/v1",
  "summary": {
   "by_kind": {
-   "PLACEHOLDER_MARKER": 907,
-   "STUB_MODULE": 334,
+   "PLACEHOLDER_MARKER": 904,
+   "STUB_MODULE": 332,
    "UNRESOLVED_DESCRIPTOR": 24,
    "VACUOUS_TEST": 1
   },
   "by_surface": {
    "apps": 34,
-   "connectors": 126,
+   "connectors": 121,
    "contracts": 3,
    "packages": 122,
    "pipelines": 236,
@@ -19,8 +19,8 @@
    "tests": 188,
    "tools": 54
   },
-  "files": 909,
-  "total": 1266
+  "files": 906,
+  "total": 1261
  },
  "findings": [
   {"kind": "PLACEHOLDER_MARKER", "path": "apps/cli/pyproject.toml"},
@@ -75,13 +75,8 @@
   {"kind": "UNRESOLVED_DESCRIPTOR", "path": "connectors/ebird/src/ebird/descriptor.yaml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/ebird/src/ebird/fetch.py"},
   {"kind": "STUB_MODULE", "path": "connectors/ebird/src/ebird/fetch.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "connectors/epa/pyproject.toml"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "connectors/epa/src/epa/admit.py"},
-  {"kind": "STUB_MODULE", "path": "connectors/epa/src/epa/admit.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/epa/src/epa/descriptor.yaml"},
   {"kind": "UNRESOLVED_DESCRIPTOR", "path": "connectors/epa/src/epa/descriptor.yaml"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "connectors/epa/src/epa/fetch.py"},
-  {"kind": "STUB_MODULE", "path": "connectors/epa/src/epa/fetch.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/familysearch/pyproject.toml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/familysearch/src/familysearch/admit.py"},
   {"kind": "STUB_MODULE", "path": "connectors/familysearch/src/familysearch/admit.py"},
