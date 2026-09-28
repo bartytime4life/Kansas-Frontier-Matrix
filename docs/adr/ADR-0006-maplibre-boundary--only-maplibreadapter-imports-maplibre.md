@@ -49,13 +49,11 @@ related:
   - packages/maplibre/src/map-runtime-port.ts
   - packages/maplibre/src/maplibre-adapter.ts
   - packages/maplibre/src/maplibre-vite-adapter.ts
-  - apps/explorer-web/src/site/mount-living-atlas.ts
-  - apps/explorer-web/src/features/living_atlas/map-style.ts
-  - apps/explorer-web/tests/browser/maplibre-webgl-probe.spec.ts
-  - tests/policy/test_explorer_web_adapter_boundary.py
+  - apps/site/source/app/maplibre-seam.ts
+  - apps/site/source/app/maplibre-seam.css
+  - tools/validators/maplibre/assess_acquisition_inventory.py
   - tools/validators/maplibre/validate_v6_readiness.py
   - scripts/maplibre-smoke-perf.mjs
-  - .github/workflows/maplibre-webgl-probe.yml
   - .github/workflows/maplibre-perf-governance.yml
 tags: [kfm, adr, maplibre, map-runtime-port, maplibre-adapter, dependency-owner, acquisition-boundary, trust-membrane, currentness-correction]
 notes:
@@ -371,11 +369,14 @@ This v1.5 change is documentation-only. Reverting it reverts the currentness rec
 - [Renderer-neutral runtime port](../../packages/maplibre/src/map-runtime-port.ts)
 - [Core MapLibre adapter](../../packages/maplibre/src/maplibre-adapter.ts)
 - [Package-owned Vite adapter](../../packages/maplibre/src/maplibre-vite-adapter.ts)
-- [Explorer Living Atlas composition](../../apps/explorer-web/src/site/mount-living-atlas.ts)
-- [Inline Living Atlas style](../../apps/explorer-web/src/features/living_atlas/map-style.ts)
-- [Explorer raw-import boundary test](../../tests/policy/test_explorer_web_adapter_boundary.py)
-- [WebGL probe fixture](../../apps/explorer-web/tests/browser/maplibre-webgl-probe.spec.ts)
-- [MapLibre WebGL workflow](../../.github/workflows/maplibre-webgl-probe.yml)
+- Not in the current tree; recorded at the v1.5 evidence snapshot `main@6f8bf49e`:
+  - Explorer Living Atlas composition: `apps/explorer-web/src/site/mount-living-atlas.ts`
+  - Inline Living Atlas style: `apps/explorer-web/src/features/living_atlas/map-style.ts`
+  - Explorer raw-import boundary test: `tests/policy/test_explorer_web_adapter_boundary.py`
+  - WebGL probe fixture: `apps/explorer-web/tests/browser/maplibre-webgl-probe.spec.ts`
+  - MapLibre WebGL workflow: `.github/workflows/maplibre-webgl-probe.yml`
+- [Site MapLibre seam module](../../apps/site/source/app/maplibre-seam.ts) and [stylesheet](../../apps/site/source/app/maplibre-seam.css) (§2.6)
+- [Acquisition inventory](../../tools/validators/maplibre/assess_acquisition_inventory.py)
 - [Retired performance harness](../../scripts/maplibre-smoke-perf.mjs)
 - [Performance-governance workflow](../../.github/workflows/maplibre-perf-governance.yml)
 - [Bounded WebGL workflow run](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34701026392)
