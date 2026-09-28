@@ -101,10 +101,21 @@ export function createWindArrowService(options: { fetchUpstream?: typeof fetch; 
       return Response.json(cached.frame, { headers: { ...frameHeaders(cached.frame, requestTime), "X-KFM-Wind-Cache": "HIT" } });
     }
     if (cached) cache.delete(grid.key);
+    let failureCode = "MODEL_REQUEST_FAILED";
     try {
       const response = await fetchUpstream(grid.url, { signal: AbortSignal.timeout(12_000), redirect: "manual" });
-      if (!response.ok || !response.body || !(response.headers.get("content-type") ?? "").toLowerCase().includes("application/json")) throw new Error("Model response unavailable.");
-      if (Number(response.headers.get("content-length")) > MAX_BYTES) throw new Error("Model response too large.");
+      if (!response.ok) {
+        failureCode = `MODEL_HTTP_${response.status}`;
+        throw new Error("Model response unavailable.");
+      }
+      if (!response.body || !(response.headers.get("content-type") ?? "").toLowerCase().includes("application/json")) {
+        failureCode = "MODEL_MEDIA_TYPE";
+        throw new Error("Model response unavailable.");
+      }
+      if (Number(response.headers.get("content-length")) > MAX_BYTES) {
+        failureCode = "MODEL_TOO_LARGE";
+        throw new Error("Model response too large.");
+      }
       const reader = response.body.getReader();
       const chunks: Uint8Array[] = [];
       let total = 0;
@@ -112,18 +123,20 @@ export function createWindArrowService(options: { fetchUpstream?: typeof fetch; 
         const { done, value } = await reader.read();
         if (done) break;
         total += value.byteLength;
-        if (total > MAX_BYTES) { await reader.cancel(); throw new Error("Model response too large."); }
+        if (total > MAX_BYTES) { failureCode = "MODEL_TOO_LARGE"; await reader.cancel(); throw new Error("Model response too large."); }
         chunks.push(value);
       }
       const bytes = new Uint8Array(total);
       let offset = 0;
       for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
+      failureCode = "MODEL_INVALID_GRID";
       const frame = parseWindArrowResponse(JSON.parse(new TextDecoder().decode(bytes)), grid.coordinates, now());
       if (cache.size >= 12) cache.delete(cache.keys().next().value!);
       cache.set(grid.key, { expires: now() + CACHE_MS, frame });
       return Response.json(frame, { headers: frameHeaders(frame, now()) });
-    } catch {
-      return Response.json({ error: "Directional wind forecast unavailable; no arrows drawn." }, { status: 502, headers: { "Cache-Control": "no-store", "Retry-After": "60" } });
+    } catch (error) {
+      if (failureCode === "MODEL_REQUEST_FAILED" && error instanceof Error && (error.name === "TimeoutError" || error.name === "AbortError")) failureCode = "MODEL_TIMEOUT";
+      return Response.json({ error: "Directional wind forecast unavailable; no flow drawn.", code: failureCode }, { status: 502, headers: { "Cache-Control": "no-store", "Retry-After": "60" } });
     }
   };
 }

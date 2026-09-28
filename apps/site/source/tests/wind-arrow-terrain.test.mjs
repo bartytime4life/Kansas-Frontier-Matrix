@@ -20,6 +20,7 @@ async function moduleUrl(file) {
 }
 
 const wind = await import(await moduleUrl("app/wind-arrow-data.ts"));
+const windClient = await import(await moduleUrl("app/wind-flow-client.ts"));
 const windCanvas = await import(await moduleUrl("app/wind-arrow-canvas.ts"));
 const terrain = await import(await moduleUrl("app/map-runtime.ts"));
 const terrainSources = await import(await moduleUrl("app/terrain-sources.ts"));
@@ -103,6 +104,29 @@ test("cached forecast is dropped as soon as its valid hour becomes stale", async
   assert.equal(second.status, 200);
   assert.equal((await second.json()).validTimeUtc, "2026-09-27T17:00:00.000Z");
   assert.equal(calls, 2);
+});
+
+test("shared Site rate limit recovers through the same validated GFS grid in the viewer", async () => {
+  const calls = [];
+  const fetcher = async (url, options) => {
+    calls.push({ url, options });
+    if (calls.length === 1) return Response.json({ code: "MODEL_HTTP_429" }, { status: 502 });
+    return Response.json(modelRows(url));
+  };
+  const result = await windClient.loadWindFlowFrame("-98,38,-97,39", new AbortController().signal, fetcher, () => NOW);
+  assert.equal(result.transport, "direct-provider");
+  assert.equal(result.frame.samples.length, 16);
+  assert.equal(result.frame.validTimeUtc, "2026-09-27T16:00:00.000Z");
+  assert.equal(new URL(calls[1].url).origin, "https://api.open-meteo.com");
+  assert.equal(calls[1].options.mode, "cors");
+  assert.equal(calls.length, 2);
+
+  let rejectedCalls = 0;
+  await assert.rejects(() => windClient.loadWindFlowFrame("-98,38,-97,39", new AbortController().signal, async () => {
+    rejectedCalls++;
+    return Response.json({ code: "MODEL_INVALID_GRID" }, { status: 502 });
+  }, () => NOW), /unavailable/i);
+  assert.equal(rejectedCalls, 1, "bad model samples must not trigger a second request");
 });
 
 test("wind flow hover only reports a nearby model point and a travel direction", () => {
