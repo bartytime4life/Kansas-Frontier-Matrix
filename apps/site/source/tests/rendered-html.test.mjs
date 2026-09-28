@@ -908,9 +908,9 @@ test("connects twenty-one bounded official context sources without admitting evi
   assert.match(countySource, /POP100,HU100/);
   assert.match(route, /state_code/);
   assert.match(route, /datetime/);
-  assert.match(route, /(?:^|[\s"'`=:(])earthquake\.usgs\.gov\/fdsnws\/event\/1\/query(?:$|[\/?&#\s"'`),])/);
+  assert.match(route, /^const USGS_EARTHQUAKE_URL = "https:\/\/earthquake\.usgs\.gov\/fdsnws\/event\/1\/query";$/m);
   assert.match(route, /NOAA HMS smoke publications/);
-  assert.match(route, /^https?:\/\/data\.raspberryshake\.org\/fdsnws\/station\/1\/query\/?$/);
+  assert.match(route, /^const RASPBERRY_SHAKE_STATION_URL = "https:\/\/data\.raspberryshake\.org\/fdsnws\/station\/1\/query";$/m);
   assert.match(route, /MAX_RASPBERRY_SHAKE_STATIONS = 250/);
   assert.match(route, /normalizedFdsnHeader/);
   assert.match(route, /FDSN archive is delayed by at least 30 minutes/);
@@ -1144,8 +1144,8 @@ test("the built official-context adapter joins dated Census population and bound
   const originalFetch = globalThis.fetch;
   const upstreamCalls = [];
   globalThis.fetch = async (input) => {
-    const url = String(input);
-    const parsedUrl = new URL(typeof input === "string" ? input : input.url);
+    const url = input instanceof Request ? input.url : String(input);
+    const parsedUrl = new URL(url);
     upstreamCalls.push(url);
     if (parsedUrl.hostname === "tigerweb.geo.census.gov") return new Response(JSON.stringify({
       type: "FeatureCollection",

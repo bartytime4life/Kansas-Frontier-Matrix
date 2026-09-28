@@ -1,13 +1,13 @@
 # GPT Site source
 
-> **Published Explorer:** Sites version 102 was privately published on 2026-09-28
-> from source commit `875a8632ae038e77685c1a7130cc0114e45e1810`, at
+> **Published Explorer:** Sites version 103 was privately published on 2026-09-28
+> from source commit `680c6ce3885fa93b21a3b971091a1c31c15a12d6`, at
 > [the stable Explorer address](https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site).
 > This directory mirrors the 224 tracked source files from that exact commit.
 > The Site project and this GitHub repository retain separate Git histories.
 
 `source/` is the GitHub source mirror for the private Explorer Site. It carries
-the same application source as version 102, including terrain, animated wind,
+the same application source as version 103, including terrain, animated wind,
 lightning, and the MapLibre acquisition seam. The repository-local
 `.gitattributes` remains outside `source/`; private hosted D1/R2 records and
 local development state are excluded.

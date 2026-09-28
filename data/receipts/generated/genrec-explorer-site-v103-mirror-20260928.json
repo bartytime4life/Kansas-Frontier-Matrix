@@ -1,5 +1,5 @@
 {
-  "receipt_id": "genrec-explorer-site-v102-mirror-20260928",
+  "receipt_id": "genrec-explorer-site-v103-mirror-20260928",
   "contract_version": "3.0.0",
   "artifact_paths": [
     "apps/site/README.md",
@@ -69,7 +69,7 @@
     "apps/site/source/vite.config.ts"
   ],
   "artifact_hashes": {
-    "apps/site/README.md": "sha256:18cbc5c9f2d7ba5f2ecccfeeed2bc6c2da19c0faee1319c5368711336edaafd2",
+    "apps/site/README.md": "sha256:e2136cf0e98bd4e642ce307d4d97a7af2c16a2ae776c92990c06795c95cf2ae4",
     "apps/site/source/README.md": "sha256:81ef20b59ba5ed976a5a6ff882e0e36a0a387c1afae62473a4c424060a67cd99",
     "apps/site/source/app/3dep-dem-tiles.ts": "sha256:67b3e84c88bb0f5d58555f6264153034763eebc9972f24c5eb863f09d3f3c791",
     "apps/site/source/app/about/page.tsx": "sha256:2cabc938a7d259088311cfc8592db2328fa3edaf8ca3d488f39ccfc3e6a3be7c",
@@ -124,7 +124,7 @@
     "apps/site/source/tests/lightning-data.test.mjs": "sha256:14dc7f200d60ded2b5168216d1ae5b343b8be4a84f3eb8709b02a3526bb02f24",
     "apps/site/source/tests/map-composition.test.mjs": "sha256:6537a5a31fe3ee1fb594db84cbf9a5b67a11228e449dbffb7bdc3fb9501eadff",
     "apps/site/source/tests/official-refresh-plan.test.mjs": "sha256:7d92f9c2a2ed3ff46166b5de9a64a6c7bb060fbbc9feec91d0b2517de75e0853",
-    "apps/site/source/tests/rendered-html.test.mjs": "sha256:ae601abd2c67d68291e63eed86e211782c6db0ed4e53340e41a742ca3bfc0b0f",
+    "apps/site/source/tests/rendered-html.test.mjs": "sha256:b4676ed49308d9aee4a9c5fcfa7b266468224c20325b6b8b3a0ca7a5404b5cae",
     "apps/site/source/tests/runtime-resilience.test.mjs": "sha256:aab60353ab2c02a640489b5bab0a4185fe5397a93f64a90819f952e846fcd38b",
     "apps/site/source/tests/security-upstream.test.mjs": "sha256:69142db0d6adb58d4e907087e42368d3d1d2ef4a885882fb6c5b75f59096b68c",
     "apps/site/source/tests/snapshot-workflows.test.mjs": "sha256:2abc3dd727a66ff87fa410229f25baf1d5aa991cb0720915bca7e59da68db2b7",
@@ -158,7 +158,7 @@
     ],
     "attached_docs": [],
     "evidence_refs": [
-      "Sites project appgprj_6aa0b1c41bc08191bfd86003920f1631 source 875a8632ae038e77685c1a7130cc0114e45e1810",
+      "Sites project appgprj_6aa0b1c41bc08191bfd86003920f1631 source 680c6ce3885fa93b21a3b971091a1c31c15a12d6",
       "GitHub main base 33f66a6b7fbbed3a8296d48eaf06b1ef47a5831f"
     ]
   },
@@ -233,22 +233,27 @@
     {
       "gate": "source-mirror-224-file-sha256-parity",
       "outcome": "PASS",
-      "reason": "Every one of the 224 tracked Site source files matches the privately deployed version 102 commit; two obsolete mirror-only source-role files were removed."
+      "reason": "Every one of the 224 tracked Site source files matches the privately deployed version 103 commit; two obsolete mirror-only source-role files were removed."
     },
     {
       "gate": "site-build",
       "outcome": "PASS",
-      "reason": "npm run build passed from the exact pushed Site source commit 875a8632."
+      "reason": "npm run build passed from the exact pushed Site source commit 680c6ce3."
     },
     {
       "gate": "mirrored-site-node-tests",
       "outcome": "PASS",
-      "reason": "199 Site tests passed on the same application source; the version 102 change only updates a Python helper dependency."
+      "reason": "All 199 Site tests passed with the corrected URL assertions and upstream mock."
     },
     {
       "gate": "mirrored-site-typescript",
       "outcome": "PASS",
       "reason": "tsc --noEmit passed in the source mirror."
+    },
+    {
+      "gate": "codeql-autofix-test-regression",
+      "outcome": "PASS",
+      "reason": "The automated URL assertion and fetch mock changes were reconciled; the affected rendered-html tests and full 199-test suite pass."
     },
     {
       "gate": "earth-engine-pillow-pin",
@@ -274,9 +279,9 @@
   "policy_decisions": [],
   "citations": [
     {
-      "id": "private-site-source-v102",
+      "id": "private-site-source-v103",
       "validated": true,
-      "evidence_ref": "Sites project appgprj_6aa0b1c41bc08191bfd86003920f1631 source 875a8632ae038e77685c1a7130cc0114e45e1810"
+      "evidence_ref": "Sites project appgprj_6aa0b1c41bc08191bfd86003920f1631 source 680c6ce3885fa93b21a3b971091a1c31c15a12d6"
     }
   ],
   "human_review": {
@@ -285,7 +290,7 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-09-28T15:34:54.784952Z",
+  "created_at": "2026-09-28T15:45:16.591635Z",
   "emitter": "OpenAI GPT-6 via Codex",
-  "notes": "Source mirror of owner-private Site v102, including the MapLibre seam and corrected Earth Engine Pillow pin. The Site was privately deployed before this GitHub mirror. This receipt is provenance only and grants no review, source admission, public release, or merge authority."
+  "notes": "Source mirror of owner-private Site v103, including the MapLibre seam, corrected Pillow pin, and repaired CodeQL test suggestions. The Site was privately deployed before this GitHub mirror. This receipt is provenance only and grants no review, source admission, public release, or merge authority."
 }
