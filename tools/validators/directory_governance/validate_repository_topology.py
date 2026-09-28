@@ -31,6 +31,18 @@ BASELINE_VERSION = "kfm.repository-topology-baseline.v1"
 DEFAULT_BASELINE = Path(__file__).with_name("repository_topology_baseline.json")
 BASELINE_REPOSITORY_PATH = "tools/validators/directory_governance/repository_topology_baseline.json"
 BOOTSTRAP_BASE_SHA = "bff35f5ddf00ef623eacf96be13a743e134f482f"
+# One-time owner-directed recovery (docs/intake/exploratory/repository-topology-baseline-recovery-20260928.md).
+# It admits exactly these three re-added waivers, all together, and only against the trusted
+# baseline whose bytes hash to RECOVERY_TRUSTED_BASELINE_SHA256. Once the recovery lands the
+# trusted baseline changes, so the exception can never apply again.
+RECOVERY_TRUSTED_BASELINE_SHA256 = "sha256:0a06efedd47f107c84f0ca611b6ae74050212daa99a8710363991ab4bb3e6a18"
+RECOVERY_FINGERPRINTS = frozenset(
+    {
+        "sha256:265f3f934f6333b04781af9b20520842c8187d79dc35e1a36906c3835f1b1079",
+        "sha256:3da8cffd3753378852fc069c240165a15e4f8cdfc90d6ee1c0d8274e6307a430",
+        "sha256:71a120ae8ca2b69896266c9ddd52f6d03577ea91fa2de4390b7d57b9ceeb912f",
+    }
+)
 ADOPTED_SHA256 = "44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
 MAX_FILE_BYTES = 4 * 1024 * 1024
 MAX_SELECTED_BLOB_BYTES = 256 * 1024 * 1024
@@ -1072,6 +1084,7 @@ def validate_baseline_transition(
     current_entries: Mapping[str, Mapping[str, object]],
     trusted_data: Mapping[str, object],
     trusted_entries: Mapping[str, Mapping[str, object]],
+    trusted_baseline_sha256: str | None = None,
 ) -> None:
     additions = sorted(set(current_entries) - set(trusted_entries))
     removals = sorted(set(trusted_entries) - set(current_entries))
@@ -1079,11 +1092,16 @@ def validate_baseline_transition(
         (entry["rule_id"], entry["subject"]): (fingerprint, entry)
         for fingerprint, entry in trusted_entries.items()
     }
+    recovery_open = trusted_baseline_sha256 == RECOVERY_TRUSTED_BASELINE_SHA256
+    recovered: set[str] = set()
     consumed_removals: set[str] = set()
     for fingerprint in additions:
         entry = current_entries[fingerprint]
         identity = (entry["rule_id"], entry["subject"])
         prior = trusted_by_identity.get(identity)
+        if prior is None and recovery_open and fingerprint in RECOVERY_FINGERPRINTS:
+            recovered.add(fingerprint)
+            continue
         if prior is None or prior[0] not in removals:
             raise TopologyError("baseline transition adds waiver fingerprints")
         current_members = set(entry["evidence_members"])
@@ -1091,6 +1109,8 @@ def validate_baseline_transition(
         if not current_members < trusted_members:
             raise TopologyError("baseline transition does not strictly shrink evidence")
         consumed_removals.add(prior[0])
+    if recovered and recovered != RECOVERY_FINGERPRINTS:
+        raise TopologyError("baseline recovery must restore its exact reviewed batch")
     for fingerprint in set(current_entries).intersection(trusted_entries):
         if current_entries[fingerprint] != trusted_entries[fingerprint]:
             raise TopologyError("baseline transition mutates a waiver entry")
@@ -1132,7 +1152,9 @@ def enforce_trusted_baseline(
             raise TopologyError("trusted baseline is missing outside the governed bootstrap")
         return
     trusted_data, trusted_entries = _load_baseline_bytes(raw, label="trusted")
-    validate_baseline_transition(current_data, current_entries, trusted_data, trusted_entries)
+    validate_baseline_transition(
+        current_data, current_entries, trusted_data, trusted_entries, _digest(raw)
+    )
 
 
 def candidate_baseline(findings: Sequence[Finding], *, expires_on: str) -> dict[str, object]:

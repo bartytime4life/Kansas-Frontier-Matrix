@@ -539,6 +539,47 @@ class RepositoryTopologyTests(unittest.TestCase):
         self.assertEqual(0, code, report)
         self.assertEqual("PASS", report["outcome"])
 
+    def test_one_time_recovery_admits_only_its_exact_batch(self) -> None:
+        data = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
+        current = module.load_baseline(BASELINE_PATH)
+        self.assertLessEqual(module.RECOVERY_FINGERPRINTS, set(current))
+        trusted = {
+            fingerprint: entry
+            for fingerprint, entry in current.items()
+            if fingerprint not in module.RECOVERY_FINGERPRINTS
+        }
+        pinned = module.RECOVERY_TRUSTED_BASELINE_SHA256
+
+        module.validate_baseline_transition(data, current, data, trusted, pinned)
+
+        with self.assertRaisesRegex(module.TopologyError, "adds waiver"):
+            module.validate_baseline_transition(data, current, data, trusted)
+        with self.assertRaisesRegex(module.TopologyError, "adds waiver"):
+            module.validate_baseline_transition(
+                data, current, data, trusted, module._digest(b"another trusted baseline")
+            )
+
+        partial = dict(current)
+        del partial[min(module.RECOVERY_FINGERPRINTS)]
+        with self.assertRaisesRegex(module.TopologyError, "exact reviewed batch"):
+            module.validate_baseline_transition(data, partial, data, trusted, pinned)
+
+        unrelated = module._finding(
+            "KFM-TOPO-003", "new-root-file.txt", "ROOT_FILE_NOT_ALLOWED"
+        )
+        with self.assertRaisesRegex(module.TopologyError, "adds waiver"):
+            module.validate_baseline_transition(
+                data,
+                {**current, unrelated.fingerprint: _entry(unrelated)},
+                data,
+                trusted,
+                pinned,
+            )
+
+        # After the recovery lands the trusted baseline already holds the batch, so
+        # the ordinary shrink-only rules apply unchanged.
+        module.validate_baseline_transition(data, current, data, current, pinned)
+
     def test_artifact_fingerprints_bind_to_indexed_content(self) -> None:
         paths = ("artifacts/release/example/release_manifest.json",)
         modes = {paths[0]: "100644"}

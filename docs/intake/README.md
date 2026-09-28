@@ -373,6 +373,8 @@ docs/intake/
 
 Current exploratory review: [repository topology ratchet and catalog hold](exploratory/repository-topology-ratchet-review-20260927.md). This packet proposes a review sequence; it does not change the ratchet or lift the catalog hold.
 
+Follow-up: [owner-directed one-time baseline recovery](exploratory/repository-topology-baseline-recovery-20260928.md) restores the three dropped waiver groups, including the current `catalog/` group, through a hash-pinned trusted-base exception.
+
 ### 6.2 Promotion state lanes
 
 ```text

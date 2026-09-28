@@ -1,0 +1,97 @@
+{
+  "receipt_id": "genrec-topology-baseline-recovery-20260928",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/intake/README.md",
+    "docs/intake/exploratory/repository-topology-baseline-recovery-20260928.md",
+    "tests/validators/directory_governance/test_validate_repository_topology.py",
+    "tools/validators/directory_governance/repository_topology_baseline.json",
+    "tools/validators/directory_governance/validate_repository_topology.py"
+  ],
+  "artifact_hashes": {
+    "docs/intake/README.md": "sha256:1fd89bc655606e7a241efbb49b524f94bf81b8f7ac591e591c6ff5c33a28a13f",
+    "docs/intake/exploratory/repository-topology-baseline-recovery-20260928.md": "sha256:ae55b538ff55300ca9b13580e11f011d2eec41f3eaa933acdc2c4a2d6f6d665e",
+    "tests/validators/directory_governance/test_validate_repository_topology.py": "sha256:16885bdc0f60114932a15ad661e6d4c3fd6de4c2b31b58e9c741128e1df1c6de",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "sha256:78f96e053e3d2e7fd14e5e0642480638f8ed0d2800f67985ac2ebc448a49347c",
+    "tools/validators/directory_governance/validate_repository_topology.py": "sha256:70ec73f3f07b5c6873d788899c2cf78e7afbdf39f9780ce14f89239399daac7f"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix main@fc7c558e3439b08f7e8670a4ef24c6985e5164be",
+      "GitHub Actions run 36433301726 job 108964733104",
+      "main@27202a0595ecdc6afd6f98b3aedaa236243e07b3 historical topology baseline",
+      "docs/intake/exploratory/repository-topology-ratchet-review-20260927.md",
+      "issue #4228 owner decision comment 5736885489"
+    ]
+  },
+  "citations": [
+    {
+      "id": "GitHub Actions run 36433301726 job 108964733104",
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/36433301726/job/108964733104",
+      "validated": true
+    },
+    {
+      "id": "Topology ratchet review packet",
+      "evidence_ref": "docs/intake/exploratory/repository-topology-ratchet-review-20260927.md",
+      "validated": true
+    },
+    {
+      "id": "issue #4228 owner decision comment 5736885489",
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228#issuecomment-5736885489",
+      "validated": false
+    }
+  ],
+  "truth_labels": {
+    "docs/intake/README.md": "CONFIRMED",
+    "docs/intake/exploratory/repository-topology-baseline-recovery-20260928.md": "CONFIRMED",
+    "tests/validators/directory_governance/test_validate_repository_topology.py": "CONFIRMED",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "CONFIRMED",
+    "tools/validators/directory_governance/validate_repository_topology.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository topology aggregate",
+      "outcome": "PASS",
+      "reason": "make repository-topology: 0 invariant, 0 new drift, 122 baselined warnings, 0 stale; contract, tests, register and diagnostics statuses all 0."
+    },
+    {
+      "gate": "trusted-base transition",
+      "outcome": "PASS",
+      "reason": "validate_repository_topology.py --trusted-baseline-ref origin/main passes; removing the three recovered entries reproduces the main baseline byte for byte (sha256 0a06efed...)."
+    },
+    {
+      "gate": "recovery negative cases",
+      "outcome": "PASS",
+      "reason": "Missing or different trusted hash, partial batch and unrelated additions are rejected; the post-recovery steady state stays shrink-only."
+    },
+    {
+      "gate": "repository governance parity",
+      "outcome": "FAIL",
+      "reason": "Inherited: the parity profile pins base_ref f1a41563, which is not an ancestor of main; the same two tests fail on main before this change."
+    }
+  ],
+  "policy_decisions": [],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-28T14:33:49Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Owner-directed one-time recovery of three dropped topology waiver groups (uppercase paths, catalog/, scaffold-only leaves) with a hash-pinned trusted-base exception. Does not accept catalog register entries, bind ADR-0040 Stage 1B, or authorize Stage 2."
+}
