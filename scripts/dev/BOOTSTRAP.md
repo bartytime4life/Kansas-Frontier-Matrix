@@ -4,7 +4,7 @@
 24.04. It does not establish CI compatibility, policy approval, evidence
 closure, source admission, release readiness, deployment, or publication.
 For the separate Site npm install and all configuration paths, use the
-[repository installation guide](../../docs/INSTALLATION.md).
+[repository installation guide](../../docs/installation.md).
 
 ## Safe inspection
 

@@ -17,7 +17,7 @@ related:
   - pnpm-lock.yaml
 [/KFM_META_BLOCK_V2] -->
 
-> **Retired guidance (2026-09-25):** This runbook describes the removed `apps/explorer-web/` workbench. For current dependency, configuration, and local hosting instructions, use [Installation](../INSTALLATION.md) and the [Site v74-derived source mirror](../../apps/site/README.md). Commands below are historical and do not apply to this branch.
+> **Retired guidance (2026-09-25):** This runbook describes the removed `apps/explorer-web/` workbench. For current dependency, configuration, and local hosting instructions, use [Installation](../installation.md) and the [Site v74-derived source mirror](../../apps/site/README.md). Commands below are historical and do not apply to this branch.
 
 # Explorer Web local development
 

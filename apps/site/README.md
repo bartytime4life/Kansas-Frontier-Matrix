@@ -19,7 +19,7 @@ other 185 shared files retain their Site v74 bytes. The repository-local
 
 ## Run locally
 
-The repository-wide dependency and configuration map is in [Installation](../../docs/INSTALLATION.md). This Site uses its own npm lockfile, separate from the root pnpm workspace.
+The repository-wide dependency and configuration map is in [Installation](../../docs/installation.md). This Site uses its own npm lockfile, separate from the root pnpm workspace.
 
 Use Node.js 22.13 or newer on Linux. The install helper also needs `flock`,
 `curl`, `sha256sum`, and GNU `timeout`.

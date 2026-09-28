@@ -293,7 +293,7 @@ Directory placement is part of the trust model. Read the adopted [Directory Rule
 
 ## Run locally
 
-Start with the [installation and configuration guide](docs/INSTALLATION.md) for the current Python, pnpm, and standalone Site dependency paths.
+Start with the [installation and configuration guide](docs/installation.md) for the current Python, pnpm, and standalone Site dependency paths.
 
 ### Download and prepare a local data store
 

@@ -50,7 +50,7 @@ This page gives new readers, reviewers, and contributors a safe path into Kansas
 | What should I verify before editing? | Current base SHA, exact target bytes, owning root, nearest README, authority documents, overlapping work, acceptance checks, and rollback |
 | How do ordinary programming layers map to KFM? | [Programming scaffold for a bounded change](#programming-scaffold-for-a-bounded-change): use existing responsibility roots instead of importing a parallel generic tree |
 | What is the Python baseline? | Python `>=3.11`, `python tools/ci/install_python_ci.py project-test`, then `make validate` and `git diff --check` |
-| What is the JavaScript baseline? | Use root pnpm for shared packages; install the runnable Site separately with its npm lockfile. See [Installation](../INSTALLATION.md). |
+| What is the JavaScript baseline? | Use root pnpm for shared packages; install the runnable Site separately with its npm lockfile. See [Installation](../installation.md). |
 | What is the normal delivery path? | One focused feature branch and a draft pull request with exact-head validation and separate human review |
 | What do public clients use? | Governed APIs and released public-safe artifacts—not RAW, WORK, QUARANTINE, candidate, canonical/internal, or direct model-runtime stores |
 | Does this page publish or synchronize anything? | **No.** It changes no lifecycle, release, deployment, publication, or native-wiki state |
@@ -234,7 +234,7 @@ npm run build
 ../serve-local.sh
 ```
 
-The Site has its own `package-lock.json` and local D1/R2 simulator state. See the [installation and configuration guide](../INSTALLATION.md) for prerequisites, environment variables, and the data-store path.
+The Site has its own `package-lock.json` and local D1/R2 simulator state. See the [installation and configuration guide](../installation.md) for prerequisites, environment variables, and the data-store path.
 
 > [!WARNING]
 > Root `pnpm run lint`, `pnpm run test`, and `pnpm run build` intentionally return `WORKFLOW_HOLD`; `make ui-build` is also held for the retired app.

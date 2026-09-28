@@ -461,7 +461,7 @@ make validate
 git diff --check
 ```
 
-The Python installer uses the committed hash locked test profile. `pre-commit` is a separate optional developer tool, so its install above is not covered by that lock. For the current component-specific dependency and configuration paths, see [Installation](docs/INSTALLATION.md).
+The Python installer uses the committed hash locked test profile. `pre-commit` is a separate optional developer tool, so its install above is not covered by that lock. For the current component-specific dependency and configuration paths, see [Installation](docs/installation.md).
 
 At the evidence snapshot:
 

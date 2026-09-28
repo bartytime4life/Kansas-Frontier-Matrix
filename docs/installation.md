@@ -8,7 +8,7 @@ owners: ["@bartytime4life"]
 created: 2026-09-27
 updated: 2026-09-27
 policy_label: public-documentation
-current_path: docs/INSTALLATION.md
+current_path: docs/installation.md
 owning_root: docs/
 responsibility: current local dependency installation and configuration paths
 truth_posture: CONFIRMED local command definitions at main@0bcdc2e784 and GitHub Site manifest at main@788fdf4829c7; runtime results require separate execution evidence

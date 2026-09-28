@@ -14,7 +14,7 @@ responsibility: current usage and limits of local developer helpers
 truth_posture: CONFIRMED command source in local checkout; runtime results require separate execution evidence
 related:
   - BOOTSTRAP.md
-  - ../../docs/INSTALLATION.md
+  - ../../docs/installation.md
   - ../../tools/ci/README.md
   - ../../docs/doctrine/directory-rules.md
 notes:
@@ -23,7 +23,7 @@ notes:
 
 # Local development helpers
 
-These scripts are convenience entry points for a local checkout. The repository's [installation guide](../../docs/INSTALLATION.md) gives the current dependency and configuration paths. The scripts do not decide policy, source admission, release, deployment, or publication.
+These scripts are convenience entry points for a local checkout. The repository's [installation guide](../../docs/installation.md) gives the current dependency and configuration paths. The scripts do not decide policy, source admission, release, deployment, or publication.
 
 ## `bootstrap.sh`
 
