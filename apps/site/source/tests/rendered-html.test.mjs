@@ -910,7 +910,7 @@ test("connects twenty-one bounded official context sources without admitting evi
   assert.match(route, /datetime/);
   assert.match(route, /(?:^|[\s"'`=:(])earthquake\.usgs\.gov\/fdsnws\/event\/1\/query(?:$|[\/?&#\s"'`),])/);
   assert.match(route, /NOAA HMS smoke publications/);
-  assert.match(route, /data\.raspberryshake\.org\/fdsnws\/station\/1\/query/);
+  assert.match(route, /^https?:\/\/data\.raspberryshake\.org\/fdsnws\/station\/1\/query\/?$/);
   assert.match(route, /MAX_RASPBERRY_SHAKE_STATIONS = 250/);
   assert.match(route, /normalizedFdsnHeader/);
   assert.match(route, /FDSN archive is delayed by at least 30 minutes/);
