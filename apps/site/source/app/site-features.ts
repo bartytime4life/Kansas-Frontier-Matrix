@@ -102,7 +102,7 @@ export const SITE_FEATURES = Object.freeze([
     userOutcome: "Show directional GFS forecast wind as moving wisps over Kansas with model valid and retrieval times visible.",
     sourceIds: ["nws-forecast-wind"],
     actionIds: ["toggle-context-connection", "open-provider-source"],
-    codePaths: ["app/live-context.ts", "app/wind-arrow-data.ts", "app/wind-arrow-canvas.ts", "app/api/wind-arrows/route.ts", "app/page.tsx"],
+    codePaths: ["app/live-context.ts", "app/wind-arrow-data.ts", "app/wind-flow-client.ts", "app/wind-arrow-canvas.ts", "app/api/wind-arrows/route.ts", "app/page.tsx"],
     boundary: "Open-Meteo NCEP GFS wisps show a model valid hour and sampled 10 m wind directions. Motion and curl are illustrative, not observed airflow, gusts, measured particle paths, smoke transport, historical data, or KFM evidence.",
   },
   {

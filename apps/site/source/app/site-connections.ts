@@ -42,7 +42,7 @@ const CONNECTION_CODE_PATHS: Record<OfficialContextId, readonly string[]> = {
   "usgs-3dep-slope": ["app/live-context.ts", "app/terrain-sources.ts", "app/map-runtime.ts", "app/page.tsx"],
   "nws-alerts": ["app/live-context.ts", "app/api/live-context/route.ts", "app/page.tsx"],
   "nws-radar": ["app/live-context.ts", "app/noaa-radar.ts", "app/api/noaa-radar/frames/route.ts", "app/page.tsx"],
-  "nws-forecast-wind": ["app/live-context.ts", "app/airflow-tiles.ts", "app/api/airflow-tile/route.ts", "app/wind-arrow-data.ts", "app/wind-arrow-canvas.ts", "app/api/wind-arrows/route.ts", "app/page.tsx"],
+  "nws-forecast-wind": ["app/live-context.ts", "app/airflow-tiles.ts", "app/api/airflow-tile/route.ts", "app/wind-arrow-data.ts", "app/wind-flow-client.ts", "app/wind-arrow-canvas.ts", "app/api/wind-arrows/route.ts", "app/page.tsx"],
   "noaa-lightning-density": ["app/live-context.ts", "app/lightning-data.ts", "app/lightning-server.ts", "app/api/lightning/frames/route.ts", "app/api/lightning/tiles/[frame]/[z]/[x]/[y]/route.ts", "app/page.tsx"],
   "nasa-lightning-climatology": ["app/live-context.ts", "app/lightning-data.ts", "app/page.tsx"],
 };
