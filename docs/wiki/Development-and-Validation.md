@@ -3,7 +3,7 @@ KFM_WIKI_SOURCE
 page_id: Development-and-Validation
 title: Development and Validation
 status: PROPOSED wiki source; review required
-updated: 2026-08-14
+updated: 2026-09-27
 authority: orientation-only; canonical repository evidence and adopted KFM authority outrank this page
 source_path: docs/wiki/Development-and-Validation.md
 publication_effect: none until separately synchronized to the native GitHub Wiki
@@ -24,20 +24,20 @@ evidence_checkpoint: main@0abdce42ea0a41f88e86b7d97df0ebd79961e37b
 
 | Need | Current repository entry point | Bounded meaning |
 |---|---|---|
-| Python environment | Python `>=3.11`; `python -m pip install -e ".[test]"` | Installs the root scaffold and test extras declared in `pyproject.toml` |
-| JavaScript environment | Node `>=22.13 <23`; `pnpm@11.17.0` | Uses the root workspace contract and lockfile |
+| Python environment | Python `>=3.11`; `python tools/ci/install_python_ci.py project-test` | Uses the committed hash locked test profile and local metadata-only root distribution |
+| JavaScript environment | Root: Node `>=22.13 <23`, `pnpm@11.17.0`; Site: Node `>=22.13.0`, npm | Root workspace and Site have separate lockfiles; see [Installation](../INSTALLATION.md) |
 | Schema/contract baseline | `make validate` | Aggregate schema validators plus configured schema and contract tests |
 | Complete registered profile | `make validator-full` | Every entry in the current validator registry exactly once—not every checker in the repository |
 | Focused trust-spine profile | `make validator-focused` | Smaller registry-declared evidence, decision, and receipt subset |
 | Changed-area selection | `make validator-changed-area CHANGED_PATH_FILE=<file>` | Selects registered validators whose globs match newline-delimited changed paths |
 | Repository guardrails | `make repository-guardrails` | Registry, workflow-security, and directory-topology guardrails |
-| Explorer Web | `make ui-build` or package-scoped scripts | TypeScript/Vite build; browser and unit tests remain separate commands |
+| Explorer Site mirror | `npm run build` and `npm test` from `apps/site/source/` | Current Site source build and local test suite; hosted behavior needs separate verification |
 | Wiki source | Markdown, link, anchor, receipt, and hash checks | Validates reviewed `docs/wiki/` source; does not synchronize the native wiki |
 | Hosted CI | Exact-head workflow jobs | Reviewer evidence for the steps that actually ran; not policy or release authority |
 
 ## Evidence checkpoint and authority
 
-This page was reconciled against `main@0abdce42ea0a41f88e86b7d97df0ebd79961e37b`.
+The original validation review used `main@0abdce42ea0a41f88e86b7d97df0ebd79961e37b`. Its installation commands were refreshed against the local checkout at `main@0bcdc2e784` on 2026-09-27. The older checkpointed claims below remain historical.
 
 **CONFIRMED at that revision:**
 
@@ -88,7 +88,7 @@ Create an isolated environment from the repository root:
 ```bash
 python -m venv .venv
 . .venv/bin/activate
-python -m pip install -e ".[test]"
+python tools/ci/install_python_ci.py project-test
 
 make validate
 git diff --check
@@ -99,7 +99,7 @@ On Windows PowerShell:
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python -m pip install -e ".[test]"
+python tools/ci/install_python_ci.py project-test
 ```
 
 When GNU Make is unavailable, run the current underlying baseline directly:
@@ -124,7 +124,7 @@ The compatibility wrapper delegates to the registry-driven full profile. Read th
 
 ## JavaScript workspace baseline
 
-The root workspace currently declares Node `>=22.13 <23`, `pnpm@11.17.0`, and a tracked `pnpm-lock.yaml`.
+The root workspace declares Node `>=22.13 <23`, `pnpm@11.17.0`, and a tracked `pnpm-lock.yaml`. It does not include the Site's `apps/site/source/` subtree.
 
 Use an approved toolchain that supplies the pinned pnpm version, then install from the lockfile:
 
@@ -133,21 +133,16 @@ pnpm --version
 pnpm install --frozen-lockfile
 ```
 
-Run package-scoped commands instead of the held root scripts:
+Run a package's own declared commands instead of the held root scripts. The runnable Site has a separate npm install:
 
 ```bash
-pnpm --filter explorer-web build
-pnpm --filter explorer-web test:unit
-pnpm --filter explorer-web test:browser
+cd apps/site/source
+npm run install:ci
+npm run build
+npm test
 ```
 
-The Explorer Web package also exposes:
-
-```bash
-pnpm --filter explorer-web test
-```
-
-That combined command runs its unit and browser suites. Browser tests may require the Playwright browser/runtime prerequisites documented by the package and CI environment.
+The Site's `npm test` rebuilds before running its Node test inventory. For a local built Worker, run `../serve-local.sh` from `apps/site/source/`. Local D1/R2 state is independent of hosted records. See [Site setup](../../apps/site/README.md).
 
 > [!WARNING]
 > Root `pnpm run lint`, `pnpm run test`, and `pnpm run build` intentionally exit nonzero with `WORKFLOW_HOLD`. Do not report those expected holds as regressions, and do not bypass them merely to obtain a green result.
@@ -221,7 +216,7 @@ Run a target only when the change affects the named surface, and inspect its imp
 | `make boundary-guards` | Policy, Explorer adapter, connector/pipeline, and API boundary tests |
 | `make boundary-guards-ci` | Boundary tests with JUnit output under `artifacts/qa/` |
 | `make deny-test` | Public-route, store, and runtime-import guards |
-| `make ui-build` | Explorer Web production build |
+| `make ui-build` | Explicit `WORKFLOW_HOLD` for the retired Explorer Web app |
 | `make maplibre-perf` | MapLibre performance smoke plus candidate artifacts |
 | `make maplibre-govern` | MapLibre performance-governance validation |
 | `make maplibre-proof` | Candidate ProofPack build and validation; no release effect |

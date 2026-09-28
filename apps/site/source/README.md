@@ -1,5 +1,7 @@
 # Kansas Frontier Matrix Explorer
 
+For this repository mirror, follow [the local Site installation steps](../README.md) from `apps/site/source/`. Its npm dependencies and local D1/R2 state are separate from the root pnpm workspace and from the hosted Site.
+
 A map-first Kansas explorer with real provider baselines, dated archive replay,
 source downloads, and private data contribution and steward review workflows.
 

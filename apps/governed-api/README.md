@@ -26,7 +26,7 @@ evidence_snapshot:
   api_workflow_blob: 84ba16a3c36a1d58b2f6f1059a31ed6354063357
 related:
   - ../README.md
-  - ../explorer-web/README.md
+  - ../site/README.md
   - ../../CONTRIBUTING.md
   - ../../docs/doctrine/directory-rules.md
   - ../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
@@ -274,7 +274,7 @@ For repository testing, follow [CONTRIBUTING](../../CONTRIBUTING.md) from the re
 ```bash
 python -m venv .venv
 . .venv/bin/activate
-python -m pip install -e ".[test]"
+python tools/ci/install_python_ci.py project-test
 make governed-api-smoke
 make governed-api-verify
 python -m pytest apps/governed-api/tests/test_abstain_routes.py -q --strict-config --strict-markers
