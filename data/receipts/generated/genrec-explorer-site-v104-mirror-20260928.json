@@ -1,5 +1,5 @@
 {
-  "receipt_id": "genrec-explorer-site-v103-mirror-20260928",
+  "receipt_id": "genrec-explorer-site-v104-mirror-20260928",
   "contract_version": "3.0.0",
   "artifact_paths": [
     "apps/site/README.md",
@@ -69,10 +69,10 @@
     "apps/site/source/vite.config.ts"
   ],
   "artifact_hashes": {
-    "apps/site/README.md": "sha256:e2136cf0e98bd4e642ce307d4d97a7af2c16a2ae776c92990c06795c95cf2ae4",
+    "apps/site/README.md": "sha256:e325ca5817ddf22a67308e6956c542632c44523984e931be2fd18873266843e0",
     "apps/site/source/README.md": "sha256:81ef20b59ba5ed976a5a6ff882e0e36a0a387c1afae62473a4c424060a67cd99",
     "apps/site/source/app/3dep-dem-tiles.ts": "sha256:67b3e84c88bb0f5d58555f6264153034763eebc9972f24c5eb863f09d3f3c791",
-    "apps/site/source/app/about/page.tsx": "sha256:2cabc938a7d259088311cfc8592db2328fa3edaf8ca3d488f39ccfc3e6a3be7c",
+    "apps/site/source/app/about/page.tsx": "sha256:b1cee4859a3817c2e88423403a772041a070dbc9b8570c5d1bf4eb53fa36329f",
     "apps/site/source/app/api/lightning/frames/route.ts": "sha256:160afa2b1014cc8c1c10c306ea8870f621bb786c889d44cad729d2afdf69186b",
     "apps/site/source/app/api/lightning/legend/route.ts": "sha256:605ed3c20f16bc26ec7028b0d49818682d3f6736a4b9d3ce2c16e4d13f42e21b",
     "apps/site/source/app/api/lightning/preview/route.ts": "sha256:f5e82618b5c04dbb27dd9a963e8f5beea4f0c4f9f66add0c934dd12678736035",
@@ -158,7 +158,7 @@
     ],
     "attached_docs": [],
     "evidence_refs": [
-      "Sites project appgprj_6aa0b1c41bc08191bfd86003920f1631 source 680c6ce3885fa93b21a3b971091a1c31c15a12d6",
+      "Sites project appgprj_6aa0b1c41bc08191bfd86003920f1631 source b6d1c7471ffd95a40934bbc0b768ceacf7ebe751",
       "GitHub main base 33f66a6b7fbbed3a8296d48eaf06b1ef47a5831f"
     ]
   },
@@ -233,12 +233,12 @@
     {
       "gate": "source-mirror-224-file-sha256-parity",
       "outcome": "PASS",
-      "reason": "Every one of the 224 tracked Site source files matches the privately deployed version 103 commit; two obsolete mirror-only source-role files were removed."
+      "reason": "Every one of the 224 tracked Site source files matches the privately deployed version 104 commit; two obsolete mirror-only source-role files were removed."
     },
     {
       "gate": "site-build",
       "outcome": "PASS",
-      "reason": "npm run build passed from the exact pushed Site source commit 680c6ce3."
+      "reason": "npm run build passed from the exact pushed Site source commit b6d1c747."
     },
     {
       "gate": "mirrored-site-node-tests",
@@ -249,6 +249,11 @@
       "gate": "mirrored-site-typescript",
       "outcome": "PASS",
       "reason": "tsc --noEmit passed in the source mirror."
+    },
+    {
+      "gate": "telemetry-scanner-label",
+      "outcome": "PASS",
+      "reason": "The About-page USGS 1 m label matches the existing GitHub wording and avoids a false telemetry meter match."
     },
     {
       "gate": "codeql-autofix-test-regression",
@@ -279,9 +284,9 @@
   "policy_decisions": [],
   "citations": [
     {
-      "id": "private-site-source-v103",
+      "id": "private-site-source-v104",
       "validated": true,
-      "evidence_ref": "Sites project appgprj_6aa0b1c41bc08191bfd86003920f1631 source 680c6ce3885fa93b21a3b971091a1c31c15a12d6"
+      "evidence_ref": "Sites project appgprj_6aa0b1c41bc08191bfd86003920f1631 source b6d1c7471ffd95a40934bbc0b768ceacf7ebe751"
     }
   ],
   "human_review": {
@@ -290,7 +295,7 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-09-28T15:45:16.591635Z",
+  "created_at": "2026-09-28T15:55:30.848205Z",
   "emitter": "OpenAI GPT-6 via Codex",
-  "notes": "Source mirror of owner-private Site v103, including the MapLibre seam, corrected Pillow pin, and repaired CodeQL test suggestions. The Site was privately deployed before this GitHub mirror. This receipt is provenance only and grants no review, source admission, public release, or merge authority."
+  "notes": "Source mirror of owner-private Site v104, including the MapLibre seam, corrected Pillow pin, repaired CodeQL test suggestions, and a concise elevation label. The Site was privately deployed before this GitHub mirror. This receipt is provenance only and grants no review, source admission, public release, or merge authority."
 }
