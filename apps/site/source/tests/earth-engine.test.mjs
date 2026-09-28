@@ -4,14 +4,9 @@ import test from "node:test";
 import vm from "node:vm";
 import ts from "typescript";
 
-const transpile = (text) => `data:text/javascript;base64,${Buffer.from(ts.transpileModule(text, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText).toString("base64")}`;
-const read = (path) => readFile(new URL(path, import.meta.url), "utf8");
-const catalogUrl = transpile(await read("../app/earth-engine-data.ts"));
-const contextUrl = transpile(await read("../app/earth-engine-context.ts"));
-const catalog = await import(catalogUrl);
-const exporter = await import(transpile((await read("../app/earth-engine-export.ts"))
-  .replace('"./earth-engine-data"', JSON.stringify(catalogUrl)).replace('"./earth-engine-context"', JSON.stringify(contextUrl))));
-const context = await import(contextUrl);
+const source = await readFile(new URL("../app/earth-engine-data.ts", import.meta.url), "utf8");
+const js = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
+const catalog = await import(`data:text/javascript;base64,${Buffer.from(js).toString("base64")}`);
 
 test("discovery supports multi-word searches and combined topic filters", () => {
   assert.equal(new Set(catalog.EARTH_ENGINE_DATASETS.map((d) => d.id)).size, 8);
@@ -108,100 +103,4 @@ test("review drafts retain provenance questions without granting admission or ex
   assert.equal(catalog.earthEngineReviewPacket("ee-3dep").requestedPeriod, null);
   assert.throws(() => catalog.earthEngineReviewPacket("ee-cdl", 2026));
   for (const d of catalog.EARTH_ENGINE_DATASETS) assert.equal(new URL(catalog.earthEngineUrl(d)).hostname, "developers.google.com");
-});
-
-const channels = (color) => [1, 3, 5].map((i) => parseInt(color.replace(/^#?/, "#").slice(i, i + 2), 16));
-function interp(value, stops, colors) {
-  const i = Math.max(0, stops.findIndex((stop, index) => index > 0 && value <= stop) - 1);
-  const t = (value - stops[i]) / (stops[i + 1] - stops[i]);
-  return channels(colors[i]).map((channel, c) => channel + (channels(colors[i + 1])[c] - channel) * t);
-}
-
-test("display ramps match the tile renderer and reproduce uneven stops as Earth Engine palettes", async () => {
-  const python = await read("../scripts/earth-engine/prepare_display_set.py");
-  const rendered = Object.fromEntries([...python.matchAll(/"(ee-[a-z0-9]+)": \(\[([^\]]*)\], \[([^\]]*)\]\)/g)]
-    .map(([, id, stops, colors]) => [id, { stops: stops.split(",").map(Number), colors: [...colors.matchAll(/"(#[0-9a-f]{6})"/g)].map((m) => m[1]) }]));
-  assert.deepEqual(rendered, JSON.parse(JSON.stringify(catalog.EARTH_ENGINE_DISPLAY_RAMPS)));
-  assert.deepEqual(catalog.earthEnginePalette(catalog.EARTH_ENGINE_DISPLAY_RAMPS["ee-chirps"]), ["fff4c2", "79c9bc", "235ca8"]);
-  for (const ramp of Object.values(catalog.EARTH_ENGINE_DISPLAY_RAMPS)) {
-    const palette = catalog.earthEnginePalette(ramp);
-    const first = ramp.stops[0], last = ramp.stops.at(-1), step = (last - first) / (palette.length - 1);
-    // Earth Engine interpolates evenly spaced palette entries; every sample and midpoint must track the renderer ramp.
-    for (let value = first; value <= last; value += step / 2) {
-      const index = (value - first) / step, low = Math.floor(index), high = Math.min(palette.length - 1, low + 1);
-      const ee = channels(palette[low]).map((channel, c) => channel + (channels(palette[high])[c] - channel) * (index - low));
-      interp(value, ramp.stops, ramp.colors).forEach((expected, c) => assert.ok(Math.abs(expected - ee[c]) <= 1, `${value}: ${expected} vs ${ee[c]}`));
-    }
-    for (const [i, stop] of ramp.stops.entries()) assert.equal("#" + palette[(stop - first) / step], ramp.colors[i]);
-  }
-  assert.equal(catalog.earthEnginePalette(catalog.EARTH_ENGINE_DISPLAY_RAMPS["ee-3dep"]).length, 12);
-  assert.equal(catalog.earthEngineLegendGradient(catalog.EARTH_ENGINE_DISPLAY_RAMPS["ee-3dep"]), "linear-gradient(90deg, #28594e 0%, #c4c98a 36.4%, #a67e54 63.6%, #efe7d4 100%)");
-  assert.match(python, /^MIN_ZOOM = 0$/m);
-  assert.match(python, /for z in range\(MIN_ZOOM, spec\["maxZoom"\] \+ 1\)/);
-});
-
-test("every installed layer has a legend swatch and discovery previews use the installed styling", async () => {
-  const css = await read("../app/earth-engine-display.module.css");
-  for (const layer of context.EARTH_ENGINE_CONTEXT_LAYERS) {
-    assert.ok(catalog.EARTH_ENGINE_DISPLAY_RAMPS[layer.id] || css.includes(`data-layer=${layer.id}]`), `${layer.id} legend`);
-  }
-  for (const id of ["ee-chirps", "ee-terraclimate", "ee-3dep"]) {
-    const recipe = catalog.buildEarthEngineRecipe(id, id === "ee-3dep" ? undefined : 2024);
-    assert.ok(recipe.includes(catalog.earthEngineVisParams(catalog.EARTH_ENGINE_DISPLAY_RAMPS[id])), id);
-  }
-  assert.ok(catalog.buildEarthEngineRecipe("ee-sentinel2", 2024).includes(catalog.EARTH_ENGINE_REFLECTANCE_VIS));
-});
-
-// A local EE double checks the generated control flow and task parameters, not provider execution.
-function runExport(id, scope, count) {
-  const layers = [], images = [], tables = [];
-  const chain = new Proxy(function () {}, {
-    get(_target, key) {
-      if (key === "getInfo") return () => count;
-      if (key === "map") return (fn) => { fn(chain); return chain; };
-      return () => chain;
-    },
-    apply: () => chain,
-  });
-  const script = exporter.buildEarthEngineExportRecipe(id, scope);
-  let error = null;
-  try {
-    vm.runInNewContext(script, {
-      ee: new Proxy({}, { get: () => chain }), print() {},
-      Map: { centerObject() {}, addLayer(_image, vis, title) { layers.push({ vis: JSON.parse(JSON.stringify(vis)), title }); } },
-      Export: { image: { toDrive(options) { images.push(JSON.parse(JSON.stringify(options))); } }, table: { toDrive(options) { tables.push(JSON.parse(JSON.stringify(options))); } } },
-    }, { timeout: 1000 });
-  } catch (cause) { error = cause; }
-  return { script, layers, images, tables, error };
-}
-
-test("Drive export recipes export the complete source inventory, the documented grid and a styled preview", () => {
-  const expected = { "ee-cdl": 1, "ee-chirps": 366, "ee-terraclimate": 12, "ee-sentinel2": 4000, "ee-3dep": 40 };
-  for (const layer of context.EARTH_ENGINE_CONTEXT_LAYERS) for (const scope of ["sample", "statewide"]) {
-    const run = runExport(layer.id, scope, expected[layer.id]);
-    assert.equal(run.error, null, `${layer.id} ${scope}: ${run.error}`);
-    assert.doesNotThrow(() => new vm.Script(run.script));
-    assert.equal(run.tables.length, 1);
-    assert.deepEqual(run.tables[0].selectors, ["source_image_id", "time_start_ms"]);
-    assert.equal(run.tables[0].fileFormat, "CSV");
-    assert.match(run.tables[0].description, new RegExp(`^kfm_${layer.id.replaceAll("-", "_")}_.*_${scope}_source_ids$`));
-    assert.equal(run.images.length, 1);
-    const highResolution = !["ee-chirps", "ee-terraclimate"].includes(layer.id);
-    assert.deepEqual(run.images[0].crsTransform, highResolution ? [30, 0, -1200000, 0, -30, 2400000]
-      : layer.id === "ee-chirps" ? [0.05, 0, -180, 0, -0.05, 50] : [1 / 24, 0, -180, 0, -(1 / 24), 90]);
-    assert.equal(run.images[0].fileDimensions, scope === "statewide" && highResolution ? 2048 : undefined);
-    assert.equal(run.layers.length, 1);
-    const ramp = catalog.EARTH_ENGINE_DISPLAY_RAMPS[layer.id];
-    if (ramp) assert.deepEqual(run.layers[0].vis, { min: ramp.stops[0], max: ramp.stops.at(-1), palette: catalog.earthEnginePalette(ramp) });
-    assert.match(run.script, /reduceRegion\(\{reducer: ee\.Reducer\.count\(\), geometry: sample, crs: /);
-  }
-  const cdl = runExport("ee-cdl", "sample", 1);
-  assert.deepEqual(cdl.layers[0].vis, {});
-  assert.match(cdl.script, /Map\.addLayer\(ee\.Image\(source\.first\(\)\)\.select\('cropland'\)\.clip\(region\), \{\}/);
-  assert.deepEqual(runExport("ee-sentinel2", "sample", 10).layers[0].vis, { min: 0, max: 0.3, gamma: 1.2 });
-  for (const [id, count] of [["ee-cdl", 2], ["ee-chirps", 365], ["ee-terraclimate", 11], ["ee-sentinel2", 0], ["ee-3dep", 0]]) {
-    const held = runExport(id, "statewide", count);
-    assert.match(String(held.error), /Export held/);
-    assert.equal(held.images.length, 0);
-  }
 });

@@ -68,7 +68,7 @@ export const TERRAIN_SOURCES: readonly TerrainSourceRecord[] = Object.freeze([
     format: "USGS F32 LERC elevation converted to Terrarium PNG for MapLibre",
     coverage: "Kansas map area; source mosaics vary by location",
     sourceUrl: "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer",
-    tileTemplate: "/api/3dep-dem-tile?z={z}&x={x}&y={y}",
+    tileTemplate: "/api/3dep-dem-tile?v=2&z={z}&x={x}&y={y}",
     encoding: "terrarium",
     tileSize: 256,
     minZoom: 6,

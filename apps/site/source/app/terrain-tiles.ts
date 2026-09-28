@@ -5,6 +5,7 @@ export const TERRAIN_TILE_MAX_ZOOM = 14;
 export const TERRAIN_TILE_TTL = 6 * 60 * 60;
 const FUNCTIONS = { hillshade: "Hillshade Multidirectional", slope: "Slope Map" } as const;
 const ORIGIN = "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer/exportImage";
+const FAILURE_PAUSE_MS = 5_000;
 export function terrainTileRequest(url: URL) {
   const p = url.searchParams;
   if ([...p.keys()].some((k) => !["kind", "z", "x", "y"].includes(k) || p.getAll(k).length !== 1)) throw new Error("Unsupported tile request.");
@@ -31,21 +32,8 @@ type Entry = { bytes: Uint8Array; retrievedAt: string; expires: number };
 type Options = { fetchBytes?: (url: string) => Promise<Uint8Array>; now?: () => number; edgeCache?: () => Cache | undefined };
 export function createTerrainTileService(options: Options = {}) {
   const now = options.now ?? Date.now;
-  const fetchBytes = options.fetchBytes ?? (async (url: string) => {
-    let lastError: unknown;
-    for (let attempt = 0; attempt < 2; attempt += 1) {
-      try {
-        const bytes = (await boundedFetch(url, 1_048_576, { timeoutMs: 12_000 })).bytes;
-        validateTerrainPNG(bytes);
-        return bytes;
-      } catch (error) {
-        lastError = error;
-        if (attempt === 0) await new Promise((resolve) => setTimeout(resolve, 300));
-      }
-    }
-    throw lastError;
-  });
-  const memory = new Map<string, Entry>(), pending = new Map<string, Promise<Entry>>(); let memoryBytes = 0;
+  const fetchBytes = options.fetchBytes ?? (async (url: string) => (await boundedFetch(url, 1_048_576, { timeoutMs: 40_000 })).bytes);
+  const memory = new Map<string, Entry>(), pending = new Map<string, Promise<Entry>>(), recentFailures = new Map<string, number>(); let memoryBytes = 0;
   const cacheControl = (expires: number) => { const remaining = Math.max(0, Math.floor((expires - now()) / 1000)); return `public, max-age=${Math.min(3600, remaining)}, s-maxage=${remaining}`; };
   const response = (entry: Entry, state: string) => new Response(new Uint8Array(entry.bytes), { headers: {
     "Content-Type": "image/png", "Cache-Control": cacheControl(entry.expires),
@@ -64,13 +52,19 @@ export function createTerrainTileService(options: Options = {}) {
       const expires = hit ? Date.parse(hit.headers.get("X-KFM-Retrieved-At") ?? "") + TERRAIN_TILE_TTL * 1000 : 0;
       if (hit?.ok && hit.headers.get("content-type") === "image/png" && expires > now()) { const result = new Response(hit.body, hit); result.headers.set("X-KFM-Tile-Cache", "EDGE"); result.headers.set("Cache-Control", cacheControl(expires)); return result; }
     } catch { /* The bounded memory cache remains usable if edge storage is unavailable. */ }
+    const failureUntil = recentFailures.get(tile.key);
+    if (failureUntil && failureUntil > now()) return Response.json({ error: "The USGS terrain tile is temporarily unavailable. Retry the layer shortly." }, { status: 502, headers: { "Cache-Control": "no-store", "Retry-After": String(Math.max(1, Math.ceil((failureUntil - now()) / 1000))), "X-KFM-Tile-Cache": "RECENT_FAILURE" } });
+    if (failureUntil) recentFailures.delete(tile.key);
     const coalesced = pending.has(tile.key);
     let work = pending.get(tile.key);
     if (!work) {
       if (pending.size >= 32) return Response.json({ error: "Terrain requests are busy. Please retry the layer shortly." }, { status: 503, headers: { "Cache-Control": "no-store", "Retry-After": "5" } });
       work = (async () => {
+        // USGS dynamic raster functions can take over 30 seconds for a valid
+        // tile. In-flight requests are coalesced and capped at 32 distinct tiles.
         const bytes = await fetchBytes(tile.upstream); validateTerrainPNG(bytes);
         const entry = { bytes, retrievedAt: new Date(now()).toISOString(), expires: now() + TERRAIN_TILE_TTL * 1000 };
+        recentFailures.delete(tile.key);
         while (memory.size >= 64 || memoryBytes + bytes.byteLength > 8 * 1024 * 1024) { const first = memory.keys().next().value; if (first === undefined) break; memoryBytes -= memory.get(first)!.bytes.byteLength; memory.delete(first); }
         memory.set(tile.key, entry); memoryBytes += bytes.byteLength;
         try { await cache?.put(cacheKey, response(entry, "ORIGIN")); } catch { /* Cache writes never make a valid source tile fail. */ }
@@ -79,6 +73,11 @@ export function createTerrainTileService(options: Options = {}) {
       void work.finally(() => pending.delete(tile.key)).catch(() => undefined);
     }
     try { return response(await work, coalesced ? "COALESCED" : "ORIGIN"); }
-    catch { return Response.json({ error: "The USGS terrain tile is temporarily unavailable. Retry the layer or use display terrain; source data is available from the download notice." }, { status: 502, headers: { "Cache-Control": "no-store", "Retry-After": "5" } }); }
+    catch {
+      recentFailures.delete(tile.key);
+      recentFailures.set(tile.key, now() + FAILURE_PAUSE_MS);
+      while (recentFailures.size > 64) recentFailures.delete(recentFailures.keys().next().value!);
+      return Response.json({ error: "The USGS terrain tile is temporarily unavailable. Retry the layer or use display terrain; source data is available from the download notice." }, { status: 502, headers: { "Cache-Control": "no-store", "Retry-After": String(FAILURE_PAUSE_MS / 1000) } });
+    }
   };
 }

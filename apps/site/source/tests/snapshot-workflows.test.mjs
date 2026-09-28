@@ -73,6 +73,26 @@ test("shared or stored snapshots reject unknown layers, references and invalid c
   ]) assert.equal(storage.validMapSnapshot({ ...snapshot, ...patch }), false);
 });
 
+test("terrain snapshots preserve the selected DEM and display scale without changing legacy drafts", () => {
+  const terrain = { ...snapshot, representation: "Terrain 3D", terrainProvider: "usgs-3dep", terrainExaggeration: 1.35 };
+  assert.equal(storage.validMapSnapshot(terrain), true);
+  assert.match(model.terrainSnapshotDescription(terrain), /USGS 3DEP dynamic DEM mosaic at 1\.35×/);
+  assert.match(model.terrainSnapshotDescription({ ...terrain, terrainProvider: "mapzen" }), /Mapzen Terrarium DEM at 1\.35×/);
+  const legacy = { ...snapshot, representation: "Terrain 3D" };
+  assert.equal(storage.validMapSnapshot(legacy), true);
+  assert.match(model.terrainSnapshotDescription(legacy), /not recorded in this saved snapshot/);
+  assert.equal(model.terrainSnapshotDescription(snapshot), null);
+  for (const invalid of [
+    { ...terrain, terrainProvider: "other" },
+    { ...terrain, terrainExaggeration: 2.1 },
+    { ...terrain, terrainExaggeration: undefined },
+    { ...snapshot, terrainProvider: "usgs-3dep", terrainExaggeration: 1.35 },
+  ]) assert.equal(storage.validMapSnapshot(invalid), false);
+  const story = model.createTrustStory(terrain, evidence);
+  assert.equal(storage.validStoryDraft(JSON.parse(JSON.stringify(story))), true);
+  assert.equal(story.scenes.every((scene) => scene.snapshot.representation === "2D" && scene.snapshot.terrainProvider === undefined), true);
+});
+
 test("location-redacted snapshots cannot restore precise bounds", () => {
   const redacted = { ...snapshot, camera: { center: "WITHHELD_BROWSER_LOCATION", zoom: "WITHHELD", pitch: "WITHHELD", bearing: "WITHHELD" } };
   assert.equal(storage.validMapSnapshot(redacted), true);

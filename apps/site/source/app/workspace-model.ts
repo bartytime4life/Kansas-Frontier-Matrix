@@ -79,6 +79,8 @@ export type MapSnapshot = Readonly<{
     pitch: number | "WITHHELD";
   }>;
   representation: "2D" | "Terrain 3D" | "Globe" | "Compare";
+  terrainProvider?: "mapzen" | "usgs-3dep";
+  terrainExaggeration?: number;
   projection: "mercator" | "globe";
   basemap: string;
   evidenceFilter?: EvidenceState | "ALL";
@@ -116,6 +118,15 @@ export type MapSnapshot = Readonly<{
   boundedCount: number;
   policy: PolicyDecision;
 }>;
+
+export function terrainSnapshotDescription(snapshot: MapSnapshot): string | null {
+  if (snapshot.representation !== "Terrain 3D") return null;
+  if (!snapshot.terrainProvider || snapshot.terrainExaggeration === undefined) {
+    return "DEM source and display scale were not recorded in this saved snapshot; external display context only, not admitted KFM evidence.";
+  }
+  const source = snapshot.terrainProvider === "usgs-3dep" ? "USGS 3DEP dynamic DEM mosaic" : "Mapzen Terrarium DEM";
+  return `${source} at ${snapshot.terrainExaggeration.toFixed(2)}× vertical display scale; external display context only, not admitted KFM evidence.`;
+}
 
 export type ReportDraft = Readonly<{
   id: string;
@@ -229,6 +240,8 @@ const sceneSnapshot = (
   area: { kind: "viewport", label: record?.spatialScope ?? "Kansas demonstration context" },
   camera: { center: record?.displayFocus ?? [-98.38, 38.48], zoom: record ? 6.4 : 5.4, bearing: 0, pitch: 0 },
   representation: "2D",
+  terrainProvider: undefined,
+  terrainExaggeration: undefined,
   projection: "mercator",
   visibleLayers: layer ? [layer] : [],
   selection: record ? { featureId: record.featureId, layerId: record.layerId, title: record.title, evidenceReference: record.citation, trustState: record.trustState } : null,

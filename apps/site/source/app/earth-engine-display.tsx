@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { ErrorEvent as MapLibreErrorEvent, Map as MapLibreMap } from "./maplibre-seam";
 import cdlPalette from "../scripts/earth-engine/cdl_2024_palette.json";
-import { EARTH_ENGINE_DATASETS, EARTH_ENGINE_DISPLAY_RAMPS, earthEngineLegendGradient, earthEngineUrl } from "./earth-engine-data";
+import { EARTH_ENGINE_DATASETS, earthEngineUrl } from "./earth-engine-data";
 import { EARTH_ENGINE_CONTEXT_LAYERS, earthEngineTileVisibleAtYear, type EarthEngineContextManifest, type EarthEngineContextLayerId } from "./earth-engine-context";
 import type { EarthEngineDisplayState } from "./earth-engine-raster-fallback";
 import styles from "./earth-engine-display.module.css";
@@ -95,7 +95,7 @@ export function EarthEngineDisplayControls({ map, mapYear, manifest, loading, er
         <small>{layer?.period ?? descriptor.period} · {layer ? `${layer.resolutionMeters.toLocaleString()} m ${descriptor.id === "ee-chirps" || descriptor.id === "ee-terraclimate" ? "native source grid" : "display grid"}` : "awaiting reviewed export"}</small>
         {selectedVisible[descriptor.id] && <>
           <small>{layer?.attribution ?? descriptor.attribution}</small>
-          <div className={styles.legend}><i aria-hidden="true" data-layer={descriptor.id} style={EARTH_ENGINE_DISPLAY_RAMPS[descriptor.id] ? { background: earthEngineLegendGradient(EARTH_ENGINE_DISPLAY_RAMPS[descriptor.id]) } : undefined} /><span>{layer?.legend ?? descriptor.legend}</span></div>
+          <div className={styles.legend}><i aria-hidden="true" data-layer={descriptor.id} /><span>{layer?.legend ?? descriptor.legend}</span></div>
           {approved && <label className={styles.opacity}>Opacity <input aria-label={`${descriptor.title} opacity`} type="range" min="0" max="100" value={Math.round((opacity[descriptor.id] ?? 0.72) * 100)} onChange={(event) => setOpacity((current) => ({ ...current, [descriptor.id]: Number(event.target.value) / 100 }))} /><output>{Math.round((opacity[descriptor.id] ?? 0.72) * 100)}%</output></label>}
           {approved && descriptor.id === "ee-cdl" && <details className={styles.cropKey}><summary>Crop class key · {Object.keys(cdlPalette.classes).length} classes</summary><ul>{Object.entries(cdlPalette.classes).map(([code, value]) => <li key={code}><i aria-hidden="true" style={{ backgroundColor: value.color }} /><span>{code} · {value.label}</span></li>)}</ul></details>}
         </>}

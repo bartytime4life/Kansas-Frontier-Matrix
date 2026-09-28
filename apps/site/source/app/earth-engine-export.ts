@@ -1,4 +1,4 @@
-import { EARTH_ENGINE_DATASETS, EARTH_ENGINE_DISPLAY_RAMPS, EARTH_ENGINE_REFLECTANCE_VIS, KANSAS_BOUNDARY, earthEngineUrl, earthEngineVisParams } from "./earth-engine-data";
+import { EARTH_ENGINE_DATASETS, KANSAS_BOUNDARY, earthEngineUrl } from "./earth-engine-data";
 import { EARTH_ENGINE_CONTEXT_LAYERS, type EarthEngineContextLayerId } from "./earth-engine-context";
 
 export type EarthEngineExportScope = "sample" | "statewide";
@@ -31,17 +31,9 @@ export function buildEarthEngineExportRecipe(id: EarthEngineContextLayerId, scop
   if (id !== "ee-3dep") lines.push("source = source.filterDate('2024-01-01', '2025-01-01');");
   lines.push(
     "print('Input collection count', source.size());",
-    "print('Source image IDs (console lists truncate; the CSV task below holds the complete inventory)', source.aggregate_array('system:id'));",
+    "print('All source image IDs (export this list for the review record)', source.aggregate_array('system:id'));",
     "print('Input time starts', source.aggregate_array('system:time_start'));",
     "print('Input footprints and properties', source);",
-    "// Complete source inventory for exports/<layer>/source_ids.csv; its task ID is the review's sourceInventoryTaskId.",
-    "Export.table.toDrive({",
-    "  collection: ee.FeatureCollection(source.map(function(scene) {",
-    "    return ee.Feature(null, {source_image_id: scene.get('system:id'), time_start_ms: scene.get('system:time_start')});",
-    "  })),",
-    `  description: '${name}_source_ids', fileNamePrefix: '${name}_source_ids', folder: 'KFM_EE_Review',`,
-    "  fileFormat: 'CSV', selectors: ['source_image_id', 'time_start_ms']",
-    "});",
   );
   if (id === "ee-cdl") lines.push(
     "// One annual categorical raster; nearest-neighbor sampling only.",
@@ -87,22 +79,18 @@ export function buildEarthEngineExportRecipe(id: EarthEngineContextLayerId, scop
     "var image = source.select('elevation').map(function(tile) { return tile.resample('bilinear'); }).mosaic().rename('elevation_m').toFloat();",
     "print('Source acquisition metadata; review mixed dates and vertical datum before approval', source);",
   );
+  lines.push(
+    "print('Output band names and source projection', image.bandNames(), image.projection());",
+    "print('Validation sample non-null pixel count', image.reduceRegion({reducer: ee.Reducer.count(), geometry: sample, scale: " + (highResolution ? "30" : "5000") + ", maxPixels: 1e8}));",
+    "Map.centerObject(region, " + (scope === "sample" ? "10" : "7") + ");",
+    "Map.addLayer(" + (id === "ee-sentinel2" ? "image.select(['red','green','blue'])" : "image.select(0)") + ".clip(region), " + (id === "ee-cdl" ? "{}" : id === "ee-sentinel2" ? "{min:0,max:0.3}" : id === "ee-3dep" ? "{min:200,max:1300}" : id === "ee-chirps" ? "{min:0,max:1200}" : "{min:-5,max:5}") + ", 'Export candidate · review only');",
+    "// Export remains a manual Code Editor task. Confirm source count and time periods before clicking Run.",
+    "// A completed task is not approval: inspect the GeoTIFF and record its SHA-256 outside Git.",
+  );
   const noData = id === "ee-cdl" ? "65535" : "-9999";
   const projection = highResolution
     ? `crs: '${GRID_30M.crs}', crsTransform: ${JSON.stringify(GRID_30M.crsTransform)},`
     : `crs: 'EPSG:4326', crsTransform: ${JSON.stringify(NATIVE_CLIMATE_GRIDS[id as keyof typeof NATIVE_CLIMATE_GRIDS])},`;
-  // Previews use the installed tile styling. CDL keeps its source band name so Earth Engine
-  // applies the catalog class palette; the renamed uint16 band would stretch to black.
-  const preview = id === "ee-cdl" ? "ee.Image(source.first()).select('cropland')" : id === "ee-sentinel2" ? "image.select(['red','green','blue'])" : "image.select(0)";
-  const vis = id === "ee-cdl" ? "{}" : id === "ee-sentinel2" ? EARTH_ENGINE_REFLECTANCE_VIS : earthEngineVisParams(EARTH_ENGINE_DISPLAY_RAMPS[id]);
-  lines.push(
-    "print('Output band names and source projection', image.bandNames(), image.projection());",
-    `print('Validation sample non-null pixel count on the export grid', image.reduceRegion({reducer: ee.Reducer.count(), geometry: sample, ${projection} maxPixels: 1e8}));`,
-    "Map.centerObject(region, " + (scope === "sample" ? "10" : "7") + ");",
-    `Map.addLayer(${preview}.clip(region), ${vis}, 'Export candidate · review only');`,
-    "// Export remains a manual Code Editor task. Confirm source count and time periods before clicking Run.",
-    "// A completed task is not approval: inspect the GeoTIFF and record its SHA-256 outside Git.",
-  );
   lines.push(
     "Export.image.toDrive({",
     `  image: image.clip(region).unmask({value: ${noData}, sameFootprint: false}),`,

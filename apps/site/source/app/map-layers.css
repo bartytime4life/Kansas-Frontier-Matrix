@@ -104,6 +104,8 @@
 .official-context-options[open] > summary { color: #edc67b; }
 .official-context-option-body { border-top: 1px solid #29474b; padding: 12px 16px 15px; }
 .official-context-option-body .opacity-control { margin: 0 0 12px; }
+.terrain-layer-key { display: block; margin: 0 0 12px; color: #c7d6ce; font-size: 11px; line-height: 1.5; }
+.terrain-layer-key::before { content: ""; display: block; height: 7px; margin-bottom: 6px; border-radius: 4px; background: linear-gradient(90deg, #b7b5ae, #e7db9a 52%, #a76945); }
 .official-context-option-body .source-time-control { margin: 0 0 12px; }
 .official-context-option-body .official-context-actions { margin: 0; }
 .layer-panel-explore { flex: none; border-top: 1px solid #365459; background: #102a2e; }

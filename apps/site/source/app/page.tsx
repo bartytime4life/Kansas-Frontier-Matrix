@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { readBoundedJson } from "./bounded-json";
-import { catalogSourceRoles, layerHasSourceRole } from "./catalog-source-roles";
 import { buildAvailabilityBins } from "./timeline-availability";
 import { deriveMapSignals } from "./map-signals";
 import { parseRepositoryObservation, type RepositoryConnection } from "./repository-status";
@@ -11,9 +10,14 @@ import { replaceExplorerHistory } from "./embed-runtime";
 import { parseSavedWorkspaceList } from "./saved-workspaces";
 import { BASELINE_STACKS, currentUtcDay } from "./daily-baseline";
 import { SourceQualityRow } from "./source-quality-row";
+import { sourceDownloadHref } from "./source-downloads";
 import { planOfficialRefresh } from "./official-refresh-plan";
 import { ArchiveDaySlider } from "./archive-day-slider";
 import { DataNotices, LayerSceneControls, RenderQualityControl } from "./map-toolbar";
+import { drawWindFlowCanvas, nearestWindFlowSample, windToCompass } from "./wind-arrow-canvas";
+import { applyTerrainReliefStyle, applyTopographicRasterDepth } from "./terrain-relief-style";
+import { TerrainRasterViewTracker, terrainRasterErrorTile, terrainRasterTileInView, type TerrainRasterId } from "./terrain-raster-status";
+import type { WindArrowFrame, WindArrowSample } from "./wind-arrow-data";
 import { EarthEngineDisplayControls } from "./earth-engine-display";
 import { EarthEngineRasterFallback, type EarthEngineDisplayState } from "./earth-engine-raster-fallback";
 import { useEarthEngineContext } from "./earth-engine-context-client";
@@ -47,10 +51,14 @@ import {
   setTerrainHeightOverlay as applyTerrainHeightOverlay,
   setTerrainPresentation as applyTerrainPresentation,
   setElevationExaggeration,
+  shouldFallbackStandardBasemap,
+  terrainSourceLoadState,
+  unexaggeratedTerrainElevation,
   TERRAIN_HILLSHADE_LAYER_ID,
   TERRAIN_HILLSHADE_SOURCE_ID,
   TERRAIN_COLOR_SOURCE_ID,
   TERRAIN_SOURCE_ID,
+  terrainPresentationSourceMatches,
   type Structures3DState,
   type TerrainPresentationState,
   updateAnalysisAreaSource,
@@ -165,10 +173,11 @@ import {
   type StoryScene,
   type TrustState,
 } from "./workspace-model";
-import { STRUCTURE_3D_SOURCE, TERRAIN_SOURCES, terrainSourceFor, type TerrainProvider } from "./terrain-sources";
+import { STRUCTURE_3D_SOURCE, TERRAIN_SOURCES, TERRARIUM_RENDER_MAX_ZOOM, terrainSourceFor, type TerrainProvider } from "./terrain-sources";
 import { EXTERNAL_CONTEXT_SOURCES } from "./external-context-sources";
 import {
   applyOfficialContextState,
+  clearOfficialContextFeed,
   clearNoaaSatelliteFrame,
   defaultOfficialContextOpacity,
   defaultOfficialContextVisibility,
@@ -182,12 +191,15 @@ import {
   noaaRadarObservationTimeIsApplied,
   officialContextVisibilityForFrame,
   setNoaaRadarObservationTime,
+  setNoaaLightningObservationTime,
+  setNoaaLightningGlow,
   setNoaaSatelliteFrame,
   type OfficialContextFeedId,
   type OfficialContextId,
   type OfficialContextPayload,
   type OfficialContextState,
 } from "./live-context";
+import { canonicalLightningTime, NOAA_LIGHTNING_LEGEND_URL, type LightningManifest } from "./lightning-data";
 import {
   isNoaaRadarManifest,
   nextNoaaRadarFrameIndex,
@@ -286,7 +298,8 @@ type PlaybackSpeed = 0.5 | 1 | 2;
 type NoaaRadarFrameLoadState = "idle" | "loading" | "ready" | "error";
 type BoxDragMode = "zoom" | "report-area";
 type TerrainProfileSample = Readonly<{ distanceMiles: number; elevationMeters: number }>;
-type TerrainElevationReading = Readonly<{ longitude: number; latitude: number; meters: number; feet: number }>;
+type TerrainElevationReading = Readonly<{ longitude: number; latitude: number; meters: number; feet: number; provider: TerrainProvider }>;
+type WindArrowHover = Readonly<{ sample: WindArrowSample; screenX: number; screenY: number }>;
 type RepositoryView = "updates" | "functions" | "scenario" | "runtime" | "transitions" | "readiness" | "sources";
 type SourceObservatoryView = "candidates" | "corpus" | "gaps";
 type GovernedRoute = "/bootstrap" | "/layers" | "/evidence" | "/focus";
@@ -421,7 +434,7 @@ const BASEMAP_CONTEXT_LAYER: LayerRecord = {
   title: "Standard vector basemap",
   description: "Open geographic context from the selected basemap style. It is a display carrier, not KFM evidence.",
   domain: "Basemap context",
-  category: "Boundaries & places",
+  category: "Reference boundaries & locators",
   sourceType: "Vector tiles",
   sourceId: "openfreemap-vector-context",
   datasetName: "OpenFreeMap / OpenMapTiles / OpenStreetMap context",
@@ -503,8 +516,9 @@ const officialContextRuntimeVisibility = (
   frame: number,
   noaaRadarReady: boolean,
   noaaRadarFrameTime: string | null,
+  buildYearCurrent = true,
 ) => {
-  const next = officialContextVisibilityForFrame(visibility, frame);
+  const next = officialContextVisibilityForFrame(visibility, frame, buildYearCurrent);
   next["nws-radar"] = next["nws-radar"] && noaaRadarReady && Boolean(noaaRadarFrameTime);
   return next;
 };
@@ -871,7 +885,7 @@ const buildBasemapContext = (candidate: BasemapFeatureCandidate, longitude: numb
     title: officialSource.title,
     description: officialSource.boundary,
     domain: officialSource.domain,
-    category: officialSource.id === "census-counties" ? "Boundaries & places"
+    category: officialSource.id === "census-counties" ? "Reference boundaries & locators"
       : ["usgs-streamflow", "noaa-nwps-gauges", "usgs-3dhp-hydrography", "usgs-wbd-watersheds", "noaa-nwm-analysis", "noaa-nwm-short-range"].includes(officialSource.id) ? "Hydrology & water"
         : officialSource.id === "usgs-3dep-hillshade" || officialSource.id === "usgs-earthquakes" ? "Geology & landforms"
           : "Weather & hazards",
@@ -959,7 +973,7 @@ const formatNoaaRadarLocalTime = (value: string) => new Intl.DateTimeFormat(unde
 
 const formatNoaaRadarUtcTime = (value: string) => `${value.slice(0, 10)} · ${value.slice(11, 16)}Z`;
 
-const timelineEraLabel = (value: number) => {
+const timelineEraLabel = (value: number, buildYearCurrent = true) => {
   if (value <= -4_000_000_000) return "Hadean eon context";
   if (value <= -2_500_000_000) return "Archean eon context";
   if (value < -541_000_000) return "Proterozoic eon context";
@@ -972,11 +986,11 @@ const timelineEraLabel = (value: number) => {
   if (value < 1541) return "Early human record capacity";
   if (value < 1854) return "Early historical capacity";
   if (value < 2000) return "Historical record";
-  if (value === 2026) return "Present operational window · source-specific clocks";
+  if (value === OFFICIAL_CONTEXT_PRESENT_FRAME) return buildYearCurrent ? "Present operational window · source-specific clocks" : "Build-year mismatch · current sources held";
   return "Modern record";
 };
 
-const TIMELINE_MAJOR_STEPS = new Set<number>([-4_540_000_000, 1800, 1850, 1900, 1950, 2000, Math.max(2026, new Date().getUTCFullYear())]);
+const TIMELINE_MAJOR_STEPS = new Set<number>([-4_540_000_000, 1800, 1850, 1900, 1950, 2000, OFFICIAL_CONTEXT_PRESENT_FRAME]);
 const TIMELINE_JUMPS = Object.freeze([
   Object.freeze({ label: "Earth", year: -4_540_000_000 }),
   Object.freeze({ label: "Paleozoic", year: -541_000_000 }),
@@ -1043,6 +1057,7 @@ const anchorDistanceMiles = (left: Pick<FeatureProperties, "focusLng" | "focusLa
 
 export default function Home() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
+  const windArrowCanvasRef = useRef<HTMLCanvasElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const earthEngineContext = useEarthEngineContext();
   const [earthEngineDisplay, setEarthEngineDisplay] = useState<EarthEngineDisplayState>({ visible: {}, opacity: {} });
@@ -1054,12 +1069,14 @@ export default function Home() {
   const visibilityRef = useRef(defaultVisibility);
   const opacityRef = useRef(defaultOpacity);
   const officialVisibilityRef = useRef(defaultOfficialVisibility);
+  const buildYearCurrentRef = useRef(true);
   const officialOpacityRef = useRef(defaultOfficialOpacity);
   const officialPayloadsRef = useRef<Partial<Record<OfficialContextFeedId, OfficialContextPayload>>>({});
   const officialArchiveDaysRef = useRef<Partial<Record<OfficialContextFeedId, string>>>({});
   const officialArchivePayloadsRef = useRef<Partial<Record<OfficialContextFeedId, OfficialContextPayload>>>({});
   const officialRequestsRef = useRef(new Map<OfficialContextFeedId, AbortController>());
   const officialRasterFailuresRef = useRef(new Set<OfficialContextId>());
+  const terrainRasterViewRef = useRef(new TerrainRasterViewTracker());
   const failedTerrainSourceRef = useRef<unknown>(null);
   const noaaRadarRequestRef = useRef<AbortController | null>(null);
   const noaaRadarLastRequestAtRef = useRef(0);
@@ -1082,20 +1099,34 @@ export default function Home() {
   const streamflowRequestedTimeRef = useRef<string | null>(null);
   const noaaHydrologyRequestRef = useRef<AbortController | null>(null);
   const orderRef = useRef(defaultOrder);
-  const yearRef = useRef<number>(2026);
+  const yearRef = useRef<number>(OFFICIAL_CONTEXT_PRESENT_FRAME);
   const temporalQueryRef = useRef<TemporalSweepQuery>({
     mode: "snapshot",
-    frame: 2026,
+    frame: OFFICIAL_CONTEXT_PRESENT_FRAME,
     rangeStart: TIME_STEPS[0],
     rangeEnd: TIME_STEPS.at(-1)!,
-    windowStart: 2026,
+    windowStart: OFFICIAL_CONTEXT_PRESENT_FRAME,
   });
   const mapEvidenceFilterRef = useRef<RegistryEvidenceFilter>("ALL");
   const basemapRef = useRef<BasemapKey>("standard");
   const projectionRef = useRef<"mercator" | "globe">("mercator");
   const scenePresetRef = useRef<ScenePresetId>("overview-2d");
   const terrainProviderRef = useRef<TerrainProvider>("mapzen");
-  const setTerrainPresentation = (map: MapLibreMap, enabled: boolean, scale: number) => applyTerrainPresentation(map, enabled, scale, terrainSourceFor(terrainProviderRef.current));
+  const attachedTerrainProviderRef = useRef<TerrainProvider | null>(null);
+  const setTerrainPresentation = (map: MapLibreMap, enabled: boolean, scale: number) => {
+    const provider = terrainProviderRef.current;
+    const source = terrainSourceFor(provider);
+    const state = applyTerrainPresentation(map, enabled, scale, source);
+    const attachedMatches = enabled && terrainPresentationSourceMatches(map, source);
+    if (enabled && state !== "ERROR") {
+      applyTerrainReliefStyle(map, basemapRef.current === "topo" ? "topographic" : "general", atmospherePresetRef.current, lightAzimuthRef.current);
+    }
+    const topoDemReady = attachedMatches && state !== "ERROR" && basemapRef.current === "topo"
+      && Boolean(map.getSource(TERRAIN_SOURCE_ID) && map.isSourceLoaded(TERRAIN_SOURCE_ID));
+    applyTopographicRasterDepth(map, topoDemReady);
+    attachedTerrainProviderRef.current = state === "LOADING" && attachedMatches ? provider : null;
+    return state;
+  };
   const setTerrainHeightOverlay = (map: MapLibreMap, enabled: boolean) => applyTerrainHeightOverlay(map, enabled, terrainSourceFor(terrainProviderRef.current));
   const verticalExaggerationRef = useRef(1);
   const topographicOverlayRef = useRef(false);
@@ -1144,6 +1175,7 @@ export default function Home() {
   const [visibility, setVisibility] = useState<Record<string, boolean>>(defaultVisibility);
   const [opacity, setOpacity] = useState<Record<string, number>>(defaultOpacity);
   const [officialVisibility, setOfficialVisibility] = useState<Record<OfficialContextId, boolean>>(defaultOfficialVisibility);
+  const [buildYearCurrent, setBuildYearCurrent] = useState(true);
   const [officialOpacity, setOfficialOpacity] = useState<Record<OfficialContextId, number>>(defaultOfficialOpacity);
   const [officialStates, setOfficialStates] = useState<Record<OfficialContextId, OfficialContextState>>(defaultOfficialStates);
   const [officialPayloads, setOfficialPayloads] = useState<Partial<Record<OfficialContextFeedId, OfficialContextPayload>>>({});
@@ -1163,6 +1195,13 @@ export default function Home() {
   const [noaaRadarFollowLatest, setNoaaRadarFollowLatest] = useState(true);
   const [noaaRadarFrameLoadState, setNoaaRadarFrameLoadState] = useState<NoaaRadarFrameLoadState>("idle");
   const [noaaRadarClock, setNoaaRadarClock] = useState(() => Date.now());
+  const [lightningManifest, setLightningManifest] = useState<LightningManifest | null>(null);
+  const [lightningManifestState, setLightningManifestState] = useState<"idle" | "loading" | "ready" | "error">("idle");
+  const [lightningFrame, setLightningFrame] = useState<string | null>(null);
+  const [lightningPlaying, setLightningPlaying] = useState(false);
+  const [lightningPreview, setLightningPreview] = useState<"idle" | "loading" | "signal" | "none" | "error">("idle");
+  const [lightningViewRevision, setLightningViewRevision] = useState(0);
+  const [lightningReloadToken, setLightningReloadToken] = useState(0);
   const [noaaSatelliteManifest, setNoaaSatelliteManifest] = useState<NoaaSatelliteManifest | null>(null);
   const [noaaSatelliteFrame, setNoaaSatelliteSelectedFrame] = useState<NoaaSatelliteFrame | null>(null);
   const [radarArchiveDraftDay, setRadarArchiveDraftDay] = useState(currentUtcDay);
@@ -1189,6 +1228,7 @@ export default function Home() {
   const [terrainState, setTerrainState] = useState<TerrainPresentationState>("OFF");
   const [topographicOverlay, setTopographicOverlay] = useState(false);
   const [terrainElevationReading, setTerrainElevationReading] = useState<TerrainElevationReading | null>(null);
+  const [terrainElevationUnavailable, setTerrainElevationUnavailable] = useState<{ longitude: number; latitude: number } | null>(null);
   const [lockedTerrainElevation, setLockedTerrainElevation] = useState<TerrainElevationReading | null>(null);
   const [verticalExaggeration, setVerticalExaggeration] = useState(1);
   const [atmospherePreset, setAtmospherePreset] = useState<AtmospherePreset>("night");
@@ -1199,6 +1239,11 @@ export default function Home() {
   const [gestureMode, setGestureMode] = useState<"cooperative" | "direct">("cooperative");
   const [sceneOrbiting, setSceneOrbiting] = useState(false);
   const [dynamicEffects, setDynamicEffects] = useState(true);
+  const [windArrowState, setWindArrowState] = useState<"OFF" | "LOADING" | "READY" | "ERROR">("OFF");
+  const [windArrowFrame, setWindArrowFrame] = useState<WindArrowFrame | null>(null);
+  const [windArrowHover, setWindArrowHover] = useState<WindArrowHover | null>(null);
+  const [windArrowSampleIndex, setWindArrowSampleIndex] = useState(0);
+  const [windArrowReloadToken, setWindArrowReloadToken] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [mapViewportBounds, setMapViewportBounds] = useState<MapBoundsState>(SUPPORTED_CONTEXT_BOUNDS);
   const [analysisArea, setAnalysisArea] = useState<MapBoundsState | null>(null);
@@ -1278,7 +1323,6 @@ export default function Home() {
   const [focusIntent, setFocusIntent] = useState<FocusIntentId>("explain");
   const [pendingFocusAction, setPendingFocusAction] = useState<FocusActionProposal | null>(null);
   const [layerQuery, setLayerQuery] = useState("");
-  const [catalogSourceRole, setCatalogSourceRole] = useState("ALL");
   const [pendingCatalogTarget, setPendingCatalogTarget] = useState<string | null>(null);
   const [atlasViewQuery, setAtlasViewQuery] = useState("");
   const [layerDomain, setLayerDomain] = useState<(typeof layerDomains)[number]>("ALL");
@@ -1325,7 +1369,7 @@ export default function Home() {
   const [compareLeftId, setCompareLeftId] = useState("water-context");
   const [compareRightId, setCompareRightId] = useState("atmosphere-observations");
   const [compareTimeA, setCompareTimeA] = useState<number>(1910);
-  const [compareTimeB, setCompareTimeB] = useState<number>(2026);
+  const [compareTimeB, setCompareTimeB] = useState<number>(OFFICIAL_CONTEXT_PRESENT_FRAME);
   const [coordinateLatitude, setCoordinateLatitude] = useState(String(KANSAS_VIEW.center[1]));
   const [coordinateLongitude, setCoordinateLongitude] = useState(String(KANSAS_VIEW.center[0]));
   const [coordinateError, setCoordinateError] = useState("");
@@ -1392,6 +1436,26 @@ export default function Home() {
   useEffect(() => { visibilityRef.current = visibility; }, [visibility]);
   useEffect(() => { opacityRef.current = opacity; }, [opacity]);
   useEffect(() => { officialVisibilityRef.current = officialVisibility; }, [officialVisibility]);
+  useEffect(() => {
+    const check = () => {
+      const current = new Date().getUTCFullYear() === OFFICIAL_CONTEXT_PRESENT_FRAME;
+      if (!current && buildYearCurrentRef.current) {
+        for (const controller of officialRequestsRef.current.values()) controller.abort();
+        noaaRadarRequestRef.current?.abort();
+        noaaSatelliteRequestRef.current?.abort();
+        streamflowRequestRef.current?.abort();
+        noaaHydrologyRequestRef.current?.abort();
+      }
+      buildYearCurrentRef.current = current;
+      setBuildYearCurrent(current);
+    };
+    check();
+    const timer = window.setInterval(check, 60_000);
+    document.addEventListener("visibilitychange", check);
+    return () => { window.clearInterval(timer); document.removeEventListener("visibilitychange", check); };
+  }, []);
+  const runtimeOfficialVisibility = useCallback((visibility: Record<OfficialContextId, boolean>, frame: number, radarReady: boolean, radarFrameTime: string | null) =>
+    officialContextRuntimeVisibility(visibility, frame, radarReady, radarFrameTime, buildYearCurrentRef.current), []);
   useEffect(() => { officialOpacityRef.current = officialOpacity; }, [officialOpacity]);
   useEffect(() => { officialPayloadsRef.current = officialPayloads; }, [officialPayloads]);
   useEffect(() => { noaaRadarManifestRef.current = noaaRadarManifest; }, [noaaRadarManifest]);
@@ -1541,33 +1605,38 @@ export default function Home() {
     if (!noaaRadarRenderable) setNoaaRadarPlaying(false);
   }, [noaaRadarRenderable]);
   const effectiveOfficialVisibility = useMemo(
-    () => officialContextRuntimeVisibility(officialVisibility, temporalQuery.frame, noaaRadarRenderable, noaaRadarFrameTime),
-    [noaaRadarFrameTime, noaaRadarRenderable, officialVisibility, temporalQuery.frame],
+    () => officialContextRuntimeVisibility(officialVisibility, temporalQuery.frame, noaaRadarRenderable, noaaRadarFrameTime, buildYearCurrent),
+    [buildYearCurrent, noaaRadarFrameTime, noaaRadarRenderable, officialVisibility, temporalQuery.frame],
   );
+  const lightningSelected = effectiveOfficialVisibility["noaa-lightning-density"] && projection !== "globe";
+  const lightningFrameIndex = lightningManifest?.frames.indexOf(lightningFrame ?? "") ?? -1;
+  const lightningPlaybackReady = (lightningPreview === "signal" || lightningPreview === "none")
+    && (officialStates["noaa-lightning-density"] === "ready" || officialStates["noaa-lightning-density"] === "empty");
   const composedSurfaceCount = activeLayers.filter((layer) => layer.renderers.some((renderer) => renderer.spec.type === "fill")).length
     + visibleOfficialSources.filter((source) => effectiveOfficialVisibility[source.id] && (source.kind === "OPERATIONAL_WMS" || source.layerIds.some((id) => id.endsWith("-fill")))).length
     + Object.entries(earthEngineDisplay.visible).filter(([id, shown]) => shown && (id === "ee-3dep" || year === 2024)).length;
-  const withheldOfficialCount = temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME ? 0 : visibleOfficialCount;
+  const withheldOfficialCount = visibleOfficialSources.filter((source) => !effectiveOfficialVisibility[source.id]).length;
   const selectedIsHeldOfficialContext = Boolean(
     selected
     && selected.featureId.startsWith("official-context:")
-    && temporalQuery.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME,
+    && (!buildYearCurrent || temporalQuery.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME),
   );
   const selectedTimeMismatch = Boolean(
     selected
     && (selectedIsHeldOfficialContext || !isFeatureAvailableForTemporalQuery(selected.layer, selected.properties.year, temporalQuery)),
   );
-  const officialFeatureCount = useMemo(() => Object.values(officialPayloads).reduce((total, payload) => total + (payload?.featureCount ?? 0), 0), [officialPayloads]);
-  const officialReadyCount = useMemo(() => Object.values(officialStates).filter((state) => state === "ready" || state === "partial" || state === "empty").length, [officialStates]);
-  const officialLoadingCount = useMemo(() => Object.values(officialStates).filter((state) => state === "loading").length, [officialStates]);
+  const officialFeatureCount = visibleOfficialSources.reduce((total, source) => total + (effectiveOfficialVisibility[source.id] ? officialPayloads[source.id as OfficialContextFeedId]?.featureCount ?? 0 : 0), 0);
+  const officialReadyCount = visibleOfficialSources.filter((source) => effectiveOfficialVisibility[source.id] && ["ready", "partial", "empty"].includes(officialStates[source.id])).length;
+  const officialLoadingCount = visibleOfficialSources.filter((source) => effectiveOfficialVisibility[source.id] && officialStates[source.id] === "loading").length;
   const officialRefreshPlan = planOfficialRefresh(OFFICIAL_CONTEXT_SOURCES, officialVisibility, temporalQuery.frame, OFFICIAL_CONTEXT_PRESENT_FRAME, Boolean(streamflowArchiveDay), officialArchiveDays);
-  const officialLatestRetrievedAt = useMemo(() => Object.values(officialPayloads)
-    .map((payload) => payload?.retrievedAt)
+  const officialLatestRetrievedAt = visibleOfficialSources.filter((source) => effectiveOfficialVisibility[source.id])
+    .map((source) => officialPayloads[source.id as OfficialContextFeedId]?.retrievedAt)
     .filter((value): value is string => Boolean(value))
-    .concat(noaaRadarManifest?.retrievedAt ?? [])
-    .concat(noaaSatelliteManifest?.retrievedAt ?? [])
+    .concat(effectiveOfficialVisibility["nws-radar"] ? noaaRadarManifest?.retrievedAt ?? [] : [])
+    .concat(effectiveOfficialVisibility["noaa-goes-geocolor"] ? noaaSatelliteManifest?.retrievedAt ?? [] : [])
+    .concat(effectiveOfficialVisibility["nws-forecast-wind"] ? windArrowFrame?.retrievedAtUtc ?? [] : [])
     .sort()
-    .at(-1) ?? null, [noaaRadarManifest?.retrievedAt, noaaSatelliteManifest?.retrievedAt, officialPayloads]);
+    .at(-1) ?? null;
   const earthquakeArchiveFrames = useMemo(() => {
     const day = officialArchiveDays["usgs-earthquakes"];
     const payload = officialArchivePayloadsRef.current["usgs-earthquakes"];
@@ -1597,8 +1666,8 @@ export default function Home() {
     && streamflowLatestAgeMinutes > 60
     ? "stale"
     : streamflowState;
-  const streamflowSelectedAtPresent = officialVisibility["usgs-streamflow"] && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
-  const noaaHydrologySelectedAtPresent = officialVisibility["noaa-nwps-gauges"] && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
+  const streamflowSelectedAtPresent = buildYearCurrent && officialVisibility["usgs-streamflow"] && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
+  const noaaHydrologySelectedAtPresent = buildYearCurrent && officialVisibility["noaa-nwps-gauges"] && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
   const mapSignals = useMemo(() => deriveMapSignals({
     streamflow: streamflowSelectedAtPresent && (streamflowState === "ready" || streamflowState === "partial") ? streamflowFrame : null,
     gauges: noaaHydrologySelectedAtPresent && ["ready", "partial"].includes(officialStates["noaa-nwps-gauges"])
@@ -1615,7 +1684,7 @@ export default function Home() {
   const noaaRadarActiveFrame = noaaRadarFrameIndex >= 0 ? noaaRadarLoopFrames[noaaRadarFrameIndex] : null;
   const noaaRadarAgeMinutes = noaaRadarActiveFrame ? noaaRadarFrameAgeMinutes(noaaRadarActiveFrame, noaaRadarClock) : null;
   const noaaRadarLatestAgeMinutes = noaaRadarLatestFrame ? noaaRadarFrameAgeMinutes(noaaRadarLatestFrame, noaaRadarClock) : null;
-  const noaaRadarSelectedAtPresent = officialVisibility["nws-radar"] && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
+  const noaaRadarSelectedAtPresent = buildYearCurrent && officialVisibility["nws-radar"] && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
   const liveDockVisible = instrumentOpen && (streamflowSelectedAtPresent || noaaRadarSelectedAtPresent);
   const showStreamflowDock = streamflowSelectedAtPresent && (liveInstrument === "river" || !noaaRadarSelectedAtPresent);
   const showRadarDock = noaaRadarSelectedAtPresent && (liveInstrument === "radar" || !streamflowSelectedAtPresent);
@@ -1791,11 +1860,11 @@ export default function Home() {
       activeAtFrame: effectiveOfficialVisibility[source.id],
       state: officialStates[source.id],
       featureCount: payload?.featureCount,
-      retrievedAt: source.id === "noaa-goes-geocolor" ? noaaSatelliteManifest?.retrievedAt : payload?.retrievedAt,
+      retrievedAt: source.id === "noaa-goes-geocolor" ? noaaSatelliteManifest?.retrievedAt : source.id === "noaa-lightning-density" ? lightningManifest?.retrievedAt : source.id === "nws-forecast-wind" ? windArrowFrame?.retrievedAtUtc : payload?.retrievedAt,
       limitation: source.id === "noaa-goes-geocolor" ? noaaSatelliteManifest?.limitation : payload?.limitation,
       temporalSupport: OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id],
     };
-  }), [effectiveOfficialVisibility, noaaSatelliteManifest, officialPayloads, officialStates, officialVisibility]);
+  }), [effectiveOfficialVisibility, lightningManifest?.retrievedAt, noaaSatelliteManifest, officialPayloads, officialStates, officialVisibility, windArrowFrame?.retrievedAtUtc]);
   const filteredOfficialContextConnections = useMemo(() => {
     const query = connectionQuery.trim().toLowerCase();
     return officialContextConnections.filter((connection) => {
@@ -1811,13 +1880,15 @@ export default function Home() {
       activation === "elevation-3d" ? scenePreset === "elevation-3d" : basemap === activation
     ));
     let state: "READY" | "REQUESTING" | "ERROR" | "NOT_SELECTED" = "NOT_SELECTED";
-    if (active && source.id === "aws-mapzen-terrarium") {
-      state = terrainState === "READY" ? "READY" : terrainState === "ERROR" ? "ERROR" : "REQUESTING";
+    if (source.id === "aws-mapzen-terrarium") {
+      const mapzenSelected = active && terrainProvider === "mapzen";
+      if (mapzenSelected) state = terrainState === "READY" && attachedTerrainProviderRef.current === "mapzen" ? "READY" : terrainState === "ERROR" ? "ERROR" : "REQUESTING";
+      return { source, active: mapzenSelected, state };
     } else if (active) {
       state = styleReady && maplibreProbe.tilesLoaded ? "READY" : runtime.kind === "error" ? "ERROR" : "REQUESTING";
     }
     return { source, active, state };
-  }), [basemap, maplibreProbe.tilesLoaded, runtime.kind, scenePreset, styleReady, terrainState]);
+  }), [basemap, maplibreProbe.tilesLoaded, runtime.kind, scenePreset, styleReady, terrainProvider, terrainState]);
   const filteredExternalContextConnections = useMemo(() => {
     const query = connectionQuery.trim().toLowerCase();
     return externalContextConnections.filter((connection) => {
@@ -1932,7 +2003,7 @@ export default function Home() {
       representation: mapRepresentationLabel,
     },
     basemap: { key: basemap, title: BASEMAPS[basemap].title, note: BASEMAPS[basemap].note },
-    time: { value: temporalQuery.frame, label: temporalScopeLabel, era: `${timelineEraLabel(temporalQuery.frame)} · ${temporalMode.replaceAll("-", " ")}` },
+    time: { value: temporalQuery.frame, label: temporalScopeLabel, era: `${timelineEraLabel(temporalQuery.frame, buildYearCurrent)} · ${temporalMode.replaceAll("-", " ")}` },
     visibleLayers: activeLayers.slice(0, 14).map((layer) => ({
       id: layer.id,
       title: layer.title,
@@ -1983,7 +2054,7 @@ export default function Home() {
       distanceMiles: Number(row.distanceMiles.toFixed(1)),
       evidenceState: row.feature.properties.evidenceState,
     })),
-  }), [activeLayers, basemap, locationCameraRedacted, mapRepresentationLabel, maplibreProbe.canvasReady, maplibreProbe.failedChecks, maplibreProbe.styleLoaded, maplibreProbe.tilesLoaded, nearbyContext, noaaRadarDisplayState, noaaRadarFrameTime, noaaRadarManifestFresh, officialContextConnections, projection, runtime.kind, selected, selectedTimeMismatch, sourceStateCounts, streamflowFrameTime, streamflowState, temporalMode, temporalQuery.frame, temporalScopeLabel, view]);
+  }), [activeLayers, basemap, buildYearCurrent, locationCameraRedacted, mapRepresentationLabel, maplibreProbe.canvasReady, maplibreProbe.failedChecks, maplibreProbe.styleLoaded, maplibreProbe.tilesLoaded, nearbyContext, noaaRadarDisplayState, noaaRadarFrameTime, noaaRadarManifestFresh, officialContextConnections, projection, runtime.kind, selected, selectedTimeMismatch, sourceStateCounts, streamflowFrameTime, streamflowState, temporalMode, temporalQuery.frame, temporalScopeLabel, view]);
   const qwenPrompt = useMemo(() => buildQwenPrompt(qwenQuestion, qwenContext), [qwenContext, qwenQuestion]);
   const analysisAreaRecordCount = useMemo(() => analysisArea
     ? LAYER_REGISTRY.reduce((count, layer) => count + layer.data.features.filter((feature) => (
@@ -2054,9 +2125,9 @@ export default function Home() {
     const query = debouncedLayerQuery.trim().toLowerCase();
     return new Set(LAYER_REGISTRY.filter((layer) => {
       const matchesQuery = !query || `${layer.title} ${layer.description} ${layer.category} ${layer.datasetName} ${layer.domain}`.toLowerCase().includes(query);
-      return matchesQuery && layerHasSourceRole(layer, catalogSourceRole);
+      return matchesQuery;
     }).map((layer) => layer.id));
-  }, [catalogSourceRole, debouncedLayerQuery]);
+  }, [debouncedLayerQuery]);
   const listedOfficialSources = useMemo(() => {
     const query = officialSourceQuery.trim().toLowerCase();
     return OFFICIAL_CONTEXT_SOURCES.filter((source) => !query || `${source.title} ${source.shortTitle} ${source.organization} ${source.domain}`.toLowerCase().includes(query))
@@ -2392,7 +2463,7 @@ export default function Home() {
       const map = mapRef.current;
       if (map && styleGenerationReadyRef.current) applyOfficialContextState(
         map,
-        officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, false, null),
+        runtimeOfficialVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, false, null),
         officialOpacityRef.current,
         officialPayloadsRef.current,
       );
@@ -2443,7 +2514,7 @@ export default function Home() {
           setOfficialErrors((current) => ({ ...current, "nws-radar": undefined }));
           applyOfficialContextState(
             map,
-            officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, observedAt),
+            runtimeOfficialVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, observedAt),
             officialOpacityRef.current,
             officialPayloadsRef.current,
           );
@@ -2456,7 +2527,7 @@ export default function Home() {
           }
           applyOfficialContextState(
             map,
-            officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, previousConfirmedFrame),
+            runtimeOfficialVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, previousConfirmedFrame),
             officialOpacityRef.current,
             officialPayloadsRef.current,
           );
@@ -2479,7 +2550,7 @@ export default function Home() {
       if (previousConfirmedFrame || !officialVisibilityRef.current["nws-radar"] || temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) {
         applyOfficialContextState(
           map,
-          officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, previousConfirmedFrame),
+          runtimeOfficialVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, previousConfirmedFrame),
           officialOpacityRef.current,
           officialPayloadsRef.current,
         );
@@ -2488,9 +2559,15 @@ export default function Home() {
     } catch (error) {
       noaaRadarFrameFailureRef.current?.(error instanceof Error ? error.message : "The NOAA radar frame could not be applied.");
     }
-  }, [announce]);
+  }, [announce, runtimeOfficialVisibility]);
 
   const refreshNoaaRadarManifest = useCallback(async (quiet = false) => {
+    if (!buildYearCurrentRef.current) {
+      noaaRadarReadyRef.current = false;
+      setNoaaRadarPlaying(false);
+      if (!quiet) announce("This site build does not match the UTC year; rebuild before refreshing current radar");
+      return;
+    }
     if (yearRef.current !== OFFICIAL_CONTEXT_PRESENT_FRAME) {
       noaaRadarReadyRef.current = false;
       setNoaaRadarPlaying(false);
@@ -2543,7 +2620,7 @@ export default function Home() {
         const map = mapRef.current;
         if (map && styleGenerationReadyRef.current) applyOfficialContextState(
           map,
-          officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, false, null),
+          runtimeOfficialVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, false, null),
           officialOpacityRef.current,
           officialPayloadsRef.current,
         );
@@ -2573,7 +2650,7 @@ export default function Home() {
     } finally {
       if (noaaRadarRequestRef.current === controller) noaaRadarRequestRef.current = null;
     }
-  }, [announce, applyNoaaRadarFrame]);
+  }, [announce, applyNoaaRadarFrame, runtimeOfficialVisibility]);
 
   const selectNoaaSatelliteFrame = useCallback((frame: NoaaSatelliteFrame) => {
     const manifest = noaaSatelliteManifestRef.current;
@@ -2587,7 +2664,7 @@ export default function Home() {
     if (map?.isStyleLoaded()) {
       try {
         setNoaaSatelliteFrame(map, frame.objectId,
-          officialVisibilityRef.current["noaa-goes-geocolor"] && temporalQueryRef.current.frame === OFFICIAL_CONTEXT_PRESENT_FRAME,
+          buildYearCurrentRef.current && officialVisibilityRef.current["noaa-goes-geocolor"] && temporalQueryRef.current.frame === OFFICIAL_CONTEXT_PRESENT_FRAME,
           officialOpacityRef.current["noaa-goes-geocolor"]);
       } catch (error) {
         setOfficialStates((current) => ({ ...current, "noaa-goes-geocolor": "error" }));
@@ -2597,7 +2674,7 @@ export default function Home() {
   }, []);
 
   const refreshNoaaSatelliteFrames = useCallback(async (quiet = false) => {
-    if (noaaSatelliteRequestRef.current || temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) return;
+    if (!buildYearCurrentRef.current || noaaSatelliteRequestRef.current || temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) return;
     const controller = new AbortController();
     noaaSatelliteRequestRef.current = controller;
     setOfficialStates((current) => ({ ...current, "noaa-goes-geocolor": "loading" }));
@@ -2677,8 +2754,8 @@ export default function Home() {
     quiet = false,
     archiveDay: string | null = null,
   ) => {
-    if (temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) {
-      if (!quiet) announce("River Pulse remains held outside the operational-present atlas frame");
+    if (!buildYearCurrentRef.current || temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) {
+      if (!quiet) announce(buildYearCurrentRef.current ? "River Pulse remains held outside the operational-present atlas frame" : "This site build does not match the UTC year; rebuild before refreshing River Pulse");
       return;
     }
     if ((requestedRange !== "24h" || archiveDay) && !requestedStationId) {
@@ -2768,8 +2845,8 @@ export default function Home() {
   }, [announce]);
 
   const refreshNoaaHydrologyNetwork = useCallback(async (quiet = false) => {
-    if (temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) {
-      if (!quiet) announce("NOAA hydrology remains held outside the operational-present atlas frame");
+    if (!buildYearCurrentRef.current || temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) {
+      if (!quiet) announce(buildYearCurrentRef.current ? "NOAA hydrology remains held outside the operational-present atlas frame" : "This site build does not match the UTC year; rebuild before refreshing NOAA hydrology");
       return;
     }
     noaaHydrologyRequestRef.current?.abort();
@@ -2894,7 +2971,7 @@ export default function Home() {
   }, [refreshStreamflow, streamflowArchiveDraftDay, streamflowSelectedStationId]);
 
   const refreshOfficialContext = useCallback(async (feed: OfficialContextFeedId) => {
-    if (temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME || officialArchiveDaysRef.current[feed]) return;
+    if (!buildYearCurrentRef.current || temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME || officialArchiveDaysRef.current[feed]) return;
     if (officialRequestsRef.current.has(feed)) return;
     const source = OFFICIAL_CONTEXT_BY_ID[feed];
     const controller = new AbortController();
@@ -2915,21 +2992,40 @@ export default function Home() {
       setOfficialPayloads(officialPayloadsRef.current);
       setOfficialStates((current) => ({ ...current, [feed]: payload.state }));
       const map = mapRef.current;
-      if (map && styleGenerationReadyRef.current) applyOfficialContextState(map, officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
+      if (map && styleGenerationReadyRef.current) applyOfficialContextState(map, runtimeOfficialVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
       announce(payload.featureCount === 0
         ? `${source.shortTitle}: zero mapped features at ${new Date(payload.retrievedAt).toLocaleTimeString()}—not an all-clear`
         : `${source.shortTitle}: ${payload.featureCount} official context features refreshed`);
     } catch (error) {
       if (officialRequestsRef.current.get(feed) !== controller) return;
       const message = error instanceof Error ? error.message : "Official context request failed.";
+      // A failed current refresh cannot leave an earlier operational snapshot
+      // mapped under an unavailable status. The payload change reapplies an
+      // empty GeoJSON source through the official-source map effect.
+      officialPayloadsRef.current = { ...officialPayloadsRef.current, [feed]: undefined };
+      setOfficialPayloads(officialPayloadsRef.current);
+      const selectedFeedFailed = officialContextIdForSelection(selectedRef.current) === feed;
+      if (selectedFeedFailed) {
+        selectedRef.current = null;
+        setSelected(null);
+        setRightOpen(false);
+        popupRef.current?.remove();
+      }
+      const map = mapRef.current;
+      if (map && styleGenerationReadyRef.current) {
+        runMapMutation("Clear failed official source", () => {
+          clearOfficialContextFeed(map, feed);
+          if (selectedFeedFailed) updateSelectionSource(map, null);
+        });
+      }
       setOfficialStates((current) => ({ ...current, [feed]: "error" }));
       setOfficialErrors((current) => ({ ...current, [feed]: message }));
-      announce(`${source.shortTitle} unavailable; no fallback inference was used`);
+      announce(`${source.shortTitle} unavailable; previous mapped features were cleared and no fallback inference was used`);
     } finally {
       window.clearTimeout(timer);
       if (officialRequestsRef.current.get(feed) === controller) officialRequestsRef.current.delete(feed);
     }
-  }, [announce]);
+  }, [announce, runMapMutation, runtimeOfficialVisibility]);
 
   const loadOfficialArchiveDay = useCallback(async (feed: OfficialContextFeedId, day: string) => {
     if (!["usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(feed)
@@ -3022,6 +3118,10 @@ export default function Home() {
   }, [smokeArchiveFrames]);
 
   const setOfficialContextVisible = useCallback((id: OfficialContextId, visible: boolean) => {
+    if (id === "usgs-3dep-hillshade" || id === "usgs-3dep-slope") {
+      terrainRasterViewRef.current.reset(id);
+      officialRasterFailuresRef.current.delete(id);
+    }
     if (id === "nws-radar" && visible) {
       noaaRadarReadyRef.current = Boolean(
         noaaRadarFrameTimeRef.current
@@ -3032,7 +3132,7 @@ export default function Home() {
     }
     if (id === "usgs-streamflow" && visible) setLiveInstrument("river");
     const source = OFFICIAL_CONTEXT_BY_ID[id];
-    if (visible && !source.apiPath && !source.managedAdapterPath && id !== "nws-radar") {
+    if (visible && source.kind === "OPERATIONAL_WMS" && id !== "nws-radar") {
       officialRasterFailuresRef.current.delete(id);
       setOfficialErrors(current => current[id] ? ({ ...current, [id]: undefined }) : current);
     }
@@ -3046,30 +3146,39 @@ export default function Home() {
     if (id === "nws-radar" && !visible) setNoaaRadarPlaying(false);
     if (id === "usgs-streamflow" && !visible) setStreamflowPlaying(false);
     const map = mapRef.current;
-    const rasterPending = visible && !source.apiPath && !source.managedAdapterPath && id !== "nws-radar" && !officialRasterFailuresRef.current.has(id);
+    const rasterPending = visible && source.kind === "OPERATIONAL_WMS" && id !== "nws-radar" && !officialRasterFailuresRef.current.has(id);
     if (rasterPending) setOfficialStates((current) => ({ ...current, [id]: "loading" }));
     // A failed global runtime proof must not leave a selected source at IDLE
     // when MapLibre's style is already loaded and can accept this layer.
     if (map?.isStyleLoaded()) {
       try {
-        applyOfficialContextState(map, officialContextRuntimeVisibility(next, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
+        applyOfficialContextState(map, runtimeOfficialVisibility(next, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
       } catch (error) {
         setOfficialStates((current) => ({ ...current, [id]: "error" }));
         setOfficialErrors((current) => ({ ...current, [id]: error instanceof Error ? error.message : "Raster context could not be applied." }));
       }
     }
-  }, [refreshNoaaHydrologyNetwork, refreshNoaaRadarManifest, refreshOfficialContext, refreshStreamflow, streamflowRange, streamflowSelectedStationId]);
+  }, [refreshNoaaHydrologyNetwork, refreshNoaaRadarManifest, refreshOfficialContext, refreshStreamflow, runtimeOfficialVisibility, streamflowRange, streamflowSelectedStationId]);
 
   const retryOfficialLayer = (id: OfficialContextId) => {
     const source = OFFICIAL_CONTEXT_BY_ID[id];
-    if (source.apiPath) { void refreshOfficialContext(id as OfficialContextFeedId); return; }
+    if (id === "nws-forecast-wind") { setWindArrowReloadToken(value => value + 1); return; }
+    if (source.apiPath) {
+      const feed = id as OfficialContextFeedId;
+      const archiveDay = officialArchiveDaysRef.current[feed];
+      if (archiveDay) void loadOfficialArchiveDay(feed, archiveDay);
+      else void refreshOfficialContext(feed);
+      return;
+    }
     if (id === "usgs-streamflow") { void refreshStreamflow(streamflowRange, streamflowSelectedStationId); return; }
     if (id === "noaa-nwps-gauges") { void refreshNoaaHydrologyNetwork(); return; }
     if (id === "nws-radar") { void refreshNoaaRadarManifest(); return; }
+    if (id === "noaa-lightning-density") { setLightningPlaying(false); setLightningReloadToken((value) => value + 1); return; }
     if (id === "noaa-goes-geocolor") { void refreshNoaaSatelliteFrames(); return; }
     const map = mapRef.current;
     if (!map || !styleGenerationReadyRef.current) return;
     officialRasterFailuresRef.current.delete(id);
+    if (id === "usgs-3dep-hillshade" || id === "usgs-3dep-slope") terrainRasterViewRef.current.reset(id);
     setOfficialErrors(current => ({ ...current, [id]: undefined }));
     setOfficialStates(current => ({ ...current, [id]: "loading" }));
     if (map.getSource(source.sourceId)) map.refreshTiles(source.sourceId);
@@ -3100,10 +3209,14 @@ export default function Home() {
     officialOpacityRef.current = next;
     setOfficialOpacity(next);
     const map = mapRef.current;
-    if (map && styleGenerationReadyRef.current) applyOfficialContextState(map, officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), next, officialPayloadsRef.current);
-  }, []);
+    if (map && styleGenerationReadyRef.current) applyOfficialContextState(map, runtimeOfficialVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), next, officialPayloadsRef.current);
+  }, [runtimeOfficialVisibility]);
 
   const refreshVisibleOfficialContext = useCallback(() => {
+    if (!buildYearCurrentRef.current) {
+      announce("This site build does not match the UTC year; rebuild before refreshing current sources");
+      return;
+    }
     const plan = planOfficialRefresh(OFFICIAL_CONTEXT_SOURCES, officialVisibilityRef.current, temporalQueryRef.current.frame, OFFICIAL_CONTEXT_PRESENT_FRAME, Boolean(streamflowArchiveDayRef.current), officialArchiveDaysRef.current);
     if (plan.reason === "historical") {
       announce(`Current sources are held at ${formatTimelineStep(temporalQueryRef.current.frame)}; switch to Present to refresh`);
@@ -3116,6 +3229,7 @@ export default function Home() {
     plan.feeds.forEach((feed) => { void refreshOfficialContext(feed as OfficialContextFeedId); });
     if (plan.radar) void refreshNoaaRadarManifest(true);
     if (plan.satellite) void refreshNoaaSatelliteFrames(true);
+    if (plan.lightning) setLightningReloadToken((value) => value + 1);
     if (plan.streamflow) void refreshStreamflow(streamflowRange, streamflowSelectedStationId, true);
     if (plan.hydrology) void refreshNoaaHydrologyNetwork(true);
     announce(`Refreshing ${plan.count} selected official connection${plan.count === 1 ? "" : "s"}`);
@@ -3126,17 +3240,18 @@ export default function Home() {
     officialVisibilityRef.current = next;
     setOfficialVisibility(next);
     setNoaaRadarPlaying(false);
+    setLightningPlaying(false);
     setStreamflowPlaying(false);
     const map = mapRef.current;
-    if (map && styleGenerationReadyRef.current) applyOfficialContextState(map, officialContextRuntimeVisibility(next, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
+    if (map && styleGenerationReadyRef.current) applyOfficialContextState(map, runtimeOfficialVisibility(next, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
     announce("Official context hidden; loaded snapshots remain available on this page");
-  }, [announce]);
+  }, [announce, runtimeOfficialVisibility]);
 
   useEffect(() => {
     const refresh = () => {
       const day = currentUtcDay();
       setBaselineDay(day);
-      if (document.hidden || temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) return;
+      if (!buildYearCurrentRef.current || document.hidden || temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) return;
       for (const source of OFFICIAL_CONTEXT_SOURCES) {
         if (source.apiPath && officialVisibilityRef.current[source.id]) void refreshOfficialContext(source.id as OfficialContextFeedId);
       }
@@ -3152,7 +3267,6 @@ export default function Home() {
     // whole visit. Revalidate only selected current rasters at their display
     // cadence; exact radar and GeoColor frames have separate dated schedulers.
     const cadence = {
-      "nws-forecast-wind": 5 * 60_000,
       "noaa-nwm-analysis": 15 * 60_000,
       "noaa-nwm-short-range": 15 * 60_000,
       "nasa-firms-active-fire": 60 * 60_000,
@@ -3163,7 +3277,7 @@ export default function Home() {
     const last = new Map<OfficialContextId, number>();
     const refresh = () => {
       const map = mapRef.current;
-      if (document.hidden || !map || !styleGenerationReadyRef.current || !map.isStyleLoaded()
+      if (!buildYearCurrentRef.current || document.hidden || !map || !styleGenerationReadyRef.current || !map.isStyleLoaded()
         || projectionRef.current === "globe" || temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) return;
       const now = Date.now();
       for (const [id, milliseconds] of Object.entries(cadence) as [OfficialContextId, number][]) {
@@ -3176,6 +3290,10 @@ export default function Home() {
         if (previous === undefined) { last.set(id, now); continue; }
         if (now - previous < milliseconds) continue;
         last.set(id, now);
+        if (id === "usgs-3dep-hillshade" || id === "usgs-3dep-slope") {
+          terrainRasterViewRef.current.reset(id);
+          setOfficialStates(current => ({ ...current, [id]: "loading" }));
+        }
         map.refreshTiles(source.sourceId);
       }
     };
@@ -3185,7 +3303,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (temporalQuery.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) return;
+    if (!buildYearCurrent || temporalQuery.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) return;
     // Hydrate selected current sources on first entry and when returning from history.
     // Archived and historical frames never initiate a current-source request.
     const timer = window.setTimeout(() => {
@@ -3194,7 +3312,7 @@ export default function Home() {
       }
     }, 40);
     return () => window.clearTimeout(timer);
-  }, [refreshOfficialContext, temporalQuery.frame]);
+  }, [buildYearCurrent, refreshOfficialContext, temporalQuery.frame]);
 
   const dismissMapUtilityWithoutFocus = useCallback(() => {
     mapUtilityReturnRef.current = null;
@@ -3716,6 +3834,7 @@ export default function Home() {
         ? { center: "WITHHELD_BROWSER_LOCATION", zoom: "WITHHELD", bearing: "WITHHELD", pitch: "WITHHELD" }
         : { center: [...view.center] as [number, number], zoom: view.zoom, bearing: view.bearing, pitch: view.pitch },
       representation,
+      ...(representation === "Terrain 3D" ? { terrainProvider, terrainExaggeration: verticalExaggeration } : {}),
       projection,
       basemap,
       evidenceFilter: mapEvidenceFilter,
@@ -3746,7 +3865,7 @@ export default function Home() {
             mode: temporalMode === "accumulation" ? "cumulative" : "interval",
             uncertainty: "Feature-filtered site context only; no interpolation, resampling, causal inference, or source admission.",
           }
-          : { start: temporalQuery.frame, end: temporalQuery.frame, label: `${formatTimelineStep(temporalQuery.frame)} · ${timelineEraLabel(temporalQuery.frame)}`, mode: "instant" },
+          : { start: temporalQuery.frame, end: temporalQuery.frame, label: `${formatTimelineStep(temporalQuery.frame)} · ${timelineEraLabel(temporalQuery.frame, buildYearCurrent)}`, mode: "instant" },
       visibleLayers: layerOrder
         .filter((layerId) => visibility[layerId])
         .map((layerId, order) => {
@@ -3767,7 +3886,7 @@ export default function Home() {
       boundedCount: Math.max(0, mapContextRecords.length - supportedMapContextCount),
       policy: policyDecisionFromEvidenceState(selected?.properties.evidenceState),
     };
-  }, [analysisArea, basemap, compareTimeA, compareTimeB, layerOrder, locationCameraRedacted, mapContextRecords, mapEvidenceFilter, compareLeftId, compareRightId, mapUtilityOpen, mapUtilityView, mapViewportBounds, movingWindowFrames, opacity, projection, scenePreset, selected, selectedTimeMismatch, supportedMapContextCount, temporalMode, temporalQuery, temporalStepRule, view, visibility]);
+  }, [analysisArea, basemap, buildYearCurrent, compareTimeA, compareTimeB, layerOrder, locationCameraRedacted, mapContextRecords, mapEvidenceFilter, compareLeftId, compareRightId, mapUtilityOpen, mapUtilityView, mapViewportBounds, movingWindowFrames, opacity, projection, scenePreset, selected, selectedTimeMismatch, supportedMapContextCount, temporalMode, temporalQuery, temporalStepRule, terrainProvider, verticalExaggeration, view, visibility]);
 
   const comparisonSnapshot = useMemo(() => captureMapSnapshot(), [captureMapSnapshot]);
 
@@ -3828,6 +3947,12 @@ export default function Home() {
     setMovingWindowFrames(snapshotSweep?.windowFrames ?? 3);
     setProjection(snapshot.projection);
     setBasemap(snapshotBasemap);
+    if (snapshot.representation === "Terrain 3D" && snapshot.terrainProvider && snapshot.terrainExaggeration !== undefined) {
+      terrainProviderRef.current = snapshot.terrainProvider;
+      verticalExaggerationRef.current = snapshot.terrainExaggeration;
+      setTerrainProvider(snapshot.terrainProvider);
+      setVerticalExaggeration(snapshot.terrainExaggeration);
+    }
     setAnalysisArea(snapshot.area.kind === "aoi" && snapshot.area.bounds ? { ...snapshot.area.bounds } : null);
     setScenePreset(snapshot.representation === "Terrain 3D" ? "elevation-3d" : snapshot.projection === "globe" ? "globe-overview" : "overview-2d");
     setMapEvidenceFilter(snapshot.evidenceFilter ?? "ALL");
@@ -3991,7 +4116,7 @@ export default function Home() {
         if (nextOfficialVisibility[source.id] && source.apiPath && !officialPayloadsRef.current[source.id as OfficialContextFeedId]) void refreshOfficialContext(source.id as OfficialContextFeedId);
       }
       const restoredYear = Number(params.get("t"));
-      const nextYear = KNOWN_TEMPORAL_FRAMES.has(restoredYear) ? restoredYear : 2026;
+      const nextYear = KNOWN_TEMPORAL_FRAMES.has(restoredYear) ? restoredYear : OFFICIAL_CONTEXT_PRESENT_FRAME;
       yearRef.current = nextYear;
       setYear(nextYear);
       setPreviewYear(nextYear);
@@ -4070,7 +4195,7 @@ export default function Home() {
         setCompareTimeB(restoredComparisonTimes[1]);
       } else {
         setCompareTimeA(1910);
-        setCompareTimeB(2026);
+        setCompareTimeB(OFFICIAL_CONTEXT_PRESENT_FRAME);
       }
       if (nextMapUtilityView === "export") setExportGeneratedAt(new Date().toISOString());
       if (nextMapUtilityView === "report") setReportGeneratedAt(new Date().toISOString());
@@ -4302,14 +4427,14 @@ export default function Home() {
               noaaRadarFrameTimeRef.current
               && noaaRadarManifestIsFresh(noaaRadarManifestRef.current, Date.now()),
             );
-            applyOfficialContextState(map, officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
+            applyOfficialContextState(map, runtimeOfficialVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
             styleStep = "ELEVATION_SCALE";
             setElevationExaggeration(map, verticalExaggerationRef.current);
             styleStep = "PROJECTION";
             applyProjectionNavigationLimits(map, projectionRef.current);
             map.setProjection({ type: projectionRef.current });
             if (noaaSatelliteFrameRef.current) setNoaaSatelliteFrame(map, noaaSatelliteFrameRef.current.objectId,
-              officialVisibilityRef.current["noaa-goes-geocolor"] && temporalQueryRef.current.frame === OFFICIAL_CONTEXT_PRESENT_FRAME,
+              buildYearCurrentRef.current && officialVisibilityRef.current["noaa-goes-geocolor"] && temporalQueryRef.current.frame === OFFICIAL_CONTEXT_PRESENT_FRAME,
               officialOpacityRef.current["noaa-goes-geocolor"]);
             styleStep = "SCENE_ENVIRONMENT";
             applySceneEnvironment(map, atmospherePresetRef.current, lightAzimuthRef.current);
@@ -4367,15 +4492,22 @@ export default function Home() {
           const now = performance.now();
           if (map.isMoving() || now - lastHoverSample < 80) return;
           lastHoverSample = now;
-          if (scenePresetRef.current === "elevation-3d" && topographicOverlayRef.current) {
-            // @ts-expect-error MapLibre runtime accepts the unexaggerated query option; bundled types currently omit it.
-            const elevationMeters = map.queryTerrainElevation([event.lngLat.lng, event.lngLat.lat], { exaggerated: false });
-            setTerrainElevationReading(elevationMeters !== null && Number.isFinite(elevationMeters) ? {
+          if (scenePresetRef.current === "elevation-3d" && styleGenerationReadyRef.current
+            && attachedTerrainProviderRef.current === terrainProviderRef.current
+            && map.getTerrain()?.source === TERRAIN_SOURCE_ID
+            && failedTerrainSourceRef.current !== map.getSource(TERRAIN_SOURCE_ID)) {
+            const elevationMeters = unexaggeratedTerrainElevation(map, [event.lngLat.lng, event.lngLat.lat]);
+            setTerrainElevationUnavailable(elevationMeters === null ? { longitude: event.lngLat.lng, latitude: event.lngLat.lat } : null);
+            setTerrainElevationReading(elevationMeters !== null ? {
               longitude: event.lngLat.lng,
               latitude: event.lngLat.lat,
               meters: elevationMeters,
               feet: elevationMeters * 3.28084,
+              provider: terrainProviderRef.current,
             } : null);
+          } else {
+            setTerrainElevationReading(null);
+            setTerrainElevationUnavailable(null);
           }
           const availableLayers = interactiveLayerIds.filter((id) => map.getLayer(id));
           const availableOfficialLayers = OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS.filter((id) => map.getLayer(id));
@@ -4443,6 +4575,7 @@ export default function Home() {
           map.getCanvas().style.cursor = "";
           setHoverSummary(null);
           setTerrainElevationReading(null);
+          setTerrainElevationUnavailable(null);
         });
 
         map.on("click", (event) => {
@@ -4588,11 +4721,33 @@ export default function Home() {
         });
         interactionHandlersBound = true;
 
+        const terrainRasterBounds = () => {
+          const bounds = map.getBounds();
+          return { west: bounds.getWest(), east: bounds.getEast(), south: bounds.getSouth(), north: bounds.getNorth() };
+        };
+        const syncTerrainRasterView = () => {
+          const bounds = terrainRasterBounds();
+          for (const id of ["usgs-3dep-hillshade", "usgs-3dep-slope"] as const) {
+            if (!officialVisibilityRef.current[id] || temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) continue;
+            const failed = terrainRasterViewRef.current.hasFailed(id, bounds, map.getZoom());
+            if (failed) officialRasterFailuresRef.current.add(id);
+            else {
+              officialRasterFailuresRef.current.delete(id);
+              const pendingRetry = rasterRetryTimers.get(id);
+              if (pendingRetry !== undefined) { window.clearTimeout(pendingRetry); rasterRetryTimers.delete(id); }
+            }
+            const source = map.getSource(OFFICIAL_CONTEXT_BY_ID[id].sourceId);
+            const next = terrainRasterViewRef.current.status(id, bounds, map.getZoom(), Boolean(source && map.isSourceLoaded(OFFICIAL_CONTEXT_BY_ID[id].sourceId)));
+            setOfficialStates(current => current[id] === next ? current : ({ ...current, [id]: next }));
+            if (!failed) setOfficialErrors(current => current[id] ? ({ ...current, [id]: undefined }) : current);
+          }
+        };
         map.on("movestart", () => {
           const center = map.getCenter();
           lastKnownGoodViewRef.current = { center: [center.lng, center.lat], zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch() };
         });
         map.on("moveend", () => {
+          syncTerrainRasterView();
           const center = map.getCenter();
           const nextView: ViewState = { center: [center.lng, center.lat], zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch() };
           const bounds = map.getBounds();
@@ -4620,7 +4775,7 @@ export default function Home() {
           const message = mapRuntimeErrorCode("event", sourceId);
           const affectedLayer = sourceId ? LAYER_REGISTRY.find((layer) => layer.sourceId === sourceId) : undefined;
           const affectedOfficialContext = sourceId ? OFFICIAL_CONTEXT_BY_SOURCE_ID[sourceId] : undefined;
-          if (basemapRef.current === "standard" && !styleFallbackAttempted && (!sourceId || (!affectedLayer && !affectedOfficialContext && sourceId !== TERRAIN_SOURCE_ID && sourceId !== TERRAIN_COLOR_SOURCE_ID))) {
+          if (basemapRef.current === "standard" && !styleFallbackAttempted && shouldFallbackStandardBasemap(sourceId, Boolean(affectedLayer), Boolean(affectedOfficialContext))) {
             styleFallbackAttempted = true;
             runtimeError = null;
             degradedReason = `Standard vector basemap unavailable; switched to the local MapLibre style. ${message}`;
@@ -4643,8 +4798,20 @@ export default function Home() {
           }
           if (affectedOfficialContext) {
             const id = affectedOfficialContext.id;
+            const terrainRaster = id === "usgs-3dep-hillshade" || id === "usgs-3dep-slope";
+            const erroredTile = terrainRasterErrorTile(event as typeof event & { tile?: { tileID?: { canonical?: { z: number; x: number; y: number } } }; coord?: { canonical?: { z: number; x: number; y: number } } });
+            if (terrainRaster && erroredTile) {
+              const bounds = map.getBounds();
+              if (!terrainRasterTileInView(erroredTile,
+                { west: bounds.getWest(), east: bounds.getEast(), south: bounds.getSouth(), north: bounds.getNorth() }, map.getZoom())) return;
+            }
             officialRasterFailuresRef.current.add(id);
-            setOfficialStates(current => ({ ...current, [id]: current[id] === "ready" || current[id] === "partial" ? "partial" : "error" }));
+            if (id === "noaa-lightning-density") setLightningPlaying(false);
+            if (terrainRaster) terrainRasterViewRef.current.markFailed(id, erroredTile);
+            const rasterBounds = terrainRaster ? terrainRasterBounds() : null;
+            setOfficialStates(current => ({ ...current, [id]: terrainRaster
+              ? terrainRasterViewRef.current.status(id, rasterBounds!, map.getZoom(), false)
+              : current[id] === "ready" || current[id] === "partial" ? "partial" : "error" }));
             setOfficialErrors(current => ({ ...current, [id]: message }));
             // A single failed display tile does not invalidate the tiles already
             // on screen. Retry the selected current source twice, then leave its
@@ -4658,7 +4825,8 @@ export default function Home() {
                   || !officialVisibilityRef.current[id] || temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME
                   || !map.getSource(affectedOfficialContext.sourceId)) return;
                 officialRasterFailuresRef.current.delete(id);
-                setOfficialStates(current => ({ ...current, [id]: current[id] === "partial" ? "partial" : "loading" }));
+                if (terrainRaster) terrainRasterViewRef.current.reset(id);
+                setOfficialStates(current => ({ ...current, [id]: terrainRaster ? "loading" : current[id] === "partial" ? "partial" : "loading" }));
                 setOfficialErrors(current => ({ ...current, [id]: undefined }));
                 map.refreshTiles(affectedOfficialContext.sourceId);
               }, attempt * 6000);
@@ -4671,9 +4839,14 @@ export default function Home() {
           if (sourceId === TERRAIN_SOURCE_ID) {
             failedTerrainSourceRef.current = map.getSource(TERRAIN_SOURCE_ID);
             setTerrainState("ERROR");
+            setTerrainElevationReading(null);
+            setTerrainElevationUnavailable(null);
             degradedReason = `Terrain DEM is unavailable; the 2D map remains usable. ${message}`;
             setRuntime({ kind: "degraded", message: degradedReason });
-            if (terrainRetryTimer === null && terrainRetryCount < 2) {
+            // A slow live 3DEP mosaic can fail many distinct tiles at once.
+            // Leave its explicit Retry control available instead of adding
+            // another automatic burst while the provider is unavailable.
+            if (terrainProviderRef.current !== "usgs-3dep" && terrainRetryTimer === null && terrainRetryCount < 2) {
               terrainRetryCount += 1;
               terrainRetryTimer = window.setTimeout(() => {
                 terrainRetryTimer = null;
@@ -4698,6 +4871,7 @@ export default function Home() {
             topographicOverlayRef.current = false;
             setTopographicOverlay(false);
             setTerrainElevationReading(null);
+            setTerrainElevationUnavailable(null);
             announce("Topographic height overlay is unavailable; Terrain 3D remains active");
             return;
           }
@@ -4716,7 +4890,12 @@ export default function Home() {
           }
         });
         map.on("sourcedata", (event) => {
-          if (event.sourceId === TERRAIN_SOURCE_ID && event.isSourceLoaded && failedTerrainSourceRef.current !== map.getSource(TERRAIN_SOURCE_ID)) {
+          if (event.sourceId === TERRAIN_SOURCE_ID && event.isSourceLoaded
+            && scenePresetRef.current === "elevation-3d" && map.getTerrain()?.source === TERRAIN_SOURCE_ID
+            && map.getSource(TERRAIN_SOURCE_ID) && map.isSourceLoaded(TERRAIN_SOURCE_ID)
+            && attachedTerrainProviderRef.current === terrainProviderRef.current
+            && terrainPresentationSourceMatches(map, terrainSourceFor(terrainProviderRef.current))
+            && failedTerrainSourceRef.current !== map.getSource(TERRAIN_SOURCE_ID)) {
             setTerrainState("READY");
             failedSourceIds.delete(TERRAIN_SOURCE_ID);
             if (terrainRetryTimer !== null) { window.clearTimeout(terrainRetryTimer); terrainRetryTimer = null; }
@@ -4724,12 +4903,21 @@ export default function Home() {
           }
           if (!event.sourceId) return;
           const officialSource = OFFICIAL_CONTEXT_BY_SOURCE_ID[event.sourceId];
-          if (officialSource && officialSource.id !== "nws-radar" && !officialSource.apiPath && !officialSource.managedAdapterPath && event.isSourceLoaded && !officialRasterFailuresRef.current.has(officialSource.id)) {
+          const terrainRaster = officialSource?.id === "usgs-3dep-hillshade" || officialSource?.id === "usgs-3dep-slope";
+          if (terrainRaster && event.tile?.state === "loaded" && officialVisibilityRef.current[officialSource.id]) {
+            terrainRasterViewRef.current.markLoaded(officialSource.id, event.coord?.canonical);
+          }
+          const rasterBounds = terrainRaster ? terrainRasterBounds() : null;
+          if (officialSource && officialSource.id !== "nws-radar" && !officialSource.apiPath && !officialSource.managedAdapterPath
+            && (terrainRaster ? terrainRasterViewRef.current.hasLoaded(officialSource.id as TerrainRasterId, rasterBounds!, map.getZoom()) : event.isSourceLoaded)) {
             const pendingRetry = rasterRetryTimers.get(officialSource.id);
             if (pendingRetry !== undefined) { window.clearTimeout(pendingRetry); rasterRetryTimers.delete(officialSource.id); }
-            const nextState = officialSource.id === "noaa-goes-geocolor" && (noaaSatelliteManifestRef.current?.partial || noaaSatelliteManifestRef.current?.freshness === "delayed") ? "partial" : "ready";
+            const nextState = terrainRaster
+              ? terrainRasterViewRef.current.status(officialSource.id as TerrainRasterId, rasterBounds!, map.getZoom(), event.isSourceLoaded)
+              : officialRasterFailuresRef.current.has(officialSource.id)
+                || officialSource.id === "noaa-goes-geocolor" && (noaaSatelliteManifestRef.current?.partial || noaaSatelliteManifestRef.current?.freshness === "delayed") ? "partial" : event.isSourceLoaded ? "ready" : "loading";
             setOfficialStates(current => current[officialSource.id] === nextState ? current : ({ ...current, [officialSource.id]: nextState }));
-            setOfficialErrors(current => current[officialSource.id] ? ({ ...current, [officialSource.id]: undefined }) : current);
+            if (nextState === "ready") setOfficialErrors(current => current[officialSource.id] ? ({ ...current, [officialSource.id]: undefined }) : current);
           }
           const layer = LAYER_REGISTRY.find((candidate) => candidate.sourceId === event.sourceId);
           if (!layer) return;
@@ -4740,8 +4928,12 @@ export default function Home() {
         });
         map.on("idle", () => {
           runMapMutation("Map readiness check", () => {
+            syncTerrainRasterView();
             if (scenePresetRef.current === "elevation-3d" && map.getTerrain()?.source === TERRAIN_SOURCE_ID
-              && map.isSourceLoaded(TERRAIN_SOURCE_ID) && failedTerrainSourceRef.current !== map.getSource(TERRAIN_SOURCE_ID)) {
+              && map.getSource(TERRAIN_SOURCE_ID) && map.isSourceLoaded(TERRAIN_SOURCE_ID)
+              && attachedTerrainProviderRef.current === terrainProviderRef.current
+              && terrainPresentationSourceMatches(map, terrainSourceFor(terrainProviderRef.current))
+              && failedTerrainSourceRef.current !== map.getSource(TERRAIN_SOURCE_ID)) {
               setTerrainState("READY");
             }
             const probe = refreshMaplibreProbe();
@@ -4785,7 +4977,7 @@ export default function Home() {
       mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, [announce, runMapMutation]);
+  }, [announce, runMapMutation, runtimeOfficialVisibility]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -4835,6 +5027,131 @@ export default function Home() {
 
   useEffect(() => {
     const map = mapRef.current;
+    const canvas = windArrowCanvasRef.current;
+    const selected = buildYearCurrent && officialVisibility["nws-forecast-wind"]
+      && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
+    if (!map || !canvas || !styleReady || !selected) {
+      setWindArrowState("OFF");
+      setWindArrowFrame(null);
+      setWindArrowHover(null);
+      canvas?.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height);
+      return;
+    }
+    let disposed = false;
+    let frame: WindArrowFrame | null = null;
+    let controller: AbortController | null = null;
+    let debounceTimer = 0;
+    let drawTimer = 0;
+    const animated = dynamicEffects && !reducedMotion;
+    const render = () => {
+      if (!disposed && frame && !document.hidden) drawWindFlowCanvas(canvas, map, frame, performance.now(), animated);
+    };
+    const tick = () => {
+      drawTimer = 0;
+      render();
+      if (animated && frame && !disposed && !document.hidden) drawTimer = window.setTimeout(tick, 50);
+    };
+    const startMotion = () => {
+      if (animated && frame && !disposed && !document.hidden && !drawTimer) drawTimer = window.setTimeout(tick, 50);
+    };
+    const onVisibilityChange = () => {
+      if (document.hidden) { window.clearTimeout(drawTimer); drawTimer = 0; }
+      else { render(); startMotion(); }
+    };
+    const onPointerMove = (event: { point: { x: number; y: number } }) => {
+      const sample = frame && !map.isMoving() ? nearestWindFlowSample(map, frame, event.point.x, event.point.y) : null;
+      setWindArrowHover(sample ? {
+        sample,
+        screenX: Math.max(12, Math.min(event.point.x + 18, map.getCanvas().clientWidth - 220)),
+        screenY: event.point.y > map.getCanvas().clientHeight - 230
+          ? Math.max(12, event.point.y - (scenePresetRef.current === "elevation-3d" ? 170 : 98))
+          : event.point.y + (scenePresetRef.current === "elevation-3d" ? 106 : 20),
+      } : null);
+    };
+    const onPointerLeave = () => setWindArrowHover(null);
+    const onMapMove = () => { if (!animated) render(); };
+    const load = async () => {
+      const bounds = map.getBounds();
+      const center = map.getCenter();
+      const west = Math.max(-102.1, Math.min(bounds.getWest(), center.lng - 0.08));
+      const east = Math.min(-94.5, Math.max(bounds.getEast(), center.lng + 0.08));
+      const south = Math.max(36.9, Math.min(bounds.getSouth(), center.lat - 0.06));
+      const north = Math.min(40.1, Math.max(bounds.getNorth(), center.lat + 0.06));
+      controller?.abort();
+      frame = null;
+      window.clearTimeout(drawTimer);
+      drawTimer = 0;
+      setWindArrowHover(null);
+      canvas.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height);
+      if (east - west < 0.02 || north - south < 0.02) {
+        setWindArrowState("ERROR");
+        setWindArrowFrame(null);
+        return;
+      }
+      controller = new AbortController();
+      setWindArrowState("LOADING");
+      setWindArrowFrame(null);
+      try {
+        const bbox = [west, south, east, north].map(value => value.toFixed(3)).join(",");
+        const response = await fetch(`/api/wind-arrows?bbox=${bbox}`, { signal: controller.signal, cache: "no-store" });
+        if (!response.ok) throw new Error("Wind model unavailable");
+        const next = await response.json() as WindArrowFrame;
+        if (!Array.isArray(next.samples) || next.samples.length !== 16 || typeof next.validTimeUtc !== "string") throw new Error("Incomplete wind grid");
+        if (disposed) return;
+        frame = next;
+        setWindArrowFrame(next);
+        setWindArrowState("READY");
+        render();
+        startMotion();
+      } catch (error) {
+        if (disposed || (error instanceof DOMException && error.name === "AbortError")) return;
+        frame = null;
+        setWindArrowFrame(null);
+        setWindArrowState("ERROR");
+      }
+    };
+    const schedule = () => { window.clearTimeout(debounceTimer); debounceTimer = window.setTimeout(() => void load(), 350); };
+    map.on("moveend", schedule);
+    map.on("move", onMapMove);
+    map.on("resize", render);
+    map.on("mousemove", onPointerMove);
+    map.getCanvas().addEventListener("mouseleave", onPointerLeave);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    const refreshTimer = window.setInterval(() => void load(), 10 * 60_000);
+    void load();
+    return () => {
+      disposed = true;
+      controller?.abort();
+      map.off("moveend", schedule);
+      map.off("move", onMapMove);
+      map.off("resize", render);
+      map.off("mousemove", onPointerMove);
+      map.getCanvas().removeEventListener("mouseleave", onPointerLeave);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.clearInterval(refreshTimer);
+      window.clearTimeout(debounceTimer);
+      window.clearTimeout(drawTimer);
+      setWindArrowHover(null);
+      canvas.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height);
+    };
+  }, [buildYearCurrent, dynamicEffects, officialVisibility, reducedMotion, styleReady, temporalQuery.frame, windArrowReloadToken]);
+
+  useEffect(() => {
+    const next: OfficialContextState = windArrowState === "READY" ? "ready" : windArrowState === "LOADING" ? "loading" : windArrowState === "ERROR" ? "error" : "idle";
+    setOfficialStates(current => current["nws-forecast-wind"] === next ? current : ({ ...current, "nws-forecast-wind": next }));
+    setOfficialErrors(current => {
+      const message = windArrowState === "ERROR" ? "GFS wind forecast unavailable or outside the supported Kansas area." : undefined;
+      return current["nws-forecast-wind"] === message ? current : ({ ...current, "nws-forecast-wind": message });
+    });
+  }, [windArrowState]);
+
+  useEffect(() => {
+    setTerrainElevationReading(null);
+    setTerrainElevationUnavailable(null);
+  }, [scenePreset, terrainProvider]);
+
+  useEffect(() => {
+    const map = mapRef.current;
     if (!map || !styleGenerationReadyRef.current) return;
     runMapMutation("Elevation-scale update", () => setElevationExaggeration(map, verticalExaggeration));
   }, [runMapMutation, verticalExaggeration]);
@@ -4847,10 +5164,12 @@ export default function Home() {
     }
     runMapMutation("Terrain presentation update", () => {
       const state = setTerrainPresentation(map, scenePreset === "elevation-3d", verticalExaggeration);
-      setTerrainState(state === "LOADING" && map.isSourceLoaded(TERRAIN_SOURCE_ID)
-        && failedTerrainSourceRef.current !== map.getSource(TERRAIN_SOURCE_ID) ? "READY" : state);
+      setTerrainHeightOverlay(map, scenePreset === "elevation-3d" && topographicOverlayRef.current && state !== "ERROR");
+      const source = map.getSource(TERRAIN_SOURCE_ID);
+      setTerrainState(terrainSourceLoadState(state, Boolean(source && attachedTerrainProviderRef.current === terrainProvider && map.isSourceLoaded(TERRAIN_SOURCE_ID)),
+        Boolean(source && failedTerrainSourceRef.current === source)));
     });
-  }, [runMapMutation, scenePreset, styleReady, verticalExaggeration]);
+  }, [runMapMutation, scenePreset, styleReady, terrainProvider, verticalExaggeration]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -4867,7 +5186,7 @@ export default function Home() {
     let animationFrame = 0;
     let lastFrame = 0;
     const budget = browserRenderBudget(renderQuality);
-    const liveWaterSelected = temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME
+    const liveWaterSelected = buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME
       && (officialVisibility["usgs-streamflow"] || officialVisibility["noaa-nwps-gauges"]);
     // Paint animation keeps MapLibre from becoming idle. Let the style and
     // source readiness check finish before starting ambient motion, including
@@ -4906,7 +5225,7 @@ export default function Home() {
       document.removeEventListener("visibilitychange", resume);
       if (styleGenerationReadyRef.current) runMapMutation("Map-effect cleanup", () => { applyDynamicMapEffects(map, 0, opacity, false); emphasizeWaterStations(0, false); });
     };
-  }, [dynamicEffects, officialVisibility, opacity, projection, reducedMotion, renderQuality, runMapMutation, runtime.kind, styleReady, temporalQuery.frame, visibility]);
+  }, [buildYearCurrent, dynamicEffects, officialVisibility, opacity, projection, reducedMotion, renderQuality, runMapMutation, runtime.kind, styleReady, temporalQuery.frame, visibility]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -4918,12 +5237,24 @@ export default function Home() {
     if (pendingRadarFrame) setNoaaRadarFrameLoadState("idle");
     if (!runMapMutation("Basemap style update", () => map.setStyle(BASEMAPS[basemap].style, { diff: false }))) return;
     styleGenerationReadyRef.current = false;
+    attachedTerrainProviderRef.current = null;
+    officialRasterFailuresRef.current.clear();
+    terrainRasterViewRef.current.resetAll();
+    setOfficialStates(current => {
+      const next = { ...current };
+      for (const source of OFFICIAL_CONTEXT_SOURCES) {
+        if (source.kind === "OPERATIONAL_WMS" && source.id !== "nws-radar" && officialVisibilityRef.current[source.id]) next[source.id] = "loading";
+      }
+      return next;
+    });
+    setTerrainElevationReading(null);
+    setTerrainElevationUnavailable(null);
     setPlaying(false);
     setStyleReady(false);
     setTerrainState(scenePresetRef.current === "elevation-3d" ? "LOADING" : "OFF");
     setMaplibreProbe((current) => ({ ...current, styleLoaded: false, idle: false, tilesLoaded: false, sourcesReady: 0 }));
     setRuntime({ kind: "loading", message: `Applying ${BASEMAPS[basemap].title} style…` });
-  }, [basemap, terrainProvider, runMapMutation]);
+  }, [basemap, runMapMutation]);
 
   useEffect(() => {
     const selectionVisible = Boolean(selected && !selectedTimeMismatch && !selectedLayerHidden && !selectedEvidenceFiltered);
@@ -4955,9 +5286,13 @@ export default function Home() {
     if (!map || !styleGenerationReadyRef.current) return;
     runMapMutation("Scene-light update", () => {
       applySceneEnvironment(map, atmospherePreset, lightAzimuth);
+      if (scenePreset === "elevation-3d") {
+        applyTerrainReliefStyle(map, basemap === "topo" ? "topographic" : "general", atmospherePreset, lightAzimuth);
+      }
+      applyTopographicRasterDepth(map, scenePreset === "elevation-3d" && basemap === "topo" && terrainState === "READY");
       map.setVerticalFieldOfView(fieldOfView);
     });
-  }, [atmospherePreset, fieldOfView, lightAzimuth, runMapMutation]);
+  }, [atmospherePreset, basemap, fieldOfView, lightAzimuth, runMapMutation, scenePreset, styleReady, terrainState]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -4999,6 +5334,142 @@ export default function Home() {
   }, [noaaRadarManifest]);
 
   useEffect(() => {
+    if (!lightningSelected) {
+      setLightningPlaying(false);
+      setLightningPreview("idle");
+      return;
+    }
+    let disposed = false;
+    const load = async () => {
+      setLightningManifestState("loading");
+      try {
+        const response = await fetch("/api/lightning/frames", { cache: "no-store" });
+        if (!response.ok) throw new Error("NOAA frame list unavailable");
+        const candidate = await readBoundedJson(response, 64 * 1024) as LightningManifest;
+        if (candidate.layer !== "ldn_lightning_strike_density" || candidate.evidenceRole !== "EXTERNAL_CONTEXT_ONLY" || !Array.isArray(candidate.frames) || candidate.frames.length < 1 || candidate.frames.length > 32 || candidate.frames.some((frame) => typeof frame !== "string" || canonicalLightningTime(frame) !== frame)) throw new Error("NOAA frame list invalid");
+        if (disposed) return;
+        setLightningManifest(candidate);
+        setLightningFrame((current) => current && candidate.frames.includes(current) ? current : candidate.latest);
+        setLightningManifestState("ready");
+      } catch {
+        if (disposed) return;
+        setLightningPlaying(false);
+        setLightningManifestState("error");
+        setOfficialStates((current) => ({ ...current, "noaa-lightning-density": "error" }));
+        setOfficialErrors((current) => ({ ...current, "noaa-lightning-density": "NOAA advertised frames unavailable; no untimed image shown." }));
+      }
+    };
+    void load();
+    const timer = window.setInterval(() => { if (!document.hidden) void load(); }, 180_000);
+    return () => { disposed = true; window.clearInterval(timer); };
+  }, [lightningSelected, lightningReloadToken]);
+
+  useEffect(() => {
+    if (!lightningSelected || !styleReady) return;
+    const map = mapRef.current;
+    if (!map) return;
+    const moved = () => setLightningViewRevision((current) => current + 1);
+    map.on("moveend", moved);
+    return () => { map.off("moveend", moved); };
+  }, [lightningSelected, styleReady]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    const id = "noaa-lightning-density";
+    if (!map || !styleReady || !map.isStyleLoaded()) return;
+    if (!lightningSelected || !lightningFrame || lightningManifestState !== "ready") {
+      const source = OFFICIAL_CONTEXT_BY_ID[id];
+      source.layerIds.forEach((layerId) => { if (map.getLayer(layerId)) map.setLayoutProperty(layerId, "visibility", "none"); });
+      return;
+    }
+    let disposed = false;
+    const abort = new AbortController();
+    let sampledSignal: boolean | null = null;
+    setLightningPreview("loading");
+    setOfficialStates((current) => ({ ...current, [id]: "loading" }));
+    setOfficialErrors((current) => ({ ...current, [id]: undefined }));
+    officialRasterFailuresRef.current.delete(id);
+    try { setNoaaLightningObservationTime(map, lightningFrame, officialOpacity[id], true); }
+    catch { setLightningPlaying(false); setLightningPreview("error"); setOfficialStates((current) => ({ ...current, [id]: "error" })); return; }
+    const settle = () => {
+      if (disposed || sampledSignal === null || !map.getSource(OFFICIAL_CONTEXT_BY_ID[id].sourceId)) return;
+      if (officialRasterFailuresRef.current.has(id)) {
+        setLightningPlaying(false);
+        setOfficialStates((current) => ({ ...current, [id]: sampledSignal ? "partial" : "error" }));
+        return;
+      }
+      if (!map.isSourceLoaded(OFFICIAL_CONTEXT_BY_ID[id].sourceId)) return;
+      setOfficialStates((current) => ({ ...current, [id]: sampledSignal ? "ready" : "empty" }));
+    };
+    map.on("sourcedata", settle);
+    const bounds = map.getBounds();
+    const center = map.getCenter();
+    const width = Math.min(16, Math.max(0.25, bounds.getEast() - bounds.getWest()));
+    const height = Math.min(10, Math.max(0.25, bounds.getNorth() - bounds.getSouth()));
+    const bbox = [Math.max(-180, center.lng - width / 2), Math.max(-25, center.lat - height / 2), Math.min(180, center.lng + width / 2), Math.min(80, center.lat + height / 2)].map((value) => value.toFixed(5)).join(",");
+    const inspect = async () => {
+      try {
+        const url = `/api/lightning/preview?time=${encodeURIComponent(lightningFrame)}&bbox=${encodeURIComponent(bbox)}`;
+        const response = await fetch(url, { signal: abort.signal, cache: "no-store" });
+        if (!response.ok) throw new Error("Preview unavailable");
+        const bitmap = await createImageBitmap(await response.blob());
+        const canvas = document.createElement("canvas");
+        canvas.width = bitmap.width; canvas.height = bitmap.height;
+        const context = canvas.getContext("2d", { willReadFrequently: true });
+        if (!context) throw new Error("Preview pixels unavailable");
+        context.drawImage(bitmap, 0, 0); bitmap.close();
+        const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+        let visiblePixels = 0;
+        for (let index = 3; index < pixels.length; index += 4) if (pixels[index] > 8) visiblePixels++;
+        if (disposed) return;
+        sampledSignal = visiblePixels > 0;
+        setLightningPreview(sampledSignal ? "signal" : "none");
+        settle();
+      } catch {
+        if (disposed) return;
+        setLightningPlaying(false);
+        setLightningPreview("error");
+        setOfficialStates((current) => ({ ...current, [id]: "partial" }));
+        setOfficialErrors((current) => ({ ...current, [id]: "NOAA current-view image could not be inspected; signal presence is unconfirmed." }));
+      }
+    };
+    void inspect();
+    return () => { disposed = true; abort.abort(); map.off("sourcedata", settle); setNoaaLightningGlow(map, 0); };
+  }, [lightningFrame, lightningManifestState, lightningSelected, lightningViewRevision, officialOpacity, styleReady]);
+
+  useEffect(() => {
+    if (!lightningSelected || lightningPreview !== "signal" || reducedMotion || !dynamicEffects || !styleReady || document.hidden) return;
+    const map = mapRef.current;
+    if (!map) return;
+    let frame = 0;
+    const started = performance.now();
+    const animate = (now: number) => {
+      const progress = Math.min(1, (now - started) / 1350);
+      setNoaaLightningGlow(map, 0.23 * Math.sin(Math.PI * progress) ** 2 * (1 - progress * 0.35));
+      if (progress < 1) frame = requestAnimationFrame(animate);
+      else setNoaaLightningGlow(map, 0);
+    };
+    frame = requestAnimationFrame(animate);
+    return () => { cancelAnimationFrame(frame); setNoaaLightningGlow(map, 0); };
+  }, [lightningFrame, lightningPreview, lightningSelected, reducedMotion, dynamicEffects, styleReady]);
+
+  useEffect(() => {
+    if (!lightningPlaying || !lightningSelected || reducedMotion || lightningManifestState !== "ready" || lightningManifest?.frames.length === 1 || !lightningPlaybackReady) return;
+    const timer = window.setTimeout(() => {
+      const frames = lightningManifest?.frames ?? [];
+      if (!frames.length) return;
+      setLightningFrame(frames[(Math.max(0, frames.indexOf(lightningFrame ?? "")) + 1) % frames.length]);
+    }, 1650);
+    return () => window.clearTimeout(timer);
+  }, [lightningFrame, lightningManifest, lightningManifestState, lightningPlaying, lightningPlaybackReady, lightningSelected, reducedMotion]);
+
+  useEffect(() => {
+    const pause = () => { if (document.hidden) setLightningPlaying(false); };
+    document.addEventListener("visibilitychange", pause);
+    return () => document.removeEventListener("visibilitychange", pause);
+  }, []);
+
+  useEffect(() => {
     if (!noaaRadarSelectedAtPresent) {
       setNoaaRadarPlaying(false);
       noaaRadarFrameLoadCleanupRef.current?.();
@@ -5013,7 +5484,7 @@ export default function Home() {
         }
         runMapMutation("Radar visibility update", () => applyOfficialContextState(
             map,
-            officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, false, null),
+            runtimeOfficialVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, false, null),
             officialOpacityRef.current,
             officialPayloadsRef.current,
         ));
@@ -5024,14 +5495,20 @@ export default function Home() {
     void refreshNoaaRadarManifest(true);
     const timer = window.setInterval(() => { void refreshNoaaRadarManifest(true); }, 240_000);
     return () => window.clearInterval(timer);
-  }, [noaaRadarSelectedAtPresent, refreshNoaaRadarManifest, runMapMutation]);
+  }, [noaaRadarSelectedAtPresent, refreshNoaaRadarManifest, runMapMutation, runtimeOfficialVisibility]);
 
   useEffect(() => {
-    if (!officialVisibility["noaa-goes-geocolor"] || temporalQuery.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) return;
+    if (!buildYearCurrent || !officialVisibility["noaa-goes-geocolor"] || temporalQuery.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) return;
     void refreshNoaaSatelliteFrames(true);
     const timer = window.setInterval(() => { void refreshNoaaSatelliteFrames(true); }, 300_000);
     return () => window.clearInterval(timer);
-  }, [officialVisibility, refreshNoaaSatelliteFrames, temporalQuery.frame]);
+  }, [buildYearCurrent, officialVisibility, refreshNoaaSatelliteFrames, temporalQuery.frame]);
+
+  useEffect(() => {
+    if (buildYearCurrent) return;
+    const map = mapRef.current;
+    if (map?.isStyleLoaded()) runMapMutation("Hold satellite image for build-year mismatch", () => clearNoaaSatelliteFrame(map));
+  }, [buildYearCurrent, runMapMutation]);
 
   useEffect(() => {
     if (!noaaRadarSelectedAtPresent || noaaRadarPendingFrameTime || noaaRadarFrameLoadState === "error" || noaaRadarLoopFrames.length === 0 || noaaRadarFrameIndex >= 0) return;
@@ -5679,12 +6156,14 @@ export default function Home() {
     const nextScenePreset: ScenePresetId = mode === "terrain" ? "elevation-3d" : mode === "globe" ? "globe-overview" : "overview-2d";
     const nextAtmosphere: AtmospherePreset = mode === "terrain" ? "dusk" : mode === "globe" ? "clear" : "night";
     const nextFieldOfView = mode === "terrain" ? 44 : mode === "globe" ? 42 : 36;
-    const nextPitch = mode === "terrain" ? Math.max(48, currentPitch) : 0;
+    const nextPitch = mode === "terrain" ? Math.max(basemapRef.current === "topo" ? 58 : 48, currentPitch) : 0;
     const nextBearing = mode === "2d" ? 0 : currentBearing;
 
     projectionRef.current = nextProjection;
     scenePresetRef.current = nextScenePreset;
-    verticalExaggerationRef.current = 1;
+    // Display emphasis is explicit; hover elevations and profile samples undo
+    // this renderer scale before reporting DEM heights.
+    verticalExaggerationRef.current = mode === "terrain" ? 1.6 : 1;
     atmospherePresetRef.current = nextAtmosphere;
     lightAzimuthRef.current = mode === "terrain" ? 235 : mode === "globe" ? 225 : 210;
     fieldOfViewRef.current = nextFieldOfView;
@@ -5701,7 +6180,7 @@ export default function Home() {
       map.setProjection({ type: nextProjection });
       applyOfficialContextState(map, effectiveOfficialVisibility, officialOpacityRef.current, officialPayloadsRef.current);
       if (mode === "terrain") {
-        setTerrainState(setTerrainPresentation(map, true, 1));
+        setTerrainState(setTerrainPresentation(map, true, verticalExaggerationRef.current));
         setTerrainHeightOverlay(map, topographicOverlayRef.current);
       }
       applySceneEnvironment(map, nextAtmosphere, lightAzimuthRef.current);
@@ -5741,7 +6220,7 @@ export default function Home() {
     activateMapRepresentation("terrain");
     openMapUtility("scene");
     toggleMeasure("distance");
-    announce("Terrain investigation ready at physical 1× scale. Draw a line on the map, finish it, then preview the display profile.");
+    announce(`Terrain investigation ready at ${verticalExaggerationRef.current.toFixed(1)}× display scale. Draw a line on the map, finish it, then preview unexaggerated DEM samples.`);
   };
 
   const toggleTopographicHeightOverlay = () => {
@@ -5755,10 +6234,9 @@ export default function Home() {
     setTopographicOverlay(next);
     if (map) setTerrainHeightOverlay(map, next && scenePresetRef.current === "elevation-3d");
     if (!next) {
-      setTerrainElevationReading(null);
       setLockedTerrainElevation(null);
     }
-    announce(next ? "Topographic height colors enabled · move over the map to read unexaggerated elevation" : "Topographic height colors disabled");
+    announce(next ? "Topographic height colors enabled · cursor DEM reading remains available" : "Topographic height colors disabled · cursor DEM reading remains available");
   };
 
   const previewTerrainProfile = () => {
@@ -5782,8 +6260,7 @@ export default function Home() {
           start[0] + (end[0] - start[0]) * fraction,
           start[1] + (end[1] - start[1]) * fraction,
         ];
-        // @ts-expect-error MapLibre runtime accepts the unexaggerated query option; bundled types currently omit it.
-        const elevation = map.queryTerrainElevation(coordinate, { exaggerated: false });
+        const elevation = unexaggeratedTerrainElevation(map, coordinate);
         if (elevation !== null && Number.isFinite(elevation)) {
           samples.push({ distanceMiles: cumulativeMiles + segmentMiles * fraction, elevationMeters: elevation });
         }
@@ -5801,13 +6278,25 @@ export default function Home() {
       setRuntime({ kind: "loading", message: "Waiting for the map style before retrying terrain…" });
       return;
     }
-    if (map.getLayer(TERRAIN_HILLSHADE_LAYER_ID)) map.removeLayer(TERRAIN_HILLSHADE_LAYER_ID);
-    map.setTerrain(null);
-    if (map.getSource(TERRAIN_HILLSHADE_SOURCE_ID)) map.removeSource(TERRAIN_HILLSHADE_SOURCE_ID);
-    if (map.getSource(TERRAIN_SOURCE_ID)) map.removeSource(TERRAIN_SOURCE_ID);
+    // Retry uses the same complete teardown as a 3D → 2D transition so a
+    // failed tile manager cannot be reused by the new terrain presentation.
+    setTerrainPresentation(map, false, 1);
+    setTerrainElevationReading(null);
+    setTerrainElevationUnavailable(null);
     setTerrainState(setTerrainPresentation(map, true, verticalExaggerationRef.current));
+    setTerrainHeightOverlay(map, topographicOverlayRef.current);
     setRuntime({ kind: "loading", message: `Retrying ${terrainProviderRef.current === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} elevation tiles…` });
     announce("Terrain source retry started; the 2D evidence path remains available");
+  };
+
+  const chooseTerrainProvider = (provider: TerrainProvider) => {
+    terrainProviderRef.current = provider;
+    attachedTerrainProviderRef.current = null;
+    setTerrainElevationReading(null);
+    setTerrainElevationUnavailable(null);
+    setTerrainProvider(provider);
+    setTerrainState("LOADING");
+    announce(`Loading ${provider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} display DEM`);
   };
 
   const applyTerrainLook = (look: "natural" | "topographic" | "buildings") => {
@@ -5818,7 +6307,7 @@ export default function Home() {
     basemapRef.current = nextBasemap; setBasemap(nextBasemap);
     activateMapRepresentation("terrain");
     atmospherePresetRef.current = "clear"; setAtmospherePreset("clear");
-    announce(`${look === "natural" ? "Imagery with physical relief" : look === "topographic" ? "Topographic terrain" : "Provider-height buildings; zoom in where mapped"} selected. Data time and camera center are preserved.`);
+    announce(`${look === "natural" ? "Imagery with DEM relief" : look === "topographic" ? "Topographic map with DEM relief" : "Provider-height buildings; zoom in where mapped"} selected at ${verticalExaggerationRef.current.toFixed(1)}× display scale. Source elevations, data time, and camera center are preserved.`);
   };
 
   const startSceneOrbit = () => {
@@ -5917,7 +6406,7 @@ export default function Home() {
         setTerrainHeightOverlay(map, topographicOverlayRef.current);
       }
       map.setProjection({ type: profile.projection });
-      applyOfficialContextState(map, officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
+      applyOfficialContextState(map, runtimeOfficialVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
       applySceneEnvironment(map, nextAtmosphere, nextLightAzimuth);
       map.setVerticalFieldOfView(nextFieldOfView);
       map.triggerRepaint();
@@ -6074,7 +6563,7 @@ export default function Home() {
     const nextOpacity = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, clamp(Number(snapshot.opacity?.[layer.id] ?? layer.defaultOpacity), 0, 1)]));
     const savedOrder = Array.isArray(snapshot.layerOrder) ? snapshot.layerOrder.filter((id) => knownLayerIds.has(id)) : [];
     const nextOrder = [...savedOrder, ...defaultOrder.filter((id) => !savedOrder.includes(id))];
-    const nextYear = KNOWN_TEMPORAL_FRAMES.has(snapshot.year) ? snapshot.year : 2026;
+    const nextYear = KNOWN_TEMPORAL_FRAMES.has(snapshot.year) ? snapshot.year : OFFICIAL_CONTEXT_PRESENT_FRAME;
     const nextBasemap: BasemapKey = snapshot.basemap === "standard" || snapshot.basemap === "imagery" || snapshot.basemap === "midnight" || snapshot.basemap === "prairie" || snapshot.basemap === "streets" || snapshot.basemap === "topo" ? snapshot.basemap : "standard";
     const nextProjection = snapshot.projection === "globe" ? "globe" : "mercator";
     // Legacy snapshots predate the marker, so fail closed instead of exposing a possibly location-derived camera.
@@ -6159,7 +6648,7 @@ export default function Home() {
     if (mapRef.current?.isStyleLoaded()) updateAnalysisAreaSource(mapRef.current, nextAnalysisArea);
     const savedComparison = snapshot.temporalComparison;
     setCompareTimeA(savedComparison && TIME_STEPS.includes(savedComparison.timeA as (typeof TIME_STEPS)[number]) ? savedComparison.timeA : 1910);
-    setCompareTimeB(savedComparison && TIME_STEPS.includes(savedComparison.timeB as (typeof TIME_STEPS)[number]) ? savedComparison.timeB : 2026);
+    setCompareTimeB(savedComparison && TIME_STEPS.includes(savedComparison.timeB as (typeof TIME_STEPS)[number]) ? savedComparison.timeB : OFFICIAL_CONTEXT_PRESENT_FRAME);
     setMapUtilityView(nextSavedSweepMode === "comparison" ? "compare" : "navigate");
     setMapUtilityOpen(nextSavedSweepMode === "comparison");
     setReportTitle(snapshot.report?.title || "Kansas map data report");
@@ -6304,7 +6793,7 @@ export default function Home() {
       if (noaaRadarReadyRef.current && noaaRadarFrameTimeRef.current && !noaaRadarObservationTimeIsApplied(map, noaaRadarFrameTimeRef.current)) {
         applyNoaaRadarFrame(noaaRadarFrameTimeRef.current);
       }
-      applyOfficialContextState(map, officialContextRuntimeVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
+      applyOfficialContextState(map, runtimeOfficialVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
       setElevationExaggeration(map, verticalExaggerationRef.current);
       map.setProjection({ type: projectionRef.current });
       applySceneEnvironment(map, atmospherePresetRef.current, lightAzimuthRef.current);
@@ -6340,7 +6829,7 @@ export default function Home() {
     officialVisibilityRef.current = defaultOfficialVisibility;
     officialOpacityRef.current = defaultOfficialOpacity;
     orderRef.current = defaultOrder;
-    yearRef.current = 2026;
+    yearRef.current = OFFICIAL_CONTEXT_PRESENT_FRAME;
     mapEvidenceFilterRef.current = "ALL";
     basemapRef.current = "standard";
     projectionRef.current = "mercator";
@@ -6383,8 +6872,8 @@ export default function Home() {
       if (source.defaultVisibility && source.apiPath && !officialPayloadsRef.current[source.id as OfficialContextFeedId]) void refreshOfficialContext(source.id as OfficialContextFeedId);
     }
     setLayerOrder(defaultOrder);
-    setYear(2026);
-    setPreviewYear(2026);
+    setYear(OFFICIAL_CONTEXT_PRESENT_FRAME);
+    setPreviewYear(OFFICIAL_CONTEXT_PRESENT_FRAME);
     setTemporalMode("snapshot");
     setTemporalStepRule("regular-calendar");
     setPlaybackSpeed(1);
@@ -6397,7 +6886,7 @@ export default function Home() {
     setDynamicEffects(true);
     setMapEvidenceFilter("ALL");
     setCompareTimeA(1910);
-    setCompareTimeB(2026);
+    setCompareTimeB(OFFICIAL_CONTEXT_PRESENT_FRAME);
     setBasemap("standard");
     setProjection("mercator");
     setScenePreset("overview-2d");
@@ -6754,6 +7243,8 @@ export default function Home() {
 
   const buildCustomReportPayload = (generatedAt: string) => {
     const recordLimit = reportDetail === "EXECUTIVE" ? 8 : reportDetail === "STANDARD" ? 30 : reportRecords.length;
+    const heightOverlayRendered = scenePreset === "elevation-3d" && terrainState === "READY"
+      && attachedTerrainProviderRef.current === terrainProvider && topographicOverlay;
     const records = reportRecords.slice(0, recordLimit).map(({ layer, properties }) => ({
       id: properties.fid,
       title: properties.title,
@@ -6799,12 +7290,13 @@ export default function Home() {
           exaggeration: verticalExaggeration,
           sourceRole: "external DEM display context · not evidence",
           heightOverlay: {
-            enabled: topographicOverlay,
+            enabled: heightOverlayRendered,
             method: "MapLibre color-relief from the active raster-dem; cursor and locked readings query unexaggerated terrain elevation.",
             colorRampMeters: [200, 300, 400, 500, 650, 800, 1000, 1250],
             lockedReading: lockedTerrainElevation ? {
               elevationMeters: lockedTerrainElevation.meters,
               elevationFeet: lockedTerrainElevation.feet,
+              provider: lockedTerrainElevation.provider,
               coordinate: locationCameraRedacted ? "WITHHELD_BROWSER_LOCATION" : [lockedTerrainElevation.longitude, lockedTerrainElevation.latitude],
             } : null,
           },
@@ -6851,7 +7343,7 @@ export default function Home() {
       ] : null,
       attribution: [
         ...reportLayerSummary.map((layer) => ({ layer: layer.title, source: layer.attribution })),
-        ...(topographicOverlay ? [{ layer: "Topographic height overlay", source: TERRAIN_SOURCES[0].attribution }] : []),
+        ...(heightOverlayRendered ? [{ layer: "Topographic height overlay", source: terrainSourceFor(terrainProvider).attribution }] : []),
       ],
     };
   };
@@ -6885,7 +7377,7 @@ export default function Home() {
       const heightOverlay = report.mapContext.terrain.heightOverlay;
       const lockedHeight = heightOverlay.lockedReading;
       const heightSection = heightOverlay.enabled
-        ? `<section><h2>Terrain height overlay</h2><p><strong>Color relief:</strong> active, based on unexaggerated DEM elevation.</p>${lockedHeight ? `<p><strong>Locked reading:</strong> ${escapeReportHtml(lockedHeight.elevationFeet.toFixed(0))} ft / ${escapeReportHtml(lockedHeight.elevationMeters.toFixed(0))} m</p>` : "<p>No cursor elevation was locked for this report.</p>"}<p class="boundary">External display DEM. Confirm vertical datum, product version, and survey requirements before using this value as authoritative evidence.</p></section>`
+        ? `<section><h2>Terrain height overlay</h2><p><strong>Color relief:</strong> active, based on unexaggerated DEM elevation.</p>${lockedHeight ? `<p><strong>Locked reading:</strong> ${escapeReportHtml(lockedHeight.elevationFeet.toFixed(0))} ft / ${escapeReportHtml(lockedHeight.elevationMeters.toFixed(0))} m · ${lockedHeight.provider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} display DEM</p>` : "<p>No cursor elevation was locked for this report.</p>"}<p class="boundary">External display DEM. Confirm vertical datum, product version, and survey requirements before using this value as authoritative evidence.</p></section>`
         : "";
       content = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeReportHtml(report.title)}</title><style>body{font:15px/1.55 Inter,system-ui,sans-serif;color:#17201d;max-width:1100px;margin:0 auto;padding:48px}header{border-bottom:3px solid #b88b38;padding-bottom:22px;margin-bottom:28px}h1{font-size:36px;letter-spacing:-.04em;margin:0 0 8px}h2{margin-top:34px}small,.muted{color:#607069}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric{border:1px solid #ccd6d1;padding:15px}.metric strong{display:block;font-size:24px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid #dce3df;padding:10px;text-align:left;vertical-align:top}th{background:#f1f5f2}code{font-size:11px}li{margin:8px 0}.boundary{border-left:4px solid #b88b38;background:#f7f3ea;padding:14px 18px}@media print{body{padding:0}.boundary{break-inside:avoid}}@media(max-width:700px){body{padding:24px}.metrics{grid-template-columns:1fr 1fr}table{display:block;overflow:auto}}</style></head><body><header><small>KANSAS FRONTIER MATRIX · CUSTOM MAP REPORT</small><h1>${escapeReportHtml(report.title)}</h1><p>${escapeReportHtml(report.scope.replaceAll("_", " "))} · active time ${escapeReportHtml(report.activeTime.label)} · generated ${escapeReportHtml(generatedAt)}</p></header>${report.summary ? `<section><h2>Report summary</h2><div class="metrics"><div class="metric"><small>MATCHED RECORDS</small><strong>${report.summary.matchedRecords}</strong></div><div class="metric"><small>INCLUDED RECORDS</small><strong>${report.summary.includedRecords}</strong></div><div class="metric"><small>LAYERS</small><strong>${report.summary.includedLayers}</strong></div><div class="metric"><small>EVIDENCE STATES</small><strong>${Object.keys(report.summary.evidenceStates).length}</strong></div></div></section>` : ""}${findings.length ? `<section><h2>Findings</h2><ol>${findings.map((finding) => `<li>${escapeReportHtml(finding)}</li>`).join("")}</ol></section>` : ""}<section><h2>Time A / Time B catalog availability</h2><div class="metrics"><div class="metric"><small>TIME A</small><strong>${escapeReportHtml(formatTimelineStep(report.temporalComparison.timeA))}</strong><span>${report.temporalComparison.timeARecordCount} records</span></div><div class="metric"><small>TIME B</small><strong>${escapeReportHtml(formatTimelineStep(report.temporalComparison.timeB))}</strong><span>${report.temporalComparison.timeBRecordCount} records</span></div><div class="metric"><small>DELTA</small><strong>${report.temporalComparison.recordDelta >= 0 ? "+" : ""}${report.temporalComparison.recordDelta}</strong><span>catalog records</span></div><div class="metric"><small>CHANGED LAYERS</small><strong>${report.temporalComparison.changedLayerCount}</strong><span>under temporal rules</span></div></div><p class="boundary">Catalog availability only—not observed change, imagery analysis, causation, or proof of an event.</p></section>${records.length ? `<section><h2>Included records</h2><table><thead><tr><th>Record</th><th>Layer / time</th><th>Evidence</th><th>Summary</th></tr></thead><tbody>${records.map((record) => `<tr><td><strong>${escapeReportHtml(record.title)}</strong><br><code>${escapeReportHtml(record.id)}</code></td><td>${escapeReportHtml(record.layer)}<br>${escapeReportHtml(record.year)}</td><td>${escapeReportHtml(record.evidenceState)}<br><code>${escapeReportHtml(record.evidenceReference)}</code></td><td>${escapeReportHtml(record.summary)}</td></tr>`).join("")}</tbody></table></section>` : ""}${limitations.length ? `<section><h2>Limitations</h2><ul>${limitations.map((limitation) => `<li>${escapeReportHtml(limitation)}</li>`).join("")}</ul></section>` : ""}<section><h2>Attribution</h2><ul>${report.attribution.map((item) => `<li><strong>${escapeReportHtml(item.layer)}:</strong> ${escapeReportHtml(item.source)}</li>`).join("")}</ul></section><p class="boundary">This report is a browser-generated public-safe demonstration artifact. It does not release, publish, admit, or authorize KFM data.</p></body></html>`;
       if (heightSection) content = content.replace("<section><h2>Time A / Time B", `${heightSection}<section><h2>Time A / Time B`);
@@ -6984,6 +7476,24 @@ export default function Home() {
     }
   };
 
+  const fireImageDay = officialPayloads["nasa-gibs-fire-points"]?.sourceDay;
+  const sourceIssues = OFFICIAL_CONTEXT_SOURCES.filter((source) =>
+    officialVisibility[source.id] && (officialStates[source.id] === "error"
+      || (officialStates[source.id] === "partial" && officialRasterFailuresRef.current.has(source.id))
+      || (source.id === "nasa-gibs-fire-points" && officialStates[source.id] === "partial" && Boolean(fireImageDay && fireImageDay < currentUtcDay()))),
+  ).map((source) => ({
+    id: source.id,
+    title: source.shortTitle,
+    downloadHref: sourceDownloadHref(source.id, officialArchiveDays[source.id as OfficialContextFeedId]),
+    detail: source.id === "nasa-gibs-fire-points" && officialStates[source.id] !== "error"
+      ? `Showing NASA image day ${fireImageDay} UTC. Newer observations were unavailable at the last check; refresh to try again.`
+      : officialStates[source.id] === "partial" && officialRasterFailuresRef.current.has(source.id)
+        ? "Some display tiles did not load. The visible tiles remain source imagery; retry to check the missing area."
+      : officialArchiveDays[source.id as OfficialContextFeedId]
+        ? `Selected archive day ${officialArchiveDays[source.id as OfficialContextFeedId]} UTC could not load. Other layers remain available.`
+        : undefined,
+  }));
+
   return (
     <div className="site-root">
       <a className="skip-link" href="#map-canvas">Skip to the map</a>
@@ -7011,11 +7521,11 @@ export default function Home() {
         </div>
         <div className="top-context" aria-label="Current map context">
           <span><small>AREA</small><strong>{selectedLabel}</strong></span>
-          <span><small>TIME</small><strong>{temporalScopeLabel}</strong></span>
+          <span><small>TIME</small><strong>{temporalScopeLabel}{buildYearCurrent ? "" : " · BUILD OUT OF DATE"}</strong></span>
           <span className="release-indicator" data-selection-state={selected?.properties.evidenceState ?? "SOURCE_DATA"} title="Visible selection posture; not release or publication authority"><i /> {selected ? selectedEvidence?.label.toUpperCase() : visibleCount > 0 ? "EXAMPLES ACTIVE" : `DAILY BASELINE · ${baselineDay}`}</span>
         </div>
         <div className="top-actions">
-          <DataNotices issues={OFFICIAL_CONTEXT_SOURCES.filter(source => officialVisibility[source.id] && officialStates[source.id] === "error").map(source => ({ id: source.id, title: source.shortTitle }))} onRetry={retryOfficialLayer} onHide={id => setOfficialContextVisible(id, false)} />
+          <DataNotices issues={sourceIssues} onRetry={retryOfficialLayer} onHide={id => setOfficialContextVisible(id, false)} />
           <div className="map-context-composer">
             <button ref={composerTriggerRef} className="new-from-map-action" type="button" aria-expanded={mapContextOpen} aria-controls="map-context-card" onClick={() => { setMapContextOpen((current) => !current); setHelpOpen(false); }} title="Create from the current map context"><span aria-hidden="true">＋</span><span className="new-from-map-label">Compose</span><span className="new-from-map-caret" aria-hidden="true">⌄</span></button>
             {mapContextOpen && <aside ref={composerRef} id="map-context-card" className="map-context-card" role="dialog" aria-modal="false" aria-labelledby="map-context-title">
@@ -7058,7 +7568,7 @@ export default function Home() {
         {helpOpen && <aside className="map-guide" role="dialog" aria-modal="false" aria-label="Map guide">
           <button className="icon-close" type="button" onClick={() => setHelpOpen(false)} aria-label="Close map guide">×</button>
           <p className="panel-kicker">MAP GUIDE</p><h2>Explore a feature, then check what supports it.</h2>
-          <p>Every layer in this build uses site-local synthetic or generalized demonstration data—not released operational data. Choose an example or select any feature to inspect its evidence state.</p>
+          <p>Guided examples use site-local synthetic or generalized records. Separately labeled live layers provide external map context, not admitted KFM evidence. Choose an example or select a feature to inspect its source and limits.</p>
           <div className="map-guide-actions"><button className="map-guide-start" type="button" onClick={showGuidedStart}>Try quick examples</button><button className="map-guide-start" type="button" onClick={startStoryTrail}>Start four-step story</button></div>
           <ol><li>Search, choose an example, or enable a layer.</li><li>Select a feature.</li><li>Inspect what is supported, missing, corrected, or withheld.</li><li>Review time, lineage, and Focus Mode when you need more detail.</li></ol>
           <p><strong>Shift + drag</strong> uses MapLibre box zoom. Map controls support coordinate navigation and camera orientation; Inspect has a keyboard-accessible feature list. Terrain uses an external display DEM when available. Synchronized comparison shows bounded layer fixtures; neither display is an admitted KFM source.</p>
@@ -7424,29 +7934,29 @@ export default function Home() {
           <div className="layer-panel-controls" hidden={leftPanelMode !== "layers" && leftPanelMode !== "live"}>
             <nav className="layer-source-switch" aria-label="Layer sources">
               <button type="button" aria-pressed={layerCatalogView === "local"} data-active={layerCatalogView === "local"} onClick={() => { setLayerCatalogView("local"); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body")?.scrollTo(0, 0); }}>Map layers <span>{visibleCount} on</span></button>
-              <button type="button" aria-pressed={layerCatalogView === "official"} data-active={layerCatalogView === "official"} onClick={() => { setLayerCatalogView("official"); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body")?.scrollTo(0, 0); }}>Live context <span>{visibleOfficialCount} selected</span></button>
+              <button type="button" aria-pressed={layerCatalogView === "official"} data-active={layerCatalogView === "official"} onClick={() => { setLayerCatalogView("official"); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body")?.scrollTo(0, 0); }}>External context <span>{visibleOfficialCount} selected</span></button>
             </nav>
-            <label className="catalog-search"><span aria-hidden="true">⌕</span><span className="sr-only">{layerCatalogView === "local" ? "Find a map layer" : "Find a live source"}</span><input type="search" value={layerCatalogView === "local" ? layerQuery : officialSourceQuery} onChange={(event) => layerCatalogView === "local" ? setLayerQuery(event.target.value) : setOfficialSourceQuery(event.target.value)} placeholder={layerCatalogView === "local" ? "Find a layer" : "Find a live source"} /></label>
+            <label className="catalog-search"><span aria-hidden="true">⌕</span><span className="sr-only">{layerCatalogView === "local" ? "Find a map layer" : "Find an external source"}</span><input type="search" value={layerCatalogView === "local" ? layerQuery : officialSourceQuery} onChange={(event) => layerCatalogView === "local" ? setLayerQuery(event.target.value) : setOfficialSourceQuery(event.target.value)} placeholder={layerCatalogView === "local" ? "Find a layer" : "Find an external source"} /></label>
           </div>
 
           <div className="layer-catalog-body" hidden={leftPanelMode !== "layers" && leftPanelMode !== "live"}>
-          <div className="layer-map-time" data-historical={year !== OFFICIAL_CONTEXT_PRESENT_FRAME}>
-            <span><span aria-hidden="true">◷</span> Map time · <strong>{temporalScopeLabel}</strong>{withheldOfficialCount > 0 ? ` · ${withheldOfficialCount} current source${withheldOfficialCount === 1 ? "" : "s"} held` : ""}</span>
+          <div className="layer-map-time" data-historical={!buildYearCurrent || year !== OFFICIAL_CONTEXT_PRESENT_FRAME}>
+            <span><span aria-hidden="true">◷</span> Map time · <strong>{temporalScopeLabel}</strong>{!buildYearCurrent ? " · build year differs from UTC year" : ""}{withheldOfficialCount > 0 ? ` · ${withheldOfficialCount} current source${withheldOfficialCount === 1 ? "" : "s"} held` : ""}</span>
             <button type="button" onClick={() => { setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); dismissMapUtilityWithoutFocus(); announce(`Opened the map timeline at ${temporalScopeLabel}`); }}>Change time</button>
           </div>
           <details className="layer-scene-entry">
             <summary>Terrain &amp; 3D appearance <span>{scenePreset === "elevation-3d" ? terrainState === "READY" ? "On" : terrainState === "ERROR" ? "Needs attention" : "Loading" : "Off"}</span></summary>
-            <LayerSceneControls active={scenePreset === "elevation-3d"} selectedLook={scenePreset !== "elevation-3d" ? null : structures3DEnabled ? "buildings" : basemap === "topo" ? "topographic" : basemap === "imagery" ? "natural" : null} terrainProvider={terrainProvider} state={terrainState} exaggeration={verticalExaggeration} lighting={atmospherePreset} azimuth={lightAzimuth} heightOverlay={topographicOverlay} onPreset={applyTerrainLook} onTerrainProvider={provider => { terrainProviderRef.current = provider; setTerrainProvider(provider); setTerrainState("LOADING"); }} on2D={() => activateMapRepresentation("2d")} onExaggeration={value => { verticalExaggerationRef.current = value; setVerticalExaggeration(value); }} onLighting={value => { atmospherePresetRef.current = value; setAtmospherePreset(value); }} onAzimuth={value => { lightAzimuthRef.current = value; setLightAzimuth(value); }} onHeight={toggleTopographicHeightOverlay} onRetry={retryTerrain} />
+            <LayerSceneControls active={scenePreset === "elevation-3d"} selectedLook={scenePreset !== "elevation-3d" ? null : structures3DEnabled ? "buildings" : basemap === "topo" ? "topographic" : basemap === "imagery" ? "natural" : null} terrainProvider={terrainProvider} state={terrainState} exaggeration={verticalExaggeration} lighting={atmospherePreset} azimuth={lightAzimuth} heightOverlay={topographicOverlay} onPreset={applyTerrainLook} onTerrainProvider={chooseTerrainProvider} on2D={() => activateMapRepresentation("2d")} onExaggeration={value => { verticalExaggerationRef.current = value; setVerticalExaggeration(value); }} onLighting={value => { atmospherePresetRef.current = value; setAtmospherePreset(value); }} onAzimuth={value => { lightAzimuthRef.current = value; setLightAzimuth(value); }} onHeight={toggleTopographicHeightOverlay} onRetry={retryTerrain} />
           </details>
           {layerCatalogView === "local" && <button className="map-catalog-launch" type="button" onClick={(event) => openMapUtility("import", event.currentTarget)}>Preview local KML or GeoJSON</button>}
           {composedSurfaceCount > 1 && <p className="layer-balance-note">Multiple surfaces are active. The map balances their opacity so boundaries and points stay readable; each slider keeps your selected value.</p>}
           {mapSignals.length > 0 && <section className="map-signal-panel" aria-label="Patterns supported by selected data"><strong>Signals in selected data</strong>{mapSignals.map((signal) => <article key={`${signal.kind}:${signal.title}`}><span>{signal.kind === "forecast" ? "PROVIDER FORECAST" : signal.kind === "observed" ? "OBSERVED" : "CATALOG TIME"}</span><b>{signal.title}</b><small>{signal.detail}</small></article>)}</section>}
           <section className="official-context-catalog" id="official-context-catalog" tabIndex={-1} hidden={layerCatalogView !== "official"} aria-labelledby="official-context-title">
-            <header><div><h2 id="official-context-title">Official current context</h2><small className="official-context-registry-summary">{visibleOfficialCount} selected · {officialReadyCount} checked</small></div></header>
-            <p>{year === OFFICIAL_CONTEXT_PRESENT_FRAME ? "Current sources have their own clocks and are for map context only." : `Current sources selected for the map are held at ${temporalScopeLabel}; choose Present to display them.`}</p>
-            <div className="official-context-pulse" aria-label="Official data connection status">
-              <div><span><small>LOADED FEATURES</small><strong>{officialFeatureCount.toLocaleString("en-US")}</strong></span><span><small>CONNECTIONS</small><strong>{officialReadyCount}/{OFFICIAL_CONTEXT_SOURCES.length} checked</strong></span><span><small>LAST RETRIEVAL</small><strong>{officialLatestRetrievedAt ? new Date(officialLatestRetrievedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "Not yet"}</strong></span></div>
-              <nav aria-label="Official data actions"><button type="button" disabled={officialRefreshPlan.count === 0 || officialLoadingCount > 0} onClick={refreshVisibleOfficialContext}>{officialRefreshPlan.reason === "historical" ? `Held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : officialLoadingCount > 0 ? "Refreshing…" : `Refresh ${officialRefreshPlan.count} selected`}</button><button type="button" disabled={visibleOfficialCount === 0} onClick={hideAllOfficialContext}>Hide all</button></nav>
+            <header><div><h2 id="official-context-title">External map context</h2><small className="official-context-registry-summary">{visibleOfficialCount} selected · {officialReadyCount} checked</small></div></header>
+            <p>{!buildYearCurrent ? `Current sources are held because this site was built for ${OFFICIAL_CONTEXT_PRESENT_FRAME}. NASA’s fixed lightning climatology remains available as historical context.` : year === OFFICIAL_CONTEXT_PRESENT_FRAME ? "Operational sources have their own observation clocks. NASA lightning climatology is a separate 1995–2014 historical composite. Both are map context only." : `Operational sources selected for the map are held at ${temporalScopeLabel}; choose Present to display them. NASA’s fixed climate field is independent of this atlas year.`}</p>
+            <div className="official-context-pulse" aria-label="Live source connection status">
+              <div><span><small>SELECTED FEATURES</small><strong>{officialFeatureCount.toLocaleString("en-US")}</strong></span><span><small>SELECTED SOURCES</small><strong>{officialReadyCount}/{visibleOfficialCount} settled</strong></span><span><small>SELECTED RETRIEVAL</small><strong>{officialLatestRetrievedAt ? new Date(officialLatestRetrievedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "Not yet"}</strong></span></div>
+              <nav aria-label="Official data actions"><button type="button" disabled={!buildYearCurrent || officialRefreshPlan.count === 0 || officialLoadingCount > 0} onClick={refreshVisibleOfficialContext}>{!buildYearCurrent ? "Rebuild required" : officialRefreshPlan.reason === "historical" ? `Held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : officialLoadingCount > 0 ? "Refreshing…" : `Refresh ${officialRefreshPlan.count} selected`}</button><button type="button" disabled={visibleOfficialCount === 0} onClick={hideAllOfficialContext}>Hide all</button></nav>
             </div>
             <div className="official-context-list">{listedOfficialSources.map((source) => {
               const state = officialStates[source.id];
@@ -7456,11 +7966,12 @@ export default function Home() {
               const riverArchiveMinDay = riverArchiveSpan?.start.slice(0, 10);
               const riverArchiveMaxDay = riverArchiveSpan ? [currentUtcDay(), riverArchiveSpan.end.slice(0, 10)].sort()[0] : undefined;
               return <article key={source.id} className="official-context-row" data-state={state} data-visible={officialVisibility[source.id]} data-held={heldAtFrame}>
-                <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.shortTitle}</strong><small>{source.organization} · {!officialVisibility[source.id] ? "off" : heldAtFrame ? "held for this map time" : needsCloserView ? `zoom to ${TERRAIN_DISPLAY_MIN_ZOOM}+` : officialContextStateLabel(state).toLowerCase()}</small></div></div>
+                <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.shortTitle}</strong><small>{source.organization}{source.kind === "HISTORICAL_RASTER" ? " · historical composite" : ""} · {!officialVisibility[source.id] ? "off" : heldAtFrame ? !buildYearCurrent ? "held until site rebuild" : "held for this map time" : needsCloserView ? `zoom to ${TERRAIN_DISPLAY_MIN_ZOOM}+` : officialContextStateLabel(state).toLowerCase()}</small></div></div>
                 <details className="official-context-options"><summary>Options</summary><div className="official-context-option-body">
-                <label className="opacity-control"><span>Opacity <b>{Math.round(officialOpacity[source.id] * 100)}%</b></span><input aria-label={`${source.shortTitle} opacity`} type="range" min="0" max="100" value={Math.round(officialOpacity[source.id] * 100)} onChange={(event) => setOfficialContextOpacity(source.id, Number(event.target.value) / 100)} /></label>
+                {source.kind !== "MODEL_CANVAS" && <label className="opacity-control"><span>Opacity <b>{Math.round(officialOpacity[source.id] * 100)}%</b></span><input aria-label={`${source.shortTitle} opacity`} type="range" min="0" max="100" value={Math.round(officialOpacity[source.id] * 100)} onChange={(event) => setOfficialContextOpacity(source.id, Number(event.target.value) / 100)} /></label>}
+                {source.id === "usgs-3dep-slope" && <small className="terrain-layer-key">USGS slope colors: gray flatter · yellow shallow · red-brown steeper. This is visual context, not a slope measurement.</small>}
                 <section className="source-time-control" aria-label={`${source.shortTitle} time controls`}>
-                  <header><span>TIME · {source.id === "usgs-streamflow" || source.id === "nws-radar" || source.id === "noaa-goes-geocolor" ? "EXACT SOURCE FRAMES" : source.id === "census-counties" ? "2020 EDITION" : "SOURCE CLOCK"}</span><strong>{source.id === "usgs-streamflow" && streamflowArchiveDay ? `${streamflowArchiveDay} UTC` : officialArchiveDays[source.id as OfficialContextFeedId] ? `${officialArchiveDays[source.id as OfficialContextFeedId]} UTC` : source.id === "nws-radar" ? "RECENT LOOP" : source.id === "noaa-goes-geocolor" ? "ROLLING 24 HOURS" : "CURRENT / PINNED"}</strong></header>
+                  <header><span>TIME · {source.id === "nasa-lightning-climatology" ? "HISTORICAL COMPOSITE" : source.id === "usgs-streamflow" || source.id === "nws-radar" || source.id === "noaa-goes-geocolor" || source.id === "noaa-lightning-density" ? "EXACT SOURCE FRAMES" : source.id === "census-counties" ? "2020 EDITION" : "SOURCE CLOCK"}</span><strong>{source.id === "nasa-lightning-climatology" ? "1995–2014" : source.id === "noaa-lightning-density" ? "15-MIN DENSITY" : source.id === "usgs-streamflow" && streamflowArchiveDay ? `${streamflowArchiveDay} UTC` : officialArchiveDays[source.id as OfficialContextFeedId] ? `${officialArchiveDays[source.id as OfficialContextFeedId]} UTC` : source.id === "nws-radar" ? "RECENT LOOP" : source.id === "noaa-goes-geocolor" ? "ROLLING 24 HOURS" : "CURRENT / PINNED"}</strong></header>
                   {source.id === "usgs-streamflow" ? <>
                     <p>{streamflowArchiveDay ? "Selected UTC day · every returned observation time" : "Loaded River Pulse window · bounded sample of exact times. Station points may use a prior sample within the declared 30-minute tolerance."}{streamflowBundle ? ` · ${streamflowBundle.observations.length.toLocaleString("en-US")} observations${streamflowBundle.truncated ? " · PARTIAL / TRUNCATED" : ""}` : streamflowState === "loading" ? " · checking source" : " · no loaded frame"}</p>
                     <input type="range" min="0" max={Math.max(0, streamflowFrames.length - 1)} value={Math.max(0, safeStreamflowFrameIndex)} disabled={streamflowFrames.length < 2 || streamflowState === "loading" || !officialVisibility[source.id] || heldAtFrame} onChange={(event) => seekStreamflow(Number(event.target.value))} aria-label="River Pulse exact observation time" aria-valuetext={streamflowFrameTime ? `${streamflowFrameTime} UTC observation cursor` : "No confirmed observation"} />
@@ -7483,7 +7994,17 @@ export default function Home() {
                     <div className="source-time-actions"><label>Older UTC day<input type="date" min="1995-01-01" max={currentUtcDay()} value={radarArchiveDraftDay} onChange={(event) => setRadarArchiveDraftDay(event.target.value)} /></label><Link href={`/observatory?start=${encodeURIComponent(`${radarArchiveDraftDay || currentUtcDay()}T00:00`)}&hours=24&layers=radar,counties`}>Check in Observatory ↗</Link></div>
                     <ArchiveDaySlider sourceLabel="NOAA radar" minDay="1995-01-01" maxDay={currentUtcDay()} day={radarArchiveDraftDay} onSelect={setRadarArchiveDraftDay} nextAction="Check in Observatory" />
                     <small>1995 is the archive adapter’s earliest query bound, not proof that every day has radar imagery. The selected older day opens a separate map.</small>
-                  </> : source.id === "nifc-fire-reports" ? <>
+                  </> : source.id === "noaa-lightning-density" ? <div className="lightning-source-control" data-signal={lightningPreview}>
+                    <p>Ground-network strike density in 8 × 8 km cells for each advertised 15-minute interval. The map glow follows only returned NOAA image cells.</p>
+                    <div className="lightning-clock"><strong>{lightningFrame ? `${lightningFrame.slice(0, 16).replace("T", " ")} UTC` : "No frame loaded"}</strong><span>{lightningManifest ? `${lightningFrameIndex + 1} / ${lightningManifest.frames.length} frames` : lightningManifestState === "loading" ? "Checking NOAA times" : "NOAA times unavailable"}</span></div>
+                    <output aria-live="polite">{!officialVisibility[source.id] ? "Layer off" : heldAtFrame ? "Held by atlas time" : lightningPreview === "loading" ? "Loading and sampling the map center…" : lightningPreview === "signal" ? "Density visible in sampled center area · frame images displayed" : lightningPreview === "none" ? "No visible density in sampled center area for this frame · not an all-clear" : lightningPreview === "error" || lightningManifestState === "error" ? "Center-area signal unconfirmed or NOAA unavailable · no simulated flashes" : "Select the layer to check exact NOAA frames"}</output>
+                    <input type="range" min="0" max={Math.max(0, (lightningManifest?.frames.length ?? 1) - 1)} value={Math.max(0, lightningFrameIndex)} disabled={!lightningManifest || !officialVisibility[source.id] || heldAtFrame} onChange={(event) => { setLightningPlaying(false); setLightningFrame(lightningManifest?.frames[Number(event.target.value)] ?? null); }} aria-label="NOAA lightning 15-minute density frame" aria-valuetext={lightningFrame ?? "No frame"} />
+                    <div className="lightning-transport"><button type="button" disabled={!lightningManifest || lightningFrameIndex <= 0} onClick={() => { setLightningPlaying(false); setLightningFrame(lightningManifest?.frames[lightningFrameIndex - 1] ?? null); }} aria-label="Previous lightning density frame">‹</button><button type="button" aria-pressed={lightningPlaying} disabled={!lightningPlaying && (reducedMotion || !lightningManifest || lightningManifest.frames.length < 2 || !lightningSelected || lightningManifestState !== "ready" || !lightningPlaybackReady)} onClick={() => setLightningPlaying((current) => !current)}>{lightningPlaying ? "Ⅱ Pause" : "▶ Play"}</button><button type="button" disabled={!lightningManifest || lightningFrameIndex >= lightningManifest.frames.length - 1} onClick={() => { setLightningPlaying(false); setLightningFrame(lightningManifest?.frames[lightningFrameIndex + 1] ?? null); }} aria-label="Next lightning density frame">›</button><button type="button" disabled={!lightningManifest} onClick={() => { setLightningPlaying(false); setLightningFrame(lightningManifest?.latest ?? null); }}>Latest</button></div>
+                    <div className="lightning-density-key"><img src="/api/lightning/legend" width="292" height="46" alt="NOAA nowCOAST lightning density legend with the provider's numeric bins and units" loading="lazy" /><a href={NOAA_LIGHTNING_LEGEND_URL} target="_blank" rel="noreferrer">NOAA density legend ↗</a></div>
+                    <small>NOAA frame {lightningFrame ? `${lightningFrame.slice(0, 16).replace("T", " ")} UTC` : "not selected"} · 15-minute density product. Exact interval boundaries are not supplied here. Frame list checked {lightningManifest ? `${lightningManifest.retrievedAt.slice(11, 16)} UTC` : "not yet"}. Empty pixels do not establish safety.</small>
+                    {reducedMotion && <small>Reduced motion: autoplay and glow are off. Frame steps remain available.</small>}
+                    <a href={source.sourceUrl} target="_blank" rel="noreferrer">NOAA layer and time metadata ↗</a>
+                  </div> : source.id === "nasa-lightning-climatology" ? <div className="lightning-climate-control"><p>NASA LIS/OTD combined flash-rate climatology from 1995–2014. This broad 0.5° climate field does not show fine local variation, this storm, or today’s lightning.</p><output>Fixed multi-year composite · no 15-minute playback</output><small>GIBS WMTS date 1995-05-04 is a tile carrier key, not a single observed lightning event.</small><a href={source.sourceUrl} target="_blank" rel="noreferrer">NASA GIBS collection metadata ↗</a></div> : source.id === "nifc-fire-reports" ? <>
                     <p>Interagency working incident reports discovered in Kansas during the last 30 days. A record confirms provider reporting; status, area, and cause can change. Satellite detections are compared only by proximity.</p>
                     <output>{!officialVisibility[source.id] ? "Report layer off." : heldAtFrame ? "Held by atlas year · Return to Present." : state === "loading" ? "Checking NIFC reports…" : state === "error" ? "NIFC reports unavailable · no substitute claims." : `${officialPayloads["nifc-fire-reports"]?.featureCount ?? 0} reports in the loaded response${state === "partial" ? " · partial" : ""}. No report is not an all-clear.`}</output>
                     <div className="source-time-actions"><a href="https://inciweb.wildfire.gov/" target="_blank" rel="noreferrer">Browse InciWeb incident updates ↗</a><a href="https://www.nifc.gov/fire-information" target="_blank" rel="noreferrer">National fire news ↗</a></div>
@@ -7491,17 +8012,29 @@ export default function Home() {
                     <p>{source.id === "usgs-earthquakes" ? "Event timestamps; a checked day can be swept event by event." : source.id === "noaa-hms-smoke" ? "Daily publication with source validity intervals; no measured second-by-second smoke frames." : source.id === "nasa-gibs-fire-points" ? "Selectable thermal detections for one exact UTC day; each point carries its own acquisition time. This is separate from the provider-default image layer." : "Station metadata valid for a checked date; no waveform time series on this map."}</p>
                     <div className="source-time-actions"><label>UTC archive day<input type="date" min={source.id === "noaa-hms-smoke" ? "2005-08-05" : source.id === "nasa-gibs-fire-points" ? "2018-01-01" : undefined} max={currentUtcDay()} value={officialArchiveDraftDays[source.id as OfficialContextFeedId] ?? ""} onChange={(event) => setOfficialArchiveDraftDays((current) => ({ ...current, [source.id]: event.target.value }))} /></label><button type="button" disabled={!officialArchiveDraftDays[source.id as OfficialContextFeedId] || state === "loading" || heldAtFrame} onClick={() => void loadOfficialArchiveDay(source.id as OfficialContextFeedId, officialArchiveDraftDays[source.id as OfficialContextFeedId]!)}>Check day on map</button>{officialArchiveDays[source.id as OfficialContextFeedId] && <button type="button" onClick={() => returnOfficialSourceToCurrent(source.id as OfficialContextFeedId)}>Current</button>}{source.id !== "nasa-gibs-fire-points" && <Link href={`/observatory?start=${encodeURIComponent(`${officialArchiveDraftDays[source.id as OfficialContextFeedId] || officialArchiveDays[source.id as OfficialContextFeedId] || currentUtcDay()}T00:00`)}&hours=24&layers=${source.id === "usgs-earthquakes" ? "earthquakes" : source.id === "noaa-hms-smoke" ? "smoke" : "shake"},counties`}>Open separate archive map ↗</Link>}</div>
                     {source.id === "noaa-hms-smoke" && <ArchiveDaySlider sourceLabel="NOAA HMS smoke" minDay="2005-08-05" maxDay={currentUtcDay()} day={officialArchiveDraftDays["noaa-hms-smoke"] ?? ""} onSelect={(day) => setOfficialArchiveDraftDays((current) => ({ ...current, "noaa-hms-smoke": day }))} nextAction="Check day on map" />}
-                    <output>{officialArchiveDays[source.id as OfficialContextFeedId] ? state === "loading" ? "Checking day · old map features cleared" : state === "error" ? "Archive unavailable · map source empty" : `${datedSourceDisplayStatus(officialArchivePayloadsRef.current[source.id as OfficialContextFeedId]?.featureCount ?? 0, officialPayloads[source.id as OfficialContextFeedId]?.featureCount ?? 0, officialArchiveDays[source.id as OfficialContextFeedId]!, officialVisibility[source.id], effectiveOfficialVisibility[source.id], styleReady)}${state === "partial" || officialPayloads[source.id as OfficialContextFeedId]?.truncated ? " · partial; missing coverage cannot be ruled out" : ""}` : !officialVisibility[source.id] ? "Current source off · Turn on layer to display." : heldAtFrame ? "Source held by atlas year · Return to Present to display." : source.id === "nasa-gibs-fire-points" ? `Current UTC day${officialPayloads["nasa-gibs-fire-points"] ? ` · ${officialPayloads["nasa-gibs-fire-points"]!.featureCount} detections loaded` : " · check source"}; missing detections are not an all-clear.` : "Current source clock · earliest available day is checked per request."}</output>
+                    <output>{officialArchiveDays[source.id as OfficialContextFeedId] ? state === "loading" ? "Checking day · old map features cleared" : state === "error" ? "Archive unavailable · map source empty" : `${datedSourceDisplayStatus(officialArchivePayloadsRef.current[source.id as OfficialContextFeedId]?.featureCount ?? 0, officialPayloads[source.id as OfficialContextFeedId]?.featureCount ?? 0, officialArchiveDays[source.id as OfficialContextFeedId]!, officialVisibility[source.id], effectiveOfficialVisibility[source.id], styleReady)}${state === "partial" || officialPayloads[source.id as OfficialContextFeedId]?.truncated ? " · partial; missing coverage cannot be ruled out" : ""}` : !officialVisibility[source.id] ? "Current source off · Turn on layer to display." : heldAtFrame ? "Source held by atlas year · Return to Present to display." : source.id === "nasa-gibs-fire-points" ? `${officialPayloads["nasa-gibs-fire-points"]?.sourceDay ? `NASA image day ${officialPayloads["nasa-gibs-fire-points"]!.sourceDay} UTC` : "Current UTC day · check source"}${officialPayloads["nasa-gibs-fire-points"] ? ` · ${officialPayloads["nasa-gibs-fire-points"]!.featureCount} detections loaded${officialPayloads["nasa-gibs-fire-points"]!.state === "partial" ? " · partial" : ""}` : ""}; missing detections are not an all-clear.` : "Current source clock · earliest available day is checked per request."}</output>
                     {source.id === "usgs-earthquakes" && officialArchiveDays["usgs-earthquakes"] && <><input type="range" min="0" max={Math.max(0, earthquakeArchiveFrames.length - 1)} value={Math.max(0, earthquakeArchiveFrameIndex)} disabled={earthquakeArchiveFrames.length < 2 || state === "loading" || !officialVisibility[source.id] || heldAtFrame} onChange={(event) => seekEarthquakeArchiveFrame(Number(event.target.value))} aria-label="Earthquakes through exact event time on selected UTC day" aria-valuetext={earthquakeArchiveFrames[earthquakeArchiveFrameIndex] ?? "No event frame"} /><small>{earthquakeArchiveFrames.length ? `Events through ${earthquakeArchiveFrames[Math.max(0, earthquakeArchiveFrameIndex)].slice(11, 19)} UTC · ${Math.max(0, earthquakeArchiveFrameIndex + 1)}/${earthquakeArchiveFrames.length} returned event times. Empty intervals remain empty.` : "No returned event times for this checked day; no slider frame invented."}</small></>}
                     {source.id === "noaa-hms-smoke" && officialArchiveDays["noaa-hms-smoke"] && <><input type="range" min="0" max={Math.max(0, smokeArchiveFrames.length - 1)} value={Math.max(0, smokeArchiveFrameIndex)} disabled={smokeArchiveFrames.length < 2 || state === "loading" || !officialVisibility[source.id] || heldAtFrame} onChange={(event) => seekSmokeArchiveFrame(Number(event.target.value))} aria-label="HMS smoke provider validity boundary on selected UTC day" aria-valuetext={smokeArchiveFrames[smokeArchiveFrameIndex] ?? "No interval boundary"} /><small>{smokeArchiveFrames.length ? `Provider interval boundary ${smokeArchiveFrames[Math.max(0, smokeArchiveFrameIndex)]?.slice(11, 19) ?? "00:00:00"} UTC · ${Math.max(0, smokeArchiveFrameIndex + 1)}/${smokeArchiveFrames.length}. Polygons appear only while their declared intervals contain the cursor.` : "No returned smoke intervals for this checked day; no intraday frame invented."}</small></>}
                   </> : <p>{OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id].limitation} No selectable observation sweep is connected for this carrier.</p>}
                   {heldAtFrame && <small>Selected source is held by the global atlas year. Return that axis to Present to display its source clock.</small>}
                 </section>
-                <div className="official-context-actions"><button type="button" onClick={() => { setSourceStatusOpen(true); setLeftOpen(false); }}>Source details & quality</button>{source.id === "nws-forecast-wind" && <button type="button" disabled={!officialVisibility[source.id] || heldAtFrame || state === "loading"} onClick={() => retryOfficialLayer(source.id)}>Reload forecast tiles</button>}{needsCloserView && <button type="button" onClick={() => { mapRef.current?.easeTo({ zoom: TERRAIN_DISPLAY_MIN_ZOOM + 0.25, duration: motionDuration(600) }); announce(`${source.shortTitle}: zoomed in to its display range`); }}>Zoom to view</button>}{["usgs-streamflow", "noaa-hms-smoke", "raspberry-shake-stations", "usgs-earthquakes", "nws-radar", "census-counties"].includes(source.id) && <Link href={`/observatory?layers=${({ "usgs-streamflow": "river", "noaa-hms-smoke": "smoke", "raspberry-shake-stations": "shake", "usgs-earthquakes": "earthquakes", "nws-radar": "radar", "census-counties": "counties" } as Record<string,string>)[source.id]},counties`}>Explore dated records ↗</Link>}</div>
+                {source.id === "nws-forecast-wind" && <div className="wind-arrow-source-card" data-state={windArrowState}>
+                  <strong>Forecast wind flow</strong>
+                  <p>Soft wind wisps move where the Open-Meteo NCEP GFS 10 m forecast points. Their curl and spacing are illustrative, not measured air or particle paths. Stationary wind barbs are removed.</p>
+                  <output aria-live="polite">{!officialVisibility[source.id] ? "Turn on Airflow to show wind flow" : heldAtFrame ? "Held by atlas year" : windArrowState === "READY" && windArrowFrame ? `Valid ${windArrowFrame.validTimeUtc.replace("T", " ").slice(0, 16)} UTC · ${windArrowFrame.samples.length} model grid points · retrieved ${windArrowFrame.retrievedAtUtc.replace("T", " ").slice(0, 16)} UTC · ${reducedMotion ? "Still wind traces for reduced motion" : dynamicEffects ? "Wind wisps moving with model direction" : "Still wind traces; ambient motion off"}` : windArrowState === "ERROR" ? "Model unavailable or outside Kansas · no wind flow drawn" : "Checking model direction and valid time…"}</output>
+                  {windArrowState === "READY" && windArrowFrame && <details className="wind-arrow-samples">
+                    <summary>Inspect model grid points</summary>
+                    <label>Grid point<select value={windArrowSampleIndex} onChange={(event) => setWindArrowSampleIndex(Number(event.target.value))}>{windArrowFrame.samples.map((sample, index) => <option key={`${sample.latitude},${sample.longitude}`} value={index}>Point {index + 1} · {sample.latitude.toFixed(3)}° N, {Math.abs(sample.longitude).toFixed(3)}° W</option>)}</select></label>
+                    {windArrowFrame.samples[windArrowSampleIndex] && <output aria-live="polite">{Math.round(windArrowFrame.samples[windArrowSampleIndex].speedMetersPerSecond * 2.23694)} mph toward {windToCompass(windArrowFrame.samples[windArrowSampleIndex].windToDegrees)} · from {windToCompass(windArrowFrame.samples[windArrowSampleIndex].windFromDegrees)}</output>}
+                    <small>Forecast at the selected model grid point, valid {windArrowFrame.validTimeUtc.replace("T", " ").slice(0, 16)} UTC. Values between these points are not measured here.</small>
+                  </details>}
+                  <button type="button" onClick={() => setWindArrowReloadToken(value => value + 1)} disabled={!officialVisibility[source.id] || windArrowState === "LOADING" || heldAtFrame}>Refresh wind forecast</button>
+                </div>}
+                <div className="official-context-actions"><button type="button" onClick={() => { setSourceStatusOpen(true); setLeftOpen(false); }}>Source details & quality</button>{needsCloserView && <button type="button" onClick={() => { mapRef.current?.easeTo({ zoom: TERRAIN_DISPLAY_MIN_ZOOM + 0.25, duration: motionDuration(600) }); announce(`${source.shortTitle}: zoomed in to its display range`); }}>Zoom to view</button>}{["usgs-streamflow", "noaa-hms-smoke", "raspberry-shake-stations", "usgs-earthquakes", "nws-radar", "census-counties"].includes(source.id) && <Link href={`/observatory?layers=${({ "usgs-streamflow": "river", "noaa-hms-smoke": "smoke", "raspberry-shake-stations": "shake", "usgs-earthquakes": "earthquakes", "nws-radar": "radar", "census-counties": "counties" } as Record<string,string>)[source.id]},counties`}>Explore dated records ↗</Link>}</div>
                 </div></details>
               </article>;
             })}{listedOfficialSources.length === 0 && <div className="catalog-empty"><strong>No sources found</strong><p>Try a provider or source name.</p></div>}</div>
-            <footer><code>OFFICIAL SOURCE → FIXED ADAPTER / WMS → MAPLIBRE</code><span>Evidence held at admission, release, and EvidenceBundle gates · <a href="https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3393" target="_blank" rel="noreferrer">governance issue #3393 ↗</a></span></footer>
+            <footer><code>EXTERNAL SOURCE → FIXED ADAPTER → MAP DISPLAY</code><span>Evidence held at admission, release, and EvidenceBundle gates · <a href="https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3393" target="_blank" rel="noreferrer">governance issue #3393 ↗</a></span></footer>
           </section>
 
           <div className="local-layer-settings" hidden={layerCatalogView !== "local"}>
@@ -7548,10 +8081,10 @@ export default function Home() {
           </section>
 
           <div className="basemap-control">
-            <div className="catalog-filter-grid"><label><span>Basemap style</span><select value={basemap} onChange={(event) => setBasemap(event.target.value as BasemapKey)}>{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title} · {BASEMAPS[key].note}</option>)}</select></label><label><span>Domain lens</span><select value={layerDomain} onChange={(event) => applyDomainLens(event.target.value as (typeof layerDomains)[number])}>{layerDomains.map((domain) => <option key={domain} value={domain}>{domain === "ALL" ? "No domain lens" : domain}</option>)}</select></label><label><span>Catalog source role</span><select value={catalogSourceRole} onChange={(event) => setCatalogSourceRole(event.target.value)}><option value="ALL">All declared roles</option>{catalogSourceRoles(LAYER_REGISTRY).map((role) => <option key={role} value={role}>{role}</option>)}</select></label></div>
+            <div className="catalog-filter-grid"><label><span>Basemap style</span><select value={basemap} onChange={(event) => setBasemap(event.target.value as BasemapKey)}>{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title} · {BASEMAPS[key].note}</option>)}</select></label><label><span>Domain lens</span><select value={layerDomain} onChange={(event) => applyDomainLens(event.target.value as (typeof layerDomains)[number])}>{layerDomains.map((domain) => <option key={domain} value={domain}>{domain === "ALL" ? "No domain lens" : domain}</option>)}</select></label></div>
             <div className="catalog-lens-status" data-active={layerDomain !== "ALL"}><strong>{layerDomain === "ALL" ? "No domain lens selected" : `${layerDomain} lens is on the map`}</strong><span>{layerDomain === "Fire" ? "Historical fire context plus NASA GIBS daily NOAA-20 thermal anomalies and NOAA HMS smoke footprints at the operational-present frame." : layerDomain === "ALL" ? "Choose a domain to add that perspective without filtering the catalog or hiding other layers." : "The lens adds matching layers as an additional perspective; current-source context remains separate and time-bounded."}</span>{layerDomain !== "ALL" && <button type="button" onClick={() => applyDomainLens("ALL")}>Remove lens</button>}</div>
             <div className="catalog-evidence-filter"><label><span>Map evidence filter</span><select value={mapEvidenceFilter} onChange={(event) => updateMapEvidenceFilter(event.target.value as RegistryEvidenceFilter)}><option value="ALL">All evidence states</option>{(Object.keys(evidenceLabels) as EvidenceState[]).map((state) => <option key={state} value={state}>{state.replaceAll("_", " ")}</option>)}</select></label><output>{mapCompatibleFeatureCount} compatible records</output>{mapEvidenceFilter !== "ALL" && <button type="button" onClick={() => updateMapEvidenceFilter("ALL")}>Clear filter</button>}</div>
-            <div className="catalog-filter-actions"><span>{layerQuery.trim() || catalogSourceRole !== "ALL" || mapEvidenceFilter !== "ALL" ? "Catalog filters are active" : "Showing every local domain"}</span><button type="button" disabled={!layerQuery.trim() && catalogSourceRole === "ALL" && mapEvidenceFilter === "ALL"} onClick={() => { setLayerQuery(""); setCatalogSourceRole("ALL"); updateMapEvidenceFilter("ALL"); }}>Clear filters</button></div>
+            <div className="catalog-filter-actions"><span>{layerQuery.trim() || mapEvidenceFilter !== "ALL" ? "Catalog filters are active" : "Showing every local domain"}</span><button type="button" disabled={!layerQuery.trim() && mapEvidenceFilter === "ALL"} onClick={() => { setLayerQuery(""); updateMapEvidenceFilter("ALL"); }}>Clear filters</button></div>
           </div>
 
 
@@ -7599,6 +8132,9 @@ export default function Home() {
             <span className="map-view-mode-heading">MAP REPRESENTATION <small>{mapRepresentationLabel}</small></span>
             <button type="button" aria-pressed={projection === "mercator" && scenePreset !== "elevation-3d"} data-active={projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => activateMapRepresentation("2d")}><b>2D</b><span>Map</span></button>
             <button type="button" aria-pressed={scenePreset === "elevation-3d"} data-active={scenePreset === "elevation-3d"} onClick={() => activateMapRepresentation("terrain")}><b>Terrain 3D</b><span>{verticalExaggeration.toFixed(1)}×</span></button>
+            {scenePreset === "elevation-3d" && <output className="terrain-mode-source" data-state={terrainState.toLowerCase()} aria-live="polite">{terrainProvider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} · {terrainState === "READY" && attachedTerrainProviderRef.current === terrainProvider ? "DEM ready" : terrainState === "ERROR" ? "DEM unavailable" : "DEM loading"}{terrainProvider === "mapzen" && terrainState === "READY" && view.zoom > TERRARIUM_RENDER_MAX_ZOOM ? ` · coarse beyond z${TERRARIUM_RENDER_MAX_ZOOM}` : ""}</output>}
+            {scenePreset === "elevation-3d" && terrainProvider === "usgs-3dep" && terrainState === "ERROR" && <button className="terrain-mode-action" type="button" onClick={() => chooseTerrainProvider("mapzen")}>Use display DEM</button>}
+            {scenePreset === "elevation-3d" && terrainState === "READY" && basemap === "topo" && view.pitch < 56 && <button className="terrain-mode-action" type="button" onClick={() => orientSceneCamera(58, view.bearing)}>Oblique view ↗</button>}
             <button type="button" aria-pressed={projection === "globe"} data-active={projection === "globe"} onClick={() => activateMapRepresentation("globe")}><b>Globe</b><span>◎</span></button>
             <button type="button" aria-pressed={mapUtilityOpen && mapUtilityView === "compare"} data-active={mapUtilityOpen && mapUtilityView === "compare"} onClick={() => mapUtilityOpen && mapUtilityView === "compare" ? closeMapUtility() : activateMapRepresentation("compare")}><b>Compare</b><span>A/B</span></button>
           </nav>
@@ -7641,18 +8177,18 @@ export default function Home() {
             <p>Today · {baselineDay} UTC. Live observations refresh as providers publish. County counts keep their Census edition, and historical gaps remain visible.</p>
             <button type="button" onClick={(event) => openMapUtility("connections", event.currentTarget)}>Connection details</button>
             <div className="source-quality-actions"><Link href="/earth-engine">Earth Engine datasets & recipes</Link><Link href="/data">Propose data for KFM</Link><Link href="/stewards">Steward review desk</Link></div>
-            <button type="button" onClick={refreshVisibleOfficialContext} disabled={officialRefreshPlan.count === 0 || officialLoadingCount > 0}>{officialRefreshPlan.reason === "historical" ? `Current sources held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : officialLoadingCount > 0 ? "Refreshing selected sources…" : officialRefreshPlan.count === 0 ? "Select a current source to refresh" : `Refresh ${officialRefreshPlan.count} selected source${officialRefreshPlan.count === 1 ? "" : "s"}`}</button>
-            {OFFICIAL_CONTEXT_SOURCES.map((source) => <SourceQualityRow key={source.id} source={source} state={officialStates[source.id]} payload={officialPayloads[source.id as OfficialContextFeedId]} error={officialErrors[source.id]} selected={officialVisibility[source.id]} held={officialVisibility[source.id] && !effectiveOfficialVisibility[source.id]} onToggle={(selected) => setOfficialContextVisible(source.id, selected)} onRetry={() => retryOfficialLayer(source.id)} />)}
+            <button type="button" onClick={refreshVisibleOfficialContext} disabled={!buildYearCurrent || officialRefreshPlan.count === 0 || officialLoadingCount > 0}>{!buildYearCurrent ? "Rebuild required for current sources" : officialRefreshPlan.reason === "historical" ? `Current sources held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : officialLoadingCount > 0 ? "Refreshing selected sources…" : officialRefreshPlan.count === 0 ? "Select a current source to refresh" : `Refresh ${officialRefreshPlan.count} selected source${officialRefreshPlan.count === 1 ? "" : "s"}`}</button>
+            {OFFICIAL_CONTEXT_SOURCES.map((source) => <SourceQualityRow key={source.id} source={source} state={officialStates[source.id]} payload={officialPayloads[source.id as OfficialContextFeedId]} error={officialErrors[source.id]} selected={officialVisibility[source.id]} held={officialVisibility[source.id] && !effectiveOfficialVisibility[source.id]} viewZoom={view.zoom} archiveDay={officialArchiveDays[source.id as OfficialContextFeedId]} observedAt={source.id === "noaa-lightning-density" ? lightningFrame : null} checkedAt={source.id === "noaa-lightning-density" ? lightningManifest?.retrievedAt : null} onToggle={(selected) => setOfficialContextVisible(source.id, selected)} onRetry={() => retryOfficialLayer(source.id)} />)}
             <Link href="/observatory/sources">Historical coverage & sources ↗</Link>
           {sourceStatusOpen && scenePreset === "elevation-3d" && <aside className="terrain-scene-passport" data-state={terrainState.toLowerCase()} aria-label="Terrain scene passport">
             <header>
-              <div><span>TERRAIN SCENE PASSPORT</span><strong>Smoky Hills relief</strong></div>
+              <div><span>TERRAIN SCENE PASSPORT</span><strong>DEM relief</strong></div>
               <b>{terrainState === "READY" ? "DEM READY" : terrainState === "ERROR" ? "DEM UNAVAILABLE" : "LOADING DEM"}</b>
             </header>
             <dl>
               <div><dt>Vertical scale</dt><dd>{verticalExaggeration.toFixed(1)}× {verticalExaggeration === 1 ? "physical" : "display"}</dd></div>
               <div><dt>Camera</dt><dd>{Math.round(view.pitch)}° pitch · {Math.round((view.bearing + 360) % 360)}° bearing</dd></div>
-              <div><dt>Carrier</dt><dd>External Terrarium DEM</dd></div>
+              <div><dt>Carrier</dt><dd>{terrainState === "READY" && attachedTerrainProviderRef.current === terrainProvider ? "Attached: " : "Selected: "}{terrainProvider === "usgs-3dep" ? "USGS 3DEP DEM" : "Mapzen Terrarium DEM"}{terrainProvider === "mapzen" && view.zoom > TERRARIUM_RENDER_MAX_ZOOM ? ` · overzoomed from z${TERRARIUM_RENDER_MAX_ZOOM}` : ""}</dd></div>
               <div><dt>Evidence</dt><dd>Display context only</dd></div>
             </dl>
             <p>Relief is observed from the renderer. Vertical datum, analytical spacing, and KFM source admission are not asserted.</p>
@@ -7661,7 +8197,7 @@ export default function Home() {
               <button type="button" onClick={startTerrainInvestigation}>Profile a transect</button>
               <button type="button" onClick={() => openMapUtility("scene")}>Inspect terrain method</button>
             </div>
-            {topographicOverlay && <output className="terrain-cursor-reading" aria-live="polite">{terrainElevationReading ? <><strong>{terrainElevationReading.feet.toFixed(0)} ft</strong><span>{terrainElevationReading.meters.toFixed(0)} m · unexaggerated DEM</span></> : <span>Move over the map to read elevation</span>}</output>}
+            <output className="terrain-cursor-reading" aria-live="polite">{terrainElevationReading ? <><strong>{terrainElevationReading.feet.toFixed(0)} ft</strong><span>{terrainElevationReading.meters.toFixed(0)} m · unexaggerated {terrainElevationReading.provider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} DEM</span></> : <span>{terrainElevationUnavailable ? "No DEM height available at pointer" : "Move over the map to read DEM elevation"}</span>}</output>
           </aside>}
           <aside hidden={!sourceStatusOpen} className="map-legend-dock" aria-label="Visible map legend">
             <header>
@@ -7793,6 +8329,9 @@ export default function Home() {
             <footer className="qwen-panel-footer"><p>Qwen is interpretive only. It cannot establish evidence, policy, release, or publication authority.</p><button type="button" onClick={() => void copyQwenPrompt()}>Copy grounded prompt</button></footer>
           </aside>}
           <div id="map-canvas" ref={mapContainerRef} className="map-canvas" tabIndex={runtime.kind === "unsupported" ? -1 : 0} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." />
+          <canvas ref={windArrowCanvasRef} className="wind-arrow-canvas" aria-hidden="true" />
+          {buildYearCurrent && officialVisibility["nws-forecast-wind"] && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME && <output className="wind-arrow-map-badge" data-state={windArrowState} aria-live="polite"><strong>OPEN-METEO · GFS WIND FLOW</strong><span>{windArrowState === "READY" && windArrowFrame ? `10 m forecast · valid ${windArrowFrame.validTimeUtc.replace("T", " ").slice(0, 16)} UTC · ${windArrowFrame.samples.length} grid points` : windArrowState === "ERROR" ? "Forecast unavailable · flow hidden" : "Loading forecast wind flow…"}</span></output>}
+          {windArrowState === "READY" && windArrowFrame && windArrowHover && <output className="wind-arrow-hover" style={{ left: windArrowHover.screenX, top: windArrowHover.screenY }} aria-label="Nearest wind model grid point"><span>GFS MODEL GRID POINT · VALID {windArrowFrame.validTimeUtc.replace("T", " ").slice(0, 16)} UTC</span><strong>{Math.round(windArrowHover.sample.speedMetersPerSecond * 2.23694)} mph <b>→ {windToCompass(windArrowHover.sample.windToDegrees)}</b></strong><small>{windArrowHover.sample.latitude.toFixed(3)}°, {windArrowHover.sample.longitude.toFixed(3)}° · 10 m forecast</small></output>}
           {hoverSummary && <aside className="map-hover-summary" style={{ left: hoverSummary.x, top: hoverSummary.y }} aria-hidden="true">
             <span>{hoverSummary.subtitle}</span><strong>{hoverSummary.title}</strong><small>{hoverSummary.state}</small>
           </aside>}
@@ -7800,6 +8339,7 @@ export default function Home() {
           {runtime.kind === "unsupported" && earthEngineContext.manifest && <EarthEngineRasterFallback manifest={earthEngineContext.manifest} mapYear={temporalMode === "snapshot" ? year : -1} display={earthEngineDisplay} onOpenLayers={openEarthEngineLayers} />}
           {(runtime.kind === "loading" || runtime.kind === "error" || (runtime.kind === "unsupported" && !earthEngineContext.manifest)) && <div className={`runtime-overlay ${runtime.kind}`} role="status" aria-live="assertive"><span className="runtime-spinner" aria-hidden="true" /><strong>{runtime.kind === "loading" ? "Preparing spatial explorer" : runtime.kind === "unsupported" ? "Map runtime unsupported" : "Map runtime unavailable"}</strong><p>{runtime.message}</p>{runtime.kind === "error" && <button type="button" onClick={() => window.location.reload()}>Reload map</button>}</div>}
           {runtime.kind === "degraded" && <div className="runtime-degraded-banner" role="status" aria-live="polite"><strong>Partial map degradation</strong><span>{runtime.message}</span></div>}
+          {!buildYearCurrent && <div className="build-year-warning" role="status" aria-live="assertive"><strong>Current layers paused</strong><span>This site was built for {OFFICIAL_CONTEXT_PRESENT_FRAME}. Rebuild it for the current UTC year before displaying live sources.</span></div>}
           {temporalNoData.length > 0 && <div className="no-time-data" role="status"><strong>No compatible record for {temporalScopeLabel} in {temporalNoData.map((layer) => layer.title).join(", ")}</strong><span>Other active layers remain visible; choose an available frame or change the sweep semantics.</span></div>}
 
           {runtime.kind === "ready" && guidedStartOpen && <aside className="guided-start" aria-labelledby="guided-start-title">
@@ -7807,7 +8347,7 @@ export default function Home() {
               <div><span>START HERE · DEMONSTRATION ONLY</span><h2 id="guided-start-title">Explore one feature in under a minute.</h2></div>
               <button className="icon-close" type="button" onClick={dismissGuidedStart} aria-label="Dismiss guided examples">×</button>
             </header>
-            <p>Every current map layer is synthetic or generalized. These examples show how the Explorer distinguishes supported, corrected, and protected contexts without pretending to be a live data source.</p>
+            <p>These guided examples use synthetic or generalized demonstration records. Separately labeled live source layers provide display context; they do not become admitted KFM evidence.</p>
             <div className="guided-example-list">
               {GUIDED_EXAMPLES.map((example) => <button key={example.id} type="button" data-tone={example.id} onClick={() => openGuidedExample(example)}>
                 <span>{example.state}</span><strong>{example.title}</strong><small>{example.summary}</small><b aria-hidden="true">→</b>
@@ -8063,14 +8603,14 @@ export default function Home() {
                   <header><div><span>TOPOGRAPHIC HEIGHT</span><h4 id="terrain-height-title">Elevation color overlay</h4></div><button type="button" role="switch" aria-checked={topographicOverlay} disabled={scenePreset !== "elevation-3d" || terrainState === "ERROR"} onClick={toggleTopographicHeightOverlay}>{topographicOverlay ? "ON" : "OFF"}</button></header>
                   <div className="terrain-height-ramp" aria-label="Elevation color scale from 200 to 1,250 meters"><i /><span>200 m</span><span>400 m</span><span>650 m</span><span>1,000 m</span><span>1,250 m</span></div>
                   <div className="terrain-height-readout">
-                    <div><small>CURSOR ELEVATION</small><strong>{terrainElevationReading ? `${terrainElevationReading.feet.toFixed(0)} ft` : "Move over map"}</strong><span>{terrainElevationReading ? `${terrainElevationReading.meters.toFixed(0)} m · ${terrainElevationReading.latitude.toFixed(5)}, ${terrainElevationReading.longitude.toFixed(5)}` : "Uses the active unexaggerated DEM"}</span></div>
+                    <div><small>CURSOR ELEVATION</small><strong>{terrainElevationReading ? `${terrainElevationReading.feet.toFixed(0)} ft` : terrainElevationUnavailable ? "Unavailable here" : "Move over map"}</strong><span>{terrainElevationReading ? `${terrainElevationReading.meters.toFixed(0)} m · ${terrainElevationReading.latitude.toFixed(5)}, ${terrainElevationReading.longitude.toFixed(5)}` : terrainElevationUnavailable ? "No loaded DEM height at this point" : "Uses the active unexaggerated DEM"}</span></div>
                     <button type="button" disabled={!terrainElevationReading} onClick={() => { setLockedTerrainElevation(terrainElevationReading); announce("Elevation reading locked into the current report context"); }}>Lock for report</button>
                   </div>
-                  {lockedTerrainElevation && <p><strong>Report reading:</strong> {lockedTerrainElevation.feet.toFixed(0)} ft / {lockedTerrainElevation.meters.toFixed(0)} m at {lockedTerrainElevation.latitude.toFixed(5)}, {lockedTerrainElevation.longitude.toFixed(5)}. External display DEM; verify against an admitted elevation source before making an authoritative claim.</p>}
+                  {lockedTerrainElevation && <p><strong>Report reading:</strong> {lockedTerrainElevation.feet.toFixed(0)} ft / {lockedTerrainElevation.meters.toFixed(0)} m at {lockedTerrainElevation.latitude.toFixed(5)}, {lockedTerrainElevation.longitude.toFixed(5)} from the {lockedTerrainElevation.provider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} display DEM. Verify against an admitted elevation source before making an authoritative claim.</p>}
                 </section>
 
                 <section className="terrain-investigation" aria-labelledby="terrain-investigation-title">
-                  <header><div><span>TERRAIN INVESTIGATION</span><h4 id="terrain-investigation-title">Relief → transect → profile → evidence</h4></div><strong>1× PHYSICAL DEFAULT</strong></header>
+                  <header><div><span>TERRAIN INVESTIGATION</span><h4 id="terrain-investigation-title">Relief → transect → profile → evidence</h4></div><strong>{verticalExaggeration.toFixed(1)}× DISPLAY</strong></header>
                   <ol><li data-complete={scenePreset === "elevation-3d"}>Enable real display relief</li><li data-complete={measurementGeometryMode === "distance" && measureCoordinateCount >= 2}>Draw and finish a transect</li><li data-complete={terrainProfile.length > 0}>Preview unexaggerated samples</li><li data-complete={Boolean(selected)}>Select a feature for evidence</li></ol>
                   <div className="terrain-investigation-actions"><button type="button" onClick={startTerrainInvestigation}>Start terrain investigation</button><button type="button" onClick={previewTerrainProfile} disabled={terrainState !== "READY" || measurementGeometryMode !== "distance" || measureCoordinateCount < 2}>Preview display profile</button></div>
                   {terrainProfile.length > 0 ? <div className="terrain-profile-preview" aria-label="Display-only terrain profile">
@@ -8141,12 +8681,12 @@ export default function Home() {
                   <label><span className="sr-only">Filter source connections</span><select value={connectionFilter} onChange={(event) => setConnectionFilter(event.target.value as typeof connectionFilter)}><option value="ALL">All connections</option><option value="VISIBLE">Visible only</option><option value="READY">Ready only</option><option value="ERROR">Errors only</option></select></label>
                 </div>
                 <section className="official-connection-ledger" aria-labelledby="official-connection-ledger-title">
-                  <header><div><span>OFFICIAL SOURCE PIPELINES</span><h4 id="official-connection-ledger-title">Fixed Kansas adapters + disclosed raster services</h4></div><strong>{officialFeatureCount} FEATURES</strong></header>
+                  <header><div><span>OFFICIAL SOURCE PIPELINES</span><h4 id="official-connection-ledger-title">Fixed Kansas adapters + disclosed raster services</h4></div><strong>{officialFeatureCount} SELECTED FEATURES</strong></header>
                   <p>Only allowlisted endpoints are connected. Feed failures stay visible; zero features is time-stamped and never interpreted as statewide safety or completeness.</p>
                   <div className="official-connection-grid">{filteredOfficialContextConnections.map(({ source, visible, activeAtFrame, state, featureCount, retrievedAt, limitation, temporalSupport }) => <article className="official-connection-card" key={source.id} data-state={state} data-held={visible && !activeAtFrame}>
                     <header><div><span>{source.kind.replaceAll("_", " ")}</span><h5>{source.title}</h5><code>{source.endpointLabel}</code></div><strong>{visible && !activeAtFrame ? "HELD" : state.toUpperCase()}</strong></header>
                     <div className="official-connection-path"><span>OFFICIAL</span><i>→</i><span>{source.apiPath || source.managedAdapterPath ? "FIXED ADAPTER" : "WMS / TILES"}</span><i>→</i><span>MAP CONTEXT</span><i>⊣</i><span>EVIDENCE HELD</span></div>
-                    <dl><div><dt>Mapped</dt><dd>{featureCount ?? (source.apiPath || source.managedAdapterPath ? "NOT LOADED" : "RASTER")}</dd></div><div><dt>Retrieved</dt><dd>{retrievedAt ? new Date(retrievedAt).toLocaleString() : source.freshness}</dd></div><div><dt>Cadence</dt><dd>{source.cadence}</dd></div><div><dt>Temporal support</dt><dd>{temporalSupport.axis.replaceAll("-", " ")} · {temporalSupport.supportedFrames.map(formatTimelineStep).join(", ")}</dd></div><div><dt>Evidence role</dt><dd>{source.evidenceRole.replaceAll("_", " ")}</dd></div></dl>
+                    <dl><div><dt>Mapped</dt><dd>{featureCount ?? (source.apiPath || source.managedAdapterPath ? "NOT LOADED" : "RASTER TILES · NO FEATURES")}</dd></div><div><dt>Retrieved</dt><dd>{retrievedAt ? new Date(retrievedAt).toLocaleString() : "No tile retrieval clock"}</dd></div><div><dt>Cadence</dt><dd>{source.cadence}</dd></div><div><dt>Temporal support</dt><dd>{temporalSupport.axis.replaceAll("-", " ")} · {temporalSupport.supportedFrames.map(formatTimelineStep).join(", ")}</dd></div><div><dt>Evidence role</dt><dd>{source.evidenceRole.replaceAll("_", " ")}</dd></div></dl>
                     <p>{limitation ?? source.boundary}</p><aside><strong>Failure boundary</strong><span>{source.fallback}</span></aside>
                     <footer><button type="button" onClick={() => setOfficialContextVisible(source.id, !visible)}>{visible ? "Hide" : "Show"}</button>{source.apiPath && <button type="button" disabled={state === "loading"} onClick={() => void refreshOfficialContext(source.id as OfficialContextFeedId)}>Refresh</button>}{source.id === "usgs-streamflow" && <button type="button" disabled={state === "loading" || !activeAtFrame} onClick={() => void refreshStreamflow(streamflowRange, streamflowSelectedStationId)}>Refresh observations</button>}{source.id === "noaa-nwps-gauges" && <button type="button" disabled={state === "loading" || !activeAtFrame} onClick={() => void refreshNoaaHydrologyNetwork()}>Refresh status</button>}<a href={source.sourceUrl} target="_blank" rel="noreferrer">Source ↗</a><a href={source.serviceUrl} target="_blank" rel="noreferrer">{source.id === "raspberry-shake-stations" ? "StationView ↗" : "Service ↗"}</a></footer>
                   </article>)}</div>
@@ -8438,7 +8978,7 @@ export default function Home() {
               </section>}
               {drawerView === "metadata" && <section role="tabpanel" id="drawer-panel-metadata" aria-labelledby="drawer-tab-metadata" className="drawer-section">
                 {selectedOfficialConnection ? <><h3>Official source details</h3><dl className="evidence-facts">
-                  <div><dt>Provider</dt><dd>{selectedOfficialConnection.source.organization}</dd></div><div><dt>Feed</dt><dd>{selectedOfficialConnection.source.endpointLabel}</dd></div><div><dt>Cadence</dt><dd>{selectedOfficialConnection.source.cadence}</dd></div><div><dt>Response state</dt><dd>{selectedOfficialConnection.state.toUpperCase()}{selectedOfficialPayload?.truncated ? " · truncated" : ""}</dd></div><div><dt>Retrieved</dt><dd>{drawerTimestamp(selectedOfficialConnection.retrievedAt)}</dd></div><div><dt>Provider time</dt><dd>{drawerTimestamp(selectedOfficialPayload?.upstreamUpdatedAt)}</dd></div><div><dt>Evidence role</dt><dd>External context only</dd></div><div><dt>Attribution</dt><dd>{selectedOfficialConnection.source.attribution}</dd></div>
+                  <div><dt>Provider</dt><dd>{selectedOfficialConnection.source.organization}</dd></div><div><dt>Feed</dt><dd>{selectedOfficialConnection.source.endpointLabel}</dd></div><div><dt>Cadence</dt><dd>{selectedOfficialConnection.source.cadence}</dd></div><div><dt>Response state</dt><dd>{selectedOfficialConnection.state.toUpperCase()}{selectedOfficialPayload?.truncated ? " · truncated" : ""}</dd></div>{selectedOfficialPayload?.sourceDay && <div><dt>NASA image day</dt><dd>{selectedOfficialPayload.sourceDay} UTC</dd></div>}<div><dt>Retrieved</dt><dd>{drawerTimestamp(selectedOfficialConnection.retrievedAt)}</dd></div><div><dt>Provider time</dt><dd>{drawerTimestamp(selectedOfficialPayload?.upstreamUpdatedAt)}</dd></div><div><dt>Evidence role</dt><dd>External context only</dd></div><div><dt>Attribution</dt><dd>{selectedOfficialConnection.source.attribution}</dd></div>
                 </dl>{selectedRiverObservation && streamflowCoverage?.station === selectedRiverObservation.stationId && <div className="notice"><strong>Provider-declared discharge record span</strong><p>{streamflowCoverage.continuous ? `${drawerTimestamp(streamflowCoverage.continuous.start)} to ${drawerTimestamp(streamflowCoverage.continuous.end)} continuous` : "No continuous span declared"}{streamflowCoverage.daily ? ` · daily ${drawerTimestamp(streamflowCoverage.daily.start)} to ${drawerTimestamp(streamflowCoverage.daily.end)}` : ""}{streamflowCoverage.partial ? " · partial metadata" : ""}. Gaps may occur within these dates.</p></div>}{selectedRiverObservation && selectedStageDetail?.status === "ready" && selectedStageDetail.detail && <><h3>USGS monitoring location</h3><dl className="evidence-facts">
                   <div><dt>Station</dt><dd>{selectedStageDetail.detail.name} · {selectedStageDetail.detail.stationId}</dd></div>
                   <div><dt>Site type</dt><dd>{selectedStageDetail.detail.siteTypeCode ?? "Not reported"}</dd></div>
@@ -8517,7 +9057,7 @@ export default function Home() {
             <button className="timeline-toggle" type="button" aria-expanded={timelineOpen} onClick={() => { if (timelineOpen) { closeTimelinePanel(); return; } setTimelineOpen(true); if (isCompact) { dismissMapUtilityWithoutFocus(); setLeftOpen(false); setRightOpen(false); } }}>
               <span>TIME SWEEP</span>
               <strong>{temporalScopeLabel}</strong>
-              <small>{previewYear === year ? `Atlas years · ${temporalMode.replaceAll("-", " ")} · ${timelineEraLabel(year)}` : `Atlas year preview ${formatTimelineStep(previewYear)}`}</small>
+              <small>{previewYear === year ? `Atlas years · ${temporalMode.replaceAll("-", " ")} · ${timelineEraLabel(year, buildYearCurrent)}` : `Atlas year preview ${formatTimelineStep(previewYear)}`}</small>
             </button>
             <div className="timeline-controls">
               <button type="button" disabled={temporalMode === "comparison" || previousSweepFrame === null} onClick={() => stepTemporalSweep("reverse")} aria-label="Previous sweep frame">‹</button>
@@ -8527,11 +9067,11 @@ export default function Home() {
             </div>
             <div className="timeline-track">
               <input type="range" min="0" max={timelineSteps.length - 1} value={Math.max(0, timelineSteps.indexOf(previewYear))} onChange={(event) => { setPreviewYear(timelineSteps[Number(event.target.value)]); setPlaying(false); }} aria-label="Preview time before committing; every year from 1800 is selectable" aria-valuetext={`Preview ${formatTimelineStep(previewYear)}; committed ${temporalScopeLabel}`} />
-              <div className="timeline-ticks" style={{ "--timeline-columns": timelineSteps.length } as React.CSSProperties} aria-hidden="true">{timelineSteps.map((step) => <span key={step} className="timeline-tick" data-active={step === previewYear} data-committed={step === temporalQuery.frame} data-major={TIMELINE_MAJOR_STEPS.has(step)} data-in-range={step >= sweepRangeStart && step <= sweepRangeEnd} title={`${formatTimelineStep(step)} · ${timelineEraLabel(step)}`}>{TIMELINE_MAJOR_STEPS.has(step) ? <b>{formatTimelineStep(step)}</b> : <i />}</span>)}</div>
+              <div className="timeline-ticks" style={{ "--timeline-columns": timelineSteps.length } as React.CSSProperties} aria-hidden="true">{timelineSteps.map((step) => <span key={step} className="timeline-tick" data-active={step === previewYear} data-committed={step === temporalQuery.frame} data-major={TIMELINE_MAJOR_STEPS.has(step)} data-in-range={step >= sweepRangeStart && step <= sweepRangeEnd} title={`${formatTimelineStep(step)} · ${timelineEraLabel(step, buildYearCurrent)}`}>{TIMELINE_MAJOR_STEPS.has(step) ? <b>{formatTimelineStep(step)}</b> : <i />}</span>)}</div>
             </div>
             <div className="timeline-commit-actions">
               <button type="button" disabled={previewYear === temporalQuery.frame} onClick={() => { setPlaying(false); commitTemporalFrame(previewYear, `Committed ${formatTimelineStep(previewYear)} to the map, evidence, report, and story context`); }}>Commit</button>
-              <button className="timeline-reset" type="button" onClick={() => { setPlaying(false); commitTemporalFrame(OFFICIAL_CONTEXT_PRESENT_FRAME, "Returned to the operational-present frame"); }}>Present</button>
+              <button className="timeline-reset" type="button" disabled={!buildYearCurrent} onClick={() => { setPlaying(false); commitTemporalFrame(OFFICIAL_CONTEXT_PRESENT_FRAME, "Returned to the operational-present frame"); }}>{buildYearCurrent ? "Present" : "Rebuild for Present"}</button>
             </div>
           </div>
 
@@ -8585,10 +9125,10 @@ export default function Home() {
             </section>
 
             <section className="timeline-live-context" data-held={withheldOfficialCount > 0} aria-labelledby="timeline-live-title">
-              <header><span>REAL OFFICIAL CONTEXT</span><strong id="timeline-live-title">{withheldOfficialCount > 0 ? `${withheldOfficialCount} current source${withheldOfficialCount === 1 ? "" : "s"} held` : `${visibleOfficialCount} selected · ${officialFeatureCount} loaded features`}</strong></header>
+              <header><span>LIVE SOURCE CONTEXT</span><strong id="timeline-live-title">{withheldOfficialCount > 0 ? `${withheldOfficialCount} current source${withheldOfficialCount === 1 ? "" : "s"} held` : `${visibleOfficialCount} selected · ${officialFeatureCount} loaded features`}</strong></header>
               {withheldOfficialCount > 0
                 ? <p>Current-only sources are hidden at this year. They return at {formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}; your choices are saved.</p>
-                : <p>{officialReadyCount}/{OFFICIAL_CONTEXT_SOURCES.length} sources settled · latest retrieval {officialLatestRetrievedAt ? `${officialLatestRetrievedAt.slice(0, 19).replace("T", " ")} UTC` : "pending"}.</p>}
+                : <p>{officialReadyCount}/{visibleOfficialCount} selected sources settled · latest selected retrieval {officialLatestRetrievedAt ? `${officialLatestRetrievedAt.slice(0, 19).replace("T", " ")} UTC` : "pending"}.</p>}
               <details className="timeline-context-details"><summary>Source clocks and limits</summary>
               <dl>
                 <div><dt>Phenomenon clock</dt><dd>{temporalScopeLabel}</dd></div>
@@ -8604,9 +9144,13 @@ export default function Home() {
           </div>}
         </section>
 
-        <footer className="status-bar" aria-label="Map status">
+        <footer className="status-bar" data-terrain={scenePreset === "elevation-3d"} aria-label="Map status">
           <span><b>{activeAtlasView?.title ?? "Kansas Overview"}</b> · {selected?.properties.title ?? "Kansas statewide"}</span>
-          <span>{mapRepresentationLabel}</span>
+          {scenePreset === "elevation-3d" ? <output className="status-terrain-readout" data-state={terrainState === "ERROR" ? "error" : terrainState !== "READY" ? "loading" : terrainElevationUnavailable ? "unavailable" : terrainElevationReading ? "sample" : "idle"} aria-live="off">
+            <em>DEM · {(terrainElevationReading?.provider ?? terrainProvider) === "usgs-3dep" ? "USGS 3DEP" : "MAPZEN"}</em>
+            <strong>{terrainState === "ERROR" ? "Unavailable" : terrainState !== "READY" ? "Loading elevation" : terrainElevationReading ? `${terrainElevationReading.feet.toFixed(0)} ft` : terrainElevationUnavailable ? "No sample here" : "Hover for height"}</strong>
+            <small>{terrainElevationReading ? `${terrainElevationReading.meters.toFixed(0)} m source height · ${verticalExaggeration.toFixed(1)}× display` : terrainElevationUnavailable ? "No loaded DEM tile at pointer" : "Source DEM height below pointer"}</small>
+          </output> : <span>{mapRepresentationLabel}</span>}
           <span>MapLibre {EXPECTED_MAPLIBRE_VERSION} · terrain context only</span>
         </footer>
       </main>

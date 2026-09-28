@@ -1,5 +1,6 @@
 import type { FeatureCollection, Geometry } from "geojson";
 import type { FilterSpecification, LayerSpecification } from "./maplibre-seam";
+import { BUILD_UTC_YEAR } from "./build-clock";
 
 export type EvidenceState =
   | "ANSWER"
@@ -14,7 +15,7 @@ export type EvidenceState =
 
 export type ReleaseState = "RELEASED" | "DEMONSTRATION" | "GENERALIZED" | "RESTRICTED";
 export type LayerCategory =
-  | "Boundaries & places"
+  | "Reference boundaries & locators"
   | "Hydrology & water"
   | "Geology & landforms"
   | "Habitat, fauna & flora"
@@ -1093,6 +1094,7 @@ const label = (id: string, sourceId: string, color: string, size = 10, filter?: 
     source: sourceId,
     ...(filter ? { filter } : {}),
     layout: {
+      "text-font": ["Noto Sans Regular"],
       "text-field": ["get", "displayLabel"],
       "text-size": size,
       "text-allow-overlap": false,
@@ -1110,7 +1112,7 @@ const label = (id: string, sourceId: string, color: string, size = 10, filter?: 
 
 export const LAYER_REGISTRY: LayerRecord[] = [
   {
-    id: "kansas-extent", title: "Kansas demonstration extent", description: "Simplified statewide frame and public-safe selection scope.", domain: "Boundaries", category: "Boundaries & places", sourceType: "GeoJSON", sourceId: "kfm-kansas-extent", datasetName: "KFM site-local Kansas extent fixture", geometryType: "Polygon", minZoom: 4, maxZoom: 12, defaultVisibility: true, defaultOpacity: 0.42,
+    id: "kansas-extent", title: "Kansas demonstration extent", description: "Simplified statewide frame and public-safe selection scope.", domain: "Boundaries", category: "Reference boundaries & locators", sourceType: "GeoJSON", sourceId: "kfm-kansas-extent", datasetName: "KFM site-local Kansas extent fixture", geometryType: "Polygon", minZoom: 4, maxZoom: 12, defaultVisibility: true, defaultOpacity: 0.42,
     legend: [{ label: "Generalized extent", color: "#c8a963", shape: "fill" }], units: "degrees", scaleNote: "Statewide generalized context", validTimeExtent: "Not time-varying", sourceTime: "Site build 2026-08-20", releaseTime: "Demonstration build", freshnessState: "NOT_APPLICABLE", attribution: "KFM site-local demonstration geometry", evidenceReference: "kfm:demo:site-local:v1", publicStatus: "GENERALIZED", sensitivityNote: "Not an authoritative boundary.", releaseState: "GENERALIZED", correctionNote: "Replace only through a released public-safe boundary adapter.", relatedLayers: ["Communities"], interactions: ["hover", "select", "zoom"], filters: [], viewingModes: ["2D", "globe"], bounds: [-102.1, 36.95, -94.55, 40.05], data: kansasBoundary,
     renderers: [fill("kansas-extent-fill", "kfm-kansas-extent", "#244f45", 0.42, "#d9bc77"), line("kansas-extent-line", "kfm-kansas-extent", "#d9bc77", 1.8, 0.9)],
   },
@@ -1215,7 +1217,7 @@ export const LAYER_REGISTRY: LayerRecord[] = [
     legend: [{ label: "Metro context", color: "#f4d38b", shape: "point" }, { label: "Regional city", color: "#f0f4e9", shape: "point" }, { label: "Local settlement", color: "#9fcab6", shape: "point" }], units: "place point", scaleNote: "Generalized place center", validTimeExtent: "Current demonstration context", sourceTime: "Site build", releaseTime: "Demonstration build", freshnessState: "NOT_APPLICABLE", attribution: "KFM site-local place fixture", evidenceReference: "kfm:demo:site-local:v1", publicStatus: "PUBLIC_SAFE", sensitivityNote: "Public place names only; no municipal boundary, population, address, household, or person-level claim.", releaseState: "DEMONSTRATION", correctionNote: "Not a gazetteer, Census release, municipal boundary, or population source.", relatedLayers: ["Hydrology context", "Roads, rail & movement", "People & DNA governance"], interactions: ["cluster", "hover", "select", "search", "zoom", "labels"], filters: ["settlement class"], viewingModes: ["2D", "globe"], bounds: [-101.8, 37.4, -94.55, 39.45], sourceOptions: { cluster: true, clusterRadius: 54, clusterMaxZoom: 7 }, data: communitiesDemo,
     renderers: [
       point("communities-clusters", "kfm-communities", "#8fc8b0", 12, 0.9, ["has", "point_count"] as FilterSpecification),
-      { id: "communities-count", baseFilter: ["has", "point_count"] as FilterSpecification, spec: { id: "communities-count", type: "symbol", source: "kfm-communities", filter: ["has", "point_count"], layout: { "text-field": ["get", "point_count_abbreviated"], "text-size": 11 }, paint: { "text-color": "#071719" } } },
+      { id: "communities-count", baseFilter: ["has", "point_count"] as FilterSpecification, spec: { id: "communities-count", type: "symbol", source: "kfm-communities", filter: ["has", "point_count"], layout: { "text-font": ["Noto Sans Regular"], "text-field": ["get", "point_count_abbreviated"], "text-size": 11 }, paint: { "text-color": "#071719" } } },
       { id: "communities-points", interactive: true, opacityProperties: ["circle-opacity"], baseFilter: ["!", ["has", "point_count"]] as FilterSpecification, spec: { id: "communities-points", type: "circle", source: "kfm-communities", filter: ["!", ["has", "point_count"]], paint: { "circle-color": ["match", ["get", "settlementClass"], "METRO", "#f4d38b", "REGIONAL", "#f0f4e9", "LOCAL", "#9fcab6", "#f0f4e9"], "circle-radius": ["match", ["get", "settlementClass"], "METRO", 7, "REGIONAL", 5.5, "LOCAL", 4.5, 5], "circle-opacity": 0.95, "circle-stroke-color": "#173337", "circle-stroke-width": 1.5 } } },
       label("communities-label", "kfm-communities", "#f5f1df", 10.5, ["!", ["has", "point_count"]] as FilterSpecification),
     ],
@@ -1244,7 +1246,7 @@ export const LAYER_REGISTRY: LayerRecord[] = [
     renderers: [
       { id: "tile-matrix-grid-fill", interactive: true, spec: { id: "tile-matrix-grid-fill", type: "fill", source: "kfm-tile-grid", paint: { "fill-color": "#d5bd75", "fill-opacity": 0.025 } } },
       line("tile-matrix-grid-line", "kfm-tile-grid", "#d5bd75", 1.1, 0.72, [2, 2]),
-      { id: "tile-matrix-grid-label", opacityProperties: ["text-opacity"], spec: { id: "tile-matrix-grid-label", type: "symbol", source: "kfm-tile-grid", layout: { "text-field": ["get", "tileLabel"], "text-size": 9, "text-allow-overlap": false }, paint: { "text-color": "#ead79c", "text-halo-color": "#07171a", "text-halo-width": 1.5, "text-opacity": 0.72 } } },
+      { id: "tile-matrix-grid-label", opacityProperties: ["text-opacity"], spec: { id: "tile-matrix-grid-label", type: "symbol", source: "kfm-tile-grid", layout: { "text-font": ["Noto Sans Regular"], "text-field": ["get", "tileLabel"], "text-size": 9, "text-allow-overlap": false }, paint: { "text-color": "#ead79c", "text-halo-color": "#07171a", "text-halo-width": 1.5, "text-opacity": 0.72 } } },
     ],
   },
   {
@@ -1255,7 +1257,7 @@ export const LAYER_REGISTRY: LayerRecord[] = [
 ];
 
 export const CATEGORY_ORDER: LayerCategory[] = [
-  "Boundaries & places", "Hydrology & water", "Geology & landforms", "Habitat, fauna & flora", "Agriculture", "Weather & hazards", "Fire, smoke & hazards", "People & DNA", "Roads, rail & movement", "Settlements & cities", "Historical geography", "Public-safe planning", "Review & diagnostics",
+  "Reference boundaries & locators", "Hydrology & water", "Geology & landforms", "Habitat, fauna & flora", "Agriculture", "Weather & hazards", "Fire, smoke & hazards", "People & DNA", "Roads, rail & movement", "Settlements & cities", "Historical geography", "Public-safe planning", "Review & diagnostics",
 ];
 
 export const TIME_STEPS = [
@@ -1272,7 +1274,7 @@ export const TIME_STEPS = [
   1000,
   1541,
   // Annual selection is a time capacity, not a claim of data in every year.
-  ...Array.from({ length: Math.max(2026, new Date().getUTCFullYear()) - 1800 + 1 }, (_, index) => 1800 + index),
+  ...Array.from({ length: BUILD_UTC_YEAR - 1800 + 1 }, (_, index) => 1800 + index),
 ] as const;
 
 export type SearchItem = {

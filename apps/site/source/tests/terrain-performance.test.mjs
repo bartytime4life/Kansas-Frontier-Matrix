@@ -39,14 +39,18 @@ test("concurrent terrain tiles share one upstream fetch and caches expire withou
   assert.match(hit.headers.get("Cache-Control"),/max-age=10, s-maxage=10/);
   now += 11000; await serve(tile()); assert.equal(calls,2);
 });
-test("edge cache survives service instances, while JSON errors and corrupt dimensions remain retryable", async () => {
+test("edge cache survives service instances, while failed tiles pause briefly and remain retryable", async () => {
   const saved = new Map(); const cache = { match: async r => saved.get(r.url)?.clone(), put: async (r,v) => { saved.set(r.url,v.clone()); } };
   let calls = 0; const options = { edgeCache: () => cache, fetchBytes: async () => { calls++; return png(); } };
   await terrain.createTerrainTileService(options)(tile());
   const hit = await terrain.createTerrainTileService(options)(tile()); assert.equal(hit.headers.get("X-KFM-Tile-Cache"),"EDGE"); assert.equal(calls,1);
-  let attempts = 0; const retry = terrain.createTerrainTileService({ fetchBytes: async () => ++attempts === 1 ? new TextEncoder().encode('{"error":"unavailable"}') : png() });
+  let attempts = 0, now = Date.parse("2026-09-12T00:00:00Z");
+  const retry = terrain.createTerrainTileService({ now: () => now, fetchBytes: async () => ++attempts === 1 ? new TextEncoder().encode('{"error":"unavailable"}') : png() });
   const bad = await retry(tile()); assert.equal(bad.status,502); assert.equal(bad.headers.get("Cache-Control"),"no-store");
+  const paused = await retry(tile()); assert.equal(paused.status,502); assert.equal(paused.headers.get("X-KFM-Tile-Cache"),"RECENT_FAILURE"); assert.equal(paused.headers.get("Retry-After"),"5"); assert.equal(attempts,1);
+  now += 5000;
   assert.equal((await retry(tile())).status,200); assert.equal(attempts,2);
+  assert.equal((await retry(tile())).headers.get("X-KFM-Tile-Cache"),"MEMORY");
   const wrongSize = png(); new DataView(wrongSize.buffer).setUint32(16,8192); assert.throws(() => terrain.validateTerrainPNG(wrongSize));
 });
 test("render quality caps high-DPI pixel work and respects the browser data-saving preference", () => {
@@ -77,7 +81,7 @@ test("opacity changes do not re-upload provider data or create disabled raster s
     getSource:id=>sources.get(id),getLayer:id=>layers.get(id),getStyle:()=>({layers:[...layers.values()]}),
     moveLayer:id=>{const layer=layers.get(id);layers.delete(id);layers.set(id,layer);},
     getProjection:()=>activeProjection,
-    addSource:(id,spec)=>sources.set(id,{...spec,setData:()=>uploads++}),addLayer:layer=>layers.set(layer.id,structuredClone(layer)),
+    addSource:(id,spec)=>sources.set(id,{...spec,setData(data){uploads++;this.data=data;}}),addLayer:layer=>layers.set(layer.id,structuredClone(layer)),
     getLayoutProperty:(id,key)=>layers.get(id)?.layout?.[key],getPaintProperty:(id,key)=>layers.get(id)?.paint?.[key],
     setLayoutProperty:(id,key,value)=>{layoutWrites++;const layer=layers.get(id);layer.layout={...layer.layout,[key]:value};},
     setPaintProperty:(id,key,value)=>{paintWrites++;const layer=layers.get(id);layer.paint={...layer.paint,[key]:value};}
@@ -99,4 +103,8 @@ test("opacity changes do not re-upload provider data or create disabled raster s
   activeProjection={type:"globe"};
   context.applyOfficialContextState(map,{...visibility,"usgs-3dep-hillshade":true},opacity,payloads);
   assert.equal(terrainLayer.layout.visibility,"none");
+  assert.equal(context.clearOfficialContextFeed(map,"census-counties"),true);
+  assert.equal(sources.get("external-census-counties").data.features.length,0,"a failed feed clears its mapped features immediately");
+  context.applyOfficialContextState(map,visibility,opacity,{});
+  assert.equal(sources.get("external-census-counties").data.features.length,0,"removing a failed feed's payload clears its mapped features");
 });

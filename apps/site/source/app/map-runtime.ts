@@ -10,6 +10,7 @@ import { externalContextSource } from "./external-context-sources";
 import { LAYER_REGISTRY, type EvidenceState } from "./explorer-data";
 import { balanceMapFills, composeMapLayers, requestFillOpacity } from "./map-layer-composition";
 import { ACTIVE_TERRAIN_SOURCE, type TerrainSourceRecord } from "./terrain-sources";
+import { terrainHillshadePaint } from "./terrain-relief-style";
 import type { TemporalSweepQuery } from "./temporal-sweep";
 
 export type BasemapKey = "standard" | "imagery" | "midnight" | "prairie" | "streets" | "topo";
@@ -35,10 +36,10 @@ export const BASEMAPS: Record<BasemapKey, { title: string; note: string; style: 
       sources: {
         "esri-imagery": {
           type: "raster",
+          // World imagery must continue under oblique views beyond Kansas.
           tiles: [esriImageryContext.requestUrl],
           tileSize: 256,
           attribution: esriImageryContext.attribution,
-          bounds: [-104.8, 34.8, -92, 42.2],
           minzoom: 4,
           maxzoom: 19,
         },
@@ -85,10 +86,10 @@ export const BASEMAPS: Record<BasemapKey, { title: string; note: string; style: 
       sources: {
         "osm-context": {
           type: "raster",
+          // This provider is global; a Kansas tile bound clips the backdrop.
           tiles: [openStreetMapContext.requestUrl],
           tileSize: 256,
           attribution: openStreetMapContext.attribution,
-          bounds: [-104.8, 34.8, -92, 42.2],
           minzoom: 4,
           maxzoom: 19,
         },
@@ -115,10 +116,10 @@ export const BASEMAPS: Record<BasemapKey, { title: string; note: string; style: 
       sources: {
         "usgs-topo-context": {
           type: "raster",
+          // Keep USGS coverage beyond the Kansas focus; the provider defines its extent.
           tiles: [usgsTopoContext.requestUrl],
           tileSize: 256,
           attribution: usgsTopoContext.attribution,
-          bounds: [-104.8, 34.8, -92, 42.2],
           minzoom: 4,
           maxzoom: 16,
         },
@@ -229,8 +230,19 @@ export const TERRAIN_SOURCE_ID = "kfm-terrain-dem";
 export const TERRAIN_HILLSHADE_SOURCE_ID = "kfm-terrain-shadow-dem";
 export const TERRAIN_HILLSHADE_LAYER_ID = "kfm-terrain-hillshade";
 export const TERRAIN_COLOR_SOURCE_ID = "kfm-terrain-color-dem";
+
+/** Only failures from the standard style's own tile sources may replace it.
+ * Unidentified errors can also come from terrain, glyphs, or other overlays. */
+export const shouldFallbackStandardBasemap = (sourceId: string | undefined, localSource: boolean, officialSource: boolean): boolean =>
+  !localSource && !officialSource && (sourceId === "openmaptiles" || sourceId === "ne2_shaded");
 export const TERRAIN_COLOR_RELIEF_LAYER_ID = "kfm-terrain-color-relief";
 export type TerrainPresentationState = "OFF" | "LOADING" | "READY" | "ERROR";
+export const terrainSourceLoadState = (state: TerrainPresentationState, loaded: boolean, failed: boolean): TerrainPresentationState =>
+  state !== "LOADING" ? state : failed ? "ERROR" : loaded ? "READY" : "LOADING";
+export const terrainPresentationSourceMatches = (map: MapLibreMap, source: TerrainSourceRecord): boolean => {
+  const attached = map.getStyle().sources?.[TERRAIN_SOURCE_ID];
+  return attached?.type === "raster-dem" && attached.tiles?.[0] === source.tileTemplate;
+};
 export const LIBERTY_STRUCTURES_3D_LAYER_ID = "building-3d";
 export type Structures3DState = "OFF" | "READY" | "UNAVAILABLE" | "ERROR";
 
@@ -246,14 +258,29 @@ export const setTerrainPresentation = (
   source: TerrainSourceRecord = ACTIVE_TERRAIN_SOURCE,
 ): TerrainPresentationState => {
   if (!enabled) {
-    if (map.getLayer(TERRAIN_HILLSHADE_LAYER_ID)) {
-      map.setLayoutProperty(TERRAIN_HILLSHADE_LAYER_ID, "visibility", "none");
+    try {
+      // Destroy MapLibre's terrain mesh before removing its tile manager. A
+      // hidden layer/source can retain an incomplete DEM tile across a later
+      // 2D → 3D toggle, leaving a rectangular zero-height terrain hole.
+      map.setTerrain(null);
+      for (const layerId of [TERRAIN_HILLSHADE_LAYER_ID, TERRAIN_COLOR_RELIEF_LAYER_ID]) {
+        if (map.getLayer(layerId)) map.removeLayer(layerId);
+      }
+      for (const sourceId of [TERRAIN_HILLSHADE_SOURCE_ID, TERRAIN_COLOR_SOURCE_ID, TERRAIN_SOURCE_ID]) {
+        if (map.getSource(sourceId)) map.removeSource(sourceId);
+      }
+      return "OFF";
+    } catch {
+      return "ERROR";
     }
-    map.setTerrain(null);
-    return "OFF";
   }
 
   try {
+    if (map.getSource(TERRAIN_SOURCE_ID) && !terrainPresentationSourceMatches(map, source)) {
+      // Provider changes must replace both DEM tile managers. Keeping the old
+      // source under a stable ID makes the selector and hover provenance false.
+      if (setTerrainPresentation(map, false, 1) === "ERROR") return "ERROR";
+    }
     const demSource = () => ({
       type: "raster-dem" as const,
       tiles: [source.tileTemplate!],
@@ -276,12 +303,8 @@ export const setTerrainPresentation = (
         source: TERRAIN_HILLSHADE_SOURCE_ID,
         layout: { visibility: "visible" },
         paint: {
-          "hillshade-shadow-color": "#163337",
-          "hillshade-highlight-color": "#d9d5bd",
-          "hillshade-accent-color": "#6d8175",
-          "hillshade-illumination-direction": 235,
+          ...terrainHillshadePaint("general", "clear", 235),
           "hillshade-illumination-anchor": "map",
-          "hillshade-exaggeration": 0.35,
         },
       }, overlay);
     } else {
@@ -293,6 +316,24 @@ export const setTerrainPresentation = (
   } catch {
     return "ERROR";
   }
+};
+
+/** MapLibre reports an elevation after terrain exaggeration. Divide by the
+ * renderer's active display scale for a source DEM reading. A missing DEM tile
+ * remains unavailable; never substitute a guessed height. */
+export const unexaggeratedTerrainElevation = (map: MapLibreMap, coordinate: [number, number]): number | null => {
+  const terrain = map.getTerrain();
+  if (!terrain) return null;
+  const exaggeration = Number(terrain.exaggeration ?? 1);
+  if (!Number.isFinite(exaggeration) || exaggeration <= 0) return null;
+  const rendered = map.queryTerrainElevation(coordinate);
+  if (rendered === null || !Number.isFinite(rendered)) return null;
+  // MapLibre returns zero when a DEM tile is missing. Kansas is above sea
+  // level, so zero in the Kansas focus area is not a usable terrain reading.
+  // Preserve legitimate sea-level readings elsewhere.
+  const [longitude, latitude] = coordinate;
+  if (rendered === 0 && longitude >= -102.1 && longitude <= -94.5 && latitude >= 36.9 && latitude <= 40.1) return null;
+  return rendered / exaggeration;
 };
 
 /** Adds a quantitative color ramp over the active terrain using unexaggerated
@@ -536,10 +577,6 @@ export const applySceneEnvironment = (map: MapLibreMap, preset: AtmospherePreset
     color: preset === "night" ? "#b9d5d8" : preset === "dusk" ? "#ffd2a2" : "#fff8df",
     intensity: preset === "night" ? 0.42 : preset === "dusk" ? 0.68 : 0.58,
   });
-  if (map.getLayer(TERRAIN_HILLSHADE_LAYER_ID)) {
-    map.setPaintProperty(TERRAIN_HILLSHADE_LAYER_ID, "hillshade-illumination-direction", safeAzimuth);
-    map.setPaintProperty(TERRAIN_HILLSHADE_LAYER_ID, "hillshade-highlight-color", preset === "dusk" ? "#ecd6b5" : "#edf1df");
-  }
 };
 
 export type TileCoordinate = Readonly<{ z: number; x: number; y: number; label: string }>;

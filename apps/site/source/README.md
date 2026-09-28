@@ -1,14 +1,7 @@
 # Kansas Frontier Matrix Explorer
 
-For this repository mirror, follow [the local Site installation steps](../README.md) from `apps/site/source/`. Its npm dependencies and local D1/R2 state are separate from the root pnpm workspace and from the hosted Site.
-
 A map-first Kansas explorer with real provider baselines, dated archive replay,
 source downloads, and private data contribution and steward review workflows.
-
-The Layer Catalog has an exact-label source-role selector for site-local fixture
-layers. It shows a layer when at least one feature carries the selected role;
-mixed-role layers may also contain features with other roles. It does not filter
-rendered geometry or live provider feeds and does not assert source admission.
 
 The owner-preserved application baseline is Site version 68. See
 [preservation and recovery](docs/SITE_PRESERVATION.md) and root `AGENTS.md`
@@ -506,7 +499,7 @@ requests cannot supply an arbitrary upstream URL.
 | USGS 3DEP LiDAR hillshade | Off | Dynamic multidirectional hillshade from the current 3DEP elevation mosaic | Rendered relief only; no work-unit, point-cloud, datum, pulse-spacing, or accuracy claim |
 | USGS 3DEP LiDAR slope | Off | Dynamic slope visualization from the same 3DEP service | Image context only; no numeric slope/elevation or source-artifact claim |
 | NWS alert areas | Off | Active Kansas alerts and bounded affected-zone geometry | Not a warning-delivery service or an all-clear |
-| NWS forecast wind barbs · Airflow | Off | Provider-default NDFD forecast 10 m sustained wind speed and direction, shown as wind barbs over Kansas | Forecast image, not measured airflow, gusts, smoke transport, or a historical frame. The Site does not resolve the exact forecast valid time |
+| GFS forecast wind flow · Airflow | Off | Open-Meteo NCEP GFS 10 m wind at 16 model grid points, shown as moving wisps over Kansas with valid and retrieval times | Motion and curl are illustrative, not observed airflow, gusts, smoke transport, measured particle paths, or a historical frame. No stationary NDFD wind barbs are mounted on the map |
 | NOAA nowCOAST radar | Off | Recent CONUS base-reflectivity observations at exact NOAA-advertised times, with 30-minute, 1-hour, and 2-hour loop views | Context only; pixels do not establish rainfall rate, storm motion, warning status, forecast, or an emergency all-clear |
 
 Every connection is `EXTERNAL_CONTEXT_ONLY`. It is excluded from KFM reports,
