@@ -172,7 +172,7 @@ repository-governance-parity:
 	$(KFM_VALIDATION_ENV) python -m unittest tests.validators.directory_governance.test_validate_repository_governance_parity --verbose
 	$(KFM_VALIDATION_ENV) python tools/validators/directory_governance/validate_repository_governance_parity.py --fixtures
 	$(KFM_VALIDATION_ENV) python tools/validators/directory_governance/validate_repository_governance_parity.py
-	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-repository-governance-parity-mrts-04-20260822.json --repo-root . --artifact-git-ref f7c6ba4c73227858c2d7c8931adae37b57092ce1
+	$(KFM_VALIDATION_ENV) python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-topology-baseline-recovery-20260928.json --repo-root . --artifact-git-ref e32729b1e74590a7b89661598e1beb680582b6f0
 
 repository-guardrails: validator-registry-check workflow-security repository-topology
 

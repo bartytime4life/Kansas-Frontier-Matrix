@@ -94,6 +94,12 @@ make target's final step still replays
 receipt's bytes match no current ancestor, so replacing that step is a separate
 decision.
 
+Follow-up: the step now replays this recovery's receipt,
+`genrec-topology-baseline-recovery-20260928.json`, against its merge commit
+`e32729b1e74590a7b89661598e1beb680582b6f0` on `main`. That keeps the step's design of
+replaying artifact bytes from one fixed ancestor commit, so later edits to the covered
+files do not break it. The historical MRTS-04 receipt stays in place as a record.
+
 ## Rollback
 
 Revert the recovery commit. The baseline returns to the pinned bytes and the three
