@@ -887,11 +887,11 @@ test("connects twenty-one bounded official context sources without admitting evi
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["noaa-hms-smoke"].apiPath, /feed=noaa-hms-smoke/);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["noaa-hms-smoke"].boundary, /fire perimeter[\s\S]*surface PM2\.5/i);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"].mapUrl, /^https:\/\/gibs\.earthdata\.nasa\.gov\/wms\/epsg3857\/best\/wms\.cgi\?[\s\S]*LAYERS=VIIRS_NOAA20_Thermal_Anomalies_375m_All/);
-  assert.doesNotMatch(registry.OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"].mapUrl, /firms\.modaps\.eosdis\.nasa\.gov/);
+  assert.doesNotMatch(registry.OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"].mapUrl, /^https?:\/\/firms\.modaps\.eosdis\.nasa\.gov(?:\/|$)/);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"].boundary, /not a rolling 24-hour FIRMS feed[\s\S]*not a mapped perimeter/i);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"].fallback, /blank tile[\s\S]*never[\s\S]*all-clear/i);
   assert.equal(registry.OFFICIAL_CONTEXT_TEMPORAL_SUPPORT["nasa-firms-active-fire"].axis, "provider-current-mosaic");
-  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"].serviceUrl, /stationview\.raspberryshake\.org/);
+  assert.match(registry.OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"].serviceUrl, /^https?:\/\/stationview\.raspberryshake\.org(?:\/|$)/);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"].boundary, /not realtime/i);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"].mapUrl, /^\/api\/terrain-tile\?kind=slope&z=\{z\}&x=\{x\}&y=\{y\}$/);
   assert.match(page, /External map context/);
@@ -908,9 +908,9 @@ test("connects twenty-one bounded official context sources without admitting evi
   assert.match(countySource, /POP100,HU100/);
   assert.match(route, /state_code/);
   assert.match(route, /datetime/);
-  assert.match(route, /earthquake\.usgs\.gov\/fdsnws\/event\/1\/query/);
+  assert.match(route, /(?:^|[\s"'`=:(])earthquake\.usgs\.gov\/fdsnws\/event\/1\/query(?:$|[\/?&#\s"'`),])/);
   assert.match(route, /NOAA HMS smoke publications/);
-  assert.match(route, /data\.raspberryshake\.org\/fdsnws\/station\/1\/query/);
+  assert.match(route, /^https?:\/\/data\.raspberryshake\.org\/fdsnws\/station\/1\/query\/?$/);
   assert.match(route, /MAX_RASPBERRY_SHAKE_STATIONS = 250/);
   assert.match(route, /normalizedFdsnHeader/);
   assert.match(route, /FDSN archive is delayed by at least 30 minutes/);
@@ -1145,16 +1145,17 @@ test("the built official-context adapter joins dated Census population and bound
   const upstreamCalls = [];
   globalThis.fetch = async (input) => {
     const url = String(input);
+    const parsedUrl = new URL(typeof input === "string" ? input : input.url);
     upstreamCalls.push(url);
-    if (url.includes("tigerweb.geo.census.gov")) return new Response(JSON.stringify({
+    if (parsedUrl.hostname === "tigerweb.geo.census.gov") return new Response(JSON.stringify({
       type: "FeatureCollection",
       features: Array.from({ length: 105 }, (_, i) => ({ type: "Feature", geometry: { type: "Polygon", coordinates: [[[-98, 38], [-97, 38], [-97, 39], [-98, 39], [-98, 38]]] }, properties: { GEOID: `20${String(i * 2 + 1).padStart(3, "0")}`, BASENAME: `Fixture county ${i}`, STATE: "20", POP100: 6118, HU100: 2400, AREALAND: 2589988.110336, AREAWATER: 0 } })),
     }), { headers: { "content-type": "application/json" } });
-    if (url.includes("api.census.gov")) return new Response(JSON.stringify([
+    if (parsedUrl.hostname === "api.census.gov") return new Response(JSON.stringify([
       ["NAME", "DP05_0001E", "state", "county"],
       ["Ellsworth County, Kansas", "6118", "20", "053"],
     ]), { headers: { "content-type": "application/json" } });
-    if (url.includes("earthquake.usgs.gov")) return new Response(JSON.stringify({
+    if (parsedUrl.hostname === "earthquake.usgs.gov") return new Response(JSON.stringify({
       type: "FeatureCollection",
       metadata: { count: 1 },
       features: [{ type: "Feature", id: "us-test", geometry: { type: "Point", coordinates: [-98.1, 38.7, 5.4] }, properties: { title: "M 2.1 - central Kansas", place: "central Kansas", mag: 2.1, magType: "ml", time: 1789000000000, updated: 1789000300000, status: "reviewed", type: "earthquake", url: "https://earthquake.usgs.gov/earthquakes/eventpage/us-test" } }],
@@ -1170,7 +1171,7 @@ test("the built official-context adapter joins dated Census population and bound
     assert.equal(countyPayload.data.features[0].properties.populationEstimateYear, 2020);
     assert.equal(countyPayload.data.features.length, 105);
     assert.equal(countyPayload.data.features[0].properties.housingUnits, 2400);
-    assert.equal(upstreamCalls.some((url) => url.includes("api.census.gov")), false);
+    assert.equal(upstreamCalls.some((url) => new URL(url).hostname === "api.census.gov"), false);
 
     const earthquakeResponse = await worker.fetch(new Request("http://localhost/api/live-context?feed=usgs-earthquakes"), {}, { waitUntil() {}, passThroughOnException() {} });
     assert.equal(earthquakeResponse.status, 200);
@@ -1385,8 +1386,8 @@ test("carries governed map context into creation workflows and checked source po
   for (const state of ["candidate", "context-only", "admitted", "held", "quarantined", "denied"]) {
     assert.match(sources, new RegExp(`"${state}"`));
   }
-  assert.match(sources, /https:\/\/kgs\.ku\.edu\/data-and-maps/);
-  assert.match(sources, /https:\/\/www\.ksdot\.gov\/about\/our-organization\/divisions\/planning-and-development\/kansas-maps-and-gis-resources/);
+  assert.match(sources, /(?:^|["'\s(])https:\/\/kgs\.ku\.edu\/data-and-maps(?:$|["'\s)])/);
+  assert.match(sources, /(?:^|["'\s(])https:\/\/www\.ksdot\.gov\/about\/our-organization\/divisions\/planning-and-development\/kansas-maps-and-gis-resources(?:$|["'\s)])/);
   for (const type of ["SourceDescriptor", "EvidenceRecord", "TemporalExtent", "MapSnapshot", "ReportDraft", "StoryScene", "PolicyDecision", "TrustState"]) {
     assert.match(workspaceModel, new RegExp(`(?:interface|type) ${type}`));
   }
