@@ -36,6 +36,12 @@ jobs:
   synthetic-candidates:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        # The interpreters tools/ci/python-test.lock declares; the stdlib json decoder's
+        # depth behavior (and so parser routing) differs between them.
+        python: ['3.11', '3.12']
     env:
       KFM_NO_NETWORK: '1'
       PYTHONDONTWRITEBYTECODE: '1'
@@ -46,7 +52,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
-          python-version: '3.11'
+          python-version: ${{ matrix.python }}
       - name: Run standard-library synthetic tests (connectors-core imported from source)
         run: python -m unittest discover -s connectors/census/tests -p 'test_*.py' -v
       - name: Record evidence boundary
