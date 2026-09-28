@@ -60,8 +60,9 @@ Stage 2.
 
 ## Validation
 
-- `make repository-topology`: `PASS: 13679 tracked paths; 0 invariant; 0 new drift;
-  122 baselined warnings; 0 stale baseline entries`; all four statuses are 0.
+- `make repository-topology` on the committed recovery tree (which adds this record and
+  its receipt): `PASS: 13681 tracked paths; 0 invariant; 0 new drift; 122 baselined
+  warnings; 0 stale baseline entries`; all four statuses are 0.
 - `validate_repository_topology.py --trusted-baseline-ref origin/main` passes.
 - Removing the three entries from the new baseline reproduces the `main` baseline
   byte for byte, confirming the pinned hash.

@@ -10,7 +10,7 @@
   ],
   "artifact_hashes": {
     "docs/intake/README.md": "sha256:1fd89bc655606e7a241efbb49b524f94bf81b8f7ac591e591c6ff5c33a28a13f",
-    "docs/intake/exploratory/repository-topology-baseline-recovery-20260928.md": "sha256:ae55b538ff55300ca9b13580e11f011d2eec41f3eaa933acdc2c4a2d6f6d665e",
+    "docs/intake/exploratory/repository-topology-baseline-recovery-20260928.md": "sha256:afb327c2588946da3a839c3549d6338ae3af51a9ca2ffeed15125a5d769b6c7e",
     "tests/validators/directory_governance/test_validate_repository_topology.py": "sha256:16885bdc0f60114932a15ad661e6d4c3fd6de4c2b31b58e9c741128e1df1c6de",
     "tools/validators/directory_governance/repository_topology_baseline.json": "sha256:78f96e053e3d2e7fd14e5e0642480638f8ed0d2800f67985ac2ebc448a49347c",
     "tools/validators/directory_governance/validate_repository_topology.py": "sha256:70ec73f3f07b5c6873d788899c2cf78e7afbdf39f9780ce14f89239399daac7f"
