@@ -7,7 +7,7 @@ import { shouldRefreshFollowToday } from "./follow-today";
 import { replaceExplorerHistory } from "../embed-runtime";
 import { browserRenderBudget, updateGeoJSON } from "../map-performance";
 import { DataNotices } from "../map-toolbar";
-import type { Map as GLMap, GeoJSONSource } from "maplibre-gl";
+import { loadMapLibre, type Map as GLMap, type GeoJSONSource } from "../maplibre-seam";
 import { BASEMAPS } from "../map-runtime";
 import { SCIENCE_EVENTS, SCIENCE_SUPPORT_LABELS, scienceMeasurement, scienceProbeGeoJSON, type ScienceTrackId } from "../science-events";
 import {
@@ -267,7 +267,7 @@ export default function EventObservatory() {
   useEffect(() => {
     let disposed = false;
     const cachedUrls = urls.current;
-    import("maplibre-gl").then((gl) => {
+    loadMapLibre().then((gl) => {
       if (disposed || !container.current) return;
       gl.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
       const budget = browserRenderBudget(); gl.setMaxParallelImageRequests(budget.imageRequests);

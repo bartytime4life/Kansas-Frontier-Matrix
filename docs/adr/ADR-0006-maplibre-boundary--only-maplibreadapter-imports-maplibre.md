@@ -3,7 +3,7 @@ doc_id: kfm://adr/0006
 title: "ADR-0006 — MapLibre Boundary: Only MapLibreAdapter Imports MapLibre"
 type: adr
 adr_id: ADR-0006
-version: v1.5
+version: v1.6
 status: accepted
 effective_decision_status: accepted
 owners: ["@bartytime4life"]
@@ -14,7 +14,7 @@ reviewers_required:
   - Package/tooling owner
   - Docs steward
 created: 2026-05-10
-updated: 2026-09-12
+updated: 2026-09-28
 accepted_on: 2026-08-21
 policy_label: public
 truth_posture: "ACCEPTED architecture / scoped implementation observed / bounded evidence / no operational authority"
@@ -60,6 +60,7 @@ related:
 tags: [kfm, adr, maplibre, map-runtime-port, maplibre-adapter, dependency-owner, acquisition-boundary, trust-membrane, currentness-correction]
 notes:
   - "v1.5 is a documentation-only current-source reconciliation. It preserves the accepted architecture decision and does not re-admit a dependency, source, release, deployment, promotion, or publication."
+  - "v1.6 adds the owner-directed Site exception in section 2.6: apps/site/source keeps one seam module, stylesheet and manifest for maplibre-gl, enforced by exact paths in the acquisition inventory."
   - "At the pinned source, @kfm/maplibre declares maplibre-gl 6.7.0 and contains a concrete adapter plus a package-owned Vite worker helper."
   - "The title's MapLibreAdapter denotes the one package-owned adapter implementation boundary. It is not a claim that exactly one source file imports maplibre-gl: the package-owned Vite worker helper also imports it."
   - "The current Explorer composition is bounded to an inline style and local Vite assets. That source fact and its fixture proof do not activate an external data source or operational environment."
@@ -173,6 +174,16 @@ Explorer Web may compose a `MapRuntimePort` supplied by `@kfm/maplibre`. It may 
 - bypass upstream policy, source, evidence, review, release, or correction decisions.
 
 The existing policy test scans Explorer Web source for static, dynamic, and CommonJS raw renderer acquisition. That is useful structural evidence, but it is not a complete repository-wide authorization mechanism.
+
+### 2.6 Separately built Site exception (v1.6, 2026-09-28)
+
+`apps/site/source/` is the preserved, separately versioned Explorer Site: it builds and deploys with its own manifest and lockfile and cannot consume `@kfm/maplibre`. It uses MapLibre surfaces that `MapRuntimePort` does not expose (controls, popups, worker configuration). At the repository owner's direction, it gets its own single seam instead of scattered raw imports:
+
+- `apps/site/source/app/maplibre-seam.ts` is the only Site module that imports `maplibre-gl`. It re-exports the renderer types and exposes `loadMapLibre()`, a lazy runtime loader.
+- `apps/site/source/app/maplibre-seam.css` is the only Site stylesheet that imports the MapLibre CSS.
+- `apps/site/source/package.json` is the only Site manifest that declares `maplibre-gl`.
+
+`tools/validators/maplibre/assess_acquisition_inventory.py` lists exactly these three paths in `SITE_SEAM_PATHS`. Any other Site acquisition, including a lookalike or nested seam file name, is still `ACQUISITION_OUTSIDE_CANDIDATE_SEAM`. The exception authorizes no other app, does not make the Site a second reusable implementation home, and does not admit a dependency, source, release, deployment, or publication. Retiring it means the Site consuming `@kfm/maplibre` or leaving this repository.
 
 [Back to top](#top)
 
@@ -376,7 +387,8 @@ This v1.5 change is documentation-only. Reverting it reverts the currentness rec
 | `v1.3` | 2026-08-13 | Repository-grounded proposed decision and pre-acceptance snapshot; preserved in Git history. |
 | `v1.4` | 2026-08-21 | Accepted architecture source transition authorized by issue #2957; original implementation narrative was intentionally scaffold-only. |
 | `v1.5` | 2026-09-12 | Documentation-only current-source reconciliation at `main@6f8bf49e`. No code, dependency, source, release, deployment, or publication action. |
+| `v1.6` | 2026-09-28 | Owner-directed, narrowly bounded exception for the separately built Site (§2.6): one Site seam module, stylesheet and manifest, enforced by the acquisition inventory. The package-owned decision is otherwise unchanged. |
 
 ---
 
-_Last updated 2026-09-12 · Document version: `v1.5` · Source metadata: `accepted` · Effective decision status: `accepted` · Implementation: package-owned bounded adapter observed · Operational authority: none · [Back to top](#top)_
+_Last updated 2026-09-28 · Document version: `v1.6` · Source metadata: `accepted` · Effective decision status: `accepted` · Implementation: package-owned bounded adapter observed · Operational authority: none · [Back to top](#top)_

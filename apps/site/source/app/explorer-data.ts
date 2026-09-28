@@ -1,5 +1,5 @@
 import type { FeatureCollection, Geometry } from "geojson";
-import type { FilterSpecification, LayerSpecification } from "maplibre-gl";
+import type { FilterSpecification, LayerSpecification } from "./maplibre-seam";
 
 export type EvidenceState =
   | "ANSWER"

@@ -1,0 +1,129 @@
+{
+  "receipt_id": "genrec-maplibre-site-seam-20260928",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/app/earth-engine-display.tsx",
+    "apps/site/source/app/explorer-data.ts",
+    "apps/site/source/app/globals.css",
+    "apps/site/source/app/globe-context.ts",
+    "apps/site/source/app/live-context.ts",
+    "apps/site/source/app/map-layer-composition.ts",
+    "apps/site/source/app/map-performance.ts",
+    "apps/site/source/app/map-runtime.ts",
+    "apps/site/source/app/maplibre-seam.css",
+    "apps/site/source/app/maplibre-seam.ts",
+    "apps/site/source/app/observatory/workspace.tsx",
+    "apps/site/source/app/page.tsx",
+    "apps/site/source/app/road-year-study.ts",
+    "apps/site/source/app/snapshot-map.tsx",
+    "apps/site/source/tests/rendered-html.test.mjs",
+    "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md",
+    "tests/maplibre/test_assess_acquisition_inventory.py",
+    "tools/validators/maplibre/assess_acquisition_inventory.py"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/app/earth-engine-display.tsx": "sha256:112cd0bfdc7ca585a83133ed0fb48c0c95136015ed7ac7dfaec88c4a24a25650",
+    "apps/site/source/app/explorer-data.ts": "sha256:c1c3127b0343edcbb95b4ce536b738a8b6d58c88c2b53de45961e30b71609766",
+    "apps/site/source/app/globals.css": "sha256:33e823b93280ba6d50004f275f0dadf83f82c49d4e706b6d5c9a5e8c4bb83c45",
+    "apps/site/source/app/globe-context.ts": "sha256:ba6e179ddf7cbb09977ee54d706a4e37a52742e339817f4abc56b40dadaa5187",
+    "apps/site/source/app/live-context.ts": "sha256:dffa3b7192ad7984f53f92a37fc93673380ca2ccddcaad9add3a638d0c200158",
+    "apps/site/source/app/map-layer-composition.ts": "sha256:51244e4f09647a36b8b0136d4b4766bfacf84c596e118554d8622e04ba8b88bb",
+    "apps/site/source/app/map-performance.ts": "sha256:c02547bd5a514067f16f9a03a1a5bd8b67882752ff39886adc19c4ec1b6afea2",
+    "apps/site/source/app/map-runtime.ts": "sha256:bda3b4d20576714f27b8e7be9dceec6b92950ca95bb86f036a6f01eef940978f",
+    "apps/site/source/app/maplibre-seam.css": "sha256:06142bf2dc02e9f1fb93de47c8f5df4335ec8342c90cb962549ac15b94cbdd02",
+    "apps/site/source/app/maplibre-seam.ts": "sha256:d0d098db8ef29f504533ecd3111a2aae83158b050a790e83ab341502195c3304",
+    "apps/site/source/app/observatory/workspace.tsx": "sha256:62294c99b541bf9cc52afe27ef1558c4774d6ea61ebbf17c476de1c9ba0ba0c4",
+    "apps/site/source/app/page.tsx": "sha256:621cc5c8f867977a4d9cade8c69d12df5c2c35d592c5774ce7bd270845c45c84",
+    "apps/site/source/app/road-year-study.ts": "sha256:e7977478ff87f29f09727a860a7a4eb803908473361ec312f5830efbd63a5000",
+    "apps/site/source/app/snapshot-map.tsx": "sha256:3f3718e78bd4a514c0324e62b95d3e52154b56be5a68a6458362e70237ccef11",
+    "apps/site/source/tests/rendered-html.test.mjs": "sha256:6a0f0eabdcda32e39f6652f639b690a2d8199a692fafe59d455fa23cb2ad3496",
+    "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md": "sha256:a8b9e213051dd5c8d185119a8482857672038ed584bec796f06d1cfc4b0fb8d6",
+    "tests/maplibre/test_assess_acquisition_inventory.py": "sha256:9a1a3d879298d0a1095a2a70295ba6ed129bfcf35d6da0d76b516688369b2fc2",
+    "tools/validators/maplibre/assess_acquisition_inventory.py": "sha256:fadcd8796d161e7e256933a7b7edc955e1cc19f6a47b4fb961324feb1a098605"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix main@e32729b1e74590a7b89661598e1beb680582b6f0",
+      "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md",
+      "GitHub Actions run 36439780430 job 108986948962"
+    ]
+  },
+  "citations": [
+    {
+      "id": "MapLibre perf governance failure on main-derived head",
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/36439780430/job/108986948962",
+      "validated": true
+    },
+    {
+      "id": "ADR-0006 consumer rule",
+      "evidence_ref": "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md",
+      "validated": true
+    }
+  ],
+  "truth_labels": {
+    "apps/site/source/app/earth-engine-display.tsx": "CONFIRMED",
+    "apps/site/source/app/explorer-data.ts": "CONFIRMED",
+    "apps/site/source/app/globals.css": "CONFIRMED",
+    "apps/site/source/app/globe-context.ts": "CONFIRMED",
+    "apps/site/source/app/live-context.ts": "CONFIRMED",
+    "apps/site/source/app/map-layer-composition.ts": "CONFIRMED",
+    "apps/site/source/app/map-performance.ts": "CONFIRMED",
+    "apps/site/source/app/map-runtime.ts": "CONFIRMED",
+    "apps/site/source/app/maplibre-seam.css": "CONFIRMED",
+    "apps/site/source/app/maplibre-seam.ts": "CONFIRMED",
+    "apps/site/source/app/observatory/workspace.tsx": "CONFIRMED",
+    "apps/site/source/app/page.tsx": "CONFIRMED",
+    "apps/site/source/app/road-year-study.ts": "CONFIRMED",
+    "apps/site/source/app/snapshot-map.tsx": "CONFIRMED",
+    "apps/site/source/tests/rendered-html.test.mjs": "CONFIRMED",
+    "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md": "CONFIRMED",
+    "tests/maplibre/test_assess_acquisition_inventory.py": "CONFIRMED",
+    "tools/validators/maplibre/assess_acquisition_inventory.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "MapLibre acquisition inventory",
+      "outcome": "PASS",
+      "reason": "Outcome HOLD (exit 3, accepted): every finding is in packages/maplibre/ or the three SITE_SEAM_PATHS; no ACQUISITION_OUTSIDE_CANDIDATE_SEAM."
+    },
+    {
+      "gate": "MapLibre tests and perf-governance workflow steps",
+      "outcome": "PASS",
+      "reason": "tests/maplibre: 96 passed plus 6 subtests; the workflow's syntax, deterministic negative-path and readiness steps all pass locally, including test_current_renderer_acquisition_is_confined_to_package_seam."
+    },
+    {
+      "gate": "Site typecheck, build and tests",
+      "outcome": "PASS",
+      "reason": "tsc --noEmit clean; production build completes with MapLibre CSS in the bundle and maplibre-gl as a separate lazy chunk; 178 of 178 Site tests pass."
+    },
+    {
+      "gate": "repository topology",
+      "outcome": "PASS",
+      "reason": "13683 tracked paths; 0 invariant; 0 new drift; 122 baselined; 0 stale."
+    }
+  ],
+  "policy_decisions": [],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-28T15:10:05Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md"
+  },
+  "notes": "Owner-directed Site-local MapLibre seam: one module, stylesheet and manifest in apps/site/source, registered by exact path in the acquisition inventory and recorded as ADR-0006 v1.6 section 2.6. No behavior change in the Site."
+}

@@ -15,7 +15,9 @@ bounded scan could not complete safely.
 
 Imports of the KFM-owned ``@kfm/maplibre`` facade are consumer use of the accepted
 MapRuntimePort boundary, not raw renderer acquisition. Only ``packages/maplibre/`` is an
-approved candidate seam for a future raw renderer dependency or import.
+approved candidate seam for a future raw renderer dependency or import, plus the exact
+files in ``SITE_SEAM_PATHS``: the separately built Site's single seam module, its
+stylesheet and its manifest (ADR-0006 Site exception, 2026-09-28).
 """
 from __future__ import annotations
 
@@ -41,6 +43,14 @@ MAX_TOTAL_PHYSICAL_READ_BYTES = 2 * MAX_TOTAL_INPUT_BYTES
 SCAN_ROOTS = ("apps", "packages", "runtime", "scripts", "tests", "examples", "public")
 RENDERER_PACKAGES = ("maplibre-gl", "mapbox-gl", "cesium", "leaflet", "ol", "openlayers")
 KFM_RENDERER_FACADES = ("@kfm/maplibre",)
+# ADR-0006 Site exception: exact files only; every other Site module must go through them.
+SITE_SEAM_PATHS = frozenset(
+    {
+        "apps/site/source/app/maplibre-seam.ts",
+        "apps/site/source/app/maplibre-seam.css",
+        "apps/site/source/package.json",
+    }
+)
 DESCRIPTOR_SAFETY_SUPPORTED = (
     hasattr(os, "O_DIRECTORY")
     and hasattr(os, "O_NOFOLLOW")
@@ -223,7 +233,7 @@ class _TotalPhysicalReadBudgetExceeded(Exception):
 
 
 def _candidate_seam(path: str) -> bool:
-    return path.startswith("packages/maplibre/")
+    return path.startswith("packages/maplibre/") or path in SITE_SEAM_PATHS
 
 
 def _is_kfm_renderer_facade(value: str) -> bool:

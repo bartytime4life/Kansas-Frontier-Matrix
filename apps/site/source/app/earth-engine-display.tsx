@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { ErrorEvent as MapLibreErrorEvent, Map as MapLibreMap } from "maplibre-gl";
+import type { ErrorEvent as MapLibreErrorEvent, Map as MapLibreMap } from "./maplibre-seam";
 import cdlPalette from "../scripts/earth-engine/cdl_2024_palette.json";
 import { EARTH_ENGINE_DATASETS, EARTH_ENGINE_DISPLAY_RAMPS, earthEngineLegendGradient, earthEngineUrl } from "./earth-engine-data";
 import { EARTH_ENGINE_CONTEXT_LAYERS, earthEngineTileVisibleAtYear, type EarthEngineContextManifest, type EarthEngineContextLayerId } from "./earth-engine-context";

@@ -20,7 +20,7 @@ import { useEarthEngineContext } from "./earth-engine-context-client";
 import { applyProjectionNavigationLimits, GLOBE_VIEWPOINTS, REGIONAL_NAVIGATION_BOUNDS } from "./globe-context";
 import { browserRenderBudget, mapRuntimeErrorCode, readRenderQuality, sampleMapRuntimeHealth, QUALITY_STORAGE_KEY, type MapRuntimeCheckFailure, type RenderQuality } from "./map-performance";
 import type { Feature, Geometry } from "geojson";
-import type { GeoJSONSource, Map as MapLibreMap, MapSourceDataEvent, Popup, ScaleControl } from "maplibre-gl";
+import { loadMapLibre, type GeoJSONSource, type Map as MapLibreMap, type MapSourceDataEvent, type Popup, type ScaleControl } from "./maplibre-seam";
 import {
   CATEGORY_ORDER,
   findFeature,
@@ -590,15 +590,15 @@ const loadConfiguredMapLibre = async () => {
     if (!response.ok) throw new Error(`MapLibre runtime asset unavailable (${response.status})`);
     await response.body?.cancel();
   }));
-  const maplibregl = await import("maplibre-gl");
-  maplibregl.setWorkerUrl(MAPLIBRE_WORKER_URL);
+  const mapLibre = await loadMapLibre();
+  mapLibre.setWorkerUrl(MAPLIBRE_WORKER_URL);
   const renderBudget = browserRenderBudget();
-  maplibregl.setMaxParallelImageRequests(renderBudget.imageRequests);
-  maplibregl.setWorkerCount(Math.max(1, Math.min(renderBudget.workerCount, Math.floor((navigator.hardwareConcurrency || 4) / 2))));
-  const version = maplibregl.getVersion();
+  mapLibre.setMaxParallelImageRequests(renderBudget.imageRequests);
+  mapLibre.setWorkerCount(Math.max(1, Math.min(renderBudget.workerCount, Math.floor((navigator.hardwareConcurrency || 4) / 2))));
+  const version = mapLibre.getVersion();
   if (version !== EXPECTED_MAPLIBRE_VERSION) throw new Error(`Expected MapLibre ${EXPECTED_MAPLIBRE_VERSION}, received ${version}`);
-  if (maplibregl.getWorkerUrl() !== MAPLIBRE_WORKER_URL) throw new Error("MapLibre worker configuration did not persist");
-  return { maplibregl, version };
+  if (mapLibre.getWorkerUrl() !== MAPLIBRE_WORKER_URL) throw new Error("MapLibre worker configuration did not persist");
+  return { mapLibre, version };
 };
 const GUIDED_EXAMPLES = Object.freeze([
   Object.freeze({
@@ -1252,7 +1252,7 @@ export default function Home() {
     const apply = () => {
       const budget = browserRenderBudget(renderQuality);
       runMapMutation("Rendering-quality update", () => map.setPixelRatio(budget.pixelRatio));
-      void import("maplibre-gl").then(gl => { if (!disposed) runMapMutation("Image-request budget update", () => gl.setMaxParallelImageRequests(budget.imageRequests)); }).catch((error: unknown) => {
+      void loadMapLibre().then(gl => { if (!disposed) runMapMutation("Image-request budget update", () => gl.setMaxParallelImageRequests(budget.imageRequests)); }).catch((error: unknown) => {
         if (!disposed) runMapMutation("MapLibre runtime update", () => { throw error; });
       });
     };
@@ -4157,7 +4157,7 @@ export default function Home() {
     const mapContainer = mapContainerRef.current;
     if (!mapContainer) return;
 
-    loadConfiguredMapLibre().then(({ maplibregl, version }) => {
+    loadConfiguredMapLibre().then(({ mapLibre, version }) => {
       if (disposed || !mapContainerRef.current) return;
       setMaplibreProbe((current) => ({ ...current, version, workerConfigured: true, runtimeAssetsReady: true, error: null }));
       try {
@@ -4173,7 +4173,7 @@ export default function Home() {
         // Chromium runtimes treat that deliberate loss as a wider GPU failure.
         const initialView = pendingViewRef.current ?? KANSAS_VIEW;
         const renderBudget = browserRenderBudget();
-        const map = new maplibregl.Map({
+        const map = new mapLibre.Map({
           container: mapContainerRef.current,
           style: BASEMAPS[basemapRef.current].style,
           center: initialView.center,
@@ -4235,12 +4235,12 @@ export default function Home() {
           resizeObserver.observe(mapContainer);
         }
         setMaplibreProbe((current) => ({ ...current, mapConstructed: true }));
-        const scaleControl = new maplibregl.ScaleControl({ unit: measureUnitRef.current, maxWidth: 110 });
+        const scaleControl = new mapLibre.ScaleControl({ unit: measureUnitRef.current, maxWidth: 110 });
         scaleControlRef.current = scaleControl;
         map.addControl(scaleControl, "bottom-left");
-        const navigationControl = new maplibregl.NavigationControl({ showCompass: true, showZoom: true, visualizePitch: true });
-        const fullscreenControl = new maplibregl.FullscreenControl();
-        const geolocateControl = new maplibregl.GeolocateControl({
+        const navigationControl = new mapLibre.NavigationControl({ showCompass: true, showZoom: true, visualizePitch: true });
+        const fullscreenControl = new mapLibre.FullscreenControl();
+        const geolocateControl = new mapLibre.GeolocateControl({
           positionOptions: { enableHighAccuracy: false },
           trackUserLocation: false,
         });
@@ -4504,7 +4504,7 @@ export default function Home() {
               const state = document.createElement("span");
               state.textContent = `${OFFICIAL_CONTEXT_BY_SOURCE_ID[externalCandidate?.source ?? ""]?.shortTitle ?? "Basemap context"} · no KFM evidence`;
               popupNode.append(title, state);
-              popupRef.current = new maplibregl.Popup({ closeButton: true, closeOnClick: false, maxWidth: "280px" })
+              popupRef.current = new mapLibre.Popup({ closeButton: true, closeOnClick: false, maxWidth: "280px" })
                 .setLngLat(event.lngLat)
                 .setDOMContent(popupNode)
                 .addTo(map);
@@ -4581,7 +4581,7 @@ export default function Home() {
           const state = document.createElement("span");
           state.textContent = evidenceLabels[context.properties.evidenceState].label;
           popupNode.append(title, state);
-          popupRef.current = new maplibregl.Popup({ closeButton: true, closeOnClick: false, maxWidth: "260px" })
+          popupRef.current = new mapLibre.Popup({ closeButton: true, closeOnClick: false, maxWidth: "260px" })
             .setLngLat(event.lngLat)
             .setDOMContent(popupNode)
             .addTo(map);
