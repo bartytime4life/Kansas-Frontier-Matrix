@@ -25,9 +25,9 @@ const registry = await import(await moduleUrl("app/site-registry.ts"));
 const workspace = {
   id: "workspace-1", name: "Kansas view", savedAt: "2026-09-15T16:00:00Z",
   view: { center: [-98.38, 38.48], zoom: 5.45, bearing: 0, pitch: 0 },
-  visibility: { "kansas-extent": true }, opacity: { "kansas-extent": 0.5 }, layerOrder: ["kansas-extent"], year: 2026,
+  visibility: { "water-context": true }, opacity: { "water-context": 0.5 }, layerOrder: ["water-context"], year: 2026,
   basemap: "standard", projection: "mercator",
-  report: { title: "Kansas report", scope: "VIEWPORT", detail: "STANDARD", layerIds: ["kansas-extent"], sections: {}, query: "" },
+  report: { title: "Kansas report", scope: "VIEWPORT", detail: "STANDARD", layerIds: ["water-context"], sections: {}, query: "" },
   selection: null,
 };
 

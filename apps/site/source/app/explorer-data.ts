@@ -141,37 +141,6 @@ const baseProps = {
   year: 2026,
 };
 
-const kansasBoundary: FeatureCollection<Geometry, FeatureProperties> = {
-  type: "FeatureCollection",
-  features: [
-    feature(
-      "ks-demo-boundary",
-      {
-        type: "Polygon",
-        coordinates: [[
-          [-102.05, 40.0], [-95.31, 40.0], [-95.12, 39.78], [-94.95, 39.56],
-          [-95.03, 39.32], [-94.62, 39.12], [-94.62, 37.0], [-102.05, 37.0],
-          [-102.05, 40.0],
-        ]],
-      },
-      {
-        ...baseProps,
-        title: "Kansas demonstration extent",
-        summary: "A simplified statewide operating extent used to frame the Explorer.",
-        sourceRole: "aggregate",
-        spatialScope: "Kansas, generalized statewide outline",
-        temporalScope: "Not time-varying",
-        lastUpdate: "2026-08-20",
-        evidenceState: "GENERALIZED_GEOMETRY",
-        releaseState: "GENERALIZED",
-        generalizationNote: "This deliberately simplified outline is not an authoritative state boundary.",
-        focusLng: -98.4,
-        focusLat: 38.5,
-      },
-    ),
-  ],
-};
-
 const waterDemo: FeatureCollection<Geometry, FeatureProperties> = {
   type: "FeatureCollection",
   features: [
@@ -185,7 +154,7 @@ const waterDemo: FeatureCollection<Geometry, FeatureProperties> = {
       lastUpdate: "2026-08-20",
       evidenceState: "ANSWER",
       citation: "kfm:evidence:synthetic:flow-001",
-      relatedLayers: "Kansas demonstration extent; Communities",
+      relatedLayers: "Communities",
       focusLng: -98.23,
       focusLat: 38.73,
     }),
@@ -1111,11 +1080,6 @@ const label = (id: string, sourceId: string, color: string, size = 10, filter?: 
 });
 
 export const LAYER_REGISTRY: LayerRecord[] = [
-  {
-    id: "kansas-extent", title: "Kansas demonstration extent", description: "Simplified statewide frame and public-safe selection scope.", domain: "Boundaries", category: "Reference boundaries & locators", sourceType: "GeoJSON", sourceId: "kfm-kansas-extent", datasetName: "KFM site-local Kansas extent fixture", geometryType: "Polygon", minZoom: 4, maxZoom: 12, defaultVisibility: true, defaultOpacity: 0.42,
-    legend: [{ label: "Generalized extent", color: "#c8a963", shape: "fill" }], units: "degrees", scaleNote: "Statewide generalized context", validTimeExtent: "Not time-varying", sourceTime: "Site build 2026-08-20", releaseTime: "Demonstration build", freshnessState: "NOT_APPLICABLE", attribution: "KFM site-local demonstration geometry", evidenceReference: "kfm:demo:site-local:v1", publicStatus: "GENERALIZED", sensitivityNote: "Not an authoritative boundary.", releaseState: "GENERALIZED", correctionNote: "Replace only through a released public-safe boundary adapter.", relatedLayers: ["Communities"], interactions: ["hover", "select", "zoom"], filters: [], viewingModes: ["2D", "globe"], bounds: [-102.1, 36.95, -94.55, 40.05], data: kansasBoundary,
-    renderers: [fill("kansas-extent-fill", "kfm-kansas-extent", "#244f45", 0.42, "#d9bc77"), line("kansas-extent-line", "kfm-kansas-extent", "#d9bc77", 1.8, 0.9)],
-  },
   {
     id: "water-context", title: "Hydrology context", description: "Simplified Kansas river and basin corridors with explicit evidence states.", domain: "Hydrology", category: "Hydrology & water", sourceType: "GeoJSON", sourceId: "kfm-water", datasetName: "KFM synthetic hydrology interaction fixtures", geometryType: "LineString", minZoom: 5, maxZoom: 14, defaultVisibility: true, defaultOpacity: 0.9,
     legend: [{ label: "Demonstration water corridor", color: "#63c8db", shape: "line" }], units: "not applicable", scaleNote: "Generalized statewide corridor", validTimeExtent: "2022–2026 demonstration context", sourceTime: "Mixed synthetic source time", releaseTime: "Demonstration build", freshnessState: "MIXED", attribution: "KFM site-local synthetic fixture", evidenceReference: "Per-feature EvidenceRef", publicStatus: "GENERALIZED", sensitivityNote: "No monitoring location, measurement, or operational status is asserted.", releaseState: "DEMONSTRATION", correctionNote: "Stale and missing evidence remain visible.", relatedLayers: ["Watershed context", "Atmosphere observations", "Communities"], interactions: ["hover", "select", "zoom", "evidence", "flow-direction display"], filters: ["time context"], viewingModes: ["2D", "globe", "pitched"], bounds: [-102.05, 37.0, -94.6, 39.2], sourceOptions: { lineMetrics: true }, data: waterDemo,

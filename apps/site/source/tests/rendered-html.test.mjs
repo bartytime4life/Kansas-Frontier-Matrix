@@ -100,12 +100,12 @@ test("adds reusable analysis recipes, device-local workspaces, report filters, a
   const layer = (id) => explorer.LAYER_REGISTRY.find((candidate) => candidate.id === id);
 
   assert.equal(recipes.ANALYSIS_RECIPES.length, 11);
-  assert.equal(recipes.ANALYSIS_RECIPES.every((recipe) => recipe.layerIds.every((id) => id === "county-starter-points" || Boolean(layer(id)))), true);
+  assert.equal(recipes.ANALYSIS_RECIPES.every((recipe) => recipe.layerIds.every((id) => Boolean(layer(id)))), true);
   assert.equal(layer("water-context").data.features.length, 4);
   assert.equal(layer("agriculture-context").data.features.length, 3);
   assert.equal(layer("communities").data.features.length, 12);
   assert.equal(layer("transport-context").data.features.length, 3);
-  assert.equal(["kansas-extent", "water-context", "watershed-context", "prairie-context", "atmosphere-observations", "communities", "transport-context"].every((id) => layer(id).defaultVisibility), true);
+  assert.equal(["water-context", "watershed-context", "prairie-context", "atmosphere-observations", "communities", "transport-context"].every((id) => layer(id).defaultVisibility), true);
   assert.match(page, /kfm-map-workspaces-v1/);
   assert.match(page, /saveCurrentWorkspace/);
   assert.match(page, /loadSavedWorkspace/);
@@ -131,7 +131,7 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   const explorer = await import(`data:text/javascript;base64,${Buffer.from(compiled).toString("base64")}`);
   const layer = (id) => explorer.LAYER_REGISTRY.find((candidate) => candidate.id === id);
 
-  assert.equal(explorer.LAYER_REGISTRY.length, 21);
+  assert.equal(explorer.LAYER_REGISTRY.length, 20);
   assert.equal(layer("watershed-context").data.features.length, 3);
   assert.equal(layer("smoke-context").data.features.length, 3);
   assert.equal(layer("elevation-concept").data.features.length, 6);
@@ -467,20 +467,18 @@ test("adds a bounded guided story and read-only layer comparison", async () => {
   assert.match(css, /\.layer-compare-grid/);
 });
 
-test("adds a complete county starter slice and scoped temporal catalog comparison", async () => {
-  const countySource = await readFile(new URL("../app/county-starter-slice.ts", import.meta.url), "utf8");
-  const countyData = JSON.parse(await readFile(new URL("../app/county-starter-points.json", import.meta.url), "utf8"));
+test("retired demonstration layers stay out of the catalog and temporal comparison keeps its scope", async () => {
+  const explorerSource = await readFile(new URL("../app/explorer-data.ts", import.meta.url), "utf8");
+  const recipeSource = await readFile(new URL("../app/analysis-recipes.ts", import.meta.url), "utf8");
   const temporalSource = await readFile(new URL("../app/temporal-comparison.ts", import.meta.url), "utf8");
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const mapInterface = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
-  assert.equal(countyData.counties.length, 105);
-  assert.equal(new Set(countyData.counties.map((county) => county.geoid)).size, 105);
-  assert.equal(countyData.counties.every((county) => Number.isFinite(county.latitude) && Number.isFinite(county.longitude)), true);
-  assert.match(countySource, /GENERALIZED_GEOMETRY/);
-  assert.match(countySource, /not a county boundary, centroid, address, county seat, parcel location/i);
-  assert.match(page, /COUNTY_STARTER_LAYER/);
+  assert.doesNotMatch(explorerSource, /Kansas demonstration extent|id: "kansas-extent"/);
+  assert.doesNotMatch(recipeSource, /county-starter-points|kansas-extent/);
+  assert.doesNotMatch(mapInterface, /county-starter-points|kansas-extent/);
+  assert.doesNotMatch(page, /COUNTY_STARTER_LAYER|county-starter-slice/);
   assert.match(page, /TIME A \/ TIME B CATALOG AVAILABILITY/);
   assert.match(page, /matchesReportRecord/);
   assert.match(page, /params\.set\("times"/);
@@ -627,7 +625,7 @@ test("keeps repository updates pinned and boundary-labeled", async () => {
   assert.match(updates, /SITE_IDENTITY\.repositoryCommit/);
   assert.match(updates, /separate source histories/);
   assert.match(updates, /Local geodata inspection now fails closed on malformed or stale input/);
-  assert.match(updates, /All 105 Kansas counties now have public locator starters/);
+  assert.match(updates, /Historical county starter slice retired from the Site/);
   assert.match(updates, /Time A \/ Time B comparison preserves report scope/);
   assert.match(updates, /repository main and this separately versioned Site now pin maplibre-gl 6\.9\.0/);
   assert.match(updates, /521 commits after the prior Site evidence pin/);
