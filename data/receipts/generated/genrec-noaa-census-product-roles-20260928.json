@@ -1,0 +1,93 @@
+{
+  "receipt_id": "genrec-noaa-census-product-roles-20260928",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/census-offline.yml",
+    ".github/workflows/noaa-connector-offline.yml",
+    "connectors/census/README.md",
+    "connectors/census/src/census/admit.py",
+    "connectors/census/tests/test_fetch_admit.py",
+    "connectors/noaa/README.md",
+    "connectors/noaa/src/noaa/admit.py",
+    "connectors/noaa/tests/test_fetch_admit.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/census-offline.yml": "sha256:f3f50905b0deaff8fe9e34dd9898756d2da4bf67dc587730aabdc6385d92412a",
+    ".github/workflows/noaa-connector-offline.yml": "sha256:9ee77f571f32cea9b2c09576883fcf433729eab9ef79b90eee404dbb3acac572",
+    "connectors/census/README.md": "sha256:c096105e4da9dab0f70e18480bc84b8e3929c35984a4225bbcc8175fc166a92e",
+    "connectors/census/src/census/admit.py": "sha256:16a342e049491ca7745a9b54288c825bf858a6f06838da25d50af8ebc5fe4be6",
+    "connectors/census/tests/test_fetch_admit.py": "sha256:4ee8a3ee93beac2e4b6738f7fd2d610f22f47593dd623745d40eeea0358f3270",
+    "connectors/noaa/README.md": "sha256:30ceaf930de030b89457fa7dbfa35d150e9299216e0cb53860b209f92230a22a",
+    "connectors/noaa/src/noaa/admit.py": "sha256:81f2d6b3f8f5ff2ca7a5111179ec09078071c2d88347a8e8bfe81f52ffb42036",
+    "connectors/noaa/tests/test_fetch_admit.py": "sha256:13a2cd4e067f3bc03dd20d4071b2c7160a6512e16b3fd6e54675f34a9bedd66d"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:cc638e034d30d52484c0da5d41e5e1d0e39a65f4c7bb5bf8c760d3e294988f04",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/3427ea16fbf4cda3f04e61102fbb21f011310759",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4779"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/census-offline.yml": "CONFIRMED",
+    ".github/workflows/noaa-connector-offline.yml": "CONFIRMED",
+    "connectors/census/README.md": "CONFIRMED",
+    "connectors/census/src/census/admit.py": "CONFIRMED",
+    "connectors/census/tests/test_fetch_admit.py": "CONFIRMED",
+    "connectors/noaa/README.md": "CONFIRMED",
+    "connectors/noaa/src/noaa/admit.py": "CONFIRMED",
+    "connectors/noaa/tests/test_fetch_admit.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "NOAA and Census suites",
+      "outcome": "PASS",
+      "reason": "Both pass on Python 3.11 and 3.12; every product routes with its own source_role, and a product removed from PRODUCT_ROLES holds with PRODUCT_ROLE_UNRESOLVED. Removing the gate is caught in both suites."
+    },
+    {
+      "gate": "Shared checks",
+      "outcome": "PASS",
+      "reason": "tests/packages/connectors_core 120 passed; make workflow-security PASS (489, 0 new drift); scaffold check PASS."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation."
+    },
+    {
+      "gate": "Source activation, admission, release",
+      "outcome": "SKIPPED",
+      "reason": "Candidate routing only; no write, admission, SourceDescriptor, activation, or publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/3427ea16fbf4cda3f04e61102fbb21f011310759"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-28T05:36:39Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Records the repository owner's 2026-09-28 in-session choice of per-product roles: NOAA USCRN observed, Storm Events administrative, NWS alerts regulatory; Census ACS aggregate, TIGER/Line administrative. Follow-up to #4779, which held the non-covered products."
+}

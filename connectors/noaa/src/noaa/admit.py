@@ -11,8 +11,9 @@ are a quarantine candidate. A parsed file or collection is a raw candidate, flag
 product flags: ``MISSING_HOURS_PRESENT`` for USCRN gaps, and the NWS collection's own
 reasons (a partial capture or the seven-day window). NWS freshness is computed as of the
 retrieval instant only and must be recomputed on reuse. The final route is HOLD while the
-connector descriptor leaves ``role`` or ``rights`` unresolved, and always for a product the
-descriptor's role does not cover (``PRODUCT_ROLE_UNRESOLVED``; only USCRN is covered). Nothing here grants
+connector descriptor leaves ``role`` or ``rights`` unresolved, and always for a product with
+no role in ``PRODUCT_ROLES`` (``PRODUCT_ROLE_UNRESOLVED``). Each decision carries its
+product's ``source_role``. Nothing here grants
 admission, establishes coverage, relays an alert, or persists material.
 """
 from __future__ import annotations
@@ -37,10 +38,15 @@ LAST_MODIFIED = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z")
 PRODUCTS = {fetch.STORM_SOURCE_ID: fetch.STORM_RETRIEVAL_PROFILE,
             fetch.USCRN_SOURCE_ID: fetch.USCRN_RETRIEVAL_PROFILE,
             fetch.NWS_SOURCE_ID: fetch.NWS_RETRIEVAL_PROFILE}
-# Source role is product-level (README "Source-role posture"): the family descriptor's
-# single role is applied only to these products. Storm Events (historical event records)
-# and NWS alerts (official warning context) hold until their own roles are decided.
-ROLE_COVERED_PRODUCTS = frozenset({fetch.USCRN_SOURCE_ID})
+# Source role is product-level (README "Source-role posture"), set by the repository
+# owner on 2026-09-28. The family descriptor still gates role/rights resolution; each
+# decision carries its product's own role. A product missing here holds with
+# PRODUCT_ROLE_UNRESOLVED.
+PRODUCT_ROLES = {
+    fetch.USCRN_SOURCE_ID: "observed",         # station sensor observations
+    fetch.STORM_SOURCE_ID: "administrative",   # forecaster-compiled historical event records
+    fetch.NWS_SOURCE_ID: "regulatory",         # official NWS-issued warning context, never a KFM alert
+}
 URL_RULES = {fetch.STORM_SOURCE_ID: fetch._require_planned_storm,
              fetch.USCRN_SOURCE_ID: fetch._require_planned_uscrn,
              fetch.NWS_SOURCE_ID: fetch._require_planned_nws}
@@ -70,6 +76,8 @@ class AdmissionDecision:
     admission: str = "NOT_ADMITTED"
     coverage: str = "NOT_ESTABLISHED"
     write_performed: bool = False
+    # The product's source role (``PRODUCT_ROLES``), or None when it is unresolved.
+    source_role: str | None = None
 
 
 def _flags(records) -> tuple[str, ...]:
@@ -137,7 +145,7 @@ def admit(retrieval: Retrieval, *,
         provisional, reasons = HOLD, tuple(episode["result"]["reason_codes"])
     else:
         provisional, reasons, parsed = _parse(source_id, retrieval, episode)
-    blockers = (() if source_id in ROLE_COVERED_PRODUCTS else ("PRODUCT_ROLE_UNRESOLVED",)) \
+    blockers = (() if source_id in PRODUCT_ROLES else ("PRODUCT_ROLE_UNRESOLVED",)) \
         + descriptor_blockers(load_descriptor() if descriptor is None else descriptor)
     route = HOLD if blockers else provisional
     return AdmissionDecision(
@@ -145,4 +153,5 @@ def admit(retrieval: Retrieval, *,
         retrieval.source_url,
         parsed if source_id == fetch.STORM_SOURCE_ID else None,
         parsed if source_id == fetch.USCRN_SOURCE_ID else None,
-        parsed if source_id == fetch.NWS_SOURCE_ID else None)
+        parsed if source_id == fetch.NWS_SOURCE_ID else None,
+        source_role=PRODUCT_ROLES.get(source_id))
