@@ -2,20 +2,20 @@ schema_version: kfm.repository-governance-parity.v1
 profile_id: kfm://governance-parity/mrts-04
 status: PROPOSED
 authority_mode: validation_projection_only
-base_ref: f1a415639a57985f859fa66e6ca73cd5c349aa78
+base_ref: fc7c558e3439b08f7e8670a4ef24c6985e5164be
 governing_refs:
   - path: control_plane/path_alias_register.yaml
     sha256: sha256:4721fd4c2df986dbc63b2174feec1863034d96326775ed000b4cfbf9fe57f5a2
   - path: control_plane/root_registry.yaml
     sha256: sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641
   - path: docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
-    sha256: sha256:060b20d6e28197faa8a9034ccb5a29b63621f73ebdeea1d2d77d31b23c2149e0
+    sha256: sha256:c778036b62bf8e619fea4466b22d24ef67ee869cab06d3d80d8a4f1c223bda9f
   - path: docs/doctrine/directory-rules.md
     sha256: sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e
   - path: tools/validators/directory_governance/repository_topology_baseline.json
-    sha256: sha256:f2ba30ddf518360e0e89ebee134e758e64e6c51a890f59c5feeecb603f4f799b
+    sha256: sha256:0a06efedd47f107c84f0ca611b6ae74050212daa99a8710363991ab4bb3e6a18
   - path: tools/validators/directory_governance/validate_repository_topology.py
-    sha256: sha256:e28e9d36aefe09aa43aa55a0b9ae5eb57cbbd963ec0564d63d39a31b1532aaf4
+    sha256: sha256:5816e18cabb092168a64104b7e48050733c7aac2a3ffb84b54d1402962fe7787
 lanes:
   - lane_id: control-plane-registry-packet
     owner_path: tools/validators/control_plane/validate_control_plane_registry_packet.py
@@ -66,9 +66,9 @@ coverage:
 expected_topology:
   rule_count: 20
   fail_invariant: 0
-  fail_new_drift: 1
-  baselined_warning: 124
-  stale_fingerprints: 1
+  fail_new_drift: 0
+  baselined_warning: 122
+  stale_fingerprints: 0
 required_non_effects:
   - does_not_accept_or_amend_adr
   - does_not_activate_source

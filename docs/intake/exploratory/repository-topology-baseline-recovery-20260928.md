@@ -70,12 +70,29 @@ Stage 2.
   missing or different trusted hash, a partial batch, an unrelated addition, and the
   post-recovery steady state.
 
-## Out of scope
+## Governance parity profile
 
-`control_plane/repository_governance_parity.yaml` pins `base_ref`
+`control_plane/repository_governance_parity.yaml` pinned `base_ref`
 `f1a415639a57985f859fa66e6ca73cd5c349aa78`, which is not an ancestor of current
-`main`, and stale `expected_topology` counts. Two parity tests fail on `main` for that
-reason, before and after this change. Re-pinning that profile is a separate decision.
+`main`, so the parity topology lane reported `TOPOLOGY_NOT_EVALUATED` on `main`. At the
+owner's direction the profile is re-pinned in the same change:
+
+- `base_ref` becomes `fc7c558e3439b08f7e8670a4ef24c6985e5164be`, the recovery's
+  trusted base;
+- the governing digests are the bytes at that base for ADR-0029 (`c778036b…`), the
+  baseline (`0a06efed…`, the recovery's pinned trusted bytes) and the validator
+  (`5816e18c…`);
+- `expected_topology` becomes `fail_new_drift: 0`, `baselined_warning: 122`,
+  `stale_fingerprints: 0`; `rule_count: 20` and `fail_invariant: 0` are unchanged. The
+  parity test's matching assertions move with it.
+
+`validate_current()` then reports profile integrity `PASS` and conformance
+`HOLD_INHERITED`, and the parity unit tests pass. The `repository-governance-parity`
+make target's final step still replays
+`genrec-repository-governance-parity-mrts-04-20260822.json` against commit
+`f7c6ba4c73227858c2d7c8931adae37b57092ce1`, which is not an ancestor of `main`. That
+receipt's bytes match no current ancestor, so replacing that step is a separate
+decision.
 
 ## Rollback
 
