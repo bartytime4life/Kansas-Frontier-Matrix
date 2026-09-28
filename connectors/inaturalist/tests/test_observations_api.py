@@ -114,12 +114,16 @@ class ClassifyTests(unittest.TestCase):
         self.assertIn('"body":"synthetic"', candidate.raw_record_json)
 
     def test_deep_nesting_is_a_bounded_error(self):
-        nested = {}
-        for _ in range(900):
-            nested = {"child": nested}
-        with self.assertRaises(obs.ObservationInputError) as caught:
-            parse([record(extra=nested)])
-        self.assertEqual(str(caught.exception), "RECORD_DEPTH")
+        # Within the page bound but past the record bound: the record diagnostic.
+        # Past both: the page bound (NestingBoundTests covers decoder-limit depths).
+        for depth, code in ((66, "RECORD_DEPTH"), (900, "NESTING_DEPTH")):
+            nested = {}
+            for _ in range(depth):
+                nested = {"child": nested}
+            with self.subTest(depth=depth), \
+                    self.assertRaises(obs.ObservationInputError) as caught:
+                parse([record(extra=nested)])
+            self.assertEqual(str(caught.exception), code)
 
     def test_most_restrictive_geoprivacy_governs(self):
         cases = [({"geoprivacy": "obscured"}, "obscured", "obscured_randomized"),
@@ -235,6 +239,23 @@ class CursorTests(unittest.TestCase):
             obs.reconcile([self.walk()[0], other])
         with self.assertRaises(obs.ObservationInputError):
             obs.reconcile([])
+
+
+class NestingBoundTests(unittest.TestCase):
+    def call(self, depth):
+        raw = ("[" * depth + "]" * depth).encode()
+        with self.assertRaises(obs.ObservationInputError) as ctx:
+            obs.parse_page(raw, status=200, source_url=obs.page_url(QUERY, per_page=2),
+                           retrieved_at=NOW)
+        return str(ctx.exception)
+
+    def test_bound_is_exact_and_interpreter_independent(self):
+        self.assertEqual(obs.MAX_NESTING, 72)
+        self.assertNotEqual(self.call(obs.MAX_NESTING), "NESTING_DEPTH")
+        # Past the bound, and past 3.11's decoder limit, the code is the same everywhere.
+        for depth in (obs.MAX_NESTING + 1, 5000, 100_000):
+            with self.subTest(depth=depth):
+                self.assertEqual(self.call(depth), "NESTING_DEPTH")
 
 
 class NoNetworkTests(unittest.TestCase):

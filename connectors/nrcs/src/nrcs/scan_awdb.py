@@ -351,7 +351,10 @@ def parse_data(body: bytes, *, status: int, source_url: str, retrieved_at: str,
     try:
         payload = json.loads(body.decode("utf-8"), parse_float=_SourceNumber,
                              parse_int=_SourceInt, parse_constant=_reject_constant)
-    except (UnicodeError, ValueError, RecursionError, InvalidOperation):
+    except RecursionError:
+        # The decoder's own depth limit is interpreter-dependent; either way it is depth.
+        raise ScanInputError("NESTING_DEPTH") from None
+    except (UnicodeError, ValueError, InvalidOperation):
         # InvalidOperation: an exponent outside Decimal's range is not a readable value.
         raise ScanInputError("INVALID_JSON") from None
     if _exceeds_nesting(payload, MAX_NESTING):

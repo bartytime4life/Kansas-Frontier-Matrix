@@ -37,6 +37,12 @@ USER_FIELDS = ("id", "login")
 # Observation records are shallow; deeper nesting is malformed input, not data.
 MAX_RECORD_DEPTH = 64
 
+# Explicit bound: the decoder's own recursion limit differs by interpreter (about
+# 1,000 levels on 3.11, tens of thousands on 3.12+), so it cannot decide routing.
+# Above MAX_RECORD_DEPTH plus the page and results levels, so per-record depth keeps
+# its own RECORD_DEPTH diagnostic; the page bound only makes decoding interpreter-independent.
+MAX_NESTING = 72
+
 
 class ObservationInputError(ValueError):
     """Bounded, non-payload-bearing diagnostic for rejected candidate input."""
@@ -327,6 +333,26 @@ class PageCandidate:
         return None if self.is_last else self.records[-1].observation_id
 
 
+def _exceeds_nesting(value: object, limit: int) -> bool:
+    """Whether containers nest deeper than ``limit``; iterative, early-exit, and holding
+    at most one iterator per level, so wide payloads cost no extra memory."""
+    if not isinstance(value, (dict, list)):
+        return False
+    stack = [iter(value.values() if isinstance(value, dict) else value)]
+    if len(stack) > limit:
+        return True
+    while stack:
+        for child in stack[-1]:
+            if isinstance(child, (dict, list)):
+                if len(stack) + 1 > limit:
+                    return True
+                stack.append(iter(child.values() if isinstance(child, dict) else child))
+                break
+        else:
+            stack.pop()
+    return False
+
+
 def parse_page(body: bytes, *, status: int, source_url: str, retrieved_at: str,
                max_bytes: int = 16 * 1024 * 1024) -> PageCandidate:
     """Parse one supplied cursor page; reject a malformed page whole, never drop rows."""
@@ -342,8 +368,13 @@ def parse_page(body: bytes, *, status: int, source_url: str, retrieved_at: str,
     try:
         payload = json.loads(body.decode("utf-8"), object_pairs_hook=_object_pairs,
                              parse_constant=_constant)
-    except (UnicodeError, ValueError, RecursionError):
+    except RecursionError:
+        # The decoder's own depth limit is interpreter-dependent; either way it is depth.
+        raise ObservationInputError("NESTING_DEPTH") from None
+    except (UnicodeError, ValueError):
         raise ObservationInputError("INVALID_JSON") from None
+    if _exceeds_nesting(payload, MAX_NESTING):
+        raise ObservationInputError("NESTING_DEPTH")
     if not isinstance(payload, dict) or not isinstance(payload.get("results"), list):
         raise ObservationInputError("PAGE_SHAPE")
     total, reported_per_page = payload.get("total_results"), payload.get("per_page")

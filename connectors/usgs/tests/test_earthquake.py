@@ -248,5 +248,21 @@ class SnapshotTests(unittest.TestCase):
                 del sys.modules[name]
 
 
+class NestingBoundTests(unittest.TestCase):
+    def call(self, depth):
+        raw = ("[" * depth + "]" * depth).encode()
+        with self.assertRaises(eq.EarthquakeInputError) as ctx:
+            eq.parse_snapshot(raw, status=200, source_url=eq.live_url(), retrieved_at=NOW)
+        return str(ctx.exception)
+
+    def test_bound_is_exact_and_interpreter_independent(self):
+        self.assertEqual(eq.MAX_NESTING, 32)
+        self.assertNotEqual(self.call(eq.MAX_NESTING), "NESTING_DEPTH")
+        # Past the bound, and past 3.11's decoder limit, the code is the same everywhere.
+        for depth in (eq.MAX_NESTING + 1, 5000, 100_000):
+            with self.subTest(depth=depth):
+                self.assertEqual(self.call(depth), "NESTING_DEPTH")
+
+
 if __name__ == "__main__":
     unittest.main()

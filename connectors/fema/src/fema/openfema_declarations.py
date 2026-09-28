@@ -36,6 +36,10 @@ DECLARATION_STRING = re.compile(r"(DR|EM|FM)-(\d{1,5})-([A-Z]{2})\Z")
 RECORD_ID = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\Z")
 DATE = re.compile(r"\d{4}-\d{2}-\d{2}\Z")
 
+# Explicit bound: the decoder's own recursion limit differs by interpreter (about
+# 1,000 levels on 3.11, tens of thousands on 3.12+), so it cannot decide routing.
+MAX_NESTING = 32
+
 
 class OpenFemaInputError(ValueError):
     """Bounded, non-payload-bearing diagnostic for rejected candidate input."""
@@ -295,6 +299,26 @@ class PageCandidate:
         return len(self.records) < self.request.top
 
 
+def _exceeds_nesting(value: object, limit: int) -> bool:
+    """Whether containers nest deeper than ``limit``; iterative, early-exit, and holding
+    at most one iterator per level, so wide payloads cost no extra memory."""
+    if not isinstance(value, (dict, list)):
+        return False
+    stack = [iter(value.values() if isinstance(value, dict) else value)]
+    if len(stack) > limit:
+        return True
+    while stack:
+        for child in stack[-1]:
+            if isinstance(child, (dict, list)):
+                if len(stack) + 1 > limit:
+                    return True
+                stack.append(iter(child.values() if isinstance(child, dict) else child))
+                break
+        else:
+            stack.pop()
+    return False
+
+
 def parse_page(body: bytes, *, status: int, source_url: str, retrieved_at: str,
                max_bytes: int = 64 * 1024 * 1024) -> PageCandidate:
     """Parse one supplied page; metadata must echo the request, else the page is rejected."""
@@ -311,8 +335,13 @@ def parse_page(body: bytes, *, status: int, source_url: str, retrieved_at: str,
                              parse_constant=_constant)
     except OpenFemaInputError:
         raise
-    except (UnicodeError, ValueError, RecursionError):
+    except RecursionError:
+        # The decoder's own depth limit is interpreter-dependent; either way it is depth.
+        raise OpenFemaInputError("NESTING_DEPTH") from None
+    except (UnicodeError, ValueError):
         raise OpenFemaInputError("INVALID_JSON") from None
+    if _exceeds_nesting(payload, MAX_NESTING):
+        raise OpenFemaInputError("NESTING_DEPTH")
     if not isinstance(payload, dict) or not isinstance(payload.get(ENTITY), list):
         raise OpenFemaInputError("PAGE_SHAPE")
     metadata = payload.get("metadata")

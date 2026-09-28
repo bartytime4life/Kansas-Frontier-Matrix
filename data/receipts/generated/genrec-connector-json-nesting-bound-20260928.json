@@ -1,0 +1,118 @@
+{
+  "receipt_id": "genrec-connector-json-nesting-bound-20260928",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "connectors/blm/src/blm/plss_cadnsdi.py",
+    "connectors/blm/tests/test_plss_cadnsdi.py",
+    "connectors/census/src/census/acs_api.py",
+    "connectors/census/tests/test_acs_api.py",
+    "connectors/fema/src/fema/openfema_declarations.py",
+    "connectors/fema/tests/test_openfema_declarations.py",
+    "connectors/gbif/src/gbif/occurrence_api.py",
+    "connectors/gbif/tests/test_occurrence_api.py",
+    "connectors/inaturalist/src/inaturalist/observations_api.py",
+    "connectors/inaturalist/tests/test_observations_api.py",
+    "connectors/noaa/src/noaa/nws_alerts.py",
+    "connectors/noaa/tests/test_nws_alerts.py",
+    "connectors/nrcs/src/nrcs/scan_awdb.py",
+    "connectors/nrcs/tests/test_scan_awdb.py",
+    "connectors/usgs/src/usgs/earthquake.py",
+    "connectors/usgs/tests/test_earthquake.py"
+  ],
+  "artifact_hashes": {
+    "connectors/blm/src/blm/plss_cadnsdi.py": "sha256:5bfa9cd56689094f76d2a851ceaac558875f454eef271a102c8b7634c6573218",
+    "connectors/blm/tests/test_plss_cadnsdi.py": "sha256:2a9e9cefc7c32d7bb4b2d420ea6c85717d2e89b542420988a8c75d5304babe39",
+    "connectors/census/src/census/acs_api.py": "sha256:764c37dd87997e3ee26c19c2f2c35a5d425420dd55ed4861d7fe1a78301ce76e",
+    "connectors/census/tests/test_acs_api.py": "sha256:94e6229964f14ec77a8dbe47f82e63643d474c72c7f790aa2d412dce80ea4086",
+    "connectors/fema/src/fema/openfema_declarations.py": "sha256:95946d6f0f40bb0cfcc991834ffa2f09787697b3cfef39c68188fa6697fed876",
+    "connectors/fema/tests/test_openfema_declarations.py": "sha256:28a3aa01c5c13e2b15ff82a5e3139b372d2f43ac0cf1bf83933e246d9f780163",
+    "connectors/gbif/src/gbif/occurrence_api.py": "sha256:98c7fcb1d6548a0dd1e3c3cc8ae581cc7ea50e60cd0b9c0e87c0d0ac258913e8",
+    "connectors/gbif/tests/test_occurrence_api.py": "sha256:e01baa7fea6d1306d9998299b93d22597861523ae71eeec93f338dd53645f572",
+    "connectors/inaturalist/src/inaturalist/observations_api.py": "sha256:50064df77b9294fbd1044022725625c86d5166a5b6dcb7c1058ae53793971746",
+    "connectors/inaturalist/tests/test_observations_api.py": "sha256:826b2de4b4601d3f6e8f41f25e974d5164a283b06d298f1989919b1b65df52e7",
+    "connectors/noaa/src/noaa/nws_alerts.py": "sha256:4b748cc383e1f15ca50ee10025e6a9aa82a4246ac8efc60780a7e45354134071",
+    "connectors/noaa/tests/test_nws_alerts.py": "sha256:a9e2bf505cb50970d8a22a2326e034985f358326737e9a3d95e7cdf172712f3a",
+    "connectors/nrcs/src/nrcs/scan_awdb.py": "sha256:0b0a3f3a54589e209ca1b96f37faa72928102031170cbe7d52cd886d2eae4f19",
+    "connectors/nrcs/tests/test_scan_awdb.py": "sha256:b3e843b94f0a24ce4af0312c15d22504553c30e67749c155ce6f7f1d88cc8141",
+    "connectors/usgs/src/usgs/earthquake.py": "sha256:568e2a652b9410bd01dc1d423b196db51aac3938453fecbeb1066e433607bd9b",
+    "connectors/usgs/tests/test_earthquake.py": "sha256:b3706285f888a6a390baf84e73954db6740719a41eec4b8385643a9b8776761f"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:cc638e034d30d52484c0da5d41e5e1d0e39a65f4c7bb5bf8c760d3e294988f04",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/5374746860ae9ae5e8cb06bae8115298e5ba1b79",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4768",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4774"
+    ]
+  },
+  "truth_labels": {
+    "connectors/blm/src/blm/plss_cadnsdi.py": "CONFIRMED",
+    "connectors/blm/tests/test_plss_cadnsdi.py": "CONFIRMED",
+    "connectors/census/src/census/acs_api.py": "CONFIRMED",
+    "connectors/census/tests/test_acs_api.py": "CONFIRMED",
+    "connectors/fema/src/fema/openfema_declarations.py": "CONFIRMED",
+    "connectors/fema/tests/test_openfema_declarations.py": "CONFIRMED",
+    "connectors/gbif/src/gbif/occurrence_api.py": "CONFIRMED",
+    "connectors/gbif/tests/test_occurrence_api.py": "CONFIRMED",
+    "connectors/inaturalist/src/inaturalist/observations_api.py": "CONFIRMED",
+    "connectors/inaturalist/tests/test_observations_api.py": "CONFIRMED",
+    "connectors/noaa/src/noaa/nws_alerts.py": "CONFIRMED",
+    "connectors/noaa/tests/test_nws_alerts.py": "CONFIRMED",
+    "connectors/nrcs/src/nrcs/scan_awdb.py": "CONFIRMED",
+    "connectors/nrcs/tests/test_scan_awdb.py": "CONFIRMED",
+    "connectors/usgs/src/usgs/earthquake.py": "CONFIRMED",
+    "connectors/usgs/tests/test_earthquake.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Eight JSON connector suites across interpreters",
+      "outcome": "PASS",
+      "reason": "Census, FEMA, GBIF, iNaturalist, NWS, USGS, NRCS and BLM suites pass on Python 3.11, 3.12 and 3.13 (USGS retrieval-episode conformance needs rfc8785, installed only for 3.11 locally; unchanged by this diff). Bodies nested at the bound, bound+1, 5,000 and 100,000 levels give the same code on every interpreter."
+    },
+    {
+      "gate": "Targeted mutation testing",
+      "outcome": "PASS",
+      "reason": "Removed check (3.12), off-by-one bound (3.12), and RecursionError mapped back to INVALID_JSON (3.11; GBIF, NRCS, BLM) are all caught; files restored."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation."
+    },
+    {
+      "gate": "Source activation, admission, release",
+      "outcome": "SKIPPED",
+      "reason": "No network library, descriptor or contract change, lifecycle write, admission, or publication; routes stay HOLD."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/5374746860ae9ae5e8cb06bae8115298e5ba1b79"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-28T04:43:04Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Extends the #4768/#4774 explicit nesting bound to the six remaining JSON connectors and maps decoder RecursionError to NESTING_DEPTH in all eight, so routing and reason codes no longer depend on the interpreter version."
+}

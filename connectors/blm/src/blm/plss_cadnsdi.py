@@ -265,7 +265,10 @@ def parse_page(body: bytes, *, status: int, source_url: str, retrieved_at: str,
     try:
         payload = json.loads(body.decode("utf-8"), parse_float=_SourceNumber,
                              parse_int=_SourceInt, parse_constant=_reject_constant)
-    except (UnicodeError, ValueError, RecursionError, InvalidOperation):
+    except RecursionError:
+        # The decoder's own depth limit is interpreter-dependent; either way it is depth.
+        raise PlssInputError("NESTING_DEPTH") from None
+    except (UnicodeError, ValueError, InvalidOperation):
         raise PlssInputError("INVALID_JSON") from None
     if _exceeds_nesting(payload, MAX_NESTING):
         raise PlssInputError("NESTING_DEPTH")

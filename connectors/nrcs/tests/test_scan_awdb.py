@@ -168,14 +168,16 @@ class ParserTests(unittest.TestCase):
         self.assertEqual(str(ctx.exception), "NESTING_DEPTH")
 
     def test_pathologically_nested_values_are_a_bounded_rejection(self):
-        # Deep enough to exceed the explicit bound on every supported Python version.
-        nested = '{"a":' * 700 + "1" + "}" * 700
-        raw = ('[{"stationTriplet": "99901:KS:SCAN", "data": [{"stationElement":'
-               ' {"elementCode": "SMS", "heightDepth": -2, "durationName": "DAILY"},'
-               ' "values": [{"date": "2023-06-01", "value": ' + nested + '}]}]}]')
-        with self.assertRaises(sa.ScanInputError) as ctx:
-            parse(body(raw=raw))
-        self.assertEqual(str(ctx.exception), "NESTING_DEPTH")
+        # Deep enough to exceed the explicit bound on every supported Python version;
+        # 5,000 and 100,000 also pass 3.11's and 3.12+'s decoder limits: still the same code.
+        for depth in (700, 5000, 100_000):
+            nested = '{"a":' * depth + "1" + "}" * depth
+            raw = ('[{"stationTriplet": "99901:KS:SCAN", "data": [{"stationElement":'
+                   ' {"elementCode": "SMS", "heightDepth": -2, "durationName": "DAILY"},'
+                   ' "values": [{"date": "2023-06-01", "value": ' + nested + '}]}]}]')
+            with self.subTest(depth=depth), self.assertRaises(sa.ScanInputError) as ctx:
+                parse(body(raw=raw))
+            self.assertEqual(str(ctx.exception), "NESTING_DEPTH")
 
     def test_modest_excess_nesting_is_rejected_by_the_explicit_bound(self):
         nested = '{"a":' * 25 + "1" + "}" * 25
