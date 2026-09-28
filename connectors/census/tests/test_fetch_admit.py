@@ -176,12 +176,12 @@ class TigerRetrievalTests(unittest.TestCase):
                 self.assertIs(fetch.tiger_entry(entry["file_name"], manifest), entry)
 
 
-# Source role is product-level: only ACS is covered by the family descriptor's role.
+# Source role is product-level; a product without a role in admit.PRODUCT_ROLES holds.
 PRODUCT_HOLD = ("PRODUCT_ROLE_UNRESOLVED",)
 
 
 def product_hold(retrieval):
-    return () if retrieval.episode["source_id"] == fetch.ACS_SOURCE_ID else PRODUCT_HOLD
+    return () if retrieval.episode["source_id"] in admit.PRODUCT_ROLES else PRODUCT_HOLD
 
 
 class AdmissionTests(unittest.TestCase):
@@ -203,13 +203,11 @@ class AdmissionTests(unittest.TestCase):
                          (admit.QUARANTINE, ("PARSE_STATE_SCOPE_MISMATCH",)))
 
     def test_tiger_package_keeps_inspector_route(self):
-        # TIGER's role is not covered by the family descriptor (product-level role), so the
-        # inspector's route is provisional and the final route holds.
         decision = admit.admit(tiger()[0], descriptor=RESOLVED, manifest=MANIFEST)
         self.assertEqual(decision.source_id, fetch.TIGER_SOURCE_ID)
-        self.assertEqual((decision.route, decision.provisional_route),
-                         (admit.HOLD, decision.package.route))
-        self.assertEqual(decision.reasons, decision.package.reasons + PRODUCT_HOLD)
+        self.assertEqual(decision.route, decision.package.route)
+        self.assertEqual(decision.reasons, decision.package.reasons)
+        self.assertEqual(decision.source_role, "administrative")
 
     def test_tiger_quarantine_route_and_reasons_pass_through(self):
         body = tiger_fixtures.package(TIGER_NAME[:-4], flag=b"*")
@@ -217,10 +215,8 @@ class AdmissionTests(unittest.TestCase):
             {**tiger_fixtures.entry_for(TIGER_NAME, body, "TRACT"), "source_url": TIGER_URL}]}}
         decision = admit.admit(tiger(payload=body, manifest=manifest)[0], descriptor=RESOLVED,
                                manifest=manifest)
-        self.assertEqual((decision.route, decision.provisional_route),
-                         (admit.HOLD, admit.QUARANTINE))
+        self.assertEqual(decision.route, admit.QUARANTINE)
         self.assertIn("DELETED_RECORDS_PRESENT", decision.reasons)
-        self.assertEqual(decision.reasons[-1], "PRODUCT_ROLE_UNRESOLVED")
 
     def test_uncaptured_retrievals_are_held(self):
         for retrieval in (acs(status=403, payload=b"no"), tiger(status=404, payload=b"no")[0],
@@ -237,18 +233,28 @@ class AdmissionTests(unittest.TestCase):
         self.assertEqual((descriptor.get("name"), descriptor.get("role"), descriptor.get("rights")),
                          ("census", "aggregate", "public-domain-us-government-work"))
         self.assertEqual(admit.descriptor_blockers(descriptor), ())
-        self.assertEqual(admit.ROLE_COVERED_PRODUCTS, frozenset({fetch.ACS_SOURCE_ID}))
-        decision = admit.admit(acs(), manifest=MANIFEST)
-        self.assertEqual(decision.route, decision.provisional_route)
-        self.assertNotEqual(decision.route, admit.HOLD)
-        self.assertFalse([r for r in decision.reasons if r.startswith("DESCRIPTOR_")])
-        package = admit.admit(tiger()[0], manifest=MANIFEST)
-        self.assertEqual((package.route, package.reasons[-1]),
-                         (admit.HOLD, "PRODUCT_ROLE_UNRESOLVED"))
+        self.assertEqual(admit.PRODUCT_ROLES, {fetch.ACS_SOURCE_ID: "aggregate",
+                                               fetch.TIGER_SOURCE_ID: "administrative"})
         for retrieval in (acs(), tiger()[0]):
+            decision = admit.admit(retrieval, manifest=MANIFEST)
+            self.assertEqual(decision.route, decision.provisional_route)
+            self.assertNotEqual(decision.route, admit.HOLD)
+            self.assertFalse([r for r in decision.reasons if r.startswith("DESCRIPTOR_")
+                              or r == "PRODUCT_ROLE_UNRESOLVED"])
+            self.assertEqual(decision.source_role,
+                             admit.PRODUCT_ROLES[retrieval.episode["source_id"]])
             held = admit.admit(retrieval, manifest=MANIFEST, descriptor=UNRESOLVED)
             self.assertEqual(held.reasons[-2:], ("DESCRIPTOR_ROLE_UNRESOLVED",
                                                  "DESCRIPTOR_RIGHTS_UNRESOLVED"))
+
+    def test_product_without_a_role_holds(self):
+        for retrieval in (acs(), tiger()[0]):
+            source = retrieval.episode["source_id"]
+            roles = {key: value for key, value in admit.PRODUCT_ROLES.items() if key != source}
+            with self.subTest(source=source), patch.object(admit, "PRODUCT_ROLES", roles):
+                decision = admit.admit(retrieval, descriptor=RESOLVED, manifest=MANIFEST)
+                self.assertEqual((decision.route, decision.reasons[-1], decision.source_role),
+                                 (admit.HOLD, "PRODUCT_ROLE_UNRESOLVED", None))
 
     def test_episode_from_another_source_is_refused(self):
         good = acs()

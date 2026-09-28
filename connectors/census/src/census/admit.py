@@ -28,10 +28,13 @@ NAME = "census"
 RAW = "RAW_CANDIDATE"
 QUARANTINE = "QUARANTINE_CANDIDATE"
 HOLD = "HOLD"
-# Source role is product-level: the family descriptor's role (``aggregate``) covers ACS
-# estimate tables only. TIGER/Line packages are reference geometry and hold until their
-# own role is decided.
-ROLE_COVERED_PRODUCTS = frozenset({fetch.ACS_SOURCE_ID})
+# Source role is product-level, set by the repository owner on 2026-09-28. The family
+# descriptor still gates role/rights resolution; each decision carries its product's own
+# role. A product missing here holds with PRODUCT_ROLE_UNRESOLVED.
+PRODUCT_ROLES = {
+    fetch.ACS_SOURCE_ID: "aggregate",          # survey estimate tables
+    fetch.TIGER_SOURCE_ID: "administrative",   # reference geometry, not legal-boundary authority
+}
 PRODUCTS = {fetch.ACS_SOURCE_ID: fetch.ACS_RETRIEVAL_PROFILE,
             fetch.TIGER_SOURCE_ID: fetch.TIGER_RETRIEVAL_PROFILE}
 
@@ -58,6 +61,8 @@ class AdmissionDecision:
     admission: str = "NOT_ADMITTED"
     coverage: str = "NOT_ESTABLISHED"
     write_performed: bool = False
+    # The product's source role (``PRODUCT_ROLES``), or None when it is unresolved.
+    source_role: str | None = None
 
 
 def _acs(retrieval: Retrieval, episode: dict):
@@ -108,8 +113,9 @@ def admit(retrieval: Retrieval, *, descriptor: dict[str, str] | None = None,
         provisional, reasons, table = _acs(retrieval, episode)
     else:
         provisional, reasons, package = _tiger(retrieval, manifest)
-    blockers = (() if source_id in ROLE_COVERED_PRODUCTS else ("PRODUCT_ROLE_UNRESOLVED",)) \
+    blockers = (() if source_id in PRODUCT_ROLES else ("PRODUCT_ROLE_UNRESOLVED",)) \
         + descriptor_blockers(load_descriptor() if descriptor is None else descriptor)
     route = HOLD if blockers else provisional
     return AdmissionDecision(route, provisional, reasons + blockers, episode["episode_id"],
-                             source_id, retrieval.source_url, table, package)
+                             source_id, retrieval.source_url, table, package,
+                             source_role=PRODUCT_ROLES.get(source_id))

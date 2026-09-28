@@ -164,27 +164,27 @@ class RetrievalTests(unittest.TestCase):
         self.assertEqual(fetch.uscrn_profile().allowed_media_types, frozenset({"text/plain"}))
 
 
-# Source role is product-level: only USCRN is covered by the family descriptor's role.
+# Source role is product-level; a product without a role in admit.PRODUCT_ROLES holds.
 PRODUCT_HOLD = ("PRODUCT_ROLE_UNRESOLVED",)
 
 
 def product_hold(retrieval):
-    return () if retrieval.episode["source_id"] == fetch.USCRN_SOURCE_ID else PRODUCT_HOLD
+    return () if retrieval.episode["source_id"] in admit.PRODUCT_ROLES else PRODUCT_HOLD
 
 
 class AdmissionTests(unittest.TestCase):
     def test_parsed_products_route_raw(self):
         decision = admit.admit(storm(), descriptor=RESOLVED)
-        self.assertEqual((decision.route, decision.provisional_route, decision.reasons),
-                         (admit.HOLD, admit.RAW, PRODUCT_HOLD))
+        self.assertEqual((decision.route, decision.reasons, decision.source_role),
+                         (admit.RAW, (), "administrative"))
         self.assertEqual(len(decision.details_file.events), 1)
         self.assertIsNone(decision.station_year)
         decision = admit.admit(uscrn(), descriptor=RESOLVED)
         self.assertEqual((decision.route, decision.reasons), (admit.RAW, ()))
         self.assertEqual(len(decision.station_year.records), 2)
         decision = admit.admit(nws(), descriptor=RESOLVED)
-        self.assertEqual((decision.route, decision.provisional_route, decision.reasons),
-                         (admit.HOLD, admit.RAW, PRODUCT_HOLD))
+        self.assertEqual((decision.route, decision.reasons, decision.source_role),
+                         (admit.RAW, (), "regulatory"))
         self.assertEqual(decision.alerts.alerts[0].freshness_as_of,
                          decision.alerts.retrieved_at)
         with self.assertRaises(FrozenInstanceError):
@@ -193,18 +193,17 @@ class AdmissionTests(unittest.TestCase):
     def test_product_flags(self):
         bad_damage = storm_fixtures.gz([storm_fixtures.row(DAMAGE_PROPERTY="lots")])
         self.assertEqual(admit.admit(storm(bad_damage), descriptor=RESOLVED).reasons,
-                         ("RECORD_QUARANTINE_CANDIDATES",) + PRODUCT_HOLD)
+                         ("RECORD_QUARANTINE_CANDIDATES",))
         gap = (uscrn_fixtures.line(1) + "\n" + uscrn_fixtures.line(3) + "\n").encode()
         self.assertEqual(admit.admit(uscrn(gap), descriptor=RESOLVED).reasons,
                          ("MISSING_HOURS_PRESENT",))
         partial = nws_fixtures.collection([nws_fixtures.alert(status="Test")],
                                           pagination={"next": NWS_URL + "&cursor=x"})
         self.assertEqual(admit.admit(nws(partial), descriptor=RESOLVED).reasons,
-                         ("RECORD_QUARANTINE_CANDIDATES", "PARTIAL_COLLECTION_MORE_PAGES")
-                         + PRODUCT_HOLD)
+                         ("RECORD_QUARANTINE_CANDIDATES", "PARTIAL_COLLECTION_MORE_PAGES"))
         seven_day = nws(url=nws_alerts.alerts_url("KS", active=False))
         self.assertEqual(admit.admit(seven_day, descriptor=RESOLVED).reasons,
-                         ("SEVEN_DAY_WINDOW_NOT_ARCHIVE",) + PRODUCT_HOLD)
+                         ("SEVEN_DAY_WINDOW_NOT_ARCHIVE",))
 
     def test_parser_rejection_is_quarantine_candidate(self):
         impossible_date = (uscrn_fixtures.line(1, date="20231301") + "\n").encode()
@@ -256,15 +255,27 @@ class AdmissionTests(unittest.TestCase):
         self.assertEqual((descriptor.get("name"), descriptor.get("role"), descriptor.get("rights")),
                          ("noaa", "observed", "public-domain-us-government-work"))
         self.assertEqual(admit.descriptor_blockers(descriptor), ())
-        self.assertEqual(admit.ROLE_COVERED_PRODUCTS, frozenset({fetch.USCRN_SOURCE_ID}))
-        for retrieval, route in ((uscrn(), admit.RAW), (storm(), admit.HOLD),
-                                 (nws(), admit.HOLD)):
+        self.assertEqual(admit.PRODUCT_ROLES, {fetch.USCRN_SOURCE_ID: "observed",
+                                               fetch.STORM_SOURCE_ID: "administrative",
+                                               fetch.NWS_SOURCE_ID: "regulatory"})
+        for retrieval in (uscrn(), storm(), nws()):
             with self.subTest(source=retrieval.episode["source_id"]):
                 decision = admit.admit(retrieval)
-                self.assertEqual((decision.route, decision.provisional_route), (route, admit.RAW))
-                self.assertFalse([r for r in decision.reasons if r.startswith("DESCRIPTOR_")])
-                self.assertEqual(decision.reasons, product_hold(retrieval))
+                self.assertEqual((decision.route, decision.provisional_route, decision.reasons),
+                                 (admit.RAW, admit.RAW, ()))
+                self.assertEqual(decision.source_role,
+                                 admit.PRODUCT_ROLES[retrieval.episode["source_id"]])
                 self.assertEqual(admit.admit(retrieval, descriptor=UNRESOLVED).route, admit.HOLD)
+
+    def test_product_without_a_role_holds(self):
+        for retrieval in (uscrn(), storm(), nws()):
+            source = retrieval.episode["source_id"]
+            roles = {key: value for key, value in admit.PRODUCT_ROLES.items() if key != source}
+            with self.subTest(source=source), patch.object(admit, "PRODUCT_ROLES", roles):
+                decision = admit.admit(retrieval, descriptor=RESOLVED)
+                self.assertEqual((decision.route, decision.provisional_route, decision.reasons,
+                                  decision.source_role),
+                                 (admit.HOLD, admit.RAW, PRODUCT_HOLD, None))
 
     def test_episode_from_another_source_is_refused(self):
         good = storm()
