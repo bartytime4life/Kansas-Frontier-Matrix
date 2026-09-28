@@ -54,4 +54,4 @@ jobs:
       - name: Record evidence boundary
         if: always()
         run: |
-          echo 'Offline synthetic OpenFEMA Disaster Declarations Summaries planner/parser, injected-transport retrieval-episode, and page-routing checks only; routes stay HOLD while descriptor role/rights are unresolved. Administrative records, not observed hazards. No provider fetch, table activation, rights review, source admission, capture completeness, active Site integration, release, or deployment proof.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Offline synthetic OpenFEMA Disaster Declarations Summaries planner/parser, injected-transport retrieval-episode, and page-routing checks only; the checked-in descriptor (role/rights set 2026-09-28) releases RAW/QUARANTINE candidate routes, still without any write or admission. Administrative records, not observed hazards. No provider fetch, table activation, rights review, source admission, capture completeness, active Site integration, release, or deployment proof.' >> "$GITHUB_STEP_SUMMARY"

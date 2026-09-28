@@ -88,6 +88,9 @@ notes:
 
 `connectors/nrcs/`
 
+> [!NOTE]
+> **Descriptor resolved (2026-09-28).** `src/nrcs/descriptor.yaml` now sets `role: observed` and `rights: public-domain-us-government-work` (U.S. federal works, 17 U.S.C. 105), as chosen by the repository owner. `admit.admit()` therefore returns its provisional `RAW_CANDIDATE` or `QUARANTINE_CANDIDATE` route instead of `HOLD`; an unresolved descriptor still holds every route. Routing remains no write, no admission, and no coverage claim. This is not a SourceDescriptor, source activation, sensitivity review, or release, and earlier notes that say routes end at `HOLD` describe the unresolved state.
+
 > Repository-present coordination and implementation boundary for candidate USDA Natural Resources Conservation Service connector work. Current evidence establishes grounded documentation, a minimal `0.0.0` package shell, and an empty namespace—not an active source family, approved acquisition surface, executable adapter suite, collected test suite, substantive connector gate, deployment, or release-ready data path.
 
 > [!NOTE]

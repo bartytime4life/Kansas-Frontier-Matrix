@@ -29,6 +29,7 @@ import test_tiger_package as tiger_fixtures  # noqa: E402
 
 RESOLVED = {"name": "census", "role": "synthetic-role", "rights": "synthetic-rights",
             "sensitivity_floor": "public"}
+UNRESOLVED = {"name": "census", "role": "TBD", "rights": "TBD", "sensitivity_floor": "public"}
 ACS_URL = acs_fixtures.URL
 TIGER_NAME = "tl_2025_20_tract.zip"
 TIGER_BODY = tiger_fixtures.package(TIGER_NAME[:-4])
@@ -218,13 +219,19 @@ class AdmissionTests(unittest.TestCase):
                 self.assertEqual(decision.reasons, tuple(
                     retrieval.episode["result"]["reason_codes"]))
 
-    def test_checked_in_descriptor_holds_every_route(self):
-        self.assertEqual(admit.load_descriptor().get("name"), "census")
+    def test_checked_in_descriptor_releases_candidate_routes(self):
+        descriptor = admit.load_descriptor()
+        self.assertEqual((descriptor.get("name"), descriptor.get("role"), descriptor.get("rights")),
+                         ("census", "aggregate", "public-domain-us-government-work"))
+        self.assertEqual(admit.descriptor_blockers(descriptor), ())
         for retrieval in (acs(), tiger()[0]):
             decision = admit.admit(retrieval, manifest=MANIFEST)
-            self.assertEqual(decision.route, admit.HOLD)
-            self.assertEqual(decision.reasons[-2:], ("DESCRIPTOR_ROLE_UNRESOLVED",
-                                                     "DESCRIPTOR_RIGHTS_UNRESOLVED"))
+            self.assertEqual(decision.route, decision.provisional_route)
+            self.assertNotEqual(decision.route, admit.HOLD)
+            self.assertFalse([r for r in decision.reasons if r.startswith("DESCRIPTOR_")])
+            held = admit.admit(retrieval, manifest=MANIFEST, descriptor=UNRESOLVED)
+            self.assertEqual(held.reasons[-2:], ("DESCRIPTOR_ROLE_UNRESOLVED",
+                                                 "DESCRIPTOR_RIGHTS_UNRESOLVED"))
 
     def test_episode_from_another_source_is_refused(self):
         good = acs()

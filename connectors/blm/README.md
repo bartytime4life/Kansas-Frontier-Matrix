@@ -59,6 +59,9 @@ notes:
 
 `connectors/blm/`
 
+> [!NOTE]
+> **Descriptor resolved (2026-09-28).** `src/blm/descriptor.yaml` now sets `role: administrative` and `rights: public-domain-us-government-work` (U.S. federal works, 17 U.S.C. 105), as chosen by the repository owner. `admit.admit()` therefore returns its provisional `RAW_CANDIDATE` or `QUARANTINE_CANDIDATE` route instead of `HOLD`; an unresolved descriptor still holds every route. Routing remains no write, no admission, and no coverage claim. This is not a SourceDescriptor, source activation, sensitivity review, or release, and earlier notes that say routes end at `HOLD` describe the unresolved state.
+
 ## Quick jumps
 
 [Status](#status) · [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Admission contract](#admission-contract) · [Dataset-family boundaries](#dataset-family-boundaries) · [Sensitive and legal boundaries](#sensitive-and-legal-boundaries) · [Lifecycle](#lifecycle) · [Bounded outcomes](#bounded-outcomes) · [Validation](#validation) · [Safe change pattern](#safe-change-pattern) · [Evidence basis](#evidence-basis) · [Rollback](#rollback) · [Definition of done](#definition-of-done)

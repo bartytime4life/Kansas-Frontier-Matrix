@@ -1,5 +1,7 @@
-# noaa source descriptor — greenfield placeholder
+# noaa connector descriptor: role and rights set by the repository owner on 2026-09-28
+# (NOAA works; 17 U.S.C. 105). Releases candidate routing only; not a
+# SourceDescriptor, source activation, admission, sensitivity review, or release.
 name: noaa
-role: TBD
-rights: TBD
+role: observed
+rights: public-domain-us-government-work
 sensitivity_floor: public

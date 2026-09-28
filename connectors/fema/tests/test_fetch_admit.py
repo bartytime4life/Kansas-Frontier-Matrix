@@ -29,6 +29,7 @@ import test_openfema_declarations as fixtures  # noqa: E402
 
 RESOLVED = {"name": "fema", "role": "synthetic-role", "rights": "synthetic-rights",
             "sensitivity_floor": "public"}
+UNRESOLVED = {"name": "fema", "role": "TBD", "rights": "TBD", "sensitivity_floor": "public"}
 URL = of.page_url(of.declaration_filter(), top=2)
 
 
@@ -159,17 +160,19 @@ class AdmissionTests(unittest.TestCase):
         decision = admit.admit(retrieve(response(403, b"no"))[0], descriptor=RESOLVED)
         self.assertEqual((decision.route, decision.reasons), (admit.HOLD, ("ACCESS_DENIED",)))
 
-    def test_checked_in_descriptor_holds_every_route(self):
-        self.assertEqual(admit.load_descriptor().get("name"), "fema")
+    def test_checked_in_descriptor_releases_candidate_routes(self):
+        descriptor = admit.load_descriptor()
+        self.assertEqual((descriptor.get("name"), descriptor.get("role"), descriptor.get("rights")),
+                         ("fema", "administrative", "public-domain-us-government-work"))
+        self.assertEqual(admit.descriptor_blockers(descriptor), ())
         for payload, provisional in ((page(), admit.RAW), (page(count=-1), admit.QUARANTINE)):
             with self.subTest(provisional=provisional):
                 decision = admit.admit(retrieve(response(payload=payload))[0])
                 self.assertEqual((decision.route, decision.provisional_route),
-                                 (admit.HOLD, provisional))
-                self.assertIn("DESCRIPTOR_ROLE_UNRESOLVED", decision.reasons)
-                self.assertIn("DESCRIPTOR_RIGHTS_UNRESOLVED", decision.reasons)
-        self.assertEqual(admit.descriptor_blockers({**RESOLVED, "name": "usgs"}),
-                         ("DESCRIPTOR_INVALID",))
+                                 (provisional, provisional))
+                self.assertFalse([r for r in decision.reasons if r.startswith("DESCRIPTOR_")])
+        held = admit.admit(retrieve(response(payload=page()))[0], descriptor=UNRESOLVED)
+        self.assertEqual(held.route, admit.HOLD)
 
     def test_tampered_retrieval_cannot_be_constructed(self):
         good = retrieve(response())[0]

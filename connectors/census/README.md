@@ -51,6 +51,9 @@ notes:
 
 `connectors/census/`
 
+> [!NOTE]
+> **Descriptor resolved (2026-09-28).** `src/census/descriptor.yaml` now sets `role: aggregate` and `rights: public-domain-us-government-work` (U.S. federal works, 17 U.S.C. 105), as chosen by the repository owner. `admit.admit()` therefore returns its provisional `RAW_CANDIDATE` or `QUARANTINE_CANDIDATE` route instead of `HOLD`; an unresolved descriptor still holds every route. Routing remains no write, no admission, and no coverage claim. This is not a SourceDescriptor, source activation, sensitivity review, or release, and earlier notes that say routes end at `HOLD` describe the unresolved state.
+
 ## Quick jumps
 
 [Status](#status) · [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Product-family boundaries](#product-family-boundaries) · [Admission contract](#admission-contract) · [Time and geography](#time-and-geography) · [Uncertainty and suppression](#uncertainty-and-suppression) · [Lifecycle](#lifecycle) · [Bounded outcomes](#bounded-outcomes) · [Validation](#validation) · [Evidence basis](#evidence-basis) · [Rollback](#rollback) · [Definition of done](#definition-of-done)

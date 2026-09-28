@@ -68,4 +68,4 @@ jobs:
       - name: Record evidence boundary
         if: always()
         run: |
-          echo 'Offline synthetic query/parser, injected-transport retrieval-episode, and candidate-routing checks only. Synthetic transports and fixture-only episodes; routes stay HOLD while descriptor role/rights are unresolved. No provider fetch, source admission, catalog completeness, active Site integration, release, or deployment proof.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Offline synthetic query/parser, injected-transport retrieval-episode, and candidate-routing checks only. Synthetic transports and fixture-only episodes; the checked-in descriptor (role/rights set 2026-09-28) releases RAW/QUARANTINE candidate routes, still without any write or admission. No provider fetch, source admission, catalog completeness, active Site integration, release, or deployment proof.' >> "$GITHUB_STEP_SUMMARY"

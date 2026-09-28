@@ -31,6 +31,7 @@ import test_uscrn_hourly as uscrn_fixtures  # noqa: E402
 
 RESOLVED = {"name": "noaa", "role": "synthetic-role", "rights": "synthetic-rights",
             "sensitivity_floor": "public"}
+UNRESOLVED = {"name": "noaa", "role": "TBD", "rights": "TBD", "sensitivity_floor": "public"}
 STORM_URL = storm_events.details_url(2020, "20260915")
 USCRN_URL = uscrn_hourly.hourly_url(2023, "KS_Synthetic_1_N")
 NWS_URL = nws_alerts.alerts_url("KS")
@@ -235,14 +236,16 @@ class AdmissionTests(unittest.TestCase):
                 self.assertEqual(decision.reasons,
                                  tuple(retrieval.episode["result"]["reason_codes"]))
 
-    def test_checked_in_descriptor_holds_every_route(self):
-        self.assertEqual(admit.load_descriptor().get("name"), "noaa")
+    def test_checked_in_descriptor_releases_candidate_routes(self):
+        descriptor = admit.load_descriptor()
+        self.assertEqual((descriptor.get("name"), descriptor.get("role"), descriptor.get("rights")),
+                         ("noaa", "observed", "public-domain-us-government-work"))
+        self.assertEqual(admit.descriptor_blockers(descriptor), ())
         for retrieval in (storm(), uscrn(), nws()):
             decision = admit.admit(retrieval)
-            self.assertEqual(decision.route, admit.HOLD)
-            self.assertEqual(decision.provisional_route, admit.RAW)
-            self.assertEqual(decision.reasons[-2:], ("DESCRIPTOR_ROLE_UNRESOLVED",
-                                                     "DESCRIPTOR_RIGHTS_UNRESOLVED"))
+            self.assertEqual((decision.route, decision.provisional_route), (admit.RAW, admit.RAW))
+            self.assertFalse([r for r in decision.reasons if r.startswith("DESCRIPTOR_")])
+            self.assertEqual(admit.admit(retrieval, descriptor=UNRESOLVED).route, admit.HOLD)
 
     def test_episode_from_another_source_is_refused(self):
         good = storm()

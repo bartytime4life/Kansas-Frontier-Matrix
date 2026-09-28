@@ -11,7 +11,7 @@
 - **`load_descriptor(path)`:** accepts only flat `key: value` lines and comments. It returns `{}` for an unreadable, oversized (over 16 KiB) or undecodable file, and for one with unknown keys, duplicate keys, indentation, or nested structure.
 - **`descriptor_blockers(descriptor, name=...)`:** returns `DESCRIPTOR_INVALID` when the name does not match. Otherwise it returns `DESCRIPTOR_ROLE_UNRESOLVED` and/or `DESCRIPTOR_RIGHTS_UNRESOLVED` for each field whose value, after folding case, whitespace, hyphens, underscores and quotes, is empty, `TBD`, `UNKNOWN`, `NEEDS_VERIFICATION`, `PROPOSED`, or `OWNER_TBD`.
 - **`sensitivity_floor_blockers(descriptor)`:** for sources whose records may be sensitive (GBIF, iNaturalist). It returns `DESCRIPTOR_SENSITIVITY_FLOOR_UNREVIEWED` unless `sensitivity_floor` is one of the non-public SourceDescriptor enum values `generalized`, `restricted` or `quarantine`, after the same normalization. A public, unresolved, unknown or misspelled floor therefore cannot authorize a candidate route.
-- **Guard test:** `test_every_checked_in_connector_descriptor_still_holds` fails if any checked-in connector descriptor would open a candidate route. Resolving role or rights is a steward decision, so that test must be updated deliberately in the same change.
+- **Guard test:** `test_only_deliberately_resolved_connector_descriptors_open_routes` fails unless the checked-in connector descriptors that open a candidate route are exactly those listed in `OPENED_CONNECTORS`. Resolving role or rights is a steward decision, so that list must be updated deliberately in the same change. Since 2026-09-28 it lists the seven U.S. federal connectors (BLM, Census, EPA, FEMA, NOAA, NRCS, USGS).
 
 ## Validation
 

@@ -25,6 +25,7 @@ from usgs import admit, earthquake, fetch  # noqa: E402
 
 RESOLVED = {"name": "usgs", "role": "synthetic-role", "rights": "synthetic-rights",
             "sensitivity_floor": "public"}
+UNRESOLVED = {"name": "usgs", "role": "TBD", "rights": "TBD", "sensitivity_floor": "public"}
 
 
 def stub_hash(value):
@@ -239,16 +240,22 @@ class AdmissionTests(unittest.TestCase):
         decision = admit.admit(retrieval, descriptor=RESOLVED)
         self.assertEqual((decision.route, decision.reasons), (admit.RAW, ("QUERY_LIMIT_REACHED",)))
 
-    def test_checked_in_descriptor_holds_every_route(self):
-        self.assertEqual(admit.load_descriptor().get("name"), "usgs")
+    def test_checked_in_descriptor_releases_candidate_routes(self):
+        descriptor = admit.load_descriptor()
+        self.assertEqual((descriptor.get("name"), descriptor.get("role"), descriptor.get("rights")),
+                         ("usgs", "observed", "public-domain-us-government-work"))
+        self.assertEqual(admit.descriptor_blockers(descriptor), ())
         for outcome, provisional in ((response(), admit.RAW),
                                      (response(payload=body(count=9)), admit.QUARANTINE)):
             with self.subTest(provisional=provisional):
                 decision = admit.admit(retrieve(outcome)[0])
                 self.assertEqual((decision.route, decision.provisional_route),
-                                 (admit.HOLD, provisional))
-                self.assertIn("DESCRIPTOR_RIGHTS_UNRESOLVED", decision.reasons)
-                self.assertIn("DESCRIPTOR_ROLE_UNRESOLVED", decision.reasons)
+                                 (provisional, provisional))
+                self.assertFalse([r for r in decision.reasons if r.startswith("DESCRIPTOR_")])
+                self.assertEqual((decision.admission, decision.write_performed),
+                                 ("NOT_ADMITTED", False))
+        held = admit.admit(retrieve(response())[0], descriptor=UNRESOLVED)
+        self.assertEqual(held.route, admit.HOLD)
 
     def test_descriptor_gate_is_shared(self):
         # Strict parsing and spelling normalization are covered in

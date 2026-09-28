@@ -2,14 +2,14 @@
  "schema_version": "kfm.scaffold-inventory/v1",
  "summary": {
   "by_kind": {
-   "PLACEHOLDER_MARKER": 904,
+   "PLACEHOLDER_MARKER": 897,
    "STUB_MODULE": 332,
-   "UNRESOLVED_DESCRIPTOR": 24,
+   "UNRESOLVED_DESCRIPTOR": 17,
    "VACUOUS_TEST": 1
   },
   "by_surface": {
    "apps": 34,
-   "connectors": 121,
+   "connectors": 107,
    "contracts": 3,
    "packages": 122,
    "pipelines": 236,
@@ -19,8 +19,8 @@
    "tests": 188,
    "tools": 54
   },
-  "files": 906,
-  "total": 1261
+  "files": 899,
+  "total": 1247
  },
  "findings": [
   {"kind": "PLACEHOLDER_MARKER", "path": "apps/cli/pyproject.toml"},
@@ -64,10 +64,6 @@
   {"kind": "UNRESOLVED_DESCRIPTOR", "path": "connectors/ahgp/src/ahgp/descriptor.yaml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/ahgp/src/ahgp/fetch.py"},
   {"kind": "STUB_MODULE", "path": "connectors/ahgp/src/ahgp/fetch.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "connectors/blm/src/blm/descriptor.yaml"},
-  {"kind": "UNRESOLVED_DESCRIPTOR", "path": "connectors/blm/src/blm/descriptor.yaml"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "connectors/census/src/census/descriptor.yaml"},
-  {"kind": "UNRESOLVED_DESCRIPTOR", "path": "connectors/census/src/census/descriptor.yaml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/ebird/pyproject.toml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/ebird/src/ebird/admit.py"},
   {"kind": "STUB_MODULE", "path": "connectors/ebird/src/ebird/admit.py"},
@@ -75,8 +71,6 @@
   {"kind": "UNRESOLVED_DESCRIPTOR", "path": "connectors/ebird/src/ebird/descriptor.yaml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/ebird/src/ebird/fetch.py"},
   {"kind": "STUB_MODULE", "path": "connectors/ebird/src/ebird/fetch.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "connectors/epa/src/epa/descriptor.yaml"},
-  {"kind": "UNRESOLVED_DESCRIPTOR", "path": "connectors/epa/src/epa/descriptor.yaml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/familysearch/pyproject.toml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/familysearch/src/familysearch/admit.py"},
   {"kind": "STUB_MODULE", "path": "connectors/familysearch/src/familysearch/admit.py"},
@@ -84,8 +78,6 @@
   {"kind": "UNRESOLVED_DESCRIPTOR", "path": "connectors/familysearch/src/familysearch/descriptor.yaml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/familysearch/src/familysearch/fetch.py"},
   {"kind": "STUB_MODULE", "path": "connectors/familysearch/src/familysearch/fetch.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "connectors/fema/src/fema/descriptor.yaml"},
-  {"kind": "UNRESOLVED_DESCRIPTOR", "path": "connectors/fema/src/fema/descriptor.yaml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/ftDNA/pyproject.toml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/ftDNA/src/ftDNA/admit.py"},
   {"kind": "STUB_MODULE", "path": "connectors/ftDNA/src/ftDNA/admit.py"},
@@ -165,10 +157,6 @@
   {"kind": "UNRESOLVED_DESCRIPTOR", "path": "connectors/newspapers/src/newspapers/descriptor.yaml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/newspapers/src/newspapers/fetch.py"},
   {"kind": "STUB_MODULE", "path": "connectors/newspapers/src/newspapers/fetch.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "connectors/noaa/src/noaa/descriptor.yaml"},
-  {"kind": "UNRESOLVED_DESCRIPTOR", "path": "connectors/noaa/src/noaa/descriptor.yaml"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "connectors/nrcs/src/nrcs/descriptor.yaml"},
-  {"kind": "UNRESOLVED_DESCRIPTOR", "path": "connectors/nrcs/src/nrcs/descriptor.yaml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/openstreetmap/pyproject.toml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/openstreetmap/src/openstreetmap/admit.py"},
   {"kind": "STUB_MODULE", "path": "connectors/openstreetmap/src/openstreetmap/admit.py"},
@@ -176,8 +164,6 @@
   {"kind": "UNRESOLVED_DESCRIPTOR", "path": "connectors/openstreetmap/src/openstreetmap/descriptor.yaml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/openstreetmap/src/openstreetmap/fetch.py"},
   {"kind": "STUB_MODULE", "path": "connectors/openstreetmap/src/openstreetmap/fetch.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "connectors/usgs/src/usgs/descriptor.yaml"},
-  {"kind": "UNRESOLVED_DESCRIPTOR", "path": "connectors/usgs/src/usgs/descriptor.yaml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "contracts/atmosphere/air-observation.schema.json"},
   {"kind": "PLACEHOLDER_MARKER", "path": "contracts/domains/habitat/habitat_patch.schema.json"},
   {"kind": "PLACEHOLDER_MARKER", "path": "contracts/people-dna-land/land_ownership_assertion.schema.json"},
