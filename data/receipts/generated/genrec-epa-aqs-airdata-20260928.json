@@ -1,0 +1,117 @@
+{
+  "receipt_id": "genrec-epa-aqs-airdata-20260928",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/epa-connector-offline.yml",
+    "connectors/epa/README.md",
+    "connectors/epa/pyproject.toml",
+    "connectors/epa/src/epa/README.md",
+    "connectors/epa/src/epa/admit.py",
+    "connectors/epa/src/epa/aqs_airdata.py",
+    "connectors/epa/src/epa/fetch.py",
+    "connectors/epa/tests/README.md",
+    "connectors/epa/tests/test_aqs_airdata.py",
+    "connectors/epa/tests/test_fetch_admit.py",
+    "connectors/epa_aqs/README.md",
+    "tools/qa/scaffold_baseline.json"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/epa-connector-offline.yml": "sha256:a8e25bae8b29acbfce6ed6a98dc5bada548b4d888a71948f1d081938b06b82b3",
+    "connectors/epa/README.md": "sha256:22a4cc884e9df076f67998a93ec258855d787c936da0811cfb84181384c261b4",
+    "connectors/epa/pyproject.toml": "sha256:820aeafbe0a235d2072790677b101c9ddb514a6e7434d99b3ba850dc9570ed17",
+    "connectors/epa/src/epa/README.md": "sha256:7491588d2b4350268888204bf07f731803d332d9c4dad7c571f769356bf2a383",
+    "connectors/epa/src/epa/admit.py": "sha256:5c2a1d97035841b29846f90af3c7cdd9d60d80bc54c0a41e1f834665e0254183",
+    "connectors/epa/src/epa/aqs_airdata.py": "sha256:30fef180771b838a1bd8c2262c621008fa8d57fa2eb7973401c9f01a117d281f",
+    "connectors/epa/src/epa/fetch.py": "sha256:e4032041009c8b6e860ae9e13a1bc1788f9ceacce01da4436f1a9a2cb57123ba",
+    "connectors/epa/tests/README.md": "sha256:663ba891fa51d1dad22bcb48176a6bf2de6c5d5c2b8f06acfd00e66085617dc2",
+    "connectors/epa/tests/test_aqs_airdata.py": "sha256:e048cf0053a533b3b09a70f4afa4eefa9409462494eb6f06b9cb0325d70f2eb9",
+    "connectors/epa/tests/test_fetch_admit.py": "sha256:14a85fb626c671d2154b15b997b7cf4796498e159d6eb3e25de38a5668d2ded2",
+    "connectors/epa_aqs/README.md": "sha256:45b9b0a150b1c6a86f796ec0a754eba2dc86194a47e06ba50916076bf4d79dbe",
+    "tools/qa/scaffold_baseline.json": "sha256:23fda43f39d9bfec947ecdb465686836603782195685814087346182451bdc77"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:cc638e034d30d52484c0da5d41e5e1d0e39a65f4c7bb5bf8c760d3e294988f04",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/d66eb22b1e0b897d9efd76e1a146ba96ff608731",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/d66eb22b1e0b897d9efd76e1a146ba96ff608731/docs/sources/catalog/epa/aqs-airdata.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/d66eb22b1e0b897d9efd76e1a146ba96ff608731/docs/sources/catalog/OPEN-QUESTIONS.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4778#discussion_r4118787175"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/epa-connector-offline.yml": "CONFIRMED",
+    "connectors/epa/README.md": "CONFIRMED",
+    "connectors/epa/pyproject.toml": "CONFIRMED",
+    "connectors/epa/src/epa/README.md": "CONFIRMED",
+    "connectors/epa/src/epa/admit.py": "CONFIRMED",
+    "connectors/epa/src/epa/aqs_airdata.py": "CONFIRMED",
+    "connectors/epa/src/epa/fetch.py": "CONFIRMED",
+    "connectors/epa/tests/README.md": "CONFIRMED",
+    "connectors/epa/tests/test_aqs_airdata.py": "CONFIRMED",
+    "connectors/epa/tests/test_fetch_admit.py": "CONFIRMED",
+    "connectors/epa_aqs/README.md": "CONFIRMED",
+    "tools/qa/scaffold_baseline.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "EPA connector suites across interpreters",
+      "outcome": "PASS",
+      "reason": "test_aqs_airdata.py and test_fetch_admit.py pass on Python 3.11, 3.12 and 3.13 without PYTHONPATH; ruff clean."
+    },
+    {
+      "gate": "Targeted mutation testing",
+      "outcome": "PASS",
+      "reason": "Removed state filter, compression-ratio check, duplicate-identity check, encryption check and parameter check, and coordinate failure made non-blocking, are each caught (3.12); file restored."
+    },
+    {
+      "gate": "Workflow security and scaffold ratchet",
+      "outcome": "PASS",
+      "reason": "make workflow-security: PASS, 489 workflows, 0 new drift. scaffold_inventory --check passes after --write-baseline removed exactly the five EPA fetch/admit/pyproject findings (1266 -> 1261)."
+    },
+    {
+      "gate": "Live AirData layout verification",
+      "outcome": "SKIPPED",
+      "reason": "aqs.epa.gov is not reachable from this session; archive layout, column set, event-type vocabulary and row identity are NEEDS VERIFICATION and the parser fails closed."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation."
+    },
+    {
+      "gate": "Source activation, admission, release",
+      "outcome": "SKIPPED",
+      "reason": "No network library, descriptor change, lifecycle write, admission, or publication; routes stay HOLD. OPEN-DSC-09 and the epa/epa_aqs relationship remain open."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/d66eb22b1e0b897d9efd76e1a146ba96ff608731"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-28T05:04:33Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Implements the connectors/epa/ fetch and admit stubs for EPA AQS AirData pre-generated daily-summary archives (criteria pollutants, Kansas rows), following the NOAA Storm Events and NRCS SCAN connector patterns. Event-type vocabulary accepts AirData's documented labels (No Events, Events Included, Events Excluded, Concurred Events Excluded) and the short forms, per the #4778 Codex P1."
+}

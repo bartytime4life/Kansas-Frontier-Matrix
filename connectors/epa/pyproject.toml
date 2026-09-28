@@ -1,4 +1,20 @@
-# connectors/epa pyproject — greenfield placeholder
+# Package metadata for the EPA connector source tree under src/epa.
+# Runtime needs only the standard library and the in-repository connectors-core
+# package (packages/connectors-core); no distribution or release is implied.
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "kfm-connector-epa"
 version = "0.0.0"
+description = "EPA AQS AirData daily-summary file planning, injected-transport retrieval episodes, and candidate routing"
+requires-python = ">=3.11"
+dependencies = ["kfm-connectors-core"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["epa"]
+
+[tool.setuptools.package-data]
+epa = ["descriptor.yaml"]
