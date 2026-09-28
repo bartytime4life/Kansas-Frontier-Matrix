@@ -57,7 +57,7 @@ def _flags(daily: aqs_airdata.DailyFileCandidate) -> tuple[str, ...]:
     flags = []
     if any(record.route == QUARANTINE for record in daily.records):
         flags.append("RECORD_QUARANTINE_CANDIDATES")
-    if reasons & {"EVENTS_INCLUDED", "EVENTS_EXCLUDED"}:
+    if reasons & {"EVENTS_INCLUDED", "EVENTS_EXCLUDED", "CONCURRED_EVENTS_EXCLUDED"}:
         flags.append("EVENT_TREATED_ROWS_PRESENT")
     if "AQI_NOT_REPORTED" in reasons:
         flags.append("AQI_NOT_REPORTED_PRESENT")

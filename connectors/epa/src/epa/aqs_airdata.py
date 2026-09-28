@@ -50,9 +50,17 @@ REQUIRED_COLUMNS = (
     "Observation Percent", "Arithmetic Mean", "1st Max Value", "1st Max Hour", "AQI",
     "Method Code", "Method Name", "Local Site Name", "Address", "State Name",
     "County Name", "City Name", "CBSA Name", "Date of Last Change")
-# ``None``: no event flag applies; ``Included``/``Excluded``: rows computed with or
-# without values EPA associates with (exceptional) events. Others are not interpreted.
-EVENT_TYPES = frozenset({"None", "Included", "Excluded"})
+# Event treatment -> flag. AirData documents ``No Events``, ``Events Included``,
+# ``Events Excluded`` and ``Concurred Events Excluded``; the short forms are also accepted
+# (which spelling current files carry is NEEDS VERIFICATION). The value stays verbatim;
+# anything else is not interpreted.
+EVENT_TYPES = {
+    "No Events": None, "None": None,
+    "Events Included": "EVENTS_INCLUDED", "Included": "EVENTS_INCLUDED",
+    "Events Excluded": "EVENTS_EXCLUDED", "Excluded": "EVENTS_EXCLUDED",
+    "Concurred Events Excluded": "CONCURRED_EVENTS_EXCLUDED",
+    "Concurred": "CONCURRED_EVENTS_EXCLUDED",
+}
 NUMBER = re.compile(r"-?\d{1,9}(?:\.\d{1,9})?\Z")
 DAY = re.compile(r"\d{4}-\d{2}-\d{2}\Z")
 # A CSV this regular compresses well, but not by more than this; beyond it is a bomb.
@@ -179,12 +187,10 @@ def _classify(row: dict[str, str], file: DailyFile) -> DailyRecord:
         raise AqsInputError("ROW_IDENTITY")
     reasons: list[str] = []
     event_type = row["Event Type"]
-    if event_type == "Included":
-        reasons.append("EVENTS_INCLUDED")
-    elif event_type == "Excluded":
-        reasons.append("EVENTS_EXCLUDED")
-    elif event_type not in EVENT_TYPES:
+    if event_type not in EVENT_TYPES:
         reasons.append("EVENT_TYPE_UNRECOGNIZED")
+    elif EVENT_TYPES[event_type] is not None:
+        reasons.append(EVENT_TYPES[event_type])
     numbers: dict[str, Decimal | None] = {}
     for column in ("Observation Percent", "Arithmetic Mean", "1st Max Value"):
         try:

@@ -127,7 +127,7 @@ class AdmissionTests(unittest.TestCase):
         with self.assertRaises(FrozenInstanceError):
             decision.route = admit.HOLD
         flagged = fixtures.archive([
-            fixtures.row(**{"Event Type": "Included"}),
+            fixtures.row(**{"Event Type": "Concurred Events Excluded"}),
             fixtures.row(AQI="", **{"Date Local": "2023-06-02"}),
             fixtures.row(**{"Date Local": "2023-06-03", "Arithmetic Mean": "x"})])
         self.assertEqual(admit.admit(daily(flagged), descriptor=RESOLVED).reasons,

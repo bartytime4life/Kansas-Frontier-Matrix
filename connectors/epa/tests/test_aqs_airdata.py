@@ -29,7 +29,7 @@ def row(**overrides):
             "Longitude": "-98.250000", "Datum": "WGS84",
             "Parameter Name": "PM2.5 - Local Conditions", "Sample Duration": "24 HOUR",
             "Pollutant Standard": "PM25 24-hour 2012", "Date Local": "2023-06-01",
-            "Units of Measure": "Micrograms/cubic meter (LC)", "Event Type": "None",
+            "Units of Measure": "Micrograms/cubic meter (LC)", "Event Type": "No Events",
             "Observation Count": "1", "Observation Percent": "100.0",
             "Arithmetic Mean": "7.30", "1st Max Value": "7.3", "1st Max Hour": "0",
             "AQI": "30", "Method Code": "000", "Method Name": "Synthetic method",
@@ -120,8 +120,19 @@ class ParseTests(unittest.TestCase):
                                                              row(**{"Date Local": "2023-06-02"})])))
 
     def test_flags_and_quarantine(self):
-        cases = ((row(**{"Event Type": "Included"}), ("EVENTS_INCLUDED",), "RAW_CANDIDATE"),
+        cases = ((row(**{"Event Type": "Events Included"}), ("EVENTS_INCLUDED",),
+                  "RAW_CANDIDATE"),
+                 (row(**{"Event Type": "Events Excluded"}), ("EVENTS_EXCLUDED",),
+                  "RAW_CANDIDATE"),
+                 (row(**{"Event Type": "Concurred Events Excluded"}),
+                  ("CONCURRED_EVENTS_EXCLUDED",), "RAW_CANDIDATE"),
+                 (row(**{"Event Type": "None"}), (), "RAW_CANDIDATE"),
+                 (row(**{"Event Type": "Included"}), ("EVENTS_INCLUDED",), "RAW_CANDIDATE"),
                  (row(**{"Event Type": "Excluded"}), ("EVENTS_EXCLUDED",), "RAW_CANDIDATE"),
+                 (row(**{"Event Type": "Concurred"}), ("CONCURRED_EVENTS_EXCLUDED",),
+                  "RAW_CANDIDATE"),
+                 (row(**{"Event Type": "events included"}), ("EVENT_TYPE_UNRECOGNIZED",),
+                  "QUARANTINE_CANDIDATE"),
                  (row(AQI=""), ("AQI_NOT_REPORTED",), "RAW_CANDIDATE"),
                  (row(**{"Event Type": "Other"}), ("EVENT_TYPE_UNRECOGNIZED",),
                   "QUARANTINE_CANDIDATE"),
@@ -149,7 +160,7 @@ class ParseTests(unittest.TestCase):
 
     def test_same_day_distinct_standards_and_events_are_distinct_rows(self):
         rows = [row(), row(**{"Pollutant Standard": "PM25 Annual 2012"}),
-                row(**{"Event Type": "Included"}), row(POC="2")]
+                row(**{"Event Type": "Events Included"}), row(POC="2")]
         self.assertEqual(len(parse(archive(rows)).records), 4)
         rejected(self, "DUPLICATE_RECORD", archive([row(), row()]))
 

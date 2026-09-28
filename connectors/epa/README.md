@@ -32,7 +32,7 @@ notes:
 >   - the archive must hold exactly one unencrypted `daily_<parameter>_<year>.csv` member, within decompressed-size and compression-ratio bounds;
 >   - the national CSV is streamed, every row must match the file's parameter code, and only rows EPA attributes to Kansas (`State Code` `20`) are classified;
 >   - numbers stay exact `Decimal`s with every source column kept verbatim, and a blank AQI stays blank, never zero;
->   - `Included`/`Excluded` event treatment and a blank AQI are flags; an unreadable number or coordinate, or an unknown event type, makes that row a quarantine candidate;
+>   - event treatment (`No Events`/`Events Included`/`Events Excluded`/`Concurred Events Excluded`, or the short forms `None`/`Included`/`Excluded`/`Concurred`) and a blank AQI are flags; an unreadable number or coordinate, or an unknown event type, makes that row a quarantine candidate;
 >   - a bad archive, header, identity, date outside the file year, or duplicate row identity rejects the whole file.
 >
 >   The archive layout, column set, event-type vocabulary and row identity are **NEEDS VERIFICATION** against current AirData documentation.
