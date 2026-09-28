@@ -1,14 +1,28 @@
 # GPT Site source
 
-> **Published Explorer:** Sites version 104 was privately published on 2026-09-28
-> from source commit `b6d1c7471ffd95a40934bbc0b768ceacf7ebe751`, at
-> [the stable Explorer address](https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site).
-> This directory mirrors the 224 tracked source files from that exact commit.
+> **Repository checkpoint (2026-09-28):** `main@de2dcbd38a70af7668a18eac968e2b217390adfb`
+> includes the v106 weather playback mirror, v107 demo-layer retirement, and a
+> later repository-only Earth Engine restoration. The private Explorer uses
+> [the stable Site address](https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site).
 > The Site project and this GitHub repository retain separate Git histories.
 
-`source/` is the GitHub source mirror for the private Explorer Site. It carries
-the same application source as version 104, including terrain, animated wind,
-lightning, and the MapLibre acquisition seam. The repository-local
+`source/` is the GitHub source for the private Explorer Site. Its version
+history is distinct from the hosted deployment history:
+
+| Checkpoint | Recorded relationship |
+| --- | --- |
+| Private Site v104, source `b6d1c7471ffd95a40934bbc0b768ceacf7ebe751` | Historical 2026-09-28 publication and 224-file source parity recorded by [the v104 mirror receipt](../../data/receipts/generated/genrec-explorer-site-v104-mirror-20260928.json) and merged PR #4786. That parity applies to the v104 snapshot only. |
+| Private Site v106, source `26ca5ad192a7a911acd0f75c6e2b2b37d7bd5e64` | Weather playback fixes were privately hosted and eight changed files were mirrored in [PR #4787](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4787), merged as `e2bdc7a9abbcb649f3047ccc0725c9e0d9577c5c`. |
+| Private Site v107, source `8012c8a0d8cc9d86aa2d6868bce163a742460c63` | Demo extent and county starter layers were retired in the privately published Site, then mirrored in [PR #4788](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4788), merged as `19a8147702ec80bdf9556d691c37f170addee51a`. |
+| Repository after v107 | [PR #4789](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4789), merged as `de2dcbd38a70af7668a18eac968e2b217390adfb`, restored Earth Engine inventory export, zoom-0 tiles, and preview parity in GitHub. No matching Site deployment is established by that merge. |
+
+The current repository source must not be described as byte-identical to a
+deployed Site without a fresh same-version comparison and hosted readback.
+The v104 receipt remains an immutable record of its historical comparison;
+it does not attest to later repository heads. Repository merge, source admission,
+Site deployment, publication, and acceptance require separate evidence and decisions.
+
+The repository-local
 `.gitattributes` remains outside `source/`; private hosted D1/R2 records and
 local development state are excluded.
 
