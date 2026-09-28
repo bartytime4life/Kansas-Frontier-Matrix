@@ -218,6 +218,23 @@ class ReconcileTests(unittest.TestCase):
         self.assertEqual(str(caught.exception), "ORDER_NOT_DETERMINISTIC")
 
 
+class NestingBoundTests(unittest.TestCase):
+    def call(self, depth):
+        raw = ("[" * depth + "]" * depth).encode()
+        with self.assertRaises(of.OpenFemaInputError) as ctx:
+            of.parse_page(raw, status=200, source_url=of.page_url(FILTER, top=2),
+                          retrieved_at=NOW)
+        return str(ctx.exception)
+
+    def test_bound_is_exact_and_interpreter_independent(self):
+        self.assertEqual(of.MAX_NESTING, 32)
+        self.assertNotEqual(self.call(of.MAX_NESTING), "NESTING_DEPTH")
+        # Past the bound, and past 3.11's decoder limit, the code is the same everywhere.
+        for depth in (of.MAX_NESTING + 1, 5000, 100_000):
+            with self.subTest(depth=depth):
+                self.assertEqual(self.call(depth), "NESTING_DEPTH")
+
+
 class NoNetworkTests(unittest.TestCase):
     def test_module_never_opens_sockets(self):
         with patch.object(socket, "socket", side_effect=AssertionError("network")), \

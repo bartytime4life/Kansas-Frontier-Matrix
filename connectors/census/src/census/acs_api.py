@@ -47,6 +47,10 @@ ANNOTATIONS = {
 }
 NUMBER = re.compile(r"-?\d+(?:\.\d+)?\Z")
 
+# Explicit bound: the decoder's own recursion limit differs by interpreter (about
+# 1,000 levels on 3.11, tens of thousands on 3.12+), so it cannot decide routing.
+MAX_NESTING = 32
+
 
 class AcsInputError(ValueError):
     """Bounded, non-payload-bearing diagnostic for rejected candidate input."""
@@ -212,6 +216,26 @@ def _constant(_: str) -> None:
     raise AcsInputError("NONSTANDARD_JSON_NUMBER")
 
 
+def _exceeds_nesting(value: object, limit: int) -> bool:
+    """Whether containers nest deeper than ``limit``; iterative, early-exit, and holding
+    at most one iterator per level, so wide payloads cost no extra memory."""
+    if not isinstance(value, (dict, list)):
+        return False
+    stack = [iter(value.values() if isinstance(value, dict) else value)]
+    if len(stack) > limit:
+        return True
+    while stack:
+        for child in stack[-1]:
+            if isinstance(child, (dict, list)):
+                if len(stack) + 1 > limit:
+                    return True
+                stack.append(iter(child.values() if isinstance(child, dict) else child))
+                break
+        else:
+            stack.pop()
+    return False
+
+
 def parse_response(body: bytes, *, status: int, source_url: str, retrieved_at: str,
                    max_bytes: int = 32 * 1024 * 1024, max_rows: int = 50_000
                    ) -> AcsTableCandidate:
@@ -234,8 +258,13 @@ def parse_response(body: bytes, *, status: int, source_url: str, retrieved_at: s
                              parse_constant=_constant)
     except AcsInputError:
         raise
-    except (UnicodeError, ValueError, RecursionError):
+    except RecursionError:
+        # The decoder's own depth limit is interpreter-dependent; either way it is depth.
+        raise AcsInputError("NESTING_DEPTH") from None
+    except (UnicodeError, ValueError):
         raise AcsInputError("INVALID_JSON") from None
+    if _exceeds_nesting(payload, MAX_NESTING):
+        raise AcsInputError("NESTING_DEPTH")
     if (not isinstance(payload, list) or not payload
             or not all(isinstance(row, list) for row in payload)):
         raise AcsInputError("TABLE_SHAPE")

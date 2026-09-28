@@ -147,6 +147,22 @@ class ParseTests(unittest.TestCase):
         self.assertEqual(row.geoid, "20001000100")
 
 
+class NestingBoundTests(unittest.TestCase):
+    def call(self, depth):
+        raw = ("[" * depth + "]" * depth).encode()
+        with self.assertRaises(acs.AcsInputError) as ctx:
+            acs.parse_response(raw, status=200, source_url=URL, retrieved_at=NOW)
+        return str(ctx.exception)
+
+    def test_bound_is_exact_and_interpreter_independent(self):
+        self.assertEqual(acs.MAX_NESTING, 32)
+        self.assertNotEqual(self.call(acs.MAX_NESTING), "NESTING_DEPTH")
+        # Past the bound, and past 3.11's decoder limit, the code is the same everywhere.
+        for depth in (acs.MAX_NESTING + 1, 5000, 100_000):
+            with self.subTest(depth=depth):
+                self.assertEqual(self.call(depth), "NESTING_DEPTH")
+
+
 class NoNetworkTests(unittest.TestCase):
     def test_module_never_opens_sockets(self):
         with patch.object(socket, "socket", side_effect=AssertionError("network")), \

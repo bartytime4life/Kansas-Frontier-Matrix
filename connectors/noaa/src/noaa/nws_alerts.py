@@ -24,6 +24,10 @@ MESSAGE_TYPES = frozenset({"Alert", "Update", "Cancel", "Ack", "Error"})
 AUTHORITY = "NWS_ISSUED_CONTEXT_ONLY"
 CACHE_HEADERS = ("Cache-Control", "Date", "Expires", "Last-Modified", "ETag")
 
+# Explicit bound: the decoder's own recursion limit differs by interpreter (about
+# 1,000 levels on 3.11, tens of thousands on 3.12+), so it cannot decide routing.
+MAX_NESTING = 32
+
 
 class NwsInputError(ValueError):
     """Bounded, non-payload-bearing diagnostic for rejected candidate input."""
@@ -203,6 +207,26 @@ def _feature(feature: object, area: str) -> tuple[AlertCandidate, datetime | Non
     return candidate, effective, expires, ends, sent
 
 
+def _exceeds_nesting(value: object, limit: int) -> bool:
+    """Whether containers nest deeper than ``limit``; iterative, early-exit, and holding
+    at most one iterator per level, so wide payloads cost no extra memory."""
+    if not isinstance(value, (dict, list)):
+        return False
+    stack = [iter(value.values() if isinstance(value, dict) else value)]
+    if len(stack) > limit:
+        return True
+    while stack:
+        for child in stack[-1]:
+            if isinstance(child, (dict, list)):
+                if len(stack) + 1 > limit:
+                    return True
+                stack.append(iter(child.values() if isinstance(child, dict) else child))
+                break
+        else:
+            stack.pop()
+    return False
+
+
 def parse_alerts(body: bytes, *, status: int, source_url: str, retrieved_at: str,
                  as_of: str | None = None, headers: dict[str, str] | None = None,
                  max_bytes: int = 16 * 1024 * 1024,
@@ -231,8 +255,13 @@ def parse_alerts(body: bytes, *, status: int, source_url: str, retrieved_at: str
         raise NwsInputError("HTTP_STATUS")
     try:
         payload = json.loads(body.decode("utf-8"))
-    except (UnicodeError, ValueError, RecursionError):
+    except RecursionError:
+        # The decoder's own depth limit is interpreter-dependent; either way it is depth.
+        raise NwsInputError("NESTING_DEPTH") from None
+    except (UnicodeError, ValueError):
         raise NwsInputError("INVALID_JSON") from None
+    if _exceeds_nesting(payload, MAX_NESTING):
+        raise NwsInputError("NESTING_DEPTH")
     if not isinstance(payload, dict) or payload.get("type") != "FeatureCollection":
         raise NwsInputError("COLLECTION_SHAPE")
     features = payload.get("features")

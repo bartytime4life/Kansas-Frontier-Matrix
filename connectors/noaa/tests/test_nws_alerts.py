@@ -155,6 +155,22 @@ class ParseTests(unittest.TestCase):
                              retrieved_at=RETRIEVED)
 
 
+class NestingBoundTests(unittest.TestCase):
+    def call(self, depth):
+        raw = ("[" * depth + "]" * depth).encode()
+        with self.assertRaises(nws.NwsInputError) as ctx:
+            nws.parse_alerts(raw, status=200, source_url=URL, retrieved_at=RETRIEVED)
+        return str(ctx.exception)
+
+    def test_bound_is_exact_and_interpreter_independent(self):
+        self.assertEqual(nws.MAX_NESTING, 32)
+        self.assertNotEqual(self.call(nws.MAX_NESTING), "NESTING_DEPTH")
+        # Past the bound, and past 3.11's decoder limit, the code is the same everywhere.
+        for depth in (nws.MAX_NESTING + 1, 5000, 100_000):
+            with self.subTest(depth=depth):
+                self.assertEqual(self.call(depth), "NESTING_DEPTH")
+
+
 class NoNetworkTests(unittest.TestCase):
     def test_module_never_opens_sockets(self):
         with patch.object(socket, "socket", side_effect=AssertionError("network")), \

@@ -132,7 +132,8 @@ class ParserTests(unittest.TestCase):
 
     def test_pathologically_nested_properties_are_a_bounded_rejection(self):
         # Deep enough to exceed the explicit bound on every supported Python version.
-        for depth in (25, 700):
+        # 5,000 and 100,000 pass 3.11's and 3.12+'s decoder limits: still the same code.
+        for depth in (25, 700, 5000, 100_000):
             nested = '{"a":' * depth + "1" + "}" * depth
             raw = body([feature(NOTE=0)]).decode().replace('"NOTE": 0', '"NOTE": ' + nested)
             with self.subTest(depth=depth), self.assertRaises(pl.PlssInputError) as ctx:
