@@ -452,7 +452,7 @@ The root project currently requires Python 3.11 or newer and exposes this baseli
 ```bash
 python -m venv .venv
 . .venv/bin/activate
-python -m pip install -e ".[test]"
+python tools/ci/install_python_ci.py project-test
 python -m pip install pre-commit
 pre-commit install
 pre-commit run --all-files
@@ -460,6 +460,8 @@ pre-commit run --all-files
 make validate
 git diff --check
 ```
+
+The Python installer uses the committed hash locked test profile. `pre-commit` is a separate optional developer tool, so its install above is not covered by that lock. For the current component-specific dependency and configuration paths, see [Installation](docs/installation.md).
 
 At the evidence snapshot:
 

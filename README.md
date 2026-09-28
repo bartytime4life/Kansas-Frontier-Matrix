@@ -293,6 +293,8 @@ Directory placement is part of the trust model. Read the adopted [Directory Rule
 
 ## Run locally
 
+Start with the [installation and configuration guide](docs/installation.md) for the current Python, pnpm, and standalone Site dependency paths.
+
 ### Download and prepare a local data store
 
 On Ubuntu, download a Git checkout so later source updates remain separate from your data:
@@ -320,7 +322,7 @@ The [`apps/site/source/`](apps/site/README.md) directory contains all 190 tracke
 cd apps/site/source
 npm run install:ci
 npm run build
-npm run dev
+../serve-local.sh
 ```
 
 The Site requires Node `>=22.13.0` and Linux helpers documented in its README. Its source includes the application, checked-in static assets, and D1 schema migration. Live provider responses, private D1 submission/review records, private R2 uploads, and separately stored local data are not bundled. Follow the [`apps/site/` README](apps/site/README.md) for its behavior and limits. The former `apps/kansas-frontier-matrix-explorer/` mirror and `apps/explorer-web/` workbench are no longer local-hosting entry points.

@@ -5,7 +5,7 @@ title: Getting Started
 version: v0.3.0
 status: PROPOSED wiki source; review required
 created: 2026-08-07
-updated: 2026-08-18
+updated: 2026-09-27
 authority: orientation-only; canonical repository evidence, adopted KFM doctrine, accepted ADRs, contracts, schemas, policy, tests, lifecycle records, and release decisions outrank this page
 source_path: docs/wiki/Getting-Started.md
 owning_root: docs/
@@ -39,7 +39,7 @@ This page gives new readers, reviewers, and contributors a safe path into Kansas
 > KFM is a governed spatial evidence and publication system. The public unit of value is an **inspectable claim**, not a file, map layer, tile, graph edge, dashboard, workflow, AI answer, or polished document by itself. Canonical repository evidence and the authority that owns each question outrank this orientation page.
 
 > [!NOTE]
-> **Evidence checkpoint:** this page was reconciled against [`main@9cb437d803a431928d3b919d9a7814647f812583`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/9cb437d803a431928d3b919d9a7814647f812583). Re-check current `main`, open pull requests, workflows, package metadata, and target-local READMEs before relying on commands or implementation claims.
+> **Evidence checkpoints:** the original onboarding review used [`main@9cb437d803a431928d3b919d9a7814647f812583`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/9cb437d803a431928d3b919d9a7814647f812583). The installation commands here were refreshed against the local checkout at `main@0bcdc2e784` on 2026-09-27. Re-check current `main`, workflows, package metadata, and target-local READMEs before relying on them.
 
 ## At a glance
 
@@ -49,8 +49,8 @@ This page gives new readers, reviewers, and contributors a safe path into Kansas
 | What is the shortest reading path? | [Home](Home.md) → [Architecture](Architecture.md) → [Data Lifecycle](Data-Lifecycle.md) → [Domains](Domains.md) |
 | What should I verify before editing? | Current base SHA, exact target bytes, owning root, nearest README, authority documents, overlapping work, acceptance checks, and rollback |
 | How do ordinary programming layers map to KFM? | [Programming scaffold for a bounded change](#programming-scaffold-for-a-bounded-change): use existing responsibility roots instead of importing a parallel generic tree |
-| What is the Python baseline? | Python `>=3.11`, `python -m pip install -e ".[test]"`, then `make validate` and `git diff --check` |
-| What is the JavaScript baseline? | Node `>=22.13 <23`, `pnpm@11.17.0`, lockfile installation, and package-scoped commands |
+| What is the Python baseline? | Python `>=3.11`, `python tools/ci/install_python_ci.py project-test`, then `make validate` and `git diff --check` |
+| What is the JavaScript baseline? | Use root pnpm for shared packages; install the runnable Site separately with its npm lockfile. See [Installation](../installation.md). |
 | What is the normal delivery path? | One focused feature branch and a draft pull request with exact-head validation and separate human review |
 | What do public clients use? | Governed APIs and released public-safe artifacts—not RAW, WORK, QUARANTINE, candidate, canonical/internal, or direct model-runtime stores |
 | Does this page publish or synchronize anything? | **No.** It changes no lifecycle, release, deployment, publication, or native-wiki state |
@@ -68,7 +68,7 @@ This page gives new readers, reviewers, and contributors a safe path into Kansas
 | Review governance and evidence | [Governance and Evidence](Governance-and-Evidence.md) → [Repository Map](Repository-Map.md) → [Directory Rules](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/doctrine/directory-rules.md) | The authority, placement, evidence, policy, and correction boundaries |
 | Contribute documentation | This page → [Development and Validation](Development-and-Validation.md) → [Contributing](Contributing.md) → [Wiki Maintenance](Wiki-Maintenance.md) | A focused, receipt-bearing, reviewable source change |
 | Work on Python, contracts, schemas, or validators | [Development and Validation](Development-and-Validation.md) → target README → relevant contracts, schemas, fixtures, tests, and validator docs | The smallest executable acceptance boundary |
-| Work on Explorer Web | [Map, UI, and AI](Map-UI-and-AI.md) → [Explorer Web README](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/apps/explorer-web/README.md) | The renderer, governed-API, Evidence Drawer, accessibility, and negative-state boundaries |
+| Work on the Explorer Site | [Map, UI, and AI](Map-UI-and-AI.md) → [Site README](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/apps/site/README.md) | The current local Site install and its separate source and data boundaries |
 | Work on the governed API | [Architecture](Architecture.md) → [Governed API README](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/apps/governed-api/README.md) | The trust-membrane and finite-response obligations |
 | Work in a domain lane | [Domains](Domains.md) → domain README → contracts/schemas/policy/tests for that lane | Bounded-context vocabulary, source-role limits, sensitivity, seams, and maturity |
 | Review sensitive material | [Security and Sensitivity](Security-and-Sensitivity.md) → [SECURITY.md](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/SECURITY.md) | A fail-closed handling and private-reporting path |
@@ -140,7 +140,7 @@ The root manifests at the evidence checkpoint declare the following development 
 |---|---|---|
 | Git | No version pinned in the inspected manifests | Revision control, branch isolation, diff and history inspection |
 | Python | `>=3.11` | Root scaffold, validators, tests, tools, and many repository checks |
-| Node.js | `>=22.13 <23` | JavaScript workspace and Explorer Web |
+| Node.js | Root workspace: `>=22.13 <23`; Site: `>=22.13.0` | Shared packages and the separately installed Site |
 | pnpm | `11.17.0` | Locked JavaScript workspace installation and package scripts |
 | GNU Make | Not version-pinned; recommended where available | Repository-native command orchestration |
 | PowerShell | Needed only for PowerShell-specific helpers such as native-wiki synchronization | Reviewed operator workflows |
@@ -187,7 +187,7 @@ Create an isolated environment from the repository root:
 ```bash
 python -m venv .venv
 . .venv/bin/activate
-python -m pip install -e ".[test]"
+python tools/ci/install_python_ci.py project-test
 
 make validate
 git diff --check
@@ -198,7 +198,7 @@ On Windows PowerShell:
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python -m pip install -e ".[test]"
+python tools/ci/install_python_ci.py project-test
 
 make validate
 git diff --check
@@ -207,7 +207,7 @@ git diff --check
 At the evidence checkpoint:
 
 - `pyproject.toml` requires Python 3.11 or newer;
-- the `test` extra installs the configured pytest and property-testing dependencies;
+- the `project-test` profile uses the committed hash locked third-party dependencies and installs the local metadata-only root distribution;
 - `make validate` runs the aggregate validator baseline plus the configured schema and contract test suites.
 
 When GNU Make is unavailable, inspect the current `Makefile` and run the present underlying baseline directly:
@@ -223,37 +223,21 @@ git diff --check
 
 ## JavaScript workspace
 
-The current root workspace declares:
+The root workspace declares Node `>=22.13 <23` and `pnpm@11.17.0`. For shared packages and MapLibre tooling, run `pnpm install --frozen-lockfile` from the repository root and use an existing package's own scripts. The removed `apps/explorer-web/` package has no runnable filter here.
 
-```text
-Node: >=22.13 <23
-pnpm: 11.17.0
-workspace: apps/* and packages/*
-```
-
-Install from the tracked lockfile with an approved toolchain:
+The runnable local web app is the separate Site mirror. On Linux, from the repository root:
 
 ```bash
-pnpm --version
-pnpm install --frozen-lockfile
+cd apps/site/source
+npm run install:ci
+npm run build
+../serve-local.sh
 ```
 
-Use package-scoped commands rather than the held root scripts. For Explorer Web:
-
-```bash
-pnpm --filter explorer-web build
-pnpm --filter explorer-web test:unit
-pnpm --filter explorer-web test:browser
-```
-
-The package also exposes a combined `test` command:
-
-```bash
-pnpm --filter explorer-web test
-```
+The Site has its own `package-lock.json` and local D1/R2 simulator state. See the [installation and configuration guide](../installation.md) for prerequisites, environment variables, and the data-store path.
 
 > [!WARNING]
-> Root `pnpm run lint`, `pnpm run test`, and `pnpm run build` intentionally return `WORKFLOW_HOLD`. Do not report those expected holds as regressions, and do not weaken or bypass them merely to obtain a green result.
+> Root `pnpm run lint`, `pnpm run test`, and `pnpm run build` intentionally return `WORKFLOW_HOLD`; `make ui-build` is also held for the retired app.
 
 Read the current [`package.json`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/package.json), lockfile, package-local README, and scripts before installing dependencies or claiming coverage.
 
@@ -477,7 +461,7 @@ File presence is evidence of repository state. It is not a shortcut around the a
 - accepted ADR-0029 adopts the current Directory Rules authority;
 - `pyproject.toml` requires Python 3.11 or newer and defines a test extra;
 - `package.json` pins Node `>=22.13 <23` and `pnpm@11.17.0`;
-- `make validate`, registry-driven validation profiles, and package-scoped Explorer Web commands are documented by current repository sources;
+- `make validate` and registry-driven validation profiles are documented by the checkpointed repository sources; the former Explorer Web commands are historical, and current Site setup uses the separate npm lockfile;
 - root JavaScript `lint`, `test`, and `build` remain intentional `WORKFLOW_HOLD` surfaces;
 - generated authoring receipts use the repository receipt schema and remain pending until human review;
 - native-wiki synchronization is a separate explicit operation.

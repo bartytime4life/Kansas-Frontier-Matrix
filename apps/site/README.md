@@ -19,6 +19,8 @@ other 185 shared files retain their Site v74 bytes. The repository-local
 
 ## Run locally
 
+The repository-wide dependency and configuration map is in [Installation](../../docs/installation.md). This Site uses its own npm lockfile, separate from the root pnpm workspace.
+
 Use Node.js 22.13 or newer on Linux. The install helper also needs `flock`,
 `curl`, `sha256sum`, and GNU `timeout`.
 
@@ -36,6 +38,17 @@ across builds. It binds to `127.0.0.1:4173` by default; set `SITE_HOST` or
 `SITE_PORT` to change the listening address or port. The Site source has its own
 npm lockfile and is deliberately outside the repository's root pnpm workspace.
 Run its npm commands from `apps/site/source/`.
+
+### Local configuration
+
+| Setting or binding | Current use |
+| --- | --- |
+| `SITE_HOST`, `SITE_PORT` | Read by `serve-local.sh`; default `127.0.0.1:4173`. |
+| `DB`, `BUCKET` | Names declared in `source/.openai/hosting.json`; local Vite/Worker configuration supplies simulated D1/R2 bindings. |
+| `KFM_STEWARD_EMAILS`, optional `KFM_STEWARD_USER_IDS` | Private server-side allowlists for hosted steward review. Do not commit values. |
+| `.wrangler/local-state/`, `.sites-runtime/` | Ignored local simulator state and install cache; neither contains hosted data. |
+
+The local launcher uses the built Worker and binds to loopback by default. The source's `npm run dev` uses Vite's separate development configuration, which currently binds to `0.0.0.0`; choose the launcher for a loopback-only check. Changing a template environment variable does not change a hosted Site setting.
 
 The snapshot includes checked-in static assets and the D1 schema migration.
 Live provider responses, private D1 submission and review records, private R2
