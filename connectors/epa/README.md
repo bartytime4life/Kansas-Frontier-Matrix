@@ -26,6 +26,9 @@ notes:
 `connectors/epa/`
 
 > [!NOTE]
+> **Descriptor resolved (2026-09-28).** `src/epa/descriptor.yaml` now sets `role: aggregate` and `rights: public-domain-us-government-work` (U.S. federal works, 17 U.S.C. 105), as chosen by the repository owner. `admit.admit()` therefore returns its provisional `RAW_CANDIDATE` or `QUARANTINE_CANDIDATE` route instead of `HOLD`; an unresolved descriptor still holds every route. Routing remains no write, no admission, and no coverage claim. This is not a SourceDescriptor, source activation, sensitivity review, or release, and earlier notes that say routes end at `HOLD` describe the unresolved state.
+
+> [!NOTE]
 > **AQS AirData daily-summary retrieval and routing (2026-09-28; supersedes the placeholder statements for `fetch.py`, `admit.py`, and `pyproject.toml`; family placement (`OPEN-DSC-09`), the `connectors/epa_aqs/` relationship, and activation are still open).**
 > - **`aqs_airdata.daily_url(parameter, year)`:** plans one pre-generated `https://aqs.epa.gov/aqsweb/airdata/daily_<parameter>_<year>.zip` GET, for criteria-pollutant parameter codes only (`42101`, `42401`, `42602`, `44201`, `81102`, `88101`, `88502`) from 1980 on. The AQS API is not planned, because it needs an account e-mail and key in the query string.
 > - **`aqs_airdata.parse_daily_file(...)`:** parses a *supplied* archive:

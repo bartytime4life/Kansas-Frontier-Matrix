@@ -1,5 +1,7 @@
-# blm source descriptor — greenfield placeholder
+# blm connector descriptor: role and rights set by the repository owner on 2026-09-28
+# (BLM works; 17 U.S.C. 105). Releases candidate routing only; not a
+# SourceDescriptor, source activation, admission, sensitivity review, or release.
 name: blm
-role: TBD
-rights: TBD
+role: administrative
+rights: public-domain-us-government-work
 sensitivity_floor: public

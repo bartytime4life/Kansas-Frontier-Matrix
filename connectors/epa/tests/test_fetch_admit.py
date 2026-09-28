@@ -29,6 +29,7 @@ import test_aqs_airdata as fixtures  # noqa: E402
 
 RESOLVED = {"name": "epa", "role": "synthetic-role", "rights": "synthetic-rights",
             "sensitivity_floor": "public"}
+UNRESOLVED = {"name": "epa", "role": "TBD", "rights": "TBD", "sensitivity_floor": "public"}
 URL = fixtures.URL
 BODY = fixtures.archive()
 MEDIA = "application/zip"
@@ -152,12 +153,16 @@ class AdmissionTests(unittest.TestCase):
                 self.assertEqual(decision.reasons,
                                  tuple(retrieval.episode["result"]["reason_codes"]))
 
-    def test_checked_in_descriptor_holds_every_route(self):
-        self.assertEqual(admit.load_descriptor().get("name"), "epa")
+    def test_checked_in_descriptor_releases_candidate_routes(self):
+        descriptor = admit.load_descriptor()
+        self.assertEqual((descriptor.get("name"), descriptor.get("role"), descriptor.get("rights")),
+                         ("epa", "aggregate", "public-domain-us-government-work"))
+        self.assertEqual(admit.descriptor_blockers(descriptor), ())
         decision = admit.admit(daily())
-        self.assertEqual((decision.route, decision.provisional_route), (admit.HOLD, admit.RAW))
-        self.assertEqual(decision.reasons[-2:], ("DESCRIPTOR_ROLE_UNRESOLVED",
-                                                 "DESCRIPTOR_RIGHTS_UNRESOLVED"))
+        self.assertEqual((decision.route, decision.provisional_route), (admit.RAW, admit.RAW))
+        self.assertEqual((decision.admission, decision.write_performed), ("NOT_ADMITTED", False))
+        self.assertEqual(admit.admit(daily(), descriptor=UNRESOLVED).reasons[-2:],
+                         ("DESCRIPTOR_ROLE_UNRESOLVED", "DESCRIPTOR_RIGHTS_UNRESOLVED"))
 
     def test_episode_from_another_source_is_refused(self):
         good = daily()

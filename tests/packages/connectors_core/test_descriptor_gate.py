@@ -62,16 +62,29 @@ def test_resolved_and_invalid_descriptors():
     assert descriptor_blockers("name: x", name="x") == ("DESCRIPTOR_INVALID",)
 
 
-def test_every_checked_in_connector_descriptor_still_holds():
+# Connectors whose role/rights the repository owner resolved (2026-09-28: U.S. federal
+# works). Adding a connector here is a steward decision and must be deliberate.
+OPENED_CONNECTORS = (
+    "connectors/blm/src/blm/descriptor.yaml",
+    "connectors/census/src/census/descriptor.yaml",
+    "connectors/epa/src/epa/descriptor.yaml",
+    "connectors/fema/src/fema/descriptor.yaml",
+    "connectors/noaa/src/noaa/descriptor.yaml",
+    "connectors/nrcs/src/nrcs/descriptor.yaml",
+    "connectors/usgs/src/usgs/descriptor.yaml",
+)
+
+
+def test_only_deliberately_resolved_connector_descriptors_open_routes():
     # Guard: a descriptor edit that resolves role/rights is a steward decision and must
-    # be deliberate; this lists which connectors would open a candidate route.
+    # be deliberate; this lists which connectors open a candidate route.
     opened = []
     for path in sorted(ROOT.glob("connectors/*/src/*/descriptor.yaml")):
         descriptor = load_descriptor(path)
         name = descriptor.get("name", "")
         if not descriptor_blockers(descriptor, name=name):
             opened.append(str(path.relative_to(ROOT)))
-    assert opened == []
+    assert tuple(opened) == OPENED_CONNECTORS
 
 
 @pytest.mark.parametrize("floor", ["generalized", "Restricted", "QUARANTINE", " restricted "])

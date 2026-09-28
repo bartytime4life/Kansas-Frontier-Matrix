@@ -92,6 +92,9 @@ notes:
 
 `connectors/noaa/`
 
+> [!NOTE]
+> **Descriptor resolved (2026-09-28).** `src/noaa/descriptor.yaml` now sets `role: observed` and `rights: public-domain-us-government-work` (U.S. federal works, 17 U.S.C. 105), as chosen by the repository owner. Because source role is product-level (see *Source-role posture*), `admit.ROLE_COVERED_PRODUCTS` applies that role to USCRN hourly02 only: USCRN returns its provisional `RAW_CANDIDATE` or `QUARANTINE_CANDIDATE` route instead of `HOLD`, while Storm Events (historical event records) and NWS alerts (official warning context) still end at `HOLD` with `PRODUCT_ROLE_UNRESOLVED` until their own roles are decided; an unresolved descriptor still holds every route. Routing remains no write, no admission, and no coverage claim. This is not a SourceDescriptor, source activation, sensitivity review, or release, and earlier notes that say routes end at `HOLD` describe the unresolved state.
+
 > Source-family boundary for NOAA fetch, parse, integrity, provenance, and admission support. This lane may organize product-specific connector code and handoff candidates for governed **RAW** or **QUARANTINE** intake. It does not establish NOAA truth, activate a source, issue warnings, approve release, or publish public data.
 
 ![status](https://img.shields.io/badge/status-draft-yellow)
