@@ -28,6 +28,10 @@ NAME = "census"
 RAW = "RAW_CANDIDATE"
 QUARANTINE = "QUARANTINE_CANDIDATE"
 HOLD = "HOLD"
+# Source role is product-level: the family descriptor's role (``aggregate``) covers ACS
+# estimate tables only. TIGER/Line packages are reference geometry and hold until their
+# own role is decided.
+ROLE_COVERED_PRODUCTS = frozenset({fetch.ACS_SOURCE_ID})
 PRODUCTS = {fetch.ACS_SOURCE_ID: fetch.ACS_RETRIEVAL_PROFILE,
             fetch.TIGER_SOURCE_ID: fetch.TIGER_RETRIEVAL_PROFILE}
 
@@ -104,7 +108,8 @@ def admit(retrieval: Retrieval, *, descriptor: dict[str, str] | None = None,
         provisional, reasons, table = _acs(retrieval, episode)
     else:
         provisional, reasons, package = _tiger(retrieval, manifest)
-    blockers = descriptor_blockers(load_descriptor() if descriptor is None else descriptor)
+    blockers = (() if source_id in ROLE_COVERED_PRODUCTS else ("PRODUCT_ROLE_UNRESOLVED",)) \
+        + descriptor_blockers(load_descriptor() if descriptor is None else descriptor)
     route = HOLD if blockers else provisional
     return AdmissionDecision(route, provisional, reasons + blockers, episode["episode_id"],
                              source_id, retrieval.source_url, table, package)

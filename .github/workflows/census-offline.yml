@@ -58,4 +58,4 @@ jobs:
       - name: Record evidence boundary
         if: always()
         run: |
-          echo 'Offline synthetic TIGER/Line package inspection, ACS API parser, injected-transport retrieval-episode, and routing checks only; the checked-in descriptor (role/rights set 2026-09-28) releases RAW/QUARANTINE candidate routes, still without any write or admission. No Census fetch, source activation, feature-class approval, disclosure review, source admission, capture completeness, active Site integration, release, or deployment proof.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Offline synthetic TIGER/Line package inspection, ACS API parser, injected-transport retrieval-episode, and routing checks only; the checked-in descriptor (role/rights set 2026-09-28) releases RAW/QUARANTINE candidate routes for ACS only (TIGER/Line packages hold with PRODUCT_ROLE_UNRESOLVED), still without any write or admission. No Census fetch, source activation, feature-class approval, disclosure review, source admission, capture completeness, active Site integration, release, or deployment proof.' >> "$GITHUB_STEP_SUMMARY"

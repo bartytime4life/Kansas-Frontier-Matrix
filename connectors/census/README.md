@@ -52,7 +52,7 @@ notes:
 `connectors/census/`
 
 > [!NOTE]
-> **Descriptor resolved (2026-09-28).** `src/census/descriptor.yaml` now sets `role: aggregate` and `rights: public-domain-us-government-work` (U.S. federal works, 17 U.S.C. 105), as chosen by the repository owner. `admit.admit()` therefore returns its provisional `RAW_CANDIDATE` or `QUARANTINE_CANDIDATE` route instead of `HOLD`; an unresolved descriptor still holds every route. Routing remains no write, no admission, and no coverage claim. This is not a SourceDescriptor, source activation, sensitivity review, or release, and earlier notes that say routes end at `HOLD` describe the unresolved state.
+> **Descriptor resolved (2026-09-28).** `src/census/descriptor.yaml` now sets `role: aggregate` and `rights: public-domain-us-government-work` (U.S. federal works, 17 U.S.C. 105), as chosen by the repository owner. Because source role is product-level, `admit.ROLE_COVERED_PRODUCTS` applies that role to ACS estimate tables only: ACS returns its provisional `RAW_CANDIDATE` or `QUARANTINE_CANDIDATE` route instead of `HOLD`, while TIGER/Line packages (reference geometry) still end at `HOLD` with `PRODUCT_ROLE_UNRESOLVED` until their own role is decided; an unresolved descriptor still holds every route. Routing remains no write, no admission, and no coverage claim. This is not a SourceDescriptor, source activation, sensitivity review, or release, and earlier notes that say routes end at `HOLD` describe the unresolved state.
 
 ## Quick jumps
 

@@ -11,7 +11,8 @@ are a quarantine candidate. A parsed file or collection is a raw candidate, flag
 product flags: ``MISSING_HOURS_PRESENT`` for USCRN gaps, and the NWS collection's own
 reasons (a partial capture or the seven-day window). NWS freshness is computed as of the
 retrieval instant only and must be recomputed on reuse. The final route is HOLD while the
-connector descriptor leaves ``role`` or ``rights`` unresolved. Nothing here grants
+connector descriptor leaves ``role`` or ``rights`` unresolved, and always for a product the
+descriptor's role does not cover (``PRODUCT_ROLE_UNRESOLVED``; only USCRN is covered). Nothing here grants
 admission, establishes coverage, relays an alert, or persists material.
 """
 from __future__ import annotations
@@ -36,6 +37,10 @@ LAST_MODIFIED = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z")
 PRODUCTS = {fetch.STORM_SOURCE_ID: fetch.STORM_RETRIEVAL_PROFILE,
             fetch.USCRN_SOURCE_ID: fetch.USCRN_RETRIEVAL_PROFILE,
             fetch.NWS_SOURCE_ID: fetch.NWS_RETRIEVAL_PROFILE}
+# Source role is product-level (README "Source-role posture"): the family descriptor's
+# single role is applied only to these products. Storm Events (historical event records)
+# and NWS alerts (official warning context) hold until their own roles are decided.
+ROLE_COVERED_PRODUCTS = frozenset({fetch.USCRN_SOURCE_ID})
 URL_RULES = {fetch.STORM_SOURCE_ID: fetch._require_planned_storm,
              fetch.USCRN_SOURCE_ID: fetch._require_planned_uscrn,
              fetch.NWS_SOURCE_ID: fetch._require_planned_nws}
@@ -132,7 +137,8 @@ def admit(retrieval: Retrieval, *,
         provisional, reasons = HOLD, tuple(episode["result"]["reason_codes"])
     else:
         provisional, reasons, parsed = _parse(source_id, retrieval, episode)
-    blockers = descriptor_blockers(load_descriptor() if descriptor is None else descriptor)
+    blockers = (() if source_id in ROLE_COVERED_PRODUCTS else ("PRODUCT_ROLE_UNRESOLVED",)) \
+        + descriptor_blockers(load_descriptor() if descriptor is None else descriptor)
     route = HOLD if blockers else provisional
     return AdmissionDecision(
         route, provisional, reasons + blockers, episode["episode_id"], source_id,
