@@ -30,6 +30,7 @@ name: repository-governance-parity
       - "tools/validators/directory_governance/**"
       - "tools/validators/validator_registry.json"
       - "data/receipts/generated/genrec-repository-governance-parity-*.json"
+      - "data/receipts/generated/genrec-topology-baseline-recovery-20260928.json"
   push:
     branches: [main]
     paths:
@@ -44,6 +45,7 @@ name: repository-governance-parity
       - "tools/validators/directory_governance/**"
       - "tools/validators/validator_registry.json"
       - "data/receipts/generated/genrec-repository-governance-parity-*.json"
+      - "data/receipts/generated/genrec-topology-baseline-recovery-20260928.json"
   workflow_dispatch:
 
 permissions:
