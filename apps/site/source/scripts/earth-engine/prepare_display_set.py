@@ -25,6 +25,9 @@ from rasterio.windows import Window
 
 PREFIX = "earth-engine-context/v1"
 ORIGIN = 20037508.342789244
+# Start at zoom 0 so installed layers stay visible at the Explorer's regional
+# minimum zoom (4) and in Globe views; MapLibre never under-zooms raster tiles.
+MIN_ZOOM = 0
 SAMPLE = {"type": "Polygon", "coordinates": [[[-99.5, 38.2], [-99.3, 38.2], [-99.3, 38.4], [-99.5, 38.4], [-99.5, 38.2]]]}
 LAYERS = {
     "ee-cdl": {"source": "USDA/NASS/CDL", "bands": 1, "unit": "USDA CDL class code", "resampling": "nearest", "maxZoom": 12, "coverage": 0.995, "period": "2024 harvest year", "resolution": 30, "attribution": "USDA NASS Cropland Data Layer", "legend": "USDA 2024 CDL crop classes · official class colors"},
@@ -199,6 +202,7 @@ def colorize(data: np.ndarray, good: np.ndarray, layer_id: str, palette: dict) -
         colors = np.clip(data[:3].transpose(1, 2, 0) / 0.3, 0, 1) ** (1 / 1.2)
         rgba[:, :, :3][good] = np.round(colors[good] * 255).astype(np.uint8)
     else:
+        # Keep identical to EARTH_ENGINE_DISPLAY_RAMPS in app/earth-engine-data.ts.
         ramps = {
             "ee-chirps": ([0, 600, 1200], ["#fff4c2", "#79c9bc", "#235ca8"]),
             "ee-terraclimate": ([-5, 0, 5], ["#a63603", "#f6eedb", "#0868ac"]),
@@ -216,7 +220,7 @@ def render_tiles(src, layer_id: str, set_dir: Path, set_id: str, geometry: dict,
     projected_boundary = transform_geom("EPSG:4326", "EPSG:3857", geometry)
     boundary_bounds = rasterio.features.bounds(projected_boundary)
     indexes = {}
-    for z in range(5, spec["maxZoom"] + 1):
+    for z in range(MIN_ZOOM, spec["maxZoom"] + 1):
         xs, ys = tile_range(boundary_bounds, z)
         entries = {}
         for x in xs:
