@@ -1,5 +1,5 @@
 {
-  "receipt_id": "genrec-explorer-site-v101-mirror-20260928",
+  "receipt_id": "genrec-explorer-site-v102-mirror-20260928",
   "contract_version": "3.0.0",
   "artifact_paths": [
     "apps/site/README.md",
@@ -52,7 +52,6 @@
     "apps/site/source/docs/EARTH_ENGINE_DISCOVERY.md",
     "apps/site/source/docs/SITE_FEATURE_CONNECTION_ACTION_MAP.md",
     "apps/site/source/scripts/earth-engine/prepare_display_set.py",
-    "apps/site/source/scripts/earth-engine/requirements.txt",
     "apps/site/source/tests/3dep-dem-tiles.test.mjs",
     "apps/site/source/tests/earth-engine.test.mjs",
     "apps/site/source/tests/lightning-data.test.mjs",
@@ -70,7 +69,7 @@
     "apps/site/source/vite.config.ts"
   ],
   "artifact_hashes": {
-    "apps/site/README.md": "sha256:88bcafed5a297323428a9d4e665a3af4cd740b509bbff7aba176fb6fd95a672c",
+    "apps/site/README.md": "sha256:18cbc5c9f2d7ba5f2ecccfeeed2bc6c2da19c0faee1319c5368711336edaafd2",
     "apps/site/source/README.md": "sha256:81ef20b59ba5ed976a5a6ff882e0e36a0a387c1afae62473a4c424060a67cd99",
     "apps/site/source/app/3dep-dem-tiles.ts": "sha256:67b3e84c88bb0f5d58555f6264153034763eebc9972f24c5eb863f09d3f3c791",
     "apps/site/source/app/about/page.tsx": "sha256:2cabc938a7d259088311cfc8592db2328fa3edaf8ca3d488f39ccfc3e6a3be7c",
@@ -120,7 +119,6 @@
     "apps/site/source/docs/EARTH_ENGINE_DISCOVERY.md": "sha256:badbab28b55adb569594c18a4d66be1b8b27b7871fff5e2519cc4d575108fdf8",
     "apps/site/source/docs/SITE_FEATURE_CONNECTION_ACTION_MAP.md": "sha256:75841b65e4ec39afa8c3d861e8951c017d99f6428ef6612ed241a7b03df9a138",
     "apps/site/source/scripts/earth-engine/prepare_display_set.py": "sha256:4da4caef577d305bd23ec488f1e0cb995597a49e5e0a3d81b5f8bda23a714172",
-    "apps/site/source/scripts/earth-engine/requirements.txt": "sha256:426ae2a9166b2f41f4d35e6a81c98f17140de41f0d0ea0812712c2d3050e7a81",
     "apps/site/source/tests/3dep-dem-tiles.test.mjs": "sha256:e84aeefeaef02ea9c34d4b7f7b131d2df85318b3ae26df550006541f10c0c298",
     "apps/site/source/tests/earth-engine.test.mjs": "sha256:4d6543ba1305a2c555844cb22ae71c130e0fc2f984fcdfda7f2a76f4f558184f",
     "apps/site/source/tests/lightning-data.test.mjs": "sha256:14dc7f200d60ded2b5168216d1ae5b343b8be4a84f3eb8709b02a3526bb02f24",
@@ -160,7 +158,7 @@
     ],
     "attached_docs": [],
     "evidence_refs": [
-      "Sites project appgprj_6aa0b1c41bc08191bfd86003920f1631 source f45ce944390c44942e27c3619cf737a770b37f53",
+      "Sites project appgprj_6aa0b1c41bc08191bfd86003920f1631 source 875a8632ae038e77685c1a7130cc0114e45e1810",
       "GitHub main base 33f66a6b7fbbed3a8296d48eaf06b1ef47a5831f"
     ]
   },
@@ -215,7 +213,6 @@
     "apps/site/source/docs/EARTH_ENGINE_DISCOVERY.md": "PROPOSED",
     "apps/site/source/docs/SITE_FEATURE_CONNECTION_ACTION_MAP.md": "PROPOSED",
     "apps/site/source/scripts/earth-engine/prepare_display_set.py": "PROPOSED",
-    "apps/site/source/scripts/earth-engine/requirements.txt": "PROPOSED",
     "apps/site/source/tests/3dep-dem-tiles.test.mjs": "PROPOSED",
     "apps/site/source/tests/earth-engine.test.mjs": "PROPOSED",
     "apps/site/source/tests/lightning-data.test.mjs": "PROPOSED",
@@ -236,22 +233,27 @@
     {
       "gate": "source-mirror-224-file-sha256-parity",
       "outcome": "PASS",
-      "reason": "Every one of the 224 tracked Site source files matches the privately deployed commit; two obsolete mirror-only source-role files were removed."
+      "reason": "Every one of the 224 tracked Site source files matches the privately deployed version 102 commit; two obsolete mirror-only source-role files were removed."
     },
     {
       "gate": "site-build",
       "outcome": "PASS",
-      "reason": "npm run build passed from the exact pushed Site source commit f45ce944."
+      "reason": "npm run build passed from the exact pushed Site source commit 875a8632."
     },
     {
       "gate": "mirrored-site-node-tests",
       "outcome": "PASS",
-      "reason": "199 Site tests passed from the same-commit source and built Worker output."
+      "reason": "199 Site tests passed on the same application source; the version 102 change only updates a Python helper dependency."
     },
     {
       "gate": "mirrored-site-typescript",
       "outcome": "PASS",
       "reason": "tsc --noEmit passed in the source mirror."
+    },
+    {
+      "gate": "earth-engine-pillow-pin",
+      "outcome": "PASS",
+      "reason": "Pillow 12.3.0 is the GitHub main pin, is available from PyPI, and passed a focused PNG encode smoke test; the previous 11.3.0 pin triggered dependency-review and repository-scan failures."
     },
     {
       "gate": "maplibre-acquisition-inventory",
@@ -272,9 +274,9 @@
   "policy_decisions": [],
   "citations": [
     {
-      "id": "private-site-source-v101",
+      "id": "private-site-source-v102",
       "validated": true,
-      "evidence_ref": "Sites project appgprj_6aa0b1c41bc08191bfd86003920f1631 source f45ce944390c44942e27c3619cf737a770b37f53"
+      "evidence_ref": "Sites project appgprj_6aa0b1c41bc08191bfd86003920f1631 source 875a8632ae038e77685c1a7130cc0114e45e1810"
     }
   ],
   "human_review": {
@@ -283,7 +285,7 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-09-28T15:24:32.006423Z",
+  "created_at": "2026-09-28T15:34:54.784952Z",
   "emitter": "OpenAI GPT-6 via Codex",
-  "notes": "Source mirror of owner-private Site v101, including the MapLibre seam integrated after PR #4784. The Site was privately deployed before this GitHub mirror. This receipt is provenance only and grants no review, source admission, public release, or merge authority."
+  "notes": "Source mirror of owner-private Site v102, including the MapLibre seam and corrected Earth Engine Pillow pin. The Site was privately deployed before this GitHub mirror. This receipt is provenance only and grants no review, source admission, public release, or merge authority."
 }
