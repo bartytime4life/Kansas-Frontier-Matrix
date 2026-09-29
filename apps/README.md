@@ -53,7 +53,7 @@ related:
   - governed-api/README.md
   - site/README.md
   - review-console/README.md
-  - cli/README.md
+  - ../packages/kfm-cli/README.md
   - workers/README.md
   - admin/README.md
   - packages/README.md
@@ -124,7 +124,7 @@ The current root contains seven direct lanes:
 - [`governed-api/`](governed-api/README.md) — bounded executable public trust membrane;
 - [`site/`](site/README.md) — GPT Site v74-derived source mirror under `site/source/` for local hosting;
 - [`review-console/`](review-console/README.md) — role-gated steward review surface;
-- [`cli/`](cli/README.md) — restricted operator command surface;
+- the operator CLI lives in [`packages/kfm-cli`](../packages/kfm-cli/README.md) (the former `apps/cli/` scaffold was removed);
 - [`workers/`](workers/README.md) — non-publishing background runner lane;
 - [`admin/`](admin/README.md) — restricted administrative surface;
 - [`packages/`](packages/README.md) — documented drift guard, not a shared-package authority.
@@ -170,7 +170,7 @@ This edition is pinned to `main@2a205c8df31ff95a61f72a52489336b924a791ac` and ap
 | The separately tracked `kansas-frontier-matrix-explorer` app resolves the `@kfm/maplibre` facade to the accepted workspace package root and boots `NullMapRuntime` as Sites-derived implementation lineage. | CONFIRMED | Child TypeScript/Vite aliases, manifest, entrypoint, focused tests, and child README | Styles, sources, layers, workers, hit testing, measurement, and runtime probes remain held; this is not renderer activation or repository-wide readiness. |
 | `explorer-web` currently contains 38 named feature lanes, 24 TypeScript adapter modules, 45 top-level unit tests, and 36 browser specs. | CONFIRMED | Pinned apps tree | File and test inventory demonstrates bounded implementation breadth, not integrated product or operational maturity. |
 | Explorer package scripts run TypeScript/Vite build, Vitest unit tests, and Playwright browser tests. | CONFIRMED | Current `package.json`, lockfile, Playwright config, and `ui-build` workflow | Workflow wiring is not a hosted-run conclusion or deployment proof. |
-| Review Console and Admin remain documentation-led; CLI and Worker Python entrypoints remain explicit greenfield placeholders. | CONFIRMED | Pinned child trees, CLI `__main__.py`, and worker `main.py` files | No review mutation, operator workflow, queue, schedule, or product readiness is established. |
+| Review Console and Admin remain documentation-led; Worker Python entrypoints remain explicit greenfield placeholders. The `apps/cli/` scaffold was removed in favor of `packages/kfm-cli`. | CONFIRMED | Pinned child trees and worker `main.py` files | No review mutation, operator workflow, queue, schedule, or product readiness is established. |
 | `@bartytime4life` is the executable GitHub review route. | CONFIRMED | Current CODEOWNERS | Routing is not stewardship, independent approval, or release authority. |
 | ADR-0029 and ADR-0006 are accepted; ADR-0004, ADR-0005, ADR-0019, and ADR-0025 remain draft or proposed. | CONFIRMED | Current ADR sources and index | Acceptance of a boundary does not admit a dependency, establish runtime behavior, or approve release. |
 | Deployment, dashboards, audit sinks, live authorization, service health, and public operation are established. | UNKNOWN | No admissible operational evidence inspected | Verify through infrastructure, runtime, logs, and deployed observations. |
@@ -389,7 +389,7 @@ Source-derived ideas advance only through the normal sequence: classify the clai
 | [`governed-api/`](governed-api/README.md) | Bounded executable WSGI, three fail-closed routes, route/envelope tests | `make governed-api-smoke`; `make governed-api-verify`; `api-test` | `ABSTAIN`, 404, or 405; no renderer/model/internal-store shortcut |
 | [`site/`](site/README.md) | Reconciled source mirror of the deployed GPT Site v74 under `site/source/`, including checked-in static assets and D1 migration | From `apps/site/source/`: `npm run install:ci`, `npm run build`, `node --test tests/*.test.mjs`, `npm run dev` | Private D1 records, R2 uploads, and live provider responses are not bundled; local success does not establish source admission or release |
 | [`review-console/`](review-console/README.md) | README-led feature boundaries and a minimal package manifest | No accepted executable review flow | No review, promotion, correction, or rollback mutation is proven |
-| [`cli/`](cli/README.md) | Python package skeleton with an explicit greenfield placeholder entrypoint and placeholder command modules | `apps/cli/src/kfm_cli/__main__.py` | No operator shortcut is review, release, or publication authority |
+| CLI | Removed 2026-09-29; the operator CLI is the installable [`packages/kfm-cli`](../packages/kfm-cli/README.md) (`doctor`, `diff`, `release-diff`, `telemetry`) | `kfm --help` after `tools/ci/install_kfm_cli.py` | Read-only local comparisons and bounded validator handoffs; no review, release, or publication authority |
 | [`workers/`](workers/README.md) | Named worker directories with explicit greenfield placeholder entrypoints | No accepted queue, schedule, worker behavior, or worker test suite | Watcher and worker outputs remain candidates or receipts, never publication |
 | [`admin/`](admin/README.md) | README-only restricted boundary | No executable admin surface | Restricted and absent by default |
 | [`packages/`](packages/README.md) | README and `.gitkeep` drift guard | No local manifest or package activation | Must not shadow top-level `packages/` |

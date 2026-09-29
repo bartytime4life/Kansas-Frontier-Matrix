@@ -2,12 +2,12 @@
  "schema_version": "kfm.scaffold-inventory/v1",
  "summary": {
   "by_kind": {
-   "PLACEHOLDER_MARKER": 892,
-   "STUB_MODULE": 332,
+   "PLACEHOLDER_MARKER": 883,
+   "STUB_MODULE": 324,
    "UNRESOLVED_DESCRIPTOR": 17
   },
   "by_surface": {
-   "apps": 34,
+   "apps": 17,
    "connectors": 107,
    "contracts": 3,
    "packages": 122,
@@ -18,27 +18,10 @@
    "tests": 186,
    "tools": 52
   },
-  "files": 894,
-  "total": 1241
+  "files": 885,
+  "total": 1224
  },
  "findings": [
-  {"kind": "PLACEHOLDER_MARKER", "path": "apps/cli/pyproject.toml"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "apps/cli/src/kfm_cli/commands/catalog.py"},
-  {"kind": "STUB_MODULE", "path": "apps/cli/src/kfm_cli/commands/catalog.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "apps/cli/src/kfm_cli/commands/fixtures.py"},
-  {"kind": "STUB_MODULE", "path": "apps/cli/src/kfm_cli/commands/fixtures.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "apps/cli/src/kfm_cli/commands/focus_dry_run.py"},
-  {"kind": "STUB_MODULE", "path": "apps/cli/src/kfm_cli/commands/focus_dry_run.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "apps/cli/src/kfm_cli/commands/ingest.py"},
-  {"kind": "STUB_MODULE", "path": "apps/cli/src/kfm_cli/commands/ingest.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "apps/cli/src/kfm_cli/commands/registry.py"},
-  {"kind": "STUB_MODULE", "path": "apps/cli/src/kfm_cli/commands/registry.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "apps/cli/src/kfm_cli/commands/release.py"},
-  {"kind": "STUB_MODULE", "path": "apps/cli/src/kfm_cli/commands/release.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "apps/cli/src/kfm_cli/commands/rollback.py"},
-  {"kind": "STUB_MODULE", "path": "apps/cli/src/kfm_cli/commands/rollback.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "apps/cli/src/kfm_cli/commands/validate.py"},
-  {"kind": "STUB_MODULE", "path": "apps/cli/src/kfm_cli/commands/validate.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "apps/governed-api/pyproject.toml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "apps/workers/src/ai_focus_worker/main.py"},
   {"kind": "STUB_MODULE", "path": "apps/workers/src/ai_focus_worker/main.py"},

@@ -246,7 +246,7 @@ This is the complete current directory map at the pinned base. It is not a propo
 
 | Surface | Pinned evidence | Current bounded interpretation |
 |---|---|---|
-| [`apps/cli/.../ingest.py`](../../../cli/src/kfm_cli/commands/ingest.py) | Single greenfield-placeholder comment | No operator CLI behavior is established |
+| `apps/cli/.../ingest.py` (removed) | Removed with the `apps/cli/` scaffold (2026-09-29) | No operator ingest command exists |
 | [`pipelines/ingest/main.py`](../../../../pipelines/ingest/main.py) | Single greenfield-placeholder comment | Shared ingest-stage execution entrypoint remains placeholder-only |
 | [`pipelines/ingest/README.md`](../../../../pipelines/ingest/README.md) | Repository-grounded shared ingest boundary | Defines placement and future obligations; does not establish a shared executable system |
 | [`SourceDescriptor` contract](../../../../contracts/source/source_descriptor.md) | Draft, schema-paired, source-role anti-collapse contract | Semantic and governance surface exists; source truth or admission is not implied |
@@ -1392,7 +1392,7 @@ Where consequence warrants:
 - Workers app boundary: [`apps/workers/`](../../README.md)
 - Apps responsibility root: [`apps/`](../../../README.md)
 - Local placeholder: [`main.py`](./main.py)
-- Placeholder ingest CLI: [`apps/cli/src/kfm_cli/commands/ingest.py`](../../../cli/src/kfm_cli/commands/ingest.py)
+- Placeholder ingest CLI: `apps/cli/src/kfm_cli/commands/ingest.py` (removed)
 - Governed public ingress: [`apps/governed-api/`](../../../governed-api/README.md)
 - Human review surface: [`apps/review-console/`](../../../review-console/README.md)
 

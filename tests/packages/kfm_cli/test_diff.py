@@ -49,3 +49,56 @@ def test_invalid_child_report_cannot_be_presented_as_success(tmp_path) -> None:
     assert result.exit_code == 2
     assert json.loads(result.stdout)["error"]["code"] == "COMPARATOR_ERROR"
     assert "raw" not in result.stdout
+
+
+def _manifest(path, refs) -> None:
+    path.write_text(json.dumps({"object_type": "ReleaseManifest",
+                                "artifacts": [{"artifact_ref": ref} for ref in refs]}),
+                    encoding="utf-8")
+
+
+def test_release_diff_reports_artifact_ref_changes(tmp_path) -> None:
+    left = tmp_path / "left.json"
+    right = tmp_path / "right.json"
+    _manifest(left, ["ref:a"])
+    _manifest(right, ["ref:a", "ref:b"])
+    changed = runner.invoke(build_app(), ["release-diff", "--left", str(left),
+                                          "--right", str(right), "--fail-on-change"])
+    assert changed.exit_code == 1
+    report = json.loads(changed.stdout)
+    assert report["tool"] == "release-manifest-diff"
+    assert report["artifacts"] == {"added": ["ref:b"], "removed": [], "changed": []}
+    assert report["blocking"] is True
+    same = runner.invoke(build_app(), ["release-diff", "--left", str(left), "--right", str(left)])
+    assert same.exit_code == 0
+    assert json.loads(same.stdout)["status"] == "same"
+
+
+def test_release_diff_rejects_untyped_input(tmp_path) -> None:
+    left = tmp_path / "left.json"
+    right = tmp_path / "right.json"
+    left.write_text('{"artifacts":[{"artifact_ref":"ref:a"}]}', encoding="utf-8")
+    _manifest(right, ["ref:a"])
+    result = runner.invoke(build_app(), ["release-diff", "--left", str(left), "--right", str(right)])
+    assert result.exit_code == 2
+    assert json.loads(result.stdout)["error"]["code"] == "LEFT_NOT_RELEASE_MANIFEST"
+
+
+def test_release_diff_rejects_a_report_missing_artifact_changes(tmp_path) -> None:
+    report = {"tool": "release-manifest-diff", "status": "same", "blocking": False,
+              "left": str((tmp_path / "left").absolute()),
+              "right": str((tmp_path / "right").absolute()),
+              "summary": {"added": [], "removed": [], "changed": []}}
+    with patch("kfm_cli.cli.subprocess.run", return_value=subprocess.CompletedProcess(
+        [], 0, json.dumps(report), ""
+    )):
+        result = runner.invoke(build_app(), ["release-diff", "--left", str(tmp_path / "left"),
+                                            "--right", str(tmp_path / "right")])
+    assert result.exit_code == 2
+    assert json.loads(result.stdout)["error"]["code"] == "COMPARATOR_ERROR"
+
+
+def test_help_lists_both_comparators() -> None:
+    result = runner.invoke(build_app(), ["--help"])
+    assert result.exit_code == 0
+    assert "diff" in result.stdout and "release-diff" in result.stdout
