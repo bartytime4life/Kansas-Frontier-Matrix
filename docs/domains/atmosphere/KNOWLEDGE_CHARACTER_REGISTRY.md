@@ -8,7 +8,14 @@ owners: DOM-AIR steward + Docs steward (PLACEHOLDER — NEEDS VERIFICATION)
 created: 2026-05-29
 updated: 2026-05-29
 policy_label: public
-related: []
+related:
+  - docs/domains/atmosphere/KNOWLEDGE_CHARACTERS.md
+  - docs/domains/atmosphere/IDENTITY_MODEL.md
+  - docs/domains/atmosphere/FILE_SYSTEM_PLAN.md
+  - docs/domains/atmosphere/EXPANSION_BACKLOG.md
+  - docs/doctrine/directory-rules.md
+  - docs/registers/DRIFT_REGISTER.md
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, atmosphere, air, knowledge-character, registry, controlled-vocabulary, governance, doctrine]
 notes:
   # NAMING COLLISION (CONFIRMED in this session): sibling docs reference BOTH this filename and KNOWLEDGE_CHARACTERS.md for the same vocabulary. This file does NOT duplicate the prose; it is a controlled-vocabulary registry surface that defers all explanation to KNOWLEDGE_CHARACTERS.md.

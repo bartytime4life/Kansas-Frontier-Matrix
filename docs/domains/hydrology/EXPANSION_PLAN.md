@@ -10,6 +10,7 @@ updated: 2026-06-06
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
+  - ../../doctrine/ai-build-operating-contract.md
   - ../../doctrine/directory-rules.md
   - docs/domains/README.md
   - docs/domains/hydrology/README.md
@@ -18,6 +19,7 @@ related:
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/authority-ladder.md
   - docs/doctrine/trust-membrane.md
+  - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
   - docs/standards/PROV.md
 tags: [kfm, domain, hydrology, expansion-plan, governance, thin-slice]
 notes:

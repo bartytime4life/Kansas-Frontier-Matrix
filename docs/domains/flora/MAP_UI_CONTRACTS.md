@@ -8,7 +8,18 @@ owners: <flora domain steward> · <UI/AI steward>
 created: 2026-05-16
 updated: 2026-06-03
 policy_label: public
-related: []
+related:
+  - ../../doctrine/ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md
+  - docs/domains/flora/README.md
+  - docs/domains/flora/IDENTITY_MODEL.md
+  - docs/architecture/trust-membrane.md
+  - docs/standards/PROV.md
+  - docs/standards/PMTILES.md
+  - schemas/contracts/v1/map/
+  - schemas/contracts/v1/ui/
+  - schemas/contracts/v1/flora/
+  - policy/sensitivity/flora/
 tags: [kfm, flora, map, ui, contracts, governed-ai, evidence-drawer, focus-mode]
 notes:
   # CONTRACT_VERSION pin: this doc is doctrine-adjacent; it tracks ai-build-operating-contract.md v3.0.0.

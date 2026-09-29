@@ -9,6 +9,8 @@ created: 2026-05-18
 updated: 2026-06-07
 policy_label: restricted-by-default
 related:
+  - ../../doctrine/directory-rules.md
+  - ../../doctrine/ai-build-operating-contract.md
   - ./DATA_LIFECYCLE.md
   - ./DEFINITION_OF_DONE.md
   - ./DNA_HANDLING.md

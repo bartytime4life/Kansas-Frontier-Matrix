@@ -16,7 +16,9 @@ related:
   - docs/domains/roads-rail-trade/HISTORIC_ROUTES.md
   - docs/standards/PROV.md
   - docs/standards/CANONICALIZATION.md
+  - schemas/contracts/v1/source/source-descriptor.json
   - docs/registers/DRIFT_REGISTER.md
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, roads-rail-trade, identity, spec_hash, source-role, governance]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned; doctrine-adjacent identity standard.

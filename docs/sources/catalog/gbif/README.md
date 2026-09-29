@@ -10,6 +10,15 @@ updated: 2026-05-21
 policy_label: public
 related:
   - docs/doctrine/directory-rules.md
+  - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
+  - docs/sources/catalog/README.md
+  - docs/domains/fauna/
+  - docs/domains/flora/
+  - docs/domains/habitat/
+  - schemas/contracts/v1/source/source-descriptor.json
+  - control_plane/source_authority_register.yaml
+  - policy/sensitivity/
+  - policy/rights/
 tags: [kfm, source, biodiversity, gbif, taxonomy, dwc, stac, fauna, flora, habitat]
 notes:
   - "Repository is not mounted in this session; all repo-state-shaped claims are PROPOSED or NEEDS VERIFICATION."

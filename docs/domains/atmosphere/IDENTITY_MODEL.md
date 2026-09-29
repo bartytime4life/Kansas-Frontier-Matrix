@@ -8,7 +8,17 @@ owners: DOM-AIR steward + Docs steward (PLACEHOLDER — NEEDS VERIFICATION)
 created: 2026-05-16
 updated: 2026-05-29
 policy_label: public
-related: []
+related:
+  - docs/domains/atmosphere/README.md
+  - docs/domains/atmosphere/CANONICAL_PATHS.md
+  - docs/domains/atmosphere/FILE_SYSTEM_PLAN.md
+  - docs/domains/atmosphere/EXPANSION_BACKLOG.md
+  - docs/doctrine/directory-rules.md
+  - docs/doctrine/lifecycle-law.md
+  - docs/doctrine/truth-posture.md
+  - docs/architecture/contract-schema-policy-split.md
+  - docs/standards/PROV.md
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, atmosphere, air, identity, evidence, governance, doctrine]
 notes:
   # Implementation-layer claims are PROPOSED pending mounted-repo inspection.

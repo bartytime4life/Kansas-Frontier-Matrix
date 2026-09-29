@@ -10,6 +10,12 @@ updated: 2026-06-07
 policy_label: public
 related:
   - docs/doctrine/directory-rules.md
+  - docs/doctrine/lifecycle-law.md
+  - docs/domains/roads-rail-trade/README.md
+  - docs/standards/PROV.md
+  - docs/standards/ISO-19115.md
+  - docs/runbooks/roads-rail-trade/
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, lifecycle, roads-rail-trade, transport, governance]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned; doctrine-adjacent doc.

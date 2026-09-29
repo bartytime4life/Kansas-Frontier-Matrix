@@ -15,6 +15,7 @@ related:
   - docs/domains/roads-rail-trade/FILE_SYSTEM_PLAN.md
   - docs/domains/roads-rail-trade/EXPANSION_BACKLOG.md
   - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, roads-rail-trade, transport, graph, triplets, projection, derived, governance]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned; doctrine-adjacent standard doc.

@@ -11,6 +11,7 @@ policy_label: public
 related:
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
+  - docs/doctrine/truth-posture.md
   - docs/doctrine/trust-membrane.md
   - docs/domains/habitat/API_CONTRACTS.md
   - docs/domains/habitat/sublanes/suitability.md

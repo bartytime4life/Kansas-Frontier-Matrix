@@ -15,6 +15,9 @@ related:
   - ./PIPELINE.md
   - ../../doctrine/directory-rules.md
   - ../../adr/
+  - ../../../contracts/transport/
+  - ../../../schemas/contracts/v1/transport/
+  - ../../../policy/sensitivity/transport/
   - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, roads, rail, trade-routes, transport]
 notes:

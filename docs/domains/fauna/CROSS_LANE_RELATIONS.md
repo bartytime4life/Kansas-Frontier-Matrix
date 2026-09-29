@@ -8,7 +8,18 @@ owners: <fauna-domain-steward> (PLACEHOLDER — assign before review)
 created: 2026-05-29
 updated: 2026-05-29
 policy_label: public
-related: []
+related:
+  - ../../doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
+  - docs/domains/fauna/README.md
+  - docs/domains/fauna/CANONICAL_PATHS.md
+  - docs/domains/fauna/CONTINUITY_INVENTORY.md
+  - docs/domains/habitat/README.md
+  - docs/domains/flora/README.md
+  - docs/domains/hydrology/README.md
+  - docs/domains/hazards/README.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+  - docs/registers/DRIFT_REGISTER.md
 tags: [kfm, fauna, cross-lane, relations, ownership, evidence-bundle, joins, sensitivity]
 notes:
   - CONTRACT_VERSION = "3.0.0" — doctrine-adjacent register under ai-build-operating-contract.md.

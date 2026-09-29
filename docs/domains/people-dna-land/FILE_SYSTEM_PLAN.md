@@ -9,6 +9,8 @@ created: 2026-05-18
 updated: 2026-06-07
 policy_label: public
 related:
+  - ../../doctrine/directory-rules.md
+  - ../../doctrine/ai-build-operating-contract.md
   - ./README.md
   - ./DATA_LIFECYCLE.md
   - ./DEFINITION_OF_DONE.md

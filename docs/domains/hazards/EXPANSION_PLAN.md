@@ -15,6 +15,10 @@ related:
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/truth-posture.md
+  - docs/domains/hazards/README.md
+  - docs/domains/hazards/DATA_LIFECYCLE.md
+  - docs/domains/hazards/EXPANSION_BACKLOG.md
+  - docs/domains/hydrology/README.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/registers/DRIFT_REGISTER.md
 tags: [kfm, hazards, domain, expansion, planning, governance]

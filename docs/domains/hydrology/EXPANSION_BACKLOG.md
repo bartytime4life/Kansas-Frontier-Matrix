@@ -10,6 +10,7 @@ updated: 2026-07-30
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
+  - ../../doctrine/ai-build-operating-contract.md
   - ../../doctrine/directory-rules.md
   - docs/domains/hydrology/README.md
   - docs/domains/hydrology/DATA_LIFECYCLE.md

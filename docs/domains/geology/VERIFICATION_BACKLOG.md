@@ -15,6 +15,7 @@ related:
   - docs/domains/geology/README.md
   - docs/domains/geology/OPEN_QUESTIONS.md
   - docs/adr/
+  - ../../doctrine/ai-build-operating-contract.md
   - ../../doctrine/directory-rules.md
 tags: [kfm, domain, geology, verification, governance, backlog, register]
 notes:

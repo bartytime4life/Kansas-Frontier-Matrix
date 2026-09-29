@@ -89,7 +89,8 @@ A focused update should:
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) — contribution workflow, evidence, validation, and pull-request expectations.
 - [`.github/CODEOWNERS`](.github/CODEOWNERS) — verified GitHub review routing and its authority limits.
 - [`docs/architecture/directory-rules.md`](docs/architecture/directory-rules.md) — repository placement doctrine and change discipline.
-- [`LICENSE`](LICENSE) — repository licensing status; currently unresolved and not replaced by this file.
+- [`LICENSE`](LICENSE) — Apache-2.0 for code; this file does not replace it.
+- [`docs/governance/data_license.md`](docs/governance/data_license.md) — CC BY 4.0 for project-authored documentation and data, and the third-party material notice.
 
 ---
 

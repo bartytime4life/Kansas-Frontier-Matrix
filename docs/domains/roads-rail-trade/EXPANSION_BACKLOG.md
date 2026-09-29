@@ -15,6 +15,7 @@ related:
   - docs/domains/roads-rail-trade/DATA_LIFECYCLE.md
   - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf
   - docs/doctrine/directory-rules.md
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, roads-rail-trade, transport, backlog, planning]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned; doctrine-adjacent planning artifact.

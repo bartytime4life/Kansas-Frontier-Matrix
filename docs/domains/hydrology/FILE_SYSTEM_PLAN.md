@@ -10,23 +10,26 @@ updated: 2026-07-30
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
+  - ../../doctrine/ai-build-operating-contract.md
   - ../../doctrine/directory-rules.md
-  - "docs/domains/README.md"
-  - "docs/domains/hydrology/DATA_LIFECYCLE.md"
-  - "docs/domains/hydrology/EXPANSION_BACKLOG.md"
-  - "docs/domains/hydrology/EXPANSION_PLAN.md"
-  - "docs/registers/DRIFT_REGISTER.md"
-  - "docs/registers/VERIFICATION_BACKLOG.md"
-  - "schemas/contracts/v1/domains/hydrology/"
-  - "contracts/domains/hydrology/"
-  - "policy/domains/hydrology/"
-  - "tests/domains/hydrology/"
-  - "fixtures/domains/hydrology/"
-  - "packages/domains/hydrology/"
-  - "pipelines/domains/hydrology/"
-  - "pipeline_specs/hydrology/"
-  - "data/registry/sources/hydrology/"
-  - "release/candidates/hydrology/"
+  - docs/domains/README.md
+  - docs/domains/hydrology/README.md
+  - docs/domains/hydrology/DATA_LIFECYCLE.md
+  - docs/domains/hydrology/EXPANSION_BACKLOG.md
+  - docs/domains/hydrology/EXPANSION_PLAN.md
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+  - schemas/contracts/v1/domains/hydrology/
+  - schemas/contracts/v1/source/source-descriptor.json
+  - contracts/domains/hydrology/
+  - policy/domains/hydrology/
+  - tests/domains/hydrology/
+  - fixtures/domains/hydrology/
+  - packages/domains/hydrology/
+  - pipelines/domains/hydrology/
+  - pipeline_specs/hydrology/
+  - data/registry/sources/hydrology/
+  - release/candidates/hydrology/
 tags: ["kfm", "hydrology", "directory-rules", "domain-lane", "file-system-plan", "governance"]
 notes:
   - "Lane PATTERN is CONFIRMED doctrine per Directory Rules §12."
