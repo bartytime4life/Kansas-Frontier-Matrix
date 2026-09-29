@@ -5,12 +5,14 @@ import test from "node:test";
 import ts from "typescript";
 
 const modules = new Map();
+const spaUrl = import.meta.resolve("sunrise-sunset-js");
 async function moduleUrl(file) {
   file = path.resolve(file);
   if (modules.has(file)) return modules.get(file);
   let js = ts.transpileModule(await readFile(file, "utf8"), {
     compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
   }).outputText;
+  js = js.replaceAll('from "sunrise-sunset-js"', `from ${JSON.stringify(spaUrl)}`);
   for (const match of [...js.matchAll(/from ["'](\.[^"']+)["']/g)]) {
     js = js.replace(match[0], `from ${JSON.stringify(await moduleUrl(path.resolve(path.dirname(file), match[1]) + ".ts"))}`);
   }

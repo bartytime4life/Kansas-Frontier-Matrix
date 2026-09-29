@@ -12,6 +12,7 @@ import { balanceMapFills, composeMapLayers, requestFillOpacity } from "./map-lay
 import { ACTIVE_TERRAIN_SOURCE, type TerrainSourceRecord } from "./terrain-sources";
 import { terrainHillshadePaint } from "./terrain-relief-style";
 import type { TemporalSweepQuery } from "./temporal-sweep";
+import { buildDaylightGeometry } from "./daylight-layer";
 
 export type BasemapKey = "standard" | "imagery" | "midnight" | "prairie" | "streets" | "topo";
 export type AtmospherePreset = "night" | "dusk" | "clear";
@@ -236,6 +237,68 @@ export const TERRAIN_COLOR_SOURCE_ID = "kfm-terrain-color-dem";
 export const shouldFallbackStandardBasemap = (sourceId: string | undefined, localSource: boolean, officialSource: boolean): boolean =>
   !localSource && !officialSource && (sourceId === "openmaptiles" || sourceId === "ne2_shaded");
 export const TERRAIN_COLOR_RELIEF_LAYER_ID = "kfm-terrain-color-relief";
+export const DAYLIGHT_GEOJSON_SOURCE_ID = "kfm-daylight-context";
+export const DAYLIGHT_FILL_LAYER_ID = "kfm-daylight-context-fill";
+
+/** Adds or updates the calculated solar context without involving any source
+ * registry, evidence state, or provider connection counts. */
+export const setDaylightMapLayer = (map: MapLibreMap, enabled: boolean, instant: Date | number): boolean => {
+  try {
+    if (!enabled) {
+      if (map.getLayer(DAYLIGHT_FILL_LAYER_ID)) map.setLayoutProperty(DAYLIGHT_FILL_LAYER_ID, "visibility", "none");
+      return true;
+    }
+    const data = buildDaylightGeometry(instant);
+    const source = map.getSource(DAYLIGHT_GEOJSON_SOURCE_ID) as GeoJSONSource | undefined;
+    if (!source) {
+      map.addSource(DAYLIGHT_GEOJSON_SOURCE_ID, {
+        type: "geojson",
+        data,
+        buffer: 0,
+        tolerance: 0,
+      });
+    } else {
+      source.setData(data);
+    }
+    let createdLayer = false;
+    if (!map.getLayer(DAYLIGHT_FILL_LAYER_ID)) {
+      const firstDataLayer = map.getStyle().layers?.find((layer) =>
+        layer.id.startsWith("kfm-") && layer.id !== "kfm-background"
+        || layer.id.startsWith("external-"),
+      )?.id;
+      map.addLayer({
+        id: DAYLIGHT_FILL_LAYER_ID,
+        type: "fill",
+        source: DAYLIGHT_GEOJSON_SOURCE_ID,
+        layout: { visibility: "visible" },
+        paint: {
+          "fill-color": [
+            "interpolate", ["linear"], ["get", "shade"],
+            -18, "#0b1b2d",
+            -12, "#1c3550",
+            -6, "#40546a",
+            -0.833, "#937c59",
+          ],
+          "fill-opacity": [
+            "interpolate", ["linear"], ["get", "shade"],
+            -18, 0.66,
+            -12, 0.48,
+            -6, 0.30,
+            -0.833, 0.16,
+          ],
+          "fill-antialias": true,
+        },
+      } as LayerSpecification, firstDataLayer);
+      createdLayer = true;
+    } else {
+      map.setLayoutProperty(DAYLIGHT_FILL_LAYER_ID, "visibility", "visible");
+    }
+    if (createdLayer) composeMapLayers(map);
+    return true;
+  } catch {
+    return false;
+  }
+};
 export type TerrainPresentationState = "OFF" | "LOADING" | "READY" | "ERROR";
 export const terrainSourceLoadState = (state: TerrainPresentationState, loaded: boolean, failed: boolean): TerrainPresentationState =>
   state !== "LOADING" ? state : failed ? "ERROR" : loaded ? "READY" : "LOADING";
