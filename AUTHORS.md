@@ -15,7 +15,7 @@
 | Current named identity | [Andy (`@bartytime4life`)](https://github.com/bartytime4life) |
 | Verification basis | Repository ownership, verified commit authorship, and the current [CODEOWNERS review route](.github/CODEOWNERS) |
 | Complete historical record | Git commits, merged pull requests, and the [GitHub contributor graph](https://github.com/bartytime4life/Kansas-Frontier-Matrix/graphs/contributors) |
-| License boundary | The repository [license remains unresolved](LICENSE); this file grants no license or reuse permission |
+| License boundary | Code is licensed under [Apache-2.0](LICENSE); project-authored documentation and data under [CC BY 4.0](docs/governance/data_license.md); third-party data keeps its source terms. This file grants no additional permission. |
 | Update route | Focused branch and draft pull request, following [`CONTRIBUTING.md`](CONTRIBUTING.md) |
 
 ## Current verified attribution
