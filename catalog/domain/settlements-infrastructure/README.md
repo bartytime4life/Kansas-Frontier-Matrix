@@ -102,7 +102,7 @@ notes:
 - [17. Definition of done](#17-definition-of-done)
 - [18. Open verification items](#18-open-verification-items)
 - [19. Safe language rules](#19-safe-language-rules)
-- Appendix A — No-loss preservation
+- [Appendix A — No-loss preservation](#appendix-a--no-loss-preservation)
 
 ---
 
