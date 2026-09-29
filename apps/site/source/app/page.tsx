@@ -14,6 +14,7 @@ import { sourceDownloadHref } from "./source-downloads";
 import { planOfficialRefresh } from "./official-refresh-plan";
 import { ArchiveDaySlider } from "./archive-day-slider";
 import { SoilMoistureControl } from "./soil-moisture-control";
+import { DEFAULT_SOIL_MAP_STATE, hideSoilContext, restoreSoilMapState, serializeSoilMapState, visibleExternalContextCount, type SoilMapState } from "./soil-moisture";
 import { DataNotices, LayerSceneControls, RenderQualityControl } from "./map-toolbar";
 import { drawWindFlowCanvas, nearestWindFlowSample, windToCompass } from "./wind-arrow-canvas";
 import { applyTerrainReliefStyle, applyTopographicRasterDepth } from "./terrain-relief-style";
@@ -1157,6 +1158,7 @@ export default function Home() {
   const [officialVisibility, setOfficialVisibility] = useState<Record<OfficialContextId, boolean>>(defaultOfficialVisibility);
   const [buildYearCurrent, setBuildYearCurrent] = useState(true);
   const [officialOpacity, setOfficialOpacity] = useState<Record<OfficialContextId, number>>(defaultOfficialOpacity);
+  const [soilMapState, setSoilMapState] = useState<SoilMapState>(DEFAULT_SOIL_MAP_STATE);
   const [officialStates, setOfficialStates] = useState<Record<OfficialContextId, OfficialContextState>>(defaultOfficialStates);
   const [officialPayloads, setOfficialPayloads] = useState<Partial<Record<OfficialContextFeedId, OfficialContextPayload>>>({});
   const [officialArchiveDays, setOfficialArchiveDays] = useState<Partial<Record<OfficialContextFeedId, string>>>({});
@@ -1578,7 +1580,7 @@ export default function Home() {
   const nextSweepFrame = nextTemporalFrame(temporalSequence, temporalQuery.frame, "forward", "stop");
   useEffect(() => { temporalQueryRef.current = temporalQuery; }, [temporalQuery]);
   const visibleOfficialSources = useMemo(() => OFFICIAL_CONTEXT_SOURCES.filter((source) => officialVisibility[source.id]), [officialVisibility]);
-  const visibleOfficialCount = visibleOfficialSources.length;
+  const visibleOfficialCount = visibleExternalContextCount(visibleOfficialSources.length, soilMapState.visible);
   const noaaRadarManifestFresh = noaaRadarManifestIsFresh(noaaRadarManifest, noaaRadarClock);
   const noaaRadarRenderable = Boolean(noaaRadarFrameTime && noaaRadarManifestFresh);
   useEffect(() => {
@@ -2305,6 +2307,7 @@ export default function Home() {
     params.set("o", LAYER_REGISTRY.map((layer) => `${layer.id}:${(opacity[layer.id] ?? layer.defaultOpacity).toFixed(2)}`).join(","));
     params.set("ctx", visibleOfficialSources.map((source) => source.id).join(","));
     params.set("ctxo", OFFICIAL_CONTEXT_SOURCES.map((source) => `${source.id}:${(officialOpacity[source.id] ?? source.defaultOpacity).toFixed(2)}`).join(","));
+    serializeSoilMapState(params, soilMapState);
     if (officialVisibility["nws-radar"] && noaaRadarFrameTime) {
       params.set("radarTime", noaaRadarFrameTime);
       params.set("radarSpan", String(noaaRadarLoopSpan));
@@ -2355,7 +2358,7 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [activeLayers, analysisArea, atmospherePreset, basemap, compareLeft.id, compareRight.id, compareTimeA, compareTimeB, currentWorkspace, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
+  }, [activeLayers, analysisArea, atmospherePreset, basemap, compareLeft.id, compareRight.id, compareTimeA, compareTimeB, currentWorkspace, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, soilMapState, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
@@ -3124,6 +3127,7 @@ export default function Home() {
     const next = { ...officialVisibilityRef.current, [id]: visible };
     officialVisibilityRef.current = next;
     setOfficialVisibility(next);
+    setSoilMapState(current => hideSoilContext(current));
     if (source.apiPath && visible && !officialPayloadsRef.current[id as OfficialContextFeedId]) void refreshOfficialContext(id as OfficialContextFeedId);
     if (id === "usgs-streamflow" && visible && !streamflowBundleRef.current) void refreshStreamflow(streamflowRange, streamflowSelectedStationId);
     if (id === "noaa-nwps-gauges" && visible && !officialPayloadsRef.current["noaa-nwps-gauges"]) void refreshNoaaHydrologyNetwork();
@@ -4072,6 +4076,7 @@ export default function Home() {
       const nextOfficialOpacity = { ...defaultOfficialOpacity, ...restoredOfficialOpacity };
       officialOpacityRef.current = nextOfficialOpacity;
       setOfficialOpacity(nextOfficialOpacity);
+      setSoilMapState(restoreSoilMapState(params));
       const restoredRadarSpan = Number(params.get("radarSpan"));
       setNoaaRadarLoopSpan(restoredRadarSpan === 30 || restoredRadarSpan === 120 ? restoredRadarSpan : 60);
       const restoredRadarSpeed = Number(params.get("radarSpeed"));
@@ -6854,6 +6859,7 @@ export default function Home() {
     setOpacity(defaultOpacity);
     setOfficialVisibility(defaultOfficialVisibility);
     setOfficialOpacity(defaultOfficialOpacity);
+    setSoilMapState(DEFAULT_SOIL_MAP_STATE);
     setOfficialErrors({});
     noaaRadarRequestRef.current?.abort();
     noaaRadarRequestRef.current = null;
@@ -7964,10 +7970,10 @@ export default function Home() {
             <header><div><h2 id="official-context-title">External map context</h2><small className="official-context-registry-summary">{visibleOfficialCount} selected · {officialReadyCount} checked</small></div></header>
             <p>{!buildYearCurrent ? `Current sources are held because this site was built for ${OFFICIAL_CONTEXT_PRESENT_FRAME}. NASA’s fixed lightning climatology remains available as historical context.` : year === OFFICIAL_CONTEXT_PRESENT_FRAME ? "Operational sources have their own observation clocks. NASA lightning climatology is a separate 1995–2014 historical composite. Both are map context only." : `Operational sources selected for the map are held at ${temporalScopeLabel}; choose Present to display them. NASA’s fixed climate field is independent of this atlas year.`}</p>
             <div className="official-context-pulse" aria-label="Live source connection status">
-              <div><span><small>SELECTED FEATURES</small><strong>{officialFeatureCount.toLocaleString("en-US")}</strong></span><span><small>SELECTED SOURCES</small><strong>{officialReadyCount}/{visibleOfficialCount} settled</strong></span><span><small>SELECTED RETRIEVAL</small><strong>{officialLatestRetrievedAt ? new Date(officialLatestRetrievedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "Not yet"}</strong></span></div>
+              <div><span><small>SELECTED FEATURES</small><strong>{officialFeatureCount.toLocaleString("en-US")}</strong></span><span><small>SELECTED FEEDS</small><strong>{officialReadyCount}/{visibleOfficialSources.length} settled</strong></span><span><small>SELECTED RETRIEVAL</small><strong>{officialLatestRetrievedAt ? new Date(officialLatestRetrievedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "Not yet"}</strong></span></div>
               <nav aria-label="Official data actions"><button type="button" disabled={!buildYearCurrent || officialRefreshPlan.count === 0 || officialLoadingCount > 0} onClick={refreshVisibleOfficialContext}>{!buildYearCurrent ? "Rebuild required" : officialRefreshPlan.reason === "historical" ? `Held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : officialLoadingCount > 0 ? "Refreshing…" : `Refresh ${officialRefreshPlan.count} selected`}</button><button type="button" disabled={visibleOfficialCount === 0} onClick={hideAllOfficialContext}>Hide all</button></nav>
             </div>
-            <div className="official-context-list"><SoilMoistureControl mapRef={mapRef} styleReady={styleReady} is2D={projection !== "globe" && scenePreset !== "elevation-3d"} />{listedOfficialSources.map((source) => {
+            <div className="official-context-list"><SoilMoistureControl mapRef={mapRef} styleReady={styleReady} is2D={projection !== "globe" && scenePreset !== "elevation-3d"} state={soilMapState} onChange={next => setSoilMapState(current => ({ ...current, ...next }))} />{listedOfficialSources.map((source) => {
               const state = officialStates[source.id];
               const heldAtFrame = officialVisibility[source.id] && !effectiveOfficialVisibility[source.id];
               const needsCloserView = officialVisibility[source.id] && !heldAtFrame && state !== "error" && view.zoom < TERRAIN_DISPLAY_MIN_ZOOM && (source.id === "usgs-3dep-hillshade" || source.id === "usgs-3dep-slope");
@@ -8683,7 +8689,7 @@ export default function Home() {
                   <article><span>READY</span><strong>{sourceStateCounts.ready}/{LAYER_REGISTRY.length}</strong><small>MapLibre sources loaded</small></article>
                   <article><span>VISIBLE</span><strong>{visibleCount}</strong><small>Registry layers drawing now</small></article>
                   <article><span>RENDERERS</span><strong>{LAYER_REGISTRY.reduce((count, layer) => count + layer.renderers.length, 0)}</strong><small>Style layers connected</small></article>
-                  <article><span>NETWORK</span><strong>{visibleOfficialCount + activeExternalContextCount}/{OFFICIAL_CONTEXT_SOURCES.length + EXTERNAL_CONTEXT_SOURCES.length}</strong><small>Official + external carriers selected</small></article>
+                  <article><span>NETWORK</span><strong>{visibleOfficialCount + activeExternalContextCount}/{OFFICIAL_CONTEXT_SOURCES.length + EXTERNAL_CONTEXT_SOURCES.length + 1}</strong><small>Official + external carriers selected</small></article>
                 </div>
                 <div className="source-connection-toolbar">
                   <label><i aria-hidden="true">⌕</i><span className="sr-only">Search source connections</span><input type="search" value={connectionQuery} onChange={(event) => setConnectionQuery(event.target.value)} placeholder="Layer, source ID, domain, or format" /></label>
@@ -9137,7 +9143,7 @@ export default function Home() {
               <header><span>LIVE SOURCE CONTEXT</span><strong id="timeline-live-title">{withheldOfficialCount > 0 ? `${withheldOfficialCount} current source${withheldOfficialCount === 1 ? "" : "s"} held` : `${visibleOfficialCount} selected · ${officialFeatureCount} loaded features`}</strong></header>
               {withheldOfficialCount > 0
                 ? <p>Current-only sources are hidden at this year. They return at {formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}; your choices are saved.</p>
-                : <p>{officialReadyCount}/{visibleOfficialCount} selected sources settled · latest selected retrieval {officialLatestRetrievedAt ? `${officialLatestRetrievedAt.slice(0, 19).replace("T", " ")} UTC` : "pending"}.</p>}
+                : <p>{officialReadyCount}/{visibleOfficialSources.length} selected feeds settled · latest selected retrieval {officialLatestRetrievedAt ? `${officialLatestRetrievedAt.slice(0, 19).replace("T", " ")} UTC` : "pending"}.</p>}
               <details className="timeline-context-details"><summary>Source clocks and limits</summary>
               <dl>
                 <div><dt>Phenomenon clock</dt><dd>{temporalScopeLabel}</dd></div>

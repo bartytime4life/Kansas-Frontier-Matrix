@@ -6,13 +6,30 @@ export const SOIL_VIEWS = {
   "root-uncertainty": { layer: "SMAP_L4_Uncertainty_Analyzed_Root_Zone_Soil_Moisture", legend: "SMAP_Uncertainty_Analyzed_Soil_Moisture_H.svg", label: "Root zone uncertainty · 0–100 cm" },
 } as const;
 export type SoilView = keyof typeof SOIL_VIEWS;
+export type SoilMapState = { visible: boolean; view: SoilView; day: string; opacity: number };
+export const DEFAULT_SOIL_MAP_STATE: SoilMapState = { visible: false, view: "surface", day: "", opacity: 0.65 };
+export const isSoilCalendarDay = (day: string) => /^\d{4}-\d{2}-\d{2}$/.test(day)
+  && Number.isFinite(Date.parse(`${day}T00:00:00Z`))
+  && new Date(`${day}T00:00:00Z`).toISOString().slice(0, 10) === day;
+export const visibleExternalContextCount = (officialCount: number, soilVisible: boolean) => officialCount + Number(soilVisible);
+export const hideSoilContext = (state: SoilMapState): SoilMapState => ({ ...state, visible: false });
+export function serializeSoilMapState(params: URLSearchParams, state: SoilMapState) {
+  params.set("soil", [state.visible ? "1" : "0", state.view, state.day, state.opacity.toFixed(2)].join("|"));
+}
+export function restoreSoilMapState(params: URLSearchParams): SoilMapState {
+  const value = params.get("soil");
+  if (!value) return DEFAULT_SOIL_MAP_STATE;
+  const [visible, view, day, opacity, ...extra] = value.split("|");
+  if (extra.length || (visible !== "0" && visible !== "1") || !Object.hasOwn(SOIL_VIEWS, view)
+    || (day !== "" && !isSoilCalendarDay(day)) || opacity.trim() === "" || !Number.isFinite(Number(opacity))) return DEFAULT_SOIL_MAP_STATE;
+  return { visible: visible === "1", view: view as SoilView, day, opacity: Math.max(0, Math.min(1, Number(opacity))) };
+}
 export const SOIL_METADATA_URL = "https://gibs.earthdata.nasa.gov/layer-metadata/v1.0/SMAP_L4_Analyzed_Surface_Soil_Moisture.json";
 export const SOIL_GUIDE_URL = "https://nsidc.org/data/spl4smau/versions/8";
 export const soilLegendUrl = (view: SoilView) => `https://gibs.earthdata.nasa.gov/legends/${SOIL_VIEWS[view].legend}`;
 
 export function validSoilDay(day: string, now = new Date()): boolean {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || Number.isNaN(Date.parse(`${day}T00:00:00Z`))) return false;
-  if (new Date(`${day}T00:00:00Z`).toISOString().slice(0, 10) !== day) return false;
+  if (!isSoilCalendarDay(day)) return false;
   const today = now.toISOString().slice(0, 10);
   const first = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - 29)).toISOString().slice(0, 10);
   return day >= first && day <= today;
