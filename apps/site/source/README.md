@@ -654,6 +654,11 @@ Scripts that need writable project-scoped home, npm, XDG, and temporary paths us
 - `app/noaa-radar.ts` owns the NOAA nowCOAST product contract, explicit-time
   parsing, recent-window selection, and exact-time WMS request construction
 - `app/api/noaa-radar/frames/route.ts` exposes the bounded radar frame manifest
+- `app/noaa-satellite.ts` keeps exact GeoColor raster IDs and validates the
+  separately labeled, daylight-dependent nowCOAST GOES visible fallback times
+- `app/api/noaa-satellite/frames/route.ts` tries the fixed NOAA GeoColor catalog
+  first, then the fixed dated visible WMS only if the catalog is unavailable;
+  neither path substitutes an undated image
 - `app/api/repository-status/route.ts` contains the fixed read-only GitHub
   currentness check
 - `app/chatgpt-auth.ts` provides optional dispatch-owned ChatGPT sign-in helpers
