@@ -52,7 +52,7 @@ notes:
   - "Expanded from a scaffold at contracts/domains/habitat/suitability_model.md."
   - "This lowercase path is the contract_doc path currently referenced by schemas/contracts/v1/domains/habitat/suitability_model.schema.json and listed in docs/domains/habitat/CANONICAL_PATHS.md."
   - "CONFLICTED path alias: contracts/domains/habitat/SuitabilityModel.md also exists as an expanded sibling semantic contract. This update preserves both paths and does not delete or merge either file."
-  - "The paired schema exists at schemas/contracts/v1/domains/habitat/suitability_model.schema.json, but it is still a PROPOSED scaffold with empty properties and additionalProperties=true; field-level enforcement remains NEEDS VERIFICATION."
+  - "The paired schema exists at schemas/contracts/v1/domains/habitat/suitability_model.schema.json, but it is still PROPOSED: it declares only the optional model_card_ref string, with additionalProperties=true; other field-level enforcement remains NEEDS VERIFICATION."
   - "SuitabilityModel is modeled Habitat, not observed land cover, not species or plant occurrence truth, not regulatory critical habitat, not HabitatPatch truth, not a public layer by itself, not a management instruction, and not release authority."
 [/KFM_META_BLOCK_V2] -->
 
@@ -88,9 +88,9 @@ notes:
 > **Contract path:** `contracts/domains/habitat/suitability_model.md`  
 > **Expanded sibling path:** `contracts/domains/habitat/SuitabilityModel.md` — already expanded and unresolved as an alias.  
 > **Schema path:** `schemas/contracts/v1/domains/habitat/suitability_model.schema.json`  
-> **Schema posture:** paired schema exists, but is still a `PROPOSED` scaffold with empty `properties` and `additionalProperties: true`.  
+> **Schema posture:** paired schema exists, but is still `PROPOSED`: it declares only the optional `model_card_ref` string, with `additionalProperties: true`.\
 > **Truth posture:** Habitat doctrine names `SuitabilityModel` as a canonical Habitat object family and requires modeled-vs-observed-vs-regulatory separation. Field-level schema shape, fixtures, validators, policy runtime, release artifacts, map/UI behavior, Focus Mode behavior, and CI/test coverage remain **NEEDS VERIFICATION**.  
-> **Structural validation, plus one grounded rule:** `tools/validators/domains/habitat/validate_suitability_model.py` enforces valid JSON, a JSON-object root, no duplicate keys, and no non-finite numbers against this scaffold, and nothing else field-wise. It additionally checks that an optional `model_card_ref`, if declared, resolves to a file that independently passes the real governance `ModelCardEnvelope` validator (`contracts/governance/model_card_envelope.md`) — the one "Model card" requirement below that has a settled object to check against. See `fixtures/domains/habitat/suitability_model/README.md`.
+> **Structural validation, plus one grounded rule:** `tools/validators/domains/habitat/validate_suitability_model.py` enforces valid JSON, a JSON-object root, no duplicate keys, no non-finite numbers, and the schema's one declared string, and nothing else field-wise. It additionally checks that an optional `model_card_ref`, if declared, resolves to a file that independently passes the real governance `ModelCardEnvelope` validator (`contracts/governance/model_card_envelope.md`) — the one "Model card" requirement below that has a settled object to check against. See `fixtures/domains/habitat/suitability_model/README.md`.
 
 > [!CAUTION]
 > `SuitabilityModel` is modeled Habitat. It is not observed land cover, not species/plant occurrence truth, not regulatory critical habitat, not a public layer, not a management instruction, not a PolicyDecision, and not a ReleaseManifest. A suitability surface presented as regulatory critical habitat is a deny-level source-role collapse.
@@ -138,7 +138,7 @@ A suitability model is an interpretive, evidence-supported artifact. It may supp
 | Lowercase contract path | `contracts/domains/habitat/suitability_model.md` existed as scaffold. | Expanded here as schema-aligned candidate. |
 | PascalCase sibling | `contracts/domains/habitat/SuitabilityModel.md` exists as expanded contract. | CONFLICTED / NEEDS VERIFICATION. |
 | Snake-case schema | `schemas/contracts/v1/domains/habitat/suitability_model.schema.json` exists as scaffold. | CONFIRMED scaffold. |
-| Schema properties | Empty object. | No field-level enforcement proven. |
+| Schema properties | Optional `model_card_ref` string only. | No other field-level enforcement proven. |
 | Schema `contract_doc` | Points to `contracts/domains/habitat/suitability_model.md`. | Aligned with this file. |
 | Canonical path table | Lists lowercase path. | Supports this path as the candidate canonical home. |
 | Schema-home slug | Canonical-paths note says segmented schema slug is CONFLICTED. | Keep visible until ADR-S-01 resolves. |

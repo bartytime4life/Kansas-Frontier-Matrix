@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Regression proof for the HabitatPatch validator entrypoint.
 
-HabitatPatch has no field-level schema yet (see
-``fixtures/domains/habitat/patch/README.md``); this suite proves the
-structural properties the current scaffold and shared JSON Schema runner
-actually enforce, plus the one additional rule the validator adds:
+HabitatPatch's PROPOSED schema declares only the optional connectivity
+reference arrays (see ``fixtures/domains/habitat/patch/README.md``); this
+suite proves the structural properties the schema and shared JSON Schema
+runner actually enforce, plus the one additional rule the validator adds:
 reference-string hygiene (sorted, unique, grammar-bounded, no
 internal-lifecycle prefixes) on the optional ``connectivity_edge_refs`` and
 ``corridor_refs`` fields. It does not assert any other HabitatPatch field
@@ -99,8 +99,8 @@ class HabitatPatchEntrypointTests(unittest.TestCase):
                     self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
                     self.assertIn(f"FAIL {path}", result.stdout)
 
-    def test_arbitrary_well_formed_object_passes_the_permissive_scaffold(self) -> None:
-        """The scaffold has no field constraints, so any JSON object is accepted."""
+    def test_arbitrary_well_formed_object_passes_the_open_schema(self) -> None:
+        """Undeclared members stay open, so any other JSON object is accepted."""
 
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "arbitrary-object.json"

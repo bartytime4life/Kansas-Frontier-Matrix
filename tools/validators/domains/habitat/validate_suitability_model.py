@@ -1,20 +1,19 @@
 #!/usr/bin/env python3
-"""Validate SuitabilityModel candidates against the current (scaffold) schema,
-plus one optional, well-grounded semantic check: ModelCardEnvelope linkage.
+"""Validate SuitabilityModel candidates against the PROPOSED schema, plus
+one optional, well-grounded semantic check: ModelCardEnvelope linkage.
 
-``schemas/contracts/v1/domains/habitat/suitability_model.schema.json`` is a
-PROPOSED scaffold with empty ``properties`` and ``additionalProperties:
-true`` (see ``contracts/domains/habitat/suitability_model.md``, "Schema
-posture", "Recommended semantics", and "Model-card burden" -- the field
-list there, including ``model_card_ref`` itself, is explicitly not yet
-enforced, and open questions such as the accepted model-card field set
-remain NEEDS VERIFICATION pending a domain-steward decision).
+``schemas/contracts/v1/domains/habitat/suitability_model.schema.json`` is
+PROPOSED. It declares only the optional ``model_card_ref`` string checked
+below and leaves every other member open (``additionalProperties: true``).
+See ``contracts/domains/habitat/suitability_model.md``, "Schema posture",
+"Recommended semantics", and "Model-card burden": the wider field list
+there is explicitly not yet enforced, and open questions such as the
+accepted model-card field set remain NEEDS VERIFICATION pending a
+domain-steward decision.
 
-This entrypoint therefore still checks only what the shared JSON Schema
-runner would check against the scaffold as it stands: valid JSON, a JSON
-object at the root, no duplicate keys, no non-finite numbers, and
-conformance with whatever the schema currently declares (nothing, field-
-wise). It additionally checks exactly one thing that IS well-grounded: if a
+This entrypoint therefore checks valid JSON, a JSON object at the root, no
+duplicate keys, no non-finite numbers, and conformance with the schema. It
+additionally checks exactly one thing that IS well-grounded: if a
 candidate declares a ``model_card_ref``, the referenced document must
 independently pass the real, already-implemented governance
 ModelCardEnvelope validator
@@ -92,6 +91,13 @@ def validate_candidate_file(path: Path) -> str | None:
     except JsonInputError as exc:
         return str(exc)
 
+    # The domain check runs first so its specific message wins; the schema
+    # declares the same fields and backs it up.
+    if isinstance(candidate, dict):
+        message = _check_model_card_linkage(candidate)
+        if message is not None:
+            return message
+
     errors = sorted(
         _VALIDATOR.iter_errors(candidate),
         key=lambda error: (list(error.absolute_path), str(error.validator)),
@@ -100,8 +106,7 @@ def validate_candidate_file(path: Path) -> str | None:
         return errors[0].message
     if not isinstance(candidate, dict):
         return "candidate document must be a JSON object"
-
-    return _check_model_card_linkage(candidate)
+    return None
 
 
 def _validate_paths(paths: list[Path]) -> bool:

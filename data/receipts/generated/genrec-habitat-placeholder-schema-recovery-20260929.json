@@ -1,0 +1,124 @@
+{
+  "receipt_id": "genrec-habitat-placeholder-schema-recovery-20260929",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/domains/habitat/habitat-patch.contract.md",
+    "contracts/domains/habitat/habitat_patch.md",
+    "contracts/domains/habitat/suitability_model.md",
+    "fixtures/domains/habitat/patch/README.md",
+    "fixtures/domains/habitat/patch/valid/valid_2.json",
+    "fixtures/domains/habitat/suitability_model/README.md",
+    "fixtures/domains/habitat/suitability_model/valid/valid_2.json",
+    "schemas/contracts/v1/domains/habitat/habitat_patch.schema.json",
+    "schemas/contracts/v1/domains/habitat/suitability_model.schema.json",
+    "tests/validators/domains/habitat/test_habitat_patch_validator_entrypoint.py",
+    "tests/validators/domains/habitat/test_suitability_model_validator_entrypoint.py",
+    "tools/qa/scaffold_baseline.json",
+    "tools/validators/domains/habitat/README.md",
+    "tools/validators/domains/habitat/validate_habitat_patch.py",
+    "tools/validators/domains/habitat/validate_suitability_model.py"
+  ],
+  "artifact_hashes": {
+    "contracts/domains/habitat/habitat-patch.contract.md": "sha256:f6cc84e044c28238916a8c7678934b7619aca340cb10bb87ba1cf2f201683f14",
+    "contracts/domains/habitat/habitat_patch.md": "sha256:2414d6fdc9b252d9a8e5ce2672228369cf84e862255237e40a9a75f222050436",
+    "contracts/domains/habitat/suitability_model.md": "sha256:7179e15fd9cfc5cb04e844a44c6c2fc44e863cf99a86ec2b422720783b728549",
+    "fixtures/domains/habitat/patch/README.md": "sha256:07118accd7ed8248e444f27626658da5099397d9c6ff0751eaf32a59b75bd433",
+    "fixtures/domains/habitat/patch/valid/valid_2.json": "sha256:0da09a0a4d869ec510a7b9b5aa0f598bc2d0382e2679f5ad03b75b41d0820945",
+    "fixtures/domains/habitat/suitability_model/README.md": "sha256:bd5862cf8390a782e1c08708bf71c4ebd7f3328efd603344dce4ecc6abd100f0",
+    "fixtures/domains/habitat/suitability_model/valid/valid_2.json": "sha256:4e27cf3c4273594648aeb67264b8663bf57fe1b941b0a992d5f27907b20be604",
+    "schemas/contracts/v1/domains/habitat/habitat_patch.schema.json": "sha256:139024ad13479949c83b7a16f1fa2280810941ae110f880966c580248b179083",
+    "schemas/contracts/v1/domains/habitat/suitability_model.schema.json": "sha256:788457617c57181086c745b4bf002d33dea9f6f949bf0404769e61d6a69cc9c6",
+    "tests/validators/domains/habitat/test_habitat_patch_validator_entrypoint.py": "sha256:97ff6f71f04ff035d5f3e9d2f336428f01aefa9778519639716d3758e1214376",
+    "tests/validators/domains/habitat/test_suitability_model_validator_entrypoint.py": "sha256:4737fe38ef05c9263241d59a88ce4be0a2ed614f7ab718318d98608e2a22194e",
+    "tools/qa/scaffold_baseline.json": "sha256:43bbcee7e17ec0d82a6eff9bbf94d014710852f97d331e59dd8f75ba84ec29f8",
+    "tools/validators/domains/habitat/README.md": "sha256:18ad1be50d1e50619b661c45c7912ff00b59e4a1331d771b983fe6fcd305b5d6",
+    "tools/validators/domains/habitat/validate_habitat_patch.py": "sha256:6bcd108e8163bf92fa0eb5a2efadf7098ebbc6b29fc27d0ae43eeb1d6ff0ec81",
+    "tools/validators/domains/habitat/validate_suitability_model.py": "sha256:410fdf247b3ac3589bcc889c4762267473c5f45d1dea59a49f4ef9ea52eb1b69"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/4324e239ecc5aa6fa4d58b104e28eb12d5e596ee",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/4324e239ecc5aa6fa4d58b104e28eb12d5e596ee/tools/validators/_common/jsonschema_runner.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/4324e239ecc5aa6fa4d58b104e28eb12d5e596ee/contracts/domains/habitat/habitat_patch.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/4324e239ecc5aa6fa4d58b104e28eb12d5e596ee/contracts/domains/habitat/suitability_model.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4772"
+    ]
+  },
+  "truth_labels": {
+    "contracts/domains/habitat/habitat-patch.contract.md": "CONFIRMED",
+    "contracts/domains/habitat/habitat_patch.md": "CONFIRMED",
+    "contracts/domains/habitat/suitability_model.md": "CONFIRMED",
+    "fixtures/domains/habitat/patch/README.md": "CONFIRMED",
+    "fixtures/domains/habitat/patch/valid/valid_2.json": "CONFIRMED",
+    "fixtures/domains/habitat/suitability_model/README.md": "CONFIRMED",
+    "fixtures/domains/habitat/suitability_model/valid/valid_2.json": "CONFIRMED",
+    "schemas/contracts/v1/domains/habitat/habitat_patch.schema.json": "CONFIRMED",
+    "schemas/contracts/v1/domains/habitat/suitability_model.schema.json": "CONFIRMED",
+    "tests/validators/domains/habitat/test_habitat_patch_validator_entrypoint.py": "CONFIRMED",
+    "tests/validators/domains/habitat/test_suitability_model_validator_entrypoint.py": "CONFIRMED",
+    "tools/qa/scaffold_baseline.json": "CONFIRMED",
+    "tools/validators/domains/habitat/README.md": "CONFIRMED",
+    "tools/validators/domains/habitat/validate_habitat_patch.py": "CONFIRMED",
+    "tools/validators/domains/habitat/validate_suitability_model.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Habitat validator suites",
+      "outcome": "PASS",
+      "reason": "tests/validators/domains/habitat: 83 passed (27 failed on the base commit with PlaceholderSchemaError). Both validators' --fixtures profiles pass with unchanged positive and negative polarity and unchanged failure messages."
+    },
+    {
+      "gate": "Scaffold ratchet",
+      "outcome": "PASS",
+      "reason": "scaffold_inventory --check passes after --write-baseline removed exactly the four habitat schema and validator findings (1247 -> 1243)."
+    },
+    {
+      "gate": "Broader offline suites",
+      "outcome": "PASS",
+      "reason": "tests/validators, tests/schemas, tests/contracts, tests/domains/habitat, tests/qa and tests/ci pass on full history with the change staged; tools/validators/_common/run_all.py exits 0."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push."
+    },
+    {
+      "gate": "Steward field definition, source admission, release",
+      "outcome": "SKIPPED",
+      "reason": "The schemas declare only the optional fields both validators already enforced; no identity, geometry, source-role, evidence, sensitivity or release field is defined, and additionalProperties stays true."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/4324e239ecc5aa6fa4d58b104e28eb12d5e596ee"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-29T03:54:38Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Restores validate_habitat_patch.py and validate_suitability_model.py after #4772 made the shared runner reject permissive placeholder object schemas. Each schema now declares exactly the optional fields its validator already enforced (connectivity_edge_refs/corridor_refs; model_card_ref), and each validator runs its domain check before the schema so the existing, more specific messages still come first. Docs, fixture notes and test docstrings that described the schemas as empty are updated."
+}

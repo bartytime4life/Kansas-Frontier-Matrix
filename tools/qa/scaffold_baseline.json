@@ -2,7 +2,7 @@
  "schema_version": "kfm.scaffold-inventory/v1",
  "summary": {
   "by_kind": {
-   "PLACEHOLDER_MARKER": 897,
+   "PLACEHOLDER_MARKER": 893,
    "STUB_MODULE": 332,
    "UNRESOLVED_DESCRIPTOR": 17,
    "VACUOUS_TEST": 1
@@ -14,13 +14,13 @@
    "packages": 122,
    "pipelines": 236,
    "policy": 112,
-   "schemas": 389,
+   "schemas": 387,
    "scripts": 2,
    "tests": 188,
-   "tools": 54
+   "tools": 52
   },
-  "files": 899,
-  "total": 1247
+  "files": 895,
+  "total": 1243
  },
  "findings": [
   {"kind": "PLACEHOLDER_MARKER", "path": "apps/cli/pyproject.toml"},
@@ -869,7 +869,6 @@
   {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/habitat/evidence_drawer_payload.schema.json"},
   {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/habitat/geoprivacy_transform_receipt.schema.json"},
   {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/habitat/habitat_decision_envelope.schema.json"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/habitat/habitat_patch.schema.json"},
   {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/habitat/habitat_quality_score.schema.json"},
   {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/habitat/land_cover/change_summary.schema.json"},
   {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/habitat/land_cover/class_scheme.schema.json"},
@@ -885,7 +884,6 @@
   {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/habitat/run_receipt.schema.json"},
   {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/habitat/source_state_hash.schema.json"},
   {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/habitat/stewardship_zone.schema.json"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/habitat/suitability_model.schema.json"},
   {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/habitat/uncertainty_surface.schema.json"},
   {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/hazards/catalog_matrix.schema.json"},
   {"kind": "PLACEHOLDER_MARKER", "path": "schemas/contracts/v1/domains/hazards/correction_notice.schema.json"},
@@ -1238,8 +1236,6 @@
   {"kind": "STUB_MODULE", "path": "tools/validators/domains/geology/validate_borehole_rights.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tools/validators/domains/geology/validate_public_safe_geometry.py"},
   {"kind": "STUB_MODULE", "path": "tools/validators/domains/geology/validate_public_safe_geometry.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tools/validators/domains/habitat/validate_habitat_patch.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tools/validators/domains/habitat/validate_suitability_model.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tools/validators/evidence/validate_hash_prefix.py"},
   {"kind": "STUB_MODULE", "path": "tools/validators/evidence/validate_hash_prefix.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tools/validators/evidence/validate_identity.py"},
