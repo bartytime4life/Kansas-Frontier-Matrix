@@ -59,8 +59,6 @@ related:
   - ../../../tests/validators/test_validate_map_context_envelope.py
   - ../../../packages/envelopes/src/envelopes/map_context_evidence_drawer.py
   - ../../../tests/packages/envelopes/test_map_context_evidence_drawer_admission.py
-  - ../../../apps/explorer-web/src/features/map_runtime/CLICK_EVIDENCE_BRIDGE.md
-  - ../../../apps/explorer-web/src/features/focus_panel/COMPOSED_CLAIM_FIXTURE.md
 tags: [kfm, architecture, ui, continuity, map-context, evidence-drawer, focus-mode, story-player, export, correction, trust-membrane]
 notes:
   - "Same-path documentation modernization only. No contract, schema, policy, fixture, validator, app, package, workflow, source, evidence, release, deployment, or publication behavior changes."
@@ -137,13 +135,13 @@ The original edition described a broad desired continuity model but was written 
 | [`test_validate_map_context_envelope.py`](../../../tests/validators/test_validate_map_context_envelope.py) | Repository-present positive, schema-negative, semantic-negative, identity, no-network, duplicate-key, non-finite-number, and CLI test source over 16 declared cases | Current hosted execution for this documentation change until exact-head checks finish |
 | [`map-context-evidence-drawer-admission.md`](./map-context-evidence-drawer-admission.md) and its [helper](../../../packages/envelopes/src/envelopes/map_context_evidence_drawer.py) | A bounded anticorruption adapter that aligns one validated selected-feature context with one validated public-safe drawer projection and emits a `DecisionEnvelope` candidate | Evidence resolution, policy evaluation, authentic review/release state, public-use authorization, or Explorer/governed-API wiring |
 | [Admission helper tests](../../../tests/packages/envelopes/test_map_context_evidence_drawer_admission.py) | Eight finite fixture outcomes, current `DecisionEnvelope` conformance, determinism, input immutability, no content leakage, safe ambiguity handling, and no-network replay are encoded in tests | A deployed runtime path |
-| [Explorer `main.ts`](../../../apps/explorer-web/src/main.ts) and [baseline shell](../../../apps/explorer-web/src/features/shell/index.tsx) | The current entrypoint mounts a fixed `ABSTAIN / NO_GOVERNED_RESPONSE` shell and the Evidence Drawer; supplied baseline input returns a fixed error | A map, route tree, API transport, released-layer flow, Focus request, story integration, export, or deployment |
-| [Map feature click bridge](../../../apps/explorer-web/src/features/map_runtime/CLICK_EVIDENCE_BRIDGE.md) and [implementation](../../../apps/explorer-web/src/features/map_runtime/index.tsx) | Strict renderer-neutral selection parsing, injected governed resolution, evidence-subset enforcement, finite local failures, and an accessible synthetic click fixture | A MapLibre dependency, live map event, browser transport, EvidenceBundle resolution, policy evaluation, or shell integration |
-| [Focus composed-claim fixture](../../../apps/explorer-web/src/features/focus_panel/COMPOSED_CLAIM_FIXTURE.md) and [resolver](../../../apps/explorer-web/src/features/focus_panel/resolver.ts) | Strict app-local request/projection parsing, injected resolution, request/claim identity binding, evidence-subset enforcement, finite composed-claim outcomes, Evidence Drawer handoff, and no-network/no-model posture | A governed API route, model adapter, live evidence resolution, policy execution, release authorization, or shell integration |
-| [Evidence Drawer](../../../apps/explorer-web/src/features/evidence_drawer/index.tsx) | Strict finite projection, safe no-leak negative copy, evidence/citation/history display, keyboard open/close, Escape handling, and focus return | Live transport, EvidenceBundle resolution, policy execution, canonical payload adoption, or public operation |
-| [Story Player current implementation](../../../apps/explorer-web/src/features/story_player/current-implementation.md) | One defensive, public-safe, 2D-only StoryManifest consumer with focused tests | Fetching, routes, map/time continuity, Evidence Drawer integration, 3D handoff, authoring, release, or publication |
-| [Export entrypoint](../../../apps/explorer-web/src/features/export/index.tsx) | A placeholder export only | Any export request, artifact, receipt, citation gate, download, or screenshot governance |
-| [MapLibre adapter](../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) and [package entry](../../../packages/maplibre/src/index.ts) | A boundary comment and a placeholder package | An admitted renderer dependency, functional adapter, map canvas, plugin set, or browser runtime |
+| Explorer `main.ts` (retired) and baseline shell (retired) | The current entrypoint mounts a fixed `ABSTAIN / NO_GOVERNED_RESPONSE` shell and the Evidence Drawer; supplied baseline input returns a fixed error | A map, route tree, API transport, released-layer flow, Focus request, story integration, export, or deployment |
+| Map feature click bridge (retired) and implementation (retired) | Strict renderer-neutral selection parsing, injected governed resolution, evidence-subset enforcement, finite local failures, and an accessible synthetic click fixture | A MapLibre dependency, live map event, browser transport, EvidenceBundle resolution, policy evaluation, or shell integration |
+| Focus composed-claim fixture (retired) and resolver (retired) | Strict app-local request/projection parsing, injected resolution, request/claim identity binding, evidence-subset enforcement, finite composed-claim outcomes, Evidence Drawer handoff, and no-network/no-model posture | A governed API route, model adapter, live evidence resolution, policy execution, release authorization, or shell integration |
+| Evidence Drawer (retired) | Strict finite projection, safe no-leak negative copy, evidence/citation/history display, keyboard open/close, Escape handling, and focus return | Live transport, EvidenceBundle resolution, policy execution, canonical payload adoption, or public operation |
+| Story Player current implementation (retired) | One defensive, public-safe, 2D-only StoryManifest consumer with focused tests | Fetching, routes, map/time continuity, Evidence Drawer integration, 3D handoff, authoring, release, or publication |
+| Export entrypoint (retired) | A placeholder export only | Any export request, artifact, receipt, citation gate, download, or screenshot governance |
+| MapLibre adapter (retired) and [package entry](../../../packages/maplibre/src/index.ts) | A boundary comment and a placeholder package | An admitted renderer dependency, functional adapter, map canvas, plugin set, or browser runtime |
 | [UI package entry](../../../packages/ui/src/index.ts) | A placeholder package | A reusable component contract or continuity state store |
 
 ### 0.2 Current maturity statement
@@ -840,16 +838,16 @@ No source deactivation, data migration, schema rollback, runtime restart, cache 
 
 ### Current app/package surfaces
 
-- [Explorer entrypoint](../../../apps/explorer-web/src/main.ts)
-- [Explorer baseline shell](../../../apps/explorer-web/src/features/shell/index.tsx)
-- [Map feature click bridge](../../../apps/explorer-web/src/features/map_runtime/CLICK_EVIDENCE_BRIDGE.md)
-- [Map feature click implementation](../../../apps/explorer-web/src/features/map_runtime/index.tsx)
-- [Focus composed-claim fixture](../../../apps/explorer-web/src/features/focus_panel/COMPOSED_CLAIM_FIXTURE.md)
-- [Focus composed-claim resolver](../../../apps/explorer-web/src/features/focus_panel/resolver.ts)
-- [Evidence Drawer implementation](../../../apps/explorer-web/src/features/evidence_drawer/index.tsx)
-- [Story Player current implementation](../../../apps/explorer-web/src/features/story_player/current-implementation.md)
-- [Export placeholder](../../../apps/explorer-web/src/features/export/index.tsx)
-- [MapLibre adapter placeholder](../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts)
+- Explorer entrypoint (retired)
+- Explorer baseline shell (retired)
+- Map feature click bridge (retired)
+- Map feature click implementation (retired)
+- Focus composed-claim fixture (retired)
+- Focus composed-claim resolver (retired)
+- Evidence Drawer implementation (retired)
+- Story Player current implementation (retired)
+- Export placeholder (retired)
+- MapLibre adapter placeholder (retired)
 - [MapLibre package placeholder](../../../packages/maplibre/src/index.ts)
 - [UI package placeholder](../../../packages/ui/src/index.ts)
 

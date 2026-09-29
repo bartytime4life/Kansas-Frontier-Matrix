@@ -36,7 +36,6 @@ related:
   - ../adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md
   - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../apps/governed-api/README.md
-  - ../../apps/explorer-web/src/adapters/GovernedClient.ts
   - ../../packages/evidence-resolver/README.md
   - ../../contracts/runtime/runtime_response_envelope.md
   - ../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
@@ -61,7 +60,7 @@ notes:
 | **Dynamic public-boundary candidate** | [`apps/governed-api/`](../../apps/governed-api/) is present and fail-closed, but [`ADR-0004`](../adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md) remains effectively **PROPOSED**. |
 | **Current dynamic behavior** | Three GET routes return deterministic `ABSTAIN / NOT_IMPLEMENTED`; unknown routes and unsupported methods return safe `ERROR` envelopes. No evidence-backed `ANSWER` path is proved. |
 | **Evidence-resolution maturity** | [`packages/evidence-resolver/`](../../packages/evidence-resolver/) implements a bounded, internal, non-authoritative `v1alpha1` candidate check. Governed runtime integration remains held. |
-| **Public-client maturity** | Explorer Web's [`GovernedClient.ts`](../../apps/explorer-web/src/adapters/GovernedClient.ts) is fixture-only and performs no network or lifecycle-store access. |
+| **Public-client maturity** | Explorer Web's `GovernedClient.ts` (retired) is fixture-only and performs no network or lifecycle-store access. |
 | **Release maturity** | The [`release/`](../../release/) root has substantial fixture-first governance surfaces, while authenticated operational release, correction propagation, rollback execution, and public parity remain held or unverified. |
 | **Path result for this change** | `PLACE` at the existing requested path. Canonical document identity remains **CONFLICTED** because a lowercase overlapping sibling also exists. |
 | **Publication effect** | None. A documentation change, commit, workflow, or pull request is not a governed release or publication transition. |
@@ -141,7 +140,7 @@ That does **not** settle the separate canonicality conflict with [`docs/architec
 | [`test_boundary_guards.py`](../../apps/governed-api/tests/test_boundary_guards.py) | Checks route manifest, `404`/`405`, forbidden renderer/model imports, and selected internal-store path literals. | Selected structural bypasses are denied in source. Indirect dependencies, deployment routing, credentials, network policy, and data exfiltration remain unproved. |
 | [`runtime_response_envelope.schema.json`](../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) | Closed proposed schema with outcomes `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`; `ANSWER` requires evidence and `precision_actually_used`. | A candidate client-facing shape exists. Its own metadata remains `PROPOSED`, and route integration is incomplete. |
 | [`packages/evidence-resolver/`](../../packages/evidence-resolver/) | Internal non-authoritative candidate resolver with bounded deterministic checks, synthetic fixtures, standard-library tests, and no-network posture. | The package may assess a caller-supplied candidate. It does not perform authoritative lookup, policy, release, or publication. |
-| [`GovernedClient.ts`](../../apps/explorer-web/src/adapters/GovernedClient.ts) | Fixture-only parser for a public-safe Evidence Drawer projection; no network or lifecycle-store access. | Public-client trust-state parsing has a bounded implementation. Live Governed API integration is not proved. |
+| `GovernedClient.ts` (retired) | Fixture-only parser for a public-safe Evidence Drawer projection; no network or lifecycle-store access. | Public-client trust-state parsing has a bounded implementation. Live Governed API integration is not proved. |
 | [`release/`](../../release/) | Canonical append-only release-decision root under adopted Directory Rules; multiple fixture-first profiles and checks exist; operational transitions remain held. | Release governance has meaningful bounded implementation, but no production release or public parity is inferred. |
 
 ### 2.2 Confirmed governance state
@@ -425,7 +424,7 @@ The scaffold now matches the required top-level field set for negative outcomes,
 
 ### 8.1 Explorer Web
 
-The inspected [`GovernedClient.ts`](../../apps/explorer-web/src/adapters/GovernedClient.ts) is a fixture-only public-safe projection parser. It deliberately performs no network or lifecycle-store access and validates:
+The inspected `GovernedClient.ts` (retired) is a fixture-only public-safe projection parser. It deliberately performs no network or lifecycle-store access and validates:
 
 - exact top-level fields;
 - finite outcomes and reason codes;
@@ -735,7 +734,7 @@ Use this checklist for any change that touches a crossing described here.
 - [`apps/governed-api/src/governed_api/stub.py`](../../apps/governed-api/src/governed_api/stub.py)
 - [`apps/governed-api/tests/test_abstain_routes.py`](../../apps/governed-api/tests/test_abstain_routes.py)
 - [`apps/governed-api/tests/test_boundary_guards.py`](../../apps/governed-api/tests/test_boundary_guards.py)
-- [`apps/explorer-web/src/adapters/GovernedClient.ts`](../../apps/explorer-web/src/adapters/GovernedClient.ts)
+- `apps/explorer-web/src/adapters/GovernedClient.ts` (retired)
 - [`packages/evidence-resolver/README.md`](../../packages/evidence-resolver/README.md)
 - [`contracts/runtime/runtime_response_envelope.md`](../../contracts/runtime/runtime_response_envelope.md)
 - [`schemas/contracts/v1/runtime/runtime_response_envelope.schema.json`](../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json)

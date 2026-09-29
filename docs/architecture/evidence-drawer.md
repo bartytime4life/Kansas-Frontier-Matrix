@@ -27,10 +27,6 @@ related:
   - fixtures/ui/evidence_drawer_payload/README.md
   - tools/validators/ui/validate_evidence_drawer_payload.py
   - tests/validators/test_validate_evidence_drawer_payload.py
-  - apps/explorer-web/src/adapters/GovernedClient.ts
-  - apps/explorer-web/src/features/evidence_drawer/README.md
-  - apps/explorer-web/src/features/evidence_drawer/index.tsx
-  - apps/explorer-web/tests/evidence-drawer.test.ts
   - .github/workflows/evidence-drawer-payload.yml
 tags: [kfm, architecture, ui, evidence-drawer, evidencebundle, evidenceref, trust-membrane, finite-outcomes, accessibility, correction, no-leak]
 notes:
@@ -108,11 +104,11 @@ This page explains architecture and current implementation boundaries. It does n
 | [`fixtures/ui/evidence_drawer_payload/`](../../fixtures/ui/evidence_drawer_payload/README.md) | Valid and invalid synthetic fixture lanes are present | Supports deterministic declaration testing only |
 | [`tools/validators/ui/validate_evidence_drawer_payload.py`](../../tools/validators/ui/validate_evidence_drawer_payload.py) | Closed-schema and cross-field validator; fixture-first; no-network | Checks declaration consistency, correction acyclicity, negative-history non-resolution, and no-leak rules |
 | [`tests/validators/test_validate_evidence_drawer_payload.py`](../../tests/validators/test_validate_evidence_drawer_payload.py) | Focused tests assert fixture polarity, schema closure, correction rules, deterministic execution, and network denial | Test source is present; tests were not executed in this documentation-only run |
-| [`apps/explorer-web/src/adapters/GovernedClient.ts`](../../apps/explorer-web/src/adapters/GovernedClient.ts) | Strict fixture-only parser for profile `kfm.explorer.evidence-drawer.public-safe.v1`; no transport or lifecycle-store access | Browser boundary fails closed without claiming live API behavior |
-| [`apps/explorer-web/src/features/evidence_drawer/index.tsx`](../../apps/explorer-web/src/features/evidence_drawer/index.tsx) | Finite view-model resolver and keyboard-operable `<aside>` renderer | Confirms a bounded app-local rendering slice, not a complete drawer product |
-| [`apps/explorer-web/tests/evidence-drawer.test.ts`](../../apps/explorer-web/tests/evidence-drawer.test.ts) | Tests cover ANSWER, stale ABSTAIN, superseded history, DENY/ERROR no-leak, malformed payloads, and no network/store reads | Supports the declared fixture boundary; does not authenticate upstream records |
+| `apps/explorer-web/src/adapters/GovernedClient.ts` (retired) | Strict fixture-only parser for profile `kfm.explorer.evidence-drawer.public-safe.v1`; no transport or lifecycle-store access | Browser boundary fails closed without claiming live API behavior |
+| `apps/explorer-web/src/features/evidence_drawer/index.tsx` (retired) | Finite view-model resolver and keyboard-operable `<aside>` renderer | Confirms a bounded app-local rendering slice, not a complete drawer product |
+| `apps/explorer-web/tests/evidence-drawer.test.ts` (retired) | Tests cover ANSWER, stale ABSTAIN, superseded history, DENY/ERROR no-leak, malformed payloads, and no network/store reads | Supports the declared fixture boundary; does not authenticate upstream records |
 | [`.github/workflows/evidence-drawer-payload.yml`](../../.github/workflows/evidence-drawer-payload.yml) | Read-only, fixture-only workflow exists for schema/fixtures/tests/receipt integrity | Workflow presence is not a required-check result, release decision, or publication proof |
-| [`apps/explorer-web/src/features/evidence_drawer/README.md`](../../apps/explorer-web/src/features/evidence_drawer/README.md) | Repository-grounded feature boundary documents the bounded executable slice and open production gaps | Component README, not architecture authority or runtime proof |
+| `apps/explorer-web/src/features/evidence_drawer/README.md` (retired) | Repository-grounded feature boundary documents the bounded executable slice and open production gaps | Component README, not architecture authority or runtime proof |
 | [`docs/architecture/ui/EVIDENCE_DRAWER.md`](./ui/EVIDENCE_DRAWER.md) | Earlier UI-oriented architecture page remains present | Its relationship to this page needs consolidation or a documented division of responsibility; this change does not decide that migration |
 
 ### 0.3 Truth labels
@@ -213,8 +209,8 @@ The target is an existing architecture page under the `docs/` responsibility roo
 
 The repository must not be summarized as having complete per-domain drawer integration merely because domain-named files exist.
 
-- [`apps/explorer-web/src/features/domains/hydrology/EvidenceDrawer.tsx`](../../apps/explorer-web/src/features/domains/hydrology/EvidenceDrawer.tsx) currently re-exports the generic Evidence Drawer implementation.
-- [`apps/explorer-web/src/features/domains/archaeology/EvidenceDrawer.tsx`](../../apps/explorer-web/src/features/domains/archaeology/EvidenceDrawer.tsx) is still a greenfield placeholder.
+- `apps/explorer-web/src/features/domains/hydrology/EvidenceDrawer.tsx` (retired) currently re-exports the generic Evidence Drawer implementation.
+- `apps/explorer-web/src/features/domains/archaeology/EvidenceDrawer.tsx` (retired) is still a greenfield placeholder.
 
 These two confirmed examples prove that domain integration maturity is uneven. A complete domain inventory requires a separate pinned scan. Domain wrappers must not create parallel evidence, policy, schema, or release authority.
 

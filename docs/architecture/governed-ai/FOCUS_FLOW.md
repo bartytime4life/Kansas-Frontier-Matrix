@@ -76,11 +76,6 @@ related:
   - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../adr/ADR-focus-model-adapter-boundary.md
   - ../../doctrine/directory-rules.md
-  - ../../../apps/explorer-web/src/features/focus_panel/types.ts
-  - ../../../apps/explorer-web/src/features/focus_panel/parsers.ts
-  - ../../../apps/explorer-web/src/features/focus_panel/resolver.ts
-  - ../../../apps/explorer-web/src/features/focus_panel/panel.ts
-  - ../../../apps/explorer-web/tests/focus-composed-claim.test.ts
   - ../../../apps/governed-api/src/governed_api/routes/registry.py
   - ../../../runtime/model_adapters/MockAdapter.py
   - ../../../contracts/runtime/runtime_response_envelope.md
@@ -162,12 +157,12 @@ The prior edition described one proposed full-stack Focus flow as though all nam
 
 | Surface | What current bytes prove | What they do **not** prove |
 |---|---|---|
-| [`types.ts`](../../../apps/explorer-web/src/features/focus_panel/types.ts) | Closed app-local request/projection profiles, finite outcomes, closure states, reason codes, trust-state fields, and a view-model boundary | Canonical Focus semantic or schema authority |
-| [`parsers.ts`](../../../apps/explorer-web/src/features/focus_panel/parsers.ts) | Exact-field parsing, bounded values, HTTPS citation checks, answer/negative-state coherence, and Evidence Drawer parity | Authentication of evidence, policy, review, release, freshness, or receipt references |
-| [`resolver.ts`](../../../apps/explorer-web/src/features/focus_panel/resolver.ts) | Empty-scope abstention, injected resolver, request/claim binding, EvidenceRef allowlist enforcement, and fixed local failures | Network transport, Governed API integration, evidence resolution, policy execution, or model inference |
-| [`panel.ts`](../../../apps/explorer-web/src/features/focus_panel/panel.ts) | Finite DOM rendering, Evidence Drawer embedding, `aria-live`, Escape close, and focus return | Normal Explorer integration, deployed accessibility conformance, or public operation |
-| [`focus-composed-claim.test.ts`](../../../apps/explorer-web/tests/focus-composed-claim.test.ts) | Executable test definitions for strict parsing, no-leak negative states, scope mismatch, and no browser network/provider/lifecycle imports | That every branch, environment, or deployment executed and passed those tests |
-| [`main.ts`](../../../apps/explorer-web/src/main.ts) | Normal Explorer startup mounts `mountExplorerSite` | A normal-site Focus composed-claim mount |
+| `types.ts` (retired) | Closed app-local request/projection profiles, finite outcomes, closure states, reason codes, trust-state fields, and a view-model boundary | Canonical Focus semantic or schema authority |
+| `parsers.ts` (retired) | Exact-field parsing, bounded values, HTTPS citation checks, answer/negative-state coherence, and Evidence Drawer parity | Authentication of evidence, policy, review, release, freshness, or receipt references |
+| `resolver.ts` (retired) | Empty-scope abstention, injected resolver, request/claim binding, EvidenceRef allowlist enforcement, and fixed local failures | Network transport, Governed API integration, evidence resolution, policy execution, or model inference |
+| `panel.ts` (retired) | Finite DOM rendering, Evidence Drawer embedding, `aria-live`, Escape close, and focus return | Normal Explorer integration, deployed accessibility conformance, or public operation |
+| `focus-composed-claim.test.ts` (retired) | Executable test definitions for strict parsing, no-leak negative states, scope mismatch, and no browser network/provider/lifecycle imports | That every branch, environment, or deployment executed and passed those tests |
+| `main.ts` (retired) | Normal Explorer startup mounts `mountExplorerSite` | A normal-site Focus composed-claim mount |
 | [`registry.py`](../../../apps/governed-api/src/governed_api/routes/registry.py) | Exactly three registered route paths | A Focus, model, citation, policy, receipt, or review route |
 | [`MockAdapter.py`](../../../runtime/model_adapters/MockAdapter.py) | Deterministic deep-copy selection from a complete synthetic four-outcome matrix without I/O | Request interpretation, semantic outcome selection, evidence resolution, policy evaluation, model calls, citations, or receipt emission |
 | [`RuntimeResponseEnvelope`](../../../contracts/runtime/runtime_response_envelope.md) and [schema](../../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) | A proposed client-facing finite envelope profile with closed shape and `ANSWER`-only precision disclosure | Semantic outcome selection, evidence closure, policy correctness, release, or live client use |

@@ -44,8 +44,6 @@ related:
   - ../../data/registry/rights/README.md
   - ../../packages/policy-runtime/README.md
   - ../../apps/governed-api/README.md
-  - ../../apps/explorer-web/README.md
-  - ../../apps/explorer-web/src/features/domains/archaeology/README.md
   - ../../release/README.md
   - ../../.github/workflows/policy-test.yml
 tags:
@@ -604,7 +602,7 @@ Public and reviewer interfaces are consumers of governed decisions. They do not 
 
 ### Current proof limit
 
-[`apps/explorer-web/src/features/domains/archaeology/README.md`](../../apps/explorer-web/src/features/domains/archaeology/README.md) documents a proposed archaeology feature boundary and mentions future CARE/sovereignty notices. It explicitly says implementation files, routes, tests, governed envelopes, receipts, review records, release manifests, and runtime behavior remain unverified. Repository search did not surface a `kfm:care` implementation under Explorer Web.
+`apps/explorer-web/src/features/domains/archaeology/README.md` (retired) documents a proposed archaeology feature boundary and mentions future CARE/sovereignty notices. It explicitly says implementation files, routes, tests, governed envelopes, receipts, review records, release manifests, and runtime behavior remain unverified. Repository search did not surface a `kfm:care` implementation under Explorer Web.
 
 MapLibre is a renderer. A style, source, layer filter, popup, camera, feature-state flag, or plugin cannot evaluate CARE, consent, sovereignty, or release.
 
@@ -720,7 +718,7 @@ Accepted Directory Rules place each artifact by its one authority responsibility
 | Policy runtime | [`packages/policy-runtime/`](../../packages/policy-runtime/README.md) | `0.0.0` placeholder, unbound evaluator, no verified consumers/deployment. |
 | Policy readiness workflow | [`.github/workflows/policy-test.yml`](../../.github/workflows/policy-test.yml) | Drift/readiness guard; broad workflow evaluates no policy and emits no decision. |
 | Governed API | [`apps/governed-api/`](../../apps/governed-api/README.md) | Intended trust membrane; CARE/authority route-by-route enforcement and deployment require separate proof. |
-| Explorer Web | [`apps/explorer-web/`](../../apps/explorer-web/README.md) | Public/semi-public shell; no verified CARE implementation surfaced. |
+| Explorer Web | `apps/explorer-web/` (retired) | Public/semi-public shell; no verified CARE implementation surfaced. |
 | Release/correction/rollback | [`release/`](../../release/README.md) | Separate decision plane; CARE metadata, review, consent, or policy cannot replace it. |
 | Document registry | [`control_plane/document_registry.yaml`](../../control_plane/document_registry.yaml) | Current file contains only its required-artifact-index entry; this architecture page is not registered there at the pinned snapshot. |
 
@@ -875,7 +873,7 @@ Before merge, close the draft pull request and abandon the feature branch. After
 - [SensitivityLabel contract](../../contracts/policy/sensitivity_label.md).
 - [RedactionReceipt contract](../../contracts/shared/redaction_receipt.md) and [fixture-only schema](../../schemas/contracts/v1/receipts/redaction_receipt.schema.json).
 - [Policy runtime placeholder](../../packages/policy-runtime/README.md).
-- [Governed API](../../apps/governed-api/README.md) and [Explorer Web](../../apps/explorer-web/README.md) boundaries.
+- [Governed API](../../apps/governed-api/README.md) and Explorer Web (retired) boundaries.
 - [Release decision plane](../../release/README.md).
 - [Policy readiness workflow](../../.github/workflows/policy-test.yml).
 

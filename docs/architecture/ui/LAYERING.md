@@ -43,7 +43,7 @@ related:
   - ../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - ../../adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md
   - ../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
-  - "../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+  - ../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md
   - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../../contracts/data/layer_manifest.md
   - ../../../contracts/data/layer_descriptor.md
@@ -55,8 +55,6 @@ related:
   - ../../../policy/layers/README.md
   - ../../../fixtures/data/layer_manifest/README.md
   - ../../../tools/validators/data/validate_layer_manifest.py
-  - ../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts
-  - ../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts
   - ../../../apps/governed-api/src/governed_api/routes/layers.py
 tags: [kfm, architecture, ui, layers, layer-manifest, layer-descriptor, layer-catalog-item, map-runtime, maplibre, evidence, policy, release, rollback]
 notes:
@@ -816,8 +814,8 @@ The smallest dependency-closed next implementation is not a live MapLibre load. 
 | Layer policy boundary | [`policy/layers/README.md`](../../../policy/layers/README.md) | Inactive no-op rule lane |
 | LayerManifest fixtures | [`fixtures/data/layer_manifest/README.md`](../../../fixtures/data/layer_manifest/README.md) | Synthetic no-network profile |
 | LayerManifest validator | [`validate_layer_manifest.py`](../../../tools/validators/data/validate_layer_manifest.py) | Bounded deterministic validator |
-| Runtime admission evaluator | [`layer_manifest_admission.ts`](../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts) | Side-effect-free fixture evaluator |
-| MapLibre adapter | [`MapLibreAdapter.ts`](../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) | Comment-only placeholder |
+| Runtime admission evaluator | `layer_manifest_admission.ts` (retired) | Side-effect-free fixture evaluator |
+| MapLibre adapter | `MapLibreAdapter.ts` (retired) | Comment-only placeholder |
 | Governed layers route | [`layers.py`](../../../apps/governed-api/src/governed_api/routes/layers.py) | ABSTAIN scaffold |
 
 ### Decisions

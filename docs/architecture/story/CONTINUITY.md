@@ -57,7 +57,7 @@ related:
   - ../ui/MAP_RUNTIME_BOUNDARY.md
   - ../document-convergence-plan.md
   - ../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
-  - "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+  - docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md
   - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../adr/INDEX.md
   - ../../doctrine/directory-rules.md
@@ -68,9 +68,6 @@ related:
   - ../../../fixtures/ui/story_manifest/cases.json
   - ../../../tools/validators/ui/validate_story_manifest.py
   - ../../../tools/validators/ui/validate_story_node.py
-  - ../../../apps/explorer-web/src/features/story_player/current-implementation.md
-  - ../../../apps/explorer-web/src/features/story_player/index.tsx
-  - ../../../apps/explorer-web/tests/story-player.test.ts
   - ../../../policy/story/README.md
   - ../../../data/manifests/story/README.md
 tags:
@@ -593,9 +590,9 @@ flowchart LR
 | StoryNode machine shape | [`schemas/contracts/v1/ui/story_node.schema.json`](../../../schemas/contracts/v1/ui/story_node.schema.json) | Closed profile |
 | StoryNode fixtures / validation | [`fixtures/ui/story_node/`](../../../fixtures/ui/story_node/) and [`validate_story_node.py`](../../../tools/validators/ui/validate_story_node.py) | Deterministic synthetic trust-inheritance proof |
 | StoryNode focused CI | [`story-node-trust-inheritance.yml`](../../../.github/workflows/story-node-trust-inheritance.yml) | Read-only focused workflow; no policy, release, or publication effect |
-| App-local Story consumer | [`index.tsx`](../../../apps/explorer-web/src/features/story_player/index.tsx) | Pure 2D-only `resolveStoryPlayer()` projection consumer |
-| App-local proof | [`story-player.test.ts`](../../../apps/explorer-web/tests/story-player.test.ts) | READY and negative-state behavior plus anti-bypass source checks |
-| Current implementation note | [`current-implementation.md`](../../../apps/explorer-web/src/features/story_player/current-implementation.md) | Records the bounded consumer and explicit non-effects |
+| App-local Story consumer | `index.tsx` (retired) | Pure 2D-only `resolveStoryPlayer()` projection consumer |
+| App-local proof | `story-player.test.ts` (retired) | READY and negative-state behavior plus anti-bypass source checks |
+| Current implementation note | `current-implementation.md` (retired) | Records the bounded consumer and explicit non-effects |
 | Story policy boundary | [`policy/story/README.md`](../../../policy/story/README.md) | Current lane documented; policy semantics and evaluator remain unestablished |
 | Story Rego source | [`evidence_continuity_required.rego`](../../../policy/story/evidence_continuity_required.rego) | Proposal stub with no operative deny rule |
 | Historical manifest lane | [`data/manifests/story/README.md`](../../../data/manifests/story/README.md) | Non-canonical compatibility and retirement boundary |
@@ -810,9 +807,9 @@ release is established by the inspected evidence.
 - [StoryNode fixtures](../../../fixtures/ui/story_node/)
 - [StoryManifest validator](../../../tools/validators/ui/validate_story_manifest.py)
 - [StoryNode validator](../../../tools/validators/ui/validate_story_node.py)
-- [Story Player implementation note](../../../apps/explorer-web/src/features/story_player/current-implementation.md)
-- [Story Player consumer](../../../apps/explorer-web/src/features/story_player/index.tsx)
-- [Story Player focused test](../../../apps/explorer-web/tests/story-player.test.ts)
+- Story Player implementation note (retired)
+- Story Player consumer (retired)
+- Story Player focused test (retired)
 - [Story policy boundary](../../../policy/story/README.md)
 - [Historical Story manifest compatibility lane](../../../data/manifests/story/README.md)
 

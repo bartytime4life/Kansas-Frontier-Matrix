@@ -58,7 +58,6 @@ related:
   - ./TELEMETRY.md
   - ../../doctrine/directory-rules.md
   - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
-  - ../../../apps/explorer-web/
   - ../../../apps/governed-api/
   - ../../../apps/review-console/
   - ../../../packages/maplibre/
@@ -96,7 +95,7 @@ notes:
 
 ## Executive determination
 
-**CONFIRMED.** KFM already has a real browser application under [`apps/explorer-web/`](../../../apps/explorer-web/), a governed-API application root, a separate review-console application root, a renderer-neutral map runtime port, a deterministic null runtime, a repository-grounded Explorer composition, a feature catalog, thirteen domain lanes, and bounded fixture-first trust interactions. The current Explorer package uses Vite, TypeScript, Vitest, and Playwright. Its current site composition exposes a synthetic map stage, deterministic map-selection-to-Evidence-Drawer cases, a domain matrix, and a descriptive feature catalog. These facts establish a meaningful implementation base; they do not establish live data, a concrete MapLibre adapter, production authorization, deployment, release, or public operation.
+**CONFIRMED.** KFM already has a real browser application under `apps/explorer-web/` (retired), a governed-API application root, a separate review-console application root, a renderer-neutral map runtime port, a deterministic null runtime, a repository-grounded Explorer composition, a feature catalog, thirteen domain lanes, and bounded fixture-first trust interactions. The current Explorer package uses Vite, TypeScript, Vitest, and Playwright. Its current site composition exposes a synthetic map stage, deterministic map-selection-to-Evidence-Drawer cases, a domain matrix, and a descriptive feature catalog. These facts establish a meaningful implementation base; they do not establish live data, a concrete MapLibre adapter, production authorization, deployment, release, or public operation.
 
 **PROPOSED.** KFM should evolve into a **Unified Workspace**: a shared interaction architecture that joins map exploration, search, time, evidence, analysis, stories, governed AI, contribution, review, source/pipeline observability, release/correction, operations, and developer support without collapsing their bounded contexts. The public Explorer, Review Console, steward surfaces, and operational surfaces may share design language and context links while remaining separately deployed and separately authorized.
 

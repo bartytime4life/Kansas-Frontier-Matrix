@@ -425,7 +425,7 @@ Accepted Directory Rules place artifacts by responsibility. The current sensitiv
 | Fixture-only transform shape/proof | [schema](../../schemas/contracts/v1/receipts/redaction_receipt.schema.json), [fixtures](../../fixtures/contracts/v1/receipts/redaction_receipt/cases.json), [validator](../../tools/validators/receipts/validate_redaction_receipt.py), [workflow](../../.github/workflows/redaction-receipt.yml) | Bounded deterministic, no-network, proposed-inactive fixture validation; authority `NONE`. |
 | General policy-evaluation mechanics | [`packages/policy-runtime/`](../../packages/policy-runtime/README.md) | Greenfield placeholder; evaluator, bundle selection, API, consumers, tests, deployment, and health remain unestablished. |
 | Release/correction/rollback decisions | [`release/`](../../release/README.md) | Separate decision plane; sensitivity source or receipts cannot replace it. |
-| Public clients | [`apps/governed-api/`](../../apps/governed-api/README.md) and [`apps/explorer-web/`](../../apps/explorer-web/README.md) | Must consume governed released projections; route-by-route and deployed sensitivity enforcement require separate proof. |
+| Public clients | [`apps/governed-api/`](../../apps/governed-api/README.md) and `apps/explorer-web/` (retired) | Must consume governed released projections; route-by-route and deployed sensitivity enforcement require separate proof. |
 
 ### Convergence boundary
 

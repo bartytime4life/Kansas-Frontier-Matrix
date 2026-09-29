@@ -27,19 +27,6 @@ related:
   - schemas/contracts/v1/ui/evidence_drawer_payload.schema.json
   - fixtures/ui/evidence_drawer_payload/README.md
   - tools/validators/ui/validate_evidence_drawer_payload.py
-  - apps/explorer-web/src/adapters/GovernedClient.ts
-  - apps/explorer-web/src/features/evidence_drawer/index.tsx
-  - apps/explorer-web/src/features/map_runtime/index.tsx
-  - apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts
-  - apps/explorer-web/src/features/map_runtime/runtime-evidence-binding.ts
-  - apps/explorer-web/src/features/map_runtime/runtime-trust-status.ts
-  - apps/explorer-web/tests/evidence-drawer.test.ts
-  - apps/explorer-web/tests/evidence-drawer-drift-integrity.test.ts
-  - apps/explorer-web/tests/map-evidence-drawer.test.ts
-  - apps/explorer-web/tests/map-runtime-evidence-binding.test.ts
-  - apps/explorer-web/tests/map-runtime-trust-status.test.ts
-  - apps/explorer-web/tests/browser/evidence-drawer.spec.ts
-  - apps/explorer-web/tests/browser/trust-surface.spec.ts
   - .github/workflows/evidence-drawer-payload.yml
 tags:
   - kfm
@@ -763,15 +750,15 @@ The denial view uses fixed public-safe copy and suppresses the supplied title an
 - [`../../../schemas/contracts/v1/ui/evidence_drawer_payload.schema.json`](../../../schemas/contracts/v1/ui/evidence_drawer_payload.schema.json) — closed machine profile
 - [`../../../fixtures/ui/evidence_drawer_payload/README.md`](../../../fixtures/ui/evidence_drawer_payload/README.md) — fixture boundary
 - [`../../../tools/validators/ui/validate_evidence_drawer_payload.py`](../../../tools/validators/ui/validate_evidence_drawer_payload.py) — no-network validator
-- [`../../../apps/explorer-web/src/adapters/GovernedClient.ts`](../../../apps/explorer-web/src/adapters/GovernedClient.ts) — strict parser
-- [`../../../apps/explorer-web/src/features/evidence_drawer/index.tsx`](../../../apps/explorer-web/src/features/evidence_drawer/index.tsx) — finite view and panel
-- [`../../../apps/explorer-web/src/features/map_runtime/index.tsx`](../../../apps/explorer-web/src/features/map_runtime/index.tsx) — strict selection adapter and bridge
-- [`../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts`](../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts) — closed supplied-projection admission
-- [`../../../apps/explorer-web/src/features/map_runtime/runtime-evidence-binding.ts`](../../../apps/explorer-web/src/features/map_runtime/runtime-evidence-binding.ts) — renderer-neutral subscription and invalidation
-- [`../../../apps/explorer-web/src/features/map_runtime/runtime-trust-status.ts`](../../../apps/explorer-web/src/features/map_runtime/runtime-trust-status.ts) — text-first finite runtime status
-- [`../../../apps/explorer-web/tests/evidence-drawer.test.ts`](../../../apps/explorer-web/tests/evidence-drawer.test.ts) — unit expectations
-- [`../../../apps/explorer-web/tests/map-evidence-drawer.test.ts`](../../../apps/explorer-web/tests/map-evidence-drawer.test.ts) — selection expectations
-- [`../../../apps/explorer-web/tests/browser/evidence-drawer.spec.ts`](../../../apps/explorer-web/tests/browser/evidence-drawer.spec.ts) — browser expectations
+- `../../../apps/explorer-web/src/adapters/GovernedClient.ts` (retired) — strict parser
+- `../../../apps/explorer-web/src/features/evidence_drawer/index.tsx` (retired) — finite view and panel
+- `../../../apps/explorer-web/src/features/map_runtime/index.tsx` (retired) — strict selection adapter and bridge
+- `../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts` (retired) — closed supplied-projection admission
+- `../../../apps/explorer-web/src/features/map_runtime/runtime-evidence-binding.ts` (retired) — renderer-neutral subscription and invalidation
+- `../../../apps/explorer-web/src/features/map_runtime/runtime-trust-status.ts` (retired) — text-first finite runtime status
+- `../../../apps/explorer-web/tests/evidence-drawer.test.ts` (retired) — unit expectations
+- `../../../apps/explorer-web/tests/map-evidence-drawer.test.ts` (retired) — selection expectations
+- `../../../apps/explorer-web/tests/browser/evidence-drawer.spec.ts` (retired) — browser expectations
 - [`../../../.github/workflows/evidence-drawer-payload.yml`](../../../.github/workflows/evidence-drawer-payload.yml) — focused read-only workflow
 - [`../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — adopted placement bytes
 - [`../../adr/ADR-0029-adopt-directory-governance-standard-v2.md`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — adoption decision

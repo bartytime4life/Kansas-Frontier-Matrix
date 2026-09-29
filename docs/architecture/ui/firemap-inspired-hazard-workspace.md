@@ -32,7 +32,7 @@ radar, smoke and earthquake problems into reviewable requirements.
 Preserve the existing Kansas Frontier Matrix Explorer: one map, camera continuity,
 MapLibre, the existing Evidence Drawer, source attribution, explicit Share flow,
 Site identity, audience and bindings. See the [UI architecture boundary](README.md)
-and the [repository app boundary](../../../apps/kansas-frontier-matrix-explorer/README.md).
+and the repository app boundary (retired).
 The standalone hosted Site and monorepo application are different source histories.
 Do not merge a standalone-root mirror into monorepo main or overwrite newer Site
 code with an older mirror.

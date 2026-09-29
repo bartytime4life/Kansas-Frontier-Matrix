@@ -72,7 +72,6 @@ related:
   - ../../../contracts/release/map_release_manifest.md
   - ../../../schemas/contracts/v1/data/layer_manifest.schema.json
   - ../../../schemas/contracts/v1/map/map_release_manifest.schema.json
-  - ../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts
 notes:
   - "Same-path architecture-document reconciliation; placement outcome PLACE."
   - "Preserves the H1, top anchor, numbered sections 1–12, and legacy section anchors."
@@ -721,14 +720,14 @@ An ADR or equivalent accepted decision is required before this page can describe
 
 - [`../../../tools/validators/data/validate_layer_manifest.py`](../../../tools/validators/data/validate_layer_manifest.py)
 - [`../../../tests/validators/test_validate_layer_manifest.py`](../../../tests/validators/test_validate_layer_manifest.py)
-- [`../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts`](../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts)
-- [`../../../apps/explorer-web/tests/layer-manifest-admission.test.ts`](../../../apps/explorer-web/tests/layer-manifest-admission.test.ts)
+- `../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts` (retired)
+- `../../../apps/explorer-web/tests/layer-manifest-admission.test.ts` (retired)
 - [`../../../fixtures/runtime/layer_manifest_admission/cases.json`](../../../fixtures/runtime/layer_manifest_admission/cases.json)
 - [`../../../tools/validators/map/validate_map_release_manifest.py`](../../../tools/validators/map/validate_map_release_manifest.py)
 - [`../../../tests/map/test_map_release_manifest.py`](../../../tests/map/test_map_release_manifest.py)
 - [`../../../policy/layers/README.md`](../../../policy/layers/README.md)
 - [`../../../.github/workflows/layer-manifest.yml`](../../../.github/workflows/layer-manifest.yml)
-- [`../../../.github/workflows/layer-manifest-admission.yml`](../../../.github/workflows/layer-manifest-admission.yml)
+- `../../../.github/workflows/layer-manifest-admission.yml` (not present)
 - [`../../../.github/workflows/map-release-manifest.yml`](../../../.github/workflows/map-release-manifest.yml)
 
 [Back to top](#top)

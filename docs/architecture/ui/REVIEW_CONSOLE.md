@@ -39,7 +39,6 @@ related:
   - apps/review-console/README.md
   - apps/review-console/src/README.md
   - apps/review-console/src/features/README.md
-  - apps/explorer-web/src/features/review_console_readonly/README.md
   - apps/governed-api/README.md
   - apps/workers/src/quarantine_review_worker/README.md
   - contracts/governance/ReviewRecord.md
@@ -264,7 +263,7 @@ The repository documents the feature families below. At the pinned snapshot, eac
 
 ### 4.1 Public read-only review is a separate surface
 
-[`apps/explorer-web/src/features/review_console_readonly/`](../../../apps/explorer-web/src/features/review_console_readonly/) is a separate compatibility/read-only concept. Its current entrypoint exports only a placeholder boolean. It must not share Review Console's mutating decision path, reviewer credentials, restricted queue metadata, or internal reason details.
+`apps/explorer-web/src/features/review_console_readonly/` (retired) is a separate compatibility/read-only concept. Its current entrypoint exports only a placeholder boolean. It must not share Review Console's mutating decision path, reviewer credentials, restricted queue metadata, or internal reason details.
 
 ### 4.2 Accessibility and trust-visible behavior
 
@@ -725,7 +724,7 @@ No state is achieved by documentation, a badge, a schema file, a green fixture t
 - [Review Console app boundary](../../../apps/review-console/README.md)
 - [Review Console source boundary](../../../apps/review-console/src/README.md)
 - [Review Console feature index](../../../apps/review-console/src/features/README.md)
-- [Explorer read-only review placeholder](../../../apps/explorer-web/src/features/review_console_readonly/README.md)
+- Explorer read-only review placeholder (retired)
 - [Governed API boundary](../../../apps/governed-api/README.md)
 - [Quarantine review worker boundary](../../../apps/workers/src/quarantine_review_worker/README.md)
 

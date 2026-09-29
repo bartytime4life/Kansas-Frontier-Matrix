@@ -1072,7 +1072,7 @@ else:
 ### Delivery and release boundaries
 
 - [General Governed API README](../../apps/governed-api/README.md)
-- [General public-client governed adapter](../../apps/explorer-web/src/adapters/GovernedClient.ts)
+- General public-client governed adapter (retired)
 - [Hazards proof lane README](../../data/proofs/hazards/README.md)
 - [Hazards release-candidate README](../../release/candidates/hazards/README.md)
 - [Release root README](../../release/README.md)

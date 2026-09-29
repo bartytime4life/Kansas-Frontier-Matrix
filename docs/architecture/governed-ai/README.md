@@ -78,7 +78,6 @@ related:
   - apps/governed-api/src/governed_api/routes/registry.py
   - apps/governed-api/src/governed_api/stub.py
   - apps/governed-api/src/ai/README.md
-  - apps/explorer-web/src/features/focus_panel/resolver.ts
   - apps/workers/src/ai_focus_worker/main.py
   - runtime/model_adapters/MockAdapter.py
   - runtime/model_adapters/OllamaAdapter.py
@@ -922,7 +921,7 @@ Merged [PR #3149](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/
 - [`docs/architecture/governed-api/README.md`](../governed-api/README.md)
 - [`apps/governed-api/README.md`](../../../apps/governed-api/README.md)
 - [`apps/governed-api/src/ai/README.md`](../../../apps/governed-api/src/ai/README.md)
-- [`apps/explorer-web/README.md`](../../../apps/explorer-web/README.md)
+- `apps/explorer-web/README.md` (retired)
 - [`apps/workers/src/ai_focus_worker/README.md`](../../../apps/workers/src/ai_focus_worker/README.md)
 - [`runtime/model_adapters/README.md`](../../../runtime/model_adapters/README.md)
 - [`runtime/ollama/README.md`](../../../runtime/ollama/README.md)

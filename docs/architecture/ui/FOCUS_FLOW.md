@@ -69,8 +69,6 @@ related:
   - ../../doctrine/directory-rules.md
   - ../../doctrine/trust-membrane.md
   - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
-  - ../../../apps/explorer-web/src/features/focus_panel/README.md
-  - ../../../apps/explorer-web/src/features/focus_panel/COMPOSED_CLAIM_FIXTURE.md
   - ../../../contracts/evidence/composed_claim_dependency_closure.md
   - ../../../schemas/contracts/v1/focus/README.md
   - ../../../policy/focus/README.md
@@ -156,10 +154,10 @@ The split prevents the browser interaction model from absorbing evidence, policy
 
 | Evidence surface | What it proves | What it does not prove |
 |---|---|---|
-| [`types.ts`](../../../apps/explorer-web/src/features/focus_panel/types.ts) | Current app-local profiles, closed outcome vocabularies, request/projection/view-model fields | Canonical contract or schema authority |
-| [`parsers.ts`](../../../apps/explorer-web/src/features/focus_panel/parsers.ts) | Exact-field parsing, bounded strings/arrays, HTTPS citations, answer/negative-state coherence, Evidence Drawer parity | Live evidence, policy, review, release, or citation service execution |
-| [`resolver.ts`](../../../apps/explorer-web/src/features/focus_panel/resolver.ts) | Injected resolver, empty-scope abstention, identity binding, EvidenceRef subset enforcement, fixed local failures | Network transport or governed API integration |
-| [`panel.ts`](../../../apps/explorer-web/src/features/focus_panel/panel.ts) | DOM projection, finite labels, embedded drawer, ARIA live behavior, Escape close, focus return | Normal site mounting, modal focus trap, route integration, or public deployment |
+| `types.ts` (retired) | Current app-local profiles, closed outcome vocabularies, request/projection/view-model fields | Canonical contract or schema authority |
+| `parsers.ts` (retired) | Exact-field parsing, bounded strings/arrays, HTTPS citations, answer/negative-state coherence, Evidence Drawer parity | Live evidence, policy, review, release, or citation service execution |
+| `resolver.ts` (retired) | Injected resolver, empty-scope abstention, identity binding, EvidenceRef subset enforcement, fixed local failures | Network transport or governed API integration |
+| `panel.ts` (retired) | DOM projection, finite labels, embedded drawer, ARIA live behavior, Escape close, focus return | Normal site mounting, modal focus trap, route integration, or public deployment |
 | Unit and browser tests | Source-level assertions and executable test definitions for supported, qualified, abstained, denied, and error paths | That every current-main or deployed environment has executed and passed them |
 | Synthetic fixtures | Deterministic public-safe examples | Real EvidenceRef resolution, real policy, real human review, real release, or public use |
 | Generated authoring receipt | Authored artifact inventory, hashes, and recorded authoring validation posture | Independent human review, release proof, or runtime effectiveness |
@@ -633,11 +631,11 @@ Any later telemetry must:
 
 | Surface | Path | Current proof purpose |
 |---|---|---|
-| Unit suite | [`apps/explorer-web/tests/focus-composed-claim.test.ts`](../../../apps/explorer-web/tests/focus-composed-claim.test.ts) | Request immutability, strict parsing, closure mapping, scope binding, sanitization, resolver errors, no-network/import guard |
-| Browser suite | [`apps/explorer-web/tests/browser/focus-composed-claim.spec.ts`](../../../apps/explorer-web/tests/browser/focus-composed-claim.spec.ts) | Supported/qualified/abstain/deny/error UI, citation/drawer handoff, keyboard entry, Escape close, focus return, no canary leakage |
-| Browser host | [`focus-composed-claim.html`](../../../apps/explorer-web/tests/browser/focus-composed-claim.html) and fixture module | Synthetic interactive harness only |
+| Unit suite | `apps/explorer-web/tests/focus-composed-claim.test.ts` (retired) | Request immutability, strict parsing, closure mapping, scope binding, sanitization, resolver errors, no-network/import guard |
+| Browser suite | `apps/explorer-web/tests/browser/focus-composed-claim.spec.ts` (retired) | Supported/qualified/abstain/deny/error UI, citation/drawer handoff, keyboard entry, Escape close, focus return, no canary leakage |
+| Browser host | `focus-composed-claim.html` (retired) and fixture module | Synthetic interactive harness only |
 | Fixture family | [`fixtures/ui/focus_composed_claim_projection/`](../../../fixtures/ui/focus_composed_claim_projection/) | Supported, qualified, unresolved, and denied public-safe projections |
-| App-local rationale | [`COMPOSED_CLAIM_FIXTURE.md`](../../../apps/explorer-web/src/features/focus_panel/COMPOSED_CLAIM_FIXTURE.md) | Scope, dependency basis, no-network boundary, proof limits, rollback |
+| App-local rationale | `COMPOSED_CLAIM_FIXTURE.md` (retired) | Scope, dependency basis, no-network boundary, proof limits, rollback |
 | Authoring receipt | [`genrec-focus-composed-claim-projection-20260808.json`](../../../data/receipts/generated/genrec-focus-composed-claim-projection-20260808.json) | Artifact/hash inventory and recorded authoring validation; not independent review or release proof |
 
 `ERROR` behavior is exercised through malformed/mismatched projections and resolver failures rather than a committed valid error-projection fixture.
@@ -721,14 +719,14 @@ No source shutdown, model rollback, data migration, cache purge, route removal, 
 
 ### Current implementation and proof surfaces
 
-- [`focus_panel/README.md`](../../../apps/explorer-web/src/features/focus_panel/README.md)
-- [`focus_panel/COMPOSED_CLAIM_FIXTURE.md`](../../../apps/explorer-web/src/features/focus_panel/COMPOSED_CLAIM_FIXTURE.md)
-- [`focus_panel/types.ts`](../../../apps/explorer-web/src/features/focus_panel/types.ts)
-- [`focus_panel/parsers.ts`](../../../apps/explorer-web/src/features/focus_panel/parsers.ts)
-- [`focus_panel/resolver.ts`](../../../apps/explorer-web/src/features/focus_panel/resolver.ts)
-- [`focus_panel/panel.ts`](../../../apps/explorer-web/src/features/focus_panel/panel.ts)
-- [`apps/explorer-web/src/main.ts`](../../../apps/explorer-web/src/main.ts)
-- [`apps/explorer-web/src/site/mount-explorer-site.ts`](../../../apps/explorer-web/src/site/mount-explorer-site.ts)
+- `focus_panel/README.md` (retired)
+- `focus_panel/COMPOSED_CLAIM_FIXTURE.md` (retired)
+- `focus_panel/types.ts` (retired)
+- `focus_panel/parsers.ts` (retired)
+- `focus_panel/resolver.ts` (retired)
+- `focus_panel/panel.ts` (retired)
+- `apps/explorer-web/src/main.ts` (retired)
+- `apps/explorer-web/src/site/mount-explorer-site.ts` (retired)
 - [`apps/governed-api/.../routes/registry.py`](../../../apps/governed-api/src/governed_api/routes/registry.py)
 - [`ComposedClaimDependencyClosureCandidate`](../../../contracts/evidence/composed_claim_dependency_closure.md)
 - [`Focus schema family`](../../../schemas/contracts/v1/focus/README.md)

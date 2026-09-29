@@ -81,7 +81,6 @@ related:
   - ../../../apps/governed-api/src/governed_api/main.py
   - ../../../apps/governed-api/src/governed_api/routes/registry.py
   - ../../../apps/governed-api/src/governed_api/stub.py
-  - ../../../apps/explorer-web/src/features/focus_panel/resolver.ts
   - ../../../runtime/model_adapters/MockAdapter.py
   - ../../../contracts/runtime/runtime_response_envelope.md
   - ../../../contracts/runtime/ai_receipt.md
@@ -866,8 +865,8 @@ That slice proves inventory and fail-closed metadata only. It does not implement
 | [`Directory Rules`](../../doctrine/directory-rules.md) | Responsibility-root and placement law | Accepted through ADR-0029 |
 | [`route registry`](../../../apps/governed-api/src/governed_api/routes/registry.py) | Exact executable route set | Three GET paths |
 | [`Governed API dispatcher`](../../../apps/governed-api/src/governed_api/main.py) | Exact method/path behavior | GET dispatch plus safe 404/405 |
-| [`Focus resolver`](../../../apps/explorer-web/src/features/focus_panel/resolver.ts) | App-local injected-resolver boundary | Bounded no-network client proof |
-| [`Focus tests`](../../../apps/explorer-web/tests/focus-composed-claim.test.ts) | Focus projection positive/negative proof | Synthetic and fixture-first |
+| `Focus resolver` (retired) | App-local injected-resolver boundary | Bounded no-network client proof |
+| `Focus tests` (retired) | Focus projection positive/negative proof | Synthetic and fixture-first |
 | [`MockAdapter`](../../../runtime/model_adapters/MockAdapter.py) | Deterministic scenario selector | No-I/O component proof only |
 | [`MockAdapter proof`](../../../tests/runtime_proof/test_mock_adapter_finite_outcomes.py) | Four-outcome/isolation/no-I/O tests | Does not start a runtime |
 | [`AIReceipt contract`](../../../contracts/runtime/ai_receipt.md) | Proposed AI accountability meaning | No emitter/store/route binding |
@@ -994,7 +993,7 @@ A route is not complete until:
 
 ---
 
-**Related (mini)** · [`README.md`](README.md) · [`FOCUS_FLOW.md`](FOCUS_FLOW.md) · [`../governed-api/ENVELOPES.md`](../governed-api/ENVELOPES.md) · [`../governed-api/AUDIENCE_CLASSES.md`](../governed-api/AUDIENCE_CLASSES.md) · [`route registry`](../../../apps/governed-api/src/governed_api/routes/registry.py) · [`Focus resolver`](../../../apps/explorer-web/src/features/focus_panel/resolver.ts) · [`MockAdapter`](../../../runtime/model_adapters/MockAdapter.py)
+**Related (mini)** · [`README.md`](README.md) · [`FOCUS_FLOW.md`](FOCUS_FLOW.md) · [`../governed-api/ENVELOPES.md`](../governed-api/ENVELOPES.md) · [`../governed-api/AUDIENCE_CLASSES.md`](../governed-api/AUDIENCE_CLASSES.md) · [`route registry`](../../../apps/governed-api/src/governed_api/routes/registry.py) · `Focus resolver` (retired) · [`MockAdapter`](../../../runtime/model_adapters/MockAdapter.py)
 
 **Last updated:** 2026-08-20 · **Doc version:** v0.3 · **Doc status:** repository-grounded draft · **Governed-AI HTTP route:** ABSENT / HOLD
 

@@ -369,9 +369,9 @@ A live closure profile needs a separately governed packet for real trace identit
 
 - [`packages/maplibre/package.json`](../../packages/maplibre/package.json) is private `@kfm/maplibre` version `0.0.0` with no `maplibre-gl` dependency.
 - [`packages/maplibre/src/index.ts`](../../packages/maplibre/src/index.ts) is a placeholder export.
-- [`apps/explorer-web/package.json`](../../apps/explorer-web/package.json) is ESM but has no MapLibre dependency.
-- [`apps/explorer-web/tsconfig.json`](../../apps/explorer-web/tsconfig.json) targets ES2022.
-- [`apps/explorer-web/src/adapters/MapLibreAdapter.ts`](../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) is comment-only.
+- `apps/explorer-web/package.json` (retired) is ESM but has no MapLibre dependency.
+- `apps/explorer-web/tsconfig.json` (retired) targets ES2022.
+- `apps/explorer-web/src/adapters/MapLibreAdapter.ts` (retired) is comment-only.
 - `configs/maplibre/v6-probe-results.json` was absent at the pinned snapshot.
 - ADR-0006 and ADR-0007 are not accepted decisions.
 - The successor generated receipt binds the current classifier/workflow/test/fixture bytes but records human review as pending and no upgrade authority.

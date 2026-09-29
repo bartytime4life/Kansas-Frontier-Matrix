@@ -28,8 +28,6 @@ related:
   - ../../../contracts/ui/trust_badge_state.md
   - ../../../schemas/contracts/v1/ui/trust_badge_state.schema.json
   - ../../../schemas/contracts/v1/ui/evidence_drawer_payload.schema.json
-  - ../../../apps/explorer-web/src/features/trust_header/index.tsx
-  - ../../../apps/explorer-web/src/features/attestation_badge/README.md
 tags:
   - kfm
   - ui
@@ -1007,13 +1005,13 @@ Do not graduate a profile when any of these remain unresolved:
 
 ### Current Explorer implementation evidence
 
-- [`apps/explorer-web/src/features/trust_header/index.tsx`](../../../apps/explorer-web/src/features/trust_header/index.tsx)
-- [`apps/explorer-web/tests/trust-header.test.ts`](../../../apps/explorer-web/tests/trust-header.test.ts)
-- [`apps/explorer-web/src/adapters/AttestationBadgeProjection.ts`](../../../apps/explorer-web/src/adapters/AttestationBadgeProjection.ts)
-- [`apps/explorer-web/src/features/attestation_badge/README.md`](../../../apps/explorer-web/src/features/attestation_badge/README.md)
-- [`apps/explorer-web/tests/browser/attestation-badge.spec.ts`](../../../apps/explorer-web/tests/browser/attestation-badge.spec.ts)
-- [`apps/explorer-web/src/site/catalog.ts`](../../../apps/explorer-web/src/site/catalog.ts)
-- [`apps/explorer-web/src/site/mount-explorer-site.ts`](../../../apps/explorer-web/src/site/mount-explorer-site.ts)
+- `apps/explorer-web/src/features/trust_header/index.tsx` (retired)
+- `apps/explorer-web/tests/trust-header.test.ts` (retired)
+- `apps/explorer-web/src/adapters/AttestationBadgeProjection.ts` (retired)
+- `apps/explorer-web/src/features/attestation_badge/README.md` (retired)
+- `apps/explorer-web/tests/browser/attestation-badge.spec.ts` (retired)
+- `apps/explorer-web/src/site/catalog.ts` (retired)
+- `apps/explorer-web/src/site/mount-explorer-site.ts` (retired)
 
 ### UI boundaries
 

@@ -156,7 +156,7 @@ This lane explains the cross-cutting architecture between a release candidate an
 | Receipts and proofs | [`data/receipts/`](../../../data/receipts/) and [`data/proofs/`](../../../data/proofs/) |
 | Public-safe released carriers | [`data/published/`](../../../data/published/) |
 | Validators and operators | [`tools/validators/`](../../../tools/validators/) and [`tools/release/`](../../../tools/release/) |
-| Public delivery | [`apps/governed-api/`](../../../apps/governed-api/) and [`apps/explorer-web/`](../../../apps/explorer-web/) |
+| Public delivery | [`apps/governed-api/`](../../../apps/governed-api/) and `apps/explorer-web/` (retired) |
 
 [Back to top](#top)
 
