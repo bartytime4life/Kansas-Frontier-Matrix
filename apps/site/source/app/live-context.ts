@@ -2,7 +2,7 @@ import type { FeatureCollection } from "geojson";
 import type { GeoJSONSource, LayerSpecification, Map as MapLibreMap, RasterTileSource } from "./maplibre-seam";
 import { noaaRadarTileUrl } from "./noaa-radar";
 import { lightningTilePath, NASA_LIGHTNING_METADATA_URL, NASA_LIGHTNING_TILES } from "./lightning-data";
-import { noaaSatelliteTileUrl } from "./noaa-satellite";
+import { noaaSatelliteTileUrl, type NoaaSatelliteFrame } from "./noaa-satellite";
 import { rememberGeoJSON, updateGeoJSON, setVisibleIfChanged, setPaintIfChanged } from "./map-performance";
 import { balanceMapFills, balanceMapRasters, composeMapLayers, requestFillOpacity, requestRasterOpacity } from "./map-layer-composition";
 import { BUILD_UTC_YEAR } from "./build-clock";
@@ -343,26 +343,26 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
   }),
   Object.freeze({
     id: "noaa-goes-geocolor",
-    title: "NOAA Earth in Real-Time GOES GeoColor",
-    shortTitle: "NOAA satellite · GeoColor",
-    organization: "NOAA NESDIS Satellite Maps",
+    title: "NOAA GOES satellite imagery",
+    shortTitle: "NOAA satellite imagery",
+    organization: "NOAA NESDIS / nowCOAST",
     domain: "Fire, smoke & hazards",
     kind: "OPERATIONAL_WMS",
     sourceId: "external-noaa-goes-geocolor",
     layerIds: Object.freeze(["external-noaa-goes-geocolor-raster"]),
     interactiveLayerIds: Object.freeze([]),
-    endpointLabel: "satellitemaps.nesdis.noaa.gov · MERGEDGC_Last_24hr ImageServer",
+    endpointLabel: "NOAA GeoColor ImageServer · nowCOAST visible fallback",
     sourceUrl: "https://www.nesdis.noaa.gov/imagery/satellite-maps/earth-real-time",
     serviceUrl: "https://satellitemaps.nesdis.noaa.gov/arcgis/rest/services/MERGEDGC_Last_24hr/ImageServer",
-    cadence: "Provider GOES East/West GeoColor images, commonly every 10–15 minutes; gaps may occur",
-    freshness: "Exact start and end times from the selected NOAA image catalog record",
+    cadence: "GeoColor commonly every 10–15 minutes; nowCOAST visible fallback commonly every 5 minutes; gaps may occur",
+    freshness: "Exact selected NOAA image or observation time",
     defaultVisibility: false,
     defaultOpacity: 0.58,
     color: "#72d8f2",
-    attribution: "NOAA NESDIS Satellite Maps · GOES GeoColor",
+    attribution: "NOAA NESDIS · GOES imagery",
     evidenceRole: "EXTERNAL_CONTEXT_ONLY",
-    boundary: "This is NOAA's time-enabled GOES East/West GeoColor imagery, with a bounded 24-hour frame list and each displayed tile locked to one catalog raster ID. GeoColor is a visual composite of satellite channels. Cloud appearance is not a surface measurement, smoke observation, fire detection, storm forecast, warning, or safety guidance. NOAA describes this satellite map as informational, not operational. No KFM EvidenceBundle or release is established.",
-    fallback: "If the dated frame catalog or tiles fail, the image layer remains unavailable. The Site does not substitute the separate cached current service, whose image time is not bound to the selected frame.",
+    boundary: "The preferred source is NOAA's time-enabled GOES East/West GeoColor imagery, locked to one dated catalog raster ID. When its catalog is unavailable, a separately labeled NOAA nowCOAST GOES visible Band 2 image may be shown at an exact advertised observation time. Visible imagery depends on daylight and is not GeoColor. Cloud appearance is not a surface measurement, smoke observation, fire detection, storm forecast, warning, or safety guidance. No KFM EvidenceBundle or release is established.",
+    fallback: "The dated nowCOAST GOES visible layer is used only when the GeoColor catalog fails. If both dated sources fail, the image layer remains unavailable; no undated tile is substituted.",
   }),
   Object.freeze({
     id: "raspberry-shake-stations",
@@ -616,7 +616,7 @@ export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextI
   "noaa-goes-geocolor": Object.freeze({
     axis: "provider-observation-loop",
     supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
-    limitation: "NOAA's rolling 24-hour GeoColor catalog supplies explicitly dated image frames. Select one provider frame; an older or delayed image remains labeled by its source time. No undated tile cache is used.",
+    limitation: "The preferred NOAA GeoColor catalog and the nowCOAST GOES visible fallback supply explicitly dated frames. The fallback is daylight-dependent and labeled separately. No undated tile cache is used.",
   }),
   "raspberry-shake-stations": Object.freeze({
     axis: "rolling-retrieval-window",
@@ -830,9 +830,9 @@ export const applyOfficialContextState = (
 };
 
 /** Select one provider catalog raster. No service-default or undated tile is used. */
-export const setNoaaSatelliteFrame = (map: MapLibreMap, objectId: number, visible: boolean, opacity: number): void => {
+export const setNoaaSatelliteFrame = (map: MapLibreMap, frame: NoaaSatelliteFrame, visible: boolean, opacity: number): void => {
   const satellite = OFFICIAL_CONTEXT_BY_ID["noaa-goes-geocolor"];
-  const tileUrl = noaaSatelliteTileUrl(objectId);
+  const tileUrl = noaaSatelliteTileUrl(frame);
   let source = map.getSource(satellite.sourceId) as RasterTileSource | undefined;
   if (!source) {
     map.addSource(satellite.sourceId, { type: "raster", tiles: [tileUrl], tileSize: 256, attribution: satellite.attribution,

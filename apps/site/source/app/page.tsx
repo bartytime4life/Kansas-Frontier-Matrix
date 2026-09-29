@@ -1200,7 +1200,7 @@ export default function Home() {
   const [streamflowArchiveDraftDay, setStreamflowArchiveDraftDay] = useState(currentUtcDay);
   const [streamflowCoverage, setStreamflowCoverage] = useState<{ station: string; continuous: { start: string; end: string } | null; daily: { start: string; end: string } | null; partial: boolean } | null>(null);
   const [streamflowCoverageMessage, setStreamflowCoverageMessage] = useState("Choose a station to check its provider-declared record span.");
-  const [liveInstrument, setLiveInstrument] = useState<"river" | "radar">("river");
+  const [liveInstrument, setLiveInstrument] = useState<"river" | "radar" | "lightning">("river");
   const [layerOrder, setLayerOrder] = useState<string[]>(defaultOrder);
   const [basemap, setBasemap] = useState<BasemapKey>("standard");
   const [view, setView] = useState<ViewState>(KANSAS_VIEW);
@@ -1668,9 +1668,17 @@ export default function Home() {
   const noaaRadarAgeMinutes = noaaRadarActiveFrame ? noaaRadarFrameAgeMinutes(noaaRadarActiveFrame, noaaRadarClock) : null;
   const noaaRadarLatestAgeMinutes = noaaRadarLatestFrame ? noaaRadarFrameAgeMinutes(noaaRadarLatestFrame, noaaRadarClock) : null;
   const noaaRadarSelectedAtPresent = buildYearCurrent && officialVisibility["nws-radar"] && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
-  const liveDockVisible = instrumentOpen && (streamflowSelectedAtPresent || noaaRadarSelectedAtPresent);
-  const showStreamflowDock = streamflowSelectedAtPresent && (liveInstrument === "river" || !noaaRadarSelectedAtPresent);
-  const showRadarDock = noaaRadarSelectedAtPresent && (liveInstrument === "radar" || !streamflowSelectedAtPresent);
+  const lightningSelectedAtPresent = buildYearCurrent && officialVisibility["noaa-lightning-density"] && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
+  const availableLiveInstruments = [
+    ...(streamflowSelectedAtPresent ? ["river" as const] : []),
+    ...(noaaRadarSelectedAtPresent ? ["radar" as const] : []),
+    ...(lightningSelectedAtPresent ? ["lightning" as const] : []),
+  ];
+  const activeLiveInstrument = availableLiveInstruments.includes(liveInstrument) ? liveInstrument : availableLiveInstruments[0] ?? null;
+  const liveDockVisible = instrumentOpen && activeLiveInstrument !== null;
+  const showStreamflowDock = activeLiveInstrument === "river";
+  const showRadarDock = activeLiveInstrument === "radar";
+  const showLightningDock = activeLiveInstrument === "lightning";
   const noaaRadarSelectedIsLatest = Boolean(noaaRadarActiveFrame && noaaRadarLatestFrame && noaaRadarActiveFrame === noaaRadarLatestFrame);
   const noaaRadarFrameError = noaaRadarManifestError
     || (noaaRadarManifest && !noaaRadarManifestFresh ? "The newest advertised NOAA observation is more than 15 minutes old." : "")
@@ -2320,7 +2328,7 @@ export default function Home() {
       if (streamflowFrameTime) params.set("hydroTime", streamflowFrameTime);
       if (streamflowSelectedStationId) params.set("hydroStation", streamflowSelectedStationId);
     }
-    if (officialVisibility["usgs-streamflow"] || officialVisibility["nws-radar"]) params.set("live", liveInstrument);
+    if (officialVisibility["usgs-streamflow"] || officialVisibility["nws-radar"] || officialVisibility["noaa-lightning-density"]) params.set("live", liveInstrument);
     params.set("t", String(year));
     params.set("tm", temporalMode);
     params.set("tstep", temporalStepRule);
@@ -2638,8 +2646,8 @@ export default function Home() {
 
   const selectNoaaSatelliteFrame = useCallback((frame: NoaaSatelliteFrame) => {
     const manifest = noaaSatelliteManifestRef.current;
-    if (!manifest?.frames.some((candidate) => candidate.objectId === frame.objectId)) return;
-    noaaSatelliteFollowLatestRef.current = frame.objectId === manifest.frames.at(-1)?.objectId;
+    if (!manifest?.frames.some((candidate) => candidate.kind === frame.kind && candidate.observedAt === frame.observedAt)) return;
+    noaaSatelliteFollowLatestRef.current = frame.observedAt === manifest.frames.at(-1)?.observedAt;
     noaaSatelliteFrameRef.current = frame;
     setNoaaSatelliteSelectedFrame(frame);
     officialRasterFailuresRef.current.delete("noaa-goes-geocolor");
@@ -2647,7 +2655,7 @@ export default function Home() {
     const map = mapRef.current;
     if (map?.isStyleLoaded()) {
       try {
-        setNoaaSatelliteFrame(map, frame.objectId,
+        setNoaaSatelliteFrame(map, frame,
           buildYearCurrentRef.current && officialVisibilityRef.current["noaa-goes-geocolor"] && temporalQueryRef.current.frame === OFFICIAL_CONTEXT_PRESENT_FRAME,
           officialOpacityRef.current["noaa-goes-geocolor"]);
       } catch (error) {
@@ -2666,15 +2674,15 @@ export default function Home() {
     try {
       const response = await fetch(NOAA_SATELLITE_FRAMES_PATH, { cache: "no-store", signal: controller.signal, headers: { Accept: "application/json" } });
       const candidate = await readBoundedJson(response, 512 * 1024) as unknown;
-      if (!response.ok || !isNoaaSatelliteManifest(candidate)) throw new Error("NOAA did not provide a valid dated GeoColor frame list.");
+      if (!response.ok || !isNoaaSatelliteManifest(candidate)) throw new Error("NOAA did not provide a valid dated satellite frame list.");
       noaaSatelliteManifestRef.current = candidate;
       setNoaaSatelliteManifest(candidate);
       const prior = noaaSatelliteFrameRef.current;
       const selectedFrame = noaaSatelliteFollowLatestRef.current
         ? candidate.frames.at(-1)!
-        : candidate.frames.find((frame) => frame.objectId === prior?.objectId) ?? candidate.frames.at(-1)!;
+        : candidate.frames.find((frame) => frame.kind === prior?.kind && frame.observedAt === prior.observedAt) ?? candidate.frames.at(-1)!;
       selectNoaaSatelliteFrame(selectedFrame);
-      if (!quiet) announce(`${candidate.frameCount} dated NOAA GeoColor images checked; newest ${drawerTimestamp(candidate.frames.at(-1)!.observedAt)}`);
+      if (!quiet) announce(`${candidate.frameCount} dated NOAA ${candidate.product === "geocolor" ? "GeoColor" : "GOES visible fallback"} images checked; newest ${drawerTimestamp(candidate.frames.at(-1)!.observedAt)}`);
     } catch (error) {
       if (controller.signal.aborted) return;
       const message = error instanceof Error ? error.message : "NOAA satellite frames are unavailable.";
@@ -2686,7 +2694,7 @@ export default function Home() {
       if (map?.isStyleLoaded()) clearNoaaSatelliteFrame(map);
       setOfficialStates((current) => ({ ...current, "noaa-goes-geocolor": "error" }));
       setOfficialErrors((current) => ({ ...current, "noaa-goes-geocolor": message }));
-      if (!quiet) announce("NOAA GeoColor unavailable; no undated satellite image was substituted");
+      if (!quiet) announce("NOAA satellite imagery unavailable; no undated image was substituted");
     } finally {
       if (noaaSatelliteRequestRef.current === controller) noaaSatelliteRequestRef.current = null;
     }
@@ -3136,6 +3144,7 @@ export default function Home() {
     if (id === "noaa-lightning-density") {
       lightningAutoStartRef.current = visible;
       setLightningPlaying(false);
+      if (visible) { setLiveInstrument("lightning"); setInstrumentOpen(true); }
     }
     if (id === "usgs-streamflow" && !visible) setStreamflowPlaying(false);
     const map = mapRef.current;
@@ -4106,7 +4115,7 @@ export default function Home() {
       setStreamflowPlaybackSpeed(restoredHydroSpeed === 0.5 || restoredHydroSpeed === 2 ? restoredHydroSpeed : 1);
       setStreamflowPlaying(false);
       const restoredLiveInstrument = params.get("live");
-      setLiveInstrument(restoredLiveInstrument === "radar" ? "radar" : "river");
+      setLiveInstrument(restoredLiveInstrument === "radar" || restoredLiveInstrument === "lightning" ? restoredLiveInstrument : "river");
       for (const source of OFFICIAL_CONTEXT_SOURCES) {
         if (nextOfficialVisibility[source.id] && source.apiPath && !officialPayloadsRef.current[source.id as OfficialContextFeedId]) void refreshOfficialContext(source.id as OfficialContextFeedId);
       }
@@ -4428,7 +4437,7 @@ export default function Home() {
             styleStep = "PROJECTION";
             applyProjectionNavigationLimits(map, projectionRef.current);
             map.setProjection({ type: projectionRef.current });
-            if (noaaSatelliteFrameRef.current) setNoaaSatelliteFrame(map, noaaSatelliteFrameRef.current.objectId,
+            if (noaaSatelliteFrameRef.current) setNoaaSatelliteFrame(map, noaaSatelliteFrameRef.current,
               buildYearCurrentRef.current && officialVisibilityRef.current["noaa-goes-geocolor"] && temporalQueryRef.current.frame === OFFICIAL_CONTEXT_PRESENT_FRAME,
               officialOpacityRef.current["noaa-goes-geocolor"]);
             styleStep = "SCENE_ENVIRONMENT";
@@ -4910,7 +4919,7 @@ export default function Home() {
             const nextState = terrainRaster
               ? terrainRasterViewRef.current.status(officialSource.id as TerrainRasterId, rasterBounds!, map.getZoom(), event.isSourceLoaded)
               : officialRasterFailuresRef.current.has(officialSource.id)
-                || officialSource.id === "noaa-goes-geocolor" && (noaaSatelliteManifestRef.current?.partial || noaaSatelliteManifestRef.current?.freshness === "delayed") ? "partial" : event.isSourceLoaded ? "ready" : "loading";
+                || officialSource.id === "noaa-goes-geocolor" && (noaaSatelliteManifestRef.current?.product === "visible" || noaaSatelliteManifestRef.current?.partial || noaaSatelliteManifestRef.current?.freshness === "delayed") ? "partial" : event.isSourceLoaded ? "ready" : "loading";
             setOfficialStates(current => current[officialSource.id] === nextState ? current : ({ ...current, [officialSource.id]: nextState }));
             if (nextState === "ready") setOfficialErrors(current => current[officialSource.id] ? ({ ...current, [officialSource.id]: undefined }) : current);
           }
@@ -7509,6 +7518,15 @@ export default function Home() {
         : undefined,
   }));
 
+  const liveObservationSwitcher = availableLiveInstruments.length > 1 ? <nav className="live-observation-switcher" aria-label="Observation controls">
+    {availableLiveInstruments.map((instrument) => <button key={instrument} type="button" aria-pressed={activeLiveInstrument === instrument} onClick={() => {
+      setLiveInstrument(instrument);
+      if (instrument !== "river") setStreamflowPlaying(false);
+      if (instrument !== "radar") setNoaaRadarPlaying(false);
+      if (instrument !== "lightning") setLightningPlaying(false);
+    }}>{instrument === "river" ? "River Pulse" : instrument === "radar" ? "Radar Loop" : "Lightning"}</button>)}
+  </nav> : null;
+
   return (
     <div className="site-root">
       <a className="skip-link" href="#map-canvas">Skip to the map</a>
@@ -7981,7 +7999,7 @@ export default function Home() {
               const riverArchiveMinDay = riverArchiveSpan?.start.slice(0, 10);
               const riverArchiveMaxDay = riverArchiveSpan ? [currentUtcDay(), riverArchiveSpan.end.slice(0, 10)].sort()[0] : undefined;
               return <article key={source.id} className="official-context-row" data-state={state} data-visible={officialVisibility[source.id]} data-held={heldAtFrame}>
-                    <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.shortTitle}</strong><small>{source.organization}{source.kind === "HISTORICAL_RASTER" ? " · historical composite" : ""} · {!officialVisibility[source.id] ? "off" : heldAtFrame ? !buildYearCurrent ? "held until site rebuild" : "held for this map time" : needsCloserView ? `zoom to ${TERRAIN_DISPLAY_MIN_ZOOM}+` : source.id === "noaa-lightning-density" && state === "empty" ? `no density in view${lightningFrame ? ` · ${lightningFrame.slice(11, 16)} UTC` : ""}` : officialContextStateLabel(state).toLowerCase()}</small></div></div>
+                    <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.shortTitle}</strong><small>{source.organization}{source.kind === "HISTORICAL_RASTER" ? " · historical composite" : ""}{source.id === "noaa-goes-geocolor" && noaaSatelliteManifest ? ` · ${noaaSatelliteManifest.product === "visible" ? "GOES visible fallback" : "GeoColor"}` : ""} · {!officialVisibility[source.id] ? "off" : heldAtFrame ? !buildYearCurrent ? "held until site rebuild" : "held for this map time" : needsCloserView ? `zoom to ${TERRAIN_DISPLAY_MIN_ZOOM}+` : source.id === "noaa-lightning-density" && state === "empty" ? `no density in view${lightningFrame ? ` · ${lightningFrame.slice(11, 16)} UTC` : ""}` : officialContextStateLabel(state).toLowerCase()}</small></div></div>
                 <details className="official-context-options"><summary>Options</summary><div className="official-context-option-body">
                 {source.kind !== "MODEL_CANVAS" && <label className="opacity-control"><span>Opacity <b>{Math.round(officialOpacity[source.id] * 100)}%</b></span><input aria-label={`${source.shortTitle} opacity`} type="range" min="0" max="100" value={Math.round(officialOpacity[source.id] * 100)} onChange={(event) => setOfficialContextOpacity(source.id, Number(event.target.value) / 100)} /></label>}
                 {source.id === "usgs-3dep-slope" && <small className="terrain-layer-key">USGS slope colors: gray flatter · yellow shallow · red-brown steeper. This is visual context, not a slope measurement.</small>}
@@ -7996,11 +8014,11 @@ export default function Home() {
                     <div className="source-time-actions"><label>Station<select value={streamflowSelectedStationId ?? ""} onChange={(event) => selectStreamflowStation(event.target.value || null)}><option value="">Choose a loaded station</option>{streamflowSelectedStationId && !(streamflowBundle?.stations ?? []).some((station) => station.stationId === streamflowSelectedStationId) && <option value={streamflowSelectedStationId}>{streamflowSelectedStationId} · selected</option>}{(streamflowBundle?.stations ?? []).map((station) => <option key={station.stationId} value={station.stationId}>{station.name} · {station.stationId}</option>)}</select></label><label>Older UTC day<input type="date" value={streamflowArchiveDraftDay} min={riverArchiveMinDay} max={riverArchiveMaxDay ?? currentUtcDay()} onChange={(event) => setStreamflowArchiveDraftDay(event.target.value)} /></label><button type="button" disabled={!streamflowSelectedStationId || !streamflowArchiveDraftDay || streamflowState === "loading" || heldAtFrame} onClick={loadStreamflowArchiveDay}>Check day on map</button>{streamflowArchiveDay && <button type="button" onClick={() => void refreshStreamflow("24h", null)}>Recent network</button>}<Link href={`/observatory?start=${encodeURIComponent(`${streamflowArchiveDraftDay || streamflowArchiveDay || currentUtcDay()}T00:00`)}&hours=24&layers=river,counties${streamflowSelectedStationId ? `&station=${encodeURIComponent(streamflowSelectedStationId)}` : ""}`}>Full station archive ↗</Link></div>
                     {riverArchiveMinDay && riverArchiveMaxDay && <ArchiveDaySlider sourceLabel="River Pulse" minDay={riverArchiveMinDay} maxDay={riverArchiveMaxDay} day={streamflowArchiveDraftDay} onSelect={setStreamflowArchiveDraftDay} nextAction="Check day on map" />}
                   </> : source.id === "noaa-goes-geocolor" ? <>
-                    <p>{noaaSatelliteManifest ? `${noaaSatelliteManifest.frameCount} dated GOES GeoColor images · latest ${drawerTimestamp(noaaSatelliteManifest.frames.at(-1)!.observedAt)}${noaaSatelliteManifest.freshness === "delayed" ? " · DELAYED" : ""}${noaaSatelliteManifest.partial ? " · PARTIAL CATALOG" : ""}` : state === "loading" ? "Checking NOAA image times…" : "No dated NOAA image catalog loaded."}</p>
-                    <input type="range" min="0" max={Math.max(0, (noaaSatelliteManifest?.frameCount ?? 0) - 1)} value={Math.max(0, noaaSatelliteManifest?.frames.findIndex((frame) => frame.objectId === noaaSatelliteFrame?.objectId) ?? 0)} disabled={!noaaSatelliteManifest || noaaSatelliteManifest.frameCount < 2 || state === "loading" || !officialVisibility[source.id] || heldAtFrame} onChange={(event) => { const frame = noaaSatelliteManifest?.frames[Number(event.target.value)]; if (frame) selectNoaaSatelliteFrame(frame); }} aria-label="NOAA GeoColor exact image frame" aria-valuetext={noaaSatelliteFrame ? `${noaaSatelliteFrame.observedAt} image start` : "No dated image selected"} />
-                    <output>{noaaSatelliteFrame ? `Selected image: ${drawerTimestamp(noaaSatelliteFrame.observedAt)} → ${drawerTimestamp(noaaSatelliteFrame.validThrough)} · raster ${noaaSatelliteFrame.objectId} · ${state.toUpperCase()}` : "No image selected"}</output>
-                    <small>{noaaSatelliteManifest ? `Catalog checked ${drawerTimestamp(noaaSatelliteManifest.retrievedAt)}. Source time describes the selected image; older selected frames are not live. This is visual cloud context, not a fire or smoke finding.` : "A dated source image is required before any tile is shown. NOAA imagery is informational."}</small>
-                    <div className="source-time-actions"><button type="button" disabled={!noaaSatelliteManifest || state === "loading"} onClick={() => { const latest = noaaSatelliteManifest?.frames.at(-1); if (latest) selectNoaaSatelliteFrame(latest); }}>Newest image</button><button type="button" disabled={state === "loading" || heldAtFrame} onClick={() => void refreshNoaaSatelliteFrames()}>Refresh frames</button><a href="https://www.nesdis.noaa.gov/imagery/satellite-maps/earth-real-time" target="_blank" rel="noreferrer">NOAA Earth in Real-Time ↗</a><a href="https://satellitemaps.nesdis.noaa.gov/arcgis/rest/services/MERGEDGC_Last_24hr/ImageServer" target="_blank" rel="noreferrer">Image catalog ↗</a></div>
+                    <p>{noaaSatelliteManifest ? `${noaaSatelliteManifest.frameCount} dated ${noaaSatelliteManifest.product === "geocolor" ? "GOES GeoColor" : "GOES visible fallback"} images · latest ${drawerTimestamp(noaaSatelliteManifest.frames.at(-1)!.observedAt)}${noaaSatelliteManifest.freshness === "delayed" ? " · DELAYED" : ""}${noaaSatelliteManifest.partial ? " · PARTIAL CATALOG" : ""}` : state === "loading" ? "Checking NOAA image times…" : "No dated NOAA image catalog loaded."}</p>
+                    <input type="range" min="0" max={Math.max(0, (noaaSatelliteManifest?.frameCount ?? 0) - 1)} value={Math.max(0, noaaSatelliteManifest?.frames.findIndex((frame) => frame.kind === noaaSatelliteFrame?.kind && frame.observedAt === noaaSatelliteFrame.observedAt) ?? 0)} disabled={!noaaSatelliteManifest || noaaSatelliteManifest.frameCount < 2 || state === "loading" || !officialVisibility[source.id] || heldAtFrame} onChange={(event) => { const frame = noaaSatelliteManifest?.frames[Number(event.target.value)]; if (frame) selectNoaaSatelliteFrame(frame); }} aria-label="NOAA satellite exact image frame" aria-valuetext={noaaSatelliteFrame ? `${noaaSatelliteFrame.observedAt} image time` : "No dated image selected"} />
+                    <output>{noaaSatelliteFrame ? noaaSatelliteFrame.kind === "geocolor" ? `Selected GeoColor image: ${drawerTimestamp(noaaSatelliteFrame.observedAt)} → ${drawerTimestamp(noaaSatelliteFrame.validThrough)} · raster ${noaaSatelliteFrame.objectId} · ${state.toUpperCase()}` : `Selected GOES visible observation: ${drawerTimestamp(noaaSatelliteFrame.observedAt)} · ${state.toUpperCase()}` : "No image selected"}</output>
+                    <small>{noaaSatelliteManifest ? `Catalog checked ${drawerTimestamp(noaaSatelliteManifest.retrievedAt)}. ${noaaSatelliteManifest.product === "visible" ? "GeoColor is unavailable; this is daylight-dependent GOES visible imagery from NOAA nowCOAST." : "GeoColor imagery is locked to the selected NOAA raster ID."} Older selected frames are not live. This is visual cloud context, not a fire or smoke finding.` : "A dated source image is required before any tile is shown. NOAA imagery is informational."}</small>
+                    <div className="source-time-actions"><button type="button" disabled={!noaaSatelliteManifest || state === "loading"} onClick={() => { const latest = noaaSatelliteManifest?.frames.at(-1); if (latest) selectNoaaSatelliteFrame(latest); }}>Newest image</button><button type="button" disabled={state === "loading" || heldAtFrame} onClick={() => void refreshNoaaSatelliteFrames()}>Refresh frames</button><a href="https://www.nesdis.noaa.gov/imagery/satellite-maps/earth-real-time" target="_blank" rel="noreferrer">NOAA Earth in Real-Time ↗</a><a href="https://satellitemaps.nesdis.noaa.gov/arcgis/rest/services/MERGEDGC_Last_24hr/ImageServer" target="_blank" rel="noreferrer">GeoColor catalog ↗</a>{noaaSatelliteManifest?.product === "visible" && <a href="https://nowcoast.noaa.gov/" target="_blank" rel="noreferrer">NOAA nowCOAST ↗</a>}</div>
                   </> : source.id === "nws-radar" ? <>
                     <p>{noaaRadarManifest ? `${noaaRadarLoopFrames.length} exact scans in the selected ${noaaRadarLoopSpan}-minute loop · ${noaaRadarManifest.gapCount} detected gaps` : noaaRadarManifestState === "loading" ? "Checking NOAA frames" : "No verified radar manifest loaded"}</p>
                     <input type="range" min="0" max={Math.max(0, noaaRadarLoopFrames.length - 1)} value={Math.max(0, noaaRadarFrameIndex)} disabled={!noaaRadarRenderable || noaaRadarLoopFrames.length < 2 || noaaRadarFrameLoadState === "loading" || !officialVisibility[source.id] || heldAtFrame} onChange={(event) => { const index = Number(event.target.value); const frame = noaaRadarLoopFrames[index]; if (!frame) return; setNoaaRadarPlaying(false); setNoaaRadarFollowLatest(index === noaaRadarLoopFrames.length - 1); applyNoaaRadarFrame(frame); }} aria-label="NOAA radar exact scan time" aria-valuetext={noaaRadarActiveFrame ?? "No confirmed radar scan"} />
@@ -8010,15 +8028,10 @@ export default function Home() {
                     <ArchiveDaySlider sourceLabel="NOAA radar" minDay="1995-01-01" maxDay={currentUtcDay()} day={radarArchiveDraftDay} onSelect={setRadarArchiveDraftDay} nextAction="Check in Observatory" />
                     <small>1995 is the archive adapter’s earliest query bound, not proof that every day has radar imagery. The selected older day opens a separate map.</small>
                   </> : source.id === "noaa-lightning-density" ? <div className="lightning-source-control" data-signal={lightningPreview}>
-                    <p>Ground-network strike density in 8 × 8 km cells for each advertised 15-minute interval. The map glow follows only returned NOAA image cells.</p>
-                    <div className="lightning-clock"><strong>{lightningFrame ? `${lightningFrame.slice(0, 16).replace("T", " ")} UTC` : "No frame loaded"}</strong><span>{lightningManifest ? `${lightningFrameIndex + 1} / ${lightningManifest.frames.length} frames` : lightningManifestState === "loading" ? "Checking NOAA times" : "NOAA times unavailable"}</span></div>
-                    <output aria-live="polite">{!officialVisibility[source.id] ? "Layer off" : heldAtFrame ? "Held by atlas time" : lightningPreview === "loading" ? "Loading and sampling the visible map area…" : lightningPreview === "signal" ? "NOAA density visible in the sampled map area for this frame" : lightningPreview === "none" ? "No NOAA density in the sampled map area for this frame · earlier frames may differ; not an all-clear" : lightningPreview === "error" || lightningManifestState === "error" ? "Visible-area signal unconfirmed or NOAA unavailable · no simulated flashes" : "Select the layer to check exact NOAA frames"}</output>
-                    <input type="range" min="0" max={Math.max(0, (lightningManifest?.frames.length ?? 1) - 1)} value={Math.max(0, lightningFrameIndex)} disabled={!lightningManifest || !officialVisibility[source.id] || heldAtFrame} onChange={(event) => { setLightningPlaying(false); setLightningFrame(lightningManifest?.frames[Number(event.target.value)] ?? null); }} aria-label="NOAA lightning 15-minute density frame" aria-valuetext={lightningFrame ?? "No frame"} />
-                    <div className="lightning-transport"><button type="button" disabled={!lightningManifest || lightningFrameIndex <= 0} onClick={() => { setLightningPlaying(false); setLightningFrame(lightningManifest?.frames[lightningFrameIndex - 1] ?? null); }} aria-label="Previous lightning density frame">‹</button><button type="button" aria-pressed={lightningPlaying} disabled={!lightningPlaying && (reducedMotion || !lightningManifest || lightningManifest.frames.length < 2 || !lightningSelected || lightningManifestState !== "ready" || !lightningPlaybackReady)} onClick={() => { if (lightningPlaying) setLightningPlaying(false); else { setLightningFrame(lightningManifest?.frames[0] ?? null); setLightningPlaying(true); } }}>{lightningPlaying ? "Ⅱ Pause" : "▶ Replay frames"}</button><button type="button" disabled={!lightningManifest || lightningFrameIndex >= lightningManifest.frames.length - 1} onClick={() => { setLightningPlaying(false); setLightningFrame(lightningManifest?.frames[lightningFrameIndex + 1] ?? null); }} aria-label="Next lightning density frame">›</button><button type="button" disabled={!lightningManifest} onClick={() => { setLightningPlaying(false); setLightningFrame(lightningManifest?.latest ?? null); }}>Latest</button></div>
-                    <div className="lightning-density-key"><img src="/api/lightning/legend" width="292" height="46" alt="NOAA nowCOAST lightning density legend with the provider's numeric bins and units" loading="lazy" /><a href={NOAA_LIGHTNING_LEGEND_URL} target="_blank" rel="noreferrer">NOAA density legend ↗</a></div>
-                    <small>NOAA frame {lightningFrame ? `${lightningFrame.slice(0, 16).replace("T", " ")} UTC` : "not selected"} · 15-minute density product. Exact interval boundaries are not supplied here. Frame list checked {lightningManifest ? `${lightningManifest.retrievedAt.slice(11, 16)} UTC` : "not yet"}. Empty pixels do not establish safety.</small>
-                    {reducedMotion && <small>Reduced motion: autoplay and glow are off. Frame steps remain available.</small>}
-                    <a href={source.sourceUrl} target="_blank" rel="noreferrer">NOAA layer and time metadata ↗</a>
+                    <p>Ground-network strike density in 8 × 8 km cells for each advertised 15-minute interval.</p>
+                    <output>{lightningFrame ? `Selected frame ${lightningFrame.slice(0, 16).replace("T", " ")} UTC` : "No NOAA frame loaded"}</output>
+                    <button type="button" onClick={() => { setLiveInstrument("lightning"); setInstrumentOpen(true); }} disabled={!officialVisibility[source.id] || heldAtFrame}>Open lightning controls on map</button>
+                    <small>Exact time, playback, source status, and legend are in the map controls.</small>
                   </div> : source.id === "nasa-lightning-climatology" ? <div className="lightning-climate-control"><p>NASA LIS/OTD combined flash-rate climatology from 1995–2014. This broad 0.5° climate field does not show fine local variation, this storm, or today’s lightning.</p><output>Fixed multi-year composite · no 15-minute playback</output><small>GIBS WMTS date 1995-05-04 is a tile carrier key, not a single observed lightning event.</small><a href={source.sourceUrl} target="_blank" rel="noreferrer">NASA GIBS collection metadata ↗</a></div> : source.id === "nifc-fire-reports" ? <>
                     <p>Interagency working incident reports discovered in Kansas during the last 30 days. A record confirms provider reporting; status, area, and cause can change. Satellite detections are compared only by proximity.</p>
                     <output>{!officialVisibility[source.id] ? "Report layer off." : heldAtFrame ? "Held by atlas year · Return to Present." : state === "loading" ? "Checking NIFC reports…" : state === "error" ? "NIFC reports unavailable · no substitute claims." : `${officialPayloads["nifc-fire-reports"]?.featureCount ?? 0} reports in the loaded response${state === "partial" ? " · partial" : ""}. No report is not an all-clear.`}</output>
@@ -8183,7 +8196,7 @@ export default function Home() {
             <label className="map-basemap-select"><span>Basemap</span><select value={basemap} onChange={(event) => setBasemap(event.target.value as BasemapKey)} aria-label="Choose basemap style">{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title}</option>)}</select></label>
             <button className="map-control-launch" type="button" onClick={() => openMapUtility("navigate")}><span aria-hidden="true">⌖</span><strong>Controls</strong></button>
             <button className="map-control-launch" type="button" onClick={() => { setSourceStatusOpen((open) => !open); setLeftOpen(false); }} aria-expanded={sourceStatusOpen} aria-controls="map-source-status"><strong>Source status</strong></button>
-            <button className="map-control-launch" type="button" onClick={() => setInstrumentOpen((open) => !open)} aria-pressed={instrumentOpen}><strong>Charts</strong></button>
+            <button className="map-control-launch" type="button" onClick={() => setInstrumentOpen((open) => !open)} aria-pressed={instrumentOpen} aria-label="Toggle observation controls"><strong>Live controls</strong></button>
             <button className="map-control-launch" type="button" onClick={() => window.location.assign("/")} title={`Open a fresh baseline for ${baselineDay} UTC`}><strong>Today’s baseline</strong></button>
             <Link className="map-control-launch" href="/data"><strong>Contribute data</strong></Link>
           </nav>
@@ -8236,10 +8249,6 @@ export default function Home() {
             <p className="map-legend-note">{basemap === "standard" ? "OpenFreeMap vector context · counties, places, roads, rail, water, and labels are display context; KFM overlays remain explicit." : basemap === "imagery" ? "Satellite imagery is display context only · overlays are synthetic or generalized." : basemap === "streets" ? "OpenStreetMap reference only · overlays are synthetic or generalized." : basemap === "topo" ? "USGS The National Map topographic tiles are display context only · KFM evidence remains separate." : "Site-local display style · overlays are synthetic or generalized."}</p>
           </aside>
           </aside>}
-          {instrumentOpen && streamflowSelectedAtPresent && noaaRadarSelectedAtPresent && <nav className="live-observation-switcher" aria-label="Live observation display">
-            <button type="button" aria-pressed={liveInstrument === "river"} onClick={() => { setLiveInstrument("river"); setNoaaRadarPlaying(false); }}>River Pulse</button>
-            <button type="button" aria-pressed={liveInstrument === "radar"} onClick={() => { setLiveInstrument("radar"); setStreamflowPlaying(false); }}>Radar Loop</button>
-          </nav>}
           {instrumentOpen && showStreamflowDock && <HydrologyObservatory
             bundle={streamflowBundle}
             state={streamflowDisplayState}
@@ -8252,6 +8261,7 @@ export default function Home() {
             selectedStationId={streamflowSelectedStationId}
             frameTimes={streamflowFrames}
             reducedMotion={reducedMotion}
+            sourceSwitcher={liveObservationSwitcher}
             onRefresh={() => { void refreshStreamflow(streamflowRange, streamflowSelectedStationId, false, streamflowArchiveDayRef.current); }}
             onTogglePlay={toggleStreamflowPlayback}
             onStep={stepStreamflow}
@@ -8274,6 +8284,7 @@ export default function Home() {
               if (event.key === "Home") { event.preventDefault(); jumpNoaaRadarToLatest(); }
             }}
           >
+            {liveObservationSwitcher}
             <header>
               <div><span>OBSERVED RADAR · EXTERNAL CONTEXT</span><strong>{NOAA_RADAR_PRODUCT_TITLE}</strong></div>
               <b>{noaaRadarDisplayState}</b>
@@ -8313,6 +8324,20 @@ export default function Home() {
             {noaaRadarFrameError && <div className="noaa-radar-error" role="alert"><strong>{noaaRadarRenderable ? "Frozen on the last confirmed observation" : "Radar withheld"}</strong><span>{noaaRadarFrameError} No untimed or synthetic fallback was used.</span></div>}
             {reducedMotion && <p className="noaa-radar-motion-note">Reduced motion is active. Automatic looping is off; exact-frame stepping remains available.</p>}
             <footer>Situational display only · not an emergency warning service · times remain separate from the atlas year</footer>
+          </aside>}
+          {instrumentOpen && showLightningDock && <aside className="lightning-observatory" data-signal={lightningPreview} aria-label="NOAA lightning density controls">
+            {liveObservationSwitcher}
+            <header>
+              <div><span>NOAA LIGHTNING · EXTERNAL CONTEXT</span><strong>15-minute strike density</strong></div>
+              <button type="button" onClick={() => setLightningReloadToken((value) => value + 1)} disabled={lightningManifestState === "loading"}>Refresh</button>
+            </header>
+            <div className="lightning-clock"><strong>{lightningFrame ? `${lightningFrame.slice(0, 16).replace("T", " ")} UTC` : "No frame loaded"}</strong><span>{lightningManifest ? `${Math.max(0, lightningFrameIndex + 1)} / ${lightningManifest.frames.length} frames` : lightningManifestState === "loading" ? "Checking NOAA times" : "NOAA times unavailable"}</span></div>
+            <output role="status" aria-live={lightningPlaying ? "off" : "polite"}>{!lightningSelected ? projection === "globe" ? "Lightning display is available on the flat map" : "Held by atlas time" : lightningPreview === "loading" ? "Loading and sampling the visible map area…" : lightningPreview === "signal" ? "NOAA density visible in the sampled map area for this frame" : lightningPreview === "none" ? "No NOAA density in the sampled map area for this frame · earlier frames may differ; not an all-clear" : lightningPreview === "error" || lightningManifestState === "error" ? "Visible-area signal unconfirmed or NOAA unavailable · no simulated flashes" : "Checking exact NOAA frames"}</output>
+            <input type="range" min="0" max={Math.max(0, (lightningManifest?.frames.length ?? 1) - 1)} value={Math.max(0, lightningFrameIndex)} disabled={!lightningManifest || !lightningSelected} onChange={(event) => { setLightningPlaying(false); setLightningFrame(lightningManifest?.frames[Number(event.target.value)] ?? null); }} aria-label="NOAA lightning 15-minute density frame" aria-valuetext={lightningFrame ?? "No frame"} />
+            <div className="lightning-transport" aria-label="Lightning playback"><button type="button" disabled={!lightningSelected || !lightningManifest || lightningFrameIndex <= 0} onClick={() => { setLightningPlaying(false); setLightningFrame(lightningManifest?.frames[lightningFrameIndex - 1] ?? null); }} aria-label="Previous lightning density frame">‹</button><button type="button" aria-pressed={lightningPlaying} disabled={!lightningPlaying && (reducedMotion || !lightningManifest || lightningManifest.frames.length < 2 || !lightningSelected || lightningManifestState !== "ready" || !lightningPlaybackReady)} onClick={() => { if (lightningPlaying) setLightningPlaying(false); else { setLightningFrame(lightningManifest?.frames[0] ?? null); setLightningPlaying(true); } }}>{lightningPlaying ? "Ⅱ Pause" : "▶ Replay frames"}</button><button type="button" disabled={!lightningSelected || !lightningManifest || lightningFrameIndex >= lightningManifest.frames.length - 1} onClick={() => { setLightningPlaying(false); setLightningFrame(lightningManifest?.frames[lightningFrameIndex + 1] ?? null); }} aria-label="Next lightning density frame">›</button><button type="button" disabled={!lightningManifest || !lightningSelected} onClick={() => { setLightningPlaying(false); setLightningFrame(lightningManifest?.latest ?? null); }}>Latest</button></div>
+            <details className="lightning-details"><summary>Density legend + source</summary><div className="lightning-density-key"><img src="/api/lightning/legend" width="292" height="46" alt="NOAA nowCOAST lightning density legend with the provider's numeric bins and units" loading="lazy" /><a href={NOAA_LIGHTNING_LEGEND_URL} target="_blank" rel="noreferrer">NOAA density legend ↗</a></div><p>Ground-network strike density in 8 × 8 km cells. The glow follows returned image cells only. This 15-minute product does not supply exact interval boundaries here. Frame list checked {lightningManifest ? `${lightningManifest.retrievedAt.slice(11, 16)} UTC` : "not yet"}. Empty pixels do not establish safety.</p><a href={OFFICIAL_CONTEXT_BY_ID["noaa-lightning-density"].sourceUrl} target="_blank" rel="noreferrer">NOAA layer and time metadata ↗</a></details>
+            {reducedMotion && <p className="lightning-motion-note">Reduced motion: autoplay and glow are off. Frame steps remain available.</p>}
+            <footer>Situational display only · not an emergency warning service · time remains separate from the atlas year</footer>
           </aside>}
           <button className="qwen-map-launch" type="button" onClick={qwenOpen ? closeQwenCompanion : openQwenCompanion} aria-expanded={qwenOpen} aria-controls="qwen-map-panel" data-open={qwenOpen}>
             <span className="qwen-launch-mark" aria-hidden="true">Q</span>

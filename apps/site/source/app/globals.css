@@ -3333,6 +3333,47 @@ body { font-size: 14px; }
 .noaa-radar-motion-note { margin: 0; border-left: 2px solid var(--gold); color: var(--gold-soft); padding-left: 8px; font-size: 10px; }
 .noaa-radar-loop > footer { color: var(--dim); font-size: 10px; line-height: 1.35; }
 
+.lightning-observatory {
+  position: absolute;
+  z-index: 19;
+  bottom: 14px;
+  left: 50%;
+  display: grid;
+  width: min(760px, calc(100% - 190px));
+  max-height: 263px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  gap: 9px;
+  border: 1px solid rgba(158, 135, 236, .55);
+  border-top: 3px solid #aa91f5;
+  border-radius: 12px;
+  background: rgba(11, 19, 35, .96);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .5);
+  padding: 10px 12px 9px;
+  transform: translateX(-50%);
+  backdrop-filter: blur(18px);
+}
+.lightning-observatory > header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.lightning-observatory > header div { display: grid; gap: 2px; }
+.lightning-observatory > header span { color: #baa8ef; font-size: 10px; font-weight: 900; letter-spacing: .1em; }
+.lightning-observatory > header strong { color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-size: 15px; }
+.lightning-observatory > header button,
+.lightning-source-control button { min-height: 32px; border: 1px solid rgba(165, 153, 231, .48); border-radius: 5px; background: rgba(25, 30, 58, .72); color: #eee9ff; padding: 3px 9px; font: inherit; font-size: 11px; cursor: pointer; }
+.lightning-observatory > header button:disabled,
+.lightning-source-control button:disabled { opacity: .45; cursor: default; }
+.lightning-observatory .lightning-clock { padding: 0; }
+.lightning-observatory > output { color: #f3dfa8; font-size: 11px; line-height: 1.4; }
+.lightning-observatory[data-signal="signal"] > output { color: #bdf4ef; }
+.lightning-observatory > input[type="range"] { width: 100%; accent-color: #ae96f5; }
+.lightning-observatory .lightning-transport button { min-height: 38px; }
+.lightning-observatory .lightning-details summary { color: #d2c8f8; font-size: 11px; font-weight: 800; cursor: pointer; }
+.lightning-observatory .lightning-details p,
+.lightning-observatory .lightning-motion-note,
+.lightning-observatory > footer { margin: 6px 0 0; color: var(--dim); font-size: 10px; line-height: 1.4; }
+.lightning-observatory .lightning-details a { color: #b6e7eb; font-size: 10px; }
+.lightning-observatory :is(button, input, summary, a):focus-visible,
+.lightning-source-control button:focus-visible { outline: 2px solid #e6d392; outline-offset: 2px; }
+
 /* River Pulse uses a second, exact observation clock. The glass instrument is
    deliberately distinct from the atlas timeline and keeps gaps visible. */
 .hydrology-observatory {
@@ -3551,22 +3592,20 @@ body { font-size: 14px; }
 .hydrology-motion-note { border-left: 2px solid var(--gold); color: var(--gold-soft); padding-left: 8px; }
 .hydrology-boundary { border-top: 1px solid var(--line); padding-top: 7px; }
 
-/* Switches between live instruments when more than one operational carrier is
-   visible. Placement follows the active dock rather than a radar-only flag. */
+/* Keep source switching inside the active controls, including while a dock scrolls. */
 .live-observation-switcher {
-  position: absolute;
-  z-index: 20;
-  bottom: calc(var(--live-dock-clearance, 252px) + 4px);
-  left: 50%;
+  position: sticky;
+  z-index: 2;
+  top: 0;
   display: inline-flex;
+  justify-self: start;
   gap: 3px;
-  max-width: calc(100% - 24px);
+  max-width: 100%;
   border: 1px solid rgba(98, 216, 229, .34);
   border-radius: 999px;
   background: rgba(2, 19, 25, .92);
   box-shadow: 0 10px 26px rgba(0, 0, 0, .38);
   padding: 3px;
-  transform: translateX(-50%);
   backdrop-filter: blur(14px);
 }
 .live-observation-switcher button {
@@ -3587,6 +3626,7 @@ body { font-size: 14px; }
 
 .map-stage[data-live-dock="true"] { --live-dock-clearance: 252px; }
 .map-stage[data-live-dock="true"]:has(.hydrology-observatory) { --live-dock-clearance: 310px; }
+.map-stage[data-live-dock="true"]:has(.lightning-observatory) { --live-dock-clearance: 285px; }
 .map-stage[data-live-dock="true"] .qwen-map-launch,
 .map-stage[data-live-dock="true"] .map-legend-dock,
 .map-stage[data-live-dock="true"] .measurement-readout,
@@ -3607,6 +3647,7 @@ body { font-size: 14px; }
   .timeline-sweep-setup { grid-column: 1 / -1; }
   .noaa-radar-loop { width: min(700px, calc(100% - 120px)); }
   .hydrology-observatory { width: min(820px, calc(100% - 120px)); }
+  .lightning-observatory { width: min(700px, calc(100% - 120px)); }
 }
 
 @media (max-width: 760px) {
@@ -3617,7 +3658,8 @@ body { font-size: 14px; }
   .timeline-range-controls { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); }
   .timeline-range-controls > strong { grid-column: 1 / -1; }
   .noaa-radar-loop,
-  .hydrology-observatory {
+  .hydrology-observatory,
+  .lightning-observatory {
     right: 8px;
     bottom: calc(62px + env(safe-area-inset-bottom));
     left: 8px;
@@ -3645,7 +3687,6 @@ body { font-size: 14px; }
   .hydrology-legend-grid { grid-template-columns: minmax(0, 1fr); }
   .map-stage[data-live-dock="true"] { --live-dock-clearance: calc(min(48dvh, 440px) + 74px + env(safe-area-inset-bottom)); }
   .map-stage[data-live-dock="true"] .map-mobile-actions { bottom: calc(8px + env(safe-area-inset-bottom)); }
-  .live-observation-switcher { bottom: calc(var(--live-dock-clearance) + 4px); }
 }
 
 @media (max-width: 500px) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useMemo, type KeyboardEvent } from "react";
+import { useId, useMemo, type KeyboardEvent, type ReactNode } from "react";
 import {
   buildHydrographSegments,
   stationObservations,
@@ -27,6 +27,7 @@ export type HydrologyObservatoryProps = Readonly<{
   selectedStationId: string | null;
   frameTimes?: readonly string[];
   reducedMotion: boolean;
+  sourceSwitcher?: ReactNode;
   onRefresh: () => void;
   onTogglePlay: () => void;
   onStep: (direction: "reverse" | "forward") => void;
@@ -166,6 +167,7 @@ export function HydrologyObservatory({
   selectedStationId,
   frameTimes,
   reducedMotion,
+  sourceSwitcher,
   onRefresh,
   onTogglePlay,
   onStep,
@@ -260,6 +262,7 @@ export function HydrologyObservatory({
     aria-busy={state === "loading"}
     onKeyDown={handleKeyDown}
   >
+    {sourceSwitcher}
     <header className="hydrology-header">
       <div className="hydrology-identity">
         <span>RIVER PULSE · USGS OBSERVATIONS</span>
