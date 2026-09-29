@@ -37,7 +37,6 @@ related:
   - ../../../tests/fixtures/maplibre/perf-envelope/README.md
   - ../../../tests/maplibre/test_perf_envelope_contract.py
   - ../../../.github/workflows/maplibre-perf-governance.yml
-  - ../../../scripts/maplibre-smoke-perf.mjs
   - ../../../schemas/maplibre/perf-envelope.schema.json
   - ../../../contracts/
   - ../../../schemas/contracts/v1/
@@ -879,7 +878,6 @@ The repository contains a real MapLibre performance-governance lane. That lane i
 
 - `configs/maplibre/perf-envelope.v1.json`;
 - `.github/workflows/maplibre-perf-governance.yml`;
-- `scripts/maplibre-smoke-perf.mjs`;
 - render-diff, attestation, release-manifest, proof-pack, correction/rollback, and failure-bundle scripts;
 - MapLibre performance validators;
 - `schemas/maplibre/perf-envelope.schema.json`;

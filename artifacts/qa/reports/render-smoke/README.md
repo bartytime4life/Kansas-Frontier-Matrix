@@ -75,6 +75,17 @@ notes:
 
 # `artifacts/qa/reports/render-smoke/` — Render Smoke QA Report, Inspection, and Non-Authority Boundary
 
+> [!IMPORTANT]
+> **2026-09-29 removal update.** The legacy standalone MapLibre performance
+> harness (`scripts/maplibre-smoke-perf.mjs`), its render-diff, attestation,
+> release-manifest, proof-pack, correction/rollback, and failure-bundle builders,
+> the root `maplibre:*` npm scripts, the `make maplibre-*` targets, their seven
+> placeholder schemas under `schemas/maplibre/`, and their placeholder verifiers
+> under `tools/validators/maplibre/` were removed. References to them below are
+> historical. The closed performance envelope
+> (`configs/maplibre/perf-envelope.v1.json`, `schemas/maplibre/perf-envelope.schema.json`,
+> `tools/validators/maplibre/validate_perf_envelope.py`) remains.
+
 > **Purpose.** Define the staging boundary for generated browser and renderer smoke-test reports without allowing a screenshot, successful page load, pixel-diff result, green workflow, performance threshold, map render, or human visual inspection to become source truth, evidence closure, accessibility conformance, policy permission, release approval, publication, or production truth.
 
 <p>

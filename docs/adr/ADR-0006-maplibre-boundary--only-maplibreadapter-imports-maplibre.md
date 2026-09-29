@@ -53,7 +53,6 @@ related:
   - apps/site/source/app/maplibre-seam.css
   - tools/validators/maplibre/assess_acquisition_inventory.py
   - tools/validators/maplibre/validate_v6_readiness.py
-  - scripts/maplibre-smoke-perf.mjs
   - .github/workflows/maplibre-perf-governance.yml
 tags: [kfm, adr, maplibre, map-runtime-port, maplibre-adapter, dependency-owner, acquisition-boundary, trust-membrane, currentness-correction]
 notes:
@@ -377,7 +376,7 @@ This v1.5 change is documentation-only. Reverting it reverts the currentness rec
   - MapLibre WebGL workflow: `.github/workflows/maplibre-webgl-probe.yml`
 - [Site MapLibre seam module](../../apps/site/source/app/maplibre-seam.ts) and [stylesheet](../../apps/site/source/app/maplibre-seam.css) (§2.6)
 - [Acquisition inventory](../../tools/validators/maplibre/assess_acquisition_inventory.py)
-- [Retired performance harness](../../scripts/maplibre-smoke-perf.mjs)
+- Retired performance harness (`scripts/maplibre-smoke-perf.mjs`, removed 2026-09-29)
 - [Performance-governance workflow](../../.github/workflows/maplibre-perf-governance.yml)
 - [Bounded WebGL workflow run](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34701026392)
 

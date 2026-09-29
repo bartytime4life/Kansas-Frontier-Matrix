@@ -379,7 +379,6 @@ This file is evaluated against the accepted Directory Rules v2 `ROOT_FULL` profi
 | `make workflow-security` | Workflow-security tests and static ratchet | Workflow source check, not hosted behavior or ruleset state |
 | `make repository-topology` | Contract tests, topology tests, correction-register test, and live topology diagnostic | Fail-closed topology result; compare base and head before assigning drift to a change |
 | `make release-dry-run` | Five synthetic publication-denial cases plus focused release tests | Denial proof only; no release assembled or approved |
-| `make maplibre-perf` / `maplibre-govern` / `maplibre-proof` | MapLibre smoke, governance, and proof-shaped artifact checks | May generate artifacts; not root suite or release authority |
 
 `make policy` runs only the configured Pass 12 policy pair when its prerequisites exist; it otherwise reports `HOLD`. `make fixtures`, `make proof-slice`, and `make catalog` are unimplemented producer lanes that report a named `HOLD` with exit status 3. None of these outcomes is a passing full-suite or publication result. `make release-dry-run` is a separate implemented denial check, as shown above.
 

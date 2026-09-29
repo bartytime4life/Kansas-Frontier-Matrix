@@ -482,9 +482,7 @@ Run only when the change affects the named surface:
 ```bash
 make governed-api-smoke
 make boundary-guards
-make maplibre-perf
-make maplibre-govern
-make maplibre-proof
+make proof-slice
 ```
 
 Read the corresponding Make target, package metadata, workflow, and tests before relying on a command. A command's presence does not prove dependencies are installed or the check passes.

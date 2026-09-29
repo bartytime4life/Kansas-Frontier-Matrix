@@ -1,48 +1,37 @@
-"""Regression guards for the retired standalone MapLibre performance harness."""
+"""Regression guards for the removed standalone MapLibre performance harness."""
 
 from __future__ import annotations
 
-import subprocess
+import json
 from pathlib import Path
 
 from tools.validators.maplibre.assess_acquisition_inventory import Outcome, scan
 
 
 ROOT = Path(__file__).resolve().parents[2]
-HARNESS = ROOT / "scripts" / "maplibre-smoke-perf.mjs"
+REMOVED_PATHS = (
+    "scripts/maplibre-smoke-perf.mjs",
+    "scripts/attest-maplibre-perf.mjs",
+    "scripts/build-maplibre-render-diff.mjs",
+    "scripts/build-maplibre-perf-proof-pack.mjs",
+    "scripts/build-maplibre-perf-release-manifest.mjs",
+    "scripts/build-maplibre-perf-failure-bundle.mjs",
+    "scripts/build-maplibre-perf-correction-and-rollback.mjs",
+    "tools/validators/maplibre/validate_perf_governance.py",
+    "schemas/maplibre/perf-proof-pack.schema.json",
+)
 
 
-def test_retired_harness_fails_with_a_finite_hold() -> None:
-    completed = subprocess.run(
-        ["node", str(HARNESS)],
-        cwd=ROOT,
-        check=False,
-        capture_output=True,
-        text=True,
-    )
-
-    assert completed.returncode == 3
-    assert completed.stdout == ""
-    assert "WORKFLOW_HOLD" in completed.stderr
-    assert "legacy MapLibre performance harness is retired" in completed.stderr
-    assert "performance execution remains NOT_RUN" in completed.stderr
+def test_retired_harness_and_its_trust_shaped_builders_stay_removed() -> None:
+    assert [path for path in REMOVED_PATHS if (ROOT / path).exists()] == []
 
 
-def test_retired_harness_has_no_renderer_or_network_acquisition() -> None:
-    text = HARNESS.read_text(encoding="utf-8")
-
-    for forbidden in (
-        "unpkg.com",
-        "demotiles.maplibre.org",
-        "maplibregl",
-        "playwright",
-        "http://",
-        "https://",
-    ):
-        assert forbidden not in text
-
-    result = scan(ROOT)
-    assert all(finding.path != "scripts/maplibre-smoke-perf.mjs" for finding in result.findings)
+def test_root_workspace_exposes_no_perf_harness_commands() -> None:
+    package = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
+    assert [name for name in package.get("scripts", {}) if name.startswith("maplibre:")] == []
+    makefile = (ROOT / "Makefile").read_text(encoding="utf-8")
+    for target in ("maplibre-perf:", "maplibre-govern:", "maplibre-proof:", "maplibre-clean:"):
+        assert f"\n{target}" not in makefile
 
 
 def test_current_renderer_acquisition_is_confined_to_package_seam() -> None:

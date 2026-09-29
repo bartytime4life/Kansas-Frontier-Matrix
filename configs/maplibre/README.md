@@ -236,13 +236,9 @@ name. The inspected set is deliberately bounded:
 | Source | What it actually does | What it does not establish |
 |---|---|---|
 | [Performance workflow](../../.github/workflows/maplibre-perf-governance.yml) | Checks the closed v1 schema/config inventories, exact identity/posture, five threshold keys, numeric domains, fixture classification, and companion wiring without installing dependencies. | Does not run the JSON Schema engine, browser, or measured-result gate; those remain separate. |
-| [Render-diff builder](../../scripts/build-maplibre-render-diff.mjs) | Parses the envelope and reads `thresholds.render_pixel_delta_ratio` for screenshot comparison. | Not an active benchmark; does not consume the four time budgets. |
-| [Proof-pack builder](../../scripts/build-maplibre-perf-proof-pack.mjs) | Hashes the envelope bytes and records their path/digest. | Hashing is not threshold validation; its literal `validation_outcome: "ANSWER"` does not execute the named command. |
-| [Release-manifest builder](../../scripts/build-maplibre-perf-release-manifest.mjs) | Includes the envelope as an artifact and hashes its bytes. | Does not decide release or validate threshold semantics; output is candidate/rejected. |
 | [Envelope validator](../../tools/validators/maplibre/validate_perf_envelope.py) | Runs the closed schema against explicit files or the nonempty positive/negative fixture lanes from any working directory. | Machine validity is not benchmark, policy, release, or publication authority. |
 | [Envelope contract tests](../../tests/maplibre/test_perf_envelope_contract.py) | Load the tracked config and schema; pin field inventories and fixture polarity; test numeric boundaries, strict parsing, CLI outcomes, and working-directory independence. | Do not launch MapLibre or measure a runtime. |
 | [Three budget-negative tests](../../tests/maplibre/test_perf_governance_negative_paths.py) | Exercise a separate [dataclass fixture](../../tests/maplibre/perf_fixture_builder.py). | Do **not** load `perf-envelope.v1.json` or test its five threshold fields. |
-| [Retired smoke harness](../../scripts/maplibre-smoke-perf.mjs) | Prints a finite retirement/hold message and sets exit code `3`. | Does not load the config, launch a browser, measure performance, or emit evidence. |
 
 ### Proposed metadata fields
 
@@ -403,13 +399,11 @@ The tracked envelope declares exactly these five values; this update changes non
 | `p95_frame_ms` | 40 | Same limit; do not substitute the separate fixture's `frame_budget_ms`. |
 | `idle_ms` | 3000 | Named time budget; not a measured stable-idle result. |
 | `load_ms` | 4000 | Named time budget; not a measured page/tile load result. |
-| `render_pixel_delta_ratio` | 0.01 | Read by the candidate render-diff builder as the allowed changed-pixel fraction. |
+| `render_pixel_delta_ratio` | 0.01 | Declared allowed changed-pixel fraction; no current consumer reads it. |
 
-The render-diff script's separate `pixelmatch` option `threshold: 0.1` is not the
-same parameter as the envelope's `0.01` ratio. A comparison pass also does not
-prove expected-scenario coverage: the current builder evaluates the screenshots
-it discovers, and an empty report list satisfies its `every(...)` expression.
-Require nonempty expected-scenario coverage before interpreting a future result.
+The legacy render-diff, proof-pack, and release-manifest builders that read or
+hashed this envelope were removed with the retired harness. A future comparison
+must require nonempty expected-scenario coverage before its result is interpreted.
 
 ### Current command-bearing workflow
 

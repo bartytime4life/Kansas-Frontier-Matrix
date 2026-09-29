@@ -94,13 +94,6 @@
       "subject": "scaffold-only-leaf-directories"
     },
     {
-      "evidence_sha256": "sha256:cd540f9732db01cea7591a3f889fac21974ef1c33fcbbd4d2bb368081e032e0a",
-      "evidence_zlib_base64": "eNpLyU8u1i8sTczJLKnUz00syMlMKkrVLUgtStNNzy9LLcpLzEtO1ctNYUgBKSxOTS4tAql0jQjwDw4Nco0P8HH0A0oDAM7iGg4=",
-      "fingerprint": "sha256:282e3f7ee41826de7432b76197db66e8920cb992bdf9696b126cb2d3be3942aa",
-      "rule_id": "KFM-TOPO-016",
-      "subject": "doc-id:kfm://doc/NEEDS_VERIFICATION"
-    },
-    {
       "evidence_sha256": "sha256:00a0eaabe165e059510bcb90719a623730fbfbc1171ffad779099da4a87e0f2e",
       "evidence_zlib_base64": "eNpLyU8u1i/OLy1KTi3WT04sSczJT9fPy09M1MtNYUjBJakf5Oro4usKVAMADqMXRA==",
       "fingerprint": "sha256:28684800e5fd5535ce11a018d9926481608ff57ea6496b5a0b63663a48f9b38d",

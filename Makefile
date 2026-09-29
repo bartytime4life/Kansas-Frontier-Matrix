@@ -46,7 +46,7 @@ normalized-summary-check:
 	$(KFM_VALIDATION_ENV) python tools/validators/source/validate_doctrine_artifact_preflight_summary.py --fixtures
 	$(KFM_VALIDATION_ENV) python -m pytest -q -p no:cacheprovider --strict-config --strict-markers tests/policy/test_preflight_summary_consistency.py tests/policy/test_normalized_summary_consumer_readiness.py tests/policy/test_run_doctrine_artifact_preflight.py tests/policy/test_preflight_summary_schema_contract.py tests/source/test_doctrine_artifact_preflight_summary_schema.py tests/ci/test_normalized_summary_workflow.py
 
-.PHONY: help validate test schemas validators validator-list validator-full validator-focused validator-release-profile validator-changed-area validator-registry-check docs-critical-structure workflow-security repository-topology repository-governance-parity repository-guardrails trust-spine-baseline program-baseline control-plane-registry-packet trust-spine-fixture-slice ci-conformance-report policy fixtures release-dry-run proof-slice catalog publish-check evidence-resolver evidence-resolver-deny hazards-validate deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify boundary-guards boundary-guards-ci maplibre-perf maplibre-govern maplibre-proof maplibre-clean
+.PHONY: help validate test schemas validators validator-list validator-full validator-focused validator-release-profile validator-changed-area validator-registry-check docs-critical-structure workflow-security repository-topology repository-governance-parity repository-guardrails trust-spine-baseline program-baseline control-plane-registry-packet trust-spine-fixture-slice ci-conformance-report policy fixtures release-dry-run proof-slice catalog publish-check evidence-resolver evidence-resolver-deny hazards-validate deny-test ui-build api-run governed-api-dev governed-api-smoke governed-api-verify boundary-guards boundary-guards-ci
 
 help:
 	@echo "KFM repository targets"
@@ -79,9 +79,6 @@ help:
 	@echo "  deny-suites           Run every registered deny suite and fail on empty suites"
 	@echo "  scaffold-inventory    Ratchet placeholder, stub, blank, and vacuous files against the baseline"
 	@echo "  ui-build              Retired workbench check (explicit HOLD)"
-	@echo "  maplibre-perf         Run MapLibre performance smoke and build artifacts"
-	@echo "  maplibre-govern       Validate MapLibre performance governance"
-	@echo "  maplibre-proof        Build and validate the MapLibre performance ProofPack"
 	@echo "  publish-check         Run bounded promotion-gate fixtures and tests"
 	@echo "  release-dry-run       Prove five synthetic publication-denial paths"
 	@echo "  evidence-resolver     Run the bounded internal evidence candidate profile"
@@ -105,9 +102,6 @@ help:
 	@echo "  proof-slice           Run the synthetic no-network Hydrology proof slice"
 	@echo "  fixtures              Report fixture-regeneration implementation HOLD"
 	@echo "  catalog               Report catalog-builder implementation HOLD"
-	@echo
-	@echo "Cleanup targets:"
-	@echo "  maplibre-clean        Remove artifacts/perf"
 
 validate:
 	$(MAKE) schemas test
@@ -278,22 +272,3 @@ boundary-guards:
 boundary-guards-ci:
 	mkdir -p artifacts/qa
 	python -m pytest -q --junitxml=artifacts/qa/policy-boundary-guards.xml tests/policy/test_control_plane_register_meta_contract.py tests/policy/test_pipeline_connector_non_publisher.py apps/governed-api/tests/test_boundary_guards.py
-
-maplibre-perf:
-	node scripts/maplibre-smoke-perf.mjs
-	node scripts/build-maplibre-render-diff.mjs
-	node scripts/attest-maplibre-perf.mjs
-	node scripts/build-maplibre-perf-release-manifest.mjs
-
-maplibre-govern:
-	python3 tools/validators/maplibre/validate_perf_governance.py
-
-maplibre-proof:
-	node scripts/build-maplibre-perf-proof-pack.mjs
-	python3 tools/validators/maplibre/validate_perf_proof_pack.py \
-		artifacts/perf/proof-pack.maplibre-perf.json
-	node scripts/build-maplibre-perf-release-manifest.mjs
-	python3 tools/validators/maplibre/validate_perf_governance.py
-
-maplibre-clean:
-	rm -rf -- artifacts/perf

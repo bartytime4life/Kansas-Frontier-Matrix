@@ -54,6 +54,17 @@ notes:
 
 # `fixtures/slim/` — Slim Runtime Fixture Boundary
 
+> [!IMPORTANT]
+> **2026-09-29 removal update.** The legacy standalone MapLibre performance
+> harness (`scripts/maplibre-smoke-perf.mjs`), its render-diff, attestation,
+> release-manifest, proof-pack, correction/rollback, and failure-bundle builders,
+> the root `maplibre:*` npm scripts, the `make maplibre-*` targets, their seven
+> placeholder schemas under `schemas/maplibre/`, and their placeholder verifiers
+> under `tools/validators/maplibre/` were removed. References to them below are
+> historical. The closed performance envelope
+> (`configs/maplibre/perf-envelope.v1.json`, `schemas/maplibre/perf-envelope.schema.json`,
+> `tools/validators/maplibre/validate_perf_envelope.py`) remains.
+
 [![Status: activation held](https://img.shields.io/badge/status-activation%20held-f59e0b?style=flat-square)](#status)
 [![Lane: slim runtime fixture](https://img.shields.io/badge/lane-slim%20runtime%20fixture-1f6feb?style=flat-square)](#purpose)
 [![Network: denied by default](https://img.shields.io/badge/network-denied%20by%20default-15803d?style=flat-square)](#validation-and-activation)
@@ -145,7 +156,7 @@ Snapshot: `main@d4c7683c1b7b85cb731a0bfd397ca90d719eed16`, inspected on 2026-07-
 | Root fixture contract | **CONFIRMED** at [`../README.md`](../README.md) | Reusable fixtures are non-authoritative, no-network by default, and distinct from test-local fixtures |
 | Heavy sibling boundary | **CONFIRMED** at [`../heavy/README.md`](../heavy/README.md) | Slim is the preferred starting tier; heavy is an exception for scale-dependent cases |
 | CODEOWNERS routing | **CONFIRMED** for `/fixtures/` | GitHub review requests route to `@bartytime4life`; required-review enforcement is not established |
-| MapLibre smoke script | **CONFIRMED** at [`scripts/maplibre-smoke-perf.mjs`](../../scripts/maplibre-smoke-perf.mjs) | Script contains a slim scenario and references `fixtures/slim/style.json` through localhost |
+| MapLibre smoke script | **REMOVED** (`scripts/maplibre-smoke-perf.mjs`, 2026-09-29) | The removed script referenced the never-committed `fixtures/slim/style.json` |
 | Root command surfaces | **CONFIRMED** in [`package.json`](../../package.json) and [`Makefile`](../../Makefile) | `npm run maplibre:perf` and `make maplibre-perf` invoke the smoke script, but command presence is not runtime proof |
 | Expected slim style fixture | **CONFIRMED ABSENT** | `fixtures/slim/style.json` does not exist at the pinned base |
 | MapLibre governance workflow | **CONFIRMED** at [`.github/workflows/maplibre-perf-governance.yml`](../../.github/workflows/maplibre-perf-governance.yml) | Changes under `fixtures/slim/**` trigger readiness checks, not the browser performance run |
@@ -506,7 +517,6 @@ CODEOWNERS routing does not prove that semantic, policy, sensitivity, security, 
 | [`../golden/README.md`](../golden/README.md) | Stable expected-output lane when an accepted comparison exists |
 | `../domains/` | Preferred family for domain-owned fixture meaning and sensitivity context |
 | [`../../tests/fixtures/README.md`](../../tests/fixtures/README.md) | Test-local fixture responsibility |
-| [`../../scripts/maplibre-smoke-perf.mjs`](../../scripts/maplibre-smoke-perf.mjs) | Command-bearing script that references the absent slim style fixture |
 | [`../../.github/workflows/maplibre-perf-governance.yml`](../../.github/workflows/maplibre-perf-governance.yml) | Path-scoped readiness workflow and explicit runtime HOLD |
 | [`../../configs/maplibre/perf-envelope.v1.json`](../../configs/maplibre/perf-envelope.v1.json) | Threshold-shaped configuration consumed by script text |
 | [`../../docs/quality/maplibre-perf-governance.md`](../../docs/quality/maplibre-perf-governance.md) | Doctrine-grounded but implementation-bounded design document |

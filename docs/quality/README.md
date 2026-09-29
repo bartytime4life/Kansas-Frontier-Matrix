@@ -311,11 +311,12 @@ Run these when documentation changes depend on validator registration or workflo
 
 ### MapLibre performance guidance changed
 
-```bash
-make maplibre-govern
-```
+The legacy performance harness and its `make maplibre-*` targets were removed. Check the closed performance envelope with:
 
-Run `make maplibre-proof` only when the governed scope includes the performance proof pack and its generated release-adjacent artifacts. Do not create or refresh proof artifacts merely to make documentation appear current.
+```bash
+python tools/validators/maplibre/validate_perf_envelope.py --fixtures
+python -m pytest -q tests/maplibre
+```
 
 ### Broader trust-spine confidence
 

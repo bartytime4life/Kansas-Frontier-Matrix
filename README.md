@@ -366,11 +366,10 @@ make boundary-guards
 make deny-test
 make governed-api-smoke
 make governed-api-verify
-make maplibre-govern
-make maplibre-proof
+make proof-slice
 ```
 
-Some Make targets are readiness markers that intentionally print `TODO`, and the root JavaScript `lint`, `test`, and `build` scripts intentionally report `WORKFLOW_HOLD`. A zero exit status from a marker is not validation evidence; a workflow pass proves only its declared job for its exact revision and inputs.
+Some Make targets are readiness lanes that exit with a named HOLD (status 3), and the root JavaScript `lint`, `test`, and `build` scripts intentionally report `WORKFLOW_HOLD`. A zero exit status from a marker is not validation evidence; a workflow pass proves only its declared job for its exact revision and inputs.
 
 ## Contributing
 
