@@ -14,6 +14,7 @@ updated: 2026-05-21
 policy_label: public-context-only; not-for-life-safety
 related:
   - docs/sources/catalog/fema/README.md
+  - docs/sources/catalog/fema/map-service-center.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/IDENTITY.md
   - docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md
@@ -72,7 +73,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 |---|---|
 | **Doc status** | `draft` — PROPOSED product page; sibling-link references verified, content scope PROPOSED |
 | **Family page** | [`./README.md`](./README.md) — FEMA family-level catalog entry |
-| **Sibling page** | `./MAP-SERVICE-CENTER.md` (not present) — companion MSC descriptor *(NEEDS VERIFICATION — sibling presence)* |
+| **Sibling page** | [`./MAP-SERVICE-CENTER.md`](map-service-center.md) — companion MSC descriptor *(NEEDS VERIFICATION — sibling presence)* |
 | **Doctrine basis** | **CONFIRMED.** Sources: KFM-P2-IDEA-0026 (NFHL canonical authority); ML-061-017 through ML-061-024 (MapLibre Master FEMA-specific rules); Encyclopedia §7.2; Domains Atlas §12.D, §24.1; [DOM-HYD] §B (NFHLZone vs Observed Flood Event); [DOM-HAZ] §B (FloodContext vs Hazard Event). |
 | **Implementation basis** | **PROPOSED / NEEDS VERIFICATION** — no mounted repo inspected this session; schema, registry, validator, fixture, and connector path claims default to PROPOSED. |
 | **Source role** | `regulatory` (companion to MSC); enum governed by Domains Atlas §24.1.1 and proposed ADR-S-04 |
@@ -107,7 +108,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 
 ## 1. Overview
 
-The **National Flood Hazard Layer (NFHL)** is FEMA's digital, query-able vector aggregate of the effective Flood Insurance Rate Maps (FIRMs) that comprise the U.S. National Flood Insurance Program. Where the Map Service Center (MSC) (not present) distributes effective FIRM panels and their backing Flood Insurance Studies as authoritative snapshots, **NFHL is the live regulatory vector surface KFM uses for analytical joins** — exposure overlays, in-or-out-of-SFHA tests, regulatory citation, and Evidence Drawer claims.
+The **National Flood Hazard Layer (NFHL)** is FEMA's digital, query-able vector aggregate of the effective Flood Insurance Rate Maps (FIRMs) that comprise the U.S. National Flood Insurance Program. Where the [Map Service Center (MSC)](map-service-center.md) distributes effective FIRM panels and their backing Flood Insurance Studies as authoritative snapshots, **NFHL is the live regulatory vector surface KFM uses for analytical joins** — exposure overlays, in-or-out-of-SFHA tests, regulatory citation, and Evidence Drawer claims.
 
 KFM admits NFHL as a **`regulatory`** source-role descriptor (Domains Atlas §24.1.1, CONFIRMED) for these reasons:
 
@@ -147,7 +148,7 @@ NFHL is published as a federated set of feature classes (flood hazard polygons, 
 | **Flood Hazard Areas (polygons)** | SFHAs and non-SFHA zones (e.g., `AE`, `VE`, `X`) | Primary regulatory polygon set; bound to `NFHLZone` (Hydrology) and `FloodContext` (Hazards) |
 | **Base Flood Elevations (lines/points)** | Elevation references for the 1%-annual-chance flood | MUST be paired with vertical datum + `TransformReceipt` before any engineering claim (ML-061-022) |
 | **Profile baselines / study lines** | Geometry from the engineering study cross-sections | Archival reference; analytical use requires cross-citation to MSC FIS |
-| **FIRM panel index** | Links polygons back to MSC FIRM panel ids (`DFIRM_ID`) | Cross-references the MSC sibling (not present) for effective-date snapshots |
+| **FIRM panel index** | Links polygons back to MSC FIRM panel ids (`DFIRM_ID`) | Cross-references the [MSC sibling](map-service-center.md) for effective-date snapshots |
 | **Political / community boundaries (as carried)** | Community ids tied to NFIP participation | Context only; not a substitute for canonical place data |
 
 [↑ Back to top](#fema-national-flood-hazard-layer-nfhl)
@@ -501,7 +502,7 @@ KFM connector posture:
 ## Related docs
 
 - [`./README.md`](./README.md) — FEMA family-level catalog entry
-- `./MAP-SERVICE-CENTER.md` (not present) — companion MSC descriptor *(NEEDS VERIFICATION — sibling presence)*
+- [`./MAP-SERVICE-CENTER.md`](map-service-center.md) — companion MSC descriptor *(NEEDS VERIFICATION — sibling presence)*
 - [`../README.md`](../README.md) — Source catalog landing page
 - [`../IDENTITY.md`](../IDENTITY.md) — Collection / item identity patterns
 - [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) — Rights and sensitivity registry
@@ -521,6 +522,6 @@ KFM connector posture:
 
 ---
 
-<sub>**Related docs**: [FEMA family](./README.md) · MSC sibling (not present) · [Directory Rules](../../../doctrine/directory-rules.md) · [connectors/fema/](../../../../connectors/fema/)</sub>
+<sub>**Related docs**: [FEMA family](./README.md) · [MSC sibling](map-service-center.md) · [Directory Rules](../../../doctrine/directory-rules.md) · [connectors/fema/](../../../../connectors/fema/)</sub>
 <sub>**Last updated**: 2026-05-21 · **Doc status**: draft · **Doctrine basis**: CONFIRMED · **Implementation basis**: PROPOSED / NEEDS VERIFICATION</sub>
 <sub>[↑ Back to top](#fema-national-flood-hazard-layer-nfhl)</sub>

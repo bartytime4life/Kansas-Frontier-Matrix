@@ -11,6 +11,7 @@ policy_label: public
 related:
   - docs/sources/catalog/usfws_ecos/README.md
   - docs/sources/catalog/usfws_ecos/critical-habitat.md
+  - docs/sources/catalog/usfws_ecos/ipac-project-lists.md
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
@@ -148,7 +149,7 @@ flowchart LR
 ## 2. Product identity within the family
 
 > [!NOTE]
-> This page is one **product** under the `usfws_ecos` source family. Sibling products include [`critical-habitat.md`](./critical-habitat.md) (geometry), `ipac.md` (not present) (project-scoped consultation lists), and `species-profiles.md` (PROPOSED — narrative). Family-wide concerns — authority, identity convention, rights/sensitivity map, taxon anchoring — live at the **family level** and are not restated here.
+> This page is one **product** under the `usfws_ecos` source family. Sibling products include [`critical-habitat.md`](./critical-habitat.md) (geometry), [`ipac.md`](ipac-project-lists.md) (project-scoped consultation lists), and `species-profiles.md` (PROPOSED — narrative). Family-wide concerns — authority, identity convention, rights/sensitivity map, taxon anchoring — live at the **family level** and are not restated here.
 
 | Attribute | Value | Status |
 |---|---|---|
@@ -165,7 +166,7 @@ flowchart LR
 | If you want… | Use… | Not this page |
 |---|---|---|
 | Designated **geometry** for critical habitat | [`critical-habitat.md`](./critical-habitat.md) | — |
-| **Project-scoped** species list for a specific AOI under 50 CFR 402.12 | `ipac.md` (not present) (per `KFM-P24-PROG-0002`, `KFM-P24-PROG-0021`) | — |
+| **Project-scoped** species list for a specific AOI under 50 CFR 402.12 | [`ipac.md`](ipac-project-lists.md) (per `KFM-P24-PROG-0002`, `KFM-P24-PROG-0021`) | — |
 | **State-level** Kansas listing context (KDWP / SINC) | `<PROPOSED> docs/sources/catalog/kdwp-tess/` (per `KFM-P19-IDEA-0005`, `KFM-P19-PROG-0012`) | — |
 | **Marine / anadromous** ESA species (NOAA-lead) | `<PROPOSED> docs/sources/catalog/noaa-fisheries-listings/` | — |
 | **Observation** evidence of a species occurrence | GBIF / iNaturalist / eBird / iDigBio product pages (`observed` source role) | — |

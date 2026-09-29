@@ -10,6 +10,7 @@ updated: 2026-05-20
 policy_label: public
 related:
   - docs/sources/catalog/census/README.md
+  - docs/sources/catalog/census/tiger-line.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/_examples/stac-item-example.json
   - docs/doctrine/directory-rules.md
@@ -101,7 +102,7 @@ CONFIRMED Atlas placement (Domains v1.1, Frontier Matrix domain D): **"Census de
 PROPOSED — ACS sits in a dense thicket of demographic products; bounding it is critical:
 
 - **Not the decennial census.** The decennial is a constitutionally-mandated **enumeration** (count) released every 10 years; ACS is a continuous **sample survey**. They are separate sources with different source-role behavior — see Decennial Census (not present).
-- **Not TIGER/Line.** TIGER provides the *boundary geometry* (tracts, block groups, places, counties, ZCTAs); ACS provides *attribute values* on those geographies. They are joined by GEOID, not substituted — see TIGER (not present).
+- **Not TIGER/Line.** TIGER provides the *boundary geometry* (tracts, block groups, places, counties, ZCTAs); ACS provides *attribute values* on those geographies. They are joined by GEOID, not substituted — see [TIGER](tiger-line.md).
 - **Not a per-household / per-person record.** PROPOSED (Atlas §24.1.1): ACS published estimates are **aggregates with irreversible loss of individual record fidelity** — disclosure controls and statistical methods prevent re-identification. The Public Use Microdata Sample (PUMS) is a separately-governed source not covered here.
 - **Not a census count.** Even at low MOE, an ACS value is an **estimate**, not a count. Conflating the two violates Atlas §24.1.1.
 - **Not an observation.** PROPOSED — never treated as Observed. If a downstream consumer needs household-level evidence, ACS is not the right source.
@@ -227,7 +228,7 @@ PROPOSED. ACS itself ships *no geometry* — it ships **tables keyed by GEOID**.
 
 - **CRS** — Inherited from the TIGER join target. PROPOSED canonical: `EPSG:5070` for overlap SQL (KFM-P26-PROG-0027) where ACS-on-TIGER products are intersected with other layers; the ACS tables themselves are geometry-free.
 - **GEOID stability** — GEOIDs are **vintage-bound**: a 2020-vintage tract `20155002400` is not the same polygon as a 2010-vintage tract with the same GEOID. PROPOSED gate: ACS estimates only join to TIGER geometry of the **same vintage family**; cross-vintage joins require a documented crosswalk.
-- **Geometry comes from elsewhere** — PROPOSED: this product page does not redefine geometry; consult TIGER (not present) for the boundary product.
+- **Geometry comes from elsewhere** — PROPOSED: this product page does not redefine geometry; consult [TIGER](tiger-line.md) for the boundary product.
 
 [Back to top](#top)
 
@@ -471,7 +472,7 @@ These are the KFM atlas cards from which the PROPOSED content above is sourced. 
 - `docs/sources/catalog/census/IDENTITY.md` (not present) — Collection-id and namespace rules for the family.
 - `docs/sources/catalog/census/RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — Rights / sensitivity tiering for `census`.
 - `docs/sources/catalog/census/decennial-census.md` (not present) — Sibling: decennial enumeration (different source-role; not a survey estimate).
-- `docs/sources/catalog/census/tiger.md` (not present) — Sibling: TIGER/Line boundary geometry (ACS joins to this).
+- [`docs/sources/catalog/census/tiger.md`](tiger-line.md) — Sibling: TIGER/Line boundary geometry (ACS joins to this).
 - _TODO_ — `docs/sources/catalog/census/pums.md` — PUMS microdata (separately-governed sibling).
 - [`docs/sources/catalog/README.md`](../../README.md) — Catalog of source families.
 - [`docs/sources/catalog/_examples/stac-item-example.json`](../_examples/stac-item-example.json) — Illustrative STAC + `kfm:provenance` shape.

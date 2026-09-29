@@ -11,6 +11,7 @@ policy_label: public
 related:
   - docs/sources/catalog/gbif/README.md
   - docs/sources/catalog/gbif/async-download.md
+  - docs/sources/catalog/gbif/occurrence-api.md
   - docs/sources/catalog/gbif/dataset-metadata.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/gbif.md
@@ -49,7 +50,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
   <img alt="Last updated: 2026-05-21" src="https://img.shields.io/badge/updated-2026--05--21-informational">
 </p>
 
-**Status:** PROPOSED — scaffold only · **Family:** [`gbif`](./README.md) · **Catalog index:** [`../README.md`](../README.md) · **Source catalog entry:** [`../gbif.md`](../gbif.md) · **Sibling products:** [Async Download](./async-download.md), Occurrence Search (not present), [Dataset Metadata](./dataset-metadata.md) · **Last reviewed:** 2026-05-21
+**Status:** PROPOSED — scaffold only · **Family:** [`gbif`](./README.md) · **Catalog index:** [`../README.md`](../README.md) · **Source catalog entry:** [`../gbif.md`](../gbif.md) · **Sibling products:** [Async Download](./async-download.md), [Occurrence Search](occurrence-api.md), [Dataset Metadata](./dataset-metadata.md) · **Last reviewed:** 2026-05-21
 
 > [!IMPORTANT]
 > **The Backbone is an anchor, not a dataset.** Per the parent source-catalog entry [`../gbif.md`](../gbif.md) §4 (CONFIRMED): "Source role is `administrative` (taxonomic authority, not occurrence). Used as anchor only; never published as occurrence evidence." This product's purpose is to be the resolution target for `kfm:gbif_backbone_doi` references that appear in *every other* GBIF-anchored catalog item across KFM's biodiversity lane.
@@ -257,7 +258,7 @@ See [`data/registry/sources/`](../../../../data/registry/sources/) for the autho
 | ITIS source family (first-line anchor) | `docs/sources/catalog/itis.md` *(PROPOSED — sibling source-catalog entry not yet authored)* | First-line authority per C7-07 |
 | Source steward register | `control_plane/source_authority_register.yaml` | **PROPOSED** |
 | Vendor README | [`./README.md`](./README.md) | Sibling — INFERRED present |
-| Sibling product pages | [`./async-download.md`](./async-download.md), `./occurrence-search.md` (not present), [`./dataset-metadata.md`](./dataset-metadata.md) | Sibling — INFERRED present |
+| Sibling product pages | [`./async-download.md`](./async-download.md), [`./occurrence-search.md`](occurrence-api.md), [`./dataset-metadata.md`](./dataset-metadata.md) | Sibling — INFERRED present |
 | Catalog README | [`../README.md`](../README.md) | Parent — INFERRED present |
 
 > [!NOTE]
@@ -565,7 +566,7 @@ GET https://api.gbif.org/v1/species/<taxonKey>
 
 - [`./README.md`](./README.md) — GBIF vendor family README
 - [`./async-download.md`](./async-download.md) — sibling product (bulk async download with citable DOI)
-- `./occurrence-search.md` (not present) — sibling product (sync exploratory search)
+- [`./occurrence-search.md`](occurrence-api.md) — sibling product (sync exploratory search)
 - [`./dataset-metadata.md`](./dataset-metadata.md) — sibling product (per-dataset license + citation lookup)
 - `./IDENTITY.md` (not present) — collection-id pattern and namespace doctrine
 - `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — product-by-product rights and sensitivity map

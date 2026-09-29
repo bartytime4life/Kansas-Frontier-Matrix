@@ -10,6 +10,9 @@ updated: 2026-05-22
 policy_label: public
 related:
   - docs/sources/catalog/loc/README.md
+  - docs/sources/catalog/loc/lcnaf-name-authority.md
+  - docs/sources/catalog/loc/lcsh-subject-headings.md
+  - docs/sources/catalog/loc/chronicling-america.md
   - docs/sources/catalog/README.md
   - docs/standards/STAC_KFM_PROFILE.md
   - docs/standards/PROV.md
@@ -567,9 +570,9 @@ See `_examples/stac-item-example.json` (not present) and `_examples/historic-map
 - [`./README.md`](./README.md) — `loc` source family overview
 - `./IDENTITY.md` (not present) — collection-id pattern, namespace decisions for the `loc` family
 - `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — rights and sensitivity disposition for `loc` products
-- `./LCNAF.md` (not present) — sibling LoC product (name authority); LCNAF anchors creators / cartographers of historic maps
-- `./LCSH.md` (not present) — sibling LoC product (subject headings); LCSH classifies the topical / geographic subject of a historic map
-- `./CHRONICLING-AMERICA.md` (not present) — sibling LoC product (recall-layer newspapers)
+- [`./LCNAF.md`](lcnaf-name-authority.md) — sibling LoC product (name authority); LCNAF anchors creators / cartographers of historic maps
+- [`./LCSH.md`](lcsh-subject-headings.md) — sibling LoC product (subject headings); LCSH classifies the topical / geographic subject of a historic map
+- [`./CHRONICLING-AMERICA.md`](chronicling-america.md) — sibling LoC product (recall-layer newspapers)
 - `./_examples/stac-item-example.json` (not present) — minimal STAC + `kfm:provenance` + `kfm:georeference` shape
 - `./_examples/historic-map-overlay-manifest-example.json` (not present) — `HistoricMapOverlayManifest` shape
 - [`../README.md`](../README.md) — `docs/sources/catalog/` overview
@@ -649,7 +652,7 @@ See `_examples/stac-item-example.json` (not present) and `_examples/historic-map
 
 ---
 
-**Related docs:** [loc family README](./README.md) · IDENTITY (not present) · RIGHTS-AND-SENSITIVITY-MAP (not present) · LCNAF (not present) · LCSH (not present) · Chronicling America (not present) · [STAC KFM Profile](../../../standards/STAC_KFM_PROFILE.md) · Plugin Allowlist (not present) · [Directory Rules](../../../doctrine/directory-rules.md)
+**Related docs:** [loc family README](./README.md) · IDENTITY (not present) · RIGHTS-AND-SENSITIVITY-MAP (not present) · [LCNAF](lcnaf-name-authority.md) · [LCSH](lcsh-subject-headings.md) · [Chronicling America](chronicling-america.md) · [STAC KFM Profile](../../../standards/STAC_KFM_PROFILE.md) · Plugin Allowlist (not present) · [Directory Rules](../../../doctrine/directory-rules.md)
 
 *Last updated: 2026-05-22 · Doc version: v0.2 · Status: PROPOSED scaffold*
 

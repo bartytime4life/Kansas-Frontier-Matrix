@@ -467,7 +467,7 @@ See [`_examples/stac-item-example.json`](../_examples/stac-item-example.json) fo
 
 - [`docs/sources/catalog/epa/README.md`](./README.md) — `epa` family landing page (PROPOSED).
 - [`docs/sources/catalog/usgs/nhdplus-hr.md`](../usgs/nhdplus-hr.md) — **USGS NHDPlus HR** product page (PROPOSED placement; the identity-and-geometry side of this join).
-- `docs/sources/catalog/usgs/nwis.md` (not present) — USGS NWIS streamgage product (PROPOSED placement; sibling waterbody crosswalk per KFM-P2-PROG-0017).
+- [`docs/sources/catalog/usgs/nwis.md`](../usgs/nwis-water.md) — USGS NWIS streamgage product (PROPOSED placement; sibling waterbody crosswalk per KFM-P2-PROG-0017).
 - [`docs/sources/catalog/epa/aqs-airdata.md`](./aqs-airdata.md) — EPA AQS / AirData (sibling EPA product page; different domain).
 - [`docs/sources/catalog/README.md`](../../README.md) — Sources catalog index (PROPOSED).
 - [`docs/sources/catalog/epa/IDENTITY.md`](../IDENTITY.md) — Collection-id and namespace conventions (PROPOSED placement).

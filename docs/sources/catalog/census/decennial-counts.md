@@ -11,6 +11,7 @@ policy_label: public
 related:
   - docs/sources/catalog/census/README.md
   - docs/sources/catalog/census/acs-estimates.md
+  - docs/sources/catalog/census/tiger-line.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/_examples/stac-item-example.json
   - docs/doctrine/directory-rules.md
@@ -110,7 +111,7 @@ CONFIRMED doctrine (KFM-P17-PROG-0015): *"Identity resolution should subtract co
 PROPOSED — bounding the decennial against adjacent demographic products is critical:
 
 - **Not ACS.** ACS is a continuous sample survey with margins of error; decennial is a decadal enumeration with counts. Different cadence, different uncertainty model, different geography coverage. See [ACS Estimates](./acs-estimates.md).
-- **Not TIGER/Line.** TIGER provides the *boundary geometry*; decennial provides *attribute counts* on those geographies. Joined by GEOID, not substituted. See TIGER (not present).
+- **Not TIGER/Line.** TIGER provides the *boundary geometry*; decennial provides *attribute counts* on those geographies. Joined by GEOID, not substituted. See [TIGER](tiger-line.md).
 - **Not PUMS microdata.** PUMS publishes anonymized person-record samples derived from the survey effort; decennial tables are aggregates. PUMS is a separately-governed source.
 - **Not the long-form census.** The long-form decennial (asked of a sample) was replaced by ACS after 2000. Long-form 1990, 1980, etc. are historical decennial; modern 2000+ uses ACS for the long-form content.
 - **Not a per-person record.** PROPOSED (Atlas §24.1.1): decennial tables are aggregates; per-person records are released only on the 72-year cycle (currently through 1950) via NARA and are a separately-governed product.
@@ -238,7 +239,7 @@ PROPOSED. Decennial itself ships **no geometry** — it ships **tables keyed by 
 - **CRS** — Inherited from the join target. PROPOSED canonical: `EPSG:5070` where decennial-on-TIGER products are intersected with other layers; decennial tables themselves are geometry-free.
 - **GEOID stability** — GEOIDs are **decade-bound**. A 2020-vintage tract `20155002400` is not the same polygon as a 2010-vintage tract with the same code. PROPOSED gate: decennial counts only join to TIGER geometry of the same vintage family; cross-decade joins require a documented crosswalk.
 - **Historical decennial geography** — Pre-modern decennials predate TIGER. PROPOSED: historical decennial counts join to **historical-county boundaries** via AHCB or an equivalent (compare KFM-P17-PROG-0014 patent-to-historical-county pattern).
-- **Geometry comes from elsewhere** — PROPOSED: this product page does not redefine geometry; consult TIGER (not present) for modern, and an AHCB-equivalent crosswalk for historical.
+- **Geometry comes from elsewhere** — PROPOSED: this product page does not redefine geometry; consult [TIGER](tiger-line.md) for modern, and an AHCB-equivalent crosswalk for historical.
 
 [Back to top](#top)
 
@@ -533,7 +534,7 @@ These are the KFM atlas cards from which the PROPOSED content above is sourced. 
 - `docs/sources/catalog/census/IDENTITY.md` (not present) — Collection-id and namespace rules for the family.
 - `docs/sources/catalog/census/RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — Rights / sensitivity tiering for `census`.
 - [`docs/sources/catalog/census/acs-estimates.md`](./acs-estimates.md) — Sibling: ACS survey estimates with MOEs (continuous, sample-based).
-- `docs/sources/catalog/census/tiger.md` (not present) — Sibling: TIGER/Line boundary geometry (decennial joins to this).
+- [`docs/sources/catalog/census/tiger.md`](tiger-line.md) — Sibling: TIGER/Line boundary geometry (decennial joins to this).
 - _TODO_ — `docs/sources/catalog/census/historical-enumeration-sheets.md` — Per-person pre-1950 NARA records (PROPOSED separate product, OPEN-FAM-08).
 - _TODO_ — `docs/sources/catalog/census/pums.md` — PUMS microdata (separately-governed sibling).
 - [`docs/sources/catalog/README.md`](../../README.md) — Catalog of source families.

@@ -11,6 +11,13 @@ policy_label: public
 related:
   - docs/sources/catalog/usgs.md
   - docs/sources/catalog/usgs/README.md
+  - docs/sources/catalog/usgs/3dep-elevation.md
+  - docs/sources/catalog/usgs/earthquake-catalog.md
+  - docs/sources/catalog/usgs/gnis-names.md
+  - docs/sources/catalog/usgs/nhdplus-hr.md
+  - docs/sources/catalog/usgs/nlcd.md
+  - docs/sources/catalog/usgs/nwis-water.md
+  - docs/sources/catalog/usgs/the-national-map.md
   - docs/sources/catalog/usgs/usgs-mrds.md
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
@@ -123,7 +130,7 @@ This product page describes how KFM catalogs the **USGS National Geologic Map Da
 4. Where USGS itself is the original publisher with first-party field-survey origin: the **observed** field-survey component AND the **interpreted** map representation derived from it.
 
 > [!NOTE]
-> **EXTERNAL** *(preserved without re-verification this session).* USGS distributes NGMDB through the Mineral and Geologic Map Sciences subprogram and historically through `ngmdb.usgs.gov`-class endpoints + MapView. Current endpoint URLs, distribution formats (Shapefile / GeoJSON / Geodatabase / KML / scanned PDFs/TIFFs / GeoPDF), the bibliographic-index format, and the relationship between NGMDB and any TNM-mediated access (see `usgs-the-national-map.md` (not present)) all remain **NEEDS VERIFICATION** until re-fetched in a session with web access.
+> **EXTERNAL** *(preserved without re-verification this session).* USGS distributes NGMDB through the Mineral and Geologic Map Sciences subprogram and historically through `ngmdb.usgs.gov`-class endpoints + MapView. Current endpoint URLs, distribution formats (Shapefile / GeoJSON / Geodatabase / KML / scanned PDFs/TIFFs / GeoPDF), the bibliographic-index format, and the relationship between NGMDB and any TNM-mediated access (see [`usgs-the-national-map.md`](the-national-map.md)) all remain **NEEDS VERIFICATION** until re-fetched in a session with web access.
 
 > [!IMPORTANT]
 > **NGMDB IS the federal carrier for the family-catalog `usgs-geologic-maps` sub-source.** The v1.1 family-catalog `usgs.md` §5 row uses the short ID `usgs-geologic-maps` for what is, in practice, the same federal product NGMDB indexes and distributes. v0.2 of this page surfaces the family-catalog short-ID reconciliation explicitly as Q-1 / ADR-S-?? rather than silently picking one name. See [§3.2](#32-family-catalog-short-id-reconciliation).
@@ -291,11 +298,11 @@ Per Atlas §24.1.1 enum + `KFM-P1-IDEA-0051` knowledge-character labels + Atlas 
 | **Engineering / geotechnical site investigation** | Site-specific geotechnical reports under qualified-engineers signatures — **NEVER** NGMDB | See [§9.1](#91-t0-default-with-engineering-disclaimer). |
 | **Fault-rupture mapping for seismic-design purposes** | State seismic-hazard authorities + USGS Earthquake Hazards Program seismic-design products — **NEVER** generic NGMDB structural features | See [§9.2](#92-fault-rupture-and-seismic-design-disclaimer). |
 | **Karst-risk assessments for infrastructure design** | State karst-program authorities + site-specific surveys — **NEVER** NGMDB surficial maps alone | See [§9.3](#93-infrastructure-overlay-cross-lane-sensitivity). |
-| **The earthquake catalog** (events, mechanisms) | `usgs-earthquake-catalog.md` (not present) | NGMDB structural features show *where* faults are mapped; the earthquake catalog records *what* events have happened on them. |
-| **Mining-community place names** | `usgs-gnis-names.md` (not present) cross-joined via co-located point | — |
-| **Terrain context** for a geologic unit | `usgs-3dep-elevation.md` (not present) cross-joined | — |
-| **Hydrography overlay** on a geologic unit | `usgs-nhdplus-hr.md` (not present) cross-joined | — |
-| **Land cover overlay** on a geologic unit | `usgs-nlcd.md` (not present) cross-joined | — |
+| **The earthquake catalog** (events, mechanisms) | [`usgs-earthquake-catalog.md`](earthquake-catalog.md) | NGMDB structural features show *where* faults are mapped; the earthquake catalog records *what* events have happened on them. |
+| **Mining-community place names** | [`usgs-gnis-names.md`](gnis-names.md) cross-joined via co-located point | — |
+| **Terrain context** for a geologic unit | [`usgs-3dep-elevation.md`](3dep-elevation.md) cross-joined | — |
+| **Hydrography overlay** on a geologic unit | [`usgs-nhdplus-hr.md`](nhdplus-hr.md) cross-joined | — |
+| **Land cover overlay** on a geologic unit | [`usgs-nlcd.md`](nlcd.md) cross-joined | — |
 
 > [!CAUTION]
 > **NGMDB does NOT support engineering, regulatory, or compliance use.** Per the engineering-disclaimer cascade established across the family (3DEP §9.3 → NHDPlus HR §9.1 → NLCD §9.1 → Water Data §9.1 → MRDS §9.1) and extended for the geologic-map interpretive character: a regional geologic map does NOT substitute for site-specific geotechnical investigation, fault-rupture mapping for seismic design, karst-risk assessment, or any other engineering-grade determination. The controlling carrier in every such case is the site-specific professional investigation under qualified-engineer signatures.

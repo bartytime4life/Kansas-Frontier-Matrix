@@ -11,6 +11,11 @@ policy_label: public
 related:
   - docs/sources/catalog/usgs.md
   - docs/sources/catalog/usgs/README.md
+  - docs/sources/catalog/usgs/3dep-elevation.md
+  - docs/sources/catalog/usgs/earthquake-catalog.md
+  - docs/sources/catalog/usgs/gnis-names.md
+  - docs/sources/catalog/usgs/nhdplus-hr.md
+  - docs/sources/catalog/usgs/nlcd.md
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
@@ -232,7 +237,7 @@ flowchart LR
 ## 2. Product identity within the family
 
 > [!NOTE]
-> This page is the **sixth** product authored under the `usgs` source family — joining the heterogeneous-role `usgs-3dep-elevation.md` (not present), real-time + historical `usgs-earthquake-catalog.md` (not present), administrative `usgs-gnis-names.md` (not present), observed-geometry + modeled-VAA `usgs-nhdplus-hr.md` (not present), and pure-modeled `usgs-nlcd.md` (not present). USGS Water Data is the second bimodal-cadence product (real-time + historical, like Earthquakes) and the **only** product page in the family driven by an in-flight upstream API migration.
+> This page is the **sixth** product authored under the `usgs` source family — joining the heterogeneous-role [`usgs-3dep-elevation.md`](3dep-elevation.md), real-time + historical [`usgs-earthquake-catalog.md`](earthquake-catalog.md), administrative [`usgs-gnis-names.md`](gnis-names.md), observed-geometry + modeled-VAA [`usgs-nhdplus-hr.md`](nhdplus-hr.md), and pure-modeled [`usgs-nlcd.md`](nlcd.md). USGS Water Data is the second bimodal-cadence product (real-time + historical, like Earthquakes) and the **only** product page in the family driven by an in-flight upstream API migration.
 
 | Attribute | Value | Status |
 |---|---|---|
@@ -268,15 +273,15 @@ Per Atlas §24.1.1 enum and the v1.1 family-catalog entry §5 row `usgs-water-da
 
 | If you want… | Use… | Not this page |
 |---|---|---|
-| **Modeled mean annual flow** (estimated at every reach, including ungauged) | `usgs-nhdplus-hr.md` (not present) VAA `QA_MA` (`modeled`) | — |
-| **Hydrography geometry** (the stream network itself, not gauge readings) | `usgs-nhdplus-hr.md` (not present) | — |
+| **Modeled mean annual flow** (estimated at every reach, including ungauged) | [`usgs-nhdplus-hr.md`](nhdplus-hr.md) VAA `QA_MA` (`modeled`) | — |
+| **Hydrography geometry** (the stream network itself, not gauge readings) | [`usgs-nhdplus-hr.md`](nhdplus-hr.md) | — |
 | **Watershed boundaries** | `<PROPOSED> docs/sources/catalog/usgs/usgs-wbd.md` | — |
 | **Operational flood forecasts** (forecast hydrographs) | `<PROPOSED> docs/sources/catalog/noaa/nws-ahps.md` — NWS Advanced Hydrologic Prediction Service, **not** USGS | USGS Water Data feeds NWS forecasts but is not itself a forecast product. |
 | **Regulatory flood-zone designations** | `<PROPOSED> docs/sources/catalog/fema/nfhl.md` — FEMA NFHL, **not** USGS | — |
 | **Water-rights compliance** for a Kansas user | `<PROPOSED> docs/sources/catalog/kdwr/water-rights.md` — Kansas Division of Water Resources, **not** USGS | USGS measures flow; KDWR adjudicates rights. |
 | **Dam-operation real-time data** for USACE / federal-project dams | `<PROPOSED> docs/sources/catalog/usace/cwms.md` — USACE Corps Water Management System | USGS does NOT operate dams. |
-| **Earthquake-induced water level changes** in wells | This page **and** `usgs-earthquake-catalog.md` (not present), cross-referenced by `event_id` and `site_id` co-location | — |
-| **Stream gauge metadata + named-place context** | This page (`GaugeStation`) cross-joined to `usgs-gnis-names.md` (not present) for the GNIS-named feature the gauge measures | — |
+| **Earthquake-induced water level changes** in wells | This page **and** [`usgs-earthquake-catalog.md`](earthquake-catalog.md), cross-referenced by `event_id` and `site_id` co-location | — |
+| **Stream gauge metadata + named-place context** | This page (`GaugeStation`) cross-joined to [`usgs-gnis-names.md`](gnis-names.md) for the GNIS-named feature the gauge measures | — |
 
 > [!CAUTION]
 > **USGS Water Data is not operational warning infrastructure.** Per the engineering-disclaimer cascade (3DEP §9.3 → NHDPlus HR §9.1 → NLCD §9.1 → this page §9.1), KFM derivatives that present USGS Water Data for operational flood warning, dam operation, or water-rights enforcement substitute scientific data for the controlling regulatory carrier. NWS AHPS issues flood forecasts; USACE operates dams; state agencies adjudicate water rights. USGS measures; others act.

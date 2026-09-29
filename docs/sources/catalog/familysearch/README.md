@@ -434,7 +434,7 @@ Carried forward from Components Pass-10 (idea **C9-02**, with vendor-risk contex
 - `docs/policy/familysearch-retention.md` (not present) — Retention policy (PROPOSED; see §11.1)
 - [`docs/registers/DRIFT_REGISTER.md`](../../../registers/DRIFT_REGISTER.md) — Drift entries for any conflict between this catalog entry and repo state
 - [`docs/adr/`](../../../adr/) — `ADR-familysearch-retention`, `ADR-duo-mapping`, `ADR-deceased-user-consent` (PROPOSED, not yet drafted)
-- `ai-build-operating-contract.md` (not present) §34 — RunReceipt / GENERATED_RECEIPT contract (CONFIRMED)
+- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) §34 — RunReceipt / GENERATED_RECEIPT contract (CONFIRMED)
 
 ---
 

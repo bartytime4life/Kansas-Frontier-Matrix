@@ -10,6 +10,7 @@ updated: 2026-05-21
 policy_label: public
 related:
   - docs/sources/catalog/ebird/README.md
+  - docs/sources/catalog/ebird/ebird-basic-dataset.md
   - docs/sources/catalog/ebird/ebird-api.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/_template/SOURCE_PRODUCT_TEMPLATE.md
@@ -45,7 +46,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 ![distribution](https://img.shields.io/badge/distribution-bulk%20monthly%20TSV-purple)
 ![last-updated](https://img.shields.io/badge/updated-2026--05--21-blue)
 
-> **Status:** PROPOSED — scaffold only · **Family:** [`ebird`](./README.md) · **Companion product:** `ebird-ebd.md` (not present) · **Other sibling:** [`ebird-api.md`](./ebird-api.md) · **Owners:** `<PLACEHOLDER — Docs steward + Source steward for ebird>` · **Last reviewed:** 2026-05-21
+> **Status:** PROPOSED — scaffold only · **Family:** [`ebird`](./README.md) · **Companion product:** [`ebird-ebd.md`](ebird-basic-dataset.md) · **Other sibling:** [`ebird-api.md`](./ebird-api.md) · **Owners:** `<PLACEHOLDER — Docs steward + Source steward for ebird>` · **Last reviewed:** 2026-05-21
 >
 > Badge targets are placeholder Shields.io endpoints until CI, registry, and policy wiring are confirmed against a mounted repo.
 
@@ -78,7 +79,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 | Field | Value | Status |
 |---|---|---|
 | Product | **eBird Sampling Event Data (SED)** — checklist-level effort metadata; one row per checklist | EXTERNAL |
-| Paired product | **eBird Basic Dataset (EBD)** — observation-level data; one row per species-on-checklist. See `ebird-ebd.md` (not present). | PROPOSED sibling |
+| Paired product | **eBird Basic Dataset (EBD)** — observation-level data; one row per species-on-checklist. See [`ebird-ebd.md`](ebird-basic-dataset.md). | PROPOSED sibling |
 | Other sibling | eBird API 2.0 — near-real-time programmatic access. See [`ebird-api.md`](./ebird-api.md). | PROPOSED sibling |
 | Family | [`ebird`](./README.md) | PROPOSED — beyond `directory-rules.md` §7.3, see `OPEN-DSC-14` |
 | Producer / host | Cornell Lab of Ornithology, Cornell University | [EXTERNAL, science.ebird.org] |
@@ -696,7 +697,7 @@ This block is illustrative — not validated against any live STAC profile, sche
 ## 16. Related docs
 
 - [`docs/sources/catalog/ebird/README.md`](./README.md) — family README
-- `docs/sources/catalog/ebird/ebird-ebd.md` (not present) — paired product (eBird Basic Dataset)
+- [`docs/sources/catalog/ebird/ebird-ebd.md`](ebird-basic-dataset.md) — paired product (eBird Basic Dataset)
 - [`docs/sources/catalog/ebird/ebird-api.md`](./ebird-api.md) — sibling product (eBird API 2.0)
 - [`docs/sources/catalog/README.md`](../README.md) — catalog lane index
 - [`docs/sources/catalog/_template/SOURCE_PRODUCT_TEMPLATE.md`](../_template/SOURCE_PRODUCT_TEMPLATE.md) — per-product page template

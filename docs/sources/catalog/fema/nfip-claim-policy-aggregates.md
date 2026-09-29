@@ -16,6 +16,8 @@ policy_label: public-context-aggregate-only; per-place-DENY; not-for-life-safety
 admission_status: UNKNOWN — admission decision pending steward + sensitivity review (family README §2)
 related:
   - docs/sources/catalog/fema/README.md
+  - docs/sources/catalog/fema/nfhl-flood-hazard.md
+  - docs/sources/catalog/fema/map-service-center.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/IDENTITY.md
   - docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md
@@ -79,7 +81,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 | **Doc status** | `draft` — PROPOSED product page; admission decision pending |
 | **Family admission status** | **UNKNOWN** — explicitly flagged in the family README §2 ("NFIP — claim and policy aggregates (if exposed)"). No admission decision recorded this session. |
 | **Family page** | [`./README.md`](./README.md) — FEMA family-level catalog entry |
-| **Sibling pages** | `./NATIONAL-FLOOD-HAZARD-LAYER.md` (not present), `./MAP-SERVICE-CENTER.md` (not present) — companion descriptors (different source roles) |
+| **Sibling pages** | [`./NATIONAL-FLOOD-HAZARD-LAYER.md`](nfhl-flood-hazard.md), [`./MAP-SERVICE-CENTER.md`](map-service-center.md) — companion descriptors (different source roles) |
 | **Doctrine basis** | **CONFIRMED.** Sources: Domains Atlas §24.1.1 (aggregate role definition); §24.1.2 (aggregate-cell-as-per-place-truth DENY); §24.1.3 (`role_aggregation_unit` requirement); §24.9.2 (trust-membrane anti-pattern); Pass-10 C6-04 / C6-05 / C6-06 (geoprivacy). |
 | **Implementation basis** | **PROPOSED / NEEDS VERIFICATION** — no mounted repo inspected this session; admission status remains UNKNOWN. |
 | **Source role** | `aggregate` (NOT `regulatory`, NOT `administrative`); `role_aggregation_unit` **MUST** be set |
@@ -503,8 +505,8 @@ AIReceipt.suggested_reframe: "Try asking at the county level."
 ## Related docs
 
 - [`./README.md`](./README.md) — FEMA family-level catalog entry (admission status reference)
-- `./NATIONAL-FLOOD-HAZARD-LAYER.md` (not present) — sibling NFHL descriptor (regulatory)
-- `./MAP-SERVICE-CENTER.md` (not present) — sibling MSC descriptor (regulatory)
+- [`./NATIONAL-FLOOD-HAZARD-LAYER.md`](nfhl-flood-hazard.md) — sibling NFHL descriptor (regulatory)
+- [`./MAP-SERVICE-CENTER.md`](map-service-center.md) — sibling MSC descriptor (regulatory)
 - [`../README.md`](../README.md) — Source catalog landing page
 - [`../IDENTITY.md`](../IDENTITY.md) — Collection / item identity patterns
 - [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) — Rights and sensitivity registry
@@ -525,6 +527,6 @@ AIReceipt.suggested_reframe: "Try asking at the county level."
 
 ---
 
-<sub>**Related docs**: [FEMA family](./README.md) · NFHL sibling (not present) · MSC sibling (not present) · [Directory Rules](../../../doctrine/directory-rules.md) · [connectors/fema/](../../../../connectors/fema/)</sub>
+<sub>**Related docs**: [FEMA family](./README.md) · [NFHL sibling](nfhl-flood-hazard.md) · [MSC sibling](map-service-center.md) · [Directory Rules](../../../doctrine/directory-rules.md) · [connectors/fema/](../../../../connectors/fema/)</sub>
 <sub>**Last updated**: 2026-05-21 · **Doc status**: draft · **Admission status**: UNKNOWN · **Doctrine basis**: CONFIRMED · **Implementation basis**: PROPOSED / NEEDS VERIFICATION</sub>
 <sub>[↑ Back to top](#fema-nfip-claim-and-policy-aggregates)</sub>

@@ -11,6 +11,7 @@ policy_label: public
 related:
   - docs/sources/catalog/usgs.md
   - docs/sources/catalog/usgs/README.md
+  - docs/sources/catalog/usgs/3dep-elevation.md
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
@@ -179,7 +180,7 @@ flowchart LR
 ## 2. Product identity within the family
 
 > [!NOTE]
-> This page is the **second** product page authored under the `usgs` source family (after `usgs-3dep-elevation.md` (not present)). Family-wide concerns — authority, identity convention, rights/sensitivity map — live at the **family level** and are not restated here. The family catalog index lives at [`docs/sources/catalog/usgs.md`](../usgs.md).
+> This page is the **second** product page authored under the `usgs` source family (after [`usgs-3dep-elevation.md`](3dep-elevation.md)). Family-wide concerns — authority, identity convention, rights/sensitivity map — live at the **family level** and are not restated here. The family catalog index lives at [`docs/sources/catalog/usgs.md`](../usgs.md).
 
 | Attribute | Value | Status |
 |---|---|---|
@@ -214,7 +215,7 @@ Per Atlas §24.1.1 enum and the v1.1 family-catalog entry §5 row for `usgs-eart
 
 | If you want… | Use… | Not this page |
 |---|---|---|
-| **Terrain context** for an earthquake's location | `usgs-3dep-elevation.md` (not present) | — |
+| **Terrain context** for an earthquake's location | [`usgs-3dep-elevation.md`](3dep-elevation.md) | — |
 | **Geologic-map context** (faults, formations) for an earthquake | `<PROPOSED> docs/sources/catalog/usgs/usgs-geologic-maps.md` | — |
 | **Building exposure / inventory** for damage modeling | `<PROPOSED> docs/sources/catalog/fema/hazus.md` or a state-DOT building inventory | — |
 | **State seismic networks** (Kansas Geological Survey, OGS Oklahoma) | `<PROPOSED> docs/sources/catalog/kgs/`, `<PROPOSED> docs/sources/catalog/ogs/` | — |

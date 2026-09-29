@@ -13,6 +13,7 @@ related:
   - docs/sources/catalog/census/decennial-counts.md
   - docs/sources/catalog/census/decennial-microdata.md
   - docs/sources/catalog/census/acs-estimates.md
+  - docs/sources/catalog/census/tiger-line.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/_examples/stac-item-example.json
   - docs/doctrine/directory-rules.md
@@ -109,7 +110,7 @@ PROPOSED — historical compilations sit adjacent to several Census products tha
 
 - **Not the official Census Bureau release.** This is a *third-party* re-publication. The Census Bureau remains the underlying authority; the compiler adds harmonization. See [Decennial Counts](./decennial-counts.md) and [ACS Estimates](./acs-estimates.md) for direct Census Bureau ingest.
 - **Not per-person micro-data.** Historical compilations are *aggregates*, not enumeration sheets. For per-person records see [Historic Decennial Micro-data](./decennial-microdata.md).
-- **Not raw TIGER.** Historical compilations include their *own* historical-boundary GIS files (NHGIS GIS, IPUMS-NHGIS shapefiles). Those are the boundary geography appropriate for the harmonized data — *not* modern TIGER. See TIGER (not present) for modern boundary geometry.
+- **Not raw TIGER.** Historical compilations include their *own* historical-boundary GIS files (NHGIS GIS, IPUMS-NHGIS shapefiles). Those are the boundary geography appropriate for the harmonized data — *not* modern TIGER. See [TIGER](tiger-line.md) for modern boundary geometry.
 - **Not a substitute for AHCB.** The Atlas of Historical County Boundaries (AHCB) is a *boundary* compilation. NHGIS-style historical-data compilations *use* AHCB-equivalent boundaries but their primary content is *data* (counts, estimates), not just boundaries. KFM may use AHCB independently for boundary-only work.
 - **Not a single product.** "Historical compilations" is a product category. Different compilers, different harmonization methods, different cohort coverage. The descriptor must pin a specific compiler + version per ingest.
 - **Not authoritative for any specific decade's data.** When the underlying decade's official Census Bureau aggregate disagrees with the compilation, **the Census Bureau release is the authority for that decade**. The compilation is authoritative for the *cross-decade harmonization*, not for any single year.
@@ -499,7 +500,7 @@ These are the KFM atlas cards from which the PROPOSED content above is sourced. 
 - [`docs/sources/catalog/census/decennial-counts.md`](./decennial-counts.md) — Sibling: direct Census Bureau Aggregate (the underlying source for most compilations).
 - [`docs/sources/catalog/census/decennial-microdata.md`](./decennial-microdata.md) — Sibling: per-person historic micro-data.
 - [`docs/sources/catalog/census/acs-estimates.md`](./acs-estimates.md) — Sibling: ACS modern Aggregate.
-- `docs/sources/catalog/census/tiger.md` (not present) — Sibling: modern TIGER/Line geometry.
+- [`docs/sources/catalog/census/tiger.md`](tiger-line.md) — Sibling: modern TIGER/Line geometry.
 - _TODO_ — `docs/sources/catalog/census/ahcb.md` — Atlas of Historical County Boundaries (boundaries-only companion).
 - _TODO_ — `docs/sources/catalog/census/pums.md` — PUMS microdata (separately-governed sibling).
 - [`docs/sources/catalog/README.md`](../../README.md) — Catalog of source families.

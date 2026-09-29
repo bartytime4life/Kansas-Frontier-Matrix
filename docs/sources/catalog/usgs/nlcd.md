@@ -11,6 +11,10 @@ policy_label: public
 related:
   - docs/sources/catalog/usgs.md
   - docs/sources/catalog/usgs/README.md
+  - docs/sources/catalog/usgs/3dep-elevation.md
+  - docs/sources/catalog/usgs/earthquake-catalog.md
+  - docs/sources/catalog/usgs/gnis-names.md
+  - docs/sources/catalog/usgs/nhdplus-hr.md
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
@@ -201,7 +205,7 @@ flowchart LR
 ## 2. Product identity within the family
 
 > [!NOTE]
-> This page is the **fifth** product authored under what is provisionally the `usgs` source family — sibling to the heterogeneous-role `usgs-3dep-elevation.md` (not present), `usgs-earthquake-catalog.md` (not present), `usgs-nhdplus-hr.md` (not present), and the administrative `usgs-gnis-names.md` (not present). NLCD's structural posture differs from all four: **pure modeled, every pixel, every sub-product**.
+> This page is the **fifth** product authored under what is provisionally the `usgs` source family — sibling to the heterogeneous-role [`usgs-3dep-elevation.md`](3dep-elevation.md), [`usgs-earthquake-catalog.md`](earthquake-catalog.md), [`usgs-nhdplus-hr.md`](nhdplus-hr.md), and the administrative [`usgs-gnis-names.md`](gnis-names.md). NLCD's structural posture differs from all four: **pure modeled, every pixel, every sub-product**.
 
 | Attribute | Value | Status |
 |---|---|---|
@@ -250,7 +254,7 @@ The v0.1 scaffold's `connectors/nlcd/` directory is more consistent with Option 
 | **Biodiversity habitat** classes | `<PROPOSED> docs/sources/catalog/gap/gap.md` (USGS GAP — ecological systems) | — |
 | **Regulatory wetlands determinations** | USACE / EPA Section 404 sources — **not** NLCD | NLCD wetlands classes are NOT regulatory wetlands. |
 | **Hi-res building / parcel footprints** | `<PROPOSED> docs/sources/catalog/census/tiger.md` + state parcel sources | NLCD developed-classes are 30m raster, not vector footprints. |
-| **Terrain context** for a land-cover analysis | `usgs-3dep-elevation.md` (not present) | — |
+| **Terrain context** for a land-cover analysis | [`usgs-3dep-elevation.md`](3dep-elevation.md) | — |
 | **EPA ecoregion baselines** alongside NLCD | `<PROPOSED> docs/sources/catalog/epa/ecoregions.md` (per `ML-K-008`) | — |
 | **NLCD ↔ CDL ↔ LANDFIRE ↔ GAP** crosswalk artifact | `<PROPOSED> docs/sources/catalog/_crosswalks/landcover-crosswalk.md` (or wherever ADR-S-?? lands the crosswalk catalog) | NLCD's native classification is preserved per `KFM-P2-IDEA-0028`; crosswalk lives separately and is **advisory**. |
 | **Aerial imagery** (Landsat reflectance the classifier ingests) | A separate Landsat / NAIP product page | NLCD is the *classifier output*, not the imagery. |

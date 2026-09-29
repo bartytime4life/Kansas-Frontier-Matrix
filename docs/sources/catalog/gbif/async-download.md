@@ -10,6 +10,7 @@ updated: 2026-05-21
 policy_label: public
 related:
   - docs/sources/catalog/gbif/README.md
+  - docs/sources/catalog/gbif/occurrence-api.md
   - docs/sources/catalog/gbif/backbone-taxonomy.md
   - docs/sources/catalog/gbif/dataset-metadata.md
   - docs/sources/catalog/README.md
@@ -48,7 +49,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
   <img alt="Last updated: 2026-05-21" src="https://img.shields.io/badge/updated-2026--05--21-informational">
 </p>
 
-**Status:** PROPOSED — scaffold only · **Family:** [`gbif`](./README.md) · **Catalog index:** [`../README.md`](../README.md) · **Source catalog entry:** [`../gbif.md`](../gbif.md) · **Sibling products:** Occurrence Search (not present), [Backbone Taxonomy](./backbone-taxonomy.md), [Dataset Metadata](./dataset-metadata.md) · **Last reviewed:** 2026-05-21
+**Status:** PROPOSED — scaffold only · **Family:** [`gbif`](./README.md) · **Catalog index:** [`../README.md`](../README.md) · **Source catalog entry:** [`../gbif.md`](../gbif.md) · **Sibling products:** [Occurrence Search](occurrence-api.md), [Backbone Taxonomy](./backbone-taxonomy.md), [Dataset Metadata](./dataset-metadata.md) · **Last reviewed:** 2026-05-21
 
 > [!IMPORTANT]
 > **The async download is the *reproducible* path.** Per GBIF technical documentation cited in the KFM corpus, async downloads issue a **GBIF Download DOI** that is the canonical citation handle for the exact dataset version retrieved. For any KFM derivative that crosses the publication boundary, prefer async + DOI over the synchronous Occurrence Search — the DOI is the reproducibility guarantee.
@@ -109,7 +110,7 @@ This page describes the **GBIF Async Download product** — the bulk, predicate-
 
 ## Why async (and not sync)
 
-The two GBIF access methods serve different needs. This product page covers async; the sibling `./occurrence-search.md` (not present) covers sync.
+The two GBIF access methods serve different needs. This product page covers async; the sibling [`./occurrence-search.md`](occurrence-api.md) covers sync.
 
 | Aspect | Async Download *(this product)* | Sync Occurrence Search |
 |---|---|---|
@@ -232,7 +233,7 @@ See [`data/registry/sources/`](../../../../data/registry/sources/) for the autho
 | SourceDescriptor schema | `schemas/contracts/v1/source/source-descriptor.json` | **Canonical** per ADR-0001 |
 | Source steward register | `control_plane/source_authority_register.yaml` | **PROPOSED** |
 | Vendor README | [`./README.md`](./README.md) | Sibling — INFERRED present |
-| Sibling product pages | `./occurrence-search.md` (not present), [`./backbone-taxonomy.md`](./backbone-taxonomy.md), [`./dataset-metadata.md`](./dataset-metadata.md) | Sibling — INFERRED present |
+| Sibling product pages | [`./occurrence-search.md`](occurrence-api.md), [`./backbone-taxonomy.md`](./backbone-taxonomy.md), [`./dataset-metadata.md`](./dataset-metadata.md) | Sibling — INFERRED present |
 | Catalog README | [`../README.md`](../README.md) | Parent — INFERRED present |
 
 > [!NOTE]
@@ -561,7 +562,7 @@ See `./_examples/stac-item-example.json` (not present) for the canonical minimal
 ## Related docs
 
 - [`./README.md`](./README.md) — GBIF vendor family README
-- `./occurrence-search.md` (not present) — sibling product page (sync, exploratory, no DOI)
+- [`./occurrence-search.md`](occurrence-api.md) — sibling product page (sync, exploratory, no DOI)
 - [`./backbone-taxonomy.md`](./backbone-taxonomy.md) — sibling product page (taxonomic anchor; DOI `10.15468/39omei`)
 - [`./dataset-metadata.md`](./dataset-metadata.md) — sibling product page (per-dataset license + citation lookup)
 - `./IDENTITY.md` (not present) — collection-id pattern and namespace doctrine

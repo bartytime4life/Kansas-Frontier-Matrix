@@ -11,6 +11,7 @@ policy_label: public
 related:
   - docs/sources/catalog/gbif/README.md
   - docs/sources/catalog/gbif/dataset-metadata.md
+  - docs/sources/catalog/gbif/async-download.md
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
   - docs/standards/PROV.md
@@ -32,7 +33,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 **Status:** PROPOSED — scaffold + v0.2 polish · **Family:** [`gbif`](./README.md) · **Owners:** *PLACEHOLDER — Docs steward + Source steward for gbif* · **Last reviewed:** 2026-05-21
 
 > [!IMPORTANT]
-> **The Occurrence API is a runtime surface, not a publication source.** Synchronous search responses are **not byte-stable** across time: records may be added, retracted, georeferenced, or revised between calls. Any KFM claim that requires reproducible evidence MUST be paired with a citable GBIF Download DOI (see `occurrence-download.md` (not present), *NEEDS VERIFICATION* of sibling presence) or with a content-addressed cached response under `tests/replay/fixtures/<use_case>/cached_responses/`. Otherwise the runtime envelope MUST ABSTAIN.
+> **The Occurrence API is a runtime surface, not a publication source.** Synchronous search responses are **not byte-stable** across time: records may be added, retracted, georeferenced, or revised between calls. Any KFM claim that requires reproducible evidence MUST be paired with a citable GBIF Download DOI (see [`occurrence-download.md`](async-download.md), *NEEDS VERIFICATION* of sibling presence) or with a content-addressed cached response under `tests/replay/fixtures/<use_case>/cached_responses/`. Otherwise the runtime envelope MUST ABSTAIN.
 
 ---
 
@@ -68,7 +69,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 | Focus-mode runtime queries (county / HUC / corridor scopes) | **OK with caveats** — runtime envelope must mark response time and abstain if downstream cite-as fails. |
 | Watchers detecting new/changed records since last poll | **OK** — emit `RunReceipt` (including no-op receipt per KFM-P21-PROG-0048); never mutate catalog. |
 | Exploratory map overlays before pinning a Download DOI | **OK** with explicit "preview" badge in the UI envelope. |
-| **Standing as the source of a PUBLISHED claim** | **DENY by default.** Use Occurrence Download (not present) (paired Download DOI) instead. |
+| **Standing as the source of a PUBLISHED claim** | **DENY by default.** Use [Occurrence Download](async-download.md) (paired Download DOI) instead. |
 | **Driving Citation Validation reports** | **DENY** unless paired with cached fixture or Download DOI. |
 
 **NEEDS VERIFICATION (this product instance):** current endpoint URL, pinned API version, per-call rate limit, maximum-records-per-search ceiling, pagination semantics (`limit` / `offset` defaults and caps), polling cadence for watcher use, and which Kansas-scope filters are CONFIRMED to behave correctly.
@@ -458,7 +459,7 @@ See also [`_examples/stac-item-example.json`](../_examples/stac-item-example.jso
 
 - [`docs/sources/catalog/gbif/README.md`](./README.md) — family landing page *(PROPOSED sibling; NEEDS VERIFICATION)*
 - [`docs/sources/catalog/gbif/dataset-metadata.md`](./dataset-metadata.md) — dataset-level license, citation, and DOI metadata
-- `docs/sources/catalog/gbif/occurrence-download.md` (not present) — **paired** asynchronous Download DOI surface *(PROPOSED sibling; NEEDS VERIFICATION)*
+- [`docs/sources/catalog/gbif/occurrence-download.md`](async-download.md) — **paired** asynchronous Download DOI surface *(PROPOSED sibling; NEEDS VERIFICATION)*
 - `docs/sources/catalog/gbif/IDENTITY.md` (not present) — Collection id + namespace pin *(PROPOSED sibling; NEEDS VERIFICATION)*
 - `docs/sources/catalog/gbif/RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — per-license / per-taxon sensitivity map *(PROPOSED sibling; NEEDS VERIFICATION)*
 - [`docs/sources/catalog/README.md`](../README.md) — catalog source-pages index

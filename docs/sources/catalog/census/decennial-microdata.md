@@ -12,6 +12,7 @@ related:
   - docs/sources/catalog/census/README.md
   - docs/sources/catalog/census/decennial-counts.md
   - docs/sources/catalog/census/acs-estimates.md
+  - docs/sources/catalog/census/tiger-line.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/_examples/stac-item-example.json
   - docs/doctrine/directory-rules.md
@@ -528,7 +529,7 @@ These are the KFM atlas cards from which the PROPOSED content above is sourced. 
 - `docs/sources/catalog/census/RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — Rights / sensitivity tiering for `census` (living-person policy, historical race / origin display).
 - [`docs/sources/catalog/census/decennial-counts.md`](./decennial-counts.md) — Sibling: aggregate decennial tables (Aggregate source role).
 - [`docs/sources/catalog/census/acs-estimates.md`](./acs-estimates.md) — Sibling: ACS estimates (Aggregate source role).
-- `docs/sources/catalog/census/tiger.md` (not present) — Sibling: TIGER/Line boundary geometry (modern geography only).
+- [`docs/sources/catalog/census/tiger.md`](tiger-line.md) — Sibling: TIGER/Line boundary geometry (modern geography only).
 - _TODO_ — `docs/sources/catalog/census/pums.md` — PUMS microdata (modern microdata sibling).
 - [`docs/sources/catalog/README.md`](../../README.md) — Catalog of source families.
 - [`docs/sources/catalog/_examples/stac-item-example.json`](../_examples/stac-item-example.json) — Illustrative STAC + `kfm:provenance` shape.

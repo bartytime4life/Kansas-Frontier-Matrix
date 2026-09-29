@@ -14,9 +14,11 @@ related:
   - docs/sources/catalog/README.md
   - docs/sources/catalog/local_upload.md
   - docs/sources/catalog/local_upload/user-file-upload.md
+  - docs/sources/catalog/loc/loc-iiif-presentations.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/lifecycle-law.md
+  - docs/governance/SEPARATION_OF_DUTIES.md
   - docs/registers/DRIFT_REGISTER.md
 tags: [kfm, docs, sources, catalog, manual_curation, workflow, stewardship, governance]
 notes:
@@ -175,7 +177,7 @@ sequenceDiagram
 This workflow does **not** own a `SourceDescriptor`. It produces and consumes descriptors *for the source being curated*. Every curation pass writes (or reads) a descriptor at [`data/registry/sources/`](../../../../data/registry/sources/), schema-shaped by `schemas/contracts/v1/source/` per Directory Rules §7.4 and ADR-0001.
 
 > [!WARNING]
-> **Do not duplicate descriptor fields on this page.** The descriptor for any given curation pass belongs to the source being curated — see e.g. [`../local_upload.md`](../local_upload.md) §5 for the `local_upload` family defaults or `../loc/iiif-presentations.md` (not present) for the LOC IIIF Presentations product defaults.
+> **Do not duplicate descriptor fields on this page.** The descriptor for any given curation pass belongs to the source being curated — see e.g. [`../local_upload.md`](../local_upload.md) §5 for the `local_upload` family defaults or [`../loc/iiif-presentations.md`](../loc/loc-iiif-presentations.md) for the LOC IIIF Presentations product defaults.
 
 | Surface this workflow touches | PROPOSED home | Read or write? |
 |---|---|---|
@@ -388,11 +390,11 @@ PROPOSED — Each item below blocks promotion of this page to `status: review`.
 - [`../README.md`](../README.md) — catalog lane orientation.
 - [`../local_upload.md`](../local_upload.md) — `local_upload` family governance doc — sibling family example.
 - [`../local_upload/user-file-upload.md`](../local_upload/user-file-upload.md) — `local_upload` product page — sibling product example (candidate-role default).
-- `../loc/iiif-presentations.md` (not present) — LOC IIIF Presentations product page — sibling product example (versioned publisher).
+- [`../loc/iiif-presentations.md`](../loc/loc-iiif-presentations.md) — LOC IIIF Presentations product page — sibling product example (versioned publisher).
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — §6.5 (singular `policy/`), §7.3 (`connectors/`), §7.4 (schema home), §9 (`data/` and `release/`).
 - [`../../../doctrine/trust-membrane.md`](../../../doctrine/trust-membrane.md) — *PROPOSED* — public-client boundary.
 - [`../../../doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md) — *PROPOSED* — RAW → PUBLISHED governance.
-- `../../../governance/separation-of-duties.md` (not present) — *PROPOSED* — full separation-of-duties matrix.
+- [`../../../governance/separation-of-duties.md`](../../../governance/SEPARATION_OF_DUTIES.md) — *PROPOSED* — full separation-of-duties matrix.
 - [`../../../registers/DRIFT_REGISTER.md`](../../../registers/DRIFT_REGISTER.md) — *PROPOSED* — where **OPEN-MCW-01** and **OPEN-MCW-02** should be logged.
 
 ---

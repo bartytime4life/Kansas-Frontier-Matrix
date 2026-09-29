@@ -16,6 +16,10 @@ policy_label: public-context-administrative; per-table-rights-snapshot-required;
 admission_status: PROPOSED — per-table admission; no umbrella decision
 related:
   - docs/sources/catalog/fema/README.md
+  - docs/sources/catalog/fema/openfema-disaster-declarations.md
+  - docs/sources/catalog/fema/nfhl-flood-hazard.md
+  - docs/sources/catalog/fema/map-service-center.md
+  - docs/sources/catalog/fema/nfip-claim-policy-aggregates.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/IDENTITY.md
   - docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md
@@ -76,7 +80,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 |---|---|
 | **Doc status** | `draft` — PROPOSED product page; admission is per-table, no umbrella decision |
 | **Family page** | [`./README.md`](./README.md) — FEMA family-level catalog entry |
-| **Sibling pages** | `./NATIONAL-FLOOD-HAZARD-LAYER.md` (not present), `./MAP-SERVICE-CENTER.md` (not present), `./NFIP-CLAIM-POLICY-AGGREGATES.md` (not present), `./DISASTER-DECLARATIONS.md` (not present) *(last NEEDS VERIFICATION — sibling presence)* |
+| **Sibling pages** | [`./NATIONAL-FLOOD-HAZARD-LAYER.md`](nfhl-flood-hazard.md), [`./MAP-SERVICE-CENTER.md`](map-service-center.md), [`./NFIP-CLAIM-POLICY-AGGREGATES.md`](nfip-claim-policy-aggregates.md), [`./DISASTER-DECLARATIONS.md`](openfema-disaster-declarations.md) *(last NEEDS VERIFICATION — sibling presence)* |
 | **Doctrine basis** | **CONFIRMED.** Sources: Domains Atlas §24.1.1 (administrative + aggregate role definitions); §24.1.2 (administrative-compilation-as-observation DENY); §24.1.3 (descriptor fields); §24.9.2 (trust-membrane anti-patterns); Encyclopedia §7.10 (FEMA OpenFEMA hazards context). |
 | **Implementation basis** | **PROPOSED / NEEDS VERIFICATION** — no mounted repo inspected this session; per-table admission decisions remain pending steward + sensitivity review. |
 | **Predominant source role** | `administrative` (records of federal actions); some tables admit as `aggregate` (totals/counts). Never `regulatory`, never `observed`. |
@@ -112,7 +116,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 
 ## 1. Overview
 
-The **OpenFEMA API** is FEMA's primary programmatic distribution channel for non-spatial (or lightly spatial) administrative and aggregate datasets. The flagship product on this surface — **Disaster Declarations** — has its own dedicated descriptor and page (`./DISASTER-DECLARATIONS.md` (not present)). This page covers the remainder: a heterogeneous bag of tables whose content describes federal program activity around disasters but does not constitute the declaration record itself.
+The **OpenFEMA API** is FEMA's primary programmatic distribution channel for non-spatial (or lightly spatial) administrative and aggregate datasets. The flagship product on this surface — **Disaster Declarations** — has its own dedicated descriptor and page ([`./DISASTER-DECLARATIONS.md`](openfema-disaster-declarations.md)). This page covers the remainder: a heterogeneous bag of tables whose content describes federal program activity around disasters but does not constitute the declaration record itself.
 
 These tables share four properties:
 
@@ -143,8 +147,8 @@ The table below enumerates OpenFEMA datasets KFM has identified as **candidates*
 | **Emergency Management Performance Grants (EMPG)** | State/local emergency-management grants | `administrative` | T0 (Open) — typical | Settlements/Infrastructure |
 | **Disaster Costs** | Federal cost totals per disaster | `aggregate` | T0 (Open) — typical | Hazards |
 | **Web Disaster Summaries / Declarations Summaries** | Disaster-level summary tables (declaration counts, summary fields) | `aggregate` | T0 (Open) — typical | Hazards |
-| **NFIP claim and policy aggregates** | *(See dedicated sibling page)* | `aggregate` | ≥ T1 | *covered in* `./NFIP-CLAIM-POLICY-AGGREGATES.md` (not present) |
-| **Disaster Declarations** | *(See dedicated sibling page)* | `administrative` | T0 (Open) — typical | *covered in* `./DISASTER-DECLARATIONS.md` (not present) |
+| **NFIP claim and policy aggregates** | *(See dedicated sibling page)* | `aggregate` | ≥ T1 | *covered in* [`./NFIP-CLAIM-POLICY-AGGREGATES.md`](nfip-claim-policy-aggregates.md) |
+| **Disaster Declarations** | *(See dedicated sibling page)* | `administrative` | T0 (Open) — typical | *covered in* [`./DISASTER-DECLARATIONS.md`](openfema-disaster-declarations.md) |
 
 > [!CAUTION]
 > **Dataset names above are descriptive English, not OpenFEMA slugs.** Exact OpenFEMA endpoint slugs and field names are version-sensitive and explicitly NEEDS VERIFICATION at admission time. Do not treat the names above as binding identifiers.
@@ -199,7 +203,7 @@ flowchart LR
 
 **Definition (Domains Atlas §24.1.1, CONFIRMED):** *"A published summary, total, or average over a unit (county, year, watershed); irreversible loss of individual record fidelity."*
 
-When an OpenFEMA table publishes counts or dollar totals at a unit-of-aggregation scale (disaster-level, county-level, etc.), it admits as `aggregate`, not `administrative`. The same DENY conditions that govern NFIP aggregates (not present) apply:
+When an OpenFEMA table publishes counts or dollar totals at a unit-of-aggregation scale (disaster-level, county-level, etc.), it admits as `aggregate`, not `administrative`. The same DENY conditions that govern [NFIP aggregates](nfip-claim-policy-aggregates.md) apply:
 
 - `role_aggregation_unit` **MUST be set** (Domains Atlas §24.1.3, CONFIRMED).
 - Aggregate-cell-as-per-place truth is **DENIED** (§24.1.2).
@@ -607,10 +611,10 @@ AIReceipt.suggested_reframe: "I have records that FEMA awarded a PA grant
 ## Related docs
 
 - [`./README.md`](./README.md) — FEMA family-level catalog entry (family admission posture)
-- `./DISASTER-DECLARATIONS.md` (not present) — sibling: the named flagship OpenFEMA product *(NEEDS VERIFICATION — sibling presence)*
-- `./NATIONAL-FLOOD-HAZARD-LAYER.md` (not present) — sibling NFHL descriptor (regulatory)
-- `./MAP-SERVICE-CENTER.md` (not present) — sibling MSC descriptor (regulatory)
-- `./NFIP-CLAIM-POLICY-AGGREGATES.md` (not present) — sibling NFIP aggregates (aggregate, high-sensitivity)
+- [`./DISASTER-DECLARATIONS.md`](openfema-disaster-declarations.md) — sibling: the named flagship OpenFEMA product *(NEEDS VERIFICATION — sibling presence)*
+- [`./NATIONAL-FLOOD-HAZARD-LAYER.md`](nfhl-flood-hazard.md) — sibling NFHL descriptor (regulatory)
+- [`./MAP-SERVICE-CENTER.md`](map-service-center.md) — sibling MSC descriptor (regulatory)
+- [`./NFIP-CLAIM-POLICY-AGGREGATES.md`](nfip-claim-policy-aggregates.md) — sibling NFIP aggregates (aggregate, high-sensitivity)
 - [`../README.md`](../README.md) — Source catalog landing page
 - [`../IDENTITY.md`](../IDENTITY.md) — Collection / item identity patterns
 - [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) — Rights and sensitivity registry
@@ -629,6 +633,6 @@ AIReceipt.suggested_reframe: "I have records that FEMA awarded a PA grant
 
 ---
 
-<sub>**Related docs**: [FEMA family](./README.md) · Disaster Declarations (not present) · NFHL (not present) · MSC (not present) · NFIP aggregates (not present) · [Directory Rules](../../../doctrine/directory-rules.md) · [connectors/fema/](../../../../connectors/fema/)</sub>
+<sub>**Related docs**: [FEMA family](./README.md) · [Disaster Declarations](openfema-disaster-declarations.md) · [NFHL](nfhl-flood-hazard.md) · [MSC](map-service-center.md) · [NFIP aggregates](nfip-claim-policy-aggregates.md) · [Directory Rules](../../../doctrine/directory-rules.md) · [connectors/fema/](../../../../connectors/fema/)</sub>
 <sub>**Last updated**: 2026-05-21 · **Doc status**: draft · **Admission**: per-table · **Doctrine basis**: CONFIRMED · **Implementation basis**: PROPOSED / NEEDS VERIFICATION</sub>
 <sub>[↑ Back to top](#openfema-auxiliary-tables)</sub>

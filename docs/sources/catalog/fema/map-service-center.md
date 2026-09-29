@@ -14,6 +14,7 @@ updated: 2026-05-21
 policy_label: public-context-only; not-for-life-safety
 related:
   - docs/sources/catalog/fema/README.md
+  - docs/sources/catalog/fema/nfhl-flood-hazard.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/IDENTITY.md
   - docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md
@@ -63,7 +64,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 |---|---|
 | **Doc status** | `draft` — PROPOSED product page; sibling-link references verified, content scope PROPOSED |
 | **Family page** | [`./README.md`](./README.md) — the FEMA family-level catalog entry |
-| **Sibling page** | `./NATIONAL-FLOOD-HAZARD-LAYER.md` (not present) — companion NFHL descriptor *(NEEDS VERIFICATION — sibling presence)* |
+| **Sibling page** | [`./NATIONAL-FLOOD-HAZARD-LAYER.md`](nfhl-flood-hazard.md) — companion NFHL descriptor *(NEEDS VERIFICATION — sibling presence)* |
 | **Doctrine basis** | **CONFIRMED.** Sources: KFM-P2-IDEA-0026, KFM-P2-PROG-0008, ML-061-019, ML-061-020, Encyclopedia §7.2 ("FEMA NFHL / MSC flood hazard context"), Domains Atlas §12.D |
 | **Implementation basis** | **PROPOSED / NEEDS VERIFICATION** — no mounted repo inspected this session; all schema, registry, validator, and connector path claims default to PROPOSED |
 | **Source role** | `regulatory` (companion to NFHL); enum governed by Domains Atlas §24.1.1 and proposed ADR-S-04 |
@@ -106,7 +107,7 @@ KFM ingests MSC as a **`regulatory`** source-role descriptor (Domains Atlas §24
 3. **Bulk preferred over WFS** — KFM doctrine PROPOSED in KFM-P2-PROG-0008 prefers MSC-style bulk extracts over WFS feature-count-capped queries for any backfill or archival use.
 
 > [!NOTE]
-> MSC is a **distribution channel**, not an interactive analytics service. Analytical queries belong to the NFHL ArcGIS REST FeatureServer (see `./NATIONAL-FLOOD-HAZARD-LAYER.md` (not present)). MSC content reaches KFM through periodic archival capture under RAW, never through a public direct-read path. PROPOSED implementation; CONFIRMED doctrine ([DOM-HAZ] trust-membrane; Directory Rules v1.2 §0).
+> MSC is a **distribution channel**, not an interactive analytics service. Analytical queries belong to the NFHL ArcGIS REST FeatureServer (see [`./NATIONAL-FLOOD-HAZARD-LAYER.md`](nfhl-flood-hazard.md)). MSC content reaches KFM through periodic archival capture under RAW, never through a public direct-read path. PROPOSED implementation; CONFIRMED doctrine ([DOM-HAZ] trust-membrane; Directory Rules v1.2 §0).
 
 ---
 
@@ -391,7 +392,7 @@ See [`../_examples/stac-item-example.json`](../_examples/stac-item-example.json)
 ## Related docs
 
 - [`./README.md`](./README.md) — FEMA family-level catalog entry
-- `./NATIONAL-FLOOD-HAZARD-LAYER.md` (not present) — companion NFHL descriptor *(NEEDS VERIFICATION — sibling presence)*
+- [`./NATIONAL-FLOOD-HAZARD-LAYER.md`](nfhl-flood-hazard.md) — companion NFHL descriptor *(NEEDS VERIFICATION — sibling presence)*
 - [`../README.md`](../README.md) — Source catalog landing page
 - [`../IDENTITY.md`](../IDENTITY.md) — Collection / item identity patterns
 - [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) — Rights and sensitivity registry
@@ -409,6 +410,6 @@ See [`../_examples/stac-item-example.json`](../_examples/stac-item-example.json)
 
 ---
 
-<sub>**Related docs**: [FEMA family](./README.md) · NFHL sibling (not present) · [Directory Rules](../../../doctrine/directory-rules.md) · [connectors/fema/](../../../../connectors/fema/)</sub>
+<sub>**Related docs**: [FEMA family](./README.md) · [NFHL sibling](nfhl-flood-hazard.md) · [Directory Rules](../../../doctrine/directory-rules.md) · [connectors/fema/](../../../../connectors/fema/)</sub>
 <sub>**Last updated**: 2026-05-21 · **Doc status**: draft · **Doctrine basis**: CONFIRMED · **Implementation basis**: PROPOSED / NEEDS VERIFICATION</sub>
 <sub>[↑ Back to top](#fema-map-service-center-msc)</sub>

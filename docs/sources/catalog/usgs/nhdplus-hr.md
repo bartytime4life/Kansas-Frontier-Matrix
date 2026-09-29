@@ -11,6 +11,9 @@ policy_label: public
 related:
   - docs/sources/catalog/usgs.md
   - docs/sources/catalog/usgs/README.md
+  - docs/sources/catalog/usgs/3dep-elevation.md
+  - docs/sources/catalog/usgs/earthquake-catalog.md
+  - docs/sources/catalog/usgs/gnis-names.md
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
@@ -174,7 +177,7 @@ flowchart LR
 ## 2. Product identity within the family
 
 > [!NOTE]
-> This page is the **fourth** product authored under the `usgs` source family — joining the heterogeneous-role `usgs-3dep-elevation.md` (not present) (terrain), the real-time + historical `usgs-earthquake-catalog.md` (not present) (seismicity), and the administrative `usgs-gnis-names.md` (not present) (place names). NHDPlus HR is the second product page in the family with a heterogeneous observed + modeled role split, paralleling the 3DEP pattern (LAZ observed → DEM modeled) at a different evidence level (geometry observed → VAAs modeled).
+> This page is the **fourth** product authored under the `usgs` source family — joining the heterogeneous-role [`usgs-3dep-elevation.md`](3dep-elevation.md) (terrain), the real-time + historical [`usgs-earthquake-catalog.md`](earthquake-catalog.md) (seismicity), and the administrative [`usgs-gnis-names.md`](gnis-names.md) (place names). NHDPlus HR is the second product page in the family with a heterogeneous observed + modeled role split, paralleling the 3DEP pattern (LAZ observed → DEM modeled) at a different evidence level (geometry observed → VAAs modeled).
 
 | Attribute | Value | Status |
 |---|---|---|
@@ -214,8 +217,8 @@ Per family-catalog [`docs/sources/catalog/usgs.md`](../usgs.md) §5 row `usgs-nh
 |---|---|---|
 | **Real-time / gauged streamflow** at a station | `<PROPOSED> docs/sources/catalog/usgs/usgs-water-data.md` (`api.waterdata.usgs.gov`) | — |
 | **Watershed boundaries** (HUC8/10/12 polygons themselves) | `<PROPOSED> docs/sources/catalog/usgs/usgs-wbd.md` | — |
-| **Terrain context** for the watershed (DEM, slope, flow direction grids) | `usgs-3dep-elevation.md` (not present) | — |
-| **Place names** for hydrography features (the GNIS name for a stream) | `usgs-gnis-names.md` (not present) (cross-joined via co-located point) | — |
+| **Terrain context** for the watershed (DEM, slope, flow direction grids) | [`usgs-3dep-elevation.md`](3dep-elevation.md) | — |
+| **Place names** for hydrography features (the GNIS name for a stream) | [`usgs-gnis-names.md`](gnis-names.md) (cross-joined via co-located point) | — |
 | **Regulatory flood-zone designations** | `<PROPOSED> docs/sources/catalog/fema/nfhl.md` — FEMA NFHL, **not** USGS | — |
 | **Engineering hydraulic-model output** (HEC-RAS, etc.) for a reach | The originating model run + its calibration data — **not** an NHDPlus HR VAA | — |
 | **3DHP successor** (NHDPlus HR's forward-looking replacement using 3DEP-derived networks) | `<PROPOSED> docs/sources/catalog/usgs/usgs-3dhp.md` once 3DHP is in scope | — |
@@ -309,7 +312,7 @@ Doctrinal anchors for this product:
 | `wbd_hu4_package` | The WBD HU-4 region this feature was packaged under | **CONFIRMED-required**. |
 | `feature_type` | Enum (`NHDFlowline`, `NHDArea`, `NHDWaterbody`) | **CONFIRMED-required**. |
 | `ftype` / `fcode` | USGS NHD feature type + feature code (e.g., `StreamRiver`, `ArtificialPath`, `LakePond`) — controlled vocabulary | **CONFIRMED-required**. Enum values **NEEDS VERIFICATION** against current NHD specification. |
-| `gnis_id` | Optional GNIS feature ID where the NHD feature is named-correlated | **PROPOSED**; cross-references the `usgs-gnis-names.md` (not present) sibling. |
+| `gnis_id` | Optional GNIS feature ID where the NHD feature is named-correlated | **PROPOSED**; cross-references the [`usgs-gnis-names.md`](gnis-names.md) sibling. |
 | **VAA fields** (on VAA records — `source_role: modeled`) | | |
 | `vaa_model_run_ref` | Structured (model name + version + parameters + run date) | **CONFIRMED-required** for any VAA record per Atlas §24.1.2 *"Modeled product"* requirement. |
 | `tot_dasqkm` | Total cumulative drainage area in km² (modeled) | Required-when-published. |
@@ -427,7 +430,7 @@ The cardinal `ReachRecord` (PROPOSED object) keyed by COMID bundles geometry + V
 | `vaa_ref` | `kfm://release/...` to the VAA record (with `vaa_model_run_ref`). |
 | `network_edges` | Array of upstream / downstream COMIDs (model-derived). |
 | `wbd_hu4` / `wbd_hu8` / `wbd_hu12` | Watershed accounting unit context. |
-| `gnis_name_ref` | Optional cross-reference to a `PlaceRecord` from `usgs-gnis-names.md` (not present) when the feature is GNIS-named. |
+| `gnis_name_ref` | Optional cross-reference to a `PlaceRecord` from [`usgs-gnis-names.md`](gnis-names.md) when the feature is GNIS-named. |
 | `ftype` / `fcode` | USGS NHD feature classification. |
 
 > [!NOTE]

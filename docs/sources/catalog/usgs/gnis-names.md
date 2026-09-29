@@ -11,6 +11,8 @@ policy_label: public
 related:
   - docs/sources/catalog/usgs.md
   - docs/sources/catalog/usgs/README.md
+  - docs/sources/catalog/usgs/3dep-elevation.md
+  - docs/sources/catalog/usgs/earthquake-catalog.md
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
@@ -174,7 +176,7 @@ flowchart LR
 ## 2. Product identity within the family
 
 > [!NOTE]
-> This page is the **third** product authored under the `usgs` source family — administrative-role sibling to the heterogeneous-role `usgs-3dep-elevation.md` (not present) (terrain) and `usgs-earthquake-catalog.md` (not present) (seismicity). It is the **only** USGS product page so far whose source role is `administrative` rather than a mix of `observed` + `modeled`. Family-wide concerns live at the family level and are not restated here; the family catalog index is at [`docs/sources/catalog/usgs.md`](../usgs.md).
+> This page is the **third** product authored under the `usgs` source family — administrative-role sibling to the heterogeneous-role [`usgs-3dep-elevation.md`](3dep-elevation.md) (terrain) and [`usgs-earthquake-catalog.md`](earthquake-catalog.md) (seismicity). It is the **only** USGS product page so far whose source role is `administrative` rather than a mix of `observed` + `modeled`. Family-wide concerns live at the family level and are not restated here; the family catalog index is at [`docs/sources/catalog/usgs.md`](../usgs.md).
 
 | Attribute | Value | Status |
 |---|---|---|

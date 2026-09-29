@@ -10,6 +10,7 @@ updated: 2026-05-21
 policy_label: public
 related:
   - docs/sources/catalog/ebird/README.md
+  - docs/sources/catalog/ebird/ebird-basic-dataset.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/_template/SOURCE_PRODUCT_TEMPLATE.md
   - docs/sources/catalog/PROFILES.md
@@ -75,7 +76,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 | Field | Value | Status |
 |---|---|---|
 | Product | eBird API 2.0 — programmatic access to recent / regional / hotspot / notable observation views | EXTERNAL |
-| Distinct from | eBird Basic Dataset (EBD) — monthly research-grade dump; see sibling page `ebird-ebd.md` (not present) | PROPOSED sibling |
+| Distinct from | eBird Basic Dataset (EBD) — monthly research-grade dump; see sibling page [`ebird-ebd.md`](ebird-basic-dataset.md) | PROPOSED sibling |
 | Family | [`ebird`](./README.md) | PROPOSED — beyond `directory-rules.md` §7.3, see `OPEN-DSC-14` |
 | Producer / host | Cornell Lab of Ornithology, Cornell University | [EXTERNAL, ebird.org] |
 | Authentication | API key, registered at `ebird.org/api/keygen`; sent via `x-ebirdapitoken` header (or `key=` query parameter) | [EXTERNAL, eBird API 2.0 docs] |
@@ -559,7 +560,7 @@ This block is illustrative — not validated against any live STAC profile, sche
 ## 16. Related docs
 
 - [`docs/sources/catalog/ebird/README.md`](./README.md) — family README
-- `docs/sources/catalog/ebird/ebird-ebd.md` (not present) — sibling product page for the eBird Basic Dataset (PROPOSED)
+- [`docs/sources/catalog/ebird/ebird-ebd.md`](ebird-basic-dataset.md) — sibling product page for the eBird Basic Dataset (PROPOSED)
 - [`docs/sources/catalog/README.md`](../README.md) — catalog lane index
 - [`docs/sources/catalog/_template/SOURCE_PRODUCT_TEMPLATE.md`](../_template/SOURCE_PRODUCT_TEMPLATE.md) — per-product page template
 - [`docs/sources/catalog/PROFILES.md`](../PROFILES.md) — STAC / DCAT / PROV-O / domain-projection registry
@@ -622,7 +623,7 @@ This block is illustrative — not validated against any live STAC profile, sche
 
 **Data quality framework** — eBird applies its own **data quality framework** (reviewer flags, hotspot vs. personal checklists, provisional vs. accepted records). KFM preserves this framework through the watcher so downstream consumers can filter appropriately (CONFIRMED — `KFM-P2-IDEA-0020`).
 
-**eBird Basic Dataset (EBD) is a distinct product** — Monthly research-grade dumps with richer fields, accessed via a separate Cornell data-request portal. KFM models EBD separately (`KFM-P24-PROG-0001`, `KFM-P24-PROG-0020`). See sibling page `ebird-ebd.md` (not present).
+**eBird Basic Dataset (EBD) is a distinct product** — Monthly research-grade dumps with richer fields, accessed via a separate Cornell data-request portal. KFM models EBD separately (`KFM-P24-PROG-0001`, `KFM-P24-PROG-0020`). See sibling page [`ebird-ebd.md`](ebird-basic-dataset.md).
 
 **What the eBird API is not**
 

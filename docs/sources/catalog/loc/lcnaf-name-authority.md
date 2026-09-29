@@ -10,6 +10,7 @@ updated: 2026-05-22
 policy_label: public
 related:
   - docs/sources/catalog/loc/README.md
+  - docs/sources/catalog/loc/chronicling-america.md
   - docs/sources/catalog/README.md
   - docs/standards/STAC_KFM_PROFILE.md
   - docs/standards/PROV.md
@@ -426,7 +427,7 @@ See `_examples/dcat-distribution-example.json` (not present) for the minimal DCA
 - [`./README.md`](./README.md) — `loc` source family overview
 - `./IDENTITY.md` (not present) — collection-id pattern, namespace decisions for the `loc` family
 - `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — rights and sensitivity disposition for `loc` products
-- `./CHRONICLING-AMERICA.md` (not present) — sibling LoC product (recall-layer newspapers); LCNAF anchors the names that appear there
+- [`./CHRONICLING-AMERICA.md`](chronicling-america.md) — sibling LoC product (recall-layer newspapers); LCNAF anchors the names that appear there
 - `./_examples/dcat-distribution-example.json` (not present) — minimal DCAT + `kfm:provenance` shape
 - [`../README.md`](../README.md) — `docs/sources/catalog/` overview
 - [`../../../standards/STAC_KFM_PROFILE.md`](../../../standards/STAC_KFM_PROFILE.md) — KFM STAC profile (namespace, extensions, attestation hook)
@@ -497,7 +498,7 @@ See `_examples/dcat-distribution-example.json` (not present) for the minimal DCA
 
 ---
 
-**Related docs:** [loc family README](./README.md) · IDENTITY (not present) · RIGHTS-AND-SENSITIVITY-MAP (not present) · Chronicling America (not present) · Authority Ladder (not present) · [STAC KFM Profile](../../../standards/STAC_KFM_PROFILE.md) · [Directory Rules](../../../doctrine/directory-rules.md)
+**Related docs:** [loc family README](./README.md) · IDENTITY (not present) · RIGHTS-AND-SENSITIVITY-MAP (not present) · [Chronicling America](chronicling-america.md) · Authority Ladder (not present) · [STAC KFM Profile](../../../standards/STAC_KFM_PROFILE.md) · [Directory Rules](../../../doctrine/directory-rules.md)
 
 *Last updated: 2026-05-22 · Doc version: v0.2 · Status: PROPOSED scaffold*
 
