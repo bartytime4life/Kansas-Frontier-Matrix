@@ -331,7 +331,7 @@ jobs:
                   "The @kfm/maplibre package must select one exact MapLibre GL JS 6.x "
                   "version; ranges and unreviewed majors are not accepted by this gate."
               )
-          if dev_dependencies != {"vitest": "5.0.0"}:
+          if dev_dependencies != {"vitest": "5.0.2"}:
               raise SystemExit(
                   "The reviewed @kfm/maplibre development dependency boundary changed. "
                   "Reconcile package tests and install behavior before changing CI."
