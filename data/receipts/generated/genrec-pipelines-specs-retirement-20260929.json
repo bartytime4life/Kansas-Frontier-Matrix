@@ -1,0 +1,77 @@
+{
+  "receipt_id": "genrec-pipelines-specs-retirement-20260929",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "control_plane/repository_governance_parity.yaml",
+    "pipelines/README.md",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py",
+    "tools/validators/directory_governance/repository_topology_baseline.json"
+  ],
+  "artifact_hashes": {
+    "control_plane/repository_governance_parity.yaml": "sha256:7f25ed834767dba25c9d4bb448aa8151b5c88ac983f97aac8956b5e1c4e1e448",
+    "pipelines/README.md": "sha256:f25fef114c8bb545b631c861deac003a653e437c3a33fa9e1a12f3af585d62ea",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "sha256:4204a59b8fc206aa04dfea2370d453db54823170fe36295d7a2e572ec486f6c3",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "sha256:866b696bb15301f288b6d66c13a4025ad2fa48c39bc1d70188a31cfd693e0c5a"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:16b20ca10096bc59bd00b28cd6c4e4168550be6e0e92eedc0e29327f8d3749be",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/93ece32b09aba1487c921ea3cd83d944dc769ead",
+      "repo:docs/doctrine/directory-rules.md#206-convergence-priority"
+    ]
+  },
+  "truth_labels": {
+    "control_plane/repository_governance_parity.yaml": "CONFIRMED",
+    "pipelines/README.md": "CONFIRMED",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "CONFIRMED",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Zero payload, writer, and consumer check",
+      "outcome": "PASS",
+      "reason": "pipelines/specs/ held only its guardrail README; no code, workflow, test, or tool reads or writes the path, and no Markdown links to it."
+    },
+    {
+      "gate": "Topology and governance parity",
+      "outcome": "PASS",
+      "reason": "The pipelines/specs alias entry is removed and the scaffold-only-leaf aggregate replaced by a strict subset (one path fewer); topology PASS including the trusted-base check; governance parity PASS/HOLD_INHERITED with baselined_warning 115."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/93ece32b09aba1487c921ea3cd83d944dc769ead"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-29T14:19:22Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Owner-approved Phase 3d. Removed pipelines/specs/README.md. Directory Rules section 20.6 priority 4 names pipelines/specs/ for retirement. The topology alias map still flags the path if it reappears."
+}
