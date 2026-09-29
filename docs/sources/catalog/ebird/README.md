@@ -10,8 +10,6 @@ updated: 2026-05-21
 policy_label: restricted
 related:
   - docs/sources/catalog/ebird/ebird-api.md
-  - docs/sources/catalog/ebird/ebird-ebd.md
-  - docs/sources/catalog/ebird/ebird-sed.md
   - docs/sources/catalog/README.md
   - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
   - docs/domains/fauna/README.md
@@ -25,6 +23,9 @@ notes:
   - "eBird EBD travels under restricted-use terms that limit republication; cite-or-abstain applies."
   - "All path claims herein are PROPOSED until verified against mounted-repo evidence."
   - "v1.1 update — integrates three sibling product pages (eBird API 2.0, EBD, SED); refreshes atlas-card grounding (KFM-P2-IDEA-0020, KFM-P2-PROG-0005, KFM-P24-PROG-0001, KFM-P24-PROG-0013, KFM-P24-PROG-0015, KFM-P24-PROG-0020, KFM-P27-PROG-0005); surfaces canonical-home question (docs/sources/catalog/ebird.md vs. docs/sources/catalog/ebird/README.md); strengthens §7.3 placement discussion (OPEN-DSC-14)."
+owning_root: docs/
+responsibility: "Documentation for eBird — Source Profile (family README); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🐦 eBird — Source Profile
@@ -72,8 +73,8 @@ KFM models **three distinct eBird products** — each with its own dedicated pro
 | Product page | Distribution | Role within KFM | Key KFM atlas card |
 |---|---|---|---|
 | [`ebird-api.md`](./ebird-api.md) | **eBird API 2.0** — near-real-time HTTP REST; API key | Operational / coverage layer; watcher-driven freshness | `KFM-P2-IDEA-0020`, `KFM-P2-PROG-0005` |
-| [`ebird-ebd.md`](./ebird-ebd.md) | **eBird Basic Dataset (EBD)** — monthly bulk TSV; restricted access agreement | Research-grade authority for historical occurrences | `KFM-P24-PROG-0001`, `KFM-P24-PROG-0020` |
-| [`ebird-sed.md`](./ebird-sed.md) | **Sampling Event Data (SED)** — checklist-level effort companion to EBD | Join key for EBD; enables zero-filled presence-absence | `KFM-P24-PROG-0001`, `KFM-P27-PROG-0005` |
+| `ebird-ebd.md` (not present) | **eBird Basic Dataset (EBD)** — monthly bulk TSV; restricted access agreement | Research-grade authority for historical occurrences | `KFM-P24-PROG-0001`, `KFM-P24-PROG-0020` |
+| `ebird-sed.md` (not present) | **Sampling Event Data (SED)** — checklist-level effort companion to EBD | Join key for EBD; enables zero-filled presence-absence | `KFM-P24-PROG-0001`, `KFM-P27-PROG-0005` |
 
 This file does **not** restate the per-product detail — see the dedicated pages for STAC profiles, identity skeletons, provenance fields, temporal handling, redaction profiles, and gate sequences specific to each product. This file covers the **family-level** concerns that apply across all three: rights posture, sensitivity rubric mapping, role and authority anchoring, and the cross-product gates.
 
@@ -295,7 +296,7 @@ The eBird family carries **two privacy gates** that operate independently:
 1. **Sensitive-species privacy** (C6 + KFM-P24-IDEA-0002) — applies wherever species records are exposed.
 2. **Observer privacy** (SED-specific, also relevant for joined EBD+SED views) — Observer IDs, precise checklist locations and timestamps, group identifiers, and trip-comment text MUST be redacted before any public release, independently of whether sensitive-species records are present.
 
-Both gates must close before any public artifact is released. See [`ebird-sed.md`](./ebird-sed.md) §10.2 for the observer-privacy framing.
+Both gates must close before any public artifact is released. See `ebird-sed.md` (not present) §10.2 for the observer-privacy framing.
 
 ### Geoprivacy transform expectations
 
@@ -345,7 +346,7 @@ Per the Fauna domain's pipeline contract (CONFIRMED doctrine; PROPOSED lane appl
 - Watchers are non-publishing: they emit receipts and candidate decisions, not authoritative artifacts.
 
 > [!TIP]
-> **Per-product gate sequences live in the product pages.** This README's gates are the family-level minimum. The full eBird API gate sequence is in [`ebird-api.md`](./ebird-api.md) §11; the EBD sequence in [`ebird-ebd.md`](./ebird-ebd.md) §11 (14 gates including agreement validity); the SED sequence in [`ebird-sed.md`](./ebird-sed.md) §11 (15 gates including pair-coherence and observer-privacy).
+> **Per-product gate sequences live in the product pages.** This README's gates are the family-level minimum. The full eBird API gate sequence is in [`ebird-api.md`](./ebird-api.md) §11; the EBD sequence in `ebird-ebd.md` (not present) §11 (14 gates including agreement validity); the SED sequence in `ebird-sed.md` (not present) §11 (15 gates including pair-coherence and observer-privacy).
 
 ---
 
@@ -454,8 +455,8 @@ Per the Fauna domain's pipeline contract (CONFIRMED doctrine; PROPOSED lane appl
 ### Sibling product pages (within this family)
 
 - [`ebird-api.md`](./ebird-api.md) — eBird API 2.0 product page
-- [`ebird-ebd.md`](./ebird-ebd.md) — eBird Basic Dataset (EBD) product page
-- [`ebird-sed.md`](./ebird-sed.md) — Sampling Event Data (SED) product page
+- `ebird-ebd.md` (not present) — eBird Basic Dataset (EBD) product page
+- `ebird-sed.md` (not present) — Sampling Event Data (SED) product page
 
 ### Catalog-lane siblings
 

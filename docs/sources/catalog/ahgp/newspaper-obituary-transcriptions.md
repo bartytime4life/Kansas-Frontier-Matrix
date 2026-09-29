@@ -10,10 +10,6 @@ updated: 2026-05-20
 policy_label: public
 related:
   - docs/sources/catalog/ahgp/README.md
-  - docs/sources/catalog/ahgp/IDENTITY.md
-  - docs/sources/catalog/ahgp/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/ahgp/NAMING.md
-  - docs/sources/catalog/ahgp/OPEN-QUESTIONS.md
   - docs/sources/catalog/ahgp/cemetery-transcriptions.md
   - docs/sources/catalog/ahgp/census-transcriptions.md
   - docs/sources/catalog/ahgp/county-town-histories.md
@@ -30,6 +26,9 @@ notes:
   - "Cross-source authority is anchored in KFM-P17-IDEA-0004 (PROPOSED): historical claims separate Kansas Memory (primary layer), HathiTrust (context), and Chronicling America (recall) — newspapers are a *distinct evidence role*, not an undifferentiated citation bucket."
   - "Chronicling America admission for OCR/IIIF/NER is anchored in KFM-P15-PROG-0033 (PROPOSED) and KFM-P17-PROG-0042 (PROPOSED)."
   - "LCNAF / VIAF anchoring for the deceased's name is anchored in KFM-P17-PROG-0042 (PROPOSED)."
+owning_root: docs/
+responsibility: "Documentation for AHGP Newspaper Obituary Transcriptions; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # AHGP Newspaper Obituary Transcriptions
@@ -80,7 +79,7 @@ INFERRED: Among the AHGP siblings, newspaper obituaries occupy a **middle-risk**
 
 ## Source authority
 
-See [`data/registry/sources/ahgp/`](../../../../data/registry/sources/ahgp/) for the authoritative `SourceDescriptor`. **Do not duplicate** descriptor fields here.
+See `data/registry/sources/ahgp/` (not present) for the authoritative `SourceDescriptor`. **Do not duplicate** descriptor fields here.
 
 **Product-specific descriptor overlay (PROPOSED, anchored in §24.1 doctrine and prior AHGP family work):**
 
@@ -114,7 +113,7 @@ See [`data/registry/sources/ahgp/`](../../../../data/registry/sources/ahgp/) for
 
 ## Collection identity
 
-- PROPOSED Collection id: `kfm-ahgp-newspaper-obituary-transcriptions` (see [`IDENTITY.md`](./IDENTITY.md)).
+- PROPOSED Collection id: `kfm-ahgp-newspaper-obituary-transcriptions` (see `IDENTITY.md` (not present)).
 - PROPOSED namespace: `kfm:` *(see family-level OPEN-DSC-03)*.
 - PROPOSED asset roles (NEEDS VERIFICATION against `schemas/contracts/v1/source/`):
 
@@ -208,7 +207,7 @@ PROPOSED handling for this product. Obituaries name multiple places: birthplace,
 
 ## Rights and sensitivity
 
-NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
+NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not restate policy here.**
 
 > [!WARNING]
 > **Living-kin redaction gate (CONFIRMED prior-session promotion-blocking condition).** Obituaries explicitly name surviving relatives ("survived by his wife Mary, sons John and Robert, …"). These survivors may still be living, including grandchildren and great-grandchildren of the deceased even when the deceased died decades ago. Living-kin name extraction MUST run at admission; matches route to a redaction review queue and the candidate MUST NOT promote to PUBLISHED with living-kin names exposed.
@@ -277,8 +276,8 @@ NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivit
 ## Related connectors and pipelines
 
 - [`connectors/ahgp/`](../../../../connectors/ahgp/) — PROPOSED. NEEDS VERIFICATION (presence not confirmed against mounted repo).
-- [`connectors/chronicling-america/`](../../../../connectors/chronicling-america/) — PROPOSED upstream authority per KFM-P15-PROG-0033 / KFM-P17-PROG-0042. NEEDS VERIFICATION.
-- [`connectors/kansas-memory/`](../../../../connectors/kansas-memory/) — PROPOSED primary layer per KFM-P17-IDEA-0004. NEEDS VERIFICATION.
+- `connectors/chronicling-america/` (not present) — PROPOSED upstream authority per KFM-P15-PROG-0033 / KFM-P17-PROG-0042. NEEDS VERIFICATION.
+- `connectors/kansas-memory/` (not present) — PROPOSED primary layer per KFM-P17-IDEA-0004. NEEDS VERIFICATION.
 - [`pipelines/ingest/`](../../../../pipelines/ingest/) · [`normalize/`](../../../../pipelines/normalize/) · [`validate/`](../../../../pipelines/validate/) · [`catalog/`](../../../../pipelines/catalog/) — standard lifecycle phases.
 - [`pipeline_specs/people-dna-land/`](../../../../pipeline_specs/people-dna-land/) — PROPOSED primary domain spec home; NEEDS VERIFICATION on exact domain folder name (drift candidate flagged in the family README).
 
@@ -343,7 +342,7 @@ See [`_examples/stac-item-example.json`](../_examples/stac-item-example.json) fo
 
 ## Open questions
 
-Family-level open questions (e.g., `OPEN-DSC-03` namespace pin) are tracked in [`OPEN-QUESTIONS.md`](./OPEN-QUESTIONS.md). Newspaper-obituary-specific items below MUST NOT renumber family-level questions.
+Family-level open questions (e.g., `OPEN-DSC-03` namespace pin) are tracked in `OPEN-QUESTIONS.md` (not present). Newspaper-obituary-specific items below MUST NOT renumber family-level questions.
 
 <details>
 <summary><b>Newspaper-obituary-specific open questions (11)</b></summary>
@@ -371,10 +370,10 @@ Family-level open questions (e.g., `OPEN-DSC-03` namespace pin) are tracked in [
 ## Related docs
 
 - [`docs/sources/catalog/ahgp/README.md`](./README.md) — AHGP family README (activation prerequisites live here).
-- [`docs/sources/catalog/ahgp/IDENTITY.md`](./IDENTITY.md) — Collection id patterns and namespace pins.
-- [`docs/sources/catalog/ahgp/RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — Rights/sensitivity map (canonical).
-- [`docs/sources/catalog/ahgp/NAMING.md`](./NAMING.md) — Naming conventions.
-- [`docs/sources/catalog/ahgp/OPEN-QUESTIONS.md`](./OPEN-QUESTIONS.md) — Family-level open questions register.
+- `docs/sources/catalog/ahgp/IDENTITY.md` (not present) — Collection id patterns and namespace pins.
+- `docs/sources/catalog/ahgp/RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — Rights/sensitivity map (canonical).
+- `docs/sources/catalog/ahgp/NAMING.md` (not present) — Naming conventions.
+- `docs/sources/catalog/ahgp/OPEN-QUESTIONS.md` (not present) — Family-level open questions register.
 - [`docs/sources/catalog/ahgp/cemetery-transcriptions.md`](./cemetery-transcriptions.md) — Sibling product (cemetery surface, `aggregate`) — burial-location cross-reference.
 - [`docs/sources/catalog/ahgp/census-transcriptions.md`](./census-transcriptions.md) — Sibling product (census surface, `aggregate`, 72-year-rule gate).
 - [`docs/sources/catalog/ahgp/county-town-histories.md`](./county-town-histories.md) — Sibling product (history surface, `administrative`).

@@ -10,10 +10,6 @@ updated: 2026-05-20
 policy_label: public
 related:
   - docs/sources/catalog/ahgp/README.md
-  - docs/sources/catalog/ahgp/IDENTITY.md
-  - docs/sources/catalog/ahgp/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/ahgp/NAMING.md
-  - docs/sources/catalog/ahgp/OPEN-QUESTIONS.md
   - docs/sources/catalog/ahgp/cemetery-transcriptions.md
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
@@ -25,6 +21,9 @@ notes:
   - "AHGP source-role and rights claims grounded in the prior AHGP family catalog session (2026-05-13); KFM-internal implementation paths remain PROPOSED or NEEDS VERIFICATION until a mounted-repo run confirms them."
   - "Not an activation document. SourceActivationDecision for SRC-AHGP remains gated on the family-level prerequisites list."
   - "72-year rule is treated as CONFIRMED KFM doctrine for census admission (anchor: 'Census 1790 through 72-year-rule released years; public for 72-year-rule-released years; later years restricted' — People-DNA-Land domain source-family note)."
+owning_root: docs/
+responsibility: "Documentation for AHGP Census Transcriptions; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # AHGP Census Transcriptions
@@ -66,7 +65,7 @@ INFERRED: Within the AHGP record-class taxonomy, census transcriptions are a **h
 
 ## Source authority
 
-See [`data/registry/sources/ahgp/`](../../../../data/registry/sources/ahgp/) for the authoritative `SourceDescriptor`. **Do not duplicate** descriptor fields here.
+See `data/registry/sources/ahgp/` (not present) for the authoritative `SourceDescriptor`. **Do not duplicate** descriptor fields here.
 
 **Product-specific descriptor overlay (PROPOSED, anchored in prior AHGP family work):**
 
@@ -100,7 +99,7 @@ See [`data/registry/sources/ahgp/`](../../../../data/registry/sources/ahgp/) for
 
 ## Collection identity
 
-- PROPOSED Collection id: `kfm-ahgp-census-transcriptions` (see [`IDENTITY.md`](./IDENTITY.md)).
+- PROPOSED Collection id: `kfm-ahgp-census-transcriptions` (see `IDENTITY.md` (not present)).
 - PROPOSED namespace: `kfm:` *(see family-level OPEN-DSC-03)*.
 - PROPOSED asset roles (NEEDS VERIFICATION against `schemas/contracts/v1/source/`):
 
@@ -189,7 +188,7 @@ PROPOSED handling for this product:
 
 ## Rights and sensitivity
 
-NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
+NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not restate policy here.**
 
 > [!WARNING]
 > **72-year rule (CONFIRMED KFM doctrine).** U.S. Census schedules are publicly released by NARA on a 72-year delay. AHGP transcriptions of within-window census years (i.e., NARA release date has not yet passed) **MUST be denied at admission** regardless of how the volunteer obtained or transcribed them. This gate sits **above** family activation and **above** rights review.
@@ -312,7 +311,7 @@ See [`_examples/stac-item-example.json`](../_examples/stac-item-example.json) fo
 
 ## Open questions
 
-Family-level open questions (e.g., `OPEN-DSC-03` namespace pin) are tracked in [`OPEN-QUESTIONS.md`](./OPEN-QUESTIONS.md). Census-specific items below MUST NOT renumber family-level questions.
+Family-level open questions (e.g., `OPEN-DSC-03` namespace pin) are tracked in `OPEN-QUESTIONS.md` (not present). Census-specific items below MUST NOT renumber family-level questions.
 
 <details>
 <summary><b>Census-specific open questions (8)</b></summary>
@@ -337,10 +336,10 @@ Family-level open questions (e.g., `OPEN-DSC-03` namespace pin) are tracked in [
 ## Related docs
 
 - [`docs/sources/catalog/ahgp/README.md`](./README.md) — AHGP family README (activation prerequisites live here).
-- [`docs/sources/catalog/ahgp/IDENTITY.md`](./IDENTITY.md) — Collection id patterns and namespace pins.
-- [`docs/sources/catalog/ahgp/RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — Rights/sensitivity map (canonical).
-- [`docs/sources/catalog/ahgp/NAMING.md`](./NAMING.md) — Naming conventions.
-- [`docs/sources/catalog/ahgp/OPEN-QUESTIONS.md`](./OPEN-QUESTIONS.md) — Family-level open questions register.
+- `docs/sources/catalog/ahgp/IDENTITY.md` (not present) — Collection id patterns and namespace pins.
+- `docs/sources/catalog/ahgp/RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — Rights/sensitivity map (canonical).
+- `docs/sources/catalog/ahgp/NAMING.md` (not present) — Naming conventions.
+- `docs/sources/catalog/ahgp/OPEN-QUESTIONS.md` (not present) — Family-level open questions register.
 - [`docs/sources/catalog/ahgp/cemetery-transcriptions.md`](./cemetery-transcriptions.md) — Sibling product page (cemetery surface).
 - [`docs/sources/catalog/README.md`](../README.md) — Source catalog landing.
 - [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Placement law.

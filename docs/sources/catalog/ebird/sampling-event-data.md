@@ -10,7 +10,6 @@ updated: 2026-05-21
 policy_label: public
 related:
   - docs/sources/catalog/ebird/README.md
-  - docs/sources/catalog/ebird/ebird-ebd.md
   - docs/sources/catalog/ebird/ebird-api.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/_template/SOURCE_PRODUCT_TEMPLATE.md
@@ -19,7 +18,6 @@ related:
   - docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/OPEN-QUESTIONS.md
   - docs/doctrine/directory-rules.md
-  - policy/sensitivity/observer-privacy.rego
 tags: [kfm, docs, sources, catalog, ebird, sed, fauna, biodiversity, citizen-science, effort, checklist-level]
 notes:
   - "PROPOSED product-page scaffold for the eBird Sampling Event Data (SED). SED is the checklist-level companion to the eBird Basic Dataset (EBD) — it is required for zero-filled presence-absence analyses but has no standalone observational value (it contains no species-level records). See sibling pages ebird-ebd.md and ebird-api.md."
@@ -27,6 +25,9 @@ notes:
   - "Sensitivity framing for SED is distinct from EBD: SED contains no species-level data, so taxonomic sensitivity does not apply. SED DOES contain observer identifiers, precise locations, and timestamps that — when joined with an EBD subset containing sensitive taxa — expose sensitive observations. SED is therefore treated as a high-value join key, not as a standalone safe product."
   - "Family folder is PROPOSED beyond directory-rules.md §7.3 — see OPEN-DSC-14."
   - "All repo paths, identity strings, and catalog-profile yes/no assignments are PROPOSED until mounted-repo inspection, SourceDescriptor admission, and per-product validation runs."
+owning_root: docs/
+responsibility: "Documentation for eBird Sampling Event Data (SED) — product page; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # eBird Sampling Event Data (SED)
@@ -44,7 +45,7 @@ notes:
 ![distribution](https://img.shields.io/badge/distribution-bulk%20monthly%20TSV-purple)
 ![last-updated](https://img.shields.io/badge/updated-2026--05--21-blue)
 
-> **Status:** PROPOSED — scaffold only · **Family:** [`ebird`](./README.md) · **Companion product:** [`ebird-ebd.md`](./ebird-ebd.md) · **Other sibling:** [`ebird-api.md`](./ebird-api.md) · **Owners:** `<PLACEHOLDER — Docs steward + Source steward for ebird>` · **Last reviewed:** 2026-05-21
+> **Status:** PROPOSED — scaffold only · **Family:** [`ebird`](./README.md) · **Companion product:** `ebird-ebd.md` (not present) · **Other sibling:** [`ebird-api.md`](./ebird-api.md) · **Owners:** `<PLACEHOLDER — Docs steward + Source steward for ebird>` · **Last reviewed:** 2026-05-21
 >
 > Badge targets are placeholder Shields.io endpoints until CI, registry, and policy wiring are confirmed against a mounted repo.
 
@@ -77,7 +78,7 @@ notes:
 | Field | Value | Status |
 |---|---|---|
 | Product | **eBird Sampling Event Data (SED)** — checklist-level effort metadata; one row per checklist | EXTERNAL |
-| Paired product | **eBird Basic Dataset (EBD)** — observation-level data; one row per species-on-checklist. See [`ebird-ebd.md`](./ebird-ebd.md). | PROPOSED sibling |
+| Paired product | **eBird Basic Dataset (EBD)** — observation-level data; one row per species-on-checklist. See `ebird-ebd.md` (not present). | PROPOSED sibling |
 | Other sibling | eBird API 2.0 — near-real-time programmatic access. See [`ebird-api.md`](./ebird-api.md). | PROPOSED sibling |
 | Family | [`ebird`](./README.md) | PROPOSED — beyond `directory-rules.md` §7.3, see `OPEN-DSC-14` |
 | Producer / host | Cornell Lab of Ornithology, Cornell University | [EXTERNAL, science.ebird.org] |
@@ -480,7 +481,7 @@ Even though the SED itself has no species records, **SED + EBD joined views are 
 - **k-anonymity is enforced** at cell aggregation time for effort-coverage layers.
 - **EBD ⨯ SED joins trigger the sensitive-species check** at the joined-record level, even when the SED side is clean.
 - **Cornell agreement state travels** with every record.
-- See [`policy/sensitivity/`](../../../../policy/sensitivity/), [`policy/privacy/`](../../../../policy/privacy/) (PROPOSED path), and [`RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
+- See [`policy/sensitivity/`](../../../../policy/sensitivity/), `policy/privacy/` (not present) (PROPOSED path), and [`RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
 
 [↑ back to top](#quick-jump)
 
@@ -695,7 +696,7 @@ This block is illustrative — not validated against any live STAC profile, sche
 ## 16. Related docs
 
 - [`docs/sources/catalog/ebird/README.md`](./README.md) — family README
-- [`docs/sources/catalog/ebird/ebird-ebd.md`](./ebird-ebd.md) — paired product (eBird Basic Dataset)
+- `docs/sources/catalog/ebird/ebird-ebd.md` (not present) — paired product (eBird Basic Dataset)
 - [`docs/sources/catalog/ebird/ebird-api.md`](./ebird-api.md) — sibling product (eBird API 2.0)
 - [`docs/sources/catalog/README.md`](../README.md) — catalog lane index
 - [`docs/sources/catalog/_template/SOURCE_PRODUCT_TEMPLATE.md`](../_template/SOURCE_PRODUCT_TEMPLATE.md) — per-product page template

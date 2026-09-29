@@ -10,10 +10,7 @@ updated: 2026-05-20
 policy_label: public
 related:
   - docs/sources/catalog/census/README.md
-  - docs/sources/catalog/census/IDENTITY.md
-  - docs/sources/catalog/census/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/census/acs-estimates.md
-  - docs/sources/catalog/census/tiger.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/_examples/stac-item-example.json
   - docs/doctrine/directory-rules.md
@@ -22,6 +19,9 @@ notes:
   - "PROPOSED product-page scaffold; sibling-link presence verified in Claude Code session."
   - "PROPOSED content sourced from Pass 23/32 atlas (Frontier Matrix domain D/E; Source-Role Anti-Collapse Register §24.1.1; KFM-P17-PROG-0015), Pass 10 (C4-01, C6-05); descriptor fields intentionally not restated here."
   - "Decennial is an enumeration (count), not a sample survey — see top-of-doc WARNING callouts distinguishing it from ACS."
+owning_root: docs/
+responsibility: "Documentation for U.S. Census Decennial Counts; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -110,7 +110,7 @@ CONFIRMED doctrine (KFM-P17-PROG-0015): *"Identity resolution should subtract co
 PROPOSED — bounding the decennial against adjacent demographic products is critical:
 
 - **Not ACS.** ACS is a continuous sample survey with margins of error; decennial is a decadal enumeration with counts. Different cadence, different uncertainty model, different geography coverage. See [ACS Estimates](./acs-estimates.md).
-- **Not TIGER/Line.** TIGER provides the *boundary geometry*; decennial provides *attribute counts* on those geographies. Joined by GEOID, not substituted. See [TIGER](./tiger.md).
+- **Not TIGER/Line.** TIGER provides the *boundary geometry*; decennial provides *attribute counts* on those geographies. Joined by GEOID, not substituted. See TIGER (not present).
 - **Not PUMS microdata.** PUMS publishes anonymized person-record samples derived from the survey effort; decennial tables are aggregates. PUMS is a separately-governed source.
 - **Not the long-form census.** The long-form decennial (asked of a sample) was replaced by ACS after 2000. Long-form 1990, 1980, etc. are historical decennial; modern 2000+ uses ACS for the long-form content.
 - **Not a per-person record.** PROPOSED (Atlas §24.1.1): decennial tables are aggregates; per-person records are released only on the 72-year cycle (currently through 1950) via NARA and are a separately-governed product.
@@ -130,8 +130,8 @@ See [`data/registry/sources/`](../../../../data/registry/sources/) for the autho
 |---|---|---|---|
 | `SourceDescriptor` | [`data/registry/sources/`](../../../../data/registry/sources/) | Identity, **source role = Aggregate**, rights, cadence, decade pin, release-product pin, DAS posture, sensitivity | **No** — pointer only |
 | Family overview & sibling links | [`./README.md`](./README.md) | Family-level orientation for `census` | **No** — see family README |
-| Collection identity rules | [`./IDENTITY.md`](./IDENTITY.md) | `kfm-<org>-<product>` pattern, namespace | **No** — see IDENTITY |
-| Rights & sensitivity mapping | [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) | Tiering, CARE applicability for tribal-area tables and historical-enumeration race/origin records, release class | **No** — see map |
+| Collection identity rules | `./IDENTITY.md` (not present) | `kfm-<org>-<product>` pattern, namespace | **No** — see IDENTITY |
+| Rights & sensitivity mapping | `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) | Tiering, CARE applicability for tribal-area tables and historical-enumeration race/origin records, release class | **No** — see map |
 | Contract shape | `schemas/contracts/v1/source/` and `schemas/contracts/v1/domains/frontier-matrix/` | JSON-schema for descriptor + `Population Observation` / `County-Year Panel` shapes | **No** — per ADR-0001 |
 
 PROPOSED source-role posture: **Aggregate** (Atlas §24.1.1). Constitutionally-mandated authority over the **count process**, but published tables remain aggregates per the anti-collapse register. Where a downstream consumer needs constitutional / administrative authority (apportionment, redistricting), the record is cited as **Aggregate with administrative-authority context**, never as Observed.
@@ -184,7 +184,7 @@ PROPOSED. The catalog projection set this product participates in. Lanes follow 
 
 ## Collection identity
 
-- PROPOSED Collection id pattern: `kfm-<org>-<product>` — see [`IDENTITY.md`](./IDENTITY.md) for the canonical rule.
+- PROPOSED Collection id pattern: `kfm-<org>-<product>` — see `IDENTITY.md` (not present) for the canonical rule.
 - PROPOSED namespace: `kfm:` — *see [OPEN-DSC-03](#open-questions); Pass-10 C4-01 records the `kfm:` vs `ks-kfm:` choice as an unresolved namespace question.*
 - PROPOSED: one Collection per **(decade, release-product)** pair (e.g., `decennial-2020-pl94-171`, `decennial-2020-dhc`, `decennial-2010-sf1`, `decennial-1880-historical`). NEEDS VERIFICATION.
 - Asset roles (count-table, allow-listed-variables, aggregation-receipt, geoid-crosswalk, das-posture-record, historical-boundary-crosswalk, etc.): NEEDS VERIFICATION — confirm against `schemas/contracts/v1/source/` and `schemas/contracts/v1/domains/frontier-matrix/`.
@@ -238,7 +238,7 @@ PROPOSED. Decennial itself ships **no geometry** — it ships **tables keyed by 
 - **CRS** — Inherited from the join target. PROPOSED canonical: `EPSG:5070` where decennial-on-TIGER products are intersected with other layers; decennial tables themselves are geometry-free.
 - **GEOID stability** — GEOIDs are **decade-bound**. A 2020-vintage tract `20155002400` is not the same polygon as a 2010-vintage tract with the same code. PROPOSED gate: decennial counts only join to TIGER geometry of the same vintage family; cross-decade joins require a documented crosswalk.
 - **Historical decennial geography** — Pre-modern decennials predate TIGER. PROPOSED: historical decennial counts join to **historical-county boundaries** via AHCB or an equivalent (compare KFM-P17-PROG-0014 patent-to-historical-county pattern).
-- **Geometry comes from elsewhere** — PROPOSED: this product page does not redefine geometry; consult [TIGER](./tiger.md) for modern, and an AHCB-equivalent crosswalk for historical.
+- **Geometry comes from elsewhere** — PROPOSED: this product page does not redefine geometry; consult TIGER (not present) for modern, and an AHCB-equivalent crosswalk for historical.
 
 [Back to top](#top)
 
@@ -364,7 +364,7 @@ Applied to KFM:
 
 ## Rights and sensitivity
 
-NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
+NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not restate policy here.**
 
 PROPOSED sensitivity posture for this product:
 
@@ -530,10 +530,10 @@ These are the KFM atlas cards from which the PROPOSED content above is sourced. 
 ## Related docs
 
 - [`docs/sources/catalog/census/README.md`](./README.md) — `census` family landing page.
-- [`docs/sources/catalog/census/IDENTITY.md`](./IDENTITY.md) — Collection-id and namespace rules for the family.
-- [`docs/sources/catalog/census/RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — Rights / sensitivity tiering for `census`.
+- `docs/sources/catalog/census/IDENTITY.md` (not present) — Collection-id and namespace rules for the family.
+- `docs/sources/catalog/census/RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — Rights / sensitivity tiering for `census`.
 - [`docs/sources/catalog/census/acs-estimates.md`](./acs-estimates.md) — Sibling: ACS survey estimates with MOEs (continuous, sample-based).
-- [`docs/sources/catalog/census/tiger.md`](./tiger.md) — Sibling: TIGER/Line boundary geometry (decennial joins to this).
+- `docs/sources/catalog/census/tiger.md` (not present) — Sibling: TIGER/Line boundary geometry (decennial joins to this).
 - _TODO_ — `docs/sources/catalog/census/historical-enumeration-sheets.md` — Per-person pre-1950 NARA records (PROPOSED separate product, OPEN-FAM-08).
 - _TODO_ — `docs/sources/catalog/census/pums.md` — PUMS microdata (separately-governed sibling).
 - [`docs/sources/catalog/README.md`](../../README.md) — Catalog of source families.

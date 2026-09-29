@@ -10,10 +10,7 @@ updated: 2026-05-23
 policy_label: public
 related:
   - docs/sources/catalog/usfws_ecos/README.md
-  - docs/sources/catalog/usfws_ecos/IDENTITY.md
-  - docs/sources/catalog/usfws_ecos/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/usfws_ecos/critical-habitat.md
-  - docs/sources/catalog/usfws_ecos/ipac.md
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
@@ -21,8 +18,6 @@ related:
   - docs/standards/SENSITIVITY_RUBRIC.md
   - docs/standards/DCAT.md
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
-  - data/registry/sources/usfws_ecos/
-  - policy/sources/usfws_ecos/
   - schemas/contracts/v1/source/
   - connectors/usfws_ecos/
 adr_refs:
@@ -36,6 +31,9 @@ notes:
   - "Naming variance: this page uses 'usfws_ecos' (snake_case folder) + kebab-case product filename. NEEDS VERIFICATION — see Open Questions Q-2."
   - "Non-spatial product. DCAT is the primary catalog profile here; STAC (if registered at all) would use the Records extension. This differs from the sibling critical-habitat product (STAC-primary)."
   - "ITIS/GBIF taxon anchor is the identity backbone for this product (C7-07, C7-08). Anchor-coverage validation is gate-blocking, not advisory."
+owning_root: docs/
+responsibility: "Documentation for USFWS ESA Listing and Status Records; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -59,7 +57,7 @@ notes:
 **Status:** `PROPOSED — scaffold filled` &nbsp;·&nbsp; **Doc version:** `v0.2` &nbsp;·&nbsp; **Family:** [`usfws_ecos`](./README.md) &nbsp;·&nbsp; **Last reviewed:** 2026-05-23
 
 > [!IMPORTANT]
-> **The Federal Register rule is the legal description; ECOS is the carrier; this page is a pointer.** Authoritative descriptor fields live in [`data/registry/sources/usfws_ecos/`](../../../../data/registry/sources/usfws_ecos/). Rights and sensitivity decisions live in [`policy/sensitivity/fauna/`](../../../../policy/sensitivity/fauna/) and are summarized at the family level in [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not duplicate descriptor or policy content on this product page.**
+> **The Federal Register rule is the legal description; ECOS is the carrier; this page is a pointer.** Authoritative descriptor fields live in `data/registry/sources/usfws_ecos/` (not present). Rights and sensitivity decisions live in [`policy/sensitivity/fauna/`](../../../../policy/sensitivity/fauna/) and are summarized at the family level in `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not duplicate descriptor or policy content on this product page.**
 
 ---
 
@@ -150,7 +148,7 @@ flowchart LR
 ## 2. Product identity within the family
 
 > [!NOTE]
-> This page is one **product** under the `usfws_ecos` source family. Sibling products include [`critical-habitat.md`](./critical-habitat.md) (geometry), [`ipac.md`](./ipac.md) (project-scoped consultation lists), and `species-profiles.md` (PROPOSED — narrative). Family-wide concerns — authority, identity convention, rights/sensitivity map, taxon anchoring — live at the **family level** and are not restated here.
+> This page is one **product** under the `usfws_ecos` source family. Sibling products include [`critical-habitat.md`](./critical-habitat.md) (geometry), `ipac.md` (not present) (project-scoped consultation lists), and `species-profiles.md` (PROPOSED — narrative). Family-wide concerns — authority, identity convention, rights/sensitivity map, taxon anchoring — live at the **family level** and are not restated here.
 
 | Attribute | Value | Status |
 |---|---|---|
@@ -167,7 +165,7 @@ flowchart LR
 | If you want… | Use… | Not this page |
 |---|---|---|
 | Designated **geometry** for critical habitat | [`critical-habitat.md`](./critical-habitat.md) | — |
-| **Project-scoped** species list for a specific AOI under 50 CFR 402.12 | [`ipac.md`](./ipac.md) (per `KFM-P24-PROG-0002`, `KFM-P24-PROG-0021`) | — |
+| **Project-scoped** species list for a specific AOI under 50 CFR 402.12 | `ipac.md` (not present) (per `KFM-P24-PROG-0002`, `KFM-P24-PROG-0021`) | — |
 | **State-level** Kansas listing context (KDWP / SINC) | `<PROPOSED> docs/sources/catalog/kdwp-tess/` (per `KFM-P19-IDEA-0005`, `KFM-P19-PROG-0012`) | — |
 | **Marine / anadromous** ESA species (NOAA-lead) | `<PROPOSED> docs/sources/catalog/noaa-fisheries-listings/` | — |
 | **Observation** evidence of a species occurrence | GBIF / iNaturalist / eBird / iDigBio product pages (`observed` source role) | — |
@@ -181,7 +179,7 @@ flowchart LR
 
 ## 3. Source authority
 
-See [`data/registry/sources/usfws_ecos/`](../../../../data/registry/sources/usfws_ecos/) for the authoritative `SourceDescriptor`. **Do not duplicate descriptor fields here.** Descriptor canonical schema home is `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 — **NEEDS VERIFICATION** of exact filename in mounted repo.
+See `data/registry/sources/usfws_ecos/` (not present) for the authoritative `SourceDescriptor`. **Do not duplicate descriptor fields here.** Descriptor canonical schema home is `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 — **NEEDS VERIFICATION** of exact filename in mounted repo.
 
 Doctrinal anchors for this product:
 
@@ -299,7 +297,7 @@ This product replaces the geometry-and-projection section that appears in spatia
 
 ## 9. Rights and sensitivity (pointer)
 
-**Do not restate policy here.** See [`policy/sensitivity/fauna/`](../../../../policy/sensitivity/fauna/) and the family-level summary at [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md).
+**Do not restate policy here.** See [`policy/sensitivity/fauna/`](../../../../policy/sensitivity/fauna/) and the family-level summary at `RIGHTS-AND-SENSITIVITY-MAP.md` (not present).
 
 > [!NOTE]
 > **Default tier: T0 (Open).** Per Atlas §24.5.1 / §24.5.2, public regulatory text/list metadata with no geometry sensitivity defaults to T0. ESA listings are themselves the *legal record* of a status determination; the record's existence and content are public by construction. This contrasts with the sibling critical-habitat product (T1 default per Atlas §24.5.2 + `KFM-P20-PROG-0002`) because that product carries geometry; this one does not. **The T0 default does NOT extend to cross-lane joins with sensitive occurrence data — see [§9.1](#91-cross-lane-join-cautions).**
@@ -316,7 +314,7 @@ Even though the listing record itself is T0, **joins** of ESA-listing records wi
 | KDWP / NatureServe sensitivity rankings | Heritage rankings (S1/S2) may **escalate** the tier of dependent occurrence derivatives but do not change the federal listing record itself. | Tier escalation applies to occurrence joins, not to this product's records. |
 
 > [!CAUTION]
-> **PROPOSED CORRECTION cross-reference.** The sensitivity tier for KFM-derived critical-habitat layers was corrected from T0 to T1 in the [`critical-habitat.md`](./critical-habitat.md) product page (per Atlas §24.5.2 + `KFM-P20-PROG-0002`). That correction does **not** apply to this product — ESA listing & status records remain T0 by default because they carry no geometry. The corrected family-level posture is documented in [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md); final tier scheme is governed by **ADR-S-05**.
+> **PROPOSED CORRECTION cross-reference.** The sensitivity tier for KFM-derived critical-habitat layers was corrected from T0 to T1 in the [`critical-habitat.md`](./critical-habitat.md) product page (per Atlas §24.5.2 + `KFM-P20-PROG-0002`). That correction does **not** apply to this product — ESA listing & status records remain T0 by default because they carry no geometry. The corrected family-level posture is documented in `RIGHTS-AND-SENSITIVITY-MAP.md` (not present); final tier scheme is governed by **ADR-S-05**.
 
 [Back to top](#top)
 
@@ -364,12 +362,12 @@ Even though the listing record itself is T0, **joins** of ESA-listing records wi
 |---|---|---|
 | `SourceDescriptor` semantic contract | [`contracts/source/`](../../../../contracts/source/) | **PROPOSED** — `contracts/source/` listed as canonical family in *KFM Repo Structure Guiding Document* v0.2; presence **NEEDS VERIFICATION**. |
 | `SourceDescriptor` machine schema | [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) | **PROPOSED canonical home** per Directory Rules §7.4 / ADR-0001. |
-| `ConservationStatus` contract | [`contracts/data/fauna/`](../../../../contracts/data/fauna/) · [`contracts/data/flora/`](../../../../contracts/data/flora/) | **PROPOSED**. |
+| `ConservationStatus` contract | `contracts/data/fauna/` (not present) · `contracts/data/flora/` (not present) | **PROPOSED**. |
 | `ConservationStatus` schema | [`schemas/contracts/v1/fauna/`](../../../../schemas/contracts/v1/fauna/) · [`schemas/contracts/v1/flora/`](../../../../schemas/contracts/v1/flora/) | **PROPOSED**. |
 | `EvidenceBundle` schema | [`schemas/contracts/v1/evidence/`](../../../../schemas/contracts/v1/evidence/) | **PROPOSED** per `KFM-P26-PROG-0004`. |
 | `EvidenceRef` schema | [`schemas/contracts/v1/evidence/`](../../../../schemas/contracts/v1/evidence/) | **PROPOSED** per `KFM-P26-PROG-0005`. |
 | `RealityBoundaryNote` | [`schemas/contracts/v1/governance/`](../../../../schemas/contracts/v1/governance/) | **PROPOSED** — Atlas §24.1.3 implies this object class; schema home unverified. |
-| Taxon-anchor crosswalk | [`contracts/data/biodiversity/taxon_crosswalk/`](../../../../contracts/data/biodiversity/) | **PROPOSED** lane; aligns with Fauna §E `Taxon Crosswalk` object family. |
+| Taxon-anchor crosswalk | `contracts/data/biodiversity/taxon_crosswalk/` (not present) | **PROPOSED** lane; aligns with Fauna §E `Taxon Crosswalk` object family. |
 | ESA Status Code enum (controlled vocabulary) | [`schemas/contracts/v1/source/usfws_esa_status_code.json`](../../../../schemas/contracts/v1/source/) | **PROPOSED** — enum values **NEEDS VERIFICATION** against USFWS SOP. |
 
 [Back to top](#top)
@@ -395,7 +393,7 @@ Even though the listing record itself is T0, **joins** of ESA-listing records wi
 
 ## 14. Example
 
-*Illustrative only — not authoritative. The minimal STAC + `kfm:provenance` shape lives at [`_examples/stac-item-example.json`](./_examples/stac-item-example.json) (file presence **NEEDS VERIFICATION**); a DCAT-shaped example for this product belongs at `_examples/dcat-record-example.jsonld` (PROPOSED).*
+*Illustrative only — not authoritative. The minimal STAC + `kfm:provenance` shape lives at `_examples/stac-item-example.json` (not present) (file presence **NEEDS VERIFICATION**); a DCAT-shaped example for this product belongs at `_examples/dcat-record-example.jsonld` (PROPOSED).*
 
 <details>
 <summary><b>Click to expand — minimal DCAT record sketch (illustrative, JSON-LD)</b></summary>
@@ -468,7 +466,7 @@ Even though the listing record itself is T0, **joins** of ESA-listing records wi
 | Q-3 | Should this product be registered in STAC via the Records extension, or stay DCAT-only? | **PROPOSED** | Default = DCAT-only; revisit if a STAC harvester adds the Records extension as a hard requirement. |
 | Q-4 | One Collection for all listings, or one per controlling agency (USFWS / joint / NOAA)? | **PROPOSED** | Default = **one Collection per controlling agency**, with `joint_usfws_noaa` as a per-record property when joint. |
 | Q-5 | Confirm cadence — daily watcher + Federal Register trigger? | **OPEN** | Resolve in `data/registry/sources/usfws_ecos/` descriptor + watcher config; material to **ADR-S-12**. |
-| Q-6 | Confirm rights status and CARE applicability for KFM derivatives. | **OPEN** | Resolve in [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). |
+| Q-6 | Confirm rights status and CARE applicability for KFM derivatives. | **OPEN** | Resolve in `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). |
 | Q-7 | **ITIS / GBIF tie-breaker policy** — per `C7-07` open question, the corpus does not yet codify what to do when ITIS and GBIF disagree on accepted name. Default (per `C7-07` suggested future work): ITIS for federal-data reconciliation, GBIF for international biodiversity queries. | **PROPOSED** | Author the tie-breaker policy under `policy/sources/usfws_ecos/` and reference here. |
 | Q-8 | **ESA Status Code enum** — current full list and any recent additions (e.g., experimental-population variants) require fresh USFWS SOP verification. | **NEEDS VERIFICATION** | Pin enum in `schemas/contracts/v1/source/usfws_esa_status_code.json`; re-fetch SOP on each update. |
 | Q-9 | **GBIF Backbone DOI version pinning** — when to bump? Per `C7-08`, long-running pipelines must tolerate a Backbone version change without invalidating prior receipts. | **OPEN** | Backbone-version-rotation playbook (per `C7-08` suggested future work). |

@@ -12,8 +12,6 @@ related:
   - docs/sources/catalog/kansas/README.md
   - docs/sources/catalog/kansas/ksgs.md
   - docs/sources/catalog/kansas/kdwp.md
-  - docs/sources/catalog/kansas/kdhe.md
-  - docs/sources/catalog/kansas/kda.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/IDENTITY.md
   - docs/sources/catalog/PROFILES.md
@@ -23,8 +21,6 @@ related:
   - docs/sources/catalog/_template/SOURCE_PRODUCT_TEMPLATE.md
   - docs/doctrine/directory-rules.md
   - docs/domains/geology/README.md
-  - docs/domains/environment/README.md
-  - docs/domains/infrastructure/README.md
   - docs/standards/SENSITIVITY_RUBRIC.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - schemas/contracts/v1/source/source_descriptor.schema.json
@@ -65,6 +61,9 @@ notes:
     in the subsurface — that role belongs to **KGS** with `source_role:
     authority` / `observed`. Collapsing KCC `regulatory` into KGS
     `authority`/`observed` is a source-role anti-collapse violation.
+owning_root: docs/
+responsibility: "Documentation for Kansas Corporation Commission — Oil and Gas Regulatory Data; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas Corporation Commission — Oil and Gas Regulatory Data
@@ -422,7 +421,7 @@ NEEDS VERIFICATION per release — see [`policy/sensitivity/`](../../../../polic
 
 - [`contracts/`](../../../../contracts/) — object families. KCC records most plausibly land in PROPOSED `RegulatoryFiling`, `PermitRecord`, `EnforcementAction`, `UICAuthorization` object families (NEEDS VERIFICATION — corpus does not enumerate these by name; structures inferred from `DOM-GEOL` Extraction Site / ResourceEstimate terms).
 - [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) — `SourceDescriptor` machine shape per ADR-0001.
-- [`schemas/contracts/v1/regulatory/`](../../../../schemas/contracts/v1/regulatory/) — PROPOSED home for regulatory-record schemas (NEEDS VERIFICATION).
+- `schemas/contracts/v1/regulatory/` (not present) — PROPOSED home for regulatory-record schemas (NEEDS VERIFICATION).
 
 [Back to top](#quick-jump)
 
@@ -431,9 +430,9 @@ NEEDS VERIFICATION per release — see [`policy/sensitivity/`](../../../../polic
 ## 14. Related connectors and pipelines
 
 - [`connectors/kansas/`](../../../../connectors/kansas/) — **CONFIRMED (at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7`)** family lane per Directory Rules v1.2 §7.3.
-- [`connectors/kansas/kcc-oil-gas-reg/`](../../../../connectors/kansas/kcc-oil-gas-reg/) — per-institution adapter (PROPOSED — corrected from v0.1's incorrect top-level `connectors/kcc_oil_gas_reg/`; see §12).
+- `connectors/kansas/kcc-oil-gas-reg/` (not present) — per-institution adapter (PROPOSED — corrected from v0.1's incorrect top-level `connectors/kcc_oil_gas_reg/`; see §12).
 - Pipelines: [`pipelines/ingest/`](../../../../pipelines/ingest/), [`pipelines/normalize/`](../../../../pipelines/normalize/), [`pipelines/validate/`](../../../../pipelines/validate/), [`pipelines/catalog/`](../../../../pipelines/catalog/).
-- Pipeline specs: [`pipeline_specs/geology/`](../../../../pipeline_specs/geology/), [`pipeline_specs/environment/`](../../../../pipeline_specs/environment/), [`pipeline_specs/infrastructure/`](../../../../pipeline_specs/infrastructure/) (PROPOSED — confirm per filing-type).
+- Pipeline specs: [`pipeline_specs/geology/`](../../../../pipeline_specs/geology/), `pipeline_specs/environment/` (not present), `pipeline_specs/infrastructure/` (not present) (PROPOSED — confirm per filing-type).
 - Sibling KGS adapter: PROPOSED `connectors/kansas/ksgs/` (or `kgs/` — see OPEN-DSC-15 / `ksgs.md` for slug-vs-corpus-abbreviation discussion). KGS is the parallel-but-distinct oil-and-gas authority surface.
 
 > [!IMPORTANT]
@@ -471,7 +470,7 @@ See [`_examples/stac-item-example.json`](../_examples/stac-item-example.json) fo
 
 ## 17. Verification backlog
 
-Inheritance: every family-level OPEN item from [`./README.md`](./README.md#11-open-questions) applies. Product-specific items below.
+Inheritance: every family-level OPEN item from [`./README.md`](./README.md) applies. Product-specific items below.
 
 | Item | Evidence that would settle it | Status |
 |---|---|---|
@@ -634,6 +633,6 @@ For traceability into the KFM Idea Index spine, this brief draws on the followin
 
 ### Footer
 
-> **Related:** [`./README.md`](./README.md) (kansas family landing) · [`./ksgs.md`](./ksgs.md) (sibling KGS surface — parallel-but-distinct oil-and-gas authority) · [`./kdwp.md`](./kdwp.md) (sibling Kansas authority) · [`./kdhe.md`](./kdhe.md) (sibling Kansas authority) · [`./kda.md`](./kda.md) (sibling Kansas authority) · [`../README.md`](../README.md) (catalog index) · [`../IDENTITY.md`](../IDENTITY.md) · [`../PROFILES.md`](../PROFILES.md) · [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) · [`../OPEN-QUESTIONS.md`](../OPEN-QUESTIONS.md) · [Directory Rules](../../../doctrine/directory-rules.md) · [Geology domain](../../../domains/geology/README.md) · [Environment domain](../../../domains/environment/README.md) · [Infrastructure domain](../../../domains/infrastructure/README.md)
+> **Related:** [`./README.md`](./README.md) (kansas family landing) · [`./ksgs.md`](./ksgs.md) (sibling KGS surface — parallel-but-distinct oil-and-gas authority) · [`./kdwp.md`](./kdwp.md) (sibling Kansas authority) · `./kdhe.md` (not present) (sibling Kansas authority) · `./kda.md` (not present) (sibling Kansas authority) · [`../README.md`](../README.md) (catalog index) · [`../IDENTITY.md`](../IDENTITY.md) · [`../PROFILES.md`](../PROFILES.md) · [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) · [`../OPEN-QUESTIONS.md`](../OPEN-QUESTIONS.md) · [Directory Rules](../../../doctrine/directory-rules.md) · [Geology domain](../../../domains/geology/README.md) · Environment domain (not present) · Infrastructure domain (not present)
 > **Last updated:** 2026-05-21 *(Claude Code product-page revision; v0.1 → v0.2)* · **Status:** draft · **Authority of this doc:** explanatory product-page; does **not** decide admission, activation, or release. Family lane `connectors/kansas/` is CONFIRMED §7.3 at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7`. Per-institution adapter `connectors/kansas/kcc-oil-gas-reg/` is **PROPOSED** (corrected from v0.1's incorrect top-level snake_case `connectors/kcc_oil_gas_reg/`).
 > [⬆ Back to top](#kansas-corporation-commission--oil-and-gas-regulatory-data)

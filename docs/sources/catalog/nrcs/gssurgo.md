@@ -11,7 +11,6 @@ policy_label: public
 related:
   - docs/sources/catalog/nrcs/README.md
   - docs/sources/catalog/nrcs/ssurgo.md
-  - docs/sources/catalog/nrcs/gnatsgo.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/IDENTITY.md
   - docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md
@@ -29,6 +28,9 @@ notes:
   - "Source role at admission is observed (gridded raster of the canonical SSURGO survey)."
   - "Annual refresh expectation tracks SSURGO release cycle (per Idea Index card KFM-P24-PROG-0004)."
   - "Silent resampling that conflates resolutions across gSSURGO / gNATSGO / SoilGrids / SMAP is a named anti-pattern."
+owning_root: docs/
+responsibility: "Documentation for gSSURGO; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌱 gSSURGO
@@ -55,7 +57,7 @@ notes:
 | **Primary domain** | Soil (`[DOM-SOIL]`) |
 | **Secondary domain** | Agriculture (`[DOM-AG]`) (joins via `SoilMapUnit` and suitability ratings) |
 | **Joins back to** | SSURGO tabular via `MUKEY` (CONFIRMED Agriculture term) |
-| **Sibling products** | [`ssurgo`](./ssurgo.md) (vector form) · [`gnatsgo`](./gnatsgo.md) (national-scale grid) |
+| **Sibling products** | [`ssurgo`](./ssurgo.md) (vector form) · `gnatsgo` (not present) (national-scale grid) |
 | **Owners** | _PLACEHOLDER — Docs steward + Source steward for nrcs_ |
 | **Last reviewed** | 2026-05-22 |
 
@@ -95,7 +97,7 @@ notes:
 | Fetch + admission code | ❌ | `connectors/nrcs/` (Directory Rules §7.3) |
 | Lifecycle data | ❌ | `data/raw/soil/nrcs.gssurgo/<run_id>/` |
 | Vector counterpart | ❌ | [`./ssurgo.md`](./ssurgo.md) |
-| National-scale gridded counterpart | ❌ | [`./gnatsgo.md`](./gnatsgo.md) |
+| National-scale gridded counterpart | ❌ | `./gnatsgo.md` (not present) |
 
 > [!NOTE]
 > This is a **product page**, not a `SourceDescriptor`. The family-level overview lives in [`./README.md`](./README.md); identity rules in [`../IDENTITY.md`](../IDENTITY.md); rights and sensitivity guidance in [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md). Do not duplicate descriptor or policy fields here.
@@ -123,7 +125,7 @@ PROPOSED scaffold. **NEEDS VERIFICATION**: exact cadence per release, current en
 - ❌ Not a regulatory determination.
 - ❌ Not a soil-moisture or soil-condition product. Soil moisture comes from SCAN / SMAP / Kansas Mesonet; soil condition is `SoilMoistureObservation`.
 - ❌ Not a substitute for SSURGO when tabular component / horizon attributes are needed at full fidelity — those join via `MUKEY` from the SSURGO/SDA product family.
-- ❌ Not a national-scale gridded soil product where SSURGO is absent — that is **gNATSGO** (see [`./gnatsgo.md`](./gnatsgo.md)).
+- ❌ Not a national-scale gridded soil product where SSURGO is absent — that is **gNATSGO** (see `./gnatsgo.md` (not present)).
 
 [↥ Back to top](#-gssurgo)
 

@@ -10,12 +10,8 @@ updated: 2026-05-21
 policy_label: public
 related:
   - docs/sources/catalog/gbif/README.md
-  - docs/sources/catalog/gbif/occurrence-search.md
   - docs/sources/catalog/gbif/backbone-taxonomy.md
   - docs/sources/catalog/gbif/dataset-metadata.md
-  - docs/sources/catalog/gbif/IDENTITY.md
-  - docs/sources/catalog/gbif/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/gbif/_examples/stac-item-example.json
   - docs/sources/catalog/README.md
   - docs/sources/catalog/gbif.md
   - docs/doctrine/directory-rules.md
@@ -28,6 +24,9 @@ notes:
   - "The Async Download workflow returns a GBIF Download DOI — distinct from the Backbone Taxonomy DOI (10.15468/39omei) — and is the citable, reproducible path. (CONFIRMED operational pattern.)"
   - "Sensitivity is per-record (NatureServe S1/S2, KDWP SINC, nest/den sites, EBD-restricted datasets), not per-product. License gating (CC0/CC-BY/CC-BY-SA) applies at admission."
   - "Type is `product-page` (not `standard`); this file carries the full presentation standard but is intentionally a scaffold, not steady-state."
+owning_root: docs/
+responsibility: "Documentation for GBIF Async Download; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # GBIF Async Download
@@ -49,7 +48,7 @@ notes:
   <img alt="Last updated: 2026-05-21" src="https://img.shields.io/badge/updated-2026--05--21-informational">
 </p>
 
-**Status:** PROPOSED — scaffold only · **Family:** [`gbif`](./README.md) · **Catalog index:** [`../README.md`](../README.md) · **Source catalog entry:** [`../gbif.md`](../gbif.md) · **Sibling products:** [Occurrence Search](./occurrence-search.md), [Backbone Taxonomy](./backbone-taxonomy.md), [Dataset Metadata](./dataset-metadata.md) · **Last reviewed:** 2026-05-21
+**Status:** PROPOSED — scaffold only · **Family:** [`gbif`](./README.md) · **Catalog index:** [`../README.md`](../README.md) · **Source catalog entry:** [`../gbif.md`](../gbif.md) · **Sibling products:** Occurrence Search (not present), [Backbone Taxonomy](./backbone-taxonomy.md), [Dataset Metadata](./dataset-metadata.md) · **Last reviewed:** 2026-05-21
 
 > [!IMPORTANT]
 > **The async download is the *reproducible* path.** Per GBIF technical documentation cited in the KFM corpus, async downloads issue a **GBIF Download DOI** that is the canonical citation handle for the exact dataset version retrieved. For any KFM derivative that crosses the publication boundary, prefer async + DOI over the synchronous Occurrence Search — the DOI is the reproducibility guarantee.
@@ -97,7 +96,7 @@ This page describes the **GBIF Async Download product** — the bulk, predicate-
 **What this page is not.**
 
 - **Not a SourceDescriptor.** See [`data/registry/sources/`](../../../../data/registry/sources/) for the authoritative descriptor.
-- **Not a policy.** See [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md).
+- **Not a policy.** See [`policy/sensitivity/`](../../../../policy/sensitivity/) and `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present).
 - **Not a schema.** See [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) per ADR-0001.
 - **Not an admission decision.** Admission requires a completed SourceDescriptor, per-dataset license parsing, sensitivity tagging, anchor resolution (ITIS first, GBIF Backbone second), and reviewer sign-off.
 
@@ -110,7 +109,7 @@ This page describes the **GBIF Async Download product** — the bulk, predicate-
 
 ## Why async (and not sync)
 
-The two GBIF access methods serve different needs. This product page covers async; the sibling [`./occurrence-search.md`](./occurrence-search.md) covers sync.
+The two GBIF access methods serve different needs. This product page covers async; the sibling `./occurrence-search.md` (not present) covers sync.
 
 | Aspect | Async Download *(this product)* | Sync Occurrence Search |
 |---|---|---|
@@ -233,7 +232,7 @@ See [`data/registry/sources/`](../../../../data/registry/sources/) for the autho
 | SourceDescriptor schema | `schemas/contracts/v1/source/source-descriptor.json` | **Canonical** per ADR-0001 |
 | Source steward register | `control_plane/source_authority_register.yaml` | **PROPOSED** |
 | Vendor README | [`./README.md`](./README.md) | Sibling — INFERRED present |
-| Sibling product pages | [`./occurrence-search.md`](./occurrence-search.md), [`./backbone-taxonomy.md`](./backbone-taxonomy.md), [`./dataset-metadata.md`](./dataset-metadata.md) | Sibling — INFERRED present |
+| Sibling product pages | `./occurrence-search.md` (not present), [`./backbone-taxonomy.md`](./backbone-taxonomy.md), [`./dataset-metadata.md`](./dataset-metadata.md) | Sibling — INFERRED present |
 | Catalog README | [`../README.md`](../README.md) | Parent — INFERRED present |
 
 > [!NOTE]
@@ -359,7 +358,7 @@ PROPOSED — async-download records carry geographic point geometry (latitude / 
 
 ## Rights and sensitivity
 
-NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.** The parent source-catalog entry [`../gbif.md`](../gbif.md) §§6–7 is the authoritative source family rights and sensitivity posture; this product page applies it.
+NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not restate policy here.** The parent source-catalog entry [`../gbif.md`](../gbif.md) §§6–7 is the authoritative source family rights and sensitivity posture; this product page applies it.
 
 | Concern | Default for this product | Citation |
 |---|---|---|
@@ -415,8 +414,8 @@ Catalog closure is the final discoverability and accountability gate before publ
 - [`contracts/fauna/`](../../../../contracts/fauna/) — domain contracts including `OccurrenceEvidence`, `OccurrencePublic`, `OccurrenceRestricted`, `Taxon`, `TaxonCrosswalk`, `ConservationStatus` (CONFIRMED terms per Atlas Part 1 Fauna chapter; file presence NEEDS VERIFICATION).
 - [`contracts/flora/`](../../../../contracts/flora/) — domain contracts including `Flora Occurrence`, `SpecimenRecord`, `Rare Plant Record`, `Plant Taxon`, `FloraTaxon Crosswalk`, `Habitat Association` (CONFIRMED terms per Atlas Part 1 Flora chapter; file presence NEEDS VERIFICATION).
 - [`schemas/contracts/v1/source/source-descriptor.json`](../../../../schemas/contracts/v1/source/source-descriptor.json) — machine shape per ADR-0001 (NEEDS VERIFICATION).
-- [`schemas/contracts/v1/fauna/occurrence-evidence.schema.json`](../../../../schemas/contracts/v1/fauna/occurrence-evidence.schema.json), `occurrence-public.schema.json`, `occurrence-restricted.schema.json` — PROPOSED schemas for CONFIRMED Fauna object families; file presence NEEDS VERIFICATION.
-- [`schemas/contracts/v1/flora/flora-occurrence.schema.json`](../../../../schemas/contracts/v1/flora/flora-occurrence.schema.json) — PROPOSED schema for CONFIRMED Flora object family; presence NEEDS VERIFICATION.
+- `schemas/contracts/v1/fauna/occurrence-evidence.schema.json` (not present), `occurrence-public.schema.json`, `occurrence-restricted.schema.json` — PROPOSED schemas for CONFIRMED Fauna object families; file presence NEEDS VERIFICATION.
+- `schemas/contracts/v1/flora/flora-occurrence.schema.json` (not present) — PROPOSED schema for CONFIRMED Flora object family; presence NEEDS VERIFICATION.
 - [`schemas/contracts/v1/receipts/`](../../../../schemas/contracts/v1/receipts/) — receipt schemas (RawCaptureReceipt, TransformReceipt, GeoprivacyTransformReceipt, RedactionReceipt, AggregationReceipt, ReleaseManifest) — PROPOSED per Atlas §24.2.1.
 - [`schemas/contracts/v1/evidence/evidence_bundle.schema.json`](../../../../schemas/contracts/v1/evidence/evidence_bundle.schema.json) — PROPOSED per `KFM-P26-PROG-0004`.
 
@@ -431,7 +430,7 @@ Catalog closure is the final discoverability and accountability gate before publ
   - `connectors/gbif/dataset_metadata.py` — per-dataset license + citation lookup (gates admission).
   - `connectors/gbif/backbone.py` — taxonomy resolution + Backbone DOI snapshot capture (CONFIRMED requirement, C7-08).
 - [`pipelines/ingest/`](../../../../pipelines/ingest/), [`pipelines/normalize/`](../../../../pipelines/normalize/), [`pipelines/validate/`](../../../../pipelines/validate/), [`pipelines/catalog/`](../../../../pipelines/catalog/) — lifecycle phase pipelines (Directory Rules §7.4, CONFIRMED).
-- [`pipeline_specs/biodiversity/`](../../../../pipeline_specs/biodiversity/) — declarative specs for the biodiversity domain lane.
+- `pipeline_specs/biodiversity/` (not present) — declarative specs for the biodiversity domain lane.
 
 [↑ Back to top](#gbif-async-download)
 
@@ -441,7 +440,7 @@ Catalog closure is the final discoverability and accountability gate before publ
 
 *Illustrative only — do not treat as authoritative. Field values are placeholders.*
 
-See [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) for the canonical minimal shape. Two fragments below: a minimal predicate skeleton (submitted to the API), and a STAC × DwC catalog item emitted from the download.
+See `./_examples/stac-item-example.json` (not present) for the canonical minimal shape. Two fragments below: a minimal predicate skeleton (submitted to the API), and a STAC × DwC catalog item emitted from the download.
 
 <details>
 <summary><strong>Illustrative async-download predicate (submitted to GBIF, click to expand)</strong></summary>
@@ -562,12 +561,12 @@ See [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) f
 ## Related docs
 
 - [`./README.md`](./README.md) — GBIF vendor family README
-- [`./occurrence-search.md`](./occurrence-search.md) — sibling product page (sync, exploratory, no DOI)
+- `./occurrence-search.md` (not present) — sibling product page (sync, exploratory, no DOI)
 - [`./backbone-taxonomy.md`](./backbone-taxonomy.md) — sibling product page (taxonomic anchor; DOI `10.15468/39omei`)
 - [`./dataset-metadata.md`](./dataset-metadata.md) — sibling product page (per-dataset license + citation lookup)
-- [`./IDENTITY.md`](./IDENTITY.md) — collection-id pattern and namespace doctrine
-- [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — product-by-product rights and sensitivity map
-- [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) — canonical minimal STAC shape
+- `./IDENTITY.md` (not present) — collection-id pattern and namespace doctrine
+- `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — product-by-product rights and sensitivity map
+- `./_examples/stac-item-example.json` (not present) — canonical minimal STAC shape
 - [`../README.md`](../README.md) — catalog index
 - [`../gbif.md`](../gbif.md) — GBIF source-catalog entry (parent doctrine for the family)
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement and lifecycle invariants

@@ -12,12 +12,10 @@ related:
   - docs/sources/catalog/epa/README.md
   - docs/sources/catalog/epa/aqs-airdata.md
   - docs/sources/catalog/epa/barkjohn-correction.md
-  - docs/sources/catalog/epa/IDENTITY.md
-  - docs/sources/catalog/epa/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
   - docs/standards/STAC_KFM_PROFILE.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - docs/domains/atmosphere/README.md
   - docs/domains/hazards/README.md
 tags: [kfm, docs, sources, catalog, epa, airnow, atmosphere, air, aqi, near-real-time, advisory]
@@ -27,6 +25,9 @@ notes:
   - "Cadence: NowCast every 5-15 minutes per KFM-P2-PROG-0003."
   - "Sibling of aqs-airdata.md and barkjohn-correction.md within the epa family."
   - "PROPOSED family folder docs/sources/catalog/epa/ may coexist with or supersede the prior single-file brief docs/sources/catalog/epa.md; reconciliation NEEDS VERIFICATION."
+owning_root: docs/
+responsibility: "Documentation for EPA AirNow API; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -197,7 +198,7 @@ flowchart LR
 
 ## Collection identity
 
-- `PROPOSED` Collection id pattern: `kfm-epa-airnow` *(illustrative; pin via [`IDENTITY.md`](./IDENTITY.md))*.
+- `PROPOSED` Collection id pattern: `kfm-epa-airnow` *(illustrative; pin via `IDENTITY.md` (not present))*.
 - `PROPOSED` namespace: `kfm:` *(see family open item `OPEN-DSC-03`; `kfm:` vs `ks-kfm:` is unsettled per C4-01 corpus note; AirNow is multi-state so the `kfm:` (KFM-global) case is stronger than for Kansas-scoped lists).*
 - Asset roles: `NEEDS VERIFICATION` — confirm against `schemas/contracts/v1/source/` per ADR-0001.
 
@@ -266,7 +267,7 @@ flowchart LR
 ## Rights and sensitivity
 
 > [!WARNING]
-> **Do not restate policy on this page.** Rights and sensitivity authority lives in [`policy/sensitivity/`](../../../../policy/sensitivity/) and is summarized in the epa family [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). This page only **points to** those authorities.
+> **Do not restate policy on this page.** Rights and sensitivity authority lives in [`policy/sensitivity/`](../../../../policy/sensitivity/) and is summarized in the epa family `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). This page only **points to** those authorities.
 
 `NEEDS VERIFICATION`:
 
@@ -326,7 +327,7 @@ flowchart LR
 
 ## Related connectors and pipelines
 
-- [`connectors/epa/airnow/`](../../../../connectors/epa/airnow/) — `PROPOSED` connector home (sub-folder under EPA family connector lane).
+- `connectors/epa/airnow/` (not present) — `PROPOSED` connector home (sub-folder under EPA family connector lane).
 - [`pipelines/ingest/`](../../../../pipelines/ingest/), [`pipelines/normalize/`](../../../../pipelines/normalize/), [`pipelines/validate/`](../../../../pipelines/validate/), [`pipelines/catalog/`](../../../../pipelines/catalog/), [`pipelines/watchers/`](../../../../pipelines/watchers/) — `PROPOSED` standard lanes.
 - `pipeline_specs/atmosphere/` — `PROPOSED`.
 
@@ -425,14 +426,14 @@ See also: [`../_examples/stac-item-example.json`](../_examples/stac-item-example
 - [`./README.md`](./README.md) — epa family overview
 - [`./aqs-airdata.md`](./aqs-airdata.md) — sibling product page (validated regulatory archive)
 - [`./barkjohn-correction.md`](./barkjohn-correction.md) — sibling product page (PurpleAir reconciliation regression)
-- [`./IDENTITY.md`](./IDENTITY.md) — epa family Collection identity
-- [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — epa family rights/sensitivity map
+- `./IDENTITY.md` (not present) — epa family Collection identity
+- `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — epa family rights/sensitivity map
 - [`../README.md`](../README.md) — sources catalog overview
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Directory Rules
 - [`../../../domains/atmosphere/README.md`](../../../domains/atmosphere/README.md) — Atmosphere/Air domain dossier (`[DOM-AIR]`, Atlas §11)
 - [`../../../domains/hazards/README.md`](../../../domains/hazards/README.md) — Hazards domain dossier (`[DOM-HAZ]`, Atlas §12)
 - [`../../../standards/STAC_KFM_PROFILE.md`](../../../standards/STAC_KFM_PROFILE.md) — STAC × KFM provenance profile *(TODO: confirm path)*
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — Schema home *(TODO: confirm filename)*
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema home *(TODO: confirm filename)*
 
 ---
 

@@ -12,14 +12,12 @@ related:
   - docs/sources/catalog/local_upload/README.md
   - docs/sources/catalog/local_upload.md
   - docs/sources/catalog/README.md
-  - docs/sources/catalog/loc/iiif-presentations.md
   - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/lifecycle-law.md
   - connectors/local_upload/README.md
   - schemas/contracts/v1/source/source_descriptor.schema.json
-  - policy/sources/local_upload/
   - policy/sensitivity/
 tags: [kfm, docs, sources, catalog, local_upload, intake, quarantine, candidate]
 notes:
@@ -27,6 +25,9 @@ notes:
   - "`connectors/local_upload/` is CONFIRMED at the doctrine level (Directory Rules §7.3); file presence at any commit is NEEDS VERIFICATION."
   - "Subdirectory pattern docs/sources/catalog/local_upload/ remains PROPOSED — see OPEN-LU-UFU-01."
   - "v0.2: tailored template to local_upload reality (no endpoint URL, no cadence, candidate role default); added sibling cross-links and pattern-resolution open question."
+owning_root: docs/
+responsibility: "Documentation for Local Upload — User File Upload (product); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Local Upload Connector
@@ -95,7 +96,7 @@ The defining attribute of this product is **elevated uncertainty at first contac
 
 | This product **IS** | This product **IS NOT** |
 |---|---|
-| The user-initiated admission surface within `local_upload` (browser drop, file picker, CLI import). | A versioned-publisher connector (LOC IIIF, USGS, FEMA, GBIF, etc.). See the sibling product page at [`../loc/iiif-presentations.md`](../loc/iiif-presentations.md) for contrast. |
+| The user-initiated admission surface within `local_upload` (browser drop, file picker, CLI import). | A versioned-publisher connector (LOC IIIF, USGS, FEMA, GBIF, etc.). See the sibling product page at `../loc/iiif-presentations.md` (not present) for contrast. |
 | A pointer into the canonical `SourceDescriptor` and family-level governance doc. | A SourceDescriptor (which lives in `data/registry/sources/`). |
 | A scaffold listing intended catalog profiles, provenance fields, and gates. | A schema, contract, policy bundle, or catalog record. |
 | Truth-labeled, evidence-light orientation for reviewers. | A claim that the connector, pipelines, validators, or fixtures exist in the mounted repo. |
@@ -187,7 +188,7 @@ PROPOSED — KFM doctrine maps spatial and non-spatial artifacts through compati
 ## Collection identity
 
 > [!NOTE]
-> Collection identity for `local_upload` is **structurally different** from a versioned-publisher product like [LOC IIIF Presentations](../loc/iiif-presentations.md). LoC has a stable upstream that justifies a stable STAC Collection. `local_upload` has **per-upload provenance** and may not warrant its own long-lived Collection at all.
+> Collection identity for `local_upload` is **structurally different** from a versioned-publisher product like LOC IIIF Presentations (not present). LoC has a stable upstream that justifies a stable STAC Collection. `local_upload` has **per-upload provenance** and may not warrant its own long-lived Collection at all.
 
 - PROPOSED Collection id pattern (if used): `kfm-local-upload-<domain>` or `kfm-local-upload-candidates` (catch-all). NEEDS VERIFICATION — see **OPEN-LU-UFU-02**.
 - PROPOSED alternative: no stable Collection; emitted Items are **orphan candidates** until re-roling moves them into a domain Collection. NEEDS VERIFICATION.
@@ -371,7 +372,7 @@ See [`../_examples/stac-item-example.json`](../_examples/stac-item-example.json)
 
 PROPOSED — Each item below blocks promotion of this page to `status: review`.
 
-- **OPEN-LU-UFU-01** — **Subdirectory authority.** Is `docs/sources/catalog/local_upload/<product>.md` the canonical pattern, or should this page live flat at `docs/sources/catalog/local_upload-user-file-upload.md`? The sibling page at [`../loc/iiif-presentations.md`](../loc/iiif-presentations.md) uses the nested pattern. Pattern resolution NEEDS VERIFICATION; see also the family doc [`../local_upload.md`](../local_upload.md) §13.1.
+- **OPEN-LU-UFU-01** — **Subdirectory authority.** Is `docs/sources/catalog/local_upload/<product>.md` the canonical pattern, or should this page live flat at `docs/sources/catalog/local_upload-user-file-upload.md`? The sibling page at `../loc/iiif-presentations.md` (not present) uses the nested pattern. Pattern resolution NEEDS VERIFICATION; see also the family doc [`../local_upload.md`](../local_upload.md) §13.1.
 - **OPEN-LU-UFU-02** — **Collection identity.** Does `local_upload` warrant a stable STAC Collection (e.g. `kfm-local-upload-candidates`), per-domain Collections, or no Collection at all (Items are orphan candidates until re-roling)? NEEDS VERIFICATION.
 - **OPEN-LU-UFU-03** — **Uploader identity attestation.** Does this product require an authenticated uploader handle, an anonymous-but-receipted upload, or both? Same as family doc §13.1 item 5. OPEN.
 - **OPEN-LU-UFU-04** — **Virus / safety scanning location.** Where does AV / archive-bomb / zip-slip protection sit — `tools/validators/connector_gate/`, `infra/`, or a dedicated scanner package? Same as family doc §13.1 item 6. OPEN.
@@ -391,7 +392,7 @@ PROPOSED — Each item below blocks promotion of this page to `status: review`.
 - [`../local_upload.md`](../local_upload.md) — **family-level governance doc** (scope, accepted inputs by class, exclusions, sensitive-content register, validators, fixtures, FAQ).
 - [`./README.md`](./README.md) — family README (nested-pattern landing page).
 - [`../README.md`](../README.md) — catalog lane orientation.
-- [`../loc/iiif-presentations.md`](../loc/iiif-presentations.md) — sibling product page (LOC IIIF Presentations) — the versioned-publisher counter-example to this product.
+- `../loc/iiif-presentations.md` (not present) — sibling product page (LOC IIIF Presentations) — the versioned-publisher counter-example to this product.
 - [`../../SOURCE_DESCRIPTOR_STANDARD.md`](../../SOURCE_DESCRIPTOR_STANDARD.md) — *PROPOSED* — descriptor fields, rights & sensitivity intake posture.
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — §7.3 (`connectors/`), §7.4 (schema home), §9 (`data/` and `release/`).
 - [`../../../doctrine/trust-membrane.md`](../../../doctrine/trust-membrane.md) — *PROPOSED* — public-client boundary.

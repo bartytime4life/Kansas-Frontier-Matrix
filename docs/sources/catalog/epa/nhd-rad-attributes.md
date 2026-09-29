@@ -15,13 +15,15 @@ related:
   - docs/doctrine/directory-rules.md
   - data/registry/sources/
   - docs/standards/STAC_KFM_PROFILE.md
-  - data/spatial/comid_huc12/
 tags: [kfm, docs, sources, catalog, epa, usgs, hydrology, nhd, nhdplus, crosswalk, attributes]
 notes:
   - "PROPOSED product-page scaffold. Path `docs/sources/catalog/epa/nhd-rad-attributes.md` is PROPOSED; the `catalog/<family>/<product>` subfolder pattern is NEEDS VERIFICATION against Directory Rules."
   - "Doctrinal subtlety: this is an *attribute join product* with **dual source authority** — NHD/NHDPlus geometry and reach identity are USGS-owned (KFM-P2-IDEA-0021, CONFIRMED); the RAD attributes are EPA-published administrative/regulatory addresses keyed on those reaches. The page lives under `epa/` because the attributes are EPA's, but every claim about reach identity, geometry, and Permanent Identifier defers to the USGS NHDPlus HR product page."
   - "RAD = EPA Reach Address Database (the WATERS service family). NEEDS VERIFICATION: corpus does not explicitly enumerate RAD endpoints; this page treats RAD as the EPA-published reach-attribute family per the scaffold title."
   - "Sibling-link placements (`./README.md`, `../IDENTITY.md`, `../RIGHTS-AND-SENSITIVITY-MAP.md`, `../_examples/`, `../usgs/nhdplus-hr.md`) are PROPOSED only."
+owning_root: docs/
+responsibility: "Documentation for EPA NHD / RAD Attributes; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # EPA NHD / RAD Attributes
@@ -128,7 +130,7 @@ The corpus is emphatic that hydrography identity is a **versioned bridge**, not 
 | HUC12 polygon geometry | **USGS** (WBD) | USGS WBD product page (PROPOSED placement) | Reference only |
 | RAD attribute values (regulatory addresses) | **EPA** | EPA RAD SourceDescriptor | Reference only |
 | HUC12 attribute *value* on a reach | **EPA RAD** (the address) | EPA RAD SourceDescriptor | Reference only |
-| The **join** between EPA attributes and USGS reaches | **KFM** (governed crosswalk) | [`data/spatial/comid_huc12/`](../../../../data/spatial/comid_huc12/) (PROPOSED) | Describe |
+| The **join** between EPA attributes and USGS reaches | **KFM** (governed crosswalk) | `data/spatial/comid_huc12/` (not present) (PROPOSED) | Describe |
 | Relationship-type semantics (exact/split/merge/retired) | **KFM** (`relationship_type` enum) | crosswalk schema | Describe |
 
 ---
@@ -407,7 +409,7 @@ The Pass-23 source-role table also flags two cross-domain risks that apply here:
   - [`pipelines/validate/`](../../../../pipelines/validate/) — crosswalk schema validation, alignment-score gate, `relationship_type` discipline.
   - [`pipelines/catalog/`](../../../../pipelines/catalog/) — STAC / DCAT / PROV emission for joined Items.
 - **Pipeline spec:** [`pipeline_specs/hydrology/`](../../../../pipeline_specs/hydrology/)
-- **Spatial artifact:** [`data/spatial/comid_huc12/`](../../../../data/spatial/comid_huc12/) — fail-closed manifest (KFM-P5-PROG-0008)
+- **Spatial artifact:** `data/spatial/comid_huc12/` (not present) — fail-closed manifest (KFM-P5-PROG-0008)
 
 > [!WARNING]
 > Linked paths are PROPOSED. Mounted-repo evidence has not been inspected; every path is NEEDS VERIFICATION.
@@ -465,7 +467,7 @@ See [`_examples/stac-item-example.json`](../_examples/stac-item-example.json) fo
 
 - [`docs/sources/catalog/epa/README.md`](./README.md) — `epa` family landing page (PROPOSED).
 - [`docs/sources/catalog/usgs/nhdplus-hr.md`](../usgs/nhdplus-hr.md) — **USGS NHDPlus HR** product page (PROPOSED placement; the identity-and-geometry side of this join).
-- [`docs/sources/catalog/usgs/nwis.md`](../usgs/nwis.md) — USGS NWIS streamgage product (PROPOSED placement; sibling waterbody crosswalk per KFM-P2-PROG-0017).
+- `docs/sources/catalog/usgs/nwis.md` (not present) — USGS NWIS streamgage product (PROPOSED placement; sibling waterbody crosswalk per KFM-P2-PROG-0017).
 - [`docs/sources/catalog/epa/aqs-airdata.md`](./aqs-airdata.md) — EPA AQS / AirData (sibling EPA product page; different domain).
 - [`docs/sources/catalog/README.md`](../../README.md) — Sources catalog index (PROPOSED).
 - [`docs/sources/catalog/epa/IDENTITY.md`](../IDENTITY.md) — Collection-id and namespace conventions (PROPOSED placement).
@@ -474,8 +476,8 @@ See [`_examples/stac-item-example.json`](../_examples/stac-item-example.json) fo
 - [`docs/domains/hydrology/`](../../../domains/hydrology/) — Hydrology domain doctrine (DOM-HYD).
 - [`docs/standards/STAC_KFM_PROFILE.md`](../../../standards/STAC_KFM_PROFILE.md) — STAC `kfm:provenance` profile (PROPOSED).
 - [`data/registry/sources/`](../../../../data/registry/sources/) — Canonical SourceDescriptor home (ADR-0001).
-- [`data/spatial/comid_huc12/`](../../../../data/spatial/comid_huc12/) — Fail-closed crosswalk manifest (KFM-P5-PROG-0008; PROPOSED placement).
-- [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — Schema-home rule.
+- `data/spatial/comid_huc12/` (not present) — Fail-closed crosswalk manifest (KFM-P5-PROG-0008; PROPOSED placement).
+- [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema-home rule.
 
 ---
 

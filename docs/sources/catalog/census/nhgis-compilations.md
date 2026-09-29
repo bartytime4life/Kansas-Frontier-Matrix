@@ -10,12 +10,9 @@ updated: 2026-05-20
 policy_label: public
 related:
   - docs/sources/catalog/census/README.md
-  - docs/sources/catalog/census/IDENTITY.md
-  - docs/sources/catalog/census/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/census/decennial-counts.md
   - docs/sources/catalog/census/decennial-microdata.md
   - docs/sources/catalog/census/acs-estimates.md
-  - docs/sources/catalog/census/tiger.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/_examples/stac-item-example.json
   - docs/doctrine/directory-rules.md
@@ -24,6 +21,9 @@ notes:
   - "PROPOSED product-page scaffold; sibling-link presence verified in Claude Code session."
   - "PROPOSED content sourced from Pass 23/32 atlas (Frontier Matrix domain B/D/E; Source-Role Anti-Collapse Register §24.1.1 — Aggregate + Modeled doctrine), KFM-P5-PROG-0008 (crosswalk manifest pattern), KFM-P25-IDEA-0014 (deterministic spatial identity), KFM-P9-FEAT-0008 (uncertainty doctrine), Pass 10 (C4-01, C6-05); descriptor fields intentionally not restated here."
   - "Distinct from the decennial-counts sibling: this is a THIRD-PARTY COMPILATION of decennial+ACS+historical-gazetteer aggregate data, with boundary harmonization as a Modeled step — see top-of-doc WARNING callouts."
+owning_root: docs/
+responsibility: "Documentation for Census Historical Compilations (NHGIS-style); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -109,7 +109,7 @@ PROPOSED — historical compilations sit adjacent to several Census products tha
 
 - **Not the official Census Bureau release.** This is a *third-party* re-publication. The Census Bureau remains the underlying authority; the compiler adds harmonization. See [Decennial Counts](./decennial-counts.md) and [ACS Estimates](./acs-estimates.md) for direct Census Bureau ingest.
 - **Not per-person micro-data.** Historical compilations are *aggregates*, not enumeration sheets. For per-person records see [Historic Decennial Micro-data](./decennial-microdata.md).
-- **Not raw TIGER.** Historical compilations include their *own* historical-boundary GIS files (NHGIS GIS, IPUMS-NHGIS shapefiles). Those are the boundary geography appropriate for the harmonized data — *not* modern TIGER. See [TIGER](./tiger.md) for modern boundary geometry.
+- **Not raw TIGER.** Historical compilations include their *own* historical-boundary GIS files (NHGIS GIS, IPUMS-NHGIS shapefiles). Those are the boundary geography appropriate for the harmonized data — *not* modern TIGER. See TIGER (not present) for modern boundary geometry.
 - **Not a substitute for AHCB.** The Atlas of Historical County Boundaries (AHCB) is a *boundary* compilation. NHGIS-style historical-data compilations *use* AHCB-equivalent boundaries but their primary content is *data* (counts, estimates), not just boundaries. KFM may use AHCB independently for boundary-only work.
 - **Not a single product.** "Historical compilations" is a product category. Different compilers, different harmonization methods, different cohort coverage. The descriptor must pin a specific compiler + version per ingest.
 - **Not authoritative for any specific decade's data.** When the underlying decade's official Census Bureau aggregate disagrees with the compilation, **the Census Bureau release is the authority for that decade**. The compilation is authoritative for the *cross-decade harmonization*, not for any single year.
@@ -128,8 +128,8 @@ See [`data/registry/sources/`](../../../../data/registry/sources/) for the autho
 |---|---|---|---|
 | `SourceDescriptor` | [`data/registry/sources/`](../../../../data/registry/sources/) | Identity, **source role = Aggregate + Modeled**, rights, compiler pin, version pin, harmonization-method pin, citation requirement | **No** — pointer only |
 | Family overview & sibling links | [`./README.md`](./README.md) | Family-level orientation for `census` | **No** — see family README |
-| Collection identity rules | [`./IDENTITY.md`](./IDENTITY.md) | `kfm-<org>-<product>` pattern, namespace | **No** — see IDENTITY |
-| Rights & sensitivity mapping | [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) | Tiering, compiler-DUA, citation enforcement | **No** — see map |
+| Collection identity rules | `./IDENTITY.md` (not present) | `kfm-<org>-<product>` pattern, namespace | **No** — see IDENTITY |
+| Rights & sensitivity mapping | `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) | Tiering, compiler-DUA, citation enforcement | **No** — see map |
 | Contract shape | `schemas/contracts/v1/source/` and `schemas/contracts/v1/domains/frontier-matrix/` | JSON-schema for descriptor + `County-Year Panel` / `GeographyVersion` / `Crosswalk` shapes | **No** — per ADR-0001 |
 
 PROPOSED source-role posture: **Aggregate + Modeled**. The underlying *values* trace to Aggregate Census Bureau releases (e.g., 1880 decennial county counts). The *boundary harmonization* — re-allocating those values to a different decade's geography — is a Modeled step with documented method, parameters, and uncertainty. Both roles travel with the record.
@@ -185,7 +185,7 @@ PROPOSED. The catalog projection set this product participates in. Lanes follow 
 
 ## Collection identity
 
-- PROPOSED Collection id pattern: `kfm-<org>-<product>` — see [`IDENTITY.md`](./IDENTITY.md) for the canonical rule.
+- PROPOSED Collection id pattern: `kfm-<org>-<product>` — see `IDENTITY.md` (not present) for the canonical rule.
 - PROPOSED namespace: `kfm:` — *see [OPEN-DSC-03](#open-questions); Pass-10 C4-01 records the `kfm:` vs `ks-kfm:` choice as an unresolved namespace question.*
 - PROPOSED: one Collection per **(compiler, version, harmonization-method)** triple (e.g., `nhgis-v18-time-consistent-2010`, `nhgis-v18-year-specific`, `icpsr-2896-county-year`). NEEDS VERIFICATION.
 - Asset roles (panel-table, boundary-shapefile, methodology-doc, crosswalk-table, uncertainty-surface, two-layer-aggregation-receipt, compiler-citation, etc.): NEEDS VERIFICATION — confirm against `schemas/contracts/v1/source/` and `schemas/contracts/v1/domains/frontier-matrix/`.
@@ -322,7 +322,7 @@ Cross-domain consumers cite **both** layers (per Atlas §24.1.1 doctrine of pres
 
 ## Rights and sensitivity
 
-NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
+NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not restate policy here.**
 
 PROPOSED sensitivity posture for this product:
 
@@ -494,12 +494,12 @@ These are the KFM atlas cards from which the PROPOSED content above is sourced. 
 ## Related docs
 
 - [`docs/sources/catalog/census/README.md`](./README.md) — `census` family landing page.
-- [`docs/sources/catalog/census/IDENTITY.md`](./IDENTITY.md) — Collection-id and namespace rules for the family.
-- [`docs/sources/catalog/census/RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — Rights / sensitivity tiering for `census` (compiler-DUA enforcement, citation requirements).
+- `docs/sources/catalog/census/IDENTITY.md` (not present) — Collection-id and namespace rules for the family.
+- `docs/sources/catalog/census/RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — Rights / sensitivity tiering for `census` (compiler-DUA enforcement, citation requirements).
 - [`docs/sources/catalog/census/decennial-counts.md`](./decennial-counts.md) — Sibling: direct Census Bureau Aggregate (the underlying source for most compilations).
 - [`docs/sources/catalog/census/decennial-microdata.md`](./decennial-microdata.md) — Sibling: per-person historic micro-data.
 - [`docs/sources/catalog/census/acs-estimates.md`](./acs-estimates.md) — Sibling: ACS modern Aggregate.
-- [`docs/sources/catalog/census/tiger.md`](./tiger.md) — Sibling: modern TIGER/Line geometry.
+- `docs/sources/catalog/census/tiger.md` (not present) — Sibling: modern TIGER/Line geometry.
 - _TODO_ — `docs/sources/catalog/census/ahcb.md` — Atlas of Historical County Boundaries (boundaries-only companion).
 - _TODO_ — `docs/sources/catalog/census/pums.md` — PUMS microdata (separately-governed sibling).
 - [`docs/sources/catalog/README.md`](../../README.md) — Catalog of source families.

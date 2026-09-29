@@ -18,6 +18,9 @@ tags: [kfm, docs, sources, catalog, epa, atmosphere, air-quality]
 notes:
   - "PROPOSED product-page scaffold. Path `docs/sources/catalog/epa/aqs-airdata.md` is PROPOSED; the `docs/sources/` root is observed in the target tree (kfm_repository_structure_guiding_document.md), but the `catalog/<family>/<product>` subfolder pattern is NEEDS VERIFICATION against Directory Rules and mounted repo evidence."
   - "Sibling links (`./README.md`, `../IDENTITY.md`, `../RIGHTS-AND-SENSITIVITY-MAP.md`, `../_examples/`) are PROPOSED placements only."
+owning_root: docs/
+responsibility: "Documentation for EPA AQS / AirData; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # EPA AQS / AirData
@@ -347,7 +350,7 @@ See [`_examples/stac-item-example.json`](../_examples/stac-item-example.json) fo
 - [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Authority boundaries and schema-home discipline.
 - [`docs/standards/STAC_KFM_PROFILE.md`](../../../standards/STAC_KFM_PROFILE.md) — STAC `kfm:provenance` profile (PROPOSED).
 - [`data/registry/sources/`](../../../../data/registry/sources/) — Canonical SourceDescriptor home (ADR-0001).
-- [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — Schema-home rule.
+- [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema-home rule.
 
 ---
 

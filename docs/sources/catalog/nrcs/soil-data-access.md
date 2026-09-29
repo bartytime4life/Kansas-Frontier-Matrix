@@ -20,6 +20,9 @@ tags: [kfm, docs, sources, catalog, nrcs, soil, sda, ssurgo]
 notes:
   - "PROPOSED product-page scaffold; sibling-link presence verified in a Claude Code session, not in a mounted repo."
   - "Path `docs/sources/catalog/nrcs/SOIL-DATA-ACCESS.md` is PROPOSED; Directory Rules treat `docs/sources/` as a documentation lane and `data/registry/sources/` as the authoritative source-descriptor home."
+owning_root: docs/
+responsibility: "Documentation for NRCS Soil Data Access (SDA); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -428,7 +431,7 @@ elif status == 200:
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Directory Rules v1.2
 - [`../../../standards/STAC.md`](../../../standards/STAC.md) — KFM-STAC profile *(NEEDS VERIFICATION of path)*
 - [`../../../standards/PROV.md`](../../../standards/PROV.md) — KFM provenance profile *(NEEDS VERIFICATION of path; PROV.md vs PROVENANCE.md naming under ADR review per Directory Rules §13.5 v1.1)*
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home ADR *(NEEDS VERIFICATION of path)*
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home ADR *(NEEDS VERIFICATION of path)*
 
 > [!NOTE]
 > All sibling paths in this section are **PROPOSED** until verified against mounted-repo evidence. Anchor breakage risk is **moderate** if `docs/sources/catalog/` is restructured by ADR before this draft is published.

@@ -11,20 +11,20 @@ policy_label: public
 related:
   - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
   - docs/sources/catalog/README.md
-  - docs/domains/people-genealogy-dna-land/README.md
   - docs/doctrine/directory-rules.md
   - schemas/contracts/v1/source/source-descriptor.schema.json
-  - data/registry/sources/people-genealogy-dna-land/
   - connectors/familysearch/README.md
   - policy/genealogy/publication.rego
   - docs/standards/DUO_MAPPING.md
-  - docs/policy/familysearch-retention.md
 tags: [kfm, source-catalog, genealogy, c9-02, oauth2, ga4gh, gedcom-x, sensitive, dom-people]
 notes:
   - "Path `docs/sources/catalog/familysearch.md` is PROPOSED; the `docs/sources/` subtree currently has only `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` as a PROPOSED file in prior reports — see §1 and Directory Rules §3. The `catalog/<source>` subfolder pattern is NEEDS VERIFICATION against mounted-repo state and may not match a sibling pattern of `docs/sources/catalog/<family>/<product>` used elsewhere."
   - "This doc is the human-readable per-source briefing. The machine-readable SourceDescriptor record lives under `data/registry/sources/<domain>/`; the JSON Schema lives under `schemas/contracts/v1/source/`."
   - "No claim is made that the FamilySearch connector, SourceActivationDecision, or any related schema is implemented in the current repo."
   - "v0.2 revision: added Doctrinal anchors table; cross-referenced Pass-23 atlas cards (KFM-P1-IDEA-0033, KFM-P15-PROG-0034) that carry the C9 posture forward; added C9-07 (23andMe Chapter 11) vendor-risk note; tightened §10 gates with explicit spec-hash-match (C5-04) and lineage-required (C5-08) items; cleaned badge encoding."
+owning_root: docs/
+responsibility: "Documentation for FamilySearch — Source Catalog Entry; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🧬 FamilySearch — Source Catalog Entry
@@ -421,20 +421,20 @@ Carried forward from Components Pass-10 (idea **C9-02**, with vendor-risk contex
 > [!NOTE]
 > Several of these targets are **PROPOSED** in prior reports and have not been verified against mounted repo state. Treat absence as "not yet created," not "not intended."
 
-- [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](./SOURCE_DESCRIPTOR_STANDARD.md) — Standard descriptor fields and intake posture (PROPOSED)
-- [`docs/sources/catalog/README.md`](./catalog/README.md) — Sources catalog index (PROPOSED placement)
-- [`docs/domains/people-genealogy-dna-land/README.md`](../domains/people-genealogy-dna-land/README.md) — Domain README (PROPOSED)
-- [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — Placement law (CONFIRMED doctrine; concrete paths PROPOSED)
-- [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md), [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md), [`docs/doctrine/authority-ladder.md`](../doctrine/authority-ladder.md) — Adjacent doctrine
-- [`schemas/contracts/v1/source/source-descriptor.schema.json`](../../schemas/contracts/v1/source/source-descriptor.schema.json) — Machine shape (PROPOSED per ADR-0001)
-- [`policy/genealogy/publication.rego`](../../policy/genealogy/publication.rego) — OPA publication gate (PROPOSED, draft outlined in New-Ideas packet)
-- [`connectors/familysearch/README.md`](../../connectors/familysearch/README.md) — Connector docs (PROPOSED)
-- [`tools/validators/source_descriptor/`](../../tools/validators/source_descriptor/) — Descriptor validator (PROPOSED)
-- [`docs/standards/DUO_MAPPING.md`](../standards/DUO_MAPPING.md) — DUO ↔ FamilySearch scope mapping (PROPOSED; see §11.5)
-- [`docs/policy/familysearch-retention.md`](../policy/familysearch-retention.md) — Retention policy (PROPOSED; see §11.1)
-- [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) — Drift entries for any conflict between this catalog entry and repo state
-- [`docs/adr/`](../adr/) — `ADR-familysearch-retention`, `ADR-duo-mapping`, `ADR-deceased-user-consent` (PROPOSED, not yet drafted)
-- [`ai-build-operating-contract.md`](../../ai-build-operating-contract.md) §34 — RunReceipt / GENERATED_RECEIPT contract (CONFIRMED)
+- [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../SOURCE_DESCRIPTOR_STANDARD.md) — Standard descriptor fields and intake posture (PROPOSED)
+- [`docs/sources/catalog/README.md`](../README.md) — Sources catalog index (PROPOSED placement)
+- `docs/domains/people-genealogy-dna-land/README.md` (not present) — Domain README (PROPOSED)
+- [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Placement law (CONFIRMED doctrine; concrete paths PROPOSED)
+- [`docs/doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md), [`docs/doctrine/trust-membrane.md`](../../../doctrine/trust-membrane.md), [`docs/doctrine/authority-ladder.md`](../../../doctrine/authority-ladder.md) — Adjacent doctrine
+- [`schemas/contracts/v1/source/source-descriptor.schema.json`](../../../../schemas/contracts/v1/source/source-descriptor.schema.json) — Machine shape (PROPOSED per ADR-0001)
+- [`policy/genealogy/publication.rego`](../../../../policy/genealogy/publication.rego) — OPA publication gate (PROPOSED, draft outlined in New-Ideas packet)
+- [`connectors/familysearch/README.md`](../../../../connectors/familysearch/README.md) — Connector docs (PROPOSED)
+- [`tools/validators/source_descriptor/`](../../../../tools/validators/source_descriptor/) — Descriptor validator (PROPOSED)
+- [`docs/standards/DUO_MAPPING.md`](../../../standards/DUO_MAPPING.md) — DUO ↔ FamilySearch scope mapping (PROPOSED; see §11.5)
+- `docs/policy/familysearch-retention.md` (not present) — Retention policy (PROPOSED; see §11.1)
+- [`docs/registers/DRIFT_REGISTER.md`](../../../registers/DRIFT_REGISTER.md) — Drift entries for any conflict between this catalog entry and repo state
+- [`docs/adr/`](../../../adr/) — `ADR-familysearch-retention`, `ADR-duo-mapping`, `ADR-deceased-user-consent` (PROPOSED, not yet drafted)
+- `ai-build-operating-contract.md` (not present) §34 — RunReceipt / GENERATED_RECEIPT contract (CONFIRMED)
 
 ---
 

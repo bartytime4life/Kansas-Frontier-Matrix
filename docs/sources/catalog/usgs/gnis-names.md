@@ -11,23 +11,13 @@ policy_label: public
 related:
   - docs/sources/catalog/usgs.md
   - docs/sources/catalog/usgs/README.md
-  - docs/sources/catalog/usgs/IDENTITY.md
-  - docs/sources/catalog/usgs/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/usgs/usgs-3dep-elevation.md
-  - docs/sources/catalog/usgs/usgs-earthquake-catalog.md
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
   - docs/standards/SENSITIVITY_RUBRIC.md
   - docs/standards/DCAT.md
-  - docs/runbooks/spatial-foundation/SOURCE_REFRESH_RUNBOOK.md
-  - data/registry/sources/usgs/
-  - policy/sources/usgs/
-  - policy/sensitivity/cultural/
   - schemas/contracts/v1/source/
-  - schemas/contracts/v1/spatial/
-  - schemas/contracts/v1/settlements/
   - connectors/usgs/
 adr_refs:
   - ADR-0001 (schema home)
@@ -46,6 +36,9 @@ notes:
   - "Cultural sensitivity is the dominant constraint, analogous to reproduction discipline for the species-profiles page in usfws_ecos. Default T0 with three explicit override classes (§9): Tribal/Indigenous, historically harmful, living-person-residence."
   - "Name history is preserved, not overwritten. Analogous append-only versioning to the earthquake-catalog page but driven by BGN decisions rather than real-time updates."
   - "Cross-domain foundational source — joined widely (Settlements, Spatial Foundation, People-DNA-Land genealogy, Roads-Rail-Trade). Join sensitivity is policy-driven; per-feature data is open."
+owning_root: docs/
+responsibility: "Documentation for USGS Geographic Names Information System (GNIS); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -71,7 +64,7 @@ notes:
 **Status:** `PROPOSED — scaffold filled` &nbsp;·&nbsp; **Doc version:** `v0.2` &nbsp;·&nbsp; **Family:** [`usgs`](./README.md) &nbsp;·&nbsp; **Last reviewed:** 2026-05-23
 
 > [!IMPORTANT]
-> **This page is a pointer.** Authoritative descriptor fields live in [`data/registry/sources/usgs/`](../../../../data/registry/sources/usgs/). Cultural-sensitivity, Tribal-authority reconciliation, and historically-harmful-name policy live in [`policy/sources/usgs/`](../../../../policy/sources/usgs/) and [`policy/sensitivity/cultural/`](../../../../policy/sensitivity/cultural/), summarized at the family level in [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not duplicate descriptor or policy content on this product page.**
+> **This page is a pointer.** Authoritative descriptor fields live in `data/registry/sources/usgs/` (not present). Cultural-sensitivity, Tribal-authority reconciliation, and historically-harmful-name policy live in `policy/sources/usgs/` (not present) and `policy/sensitivity/cultural/` (not present), summarized at the family level in `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not duplicate descriptor or policy content on this product page.**
 
 > [!CAUTION]
 > **GNIS records U.S. federal canonical names; it is not the sole authority for what a place is called.** Tribal nations have their own authoritative naming for their territories (e.g., the formal restoration of "Denali" alongside the prior federal name); state and local jurisdictions have their own registries; archival sources attest to historical names not all of which appear in GNIS. KFM treats GNIS as the **U.S. federal administrative carrier** — primary for U.S. federal-administrative use, but **never silently substituted for** Tribal-authoritative names, historically-attested names, or contested names. See [§9](#9-rights-and-sensitivity-pointer), [§10](#10-reality-boundary), and Q-4 / Q-6 in [§15](#15-open-questions).
@@ -181,7 +174,7 @@ flowchart LR
 ## 2. Product identity within the family
 
 > [!NOTE]
-> This page is the **third** product authored under the `usgs` source family — administrative-role sibling to the heterogeneous-role [`usgs-3dep-elevation.md`](./usgs-3dep-elevation.md) (terrain) and [`usgs-earthquake-catalog.md`](./usgs-earthquake-catalog.md) (seismicity). It is the **only** USGS product page so far whose source role is `administrative` rather than a mix of `observed` + `modeled`. Family-wide concerns live at the family level and are not restated here; the family catalog index is at [`docs/sources/catalog/usgs.md`](../usgs.md).
+> This page is the **third** product authored under the `usgs` source family — administrative-role sibling to the heterogeneous-role `usgs-3dep-elevation.md` (not present) (terrain) and `usgs-earthquake-catalog.md` (not present) (seismicity). It is the **only** USGS product page so far whose source role is `administrative` rather than a mix of `observed` + `modeled`. Family-wide concerns live at the family level and are not restated here; the family catalog index is at [`docs/sources/catalog/usgs.md`](../usgs.md).
 
 | Attribute | Value | Status |
 |---|---|---|
@@ -236,7 +229,7 @@ GNIS records sit cleanly at `administrative`, but a small fraction warrant a par
 
 ## 3. Source authority
 
-See [`data/registry/sources/usgs/`](../../../../data/registry/sources/usgs/) for the authoritative `SourceDescriptor`. **Do not duplicate descriptor fields here.** Descriptor canonical schema home is `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 — **NEEDS VERIFICATION**.
+See `data/registry/sources/usgs/` (not present) for the authoritative `SourceDescriptor`. **Do not duplicate descriptor fields here.** Descriptor canonical schema home is `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 — **NEEDS VERIFICATION**.
 
 Doctrinal anchors for this product:
 
@@ -429,7 +422,7 @@ graph LR
 
 ## 9. Rights and sensitivity (pointer)
 
-**Do not restate policy here.** See [`policy/sensitivity/cultural/`](../../../../policy/sensitivity/cultural/) and the family-level summary at [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md).
+**Do not restate policy here.** See `policy/sensitivity/cultural/` (not present) and the family-level summary at `RIGHTS-AND-SENSITIVITY-MAP.md` (not present).
 
 ### 9.1 T0 default
 
@@ -523,13 +516,13 @@ graph LR
 | Surface | Path (PROPOSED unless noted) | Status |
 |---|---|---|
 | `SourceDescriptor` semantic + schema | [`contracts/source/`](../../../../contracts/source/) · [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) | **PROPOSED** canonical homes per Directory Rules §7.4 / ADR-0001. |
-| `PlaceRecord` contract | [`contracts/data/settlements/`](../../../../contracts/data/settlements/) | **PROPOSED** — new object class introduced by this product. |
-| `PlaceRecord` schema | [`schemas/contracts/v1/settlements/`](../../../../schemas/contracts/v1/settlements/) | **PROPOSED**. |
-| `NameAttestation` schema (per-attestation sub-record) | [`schemas/contracts/v1/settlements/`](../../../../schemas/contracts/v1/settlements/) | **PROPOSED**. |
-| `NameHistoryChain` schema (the append-only chain itself) | [`schemas/contracts/v1/settlements/`](../../../../schemas/contracts/v1/settlements/) | **PROPOSED**. |
+| `PlaceRecord` contract | `contracts/data/settlements/` (not present) | **PROPOSED** — new object class introduced by this product. |
+| `PlaceRecord` schema | `schemas/contracts/v1/settlements/` (not present) | **PROPOSED**. |
+| `NameAttestation` schema (per-attestation sub-record) | `schemas/contracts/v1/settlements/` (not present) | **PROPOSED**. |
+| `NameHistoryChain` schema (the append-only chain itself) | `schemas/contracts/v1/settlements/` (not present) | **PROPOSED**. |
 | `BGNDecisionRef` schema | [`schemas/contracts/v1/governance/`](../../../../schemas/contracts/v1/governance/) | **PROPOSED**. |
-| `CulturalFlagPolicy` controlled vocabulary | [`policy/sensitivity/cultural/`](../../../../policy/sensitivity/cultural/) | **PROPOSED** lane. |
-| `TribalAuthorityReconciliation` schema | [`schemas/contracts/v1/settlements/`](../../../../schemas/contracts/v1/settlements/) | **PROPOSED** — gating policy lives in `policy/sensitivity/cultural/`. |
+| `CulturalFlagPolicy` controlled vocabulary | `policy/sensitivity/cultural/` (not present) | **PROPOSED** lane. |
+| `TribalAuthorityReconciliation` schema | `schemas/contracts/v1/settlements/` (not present) | **PROPOSED** — gating policy lives in `policy/sensitivity/cultural/`. |
 | GNIS feature-class enum | [`schemas/contracts/v1/source/usgs_gnis_feature_class.json`](../../../../schemas/contracts/v1/source/) | **PROPOSED** — enum values **NEEDS VERIFICATION** against USGS controlled vocabulary. |
 | `EvidenceBundle` / `EvidenceRef` | [`schemas/contracts/v1/evidence/`](../../../../schemas/contracts/v1/evidence/) | **PROPOSED** per `KFM-P26-PROG-0004` / 0005. |
 | `RealityBoundaryNote` | [`schemas/contracts/v1/governance/`](../../../../schemas/contracts/v1/governance/) | **PROPOSED**. |
@@ -549,8 +542,8 @@ graph LR
 | Tribal-authority reconciliation | [`pipelines/normalize/tribal_recon/`](../../../../pipelines/normalize/) | **PROPOSED** — joins GNIS records to known Tribal-authoritative records; never auto-creates; flags for steward + sovereignty-review. |
 | Validate pipeline | [`pipelines/validate/`](../../../../pipelines/validate/) | All validators in [§11](#11-validation-and-catalog-closure). |
 | Catalog pipeline | [`pipelines/catalog/`](../../../../pipelines/catalog/) | DCAT-primary + STAC-secondary catalog closure; rich PROV-O lineage for name-history chains. |
-| Pipeline specs | [`pipeline_specs/settlements/`](../../../../pipeline_specs/settlements/) | Declarative configuration. |
-| Refresh runbook | [`docs/runbooks/spatial-foundation/SOURCE_REFRESH_RUNBOOK.md`](../../../runbooks/spatial-foundation/) | **PROPOSED** — same runbook as 3DEP; spatial-foundation lane. |
+| Pipeline specs | `pipeline_specs/settlements/` (not present) | Declarative configuration. |
+| Refresh runbook | `docs/runbooks/spatial-foundation/SOURCE_REFRESH_RUNBOOK.md` (not present) | **PROPOSED** — same runbook as 3DEP; spatial-foundation lane. |
 | BGN-decision watcher | [`pipelines/watchers/bgn_decisions/`](../../../../pipelines/watchers/) | **PROPOSED** — when the BGN publishes a name decision, emits an `EventEnvelope` triggering re-ingest of affected feature IDs. |
 | Content-hash watcher | [`pipelines/watchers/usgs_gnis_content_hash/`](../../../../pipelines/watchers/) | **PROPOSED** — detects GNIS download-surface changes between scheduled pulls. |
 
@@ -560,7 +553,7 @@ graph LR
 
 ## 14. Example
 
-*Illustrative only — not authoritative. A minimal STAC + `kfm:provenance` shape lives at [`_examples/stac-item-example.json`](./_examples/stac-item-example.json) (file presence **NEEDS VERIFICATION**); a GNIS-specific example sketch belongs at `_examples/place-record-example.json` (PROPOSED).*
+*Illustrative only — not authoritative. A minimal STAC + `kfm:provenance` shape lives at `_examples/stac-item-example.json` (not present) (file presence **NEEDS VERIFICATION**); a GNIS-specific example sketch belongs at `_examples/place-record-example.json` (PROPOSED).*
 
 <details>
 <summary><b>Click to expand — minimal PlaceRecord sketch (illustrative, JSON-LD)</b></summary>

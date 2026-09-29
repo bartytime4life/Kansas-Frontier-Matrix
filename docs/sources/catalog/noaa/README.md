@@ -17,11 +17,10 @@ related:
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/truth-posture.md
   - docs/doctrine/directory-rules.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - schemas/contracts/v1/source/source_descriptor.schema.json
   - connectors/noaa/README.md
   - policy/release/hazards/
-  - policy/release/atmosphere/
   - policy/sensitivity/
 tags: [kfm, sources, noaa, hazards, atmosphere, weather, climate, hms, nws, storm-events]
 notes:
@@ -29,6 +28,9 @@ notes:
   - "Confirm with Docs steward before merging; alternative homes include `docs/sources/families/noaa.md` or a flat `docs/sources/noaa.md`. See OPEN-NOAA-01."
   - "Default `source_role` is *multi-role* — NOAA admissions span `observed` (Storm Events, station obs), `regulatory-context` (NWS warnings/advisories — contextual only), `modeled` (forecasts, HMS, model fields), and `aggregate` (climate normals). The family must never be admitted under a single role."
   - "v1.1 polish pass: section numbering unified (Repo fit is now §2); added §5.0 source-role quick reference; added §9.0 receipts quick reference; OPEN questions renumbered as `OPEN-NOAA-NN`; cross-link to sibling product-pages under `docs/sources/catalog/newspapers/` added."
+owning_root: docs/
+responsibility: "Documentation for NOAA Source Family — Catalog Entry; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # NOAA Source Family — Catalog Entry
@@ -427,18 +429,18 @@ Tests prove the doctrine is enforceable. The following are `PROPOSED` validator 
 
 ## 12. Related docs
 
-- [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../SOURCE_DESCRIPTOR_STANDARD.md) — *PROPOSED — cross-source descriptor standard*
+- [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../SOURCE_DESCRIPTOR_STANDARD.md) — *PROPOSED — cross-source descriptor standard*
 - [`docs/sources/catalog/README.md`](./README.md) — Catalog landing page
-- [`docs/sources/catalog/newspapers/legal-notices.md`](./newspapers/legal-notices.md) — Sibling family product-page (different family; useful structural reference for `authority`-default)
-- [`docs/sources/catalog/newspapers/obituaries.md`](./newspapers/obituaries.md) — Sibling family product-page (`candidate`-default)
-- [`docs/sources/catalog/newspapers/ocr-full-text.md`](./newspapers/ocr-full-text.md) — Sibling family product-page (`observation` + `ModelRunReceipt`)
-- [`docs/domains/hazards/README.md`](../../domains/hazards/README.md) — *Hazards domain dossier*
-- [`docs/domains/atmosphere/README.md`](../../domains/atmosphere/README.md) — *Atmosphere/Air/Climate domain dossier*
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — *this catalog entry's placement authority*
-- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — *RAW → … → PUBLISHED invariant*
-- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — *public-API-only consumption rule*
-- [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — *cite-or-abstain*
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — *schema-home convention*
+- [`docs/sources/catalog/newspapers/legal-notices.md`](../newspapers/legal-notices.md) — Sibling family product-page (different family; useful structural reference for `authority`-default)
+- [`docs/sources/catalog/newspapers/obituaries.md`](../newspapers/obituaries.md) — Sibling family product-page (`candidate`-default)
+- [`docs/sources/catalog/newspapers/ocr-full-text.md`](../newspapers/ocr-full-text.md) — Sibling family product-page (`observation` + `ModelRunReceipt`)
+- [`docs/domains/hazards/README.md`](../../../domains/hazards/README.md) — *Hazards domain dossier*
+- [`docs/domains/atmosphere/README.md`](../../../domains/atmosphere/README.md) — *Atmosphere/Air/Climate domain dossier*
+- [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — *this catalog entry's placement authority*
+- [`docs/doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md) — *RAW → … → PUBLISHED invariant*
+- [`docs/doctrine/trust-membrane.md`](../../../doctrine/trust-membrane.md) — *public-API-only consumption rule*
+- [`docs/doctrine/truth-posture.md`](../../../doctrine/truth-posture.md) — *cite-or-abstain*
+- [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — *schema-home convention*
 - `schemas/contracts/v1/source/source_descriptor.schema.json` — *PROPOSED — canonical SourceDescriptor*
 - `connectors/noaa/README.md` — *NOAA-specific connector docs*
 - `policy/release/hazards/` — *release policy for hazard-derived layers*
@@ -487,7 +489,7 @@ Excerpted from KFM Atlas v1.1 §24.1.3. Field names below are `PROPOSED` shape; 
 
 ---
 
-**Related docs:** [hazards domain](../../domains/hazards/README.md) · [atmosphere domain](../../domains/atmosphere/README.md) · [source descriptor standard](../SOURCE_DESCRIPTOR_STANDARD.md) · [directory rules](../../doctrine/directory-rules.md) · [catalog root](./README.md)
+**Related docs:** [hazards domain](../../../domains/hazards/README.md) · [atmosphere domain](../../../domains/atmosphere/README.md) · [source descriptor standard](../../SOURCE_DESCRIPTOR_STANDARD.md) · [directory rules](../../../doctrine/directory-rules.md) · [catalog root](./README.md)
 **Last updated:** `2026-05-22` *(v1.1 polish pass; full review pass still pending)*
 **Version:** `v1.1` · **Status:** `draft` · **Default `source_role`:** *multi-role (see [§5.0](#50-quick-reference))* · **Owners:** *PLACEHOLDER*
 

@@ -10,16 +10,18 @@ updated: 2026-05-13
 policy_label: public
 related:
   - docs/doctrine/directory-rules.md
-  - docs/sources/README.md            # PROPOSED — verify presence
-  - docs/standards/                    # external-standards anchors
+  - docs/sources/README.md
+  - docs/standards/
   - docs/domains/people-dna-land/README.md
-  - docs/domains/frontier-matrix/README.md   # PROPOSED — verify lane folder name
   - control_plane/source_authority_register.yaml
-  - schemas/contracts/v1/source/source-descriptor.json   # PROPOSED — per ADR-0001
+  - schemas/contracts/v1/source/source-descriptor.json
 tags: [kfm, sources, federal, land, blm, glo, plss, public-domain]
 notes:
   - All KFM-specific repo paths PROPOSED until verified against mounted repo.
   - BLM technical surfaces sourced externally; see "External sources" in review notes.
+owning_root: docs/
+responsibility: "Documentation for Source Catalog Entry — Bureau of Land Management (BLM); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Source Catalog Entry — Bureau of Land Management (BLM)
@@ -471,8 +473,8 @@ notes: |
 - [`docs/sources/README.md`](../../README.md) — `TODO` create if missing
 - [`docs/standards/`](../../../standards/) — STAC, DCAT, PROV anchors
 - [`docs/domains/people-dna-land/README.md`](../../../domains/people-dna-land/README.md) — consumer domain
-- [`docs/domains/frontier-matrix/README.md`](../../../domains/frontier-matrix/) — consumer domain (`TODO` verify folder name)
-- [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home convention
+- `docs/domains/frontier-matrix/README.md` (not present) — consumer domain (`TODO` verify folder name)
+- [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home convention
 - `control_plane/source_authority_register.yaml` — machine-readable register
 
 ---

@@ -10,9 +10,6 @@ updated: 2026-05-21
 policy_label: public
 related:
   - docs/sources/catalog/ftdna/README.md
-  - docs/sources/catalog/ftdna/IDENTITY.md
-  - docs/sources/catalog/ftdna/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/ftdna/_examples/stac-item-example.json
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
   - docs/standards/SENSITIVITY_RUBRIC.md
@@ -24,6 +21,9 @@ notes:
   - "Autosomal raw data = tab-delimited genotype calls keyed by rsID per C9-03; HIGHEST-sensitivity DTC product (T4 default)."
   - "Product-specific facts (export-format version, file shape, cadence) are NEEDS VERIFICATION until inspected against a real export at admission."
   - "Type is `product-page` (not `standard`); this file does not carry full standard-doc obligations but does carry the full presentation standard."
+owning_root: docs/
+responsibility: "Documentation for FTDNA Autosomal Raw Data; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # FTDNA Autosomal Raw Data
@@ -76,7 +76,7 @@ This page describes the **FTDNA autosomal raw data product** as a *catalog targe
 **What this page is not.**
 
 - **Not a SourceDescriptor.** See [`data/registry/sources/`](../../../../data/registry/sources/) for the authoritative descriptor.
-- **Not a policy.** See [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md).
+- **Not a policy.** See [`policy/sensitivity/`](../../../../policy/sensitivity/) and `RIGHTS-AND-SENSITIVITY-MAP.md` (not present).
 - **Not a schema.** See [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) per ADR-0001.
 - **Not an admission decision.** Admission requires a completed SourceDescriptor, rights resolution, sensitivity tagging, consent stack, and reviewer sign-off.
 
@@ -153,7 +153,7 @@ Per Pass-10 `C4` (CONFIRMED doctrine), every promoted dataset must have a STAC I
 
 ## Collection identity
 
-- **PROPOSED Collection id pattern:** `kfm-ftdna-autosomal-raw` (vendor-product slug; see [`./IDENTITY.md`](./IDENTITY.md) for the canonical pattern).
+- **PROPOSED Collection id pattern:** `kfm-ftdna-autosomal-raw` (vendor-product slug; see `./IDENTITY.md` (not present) for the canonical pattern).
 - **PROPOSED namespace:** `kfm:` *(see OPEN-DSC-03 — the `kfm:` vs `ks-kfm:` choice remains open per `C4-01` open question, CONFIRMED).*
 - **Asset roles:** NEEDS VERIFICATION — confirm against [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/). At minimum: `data` (the raw call file), `metadata` (any vendor-supplied sidecar), `checksum` (per-asset `file:checksum`).
 
@@ -222,7 +222,7 @@ PROPOSED — autosomal raw genotype data has **no inherent geographic geometry**
 
 ## Rights and sensitivity
 
-NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
+NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not restate policy here.**
 
 | Concern | Default for this product | Citation |
 |---|---|---|
@@ -269,7 +269,7 @@ Catalog closure is the final discoverability and accountability gate before publ
 
 ## Related connectors and pipelines
 
-- [`connectors/ftdna/`](../../../../connectors/ftdna/) — source-specific fetch / admission logic (Directory Rules §7.3, CONFIRMED).
+- `connectors/ftdna/` (not present) — source-specific fetch / admission logic (Directory Rules §7.3, CONFIRMED).
   - **Posture:** PROPOSED quarantine-only intake — connectors MUST NOT pull DTC payloads on behalf of users without an attested per-user grant. NEEDS VERIFICATION at admission.
 - [`pipelines/ingest/`](../../../../pipelines/ingest/), [`pipelines/normalize/`](../../../../pipelines/normalize/), [`pipelines/validate/`](../../../../pipelines/validate/), [`pipelines/catalog/`](../../../../pipelines/catalog/) — lifecycle phase pipelines (Directory Rules §7.4, CONFIRMED).
 - [`pipeline_specs/people-dna-land/`](../../../../pipeline_specs/people-dna-land/) — declarative specs for the People/DNA/Land domain lane (Directory Rules §13.1, CONFIRMED domain-lane skeleton).
@@ -282,7 +282,7 @@ Catalog closure is the final discoverability and accountability gate before publ
 
 *Illustrative only — do not treat as authoritative. Field values are placeholders.*
 
-See [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) for the canonical minimal shape. The fragment below shows the key `properties` block grounded in `C4-01` (CONFIRMED).
+See `./_examples/stac-item-example.json` (not present) for the canonical minimal shape. The fragment below shows the key `properties` block grounded in `C4-01` (CONFIRMED).
 
 <details>
 <summary><strong>Minimal STAC Item <code>properties</code> fragment (illustrative, click to expand)</strong></summary>
@@ -350,9 +350,9 @@ See [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) f
 ## Related docs
 
 - [`./README.md`](./README.md) — FTDNA vendor family README
-- [`./IDENTITY.md`](./IDENTITY.md) — collection-id pattern and namespace doctrine
-- [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — product-by-product rights and sensitivity map
-- [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) — canonical minimal STAC shape
+- `./IDENTITY.md` (not present) — collection-id pattern and namespace doctrine
+- `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — product-by-product rights and sensitivity map
+- `./_examples/stac-item-example.json` (not present) — canonical minimal STAC shape
 - [`../README.md`](../README.md) — catalog index
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement and lifecycle invariants
 - [`../../../standards/SENSITIVITY_RUBRIC.md`](../../../standards/SENSITIVITY_RUBRIC.md) — `C6-01` 0–5 rubric *(PROPOSED in corpus; not yet authored)*

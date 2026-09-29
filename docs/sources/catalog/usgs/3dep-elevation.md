@@ -10,8 +10,6 @@ updated: 2026-05-23
 policy_label: public
 related:
   - docs/sources/catalog/usgs/README.md
-  - docs/sources/catalog/usgs/IDENTITY.md
-  - docs/sources/catalog/usgs/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
@@ -19,10 +17,6 @@ related:
   - docs/standards/SENSITIVITY_RUBRIC.md
   - docs/standards/STAC.md
   - docs/standards/PMTILES.md
-  - docs/runbooks/spatial-foundation/SOURCE_REFRESH_RUNBOOK.md
-  - data/registry/sources/usgs/
-  - policy/sources/usgs/
-  - schemas/contracts/v1/spatial/
   - schemas/contracts/v1/source/
   - connectors/usgs/
 adr_refs:
@@ -39,6 +33,9 @@ notes:
   - "Vertical datum + horizontal CRS are gate-critical for this product per ML-061-015 (terrain artifact manifests) and ML-061-022 (NFHL units check). See §8.2."
   - "STAC is the natural primary catalog (with Raster, Projection, and Pointcloud extensions). DCAT participates as a mirror. Upstream 3DEP already publishes a STAC catalog — KFM ingests from upstream STAC where possible per KFM-P14-PROG-0011."
   - "Cross-domain product: serves Spatial Foundation (2D) AND Planetary/3D. The same source family appears in both domain §D source-family tables in the Atlas."
+owning_root: docs/
+responsibility: "Documentation for USGS 3D Elevation Program (3DEP); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -64,7 +61,7 @@ notes:
 **Status:** `PROPOSED — scaffold filled` &nbsp;·&nbsp; **Doc version:** `v0.2` &nbsp;·&nbsp; **Family:** [`usgs`](./README.md) &nbsp;·&nbsp; **Last reviewed:** 2026-05-23
 
 > [!IMPORTANT]
-> **This page is a pointer.** Authoritative descriptor fields live in [`data/registry/sources/usgs/`](../../../../data/registry/sources/usgs/). Rights, sensitivity, and any infrastructure-overlay policy live in [`policy/sources/usgs/`](../../../../policy/sources/usgs/) and [`policy/sensitivity/`](../../../../policy/sensitivity/), summarized at the family level in [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not duplicate descriptor or policy content on this product page.**
+> **This page is a pointer.** Authoritative descriptor fields live in `data/registry/sources/usgs/` (not present). Rights, sensitivity, and any infrastructure-overlay policy live in `policy/sources/usgs/` (not present) and [`policy/sensitivity/`](../../../../policy/sensitivity/), summarized at the family level in `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not duplicate descriptor or policy content on this product page.**
 
 > [!CAUTION]
 > **Vertical datum and horizontal CRS are gate-critical.** Per `ML-061-015` *"Vertical datum and CRS belong in terrain artifact manifests"* and `ML-061-022` *"NFHL vertical datum and units must be checked before engineering claims"*, every 3DEP-derived tile MUST declare its horizontal CRS, vertical datum (e.g., NAVD88), geoid model where applicable, and units (m vs ft) **explicitly**. Silent mixing of vertical datums or units is denied at Gate D. Analysis CRS and web-delivery CRS are kept separate per `ML-061-096`. Nodata must remain consistent through pyramid overviews per `ML-061-098`. See [§8](#8-geometry-projection-and-vertical-datum-discipline).
@@ -221,7 +218,7 @@ Per `KFM-P30-IDEA-0019` *"Kansas LiDAR should distinguish immutable LAZ source t
 
 ## 3. Source authority
 
-See [`data/registry/sources/usgs/`](../../../../data/registry/sources/usgs/) for the authoritative `SourceDescriptor`. **Do not duplicate descriptor fields here.** Descriptor canonical schema home is `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 — **NEEDS VERIFICATION** of exact filename in mounted repo.
+See `data/registry/sources/usgs/` (not present) for the authoritative `SourceDescriptor`. **Do not duplicate descriptor fields here.** Descriptor canonical schema home is `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 — **NEEDS VERIFICATION** of exact filename in mounted repo.
 
 Doctrinal anchors for this product:
 
@@ -406,7 +403,7 @@ Lineage in `prov:wasDerivedFrom` is **gate-blocking**: a DEM record with no reso
 
 ## 9. Rights and sensitivity (pointer)
 
-**Do not restate policy here.** See [`policy/sources/usgs/`](../../../../policy/sources/usgs/) and the family-level summary at [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md).
+**Do not restate policy here.** See `policy/sources/usgs/` (not present) and the family-level summary at `RIGHTS-AND-SENSITIVITY-MAP.md` (not present).
 
 ### 9.1 T0 default with infrastructure override
 
@@ -482,17 +479,17 @@ Lineage in `prov:wasDerivedFrom` is **gate-blocking**: a DEM record with no reso
 | Surface | Path (PROPOSED unless noted) | Status |
 |---|---|---|
 | `SourceDescriptor` semantic + schema | [`contracts/source/`](../../../../contracts/source/) · [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) | **PROPOSED** canonical homes per Directory Rules §7.4 / ADR-0001. |
-| `CoordinateReferenceProfile` | [`schemas/contracts/v1/spatial/`](../../../../schemas/contracts/v1/spatial/) | **PROPOSED** per Atlas Spatial Foundation §E. |
-| `GeographyVersion` | [`schemas/contracts/v1/spatial/`](../../../../schemas/contracts/v1/spatial/) | **PROPOSED** per Atlas Spatial Foundation §E. |
-| `ProjectionTransformReceipt` | [`schemas/contracts/v1/spatial/`](../../../../schemas/contracts/v1/spatial/) | **PROPOSED**. |
-| `RasterAssetManifest` | [`schemas/contracts/v1/spatial/`](../../../../schemas/contracts/v1/spatial/) | **PROPOSED** per `Master MapLibre Components v2.1` Section K. |
-| `COGArtifactManifest` | [`schemas/contracts/v1/spatial/`](../../../../schemas/contracts/v1/spatial/) | **PROPOSED** per Section K. |
-| `Elevation/DEM manifest` | [`schemas/contracts/v1/spatial/`](../../../../schemas/contracts/v1/spatial/) | **PROPOSED** per Section K. |
-| `TerrainTilesetManifest` | [`schemas/contracts/v1/spatial/`](../../../../schemas/contracts/v1/spatial/) | **PROPOSED** per Section K. |
-| `UncertaintyRaster` / `UncertaintySurface` | [`schemas/contracts/v1/spatial/`](../../../../schemas/contracts/v1/spatial/) | **PROPOSED** per Section K + Atlas §E `UncertaintySurface`. |
-| `ArrayAssetManifest` | [`schemas/contracts/v1/spatial/`](../../../../schemas/contracts/v1/spatial/) | **PROPOSED** per Section K (Zarr-style arrays). |
-| Pointcloud STAC profile (LAZ / EPT / COPC) | [`schemas/contracts/v1/spatial/pointcloud/`](../../../../schemas/contracts/v1/spatial/) | **PROPOSED** per `KFM-P30-PROG-0027`. |
-| `COGValidationReport` | [`schemas/contracts/v1/spatial/`](../../../../schemas/contracts/v1/spatial/) | **PROPOSED** per Section K. |
+| `CoordinateReferenceProfile` | `schemas/contracts/v1/spatial/` (not present) | **PROPOSED** per Atlas Spatial Foundation §E. |
+| `GeographyVersion` | `schemas/contracts/v1/spatial/` (not present) | **PROPOSED** per Atlas Spatial Foundation §E. |
+| `ProjectionTransformReceipt` | `schemas/contracts/v1/spatial/` (not present) | **PROPOSED**. |
+| `RasterAssetManifest` | `schemas/contracts/v1/spatial/` (not present) | **PROPOSED** per `Master MapLibre Components v2.1` Section K. |
+| `COGArtifactManifest` | `schemas/contracts/v1/spatial/` (not present) | **PROPOSED** per Section K. |
+| `Elevation/DEM manifest` | `schemas/contracts/v1/spatial/` (not present) | **PROPOSED** per Section K. |
+| `TerrainTilesetManifest` | `schemas/contracts/v1/spatial/` (not present) | **PROPOSED** per Section K. |
+| `UncertaintyRaster` / `UncertaintySurface` | `schemas/contracts/v1/spatial/` (not present) | **PROPOSED** per Section K + Atlas §E `UncertaintySurface`. |
+| `ArrayAssetManifest` | `schemas/contracts/v1/spatial/` (not present) | **PROPOSED** per Section K (Zarr-style arrays). |
+| Pointcloud STAC profile (LAZ / EPT / COPC) | `schemas/contracts/v1/spatial/pointcloud/` (not present) | **PROPOSED** per `KFM-P30-PROG-0027`. |
+| `COGValidationReport` | `schemas/contracts/v1/spatial/` (not present) | **PROPOSED** per Section K. |
 | `EvidenceBundle` / `EvidenceRef` | [`schemas/contracts/v1/evidence/`](../../../../schemas/contracts/v1/evidence/) | **PROPOSED** per `KFM-P26-PROG-0004` / 0005. |
 | `RealityBoundaryNote` | [`schemas/contracts/v1/governance/`](../../../../schemas/contracts/v1/governance/) | **PROPOSED**. |
 
@@ -509,8 +506,8 @@ Lineage in `prov:wasDerivedFrom` is **gate-blocking**: a DEM record with no reso
 | Normalize pipeline | [`pipelines/normalize/`](../../../../pipelines/normalize/) | CRS canonicalization (preserving analysis CRS); vertical-datum tagging; units tagging; nodata propagation; QL preservation; derivation-chain capture. |
 | Validate pipeline | [`pipelines/validate/`](../../../../pipelines/validate/) | All validators in [§11](#11-validation-and-catalog-closure); `COGValidationReport`; STAC Raster + Projection + Pointcloud lint. |
 | Catalog pipeline | [`pipelines/catalog/`](../../../../pipelines/catalog/) | STAC-primary catalog closure with rich PROV-O lineage (LAZ → EPT/COPC → DEM → derivatives). |
-| Pipeline specs | [`pipeline_specs/spatial/`](../../../../pipeline_specs/spatial/) | Declarative configuration. |
-| Refresh runbook | [`docs/runbooks/spatial-foundation/SOURCE_REFRESH_RUNBOOK.md`](../../../runbooks/spatial-foundation/) | **PROPOSED**; analog to the authored fauna runbook. |
+| Pipeline specs | `pipeline_specs/spatial/` (not present) | Declarative configuration. |
+| Refresh runbook | `docs/runbooks/spatial-foundation/SOURCE_REFRESH_RUNBOOK.md` (not present) | **PROPOSED**; analog to the authored fauna runbook. |
 | 3DEP coverage watcher | [`pipelines/watchers/usgs_3dep_coverage/`](../../../../pipelines/watchers/) | **PROPOSED** — polls USGS 3DEP STAC for new Quality-Level coverage in KFM AOIs (Kansas tiles); emits `EventEnvelope` when new tiles publish. |
 | Re-fly supersession watcher | [`pipelines/watchers/usgs_3dep_supersession/`](../../../../pipelines/watchers/) | **PROPOSED** — detects when an area is re-flown at higher QL; emits `CorrectionNotice` skeleton against the superseded tile. |
 
@@ -520,7 +517,7 @@ Lineage in `prov:wasDerivedFrom` is **gate-blocking**: a DEM record with no reso
 
 ## 14. Example
 
-*Illustrative only — not authoritative. The minimal STAC + `kfm:provenance` shape lives at [`_examples/stac-item-example.json`](./_examples/stac-item-example.json) (file presence **NEEDS VERIFICATION**); a 3DEP-specific example sketch belongs at `_examples/stac-3dep-dem-example.json` (PROPOSED).*
+*Illustrative only — not authoritative. The minimal STAC + `kfm:provenance` shape lives at `_examples/stac-item-example.json` (not present) (file presence **NEEDS VERIFICATION**); a 3DEP-specific example sketch belongs at `_examples/stac-3dep-dem-example.json` (PROPOSED).*
 
 <details>
 <summary><b>Click to expand — minimal STAC Item sketch for a KFM-derived 3DEP 1 m DEM tile (illustrative)</b></summary>

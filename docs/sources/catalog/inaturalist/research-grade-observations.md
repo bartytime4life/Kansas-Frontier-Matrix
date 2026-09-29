@@ -10,7 +10,6 @@ updated: 2026-05-21
 policy_label: public
 related:
   - docs/sources/catalog/inaturalist/README.md
-  - docs/sources/catalog/inaturalist/inaturalist.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/IDENTITY.md
   - docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md
@@ -20,7 +19,6 @@ related:
   - docs/standards/REDACTION_DETERMINISM.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - schemas/contracts/v1/source/source_descriptor.schema.json
-  - schemas/contracts/v1/biodiversity/occurrence_evidence.schema.json
   - connectors/inaturalist/README.md
   - policy/sensitivity/
   - policy/rights/
@@ -39,6 +37,9 @@ notes:
     Research-grade-only admission bar is CONFIRMED doctrine per atlas idea card
     KFM-P6-PROG-0001; license normalization and geoprivacy-as-evidence are the
     fail-closed anchors.
+owning_root: docs/
+responsibility: "Documentation for iNaturalist Community Observations — Research-Grade; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # iNaturalist Community Observations — Research-Grade
@@ -62,7 +63,7 @@ notes:
 
 > [!NOTE]
 > **What this page is:** the product-page surface for the **research-grade** iNaturalist observation stream. It points at the authoritative SourceDescriptor, catalog profiles, and policy rather than restating them.
-> **What it is not:** the source-family landing page (see [`./README.md`](./README.md) and [`./inaturalist.md`](./inaturalist.md)), a connector spec, or a release manifest.
+> **What it is not:** the source-family landing page (see [`./README.md`](./README.md) and `./inaturalist.md` (not present)), a connector spec, or a release manifest.
 
 ---
 
@@ -143,7 +144,7 @@ flowchart TB
 
 See [`data/registry/sources/`](../../../../data/registry/sources/) for the authoritative `SourceDescriptor`. **Do not duplicate descriptor fields here.**
 
-For the source-family-level reading (identity, role, sibling sources, taxonomy anchoring, redaction profiles), see the sibling profile [`./inaturalist.md`](./inaturalist.md).
+For the source-family-level reading (identity, role, sibling sources, taxonomy anchoring, redaction profiles), see the sibling profile `./inaturalist.md` (not present).
 
 > [!IMPORTANT]
 > Product pages **cite** authority; they do not **own** it. The descriptor is the source of truth for identity, rights, sensitivity, cadence, and citation. The schema (per ADR-0001 default home `schemas/contracts/v1/source/source_descriptor.schema.json`) is the source of truth for descriptor shape.
@@ -431,6 +432,6 @@ The skeleton lives inline in §14 to keep this product page self-contained for r
 
 ### Footer
 
-> **Related:** [`./README.md`](./README.md) (family landing) · [`./inaturalist.md`](./inaturalist.md) (source-family profile) · [`../README.md`](../README.md) (catalog index) · [`../IDENTITY.md`](../IDENTITY.md) · [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) · [Directory Rules](../../../doctrine/directory-rules.md)
+> **Related:** [`./README.md`](./README.md) (family landing) · `./inaturalist.md` (not present) (source-family profile) · [`../README.md`](../README.md) (catalog index) · [`../IDENTITY.md`](../IDENTITY.md) · [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) · [Directory Rules](../../../doctrine/directory-rules.md)
 > **Last updated:** 2026-05-21 *(Claude Code product-page revision; v0.1 → v0.2)* · **Status:** draft · **Authority of this doc:** explanatory product-page; does **not** decide admission, activation, or release.
 > [⬆ Back to top](#inaturalist-community-observations--research-grade)

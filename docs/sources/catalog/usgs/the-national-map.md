@@ -11,14 +11,6 @@ policy_label: public
 related:
   - docs/sources/catalog/usgs.md
   - docs/sources/catalog/usgs/README.md
-  - docs/sources/catalog/usgs/IDENTITY.md
-  - docs/sources/catalog/usgs/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/usgs/usgs-3dep-elevation.md
-  - docs/sources/catalog/usgs/usgs-earthquake-catalog.md
-  - docs/sources/catalog/usgs/usgs-gnis-names.md
-  - docs/sources/catalog/usgs/usgs-nhdplus-hr.md
-  - docs/sources/catalog/usgs/usgs-nlcd.md
-  - docs/sources/catalog/usgs/usgs-nwis-water.md
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
@@ -27,10 +19,7 @@ related:
   - docs/standards/STAC.md
   - docs/standards/DCAT.md
   - docs/standards/PROV.md
-  - data/registry/sources/usgs/
-  - policy/sources/usgs/
   - schemas/contracts/v1/source/
-  - schemas/contracts/v1/carrier/
   - connectors/usgs/
 adr_refs:
   - ADR-0001 (schema home)
@@ -46,6 +35,9 @@ notes:
   - "STRUCTURAL UNIQUE: TNM is a carrier/access surface, NOT a content source. It aggregates and delivers other USGS programs' content; it does not own observations, models, or administrative records of its own. The v1.1 family-catalog §5.1 explicitly flagged this product as carrier-vs-product-page UNDECIDED. v0.2 authors this page as the carrier-disposition product page the family-catalog anticipated, with the UNDECIDED disposition surfaced rather than silently resolved (see §2)."
   - "Source-role: TNM itself does not carry a §24.1.1 enum role for content; it carries `administrative` for its own discovery metadata + delivery receipts. Per-asset served via TNM inherits the role of its originating program (3DEP DEM = modeled; NHDPlus HR geometry = observed; etc.) per the role-inheritance rule formalized in §2.1."
   - "Cross-references six sibling product pages explicitly: 3DEP, earthquake-catalog, GNIS, NHDPlus HR, NLCD, and Water Data are all reachable through TNM (in varying degrees) and the connector wiring must preserve the upstream-program reference through every TNM-mediated fetch."
+owning_root: docs/
+responsibility: "Documentation for USGS The National Map (TNM); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -71,7 +63,7 @@ notes:
 **Status:** `PROPOSED — scaffold filled (carrier disposition)` &nbsp;·&nbsp; **Doc version:** `v0.2` &nbsp;·&nbsp; **Family:** [`usgs`](./README.md) &nbsp;·&nbsp; **Last reviewed:** 2026-05-23
 
 > [!IMPORTANT]
-> **This page is a pointer twice over.** First, like every product page in this family, descriptor fields live in [`data/registry/sources/usgs/`](../../../../data/registry/sources/usgs/) and policy lives in [`policy/sources/usgs/`](../../../../policy/sources/usgs/) — **do not duplicate descriptor or policy here.** Second, and uniquely for TNM, this page is structurally a **pointer to the per-program product pages** (3DEP, NHDPlus HR, GNIS, NLCD, Water Data, etc.) for everything content-related; TNM-the-carrier owns only its own discovery + delivery surface.
+> **This page is a pointer twice over.** First, like every product page in this family, descriptor fields live in `data/registry/sources/usgs/` (not present) and policy lives in `policy/sources/usgs/` (not present) — **do not duplicate descriptor or policy here.** Second, and uniquely for TNM, this page is structurally a **pointer to the per-program product pages** (3DEP, NHDPlus HR, GNIS, NLCD, Water Data, etc.) for everything content-related; TNM-the-carrier owns only its own discovery + delivery surface.
 
 > [!CAUTION]
 > **TNM is not a §24.1.1 content-role source.** TNM does not observe, model, or regulate. An NLCD raster served via TNM **is and remains** a `modeled` MRLC product; a 3DEP DEM served via TNM **is and remains** a `modeled` 3DEP product; a GNIS name record served via TNM **is and remains** an `administrative` GNIS record. The role belongs to the originating program, not to the delivery vehicle. KFM derivatives that cite *"TNM"* as the source-role of a piece of content collapse the carrier into the content and violate the role-inheritance rule formalized in [§2.1](#21-sub-product-source-role-decomposition).
@@ -196,7 +188,7 @@ flowchart TB
 ## 2. Product identity within the family
 
 > [!NOTE]
-> This page is the **seventh** product authored under the `usgs` source family — but unlike the heterogeneous-role siblings [3DEP](./usgs-3dep-elevation.md), [Earthquakes](./usgs-earthquake-catalog.md), [NHDPlus HR](./usgs-nhdplus-hr.md), [Water Data](./usgs-nwis-water.md), the administrative [GNIS](./usgs-gnis-names.md), and the pure-modeled [NLCD](./usgs-nlcd.md) — TNM is structurally different: **a carrier surface, not a content source**.
+> This page is the **seventh** product authored under the `usgs` source family — but unlike the heterogeneous-role siblings 3DEP (not present), Earthquakes (not present), NHDPlus HR (not present), Water Data (not present), the administrative GNIS (not present), and the pure-modeled NLCD (not present) — TNM is structurally different: **a carrier surface, not a content source**.
 
 <details>
 <summary><strong>Carrier-vs-product-page disposition — open structural ADR (PROPOSED, surfaced from family-catalog §5.1)</strong></summary>
@@ -243,12 +235,12 @@ v0.2 implements Option A as the working hypothesis and surfaces the choice for A
 
 | If you want… | Use… | Not this page |
 |---|---|---|
-| **3DEP DEMs or LAZ point clouds** (content) | [`usgs-3dep-elevation.md`](./usgs-3dep-elevation.md) — content; TNM-aware fetch documented there | This page only documents *that* TNM is the delivery vehicle. |
-| **NHDPlus HR geometry or VAAs** (content) | [`usgs-nhdplus-hr.md`](./usgs-nhdplus-hr.md) — content | — |
-| **GNIS place-name records** (content) | [`usgs-gnis-names.md`](./usgs-gnis-names.md) — content | — |
-| **NLCD land-cover rasters** (content; MRLC-produced) | [`usgs-nlcd.md`](./usgs-nlcd.md) — content; family-folder placement open per §2 of that page | — |
-| **Earthquake event records** (content) | [`usgs-earthquake-catalog.md`](./usgs-earthquake-catalog.md) — content; **earthquake API is NOT TNM-mediated** | TNM does not serve real-time seismic feeds. |
-| **Real-time stream gauge data** (content) | [`usgs-nwis-water.md`](./usgs-nwis-water.md) — content; **Water Data API is NOT TNM-mediated** | TNM does not serve real-time water data; that is `api.waterdata.usgs.gov`. |
+| **3DEP DEMs or LAZ point clouds** (content) | `usgs-3dep-elevation.md` (not present) — content; TNM-aware fetch documented there | This page only documents *that* TNM is the delivery vehicle. |
+| **NHDPlus HR geometry or VAAs** (content) | `usgs-nhdplus-hr.md` (not present) — content | — |
+| **GNIS place-name records** (content) | `usgs-gnis-names.md` (not present) — content | — |
+| **NLCD land-cover rasters** (content; MRLC-produced) | `usgs-nlcd.md` (not present) — content; family-folder placement open per §2 of that page | — |
+| **Earthquake event records** (content) | `usgs-earthquake-catalog.md` (not present) — content; **earthquake API is NOT TNM-mediated** | TNM does not serve real-time seismic feeds. |
+| **Real-time stream gauge data** (content) | `usgs-nwis-water.md` (not present) — content; **Water Data API is NOT TNM-mediated** | TNM does not serve real-time water data; that is `api.waterdata.usgs.gov`. |
 | **A discovery interface** to find what is available across multiple USGS programs | This page (TNM Access API documentation) | — |
 | **A download mechanism** for staged USGS files at scale | This page (TNM Download API documentation) | — |
 | **USGS Science Data Catalog** (an aggregator at a different level than TNM) | `<PROPOSED> docs/sources/catalog/usgs/usgs-sdc.md` per family-catalog §5 row `usgs-sdc` — another carrier-vs-product-page UNDECIDED case | — |
@@ -262,7 +254,7 @@ v0.2 implements Option A as the working hypothesis and surfaces the choice for A
 
 ## 3. Source authority
 
-See [`data/registry/sources/usgs/`](../../../../data/registry/sources/usgs/) for the authoritative `SourceDescriptor` for TNM-the-carrier. **Do not duplicate descriptor fields here.** Descriptor canonical schema home is `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 — **NEEDS VERIFICATION**.
+See `data/registry/sources/usgs/` (not present) for the authoritative `SourceDescriptor` for TNM-the-carrier. **Do not duplicate descriptor fields here.** Descriptor canonical schema home is `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 — **NEEDS VERIFICATION**.
 
 > [!IMPORTANT]
 > **TNM's `SourceDescriptor` describes the carrier, not the carried content.** Each program reached through TNM has its own `SourceDescriptor` (in `data/registry/sources/usgs/` per its own product page). The TNM descriptor documents the carrier surface — endpoints, rate limits, authentication, deprecation track — and explicitly references the per-program descriptors it delivers.
@@ -423,7 +415,7 @@ TNM's own time discipline is thin: the carrier itself rarely changes; the assets
 
 ## 9. Rights and sensitivity (pointer)
 
-**Do not restate policy here.** See [`policy/sources/usgs/`](../../../../policy/sources/usgs/) and the family-level summary at [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Most rights and sensitivity concerns for TNM-mediated content belong to the per-program product page**, not here.
+**Do not restate policy here.** See `policy/sources/usgs/` (not present) and the family-level summary at `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Most rights and sensitivity concerns for TNM-mediated content belong to the per-program product page**, not here.
 
 ### 9.1 T0 default for the carrier itself
 
@@ -488,7 +480,7 @@ TNM's own time discipline is thin: the carrier itself rarely changes; the assets
   - Carrier-own record (discovery/service/delivery) carrying a content-role (`observed`/`modeled`/`regulatory`/`aggregate`) → Gate F deny. The carrier's own role is `administrative`.
   - Per-asset record without `upstream_program_role` → Gate F deny.
 - **TNM mediation flag preserved** — `usgs_tnm_mediation_flag_preserved`: per-asset records ingested via TNM carry a `via_tnm: true` flag (or equivalent) so downstream consumers can recognize the delivery vehicle.
-- **Deprecation-aware fetch** — `usgs_tnm_deprecation_flag_checked`: when a TNM endpoint signals deprecation, the connector records the flag and routes through the per-program migration path (analog to USGS Water Data API migration in [`usgs-nwis-water.md`](./usgs-nwis-water.md) §3.2).
+- **Deprecation-aware fetch** — `usgs_tnm_deprecation_flag_checked`: when a TNM endpoint signals deprecation, the connector records the flag and routes through the per-program migration path (analog to USGS Water Data API migration in `usgs-nwis-water.md` (not present) §3.2).
 - **PROV-O closure** (`C8-03`): every TNM-mediated per-asset record carries (a) `prov:wasGeneratedBy` linking to the originating program's authoritative record and (b) `prov:wasInformedBy` linking to the TNM delivery receipt. The carrier is preserved as a PROV node, not collapsed.
 - **STAC Projection lint** for carrier-availability bounding boxes (`KFM-P27-FEAT-0003`).
 - **DCAT mirror closure** for TNM-carrier collections (`KFM-P14-IDEA-0002`, `KFM-P26-PROG-0025`).
@@ -507,10 +499,10 @@ TNM's own time discipline is thin: the carrier itself rarely changes; the assets
 | Surface | Path (PROPOSED unless noted) | Status |
 |---|---|---|
 | `SourceDescriptor` semantic + schema | [`contracts/source/`](../../../../contracts/source/) · [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) | **PROPOSED** canonical homes per Directory Rules §7.4 / ADR-0001. |
-| `TNMResourceRef` schema (discovery records) | [`schemas/contracts/v1/carrier/`](../../../../schemas/contracts/v1/carrier/) | **PROPOSED** — new carrier-specific object class. |
-| `TNMServiceCatalogEntry` schema | [`schemas/contracts/v1/carrier/`](../../../../schemas/contracts/v1/carrier/) | **PROPOSED**. |
-| `TNMDownloadReceipt` schema | [`schemas/contracts/v1/carrier/`](../../../../schemas/contracts/v1/carrier/) | **PROPOSED**. |
-| `CarrierMediationRef` schema (the carrier-reference fields that attach to every per-asset record) | [`schemas/contracts/v1/carrier/`](../../../../schemas/contracts/v1/carrier/) | **PROPOSED** — shared with any future carrier product page (e.g., `usgs-sdc.md` if authored). |
+| `TNMResourceRef` schema (discovery records) | `schemas/contracts/v1/carrier/` (not present) | **PROPOSED** — new carrier-specific object class. |
+| `TNMServiceCatalogEntry` schema | `schemas/contracts/v1/carrier/` (not present) | **PROPOSED**. |
+| `TNMDownloadReceipt` schema | `schemas/contracts/v1/carrier/` (not present) | **PROPOSED**. |
+| `CarrierMediationRef` schema (the carrier-reference fields that attach to every per-asset record) | `schemas/contracts/v1/carrier/` (not present) | **PROPOSED** — shared with any future carrier product page (e.g., `usgs-sdc.md` if authored). |
 | `RateLimitGovernorState` schema (shared across TNM-aware connectors) | [`schemas/contracts/v1/governance/`](../../../../schemas/contracts/v1/governance/) | **PROPOSED**. |
 | `EvidenceBundle` / `EvidenceRef` | [`schemas/contracts/v1/evidence/`](../../../../schemas/contracts/v1/evidence/) | **PROPOSED** per `KFM-P26-PROG-0004` / 0005. |
 | `RealityBoundaryNote` | [`schemas/contracts/v1/governance/`](../../../../schemas/contracts/v1/governance/) | **PROPOSED**. |
@@ -525,7 +517,7 @@ TNM's own time discipline is thin: the carrier itself rarely changes; the assets
 |---|---|---|
 | **TNM-aware fetch pattern** (shared across per-program connectors) | various per-program `connectors/usgs/<program>_pull/` | Every per-program connector that uses TNM as a delivery vehicle (3DEP, NHDPlus HR, GNIS bulk-download, NLCD partial, geologic maps) implements the TNM-aware pattern: discovery → rate-limit-aware download → checksum verify → emit `TNMDownloadReceipt` → attach `CarrierMediationRef` to the per-asset record. |
 | **TNM-own connector** (carrier-discovery refresh) | [`connectors/usgs/tnm_discovery/`](../../../../connectors/usgs/) | **PROPOSED** — periodic refresh of TNM's published service catalog + available-asset index; emits `TNMServiceCatalogEntry` records. |
-| **Rate-limit governor** | [`pipelines/governance/tnm_rate_limit_governor/`](../../../../pipelines/governance/) | **PROPOSED** — shared service across all TNM-aware connectors; tracks per-endpoint quota windows; enforces back-off + quarantine recovery per ADR-S-12. |
+| **Rate-limit governor** | `pipelines/governance/tnm_rate_limit_governor/` (not present) | **PROPOSED** — shared service across all TNM-aware connectors; tracks per-endpoint quota windows; enforces back-off + quarantine recovery per ADR-S-12. |
 | **Ingest pipeline** | [`pipelines/ingest/`](../../../../pipelines/ingest/) | Per-asset records pass through the standard ingest pipeline with the `via_tnm` flag set on `CarrierMediationRef` attached; RAW capture into `data/raw/<domain>/<program>/<run_id>/` (program-owned, not TNM-owned). |
 | **Carrier-records ingest** | [`pipelines/ingest/carrier/tnm/`](../../../../pipelines/ingest/) | **PROPOSED** — separate ingest path for TNM's own carrier records (discovery + services + delivery receipts) into `data/raw/carrier/usgs-tnm/`. |
 | **Normalize pipeline** | [`pipelines/normalize/`](../../../../pipelines/normalize/) | TNM-carrier records have a thin normalize stage (mostly URL canonicalization + endpoint enum mapping); per-asset records normalize per their program. |

@@ -10,8 +10,6 @@ updated: 2026-05-22
 policy_label: public
 related:
   - docs/sources/catalog/nrcs/README.md
-  - docs/sources/catalog/nrcs/SSURGO.md
-  - docs/sources/catalog/nrcs/SOIL-DATA-ACCESS.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/IDENTITY.md
   - docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md
@@ -23,6 +21,9 @@ notes:
   - "PROPOSED product-page scaffold; sibling-link presence verified in a Claude Code session, not in a mounted repo."
   - "Path `docs/sources/catalog/nrcs/WEB-SOIL-SURVEY.md` is PROPOSED; Directory Rules treat `docs/sources/` as a documentation lane and `data/registry/sources/` as the authoritative SourceDescriptor home."
   - "WSS is NOT currently listed as a recognized KFM source family in [DOM-SOIL] §D (which lists NRCS SSURGO, USDA NRCS Soil Data Access, NRCS gSSURGO, NRCS gNATSGO, Kansas Mesonet, NRCS SCAN, NOAA USCRN, NASA SMAP). KFM disposition for WSS is UNRESOLVED and OPEN for ADR. This page documents the question, not a confirmed ingest."
+owning_root: docs/
+responsibility: "Documentation for NRCS Web Soil Survey (WSS); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -41,7 +42,7 @@ notes:
 
 **Status:** PROPOSED — scaffold only · **disposition UNRESOLVED** ·
 **Family:** [`nrcs`](./README.md) ·
-**Sibling products:** [`SSURGO.md`](./SSURGO.md) *(canonical static vector)* · [`SOIL-DATA-ACCESS.md`](./SOIL-DATA-ACCESS.md) *(programmatic API)* ·
+**Sibling products:** `SSURGO.md` (not present) *(canonical static vector)* · `SOIL-DATA-ACCESS.md` (not present) *(programmatic API)* ·
 **Domain segment:** `soil` (per Directory Rules §4 Step 3) ·
 **Owners:** *PLACEHOLDER — Docs steward + Source steward for `nrcs`* ·
 **Last reviewed:** 2026-05-22
@@ -99,8 +100,8 @@ WSS is best understood as a **third surface over the SSURGO source-of-record**, 
 
 | Surface | Intended audience | Form | Cadence semantics | KFM ingest posture |
 |---|---|---|---|---|
-| **SSURGO** *(canonical static)* | Programmatic consumers | FGDB / SHP / GeoPackage bulk; tabular tables | NRCS Oct-1 annual refresh (ASR) + weekly metadata | **CONFIRMED** source family ([`SSURGO.md`](./SSURGO.md)) |
-| **SDA** *(programmatic API)* | Programmatic consumers | SQL / REST query surface | Live query against the Soil Data Mart | **CONFIRMED** source family ([`SOIL-DATA-ACCESS.md`](./SOIL-DATA-ACCESS.md)) |
+| **SSURGO** *(canonical static)* | Programmatic consumers | FGDB / SHP / GeoPackage bulk; tabular tables | NRCS Oct-1 annual refresh (ASR) + weekly metadata | **CONFIRMED** source family (`SSURGO.md` (not present)) |
+| **SDA** *(programmatic API)* | Programmatic consumers | SQL / REST query surface | Live query against the Soil Data Mart | **CONFIRMED** source family (`SOIL-DATA-ACCESS.md` (not present)) |
 | **WSS** *(this page)* | **Human users** in a browser session | Interactive map UI + on-demand PDF reports + SHP/tab exports | **Session-scoped**; AOI-derived; not a polling target | **UNRESOLVED** — see §4 |
 
 <sup>SSURGO and SDA presence in `[DOM-SOIL]` §D is CONFIRMED; the absence of WSS from that table is CONFIRMED.</sup>
@@ -308,8 +309,8 @@ See [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`RIGHTS-AND-SE
 ## 13. Related docs
 
 - [`./README.md`](./README.md) — `nrcs` family README *(sibling)*
-- [`./SSURGO.md`](./SSURGO.md) — SSURGO product page *(canonical static vector source-of-record)*
-- [`./SOIL-DATA-ACCESS.md`](./SOIL-DATA-ACCESS.md) — SDA product page *(programmatic API surface)*
+- `./SSURGO.md` (not present) — SSURGO product page *(canonical static vector source-of-record)*
+- `./SOIL-DATA-ACCESS.md` (not present) — SDA product page *(programmatic API surface)*
 - [`../README.md`](../README.md) — `docs/sources/catalog/README.md` parent
 - [`../IDENTITY.md`](../IDENTITY.md) — catalog-wide identity contract *(PROPOSED)*
 - [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) — catalog-wide rights map *(PROPOSED)*

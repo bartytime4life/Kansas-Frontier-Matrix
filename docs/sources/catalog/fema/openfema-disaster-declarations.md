@@ -14,10 +14,6 @@ policy_label: public-context-administrative; not-for-life-safety
 admission_status: PROPOSED — CONFIRMED doctrine basis; implementation pending mounted-repo verification
 related:
   - docs/sources/catalog/fema/README.md
-  - docs/sources/catalog/fema/NATIONAL-FLOOD-HAZARD-LAYER.md
-  - docs/sources/catalog/fema/MAP-SERVICE-CENTER.md
-  - docs/sources/catalog/fema/NFIP-CLAIM-POLICY-AGGREGATES.md
-  - docs/sources/catalog/fema/OPENFEMA-AUXILIARY-TABLES.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/IDENTITY.md
   - docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md
@@ -29,7 +25,7 @@ related:
   - data/registry/sources/
   - connectors/fema/
   - schemas/contracts/v1/source/source-descriptor.json
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 corpus_anchors:
   - Domains Atlas §12.D        # Hazards: FEMA Disaster Declarations / OpenFEMA source family
   - Domains Atlas §24.1.1      # canonical source-role classes (administrative definition)
@@ -43,6 +39,9 @@ notes:
   - "Source role is `administrative`, not `regulatory` and not `observed`. A Disaster Declaration is a record of a federal action — never an observed flood / fire / storm / earthquake event."
   - "This is the canonical FEMA source for the Hazards-domain `DisasterDeclaration` object family (Domains Atlas §12.E)."
   - "Path `docs/sources/catalog/fema/DISASTER-DECLARATIONS.md` is PROPOSED. `docs/sources/` is CONFIRMED at commit per Directory Rules v1.2 §6.1; `catalog/` subfolder convention is NEEDS VERIFICATION (no ADR observed)."
+owning_root: docs/
+responsibility: "Documentation for OpenFEMA Disaster Declarations; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # OpenFEMA Disaster Declarations
@@ -72,7 +71,7 @@ notes:
 |---|---|
 | **Doc status** | `draft` — PROPOSED product page; admission decision pending steward review |
 | **Family page** | [`./README.md`](./README.md) — FEMA family-level catalog entry |
-| **Sibling pages** | [`./NATIONAL-FLOOD-HAZARD-LAYER.md`](./NATIONAL-FLOOD-HAZARD-LAYER.md), [`./MAP-SERVICE-CENTER.md`](./MAP-SERVICE-CENTER.md), [`./NFIP-CLAIM-POLICY-AGGREGATES.md`](./NFIP-CLAIM-POLICY-AGGREGATES.md), [`./OPENFEMA-AUXILIARY-TABLES.md`](./OPENFEMA-AUXILIARY-TABLES.md) |
+| **Sibling pages** | `./NATIONAL-FLOOD-HAZARD-LAYER.md` (not present), `./MAP-SERVICE-CENTER.md` (not present), `./NFIP-CLAIM-POLICY-AGGREGATES.md` (not present), `./OPENFEMA-AUXILIARY-TABLES.md` (not present) |
 | **Doctrine basis** | **CONFIRMED.** Sources: Domains Atlas §12.D (Hazards source family: *"FEMA Disaster Declarations / OpenFEMA"*); §12.E (Hazards `Disaster Declaration` object family); §24.1.1 (administrative role definition); §24.1.2 (administrative-compilation-as-observation DENY); §24.9.2 (trust-membrane anti-patterns); Encyclopedia §7.10 (FEMA Disaster Declarations / OpenFEMA hazards context). |
 | **Implementation basis** | **PROPOSED / NEEDS VERIFICATION** — no mounted repo inspected this session; schema, registry, validator, fixture, and connector path claims default to PROPOSED. |
 | **Source role** | `administrative` (NOT `regulatory`, NOT `observed`); `role_authority: FEMA` |
@@ -123,7 +122,7 @@ KFM admits this dataset as the **canonical `administrative` source for the Hazar
 | **Bound object** | `DisasterDeclaration` (Hazards) — **not** `Hazard Event` |
 
 > [!NOTE]
-> This page describes the **Disaster Declarations summary dataset** — the canonical declaration record. Related OpenFEMA datasets (PA project details, IHP aggregates, HMGP summaries, disaster costs) admit as separate `SourceDescriptor` records and are covered on [`./OPENFEMA-AUXILIARY-TABLES.md`](./OPENFEMA-AUXILIARY-TABLES.md). Per the Unified Manual §3.6 (CONFIRMED): *"source role cannot be inferred from convenience"* — adjacency in the OpenFEMA API does not imply shared admission.
+> This page describes the **Disaster Declarations summary dataset** — the canonical declaration record. Related OpenFEMA datasets (PA project details, IHP aggregates, HMGP summaries, disaster costs) admit as separate `SourceDescriptor` records and are covered on `./OPENFEMA-AUXILIARY-TABLES.md` (not present). Per the Unified Manual §3.6 (CONFIRMED): *"source role cannot be inferred from convenience"* — adjacency in the OpenFEMA API does not imply shared admission.
 
 ---
 
@@ -140,7 +139,7 @@ The OpenFEMA Disaster Declarations dataset publishes records with the following 
 | **Incident begin date / incident end date** | The period the declaration applies to | `valid_time` interval |
 | **Designated areas (state / tribal nation / county)** | Geographic units the declaration applies to | Geometry sourced from canonical place authority (TIGER/Line for states/counties; NEEDS VERIFICATION for tribal nations); never finer than declared unit |
 | **Disaster name / title** | FEMA's title for the declaration (e.g., *"Severe Storms, Tornadoes, And Flooding"*) | Preserved verbatim |
-| **Program activations** | Which FEMA assistance programs were activated (IA, PA, HMGP) for this declaration | Cross-reference to auxiliary tables ([sibling page](./OPENFEMA-AUXILIARY-TABLES.md)) |
+| **Program activations** | Which FEMA assistance programs were activated (IA, PA, HMGP) for this declaration | Cross-reference to auxiliary tables (sibling page (not present)) |
 
 > [!CAUTION]
 > The **incident type** field is the most common source-role-collapse risk. A declaration with `incident_type: "Severe Storms, Tornadoes, And Flooding"` is **not** evidence that any specific tornado touched down on a specific date at a specific location. It is evidence that FEMA declared a disaster *citing* tornadoes as the incident type. Observed tornado events come from other source families (NOAA Storm Events, NWS, etc.).
@@ -353,7 +352,7 @@ PROPOSED — distinct source / observed / valid / retrieval / release / correcti
 | `correction_time` | If KFM has corrected a prior release | Required on every `CorrectionNotice` |
 
 > [!WARNING]
-> **OpenFEMA records can be revised retroactively** as declarations are amended, designated areas are added, or program activations are updated. Treat each declaration record as a vintage; cite by `source_time` + dataset version; watch the upstream publisher for revisions that would trigger a `CorrectionNotice`. (Same retroactive-revision posture as the [OpenFEMA auxiliary tables sibling](./OPENFEMA-AUXILIARY-TABLES.md).)
+> **OpenFEMA records can be revised retroactively** as declarations are amended, designated areas are added, or program activations are updated. Treat each declaration record as a vintage; cite by `source_time` + dataset version; watch the upstream publisher for revisions that would trigger a `CorrectionNotice`. (Same retroactive-revision posture as the OpenFEMA auxiliary tables sibling (not present).)
 
 ---
 
@@ -371,7 +370,7 @@ The "geometry" of a Disaster Declaration is **the union of designated areas** �
 | Aggregation pattern | The union of declared areas is the natural envelope; per-area cells may be rendered as choropleth (declaration count, time-since-declaration) | When rendered as a count surface, treat as `aggregate` with `role_aggregation_unit` set |
 
 > [!WARNING]
-> Rendering a Disaster Declaration as a precise per-point footprint inside a declared county is a **prohibited rendering transform**. The declaration applies to the *county as a unit*, not to specific addresses or features within it. This is the same geometry-scope guard that governs aggregate sources (see [NFIP aggregates sibling](./NFIP-CLAIM-POLICY-AGGREGATES.md) §4), applied to administrative geometry.
+> Rendering a Disaster Declaration as a precise per-point footprint inside a declared county is a **prohibited rendering transform**. The declaration applies to the *county as a unit*, not to specific addresses or features within it. This is the same geometry-scope guard that governs aggregate sources (see NFIP aggregates sibling (not present) §4), applied to administrative geometry.
 
 ---
 
@@ -556,17 +555,17 @@ For FM: "Fire Management Assistance Declaration FM-<####>, declared <DECLARATION
 ## Related docs
 
 - [`./README.md`](./README.md) — FEMA family-level catalog entry
-- [`./NATIONAL-FLOOD-HAZARD-LAYER.md`](./NATIONAL-FLOOD-HAZARD-LAYER.md) — sibling NFHL descriptor (regulatory)
-- [`./MAP-SERVICE-CENTER.md`](./MAP-SERVICE-CENTER.md) — sibling MSC descriptor (regulatory)
-- [`./NFIP-CLAIM-POLICY-AGGREGATES.md`](./NFIP-CLAIM-POLICY-AGGREGATES.md) — sibling NFIP aggregates (aggregate, high-sensitivity)
-- [`./OPENFEMA-AUXILIARY-TABLES.md`](./OPENFEMA-AUXILIARY-TABLES.md) — sibling auxiliary OpenFEMA tables (administrative + aggregate mix)
+- `./NATIONAL-FLOOD-HAZARD-LAYER.md` (not present) — sibling NFHL descriptor (regulatory)
+- `./MAP-SERVICE-CENTER.md` (not present) — sibling MSC descriptor (regulatory)
+- `./NFIP-CLAIM-POLICY-AGGREGATES.md` (not present) — sibling NFIP aggregates (aggregate, high-sensitivity)
+- `./OPENFEMA-AUXILIARY-TABLES.md` (not present) — sibling auxiliary OpenFEMA tables (administrative + aggregate mix)
 - [`../README.md`](../README.md) — Source catalog landing page
 - [`../IDENTITY.md`](../IDENTITY.md) — Collection / item identity patterns
 - [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) — Rights and sensitivity registry
 - [`../_examples/stac-item-example.json`](../_examples/stac-item-example.json) — Reference STAC + `kfm:provenance` shape
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Placement and lifecycle law (v1.2)
 - [`../../../domains/hazards/README.md`](../../../domains/hazards/README.md) — Hazards domain consumer *(PROPOSED path)*
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — Schema home rule
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema home rule
 - `<TODO>` `../../../adr/ADR-S-04-source-role-vocabulary-v1.md` — Source-role vocabulary v1 (PROPOSED in Domains Atlas §24.12)
 - `<TODO>` `../../../adr/ADR-S-14-cross-lane-join-policy.md` — Cross-lane join policy (PROPOSED in Domains Atlas §24.12)
 
@@ -578,6 +577,6 @@ For FM: "Fire Management Assistance Declaration FM-<####>, declared <DECLARATION
 
 ---
 
-<sub>**Related docs**: [FEMA family](./README.md) · [NFHL](./NATIONAL-FLOOD-HAZARD-LAYER.md) · [MSC](./MAP-SERVICE-CENTER.md) · [NFIP aggregates](./NFIP-CLAIM-POLICY-AGGREGATES.md) · [Auxiliary tables](./OPENFEMA-AUXILIARY-TABLES.md) · [Directory Rules](../../../doctrine/directory-rules.md) · [connectors/fema/](../../../../connectors/fema/)</sub>
+<sub>**Related docs**: [FEMA family](./README.md) · NFHL (not present) · MSC (not present) · NFIP aggregates (not present) · Auxiliary tables (not present) · [Directory Rules](../../../doctrine/directory-rules.md) · [connectors/fema/](../../../../connectors/fema/)</sub>
 <sub>**Last updated**: 2026-05-21 · **Doc status**: draft · **Admission**: PROPOSED · **Doctrine basis**: CONFIRMED · **Implementation basis**: PROPOSED / NEEDS VERIFICATION</sub>
 <sub>[↑ Back to top](#openfema-disaster-declarations)</sub>

@@ -23,6 +23,9 @@ notes:
   - "PROPOSED product-page scaffold; description grounded in [DOM-AIR] §D and Atlas idea cards (KFM-P13-PROG-0032, KFM-P13-PROG-0006, KFM-P2-IDEA-0022). Sibling-link presence verified in a Claude Code session, not in a mounted repo."
   - "OpenAQ source_role is `aggregate` per Atlas §24.1.3 — NOT `observed` and NOT `regulatory`. Anti-collapse rules apply throughout (§7)."
   - "Family-level §7.3 disposition (OPEN-DSC-14) is OPEN; until it resolves, no SourceDescriptor or connector activation should land. See the family README §5."
+owning_root: docs/
+responsibility: "Documentation for OpenAQ Air Quality Aggregator; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -543,10 +546,10 @@ elif status == 200:
 - [`../OPEN-QUESTIONS.md`](../OPEN-QUESTIONS.md) — lane-wide open question register *(`OPEN-DSC-03`, `OPEN-DSC-14`)*
 - [`../_examples/stac-item-example.json`](../_examples/stac-item-example.json) — canonical STAC + `kfm:provenance` example *(PROPOSED)*
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Directory Rules v1.2 *(§7.3 canonical connector roots; §13 anti-patterns)*
-- [`../../../domains/atmosphere-air/README.md`](../../../domains/atmosphere-air/README.md) — atmosphere/air domain doctrine *(NEEDS VERIFICATION of path)*
+- `../../../domains/atmosphere-air/README.md` (not present) — atmosphere/air domain doctrine *(NEEDS VERIFICATION of path)*
 - [`../../../standards/STAC.md`](../../../standards/STAC.md) — KFM-STAC profile *(NEEDS VERIFICATION of path)*
 - [`../../../standards/PROV.md`](../../../standards/PROV.md) — KFM provenance profile *(NEEDS VERIFICATION of path; PROV.md vs PROVENANCE.md naming under ADR review per Directory Rules §13.5 v1.1)*
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home ADR *(NEEDS VERIFICATION of path)*
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home ADR *(NEEDS VERIFICATION of path)*
 - [`../../../adr/`](../../../adr/) — ADR directory *(an ADR is REQUIRED before §7.3 promotion; see family README §5)*
 
 > [!NOTE]

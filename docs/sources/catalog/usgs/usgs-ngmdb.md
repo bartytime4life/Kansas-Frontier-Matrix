@@ -11,15 +11,6 @@ policy_label: public
 related:
   - docs/sources/catalog/usgs.md
   - docs/sources/catalog/usgs/README.md
-  - docs/sources/catalog/usgs/IDENTITY.md
-  - docs/sources/catalog/usgs/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/usgs/usgs-3dep-elevation.md
-  - docs/sources/catalog/usgs/usgs-earthquake-catalog.md
-  - docs/sources/catalog/usgs/usgs-gnis-names.md
-  - docs/sources/catalog/usgs/usgs-nhdplus-hr.md
-  - docs/sources/catalog/usgs/usgs-nlcd.md
-  - docs/sources/catalog/usgs/usgs-nwis-water.md
-  - docs/sources/catalog/usgs/usgs-the-national-map.md
   - docs/sources/catalog/usgs/usgs-mrds.md
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
@@ -31,10 +22,6 @@ related:
   - docs/standards/PROV.md
   - docs/runbooks/geology/SOURCE_REFRESH_RUNBOOK.md
   - docs/domains/geology/README.md
-  - data/registry/sources/usgs/
-  - policy/sources/usgs/
-  - policy/sensitivity/geology/
-  - policy/sensitivity/cultural/
   - policy/sensitivity/hazards/
   - policy/sensitivity/infrastructure/
   - schemas/contracts/v1/source/
@@ -62,6 +49,9 @@ notes:
   - "Multiple-interpretations chain: the same area mapped by different authors at different times produces multiple interpretations. KFM preserves all as distinct interpretation records (analogous to GNIS attestation_n + MRDS source-attribution-chain) rather than collapsing to a single 'current' map."
   - "Connector-home convention: scaffold places this at connectors/usgs_ngmdb/, the SECOND occurrence of the compound family-prefix flat-folder pattern (after MRDS connectors/usgs_mrds/). Both are geology/mineral-resources surfaces — a coincidence or signal of an emerging sub-family convention? ADR-S-?? has more data to evaluate now."
   - "Cross-references the MRDS sibling explicitly: NGMDB is the geologic-context layer (units, structures) for MRDS occurrence records. Complementary, not redundant."
+owning_root: docs/
+responsibility: "Documentation for USGS National Geologic Map Database; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -89,7 +79,7 @@ notes:
 **Status:** `PROPOSED — scaffold filled` &nbsp;·&nbsp; **Doc version:** `v0.2` &nbsp;·&nbsp; **Family:** [`usgs`](./README.md) &nbsp;·&nbsp; **Last reviewed:** 2026-05-23
 
 > [!IMPORTANT]
-> **This page is a pointer.** Authoritative descriptor fields live in [`data/registry/sources/usgs/`](../../../../data/registry/sources/usgs/). Rights, sensitivity, engineering / fault-rupture-mapping disclaimers, CARE applicability, and infrastructure-overlay policy live in [`policy/sources/usgs/`](../../../../policy/sources/usgs/), [`policy/sensitivity/geology/`](../../../../policy/sensitivity/geology/), [`policy/sensitivity/cultural/`](../../../../policy/sensitivity/cultural/), [`policy/sensitivity/hazards/`](../../../../policy/sensitivity/hazards/), and [`policy/sensitivity/infrastructure/`](../../../../policy/sensitivity/infrastructure/), summarized at the family level in [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not duplicate descriptor or policy content on this product page.**
+> **This page is a pointer.** Authoritative descriptor fields live in `data/registry/sources/usgs/` (not present). Rights, sensitivity, engineering / fault-rupture-mapping disclaimers, CARE applicability, and infrastructure-overlay policy live in `policy/sources/usgs/` (not present), `policy/sensitivity/geology/` (not present), `policy/sensitivity/cultural/` (not present), [`policy/sensitivity/hazards/`](../../../../policy/sensitivity/hazards/), and [`policy/sensitivity/infrastructure/`](../../../../policy/sensitivity/infrastructure/), summarized at the family level in `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not duplicate descriptor or policy content on this product page.**
 
 > [!CAUTION]
 > **Geologic maps are interpretations, not direct observations.** Per `KFM-P1-IDEA-0051` knowledge-character labels (which explicitly include `interpreted`): unit boundaries, fault traces, formation extents, subsurface inferences, age assignments, and correlation between maps are all expert interpretations of evidence — not direct measurements. KFM derivatives that cite a geologic map as if it were a measurement (e.g., *"the formation extends here"* without the interpretive qualifier) collapse interpretation into observation and violate the source-role anti-collapse rule per Atlas §24.1.2. See [§2.1](#21-sub-product-source-role-decomposition) and [§6](#6-provenance-fields). *(Atlas §24.1.1 enum disposition for `interpreted` is itself open — Q-2 + ADR-S-04.)*
@@ -133,7 +123,7 @@ This product page describes how KFM catalogs the **USGS National Geologic Map Da
 4. Where USGS itself is the original publisher with first-party field-survey origin: the **observed** field-survey component AND the **interpreted** map representation derived from it.
 
 > [!NOTE]
-> **EXTERNAL** *(preserved without re-verification this session).* USGS distributes NGMDB through the Mineral and Geologic Map Sciences subprogram and historically through `ngmdb.usgs.gov`-class endpoints + MapView. Current endpoint URLs, distribution formats (Shapefile / GeoJSON / Geodatabase / KML / scanned PDFs/TIFFs / GeoPDF), the bibliographic-index format, and the relationship between NGMDB and any TNM-mediated access (see [`usgs-the-national-map.md`](./usgs-the-national-map.md)) all remain **NEEDS VERIFICATION** until re-fetched in a session with web access.
+> **EXTERNAL** *(preserved without re-verification this session).* USGS distributes NGMDB through the Mineral and Geologic Map Sciences subprogram and historically through `ngmdb.usgs.gov`-class endpoints + MapView. Current endpoint URLs, distribution formats (Shapefile / GeoJSON / Geodatabase / KML / scanned PDFs/TIFFs / GeoPDF), the bibliographic-index format, and the relationship between NGMDB and any TNM-mediated access (see `usgs-the-national-map.md` (not present)) all remain **NEEDS VERIFICATION** until re-fetched in a session with web access.
 
 > [!IMPORTANT]
 > **NGMDB IS the federal carrier for the family-catalog `usgs-geologic-maps` sub-source.** The v1.1 family-catalog `usgs.md` §5 row uses the short ID `usgs-geologic-maps` for what is, in practice, the same federal product NGMDB indexes and distributes. v0.2 of this page surfaces the family-catalog short-ID reconciliation explicitly as Q-1 / ADR-S-?? rather than silently picking one name. See [§3.2](#32-family-catalog-short-id-reconciliation).
@@ -301,11 +291,11 @@ Per Atlas §24.1.1 enum + `KFM-P1-IDEA-0051` knowledge-character labels + Atlas 
 | **Engineering / geotechnical site investigation** | Site-specific geotechnical reports under qualified-engineers signatures — **NEVER** NGMDB | See [§9.1](#91-t0-default-with-engineering-disclaimer). |
 | **Fault-rupture mapping for seismic-design purposes** | State seismic-hazard authorities + USGS Earthquake Hazards Program seismic-design products — **NEVER** generic NGMDB structural features | See [§9.2](#92-fault-rupture-and-seismic-design-disclaimer). |
 | **Karst-risk assessments for infrastructure design** | State karst-program authorities + site-specific surveys — **NEVER** NGMDB surficial maps alone | See [§9.3](#93-infrastructure-overlay-cross-lane-sensitivity). |
-| **The earthquake catalog** (events, mechanisms) | [`usgs-earthquake-catalog.md`](./usgs-earthquake-catalog.md) | NGMDB structural features show *where* faults are mapped; the earthquake catalog records *what* events have happened on them. |
-| **Mining-community place names** | [`usgs-gnis-names.md`](./usgs-gnis-names.md) cross-joined via co-located point | — |
-| **Terrain context** for a geologic unit | [`usgs-3dep-elevation.md`](./usgs-3dep-elevation.md) cross-joined | — |
-| **Hydrography overlay** on a geologic unit | [`usgs-nhdplus-hr.md`](./usgs-nhdplus-hr.md) cross-joined | — |
-| **Land cover overlay** on a geologic unit | [`usgs-nlcd.md`](./usgs-nlcd.md) cross-joined | — |
+| **The earthquake catalog** (events, mechanisms) | `usgs-earthquake-catalog.md` (not present) | NGMDB structural features show *where* faults are mapped; the earthquake catalog records *what* events have happened on them. |
+| **Mining-community place names** | `usgs-gnis-names.md` (not present) cross-joined via co-located point | — |
+| **Terrain context** for a geologic unit | `usgs-3dep-elevation.md` (not present) cross-joined | — |
+| **Hydrography overlay** on a geologic unit | `usgs-nhdplus-hr.md` (not present) cross-joined | — |
+| **Land cover overlay** on a geologic unit | `usgs-nlcd.md` (not present) cross-joined | — |
 
 > [!CAUTION]
 > **NGMDB does NOT support engineering, regulatory, or compliance use.** Per the engineering-disclaimer cascade established across the family (3DEP §9.3 → NHDPlus HR §9.1 → NLCD §9.1 → Water Data §9.1 → MRDS §9.1) and extended for the geologic-map interpretive character: a regional geologic map does NOT substitute for site-specific geotechnical investigation, fault-rupture mapping for seismic design, karst-risk assessment, or any other engineering-grade determination. The controlling carrier in every such case is the site-specific professional investigation under qualified-engineer signatures.
@@ -316,7 +306,7 @@ Per Atlas §24.1.1 enum + `KFM-P1-IDEA-0051` knowledge-character labels + Atlas 
 
 ## 3. Source authority and family-catalog reconciliation
 
-See [`data/registry/sources/usgs/`](../../../../data/registry/sources/usgs/) for the authoritative `SourceDescriptor`. **Do not duplicate descriptor fields here.** Descriptor canonical schema home is `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 — **NEEDS VERIFICATION**.
+See `data/registry/sources/usgs/` (not present) for the authoritative `SourceDescriptor`. **Do not duplicate descriptor fields here.** Descriptor canonical schema home is `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 — **NEEDS VERIFICATION**.
 
 ### 3.1 Doctrinal anchors
 
@@ -441,7 +431,7 @@ See [`data/registry/sources/usgs/`](../../../../data/registry/sources/usgs/) for
 | `scale_aware_resolution_meters` | Numeric — the effective ground resolution implied by the map scale (e.g., 1:24K ≈ ~12m/pixel cartographic resolution; 1:500K ≈ ~250m/pixel) | **PROPOSED-required**. |
 | **Cross-references** | | |
 | `cross_source_refs` | Array of cross-refs to MRDS occurrence records, GNIS named places, borehole/well-log records that share the map's footprint | **PROPOSED**. |
-| `tribal_lands_overlap` | Boolean + Tribal-authority context | **PROPOSED-required when applicable** per [§9.4](#94-care-applicability-tribal-lands-geology). |
+| `tribal_lands_overlap` | Boolean + Tribal-authority context | **PROPOSED-required when applicable** per [§9.4](#94-care-applicability--tribal-lands-geology). |
 | `kfm:provenance.reality_boundary_ref` | `kfm://realityboundary/...` | Per [§10](#10-reality-boundary). |
 | `kfm:provenance.engineering_disclaimer_ref` | `kfm://disclaimer/ngmdb-not-engineering-not-regulatory` | Per [§9.1](#91-t0-default-with-engineering-disclaimer). |
 | `kfm:provenance.fault_rupture_disclaimer_ref` | `kfm://disclaimer/ngmdb-structure-not-fault-rupture-design` | Per [§9.2](#92-fault-rupture-and-seismic-design-disclaimer). |
@@ -607,7 +597,7 @@ graph LR
 
 ## 9. Rights and sensitivity (pointer)
 
-**Do not restate policy here.** See [`policy/sensitivity/geology/`](../../../../policy/sensitivity/geology/), [`policy/sensitivity/cultural/`](../../../../policy/sensitivity/cultural/), [`policy/sensitivity/hazards/`](../../../../policy/sensitivity/hazards/), [`policy/sensitivity/infrastructure/`](../../../../policy/sensitivity/infrastructure/), and the family-level summary at [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md).
+**Do not restate policy here.** See `policy/sensitivity/geology/` (not present), `policy/sensitivity/cultural/` (not present), [`policy/sensitivity/hazards/`](../../../../policy/sensitivity/hazards/), [`policy/sensitivity/infrastructure/`](../../../../policy/sensitivity/infrastructure/), and the family-level summary at `RIGHTS-AND-SENSITIVITY-MAP.md` (not present).
 
 ### 9.1 T0 default with engineering disclaimer
 
@@ -713,7 +703,7 @@ graph LR
 - **Engineering-claim disclaimer banner required** (gate-blocking) — `usgs_ngmdb_engineering_disclaimer_banner_required`.
 - **Fault-rupture disclaimer banner required for structure features** (gate-blocking) — `usgs_ngmdb_fault_rupture_disclaimer_banner_required` per [§9.2](#92-fault-rupture-and-seismic-design-disclaimer).
 - **Infrastructure-overlay generalization required** — `usgs_ngmdb_infrastructure_overlay_generalization` per [§9.3](#93-infrastructure-overlay-cross-lane-sensitivity).
-- **CARE Tribal-lands review required where applicable** (gate-blocking) — `usgs_ngmdb_tribal_lands_review_required` per [§9.4](#94-care-applicability-tribal-lands-geology).
+- **CARE Tribal-lands review required where applicable** (gate-blocking) — `usgs_ngmdb_tribal_lands_review_required` per [§9.4](#94-care-applicability--tribal-lands-geology).
 - **Cross-lane Hazards context-only enforcement** — `usgs_ngmdb_hazards_context_only_enforced`: structural features in the hazards projection carry the context-not-authority flag per Atlas Geology §F.
 - **People/Land non-ownership boundary enforced** — `usgs_ngmdb_people_land_non_ownership_enforced` per Atlas Geology §B.
 - **Datum-shift TransformReceipt required for older NAD27 maps** — `usgs_ngmdb_datum_shift_receipt_required` per `ML-061-022`.
@@ -793,7 +783,7 @@ graph LR
 
 ## 14. Example
 
-*Illustrative only — not authoritative. A minimal STAC + `kfm:provenance` shape lives at [`_examples/stac-item-example.json`](./_examples/stac-item-example.json) (file presence **NEEDS VERIFICATION**); NGMDB-specific example sketches belong at `_examples/geologic-unit-record-example.json`, `_examples/structure-feature-inferred-example.json`, and `_examples/multi-interpretation-chain-example.json` (PROPOSED).*
+*Illustrative only — not authoritative. A minimal STAC + `kfm:provenance` shape lives at `_examples/stac-item-example.json` (not present) (file presence **NEEDS VERIFICATION**); NGMDB-specific example sketches belong at `_examples/geologic-unit-record-example.json`, `_examples/structure-feature-inferred-example.json`, and `_examples/multi-interpretation-chain-example.json` (PROPOSED).*
 
 <details>
 <summary><b>Click to expand — minimal GeologicUnitRecord sketch (illustrative, JSON-LD)</b></summary>

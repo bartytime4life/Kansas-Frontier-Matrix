@@ -10,24 +10,19 @@ updated: 2026-05-22
 policy_label: public
 related:
   - docs/sources/catalog/loc/README.md
-  - docs/sources/catalog/loc/IDENTITY.md
-  - docs/sources/catalog/loc/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/loc/CHRONICLING-AMERICA.md
-  - docs/sources/catalog/loc/_examples/dcat-distribution-example.json
   - docs/sources/catalog/README.md
   - docs/standards/STAC_KFM_PROFILE.md
   - docs/standards/PROV.md
-  - docs/standards/AUTHORITY_LADDER.md
   - docs/doctrine/directory-rules.md
-  - data/registry/sources/loc/lcnaf/
   - schemas/contracts/v1/source/source-descriptor.schema.json
-  - connectors/loc/lcnaf/
-  - pipeline_specs/people-dna-land/loc-lcnaf/
 tags: [kfm, docs, sources, catalog, loc, authority, name-authority, lcnaf, identity, crosswalk, cidoc-crm]
 notes:
   - "PROPOSED product-page scaffold; the docs/sources/catalog/loc/ tree itself is PROPOSED until repo verification."
   - "LCNAF is an AUTHORITY-anchor source (not geospatial); STAC participation is marginal; DCAT + PROV-O are primary."
   - "Owners, badge targets, and example links are explicit placeholders — not fabricated."
+owning_root: docs/
+responsibility: "Documentation for LOC Name Authority File (LCNAF); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # LOC Name Authority File (LCNAF)
@@ -150,7 +145,7 @@ CONFIRMED (Pass 10 C7-06): For figures whose primary evidentiary footprint is in
 | Archive | **SNAC / EAC-CPF** | Primary footprint in archival collections | SNAC ID alongside LCNAF when both exist |
 
 > [!TIP]
-> The authority ladder is **policy**, not opinion. Gate B (catalog promotion) should fail closed for in-scope record classes that lack at least one ladder anchor. See [`docs/standards/AUTHORITY_LADDER.md`](../../../standards/AUTHORITY_LADDER.md) *(path PROPOSED)* and `policy/sources/` for the enforceable form.
+> The authority ladder is **policy**, not opinion. Gate B (catalog promotion) should fail closed for in-scope record classes that lack at least one ladder anchor. See `docs/standards/AUTHORITY_LADDER.md` (not present) *(path PROPOSED)* and `policy/sources/` for the enforceable form.
 
 [↑ Back to top](#loc-name-authority-file-lcnaf)
 
@@ -174,7 +169,7 @@ CONFIRMED (Pass 10 C4): KFM publishes through **STAC** (spatiotemporal), **DCAT*
 
 ## 6. Collection identity
 
-PROPOSED (Pass 10 C4-02): Collection id pattern is `kfm-<org>-<product>`; the exact form for this product is left to [`IDENTITY.md`](./IDENTITY.md). Collection ids are **stable handles** — renaming a Collection breaks links throughout the catalog.
+PROPOSED (Pass 10 C4-02): Collection id pattern is `kfm-<org>-<product>`; the exact form for this product is left to `IDENTITY.md` (not present). Collection ids are **stable handles** — renaming a Collection breaks links throughout the catalog.
 
 PROPOSED (Pass 10 C4-01 open question, tracked as **OPEN-DSC-03**): The vendor namespace for KFM STAC / DCAT extension fields is **unresolved between `kfm:` (KFM-global) and `ks-kfm:` (Kansas-scoped)**. This product page **MUST NOT** pin the choice; it follows [`docs/standards/STAC_KFM_PROFILE.md`](../../../standards/STAC_KFM_PROFILE.md) once the ADR lands.
 
@@ -247,7 +242,7 @@ PROPOSED — **LCNAF records have no geometry**; this product never emits map la
 
 ## 10. Rights, sensitivity, and CARE posture
 
-NEEDS VERIFICATION (default for this product): defer to [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
+NEEDS VERIFICATION (default for this product): defer to [`policy/sensitivity/`](../../../../policy/sensitivity/) and `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not restate policy here.**
 
 CONFIRMED (Master MapLibre Q section; CDB §16; Pass 10 C15 CARE; `KFM-P10-PROG-0014` SPDX guard):
 
@@ -328,9 +323,9 @@ NEEDS VERIFICATION (Directory Rules §13.5 anti-pattern *Source alias drift risk
 ## 14. Examples (illustrative only)
 
 > [!NOTE]
-> Examples below are **illustrative**, not authoritative. Authoritative samples live under [`_examples/`](./_examples/) and the fixture lanes (`fixtures/` and `tests/fixtures/`) — do not treat any block on this page as a contract.
+> Examples below are **illustrative**, not authoritative. Authoritative samples live under `_examples/` (not present) and the fixture lanes (`fixtures/` and `tests/fixtures/`) — do not treat any block on this page as a contract.
 
-See [`_examples/dcat-distribution-example.json`](./_examples/dcat-distribution-example.json) for the minimal DCAT + `kfm:provenance` shape.
+See `_examples/dcat-distribution-example.json` (not present) for the minimal DCAT + `kfm:provenance` shape.
 
 <details>
 <summary><strong>Illustrative DCAT distribution sketch (DO NOT COPY VERBATIM)</strong></summary>
@@ -429,16 +424,16 @@ See [`_examples/dcat-distribution-example.json`](./_examples/dcat-distribution-e
 ## 16. Related docs
 
 - [`./README.md`](./README.md) — `loc` source family overview
-- [`./IDENTITY.md`](./IDENTITY.md) — collection-id pattern, namespace decisions for the `loc` family
-- [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — rights and sensitivity disposition for `loc` products
-- [`./CHRONICLING-AMERICA.md`](./CHRONICLING-AMERICA.md) — sibling LoC product (recall-layer newspapers); LCNAF anchors the names that appear there
-- [`./_examples/dcat-distribution-example.json`](./_examples/dcat-distribution-example.json) — minimal DCAT + `kfm:provenance` shape
+- `./IDENTITY.md` (not present) — collection-id pattern, namespace decisions for the `loc` family
+- `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — rights and sensitivity disposition for `loc` products
+- `./CHRONICLING-AMERICA.md` (not present) — sibling LoC product (recall-layer newspapers); LCNAF anchors the names that appear there
+- `./_examples/dcat-distribution-example.json` (not present) — minimal DCAT + `kfm:provenance` shape
 - [`../README.md`](../README.md) — `docs/sources/catalog/` overview
 - [`../../../standards/STAC_KFM_PROFILE.md`](../../../standards/STAC_KFM_PROFILE.md) — KFM STAC profile (namespace, extensions, attestation hook)
 - [`../../../standards/PROV.md`](../../../standards/PROV.md) — PROV-O / PAV provenance profile *(filename pending ADR-S-06)*
-- [`../../../standards/AUTHORITY_LADDER.md`](../../../standards/AUTHORITY_LADDER.md) — personal-name authority ladder *(path PROPOSED)*
+- `../../../standards/AUTHORITY_LADDER.md` (not present) — personal-name authority ladder *(path PROPOSED)*
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement law
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home rule *(path PROPOSED)*
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home rule *(path PROPOSED)*
 
 [↑ Back to top](#loc-name-authority-file-lcnaf)
 
@@ -502,7 +497,7 @@ See [`_examples/dcat-distribution-example.json`](./_examples/dcat-distribution-e
 
 ---
 
-**Related docs:** [loc family README](./README.md) · [IDENTITY](./IDENTITY.md) · [RIGHTS-AND-SENSITIVITY-MAP](./RIGHTS-AND-SENSITIVITY-MAP.md) · [Chronicling America](./CHRONICLING-AMERICA.md) · [Authority Ladder](../../../standards/AUTHORITY_LADDER.md) · [STAC KFM Profile](../../../standards/STAC_KFM_PROFILE.md) · [Directory Rules](../../../doctrine/directory-rules.md)
+**Related docs:** [loc family README](./README.md) · IDENTITY (not present) · RIGHTS-AND-SENSITIVITY-MAP (not present) · Chronicling America (not present) · Authority Ladder (not present) · [STAC KFM Profile](../../../standards/STAC_KFM_PROFILE.md) · [Directory Rules](../../../doctrine/directory-rules.md)
 
 *Last updated: 2026-05-22 · Doc version: v0.2 · Status: PROPOSED scaffold*
 

@@ -33,9 +33,8 @@ related:
   - docs/registers/AUTHORITY_LADDER.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - schemas/contracts/v1/source/source_descriptor.schema.json
-  - connectors/landfire/
   - data/registry/sources/
   - policy/sensitivity/
   - policy/rights/
@@ -99,6 +98,9 @@ notes:
     `kfm:provenance`; `C4-02` STAC Collection `kfm-<org>-<product>`;
     `C4-05` DCAT; `C5-02` default-deny promotion; `C5-04` spec-hash-match;
     `C5-08` lineage required; `C3-01` smart-sync HTTP validators.
+owning_root: docs/
+responsibility: "Documentation for LANDFIRE source family — Catalog README; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # `landfire` source family — Catalog README
@@ -463,7 +465,7 @@ flowchart LR
 - [`../../../standards/SENSITIVITY_RUBRIC.md`](../../../standards/SENSITIVITY_RUBRIC.md) — `C6-01` 0–5 rubric (PROPOSED in corpus)
 - [`../../../registers/AUTHORITY_LADDER.md`](../../../registers/AUTHORITY_LADDER.md) — authority order
 - [`../../../registers/DRIFT_REGISTER.md`](../../../registers/DRIFT_REGISTER.md) — drift filing (including OPEN-DSC-14 ADR-ratification gap)
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home convention
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home convention
 - Pass-10 Idea Index — **`C4-01`** STAC `kfm:provenance`; **`C4-02`** STAC Collection; **`C4-05`** DCAT distribution; **`C5-02`** default-deny promotion; **`C5-04`** spec-hash-match; **`C5-08`** lineage required; **`C3-01`** smart-sync HTTP validators
 - Pass-23/32 Consolidated Atlas — **`KFM-P2-IDEA-0028`** USDA CDL + NLCD + LANDFIRE + GAP land cover (CONFIRMED, Pass 32); **`KFM-P18-PROG-0032`** LANDFIRE LDist source descriptor (active, Pass 32); **`KFM-P25-PROG-0010`** GAP/LANDFIRE source descriptor (active, Pass 32); **`KFM-P25-IDEA-0010`** LANDFIRE EVT facies mapping (active, Pass 32); **`KFM-P25-FEAT-0005`** vegetation facies county map (active, Pass 32); **`KFM-P25-PROG-0024`** LANDFIRE EVT county summary pipeline (active, Pass 32); **`KFM-P25-PROG-0025`** USNVC nvc_code metadata crosswalk (active, Pass 32); **`KFM-P20-IDEA-0002`** mask-aware HLS vegetation analytics (active, Pass 32, parallel pattern); **`KFM-P24-PROG-0051`** Soils PMTiles/COG artifact contract (active, Pass 32, parallel distribution model); **`KFM-P13-PROG-0018`** sensitive species grid generalization (active, Pass 32, applied weakly)
 - Master MapLibre Components — **`ML-K-067`** LANDFIRE EVT raster → COG with signed derivative provenance

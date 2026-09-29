@@ -10,11 +10,8 @@ updated: 2026-05-20
 policy_label: public
 related:
   - docs/sources/catalog/census/README.md
-  - docs/sources/catalog/census/IDENTITY.md
-  - docs/sources/catalog/census/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/census/decennial-counts.md
   - docs/sources/catalog/census/acs-estimates.md
-  - docs/sources/catalog/census/tiger.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/_examples/stac-item-example.json
   - docs/doctrine/directory-rules.md
@@ -23,6 +20,9 @@ notes:
   - "PROPOSED product-page scaffold; sibling-link presence verified in Claude Code session."
   - "PROPOSED content sourced from Pass 23/32 atlas (People/DNA/Land domain D/E; Source-Role Anti-Collapse Register §24.1.1; KFM-P17-PROG-0015), Pass 10 (C4-01, C6-05, C6-06), unified-doctrine sensitivity tier scheme T0-T4; descriptor fields intentionally not restated here."
   - "Distinct from the decennial-counts sibling: this product is Observed (per-person enumeration), NOT Aggregate — see top-of-doc WARNING callouts."
+owning_root: docs/
+responsibility: "Documentation for Historic Decennial Micro-data; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -127,8 +127,8 @@ See [`data/registry/sources/`](../../../../data/registry/sources/) for the autho
 |---|---|---|---|
 | `SourceDescriptor` | [`data/registry/sources/`](../../../../data/registry/sources/) | Identity, **source role = Observed**, rights, cohort cadence, transcription-source pin, sensitivity, living-person policy reference | **No** — pointer only |
 | Family overview & sibling links | [`./README.md`](./README.md) | Family-level orientation for `census` | **No** — see family README |
-| Collection identity rules | [`./IDENTITY.md`](./IDENTITY.md) | `kfm-<org>-<product>` pattern, namespace | **No** — see IDENTITY |
-| Rights & sensitivity mapping | [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) | Tiering (T0–T4), living-person policy, historical race / origin display | **No** — see map |
+| Collection identity rules | `./IDENTITY.md` (not present) | `kfm-<org>-<product>` pattern, namespace | **No** — see IDENTITY |
+| Rights & sensitivity mapping | `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) | Tiering (T0–T4), living-person policy, historical race / origin display | **No** — see map |
 | Contract shape | `schemas/contracts/v1/source/` and `schemas/contracts/v1/domains/people-dna-land/` | JSON-schema for descriptor + `Person Assertion` / `NameAssertion` / `Residence Event` shapes | **No** — per ADR-0001 |
 
 PROPOSED source-role posture: **Observed** (Atlas §24.1.1). Specifically: the *original NARA-released enumeration schedule* is the canonical Observed record; **transcriptions** (IPUMS, Ancestry, FamilySearch) are *Observed-with-transcription-receipt* — the transcription introduces a step-with-its-own-errors that must be recorded but does not change the underlying source role.
@@ -181,7 +181,7 @@ PROPOSED. The catalog projection set this product participates in. Lanes follow 
 
 ## Collection identity
 
-- PROPOSED Collection id pattern: `kfm-<org>-<product>` — see [`IDENTITY.md`](./IDENTITY.md) for the canonical rule.
+- PROPOSED Collection id pattern: `kfm-<org>-<product>` — see `IDENTITY.md` (not present) for the canonical rule.
 - PROPOSED namespace: `kfm:` — *see [OPEN-DSC-03](#open-questions); Pass-10 C4-01 records the `kfm:` vs `ks-kfm:` choice as an unresolved namespace question.*
 - PROPOSED: one Collection per **(cohort, transcription-source)** pair (e.g., `decennial-microdata-1880-ipums`, `decennial-microdata-1900-nara`, `decennial-microdata-1940-familysearch`). NEEDS VERIFICATION.
 - Asset roles (enumeration-image, transcription-table, household-link, person-assertion, name-assertion, residence-event, historical-boundary-geocode, transcription-receipt, etc.): NEEDS VERIFICATION — confirm against `schemas/contracts/v1/source/` and `schemas/contracts/v1/domains/people-dna-land/`.
@@ -353,7 +353,7 @@ CONFIRMED doctrine cross-reference (unified-doctrine sensitivity-tier scheme): *
 
 ## Rights and sensitivity
 
-NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
+NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not restate policy here.**
 
 PROPOSED sensitivity posture for this product:
 
@@ -524,11 +524,11 @@ These are the KFM atlas cards from which the PROPOSED content above is sourced. 
 ## Related docs
 
 - [`docs/sources/catalog/census/README.md`](./README.md) — `census` family landing page.
-- [`docs/sources/catalog/census/IDENTITY.md`](./IDENTITY.md) — Collection-id and namespace rules for the family.
-- [`docs/sources/catalog/census/RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — Rights / sensitivity tiering for `census` (living-person policy, historical race / origin display).
+- `docs/sources/catalog/census/IDENTITY.md` (not present) — Collection-id and namespace rules for the family.
+- `docs/sources/catalog/census/RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — Rights / sensitivity tiering for `census` (living-person policy, historical race / origin display).
 - [`docs/sources/catalog/census/decennial-counts.md`](./decennial-counts.md) — Sibling: aggregate decennial tables (Aggregate source role).
 - [`docs/sources/catalog/census/acs-estimates.md`](./acs-estimates.md) — Sibling: ACS estimates (Aggregate source role).
-- [`docs/sources/catalog/census/tiger.md`](./tiger.md) — Sibling: TIGER/Line boundary geometry (modern geography only).
+- `docs/sources/catalog/census/tiger.md` (not present) — Sibling: TIGER/Line boundary geometry (modern geography only).
 - _TODO_ — `docs/sources/catalog/census/pums.md` — PUMS microdata (modern microdata sibling).
 - [`docs/sources/catalog/README.md`](../../README.md) — Catalog of source families.
 - [`docs/sources/catalog/_examples/stac-item-example.json`](../_examples/stac-item-example.json) — Illustrative STAC + `kfm:provenance` shape.

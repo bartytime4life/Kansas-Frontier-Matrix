@@ -20,12 +20,10 @@ related:
   - docs/doctrine/directory-rules.md
   - docs/domains/soil/README.md
   - docs/domains/agriculture/README.md
-  - docs/domains/weather-atmospheric/README.md
   - docs/domains/hydrology/README.md
   - docs/standards/SENSITIVITY_RUBRIC.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - schemas/contracts/v1/source/source_descriptor.schema.json
-  - schemas/contracts/v1/sensors/station_health.schema.json
   - connectors/kansas/
   - data/registry/sources/
   - policy/sensitivity/
@@ -60,6 +58,9 @@ notes:
     per the v0.1 scaffold subtitle. Until per-product license terms are reviewed
     against current Kansas Mesonet terms-of-use, KFM treats this as a runtime
     gate — unknown rights default to DENY.
+owning_root: docs/
+responsibility: "Documentation for Kansas Mesonet; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas Mesonet
@@ -390,8 +391,8 @@ NEEDS VERIFICATION per release — see [`policy/sensitivity/`](../../../../polic
 
 - [`contracts/`](../../../../contracts/) — object families (notably `WeatherObservation`, `SoilMoistureObservation`, `Pedon` per Domains Atlas; `station_health` per `KFM-P21-PROG-0006`).
 - [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) — `SourceDescriptor` machine shape per ADR-0001.
-- [`schemas/contracts/v1/sensors/station_health.schema.json`](../../../../schemas/contracts/v1/sensors/station_health.schema.json) — `station_health` schema (PROPOSED home; NEEDS VERIFICATION).
-- [`schemas/contracts/v1/timeseries/`](../../../../schemas/contracts/v1/timeseries/) — PROPOSED home for point-station time-series schema.
+- `schemas/contracts/v1/sensors/station_health.schema.json` (not present) — `station_health` schema (PROPOSED home; NEEDS VERIFICATION).
+- `schemas/contracts/v1/timeseries/` (not present) — PROPOSED home for point-station time-series schema.
 
 [Back to top](#quick-jump)
 
@@ -400,9 +401,9 @@ NEEDS VERIFICATION per release — see [`policy/sensitivity/`](../../../../polic
 ## 14. Related connectors and pipelines
 
 - [`connectors/kansas/`](../../../../connectors/kansas/) — **CONFIRMED (at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7`)** family lane per Directory Rules v1.2 §7.3.
-- [`connectors/kansas/kansas-mesonet/`](../../../../connectors/kansas/kansas-mesonet/) — per-institution adapter (PROPOSED — was incorrectly referenced as top-level `connectors/kansas-mesonet/` in v0.1; see §12).
+- `connectors/kansas/kansas-mesonet/` (not present) — per-institution adapter (PROPOSED — was incorrectly referenced as top-level `connectors/kansas-mesonet/` in v0.1; see §12).
 - Pipelines: [`pipelines/ingest/`](../../../../pipelines/ingest/), [`pipelines/normalize/`](../../../../pipelines/normalize/), [`pipelines/validate/`](../../../../pipelines/validate/), [`pipelines/catalog/`](../../../../pipelines/catalog/).
-- Pipeline specs: [`pipeline_specs/soil/`](../../../../pipeline_specs/soil/), [`pipeline_specs/weather-atmospheric/`](../../../../pipeline_specs/weather-atmospheric/), [`pipeline_specs/agriculture/`](../../../../pipeline_specs/agriculture/), [`pipeline_specs/hydrology/`](../../../../pipeline_specs/hydrology/) (PROPOSED — confirm each per measurement type).
+- Pipeline specs: [`pipeline_specs/soil/`](../../../../pipeline_specs/soil/), `pipeline_specs/weather-atmospheric/` (not present), [`pipeline_specs/agriculture/`](../../../../pipeline_specs/agriculture/), [`pipeline_specs/hydrology/`](../../../../pipeline_specs/hydrology/) (PROPOSED — confirm each per measurement type).
 
 > [!IMPORTANT]
 > **Connector-as-non-publisher** rule (CONFIRMED, Directory Rules §7.3). `connectors/kansas/kansas-mesonet/` MUST write only to `data/raw/<domain>/kansas-mesonet/<run_id>/` or `data/quarantine/...`. It MUST NOT write to `data/processed/`, `data/catalog/`, or `data/published/`.
@@ -441,7 +442,7 @@ See [`_examples/stac-item-example.json`](../_examples/stac-item-example.json) fo
 
 ## 17. Verification backlog
 
-Inheritance: every family-level OPEN item from [`./README.md`](./README.md#11-open-questions) applies. Product-specific items below.
+Inheritance: every family-level OPEN item from [`./README.md`](./README.md) applies. Product-specific items below.
 
 | Item | Evidence that would settle it | Status |
 |---|---|---|
@@ -586,6 +587,6 @@ Inheritance: every family-level OPEN item from [`./README.md`](./README.md#11-op
 
 ### Footer
 
-> **Related:** [`./README.md`](./README.md) (kansas family landing) · [`../README.md`](../README.md) (catalog index) · [`../IDENTITY.md`](../IDENTITY.md) · [`../PROFILES.md`](../PROFILES.md) · [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) · [`../OPEN-QUESTIONS.md`](../OPEN-QUESTIONS.md) · [Directory Rules](../../../doctrine/directory-rules.md) · [Soil domain](../../../domains/soil/README.md) · [Weather-atmospheric domain](../../../domains/weather-atmospheric/README.md) · [Agriculture domain](../../../domains/agriculture/README.md) · [Hydrology domain](../../../domains/hydrology/README.md)
+> **Related:** [`./README.md`](./README.md) (kansas family landing) · [`../README.md`](../README.md) (catalog index) · [`../IDENTITY.md`](../IDENTITY.md) · [`../PROFILES.md`](../PROFILES.md) · [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) · [`../OPEN-QUESTIONS.md`](../OPEN-QUESTIONS.md) · [Directory Rules](../../../doctrine/directory-rules.md) · [Soil domain](../../../domains/soil/README.md) · Weather-atmospheric domain (not present) · [Agriculture domain](../../../domains/agriculture/README.md) · [Hydrology domain](../../../domains/hydrology/README.md)
 > **Last updated:** 2026-05-21 *(Claude Code product-page revision; v0.1 → v0.2)* · **Status:** draft · **Authority of this doc:** explanatory product-page; does **not** decide admission, activation, or release. Family lane `connectors/kansas/` is CONFIRMED §7.3 at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7`. Per-institution adapter `connectors/kansas/kansas-mesonet/` is **PROPOSED** (corrected from v0.1's incorrect top-level reference).
 > [⬆ Back to top](#kansas-mesonet)
