@@ -418,11 +418,9 @@ data/prov/
 data/reports/
 data/rollback/
 data/trade-routes/
-data/triplet/
-data/triplet(s)/
 ```
 
-These paths are current repository evidence, not new-write authority. Current `data/README.md` classifies them as compatibility, migration, deprecation, or decision candidates that require per-object inventory, producer/consumer cutover, identity preservation, validation, and rollback before movement or retirement.
+These paths are current repository evidence, not new-write authority. The former `data/triplet/` and `data/triplet(s)/` pointers were removed on 2026-09-29; `data/triplets/` is the only triplet lane. Current `data/README.md` classifies them as compatibility, migration, deprecation, or decision candidates that require per-object inventory, producer/consumer cutover, identity preservation, validation, and rollback before movement or retirement.
 
 > [!WARNING]
 > Do not “clean up” these lanes by bulk movement. Classify the object family first, then move through a reviewed migration with one canonical writer and proved consumers.

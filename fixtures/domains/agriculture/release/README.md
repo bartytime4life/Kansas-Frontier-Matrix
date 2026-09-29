@@ -129,7 +129,7 @@ Fixtures should be synthetic, deterministic, compact, public-safe, and reviewabl
 | Agriculture object meaning | `contracts/domains/agriculture/` | Referenced, not replaced. |
 | Machine-checkable Agriculture shape | `schemas/contracts/v1/domains/agriculture/` | Referenced, not duplicated. |
 | Agriculture policy | `policy/domains/agriculture/` | Out of scope; fixtures may test it but do not define it. |
-| Canonical lifecycle data | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/triplet/`, `data/published/` | Out of scope. |
+| Canonical lifecycle data | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/triplets/`, `data/published/` | Out of scope. |
 | Tests and validation proof | `tests/domains/agriculture/` and validator tooling | Referenced, not claimed as run. |
 
 Do not collapse this fixture lane into release authority, policy authority, catalog authority, source truth, EvidenceBundle authority, signature authority, rollback authority, or public-client permission.

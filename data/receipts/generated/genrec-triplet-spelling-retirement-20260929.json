@@ -1,0 +1,138 @@
+{
+  "receipt_id": "genrec-triplet-spelling-retirement-20260929",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "control_plane/repository_governance_parity.yaml",
+    "data/README.md",
+    "data/catalog/domain/habitat/README.md",
+    "data/triplets/README.md",
+    "docs/architecture/SKELETON_MAP.md",
+    "fixtures/contracts/v1/README.md",
+    "fixtures/domains/agriculture/README.md",
+    "fixtures/domains/agriculture/field_level_attempt/README.md",
+    "fixtures/domains/agriculture/hls_vi/README.md",
+    "fixtures/domains/agriculture/invalid/README.md",
+    "fixtures/domains/agriculture/nass_quickstats/README.md",
+    "fixtures/domains/agriculture/no_network/README.md",
+    "fixtures/domains/agriculture/no_network/nass/README.md",
+    "fixtures/domains/agriculture/release/README.md",
+    "fixtures/domains/agriculture/soil_moisture/README.md",
+    "fixtures/domains/agriculture/ssurgo/README.md",
+    "fixtures/domains/agriculture/valid/README.md",
+    "fixtures/domains/archaeology-public-safe/README.md",
+    "fixtures/domains/archaeology/golden/README.md",
+    "fixtures/domains/archaeology/invalid/README.md",
+    "fixtures/domains/archaeology/site/README.md",
+    "pipelines/triplets/README.md",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py",
+    "tools/validators/directory_governance/repository_topology_baseline.json"
+  ],
+  "artifact_hashes": {
+    "control_plane/repository_governance_parity.yaml": "sha256:15615f2d8738f1a81cbfa5a8e6f65f3fd4b925da0e0c78f7d57f625eca5b9da3",
+    "data/README.md": "sha256:3428acf0346157ece8bded22e1155b58d6e53a2faac2ca41a90589dc8b7e97f9",
+    "data/catalog/domain/habitat/README.md": "sha256:1f0761ec1e5713e58fa14ceed575170928e692cab25b8c53f0d6a7be77ea99ab",
+    "data/triplets/README.md": "sha256:024eb0f3303e64fc5b62a825e92d420cbdc39589dac5354376e6a6b92f8b70ef",
+    "docs/architecture/SKELETON_MAP.md": "sha256:37b76fabef7fe180ae0b313a23213e400d01141b1dba84cdcd1da5b4d24756b7",
+    "fixtures/contracts/v1/README.md": "sha256:0a3d1a2b704114894334fe3c73c4c2b319d1f51be907fe33de769649b14c1a77",
+    "fixtures/domains/agriculture/README.md": "sha256:7b105c050c0cfbbc31fa5e57dfb19d6f63514c0328126e67a8d0f7214760bd22",
+    "fixtures/domains/agriculture/field_level_attempt/README.md": "sha256:ae350cee8e7fe5190ead1134f39da5220f946e108dce54a77fe7e30d256914d4",
+    "fixtures/domains/agriculture/hls_vi/README.md": "sha256:e6c787d012bf06fbb1fc6dc24c0e0584851a24cc6f7b14f3a25db02dd1fd07e6",
+    "fixtures/domains/agriculture/invalid/README.md": "sha256:7eaeb9e682f7a2f0d098edb80d5fda9bc1842a1dbc7a75ca2affdffce8e1073f",
+    "fixtures/domains/agriculture/nass_quickstats/README.md": "sha256:b54cf4471dc855effa400451de63de37ac9f4db29c23f59eb442deb56cbfc38d",
+    "fixtures/domains/agriculture/no_network/README.md": "sha256:c08c4e5dbdc57a2a0ceed6c360bde1eb535f7a44f6e2a7c3eb8220f9623d6653",
+    "fixtures/domains/agriculture/no_network/nass/README.md": "sha256:4f30a9513c2447418571b4b6d9ea6252a7c170f782cf66627a957a510b4bce00",
+    "fixtures/domains/agriculture/release/README.md": "sha256:9fe7d6e64293c9200c551aa20d58dec7a9f04cc7f1cc8cb937cef3b257fc47e6",
+    "fixtures/domains/agriculture/soil_moisture/README.md": "sha256:f206bbcea3f9a4bd87d75802a2a969798e43aa4e585eae8926d0e80380dbda14",
+    "fixtures/domains/agriculture/ssurgo/README.md": "sha256:e2570466b2d5daffedb59984395de59920fdbffe8026254b4e499b617e5090a0",
+    "fixtures/domains/agriculture/valid/README.md": "sha256:add7767af002f892fc705c4372f4b9c75a981c0b3ff44114411e259ba212a162",
+    "fixtures/domains/archaeology-public-safe/README.md": "sha256:2ce89e5f92ea6bdf4bef989dcb2222637489d4aa8c0248a5c685e4e3f654721a",
+    "fixtures/domains/archaeology/golden/README.md": "sha256:d0dda5332ac4cefdb1e6f53a821db964097a1e19c94e435ea5baf81f3fe4f449",
+    "fixtures/domains/archaeology/invalid/README.md": "sha256:9e08287d4e1b2abd720275725bbfb3b98036116f49973ee37cf984cac00bb4ce",
+    "fixtures/domains/archaeology/site/README.md": "sha256:5dd566a286bde753f87b5db5bac487c6c6eb1dbab8a9a23170571c0e3d9edda8",
+    "pipelines/triplets/README.md": "sha256:8bae91c4257d9eaccbb3d7d7d1f92913360687699a51f7b3629195ce6bdef43d",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "sha256:99dc55e64a6d2b74bfdd9f4b7faa0432fd10c952bea50722599470bec64247b5",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "sha256:f2896cf905bf8113e77b5467405b915c690113490032e5b0ea812d4feba99c91"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:63ad3c1a77da893c6c39d8a958eefaf600ddd7aeeb788f858c53feef44e60865",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/90cb8318ed8bc23e6f31971830777c6555c1e02e",
+      "repo:docs/doctrine/directory-rules.md#133-singular-and-plural",
+      "repo:docs/doctrine/directory-rules.md#206-convergence-priority"
+    ]
+  },
+  "truth_labels": {
+    "control_plane/repository_governance_parity.yaml": "CONFIRMED",
+    "data/README.md": "CONFIRMED",
+    "data/catalog/domain/habitat/README.md": "CONFIRMED",
+    "data/triplets/README.md": "CONFIRMED",
+    "docs/architecture/SKELETON_MAP.md": "CONFIRMED",
+    "fixtures/contracts/v1/README.md": "CONFIRMED",
+    "fixtures/domains/agriculture/README.md": "CONFIRMED",
+    "fixtures/domains/agriculture/field_level_attempt/README.md": "CONFIRMED",
+    "fixtures/domains/agriculture/hls_vi/README.md": "CONFIRMED",
+    "fixtures/domains/agriculture/invalid/README.md": "CONFIRMED",
+    "fixtures/domains/agriculture/nass_quickstats/README.md": "CONFIRMED",
+    "fixtures/domains/agriculture/no_network/README.md": "CONFIRMED",
+    "fixtures/domains/agriculture/no_network/nass/README.md": "CONFIRMED",
+    "fixtures/domains/agriculture/release/README.md": "CONFIRMED",
+    "fixtures/domains/agriculture/soil_moisture/README.md": "CONFIRMED",
+    "fixtures/domains/agriculture/ssurgo/README.md": "CONFIRMED",
+    "fixtures/domains/agriculture/valid/README.md": "CONFIRMED",
+    "fixtures/domains/archaeology-public-safe/README.md": "CONFIRMED",
+    "fixtures/domains/archaeology/golden/README.md": "CONFIRMED",
+    "fixtures/domains/archaeology/invalid/README.md": "CONFIRMED",
+    "fixtures/domains/archaeology/site/README.md": "CONFIRMED",
+    "pipelines/triplets/README.md": "CONFIRMED",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "CONFIRMED",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Zero payload, writer, and consumer check",
+      "outcome": "PASS",
+      "reason": "The two singular folders held only three README files; no code, workflow, test, or tool reads or writes those paths. Receipts naming them are historical and none is verified by CI against current bytes."
+    },
+    {
+      "gate": "Topology and governance parity",
+      "outcome": "PASS",
+      "reason": "Five stale triplet entries removed and the scaffold-only-leaf aggregate replaced by a strict subset (two paths fewer); validate_repository_topology PASS including --trusted-baseline-ref origin/main; governance parity PASS/HOLD_INHERITED with baselined_warning 116; directory-governance tests pass."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/90cb8318ed8bc23e6f31971830777c6555c1e02e"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-29T14:03:35Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Owner-approved Phase 3d. Removed: data/triplet/README.md, data/triplet/habitat/README.md, data/triplet(s)/README.md. docs/doctrine/directory-rules.md is digest-pinned and unchanged; its section 20.4 collision list is historical. The topology validator's triplet alias map is kept so recreating either folder is flagged. Eight domain planning docs that still list the plural/singular choice as open are left unchanged: editing them brings about 90 pre-existing link, metadata, and related-doc failures into diff-scoped CI. docs/registers/DOMAIN_LANE.md is also unchanged because control_plane/domain_lane_register.yaml pins its git blob. The retirement is recorded in data/README.md, data/triplets/README.md, and docs/architecture/SKELETON_MAP.md."
+}

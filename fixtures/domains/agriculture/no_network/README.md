@@ -117,7 +117,7 @@ For aggregate source fixtures, preserve source-role semantics and do not normali
 | Machine-checkable Agriculture shape | `schemas/contracts/v1/domains/agriculture/` | Referenced, not duplicated. |
 | Agriculture policy | `policy/domains/agriculture/` | Out of scope; fixtures may test it but do not define it. |
 | Source registry records | `data/registry/sources/` | Out of scope. |
-| Canonical lifecycle data | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/triplet/`, `data/published/` | Out of scope; do not duplicate as fixtures. |
+| Canonical lifecycle data | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/triplets/`, `data/published/` | Out of scope; do not duplicate as fixtures. |
 | Tests and validation proof | `tests/domains/agriculture/` and validator tooling | Referenced, not claimed as run. |
 
 Do not collapse this parent fixture lane into source access, source registry authority, source freshness proof, catalog authority, policy authority, release approval, or public-client permission.

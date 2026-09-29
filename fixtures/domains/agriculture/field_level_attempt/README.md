@@ -111,7 +111,7 @@ Avoid real private records, precise production field geometry, source dumps, per
 | Agriculture executable policy | `policy/domains/agriculture/` | Out of scope; fixtures may test it but do not define it. |
 | Sensitivity policy | `policy/sensitivity/` | Out of scope. |
 | Release policy | `policy/release/` | Out of scope. |
-| Canonical lifecycle data | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/triplet/`, `data/published/` | Out of scope; do not duplicate as fixtures. |
+| Canonical lifecycle data | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/triplets/`, `data/published/` | Out of scope; do not duplicate as fixtures. |
 | Tests and validation proof | `tests/domains/agriculture/` and validator tooling | Referenced, not claimed as run. |
 
 Do not collapse this fixture lane into policy authority, sensitivity authority, source truth, catalog authority, release approval, or public-client permission.

@@ -30,7 +30,6 @@ related:
   - ../../data/triplets/README.md
   - ../../data/triplets/graph_deltas/README.md
   - ../../data/triplets/exports/README.md
-  - ../../data/triplet/README.md
   - ../../catalog/triplet/README.md
   - ../../data/receipts/generated/README.md
   - ../../docs/architecture/directory-rules.md
@@ -223,7 +222,7 @@ The canonical plural lifecycle lane is [`data/triplets/`](../../data/triplets/RE
 
 Two other paths require anti-drift handling:
 
-- [`data/triplet/`](../../data/triplet/README.md) declares itself a singular compatibility lane and routes new lifecycle data to `data/triplets/`.
+- The singular `data/triplet/` and literal `data/triplet(s)/` compatibility pointers were removed on 2026-09-29; new lifecycle data goes to `data/triplets/`.
 - [`catalog/triplet/`](../../catalog/triplet/README.md) declares itself a root-level compatibility redirect, not a graph, catalog, receipt, proof, or publication authority.
 
 This README does not change or independently validate their retention decisions.
@@ -635,7 +634,7 @@ The shared triplet lane is not implementation-complete until repository evidence
 | `TRIPPIPE-014` | How are sensitive cross-domain joins classified and transformed? | Policy bundle, relationship sensitivity rules, redaction/generalization contracts and tests. | **NEEDS VERIFICATION** |
 | `TRIPPIPE-015` | How do corrections invalidate graph, catalog, search, map, export, and AI derivatives? | Dependency graph, correction contract, invalidation runner, rollback drill. | **UNKNOWN** |
 | `TRIPPIPE-016` | Which owners provide pipeline, domain, evidence, policy, graph, receipt, and release review? | Verified stewardship assignments and repository review controls. | **NEEDS VERIFICATION** |
-| `TRIPPIPE-017` | Should the singular `data/triplet/` and root `catalog/triplet/` compatibility paths be retained or retired? | Reference inventory, accepted migration plan, deprecation window, rollback. | **NEEDS VERIFICATION / ADR** |
+| `TRIPPIPE-017` | Should the root `catalog/triplet/` compatibility path be retained or retired? The singular `data/triplet/` path was retired on 2026-09-29. | Reference inventory, accepted migration plan, deprecation window, rollback. | **NEEDS VERIFICATION / ADR** |
 | `TRIPPIPE-018` | Which of the two Directory Rules editions is the canonical document home? | Accepted authority/supersession decision and reference migration. | **NEEDS VERIFICATION / ADR** |
 
 Open items belong in the appropriate contract, schema, policy, ADR, drift register, issue, test, or implementation work. This README must not silently close them.
@@ -657,7 +656,7 @@ Open items belong in the appropriate contract, schema, policy, ADR, drift regist
 | [`tests/pipelines/README.md`](../../tests/pipelines/README.md) | Direct pipeline test lane is README-only at its bounded snapshot; default test target excludes it. | **CONFIRMED documentation** |
 | [`data/triplets/README.md`](../../data/triplets/README.md) | Canonical plural lifecycle lane for relationship projections; projections are not canonical truth. | **CONFIRMED documentation** |
 | [`graph_deltas/README.md`](../../data/triplets/graph_deltas/README.md) and [`exports/README.md`](../../data/triplets/exports/README.md) | Each remains a greenfield stub. | **CONFIRMED** |
-| [`data/triplet/README.md`](../../data/triplet/README.md) and [`catalog/triplet/README.md`](../../catalog/triplet/README.md) | Singular data and root catalog paths declare compatibility/redirect roles. | **CONFIRMED documentation** |
+| `data/triplet/README.md` (removed 2026-09-29) and [`catalog/triplet/README.md`](../../catalog/triplet/README.md) | The singular data pointer is retired; the root catalog path still declares a compatibility/redirect role. | **CONFIRMED documentation** |
 | [`docs/architecture/directory-rules.md`](../../docs/architecture/directory-rules.md) and [`docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md) | Executable/declarative split, lifecycle/data placement, no-parallel-authority rule; document-home conflict remains open. | **CONFIRMED files / authority conflict unresolved** |
 | [`lifecycle-law.md`](../../docs/doctrine/lifecycle-law.md) | `CATALOG / TRIPLET` is paired closure/projection; lifecycle names `GraphBuildReceipt`; unreleased triplets are non-public. | **CONFIRMED doctrine; implementation not implied** |
 | Supplied Directory Rules PDF, Pipeline Living Implementation Manual v0.3, Implementation Reference, and Greenfield Plan | Placement, derivative-not-truth, governed-interface, lifecycle, and no-direct-publication doctrine. | **CONFIRMED supplied evidence; current runtime not implied** |

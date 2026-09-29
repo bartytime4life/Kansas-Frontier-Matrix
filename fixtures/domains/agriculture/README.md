@@ -125,7 +125,7 @@ Add new child lanes only when there is a real test, validator, parser, source-he
 | Machine-checkable Agriculture shape | `schemas/contracts/v1/domains/agriculture/` | Referenced, not duplicated. |
 | Agriculture policy | `policy/domains/agriculture/` and policy roots | Out of scope; fixtures may test it but do not define it. |
 | Source registry records | `data/registry/sources/` and source descriptor roots | Out of scope. |
-| Canonical lifecycle data | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/triplet/`, `data/published/` | Out of scope; do not duplicate as fixtures. |
+| Canonical lifecycle data | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/triplets/`, `data/published/` | Out of scope; do not duplicate as fixtures. |
 | Release candidates and decisions | `release/` roots | Out of scope; fixtures may model shape but do not decide release. |
 | Published layers and public clients | `data/published/`, governed APIs, and app roots | Out of scope. |
 | Tests and validation proof | `tests/domains/agriculture/` and validator tooling | Referenced, not claimed as run. |
