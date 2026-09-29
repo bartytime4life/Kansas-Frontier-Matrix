@@ -96,7 +96,6 @@ related:
   - ../../../contracts/joins/cross_lane_join_assessment.md
   - ../../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
   - ../../../packages/evidence-resolver/README.md
-  - ../../../apps/explorer-web/src/adapters/GovernedClient.ts
   - ../../../release/README.md
 tags: [kfm, architecture, cross-domain, trust-membrane, bounded-context, evidence, policy, sensitivity, release, governed-api, finite-outcomes, correction, rollback]
 notes:
@@ -169,7 +168,7 @@ This revision preserves the durable principle and narrows every implementation c
 | Governed API | The route registry contains `/bootstrap`, `/layers`, and `/evidence`; all return `ABSTAIN / NOT_IMPLEMENTED` | Bounded negative-envelope behavior exists; no substantive `ANSWER` path exists |
 | Runtime envelope | The current schema is closed and finite: `ANSWER`, `ABSTAIN`, `DENY`, `ERROR` | Shape does not authenticate evidence, policy, release, or public safety |
 | Evidence resolver | [`packages/evidence-resolver/`](../../../packages/evidence-resolver/README.md) implements an internal `v1alpha1` candidate check with `authoritative: false` | `RESOLVED` is not evidence truth, policy permission, release, or `ANSWER` |
-| Explorer projection | [`GovernedClient.ts`](../../../apps/explorer-web/src/adapters/GovernedClient.ts) parses one fixture-only public-safe Evidence Drawer profile and performs no network access | Client refusal/parsing proof exists; live API integration is absent |
+| Explorer projection | `GovernedClient.ts` (retired) parses one fixture-only public-safe Evidence Drawer profile and performs no network access | Client refusal/parsing proof exists; live API integration is absent |
 | Release governance | [`release/`](../../../release/README.md) is the canonical append-only release-decision plane with mixed fixture-first maturity | Operational release, correction propagation, and rollback execution remain held or unknown |
 
 ### Truth posture
@@ -588,7 +587,7 @@ The exact reference profile for those objects remains **PROPOSED / NEEDS VERIFIC
 
 ### 6.4 Current browser boundary
 
-The Explorer [`GovernedClient.ts`](../../../apps/explorer-web/src/adapters/GovernedClient.ts) validates a separate, deliberately small, fixture-only Evidence Drawer projection. It rejects malformed profiles, preserves finite outcomes, renders negative and correction history, and performs no network or lifecycle-store access.
+The Explorer `GovernedClient.ts` (retired) validates a separate, deliberately small, fixture-only Evidence Drawer projection. It rejects malformed profiles, preserves finite outcomes, renders negative and correction history, and performs no network or lifecycle-store access.
 
 That parser is useful bounded proof. It is not the canonical runtime envelope, not a live Governed API client, not evidence authentication, and not deployed public behavior.
 
@@ -797,7 +796,7 @@ The slice must remain internal and non-publishing. It should reuse current objec
 | [`CrossLaneJoinAssessment`](../../../contracts/joins/cross_lane_join_assessment.md) | Synthetic candidate semantics | Proposed, local-only, non-authoritative |
 | [`RuntimeResponseEnvelope schema`](../../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) | Finite public response shape | Proposed closed schema with bounded executable negative integration |
 | [`Evidence resolver`](../../../packages/evidence-resolver/README.md) | Internal candidate resolution check | `v1alpha1`, no-network, `authoritative: false` |
-| [`Explorer GovernedClient`](../../../apps/explorer-web/src/adapters/GovernedClient.ts) | Fixture-only public-safe projection parser | No live transport or lifecycle-store access |
+| `Explorer GovernedClient` (retired) | Fixture-only public-safe projection parser | No live transport or lifecycle-store access |
 | [`release/`](../../../release/README.md) | Canonical release-decision plane | Mixed fixture-first maturity; operational release held |
 | [`data/published/`](../../../data/published/README.md) | Released public-safe carrier lane | Payload/runtime enforcement remains unverified |
 

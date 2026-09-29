@@ -80,7 +80,6 @@ related:
   - ../../../apps/governed-api/src/governed_api/main.py
   - ../../../apps/governed-api/src/governed_api/routes/registry.py
   - ../../../apps/governed-api/tests/test_boundary_guards.py
-  - ../../../apps/explorer-web/src/features/focus_panel/resolver.ts
   - ../../../packages/evidence-resolver/README.md
   - ../../../contracts/runtime/runtime_response_envelope.md
   - ../../../contracts/runtime/ai_receipt.md
@@ -146,10 +145,10 @@ Current evidence supports a narrower and more useful split.
 | [`routes/registry.py`](../../../apps/governed-api/src/governed_api/routes/registry.py) | Exactly `/bootstrap`, `/layers`, and `/evidence` are registered | A Focus/model/AI route or a complete public API |
 | [`test_abstain_routes.py`](../../../apps/governed-api/tests/test_abstain_routes.py) | Every registered route returns schema-shaped `ABSTAIN / NOT_IMPLEMENTED` scaffold state | Evidence-backed `ANSWER`, accepted policy, or production behavior |
 | [`test_boundary_guards.py`](../../../apps/governed-api/tests/test_boundary_guards.py) | Selected forbidden imports, route manifest, safe `404`/`405`, and forbidden internal path literals are checked | Complete dependency, network, credential, data-flow, or deployment isolation |
-| [`types.ts`](../../../apps/explorer-web/src/features/focus_panel/types.ts) | Closed app-local Focus request/projection vocabulary and finite client states | Canonical semantic or schema authority |
-| [`parsers.ts`](../../../apps/explorer-web/src/features/focus_panel/parsers.ts) | Exact-field parsing, bounded text, HTTPS citation syntax, answer/negative-state coherence, and Evidence Drawer parity | Authentication of evidence, policy, review, release, freshness, citation, or receipt declarations |
-| [`resolver.ts`](../../../apps/explorer-web/src/features/focus_panel/resolver.ts) | Injected-resolver boundary, empty-scope abstention, identity binding, and EvidenceRef allowlist enforcement without browser transport or store access | Governed API transport, EvidenceBundle resolution, policy execution, model inference, or receipt emission |
-| [`test_explorer_web_adapter_boundary.py`](../../../tests/policy/test_explorer_web_adapter_boundary.py) | Selected map-import placement and forbidden store-literal checks | Complete browser dependency graph, network egress, or deployed isolation |
+| `types.ts` (retired) | Closed app-local Focus request/projection vocabulary and finite client states | Canonical semantic or schema authority |
+| `parsers.ts` (retired) | Exact-field parsing, bounded text, HTTPS citation syntax, answer/negative-state coherence, and Evidence Drawer parity | Authentication of evidence, policy, review, release, freshness, citation, or receipt declarations |
+| `resolver.ts` (retired) | Injected-resolver boundary, empty-scope abstention, identity binding, and EvidenceRef allowlist enforcement without browser transport or store access | Governed API transport, EvidenceBundle resolution, policy execution, model inference, or receipt emission |
+| `test_explorer_web_adapter_boundary.py` (not present) | Selected map-import placement and forbidden store-literal checks | Complete browser dependency graph, network egress, or deployed isolation |
 | [`packages/evidence-resolver/`](../../../packages/evidence-resolver/README.md) | Pure internal candidate evaluation with finite local statuses and no I/O | Authoritative lookup, source admission, policy, review, release, public answer, or publication |
 | [`runtime_projection.py`](../../../packages/evidence-resolver/src/evidence_resolver/runtime_projection.py) | `RESOLVED` projects only to `CONTINUE_GOVERNED_CHECKS`; other candidate states fail closed | Final runtime outcome or render authority |
 | [`MockAdapter.py`](../../../runtime/model_adapters/MockAdapter.py) | Deterministic deep-copy selection from a complete synthetic four-outcome matrix without I/O | Request interpretation, evidence resolution, policy, citations, provider calls, outcome authority, or receipt emission |
@@ -913,7 +912,7 @@ The prior edition listed several speculative paths as though they were the targe
 | Runtime AI accountability semantics | [`contracts/runtime/ai_receipt.md`](../../../contracts/runtime/ai_receipt.md) | **PROPOSED; schema-paired** | Nine fields; accountability only |
 | Runtime AI accountability shape | [`schemas/contracts/v1/runtime/ai_receipt.schema.json`](../../../schemas/contracts/v1/runtime/ai_receipt.schema.json) | **PROPOSED; bounded validator/builders** | No emitter/store/retention/correction proof |
 | Citation-readiness profile | [`contracts/evidence/citation_validation_report.md`](../../../contracts/evidence/citation_validation_report.md) and paired schema | **PROPOSED; fixture-first** | Declaration consistency is not live evidence authentication |
-| Explorer Focus request/projection | [`apps/explorer-web/src/features/focus_panel/`](../../../apps/explorer-web/src/features/focus_panel/) | **CONFIRMED app-local implementation** | Strict local profile; not canonical semantic/schema authority |
+| Explorer Focus request/projection | `apps/explorer-web/src/features/focus_panel/` (retired) | **CONFIRMED app-local implementation** | Strict local profile; not canonical semantic/schema authority |
 | Generic Focus schemas | `schemas/contracts/v1/focus/` | **PROPOSED permissive scaffolds** | Must not silently replace app-local strict profile or runtime envelope |
 | Evidence candidate resolver | [`packages/evidence-resolver/`](../../../packages/evidence-resolver/README.md) | **CONFIRMED internal alpha** | Non-authoritative, no I/O, no public API |
 | Provider-neutral runtime lane | [`runtime/model_adapters/`](../../../runtime/model_adapters/README.md) | **CONFIRMED lane; mixed implementation** | Mock selector exists; provider adapter absent |

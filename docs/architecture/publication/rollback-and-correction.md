@@ -21,6 +21,9 @@ tags: [kfm, architecture, publication, rollback, correction, doctrine]
 notes:
   - PROPOSED. Concise companion to ROLLBACK.md and CORRECTION.md (deep treatments).
   - Never delete, always supersede. Public lineage is preserved.
+owning_root: docs/
+responsibility: "Documentation for Publication — Rollback and Correction; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -50,7 +53,7 @@ notes:
 2. [Rollback vs correction — the contrast](#2-rollback-vs-correction--the-contrast)
 3. [Rollback](#3-rollback)
 4. [Correction](#4-correction)
-5. [The never-delete rule](#5-the-neverdelete-rule)
+5. [The never-delete rule](#5-the-never-delete-rule)
 6. [Drawer and renderer behavior](#6-drawer-and-renderer-behavior)
 7. [Audit posture](#7-audit-posture)
 8. [Anti-patterns](#8-anti-patterns)

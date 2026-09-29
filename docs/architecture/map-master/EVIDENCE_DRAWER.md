@@ -76,11 +76,6 @@ related:
   - ../../../contracts/ui/evidence_drawer_payload.md
   - ../../../contracts/evidence/evidence_drawer_payload.md
   - ../../../schemas/contracts/v1/ui/evidence_drawer_payload.schema.json
-  - ../../../apps/explorer-web/src/adapters/GovernedClient.ts
-  - ../../../apps/explorer-web/src/features/evidence_drawer/index.tsx
-  - ../../../apps/explorer-web/src/features/map_runtime/index.tsx
-  - ../../../apps/explorer-web/tests/evidence-drawer.test.ts
-  - ../../../apps/explorer-web/tests/map-evidence-drawer.test.ts
   - ../../../tools/validators/ui/validate_evidence_drawer_payload.py
 tags: [kfm, architecture, map-master, evidence-drawer, map-selection, EvidenceDrawerPayload, EvidenceRef, EvidenceBundle, finite-outcomes, accessibility, correction, no-leak, runtime-hold]
 notes:
@@ -161,11 +156,11 @@ Its implementation description did not age as well. The current repository has m
 | [`contracts/ui/evidence_drawer_payload.md`](../../../contracts/ui/evidence_drawer_payload.md) | Draft v0.3 bounded UI projection semantics and explicit non-effects | Strongest current UI-facing semantic description; still `PROPOSED` and not evidence closure |
 | [`schemas/contracts/v1/ui/evidence_drawer_payload.schema.json`](../../../schemas/contracts/v1/ui/evidence_drawer_payload.schema.json) | Closed Draft 2020-12 shape with four outcomes, bounded trust state, HTTPS citations, and optional history | Machine-declared fixture profile exists; upstream authenticity is not proved |
 | [`contracts/evidence/evidence_drawer_payload.md`](../../../contracts/evidence/evidence_drawer_payload.md) | Adjacent evidence-family contract remains `PATH-NEEDS-REVIEW`; its paired schema is described as permissive | UI/evidence semantic-home seam remains unresolved |
-| [`GovernedClient.ts`](../../../apps/explorer-web/src/adapters/GovernedClient.ts) | Strict parser for `kfm.explorer.evidence-drawer.public-safe.v1`; no transport or lifecycle-store access | Bounded app adapter fails closed over supplied objects |
-| [`evidence_drawer/index.tsx`](../../../apps/explorer-web/src/features/evidence_drawer/index.tsx) | Finite view-model resolver and keyboard-operable drawer renderer | App-local projection and accessibility slice exists |
-| [`map_runtime/index.tsx`](../../../apps/explorer-web/src/features/map_runtime/index.tsx) | Strict renderer-neutral selection parser, injected resolver, active-and-history evidence-scope check, finite local failures, and synthetic controls | Bounded click-to-drawer laboratory exists without a renderer or live service |
-| [`evidence-drawer.test.ts`](../../../apps/explorer-web/tests/evidence-drawer.test.ts) | Test source covers answer, stale abstention, superseded history, no-leak denial/error, malformed payloads, and forbidden access patterns | Intended bounded behavior is inspectable; this documentation run did not execute it |
-| [`map-evidence-drawer.test.ts`](../../../apps/explorer-web/tests/map-evidence-drawer.test.ts) | Test source covers strict selection, missing evidence, denial, out-of-scope evidence, resolver failure, and renderer/network/store exclusions | Selection-to-drawer scope rules are fixture-backed |
+| `GovernedClient.ts` (retired) | Strict parser for `kfm.explorer.evidence-drawer.public-safe.v1`; no transport or lifecycle-store access | Bounded app adapter fails closed over supplied objects |
+| `evidence_drawer/index.tsx` (retired) | Finite view-model resolver and keyboard-operable drawer renderer | App-local projection and accessibility slice exists |
+| `map_runtime/index.tsx` (retired) | Strict renderer-neutral selection parser, injected resolver, active-and-history evidence-scope check, finite local failures, and synthetic controls | Bounded click-to-drawer laboratory exists without a renderer or live service |
+| `evidence-drawer.test.ts` (retired) | Test source covers answer, stale abstention, superseded history, no-leak denial/error, malformed payloads, and forbidden access patterns | Intended bounded behavior is inspectable; this documentation run did not execute it |
+| `map-evidence-drawer.test.ts` (retired) | Test source covers strict selection, missing evidence, denial, out-of-scope evidence, resolver failure, and renderer/network/store exclusions | Selection-to-drawer scope rules are fixture-backed |
 | Browser test sources | Keyboard open/close, focus entry/return, citations, correction history, abstention, denial, scope mismatch, and resolver-error behavior are represented | Browser expectations exist; production accessibility and live integration remain open |
 | [`validate_evidence_drawer_payload.py`](../../../tools/validators/ui/validate_evidence_drawer_payload.py) | No-network closed-schema and cross-field validator | Declaration consistency can be checked without resolving evidence |
 | [Focused workflow](../../../.github/workflows/evidence-drawer-payload.yml) | Read-only path-scoped orchestration for schema, fixtures, tests, and receipt integrity | Workflow presence is not a required-check result, release approval, or publication proof |
@@ -663,8 +658,8 @@ An ADR is warranted when a choice establishes or changes authority, canonical ho
 | [`contracts/ui/evidence_drawer_payload.md`](../../../contracts/ui/evidence_drawer_payload.md) | Current bounded UI semantic profile | Draft / PROPOSED / bounded executable |
 | [`schemas/contracts/v1/ui/evidence_drawer_payload.schema.json`](../../../schemas/contracts/v1/ui/evidence_drawer_payload.schema.json) | Current closed machine profile | Repository-present proposed UI projection |
 | [`contracts/evidence/evidence_drawer_payload.md`](../../../contracts/evidence/evidence_drawer_payload.md) | Evidence-family sibling | `PATH-NEEDS-REVIEW`; do not treat as silently superseded |
-| [`apps/explorer-web/src/features/evidence_drawer/index.tsx`](../../../apps/explorer-web/src/features/evidence_drawer/index.tsx) | Finite drawer view and keyboard rendering | Bounded app-local implementation |
-| [`apps/explorer-web/src/features/map_runtime/index.tsx`](../../../apps/explorer-web/src/features/map_runtime/index.tsx) | Renderer-neutral selection bridge | Bounded fixture implementation; no live renderer or transport |
+| `apps/explorer-web/src/features/evidence_drawer/index.tsx` (retired) | Finite drawer view and keyboard rendering | Bounded app-local implementation |
+| `apps/explorer-web/src/features/map_runtime/index.tsx` (retired) | Renderer-neutral selection bridge | Bounded fixture implementation; no live renderer or transport |
 
 [Back to top](#top)
 

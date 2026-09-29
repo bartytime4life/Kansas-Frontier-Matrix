@@ -51,11 +51,9 @@ related:
   - ../../adr/ADR-0020-abstain-is-a-first-class-decision.md
   - ../../adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md
   - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
-  - ../../../apps/explorer-web/README.md
   - ../../../apps/governed-api/README.md
   - ../../../contracts/ui/map_context_envelope.md
   - ../../../contracts/ui/evidence_drawer_payload.md
-  - ../../../tests/policy/test_explorer_web_adapter_boundary.py
 tags: [kfm, architecture, ui, explorer-web, governed-api, evidence-drawer, map-runtime, trust-membrane, finite-outcomes, fail-closed, correction, rollback]
 notes:
   - "v2.0-draft is a same-path documentation-only reconciliation against current repository evidence."
@@ -524,12 +522,12 @@ Before merge, close the draft pull request and abandon or delete its feature bra
 
 ### Current implementation and contracts
 
-- [`apps/explorer-web/README.md`](../../../apps/explorer-web/README.md) — Explorer boundary and current implementation notes.
+- `apps/explorer-web/README.md` (retired) — Explorer boundary and current implementation notes.
 - [`apps/governed-api/README.md`](../../../apps/governed-api/README.md) — Governed API app boundary.
 - [`contracts/ui/map_context_envelope.md`](../../../contracts/ui/map_context_envelope.md) — proposed renderer-neutral context contract.
 - [`contracts/ui/evidence_drawer_payload.md`](../../../contracts/ui/evidence_drawer_payload.md) — bounded UI projection contract.
-- [`tests/policy/test_explorer_web_adapter_boundary.py`](../../../tests/policy/test_explorer_web_adapter_boundary.py) — selected source-level adapter and internal-store guards.
-- [`.github/workflows/ui-build.yml`](../../../.github/workflows/ui-build.yml) — repository-native Explorer build/test workflow; a workflow file is not publication proof.
+- `tests/policy/test_explorer_web_adapter_boundary.py` (not present) — selected source-level adapter and internal-store guards.
+- `.github/workflows/ui-build.yml` (not present) — repository-native Explorer build/test workflow; a workflow file is not publication proof.
 
 ---
 

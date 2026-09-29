@@ -26,12 +26,6 @@ related:
   - docs/architecture/ui/EVIDENCE_DRAWER.md
   - docs/architecture/ui/LAYERING.md
   - docs/architecture/evidence-drawer.md
-  - apps/explorer-web/src/main.ts
-  - apps/explorer-web/src/adapters/GovernedClient.ts
-  - apps/explorer-web/src/features/compare/README.md
-  - apps/explorer-web/src/features/compare/index.tsx
-  - apps/explorer-web/src/features/export/README.md
-  - apps/explorer-web/src/features/export/index.tsx
   - apps/governed-api/routes/README.md
   - apps/governed-api/src/routes/README.md
   - contracts/ui/citation_validation_report.md
@@ -68,10 +62,10 @@ notes:
 | **Directory authority** | **CONFIRMED / ACCEPTED:** [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [Directory Rules v2](../../doctrine/directory-rules.md) |
 | **Architecture page** | **CONFIRMED** at this existing path; same-path modernization only |
 | **Review route** | `@bartytime4life` through [`CODEOWNERS`](../../../.github/CODEOWNERS); independent stewardship remains **NEEDS VERIFICATION** |
-| **Compare source** | **CONFIRMED path / placeholder only:** [`features/compare/index.tsx`](../../../apps/explorer-web/src/features/compare/index.tsx) exports `placeholder = true` |
-| **Export source** | **CONFIRMED path / placeholder only:** [`features/export/index.tsx`](../../../apps/explorer-web/src/features/export/index.tsx) exports `placeholder = true` |
-| **Explorer launch wiring** | **CONFIRMED bounded:** [`main.ts`](../../../apps/explorer-web/src/main.ts) mounts the baseline shell and fixture-driven Evidence Drawer, not Compare or Export |
-| **Browser transport** | **CONFIRMED bounded:** [`GovernedClient.ts`](../../../apps/explorer-web/src/adapters/GovernedClient.ts) is an Evidence Drawer fixture adapter with no network or lifecycle-store access; no Compare/Export client is established |
+| **Compare source** | **CONFIRMED path / placeholder only:** `features/compare/index.tsx` (retired) exports `placeholder = true` |
+| **Export source** | **CONFIRMED path / placeholder only:** `features/export/index.tsx` (retired) exports `placeholder = true` |
+| **Explorer launch wiring** | **CONFIRMED bounded:** `main.ts` (retired) mounts the baseline shell and fixture-driven Evidence Drawer, not Compare or Export |
+| **Browser transport** | **CONFIRMED bounded:** `GovernedClient.ts` (retired) is an Evidence Drawer fixture adapter with no network or lifecycle-store access; no Compare/Export client is established |
 | **Governed API routes** | **CONFIRMED absent from inspected route surfaces:** no Compare or Export implementation appears under the two current route directories |
 | **Compare / Export schemas** | **NOT VERIFIED:** no Compare projection schema or `ExportReceipt` schema was found in the inspected UI and receipt schema homes |
 | **Citation validation** | **CONFIRMED semantic contract + permissive stub only:** the UI schema requires only `id` and allows additional properties |
@@ -113,12 +107,12 @@ This page is architecture documentation. It does not amend contracts, schemas, p
 | Surface | Confirmed state | Safe interpretation |
 |---|---|---|
 | [`docs/architecture/ui/README.md`](./README.md) | Repository-grounded UI architecture landing page | Explorer Web is a bounded fixture-first shell, not a complete live map product |
-| [`apps/explorer-web/src/features/compare/README.md`](../../../apps/explorer-web/src/features/compare/README.md) | Detailed draft feature contract exists | Contract prose does not prove components, route wiring, tests, or runtime |
-| [`apps/explorer-web/src/features/compare/index.tsx`](../../../apps/explorer-web/src/features/compare/index.tsx) | Two-line greenfield placeholder | Compare is not implemented by this entry |
-| [`apps/explorer-web/src/features/export/README.md`](../../../apps/explorer-web/src/features/export/README.md) | Detailed draft feature contract exists and records missing export policy | Contract prose does not prove governed export behavior |
-| [`apps/explorer-web/src/features/export/index.tsx`](../../../apps/explorer-web/src/features/export/index.tsx) | Two-line greenfield placeholder | Export is not implemented by this entry |
-| [`apps/explorer-web/src/main.ts`](../../../apps/explorer-web/src/main.ts) | Mounts baseline shell and Evidence Drawer | Compare and Export are not launch-wired in the inspected entrypoint |
-| [`apps/explorer-web/src/adapters/GovernedClient.ts`](../../../apps/explorer-web/src/adapters/GovernedClient.ts) | Strict, no-network Evidence Drawer projection parser | It is not a live generalized governed client and has no Compare/Export contract |
+| `apps/explorer-web/src/features/compare/README.md` (retired) | Detailed draft feature contract exists | Contract prose does not prove components, route wiring, tests, or runtime |
+| `apps/explorer-web/src/features/compare/index.tsx` (retired) | Two-line greenfield placeholder | Compare is not implemented by this entry |
+| `apps/explorer-web/src/features/export/README.md` (retired) | Detailed draft feature contract exists and records missing export policy | Contract prose does not prove governed export behavior |
+| `apps/explorer-web/src/features/export/index.tsx` (retired) | Two-line greenfield placeholder | Export is not implemented by this entry |
+| `apps/explorer-web/src/main.ts` (retired) | Mounts baseline shell and Evidence Drawer | Compare and Export are not launch-wired in the inspected entrypoint |
+| `apps/explorer-web/src/adapters/GovernedClient.ts` (retired) | Strict, no-network Evidence Drawer projection parser | It is not a live generalized governed client and has no Compare/Export contract |
 | [`apps/governed-api/routes/`](../../../apps/governed-api/routes/README.md) | README plus domain subdirectory in the inspected lane | No Compare or Export route is established there |
 | [`apps/governed-api/src/routes/`](../../../apps/governed-api/src/routes/README.md) | README plus agriculture subdirectory in the inspected lane | No Compare or Export route is established there |
 | [`schemas/contracts/v1/ui/citation_validation_report.schema.json`](../../../schemas/contracts/v1/ui/citation_validation_report.schema.json) | Draft stub; only `id` required; additional properties allowed | It cannot prove claim coverage, export safety, or citation closure |
@@ -757,9 +751,9 @@ Material corrections in this edition:
 - [UI Evidence Drawer](./EVIDENCE_DRAWER.md) — overlapping UI-oriented Evidence Drawer architecture
 - [UI layering](./LAYERING.md) — layer responsibility guidance
 - [Current Evidence Drawer architecture](../evidence-drawer.md) — repository-grounded bounded executable slice
-- [Compare feature README](../../../apps/explorer-web/src/features/compare/README.md) — app-local draft feature contract
-- [Export feature README](../../../apps/explorer-web/src/features/export/README.md) — app-local draft feature contract
-- [Explorer Web source entrypoint](../../../apps/explorer-web/src/main.ts) — current bounded launch wiring
+- Compare feature README (retired) — app-local draft feature contract
+- Export feature README (retired) — app-local draft feature contract
+- Explorer Web source entrypoint (retired) — current bounded launch wiring
 - [Directory Rules v2](../../doctrine/directory-rules.md) — accepted placement authority through ADR-0029
 - [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — adoption decision
 - [Telemetry policy README](../../../policy/telemetry/README.md) — intended telemetry posture; executable enforcement remains incomplete
@@ -797,6 +791,6 @@ This page owns the cross-feature architecture explanation. The app-local READMEs
 
 <sub>Authority boundary: this document is a repository-grounded architecture explanation. It does not implement Compare or Export, activate policy, approve rights or sensitivity, resolve evidence, emit a receipt, release an artifact, or publish KFM content.</sub>
 
-**Related:** [UI README](./README.md) · [Compare feature](../../../apps/explorer-web/src/features/compare/README.md) · [Export feature](../../../apps/explorer-web/src/features/export/README.md) · [Evidence Drawer](../evidence-drawer.md) · [Directory Rules](../../doctrine/directory-rules.md)
+**Related:** [UI README](./README.md) · Compare feature (retired) · Export feature (retired) · [Evidence Drawer](../evidence-drawer.md) · [Directory Rules](../../doctrine/directory-rules.md)
 
 [Back to top](#top)

@@ -71,7 +71,7 @@ related:
   - docs/architecture/ui/TELEMETRY.md
   - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
-  - "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+  - docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - docs/doctrine/directory-rules.md
   - contracts/ui/story_manifest.md
@@ -87,10 +87,6 @@ related:
   - tests/validators/test_validate_story_node.py
   - .github/workflows/story-manifest-trust-inheritance.yml
   - .github/workflows/story-node-trust-inheritance.yml
-  - apps/explorer-web/src/features/story_player/README.md
-  - apps/explorer-web/src/features/story_player/current-implementation.md
-  - apps/explorer-web/src/features/story_player/index.tsx
-  - apps/explorer-web/tests/story-player.test.ts
   - policy/story/README.md
   - policy/story/evidence_continuity_required.rego
   - data/manifests/story/README.md
@@ -182,10 +178,10 @@ This revision is grounded in `main@d639f9ff40288d12244cd7bc84af538652f6dfb1`.
 | StoryManifest schema | [`schemas/contracts/v1/ui/story_manifest.schema.json`](../../../schemas/contracts/v1/ui/story_manifest.schema.json) is closed. | Unknown fields such as raw narrative bodies are outside profile. |
 | StoryNode schema | [`schemas/contracts/v1/ui/story_node.schema.json`](../../../schemas/contracts/v1/ui/story_node.schema.json) is closed. | Shape proof is present for the UI projection only. |
 | Projection validators and tests | StoryManifest and StoryNode validators, synthetic fixtures, tests, and focused workflows exist. | Deterministic no-network profile validation is implemented; reference resolution is not. |
-| Story Player source | [`index.tsx`](../../../apps/explorer-web/src/features/story_player/index.tsx) implements `resolveStoryPlayer()`. | The former two-line placeholder claim is stale and corrected here. |
-| Story Player app tests | [`story-player.test.ts`](../../../apps/explorer-web/tests/story-player.test.ts) contains 10 focused Vitest cases. | App-local projection eligibility and anti-bypass behavior are tested; rendered playback is not. |
-| Current implementation note | [`current-implementation.md`](../../../apps/explorer-web/src/features/story_player/current-implementation.md) records the bounded consumer and explicit non-effects. | It is accurate implementation-boundary documentation, not a release record. |
-| App feature README | [`apps/explorer-web/src/features/story_player/README.md`](../../../apps/explorer-web/src/features/story_player/README.md) remains pre-implementation in parts. | Treat its maturity wording as bounded drift pending a separate same-path update. |
+| Story Player source | `index.tsx` (retired) implements `resolveStoryPlayer()`. | The former two-line placeholder claim is stale and corrected here. |
+| Story Player app tests | `story-player.test.ts` (retired) contains 10 focused Vitest cases. | App-local projection eligibility and anti-bypass behavior are tested; rendered playback is not. |
+| Current implementation note | `current-implementation.md` (retired) records the bounded consumer and explicit non-effects. | It is accurate implementation-boundary documentation, not a release record. |
+| App feature README | `apps/explorer-web/src/features/story_player/README.md` (retired) remains pre-implementation in parts. | Treat its maturity wording as bounded drift pending a separate same-path update. |
 | Consumer call sites | Repository search found `resolveStoryPlayer` only in its source, focused test, and architecture documentation. | No verified Explorer navigation or rendered component wiring exists. |
 | Story policy | [`policy/story/evidence_continuity_required.rego`](../../../policy/story/evidence_continuity_required.rego) remains a proposed stub with no real rules. | No enforcing Story evidence-continuity policy is established. |
 | Governed API routes | The inspected Python route package contains bootstrap, evidence, layers, and registry surfaces; no Story route is present. | Earlier concrete Story endpoint names remain lineage, not current behavior. |
@@ -837,10 +833,10 @@ Merged PR #2868 can be reverted as a repository change if its consumer slice mus
 | [`contracts/ui/story_manifest.md`](../../../contracts/ui/story_manifest.md) | Current bounded StoryManifest projection meaning |
 | [`contracts/ui/story_node.md`](../../../contracts/ui/story_node.md) | Current bounded StoryNode projection meaning |
 | [`contracts/story/README.md`](../../../contracts/story/README.md) | Broader proposed Story semantic lane; convergence unresolved |
-| [`apps/explorer-web/src/features/story_player/index.tsx`](../../../apps/explorer-web/src/features/story_player/index.tsx) | Current pure StoryManifest projection consumer |
-| [`apps/explorer-web/src/features/story_player/current-implementation.md`](../../../apps/explorer-web/src/features/story_player/current-implementation.md) | Bounded implementation and rollback note |
-| [`apps/explorer-web/src/features/story_player/README.md`](../../../apps/explorer-web/src/features/story_player/README.md) | App-local feature boundary with remaining maturity drift |
-| [`apps/explorer-web/tests/story-player.test.ts`](../../../apps/explorer-web/tests/story-player.test.ts) | Focused app-local projection and anti-bypass proof |
+| `apps/explorer-web/src/features/story_player/index.tsx` (retired) | Current pure StoryManifest projection consumer |
+| `apps/explorer-web/src/features/story_player/current-implementation.md` (retired) | Bounded implementation and rollback note |
+| `apps/explorer-web/src/features/story_player/README.md` (retired) | App-local feature boundary with remaining maturity drift |
+| `apps/explorer-web/tests/story-player.test.ts` (retired) | Focused app-local projection and anti-bypass proof |
 | [`policy/story/README.md`](../../../policy/story/README.md) | Story policy boundary documentation |
 | [`data/manifests/story/README.md`](../../../data/manifests/story/README.md) | Non-canonical compatibility/retirement boundary |
 | [`data/receipts/generated/genrec-story-player-governed-projection-20260814.json`](../../../data/receipts/generated/genrec-story-player-governed-projection-20260814.json) | Initial consumer authoring receipt; process memory only |

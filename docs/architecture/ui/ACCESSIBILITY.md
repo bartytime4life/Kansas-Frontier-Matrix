@@ -50,12 +50,6 @@ related:
   - docs/doctrine/directory-rules.md
   - contracts/ui/evidence_drawer_payload.md
   - schemas/contracts/v1/ui/evidence_drawer_payload.schema.json
-  - apps/explorer-web/src/main.ts
-  - apps/explorer-web/src/features/evidence_drawer/index.tsx
-  - apps/explorer-web/tests/evidence-drawer.test.ts
-  - apps/explorer-web/tests/browser/evidence-drawer.spec.ts
-  - .github/workflows/accessibility.yml
-  - .github/workflows/ui-build.yml
   - .github/workflows/evidence-drawer-payload.yml
 tags: [kfm, ui, accessibility, architecture, explorer-web, evidence-drawer, finite-outcomes, keyboard, focus, non-map-parity, trust-membrane]
 notes:
@@ -138,7 +132,7 @@ It does **not** define semantic object meaning, machine payload shape, policy ad
 
 | Concern | Owning surface |
 |---|---|
-| Executable components and styles | [`apps/explorer-web/`](../../../apps/explorer-web/) or a reviewed shared package |
+| Executable components and styles | `apps/explorer-web/` (retired) or a reviewed shared package |
 | Object meaning | [`contracts/`](../../../contracts/) |
 | Machine validation | [`schemas/`](../../../schemas/) |
 | Allow, deny, restrict, abstain, and disclosure obligations | [`policy/`](../../../policy/) |
@@ -835,23 +829,23 @@ The next accessibility slice remains **PROPOSED**: select and pin an automated r
 
 ### Current bounded implementation and proof
 
-- [`apps/explorer-web/package.json`](../../../apps/explorer-web/package.json)
-- [`apps/explorer-web/src/main.ts`](../../../apps/explorer-web/src/main.ts)
-- [`apps/explorer-web/src/features/shell/index.tsx`](../../../apps/explorer-web/src/features/shell/index.tsx)
-- [`apps/explorer-web/src/features/evidence_drawer/index.tsx`](../../../apps/explorer-web/src/features/evidence_drawer/index.tsx)
-- [`apps/explorer-web/tests/evidence-drawer.test.ts`](../../../apps/explorer-web/tests/evidence-drawer.test.ts)
-- [`apps/explorer-web/tests/browser/evidence-drawer.spec.ts`](../../../apps/explorer-web/tests/browser/evidence-drawer.spec.ts)
+- `apps/explorer-web/package.json` (retired)
+- `apps/explorer-web/src/main.ts` (retired)
+- `apps/explorer-web/src/features/shell/index.tsx` (retired)
+- `apps/explorer-web/src/features/evidence_drawer/index.tsx` (retired)
+- `apps/explorer-web/tests/evidence-drawer.test.ts` (retired)
+- `apps/explorer-web/tests/browser/evidence-drawer.spec.ts` (retired)
 - [`contracts/ui/evidence_drawer_payload.md`](../../../contracts/ui/evidence_drawer_payload.md)
 - [`schemas/contracts/v1/ui/evidence_drawer_payload.schema.json`](../../../schemas/contracts/v1/ui/evidence_drawer_payload.schema.json)
 - [`fixtures/ui/evidence_drawer_payload/`](../../../fixtures/ui/evidence_drawer_payload/)
 - [`tools/validators/ui/validate_evidence_drawer_payload.py`](../../../tools/validators/ui/validate_evidence_drawer_payload.py)
 - [`tests/validators/test_validate_evidence_drawer_payload.py`](../../../tests/validators/test_validate_evidence_drawer_payload.py)
-- [`tests/policy/test_explorer_web_adapter_boundary.py`](../../../tests/policy/test_explorer_web_adapter_boundary.py)
+- `tests/policy/test_explorer_web_adapter_boundary.py` (not present)
 
 ### Workflows
 
-- [`accessibility.yml`](../../../.github/workflows/accessibility.yml) — bounded keyboard/focus smoke plus explicit axe readiness HOLD.
-- [`ui-build.yml`](../../../.github/workflows/ui-build.yml) — Explorer build and package tests.
+- `accessibility.yml` (not present) — bounded keyboard/focus smoke plus explicit axe readiness HOLD.
+- `ui-build.yml` (not present) — Explorer build and package tests.
 - [`evidence-drawer-payload.yml`](../../../.github/workflows/evidence-drawer-payload.yml) — closed projection validation.
 
 ### Removed stale dependencies

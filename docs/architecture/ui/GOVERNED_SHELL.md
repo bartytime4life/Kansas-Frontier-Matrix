@@ -55,20 +55,11 @@ related:
   - ../../doctrine/directory-rules.md
   - ../../adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md
   - ../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
-  - "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+  - docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md
   - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
-  - ../../../apps/explorer-web/src/main.ts
-  - ../../../apps/explorer-web/src/site/README.md
-  - ../../../apps/explorer-web/src/site/mount-explorer-site.ts
-  - ../../../apps/explorer-web/src/site/catalog.ts
-  - ../../../apps/explorer-web/src/features/shell/index.tsx
-  - ../../../apps/explorer-web/src/features/map_runtime/index.tsx
-  - ../../../apps/explorer-web/src/features/evidence_drawer/index.tsx
-  - ../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts
   - ../../../packages/maplibre/
   - ../../../contracts/ui/map_context_envelope.md
   - ../../../contracts/ui/evidence_drawer_payload.md
-  - ../../../apps/explorer-web/tests/explorer-site-catalog.test.ts
   - ../../../data/receipts/generated/genrec-explorer-site-composition-20260819.json
 tags:
   - kfm
@@ -109,11 +100,11 @@ notes:
 | **Evidence snapshot** | `main@68603b748d859884f5e140467285b5ae71d093a9` |
 | **Document role** | Human-readable UI architecture reference at the existing path; no semantic, schema, policy, evidence, runtime, release, or publication authority |
 | **Placement authority** | **CONFIRMED:** accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [Directory Rules v2](../../doctrine/directory-rules.md); the same-path `docs/architecture/ui/` update is `PLACE` |
-| **Current Explorer entrypoint** | **CONFIRMED:** [`src/main.ts`](../../../apps/explorer-web/src/main.ts) mounts [`mountExplorerSite`](../../../apps/explorer-web/src/site/mount-explorer-site.ts) |
+| **Current Explorer entrypoint** | **CONFIRMED:** `src/main.ts` (retired) mounts `mountExplorerSite` (retired) |
 | **Current visual shell** | **CONFIRMED / BOUNDED:** map-first landing composition with header, skip link, section navigation, trust posture, synthetic map stage, deterministic evidence lab, 13-domain matrix, 38-feature catalog, 8 trust principles, and public-safety disclaimer |
-| **Current baseline state** | **CONFIRMED:** [`resolveBaselineShell`](../../../apps/explorer-web/src/features/shell/index.tsx) returns `ABSTAIN / NO_GOVERNED_RESPONSE` without input and `ERROR / UNSUPPORTED_BASELINE_INPUT` with supplied input; both carry zero evidence references |
+| **Current baseline state** | **CONFIRMED:** `resolveBaselineShell` (retired) returns `ABSTAIN / NO_GOVERNED_RESPONSE` without input and `ERROR / UNSUPPORTED_BASELINE_INPUT` with supplied input; both carry zero evidence references |
 | **Current evidence interaction** | **CONFIRMED / FIXTURE-ONLY:** strict renderer-neutral selection parsing, injected in-memory resolution, evidence-subset enforcement, and finite Evidence Drawer projection |
-| **Current map renderer** | **HOLD:** no `maplibre-gl` dependency in Explorer; [`MapLibreAdapter.ts`](../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) is one boundary comment; `@kfm/maplibre` is a private `0.0.0` placeholder |
+| **Current map renderer** | **HOLD:** no `maplibre-gl` dependency in Explorer; `MapLibreAdapter.ts` (retired) is one boundary comment; `@kfm/maplibre` is a private `0.0.0` placeholder |
 | **Current transport** | **NOT ESTABLISHED:** the composed site uses local deterministic fixtures; no live Explorer-to-Governed-API claim path is mounted |
 | **Decision state** | **MIXED:** ADR-0029 is accepted; shell, governed-API, MapLibre-boundary, sole-renderer, finite-envelope, abstention, and public-client ADRs remain proposed unless separately accepted |
 | **Deployment / public operation** | **UNKNOWN / not established:** this page does not prove hosting, authentication, authorization, CSP, CORS, production telemetry, released data, or publication |
@@ -163,13 +154,13 @@ The prior edition was written as a proposal against an unmounted repository. It 
 Current repository evidence supports a materially stronger—but still bounded—statement:
 
 1. Merged PR [`#3070`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3070) replaced the inert default page with a repository-grounded Explorer composition.
-2. [`main.ts`](../../../apps/explorer-web/src/main.ts) mounts [`mountExplorerSite`](../../../apps/explorer-web/src/site/mount-explorer-site.ts).
-3. The current visual composition lives under [`src/site/`](../../../apps/explorer-web/src/site/), not in a proposed `src/app/GovernedShell.tsx`.
-4. [`features/shell/index.tsx`](../../../apps/explorer-web/src/features/shell/index.tsx) remains a small immutable finite-state baseline resolver.
-5. [`catalog.ts`](../../../apps/explorer-web/src/site/catalog.ts) inventories **38** feature families, **13** knowledge domains, and **8** trust principles with conservative maturity labels.
+2. `main.ts` (retired) mounts `mountExplorerSite` (retired).
+3. The current visual composition lives under `src/site/` (retired), not in a proposed `src/app/GovernedShell.tsx`.
+4. `features/shell/index.tsx` (retired) remains a small immutable finite-state baseline resolver.
+5. `catalog.ts` (retired) inventories **38** feature families, **13** knowledge domains, and **8** trust principles with conservative maturity labels.
 6. The catalog labels `Governed shell` and `Trust Header` as `VERIFIED_SLICE`, `Time Banner` as `FIXTURE_FIRST`, and the concrete MapLibre runtime as `HOLD`.
 7. The map area is a decorative Kansas SVG plus ordinary keyboard-operable controls, not a geographic renderer.
-8. The selection laboratory reuses the strict [`map_runtime`](../../../apps/explorer-web/src/features/map_runtime/index.tsx) bridge and bounded [`Evidence Drawer`](../../../apps/explorer-web/src/features/evidence_drawer/index.tsx).
+8. The selection laboratory reuses the strict `map_runtime` (retired) bridge and bounded `Evidence Drawer` (retired).
 9. The site performs no live source ingestion, model call, policy decision, review transition, release transition, or publication action.
 10. The exact current implementation is therefore **bounded executable composition**, not a production governed map application.
 
@@ -194,10 +185,10 @@ The term `GovernedShell` currently spans two repository-present surfaces with di
 
 | Surface | Current responsibility | Maturity |
 |---|---|---|
-| [`apps/explorer-web/src/features/shell/index.tsx`](../../../apps/explorer-web/src/features/shell/index.tsx) | Immutable finite baseline state: `ABSTAIN` without input and `ERROR` for unsupported input | **CONFIRMED / BOUNDED** |
-| [`apps/explorer-web/src/site/mount-explorer-site.ts`](../../../apps/explorer-web/src/site/mount-explorer-site.ts) | The current visual composition root and section orchestration | **CONFIRMED / BOUNDED** |
-| [`apps/explorer-web/src/site/catalog.ts`](../../../apps/explorer-web/src/site/catalog.ts) | Descriptive repository inventory and maturity labels | **CONFIRMED snapshot / non-authoritative** |
-| [`apps/explorer-web/src/features/shell/README.md`](../../../apps/explorer-web/src/features/shell/README.md) | Earlier feature-boundary design and graduation guidance | **LINEAGE / partly stale current-state prose** |
+| `apps/explorer-web/src/features/shell/index.tsx` (retired) | Immutable finite baseline state: `ABSTAIN` without input and `ERROR` for unsupported input | **CONFIRMED / BOUNDED** |
+| `apps/explorer-web/src/site/mount-explorer-site.ts` (retired) | The current visual composition root and section orchestration | **CONFIRMED / BOUNDED** |
+| `apps/explorer-web/src/site/catalog.ts` (retired) | Descriptive repository inventory and maturity labels | **CONFIRMED snapshot / non-authoritative** |
+| `apps/explorer-web/src/features/shell/README.md` (retired) | Earlier feature-boundary design and graduation guidance | **LINEAGE / partly stale current-state prose** |
 
 This split is not silently declared a defect. Consolidating, renaming, or moving code would be a separate implementation change requiring consumer, test, ownership, and rollback analysis. This page records the split so architecture prose does not pretend that a proposed React route shell exists where the current implementation is vanilla TypeScript DOM composition.
 
@@ -297,7 +288,7 @@ The document does not create a second authority for semantic meaning, machine sh
 | Responsibility | Current or expected owning root | Shell relationship |
 |---|---|---|
 | Human architecture | `docs/architecture/ui/` | This page explains the shell boundary |
-| Deployable Explorer composition | [`apps/explorer-web/`](../../../apps/explorer-web/) | Current app and composition surface |
+| Deployable Explorer composition | `apps/explorer-web/` (retired) | Current app and composition surface |
 | Shared UI implementation | [`packages/ui/`](../../../packages/ui/) | Reusable code when a reviewed shared API exists; current maturity must be verified |
 | Renderer helper/wrapper | [`packages/maplibre/`](../../../packages/maplibre/) | Current private placeholder; no admitted runtime |
 | Semantic meaning | [`contracts/`](../../../contracts/) | Object meaning; shell documentation may reference but not redefine |
@@ -907,9 +898,9 @@ This page does not prove:
 
 | Surface | What it checks | Authority limit |
 |---|---|---|
-| [`apps/explorer-web/package.json`](../../../apps/explorer-web/package.json) | TypeScript/Vite build, Vitest unit tests, Playwright browser tests | Tooling and tests; not release, deployment, or public operation |
-| [`ui-build.yml`](../../../.github/workflows/ui-build.yml) | Locked Explorer build/test readiness, frozen install, build, unit and browser suites | CI signal only; dependency install may use package registry |
-| [`explorer-site-catalog.test.ts`](../../../apps/explorer-web/tests/explorer-site-catalog.test.ts) | Unique feature/domain IDs and paths, 13-domain inventory, MapLibre HOLD, filters, sensitive-domain safeguard | Catalog invariants, not runtime availability |
+| `apps/explorer-web/package.json` (retired) | TypeScript/Vite build, Vitest unit tests, Playwright browser tests | Tooling and tests; not release, deployment, or public operation |
+| `ui-build.yml` (not present) | Locked Explorer build/test readiness, frozen install, build, unit and browser suites | CI signal only; dependency install may use package registry |
+| `explorer-site-catalog.test.ts` (retired) | Unique feature/domain IDs and paths, 13-domain inventory, MapLibre HOLD, filters, sensitive-domain safeguard | Catalog invariants, not runtime availability |
 | Map-runtime tests | Strict selection shape, finite local failures, resolver injection, evidence-subset enforcement | Synthetic bridge, not real renderer/network/evidence resolution |
 | Evidence Drawer tests | Projection parsing, finite states, no-leak negative copy, keyboard behavior, history | UI projection, not authoritative evidence/policy/release |
 | Browser suites | Feature-specific keyboard and rendering behavior | Browser fixture behavior, not deployed product proof |
@@ -1069,18 +1060,18 @@ After P1:
 
 ### Current executable evidence
 
-- [Explorer entrypoint](../../../apps/explorer-web/src/main.ts)
-- [Site composition README](../../../apps/explorer-web/src/site/README.md)
-- [Site composition](../../../apps/explorer-web/src/site/mount-explorer-site.ts)
-- [Site catalog](../../../apps/explorer-web/src/site/catalog.ts)
-- [Baseline shell state](../../../apps/explorer-web/src/features/shell/index.tsx)
-- [Map evidence bridge](../../../apps/explorer-web/src/features/map_runtime/index.tsx)
-- [Evidence Drawer](../../../apps/explorer-web/src/features/evidence_drawer/index.tsx)
-- [MapLibre adapter placeholder](../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts)
-- [Explorer package manifest](../../../apps/explorer-web/package.json)
+- Explorer entrypoint (retired)
+- Site composition README (retired)
+- Site composition (retired)
+- Site catalog (retired)
+- Baseline shell state (retired)
+- Map evidence bridge (retired)
+- Evidence Drawer (retired)
+- MapLibre adapter placeholder (retired)
+- Explorer package manifest (retired)
 - [MapLibre package placeholder](../../../packages/maplibre/)
-- [Explorer catalog test](../../../apps/explorer-web/tests/explorer-site-catalog.test.ts)
-- [UI build workflow](../../../.github/workflows/ui-build.yml)
+- Explorer catalog test (retired)
+- UI build workflow (not present)
 - [Composition authoring receipt](../../../data/receipts/generated/genrec-explorer-site-composition-20260819.json)
 
 [Back to top](#top)

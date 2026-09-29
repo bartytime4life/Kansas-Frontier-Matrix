@@ -44,19 +44,11 @@ related:
   - docs/doctrine/directory-rules.md
   - docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md
   - docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
-  - "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+  - docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
-  - apps/explorer-web/src/main.ts
-  - apps/explorer-web/src/site/README.md
-  - apps/explorer-web/src/site/mount-explorer-site.ts
-  - apps/explorer-web/src/site/catalog.ts
-  - apps/explorer-web/src/features/map_runtime/index.tsx
-  - apps/explorer-web/src/features/evidence_drawer/index.tsx
-  - apps/explorer-web/src/adapters/MapLibreAdapter.ts
   - packages/maplibre/README.md
   - contracts/ui/evidence_drawer_payload.md
   - contracts/ui/map_context_envelope.md
-  - apps/explorer-web/tests/explorer-site-catalog.test.ts
 tags: [kfm, architecture, ui, explorer-web, map-shell, map-runtime, maplibre, evidence-drawer, finite-outcomes, trust-membrane, renderer-hold, correction, rollback]
 notes:
   - "v2.0 replaces proposal-era, no-repository language with a current repository-grounded architecture and implementation boundary."
@@ -82,7 +74,7 @@ notes:
 | **Evidence snapshot** | `main@232f7aeda87abbc46c85a8dd37b75cc9def8a2c5` |
 | **Document role** | Human-readable cross-cutting architecture reference at the existing path; no semantic, schema, policy, runtime, or release authority |
 | **Placement authority** | **CONFIRMED:** accepted [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) adopts [Directory Rules v2](../doctrine/directory-rules.md) |
-| **Current Explorer entrypoint** | **CONFIRMED:** [`src/main.ts`](../../apps/explorer-web/src/main.ts) mounts the repository-grounded site composition |
+| **Current Explorer entrypoint** | **CONFIRMED:** `src/main.ts` (retired) mounts the repository-grounded site composition |
 | **Current composed shell** | **CONFIRMED / BOUNDED:** map-first landing surface, four navigation regions, 38 repository feature families, 13 knowledge domains, 8 trust principles, and a deterministic synthetic map-evidence laboratory |
 | **Current map stage** | **SYNTHETIC:** decorative Kansas SVG plus keyboard-operable fixture controls; no real basemap, tile source, released layer, camera runtime, or MapLibre boot |
 | **Current selection boundary** | **CONFIRMED / BOUNDED:** strict renderer-neutral selection parsing, injected governed resolver, evidence-subset enforcement, and finite Evidence Drawer outcomes |
@@ -131,11 +123,11 @@ notes:
 The prior edition was written as a proposal against an unmounted repository. Current evidence now establishes a materially different—but still bounded—state:
 
 1. Merged PR `#3070` replaced the inert default page with a repository-grounded Explorer composition.
-2. [`main.ts`](../../apps/explorer-web/src/main.ts) mounts [`mountExplorerSite`](../../apps/explorer-web/src/site/mount-explorer-site.ts).
+2. `main.ts` (retired) mounts `mountExplorerSite` (retired).
 3. The composed site exposes **Map**, **Knowledge**, **Features**, and **Trust** regions.
-4. [`catalog.ts`](../../apps/explorer-web/src/site/catalog.ts) inventories 38 feature families, 13 knowledge domains, and 8 trust principles with conservative maturity labels.
+4. `catalog.ts` (retired) inventories 38 feature families, 13 knowledge domains, and 8 trust principles with conservative maturity labels.
 5. The map region is a decorative, explicitly synthetic SVG—not a renderer.
-6. The selection laboratory reuses the strict [`map_runtime`](../../apps/explorer-web/src/features/map_runtime/index.tsx) bridge and the bounded Evidence Drawer.
+6. The selection laboratory reuses the strict `map_runtime` (retired) bridge and the bounded Evidence Drawer.
 7. The current MapLibre package and adapter remain non-functional scaffolds, and the catalog keeps renderer admission on `HOLD`.
 
 ### 0.2 Current composed surfaces
@@ -158,7 +150,7 @@ Current executable bytes outrank older documentation when describing what the en
 
 | Adjacent surface | Current conflict | Disposition in this page |
 |---|---|---|
-| [`apps/explorer-web/README.md`](../../apps/explorer-web/README.md) | Says the default entrypoint is still the earlier minimal fail-closed composition | Treat as **STALE current-state prose**; retain its trust-boundary guidance |
+| `apps/explorer-web/README.md` (retired) | Says the default entrypoint is still the earlier minimal fail-closed composition | Treat as **STALE current-state prose**; retain its trust-boundary guidance |
 | [`ui/BOUNDARIES.md`](./ui/BOUNDARIES.md) | Evidence snapshot predates the new site composition | Treat as a strong boundary reference with **NEEDS VERIFICATION** current-state rows |
 | [`ui/MAP_RUNTIME_BOUNDARY.md`](./ui/MAP_RUNTIME_BOUNDARY.md) | Proposal-era routes, owners, paths, and “canonical” language predate current repository reconciliation | Treat as design lineage; ADR-0006 and current code remain controlling evidence for decision and implementation state |
 | [`map-master/README.md`](./map-master/README.md) and [`maplibre.md`](./maplibre.md) | Separate current lane navigation from proposal-era renderer and package claims | Use the folder README as the Map Master landing page; evaluate MapLibre implementation claims against current repository evidence |
@@ -414,7 +406,7 @@ The section anchor is retained for compatibility. The implementation state has c
 
 ### 6.1 Current executable anti-corruption seam
 
-The current app-local [`MapFeatureSelection`](../../apps/explorer-web/src/features/map_runtime/index.tsx) profile is the only verified executable map-boundary object in the composed site.
+The current app-local `MapFeatureSelection` (retired) profile is the only verified executable map-boundary object in the composed site.
 
 ```ts
 type MapFeatureSelection = Readonly<{
@@ -451,7 +443,7 @@ interface MapRuntimePort {
 |---|---|
 | [`packages/maplibre/package.json`](../../packages/maplibre/package.json) | Private `@kfm/maplibre`, version `0.0.0`, no scripts, exports, engines, or dependencies |
 | [`packages/maplibre/src/index.ts`](../../packages/maplibre/src/index.ts) | One placeholder export |
-| [`apps/explorer-web/src/adapters/MapLibreAdapter.ts`](../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) | One boundary comment; no import, export, type, or implementation |
+| `apps/explorer-web/src/adapters/MapLibreAdapter.ts` (retired) | One boundary comment; no import, export, type, or implementation |
 | Explorer package manifest | Real build/test scripts, but no `maplibre-gl` dependency |
 | Renderer ADRs | ADR-0006 and ADR-0007 remain proposed |
 | Current catalog | MapLibre readiness candidate `6.6.0`, dependency not admitted, runtime not implemented, state `HOLD` |
@@ -684,17 +676,17 @@ A review of this page must verify:
 
 | Responsibility | Current home | Current maturity | Boundary |
 |---|---|---|---|
-| Deployable browser composition | [`apps/explorer-web/`](../../apps/explorer-web/) | **CONFIRMED bounded executable** | App composition; not truth or release authority |
-| Current site composition | [`apps/explorer-web/src/site/`](../../apps/explorer-web/src/site/) | **CONFIRMED executable** | Repository-grounded site and synthetic map laboratory |
-| App-local map selection bridge | [`apps/explorer-web/src/features/map_runtime/`](../../apps/explorer-web/src/features/map_runtime/) | **CONFIRMED fixture-first executable** | Renderer-neutral candidate-to-drawer boundary |
-| App-local Evidence Drawer | [`apps/explorer-web/src/features/evidence_drawer/`](../../apps/explorer-web/src/features/evidence_drawer/) | **CONFIRMED bounded executable** | Projection/rendering only |
-| App-local renderer adapter placeholder | [`apps/explorer-web/src/adapters/MapLibreAdapter.ts`](../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) | **COMMENT-ONLY / HOLD** | No functioning adapter |
+| Deployable browser composition | `apps/explorer-web/` (retired) | **CONFIRMED bounded executable** | App composition; not truth or release authority |
+| Current site composition | `apps/explorer-web/src/site/` (retired) | **CONFIRMED executable** | Repository-grounded site and synthetic map laboratory |
+| App-local map selection bridge | `apps/explorer-web/src/features/map_runtime/` (retired) | **CONFIRMED fixture-first executable** | Renderer-neutral candidate-to-drawer boundary |
+| App-local Evidence Drawer | `apps/explorer-web/src/features/evidence_drawer/` (retired) | **CONFIRMED bounded executable** | Projection/rendering only |
+| App-local renderer adapter placeholder | `apps/explorer-web/src/adapters/MapLibreAdapter.ts` (retired) | **COMMENT-ONLY / HOLD** | No functioning adapter |
 | Reusable renderer package candidate | [`packages/maplibre/`](../../packages/maplibre/) | **Private `0.0.0` scaffold / HOLD** | Proposed implementation/distribution seam |
 | UI payload semantics | [`contracts/ui/`](../../contracts/ui/) | **Mixed:** bounded proposed profiles and adjacent unresolved authority | Meaning, not runtime |
 | UI machine shapes | [`schemas/contracts/v1/ui/`](../../schemas/contracts/v1/ui/) | **Mixed:** closed fixture profiles and other maturity states | Shape, not policy |
 | Reusable synthetic examples | [`fixtures/ui/`](../../fixtures/ui/) | **CONFIRMED fixture lanes** | Synthetic only |
 | UI validators | [`tools/validators/ui/`](../../tools/validators/ui/) | **CONFIRMED bounded validators** | Declared conformance, not public truth |
-| App tests | [`apps/explorer-web/tests/`](../../apps/explorer-web/tests/) | **CONFIRMED executable tests** | App-local proof |
+| App tests | `apps/explorer-web/tests/` (retired) | **CONFIRMED executable tests** | App-local proof |
 | Cross-root tests | [`tests/`](../../tests/) | **CONFIRMED mixed test roots** | Boundary/validator proof |
 | Dynamic governed interface | [`apps/governed-api/`](../../apps/governed-api/) | **Repository-present; live shell transport not composed** | Trust-bearing dynamic responses |
 | Policy | [`policy/`](../../policy/) | **Separate authority root; shell policy binding not established** | Admissibility |
@@ -853,12 +845,12 @@ No. It is a descriptive, repository-pinned presentation catalog with conservativ
 
 ### Current application and bounded implementation
 
-- [Explorer Web](../../apps/explorer-web/README.md) — boundary guidance; current-entrypoint prose predates merged site composition
-- [Explorer site composition](../../apps/explorer-web/src/site/README.md)
-- [Current entrypoint](../../apps/explorer-web/src/main.ts)
-- [Site catalog](../../apps/explorer-web/src/site/catalog.ts)
-- [Map selection bridge](../../apps/explorer-web/src/features/map_runtime/index.tsx)
-- [Evidence Drawer implementation](../../apps/explorer-web/src/features/evidence_drawer/index.tsx)
+- Explorer Web (retired) — boundary guidance; current-entrypoint prose predates merged site composition
+- Explorer site composition (retired)
+- Current entrypoint (retired)
+- Site catalog (retired)
+- Map selection bridge (retired)
+- Evidence Drawer implementation (retired)
 - [MapLibre package boundary](../../packages/maplibre/README.md)
 
 ### Contracts and architecture companions
@@ -872,8 +864,8 @@ No. It is a descriptive, repository-pinned presentation catalog with conservativ
 
 ### Validation and tests
 
-- [Explorer site catalog test](../../apps/explorer-web/tests/explorer-site-catalog.test.ts)
-- [Explorer adapter-boundary test](../../tests/policy/test_explorer_web_adapter_boundary.py)
+- Explorer site catalog test (retired)
+- Explorer adapter-boundary test (not present)
 - [Evidence Drawer validator](../../tools/validators/ui/validate_evidence_drawer_payload.py)
 
 ---

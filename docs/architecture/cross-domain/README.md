@@ -17,8 +17,7 @@ responsibility_root: docs/
 responsibility: "Index and explain cross-domain architecture, relation invariants, source-role anti-collapse, responsibility placement, compositional boundaries, trust-membrane requirements, and current repository maturity without becoming contract, schema, policy, registry, implementation, evidence, review, release, or publication authority."
 current_path: docs/architecture/cross-domain/README.md
 canonical_relationship: "Same-path nested architecture index under accepted Directory Rules section 12.5; no sibling authority, new root, seam activation, or migration created."
-supersedes:
-  - v0.3.0 at the same path
+supersedes: []
 superseded_by: []
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
@@ -909,7 +908,7 @@ A README cannot close those decisions.
 - [Cross-domain tests](../../../tests/cross_domain/README.md)
 - [Cross-lane pipelines](../../../pipelines/cross_lane/README.md)
 - [Governed API application](../../../apps/governed-api/README.md)
-- [Explorer Web](../../../apps/explorer-web/README.md)
+- Explorer Web (retired)
 - [Release responsibility root](../../../release/README.md)
 
 [Back to top](#top)

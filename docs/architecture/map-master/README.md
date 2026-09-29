@@ -77,7 +77,7 @@ related:
   - ../planetary-3d.md
   - ../ui/MAP_RUNTIME_BOUNDARY.md
   - ../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
-  - "../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+  - ../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md
   - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../doctrine/directory-rules.md
   - ../../../packages/maplibre/README.md
@@ -86,13 +86,6 @@ related:
   - ../../../packages/maplibre/src/map-runtime-port.ts
   - ../../../packages/maplibre/src/maplibre-adapter.ts
   - ../../../packages/maplibre/src/maplibre-vite-adapter.ts
-  - ../../../apps/explorer-web/package.json
-  - ../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts
-  - ../../../apps/explorer-web/src/features/map_runtime/index.tsx
-  - ../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts
-  - ../../../apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts
-  - ../../../apps/explorer-web/tests/browser/maplibre-vite-adapter.spec.ts
-  - ../../../apps/kansas-frontier-matrix-explorer/package.json
   - ../../../tools/validators/maplibre/assess_acquisition_inventory.py
   - ../../../tools/validators/maplibre/validate_v6_readiness.py
 tags: [kfm, architecture, map-master, maplibre, renderer, evidence-drawer, layer-lifecycle, tile-artifacts, viewer-verification, performance, 2d-3d-parity, trust-membrane, runtime-hold]
@@ -463,13 +456,13 @@ The siblings carry their own pinned evidence snapshots. This parent records thei
 | [`packages/maplibre/src/index.ts`](../../../packages/maplibre/src/index.ts) | Exports the renderer-neutral port and deterministic null runtime | No raw MapLibre types or classes cross the root boundary |
 | [`maplibre-adapter.ts`](../../../packages/maplibre/src/maplibre-adapter.ts) | Package-owned empty-style construction, camera synchronization, finite lifecycle failures, and teardown | No source, layer, selection, protocol, plugin, or external-style admission |
 | [`maplibre-vite-adapter.ts`](../../../packages/maplibre/src/maplibre-vite-adapter.ts) | Configures the Vite-emitted same-origin worker before adapter construction | Vite-specific acquisition remains inside the package seam |
-| [`apps/explorer-web/package.json`](../../../apps/explorer-web/package.json) and Vite aliases | Consumer toolchain reaches the package through repository-local aliases and an isolated browser fixture | Normal site composition still uses `NullMapRuntime` |
-| [`MapLibreAdapter.ts`](../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) | Comment-only compatibility marker | No app-local runtime import or second adapter authority |
-| [`kansas-frontier-matrix-explorer/package.json`](../../../apps/kansas-frontier-matrix-explorer/package.json) and app imports | Separately tracked app depends on the package root and initializes `NullMapRuntime` | Full renderer capability migration remains held |
+| `apps/explorer-web/package.json` (retired) and Vite aliases | Consumer toolchain reaches the package through repository-local aliases and an isolated browser fixture | Normal site composition still uses `NullMapRuntime` |
+| `MapLibreAdapter.ts` (retired) | Comment-only compatibility marker | No app-local runtime import or second adapter authority |
+| `kansas-frontier-matrix-explorer/package.json` (retired) and app imports | Separately tracked app depends on the package root and initializes `NullMapRuntime` | Full renderer capability migration remains held |
 
 ### 6.2 Renderer-neutral map selection
 
-[`apps/explorer-web/src/features/map_runtime/index.tsx`](../../../apps/explorer-web/src/features/map_runtime/index.tsx) currently provides:
+`apps/explorer-web/src/features/map_runtime/index.tsx` (retired) currently provides:
 
 - exact-field parsing for `kfm.explorer.map-feature-selection.v1`;
 - bounded identifiers and a maximum of sixteen unique evidence references;
@@ -484,7 +477,7 @@ It performs no source, policy, evidence-store, lifecycle, renderer, model, or ow
 
 ### 6.3 Fixture-only layer admission
 
-[`layer_manifest_admission.ts`](../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts) evaluates one closed synthetic projection. Every result carries:
+`layer_manifest_admission.ts` (retired) evaluates one closed synthetic projection. Every result carries:
 
 ```text
 authority: "NONE"
@@ -497,7 +490,7 @@ A `PASS / LAYER_MANIFEST_REGISTER_ELIGIBLE` result means only that a later gover
 
 ### 6.4 Fixture-only release-scoped PMTiles cache decision
 
-[`pmtiles_release_cache.ts`](../../../apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts) classifies a future cache hit, online fetch requirement, offline miss, partial entry, mismatch, withdrawal, denied source class, authority overclaim, or invalid input. It performs no fetch and does not call CacheStorage.
+`pmtiles_release_cache.ts` (retired) classifies a future cache hit, online fetch requirement, offline miss, partial entry, mismatch, withdrawal, denied source class, authority overclaim, or invalid input. It performs no fetch and does not call CacheStorage.
 
 Even `PASS` retains:
 
@@ -842,13 +835,13 @@ This revision changes one established documentation file only.
 | [`packages/maplibre/src/index.ts`](../../../packages/maplibre/src/index.ts) | Renderer-neutral port and null-runtime exports |
 | [`maplibre-adapter.ts`](../../../packages/maplibre/src/maplibre-adapter.ts) | Package-owned bounded lifecycle/camera adapter |
 | [`maplibre-vite-adapter.ts`](../../../packages/maplibre/src/maplibre-vite-adapter.ts) | Package-owned Vite worker configuration seam |
-| [`apps/explorer-web/package.json`](../../../apps/explorer-web/package.json) | Explorer toolchain; package aliases and isolated browser fixture are configured outside the manifest |
-| [`MapLibreAdapter.ts`](../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) | Comment-only app compatibility marker; not the concrete implementation |
-| [`maplibre-vite-adapter.spec.ts`](../../../apps/explorer-web/tests/browser/maplibre-vite-adapter.spec.ts) | Isolated real-browser adapter/worker/CSS proof |
-| [`kansas-frontier-matrix-explorer/package.json`](../../../apps/kansas-frontier-matrix-explorer/package.json) | Renderer-neutral package consumer; full renderer capability HOLD |
-| [`map_runtime/index.tsx`](../../../apps/explorer-web/src/features/map_runtime/index.tsx) | Renderer-neutral selection-to-Evidence-Drawer bridge |
-| [`layer_manifest_admission.ts`](../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts) | Fixture-only zero-effect admission decision |
-| [`pmtiles_release_cache.ts`](../../../apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts) | Fixture-only zero-effect cache decision |
+| `apps/explorer-web/package.json` (retired) | Explorer toolchain; package aliases and isolated browser fixture are configured outside the manifest |
+| `MapLibreAdapter.ts` (retired) | Comment-only app compatibility marker; not the concrete implementation |
+| `maplibre-vite-adapter.spec.ts` (retired) | Isolated real-browser adapter/worker/CSS proof |
+| `kansas-frontier-matrix-explorer/package.json` (retired) | Renderer-neutral package consumer; full renderer capability HOLD |
+| `map_runtime/index.tsx` (retired) | Renderer-neutral selection-to-Evidence-Drawer bridge |
+| `layer_manifest_admission.ts` (retired) | Fixture-only zero-effect admission decision |
+| `pmtiles_release_cache.ts` (retired) | Fixture-only zero-effect cache decision |
 | [`assess_acquisition_inventory.py`](../../../tools/validators/maplibre/assess_acquisition_inventory.py) | Bounded structural acquisition inventory |
 | [`validate_v6_readiness.py`](../../../tools/validators/maplibre/validate_v6_readiness.py) | Exact `6.6.0`, twelve-probe readiness classifier |
 | [MapLibre acquisition workflow](../../../.github/workflows/maplibre-acquisition-inventory.yml) | Read-only hosted orchestration for the inventory profile |

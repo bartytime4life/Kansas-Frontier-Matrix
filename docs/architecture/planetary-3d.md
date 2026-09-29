@@ -58,7 +58,7 @@ related:
   - docs/doctrine/directory-rules.md
   - docs/adr/INDEX.md
   - docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
-  - "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+  - docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - contracts/map/three_d_admission_decision.md
   - contracts/receipts/representation_receipt.md
@@ -74,8 +74,6 @@ related:
   - tests/validators/test_validate_representation_receipt.py
   - .github/workflows/three-d-admission-decision.yml
   - .github/workflows/representation-receipt.yml
-  - apps/explorer-web/package.json
-  - apps/explorer-web/src/adapters/MapLibreAdapter.ts
   - packages/maplibre/package.json
   - packages/maplibre/src/index.ts
   - packages/maplibre/src/map-runtime-port.ts
@@ -179,11 +177,11 @@ The current tree establishes two executable-but-inactive trust slices, one rende
 | [Reality Boundary Note schema](../../schemas/contracts/v1/evidence/reality_boundary_note.schema.json) | Closed shape for representation kind, reality posture, source roles, evidence refs, transforms, limitations, spatial/temporal scope, and correction refs | A schema exists, but an accepted semantic contract and live resolution path are not established |
 | [Scene schema family README](../../schemas/contracts/v1/scene/README.md) | Explicit README-only guardrail; no accepted scene schemas found in that family | Do not infer `SceneManifest` implementation |
 | [Published scene README](../../data/published/layers/scene/README.md) | Defines intended released-carrier boundary; exact directory contains only README and `.gitkeep` | No current scene release is established |
-| [Explorer manifest](../../apps/explorer-web/package.json) | Vite/TypeScript/Vitest/Playwright tooling only; no renderer or 3D dependencies | Explorer cannot be described as a functioning 3D client |
+| Explorer manifest (retired) | Vite/TypeScript/Vitest/Playwright tooling only; no renderer or 3D dependencies | Explorer cannot be described as a functioning 3D client |
 | [MapLibre package manifest](../../packages/maplibre/package.json) and [entrypoint](../../packages/maplibre/src/index.ts) | Private `@kfm/maplibre` version `0.0.0`; explicit source export surface; no renderer dependency | Package home owns a renderer-neutral seam, not a renderer runtime |
 | [`MapRuntimePort`](../../packages/maplibre/src/map-runtime-port.ts) | Serializable camera, selection, runtime-state, snapshot, validation, and disposal boundary with finite errors and no concrete renderer types | Reusable application seam exists; no renderer acquisition or browser proof follows |
 | [`NullMapRuntime`](../../packages/maplibre/src/null-map-runtime.ts) | Deterministic, no-network implementation for migration and tests | Test/control runtime exists; it is not a browser renderer or release proof |
-| [Explorer adapter](../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) | One boundary comment; no concrete implementation | Renderer adapter remains unimplemented |
+| Explorer adapter (retired) | One boundary comment; no concrete implementation | Renderer adapter remains unimplemented |
 | [REST/3D architecture companion](./rest-orchestrated-3d-derivatives.md) | Source-reconciled explanatory companion merged by PR #3434 | Defines no route, schema, worker, source, dependency, release, or publication authority |
 | [REST/3D source map](../intake/exploratory/rest-orchestrated-advanced-3d-rendering-source-map.md) | Noncanonical source-lineage and verified page-map record from PR #3435 and issue #3436 | Supports research traceability; it does not compete with this parent architecture |
 
@@ -1053,8 +1051,8 @@ A future renderer/scene implementation needs a separate rollback plan covering:
 
 ### 14.3 Renderer and source boundaries
 
-- [Explorer package manifest](../../apps/explorer-web/package.json) — no concrete renderer dependency.
-- [Explorer MapLibre adapter boundary](../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) — comment-only; no concrete implementation.
+- Explorer package manifest (retired) — no concrete renderer dependency.
+- Explorer MapLibre adapter boundary (retired) — comment-only; no concrete implementation.
 - [MapLibre package manifest](../../packages/maplibre/package.json) — accepted owning package, explicit source exports, no `maplibre-gl` dependency.
 - [USGS 3DEP source-planning page](../sources/catalog/usgs/3dep-elevation.md) — source-role and datum guidance; not active-source or release proof.
 

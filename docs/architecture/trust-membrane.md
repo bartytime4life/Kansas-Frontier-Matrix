@@ -225,7 +225,7 @@ The repository contains bounded implementation surfaces that protect parts of th
 | [`DecisionEnvelope`](../../contracts/runtime/decision_envelope.md) | Proposed finite runtime decision record with policy family, reasons, and obligations. | Policy execution, release approval, or transport behavior. |
 | [`PolicyDecision`](../../contracts/policy/policy_decision.md) | Proposed semantic record for one policy evaluation event. | Accepted policy bundle, evaluator binding, authenticated authority, operational enforcement. |
 | [`packages/evidence-resolver/`](../../packages/evidence-resolver/README.md) | Internal no-network v1alpha1 candidate check over explicit caller-supplied inputs. | Authoritative lookup, claim-scope closure, rights/sensitivity evaluation, public outcome mapping, production consumer. |
-| [`GovernedClient.ts`](../../apps/explorer-web/src/adapters/GovernedClient.ts) | Strict fixture-only Evidence Drawer projection parser; no network or lifecycle-store access. | Live Governed API transport or production runtime parity. |
+| `GovernedClient.ts` (retired) | Strict fixture-only Evidence Drawer projection parser; no network or lifecycle-store access. | Live Governed API transport or production runtime parity. |
 | [`release/`](../../release/README.md) | Canonical append-only release-decision root with multiple fixture-first validation surfaces. | Authenticated operational release, public alias mutation, correction propagation, cache invalidation, deployed rollback. |
 | [Promotion-gate readiness validator](../../tools/validators/promotion_gate/README.md) | Deterministic, no-network A–G packet checks with finite results and no writes. | Existence/authenticity of referenced objects, live policy, signatures, release execution, publication. |
 
@@ -749,7 +749,7 @@ The slice should include `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`, and prove no 
 - [`packages/evidence-resolver/`](../../packages/evidence-resolver/README.md).
 - [`release/`](../../release/README.md).
 - [Promotion-gate readiness validator](../../tools/validators/promotion_gate/README.md).
-- [Explorer fixture-only governed adapter](../../apps/explorer-web/src/adapters/GovernedClient.ts).
+- Explorer fixture-only governed adapter (retired).
 
 ## Non-effects
 

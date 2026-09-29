@@ -61,28 +61,19 @@ related:
   - docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
   - docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md
   - docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
-  - "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+  - docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md
   - docs/adr/ADR-0016-telemetry-redaction-posture.md
   - docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md
   - docs/adr/ADR-0020-abstain-is-a-first-class-decision.md
   - docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - docs/doctrine/directory-rules.md
-  - apps/explorer-web/README.md
-  - apps/explorer-web/src/main.ts
-  - apps/explorer-web/src/site/README.md
-  - apps/explorer-web/src/site/mount-explorer-site.ts
-  - apps/explorer-web/src/site/catalog.ts
-  - apps/explorer-web/tests/explorer-site-catalog.test.ts
-  - apps/explorer-web/src/features/story_player/current-implementation.md
   - apps/governed-api/src/governed_api/main.py
   - apps/governed-api/src/governed_api/routes/registry.py
   - apps/governed-api/src/governed_api/stub.py
   - packages/ui/README.md
   - packages/maplibre/README.md
   - policy/ui/README.md
-  - tests/policy/test_explorer_web_adapter_boundary.py
-  - .github/workflows/ui-build.yml
 tags: [kfm, ui, architecture, explorer-web, governed-api, maplibre, evidence-drawer, focus-mode, story-player, review-console, accessibility, finite-outcomes, trust-membrane, correction, rollback]
 notes:
   - "v4.1.1-draft preserves the v4.1 landing-page evidence snapshot and corrects only the Evidence Drawer sibling status after same-path v2.1 reconciliation at main@366cfa9185b0d10ca27f128a8a041ca8c5312896."
@@ -99,7 +90,7 @@ notes:
 > **Repository-grounded landing page.** KFM's UI is a downstream, map-first, time-aware, evidence-bounded client surface. It may orient users, render finite governed projections, exercise deterministic synthetic interactions, and display already released public-safe carriers. It does not create truth, resolve evidence authority, decide policy, approve review or release, activate sources, call model runtimes directly, or publish by displaying something.
 
 > [!IMPORTANT]
-> **Current Explorer composition is real but bounded.** At `main@362d6590b9516596ad1c34a64781c13bf85d52c8`, [`src/main.ts`](../../../apps/explorer-web/src/main.ts) mounts the repository-grounded [`mountExplorerSite`](../../../apps/explorer-web/src/site/mount-explorer-site.ts) composition. That composition includes a skip link, section navigation, trust posture, synthetic renderer-neutral map stage, deterministic map-selection-to-Evidence-Drawer laboratory, thirteen knowledge-domain entries, thirty-eight descriptive feature entries, and eight trust principles. It consumes the dependency-free `MapRuntimePort` through `NullMapRuntime`, still uses local deterministic fixtures, preserves the baseline `ABSTAIN / NO_GOVERNED_RESPONSE` posture, imports no MapLibre runtime, and establishes no live Governed API claim path, released-layer loader, model call, deployment, release, or public operation.
+> **Current Explorer composition is real but bounded.** At `main@362d6590b9516596ad1c34a64781c13bf85d52c8`, `src/main.ts` (retired) mounts the repository-grounded `mountExplorerSite` (retired) composition. That composition includes a skip link, section navigation, trust posture, synthetic renderer-neutral map stage, deterministic map-selection-to-Evidence-Drawer laboratory, thirteen knowledge-domain entries, thirty-eight descriptive feature entries, and eight trust principles. It consumes the dependency-free `MapRuntimePort` through `NullMapRuntime`, still uses local deterministic fixtures, preserves the baseline `ABSTAIN / NO_GOVERNED_RESPONSE` posture, imports no MapLibre runtime, and establishes no live Governed API claim path, released-layer loader, model call, deployment, release, or public operation.
 
 | Field | Current evidence-backed value |
 |---|---|
@@ -198,9 +189,9 @@ The current [`ADR index`](../../adr/INDEX.md) records thirty-six numbered ADRs. 
 | Surface | Verified state | Authority limit |
 |---|---|---|
 | `docs/architecture/ui/` | This README plus fourteen sibling architecture documents are present | Presence does not prove freshness, acceptance, implementation, or consistency |
-| [`apps/explorer-web/package.json`](../../../apps/explorer-web/package.json) | Real Vite, TypeScript, Vitest, and Playwright scripts under Node 22; no runtime renderer dependency is declared | Build tooling is not a map runtime, deployment, release, or publication |
-| [`apps/explorer-web/src/main.ts`](../../../apps/explorer-web/src/main.ts) | Imports the site CSS bundle and mounts `mountExplorerSite(root)` | Composition is local and deterministic; it is not a live route or network claim path |
-| [`apps/explorer-web/src/site/`](../../../apps/explorer-web/src/site/) | Map-first landing composition with skip link, section navigation, trust posture, synthetic map stage, deterministic evidence lab, domain matrix, feature catalog, and trust principles | Repository orientation and fixture proof only; no live data, source activation, policy execution, or public release |
+| `apps/explorer-web/package.json` (retired) | Real Vite, TypeScript, Vitest, and Playwright scripts under Node 22; no runtime renderer dependency is declared | Build tooling is not a map runtime, deployment, release, or publication |
+| `apps/explorer-web/src/main.ts` (retired) | Imports the site CSS bundle and mounts `mountExplorerSite(root)` | Composition is local and deterministic; it is not a live route or network claim path |
+| `apps/explorer-web/src/site/` (retired) | Map-first landing composition with skip link, section navigation, trust posture, synthetic map stage, deterministic evidence lab, domain matrix, feature catalog, and trust principles | Repository orientation and fixture proof only; no live data, source activation, policy execution, or public release |
 | Repository catalog | Thirty-eight descriptive feature entries, thirteen knowledge domains, eight trust principles, and explicit maturity labels | Catalog labels describe bounded repository state; they are not release, review, policy, or publication states |
 | Baseline shell resolver | No-input resolution returns `ABSTAIN / NO_GOVERNED_RESPONSE`; supplied input returns `ERROR / UNSUPPORTED_BASELINE_INPUT`; both carry zero evidence refs | Safe absence path only; not a live response pipeline |
 | Map-evidence laboratory | Renderer-neutral synthetic selections exercise supported, missing, restricted, mismatched, and resolver-error cases through the local Evidence Drawer bridge | No MapLibre import, external fetch, EvidenceBundle resolver, policy engine, or released feature is involved |
@@ -255,9 +246,9 @@ The existing path is placement-safe under the accepted Directory Rules:
 
 | Responsibility | Current or expected home | UI relationship |
 |---|---|---|
-| Deployable browser composition | [`apps/explorer-web/`](../../../apps/explorer-web/) | Current bounded app workspace |
-| Explorer site composition | [`apps/explorer-web/src/site/`](../../../apps/explorer-web/src/site/) | Current map-first landing composition and repository catalog |
-| App-local features and adapters | [`apps/explorer-web/src/features/`](../../../apps/explorer-web/src/features/) and [`src/adapters/`](../../../apps/explorer-web/src/adapters/) | Defensive projections and view-model behavior |
+| Deployable browser composition | `apps/explorer-web/` (retired) | Current bounded app workspace |
+| Explorer site composition | `apps/explorer-web/src/site/` (retired) | Current map-first landing composition and repository catalog |
+| App-local features and adapters | `apps/explorer-web/src/features/` (retired) and `src/adapters/` (retired) | Defensive projections and view-model behavior |
 | Governed dynamic interface | [`apps/governed-api/`](../../../apps/governed-api/) | Current negative scaffold and future trust-bearing transport boundary |
 | Restricted steward application | [`apps/review-console/`](../../../apps/review-console/) | Documentation scaffold; runtime on HOLD |
 | Reusable UI code | [`packages/ui/`](../../../packages/ui/) | Current placeholder package |
@@ -618,7 +609,7 @@ python tools/validators/validate_generated_receipt.py \
   --repo-root .
 ```
 
-The read-only [`ui-build` workflow](../../../.github/workflows/ui-build.yml) checks locked readiness, build, unit tests, and browser tests. Documentation workflows should supply repository-native metadata, link, graph, and stale-reference coverage according to their path triggers.
+The read-only `ui-build` workflow (not present) checks locked readiness, build, unit tests, and browser tests. Documentation workflows should supply repository-native metadata, link, graph, and stale-reference coverage according to their path triggers.
 
 ### Acceptance matrix
 
@@ -737,10 +728,10 @@ Material changes to an ADR, contract, schema, policy, release rule, object-famil
 
 | Path | Relationship |
 |---|---|
-| [`apps/explorer-web/`](../../../apps/explorer-web/) | Current deployable Explorer workspace |
-| [`apps/explorer-web/src/site/`](../../../apps/explorer-web/src/site/) | Current map-first landing composition and descriptive repository catalog |
-| [`apps/explorer-web/src/features/`](../../../apps/explorer-web/src/features/) | App-local bounded feature slices and placeholders |
-| [`apps/explorer-web/src/adapters/`](../../../apps/explorer-web/src/adapters/) | Defensive app-local input boundaries |
+| `apps/explorer-web/` (retired) | Current deployable Explorer workspace |
+| `apps/explorer-web/src/site/` (retired) | Current map-first landing composition and descriptive repository catalog |
+| `apps/explorer-web/src/features/` (retired) | App-local bounded feature slices and placeholders |
+| `apps/explorer-web/src/adapters/` (retired) | Defensive app-local input boundaries |
 | [`apps/governed-api/`](../../../apps/governed-api/) | Current negative scaffold and future trust-bearing dynamic interface |
 | [`apps/review-console/`](../../../apps/review-console/) | Restricted steward/review application scaffold |
 | [`packages/ui/`](../../../packages/ui/) | Current shared-UI placeholder package |

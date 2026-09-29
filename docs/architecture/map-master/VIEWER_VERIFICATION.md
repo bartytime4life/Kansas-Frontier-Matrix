@@ -48,9 +48,7 @@ related:
   - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../../contracts/data/layer_manifest.md
   - ../../../contracts/runtime/layer_manifest_admission.md
-  - ../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts
   - ../../../fixtures/runtime/layer_manifest_admission/cases.json
-  - ../../../apps/explorer-web/tests/layer-manifest-admission.test.ts
   - ../../../policy/layers/README.md
   - ../../../apps/governed-api/src/governed_api/routes/layers.py
 tags: [kfm, architecture, map-master, verification, layer-manifest, runtime-admission, fail-closed, maplibre, evidence, policy, release, rollback]
@@ -131,12 +129,12 @@ notes:
 The prior page described a viewer-side gate as though it already sat between a `LayerDescriptor` and MapLibre's `addSource` / `addLayer` calls. The current tree establishes a narrower state:
 
 1. [`contracts/runtime/layer_manifest_admission.md`](../../../contracts/runtime/layer_manifest_admission.md) defines a **proposed-inactive, fixture-only** eligibility projection.
-2. [`layer_manifest_admission.ts`](../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts) implements a pure evaluator over that synthetic projection.
+2. `layer_manifest_admission.ts` (retired) implements a pure evaluator over that synthetic projection.
 3. [`cases.json`](../../../fixtures/runtime/layer_manifest_admission/cases.json) declares 13 deterministic positive and negative cases.
-4. [`layer-manifest-admission.test.ts`](../../../apps/explorer-web/tests/layer-manifest-admission.test.ts) replays the cases and proves the module contains no transport, MapLibre import, `addSource`, or registry-mutation shortcut.
-5. [The focused workflow](../../../.github/workflows/layer-manifest-admission.yml) builds Explorer, runs the focused test, and validates the implementation packet's generated receipt.
+4. `layer-manifest-admission.test.ts` (retired) replays the cases and proves the module contains no transport, MapLibre import, `addSource`, or registry-mutation shortcut.
+5. The focused workflow (not present) builds Explorer, runs the focused test, and validates the implementation packet's generated receipt.
 6. The current [`/layers` route](../../../apps/governed-api/src/governed_api/routes/layers.py) still returns an `ABSTAIN` stub.
-7. The app-local [`MapLibreAdapter.ts`](../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) remains a one-comment legacy boundary, but the accepted implementation home is now [`packages/maplibre/`](../../../packages/maplibre/README.md). That private package owns exact `maplibre-gl@6.6.0`, a renderer-neutral port and null runtime, the initial package adapter, and the Vite worker seam.
+7. The app-local `MapLibreAdapter.ts` (retired) remains a one-comment legacy boundary, but the accepted implementation home is now [`packages/maplibre/`](../../../packages/maplibre/README.md). That private package owns exact `maplibre-gl@6.6.0`, a renderer-neutral port and null runtime, the initial package adapter, and the Vite worker seam.
 8. Package tests and the isolated browser fixture exercise bounded lifecycle, camera, failure, teardown, and worker behavior. Repository search still found no functioning governed `addSource` / `addLayer` loader, and the focused admission test explicitly asserts that its evaluator source contains no such effect.
 
 The safe current conclusion is therefore **fixture-only runtime-admission classification plus explicit non-effects**. A viewer loader remains a future, dependency-closed implementation slice.
@@ -996,15 +994,15 @@ Routine same-path documentation corrections, fixture additions inside an accepte
 | [`PERFORMANCE_BUDGETS.md`](PERFORMANCE_BUDGETS.md) | Repository-grounded fixture-first performance boundary | **CONFIRMED bounded evidence / production and operational holds** |
 | [`LayerManifest` contract](../../../contracts/data/layer_manifest.md) | Draft semantic profile with strict fixture-only branch | **CONFIRMED repository bytes / PROPOSED profile** |
 | [Runtime-admission contract](../../../contracts/runtime/layer_manifest_admission.md) | Fixture eligibility and non-effects | **CONFIRMED repository bytes / PROPOSED-INACTIVE meaning** |
-| [Runtime evaluator](../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts) | Pure finite classifier | **CONFIRMED bounded implementation** |
+| Runtime evaluator (retired) | Pure finite classifier | **CONFIRMED bounded implementation** |
 | [Fixture matrix](../../../fixtures/runtime/layer_manifest_admission/cases.json) | 13 synthetic cases | **CONFIRMED** |
-| [Focused tests](../../../apps/explorer-web/tests/layer-manifest-admission.test.ts) | Outcome replay and no-side-effect checks | **CONFIRMED bounded proof** |
-| [Focused workflow](../../../.github/workflows/layer-manifest-admission.yml) | Read-only orchestration | **CONFIRMED; not authority** |
+| Focused tests (retired) | Outcome replay and no-side-effect checks | **CONFIRMED bounded proof** |
+| Focused workflow (not present) | Read-only orchestration | **CONFIRMED; not authority** |
 | [Implementation generated receipt](../../../data/receipts/generated/genrec-layer-manifest-admission-20260808.json) | Authoring provenance | **CONFIRMED present; human review pending** |
 | [Layer policy boundary](../../../policy/layers/README.md) | Proposed rule-source lane | **CONFIRMED inactive** |
 | [Governed `/layers` route](../../../apps/governed-api/src/governed_api/routes/layers.py) | Shared abstention stub | **CONFIRMED negative scaffold** |
-| [Explorer package](../../../apps/explorer-web/package.json) | Build/test scripts, no MapLibre dependency | **CONFIRMED** |
-| [Legacy app adapter path](../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) | Single boundary comment; does not acquire MapLibre | **CONFIRMED historical placeholder / not the implementation home** |
+| Explorer package (retired) | Build/test scripts, no MapLibre dependency | **CONFIRMED** |
+| Legacy app adapter path (retired) | Single boundary comment; does not acquire MapLibre | **CONFIRMED historical placeholder / not the implementation home** |
 | [MapLibre package manifest](../../../packages/maplibre/package.json) | Private `0.0.0` package with exact `maplibre-gl@6.6.0` and explicit exports | **CONFIRMED bounded dependency closure** |
 | [MapRuntimePort](../../../packages/maplibre/src/map-runtime-port.ts) and [NullMapRuntime](../../../packages/maplibre/src/null-map-runtime.ts) | Renderer-neutral finite port and deterministic no-effect implementation | **CONFIRMED bounded implementation** |
 | [Package MapLibre adapter](../../../packages/maplibre/src/maplibre-adapter.ts) and [Vite seam](../../../packages/maplibre/src/maplibre-vite-adapter.ts) | Initial lifecycle/camera adapter and package-owned worker configuration | **CONFIRMED bounded implementation / no source-layer loader** |

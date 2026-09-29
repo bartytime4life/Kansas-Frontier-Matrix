@@ -58,7 +58,7 @@ related:
   - docs/architecture/story/README.md
   - docs/architecture/story/CONTINUITY.md
   - docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
-  - "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+  - docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - docs/doctrine/directory-rules.md
   - contracts/ui/story_manifest.md
@@ -68,10 +68,6 @@ related:
   - tools/validators/ui/validate_story_manifest.py
   - tests/validators/test_validate_story_manifest.py
   - .github/workflows/story-manifest-trust-inheritance.yml
-  - apps/explorer-web/src/features/story_player/README.md
-  - apps/explorer-web/src/features/story_player/current-implementation.md
-  - apps/explorer-web/src/features/story_player/index.tsx
-  - apps/explorer-web/tests/story-player.test.ts
   - policy/story/README.md
   - data/manifests/story/README.md
   - data/receipts/generated/genrec-story-player-governed-projection-20260814.json
@@ -1140,10 +1136,10 @@ When documentation and implementation differ, current code/configuration/tests c
 
 ### App, policy, data, and receipts
 
-- [`Story Player feature README`](../../../apps/explorer-web/src/features/story_player/README.md)
-- [`Story Player current implementation`](../../../apps/explorer-web/src/features/story_player/current-implementation.md)
-- [`Story Player source`](../../../apps/explorer-web/src/features/story_player/index.tsx)
-- [`Story Player tests`](../../../apps/explorer-web/tests/story-player.test.ts)
+- `Story Player feature README` (retired)
+- `Story Player current implementation` (retired)
+- `Story Player source` (retired)
+- `Story Player tests` (retired)
 - [`Story policy boundary`](../../../policy/story/README.md)
 - [`Historical Story manifest compatibility lane`](../../../data/manifests/story/README.md)
 - [`Story Player authoring receipt`](../../../data/receipts/generated/genrec-story-player-governed-projection-20260814.json)

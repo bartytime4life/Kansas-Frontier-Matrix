@@ -52,7 +52,6 @@ related:
   - tools/validators/telemetry/README.md
   - data/receipts/telemetry/README.md
   - .github/workflows/telemetry-policy.yml
-  - apps/explorer-web/README.md
   - apps/governed-api/README.md
 tags: [kfm, architecture, ui, telemetry, observability, privacy, redaction, fixture-first, trust-membrane, fail-closed, no-release]
 notes:
@@ -593,7 +592,7 @@ No one gate may be inferred from another. A schema does not prove policy; policy
 | [`General telemetry validator path`](../../../tools/validators/validate_telemetry_safety.py) | Bounded local profile dispatch; no general safety policy |
 | [`Telemetry receipts`](../../../data/receipts/telemetry/README.md) | Receipt-family boundary; no instance proved |
 | [`telemetry-policy workflow`](../../../.github/workflows/telemetry-policy.yml) | No-network readiness checks and explicit workflow hold |
-| [`Explorer Web README`](../../../apps/explorer-web/README.md) | Current UI deployable boundary; no production telemetry inferred |
+| `Explorer Web README` (retired) | Current UI deployable boundary; no production telemetry inferred |
 | [`Governed API README`](../../../apps/governed-api/README.md) | Deployable trust-membrane boundary; candidate route families are not implementation proof |
 
 [Back to top](#top)

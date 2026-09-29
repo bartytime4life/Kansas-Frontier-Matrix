@@ -89,7 +89,7 @@ related:
   - TILE_ARTIFACTS.md
   - 2D_3D_PARITY.md
   - ../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
-  - "../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+  - ../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md
   - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../doctrine/directory-rules.md
   - ../../../packages/maplibre/package.json
@@ -98,14 +98,6 @@ related:
   - ../../../packages/maplibre/src/null-map-runtime.ts
   - ../../../packages/maplibre/src/maplibre-adapter.ts
   - ../../../packages/maplibre/src/maplibre-vite-adapter.ts
-  - ../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts
-  - ../../../apps/explorer-web/src/site/mount-explorer-site.ts
-  - ../../../apps/kansas-frontier-matrix-explorer/package.json
-  - ../../../apps/kansas-frontier-matrix-explorer/app/map-runtime.ts
-  - ../../../apps/explorer-web/src/features/map_runtime/index.tsx
-  - ../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts
-  - ../../../apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts
-  - ../../../apps/explorer-web/tests/map-evidence-drawer.test.ts
   - ../../../tools/validators/maplibre/assess_acquisition_inventory.py
   - ../../../tools/validators/maplibre/validate_v6_readiness.py
   - ../../../.github/workflows/maplibre-acquisition-inventory.yml
@@ -842,14 +834,14 @@ An accepted ADR or amendment is required before:
 | [`../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md`](../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) | Adapter/acquisition decision | Accepted architecture |
 | [`ADR-0007`](<../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) | Renderer-family decision | Accepted architecture |
 | [`../../adr/ADR-0029-adopt-directory-governance-standard-v2.md`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Placement authority | Accepted |
-| [`../../../apps/explorer-web/src/features/map_runtime/index.tsx`](../../../apps/explorer-web/src/features/map_runtime/index.tsx) | Renderer-neutral selection bridge | Bounded executable |
-| [`../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts`](../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts) | Fixture-only registration eligibility | Bounded executable / no mutation |
-| [`../../../apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts`](../../../apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts) | Fixture-only release-scoped cache decision | Bounded executable / no mutation |
+| `../../../apps/explorer-web/src/features/map_runtime/index.tsx` (retired) | Renderer-neutral selection bridge | Bounded executable |
+| `../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts` (retired) | Fixture-only registration eligibility | Bounded executable / no mutation |
+| `../../../apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts` (retired) | Fixture-only release-scoped cache decision | Bounded executable / no mutation |
 | [`../../../tools/validators/maplibre/assess_acquisition_inventory.py`](../../../tools/validators/maplibre/assess_acquisition_inventory.py) | Structural acquisition inventory | Bounded executable / non-authoritative |
 | [`../../../tools/validators/maplibre/validate_v6_readiness.py`](../../../tools/validators/maplibre/validate_v6_readiness.py) | Exact `6.6.0` readiness classifier | Bounded executable / current HOLD |
 | [`../../../packages/maplibre/`](../../../packages/maplibre/) | Accepted reusable package home | Exact dependency, port/null runtime, initial adapter, CSS, Vite worker, and focused tests |
-| [`../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts`](../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) | Historical app-side boundary marker | Comment-only; not a runtime importer |
-| [`../../../apps/kansas-frontier-matrix-explorer/`](../../../apps/kansas-frontier-matrix-explorer/) | Renderer-neutral Sites consumer | NullMapRuntime shell; full renderer capabilities held |
+| `../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts` (retired) | Historical app-side boundary marker | Comment-only; not a runtime importer |
+| `../../../apps/kansas-frontier-matrix-explorer/` (retired) | Renderer-neutral Sites consumer | NullMapRuntime shell; full renderer capabilities held |
 
 [Back to top](#top)
 

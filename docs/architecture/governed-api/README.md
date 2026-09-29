@@ -76,7 +76,6 @@ related:
   - ../../doctrine/trust-membrane.md
   - ../../../apps/README.md
   - ../../../apps/governed-api/README.md
-  - ../../../apps/explorer-web/src/adapters/GovernedClient.ts
   - ../../../contracts/runtime/runtime_response_envelope.md
   - ../../../contracts/runtime/decision_envelope.md
   - ../../../contracts/runtime/precision_actually_used.md
@@ -803,7 +802,7 @@ Revert this link-closure commit and its generated authoring receipt together to 
 - [Governed API negative envelope builders](../../../apps/governed-api/src/governed_api/stub.py)
 - [Governed API route tests](../../../apps/governed-api/tests/test_abstain_routes.py)
 - [Governed API boundary tests](../../../apps/governed-api/tests/test_boundary_guards.py)
-- [Explorer fixture-only GovernedClient](../../../apps/explorer-web/src/adapters/GovernedClient.ts)
+- Explorer fixture-only GovernedClient (retired)
 - [RuntimeResponseEnvelope contract](../../../contracts/runtime/runtime_response_envelope.md)
 - [DecisionEnvelope contract](../../../contracts/runtime/decision_envelope.md)
 - [PrecisionActuallyUsed contract](../../../contracts/runtime/precision_actually_used.md)

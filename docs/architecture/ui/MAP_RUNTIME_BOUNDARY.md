@@ -79,13 +79,9 @@ related:
   - docs/architecture/maplibre-master.md
   - docs/architecture/governed-api/README.md
   - docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md
-  - "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+  - docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - docs/doctrine/directory-rules.md
-  - apps/explorer-web/src/features/map_runtime/index.tsx
-  - apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts
-  - apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts
-  - apps/explorer-web/src/adapters/MapLibreAdapter.ts
   - packages/maplibre/package.json
   - packages/maplibre/src/index.ts
 tags: [kfm, architecture, ui, map-runtime, maplibre, renderer-neutral, adapter, evidence-drawer, finite-outcomes, trust-membrane, renderer-hold, rollback]
@@ -170,22 +166,22 @@ This file is explanatory architecture. Semantic meaning belongs to contracts; ma
 
 | Surface | Verified repository evidence | Bounded conclusion |
 |---|---|---|
-| [`apps/explorer-web/src/features/map_runtime/index.tsx`](../../../apps/explorer-web/src/features/map_runtime/index.tsx) | Strict `kfm.explorer.map-feature-selection.v1` parser, exact fields, bounded identifiers, at most 16 unique EvidenceRefs, injected resolver, evidence-subset check, fixed local failures, accessible fixture controls | A rendered-feature selection can scope a governed request without becoming evidence |
-| [`apps/explorer-web/tests/map-evidence-drawer.test.ts`](../../../apps/explorer-web/tests/map-evidence-drawer.test.ts) | Covers supported, invalid, missing-evidence, denied, out-of-scope, resolver-error, no-network, no-renderer-import, no-lifecycle-path, and no-model-runtime behavior | The bounded bridge has deterministic unit evidence; this is not live renderer or API proof |
-| [`CLICK_EVIDENCE_BRIDGE.md`](../../../apps/explorer-web/src/features/map_runtime/CLICK_EVIDENCE_BRIDGE.md) | Explicit renderer-neutral, fixture-first, no-network boundary and rollback statement | Real MapLibre and transport wiring remain future work |
-| [`layer_manifest_admission.ts`](../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts) | Exact fixture profile; finite `PASS`, `HOLD`, `DENY`, `ERROR`; checks public release, binding, evidence, policy, review, promotion, artifact, signature, rollback, source class, and authority overclaim | `PASS` means registration eligibility only; no registry is mutated and no MapLibre source is created |
-| [`layer-manifest-admission.test.ts`](../../../apps/explorer-web/tests/layer-manifest-admission.test.ts) | Positive and exact-negative synthetic coverage for the fixture evaluator | Test evidence is bounded to decision behavior |
-| [`pmtiles_release_cache.ts`](../../../apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts) | Release-, artifact-, and policy-scoped key; finite cache outcomes; explicit `cacheMutated: false` and `networkRequested: false` | A future cache action can be planned without fetching, writing, or authorizing public use |
-| [`pmtiles-release-cache.test.ts`](../../../apps/explorer-web/tests/pmtiles-release-cache.test.ts) | Positive and exact-negative synthetic coverage for cache hit, miss, mismatch, incomplete, withdrawal, authority, and invalid-input cases | No operational CacheStorage or Service Worker behavior is proved |
-| [`apps/explorer-web/package.json`](../../../apps/explorer-web/package.json) | Build, unit-test, and browser-test scripts; consumes the package seam without declaring raw `maplibre-gl` | Explorer does not create a parallel renderer dependency home |
+| `apps/explorer-web/src/features/map_runtime/index.tsx` (retired) | Strict `kfm.explorer.map-feature-selection.v1` parser, exact fields, bounded identifiers, at most 16 unique EvidenceRefs, injected resolver, evidence-subset check, fixed local failures, accessible fixture controls | A rendered-feature selection can scope a governed request without becoming evidence |
+| `apps/explorer-web/tests/map-evidence-drawer.test.ts` (retired) | Covers supported, invalid, missing-evidence, denied, out-of-scope, resolver-error, no-network, no-renderer-import, no-lifecycle-path, and no-model-runtime behavior | The bounded bridge has deterministic unit evidence; this is not live renderer or API proof |
+| `CLICK_EVIDENCE_BRIDGE.md` (retired) | Explicit renderer-neutral, fixture-first, no-network boundary and rollback statement | Real MapLibre and transport wiring remain future work |
+| `layer_manifest_admission.ts` (retired) | Exact fixture profile; finite `PASS`, `HOLD`, `DENY`, `ERROR`; checks public release, binding, evidence, policy, review, promotion, artifact, signature, rollback, source class, and authority overclaim | `PASS` means registration eligibility only; no registry is mutated and no MapLibre source is created |
+| `layer-manifest-admission.test.ts` (retired) | Positive and exact-negative synthetic coverage for the fixture evaluator | Test evidence is bounded to decision behavior |
+| `pmtiles_release_cache.ts` (retired) | Release-, artifact-, and policy-scoped key; finite cache outcomes; explicit `cacheMutated: false` and `networkRequested: false` | A future cache action can be planned without fetching, writing, or authorizing public use |
+| `pmtiles-release-cache.test.ts` (retired) | Positive and exact-negative synthetic coverage for cache hit, miss, mismatch, incomplete, withdrawal, authority, and invalid-input cases | No operational CacheStorage or Service Worker behavior is proved |
+| `apps/explorer-web/package.json` (retired) | Build, unit-test, and browser-test scripts; consumes the package seam without declaring raw `maplibre-gl` | Explorer does not create a parallel renderer dependency home |
 | [`packages/maplibre/package.json`](../../../packages/maplibre/package.json) | Private package `@kfm/maplibre`, version `0.0.0`, exact `maplibre-gl@6.6.0`, focused scripts, and explicit exports | The accepted package seam owns the renderer dependency; distribution remains unauthorized |
 | [`packages/maplibre/src/index.ts`](../../../packages/maplibre/src/index.ts) | Exports the renderer-neutral port and deterministic null runtime | Normal consumers remain renderer-neutral |
 | [`maplibre-adapter.ts`](../../../packages/maplibre/src/maplibre-adapter.ts) | Package-owned raw renderer import; bounded construction, lifecycle, camera, finite errors, and teardown | Concrete adapter behavior exists without owning sources, evidence, policy, release, or publication |
-| [`maplibre-vite-adapter.ts`](../../../packages/maplibre/src/maplibre-vite-adapter.ts) and [`vite.config.ts`](../../../apps/explorer-web/vite.config.ts) | Package-owned Vite worker URL/configuration and Explorer CSS/build integration | The same-origin worker build seam exists; production activation and broad CSP proof do not |
+| [`maplibre-vite-adapter.ts`](../../../packages/maplibre/src/maplibre-vite-adapter.ts) and `vite.config.ts` (retired) | Package-owned Vite worker URL/configuration and Explorer CSS/build integration | The same-origin worker build seam exists; production activation and broad CSP proof do not |
 | [`map-runtime-port.ts`](../../../packages/maplibre/src/map-runtime-port.ts) | KFM-owned serializable camera, selection, snapshot, finite-state, validation, listener, error, and disposal contract | The port consumes bounded state; it owns no evidence, policy, review, release, lifecycle, or publication decision |
 | [`null-map-runtime.ts`](../../../packages/maplibre/src/null-map-runtime.ts) | Deterministic no-network implementation used for consumer migration and tests | It is not a renderer and does not satisfy browser readiness |
 | Package and Explorer focused tests | Mocked package tests cover bounded adapter success/failure; the Vite browser fixture covers real construction, CSS/local-request behavior, disposal, and WebGL2 denial | This is exact fixture evidence, not production activation, accessibility closure, performance proof, release, or publication |
-| [`apps/explorer-web/src/adapters/MapLibreAdapter.ts`](../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) | Legacy comment-only placeholder | It is not the importer seam; the functioning implementation is package-owned |
+| `apps/explorer-web/src/adapters/MapLibreAdapter.ts` (retired) | Legacy comment-only placeholder | It is not the importer seam; the functioning implementation is package-owned |
 | Governed API route scaffolds | `/bootstrap`, `/layers`, and `/evidence` call the shared abstain stub with `outcome: ABSTAIN` and `reason_code: NOT_IMPLEMENTED` | No current click-specific claim-resolution transport may be inferred |
 | [ADR-0006](../../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) and [ADR-0007](<../../adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) | Both are `accepted` | Package ownership, the adapter seam, and renderer-family selection are binding architecture; dependency and runtime admission remain separate |
 | [Map Master renderer boundary](../map-master/RENDERER_BOUNDARY.md) | Reconciles the seven negative authorities with current executable evidence and keeps concrete MapLibre on HOLD | This UI page should remain consistent with that broader boundary |
@@ -846,16 +842,16 @@ This update does not:
 
 ### Current executable surfaces
 
-- [Renderer-neutral click bridge](../../../apps/explorer-web/src/features/map_runtime/index.tsx)
-- [Click bridge notes](../../../apps/explorer-web/src/features/map_runtime/CLICK_EVIDENCE_BRIDGE.md)
-- [LayerManifest admission fixture](../../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts)
-- [PMTiles cache fixture](../../../apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts)
-- [Legacy Explorer adapter placeholder](../../../apps/explorer-web/src/adapters/MapLibreAdapter.ts)
+- Renderer-neutral click bridge (retired)
+- Click bridge notes (retired)
+- LayerManifest admission fixture (retired)
+- PMTiles cache fixture (retired)
+- Legacy Explorer adapter placeholder (retired)
 - [`@kfm/maplibre` package manifest](../../../packages/maplibre/package.json)
 - [`@kfm/maplibre` port and null-runtime entry](../../../packages/maplibre/src/index.ts)
 - [Package-owned concrete adapter](../../../packages/maplibre/src/maplibre-adapter.ts)
 - [Package-owned Vite worker adapter](../../../packages/maplibre/src/maplibre-vite-adapter.ts)
-- [Explorer real-MapLibre browser fixture](../../../apps/explorer-web/tests/browser/maplibre-vite-adapter.spec.ts)
+- Explorer real-MapLibre browser fixture (retired)
 
 [Back to top](#top)
 

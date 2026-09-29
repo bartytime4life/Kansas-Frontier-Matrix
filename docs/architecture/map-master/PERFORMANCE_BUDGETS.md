@@ -38,8 +38,6 @@ related:
   - 2D_3D_PARITY.md
   - ../ui/MAP_RUNTIME_BOUNDARY.md
   - ../ui/TELEMETRY.md
-  - ../../../apps/explorer-web/README.md
-  - ../../../apps/explorer-web/src/features/map_runtime/MOBILE_PMTILES_VERIFICATION_FIXTURE.md
   - ../../../contracts/runtime/verified_rendering_resource_envelope.md
   - ../../../contracts/validation/public_map_service_slo_assessment.md
   - ../../../schemas/contracts/v1/runtime/verified_rendering_resource_envelope.schema.json
@@ -823,8 +821,8 @@ Stop or narrow implementation when:
 | [`2D_3D_PARITY.md`](2D_3D_PARITY.md) | 2D/3D trust-parity boundary and bounded candidate evidence | Repository-grounded v1.0; renderer, scene release, deployment, and publication remain HOLD |
 | [`../ui/MAP_RUNTIME_BOUNDARY.md`](../ui/MAP_RUNTIME_BOUNDARY.md) | UI-to-map-runtime authority boundary | Human architecture; preserves renderer and trust holds |
 | [`../ui/TELEMETRY.md`](../ui/TELEMETRY.md) | Current telemetry inventory and graduation map | Repository-grounded fixture evidence; operational telemetry HOLD |
-| [`../../../apps/explorer-web/README.md`](../../../apps/explorer-web/README.md) | Current browser-shell implementation boundary | Real toolchain and bounded slices; no live integrated map |
-| [`../../../apps/explorer-web/src/features/map_runtime/MOBILE_PMTILES_VERIFICATION_FIXTURE.md`](../../../apps/explorer-web/src/features/map_runtime/MOBILE_PMTILES_VERIFICATION_FIXTURE.md) | Mobile synthetic archive/range/decode-render proof | Executed synthetic fixture; MapLibre/release HOLD |
+| `../../../apps/explorer-web/README.md` (retired) | Current browser-shell implementation boundary | Real toolchain and bounded slices; no live integrated map |
+| `../../../apps/explorer-web/src/features/map_runtime/MOBILE_PMTILES_VERIFICATION_FIXTURE.md` (retired) | Mobile synthetic archive/range/decode-render proof | Executed synthetic fixture; MapLibre/release HOLD |
 | [`../../../contracts/runtime/verified_rendering_resource_envelope.md`](../../../contracts/runtime/verified_rendering_resource_envelope.md) | Worker-trace and resource-budget candidate meaning | Proposed-inactive, fixture-only |
 | [`../../../contracts/validation/public_map_service_slo_assessment.md`](../../../contracts/validation/public_map_service_slo_assessment.md) | Service SLO/error-budget candidate meaning | Proposed-inactive, fixture-only |
 | [`../../adr/ADR-0029-adopt-directory-governance-standard-v2.md`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Placement authority | Accepted |

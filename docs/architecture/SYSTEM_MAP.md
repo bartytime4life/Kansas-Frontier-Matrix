@@ -278,7 +278,7 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 - [`packages/evidence-resolver/README.md`](../../packages/evidence-resolver/README.md) documents a bounded deterministic no-network candidate resolver with synthetic fixtures and tests. It is explicitly non-authoritative and not a public production resolver.
 - [`packages/maplibre/README.md`](../../packages/maplibre/README.md) documents a package scaffold and admission holds, not a functional admitted renderer adapter.
 - [`apps/governed-api/README.md`](../../apps/governed-api/README.md) establishes an app boundary; current routes, DTOs, middleware, deployment, and operational behavior remain `NEEDS VERIFICATION`.
-- [`apps/explorer-web/README.md`](../../apps/explorer-web/README.md) documents a real workspace and bounded fixture-first projections; live transport, admitted renderer, deployment, release, and public availability remain held or unknown.
+- `apps/explorer-web/README.md` (retired) documents a real workspace and bounded fixture-first projections; live transport, admitted renderer, deployment, release, and public availability remain held or unknown.
 
 [Back to top](#top)
 
@@ -436,7 +436,7 @@ Record unresolved items in the [drift register](../registers/DRIFT_REGISTER.md),
 - [Root registry](../../control_plane/root_registry.yaml) and [CODEOWNERS](../../.github/CODEOWNERS)
 - [`data/README.md`](../../data/README.md) and [`release/README.md`](../../release/README.md)
 - [`apps/governed-api/README.md`](../../apps/governed-api/README.md)
-- [`apps/explorer-web/README.md`](../../apps/explorer-web/README.md)
+- `apps/explorer-web/README.md` (retired)
 - [`packages/evidence-resolver/README.md`](../../packages/evidence-resolver/README.md)
 - [`packages/maplibre/README.md`](../../packages/maplibre/README.md)
 
