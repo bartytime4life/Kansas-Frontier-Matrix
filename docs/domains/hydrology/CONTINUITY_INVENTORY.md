@@ -15,9 +15,8 @@ related:
   - docs/domains/README.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
-  - directory-rules.md                                  # placement law (root file; docs/doctrine/ mirror is PROPOSED)
-  - docs/architecture/maplibre-3d.md                    # sole-renderer doctrine (v1.3); 3D inside packages/maplibre-runtime/
-  - ai-build-operating-contract.md                      # CONTRACT_VERSION = "3.0.0"
+  - docs/doctrine/directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
   - docs/standards/PROV.md
   - docs/standards/PMTILES.md
   - docs/standards/OGC-API-TILES.md
@@ -35,6 +34,9 @@ notes:
   - "Lineage classification only; not an implementation claim."
   - "All path-bearing claims governed by Directory Rules §3, §4, §12."
   - "Renderer updated: Cesium is RETIRED (Directory Rules v1.3 §11; anti-pattern §13.5 #21). 3D hydrology is hosted inside packages/maplibre-runtime/ (MapLibre-3D). Sole-renderer decision is doctrine-CONFIRMED at directory-rules v1.3; underlying ADR is PROPOSED (OPEN-DR-10)."
+owning_root: docs/
+responsibility: "Documentation for Hydrology — Continuity Inventory; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -224,7 +226,7 @@ The core table. Each row records a hydrology-relevant prior surface, its continu
 
 | Prior gain | Disposition | Lineage basis | Reason for deferral |
 |---|---|---|---|
-| 3D hydrology scene (MapLibre-3D, hosted inside `packages/maplibre-runtime/`) | `DEFER` | `[DIRRULES §7.2.a, §11]` / `docs/architecture/maplibre-3d.md` / `[ENCY]` | 2D evidence continuity must be proven first. 3D enters only inside the sole governed renderer adapter, with `SceneManifest`, `RealityBoundaryNote`, a **3D Admission Decision**, and a `RepresentationReceipt`. **Cesium is retired** — see the [renderer note](#451-renderer-note-cesium-retired) below. |
+| 3D hydrology scene (MapLibre-3D, hosted inside `packages/maplibre-runtime/`) | `DEFER` | `[DIRRULES §7.2.a, §11]` / `docs/architecture/maplibre-3d.md` / `[ENCY]` | 2D evidence continuity must be proven first. 3D enters only inside the sole governed renderer adapter, with `SceneManifest`, `RealityBoundaryNote`, a **3D Admission Decision**, and a `RepresentationReceipt`. **Cesium is retired** — see the [renderer note](#451-renderer-note--cesium-retired) below. |
 | Cross-domain hydrology graph queries and analytics | `DEFER` | `[ENCY] L (Ambitious / research)` | Build only after thin-slice proof lane closure; graph projections downstream of evidence, not parallel to it. |
 | Hydrology time-slider compare mode beyond fixtures | `DEFER` | `[ENCY] L (After proof lane)` | Requires versioned observations/layers + temporal-alignment tests beyond the thin slice. |
 | MLT (MapLibre Tiles) pilot for hydrology | `DEFER` | `Master MapLibre Atlas` | Performance-promising but parity-unverified; PMTiles/COG remain canonical. |
@@ -515,7 +517,7 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW→PUBLISHED governing rules
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — governed API as the public path
 - `directory-rules.md` — Domain Placement Law (§12), sole-renderer architecture (§7.2.a, §11) *(canonical path NEEDS VERIFICATION, OQ-HYD-CI-01)*
-- [`docs/architecture/maplibre-3d.md`](../../architecture/maplibre-3d.md) — sole-renderer doctrine; 3D inside `packages/maplibre-runtime/` (v1.3)
+- `docs/architecture/maplibre-3d.md` (not present) — sole-renderer doctrine; 3D inside `packages/maplibre-runtime/` (v1.3)
 - `ai-build-operating-contract.md` — operating contract, `CONTRACT_VERSION = "3.0.0"` *(canonical path NEEDS VERIFICATION)*
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O / PAV provenance profile *(naming question open with `PROVENANCE.md`, OPEN-DR-04)*
 - [`docs/standards/PMTILES.md`](../../standards/PMTILES.md) — PMTiles v3 governance profile

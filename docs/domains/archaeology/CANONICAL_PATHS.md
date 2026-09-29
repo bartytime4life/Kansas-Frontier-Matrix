@@ -12,12 +12,12 @@ related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/authority-ladder.md
-  - docs/adr/ADR-0001-schema-home.md
-  - docs/domains/archaeology/ARCHITECTURE.md            # PROPOSED — see §11 changelog note
-  - docs/domains/archaeology/README.md                  # PROPOSED
-  - docs/domains/archaeology/CONTINUITY_INVENTORY.md    # PROPOSED — sibling continuity register
-  - docs/domains/archaeology/CROSS_DOMAIN.md            # PROPOSED — sibling cross-lane register
-  - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.md  # PROPOSED
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - docs/domains/archaeology/ARCHITECTURE.md
+  - docs/domains/archaeology/README.md
+  - docs/domains/archaeology/CONTINUITY_INVENTORY.md
+  - docs/domains/archaeology/CROSS_DOMAIN.md
+  - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.md
 tags: [kfm, archaeology, directory-rules, placement, governance, doctrine-adjacent]
 notes:
   - "Pinned to CONTRACT_VERSION = \"3.0.0\" per ai-build-operating-contract.md §1.3 / §8 (truth labels) and §37 (versioning + CONTRACT_VERSION pinning convention)."
@@ -25,6 +25,9 @@ notes:
   - "Authority of any specific path quoted: PROPOSED until verified against mounted-repo evidence ([CONTRACT v3.0] §7 current-session evidence limit)."
   - "Surfaces and resolves the contracts/domains/archaeology/ vs contracts/archaeology/ form-conflict in favor of Directory Rules §12 per the §2.1 authority order — see §2.4. The Atlas v1.1 §24.13 row 15 and ENCY §7.13 both use the no-domains/ shorthand."
   - "§6.1 quotes [CONTRACT v3.0] §23.2 (Archaeology — site locations) verbatim; the §23.2 matrix is itself PROPOSED in v3.0 pending steward ratification, with most-restrictive-applicable-row fallback. RedactionReceipt and MapReleaseManifest threaded through §3, §5.7, §5.8, §6, and §8."
+owning_root: docs/
+responsibility: "Documentation for Canonical Paths — Archaeology Domain; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Canonical Paths — Archaeology Domain
@@ -737,7 +740,7 @@ This document is done enough to enter the repository when:
   [`../../doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) ·
   [`../../doctrine/truth-posture.md`](../../doctrine/truth-posture.md)
 - **ADRs**:
-  [`../../adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — schema-home rule (CONFIRMED in doctrine; mounted-repo presence NEEDS VERIFICATION) ·
+  [`../../adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home rule (CONFIRMED in doctrine; mounted-repo presence NEEDS VERIFICATION) ·
   [`../../adr/`](../../adr/) — proposed ADRs in §10.2
 - **Sibling archaeology docs** (PROPOSED):
   [`README.md`](README.md) — domain landing page ·
@@ -745,10 +748,10 @@ This document is done enough to enter the repository when:
   [`CONTINUITY_INVENTORY.md`](CONTINUITY_INVENTORY.md) — continuity register ·
   [`CROSS_DOMAIN.md`](CROSS_DOMAIN.md) — cross-lane boundary register ·
   [`OBJECT_FAMILIES.md`](OBJECT_FAMILIES.md) ·
-  [`SOURCE_FAMILIES.md`](SOURCE_FAMILIES.md) ·
+  [`SOURCE_FAMILIES.md`](source-families.md) ·
   [`SENSITIVITY.md`](SENSITIVITY.md) ·
   [`PIPELINE.md`](PIPELINE.md) ·
-  [`VIEWING_PRODUCTS.md`](VIEWING_PRODUCTS.md) ·
+  `VIEWING_PRODUCTS.md` (not present) ·
   [`VERIFICATION_BACKLOG.md`](VERIFICATION_BACKLOG.md)
 - **Source-descriptor doctrine** (PROPOSED):
   [`../../sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../sources/SOURCE_DESCRIPTOR_STANDARD.md)
@@ -763,7 +766,7 @@ This document is done enough to enter the repository when:
   [`schemas/contracts/v1/domains/archaeology/`](../../../schemas/contracts/v1/domains/archaeology/) ·
   [`schemas/contracts/v1/receipts/redaction_receipt.schema.json`](../../../schemas/contracts/v1/receipts/redaction_receipt.schema.json) ·
   [`schemas/contracts/v1/receipts/generated_receipt.schema.json`](../../../schemas/contracts/v1/receipts/generated_receipt.schema.json) ·
-  [`schemas/contracts/v1/release/map_release_manifest.schema.json`](../../../schemas/contracts/v1/release/map_release_manifest.schema.json)
+  `schemas/contracts/v1/release/map_release_manifest.schema.json` (not present)
 
 </details>
 

@@ -8,9 +8,12 @@ owners: PLACEHOLDER-settlements-infrastructure-domain-steward, PLACEHOLDER-docs-
 created: 2026-06-07
 updated: 2026-06-07
 policy_label: public
-related: [ai-build-operating-contract.md, directory-rules.md, docs/domains/settlements-infrastructure/PATHS.md, schemas/contracts/v1/domains/settlements-infrastructure/, policy/sensitivity/infrastructure/, data/published/layers/settlements-infrastructure/]
+related: [docs/doctrine/ai-build-operating-contract.md, docs/doctrine/directory-rules.md, schemas/contracts/v1/domains/settlements-infrastructure/, policy/sensitivity/infrastructure/, data/published/layers/settlements-infrastructure/]
 tags: [kfm, settlements-infrastructure, domain, readme, lane]
 notes: [Doctrine-adjacent; CONTRACT_VERSION = "3.0.0" pinned. Lane landing page for Settlements/Infrastructure. Object families, source families, pipeline, sensitivity, and cross-lane relations are CONFIRMED from Atlas ch.14; field realization and all repo paths are PROPOSED until verified against a mounted repo. Critical-asset detail defaults to T4.]
+owning_root: docs/
+responsibility: "Documentation for Settlements & Infrastructure — Domain Lane; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -31,7 +34,7 @@ notes: [Doctrine-adjacent; CONTRACT_VERSION = "3.0.0" pinned. Lane landing page 
 **Pinned:** `CONTRACT_VERSION = "3.0.0"` (`ai-build-operating-contract.md`)
 
 > [!IMPORTANT]
-> This README is the lane's **landing page**, not its authority. Placement is governed by [`directory-rules.md`](../../../directory-rules.md) §12; object meaning by `contracts/`; object shape by `schemas/`; allow/deny by `policy/`. This page orients; the canonical surfaces govern.
+> This README is the lane's **landing page**, not its authority. Placement is governed by [`directory-rules.md`](../../../doctrine/directory-rules.md) §12; object meaning by `contracts/`; object shape by `schemas/`; allow/deny by `policy/`. This page orients; the canonical surfaces govern.
 
 ---
 
@@ -88,7 +91,7 @@ flowchart LR
 - **Upstream:** `directory-rules.md` (placement), Atlas ch.14 / §24.13 (dossier + root crosswalk), `ai-build-operating-contract.md` (operating law).
 - **Downstream:** `apps/governed-api/` (settlement decision surfaces), `apps/explorer-web/` (MapLibre layers), `data/published/layers/settlements-infrastructure/`.
 
-> For the full path crosswalk see [`PATHS.md`](./PATHS.md). *(All concrete paths PROPOSED until repo-verified.)*
+> For the full path crosswalk see `PATHS.md` (not present). *(All concrete paths PROPOSED until repo-verified.)*
 
 [↑ Back to top](#top)
 
@@ -234,7 +237,7 @@ Other lanes are **cited via governed joins**; ownership and sensitivity are pres
 | Doc | Role | Status |
 |---|---|---|
 | [`README.md`](./README.md) | This lane landing page | draft |
-| [`PATHS.md`](./PATHS.md) | Lane path crosswalk (restates Directory Rules §12 / Atlas §24.13) | draft |
+| `PATHS.md` (not present) | Lane path crosswalk (restates Directory Rules §12 / Atlas §24.13) | draft |
 | `UBIQUITOUS_LANGUAGE.md` | Bounded-context glossary | PROPOSED — TODO |
 | `SOURCES.md` / `SOURCE_REGISTRY.md` | Source ledger / admission doctrine | PROPOSED — TODO |
 | `VERIFICATION_BACKLOG.md` | Domain-scoped verification register | PROPOSED — TODO |
@@ -286,9 +289,9 @@ This lane README is done enough to enter the repository when:
 
 ## Related docs
 
-- [`docs/domains/settlements-infrastructure/PATHS.md`](./PATHS.md) — lane path crosswalk
-- [`directory-rules.md`](../../../directory-rules.md) — placement authority; §12 Domain Placement Law
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"`
+- `docs/domains/settlements-infrastructure/PATHS.md` (not present) — lane path crosswalk
+- [`directory-rules.md`](../../../doctrine/directory-rules.md) — placement authority; §12 Domain Placement Law
+- `ai-build-operating-contract.md` (not present) — operating law; `CONTRACT_VERSION = "3.0.0"`
 - Atlas ch.14 (Settlements & Infrastructure) and §24.13 (root crosswalk) — dossier
 - `schemas/contracts/v1/domains/settlements-infrastructure/` — object shape *(PROPOSED)*
 - `policy/sensitivity/infrastructure/` — critical-asset deny lane *(PROPOSED)*

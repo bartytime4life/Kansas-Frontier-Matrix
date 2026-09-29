@@ -10,34 +10,30 @@ updated: 2026-05-29
 policy_label: public                                       # Document is public; subject matter is sensitivity-gated by §23.2
 contract_version: "3.0.0"
 related:
-  - docs/doctrine/ai-build-operating-contract.md           # CONFIRMED authority; pins CONTRACT_VERSION = "3.0.0"
-  - docs/doctrine/directory-rules.md                       # CONFIRMED edition v1.3; PROPOSED canonical home
-  - docs/doctrine/authority-ladder.md                      # PROPOSED
-  - docs/doctrine/lifecycle-law.md                         # PROPOSED
-  - docs/doctrine/trust-membrane.md                        # PROPOSED
-  - docs/doctrine/truth-posture.md                         # PROPOSED
-  - docs/architecture/maplibre-3d.md                       # PROPOSED — v1.3 sole-renderer doctrine (3D handoff)
-  - docs/domains/archaeology/README.md                     # PROPOSED — sibling
-  - docs/domains/archaeology/ARCHITECTURE.md               # PROPOSED — sibling (see OQ-DL-02)
-  - docs/domains/archaeology/CANONICAL_PATHS.md            # PROPOSED — sibling (path-namespace authority)
-  - docs/domains/archaeology/CONTINUITY_INVENTORY.md       # PROPOSED — sibling
-  - docs/domains/archaeology/CROSS_DOMAIN.md               # PROPOSED — sibling
-  - docs/domains/archaeology/CULTURAL_REVIEW.md            # PROPOSED — sibling (reviewer-record authority)
-  - docs/domains/archaeology/SENSITIVITY.md                # PROPOSED — sibling
-  - docs/domains/archaeology/SOURCE_FAMILIES.md            # PROPOSED — sibling
-  - docs/standards/PROV.md                                 # CONFIRMED — provenance brief
-  - docs/standards/PMTILES.md                              # CONFIRMED — tile governance profile
-  - docs/registers/VERIFICATION_BACKLOG.md                 # PROPOSED
-  - docs/registers/DRIFT_REGISTER.md                       # PROPOSED
-  - schemas/contracts/v1/domains/archaeology/              # PROPOSED — domain schemas
-  - schemas/contracts/v1/governance/                       # PROPOSED — review-record schemas (subject to OQ-CR-03)
-  - schemas/contracts/v1/receipts/                         # PROPOSED — cross-cutting receipts (subject to ADR-S-03)
-  - schemas/contracts/v1/3d/                               # PROPOSED — 3D-asset schemas (Directory Rules v1.3 §6.4)
-  - policy/sensitivity/archaeology/                        # PROPOSED — §23.2 enforcement home (replaces v1's policy/domains/)
-  - policy/consent/                                        # PROPOSED — consent / revocation rules
-  - policy/sovereignty/                                    # PROPOSED — sovereignty label inheritance
-  - policy/care/                                           # PROPOSED — CARE default-deny rule
-  - contracts/domains/archaeology/                         # PROPOSED — object meanings (Directory Rules §12 form)
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
+  - docs/doctrine/authority-ladder.md
+  - docs/doctrine/lifecycle-law.md
+  - docs/doctrine/trust-membrane.md
+  - docs/doctrine/truth-posture.md
+  - docs/domains/archaeology/README.md
+  - docs/domains/archaeology/ARCHITECTURE.md
+  - docs/domains/archaeology/CANONICAL_PATHS.md
+  - docs/domains/archaeology/CONTINUITY_INVENTORY.md
+  - docs/domains/archaeology/CROSS_DOMAIN.md
+  - docs/domains/archaeology/CULTURAL_REVIEW.md
+  - docs/domains/archaeology/SENSITIVITY.md
+  - docs/domains/archaeology/source-families.md
+  - docs/standards/PROV.md
+  - docs/standards/PMTILES.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+  - docs/registers/DRIFT_REGISTER.md
+  - schemas/contracts/v1/domains/archaeology/
+  - schemas/contracts/v1/governance/
+  - schemas/contracts/v1/receipts/
+  - policy/sensitivity/archaeology/
+  - policy/consent/
+  - contracts/domains/archaeology/
 tags: [kfm, archaeology, lifecycle, governance, sensitivity, doctrine-adjacent]
 notes:
   - "v2.1 pinned to CONTRACT_VERSION = \"3.0.0\" per ai-build-operating-contract.md §0 and §37."
@@ -48,6 +44,9 @@ notes:
   - "Three §23.2 rows apply: 'Archaeology — site locations', 'Indigenous / cultural records', 'Burial / sacred sites'. Most-restrictive-applicable-row rule controls when rows compound."
   - "The §23.2 county/region generalization is the CONFIRMED public floor; the H3 r7 floor is a PROPOSED lane-local refinement subordinate to it (OQ-DL-07)."
   - "v2.1 anchor preservation: §1–§20 anchors retained from v2 exactly. v2.1 is a reconciliation MINOR bump (Directory Rules v1.3 pin; §23.2-floor subordination of H3 r7; contract §48→§47 receipt-CI citation fix; v1.3 3D schema-home references)."
+owning_root: docs/
+responsibility: "Documentation for Archaeology Data Lifecycle; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Archaeology Data Lifecycle
@@ -732,12 +731,12 @@ These items are explicitly **not resolved** by this document and should be track
   [`docs/domains/archaeology/CROSS_DOMAIN.md`](./CROSS_DOMAIN.md) ·
   [`docs/domains/archaeology/CULTURAL_REVIEW.md`](./CULTURAL_REVIEW.md) — reviewer-record authority for this doc's §11.3 ·
   [`docs/domains/archaeology/SENSITIVITY.md`](./SENSITIVITY.md) ·
-  [`docs/domains/archaeology/SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md)
+  [`docs/domains/archaeology/SOURCE_FAMILIES.md`](source-families.md)
 - **Architecture neighbors:**
   [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — public trust path ·
-  [`docs/architecture/cross-lane.md`](../../architecture/cross-lane.md) ·
+  `docs/architecture/cross-lane.md` (not present) ·
   [`docs/architecture/sovereignty-care.md`](../../architecture/sovereignty-care.md) ·
-  [`docs/architecture/maplibre-3d.md`](../../architecture/maplibre-3d.md) — v1.3 sole-renderer doctrine
+  `docs/architecture/maplibre-3d.md` (not present) — v1.3 sole-renderer doctrine
 - **Standards:**
   [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O and PAV provenance brief ·
   [`docs/standards/PMTILES.md`](../../standards/PMTILES.md) — PMTiles v3 governance profile
@@ -747,12 +746,12 @@ These items are explicitly **not resolved** by this document and should be track
 - **Policy bundles** (PROPOSED; subject to `OQ-DL-05`):
   [`policy/sensitivity/archaeology/`](../../../policy/sensitivity/archaeology/) — §23.2 enforcement ·
   [`policy/consent/`](../../../policy/consent/) ·
-  [`policy/sovereignty/`](../../../policy/sovereignty/) ·
-  [`policy/care/`](../../../policy/care/) ·
-  [`policy/release/archaeology/`](../../../policy/release/archaeology/)
+  `policy/sovereignty/` (not present) ·
+  `policy/care/` (not present) ·
+  `policy/release/archaeology/` (not present)
 - **Schemas:**
   [`schemas/contracts/v1/domains/archaeology/`](../../../schemas/contracts/v1/domains/archaeology/) — domain schemas ·
-  [`schemas/contracts/v1/3d/`](../../../schemas/contracts/v1/3d/) — 3D-asset schemas *(Directory Rules v1.3 §6.4)* ·
+  `schemas/contracts/v1/3d/` (not present) — 3D-asset schemas *(Directory Rules v1.3 §6.4)* ·
   [`schemas/contracts/v1/governance/`](../../../schemas/contracts/v1/governance/) — review-record schemas *(subject to `OQ-CR-03`)* ·
   [`schemas/contracts/v1/receipts/`](../../../schemas/contracts/v1/receipts/) — cross-cutting receipts *(subject to `ADR-S-03`)*
 - **Contracts:**

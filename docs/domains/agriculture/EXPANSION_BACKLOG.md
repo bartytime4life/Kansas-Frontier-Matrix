@@ -18,11 +18,11 @@ related:
   - docs/doctrine/policy-aware.md
   - docs/doctrine/evidence-first.md
   - docs/doctrine/ai-as-assistant.md
-  - docs/doctrine/corrections-are-first-class.md
+  - docs/doctrine/corrections-first-class.md
   - docs/domains/agriculture/README.md
   - docs/domains/agriculture/DOMAIN.md
   - docs/domains/agriculture/ARCHITECTURE.md
-  - docs/domains/agriculture/api-contracts.md
+  - docs/domains/agriculture/API_CONTRACTS.md
   - docs/domains/agriculture/CANONICAL_PATHS.md
   - docs/domains/agriculture/CONTINUITY_INVENTORY.md
   - docs/domains/agriculture/CROSS_LANE.md
@@ -40,6 +40,9 @@ notes:
   - Work-tracking register; aggregates open items from Atlas Ch. 9.N and the eight Agriculture sibling docs.
   - All file paths under contracts/, schemas/, policy/, tests/, pipelines/, data/, release/ are PROPOSED per Directory Rules until verified against mounted-repo evidence.
   - Items carried forward from Domains Culmination Atlas v1.1 Ch. 9.N are CONFIRMED as a project-authored backlog; their resolution remains NEEDS VERIFICATION.
+owning_root: docs/
+responsibility: "Documentation for Agriculture Domain — Expansion Backlog; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -71,7 +74,7 @@ notes:
 > **What this doc is — and what it is not.** This is the **work-tracking register** for the Agriculture domain: design decisions to make, implementation increments to ship, pilots to run, verifications to close, missing evidence to chase. It does **not** decide:
 > - the *meaning* of an Agriculture term → [`DOMAIN.md`](./DOMAIN.md),
 > - the *physical architecture* (sublanes, lifecycle pipeline) → [`ARCHITECTURE.md`](./ARCHITECTURE.md),
-> - the *wire shape* of governed-API envelopes → [`api-contracts.md`](./api-contracts.md),
+> - the *wire shape* of governed-API envelopes → [`api-contracts.md`](API_CONTRACTS.md),
 > - the *placement* of files in the monorepo → [`CANONICAL_PATHS.md`](./CANONICAL_PATHS.md),
 > - the *lifecycle phases and gates* → [`DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md),
 > - the *per-edge cross-lane contracts* → [`CROSS_LANE.md`](./CROSS_LANE.md),
@@ -163,10 +166,10 @@ This document MUST obey the doctrinal stack below, in order. A lower row cannot 
 | Finite policy outcomes | [`policy-aware.md`](../../doctrine/policy-aware.md) | **CONFIRMED doctrine** |
 | Cite-or-abstain truth posture | [`evidence-first.md`](../../doctrine/evidence-first.md) | **CONFIRMED doctrine** |
 | AI is interpretive, never root truth | [`ai-as-assistant.md`](../../doctrine/ai-as-assistant.md) | **CONFIRMED doctrine** |
-| Corrections are first-class | [`corrections-are-first-class.md`](../../doctrine/corrections-are-first-class.md) | **CONFIRMED doctrine** |
+| Corrections are first-class | [`corrections-are-first-class.md`](../../doctrine/corrections-first-class.md) | **CONFIRMED doctrine** |
 | Agriculture bounded-context authority | [`DOMAIN.md`](./DOMAIN.md) | **CONFIRMED doctrine (this corpus)** |
 | Agriculture architectural authority | [`ARCHITECTURE.md`](./ARCHITECTURE.md) | **CONFIRMED doctrine (this corpus)** |
-| Agriculture wire-level authority | [`api-contracts.md`](./api-contracts.md) | **CONFIRMED doctrine (this corpus)** |
+| Agriculture wire-level authority | [`api-contracts.md`](API_CONTRACTS.md) | **CONFIRMED doctrine (this corpus)** |
 | Agriculture placement authority | [`CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) | **CONFIRMED doctrine (this corpus)** |
 | Agriculture lifecycle authority | [`DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) | **CONFIRMED doctrine (this corpus)** |
 | Agriculture per-edge cross-lane authority | [`CROSS_LANE.md`](./CROSS_LANE.md) | **CONFIRMED doctrine (this corpus)** |
@@ -398,7 +401,7 @@ Bounded experiments with explicit acceptance criteria.
 |---|---|---|---|
 | [`DOMAIN.md`](./DOMAIN.md) | `OQ-AG-DOM-01` through `OQ-AG-DOM-12` | 12 | DDD classification (entity vs VO vs aggregate); ACL implementation; invariant exhaustiveness; Shared Kernel composition. |
 | [`ARCHITECTURE.md`](./ARCHITECTURE.md) | `OQ-AG-ARCH-01` through `OQ-AG-ARCH-10` | 10 | Architectural pattern (single-file vs folder); sublane axes; source-role assignments; sensitivity tier matrix. |
-| [`api-contracts.md`](./api-contracts.md) | `OQ-AG-API-01` through `OQ-AG-API-16` | 16 | Route names; DTO field names; envelope shape; outcome admissions (`NARROWED` / `BOUNDED`); receipt schema homes; person-parcel enforcement; revocation propagation. |
+| [`api-contracts.md`](API_CONTRACTS.md) | `OQ-AG-API-01` through `OQ-AG-API-16` | 16 | Route names; DTO field names; envelope shape; outcome admissions (`NARROWED` / `BOUNDED`); receipt schema homes; person-parcel enforcement; revocation propagation. |
 | [`CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) | `OQ-AG-CP-01` through `OQ-AG-CP-13` | 13 | Pipelines layout; fixtures authority; registry path; runbooks pattern; receipt schema home; policy/sensitivity/release split. |
 | [`CONTINUITY_INVENTORY.md`](./CONTINUITY_INVENTORY.md) | `OQ-AG-CI-01` through `OQ-AG-CI-10` | 10 | Doc placement; registry path; AggregationReceipt schema; NARROWED/BOUNDED admission; policy layout; runbooks pattern; pest-stress boundary; k-anon thresholds; revocation propagation; README merge. |
 | [`CROSS_LANE.md`](./CROSS_LANE.md) | `OQ-AG-CL-01` through `OQ-AG-CL-12` | 12 | Edge join keys; parcel_id ownership; k-anon thresholds; person-parcel enforcement; Fauna disease boundary; Geology edge; Matrix GeographyVersion; WithdrawalNotice; revocation; MatrixCellInput envelope; AggregationReceipt scope; Settlements touch. |
@@ -648,14 +651,14 @@ A repository implementation of this backlog conforms when **all** of the followi
 - [`docs/doctrine/policy-aware.md`](../../doctrine/policy-aware.md)
 - [`docs/doctrine/evidence-first.md`](../../doctrine/evidence-first.md)
 - [`docs/doctrine/ai-as-assistant.md`](../../doctrine/ai-as-assistant.md)
-- [`docs/doctrine/corrections-are-first-class.md`](../../doctrine/corrections-are-first-class.md)
+- [`docs/doctrine/corrections-are-first-class.md`](../../doctrine/corrections-first-class.md)
 
 ### 12.3 Agriculture sibling docs (the eight)
 
 - [`docs/domains/agriculture/README.md`](./README.md) — domain landing.
 - [`docs/domains/agriculture/DOMAIN.md`](./DOMAIN.md) — bounded-context + ubiquitous-language + conceptual-model authority.
 - [`docs/domains/agriculture/ARCHITECTURE.md`](./ARCHITECTURE.md) — architectural contract.
-- [`docs/domains/agriculture/api-contracts.md`](./api-contracts.md) — wire-level interface contract.
+- [`docs/domains/agriculture/api-contracts.md`](API_CONTRACTS.md) — wire-level interface contract.
 - [`docs/domains/agriculture/CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) — path-only crosswalk.
 - [`docs/domains/agriculture/CONTINUITY_INVENTORY.md`](./CONTINUITY_INVENTORY.md) — carry-forward register.
 - [`docs/domains/agriculture/CROSS_LANE.md`](./CROSS_LANE.md) — per-edge cross-lane contracts.

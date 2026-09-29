@@ -11,24 +11,26 @@ updated: 2026-06-07
 policy_label: restricted
 contract_version: "3.0.0"
 related:
-  - docs/domains/people-dna-land/README.md                     # authored prior session (v1.1)
-  - docs/domains/people-dna-land/PEOPLE_DOMAIN_MODEL.md         # authored prior session (v0.1)
-  - docs/domains/people-dna-land/PEOPLE_PRESERVATION_MATRIX.md  # authored prior session (v0.2)
-  - docs/domains/people-dna-land/MISSING_OR_PLANNED_FILES.md    # authored prior session (v0.2)
-  - docs/standards/RELEASE_MANIFEST.md                # PROPOSED — NEEDS VERIFICATION
-  - docs/standards/EVIDENCE_BUNDLE.md                 # PROPOSED — NEEDS VERIFICATION
-  - docs/standards/CONSENT_TOKENS.md                  # PROPOSED — NEEDS VERIFICATION (Pass-10 C6-07)
-  - docs/runbooks/people-dna-land/                    # PROPOSED — NEEDS VERIFICATION
-  - docs/registers/DRIFT_REGISTER.md                  # CONFIRMED rule / PROPOSED presence
-  - docs/registers/VERIFICATION_BACKLOG.md            # CONFIRMED rule / PROPOSED presence
-  - docs/doctrine/directory-rules.md                  # CONFIRMED (project doctrine)
-  - ai-build-operating-contract.md
+  - docs/domains/people-dna-land/README.md
+  - docs/domains/people-dna-land/PEOPLE_DOMAIN_MODEL.md
+  - docs/domains/people-dna-land/MISSING_OR_PLANNED_FILES.md
+  - docs/standards/RELEASE_MANIFEST.md
+  - docs/standards/EVIDENCE_BUNDLE.md
+  - docs/standards/CONSENT_TOKENS.md
+  - docs/runbooks/people-dna-land/
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+  - docs/doctrine/directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, people, dna, land, release, sensitivity, governance]
 notes:
   - "CONTRACT_VERSION pinned to 3.0.0 per ai-build-operating-contract.md."
   - "Domain-segment naming (`people-dna-land` vs `people`) is doctrinally unresolved between Directory Rules §6.1/§12 and Atlas v1.1 §24.13; tracked session-wide as OQ-PDL-SEG-01 (= local OPEN-PEOPLE-NAMING). See §13."
   - "ReleaseManifest contract is CONFIRMED doctrine (KFM-P7-PROG-0003 [NI-425]); the Pass-15 release-index extension (dataset_id, spec_hash, run_receipt, SPDX, timestamp, evidence_bundle_digest) is CONFIRMED. Per-domain sensitivity/consent extension fields are PROPOSED."
   - "All implementation-layer paths are PROPOSED until verified against a mounted repo."
+owning_root: docs/
+responsibility: "Documentation for People / DNA / Land — Release Index; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # People / DNA / Land — Release Index
@@ -310,7 +312,7 @@ flowchart LR
 | **Supersession** | A newer release replaces an older one (no defect required). | Supersession link in bundle registry; lineage chain entry. | Older release remains discoverable in lineage; not surfaced as current. |
 
 > [!IMPORTANT]
-> **Right-to-be-forgotten vs tombstone (open boundary).** Revocation of consent for living-person or DNA-derived material may require *true erasure* rather than a tombstone — the corpus is explicit that tombstones satisfy explainability but not erasure (Pass-10 C5-09). The boundary is flagged open and aligned with GDPR / applicable Tribal data policies. Until an ADR resolves it, People/DNA/Land defaults to erasure for living-person and DNA content where law requires, and tombstone-with-supersession for everything else. When erasure occurs, the *fact* of erasure is logged without restating removed content. **NEEDS VERIFICATION** against implemented policy. *(See [PEOPLE_PRESERVATION_MATRIX.md](PEOPLE_PRESERVATION_MATRIX.md) §7 for the full decision matrix.)*
+> **Right-to-be-forgotten vs tombstone (open boundary).** Revocation of consent for living-person or DNA-derived material may require *true erasure* rather than a tombstone — the corpus is explicit that tombstones satisfy explainability but not erasure (Pass-10 C5-09). The boundary is flagged open and aligned with GDPR / applicable Tribal data policies. Until an ADR resolves it, People/DNA/Land defaults to erasure for living-person and DNA content where law requires, and tombstone-with-supersession for everything else. When erasure occurs, the *fact* of erasure is logged without restating removed content. **NEEDS VERIFICATION** against implemented policy. *(See PEOPLE_PRESERVATION_MATRIX.md (not present) §7 for the full decision matrix.)*
 
 [↑ back to top](#table-of-contents)
 
@@ -454,7 +456,7 @@ Open architectural questions surfaced by this document. Resolutions migrate to `
 
 - [`README.md`](./README.md) — domain landing page · *authored prior session (v1.1)*
 - [`PEOPLE_DOMAIN_MODEL.md`](./PEOPLE_DOMAIN_MODEL.md) — bounded context, identity, aggregates · *authored prior session (v0.1)*
-- [`PEOPLE_PRESERVATION_MATRIX.md`](./PEOPLE_PRESERVATION_MATRIX.md) — retention, tombstone, erasure · *authored prior session (v0.2)*
+- `PEOPLE_PRESERVATION_MATRIX.md` (not present) — retention, tombstone, erasure · *authored prior session (v0.2)*
 - [`MISSING_OR_PLANNED_FILES.md`](./MISSING_OR_PLANNED_FILES.md) — file inventory · *authored prior session (v0.2)*
 - [`SENSITIVITY.md`](./SENSITIVITY.md) — sensitivity profile · **TODO**
 - [`CONSENT.md`](./CONSENT.md) — consent-token contract · **TODO**

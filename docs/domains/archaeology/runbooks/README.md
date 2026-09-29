@@ -15,7 +15,6 @@ related:
   - docs/domains/archaeology/ARCHITECTURE.md
   - docs/domains/archaeology/VERIFICATION_BACKLOG.md
   - docs/runbooks/README.md
-  - docs/runbooks/archaeology/rollback-drill.md
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/adr/README.md
@@ -26,6 +25,9 @@ notes:
   - PLACEMENT RECONCILED in v1.1 — this README documents the canonical docs/runbooks/archaeology/ folder (Directory Rules §6.1.b Pattern A; OPEN-DR-02 recommends Pattern A). The earlier draft documented a "Pattern C" folder under the domain dossier (docs/domains/archaeology/runbooks/), which Directory Rules does not define as a runbook home and which would create a parallel root (§13.5). Pattern C is retained below as recorded rationale, not as this folder's identity.
   - The OPEN-DR-02 ADR (Pattern A vs Pattern B under docs/runbooks/) is still required to freeze the subfolder convention — see OQ-AR-RB-01.
   - Inherits Archaeology domain sensitivity envelope: T4 default for site coords (T1 generalized only after steward review, Atlas §24.14), T4 forever for human remains / sacred sites (Atlas §24.5.2).
+owning_root: docs/
+responsibility: "Documentation for Archaeology Runbooks — README; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Archaeology Runbooks — `README`
@@ -427,20 +429,20 @@ This README (and the folder it documents) is done enough to enter the repository
 
 PROPOSED links. All paths are PROPOSED until verified against a mounted repo. Relative paths assume the canonical location `docs/runbooks/archaeology/README.md`.
 
-- [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — _TODO_ — operating contract v3.0; `CONTRACT_VERSION = "3.0.0"`; §§33, 34, 37, 38.
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — _TODO_ — placement; §6.1.b runbooks contract; §15 per-folder README contract; §18.b OPEN-DR-02 / OPEN-DR-04.
+- [`docs/doctrine/ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — _TODO_ — operating contract v3.0; `CONTRACT_VERSION = "3.0.0"`; §§33, 34, 37, 38.
+- [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — _TODO_ — placement; §6.1.b runbooks contract; §15 per-folder README contract; §18.b OPEN-DR-02 / OPEN-DR-04.
 - [`./rollback-drill.md`](./rollback-drill.md) — rollback drill runbook (drafted; sibling in this folder).
 - [`docs/runbooks/README.md`](../README.md) — _TODO_ — canonical runbooks root README.
-- [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../fauna/SOURCE_REFRESH_RUNBOOK.md) — _TODO_ — Pattern A precedent; template for archaeology source-refresh runbook.
-- [`docs/domains/archaeology/README.md`](../../domains/archaeology/README.md) — _TODO_ — Archaeology domain README (existence NEEDS VERIFICATION).
-- [`docs/domains/archaeology/ARCHITECTURE.md`](../../domains/archaeology/ARCHITECTURE.md) — Archaeology domain architecture; §13 publication/correction/rollback links the rollback drill.
-- [`docs/domains/archaeology/VERIFICATION_BACKLOG.md`](../../domains/archaeology/VERIFICATION_BACKLOG.md) — _TODO_ — Archaeology verification backlog (per-domain).
-- [`docs/domains/archaeology/CHANGELOG.md`](../../domains/archaeology/CHANGELOG.md) — _TODO_ — Archaeology dossier changelog (PROPOSED).
-- [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — _TODO_ — drift entries (especially any stray Pattern C folder, and runbook filename casing).
-- [`docs/adr/README.md`](../../adr/README.md) — _TODO_ — ADR index; OPEN-DR-02 to be filed here.
-- [`policy/sensitivity/archaeology/`](../../../policy/sensitivity/archaeology/) — _TODO_ — sensitivity enforcement (canonical). Runbooks invoke; never substitute.
-- [`release/rollback_cards/`](../../../release/rollback_cards/) — _TODO_ — canonical home for `RollbackCard` artifacts emitted by runbooks.
-- [`release/correction_notices/`](../../../release/correction_notices/) — _TODO_ — canonical home for `CorrectionNotice` artifacts emitted by runbooks.
+- [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) — _TODO_ — Pattern A precedent; template for archaeology source-refresh runbook.
+- [`docs/domains/archaeology/README.md`](../README.md) — _TODO_ — Archaeology domain README (existence NEEDS VERIFICATION).
+- [`docs/domains/archaeology/ARCHITECTURE.md`](../ARCHITECTURE.md) — Archaeology domain architecture; §13 publication/correction/rollback links the rollback drill.
+- [`docs/domains/archaeology/VERIFICATION_BACKLOG.md`](../VERIFICATION_BACKLOG.md) — _TODO_ — Archaeology verification backlog (per-domain).
+- [`docs/domains/archaeology/CHANGELOG.md`](../CHANGELOG.md) — _TODO_ — Archaeology dossier changelog (PROPOSED).
+- [`docs/registers/DRIFT_REGISTER.md`](../../../registers/DRIFT_REGISTER.md) — _TODO_ — drift entries (especially any stray Pattern C folder, and runbook filename casing).
+- [`docs/adr/README.md`](../../../adr/README.md) — _TODO_ — ADR index; OPEN-DR-02 to be filed here.
+- [`policy/sensitivity/archaeology/`](../../../../policy/sensitivity/archaeology/) — _TODO_ — sensitivity enforcement (canonical). Runbooks invoke; never substitute.
+- [`release/rollback_cards/`](../../../../release/rollback_cards/) — _TODO_ — canonical home for `RollbackCard` artifacts emitted by runbooks.
+- [`release/correction_notices/`](../../../../release/correction_notices/) — _TODO_ — canonical home for `CorrectionNotice` artifacts emitted by runbooks.
 
 **ADRs governing this folder (when filed):**
 

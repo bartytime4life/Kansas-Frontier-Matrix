@@ -9,15 +9,14 @@ created: 2026-05-17
 updated: 2026-06-05
 policy_label: public
 related:
-  - docs/domains/habitat/README.md                   # PROPOSED — verify presence
-  - docs/domains/habitat/ARCHITECTURE.md             # PROPOSED — verify presence
-  - docs/domains/habitat/CANONICAL_PATHS.md          # PROPOSED — verify presence
-  - docs/domains/fauna/README.md                     # PROPOSED — verify presence
-  - docs/architecture/habitat-fauna-thin-slice.md    # PROPOSED — cross-lane doc; NOT a habitat-fauna/ domain folder (see §15 note)
-  - docs/doctrine/directory-rules.md                 # CONFIRMED doctrine, path PROPOSED
-  - docs/registers/VERIFICATION_BACKLOG.md           # PROPOSED — verify presence
-  - docs/registers/DRIFT_REGISTER.md                 # PROPOSED — verify presence
-  - ai-build-operating-contract.md
+  - docs/domains/habitat/README.md
+  - docs/domains/habitat/ARCHITECTURE.md
+  - docs/domains/habitat/CANONICAL_PATHS.md
+  - docs/domains/fauna/README.md
+  - docs/doctrine/directory-rules.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, habitat, continuity, lineage, governance]
 notes:
   - CONTRACT_VERSION = "3.0.0"
@@ -26,6 +25,9 @@ notes:
   - PROPOSED paths require mounted-repo verification before promotion.
   - "CONFLICTED schema-home: ADR-0001 is OPEN per Atlas ADR-S-01 (confirm-or-amend; VB-11-01 NEEDS VERIFICATION); segmented .../domains/habitat/ (DIRRULES §12) vs flat .../habitat/ (Atlas §24.13) unresolved. See §13, §14."
   - "CONFLICTED placement: docs/domains/habitat-fauna/ is a cross-lane domain folder, contrary to DIRRULES §12 (cross-domain doctrine → docs/architecture/<topic>.md). See §15 note."
+owning_root: docs/
+responsibility: "Documentation for Habitat Domain — Continuity Inventory; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Habitat Domain — Continuity Inventory
@@ -464,7 +466,7 @@ RETIRE              →  superseded; preserve in docs/archive/ if removed from a
 
 ---
 
-**Related docs (short list):** [`docs/domains/habitat/README.md`](./README.md) *(PROPOSED)* · [`docs/architecture/habitat-fauna-thin-slice.md`](../../architecture/habitat-fauna-thin-slice.md) *(PROPOSED; corrected home — §15)* · [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) *(CONFIRMED doctrine; path PROPOSED)* · [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) *(PROPOSED)*
+**Related docs (short list):** [`docs/domains/habitat/README.md`](./README.md) *(PROPOSED)* · `docs/architecture/habitat-fauna-thin-slice.md` (not present) *(PROPOSED; corrected home — §15)* · [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) *(CONFIRMED doctrine; path PROPOSED)* · [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) *(PROPOSED)*
 
 **Last updated:** 2026-06-05 &nbsp;·&nbsp; **Doc class:** standard &nbsp;·&nbsp; **Status:** draft &nbsp;·&nbsp; **Version:** v1 &nbsp;·&nbsp; `CONTRACT_VERSION = "3.0.0"`
 

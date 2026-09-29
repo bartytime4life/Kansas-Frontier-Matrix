@@ -9,21 +9,21 @@ created: 2026-05-27
 updated: 2026-05-29
 policy_label: public                                  # Document is public; subject content is sensitivity-gated
 related:
-  - docs/doctrine/ai-build-operating-contract.md      # CONFIRMED authority; pins CONTRACT_VERSION = "3.0.0"
-  - docs/doctrine/directory-rules.md                  # PROPOSED canonical home
-  - docs/doctrine/authority-ladder.md                 # PROPOSED
-  - docs/doctrine/lifecycle-law.md                    # PROPOSED
-  - docs/doctrine/truth-posture.md                    # PROPOSED
-  - docs/doctrine/trust-membrane.md                   # PROPOSED
-  - docs/domains/archaeology/README.md                # PROPOSED
-  - docs/domains/archaeology/ARCHITECTURE.md          # PROPOSED — sibling (see OQ-CD-02)
-  - docs/domains/archaeology/CANONICAL_PATHS.md       # PROPOSED — sibling (path-namespace authority)
-  - docs/domains/archaeology/CONTINUITY_INVENTORY.md  # PROPOSED — sibling (continuity register)
-  - docs/domains/archaeology/SENSITIVITY.md           # PROPOSED — sibling
-  - docs/registers/VERIFICATION_BACKLOG.md            # PROPOSED
-  - docs/registers/DRIFT_REGISTER.md                  # PROPOSED
-  - policy/sensitivity/archaeology/                   # PROPOSED — §23.2 enforcement home (ENCY §7.13)
-  - policy/runtime/cross_lane/                        # PROPOSED — cross-lane runtime gate
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
+  - docs/doctrine/authority-ladder.md
+  - docs/doctrine/lifecycle-law.md
+  - docs/doctrine/truth-posture.md
+  - docs/doctrine/trust-membrane.md
+  - docs/domains/archaeology/README.md
+  - docs/domains/archaeology/ARCHITECTURE.md
+  - docs/domains/archaeology/CANONICAL_PATHS.md
+  - docs/domains/archaeology/CONTINUITY_INVENTORY.md
+  - docs/domains/archaeology/SENSITIVITY.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+  - docs/registers/DRIFT_REGISTER.md
+  - policy/sensitivity/archaeology/
+  - policy/runtime/cross_lane/
 tags: [kfm, archaeology, cross-domain, cross-lane, governance, evidence, sensitivity, doctrine-adjacent]
 notes:
   - "Pinned to CONTRACT_VERSION = \"3.0.0\" per ai-build-operating-contract.md §23 and the v3.0 front matter."
@@ -31,6 +31,9 @@ notes:
   - "Atlas v1.1 §24.4.13 names three edges OWNED by Archaeology (Settlements, Planetary/3D, People/Land). DOM-ARCH §F names four edges Archaeology CONSUMES (Spatial Foundation, Roads/Rail, Settlements, Hazards). Atlas §24.4.6 / §24.4.11 / §24.4.14 / §24.4.16 catalog the reciprocal edges where Archaeology is cited by other lanes (Flora, Roads/Rail, People/Land, Planetary/3D)."
   - "All path-shaped claims PROPOSED until verified against a mounted repository ([CONTRACT v3.0] §13). The contracts/domains/archaeology/ form is preserved per CANONICAL_PATHS.md v1.1 §2.4 (Directory Rules §12 wins on §2.1 authority order). NOTE: Atlas §24.13 crosswalk and ENCY §7.13 both render this as contracts/archaeology/ (no domains/ segment) — the unresolved namespace discrepancy this doc tracks."
   - "Cross-lane join policy is enumerated as ADR-S-14 in the Atlas v1.1 §24.12 Master Open-ADR Backlog (a PROPOSED triage backlog, not an accepted/opened ADR). Until ratified, every cross-lane archaeology join defers to the most restrictive applicable §23.2 row."
+owning_root: docs/
+responsibility: "Documentation for Archaeology Domain — Cross-Domain Relations; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Archaeology Domain — Cross-Domain Relations
@@ -568,24 +571,24 @@ This document is done enough to enter the repository when:
   [`docs/domains/archaeology/CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) — per-domain canonical paths reference ·
   [`docs/domains/archaeology/CONTINUITY_INVENTORY.md`](./CONTINUITY_INVENTORY.md) — continuity register ·
   [`docs/domains/archaeology/SENSITIVITY.md`](./SENSITIVITY.md) — exact-coord denial, CARE, sovereignty, §23.2 ·
-  [`docs/domains/archaeology/SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md) ·
+  [`docs/domains/archaeology/SOURCE_FAMILIES.md`](source-families.md) ·
   [`docs/domains/archaeology/PIPELINE.md`](./PIPELINE.md) ·
-  [`docs/domains/archaeology/VIEWING_PRODUCTS.md`](./VIEWING_PRODUCTS.md)
+  `docs/domains/archaeology/VIEWING_PRODUCTS.md` (not present)
 - **Related-lane architecture docs** (PROPOSED — one per cross-lane edge):
-  [`docs/domains/spatial/ARCHITECTURE.md`](../spatial/ARCHITECTURE.md) — Spatial Foundation ·
+  `docs/domains/spatial/ARCHITECTURE.md` (not present) — Spatial Foundation ·
   [`docs/domains/roads-rail-trade/ARCHITECTURE.md`](../roads-rail-trade/ARCHITECTURE.md) — Roads/Rail/Trade ·
   [`docs/domains/settlements-infrastructure/ARCHITECTURE.md`](../settlements-infrastructure/ARCHITECTURE.md) — Settlements/Infrastructure ·
   [`docs/domains/hazards/ARCHITECTURE.md`](../hazards/ARCHITECTURE.md) — Hazards ·
   [`docs/domains/geology/ARCHITECTURE.md`](../geology/ARCHITECTURE.md) — Geology ·
-  [`docs/domains/flora/architecture/README.md`](../flora/architecture/README.md) — Flora ·
+  `docs/domains/flora/architecture/README.md` (not present) — Flora ·
   [`docs/domains/fauna/ARCHITECTURE.md`](../fauna/ARCHITECTURE.md) — Fauna ·
   [`docs/domains/people-dna-land/ARCHITECTURE.md`](../people-dna-land/ARCHITECTURE.md) — People/Genealogy/DNA/Land ·
-  [`docs/domains/frontier-matrix/ARCHITECTURE.md`](../frontier-matrix/ARCHITECTURE.md) — Frontier Matrix ·
-  [`docs/domains/planetary-3d/ARCHITECTURE.md`](../planetary-3d/ARCHITECTURE.md) — Planetary/3D
+  `docs/domains/frontier-matrix/ARCHITECTURE.md` (not present) — Frontier Matrix ·
+  `docs/domains/planetary-3d/ARCHITECTURE.md` (not present) — Planetary/3D
 - **Architecture neighbors** (PROPOSED):
-  [`docs/architecture/cross-lane.md`](../../architecture/cross-lane.md) — cross-lane doctrine (PROPOSED) ·
+  `docs/architecture/cross-lane.md` (not present) — cross-lane doctrine (PROPOSED) ·
   [`docs/architecture/sovereignty-care.md`](../../architecture/sovereignty-care.md) — sovereignty / CARE cross-cutting ·
-  [`docs/architecture/maplibre-3d.md`](../../architecture/maplibre-3d.md) — 3D admission operationalization (ADR-S-07; see `OQ-CD-09`)
+  `docs/architecture/maplibre-3d.md` (not present) — 3D admission operationalization (ADR-S-07; see `OQ-CD-09`)
 - **Registers** (PROPOSED):
   [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) ·
   [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) ·
@@ -593,11 +596,11 @@ This document is done enough to enter the repository when:
 - **Policy / schemas** (PROPOSED; subject to `OQ-CD-03`, `OQ-CD-05`, and the `OQ-CD-02` namespace conflict):
   [`policy/sensitivity/archaeology/`](../../../policy/sensitivity/archaeology/) — §23.2 enforcement home (ENCY §7.13) ·
   [`policy/runtime/cross_lane/`](../../../policy/runtime/cross_lane/) — cross-lane runtime gate (PROPOSED) ·
-  [`policy/maplibre/3d-admission.rego`](../../../policy/maplibre/3d-admission.rego) — 3D admission gate (`directory-rules.md` v1.3 §18.c) ·
+  `policy/maplibre/3d-admission.rego` (not present) — 3D admission gate (`directory-rules.md` v1.3 §18.c) ·
   [`schemas/contracts/v1/domains/archaeology/`](../../../schemas/contracts/v1/domains/archaeology/) — archaeology schemas (Directory Rules §12 form; vs `schemas/contracts/v1/archaeology/` in Atlas §24.13 / ENCY §7.13 — `OQ-CD-02`) ·
   [`schemas/contracts/v1/receipts/redaction_receipt.schema.json`](../../../schemas/contracts/v1/receipts/redaction_receipt.schema.json) ·
-  [`schemas/contracts/v1/release/map_release_manifest.schema.json`](../../../schemas/contracts/v1/release/map_release_manifest.schema.json) ·
-  [`tools/validators/cross_lane/`](../../../tools/validators/cross_lane/) — joint negative-fixture validator (PROPOSED per §9.1)
+  `schemas/contracts/v1/release/map_release_manifest.schema.json` (not present) ·
+  `tools/validators/cross_lane/` (not present) — joint negative-fixture validator (PROPOSED per §9.1)
 - **Atlas & encyclopedia**:
   Atlas v1.1 §24.4.6 (Flora → Archaeology) · §24.4.11 (Roads/Rail → Archaeology) · §24.4.13 (Archaeology owned edges) · §24.4.14 (People/Land → Archaeology) · §24.4.16 (Planetary/3D citation rules) · §24.5 (sensitivity tier reference, PROPOSED) · §24.12 (Open-ADR backlog: `ADR-S-03/05/07/08/10/14`) · §24.14 (master object-family × domain matrix) ·
   Encyclopedia §7.13 (Archaeology) ·

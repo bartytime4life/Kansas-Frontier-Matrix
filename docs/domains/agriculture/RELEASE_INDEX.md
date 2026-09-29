@@ -681,7 +681,7 @@ Open and track these in `docs/registers/VERIFICATION_BACKLOG.md`.
 - [`../hazards/`](../hazards/) — owns drought / disaster events; agriculture supplies indicator context
 - [`../people-dna-land/`](../people-dna-land/) — owns parcels, ownership, living-person privacy; agriculture joins restricted
 - [`../flora/`](../flora/) — owns plant taxa; agriculture does not own vegetation truth
-- [`../frontier-matrix/`](../frontier-matrix/) — county-year panels cite agriculture
+- `../frontier-matrix/` (not present) — county-year panels cite agriculture
 
 **Doctrine**
 
@@ -695,7 +695,7 @@ Open and track these in `docs/registers/VERIFICATION_BACKLOG.md`.
 
 - [`../../architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — finite-outcome envelope *(PROPOSED)*
 - [`../../architecture/map-shell.md`](../../architecture/map-shell.md) — MapLibre is downstream of trust *(PROPOSED)*
-- [`../../architecture/maplibre-3d.md`](../../architecture/maplibre-3d.md) — MapLibre 3D / globe / terrain doctrine *(PROPOSED)*
+- `../../architecture/maplibre-3d.md` (not present) — MapLibre 3D / globe / terrain doctrine *(PROPOSED)*
 - [`../../architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — meaning / shape / decision split *(PROPOSED)*
 
 **Cross-root lanes (paths `PROPOSED`)**

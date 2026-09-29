@@ -20,6 +20,9 @@ tags: [kfm, domain, soil, architecture, lane]
 notes:
   - Greenfield placeholder; doctrine-grounded, implementation-unverified.
   - Path PROPOSED per Directory Rules §3 (domain-as-lane, not as root).
+owning_root: docs/
+responsibility: "Documentation for Soil — Domain Architecture; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Soil — Domain Architecture
@@ -484,7 +487,7 @@ flowchart LR
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED invariant
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Governed-API rule
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — Contract / Schema / Policy split
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — Schema home decision
+- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema home decision
 - [`docs/domains/agriculture/`](../agriculture/) — Adjacent lane (crop/yield)
 - [`docs/domains/hydrology/`](../hydrology/) — Adjacent lane (water)
 - [`docs/domains/geology/`](../geology/) — Adjacent lane (lithology)

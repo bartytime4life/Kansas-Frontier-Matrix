@@ -10,29 +10,24 @@ updated: 2026-05-29
 policy_label: public                                  # Document is public; subject matter is sensitivity-gated by §23.2
 contract_version: "3.0.0"
 related:
-  - docs/doctrine/ai-build-operating-contract.md      # CONFIRMED authority; pins CONTRACT_VERSION = "3.0.0"
-  - docs/doctrine/directory-rules.md                  # CONFIRMED edition v1.3; PROPOSED canonical home
-  - docs/doctrine/authority-ladder.md                 # PROPOSED
-  - docs/doctrine/lifecycle-law.md                    # PROPOSED
-  - docs/doctrine/trust-membrane.md                   # PROPOSED
-  - docs/domains/archaeology/README.md                # PROPOSED
-  - docs/domains/archaeology/ARCHITECTURE.md          # PROPOSED — sibling (see OQ-CR-02)
-  - docs/domains/archaeology/CANONICAL_PATHS.md       # PROPOSED — sibling (path-namespace authority)
-  - docs/domains/archaeology/CONTINUITY_INVENTORY.md  # PROPOSED — sibling
-  - docs/domains/archaeology/CROSS_DOMAIN.md          # PROPOSED — sibling (cross-lane edges)
-  - docs/domains/archaeology/DATA_LIFECYCLE.md        # PROPOSED — sibling (lifecycle gates that consume these reviews)
-  - docs/domains/archaeology/SENSITIVITY.md           # PROPOSED — sibling
-  - docs/architecture/sovereignty-care.md             # PROPOSED — cross-cutting CARE doctrine
-  - policy/sensitivity/archaeology/                   # PROPOSED — §23.2 enforcement home
-  - policy/consent/                                   # PROPOSED — consent / revocation manifests
-  - policy/sovereignty/                               # PROPOSED — tribal sovereignty label inheritance
-  - schemas/contracts/v1/governance/review_record.schema.json    # PROPOSED
-  - schemas/contracts/v1/governance/cultural_review.schema.json  # PROPOSED
-  - schemas/contracts/v1/governance/steward_review.schema.json   # PROPOSED
-  - schemas/contracts/v1/governance/consent_receipt.schema.json  # PROPOSED
-  - schemas/contracts/v1/governance/revocation_manifest.schema.json  # PROPOSED
-  - docs/registers/VERIFICATION_BACKLOG.md            # PROPOSED
-  - docs/registers/DRIFT_REGISTER.md                  # PROPOSED
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
+  - docs/doctrine/authority-ladder.md
+  - docs/doctrine/lifecycle-law.md
+  - docs/doctrine/trust-membrane.md
+  - docs/domains/archaeology/README.md
+  - docs/domains/archaeology/ARCHITECTURE.md
+  - docs/domains/archaeology/CANONICAL_PATHS.md
+  - docs/domains/archaeology/CONTINUITY_INVENTORY.md
+  - docs/domains/archaeology/CROSS_DOMAIN.md
+  - docs/domains/archaeology/DATA_LIFECYCLE.md
+  - docs/domains/archaeology/SENSITIVITY.md
+  - docs/architecture/sovereignty-care.md
+  - policy/sensitivity/archaeology/
+  - policy/consent/
+  - schemas/contracts/v1/governance/review_record.schema.json
+  - docs/registers/VERIFICATION_BACKLOG.md
+  - docs/registers/DRIFT_REGISTER.md
 tags: [kfm, archaeology, cultural-review, sovereignty, CARE, consent, governance, sensitivity, doctrine-adjacent]
 notes:
   - "Pinned to CONTRACT_VERSION = \"3.0.0\" per ai-build-operating-contract.md §0 and §37."
@@ -42,6 +37,9 @@ notes:
   - "This document encodes the GOVERNANCE of cultural review (who, when, how recorded, how revoked) — it does NOT define the substance of cultural knowledge. Substance is deferred to the named authority per DDD Anticorruption Layer pattern."
   - "All file-path-shaped claims PROPOSED until verified against a mounted repository ([CONTRACT v3.0] §13). Path namespace uses Directory Rules v1.3 §12 form (contracts/domains/archaeology/) per CANONICAL_PATHS.md v1.1 §2.4."
   - "v1.1 reconciliation: Directory Rules v1.3 pinned; §16 DoD receipt-CI citation corrected §48 → §47 (§48 is the Adoption checklist; the receipt schema + companion-artifact authority is §34 + §47); H3 r7 subordinated to the §23.2 county/region floor; [CONTRACT v3.0] §12 untrusted-content posture added for oral-history / document ingestion."
+owning_root: docs/
+responsibility: "Documentation for Archaeology Domain — Cultural Review Protocol; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Archaeology Domain — Cultural Review Protocol
@@ -870,28 +868,28 @@ This document is done enough to enter the repository when:
   [`docs/domains/archaeology/CROSS_DOMAIN.md`](./CROSS_DOMAIN.md) ·
   [`docs/domains/archaeology/DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — lifecycle gates that consume these reviews ·
   [`docs/domains/archaeology/SENSITIVITY.md`](./SENSITIVITY.md) ·
-  [`docs/domains/archaeology/SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md)
+  [`docs/domains/archaeology/SOURCE_FAMILIES.md`](source-families.md)
 - **Cross-cutting architecture neighbors** (PROPOSED):
   [`docs/architecture/sovereignty-care.md`](../../architecture/sovereignty-care.md) — sovereignty / CARE cross-cutting doctrine ·
-  [`docs/architecture/governed-ai/cultural-review.md`](../../architecture/governed-ai/cultural-review.md) — AI surface boundary for cultural material *(PROPOSED)*
+  `docs/architecture/governed-ai/cultural-review.md` (not present) — AI surface boundary for cultural material *(PROPOSED)*
 - **Governance schemas** (PROPOSED; subject to `OQ-CR-03`):
   [`schemas/contracts/v1/governance/review_record.schema.json`](../../../schemas/contracts/v1/governance/review_record.schema.json) ·
-  [`schemas/contracts/v1/governance/cultural_review.schema.json`](../../../schemas/contracts/v1/governance/cultural_review.schema.json) ·
-  [`schemas/contracts/v1/governance/steward_review.schema.json`](../../../schemas/contracts/v1/governance/steward_review.schema.json) ·
-  [`schemas/contracts/v1/governance/consent_receipt.schema.json`](../../../schemas/contracts/v1/governance/consent_receipt.schema.json) ·
-  [`schemas/contracts/v1/governance/revocation_manifest.schema.json`](../../../schemas/contracts/v1/governance/revocation_manifest.schema.json) ·
-  [`schemas/contracts/v1/governance/sovereignty_waiver.schema.json`](../../../schemas/contracts/v1/governance/sovereignty_waiver.schema.json)
+  `schemas/contracts/v1/governance/cultural_review.schema.json` (not present) ·
+  `schemas/contracts/v1/governance/steward_review.schema.json` (not present) ·
+  `schemas/contracts/v1/governance/consent_receipt.schema.json` (not present) ·
+  `schemas/contracts/v1/governance/revocation_manifest.schema.json` (not present) ·
+  `schemas/contracts/v1/governance/sovereignty_waiver.schema.json` (not present)
 - **Policy bundles** (PROPOSED; subject to `OQ-CR-06`):
   [`policy/sensitivity/archaeology/`](../../../policy/sensitivity/archaeology/) — §23.2 enforcement ·
   [`policy/consent/`](../../../policy/consent/) — consent and revocation rules ·
-  [`policy/sovereignty/`](../../../policy/sovereignty/) — sovereignty-label inheritance · 
-  [`policy/care/`](../../../policy/care/) — CARE default-deny (Pass 10 §C15-03)
+  `policy/sovereignty/` (not present) — sovereignty-label inheritance · 
+  `policy/care/` (not present) — CARE default-deny (Pass 10 §C15-03)
 - **Tests / fixtures** (PROPOSED):
   [`tests/domains/archaeology/test_cultural_review_required.py`](../../../tests/domains/archaeology/) ·
   [`tests/domains/archaeology/test_revocation_fail_closed.py`](../../../tests/domains/archaeology/) ·
   [`tests/domains/archaeology/test_sovereignty_label_inheritance.py`](../../../tests/domains/archaeology/) ·
-  [`fixtures/domains/archaeology/cultural_review/`](../../../fixtures/domains/archaeology/cultural_review/) ·
-  [`fixtures/domains/archaeology/revocation_manifests/`](../../../fixtures/domains/archaeology/revocation_manifests/)
+  `fixtures/domains/archaeology/cultural_review/` (not present) ·
+  `fixtures/domains/archaeology/revocation_manifests/` (not present)
 - **Registers** (PROPOSED):
   [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) ·
   [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) ·

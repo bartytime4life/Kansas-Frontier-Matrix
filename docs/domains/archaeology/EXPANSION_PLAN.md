@@ -21,7 +21,6 @@ related:
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/authority-ladder.md
-  - docs/architecture/maplibre-3d.md
   - docs/standards/PROV.md
   - control_plane/domain_lane_register.yaml
 tags: [kfm, domain, archaeology, cultural-heritage, expansion-plan, sensitivity, doctrine-adjacent]
@@ -32,6 +31,9 @@ notes:
   - "Normative language follows RFC 2119 / RFC 8174 per ai-build-operating-contract.md §5.1.1."
   - Temporal claims align with EDTF, OWL-Time, CIDOC CRM E52, Allen interval algebra, STAC datetime, and W3C PROV-O; no implicit timezones; Julian dates carry a calendar flag.
   - "v0.3 corrections: Directory Rules is the live v1.3 edition; the fixtures 'no two competing homes' rule is Directory Rules §6.6 (the v0.2 §13.5 citation was wrong — §13.5 is the anti-patterns section); the §23.2 county/region floor is named the authoritative public floor and H3 r7 is reframed as a PROPOSED lane refinement; the watcher invariant cites §13.5."
+owning_root: docs/
+responsibility: "Documentation for Archaeology Domain — Expansion Plan; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Archaeology Domain — Expansion Plan
@@ -726,12 +728,12 @@ This document is done enough to enter the repository when:
 | [`docs/doctrine/authority-ladder.md`](../../doctrine/authority-ladder.md) | Truth-label and authority source order. `[AUTH-LADDER]` |
 | [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) | Lifecycle invariant (TODO — link target NEEDS VERIFICATION). |
 | [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) | Public-path discipline (TODO — link target NEEDS VERIFICATION). |
-| [`docs/architecture/maplibre-3d.md`](../../architecture/maplibre-3d.md) | MapLibre sole-renderer doctrine (v1.3, PROPOSED via ADR). |
+| `docs/architecture/maplibre-3d.md` (not present) | MapLibre sole-renderer doctrine (v1.3, PROPOSED via ADR). |
 | [`docs/standards/PROV.md`](../../standards/PROV.md) | W3C PROV-O / PAV provenance crosswalk. |
 | [`policy/sensitivity/archaeology/`](../../../policy/sensitivity/archaeology/) | Deny-by-default policy bundle (PROPOSED home). |
 | [`schemas/contracts/v1/domains/archaeology/`](../../../schemas/contracts/v1/domains/archaeology/) | Machine-checkable object shapes (PROPOSED home). |
 | [`schemas/contracts/v1/receipts/`](../../../schemas/contracts/v1/receipts/) | `GENERATED_RECEIPT.json` schema home (PROPOSED per `[CONTRACT] §47`). |
-| [`schemas/contracts/v1/3d/`](../../../schemas/contracts/v1/3d/) | 3D-asset schema home (PROPOSED per Directory Rules v1.3 §6.4). |
+| `schemas/contracts/v1/3d/` (not present) | 3D-asset schema home (PROPOSED per Directory Rules v1.3 §6.4). |
 | [`contracts/domains/archaeology/`](../../../contracts/domains/archaeology/) | Object-family meaning (PROPOSED home). |
 | Atlas v1.1 Ch. 15 + §24.4.13 + §24.5 + §24.7 | Doctrine extension; cross-lane edges; sensitivity tier matrix; reviewer separation. `[ATLAS-v1.1]` |
 | Encyclopedia §7.13 + §21 | Domain spine; programming-possibilities backlog. `[ENCY]` |

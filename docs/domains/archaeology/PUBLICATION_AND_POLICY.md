@@ -15,26 +15,26 @@ policy_label: public
 related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
-  - docs/domains/archaeology/README.md           # PROPOSED
+  - docs/domains/archaeology/README.md
   - docs/domains/archaeology/OBJECT_FAMILIES.md
   - docs/domains/archaeology/PIPELINE.md
   - docs/domains/archaeology/PRESERVATION_MATRIX.md
-  - docs/domains/archaeology/SENSITIVITY.md      # PROPOSED
-  - policy/domains/archaeology/                  # PROPOSED — allow / deny / restrict / abstain
-  - policy/sensitivity/archaeology/              # PROPOSED — DENY lane
-  - policy/release/archaeology/                  # PROPOSED — staged release
-  - policy/consent/archaeology/                  # PROPOSED — sovereignty / oral history
-  - schemas/contracts/v1/archaeology/            # PROPOSED — Atlas v1.1 §2.1
-  - schemas/contracts/v1/receipts/               # PROPOSED — receipt home
-  - release/manifests/archaeology/               # PROPOSED
-  - release/candidates/archaeology/              # PROPOSED
-  - data/published/layers/archaeology/           # PROPOSED — generalized only
+  - docs/domains/archaeology/SENSITIVITY.md
+  - policy/domains/archaeology/
+  - policy/sensitivity/archaeology/
+  - schemas/contracts/v1/archaeology/
+  - schemas/contracts/v1/receipts/
+  - release/candidates/archaeology/
+  - data/published/layers/archaeology/
 tags: [kfm, domain, archaeology, publication, policy, release, governed-api, doctrine]
 notes:
   - CONTRACT_VERSION pinned to "3.0.0"
   - Sensitive-domain doc; archaeology default tier is T4 (DENY) for site location, human remains, sacred sites
   - All repo-state and path claims are PROPOSED until repo is mounted
   - Companion to OBJECT_FAMILIES.md, PIPELINE.md, and PRESERVATION_MATRIX.md
+owning_root: docs/
+responsibility: "Documentation for Archaeology — Publication and Policy; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 ![status: draft](https://img.shields.io/badge/status-draft-orange)
@@ -803,7 +803,7 @@ This document is done enough to enter the repository when:
 - [`docs/domains/archaeology/README.md`](./README.md) — *(PROPOSED — link target)* domain landing page.
 - [`docs/runbooks/archaeology/`](../../runbooks/archaeology/) — *(PROPOSED — link target)* runbooks (admission, rollback drill, sovereignty review, parity tests).
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — *(PROPOSED — link target)* drift register.
-- [`docs/registers/OVERRIDE_REGISTER.md`](../../registers/OVERRIDE_REGISTER.md) — *(PROPOSED — link target)* override register (KFM-P3-IDEA-0003).
+- `docs/registers/OVERRIDE_REGISTER.md` (not present) — *(PROPOSED — link target)* override register (KFM-P3-IDEA-0003).
 - Atlas v1.1 Ch. 15 — Archaeology and Cultural Heritage (§I, §J, §K, §L, §M, §N).
 - Atlas v1.1 §24.1 (anti-collapse), §24.2 (receipts), §24.3 (decision-outcome envelope), §24.5 (tiers), §24.6 (gates + reason codes), §24.7 (reviewer roles + SoD matrix), §24.8 (stale-state + supersession), §24.9 (anti-patterns), §24.11 (governance health indicators), §24.12 (open ADRs).
 - `KFM_Unified_Implementation_Architecture_Build_Manual.md` §6.2 Gates A–G; §7.1 object map.

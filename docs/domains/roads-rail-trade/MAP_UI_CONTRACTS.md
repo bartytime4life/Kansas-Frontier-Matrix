@@ -9,19 +9,18 @@ created: 2026-05-19
 updated: 2026-06-07
 policy_label: public
 related:
-  - docs/domains/roads-rail-trade/README.md                # PROPOSED — NEEDS VERIFICATION
+  - docs/domains/roads-rail-trade/README.md
   - docs/domains/roads-rail-trade/DATA_LIFECYCLE.md
   - docs/domains/roads-rail-trade/FILE_SYSTEM_PLAN.md
   - docs/domains/roads-rail-trade/GRAPH_PROJECTIONS.md
   - docs/domains/roads-rail-trade/HISTORIC_ROUTES.md
   - docs/domains/roads-rail-trade/IDENTITY_MODEL.md
-  - docs/architecture/maplibre-3d.md                       # PROPOSED — NEEDS VERIFICATION
   - docs/standards/PROV.md
-  - schemas/contracts/v1/map/                              # PROPOSED schema home — NEEDS VERIFICATION
-  - schemas/contracts/v1/ui/                               # PROPOSED schema home — NEEDS VERIFICATION
-  - schemas/contracts/v1/ai/                               # PROPOSED schema home — NEEDS VERIFICATION
-  - schemas/contracts/v1/runtime/decision_envelope.schema.json   # PROPOSED — NEEDS VERIFICATION
-  - ai-build-operating-contract.md                         # CONTRACT_VERSION = "3.0.0"
+  - schemas/contracts/v1/map/
+  - schemas/contracts/v1/ui/
+  - schemas/contracts/v1/ai/
+  - schemas/contracts/v1/runtime/decision_envelope.schema.json
+  - docs/doctrine/ai-build-operating-contract.md
 tags: [kfm, domain:roads-rail-trade, ui, maplibre, contracts, governance]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned; doctrine-adjacent map-UI contract profile.
@@ -29,6 +28,9 @@ notes:
   - Implementation paths PROPOSED pending mounted-repo verification.
   - Segment-name conflict (roads-rail-trade vs transport) tracked as OPEN-ROADS-UI-09; aligned to FILE_SYSTEM_PLAN OPEN-RRT-FSP-01 (Directory Rules §12 names roads-rail-trade verbatim and is the stronger authority).
   - The sole browser renderer is packages/maplibre-runtime/ (Directory Rules v1.3; Cesium retired).
+owning_root: docs/
+responsibility: "Documentation for Map UI Contracts — Roads, Rail, and Trade Routes; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🛣️ Map UI Contracts — Roads, Rail, and Trade Routes
@@ -547,7 +549,7 @@ This document is done enough to enter the repository when:
 - [`docs/domains/roads-rail-trade/GRAPH_PROJECTIONS.md`](./GRAPH_PROJECTIONS.md) — derived graph / connectivity view *(companion)*
 - [`docs/domains/roads-rail-trade/HISTORIC_ROUTES.md`](./HISTORIC_ROUTES.md) — historic-route sensitivity & generalization *(companion)*
 - [`docs/domains/roads-rail-trade/IDENTITY_MODEL.md`](./IDENTITY_MODEL.md) — identity & spec_hash *(companion)*
-- [`docs/architecture/maplibre-3d.md`](../../architecture/maplibre-3d.md) — MapLibre renderer / 3D surface *(PROPOSED — NEEDS VERIFICATION)*
+- `docs/architecture/maplibre-3d.md` (not present) — MapLibre renderer / 3D surface *(PROPOSED — NEEDS VERIFICATION)*
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement authority *(CONFIRMED authored)*
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance reference *(PROPOSED — NEEDS VERIFICATION)*
 - `schemas/contracts/v1/map/` — `LayerManifest`, `StyleManifest`, `TileArtifactManifest`, `MapReleaseManifest` *(PROPOSED schema home)*

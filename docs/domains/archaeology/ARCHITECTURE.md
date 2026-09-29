@@ -17,9 +17,9 @@ related:
   - docs/doctrine/authority-ladder.md
   - docs/architecture/governed-api/README.md
   - docs/domains/archaeology/README.md
-  - docs/domains/archaeology/CANONICAL_PATHS.md          # path-namespace authority for this lane
-  - docs/domains/archaeology/CONTINUITY_INVENTORY.md     # continuity register
-  - docs/domains/archaeology/CROSS_DOMAIN.md             # cross-lane boundary register
+  - docs/domains/archaeology/CANONICAL_PATHS.md
+  - docs/domains/archaeology/CONTINUITY_INVENTORY.md
+  - docs/domains/archaeology/CROSS_DOMAIN.md
   - docs/runbooks/archaeology/PROMOTION_RUNBOOK.md
   - docs/runbooks/archaeology/ROLLBACK_RUNBOOK.md
   - contracts/domains/archaeology/
@@ -31,6 +31,9 @@ notes:
   - "Doctrine is CONFIRMED from [ENCY] §7.13, Atlas v1.1 §24.13, [DOM-ARCH], [DIRRULES] §12, and the v3.0 §23.2 sensitive-domain matrix (matrix itself PROPOSED pending steward ratification). Implementation maturity is UNKNOWN until verified against mounted-repo evidence."
   - "v1.2 RECONCILES the path namespace: this file now uses the Directory Rules §12 form (contracts/domains/archaeology/, schemas/contracts/v1/domains/archaeology/), matching CANONICAL_PATHS.md, CONTINUITY_INVENTORY.md, and CROSS_DOMAIN.md. The Atlas v1.1 §24.13 / ENCY §7.13 shorthand (contracts/archaeology/) is recorded as LINEAGE. Resolution basis: §2.1 authority order — Directory Rules §12 (CONFIRMED rule) outranks the Atlas crosswalk (PROPOSED). Closes OQ-ARCH-01 in favor of the §12 form; a uniform ADR-domains-segment may still revisit it repo-wide."
   - "DOM-ARCH names two overlapping object lists — the §B/ENCY collapsed set and the §E decomposed spine. Both are preserved; the casing/decomposition conflict is tracked as OQ-ARCH-04 / OQ-CI-01."
+owning_root: docs/
+responsibility: "Documentation for Archaeology Domain — Architecture; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Archaeology Domain — Architecture
@@ -802,7 +805,7 @@ This document is done enough to enter the repository when:
   [`CANONICAL_PATHS.md`](CANONICAL_PATHS.md) — path-namespace authority for this lane ·
   [`CONTINUITY_INVENTORY.md`](CONTINUITY_INVENTORY.md) — continuity register ·
   [`CROSS_DOMAIN.md`](CROSS_DOMAIN.md) — cross-lane boundary register ·
-  [`SENSITIVITY.md`](SENSITIVITY.md) · [`PIPELINE.md`](PIPELINE.md) · [`VIEWING_PRODUCTS.md`](VIEWING_PRODUCTS.md) · [`VERIFICATION_BACKLOG.md`](VERIFICATION_BACKLOG.md)
+  [`SENSITIVITY.md`](SENSITIVITY.md) · [`PIPELINE.md`](PIPELINE.md) · `VIEWING_PRODUCTS.md` (not present) · [`VERIFICATION_BACKLOG.md`](VERIFICATION_BACKLOG.md)
 - **Architecture neighbors**:
   [`../../architecture/governed-api/README.md`](../../architecture/governed-api/README.md) ·
   [`../../architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) ·
@@ -817,7 +820,7 @@ This document is done enough to enter the repository when:
   [`../roads-rail-trade/ARCHITECTURE.md`](../roads-rail-trade/ARCHITECTURE.md) ·
   [`../hazards/ARCHITECTURE.md`](../hazards/ARCHITECTURE.md) ·
   [`../geology/ARCHITECTURE.md`](../geology/ARCHITECTURE.md) ·
-  [`../flora/architecture/README.md`](../flora/architecture/README.md) *(folder pattern — see `OQ-ARCH-03`)*
+  `../flora/architecture/README.md` (not present) *(folder pattern — see `OQ-ARCH-03`)*
 - **ADRs (proposed)**: [`../../adr/`](../../adr/) — see §15.2
 - **Registers**:
   [`../../registers/AUTHORITY_LADDER.md`](../../registers/AUTHORITY_LADDER.md) ·

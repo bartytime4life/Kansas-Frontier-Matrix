@@ -650,7 +650,7 @@ Prefer the smallest coherent and reversible change. Documentation polish must pr
 | [`../../data/README.md`](../../data/README.md) | Lifecycle, accountability, evidence, receipt, proof, catalog, and published instances |
 | [`../../release/README.md`](../../release/README.md) | Promotion, release, correction, withdrawal, rollback decisions |
 | [`../../apps/governed-api/README.md`](../../apps/governed-api/README.md) | Intended governed client boundary; current maturity is independently bounded |
-| [`../../apps/explorer-web/README.md`](../../apps/explorer-web/README.md) | Map-first client surface; not domain truth authority |
+| `../../apps/explorer-web/README.md` (retired) | Map-first client surface; not domain truth authority |
 
 [Back to top](#top)
 

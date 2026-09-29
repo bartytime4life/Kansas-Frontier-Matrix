@@ -11,18 +11,17 @@ policy_label: public
 related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
-  - docs/doctrine/lifecycle-law.md                     # PROPOSED — link target
-  - docs/adr/ADR-0001-schema-home.md
-  - docs/domains/archaeology/README.md                 # PROPOSED — link target
+  - docs/doctrine/lifecycle-law.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - docs/domains/archaeology/README.md
   - docs/domains/archaeology/OBJECT_FAMILIES.md
   - docs/domains/archaeology/PIPELINE.md
   - docs/domains/archaeology/PRESERVATION_MATRIX.md
   - docs/domains/archaeology/PUBLICATION_AND_POLICY.md
-  - docs/domains/archaeology/SENSITIVITY.md            # PROPOSED — link target
-  - docs/runbooks/archaeology/                         # PROPOSED — link target
-  - docs/registers/DRIFT_REGISTER.md                   # PROPOSED — link target
-  - docs/registers/OVERRIDE_REGISTER.md                # PROPOSED — link target
-  - docs/registers/VERIFICATION_BACKLOG.md             # PROPOSED — link target
+  - docs/domains/archaeology/SENSITIVITY.md
+  - docs/runbooks/archaeology/
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/registers/VERIFICATION_BACKLOG.md
   - release/README.md
   - release/candidates/archaeology/
   - release/manifests/
@@ -39,6 +38,9 @@ notes:
   - Sensitive geometry MUST NOT appear in this index.
   - Sensitive-domain doc; archaeology default tier is T4 (DENY) for exact site location, human remains, sacred sites.
   - Companion to OBJECT_FAMILIES.md, PIPELINE.md, PRESERVATION_MATRIX.md, and PUBLICATION_AND_POLICY.md.
+owning_root: docs/
+responsibility: "Documentation for Archaeology · Release Index; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Archaeology · Release Index
@@ -161,8 +163,8 @@ Each row in [§7](#7-released-layers-and-manifests)–[§10](#10-rollback-cards)
 - **Correction notices** — `CorrectionNotice` records issued against any previously published archaeology release.
 - **Rollback cards** — `RollbackCard` records targeting a prior safe release.
 - **Sensitivity tier mapping** — the default tier for each archaeology object family and the allowed transforms before public release (canonical matrix in [`PRESERVATION_MATRIX.md` §4.2](./PRESERVATION_MATRIX.md#42-archaeology-object-class-tier-matrix-proposed)).
-- **Override records** *(via* [`OVERRIDE_REGISTER.md`](#15-related-docs)*)* — signed override records that bypassed a non-blocking gate; never silent. _Source: KFM-P3-IDEA-0003; see [§16.G](#16--appendix--minimum-recorded-fields)._
-- **Stale-state markers and supersession lineage** — surfaced where applicable; see [§16.E–F](#16--appendix--minimum-recorded-fields).
+- **Override records** *(via* [`OVERRIDE_REGISTER.md`](#15-related-docs)*)* — signed override records that bypassed a non-blocking gate; never silent. _Source: KFM-P3-IDEA-0003; see [§16.G](#16-appendix--minimum-recorded-fields)._
+- **Stale-state markers and supersession lineage** — surfaced where applicable; see [§16.E–F](#16-appendix--minimum-recorded-fields).
 
 [⬆ Back to top](#archaeology--release-index)
 
@@ -178,7 +180,7 @@ Each row in [§7](#7-released-layers-and-manifests)–[§10](#10-rollback-cards)
 - **No restricted-access archive identifiers** — collection security and private-landowner records remain T3 / T4.
 - **No AI-generated narrative as truth** — Focus Mode summaries belong in the Evidence Drawer, never in this index. AI outputs are interpretive; `EvidenceBundle` outranks generated language.
 - **No release manifests by value** — the index references `release_id` and links to `release/manifests/<release_id>.json`; it does not embed the manifest body.
-- **No candidate framed as a confirmed site** — a `CandidateFeature`, `RemoteSensingAnomaly`, or `LiDARCandidate` listed in this index MUST carry its candidate role explicitly. Promotion is a **tier** transition, not a **source-role** upgrade ([`PRESERVATION_MATRIX.md` §11](./PRESERVATION_MATRIX.md#11--anti-collapse-and-source-role-preservation)).
+- **No candidate framed as a confirmed site** — a `CandidateFeature`, `RemoteSensingAnomaly`, or `LiDARCandidate` listed in this index MUST carry its candidate role explicitly. Promotion is a **tier** transition, not a **source-role** upgrade ([`PRESERVATION_MATRIX.md` §11](./PRESERVATION_MATRIX.md#11-anti-collapse-and-source-role-preservation)).
 - **No synthetic content framed as observation** — 3D scenes, reconstructions, and AI-drafted carriers MUST be labeled with `RealityBoundaryNote` and `RepresentationReceipt` references at the manifest layer; the index inherits those flags.
 
 [⬆ Back to top](#archaeology--release-index)
@@ -326,7 +328,7 @@ flowchart LR
 
 ## 7. Released layers and manifests
 
-**PROPOSED rows — placeholders until release plane is inspected.** Each row references one `ReleaseManifest` by `release_id`. No exact geometry. No source-secret identifiers. **Source role is shown so candidate / observed / aggregate are never silently conflated** (anti-collapse rule, [`PRESERVATION_MATRIX.md` §11](./PRESERVATION_MATRIX.md#11--anti-collapse-and-source-role-preservation)).
+**PROPOSED rows — placeholders until release plane is inspected.** Each row references one `ReleaseManifest` by `release_id`. No exact geometry. No source-secret identifiers. **Source role is shown so candidate / observed / aggregate are never silently conflated** (anti-collapse rule, [`PRESERVATION_MATRIX.md` §11](./PRESERVATION_MATRIX.md#11-anti-collapse-and-source-role-preservation)).
 
 | `release_id` | Layer (public-safe name) | Source role | Sensitivity tier | `spec_hash` | Published at | Manifest | Status |
 |---|---|---|---|---|---|---|---|
@@ -408,7 +410,7 @@ flowchart LR
 **CONFIRMED doctrine / PROPOSED transform realization.** Default tiers for Archaeology object families. Transforms and gates must produce auditable receipts (`RedactionReceipt`, `AggregationReceipt`, `PublicationTransformReceipt` / `RepresentationReceipt`) and a `ReviewRecord` before the object is eligible for the lower tier.
 
 > [!IMPORTANT]
-> **This section is a navigator-level summary.** The canonical tier × transform decision matrix for archaeology — with every owning object family, all required receipts, the worked steward workflow, and the source-role anti-collapse rules — is in [`PRESERVATION_MATRIX.md` §4.2](./PRESERVATION_MATRIX.md#42-archaeology-object-class-tier-matrix-proposed) and [`PRESERVATION_MATRIX.md` §11](./PRESERVATION_MATRIX.md#11--anti-collapse-and-source-role-preservation). The table below MUST agree with that matrix; conflicts are logged in `docs/registers/DRIFT_REGISTER.md`.
+> **This section is a navigator-level summary.** The canonical tier × transform decision matrix for archaeology — with every owning object family, all required receipts, the worked steward workflow, and the source-role anti-collapse rules — is in [`PRESERVATION_MATRIX.md` §4.2](./PRESERVATION_MATRIX.md#42-archaeology-object-class-tier-matrix-proposed) and [`PRESERVATION_MATRIX.md` §11](./PRESERVATION_MATRIX.md#11-anti-collapse-and-source-role-preservation). The table below MUST agree with that matrix; conflicts are logged in `docs/registers/DRIFT_REGISTER.md`.
 
 | Object class                                 | Default tier | Allowed transforms (PROPOSED)                                                                | Required gates                                              |
 | -------------------------------------------- | ------------ | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
@@ -428,7 +430,7 @@ flowchart LR
 > The **H3 r7 floor** for sensitive archaeology products is sourced from the Master MapLibre v1.7 update packet (`[ML-061-159]`, EXTERNAL-INTERNAL reference within the KFM idea index). Treat this floor as **`NEEDS VERIFICATION`** against `policy/domains/archaeology/` until inspected on a mounted repo. The canonical archaeology generalization threshold is an open ADR item (`OQ-ARCH-RI-02`; mirrored in `OQ-ARCH-PIPE-03` / `OQ-ARCH-PM-03`).
 
 > [!WARNING]
-> **Tier transitions do not perform source-role upgrades.** Moving a `CandidateFeature` from T4 to T2 makes it visible to reviewers; it does not make it a confirmed `ArchaeologicalSite`. Role transitions are separate governed events with their own evidence and review. _Source: Atlas v1.1 §24.1; [`PRESERVATION_MATRIX.md` §11.1](./PRESERVATION_MATRIX.md#11--anti-collapse-and-source-role-preservation)._
+> **Tier transitions do not perform source-role upgrades.** Moving a `CandidateFeature` from T4 to T2 makes it visible to reviewers; it does not make it a confirmed `ArchaeologicalSite`. Role transitions are separate governed events with their own evidence and review. _Source: Atlas v1.1 §24.1; [`PRESERVATION_MATRIX.md` §11.1](./PRESERVATION_MATRIX.md#11-anti-collapse-and-source-role-preservation)._
 
 [⬆ Back to top](#archaeology--release-index)
 
@@ -516,7 +518,7 @@ mkdir -p release/candidates/archaeology/<candidate_id>
 
 > [!NOTE]
 > **Why does a `candidate` row stay a candidate after release?**
-> Releasing a generalized candidate surface at T1 changes the tier; it does NOT change the source role. A `RemoteSensingAnomaly` or `LiDARCandidate` remains a candidate until a separate, governed confirmation event (with its own evidence and review) reclassifies it. _Source: Atlas v1.1 §24.1; [`PRESERVATION_MATRIX.md` §11](./PRESERVATION_MATRIX.md#11--anti-collapse-and-source-role-preservation)._
+> Releasing a generalized candidate surface at T1 changes the tier; it does NOT change the source role. A `RemoteSensingAnomaly` or `LiDARCandidate` remains a candidate until a separate, governed confirmation event (with its own evidence and review) reclassifies it. _Source: Atlas v1.1 §24.1; [`PRESERVATION_MATRIX.md` §11](./PRESERVATION_MATRIX.md#11-anti-collapse-and-source-role-preservation)._
 
 > [!NOTE]
 > **Is this page generated or hand-edited?**
@@ -535,7 +537,7 @@ mkdir -p release/candidates/archaeology/<candidate_id>
 - [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — v3.0 operating law (`CONTRACT_VERSION = "3.0.0"`).
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — §4 placement protocol, §9.2 release plane, §12 domain placement, §13.2 drift patterns, §15 README contract.
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — *(PROPOSED — link target)* RAW → … → PUBLISHED invariant.
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — schema canonicality.
+- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema canonicality.
 - [`docs/domains/archaeology/README.md`](./README.md) — *(PROPOSED — link target)* domain identity, ubiquitous language, source families.
 - [`docs/domains/archaeology/OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) — Companion register of identity-bearing archaeology objects and source-role anti-collapse posture.
 - [`docs/domains/archaeology/PIPELINE.md`](./PIPELINE.md) — Companion lifecycle / gate reference for the archaeology lane.
@@ -544,7 +546,7 @@ mkdir -p release/candidates/archaeology/<candidate_id>
 - [`docs/domains/archaeology/SENSITIVITY.md`](./SENSITIVITY.md) — *(PROPOSED — link target)* tier matrix + transform catalogue detail.
 - [`docs/runbooks/archaeology/`](../../runbooks/archaeology/) — *(PROPOSED — link target)* runbooks (admission, rollback drill, sovereignty review, parity tests).
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — *(PROPOSED — link target)* drift register.
-- [`docs/registers/OVERRIDE_REGISTER.md`](../../registers/OVERRIDE_REGISTER.md) — *(PROPOSED — link target)* override register (KFM-P3-IDEA-0003).
+- `docs/registers/OVERRIDE_REGISTER.md` (not present) — *(PROPOSED — link target)* override register (KFM-P3-IDEA-0003).
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — *(PROPOSED — link target)* aging candidates and open verification items.
 - [`release/README.md`](../../../release/README.md) — release plane authority and folder split.
 - [`policy/domains/archaeology/`](../../../policy/domains/archaeology/) — *(PROPOSED)* sensitivity, rights, review-required gates; default-deny OPA bundle.
@@ -768,7 +770,7 @@ These items remain `NEEDS VERIFICATION` before promotion from `draft` to `publis
 | §1 Scope — added "Companion docs in the archaeology lane" callout pointing to the four sibling docs. | clarification | Establishes the doctrine-vs-navigator separation up front. |
 | §2 Repo fit — added five new Upstream rows (`OBJECT_FAMILIES.md`, `PIPELINE.md`, `PRESERVATION_MATRIX.md`, `PUBLICATION_AND_POLICY.md`, `lifecycle-law.md`), one new Downstream row family (registers), and the override register. | gap closure | Reflects the now-authored sibling docs and the override-register requirement (KFM-P3-IDEA-0003). |
 | §3 What this index tracks — added override-records and stale-state / supersession bullets. | gap closure | Surfaces the new §16.E–H appendix material and the override-as-first-class-event rule. |
-| §4 What this index does NOT contain — added anti-collapse bullets: no candidate-framed-as-confirmed-site, no synthetic-framed-as-observation. | gap closure | Aligns with [`PRESERVATION_MATRIX.md` §11](./PRESERVATION_MATRIX.md#11--anti-collapse-and-source-role-preservation) and [`PUBLICATION_AND_POLICY.md` §5.1](./PUBLICATION_AND_POLICY.md#5--policy-as-code--deny--abstain--allow). |
+| §4 What this index does NOT contain — added anti-collapse bullets: no candidate-framed-as-confirmed-site, no synthetic-framed-as-observation. | gap closure | Aligns with [`PRESERVATION_MATRIX.md` §11](./PRESERVATION_MATRIX.md#11-anti-collapse-and-source-role-preservation) and [`PUBLICATION_AND_POLICY.md` §5.1](./PUBLICATION_AND_POLICY.md#5--policy-as-code--deny--abstain--allow). |
 | §5 Directory tree — added the four archaeology sibling files, the three registers, `policy/domains/archaeology/` policy-bundle layout, `release/override_records/`, and `override_record.schema.json`. | gap closure | Reflects the now-authored sibling docs and the override-register / policy-bundle expansion. |
 | §6 Release plane diagram — added **Pre-RAW** node (with `EventEnvelope` / `EventRunReceipt`), added **override_records** node with attachment edges to `PromotionDecision` and `ReleaseManifest`, and added the override-records pointer from `TR`. | gap closure | Aligns with [`PIPELINE.md` §5](./PIPELINE.md#5--pre-raw--watcher-signal-stage) Pre-RAW recognition and the override-record discipline in [`PUBLICATION_AND_POLICY.md` §13](./PUBLICATION_AND_POLICY.md#13--override-and-emergency-bypass-discipline). |
 | §7 Released layers and manifests — added **Source role** column to the row schema and a `WARNING` callout enforcing the anti-collapse rule (candidate stays a candidate across tier transitions). | gap closure | Anti-collapse is one of the highest-risk failure modes in archaeology; making `source_role` a visible column in the navigator prevents silent role upgrades. |

@@ -13,12 +13,13 @@ related:
   - docs/domains/atmosphere/EXPANSION_BACKLOG.md
   - docs/domains/atmosphere/EXPANSION_PLAN.md
   - docs/doctrine/directory-rules.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
-  - ai-build-operating-contract.md
-  - kfm://atlas/v1.1/ch11
-  - kfm://atlas/v1.1/ch24.1
+  - docs/doctrine/ai-build-operating-contract.md
+owning_root: docs/
+responsibility: "Documentation for Atmosphere / Air — File System Plan; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <!--
@@ -56,7 +57,7 @@ A **PROPOSED** repository-level layout for the Atmosphere / Air domain across ev
 2. [Repo fit](#2-repo-fit)
 3. [Accepted inputs (what belongs in this lane)](#3-accepted-inputs-what-belongs-in-this-lane)
 4. [Exclusions (what does not belong here)](#4-exclusions-what-does-not-belong-here)
-5. [Proposed directory tree — Atmosphere / Air lane](#5-proposed-directory-tree--atmosphereair-lane)
+5. [Proposed directory tree — Atmosphere / Air lane](#5-proposed-directory-tree--atmosphere--air-lane)
 6. [Lane → responsibility-root crosswalk](#6-lane--responsibility-root-crosswalk)
 7. [Lane fan-out diagram](#7-lane-fan-out-diagram)
 8. [Source-role channels (anti-collapse)](#8-source-role-channels-anti-collapse)

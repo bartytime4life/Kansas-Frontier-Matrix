@@ -15,27 +15,26 @@ policy_label: public
 related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
-  - docs/domains/archaeology/README.md                 # PROPOSED
+  - docs/domains/archaeology/README.md
   - docs/domains/archaeology/OBJECT_FAMILIES.md
   - docs/domains/archaeology/PIPELINE.md
   - docs/domains/archaeology/PRESERVATION_MATRIX.md
   - docs/domains/archaeology/PUBLICATION_AND_POLICY.md
   - docs/domains/archaeology/RELEASE_INDEX.md
   - docs/domains/archaeology/SENSITIVITY.md
-  - docs/standards/SMART_SYNC.md                       # PROPOSED — Pass 10 C3 home
-  - docs/runbooks/archaeology/source_refresh.md        # PROPOSED — per-family refresh
-  - docs/runbooks/archaeology/sovereignty_review.md    # PROPOSED — SENSITIVITY §18
-  - control_plane/source_authority_register.yaml      # PROPOSED — reviewer authority register
-  - data/registry/archaeology/sources/                 # PROPOSED — SourceDescriptor ledger
-  - schemas/contracts/v1/source_descriptor.schema.json # PROPOSED
-  - policy/domains/archaeology/                        # PROPOSED — Rego bundle
-  - tools/ingest/watchers/                             # PROPOSED — watcher home
+  - docs/standards/SMART_SYNC.md
+  - control_plane/source_authority_register.yaml
+  - data/registry/archaeology/sources/
+  - policy/domains/archaeology/
 tags: [kfm, domain, archaeology, sources, source-descriptor, doctrine, admission]
 notes:
   - CONTRACT_VERSION pinned to "3.0.0"
   - Sensitive-domain doc; archaeology default tier is T4 (DENY) for site location, human remains, sacred sites.
   - All repo-state and path claims are PROPOSED until repo is mounted.
   - Companion to OBJECT_FAMILIES.md, PIPELINE.md, PRESERVATION_MATRIX.md, PUBLICATION_AND_POLICY.md, RELEASE_INDEX.md, and SENSITIVITY.md.
+owning_root: docs/
+responsibility: "Documentation for Archaeology — Sources; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 ![status: draft](https://img.shields.io/badge/status-draft-orange)
@@ -1209,10 +1208,10 @@ This document is done enough to enter the repository when:
 - [`docs/domains/archaeology/RELEASE_INDEX.md`](./RELEASE_INDEX.md) — Release-plane navigator.
 - [`docs/domains/archaeology/SENSITIVITY.md`](./SENSITIVITY.md) — Detailed transform catalogue; CARE labels; consent; sovereignty review workflow.
 - [`docs/standards/SMART_SYNC.md`](../../standards/SMART_SYNC.md) — *(PROPOSED — link target)* Pass 10 §C3 smart-sync / HTTP-validator pattern.
-- [`docs/runbooks/archaeology/source_refresh.md`](../../runbooks/archaeology/source_refresh.md) — *(PROPOSED — link target)* per-family source refresh runbook.
-- [`docs/runbooks/archaeology/sovereignty_review.md`](../../runbooks/archaeology/sovereignty_review.md) — *(PROPOSED — link target)* sovereignty review workflow (admission, revocation, escalation).
+- `docs/runbooks/archaeology/source_refresh.md` (not present) — *(PROPOSED — link target)* per-family source refresh runbook.
+- `docs/runbooks/archaeology/sovereignty_review.md` (not present) — *(PROPOSED — link target)* sovereignty review workflow (admission, revocation, escalation).
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — *(PROPOSED — link target)* drift register.
-- [`schemas/contracts/v1/source_descriptor.schema.json`](../../../schemas/contracts/v1/source_descriptor.schema.json) — *(PROPOSED)* `SourceDescriptor` schema home.
+- `schemas/contracts/v1/source_descriptor.schema.json` (not present) — *(PROPOSED)* `SourceDescriptor` schema home.
 - [`control_plane/source_authority_register.yaml`](../../../control_plane/source_authority_register.yaml) — *(PROPOSED)* source steward + reviewer authority register.
 - Atlas v1.1 Ch. 15 §D (key source families), §H (pipeline shape), §I (sensitivity / rights), §N (verification backlog).
 - Atlas v1.1 §24.1 (source-role anti-collapse register), §24.2 (`SourceDescriptor` and receipt catalog), §24.5 (tiers), §24.7 (reviewer roles), §24.8 (stale-state / supersession).

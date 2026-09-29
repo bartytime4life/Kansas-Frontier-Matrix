@@ -11,7 +11,7 @@ policy_label: public
 contract_version: "3.0.0"
 related:
   - docs/domains/README.md
-  - docs/domains/hazards/api-contracts.md
+  - docs/domains/hazards/API_CONTRACTS.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
@@ -34,6 +34,9 @@ notes:
   # Pass-index idea IDs corrected v1->v2: the real convention is KFM-P{PASS}-IDEA-{NNNN}; the
   #   v1 "KFM-IDX-*" IDs were not verifiable and are neutralized. The one verifiable card is
   #   KFM-P1-IDEA-0072 (atmosphere/hazards knowledge-character separation).
+owning_root: docs/
+responsibility: "Documentation for Hazards Domain Architecture; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Hazards Domain Architecture
@@ -389,7 +392,7 @@ CONFIRMED doctrine, PROPOSED implementation. AI inside KFM is **interpretive and
 
 ## 11. API, Contract & Schema Surfaces
 
-PROPOSED governed API surfaces. Exact routes, DTO field shapes, and schema homes are **PROPOSED** pending mounted-repo verification and ADR confirmation. The four-surface set and finite-outcome grammar are **CONFIRMED** from the Hazards J-table; field shapes and routes remain unverified. The full surface-by-surface contract lives in the companion doc, [`api-contracts.md`](./api-contracts.md).
+PROPOSED governed API surfaces. Exact routes, DTO field shapes, and schema homes are **PROPOSED** pending mounted-repo verification and ADR confirmation. The four-surface set and finite-outcome grammar are **CONFIRMED** from the Hazards J-table; field shapes and routes remain unverified. The full surface-by-surface contract lives in the companion doc, [`api-contracts.md`](API_CONTRACTS.md).
 
 | Surface | DTO / artifact | Finite outcomes | Status |
 |---|---|---|---|
@@ -629,7 +632,7 @@ These items are **NEEDS VERIFICATION**, **PROPOSED**, or **OPEN** against mounte
 > Placeholder targets — link validity NEEDS VERIFICATION against mounted-repo evidence.
 
 - [`docs/domains/README.md`](../README.md) — domain lane index
-- [`docs/domains/hazards/api-contracts.md`](./api-contracts.md) — Hazards governed API surfaces, decision envelopes, contract shape
+- [`docs/domains/hazards/api-contracts.md`](API_CONTRACTS.md) — Hazards governed API surfaces, decision envelopes, contract shape
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law, lane pattern, anti-patterns
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED invariant
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — governed API as trust path

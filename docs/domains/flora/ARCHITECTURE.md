@@ -28,6 +28,9 @@ notes:
   - Implementation paths are PROPOSED until verified against mounted-repo evidence.
   - Schema home follows ADR-0001 (schemas/contracts/v1/...); Atlas Appendix D `schemas/contracts/v1/flora/` form is lineage/CONFLICTED pending migration.
   - Per-source rights/license terms are NEEDS VERIFICATION in the corpus; no external research was performed for this revision, so no external license fact is asserted as CONFIRMED.
+owning_root: docs/
+responsibility: "Documentation for Flora — Domain Architecture; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌿 Flora — Domain Architecture
@@ -663,7 +666,7 @@ Rollback drills are part of every flora release-readiness check.
 <summary><strong>Architecture (cross-cutting)</strong></summary>
 
 - [Domains index](../README.md) — *PROPOSED home*
-- [Flora — API Contracts](./api-contracts.md) — Flora governed-API contract surface *(PROPOSED)*
+- [Flora — API Contracts](API_CONTRACTS.md) — Flora governed-API contract surface *(PROPOSED)*
 - [Governed API](../../architecture/governed-api/README.md) — *PROPOSED home*
 - [Map shell](../../architecture/map-shell.md) — *PROPOSED home*
 - [Contract / schema / policy split](../../architecture/contract-schema-policy-split.md) — *PROPOSED home*
@@ -749,7 +752,7 @@ PROPOSED first-PR rules (parallel-lane discipline):
 
 <div align="center">
 
-**Related:** [Directory Rules](../../doctrine/directory-rules.md) · [AI Build Operating Contract](../../doctrine/ai-build-operating-contract.md) · [Flora API Contracts](./api-contracts.md) · [Governed API](../../architecture/governed-api/README.md) · [Domains index](../README.md)
+**Related:** [Directory Rules](../../doctrine/directory-rules.md) · [AI Build Operating Contract](../../doctrine/ai-build-operating-contract.md) · [Flora API Contracts](API_CONTRACTS.md) · [Governed API](../../architecture/governed-api/README.md) · [Domains index](../README.md)
 
 _Last updated: **2026-06-03** · Version: **v1.1** · Status: **draft** · CONTRACT_VERSION: **3.0.0** · Lane: **Flora** · Schema home: `schemas/contracts/v1/domains/flora/`_
 

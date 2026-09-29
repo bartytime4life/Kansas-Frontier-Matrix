@@ -10,8 +10,8 @@ updated: 2026-07-31
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
-  - ai-build-operating-contract.md
-  - directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
   - docs/domains/hydrology/README.md
   - docs/domains/hydrology/DATA_LIFECYCLE.md
   - docs/domains/hydrology/EXPANSION_BACKLOG.md
@@ -25,6 +25,9 @@ notes:
   - Domain vocabulary and anti-collapse meanings remain documented; decision #1886 keeps the common feature-identity tuple and exact identity terms REMAIN_PROPOSED pending profile closure.
   - Satisfies backlog item HYD-M12 (hydrology ubiquitous-language glossary).
   - Current repository evidence at main@9f42d4c3a35f5df4dbf027cbec3922cc03e22b7e confirms a minimal permissive identity schema, proposed ADR-0013, conflicting SourceDescriptor and SpecHash shapes, and no dedicated identity fixture/validator/test lane.
+owning_root: docs/
+responsibility: "Documentation for Hydrology — Ubiquitous Language Glossary; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 💧 Hydrology — Ubiquitous Language Glossary
@@ -44,17 +47,17 @@ notes:
 
 ## Quick jump
 
-- [1 · Purpose & how to read this glossary](#1-purpose-how-to-read-this-glossary)
-- [2 · Reading the labels](#2-reading-the-labels)
-- [3 · Hydrology object families](#3-hydrology-object-families)
-- [4 · Source families and source roles](#4-source-families-and-source-roles)
-- [5 · Identity, crosswalk, and lineage terms](#5-identity-crosswalk-and-lineage-terms)
-- [6 · Temporal vocabulary](#6-temporal-vocabulary)
-- [7 · Cross-cutting governance terms](#7-cross-cutting-governance-terms)
-- [8 · Collapse-prevention terms (what must stay distinct)](#8-collapse-prevention-terms-what-must-stay-distinct)
-- [9 · Cross-lane boundary terms](#9-cross-lane-boundary-terms)
-- [10 · Related docs](#10-related-docs)
-- [Appendix A · Term → home crosswalk](#appendix-a-term-home-crosswalk)
+- [1 · Purpose & how to read this glossary](#1--purpose--how-to-read-this-glossary)
+- [2 · Reading the labels](#2--reading-the-labels)
+- [3 · Hydrology object families](#3--hydrology-object-families)
+- [4 · Source families and source roles](#4--source-families-and-source-roles)
+- [5 · Identity, crosswalk, and lineage terms](#5--identity-crosswalk-and-lineage-terms)
+- [6 · Temporal vocabulary](#6--temporal-vocabulary)
+- [7 · Cross-cutting governance terms](#7--cross-cutting-governance-terms)
+- [8 · Collapse-prevention terms (what must stay distinct)](#8--collapse-prevention-terms-what-must-stay-distinct)
+- [9 · Cross-lane boundary terms](#9--cross-lane-boundary-terms)
+- [10 · Related docs](#10--related-docs)
+- [Appendix A · Term → home crosswalk](#appendix-a--term--home-crosswalk)
 
 ---
 
@@ -67,7 +70,7 @@ A glossary in KFM is not decoration: a domain term carries the same meaning acro
 > [!IMPORTANT]
 > Every hydrology term is **constrained by source role, evidence, time, and release state** — this is CONFIRMED doctrine from the Atlas ubiquitous-language table [DOM-HYD §C]. A term names *what kind of evidence a thing is*, not merely *what it is about*. "Flood" is not one concept; it is at least four (see §8).
 
-[Back to top](#hydrology-ubiquitous-language-glossary)
+[Back to top](#-hydrology--ubiquitous-language-glossary)
 
 ---
 
@@ -87,7 +90,7 @@ Each entry carries a truth label so contributors do not promote a planning defin
 > tuple, its exact slot meanings, persisted representation, and family profiles
 > `REMAIN_PROPOSED`; this glossary must not upgrade them through wording.
 
-[Back to top](#hydrology-ubiquitous-language-glossary)
+[Back to top](#-hydrology--ubiquitous-language-glossary)
 
 ---
 
@@ -117,7 +120,7 @@ Each entry carries a truth label so contributors do not promote a planning defin
 | **DroughtLink** | A proposed link relating hydrology to drought context. | Family profile `HOLD`; neighboring-domain identity remains sovereign. |
 | **IrrigationLink** | A proposed link relating hydrology to irrigation context. | Family profile `HOLD`; neighboring-domain identity remains sovereign. |
 
-[Back to top](#hydrology-ubiquitous-language-glossary)
+[Back to top](#-hydrology--ubiquitous-language-glossary)
 
 ---
 
@@ -150,7 +153,7 @@ Each entry carries a truth label so contributors do not promote a planning defin
 > [!NOTE]
 > Rights and current terms for every hydrology source family are **NEEDS VERIFICATION**, and sensitive joins fail closed. [DOM-HYD §D]
 
-[Back to top](#hydrology-ubiquitous-language-glossary)
+[Back to top](#-hydrology--ubiquitous-language-glossary)
 
 ---
 
@@ -183,7 +186,7 @@ Each entry carries a truth label so contributors do not promote a planning defin
 > [!CAUTION]
 > **CONFLICTED — crosswalk validator home (ADR-S-CWV-01).** The corpus places the crosswalk tooling at `tools/probes/comid_huc12/`, `tools/validators/validators/crosswalk/`, **and** `tools/validators/hydro/` in different sources. Do not assert one; track in `DRIFT_REGISTER.md`. **3DHP supersession** of the v2.1 crosswalk key (COMID → 3DHP `universal_reference_id` → HUC12?) is unresolved in the corpus.
 
-[Back to top](#hydrology-ubiquitous-language-glossary)
+[Back to top](#-hydrology--ubiquitous-language-glossary)
 
 ---
 
@@ -201,7 +204,7 @@ Each entry carries a truth label so contributors do not promote a planning defin
 | **Correction time** | When a published claim was corrected. |
 | **Provisional vs final** | USGS observation status — provisional readings may be revised; final readings are settled. Status is preserved, never flattened. |
 
-[Back to top](#hydrology-ubiquitous-language-glossary)
+[Back to top](#-hydrology--ubiquitous-language-glossary)
 
 ---
 
@@ -229,7 +232,7 @@ Each entry carries a truth label so contributors do not promote a planning defin
 | **Finite outcomes** | The fixed result sets: promotion `ALLOW/DENY/HOLD/ERROR`; validator `PASS/FAIL/ERROR`; governed-API/AI `ANSWER/ABSTAIN/DENY/ERROR`. | `Atlas §24.3` |
 | **Watcher-as-non-publisher** | A watcher observes and emits Pre-RAW signals, receipts, and candidates only; it never publishes. | `directory-rules.md` |
 
-[Back to top](#hydrology-ubiquitous-language-glossary)
+[Back to top](#-hydrology--ubiquitous-language-glossary)
 
 ---
 
@@ -251,7 +254,7 @@ Each entry carries a truth label so contributors do not promote a planning defin
 > [!CAUTION]
 > KFM is **not** an emergency-alert authority. Any hydrology surface drifting toward "current inundation," "active warning," or "evacuation guidance" is out of policy and must redirect life-safety action to official sources (NWS, state/county emergency management). [ENCY §20.4] [DOM-HAZ]
 
-[Back to top](#hydrology-ubiquitous-language-glossary)
+[Back to top](#-hydrology--ubiquitous-language-glossary)
 
 ---
 
@@ -269,7 +272,7 @@ Each entry carries a truth label so contributors do not promote a planning defin
 | **Precipitation / drought drivers** | Atmosphere / Air | Observed/modeled atmospheric truth. |
 | **Flood / drought / declaration** | Hazards | Hazard-event truth; life-safety authority. |
 
-[Back to top](#hydrology-ubiquitous-language-glossary)
+[Back to top](#-hydrology--ubiquitous-language-glossary)
 
 ---
 
@@ -288,7 +291,7 @@ Each entry carries a truth label so contributors do not promote a planning defin
 
 <!-- TODO: re-check link paths against the mounted repo; create BOUNDARY.md / SOURCE_FAMILIES.md cross-links once authored. -->
 
-[Back to top](#hydrology-ubiquitous-language-glossary)
+[Back to top](#-hydrology--ubiquitous-language-glossary)
 
 ---
 
@@ -319,10 +322,10 @@ Each entry carries a truth label so contributors do not promote a planning defin
 
 </details>
 
-[Back to top](#hydrology-ubiquitous-language-glossary)
+[Back to top](#-hydrology--ubiquitous-language-glossary)
 
 ---
 
 **Last updated:** 2026-07-31 · **Status:** draft / `REMAIN_PROPOSED` identity · **Lane:** hydrology · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Backlog:** HYD-M12
 
-[⬆ Back to top](#hydrology-ubiquitous-language-glossary)
+[⬆ Back to top](#-hydrology--ubiquitous-language-glossary)

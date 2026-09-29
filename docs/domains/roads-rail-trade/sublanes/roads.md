@@ -15,7 +15,7 @@ related:
   - docs/domains/roads-rail-trade/sublanes/trade-routes.md
   - docs/doctrine/directory-rules.md
   - docs/architecture/governed-api/README.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 tags: [kfm, domain, roads, transport, sublane]
 notes:
   - 'CONTRACT_VERSION = "3.0.0" pinned per ai-build-operating-contract.md'
@@ -24,6 +24,9 @@ notes:
   - "Slug variance: Directory Rules §12 uses schemas/contracts/v1/domains/roads-rail-trade/; Atlas §24.13 uses schemas/contracts/v1/transport/. CONFLICTED — see §13 OPEN-ROADS-03."
   - "Cesium is retired (v1.3 doctrine-target): packages/maplibre-runtime/ is the SOLE governed browser-side renderer; freeze rule in effect. Cesium language removed from §12."
   - "Implementation-layer paths (schemas/, policy/, packages/, pipelines/) remain PROPOSED until mounted-repo verification."
+owning_root: docs/
+responsibility: "Documentation for Roads Sublane — Roads, Rail, and Trade Routes Domain Dossier; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Roads Sublane — Roads, Rail, and Trade Routes Domain
@@ -413,7 +416,7 @@ Tracked here for triage; resolutions migrate to `docs/registers/VERIFICATION_BAC
 - Sibling sublane (PROPOSED): [`docs/domains/roads-rail-trade/sublanes/trade-routes.md`](./trade-routes.md)
 - Doctrine: [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Domain Placement Law (§12), lifecycle invariant.
 - Architecture: [`docs/architecture/governed-api/README.md`](../../../architecture/governed-api/README.md) — trust-membrane definition.
-- ADR: [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home rule.
+- ADR: [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home rule.
 - Registers: `docs/registers/VERIFICATION_BACKLOG.md`, `docs/registers/DRIFT_REGISTER.md` — destinations for §13 items, including the OPEN-ROADS-03 slug conflict. (`TODO` link targets — verify on mount.)
 - Atlas §24.13 — Responsibility-root crosswalk (source of the `transport` slug variance).
 

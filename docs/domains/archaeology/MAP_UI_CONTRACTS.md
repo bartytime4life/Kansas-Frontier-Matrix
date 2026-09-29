@@ -22,9 +22,6 @@ related:
   - docs/architecture/governed-ai/README.md
   - docs/architecture/governed-api/README.md
   - docs/architecture/map-shell.md
-  - docs/architecture/maplibre-3d.md
-  - docs/atlases/domains-v1.1/ch15-archaeology.md
-  - docs/atlases/domains-v1.1/ch24-5-sensitivity-tier-reference.md
   - contracts/domains/archaeology/
   - schemas/contracts/v1/domains/archaeology/
   - policy/domains/archaeology/
@@ -36,6 +33,9 @@ notes:
   - v0.3 corrects the two residual "Directory Rules §12 (v1.2)" references to the live v1.3 edition; reconciles the geometry-generalization floor with operating contract §23.2 (county/region); and relabels HOLD as a promotion-class state rather than a contract §22.2 runtime outcome.
   - v0.3 is a MINOR bump per contract §37 (clarifications, reconciliations; no breaking anchor or schema changes; §§1–19 anchors preserved).
   - GENERATED_RECEIPT.json planned for repo-bound merge per contract §34.
+owning_root: docs/
+responsibility: "Documentation for Archaeology — Map / UI Contracts; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Archaeology — Map / UI Contracts
@@ -644,9 +644,9 @@ This document is **done enough to enter the repository** when:
 - [`docs/architecture/governed-ai/README.md`](../../architecture/governed-ai/README.md) — _TODO: governed AI architecture_
 - [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — _TODO: governed API surface_
 - [`docs/architecture/map-shell.md`](../../architecture/map-shell.md) — _TODO: map shell contract_
-- [`docs/architecture/maplibre-3d.md`](../../architecture/maplibre-3d.md) — MapLibre 3D / sole-renderer doctrine (v1.3, PROPOSED via ADR)
-- [`docs/atlases/domains-v1.1/ch15-archaeology.md`](../../atlases/domains-v1.1/ch15-archaeology.md) — _TODO: Atlas Ch. 15_
-- [`docs/atlases/domains-v1.1/ch24-5-sensitivity-tier-reference.md`](../../atlases/domains-v1.1/ch24-5-sensitivity-tier-reference.md) — _TODO: Atlas §24.5_
+- `docs/architecture/maplibre-3d.md` (not present) — MapLibre 3D / sole-renderer doctrine (v1.3, PROPOSED via ADR)
+- `docs/atlases/domains-v1.1/ch15-archaeology.md` (not present) — _TODO: Atlas Ch. 15_
+- `docs/atlases/domains-v1.1/ch24-5-sensitivity-tier-reference.md` (not present) — _TODO: Atlas §24.5_
 - [`contracts/OBJECT_MAP.md`](../../../contracts/OBJECT_MAP.md) — _TODO: object family crosswalk_
 - [`policy/domains/archaeology/`](../../../policy/domains/archaeology/) — _TODO: policy package_
 - [`policy/sensitivity/archaeology/`](../../../policy/sensitivity/archaeology/) — _TODO: sensitivity policy bundle_

@@ -9,17 +9,16 @@ created: 2026-05-19
 updated: 2026-06-07
 policy_label: public (sublane scaffold) — content tiers vary; Settlement / Municipality / GhostTown default T0; sovereignty-sensitive surfaces (ReservationCommunity, archaeology-adjacent townsites) escalate per per-source review
 related:
-  - ai-build-operating-contract.md                              # canonical operating contract, CONTRACT_VERSION = "3.0.0"
-  - docs/domains/settlements-infrastructure/README.md           # PROPOSED parent dossier
-  - docs/domains/settlements-infrastructure/sublanes/infrastructure.md   # PROPOSED sibling sublane
-  - docs/domains/roads-rail-trade/README.md                     # canonical owner of transport routes
-  - docs/domains/roads-rail-trade/sublanes/rail.md              # rail-side depot identity discussion
-  - docs/domains/hydrology/README.md                            # water / wastewater / floodplain context
-  - docs/domains/hazards/README.md                              # exposure, resilience, disaster declarations
-  - docs/domains/people-dna-land/README.md                      # residence, ownership, parcel, living-person privacy
-  - docs/domains/archaeology/README.md                          # historic site / townsite cultural sensitivity
-  - docs/domains/frontier-matrix/README.md                      # Settlement Status as matrix input
-  - docs/doctrine/directory-rules.md                            # placement authority
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/domains/settlements-infrastructure/README.md
+  - docs/domains/settlements-infrastructure/sublanes/infrastructure.md
+  - docs/domains/roads-rail-trade/README.md
+  - docs/domains/roads-rail-trade/sublanes/rail.md
+  - docs/domains/hydrology/README.md
+  - docs/domains/hazards/README.md
+  - docs/domains/people-dna-land/README.md
+  - docs/domains/archaeology/README.md
+  - docs/doctrine/directory-rules.md
 tags: [kfm, domain, settlements-infrastructure, sublane, settlements]
 notes:
   - "CONTRACT_VERSION = \"3.0.0\" — this sublane refines doctrine and inherits the operating contract pin."
@@ -27,6 +26,9 @@ notes:
   - "Schema-home is CONFLICTED: [ENCY] §7.12 names schemas/contracts/v1/settlement/ (singular) while Directory Rules §6.4 patterns schemas/contracts/v1/domains/<domain>/. See OPEN-DR-SUBLANE-03 — ADR-class per Directory Rules §2.4(3)."
   - "All path, route, schema, and tooling claims remain PROPOSED until a mounted repository is inspected."
   - "ReservationCommunity sensitivity defers to Indigenous-sovereignty review under [DOM-ARCH] / [DOM-PEOPLE] doctrine; this sublane does not author that policy."
+owning_root: docs/
+responsibility: "Documentation for Settlements / Infrastructure — Settlements Sublane Dossier; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Settlements / Infrastructure — **Settlements Sublane Dossier**
@@ -476,10 +478,10 @@ Source: `[DOM-SETTLE]` §N (Atlas v1.0 p. 96).
 - Hazards: [`docs/domains/hazards/README.md`](../../hazards/README.md) — exposure / resilience / declarations.
 - People / DNA / Land: [`docs/domains/people-dna-land/README.md`](../../people-dna-land/README.md) — residence, parcel, living-person policy.
 - Archaeology: [`docs/domains/archaeology/README.md`](../../archaeology/README.md) — historic-townsite cultural sensitivity.
-- Frontier Matrix: [`docs/domains/frontier-matrix/README.md`](../../frontier-matrix/README.md) — Settlement Status hand-off — `TODO`, **NEEDS VERIFICATION**.
+- Frontier Matrix: `docs/domains/frontier-matrix/README.md` (not present) — Settlement Status hand-off — `TODO`, **NEEDS VERIFICATION**.
 - Doctrine: [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Domain Placement Law (§12), schema-home rule (§6.4).
 - Architecture: [`docs/architecture/governed-api/README.md`](../../../architecture/governed-api/README.md) — trust-membrane definition.
-- ADR: [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home rule.
+- ADR: [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home rule.
 - Registers: `docs/registers/VERIFICATION_BACKLOG.md`, `docs/registers/DRIFT_REGISTER.md` — destinations for §O items. (`TODO` link targets — verify on mount.)
 
 -----

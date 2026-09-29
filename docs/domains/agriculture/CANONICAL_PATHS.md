@@ -18,11 +18,11 @@ related:
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/evidence-first.md
   - docs/doctrine/ai-as-assistant.md
-  - docs/doctrine/corrections-are-first-class.md
+  - docs/doctrine/corrections-first-class.md
   - docs/architecture/domain-placement-law.md
   - docs/domains/agriculture/README.md
   - docs/domains/agriculture/ARCHITECTURE.md
-  - docs/domains/agriculture/api-contracts.md
+  - docs/domains/agriculture/API_CONTRACTS.md
   - docs/domains/agriculture/policy/README.md
   - docs/domains/agriculture/runbooks/README.md
   - docs/domains/agriculture/sublanes/README.md
@@ -38,13 +38,16 @@ notes:
   - Path-only crosswalk; nothing here decides meaning, shape, policy, or release outcomes.
   - All Agriculture-specific paths are PROPOSED until the mounted repo confirms them.
   - External standards are NOT cited; this doc is grounded in project doctrine only.
+owning_root: docs/
+responsibility: "Documentation for Agriculture — Canonical Paths; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Agriculture — Canonical Paths
 
-> Where Agriculture-domain files belong inside the KFM responsibility-rooted monorepo, and where they must not be placed. A **path-only** crosswalk — meaning lives in [`ARCHITECTURE.md`](./ARCHITECTURE.md), wire shape lives in [`api-contracts.md`](./api-contracts.md), release outcomes live in [`policy/README.md`](./policy/README.md).
+> Where Agriculture-domain files belong inside the KFM responsibility-rooted monorepo, and where they must not be placed. A **path-only** crosswalk — meaning lives in [`ARCHITECTURE.md`](./ARCHITECTURE.md), wire shape lives in [`api-contracts.md`](API_CONTRACTS.md), release outcomes live in [`policy/README.md`](./policy/README.md).
 
 [![Status: draft](https://img.shields.io/badge/status-draft-yellow)](#sec-3-truth-posture)
 [![Contract: v3.0.0](https://img.shields.io/badge/contract-v3.0.0-blue)](../../doctrine/ai-build-operating-contract.md)
@@ -61,7 +64,7 @@ notes:
 > [!IMPORTANT]
 > **What this doc is — and what it is not.** This is the **placement** doctrine for Agriculture files: *where* a file goes once you know what it is. It does **not** decide:
 > - what an Agriculture object *means* → [`ARCHITECTURE.md`](./ARCHITECTURE.md) §4 + `contracts/domains/agriculture/`,
-> - the *machine shape* of an Agriculture envelope or DTO → [`api-contracts.md`](./api-contracts.md) §5 + `schemas/contracts/v1/domains/agriculture/`,
+> - the *machine shape* of an Agriculture envelope or DTO → [`api-contracts.md`](API_CONTRACTS.md) §5 + `schemas/contracts/v1/domains/agriculture/`,
 > - whether something can be *published* → [`policy/README.md`](./policy/README.md) + `policy/domains/agriculture/`,
 > - what is *true* about a crop, field, suitability score, or aggregation → `data/proofs/...` (`EvidenceBundle`s referenced from canonical records).
 > Reach for the right sibling doc when the question is not "where does this go?".
@@ -125,7 +128,7 @@ This document MUST obey the doctrinal stack below, in order. A lower row cannot 
 | Finite policy outcomes; sensitive lanes default to `DENY`. | [`policy-aware.md`](../../doctrine/policy-aware.md) | **CONFIRMED doctrine** |
 | `EvidenceBundle` outranks generated language; cite-or-abstain is the default truth posture. | [`evidence-first.md`](../../doctrine/evidence-first.md) | **CONFIRMED doctrine** |
 | AI is interpretive, never root truth; `AIReceipt` mandatory at Focus Mode. | [`ai-as-assistant.md`](../../doctrine/ai-as-assistant.md) | **CONFIRMED doctrine** |
-| Corrections are first-class; `CorrectionNotice` + `RollbackCard` lineage preserved. | [`corrections-are-first-class.md`](../../doctrine/corrections-are-first-class.md) | **CONFIRMED doctrine** |
+| Corrections are first-class; `CorrectionNotice` + `RollbackCard` lineage preserved. | [`corrections-are-first-class.md`](../../doctrine/corrections-first-class.md) | **CONFIRMED doctrine** |
 
 ### 2.1 RFC 2119 conformance
 
@@ -169,7 +172,7 @@ CONFIRMED doctrine / PROPOSED implementation. The Agriculture domain governs:
 
 > Crop observations, field candidates, crop rotation, yield observations, irrigation context, conservation-practice context, soil-crop suitability, agricultural-economy observations, supply-chain nodes, drought and pest stress indicators, and **aggregation receipts** — with public-safe products and source-rights-respecting joins. `[CONFIRMED — DOM-AG; ENCY §7.7; Atlas §9.]`
 
-The full architectural breakdown — object families, bounded context, source-role anti-collapse, sublane decomposition, cross-lane edges, sensitivity tiers, and governed AI behavior — lives in [`ARCHITECTURE.md`](./ARCHITECTURE.md). The wire-level envelope and DTO shapes live in [`api-contracts.md`](./api-contracts.md). This document touches those questions only insofar as they affect *placement*.
+The full architectural breakdown — object families, bounded context, source-role anti-collapse, sublane decomposition, cross-lane edges, sensitivity tiers, and governed AI behavior — lives in [`ARCHITECTURE.md`](./ARCHITECTURE.md). The wire-level envelope and DTO shapes live in [`api-contracts.md`](API_CONTRACTS.md). This document touches those questions only insofar as they affect *placement*.
 
 Explicitly **not owned** by Agriculture (relevant to placement choices):
 
@@ -264,7 +267,7 @@ The table below is the **PROPOSED realization** of Directory Rules §12 for the 
 
 | Responsibility | Canonical Agriculture path (PROPOSED) | Owns / contains | Rule |
 |---|---|---|---|
-| Human-facing doctrine | `docs/domains/agriculture/` (incl. `README.md`, [`ARCHITECTURE.md`](./ARCHITECTURE.md), [`api-contracts.md`](./api-contracts.md), [`policy/README.md`](./policy/README.md), [`runbooks/README.md`](./runbooks/README.md), [`sublanes/README.md`](./sublanes/README.md), [`sublanes/cropland.md`](./sublanes/cropland.md)) | Domain README, architectural contract, wire-level contract, sibling aspect READMEs, dossier crosswalks, runbooks. | DIRRULES §§3, 12 |
+| Human-facing doctrine | `docs/domains/agriculture/` (incl. `README.md`, [`ARCHITECTURE.md`](./ARCHITECTURE.md), [`api-contracts.md`](API_CONTRACTS.md), [`policy/README.md`](./policy/README.md), [`runbooks/README.md`](./runbooks/README.md), [`sublanes/README.md`](./sublanes/README.md), [`sublanes/cropland.md`](./sublanes/cropland.md)) | Domain README, architectural contract, wire-level contract, sibling aspect READMEs, dossier crosswalks, runbooks. | DIRRULES §§3, 12 |
 | Object meaning (semantic Markdown) | `contracts/domains/agriculture/` | Definitions for `CropObservation`, `FieldCandidate`, `CropRotation`, `YieldObservation`, `IrrigationLink`, `ConservationPractice`, `SoilCropSuitability`, `AgriculturalEconomyObservation`, `SupplyChainNode`, `DroughtStressIndicator`, `PestStressIndicator`, `AggregationReceipt`. **No `.schema.json` files here.** | DIRRULES §§3, 6.3, 12; DOM-AG; ENCY §7.7 |
 | Machine shape (JSON Schema) | `schemas/contracts/v1/domains/agriculture/` | JSON Schemas for the object families above; validator-facing shape. Pinned to `contract_version = "3.0.0"` where applicable. | DIRRULES §§5, 12, 13.1 (ADR-0001 canonical schema home) |
 | Receipt schemas (cross-cutting; Agriculture is a primary citer) | `schemas/contracts/v1/receipts/` (PROPOSED home; ADR-S-03 pending) | `AggregationReceipt`, `RedactionReceipt`, `GENERATED_RECEIPT`, `RunReceipt`, `AIReceipt`. | DIRRULES §§5, 12; operating contract §34 + §47 |
@@ -549,10 +552,10 @@ When you are about to add or move an Agriculture-domain file, walk this five-ste
 | **OQ-AG-CP-06** | Whether `apps/api/` and `apps/governed-api/` co-exist for Agriculture endpoints. | API owner | Mounted-repo inspection + ADR. `[DIRRULES §18]` |
 | **OQ-AG-CP-07** | NASS / QuickStats / Crop Progress activation, source-role assignments, and policy-bundle filenames in `policy/domains/agriculture/`. | Source steward + Policy steward | Mounted-repo files, registry entries, tests, emitted artifacts. `[DOM-AG §N; ENCY]` |
 | **OQ-AG-CP-08** | Kansas Mesonet, HLS-VI, SMAP, USCRN, SCAN product term and rights validation. | Source steward + Rights-holder rep | Source registry entries; rights review records. `[DOM-AG §N]` |
-| **OQ-AG-CP-09** | Agriculture API route name(s), DTO names, and Layer Manifest registry entries. | API owner | Mounted-repo inspection of `apps/governed-api/` and `data/registry/layers/`. `[DOM-AG §J]` Resolves alongside [`api-contracts.md`](./api-contracts.md) OQ-AG-API-01 / -05. |
+| **OQ-AG-CP-09** | Agriculture API route name(s), DTO names, and Layer Manifest registry entries. | API owner | Mounted-repo inspection of `apps/governed-api/` and `data/registry/layers/`. `[DOM-AG §J]` Resolves alongside [`api-contracts.md`](API_CONTRACTS.md) OQ-AG-API-01 / -05. |
 | **OQ-AG-CP-10** | Whether a layer-internal manifest convention under `data/published/layers/agriculture/<layer>/manifest.*` exists in addition to `release/manifests/`. | Release steward | ADR or mounted-repo inspection. `[DIRRULES §18]` |
 | **OQ-AG-CP-11** *(v2)* | Whether `docs/runbooks/agriculture/` (subfolder, Pattern A) or `docs/runbooks/agriculture_<topic>.md` (flat, Pattern B) is canonical. | Docs steward | Directory Rules OPEN-DR-02; ADR. |
-| **OQ-AG-CP-12** *(v2)* | Whether `schemas/contracts/v1/receipts/` is the canonical home for `AggregationReceipt` and `GENERATED_RECEIPT.json`, or whether they live under per-class subdirs. | Contract / schema steward | ADR-S-03. Resolves alongside [`api-contracts.md`](./api-contracts.md) OQ-AG-API-07 / -15. |
+| **OQ-AG-CP-12** *(v2)* | Whether `schemas/contracts/v1/receipts/` is the canonical home for `AggregationReceipt` and `GENERATED_RECEIPT.json`, or whether they live under per-class subdirs. | Contract / schema steward | ADR-S-03. Resolves alongside [`api-contracts.md`](API_CONTRACTS.md) OQ-AG-API-07 / -15. |
 | **OQ-AG-CP-13** *(v2)* | Whether `policy/sensitivity/agriculture/` + `policy/release/agriculture/` are siblings of `policy/domains/agriculture/`, or substructures within it. | Policy steward | ADR-AG-POL-01 (PROPOSED). |
 
 [Back to top](#top)
@@ -690,13 +693,13 @@ A repository implementation of this document conforms when **all** of the follow
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md)
 - [`docs/doctrine/evidence-first.md`](../../doctrine/evidence-first.md)
 - [`docs/doctrine/ai-as-assistant.md`](../../doctrine/ai-as-assistant.md)
-- [`docs/doctrine/corrections-are-first-class.md`](../../doctrine/corrections-are-first-class.md)
+- [`docs/doctrine/corrections-are-first-class.md`](../../doctrine/corrections-first-class.md)
 
 ### 19.3 Agriculture sibling docs
 
 - [`docs/domains/agriculture/README.md`](./README.md) — domain landing.
 - [`docs/domains/agriculture/ARCHITECTURE.md`](./ARCHITECTURE.md) — architectural contract (meaning / identity / lifecycle / trust posture).
-- [`docs/domains/agriculture/api-contracts.md`](./api-contracts.md) — wire-level interface contract.
+- [`docs/domains/agriculture/api-contracts.md`](API_CONTRACTS.md) — wire-level interface contract.
 - [`docs/domains/agriculture/policy/README.md`](./policy/README.md) — policy aspect index.
 - [`docs/domains/agriculture/runbooks/README.md`](./runbooks/README.md) — runbooks aspect index.
 - [`docs/domains/agriculture/sublanes/README.md`](./sublanes/README.md) — 5-axis sublane decomposition.

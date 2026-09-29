@@ -15,8 +15,8 @@ related:
   - docs/domains/habitat/CANONICAL_PATHS.md
   - docs/architecture/contract-schema-policy-split.md
   - docs/doctrine/directory-rules.md
-  - docs/adr/ADR-0001-schema-home.md
-  - ai-build-operating-contract.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - docs/doctrine/ai-build-operating-contract.md
   - contracts/domains/habitat/
   - schemas/contracts/v1/domains/habitat/
   - policy/domains/habitat/
@@ -27,6 +27,9 @@ notes:
   - .schema.json files NEVER live under contracts/ — they live under the canonical schema home (slug CONFLICTED, see §4).
   - "CONFLICTED schema-home: ADR-0001 OPEN per Atlas ADR-S-01 (confirm-or-amend; VB-11-01 NEEDS VERIFICATION); segmented .../domains/habitat/ (DIRRULES §12) vs flat .../habitat/ (Atlas §24.13) unresolved. See §4."
   - All repo-path claims are PROPOSED until verified against a mounted repo.
+owning_root: docs/
+responsibility: "Documentation for Habitat Domain — Contracts Index; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Habitat Domain — Contracts Index
@@ -50,7 +53,7 @@ notes:
 
 ## Contents
 
-1. [What `contracts/` owns — and what it does not](#1-what-contracts-owns--what-it-does-not)
+1. What `contracts/` owns — and what it does not
 2. [Authority basis](#2-authority-basis)
 3. [Contract-layer map](#3-contract-layer-map)
 4. [Where each family lives (the four-layer split)](#4-where-each-family-lives-the-four-layer-split)

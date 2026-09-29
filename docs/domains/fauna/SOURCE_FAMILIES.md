@@ -24,6 +24,9 @@ notes:
   # ALL rights / terms / cadence values are NEEDS VERIFICATION. eBird EBD carries restricted-use republication terms.
   # Canonical role enum (observed | regulatory | modeled | aggregate | administrative | candidate | synthetic) is defined in SOURCES.md §4.
   # Doctrine-adjacent doc; CONTRACT_VERSION = "3.0.0" pinned per AI Build Operating Contract v3.0.
+owning_root: docs/
+responsibility: "Documentation for Fauna Domain — Source Family Reference; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -58,18 +61,18 @@ notes:
 - [1. How to read a dossier](#1-how-to-read-a-dossier)
 - [2. Family overview](#2-family-overview)
 - [3. Steward & authority families](#3-steward--authority-families)
-  - [3.1 KDWP-like steward sources](#31-kdwp-like-steward-sources)
-  - [3.2 USFWS ECOS / IPaC](#32-usfws-ecos--ipac)
-  - [3.3 NatureServe / heritage](#33-natureserve--heritage)
+  - 3.1 KDWP-like steward sources
+  - 3.2 USFWS ECOS / IPaC
+  - 3.3 NatureServe / heritage
 - [4. Aggregator & observation families](#4-aggregator--observation-families)
-  - [4.1 GBIF](#41-gbif)
-  - [4.2 eBird (EBD)](#42-ebird-ebd)
-  - [4.3 iNaturalist](#43-inaturalist)
-  - [4.4 iDigBio / Symbiota / in-state collections](#44-idigbio--symbiota--in-state-collections)
-  - [4.5 BISON-like aggregators](#45-bison-like-aggregators)
+  - 4.1 GBIF
+  - 4.2 eBird (EBD)
+  - 4.3 iNaturalist
+  - 4.4 iDigBio / Symbiota / in-state collections
+  - 4.5 BISON-like aggregators
 - [5. Invasive & monitoring families](#5-invasive--monitoring-families)
-  - [5.1 EDDMapS / invasive feeds](#51-eddmaps--invasive-feeds)
-  - [5.2 Agency monitoring / eDNA / acoustic / telemetry](#52-agency-monitoring--edna--acoustic--telemetry)
+  - 5.1 EDDMapS / invasive feeds
+  - 5.2 Agency monitoring / eDNA / acoustic / telemetry
 - [6. Context layers (not fauna truth)](#6-context-layers-not-fauna-truth)
 - [7. Dedupe and UI-weight discipline](#7-dedupe-and-ui-weight-discipline)
 - [8. Open questions register](#8-open-questions-register)

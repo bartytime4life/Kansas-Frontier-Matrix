@@ -14,35 +14,31 @@ related:
   - docs/doctrine/truth-posture.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/lifecycle-law.md
-  - docs/domains/archaeology/README.md                  # PROPOSED — link target
+  - docs/domains/archaeology/README.md
   - docs/domains/archaeology/OBJECT_FAMILIES.md
   - docs/domains/archaeology/PIPELINE.md
   - docs/domains/archaeology/PRESERVATION_MATRIX.md
   - docs/domains/archaeology/PUBLICATION_AND_POLICY.md
   - docs/domains/archaeology/RELEASE_INDEX.md
   - docs/domains/archaeology/SENSITIVITY.md
-  - docs/domains/archaeology/SOURCES.md                  # CONFIRMED draft sibling — source-family catalogue
-  - docs/domains/archaeology/CULTURAL_REVIEW.md          # PROPOSED — link target
-  - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md           # PROPOSED — link target
-  - docs/standards/SMART_SYNC.md                         # PROPOSED — Pass 10 §C3 home
-  - docs/runbooks/archaeology/source_refresh.md          # PROPOSED — per-family refresh
-  - docs/runbooks/archaeology/sovereignty_review.md      # PROPOSED — SENSITIVITY §18
-  - docs/adr/ADR-0001-schema-home.md
-  - docs/adr/ADR-archaeology-source-roles.md             # PROPOSED — pairs with Atlas v1.1 §24.12 ADR-S-04
-  - docs/adr/ADR-archaeology-exact-location-policy.md    # PROPOSED — pairs with OQ-ARCH-S-01 / RI-02 / PIPE-03 / PM-03
-  - docs/registers/VERIFICATION_BACKLOG.md               # PROPOSED — aging admission backlog
-  - docs/registers/DRIFT_REGISTER.md                     # PROPOSED — drift between guide and YAML
-  - docs/registers/OVERRIDE_REGISTER.md                  # PROPOSED — KFM-P3-IDEA-0003
+  - docs/domains/archaeology/SOURCES.md
+  - docs/domains/archaeology/CULTURAL_REVIEW.md
+  - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
+  - docs/standards/SMART_SYNC.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - docs/adr/ADR-archaeology-source-roles.md
+  - docs/adr/ADR-archaeology-exact-location-policy.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+  - docs/registers/DRIFT_REGISTER.md
   - data/registry/sources/archaeology/sources.yaml
   - data/registry/sources/archaeology/source_roles.yaml
   - data/registry/sources/archaeology/sensitivity_policies.yaml
   - data/registry/sources/archaeology/rights_profiles.yaml
   - data/registry/sources/archaeology/steward_authorities.yaml
   - data/published/layers/archaeology/layer_registry.yaml
-  - schemas/contracts/v1/source/source-descriptor.json   # PROPOSED — canonical schema home
-  - schemas/contracts/v1/source/source-activation-decision.json   # PROPOSED
-  - tools/ingest/watchers/                               # PROPOSED — watcher home
-  - control_plane/source_authority_register.yaml         # PROPOSED — reviewer authority register
+  - schemas/contracts/v1/source/source-descriptor.json
+  - schemas/contracts/v1/source/source-activation-decision.json
+  - control_plane/source_authority_register.yaml
 tags: [kfm, archaeology, registry, sources, governance, evidence, sensitivity, doctrine, admission]
 notes:
   - CONTRACT_VERSION pinned to "3.0.0".
@@ -50,6 +46,9 @@ notes:
   - All listed candidate source families are PROPOSED / NEEDS VERIFICATION.
   - Exact site geometry is DENY by default; cultural / sovereignty / steward review governs disclosure.
   - This file is the **human guide** to the source registry; SOURCES.md is the **source-family catalogue**. The two are companion docs and MUST agree.
+owning_root: docs/
+responsibility: "Documentation for Archaeology Source Registry — Human Guide; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Archaeology Source Registry — Human Guide
@@ -891,15 +890,15 @@ the sibling docs.
 
 **Runbooks and registers**
 
-- [`docs/runbooks/archaeology/source_refresh.md`](../../runbooks/archaeology/source_refresh.md) — *(PROPOSED — link target)* per-family source refresh runbook
-- [`docs/runbooks/archaeology/sovereignty_review.md`](../../runbooks/archaeology/sovereignty_review.md) — *(PROPOSED — link target)* sovereignty review workflow
+- `docs/runbooks/archaeology/source_refresh.md` (not present) — *(PROPOSED — link target)* per-family source refresh runbook
+- `docs/runbooks/archaeology/sovereignty_review.md` (not present) — *(PROPOSED — link target)* sovereignty review workflow
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — *(PROPOSED — link target)* aging admission backlog
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — *(PROPOSED — link target)* drift between this guide, `SOURCES.md`, and the YAML
-- [`docs/registers/OVERRIDE_REGISTER.md`](../../registers/OVERRIDE_REGISTER.md) — *(PROPOSED — link target)* override register (KFM-P3-IDEA-0003)
+- `docs/registers/OVERRIDE_REGISTER.md` (not present) — *(PROPOSED — link target)* override register (KFM-P3-IDEA-0003)
 
 **ADRs**
 
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — schema-home convention
+- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home convention
 - [`docs/adr/ADR-archaeology-source-roles.md`](../../adr/ADR-archaeology-source-roles.md) — *(TODO — pairs with Atlas v1.1 §24.12 ADR-S-04 source-role vocabulary; resolves `OQ-ARCH-SR-04`)*
 - [`docs/adr/ADR-archaeology-exact-location-policy.md`](../../adr/ADR-archaeology-exact-location-policy.md) — *(TODO — pairs with `OQ-ARCH-SR-03`)*
 
