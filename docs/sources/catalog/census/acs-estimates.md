@@ -10,10 +10,7 @@ updated: 2026-05-20
 policy_label: public
 related:
   - docs/sources/catalog/census/README.md
-  - docs/sources/catalog/census/IDENTITY.md
-  - docs/sources/catalog/census/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/census/decennial-census.md
-  - docs/sources/catalog/census/tiger.md
+  - docs/sources/catalog/census/tiger-line.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/_examples/stac-item-example.json
   - docs/doctrine/directory-rules.md
@@ -22,6 +19,9 @@ notes:
   - "PROPOSED product-page scaffold; sibling-link presence verified in Claude Code session."
   - "PROPOSED content sourced from Pass 23/32 atlas (Frontier Matrix domain D/E; Source-Role Anti-Collapse Register §24.1.1), Pass 10 (C4-01, C6-05), KFM-P9-FEAT-0008; descriptor fields intentionally not restated here."
   - "ACS is doctrinally an Aggregate source-role with Margin-of-Error as evidence — see top-of-doc WARNING callouts."
+owning_root: docs/
+responsibility: "Documentation for American Community Survey (ACS) Estimates; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -101,8 +101,8 @@ CONFIRMED Atlas placement (Domains v1.1, Frontier Matrix domain D): **"Census de
 
 PROPOSED — ACS sits in a dense thicket of demographic products; bounding it is critical:
 
-- **Not the decennial census.** The decennial is a constitutionally-mandated **enumeration** (count) released every 10 years; ACS is a continuous **sample survey**. They are separate sources with different source-role behavior — see [Decennial Census](./decennial-census.md).
-- **Not TIGER/Line.** TIGER provides the *boundary geometry* (tracts, block groups, places, counties, ZCTAs); ACS provides *attribute values* on those geographies. They are joined by GEOID, not substituted — see [TIGER](./tiger.md).
+- **Not the decennial census.** The decennial is a constitutionally-mandated **enumeration** (count) released every 10 years; ACS is a continuous **sample survey**. They are separate sources with different source-role behavior — see Decennial Census (not present).
+- **Not TIGER/Line.** TIGER provides the *boundary geometry* (tracts, block groups, places, counties, ZCTAs); ACS provides *attribute values* on those geographies. They are joined by GEOID, not substituted — see [TIGER](tiger-line.md).
 - **Not a per-household / per-person record.** PROPOSED (Atlas §24.1.1): ACS published estimates are **aggregates with irreversible loss of individual record fidelity** — disclosure controls and statistical methods prevent re-identification. The Public Use Microdata Sample (PUMS) is a separately-governed source not covered here.
 - **Not a census count.** Even at low MOE, an ACS value is an **estimate**, not a count. Conflating the two violates Atlas §24.1.1.
 - **Not an observation.** PROPOSED — never treated as Observed. If a downstream consumer needs household-level evidence, ACS is not the right source.
@@ -121,8 +121,8 @@ See [`data/registry/sources/`](../../../../data/registry/sources/) for the autho
 |---|---|---|---|
 | `SourceDescriptor` | [`data/registry/sources/`](../../../../data/registry/sources/) | Identity, **source role = Aggregate**, rights, cadence, vintage pin, variable allow-list, sensitivity | **No** — pointer only |
 | Family overview & sibling links | [`./README.md`](./README.md) | Family-level orientation for `census` | **No** — see family README |
-| Collection identity rules | [`./IDENTITY.md`](./IDENTITY.md) | `kfm-<org>-<product>` pattern, namespace | **No** — see IDENTITY |
-| Rights & sensitivity mapping | [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) | Tiering, small-cell-suppression, living-person posture | **No** — see map |
+| Collection identity rules | `./IDENTITY.md` (not present) | `kfm-<org>-<product>` pattern, namespace | **No** — see IDENTITY |
+| Rights & sensitivity mapping | `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) | Tiering, small-cell-suppression, living-person posture | **No** — see map |
 | Contract shape | `schemas/contracts/v1/source/` and `schemas/contracts/v1/domains/frontier-matrix/` | JSON-schema for descriptor + `Population Observation` / `Economic Observation` / `County-Year Panel` shapes | **No** — per ADR-0001 |
 
 PROPOSED source-role posture: **Aggregate** (Atlas §24.1.1 names "Census tract aggregates" as the canonical Aggregate example). Even when joined to TIGER geometry, ACS values remain Aggregates — the geometry does not promote them to Observations.
@@ -175,7 +175,7 @@ PROPOSED. The catalog projection set this product participates in. Lanes follow 
 
 ## Collection identity
 
-- PROPOSED Collection id pattern: `kfm-<org>-<product>` — see [`IDENTITY.md`](./IDENTITY.md) for the canonical rule.
+- PROPOSED Collection id pattern: `kfm-<org>-<product>` — see `IDENTITY.md` (not present) for the canonical rule.
 - PROPOSED namespace: `kfm:` — *see [OPEN-DSC-03](#open-questions); Pass-10 C4-01 records the `kfm:` vs `ks-kfm:` choice as an unresolved namespace question.*
 - PROPOSED: one Collection per **(vintage, release-type)** pair (e.g., `acs-1yr-2024`, `acs-5yr-2020-2024`). NEEDS VERIFICATION.
 - Asset roles (estimate-table, moe-table, allow-listed-variables, aggregation-receipt, geoid-crosswalk, etc.): NEEDS VERIFICATION — confirm against `schemas/contracts/v1/source/` and `schemas/contracts/v1/domains/frontier-matrix/`.
@@ -228,7 +228,7 @@ PROPOSED. ACS itself ships *no geometry* — it ships **tables keyed by GEOID**.
 
 - **CRS** — Inherited from the TIGER join target. PROPOSED canonical: `EPSG:5070` for overlap SQL (KFM-P26-PROG-0027) where ACS-on-TIGER products are intersected with other layers; the ACS tables themselves are geometry-free.
 - **GEOID stability** — GEOIDs are **vintage-bound**: a 2020-vintage tract `20155002400` is not the same polygon as a 2010-vintage tract with the same GEOID. PROPOSED gate: ACS estimates only join to TIGER geometry of the **same vintage family**; cross-vintage joins require a documented crosswalk.
-- **Geometry comes from elsewhere** — PROPOSED: this product page does not redefine geometry; consult [TIGER](./tiger.md) for the boundary product.
+- **Geometry comes from elsewhere** — PROPOSED: this product page does not redefine geometry; consult [TIGER](tiger-line.md) for the boundary product.
 
 [Back to top](#top)
 
@@ -312,7 +312,7 @@ CONFIRMED reference (Pass-10 C6-05): KFM doctrine on differential privacy is *"D
 
 ## Rights and sensitivity
 
-NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
+NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not restate policy here.**
 
 PROPOSED sensitivity posture for this product:
 
@@ -469,10 +469,10 @@ These are the KFM atlas cards from which the PROPOSED content above is sourced. 
 ## Related docs
 
 - [`docs/sources/catalog/census/README.md`](./README.md) — `census` family landing page.
-- [`docs/sources/catalog/census/IDENTITY.md`](./IDENTITY.md) — Collection-id and namespace rules for the family.
-- [`docs/sources/catalog/census/RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — Rights / sensitivity tiering for `census`.
-- [`docs/sources/catalog/census/decennial-census.md`](./decennial-census.md) — Sibling: decennial enumeration (different source-role; not a survey estimate).
-- [`docs/sources/catalog/census/tiger.md`](./tiger.md) — Sibling: TIGER/Line boundary geometry (ACS joins to this).
+- `docs/sources/catalog/census/IDENTITY.md` (not present) — Collection-id and namespace rules for the family.
+- `docs/sources/catalog/census/RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — Rights / sensitivity tiering for `census`.
+- `docs/sources/catalog/census/decennial-census.md` (not present) — Sibling: decennial enumeration (different source-role; not a survey estimate).
+- [`docs/sources/catalog/census/tiger.md`](tiger-line.md) — Sibling: TIGER/Line boundary geometry (ACS joins to this).
 - _TODO_ — `docs/sources/catalog/census/pums.md` — PUMS microdata (separately-governed sibling).
 - [`docs/sources/catalog/README.md`](../../README.md) — Catalog of source families.
 - [`docs/sources/catalog/_examples/stac-item-example.json`](../_examples/stac-item-example.json) — Illustrative STAC + `kfm:provenance` shape.

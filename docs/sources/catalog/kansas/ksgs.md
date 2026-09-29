@@ -13,8 +13,6 @@ related:
   - docs/sources/catalog/kansas/README.md
   - docs/sources/catalog/kansas/kcc-oil-gas-reg.md
   - docs/sources/catalog/kansas/kdwp.md
-  - docs/sources/catalog/kansas/kdhe.md
-  - docs/sources/catalog/kansas/kda.md
   - docs/sources/catalog/kansas/kansas-mesonet.md
   - docs/sources/catalog/kansas/kansas-state-archives.md
   - docs/sources/catalog/kansas/kansas-memory.md
@@ -34,15 +32,13 @@ related:
   - docs/doctrine/truth-posture.md
   - docs/domains/geology/README.md
   - docs/domains/hydrology/README.md
-  - docs/domains/environment/README.md
   - docs/standards/SENSITIVITY_RUBRIC.md
   - docs/registers/AUTHORITY_LADDER.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - control_plane/source_authority_register.yaml
   - schemas/contracts/v1/source/source_descriptor.schema.json
-  - connectors/kansas/kgs/
   - data/registry/sources/
   - policy/sensitivity/
   - policy/rights/
@@ -81,6 +77,9 @@ notes:
   - >-
     `connectors/kansas/` lane is CONFIRMED (at commit
     `b6a27916bbb9e07cbf3752870c867476e1e094e7`) per Directory Rules v1.2 §7.3.
+owning_root: docs/
+responsibility: "Documentation for Kansas Geological Survey (KGS) — Source Catalog Entry; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas Geological Survey (KGS) — Source Catalog Entry
@@ -447,8 +446,8 @@ These items must be resolved before relying on this entry to drive admission or 
 - [`./README.md`](./README.md) — `docs/sources/catalog/kansas/` family README v0.2 (lists this brief; confirms `connectors/kansas/` as §7.3 canonical at commit `b6a27916...`)
 - [`./kcc-oil-gas-reg.md`](./kcc-oil-gas-reg.md) — **sibling KCC oil-and-gas regulatory page (v0.2)** — parallel-but-distinct authority for the oil-and-gas data lane
 - [`./kdwp.md`](./kdwp.md) — sibling Kansas-first authority per `C7-10` (regulatory framing complement)
-- [`./kdhe.md`](./kdhe.md) — **joint-program partner** for WWC5 (PROPOSED sibling page)
-- [`./kda.md`](./kda.md) — joint-program partner for WIMAS via KDA-DWR (PROPOSED sibling page)
+- `./kdhe.md` (not present) — **joint-program partner** for WWC5 (PROPOSED sibling page)
+- `./kda.md` (not present) — joint-program partner for WIMAS via KDA-DWR (PROPOSED sibling page)
 - [`./kansas-mesonet.md`](./kansas-mesonet.md) — waterbody-crosswalk partner per `KFM-P2-PROG-0017` (v0.2 sibling)
 - [`./kansas-state-archives.md`](./kansas-state-archives.md) — KSHS-umbrella brief (sibling Kansas-first authority)
 - [`./kansas-memory.md`](./kansas-memory.md) — sister KSHS surface
@@ -467,8 +466,8 @@ These items must be resolved before relying on this entry to drive admission or 
 - [`../../../doctrine/truth-posture.md`](../../../doctrine/truth-posture.md) — cite-or-abstain
 - [`../../../domains/geology/README.md`](../../../domains/geology/README.md) — primary consuming domain
 - [`../../../domains/hydrology/README.md`](../../../domains/hydrology/README.md) — secondary consuming domain via WWC5 / Geoportal
-- [`../../../domains/environment/README.md`](../../../domains/environment/README.md) — adjacent consuming domain
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home convention
+- `../../../domains/environment/README.md` (not present) — adjacent consuming domain
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home convention
 - [`../../../registers/AUTHORITY_LADDER.md`](../../../registers/AUTHORITY_LADDER.md) — authority order
 - [`../../../registers/DRIFT_REGISTER.md`](../../../registers/DRIFT_REGISTER.md) — drift filing
 - [`../../../../control_plane/source_authority_register.yaml`](../../../../control_plane/source_authority_register.yaml) — machine-readable register

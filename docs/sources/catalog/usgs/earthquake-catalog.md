@@ -11,9 +11,7 @@ policy_label: public
 related:
   - docs/sources/catalog/usgs.md
   - docs/sources/catalog/usgs/README.md
-  - docs/sources/catalog/usgs/IDENTITY.md
-  - docs/sources/catalog/usgs/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/usgs/usgs-3dep-elevation.md
+  - docs/sources/catalog/usgs/3dep-elevation.md
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
@@ -21,8 +19,6 @@ related:
   - docs/standards/SENSITIVITY_RUBRIC.md
   - docs/standards/STAC.md
   - docs/runbooks/hazards/SOURCE_REFRESH_RUNBOOK.md
-  - data/registry/sources/usgs/
-  - policy/sources/usgs/
   - policy/sensitivity/hazards/
   - schemas/contracts/v1/source/
   - schemas/contracts/v1/hazards/
@@ -42,6 +38,9 @@ notes:
   - "Real-time + historical cadence — the only product in this family with a continuous near-real-time stream. Drives §7 update_time discipline and §13 watcher design."
   - "Event versioning is binding: USGS events refine over hours/days/weeks after origin; KFM stores immutable per-update snapshots, never overlays. See §7 and §8.2."
   - "Geographic scope is global, not Kansas-AOI-bounded. Earthquakes outside Kansas (e.g., Oklahoma induced seismicity) may be material to Kansas; AOI policy must be cadence-aware. See Q-7."
+owning_root: docs/
+responsibility: "Documentation for USGS Earthquakes; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -67,10 +66,10 @@ notes:
 **Status:** `PROPOSED — scaffold filled` &nbsp;·&nbsp; **Doc version:** `v0.2` &nbsp;·&nbsp; **Family:** [`usgs`](./README.md) &nbsp;·&nbsp; **Last reviewed:** 2026-05-23
 
 > [!IMPORTANT]
-> **This page is a pointer.** Authoritative descriptor fields live in [`data/registry/sources/usgs/`](../../../../data/registry/sources/usgs/). Rights, sensitivity, and induced-vs-natural attribution policy live in [`policy/sources/usgs/`](../../../../policy/sources/usgs/) and [`policy/sensitivity/hazards/`](../../../../policy/sensitivity/hazards/), summarized at the family level in [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not duplicate descriptor or policy content on this product page.**
+> **This page is a pointer.** Authoritative descriptor fields live in `data/registry/sources/usgs/` (not present). Rights, sensitivity, and induced-vs-natural attribution policy live in `policy/sources/usgs/` (not present) and [`policy/sensitivity/hazards/`](../../../../policy/sensitivity/hazards/), summarized at the family level in `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not duplicate descriptor or policy content on this product page.**
 
 > [!CAUTION]
-> **Source-role discipline is unusually rich here.** A single USGS earthquake event ID carries (a) `observed` origin parameters that refine over time, (b) `modeled` PAGER/ShakeMap/focal-mechanism derivatives, and (c) `observed` crowdsourced DYFI reports. KFM derivatives that cite a PAGER loss estimate *as if it were a measured loss*, or a ShakeMap intensity *as if it were a recorded ground motion at every cell*, violate the source-role anti-collapse rule. See [§2.1](#21-sub-product-source-role-decomposition) and [§6](#6-source-role-posture-anti-collapse).
+> **Source-role discipline is unusually rich here.** A single USGS earthquake event ID carries (a) `observed` origin parameters that refine over time, (b) `modeled` PAGER/ShakeMap/focal-mechanism derivatives, and (c) `observed` crowdsourced DYFI reports. KFM derivatives that cite a PAGER loss estimate *as if it were a measured loss*, or a ShakeMap intensity *as if it were a recorded ground motion at every cell*, violate the source-role anti-collapse rule. See [§2.1](#21-sub-product-source-role-decomposition) and §6.
 
 ---
 
@@ -181,7 +180,7 @@ flowchart LR
 ## 2. Product identity within the family
 
 > [!NOTE]
-> This page is the **second** product page authored under the `usgs` source family (after [`usgs-3dep-elevation.md`](./usgs-3dep-elevation.md)). Family-wide concerns — authority, identity convention, rights/sensitivity map — live at the **family level** and are not restated here. The family catalog index lives at [`docs/sources/catalog/usgs.md`](../usgs.md).
+> This page is the **second** product page authored under the `usgs` source family (after [`usgs-3dep-elevation.md`](3dep-elevation.md)). Family-wide concerns — authority, identity convention, rights/sensitivity map — live at the **family level** and are not restated here. The family catalog index lives at [`docs/sources/catalog/usgs.md`](../usgs.md).
 
 | Attribute | Value | Status |
 |---|---|---|
@@ -216,7 +215,7 @@ Per Atlas §24.1.1 enum and the v1.1 family-catalog entry §5 row for `usgs-eart
 
 | If you want… | Use… | Not this page |
 |---|---|---|
-| **Terrain context** for an earthquake's location | [`usgs-3dep-elevation.md`](./usgs-3dep-elevation.md) | — |
+| **Terrain context** for an earthquake's location | [`usgs-3dep-elevation.md`](3dep-elevation.md) | — |
 | **Geologic-map context** (faults, formations) for an earthquake | `<PROPOSED> docs/sources/catalog/usgs/usgs-geologic-maps.md` | — |
 | **Building exposure / inventory** for damage modeling | `<PROPOSED> docs/sources/catalog/fema/hazus.md` or a state-DOT building inventory | — |
 | **State seismic networks** (Kansas Geological Survey, OGS Oklahoma) | `<PROPOSED> docs/sources/catalog/kgs/`, `<PROPOSED> docs/sources/catalog/ogs/` | — |
@@ -233,7 +232,7 @@ Per Atlas §24.1.1 enum and the v1.1 family-catalog entry §5 row for `usgs-eart
 
 ## 3. Source authority
 
-See [`data/registry/sources/usgs/`](../../../../data/registry/sources/usgs/) for the authoritative `SourceDescriptor`. **Do not duplicate descriptor fields here.** Descriptor canonical schema home is `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 — **NEEDS VERIFICATION** of exact filename.
+See `data/registry/sources/usgs/` (not present) for the authoritative `SourceDescriptor`. **Do not duplicate descriptor fields here.** Descriptor canonical schema home is `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 — **NEEDS VERIFICATION** of exact filename.
 
 Doctrinal anchors for this product:
 
@@ -398,7 +397,7 @@ This product is **heterogeneous in geometry** — different sub-products have di
 
 ## 9. Rights and sensitivity (pointer)
 
-**Do not restate policy here.** See [`policy/sensitivity/hazards/`](../../../../policy/sensitivity/hazards/) and the family-level summary at [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md).
+**Do not restate policy here.** See [`policy/sensitivity/hazards/`](../../../../policy/sensitivity/hazards/) and the family-level summary at `RIGHTS-AND-SENSITIVITY-MAP.md` (not present).
 
 ### 9.1 T0 default with CARE awareness
 
@@ -481,7 +480,7 @@ This product is **heterogeneous in geometry** — different sub-products have di
 | Surface | Path (PROPOSED unless noted) | Status |
 |---|---|---|
 | `SourceDescriptor` semantic + schema | [`contracts/source/`](../../../../contracts/source/) · [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) | **PROPOSED** canonical homes per Directory Rules §7.4 / ADR-0001. |
-| `SeismicEvent` contract | [`contracts/data/hazards/`](../../../../contracts/data/hazards/) | **PROPOSED** — new object class. |
+| `SeismicEvent` contract | `contracts/data/hazards/` (not present) | **PROPOSED** — new object class. |
 | `SeismicEvent` schema | [`schemas/contracts/v1/hazards/`](../../../../schemas/contracts/v1/hazards/) | **PROPOSED**. |
 | `Origin` / `Magnitude` / `FocalMechanism` sub-schemas | [`schemas/contracts/v1/hazards/seismic/`](../../../../schemas/contracts/v1/hazards/) | **PROPOSED**. |
 | `ShakeMapItem` schema | [`schemas/contracts/v1/hazards/`](../../../../schemas/contracts/v1/hazards/) | **PROPOSED**. |
@@ -521,7 +520,7 @@ This product is **heterogeneous in geometry** — different sub-products have di
 
 ## 14. Example
 
-*Illustrative only — not authoritative. A minimal STAC + `kfm:provenance` shape lives at [`_examples/stac-item-example.json`](./_examples/stac-item-example.json) (file presence **NEEDS VERIFICATION**); an event-specific example sketch belongs at `_examples/stac-earthquake-event-example.json` (PROPOSED).*
+*Illustrative only — not authoritative. A minimal STAC + `kfm:provenance` shape lives at `_examples/stac-item-example.json` (not present) (file presence **NEEDS VERIFICATION**); an event-specific example sketch belongs at `_examples/stac-earthquake-event-example.json` (PROPOSED).*
 
 <details>
 <summary><b>Click to expand — minimal STAC Item sketch for a KFM-derived earthquake event snapshot (illustrative)</b></summary>

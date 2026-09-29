@@ -12,7 +12,6 @@ policy_label: public
 related:
   - docs/sources/catalog/kansas/README.md
   - docs/sources/catalog/kansas/kbs.md
-  - docs/sources/catalog/kansas/ksu-special-collections.md
   - docs/sources/catalog/kansas/ksu-research-extension.md
   - docs/sources/catalog/kansas/ku-nhm.md
   - docs/sources/catalog/kansas/fhsu-sternberg.md
@@ -37,13 +36,11 @@ related:
   - docs/registers/AUTHORITY_LADDER.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - schemas/contracts/v1/source/source_descriptor.schema.json
-  - connectors/kansas/ku-herbarium/
   - data/registry/sources/
   - policy/sensitivity/
   - policy/rights/
-  - tools/validators/flora_dwca_validator/
 tags: [kfm, sources, catalog, kansas, ku, kanu, mcgregor-herbarium, flora, biodiversity, dwc-a, ipt, c7-10, kfm-p2-idea-0019, kfm-p2-prog-0002]
 notes:
   - >-
@@ -89,6 +86,9 @@ notes:
   - >-
     `connectors/kansas/` lane is CONFIRMED (at commit
     `b6a27916bbb9e07cbf3752870c867476e1e094e7`) per Directory Rules v1.2 §7.3.
+owning_root: docs/
+responsibility: "Documentation for KU R. L. McGregor Herbarium (KANU) — Source Catalog Entry; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # KU R. L. McGregor Herbarium (KANU) — Source Catalog Entry
@@ -486,7 +486,7 @@ Because v0.1 placed the connector at `connectors/ku_herbarium/` (top-level, snak
 - [`./kbs.md`](./kbs.md) — **KBS-umbrella brief (v0.2)** — this dossier's parent; KBS NHI authority + KU McGregor Herbarium (KANU) observed
 - [`./ku-nhm.md`](./ku-nhm.md) — sibling Kansas-first biodiversity authority per `C7-10` (KU Biodiversity Institute / Natural History Museum, ~454k specimens per `C10-06`)
 - [`./fhsu-sternberg.md`](./fhsu-sternberg.md) — sibling in-state biodiversity collection
-- [`./ksu-special-collections.md`](./ksu-special-collections.md) — sibling K-State collections (PROPOSED; not the same institution but related Kansas land-grant)
+- `./ksu-special-collections.md` (not present) — sibling K-State collections (PROPOSED; not the same institution but related Kansas land-grant)
 - [`./ksu-research-extension.md`](./ksu-research-extension.md) — sibling K-State umbrella covering variety trials (cf. flora context via `KFM-P2-PROG-0002`)
 - [`./kdwp.md`](./kdwp.md) — sibling Kansas-first authority per `C7-10` (regulatory listings for rare-plant context per `KFM-P19-IDEA-0005`)
 - [`./khri.md`](./khri.md) — sibling Kansas-first authority per `C7-10`
@@ -507,7 +507,7 @@ Because v0.1 placed the connector at `connectors/ku_herbarium/` (top-level, snak
 - [`../../../standards/SENSITIVITY_RUBRIC.md`](../../../standards/SENSITIVITY_RUBRIC.md) — `C6-01` 0–5 rubric (PROPOSED in corpus)
 - [`../../../registers/AUTHORITY_LADDER.md`](../../../registers/AUTHORITY_LADDER.md) — authority order
 - [`../../../registers/DRIFT_REGISTER.md`](../../../registers/DRIFT_REGISTER.md) — drift filing
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home convention
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home convention
 - Pass-10 Idea Index — **`C7-10`** Kansas-First Domain Authorities (CONFIRMED — KBS NHI + KU Biodiversity Institute named); **`C10-06`** Biodiversity Stack (CONFIRMED — KU NHM ~454k specimens cited); **`C5-02`** default-deny promotion (CONFIRMED); **`C6-01`/`C6-02`** sensitivity rubric + named profiles (CONFIRMED); **`C7-01`** Wikidata; **`C7-02`** LCNAF; **`C7-07`** ITIS TSN; **`C7-08`** GBIF Backbone DOI `10.15468/39omei`; **`C7-09`** GNIS; **`C4-01`** STAC `kfm:provenance` (CONFIRMED)
 - Pass-23/32 Consolidated Atlas — **`KFM-P2-IDEA-0019`** KANU + KSC + iDigBio + USDA PLANTS biodiversity authorities (CONFIRMED, Pass 32); **`KFM-P2-PROG-0002`** Kansas flora watcher / KANU IPT pipeline (active, Pass 32); **`KFM-P24-IDEA-0002`** + **`KFM-P24-PROG-0013`** sensitive deny-by-default + OPA ABSTAIN/DENY (active); **`KFM-P13-PROG-0018`** sensitive grid generalization (active); **`KFM-P19-IDEA-0005`** KDWP regulatory (referenced for contrast); **DOM-FLORA §D** "Kansas Biological Survey / KU herbarium surfaces" (CONFIRMED listing); Atlas §24.1.2 + §24.1.3 + §24.2.1 + §24.8 (CONFIRMED)
 

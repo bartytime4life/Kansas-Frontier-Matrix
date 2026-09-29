@@ -11,20 +11,22 @@ policy_label: public
 related:
   - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
   - docs/sources/catalog/README.md
-  - docs/sources/catalog/loc/iiif-presentations.md
+  - docs/sources/catalog/loc/loc-iiif-presentations.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/truth-posture.md
   - connectors/local_upload/README.md
   - schemas/contracts/v1/source/source_descriptor.schema.json
-  - policy/sources/local_upload/
 tags: [kfm, sources, catalog, local_upload, connector, intake, quarantine]
 notes:
   - "`connectors/local_upload/` is named in Directory Rules §7.3 and in the proposed target tree; specific file presence at any commit remains NEEDS VERIFICATION."
   - "Subdirectory `docs/sources/catalog/` remains PROPOSED — not directly attested in Directory Rules; see §13.1."
   - "All other referenced repo paths are PROPOSED until mounted-repo verification."
   - "v2: refreshed truth labels, sibling product-page cross-link, evidence appendix; no anchor changes vs v1."
+owning_root: docs/
+responsibility: "Documentation for Local Upload — Source Catalog Entry; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Local Upload — Source Catalog Entry
@@ -441,7 +443,7 @@ Because at admission KFM has no resolved rights, no validated provenance, no sen
 <details>
 <summary><strong>How does <code>local_upload</code> differ from a versioned-publisher connector (e.g. LOC IIIF)?</strong></summary>
 
-A versioned publisher arrives with declared identity (the LoC manifest URL), declared rights (the IIIF / LoC rights statement), and a cadence inferable from upstream change. A `local_upload` arrives with **none** of these. The LoC IIIF Presentations connector can admit at `source_role = observed` (or `authority`) once the descriptor is reviewed; `local_upload` cannot, by construction — it admits at `candidate` and re-roling requires a steward and a new descriptor. See the sibling product page at [`docs/sources/catalog/loc/iiif-presentations.md`](./loc/iiif-presentations.md) for contrast.
+A versioned publisher arrives with declared identity (the LoC manifest URL), declared rights (the IIIF / LoC rights statement), and a cadence inferable from upstream change. A `local_upload` arrives with **none** of these. The LoC IIIF Presentations connector can admit at `source_role = observed` (or `authority`) once the descriptor is reviewed; `local_upload` cannot, by construction — it admits at `candidate` and re-roling requires a steward and a new descriptor. See the sibling product page at [`docs/sources/catalog/loc/iiif-presentations.md`](../loc/loc-iiif-presentations.md) for contrast.
 </details>
 
 [⬆ Back to top](#local-upload--source-catalog-entry)
@@ -452,7 +454,7 @@ A versioned publisher arrives with declared identity (the LoC manifest URL), dec
 
 - [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../SOURCE_DESCRIPTOR_STANDARD.md) — *PROPOSED* — descriptor fields, rights & sensitivity intake posture.
 - [`docs/sources/catalog/README.md`](../README.md) — *PROPOSED / TODO* — catalog-lane orientation for source-family entries.
-- [`docs/sources/catalog/loc/iiif-presentations.md`](./loc/iiif-presentations.md) — sibling product-page example (LOC IIIF Presentations) for contrast with this lane.
+- [`docs/sources/catalog/loc/iiif-presentations.md`](../loc/loc-iiif-presentations.md) — sibling product-page example (LOC IIIF Presentations) for contrast with this lane.
 - [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — §6.1 (`docs/`), §7.3 (`connectors/`), §7.4 (`pipelines/` and schema home), §9 (`data/` and `release/`).
 - [`docs/doctrine/trust-membrane.md`](../../../doctrine/trust-membrane.md) — *PROPOSED* — public-client boundary.
 - [`docs/doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md) — *PROPOSED* — RAW → PUBLISHED governance.
@@ -461,7 +463,7 @@ A versioned publisher arrives with declared identity (the LoC manifest URL), dec
 - [`connectors/local_upload/README.md`](../../../../connectors/local_upload/README.md) — *PROPOSED / TODO* — connector-level README.
 - [`schemas/contracts/v1/source/source_descriptor.schema.json`](../../../../schemas/contracts/v1/source/source_descriptor.schema.json) — *PROPOSED / NEEDS VERIFICATION* — descriptor schema per ADR-0001.
 - [`policy/sources/`](../../../../policy/sources/) — *PROPOSED / TODO* — rights, sensitivity, admission gates.
-- [`tests/fixtures/sources/local_upload/`](../../../../tests/fixtures/sources/local_upload/) — *PROPOSED / TODO* — valid + negative fixtures.
+- `tests/fixtures/sources/local_upload/` (not present) — *PROPOSED / TODO* — valid + negative fixtures.
 
 [⬆ Back to top](#local-upload--source-catalog-entry)
 
@@ -517,7 +519,7 @@ This file makes no claim about the runtime state, the CI workflow state, the tes
 <summary><strong>13.4 Anchor & link breakage notice</strong></summary>
 
 - This is a v2 revision of a draft doc; **no Section-1 through Section-13 anchors changed** between v1 and v2. Outbound links remain placeholders until target docs are created or verified.
-- v2 adds one new outbound link to the sibling product page at [`./loc/iiif-presentations.md`](./loc/iiif-presentations.md). Adopting (or rejecting) the `docs/sources/catalog/` subdirectory pattern affects both this file and the sibling; coordinate with the docs steward before broad adoption.
+- v2 adds one new outbound link to the sibling product page at `./loc/iiif-presentations.md` (not present). Adopting (or rejecting) the `docs/sources/catalog/` subdirectory pattern affects both this file and the sibling; coordinate with the docs steward before broad adoption.
 
 </details>
 
@@ -525,6 +527,6 @@ This file makes no claim about the runtime state, the CI workflow state, the tes
 
 ---
 
-<sub>**Related docs:** [SOURCE_DESCRIPTOR_STANDARD](../../SOURCE_DESCRIPTOR_STANDARD.md) · [Catalog README](../README.md) · [LOC IIIF Presentations (sibling)](./loc/iiif-presentations.md) · [Directory Rules](../../../doctrine/directory-rules.md) · [Trust membrane](../../../doctrine/trust-membrane.md) · [Lifecycle law](../../../doctrine/lifecycle-law.md)</sub>
+<sub>**Related docs:** [SOURCE_DESCRIPTOR_STANDARD](../../SOURCE_DESCRIPTOR_STANDARD.md) · [Catalog README](../README.md) · LOC IIIF Presentations (sibling) (not present) · [Directory Rules](../../../doctrine/directory-rules.md) · [Trust membrane](../../../doctrine/trust-membrane.md) · [Lifecycle law](../../../doctrine/lifecycle-law.md)</sub>
 
 <sub>**Last updated:** 2026-05-22 · **Status:** draft · **Version:** v2 · **Authority:** PROPOSED until source descriptor, fixtures, validators, and policy gates exist · **Evidence basis:** docs-only (no mounted repo this session) · [⬆ Back to top](#local-upload--source-catalog-entry)</sub>

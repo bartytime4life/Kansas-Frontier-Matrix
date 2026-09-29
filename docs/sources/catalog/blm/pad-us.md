@@ -10,8 +10,6 @@ updated: 2026-05-20
 policy_label: public
 related:
   - docs/sources/catalog/blm/README.md
-  - docs/sources/catalog/blm/IDENTITY.md
-  - docs/sources/catalog/blm/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/blm/glo-field-notes.md
   - docs/sources/catalog/blm/glo-land-patents.md
   - docs/sources/catalog/blm/glo-survey-plats.md
@@ -23,6 +21,9 @@ notes:
   - "PROPOSED product-page scaffold; sibling-link presence verified in Claude Code session."
   - "PROPOSED content sourced from Pass 23/32 atlas (KFM-P25-PROG-0009, KFM-P25-IDEA-0004, KFM-P25-FEAT-0003) and Pass 10 (C4-01, C15-01..03); descriptor fields intentionally not restated here."
   - "This is the BLM-contributed federal-lands SLICE of PAD-US; the full aggregate dataset is stewarded by USGS Gap Analysis Project — source-role distinction surfaced in §Source authority and OPEN-FAM-01."
+owning_root: docs/
+responsibility: "Documentation for BLM PAD-US Federal Lands; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -119,8 +120,8 @@ PAD-US has a **dual-authority structure** that the descriptor must record explic
 |---|---|---|---|
 | `SourceDescriptor` | [`data/registry/sources/`](../../../../data/registry/sources/) | Identity, source role, rights, cadence, sensitivity, version pin, USGS-aggregator vs BLM-contributor distinction | **No** — pointer only |
 | Family overview & sibling links | [`./README.md`](./README.md) | Family-level orientation for `blm` | **No** — see family README |
-| Collection identity rules | [`./IDENTITY.md`](./IDENTITY.md) | `kfm-<org>-<product>` pattern, namespace | **No** — see IDENTITY |
-| Rights & sensitivity mapping | [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) | Tiering, CARE applicability for tribal-adjacent designations, release class | **No** — see map |
+| Collection identity rules | `./IDENTITY.md` (not present) | `kfm-<org>-<product>` pattern, namespace | **No** — see IDENTITY |
+| Rights & sensitivity mapping | `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) | Tiering, CARE applicability for tribal-adjacent designations, release class | **No** — see map |
 | Contract shape | `schemas/contracts/v1/source/` and `schemas/contracts/v1/domains/habitat/` | JSON-schema for descriptor + PAD-US-shaped polygon record | **No** — per ADR-0001 |
 
 > [!NOTE]
@@ -176,7 +177,7 @@ PROPOSED. The catalog projection set this product participates in. Lanes follow 
 
 ## Collection identity
 
-- PROPOSED Collection id pattern: `kfm-<org>-<product>` — see [`IDENTITY.md`](./IDENTITY.md) for the canonical rule.
+- PROPOSED Collection id pattern: `kfm-<org>-<product>` — see `IDENTITY.md` (not present) for the canonical rule.
 - PROPOSED namespace: `kfm:` — *see [OPEN-DSC-03](#open-questions); Pass-10 C4-01 records the `kfm:` vs `ks-kfm:` choice as an unresolved namespace question.*
 - PROPOSED: one Collection per PAD-US **version pin** (e.g., a v3.0 Collection and a v4.0 Collection coexist with explicit supersession). NEEDS VERIFICATION.
 - Asset roles (polygon-vector, attribute-table, gap-status-summary, iucn-crosswalk, boundary-diff-manifest, etc.): NEEDS VERIFICATION — confirm against `schemas/contracts/v1/source/` and `schemas/contracts/v1/domains/habitat/`.
@@ -273,7 +274,7 @@ PROPOSED. PAD-US is **versioned context** (KFM-P25-IDEA-0004); KFM must reason a
 
 ## Rights and sensitivity
 
-NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
+NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not restate policy here.**
 
 PROPOSED sensitivity posture for this product:
 
@@ -443,8 +444,8 @@ These are the KFM atlas cards from which the PROPOSED content above is sourced. 
 ## Related docs
 
 - [`docs/sources/catalog/blm/README.md`](./README.md) — `blm` family landing page.
-- [`docs/sources/catalog/blm/IDENTITY.md`](./IDENTITY.md) — Collection-id and namespace rules for the family.
-- [`docs/sources/catalog/blm/RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — Rights / sensitivity tiering for `blm` (CARE applicability for tribal-adjacent designations).
+- `docs/sources/catalog/blm/IDENTITY.md` (not present) — Collection-id and namespace rules for the family.
+- `docs/sources/catalog/blm/RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — Rights / sensitivity tiering for `blm` (CARE applicability for tribal-adjacent designations).
 - [`docs/sources/catalog/blm/glo-field-notes.md`](./glo-field-notes.md) — Sibling product: GLO narrative survey records.
 - [`docs/sources/catalog/blm/glo-land-patents.md`](./glo-land-patents.md) — Sibling product: GLO title-instrument records.
 - [`docs/sources/catalog/blm/glo-survey-plats.md`](./glo-survey-plats.md) — Sibling product: GLO historic raster plats.

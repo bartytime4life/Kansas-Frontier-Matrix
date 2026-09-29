@@ -16,14 +16,11 @@ related:
   - docs/sources/catalog/kansas/khri.md
   - docs/sources/catalog/kansas/ksgs.md
   - docs/sources/catalog/kansas/kcc-oil-gas-reg.md
-  - docs/sources/catalog/kansas/kdhe.md
-  - docs/sources/catalog/kansas/kda.md
   - docs/sources/catalog/kansas/kansas-state-archives.md
   - docs/sources/catalog/kansas/kansas-memory.md
   - docs/sources/catalog/kansas/kbs.md
   - docs/sources/catalog/kansas/ku-nhm.md
   - docs/sources/catalog/kansas/fhsu-sternberg.md
-  - docs/sources/catalog/kansas/ksu-special-collections.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/IDENTITY.md
   - docs/sources/catalog/PROFILES.md
@@ -43,10 +40,8 @@ related:
   - docs/registers/AUTHORITY_LADDER.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - schemas/contracts/v1/source/source_descriptor.schema.json
-  - connectors/kansas/ksu-research-extension/
-  - connectors/kansas/kansas-mesonet/
   - data/registry/sources/
   - policy/sensitivity/
   - policy/rights/
@@ -101,6 +96,9 @@ notes:
     through DOM-AGRI "local extension sources" and DOM-ATMOS "Kansas
     Mesonet". This distinction is surfaced in §1 IMPORTANT callout to prevent
     elevation drift.
+owning_root: docs/
+responsibility: "Documentation for KSU Research and Extension — Source Catalog Entry; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # KSU Research and Extension — Source Catalog Entry
@@ -182,7 +180,7 @@ notes:
 
 - **In scope** for this umbrella entry: K-State R&E sub-products that KFM may ingest as evidence — extension publications acting as aggregated context, K-State variety trial / crop performance test reports, Agricultural Experiment Station (AES) outputs, soil testing service outputs, and adjacent advisory products from K-State R&E's research stations and county-extension offices.
 - **In scope but cross-referenced via per-surface page**: **Kansas Mesonet** sensor network. Posture, descriptor shape, sensor-metadata details, station_health gate, and native cadence preservation live in [`./kansas-mesonet.md`](./kansas-mesonet.md) v0.2; this umbrella page inherits and coordinates rather than duplicates.
-- **Out of scope:** **KSU Special Collections** (the archival holdings cited at approximately 1,000,000 items in the `C10-07` archives stack) is institutionally distinct from K-State Research and Extension. KSU SC is governed under the archives domain and **MUST** have its own catalog entry — see [`./ksu-special-collections.md`](./ksu-special-collections.md) (PROPOSED sibling under `docs/sources/catalog/kansas/`).
+- **Out of scope:** **KSU Special Collections** (the archival holdings cited at approximately 1,000,000 items in the `C10-07` archives stack) is institutionally distinct from K-State Research and Extension. KSU SC is governed under the archives domain and **MUST** have its own catalog entry — see `./ksu-special-collections.md` (not present) (PROPOSED sibling under `docs/sources/catalog/kansas/`).
 
 [Back to top](#ksu-research-and-extension--source-catalog-entry)
 
@@ -264,7 +262,7 @@ K-State R&E sub-products carry **multiple, distinct source roles**. The KFM **So
 > - Administrative publication record cited as an **observed event** timeline → **DENY** publication of compilation as observed event evidence.
 
 > [!NOTE]
-> **`regulatory` is NOT a K-State R&E role.** K-State R&E publishes research, observation, aggregate analyses, and advisory products — but does not issue regulatory instruments. Kansas regulatory authorities for adjacent domains live elsewhere: KDWP for listed species per `KFM-P19-IDEA-0005` (see [`./kdwp.md`](./kdwp.md) v0.2); KCC for oil-and-gas regulatory per DOM-GEOL §D row 5 (see [`./kcc-oil-gas-reg.md`](./kcc-oil-gas-reg.md) v0.2). KDHE for environmental regulatory (see [`./kdhe.md`](./kdhe.md) PROPOSED). Conflating K-State R&E advisory with regulatory authority is a source-role anti-collapse violation.
+> **`regulatory` is NOT a K-State R&E role.** K-State R&E publishes research, observation, aggregate analyses, and advisory products — but does not issue regulatory instruments. Kansas regulatory authorities for adjacent domains live elsewhere: KDWP for listed species per `KFM-P19-IDEA-0005` (see [`./kdwp.md`](./kdwp.md) v0.2); KCC for oil-and-gas regulatory per DOM-GEOL §D row 5 (see [`./kcc-oil-gas-reg.md`](./kcc-oil-gas-reg.md) v0.2). KDHE for environmental regulatory (see `./kdhe.md` (not present) PROPOSED). Conflating K-State R&E advisory with regulatory authority is a source-role anti-collapse violation.
 
 [Back to top](#ksu-research-and-extension--source-catalog-entry)
 
@@ -493,13 +491,13 @@ flowchart LR
 
 - [`./README.md`](./README.md) — `docs/sources/catalog/kansas/` family README v0.2 (lists this brief; confirms `connectors/kansas/` as §7.3 canonical at commit `b6a27916...`)
 - [`./kansas-mesonet.md`](./kansas-mesonet.md) — **Kansas Mesonet per-surface product page (v0.2)** — this umbrella's primary parented surface
-- [`./ksu-special-collections.md`](./ksu-special-collections.md) — KSU Special Collections (PROPOSED sibling; out-of-scope for this umbrella per §1 boundary; lives under archives stack `C10-07`)
+- `./ksu-special-collections.md` (not present) — KSU Special Collections (PROPOSED sibling; out-of-scope for this umbrella per §1 boundary; lives under archives stack `C10-07`)
 - [`./kdwp.md`](./kdwp.md) — sibling Kansas-first authority per `C7-10` (KSU R&E is NOT in this cluster; see §1 IMPORTANT)
 - [`./khri.md`](./khri.md) — sibling Kansas-first authority per `C7-10`
 - [`./ksgs.md`](./ksgs.md) — sibling Kansas-first authority per `C7-10` (KGS, jointly publishes WWC5 with KDHE)
 - [`./kcc-oil-gas-reg.md`](./kcc-oil-gas-reg.md) — sibling Kansas regulatory authority (oil-and-gas regulatory; KSU R&E is NOT regulatory)
-- [`./kdhe.md`](./kdhe.md) — sibling Kansas authority (PROPOSED; joint publisher of WWC5 with KGS)
-- [`./kda.md`](./kda.md) — sibling Kansas authority (PROPOSED; KDA-DWR for water rights via WIMAS)
+- `./kdhe.md` (not present) — sibling Kansas authority (PROPOSED; joint publisher of WWC5 with KGS)
+- `./kda.md` (not present) — sibling Kansas authority (PROPOSED; KDA-DWR for water rights via WIMAS)
 - [`./kansas-state-archives.md`](./kansas-state-archives.md) — KSHS-umbrella brief (parallel umbrella pattern model)
 - [`./kansas-memory.md`](./kansas-memory.md) — sibling KSHS surface
 - [`./kbs.md`](./kbs.md) — sibling Kansas-first biodiversity authority
@@ -521,7 +519,7 @@ flowchart LR
 - [`../../../standards/SENSITIVITY_RUBRIC.md`](../../../standards/SENSITIVITY_RUBRIC.md) — `C6-01` 0–5 rubric (PROPOSED in corpus)
 - [`../../../registers/AUTHORITY_LADDER.md`](../../../registers/AUTHORITY_LADDER.md) — authority order
 - [`../../../registers/DRIFT_REGISTER.md`](../../../registers/DRIFT_REGISTER.md) — drift filing
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home convention
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home convention
 - Pass-10 Idea Index — **`C10-01`** Soil Stack (CONFIRMED); **`C7-10`** Kansas-First Domain Authorities (CONFIRMED — KSU R&E NOT included); **`C5-02`** default-deny promotion (CONFIRMED); **`C6-01`/`C6-02`** sensitivity rubric + named profiles (CONFIRMED); **`C6-06`** k-anonymity (CONFIRMED); **`C4-01`** STAC kfm:provenance (CONFIRMED)
 - Pass-23/32 Consolidated Atlas — **`KFM-P21-PROG-0006`** Mesonet station_health probe (active); **`KFM-P23-PROG-0039`** Mesonet soil-moisture watcher 5-min/hourly/daily (active); **`KFM-P2-IDEA-0023`** SMAP L4 vs Kansas Mesonet temporal preservation (CONFIRMED); **`KFM-P2-IDEA-0019`** USDA PLANTS as plant-name authority (CONFIRMED); **`KFM-P2-PROG-0002`** Kansas flora watcher (active); **`KFM-P19-IDEA-0005`** KDWP regulatory contrast (active, referenced for contrast); **`KFM-P24-IDEA-0002`** + **`KFM-P24-PROG-0013`** sensitive deny-by-default + OPA ABSTAIN/DENY (active); **`KFM-P13-PROG-0018`** sensitive grid generalization (active); Atlas §24.1.2 + §24.1.3 + §24.2.1 + §24.8 (CONFIRMED)
 

@@ -15,6 +15,9 @@ tags: [kfm, docs, sources, catalog]
 notes:
   - "PROPOSED scaffold; sibling-link presence verified in Claude Code session."
   - "Template — copy to <family>/<product-name>.md and replace every <placeholder>. Keep the real KFM Meta Block above; replace the placeholder line below with a real meta block."
+owning_root: docs/
+responsibility: "Documentation for Source product page template; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <KFM Meta Block v2 — type: product-page>
@@ -31,7 +34,7 @@ notes:
 PROPOSED scaffold. NEEDS VERIFICATION: scope, cadence, geographic coverage, current endpoint URL, rights status, license terms.
 
 ## Source authority
-See [`data/registry/sources/<family>/`](../../../../data/registry/sources/<family>/) for the authoritative SourceDescriptor. **Do not duplicate** descriptor fields here.
+See `data/registry/sources/<family>/` (not present) for the authoritative SourceDescriptor. **Do not duplicate** descriptor fields here.
 
 ## Catalog profiles used
 | Profile | Lane | Used by this product? |

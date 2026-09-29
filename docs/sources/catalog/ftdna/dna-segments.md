@@ -12,9 +12,6 @@ related:
   - docs/sources/catalog/ftdna/README.md
   - docs/sources/catalog/ftdna/autosomal-raw-data.md
   - docs/sources/catalog/ftdna/dna-matches.md
-  - docs/sources/catalog/ftdna/IDENTITY.md
-  - docs/sources/catalog/ftdna/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/ftdna/_examples/stac-item-example.json
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
   - docs/standards/SENSITIVITY_RUBRIC.md
@@ -27,6 +24,9 @@ notes:
   - "CRITICAL: segment coordinates are themselves uniquely re-identifying — they function as a biometric-level fingerprint independent of the kit identifier."
   - "Atlas Part 1 §D lists 'DNA vendor match CSV/segment/triangulation data' as a single CONFIRMED source family with the note 'sensitive joins fail closed' — segments inherit the same default-deny posture as match lists, with additional cross-vendor re-identification risk."
   - "Type is `product-page` (not `standard`); this file carries the full presentation standard but is intentionally a scaffold, not steady-state."
+owning_root: docs/
+responsibility: "Documentation for FTDNA DNA Segments; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # FTDNA DNA Segments
@@ -85,7 +85,7 @@ This page describes the **FTDNA DNA Segments product** — the chromosome-painte
 **What this page is not.**
 
 - **Not a SourceDescriptor.** See [`data/registry/sources/`](../../../../data/registry/sources/) for the authoritative descriptor.
-- **Not a policy.** See [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md).
+- **Not a policy.** See [`policy/sensitivity/`](../../../../policy/sensitivity/) and `RIGHTS-AND-SENSITIVITY-MAP.md` (not present).
 - **Not a schema.** See [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) per ADR-0001.
 - **Not an admission decision.** Admission requires a completed SourceDescriptor, rights resolution, sensitivity tagging, consent stack (including third-party considerations), HMAC-tokenization of kit identifiers, **coordinate-level redaction or aggregation policy**, and reviewer sign-off.
 
@@ -210,7 +210,7 @@ Per Pass-10 `C4` (CONFIRMED doctrine), every promoted dataset must have a STAC I
 
 ## Collection identity
 
-- **PROPOSED Collection id pattern:** `kfm-ftdna-dna-segments` (vendor-product slug; see [`./IDENTITY.md`](./IDENTITY.md) for the canonical pattern).
+- **PROPOSED Collection id pattern:** `kfm-ftdna-dna-segments` (vendor-product slug; see `./IDENTITY.md` (not present) for the canonical pattern).
 - **PROPOSED namespace:** `kfm:` *(see OPEN-DSC-03 — the `kfm:` vs `ks-kfm:` choice remains open per `C4-01` open question, CONFIRMED).*
 - **PROPOSED aggregate-derivative Collection id pattern:** `kfm-ftdna-dna-segments-agg` *(separate Collection because the tier, consent semantics, and allowed coordinate resolution differ — reviewer-only T4 with raw coords vs aggregate-only T1 with coords destroyed).*
 - **Asset roles:** NEEDS VERIFICATION — confirm against [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/). At minimum: `data` (the tokenized segment table), `metadata` (any vendor-supplied sidecar describing the matching algorithm and threshold), `checksum` (per-asset `file:checksum`). **The plaintext segment table MUST NOT appear as a STAC asset** even with kit tokens; the coordinates remain identifying.
@@ -295,7 +295,7 @@ PROPOSED — DNA segment data has a **genomic** coordinate system (chromosome + 
 
 ## Rights and sensitivity
 
-NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
+NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not restate policy here.**
 
 | Concern | Default for this product | Citation |
 |---|---|---|
@@ -344,8 +344,8 @@ Catalog closure is the final discoverability and accountability gate before publ
 - [`contracts/source/`](../../../../contracts/source/) — semantic meaning for source-class objects (NEEDS VERIFICATION; Directory Rules §6.3, CONFIRMED authority).
 - [`contracts/people-dna-land/`](../../../../contracts/people-dna-land/) — domain contracts including `DNASegment`, `DNAMatchEvidence`, `RelationshipHypothesis`, `DNAKitToken`, `ConsentGrant`, `RevocationReceipt` (CONFIRMED terms per Atlas People/DNA/Land glossary; file presence NEEDS VERIFICATION).
 - [`schemas/contracts/v1/source/source-descriptor.json`](../../../../schemas/contracts/v1/source/source-descriptor.json) — machine shape per ADR-0001 (NEEDS VERIFICATION).
-- [`schemas/contracts/v1/people-dna-land/dna-segment.schema.json`](../../../../schemas/contracts/v1/people-dna-land/dna-segment.schema.json) — PROPOSED; presence NEEDS VERIFICATION.
-- [`schemas/contracts/v1/people-dna-land/relationship-hypothesis.schema.json`](../../../../schemas/contracts/v1/people-dna-land/relationship-hypothesis.schema.json) — PROPOSED downstream-derivative schema; presence NEEDS VERIFICATION.
+- `schemas/contracts/v1/people-dna-land/dna-segment.schema.json` (not present) — PROPOSED; presence NEEDS VERIFICATION.
+- `schemas/contracts/v1/people-dna-land/relationship-hypothesis.schema.json` (not present) — PROPOSED downstream-derivative schema; presence NEEDS VERIFICATION.
 - [`schemas/contracts/v1/receipts/`](../../../../schemas/contracts/v1/receipts/) — receipt schemas (RawCaptureReceipt, TransformReceipt, RedactionReceipt, AggregationReceipt, ReleaseManifest, ModelRunReceipt, etc.) — PROPOSED per Atlas §24.2.1.
 - [`schemas/contracts/v1/evidence/evidence_bundle.schema.json`](../../../../schemas/contracts/v1/evidence/evidence_bundle.schema.json) — PROPOSED per `KFM-P26-PROG-0004`.
 
@@ -355,7 +355,7 @@ Catalog closure is the final discoverability and accountability gate before publ
 
 ## Related connectors and pipelines
 
-- [`connectors/ftdna/`](../../../../connectors/ftdna/) — source-specific fetch / admission logic (Directory Rules §7.3, CONFIRMED).
+- `connectors/ftdna/` (not present) — source-specific fetch / admission logic (Directory Rules §7.3, CONFIRMED).
   - **Posture:** PROPOSED quarantine-only intake. Connectors MUST NOT pull DTC payloads on behalf of users without an attested per-user grant. The FTDNA segment connector MUST apply HMAC tokenization at intake **and** the coordinate-redaction policy before the payload reaches any non-quarantine lane.
 - [`pipelines/ingest/`](../../../../pipelines/ingest/), [`pipelines/normalize/`](../../../../pipelines/normalize/), [`pipelines/validate/`](../../../../pipelines/validate/), [`pipelines/catalog/`](../../../../pipelines/catalog/) — lifecycle phase pipelines (Directory Rules §7.4, CONFIRMED).
 - [`pipeline_specs/people-dna-land/`](../../../../pipeline_specs/people-dna-land/) — declarative specs for the People/DNA/Land domain lane (Directory Rules §13.1, CONFIRMED domain-lane skeleton).
@@ -368,7 +368,7 @@ Catalog closure is the final discoverability and accountability gate before publ
 
 *Illustrative only — do not treat as authoritative. Field values are placeholders.*
 
-See [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) for the canonical minimal shape. The fragments below show two views: the **raw (reviewer-only)** item and the **aggregate-derivative (T1 candidate)** item, both grounded in `C4-01` (CONFIRMED).
+See `./_examples/stac-item-example.json` (not present) for the canonical minimal shape. The fragments below show two views: the **raw (reviewer-only)** item and the **aggregate-derivative (T1 candidate)** item, both grounded in `C4-01` (CONFIRMED).
 
 <details>
 <summary><strong>Minimal STAC Item <code>properties</code> fragment — raw segment set (reviewer-only, click to expand)</strong></summary>
@@ -490,9 +490,9 @@ See [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) f
 - [`./README.md`](./README.md) — FTDNA vendor family README
 - [`./autosomal-raw-data.md`](./autosomal-raw-data.md) — sibling product page (autosomal raw genotype)
 - [`./dna-matches.md`](./dna-matches.md) — sibling product page (kit-to-kit match list)
-- [`./IDENTITY.md`](./IDENTITY.md) — collection-id pattern and namespace doctrine
-- [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — product-by-product rights and sensitivity map
-- [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) — canonical minimal STAC shape
+- `./IDENTITY.md` (not present) — collection-id pattern and namespace doctrine
+- `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — product-by-product rights and sensitivity map
+- `./_examples/stac-item-example.json` (not present) — canonical minimal STAC shape
 - [`../README.md`](../README.md) — catalog index
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement and lifecycle invariants
 - [`../../../standards/SENSITIVITY_RUBRIC.md`](../../../standards/SENSITIVITY_RUBRIC.md) — `C6-01` 0–5 rubric *(PROPOSED in corpus; not yet authored)*

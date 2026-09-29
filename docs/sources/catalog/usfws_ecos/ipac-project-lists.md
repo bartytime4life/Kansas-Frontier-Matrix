@@ -10,8 +10,6 @@ updated: 2026-05-23
 policy_label: public
 related:
   - docs/sources/catalog/usfws_ecos/README.md
-  - docs/sources/catalog/usfws_ecos/IDENTITY.md
-  - docs/sources/catalog/usfws_ecos/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/usfws_ecos/critical-habitat.md
   - docs/sources/catalog/usfws_ecos/esa-listing-status.md
   - docs/sources/catalog/README.md
@@ -20,8 +18,6 @@ related:
   - docs/doctrine/trust-membrane.md
   - docs/standards/SENSITIVITY_RUBRIC.md
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
-  - data/registry/sources/usfws_ecos/
-  - policy/sources/usfws_ecos/
   - policy/sensitivity/fauna/
   - schemas/contracts/v1/source/
   - connectors/usfws_ecos/
@@ -38,6 +34,9 @@ notes:
   - "Hybrid spatial + tabular product: STAC carries the AOI envelope + species list asset; DCAT carries the tabular mirror. Different posture from the geometry-only critical-habitat product and the tabular-only esa-listing-status product."
   - "API-key gated. Per KFM-P24-PROG-0002, IPaC source descriptor must record API-key requirement; credential-management path is PROPOSED under policy/sources/usfws_ecos/ (Q-4)."
   - "T2 default sensitivity. Project-scoped lists may reveal project intent even when their constituent species records (sourced from ESA listings) are T0."
+owning_root: docs/
+responsibility: "Documentation for USFWS IPaC Project Species Lists; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -62,7 +61,7 @@ notes:
 **Status:** `PROPOSED — scaffold filled` &nbsp;·&nbsp; **Doc version:** `v0.2` &nbsp;·&nbsp; **Family:** [`usfws_ecos`](./README.md) &nbsp;·&nbsp; **Last reviewed:** 2026-05-23
 
 > [!IMPORTANT]
-> **The Federal Register listing rule is the legal description; 50 CFR 402.12 is the procedural authority; IPaC is the carrier; this page is a pointer.** Authoritative descriptor fields live in [`data/registry/sources/usfws_ecos/`](../../../../data/registry/sources/usfws_ecos/). Rights, sensitivity, and credential policy live in [`policy/sources/usfws_ecos/`](../../../../policy/sources/usfws_ecos/) and [`policy/sensitivity/fauna/`](../../../../policy/sensitivity/fauna/), summarized at the family level in [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not duplicate descriptor or policy content on this product page.**
+> **The Federal Register listing rule is the legal description; 50 CFR 402.12 is the procedural authority; IPaC is the carrier; this page is a pointer.** Authoritative descriptor fields live in `data/registry/sources/usfws_ecos/` (not present). Rights, sensitivity, and credential policy live in `policy/sources/usfws_ecos/` (not present) and [`policy/sensitivity/fauna/`](../../../../policy/sensitivity/fauna/), summarized at the family level in `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not duplicate descriptor or policy content on this product page.**
 
 > [!CAUTION]
 > **Project intent disclosure risk.** An IPaC species list is **defined by an Area of Interest** submitted by a project proponent. The AOI itself can reveal what is being planned where — even when every constituent species record is public. Default sensitivity is **T2** (Reviewer); promotion to T0/T1 requires explicit policy review. Sensitive-occurrence joins remain **T4** (Denied) by default. See [§9](#9-rights-and-sensitivity-pointer).
@@ -199,7 +198,7 @@ flowchart LR
 
 ## 3. Source authority
 
-See [`data/registry/sources/usfws_ecos/`](../../../../data/registry/sources/usfws_ecos/) for the authoritative `SourceDescriptor`. **Do not duplicate descriptor fields here.** Descriptor canonical schema home is `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 — **NEEDS VERIFICATION** of exact filename in mounted repo.
+See `data/registry/sources/usfws_ecos/` (not present) for the authoritative `SourceDescriptor`. **Do not duplicate descriptor fields here.** Descriptor canonical schema home is `schemas/contracts/v1/source/source-descriptor.json` per Directory Rules §7.4 / ADR-0001 — **NEEDS VERIFICATION** of exact filename in mounted repo.
 
 Doctrinal anchors for this product:
 
@@ -313,7 +312,7 @@ Unlike the sibling products (one geometry-only, one tabular-only), IPaC is **hyb
 |---|---|---|
 | AOI format on submission | GeoJSON polygon / multipolygon, or `(centroid_lat, centroid_lon, buffer_m)` for centroid-derived AOIs | **EXTERNAL — NEEDS VERIFICATION** of accepted formats per current IPaC API. |
 | Canonical KFM CRS | `EPSG:4326` (geographic) for catalog payloads | **PROPOSED**. |
-| AOI generalization on KFM side | Allowed only when documented in a `TransformReceipt` (input geom hash, output geom hash, transform, parameters, tolerance) per the project-page invariant; default = **no generalization** for IPaC AOIs unless the AOI itself is sensitive. | **PROPOSED** — sensitive AOI handling belongs in [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). |
+| AOI generalization on KFM side | Allowed only when documented in a `TransformReceipt` (input geom hash, output geom hash, transform, parameters, tolerance) per the project-page invariant; default = **no generalization** for IPaC AOIs unless the AOI itself is sensitive. | **PROPOSED** — sensitive AOI handling belongs in `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). |
 | AOI sensitivity | **Variable.** Public infrastructure project AOI = T0 attribute; private-landowner AOI = T2+; critical-infrastructure AOI (energy, water, defense) = T4. | **PROPOSED** scheme; controlling policy lives at family level. |
 | STAC `proj:*` fields on the Item | Required: `proj:code`, `proj:bbox`, `proj:geometry`, `proj:shape` (per `KFM-P27-FEAT-0003` STAC Projection lint). | **PROPOSED-required** when the consultation is registered in STAC. |
 
@@ -342,7 +341,7 @@ The cardinal evidence object is a `ConsultationRecord` (**PROPOSED** object clas
 
 ## 9. Rights and sensitivity (pointer)
 
-**Do not restate policy here.** See [`policy/sensitivity/fauna/`](../../../../policy/sensitivity/fauna/) and the family-level summary at [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md).
+**Do not restate policy here.** See [`policy/sensitivity/fauna/`](../../../../policy/sensitivity/fauna/) and the family-level summary at `RIGHTS-AND-SENSITIVITY-MAP.md` (not present).
 
 > [!NOTE]
 > **Default tier: T2 (Reviewer).** Per Atlas §24.5.1, T2 = *"Released only to authenticated reviewers or domain stewards; policy-bounded; correction path active."* Project-scoped lists may reveal sensitive project intent even when their **constituent species records** (sourced from ESA listings) are individually T0. Promotion of a specific consultation to T1 (generalized) or T0 (open) requires explicit policy review and a `PolicyDecision` plus, when transformed, a `RedactionReceipt`.
@@ -420,14 +419,14 @@ CARE principles (Collective benefit, Authority to control, Responsibility, Ethic
 |---|---|---|
 | `SourceDescriptor` semantic contract | [`contracts/source/`](../../../../contracts/source/) | **PROPOSED**. |
 | `SourceDescriptor` machine schema | [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) | **PROPOSED canonical home** per Directory Rules §7.4 / ADR-0001. |
-| `ConsultationRecord` contract | [`contracts/data/fauna/`](../../../../contracts/data/fauna/) | **PROPOSED** — new object class introduced by this product. |
+| `ConsultationRecord` contract | `contracts/data/fauna/` (not present) | **PROPOSED** — new object class introduced by this product. |
 | `ConsultationRecord` schema | [`schemas/contracts/v1/fauna/`](../../../../schemas/contracts/v1/fauna/) | **PROPOSED**. |
 | `ConservationStatus` schema (referenced) | [`schemas/contracts/v1/fauna/`](../../../../schemas/contracts/v1/fauna/) | **PROPOSED** — shared with `esa-listing-status.md`. |
 | `RangePolygon` schema (referenced when CH overlap) | [`schemas/contracts/v1/habitat/`](../../../../schemas/contracts/v1/habitat/) | **PROPOSED** — shared with `critical-habitat.md`. |
 | `EvidenceBundle` / `EvidenceRef` schemas | [`schemas/contracts/v1/evidence/`](../../../../schemas/contracts/v1/evidence/) | **PROPOSED** per `KFM-P26-PROG-0004` / `KFM-P26-PROG-0005`. |
 | `ConsentMetadata` / `ConsentReceiptPointer` | [`schemas/contracts/v1/governance/`](../../../../schemas/contracts/v1/governance/) | **PROPOSED** — pointer-only consent proof per `Master MapLibre Components v2.1`. |
 | `RealityBoundaryNote` | [`schemas/contracts/v1/governance/`](../../../../schemas/contracts/v1/governance/) | **PROPOSED**. |
-| Credentials manifest (API-key reference) | [`policy/sources/usfws_ecos/credentials/`](../../../../policy/sources/usfws_ecos/) | **PROPOSED** lane; Q-4 open. |
+| Credentials manifest (API-key reference) | `policy/sources/usfws_ecos/credentials/` (not present) | **PROPOSED** lane; Q-4 open. |
 
 [Back to top](#top)
 
@@ -453,7 +452,7 @@ CARE principles (Collective benefit, Authority to control, Responsibility, Ethic
 
 ## 14. Example
 
-*Illustrative only — not authoritative. The minimal STAC + `kfm:provenance` shape lives at [`_examples/stac-item-example.json`](./_examples/stac-item-example.json) (file presence **NEEDS VERIFICATION**); an IPaC-specific example sketch belongs at `_examples/ipac-consultation-example.json` (PROPOSED).*
+*Illustrative only — not authoritative. The minimal STAC + `kfm:provenance` shape lives at `_examples/stac-item-example.json` (not present) (file presence **NEEDS VERIFICATION**); an IPaC-specific example sketch belongs at `_examples/ipac-consultation-example.json` (PROPOSED).*
 
 <details>
 <summary><b>Click to expand — minimal STAC Item sketch for an IPaC consultation (illustrative)</b></summary>
@@ -530,7 +529,7 @@ CARE principles (Collective benefit, Authority to control, Responsibility, Ethic
 | Q-3 | Should this product be registered in STAC as one Collection (per consultation = Item), or aggregated by project / requestor / year? | **PROPOSED** | Default = **one Item per consultation**, one Collection for all consultations. Aggregation deferred. |
 | Q-4 | **Credentials-management path for IPaC API keys.** Where does the credentials manifest live, who rotates it, and how is the rotation audited? | **OPEN — gating** | Author credentials policy under `policy/sources/usfws_ecos/credentials/` (PROPOSED). Connector cannot operate without this resolved. |
 | Q-5 | Confirm cadence — **on-demand only**, plus a Federal-Register-watcher trigger to mark stored consultations stale when listings change? | **OPEN** | Resolve in `data/registry/sources/usfws_ecos/` descriptor + watcher config; material to **ADR-S-12**. |
-| Q-6 | Confirm rights status and CARE applicability for KFM derivatives, especially for AOIs overlapping Tribal lands. | **OPEN** | Resolve in [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). |
+| Q-6 | Confirm rights status and CARE applicability for KFM derivatives, especially for AOIs overlapping Tribal lands. | **OPEN** | Resolve in `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). |
 | Q-7 | **AOI sensitivity classification.** What is the rubric for classifying an AOI as T0 / T1 / T2 / T3 / T4 at admission? `KFM-P25-PROG-0015` (fail-closed habitat assignment precision rule) is relevant; needs operational rubric. | **PROPOSED — gating** | Author AOI-sensitivity rubric under `policy/sources/usfws_ecos/`. Default to T2 if unclassified, per [§9.1](#91-per-attribute-tier-matrix-proposed). |
 | Q-8 | **Review-cycle tolerance for consultation aging.** What is the maximum age at which a stored consultation is acceptable for project-grade use? | **PROPOSED — gating** | Author per-domain tolerance policy. Conservative default = re-consult if older than 90 days for project-grade use; consult-aware applications may use older for educational/research. |
 | Q-9 | **Requestor identity handling.** When a project proponent submits an AOI through KFM (rather than directly to IPaC), does KFM retain the requestor identity? If so, under what consent terms? | **OPEN — gating** | Default = **pointer-only** consent metadata; raw requestor identity NEVER in published artifacts. |

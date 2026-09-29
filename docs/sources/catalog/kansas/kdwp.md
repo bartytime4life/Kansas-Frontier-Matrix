@@ -48,11 +48,10 @@ related:
   - docs/domains/flora/README.md
   - docs/domains/habitat/README.md
   - docs/standards/SENSITIVITY_RUBRIC.md
-  - docs/security/sensitive_register.md
   - docs/registers/AUTHORITY_LADDER.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - schemas/contracts/v1/source/source_descriptor.schema.json
   - connectors/kansas/kdwp/
   - data/registry/sources/
@@ -87,6 +86,9 @@ notes:
   - >-
     `connectors/kansas/` lane is CONFIRMED (at commit
     `b6a27916bbb9e07cbf3752870c867476e1e094e7`) per Directory Rules v1.2 §7.3.
+owning_root: docs/
+responsibility: "Documentation for KDWP — Kansas Department of Wildlife and Parks (Source Catalog Entry); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 ---
@@ -292,7 +294,7 @@ What this means operationally for KDWP-sourced records:
 > [!TIP]
 > **Three-way ranking disagreements need surface, not silence.** When KDWP SINC, NatureServe G-rank, and KBS NHI ranks disagree on a Kansas taxon's sensitivity, KFM does NOT silently pick a winner. The disagreement is recorded in the catalog and resolution defers to the steward (operational policy TBD — see sibling `kbs.md` OPEN-KBS-04 for the same tension at the KBS surface).
 
-For the explicit Kansas-deny-by-default register and the cross-domain matrix of redaction triggers, see [`docs/security/sensitive_register.md`](../../../security/sensitive_register.md) *(PROPOSED path)*.
+For the explicit Kansas-deny-by-default register and the cross-domain matrix of redaction triggers, see `docs/security/sensitive_register.md` (not present) *(PROPOSED path)*.
 
 [⬆ Back to top](#kdwp--kansas-department-of-wildlife-and-parks)
 
@@ -535,12 +537,12 @@ Because the sibling v0.2 revisions (Kansas Mesonet, KBS, KCC oil-and-gas, KDOT) 
 - [`../../../domains/fauna/README.md`](../../../domains/fauna/README.md) — primary receiving domain *(PROPOSED placement)*
 - [`../../../domains/flora/README.md`](../../../domains/flora/README.md) — Flora context: KDWP listed-species and Ecological Review Tool outputs *(PROPOSED placement)*
 - [`../../../domains/habitat/README.md`](../../../domains/habitat/README.md) — Habitat overlays, including KDWP stewardship layers *(PROPOSED placement)*
-- [`../../../security/sensitive_register.md`](../../../security/sensitive_register.md) — sensitive / deny-by-default register *(PROPOSED placement)*
+- `../../../security/sensitive_register.md` (not present) — sensitive / deny-by-default register *(PROPOSED placement)*
 - [`../../../standards/SENSITIVITY_RUBRIC.md`](../../../standards/SENSITIVITY_RUBRIC.md) — `C6-01` 0–5 rubric (PROPOSED in corpus)
 - [`../../../standards/`](../../../standards/) — external standards KFM conforms to (STAC, DCAT, PROV-O, etc.)
 - [`../../../registers/AUTHORITY_LADDER.md`](../../../registers/AUTHORITY_LADDER.md) — authority order for placement and citation *(PROPOSED)*
 - [`../../../registers/DRIFT_REGISTER.md`](../../../registers/DRIFT_REGISTER.md) — where to log conflicts between this entry and mounted-repo state *(PROPOSED)*
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home convention for `SourceDescriptor` *(PROPOSED — referenced by Directory Rules §7.4; NEEDS VERIFICATION in repo)*
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home convention for `SourceDescriptor` *(PROPOSED — referenced by Directory Rules §7.4; NEEDS VERIFICATION in repo)*
 - Pass-10 Idea Index — **`C7-10`** Kansas-First Domain Authorities (CONFIRMED); **`C6-01`** Sensitivity Rubric (CONFIRMED); **`C10-06`** Biodiversity Stack (CONFIRMED)
 - Pass-23/32 Consolidated Atlas — **`KFM-P19-IDEA-0005`** KDWP listing canonical regulatory context (CONFIRMED); **`KFM-P2-IDEA-0024`** Kansas-specific authorities (CONFIRMED); **`KFM-P13-PROG-0018`** sensitive-species grid generalization (active); **`KFM-P24-IDEA-0002`** + **`KFM-P24-PROG-0013`** sensitive species deny-by-default + OPA ABSTAIN/DENY (active)
 

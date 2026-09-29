@@ -16,19 +16,17 @@ related:
   - docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/OPEN-QUESTIONS.md
   - docs/sources/catalog/_template/SOURCE_PRODUCT_TEMPLATE.md
-  - docs/sources/catalog/loc/lcnaf.md
-  - docs/sources/catalog/loc/lcsh.md
-  - docs/sources/catalog/loc/iiif.md
-  - docs/sources/catalog/loc/maps.md
-  - docs/sources/catalog/loc/chronam.md
-  - docs/sources/catalog/loc/id-loc-gov.md
+  - docs/sources/catalog/loc/lcnaf-name-authority.md
+  - docs/sources/catalog/loc/lcsh-subject-headings.md
+  - docs/sources/catalog/loc/loc-iiif-presentations.md
+  - docs/sources/catalog/loc/loc-historic-maps.md
+  - docs/sources/catalog/loc/chronicling-america.md
   - docs/sources/catalog/isric/README.md
   - docs/sources/catalog/landfire/README.md
   - docs/sources/catalog/kansas/README.md
   - docs/sources/catalog/kansas/kansas-state-archives.md
   - docs/sources/catalog/kansas/kansas-memory.md
   - docs/sources/catalog/kansas/khri.md
-  - docs/sources/catalog/kansas/ksu-special-collections.md
   - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/authority-ladder.md
@@ -38,13 +36,11 @@ related:
   - docs/architecture/contract-schema-policy-split.md
   - docs/domains/archaeology/README.md
   - docs/domains/people-dna-land/README.md
-  - docs/domains/genealogy/README.md
-  - docs/domains/settlements/README.md
   - docs/standards/SENSITIVITY_RUBRIC.md
   - docs/registers/AUTHORITY_LADDER.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - schemas/contracts/v1/source/source_descriptor.schema.json
   - connectors/loc/
   - data/registry/sources/
@@ -98,6 +94,9 @@ notes:
     STAC `kfm:provenance`; `C4-02` STAC Collection; `C8-03` PROV-O; `C5-02`
     default-deny promotion; `C5-08` lineage required; `C6-02` named
     redaction profiles; `C6-06` k-anonymity.
+owning_root: docs/
+responsibility: "Documentation for Library of Congress (LOC) — Source Family Catalog; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Library of Congress (LOC) — Source Family Catalog
@@ -215,12 +214,12 @@ This table is the **inventory header** for the LOC family. Each row is a sub-sou
 
 | Sub-source | Per-page (PROPOSED) | Short ID | KFM role family | Primary KFM use | Status |
 |---|---|---|---|---|---|
-| LCNAF — LC Name Authority File (`id.loc.gov/authorities/names`) | [`./lcnaf.md`](./lcnaf.md) | `loc__lcnaf` | **authority** (administrative, in the source-role enum) | Anchoring person/corporate-body identity in CIDOC-CRM E21/E74 nodes alongside Wikidata QID | **CONFIRMED in scope** [`C7-02`] |
-| LCSH — LC Subject Headings (`id.loc.gov/authorities/subjects`) | [`./lcsh.md`](./lcsh.md) | `loc__lcsh` | **authority** (administrative) | Controlled-vocabulary anchoring for archival description crosswalks | PROPOSED — implied by `C7-02` cataloging stream, not enumerated as a separate KFM idea card |
-| LOC IIIF presentations (archive items, manuscripts, photographs) | [`./iiif.md`](./iiif.md) | `loc__iiif` | **context** (administrative carrier of observed/representational evidence) | Federal-level discovery surface for Kansas-related holdings; Story-Node evidence carrier; STAC-PROV-anchored ingest per `KFM-P14-PROG-0009` | **CONFIRMED in scope** [`C10-07`, `KFM-P14-PROG-0009` (Pass 32 EXPANDED)] |
-| LOC Geography & Map Division — historic maps via IIIF + Allmaps overlays | [`./maps.md`](./maps.md) | `loc__maps` | **context** (with `historic_overlay_uncertainty`) | Warped historic-map overlays in Story-Node map panels; pre-statehood and frontier mapping context | **CONFIRMED at idea level** [`KFM-P9-FEAT-0016`, `KFM-P9-PROG-0074` (active Pass 32), `KFM-P18-INV-449`, `ML-064-036`, `ML-064-037`]; implementation PROPOSED |
-| Chronicling America — historic newspaper pages and OCR | [`./chronam.md`](./chronam.md) | `loc__chronam` | **context** (historic newspaper text as carrier of contextual evidence) | Place-history and event context for the People–Place–Event graph; never the observed event itself; NER-to-event extraction per `KFM-P15-PROG-0033` | **CONFIRMED at idea level** [`KFM-P15-PROG-0033` (active Pass 32), `C10-07`-archives-stack-implied] |
-| LOC linked-data services (other `id.loc.gov` vocabularies — LCGFT, MARC relators) | [`./id-loc-gov.md`](./id-loc-gov.md) | `loc__id` | **authority** (administrative) | Controlled-vocabulary crosswalks beyond LCNAF/LCSH (e.g., LCGFT, MARC relators) | PROPOSED — adjacent to `C7-02` |
+| LCNAF — LC Name Authority File (`id.loc.gov/authorities/names`) | [`./lcnaf.md`](lcnaf-name-authority.md) | `loc__lcnaf` | **authority** (administrative, in the source-role enum) | Anchoring person/corporate-body identity in CIDOC-CRM E21/E74 nodes alongside Wikidata QID | **CONFIRMED in scope** [`C7-02`] |
+| LCSH — LC Subject Headings (`id.loc.gov/authorities/subjects`) | [`./lcsh.md`](lcsh-subject-headings.md) | `loc__lcsh` | **authority** (administrative) | Controlled-vocabulary anchoring for archival description crosswalks | PROPOSED — implied by `C7-02` cataloging stream, not enumerated as a separate KFM idea card |
+| LOC IIIF presentations (archive items, manuscripts, photographs) | [`./iiif.md`](loc-iiif-presentations.md) | `loc__iiif` | **context** (administrative carrier of observed/representational evidence) | Federal-level discovery surface for Kansas-related holdings; Story-Node evidence carrier; STAC-PROV-anchored ingest per `KFM-P14-PROG-0009` | **CONFIRMED in scope** [`C10-07`, `KFM-P14-PROG-0009` (Pass 32 EXPANDED)] |
+| LOC Geography & Map Division — historic maps via IIIF + Allmaps overlays | [`./maps.md`](loc-historic-maps.md) | `loc__maps` | **context** (with `historic_overlay_uncertainty`) | Warped historic-map overlays in Story-Node map panels; pre-statehood and frontier mapping context | **CONFIRMED at idea level** [`KFM-P9-FEAT-0016`, `KFM-P9-PROG-0074` (active Pass 32), `KFM-P18-INV-449`, `ML-064-036`, `ML-064-037`]; implementation PROPOSED |
+| Chronicling America — historic newspaper pages and OCR | [`./chronam.md`](chronicling-america.md) | `loc__chronam` | **context** (historic newspaper text as carrier of contextual evidence) | Place-history and event context for the People–Place–Event graph; never the observed event itself; NER-to-event extraction per `KFM-P15-PROG-0033` | **CONFIRMED at idea level** [`KFM-P15-PROG-0033` (active Pass 32), `C10-07`-archives-stack-implied] |
+| LOC linked-data services (other `id.loc.gov` vocabularies — LCGFT, MARC relators) | `./id-loc-gov.md` (not present) | `loc__id` | **authority** (administrative) | Controlled-vocabulary crosswalks beyond LCNAF/LCSH (e.g., LCGFT, MARC relators) | PROPOSED — adjacent to `C7-02` |
 
 > [!NOTE]
 > The short IDs (`loc__lcnaf`, `loc__iiif`, etc.) are **PROPOSED naming**. They follow the directory-rules pattern `<root>/<source_id>/<run_id>/` and the convention of using `loc__<lane>` to keep the LOC family namespaced. Final IDs MUST be decided in `control_plane/source_authority_register.yaml` and `schemas/contracts/v1/source/source_descriptor.schema.json` before any connector activates. [Directory Rules §7.3]
@@ -643,7 +642,7 @@ Per `KFM-P14-PROG-0009` (active Pass 32 EXPANDED): "LoC item pages can enter KFM
 <details>
 <summary><strong>How does this page relate to per-sub-source pages?</strong></summary>
 
-This page is the **LOC family-README**. Per-sub-source pages enumerate at [`./lcnaf.md`](./lcnaf.md), [`./lcsh.md`](./lcsh.md), [`./iiif.md`](./iiif.md), [`./maps.md`](./maps.md), [`./chronam.md`](./chronam.md), [`./id-loc-gov.md`](./id-loc-gov.md) (all PROPOSED). This page sets family-level posture (rights floor, authority-ladder anchor, lifecycle gates, source-role discipline); per-sub-source pages set sub-source-specific admission posture (specific endpoints, specific OCR/IIIF/MADS-RDF details). The umbrella pattern mirrors KBS / KSHS / KSU R&E / LANDFIRE umbrella-vs-surface models established in sibling v0.2 product pages.
+This page is the **LOC family-README**. Per-sub-source pages enumerate at [`./lcnaf.md`](lcnaf-name-authority.md), [`./lcsh.md`](lcsh-subject-headings.md), [`./iiif.md`](loc-iiif-presentations.md), [`./maps.md`](loc-historic-maps.md), [`./chronam.md`](chronicling-america.md), `./id-loc-gov.md` (not present) (all PROPOSED). This page sets family-level posture (rights floor, authority-ladder anchor, lifecycle gates, source-role discipline); per-sub-source pages set sub-source-specific admission posture (specific endpoints, specific OCR/IIIF/MADS-RDF details). The umbrella pattern mirrors KBS / KSHS / KSU R&E / LANDFIRE umbrella-vs-surface models established in sibling v0.2 product pages.
 </details>
 
 [Back to top ↑](#library-of-congress-loc--source-family-catalog)
@@ -655,12 +654,12 @@ This page is the **LOC family-README**. Per-sub-source pages enumerate at [`./lc
 > [!NOTE]
 > Targets below reflect the v0.2 catalog reorganization (`docs/sources/catalog/<family>/<product>.md`, kebab-case slugs). Per-sub-source pages PROPOSED until verified in the mounted repo.
 
-- [`./lcnaf.md`](./lcnaf.md) — per-sub-source page: LCNAF (PROPOSED)
-- [`./lcsh.md`](./lcsh.md) — per-sub-source page: LCSH (PROPOSED)
-- [`./iiif.md`](./iiif.md) — per-sub-source page: LOC IIIF presentations (PROPOSED)
-- [`./maps.md`](./maps.md) — per-sub-source page: LOC Geography & Map Division (PROPOSED)
-- [`./chronam.md`](./chronam.md) — per-sub-source page: Chronicling America (PROPOSED)
-- [`./id-loc-gov.md`](./id-loc-gov.md) — per-sub-source page: other `id.loc.gov` vocabularies (PROPOSED)
+- [`./lcnaf.md`](lcnaf-name-authority.md) — per-sub-source page: LCNAF (PROPOSED)
+- [`./lcsh.md`](lcsh-subject-headings.md) — per-sub-source page: LCSH (PROPOSED)
+- [`./iiif.md`](loc-iiif-presentations.md) — per-sub-source page: LOC IIIF presentations (PROPOSED)
+- [`./maps.md`](loc-historic-maps.md) — per-sub-source page: LOC Geography & Map Division (PROPOSED)
+- [`./chronam.md`](chronicling-america.md) — per-sub-source page: Chronicling America (PROPOSED)
+- `./id-loc-gov.md` (not present) — per-sub-source page: other `id.loc.gov` vocabularies (PROPOSED)
 - [`../README.md`](../README.md) — `docs/sources/catalog/` index (TODO: create or verify)
 - [`../landfire/README.md`](../landfire/README.md) — sibling beyond-§7.3 family README (parallel structural model, v0.2)
 - [`../isric/README.md`](../isric/README.md) — sibling beyond-§7.3 family README (parallel structural model, v0.2)
@@ -668,7 +667,7 @@ This page is the **LOC family-README**. Per-sub-source pages enumerate at [`./lc
 - [`../kansas/kansas-state-archives.md`](../kansas/kansas-state-archives.md) — KSHS umbrella per `C10-07` archives stack
 - [`../kansas/kansas-memory.md`](../kansas/kansas-memory.md) — Kansas Memory per-surface (~600k items per `C10-07`)
 - [`../kansas/khri.md`](../kansas/khri.md) — KHRI sibling Kansas-first authority per `C7-10` + `C10-07`
-- [`../kansas/ksu-special-collections.md`](../kansas/ksu-special-collections.md) — KSU SC sibling per `C10-07` archives stack (~1M items)
+- `../kansas/ksu-special-collections.md` (not present) — KSU SC sibling per `C10-07` archives stack (~1M items)
 - [`../IDENTITY.md`](../IDENTITY.md) — Collection-id and namespace conventions
 - [`../PROFILES.md`](../PROFILES.md) — catalog-profile selection guidance
 - [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) — lane-wide rights/sensitivity matrix
@@ -680,11 +679,11 @@ This page is the **LOC family-README**. Per-sub-source pages enumerate at [`./lc
 - [`../../../doctrine/truth-posture.md`](../../../doctrine/truth-posture.md) — cite-or-abstain
 - [`../../../doctrine/trust-membrane.md`](../../../doctrine/trust-membrane.md) — public-path discipline
 - [`../../../architecture/contract-schema-policy-split.md`](../../../architecture/contract-schema-policy-split.md) — why SourceDescriptor lives in three layers
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home convention
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home convention
 - [`../../../domains/archaeology/README.md`](../../../domains/archaeology/README.md) — primary receiving domain
 - [`../../../domains/people-dna-land/README.md`](../../../domains/people-dna-land/README.md) — secondary receiving domain (LCNAF identity)
-- [`../../../domains/genealogy/README.md`](../../../domains/genealogy/README.md) — tertiary receiving domain (LCNAF + Wikidata QID anchoring)
-- [`../../../domains/settlements/README.md`](../../../domains/settlements/README.md) — quaternary receiving domain (historic-map context)
+- `../../../domains/genealogy/README.md` (not present) — tertiary receiving domain (LCNAF + Wikidata QID anchoring)
+- `../../../domains/settlements/README.md` (not present) — quaternary receiving domain (historic-map context)
 - [`../../../standards/SENSITIVITY_RUBRIC.md`](../../../standards/SENSITIVITY_RUBRIC.md) — `C6-01` 0–5 rubric (PROPOSED in corpus)
 - [`../../../registers/AUTHORITY_LADDER.md`](../../../registers/AUTHORITY_LADDER.md) — authority order
 - [`../../../registers/DRIFT_REGISTER.md`](../../../registers/DRIFT_REGISTER.md) — drift filing
@@ -692,7 +691,7 @@ This page is the **LOC family-README**. Per-sub-source pages enumerate at [`./lc
 - [`../../../../schemas/contracts/v1/source/source_descriptor.schema.json`](../../../../schemas/contracts/v1/source/source_descriptor.schema.json) — canonical schema home per ADR-0001
 - [`../../../../contracts/source/source_descriptor.md`](../../../../contracts/source/source_descriptor.md) — object meaning (PROPOSED)
 - [`../../../../connectors/loc/README.md`](../../../../connectors/loc/README.md) — connector family (PROPOSED beyond §7.3 per OPEN-DSC-14)
-- [`../../../../policy/sources/loc.rego`](../../../../policy/sources/loc.rego) — admission gates (PROPOSED home)
+- `../../../../policy/sources/loc.rego` (not present) — admission gates (PROPOSED home)
 - [`../../../../control_plane/source_authority_register.yaml`](../../../../control_plane/source_authority_register.yaml) — register entries for each LOC sub-source
 - Pass-10 Idea Index — **`C7-01`** Wikidata; **`C7-02`** LCNAF (CONFIRMED — central card); **`C7-03`** VIAF; **`C7-04`** ISNI; **`C7-09`** USGS GNIS; **`C10-07`** Archives Stack (CONFIRMED — LOC IIIF named); **`C4-01`** STAC `kfm:provenance`; **`C4-02`** STAC Collection; **`C5-02`** default-deny promotion; **`C5-08`** lineage required; **`C6-01`/`C6-02`/`C6-06`** sensitivity rubric + redaction profiles + k-anonymity; **`C8-01`** CIDOC-CRM; **`C8-03`** PROV-O
 - Pass-23/32 Consolidated Atlas — **`KFM-P14-PROG-0009`** LOC IIIF STAC PROV ingestor (active Pass 32 EXPANDED — operationally definitive); **`KFM-P15-PROG-0033`** Chronicling America OCR/IIIF NER-to-event (active Pass 32 — confirms ChronAm corpus presence); **`KFM-P9-FEAT-0016`** IIIF/Allmaps overlays require georeference and rights evidence (active Pass 32); **`KFM-P9-PROG-0074`** IIIF and Allmaps historic overlays as rights-bound map context (active Pass 32); **`KFM-P18-INV-449`** LOC Geography & Map Division inventory (Pass 18); Atlas §24.1.1 + §24.1.2 + §24.1.3 + §24.2.1 + §24.6.2

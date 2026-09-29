@@ -11,16 +11,12 @@ policy_label: public
 related:
   - docs/sources/catalog/gbif/README.md
   - docs/sources/catalog/gbif/async-download.md
-  - docs/sources/catalog/gbif/occurrence-search.md
+  - docs/sources/catalog/gbif/occurrence-api.md
   - docs/sources/catalog/gbif/dataset-metadata.md
-  - docs/sources/catalog/gbif/IDENTITY.md
-  - docs/sources/catalog/gbif/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/gbif/_examples/stac-item-example.json
   - docs/sources/catalog/README.md
   - docs/sources/catalog/gbif.md
   - docs/doctrine/directory-rules.md
   - docs/standards/stac-dwc-hybrid.md
-  - docs/runbooks/backbone-version-rotation.md
 tags: [kfm, docs, sources, catalog, gbif, backbone, taxonomy, anchor, crosswalk, itis, fauna, flora, reference-data]
 notes:
   - "PROPOSED product-page scaffold; sibling-link presence verified in Claude Code session."
@@ -30,6 +26,9 @@ notes:
   - "CONFIRMED tension (C7-08): the Backbone is updated and re-versioned periodically; long-running pipelines must tolerate a Backbone version change without invalidating prior receipts."
   - "Object families this product enables: Taxon and TaxonCrosswalk (CONFIRMED in Atlas §E for both Fauna and Flora)."
   - "Type is `product-page` (not `standard`); this file carries the full presentation standard but is intentionally a scaffold, not steady-state."
+owning_root: docs/
+responsibility: "Documentation for GBIF Backbone Taxonomy; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # GBIF Backbone Taxonomy
@@ -51,7 +50,7 @@ notes:
   <img alt="Last updated: 2026-05-21" src="https://img.shields.io/badge/updated-2026--05--21-informational">
 </p>
 
-**Status:** PROPOSED — scaffold only · **Family:** [`gbif`](./README.md) · **Catalog index:** [`../README.md`](../README.md) · **Source catalog entry:** [`../gbif.md`](../gbif.md) · **Sibling products:** [Async Download](./async-download.md), [Occurrence Search](./occurrence-search.md), [Dataset Metadata](./dataset-metadata.md) · **Last reviewed:** 2026-05-21
+**Status:** PROPOSED — scaffold only · **Family:** [`gbif`](./README.md) · **Catalog index:** [`../README.md`](../README.md) · **Source catalog entry:** [`../gbif.md`](../gbif.md) · **Sibling products:** [Async Download](./async-download.md), [Occurrence Search](occurrence-api.md), [Dataset Metadata](./dataset-metadata.md) · **Last reviewed:** 2026-05-21
 
 > [!IMPORTANT]
 > **The Backbone is an anchor, not a dataset.** Per the parent source-catalog entry [`../gbif.md`](../gbif.md) §4 (CONFIRMED): "Source role is `administrative` (taxonomic authority, not occurrence). Used as anchor only; never published as occurrence evidence." This product's purpose is to be the resolution target for `kfm:gbif_backbone_doi` references that appear in *every other* GBIF-anchored catalog item across KFM's biodiversity lane.
@@ -103,7 +102,7 @@ This page describes the **GBIF Backbone Taxonomy product** — the synthesized t
 **What this page is not.**
 
 - **Not a SourceDescriptor.** See [`data/registry/sources/`](../../../../data/registry/sources/).
-- **Not a policy.** See [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md).
+- **Not a policy.** See [`policy/sensitivity/`](../../../../policy/sensitivity/) and `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present).
 - **Not a schema.** See [`schemas/contracts/v1/source/`](../../../../schemas/contracts/v1/source/) per ADR-0001.
 - **Not the ITIS authority.** ITIS TSN is the *first-line* anchor (CONFIRMED, C7-07); the Backbone is consulted only when ITIS is silent or stale, or when international comparability requires it.
 
@@ -259,7 +258,7 @@ See [`data/registry/sources/`](../../../../data/registry/sources/) for the autho
 | ITIS source family (first-line anchor) | `docs/sources/catalog/itis.md` *(PROPOSED — sibling source-catalog entry not yet authored)* | First-line authority per C7-07 |
 | Source steward register | `control_plane/source_authority_register.yaml` | **PROPOSED** |
 | Vendor README | [`./README.md`](./README.md) | Sibling — INFERRED present |
-| Sibling product pages | [`./async-download.md`](./async-download.md), [`./occurrence-search.md`](./occurrence-search.md), [`./dataset-metadata.md`](./dataset-metadata.md) | Sibling — INFERRED present |
+| Sibling product pages | [`./async-download.md`](./async-download.md), [`./occurrence-search.md`](occurrence-api.md), [`./dataset-metadata.md`](./dataset-metadata.md) | Sibling — INFERRED present |
 | Catalog README | [`../README.md`](../README.md) | Parent — INFERRED present |
 
 > [!NOTE]
@@ -382,7 +381,7 @@ PROPOSED — distinct **source / observed / valid / retrieval / release / correc
 
 ## Rights and sensitivity
 
-NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
+NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not restate policy here.**
 
 | Concern | Default for this product | Citation |
 |---|---|---|
@@ -433,8 +432,8 @@ Catalog closure is the final discoverability and accountability gate before publ
 - [`contracts/fauna/`](../../../../contracts/fauna/) — Fauna domain contracts including `Taxon` and `TaxonCrosswalk` (CONFIRMED terms per Atlas Part 1 Fauna §E; file presence NEEDS VERIFICATION).
 - [`contracts/flora/`](../../../../contracts/flora/) — Flora domain contracts including `Plant Taxon` and `FloraTaxon Crosswalk` (CONFIRMED terms per Atlas Part 1 Flora §E; file presence NEEDS VERIFICATION).
 - [`schemas/contracts/v1/source/source-descriptor.json`](../../../../schemas/contracts/v1/source/source-descriptor.json) — machine shape per ADR-0001 (NEEDS VERIFICATION).
-- [`schemas/contracts/v1/fauna/taxon-crosswalk.schema.json`](../../../../schemas/contracts/v1/fauna/taxon-crosswalk.schema.json) — PROPOSED schema for CONFIRMED Fauna object family; presence NEEDS VERIFICATION.
-- [`schemas/contracts/v1/flora/flora-taxon-crosswalk.schema.json`](../../../../schemas/contracts/v1/flora/flora-taxon-crosswalk.schema.json) — PROPOSED schema for CONFIRMED Flora object family; presence NEEDS VERIFICATION.
+- `schemas/contracts/v1/fauna/taxon-crosswalk.schema.json` (not present) — PROPOSED schema for CONFIRMED Fauna object family; presence NEEDS VERIFICATION.
+- `schemas/contracts/v1/flora/flora-taxon-crosswalk.schema.json` (not present) — PROPOSED schema for CONFIRMED Flora object family; presence NEEDS VERIFICATION.
 - [`schemas/contracts/v1/receipts/`](../../../../schemas/contracts/v1/receipts/) — receipt schemas including a PROPOSED `BackboneRotationReceipt` for adoption events; PROPOSED per Atlas §24.2.1.
 - [`schemas/contracts/v1/evidence/evidence_bundle.schema.json`](../../../../schemas/contracts/v1/evidence/evidence_bundle.schema.json) — PROPOSED per `KFM-P26-PROG-0004`.
 
@@ -447,8 +446,8 @@ Catalog closure is the final discoverability and accountability gate before publ
 - [`connectors/gbif/`](../../../../connectors/gbif/) — source-specific fetch / admission logic (Directory Rules §7.3, CONFIRMED).
   - `connectors/gbif/backbone.py` — taxonomy resolution + Backbone DOI snapshot capture *(CONFIRMED requirement, C7-08)*. Called from every PROCESSED-stage anchoring step in the biodiversity lane.
 - [`pipelines/ingest/`](../../../../pipelines/ingest/), [`pipelines/normalize/`](../../../../pipelines/normalize/), [`pipelines/validate/`](../../../../pipelines/validate/), [`pipelines/catalog/`](../../../../pipelines/catalog/) — lifecycle phase pipelines (Directory Rules §7.4, CONFIRMED).
-- [`pipeline_specs/biodiversity/`](../../../../pipeline_specs/biodiversity/) — declarative specs.
-- [`pipeline_specs/biodiversity/backbone-rotation.yaml`](../../../../pipeline_specs/biodiversity/backbone-rotation.yaml) — PROPOSED rotation playbook spec per C7-08 Suggested Future Work.
+- `pipeline_specs/biodiversity/` (not present) — declarative specs.
+- `pipeline_specs/biodiversity/backbone-rotation.yaml` (not present) — PROPOSED rotation playbook spec per C7-08 Suggested Future Work.
 
 [↑ Back to top](#gbif-backbone-taxonomy)
 
@@ -458,7 +457,7 @@ Catalog closure is the final discoverability and accountability gate before publ
 
 *Illustrative only — do not treat as authoritative. Field values are placeholders.*
 
-See [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) for the canonical minimal shape. Two fragments below: a name-match API call (the operational entry point), and the STAC catalog item that represents a Backbone snapshot.
+See `./_examples/stac-item-example.json` (not present) for the canonical minimal shape. Two fragments below: a name-match API call (the operational entry point), and the STAC catalog item that represents a Backbone snapshot.
 
 <details>
 <summary><strong>Illustrative API calls (click to expand)</strong></summary>
@@ -567,16 +566,16 @@ GET https://api.gbif.org/v1/species/<taxonKey>
 
 - [`./README.md`](./README.md) — GBIF vendor family README
 - [`./async-download.md`](./async-download.md) — sibling product (bulk async download with citable DOI)
-- [`./occurrence-search.md`](./occurrence-search.md) — sibling product (sync exploratory search)
+- [`./occurrence-search.md`](occurrence-api.md) — sibling product (sync exploratory search)
 - [`./dataset-metadata.md`](./dataset-metadata.md) — sibling product (per-dataset license + citation lookup)
-- [`./IDENTITY.md`](./IDENTITY.md) — collection-id pattern and namespace doctrine
-- [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — product-by-product rights and sensitivity map
-- [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) — canonical minimal STAC shape
+- `./IDENTITY.md` (not present) — collection-id pattern and namespace doctrine
+- `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — product-by-product rights and sensitivity map
+- `./_examples/stac-item-example.json` (not present) — canonical minimal STAC shape
 - [`../README.md`](../README.md) — catalog index
 - [`../gbif.md`](../gbif.md) — GBIF source-catalog entry (parent doctrine for the family)
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement and lifecycle invariants
 - [`../../../standards/stac-dwc-hybrid.md`](../../../standards/stac-dwc-hybrid.md) — STAC × DwC profile *(PROPOSED; see C4-03)*
-- [`../../../runbooks/backbone-version-rotation.md`](../../../runbooks/backbone-version-rotation.md) — Backbone-version-rotation playbook *(PROPOSED — referenced in C7-08 Suggested Future Work)*
+- `../../../runbooks/backbone-version-rotation.md` (not present) — Backbone-version-rotation playbook *(PROPOSED — referenced in C7-08 Suggested Future Work)*
 
 ---
 

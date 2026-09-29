@@ -25,6 +25,9 @@ notes:
   - "Family scaffolded from the connectors/ inventory; descriptions grounded in [DOM-AIR] §D and Atlas idea cards. Sibling-link presence verified in a Claude Code session, not in a mounted repo."
   - "DUAL STATUS: CONFIRMED in [DOM-AIR] §D (listed as 'OpenAQ-like aggregators'); NOT in directory-rules.md §7.3 nine canonical connector roots (`usgs/ fema/ noaa/ nrcs/ kansas/ gbif/ inaturalist/ census/ local_upload/`). Promotion of `connectors/openaq/` to §7.3 is ADR-class — see OPEN-DSC-14."
   - "OpenAQ source_role is `aggregate` per Atlas §24.1 source-role anti-collapse register; MUST NOT be relabeled as `observed` regulatory data. See §10 below."
+owning_root: docs/
+responsibility: "Documentation for OpenAQ source family; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -352,7 +355,7 @@ See [`RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) and [`po
 - [`../OPEN-QUESTIONS.md`](../OPEN-QUESTIONS.md) — lane-wide open question register *(includes `OPEN-DSC-03`, `OPEN-DSC-14`)*
 - [`../_template/SOURCE_PRODUCT_TEMPLATE.md`](../_template/SOURCE_PRODUCT_TEMPLATE.md) — product-page template *(PROPOSED)*
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Directory Rules v1.2 *(§7.3 canonical connector roots; §13 anti-patterns)*
-- [`../../../domains/atmosphere-air/README.md`](../../../domains/atmosphere-air/README.md) — atmosphere/air domain doctrine *(NEEDS VERIFICATION of path)*
+- `../../../domains/atmosphere-air/README.md` (not present) — atmosphere/air domain doctrine *(NEEDS VERIFICATION of path)*
 - [`../../../standards/STAC.md`](../../../standards/STAC.md) — KFM-STAC profile *(NEEDS VERIFICATION of path)*
 - [`../../../standards/PROV.md`](../../../standards/PROV.md) — KFM provenance profile *(NEEDS VERIFICATION of path; PROV.md vs PROVENANCE.md naming under ADR review per Directory Rules §13.5 v1.1)*
 - [`../../../adr/`](../../../adr/) — ADR directory *(an ADR is REQUIRED before §7.3 promotion; see §5)*

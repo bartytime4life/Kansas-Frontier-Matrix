@@ -10,8 +10,6 @@ updated: 2026-05-22
 policy_label: public
 related:
   - docs/sources/catalog/noaa/README.md
-  - docs/sources/catalog/noaa/IDENTITY.md
-  - docs/sources/catalog/noaa/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/noaa/noaa-uscrn.md
   - docs/sources/catalog/noaa/nws-api.md
   - docs/sources/catalog/noaa/hrrr-smoke.md
@@ -23,7 +21,7 @@ related:
   - docs/domains/hydrology/README.md
   - docs/doctrine/directory-rules.md
   - docs/standards/PROV.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 tags: [kfm, docs, sources, catalog, noaa, ncei, coop, asos, awos, station-observations, climate-normals, climate-anomalies, reanalysis, atmosphere-air, multi-role]
 notes:
   - "PROPOSED product-page scaffold; sibling-link presence and repo path NEEDS VERIFICATION."
@@ -32,6 +30,9 @@ notes:
   - "Dominant anti-collapse: climate normal cited as per-place truth (CONFIRMED — NOAA family entry §5.2). Plus all DOM-AIR §I anti-collapses apply at least partially across components."
   - "Bundle scope is broad — likely candidate for future split into separate product-pages per component (OPEN-STN-04). v0.2 polish preserves the bundle framing while making the splits inspectable."
   - "Distinguish from USCRN (reference-grade), NWS API (operational), HRRR-Smoke (active-forecast). This product covers Mesonet-adjacent / non-reference station obs + historical archive + derived climate products."
+owning_root: docs/
+responsibility: "Documentation for NOAA/NWS Station Observations and Climate Products; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # NOAA/NWS Station Observations and Climate Products
@@ -228,8 +229,8 @@ Reanalyses are **gridded climate datasets** produced by running a numerical mode
 | Direction | Neighbor | Relationship |
 |---|---|---|
 | **Upstream (parent)** | [`README.md`](./README.md) | NOAA family-level orientation. |
-| **Sibling** | [`IDENTITY.md`](./IDENTITY.md) | Collection-id and namespace rules for the NOAA family. |
-| **Sibling** | [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) | Family rights / sensitivity decisions; this page does **not** restate policy. |
+| **Sibling** | `IDENTITY.md` (not present) | Collection-id and namespace rules for the NOAA family. |
+| **Sibling** | `RIGHTS-AND-SENSITIVITY-MAP.md` (not present) | Family rights / sensitivity decisions; this page does **not** restate policy. |
 | **Sibling — directly adjacent** | [`noaa-uscrn.md`](./noaa-uscrn.md) | USCRN is the **reference-grade** subset; this bundle covers the **non-reference** station networks plus aggregates plus reanalyses. AC-4 anti-collapse trades on the difference. |
 | **Sibling — partial overlap** | [`nws-api.md`](./nws-api.md) | NWS API exposes some operational station obs; this bundle covers the NCEI archive of historical station obs. Overlap question tracked as OPEN-NWS-07 (carried forward as OPEN-STN-05). |
 | **Sibling — forecast comparator** | [`hrrr-smoke.md`](./hrrr-smoke.md) | HRRR-Smoke is `modeled` forecast; reanalyses in this bundle are `modeled` retrospective. The trust badge distinction matters. |
@@ -301,7 +302,7 @@ PROPOSED — each descriptor should at minimum carry:
 - `role_authority` — NOAA NCEI for archive products and normals; NWS for operational network obs; the specific reanalysis project (NCEP/NCAR, NCEP, ECMWF, etc.) for reanalyses.
 - `role_model_run_ref` *(required for reanalysis component)* — `EvidenceRef → ModelRunReceipt`.
 - `rights` — generally U.S. government works in the public domain; per-product terms NEEDS VERIFICATION.
-- `sensitivity` — tier per [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md).
+- `sensitivity` — tier per `RIGHTS-AND-SENSITIVITY-MAP.md` (not present).
 - `cadence` — per-station for station obs; periodic re-publication for normals (when NOAA issues a new normal baseline); per-product for reanalyses.
 - `station_metadata_ref` *(required for station component)* — per KFM-P10-PROG-0019.
 - `baseline_period` *(required for normals and anomalies)* — first-class field.
@@ -478,7 +479,7 @@ PROPOSED — quality and uncertainty handling varies sharply by component.
 ## Rights and sensitivity
 
 > [!IMPORTANT]
-> **Do not restate policy here.** Sensitivity tier, redaction rules, and reveal posture are decided in [`policy/sensitivity/`](../../../../policy/sensitivity/) and summarized in the sibling [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). This section names the *kinds of risks* the product introduces, not the *decisions* taken against them.
+> **Do not restate policy here.** Sensitivity tier, redaction rules, and reveal posture are decided in [`policy/sensitivity/`](../../../../policy/sensitivity/) and summarized in the sibling `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). This section names the *kinds of risks* the product introduces, not the *decisions* taken against them.
 
 PROPOSED risk surfaces — NEEDS VERIFICATION per product:
 
@@ -751,20 +752,20 @@ PROPOSED — typical wiring (NEEDS VERIFICATION per component):
 ## Related docs
 
 - [`./README.md`](./README.md) — NOAA family landing page.
-- [`./IDENTITY.md`](./IDENTITY.md) — Collection-id and namespace rules.
-- [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — Family rights / sensitivity decisions.
+- `./IDENTITY.md` (not present) — Collection-id and namespace rules.
+- `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — Family rights / sensitivity decisions.
 - [`./noaa-uscrn.md`](./noaa-uscrn.md) — Reference-grade station sibling (this bundle's non-reference station component is doctrinally distinct).
 - [`./nws-api.md`](./nws-api.md) — Operational NWS API sibling (partial overlap on station obs).
 - [`./hrrr-smoke.md`](./hrrr-smoke.md) — Active-forecast `modeled` sibling (reanalyses in this bundle are retrospective `modeled`).
 - [`./goes-abi-aod.md`](./goes-abi-aod.md), [`./hms-fire-smoke.md`](./hms-fire-smoke.md) — Other NOAA-family slices.
-- [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) — Minimal STAC + `kfm:provenance` shape (illustrative).
+- `./_examples/stac-item-example.json` (not present) — Minimal STAC + `kfm:provenance` shape (illustrative).
 - [`../README.md`](../README.md) — Catalog root.
 - [`../../../domains/atmosphere/README.md`](../../../domains/atmosphere/README.md) — Primary domain.
 - [`../../../domains/agriculture/README.md`](../../../domains/agriculture/README.md) — Adjacency.
 - [`../../../domains/hydrology/README.md`](../../../domains/hydrology/README.md) — Adjacency.
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Placement authority.
 - [`../../../standards/PROV.md`](../../../standards/PROV.md) — W3C PROV-O / PAV profile.
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — Schema home rule.
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema home rule.
 - *TODO* — link to the `noaa/ncei` and `noaa/reanalysis` connector READMEs once authored.
 - *TODO* — link to `kfm-stac-extension.md` once authored.
 - *TODO* — link to the `ClimateNormal` / `ClimateAnomaly` / `WeatherObservation` schemas once authored.

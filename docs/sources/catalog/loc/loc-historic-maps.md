@@ -10,29 +10,23 @@ updated: 2026-05-22
 policy_label: public
 related:
   - docs/sources/catalog/loc/README.md
-  - docs/sources/catalog/loc/IDENTITY.md
-  - docs/sources/catalog/loc/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/loc/LCNAF.md
-  - docs/sources/catalog/loc/LCSH.md
-  - docs/sources/catalog/loc/CHRONICLING-AMERICA.md
-  - docs/sources/catalog/loc/_examples/stac-item-example.json
-  - docs/sources/catalog/loc/_examples/historic-map-overlay-manifest-example.json
+  - docs/sources/catalog/loc/lcnaf-name-authority.md
+  - docs/sources/catalog/loc/lcsh-subject-headings.md
+  - docs/sources/catalog/loc/chronicling-america.md
   - docs/sources/catalog/README.md
   - docs/standards/STAC_KFM_PROFILE.md
   - docs/standards/PROV.md
-  - docs/standards/PLUGIN_ALLOWLIST.md
   - docs/doctrine/directory-rules.md
-  - data/registry/sources/loc/historic-maps/
   - schemas/contracts/v1/source/source-descriptor.schema.json
-  - schemas/contracts/v1/map/historic_map_overlay_manifest.schema.json
-  - connectors/loc/historic-maps/
-  - pipeline_specs/cross-domain/loc-historic-maps/
 tags: [kfm, docs, sources, catalog, loc, historic-maps, iiif, allmaps, georeference, warped-overlay, representation, story-node]
 notes:
   - "PROPOSED product-page scaffold; the docs/sources/catalog/loc/ tree itself is PROPOSED until repo verification."
   - "Historic-map overlays are INTERPRETIVE REPRESENTATIONS, not direct geometry evidence — Representation Receipt + Reality Boundary Note are required."
   - "Doctrine grounded in KFM-P9-FEAT-0016, KFM-P9-PROG-0074, ML-064-036/037, ML-064-103 (analog GLO RMS pattern)."
   - "Owners, badge targets, and example links are explicit placeholders — not fabricated."
+owning_root: docs/
+responsibility: "Documentation for LOC Geography and Map Division Historic Maps; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # LOC Geography and Map Division — Historic Maps
@@ -192,7 +186,7 @@ CONFIRMED (Pass 10 C4): KFM publishes through **STAC** (spatiotemporal), **DCAT*
 
 ## 6. Collection identity
 
-PROPOSED (Pass 10 C4-02): Collection id pattern is `kfm-<org>-<product>`; the exact form for this product is left to [`IDENTITY.md`](./IDENTITY.md). Collection ids are **stable handles** — renaming a Collection breaks links throughout the catalog.
+PROPOSED (Pass 10 C4-02): Collection id pattern is `kfm-<org>-<product>`; the exact form for this product is left to `IDENTITY.md` (not present). Collection ids are **stable handles** — renaming a Collection breaks links throughout the catalog.
 
 PROPOSED (Pass 10 C4-01 open question, tracked as **OPEN-DSC-03**): The vendor namespace for KFM extension fields is **unresolved between `kfm:` (KFM-global) and `ks-kfm:` (Kansas-scoped)**. This page does not pin the choice.
 
@@ -292,7 +286,7 @@ PROPOSED rules for this product:
 
 ## 10. Rights, sensitivity, and CARE posture
 
-NEEDS VERIFICATION (default for this product): defer to [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
+NEEDS VERIFICATION (default for this product): defer to [`policy/sensitivity/`](../../../../policy/sensitivity/) and `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not restate policy here.**
 
 CONFIRMED (`KFM-P9-PROG-0074`): KFM historic-map overlays MUST *"preserve **IIIF rights, georeferencing annotation provenance, and plugin governance** before MapLibre display."* This implies **two parallel rights streams** that must both clear:
 
@@ -378,7 +372,7 @@ CONFIRMED (`KFM-P1-IDEA-0020`, "Catalog closure before public release"): Public 
 | `EvidenceBundle` (shape) | `schemas/contracts/v1/evidence/evidence_bundle.schema.json` | CONFIRMED in Master MapLibre object table |
 | `RepresentationReceipt` (shape) | PROPOSED home under `schemas/contracts/v1/receipts/` or `schemas/contracts/v1/<domain>/receipts/` per **ADR-S-03** | PROPOSED — schema home pending ADR-S-03 |
 | `Reality Boundary Note` (shape) | PROPOSED home, likely under `schemas/contracts/v1/ui/` or `schemas/contracts/v1/evidence/` | PROPOSED |
-| Plugin allowlist | [`policy/plugins/`](../../../../policy/plugins/) (PROPOSED) | PROPOSED |
+| Plugin allowlist | `policy/plugins/` (not present) (PROPOSED) | PROPOSED |
 
 [↑ Back to top](#loc-geography-and-map-division--historic-maps)
 
@@ -409,9 +403,9 @@ NEEDS VERIFICATION (Directory Rules §13.5 anti-pattern *Source alias drift risk
 ## 15. Examples (illustrative only)
 
 > [!NOTE]
-> Examples below are **illustrative**, not authoritative. Authoritative samples live under [`_examples/`](./_examples/) and the fixture lanes — do not treat any block on this page as a contract.
+> Examples below are **illustrative**, not authoritative. Authoritative samples live under `_examples/` (not present) and the fixture lanes — do not treat any block on this page as a contract.
 
-See [`_examples/stac-item-example.json`](./_examples/stac-item-example.json) and [`_examples/historic-map-overlay-manifest-example.json`](./_examples/historic-map-overlay-manifest-example.json).
+See `_examples/stac-item-example.json` (not present) and `_examples/historic-map-overlay-manifest-example.json` (not present).
 
 <details>
 <summary><strong>Illustrative STAC Item sketch with georeference provenance (DO NOT COPY VERBATIM)</strong></summary>
@@ -574,19 +568,19 @@ See [`_examples/stac-item-example.json`](./_examples/stac-item-example.json) and
 ## 17. Related docs
 
 - [`./README.md`](./README.md) — `loc` source family overview
-- [`./IDENTITY.md`](./IDENTITY.md) — collection-id pattern, namespace decisions for the `loc` family
-- [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — rights and sensitivity disposition for `loc` products
-- [`./LCNAF.md`](./LCNAF.md) — sibling LoC product (name authority); LCNAF anchors creators / cartographers of historic maps
-- [`./LCSH.md`](./LCSH.md) — sibling LoC product (subject headings); LCSH classifies the topical / geographic subject of a historic map
-- [`./CHRONICLING-AMERICA.md`](./CHRONICLING-AMERICA.md) — sibling LoC product (recall-layer newspapers)
-- [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) — minimal STAC + `kfm:provenance` + `kfm:georeference` shape
-- [`./_examples/historic-map-overlay-manifest-example.json`](./_examples/historic-map-overlay-manifest-example.json) — `HistoricMapOverlayManifest` shape
+- `./IDENTITY.md` (not present) — collection-id pattern, namespace decisions for the `loc` family
+- `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — rights and sensitivity disposition for `loc` products
+- [`./LCNAF.md`](lcnaf-name-authority.md) — sibling LoC product (name authority); LCNAF anchors creators / cartographers of historic maps
+- [`./LCSH.md`](lcsh-subject-headings.md) — sibling LoC product (subject headings); LCSH classifies the topical / geographic subject of a historic map
+- [`./CHRONICLING-AMERICA.md`](chronicling-america.md) — sibling LoC product (recall-layer newspapers)
+- `./_examples/stac-item-example.json` (not present) — minimal STAC + `kfm:provenance` + `kfm:georeference` shape
+- `./_examples/historic-map-overlay-manifest-example.json` (not present) — `HistoricMapOverlayManifest` shape
 - [`../README.md`](../README.md) — `docs/sources/catalog/` overview
 - [`../../../standards/STAC_KFM_PROFILE.md`](../../../standards/STAC_KFM_PROFILE.md) — KFM STAC profile (namespace, extensions, attestation hook)
 - [`../../../standards/PROV.md`](../../../standards/PROV.md) — PROV-O / PAV provenance profile *(filename pending ADR-S-06)*
-- [`../../../standards/PLUGIN_ALLOWLIST.md`](../../../standards/PLUGIN_ALLOWLIST.md) — plugin-allowlist convention *(path PROPOSED)*
+- `../../../standards/PLUGIN_ALLOWLIST.md` (not present) — plugin-allowlist convention *(path PROPOSED)*
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement law
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — schema-home rule *(path PROPOSED)*
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home rule *(path PROPOSED)*
 
 [↑ Back to top](#loc-geography-and-map-division--historic-maps)
 
@@ -658,7 +652,7 @@ See [`_examples/stac-item-example.json`](./_examples/stac-item-example.json) and
 
 ---
 
-**Related docs:** [loc family README](./README.md) · [IDENTITY](./IDENTITY.md) · [RIGHTS-AND-SENSITIVITY-MAP](./RIGHTS-AND-SENSITIVITY-MAP.md) · [LCNAF](./LCNAF.md) · [LCSH](./LCSH.md) · [Chronicling America](./CHRONICLING-AMERICA.md) · [STAC KFM Profile](../../../standards/STAC_KFM_PROFILE.md) · [Plugin Allowlist](../../../standards/PLUGIN_ALLOWLIST.md) · [Directory Rules](../../../doctrine/directory-rules.md)
+**Related docs:** [loc family README](./README.md) · IDENTITY (not present) · RIGHTS-AND-SENSITIVITY-MAP (not present) · [LCNAF](lcnaf-name-authority.md) · [LCSH](lcsh-subject-headings.md) · [Chronicling America](chronicling-america.md) · [STAC KFM Profile](../../../standards/STAC_KFM_PROFILE.md) · Plugin Allowlist (not present) · [Directory Rules](../../../doctrine/directory-rules.md)
 
 *Last updated: 2026-05-22 · Doc version: v0.2 · Status: PROPOSED scaffold*
 

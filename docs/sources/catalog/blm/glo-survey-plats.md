@@ -10,9 +10,6 @@ updated: 2026-05-20
 policy_label: public
 related:
   - docs/sources/catalog/blm/README.md
-  - docs/sources/catalog/blm/IDENTITY.md
-  - docs/sources/catalog/blm/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/blm/glo-plats.md
   - docs/sources/catalog/blm/glo-field-notes.md
   - docs/sources/catalog/README.md
   - docs/sources/catalog/_examples/stac-item-example.json
@@ -21,6 +18,9 @@ tags: [kfm, docs, sources, catalog, blm, glo, land-patents, title, people-dna-la
 notes:
   - "PROPOSED product-page scaffold; sibling-link presence verified in Claude Code session."
   - "PROPOSED content sourced from Pass 23/32 atlas (KFM-P29-IDEA-0016, KFM-P17-PROG-0014, KFM-P2-IDEA-0016, KFM-P2-PROG-0011) and Pass 10 (C4-01, C15-01..03); descriptor fields intentionally not restated here."
+owning_root: docs/
+responsibility: "Documentation for BLM GLO Land Patents; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -107,8 +107,8 @@ See [`data/registry/sources/`](../../../../data/registry/sources/) for the autho
 |---|---|---|---|
 | `SourceDescriptor` | [`data/registry/sources/`](../../../../data/registry/sources/) | Identity, source role, rights, cadence, sensitivity, authority class | **No** — pointer only |
 | Family overview & sibling links | [`./README.md`](./README.md) | Family-level orientation for `blm` | **No** — see family README |
-| Collection identity rules | [`./IDENTITY.md`](./IDENTITY.md) | `kfm-<org>-<product>` pattern, namespace | **No** — see IDENTITY |
-| Rights & sensitivity mapping | [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) | Tiering, living-person review, release class | **No** — see map |
+| Collection identity rules | `./IDENTITY.md` (not present) | `kfm-<org>-<product>` pattern, namespace | **No** — see IDENTITY |
+| Rights & sensitivity mapping | `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) | Tiering, living-person review, release class | **No** — see map |
 | Contract shape | `schemas/contracts/v1/source/` and `schemas/contracts/v1/domains/people-dna-land/` | JSON-schema for descriptor + Land Ownership Assertion / Title Instrument | **No** — per ADR-0001 |
 
 [Back to top](#top)
@@ -159,7 +159,7 @@ PROPOSED. The catalog projection set this product participates in. Lanes follow 
 
 ## Collection identity
 
-- PROPOSED Collection id pattern: `kfm-<org>-<product>` — see [`IDENTITY.md`](./IDENTITY.md) for the canonical rule.
+- PROPOSED Collection id pattern: `kfm-<org>-<product>` — see `IDENTITY.md` (not present) for the canonical rule.
 - PROPOSED namespace: `kfm:` — *see [OPEN-DSC-03](#open-questions); Pass-10 C4-01 records the `kfm:` vs `ks-kfm:` choice as an unresolved namespace question.*
 - Asset roles (record-image, parsed-record, legal-description-raw, legal-description-parsed, ownership-assertion, title-instrument, etc.): NEEDS VERIFICATION — confirm against `schemas/contracts/v1/source/` and `schemas/contracts/v1/domains/people-dna-land/`.
 
@@ -244,7 +244,7 @@ PROPOSED identity rule for the patent record itself (Domain Atlas E): *determini
 
 ## Rights and sensitivity
 
-NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
+NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). **Do not restate policy here.**
 
 PROPOSED sensitivity posture for this product, derived from People/DNA/Land doctrine (Domains v1.1 ch. 16, sections I and N):
 
@@ -391,8 +391,8 @@ Pass-10 references:
 ## Related docs
 
 - [`docs/sources/catalog/blm/README.md`](./README.md) — `blm` family landing page.
-- [`docs/sources/catalog/blm/IDENTITY.md`](./IDENTITY.md) — Collection-id and namespace rules for the family.
-- [`docs/sources/catalog/blm/RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — Rights / sensitivity tiering for `blm` (living-person policy lives here).
+- `docs/sources/catalog/blm/IDENTITY.md` (not present) — Collection-id and namespace rules for the family.
+- `docs/sources/catalog/blm/RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — Rights / sensitivity tiering for `blm` (living-person policy lives here).
 - [`docs/sources/catalog/blm/glo-field-notes.md`](./glo-field-notes.md) — Sibling product: narrative survey records.
 - _TODO_ — `docs/sources/catalog/blm/glo-plats.md` — Sibling product: raster survey plats.
 - _TODO_ — `docs/sources/catalog/blm/cadnsdi.md` — Sibling product: present-day cadastre.

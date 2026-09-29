@@ -10,15 +10,13 @@ updated: 2026-05-22
 policy_label: public
 related:
   - docs/sources/catalog/noaa/README.md
-  - docs/sources/catalog/noaa/IDENTITY.md
-  - docs/sources/catalog/noaa/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/noaa/goes-abi-aod.md
   - docs/sources/catalog/README.md
   - docs/domains/hazards/README.md
   - docs/domains/atmosphere/README.md
   - docs/doctrine/directory-rules.md
   - docs/standards/PROV.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 tags: [kfm, docs, sources, catalog, noaa, hms, fire, smoke, hazards, atmosphere-air, multi-role, analyst-augmented]
 notes:
   - "PROPOSED product-page scaffold; sibling-link presence and repo path NEEDS VERIFICATION."
@@ -26,6 +24,9 @@ notes:
   - "HMS is a MULTI-COMPONENT product. Fire detection portion defaults to source_role: observation (analyst-confirmed satellite signal). Smoke polygon portion defaults to source_role: modeled (analyst-drawn interpretive boundaries). They MUST be tagged separately."
   - "HMS feeds BOTH Hazards (SmokeContext, WildfireDetection) and Atmosphere/Air (SmokeContext) — multi-domain product."
   - "Dominant anti-collapse stack: HMS smoke polygon ≠ surface smoke concentration; smoke density class ≠ PM2.5; fire detection ≠ ground-truth fire; HMS ≠ KFM alert."
+owning_root: docs/
+responsibility: "Documentation for NOAA HMS Fire and Smoke; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # NOAA HMS Fire and Smoke
@@ -169,8 +170,8 @@ The KFM `ModelRunReceipt` (or a `ReviewRecord` sibling) for an HMS pass must cap
 | Direction | Neighbor | Relationship |
 |---|---|---|
 | **Upstream (parent)** | [`README.md`](./README.md) | NOAA family-level orientation; this product is one slice. |
-| **Sibling** | [`IDENTITY.md`](./IDENTITY.md) | Collection-id and namespace rules for the NOAA family. |
-| **Sibling** | [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) | Family rights / sensitivity decisions; this page does **not** restate policy. |
+| **Sibling** | `IDENTITY.md` (not present) | Collection-id and namespace rules for the NOAA family. |
+| **Sibling** | `RIGHTS-AND-SENSITIVITY-MAP.md` (not present) | Family rights / sensitivity decisions; this page does **not** restate policy. |
 | **Sibling** | [`goes-abi-aod.md`](./goes-abi-aod.md) | NOAA-family sibling (also `modeled`-leaning; uses similar anti-collapse pattern). |
 | **Cross-family sibling** | [`../newspapers/ocr-full-text.md`](../newspapers/ocr-full-text.md) | Structural parallel (mandatory `ModelRunReceipt`; engine/version-in-identity rule). |
 | **Upstream (root)** | [`../README.md`](../README.md) | Catalog landing page. |
@@ -235,7 +236,7 @@ PROPOSED — the descriptor(s) for this slice should at minimum carry:
 - `role_authority` — NOAA NESDIS (operational authority); distinct from KFM (which is **not** an alerting authority).
 - `role_model_run_ref` *(required for the smoke-polygon component)* — `EvidenceRef → ModelRunReceipt`-style record of the analyst pass.
 - `rights` — license, redistribution terms, attribution; HMS products are generally U.S. government works in the public domain, but per-product terms **NEEDS VERIFICATION**.
-- `sensitivity` — tier per [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md).
+- `sensitivity` — tier per `RIGHTS-AND-SENSITIVITY-MAP.md` (not present).
 - `cadence` — operational daily cadence (NEEDS VERIFICATION — confirm exact cadence and any sub-daily passes).
 - `ingest_hash` — content-addressable digest of the admitted feed.
 
@@ -396,7 +397,7 @@ NEEDS VERIFICATION — confirm against any HMS fixtures in `tests/` or `fixtures
 ## Rights and sensitivity
 
 > [!IMPORTANT]
-> **Do not restate policy here.** Sensitivity tier, redaction rules, and reveal posture are decided in [`policy/sensitivity/`](../../../../policy/sensitivity/) and summarized in the sibling [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). This section names the *kinds of risks* the product introduces, not the *decisions* taken against them.
+> **Do not restate policy here.** Sensitivity tier, redaction rules, and reveal posture are decided in [`policy/sensitivity/`](../../../../policy/sensitivity/) and summarized in the sibling `RIGHTS-AND-SENSITIVITY-MAP.md` (not present). This section names the *kinds of risks* the product introduces, not the *decisions* taken against them.
 
 PROPOSED risk surfaces — NEEDS VERIFICATION per product:
 
@@ -598,17 +599,17 @@ PROPOSED — typical wiring (NEEDS VERIFICATION per product):
 ## Related docs
 
 - [`./README.md`](./README.md) — NOAA family landing page.
-- [`./IDENTITY.md`](./IDENTITY.md) — Collection-id and namespace rules.
-- [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — Family rights / sensitivity decisions.
+- `./IDENTITY.md` (not present) — Collection-id and namespace rules.
+- `./RIGHTS-AND-SENSITIVITY-MAP.md` (not present) — Family rights / sensitivity decisions.
 - [`./goes-abi-aod.md`](./goes-abi-aod.md) — NOAA-family sibling (similar `modeled`-leaning posture and anti-collapse pattern).
-- [`./_examples/stac-item-example.json`](./_examples/stac-item-example.json) — Minimal STAC + `kfm:provenance` shape (illustrative).
+- `./_examples/stac-item-example.json` (not present) — Minimal STAC + `kfm:provenance` shape (illustrative).
 - [`../README.md`](../README.md) — Catalog root.
 - [`../newspapers/ocr-full-text.md`](../newspapers/ocr-full-text.md) — Structural parallel for `ModelRunReceipt`-mandatory products.
 - [`../../../domains/hazards/README.md`](../../../domains/hazards/README.md) — Co-primary domain (SmokeContext, WildfireDetection, HazardEvent).
 - [`../../../domains/atmosphere/README.md`](../../../domains/atmosphere/README.md) — Co-primary domain (SmokeContext).
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Placement authority, lifecycle law, drift register.
 - [`../../../standards/PROV.md`](../../../standards/PROV.md) — W3C PROV-O / PAV profile (naming reconciliation pending).
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — Schema home rule.
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema home rule.
 - *TODO* — link to the `noaa/hms` connector README once authored.
 - *TODO* — link to `kfm-stac-extension.md` once authored.
 - *TODO* — link to the `SmokeContext` schema once owned-domain is decided (OPEN-HMS-08).

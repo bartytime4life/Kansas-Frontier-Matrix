@@ -34,9 +34,8 @@ related:
   - docs/registers/AUTHORITY_LADDER.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - schemas/contracts/v1/source/source_descriptor.schema.json
-  - connectors/kansas/khri/
   - data/registry/sources/
   - policy/sensitivity/
   - policy/rights/
@@ -74,6 +73,9 @@ notes:
   - >-
     `connectors/kansas/` lane is CONFIRMED (at commit
     `b6a27916bbb9e07cbf3752870c867476e1e094e7`) per Directory Rules v1.2 §7.3.
+owning_root: docs/
+responsibility: "Documentation for KHRI — Kansas Historic Resources Inventory (Source Dossier); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # KHRI — Kansas Historic Resources Inventory
@@ -536,7 +538,7 @@ A. Because four sibling v0.2 revisions in this conversation series (Kansas Meson
 - [`../../../standards/SENSITIVITY_RUBRIC.md`](../../../standards/SENSITIVITY_RUBRIC.md) — `C6-01` 0–5 rubric (PROPOSED in corpus); cross-reference for T0–T4 mapping
 - [`../../../registers/AUTHORITY_LADDER.md`](../../../registers/AUTHORITY_LADDER.md) — authority order for placement and citation
 - [`../../../registers/DRIFT_REGISTER.md`](../../../registers/DRIFT_REGISTER.md) — where to file repo/doctrine drift
-- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — Schema-home rule
+- [`../../../adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema-home rule
 - Pass-10 Idea Index — **`C7-10`** Kansas-First Domain Authorities (CONFIRMED); **`C10-07`** Archives Stack (CONFIRMED); **`C7-09`** GNIS as federal place authority (CONFIRMED); **`C7-01`/`C7-02`/`C7-05`/`C7-06`** authority crosswalks; **`C6-01`** Sensitivity Rubric (CONFIRMED); **`C5-02`** default-deny promotion (CONFIRMED); **`C15-02`/`C15-03`** CARE extension + OPA default-deny
 - Pass-23/32 Consolidated Atlas — **`KFM-P17-PROG-0011`** Kansas historical provenance source object (active); **`KFM-P2-IDEA-0024`** Kansas authorities mixed-modality (CONFIRMED); **`KFM-P13-PROG-0018`** sensitive grid generalization (active); **`KFM-P24-IDEA-0002`** + **`KFM-P24-PROG-0013`** sensitive deny-by-default + OPA ABSTAIN/DENY (active); Atlas §24.1.2 + §24.1.3 + §24.2.1 + §24.8 (CONFIRMED)
 
