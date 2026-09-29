@@ -1,0 +1,154 @@
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+import test from "node:test";
+import ts from "typescript";
+import { getSunrise, getTwilight } from "sunrise-sunset-js";
+
+const modules = new Map();
+const spaUrl = new URL("../node_modules/sunrise-sunset-js/dist/index.js", import.meta.url).href;
+async function moduleUrl(file) {
+  file = path.resolve(file);
+  if (modules.has(file)) return modules.get(file);
+  let javascript = ts.transpileModule(await readFile(file, "utf8"), {
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+  }).outputText.replaceAll('from "sunrise-sunset-js"', `from ${JSON.stringify(spaUrl)}`);
+  for (const match of [...javascript.matchAll(/from ["'](\.[^"']+)["']/g)]) {
+    javascript = javascript.replace(match[0], `from ${JSON.stringify(await moduleUrl(path.resolve(path.dirname(file), match[1]) + ".ts"))}`);
+  }
+  const url = `data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`;
+  modules.set(file, url);
+  return url;
+}
+
+const solar = await import(await moduleUrl("app/daylight-layer.ts"));
+const runtime = await import(await moduleUrl("app/map-runtime.ts"));
+
+test("SPA-backed solar position matches the published NREL Golden, Colorado example", () => {
+  const result = solar.solarPositionAt(Date.parse("2003-10-17T19:30:30Z"), 39.742476, -105.1786, {
+    elevation: 1830.14, pressure: 820, temperature: 11, deltaT: 67,
+  });
+  assert.ok(Math.abs(result.elevationDegrees - 39.88838) < 0.00001);
+  assert.ok(Math.abs(result.azimuthDegrees - 194.34024) < 0.00001);
+});
+
+test("apparent sunrise and all twilight boundaries use their conventional solar altitudes", () => {
+  const latitude = 38.5;
+  const longitude = -98.2;
+  const day = new Date("2026-06-21T12:00:00Z");
+  const options = { timezoneId: solar.KANSAS_DAYLIGHT_TIME_ZONE };
+  const times = [
+    [getSunrise(latitude, longitude, day, options), -0.833],
+    [getTwilight(latitude, longitude, day, options).civilDawn, -6],
+    [getTwilight(latitude, longitude, day, options).nauticalDawn, -12],
+    [getTwilight(latitude, longitude, day, options).astronomicalDawn, -18],
+  ];
+  for (const [instant, expectedAltitude] of times) {
+    assert.ok(instant instanceof Date);
+    const actualAltitude = solar.solarPositionAt(instant, latitude, longitude).elevationDegrees;
+    assert.ok(Math.abs(actualAltitude - expectedAltitude) < 0.03, `${actualAltitude}° should be near ${expectedAltitude}°`);
+  }
+});
+
+test("Kansas Central dates convert across standard time and 23/25-hour DST days", () => {
+  const winter = solar.kansasLocalDayInterval("2026-01-15");
+  assert.equal(new Date(winter.startMs).toISOString(), "2026-01-15T06:00:00.000Z");
+  assert.equal(solar.formatKansasSolarTime(Date.parse("2026-01-15T18:34:56Z")).central.includes("12:34:56 PM CST"), true);
+  assert.equal(solar.formatKansasSolarTime(Date.parse("2026-01-15T18:34:56Z")).utc.includes("18:34:56 UTC"), true);
+  assert.equal(solar.kansasLocalDayInterval("2026-03-08").durationMs, 23 * 3_600_000);
+  assert.equal(solar.kansasLocalDayInterval("2026-11-01").durationMs, 25 * 3_600_000);
+  assert.equal(solar.instantAtDayFraction("2026-03-08", 0.5), winter.startMs + (solar.kansasLocalDayInterval("2026-03-08").startMs - winter.startMs) + 11.5 * 3_600_000);
+  assert.equal(solar.isInstantInKansasDay(solar.kansasLocalDayInterval("2026-11-01").endMs, "2026-11-01"), false);
+});
+
+test("loop, date-change, scrub, and URL-restore state stay bounded and paused when restored", () => {
+  assert.equal(solar.daylightLoopFraction(0, 30_000), 0.5);
+  assert.equal(solar.daylightLoopFraction(0.75, 30_000), 0.25);
+  assert.equal(solar.daylightLoopFraction(0.25, 60_000), 0.25);
+  assert.equal(solar.daylightShouldAutoplay(false, false), true);
+  assert.equal(solar.daylightShouldAutoplay(true, false), false);
+  assert.equal(solar.daylightShouldAutoplay(false, true), false);
+  assert.equal(solar.instantAtDayFraction("2026-03-08", 0.5), solar.kansasLocalDayInterval("2026-03-08").startMs + 11.5 * 3_600_000);
+  const restored = solar.restoreDaylightView("2026-11-01", "2026-11-01T17:00:00.000Z", true, "2026-09-29");
+  assert.deepEqual(restored, { day: "2026-11-01", instantMs: Date.parse("2026-11-01T17:00:00Z"), enabled: true, playing: false });
+  const outOfDay = solar.restoreDaylightView("2026-11-01", "2026-11-02T12:00:00.000Z", false, "2026-09-29");
+  assert.equal(outOfDay.instantMs, solar.kansasLocalDayInterval("2026-11-01").startMs);
+  assert.equal(outOfDay.playing, false);
+});
+
+test("equinox, solstice, and polar day/night geometry remain bounded", () => {
+  const equinox = solar.solarPositionAt(Date.parse("2026-03-20T14:46:00Z"), 0, 0);
+  const summer = solar.solarPositionAt(Date.parse("2026-06-21T12:00:00Z"), 0, 0);
+  const winter = solar.solarPositionAt(Date.parse("2026-12-21T12:00:00Z"), 0, 0);
+  assert.ok(Math.abs(equinox.declinationDegrees) < 0.2);
+  assert.ok(summer.declinationDegrees > 23 && summer.declinationDegrees < 24);
+  assert.ok(winter.declinationDegrees < -23 && winter.declinationDegrees > -24);
+  assert.ok(solar.solarPositionAt(Date.parse("2026-06-21T12:00:00Z"), 89, 0).elevationDegrees > 0);
+  assert.ok(solar.solarPositionAt(Date.parse("2026-12-21T12:00:00Z"), 89, 0).elevationDegrees < 0);
+
+  const geometry = solar.buildDaylightGeometry(Date.parse("2026-06-21T12:00:00Z"));
+  assert.equal(geometry.features.length, 36);
+  assert.ok(geometry.features.some((feature) => feature.properties.band === "astronomical"));
+  assert.ok(geometry.features.some((feature) => feature.properties.band === "nautical"));
+  assert.ok(geometry.features.some((feature) => feature.properties.band === "civil"));
+  for (const feature of geometry.features) for (const ring of feature.geometry.coordinates) {
+    assert.deepEqual(ring[0], ring.at(-1));
+    assert.ok(ring.length >= 361);
+    assert.ok(ring.every(([longitude, latitude]) => longitude >= -180 && longitude <= 180 && latitude >= -90 && latitude <= 90));
+  }
+});
+
+test("daylight tints basemap and imagery, then yields to observation overlays and labels", () => {
+  const sources = new Map();
+  const layers = [
+    { id: "basemap-labels", type: "symbol" },
+    { id: "external-goes-geocolor", type: "raster" },
+    { id: "external-hydrology", type: "line" },
+    { id: "external-streamflow-observations", type: "circle" },
+  ];
+  const map = {
+    getStyle: () => ({ layers: [...layers] }),
+    getSource: (id) => sources.get(id),
+    addSource: (id, source) => sources.set(id, { ...source, setData(data) { this.data = data; } }),
+    getLayer: (id) => layers.find((layer) => layer.id === id),
+    addLayer: (layer, beforeId) => {
+      const index = beforeId ? layers.findIndex((candidate) => candidate.id === beforeId) : layers.length;
+      layers.splice(index < 0 ? layers.length : index, 0, layer);
+    },
+    moveLayer: (id) => {
+      const index = layers.findIndex((layer) => layer.id === id);
+      if (index < 0) return;
+      layers.push(layers.splice(index, 1)[0]);
+    },
+    setLayoutProperty: (id, name, value) => { map.getLayer(id).layout[name] = value; },
+  };
+  assert.equal(runtime.setDaylightMapLayer(map, true, Date.parse("2026-06-21T12:00:00Z")), true);
+  const ids = layers.map(({ id }) => id);
+  assert.ok(ids.indexOf("basemap-labels") < ids.indexOf(runtime.DAYLIGHT_FILL_LAYER_ID));
+  assert.ok(ids.indexOf("external-goes-geocolor") < ids.indexOf(runtime.DAYLIGHT_FILL_LAYER_ID));
+  assert.ok(ids.indexOf(runtime.DAYLIGHT_FILL_LAYER_ID) < ids.indexOf("external-hydrology"));
+  assert.ok(ids.indexOf(runtime.DAYLIGHT_FILL_LAYER_ID) < ids.indexOf("external-streamflow-observations"));
+  assert.equal(sources.get(runtime.DAYLIGHT_GEOJSON_SOURCE_ID).data.features.length, 36);
+  assert.equal(runtime.setDaylightMapLayer(map, false, 0), true);
+  assert.equal(map.getLayer(runtime.DAYLIGHT_FILL_LAYER_ID).layout.visibility, "none");
+});
+
+test("page persists selected solar cursor and restores the layer paused with reduced-motion safeguards", async () => {
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const requiredStateContracts = [
+    ['params.set("sunDay", daylightDay)', "day is saved in shared map state"],
+    ['params.set("sunAt", new Date(daylightInstant).toISOString())', "cursor is saved in shared map state"],
+    ['restoreDaylightView(params.get("sunDay"), params.get("sunAt"), params.get("sun") === "on")', "URL restore uses the validated paused state helper"],
+    [/daylightPlayingRef\.current = false;\s+setDaylightDay\(restoredSolar\.day\)/, "URL restore pauses playback"],
+    ["daylightShouldAutoplay(reducedMotion, document.hidden)", "date selection honors reduced motion and hidden tabs"],
+    ["if (!enabled || document.hidden) setDaylightPlayback(false)", "hiding the layer pauses its invisible loop"],
+    ["now - lastMapUpdate >= 100", "map geometry updates at a bounded 10 Hz"],
+    ["now - lastClockUpdate >= 250", "clock display rerenders at a bounded 4 Hz"],
+    ["if (!document.hidden) return", "tab visibility change pauses playback"],
+    ['daylightPlaying ? "Pause" : "Resume"', "control toggles pause and resume"],
+    [/seekDaylight\(Number\(event\.target\.value\) \/ 10_000\)/, "scrubber seeks within the selected day"],
+  ];
+  for (const [contract, description] of requiredStateContracts) {
+    assert.ok(typeof contract === "string" ? page.includes(contract) : contract.test(page), description);
+  }
+});
