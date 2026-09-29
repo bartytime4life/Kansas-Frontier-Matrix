@@ -1,1 +1,0 @@
-# archaeology :: validate — greenfield placeholder

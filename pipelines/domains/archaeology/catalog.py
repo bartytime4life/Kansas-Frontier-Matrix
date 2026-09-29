@@ -1,1 +1,0 @@
-# archaeology :: catalog — greenfield placeholder

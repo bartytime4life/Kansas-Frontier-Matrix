@@ -1,1 +1,0 @@
-# fauna :: rollback — greenfield placeholder
