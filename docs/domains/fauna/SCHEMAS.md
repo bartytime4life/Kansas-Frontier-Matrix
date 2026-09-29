@@ -19,7 +19,7 @@ related:
   - policy/sensitivity/fauna/
   - tests/domains/fauna/
   - fixtures/domains/fauna/
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 tags: [kfm, domain, fauna, schemas, json-schema, identity, spec-hash]
 notes:
   # Explains the Fauna machine-schema home; it is NOT the schema authority. The .schema.json files at schemas/contracts/v1/domains/fauna/ are authoritative.
@@ -27,6 +27,9 @@ notes:
   # Field-level realizations are PROPOSED; object-family NAMES are CONFIRMED (Atlas Ch. 7).
   # Doctrine-adjacent doc; CONTRACT_VERSION = "3.0.0" pinned per AI Build Operating Contract v3.0.
   # Sensitive occurrence = T4 default; restricted/public split is enforced at the schema + policy boundary.
+owning_root: docs/
+responsibility: "Documentation for Fauna Domain — Schemas; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -411,7 +414,7 @@ This document is done enough to enter the repository when:
 - [`schemas/contracts/v1/domains/fauna/`](../../../schemas/contracts/v1/domains/fauna/) — Fauna schema home *(authoritative; PROPOSED presence)*
 - [`schemas/contracts/v1/common/`](../../../schemas/contracts/v1/common/) — Shared base schemas
 - [`policy/sensitivity/fauna/`](../../../policy/sensitivity/fauna/) — Fauna sensitivity rules *(PROPOSED)*
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — Schema-home rule
+- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema-home rule
 - **Atlas references:** Atlas v1.1 Ch. 7 (Fauna §7.B owned objects, §7.E identity/temporal), §24.5 (Sensitivity Tiers T0–T4); Pass-10 C1-02 (deterministic `spec_hash`)
 - **External anchor:** RFC 8785 (JSON Canonicalization Scheme) — for the canonicalization step only
 

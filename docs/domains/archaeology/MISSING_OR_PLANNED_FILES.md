@@ -18,13 +18,9 @@ related:
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - docs/domains/archaeology/README.md
   - docs/domains/archaeology/MAP_UI_CONTRACTS.md
-  - docs/atlases/domains-v1.1/ch15-archaeology.md
-  - docs/atlases/domains-v1.1/ch24-5-sensitivity-tier-reference.md
-  - docs/architecture/maplibre-3d.md
-  - kfm://doc/docs/standards/PROV
 tags: [kfm, archaeology, planning, directory-rules, backlog, doctrine]
 notes:
   - CONTRACT_VERSION pinned to 3.0.0 per ai-build-operating-contract.md §0 / §37.
@@ -32,6 +28,9 @@ notes:
   - v1.2 corrects the Directory Rules edition reference from v1.2 to the live v1.3 (renderer-decision refresh) and reconciles the §23.2 generalization-floor claim with the operating contract (county/region) versus the lane-local H3-r7 proposal.
   - v1.2 is a MINOR bump per contract §37 (clarifications, reconciliations, gap closures; no breaking anchor changes — §§1–13 anchors preserved from v1.1).
   - This is a planning ledger, not a publication artifact. Promotion of any row from PLANNED to PRESENT requires mounted-repo evidence.
+owning_root: docs/
+responsibility: "Documentation for Archaeology — Missing or Planned Files; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🏺 Archaeology — Missing or Planned Files
@@ -744,10 +743,10 @@ update protocol
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — Global verification register; mirror file-level items here
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — Where to log conflicts between this ledger and the live repo
 - [`docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md`](../../registers/CANONICAL_LINEAGE_EXPLORATORY.md) — Lineage notes for archaeology-lane moves
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — Canonical schema home decision
+- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Canonical schema home decision
 - [`docs/domains/archaeology/README.md`](./README.md) — Lane orientation _(PLANNED)_
 - [`docs/domains/archaeology/MAP_UI_CONTRACTS.md`](./MAP_UI_CONTRACTS.md) — Sibling: governed surfaces and payload contracts
-- [`docs/architecture/maplibre-3d.md`](../../architecture/maplibre-3d.md) — MapLibre sole-renderer doctrine (v1.3, PROPOSED via ADR)
+- `docs/architecture/maplibre-3d.md` (not present) — MapLibre sole-renderer doctrine (v1.3, PROPOSED via ADR)
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O / PAV conformance brief
 - `KFM_Domains_Culmination_Atlas_v1_1.pdf` §15 — Archaeology and Cultural Heritage
 - `KFM_Domains_Culmination_Atlas_v1_1.pdf` §24.5 — Sensitivity / Rights Tier Reference (T0–T4)

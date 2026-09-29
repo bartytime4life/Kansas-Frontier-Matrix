@@ -9,12 +9,11 @@ created: 2026-05-17
 updated: 2026-06-06
 policy_label: public
 related:
-  - directory-rules.md                                  # placement law (root file; docs/doctrine/ mirror is PROPOSED)
+  - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
   - docs/architecture/contract-schema-policy-split.md
-  - docs/architecture/maplibre-3d.md                    # sole-renderer doctrine (v1.3)
-  - ai-build-operating-contract.md                      # CONTRACT_VERSION = "3.0.0"
+  - docs/doctrine/ai-build-operating-contract.md
   - docs/domains/hydrology/README.md
   - contracts/domains/hydrology/
   - schemas/contracts/v1/domains/hydrology/
@@ -25,6 +24,9 @@ notes:
   - Doctrine is CONFIRMED from project knowledge; implementation maturity is PROPOSED until mounted-repo evidence confirms.
   - NFHL regulatory context is NOT observed inundation; USGS Water Data are observations, not emergency authority.
   - Renderer corrected to packages/maplibre-runtime/ (Directory Rules v1.3); Cesium is RETIRED. Sole-renderer decision is doctrine-CONFIRMED at directory-rules v1.3; underlying ADR is PROPOSED (OPEN-DR-10).
+owning_root: docs/
+responsibility: "Documentation for Hydrology Domain — Lane Architecture; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -590,7 +592,7 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED invariant.
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — governed delivery boundary.
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — split between `contracts/`, `schemas/`, `policy/`, `tests/`.
-- [`docs/architecture/maplibre-3d.md`](../../architecture/maplibre-3d.md) — sole-renderer doctrine + 3D feature surface (v1.3).
+- `docs/architecture/maplibre-3d.md` (not present) — sole-renderer doctrine + 3D feature surface (v1.3).
 - `ai-build-operating-contract.md` — operating contract, `CONTRACT_VERSION = "3.0.0"`; §21 (finite outcomes), §22 (renderer/UI), §23.2 (sensitive-domain matrix). *Canonical path NEEDS VERIFICATION.*
 - [`contracts/domains/hydrology/`](../../../contracts/domains/hydrology/) — object meaning (Markdown).
 - [`schemas/contracts/v1/domains/hydrology/`](../../../schemas/contracts/v1/domains/hydrology/) — machine shape (JSON Schema).

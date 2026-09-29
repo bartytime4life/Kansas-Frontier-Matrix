@@ -10,8 +10,8 @@ updated: 2026-07-31
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
-  - ai-build-operating-contract.md
-  - directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
   - docs/domains/hydrology/README.md
   - docs/domains/hydrology/DATA_LIFECYCLE.md
   - docs/domains/hydrology/EXPANSION_BACKLOG.md
@@ -24,9 +24,9 @@ related:
   - docs/doctrine/trust-membrane.md
   - docs/standards/CANONICALIZATION.md
   - docs/architecture/contract-schema-policy-split.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - schemas/contracts/v1/domains/hydrology/
-  - schemas/contracts/v1/source/source-descriptor.json   # shared SourceDescriptor schema (ADR-0001)
+  - schemas/contracts/v1/source/source-descriptor.json
   - contracts/domains/hydrology/
   - policy/domains/hydrology/
 tags: [kfm, domain, hydrology, identity, evidence, governance]
@@ -36,6 +36,9 @@ notes:
   - SourceDescriptor schema home is schemas/contracts/v1/source/source-descriptor.json (ADR-0001); source/ vs sources/ is CONFLICTED.
   - Crosswalk validator home is CONFLICTED (ADR-S-CWV-01); ADR-0013's RFC 8785 JCS + SHA-256 grammar remains proposed and conflicts with the current common SpecHash schema.
   - v2 reconciles CONTRACT_VERSION pin, doc_id slug, Pre-RAW phase, crosswalk validator placement, alignment threshold, and companion cross-links. See Changelog (§14).
+owning_root: docs/
+responsibility: "Documentation for Hydrology Identity Model; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 💧 Hydrology Identity Model
@@ -76,9 +79,9 @@ This is the identity-and-determinism companion to [`GLOSSARY.md`](./GLOSSARY.md)
 1. [Scope and identity boundaries](#1-scope-and-identity-boundaries)
 2. [The deterministic identity rule](#2-the-deterministic-identity-rule)
 3. [Object families and their identities](#3-object-families-and-their-identities)
-4. [Temporal handling — six times that stay distinct](#4-temporal-handling-six-times-that-stay-distinct)
-5. [Identity machinery — `spec_hash`, digests, ID derivation](#5-identity-machinery-digests-id-derivation)
-6. [Reach identity: COMID → HUC12 worked example](#6-reach-identity-comid-huc12-worked-example)
+4. [Temporal handling — six times that stay distinct](#4-temporal-handling--six-times-that-stay-distinct)
+5. Identity machinery — `spec_hash`, digests, ID derivation
+6. [Reach identity: COMID → HUC12 worked example](#6-reach-identity-comid--huc12-worked-example)
 7. [Edge cases and ABSTAIN semantics](#7-edge-cases-and-abstain-semantics)
 8. [Source-role discipline and identity](#8-source-role-discipline-and-identity)
 9. [Cross-domain identity edges](#9-cross-domain-identity-edges)
@@ -86,7 +89,7 @@ This is the identity-and-determinism companion to [`GLOSSARY.md`](./GLOSSARY.md)
 11. [Where this lives in the repo](#11-where-this-lives-in-the-repo)
 12. [Verification backlog and open questions](#12-verification-backlog-and-open-questions)
 13. [Related documents](#13-related-documents)
-14. [Changelog](#14-changelog-v1-v2)
+14. [Changelog](#14-changelog-v1--v2)
 
 ---
 

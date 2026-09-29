@@ -9,19 +9,14 @@ created: 2026-05-17
 updated: 2026-07-31
 policy_label: public
 related:
-  - ai-build-operating-contract.md
-  - directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
   - docs/architecture/
   - docs/registers/DRIFT_REGISTER.md
   - docs/domains/hydrology/PUBLICATION_POSTURE.md
-  - contracts/domains/hydrology/                     # PROPOSED; path CONFLICTED vs Atlas §24.13 — see §17
-  - schemas/contracts/v1/domains/hydrology/          # PROPOSED; path CONFLICTED vs Atlas §24.13 — see §17
+  - contracts/domains/hydrology/
+  - schemas/contracts/v1/domains/hydrology/
   - policy/domains/hydrology/
-  - kfm://source-id/DOM-HYD
-  - kfm://source-id/ENCY
-  - kfm://source-id/DIRRULES
-  - kfm://source-id/BLD-COMP
-  - kfm://source-id/IMPL-PIPE
 tags: [kfm, domain, hydrology, watershed, huc, gauge, nhdplus, nfhl, evidence-bundle]
 notes:
   - 'CONTRACT_VERSION = "3.0.0"'
@@ -30,6 +25,9 @@ notes:
   - "NFHL is regulatory context only; never published as observed flooding."
   - "Domain-segment path form (.../domains/hydrology/) follows Directory Rules §12 but CONFLICTS with Atlas §24.13 (.../hydrology/). Tracked in §17."
   - "Decision #1886 keeps the common feature-identity tuple REMAIN_PROPOSED pending cross-cutting profile, SourceDescriptor, machine, migration, stewardship, and consumer closure."
+owning_root: docs/
+responsibility: "Documentation for Hydrology Domain — README; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 💧 Hydrology — Domain README
@@ -65,23 +63,23 @@ notes:
 
 ## Table of contents
 
-1. [Scope & boundary](#1-scope-boundary)
-2. [Repo fit & directory pattern](#2-repo-fit-directory-pattern)
+1. [Scope & boundary](#1-scope--boundary)
+2. [Repo fit & directory pattern](#2-repo-fit--directory-pattern)
 3. [Ubiquitous language](#3-ubiquitous-language)
-4. [Source families & source roles](#4-source-families-source-roles)
+4. [Source families & source roles](#4-source-families--source-roles)
 5. [Object families](#5-object-families)
 6. [Cross-lane relations](#6-cross-lane-relations)
-7. [Pipeline shape (RAW → PUBLISHED)](#7-pipeline-shape-raw-published)
-8. [Map & viewing products](#8-map-viewing-products)
-9. [API / contract / schema surfaces (PROPOSED)](#9-api-contract-schema-surfaces-proposed)
+7. [Pipeline shape (RAW → PUBLISHED)](#7-pipeline-shape-raw--published)
+8. [Map & viewing products](#8-map--viewing-products)
+9. [API / contract / schema surfaces (PROPOSED)](#9-api--contract--schema-surfaces-proposed)
 10. [Validators, tests, and fixtures (PROPOSED)](#10-validators-tests-and-fixtures-proposed)
-11. [Sensitivity, rights, & publication posture](#11-sensitivity-rights-publication-posture)
+11. [Sensitivity, rights, & publication posture](#11-sensitivity-rights--publication-posture)
 12. [Governed AI behavior](#12-governed-ai-behavior)
-13. [Publication, correction, & rollback](#13-publication-correction-rollback)
+13. [Publication, correction, & rollback](#13-publication-correction--rollback)
 14. [Thin-slice plan](#14-thin-slice-plan)
-15. [Verification backlog & open questions](#15-verification-backlog-open-questions)
-16. [Related folders & docs](#16-related-folders-docs)
-17. [ADRs & open path conflicts](#17-adrs-open-path-conflicts)
+15. [Verification backlog & open questions](#15-verification-backlog--open-questions)
+16. [Related folders & docs](#16-related-folders--docs)
+17. [ADRs & open path conflicts](#17-adrs--open-path-conflicts)
 
 ---
 
@@ -114,9 +112,9 @@ Hydrology represents Kansas water systems as **evidence-bound, time-aware** hydr
 > [!CAUTION]
 > Collapsing **observed gauge readings**, **regulatory NFHL zones**, **modeled hydrographs**, and
 > **operational warnings** into a single truth class is a publication-blocking violation. See
-> [§11. Sensitivity, rights, & publication posture](#11-sensitivity-rights-publication-posture).
+> [§11. Sensitivity, rights, & publication posture](#11-sensitivity-rights--publication-posture).
 
-[⬆ Back to top](#hydrology-domain-readme)
+[⬆ Back to top](#-hydrology--domain-readme)
 
 ---
 
@@ -129,7 +127,7 @@ Hydrology represents Kansas water systems as **evidence-bound, time-aware** hydr
 > segment (`schemas/contracts/v1/domains/hydrology/`, `contracts/domains/hydrology/`). The
 > Atlas §24.13 crosswalk spells the same lane **without** it (`schemas/contracts/v1/hydrology/`,
 > `contracts/hydrology/`). This README follows **Directory Rules** (which win on path
-> questions) and logs the divergence in [§17](#17-adrs-open-path-conflicts) for ADR resolution.
+> questions) and logs the divergence in [§17](#17-adrs--open-path-conflicts) for ADR resolution.
 > Treat the segment as PROPOSED until reconciled.
 
 ### Lane pattern across responsibility roots — _PROPOSED tree (NEEDS VERIFICATION in mounted repo)_
@@ -197,7 +195,7 @@ flowchart LR
 > `PromotionDecision`, `ReleaseManifest`, `RollbackCard`), and every required artifact must
 > *resolve* — not merely reference — its dependencies, or the transition fails closed.
 
-[⬆ Back to top](#hydrology-domain-readme)
+[⬆ Back to top](#-hydrology--domain-readme)
 
 ---
 
@@ -227,9 +225,9 @@ flowchart LR
 
 > [!IMPORTANT]
 > "Source role" is a first-class attribute, not a stylistic tag. See
-> [§4. Source families & source roles](#4-source-families-source-roles).
+> [§4. Source families & source roles](#4-source-families--source-roles).
 
-[⬆ Back to top](#hydrology-domain-readme)
+[⬆ Back to top](#-hydrology--domain-readme)
 
 ---
 
@@ -270,7 +268,7 @@ flowchart LR
 > Role mismatch is a **DENY condition**, not a quality issue. Enforcement lives in
 > `policy/domains/hydrology/`.
 
-[⬆ Back to top](#hydrology-domain-readme)
+[⬆ Back to top](#-hydrology--domain-readme)
 
 ---
 
@@ -337,7 +335,7 @@ properties, and cannot prove any row above.
 
 </details>
 
-[⬆ Back to top](#hydrology-domain-readme)
+[⬆ Back to top](#-hydrology--domain-readme)
 
 ---
 
@@ -379,7 +377,7 @@ flowchart TB
 > The Spatial Foundation, Habitat/Fauna/Flora, and Frontier Matrix edges are INFERRED from the
 > lane coverage and cross-cutting doctrine; treat them as PROPOSED until confirmed.
 
-[⬆ Back to top](#hydrology-domain-readme)
+[⬆ Back to top](#-hydrology--domain-readme)
 
 ---
 
@@ -401,7 +399,7 @@ flowchart TB
 > `data/catalog/`, or `data/published/`. Writing directly to those from a connector violates
 > the invariant. _([Atlas Pass-20 cross-cutting themes])._
 
-[⬆ Back to top](#hydrology-domain-readme)
+[⬆ Back to top](#-hydrology--domain-readme)
 
 ---
 
@@ -422,7 +420,7 @@ flowchart TB
 - Upstream / downstream tracing tool.
 - **Cross-cutting (CONFIRMED doctrine):** Evidence Drawer, time-aware state, trust badges, sensitivity-redacted view, correction / stale-state view, governed Focus Mode.
 
-[⬆ Back to top](#hydrology-domain-readme)
+[⬆ Back to top](#-hydrology--domain-readme)
 
 ---
 
@@ -442,12 +440,12 @@ All surfaces below are **PROPOSED** _([DOM-HYD §J], [ENCY §7.2.J])._ Exact rou
 
 > [!NOTE]
 > Schema responsibility root is `schemas/contracts/v1/...` per **ADR-0001 (schema-home rule)**;
-> the `domains/hydrology/` segment under it is CONFLICTED per [§2](#2-repo-fit-directory-pattern)
-> and [§17](#17-adrs-open-path-conflicts). Any `contracts/<domain>/<x>.schema.json` is
+> the `domains/hydrology/` segment under it is CONFLICTED per [§2](#2-repo-fit--directory-pattern)
+> and [§17](#17-adrs--open-path-conflicts). Any `contracts/<domain>/<x>.schema.json` is
 > lineage / CONFLICTED until migrated. The last three routes carry **illustrative** verbs/paths
 > and are not Atlas-sourced.
 
-[⬆ Back to top](#hydrology-domain-readme)
+[⬆ Back to top](#-hydrology--domain-readme)
 
 ---
 
@@ -502,11 +500,11 @@ Finite-outcome expectations:
 | `ERROR`    | Structural / runtime failure.              |
 
 Validator exit-code → outcome mapping is **ADR-class and OPEN** (OPEN-DR-03; see
-[§17](#17-adrs-open-path-conflicts)). The filenames above are illustrative, not Atlas-sourced.
+[§17](#17-adrs--open-path-conflicts)). The filenames above are illustrative, not Atlas-sourced.
 
 </details>
 
-[⬆ Back to top](#hydrology-domain-readme)
+[⬆ Back to top](#-hydrology--domain-readme)
 
 ---
 
@@ -539,7 +537,7 @@ recorded via receipts (e.g., `RedactionReceipt`, `AggregationReceipt`) and repro
 > **private-property implication**. Route any genuinely sensitive disposition through the
 > operating contract's §23.2 sensitive-domain decision matrix rather than re-deriving it here.
 
-[⬆ Back to top](#hydrology-domain-readme)
+[⬆ Back to top](#-hydrology--domain-readme)
 
 ---
 
@@ -572,7 +570,7 @@ recorded via receipts (e.g., `RedactionReceipt`, `AggregationReceipt`) and repro
 > other life-safety directive returns **DENY**. KFM presents cited, time-stamped evidence; it is
 > never the alerting authority _([Atlas §20.4 emergency-alert boundary])._
 
-[⬆ Back to top](#hydrology-domain-readme)
+[⬆ Back to top](#-hydrology--domain-readme)
 
 ---
 
@@ -604,7 +602,7 @@ and invalidates downstream derivatives. **No silent edits.**
 > `ReleaseManifest` or rollback target is a release-queue anti-pattern (Atlas §24.9.2): the
 > public surface cannot be rolled back and the release is not auditable → `HOLD` / `DENY`.
 
-[⬆ Back to top](#hydrology-domain-readme)
+[⬆ Back to top](#-hydrology--domain-readme)
 
 ---
 
@@ -633,7 +631,7 @@ proof → publication):
 9. Catalog/proof closure → `data/catalog/domain/hydrology/`, `data/proofs/`.
 10. `ReleaseManifest` + `RollbackCard` rehearsal → first public-safe release.
 
-[⬆ Back to top](#hydrology-domain-readme)
+[⬆ Back to top](#-hydrology--domain-readme)
 
 ---
 
@@ -661,7 +659,7 @@ These items remain `NEEDS VERIFICATION` / `OPEN` before the lane's docs and code
 | 16 | Common feature-identity profile graduation. | Accept ADR-0013/common SpecHash and one SourceDescriptor authority; close exact version/ID grammar, family profiles, fixtures, validator/tests, consumer inventory, migration, and rollback rehearsal. | HELD — #1886 |
 | 17 | Identity stewardship assignments. | Record accountable Hydrology, identity, hashing, schema, source-registry, family, correction, sensitivity, and consumer/release stewards. | MISSING |
 
-[⬆ Back to top](#hydrology-domain-readme)
+[⬆ Back to top](#-hydrology--domain-readme)
 
 ---
 
@@ -698,7 +696,7 @@ These items remain `NEEDS VERIFICATION` / `OPEN` before the lane's docs and code
 > All link targets above are **PROPOSED** until verified in the mounted repo. Broken links are a
 > drift signal; report via [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md).
 
-[⬆ Back to top](#hydrology-domain-readme)
+[⬆ Back to top](#-hydrology--domain-readme)
 
 ---
 
@@ -719,7 +717,7 @@ These items remain `NEEDS VERIFICATION` / `OPEN` before the lane's docs and code
 > README is the **Directory Rules form** (which wins on path questions) and is simultaneously
 > **CONFLICTED** with the Atlas crosswalk form. Log it in `docs/registers/DRIFT_REGISTER.md`.
 
-[⬆ Back to top](#hydrology-domain-readme)
+[⬆ Back to top](#-hydrology--domain-readme)
 
 ---
 
@@ -738,4 +736,4 @@ conformance review._
 
 *Last updated: 2026-07-30 · `CONTRACT_VERSION = "3.0.0"` · status: `draft`*
 
-[⬆ Back to top](#hydrology-domain-readme)
+[⬆ Back to top](#-hydrology--domain-readme)

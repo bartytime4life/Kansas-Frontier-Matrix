@@ -9,13 +9,12 @@ created: 2026-05-17
 updated: 2026-07-30
 policy_label: public
 related:
-  - directory-rules.md                                  # placement law (root file; docs/doctrine/ mirror is PROPOSED)
+  - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
   - docs/architecture/contract-schema-policy-split.md
-  - docs/architecture/maplibre-3d.md                    # sole-renderer doctrine (v1.3)
-  - docs/adr/ADR-0001-schema-home.md
-  - ai-build-operating-contract.md                      # CONTRACT_VERSION = "3.0.0"
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - docs/doctrine/ai-build-operating-contract.md
   - docs/domains/README.md
   - docs/domains/hydrology/README.md
   - control_plane/domain_lane_register.yaml
@@ -27,6 +26,9 @@ notes:
   - Governed by Directory Rules §12 (Domain Placement Law) and §6–9.
   - Renderer home corrected to packages/maplibre-runtime/ (Directory Rules v1.3); packages/maplibre/ is the frozen v1.2 historical name (anti-pattern §13.5 #27). Cesium retired.
   - Possible filename collision with docs/domains/hydrology/canonical-paths/README.md — tracked as OQ-HYD-CP-01.
+owning_root: docs/
+responsibility: "Documentation for Hydrology Domain — Canonical Paths; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -63,7 +65,7 @@ notes:
    - [4.5 `tests/domains/hydrology/` and `fixtures/domains/hydrology/`](#45-testsdomainshydrology-and-fixturesdomainshydrology--enforceability-proof)
    - [4.6 `packages/domains/hydrology/`](#46-packagesdomainshydrology--shared-libraries-scoped-to-hydrology)
    - [4.7 `pipelines/domains/hydrology/` and `pipeline_specs/hydrology/`](#47-pipelinesdomainshydrology-and-pipeline_specshydrology--pipeline-logic-and-config)
-   - [4.8 `data/<phase>/hydrology/` lifecycle lanes](#48-datasephasehydrology-lifecycle-lanes)
+   - 4.8 `data/<phase>/hydrology/` lifecycle lanes
    - [4.9 `data/catalog/domain/hydrology/` and `data/published/layers/hydrology/`](#49-datacatalogdomainhydrology-and-datapublishedlayershydrology)
    - [4.10 `data/registry/sources/hydrology/`](#410-dataregistrysourceshydrology--source-registry-for-hydrology-sources)
    - [4.11 `release/candidates/hydrology/`](#411-releasecandidateshydrology--release-decisions-for-hydrology-artifacts)
@@ -575,8 +577,8 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED invariant.
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — governed-API boundary.
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — contracts vs schemas vs policy.
-- [`docs/architecture/maplibre-3d.md`](../../architecture/maplibre-3d.md) — sole-renderer doctrine (v1.3).
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — schema-home rule.
+- `docs/architecture/maplibre-3d.md` (not present) — sole-renderer doctrine (v1.3).
+- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home rule.
 - `ai-build-operating-contract.md` — operating contract, `CONTRACT_VERSION = "3.0.0"` (canonical path NEEDS VERIFICATION).
 - [`docs/domains/README.md`](../README.md) — domains index.
 - [`docs/domains/hydrology/README.md`](./README.md) — hydrology landing page.

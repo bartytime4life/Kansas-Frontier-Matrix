@@ -14,14 +14,14 @@ related:
   - docs/architecture/governed-api/README.md
   - docs/architecture/contract-schema-policy-split.md
   - docs/doctrine/trust-membrane.md
-  - directory-rules.md                                  # placement authority (root file; docs/doctrine/ mirror is PROPOSED)
-  - ai-build-operating-contract.md                      # CONTRACT_VERSION = "3.0.0"
+  - docs/doctrine/directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
   - contracts/domains/hydrology/
   - schemas/contracts/v1/domains/hydrology/
   - policy/domains/hydrology/
   - tests/domains/hydrology/
   - fixtures/domains/hydrology/
-  - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md        # sibling template (Pattern A; OPEN-DR-02)
+  - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
 tags: [kfm, hydrology, api, contracts, governed-api, trust-membrane, evidence, decision-envelope]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned per ai-build-operating-contract.md v3.0.
@@ -29,6 +29,9 @@ notes:
   - All API routes are PROPOSED; current implementation maturity is UNKNOWN.
   - Authoritative doctrine — KFM Domains Atlas v1.1 §4 (Hydrology), §24.3, §24.6; Encyclopedia §7.2; ai-build-operating-contract.md §8, §21, §22; Directory Rules §6.3-§6.5, §7, §12; Whole-UI + Governed AI Expansion Report.
   - Runtime answer outcomes (ANSWER / ABSTAIN / DENY / ERROR, optional NARROWED / BOUNDED) are distinct from gate-class outcomes (HOLD / PASS / FAIL) — see §5.
+owning_root: docs/
+responsibility: "Documentation for Hydrology — API Contracts; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -659,7 +662,7 @@ This document is done enough to enter the repository when:
 <!-- All links are repo-relative and PROPOSED. Update once mounted-repo paths are confirmed. -->
 
 - [`docs/domains/hydrology/README.md`](../README.md) — Hydrology domain index (PROPOSED).
-- [`docs/domains/hydrology/SOURCE_FAMILIES.md`](../SOURCE_FAMILIES.md) — Hydrology source families and role discipline (PROPOSED).
+- [`docs/domains/hydrology/SOURCE_FAMILIES.md`](SOURCE_FAMILIES.md) — Hydrology source families and role discipline (PROPOSED).
 - [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — Governed API trust membrane (PROPOSED).
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — Contract / schema / policy split (PROPOSED).
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Trust membrane doctrine (PROPOSED).

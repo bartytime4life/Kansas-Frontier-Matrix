@@ -29,6 +29,9 @@ notes:
   - PLACEMENT CORRECTED in v1.1 — canonical home is docs/runbooks/archaeology/rollback-drill.md (Directory Rules §6.1.b Pattern A; OPEN-DR-02 recommends Pattern A). The earlier "Pattern C" (docs/domains/<domain>/runbooks/) is NOT a Directory-Rules-defined runbook home and would create a parallel root (§13.5). See §0 and OQ-AR-RB-DRILL-01.
   - Synthetic fixtures only; no T4-class content in this file, in drill inputs, or in drill outputs.
   - This file is steward-driven; AI MAY draft text, AI MUST NOT execute the procedure.
+owning_root: docs/
+responsibility: "Documentation for Archaeology — Rollback Drill Runbook; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Archaeology — Rollback Drill Runbook
@@ -451,25 +454,25 @@ This runbook is done enough to enter the repository when:
 
 PROPOSED links. All paths are PROPOSED until verified against a mounted repo. Relative paths below assume the canonical location `docs/runbooks/archaeology/rollback-drill.md`.
 
-- [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — _TODO_ — operating contract v3.0; §§10.1, 21, 33, 34, 37, 38.
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — _TODO_ — §6.1.b runbooks placement contract; §4 placement protocol; §13.5 drift; §18.b OPEN-DR-02 / OPEN-DR-04.
+- [`docs/doctrine/ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — _TODO_ — operating contract v3.0; §§10.1, 21, 33, 34, 37, 38.
+- [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — _TODO_ — §6.1.b runbooks placement contract; §4 placement protocol; §13.5 drift; §18.b OPEN-DR-02 / OPEN-DR-04.
 - [`./README.md`](./README.md) — _TODO_ — Archaeology runbooks-folder README (`docs/runbooks/archaeology/`).
 - [`docs/runbooks/README.md`](../README.md) — _TODO_ — canonical runbooks root.
-- [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../fauna/SOURCE_REFRESH_RUNBOOK.md) — _TODO_ — Pattern A precedent.
-- [`./emergency-disablement.md`](./emergency-disablement.md) — _TODO, not yet authored_ — real-incident runbook this drill rehearses.
-- [`./sovereignty-review.md`](./sovereignty-review.md) — _TODO, not yet authored_ — sovereignty-review protocol invoked at G7.
-- [`docs/domains/archaeology/ARCHITECTURE.md`](../../domains/archaeology/ARCHITECTURE.md) — Archaeology domain architecture; §13 publication/correction/rollback.
-- [`docs/domains/archaeology/README.md`](../../domains/archaeology/README.md) — _TODO_ — Archaeology domain README.
-- [`docs/domains/archaeology/VERIFICATION_BACKLOG.md`](../../domains/archaeology/VERIFICATION_BACKLOG.md) — _TODO_ — Archaeology verification backlog; the Atlas Ch. 15 §N item 4 entry should link this file.
-- [`docs/domains/archaeology/CHANGELOG.md`](../../domains/archaeology/CHANGELOG.md) — _TODO_ — Archaeology dossier changelog (PROPOSED).
-- [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — _TODO_ — drift entries (Pattern A vs the rejected Pattern C; filename casing; any re-exposure incident).
-- [`docs/adr/README.md`](../../adr/README.md) — _TODO_ — ADR index; OPEN-DR-02 and the OQ-AR-RB-DRILL-* items to be filed here.
-- [`policy/sensitivity/archaeology/`](../../../policy/sensitivity/archaeology/) — _TODO_ — sensitivity enforcement; the rule that fires at G3.
-- [`release/rollback_cards/`](../../../release/rollback_cards/) — _TODO_ — emission home for G6.
-- [`release/correction_notices/`](../../../release/correction_notices/) — _TODO_ — emission home for G8.
-- [`data/receipts/`](../../../data/receipts/) — _TODO_ — emission home for `RunReceipt`, `PolicyDecision`, `AIReceipt`, `ReviewRecord`, `RehearsalReceipt`.
-- [`data/quarantine/`](../../../data/quarantine/) — _TODO_ — destination for the quarantined synthetic record (G5).
-- [`fixtures/domains/archaeology/no_network/rollback_drill/`](../../../fixtures/domains/archaeology/no_network/rollback_drill/) — _TODO_ — synthetic fixture home.
+- [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) — _TODO_ — Pattern A precedent.
+- `./emergency-disablement.md` (not present) — _TODO, not yet authored_ — real-incident runbook this drill rehearses.
+- `./sovereignty-review.md` (not present) — _TODO, not yet authored_ — sovereignty-review protocol invoked at G7.
+- [`docs/domains/archaeology/ARCHITECTURE.md`](../ARCHITECTURE.md) — Archaeology domain architecture; §13 publication/correction/rollback.
+- [`docs/domains/archaeology/README.md`](../README.md) — _TODO_ — Archaeology domain README.
+- [`docs/domains/archaeology/VERIFICATION_BACKLOG.md`](../VERIFICATION_BACKLOG.md) — _TODO_ — Archaeology verification backlog; the Atlas Ch. 15 §N item 4 entry should link this file.
+- [`docs/domains/archaeology/CHANGELOG.md`](../CHANGELOG.md) — _TODO_ — Archaeology dossier changelog (PROPOSED).
+- [`docs/registers/DRIFT_REGISTER.md`](../../../registers/DRIFT_REGISTER.md) — _TODO_ — drift entries (Pattern A vs the rejected Pattern C; filename casing; any re-exposure incident).
+- [`docs/adr/README.md`](../../../adr/README.md) — _TODO_ — ADR index; OPEN-DR-02 and the OQ-AR-RB-DRILL-* items to be filed here.
+- [`policy/sensitivity/archaeology/`](../../../../policy/sensitivity/archaeology/) — _TODO_ — sensitivity enforcement; the rule that fires at G3.
+- [`release/rollback_cards/`](../../../../release/rollback_cards/) — _TODO_ — emission home for G6.
+- [`release/correction_notices/`](../../../../release/correction_notices/) — _TODO_ — emission home for G8.
+- [`data/receipts/`](../../../../data/receipts/) — _TODO_ — emission home for `RunReceipt`, `PolicyDecision`, `AIReceipt`, `ReviewRecord`, `RehearsalReceipt`.
+- [`data/quarantine/`](../../../../data/quarantine/) — _TODO_ — destination for the quarantined synthetic record (G5).
+- `fixtures/domains/archaeology/no_network/rollback_drill/` (not present) — _TODO_ — synthetic fixture home.
 
 **ADRs governing this runbook (when filed):**
 

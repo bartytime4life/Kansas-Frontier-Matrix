@@ -32,6 +32,9 @@ notes:
   - All paths in this document are PROPOSED until verified against mounted-repo evidence.
   - Agriculture map products are aggregate-only by default; field-level joins fail closed (operating contract §23.2 sensitive-domain matrix).
   - Mermaid diagrams use quoted node labels to defend against punctuation-induced parse errors.
+owning_root: docs/
+responsibility: "Documentation for Agriculture — Map & UI Contracts; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌾 Agriculture — Map & UI Contracts
@@ -599,7 +602,7 @@ Forbidden in Agriculture map UI work. Each anti-pattern below corresponds to a D
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Trust membrane doctrine *(PROPOSED)*
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — Lifecycle invariants *(PROPOSED)*
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Placement rules.
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — Schema-home rule *(PROPOSED)*
+- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema-home rule *(PROPOSED)*
 - [`contracts/OBJECT_MAP.md`](../../../contracts/OBJECT_MAP.md) — Object-to-schema crosswalk *(PROPOSED)*
 
 ### Domain neighbors

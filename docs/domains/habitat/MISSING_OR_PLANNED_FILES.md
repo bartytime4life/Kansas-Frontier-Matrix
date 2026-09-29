@@ -17,13 +17,16 @@ related:
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
-  - ai-build-operating-contract.md
+  - docs/doctrine/ai-build-operating-contract.md
 tags: [kfm, habitat, domain, tracker, planning, directory-rules]
 notes:
   - All path claims are PROPOSED until verified against mounted-repo evidence.
   - Implementation maturity remains UNKNOWN without repo inspection.
   - Sensitive joins (Habitat × Fauna occurrences) deny by default.
   - "CONFLICTED schema-home: ADR-0001 OPEN per Atlas ADR-S-01 (confirm-or-amend; VB-11-01 NEEDS VERIFICATION); segmented schemas/contracts/v1/domains/habitat/ (DIRRULES §12) vs flat schemas/contracts/v1/habitat/ (Atlas §24.13). See schemas section + open-conflicts table."
+owning_root: docs/
+responsibility: "Documentation for Habitat Domain — Missing or Planned Files; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Habitat Domain — Missing or Planned Files
@@ -67,7 +70,7 @@ notes:
   - [`tools/validators/domains/habitat/`](#toolsvalidatorsdomainshabitat)
   - [`pipelines/domains/habitat/` and `pipeline_specs/habitat/`](#pipelinesdomainshabitat-and-pipeline_specshabitat)
   - [`connectors/`](#connectors)
-  - [`data/<phase>/habitat/`](#datapasehabitat)
+  - `data/<phase>/habitat/`
   - [`release/candidates/habitat/`](#releasecandidateshabitat)
   - [`control_plane/`](#control_plane)
 - [Habitat–Fauna thin-slice fixture pack](#habitatfauna-thin-slice-fixture-pack)

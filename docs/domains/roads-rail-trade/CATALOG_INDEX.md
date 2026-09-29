@@ -17,7 +17,7 @@ related:
   - docs/standards/STAC.md
   - docs/standards/DCAT.md
   - docs/standards/PROV.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 tags: [kfm, domain, roads-rail-trade, transport, catalog, stac, dcat, prov, triplet, evidence-bundle]
 notes:
   - 'CONTRACT_VERSION = "3.0.0" pinned per ai-build-operating-contract.md'
@@ -25,6 +25,9 @@ notes:
   - "PLACEMENT SUBTLETY (Directory Rules): data/catalog/ is structured stac/ dcat/ prov/ domain/. The domain-scoped record home is data/catalog/domain/roads-rail-trade/. The stac/ dcat/ prov/ homes are FORMAT homes; a domain/area appears as a SUB-SEGMENT inside them (data/catalog/stac/<area>/), never the reverse. Do not imply this lane owns data/catalog/stac/."
   - "Schema/contract slug CONFLICTED (domains/roads-rail-trade/ §12 vs transport/ §24.13). Catalog records reference contracts/schemas by the resolved slug; see CANONICAL_PATHS §3."
   - "All concrete paths/keys/record counts are PROPOSED until verified against a mounted repository."
+owning_root: docs/
+responsibility: "Documentation for Catalog Index — Roads / Rail / Trade Routes Domain; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Catalog Index — Roads / Rail / Trade Routes Domain
@@ -237,7 +240,7 @@ Track in `docs/registers/VERIFICATION_BACKLOG.md` / `docs/registers/DRIFT_REGIST
 - Doctrine: [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — `data/catalog/` structure, lifecycle invariant, catalog-area placement rule.
 - Doctrine: [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED, promotion as governed transition.
 - Standards: [`docs/standards/STAC.md`](../../standards/STAC.md), [`docs/standards/DCAT.md`](../../standards/DCAT.md), [`docs/standards/PROV.md`](../../standards/PROV.md) — the catalog formats this lane conforms to.
-- ADR: [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — schema-home rule that catalog records reference via `spec_hash`.
+- ADR: [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home rule that catalog records reference via `spec_hash`.
 - Atlas Ch. 13 §H (lifecycle/gate), §E (identity), §I (sensitivity), §K (graph rollback) — doctrine basis.
 - Registers: `docs/registers/VERIFICATION_BACKLOG.md`, `docs/registers/DRIFT_REGISTER.md` — destinations for §10 items.
 

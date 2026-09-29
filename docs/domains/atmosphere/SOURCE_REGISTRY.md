@@ -8,9 +8,12 @@ owners: TBD — atmosphere-domain-steward (placeholder)
 created: 2026-05-16
 updated: 2026-05-29
 policy_label: public
-related: [docs/domains/atmosphere/README.md, docs/domains/atmosphere/SOURCE_INDEX.md, docs/domains/atmosphere/SOURCE_FAMILIES.md, docs/domains/atmosphere/SOURCES.md, docs/standards/PROV.md, data/registry/sources/atmosphere/, schemas/contracts/v1/source/source-descriptor.json, policy/sensitivity/atmosphere/, ai-build-operating-contract.md]
+related: [docs/domains/atmosphere/README.md, docs/domains/atmosphere/SOURCE_INDEX.md, docs/domains/atmosphere/SOURCE_FAMILIES.md, docs/domains/atmosphere/SOURCES.md, docs/standards/PROV.md, data/registry/sources/atmosphere/, schemas/contracts/v1/source/source-descriptor.json, policy/sensitivity/atmosphere/, docs/doctrine/ai-build-operating-contract.md]
 tags: [kfm, atmosphere, source-registry, source-admission, governance]
 notes: [CONTRACT_VERSION pinned 3.0.0 # PROPOSED placement per Directory Rules §3 Step 3 and §12 # doctrinal artifact only; canonical machine-readable registry lives under data/registry/sources/atmosphere/ # filename reconciliation with sibling source docs flagged OQ-AIR-REG-01]
+owning_root: docs/
+responsibility: "Documentation for Atmosphere — Source Registry; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -49,16 +52,16 @@ notes: [CONTRACT_VERSION pinned 3.0.0 # PROPOSED placement per Directory Rules �
 2. [Repo fit and sibling docs](#-repo-fit-and-sibling-docs)
 3. [What belongs in this registry](#-what-belongs-in-this-registry)
 4. [What does not belong here](#-what-does-not-belong-here)
-5. [Source families (Atmosphere)](#%EF%B8%8F-source-families-atmosphere)
+5. Source families (Atmosphere)
 6. [Source-role anti-collapse register](#-source-role-anti-collapse-register)
-7. [Knowledge-character vocabulary](#%EF%B8%8F-knowledge-character-vocabulary)
+7. Knowledge-character vocabulary
 8. [Source activation flow](#-source-activation-flow)
 9. [Pipeline shape (RAW → PUBLISHED)](#-pipeline-shape-raw--published)
-10. [Sensitivity, rights, and publication posture](#%EF%B8%8F-sensitivity-rights-and-publication-posture)
+10. Sensitivity, rights, and publication posture
 11. [Schema and contract anchors](#-schema-and-contract-anchors)
-12. [Validators, tests, and fixtures](#%EF%B8%8F-validators-tests-and-fixtures)
+12. Validators, tests, and fixtures
 13. [Governed AI behavior](#-governed-ai-behavior)
-14. [Companion machine-readable locations](#%EF%B8%8F-companion-machine-readable-locations)
+14. Companion machine-readable locations
 15. [Open questions register](#-open-questions-register)
 16. [Open verification backlog](#-open-verification-backlog)
 17. [Changelog](#-changelog-v0--v1)

@@ -15,7 +15,7 @@ policy_label: public
 related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
-  - docs/domains/archaeology/README.md                  # PROPOSED
+  - docs/domains/archaeology/README.md
   - docs/domains/archaeology/OBJECT_FAMILIES.md
   - docs/domains/archaeology/PIPELINE.md
   - docs/domains/archaeology/PRESERVATION_MATRIX.md
@@ -24,24 +24,22 @@ related:
   - docs/domains/archaeology/SENSITIVITY.md
   - docs/domains/archaeology/SOURCES.md
   - docs/domains/archaeology/SOURCE_REGISTRY.md
-  - docs/standards/SMART_SYNC.md                        # PROPOSED — Pass 10 §C3 home
-  - docs/standards/REDACTION_DETERMINISM.md             # PROPOSED — Pass 10 §C6-03 home
-  - docs/runbooks/archaeology/parity_test.md            # PROPOSED — CI / runtime parity
-  - docs/runbooks/archaeology/rollback_drill.md         # PROPOSED — drill cadence
-  - tools/validators/                                   # PROPOSED — validator home
-  - tools/validators/validate_all.py                    # PROPOSED — canonical entrypoint
-  - tools/replay/                                       # PROPOSED — replay harness home
-  - tests/domains/archaeology/                          # PROPOSED — archaeology test home
-  - tests/replay/fixtures/                              # PROPOSED — replay fixtures
-  - fixtures/domains/archaeology/                       # PROPOSED — no-network fixtures
-  - policy/domains/archaeology/                         # PROPOSED — Rego bundle
-  - schemas/contracts/v1/receipts/validation_report.schema.json   # PROPOSED
+  - docs/standards/SMART_SYNC.md
+  - docs/standards/REDACTION_DETERMINISM.md
+  - tools/validators/
+  - tools/validators/validate_all.py
+  - tests/domains/archaeology/
+  - fixtures/domains/archaeology/
+  - policy/domains/archaeology/
 tags: [kfm, domain, archaeology, validators, tests, fixtures, CI, doctrine, fail-closed]
 notes:
   - CONTRACT_VERSION pinned to "3.0.0"
   - Sensitive-domain doc; archaeology default tier is T4 (DENY) for site location, human remains, sacred sites.
   - All repo-state and path claims are PROPOSED until repo is mounted.
   - Companion to OBJECT_FAMILIES.md, PIPELINE.md, PRESERVATION_MATRIX.md, PUBLICATION_AND_POLICY.md, RELEASE_INDEX.md, SENSITIVITY.md, SOURCES.md, and SOURCE_REGISTRY.md.
+owning_root: docs/
+responsibility: "Documentation for Archaeology — Validators; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 ![status: draft](https://img.shields.io/badge/status-draft-orange)
@@ -1241,8 +1239,8 @@ This document is done enough to enter the repository when:
 - [`docs/domains/archaeology/SOURCE_REGISTRY.md`](./SOURCE_REGISTRY.md) — Admission contract; V4's gate B / C inputs.
 - [`docs/standards/SMART_SYNC.md`](../../standards/SMART_SYNC.md) — *(PROPOSED — link target)* Pass 10 §C3 watcher / validator pattern.
 - [`docs/standards/REDACTION_DETERMINISM.md`](../../standards/REDACTION_DETERMINISM.md) — *(PROPOSED — link target)* Pass 10 §C6-03 seeded jitter / replay determinism rules V5 relies on.
-- [`docs/runbooks/archaeology/parity_test.md`](../../runbooks/archaeology/parity_test.md) — *(PROPOSED — link target)* CI / runtime parity test workflow.
-- [`docs/runbooks/archaeology/rollback_drill.md`](../../runbooks/archaeology/rollback_drill.md) — *(PROPOSED — link target)* rollback drill V6 references.
+- `docs/runbooks/archaeology/parity_test.md` (not present) — *(PROPOSED — link target)* CI / runtime parity test workflow.
+- `docs/runbooks/archaeology/rollback_drill.md` (not present) — *(PROPOSED — link target)* rollback drill V6 references.
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — *(PROPOSED — link target)* drift register.
 - Atlas v1.1 Ch. 15 §K (validators / tests / fixtures), §J (DTOs / outcomes), §L (governed AI), §M (publication / correction / rollback), §N (verification backlog).
 - Atlas v1.1 §20.4 (Master Validator / Test Catalogue), §24.3 (finite-outcome envelope), §24.6 (Gates A–G), §24.7 (reviewer roles).

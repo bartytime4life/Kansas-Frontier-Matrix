@@ -8,9 +8,12 @@ owners: PLACEHOLDER-settlements-infrastructure-domain-steward, PLACEHOLDER-docs-
 created: 2026-06-07
 updated: 2026-06-07
 policy_label: public
-related: [ai-build-operating-contract.md, directory-rules.md, docs/domains/settlements-infrastructure/README.md, schemas/contracts/v1/domains/settlements-infrastructure/, policy/sensitivity/infrastructure/, data/published/layers/settlements-infrastructure/]
+related: [docs/doctrine/ai-build-operating-contract.md, docs/doctrine/directory-rules.md, docs/domains/settlements-infrastructure/README.md, schemas/contracts/v1/domains/settlements-infrastructure/, policy/sensitivity/infrastructure/, data/published/layers/settlements-infrastructure/]
 tags: [kfm, settlements-infrastructure, paths, crosswalk, placement, directory-rules]
 notes: [Doctrine-adjacent; CONTRACT_VERSION = "3.0.0" pinned. This is a READ-ONLY lane crosswalk that RESTATES Directory Rules §12 + Atlas §24.13 — it is NOT a placement authority. directory-rules.md governs. Created via Option A instead of the requested CANONICAL_PATHS/ folder to avoid a parallel-authority / singleton-folder smell. All concrete paths are PROPOSED until verified against a mounted repo.]
+owning_root: docs/
+responsibility: "Documentation for Settlements & Infrastructure — Lane Path Crosswalk; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -31,7 +34,7 @@ notes: [Doctrine-adjacent; CONTRACT_VERSION = "3.0.0" pinned. This is a READ-ONL
 **Pinned:** `CONTRACT_VERSION = "3.0.0"` (`ai-build-operating-contract.md`)
 
 > [!IMPORTANT]
-> **This file is a crosswalk, not a placement authority.** The canonical placement authority is [`directory-rules.md`](../../../directory-rules.md) (§12 Domain Placement Law); the canonical Atlas-section ↔ root mapping is **Atlas §24.13**. If this page ever disagrees with either, **they govern** and the conflict is logged in `docs/registers/DRIFT_REGISTER.md`. A new placement authority MUST NOT be created here. *(Directory Rules §13 / §24.9.1 — parallel homes create competing authorities.)*
+> **This file is a crosswalk, not a placement authority.** The canonical placement authority is [`directory-rules.md`](../../../doctrine/directory-rules.md) (§12 Domain Placement Law); the canonical Atlas-section ↔ root mapping is **Atlas §24.13**. If this page ever disagrees with either, **they govern** and the conflict is logged in `docs/registers/DRIFT_REGISTER.md`. A new placement authority MUST NOT be created here. *(Directory Rules §13 / §24.9.1 — parallel homes create competing authorities.)*
 
 ---
 
@@ -266,8 +269,8 @@ This document is done enough to enter the repository when:
 ## Related docs
 
 - [`docs/domains/settlements-infrastructure/README.md`](./README.md) *(PROPOSED neighbor — verify)*
-- [`directory-rules.md`](../../../directory-rules.md) — **placement authority**; §12 Domain Placement Law; §13 / §24.9.1 parallel-authority anti-pattern
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"`
+- [`directory-rules.md`](../../../doctrine/directory-rules.md) — **placement authority**; §12 Domain Placement Law; §13 / §24.9.1 parallel-authority anti-pattern
+- `ai-build-operating-contract.md` (not present) — operating law; `CONTRACT_VERSION = "3.0.0"`
 - Atlas §24.13 — Atlas Section ↔ Dossier ↔ Responsibility Root crosswalk *(authoritative source-root mapping)*
 - `policy/sensitivity/infrastructure/` — critical-asset deny lane *(PROPOSED)*
 - `data/published/layers/settlements-infrastructure/` — public-safe release home *(PROPOSED)*

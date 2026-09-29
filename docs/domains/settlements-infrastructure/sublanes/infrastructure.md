@@ -8,8 +8,11 @@ owners: PLACEHOLDER-settlements-infrastructure-domain-steward, PLACEHOLDER-infra
 created: 2026-05-19
 updated: 2026-06-07
 policy_label: mixed (T0 manifest / T1 generalized / T2 reviewer / T4 critical-asset deny)
-related: [ai-build-operating-contract.md, directory-rules.md, docs/domains/settlements-infrastructure/README.md, docs/domains/settlements-infrastructure/OBJECT_FAMILIES.md, docs/domains/settlements-infrastructure/PATHS.md, contracts/domains/settlements-infrastructure/, schemas/contracts/v1/domains/settlements-infrastructure/, policy/sensitivity/infrastructure/]
+related: [docs/doctrine/ai-build-operating-contract.md, docs/doctrine/directory-rules.md, docs/domains/settlements-infrastructure/README.md, contracts/domains/settlements-infrastructure/, schemas/contracts/v1/domains/settlements-infrastructure/, policy/sensitivity/infrastructure/]
 notes: [Doctrine-adjacent; CONTRACT_VERSION = "3.0.0" pinned. v2 re-homes the prior "Infrastructure sublane" content as an infrastructure-side OBJECT-FAMILY dossier — "sublane" is not a KFM structural unit; domains subdivide by object family (Directory Rules §12; Atlas §24.14). Companion to OBJECT_FAMILIES.md (infrastructure-side half). Critical-asset detail and condition/vulnerability default to T4. Sibling "sublane" files cited in v1 were NOT verified and are downgraded.]
+owning_root: docs/
+responsibility: "Documentation for Infrastructure — Settlements / Infrastructure (object-family dossier); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -31,7 +34,7 @@ notes: [Doctrine-adjacent; CONTRACT_VERSION = "3.0.0" pinned. v2 re-homes the pr
 **Pinned:** `CONTRACT_VERSION = "3.0.0"` (`ai-build-operating-contract.md`)
 
 > [!IMPORTANT]
-> **This is an object-family dossier, not a "sublane."** KFM has no `sublanes/` structural unit; domains subdivide by **object family**, and cross-cutting files route to the lowest common responsibility root *(Directory Rules §12; Atlas §24.14)*. This file documents the **infrastructure-side families** of the one Settlements/Infrastructure bounded context — it does **not** create a second context, a new directory unit, or a new placement authority. It is the detailed companion to [`OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) §3 (infrastructure-side). The settlements-side families are documented under the same grouping.
+> **This is an object-family dossier, not a "sublane."** KFM has no `sublanes/` structural unit; domains subdivide by **object family**, and cross-cutting files route to the lowest common responsibility root *(Directory Rules §12; Atlas §24.14)*. This file documents the **infrastructure-side families** of the one Settlements/Infrastructure bounded context — it does **not** create a second context, a new directory unit, or a new placement authority. It is the detailed companion to `OBJECT_FAMILIES.md` (not present) §3 (infrastructure-side). The settlements-side families are documented under the same grouping.
 
 ---
 
@@ -58,7 +61,7 @@ notes: [Doctrine-adjacent; CONTRACT_VERSION = "3.0.0" pinned. v2 re-homes the pr
 
 ## 1. Dossier in context
 
-This file documents the **infrastructure-side object families** of the **Settlements / Infrastructure** domain — the slice that owns evidence and released derivatives for physical infrastructure assets, the networks they form, the facilities that anchor them, the service areas they cover, the operators that run them, and the condition observations and dependency relations recorded against them. The settlements-side families (Settlement, Municipality, CensusPlace, Townsite, GhostTown, Fort, Mission, ReservationCommunity) are the other half of the same bounded context, grouped in [`OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) §2. Both halves share one parent dossier, one source-role doctrine, one ubiquitous language, and one lifecycle invariant. *(CONFIRMED parent-domain scope — `[DOM-SETTLE] [ENCY]`; infrastructure-side grouping per `OBJECT_FAMILIES.md`.)*
+This file documents the **infrastructure-side object families** of the **Settlements / Infrastructure** domain — the slice that owns evidence and released derivatives for physical infrastructure assets, the networks they form, the facilities that anchor them, the service areas they cover, the operators that run them, and the condition observations and dependency relations recorded against them. The settlements-side families (Settlement, Municipality, CensusPlace, Townsite, GhostTown, Fort, Mission, ReservationCommunity) are the other half of the same bounded context, grouped in `OBJECT_FAMILIES.md` (not present) §2. Both halves share one parent dossier, one source-role doctrine, one ubiquitous language, and one lifecycle invariant. *(CONFIRMED parent-domain scope — `[DOM-SETTLE] [ENCY]`; infrastructure-side grouping per `OBJECT_FAMILIES.md`.)*
 
 ### 1.1 Why an infrastructure-side dossier
 
@@ -433,11 +436,11 @@ This dossier is done enough to enter the repository when:
 > [!NOTE]
 > Paths below are **PROPOSED** until repo mount and a per-root README ratifies them; some targets are **TODO** authoring, listed to keep the docs graph visible. `[DIRRULES §15]`
 
-- **Parent dossier** — [`docs/domains/settlements-infrastructure/README.md`](./README.md)
-- **Object-family grouping** — [`docs/domains/settlements-infrastructure/OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) (this is the infrastructure-side detail companion)
-- **Lane path crosswalk** — [`docs/domains/settlements-infrastructure/PATHS.md`](./PATHS.md)
+- **Parent dossier** — [`docs/domains/settlements-infrastructure/README.md`](../README.md)
+- **Object-family grouping** — `docs/domains/settlements-infrastructure/OBJECT_FAMILIES.md` (not present) (this is the infrastructure-side detail companion)
+- **Lane path crosswalk** — `docs/domains/settlements-infrastructure/PATHS.md` (not present)
 - **Lane glossary** — `docs/domains/settlements-infrastructure/UBIQUITOUS_LANGUAGE.md` *(TODO)*
-- **Doctrine** — [`directory-rules.md`](../../../directory-rules.md) (§12 Domain Placement Law; §2.4 ADR triggers); [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) (`CONTRACT_VERSION = "3.0.0"`)
+- **Doctrine** — [`directory-rules.md`](../../../doctrine/directory-rules.md) (§12 Domain Placement Law; §2.4 ADR triggers); `ai-build-operating-contract.md` (not present) (`CONTRACT_VERSION = "3.0.0"`)
 - **Dossier source** — Atlas ch.14 (Settlements & Infrastructure); §24.5 (sensitivity tiers); §24.1 (source-role); §24.14 (object-family × domain matrix)
 - **Standards** — `docs/standards/PROV.md` *(naming variance vs `PROVENANCE.md` — NEEDS VERIFICATION)*
 - **Registers** — `docs/registers/DRIFT_REGISTER.md`, `docs/registers/VERIFICATION_BACKLOG.md`
@@ -489,7 +492,7 @@ pipelines/domains/settlements-infrastructure/                                   
 
 ---
 
-**Related:** [Parent dossier](./README.md) · [Object families](./OBJECT_FAMILIES.md) · [Paths](./PATHS.md) · [Directory Rules](../../../directory-rules.md)
+**Related:** Parent dossier (not present) · Object families (not present) · Paths (not present) · [Directory Rules](../../../doctrine/directory-rules.md)
 
 *Last updated: 2026-06-07 · Doc version: v2 (draft) · `CONTRACT_VERSION = "3.0.0"`*
 

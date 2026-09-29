@@ -11,7 +11,7 @@ policy_label: public
 contract_version: "3.0.0"
 related:
   - docs/domains/hazards/ARCHITECTURE.md
-  - docs/domains/hazards/api-contracts.md
+  - docs/domains/hazards/API_CONTRACTS.md
   - docs/domains/hazards/README.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
@@ -36,6 +36,9 @@ notes:
   # Schema-home segment: schemas/contracts/v1/hazards/ (no /domains/ segment) per Atlas Sec 24.13 crosswalk; ADR-S-01 / ADR-0001 pending.
   # Idea/Feature/Programming seed-card IDs use the real convention KFM-P{PASS}-{CLASS}-{NNNN}; PASS and ordinal are placeholders until allocated.
   # No mounted repo this session: all paths, routes, schema files, and phase artifacts are PROPOSED / NEEDS VERIFICATION.
+owning_root: docs/
+responsibility: "Documentation for Hazards Domain Implementation Blueprint; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Hazards Domain Implementation Blueprint
@@ -93,7 +96,7 @@ This is the **lane build plan** for Hazards. It is the third member of the Hazar
 | Doc | Question it answers | This blueprint's relationship |
 |---|---|---|
 | [`ARCHITECTURE.md`](./ARCHITECTURE.md) | **What** the Hazards lane is — scope, object families, source roles, cross-lane relations, lifecycle. | Upstream. The blueprint assumes it and does not duplicate it. |
-| [`api-contracts.md`](./api-contracts.md) | **Which** governed surfaces publish Hazards claims and what envelopes they return. | Upstream. The blueprint schedules these surfaces into build phases. |
+| [`api-contracts.md`](API_CONTRACTS.md) | **Which** governed surfaces publish Hazards claims and what envelopes they return. | Upstream. The blueprint schedules these surfaces into build phases. |
 | **`BLUEPRINT.md`** *(this doc)* | **How** the lane gets built — reversible slices, exit criteria, validators, rollback. | The build sequence. |
 
 > [!NOTE]
@@ -420,7 +423,7 @@ This document is done enough to enter the repository when:
 > Placeholder targets — link validity NEEDS VERIFICATION against mounted-repo evidence.
 
 - [`docs/domains/hazards/ARCHITECTURE.md`](./ARCHITECTURE.md) — what the Hazards lane is
-- [`docs/domains/hazards/api-contracts.md`](./api-contracts.md) — governed API surfaces + decision envelopes
+- [`docs/domains/hazards/api-contracts.md`](API_CONTRACTS.md) — governed API surfaces + decision envelopes
 - [`docs/domains/hazards/README.md`](./README.md) — Hazards landing page. `TODO` link target
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law, lane pattern, anti-patterns
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED invariant

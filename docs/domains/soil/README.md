@@ -38,6 +38,7 @@ notes:
   - "Repository snapshot: main@d1a13a3c852944d8fd8754a887f0b35d3ea9a971 plus the bounded three-profile fixture-validator batch described below."
   - "Planning lineage: KFM Soil Architecture Extended Pro PDF-Only Planning Report, 25 pages, SHA-256 7c2d498212b9ad56f3ba37bf91f841e9f328794e8aa4940f8f665a4116c5aaea."
   - "The planning report explicitly had no mounted repository. Its proposed paths and implementation claims are not imported as current facts."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -110,7 +111,7 @@ behavior.
 | Conformance evidence | [`tests/domains/soil/`](../../../tests/domains/soil/README.md) | Deterministic tests |
 | Repository validators | [`tools/validators/domains/soil/`](../../../tools/validators/domains/soil/README.md) | Validation tooling |
 | Release, correction, rollback | `release/` | Decision authority |
-| Public UI composition | [`apps/explorer-web/.../soil/`](../../../apps/explorer-web/src/features/domains/soil/README.md) | Downstream rendering only |
+| Public UI composition | `apps/explorer-web/.../soil/` (retired) | Downstream rendering only |
 
 > [!WARNING]
 > Soil is a domain segment, not a repository root. A new top-level `soil/`

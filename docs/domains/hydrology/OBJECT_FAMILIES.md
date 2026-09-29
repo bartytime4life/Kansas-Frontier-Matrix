@@ -10,8 +10,8 @@ updated: 2026-07-31
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
-  - ai-build-operating-contract.md
-  - directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
   - docs/domains/hydrology/README.md
   - docs/domains/hydrology/INDEX.md
   - docs/domains/hydrology/GLOSSARY.md
@@ -27,6 +27,9 @@ notes:
   - The Atlas §2.2 spine list omits UpstreamTrace and Flood Context that §B/§E include — surfaced as an open question, not smoothed.
   - Detailed semantics per object belong in contracts/domains/hydrology/*.md; machine shape in schemas/contracts/v1/domains/hydrology/. This doc is the lane's object catalog and index into both.
   - AquiferObservation and AquiferContextLink adopt a separated measurement/relation pair with closed PROPOSED schemas and bounded offline tests.
+owning_root: docs/
+responsibility: "Documentation for Hydrology — Object Families; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 💧 Hydrology — Object Families
@@ -46,16 +49,16 @@ notes:
 
 ## Contents
 
-- [1. Purpose & how to read this catalog](#1-purpose-how-to-read-this-catalog)
+- [1. Purpose & how to read this catalog](#1-purpose--how-to-read-this-catalog)
 - [2. The object-family spine](#2-the-object-family-spine)
 - [3. Shared invariants (every family)](#3-shared-invariants-every-family)
 - [3.1 Minimum family-profile candidates](#31-minimum-family-profile-candidates)
-- [4. Accounting & network families](#4-accounting-network-families)
+- [4. Accounting & network families](#4-accounting--network-families)
 - [5. Observation families](#5-observation-families)
 - [6. Flood families (the separation that must hold)](#6-flood-families-the-separation-that-must-hold)
 - [7. Derived families](#7-derived-families)
 - [8. Cross-lane link objects](#8-cross-lane-link-objects)
-- [9. Object → home crosswalk](#9-object-home-crosswalk)
+- [9. Object → home crosswalk](#9-object--home-crosswalk)
 - [10. Open questions](#10-open-questions)
 - [11. Related docs](#11-related-docs)
 

@@ -9,7 +9,7 @@ created: 2026-05-17
 updated: 2026-06-05
 policy_label: public
 related:
-  - ai-build-operating-contract.md
+  - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/registers/DRIFT_REGISTER.md
@@ -23,6 +23,9 @@ notes:
   # The life-safety boundary is doctrinal: KFM Hazards is NOT an emergency alert system.
   # v2 reconciles the source-role vocabulary to the canonical seven-class enum (Atlas 24.1)
   #   and surfaces the Atlas 24.13 crosswalk vs. Directory Rules 12 segment-form conflict.
+owning_root: docs/
+responsibility: "Documentation for Hazards — Missing or Planned Files; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌪️ Hazards — Missing or Planned Files
@@ -89,7 +92,7 @@ This file enumerates what the lane is doctrinally expected to grow into, per **D
 Per **Directory Rules §12 — Domain Placement Law**, hazards is a **domain segment** inside each responsibility root, never a root folder itself. The segment form below (`contracts/domains/hazards/`, `policy/domains/hazards/`, `schemas/contracts/v1/domains/hazards/`, …) is the form §12 mandates verbatim. _(CONFIRMED: Directory Rules §12, which lists `contracts/domains/<domain>/`, `policy/domains/<domain>/`, and `schemas/contracts/v1/domains/<domain>/` as the canonical lane pattern.)_
 
 > [!WARNING]
-> **Crosswalk shorthand vs. Directory Rules segment form — CONFLICTED.** The Atlas v1.1 §24.13 crosswalk lists the hazards responsibility roots in **non-segment** shorthand: `schemas/contracts/v1/hazards/`, `contracts/hazards/`, and `policy/release/hazards/`. Directory Rules §12 requires the **`domains/` segment** form used throughout this file. Per the Atlas's own §24 authority rule ("the master tables in Chapter 24 are navigational, not authoritative … a Chapter 24 table that disagrees is treated as a drift entry"), **Directory Rules win**; this divergence is logged as a drift candidate (see [§10](#10-anti-pattern-watchlist) and the [DRIFT_REGISTER](docs/registers/DRIFT_REGISTER.md)). One exception is worth noting: the crosswalk's `policy/release/hazards/` is a legitimate home for the release-gate `.rego` per Directory Rules §13.5 ("Policy code under `release/`" → move to `policy/release/` or `policy/domains/<domain>/`); see [§5.4](#54-policydomainshazards).
+> **Crosswalk shorthand vs. Directory Rules segment form — CONFLICTED.** The Atlas v1.1 §24.13 crosswalk lists the hazards responsibility roots in **non-segment** shorthand: `schemas/contracts/v1/hazards/`, `contracts/hazards/`, and `policy/release/hazards/`. Directory Rules §12 requires the **`domains/` segment** form used throughout this file. Per the Atlas's own §24 authority rule ("the master tables in Chapter 24 are navigational, not authoritative … a Chapter 24 table that disagrees is treated as a drift entry"), **Directory Rules win**; this divergence is logged as a drift candidate (see [§10](#10-anti-pattern-watchlist) and the DRIFT_REGISTER (not present)). One exception is worth noting: the crosswalk's `policy/release/hazards/` is a legitimate home for the release-gate `.rego` per Directory Rules §13.5 ("Policy code under `release/`" → move to `policy/release/` or `policy/domains/<domain>/`); see [§5.4](#54-policydomainshazards).
 
 ```mermaid
 flowchart LR

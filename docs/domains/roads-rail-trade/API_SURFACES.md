@@ -9,19 +9,22 @@ created: 2026-06-07
 updated: 2026-06-07
 policy_label: public
 related:
-  - docs/domains/roads-rail-trade/API_CONTRACTS.md          # flat-file contracts doc (PATH COLLISION pair, see below)
-  - docs/domains/roads-rail-trade/api-contracts/README.md   # folder contracts doc (PATH COLLISION pair)
+  - docs/domains/roads-rail-trade/API_CONTRACTS.md
+  - docs/domains/roads-rail-trade/api-contracts/README.md
   - docs/domains/roads-rail-trade/README.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/trust-membrane.md
   - docs/architecture/governed-api/README.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 tags: [kfm, domains, roads-rail-trade, api, surfaces, governed-api, routing]
 notes:
   - 'CONTRACT_VERSION = "3.0.0" pinned per ai-build-operating-contract.md'
   - "SCOPE GUARD: this is a SURFACE CATALOG (which endpoints exist + routing/wiring status), NOT a contracts doc. DTO/schema/outcome SEMANTICS live in the API-contracts doc. Three API docs now overlap in this lane — see API-doc proliferation callout (ADR-RRT-API-07)."
   - "All routes, base URLs, framework bindings, and wiring states are UNKNOWN/PROPOSED until a mounted repo or OpenAPI document is inspected."
   - "Schema-home slug CONFLICTED: Directory Rules §12 (domains/roads-rail-trade/) vs Atlas §24.13 (transport/). See ADR-RRT-API-01/02."
+owning_root: docs/
+responsibility: "Documentation for Roads / Rail / Trade — API Surfaces (catalog & routing status); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Roads / Rail / Trade — API Surfaces
@@ -209,7 +212,7 @@ Track in `docs/registers/VERIFICATION_BACKLOG.md` / `docs/registers/DRIFT_REGIST
 - Doctrine: [`../../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Domain Placement Law (§12), responsibility roots.
 - Doctrine: [`../../../doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — trust-membrane boundary (CONFIRMED in Directory Rules related-doctrine list).
 - Architecture: [`../../../architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — governed-API surface definition.
-- ADR: [`../../../adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — schema-home rule.
+- ADR: [`../../../adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home rule.
 - Atlas §20.3 — Master API Surface Table; Atlas Ch. 13 §J — Roads/Rail surface rows (doctrine basis).
 - Registers: `docs/registers/VERIFICATION_BACKLOG.md`, `docs/registers/DRIFT_REGISTER.md` — destinations for §8 items.
 

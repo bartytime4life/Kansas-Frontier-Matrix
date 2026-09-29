@@ -30,6 +30,9 @@ notes:
   - Implementation-layer claims (routes, payload shapes, file paths) are PROPOSED until verified against a mounted repo and ADR-0001.
   - Source-role anti-collapse and the T4 default for sensitive flora locations are CONFIRMED doctrine.
   - Schema-home reconciled to Directory Rules ADR-0001 canonical pattern; Atlas Appendix D `schemas/contracts/v1/flora/` form is treated as lineage/CONFLICTED pending migration.
+owning_root: docs/
+responsibility: "Documentation for Flora — API Contracts; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Flora — API Contracts
@@ -73,7 +76,7 @@ notes:
 12. [Validators, tests, and fixtures](#12-validators-tests-and-fixtures)
 13. [Open questions register](#13-open-questions-register)
 14. [Open verification backlog](#14-open-verification-backlog)
-15. [Changelog](#15-changelog)
+15. Changelog
 16. [Definition of done](#16-definition-of-done)
 17. [Related docs](#17-related-docs)
 

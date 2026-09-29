@@ -18,10 +18,10 @@ related:
   - docs/doctrine/policy-aware.md
   - docs/doctrine/evidence-first.md
   - docs/doctrine/ai-as-assistant.md
-  - docs/doctrine/corrections-are-first-class.md
+  - docs/doctrine/corrections-first-class.md
   - docs/domains/agriculture/README.md
   - docs/domains/agriculture/ARCHITECTURE.md
-  - docs/domains/agriculture/api-contracts.md
+  - docs/domains/agriculture/API_CONTRACTS.md
   - docs/domains/agriculture/CANONICAL_PATHS.md
   - docs/domains/agriculture/CONTINUITY_INVENTORY.md
   - docs/domains/agriculture/CROSS_LANE.md
@@ -36,6 +36,9 @@ notes:
   - Aligns with Atlas v1.1 §24.6 Master Pipeline Gate Reference.
   - Mounted repo not inspected this session; all path-shaped claims PROPOSED.
   - This doc is the lifecycle-and-gates contract; placement at CANONICAL_PATHS.md, edges at CROSS_LANE.md, wire at api-contracts.md.
+owning_root: docs/
+responsibility: "Documentation for Agriculture — Data Lifecycle; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -60,7 +63,7 @@ notes:
 > [!IMPORTANT]
 > **What this doc is — and what it is not.** This is the **lifecycle-and-gates contract** for the Agriculture domain: how data moves through phases, what each gate requires, what receipts each phase emits, what failure-closed outcomes look like. It does **not** decide:
 > - *what* an Agriculture object means → [`ARCHITECTURE.md`](./ARCHITECTURE.md),
-> - the *wire shape* of a governed-API envelope → [`api-contracts.md`](./api-contracts.md),
+> - the *wire shape* of a governed-API envelope → [`api-contracts.md`](API_CONTRACTS.md),
 > - *where* lifecycle artifacts physically live → [`CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) §7,
 > - *how* corrections cross domain boundaries → [`CROSS_LANE.md`](./CROSS_LANE.md) §16,
 > - the *carry-forward state* of doctrine from prior passes → [`CONTINUITY_INVENTORY.md`](./CONTINUITY_INVENTORY.md).
@@ -143,7 +146,7 @@ This document MUST obey the doctrinal stack below, in order. A lower row cannot 
 | Finite policy outcomes | [`policy-aware.md`](../../doctrine/policy-aware.md) | **CONFIRMED doctrine** |
 | Cite-or-abstain truth posture | [`evidence-first.md`](../../doctrine/evidence-first.md) | **CONFIRMED doctrine** |
 | AI is interpretive, never root truth | [`ai-as-assistant.md`](../../doctrine/ai-as-assistant.md) | **CONFIRMED doctrine** |
-| `CorrectionNotice` + `RollbackCard` lineage | [`corrections-are-first-class.md`](../../doctrine/corrections-are-first-class.md) | **CONFIRMED doctrine** |
+| `CorrectionNotice` + `RollbackCard` lineage | [`corrections-are-first-class.md`](../../doctrine/corrections-first-class.md) | **CONFIRMED doctrine** |
 | Master Pipeline Gate Reference | Atlas §24.6.1 (`[ENCY]`) | **CONFIRMED doctrine** |
 | Master Receipt Catalog | Atlas §24.2 (`[ENCY]`) | **CONFIRMED doctrine** |
 | Agriculture domain doctrine baseline | Atlas v1.1 §9 + §24.4.7 (`[DOM-AG]`) | **CONFIRMED doctrine** |
@@ -273,7 +276,7 @@ _A dot means the receipt is normally emitted, amended, or referenced at that pha
 > [!IMPORTANT]
 > **Agriculture is the lane where `AggregationReceipt` is most load-bearing.** Aggregation is what makes public Agriculture data safe; without a receipt, the aggregate has no audit trail proving it was not derived from a denied join or from un-aggregated operator material. Every Agriculture envelope whose `evidence_refs[]` includes `role = aggregate` MUST resolve an `AggregationReceipt`; without it, the envelope MUST `ABSTAIN` with reason `aggregation_receipt_missing`. `[CONFIRMED — Atlas §24.13; ARCHITECTURE.md §5.]`
 
-PROPOSED minimum content (subject to schema PR / ADR-S-03; resolves alongside [`api-contracts.md`](./api-contracts.md) OQ-AG-API-07):
+PROPOSED minimum content (subject to schema PR / ADR-S-03; resolves alongside [`api-contracts.md`](API_CONTRACTS.md) OQ-AG-API-07):
 
 - `aggregation_method` — e.g., area-weighted mean, sum, count, median.
 - `geometry_scope` — county FIPS, HUC, grid cell ID, with explicit threshold.
@@ -608,7 +611,7 @@ Every governed surface that touches Agriculture data emits a finite outcome. The
 `ACCEPTED` · `DENY` · `ERROR`. Intake-only; no public claim emitted by `ACCEPTED` alone. `[CONFIRMED — operating contract §8; api-contracts.md §4.3.]`
 
 > [!IMPORTANT]
-> **The three vocabularies MUST NOT be conflated.** Confusing them is a §13.5 anti-pattern. Where a row in this doc references a gate or workflow outcome, it is named explicitly. The wire-level contract lives at [`api-contracts.md`](./api-contracts.md) §4. `[CONFIRMED — operating contract §21.2; Atlas §24.3.1.]`
+> **The three vocabularies MUST NOT be conflated.** Confusing them is a §13.5 anti-pattern. Where a row in this doc references a gate or workflow outcome, it is named explicitly. The wire-level contract lives at [`api-contracts.md`](API_CONTRACTS.md) §4. `[CONFIRMED — operating contract §21.2; Atlas §24.3.1.]`
 
 [⤴ Back to top](#top)
 
@@ -849,13 +852,13 @@ A repository implementation of this document conforms when **all** of the follow
 - [`docs/doctrine/policy-aware.md`](../../doctrine/policy-aware.md)
 - [`docs/doctrine/evidence-first.md`](../../doctrine/evidence-first.md)
 - [`docs/doctrine/ai-as-assistant.md`](../../doctrine/ai-as-assistant.md)
-- [`docs/doctrine/corrections-are-first-class.md`](../../doctrine/corrections-are-first-class.md)
+- [`docs/doctrine/corrections-are-first-class.md`](../../doctrine/corrections-first-class.md)
 
 ### 19.3 Agriculture sibling docs
 
 - [`docs/domains/agriculture/README.md`](./README.md) — domain landing.
 - [`docs/domains/agriculture/ARCHITECTURE.md`](./ARCHITECTURE.md) — architectural contract (object families, sublanes, identity rules, sensitivity tier matrix).
-- [`docs/domains/agriculture/api-contracts.md`](./api-contracts.md) — wire-level interface contract (envelopes, DTOs, outcome grammar).
+- [`docs/domains/agriculture/api-contracts.md`](API_CONTRACTS.md) — wire-level interface contract (envelopes, DTOs, outcome grammar).
 - [`docs/domains/agriculture/CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) — path-only crosswalk (full placement rules).
 - [`docs/domains/agriculture/CONTINUITY_INVENTORY.md`](./CONTINUITY_INVENTORY.md) — carry-forward register.
 - [`docs/domains/agriculture/CROSS_LANE.md`](./CROSS_LANE.md) — per-edge cross-lane contracts.

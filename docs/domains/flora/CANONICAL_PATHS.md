@@ -13,7 +13,7 @@ related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/domains/flora/README.md
   - docs/domains/fauna/CANONICAL_PATHS.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
 tags: [kfm, directory-rules, flora, canonical-paths, governance]
@@ -24,6 +24,9 @@ notes:
   # Schema-home path-segment form is CONFLICTED: Directory Rules §12/§6.4 (domains/<lane>/) vs Atlas §24.13/§24.14 (bare flora/). This doc follows Directory Rules per §2.1 + ADR-0001; routes the Atlas form to DRIFT_REGISTER. See §4.3 and §13 item 16.
   # source_role uses the canonical seven-class enum (Atlas §24.1.1): observed | regulatory | modeled | aggregate | administrative | candidate | synthetic.
   # Doctrine-adjacent doc; CONTRACT_VERSION = "3.0.0" pinned per AI Build Operating Contract v3.0.
+owning_root: docs/
+responsibility: "Documentation for Canonical Paths — Flora Domain; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Canonical Paths — Flora Domain
@@ -496,7 +499,7 @@ This register is done enough to enter the repository when:
 - [`docs/domains/fauna/CANONICAL_PATHS.md`](../fauna/CANONICAL_PATHS.md) — Parallel canonical-paths register for the fauna domain.
 - [`docs/runbooks/flora/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/flora/SOURCE_REFRESH_RUNBOOK.md) — Flora source refresh runbook. *(PROPOSED target.)*
 - [`docs/runbooks/flora/ROLLBACK_RUNBOOK.md`](../../runbooks/flora/ROLLBACK_RUNBOOK.md) — Flora rollback runbook. *(PROPOSED target.)*
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — Schema-home rule fixing `schemas/contracts/v1/...` as canonical. **NEEDS VERIFICATION.**
+- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema-home rule fixing `schemas/contracts/v1/...` as canonical. **NEEDS VERIFICATION.**
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — Cross-repo verification register.
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — Cross-repo drift register (schema-home conflict logged here).
 - [`contracts/domains/flora/`](../../../contracts/domains/flora/) — Flora object-family meaning. *(PROPOSED target.)*

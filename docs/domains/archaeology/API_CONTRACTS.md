@@ -585,7 +585,7 @@ Repository paths below are confirmed unless explicitly qualified; maturity and a
 - [`./CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) — Archaeology canonical paths (sibling).
 - [`./CROSS_DOMAIN.md`](./CROSS_DOMAIN.md) — edges to Spatial Foundation, Roads / Rail, Settlements, Hazards, People / Land (sibling).
 - [`./SENSITIVITY.md`](./SENSITIVITY.md) — T0–T4 tier matrix, allowed transforms, gates.
-- [`./SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md) — source families, rights, sensitivity, cadence.
+- [`./SOURCE_FAMILIES.md`](source-families.md) — source families, rights, sensitivity, cadence.
 - [`./PIPELINE.md`](./PIPELINE.md) — RAW → PUBLISHED gates for this lane.
 - [`./VERIFICATION_BACKLOG.md`](./VERIFICATION_BACKLOG.md) — Archaeology verification backlog.
 - [`./runbooks/README.md`](./runbooks/README.md) — Archaeology runbooks folder README (placement under ADR review, `OQ-AR-API-09`).
