@@ -31,7 +31,11 @@ export function parseSoilAvailability(xml: string, now = new Date()): Record<Soi
     for (const item of time.matchAll(/<Value>([^<]+)<\/Value>/g)) {
       const match = item[1].match(/^(\d{4}-\d{2}-\d{2})\/(\d{4}-\d{2}-\d{2})\/P1D$/);
       if (!match) throw new Error(`Unexpected NASA time range for ${view}.`);
-      if (!Number.isFinite(Date.parse(`${match[1]}T00:00:00Z`)) || !Number.isFinite(Date.parse(`${match[2]}T00:00:00Z`)) || match[1] > match[2]) throw new Error(`Invalid NASA time range for ${view}.`);
+      const canonical = (value: string) => {
+        const stamp = Date.parse(`${value}T00:00:00Z`);
+        return Number.isFinite(stamp) && new Date(stamp).toISOString().slice(0, 10) === value;
+      };
+      if (!canonical(match[1]) || !canonical(match[2]) || match[1] > match[2]) throw new Error(`Invalid NASA time range for ${view}.`);
       for (let t = Date.parse(`${match[1]}T00:00:00Z`), end = Date.parse(`${match[2]}T00:00:00Z`), n = 0; t <= end && n < 31; t += 86400000, n++) {
         const day = new Date(t).toISOString().slice(0, 10);
         if (validSoilDay(day, now)) days.add(day);

@@ -75,6 +75,11 @@ export async function soilTileBytes(view: SoilView, day: string, z: number, x: n
     bytes = new Uint8Array(length); let offset = 0;
     for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.length; }
   } catch (error) { throw new SoilSourceError(error instanceof Error && (error.name === "AbortError" || error.name === "TimeoutError") ? "NASA_TIMEOUT" : "NASA_MALFORMED_OR_OVERSIZED", error instanceof Error && (error.name === "AbortError" || error.name === "TimeoutError") ? 504 : 502); }
-  if (bytes.length < 8 || ![137,80,78,71,13,10,26,10].every((n, i) => bytes[i] === n)) throw new SoilSourceError("NASA_INVALID_PNG");
+  // GIBS WMTS tiles are 256 px PNGs. Reject an image with a forged signature
+  // or implausible dimensions before forwarding it to the map decoder.
+  const header = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  if (bytes.length < 33 || ![137,80,78,71,13,10,26,10].every((n, i) => bytes[i] === n)
+    || header.getUint32(8) !== 13 || String.fromCharCode(...bytes.slice(12, 16)) !== "IHDR"
+    || header.getUint32(16) !== 256 || header.getUint32(20) !== 256) throw new SoilSourceError("NASA_INVALID_PNG");
   return bytes;
 }

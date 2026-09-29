@@ -31,6 +31,7 @@ test("four fixed views share only exact available UTC days and preserve gaps", (
 
 test("malformed provider time and missing layers fail closed", () => {
   assert.throws(() => soil.parseSoilAvailability(capabilities({ root: ["2026-09-25/2026-09-27/P2D"] }), now));
+  assert.throws(() => soil.parseSoilAvailability(capabilities({ root: ["2026-02-30/2026-03-02/P1D"] }), now));
   assert.throws(() => soil.parseSoilAvailability("<Capabilities></Capabilities>", now));
   assert.equal(soil.validSoilDay("2026-02-30", now), false);
   assert.equal(soil.validSoilDay("2026-08-01", now), false);
@@ -64,6 +65,9 @@ test("tile bytes reject false PNG content and oversized streamed body", async ()
   const original = global.fetch;
   try {
     global.fetch = async () => new Response("not PNG", { headers: { "Content-Type": "image/png" } });
+    await assert.rejects(server.soilTileBytes("surface", "2026-09-27", 6, 14, 24), { code: "NASA_INVALID_PNG" });
+    const forged = new Uint8Array(33); forged.set([137,80,78,71,13,10,26,10], 0); forged.set([0,0,0,13,73,72,68,82], 8);
+    global.fetch = async () => new Response(forged, { headers: { "Content-Type": "image/png" } });
     await assert.rejects(server.soilTileBytes("surface", "2026-09-27", 6, 14, 24), { code: "NASA_INVALID_PNG" });
     global.fetch = async () => new Response(new Uint8Array(1024 * 1024 + 1), { headers: { "Content-Type": "image/png" } });
     await assert.rejects(server.soilTileBytes("surface", "2026-09-27", 6, 14, 24), { code: "NASA_MALFORMED_OR_OVERSIZED" });
