@@ -22,8 +22,6 @@ related:
   - ./src/README.md
   - ./src/local_upload/README.md
   - ./src/local_upload/__init__.py
-  - ./src/local_upload/fetch.py
-  - ./src/local_upload/admit.py
   - ./src/local_upload/descriptor.yaml
   - ./tests/README.md
   - ../../CONTRIBUTING.md
@@ -61,6 +59,9 @@ notes:
 <a id="top"></a>
 
 # Local Upload Greenfield Connector and Trust-Edge Boundary
+
+> [!NOTE]
+> **2026-09-29:** the unreferenced placeholder files `src/local_upload/admit.py` and `src/local_upload/fetch.py` were removed from `connectors/local_upload/` in [#4792](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792). None was executable or authoritative. Evidence notes and prose below that describe their contents record the earlier snapshot.
 
 ## Local quarantine capture implementation — current branch
 
@@ -161,8 +162,6 @@ connectors/local_upload/
 │   └── local_upload/
 │       ├── README.md                      # package trust-edge boundary v0.2
 │       ├── __init__.py                    # empty
-│       ├── fetch.py                       # comment-only placeholder
-│       ├── admit.py                       # comment-only placeholder
 │       └── descriptor.yaml                # four-field placeholder
 └── tests/
     └── README.md                          # negative-first test boundary v0.2
@@ -179,8 +178,8 @@ The merged child boundaries record exact `Not Found` results for conventional te
 | `src/README.md` | v0.2 source-layout boundary | Organizes future implementation; does not prove an installable package. |
 | Package README | v0.2 trust-edge boundary | Defines arbitrary-file and candidate-output constraints; does not implement them. |
 | `__init__.py` | Empty | No public package API or import-time behavior. |
-| `fetch.py` | Comment-only | No upload transport, stream capture, hashing, scanner, source-head, or staging behavior. |
-| `admit.py` | Comment-only | No validation, disposition, quarantine, receipt, or candidate-handoff behavior. |
+| `fetch.py` (removed 2026-09-29) | Comment-only | No upload transport, stream capture, hashing, scanner, source-head, or staging behavior. |
+| `admit.py` (removed 2026-09-29) | Comment-only | No validation, disposition, quarantine, receipt, or candidate-handoff behavior. |
 | `descriptor.yaml` | `name`, `role: TBD`, `rights: TBD`, `sensitivity_floor: public` | Invalid as descriptor authority, activation, rights clearance, sensitivity clearance, or release evidence. |
 | Test README | v0.2 negative-first contract | No runner, collection, pass rate, coverage, or executable security proof follows. |
 | Workflows | TODO echo steps | Green execution would prove only that placeholder steps ran. |

@@ -16,8 +16,6 @@ related:
   - src/README.md
   - src/ftDNA/README.md
   - src/ftDNA/__init__.py
-  - src/ftDNA/fetch.py
-  - src/ftDNA/descriptor.yaml
   - tests/README.md
   - ../../docs/sources/catalog/ftdna/README.md
   - ../../docs/sources/catalog/ftdna/autosomal-raw-data.md
@@ -52,6 +50,9 @@ notes:
 <a id="top"></a>
 
 # FamilyTreeDNA Connector Lane
+
+> [!NOTE]
+> **2026-09-29:** the unreferenced placeholder files `src/ftDNA/admit.py`, `src/ftDNA/descriptor.yaml` and `src/ftDNA/fetch.py` were removed from `connectors/ftDNA/` in [#4792](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792). None was executable or authoritative. Evidence notes and prose below that describe their contents record the earlier snapshot.
 
 > Evidence-grounded parent boundary for a possible FamilyTreeDNA / FTDNA source-admission connector. The current lane is a greenfield documentation-and-placeholder scaffold. It does **not** provide an approved vendor integration, supported installable package, account access, parser, consent validator, DNA interpretation engine, lifecycle writer, or publication path.
 
@@ -119,9 +120,7 @@ connectors/ftDNA/
 │   ├── README.md                     # v0.2 source-root contract
 │   └── ftDNA/
 │       ├── README.md                 # v0.2 package contract
-│       ├── __init__.py               # empty file
-│       ├── descriptor.yaml           # role/rights TBD; unsafe public floor
-│       └── fetch.py                  # one-line greenfield placeholder
+│       └── __init__.py               # empty file
 └── tests/
     └── README.md                     # v0.2 documentation-only test contract
 ```
@@ -135,8 +134,8 @@ connectors/ftDNA/
 | `src/README.md` | Evidence-grounded source-root contract. | **DOCUMENTED** |
 | `src/ftDNA/README.md` | Evidence-grounded package contract. | **DOCUMENTED** |
 | `src/ftDNA/__init__.py` | Empty file. | **IMPORT-SHAPED / BEHAVIOR ABSENT** |
-| `src/ftDNA/fetch.py` | Comment-only greenfield placeholder. | **PLACEHOLDER / NON-EXECUTABLE** |
-| `src/ftDNA/descriptor.yaml` | `name: ftDNA`, `role: TBD`, `rights: TBD`, `sensitivity_floor: public`. | **PLACEHOLDER / UNSAFE DEFAULT** |
+| `src/ftDNA/fetch.py` (removed 2026-09-29) | Comment-only greenfield placeholder. | **PLACEHOLDER / NON-EXECUTABLE** |
+| `src/ftDNA/descriptor.yaml` (removed 2026-09-29) | `name: ftDNA`, `role: TBD`, `rights: TBD`, `sensitivity_floor: public`. | **PLACEHOLDER / UNSAFE DEFAULT** |
 | `tests/README.md` | Connector-local test contract. | **DOCUMENTED** |
 | Executable tests and fixtures | None confirmed. | **ABSENT** |
 | Build backend and `src/` package discovery | None confirmed. | **ABSENT** |
@@ -167,8 +166,8 @@ connectors/ftDNA/
 | `src/README.md` | **CONFIRMED v0.2** | Source-code placement, invariants, product separation, consent, third-party, packaging, and handoff requirements are documented. | Implemented enforcement. |
 | `src/ftDNA/README.md` | **CONFIRMED v0.2** | Package-level product, role, access, privacy, consent-reference, packaging, testing, and finite-outcome requirements are documented. | Parsers, clients, tokenization, consent validation, or candidate envelopes. |
 | `src/ftDNA/__init__.py` | **CONFIRMED empty** | A package namespace was scaffolded. | Stable API, supported import name, or import safety. |
-| `src/ftDNA/fetch.py` | **CONFIRMED placeholder** | A future source-input responsibility was anticipated. | Approved network access, account access, supplied-input handling, parsing, retries, or persistence. |
-| `src/ftDNA/descriptor.yaml` | **CONFIRMED unsafe placeholder** | Local scaffold metadata exists. | Canonical descriptor authority, resolved role/rights, safe sensitivity, or activation. |
+| `src/ftDNA/fetch.py` (removed 2026-09-29) | **CONFIRMED placeholder** | A future source-input responsibility was anticipated. | Approved network access, account access, supplied-input handling, parsing, retries, or persistence. |
+| `src/ftDNA/descriptor.yaml` (removed 2026-09-29) | **CONFIRMED unsafe placeholder** | Local scaffold metadata exists. | Canonical descriptor authority, resolved role/rights, safe sensitivity, or activation. |
 | `tests/README.md` | **CONFIRMED v0.2** | Synthetic-only, no-network, no-account, negative-first, product-specific, privacy, archive, and handoff test requirements are documented. | Executable tests, accepted live-test variables, passing results, or CI enforcement. |
 | `docs/sources/catalog/ftdna/README.md` | **CONFIRMED draft family profile** | FTDNA is documented as a proposed DTC-vendor family with default-deny, rights, consent, revocation, and vendor-risk requirements. | Accepted admission, current vendor terms, or runtime behavior. |
 | Lowercase FTDNA product pages | **CONFIRMED draft profiles** | Autosomal raw, DNA matches, DNA segments, and haplogroup data have distinct proposed sensitivity and gate postures. | Accepted formats, current export schemas, or activated parsers. |
@@ -711,9 +710,7 @@ connectors/ftDNA/
 │   ├── README.md
 │   └── ftDNA/
 │       ├── README.md
-│       ├── __init__.py
-│       ├── descriptor.yaml
-│       └── fetch.py
+│       └── __init__.py
 └── tests/
     └── README.md
 ```

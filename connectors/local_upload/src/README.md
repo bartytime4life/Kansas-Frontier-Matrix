@@ -21,8 +21,6 @@ related:
   - ../tests/README.md
   - ./local_upload/README.md
   - ./local_upload/__init__.py
-  - ./local_upload/fetch.py
-  - ./local_upload/admit.py
   - ./local_upload/descriptor.yaml
   - ../../../CONTRIBUTING.md
   - ../../../.github/CODEOWNERS
@@ -58,6 +56,9 @@ notes:
 <a id="top"></a>
 
 # Local Upload Greenfield Source Layout Boundary
+
+> [!NOTE]
+> **2026-09-29:** the unreferenced placeholder files `src/local_upload/admit.py` and `src/local_upload/fetch.py` were removed from `connectors/local_upload/` in [#4792](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792). None was executable or authoritative. Evidence notes and prose below that describe their contents record the earlier snapshot.
 
 ## Local quarantine capture implementation — current branch
 
@@ -157,8 +158,6 @@ connectors/local_upload/
 │   └── local_upload/
 │       ├── README.md                      # package trust-edge boundary v0.2
 │       ├── __init__.py                    # empty
-│       ├── fetch.py                       # comment-only placeholder
-│       ├── admit.py                       # comment-only placeholder
 │       └── descriptor.yaml                # four-field placeholder
 └── tests/
     └── README.md                          # documentation contract v0.1
@@ -183,8 +182,8 @@ These statements are bounded to the pinned commit and exact paths. Differently n
 | `src/README.md` | This layout contract. | Documents boundaries; does not implement them. |
 | `src/local_upload/README.md` | v0.2 package trust-edge boundary. | Defines future behavior constraints; does not create behavior. |
 | `src/local_upload/__init__.py` | Empty. | No public package API or initialization behavior. |
-| `src/local_upload/fetch.py` | Comment-only. | No upload transport, staging, stream capture, hashing, scanner, or source-head behavior. |
-| `src/local_upload/admit.py` | Comment-only. | No validation, disposition, quarantine, receipt, or candidate-handoff behavior. |
+| `src/local_upload/fetch.py` (removed 2026-09-29) | Comment-only. | No upload transport, staging, stream capture, hashing, scanner, or source-head behavior. |
+| `src/local_upload/admit.py` (removed 2026-09-29) | Comment-only. | No validation, disposition, quarantine, receipt, or candidate-handoff behavior. |
 | `src/local_upload/descriptor.yaml` | `name: local_upload`, `role: TBD`, `rights: TBD`, `sensitivity_floor: public`. | Invalid as source authority, activation, rights clearance, sensitivity clearance, or release evidence. |
 | Parent metadata | Name and `0.0.0` only. | Buildability, dependencies, supported Python, discovery, commands, and runtime remain unknown. |
 | Connector tests | README-only at the named probes. | Discovery count, coverage, pass state, negative-case enforcement, and fixture safety remain unknown. |

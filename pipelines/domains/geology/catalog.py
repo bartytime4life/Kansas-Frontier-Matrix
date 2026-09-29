@@ -1,1 +1,0 @@
-# geology :: catalog — greenfield placeholder

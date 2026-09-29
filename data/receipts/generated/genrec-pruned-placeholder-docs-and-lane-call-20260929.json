@@ -1,0 +1,135 @@
+{
+  "receipt_id": "genrec-pruned-placeholder-docs-and-lane-call-20260929",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "connectors/ebird/README.md",
+    "connectors/ebird/tests/README.md",
+    "connectors/ftDNA/README.md",
+    "connectors/ftDNA/src/README.md",
+    "connectors/ftDNA/src/ftDNA/README.md",
+    "connectors/ftDNA/tests/README.md",
+    "connectors/kansas_memory/README.md",
+    "connectors/kansas_memory/src/README.md",
+    "connectors/kansas_memory/src/kansas_memory/README.md",
+    "connectors/kansas_memory/tests/README.md",
+    "connectors/local_upload/README.md",
+    "connectors/local_upload/src/README.md",
+    "connectors/local_upload/src/local_upload/README.md",
+    "connectors/local_upload/tests/README.md",
+    "connectors/manual_curation/README.md",
+    "connectors/manual_curation/src/README.md",
+    "connectors/manual_curation/src/manual_curation/README.md",
+    "connectors/manual_curation/tests/README.md",
+    "packages/domains/geology/src/geology/README.md",
+    "packages/domains/roads-rail-trade/src/README.md",
+    "packages/domains/soil/src/soil/README.md",
+    "tests/validators/test_e2e_readiness.py",
+    "tools/validators/e2e_readiness.py"
+  ],
+  "artifact_hashes": {
+    "connectors/ebird/README.md": "sha256:d7eef1d1a205f2d0343f4580678ff5b56eeb28b010745174247d01d6c0734b07",
+    "connectors/ebird/tests/README.md": "sha256:75e6b91563d8cf56f33a12c0b93bbf728f76ed4be8b67052ea779c371035dadb",
+    "connectors/ftDNA/README.md": "sha256:2accd499423d64cb77bfd57218307a7cbe7fc2880c3fb248d689f6e099f25cda",
+    "connectors/ftDNA/src/README.md": "sha256:5c87e5d4b08c05ddd0804cce0743554bb82f36f36c26bd2fb84949e6ed66350a",
+    "connectors/ftDNA/src/ftDNA/README.md": "sha256:7faee88c1bb77d9891baef441a47e96edbb8af42acdbb419bd041147aca531b5",
+    "connectors/ftDNA/tests/README.md": "sha256:cc429b2a1606283ba760b890285d0c0c84969d303fc8c02a5c65423dd50c0b06",
+    "connectors/kansas_memory/README.md": "sha256:c8d3981f49fe579f175553b5d06def9175b14eb15d00ed39893684df157e23e4",
+    "connectors/kansas_memory/src/README.md": "sha256:457d1356d7fba7c3940e4fbb5abff83716d529234e44c7d18c17a03130ee49b6",
+    "connectors/kansas_memory/src/kansas_memory/README.md": "sha256:c2a496cf8d33dac030cbeb0d8141b6411e0b7006b6a3c47c9ff534f02aaa8beb",
+    "connectors/kansas_memory/tests/README.md": "sha256:fae205c79a26711c6844d76fa2587e423b12b1512964ccf7fbd40b13ff736add",
+    "connectors/local_upload/README.md": "sha256:76fd6ce688f04f2cbef4a3a4fc7ab21b582e76ef7fb767e2982c59bac99fa9bc",
+    "connectors/local_upload/src/README.md": "sha256:da6d6a085af64623abea3108ec4d1fd3a6bcc7f6ea5052ec575bc7ec24bc5467",
+    "connectors/local_upload/src/local_upload/README.md": "sha256:0d3feb59eeaea74860f8a8ebe694357014b10853ab84f8caeb0532a61e653e98",
+    "connectors/local_upload/tests/README.md": "sha256:0dce011f9cd8ccaa37a0505b8f1adb5876378715a30f172647d076d490626adc",
+    "connectors/manual_curation/README.md": "sha256:b3990919e3cd3e74e8f6c109e5d710733957caddd046df6989865e666950609f",
+    "connectors/manual_curation/src/README.md": "sha256:05456228170b50f38f0c97764378648aa07b58da211b47f2b2507a26b04002f5",
+    "connectors/manual_curation/src/manual_curation/README.md": "sha256:7b4fc41b8b8ece2709442e27e54378e22bc5793d8eaf81ff3b46d52238dfa40f",
+    "connectors/manual_curation/tests/README.md": "sha256:07f7ae411217e0f555b3b338b163a7df1f683a43856c0d93ba5d49252b0b09da",
+    "packages/domains/geology/src/geology/README.md": "sha256:78f683a5988a7d7e783282f6b15a79304eac18c9da0eda42d87d085480158f1d",
+    "packages/domains/roads-rail-trade/src/README.md": "sha256:4d955f35125d8dc9fd46de20bd13e13468b0a7d2c0f6dd63aa0defd37f48b784",
+    "packages/domains/soil/src/soil/README.md": "sha256:07f97a8d62d1acbd276218428d90f6149053d8c253631b29163870510af8098a",
+    "tests/validators/test_e2e_readiness.py": "sha256:0442f74d43b5bba297d020c533a4ff5abab29176fdc4070fc5a54085aca50a23",
+    "tools/validators/e2e_readiness.py": "sha256:b704256f3e6e36b7db7526ecc7b5368dea8658b14e0cf4266827c3ef3035a45e"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:88d95c42e0504fda8b57eb1c2265471a8ed7e8e64ad7a8b52205f8f46c0f41a9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/a3611840771c9a53b754a0aafcfb5e503f283bc6",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792#discussion_r4130057761",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792#discussion_r4130057771"
+    ]
+  },
+  "truth_labels": {
+    "connectors/ebird/README.md": "CONFIRMED",
+    "connectors/ebird/tests/README.md": "CONFIRMED",
+    "connectors/ftDNA/README.md": "CONFIRMED",
+    "connectors/ftDNA/src/README.md": "CONFIRMED",
+    "connectors/ftDNA/src/ftDNA/README.md": "CONFIRMED",
+    "connectors/ftDNA/tests/README.md": "CONFIRMED",
+    "connectors/kansas_memory/README.md": "CONFIRMED",
+    "connectors/kansas_memory/src/README.md": "CONFIRMED",
+    "connectors/kansas_memory/src/kansas_memory/README.md": "CONFIRMED",
+    "connectors/kansas_memory/tests/README.md": "CONFIRMED",
+    "connectors/local_upload/README.md": "CONFIRMED",
+    "connectors/local_upload/src/README.md": "CONFIRMED",
+    "connectors/local_upload/src/local_upload/README.md": "CONFIRMED",
+    "connectors/local_upload/tests/README.md": "CONFIRMED",
+    "connectors/manual_curation/README.md": "CONFIRMED",
+    "connectors/manual_curation/src/README.md": "CONFIRMED",
+    "connectors/manual_curation/src/manual_curation/README.md": "CONFIRMED",
+    "connectors/manual_curation/tests/README.md": "CONFIRMED",
+    "packages/domains/geology/src/geology/README.md": "CONFIRMED",
+    "packages/domains/roads-rail-trade/src/README.md": "CONFIRMED",
+    "packages/domains/soil/src/soil/README.md": "CONFIRMED",
+    "tests/validators/test_e2e_readiness.py": "CONFIRMED",
+    "tools/validators/e2e_readiness.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Reproduce then fix",
+      "outcome": "PASS",
+      "reason": "Two new e2e_readiness tests (lane markers passed to print, and a subprocess command naming another lane) fail on the base validator and pass once the check requires subprocess.<launcher> with run_lane.py immediately followed by proof-slice."
+    },
+    {
+      "gate": "Focused suites and replay",
+      "outcome": "PASS",
+      "reason": "tests/connectors, tests/packages, tests/e2e and e2e-readiness tests pass; link check on every edited README passes; replayed workflows pass apart from the container's missing IPv6 and steps needing workflow expressions."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/a3611840771c9a53b754a0aafcfb5e503f283bc6"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-29T05:51:41Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 4792
+  },
+  "notes": "README updates drop related-list and current-tree entries for placeholder files removed in bb30dceff6, mark current-contents table rows as removed, and add one dated note per README; proposed module maps are unchanged. Links to never-present data/raw/archives and data/quarantine/archives paths become plain text."
+}

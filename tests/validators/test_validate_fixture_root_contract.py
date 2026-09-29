@@ -144,7 +144,7 @@ class FixtureRootContractTests(unittest.TestCase):
                 "# synthetic non-fixture validator\n", encoding="utf-8"
             )
         (self.root / "Makefile").write_text(
-            'fixtures:\n\t@echo "TODO: regenerate deterministic fixtures"\n',
+            "fixtures:\n\t$(KFM_VALIDATION_ENV) python tools/readiness/run_lane.py fixtures\n",
             encoding="utf-8",
         )
 

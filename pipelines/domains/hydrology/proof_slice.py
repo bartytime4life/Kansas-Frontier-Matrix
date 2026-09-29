@@ -156,6 +156,12 @@ class PinnedInputs:
         self.loaded[relative] = value
         return value
 
+    def verify_all(self) -> None:
+        """Load every pinned input, so a PASS covers the whole manifest."""
+
+        for relative in sorted(self._pins):
+            self.load(relative)
+
     def manifest(self) -> list[dict[str, str]]:
         return [{"path": path, "sha256": self._pins[path]} for path in sorted(self._pins)]
 
@@ -352,6 +358,7 @@ def build_record(profile_relative: str = DEFAULT_PROFILE) -> dict[str, Any]:
     inputs = PinnedInputs()
     for entry in (profile["packet"], profile["base_request"], *profile["evidence_bundles"], *profile["cases"]):
         inputs.pin(entry)
+    inputs.verify_all()
 
     packet_path = profile["packet"]["path"]
     packet = inputs.load(packet_path)

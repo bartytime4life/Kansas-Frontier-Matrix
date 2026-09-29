@@ -1,0 +1,86 @@
+{
+  "receipt_id": "genrec-proof-slice-review-findings-20260929",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/hydrology-proof-slice.yml",
+    "contracts/domains/hydrology/proof_slice.md",
+    "pipelines/domains/hydrology/proof_slice.py",
+    "tests/domains/hydrology/test_proof_slice.py",
+    "tests/validators/test_e2e_readiness.py",
+    "tools/validators/e2e_readiness.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/hydrology-proof-slice.yml": "sha256:c3c3f0e87ce2cef71556427fc59af797ea3ac0994464574506127c7e05e555de",
+    "contracts/domains/hydrology/proof_slice.md": "sha256:d67572289fec09eca41b73dc7839335111438fe2ca7d01e4be2bc92cec2fe3ef",
+    "pipelines/domains/hydrology/proof_slice.py": "sha256:5bebd80309eb1701982cfeec5cdff57ca7163c5fec363bfa592fa0ec8a6a901b",
+    "tests/domains/hydrology/test_proof_slice.py": "sha256:c80a0447854dfa161d73279603b2f9e12f9610596d5d9cad210a5f626c0d40e5",
+    "tests/validators/test_e2e_readiness.py": "sha256:9e23581e4a852901178de22b35c6408c54d1e9ac8a3e1617b44c39fd5cc23eaf",
+    "tools/validators/e2e_readiness.py": "sha256:3d01a8a32a9e9806361ef8eac7c9d50c24a11094e5ee062316f33bcb54e39415"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/a3611840771c9a53b754a0aafcfb5e503f283bc6",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4791#discussion_r4129638925",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4791#discussion_r4129638933",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4791#discussion_r4129638937"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/hydrology-proof-slice.yml": "CONFIRMED",
+    "contracts/domains/hydrology/proof_slice.md": "CONFIRMED",
+    "pipelines/domains/hydrology/proof_slice.py": "CONFIRMED",
+    "tests/domains/hydrology/test_proof_slice.py": "CONFIRMED",
+    "tests/validators/test_e2e_readiness.py": "CONFIRMED",
+    "tools/validators/e2e_readiness.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Reproduce then fix",
+      "outcome": "PASS",
+      "reason": "New proof-slice tests (unused pinned input with a bad digest, and missing) fail on the base harness and pass with verify_all; the new e2e_readiness test (lane named only in comments/docstrings) fails on the base validator and passes with the AST call check."
+    },
+    {
+      "gate": "Focused suites and replay",
+      "outcome": "PASS",
+      "reason": "tests/domains/hydrology, tests/e2e, readiness-lane and e2e-readiness tests pass except the IPv6 guard case (no IPv6 in this container); hydrology-proof-slice, e2e-smoke and domain-hydrology steps replay green apart from steps needing workflow expressions; make workflow-security passes."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/a3611840771c9a53b754a0aafcfb5e503f283bc6"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-29T05:22:01Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 4792,
+    "adr_link": "docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md"
+  },
+  "notes": "Addresses the three Codex P2 findings left on #4791 after it merged: verify every pinned proof-slice input before a PASS, require an actual lane call in the proof-slice E2E test, and trigger the proof-slice workflow on the shared schemas it resolves."
+}

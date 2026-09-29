@@ -24,6 +24,7 @@ EXPECTED_E2E_FILES = frozenset(
 )
 PROOF_SLICE_TEST = "test_hydrology_proof_slice.py"
 PROOF_SLICE_LANE_MARKERS = ("tools/readiness/run_lane.py", "proof-slice")
+SUBPROCESS_LAUNCHERS = frozenset({"call", "check_call", "check_output", "Popen", "run"})
 
 
 @dataclass(frozen=True)
@@ -52,8 +53,7 @@ def _proof_slice_test_findings(path: Path) -> list[str]:
     """The Hydrology proof-slice E2E must run the accepted lane, not a placeholder."""
 
     try:
-        text = path.read_text(encoding="utf-8")
-        tree = ast.parse(text)
+        tree = ast.parse(path.read_text(encoding="utf-8"))
     except (OSError, SyntaxError, UnicodeError):
         return ["E2E_PROOF_SLICE_TEST_INVALID"]
     tests = [
@@ -63,9 +63,45 @@ def _proof_slice_test_findings(path: Path) -> list[str]:
     ]
     if not tests or any(_is_vacuous_test(node) for node in tests):
         return ["E2E_PROOF_SLICE_TEST_VACUOUS"]
-    if not all(marker in text for marker in PROOF_SLICE_LANE_MARKERS):
+    if not any(_invokes_proof_slice_lane(node) for node in tests):
         return ["E2E_PROOF_SLICE_LANE_NOT_INVOKED"]
     return []
+
+
+def _invokes_proof_slice_lane(test: ast.FunctionDef | ast.AsyncFunctionDef) -> bool:
+    """True when the test starts the lane as a subprocess.
+
+    The call must be ``subprocess.<launcher>(...)`` whose command list or tuple
+    names ``tools/readiness/run_lane.py`` immediately followed by
+    ``proof-slice``. Comments, docstrings, and other calls that merely carry
+    those strings do not count.
+    """
+
+    for node in ast.walk(test):
+        if not isinstance(node, ast.Call) or not _is_subprocess_launcher(node.func):
+            continue
+        command = node.args[0] if node.args else next(
+            (keyword.value for keyword in node.keywords if keyword.arg == "args"), None
+        )
+        if not isinstance(command, (ast.List, ast.Tuple)):
+            continue
+        elements = [
+            element.value if isinstance(element, ast.Constant) else None
+            for element in command.elts
+        ]
+        pairs = zip(elements, elements[1:])
+        if PROOF_SLICE_LANE_MARKERS in pairs:
+            return True
+    return False
+
+
+def _is_subprocess_launcher(func: ast.expr) -> bool:
+    return (
+        isinstance(func, ast.Attribute)
+        and func.attr in SUBPROCESS_LAUNCHERS
+        and isinstance(func.value, ast.Name)
+        and func.value.id == "subprocess"
+    )
 
 
 def inspect_readiness(repository_root: Path) -> ReadinessReport:

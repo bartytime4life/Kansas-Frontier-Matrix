@@ -23,7 +23,7 @@ NON_FIXTURE_ARGUMENTS: dict[str, tuple[str, ...]] = {
         "CONTRIBUTING.md",
     ),
 }
-EXPECTED_TARGET = '\t@echo "TODO: regenerate deterministic fixtures"'
+EXPECTED_TARGET = "\t$(KFM_VALIDATION_ENV) python tools/readiness/run_lane.py fixtures"
 EXPECTED_ROOT: dict[str, object] = {
     "root_id": "root.fixtures",
     "path": "fixtures/",

@@ -16,8 +16,6 @@ related:
   - ../../pyproject.toml
   - ../../tests/README.md
   - __init__.py
-  - fetch.py
-  - descriptor.yaml
   - ../../../../docs/sources/catalog/ftdna/README.md
   - ../../../../docs/sources/catalog/ftdna/autosomal-raw-data.md
   - ../../../../docs/sources/catalog/ftdna/dna-matches.md
@@ -51,6 +49,9 @@ notes:
 <a id="top"></a>
 
 # FamilyTreeDNA Connector Package Scaffold
+
+> [!NOTE]
+> **2026-09-29:** the unreferenced placeholder files `src/ftDNA/admit.py`, `src/ftDNA/descriptor.yaml` and `src/ftDNA/fetch.py` were removed from `connectors/ftDNA/` in [#4792](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792). None was executable or authoritative. Evidence notes and prose below that describe their contents record the earlier snapshot.
 
 > Evidence-grounded package boundary for a possible FamilyTreeDNA / FTDNA source-admission adapter. The package is currently a behaviorless scaffold. It does **not** provide an approved vendor client, account integration, parser, consent validator, privacy transform, DNA interpretation engine, RAW writer, or public-data path.
 
@@ -117,9 +118,7 @@ connectors/ftDNA/
 │   ├── README.md
 │   └── ftDNA/
 │       ├── README.md              # this package contract
-│       ├── __init__.py            # empty file
-│       ├── descriptor.yaml        # placeholder: role/rights TBD; unsafe public floor
-│       └── fetch.py               # one-line greenfield placeholder
+│       └── __init__.py            # empty file
 └── tests/
     └── README.md                  # documentation only
 ```
@@ -130,8 +129,8 @@ connectors/ftDNA/
 |---|---|---:|
 | `src/ftDNA/README.md` | This package boundary. | **DOCUMENTED** |
 | `src/ftDNA/__init__.py` | Empty file. | **IMPORT-SHAPED / BEHAVIOR ABSENT** |
-| `src/ftDNA/fetch.py` | Comment-only greenfield placeholder. | **PLACEHOLDER / NON-EXECUTABLE** |
-| `src/ftDNA/descriptor.yaml` | `name: ftDNA`, `role: TBD`, `rights: TBD`, `sensitivity_floor: public`. | **PLACEHOLDER / UNSAFE DEFAULT** |
+| `src/ftDNA/fetch.py` (removed 2026-09-29) | Comment-only greenfield placeholder. | **PLACEHOLDER / NON-EXECUTABLE** |
+| `src/ftDNA/descriptor.yaml` (removed 2026-09-29) | `name: ftDNA`, `role: TBD`, `rights: TBD`, `sensitivity_floor: public`. | **PLACEHOLDER / UNSAFE DEFAULT** |
 | `pyproject.toml` | Project name and version `0.0.0` only. | **INCOMPLETE** |
 | Build backend and package discovery | None confirmed. | **ABSENT** |
 | Supported Python version and dependencies | None confirmed. | **ABSENT** |
@@ -157,8 +156,8 @@ connectors/ftDNA/
 |---|---:|---|---|
 | `connectors/ftDNA/src/ftDNA/README.md` | **CONFIRMED** | A package-level documentation boundary exists. | Executable behavior. |
 | `__init__.py` | **CONFIRMED empty** | A possible import namespace was scaffolded. | A stable API, installability, or import safety tests. |
-| `fetch.py` | **CONFIRMED placeholder** | A future source-input responsibility was anticipated. | Network access, manual-upload handling, authentication, parsing, or retries. |
-| `descriptor.yaml` | **CONFIRMED placeholder** | Package-local metadata was anticipated. | Canonical source authority, resolved role/rights, safe sensitivity, or activation. |
+| `fetch.py` (removed 2026-09-29) | **CONFIRMED placeholder** | A future source-input responsibility was anticipated. | Network access, manual-upload handling, authentication, parsing, or retries. |
+| `descriptor.yaml` (removed 2026-09-29) | **CONFIRMED placeholder** | Package-local metadata was anticipated. | Canonical source authority, resolved role/rights, safe sensitivity, or activation. |
 | `../../pyproject.toml` | **CONFIRMED placeholder** | The project name `kfm-connector-ftDNA` and version `0.0.0` are recorded. | Build/install behavior, dependencies, entry points, or test runner. |
 | `../../tests/README.md` | **CONFIRMED documentation** | No-network, consent, rights, and negative-state test expectations are described. | Executable tests, accepted live-test flags, or passing results. |
 | `docs/sources/catalog/ftdna/README.md` | **CONFIRMED draft family profile** | FTDNA is a proposed DTC-vendor source family with default-deny, consent, rights, revocation, and product distinctions. | Accepted admission, current vendor facts, or runtime interfaces. |
@@ -651,9 +650,7 @@ The confirmed package files are minimal:
 ```text
 ftDNA/
 ├── README.md
-├── __init__.py        # empty
-├── descriptor.yaml    # placeholder, not authority
-└── fetch.py           # one-line placeholder
+└── __init__.py        # empty
 ```
 
 A future **manual-input-first** package might use a structure like:

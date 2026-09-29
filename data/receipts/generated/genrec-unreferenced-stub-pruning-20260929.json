@@ -1,0 +1,82 @@
+{
+  "receipt_id": "genrec-unreferenced-stub-pruning-20260929",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/qa/scaffold_baseline.json",
+    "tools/validators/directory_governance/repository_topology_baseline.json"
+  ],
+  "artifact_hashes": {
+    "tools/qa/scaffold_baseline.json": "sha256:8018e0d9dfa8479955884eb64924d5449b4d429f7568875cef8db23f4c38b238",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "sha256:731c4a58ed5c7a92b566a827cbf0dee2fd5ab63c73ee89e19126b51f344ce1fe"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/d72d398a91a6b18b949e6d95e2dbd7a3c3551d16",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4791"
+    ]
+  },
+  "truth_labels": {
+    "tools/qa/scaffold_baseline.json": "CONFIRMED",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Selection",
+      "outcome": "PASS",
+      "reason": "Each deleted file was a scaffold-inventory finding with at most six non-blank lines, no executable Python statements, no full-path reference in any tracked file outside receipts and the scaffold baseline, no resolved Markdown link, no workflow/test/tool reference that names both its directory and filename, and no relative import. pyproject.toml, .rego, and the local_upload descriptor were excluded; the agriculture and hazards pipeline stubs were kept because removing them would create new scaffold-only leaf directories."
+    },
+    {
+      "gate": "Offline suites",
+      "outcome": "PASS",
+      "reason": "tests/: 7706 passed. With the geo-transforms profile installed, make offline-pipeline-check passes except the IPv6 guard case, which fails identically on base because this container has no IPv6."
+    },
+    {
+      "gate": "Workflow replay",
+      "outcome": "PASS",
+      "reason": "Run steps of the 12 workflows whose triggers or inline checks touch the deleted paths replayed locally; every non-install step passes except steps needing workflow-level expressions or env the replay does not supply, which pass when run directly."
+    },
+    {
+      "gate": "Repository guardrails",
+      "outcome": "PASS",
+      "reason": "repository-topology (also with --trusted-baseline-ref main), repository-governance-parity, root registry, scaffold_inventory --check pass. Scaffold findings 1224 -> 949; the path-grammar:uppercase topology waiver strictly shrinks again (ftDNA paths)."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/d72d398a91a6b18b949e6d95e2dbd7a3c3551d16"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-29T05:13:38Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 4791,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Deletes 138 unreferenced one-line placeholder stubs at the repository owner's direction: connectors/ebird/src (2); connectors/familysearch/src (1); connectors/ftDNA/src (3); connectors/kansas_memory/src (3); connectors/local_upload/src (2); connectors/manual_curation/src (3); connectors/newspapers/src (3); connectors/openstreetmap/src (3); packages/citation/src (1); packages/domains/agriculture (3); packages/domains/archaeology (2); packages/domains/atmosphere (3); packages/domains/fauna (2); packages/domains/flora (3); packages/domains/geology (3); packages/domains/habitat (3); packages/domains/hazards (2); packages/domains/hydrology (3); packages/domains/people-dna-land (3); packages/domains/roads-rail-trade (3); packages/domains/settlements-infrastructure (3); packages/domains/soil (3); packages/envelopes/src (1); packages/identity/src (1); packages/source-registry/src (1); pipelines/domains/archaeology (7); pipelines/domains/atmosphere (7); pipelines/domains/fauna (6); pipelines/domains/flora (7); pipelines/domains/geology (7); pipelines/domains/habitat (7); pipelines/domains/people-dna-land (6); pipelines/domains/roads-rail-trade (7); pipelines/domains/settlements-infrastructure (7); pipelines/domains/soil (7); pipelines/normalize/main.py (1); pipelines/publish/main.py (1); tests/domains/geology (3); tests/domains/roads-rail-trade (1); tools/validators/catalog (1); tools/validators/domains (1); tools/validators/evidence (1); tools/validators/genealogy (1)."
+}

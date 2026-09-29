@@ -35,6 +35,9 @@ notes:
 
 # Soil Python Source Namespace
 
+> [!NOTE]
+> **2026-09-29:** the unreferenced placeholder files `src/soil/identity.py`, `src/soil/layers.py` and `src/soil/observations.py` were removed from `packages/domains/soil/` in [#4792](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792). None was executable or authoritative. Evidence notes and prose below that describe their contents record the earlier snapshot.
+
 `packages/domains/soil/src/soil/` is the importable-code boundary for the `kfm-domain-soil` package. The current package is a `0.0.0` greenfield scaffold, not an implemented library.
 
 ## Purpose
@@ -54,9 +57,9 @@ The namespace may implement accepted contracts and schemas. It does not define t
 | File | Repository evidence | Implemented behavior |
 | --- | --- | --- |
 | `__init__.py` | Empty file | None; no exports or public API are declared. |
-| `identity.py` | One line: greenfield identity-normalization placeholder | None. |
-| `layers.py` | One line: greenfield layer-descriptor placeholder | None. |
-| `observations.py` | One line: greenfield observation-parsing placeholder | None. |
+| `identity.py` (removed 2026-09-29) | One line: greenfield identity-normalization placeholder | None. |
+| `layers.py` (removed 2026-09-29) | One line: greenfield layer-descriptor placeholder | None. |
+| `observations.py` (removed 2026-09-29) | One line: greenfield observation-parsing placeholder | None. |
 
 `packages/domains/soil/pyproject.toml` declares package name `kfm-domain-soil` and version `0.0.0`; it does not declare dependencies or a build backend. Imports, packaging, consumers, test results, CI wiring, and production behavior remain **UNKNOWN**.
 

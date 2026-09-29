@@ -1,1 +1,0 @@
-# atmosphere :: validate — greenfield placeholder

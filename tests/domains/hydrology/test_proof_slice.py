@@ -186,6 +186,26 @@ def test_digest_mismatch_stops_the_run(scratch_profile) -> None:
     assert "pinned digest mismatch" in json.loads(output)["reason"]
 
 
+def test_unused_pinned_input_with_a_bad_digest_stops_the_run(scratch_profile) -> None:
+    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+    profile["evidence_bundles"].append(
+        {"path": f"{FIXTURES}/README.md", "sha256": "sha256:" + "0" * 64}
+    )
+    code, output = proof_slice.run(scratch_profile(profile))
+    assert code == 2
+    assert "pinned digest mismatch" in json.loads(output)["reason"]
+
+
+def test_unused_pinned_input_that_is_missing_stops_the_run(scratch_profile) -> None:
+    profile = json.loads(PROFILE.read_text(encoding="utf-8"))
+    profile["evidence_bundles"].append(
+        {"path": f"{FIXTURES}/does-not-exist.json", "sha256": "sha256:" + "0" * 64}
+    )
+    code, output = proof_slice.run(scratch_profile(profile))
+    assert code == 2
+    assert "not a regular file" in json.loads(output)["reason"]
+
+
 def test_wrong_expectation_fails_the_record(scratch_profile) -> None:
     profile = json.loads(PROFILE.read_text(encoding="utf-8"))
     profile["cases"][0]["expected_outcome"] = "DENY"

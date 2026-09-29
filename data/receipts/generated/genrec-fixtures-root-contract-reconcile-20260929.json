@@ -1,0 +1,82 @@
+{
+  "receipt_id": "genrec-fixtures-root-contract-reconcile-20260929",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "fixtures/README.md",
+    "fixtures/contracts/README.md",
+    "fixtures/domains/agriculture/catalog/README.md",
+    "fixtures/synthetic/README.md",
+    "tests/validators/test_validate_fixture_root_contract.py",
+    "tools/validators/_fixture_root_contract_checks.py"
+  ],
+  "artifact_hashes": {
+    "fixtures/README.md": "sha256:29b21d56c28d2783b08da5e039c3ccf6e95bbd5bd62a0f2a5f3de22bb3cbd41d",
+    "fixtures/contracts/README.md": "sha256:fd5f5882f08f486099fbffd4d6f52b0b3a6049d0fed5875de82ac6ac0e5de29e",
+    "fixtures/domains/agriculture/catalog/README.md": "sha256:e9b242763c298a55b599b6b7b27432468ca7693d82c56a13cf50ec51c27504c3",
+    "fixtures/synthetic/README.md": "sha256:6f51b14deb494be36872446fa6045f362aab16c5fc316a89f8d0ca41f19b08b9",
+    "tests/validators/test_validate_fixture_root_contract.py": "sha256:44516a2bd20b82e6f634e2da1bb62ae6c8078d24dc76ee42d0b89b4947ad7476",
+    "tools/validators/_fixture_root_contract_checks.py": "sha256:6c75f91b5fb227d130b5e37cb1ab21d1f6dc9b5198760d80ec22e953f83aee41"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:993e669a0eb29f5ad1bebc63dbd1ec877461e0a904ca18989767bd277a16f4ba",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/a3611840771c9a53b754a0aafcfb5e503f283bc6"
+    ]
+  },
+  "truth_labels": {
+    "fixtures/README.md": "CONFIRMED",
+    "fixtures/contracts/README.md": "CONFIRMED",
+    "fixtures/domains/agriculture/catalog/README.md": "CONFIRMED",
+    "fixtures/synthetic/README.md": "CONFIRMED",
+    "tests/validators/test_validate_fixture_root_contract.py": "CONFIRMED",
+    "tools/validators/_fixture_root_contract_checks.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Reproduce then fix",
+      "outcome": "PASS",
+      "reason": "validate_fixture_root_contract.py fails on the base (stale make fixtures target text, 31 vs 32 direct children, undocumented security/) and passes with findings [] after the change."
+    },
+    {
+      "gate": "Focused suites and replay",
+      "outcome": "PASS",
+      "reason": "tests/validators/test_validate_fixture_root_contract.py passes; fixtures-root-contract.yml steps replay green apart from dependency install; scaffold inventory check holds at 949; link check on the edited READMEs reports no errors. The CI-equivalent diff-scoped link check passes after repairing three pre-existing broken anchors in fixtures/contracts/README.md."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/a3611840771c9a53b754a0aafcfb5e503f283bc6"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-29T05:28:03Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 4792
+  },
+  "notes": "Fixes the fixtures-root-contract check, red on main since the Makefile fixtures target moved to the readiness-lane runner and fixtures/security/ was added. The contract now expects the run_lane.py target, and fixture READMEs describe make fixtures as a HOLD (exit 3), not a zero-exit TODO."
+}

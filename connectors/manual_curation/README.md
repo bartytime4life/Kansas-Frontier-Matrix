@@ -21,9 +21,6 @@ related:
   - ./src/README.md
   - ./src/manual_curation/README.md
   - ./src/manual_curation/__init__.py
-  - ./src/manual_curation/fetch.py
-  - ./src/manual_curation/admit.py
-  - ./src/manual_curation/descriptor.yaml
   - ./tests/README.md
   - ../../CONTRIBUTING.md
   - ../../.github/CODEOWNERS
@@ -63,6 +60,9 @@ notes:
 <a id="top"></a>
 
 # Manual Curation Greenfield Process-Helper and Steward-Gate Boundary
+
+> [!NOTE]
+> **2026-09-29:** the unreferenced placeholder files `src/manual_curation/admit.py`, `src/manual_curation/descriptor.yaml` and `src/manual_curation/fetch.py` were removed from `connectors/manual_curation/` in [#4792](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792). None was executable or authoritative. Evidence notes and prose below that describe their contents record the earlier snapshot.
 
 > Repository-grounded boundary for `connectors/manual_curation/`. The folder contains a non-operational `0.0.0` Python scaffold whose name suggests a connector, while the governing workflow documentation defines manual curation as a steward process applied **to** sources—not an upstream publisher or source family.
 
@@ -150,10 +150,7 @@ connectors/manual_curation/
 │   ├── README.md                          # source-layout and process-ownership boundary v0.2
 │   └── manual_curation/
 │       ├── README.md                      # package and steward-gate boundary v0.2
-│       ├── __init__.py                    # empty
-│       ├── fetch.py                       # comment-only placeholder
-│       ├── admit.py                       # comment-only placeholder
-│       └── descriptor.yaml                # four-field placeholder
+│       └── __init__.py                    # empty
 └── tests/
     └── README.md                          # negative-first test boundary v0.2
 ```
@@ -180,9 +177,9 @@ These are bounded absence statements. They do not prove that no differently name
 | `src/README.md` | v0.2 source-layout contract | Records the real tree and placement tension; does not implement anything. |
 | Package README | v0.2 package/steward-gate contract | Defines future behavior constraints; does not create behavior. |
 | `__init__.py` | Empty | No public package API or initialization behavior. |
-| `fetch.py` | Comment-only | No fetch, candidate assembly, hashing, source-head observation, retry, staging, or adapter behavior. |
-| `admit.py` | Comment-only | No validation, policy call, review routing, disposition, receipt, activation, or lifecycle handoff. |
-| `descriptor.yaml` | `name: manual_curation`, `role: TBD`, `rights: TBD`, `sensitivity_floor: public` | Invalid as source authority, activation, rights clearance, sensitivity clearance, review evidence, or release evidence. |
+| `fetch.py` (removed 2026-09-29) | Comment-only | No fetch, candidate assembly, hashing, source-head observation, retry, staging, or adapter behavior. |
+| `admit.py` (removed 2026-09-29) | Comment-only | No validation, policy call, review routing, disposition, receipt, activation, or lifecycle handoff. |
+| `descriptor.yaml` (removed 2026-09-29) | `name: manual_curation`, `role: TBD`, `rights: TBD`, `sensitivity_floor: public` | Invalid as source authority, activation, rights clearance, sensitivity clearance, review evidence, or release evidence. |
 | Test README | v0.2 negative-first proof contract | No runner, collection, coverage, pass rate, or executable proof follows. |
 | Workflows | TODO echo steps | A green execution proves only that placeholder steps ran. |
 

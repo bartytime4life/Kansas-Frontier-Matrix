@@ -55,6 +55,9 @@ notes:
 
 # Kansas Memory Compatibility Package Admission Boundary
 
+> [!NOTE]
+> **2026-09-29:** the unreferenced placeholder files `src/kansas_memory/admit.py`, `src/kansas_memory/descriptor.yaml` and `src/kansas_memory/fetch.py` were removed from `connectors/kansas_memory/` in [#4792](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792). None was executable or authoritative. Evidence notes and prose below that describe their contents record the earlier snapshot.
+
 > [!IMPORTANT]
 > **Document lifecycle:** `draft`  
 > **Component maturity:** repository-present greenfield package scaffold; executable behavior `UNKNOWN`  
@@ -148,10 +151,7 @@ connectors/kansas_memory/
 │   ├── README.md
 │   └── kansas_memory/
 │       ├── README.md
-│       ├── __init__.py        # CONFIRMED empty
-│       ├── admit.py           # CONFIRMED one-line greenfield placeholder
-│       ├── fetch.py           # CONFIRMED one-line greenfield placeholder
-│       └── descriptor.yaml    # CONFIRMED four-field unsafe placeholder
+│       └── __init__.py        # CONFIRMED empty
 └── tests/
     └── README.md              # test contract only; conventional test files probed absent
 ```
@@ -161,9 +161,9 @@ connectors/kansas_memory/
 | File | Observed bytes | Safe conclusion | Must not be inferred |
 |---|---|---|---|
 | `__init__.py` | Empty file. | A Python package marker exists. | Import safety, API surface, version, initialization behavior, or installability. |
-| `admit.py` | One comment naming an admission-gate placeholder. | An intended responsibility is named. | Any gate logic, finite outcome, descriptor validation, policy enforcement, or handoff behavior. |
-| `fetch.py` | One comment naming a fetcher placeholder. | An intended responsibility is named. | Network client, endpoint support, authentication, retry, rate limit, caching, or source access. |
-| `descriptor.yaml` | `name`, `role: TBD`, `rights: TBD`, `sensitivity_floor: public`. | A legacy scaffold anticipated source metadata. | Valid SourceDescriptor, accepted role, verified rights, public sensitivity, activation, or release authority. |
+| `admit.py` (removed 2026-09-29) | One comment naming an admission-gate placeholder. | An intended responsibility is named. | Any gate logic, finite outcome, descriptor validation, policy enforcement, or handoff behavior. |
+| `fetch.py` (removed 2026-09-29) | One comment naming a fetcher placeholder. | An intended responsibility is named. | Network client, endpoint support, authentication, retry, rate limit, caching, or source access. |
+| `descriptor.yaml` (removed 2026-09-29) | `name`, `role: TBD`, `rights: TBD`, `sensitivity_floor: public`. | A legacy scaffold anticipated source metadata. | Valid SourceDescriptor, accepted role, verified rights, public sensitivity, activation, or release authority. |
 | `../../pyproject.toml` | Project name and version `0.0.0` only. | A package name placeholder exists. | Buildability, dependency set, entry point, supported Python, packaging convention, or runtime maturity. |
 | `../../tests/README.md` | Documentation-only test contract. | Intended tests are described. | Test files, fixtures, coverage, passing status, or CI enforcement. |
 
@@ -449,8 +449,8 @@ The inspected CODEOWNERS file provides only the repository-wide `@kfm/maintainer
 | [`../../../../schemas/contracts/v1/sources/source_descriptor.schema.json`](../../../../schemas/contracts/v1/sources/source_descriptor.schema.json) | Nominal plural schema. | **CONFIRMED empty PROPOSED scaffold** |
 | [`../../../../policy/rights/`](../../../../policy/rights/) | Rights and reuse decisions. | **Outside package** |
 | [`../../../../policy/sensitivity/`](../../../../policy/sensitivity/) | Sensitivity, privacy, redaction, CARE-adjacent controls. | **Outside package** |
-| [`../../../../data/raw/archives/`](../../../../data/raw/archives/) | Potential caller-owned admitted capture surface. | **Outside package / exact source shape NEEDS VERIFICATION** |
-| [`../../../../data/quarantine/archives/`](../../../../data/quarantine/archives/) | Potential caller-owned hold surface. | **Outside package / exact reason shape NEEDS VERIFICATION** |
+| `data/raw/archives/` (not present) | Potential caller-owned admitted capture surface. | **Outside package / exact source shape NEEDS VERIFICATION** |
+| `data/quarantine/archives/` (not present) | Potential caller-owned hold surface. | **Outside package / exact reason shape NEEDS VERIFICATION** |
 | [`../../../../data/receipts/`](../../../../data/receipts/) | Process-memory receipts. | **Outside package** |
 | [`../../../../release/`](../../../../release/) | Release, correction, withdrawal, and rollback decisions. | **Outside package** |
 

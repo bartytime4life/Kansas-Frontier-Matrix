@@ -66,6 +66,36 @@ class E2ERetirementReadinessTests(unittest.TestCase):
         )
         self.assertIn("E2E_PROOF_SLICE_LANE_NOT_INVOKED", inspect_readiness(self.root).findings)
 
+    def test_lane_named_only_in_text_is_not_an_invocation(self) -> None:
+        (self.root / "tests/e2e/test_hydrology_proof_slice.py").write_text(
+            '"""Runs tools/readiness/run_lane.py proof-slice."""\n'
+            "# tools/readiness/run_lane.py proof-slice\n"
+            "def test_something():\n"
+            '    """tools/readiness/run_lane.py proof-slice"""\n'
+            "    assert 1 + 1 == 2\n",
+            encoding="utf-8",
+        )
+        self.assertIn("E2E_PROOF_SLICE_LANE_NOT_INVOKED", inspect_readiness(self.root).findings)
+
+    def test_lane_markers_passed_to_an_unrelated_call_are_not_an_invocation(self) -> None:
+        (self.root / "tests/e2e/test_hydrology_proof_slice.py").write_text(
+            "def test_something():\n"
+            '    print("tools/readiness/run_lane.py", "proof-slice")\n'
+            '    assert ["tools/readiness/run_lane.py", "proof-slice"]\n',
+            encoding="utf-8",
+        )
+        self.assertIn("E2E_PROOF_SLICE_LANE_NOT_INVOKED", inspect_readiness(self.root).findings)
+
+    def test_subprocess_call_with_other_lane_is_not_an_invocation(self) -> None:
+        (self.root / "tests/e2e/test_hydrology_proof_slice.py").write_text(
+            "import subprocess\n"
+            "def test_something():\n"
+            '    subprocess.run(["python", "tools/readiness/run_lane.py", "fixtures", "proof-slice"])\n'
+            "    assert True\n",
+            encoding="utf-8",
+        )
+        self.assertIn("E2E_PROOF_SLICE_LANE_NOT_INVOKED", inspect_readiness(self.root).findings)
+
     def test_unparseable_proof_slice_test_is_rejected(self) -> None:
         (self.root / "tests/e2e/test_hydrology_proof_slice.py").write_text("def (:\n", encoding="utf-8")
         self.assertIn("E2E_PROOF_SLICE_TEST_INVALID", inspect_readiness(self.root).findings)

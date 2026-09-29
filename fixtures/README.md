@@ -2,10 +2,10 @@
 doc_id: kfm://doc/fixtures-readme
 title: fixtures/ — Canonical Reusable Fixture Root
 type: readme; root-readme; canonical-fixtures-root; reusable-test-fixture-boundary
-version: v0.2.3
+version: v0.2.4
 status: repository-grounded draft; aligned to adopted Directory Rules v2; non-authoritative
 created: NEEDS VERIFICATION
-updated: 2026-08-23
+updated: 2026-09-29
 supersedes: v0.1 at the same path
 prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
 current_path: fixtures/README.md
@@ -15,9 +15,9 @@ readme_profile: ROOT_FULL
 policy_label: public-review; synthetic-public-safe-only; no-network-default; no-authority; cite-or-abstain
 truth_posture: >
   CONFIRMED the existing same-path canonical fixture root, adopted Directory Rules v2
-  through ADR-0029, root.fixtures machine projection, current 31-direct-child tree,
+  through ADR-0029, root.fixtures machine projection, current 32-direct-child tree,
   23-validator aggregate profile, generated-receipt fixture lane, no-network
-  validation posture, CODEOWNERS route, and make fixtures readiness-marker behavior at
+  validation posture, CODEOWNERS route, and make fixtures readiness-lane HOLD behavior at
   head@76bc1ffef374f14e0123f2e0817e8cab0c3727f5 / PROPOSED the fixture admission
   checklist and scenario vocabulary below / UNKNOWN exhaustive recursive payload and
   consumer inventory, deployed consumers, third-party sample rights, and public effects /
@@ -53,6 +53,7 @@ related:
   - ../data/receipts/generated/README.md
 tags: [kfm, fixtures, root-readme, synthetic, deterministic, valid, invalid, golden, denied, abstain, hold, error, correction, rollback, no-network, public-safe]
 notes:
+  - "v0.2.4 adds the already-present security/ direct child (scan-receipt fixtures from #4657) to the exact root map, advances the reviewed count from 31 to 32, and records that make fixtures now delegates to the readiness-lane runner, which exits 3 with a named HOLD; no child is moved, reclassified, promoted, or published."
   - "v0.2.3 adds the already-present source/ direct child (introduced by the local-data source-admission fixtures) to the exact root map and advances the reviewed count from 30 to 31; no child is moved, reclassified, promoted, or published."
   - "v0.2.2 adds the already-present correction/ direct child to the exact root map and advances the reviewed count from 29 to 30; no child is moved, reclassified, promoted, or published."
   - "v0.2.1 reconciles the direct-child inventory after governance/ and policy/ were present but omitted from the prior map; no child is moved, reclassified, promoted, or published."
@@ -84,7 +85,7 @@ notes:
 | Repository exposure | `public`; payloads must therefore be synthetic and public-safe |
 | Mutation / retention | `versioned` / `repository_lifetime` |
 | Validation profile | `synthetic_public_safe_only` |
-| Direct-child snapshot | `README.md` plus 31 directories at `head@76bc1ff…` |
+| Direct-child snapshot | `README.md` plus 32 directories at `head@76bc1ff…` |
 | Normal public-client use | **DENY** — repository fixtures are not governed runtime data |
 | Release or publication effect | None |
 
@@ -144,12 +145,12 @@ The current machine projection and [CODEOWNERS](../.github/CODEOWNERS) route thi
 | Placement authority | **CONFIRMED** | Directory Rules v2 adopted through ADR-0029 |
 | Root projection | **CONFIRMED** | `root.fixtures` is present in the root registry |
 | Same-path README role | **CONFIRMED** | Existing root README modernized in place |
-| Direct-child inventory | **CONFIRMED** | 31 direct-child directories at the pinned tree |
+| Direct-child inventory | **CONFIRMED** | 32 direct-child directories at the pinned tree |
 | Reusable fixture role | **CONFIRMED** | Root registry and current validator consumers |
 | All child contracts current | **NEEDS VERIFICATION** | Child README depth and freshness are mixed |
 | Complete recursive payload inventory | **UNKNOWN** | No claim of every nested file or consumer |
 | Every payload bound to a consumer | **NEEDS VERIFICATION** | Require child-level validator/test links |
-| Dedicated fixture regeneration system | **NOT IMPLEMENTED / readiness marker only** | `make fixtures` prints TODO and exits successfully |
+| Dedicated fixture regeneration system | **NOT IMPLEMENTED / readiness-lane HOLD** | `make fixtures` runs `tools/readiness/run_lane.py fixtures`, which exits 3 with a named HOLD |
 | Production or public runtime use | **DENY by role** | Fixtures are repository test carriers, not governed runtime data |
 
 The current tree contains mature validator-backed families, compatibility/staging lanes, broad valid/invalid groupings, and child lanes whose deeper status is not established by their directory name alone. This README therefore documents the root contract without upgrading every child to implemented or validated status.
@@ -355,7 +356,7 @@ The current `full` validator profile in [`validator_registry.json`](../tools/val
 [`validator-suite.yml`](../.github/workflows/validator-suite.yml) exercises the aggregate inventory, shared schema runner, generated-receipt integrity checks, a material-change profile, and an expected EvidenceBundle rejection. Its successful conclusion is bounded validation evidence; it does not create policy, review, proof, release, or publication authority.
 
 > [!WARNING]
-> `make fixtures` is currently a readiness marker that prints `TODO: regenerate deterministic fixtures` and exits successfully. It is **not** fixture regeneration or validation evidence.
+> `make fixtures` runs `tools/readiness/run_lane.py fixtures`, which reports a named HOLD and exits with status 3 because no accepted regeneration producer exists. It is **not** fixture regeneration or validation evidence.
 
 ### Required negative checks
 
@@ -490,6 +491,7 @@ fixtures/
 ├── release/                      # Synthetic release-governance fixtures only.
 ├── review/                       # Review-record fixture families.
 ├── runtime/                      # Runtime-envelope and adapter fixtures.
+├── security/                     # Security scan-receipt fixtures.
 ├── slim/                         # Compact fixture subsets.
 ├── source/                       # Local-data capture and offline-sync example fixtures.
 ├── synthetic/                    # General synthetic compatibility lane.
