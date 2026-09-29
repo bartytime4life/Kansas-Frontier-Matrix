@@ -25,9 +25,9 @@
     }
   },
   "dependencies": {
-    "maplibre-gl": "6.9.0"
+    "maplibre-gl": "6.11.2"
   },
   "devDependencies": {
-    "vitest": "5.0.0"
+    "vitest": "5.0.2"
   }
 }
