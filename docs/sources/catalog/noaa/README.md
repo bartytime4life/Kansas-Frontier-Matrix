@@ -5,7 +5,7 @@ type: standard
 version: v1.1
 status: draft
 owners: TODO — Docs steward + Hazards domain steward + Atmosphere/Air/Climate domain steward
-created: TODO-YYYY-MM-DD
+created: 2026-05-08
 updated: 2026-05-22
 policy_label: public
 related:

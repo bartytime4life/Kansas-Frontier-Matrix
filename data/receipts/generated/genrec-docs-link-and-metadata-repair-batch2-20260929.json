@@ -163,7 +163,7 @@
     "docs/sources/catalog/newspapers/legal-notices.md": "sha256:5b3ef8dd2ec85357edaa4c162c2b9a87d396d02806332b2194f7c9475f790e1c",
     "docs/sources/catalog/newspapers/obituaries.md": "sha256:01304f316e8b44347b29cbac1338e5207cd635ab0795042e86a4137ee9e4ad52",
     "docs/sources/catalog/newspapers/ocr-full-text.md": "sha256:f902422586047233382ebe9c6235b28b5d654a7cee8b784d0c57746e5a8ac96b",
-    "docs/sources/catalog/noaa/README.md": "sha256:f9aaaf26dce15f6d8f4b16b7fabd53bec7fdc790f6de973a3553664f1b8f5ddd",
+    "docs/sources/catalog/noaa/README.md": "sha256:a3428b742a2bfdc9817de3cf472113167b4b31a646bf53f2543d51c1a79352e8",
     "docs/sources/catalog/noaa/goes-abi-aod.md": "sha256:ca6a7f55344bb18f5eb65c976f0be32d15c363ea96404123aa04c351738a08e6",
     "docs/sources/catalog/noaa/hms-fire-smoke.md": "sha256:2e7ad367ec6e4624477fa84b85ff41800b3cb7dd0f4e86d3f20bfe46e337cc28",
     "docs/sources/catalog/noaa/hrrr-smoke.md": "sha256:ee336b5376d97344c324eadfecfca2196ee0fa6534d7deaf0e65010e145d7bbb",
@@ -340,5 +340,5 @@
   "links": {
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
   },
-  "notes": "responsibility values are derived from each document title and truth_posture states that the document claims were not re-reviewed. Links to missing family-level pages (for example ahgp/IDENTITY.md) are not redirected to the catalog-wide page of the same name. Seven files are excluded for individual review: three pairs share a doc_id (ahgp/county-town-histories.md and ahgp/family-trees.md, blm/glo-field-notes.md and blm/glo-land-patents.md, usfws_ecos/README.md and usfws_ecos/critical-habitat.md) and manual_curation/README.md declares supersedes: v2 (2026-05-22), which is not a document path."
+  "notes": "responsibility values are derived from each document title and truth_posture states that the document claims were not re-reviewed. Links to missing family-level pages (for example ahgp/IDENTITY.md) are not redirected to the catalog-wide page of the same name. Seven files are excluded for individual review: three pairs share a doc_id (ahgp/county-town-histories.md and ahgp/family-trees.md, blm/glo-field-notes.md and blm/glo-land-patents.md, usfws_ecos/README.md and usfws_ecos/critical-habitat.md) and manual_curation/README.md declares supersedes: v2 (2026-05-22), which is not a document path. docs/sources/catalog/noaa/README.md also replaces the placeholder created: TODO-YYYY-MM-DD with 2026-05-08, the date of the commit that first added the file (37a8d7a270), because the diff-scoped stale-docs check rejects a non-date created value."
 }
