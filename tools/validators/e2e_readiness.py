@@ -52,8 +52,7 @@ def _proof_slice_test_findings(path: Path) -> list[str]:
     """The Hydrology proof-slice E2E must run the accepted lane, not a placeholder."""
 
     try:
-        text = path.read_text(encoding="utf-8")
-        tree = ast.parse(text)
+        tree = ast.parse(path.read_text(encoding="utf-8"))
     except (OSError, SyntaxError, UnicodeError):
         return ["E2E_PROOF_SLICE_TEST_INVALID"]
     tests = [
@@ -63,9 +62,30 @@ def _proof_slice_test_findings(path: Path) -> list[str]:
     ]
     if not tests or any(_is_vacuous_test(node) for node in tests):
         return ["E2E_PROOF_SLICE_TEST_VACUOUS"]
-    if not all(marker in text for marker in PROOF_SLICE_LANE_MARKERS):
+    if not any(_invokes_proof_slice_lane(node) for node in tests):
         return ["E2E_PROOF_SLICE_LANE_NOT_INVOKED"]
     return []
+
+
+def _invokes_proof_slice_lane(test: ast.FunctionDef | ast.AsyncFunctionDef) -> bool:
+    """True when one call inside the test passes both lane markers as arguments.
+
+    Comments and docstrings are not calls, so text alone cannot satisfy this.
+    """
+
+    for node in ast.walk(test):
+        if not isinstance(node, ast.Call):
+            continue
+        arguments = [*node.args, *(keyword.value for keyword in node.keywords)]
+        strings = {
+            constant.value
+            for argument in arguments
+            for constant in ast.walk(argument)
+            if isinstance(constant, ast.Constant) and isinstance(constant.value, str)
+        }
+        if all(marker in strings for marker in PROOF_SLICE_LANE_MARKERS):
+            return True
+    return False
 
 
 def inspect_readiness(repository_root: Path) -> ReadinessReport:

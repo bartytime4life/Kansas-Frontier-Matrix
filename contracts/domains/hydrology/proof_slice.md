@@ -72,7 +72,8 @@ are bounded in-harness rules, not a repository-wide policy evaluator.
 
 ## Failure behavior
 
-An unpinned input, a digest mismatch, a schema-invalid profile/request/case, an
+Every pinned input is loaded and digest-checked before any case runs, whether or
+not a case uses it. An unpinned input, a digest mismatch, a schema-invalid profile/request/case, an
 invalid emitted envelope, or a non-identical replay stops the run: exit `2` for
 an untrusted input and exit `1` for a mismatch or non-deterministic replay. A case
 whose outcome differs from the profile makes the record `FAIL`.
