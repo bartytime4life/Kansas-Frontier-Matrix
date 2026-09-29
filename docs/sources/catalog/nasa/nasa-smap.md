@@ -19,7 +19,6 @@ related:
   - docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md
   - docs/sources/catalog/_template/SOURCE_PRODUCT_TEMPLATE.md
   - docs/doctrine/directory-rules.md
-  - docs/adr/ADR-NNNN-nasa-source-family-promotion.md
 tags: [kfm, docs, sources, catalog, nasa, smap, soil-moisture, ldas, ease-grid, agriculture, soil]
 notes:
   - "PROPOSED product-page scaffold. Framing as model-assimilated LDAS/EnKF reference product (not raw observation) grounded in KFM-P15-PROG-0010. Pair-with-Mesonet rule (no silent merge) grounded in KFM-P2-IDEA-0023."
@@ -43,6 +42,8 @@ notes:
 <!-- TODO: replace with generated badges (KFM-P3-FEAT-0005): truth, gate, freshness, source-role -->
 
 **Status:** PROPOSED — scaffold; family is **beyond `directory-rules.md` §7.3** (see family README and OPEN-DSC-14). · **Family:** [`nasa`](./README.md) · **Owners:** `<PLACEHOLDER — Docs steward + Source steward for nasa>` · **Last reviewed:** 2026-05-22
+
+> **Implementation note — 2026-09-29:** The [owner-private Explorer](https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site) Site v113 displays NASA GIBS SPL4SMAU Version 8 daily 12:00 UTC modeled images for surface (0–5 cm), root zone (0–100 cm), and each uncertainty view. Its independent day selector uses the latest day shared by all four advertised views within the preceding 30 days. This Site-only visual connection is `EXTERNAL_CONTEXT_ONLY`: it does not implement the proposed acquisition, catalog, EvidenceBundle, promotion, or release paths below. Browser-visible raster proof was unavailable at deployment because the admin browser security check could not be verified; local backend checks returned PNG tiles for a Kansas sample in all four views. [NASA GIBS metadata](https://gibs.earthdata.nasa.gov/layer-metadata/v1.0/SMAP_L4_Analyzed_Surface_Soil_Moisture.json) · [NSIDC product guide](https://nsidc.org/data/spl4smau/versions/8).
 
 ---
 

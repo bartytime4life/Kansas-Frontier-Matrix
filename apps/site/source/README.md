@@ -475,6 +475,14 @@ The local Midnight and Prairie styles make no basemap request. A failed
 external carrier preserves the site-local layers, evidence text, and report
 path; terrain failure returns to the 2D evidence path.
 
+## NASA SMAP soil moisture display — September 29, 2026
+
+The owner-private Explorer has one optional **Soil moisture** control under Official sources. It is off by default. The four fixed NASA GIBS SPL4SMAU V008 views are surface (0–5 cm) and root-zone (0–100 cm) modeled moisture, each with an uncertainty view. The selected view renders as one dated raster at a time with its matching NASA legend. The source time is a daily 12:00 UTC snapshot at approximately 9 km product resolution. Color is not a numeric point reading, a local sensor observation, or an all-clear.
+
+`/api/soil-moisture/availability` reads NASA WMTS capabilities on open or retry, exposes days within the last 30 UTC calendar days for each fixed view, and selects the latest shared day. It caches successful availability for 15 minutes. `/api/soil-moisture/tile` accepts only the four fixed layer IDs, an advertised shared UTC day, and valid zoom 0–6 tile coordinates; it rejects redirects and non-PNG or oversized responses. The UI reports source, backend, and map tile states separately. Switching day or view removes the prior raster source before requesting the next one. Terrain 3D and globe views hold the regional raster.
+
+This is external visual context only. It does not enter KFM RAW, catalog, EvidenceBundle, reports, exports, admission, or release. Missing days and failed tiles remain unavailable. [NASA GIBS layer metadata](https://gibs.earthdata.nasa.gov/layer-metadata/v1.0/SMAP_L4_Analyzed_Surface_Soil_Moisture.json) · [NSIDC SPL4SMAU Version 8](https://nsidc.org/data/spl4smau/versions/8). Kansas Mesonet remains a separate candidate requiring written consent for automated ingestion under its [usage policy](https://mesonet.k-state.edu/about/usage/).
+
 ## Official Kansas context adapters
 
 The Layer Catalog also exposes sixteen fixed, source-specific connections. Search
