@@ -19,8 +19,7 @@ related:
   - docs/doctrine/sensitivity.md
   - docs/doctrine/policy-aware.md
   - docs/standards/PROV.md
-  - docs/standards/DARWIN-CORE.md
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain:habitat, sensitivity, geoprivacy, deny-by-default, redaction, generalization, rare-species, governance]
 notes:
   - "Sensitive-domain document. Disposition is routed through the ai-build-operating-contract.md §23.2 sensitive-domain decision matrix; this doc does NOT re-derive disposition."
@@ -28,6 +27,9 @@ notes:
   - "Contains NO exact coordinates, identifiers, restricted-source-derived fields, generalization radii, geohash precisions, or thresholds. Those are steward-gated and live in the policy bundle."
   - "Habitat sensitivity is largely INHERITED through the joined lane (Fauna/Flora). Atlas §24.13 lists no policy/sensitivity/habitat/ root; see OQ-HAB-SG-02."
   - "CONTRACT_VERSION = \"3.0.0\""
+owning_root: docs/
+responsibility: "Documentation for Habitat Domain — Sensitivity & Geoprivacy Posture; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -402,7 +404,7 @@ This document is done enough to enter the repository when:
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance vocabulary for transform receipts.
 - `docs/standards/DARWIN-CORE.md` — Darwin Core geoprivacy terms the `geoprivacy_status` enum binds to *(PROPOSED — NEEDS VERIFICATION)*.
 - `policy/sensitivity/fauna/` — Fauna geoprivacy rules Habitat inherits through on join *(CONFIRMED home for Fauna; PROPOSED Habitat binding)*.
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — §23 sensitive-domain matrix; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — §23 sensitive-domain matrix; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
 
 ---
 

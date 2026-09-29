@@ -20,13 +20,16 @@ related:
   - policy/domains/hazards/
   - policy/release/hazards/
   - data/registry/sources/hazards/
-  - ai-build-operating-contract.md
+  - ../../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain:hazards, missing-files, planned-files, inventory, governance, needs-verification]
 notes:
   - "FOLDER + CASING: requested as docs/domains/hazards/missing_or_planned_files/README.md — folder form (permitted, §6.1.a) with a lowercase_with_underscores folder name. The domain-suite member name is MISSING_OR_PLANNED_FILES; Directory Rules §6.1.a recommends UPPERCASE for doc artifacts. The lowercase folder + file-vs-folder choice is a low-stakes casing/structure drift item, tracked as OQ-HAZ-MPF-01 (same class as OPEN-DR-04). Honored as requested; flagged not split."
   - "INVENTORY DOC: every file listed here is PROPOSED / planned / NOT YET CREATED by definition. Nothing here asserts a file exists. This is the lane's gap inventory, derived from the Hazards dossier §B/§D/§E/§J/§K/§M/§N and the standard domain-suite pattern."
   - "EMERGENCY-ALERT BOUNDARY (hard): KFM Hazards is never an alert authority; planned files must encode warning/advisory/watch as CONTEXT, never instruction."
   - "Expected schema/contract/policy homes follow Atlas §24.13 (hazards) and Directory Rules §12 segment form. CONTRACT_VERSION = \"3.0.0\"."
+owning_root: docs/
+responsibility: "Documentation for Hazards Domain — Missing or Planned Files (inventory index); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -352,7 +355,7 @@ This inventory is done enough to enter the repository when:
 - `contracts/domains/hazards/` — planned contract home *(PROPOSED)*.
 - `policy/domains/hazards/`, `policy/release/hazards/` — planned policy homes *(PROPOSED; §24.13)*.
 - `data/registry/sources/hazards/` — planned registry home *(PROPOSED)*.
-- [`ai-build-operating-contract.md`](../../../../ai-build-operating-contract.md) — §20.5 emergency-alert boundary; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
+- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — §20.5 emergency-alert boundary; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
 
 ---
 

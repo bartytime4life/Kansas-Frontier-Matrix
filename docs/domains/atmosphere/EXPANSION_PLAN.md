@@ -14,7 +14,7 @@ related:
   - docs/domains/atmosphere/SOURCES.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/adr/
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, atmosphere, air, plan, roadmap, governance, sequencing]
 notes:
   # Path PROPOSED per Directory Rules §12 (Domain Placement Law) and §4 (placement quick check).
@@ -22,6 +22,9 @@ notes:
   # Domain-internal phases sit INSIDE the master roadmap's Phase 10 (Domain expansion, public-safe aggregates) per Atlas §21 / [ENCY] §23 — NOT Phase 5, which is the Hydrology proof slice.
   # Doctrine-adjacent doc: pinned CONTRACT_VERSION = "3.0.0".
   # Meta Block v2 rule: no nested HTML comments inside this block; '#' annotations only.
+owning_root: docs/
+responsibility: "Documentation for Atmosphere / Air — Expansion Plan; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌬️ Atmosphere / Air — Expansion Plan
@@ -593,7 +596,7 @@ This document is done enough to enter the repository when:
 - [`policy/domains/atmosphere/`](../../../policy/domains/atmosphere/) — proposed policy lane *(**TODO**)*
 - [`tests/domains/atmosphere/`](../../../tests/domains/atmosphere/) — proposed test lane *(**TODO**)*
 - [`data/registry/sources/atmosphere/`](../../../data/registry/sources/atmosphere/) — proposed source registry *(**TODO**)*
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract (`CONTRACT_VERSION = "3.0.0"`; §30 build order)
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract (`CONTRACT_VERSION = "3.0.0"`; §30 build order)
 
 External (doctrinal) — names only; not links:
 

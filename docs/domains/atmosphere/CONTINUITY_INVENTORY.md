@@ -10,7 +10,7 @@ updated: 2026-05-28
 policy_label: public
 contract_version: "3.0.0"
 related:
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
   - docs/domains/atmosphere/README.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
@@ -23,6 +23,9 @@ notes:
   - "Continuity inventory specialized for Atmosphere/Air per the continuity-inventory pattern in the KFM Whole-UI + Governed AI Expansion Report (exact section anchor NEEDS VERIFICATION)."
   - "Repo is not mounted in this session; all path-shaped claims are PROPOSED until verified."
   - "Carries forward prior atmosphere doctrine from KFM Domains Culmination Atlas Ch. 11 and the KFM Encyclopedia (Atmosphere/Air/Climate)."
+owning_root: docs/
+responsibility: "Documentation for Atmosphere / Air — Continuity Inventory; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Atmosphere / Air — Continuity Inventory
@@ -514,7 +517,7 @@ This document is done enough to enter the repository when:
 
 ## 19. Related docs
 
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED present in project.)*
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED present in project.)*
 - [`docs/domains/atmosphere/README.md`](./README.md) — Atmosphere/Air landing page (PROPOSED).
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules (v1.3); §12 Domain Placement Law governs this file's path.
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED lifecycle invariant (PROPOSED canonical home).
@@ -577,7 +580,7 @@ Attached KFM doctrinal sources used to ground this inventory. None of these prov
 
 ---
 
-**Related docs:** [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) · [`docs/domains/atmosphere/README.md`](./README.md) · [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md)
+**Related docs:** [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) · [`docs/domains/atmosphere/README.md`](./README.md) · [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md)
 
 **Last updated:** 2026-05-28 · **CONTRACT_VERSION:** 3.0.0 · **Authority:** doctrine carry-forward (this file does not decide schemas, policy, or release surfaces) · **Repo-verified:** NO (repo not mounted in this session)
 

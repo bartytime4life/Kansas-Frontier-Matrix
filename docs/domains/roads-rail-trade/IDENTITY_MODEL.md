@@ -16,15 +16,16 @@ related:
   - docs/domains/roads-rail-trade/HISTORIC_ROUTES.md
   - docs/standards/PROV.md
   - docs/standards/CANONICALIZATION.md
-  - schemas/contracts/v1/source/source-descriptor.json   # CONFIRMED default home (DR §7.4 / ADR-0001)
   - docs/registers/DRIFT_REGISTER.md
-  - ai-build-operating-contract.md                        # CONTRACT_VERSION = "3.0.0"
 tags: [kfm, domain, roads-rail-trade, identity, spec_hash, source-role, governance]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned; doctrine-adjacent identity standard.
   - Draft from KFM corpus (Atlas Ch. 13, §24.1, §24.13; Directory Rules §§3, 7.4, 12; Pass-10 C1-01/C1-02/C8-05; DDD Entities).
   - No mounted repo, schemas, tests, or runtime were inspected; implementation claims are PROPOSED / NEEDS VERIFICATION.
   - Segment-name conflict (roads-rail-trade vs transport) tracked as OQ-01; aligned to FILE_SYSTEM_PLAN OPEN-RRT-FSP-01 (Directory Rules §12 names roads-rail-trade verbatim and is the stronger authority).
+owning_root: docs/
+responsibility: "Documentation for Roads / Rail / Trade — Identity Model; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 # Roads / Rail / Trade — Identity Model
 
@@ -413,7 +414,7 @@ This document is done enough to enter the repository when:
 - [`docs/standards/CANONICALIZATION.md`](../../standards/CANONICALIZATION.md) — *JCS vs URDNA2015 decision matrix (Pass-10 C8-05)*
 - [`schemas/contracts/v1/source/source-descriptor.json`](../../../schemas/contracts/v1/source/source-descriptor.json) — *CONFIRMED default SourceDescriptor home (DR §7.4 / ADR-0001); NEEDS VERIFICATION*
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — *where to file the schema-home naming conflict (OQ-01)*
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — *operating contract; `CONTRACT_VERSION = "3.0.0"`*
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — *operating contract; `CONTRACT_VERSION = "3.0.0"`*
 
 ---
 

@@ -10,8 +10,8 @@ updated: 2026-06-05
 policy_label: public
 contract_version: "3.0.0"
 related:
-  - ai-build-operating-contract.md
-  - directory-rules.md
+  - ../../doctrine/ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md
   - docs/domains/hazards/README.md
   - docs/domains/hazards/DATA_LIFECYCLE.md
   - docs/domains/hazards/GLOSSARY.md
@@ -26,6 +26,9 @@ notes:
   - This is the lane's defining invariant; CONFIRMED doctrine across Atlas §20.4, §20.5, §12.B, §12.I, IMPL-MANUAL §10.10, Unified Doctrine Synthesis.
   - The boundary is cross-lane (Hazards, Hydrology, Atmosphere/Air), not Hazards-only.
   - PROPOSED implementation (flags, routes, validators) until repo evidence is mounted.
+owning_root: docs/
+responsibility: "Documentation for Hazards Domain — Life-Safety Boundary; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Hazards Domain — Life-Safety Boundary
@@ -369,8 +372,8 @@ This document is done enough to enter the repository when:
 
 > Sibling-doc placement under `docs/domains/hazards/` is CONFIRMED by Directory Rules §12; specific file presence is NEEDS VERIFICATION.
 
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law; deny-by-default; `CONTRACT_VERSION = "3.0.0"` *(CONFIRMED authority)*
-- [`directory-rules.md`](../../../directory-rules.md) — placement; §12 Domain Placement Law; cross-cutting files *(CONFIRMED)*
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law; deny-by-default; `CONTRACT_VERSION = "3.0.0"` *(CONFIRMED authority)*
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — placement; §12 Domain Placement Law; cross-cutting files *(CONFIRMED)*
 - [`docs/domains/hazards/README.md`](./README.md) — Hazards lane orientation *(file presence NEEDS VERIFICATION)*
 - [`docs/domains/hazards/DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — lifecycle, freshness rules, receipt matrix *(sibling doc)*
 - [`docs/domains/hazards/GLOSSARY.md`](./GLOSSARY.md) — boundary & anti-collapse terms *(sibling doc)*

@@ -20,7 +20,7 @@ related:
   - docs/doctrine/directory-rules.md
   - data/registry/sources/habitat/
   - schemas/contracts/v1/source/source-descriptor.json
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain:habitat, sources, source-families, source-descriptor, dossier, rights, governance]
 notes:
   - "Per-family DEEP DOSSIERS. Companion to docs/domains/habitat/SOURCES.md (the one-row-per-family index). This doc holds one detailed profile per source family; SOURCES.md stays the lightweight index. Division of responsibility recorded in §1 and OQ-HAB-SF-01."
@@ -29,6 +29,9 @@ notes:
   - "Per-family descriptor fields are drawn from CONFIRMED idea-cards (NWI 0008, PAD-US 0009, GAP/LANDFIRE 0010, NEON 0011, land-cover 0028, NatureServe 0023/IDEA-0009, freshness FEAT-0003)."
   - "Rights/terms for every family are NEEDS VERIFICATION; sensitive joins fail closed. No exact coordinates, tokens, or restricted-source-derived fields appear."
   - "Path uses Directory Rules §12 segment form; registry path form is OQ-HAB-SF-04. CONTRACT_VERSION = \"3.0.0\"."
+owning_root: docs/
+responsibility: "Documentation for Habitat Domain — Source Family Dossiers; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -369,7 +372,7 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — §7.4 source schema home; §12 Domain Placement Law.
 - `data/registry/sources/habitat/` — append-only descriptor authority *(CONFIRMED home / PROPOSED presence)*.
 - `schemas/contracts/v1/source/source-descriptor.json` — `SourceDescriptor` schema *(CONFIRMED default home / PROPOSED presence)*.
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — gates A–G; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — gates A–G; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
 
 ---
 

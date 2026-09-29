@@ -16,11 +16,11 @@ related:
   - docs/runbooks/habitat/SOURCE_REFRESH_RUNBOOK.md
   - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
-  - directory-rules.md
+  - ../../doctrine/directory-rules.md
   - schemas/contracts/v1/source/source-descriptor.json
   - data/registry/sources/habitat/
   - policy/domains/habitat/
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, habitat, source-registry, governance, admission]
 notes:
   - Path placement follows Directory Rules §12 domain lane pattern.
@@ -29,6 +29,9 @@ notes:
   - "Source-role labels use the CONFIRMED 7-role enum (Atlas §24.1.1 / ADR-S-04). Per-family role assignments are PROPOSED; the NWI/NLCD multi-role labels here diverge from SOURCE_FAMILIES.md and are flagged in OQ-HAB-SR-14."
   - "Sensitivity outcomes route through the §20.5 deny-by-default register; tier scheme T0–T4 (Atlas §24.5.1 / ADR-S-05) referenced, adoption PROPOSED."
   - "CONTRACT_VERSION = \"3.0.0\""
+owning_root: docs/
+responsibility: "Documentation for Habitat Domain — Source Registry; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌿 Habitat Domain — Source Registry
@@ -455,11 +458,11 @@ This registry is done enough to enter the repository when:
 - [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) — Fauna runbook (cross-domain pattern reference)
 - [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../sources/SOURCE_DESCRIPTOR_STANDARD.md) — Project-wide descriptor standard *(PROPOSED — Whole-UI report §23)*
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O / PAV provenance profile
-- [`directory-rules.md`](../../../directory-rules.md) — Canonical placement law (§§5, 7.3, 7.4, 7.5, 12)
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — Canonical placement law (§§5, 7.3, 7.4, 7.5, 12)
 - `schemas/contracts/v1/source/source-descriptor.json` — Descriptor schema *(PROPOSED home; NEEDS VERIFICATION)*
 - `policy/domains/habitat/` — Habitat-specific admissibility and sensitivity policy *(PROPOSED)*
 - `data/registry/sources/habitat/` — Machine-readable habitat source registry *(PROPOSED)*
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — canonical operating contract (`CONTRACT_VERSION = "3.0.0"`)
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract (`CONTRACT_VERSION = "3.0.0"`)
 
 [⬆ back to top](#contents)
 

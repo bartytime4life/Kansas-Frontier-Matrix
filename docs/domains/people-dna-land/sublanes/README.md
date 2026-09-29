@@ -8,9 +8,12 @@ owners: <People/DNA/Land domain steward — PLACEHOLDER>, <Source steward — PL
 created: 2026-06-06
 updated: 2026-06-06
 policy_label: restricted
-related: [ai-build-operating-contract.md, directory-rules.md, docs/domains/people-dna-land/README.md, docs/domains/people-dna-land/sublanes/people/README.md, docs/domains/people-dna-land/sublanes/dna/README.md, docs/domains/people-dna-land/sublanes/land/README.md, policy/sensitivity/people/, policy/consent/people/]
+related: [../../../doctrine/ai-build-operating-contract.md, ../../../doctrine/directory-rules.md, docs/domains/people-dna-land/README.md, docs/domains/people-dna-land/sublanes/people/README.md, policy/consent/people/]
 tags: [kfm, people, dna, land, genealogy, sublanes, sensitive]
 notes: [CONTRACT_VERSION = "3.0.0"; sources Atlas v1.1 ch.16 scope + object spine + §24.5 tiers; domain slug "people-dna-land" CONFIRMED by Directory Rules §12; the sublanes/ subfolder convention is NOT in §12 and is PROPOSED pending ADR (OQ-PEOPLE-SUB-01)]
+owning_root: docs/
+responsibility: "Documentation for People / DNA / Land — Sublanes Index; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -28,7 +31,7 @@ notes: [CONTRACT_VERSION = "3.0.0"; sources Atlas v1.1 ch.16 scope + object spin
 ![build](https://img.shields.io/badge/CI-TODO-lightgrey)
 
 **Status:** `draft` · **Owners:** `<Domain steward>` · `<Source steward>` · `<Sensitivity reviewer>` · `<Rights-holder rep>` *(all PLACEHOLDER)* · **Updated:** 2026-06-06
-**`CONTRACT_VERSION = "3.0.0"`** — governed by [`ai-build-operating-contract.md`](../../../../ai-build-operating-contract.md) and [`directory-rules.md`](../../../../directory-rules.md).
+**`CONTRACT_VERSION = "3.0.0"`** — governed by [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) and [`directory-rules.md`](../../../doctrine/directory-rules.md).
 
 > [!IMPORTANT]
 > **This whole directory is PROPOSED.** Directory Rules §12 (Domain Placement Law) defines a
@@ -136,8 +139,8 @@ Atlas v1.1 ch.16 scope statement. `[DOM-PEOPLE] [ENCY]` — *CONFIRMED scope.*
 | Sublane | Slice of the domain | Owned object families (from ch.16 scope) | Default sensitivity |
 |---|---|---|---|
 | [`people/`](people/README.md) | Person evidence and genealogy | Person Assertion, Person Identity Candidate, PersonCanonical, NameAssertion, LifeEvent, Residence Event, Migration Event, Genealogy Relationship, FamilyGroup, RelationshipAssertion, Relationship Hypothesis | living-person fields **T4** |
-| [`dna/`](dna/README.md) | Restricted DNA evidence and consent | DNA Match Evidence, DNASegment, DNAKitToken, ConsentGrant, RevocationReceipt | raw DNA segments **T4** (no public-tier transform) |
-| [`land/`](land/README.md) | Land instruments, ownership, parcels | Land Ownership Assertion, Deed Instrument, Title Instrument, Assessor Record, TaxRecord, Parcel Version, Ownership Interval, LandParcel, LegalDescription, LandInstrument | private person-parcel join **T4** |
+| `dna/` (not present) | Restricted DNA evidence and consent | DNA Match Evidence, DNASegment, DNAKitToken, ConsentGrant, RevocationReceipt | raw DNA segments **T4** (no public-tier transform) |
+| `land/` (not present) | Land instruments, ownership, parcels | Land Ownership Assertion, Deed Instrument, Title Instrument, Assessor Record, TaxRecord, Parcel Version, Ownership Interval, LandParcel, LegalDescription, LandInstrument | private person-parcel join **T4** |
 
 > [!NOTE]
 > The split is doctrine-aligned but the *folder names* `people` / `dna` / `land` are PROPOSED
@@ -233,12 +236,12 @@ This document is done enough to enter the repository when:
 
 ## Related docs
 
-- [`ai-build-operating-contract.md`](../../../../ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
-- [`directory-rules.md`](../../../../directory-rules.md) — placement authority (§3, §12, §2.4, §18 OPEN-DR-02)
+- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- [`directory-rules.md`](../../../doctrine/directory-rules.md) — placement authority (§3, §12, §2.4, §18 OPEN-DR-02)
 - `docs/domains/people-dna-land/README.md` — parent domain lane landing *(TODO — verify path)*
 - [`people/README.md`](people/README.md) — person / genealogy sublane *(PROPOSED)*
-- [`dna/README.md`](dna/README.md) — restricted DNA sublane *(PROPOSED)*
-- [`land/README.md`](land/README.md) — land / title / parcel sublane *(PROPOSED)*
+- `dna/README.md` (not present) — restricted DNA sublane *(PROPOSED)*
+- `land/README.md` (not present) — land / title / parcel sublane *(PROPOSED)*
 - `policy/sensitivity/people/` · `policy/consent/people/` — deny-default + consent lanes *(PROPOSED)*
 - Atlas v1.1 ch.16 — People/Genealogy/DNA/Land dossier *(reference view, not authority)*
 

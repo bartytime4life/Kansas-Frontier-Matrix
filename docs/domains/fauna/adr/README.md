@@ -8,9 +8,12 @@ owners: TBD (domain steward: Fauna); TBD (governance reviewer); TBD (sensitivity
 created: 2026-05-29
 updated: 2026-05-29
 policy_label: public
-related: [docs/domains/fauna/README.md, docs/adr/README.md, docs/doctrine/directory-rules.md, policy/sensitivity/fauna/, schemas/contracts/v1/domains/fauna/, docs/registers/DRIFT_REGISTER.md, ai-build-operating-contract.md]
+related: [docs/domains/fauna/README.md, docs/adr/README.md, docs/doctrine/directory-rules.md, policy/sensitivity/fauna/, schemas/contracts/v1/domains/fauna/, docs/registers/DRIFT_REGISTER.md, ../../../doctrine/ai-build-operating-contract.md]
 tags: [kfm, domain, fauna, adr, governance, sensitivity, geoprivacy]
 notes: [CONTRACT_VERSION pinned 3.0.0 # per-domain ADR index; repo-wide ADRs live in docs/adr/ # fauna is a sensitive lane — T4 default for sensitive occurrences # whether per-domain adr/ subfolders are canonical vs all-ADRs-in-docs/adr/ is OPEN → OQ-FAUNA-ADR-01]
+owning_root: docs/
+responsibility: "Documentation for Fauna · Domain ADR Index; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -244,7 +247,7 @@ This index is done enough to enter the repository when:
 
 - [`docs/domains/fauna/README.md`](../README.md) — Fauna lane landing page *(NEEDS VERIFICATION)*
 - [`docs/adr/README.md`](../../../adr/README.md) — repo-wide ADR index *(NEEDS VERIFICATION)*
-- [`ai-build-operating-contract.md`](../../../../ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement law, §2.4 ADR triggers *(path PROPOSED — verify)*
 - `policy/sensitivity/fauna/` — fauna sensitivity / geoprivacy policy *(PROPOSED)*
 - `schemas/contracts/v1/domains/fauna/` — fauna schemas *(PROPOSED; slug CONFLICTED)*

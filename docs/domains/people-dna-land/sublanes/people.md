@@ -12,11 +12,9 @@ related:
   # NEEDS VERIFICATION — every path below is PROPOSED until checked against a mounted repo
   - docs/domains/people-dna-land/README.md
   - docs/domains/people-dna-land/sublanes/README.md
-  - docs/domains/people-dna-land/sublanes/dna/README.md
-  - docs/domains/people-dna-land/sublanes/genealogy/README.md
   - docs/domains/people-dna-land/sublanes/land.md
-  - directory-rules.md
-  - ai-build-operating-contract.md
+  - ../../../doctrine/directory-rules.md
+  - ../../../doctrine/ai-build-operating-contract.md
   - docs/standards/PROV.md
 tags: [kfm, domain, people, sublane, person-assertion, identity, life-events, residence, migration]
 notes:
@@ -24,6 +22,9 @@ notes:
   # sublanes/ path segment is PROPOSED; not in Directory Rules §12; needs ADR (OQ-PEOPLE-SUB-01).
   # FILENAME CONFLICT: this draft uses flat sublanes/people.md; a prior draft used subfolder sublanes/people/README.md. Unresolved (OQ-PEOPLE-SUB-13).
   # Living-person + DNA-derived outputs are deny-by-default; person object families owned by single [DOM-PEOPLE] bounded context.
+owning_root: docs/
+responsibility: "Documentation for People Sublane — People, Genealogy, DNA, and Land Ownership Domain; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 👤 People Sublane
@@ -461,8 +462,8 @@ The finite outcome set is `ANSWER` / `ABSTAIN` / `DENY` / `ERROR`. Every Focus M
 - `sublanes/genealogy(.md|/README.md)` — Genealogy sublane *(PROPOSED; filename per OQ-PEOPLE-SUB-13)*
 - `sublanes/dna(.md|/README.md)` — DNA sublane *(PROPOSED)*
 - `sublanes/land(.md)` — Land sublane *(PROPOSED)*
-- [`directory-rules.md`](../../../../directory-rules.md) — Directory Rules (placement law §3, §12, §2.5, §18 OPEN-DR-02)
-- [`ai-build-operating-contract.md`](../../../../ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- [`directory-rules.md`](../../../doctrine/directory-rules.md) — Directory Rules (placement law §3, §12, §2.5, §18 OPEN-DR-02)
+- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - [`docs/standards/PROV.md`](../../../standards/PROV.md) — provenance crosswalk
 - `docs/registers/VERIFICATION_BACKLOG.md` · `docs/registers/DRIFT_REGISTER.md` — open items + drift (PROPOSED paths)
 - _TODO: link to the `sublanes/` ADR (OQ-PEOPLE-SUB-01/02/13) once authored._

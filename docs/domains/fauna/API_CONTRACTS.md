@@ -8,9 +8,12 @@ owners: <fauna-domain-steward> + <contract-schema-steward>  # TODO confirm in OW
 created: 2026-05-16
 updated: 2026-05-29
 policy_label: public
-related: [docs/domains/fauna/README.md, docs/domains/fauna/SCHEMAS.md, docs/domains/fauna/POLICY.md, docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md, docs/architecture/governed-api/README.md, contracts/OBJECT_MAP.md, schemas/contracts/v1/runtime/runtime_response_envelope.schema.json, schemas/contracts/v1/ui/evidence_drawer_payload.schema.json, schemas/contracts/v1/map/layer_manifest.schema.json, schemas/contracts/v1/ai/ai_receipt.schema.json, ai-build-operating-contract.md]
+related: [docs/domains/fauna/README.md, docs/domains/fauna/SCHEMAS.md, docs/domains/fauna/POLICY.md, docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md, docs/architecture/governed-api/README.md, contracts/OBJECT_MAP.md, schemas/contracts/v1/runtime/runtime_response_envelope.schema.json, schemas/contracts/v1/ui/evidence_drawer_payload.schema.json, schemas/contracts/v1/map/layer_manifest.schema.json, schemas/contracts/v1/ai/ai_receipt.schema.json, ../../doctrine/ai-build-operating-contract.md]
 tags: [kfm, fauna, api, contracts, governed-api]
 notes: [CONTRACT_VERSION pinned 3.0.0 # all route paths, DTO field lists, and status codes PROPOSED until verified against a mounted repo and an accepted ADR # exact Fauna feature/detail resolver route is UNKNOWN per Atlas §7.J # Atlas §7.J names the DTO FaunaDecisionEnvelope # schema slug fauna vs domains/fauna is CONFLICTED → OQ-FAUNA-API-011]
+owning_root: docs/
+responsibility: "Documentation for Fauna — API Contracts; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -152,7 +155,7 @@ rollback, review queue, evidence resolver) applied to the Fauna lane. Routes sho
 | 7 | Evidence bundle resolution           | `GET /api/v1/evidence/{bundle_id}`                     | `EvidenceBundle`                                         | ANSWER / DENY / ERROR            | PROPOSED [§20.3 evidence resolver]           |
 
 **Schema responsibility root:** `schemas/contracts/v1/` — per
-[ADR-0001 (schema home)](../../adr/ADR-0001-schema-home.md). Fauna-specific schemas
+ADR-0001 (schema home) (not present). Fauna-specific schemas
 are placed under `schemas/contracts/v1/domains/fauna/`. **PROPOSED**; verify against
 mounted repo evidence and Directory Rules §6 / §12 before treating as canonical.
 
@@ -698,9 +701,9 @@ docs/runbooks/fauna/
 - [`docs/domains/fauna/adr/README.md`](./adr/README.md) — Fauna ADR index
 - [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) — source refresh runbook
 - [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — generic governed API architecture *(TODO confirm path)*
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — schema home decision
+- `docs/adr/ADR-0001-schema-home.md` (not present) — schema home decision
 - [`contracts/OBJECT_MAP.md`](../../../contracts/OBJECT_MAP.md) — object family ↔ schema ↔ policy crosswalk
 - Project knowledge: **KFM Domains Culmination Atlas v1.1** §7 (Fauna), §7.J (API surfaces), §7.I (sensitivity), §7.K (validators), §20.3 (Master API Surface Table), §20.5 (deny-by-default register).
 

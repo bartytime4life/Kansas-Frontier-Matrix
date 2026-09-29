@@ -15,8 +15,8 @@ related:
   - docs/domains/people-dna-land/CANONICAL_PATHS.md
   - docs/domains/people-dna-land/CHAIN_OF_TITLE_NOTES.md
   - docs/domains/people-dna-land/CONSENT_MODEL.md
-  - directory-rules.md
-  - ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, people-dna-land, cross-lane, edges, joins, sensitivity, governance]
 notes:
   # CONTRACT_VERSION = "3.0.0"
@@ -24,6 +24,9 @@ notes:
   # Edge OWNERSHIP matters: an edge is owned by exactly one lane (Atlas §24.4 lattice). People owns 4 edges (§24.4.14); is consumer on others (§24.4.12/13/15).
   # Living-person fields fail closed across every boundary; private person-parcel joins denied by default.
   # Where the §24.4 lattice and §16.F per-domain list conflict, §16.F (v1.0) governs and the conflict is filed.
+owning_root: docs/
+responsibility: "Documentation for Cross-Lane Relations — People / Genealogy / DNA / Land Domain; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Cross-Lane Relations — People / Genealogy / DNA / Land Domain
@@ -315,8 +318,8 @@ PROPOSED; homes use the **whole-domain** `people-dna-land` segment per §12. Cro
 - [`./CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) — path register and segment-naming conflict
 - [`./CHAIN_OF_TITLE_NOTES.md`](./CHAIN_OF_TITLE_NOTES.md) — land edge to Frontier-owned land-office records
 - [`./CONSENT_MODEL.md`](./CONSENT_MODEL.md) · [`./CONTINUITY_INVENTORY.md`](./CONTINUITY_INVENTORY.md)
-- [`directory-rules.md`](../../../directory-rules.md) — placement law (§12)
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — placement law (§12)
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - Atlas anchors: §16.F (People/DNA/Land per-domain relations) · §24.4.11–§24.4.15 (edge-ownership lattice) · §17.F (Frontier↔People/Land edge) · §24.14 (object-family × domain sensitivity) · §24.9.2 (trust-membrane anti-patterns) · §24.10 (cross-lane inference risk)
 
 -----

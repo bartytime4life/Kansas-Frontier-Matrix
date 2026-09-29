@@ -15,13 +15,15 @@ related:
   - docs/domains/roads-rail-trade/DATA_LIFECYCLE.md
   - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf
   - docs/doctrine/directory-rules.md
-  - ai-build-operating-contract.md            # CONTRACT_VERSION = "3.0.0"
 tags: [kfm, domain, roads-rail-trade, transport, backlog, planning]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned; doctrine-adjacent planning artifact.
   - Atlas v1.1 Ch. 13 ("Roads, Rail, and Trade Routes") is the doctrinal baseline for this backlog.
   - Implementation maturity is UNKNOWN in this docs-only authoring pass; all path/route claims are PROPOSED until repo-verified.
   - SEGMENT-NAMING CONFLICT - Directory Rules 24.13 crosswalk names the schema/contract segment "transport"; this doc uses "roads-rail-trade" for docs/data/policy/tests segments. Surfaced as Q-08 and an ADR candidate.
+owning_root: docs/
+responsibility: "Documentation for Roads, Rail, and Trade Routes — Expansion Backlog; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Roads, Rail, and Trade Routes — Expansion Backlog
@@ -38,7 +40,7 @@ notes:
   <img alt="Updated: 2026-06-07" src="https://img.shields.io/badge/updated-2026--06--07-lightgrey" />
 </p>
 
-**Status:** `draft` · **Owners:** _TODO — Roads/Rail/Trade Routes domain stewards (see [`CODEOWNERS`](../../../CODEOWNERS) — PROPOSED path)_ · **Last updated:** 2026-06-07
+**Status:** `draft` · **Owners:** _TODO — Roads/Rail/Trade Routes domain stewards (see `CODEOWNERS` (not present) — PROPOSED path)_ · **Last updated:** 2026-06-07
 
 > [!IMPORTANT]
 > This is a **planning artifact**, not a repository-state document. Every item below is **PROPOSED**, **NEEDS VERIFICATION**, or **UNKNOWN** with respect to the current mounted repo. Doctrine items are labeled **CONFIRMED** where they are grounded in attached project sources. No item here may be quoted as evidence of implementation.
@@ -437,7 +439,7 @@ Linked targets are **PROPOSED** repo placements per Directory Rules unless other
 - [`docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf`](../../atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf) — Domain Atlas v1.1, Ch. 13 _(PROPOSED path, per Atlas App. G)_
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — drift register _(PROPOSED path)_
 - [`docs/registers/ADR_INDEX.md`](../../registers/ADR_INDEX.md) — ADR index, including ADR-0001 (schema home) _(PROPOSED path)_
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract; `CONTRACT_VERSION = "3.0.0"`
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract; `CONTRACT_VERSION = "3.0.0"`
 
 Atlas / corpus references (not repo paths):
 

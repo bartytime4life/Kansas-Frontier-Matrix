@@ -11,9 +11,7 @@ policy_label: public
 related:
   - docs/runbooks/README.md
   - docs/runbooks/ui_VALIDATION.md
-  - docs/runbooks/governed_ai_VALIDATION.md
-  - docs/adr/ADR-0001-schema-home.md
-  - directory-rules.md
+  - ../doctrine/directory-rules.md
   - contracts/OBJECT_MAP.md
   - schemas/contracts/v1/
   - tests/runtime_proof/
@@ -23,6 +21,9 @@ notes:
   - "Defines the no-network test discipline that is the FIRST KFM CI pipeline."
   - "Repo-shape claims (commands, paths, workflow names) are PROPOSED until repo mount verifies."
   - "Sensitive-lane fixtures MUST be public-safe transforms — never real coordinates, DNA, or living-person records."
+owning_root: docs/
+responsibility: "Documentation for No-Network Test Runbook; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌐 No-Network Test Runbook
@@ -44,7 +45,7 @@ notes:
 | **Last updated** | 2026-05-12 |
 | **Authority of doctrine in this doc** | **CONFIRMED** — supported by BLD-GREEN, BLD-COMP, IMPL-PIPE, ENCY, WUI/GAI, and ML-063-057 |
 | **Authority of any concrete path / command / workflow name** | **PROPOSED** until mounted-repo evidence confirms |
-| **Companion docs** | [`docs/runbooks/ui_VALIDATION.md`](./ui_VALIDATION.md) · [`docs/runbooks/governed_ai_VALIDATION.md`](./governed_ai_VALIDATION.md) · [`directory-rules.md`](../../directory-rules.md) |
+| **Companion docs** | [`docs/runbooks/ui_VALIDATION.md`](./ui_VALIDATION.md) · `docs/runbooks/governed_ai_VALIDATION.md` (not present) · [`directory-rules.md`](../doctrine/directory-rules.md) |
 
 ---
 
@@ -84,7 +85,7 @@ KFM's first CI pipeline is **no-network by default**. This runbook tells contrib
 
 - Live-source connector exercises, external endpoint smoke tests, package-version checks, runtime smoke tests, and any deployment surface. These belong in **separate, opt-in, source-activated jobs**, *after* this no-network suite is green. **CONFIRMED doctrine** (see §3); concrete job names are PROPOSED.
 - UI accessibility, e2e, and visual-trust runs — covered by [`docs/runbooks/ui_VALIDATION.md`](./ui_VALIDATION.md) (PROPOSED CREATE).
-- Governed AI / Focus Mode adapter validation — covered by [`docs/runbooks/governed_ai_VALIDATION.md`](./governed_ai_VALIDATION.md) (PROPOSED CREATE).
+- Governed AI / Focus Mode adapter validation — covered by `docs/runbooks/governed_ai_VALIDATION.md` (not present) (PROPOSED CREATE).
 - Rollback drills against a real release — covered by the rollback runbook (PROPOSED CREATE).
 
 > [!IMPORTANT]
@@ -103,7 +104,7 @@ A test run is "no-network" when **every** statement below is true:
 5. **No release publication** occurs. Promotion runs as a **dry-run**: it produces auditable gate outputs (`PolicyDecision`, `ValidationReport`, `RunReceipt`, dry-run `ReleaseManifest`) without flipping any artifact to `data/published/`.
 6. **No secrets** are required to make the suite pass. The suite is reproducible on a developer laptop and on a clean CI runner with the same code.
 
-The first implementation **MAY** be entirely no-network and deterministic; this is explicitly endorsed as the starting posture for watchers and source-driven pipelines (see ML-063-057 in [`Master_MapLibre_Components-Functions-Features.pdf`](../../Master_MapLibre_Components-Functions-Features_compressed.pdf), §U).
+The first implementation **MAY** be entirely no-network and deterministic; this is explicitly endorsed as the starting posture for watchers and source-driven pipelines (see ML-063-057 in `Master_MapLibre_Components-Functions-Features.pdf` (not present), §U).
 
 ---
 
@@ -349,14 +350,14 @@ Items that this runbook cannot resolve without mounted-repo evidence:
 
 ## 14 · Related docs
 
-- [`directory-rules.md`](../../directory-rules.md) — Authority for `docs/runbooks/` and the test/fixture homes.
-- [`docs/adr/ADR-0001-schema-home.md`](../adr/ADR-0001-schema-home.md) — Schema-home rule referenced throughout (**PROPOSED** path).
+- [`directory-rules.md`](../doctrine/directory-rules.md) — Authority for `docs/runbooks/` and the test/fixture homes.
+- `docs/adr/ADR-0001-schema-home.md` (not present) — Schema-home rule referenced throughout (**PROPOSED** path).
 - [`docs/runbooks/ui_VALIDATION.md`](./ui_VALIDATION.md) — UI validation, accessibility, contract, e2e smoke (**PROPOSED CREATE**).
 - [`docs/runbooks/ui_LOCAL_DEV.md`](./ui_LOCAL_DEV.md) — Local UI setup and mock fixture runbook (**PROPOSED CREATE**).
 - [`docs/runbooks/ui_ROLLBACK.md`](./ui_ROLLBACK.md) — UI rollback, feature flag, schema deprecation (**PROPOSED CREATE**).
-- [`docs/runbooks/governed_ai_LOCAL_DEV.md`](./governed_ai_LOCAL_DEV.md) — MockAdapter + provider-adapter local dev (**PROPOSED CREATE**).
-- [`docs/runbooks/governed_ai_VALIDATION.md`](./governed_ai_VALIDATION.md) — Focus Mode evidence / citation / policy validation (**PROPOSED CREATE**).
-- [`docs/runbooks/governed_ai_ROLLBACK.md`](./governed_ai_ROLLBACK.md) — AI adapter rollback and kill switch (**PROPOSED CREATE**).
+- `docs/runbooks/governed_ai_LOCAL_DEV.md` (not present) — MockAdapter + provider-adapter local dev (**PROPOSED CREATE**).
+- `docs/runbooks/governed_ai_VALIDATION.md` (not present) — Focus Mode evidence / citation / policy validation (**PROPOSED CREATE**).
+- `docs/runbooks/governed_ai_ROLLBACK.md` (not present) — AI adapter rollback and kill switch (**PROPOSED CREATE**).
 - [`contracts/OBJECT_MAP.md`](../../contracts/OBJECT_MAP.md) — DTO ↔ schema ↔ fixture crosswalk (**PROPOSED CREATE**).
 - [`docs/standards/CANONICALIZATION.md`](../standards/CANONICALIZATION.md) — JCS vs URDNA2015 decision matrix (**PROPOSED CREATE**, per C1-02 / C8-05).
 - [`docs/standards/RUN_RECEIPT.md`](../standards/RUN_RECEIPT.md) — Canonical receipt fields and validation (**PROPOSED CREATE**, per C1-01).
@@ -498,6 +499,6 @@ Pair every `fixtures/valid/<name>.json` with a sibling `fixtures/invalid/<name>.
 
 ---
 
-**Related runbooks:** [`ui_VALIDATION.md`](./ui_VALIDATION.md) · [`ui_LOCAL_DEV.md`](./ui_LOCAL_DEV.md) · [`ui_ROLLBACK.md`](./ui_ROLLBACK.md) · [`governed_ai_VALIDATION.md`](./governed_ai_VALIDATION.md) · [`governed_ai_LOCAL_DEV.md`](./governed_ai_LOCAL_DEV.md) · [`governed_ai_ROLLBACK.md`](./governed_ai_ROLLBACK.md)
+**Related runbooks:** [`ui_VALIDATION.md`](./ui_VALIDATION.md) · [`ui_LOCAL_DEV.md`](./ui_LOCAL_DEV.md) · [`ui_ROLLBACK.md`](./ui_ROLLBACK.md) · `governed_ai_VALIDATION.md` (not present) · `governed_ai_LOCAL_DEV.md` (not present) · `governed_ai_ROLLBACK.md` (not present)
 
 **Last updated:** 2026-05-12 · [⬆ Back to top](#-no-network-test-runbook)

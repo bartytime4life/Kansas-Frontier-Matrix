@@ -8,19 +8,7 @@ owners: <flora domain steward> · <UI/AI steward>
 created: 2026-05-16
 updated: 2026-06-03
 policy_label: public
-related:
-  - ai-build-operating-contract.md                 # CONFIRMED canonical operating contract (CONTRACT_VERSION 3.0.0)
-  - directory-rules.md                             # CONFIRMED path authority (§6.4, §7.4, §11 v1.3 sole-renderer, §12, §13)
-  - docs/domains/flora/README.md                   # NEEDS VERIFICATION
-  - docs/domains/flora/IDENTITY_MODEL.md           # companion identity charter (mirrors envelope + object-family decisions)
-  - docs/architecture/trust-membrane.md            # NEEDS VERIFICATION
-  - docs/architecture/maplibre-3d.md               # CONFIRMED authored; sole-renderer doctrine (renderer-decision ADR PROPOSED)
-  - docs/standards/PROV.md                         # NEEDS VERIFICATION
-  - docs/standards/PMTILES.md                      # NEEDS VERIFICATION
-  - schemas/contracts/v1/map/                       # PROPOSED cross-cutting map-contract home (LayerManifest, StyleManifest, …)
-  - schemas/contracts/v1/ui/                        # PROPOSED cross-cutting UI-contract home (EvidenceDrawerPayload, MapContextEnvelope)
-  - schemas/contracts/v1/flora/                      # PROPOSED Flora object-family schema home (Encyclopedia §7.6)
-  - policy/sensitivity/flora/                        # CONFIRMED Flora sensitivity-policy home (Encyclopedia §7.6 / Atlas Ch. 24.13)
+related: []
 tags: [kfm, flora, map, ui, contracts, governed-ai, evidence-drawer, focus-mode]
 notes:
   # CONTRACT_VERSION pin: this doc is doctrine-adjacent; it tracks ai-build-operating-contract.md v3.0.0.
@@ -29,6 +17,9 @@ notes:
   # Renderer doctrine corrected to v1.3 sole-renderer (MapLibre via packages/maplibre-runtime/); Cesium is removed doctrine. Renderer-decision ADR is PROPOSED (number pending; OPEN-DR-10).
   # Runtime shape aligned to RuntimeResponseEnvelope (contract §8); bespoke FloraDecisionEnvelope flagged CONFLICTED / migration-tracked.
   # All path and route claims are PROPOSED / NEEDS VERIFICATION until verified against a mounted repo.
+owning_root: docs/
+responsibility: "Documentation for Flora · Map UI Contracts; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌿 Flora · Map UI Contracts
@@ -664,9 +655,9 @@ This document is done enough to enter the repository when:
 
 > Links are repo-relative. Targets marked **TODO** / **NEEDS VERIFICATION** are placeholders pending verification of the mounted layout.
 
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"` *(authored)*
-- [`directory-rules.md`](../../../directory-rules.md) — placement authority (§6.4/§7.4 schema home, §11 sole-renderer, §12 Domain Placement Law, §13 anti-patterns) *(authored)*
-- [`docs/architecture/maplibre-3d.md`](../../architecture/maplibre-3d.md) — sole-renderer doctrine; renderer-decision ADR text *(authored; ADR PROPOSED)*
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"` *(authored)*
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — placement authority (§6.4/§7.4 schema home, §11 sole-renderer, §12 Domain Placement Law, §13 anti-patterns) *(authored)*
+- `docs/architecture/maplibre-3d.md` (not present) — sole-renderer doctrine; renderer-decision ADR text *(authored; ADR PROPOSED)*
 - [`docs/domains/flora/README.md`](./README.md) — Flora domain README *(NEEDS VERIFICATION)*
 - [`docs/domains/flora/IDENTITY_MODEL.md`](./IDENTITY_MODEL.md) — Flora identity charter (envelope + object-family decisions mirror this doc)
 - `docs/domains/flora/SENSITIVITY_POLICY.md` — **TODO**; Flora sensitivity tiers and review process

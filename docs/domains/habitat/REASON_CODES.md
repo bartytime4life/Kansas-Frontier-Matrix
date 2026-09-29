@@ -18,7 +18,7 @@ related:
   - docs/standards/PROV.md
   - control_plane/policy_gate_register.yaml
   - control_plane/release_state_register.yaml
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, habitat, reason-codes, policy, deny, abstain, quarantine, governance]
 notes:
   - "Reason-code catalog localizes the Atlas §24.6.3 master gate-failure reason codes and the §24.3 finite-outcome classes to the Habitat lane."
@@ -26,6 +26,9 @@ notes:
   - "Habitat-local reason codes (JOIN_SENSITIVE_OCCURRENCE, MODEL_LABEL_COLLAPSE, etc.) are PROPOSED extensions of the master catalog."
   - "Path uses the Directory Rules §12 segment form (docs/domains/habitat/); Atlas §24.13 flat-form drift is tracked in the lane README (HAB-V-009)."
   - "CONTRACT_VERSION = \"3.0.0\""
+owning_root: docs/
+responsibility: "Documentation for Habitat Domain — Reason Code Catalog; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -392,7 +395,7 @@ This document is done enough to enter the repository when:
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance vocabulary for receipts that carry codes.
 - [`control_plane/policy_gate_register.yaml`](../../../control_plane/policy_gate_register.yaml) — operational registry for these codes *(NEEDS VERIFICATION)*.
 - [`control_plane/release_state_register.yaml`](../../../control_plane/release_state_register.yaml) — release-state vocabulary referenced by `HOLD` outcomes *(NEEDS VERIFICATION)*.
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
 
 ---
 

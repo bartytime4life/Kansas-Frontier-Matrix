@@ -12,9 +12,7 @@ related:
   - docs/sources/catalog/familysearch/README.md
   - docs/sources/catalog/familysearch.md
   - docs/sources/catalog/README.md
-  - docs/domains/people-genealogy-dna-land/README.md
   - docs/doctrine/directory-rules.md
-  - data/registry/sources/people-genealogy-dna-land/
   - policy/genealogy/publication.rego
   - schemas/contracts/v1/source/source-descriptor.schema.json
 tags: [kfm, docs, sources, catalog, familysearch, family-tree, genealogy, dom-people, candidate, c9-02]
@@ -23,6 +21,9 @@ notes:
   - "Doctrinal subtlety: Family Tree records are **community-contributed candidate hypotheses**, not observations. Their SourceDescriptor carries `source_role: candidate` with `role_candidate_disposition: pending` by default. PUBLISHED edge is forbidden until `merged` AND corroborated by an `observation`-role source (per KFM-P1-PROG-0007 and Pass-23 source-role rules)."
   - "Catalog profile note: Family Tree records are person-graph nodes (CIDOC-CRM E21 / DOM-PEOPLE object families), not spatiotemporal assets. STAC may not be the primary catalog profile; CIDOC-CRM projection in `data/catalog/domain/people-genealogy-dna-land/` is. Person events (E5) with date + place MAY surface as STAC Items, but this is OPEN — see OPEN-FT-02."
   - "Sibling-link placements (`./README.md`, `../IDENTITY.md`, `../RIGHTS-AND-SENSITIVITY-MAP.md`, `../_examples/`, `./historical-records.md`) are PROPOSED only."
+owning_root: docs/
+responsibility: "Documentation for FamilySearch Family Tree; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌳 FamilySearch Family Tree
@@ -46,7 +47,7 @@ notes:
 **Last reviewed:** 2026-05-21
 
 > [!IMPORTANT]
-> **Family Tree records are candidates, not observations.** Per the source-role enum (KFM-P1-PROG-0007) and the Pass-23 source-role rules table, *"Administrative compilation cited as observation → DENY publication of compilation as observed event timeline."* Family Tree person records, relationship assertions, and tree-derived claims **MUST NOT** appear on a PUBLISHED edge until two conditions are met: (1) `role_candidate_disposition: merged`, and (2) a corroborating `observation`-role source (e.g., an indexed historical record from [`historical-records.md`](./historical-records.md)) is bound to the merged record. Every public surface that renders a tree-derived claim without these two conditions is a doctrinal failure.
+> **Family Tree records are candidates, not observations.** Per the source-role enum (KFM-P1-PROG-0007) and the Pass-23 source-role rules table, *"Administrative compilation cited as observation → DENY publication of compilation as observed event timeline."* Family Tree person records, relationship assertions, and tree-derived claims **MUST NOT** appear on a PUBLISHED edge until two conditions are met: (1) `role_candidate_disposition: merged`, and (2) a corroborating `observation`-role source (e.g., an indexed historical record from `historical-records.md` (not present)) is bound to the merged record. Every public surface that renders a tree-derived claim without these two conditions is a doctrinal failure.
 
 ---
 
@@ -204,7 +205,7 @@ flowchart LR
 
 ## Source authority
 
-The authoritative SourceDescriptor lives in [`data/registry/sources/people-genealogy-dna-land/`](../../../../data/registry/sources/people-genealogy-dna-land/) per **ADR-0001** and Directory Rules §7.4. **Do not duplicate** descriptor fields here.
+The authoritative SourceDescriptor lives in `data/registry/sources/people-genealogy-dna-land/` (not present) per **ADR-0001** and Directory Rules §7.4. **Do not duplicate** descriptor fields here.
 
 | Field on the descriptor | Where defined | Why it is **not** restated here |
 |---|---|---|
@@ -444,7 +445,7 @@ The Pass-23 carry-forward (KFM-P1-IDEA-0033, PROPOSED) reinforces the C9 stance:
   - [`pipelines/normalize/`](../../../../pipelines/normalize/) — GEDCOM-X → CIDOC-CRM projection; date-qualifier normalization; place anchoring.
   - [`pipelines/validate/`](../../../../pipelines/validate/) — `source_role = candidate` enforcement; living-person guard; disposition tracking.
   - [`pipelines/catalog/`](../../../../pipelines/catalog/) — CIDOC-CRM + PROV-O emission; conditional STAC emission for E5 Events (OPEN-FT-02).
-- **Pipeline spec:** [`pipeline_specs/people-genealogy-dna-land/`](../../../../pipeline_specs/people-genealogy-dna-land/) (PROPOSED).
+- **Pipeline spec:** `pipeline_specs/people-genealogy-dna-land/` (not present) (PROPOSED).
 - **Policy:** [`policy/genealogy/publication.rego`](../../../../policy/genealogy/publication.rego) (PROPOSED, draft outlined in New-Ideas packet).
 
 > [!WARNING]
@@ -504,19 +505,19 @@ See [`_examples/`](../_examples/) for the minimal CIDOC-CRM projection + Evidenc
 
 - [`docs/sources/catalog/familysearch/README.md`](./README.md) — `familysearch` family landing page (PROPOSED).
 - [`docs/sources/catalog/familysearch.md`](../familysearch.md) — **Parent FamilySearch source catalog entry** (standard doc; covers OAuth2, GA4GH overlay, full receipt envelope, retention, vendor risk).
-- [`docs/sources/catalog/familysearch/historical-records.md`](./historical-records.md) — Sibling product: indexed historical record images (`source_role: observation`; the corroborating-evidence side of merge gates) — PROPOSED placement.
+- `docs/sources/catalog/familysearch/historical-records.md` (not present) — Sibling product: indexed historical record images (`source_role: observation`; the corroborating-evidence side of merge gates) — PROPOSED placement.
 - [`docs/sources/catalog/README.md`](../../README.md) — Sources catalog index (PROPOSED).
 - [`docs/sources/catalog/familysearch/IDENTITY.md`](../IDENTITY.md) — Collection-id and namespace conventions (PROPOSED placement).
 - [`docs/sources/catalog/familysearch/RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) — Family-level rights map (PROPOSED placement).
 - [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Authority boundaries and schema-home discipline.
-- [`docs/domains/people-genealogy-dna-land/README.md`](../../../domains/people-genealogy-dna-land/README.md) — DOM-PEOPLE domain doctrine.
-- [`docs/standards/CIDOC_CRM_PROFILE.md`](../../../standards/CIDOC_CRM_PROFILE.md) — KFM CRM application profile (PROPOSED).
+- `docs/domains/people-genealogy-dna-land/README.md` (not present) — DOM-PEOPLE domain doctrine.
+- `docs/standards/CIDOC_CRM_PROFILE.md` (not present) — KFM CRM application profile (PROPOSED).
 - [`docs/standards/DUO_MAPPING.md`](../../../standards/DUO_MAPPING.md) — DUO ↔ FamilySearch scope mapping (PROPOSED).
-- [`docs/policy/familysearch-retention.md`](../../../policy/familysearch-retention.md) — Retention policy (PROPOSED).
-- [`data/registry/sources/people-genealogy-dna-land/`](../../../../data/registry/sources/people-genealogy-dna-land/) — Canonical SourceDescriptor home (ADR-0001).
+- `docs/policy/familysearch-retention.md` (not present) — Retention policy (PROPOSED).
+- `data/registry/sources/people-genealogy-dna-land/` (not present) — Canonical SourceDescriptor home (ADR-0001).
 - [`policy/genealogy/publication.rego`](../../../../policy/genealogy/publication.rego) — OPA publication gate (PROPOSED).
-- [`ai-build-operating-contract.md`](../../../../ai-build-operating-contract.md) — §34 RunReceipt / GENERATED_RECEIPT discipline (CONFIRMED).
-- [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — Schema-home rule.
+- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — §34 RunReceipt / GENERATED_RECEIPT discipline (CONFIRMED).
+- `docs/adr/ADR-0001-schema-home.md` (not present) — Schema-home rule.
 
 ---
 

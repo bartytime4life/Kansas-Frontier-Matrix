@@ -9,8 +9,6 @@ created: 2026-05-18
 updated: 2026-06-07
 policy_label: public
 related:
-  - ../../doctrine/directory-rules.md             # Directory Rules v1.3 — §12 Domain Placement Law (authority)
-  - ../../../ai-build-operating-contract.md         # CONTRACT_VERSION = "3.0.0"
   - ./README.md
   - ./DATA_LIFECYCLE.md
   - ./DEFINITION_OF_DONE.md
@@ -32,6 +30,9 @@ notes:
   - SLUG CONFLICT (OQ-01) has TWO axes — (a) slug `people-dna-land` (Directory Rules §12, line 928, CONFIRMED) vs `people` (Atlas §24.13 crosswalk, self-labeled PROPOSED); and (b) whether a `domains/` segment sits under schemas/contracts/v1/ and contracts/ (DIRRULES §12 = yes; Atlas §24.13 = no). Directory Rules §12 is canonical placement law and WINS; this plan uses the §12 form throughout.
   - CROSS-SIBLING NOTE: sibling docs DATA_LIFECYCLE/DEFINITION_OF_DONE/DNA_HANDLING/EXPANSION_* used the Atlas §24.13 `people` root form. That is the weaker authority; this plan flags the inconsistency for DRIFT_REGISTER reconciliation rather than silently re-flipping (OQ-01).
   - Consent terms are ConsentGrant + RevocationReceipt (Atlas ubiquitous language).
+owning_root: docs/
+responsibility: "Documentation for People / Genealogy / DNA / Land — File System Plan; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # People / Genealogy / DNA / Land — File System Plan
@@ -564,7 +565,7 @@ For any PR that proposes, creates, moves, or renames a People/DNA/Land file:
 <!-- Placeholders preserved where target docs are PROPOSED. -->
 
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules v1.3; placement authority and lifecycle invariant. **Authoritative.**
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract v3.0 (`CONTRACT_VERSION = "3.0.0"`).
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract v3.0 (`CONTRACT_VERSION = "3.0.0"`).
 - [`./README.md`](./README.md) — People/DNA/Land domain landing page. **PROPOSED / TODO.**
 - [`./DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — lifecycle, tiers, receipts (sibling).
 - [`./DEFINITION_OF_DONE.md`](./DEFINITION_OF_DONE.md) — promotion-readiness checklist (sibling).
@@ -578,7 +579,7 @@ For any PR that proposes, creates, moves, or renames a People/DNA/Land file:
 - [`docs/domains/settlements-infrastructure/FILE_SYSTEM_PLAN.md`](../settlements-infrastructure/FILE_SYSTEM_PLAN.md) — adjacent lane (residence, cemetery, court, township). **TODO** if absent.
 - [`docs/domains/agriculture/FILE_SYSTEM_PLAN.md`](../agriculture/FILE_SYSTEM_PLAN.md) — adjacent lane (farm/operator privacy, private-join denial). **PROPOSED.**
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — contract vs schema vs policy boundary. **PROPOSED home.**
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — schema home convention. **PROPOSED home.**
+- `docs/adr/ADR-0001-schema-home.md` (not present) — schema home convention. **PROPOSED home.**
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — where mounted-repo vs plan conflicts (incl. OQ-01 slug divergence) get recorded.
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — `NEEDS VERIFICATION` items from §12.
 

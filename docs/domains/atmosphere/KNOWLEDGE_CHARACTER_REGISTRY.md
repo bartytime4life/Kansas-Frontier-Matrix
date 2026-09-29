@@ -8,15 +8,7 @@ owners: DOM-AIR steward + Docs steward (PLACEHOLDER — NEEDS VERIFICATION)
 created: 2026-05-29
 updated: 2026-05-29
 policy_label: public
-related:
-  - docs/domains/atmosphere/KNOWLEDGE_CHARACTERS.md  # CANONICAL prose explainer for this vocabulary
-  - docs/domains/atmosphere/IDENTITY_MODEL.md         # companion — identity view
-  - docs/domains/atmosphere/FILE_SYSTEM_PLAN.md       # companion — placement view
-  - docs/domains/atmosphere/EXPANSION_BACKLOG.md      # companion — candidate register
-  - docs/doctrine/directory-rules.md                  # CONFIRMED — this project
-  - docs/registers/DRIFT_REGISTER.md                  # receives the naming-collision drift entry
-  - docs/adr/ADR-0001-schema-home.md                  # CONFIRMED — cited by Directory Rules
-  - ai-build-operating-contract.md                    # CONFIRMED — operating contract
+related: []
 tags: [kfm, atmosphere, air, knowledge-character, registry, controlled-vocabulary, governance, doctrine]
 notes:
   # NAMING COLLISION (CONFIRMED in this session): sibling docs reference BOTH this filename and KNOWLEDGE_CHARACTERS.md for the same vocabulary. This file does NOT duplicate the prose; it is a controlled-vocabulary registry surface that defers all explanation to KNOWLEDGE_CHARACTERS.md.
@@ -25,6 +17,9 @@ notes:
   # Registry home (data/registry/ vs control_plane/) is ADR-class (ADR-S-03) — this docs-lane file is the human-readable index, not the machine artifact.
   # CONTRACT_VERSION = "3.0.0" (doctrine-adjacent doc).
   # Meta Block v2 rule: no nested HTML comments inside this block; '#' annotations only.
+owning_root: docs/
+responsibility: "Documentation for Atmosphere — Knowledge Character Registry; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Atmosphere — Knowledge Character Registry
@@ -185,8 +180,8 @@ This document is done enough to enter the repository when:
 - [`docs/domains/atmosphere/README.md`](./README.md) — Atmosphere lane overview *(PROPOSED)*
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules §13.1 (parallel-home anti-pattern), §2.5 (drift handling) *(CONFIRMED)*
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — receives the OQ-REG-01 naming-collision entry *(PROPOSED)*
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — default schema home *(CONFIRMED)*
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract *(CONFIRMED — `CONTRACT_VERSION = "3.0.0"`)*
+- `docs/adr/ADR-0001-schema-home.md` (not present) — default schema home *(CONFIRMED)*
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract *(CONFIRMED — `CONTRACT_VERSION = "3.0.0"`)*
 
 External (doctrinal) — names only; not links:
 

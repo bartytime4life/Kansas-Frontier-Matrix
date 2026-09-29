@@ -15,13 +15,16 @@ related:
   - docs/domains/fauna/SENSITIVITY.md
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
   - docs/standards/PROV.md
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, fauna, lifecycle, governance, sensitivity]
 notes:
   - CONTRACT_VERSION = "3.0.0".
   - Implementation-layer paths are PROPOSED pending mounted-repo verification.
   - Aligns Fauna lane to RAW -> WORK/QUARANTINE -> PROCESSED -> CATALOG/TRIPLET -> PUBLISHED.
   - v2 reconciles runtime-envelope naming to RuntimeResponseEnvelope (DecisionEnvelope migration, CONFLICTED until ADR).
+owning_root: docs/
+responsibility: "Documentation for Fauna Data Lifecycle; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🦌 Fauna — Data Lifecycle
@@ -517,7 +520,7 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — TODO link target; canonical lifecycle invariant.
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — TODO link target; placement protocol and Domain Placement Law (§12).
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — TODO link target; public clients consume governed APIs only.
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — TODO link target; `CONTRACT_VERSION = "3.0.0"`; finite-outcome and `RuntimeResponseEnvelope` definitions.
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — TODO link target; `CONTRACT_VERSION = "3.0.0"`; finite-outcome and `RuntimeResponseEnvelope` definitions.
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance standards profile (`PROV.md` vs `PROVENANCE.md` filename open item — NEEDS VERIFICATION).
 
 </details>

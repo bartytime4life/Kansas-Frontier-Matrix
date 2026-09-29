@@ -10,10 +10,9 @@ updated: 2026-05-29
 policy_label: public
 related:
   - docs/doctrine/directory-rules.md
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
   - docs/domains/fauna/README.md
   - docs/domains/README.md
-  - docs/adr/ADR-0001-schema-home.md
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
   - docs/runbooks/fauna/ROLLBACK_RUNBOOK.md
   - docs/registers/VERIFICATION_BACKLOG.md
@@ -26,6 +25,9 @@ notes:
   - connectors/ is organized by SOURCE, not by domain — Directory Rules §4 Step 3 omits a connectors/<domain> segment. See OQ-FAUNA-02.
   - Sensitive-lane discipline (nests, dens, roosts, hibernacula, spawning) governs path placement, not just policy.
   - Meta Block v2 carries no nested HTML comments; inline annotations use # only.
+owning_root: docs/
+responsibility: "Documentation for Fauna — Canonical Paths Register; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Fauna — Canonical Paths Register
@@ -637,7 +639,7 @@ docs/architecture/sensitivity.md                # cross-domain sensitivity doctr
 
 ### Footer
 
-**Related docs:** [`directory-rules.md`](../../doctrine/directory-rules.md) · [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) · [`docs/domains/fauna/README.md`](./README.md) · [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) · [`docs/runbooks/fauna/ROLLBACK_RUNBOOK.md`](../../runbooks/fauna/ROLLBACK_RUNBOOK.md) · [`ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md)
+**Related docs:** [`directory-rules.md`](../../doctrine/directory-rules.md) · [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) · [`docs/domains/fauna/README.md`](./README.md) · [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) · [`docs/runbooks/fauna/ROLLBACK_RUNBOOK.md`](../../runbooks/fauna/ROLLBACK_RUNBOOK.md) · `ADR-0001-schema-home.md` (not present)
 
 **Last updated:** 2026-05-29 · **Version:** v1 · **Status:** draft · **`CONTRACT_VERSION = "3.0.0"`**
 

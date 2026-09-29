@@ -10,7 +10,7 @@ updated: 2026-05-28
 policy_label: public
 contract_version: "3.0.0"
 related:
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/domains/atmosphere/README.md
   - docs/domains/atmosphere/CANONICAL_PATHS.md
@@ -25,6 +25,9 @@ notes:
   - Specializes Atlas v1.1 §24.13 (Atlas↔Dossier↔Root) and §24.14 (Object Family × Domain) for Atmosphere/Air.
   - Atlas crosswalk uses segment `air`; Directory Rules §12 uses `atmosphere`. Segment choice is ADR-class — see §3.
   - Repo not mounted; all path-shaped claims PROPOSED until verified.
+owning_root: docs/
+responsibility: "Documentation for Atmosphere / Air — Crosswalk; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Atmosphere / Air — Crosswalk
@@ -55,14 +58,14 @@ notes:
 1. [Purpose](#1-purpose)
 2. [Canonical row (Atlas ↔ Dossier ↔ Root)](#2-canonical-row-atlas--dossier--root)
 3. [Segment crosswalk: `atmosphere` vs `air`](#3-segment-crosswalk-atmosphere-vs-air)
-4. [Responsibility-root crosswalk](#4-responsibilityroot-crosswalk)
-5. [Object-family crosswalk (own / cite / sensitivity)](#5-objectfamily-crosswalk-own--cite--sensitivity)
-6. [Knowledge-character ↔ source-role ↔ object crosswalk](#6-knowledgecharacter--sourcerole--object-crosswalk)
-7. [Cross-lane relation crosswalk](#7-crosslane-relation-crosswalk)
+4. [Responsibility-root crosswalk](#4-responsibility-root-crosswalk)
+5. [Object-family crosswalk (own / cite / sensitivity)](#5-object-family-crosswalk-own--cite--sensitivity)
+6. [Knowledge-character ↔ source-role ↔ object crosswalk](#6-knowledge-character--source-role--object-crosswalk)
+7. [Cross-lane relation crosswalk](#7-cross-lane-relation-crosswalk)
 8. [Sensitivity / rights tier crosswalk (T0–T4)](#8-sensitivity--rights-tier-crosswalk-t0t4)
-9. [Decision-outcome and surface crosswalk](#9-decisionoutcome-and-surface-crosswalk)
+9. [Decision-outcome and surface crosswalk](#9-decision-outcome-and-surface-crosswalk)
 10. [External standards crosswalk (ISO 19115 / DCAT / STAC / PROV)](#10-external-standards-crosswalk-iso-19115--dcat--stac--prov)
-11. [Open-ADR crosswalk](#11-openadr-crosswalk)
+11. [Open-ADR crosswalk](#11-open-adr-crosswalk)
 12. [Open questions register](#12-open-questions-register)
 13. [Open verification backlog](#13-open-verification-backlog)
 14. [Changelog](#14-changelog)
@@ -85,7 +88,7 @@ It also threads the related registers (§24.1 source roles, §24.5 sensitivity t
 > [!NOTE]
 > Every implementation-layer path on this page is **PROPOSED**. No repository is mounted in this session. This crosswalk is the doctrinal mapping, not an inventory of files that currently exist. A row moves from PROPOSED to CONFIRMED only against mounted-repo evidence.
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -100,7 +103,7 @@ The Atmosphere/Air row of the §24.13 crosswalk, as carried in the Encyclopedia 
 > [!WARNING]
 > **The canonical crosswalk uses the segment `air`, not `atmosphere`.** The Atlas §24.13 row and the Encyclopedia §7.1 map both render Atmosphere/Air's responsibility root as `schemas/contracts/v1/air/` and `contracts/air/`. Directory Rules §12 enumerates the domain segment as `atmosphere`. The doc-side path supplied for this file uses `atmosphere`. These three forms are an **ADR-class** divergence (§3). This document presents both and does not silently pick one.
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -130,7 +133,7 @@ flowchart TD
 
 **Posture pending ADR.** This crosswalk records the segment **as each source actually uses it** — `atmosphere/` for docs paths, `air/` for the schema/contract responsibility root — rather than forcing one form. Contributors should log the divergence in `docs/registers/DRIFT_REGISTER.md` and not create new files under both segments simultaneously. See §11 (OQ-AIR-XW-01).
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -153,7 +156,7 @@ The Atmosphere/Air lane across responsibility roots. Schema/contract roots follo
 > [!NOTE]
 > The schema/contract `air` segment and the data/docs `atmosphere` segment are presented as the sources state them. Whether `policy/` and `connectors/` follow `air` or `atmosphere` is **NEEDS VERIFICATION** — the Atlas crosswalk only pins schema/contract; the rest is inferred from the §12 lane pattern. This is the heart of the segment ADR (§3).
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -192,7 +195,7 @@ Atmosphere/Air also **cites** (does not own) cross-cutting families:
 > [!CAUTION]
 > **A sensitivity default of T0 is not a license to expose precise geometry.** Where an Atmosphere object joins living-person, infrastructure-precision, or culturally restricted geometry (e.g., a low-population station at a private facility), the **most restrictive applicable tier governs** and the record is generalized or redacted with a `RedactionReceipt` before publication. The T0 defaults above are for the open, non-joined case.
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -217,7 +220,7 @@ This is the anti-collapse heart of the domain: each knowledge character maps to 
 > [!CAUTION]
 > **Promotion never upgrades source role or knowledge character.** A `LOW_COST_SENSOR` reading does not become an `OBSERVED_SENSOR` reference measurement by passing validation; an `ATMOSPHERIC_MODEL_FIELD` does not become an `OBSERVED_SENSOR` by being published. Both are set at admission and preserved (Atlas §24.1).
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -236,7 +239,7 @@ The §24.4 Cross-Lane Relation Atlas row for Atmosphere/Air (Atlas Ch. 11 §F). 
 > [!IMPORTANT]
 > Cross-lane joins are inference-risk multipliers. ADR-S-14 (Cross-lane join policy) governs which joins require steward review, which are denied, which are open. Until accepted, joins touching sensitive lanes (Biodiversity, People/DNA, Archaeology) fail closed.
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -255,7 +258,7 @@ The §24.5 Sensitivity / Rights Tier Reference applied to Atmosphere/Air. Tiers 
 > [!NOTE]
 > Tier labels T0–T4 are the scheme proposed in Atlas §24.5; their exact definitions are ADR-S-05 (NEEDS VERIFICATION). The Atmosphere/Air mapping above is PROPOSED and should be confirmed against the accepted tier scheme and the domain policy bundle.
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -273,7 +276,7 @@ The §24.3 Decision Outcome Envelope Reference applied to Atmosphere/Air governe
 | Release queue | `ReleaseManifest` | ALLOW / HOLD / DENY / ERROR |
 | Correction / rollback | `CorrectionNotice` / `RollbackCard` | ACCEPTED / HOLD / DENY / ERROR |
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -298,7 +301,7 @@ How Atmosphere/Air catalog records map to external metadata standards (detail in
 > [!IMPORTANT]
 > **STAC for spatiotemporal, DCAT for everything else**, with a bridge that mints a DCAT mirror of every STAC Collection (the corpus disposition). ISO 19115 is a crosswalk target for portals that expect it; whether KFM generates ISO 19115 for Atmosphere records or only STAC/DCAT is **NEEDS VERIFICATION**. External standards inform discovery; they never outrank the `EvidenceBundle` or the trust membrane.
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -316,7 +319,7 @@ Atmosphere/Air's intersections with the §24.12 Master Open-ADR Backlog. These a
 | ADR-S-14 | Cross-lane join policy | Atmosphere ↔ Biodiversity/Hazards/Agriculture/Hydrology joins. |
 | (new) | Atmosphere segment canonicalization | `atmosphere/` vs `air/` (§3). |
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -363,7 +366,7 @@ This document is done enough to enter the repository when:
 - a `GENERATED_RECEIPT.json` is wired into CI for this artifact;
 - future changes follow the operating contract's §37 lifecycle.
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -371,7 +374,7 @@ This document is done enough to enter the repository when:
 
 > Placeholder links — verify paths against mounted repo before merging.
 
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED present in project.)*
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED present in project.)*
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — placement law §12; ADR-class rule §2.4(5); conflict rule §2.5. *(CONFIRMED present in project.)*
 - [`docs/domains/atmosphere/README.md`](./README.md) — domain landing page. *(TODO.)*
 - [`docs/domains/atmosphere/CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) — lane registry; segment ADR posture. *(PROPOSED.)*
@@ -385,4 +388,4 @@ This document is done enough to enter the repository when:
 
 <sub>Atmosphere / Air — Crosswalk · status `draft` · version `v1-draft` · Atlas Ch. 11 · dossier `[DOM-AIR]` · CONTRACT_VERSION `3.0.0` · last updated 2026-05-28 · authority PROPOSED — navigational, not authoritative; the `EvidenceBundle` and governing dossiers govern. Segment `atmosphere`/`air` is ADR-class.</sub>
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)

@@ -11,7 +11,7 @@ policy_label: public
 contract_version: "3.0.0"
 related:
   - docs/doctrine/directory-rules.md
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
   - docs/domains/fauna/README.md
   - docs/domains/fauna/IDENTITY_MODEL.md
   - docs/domains/fauna/MAP_UI_CONTRACTS.md
@@ -26,6 +26,9 @@ notes:
   - "Atlas internal inconsistency: §7.B ownership enumerates 14 families and omits MonitoringEvent; §7.C ubiquitous language lists MonitoringEvent as a CONFIRMED term; the cross-domain core-families index lists only 12 (drops Invasive Species Record and Redaction Receipt). Reconciled here as CONFLICTED, see §3 and §6."
   - "All repo paths PROPOSED until verified against a mounted repo."
   - "This file is the OBJECTS reference the Missing-or-Planned register calls OBJECT_FAMILIES.md; filename reconciled to OBJECTS.md — see Changelog."
+owning_root: docs/
+responsibility: "Documentation for Fauna — Object Families; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🦌 Fauna — Object Families
@@ -425,7 +428,7 @@ This document is done enough to enter the repository when:
 - [`docs/domains/fauna/MAP_UI_CONTRACTS.md`](./MAP_UI_CONTRACTS.md) — how these families render and resolve at the Map UI seam. *(PROPOSED — companion)*
 - [`docs/domains/fauna/MISSING_OR_PLANNED_FILES.md`](./MISSING_OR_PLANNED_FILES.md) — where each family's contract / schema / test is expected to land. *(PROPOSED — companion)*
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law. *(CONFIRMED)*
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED)*
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED)*
 - `contracts/domains/fauna/` — per-family semantic specs. *(PROPOSED)*
 - `schemas/contracts/v1/domains/fauna/` — per-family JSON Schema. *(PROPOSED)*
 - `policy/sensitivity/fauna/` — sensitivity classes and geoprivacy transform rules. *(PROPOSED)*

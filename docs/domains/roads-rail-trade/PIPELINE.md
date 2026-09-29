@@ -8,9 +8,12 @@ owners: TODO-roads-rail-domain-steward
 created: 2026-06-07
 updated: 2026-06-07
 policy_label: public
-related: [docs/domains/roads-rail-trade/OBJECT_FAMILIES.md, docs/domains/roads-rail-trade/README.md, pipeline_specs/roads-rail-trade/, pipelines/domains/, schemas/contracts/v1/domains/roads-rail/, policy/sensitivity/roads-rail/, release/candidates/roads-rail-trade/, ai-build-operating-contract.md]
+related: [docs/domains/roads-rail-trade/OBJECT_FAMILIES.md, docs/domains/roads-rail-trade/README.md, pipeline_specs/roads-rail-trade/, pipelines/domains/, release/candidates/roads-rail-trade/, ../../doctrine/ai-build-operating-contract.md]
 tags: [kfm]
 notes: [CONTRACT_VERSION = "3.0.0" pinned; lifecycle and gate doctrine grounded in Atlas Ch.13 §H, Atlas Ch.24.6, Build Manual §6.1/§6.2 Gates A-G, and repo guiding document data/ lifecycle paths; stage Status values are PROPOSED lane application of CONFIRMED doctrine; route names and schema bodies NEEDS VERIFICATION; lane slug roads-rail-trade confirmed for docs/pipelines/pipeline_specs, roads-rail used for schemas/contracts per Atlas crosswalk - ADR candidate]
+owning_root: docs/
+responsibility: "Documentation for Roads, Rail & Trade Routes — Pipeline (RAW → PUBLISHED); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -313,8 +316,8 @@ This document is done enough to enter the repository when:
 - [`docs/domains/roads-rail-trade/OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) — object-family reference
 - [`docs/domains/roads-rail-trade/README.md`](./README.md) — lane overview *(TODO: verify exists)*
 - [`pipeline_specs/roads-rail-trade/`](../../../pipeline_specs/roads-rail-trade/) — declarative pipeline specs *(PROPOSED presence)*
-- [`schemas/contracts/v1/domains/roads-rail/`](../../../schemas/contracts/v1/domains/roads-rail/) — schema home *(PROPOSED)*
-- [`policy/sensitivity/roads-rail/`](../../../policy/sensitivity/roads-rail/) — sensitivity policy *(PROPOSED)*
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — `CONTRACT_VERSION = "3.0.0"`
+- `schemas/contracts/v1/domains/roads-rail/` (not present) — schema home *(PROPOSED)*
+- `policy/sensitivity/roads-rail/` (not present) — sensitivity policy *(PROPOSED)*
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — `CONTRACT_VERSION = "3.0.0"`
 
 *Last updated: 2026-06-07 · [↑ Back to top](#top)*

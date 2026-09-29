@@ -10,24 +10,17 @@ updated: 2026-05-28
 policy_label: public
 contract_version: "3.0.0"
 related:
-  - kfm://doc/ai-build-operating-contract
   - kfm://doc/directory-rules
-  - kfm://doc/domains/atmosphere/architecture
-  - kfm://doc/domains/atmosphere/canonical-paths
   - kfm://doc/domains/atmosphere/api-contracts
-  - kfm://doc/standards/STAC
-  - kfm://doc/standards/DCAT
-  - kfm://doc/standards/PROV
-  - kfm://doc/standards/ISO-19115
-  - kfm://doc/standards/PMTILES
-  - kfm://doc/standards/OGC-API-TILES
-  - kfm://doc/standards/OAI-PMH
 tags: [kfm, atmosphere, air, catalog, stac, dcat, prov, catalog-closure, discovery]
 notes:
   - CONTRACT_VERSION pinned to 3.0.0 per ai-build-operating-contract.md.
   - Catalog index is a CATALOG/TRIPLET-phase navigational artifact; it is not a release authority.
   - All implementation paths and record counts are PROPOSED pending mounted-repo verification.
   - Domain segment (`atmosphere/` vs `air/`) is ADR-class — see Canonical Paths §2.
+owning_root: docs/
+responsibility: "Documentation for Atmosphere — Catalog Index; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Atmosphere — Catalog Index
@@ -61,8 +54,8 @@ notes:
 5. [Catalog homes (paths)](#5-catalog-homes-paths)
 6. [STAC / DCAT / PROV crosswalk for Atmosphere](#6-stac--dcat--prov-crosswalk-for-atmosphere)
 7. [Layer / collection index (by viewing product)](#7-layer--collection-index-by-viewing-product)
-8. [Object-family → catalog-record map](#8-objectfamily--catalogrecord-map)
-9. [Source-role and sensitivity in the catalog](#9-sourcerole-and-sensitivity-in-the-catalog)
+8. [Object-family → catalog-record map](#8-object-family--catalog-record-map)
+9. [Source-role and sensitivity in the catalog](#9-source-role-and-sensitivity-in-the-catalog)
 10. [Catalog QA and validators](#10-catalog-qa-and-validators)
 11. [How to register a new Atmosphere record](#11-how-to-register-a-new-atmosphere-record)
 12. [Open questions register](#12-open-questions-register)
@@ -86,7 +79,7 @@ It does **not** define object meaning (`contracts/`), object shape (`schemas/`),
 
 The Atmosphere domain catalogs *air observations, AQI reports, regulatory archives, low-cost sensors, model fields, remote-sensing masks, climate/anomaly context, fusion products, meteorological support, and advisories* (Atlas v1.0 Ch. 11 §A) — each carrying its source role and knowledge character through to the catalog record.
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -118,7 +111,7 @@ flowchart LR
 > [!CAUTION]
 > A catalog record is **not** a release. Discovery indexing does not grant public exposure. An Atmosphere STAC item can exist in `data/catalog/domain/atmosphere/` while the underlying layer remains unpublished; only a `ReleaseManifest` moves it to PUBLISHED. Promotion is a governed state transition, not a file move (Directory Rules §9.1).
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -140,7 +133,7 @@ flowchart LR
 > [!NOTE]
 > Catalog closure is the **final discoverability and accountability gate before publication**. This index lists records that have, or are expected to have, passed it. Any record listed without a resolvable `EvidenceBundle`, `PolicyDecision`, and release/rollback pointer is marked PROPOSED and is not a publication candidate.
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -160,7 +153,7 @@ The Atmosphere catalog uses the KFM-wide profile set. STAC carries spatiotempora
 > [!TIP]
 > **Catalog writers emit DCAT, STAC, and PROV together.** Per the catalog-closure-writers pattern, each Atmosphere catalog entry SHOULD carry dataset DOI, harvest date, dataset version, license, `rightsHolder`, `datasetID`, and `EvidenceBundle` references across the STAC/DCAT/PROV triple — so a record is discoverable in a STAC browser, an open-data portal (DCAT), and a provenance graph (PROV) without re-deriving any field.
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -184,7 +177,7 @@ data/registry/sources/atmosphere/        # SourceDescriptor entries
 > [!NOTE]
 > Whether STAC/DCAT/PROV are sub-laned by domain (`data/catalog/stac/atmosphere/`) or held in a flat catalog with a `domain` property is **NEEDS VERIFICATION** against the mounted `data/catalog/` tree. The `data/catalog/domain/atmosphere/` home for domain catalog records is the form the Directory Rules `data/` tree shows; the per-profile sub-lanes above are PROPOSED.
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -247,7 +240,7 @@ The fields below are the **PROPOSED** crosswalk a catalog writer fills for an At
 
 </details>
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -272,7 +265,7 @@ The Atmosphere domain's viewing products (Atlas v1.0 Ch. 11 §G, PROPOSED) each 
 
 The cross-cutting viewing products (Evidence Drawer, time-aware state, trust badges, sensitivity-redacted view, correction/stale-state view, governed Focus Mode) are CONFIRMED doctrine and apply to every collection above; they are not themselves catalog records.
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -301,7 +294,7 @@ Each CONFIRMED Atmosphere object family (Atlas v1.0 Ch. 11 §B/§E) produces cat
 > [!NOTE]
 > The six time facets (source, observed, valid, retrieval, release, correction) stay distinct in the catalog record where material (CONFIRMED). A STAC item that collapses observed-time and valid-time into one `datetime` fails the temporal-logic validator.
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -320,7 +313,7 @@ Every Atmosphere catalog record carries its **source role** (`observed` / `regul
 > [!CAUTION]
 > **Sensitive geometry is generalized or redacted before it reaches the catalog.** Where an Atmosphere record joins living-person, infrastructure-precision, or culturally restricted geometry, the catalog record MUST reference a `RedactionReceipt` and expose only the generalized form. Exact restricted geometry never appears in a public-bound catalog record. When rights, sensitivity, or source role is unresolved, the record stays in quarantine and is not indexed for release.
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -343,7 +336,7 @@ Every Atmosphere catalog record carries its **source role** (`observed` / `regul
 > [!TIP]
 > The catalog QA result SHOULD surface as a CI artifact for PR review (missing license / providers / extensions, broken links, JSON errors, warn/fail outcomes), so a reviewer sees catalog health before approving a release candidate.
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -363,7 +356,7 @@ The protocol below mirrors catalog closure (§3). All steps are PROPOSED workflo
 > [!IMPORTANT]
 > Registering a catalog record is **not** publishing. It is the closure gate that *makes a record eligible* for release. The watcher-as-non-publisher invariant still holds: catalog writers and watchers emit records and candidates; they do not publish.
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -412,7 +405,7 @@ This document is done enough to enter the repository when:
 - a `GENERATED_RECEIPT.json` is wired into CI for this artifact;
 - future changes follow the operating contract's §37 lifecycle.
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -420,8 +413,8 @@ This document is done enough to enter the repository when:
 
 > Placeholder links — verify paths against mounted repo before merging.
 
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED present in project.)*
-- [`directory-rules.md`](../../../directory-rules.md) — lifecycle (§9.1), release split (§9.2), placement law (§12). *(CONFIRMED present in project.)*
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED present in project.)*
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — lifecycle (§9.1), release split (§9.2), placement law (§12). *(CONFIRMED present in project.)*
 - [`docs/domains/atmosphere/ARCHITECTURE.md`](./ARCHITECTURE.md) — domain architecture. *(PROPOSED.)*
 - [`docs/domains/atmosphere/CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) — lane registry; segment ADR posture. *(PROPOSED.)*
 - [`docs/domains/atmosphere/API_CONTRACTS.md`](./API_CONTRACTS.md) — governed API + Evidence Drawer surfaces. *(PROPOSED.)*
@@ -438,4 +431,4 @@ This document is done enough to enter the repository when:
 
 <sub>Atmosphere — Catalog Index · status `draft` · version `v1` · phase CATALOG/TRIPLET · CONTRACT_VERSION `3.0.0` · last updated 2026-05-28 · authority PROPOSED (verify against mounted repo, accepted ADRs, and `schemas/contracts/v1/`). Navigational, not authoritative — the `EvidenceBundle` governs.</sub>
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)

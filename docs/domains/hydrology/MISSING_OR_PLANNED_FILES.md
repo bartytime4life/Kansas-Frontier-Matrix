@@ -10,8 +10,8 @@ updated: 2026-06-06
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
-  - ai-build-operating-contract.md
-  - directory-rules.md
+  - ../../doctrine/ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/domains/hydrology/README.md
@@ -26,6 +26,9 @@ notes:
   - Per §15, a folder lacking a contract-conformant README is a DRIFT CANDIDATE, not confirmed MISSING, until the repo is inspected.
   - Crosswalk validator home is CONFLICTED (ADR-S-CWV-01); SourceDescriptor schema home schemas/contracts/v1/source/ (source/ vs sources/ CONFLICTED).
   - OBJECT_MAP vs OBJECT_FAMILIES filename drift resolved in favor of OBJECT_FAMILIES.md (sibling-doc convention). See Changelog.
+owning_root: docs/
+responsibility: "Documentation for Hydrology — Missing or Planned Files; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌊 Hydrology — Missing or Planned Files
@@ -361,8 +364,8 @@ Mirrors the hydrology backlog (Atlas v1.1 §4 N) into a checkable register.
 
 ## Related docs
 
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract; `CONTRACT_VERSION = "3.0.0"`.
-- [`directory-rules.md`](../../../directory-rules.md) — Domain Placement Law (§12), Required README Contract (§15), Path-Validation Checklist (§16), OPEN-DR-01/02.
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract; `CONTRACT_VERSION = "3.0.0"`.
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — Domain Placement Law (§12), Required README Contract (§15), Path-Validation Checklist (§16), OPEN-DR-01/02.
 - [`docs/domains/hydrology/FILE_SYSTEM_PLAN.md`](./FILE_SYSTEM_PLAN.md) — **per-root placement contract; the authoritative file list this tracker defers to.**
 - [`docs/domains/hydrology/INDEX.md`](./INDEX.md) — lane navigation hub (live document map).
 - [`docs/domains/hydrology/README.md`](./README.md) — lane landing page (§15 README).

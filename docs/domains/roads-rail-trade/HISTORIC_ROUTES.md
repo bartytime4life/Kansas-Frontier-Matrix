@@ -17,7 +17,6 @@ related:
   - docs/domains/roads-rail-trade/EXPANSION_BACKLOG.md
   - docs/domains/archaeology/SENSITIVITY.md
   - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf
-  - ai-build-operating-contract.md            # CONTRACT_VERSION = "3.0.0"
 tags: [kfm, domain, roads-rail-trade, transport, historic-routes, sensitivity, sovereignty, generalization, governance]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned; doctrine-adjacent standard doc on a SENSITIVE domain.
@@ -25,6 +24,9 @@ notes:
   - CONFIRMED doctrine - Indigenous trade and mobility corridors, oral history, treaty, cultural, and interpretive evidence default to steward review and generalized public geometry (Atlas Ch. 13.I).
   - NAMING CONFLICT - the Atlas owns-list (Ch. 13.B) spells the object "Historic Route" while ubiquitous language (Ch. 13.C) and viewing products (Ch. 13.G) spell it "Historic RouteClaim". Real intra-Atlas inconsistency tracked as OQ-RRT-HR-04; this doc uses "Historic RouteClaim" as the primary term and flags it.
   - All implementation-layer paths, schema names, validator IDs, and the H3/distance generalization parameters are PROPOSED; mounted-repo presence is NEEDS VERIFICATION.
+owning_root: docs/
+responsibility: "Documentation for Roads, Rail, and Trade — Historic Routes; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 # Roads, Rail, and Trade — Historic Routes
 
@@ -366,7 +368,7 @@ Placeholders below are PROPOSED targets. Mounted-repo presence is NEEDS VERIFICA
 - [`docs/domains/archaeology/SENSITIVITY.md`](../archaeology/SENSITIVITY.md) — the cultural-side sensitivity policy this lane consumes — TODO: NEEDS VERIFICATION.
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law.
 - [`docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf`](../../atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf) — Ch. 13 (Roads/Rail), Ch. 24.5 (tiers), Ch. 24.4.13 (Archaeology edges).
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract; `CONTRACT_VERSION = "3.0.0"`; §23.2 sensitive-domain matrix.
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract; `CONTRACT_VERSION = "3.0.0"`; §23.2 sensitive-domain matrix.
 
 Atlas / corpus references (not repo paths):
 

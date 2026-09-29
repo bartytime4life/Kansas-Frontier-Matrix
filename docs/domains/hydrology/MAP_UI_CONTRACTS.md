@@ -10,14 +10,11 @@ updated: 2026-06-06
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
-  - ai-build-operating-contract.md
-  - directory-rules.md
-  - Master_MapLibre_Components-Functions-Features_v2_1_FULL.md
-  - docs/architecture/whole-ui-governed-ai-expansion.md
+  - ../../doctrine/ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md
   - docs/domains/hydrology/README.md
   - docs/domains/hydrology/INDEX.md
   - docs/domains/hydrology/DATA_LIFECYCLE.md
-  - docs/domains/hydrology/identity-model.md
   - docs/domains/hydrology/GLOSSARY.md
 tags: [kfm, hydrology, map, ui, contracts, governed-api, evidence, layer-manifest]
 notes:
@@ -26,6 +23,9 @@ notes:
   - NFHL role-separation is a CONFIRMED doctrinal invariant for this domain (Atlas §24.1.2).
   - SourceDescriptor schema home schemas/contracts/v1/source/source-descriptor.json (ADR-0001); source/ vs sources/ CONFLICTED.
   - v2 pins CONTRACT_VERSION, fixes doc_id to lane slug, reconciles the trust-state vocabulary, aligns finite-outcome sets, and adds companion cross-links. See Changelog (§18).
+owning_root: docs/
+responsibility: "Documentation for Hydrology — Map UI Contracts; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 💧 Hydrology — Map UI Contracts
@@ -74,7 +74,7 @@ notes:
 
 **CONFIRMED doctrine / PROPOSED implementation.** This document specifies the **map-UI-facing contract surface** for the Hydrology lane: which Hydrology objects may appear in the public map shell, in what shape they appear, what outcomes the governed API may return for them, what the renderer is permitted to do with them, and what guards prevent misuse. It is a **profile** that specializes the cross-cutting MapLibre object families — `LayerManifest`, `StyleManifest`, `TileArtifactManifest`, `MapReleaseManifest`, `EvidenceDrawerPayload`, `MapContextEnvelope`, `FocusModeRequest/Response`, `AIReceipt`, `CitationValidationReport`, `PolicyDecision` — for the Hydrology lane. [MAP-MASTER §7.M]
 
-It is a companion to [`INDEX.md`](./INDEX.md) (lane navigation), [`identity-model.md`](./identity-model.md) (feature identity), and [`DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) (gates). It is **not**:
+It is a companion to [`INDEX.md`](./INDEX.md) (lane navigation), `identity-model.md` (not present) (feature identity), and [`DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) (gates). It is **not**:
 
 - A connector or pipeline specification (see hydrology pipeline specs).
 - A schema home (schemas live under `schemas/contracts/v1/...`; PROPOSED).
@@ -295,7 +295,7 @@ When a user clicks (or keyboard-activates) a hydrology feature, the governed API
 
 | Field | Purpose | Hydrology-specific note |
 |---|---|---|
-| `feature_id` | Stable identifier for the clicked feature | Provider-based where possible (e.g., gauge `site_no`, HUC12 code, NHDPlus permanent identifier). Identity rule: see [`identity-model.md`](./identity-model.md). |
+| `feature_id` | Stable identifier for the clicked feature | Provider-based where possible (e.g., gauge `site_no`, HUC12 code, NHDPlus permanent identifier). Identity rule: see `identity-model.md` (not present). |
 | `layer_id` | The `LayerManifest` the feature belongs to | — |
 | `evidence_bundle_refs` | One or more `EvidenceBundle` IDs | Always required for consequential claims. |
 | `source_summary` | Source descriptor projection (name, role, authority, attribution) | Must name the source role. |
@@ -531,11 +531,11 @@ ADR-linked rows reference the open-ADR backlog (Atlas §24.12, Directory Rules �
 
 > Many of these are PROPOSED paths; replace with actual repo paths once verified. Inbound links from these docs SHOULD point to this contract.
 
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract; `CONTRACT_VERSION = "3.0.0"`
-- [`directory-rules.md`](../../../directory-rules.md) — placement law (§12), compatibility roots, OPEN-DR-01/03
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract; `CONTRACT_VERSION = "3.0.0"`
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — placement law (§12), compatibility roots, OPEN-DR-01/03
 - [`docs/domains/hydrology/INDEX.md`](./INDEX.md) — hydrology lane index (companion)
 - [`docs/domains/hydrology/README.md`](./README.md) — hydrology lane landing page (PROPOSED)
-- [`docs/domains/hydrology/identity-model.md`](./identity-model.md) — feature identity (companion)
+- `docs/domains/hydrology/identity-model.md` (not present) — feature identity (companion)
 - [`docs/domains/hydrology/DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — gates and lifecycle (companion)
 - [`docs/domains/hydrology/GLOSSARY.md`](./GLOSSARY.md) — ubiquitous-language glossary (companion)
 - `docs/architecture/map-shell.md` — map shell architecture (PROPOSED)
@@ -583,7 +583,7 @@ ADR-linked rows reference the open-ADR backlog (Atlas §24.12, Directory Rules �
 >
 > _**Authority basis.**_ Cross-cutting object families and the governed-API outcome envelope are **CONFIRMED doctrine** in the KFM corpus (MapLibre Master §7.M, §10, §12–§13). Hydrology lane object definitions and NFHL source-role separation are **CONFIRMED doctrine** (Atlas §24.1.2). The trust-state enum is **CONFLICTED** (§10). All repo paths, route names, and schema homes named here are **PROPOSED** until verified against a mounted repository. Bend an invariant only via ADR.
 
-**Related:** [`directory-rules.md`](../../../directory-rules.md) · [`docs/domains/hydrology/INDEX.md`](./INDEX.md) · `docs/standards/MAP_TRUST_STATES.md` · [`docs/standards/PROV.md`](../../standards/PROV.md)
+**Related:** [`directory-rules.md`](../../doctrine/directory-rules.md) · [`docs/domains/hydrology/INDEX.md`](./INDEX.md) · `docs/standards/MAP_TRUST_STATES.md` · [`docs/standards/PROV.md`](../../standards/PROV.md)
 
 **Status:** draft · **Version:** v2 · **Contract:** `CONTRACT_VERSION = "3.0.0"` · **Last updated:** 2026-06-06 · **Maintainers:** hydrology lane steward, map shell owner, governance reviewer (placeholders) · **Review cadence:** quarterly or on any change to cross-cutting Map UI families.
 

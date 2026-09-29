@@ -14,13 +14,16 @@ related:
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/adr/
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, atmosphere, air, backlog, expansion, governance]
 notes:
   # Path PROPOSED per Directory Rules §12 (Domain Placement Law) and §4 (placement quick check).
   # Item statuses align with [DOM-AIR] and [ENCY] §7.9 doctrine; implementation maturity remains PROPOSED until a mounted-repo scan confirms.
   # Doctrine-adjacent doc: pinned CONTRACT_VERSION = "3.0.0".
   # Meta Block v2 rule: no nested HTML comments inside this block; '#' annotations only.
+owning_root: docs/
+responsibility: "Documentation for Atmosphere / Air — Expansion Backlog; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌬️ Atmosphere / Air — Expansion Backlog
@@ -559,7 +562,7 @@ This document is done enough to enter the repository when:
 - [`policy/domains/atmosphere/`](../../../policy/domains/atmosphere/) — proposed policy lane *(**TODO**)*
 - [`tests/domains/atmosphere/`](../../../tests/domains/atmosphere/) — proposed test lane *(**TODO**)*
 - [`data/registry/sources/atmosphere/`](../../../data/registry/sources/atmosphere/) — proposed source registry *(**TODO**)*
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract (`CONTRACT_VERSION = "3.0.0"`)
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract (`CONTRACT_VERSION = "3.0.0"`)
 
 External (doctrinal) — names only; not links:
 

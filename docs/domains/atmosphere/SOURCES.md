@@ -8,9 +8,12 @@ owners: KFM Atmosphere/Air domain stewards  # PLACEHOLDER — confirm steward ro
 created: 2026-05-29
 updated: 2026-05-29
 policy_label: public
-related: [ai-build-operating-contract.md, directory-rules.md, docs/domains/atmosphere/README.md, docs/sources/README.md, schemas/contracts/v1/source/source-descriptor.json]
+related: [../../doctrine/ai-build-operating-contract.md, ../../doctrine/directory-rules.md, docs/domains/atmosphere/README.md, docs/sources/README.md, schemas/contracts/v1/source/source-descriptor.json]
 tags: [kfm]
 notes: [CONTRACT_VERSION pinned 3.0.0; repo-state claims PROPOSED/NEEDS VERIFICATION pending mounted-repo inspection; placement vs docs/sources/ flagged OQ-AIR-SRC-01]
+owning_root: docs/
+responsibility: "Documentation for Atmosphere / Air — Source Families & Descriptors; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -293,7 +296,7 @@ This document is done enough to enter the repository when:
 
 ## Related docs
 
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — placement doctrine *(path PROPOSED — verify)*
 - [`docs/domains/atmosphere/README.md`](./README.md) — domain landing page *(NEEDS VERIFICATION)*
 - [`docs/sources/README.md`](../../sources/README.md) — global source-descriptor standards *(NEEDS VERIFICATION)*

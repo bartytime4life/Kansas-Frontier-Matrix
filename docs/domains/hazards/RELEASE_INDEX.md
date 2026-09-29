@@ -9,7 +9,7 @@ created: 2026-05-17
 updated: 2026-06-05
 policy_label: public
 related:
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
   - docs/domains/hazards/README.md
   - docs/domains/hazards/PUBLICATION_AND_BOUNDARY.md
   - docs/domains/hazards/PRESERVATION_MATRIX.md
@@ -34,6 +34,9 @@ notes:
   # Hazards is contextual / planning — NOT a life-safety alerting surface; alert authority is T4 forever (Atlas 24.5.2).
   # Most implementation claims are PROPOSED until repo evidence confirms them.
   # v2 aligns source-role vocabulary to the canonical seven-class enum (Atlas 24.1.1) and reconciles the lane tree to Directory Rules 9.1.
+owning_root: docs/
+responsibility: "Documentation for Hazards Release Index; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌪️ Hazards Release Index
@@ -659,7 +662,7 @@ A complete Hazards rollback drill (NEEDS VERIFICATION in CI) should:
 - [`docs/domains/hazards/PUBLICATION_AND_BOUNDARY.md`](./PUBLICATION_AND_BOUNDARY.md) — publication path + not-for-life-safety boundary (PROPOSED)
 - [`docs/domains/hazards/PRESERVATION_MATRIX.md`](./PRESERVATION_MATRIX.md) — preservation per lifecycle stage and tier (PROPOSED)
 - [`docs/domains/hazards/MISSING_OR_PLANNED_FILES.md`](./MISSING_OR_PLANNED_FILES.md) — lane planning inventory (PROPOSED)
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract (`CONTRACT_VERSION = "3.0.0"`)
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract (`CONTRACT_VERSION = "3.0.0"`)
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules (Domain Placement Law §12, `data/` §9.1, `release/` §9.2, anti-patterns §13)
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O profile *(see open naming question in §17)*
 - [`docs/standards/PMTILES.md`](../../standards/PMTILES.md) — PMTiles release discipline

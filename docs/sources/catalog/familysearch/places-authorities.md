@@ -14,10 +14,7 @@ related:
   - docs/sources/catalog/familysearch/historical-record-images.md
   - docs/sources/catalog/familysearch.md
   - docs/sources/catalog/README.md
-  - docs/sources/catalog/usgs/gnis.md
-  - docs/domains/people-genealogy-dna-land/README.md
   - docs/doctrine/directory-rules.md
-  - data/registry/sources/people-genealogy-dna-land/
   - schemas/contracts/v1/source/source-descriptor.schema.json
 tags: [kfm, docs, sources, catalog, familysearch, places, authorities, dom-people, context, c7-09, c9-06]
 notes:
@@ -25,6 +22,9 @@ notes:
   - "Doctrinal subtlety: this product is the **context-role / routing substrate** sibling to Family Tree (candidate) and Historical Record Images (observation). FamilySearch Places provides PLACE IDENTIFIERS used to anchor records, **NOT a primary place authority**. The canonical anchor ladder (per C7-09 expansion direction) is GNIS → TGN → KHRI → Wikidata; FamilySearch Places is a routing layer that helps locate where to anchor — like a place-side analog of COMID legacy_keys in hydrography."
   - "Doctrinal subtlety 2 — historical and Indigenous place names: C7-09 explicitly warns that 'exclusive reliance on GNIS encodes a colonial-era naming layer.' Pre-statehood places, Indigenous place names, ghost towns, and abandoned places route to TGN / KHRI / community authority — and may require CARE consideration (C15-01). See [Indigenous place names and CARE applicability](#indigenous-place-names-and-care-applicability)."
   - "Sibling-link placements (`./README.md`, `./family-tree.md`, `./historical-record-images.md`, `../IDENTITY.md`, `../RIGHTS-AND-SENSITIVITY-MAP.md`, `../_examples/`, `../usgs/gnis.md`) are PROPOSED only."
+owning_root: docs/
+responsibility: "Documentation for FamilySearch Places; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🗺️ FamilySearch Places
@@ -213,7 +213,7 @@ flowchart LR
 
 ## Source authority
 
-The authoritative SourceDescriptor for FamilySearch Places lives in [`data/registry/sources/people-genealogy-dna-land/`](../../../../data/registry/sources/people-genealogy-dna-land/) per **ADR-0001** and Directory Rules §7.4. **Do not duplicate** descriptor fields here.
+The authoritative SourceDescriptor for FamilySearch Places lives in `data/registry/sources/people-genealogy-dna-land/` (not present) per **ADR-0001** and Directory Rules §7.4. **Do not duplicate** descriptor fields here.
 
 Place-authority SourceDescriptors live alongside in their own files (PROPOSED placements):
 
@@ -491,16 +491,16 @@ Place identifiers are not timeless. A place name has a period of use; an adminis
 - **Connector:** [`connectors/familysearch/`](../../../../connectors/familysearch/) — OAuth2-gated fetch of Place records (typically as part of fetching the consuming Family Tree / Record Image).
 - **Adjacent connectors:**
   - [`connectors/usgs/`](../../../../connectors/usgs/) — GNIS authority feed.
-  - [`connectors/getty/`](../../../../connectors/getty/) (PROPOSED) — TGN authority feed.
-  - [`connectors/kshs/`](../../../../connectors/kshs/) (PROPOSED) — KHRI authority feed.
-  - [`connectors/wikidata/`](../../../../connectors/wikidata/) (PROPOSED) — Wikidata crosswalk substrate.
+  - `connectors/getty/` (not present) (PROPOSED) — TGN authority feed.
+  - `connectors/kshs/` (not present) (PROPOSED) — KHRI authority feed.
+  - `connectors/wikidata/` (not present) (PROPOSED) — Wikidata crosswalk substrate.
 - **Pipelines:**
   - [`pipelines/ingest/`](../../../../pipelines/ingest/) — RAW capture of FamilySearch Place records + per-authority snapshots.
   - [`pipelines/normalize/`](../../../../pipelines/normalize/) — Ladder execution; confidence scoring; verbatim preservation.
   - [`pipelines/validate/`](../../../../pipelines/validate/) — Coordinate validity, GeographyVersion pin, ladder-order discipline, curator-queue routing.
   - [`pipelines/catalog/`](../../../../pipelines/catalog/) — Crosswalk artifact emission; CIDOC-CRM E53 projection; PROV-O lineage.
-- **Pipeline spec:** [`pipeline_specs/people-genealogy-dna-land/`](../../../../pipeline_specs/people-genealogy-dna-land/) (PROPOSED).
-- **Crosswalk artifact:** [`data/crosswalks/places/`](../../../../data/crosswalks/places/) (PROPOSED placement; doctrinal analog of `data/spatial/comid_huc12/` per KFM-P5-PROG-0008).
+- **Pipeline spec:** `pipeline_specs/people-genealogy-dna-land/` (not present) (PROPOSED).
+- **Crosswalk artifact:** `data/crosswalks/places/` (not present) (PROPOSED placement; doctrinal analog of `data/spatial/comid_huc12/` per KFM-P5-PROG-0008).
 
 > [!WARNING]
 > Linked paths are PROPOSED placements consistent with the repository structure guide. Mounted-repo evidence has not been inspected in this session; every linked path is NEEDS VERIFICATION.
@@ -567,25 +567,25 @@ See [`_examples/`](../_examples/) for the minimal place-anchor decision record +
 - [`docs/sources/catalog/familysearch/family-tree.md`](./family-tree.md) — Sibling product: community-contributed tree nodes (`source_role: candidate`).
 - [`docs/sources/catalog/familysearch/historical-record-images.md`](./historical-record-images.md) — Sibling product: indexed historical record images (`source_role: observation`).
 - [`docs/sources/catalog/familysearch.md`](../familysearch.md) — **Parent FamilySearch source catalog entry** (standard doc; covers OAuth2, GA4GH overlay, full receipt envelope, retention, vendor risk).
-- [`docs/sources/catalog/usgs/gnis.md`](../usgs/gnis.md) — **USGS GNIS** product page (the canonical anchor authority for U.S. places; C7-09).
-- [`docs/sources/catalog/getty/tgn.md`](../getty/tgn.md) — Getty TGN product page (historical / vernacular / Indigenous places; C7-05) — PROPOSED placement.
-- [`docs/sources/catalog/kshs/khri.md`](../kshs/khri.md) — KHRI product page (Kansas historic resources; C7-10) — PROPOSED placement.
-- [`docs/sources/catalog/wikidata/`](../wikidata/) — Wikidata as crosswalk substrate (C7-01) — PROPOSED placement.
+- `docs/sources/catalog/usgs/gnis.md` (not present) — **USGS GNIS** product page (the canonical anchor authority for U.S. places; C7-09).
+- `docs/sources/catalog/getty/tgn.md` (not present) — Getty TGN product page (historical / vernacular / Indigenous places; C7-05) — PROPOSED placement.
+- `docs/sources/catalog/kshs/khri.md` (not present) — KHRI product page (Kansas historic resources; C7-10) — PROPOSED placement.
+- `docs/sources/catalog/wikidata/` (not present) — Wikidata as crosswalk substrate (C7-01) — PROPOSED placement.
 - [`docs/sources/catalog/README.md`](../../README.md) — Sources catalog index (PROPOSED).
 - [`docs/sources/catalog/familysearch/IDENTITY.md`](../IDENTITY.md) — Collection-id and namespace conventions (PROPOSED placement).
 - [`docs/sources/catalog/familysearch/RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) — Family-level rights map (PROPOSED placement).
 - [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Authority boundaries and schema-home discipline.
-- [`docs/domains/people-genealogy-dna-land/README.md`](../../../domains/people-genealogy-dna-land/README.md) — DOM-PEOPLE domain doctrine.
+- `docs/domains/people-genealogy-dna-land/README.md` (not present) — DOM-PEOPLE domain doctrine.
 - [`docs/domains/settlements-infrastructure/README.md`](../../../domains/settlements-infrastructure/README.md) — DOM-Settlements/Infrastructure doctrine (PROPOSED).
-- [`docs/domains/frontier-matrix/README.md`](../../../domains/frontier-matrix/README.md) — DOM-Frontier Matrix doctrine (PROPOSED; GeographyVersion + AdminBoundaryChange home).
-- [`docs/standards/CIDOC_CRM_PROFILE.md`](../../../standards/CIDOC_CRM_PROFILE.md) — KFM CRM application profile (PROPOSED).
-- [`docs/standards/PLACE_ANCHORING_LADDER.md`](../../../standards/PLACE_ANCHORING_LADDER.md) — Ladder discipline + smoke-test (PROPOSED per C7-09 expansion direction).
-- [`docs/standards/CARE_FAIR_PROFILE.md`](../../../standards/CARE_FAIR_PROFILE.md) — CARE / FAIR applicability profile (PROPOSED).
-- [`data/registry/sources/people-genealogy-dna-land/`](../../../../data/registry/sources/people-genealogy-dna-land/) — Canonical SourceDescriptor home (ADR-0001).
-- [`data/crosswalks/places/`](../../../../data/crosswalks/places/) — Place-anchor crosswalk artifact (PROPOSED placement).
+- `docs/domains/frontier-matrix/README.md` (not present) — DOM-Frontier Matrix doctrine (PROPOSED; GeographyVersion + AdminBoundaryChange home).
+- `docs/standards/CIDOC_CRM_PROFILE.md` (not present) — KFM CRM application profile (PROPOSED).
+- `docs/standards/PLACE_ANCHORING_LADDER.md` (not present) — Ladder discipline + smoke-test (PROPOSED per C7-09 expansion direction).
+- `docs/standards/CARE_FAIR_PROFILE.md` (not present) — CARE / FAIR applicability profile (PROPOSED).
+- `data/registry/sources/people-genealogy-dna-land/` (not present) — Canonical SourceDescriptor home (ADR-0001).
+- `data/crosswalks/places/` (not present) — Place-anchor crosswalk artifact (PROPOSED placement).
 - [`policy/genealogy/publication.rego`](../../../../policy/genealogy/publication.rego) — OPA publication gate (PROPOSED).
-- [`ai-build-operating-contract.md`](../../../../ai-build-operating-contract.md) — §34 RunReceipt / GENERATED_RECEIPT discipline (CONFIRMED).
-- [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — Schema-home rule.
+- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — §34 RunReceipt / GENERATED_RECEIPT discipline (CONFIRMED).
+- `docs/adr/ADR-0001-schema-home.md` (not present) — Schema-home rule.
 
 ---
 

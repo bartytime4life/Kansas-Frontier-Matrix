@@ -16,16 +16,18 @@ related:
   - docs/domains/habitat/CONTRACTS.md
   - docs/domains/fauna/FILE_SYSTEM_PLAN.md
   - docs/architecture/contract-schema-policy-split.md
-  - docs/architecture/habitat-fauna-thin-slice.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, habitat, directory, governance, placement, ddd]
 notes:
   - CONTRACT_VERSION = "3.0.0"
   - Specific paths are PROPOSED until verified against mounted-repo evidence.
   - Habitat × Fauna thin slice is the first proof-bearing lane.
   - "CONFLICTED schema-home: ADR-0001 OPEN per Atlas ADR-S-01 (confirm-or-amend; VB-11-01 NEEDS VERIFICATION); segmented .../domains/habitat/ (DIRRULES §12) vs flat .../habitat/ (Atlas §24.13) unresolved. See §1, §3."
+owning_root: docs/
+responsibility: "Documentation for Habitat Domain — File System Plan; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Habitat Domain — File System Plan
@@ -551,9 +553,9 @@ Use this list for any PR that adds, moves, or renames a file inside a Habitat la
 - [`docs/domains/fauna/FILE_SYSTEM_PLAN.md`](../fauna/FILE_SYSTEM_PLAN.md) — pairs with the Habitat × Fauna thin slice. **TODO** if absent.
 - [`docs/domains/flora/FILE_SYSTEM_PLAN.md`](../flora/FILE_SYSTEM_PLAN.md) — adjacent boundary. **TODO** if absent.
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — contract vs schema vs policy boundary. **PROPOSED home.**
-- [`docs/architecture/habitat-fauna-thin-slice.md`](../../architecture/habitat-fauna-thin-slice.md) — cross-lane thin-slice doctrine (corrected home, §8). **PROPOSED.**
+- `docs/architecture/habitat-fauna-thin-slice.md` (not present) — cross-lane thin-slice doctrine (corrected home, §8). **PROPOSED.**
 - [`docs/architecture/ecology-cross-domain.md`](../../architecture/ecology-cross-domain.md) — cross-domain ecology doctrine. **PROPOSED home.**
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law; §23.2 sensitive-domain matrix. **CONFIRMED** (`CONTRACT_VERSION = "3.0.0"`).
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law; §23.2 sensitive-domain matrix. **CONFIRMED** (`CONTRACT_VERSION = "3.0.0"`).
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — where mounted-repo vs plan conflicts get recorded (incl. the §3 schema-slug conflict).
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — `NEEDS VERIFICATION` items from §12.
 

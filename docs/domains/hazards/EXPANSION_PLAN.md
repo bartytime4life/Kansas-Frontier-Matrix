@@ -10,16 +10,11 @@ updated: 2026-06-05
 policy_label: public
 contract_version: "3.0.0"
 related:
-  - ai-build-operating-contract.md
-  - directory-rules.md
+  - ../../doctrine/ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/truth-posture.md
-  - docs/domains/hazards/README.md            # PROPOSED neighbor; NEEDS VERIFICATION
-  - docs/domains/hazards/DATA_LIFECYCLE.md     # sibling doc
-  - docs/domains/hazards/EXPANSION_BACKLOG.md  # sibling doc
-  - docs/domains/hydrology/README.md           # PROPOSED neighbor; NEEDS VERIFICATION
-  - docs/adr/ADR-0001-schema-home.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/registers/DRIFT_REGISTER.md
 tags: [kfm, hazards, domain, expansion, planning, governance]
@@ -29,6 +24,9 @@ notes:
   - apps/governed-api/ trust path is CONFIRMED at commit b6a279… per the Repository Structure Guiding Document.
   - Life-safety / not-emergency-alert boundary is a non-negotiable invariant for this lane.
   - v2 flags OQ-HAZ-EP-01 — operational_warning -> source_role mapping (observed vs context) is CONFLICTED pending ADR.
+owning_root: docs/
+responsibility: "Documentation for Hazards Domain — Expansion Plan; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Hazards Domain — Expansion Plan
@@ -640,7 +638,7 @@ Source: Atlas Appendix A; Encyclopedia glossary; Directory Rules §19 glossary.
 
 ---
 
-**Related docs:** [Directory Rules](../../../directory-rules.md) · [Hazards DATA_LIFECYCLE](./DATA_LIFECYCLE.md) · [Hazards EXPANSION_BACKLOG](./EXPANSION_BACKLOG.md) · [Verification backlog](../../registers/VERIFICATION_BACKLOG.md)
+**Related docs:** [Directory Rules](../../doctrine/directory-rules.md) · [Hazards DATA_LIFECYCLE](./DATA_LIFECYCLE.md) · [Hazards EXPANSION_BACKLOG](./EXPANSION_BACKLOG.md) · [Verification backlog](../../registers/VERIFICATION_BACKLOG.md)
 
 **Last updated:** 2026-06-05 · **Version:** v2 (draft) · **Contract:** `CONTRACT_VERSION = "3.0.0"`
 

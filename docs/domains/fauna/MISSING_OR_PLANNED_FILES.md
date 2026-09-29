@@ -11,7 +11,7 @@ policy_label: public
 contract_version: "3.0.0"
 related:
   - docs/doctrine/directory-rules.md
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
   - docs/domains/fauna/README.md
   - docs/domains/fauna/IDENTITY_MODEL.md
   - docs/domains/fauna/MAP_UI_CONTRACTS.md
@@ -29,6 +29,9 @@ notes:
   - "MonitoringEvent is CONFLICTED — it is NOT in the Atlas v1.1 Fauna ownership list (§B); see §5.1 and §6.1/§6.4/§6.5 caveats."
   - "FaunaDecisionEnvelope retired in favor of RuntimeResponseEnvelope; see §6.6."
   - Atlas §24.13 omits the `domains/` segment for contracts/ and schemas/; Directory Rules §6.3/§6.4 keep it and win (§2.1). See §6.4/§6.5 CONFLICTED notes.
+owning_root: docs/
+responsibility: "Documentation for Fauna — Missing or Planned Files Register; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🦌 Fauna — Missing or Planned Files Register
@@ -646,7 +649,7 @@ This register is done enough to enter the repository when:
 ## 12. Related docs
 
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — canonical placement law and lifecycle invariant. *(CONFIRMED)*
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED)*
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED)*
 - [`docs/domains/fauna/README.md`](./README.md) *(NEEDS VERIFICATION present)* — fauna domain dossier
 - [`docs/domains/fauna/IDENTITY_MODEL.md`](./IDENTITY_MODEL.md) *(PROPOSED — companion)* — fauna identity model
 - [`docs/domains/fauna/MAP_UI_CONTRACTS.md`](./MAP_UI_CONTRACTS.md) *(PROPOSED — companion)* — fauna × Map UI seam

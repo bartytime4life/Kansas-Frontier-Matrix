@@ -10,7 +10,7 @@ updated: 2026-05-28
 policy_label: public
 contract_version: "3.0.0"
 related:
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/trust-membrane.md
   - docs/architecture/contract-schema-policy-split.md
@@ -22,6 +22,9 @@ notes:
   - Repo not mounted in this session; all repo-shaped claims are PROPOSED.
   - Folder-name asymmetry: docs/domains/atmosphere/ vs schemas/contracts/v1/air/ — see §2.
   - CONTRACT_VERSION pinned to "3.0.0" per ai-build-operating-contract.md.
+owning_root: docs/
+responsibility: "Documentation for Atmosphere/Air — API & Contract Surfaces; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Atmosphere/Air — API & Contract Surfaces
@@ -54,17 +57,17 @@ notes:
 
 1. [Purpose](#1-purpose)
 2. [Repo fit and scope](#2-repo-fit-and-scope)
-3. [Trust-membrane preamble](#3-trustmembrane-preamble)
+3. [Trust-membrane preamble](#3-trust-membrane-preamble)
 4. [Atmosphere/Air API surface catalog](#4-atmosphereair-api-surface-catalog)
-5. [Finite-outcome envelope semantics](#5-finiteoutcome-envelope-semantics)
+5. [Finite-outcome envelope semantics](#5-finite-outcome-envelope-semantics)
 6. [Domain object families and ubiquitous language](#6-domain-object-families-and-ubiquitous-language)
 7. [Request/response DTO and schema families](#7-requestresponse-dto-and-schema-families)
-8. [Source-role anti-collapse (acute for this domain)](#8-sourcerole-anticollapse-acute-for-this-domain)
-9. [Cross-lane interactions](#9-crosslane-interactions)
+8. [Source-role anti-collapse (acute for this domain)](#8-source-role-anti-collapse-acute-for-this-domain)
+9. [Cross-lane interactions](#9-cross-lane-interactions)
 10. [Publication, correction, and rollback](#10-publication-correction-and-rollback)
 11. [Validators, tests, and fixtures](#11-validators-tests-and-fixtures)
 12. [Governed AI behavior on this domain](#12-governed-ai-behavior-on-this-domain)
-13. [End-to-end governed flow (diagram)](#13-endtoend-governed-flow-diagram)
+13. [End-to-end governed flow (diagram)](#13-end-to-end-governed-flow-diagram)
 14. [Open questions register](#14-open-questions-register)
 15. [Open verification backlog](#15-open-verification-backlog)
 16. [Changelog](#16-changelog)
@@ -120,7 +123,7 @@ It is a **navigational reference**, not authority. The canonical sources for any
 - Release manifests, rollback cards, correction notices — those live under `release/...`.
 - Pipeline definitions — `pipelines/domains/air/...` and `pipeline_specs/air/...` (PROPOSED).
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -151,7 +154,7 @@ Atmosphere/Air **inherits** the universal trust-membrane invariants and adds dom
 - **Low-cost sensors require caveats.** Public release of low-cost sensor data requires correction, caveats, confidence bounds, and limitations; release without these is a DENY.
 - **KFM is never an alert authority.** Atmosphere/Air surfaces MUST NOT substitute for NWS, EPA, or other authoritative real-time alerting; emergency-alerting replacement is a DENY at the AI surface and a HOLD or DENY at publication where the framing implies alert authority.
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -186,7 +189,7 @@ These surfaces are domain-agnostic governed APIs; Atmosphere/Air is one of the d
 > [!NOTE]
 > Route prefixes (`/api/v1/...`), domain segment naming (`atmosphere` vs `air`), and content-type negotiation are NOT asserted as repo facts. They are PROPOSED shapes pending verification. DTO names in the table above are pinned to the Atlas §20.3 wording; whether the mounted repo uses `DomainFeatureEnvelope` or a domain alias (`AtmosphereAirDecisionEnvelope`) is NEEDS VERIFICATION.
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -221,7 +224,7 @@ Aligned to Atlas §24.3.2. The forbidden-behavior column restates the master map
 | Review queue / steward console (U6) | ALLOW / RESTRICT / DENY / HOLD / ERROR | Mixing review and publication duties on the same actor when separation is required; bypassing logging. |
 | Correction / rollback (U7) | ACCEPTED / HOLD / DENY / ERROR | Accepting a correction without invalidating downstream derivatives; silent rollback without `RollbackCard`. |
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -272,7 +275,7 @@ The `LayerManifest` layer-class and the source-role guard type against these kno
 | `ALERT_AND_ADVISORY_CONTEXT` | advisory layers (context only; never alert authority) |
 | `NETWORK_AND_SITE_CONTEXT` | station / network roster layers |
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -386,7 +389,7 @@ PROPOSED schema homes (CONFIRMED doctrine for the universal shapes):
 
 </details>
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -433,7 +436,7 @@ PROPOSED schema home: `schemas/contracts/v1/source/source-descriptor.json` (defa
 | `role_synthetic_basis` | `source_role = synthetic` (MUST) | `{ method, inputs, reality_boundary_note_ref }`. Records what is and is not real in the carrier. |
 | `role_candidate_disposition` | `source_role = candidate` (MUST) | enum: `pending` / `merged` / `rejected` / `quarantined`. PUBLISHED edge forbidden until `merged`. |
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -449,7 +452,7 @@ Atmosphere/Air content frequently joins with adjacent domains. Every cross-lane 
 | Atmosphere/Air | **Biodiversity domains** (Habitat, Fauna, Flora) | Phenology, smoke, fire, drought stress. | Cross-lane joins MUST NOT expose sensitive locations from the biodiversity side. |
 | Atmosphere/Air | **Spatial Foundation** | Projection, clipping, generalization tolerances on time-aware overlays. | Overlay primitives are constrained by Spatial Foundation rules; Atmosphere/Air does not redefine reference systems. |
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -474,7 +477,7 @@ CONFIRMED doctrine / PROPOSED implementation (Atlas Ch. 11 §H/§M; Encyclopedia
 
 Atmosphere/Air publication requires a `ReleaseManifest`, a resolvable `EvidenceBundle`, validation/policy support, review state where required, a correction path, a stale-state rule, and a rollback target. The correction/rollback surface (U7) returns `ACCEPTED / HOLD / DENY / ERROR`; it MUST invalidate downstream derivatives on accepted correction and MUST NOT roll back silently without a `RollbackCard`. Separation-of-duties applies on release-significant lanes: the author of a release MUST NOT also approve it where separation is required (NEEDS VERIFICATION which Atmosphere/Air lanes carry that requirement — Q9).
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -517,7 +520,7 @@ The validator and test obligations below are **PROPOSED** (Atlas Ch. 11 §K plus
 > [!TIP]
 > **Negative fixtures matter as much as positive fixtures.** A `stale-source` fixture proves the surface ABSTAINS rather than serving a stale value. A `model-as-observed` fixture proves the validator denies the relabel. The trust posture is enforced by failing closed on the bad cases, not by passing on the good ones.
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -533,7 +536,7 @@ CONFIRMED doctrine / PROPOSED implementation: AI on Atmosphere/Air surfaces is *
 | **Receipt** | Emit `AIReceipt` and `RuntimeResponseEnvelope` with `outcome ∈ {ANSWER, ABSTAIN, DENY, ERROR}`, `evidence_refs`, `policy_decision`, and `citation_validation`. |
 | **Never** | Substitute generated language for `EvidenceBundle`; invent provenance; alter the governance posture of a feature; act as an alert authority. |
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -571,7 +574,7 @@ flowchart TD
 > [!NOTE]
 > **NEEDS VERIFICATION.** The exact step names, the placement of the citation check, the relationship between the feature resolver and the Evidence Drawer payload generator, and the wiring of Focus Mode to `AIReceipt` reflect doctrine, not mounted-repo evidence. Treat the diagram as a doctrinal flow, not as a route map.
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -623,7 +626,7 @@ This document is done enough to enter the repository when:
 - the `GENERATED_RECEIPT.json` (planned in Section 2 of the authoring response) is wired into CI;
 - future changes follow the operating contract's §37 lifecycle.
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)
 
 ---
 
@@ -631,7 +634,7 @@ This document is done enough to enter the repository when:
 
 > Placeholder links — verify paths against mounted repo before merging.
 
-- [AI Build Operating Contract](../../../ai-build-operating-contract.md) — `CONTRACT_VERSION = "3.0.0"`; canonical operating law.
+- [AI Build Operating Contract](../../doctrine/ai-build-operating-contract.md) — `CONTRACT_VERSION = "3.0.0"`; canonical operating law.
 - [Directory Rules](../../doctrine/directory-rules.md) — Domain Placement Law (§12), schema-home rule (§7.4).
 - [Trust Membrane](../../doctrine/trust-membrane.md) — `TODO` verify path.
 - [Lifecycle Law](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED governed transitions; `TODO` verify path.
@@ -644,10 +647,10 @@ This document is done enough to enter the repository when:
 - [Agriculture domain — cross-lane interactions](../agriculture/README.md) — `TODO`.
 - [Master API Surface Table (Atlas §20.3)](../../atlas/master-api-surface.md) — `TODO`.
 - [Master Source-Role Anti-Collapse Register (Atlas §24.1)](../../atlas/source-role-anti-collapse.md) — `TODO`.
-- [Master Decision Outcome Envelope Reference (Atlas §24.3)](../../atlas/decision-outcome-envelope.md) — `TODO`.
+- Master Decision Outcome Envelope Reference (Atlas §24.3) (not present) — `TODO`.
 
 ---
 
 <sub>Atmosphere/Air — API & Contract Surfaces · status `draft` · version `v1-draft` · CONTRACT_VERSION `3.0.0` · last updated 2026-05-28 · authority PROPOSED (verify against mounted repo, accepted ADRs, and `schemas/contracts/v1/`).</sub>
 
-[⬆ Back to top](#contents)
+[⬆ Back to top](#-contents)

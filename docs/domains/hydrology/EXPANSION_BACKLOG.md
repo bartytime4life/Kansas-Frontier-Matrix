@@ -10,8 +10,7 @@ updated: 2026-07-30
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
-  - ai-build-operating-contract.md            # canonical operating contract (CONTRACT_VERSION 3.0.0)
-  - directory-rules.md
+  - ../../doctrine/directory-rules.md
   - docs/domains/hydrology/README.md
   - docs/domains/hydrology/DATA_LIFECYCLE.md
   - docs/domains/README.md
@@ -30,6 +29,9 @@ notes:
   - "All implementation-maturity claims are PROPOSED or NEEDS VERIFICATION pending mounted-repo evidence (no repo mounted this session)."
   - "Sequencing recommendations are non-binding until ADR/steward review."
   - "v2 reconciles crosswalk validator placement (ADR-S-CWV-01), Pre-RAW lifecycle phase, runbook convention (ADR-S-13 / OPEN-DR-02), and CONTRACT_VERSION pin against Atlas v1.1 + Directory Rules + Operating Contract v3.0. See Changelog."
+owning_root: docs/
+responsibility: "Documentation for Hydrology Domain — Expansion Backlog; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Hydrology Domain — Expansion Backlog
@@ -421,8 +423,8 @@ These ideas surface in the project corpus but are **not** in scope for hydrology
 > [!NOTE]
 > Links are repository-relative. Targets marked **TODO** are referenced for completeness; the file may not yet exist and should be created or linked as the lane matures.
 
-- [Operating contract](../../../ai-build-operating-contract.md) — canonical; `CONTRACT_VERSION = "3.0.0"`
-- [Directory Rules](../../../directory-rules.md)
+- [Operating contract](../../doctrine/ai-build-operating-contract.md) — canonical; `CONTRACT_VERSION = "3.0.0"`
+- [Directory Rules](../../doctrine/directory-rules.md)
 - [Domain README — Hydrology](./README.md) — **TODO**
 - [Hydrology — Data Lifecycle](./DATA_LIFECYCLE.md) — companion lane doc
 - [Domain glossary — Hydrology](./GLOSSARY.md) — **TODO** (per HYD-M12)
