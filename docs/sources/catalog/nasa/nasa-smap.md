@@ -44,6 +44,8 @@ notes:
 
 **Status:** PROPOSED — scaffold; family is **beyond `directory-rules.md` §7.3** (see family README and OPEN-DSC-14). · **Family:** [`nasa`](./README.md) · **Owners:** `<PLACEHOLDER — Docs steward + Source steward for nasa>` · **Last reviewed:** 2026-05-22
 
+> **Implementation note — 2026-09-29:** The [owner-private Explorer](https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site) Site v112 displays NASA GIBS SPL4SMAU Version 8 daily 12:00 UTC modeled images for surface (0–5 cm), root zone (0–100 cm), and each uncertainty view. Its independent day selector uses the latest day shared by all four advertised views within the preceding 30 days. This Site-only visual connection is `EXTERNAL_CONTEXT_ONLY`: it does not implement the proposed acquisition, catalog, EvidenceBundle, promotion, or release paths below. Browser-visible raster proof was unavailable at deployment because the admin browser security check could not be verified; local backend checks returned PNG tiles for a Kansas sample in all four views. [NASA GIBS metadata](https://gibs.earthdata.nasa.gov/layer-metadata/v1.0/SMAP_L4_Analyzed_Surface_Soil_Moisture.json) · [NSIDC product guide](https://nsidc.org/data/spl4smau/versions/8).
+
 ---
 
 ## Contents

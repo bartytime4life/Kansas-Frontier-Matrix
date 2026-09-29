@@ -13,6 +13,7 @@ import { SourceQualityRow } from "./source-quality-row";
 import { sourceDownloadHref } from "./source-downloads";
 import { planOfficialRefresh } from "./official-refresh-plan";
 import { ArchiveDaySlider } from "./archive-day-slider";
+import { SoilMoistureControl } from "./soil-moisture-control";
 import { DataNotices, LayerSceneControls, RenderQualityControl } from "./map-toolbar";
 import { drawWindFlowCanvas, nearestWindFlowSample, windToCompass } from "./wind-arrow-canvas";
 import { applyTerrainReliefStyle, applyTopographicRasterDepth } from "./terrain-relief-style";
@@ -4758,6 +4759,7 @@ export default function Home() {
         });
         map.on("error", (event) => {
           const sourceId = (event as typeof event & { sourceId?: string }).sourceId;
+          if (sourceId === "external-nasa-smap-soil") return;
           // MapLibre error text can contain a provider URL or a query token.
           // Only the finite class and already registered source title enter UI state.
           const message = mapRuntimeErrorCode("event", sourceId);
@@ -7965,7 +7967,7 @@ export default function Home() {
               <div><span><small>SELECTED FEATURES</small><strong>{officialFeatureCount.toLocaleString("en-US")}</strong></span><span><small>SELECTED SOURCES</small><strong>{officialReadyCount}/{visibleOfficialCount} settled</strong></span><span><small>SELECTED RETRIEVAL</small><strong>{officialLatestRetrievedAt ? new Date(officialLatestRetrievedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "Not yet"}</strong></span></div>
               <nav aria-label="Official data actions"><button type="button" disabled={!buildYearCurrent || officialRefreshPlan.count === 0 || officialLoadingCount > 0} onClick={refreshVisibleOfficialContext}>{!buildYearCurrent ? "Rebuild required" : officialRefreshPlan.reason === "historical" ? `Held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : officialLoadingCount > 0 ? "Refreshing…" : `Refresh ${officialRefreshPlan.count} selected`}</button><button type="button" disabled={visibleOfficialCount === 0} onClick={hideAllOfficialContext}>Hide all</button></nav>
             </div>
-            <div className="official-context-list">{listedOfficialSources.map((source) => {
+            <div className="official-context-list"><SoilMoistureControl mapRef={mapRef} styleReady={styleReady} is2D={projection !== "globe" && scenePreset !== "elevation-3d"} />{listedOfficialSources.map((source) => {
               const state = officialStates[source.id];
               const heldAtFrame = officialVisibility[source.id] && !effectiveOfficialVisibility[source.id];
               const needsCloserView = officialVisibility[source.id] && !heldAtFrame && state !== "error" && view.zoom < TERRAIN_DISPLAY_MIN_ZOOM && (source.id === "usgs-3dep-hillshade" || source.id === "usgs-3dep-slope");
