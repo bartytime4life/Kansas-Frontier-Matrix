@@ -1,0 +1,84 @@
+{
+  "receipt_id": "genrec-inherited-ci-workflow-repairs-20260929",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/identity-token-validation.yml",
+    ".github/workflows/maplibre-perf-governance.yml",
+    ".github/workflows/pm25-sensor-colocation-manifest.yml",
+    ".github/workflows/public-map-service-slo-assessment.yml",
+    ".github/workflows/receipt-proof-pairing-assessment.yml",
+    ".github/workflows/synthetic-release-catalog-closure.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/identity-token-validation.yml": "sha256:d12ed708f1d9eb58f36a46d85dbb1cbaf0ce0ab2735cb8fba1af6fcd996b1dec",
+    ".github/workflows/maplibre-perf-governance.yml": "sha256:759a54a79a2352707ee3cff37419647c590eecd2aafdb25637bb738fbc8f6e06",
+    ".github/workflows/pm25-sensor-colocation-manifest.yml": "sha256:1cb46f5b2282dbdc1ae4667242ef331841782d0f6bdfa2121477d24cbdfe1966",
+    ".github/workflows/public-map-service-slo-assessment.yml": "sha256:e7d62a543e2e8d06b023b7d56a0afcd0e1f39d9f1fcffc1267a80417c8164e70",
+    ".github/workflows/receipt-proof-pairing-assessment.yml": "sha256:b59c2210dee924c12f7af6ec77a7ecb978fb47e52052bd9df223160926a033aa",
+    ".github/workflows/synthetic-release-catalog-closure.yml": "sha256:2c73944c44e02fc5d8d3790013055bb8425f48b7199869ffa09950c41627eeef"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:b16a9e8c0b4515d32f4c04911a3f6d03be26599e9f1425757bacf921a8eec75b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/d4ceddc4c65aafaf24439ab2cc4db11e5bef1258",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4797#issuecomment-5893716853",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4797#issuecomment-5893782056"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/identity-token-validation.yml": "CONFIRMED",
+    ".github/workflows/maplibre-perf-governance.yml": "CONFIRMED",
+    ".github/workflows/pm25-sensor-colocation-manifest.yml": "CONFIRMED",
+    ".github/workflows/public-map-service-slo-assessment.yml": "CONFIRMED",
+    ".github/workflows/receipt-proof-pairing-assessment.yml": "CONFIRMED",
+    ".github/workflows/synthetic-release-catalog-closure.yml": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Reproduce then fix",
+      "outcome": "PASS",
+      "reason": "Each failure reproduces on main: the MapLibre gate expects vitest 5.0.0 in both the manifest check and the pnpm importer marker while packages/maplibre and pnpm-lock.yaml pin 5.0.2; trust-spine-fixture-slice exits 2 in a depth-1 clone; four receipts report ARTIFACT_DIGEST_MISMATCH against current bytes but validate with --artifact-git-ref at the commit that last updated each receipt."
+    },
+    {
+      "gate": "Workflow guardrails and replay",
+      "outcome": "PASS",
+      "reason": "make workflow-security PASS (489 workflows); install_python_ci.py verify-workflows PASS at the pinned migration head; tests/ci/test_install_python_ci.py PASS; replayed run steps of the six edited workflows and python-dependency-lock report no failures."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/d4ceddc4c65aafaf24439ab2cc4db11e5bef1258"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-29T16:00:35Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 4797
+  },
+  "notes": "window-ordering-lint-profile is not repaired: genrec-pass18-window-ordering-lint-20260811.json records a sha256 for contracts/validation/window_ordering_lint_profile.md that matches no committed version of that file, so no --artifact-git-ref can validate it. Correcting that receipt is left to the owner."
+}

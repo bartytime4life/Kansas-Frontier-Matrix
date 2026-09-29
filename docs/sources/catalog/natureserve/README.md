@@ -24,7 +24,6 @@ related:
   - schemas/contracts/v1/source/source_descriptor.schema.json
   - policy/sensitivity/
   - policy/rights/
-  - control_plane/registries/source_authority_register.yaml
 tags: [kfm, source-profile, biodiversity, fauna, flora, conservation-status, natureserve, restricted-use, authority, sensitive-data, sensitivity-driver]
 notes:
   - "NatureServe products are restricted-by-default per corpus (KFM Flora watcher card tensions, KFM-P25-PROG-0023). Full licensing-and-distribution control is not fully specified in doctrine and MUST be settled by rights-steward review before any connector activation. CONFIRMED tension; PROPOSED admission posture."
@@ -32,6 +31,9 @@ notes:
   - "Filename casing follows the lowercase convention used for prior-session-authored source profiles (ebird.md, inaturalist.md); contrast with docs/standards/ which uses UPPERCASE-WITH-HYPHENS (§6.1.a). docs/sources/ filename convention NEEDS VERIFICATION against a per-root README or ADR."
   - "Canonical SourceDescriptor schema home is schemas/contracts/v1/source/<filename> per Directory Rules §7.4 and ADR-0001. The corpus references both source-descriptor.json (hyphen) and source_descriptor.schema.json (underscore + .schema.json suffix) at different points; the .schema.json form is used here for consistency with KFM's JSON Schema naming. NEEDS VERIFICATION against mounted-repo evidence."
   - "All repo-state claims herein remain PROPOSED until verified against mounted-repo evidence; no repository was mounted in this session."
+owning_root: docs/
+responsibility: "Documentation for NatureServe — Source Profile; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌿 NatureServe — Source Profile
@@ -426,17 +428,17 @@ NatureServe is one node in a small network of conservation-status and biodiversi
 > Targets are placeholders or PROPOSED until mounted-repo verification. Files marked **CONFIRMED authored (prior session)** were authored in earlier work but remain NEEDS VERIFICATION in repo.
 
 - [`docs/sources/README.md`](../README.md) — source-catalog landing (TODO author)
-- [`docs/sources/catalog/ebird.md`](./ebird.md) — sibling profile, CONFIRMED authored (prior session); NEEDS VERIFICATION in repo
-- [`docs/sources/catalog/inaturalist.md`](./inaturalist.md) — sibling profile, CONFIRMED authored (prior session); NEEDS VERIFICATION in repo
-- [`docs/domains/fauna/README.md`](../../domains/fauna/README.md) — Fauna domain index
-- [`docs/domains/flora/README.md`](../../domains/flora/README.md) — Flora domain index
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules (governs placement)
-- [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — cite-or-abstain doctrine
-- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — public-path rules
-- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — `RAW → … → PUBLISHED` invariant
-- [`docs/standards/SENSITIVITY_RUBRIC.md`](../../standards/SENSITIVITY_RUBRIC.md) — PROPOSED, not yet authored (Directory Rules §18 OPEN-DR-05)
-- [`docs/standards/REDACTION_DETERMINISM.md`](../../standards/REDACTION_DETERMINISM.md) — PROPOSED, not yet authored (Directory Rules §18 OPEN-DR-05)
-- [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) — CONFIRMED authored (prior session); NEEDS VERIFICATION in repo
+- `docs/sources/catalog/ebird.md` (not present) — sibling profile, CONFIRMED authored (prior session); NEEDS VERIFICATION in repo
+- `docs/sources/catalog/inaturalist.md` (not present) — sibling profile, CONFIRMED authored (prior session); NEEDS VERIFICATION in repo
+- `docs/domains/fauna/README.md` (not present) — Fauna domain index
+- `docs/domains/flora/README.md` (not present) — Flora domain index
+- [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Directory Rules (governs placement)
+- `docs/doctrine/truth-posture.md` (not present) — cite-or-abstain doctrine
+- `docs/doctrine/trust-membrane.md` (not present) — public-path rules
+- `docs/doctrine/lifecycle-law.md` (not present) — `RAW → … → PUBLISHED` invariant
+- `docs/standards/SENSITIVITY_RUBRIC.md` (not present) — PROPOSED, not yet authored (Directory Rules §18 OPEN-DR-05)
+- `docs/standards/REDACTION_DETERMINISM.md` (not present) — PROPOSED, not yet authored (Directory Rules §18 OPEN-DR-05)
+- `docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md` (not present) — CONFIRMED authored (prior session); NEEDS VERIFICATION in repo
 - `schemas/contracts/v1/source/source_descriptor.schema.json` — canonical schema home per Directory Rules §7.4 / ADR-0001 (NEEDS VERIFICATION; filename variance noted in §11 V3)
 - `policy/sensitivity/` — sensitive-taxa policy bundle (NEEDS VERIFICATION)
 - `policy/rights/` — license-map bundle host for `license_map.json` (NEEDS VERIFICATION)
@@ -527,7 +529,7 @@ This is a *governed state transition*, not a file move, and is owned by the rele
 
 <!-- Footer -->
 
-**Related docs:** [`docs/sources/README.md`](../README.md) · [`docs/sources/catalog/ebird.md`](./ebird.md) · [`docs/sources/catalog/inaturalist.md`](./inaturalist.md) · [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`docs/standards/SENSITIVITY_RUBRIC.md`](../../standards/SENSITIVITY_RUBRIC.md) *(PROPOSED, not yet authored)* · [`docs/standards/REDACTION_DETERMINISM.md`](../../standards/REDACTION_DETERMINISM.md) *(PROPOSED, not yet authored)*
+**Related docs:** [`docs/sources/README.md`](../README.md) · `docs/sources/catalog/ebird.md` (not present) · `docs/sources/catalog/inaturalist.md` (not present) · [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) · `docs/standards/SENSITIVITY_RUBRIC.md` (not present) *(PROPOSED, not yet authored)* · `docs/standards/REDACTION_DETERMINISM.md` (not present) *(PROPOSED, not yet authored)*
 
 **Last updated:** 2026-05-22 · **Status:** draft · **Default release class:** restricted · **Doc id:** `kfm://doc/sources/catalog/natureserve`
 

@@ -24,7 +24,7 @@ related:
   - data/published/layers/habitat/
   - data/registry/sources/habitat/
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain:habitat, release, index, navigation, governance]
 notes:
   - This doc is a human-readable navigation index, not the release authority store.
@@ -35,6 +35,9 @@ notes:
   - "Path uses Directory Rules §12 segment form (docs/domains/habitat/); Atlas §24.13 flat-form drift is tracked in the lane README (HAB-V-009)."
   - Index entries and field set are PROPOSED until ADR/per-root README confirmation.
   - "CONTRACT_VERSION = \"3.0.0\""
+owning_root: docs/
+responsibility: "Documentation for Habitat Domain Release Index; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌿 Habitat Domain Release Index
@@ -483,7 +486,7 @@ This index is done enough to enter the repository when:
 - `docs/registers/VERIFICATION_BACKLOG.md` — verification backlog *(PROPOSED — `NEEDS VERIFICATION`)*
 - `docs/registers/DRIFT_REGISTER.md` — drift register *(PROPOSED — `NEEDS VERIFICATION`)*
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) *(CONFIRMED doctrine; canonical path `PROPOSED`)*
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — canonical operating contract (`CONTRACT_VERSION = "3.0.0"`)
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract (`CONTRACT_VERSION = "3.0.0"`)
 
 ---
 

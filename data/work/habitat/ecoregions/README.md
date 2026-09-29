@@ -335,7 +335,7 @@ is also forbidden for rights-unresolved material, source-role collapse, geometry
 - [`../../../../docs/domains/habitat/SOURCE_FAMILIES.md`](../../../../docs/domains/habitat/SOURCE_FAMILIES.md)
 - [`../../../../docs/domains/habitat/SOURCES.md`](../../../../docs/domains/habitat/SOURCES.md)
 - [`../../../../docs/domains/habitat/SENSITIVITY.md`](../../../../docs/domains/habitat/SENSITIVITY.md)
-- [`../../../../docs/domains/habitat/POLICY.md`](../../../../docs/domains/habitat/POLICY.md)
+- `../../../../docs/domains/habitat/POLICY.md` (not present)
 - [`../../../../docs/domains/habitat/API_CONTRACTS.md`](../../../../docs/domains/habitat/API_CONTRACTS.md)
 - [`../../../../release/manifests/README.md`](../../../../release/manifests/README.md)
 

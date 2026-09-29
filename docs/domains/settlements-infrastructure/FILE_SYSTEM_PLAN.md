@@ -9,18 +9,19 @@ created: 2026-05-19
 updated: 2026-06-08
 policy_label: public
 related:
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/domains/README.md
   - docs/standards/PROV.md
   - docs/runbooks/README.md
-  - kfm://atlas/domains/v1_1#ch-14-settlements-infrastructure
-  - kfm://encyclopedia/section-7-12
 tags: [kfm, domain, settlements, infrastructure, directory-rules, file-system-plan]
 notes:
   - "CONTRACT_VERSION pinned to 3.0.0 per ai-build-operating-contract.md authority."
   - "All concrete paths in this plan are PROPOSED until verified against a mounted repository."
   - "Slug 'settlements-infrastructure/' is grounded in directory-rules.md v1.3 6.1; schema-folder variance vs. the Atlas '[DOM-SETTLE] schemas/contracts/v1/settlement/' singular form is filed as OPEN-FSP-01 and is independently tracked in the KFM slug-drift register."
+owning_root: docs/
+responsibility: "Documentation for Settlements & Infrastructure — Domain File-System Plan; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Settlements & Infrastructure — Domain File-System Plan
@@ -373,7 +374,7 @@ Tracked here for triage; resolutions migrate to `docs/registers/VERIFICATION_BAC
 
 ## 12 · Related docs
 
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"`
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"`
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement authority, **v1.3** *(CONFIRMED reference)*
 - [`docs/domains/README.md`](../README.md) — domain-index landing *(PROPOSED — confirm presence)*
 - [`docs/domains/settlements-infrastructure/README.md`](./README.md) — domain operating manual *(PROPOSED — planned sibling)*

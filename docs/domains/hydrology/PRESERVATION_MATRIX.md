@@ -10,13 +10,12 @@ updated: 2026-07-30
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
-  - ai-build-operating-contract.md
-  - directory-rules.md
+  - ../../doctrine/ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md
   - docs/domains/hydrology/README.md
   - docs/domains/hydrology/INDEX.md
   - docs/domains/hydrology/DATA_LIFECYCLE.md
   - docs/domains/hydrology/OBJECT_FAMILIES.md
-  - docs/domains/hydrology/identity-model.md
   - schemas/contracts/v1/domains/hydrology/
   - policy/domains/hydrology/
 tags: [kfm, hydrology, preservation, lifecycle, evidence, receipts, retention]
@@ -27,6 +26,9 @@ notes:
   - Tier scheme is the full T0–T4 (T0 Open / T1 Generalized / T2 Reviewer / T3 Restricted / T4 Denied). Hydrology well/withdrawal records default T1/T2 per Atlas §24.5.2 (v1 erroneously wrote T1/T4).
   - Historical Atlas placement omitted AquiferObservation from §E; the separated-pair decision now treats it as a measurement family and AquiferContextLink as the link record.
   - v2 fixes the doc_id, adds Pre-RAW, corrects the tier values + adds T2/T3, reconciles source roles to the canonical seven, pins CONTRACT_VERSION, and corrects relative-link depth. See Changelog (§14).
+owning_root: docs/
+responsibility: "Documentation for Hydrology — Preservation Matrix; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -406,13 +408,13 @@ Published hydrology claims are **amendable** but never quietly. The corrections 
 
 ## 13 · Related docs
 
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract; `CONTRACT_VERSION = "3.0.0"`, §34 GENERATED_RECEIPT.
-- [`directory-rules.md`](../../../directory-rules.md) — lifecycle law, Domain Placement Law §12, README contract §15.
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract; `CONTRACT_VERSION = "3.0.0"`, §34 GENERATED_RECEIPT.
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — lifecycle law, Domain Placement Law §12, README contract §15.
 - [`docs/domains/hydrology/README.md`](./README.md) — lane landing page.
 - [`docs/domains/hydrology/INDEX.md`](./INDEX.md) — lane navigation hub.
 - [`docs/domains/hydrology/DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — gates + `Pre-RAW → PUBLISHED` in detail.
 - [`docs/domains/hydrology/OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) — per-family catalog (object families, roles, tiers, link objects).
-- [`docs/domains/hydrology/identity-model.md`](./identity-model.md) — identity rule + `spec_hash` + crosswalk.
+- `docs/domains/hydrology/identity-model.md` (not present) — identity rule + `spec_hash` + crosswalk.
 - [`schemas/contracts/v1/domains/hydrology/`](../../../schemas/contracts/v1/domains/hydrology/) — canonical schema home (PROPOSED).
 - [`policy/domains/hydrology/`](../../../policy/domains/hydrology/) — hydrology policy bundles (PROPOSED).
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — file drift entries; cross-link when conflicts surface.

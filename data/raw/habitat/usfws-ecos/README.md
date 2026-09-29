@@ -227,7 +227,7 @@ This is forbidden unless each governed lifecycle transition has actually happene
 - [`../../../../docs/domains/habitat/SOURCE_REGISTRY.md`](../../../../docs/domains/habitat/SOURCE_REGISTRY.md)
 - [`../../../../docs/domains/habitat/SOURCE_FAMILIES.md`](../../../../docs/domains/habitat/SOURCE_FAMILIES.md)
 - [`../../../../docs/domains/habitat/SOURCES.md`](../../../../docs/domains/habitat/SOURCES.md)
-- [`../../../../docs/domains/habitat/POLICY.md`](../../../../docs/domains/habitat/POLICY.md)
+- `../../../../docs/domains/habitat/POLICY.md` (not present)
 - [`../../../../docs/sources/catalog/usfws_ecos/README.md`](../../../../docs/sources/catalog/usfws_ecos/README.md)
 - [`../../../../docs/architecture/source-roles.md`](../../../../docs/architecture/source-roles.md)
 - [`../../../../release/manifests/README.md`](../../../../release/manifests/README.md)

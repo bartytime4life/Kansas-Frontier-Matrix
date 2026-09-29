@@ -635,8 +635,8 @@ For behavior changes, rollback must be defined before activation by the job, dat
 | [Apps root](../README.md) | Parent deployable-application contract |
 | [Workers source boundary](src/README.md) | Child source-tree contract |
 | [Governed API](../governed-api/README.md) | Public trust membrane; workers are not a substitute |
-| [Explorer Web](../explorer-web/README.md) | Public map/UI consumes governed outputs only |
-| [CLI](../cli/README.md) | Operator request and dry-run/report surface |
+| Explorer Web (retired) | Public map/UI consumes governed outputs only |
+| CLI (retired) | Operator request and dry-run/report surface |
 | [Review Console](../review-console/README.md) | Human review/adjudication surface |
 | [Directory Rules](../../docs/doctrine/directory-rules.md) | Accepted placement and dependency law |
 | [ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Adoption decision for Directory Rules v2 |

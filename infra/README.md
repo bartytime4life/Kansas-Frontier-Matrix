@@ -374,7 +374,7 @@ If secret, credential, state, or sensitive operational material is committed her
 | Surface | Current state | What it proves—and does not prove |
 |---|---|---|
 | [`infra/hardening/CHECKLIST.md`](./hardening/CHECKLIST.md) | **CONFIRMED** review checklist | Provides review questions; does not execute checks or show a completed review. |
-| [`tests/infra/test_docker_security_overrides.py`](../tests/infra/test_docker_security_overrides.py) | **CONFIRMED** deterministic no-network test | Checks exact Explorer overlay versions and integrity metadata, the checksum-bound npm archive, replacement targets, dependency versions, and extraction API assertion. It does not build or run an image. |
+| `tests/infra/test_docker_security_overrides.py` (not present) | **CONFIRMED** deterministic no-network test | Checks exact Explorer overlay versions and integrity metadata, the checksum-bound npm archive, replacement targets, dependency versions, and extraction API assertion. It does not build or run an image. |
 | [`tests/infra/test_compose_static.py`](../tests/infra/test_compose_static.py) | **CONFIRMED** deterministic no-network test | Verifies the two relative contexts and Dockerfiles resolve, ports are loopback-bound, and selected sensitive mounts/privileged escapes are absent. It is not runtime or environment proof. |
 | [`.github/workflows/infra-compose-smoke.yml`](../.github/workflows/infra-compose-smoke.yml) | **CONFIRMED** read-only workflow with immutable action pins | Runs static tests, `docker compose ... config --quiet`, and `docker compose ... build`; never starts services. |
 | Exact-main Compose run [`33277502881`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33277502881) | **CONFIRMED success** at `4e714b6…` | Static and render/build jobs passed. The result is point-in-time evidence for those bytes, not service-start or continuous environment proof. |
@@ -489,7 +489,7 @@ For policy-significant or production-exposure changes, the author should not be 
 | [`docs/runbooks/`](../docs/runbooks/) | Operational procedures, recovery, drills, and incident response. |
 | [`docs/architecture/`](../docs/architecture/) | Deployment topology and governed API design. |
 | [`apps/governed-api/`](../apps/governed-api/) | Executable public trust membrane. |
-| [`apps/explorer-web/`](../apps/explorer-web/) | Public map shell downstream of governed APIs and released artifacts. |
+| `apps/explorer-web/` (retired) | Public map shell downstream of governed APIs and released artifacts. |
 | [`apps/review-console/`](../apps/review-console/) | Restricted reviewer surface; not the normal public path. |
 | [`runtime/`](../runtime/) | Private adapters and model-runtime implementation. |
 | [`configs/`](../configs/) | Non-secret configuration defaults and templates. |

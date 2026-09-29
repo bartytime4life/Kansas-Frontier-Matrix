@@ -18,7 +18,7 @@ related:
   - release/README.md
   - data/published/layers/atmosphere/README.md
   - docs/doctrine/directory-rules.md
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, atmosphere, air, release, governance, index]
 notes:
   - CONTRACT_VERSION 3.0.0 pinned; doctrine-adjacent navigation index.
@@ -26,6 +26,9 @@ notes:
   - Not a release decision authority. Authority lives in release/manifests/.
   - All implementation-layer claims are PROPOSED pending mounted-repo verification.
   - Meta Block v2 carries no nested HTML comments; inline annotation uses # only.
+owning_root: docs/
+responsibility: "Documentation for Atmosphere/Air — Release Index; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Atmosphere/Air — Release Index
@@ -72,7 +75,7 @@ notes:
 11. [Correction and rollback index](#11-correction-and-rollback-index)
 12. [Validation gates and required closure](#12-validation-gates-and-required-closure)
 13. [Atmosphere-specific anti-patterns](#13-atmosphere-specific-anti-patterns)
-14. [Open questions register](#open-questions-register)
+14. Open questions register
 - [Open verification backlog](#open-verification-backlog)
 - [Changelog v1 → v2](#changelog-v1--v2)
 - [Definition of done](#definition-of-done)
@@ -533,7 +536,7 @@ This document is done enough to enter the repository when:
 - [`./SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md) — Atmosphere source roster *(PROPOSED neighbor)*
 - [`../README.md`](../README.md) — `docs/domains/` landing
 - [`../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules (§9.2 release, §12 Domain Placement, §10 anti-patterns)
-- [`../../../ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — canonical operating contract (CONTRACT_VERSION 3.0.0)
+- [`../../../ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract (CONTRACT_VERSION 3.0.0)
 - [`../../standards/PROV.md`](../../standards/PROV.md) — Provenance profile *(name pending ADR — see open questions)*
 - [`../../standards/PMTILES.md`](../../standards/PMTILES.md) — PMTiles governance profile
 - [`../../standards/OGC-API-TILES.md`](../../standards/OGC-API-TILES.md) — Tile delivery standard
@@ -549,7 +552,7 @@ This document is done enough to enter the repository when:
 
 ---
 
-**Related:** [README](./README.md) · [Pipeline](./PIPELINE.md) · [Publication Posture](./PUBLICATION_POSTURE.md) · [Preservation Matrix](./PRESERVATION_MATRIX.md) · [Directory Rules](../../doctrine/directory-rules.md) · [Operating Contract](../../../ai-build-operating-contract.md) · [release/](../../../release/README.md)
+**Related:** [README](./README.md) · [Pipeline](./PIPELINE.md) · [Publication Posture](./PUBLICATION_POSTURE.md) · [Preservation Matrix](./PRESERVATION_MATRIX.md) · [Directory Rules](../../doctrine/directory-rules.md) · [Operating Contract](../../doctrine/ai-build-operating-contract.md) · [release/](../../../release/README.md)
 
 **Last reviewed:** 2026-05-29 · **Doc type:** Release index (human-facing navigation; not a release decision authority) · **Authority anchor:** Directory Rules §9.2, §12 · **Truth posture:** cite-or-abstain · **Version:** v2 · **CONTRACT_VERSION = "3.0.0"**
 

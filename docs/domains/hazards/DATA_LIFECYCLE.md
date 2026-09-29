@@ -10,8 +10,8 @@ updated: 2026-06-05
 policy_label: public
 contract_version: "3.0.0"
 related:
-  - ai-build-operating-contract.md
-  - directory-rules.md
+  - ../../doctrine/ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
   - docs/domains/hazards/README.md
@@ -19,7 +19,6 @@ related:
   - docs/domains/atmosphere/DATA_LIFECYCLE.md
   - docs/standards/PROV.md
   - docs/standards/PMTILES.md
-  - kfm://register/domain-lane/hazards
 tags: [kfm, domain, hazards, lifecycle, data, governance, life-safety-boundary]
 notes:
   - CONTRACT_VERSION pinned at 3.0.0 per ai-build-operating-contract.md v3.0.
@@ -27,6 +26,9 @@ notes:
   - Domain-segment lane tree under existing responsibility roots is CONFIRMED by Directory Rules §12; specific file presence is NEEDS VERIFICATION.
   - Owners and CI/badge endpoints are placeholders pending mounted-repo confirmation.
   - v2 corrects the receipt-phase matrix (RedactionReceipt/AggregationReceipt/ModelRunReceipt PUBLISHED dots) per Atlas v1.1 §24.2.2.
+owning_root: docs/
+responsibility: "Documentation for Hazards Domain — Data Lifecycle; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Hazards Domain — Data Lifecycle
@@ -700,8 +702,8 @@ This document is done enough to enter the repository when:
 > Sibling-doc paths are PROPOSED unless verified; placement under `docs/domains/hazards/` is CONFIRMED
 > by Directory Rules §12.
 
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"` *(CONFIRMED authority)*
-- [`directory-rules.md`](../../../directory-rules.md) — placement, Domain Placement Law §12, drift §13 *(CONFIRMED authority)*
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"` *(CONFIRMED authority)*
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — placement, Domain Placement Law §12, drift §13 *(CONFIRMED authority)*
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — universal RAW → PUBLISHED invariant *(PROPOSED path)*
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — public surfaces, governed APIs, no-bypass rule *(PROPOSED path)*
 - [`docs/domains/hazards/README.md`](./README.md) — Hazards lane orientation *(file presence NEEDS VERIFICATION)*

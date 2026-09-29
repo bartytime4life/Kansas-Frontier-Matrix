@@ -50,6 +50,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0
       - name: Set up repository Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
@@ -64,7 +65,7 @@ jobs:
           python -m unittest -v tests.validators.governance.test_validate_receipt_proof_pairing_assessment
           python tools/validators/governance/validate_receipt_proof_pairing_assessment.py --fixtures
       - name: Validate generated authoring receipt
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass25-receipt-proof-pairing-correction-20260812.json --repo-root .
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass25-receipt-proof-pairing-correction-20260812.json --repo-root . --artifact-git-ref b47d2fa684c9726ec68825cf31d7872da9d0242a
       - name: Record trust boundary
         if: always()
         run: |

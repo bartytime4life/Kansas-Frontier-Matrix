@@ -113,7 +113,7 @@ This lane is downstream. It should not admit raw source captures, work candidate
 | [`../../quarantine/flora/`](../../quarantine/flora/) | Held or unsafe material. | Never public-readable. |
 | [`../../processed/flora/`](../../processed/flora/) | Validated normalized candidates. | Upstream of catalog and release, not public by itself. |
 | [`../../catalog/domain/flora/`](../../catalog/domain/flora/) | Flora catalog records. | Discovery/lineage carrier; not release authority. |
-| [`../../triplets/flora/`](../../triplets/flora/) | Flora graph/triplet projection. | Upstream or sibling projection, not public by itself. |
+| `../../triplets/flora/` (not present) | Flora graph/triplet projection. | Upstream or sibling projection, not public by itself. |
 | [`../../proofs/flora/`](../../proofs/flora/) | Flora proof support. | Evidence and proof support; not published carrier. |
 | [`../../proofs/validation_report/flora/`](../../proofs/validation_report/flora/) | Flora validation reports. | Gate support, not publication authority. |
 | [`../../receipts/`](../../receipts/) | Process memory. | Receipts say what ran; they do not publish. |

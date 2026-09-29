@@ -10,12 +10,12 @@ updated: 2026-06-07
 policy_label: public
 related:
   - docs/doctrine/directory-rules.md
-  - docs/doctrine/lifecycle-law.md            # NEEDS VERIFICATION
-  - docs/domains/roads-rail-trade/README.md   # NEEDS VERIFICATION
-  - docs/standards/PROV.md                    # NEEDS VERIFICATION (see OPEN-DR-01)
-  - docs/standards/ISO-19115.md               # NEEDS VERIFICATION
-  - docs/runbooks/roads-rail-trade/           # NEEDS VERIFICATION (see OPEN-DR-02)
-  - ai-build-operating-contract.md            # CONTRACT_VERSION = "3.0.0"
+  - docs/doctrine/lifecycle-law.md
+  - docs/domains/roads-rail-trade/README.md
+  - docs/standards/PROV.md
+  - docs/standards/ISO-19115.md
+  - docs/runbooks/roads-rail-trade/
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, lifecycle, roads-rail-trade, transport, governance]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned; doctrine-adjacent doc.
@@ -23,6 +23,9 @@ notes:
   - Path placement follows Directory Rules Step 1-5 and Domain Placement Law.
   - SEGMENT-NAMING CONFLICT - Directory Rules 24.13 crosswalk uses the segment "transport" for this domain's schema/contract roots; this doc uses "roads-rail-trade" for data-lane/docs segments. Surfaced as an ADR candidate. See OQ-RRT-LC-01 and Section 2.
   - All implementation-layer paths and artifact IDs are PROPOSED.
+owning_root: docs/
+responsibility: "Documentation for Roads, Rail & Trade — Data Lifecycle; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 # Roads, Rail & Trade — Data Lifecycle
 
@@ -423,7 +426,7 @@ Placeholders below are PROPOSED targets. Mounted-repo presence is NEEDS VERIFICA
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance external-standard profile (filename pending §18 OPEN-DR-01: `PROV.md` vs `PROVENANCE.md`).
 - [`docs/standards/ISO-19115.md`](../../standards/ISO-19115.md) — metadata external-standard profile — NEEDS VERIFICATION.
 - [`docs/runbooks/roads-rail-trade/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/roads-rail-trade/SOURCE_REFRESH_RUNBOOK.md) — TODO: PROPOSED; subfolder convention pending per §18 OPEN-DR-02.
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract; `CONTRACT_VERSION = "3.0.0"`.
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract; `CONTRACT_VERSION = "3.0.0"`.
 - [`docs/adr/`](../../adr/) — relevant ADRs once authored: ADR-0001 (schema home), ADR-S-04 (source-role vocabulary), ADR-S-05 (sensitivity tier scheme), ADR-S-09 (reviewer separation-of-duties).
 
 Atlas / corpus references (not repo paths):

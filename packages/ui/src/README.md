@@ -76,7 +76,7 @@ and are not automatically retried or rolled back. Errors after a host mutation
 are not described as proof that nothing changed. Persistent host-read failures
 disable mutation and show a finite, redacted message.
 
-The [existing Site adapter and integration handoff](../../../apps/kansas-frontier-matrix-explorer/docs/earth-layer-library-integration.md)
+The existing Site adapter and integration handoff (retired)
 remain **dormant**: this change does not import the wrapper into `page.tsx` or its
 stylesheet into `layout.tsx`. The adapter covers eight inspected synthetic or
 generalized fixtures only; no operational source is admitted. Other legacy layer
@@ -130,7 +130,7 @@ This tree is not a deployable application, not a data authority, not a MapLibre 
 |---|---|---|---|
 | Owning package | [`../README.md`](../README.md) | CONFIRMED adjacent README expected | Package-level boundary and package-facing overview |
 | Renderer neighbor | [`../../maplibre/README.md`](../../maplibre/README.md) | NEEDS VERIFICATION | Map source, layer, style, and camera logic belongs there |
-| Public explorer app | [`../../../apps/explorer-web/README.md`](../../../apps/explorer-web/README.md) | NEEDS VERIFICATION | Deployable app shell should consume this package, not live inside it |
+| Public explorer app | `../../../apps/explorer-web/README.md` (retired) | NEEDS VERIFICATION | Deployable app shell should consume this package, not live inside it |
 | Governed API app | [`../../../apps/governed-api/README.md`](../../../apps/governed-api/README.md) | NEEDS VERIFICATION | Public payloads should be governed before reaching UI props |
 | Directory doctrine | [`../../../docs/doctrine/directory-rules.md`](../../../docs/doctrine/directory-rules.md) | NEEDS VERIFICATION | Placement authority; verify current repo path before relying on link |
 

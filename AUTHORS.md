@@ -15,7 +15,7 @@
 | Current named identity | [Andy (`@bartytime4life`)](https://github.com/bartytime4life) |
 | Verification basis | Repository ownership, verified commit authorship, and the current [CODEOWNERS review route](.github/CODEOWNERS) |
 | Complete historical record | Git commits, merged pull requests, and the [GitHub contributor graph](https://github.com/bartytime4life/Kansas-Frontier-Matrix/graphs/contributors) |
-| License boundary | The repository [license remains unresolved](LICENSE); this file grants no license or reuse permission |
+| License boundary | Code is licensed under [Apache-2.0](LICENSE); project-authored documentation and data under [CC BY 4.0](docs/governance/data_license.md); third-party data keeps its source terms. This file grants no additional permission. |
 | Update route | Focused branch and draft pull request, following [`CONTRIBUTING.md`](CONTRIBUTING.md) |
 
 ## Current verified attribution
@@ -89,7 +89,8 @@ A focused update should:
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) — contribution workflow, evidence, validation, and pull-request expectations.
 - [`.github/CODEOWNERS`](.github/CODEOWNERS) — verified GitHub review routing and its authority limits.
 - [`docs/architecture/directory-rules.md`](docs/architecture/directory-rules.md) — repository placement doctrine and change discipline.
-- [`LICENSE`](LICENSE) — repository licensing status; currently unresolved and not replaced by this file.
+- [`LICENSE`](LICENSE) — Apache-2.0 for code; this file does not replace it.
+- [`docs/governance/data_license.md`](docs/governance/data_license.md) — CC BY 4.0 for project-authored documentation and data, and the third-party material notice.
 
 ---
 

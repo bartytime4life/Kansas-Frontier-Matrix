@@ -72,7 +72,6 @@ related:
   - ./watchers/README.md
   - ./domains/README.md
   - ./proofs/README.md
-  - ./specs/README.md
   - ./cross_lane/README.md
   - ./biodiversity/README.md
   - ../packages/pipelines-core/README.md
@@ -256,7 +255,7 @@ The internal `PROPOSED_FOR_ADOPTION` label remains inside the byte-pinned Direct
 |---|---|---|
 | `pipelines/{ingest,normalize,validate,catalog,triplets,publish,rollback}/` | Canonical stage-first lanes | Add domain work below the applicable stage; new execution still needs contracts, specs, fixtures, tests, receipts, and review. |
 | `pipelines/domains/` | Existing competing topology | Do not add a second writable domain implementation when stage-first placement already owns it; disposition requires inventory and migration evidence. |
-| `pipelines/specs/` | Compatibility candidate | Never add declarative specifications; canonical declarations belong in `pipeline_specs/`. |
+| `pipelines/specs/` | Retired 2026-09-29 | The README-only guardrail was removed; the topology validator flags the path if it reappears. Declarations belong in `pipeline_specs/`. |
 | `pipelines/watchers/` | Existing, ownership unresolved | Preserve non-publisher behavior; resolve stage, domain, tool, and declarative ownership before activation. |
 | `pipelines/proofs/` | Existing, placement unresolved | May orchestrate checks only if accepted; proof instances remain under `data/proofs/`. |
 | `pipelines/cross_lane/` | Existing generic composition boundary | Do not treat it as an accepted framework without a registered seam and one writable implementation owner. |
@@ -328,7 +327,7 @@ The merged resilience pull request recorded focused deterministic validation and
 
 1. **Connector-to-ingest handoff.** Source acquisition and admission belong to connectors and source governance; the exact executable handoff into ingest remains unresolved.
 2. **Stage-first versus domain-first implementation.** Adopted v2 prefers stage-first placement, while `pipelines/domains/` remains present. Do not add dual writers.
-3. **Specification duplication.** `pipeline_specs/` is canonical; `pipelines/specs/` is not a fallback discovery path.
+3. **Specification duplication.** `pipeline_specs/` is canonical; the retired `pipelines/specs/` path is not a fallback discovery path.
 4. **Watcher ownership.** Shared stage, domain, declarative, and tool watcher surfaces coexist without one accepted active owner.
 5. **Proof orchestration.** `pipelines/proofs/`, validators, tests, and `data/proofs/` have different responsibilities; orchestration placement remains unsettled.
 6. **Cross-domain composition.** Generic `cross_lane/` and `biodiversity/` paths need registered seam ownership and migration decisions.
@@ -784,7 +783,6 @@ A pipeline author must not be the sole approver when a change can affect:
 | [`domains/`](./domains/) | Existing domain-first execution tree; accepted v2 stage-first convergence remains incomplete. |
 | [`watchers/`](./watchers/) | Non-publisher watcher orchestration; active ownership unresolved. |
 | [`proofs/`](./proofs/) | Proposed proof orchestration; proof instances remain outside this root. |
-| [`specs/`](./specs/) | Compatibility candidate; route declarations to `pipeline_specs/`. |
 | [`cross_lane/`](./cross_lane/) | Existing generic composition boundary; no sovereign framework authority. |
 | [`biodiversity/`](./biodiversity/) | Existing umbrella; domain ownership and canonical placement unresolved. |
 
@@ -861,7 +859,7 @@ Only ADR-0029 was verified here as accepted. Other ADR status must be read from 
 
 | Surface | Current posture | Required next evidence |
 |---|---|---|
-| `pipelines/specs/` -> `pipeline_specs/` | Compatibility candidate; single-write to canonical declarative root | Consumer inventory, path guard, migration record, zero-writer proof |
+| `pipelines/specs/` -> `pipeline_specs/` | Retired 2026-09-29; the path held only a README, with no writers or consumers | None; the topology validator guards against reintroduction |
 | `pipelines/domains/<domain>/<stage>/` versus `pipelines/<stage>/<domain>/` | Competing topology under adopted stage-first rule | Full file/consumer inventory, one writer, import and workflow parity, migration and rollback |
 | `cross_lane/` and `biodiversity/` | Existing generic/umbrella paths | Registered seam or owning domain, consumer map, ADR/migration disposition |
 | Domain aliases | Existing historical naming pressure | Alias registry, canonical scope IDs, no permissive bypass, transition window |
@@ -903,7 +901,6 @@ pipelines/
 ├── proofs/            # proof-orchestration candidate; no proof-instance authority
 ├── publish/            # publish-readiness support; no release authority
 ├── rollback/           # rollback-readiness support; no rollback authority
-├── specs/             # compatibility candidate; canonical specs are pipeline_specs/
 ├── triplets/          # derived relationship-projection boundary
 ├── validate/          # validation orchestration boundary
 └── watchers/          # non-publisher watcher orchestration; ownership unresolved

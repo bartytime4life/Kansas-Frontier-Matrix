@@ -10,13 +10,12 @@ updated: 2026-06-05
 policy_label: public
 contract_version: "3.0.0"
 related:
-  - ai-build-operating-contract.md
-  - directory-rules.md
+  - ../../doctrine/ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md
   - docs/domains/hazards/README.md
   - docs/domains/hazards/DATA_LIFECYCLE.md
   - docs/domains/hazards/EXPANSION_BACKLOG.md
   - docs/domains/hazards/EXPANSION_PLAN.md
-  - docs/adr/ADR-0001-schema-home.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/registers/DRIFT_REGISTER.md
 tags: [kfm, hazards, directory, placement, plan]
@@ -25,6 +24,9 @@ notes:
   - All implementation-layer claims are PROPOSED until verified against a mounted repo.
   - This document plans placement; it does not authorize publication.
   - v2 cross-references DRIFT-HAZ-PATH-01 — the policy/release/hazards form derives from the Atlas §24.13 non-segmented shorthand; segmented §12 forms are canonical.
+owning_root: docs/
+responsibility: "Documentation for Hazards Domain — File System Plan; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌪️ Hazards Domain — File System Plan
@@ -666,15 +668,15 @@ This document is done enough to enter the repository when:
 
 ## 17. Related docs
 
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"`. **CONFIRMED authority**.
-- [`directory-rules.md`](../../../directory-rules.md) — root Directory Rules; authoritative for placement. **CONFIRMED**.
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"`. **CONFIRMED authority**.
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — root Directory Rules; authoritative for placement. **CONFIRMED**.
 - [`docs/domains/hazards/README.md`](./README.md) — Hazards lane landing page (PROPOSED).
 - [`docs/domains/hazards/DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — Hazards lifecycle companion (sibling doc).
 - [`docs/domains/hazards/EXPANSION_BACKLOG.md`](./EXPANSION_BACKLOG.md) — Hazards backlog (home of DRIFT-HAZ-PATH-01).
 - [`docs/domains/hazards/EXPANSION_PLAN.md`](./EXPANSION_PLAN.md) — Hazards expansion plan (sibling doc).
 - [`docs/domains/hazards/BLUEPRINT.md`](./BLUEPRINT.md) — Full Hazards lane blueprint (PROPOSED).
 - [`docs/runbooks/hazards/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/hazards/SOURCE_REFRESH_RUNBOOK.md) — Hazards source refresh procedure (PROPOSED; subfolder convention pending ADR).
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — Canonical home for JSON Schemas; binding for the `schemas/` rows above.
+- `docs/adr/ADR-0001-schema-home.md` (not present) — Canonical home for JSON Schemas; binding for the `schemas/` rows above.
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — Where the §14 backlog items should be lifted.
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — Where any conflict between this plan and the live repo should be filed.
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — Provenance profile that EvidenceBundles referenced here must satisfy (NEEDS VERIFICATION).

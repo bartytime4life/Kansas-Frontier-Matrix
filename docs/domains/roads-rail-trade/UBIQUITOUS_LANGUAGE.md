@@ -8,9 +8,12 @@ owners: PLACEHOLDER-roads-rail-trade-domain-steward, PLACEHOLDER-docs-steward
 created: 2026-06-07
 updated: 2026-06-07
 policy_label: public
-related: [ai-build-operating-contract.md, directory-rules.md, DomainDriven_Design_Reference.pdf, docs/domains/roads-rail-trade/README.md, docs/domains/roads-rail-trade/SOURCES.md, contracts/domains/roads-rail-trade/, schemas/contracts/v1/domains/roads-rail-trade/]
+related: [../../doctrine/ai-build-operating-contract.md, ../../doctrine/directory-rules.md, docs/domains/roads-rail-trade/README.md, docs/domains/roads-rail-trade/SOURCES.md, contracts/domains/roads-rail-trade/, schemas/contracts/v1/domains/roads-rail-trade/]
 tags: [kfm, roads-rail-trade, ubiquitous-language, ddd, glossary, bounded-context]
 notes: [Doctrine-adjacent; CONTRACT_VERSION = "3.0.0" pinned. Bounded-context vocabulary for the Roads/Rail/Trade lane. Terms are CONFIRMED from Atlas v1.1 ch.13 §C; field realization is PROPOSED. CONFLICTED: dossier §B informal labels vs §C canonical compound forms — both preserved and mapped in §4.]
+owning_root: docs/
+responsibility: "Documentation for Roads / Rail / Trade Routes — Ubiquitous Language; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -309,8 +312,8 @@ This document is done enough to enter the repository when:
 - [`docs/domains/roads-rail-trade/SOURCE_REGISTRY.md`](./SOURCE_REGISTRY.md) — source admission doctrine
 - `contracts/domains/roads-rail-trade/` — object-meaning home this glossary mirrors *(PROPOSED)*
 - `schemas/contracts/v1/domains/roads-rail-trade/` — field-shape home *(PROPOSED)*
-- [`directory-rules.md`](../../../directory-rules.md) — Domain Placement Law §12
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"`
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — Domain Placement Law §12
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"`
 - `DomainDriven_Design_Reference.pdf` — ubiquitous-language pattern `[DDD]`
 
 ---

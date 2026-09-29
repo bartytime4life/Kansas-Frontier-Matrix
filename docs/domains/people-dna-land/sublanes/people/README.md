@@ -8,9 +8,12 @@ owners: <People/DNA/Land domain steward — PLACEHOLDER>, <Source steward — PL
 created: 2026-06-06
 updated: 2026-06-06
 policy_label: restricted
-related: [ai-build-operating-contract.md, directory-rules.md, docs/domains/people-dna-land/README.md, docs/domains/people-dna-land/sublanes/dna/README.md, docs/domains/people-dna-land/sublanes/land/README.md, policy/sensitivity/people/, policy/consent/people/]
+related: [../../../../doctrine/ai-build-operating-contract.md, ../../../../doctrine/directory-rules.md, docs/domains/people-dna-land/README.md, policy/consent/people/]
 tags: [kfm, people, genealogy, person, sublane, sensitive]
 notes: [CONTRACT_VERSION = "3.0.0"; sources Atlas v1.1 ch.16 object/term spine; domain slug "people-dna-land" CONFIRMED by Directory Rules §12; the sublanes/ subfolder convention is NOT in §12 and is PROPOSED pending ADR]
+owning_root: docs/
+responsibility: "Documentation for People / DNA / Land — People Sublane; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -28,7 +31,7 @@ notes: [CONTRACT_VERSION = "3.0.0"; sources Atlas v1.1 ch.16 object/term spine; 
 ![build](https://img.shields.io/badge/CI-TODO-lightgrey)
 
 **Status:** `draft` · **Owners:** `<Domain steward>` · `<Source steward>` · `<Sensitivity reviewer>` *(all PLACEHOLDER)* · **Updated:** 2026-06-06
-**`CONTRACT_VERSION = "3.0.0"`** — governed by [`ai-build-operating-contract.md`](../../../../../ai-build-operating-contract.md) and [`directory-rules.md`](../../../../../directory-rules.md).
+**`CONTRACT_VERSION = "3.0.0"`** — governed by [`ai-build-operating-contract.md`](../../../../doctrine/ai-build-operating-contract.md) and [`directory-rules.md`](../../../../doctrine/directory-rules.md).
 
 > [!IMPORTANT]
 > **The `sublanes/` subfolder convention is PROPOSED, not canonical.** Directory Rules §12
@@ -288,8 +291,8 @@ This document is done enough to enter the repository when:
 
 ## Related docs
 
-- [`ai-build-operating-contract.md`](../../../../../ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
-- [`directory-rules.md`](../../../../../directory-rules.md) — placement authority (§3, §12, §2.4, §18 OPEN-DR-02)
+- [`ai-build-operating-contract.md`](../../../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- [`directory-rules.md`](../../../../doctrine/directory-rules.md) — placement authority (§3, §12, §2.4, §18 OPEN-DR-02)
 - `docs/domains/people-dna-land/README.md` — parent domain lane landing *(TODO — verify path)*
 - `docs/domains/people-dna-land/sublanes/dna/README.md` — DNA sibling sublane *(PROPOSED)*
 - `docs/domains/people-dna-land/sublanes/land/README.md` — Land sibling sublane *(PROPOSED)*

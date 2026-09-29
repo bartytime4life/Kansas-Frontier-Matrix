@@ -503,7 +503,7 @@ Accepted named specialists and separation-of-duties controls remain **NEEDS VERI
 | [`data/proofs/flora/`](../../../data/proofs/flora/README.md) | Flora proof-support lane; current production remains held |
 | [`release/candidates/flora/`](../../../release/candidates/flora/README.md) | Pre-publication candidate review boundary; no child dossier established |
 | [`data/published/flora/`](../../../data/published/flora/README.md) | Downstream released public-safe carrier lane; path presence is not publication |
-| [`apps/explorer-web/src/features/domains/flora/`](../../../apps/explorer-web/src/features/domains/flora/README.md) | Flora UI surface downstream of governed decisions and released carriers |
+| `apps/explorer-web/src/features/domains/flora/` (retired) | Flora UI surface downstream of governed decisions and released carriers |
 
 [Back to top](#top)
 

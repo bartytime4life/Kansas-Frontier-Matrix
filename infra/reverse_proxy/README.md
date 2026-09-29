@@ -95,8 +95,8 @@ observed upstream binding:
 
 | Candidate surface | Confirmed repository evidence | Edge conclusion |
 |---|---|---|
-| [`apps/explorer-web/`](../../apps/explorer-web/) | A Vite application family exists | No public route is proved |
-| [`apps/kansas-frontier-matrix-explorer/`](../../apps/kansas-frontier-matrix-explorer/) | A separate Sites-oriented application family exists; its [hosting identity](../../apps/kansas-frontier-matrix-explorer/.openai/hosting.json) names a Sites project | The identity is not proxy configuration or runtime proof |
+| `apps/explorer-web/` (retired) | A Vite application family exists | No public route is proved |
+| `apps/kansas-frontier-matrix-explorer/` (retired) | A separate Sites-oriented application family exists; its hosting identity (retired) names a Sites project | The identity is not proxy configuration or runtime proof |
 | [`apps/governed-api/`](../../apps/governed-api/) | The [route registry](../../apps/governed-api/src/governed_api/routes/registry.py) registers `/bootstrap`, `/layers`, and `/evidence`; the [WSGI application](../../apps/governed-api/src/governed_api/main.py) binds locally in its direct entry point | Handler presence and a local bind do not prove an edge route |
 | [`infra/compose/docker-compose.yml`](../compose/docker-compose.yml) | A greenfield development Compose placeholder maps loopback ports for two named services | Static port text does not prove a runnable service, selected Explorer family, public ingress, or deployment |
 

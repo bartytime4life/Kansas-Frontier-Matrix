@@ -58,6 +58,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0
 
       - name: Set up repository Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -80,7 +81,7 @@ jobs:
         run: python tools/validators/domains/atmosphere/validate_pm25_sensor_colocation_manifest.py --fixtures
 
       - name: Validate generated authoring receipt integrity
-        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass30-pm25-sensor-colocation-manifest-source-map-reconciliation-20260825.json
+        run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-pass30-pm25-sensor-colocation-manifest-source-map-reconciliation-20260825.json --artifact-git-ref 9a740aa34bb084722c86e7cd53caa47694833707
 
       - name: Record authority boundary
         if: always()

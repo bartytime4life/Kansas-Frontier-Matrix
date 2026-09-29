@@ -1,0 +1,83 @@
+{
+  "receipt_id": "genrec-repository-license-selection-20260929",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "AUTHORS.md",
+    "LICENSE",
+    "docs/governance/data_license.md",
+    "package.json",
+    "pyproject.toml"
+  ],
+  "artifact_hashes": {
+    "AUTHORS.md": "sha256:12074942a6dbf62fab9e992a55623b5d18da46e0031809187ecd6464e7f37bc1",
+    "LICENSE": "sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "docs/governance/data_license.md": "sha256:d59811eb169c241bbbfd67cfc14e80f5b569fe359094b1cf1df62d45ad249d15",
+    "package.json": "sha256:1cfda766b969d50c8a317d68644b46f8381ad3c762d6f0ffc6f2cc67afd9a9de",
+    "pyproject.toml": "sha256:7fc766e631fa3932c2c22d4369ab7833a66d8de79cf75c174aaccad84c3dd61b"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:6fd7b25b0cfcadb1161edcfaa1136ecca426e81562d20da4e8a2835958594f8c",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/93ece32b09aba1487c921ea3cd83d944dc769ead",
+      "https://www.apache.org/licenses/LICENSE-2.0.txt",
+      "npm:spdx-license-list@6.12.0/licenses/CC-BY-4.0.json"
+    ]
+  },
+  "truth_labels": {
+    "AUTHORS.md": "CONFIRMED",
+    "LICENSE": "CONFIRMED",
+    "docs/governance/data_license.md": "CONFIRMED",
+    "package.json": "CONFIRMED",
+    "pyproject.toml": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "License text integrity",
+      "outcome": "PASS",
+      "reason": "LICENSE is the Apache-2.0 text from apache.org and matches the system copy at /usr/share/common-licenses/Apache-2.0 after whitespace normalization; the CC BY 4.0 legal code is the SPDX license-list text."
+    },
+    {
+      "gate": "Packaging and repository guardrails",
+      "outcome": "PASS",
+      "reason": "tests/ci/test_root_python_distribution.py passes including the opt-in real build (License metadata Apache-2.0; License-File still LICENSE and AUTHORS.md); topology, root registry, scaffold inventory, link and metadata checks pass. The data license lives under docs/governance/ because the root-file allowlist and hatchling's default license-file globs exclude a new root file."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/93ece32b09aba1487c921ea3cd83d944dc769ead"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [
+      "@bartytime4life"
+    ],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-29T15:02:27Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "License choice made by the repository owner in session on 2026-09-29 (Apache-2.0 code; CC BY 4.0 project-authored docs and data; third-party material keeps its source terms). This receipt records authorship of the files, not legal review."
+}

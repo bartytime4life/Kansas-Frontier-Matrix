@@ -10,12 +10,11 @@ updated: 2026-06-02
 policy_label: public
 related:
   - docs/domains/fauna/README.md
-  - docs/domains/fauna/FAUNA_DATA_LIFECYCLE.md
   - docs/domains/habitat/README.md
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
   - docs/standards/PROV.md
-  - directory-rules.md
-  - ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, fauna, backlog, domain, governance, expansion]
 notes:
   - CONTRACT_VERSION = "3.0.0".
@@ -23,6 +22,9 @@ notes:
   - Backlog items inherit doctrine from [DOM-FAUNA], [DOM-HF], [ENCY]; implementation rows remain PROPOSED until repo evidence is mounted.
   - PROPOSED owners/badges/CI URLs are placeholders pending CODEOWNERS and CI inspection.
   - v2 corrects source-role enum to the canonical Atlas §24.1.3 vocabulary and fixes per-domain section-letter citations.
+owning_root: docs/
+responsibility: "Documentation for Fauna Domain — Expansion Backlog; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Fauna Domain — Expansion Backlog
@@ -530,6 +532,6 @@ A **PROPOSED** ordering that respects the trust-spine-before-features posture in
 
 ---
 
-**Related docs:** [`README.md`](./README.md) (PROPOSED) · [`FAUNA_DATA_LIFECYCLE.md`](./FAUNA_DATA_LIFECYCLE.md) (PROPOSED) · [`OPEN_QUESTIONS.md`](./OPEN_QUESTIONS.md) (PROPOSED) · [`../habitat/README.md`](../habitat/README.md) (PROPOSED) · [`../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) · [`../../standards/PROV.md`](../../standards/PROV.md) · [`../../../directory-rules.md`](../../../directory-rules.md)
+**Related docs:** [`README.md`](./README.md) (PROPOSED) · `FAUNA_DATA_LIFECYCLE.md` (not present) (PROPOSED) · [`OPEN_QUESTIONS.md`](./OPEN_QUESTIONS.md) (PROPOSED) · [`../habitat/README.md`](../habitat/README.md) (PROPOSED) · [`../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) · [`../../standards/PROV.md`](../../standards/PROV.md) · [`../../../directory-rules.md`](../../doctrine/directory-rules.md)
 
 **Last updated:** 2026-06-02 · [Back to top ↑](#contents)

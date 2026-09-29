@@ -13,10 +13,8 @@ related:
   - docs/domains/people-dna-land/README.md
   - docs/domains/people-dna-land/sublanes/README.md
   - docs/domains/people-dna-land/sublanes/people/README.md
-  - docs/domains/people-dna-land/sublanes/dna/README.md
-  - docs/domains/people-dna-land/sublanes/genealogy/README.md
-  - directory-rules.md
-  - ai-build-operating-contract.md
+  - ../../../doctrine/directory-rules.md
+  - ../../../doctrine/ai-build-operating-contract.md
   - docs/standards/PROV.md
   - docs/standards/ISO-19115.md
 tags: [kfm, land, people-dna-land, sublane, ownership, parcel, deed, title, governance]
@@ -25,6 +23,9 @@ notes:
   # sublanes/ folder convention is PROPOSED; not in Directory Rules §12; needs ADR (OQ-PEOPLE-SUB-01).
   # FILENAME: requested as flat sublanes/land.md; prior siblings used sublanes/<x>/README.md. Flat-vs-subfolder is unresolved (OQ-PEOPLE-SUB-13).
   # CONFIRMED hard rules: assessor/tax records and parcel geometry are NOT title truth; ownership is temporal evidence-bound assertion, not a map label.
+owning_root: docs/
+responsibility: "Documentation for Land Sublane — People / Genealogy / DNA / Land Ownership; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🪧 Land Sublane — People / Genealogy / DNA / Land Ownership
@@ -45,7 +46,7 @@ notes:
 | **Last updated** | 2026-06-06                                                     |
 | **Contract**     | `CONTRACT_VERSION = "3.0.0"`                                   |
 | **Parent**       | [`docs/domains/people-dna-land/README.md`](../README.md)       |
-| **Sibling sublanes** | [`people`](./people/README.md) · [`dna`](./dna/README.md) · [`genealogy`](./genealogy/README.md) — *paths PROPOSED* |
+| **Sibling sublanes** | [`people`](./people/README.md) · `dna` (not present) · `genealogy` (not present) — *paths PROPOSED* |
 
 > [!IMPORTANT]
 > **Two hard rules govern this sublane and never bend:**
@@ -374,10 +375,10 @@ Every release of a land artifact requires: `ReleaseManifest`; `EvidenceBundle` c
 - [`../README.md`](../README.md) — People / Genealogy / DNA / Land Ownership domain landing *(PROPOSED)*
 - [`./README.md`](./README.md) — sublanes index *(PROPOSED layer)*
 - [`./people/README.md`](./people/README.md) — People sublane: PersonCanonical, identity resolution *(PROPOSED)*
-- [`./dna/README.md`](./dna/README.md) — DNA sublane: DNAMatchEvidence, restricted access *(PROPOSED)*
-- [`./genealogy/README.md`](./genealogy/README.md) — Genealogy sublane: kinship, life events *(PROPOSED)*
-- [`directory-rules.md`](../../../../directory-rules.md) — placement law (§3, §12, §2.4, §18 OPEN-DR-02)
-- [`ai-build-operating-contract.md`](../../../../ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- `./dna/README.md` (not present) — DNA sublane: DNAMatchEvidence, restricted access *(PROPOSED)*
+- `./genealogy/README.md` (not present) — Genealogy sublane: kinship, life events *(PROPOSED)*
+- [`directory-rules.md`](../../../doctrine/directory-rules.md) — placement law (§3, §12, §2.4, §18 OPEN-DR-02)
+- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - [`docs/standards/PROV.md`](../../../standards/PROV.md) — provenance vocabulary profile
 - [`docs/standards/ISO-19115.md`](../../../standards/ISO-19115.md) — metadata profile
 - Atlas v1.1 Ch. 16 — People/Genealogy/DNA/Land dossier *(reference view, not authority)*

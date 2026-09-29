@@ -11,20 +11,22 @@ policy_label: public
 related:
   - docs/domains/README.md
   - docs/domains/geology/README.md
-  - directory-rules.md
+  - ../../doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/authority-ladder.md
   - docs/architecture/governed-api/README.md
   - docs/architecture/contract-schema-policy-split.md
-  - docs/adr/ADR-0001-schema-home.md
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, geology, natural-resources, architecture]
 notes:
   - Doctrine-adjacent; CONTRACT_VERSION pinned to 3.0.0 per ai-build-operating-contract.md.
   - Implementation-layer claims are PROPOSED until verified against mounted-repo evidence.
   - Source rights, KGS/KCC terms, and validator language are NEEDS VERIFICATION.
   - Placement-law location (directory-rules.md root vs docs/doctrine/) is itself OPEN/CONFLICTED — see §14.
+owning_root: docs/
+responsibility: "Documentation for Geology and Natural Resources Domain — Architecture; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Geology and Natural Resources Domain — Architecture
@@ -565,14 +567,14 @@ This document is done enough to enter the repository when:
 - [`docs/domains/geology/README.md`](./README.md) — Geology lane orientation README (PROPOSED companion)
 - [`docs/domains/geology/API_CONTRACTS.md`](./API_CONTRACTS.md) — Geology governed API contracts (companion)
 - [`docs/domains/geology/surficial.md`](./surficial.md) — Surficial sublane doctrine (companion; PROPOSED)
-- [`directory-rules.md`](../../../directory-rules.md) — Authority for placement, lane pattern, schema-home rule (§6.4), and anti-patterns (§13)
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — Canonical operating contract (`CONTRACT_VERSION = "3.0.0"`)
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — Authority for placement, lane pattern, schema-home rule (§6.4), and anti-patterns (§13)
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — Canonical operating contract (`CONTRACT_VERSION = "3.0.0"`)
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED invariant
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Governed-API-only public path
 - [`docs/doctrine/authority-ladder.md`](../../doctrine/authority-ladder.md) — Truth-source ranking
 - [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — Public-read membrane (PROPOSED)
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — `contracts/` vs `schemas/` vs `policy/`
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — Schema-home decision
+- `docs/adr/ADR-0001-schema-home.md` (not present) — Schema-home decision
 - Adjacent domain architectures: [`docs/domains/hydrology/ARCHITECTURE.md`](../hydrology/ARCHITECTURE.md) · [`docs/domains/soil/ARCHITECTURE.md`](../soil/ARCHITECTURE.md) · [`docs/domains/hazards/ARCHITECTURE.md`](../hazards/ARCHITECTURE.md) — _existence not verified this session_
 - KFM Domains Culmination Atlas v1.1 — §10 (Geology / Natural Resources), §24.1 (Source-Role Anti-Collapse), §24.5 (Sensitivity Tiers), §24.13 (Responsibility-Root Crosswalk), §24.14 (Object Family × Domain Matrix)
 

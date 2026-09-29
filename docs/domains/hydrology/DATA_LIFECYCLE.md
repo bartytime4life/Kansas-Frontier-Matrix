@@ -10,8 +10,8 @@ updated: 2026-06-06
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
-  - ai-build-operating-contract.md            # canonical operating contract (CONTRACT_VERSION 3.0.0)
-  - directory-rules.md
+  - ../../doctrine/ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
   - docs/standards/PROV.md
@@ -25,6 +25,9 @@ notes:
   - Body claims labeled CONFIRMED doctrine / PROPOSED implementation per KFM truth posture.
   - Implementation-layer claims (paths, validators, CI) are PROPOSED pending mounted-repo verification.
   - v2 reconciles SourceDescriptor schema home, promotion-gate finite-outcome set, and ADR references against Atlas v1.1 + Directory Rules + Operating Contract v3.0. See Changelog.
+owning_root: docs/
+responsibility: "Documentation for Hydrology — Data Lifecycle; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 💧 Hydrology — Data Lifecycle
@@ -470,8 +473,8 @@ This document is done enough to enter the repository when:
 
 ## 16 · Related docs
 
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — canonical operating contract; `CONTRACT_VERSION = "3.0.0"`.
-- [`directory-rules.md`](../../../directory-rules.md) — placement law, lifecycle invariant, anti-patterns.
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract; `CONTRACT_VERSION = "3.0.0"`.
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — placement law, lifecycle invariant, anti-patterns.
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED invariant (canonical).
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — public surface boundary.
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O / PAV profile.

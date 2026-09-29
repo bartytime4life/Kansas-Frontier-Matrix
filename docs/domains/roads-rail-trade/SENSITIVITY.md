@@ -8,7 +8,7 @@ owners: TODO — Roads/Rail/Trade domain steward + sensitivity reviewer + rights
 created: 2026-06-07
 updated: 2026-06-07
 policy_label: public
-related: [docs/domains/roads-rail-trade/README.md, docs/domains/roads-rail-trade/PRESERVATION_MATRIX.md, docs/domains/roads-rail-trade/PIPELINE.md, docs/domains/roads-rail-trade/OBJECT_FAMILIES.md, policy/sensitivity/transport/, ai-build-operating-contract.md, docs/standards/SENSITIVITY_RUBRIC.md]
+related: [docs/domains/roads-rail-trade/README.md, docs/domains/roads-rail-trade/PRESERVATION_MATRIX.md, docs/domains/roads-rail-trade/PIPELINE.md, docs/domains/roads-rail-trade/OBJECT_FAMILIES.md, policy/sensitivity/transport/, ../../doctrine/ai-build-operating-contract.md, docs/standards/SENSITIVITY_RUBRIC.md]
 tags: [kfm, domain, roads-rail-trade, sensitivity, rights, tiers, redaction, sovereignty]
 notes:
   - "CONTRACT_VERSION = 3.0.0 pinned for this doctrine-adjacent doc."
@@ -16,6 +16,9 @@ notes:
   - "Tier scheme T0–T4 is PROPOSED per Atlas §24.5.1 (ADR-S-05). Lane baseline T1 (ENCY §7.11); core segments T0 (Atlas §24.14); cultural-corridor and critical-facility detail rise to T4."
   - "Policy home policy/sensitivity/transport/ uses the transport/ schema/policy segment (Atlas Ch.24.13 / ENCY §7.11), not domains/roads-rail-trade/ — documented divergence OQ-RRT-01."
   - "UncertaintySurface is the anchored gate object for T1 historic routes (doctrine-synthesis §16)."
+owning_root: docs/
+responsibility: "Documentation for Roads, Rail & Trade Routes — Sensitivity, Rights & Publication Posture; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -304,7 +307,7 @@ This document is done enough to enter the repository when:
 - [`docs/domains/roads-rail-trade/PIPELINE.md`](./PIPELINE.md) — RAW → PUBLISHED lifecycle & gates
 - [`docs/domains/roads-rail-trade/OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) — object identity & roles
 - [`policy/sensitivity/transport/`](../../../policy/sensitivity/transport/) — sensitivity policy home *(PROPOSED)*
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — §23 sensitive-domain matrix; `CONTRACT_VERSION = "3.0.0"`
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — §23 sensitive-domain matrix; `CONTRACT_VERSION = "3.0.0"`
 - `docs/standards/SENSITIVITY_RUBRIC.md` — cross-cutting rubric *(PROPOSED; not yet authored)*
 
 *Last updated: 2026-06-07 · [↑ Back to top](#top)*

@@ -8,9 +8,12 @@ owners: PLACEHOLDER-source-steward, PLACEHOLDER-roads-rail-domain-steward
 created: 2026-06-07
 updated: 2026-06-07
 policy_label: public
-related: [ai-build-operating-contract.md, directory-rules.md, docs/domains/roads-rail-trade/SOURCES.md, docs/domains/roads-rail-trade/README.md, schemas/contracts/v1/source/source-descriptor.json, data/registry/sources/roads-rail-trade/, policy/domains/roads-rail-trade/]
+related: [../../doctrine/ai-build-operating-contract.md, ../../doctrine/directory-rules.md, docs/domains/roads-rail-trade/SOURCES.md, docs/domains/roads-rail-trade/README.md, schemas/contracts/v1/source/source-descriptor.json, data/registry/sources/roads-rail-trade/, policy/domains/roads-rail-trade/]
 tags: [kfm, roads-rail-trade, source-families, source-role, rights, sensitivity, source-watch]
 notes: [Doctrine-adjacent; CONTRACT_VERSION = "3.0.0" pinned. Deep per-family companion to SOURCES.md (Option A division of labor). SOURCES.md remains the lane Source Ledger / authoritative index; this file holds per-family verification detail. Roles, rights, terms, endpoints, cadence are NEEDS VERIFICATION until an admitted SourceDescriptor confirms them.]
+owning_root: docs/
+responsibility: "Documentation for Roads, Rail & Trade Routes — Source Families (Deep Reference); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -296,8 +299,8 @@ This document is done enough to enter the repository when:
 
 - [`docs/domains/roads-rail-trade/SOURCES.md`](./SOURCES.md) — **authoritative lane Source Ledger / index** (this file is its deep companion)
 - [`docs/domains/roads-rail-trade/README.md`](./README.md) *(PROPOSED neighbor — verify)*
-- [`directory-rules.md`](../../../directory-rules.md) — Domain Placement Law §12; parallel-authority anti-pattern §13.1
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"`
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — Domain Placement Law §12; parallel-authority anti-pattern §13.1
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"`
 - `schemas/contracts/v1/source/source-descriptor.json` *(PROPOSED canonical schema home)*
 - `data/registry/sources/roads-rail-trade/` *(PROPOSED registry lane)*
 - `policy/domains/roads-rail-trade/` *(PROPOSED policy lane)*

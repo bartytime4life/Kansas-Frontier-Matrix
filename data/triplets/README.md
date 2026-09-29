@@ -87,7 +87,7 @@ Local README, inventory, digest, migration, and disposition sidecars may explain
 | canonical domain records or source payloads | their RAW/WORK/PROCESSED lanes |
 | catalog metadata | `data/catalog/` |
 | proofs, receipts, release decisions, or public graph services | their dedicated authority lanes |
-| new payloads in singular or literal compatibility paths | `data/triplet/` and `data/triplet(s)/` are compatibility-only |
+| new payloads in singular or literal compatibility paths | `data/triplet/` and `data/triplet(s)/` were removed on 2026-09-29; recreating either is topology drift |
 | Credentials, private keys, private endpoints, or unsafe logs | Approved secret and restricted operational systems |
 | Maps, reports, graphs, indexes, or AI output presented as sovereign truth | Resolve governed evidence/release state or abstain |
 

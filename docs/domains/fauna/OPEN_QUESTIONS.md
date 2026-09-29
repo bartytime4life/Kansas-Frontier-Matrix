@@ -11,7 +11,7 @@ policy_label: public
 contract_version: "3.0.0"
 related:
   - docs/doctrine/directory-rules.md
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
   - docs/domains/fauna/README.md
   - docs/domains/fauna/IDENTITY_MODEL.md
   - docs/domains/fauna/MAP_UI_CONTRACTS.md
@@ -26,6 +26,9 @@ notes:
   - "Consolidates the open items from the Atlas v1.1 §7.N Fauna backlog and from the Fauna companion docs (IDENTITY_MODEL, MAP_UI_CONTRACTS, OBJECT_FAMILIES, MISSING_OR_PLANNED_FILES)."
   - "This register is a navigation surface, not an authority. Resolutions land in ADRs, schemas, policy, and the DRIFT_REGISTER — not here."
   - "All repo paths PROPOSED until verified against a mounted repo."
+owning_root: docs/
+responsibility: "Documentation for Fauna — Open Questions Register; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🦌 Fauna — Open Questions Register
@@ -330,7 +333,7 @@ This register is done enough to enter the repository when:
 - [`docs/domains/fauna/OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) — family roster (source of §4 items). *(PROPOSED — companion; duplication with `OBJECTS.md`, OQ-FAUNA-04)*
 - [`docs/domains/fauna/MISSING_OR_PLANNED_FILES.md`](./MISSING_OR_PLANNED_FILES.md) — planned-files register (source of §5 items). *(PROPOSED — companion)*
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law. *(CONFIRMED)*
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED)*
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED)*
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — where CONFLICTED items are logged. *(NEEDS VERIFICATION present)*
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — repo-wide backlog. *(NEEDS VERIFICATION present)*
 - [`control_plane/verification_backlog.yaml`](../../../control_plane/verification_backlog.yaml) — machine-readable mirror. *(NEEDS VERIFICATION present)*

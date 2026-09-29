@@ -91,7 +91,7 @@ which family should become canonical.
 | Evidence semantics | [`contracts/evidence/`](../evidence/README.md) | Owns evidence references and bundles that support consequential claims. |
 | Machine shape | [`schemas/contracts/v1/focus/`](../../schemas/contracts/v1/focus/README.md) and object-specific schema families | Mixed proposed scaffolds and compatibility paths with documented overlap. |
 | Admissibility | [`policy/focus/`](../../policy/focus/README.md) | Repository-grounded but inactive policy boundary; evaluator remains unbound. |
-| Explorer projection | [Focus Panel feature](../../apps/explorer-web/src/features/focus_panel/README.md) | Bounded fixture-first consumer implementation; not contract-path authority. |
+| Explorer projection | Focus Panel feature (retired) | Bounded fixture-first consumer implementation; not contract-path authority. |
 
 ## Current executable evidence and limits
 

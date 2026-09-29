@@ -1,0 +1,72 @@
+{
+  "receipt_id": "genrec-post-merge-review-findings-4792-20260929",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/validators/test_e2e_readiness.py",
+    "tools/validators/e2e_readiness.py"
+  ],
+  "artifact_hashes": {
+    "tests/validators/test_e2e_readiness.py": "sha256:5fefcc0db089fbe77c3fdfcaad26ab741ba4a3d5845f8eeecae98ed0166630dd",
+    "tools/validators/e2e_readiness.py": "sha256:ede5a0220ee91040441b465d29a8197095251957bc37f93c6cb30293588aed94"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:f72a018418e9e3cd1bee162bfe1186c386b873432649fdecf4b1fddc5dea9211",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/93ece32b09aba1487c921ea3cd83d944dc769ead",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792#discussion_r4130314510",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792#discussion_r4130314514"
+    ]
+  },
+  "truth_labels": {
+    "tests/validators/test_e2e_readiness.py": "CONFIRMED",
+    "tools/validators/e2e_readiness.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Reproduce then fix",
+      "outcome": "PASS",
+      "reason": "A new e2e_readiness test (lane call only inside an uncalled nested function and lambda) fails on the merged validator and passes once the walk skips nested function scopes; the committed proof-slice test still counts as a lane invocation."
+    },
+    {
+      "gate": "Focused suites",
+      "outcome": "PASS",
+      "reason": "tests/validators/test_e2e_readiness.py and tests/e2e pass; e2e_readiness reports its expected hold on the repository."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "No pull request opened; read after push if one is requested."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/93ece32b09aba1487c921ea3cd83d944dc769ead"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-29T13:36:27Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 4792
+  },
+  "notes": "Follow-up to merged #4792. Class bodies are still walked because they execute at definition; methods are excluded as nested functions. The P3 catalog README finding is not addressed here: that README is bound by genrec-catalog-health-20260807.json, which catalog-health.yml verifies against current bytes, so updating it needs a receipt supersession."
+}

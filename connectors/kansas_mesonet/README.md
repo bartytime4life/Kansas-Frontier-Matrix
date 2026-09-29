@@ -273,7 +273,7 @@ Passing CI or merging a PR does not substitute for written source consent, polic
 | [`../`](../README.md) | Canonical connector responsibility root. | **CONFIRMED v0.3 root contract** |
 | [`../kansas/`](../kansas/README.md) | Kansas source-family coordination lane. | **CONFIRMED v0.2 / child topology provisional** |
 | [`../kansas/mesonet/`](../kansas/mesonet/README.md) | Closest surviving Mesonet product contract. | **CONFIRMED v0.2 / final child slug conflicted** |
-| [`../ks-mesonet/`](../ks-mesonet/README.md) | Short-name top-level alias. | **CONFIRMED v0.1 / stale path claims** |
+| `../ks-mesonet/` (not present) | Short-name top-level alias. | **CONFIRMED v0.1 / stale path claims** |
 | `../kansas-mesonet/` | Former top-level hyphen path. | **DELETED BY COMMIT 55c4e537** |
 | `../kansas/kansas-mesonet/` | Source-profile-proposed child. | **NOT FOUND AT EXACT PATH** |
 | [`../../docs/sources/catalog/kansas/kansas-mesonet.md`](../../docs/sources/catalog/kansas/kansas-mesonet.md) | Human-facing product/source profile. | **CONFIRMED v0.2 / path claim partly stale** |

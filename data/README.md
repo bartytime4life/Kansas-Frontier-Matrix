@@ -77,8 +77,6 @@ related:
   - prov/README.md
   - rollback/README.md
   - trade-routes/README.md
-  - triplet/README.md
-  - triplet(s)/README.md
   - ../release/README.md
   - ../docs/doctrine/directory-rules.md
   - ../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
@@ -536,8 +534,6 @@ data/
 ├── reports/
 ├── rollback/
 ├── trade-routes/
-├── triplet(s)/
-├── triplet/
 ├── triplets/
 └── work/
 ```
@@ -678,8 +674,8 @@ The presence of a lane proves repository bytes, not populated payload quality, a
 | `prov/` | `MIGRATE` candidate | `data/catalog/prov/` | Cut writers only after inventory and mapping. |
 | `rollback/` | `DEPRECATED/HOLD` ambiguous lane | Decisions: `release/rollback_cards/`; execution: `data/receipts/rollback/` | No new generic writes; classify before migration. |
 | `trade-routes/` | `MIGRATE/HOLD` topic bucket | `data/<lifecycle>/roads-rail-trade/` or registered object family | No bulk move; classify each object. |
-| `triplet/` | `MIGRATE` compatibility source | `data/triplets/` | Canonical single-write after consumer inventory. |
-| `triplet(s)/` | `DENY FOR NEW CANONICAL USE` | `data/triplets/` | Parenthesized placeholder grammar is nonconforming; preserve only for migration evidence. |
+| `triplet/` | `RETIRED 2026-09-29` | `data/triplets/` | README-only compatibility pointer removed; it held no payloads, writers, or consumers. |
+| `triplet(s)/` | `RETIRED 2026-09-29` | `data/triplets/` | Parenthesized placeholder grammar is nonconforming; the README-only pointer was removed. |
 
 These outcomes classify path posture; they do not authorize the migrations themselves.
 

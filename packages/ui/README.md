@@ -72,7 +72,7 @@ KFM separates deployable applications from shared packages. `packages/ui/` shoul
 | Source tree | [`src/README.md`](src/README.md) | CONFIRMED adjacent README | Importable component source boundary |
 | Renderer neighbor | [`../maplibre/README.md`](../maplibre/README.md) | NEEDS VERIFICATION | Map source, layer, style, and camera logic belongs outside this package |
 | Temporal neighbor | [`../temporal/README.md`](../temporal/README.md) | NEEDS VERIFICATION | Time labels and temporal display helpers may depend on shared temporal vocabulary |
-| Public explorer app | [`../../apps/explorer-web/README.md`](../../apps/explorer-web/README.md) | NEEDS VERIFICATION | Deployable app shell should consume this package |
+| Public explorer app | `../../apps/explorer-web/README.md` (retired) | NEEDS VERIFICATION | Deployable app shell should consume this package |
 | Governed API app | [`../../apps/governed-api/README.md`](../../apps/governed-api/README.md) | NEEDS VERIFICATION | Public payloads should be governed before reaching UI props |
 | Directory doctrine | [`../../docs/doctrine/directory-rules.md`](../../docs/doctrine/directory-rules.md) | NEEDS VERIFICATION | Placement authority; verify current repo path before relying on link |
 

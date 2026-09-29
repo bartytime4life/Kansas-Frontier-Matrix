@@ -9,20 +9,19 @@ created: 2026-05-19
 updated: 2026-06-08
 policy_label: public
 related:
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/registers/DRIFT_REGISTER.md
-  - kfm://atlas/v1.1#ch14-settlements-infrastructure
-  - kfm://atlas/v1.1#ch20-5-deny-by-default-register
-  - kfm://atlas/v1.1#ch24-5-sensitivity-tier-reference
-  - kfm://atlas/v1.1#ch24-13-atlas-dossier-root-crosswalk
 tags: [kfm, domain, settlements, infrastructure, expansion-plan]
 notes:
   - "CONTRACT_VERSION pinned to 3.0.0 per ai-build-operating-contract.md authority."
   - "Path home (PROPOSED): docs/domains/settlements-infrastructure/EXPANSION_PLAN.md per Directory Rules v1.3 12 (Domain Placement Law) and 6.1 (docs/ tree lists settlements-infrastructure as a segment)."
   - "Implementation-layer paths, routes, schemas, policies, tests, and CI claims are PROPOSED until verified against a mounted repo."
   - "CONFLICTED: lane segment naming. Directory Rules 6.1/6.4 trees use domains/<domain>/ and schemas/contracts/v1/domains/<domain>/; Atlas 24.13 row 14 uses flat contracts/settlement/ and schemas/contracts/v1/settlement/. Surfaced as ADR-S-SETTLE-01; mapped to Atlas open-ADR ADR-S-01/ADR-S-02 and ADR-0001."
+owning_root: docs/
+responsibility: "Documentation for Settlements / Infrastructure — Expansion Plan; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Settlements / Infrastructure — Expansion Plan
@@ -581,7 +580,7 @@ CONFIRMED carryover from Atlas v1.1 Ch. 14 §N.
 > [!NOTE]
 > Links below are **PROPOSED** repo-relative targets. Validate against repo evidence before publishing externally.
 
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"`
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"`
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement authority, **v1.3** (CONFIRMED rule / PROPOSED presence)
 - [`docs/domains/README.md`](../README.md) — domain-lane index *(TODO link target)*
 - [`docs/domains/settlements-infrastructure/README.md`](./README.md) — lane landing *(TODO)*

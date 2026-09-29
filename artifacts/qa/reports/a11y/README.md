@@ -77,7 +77,7 @@ contained accessibility output.
 ## Upstream executable evidence
 
 The
-[`accessibility` workflow](../../../../.github/workflows/accessibility.yml)
+`accessibility` workflow (not present)
 preserves two stable jobs:
 
 | Job | Current operation | Successful completion means | It does not mean |
@@ -86,7 +86,7 @@ preserves two stable jobs:
 | `axe` | Writes `WORKFLOW_SKIPPED_EXPLICIT` and `WORKFLOW_HOLD` to the step summary. | The hold-reporting step completed. | An axe scan, ruleset evaluation, or accessibility pass. |
 
 The workflow contract test at
-[`tests/ci/test_accessibility_workflow.py`](../../../../tests/ci/test_accessibility_workflow.py)
+`tests/ci/test_accessibility_workflow.py` (not present)
 checks the exact browser-spec list, stable job names, read-only permission,
 pinned actions, and no-upload posture. It tests workflow shape; it does not run
 the browser smoke or validate accessibility.

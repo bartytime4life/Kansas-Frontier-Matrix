@@ -116,7 +116,7 @@ This lane is downstream. It should not admit raw source captures, work candidate
 | [`../../catalog/domain/geology/`](../../catalog/domain/geology/) | Geology catalog records. | Discovery/lineage carrier; not release authority. |
 | [`../../triplets/geology/`](../../triplets/geology/) | Geology graph/triplet projection. | Upstream or sibling projection, not public by itself. |
 | [`../../proofs/geology/`](../../proofs/geology/) | Geology proof support. | Evidence and proof support; not published carrier. |
-| [`../../proofs/validation_report/geology/`](../../proofs/validation_report/geology/) | Geology validation reports. | Gate support, not publication authority. |
+| `../../proofs/validation_report/geology/` (not present) | Geology validation reports. | Gate support, not publication authority. |
 | [`../../receipts/`](../../receipts/) | Process memory. | Receipts say what ran; they do not publish. |
 | [`../../../release/`](../../../release/) | Release decisions, manifests, correction, withdrawal, rollback, signatures. | Publication authority lives here. |
 | [`../../../contracts/`](../../../contracts/) | Semantic meaning. | Published artifacts conform to contracts; they do not define them. |

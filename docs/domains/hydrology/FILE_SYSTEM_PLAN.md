@@ -10,27 +10,26 @@ updated: 2026-07-30
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
-  - "ai-build-operating-contract.md"                 # canonical operating contract (CONTRACT_VERSION 3.0.0)
-  - "directory-rules.md"
-  - "docs/domains/README.md"
-  - "docs/domains/hydrology/README.md"               # TODO: verify presence
-  - "docs/domains/hydrology/DATA_LIFECYCLE.md"
-  - "docs/domains/hydrology/EXPANSION_BACKLOG.md"
-  - "docs/domains/hydrology/EXPANSION_PLAN.md"
-  - "docs/adr/ADR-0001-schema-home.md"
-  - "docs/registers/DRIFT_REGISTER.md"
-  - "docs/registers/VERIFICATION_BACKLOG.md"
-  - "schemas/contracts/v1/domains/hydrology/"
-  - "schemas/contracts/v1/source/source-descriptor.json"   # shared SourceDescriptor schema (ADR-0001)
-  - "contracts/domains/hydrology/"
-  - "policy/domains/hydrology/"
-  - "tests/domains/hydrology/"
-  - "fixtures/domains/hydrology/"
-  - "packages/domains/hydrology/"
-  - "pipelines/domains/hydrology/"
-  - "pipeline_specs/hydrology/"
-  - "data/registry/sources/hydrology/"
-  - "release/candidates/hydrology/"
+  - ../../doctrine/ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md
+  - docs/domains/README.md
+  - docs/domains/hydrology/README.md
+  - docs/domains/hydrology/DATA_LIFECYCLE.md
+  - docs/domains/hydrology/EXPANSION_BACKLOG.md
+  - docs/domains/hydrology/EXPANSION_PLAN.md
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+  - schemas/contracts/v1/domains/hydrology/
+  - schemas/contracts/v1/source/source-descriptor.json
+  - contracts/domains/hydrology/
+  - policy/domains/hydrology/
+  - tests/domains/hydrology/
+  - fixtures/domains/hydrology/
+  - packages/domains/hydrology/
+  - pipelines/domains/hydrology/
+  - pipeline_specs/hydrology/
+  - data/registry/sources/hydrology/
+  - release/candidates/hydrology/
 tags: ["kfm", "hydrology", "directory-rules", "domain-lane", "file-system-plan", "governance"]
 notes:
   - "Lane PATTERN is CONFIRMED doctrine per Directory Rules §12."
@@ -38,6 +37,9 @@ notes:
   - "Companion to directory-rules.md; never overrides it. Also companion to DATA_LIFECYCLE / EXPANSION_BACKLOG / EXPANSION_PLAN."
   - "Crosswalk validator home is CONFLICTED (ADR-S-CWV-01); SourceDescriptor schema home is schemas/contracts/v1/source/ (source/ vs sources/ CONFLICTED per ADR-0001)."
   - "v2 reconciles crosswalk validator placement, SourceDescriptor schema home, Pre-RAW phase, alignment-threshold status, and CONTRACT_VERSION pin. See Changelog (§14)."
+owning_root: docs/
+responsibility: "Documentation for Hydrology — File System Plan; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Hydrology — File System Plan
@@ -674,8 +676,8 @@ ADR-linked rows reference the open-ADR backlog in Atlas §24.12 and Directory Ru
 
 ## 13 · Related docs
 
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — canonical operating contract; `CONTRACT_VERSION = "3.0.0"`.
-- [`directory-rules.md`](../../../directory-rules.md) — placement law; this plan never overrides it.
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract; `CONTRACT_VERSION = "3.0.0"`.
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — placement law; this plan never overrides it.
 - [`docs/domains/README.md`](../README.md) — domain index. *(TODO: verify presence.)*
 - [`docs/domains/hydrology/README.md`](./README.md) — hydrology domain landing page. *(TODO: verify presence.)*
 - [`docs/domains/hydrology/DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — lane governance and gates (companion).
@@ -685,7 +687,7 @@ ADR-linked rows reference the open-ADR backlog in Atlas §24.12 and Directory Ru
 - [`docs/domains/hydrology/SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md) — source families and roles. *(TODO.)*
 - [`docs/domains/hydrology/OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) — hydrology object families. *(TODO.)*
 - [`docs/domains/hydrology/THIN_SLICE_PLAN.md`](./THIN_SLICE_PLAN.md) — Kansas HUC12 fixture-first proof slice. *(TODO.)*
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — schema-home authority.
+- `docs/adr/ADR-0001-schema-home.md` (not present) — schema-home authority.
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — open drift entries.
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — verification queue.
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance profile (W3C PROV-O / PAV); live artifact, cf. OPEN-DR-01.

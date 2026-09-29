@@ -19,7 +19,7 @@ related:
   - docs/doctrine/policy-aware.md
   - docs/doctrine/directory-rules.md
   - docs/standards/PROV.md
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain:habitat, sensitivity, deny-by-default, geoprivacy, redaction, rare-species, governance]
 notes:
   - "Sensitive-domain document. Disposition is routed through the ai-build-operating-contract.md §23.2 sensitive-domain decision matrix; this doc does NOT re-derive disposition."
@@ -28,6 +28,9 @@ notes:
   - "Habitat sensitivity is largely INHERITED through the joined lane (Fauna/Flora). Atlas §24.13 lists no policy/sensitivity/habitat/ root; see Open Question OQ-HAB-SEN-01."
   - "Tier scheme T0-T4 and per-domain matrix are CONFIRMED doctrine; adoption is PROPOSED pending ADR-S-05. Reason codes per docs/domains/habitat/REASON_CODES.md."
   - "CONTRACT_VERSION = \"3.0.0\""
+owning_root: docs/
+responsibility: "Documentation for Habitat Domain — Sensitivity & Deny-by-Default Posture; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -385,7 +388,7 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — §12 Domain Placement Law.
 - `policy/sensitivity/fauna/` — Fauna sensitivity rules Habitat inherits through on join *(CONFIRMED home for Fauna; PROPOSED Habitat binding)*.
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance vocabulary for the receipts that carry transforms.
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — §23 sensitive-domain matrix; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — §23 sensitive-domain matrix; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
 
 ---
 

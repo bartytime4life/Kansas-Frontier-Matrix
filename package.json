@@ -7,7 +7,7 @@
     "node": ">=22.13 <23"
   },
   "description": "Private JavaScript workspace coordinator for Kansas Frontier Matrix.",
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bartytime4life/Kansas-Frontier-Matrix.git"

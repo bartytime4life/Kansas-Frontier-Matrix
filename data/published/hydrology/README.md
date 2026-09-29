@@ -113,9 +113,9 @@ This lane should not contain raw source captures, working candidates, held mater
 | [`../../quarantine/hydrology/`](../../quarantine/hydrology/) | Held material. | Not public-readable. |
 | [`../../processed/hydrology/`](../../processed/hydrology/) | Validated candidates. | Upstream of release. |
 | [`../../catalog/domain/hydrology/`](../../catalog/domain/hydrology/) | Catalog records. | Discovery and lineage, not release authority. |
-| [`../../triplets/hydrology/`](../../triplets/hydrology/) | Graph projection. | Not public by itself. |
+| `../../triplets/hydrology/` (not present) | Graph projection. | Not public by itself. |
 | [`../../proofs/hydrology/`](../../proofs/hydrology/) | Proof support. | Support, not published carrier. |
-| [`../../proofs/validation_report/hydrology/`](../../proofs/validation_report/hydrology/) | Validation reports. | Gate support, not publication authority. |
+| `../../proofs/validation_report/hydrology/` (not present) | Validation reports. | Gate support, not publication authority. |
 | [`../../receipts/`](../../receipts/) | Process memory. | Receipts do not publish. |
 | [`../../../release/`](../../../release/) | Release authority. | Manifests, correction, withdrawal, rollback, signatures. |
 | [`../../../contracts/`](../../../contracts/) | Semantic meaning. | Published artifacts conform; they do not define meaning. |

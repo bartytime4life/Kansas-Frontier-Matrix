@@ -8,9 +8,12 @@ owners: PLACEHOLDER-source-steward, PLACEHOLDER-roads-rail-domain-steward
 created: 2026-06-07
 updated: 2026-06-07
 policy_label: public
-related: [ai-build-operating-contract.md, directory-rules.md, docs/domains/roads-rail-trade/README.md, schemas/contracts/v1/source/source-descriptor.json, data/registry/sources/roads-rail-trade/, policy/domains/roads-rail-trade/]
+related: [../../doctrine/ai-build-operating-contract.md, ../../doctrine/directory-rules.md, docs/domains/roads-rail-trade/README.md, schemas/contracts/v1/source/source-descriptor.json, data/registry/sources/roads-rail-trade/, policy/domains/roads-rail-trade/]
 tags: [kfm, roads-rail-trade, sources, source-role, sensitivity, provenance]
 notes: [Doctrine-adjacent; CONTRACT_VERSION = "3.0.0" pinned. Source-family list is PROPOSED from the Roads/Rail dossier; rights, current terms, endpoints, and freshness are NEEDS VERIFICATION before admission/activation.]
+owning_root: docs/
+responsibility: "Documentation for Roads, Rail & Trade Routes — Source Catalog (SOURCES.md); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -43,7 +46,7 @@ notes: [Doctrine-adjacent; CONTRACT_VERSION = "3.0.0" pinned. Source-family list
 - [6. Source-role channels](#6-source-role-channels-anti-collapse)
 - [7. Source families (catalog)](#7-source-families-catalog)
 - [8. Sensitivity & publication posture](#8-sensitivity--publication-posture)
-- [9. Admission lifecycle](#9-admission-lifecycle-ra--published)
+- 9. Admission lifecycle
 - [10. Source registry record shape](#10-source-registry-record-shape-proposed)
 - [Open questions register](#open-questions-register)
 - [Open verification backlog](#open-verification-backlog)
@@ -339,8 +342,8 @@ This document is done enough to enter the repository when:
 ## Related docs
 
 - [`docs/domains/roads-rail-trade/README.md`](./README.md) *(PROPOSED neighbor — verify)*
-- [`directory-rules.md`](../../../directory-rules.md) — Domain Placement Law §12, placement protocol §4
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"`
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — Domain Placement Law §12, placement protocol §4
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"`
 - `schemas/contracts/v1/source/source-descriptor.json` *(PROPOSED canonical schema home)*
 - `data/registry/sources/roads-rail-trade/` *(PROPOSED registry lane)*
 - `policy/domains/roads-rail-trade/` *(PROPOSED policy lane)*

@@ -13,8 +13,8 @@ related:
   - docs/domains/people-dna-land/CONSENT_MODEL.md
   - docs/domains/people-dna-land/ARCHITECTURE.md
   - docs/domains/people-dna-land/CANONICAL_PATHS.md
-  - directory-rules.md
-  - ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, people-dna-land, consent, register, revocation, dna, living-person]
 notes:
   # CONTRACT_VERSION = "3.0.0"
@@ -22,6 +22,9 @@ notes:
   # HARD RULE: the register stores pointers, pseudonyms, status-list indices, DUO codes, and DSSE digests — NEVER raw PII, raw tokens (fingerprints only), or genotype data.
   # The register is NOT a publication permission: presence of a consent entry never publishes data (keystone rule, CONSENT_MODEL.md §2).
   # Register placement (data/registry/ vs control_plane/ vs policy/consent/) is an open ADR.
+owning_root: docs/
+responsibility: "Documentation for Consent Register — People / Genealogy / DNA / Land Domain; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Consent Register — People / Genealogy / DNA / Land Domain
@@ -309,8 +312,8 @@ PROPOSED; homes use the **whole-domain** `people-dna-land` segment (or the conse
 - [`./ARCHITECTURE.md`](./ARCHITECTURE.md) — domain architecture (sensitivity tiers, MUST-DENY conditions)
 - [`./CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) — register/consent-lane placement conflict (§9.3, VB-PDL-04)
 - `./sublanes/dna/README.md` — DNA sublane *(path pending the `sublanes/` ADR, ADR-NNNN)*
-- [`directory-rules.md`](../../../directory-rules.md) — placement law (§6.2 control_plane registers, §2.4 ADR triggers)
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — placement law (§6.2 control_plane registers, §2.4 ADR triggers)
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - Corpus anchors: Atlas Ch. 16 §C (`ConsentGrant`, `RevocationReceipt`, `DNAKitToken`) · §24.10 (risk register: living-person inference; rights-status drift) · KFM-P1-PROG-0007 (register pattern) · Pass-10 C9-02 (token fingerprint), C9-03 (no genotype republished), C9-04 (GA4GH DUO), C6-08 (revocation/cache), C5-09 (tombstones)
 
 -----

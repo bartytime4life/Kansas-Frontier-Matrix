@@ -10,8 +10,8 @@ updated: 2026-06-05
 policy_label: public
 contract_version: "3.0.0"
 related:
-  - ai-build-operating-contract.md
-  - directory-rules.md
+  - ../../doctrine/ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md
   - docs/domains/hazards/README.md
   - docs/domains/hazards/DATA_LIFECYCLE.md
   - docs/domains/hazards/GLOSSARY.md
@@ -28,6 +28,9 @@ notes:
   - PROPOSED implementation specifics (paths, validator names, ID derivation) until repo evidence is mounted.
   - Hazards is NOT an emergency alert system; this document constrains identity, not alerting.
   - v2 flags OQ-HAZ-IM-01 — operational-context source-role (administrative vs observed vs context) is CONFLICTED across the Hazards lane docs.
+owning_root: docs/
+responsibility: "Documentation for Hazards Identity Model; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Hazards Identity Model
@@ -523,8 +526,8 @@ This document is done enough to enter the repository when:
 
 ## 18. Related docs
 
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"` *(CONFIRMED authority)*
-- [`directory-rules.md`](../../../directory-rules.md) — placement authority; §12 Domain Placement Law *(CONFIRMED)*
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"` *(CONFIRMED authority)*
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — placement authority; §12 Domain Placement Law *(CONFIRMED)*
 - [`docs/domains/hazards/README.md`](./README.md) — Hazards lane landing and scope *(file presence NEEDS VERIFICATION)*
 - [`docs/domains/hazards/DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — lifecycle, freshness, receipt matrix *(sibling doc; operational-context role posture)*
 - [`docs/domains/hazards/GLOSSARY.md`](./GLOSSARY.md) — lane vocabulary; knowledge-character labels *(sibling doc)*

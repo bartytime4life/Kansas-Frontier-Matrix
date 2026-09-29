@@ -14,9 +14,8 @@ related:
   - docs/domains/people-dna-land/README.md
   - docs/domains/people-dna-land/API_CONTRACTS.md
   - docs/domains/people-dna-land/sublanes/README.md
-  - docs/adr/ADR-NNNN-sublanes-docs-convention.md
-  - directory-rules.md
-  - ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md
+  - ../../doctrine/ai-build-operating-contract.md
   - docs/standards/PROV.md
 tags: [kfm, domain, people, genealogy, dna, land, sensitive, assertion-first]
 notes:
@@ -26,6 +25,9 @@ notes:
   # Promotion Gates A-G corrected to canonical Pass 10 C5-01 labels; letter sequence is conventional pending ADR-S-08.
   # Segment naming people-dna-land (DIRRULES §12) vs people (Atlas §24.13) is an open ADR (OQ-PEOPLE-DNA-11).
   # All repo paths PROPOSED until verified against a mounted repo and Directory Rules.
+owning_root: docs/
+responsibility: "Documentation for People / Genealogy / DNA / Land Ownership — Domain Architecture; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # People / Genealogy / DNA / Land Ownership — Domain Architecture
@@ -577,9 +579,9 @@ When evidence is insufficient, the AI must **ABSTAIN** with a reason; when polic
 - [`docs/domains/people-dna-land/README.md`](./README.md) — Domain landing *(PROPOSED)*
 - [`docs/domains/people-dna-land/API_CONTRACTS.md`](./API_CONTRACTS.md) — governed-API surface contract
 - [`docs/domains/people-dna-land/sublanes/README.md`](./sublanes/README.md) — sublanes index *(convention pending ADR-NNNN)*
-- [`docs/adr/ADR-NNNN-sublanes-docs-convention.md`](../../adr/ADR-NNNN-sublanes-docs-convention.md) — `sublanes/` convention ADR
-- [`directory-rules.md`](../../../directory-rules.md) — Path authority and responsibility roots (§3, §12, §2.4, §2.5)
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- `docs/adr/ADR-NNNN-sublanes-docs-convention.md` (not present) — `sublanes/` convention ADR
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — Path authority and responsibility roots (§3, §12, §2.4, §2.5)
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O profile *(see open question #11)*
 - `docs/adr/` — Accepted ADRs *(enumeration NEEDS VERIFICATION)*
 - `contracts/domains/people-dna-land/` · `schemas/contracts/v1/domains/people-dna-land/` · `policy/domains/people-dna-land/` — object meaning / shape / policy *(PROPOSED)*

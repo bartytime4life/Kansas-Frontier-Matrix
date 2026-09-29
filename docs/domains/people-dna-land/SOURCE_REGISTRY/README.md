@@ -8,9 +8,12 @@ owners: <Source steward — PLACEHOLDER>, <People/DNA/Land domain steward — PL
 created: 2026-06-06
 updated: 2026-06-06
 policy_label: restricted
-related: [ai-build-operating-contract.md, directory-rules.md, docs/domains/people-dna-land/README.md, policy/sensitivity/people/, policy/consent/people/, schemas/contracts/v1/source/source-descriptor.json]
+related: [../../../doctrine/ai-build-operating-contract.md, ../../../doctrine/directory-rules.md, docs/domains/people-dna-land/README.md, policy/consent/people/, schemas/contracts/v1/source/source-descriptor.json]
 tags: [kfm, people, dna, land, genealogy, source-registry, sensitive, consent]
 notes: [CONTRACT_VERSION = "3.0.0"; sources Atlas v1.1 ch.16 source families + §24.5 sensitivity tiers + §24.13 crosswalk; slug "people-dna-land" vs crosswalk "people/" is CONFLICTED pending ADR; SOURCE_REGISTRY/ subfolder-with-README pattern is PROPOSED]
+owning_root: docs/
+responsibility: "Documentation for People / DNA / Land — Source Registry; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -28,7 +31,7 @@ notes: [CONTRACT_VERSION = "3.0.0"; sources Atlas v1.1 ch.16 source families + �
 ![updated](https://img.shields.io/badge/updated-2026--06--06-blue)
 
 **Status:** `draft` · **Owners:** `<Source steward>` · `<Domain steward>` · `<Sensitivity reviewer>` · `<Rights-holder rep>` *(all PLACEHOLDER)* · **Updated:** 2026-06-06
-**`CONTRACT_VERSION = "3.0.0"`** — governed by [`ai-build-operating-contract.md`](../../../../ai-build-operating-contract.md) and [`directory-rules.md`](../../../../directory-rules.md).
+**`CONTRACT_VERSION = "3.0.0"`** — governed by [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) and [`directory-rules.md`](../../../doctrine/directory-rules.md).
 
 > [!CAUTION]
 > **This lane fails closed.** Living-person output and DNA-derived outputs are denied or
@@ -300,8 +303,8 @@ This document is done enough to enter the repository when:
 
 ## Related docs
 
-- [`ai-build-operating-contract.md`](../../../../ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
-- [`directory-rules.md`](../../../../directory-rules.md) — placement authority (§3, §7.4, §12, §2.4)
+- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- [`directory-rules.md`](../../../doctrine/directory-rules.md) — placement authority (§3, §7.4, §12, §2.4)
 - `docs/domains/people-dna-land/README.md` — domain lane landing page *(TODO — verify slug + path)*
 - `policy/sensitivity/people/` — sensitivity deny-default lanes *(PROPOSED)*
 - `policy/consent/people/` — consent / revocation gates *(PROPOSED)*

@@ -63,7 +63,7 @@ The [Review Console architecture](../../docs/architecture/ui/REVIEW_CONSOLE.md) 
 |---|---|---|
 | This app and its seven feature lanes | CONFIRMED / DRAFT | Documentation and a placeholder manifest exist; executable app behavior is absent in this subtree. |
 | [Package manifest](package.json) | CONFIRMED / DRAFT | `name: review-console`, `private: true`, `version: 0.0.0`; no `scripts`, `dependencies`, or `devDependencies`. |
-| [Explorer read-only review entry](../explorer-web/src/features/review_console_readonly/index.tsx) | CONFIRMED / DRAFT | It exports `placeholder = true`; it is not an integrated review viewer or a decision API. |
+| Explorer read-only review entry (retired) | CONFIRMED / DRAFT | It exports `placeholder = true`; it is not an integrated review viewer or a decision API. |
 | [ReviewRecord validator](../../tools/validators/validate_review_record.py) | CONFIRMED / IMPLEMENTED, fixture-only | Separate executable checks for synthetic release-promotion review projections exist; execution results must be recorded separately. |
 | Integrated identity, queue, API, evidence, policy, audit, and release handoffs | UNKNOWN / NOT INSPECTED as a running system | Documentation and validator source do not establish an operational review service. |
 
@@ -77,7 +77,7 @@ These observations are pinned to the commit above. Reinspect before implementati
 |---|---|---|
 | Deployable composition | [Apps root](../README.md), this app, [source guide](src/README.md) | App-local shell and review workflow composition, when implemented |
 | Governed interface | [Governed API](../governed-api/README.md) | Role-appropriate projections and a separately admitted review-write interface; no live queue or submission route is claimed here |
-| Public/semi-public visibility | [Explorer read-only review](../explorer-web/src/features/review_console_readonly/README.md) | Separate consumer; no import or exposure of mutating review behavior |
+| Public/semi-public visibility | Explorer read-only review (retired) | Separate consumer; no import or exposure of mutating review behavior |
 | Object meaning and machine shape | [ReviewRecord contract](../../contracts/governance/ReviewRecord.md), [governance schema](../../schemas/contracts/v1/governance/review_record.schema.json) | Existing draft/proposed definitions, not a newly accepted submission contract |
 | Access, rights, sensitivity, and action rules | [Policy root](../../policy/) | The app consumes decisions; it does not author or override policy |
 | Lifecycle state, receipts, and proofs | [Data root](../../data/) | Records stay outside the browser and app source tree |

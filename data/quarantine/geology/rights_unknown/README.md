@@ -262,7 +262,7 @@ flowchart LR
 - [`../../../README.md`](../../../README.md)
 - [`../../../processed/geology/README.md`](../../../processed/geology/README.md)
 - [`../../../published/layers/geology/README.md`](../../../published/layers/geology/README.md)
-- [`../../../proofs/validation_report/geology/README.md`](../../../proofs/validation_report/geology/README.md)
+- `../../../proofs/validation_report/geology/README.md` (not present)
 - [`../../../../docs/domains/geology/ARCHITECTURE.md`](../../../../docs/domains/geology/ARCHITECTURE.md)
 - [`../../../../docs/domains/geology/README.md`](../../../../docs/domains/geology/README.md)
 - [`../../../../docs/runbooks/geology/PROMOTION_RUNBOOK.md`](../../../../docs/runbooks/geology/PROMOTION_RUNBOOK.md)

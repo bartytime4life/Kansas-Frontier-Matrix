@@ -9,17 +9,16 @@ created: 2026-05-16
 updated: 2026-05-29
 policy_label: public
 related:
-  - docs/domains/atmosphere/README.md            # PROPOSED — NEEDS VERIFICATION
-  - docs/domains/atmosphere/CANONICAL_PATHS.md   # PROPOSED — NEEDS VERIFICATION
-  - docs/domains/atmosphere/FILE_SYSTEM_PLAN.md  # companion — placement view
-  - docs/domains/atmosphere/EXPANSION_BACKLOG.md # companion — candidate register
-  - docs/doctrine/directory-rules.md             # CONFIRMED — this project
-  - docs/doctrine/lifecycle-law.md               # PROPOSED — NEEDS VERIFICATION
-  - docs/doctrine/truth-posture.md               # PROPOSED — NEEDS VERIFICATION
-  - docs/architecture/contract-schema-policy-split.md # PROPOSED — NEEDS VERIFICATION
-  - docs/standards/PROV.md                       # CONFIRMED — drafted in this project series
-  - docs/adr/ADR-0001-schema-home.md             # CONFIRMED — cited by Directory Rules
-  - ai-build-operating-contract.md               # CONFIRMED — operating contract
+  - docs/domains/atmosphere/README.md
+  - docs/domains/atmosphere/CANONICAL_PATHS.md
+  - docs/domains/atmosphere/FILE_SYSTEM_PLAN.md
+  - docs/domains/atmosphere/EXPANSION_BACKLOG.md
+  - docs/doctrine/directory-rules.md
+  - docs/doctrine/lifecycle-law.md
+  - docs/doctrine/truth-posture.md
+  - docs/architecture/contract-schema-policy-split.md
+  - docs/standards/PROV.md
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, atmosphere, air, identity, evidence, governance, doctrine]
 notes:
   # Implementation-layer claims are PROPOSED pending mounted-repo inspection.
@@ -28,6 +27,9 @@ notes:
   # The specific bundle_id / evidence_ref_id base32 derivation is NEEDS VERIFICATION (not located in indexed project knowledge).
   # CONTRACT_VERSION = "3.0.0" (doctrine-adjacent doc).
   # Meta Block v2 rule: no nested HTML comments inside this block; '#' annotations only.
+owning_root: docs/
+responsibility: "Documentation for Atmosphere — Identity Model; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Atmosphere — Identity Model
@@ -653,8 +655,8 @@ The following are **PROPOSED** sibling and ancestor documents per Directory Rule
 - [`docs/standards/OGC-API-TILES.md`](../../standards/OGC-API-TILES.md) — OGC API Tiles delivery *(CONFIRMED — drafted in this project series)*
 - [`docs/standards/OAI-PMH.md`](../../standards/OAI-PMH.md) — OAI-PMH 2.0 harvest *(CONFIRMED — drafted in this project series)*
 - [`docs/standards/ISO-19115.md`](../../standards/ISO-19115.md) — ISO 19115 crosswalk *(CONFIRMED — drafted in this project series)*
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — default machine-schema home *(CONFIRMED — cited by Directory Rules)*
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract *(CONFIRMED — `CONTRACT_VERSION = "3.0.0"`)*
+- `docs/adr/ADR-0001-schema-home.md` (not present) — default machine-schema home *(CONFIRMED — cited by Directory Rules)*
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract *(CONFIRMED — `CONTRACT_VERSION = "3.0.0"`)*
 - `schemas/contracts/v1/domains/atmosphere/` — Atmosphere machine-shape home *(PROPOSED — §12 lane pattern; presence NEEDS VERIFICATION)*
 - `contracts/domains/atmosphere/` — Atmosphere object meaning *(PROPOSED — NEEDS VERIFICATION)*
 - `policy/domains/atmosphere/` — Atmosphere admissibility / sensitivity bundles *(PROPOSED — NEEDS VERIFICATION)*

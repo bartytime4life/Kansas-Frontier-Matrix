@@ -306,7 +306,7 @@ No input may smuggle raw, quarantined, restricted, unreleased, or canonical-inte
 | Trust-bearing candidate | None as authority while here | Route to canonical receipt/proof/catalog/release/published owner after gates |
 | Failure bundle | Debugging only | Sensitive content redacted; durable incident/audit record goes to governed owner |
 
-Nothing under `artifacts/` is a standard data source for [`apps/governed-api/`](../apps/governed-api/) or [`apps/explorer-web/`](../apps/explorer-web/).
+Nothing under `artifacts/` is a standard data source for [`apps/governed-api/`](../apps/governed-api/) or `apps/explorer-web/` (retired).
 
 ## Public exposure and sensitivity
 
@@ -431,7 +431,7 @@ Escalate rather than normalize silently when:
 | [`tests/`](../tests/) and [`fixtures/`](../fixtures/) | Conformance code and reusable test inputs |
 | [`tools/validators/`](../tools/validators/) | Repository validator implementation |
 | [`apps/governed-api/`](../apps/governed-api/) | Public trust membrane; no artifact-root truth reads |
-| [`apps/explorer-web/`](../apps/explorer-web/) | Public/semi-public client; governed interfaces only |
+| `apps/explorer-web/` (retired) | Public/semi-public client; governed interfaces only |
 | [`control_plane/root_registry.yaml`](../control_plane/root_registry.yaml) | Non-authoritative machine projection of the adopted root class |
 | [`docs/registers/DRIFT_REGISTER.md`](../docs/registers/DRIFT_REGISTER.md) | Historical/open drift record |
 

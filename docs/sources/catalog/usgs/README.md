@@ -11,8 +11,6 @@ policy_label: public
 related:
   - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
   - docs/sources/catalog/README.md
-  - docs/sources/catalog/usgs/usgs-3dep-elevation.md
-  - docs/sources/catalog/usfws-ecos.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/truth-posture.md
@@ -28,7 +26,6 @@ related:
   - docs/standards/SENSITIVITY_RUBRIC.md
   - connectors/usgs/README.md
   - schemas/contracts/v1/source/source_descriptor.schema.json
-  - schemas/contracts/v1/spatial/
 adr_refs:
   - ADR-0001 (schema home)
   - <PROPOSED> ADR-S-04 (source-role vocabulary v1)
@@ -41,6 +38,9 @@ tags: [kfm, sources, catalog, usgs, hydrology, spatial-foundation, geology, haza
 notes:
   - "v1.1 — additive minor revision: cross-references to the newly-authored sibling product page docs/sources/catalog/usgs/usgs-3dep-elevation.md; structural-convention divergence flagged in §2 (flat-file usgs.md vs nested-folder usgs/<product>.md); ADR backlog made explicit; v0.2 connector pre-RAW EventEnvelope reflected in §8 diagram; Atlas §24.5.2 per-domain sensitivity tier doctrine threaded into §7."
   - "Catalog entry; not an admission decision. Activation lives in data/registry/sources/. Per-sub-source rights/cadence remain NEEDS VERIFICATION until SourceDescriptor lands."
+owning_root: docs/
+responsibility: "Documentation for USGS — Source Family Catalog Entry; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # USGS — Source Family Catalog Entry
@@ -66,10 +66,10 @@ notes:
 | **Owners** | `TODO` — Docs steward · Hydrology domain owner · Spatial Foundation domain owner |
 | **Last updated** | `2026-05-23` |
 | **Path (this file, flat-file convention)** | `docs/sources/catalog/usgs.md` *(PROPOSED — see §2 Repo fit and the structural-divergence note there)* |
-| **Sibling product pages (nested-folder convention)** | `docs/sources/catalog/usgs/<product>.md` — first authored: [`usgs-3dep-elevation.md`](./usgs/usgs-3dep-elevation.md) |
+| **Sibling product pages (nested-folder convention)** | `docs/sources/catalog/usgs/<product>.md` — first authored: `usgs-3dep-elevation.md` (not present) |
 
 > [!IMPORTANT]
-> **Structural convergence note.** Two structural conventions are currently in active use in this conversation's authored output: this file (flat single-file family-catalog at `docs/sources/catalog/usgs.md`) and per-product pages under a nested folder (`docs/sources/catalog/usgs/<product>.md`, e.g. the now-authored [`usgs-3dep-elevation.md`](./usgs/usgs-3dep-elevation.md)). Both are PROPOSED until reconciled by ADR. See [§2 Repo fit](#2-repo-fit) for the discussion; v1.1 of this page does **not** silently pick one over the other.
+> **Structural convergence note.** Two structural conventions are currently in active use in this conversation's authored output: this file (flat single-file family-catalog at `docs/sources/catalog/usgs.md`) and per-product pages under a nested folder (`docs/sources/catalog/usgs/<product>.md`, e.g. the now-authored `usgs-3dep-elevation.md` (not present)). Both are PROPOSED until reconciled by ADR. See [§2 Repo fit](#2-repo-fit) for the discussion; v1.1 of this page does **not** silently pick one over the other.
 
 ---
 
@@ -116,7 +116,7 @@ The KFM source registry is, per doctrine, an *admission and authority-control su
 |---|---|---|
 | `docs/sources/` lane | **CONFIRMED** | Directory Rules §6.1 lists `docs/sources/` for "source-descriptor standards, source families." |
 | `catalog/` subfolder | **PROPOSED** | Not explicitly named in Directory Rules; consistent with the lane's purpose (per-family catalog pages). Open a `docs/registers/DRIFT_REGISTER.md` entry if a different convention is preferred. |
-| **Nested family folder** (`catalog/usgs/`) | **PROPOSED — coexisting convention** | The per-product page [`usgs-3dep-elevation.md`](./usgs/usgs-3dep-elevation.md) was authored in this conversation under `docs/sources/catalog/usgs/`, paralleling the same pattern used for `docs/sources/catalog/usfws_ecos/{critical-habitat,esa-listing-status,ipac-project-lists,species-profiles}.md`. **See structural-divergence note below.** |
+| **Nested family folder** (`catalog/usgs/`) | **PROPOSED — coexisting convention** | The per-product page `usgs-3dep-elevation.md` (not present) was authored in this conversation under `docs/sources/catalog/usgs/`, paralleling the same pattern used for `docs/sources/catalog/usfws_ecos/{critical-habitat,esa-listing-status,ipac-project-lists,species-profiles}.md`. **See structural-divergence note below.** |
 | Domain placement | **CONFIRMED** | Cross-domain source family; therefore *not* under any single `docs/domains/<domain>/`. Directory Rules §12 — multi-domain files live under the lowest common responsibility root without a domain segment. |
 | Connector home | **CONFIRMED** | `connectors/usgs/` is named in Directory Rules §7.3. |
 | Schema home (descriptor) | **CONFIRMED default** | `schemas/contracts/v1/source/source_descriptor.schema.json` per ADR-0001 (schema home). Specific file presence is **NEEDS VERIFICATION** until the mounted repo is inspected. |
@@ -188,7 +188,7 @@ The table below catalogs the USGS sub-sources KFM dossiers and the encyclopedia 
 | **USGS Water Data APIs** (`api.waterdata.usgs.gov`) — successor to legacy WaterServices/NWIS | `usgs-water-data` | `observed` (gauges, sensor readings); `aggregate` (daily values, summaries) | Hydrology · Hazards (context) | PROPOSED — NEEDS VERIFICATION | **PROPOSED** — not yet authored |
 | **Watershed Boundary Dataset (WBD) / HUC** | `usgs-wbd` | `administrative` (HUC accounting units) *(see §6 role-mapping note; "context" alone is not a §24.1.1 enum value)* | Hydrology · Spatial Foundation · Agriculture · Habitat | PROPOSED — NEEDS VERIFICATION | **PROPOSED** — not yet authored |
 | **NHDPlus High Resolution (NHDPlus HR) / NHD / 3DHP** | `usgs-nhdplus-hr` | `observed` (hydrography geometry — first-party survey/digitization); `modeled` (Value-Added Attributes such as cumulative drainage, mean annual flow/velocity, flow direction). *(v1.1 note: NHD geometry itself was labeled "context" in v1; that informal label maps to `observed` at the descriptor level — the geometry is a measured/digitized representation, not a model output.)* | Hydrology · Spatial Foundation | PROPOSED — NEEDS VERIFICATION | **PROPOSED** — not yet authored |
-| **3D Elevation Program (3DEP)** — terrain, DEMs, LiDAR derivatives | `usgs-3dep` | **Heterogeneous** per `KFM-P30-IDEA-0019`: `observed` (LAZ point clouds — immutable source truth); `observed` derivative carrier (EPT/COPC analytic delivery); `modeled` (1 m DEM and coarser); `modeled` second-order (hillshade, slope, aspect, uncertainty) | Spatial Foundation · Hydrology · Hazards · Archaeology · Planetary/3D | PROPOSED — NEEDS VERIFICATION | **CONFIRMED authored — [`usgs-3dep-elevation.md`](./usgs/usgs-3dep-elevation.md)** *(v0.2)* |
+| **3D Elevation Program (3DEP)** — terrain, DEMs, LiDAR derivatives | `usgs-3dep` | **Heterogeneous** per `KFM-P30-IDEA-0019`: `observed` (LAZ point clouds — immutable source truth); `observed` derivative carrier (EPT/COPC analytic delivery); `modeled` (1 m DEM and coarser); `modeled` second-order (hillshade, slope, aspect, uncertainty) | Spatial Foundation · Hydrology · Hazards · Archaeology · Planetary/3D | PROPOSED — NEEDS VERIFICATION | **CONFIRMED authored — `usgs-3dep-elevation.md` (not present)** *(v0.2)* |
 | **The National Map** — discovery/download platform | `usgs-tnm` | `aggregator` of program assets *(carrier; per-asset role applies)* | Spatial Foundation (cross-cutting) | PROPOSED — NEEDS VERIFICATION | **PROPOSED** — not yet authored |
 | **Geographic Names Information System (GNIS)** | `usgs-gnis` | `administrative` (official geographic names, populated places) — per **`C7-09`** (USGS GNIS as the U.S.-canonical place-names authority); `candidate` (historical identity ambiguity) | Settlements & Infrastructure · Spatial Foundation · People-DNA-Land · Roads-Rail-Trade | PROPOSED — NEEDS VERIFICATION | **PROPOSED** — not yet authored |
 | **USGS Science Data Catalog** — e.g., NHDPlus v2.1 COMID → WBD HU-12 crosswalk | `usgs-sdc` | `modeled` where derivation is documented; `aggregate` for cross-domain mosaic products. *(v1.1 note: "context" alone is not a §24.1.1 enum value; per-product mapping required at descriptor time.)* | Hydrology (crosswalks) · cross-domain | PROPOSED — NEEDS VERIFICATION | **PROPOSED** — not yet authored |
@@ -213,7 +213,7 @@ The KFM `New_Ideas_5-8-26.pdf` packet records that the modern **USGS Water Data 
 
 | Sub-source | Per-product page path *(PROPOSED unless noted)* | Status |
 |---|---|---|
-| `usgs-3dep` | [`docs/sources/catalog/usgs/usgs-3dep-elevation.md`](./usgs/usgs-3dep-elevation.md) | **CONFIRMED authored** (v0.2) — covers LAZ, EPT/COPC, 1 m DEM, coarser DEMs, and second-order derivatives under one product page with `source_role` decomposition per sub-product. |
+| `usgs-3dep` | `docs/sources/catalog/usgs/usgs-3dep-elevation.md` (not present) | **CONFIRMED authored** (v0.2) — covers LAZ, EPT/COPC, 1 m DEM, coarser DEMs, and second-order derivatives under one product page with `source_role` decomposition per sub-product. |
 | `usgs-nhdplus-hr` | `docs/sources/catalog/usgs/usgs-nhd.md` | **PROPOSED** — not yet authored. |
 | `usgs-wbd` | `docs/sources/catalog/usgs/usgs-wbd.md` | **PROPOSED** — not yet authored. |
 | `usgs-gnis` | `docs/sources/catalog/usgs/usgs-gnis.md` | **PROPOSED** — not yet authored; should anchor to `C7-09`. |
@@ -234,7 +234,7 @@ The KFM `New_Ideas_5-8-26.pdf` packet records that the modern **USGS Water Data 
 
 | Anti-collapse risk | USGS context | Required guardrail |
 |---|---|---|
-| **Modeled product labeled as observed** | NHDPlus HR Value-Added Attributes (e.g., cumulative drainage, mean annual flow/velocity) are *derived*, not measured at each reach. 3DEP-derived DEMs, hillshade, slope, aspect are *modeled* from LiDAR returns — only the LAZ point clouds are `observed` (see `KFM-P30-IDEA-0019` and the [3DEP product page](./usgs/usgs-3dep-elevation.md) §2.1 for the per-sub-product decomposition). | Carry `role_model_run_ref` on `SourceDescriptor`; preserve role through every transform; expose role in `EvidenceBundle`. |
+| **Modeled product labeled as observed** | NHDPlus HR Value-Added Attributes (e.g., cumulative drainage, mean annual flow/velocity) are *derived*, not measured at each reach. 3DEP-derived DEMs, hillshade, slope, aspect are *modeled* from LiDAR returns — only the LAZ point clouds are `observed` (see `KFM-P30-IDEA-0019` and the 3DEP product page (not present) §2.1 for the per-sub-product decomposition). | Carry `role_model_run_ref` on `SourceDescriptor`; preserve role through every transform; expose role in `EvidenceBundle`. |
 | **Administrative compilation cited as observation** | GNIS entries and compiled geologic maps are *administrative compilations*, not first-hand observations of the named place at the cited time. | Cite as administrative context; never collapsed with observation. Use `LifeEvent` vs `AdminEvent` separation in People/Settlements lanes. |
 | **Aggregate cited as per-place truth** | USGS Water Data daily-value or annual summaries are *aggregates* over time windows; some catalog products aggregate spatially. | `AggregationReceipt` with explicit `role_aggregation_unit`; DENY join from aggregate cell to single record; ABSTAIN at AI. |
 
@@ -252,7 +252,7 @@ The KFM `New_Ideas_5-8-26.pdf` packet records that the modern **USGS Water Data 
 |---|---|---|
 | **Rights / license** | Generally permissive for federal USGS open data (17 U.S.C. §105) | **NEEDS VERIFICATION** per dataset; capture license text and attribution requirement on each `SourceDescriptor`; unknown rights fail closed. |
 | **Sensitivity (default)** | Mostly low-sensitivity → **T0 (Open)** per Atlas §24.5.1–24.5.2 | Per-sub-source overrides apply (see below). |
-| **Sensitivity — infrastructure overlay** | **T4 at the join** when high-resolution elevation, hydrography, or place data overlays critical infrastructure | Per Atlas §24.5.2 *"Infrastructure — critical asset detail"* row (T4) and *"Infrastructure — condition / vulnerability"* row (T4, T3 to named authorities only). Governed by ADR-S-14 (cross-lane join policy). See the [3DEP product page](./usgs/usgs-3dep-elevation.md) §9.1 for the worked case. |
+| **Sensitivity — infrastructure overlay** | **T4 at the join** when high-resolution elevation, hydrography, or place data overlays critical infrastructure | Per Atlas §24.5.2 *"Infrastructure — critical asset detail"* row (T4) and *"Infrastructure — condition / vulnerability"* row (T4, T3 to named authorities only). Governed by ADR-S-14 (cross-lane join policy). See the 3DEP product page (not present) §9.1 for the worked case. |
 | **Sensitivity — biodiversity join** | **T4 at the join** when USGS data is joined to precise rare-species occurrence records | Per `KFM-P24-IDEA-0002` (sensitive species deny-by-default) and `KFM-P25-IDEA-0006` (precision degradation). |
 | **Sensitivity — Tribal lands** | Routes through **`sovereignty_review`** (CARE applicability, S.O. 3206) | Family-level policy; routes any KFM-side aggregation / featuring / story over Tribal lands through Tribal-government review when triggered. |
 | **Freshness / cadence** | Highly source-vintage-specific (NHDPlus HR releases; 3DEP collection vintages; Water Data near-real-time vs daily values; earthquake stream is near-real-time) | Record `cadence`, `retrieval_time`, and `stale-state` thresholds on each `SourceDescriptor`; surface stale/degraded badges on UI. ADR-S-12 governs connector cadence + quarantine recovery. |
@@ -407,7 +407,7 @@ Below KFM core invariants, ADRs, and Directory Rules; above per-root READMEs onl
 - `docs/sources/README.md` *(PROPOSED)*.
 - `docs/sources/catalog/README.md` *(PROPOSED)*.
 - `docs/sources/catalog/usfws-ecos.md` — sibling family catalog entry (flat-file convention).
-- [`docs/sources/catalog/usgs/usgs-3dep-elevation.md`](./usgs/usgs-3dep-elevation.md) — **CONFIRMED authored** per-product page (nested-folder convention).
+- `docs/sources/catalog/usgs/usgs-3dep-elevation.md` (not present) — **CONFIRMED authored** per-product page (nested-folder convention).
 - `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` *(PROPOSED — referenced in the Whole-UI Expansion Report)*.
 - `docs/standards/STAC.md` *(PROPOSED)* · `docs/standards/DCAT.md` *(PROPOSED)* · `docs/standards/PROV.md` — STAC/DCAT/PROV profiles for USGS-derived catalog items.
 - `docs/standards/PMTILES.md` — tile delivery profile.
@@ -533,7 +533,7 @@ Citations: KFM Encyclopedia Master Domain Atlas (§5) and Appendix D Source fami
 | **Sensitive-occurrence join** *(cross-lane)* | **T4** at the join | Per `KFM-P24-IDEA-0002`, `KFM-P25-IDEA-0006`. |
 | **Tribal-lands featuring** *(cross-lane)* | **`sovereignty_review`** required | CARE applicability; S.O. 3206. |
 
-Detail per product lives on the per-product page (e.g., [3DEP product page §9](./usgs/usgs-3dep-elevation.md#9-rights-and-sensitivity-pointer)).
+Detail per product lives on the per-product page (e.g., 3DEP product page §9 (not present)).
 
 </details>
 
@@ -553,7 +553,7 @@ Detail per product lives on the per-product page (e.g., [3DEP product page §9](
 
 ---
 
-**Related:** [Directory Rules](../../doctrine/directory-rules.md) · [Source Descriptor Standard](../SOURCE_DESCRIPTOR_STANDARD.md) *(PROPOSED)* · [USGS Connector README](../../../connectors/usgs/README.md) *(PROPOSED)* · [Hydrology Domain](../../domains/hydrology/README.md) · **[3DEP Product Page](./usgs/usgs-3dep-elevation.md)** *(CONFIRMED authored)*
+**Related:** [Directory Rules](../../../doctrine/directory-rules.md) · Source Descriptor Standard (not present) *(PROPOSED)* · USGS Connector README (not present) *(PROPOSED)* · Hydrology Domain (not present) · **3DEP Product Page (not present)** *(CONFIRMED authored)*
 
 **Last updated:** 2026-05-23
 

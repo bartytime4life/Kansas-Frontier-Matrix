@@ -8,9 +8,12 @@ owners: TODO-roads-rail-domain-steward
 created: 2026-06-07
 updated: 2026-06-07
 policy_label: public
-related: [docs/domains/roads-rail-trade/README.md, schemas/contracts/v1/domains/roads-rail/, contracts/domains/roads-rail/, policy/sensitivity/roads-rail/, ai-build-operating-contract.md]
+related: [docs/domains/roads-rail-trade/README.md, ../../doctrine/ai-build-operating-contract.md]
 tags: [kfm]
 notes: [CONTRACT_VERSION = "3.0.0" pinned; object-family roster grounded in Atlas v1.0 Ch.13 §E and Ch.24.14; identity rule, source-role, and sensitivity columns are PROPOSED pending schema/ADR verification; path slug roads-rail-trade diverges from Atlas 24.13 crosswalk slug roads-rail and is an ADR candidate]
+owning_root: docs/
+responsibility: "Documentation for Roads, Rail & Trade Routes — Object Families; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -336,9 +339,9 @@ This document is done enough to enter the repository when:
 ## Related docs
 
 - [`docs/domains/roads-rail-trade/README.md`](./README.md) — lane overview *(TODO: verify exists)*
-- [`schemas/contracts/v1/domains/roads-rail/`](../../../schemas/contracts/v1/domains/roads-rail/) — schema home *(PROPOSED)*
-- [`contracts/domains/roads-rail/`](../../../contracts/domains/roads-rail/) — object meaning *(PROPOSED)*
-- [`policy/sensitivity/roads-rail/`](../../../policy/sensitivity/roads-rail/) — sensitivity policy *(PROPOSED)*
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — `CONTRACT_VERSION = "3.0.0"`
+- `schemas/contracts/v1/domains/roads-rail/` (not present) — schema home *(PROPOSED)*
+- `contracts/domains/roads-rail/` (not present) — object meaning *(PROPOSED)*
+- `policy/sensitivity/roads-rail/` (not present) — sensitivity policy *(PROPOSED)*
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — `CONTRACT_VERSION = "3.0.0"`
 
 *Last updated: 2026-06-07 · [↑ Back to top](#top)*

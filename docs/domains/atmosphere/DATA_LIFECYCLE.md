@@ -9,7 +9,7 @@ created: 2026-05-15
 updated: 2026-05-28
 policy_label: public
 related:
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/trust-membrane.md
@@ -24,6 +24,9 @@ notes:
   - CONTRACT_VERSION = "3.0.0" (doctrine-adjacent doc).
   - All repo-shaped paths are PROPOSED until verified against the mounted repository.
   - Atmosphere/Air does not replace official advisories or emergency alerting.
+owning_root: docs/
+responsibility: "Documentation for Atmosphere / Air — Data Lifecycle; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Atmosphere / Air — Data Lifecycle
@@ -604,7 +607,7 @@ This document is done enough to enter the repository when:
 
 > Paths below are **PROPOSED** until verified.
 
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract v3.0 (canonical). *(Verify relative path.)*
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract v3.0 (canonical). *(Verify relative path.)*
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — CONFIRMED canonical statement of the lifecycle invariant.
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Domain Placement Law and per-root authority.
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Public surfaces consume governed APIs only.

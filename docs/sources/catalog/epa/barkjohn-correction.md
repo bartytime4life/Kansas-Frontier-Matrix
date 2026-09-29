@@ -11,17 +11,18 @@ policy_label: public
 related:
   - docs/sources/catalog/epa/README.md
   - docs/sources/catalog/epa/aqs-airdata.md
-  - docs/sources/catalog/purpleair/README.md
   - docs/sources/catalog/README.md
   - docs/doctrine/directory-rules.md
   - data/registry/sources/
-  - policy/correction/barkjohn/
   - docs/standards/STAC_KFM_PROFILE.md
 tags: [kfm, docs, sources, catalog, epa, atmosphere, air-quality, correction, model]
 notes:
   - "PROPOSED product-page scaffold. Path `docs/sources/catalog/epa/barkjohn-correction.md` is PROPOSED; the `catalog/<family>/<product>` subfolder pattern is NEEDS VERIFICATION against Directory Rules."
   - "Doctrinal subtlety: Barkjohn is a *published correction regression*, not an observation source. Its SourceDescriptor carries `source_role: modeled` with a `role_model_run_ref`; it is *applied to* PurpleAir, not ingested in parallel with it. Placement under `docs/sources/catalog/epa/` is acceptable scaffolding but reviewers should consider whether a `docs/methods/` or `docs/models/` home is a better long-term fit (see OPEN-PATH-02)."
   - "Sibling-link placements (`./README.md`, `../IDENTITY.md`, `../RIGHTS-AND-SENSITIVITY-MAP.md`, `../_examples/`) are PROPOSED only."
+owning_root: docs/
+responsibility: "Documentation for EPA Barkjohn Correction; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # EPA Barkjohn Correction
@@ -44,7 +45,7 @@ notes:
 **Last reviewed:** 2026-05-21
 
 > [!IMPORTANT]
-> **The Barkjohn correction is a model, not a source feed.** It is a published regression EPA emits to reconcile PurpleAir community-sensor PM2.5 readings to regulatory-grade monitors. KFM applies it as a transformation step inside `pipelines/normalize/`. The SourceDescriptor for Barkjohn carries `source_role: modeled` with a `role_model_run_ref` (KFM-P1-PROG-0007) — it is not an observation source. Its authoritative version, parameters, and provenance live in [`data/registry/sources/`](../../../../data/registry/sources/) and in the policy bundle at [`policy/correction/barkjohn/`](../../../../policy/correction/barkjohn/) (path PROPOSED).
+> **The Barkjohn correction is a model, not a source feed.** It is a published regression EPA emits to reconcile PurpleAir community-sensor PM2.5 readings to regulatory-grade monitors. KFM applies it as a transformation step inside `pipelines/normalize/`. The SourceDescriptor for Barkjohn carries `source_role: modeled` with a `role_model_run_ref` (KFM-P1-PROG-0007) — it is not an observation source. Its authoritative version, parameters, and provenance live in [`data/registry/sources/`](../../../../data/registry/sources/) and in the policy bundle at `policy/correction/barkjohn/` (not present) (path PROPOSED).
 
 ---
 
@@ -379,7 +380,7 @@ CARE applicability is unlikely for the Barkjohn artifact itself (it is a public 
   - [`pipelines/validate/`](../../../../pipelines/validate/) — validity guards (channel divergence, impossible-PM, regime checks)
   - [`pipelines/catalog/`](../../../../pipelines/catalog/) — STAC / DCAT / PROV emission for the corrected Items
 - **Pipeline spec:** [`pipeline_specs/atmosphere/`](../../../../pipeline_specs/atmosphere/)
-- **Policy:** [`policy/correction/barkjohn/`](../../../../policy/correction/barkjohn/) (path PROPOSED) — version pin, allow rule, remediation playbook
+- **Policy:** `policy/correction/barkjohn/` (not present) (path PROPOSED) — version pin, allow rule, remediation playbook
 
 > [!WARNING]
 > Linked paths are PROPOSED placements consistent with the repository structure guide. Mounted-repo evidence has not been inspected in this session; every path on this page is NEEDS VERIFICATION.
@@ -421,16 +422,16 @@ See [`_examples/stac-item-example.json`](../_examples/stac-item-example.json) fo
 
 - [`docs/sources/catalog/epa/README.md`](./README.md) — `epa` family landing page (PROPOSED).
 - [`docs/sources/catalog/epa/aqs-airdata.md`](./aqs-airdata.md) — EPA AQS / AirData product page (regulatory-grade reference monitors that anchor the correction).
-- [`docs/sources/catalog/purpleair/README.md`](../purpleair/README.md) — PurpleAir family (the data Barkjohn is applied to; PROPOSED placement).
+- `docs/sources/catalog/purpleair/README.md` (not present) — PurpleAir family (the data Barkjohn is applied to; PROPOSED placement).
 - [`docs/sources/catalog/README.md`](../../README.md) — Sources catalog index (PROPOSED).
 - [`docs/sources/catalog/epa/IDENTITY.md`](../IDENTITY.md) — Collection-id and namespace conventions (PROPOSED placement).
 - [`docs/sources/catalog/epa/RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) — Family-level rights map (PROPOSED placement).
 - [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Authority boundaries and schema-home discipline.
 - [`docs/standards/STAC_KFM_PROFILE.md`](../../../standards/STAC_KFM_PROFILE.md) — STAC `kfm:provenance` profile (PROPOSED).
-- [`ai-build-operating-contract.md`](../../../../ai-build-operating-contract.md) — §34 GENERATED\_RECEIPT / ModelRunReceipt discipline (CONFIRMED contract).
+- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — §34 GENERATED\_RECEIPT / ModelRunReceipt discipline (CONFIRMED contract).
 - [`data/registry/sources/`](../../../../data/registry/sources/) — Canonical SourceDescriptor home (ADR-0001).
-- [`policy/correction/barkjohn/`](../../../../policy/correction/barkjohn/) — Version pin and allow rule (PROPOSED).
-- [`docs/adr/ADR-0001-schema-home.md`](../../../adr/ADR-0001-schema-home.md) — Schema-home rule.
+- `policy/correction/barkjohn/` (not present) — Version pin and allow rule (PROPOSED).
+- `docs/adr/ADR-0001-schema-home.md` (not present) — Schema-home rule.
 
 ---
 

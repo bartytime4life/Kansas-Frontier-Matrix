@@ -9,18 +9,13 @@ created: 2026-05-18
 updated: 2026-06-07
 policy_label: restricted-by-default
 related:
-  - ../../doctrine/directory-rules.md          # Directory Rules v1.3
-  - ../../../ai-build-operating-contract.md     # CONTRACT_VERSION = "3.0.0"
+  - ../../doctrine/directory-rules.md
+  - ../../doctrine/ai-build-operating-contract.md
   - ./DATA_LIFECYCLE.md
   - ./DEFINITION_OF_DONE.md
   - ./DNA_HANDLING.md
   - ../../standards/PROV.md
   - ../../registers/VERIFICATION_BACKLOG.md
-  - kfm://atlas/domains-v1.1/ch16
-  - kfm://atlas/domains-v1.1/ch24.12
-  - kfm://atlas/domains-v1.1/ch24.13
-  - kfm://pass10/c9
-  - kfm://pass10/c6
 tags: [kfm, domain, people-dna-land, backlog, governance, sensitivity]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned per ai-build-operating-contract.md v3.0.
@@ -30,6 +25,9 @@ notes:
   - ADR-S NUMBERING CONFLICT (OQ-PDL-ADR-NUM-01): the corpus carries two different ADR-S-* lists (Atlas §24.12 / Directory Rules §18.c vs Unified Doctrine §49). The same number (e.g. ADR-S-08) means different things in each. Cross-refs below cite the source list explicitly.
   - Consent terms are ConsentGrant + RevocationReceipt (Atlas ubiquitous language); DNA-overlay cards also use ConsentManifest / revocation ledger / DNAKitToken (naming reconciliation OPEN — see DNA_HANDLING.md OQ-PEOPLE-DNA-NAME-01).
   - Owners are placeholders pending CODEOWNERS resolution.
+owning_root: docs/
+responsibility: "Documentation for People / DNA / Land — Expansion Backlog; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # People / DNA / Land — Expansion Backlog
@@ -479,7 +477,7 @@ flowchart TB
 ## 15. Related docs
 
 - [`../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules v1.3; placement authority (responsibility roots, lifecycle, compatibility roots).
-- [`../../../ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating contract v3.0 (`CONTRACT_VERSION = "3.0.0"`).
+- [`../../../ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract v3.0 (`CONTRACT_VERSION = "3.0.0"`).
 - [`./DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — domain lifecycle, tiers, receipts (sibling; in-flight).
 - [`./DEFINITION_OF_DONE.md`](./DEFINITION_OF_DONE.md) — per-domain promotion-readiness checklist (sibling; in-flight; closes D-PDL-01).
 - [`./DNA_HANDLING.md`](./DNA_HANDLING.md) — DNA & genomic handling sub-policy (sibling; in-flight; closes D-PDL-08).

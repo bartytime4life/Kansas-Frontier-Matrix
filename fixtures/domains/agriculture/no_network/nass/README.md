@@ -138,7 +138,7 @@ Do not store live source dumps, full external responses, private joins, credenti
 | Agriculture object meaning | `contracts/domains/agriculture/` | Referenced, not replaced. |
 | Machine-checkable Agriculture shape | `schemas/contracts/v1/domains/agriculture/` | Referenced, not duplicated. |
 | Agriculture policy | `policy/domains/agriculture/` | Out of scope; fixtures may test it but do not define it. |
-| Canonical lifecycle data | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/triplet/`, `data/published/` | Out of scope; do not duplicate as fixtures. |
+| Canonical lifecycle data | `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, `data/catalog/`, `data/triplets/`, `data/published/` | Out of scope; do not duplicate as fixtures. |
 | Tests and validation proof | `tests/domains/agriculture/` and validator tooling | Referenced, not claimed as run. |
 
 Do not collapse this fixture lane into source access, source registry authority, source freshness proof, catalog authority, policy authority, release approval, or public-client permission.

@@ -13,9 +13,8 @@ related:
   - docs/domains/people-dna-land/ARCHITECTURE.md
   - docs/domains/people-dna-land/API_CONTRACTS.md
   - docs/domains/people-dna-land/CANONICAL_PATHS.md
-  - docs/domains/people-dna-land/sublanes/land/README.md
-  - directory-rules.md
-  - ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, people-dna-land, land, chain-of-title, ownership-interval, title, hypothesis]
 notes:
   # CONTRACT_VERSION = "3.0.0"
@@ -23,6 +22,9 @@ notes:
   # Two hard rules: assessor/tax records are NOT title truth; parcel geometry is NOT a title boundary.
   # KFM does not issue title opinions, quiet title, or legal advice; this doc is a modeling/reasoning note.
   # Frontier Matrix owns Land Office Record + Public Land Record (Atlas Ch.17 §B), not this domain.
+owning_root: docs/
+responsibility: "Documentation for Chain-of-Title Notes — People / Genealogy / DNA / Land Domain; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Chain-of-Title Notes — People / Genealogy / DNA / Land Domain
@@ -344,8 +346,8 @@ OwnershipInterval #3   valid: 1904-02-?? .. 1920-..   source: deed recorded 1904
 - [`./API_CONTRACTS.md`](./API_CONTRACTS.md) — governed-API surface contract (deny vocabulary, finite outcomes)
 - [`./CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) — path register and conflict log
 - `./sublanes/land/README.md` — Land sublane *(path pending the `sublanes/` ADR, ADR-NNNN)*
-- [`directory-rules.md`](../../../directory-rules.md) — placement law (§3, §12)
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — placement law (§3, §12)
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - Atlas Ch. 16 (`[DOM-PEOPLE]`) §A/§B/§C/§E/§I/§K/§L · Ch. 17 (Frontier Matrix, owns Land Office / Public Land records) · §24.1 (source-role anti-collapse) · §24.5.3 (tier transitions)
 
 -----

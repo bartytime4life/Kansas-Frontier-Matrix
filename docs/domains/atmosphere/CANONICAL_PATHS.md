@@ -10,21 +10,16 @@ updated: 2026-05-28
 policy_label: public
 contract_version: "3.0.0"
 related:
-  - kfm://doc/ai-build-operating-contract
   - kfm://doc/directory-rules
-  - kfm://doc/atlas/domains/atmosphere
-  - kfm://doc/encyclopedia/atmosphere-air
-  - kfm://doc/standards/PROV
-  - kfm://doc/standards/ISO-19115
-  - kfm://doc/standards/PMTILES
-  - kfm://doc/standards/OGC-API-TILES
-  - kfm://doc/standards/OAI-PMH
 tags: [kfm, atmosphere, air, canonical-paths, directory-rules, domain-placement-law]
 notes:
   - CONTRACT_VERSION pinned to 3.0.0 per ai-build-operating-contract.md.
   - Directory Rules cited at v1.3 (current corpus version).
   - All implementation paths are PROPOSED pending mounted-repo verification.
   - Domain segment (`atmosphere/` vs `air/`) is ADR-class — see §2.
+owning_root: docs/
+responsibility: "Documentation for Atmosphere — Canonical Paths; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 # Atmosphere — Canonical Paths
 > Canonical lane registry for the **Atmosphere / Air** domain — the one place that says where every Atmosphere-related file belongs across every responsibility root, derived from Directory Rules §12 (Domain Placement Law) and Atlas v1.0 Ch. 11. **PROPOSED** until verified against mounted-repo evidence.
@@ -344,8 +339,8 @@ This document is done enough to enter the repository when:
 [⬆ Back to top](#mini-toc)
 ---
 ## 14. Related docs
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED present in project; PROPOSED relative link.)*
-- [`directory-rules.md`](../../../directory-rules.md) — Canonical placement and lifecycle doctrine (v1.3); **authoritative** for any path question this document leaves OPEN. *(CONFIRMED present in project; PROPOSED relative link.)*
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED present in project; PROPOSED relative link.)*
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — Canonical placement and lifecycle doctrine (v1.3); **authoritative** for any path question this document leaves OPEN. *(CONFIRMED present in project; PROPOSED relative link.)*
 - [`docs/domains/atmosphere/README.md`](./README.md) — Domain landing page (TODO; placeholder).
 - [`docs/architecture/`](../../architecture/) — Cross-domain doctrine (placement target for any Atmosphere doctrine spanning multiple domains).
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — Where any observed `air/` vs `atmosphere/` divergence in mounted-repo evidence should be logged. *(PROPOSED.)*

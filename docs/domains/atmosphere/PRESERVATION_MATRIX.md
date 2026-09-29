@@ -16,7 +16,7 @@ related:
   - docs/domains/atmosphere/POLICY.md
   - docs/domains/atmosphere/MISSING_OR_PLANNED_FILES.md
   - docs/doctrine/directory-rules.md
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
   - schemas/contracts/v1/source/source-descriptor.json
 tags: [kfm, atmosphere, air, doctrine, preservation, source-role, knowledge-character, sensitivity, lifecycle, anti-collapse]
 notes:
@@ -25,6 +25,9 @@ notes:
   - All implementation-layer claims (schemas, validators, policies, routes) are PROPOSED until verified against a mounted repo.
   - "Atmosphere / Air" is the canonical domain identity in Atlas v1.1 11; "atmosphere" is the directory slug per Directory Rules 12.
   - Meta Block v2 carries no nested HTML comments; inline annotation uses # only.
+owning_root: docs/
+responsibility: "Documentation for Atmosphere/Air — Preservation Matrix; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Atmosphere/Air — Preservation Matrix
@@ -733,7 +736,7 @@ This document is done enough to enter the repository when:
 
 ---
 
-**Related:** [README](./README.md) · [Object Family Map](./OBJECT_FAMILY_MAP.md) · [Pipeline](./PIPELINE.md) · [Policy](./POLICY.md) · [Planned Files](./MISSING_OR_PLANNED_FILES.md) · [Directory Rules](../../doctrine/directory-rules.md) · [Operating Contract](../../../ai-build-operating-contract.md) — _all PROPOSED paths; NEEDS VERIFICATION_
+**Related:** [README](./README.md) · [Object Family Map](./OBJECT_FAMILY_MAP.md) · [Pipeline](./PIPELINE.md) · [Policy](./POLICY.md) · [Planned Files](./MISSING_OR_PLANNED_FILES.md) · [Directory Rules](../../doctrine/directory-rules.md) · [Operating Contract](../../doctrine/ai-build-operating-contract.md) — _all PROPOSED paths; NEEDS VERIFICATION_
 
 **Last updated:** 2026-05-29 · **Doc id:** `kfm://doc/atmosphere/preservation-matrix` · **Version:** v2 · **Status:** Draft · **CONTRACT_VERSION = "3.0.0"**
 

@@ -14,11 +14,8 @@ related:
   - docs/domains/people-dna-land/sublanes/README.md
   - docs/domains/people-dna-land/sublanes/land.md
   - docs/domains/people-dna-land/sublanes/people/README.md
-  - docs/domains/people-dna-land/sublanes/dna/README.md
-  - docs/domains/people-dna-land/sublanes/genealogy/README.md
-  - docs/domains/frontier-matrix/README.md
-  - directory-rules.md
-  - ai-build-operating-contract.md
+  - ../../../doctrine/directory-rules.md
+  - ../../../doctrine/ai-build-operating-contract.md
   - docs/standards/PROV.md
 tags: [kfm, domain, people-dna-land, land-ownership, sublane]
 notes:
@@ -27,6 +24,9 @@ notes:
   # sublanes/ subdirectory is PROPOSED; not confirmed by ADR or mounted-repo inspection (OQ-PEOPLE-SUB-01).
   # filename land_ownership.md (flat) vs land.md (flat) vs land/README.md (subfolder) — all three forms now exist in drafts (OQ-PEOPLE-SUB-13).
   # CONFIRMED: Frontier Matrix owns LandOfficeRecord and PublicLandRecord; this sublane does not.
+owning_root: docs/
+responsibility: "Documentation for Land Ownership Sublane — People / Genealogy / DNA / Land Ownership Domain; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🪙 Land Ownership Sublane
@@ -542,11 +542,11 @@ sequenceDiagram
 - [`docs/domains/people-dna-land/sublanes/README.md`](./README.md) — sublanes index (PROPOSED)
 - [`docs/domains/people-dna-land/sublanes/land.md`](./land.md) — **duplicate land slice (OQ-PEOPLE-SUB-14)**
 - [`docs/domains/people-dna-land/sublanes/people/README.md`](./people/README.md) — sibling sublane (PROPOSED)
-- [`docs/domains/people-dna-land/sublanes/dna/README.md`](./dna/README.md) — sibling sublane (PROPOSED)
-- [`docs/domains/people-dna-land/sublanes/genealogy/README.md`](./genealogy/README.md) — sibling sublane (PROPOSED)
-- [`docs/domains/frontier-matrix/README.md`](../../frontier-matrix/README.md) — owner of `Land Office Record` / `Public Land Record` (PROPOSED)
-- [`directory-rules.md`](../../../../directory-rules.md) — placement law (§3, §12, §2.4, §7.4) (CONFIRMED file role)
-- [`ai-build-operating-contract.md`](../../../../ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- `docs/domains/people-dna-land/sublanes/dna/README.md` (not present) — sibling sublane (PROPOSED)
+- `docs/domains/people-dna-land/sublanes/genealogy/README.md` (not present) — sibling sublane (PROPOSED)
+- `docs/domains/frontier-matrix/README.md` (not present) — owner of `Land Office Record` / `Public Land Record` (PROPOSED)
+- [`directory-rules.md`](../../../doctrine/directory-rules.md) — placement law (§3, §12, §2.4, §7.4) (CONFIRMED file role)
+- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - [`docs/standards/PROV.md`](../../../standards/PROV.md) — provenance crosswalk
 - `docs/registers/VERIFICATION_BACKLOG.md` · `docs/registers/DRIFT_REGISTER.md` — open items + drift (PROPOSED paths)
 

@@ -49,8 +49,8 @@ Build public-safe geology layer-manifest payloads for governed KFM map, API, Evi
 - [Validation gates](#validation-gates)
 - [Development rules](#development-rules)
 - [Definition of done](#definition-of-done)
-- [Verification checklist](#verification-checklist)
-- [Rollback](#rollback)
+- Verification checklist
+- Rollback
 
 ---
 

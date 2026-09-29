@@ -10,20 +10,22 @@ updated: 2026-06-02
 policy_label: public
 related:
   - docs/domains/fauna/README.md
-  - docs/domains/fauna/FAUNA_DATA_LIFECYCLE.md
   - docs/domains/fauna/EXPANSION_BACKLOG.md
   - docs/domains/fauna/EXPANSION_PLAN.md
   - docs/standards/PROV.md
   - docs/standards/PMTILES.md
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
-  - directory-rules.md
-  - ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, fauna, directory-rules, placement, sensitivity, geoprivacy]
 notes:
   - CONTRACT_VERSION = "3.0.0".
   - Derived from Directory Rules §4 placement protocol and §12 Domain Placement Law.
   - Directory Rules section numbers vary by version (v1.2/v1.3); section pointers here are NEEDS VERIFICATION against the mounted edition.
   - Repo-state claims remain PROPOSED until mounted-repo inspection.
+owning_root: docs/
+responsibility: "Documentation for Fauna Domain — File System Plan; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Fauna Domain — File System Plan
@@ -561,10 +563,10 @@ For any new fauna-bearing file, walk Directory Rules §4 Steps 1–5 in order:
 
 ## 16. Related docs
 
-- [`directory-rules.md`](../../../directory-rules.md) — Authoritative placement protocol (§§3, 4, 7, 12, 13; README contract §15 in this edition).
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — `CONTRACT_VERSION = "3.0.0"`; T0–T4, finite outcomes, `RuntimeResponseEnvelope`.
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — Authoritative placement protocol (§§3, 4, 7, 12, 13; README contract §15 in this edition).
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — `CONTRACT_VERSION = "3.0.0"`; T0–T4, finite outcomes, `RuntimeResponseEnvelope`.
 - [`docs/domains/fauna/README.md`](./README.md) — *(PROPOSED)* lane README and entry point.
-- [`docs/domains/fauna/FAUNA_DATA_LIFECYCLE.md`](./FAUNA_DATA_LIFECYCLE.md) — *(PROPOSED)* lifecycle companion.
+- `docs/domains/fauna/FAUNA_DATA_LIFECYCLE.md` (not present) — *(PROPOSED)* lifecycle companion.
 - [`docs/domains/fauna/EXPANSION_BACKLOG.md`](./EXPANSION_BACKLOG.md) — *(PROPOSED)* backlog register.
 - [`docs/domains/fauna/EXPANSION_PLAN.md`](./EXPANSION_PLAN.md) — *(PROPOSED)* phased rollout plan.
 - [`docs/domains/fauna/SOURCES.md`](./SOURCES.md) — *(PROPOSED)* source-role doctrine.

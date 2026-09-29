@@ -29,7 +29,6 @@ related:
   - tests/domains/water_planning/test_geometry_authority.py
   - tests/domains/water_planning/test_rac_registry.py
   - tests/schemas/test_water_planning_contracts.py
-  - docs/adr/ADR-0001-schema-home.md
 tags: [kfm, source-catalog, kansas, kansas-first, kwo, water-planning, water-infrastructure, grant, rac, regional-advisory-committee, water-authority, water-plan, hydrology, governance, deferred-epic]
 notes:
   - "The exact public KWO RAC Feature Service and Census 2025 county layer are admitted only for the bounded internal geometry/crosswalk candidate recorded in issue #1675."
@@ -39,6 +38,9 @@ notes:
   - "HB 2462 (2026) changed eligibility criteria, scoring categories, and administration — must be modeled as a new ProgramVersion."
   - "Kansas has exactly 14 Regional Advisory Committee planning areas."
   - "Slice 4 now pins one 14-feature KWO geometry payload and a 209-row positive-area county intersection crosswalk."
+owning_root: docs/
+responsibility: "Documentation for KWO — Kansas Water Office (Source Catalog Entry); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -383,19 +385,19 @@ connector or any public carrier.
 
 - [`docs/sources/catalog/kansas/README.md`](./README.md) — Kansas source family index
 - [`docs/sources/catalog/README.md`](../README.md) — Source catalog parent
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Placement and authority rules
-- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED governance
-- [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — Cite-or-abstain
-- [`schemas/contracts/v1/domains/water_planning/`](../../../schemas/contracts/v1/domains/water_planning/) — Entity schemas (PROPOSED)
-- [`contracts/domains/water_planning/`](../../../contracts/domains/water_planning/) — Contract documents (PROPOSED)
-- [`fixtures/domains/water_planning/`](../../../fixtures/domains/water_planning/) — Synthetic fixtures
-- [`tests/schemas/test_water_planning_contracts.py`](../../../tests/schemas/test_water_planning_contracts.py) — Schema tests
-- [`fixtures/domains/water_planning/geometry_authority/`](../../../fixtures/domains/water_planning/geometry_authority/) — Slice 4 synthetic authority fixtures
-- [`tools/validators/domains/water_planning/validate_geometry_authority.py`](../../../tools/validators/domains/water_planning/validate_geometry_authority.py) — Slice 4 deterministic checker
-- [`tests/domains/water_planning/test_geometry_authority.py`](../../../tests/domains/water_planning/test_geometry_authority.py) — Slice 4 no-network tests
-- [`contracts/domains/water_planning/rac_geometry_registry.md`](../../../contracts/domains/water_planning/rac_geometry_registry.md) — Concrete source and derivation contract
-- [`tools/validators/domains/water_planning/validate_rac_registry.py`](../../../tools/validators/domains/water_planning/validate_rac_registry.py) — Concrete registry validator
-- [`tests/domains/water_planning/test_rac_registry.py`](../../../tests/domains/water_planning/test_rac_registry.py) — Concrete registry regression tests
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — Schema-home convention
+- [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Placement and authority rules
+- `docs/doctrine/lifecycle-law.md` (not present) — RAW → PUBLISHED governance
+- `docs/doctrine/truth-posture.md` (not present) — Cite-or-abstain
+- `schemas/contracts/v1/domains/water_planning/` (not present) — Entity schemas (PROPOSED)
+- `contracts/domains/water_planning/` (not present) — Contract documents (PROPOSED)
+- `fixtures/domains/water_planning/` (not present) — Synthetic fixtures
+- `tests/schemas/test_water_planning_contracts.py` (not present) — Schema tests
+- `fixtures/domains/water_planning/geometry_authority/` (not present) — Slice 4 synthetic authority fixtures
+- `tools/validators/domains/water_planning/validate_geometry_authority.py` (not present) — Slice 4 deterministic checker
+- `tests/domains/water_planning/test_geometry_authority.py` (not present) — Slice 4 no-network tests
+- `contracts/domains/water_planning/rac_geometry_registry.md` (not present) — Concrete source and derivation contract
+- `tools/validators/domains/water_planning/validate_rac_registry.py` (not present) — Concrete registry validator
+- `tests/domains/water_planning/test_rac_registry.py` (not present) — Concrete registry regression tests
+- `docs/adr/ADR-0001-schema-home.md` (not present) — Schema-home convention
 
 [Back to top](#top)

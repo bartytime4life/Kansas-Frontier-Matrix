@@ -19,7 +19,7 @@ related:
   - docs/doctrine/directory-rules.md
   - data/registry/sources/habitat/
   - data/raw/habitat/
-  - ai-build-operating-contract.md
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain:habitat, runbook, source-refresh, ops, watcher, promotion, governance]
 notes:
   - "PLACEMENT CONFLICT: requested at docs/domains/habitat/SOURCE_REFRESH_RUNBOOK.md, but Directory Rules §6.1.b makes docs/runbooks/ the canonical home for operational procedures. A runbook under docs/domains/ is a responsibility-root violation (a runbook is procedure, not domain documentation). This artifact is placed at docs/runbooks/habitat/SOURCE_REFRESH_RUNBOOK.md (Pattern A — domain subfolder, matching the fauna runbook). The requested path is recorded as a drift candidate (OQ-HAB-RB-01)."
@@ -27,6 +27,9 @@ notes:
   - "Watcher-as-non-publisher invariant: a watcher proposes a candidate delta and emits a receipt; it NEVER promotes or publishes."
   - "Refresh is a governed lifecycle pass (RAW → … → PUBLISHED), not a file overwrite. Source role is set at admission and never edited in-place; a changed role needs a new descriptor + CorrectionNotice."
   - "Sensitive sources (NatureServe rare-data, occurrence inputs, KDWP SGCN) fail closed. No exact coordinates, tokens, or restricted-source fields appear. CONTRACT_VERSION = \"3.0.0\"."
+owning_root: docs/
+responsibility: "Documentation for Habitat — Source Refresh Runbook; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -333,7 +336,7 @@ This runbook is done enough to enter the repository when:
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — §6.1.b runbook placement; OPEN-DR-02.
 - `data/registry/sources/habitat/` — append-only descriptor authority *(CONFIRMED home / PROPOSED presence)*.
 - `data/raw/habitat/` — RAW capture home *(PROPOSED)*.
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — gates A–G; §23 runbooks-to-create; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — gates A–G; §23 runbooks-to-create; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
 
 ---
 

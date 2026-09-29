@@ -114,9 +114,9 @@ This lane should not contain raw source captures, working candidates, held mater
 | [`../../quarantine/hazards/`](../../quarantine/hazards/) | Held material. | Not public-readable. |
 | [`../../processed/hazards/`](../../processed/hazards/) | Validated candidates. | Upstream of release. |
 | [`../../catalog/domain/hazards/`](../../catalog/domain/hazards/) | Catalog records. | Discovery and lineage, not release authority. |
-| [`../../triplets/hazards/`](../../triplets/hazards/) | Graph projection. | Not public by itself. |
+| `../../triplets/hazards/` (not present) | Graph projection. | Not public by itself. |
 | [`../../proofs/hazards/`](../../proofs/hazards/) | Proof support. | Support, not published carrier. |
-| [`../../proofs/validation_report/hazards/`](../../proofs/validation_report/hazards/) | Validation reports. | Gate support, not publication authority. |
+| `../../proofs/validation_report/hazards/` (not present) | Validation reports. | Gate support, not publication authority. |
 | [`../../receipts/`](../../receipts/) | Process memory. | Receipts do not publish. |
 | [`../../../release/`](../../../release/) | Release authority. | Manifests, correction, withdrawal, rollback, signatures. |
 | [`../../../contracts/`](../../../contracts/) | Semantic meaning. | Published artifacts conform; they do not define meaning. |

@@ -11,7 +11,7 @@ policy_label: public
 related:
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/truth-posture.md          # filename NEEDS VERIFICATION (see §17 note)
+  - docs/doctrine/truth-posture.md
   - docs/doctrine/trust-membrane.md
   - docs/domains/habitat/API_CONTRACTS.md
   - docs/domains/habitat/sublanes/suitability.md
@@ -20,9 +20,7 @@ related:
   - docs/domains/flora/ARCHITECTURE.md
   - docs/standards/PROV.md
   - docs/standards/PMTILES.md
-  - ai-build-operating-contract.md
-  - kfm://doc/dom-hab
-  - kfm://doc/dom-hf
+  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, habitat, ecology, lane-architecture]
 notes:
   - CONTRACT_VERSION = "3.0.0"
@@ -30,6 +28,9 @@ notes:
   - All repo-path claims are PROPOSED until verified against a mounted repository.
   - Owner placeholder pending CODEOWNERS / steward assignment.
   - "CONFLICTED schema-home: ADR-0001 is referenced by ADR-S-01 as still-open (confirm-or-amend); and Directory Rules §12 segmented slug (.../domains/habitat/) vs Atlas §24.13 flat slug (.../habitat/) is unresolved. See §3.2 and §16."
+owning_root: docs/
+responsibility: "Documentation for Habitat Domain · Architecture; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Habitat Domain · Architecture
@@ -568,12 +569,12 @@ flowchart LR
 <details>
 <summary><strong>Lane companions, ADRs, and runbooks (PROPOSED locations)</strong></summary>
 
-- **Lane:** [`README.md`](README.md) · [`API_CONTRACTS.md`](API_CONTRACTS.md) · [`CURRENT_STATE.md`](CURRENT_STATE.md) · [`SOURCE_REGISTRY.md`](SOURCE_REGISTRY.md) · [`DATA_MODEL.md`](DATA_MODEL.md) · [`PIPELINES_AND_LIFECYCLE.md`](PIPELINES_AND_LIFECYCLE.md) · [`PUBLICATION_AND_POLICY.md`](PUBLICATION_AND_POLICY.md) · [`UI_AND_EVIDENCE_DRAWER.md`](UI_AND_EVIDENCE_DRAWER.md) · [`VERIFICATION_BACKLOG.md`](VERIFICATION_BACKLOG.md) · [`ROADMAP.md`](ROADMAP.md) · [`GLOSSARY.md`](GLOSSARY.md) · [`CHANGELOG.md`](CHANGELOG.md)
+- **Lane:** [`README.md`](README.md) · [`API_CONTRACTS.md`](API_CONTRACTS.md) · `CURRENT_STATE.md` (not present) · [`SOURCE_REGISTRY.md`](SOURCE_REGISTRY.md) · `DATA_MODEL.md` (not present) · `PIPELINES_AND_LIFECYCLE.md` (not present) · `PUBLICATION_AND_POLICY.md` (not present) · `UI_AND_EVIDENCE_DRAWER.md` (not present) · [`VERIFICATION_BACKLOG.md`](VERIFICATION_BACKLOG.md) · `ROADMAP.md` (not present) · `GLOSSARY.md` (not present) · [`CHANGELOG.md`](CHANGELOG.md)
 - **Sublanes:** [`sublanes/suitability.md`](sublanes/suitability.md) · [`sublanes/restoration.md`](sublanes/restoration.md)
 - **ADRs:** [`ADR-habitat-schema-home.md`](../../adr/ADR-habitat-schema-home.md) *(maps to ADR-S-01)* · [`ADR-habitat-source-roles.md`](../../adr/ADR-habitat-source-roles.md) · [`ADR-habitat-modeled-vs-critical.md`](../../adr/ADR-habitat-modeled-vs-critical.md) · [`ADR-habitat-stewardship-zone-policy.md`](../../adr/ADR-habitat-stewardship-zone-policy.md) · [`ADR-habitat-fauna-thin-slice.md`](../../adr/ADR-habitat-fauna-thin-slice.md) *(all TODO link targets)*
 - **Runbooks:** `runbooks/habitat-ingest.md` · `runbooks/habitat-promotion.md` · `runbooks/habitat-rollback.md` · `runbooks/dom-hf-thin-slice.md` *(TODO link targets; flat-vs-`<domain>/`-subfolder naming is OPEN-DR-02)*
 - **Cross-domain neighbors:** [`../fauna/ARCHITECTURE.md`](../fauna/ARCHITECTURE.md) · [`../flora/ARCHITECTURE.md`](../flora/ARCHITECTURE.md) · [`../soil/ARCHITECTURE.md`](../soil/ARCHITECTURE.md) · [`../hydrology/ARCHITECTURE.md`](../hydrology/ARCHITECTURE.md) · [`../agriculture/ARCHITECTURE.md`](../agriculture/ARCHITECTURE.md) · [`../hazards/ARCHITECTURE.md`](../hazards/ARCHITECTURE.md)
-- **Doctrine roots:** [`../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`../../doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) · [`../../doctrine/truth-posture.md`](../../doctrine/truth-posture.md) *(filename NEEDS VERIFICATION)* · [`../../doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) · [`../../../ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) *(`CONTRACT_VERSION = "3.0.0"`)*
+- **Doctrine roots:** [`../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`../../doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) · [`../../doctrine/truth-posture.md`](../../doctrine/truth-posture.md) *(filename NEEDS VERIFICATION)* · [`../../doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) · [`../../../ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) *(`CONTRACT_VERSION = "3.0.0"`)*
 - **Standards:** [`../../standards/PROV.md`](../../standards/PROV.md) *(vs `PROVENANCE.md`, OPEN-DR-01)* · [`../../standards/PMTILES.md`](../../standards/PMTILES.md) · [`../../standards/OGC-API-TILES.md`](../../standards/OGC-API-TILES.md) · [`../../standards/ISO-19115.md`](../../standards/ISO-19115.md)
 
 </details>

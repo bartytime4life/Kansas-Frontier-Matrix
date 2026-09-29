@@ -499,7 +499,7 @@ authority-overclaim, and invalid-shape paths.
 Its `PASS` result still carries `authority: "NONE"`,
 `registryMutated: false`, `maplibreSourceCreated: false`, and a hold stating
 that runtime registration was not executed. The dedicated
-[`layer-manifest-admission` workflow](../../.github/workflows/layer-manifest-admission.yml)
+`layer-manifest-admission` workflow (not present)
 does not resolve real references, verify artifacts/signatures, execute policy,
 release, deploy, or publish; this README path does not trigger it.
 

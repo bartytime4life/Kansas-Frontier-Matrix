@@ -15,8 +15,8 @@ related:
   - docs/domains/geology/README.md
   - docs/domains/geology/OPEN_QUESTIONS.md
   - docs/adr/
-  - ai-build-operating-contract.md   # CONTRACT_VERSION = "3.0.0"
-  - directory-rules.md
+  - ../../doctrine/ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md
 tags: [kfm, domain, geology, verification, governance, backlog, register]
 notes:
   - Domain-scoped feeder into docs/registers/VERIFICATION_BACKLOG.md (Directory Rules §18).
@@ -24,6 +24,9 @@ notes:
   - Primary rows mirror Atlas §10.N verbatim; supplementary rows are derived from Atlas §10.D/K/I, Encyclopedia §7.8, and Unified Build Manual §10.8 (geology) / §25 (open verification backlog).
   - Citation correction (v0.1 revision): prior "Unified Build Manual §6.11 (30.11)" did not exist; the geology section is §10.8 and the verification backlog is §25. Re-pointed. See changelog.
   - ADR-S identifiers (S-01..S-15) are the real §24.12 Master Open-ADR Backlog set; exact number↔title pairing per row is NEEDS VERIFICATION against the §24.12 table.
+owning_root: docs/
+responsibility: "Documentation for Geology and Natural Resources — Verification Backlog; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -485,8 +488,8 @@ they SHOULD be elevated to the global register or to ADRs as they harden.
 - [`docs/domains/geology/README.md`](./README.md) — geology domain landing page. *(TODO if not yet present.)*
 - [`docs/domains/geology/OPEN_QUESTIONS.md`](./OPEN_QUESTIONS.md) — geology open-questions register (`OQ-GEOL-NN`).
 - [`docs/adr/`](../../adr/) — Architecture Decision Records, including any ADRs raised from [Section E](#section-e--open-adr-class-questions).
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law, §23 sensitive-domain matrix (`CONTRACT_VERSION = "3.0.0"`).
-- [`directory-rules.md`](../../../directory-rules.md) — placement law (§12) and open-questions guidance (§18).
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law, §23 sensitive-domain matrix (`CONTRACT_VERSION = "3.0.0"`).
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — placement law (§12) and open-questions guidance (§18).
 - Atlas §10 (Geology and Natural Resources) and §24.12 (Master Open-ADR Backlog) — doctrinal source for this register.
 - Encyclopedia §7.8 (Geology and Natural Resources) — feature backlog and risk register.
 - Unified Implementation Architecture Build Manual §10.8 (Geology) and §25 (Open verification backlog) — open verification items.

@@ -10,8 +10,8 @@ updated: 2026-06-05
 policy_label: public
 contract_version: "3.0.0"
 related:
-  - ai-build-operating-contract.md
-  - directory-rules.md
+  - ../../doctrine/ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md
   - docs/domains/hazards/README.md
   - docs/domains/hazards/DATA_LIFECYCLE.md
   - docs/domains/hazards/EXPANSION_BACKLOG.md
@@ -24,6 +24,9 @@ notes:
   - CONTRACT_VERSION pinned at 3.0.0 per ai-build-operating-contract.md v3.0.
   - Atlas §12.C records each Hazards term as "CONFIRMED term / PROPOSED field realization"; one-line glosses below are INFERRED from the term name plus lane doctrine, not verbatim Atlas definitions.
   - KFM Hazards is explicitly NOT an emergency alert system.
+owning_root: docs/
+responsibility: "Documentation for Hazards Domain — Glossary; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Hazards Domain — Glossary
@@ -278,8 +281,8 @@ The Hazards lane keeps several time fields **distinct where material** — colla
 
 > Sibling-doc placement under `docs/domains/hazards/` is CONFIRMED by Directory Rules §12; specific file presence is NEEDS VERIFICATION.
 
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"` *(CONFIRMED authority)*
-- [`directory-rules.md`](../../../directory-rules.md) — placement; §12 Domain Placement Law; §19 glossary *(CONFIRMED)*
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"` *(CONFIRMED authority)*
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — placement; §12 Domain Placement Law; §19 glossary *(CONFIRMED)*
 - [`docs/domains/hazards/README.md`](./README.md) — Hazards lane orientation *(file presence NEEDS VERIFICATION)*
 - [`docs/domains/hazards/DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — lifecycle, freshness, receipt matrix *(sibling doc)*
 - [`docs/domains/hazards/EXPANSION_BACKLOG.md`](./EXPANSION_BACKLOG.md) — backlog; home of DRIFT-HAZ-PATH-01 *(sibling doc)*

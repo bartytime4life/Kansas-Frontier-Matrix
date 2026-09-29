@@ -115,7 +115,7 @@ This lane is downstream. It should not admit raw source captures, work candidate
 | [`../../catalog/domain/fauna/`](../../catalog/domain/fauna/) | Fauna catalog records. | Discovery/lineage carrier; not release authority. |
 | [`../../triplets/fauna/`](../../triplets/fauna/) | Fauna graph/triplet projection. | Upstream or sibling projection, not public by itself. |
 | [`../../proofs/fauna/`](../../proofs/fauna/) | Fauna proof support. | Evidence and proof support; not published carrier. |
-| [`../../proofs/validation_report/fauna/`](../../proofs/validation_report/fauna/) | Fauna validation reports. | Gate support, not publication authority. |
+| `../../proofs/validation_report/fauna/` (not present) | Fauna validation reports. | Gate support, not publication authority. |
 | [`../../receipts/`](../../receipts/) | Process memory. | Receipts say what ran; they do not publish. |
 | [`../api_payloads/fauna/`](../api_payloads/fauna/) | Released API-payload carriers. | Child/sibling carrier lane for API-shaped outputs. |
 | [`../../../release/`](../../../release/) | Release decisions, manifests, correction, withdrawal, rollback, signatures. | Publication authority lives here. |

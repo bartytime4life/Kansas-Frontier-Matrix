@@ -9,17 +9,17 @@ created: 2026-05-29
 updated: 2026-05-29
 policy_label: public
 related:
-  - ai-build-operating-contract.md                         # CONTRACT_VERSION = "3.0.0"
-  - docs/doctrine/directory-rules.md                       # CONFIRMED — viewed this session
-  - docs/domains/fauna/README.md                           # PROPOSED — verify
-  - docs/domains/fauna/CANONICAL_PATHS.md                  # PROPOSED — companion placement register
-  - docs/domains/fauna/CONTINUITY_INVENTORY.md             # PROPOSED — companion lineage inventory
-  - docs/domains/habitat/README.md                         # PROPOSED — owning lane (habitat)
-  - docs/domains/flora/README.md                           # PROPOSED — owning lane (flora)
-  - docs/domains/hydrology/README.md                       # PROPOSED — owning lane (hydrology)
-  - docs/domains/hazards/README.md                         # PROPOSED — owning lane (hazards)
-  - docs/registers/VERIFICATION_BACKLOG.md                 # PROPOSED — verify
-  - docs/registers/DRIFT_REGISTER.md                       # PROPOSED — verify
+  - ../../doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
+  - docs/domains/fauna/README.md
+  - docs/domains/fauna/CANONICAL_PATHS.md
+  - docs/domains/fauna/CONTINUITY_INVENTORY.md
+  - docs/domains/habitat/README.md
+  - docs/domains/flora/README.md
+  - docs/domains/hydrology/README.md
+  - docs/domains/hazards/README.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+  - docs/registers/DRIFT_REGISTER.md
 tags: [kfm, fauna, cross-lane, relations, ownership, evidence-bundle, joins, sensitivity]
 notes:
   - CONTRACT_VERSION = "3.0.0" — doctrine-adjacent register under ai-build-operating-contract.md.
@@ -27,6 +27,9 @@ notes:
   - Cross-lane files are placed WITHOUT a fauna/ segment per Directory Rules §12 multi-domain rule.
   - Owner-publishes / consumer-cites lattice from Atlas §24.4; consumers cite, never modify.
   - Meta Block v2 carries no nested HTML comments; inline annotations use # only.
+owning_root: docs/
+responsibility: "Documentation for Fauna — Cross-Lane Relations; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Fauna — Cross-Lane Relations
@@ -424,7 +427,7 @@ This document is done enough to enter the repository when:
 
 ### Footer
 
-**Related docs:** [`directory-rules.md`](../../doctrine/directory-rules.md) · [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) · [`README.md`](./README.md) · [`CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) · [`CONTINUITY_INVENTORY.md`](./CONTINUITY_INVENTORY.md)
+**Related docs:** [`directory-rules.md`](../../doctrine/directory-rules.md) · [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) · [`README.md`](./README.md) · [`CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) · [`CONTINUITY_INVENTORY.md`](./CONTINUITY_INVENTORY.md)
 
 **Last updated:** 2026-05-29 · **Version:** v1 · **Status:** draft · **`CONTRACT_VERSION = "3.0.0"`**
 

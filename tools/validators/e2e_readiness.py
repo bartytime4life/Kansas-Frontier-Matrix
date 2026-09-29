@@ -25,6 +25,7 @@ EXPECTED_E2E_FILES = frozenset(
 PROOF_SLICE_TEST = "test_hydrology_proof_slice.py"
 PROOF_SLICE_LANE_MARKERS = ("tools/readiness/run_lane.py", "proof-slice")
 SUBPROCESS_LAUNCHERS = frozenset({"call", "check_call", "check_output", "Popen", "run"})
+NESTED_SCOPES = (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)
 
 
 @dataclass(frozen=True)
@@ -73,11 +74,12 @@ def _invokes_proof_slice_lane(test: ast.FunctionDef | ast.AsyncFunctionDef) -> b
 
     The call must be ``subprocess.<launcher>(...)`` whose command list or tuple
     names ``tools/readiness/run_lane.py`` immediately followed by
-    ``proof-slice``. Comments, docstrings, and other calls that merely carry
-    those strings do not count.
+    ``proof-slice``. Comments, docstrings, other calls that merely carry those
+    strings, and calls inside nested functions or lambdas (which may never
+    run) do not count.
     """
 
-    for node in ast.walk(test):
+    for node in _walk_executed_scope(test):
         if not isinstance(node, ast.Call) or not _is_subprocess_launcher(node.func):
             continue
         command = node.args[0] if node.args else next(
@@ -93,6 +95,18 @@ def _invokes_proof_slice_lane(test: ast.FunctionDef | ast.AsyncFunctionDef) -> b
         if PROOF_SLICE_LANE_MARKERS in pairs:
             return True
     return False
+
+
+def _walk_executed_scope(test: ast.FunctionDef | ast.AsyncFunctionDef):
+    """Yield nodes in the test body without entering nested function scopes."""
+
+    pending: list[ast.AST] = [node for node in test.body if not isinstance(node, NESTED_SCOPES)]
+    while pending:
+        node = pending.pop()
+        yield node
+        for child in ast.iter_child_nodes(node):
+            if not isinstance(child, NESTED_SCOPES):
+                pending.append(child)
 
 
 def _is_subprocess_launcher(func: ast.expr) -> bool:

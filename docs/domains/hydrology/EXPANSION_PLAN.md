@@ -10,8 +10,8 @@ updated: 2026-06-06
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
-  - ai-build-operating-contract.md            # canonical operating contract (CONTRACT_VERSION 3.0.0)
-  - directory-rules.md
+  - ../../doctrine/ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md
   - docs/domains/README.md
   - docs/domains/hydrology/README.md
   - docs/domains/hydrology/DATA_LIFECYCLE.md
@@ -19,7 +19,7 @@ related:
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/authority-ladder.md
   - docs/doctrine/trust-membrane.md
-  - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md   # SourceDescriptor MEANING (Markdown); schema home is schemas/contracts/v1/source/
+  - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
   - docs/standards/PROV.md
 tags: [kfm, domain, hydrology, expansion-plan, governance, thin-slice]
 notes:
@@ -28,6 +28,9 @@ notes:
   - Crosswalk validator path is CONFLICTED (ADR-S-CWV-01) — corpus uses three different homes; do not assert one.
   - PROV.md vs PROVENANCE.md naming = Directory Rules OPEN-DR-01; runbook subfolder = ADR-S-13 / OPEN-DR-02.
   - v2 reconciles schema home, crosswalk placement, Pre-RAW phase, and CONTRACT_VERSION pin. See Changelog (§17).
+owning_root: docs/
+responsibility: "Documentation for Hydrology — Domain Expansion Plan; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 💧 Hydrology — Domain Expansion Plan
@@ -724,8 +727,8 @@ ADR-linked rows reference the open-ADR backlog in Atlas §24.12 and Directory Ru
 
 ## 16. Related Docs
 
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — canonical operating contract; `CONTRACT_VERSION = "3.0.0"`
-- [`directory-rules.md`](../../../directory-rules.md) — Domain Placement Law (§12), lifecycle invariants, OPEN-DR-01/02/03
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract; `CONTRACT_VERSION = "3.0.0"`
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — Domain Placement Law (§12), lifecycle invariants, OPEN-DR-01/02/03
 - [`docs/domains/README.md`](../README.md) — Domain lane index and source-role burden logic (PROPOSED)
 - [`docs/domains/hydrology/README.md`](./README.md) — Hydrology lane landing page (PROPOSED)
 - [`docs/domains/hydrology/DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — lane governance, gates, artifact homes

@@ -10,21 +10,22 @@ updated: 2026-06-06
 policy_label: restricted
 related:
   # NEEDS VERIFICATION — repo presence PROPOSED until checked against a mounted repo
-  - directory-rules.md
-  - ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md
+  - ../../doctrine/ai-build-operating-contract.md
   - docs/domains/people-dna-land/README.md
   - docs/domains/people-dna-land/ARCHITECTURE.md
   - docs/domains/people-dna-land/API_CONTRACTS.md
-  - docs/adr/ADR-NNNN-sublanes-docs-convention.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
-  - docs/adr/ADR-0001-schema-home.md
 tags: [kfm, domain, people-dna-land, canonical-paths, governance, directory-rules]
 notes:
   # CONTRACT_VERSION = "3.0.0"
   # Doctrine grounded in directory-rules.md §3, §6.3-6.5, §7, §12; Encyclopedia §7.14; Atlas Ch. 16, §24.13.
   # Repo presence of any path is PROPOSED until verified against a mounted repository.
   # Surface conflict between Directory Rules and Atlas §24.13 crosswalk on schema-home segment shape, domain segment name, and consent lane.
+owning_root: docs/
+responsibility: "Documentation for Canonical Paths — People / Genealogy / DNA / Land Domain; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Canonical Paths — People / Genealogy / DNA / Land Domain
@@ -480,7 +481,7 @@ The following placements are **anti-patterns** and would be rejected at review:
 
 ### Footer
 
-**Related:** [`directory-rules.md`](../../../directory-rules.md) · [`docs/domains/people-dna-land/README.md`](./README.md) · [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) · [`docs/adr/`](../../adr/) — *all path targets PROPOSED; verify on mounted repo.*
+**Related:** [`directory-rules.md`](../../doctrine/directory-rules.md) · [`docs/domains/people-dna-land/README.md`](./README.md) · [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) · [`docs/adr/`](../../adr/) — *all path targets PROPOSED; verify on mounted repo.*
 
 **Last reviewed:** 2026-06-06 · **Doc version:** v1 (draft) · **Authority class:** Standard / Canonical-path register · **Domain:** `people-dna-land` · `CONTRACT_VERSION = "3.0.0"`
 

@@ -10,8 +10,8 @@ updated: 2026-06-05
 policy_label: public
 contract_version: "3.0.0"
 related:
-  - ai-build-operating-contract.md
-  - directory-rules.md
+  - ../../doctrine/ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md
   - docs/domains/hazards/README.md
   - docs/domains/hazards/DATA_LIFECYCLE.md
   - docs/domains/hazards/LIFE_SAFETY_BOUNDARY.md
@@ -28,6 +28,9 @@ notes:
   - KFM is not an alert authority — life-safety actions redirect to official sources (see LIFE_SAFETY_BOUNDARY.md).
   - All repo-state claims here are PROPOSED until verified against a mounted repo, except apps/governed-api/ and apps/explorer-web/ which are CONFIRMED at commit b6a279….
   - v2 reconciles the four-role vs canonical seven-role vocabulary (OQ-HAZ-MUI-01) and flags DRIFT-HAZ-PATH-01 on the contracts/policy paths.
+owning_root: docs/
+responsibility: "Documentation for Hazards — Map and UI Contracts; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🌪️ Hazards — Map and UI Contracts
@@ -604,8 +607,8 @@ This document is done enough to enter the repository when:
 
 > Links below are **PROPOSED** paths unless noted; verify against mounted repo before linking from rendered surfaces. Placement under `docs/domains/hazards/` is CONFIRMED by §12.
 
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"` *(CONFIRMED authority)*
-- [`directory-rules.md`](../../../directory-rules.md) — placement; §12, §7.1/§11 trust membrane *(CONFIRMED)*
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"` *(CONFIRMED authority)*
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — placement; §12, §7.1/§11 trust membrane *(CONFIRMED)*
 - [`docs/domains/hazards/README.md`](./README.md) — hazards domain landing *(PROPOSED)*
 - [`docs/domains/hazards/LIFE_SAFETY_BOUNDARY.md`](./LIFE_SAFETY_BOUNDARY.md) — the not-an-alert-system invariant *(sibling doc)*
 - [`docs/domains/hazards/DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — lifecycle, freshness, receipt matrix *(sibling doc)*

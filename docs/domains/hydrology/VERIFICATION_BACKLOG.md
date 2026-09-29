@@ -10,8 +10,8 @@ created: 2026-05-18
 updated: 2026-06-07
 policy_label: public
 related:
-  - ai-build-operating-contract.md
-  - directory-rules.md
+  - ../../doctrine/ai-build-operating-contract.md
+  - ../../doctrine/directory-rules.md
   - docs/domains/hydrology/README.md
   - docs/domains/hydrology/SOURCE_FAMILIES.md
   - docs/domains/hydrology/SOURCE_ROLE_MATRIX.md
@@ -28,6 +28,9 @@ notes:
   - "All implementation-layer claims are PROPOSED until the repo is mounted and inspected."
   - "Cite-or-abstain applies; this file MUST NOT be cited as proof of implementation."
   - "Schema-home rule is ADR-0001 / Directory Rules §7.4 + §6.4 (not §13.1, which is an anti-pattern section)."
+owning_root: docs/
+responsibility: "Documentation for Hydrology — Verification Backlog; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Hydrology — Verification Backlog
@@ -409,6 +412,6 @@ Negative fixtures are essential, not optional. Validators that pass every positi
 
 ---
 
-<sub>**Related docs:** [`README.md`](README.md) · [`SOURCE_REGISTRY.md`](SOURCE_REGISTRY.md) · [`SOURCE_ROLE_MATRIX.md`](SOURCE_ROLE_MATRIX.md) · [`PUBLICATION_POSTURE.md`](PUBLICATION_POSTURE.md) · [`THIN_SLICE_PLAN.md`](THIN_SLICE_PLAN.md) · [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) · [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) · [`directory-rules.md`](../../../directory-rules.md)</sub>
+<sub>**Related docs:** [`README.md`](README.md) · [`SOURCE_REGISTRY.md`](SOURCE_REGISTRY.md) · [`SOURCE_ROLE_MATRIX.md`](SOURCE_ROLE_MATRIX.md) · [`PUBLICATION_POSTURE.md`](PUBLICATION_POSTURE.md) · [`THIN_SLICE_PLAN.md`](THIN_SLICE_PLAN.md) · [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) · [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) · [`directory-rules.md`](../../doctrine/directory-rules.md)</sub>
 
 <sub>**Last updated:** 2026-06-07 &middot; `CONTRACT_VERSION = "3.0.0"` &middot; **Authority:** implementation-bearing register, not an ADR &middot; **Truth posture:** CONFIRMED doctrine / PROPOSED implementation &middot; [Back to top](#hydrology--verification-backlog)</sub>

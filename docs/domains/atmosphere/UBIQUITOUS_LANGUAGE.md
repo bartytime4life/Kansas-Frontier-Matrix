@@ -8,9 +8,12 @@ owners: KFM Atmosphere/Air domain stewards  # PLACEHOLDER — confirm steward ro
 created: 2026-05-29
 updated: 2026-05-29
 policy_label: public
-related: [ai-build-operating-contract.md, directory-rules.md, docs/domains/atmosphere/README.md, docs/domains/atmosphere/SOURCE_FAMILIES.md, docs/domains/atmosphere/SOURCE_REGISTRY.md, contracts/domains/atmosphere/]
+related: [../../doctrine/ai-build-operating-contract.md, ../../doctrine/directory-rules.md, docs/domains/atmosphere/README.md, docs/domains/atmosphere/SOURCE_FAMILIES.md, docs/domains/atmosphere/SOURCE_REGISTRY.md, contracts/domains/atmosphere/]
 tags: [kfm]
 notes: [CONTRACT_VERSION pinned 3.0.0 # terms from Atlas Ch.11 §C; CONFIRMED as terms, field realization PROPOSED # DDD ubiquitous-language framing per DomainDriven Design Reference]
+owning_root: docs/
+responsibility: "Documentation for Atmosphere / Air — Ubiquitous Language; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -256,7 +259,7 @@ This document is done enough to enter the repository when:
 - [`docs/domains/atmosphere/README.md`](./README.md) — domain landing page *(NEEDS VERIFICATION)*
 - [`docs/domains/atmosphere/SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md) — source-family catalog
 - [`docs/domains/atmosphere/SOURCE_REGISTRY.md`](./SOURCE_REGISTRY.md) — source admission & knowledge-character use
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - `contracts/domains/atmosphere/` — term meaning (field realization) *(PROPOSED)*
 - `schemas/contracts/v1/domains/atmosphere/` — term shape *(PROPOSED)*
 
