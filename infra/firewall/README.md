@@ -105,7 +105,7 @@ platforms, secret stores, and managed firewalls were not inspected.
 |---|---|---|
 | [`infra/compose/docker-compose.yml`](../compose/docker-compose.yml) | Greenfield placeholder; binds governed API to `127.0.0.1:8080` and Explorer to `127.0.0.1:5173` | Loopback intent for that file only; not a firewall or deployment proof |
 | [`infra/docker/Dockerfile.governed-api`](../docker/Dockerfile.governed-api) | Security-review placeholder with no application payload, listener, `CMD`, or `ENTRYPOINT` | Image-hardening scaffold, not a running API |
-| [`infra/docker/Dockerfile.explorer-web`](../docker/Dockerfile.explorer-web) | Security-review placeholder with no application payload, listener, `CMD`, or `ENTRYPOINT` | Image-hardening scaffold, not a running Explorer |
+| `infra/docker/Dockerfile.explorer-web` (retired) | Security-review placeholder with no application payload, listener, `CMD`, or `ENTRYPOINT` | Image-hardening scaffold, not a running Explorer |
 | [`infra/reverse_proxy/caddy.example.caddyfile`](../reverse_proxy/caddy.example.caddyfile) | One-line Greenfield placeholder | No active proxy route, allowlist, TLS, or denial behavior |
 | [`infra/hardening/CHECKLIST.md`](../hardening/CHECKLIST.md) | Draft review template with unchecked fields | Review method, not a completed review or sign-off |
 | [`.github/workflows/deny-test.yml`](../../.github/workflows/deny-test.yml) | Runs named governed-API source and route checks | Application-boundary evidence only; no packet, listener, host, egress, or deployment probe |

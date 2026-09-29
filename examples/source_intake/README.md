@@ -360,7 +360,7 @@ Before adding or changing examples here, verify:
 | Secret/sensitive-pattern review | `PASS (bounded manual review)` | Documentation-only source review; not a repository-wide secret or sensitivity scan. |
 | [`docs-build.yml`](../../.github/workflows/docs-build.yml) | `WORKFLOW_HOLD` by definition | Workflow definition still holds until an accepted docs generator/build and preview artifact exist. |
 | [`link-check.yml`](../../.github/workflows/link-check.yml) | `DEFINED / NOT RUN` | The current workflow defines deterministic no-network local Markdown target checking for changed docs; no hosted run was fetched in this update. |
-| [`accessibility.yml`](../../.github/workflows/accessibility.yml) | `PARTIAL / NOT RUN` | `keyboard-navigation` is executable by workflow definition; `axe` remains an explicit hold; no hosted run or WCAG claim is made. |
+| `accessibility.yml` (not present) | `PARTIAL / NOT RUN` | `keyboard-navigation` is executable by workflow definition; `axe` remains an explicit hold; no hosted run or WCAG claim is made. |
 | GitHub-rendered visual inspection | `NEEDS VERIFICATION` | Required before claiming a host-render pass. |
 | Runnable source-intake behavior, schema validation, fixture parity, connector execution, or operational admission | `UNKNOWN / NEEDS VERIFICATION` | This lane remains static and non-authoritative. |
 
@@ -449,7 +449,7 @@ Maintenance rules:
 | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | CONFIRMED routing | Default review route is `@bartytime4life`; no dedicated `/examples/` rule. | Not proof of stewardship, enforcement, independence, or approval. |
 | [`../../.github/workflows/docs-build.yml`](../../.github/workflows/docs-build.yml) | CONFIRMED workflow definition | Docs build/preview remain explicit readiness holds. | No render, preview artifact, or publication. |
 | [`../../.github/workflows/link-check.yml`](../../.github/workflows/link-check.yml) | CONFIRMED workflow definition | Current workflow defines a bounded no-network local Markdown link check for changed docs. | No hosted run was fetched in this revision; external targets remain unverified. |
-| [`../../.github/workflows/accessibility.yml`](../../.github/workflows/accessibility.yml) | CONFIRMED workflow definition | Keyboard-navigation has a bounded Explorer Web job; `axe` remains an explicit hold. | No hosted run, whole-app audit, or WCAG conformance is claimed. |
+| `../../.github/workflows/accessibility.yml` (not present) | CONFIRMED workflow definition | Keyboard-navigation has a bounded Explorer Web job; `axe` remains an explicit hold. | No hosted run, whole-app audit, or WCAG conformance is claimed. |
 | Recursive tree, local execution, deployments, production telemetry, and consumer inventory | UNKNOWN | No claim. | Requires separate evidence. |
 
 Exact reads and bounded searches do not replace a recursive tree, dependency install, example run, deterministic fixture suite, CI history, deployed-consumer inventory, runtime telemetry, or host-render review.

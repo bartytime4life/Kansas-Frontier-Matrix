@@ -918,7 +918,7 @@ The safe emergency posture is to **deny or hold affected public operations**, pr
 | Release candidates | [`release/candidates/fauna/`](../../../release/candidates/fauna/README.md) | Candidate review boundary; a candidate is not a release |
 | Rollback support | [`release/rollback/fauna/`](../../../release/rollback/fauna/README.md) | Fauna rollback support boundary |
 | Public carrier | [`data/published/fauna/`](../../../data/published/fauna/README.md) | Governed published carrier only after release; never a direct policy output |
-| Explorer surface | [`apps/explorer-web/src/features/domains/fauna/`](../../../apps/explorer-web/src/features/domains/fauna/README.md) | Public client feature boundary; must consume governed interfaces |
+| Explorer surface | `apps/explorer-web/src/features/domains/fauna/` (retired) | Public client feature boundary; must consume governed interfaces |
 
 ### Cross-domain seams
 

@@ -183,7 +183,7 @@ CODEOWNERS routing is not stewardship, approval evidence, policy permission, rel
 - [tests/](../../tests/README.md) — executable conformance and regression checks
 - [contracts/](../../contracts/README.md) and [schemas/](../../schemas/README.md) — semantic meaning and machine shape
 - [policy/](../../policy/README.md) — admissibility and obligations
-- [apps/explorer-web/](../../apps/explorer-web/README.md) and [packages/](../../packages/README.md) — implementation homes
+- apps/explorer-web/ (retired) and [packages/](../../packages/README.md) — implementation homes
 - [data/published/](../../data/published/README.md) — released carriers, subject to release authority
 - [data/proofs/](../../data/proofs/README.md) and [data/receipts/](../../data/receipts/README.md) — accountability artifacts
 - [release/](../../release/README.md) — release, correction, withdrawal, and rollback decisions

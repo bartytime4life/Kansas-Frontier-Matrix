@@ -362,7 +362,7 @@ Before changing this walkthrough, verify:
 | Secret/sensitive-pattern review | `PASS` for this documentation-only change | Not a repository-wide scanner result. |
 | [`docs-build.yml`](../../.github/workflows/docs-build.yml) | `WORKFLOW_HOLD` by definition | No accepted documentation generator/build or preview artifact. |
 | [`link-check.yml`](../../.github/workflows/link-check.yml) | `WORKFLOW_HOLD` by definition | No accepted executable link/anchor checker. |
-| [`accessibility.yml`](../../.github/workflows/accessibility.yml) | `WORKFLOW_HOLD` by definition | No axe or keyboard-navigation execution. |
+| `accessibility.yml` (not present) | `WORKFLOW_HOLD` by definition | No axe or keyboard-navigation execution. |
 | Live USGS endpoint, migration, response, and rate-limit checks | `NOT RUN` | The walkthrough is deliberately no-network; current behavior remains `NEEDS VERIFICATION`. |
 | Connector, schema, policy, fixture, validator, RAW, receipt, and runtime execution | `UNKNOWN / NEEDS VERIFICATION` | This file proves none of those. |
 | GitHub-rendered visual inspection | `NEEDS VERIFICATION` | Required before claiming a host-render pass. |
@@ -444,7 +444,7 @@ Maintenance rules:
 | [`../../data/registry/sources/README.md`](../../data/registry/sources/README.md) | CONFIRMED README | Registry is the source admission and authority-control surface. | Inventory, schema, and validator maturity remain as labeled there. |
 | [`../../contracts/runtime/decision_envelope.md`](../../contracts/runtime/decision_envelope.md) | CONFIRMED contract text | Public runtime outcomes are `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`. | Does not define operational source-admission storage. |
 | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | CONFIRMED routing | Default review route is `@bartytime4life`; no dedicated `/examples/` rule. | Not proof of stewardship, enforcement, independence, or approval. |
-| [`../../.github/workflows/docs-build.yml`](../../.github/workflows/docs-build.yml), [`link-check.yml`](../../.github/workflows/link-check.yml), and [`accessibility.yml`](../../.github/workflows/accessibility.yml) | CONFIRMED workflow text | Documentation build, link, and accessibility surfaces are explicit readiness holds. | They do not establish render, link, accessibility, release, or publication success. |
+| [`../../.github/workflows/docs-build.yml`](../../.github/workflows/docs-build.yml), [`link-check.yml`](../../.github/workflows/link-check.yml), and `accessibility.yml` (not present) | CONFIRMED workflow text | Documentation build, link, and accessibility surfaces are explicit readiness holds. | They do not establish render, link, accessibility, release, or publication success. |
 | Directory Rules and [`directory-rules.md`](../../docs/doctrine/directory-rules.md) | CONFIRMED doctrine | `examples/` owns worked examples; lifecycle and authority roots remain separate. | Does not establish runtime maturity. |
 | Live USGS endpoints, external current documentation, dependency closure, execution, deployments, telemetry, and consumer inventory | UNKNOWN / NOT RUN | No claim. | Requires separate governed verification. |
 

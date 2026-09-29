@@ -277,7 +277,7 @@ Packages must not write authoritative records directly to canonical data, proof,
 | [`dependency-scan`](../.github/workflows/dependency-scan.yml) | Point-in-time root Python audit plus lock-backed pnpm audit/readiness classification. | Not vulnerability absence, license/provenance admission, or release. |
 | [`connector-gate`](../.github/workflows/connector-gate.yml) | Compiles/imports connectors-core and runs deterministic no-network tests plus connector boundary checks. | Not live-source correctness, source rights, connector-run receipt closure, release, or publication. |
 | [`schema-registry-package`](../.github/workflows/schema-registry-package.yml) | No-network package tests, fixture snapshot, and generated receipt integrity. | Not schema authority, consumer adoption, or release. |
-| [`ui-build`](../.github/workflows/ui-build.yml) | Explorer Web build/test with exact pnpm/frozen lock. | Not package-root coverage. |
+| `ui-build` (not present) | Explorer Web build/test with exact pnpm/frozen lock. | Not package-root coverage. |
 
 ### Minimum package evidence
 

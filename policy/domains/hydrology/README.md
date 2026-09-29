@@ -885,7 +885,7 @@ Every future active source in this lane must document:
 | [`policy/bundles/`](../../bundles/README.md) | Policy packaging boundary | No accepted Hydrology bundle |
 | [`policy/decision/`](../../decision/vocabulary.v1.json) | Shared inactive outward vocabulary | Concrete `PROPOSED_INACTIVE` profile |
 | [`packages/policy-runtime/`](../../../packages/policy-runtime/README.md) | Proposed general evaluator package | `0.0.0` placeholder/unbound |
-| [`apps/explorer-web/.../hydrology/`](../../../apps/explorer-web/src/features/domains/hydrology/README.md) | Intended public feature boundary | Three placeholder implementation modules |
+| `apps/explorer-web/.../hydrology/` (retired) | Intended public feature boundary | Three placeholder implementation modules |
 
 [Back to top](#top)
 

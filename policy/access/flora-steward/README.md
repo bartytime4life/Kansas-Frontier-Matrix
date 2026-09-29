@@ -95,9 +95,9 @@ notes:
 - [20. Implementation sequence](#20-implementation-sequence)
 - [21. Definition of done](#21-definition-of-done)
 - [22. Open verification register](#22-open-verification-register)
-- [Appendix A — illustrative PolicyInputBundle](#appendix-a-illustrative-policyinputbundle)
-- [Appendix B — illustrative PolicyDecision](#appendix-b-illustrative-policydecision)
-- [Appendix C — v0.1 to v0.2 preservation and correction note](#appendix-c-v01-to-v02-preservation-and-correction-note)
+- Appendix A — illustrative PolicyInputBundle
+- Appendix B — illustrative PolicyDecision
+- Appendix C — v0.1 to v0.2 preservation and correction note
 
 ---
 

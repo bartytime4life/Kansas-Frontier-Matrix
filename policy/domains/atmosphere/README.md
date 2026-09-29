@@ -895,7 +895,7 @@ Restoring that blob reverts only this README. It does not roll back any policy s
 |---|---|
 | [`../README.md`](../README.md) | Parent domain-policy boundary |
 | [`../../README.md`](../../README.md) | Canonical policy-root responsibility boundary |
-| [`../air/README.md`](../air/README.md) | Separate compatibility lane; must not become parallel authority |
+| `../air/README.md` (not present) | Separate compatibility lane; must not become parallel authority |
 | [`../../../docs/domains/atmosphere/README.md`](../../../docs/domains/atmosphere/README.md) | Human Atmosphere scope and object-family context |
 | [`../../../docs/domains/atmosphere/CANONICAL_PATHS.md`](../../../docs/domains/atmosphere/CANONICAL_PATHS.md) | Preferred placement and namespace-drift context |
 | [`../../../docs/domains/atmosphere/POLICY.md`](../../../docs/domains/atmosphere/POLICY.md) | Draft human policy doctrine, not runtime enforcement |

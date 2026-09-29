@@ -398,7 +398,7 @@ That accepted root placement does **not** decide which consent family lane owns 
 | Bounded domain candidate meaning | [domain contracts](../../contracts/domains/people-dna-land/consented_genealogy_overlay.md) | Define fixture-only object meaning; no parent-policy authority. |
 | Validators and tests | `tools/`, `tests/`, `fixtures/` | Prove bounded synthetic behavior; do not issue consent or approve release. |
 | Runtime execution | `packages/` and governed applications | Execute accepted rules and obligations; cannot redefine policy semantics. |
-| Viewer-local UI behavior | [Explorer consent card](../../apps/explorer-web/src/features/consent_card/README.md) | Consumes a public-safe projection; cannot evaluate or change subject consent. |
+| Viewer-local UI behavior | Explorer consent card (retired) | Consumes a public-safe projection; cannot evaluate or change subject consent. |
 | Receipts and proofs | accepted `data/receipts/` and `data/proofs/` profiles | Record bounded activity; do not become consent, policy, cleanup, or release authority. |
 | Review and release | review records and `release/` | Independent approval, correction, withdrawal, rollback, and publication authority. |
 | Public access | governed application/API surfaces | Consume only released, policy-filtered projections through the trust membrane. |
