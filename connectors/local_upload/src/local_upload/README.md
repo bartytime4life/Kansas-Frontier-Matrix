@@ -22,8 +22,6 @@ related:
   - ../../pyproject.toml
   - ../../tests/README.md
   - ./__init__.py
-  - ./fetch.py
-  - ./admit.py
   - ./descriptor.yaml
   - ../../../README.md
   - ../../../../CONTRIBUTING.md
@@ -60,6 +58,9 @@ notes:
 <a id="top"></a>
 
 # Local Upload Greenfield Package and Trust-Edge Boundary
+
+> [!NOTE]
+> **2026-09-29:** the unreferenced placeholder files `src/local_upload/admit.py` and `src/local_upload/fetch.py` were removed from `connectors/local_upload/` in [#4792](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792). None was executable or authoritative. Evidence notes and prose below that describe their contents record the earlier snapshot.
 
 ## Local quarantine capture implementation — current branch
 
@@ -157,8 +158,6 @@ connectors/local_upload/
 │   └── local_upload/
 │       ├── README.md                      # this package boundary
 │       ├── __init__.py                    # empty
-│       ├── fetch.py                       # comment-only placeholder
-│       ├── admit.py                       # comment-only placeholder
 │       └── descriptor.yaml                # four-field placeholder
 └── tests/
     └── README.md                          # documentation contract v0.1
@@ -182,8 +181,8 @@ These statements are bounded to the pinned commit and exact paths. Differently n
 |---|---|---|
 | `pyproject.toml` | Name and `0.0.0` only. | Buildability, installability, supported Python, dependencies, commands, and package discovery are unknown. |
 | `__init__.py` | Empty. | No public import API or initialization behavior. |
-| `fetch.py` | Comment-only. | No upload transport, staging, stream handling, size enforcement, hashing, scanner invocation, or source-head behavior. |
-| `admit.py` | Comment-only. | No validation, decision, quarantine, receipt, or candidate-handoff behavior. |
+| `fetch.py` (removed 2026-09-29) | Comment-only. | No upload transport, staging, stream handling, size enforcement, hashing, scanner invocation, or source-head behavior. |
+| `admit.py` (removed 2026-09-29) | Comment-only. | No validation, decision, quarantine, receipt, or candidate-handoff behavior. |
 | `descriptor.yaml` | `name: local_upload`, `role: TBD`, `rights: TBD`, `sensitivity_floor: public`. | Invalid as source authority, activation, rights clearance, sensitivity clearance, or release evidence. |
 | Tests | README-only at the named probes. | Discovery count, coverage, pass state, negative-case enforcement, and fixture safety are unknown. |
 | Workflows | TODO-only. | Green completion proves workflow execution only. |

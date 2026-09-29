@@ -16,8 +16,6 @@ related:
   - ../tests/README.md
   - ftDNA/README.md
   - ftDNA/__init__.py
-  - ftDNA/fetch.py
-  - ftDNA/descriptor.yaml
   - ../../../docs/sources/catalog/ftdna/README.md
   - ../../../docs/sources/catalog/ftdna/autosomal-raw-data.md
   - ../../../docs/sources/catalog/ftdna/dna-matches.md
@@ -51,6 +49,9 @@ notes:
 <a id="top"></a>
 
 # FamilyTreeDNA Connector Source Root
+
+> [!NOTE]
+> **2026-09-29:** the unreferenced placeholder files `src/ftDNA/admit.py`, `src/ftDNA/descriptor.yaml` and `src/ftDNA/fetch.py` were removed from `connectors/ftDNA/` in [#4792](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792). None was executable or authoritative. Evidence notes and prose below that describe their contents record the earlier snapshot.
 
 > Evidence-grounded source-code boundary for a possible FamilyTreeDNA / FTDNA connector package. The current root is a greenfield scaffold, not an operational integration. It does **not** prove installability, supported imports, vendor access, consent validation, parser behavior, genetic interpretation, RAW persistence, or publication capability.
 
@@ -118,9 +119,7 @@ connectors/ftDNA/
 │   ├── README.md                       # this source-root contract
 │   └── ftDNA/
 │       ├── README.md                   # expanded package contract
-│       ├── __init__.py                 # empty file
-│       ├── descriptor.yaml             # placeholder; unsafe public floor
-│       └── fetch.py                    # one-line greenfield placeholder
+│       └── __init__.py                 # empty file
 └── tests/
     └── README.md                       # documentation only
 ```
@@ -132,8 +131,8 @@ connectors/ftDNA/
 | `src/README.md` | This source-root boundary. | **DOCUMENTED** |
 | `src/ftDNA/README.md` | Evidence-grounded package contract. | **DOCUMENTED** |
 | `src/ftDNA/__init__.py` | Empty file. | **IMPORT-SHAPED / BEHAVIOR ABSENT** |
-| `src/ftDNA/fetch.py` | Comment-only greenfield placeholder. | **PLACEHOLDER / NON-EXECUTABLE** |
-| `src/ftDNA/descriptor.yaml` | `name: ftDNA`, `role: TBD`, `rights: TBD`, `sensitivity_floor: public`. | **PLACEHOLDER / UNSAFE DEFAULT** |
+| `src/ftDNA/fetch.py` (removed 2026-09-29) | Comment-only greenfield placeholder. | **PLACEHOLDER / NON-EXECUTABLE** |
+| `src/ftDNA/descriptor.yaml` (removed 2026-09-29) | `name: ftDNA`, `role: TBD`, `rights: TBD`, `sensitivity_floor: public`. | **PLACEHOLDER / UNSAFE DEFAULT** |
 | `pyproject.toml` | Project name `kfm-connector-ftDNA` and version `0.0.0` only. | **INCOMPLETE** |
 | Build backend | None confirmed. | **ABSENT** |
 | `src/` package discovery | None confirmed. | **ABSENT** |
@@ -163,8 +162,8 @@ connectors/ftDNA/
 | `connectors/ftDNA/src/README.md` | **CONFIRMED** | A source-root documentation boundary exists. | Executable behavior or installability. |
 | `connectors/ftDNA/src/ftDNA/README.md` | **CONFIRMED v0.2** | Package-level default-deny, manual-input-first, consent, privacy, product, packaging, testing, and handoff requirements are documented. | Implemented modules or passing enforcement. |
 | `src/ftDNA/__init__.py` | **CONFIRMED empty** | A package namespace was scaffolded. | A stable API, supported import name, or import safety. |
-| `src/ftDNA/fetch.py` | **CONFIRMED placeholder** | A future input responsibility was anticipated. | Approved network access, account access, manual upload handling, parsing, or retries. |
-| `src/ftDNA/descriptor.yaml` | **CONFIRMED placeholder** | Package-local metadata was anticipated. | Canonical source authority, resolved role/rights, safe sensitivity, or activation. |
+| `src/ftDNA/fetch.py` (removed 2026-09-29) | **CONFIRMED placeholder** | A future input responsibility was anticipated. | Approved network access, account access, manual upload handling, parsing, or retries. |
+| `src/ftDNA/descriptor.yaml` (removed 2026-09-29) | **CONFIRMED placeholder** | Package-local metadata was anticipated. | Canonical source authority, resolved role/rights, safe sensitivity, or activation. |
 | `connectors/ftDNA/pyproject.toml` | **CONFIRMED placeholder** | Project name and version are recorded. | Build backend, package discovery, dependencies, Python support, installation, or tests. |
 | `connectors/ftDNA/tests/README.md` | **CONFIRMED v0.1 documentation** | No-network, consent, rights, negative-state, and lifecycle-boundary intentions are documented. | Executable tests, accepted live-test variables, or passing results. |
 | `connectors/ftDNA/README.md` | **CONFIRMED v0.1 parent contract** | Connector-level source-admission intent exists. | Current package inventory; it predates the verified product catalog and package audit. |
@@ -585,9 +584,7 @@ src/
 ├── README.md
 └── ftDNA/
     ├── README.md
-    ├── __init__.py        # empty
-    ├── descriptor.yaml    # unsafe placeholder; not authority
-    └── fetch.py           # one-line placeholder
+    └── __init__.py        # empty
 ```
 
 A future **manual-input-first** tree might resemble:

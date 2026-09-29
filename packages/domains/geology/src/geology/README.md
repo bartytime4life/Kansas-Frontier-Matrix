@@ -36,6 +36,9 @@ notes:
 
 # Geology Python Source Namespace
 
+> [!NOTE]
+> **2026-09-29:** the unreferenced placeholder files `src/geology/identity.py`, `src/geology/layers.py` and `src/geology/observations.py` were removed from `packages/domains/geology/` in [#4792](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792). None was executable or authoritative. Evidence notes and prose below that describe their contents record the earlier snapshot.
+
 `packages/domains/geology/src/geology/` is the importable-code boundary for the `kfm-domain-geology` package. The current package is a `0.0.0` greenfield scaffold, not an implemented geology library.
 
 ## Purpose
@@ -55,9 +58,9 @@ The namespace may implement accepted contracts and schemas. It does not define t
 | File | Repository evidence | Implemented behavior |
 |---|---|---|
 | `__init__.py` | Empty file | None; no exports or public API are declared. |
-| `identity.py` | One line identifying a greenfield identity-normalization placeholder | None. |
-| `layers.py` | One line identifying a greenfield layer-descriptor placeholder | None. |
-| `observations.py` | One line identifying a greenfield observation-parsing placeholder | None. |
+| `identity.py` (removed 2026-09-29) | One line identifying a greenfield identity-normalization placeholder | None. |
+| `layers.py` (removed 2026-09-29) | One line identifying a greenfield layer-descriptor placeholder | None. |
+| `observations.py` (removed 2026-09-29) | One line identifying a greenfield observation-parsing placeholder | None. |
 
 `packages/domains/geology/pyproject.toml` declares package name `kfm-domain-geology` and version `0.0.0`; it does not declare dependencies or a build backend. The repository also contains Geology contracts, schemas, policy scaffolds, fixtures, and tests in their own roots, but their presence does not prove this namespace consumes or enforces them.
 

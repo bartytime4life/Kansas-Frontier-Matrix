@@ -52,6 +52,9 @@ notes:
 
 # Kansas Memory Compatibility Connector Boundary
 
+> [!NOTE]
+> **2026-09-29:** the unreferenced placeholder files `src/kansas_memory/admit.py`, `src/kansas_memory/descriptor.yaml` and `src/kansas_memory/fetch.py` were removed from `connectors/kansas_memory/` in [#4792](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792). None was executable or authoritative. Evidence notes and prose below that describe their contents record the earlier snapshot.
+
 > [!IMPORTANT]
 > **Document lifecycle:** `draft`  
 > **Component maturity:** compatibility documentation with a `0.0.0` placeholder package; runtime `UNKNOWN`  
@@ -339,10 +342,7 @@ connectors/kansas_memory/
 │   ├── README.md                          # v0.2 layout boundary
 │   └── kansas_memory/
 │       ├── README.md                      # v0.2 package boundary
-│       ├── __init__.py                    # empty
-│       ├── admit.py                       # one-line placeholder
-│       ├── fetch.py                       # one-line placeholder
-│       └── descriptor.yaml                # unresolved four-field placeholder
+│       └── __init__.py                    # empty
 └── tests/
     └── README.md                          # v0.2 test contract; no suite confirmed
 ```

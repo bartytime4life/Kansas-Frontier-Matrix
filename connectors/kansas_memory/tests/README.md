@@ -54,6 +54,9 @@ notes:
 
 # Kansas Memory Compatibility Connector Test Contract
 
+> [!NOTE]
+> **2026-09-29:** the unreferenced placeholder files `src/kansas_memory/admit.py`, `src/kansas_memory/descriptor.yaml` and `src/kansas_memory/fetch.py` were removed from `connectors/kansas_memory/` in [#4792](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792). None was executable or authoritative. Evidence notes and prose below that describe their contents record the earlier snapshot.
+
 > [!IMPORTANT]
 > **Document lifecycle:** `draft`  
 > **Component maturity:** README-only test scaffold; executable coverage `UNKNOWN`  
@@ -95,10 +98,7 @@ connectors/kansas_memory/
 │   ├── README.md                          # v0.2 source-layout boundary
 │   └── kansas_memory/
 │       ├── README.md                      # v0.2 package admission boundary
-│       ├── __init__.py                    # empty
-│       ├── admit.py                       # one-line greenfield placeholder
-│       ├── fetch.py                       # one-line greenfield placeholder
-│       └── descriptor.yaml                # unresolved local placeholder
+│       └── __init__.py                    # empty
 └── tests/
     └── README.md                          # this file; confirmed current inventory
 ```
@@ -555,8 +555,8 @@ Documentation readiness does not imply executable test readiness, package readin
 | [`../../../control_plane/source_authority_register.yaml`](../../../control_plane/source_authority_register.yaml) | Machine source-authority register. | **CONFIRMED file / entries empty** |
 | [`../../../policy/rights/`](../../../policy/rights/) | Rights and reuse decisions. | **Outside tests** |
 | [`../../../policy/sensitivity/`](../../../policy/sensitivity/) | Sensitivity, privacy, redaction, and CARE-adjacent controls. | **Outside tests** |
-| [`../../../data/raw/archives/`](../../../data/raw/archives/) | Potential caller-owned admitted candidate surface. | **Outside tests** |
-| [`../../../data/quarantine/archives/`](../../../data/quarantine/archives/) | Potential caller-owned hold surface. | **Outside tests** |
+| `data/raw/archives/` (not present) | Potential caller-owned admitted candidate surface. | **Outside tests** |
+| `data/quarantine/archives/` (not present) | Potential caller-owned hold surface. | **Outside tests** |
 | [`../../../data/receipts/`](../../../data/receipts/) | Process-memory receipts. | **Outside tests** |
 | [`../../../release/`](../../../release/) | Release, correction, withdrawal, and rollback controls. | **Outside tests** |
 

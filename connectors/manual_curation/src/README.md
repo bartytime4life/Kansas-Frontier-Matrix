@@ -21,9 +21,6 @@ related:
   - ../tests/README.md
   - ./manual_curation/README.md
   - ./manual_curation/__init__.py
-  - ./manual_curation/fetch.py
-  - ./manual_curation/admit.py
-  - ./manual_curation/descriptor.yaml
   - ../../../CONTRIBUTING.md
   - ../../../.github/CODEOWNERS
   - ../../../.github/workflows/connector-gate.yml
@@ -60,6 +57,9 @@ notes:
 <a id="top"></a>
 
 # Manual Curation Greenfield Source Layout and Process-Ownership Boundary
+
+> [!NOTE]
+> **2026-09-29:** the unreferenced placeholder files `src/manual_curation/admit.py`, `src/manual_curation/descriptor.yaml` and `src/manual_curation/fetch.py` were removed from `connectors/manual_curation/` in [#4792](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4792). None was executable or authoritative. Evidence notes and prose below that describe their contents record the earlier snapshot.
 
 > Repository-grounded boundary for `connectors/manual_curation/src/`. The layout contains one `manual_curation` Python namespace and verified placeholder files, but no supported curation or connector behavior. It organizes future package code only; it is not a source registry, review authority, policy engine, lifecycle store, EvidenceBundle resolver, catalog-closure service, release plane, or public surface.
 
@@ -143,10 +143,7 @@ connectors/manual_curation/
 │   ├── README.md                          # this source-layout boundary
 │   └── manual_curation/
 │       ├── README.md                      # package/steward-gate boundary v0.2
-│       ├── __init__.py                    # empty
-│       ├── fetch.py                       # comment-only placeholder
-│       ├── admit.py                       # comment-only placeholder
-│       └── descriptor.yaml                # four-field placeholder
+│       └── __init__.py                    # empty
 └── tests/
     └── README.md                          # documentation contract v0.1
 ```
@@ -169,9 +166,9 @@ These statements are bounded to the exact paths and pinned commit. Differently n
 | `src/README.md` | This layout contract. | Documents boundaries; does not implement them. |
 | `src/manual_curation/README.md` | v0.2 package and steward-gate boundary. | Defines future constraints and unresolved ownership; does not create behavior. |
 | `src/manual_curation/__init__.py` | Empty. | No public package API or initialization behavior. |
-| `src/manual_curation/fetch.py` | Comment-only. | No source retrieval, packet assembly, hashing, source-head, retry, staging, or adapter behavior. |
-| `src/manual_curation/admit.py` | Comment-only. | No validation, policy call, review routing, disposition, receipt, or handoff behavior. |
-| `src/manual_curation/descriptor.yaml` | `name: manual_curation`, `role: TBD`, `rights: TBD`, `sensitivity_floor: public`. | Invalid as source authority, activation, rights clearance, sensitivity clearance, review evidence, or release evidence. |
+| `src/manual_curation/fetch.py` (removed 2026-09-29) | Comment-only. | No source retrieval, packet assembly, hashing, source-head, retry, staging, or adapter behavior. |
+| `src/manual_curation/admit.py` (removed 2026-09-29) | Comment-only. | No validation, policy call, review routing, disposition, receipt, or handoff behavior. |
+| `src/manual_curation/descriptor.yaml` (removed 2026-09-29) | `name: manual_curation`, `role: TBD`, `rights: TBD`, `sensitivity_floor: public`. | Invalid as source authority, activation, rights clearance, sensitivity clearance, review evidence, or release evidence. |
 | Parent metadata | Name and `0.0.0` only. | Buildability, dependencies, supported Python, discovery, commands, and runtime remain unknown. |
 | Connector tests | README-only at the named probes. | Discovery count, coverage, pass state, negative-case enforcement, and fixture safety remain unknown. |
 | Connector workflows | TODO-only. | Green completion proves workflow execution only. |
@@ -766,9 +763,9 @@ No package-specific dashboard, runtime log, deployment, service-level objective,
 | `connectors/manual_curation/src/README.md` | **CONFIRMED** | Existing v0.1 layout document and prior blob. | Package behavior or ownership correctness. |
 | `connectors/manual_curation/pyproject.toml` | **CONFIRMED** | Distribution name and `0.0.0` placeholder version. | Buildability, dependencies, discovery, commands, or supported Python. |
 | `src/manual_curation/__init__.py` | **CONFIRMED empty** | No current initializer behavior. | Absence of every possible module or external integration. |
-| `src/manual_curation/fetch.py` | **CONFIRMED comment-only** | No implemented named fetch surface. | Absence of differently named retrieval code elsewhere. |
-| `src/manual_curation/admit.py` | **CONFIRMED comment-only** | No implemented named admission surface. | Absence of differently named admission code elsewhere. |
-| `src/manual_curation/descriptor.yaml` | **CONFIRMED four-field placeholder** | Current local descriptor content. | Source authority, rights clearance, sensitivity clearance, review, activation, or release. |
+| `src/manual_curation/fetch.py` (removed 2026-09-29) | **CONFIRMED comment-only** | No implemented named fetch surface. | Absence of differently named retrieval code elsewhere. |
+| `src/manual_curation/admit.py` (removed 2026-09-29) | **CONFIRMED comment-only** | No implemented named admission surface. | Absence of differently named admission code elsewhere. |
+| `src/manual_curation/descriptor.yaml` (removed 2026-09-29) | **CONFIRMED four-field placeholder** | Current local descriptor content. | Source authority, rights clearance, sensitivity clearance, review, activation, or release. |
 | `src/manual_curation/README.md` v0.2 | **CONFIRMED** | Repository-grounded package boundary, process-not-source conflict, and implementation limits. | Executable behavior. |
 | `connectors/manual_curation/tests/README.md` | **CONFIRMED** | Intended test posture. | Executable tests, collection, coverage, or pass state. |
 | Exact test probes | **NOT FOUND** | Named conventional files were absent at the pinned base. | Absence of differently named tests. |
