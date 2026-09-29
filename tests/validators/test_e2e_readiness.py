@@ -5,6 +5,14 @@ import unittest
 from tools.validators.e2e_readiness import inspect_readiness
 
 
+ACCEPTED_PROOF_SLICE_TEST = (
+    "import subprocess, sys\n\n"
+    "def test_lane():\n"
+    "    result = subprocess.run([sys.executable, 'tools/readiness/run_lane.py', 'proof-slice'])\n"
+    "    assert result.returncode == 0\n"
+)
+
+
 class E2ERetirementReadinessTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temp = tempfile.TemporaryDirectory()
@@ -23,7 +31,7 @@ class E2ERetirementReadinessTests(unittest.TestCase):
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text("\n", encoding="utf-8")
         (self.root / "tests/e2e/test_hydrology_proof_slice.py").write_text(
-            "# placeholder\n\ndef test_proof_slice_placeholder():\n    assert True\n",
+            ACCEPTED_PROOF_SLICE_TEST,
             encoding="utf-8",
         )
 
@@ -44,12 +52,27 @@ class E2ERetirementReadinessTests(unittest.TestCase):
             inspect_readiness(self.root).findings,
         )
 
-    def test_placeholder_change_requires_review(self) -> None:
+    def test_reverting_to_a_vacuous_placeholder_is_rejected(self) -> None:
         (self.root / "tests/e2e/test_hydrology_proof_slice.py").write_text(
-            "def test_proof_slice_placeholder():\n    assert False\n",
+            "def test_proof_slice_placeholder():\n    assert True\n",
             encoding="utf-8",
         )
-        self.assertIn("E2E_PLACEHOLDER_CHANGED", inspect_readiness(self.root).findings)
+        self.assertIn("E2E_PROOF_SLICE_TEST_VACUOUS", inspect_readiness(self.root).findings)
+
+    def test_proof_slice_test_must_invoke_the_lane(self) -> None:
+        (self.root / "tests/e2e/test_hydrology_proof_slice.py").write_text(
+            "def test_something():\n    assert 1 + 1 == 2\n",
+            encoding="utf-8",
+        )
+        self.assertIn("E2E_PROOF_SLICE_LANE_NOT_INVOKED", inspect_readiness(self.root).findings)
+
+    def test_unparseable_proof_slice_test_is_rejected(self) -> None:
+        (self.root / "tests/e2e/test_hydrology_proof_slice.py").write_text("def (:\n", encoding="utf-8")
+        self.assertIn("E2E_PROOF_SLICE_TEST_INVALID", inspect_readiness(self.root).findings)
+
+    def test_committed_repository_passes(self) -> None:
+        repository = Path(__file__).resolve().parents[2]
+        self.assertEqual(inspect_readiness(repository).findings, ())
 
 
 if __name__ == "__main__":

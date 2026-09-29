@@ -1,20 +1,19 @@
 #!/usr/bin/env python3
-"""Validate HabitatPatch candidates against the current (scaffold) schema,
-plus reference-hygiene checks for two PROPOSED connectivity fields.
+"""Validate HabitatPatch candidates against the PROPOSED schema, plus
+reference-hygiene checks for two PROPOSED connectivity fields.
 
-``schemas/contracts/v1/domains/habitat/habitat_patch.schema.json`` is a
-PROPOSED scaffold with empty ``properties`` and ``additionalProperties:
-true`` (see ``contracts/domains/habitat/habitat_patch.md``, "Schema posture"
-and "Recommended semantics" -- the field list there is explicitly not yet
-enforced, and open questions such as the canonical source-role spelling and
-which sibling contract document is canonical remain NEEDS VERIFICATION
-pending a domain-steward decision).
+``schemas/contracts/v1/domains/habitat/habitat_patch.schema.json`` is
+PROPOSED. It declares only the two optional connectivity reference arrays
+checked below and leaves every other member open (``additionalProperties:
+true``). See ``contracts/domains/habitat/habitat_patch.md``, "Schema
+posture" and "Recommended semantics": the wider field list there is
+explicitly not yet enforced, and open questions such as the canonical
+source-role spelling and which sibling contract document is canonical
+remain NEEDS VERIFICATION pending a domain-steward decision.
 
-This entrypoint therefore still checks only what the shared JSON Schema
-runner would check against the scaffold as it stands: valid JSON, a JSON
-object at the root, no duplicate object keys, no non-finite numbers, and
-conformance with whatever the schema currently declares (nothing, field-
-wise). It additionally checks reference-string HYGIENE on two of
+This entrypoint therefore checks valid JSON, a JSON object at the root, no
+duplicate object keys, no non-finite numbers, and conformance with the
+schema. It additionally checks reference-string HYGIENE on two of
 HabitatPatch's own PROPOSED fields: ``connectivity_edge_refs`` and
 ``corridor_refs``, which point at ``ConnectivityEdge`` and ``Corridor`` --
 two other Habitat object families that are themselves still empty PROPOSED
@@ -107,6 +106,13 @@ def validate_candidate_file(path: Path) -> str | None:
     except JsonInputError as exc:
         return str(exc)
 
+    # The domain check runs first so its specific message wins; the schema
+    # declares the same fields and backs it up.
+    if isinstance(candidate, dict):
+        message = _connectivity_finding(candidate)
+        if message is not None:
+            return message
+
     errors = sorted(
         _VALIDATOR.iter_errors(candidate),
         key=lambda error: (list(error.absolute_path), str(error.validator)),
@@ -115,8 +121,7 @@ def validate_candidate_file(path: Path) -> str | None:
         return errors[0].message
     if not isinstance(candidate, dict):
         return "candidate document must be a JSON object"
-
-    return _connectivity_finding(candidate)
+    return None
 
 
 def _validate_paths(paths: list[Path]) -> bool:

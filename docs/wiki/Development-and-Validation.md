@@ -217,9 +217,7 @@ Run a target only when the change affects the named surface, and inspect its imp
 | `make boundary-guards-ci` | Boundary tests with JUnit output under `artifacts/qa/` |
 | `make deny-test` | Public-route, store, and runtime-import guards |
 | `make ui-build` | Explicit `WORKFLOW_HOLD` for the retired Explorer Web app |
-| `make maplibre-perf` | MapLibre performance smoke plus candidate artifacts |
-| `make maplibre-govern` | MapLibre performance-governance validation |
-| `make maplibre-proof` | Candidate ProofPack build and validation; no release effect |
+| `make proof-slice` | Synthetic no-network Hydrology proof slice |
 | `make evidence-resolver` | Internal evidence-candidate profile and tests |
 | `make evidence-resolver-deny` | Evidence-resolver negative fixtures and tests |
 | `make publish-check` | Fixture-only review-record and promotion-gate checks |

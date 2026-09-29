@@ -1,0 +1,8 @@
+{
+  "case_id": "03-deny-sensitive-exact-geometry",
+  "thin_slice_assertion": 3,
+  "description": "Exact site geometry is denied on a public surface.",
+  "overrides": {
+    "geometry_precision": "exact_point"
+  }
+}

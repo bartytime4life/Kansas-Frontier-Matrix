@@ -95,6 +95,14 @@ notes:
 **Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Does not belong](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related roots](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Command routing](#current-command-routing) · [Inventory](#confirmed-current-inventory) · [Child lanes](#child-lane-contracts) · [Planner wrappers](#governed-planning-wrappers) · [MapLibre](#root-level-maplibre-performance-chain) · [Execution](#safe-execution-contract) · [Artifact boundary](#generated-artifact-and-trust-object-boundary) · [Outcomes](#finite-outcomes-and-failure-semantics) · [Graduation](#graduation-and-promotion-rules) · [Rollback](#correction-and-rollback) · [Open verification](#open-verification-register)
 
 > [!IMPORTANT]
+> **2026-09-29 removal update.** The seven root-level MapLibre scripts
+> (`maplibre-smoke-perf.mjs` and the render-diff, attestation, release-manifest,
+> proof-pack, correction/rollback, and failure-bundle builders), the root
+> `maplibre:*` npm scripts, and the `make maplibre-*` targets were removed with
+> their placeholder schemas and verifiers. Sections below that describe that
+> chain are historical; the current inventory and command lists reflect the removal.
+
+> [!IMPORTANT]
 > A script may execute work, but successful execution grants no KFM authority. Output is not automatically evidence, proof, policy approval, lifecycle promotion, release approval, correction authority, rollback authorization, or public truth.
 
 > [!NOTE]
@@ -453,29 +461,8 @@ It does **not** install workspace packages or a browser, run Playwright, start a
 - canonical receipt/proof/release destinations;
 - rollback and correction behavior.
 
-<details>
-<summary><strong>Current command names — availability only, not a run recommendation</strong></summary>
-
-```bash
-npm run maplibre:perf
-npm run maplibre:render-diff
-npm run maplibre:attest
-npm run maplibre:manifest
-npm run maplibre:govern
-npm run maplibre:proof
-npm run maplibre:proof:validate
-npm run maplibre:failure-bundle
-npm run maplibre:correction
-npm run maplibre:perf:full
-npm run maplibre:clean
-
-make maplibre-perf
-make maplibre-govern
-make maplibre-proof
-make maplibre-clean
-```
-
-</details>
+The former `npm run maplibre:*` scripts and `make maplibre-*` targets were removed
+with the legacy harness; no root MapLibre performance command remains.
 
 ### Child-lane checks
 
@@ -658,15 +645,8 @@ Directory Rules §16 requests a direct-child map rather than a recursive dump.
 ```text
 scripts/
 ├── README.md
-├── attest-maplibre-perf.mjs
-├── build-maplibre-perf-correction-and-rollback.mjs
-├── build-maplibre-perf-failure-bundle.mjs
-├── build-maplibre-perf-proof-pack.mjs
-├── build-maplibre-perf-release-manifest.mjs
-├── build-maplibre-render-diff.mjs
 ├── dev/
 ├── maintenance/
-├── maplibre-smoke-perf.mjs
 ├── one_off/
 ├── plan_backfill_window.py
 └── plan_pipeline_resilience.py
@@ -681,7 +661,6 @@ scripts/
 | `one_off/` | Temporary quarantine lane | README-only in bounded evidence; delete or promote after use. |
 | `plan_backfill_window.py` | Thin planning wrapper | Reusable logic in `packages/pipelines-core`; no network or writes. |
 | `plan_pipeline_resilience.py` | Thin planning wrapper | Reusable logic in `packages/pipelines-core`; operator-safe no-write output. |
-| Seven `*maplibre*` / MapLibre builder scripts | Trust-adjacent candidate-builder family | Command-exposed; CI-held; `artifacts/perf/` placement conflicted. |
 
 ### Bounded inventory limits
 
@@ -807,9 +786,9 @@ Re-review or graduate when a wrapper:
 
 ## Root-level MapLibre performance chain
 
-### Local candidate-builder flow
+### Local candidate-builder flow (removed)
 
-The current local command surfaces can invoke:
+Historical record of the removed chain; none of these files exist now:
 
 ```text
 configs/maplibre/perf-envelope.v1.json
@@ -837,7 +816,7 @@ candidate failure
 ```mermaid
 flowchart LR
     A["Checkout<br/>read-only token"] --> B["Node 22 + Python 3.12"]
-    B --> C["Syntax-check 7 scripts"]
+    B --> C["Parse MapLibre validators<br/>and tests"]
     C --> D["Run bounded deterministic<br/>negative-path checks"]
     D --> E["Inspect pnpm, fixture,<br/>schema, validator, and placement assumptions"]
     E --> F["Explicit HOLD"]

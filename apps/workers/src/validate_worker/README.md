@@ -877,7 +877,7 @@ None is evidence of a Validate Worker writer.
 
 The shared [`pipelines/validate/README.md`](../../../../pipelines/validate/README.md) is detailed and repository-grounded. Its [`main.py`](../../../../pipelines/validate/main.py) is still a one-comment placeholder.
 
-The CLI command at [`apps/cli/src/kfm_cli/commands/validate.py`](../../../cli/src/kfm_cli/commands/validate.py) is also a one-comment placeholder.
+The CLI command at `apps/cli/src/kfm_cli/commands/validate.py` (removed) was a one-comment placeholder and was removed with the `apps/cli/` scaffold.
 
 These are adjacent boundaries, not callable worker capabilities.
 
@@ -1888,7 +1888,7 @@ High-consequence release requires independent evidence and human or governed dec
 - [Workers source boundary](../README.md)
 - [Workers deployable boundary](../../README.md)
 - [Placeholder entrypoint](./main.py)
-- [CLI Validate placeholder](../../../cli/src/kfm_cli/commands/validate.py)
+- CLI Validate placeholder (removed)
 - [Governed API boundary](../../../governed-api/README.md)
 - [Review Console boundary](../../../review-console/README.md)
 

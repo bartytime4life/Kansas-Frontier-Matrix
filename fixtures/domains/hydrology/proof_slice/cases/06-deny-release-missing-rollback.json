@@ -1,0 +1,8 @@
+{
+  "case_id": "06-deny-release-missing-rollback",
+  "thin_slice_assertion": 6,
+  "description": "A release candidate without a rollback target is denied.",
+  "overrides": {
+    "rollback_target": null
+  }
+}

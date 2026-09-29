@@ -41,16 +41,10 @@ related:
   - ../../packages/maplibre/src/index.ts
   - ../../packages/maplibre/src/maplibre-adapter.ts
   - ../../packages/maplibre/src/maplibre-vite-adapter.ts
-  - ../../apps/explorer-web/package.json
-  - ../../apps/explorer-web/src/adapters/MapLibreAdapter.ts
-  - ../../apps/explorer-web/src/features/map_runtime/index.tsx
-  - ../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts
-  - ../../apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts
   - ../../configs/maplibre/README.md
   - ../../tools/validators/maplibre/assess_acquisition_inventory.py
   - ../../tools/validators/maplibre/validate_v6_readiness.py
   - ../../tests/maplibre/test_validate_v6_readiness.py
-  - ../../scripts/maplibre-smoke-perf.mjs
 tags: [kfm, architecture, maplibre, map-master, explorer-web, renderer-boundary, evidence-drawer, pmtiles, validation]
 notes:
   - "This revision preserves the document identity and stable legacy anchors while replacing proposal-era repository assumptions with current pinned evidence."
@@ -133,12 +127,12 @@ KFM's accepted architecture treats MapLibre as a **browser-side rendering and in
 - [`packages/maplibre/src/index.ts`](../../packages/maplibre/src/index.ts) re-exports the renderer-neutral `map-runtime-port` and `null-map-runtime` surfaces; [`packages/maplibre/package.json`](../../packages/maplibre/package.json) exposes the effectful adapters separately as `@kfm/maplibre/adapter` and `@kfm/maplibre/vite-adapter`.
 - [`maplibre-adapter.ts`](../../packages/maplibre/src/maplibre-adapter.ts) implements the initial lifecycle/camera slice with an inline empty style, finite errors, and teardown.
 - [`maplibre-vite-adapter.ts`](../../packages/maplibre/src/maplibre-vite-adapter.ts) owns the Vite worker URL setup required by the detected bundler.
-- [`apps/explorer-web/package.json`](../../apps/explorer-web/package.json) does not declare `maplibre-gl`, and the normal site composition still constructs `NullMapRuntime`.
-- [`apps/explorer-web/src/adapters/MapLibreAdapter.ts`](../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) remains an app-local compatibility marker, not the reusable implementation owner.
-- The separately tracked [`apps/kansas-frontier-matrix-explorer/`](../../apps/kansas-frontier-matrix-explorer/) imports `@kfm/maplibre` and boots `NullMapRuntime`; direct dependency, CSS, worker, dynamic/global, and construction acquisition were removed, so profile v14 returns structural `HOLD` with raw acquisition confined to the accepted seam.
-- [`map_runtime/index.tsx`](../../apps/explorer-web/src/features/map_runtime/index.tsx) provides a renderer-neutral, fixture-driven selection profile with an injected resolver.
-- [`layer_manifest_admission.ts`](../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts) evaluates bounded admission inputs but does not mutate a registry or call `addSource`.
-- [`pmtiles_release_cache.ts`](../../apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts) plans release-scoped cache behavior but performs no fetch or cache operation.
+- `apps/explorer-web/package.json` (retired) does not declare `maplibre-gl`, and the normal site composition still constructs `NullMapRuntime`.
+- `apps/explorer-web/src/adapters/MapLibreAdapter.ts` (retired) remains an app-local compatibility marker, not the reusable implementation owner.
+- The separately tracked `apps/kansas-frontier-matrix-explorer/` (retired) imports `@kfm/maplibre` and boots `NullMapRuntime`; direct dependency, CSS, worker, dynamic/global, and construction acquisition were removed, so profile v14 returns structural `HOLD` with raw acquisition confined to the accepted seam.
+- `map_runtime/index.tsx` (retired) provides a renderer-neutral, fixture-driven selection profile with an injected resolver.
+- `layer_manifest_admission.ts` (retired) evaluates bounded admission inputs but does not mutate a registry or call `addSource`.
+- `pmtiles_release_cache.ts` (retired) plans release-scoped cache behavior but performs no fetch or cache operation.
 
 That is a concrete bounded package runtime, but it is not a conforming production activation and it is not publication evidence.
 
@@ -251,7 +245,7 @@ This table reports **current repository maturity**, not the broader capabilities
 | Acquisition inventory | Profile v14 finds raw acquisition only in the accepted package seam | `HOLD · RENDERER_ACQUISITION_PRESENT` |
 | Committed v6 probe result | `configs/maplibre/v6-probe-results.json` is absent; all twelve probes report `NOT_RUN` | `HOLD · RUNTIME_PROBES_PENDING` |
 | MapLibre GL JS dependency | Exact `6.6.0` is pinned only in the accepted package; the Sites-derived app consumes the renderer-neutral facade | `IMPLEMENTED · PACKAGE-OWNED` |
-| Standalone performance harness | `scripts/maplibre-smoke-perf.mjs` exits finite `WORKFLOW_HOLD` before renderer or network acquisition | `RETIRED · REPLACEMENT HOLD` |
+| Standalone performance harness | The legacy `scripts/maplibre-smoke-perf.mjs` was removed | `REMOVED · REPLACEMENT HOLD` |
 | MapLibre configuration lane | README plus a performance-envelope payload; not a live viewer config or source registry | `BOUNDED CONFIG SUPPORT` |
 | Production 2D / terrain / globe / 3D runtime | No current code, runtime trace, release manifest, deployment record, or hosted result inspected proves it | `UNKNOWN / NOT PROVEN` |
 
@@ -308,12 +302,11 @@ This update stays at `docs/architecture/maplibre.md`. Under the accepted Directo
 | [`docs/architecture/maplibre.md`](./maplibre.md) | Human-readable lane entry point | Accepted architecture and current evidence are documented | Runtime readiness, release, deployment, or publication |
 | [`docs/architecture/map-master/`](./map-master/README.md) | Map Master architecture sublane | Current navigation and bounded doctrine exist | Production viewer or release |
 | [`packages/maplibre/`](../../packages/maplibre/) | Reusable dependency and adapter seam | Exact dependency, port, null runtime, initial adapter, Vite worker seam, tests, and fixture exist | Production activation or public release |
-| [`apps/explorer-web/`](../../apps/explorer-web/) | Explorer Web application | Normal browser application and bounded `NullMapRuntime` composition exist | MapLibre production activation or published site |
-| [`apps/kansas-frontier-matrix-explorer/`](../../apps/kansas-frontier-matrix-explorer/) | Sites-derived application | A renderer-neutral NullMapRuntime shell and catalog/evidence surfaces exist | Full renderer capability migration, activation, or authority to create a peer seam |
+| `apps/explorer-web/` (retired) | Explorer Web application | Normal browser application and bounded `NullMapRuntime` composition exist | MapLibre production activation or published site |
+| `apps/kansas-frontier-matrix-explorer/` (retired) | Sites-derived application | A renderer-neutral NullMapRuntime shell and catalog/evidence surfaces exist | Full renderer capability migration, activation, or authority to create a peer seam |
 | [`configs/maplibre/`](../../configs/maplibre/) | Commit-safe configuration support | README and bounded performance input exist | Live style/layer/source registry |
 | [`tools/validators/maplibre/`](../../tools/validators/maplibre/) | Repository validation tooling | Acquisition and readiness logic exist | `READY`; current exact-head results are structural acquisition `HOLD` and readiness `HOLD` |
 | [`tests/maplibre/`](../../tests/maplibre/) | Focused test ownership | Synthetic validator tests exist | Browser/runtime parity or hosted success |
-| [`scripts/maplibre-smoke-perf.mjs`](../../scripts/maplibre-smoke-perf.mjs) | Retired standalone script | A finite `WORKFLOW_HOLD` prevents renderer/network acquisition | Replacement performance authority or release eligibility |
 
 ### Placement rules for future work
 
@@ -340,11 +333,11 @@ The exact future file set is `NEEDS VERIFICATION` until a scoped implementation 
 | Understand the whole Map Master lane | [Map Master README](./map-master/README.md) | [MapLibre register](./maplibre-master.md) |
 | Change or review the renderer trust boundary | [Renderer Boundary](./map-master/RENDERER_BOUNDARY.md) | [UI Map Runtime Boundary](./ui/MAP_RUNTIME_BOUNDARY.md) and [ADR-0006](../adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) |
 | Review the accepted sole-renderer scope | [ADR-0007](../adr/ADR-0007%20%E2%80%94%20MapLibre%20GL%20JS%20Is%20the%20Sole%20Browser-Side%20Renderer.md) | [Renderer disposition](#5-renderer-disposition) |
-| Work on Explorer shell behavior | [Map Shell](./map-shell.md) | [`map_runtime/index.tsx`](../../apps/explorer-web/src/features/map_runtime/index.tsx) |
-| Work on selection and Evidence Drawer behavior | [Evidence Drawer](./map-master/EVIDENCE_DRAWER.md) | [`map_runtime/index.tsx`](../../apps/explorer-web/src/features/map_runtime/index.tsx) |
-| Work on layer admission or lifecycle | [Layer Lifecycle](./map-master/LAYER_LIFECYCLE.md) | [`layer_manifest_admission.ts`](../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts) |
-| Work on PMTiles or tile release behavior | [Tile Artifacts](./map-master/TILE_ARTIFACTS.md) | [`pmtiles_release_cache.ts`](../../apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts) |
-| Work on performance | [Performance Budgets](./map-master/PERFORMANCE_BUDGETS.md) | [MapLibre config boundary](../../configs/maplibre/README.md) and the [performance harness](../../scripts/maplibre-smoke-perf.mjs) |
+| Work on Explorer shell behavior | [Map Shell](./map-shell.md) | `map_runtime/index.tsx` (retired) |
+| Work on selection and Evidence Drawer behavior | [Evidence Drawer](./map-master/EVIDENCE_DRAWER.md) | `map_runtime/index.tsx` (retired) |
+| Work on layer admission or lifecycle | [Layer Lifecycle](./map-master/LAYER_LIFECYCLE.md) | `layer_manifest_admission.ts` (retired) |
+| Work on PMTiles or tile release behavior | [Tile Artifacts](./map-master/TILE_ARTIFACTS.md) | `pmtiles_release_cache.ts` (retired) |
+| Work on performance | [Performance Budgets](./map-master/PERFORMANCE_BUDGETS.md) | [MapLibre config boundary](../../configs/maplibre/README.md) |
 | Work on 2D / 3D evidence parity | [2D / 3D Parity](./map-master/2D_3D_PARITY.md) | [Planetary / 3D](./planetary-3d.md) |
 | Verify viewer behavior and negative states | [Viewer Verification](./map-master/VIEWER_VERIFICATION.md) | Current Explorer tests and exact-head hosted checks |
 | Evaluate the v6 candidate | [Readiness validator](../../tools/validators/maplibre/validate_v6_readiness.py) | [Focused tests](../../tests/maplibre/test_validate_v6_readiness.py) |
@@ -435,16 +428,15 @@ These questions do not block this documentation correction. The acquisition find
 - [`@kfm/maplibre` package manifest](../../packages/maplibre/package.json)
 - [Package-owned MapLibre adapter](../../packages/maplibre/src/maplibre-adapter.ts)
 - [Vite worker adapter](../../packages/maplibre/src/maplibre-vite-adapter.ts)
-- [Explorer Web manifest](../../apps/explorer-web/package.json)
-- [Explorer app-local compatibility marker](../../apps/explorer-web/src/adapters/MapLibreAdapter.ts)
-- [Renderer-neutral map runtime](../../apps/explorer-web/src/features/map_runtime/index.tsx)
-- [Layer-manifest admission evaluator](../../apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts)
-- [PMTiles release-cache planner](../../apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts)
+- Explorer Web manifest (retired)
+- Explorer app-local compatibility marker (retired)
+- Renderer-neutral map runtime (retired)
+- Layer-manifest admission evaluator (retired)
+- PMTiles release-cache planner (retired)
 - [MapLibre configuration boundary](../../configs/maplibre/README.md)
 - [Acquisition inventory](../../tools/validators/maplibre/assess_acquisition_inventory.py)
 - [v6 readiness validator](../../tools/validators/maplibre/validate_v6_readiness.py)
 - [v6 readiness tests](../../tests/maplibre/test_validate_v6_readiness.py)
-- [Standalone performance harness](../../scripts/maplibre-smoke-perf.mjs)
 
 [Back to top](#top)
 

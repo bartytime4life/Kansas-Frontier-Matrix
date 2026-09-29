@@ -2,7 +2,7 @@ schema_version: kfm.repository-governance-parity.v1
 profile_id: kfm://governance-parity/mrts-04
 status: PROPOSED
 authority_mode: validation_projection_only
-base_ref: fc7c558e3439b08f7e8670a4ef24c6985e5164be
+base_ref: 4324e239ecc5aa6fa4d58b104e28eb12d5e596ee
 governing_refs:
   - path: control_plane/path_alias_register.yaml
     sha256: sha256:4721fd4c2df986dbc63b2174feec1863034d96326775ed000b4cfbf9fe57f5a2
@@ -13,9 +13,9 @@ governing_refs:
   - path: docs/doctrine/directory-rules.md
     sha256: sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e
   - path: tools/validators/directory_governance/repository_topology_baseline.json
-    sha256: sha256:0a06efedd47f107c84f0ca611b6ae74050212daa99a8710363991ab4bb3e6a18
+    sha256: sha256:78f96e053e3d2e7fd14e5e0642480638f8ed0d2800f67985ac2ebc448a49347c
   - path: tools/validators/directory_governance/validate_repository_topology.py
-    sha256: sha256:5816e18cabb092168a64104b7e48050733c7aac2a3ffb84b54d1402962fe7787
+    sha256: sha256:70ec73f3f07b5c6873d788899c2cf78e7afbdf39f9780ce14f89239399daac7f
 lanes:
   - lane_id: control-plane-registry-packet
     owner_path: tools/validators/control_plane/validate_control_plane_registry_packet.py
@@ -67,7 +67,7 @@ expected_topology:
   rule_count: 20
   fail_invariant: 0
   fail_new_drift: 0
-  baselined_warning: 122
+  baselined_warning: 121
   stale_fingerprints: 0
 required_non_effects:
   - does_not_accept_or_amend_adr

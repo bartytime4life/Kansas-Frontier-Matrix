@@ -50,7 +50,7 @@ notes:
   - "Expanded from a scaffold at contracts/domains/habitat/habitat_patch.md."
   - "This path is the contract_doc path currently referenced by schemas/contracts/v1/domains/habitat/habitat_patch.schema.json."
   - "CONFLICTED / NEEDS VERIFICATION: contracts/domains/habitat/habitat-patch.contract.md also exists as an expanded sibling semantic contract. This update preserves both paths and does not delete or merge either file."
-  - "The paired schema exists at schemas/contracts/v1/domains/habitat/habitat_patch.schema.json, but it is still a PROPOSED scaffold with empty properties and additionalProperties=true; field-level enforcement remains NEEDS VERIFICATION."
+  - "The paired schema exists at schemas/contracts/v1/domains/habitat/habitat_patch.schema.json, but it is still PROPOSED: it declares only the optional connectivity_edge_refs and corridor_refs arrays, with additionalProperties=true; other field-level enforcement remains NEEDS VERIFICATION."
   - "HabitatPatch is a discrete polygonal habitat unit and one of the Habitat lane's canonical object families. It is not species occurrence truth, not Flora vegetation-community ownership, not regulatory critical habitat, not modeled suitability, not a connectivity edge/corridor, and not release authority."
 [/KFM_META_BLOCK_V2] -->
 
@@ -86,7 +86,7 @@ notes:
 > **Contract path:** `contracts/domains/habitat/habitat_patch.md`  
 > **Expanded sibling path:** `contracts/domains/habitat/habitat-patch.contract.md` — also exists and remains unresolved.  
 > **Schema path:** `schemas/contracts/v1/domains/habitat/habitat_patch.schema.json`  
-> **Schema posture:** paired schema exists, but is still a `PROPOSED` scaffold with empty `properties` and `additionalProperties: true`.  
+> **Schema posture:** paired schema exists, but is still `PROPOSED`: it declares only the optional `connectivity_edge_refs` and `corridor_refs` arrays, with `additionalProperties: true`.\
 > **Truth posture:** Habitat doctrine confirms `HabitatPatch` as a canonical object family for discrete polygonal habitat units. Field-level schema shape, fixtures, validators, source registry activation, policy runtime, release artifacts, map/UI behavior, Focus Mode behavior, and CI/test coverage remain **NEEDS VERIFICATION**.
 
 > [!CAUTION]
@@ -149,13 +149,13 @@ A patch is the spatial carrier for Habitat reasoning. It may carry class, qualit
 | Confirmed schema path | `schemas/contracts/v1/domains/habitat/habitat_patch.schema.json` |
 | Schema status | `PROPOSED` |
 | Schema title | `Habitat Patch` |
-| Schema properties | Empty object |
+| Schema properties | Optional `connectivity_edge_refs` and `corridor_refs` reference arrays only |
 | Required fields | None visible in the scaffold |
 | Additional properties | `true` |
 | Source doc | `docs/domains/habitat/MISSING_OR_PLANNED_FILES.md` |
 | Contract doc pointer | `contracts/domains/habitat/habitat_patch.md` |
 | Field-level validation | NEEDS VERIFICATION |
-| Structural validation, plus reference hygiene | `tools/validators/domains/habitat/validate_habitat_patch.py` enforces valid JSON, a JSON-object root, no duplicate keys, and no non-finite numbers against this scaffold, and nothing else field-wise. It additionally checks that the optional `connectivity_edge_refs` and `corridor_refs` fields, if declared, are sorted, unique, grammar-bounded reference arrays free of internal-lifecycle prefixes — reusing the shared CatalogMatrix closure validator's ref-hygiene rule unchanged, without resolving either field to a real `ConnectivityEdge` or `Corridor` (both are themselves empty `PROPOSED` scaffolds; see `connectivity_edge.md`, `corridor.md`). See `fixtures/domains/habitat/patch/README.md`. |
+| Structural validation, plus reference hygiene | `tools/validators/domains/habitat/validate_habitat_patch.py` enforces valid JSON, a JSON-object root, no duplicate keys, no non-finite numbers, and the schema's two declared arrays, and nothing else field-wise. It additionally checks that the optional `connectivity_edge_refs` and `corridor_refs` fields, if declared, are sorted, unique, grammar-bounded reference arrays free of internal-lifecycle prefixes — reusing the shared CatalogMatrix closure validator's ref-hygiene rule unchanged, without resolving either field to a real `ConnectivityEdge` or `Corridor` (both are themselves empty `PROPOSED` scaffolds; see `connectivity_edge.md`, `corridor.md`). See `fixtures/domains/habitat/patch/README.md`. |
 
 Until schema fields are added and the sibling-path conflict is resolved, this file is semantic guidance and review vocabulary only.
 

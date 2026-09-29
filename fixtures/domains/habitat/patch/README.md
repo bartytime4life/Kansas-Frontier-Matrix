@@ -2,9 +2,10 @@
 
 Structural-only fixtures for `tools/validators/domains/habitat/validate_habitat_patch.py`.
 
-`schemas/contracts/v1/domains/habitat/habitat_patch.schema.json` is a `PROPOSED`
-scaffold: empty `properties`, `additionalProperties: true`, and `type: object`.
-Field-level `HabitatPatch` semantics (identity, source role, geometry,
+`schemas/contracts/v1/domains/habitat/habitat_patch.schema.json` is `PROPOSED`:
+`type: object`, `additionalProperties: true`, and only the two optional
+`connectivity_edge_refs` and `corridor_refs` reference arrays declared.
+Other field-level `HabitatPatch` semantics (identity, source role, geometry,
 evidence, sensitivity, policy, release) remain `NEEDS VERIFICATION` pending a
 domain-steward schema expansion (see
 `contracts/domains/habitat/habitat_patch.md`, "Schema posture" and

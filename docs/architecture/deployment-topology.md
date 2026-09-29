@@ -48,7 +48,6 @@ related:
   - ../../infra/README.md
   - ../../infra/compose/README.md
   - ../../apps/governed-api/README.md
-  - ../../apps/explorer-web/README.md
   - ../../runtime/README.md
   - ../../release/README.md
 notes:
@@ -177,7 +176,7 @@ The artifact kind is a human architecture explanation; its authority owner is `d
 | [`infra-compose-smoke`](../../.github/workflows/infra-compose-smoke.yml) | Compose rendering and placeholder image builds without service start | A running stack, release, deployment, health, or publication |
 | [`security.yml`](../../.github/workflows/security.yml) | Declared dependency review, repository scan, container scan, and Scorecard orchestration | Current green status, vulnerability absence, runtime security, or release approval |
 | [`governed-api/README.md`](governed-api/README.md) and app bytes | WSGI scaffold and three GET routes returning finite negative envelopes | Substantive `ANSWER`, authentication, evidence/policy/release binding, or production service |
-| [`apps/explorer-web/README.md`](../../apps/explorer-web/README.md) and package manifest | Locked build/test workspace, fail-closed default entrypoint, bounded fixture-first UI slices | Admitted renderer, live API transport, hosted application, or public product |
+| `apps/explorer-web/README.md` (retired) and package manifest | Locked build/test workspace, fail-closed default entrypoint, bounded fixture-first UI slices | Admitted renderer, live API transport, hosted application, or public product |
 | [`runtime/README.md`](../../runtime/README.md) | Internal runtime boundary and no-direct-public-runtime rule | Accepted provider inventory, production isolation, model service health, or deployed composition |
 | [`release/README.md`](../../release/README.md) and release register | Canonical release-decision root, fixture-first validation, operational holds, empty proposed register | Assembled approved release, promotion execution, rollback execution, or production parity |
 | Current issue and PR searches | No open PR owned this exact path at preflight; security/runtime/release blockers remain tracked elsewhere | Universal absence of external work or future overlap |
@@ -402,7 +401,7 @@ A future topology may add databases, queues, caches, catalogs, object stores, se
 | `apps/explorer-web/` | Browser composition and trust-visible UI | Build/test workspace plus bounded fixture-first slices; renderer and deployment held | May be statically hosted only with reviewed base URL/CSP/integrity/caching and released public-safe carriers; dynamic claims still use Governed API |
 | `apps/review-console/` | Role-gated review and stewardship | Not re-audited in this documentation slice | Must remain separate from public access, use authenticated roles, and preserve audit/review semantics |
 | `apps/workers/` | Background execution | Not re-audited here | Watcher-as-non-publisher; internal ingress/egress, retries, receipts, and kill switches required |
-| `apps/cli/` | Operator and validation interface | Not re-audited here | Operator identity, environment targeting, no implicit release, and audit-safe output required |
+| `packages/kfm-cli/` (the former `apps/cli/` scaffold was removed) | Operator and validation interface | Read-only `doctor`, `diff`, `release-diff`, `telemetry` | Operator identity, environment targeting, no implicit release, and audit-safe output required |
 | `apps/admin/` | Exceptional restricted administration | Not re-audited here | Must not become the normal public path; every shortcut needs justification, scope, logging, and rollback |
 
 This page does not promote any proposed application decision or claim all listed surfaces are deployable.
@@ -960,9 +959,9 @@ This page is not that packet.
 - [`infra/compose/README.md`](../../infra/compose/README.md) — current Compose lane contract.
 - [`infra/compose/docker-compose.yml`](../../infra/compose/docker-compose.yml) — two-service loopback placeholder.
 - [`infra/docker/Dockerfile.governed-api`](../../infra/docker/Dockerfile.governed-api) — governed-api security-review image placeholder.
-- [`infra/docker/Dockerfile.explorer-web`](../../infra/docker/Dockerfile.explorer-web) — Explorer security-review image placeholder.
+- `infra/docker/Dockerfile.explorer-web` (retired) — Explorer security-review image placeholder.
 - [`apps/governed-api/README.md`](../../apps/governed-api/README.md) — application boundary.
-- [`apps/explorer-web/README.md`](../../apps/explorer-web/README.md) — current bounded browser-shell maturity.
+- `apps/explorer-web/README.md` (retired) — current bounded browser-shell maturity.
 - [`runtime/README.md`](../../runtime/README.md) — internal runtime composition boundary.
 - [`release/README.md`](../../release/README.md) — release-decision plane and operational holds.
 - [`control_plane/release_state_register.yaml`](../../control_plane/release_state_register.yaml) — proposed empty release-state projection.

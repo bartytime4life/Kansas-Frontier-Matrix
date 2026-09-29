@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Regression proof for the SuitabilityModel validator entrypoint.
 
-SuitabilityModel has no field-level schema yet (see
-``fixtures/domains/habitat/suitability_model/README.md``); this suite proves
-only the structural properties the current scaffold and shared JSON Schema
-runner actually enforce, plus the one additional, well-grounded rule the
+SuitabilityModel's PROPOSED schema declares only the optional
+``model_card_ref`` (see ``fixtures/domains/habitat/suitability_model/README.md``);
+this suite proves only the structural properties the schema and shared JSON
+Schema runner actually enforce, plus the one additional, well-grounded rule the
 validator adds: optional ``model_card_ref`` linkage to the real,
 already-implemented governance ModelCardEnvelope validator. It does not
 assert any other SuitabilityModel field name, model-card topic, or enum
@@ -98,8 +98,8 @@ class SuitabilityModelEntrypointTests(unittest.TestCase):
                     self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
                     self.assertIn(f"FAIL {path}", result.stdout)
 
-    def test_arbitrary_well_formed_object_passes_the_permissive_scaffold(self) -> None:
-        """The scaffold has no field constraints, so any JSON object is accepted."""
+    def test_arbitrary_well_formed_object_passes_the_open_schema(self) -> None:
+        """Undeclared members stay open, so any other JSON object is accepted."""
 
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "arbitrary-object.json"

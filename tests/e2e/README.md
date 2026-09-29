@@ -142,8 +142,11 @@ tests/e2e/
 
 The Agriculture child is repository-grounded but README-only. It defines aggregate-only, no-network, evidence, policy, release, correction, rollback, and public-surface expectations without claiming executable coverage.
 
-The Hydrology module contains only `test_proof_slice_placeholder()` with
-`assert True`; it is not a proof slice. The current workflow calls the bounded
+The Hydrology module runs `tools/readiness/run_lane.py proof-slice` in a fresh
+process and requires a `PASS` for all 14 synthetic cases (see
+[`contracts/domains/hydrology/proof_slice.md`](../../contracts/domains/hydrology/proof_slice.md)).
+It is a synthetic proof slice, not a composed Site plus Governed API journey,
+which remains held. The current workflow calls the bounded
 standard-library readiness validator:
 
 ```yaml

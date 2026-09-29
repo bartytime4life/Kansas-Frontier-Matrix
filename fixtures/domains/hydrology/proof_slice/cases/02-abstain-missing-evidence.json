@@ -1,0 +1,8 @@
+{
+  "case_id": "02-abstain-missing-evidence",
+  "thin_slice_assertion": 2,
+  "description": "No EvidenceBundle: cite or abstain.",
+  "overrides": {
+    "evidence_bundle": null
+  }
+}

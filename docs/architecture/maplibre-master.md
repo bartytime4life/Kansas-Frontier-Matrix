@@ -64,8 +64,6 @@ related:
   - ../../packages/maplibre/README.md
   - ../../packages/maplibre/package.json
   - ../../packages/maplibre/src/index.ts
-  - ../../apps/explorer-web/README.md
-  - ../../apps/explorer-web/src/adapters/MapLibreAdapter.ts
   - ../../contracts/ui/renderer_capability_profile.md
   - ../../contracts/data/layer_manifest.md
   - ../../contracts/release/geospatial_carrier_readiness.md
@@ -74,7 +72,6 @@ related:
   - ../../tools/validators/maplibre/validate_v6_readiness.py
   - ../../tests/maplibre/test_assess_acquisition_inventory.py
   - ../../tests/maplibre/test_validate_v6_readiness.py
-  - ../../scripts/maplibre-smoke-perf.mjs
   - ../../configs/maplibre/README.md
 tags: [kfm, architecture, maplibre, renderer, map-runtime, components, functions, features, evidence, policy, release, rollback]
 notes:
@@ -453,7 +450,7 @@ The validator treats only `packages/maplibre/` as the accepted raw-renderer seam
 
 ### 8.2 Current acquisition and runtime holds
 
-`scripts/maplibre-smoke-perf.mjs` is retired and exits with a finite `WORKFLOW_HOLD` before renderer or network acquisition. Exact package-owned MapLibre acquisition under `packages/maplibre/` is accepted by ADR-0006, but it does not authorize Explorer production activation, live sources, performance execution, release, deployment, or publication. The current repository-wide result is structural `HOLD`: the Sites-derived Explorer imports the package-owned renderer-neutral root and initializes `NullMapRuntime`, while raw renderer acquisition remains confined to the accepted seam. The inventory must continue to fail closed on any regression outside that seam.
+The retired `scripts/maplibre-smoke-perf.mjs` harness and its trust-shaped builders were removed. Exact package-owned MapLibre acquisition under `packages/maplibre/` is accepted by ADR-0006, but it does not authorize Explorer production activation, live sources, performance execution, release, deployment, or publication. The current repository-wide result is structural `HOLD`: the Sites-derived Explorer imports the package-owned renderer-neutral root and initializes `NullMapRuntime`, while raw renderer acquisition remains confined to the accepted seam. The inventory must continue to fail closed on any regression outside that seam.
 
 ### 8.3 Admission record
 
@@ -665,7 +662,7 @@ Accepted ADR-0029 adopts Directory Rules v2. This same-path update is a `PLACE` 
 | MapLibre fixtures/tests | `fixtures/maplibre/`, `tests/maplibre/` | `CONFIRMED` bounded validation lanes |
 | Renderer capability candidate | `contracts/ui/`, `schemas/contracts/v1/ui/`, related fixtures/validator/tests | `CONFIRMED` inactive fixture-only packet |
 | Runtime configuration guidance | `configs/maplibre/README.md` and selected config files | `CONFIRMED` docs/config lane; production config not inferred |
-| Performance harness | `scripts/maplibre-smoke-perf.mjs`, `artifacts/perf/` outputs | `CONFIRMED` retired finite-HOLD entrypoint; replacement performance execution and artifact authority remain unresolved |
+| Performance harness | none (legacy `scripts/maplibre-smoke-perf.mjs` removed) | `CONFIRMED` removed; replacement performance execution and artifact authority remain unresolved |
 | Semantic map/release objects | Existing `contracts/` families | Mixed maturity; use owning family rather than a new MapLibre contract root |
 | Machine shapes | Existing `schemas/` responsibility root | Mixed maturity; no new `schemas/contracts/v1/maplibre/` authority is created here |
 | Admissibility | Existing `policy/` responsibility root | No active MapLibre policy bundle is asserted here |
@@ -865,7 +862,7 @@ Adjacent May-era MapLibre architecture and atlas pages still contain proposal-er
 - [`map-shell.md`](./map-shell.md) — shell and trust-membrane lineage; reconcile current implementation claims separately.
 - [`ui/MAP_RUNTIME_BOUNDARY.md`](./ui/MAP_RUNTIME_BOUNDARY.md) — UI runtime boundary.
 - [`packages/maplibre/README.md`](../../packages/maplibre/README.md) — package boundary and current scaffold evidence.
-- [`apps/explorer-web/README.md`](../../apps/explorer-web/README.md) — current Explorer application boundary.
+- `apps/explorer-web/README.md` (retired) — current Explorer application boundary.
 - [`configs/maplibre/README.md`](../../configs/maplibre/README.md) — MapLibre configuration/readiness lane.
 
 ### 16.3 Contracts, standards, and validation

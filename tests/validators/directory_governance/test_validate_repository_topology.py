@@ -22,6 +22,8 @@ MODULE_PATH = (
     / "tools/validators/directory_governance/validate_repository_topology.py"
 )
 BASELINE_PATH = MODULE_PATH.with_name("repository_topology_baseline.json")
+# Merge commit of the one-time baseline recovery (#4782).
+RECOVERY_COMMIT = "e32729b1e74590a7b89661598e1beb680582b6f0"
 SPEC = importlib.util.spec_from_file_location(
     "kfm_validate_repository_topology", MODULE_PATH
 )
@@ -540,8 +542,13 @@ class RepositoryTopologyTests(unittest.TestCase):
         self.assertEqual("PASS", report["outcome"])
 
     def test_one_time_recovery_admits_only_its_exact_batch(self) -> None:
-        data = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
-        current = module.load_baseline(BASELINE_PATH)
+        # Replay the baseline exactly as the recovery landed it; later changes may
+        # legitimately shrink the recovered waivers under the ordinary rules.
+        raw = subprocess.run(
+            ["git", "show", f"{RECOVERY_COMMIT}:{module.BASELINE_REPOSITORY_PATH}"],
+            cwd=REPO_ROOT, capture_output=True, check=True,
+        ).stdout
+        data, current = module._load_baseline_bytes(raw, label="recovery")
         self.assertLessEqual(module.RECOVERY_FINGERPRINTS, set(current))
         trusted = {
             fingerprint: entry

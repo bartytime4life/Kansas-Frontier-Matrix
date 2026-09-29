@@ -765,8 +765,8 @@ jobs:
             exit 1
           fi
 
-          if ! grep -Fq "echo TODO build-proof-slice" ".github/workflows/hydrology-proof-slice.yml"; then
-            echo "::error::The dedicated Hydrology proof-slice workflow changed. Coordinate the accepted proof command and avoid parallel proof authority."
+          if ! grep -Fq "python tools/readiness/run_lane.py proof-slice" ".github/workflows/hydrology-proof-slice.yml"; then
+            echo "::error::The dedicated Hydrology proof-slice workflow no longer runs the accepted proof lane. Coordinate the proof command and avoid parallel proof authority."
             exit 1
           fi
 
@@ -782,7 +782,7 @@ jobs:
           fi
 
           echo "WORKFLOW_SKIPPED_EXPLICIT: build-proof-hydrology"
-          echo "WORKFLOW_HOLD: no accepted Hydrology proof producer or deterministic proof command"
+          echo "Delegated: the synthetic proof slice runs in hydrology-proof-slice; real-source proof remains held under ADR-0009"
 
       - name: Record Hydrology proof hold
         if: always()
@@ -793,15 +793,15 @@ jobs:
 
           `WORKFLOW_SKIPPED_EXPLICIT`
 
-          `WORKFLOW_HOLD: no accepted Hydrology proof producer or deterministic proof command`
+          The synthetic, no-network proof slice runs in the dedicated
+          `hydrology-proof-slice` workflow through
+          `tools/readiness/run_lane.py proof-slice`. This job only checks that
+          delegation and that no proof payload or parallel proof command has
+          appeared. Real-source proof, EvidenceRef-to-EvidenceBundle resolution
+          for admitted sources, access controls, and release linkage remain held
+          under ADR-0009.
 
-          Hydrology is designated as the first proof-bearing lane, but its domain
-          proof guide and the dedicated proof-slice workflow remain documentation
-          or TODO scaffolds. Concrete proof inventory, EvidenceRef-to-EvidenceBundle
-          resolution, source-role closure, schemas, validators, access controls,
-          receipts, and release linkage remain unverified.
-
-          A green held result is readiness evidence only. It is not an
+          A green result is readiness evidence only. It is not an
           EvidenceBundle, ProofPack, ValidationReport, flood-warning product,
           engineering determination, regulatory determination, release decision,
           or publication authority.

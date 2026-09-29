@@ -22,7 +22,8 @@ EXPECTED_E2E_FILES = frozenset(
         "test_hydrology_proof_slice.py",
     }
 )
-EXPECTED_PLACEHOLDER = "def test_proof_slice_placeholder():\n    assert True"
+PROOF_SLICE_TEST = "test_hydrology_proof_slice.py"
+PROOF_SLICE_LANE_MARKERS = ("tools/readiness/run_lane.py", "proof-slice")
 
 
 @dataclass(frozen=True)
@@ -32,6 +33,39 @@ class ReadinessReport:
     @property
     def ok(self) -> bool:
         return not self.findings
+
+
+def _is_vacuous_test(node: ast.FunctionDef | ast.AsyncFunctionDef) -> bool:
+    body = [
+        stmt
+        for stmt in node.body
+        if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Constant))
+    ]
+    return all(
+        isinstance(stmt, ast.Pass)
+        or (isinstance(stmt, ast.Assert) and isinstance(stmt.test, ast.Constant))
+        for stmt in body
+    )
+
+
+def _proof_slice_test_findings(path: Path) -> list[str]:
+    """The Hydrology proof-slice E2E must run the accepted lane, not a placeholder."""
+
+    try:
+        text = path.read_text(encoding="utf-8")
+        tree = ast.parse(text)
+    except (OSError, SyntaxError, UnicodeError):
+        return ["E2E_PROOF_SLICE_TEST_INVALID"]
+    tests = [
+        node
+        for node in tree.body
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name.startswith("test")
+    ]
+    if not tests or any(_is_vacuous_test(node) for node in tests):
+        return ["E2E_PROOF_SLICE_TEST_VACUOUS"]
+    if not all(marker in text for marker in PROOF_SLICE_LANE_MARKERS):
+        return ["E2E_PROOF_SLICE_LANE_NOT_INVOKED"]
+    return []
 
 
 def inspect_readiness(repository_root: Path) -> ReadinessReport:
@@ -61,15 +95,9 @@ def inspect_readiness(repository_root: Path) -> ReadinessReport:
             findings.append(f"E2E_BOUNDARY_MISSING:{relative}")
         for relative in sorted(observed - EXPECTED_E2E_FILES):
             findings.append(f"E2E_IMPLEMENTATION_SURFACED:{relative}")
-        placeholder = e2e_root / "test_hydrology_proof_slice.py"
-        if placeholder.is_file():
-            try:
-                tree = ast.parse(placeholder.read_text(encoding="utf-8"))
-                expected = ast.parse(EXPECTED_PLACEHOLDER)
-                if ast.dump(tree, include_attributes=False) != ast.dump(expected, include_attributes=False):
-                    findings.append("E2E_PLACEHOLDER_CHANGED")
-            except (OSError, SyntaxError, UnicodeError):
-                findings.append("E2E_PLACEHOLDER_INVALID")
+        proof_slice_test = e2e_root / PROOF_SLICE_TEST
+        if proof_slice_test.is_file():
+            findings.extend(_proof_slice_test_findings(proof_slice_test))
 
     return ReadinessReport(tuple(sorted(set(findings))))
 

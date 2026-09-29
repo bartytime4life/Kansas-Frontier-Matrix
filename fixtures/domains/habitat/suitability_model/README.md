@@ -2,9 +2,9 @@
 
 Structural-only fixtures for `tools/validators/domains/habitat/validate_suitability_model.py`.
 
-`schemas/contracts/v1/domains/habitat/suitability_model.schema.json` is a
-`PROPOSED` scaffold: empty `properties`, `additionalProperties: true`, and
-`type: object`. Field-level `SuitabilityModel` semantics (model card,
+`schemas/contracts/v1/domains/habitat/suitability_model.schema.json` is
+`PROPOSED`: `type: object`, `additionalProperties: true`, and only the
+optional `model_card_ref` string declared. Other field-level `SuitabilityModel` semantics (model card,
 model-versus-observation source role, uncertainty, evidence, policy, release)
 remain `NEEDS VERIFICATION` pending a domain-steward schema expansion (see
 `contracts/domains/habitat/suitability_model.md`, "Schema posture" and

@@ -1,0 +1,6 @@
+{
+  "case_id": "01-answer-current",
+  "thin_slice_assertion": 1,
+  "description": "Valid public-safe fixture with closed evidence answers.",
+  "overrides": {}
+}

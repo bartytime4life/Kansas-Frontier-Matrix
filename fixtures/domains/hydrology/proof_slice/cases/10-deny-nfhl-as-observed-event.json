@@ -1,0 +1,9 @@
+{
+  "case_id": "10-deny-nfhl-as-observed-event",
+  "thin_slice_assertion": 10,
+  "description": "Regulatory flood-hazard context presented as an observed flood event is denied.",
+  "overrides": {
+    "feature_source_role": "regulatory_context",
+    "presented_as": "observed_flood_event"
+  }
+}

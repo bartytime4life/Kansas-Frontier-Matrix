@@ -1,59 +1,58 @@
-# KFM Hydrology proof-slice readiness gate.
-# Status: explicit governed hold. The repository does not yet contain an
-# accepted Hydrology proof producer or EvidenceBundle closure command that
-# this workflow can execute truthfully. The CatalogMatrix job now replays the
-# accepted exact-option adapter (tools/validators/domains/hydrology/
-# validate_catalog_matrix.py, delegating unchanged to the shared CatalogMatrix
-# closure validator) against its own test and fixture suite; this proves the
-# adapter's shape and shared-schema behavior, not domain-specific catalog
-# closure, promotion, or release authority, which remain held.
-#
-# Downstream compatibility sentinel consumed by domain-hydrology while the
-# proof-producing lane remains held; this comment is never executed:
-#   echo TODO build-proof-slice
+# KFM Hydrology proof-slice gate.
+# Status: the synthetic, no-network proof slice is implemented and runs here
+# through its readiness lane (tools/readiness/run_lane.py proof-slice ->
+# pipelines/domains/hydrology/proof_slice.py). It replays digest-pinned
+# fixtures and proves 14 finite outcomes covering all ten THIN_SLICE
+# assertions. EvidenceBundle closure for real sources and domain catalog
+# closure remain held. The CatalogMatrix job replays the accepted exact-option
+# adapter (tools/validators/domains/hydrology/validate_catalog_matrix.py,
+# delegating unchanged to the shared CatalogMatrix closure validator) against
+# its own test and fixture suite; this proves the adapter's shape and
+# shared-schema behavior, not domain-specific catalog closure, promotion, or
+# release authority.
 #
 # Responsibility:
-# - Detect whether the repository assumptions supporting the Hydrology proof
-#   hold have changed, without manufacturing proof, promotion, or release state.
+# - Run the synthetic proof slice and fail on any outcome, digest, schema, or
+#   replay drift; keep the promotion stub and pipeline placeholders unexecuted.
 # Trigger:
 # - Pull requests and pushes to main are scoped to Hydrology proof, contract,
 #   schema, fixture, pipeline, validator, test, policy, and workflow surfaces.
-# - workflow_dispatch supports explicit maintainer readiness inspection.
+# - workflow_dispatch supports explicit maintainer inspection.
 # Untrusted-code posture:
 # - Pull requests execute submitted repository text with read-only contents
 #   permission and no secrets, write scopes, OIDC, deployment, or publication.
 # Runner and network:
 # - GitHub-hosted Ubuntu and Python 3.12 are used. The build-proof-slice and
 #   verify-catalog-matrix jobs install pinned Python dependencies via
-#   tools/ci/install_python_ci.py (pytest, jsonschema) to replay the accepted
-#   readiness-lane and CatalogMatrix adapter test suites; verify-evidence-bundle-closure
-#   remains standard-library-only. All checks run with KFM_NO_NETWORK=1 and
-#   perform no live source, catalog, proof, or release network access.
+#   tools/ci/install_python_ci.py (pytest, jsonschema); verify-evidence-bundle-closure
+#   remains standard-library-only. All checks run with KFM_NO_NETWORK=1; the
+#   proof lane also loads the tools/ci/kfm_no_network egress guard.
 # Commands:
-# - No Hydrology proof, closure, or catalog command is accepted yet. This file
-#   runs repository-readiness inspection only and deliberately does not invoke
-#   pipelines/domains/hydrology/promote.py or any publish/release operation.
+# - python tools/readiness/run_lane.py proof-slice (same as make proof-slice),
+#   plus the proof-slice, readiness-lane, and E2E pytest suites. This file
+#   deliberately does not invoke pipelines/domains/hydrology/promote.py or any
+#   publish/release operation.
 # Inputs:
 # - Hydrology proof/catalog lanes, contracts, schemas, fixtures, pipelines,
 #   validators, tests, policy, doctrine, ADRs, and the root Makefile.
 # Outputs:
 # - GitHub job conclusions, logs, annotations, and step summaries only. No data,
-#   receipt, proof, catalog record, promotion decision, or release file is written.
+#   receipt, proof, catalog record, promotion decision, or release file is
+#   written to the repository.
 # Outcome:
-# - Unchanged placeholder/readiness state: WORKFLOW_SKIPPED_EXPLICIT plus
-#   WORKFLOW_HOLD, identifying the missing governed implementation.
-# - Missing boundaries or newly surfaced implementation/artifacts: WORKFLOW_FAIL
-#   until this orchestration is reviewed and wired to accepted commands.
+# - PASS when every pinned case reaches its expected finite outcome and replay
+#   is byte-identical; WORKFLOW_FAIL otherwise.
 # Compatibility:
 # - Workflow name `hydrology-proof-slice` and job ids `build-proof-slice`,
 #   `verify-evidence-bundle-closure`, and `verify-catalog-matrix` are preserved.
 # Rollback / disable:
-# - Revert this workflow revision. Do not restore executable TODO steps, run the
-#   promotion stub, or disable a required check without Hydrology, evidence,
-#   catalog, policy, release, and branch-protection review.
+# - Revert this workflow revision together with the lane registry change. Do
+#   not run the promotion stub or disable a required check without Hydrology,
+#   evidence, catalog, policy, release, and branch-protection review.
 # Authority boundary:
-# - Readiness is not proof. Passing these jobs does not establish evidence
-#   closure, catalog closure, promotion, publication, or Hydrology truth.
+# - A synthetic proof-slice PASS is not real-source proof under ADR-0009 and
+#   does not establish evidence closure, catalog closure, promotion,
+#   publication, or Hydrology truth.
 name: hydrology-proof-slice
 
 "on":
@@ -70,6 +69,11 @@ name: hydrology-proof-slice
       - "docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md"
       - "docs/domains/hydrology/**"
       - "fixtures/data/catalog_matrix/closure/**"
+      - "fixtures/contracts/v1/domains/hydrology/living_waters_fixture_packet/**"
+      - "packages/hashing/src/**"
+      - "tests/validators/test_e2e_readiness.py"
+      - "tools/ci/kfm_no_network/**"
+      - "tools/validators/e2e_readiness.py"
       - "fixtures/domains/hydrology/**"
       - "packages/domains/hydrology/**"
       - "pipelines/domains/hydrology/**"
@@ -102,6 +106,11 @@ name: hydrology-proof-slice
       - "docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md"
       - "docs/domains/hydrology/**"
       - "fixtures/data/catalog_matrix/closure/**"
+      - "fixtures/contracts/v1/domains/hydrology/living_waters_fixture_packet/**"
+      - "packages/hashing/src/**"
+      - "tests/validators/test_e2e_readiness.py"
+      - "tools/ci/kfm_no_network/**"
+      - "tools/validators/e2e_readiness.py"
       - "fixtures/domains/hydrology/**"
       - "packages/domains/hydrology/**"
       - "pipelines/domains/hydrology/**"
@@ -154,7 +163,7 @@ jobs:
       - name: Install declared validation dependencies
         run: python tools/ci/install_python_ci.py project-test
 
-      - name: Evaluate proof-producer readiness
+      - name: Check proof-slice boundaries
         shell: bash
         env:
           KFM_NO_NETWORK: "1"
@@ -163,25 +172,22 @@ jobs:
 
           required_paths=(
             "Makefile"
+            "contracts/domains/hydrology/proof_slice.md"
+            "control_plane/readiness/hydrology-proof-slice-profile.json"
+            "control_plane/readiness/lanes.json"
             "data/proofs/hydrology/README.md"
             "docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md"
             "docs/domains/hydrology/THIN_SLICE.md"
-            "packages/domains/hydrology/src/hydrology"
-            "pipelines/domains/hydrology/README.md"
-            "pipelines/domains/hydrology/catalog.py"
-            "pipelines/domains/hydrology/ingest.py"
-            "pipelines/domains/hydrology/normalize.py"
+            "fixtures/domains/hydrology/proof_slice/base_request.json"
+            "pipelines/domains/hydrology/proof_slice.py"
             "pipelines/domains/hydrology/promote.py"
-            "pipelines/domains/hydrology/publish.py"
-            "pipelines/domains/hydrology/rollback.py"
-            "pipelines/domains/hydrology/triplets.py"
-            "pipelines/domains/hydrology/validate.py"
-            "release/candidates/hydrology/README.md"
-            "tests/e2e/test_hydrology_proof_slice.py"
-            "control_plane/readiness/lanes.json"
-            "tools/readiness/run_lane.py"
+            "schemas/contracts/v1/domains/hydrology/proof_slice_profile.schema.json"
+            "schemas/contracts/v1/domains/hydrology/proof_slice_record.schema.json"
             "schemas/contracts/v1/governance/readiness_lanes.schema.json"
             "tests/ci/test_readiness_lanes.py"
+            "tests/domains/hydrology/test_proof_slice.py"
+            "tests/e2e/test_hydrology_proof_slice.py"
+            "tools/readiness/run_lane.py"
           )
 
           for required_path in "${required_paths[@]}"; do
@@ -195,23 +201,7 @@ jobs:
           import ast
           import json
           import re
-          import subprocess
-          import sys
           from pathlib import Path
-
-          proof_root = Path("data/proofs/hydrology")
-          proof_payloads = sorted(
-              path
-              for path in proof_root.rglob("*")
-              if path.is_file() and path.name not in {"README.md", ".gitkeep"}
-          )
-          if proof_payloads:
-              raise SystemExit(
-                  "Hydrology proof artifacts surfaced while the producer remains "
-                  "unwired. Review provenance, validation, policy, receipts, release, "
-                  "and rollback before changing CI:\n"
-                  + "\n".join(str(path) for path in proof_payloads)
-              )
 
           placeholder_pipeline_files = {
               "catalog.py": "# hydrology :: catalog — greenfield placeholder",
@@ -228,8 +218,8 @@ jobs:
               actual = path.read_text(encoding="utf-8").strip()
               if actual != expected:
                   raise SystemExit(
-                      f"{path} is no longer the reviewed placeholder. Wire the accepted "
-                      "proof producer and deterministic tests deliberately."
+                      f"{path} is no longer the reviewed placeholder. The synthetic proof "
+                      "slice does not cover it; wire it deliberately with its own tests."
                   )
 
           promotion_path = pipeline_root / "promote.py"
@@ -247,31 +237,6 @@ jobs:
                       f"receipts, rollback, and workflow isolation; missing marker: {marker}"
                   )
 
-          e2e_path = Path("tests/e2e/test_hydrology_proof_slice.py")
-          e2e_module = ast.parse(
-              e2e_path.read_text(encoding="utf-8"), filename=str(e2e_path)
-          )
-          functions = [
-              node for node in e2e_module.body if isinstance(node, ast.FunctionDef)
-          ]
-          if len(functions) != 1 or functions[0].name != "test_proof_slice_placeholder":
-              raise SystemExit(
-                  "Hydrology proof-slice E2E coverage changed. Review and wire the real "
-                  "producer/test contract before retaining this hold."
-              )
-          function = functions[0]
-          if (
-              function.args.args
-              or len(function.body) != 1
-              or not isinstance(function.body[0], ast.Assert)
-              or not isinstance(function.body[0].test, ast.Constant)
-              or function.body[0].test.value is not True
-          ):
-              raise SystemExit(
-                  "Hydrology proof-slice E2E test is no longer the exact assert-true "
-                  "placeholder. Replace readiness inspection with accepted execution."
-              )
-
           makefile = Path("Makefile").read_text(encoding="utf-8")
           target = re.search(
               r"(?ms)^proof-slice:\s*\n(?P<body>(?:^[ \t].*\n?)*)", makefile
@@ -282,74 +247,69 @@ jobs:
                   "network posture, proof semantics, and rollback before invoking it in CI."
               )
 
-          registry_path = Path("control_plane/readiness/lanes.json")
-          registry = json.loads(registry_path.read_text(encoding="utf-8"))
+          registry = json.loads(
+              Path("control_plane/readiness/lanes.json").read_text(encoding="utf-8")
+          )
           lane = next(item for item in registry["lanes"] if item["id"] == "proof-slice")
-          if lane["status"] != "HOLD" or lane["command"] is not None:
-              raise SystemExit(
-                  "The proof-slice readiness lane is no longer HOLD. Review the accepted "
-                  "producer, evidence closure, policy, receipts, release, and rollback "
-                  "before retaining this workflow as a bare readiness gate."
-              )
-          expected_lane_required_paths = [
+          expected_command = [
+              "python",
               "pipelines/domains/hydrology/proof_slice.py",
+              "--profile",
               "control_plane/readiness/hydrology-proof-slice-profile.json",
           ]
-          if lane["required_paths"] != expected_lane_required_paths:
+          if lane["status"] != "IMPLEMENTED" or lane["command"] != expected_command:
               raise SystemExit(
-                  "The proof-slice readiness lane's required paths changed. Review "
-                  "before changing CI."
+                  "The proof-slice readiness lane changed. Review the producer, profile, "
+                  "and fixtures before changing CI."
               )
-          for path in expected_lane_required_paths:
-              if Path(path).exists():
-                  raise SystemExit(
-                      f"A Hydrology proof-slice implementation artifact surfaced at "
-                      f"{path}. Wire it deliberately with review before relying on "
-                      "this hold."
-                  )
-
-          completed = subprocess.run(
-              [sys.executable, "tools/readiness/run_lane.py", "proof-slice"],
-              capture_output=True,
-              text=True,
-              check=False,
+          profile = json.loads(
+              Path("control_plane/readiness/hydrology-proof-slice-profile.json").read_text(
+                  encoding="utf-8"
+              )
           )
-          if completed.returncode != 3:
+          if profile.get("posture") != "SYNTHETIC_FIXTURE_ONLY":
               raise SystemExit(
-                  "tools/readiness/run_lane.py proof-slice exited "
-                  f"{completed.returncode}, expected 3 (HOLD). "
-                  f"stdout={completed.stdout!r} stderr={completed.stderr!r}"
+                  "The proof-slice profile is no longer synthetic-only. Real-source proof "
+                  "requires source admission under ADR-0009 before CI may run it."
               )
-          lane_result = json.loads(completed.stdout)
-          if lane_result.get("status") != "HOLD":
-              raise SystemExit(
-                  "proof-slice lane reported status "
-                  f"{lane_result.get('status')!r}, expected HOLD."
-              )
-
-          print("Hydrology proof storage contains no proof payloads.")
-          print("The proof pipeline and E2E test remain explicit placeholders.")
-          print(
-              "The proof-slice Make target delegates to the shared readiness-lane "
-              "runner, which reports HOLD from a fresh subprocess."
-          )
-          print("The promotion stub was inspected as text and was not executed.")
+          print("Proof-slice boundaries are intact; the promotion stub was inspected, not run.")
           PY
 
-          python -m pytest -q tests/ci/test_readiness_lanes.py
+      - name: Run the synthetic proof slice
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+        run: |
+          set -euo pipefail
+          python tools/readiness/run_lane.py proof-slice | tee proof-slice-result.json
+          python -m pytest -q tests/ci/test_readiness_lanes.py tests/domains/hydrology/test_proof_slice.py tests/e2e/test_hydrology_proof_slice.py
 
-      - name: Record explicit proof-build hold
+          proof_payload="$(find data/proofs/hydrology -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
+          if [[ -n "$proof_payload" ]]; then
+            echo "::error::The proof slice must not write lifecycle proof storage: $proof_payload"
+            exit 1
+          fi
+
+      - name: Record proof-slice result
+        if: always()
         shell: bash
         run: |
           set -euo pipefail
           {
-            echo "### Hydrology proof build"
-            echo "- Outcome: WORKFLOW_SKIPPED_EXPLICIT"
-            echo "- Gate: WORKFLOW_HOLD"
-            echo "- Reason: no accepted proof producer or meaningful E2E proof test exists."
-            echo "- Safety: the promotion stub was not executed; no proof, receipt, or release state was written."
+            echo "### Hydrology proof slice"
+            if [[ -s proof-slice-result.json ]]; then
+              python - <<'PY'
+          import json
+
+          result = json.load(open("proof-slice-result.json", encoding="utf-8"))
+          print(f"- Lane: {result['status']} ({result['reason']}), cases: {result.get('cases', 'n/a')}")
+          PY
+            else
+              echo "- Lane: not run"
+            fi
+            echo "- Posture: SYNTHETIC_FIXTURE_ONLY. No source was admitted, no PolicyDecision was emitted, and nothing was released or published."
+            echo "- ADR-0009 real-source gates remain open."
           } >> "$GITHUB_STEP_SUMMARY"
-          echo "::notice::WORKFLOW_HOLD — Hydrology proof production is not implemented."
 
   verify-evidence-bundle-closure:
     runs-on: ubuntu-latest

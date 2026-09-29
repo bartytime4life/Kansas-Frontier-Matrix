@@ -40,7 +40,6 @@ related:
   - ../../tests/maplibre/test_perf_envelope_contract.py
   - ../../.github/workflows/maplibre-perf-governance.yml
   - ../../.github/workflows/schema-validation.yml
-  - ../../scripts/maplibre-smoke-perf.mjs
   - ../../tests/maplibre/test_legacy_perf_harness_retirement.py
   - ../../tools/validators/maplibre/assess_acquisition_inventory.py
   - ../../apps/explorer-web/tests/browser/maplibre-vite-adapter.spec.ts
@@ -137,7 +136,7 @@ The merged [`src/README.md`](src/README.md) governs source placement, module dec
 | `package.json` | **CONFIRMED admitted on current main** | Private `0.0.0` package with exact `maplibre-gl@6.9.0`, focused test scripts, explicit exports, and no publication authority. |
 | Root workspace enrollment | **CONFIRMED** | Root `package.json` includes `packages/*`, so this folder is inside the npm workspace pattern. |
 | Root generic commands | **CONFIRMED placeholders** | `lint`, `test`, and `build` only echo TODO messages; they do not prove package checks. |
-| Root MapLibre commands | **MIXED / HELD** | `maplibre:perf` now returns a finite exit-3 hold; adjacent render-diff, attestation, manifest, proof, correction, rollback, and failure-bundle entry points are not package adapter proof or authorization to emit trust artifacts. |
+| Root MapLibre commands | **REMOVED** | The root `maplibre:*` scripts, the legacy harness, and its render-diff, attestation, manifest, proof, correction, rollback, and failure-bundle builders were removed. |
 | Root package manager and lockfile | **CONFIRMED** | Root metadata pins `pnpm@11.17.0` and Node `>=22.13 <23`; `pnpm-lock.yaml` records the exact dependency closure. This does not prove review, runtime readiness, or distribution authorization. |
 | Package exports | **IMPLEMENTED / SPLIT** | The root facade exports the renderer-neutral port/null runtime; `@kfm/maplibre/adapter` exports the package-owned adapter without raw renderer types. |
 | Renderer-neutral source modules | **IMPLEMENTED / BOUNDED** | `MapRuntimePort`, `NullMapRuntime`, serializable values, strict validators, finite states, reason codes, listeners, and disposal behavior exist. |
@@ -168,7 +167,7 @@ The merged [`src/README.md`](src/README.md) governs source placement, module dec
 - The paired source README records the TypeScript source-envelope boundary.
 - Root generic `lint`, `test`, and `build` scripts are placeholders.
 - Root package metadata pins pnpm and Node, and the repository carries `pnpm-lock.yaml`.
-- Root MapLibre scripts expose adjacent performance/proof entry points; `maplibre:perf` now stops with a finite hold before acquisition or artifact emission.
+- The root MapLibre performance/proof scripts were removed; no root entry point emits performance or trust artifacts.
 - ADR-0006 and ADR-0007 are accepted architecture decisions.
 - MapLibre remains downstream of governed evidence, policy, review, release, correction, and rollback.
 - The package-owned adapter, Vite worker seam, focused mocked tests, and bounded real-browser fixture are implemented; Explorer production composition and broader authenticated runtime proof remain unestablished.
@@ -1134,7 +1133,7 @@ Repository-root MapLibre performance tooling is **adjacent evidence**, not packa
 Confirmed tooling includes:
 
 - root npm scripts;
-- Playwright/pixelmatch/pngjs development dependencies;
+- root browser or screenshot development dependencies (removed with the legacy harness);
 - a retired smoke-performance entry point that returns a finite hold;
 - a performance-envelope config;
 - validators;

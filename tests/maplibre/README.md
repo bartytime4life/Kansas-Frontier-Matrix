@@ -78,7 +78,7 @@ The count describes the checked-in source, not a hosted collection receipt.
 | [`test_assess_acquisition_inventory.py`](test_assess_acquisition_inventory.py) | 49 | Renderer imports, re-exports, globals, CDN assets, package homes, manifest errors, input budgets, symlink/path confinement, mutation races, and summary redaction | [`maplibre-acquisition-inventory.yml`](../../.github/workflows/maplibre-acquisition-inventory.yml) runs the full module and current-repository scan |
 | [`test_source_metadata.py`](test_source_metadata.py) | 9 | Local source epoch/license/digest projection, optional proof/manifest reference syntax, local manifest-digest equality, finite outcomes, and exact reason codes | [`maplibre-source-metadata.yml`](../../.github/workflows/maplibre-source-metadata.yml) runs the focused module, exact synthetic fixture outcomes, and authored syntax checks |
 | [`test_validate_v6_readiness.py`](test_validate_v6_readiness.py) | 16 | Exact-version ownership, duplicate/floating dependencies, import boundaries, probe posture, upstream tag identity, and declared-versus-computed outcomes | [`briefing-implementation-campaign.yml`](../../.github/workflows/briefing-implementation-campaign.yml) runs the module, fixture polarity, and current-repository scan |
-| [`test_legacy_perf_harness_retirement.py`](test_legacy_perf_harness_retirement.py) | 3 | Finite retirement outcome, absence of renderer/network acquisition, and confinement of current acquisition to the package seam | [`maplibre-perf-governance.yml`](../../.github/workflows/maplibre-perf-governance.yml) invokes all three functions directly |
+| [`test_legacy_perf_harness_retirement.py`](test_legacy_perf_harness_retirement.py) | 3 | The removed harness and its builders stay removed, no root perf commands resurface, and current acquisition stays confined to the package seam | [`maplibre-perf-governance.yml`](../../.github/workflows/maplibre-perf-governance.yml) invokes all three functions directly |
 | [`test_package_exports.py`](test_package_exports.py) | 3 | Public export targets, renderer-neutral root facade, and Node resolution of root and adapter subpaths | [`maplibre-perf-governance.yml`](../../.github/workflows/maplibre-perf-governance.yml) invokes all three functions directly |
 | [`test_perf_envelope_contract.py`](test_perf_envelope_contract.py) | 9 | Closed schema inventories, tracked-config validity, fixture polarity, identity/posture constants, threshold/note domains, strict JSON parsing, finite CLI outcomes, and cwd-independent execution | [`schema-validation.yml`](../../.github/workflows/schema-validation.yml) runs the validator, fixture pack, and focused module |
 | [`test_perf_governance_negative_paths.py`](test_perf_governance_negative_paths.py) | 3 | Rejection of zero frame budget, negative memory budget, and out-of-range tile error rate | [`maplibre-perf-governance.yml`](../../.github/workflows/maplibre-perf-governance.yml) invokes all three functions directly |
@@ -168,13 +168,12 @@ not a renderer measurement or release decision.
 
 The hosted performance-governance workflow directly invokes the nine functions
 from the retirement, export, and scalar-negative modules. It also parses every
-Python file in this directory and every MapLibre validator, then syntax-checks
-the seven repository-owned MapLibre scripts. Use that workflow as the exact
-command contract for this held lane.
+Python file in this directory and every MapLibre validator. Use that workflow
+as the exact command contract for this held lane.
 
-The root `maplibre:govern` and `make maplibre-govern` commands still invoke the
-placeholder governance validator without inputs. They are retained as explicit
-hold surfaces, not complete performance validation commands.
+The legacy harness, its trust-shaped builders, the root `maplibre:*` scripts,
+and the `make maplibre-*` targets were removed; there is no aggregate
+performance-governance command.
 
 ## CI mapping
 
@@ -196,10 +195,9 @@ release manifests, deployment records, or publication records.
 
 The checked Python tests and classifiers use repository files and synthetic
 fixtures. The performance workflow installs neither workspace dependencies nor
-browsers after action bootstrap. The retired
-[`scripts/maplibre-smoke-perf.mjs`](../../scripts/maplibre-smoke-perf.mjs) must
-remain free of CDN URLs, renderer globals, Playwright acquisition, screenshots,
-and artifact writes.
+browsers after action bootstrap. The removed standalone harness
+(`scripts/maplibre-smoke-perf.mjs`) must not return without deterministic local
+fixtures, network denial, and accepted artifact authority.
 
 A future browser-performance lane needs deterministic local styles, tiles,
 glyphs, sprites, thresholds, expected metrics, network denial, and accepted

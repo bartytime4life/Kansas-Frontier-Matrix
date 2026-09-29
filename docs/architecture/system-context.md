@@ -57,7 +57,6 @@ related:
   - ../adr/INDEX.md
   - ../../apps/README.md
   - ../../apps/governed-api/README.md
-  - ../../apps/explorer-web/README.md
   - ../../apps/review-console/README.md
   - ../../data/README.md
   - ../../policy/README.md
@@ -108,7 +107,7 @@ notes:
 | Placement authority | **CONFIRMED:** Directory Rules v2 adopted by accepted ADR-0029 |
 | Numbered ADR posture | **CONFIRMED:** ADR-0029 is accepted; all other numbered ADRs remain proposed at this snapshot |
 | Verified GitHub review route | **CONFIRMED:** `@bartytime4life` through `.github/CODEOWNERS`; specialist stewardship remains **NEEDS VERIFICATION** |
-| Repository-present boundary surfaces | **CONFIRMED:** `apps/governed-api/`, `apps/explorer-web/`, `apps/review-console/`, `apps/cli/`, `apps/admin/`, `apps/workers/`, `connectors/`, `runtime/`, `data/`, `policy/`, and `release/` exist |
+| Repository-present boundary surfaces | **CONFIRMED:** `apps/governed-api/`, `apps/explorer-web/`, `apps/review-console/`, `apps/admin/`, `apps/workers/`, `connectors/`, `runtime/`, `data/`, `policy/`, and `release/` exist |
 | Bounded executable posture | **MIXED:** Governed API has fail-closed scaffold routes; Explorer has a static fixture-first shell and independently tested trust components; several restricted app lanes remain scaffolded or documentation-led |
 | Operational posture | **UNKNOWN:** live authorization, source activation, public endpoints, identity provider, deployed services, production health, audit sinks, and release/publication parity are not established here |
 | Change effect | Documentation only; no authority, implementation, lifecycle, release, deployment, or publication transition |
@@ -547,7 +546,7 @@ client request
 | Architecture-lane navigation and convergence state | [`README.md`](./README.md) and [`document-convergence-plan.md`](./document-convergence-plan.md) |
 | Deployment hosts, networks, containers, environments, exposure, and readiness | [`deployment-topology.md`](./deployment-topology.md), `infra/`, and runbooks |
 | Governed API route and envelope architecture | [`governed-api/README.md`](./governed-api/README.md) and [`apps/governed-api/README.md`](../../apps/governed-api/README.md) |
-| Explorer, MapLibre, Evidence Drawer, and Focus Mode composition | [`map-shell.md`](./map-shell.md) and [`apps/explorer-web/README.md`](../../apps/explorer-web/README.md) |
+| Explorer, MapLibre, Evidence Drawer, and Focus Mode composition | [`map-shell.md`](./map-shell.md) and `apps/explorer-web/README.md` (retired) |
 | Review, CLI, Admin, and worker implementation | App-local READMEs and implementation under `apps/` |
 | Object meaning | `contracts/` |
 | Machine-valid shape | `schemas/` |
@@ -631,7 +630,7 @@ A boundary path should not be described as operational until current evidence in
 
 - [Apps root](../../apps/README.md)
 - [Governed API app](../../apps/governed-api/README.md)
-- [Explorer Web app](../../apps/explorer-web/README.md)
+- Explorer Web app (retired)
 - [Review Console app](../../apps/review-console/README.md)
 - [Data root](../../data/README.md)
 - [Policy root](../../policy/README.md)

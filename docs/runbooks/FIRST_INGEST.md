@@ -29,7 +29,7 @@ notes:
   - "Inspection covered the target, adopted directory and lifecycle doctrine, trust boundaries, source guidance, contracts, schemas, fixture-first producers, validators, tests, workflows, receipt guidance, and placeholder shared ingest and CLI entrypoints."
   - "Notion was coordination context and Google Drive was read-only design lineage; neither overrides current repository evidence."
   - "The repository supports bounded no-network ingest rehearsals; it does not expose one verified generic live first-ingest command."
-  - "pipelines/ingest/main.py and apps/cli/src/kfm_cli/commands/ingest.py remain placeholders, so earlier kfm-connector, kfm-pipeline, and kfm-validate examples were removed."
+  - "pipelines/ingest/main.py remains a placeholder and the apps/cli ingest placeholder was removed, so earlier kfm-connector, kfm-pipeline, and kfm-validate examples were removed."
   - "SourceDescriptor contract/schema paths remain a documented convergence boundary; this runbook validates existing fixture families without declaring a new canonical path."
   - "A rehearsal candidate, validator PASS, receipt, or green workflow does not activate a source, mutate lifecycle state, establish evidence closure, or authorize release or publication."
 [/KFM_META_BLOCK_V2] -->
@@ -147,7 +147,7 @@ under `pipelines/`, machine shapes under `schemas/`, test inputs under
 |---|---|---|
 | `pipelines/ingest/README.md` | Repository-grounded shared ingest boundary | No shared executable ingest system established |
 | `pipelines/ingest/main.py` | Placeholder only | Not runnable ingest orchestration |
-| `apps/cli/src/kfm_cli/commands/ingest.py` | Placeholder only | No verified generic `kfm ingest` command |
+| `apps/cli/src/kfm_cli/commands/ingest.py` | Removed 2026-09-29 with the `apps/cli/` scaffold | No verified generic `kfm ingest` command |
 | `SourceDescriptor` contract, schemas, fixtures, validators | Proposed, fixture-validated family with multiple compatibility paths | Shape checks do not activate or admit a source |
 | `SourceIngestionPlanCandidate` | Proposed fixture-only contract, schema, validator, and tests | Selects and checks a no-authority plan; performs no network or lifecycle write |
 | CSV-to-GeoJSON preflight | Deterministic fixture-only helper and tests | Produces a review candidate from synthetic points only |

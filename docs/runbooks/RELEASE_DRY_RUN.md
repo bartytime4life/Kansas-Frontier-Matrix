@@ -13,9 +13,8 @@ related:
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/directory-rules.md
   - docs/architecture/governed-api/README.md
-  - docs/runbooks/RELEASE_ROLLBACK_DRILL.md
   - release/README.md
-  - apps/cli/README.md
+  - packages/kfm-cli/README.md
 tags: [kfm, runbook, release, dry-run, promotion, governance, fail-closed]
 notes:
   - Operational runbook for PR-09 promotion dry-run.
@@ -151,7 +150,7 @@ Before invoking the dry-run, the candidate dossier under `release/candidates/<re
 | Signed `RunReceipt` for the build that produced the artifacts | `data/receipts/run/<run_id>.json(+.sig)` | Tamper-evident provenance |
 
 > [!NOTE]
-> **PROPOSED tool placements:** `tools/validators/`, `tools/attest/`, `apps/cli/release-dry-run`, `apps/governed-api/` for envelope helpers. Real paths require mounted-repo verification. Treat anything path-shaped here as PROPOSED until checked.
+> **PROPOSED tool placements:** `tools/validators/`, `tools/attest/`, `packages/kfm-cli` (`kfm release-diff` compares candidates today), `apps/governed-api/` for envelope helpers. Real paths require mounted-repo verification. Treat anything path-shaped here as PROPOSED until checked.
 
 [Back to top](#top)
 
@@ -420,7 +419,7 @@ A release dry-run is "done" when **all** of the following are true. Anything les
 | `docs/runbooks/RELEASE_CORRECTION.md` | Sibling runbook; correction-path rehearsal | PROPOSED |
 | `docs/registers/DRIFT_REGISTER.md` | Where to record any contradiction between this runbook and the mounted repo | PROPOSED |
 | `docs/registers/VERIFICATION_BACKLOG.md` | Where to record `NEEDS VERIFICATION` items raised by a dry-run | PROPOSED |
-| `apps/cli/README.md` | Maintainer commands, including `release dry-run` | PROPOSED command surface |
+| `packages/kfm-cli/README.md` | Maintainer commands; `kfm release-diff` compares two ReleaseManifest candidates | CONFIRMED comparison only; no dry-run command |
 
 **External standards relevant to dry-run evidence** (informational, not authoritative for KFM doctrine):
 
@@ -436,7 +435,7 @@ A release dry-run is "done" when **all** of the following are true. Anything les
 
 - **NEEDS VERIFICATION:** Does a workflow file (e.g., `.github/workflows/promotion-dry-run.yml`) currently exist? If yes, are its step names and emitted artifacts consistent with §5?
 - **NEEDS VERIFICATION:** Is the canonical home for the dry-run `PromotionDecision` `release/promotion_decisions/<release_id>.dryrun.json`, or does it live alongside the real `PromotionDecision` with a `mode: dryrun` field? Either is defensible; an ADR should fix one.
-- **NEEDS VERIFICATION:** Which CLI tool actually drives the dry-run — `apps/cli/` (CONFIRMED role per Directory Rules §7.1), a `tools/` script, or a CI-only composite action?
+- **NEEDS VERIFICATION:** Which CLI tool actually drives the dry-run — `packages/kfm-cli`, a `tools/` script (`make release-dry-run` runs `tools/release/release_dry_run.py`), or a CI-only composite action?
 - **PROPOSED:** Should the dry-run runbook block release-class PRs from merging until a `dryrun.json` is committed? (Argues *yes*: prevents stealth release-class changes. Argues *no*: increases PR cycle time.) Needs an ADR.
 - **NEEDS VERIFICATION:** Exact reason-code enum values used by the policy bundle. The catalog in §8 is PROPOSED-at-consolidation; the wire format requires inspection.
 

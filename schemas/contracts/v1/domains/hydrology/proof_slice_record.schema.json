@@ -1,0 +1,214 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/hydrology/proof_slice_record.schema.json",
+  "title": "Hydrology proof-slice record",
+  "description": "Deterministic output of one synthetic no-network Hydrology proof-slice run. It is a review aid, not evidence of a real observation, a policy decision, a release, or publication.",
+  "x-kfm": {
+    "contract_doc": "contracts/domains/hydrology/proof_slice.md",
+    "validator": "pipelines/domains/hydrology/proof_slice.py",
+    "status": "PROPOSED"
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile_id",
+    "profile_sha256",
+    "posture",
+    "outcome",
+    "inputs",
+    "packet_validation",
+    "cases",
+    "rollback_rehearsal",
+    "effects",
+    "spec_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "kfm.hydrology-proof-slice-record/v1"
+    },
+    "profile_id": {
+      "type": "string"
+    },
+    "profile_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "posture": {
+      "const": "SYNTHETIC_FIXTURE_ONLY"
+    },
+    "outcome": {
+      "enum": [
+        "PASS",
+        "FAIL"
+      ]
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "sha256"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          }
+        }
+      }
+    },
+    "packet_validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "findings"
+      ],
+      "properties": {
+        "outcome": {
+          "enum": [
+            "PASS",
+            "FAIL"
+          ]
+        },
+        "findings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "case_id",
+          "thin_slice_assertion",
+          "expected_outcome",
+          "expected_reason_code",
+          "matched",
+          "envelope"
+        ],
+        "properties": {
+          "case_id": {
+            "type": "string"
+          },
+          "thin_slice_assertion": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "integer"
+              }
+            ]
+          },
+          "expected_outcome": {
+            "enum": [
+              "ANSWER",
+              "ABSTAIN",
+              "DENY",
+              "ERROR"
+            ]
+          },
+          "expected_reason_code": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]{0,63}$"
+          },
+          "matched": {
+            "type": "boolean"
+          },
+          "envelope": {
+            "$ref": "https://schemas.kfm.local/contracts/v1/domains/hydrology/decision_envelope.schema.json"
+          }
+        }
+      }
+    },
+    "rollback_rehearsal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dry_run",
+        "release_candidate",
+        "rollback_target",
+        "pointer_before",
+        "pointer_after_publish",
+        "pointer_after_rollback",
+        "outcome"
+      ],
+      "properties": {
+        "dry_run": {
+          "const": true
+        },
+        "release_candidate": {
+          "type": "string"
+        },
+        "rollback_target": {
+          "type": "string"
+        },
+        "pointer_before": {
+          "type": "string"
+        },
+        "pointer_after_publish": {
+          "type": "string"
+        },
+        "pointer_after_rollback": {
+          "type": "string"
+        },
+        "outcome": {
+          "enum": [
+            "PASS",
+            "FAIL"
+          ]
+        }
+      }
+    },
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "network_accessed",
+        "source_admitted",
+        "policy_decision_emitted",
+        "lifecycle_written",
+        "released",
+        "published"
+      ],
+      "properties": {
+        "network_accessed": {
+          "const": false
+        },
+        "source_admitted": {
+          "const": false
+        },
+        "policy_decision_emitted": {
+          "const": false
+        },
+        "lifecycle_written": {
+          "const": false
+        },
+        "released": {
+          "const": false
+        },
+        "published": {
+          "const": false
+        }
+      }
+    },
+    "spec_hash": {
+      "$ref": "https://schemas.kfm.local/contracts/v1/common/spec_hash.schema.json"
+    }
+  }
+}

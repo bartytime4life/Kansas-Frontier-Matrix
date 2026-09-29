@@ -1,1 +1,0 @@
-# kfm registry — greenfield placeholder

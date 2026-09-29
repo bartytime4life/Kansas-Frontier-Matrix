@@ -1,1 +1,0 @@
-# kfm fixtures — greenfield placeholder

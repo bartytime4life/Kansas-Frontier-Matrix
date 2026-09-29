@@ -49,7 +49,7 @@ related:
 notes:
   - "Expanded from a scaffold at contracts/domains/habitat/habitat-patch.contract.md."
   - "CONFLICTED / NEEDS VERIFICATION: the requested file is habitat-patch.contract.md, while the paired schema's x-kfm.contract_doc points to contracts/domains/habitat/habitat_patch.md, and that sibling file also exists as a scaffold. This update preserves the requested path and does not delete or merge the sibling scaffold."
-  - "The paired schema exists at schemas/contracts/v1/domains/habitat/habitat_patch.schema.json, but it is still a PROPOSED scaffold with empty properties and additionalProperties=true; field-level enforcement remains NEEDS VERIFICATION."
+  - "The paired schema exists at schemas/contracts/v1/domains/habitat/habitat_patch.schema.json, but it is still PROPOSED: it declares only the optional connectivity_edge_refs and corridor_refs arrays, with additionalProperties=true; field-level enforcement remains NEEDS VERIFICATION."
   - "HabitatPatch is a discrete polygonal habitat unit and one of the Habitat lane's canonical object families. It is not species occurrence truth, not Flora vegetation-community ownership, not regulatory critical habitat, not modeled suitability, not a connectivity edge/corridor, and not release authority."
 [/KFM_META_BLOCK_V2] -->
 
@@ -84,7 +84,7 @@ notes:
 > **Requested contract path:** `contracts/domains/habitat/habitat-patch.contract.md`  
 > **Conflicting sibling path:** `contracts/domains/habitat/habitat_patch.md` — also exists as a scaffold.  
 > **Schema path:** `schemas/contracts/v1/domains/habitat/habitat_patch.schema.json`  
-> **Schema posture:** paired schema exists, but is still a `PROPOSED` scaffold with empty `properties` and `additionalProperties: true`.  
+> **Schema posture:** paired schema exists, but is still `PROPOSED`: it declares only the optional `connectivity_edge_refs` and `corridor_refs` arrays, with `additionalProperties: true`.\
 > **Truth posture:** Habitat doctrine confirms `HabitatPatch` as a canonical object family for discrete polygonal habitat units. Field-level schema shape, fixtures, validators, source registry activation, policy runtime, release artifacts, map/UI behavior, Focus Mode behavior, and CI/test coverage remain **NEEDS VERIFICATION**.
 
 > [!CAUTION]

@@ -1,0 +1,8 @@
+{
+  "case_id": "13-error-artifact-unavailable",
+  "thin_slice_assertion": null,
+  "description": "An unavailable artifact is a finite ERROR.",
+  "overrides": {
+    "scenario_id": "unavailable"
+  }
+}

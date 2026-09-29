@@ -1,0 +1,8 @@
+{
+  "case_id": "04-deny-unknown-rights",
+  "thin_slice_assertion": 4,
+  "description": "An EvidenceBundle whose license is not on the allowlist is denied.",
+  "overrides": {
+    "evidence_bundle": "fixtures/domains/hydrology/proof_slice/evidence_bundle_unknown_rights.json"
+  }
+}

@@ -45,6 +45,14 @@ notes:
 
 # `schemas/maplibre/` — MapLibre Performance-Schema Compatibility and Readiness Boundary
 
+> [!IMPORTANT]
+> **2026-09-29 removal update.** The seven accept-any placeholder schemas
+> (`perf-receipt`, `render-diff-report`, `perf-proof-pack`, `perf-rollback-plan`,
+> `perf-failure-bundle`, `perf-release-manifest`, `perf-correction-notice`) were
+> removed with the legacy harness that was their only consumer. Only the closed
+> `perf-envelope.schema.json` remains; later references to "seven placeholders"
+> are historical.
+
 > **One-line purpose.** Enforce the tracked PerfEnvelope v1 machine shape, keep seven historical trust-output placeholders visible and bounded, and prevent green checks from being mistaken for runtime readiness, release approval, or publication authority.
 
 <kbd>TRANSITIONAL COMPATIBILITY</kbd> <kbd>1 CLOSED CONFIG SCHEMA</kbd> <kbd>7 PLACEHOLDERS</kbd> <kbd>RUNTIME: HOLD</kbd> <kbd>PUBLISHER: NO</kbd>
@@ -183,14 +191,7 @@ Directory Rules `DIR-README-003` requires this map to show the current directory
 ```text
 schemas/maplibre/
 ├── README.md
-├── perf-correction-notice.schema.json
-├── perf-envelope.schema.json
-├── perf-failure-bundle.schema.json
-├── perf-proof-pack.schema.json
-├── perf-receipt.schema.json
-├── perf-release-manifest.schema.json
-├── perf-rollback-plan.schema.json
-└── render-diff-report.schema.json
+└── perf-envelope.schema.json
 ```
 
 No nested directory is present in the inspected target tree. The inventory is exact for the pinned snapshot; it is not a claim about later commits.
@@ -200,13 +201,6 @@ No nested directory is present in the inspected target tree. The inventory is ex
 | File | Confirmed machine behavior | Filename-implied concern only | Canonical destination |
 |---|---|---|---|
 | [`perf-envelope.schema.json`](./perf-envelope.schema.json) | Closed `PerfEnvelope` v1 configuration shape with exact identity/posture, five numeric thresholds, and bounded notes | Repository-owned threshold configuration, not a measurement or release object | **TRANSITIONAL PATH; CANONICAL DESTINATION NEEDS VERIFICATION** |
-| [`perf-receipt.schema.json`](./perf-receipt.schema.json) | Accept any JSON object | Evaluation or execution receipt | **NEEDS VERIFICATION** |
-| [`render-diff-report.schema.json`](./render-diff-report.schema.json) | Accept any JSON object | Render comparison report | **NEEDS VERIFICATION** |
-| [`perf-proof-pack.schema.json`](./perf-proof-pack.schema.json) | Accept any JSON object | Proof or evidence aggregation | **NEEDS VERIFICATION** |
-| [`perf-rollback-plan.schema.json`](./perf-rollback-plan.schema.json) | Accept any JSON object | Release rollback planning | **NEEDS VERIFICATION** |
-| [`perf-failure-bundle.schema.json`](./perf-failure-bundle.schema.json) | Accept any JSON object | Failure triage or diagnostic bundle | **NEEDS VERIFICATION** |
-| [`perf-release-manifest.schema.json`](./perf-release-manifest.schema.json) | Accept any JSON object | Release or promotion manifest | **NEEDS VERIFICATION** |
-| [`perf-correction-notice.schema.json`](./perf-correction-notice.schema.json) | Accept any JSON object | Correction or withdrawal notice | **NEEDS VERIFICATION** |
 
 The third column is vocabulary suggested by filenames, not confirmed semantics. Do not use it to generate payloads, APIs, schemas, validators, or release logic without an accepted contract and object-family review.
 

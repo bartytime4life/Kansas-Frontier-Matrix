@@ -469,7 +469,7 @@ At the evidence snapshot:
 - `make schemas` invokes `python tools/validators/_common/run_all.py`.
 - `make test` runs `python -m pytest tests/schemas tests/contracts -q`.
 - Implemented Make targets include repository guardrails, governed-API checks, deny/boundary checks, release dry-run checks, and MapLibre validation surfaces; read each target before relying on it.
-- Readiness markers `policy`, `fixtures`, `proof-slice`, and `catalog` intentionally print `TODO` and do not prove validation.
+- Readiness lanes run through `tools/readiness/run_lane.py`: `policy` runs the Pass 12 Rego pair and `proof-slice` runs the synthetic no-network Hydrology proof slice; `fixtures` and `catalog` exit with a named HOLD (status 3) and do not prove validation.
 - The root JavaScript workspace in [`package.json`](package.json) pins `pnpm@11.17.0` and Node `>=22.13 <23`; its root `lint`, `test`, and `build` scripts intentionally exit with `WORKFLOW_HOLD`, so they are not validation. Use affected package commands for JavaScript/TypeScript changes.
 - [`pnpm-workspace.yaml`](pnpm-workspace.yaml) carries an `allowBuilds` policy. Do not bypass or rewrite that policy merely to make a check green.
 
@@ -482,9 +482,7 @@ Run only when the change affects the named surface:
 ```bash
 make governed-api-smoke
 make boundary-guards
-make maplibre-perf
-make maplibre-govern
-make maplibre-proof
+make proof-slice
 ```
 
 Read the corresponding Make target, package metadata, workflow, and tests before relying on a command. A command's presence does not prove dependencies are installed or the check passes.
