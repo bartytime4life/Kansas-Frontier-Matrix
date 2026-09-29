@@ -540,8 +540,10 @@ scrubbing, and stores the selected day and cursor in the map URL. Restored links
 open paused, and reduced-motion settings disable autoplay. This calculated
 solar geometry is map context, not measured ground-level brightness. It is not
 a provider feed and does not use GOES or VIIRS imagery as a solar input; those
-layers remain independently controlled visual context. The NREL method is
-described in the [Solar Position Algorithm report](https://www.nrel.gov/docs/fy08osti/34302.pdf);
+layers remain independently controlled visual context. Solar polygons are
+clipped at the antimeridian so the same twilight boundary continues across
+globe and flat map views. The NREL method is described in the
+[Solar Position Algorithm report](https://www.nrel.gov/docs/fy08osti/34302.pdf);
 the [USNO daily service](https://aa.usno.navy.mil/data/api) provides independent
 event-time checks.
 

@@ -6,6 +6,7 @@ import ts from "typescript";
 
 const modules = new Map();
 const spaUrl = import.meta.resolve("sunrise-sunset-js");
+const clippingUrl = new URL("../node_modules/polygon-clipping/dist/polygon-clipping.esm.js", import.meta.url).href;
 async function moduleUrl(file) {
   file = path.resolve(file);
   if (modules.has(file)) return modules.get(file);
@@ -13,6 +14,7 @@ async function moduleUrl(file) {
     compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
   }).outputText;
   js = js.replaceAll('from "sunrise-sunset-js"', `from ${JSON.stringify(spaUrl)}`);
+  js = js.replaceAll('from "polygon-clipping"', `from ${JSON.stringify(clippingUrl)}`);
   for (const match of [...js.matchAll(/from ["'](\.[^"']+)["']/g)]) {
     js = js.replace(match[0], `from ${JSON.stringify(await moduleUrl(path.resolve(path.dirname(file), match[1]) + ".ts"))}`);
   }
