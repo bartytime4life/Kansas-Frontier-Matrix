@@ -11,7 +11,7 @@
   ],
   "artifact_hashes": {
     ".github/workflows/identity-token-validation.yml": "sha256:d12ed708f1d9eb58f36a46d85dbb1cbaf0ce0ab2735cb8fba1af6fcd996b1dec",
-    ".github/workflows/maplibre-perf-governance.yml": "sha256:7607f33a29f7c42ee89bce67fb325b2f19dfb155e03be0af5796591df9061b62",
+    ".github/workflows/maplibre-perf-governance.yml": "sha256:759a54a79a2352707ee3cff37419647c590eecd2aafdb25637bb738fbc8f6e06",
     ".github/workflows/pm25-sensor-colocation-manifest.yml": "sha256:1cb46f5b2282dbdc1ae4667242ef331841782d0f6bdfa2121477d24cbdfe1966",
     ".github/workflows/public-map-service-slo-assessment.yml": "sha256:e7d62a543e2e8d06b023b7d56a0afcd0e1f39d9f1fcffc1267a80417c8164e70",
     ".github/workflows/receipt-proof-pairing-assessment.yml": "sha256:b59c2210dee924c12f7af6ec77a7ecb978fb47e52052bd9df223160926a033aa",
@@ -47,7 +47,7 @@
     {
       "gate": "Reproduce then fix",
       "outcome": "PASS",
-      "reason": "Each failure reproduces on main: the MapLibre gate expects vitest 5.0.0 while packages/maplibre pins 5.0.2; trust-spine-fixture-slice exits 2 in a depth-1 clone; four receipts report ARTIFACT_DIGEST_MISMATCH against current bytes but validate with --artifact-git-ref at the commit that last updated each receipt."
+      "reason": "Each failure reproduces on main: the MapLibre gate expects vitest 5.0.0 in both the manifest check and the pnpm importer marker while packages/maplibre and pnpm-lock.yaml pin 5.0.2; trust-spine-fixture-slice exits 2 in a depth-1 clone; four receipts report ARTIFACT_DIGEST_MISMATCH against current bytes but validate with --artifact-git-ref at the commit that last updated each receipt."
     },
     {
       "gate": "Workflow guardrails and replay",

@@ -351,7 +351,7 @@ jobs:
               f"        version: {selected_version}\n"
               "    devDependencies:\n"
               "      vitest:\n"
-              "        specifier: 5.0.0\n"
+              "        specifier: 5.0.2\n"
           )
           if importer_marker not in lock_text:
               raise SystemExit(
