@@ -11,7 +11,7 @@
   ],
   "artifact_hashes": {
     "fixtures/README.md": "sha256:29b21d56c28d2783b08da5e039c3ccf6e95bbd5bd62a0f2a5f3de22bb3cbd41d",
-    "fixtures/contracts/README.md": "sha256:dc37fc1cecab40814b2726247bb311da9ec205c079814682b47ee1f3791acc51",
+    "fixtures/contracts/README.md": "sha256:fd5f5882f08f486099fbffd4d6f52b0b3a6049d0fed5875de82ac6ac0e5de29e",
     "fixtures/domains/agriculture/catalog/README.md": "sha256:e9b242763c298a55b599b6b7b27432468ca7693d82c56a13cf50ec51c27504c3",
     "fixtures/synthetic/README.md": "sha256:6f51b14deb494be36872446fa6045f362aab16c5fc316a89f8d0ca41f19b08b9",
     "tests/validators/test_validate_fixture_root_contract.py": "sha256:44516a2bd20b82e6f634e2da1bb62ae6c8078d24dc76ee42d0b89b4947ad7476",
@@ -50,7 +50,7 @@
     {
       "gate": "Focused suites and replay",
       "outcome": "PASS",
-      "reason": "tests/validators/test_validate_fixture_root_contract.py passes; fixtures-root-contract.yml steps replay green apart from dependency install; scaffold inventory check holds at 949; link check on the edited READMEs reports no errors."
+      "reason": "tests/validators/test_validate_fixture_root_contract.py passes; fixtures-root-contract.yml steps replay green apart from dependency install; scaffold inventory check holds at 949; link check on the edited READMEs reports no errors. The CI-equivalent diff-scoped link check passes after repairing three pre-existing broken anchors in fixtures/contracts/README.md."
     },
     {
       "gate": "Hosted CI and independent review",
