@@ -1,0 +1,213 @@
+{
+  "receipt_id": "genrec-hydrology-synthetic-proof-slice-20260929",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/domain-hydrology.yml",
+    ".github/workflows/hydrology-proof-slice.yml",
+    "CONTRIBUTING.md",
+    "Makefile",
+    "contracts/domains/hydrology/proof_slice.md",
+    "control_plane/readiness/hydrology-proof-slice-profile.json",
+    "control_plane/readiness/lanes.json",
+    "data/catalog/domain/hydrology/README.md",
+    "docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md",
+    "fixtures/domains/hydrology/proof_slice/README.md",
+    "fixtures/domains/hydrology/proof_slice/base_request.json",
+    "fixtures/domains/hydrology/proof_slice/cases/01-answer-current.json",
+    "fixtures/domains/hydrology/proof_slice/cases/02-abstain-missing-evidence.json",
+    "fixtures/domains/hydrology/proof_slice/cases/03-deny-sensitive-exact-geometry.json",
+    "fixtures/domains/hydrology/proof_slice/cases/04-deny-unknown-rights.json",
+    "fixtures/domains/hydrology/proof_slice/cases/05-error-policy-evaluator-unavailable.json",
+    "fixtures/domains/hydrology/proof_slice/cases/06-deny-release-missing-rollback.json",
+    "fixtures/domains/hydrology/proof_slice/cases/07-deny-ui-direct-model-call.json",
+    "fixtures/domains/hydrology/proof_slice/cases/08-deny-public-raw-path.json",
+    "fixtures/domains/hydrology/proof_slice/cases/09-abstain-ambiguous-reach.json",
+    "fixtures/domains/hydrology/proof_slice/cases/10-deny-nfhl-as-observed-event.json",
+    "fixtures/domains/hydrology/proof_slice/cases/11-answer-stale.json",
+    "fixtures/domains/hydrology/proof_slice/cases/12-abstain-no-results.json",
+    "fixtures/domains/hydrology/proof_slice/cases/13-error-artifact-unavailable.json",
+    "fixtures/domains/hydrology/proof_slice/cases/14-abstain-evidence-tampered.json",
+    "fixtures/domains/hydrology/proof_slice/evidence_bundle.json",
+    "fixtures/domains/hydrology/proof_slice/evidence_bundle_tampered.json",
+    "fixtures/domains/hydrology/proof_slice/evidence_bundle_unknown_rights.json",
+    "pipelines/domains/hydrology/proof_slice.py",
+    "schemas/contracts/v1/domains/hydrology/proof_slice_case.schema.json",
+    "schemas/contracts/v1/domains/hydrology/proof_slice_profile.schema.json",
+    "schemas/contracts/v1/domains/hydrology/proof_slice_record.schema.json",
+    "schemas/contracts/v1/domains/hydrology/proof_slice_request.schema.json",
+    "tests/ci/test_readiness_lanes.py",
+    "tests/domains/hydrology/test_proof_slice.py",
+    "tests/e2e/README.md",
+    "tests/e2e/test_hydrology_proof_slice.py",
+    "tests/validators/test_e2e_readiness.py",
+    "tools/qa/scaffold_baseline.json",
+    "tools/readiness/run_lane.py",
+    "tools/validators/e2e_readiness.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/domain-hydrology.yml": "sha256:366b7b173844785a0e69fc83b1dc1b982f5c7495bc371c7752f3f8a988bcdb9f",
+    ".github/workflows/hydrology-proof-slice.yml": "sha256:054c846e8190b2cc8305b6205874fec65fdab98ce9a0dd8222e7782f7f4ca4f4",
+    "CONTRIBUTING.md": "sha256:d5f060a95001f7252dd646134a75434fac4e7480ba3df5bda1926f1923fc3b09",
+    "Makefile": "sha256:03a167b8ddd00962a1e1389151c749da3da539d7af7fa8eebdbcfab0ebfe1475",
+    "contracts/domains/hydrology/proof_slice.md": "sha256:0b399eac77c2921227b02549aa4f6370d1831b89579e4f383c8b3fbaefa0ed6c",
+    "control_plane/readiness/hydrology-proof-slice-profile.json": "sha256:79edd8673a04b739d3fdbed8467e0b3d331f06b27227fdb820305da0621e6519",
+    "control_plane/readiness/lanes.json": "sha256:eea5cd8b91a60c8b7c8873caf3799f09dc5cf8955439b9cba0b40ddbea28fa37",
+    "data/catalog/domain/hydrology/README.md": "sha256:09a40da25a506078bb0dae76e4270d4fdba28b2935e5af1260db8cfc92a78a94",
+    "docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md": "sha256:30fa8ddf0b7cdf2dd354bc3a27531faf047892414d0f9a5c40fbac53fa3325dd",
+    "fixtures/domains/hydrology/proof_slice/README.md": "sha256:00356e5197e4d9fb404001faca4c0764b5a99eaee1c3aacafafc9ced14e38de4",
+    "fixtures/domains/hydrology/proof_slice/base_request.json": "sha256:2542bb53b4ad28ddc2b47970bf2e409b426cb37b6bbe2278607840a0defadff5",
+    "fixtures/domains/hydrology/proof_slice/cases/01-answer-current.json": "sha256:10dcf965d3bc79d8c68412828dfd7e1e22c4061813b7f4fe28865588740d29ff",
+    "fixtures/domains/hydrology/proof_slice/cases/02-abstain-missing-evidence.json": "sha256:69e8d5e895b3ee69866deacfa9cb8af4451159b6ee70585cf8072ba1a7fb84c6",
+    "fixtures/domains/hydrology/proof_slice/cases/03-deny-sensitive-exact-geometry.json": "sha256:312779fca270d9279ca9a316ce233725bfb5b2313abb5b09b5128bc9268b9d1e",
+    "fixtures/domains/hydrology/proof_slice/cases/04-deny-unknown-rights.json": "sha256:f2e9994572bb92072b53e365c251ada0f61e66be47209cf0e836ec054b67992d",
+    "fixtures/domains/hydrology/proof_slice/cases/05-error-policy-evaluator-unavailable.json": "sha256:1a914a21fce28d7ff0192265d5108ba6bf4812482237d87e1e64a899a9c9984f",
+    "fixtures/domains/hydrology/proof_slice/cases/06-deny-release-missing-rollback.json": "sha256:2f250d8b0d78e6e5078bd7199980400885f39249ac517cd79e6fc4f2126802f5",
+    "fixtures/domains/hydrology/proof_slice/cases/07-deny-ui-direct-model-call.json": "sha256:59d493a3af653a6148aeca2b23f3d79f81f98ec0330167d22341581ef43ba548",
+    "fixtures/domains/hydrology/proof_slice/cases/08-deny-public-raw-path.json": "sha256:eeb49adb5d22cf87295a99b1e04647c8a9ff08503ab6676cf82d7a817da1a223",
+    "fixtures/domains/hydrology/proof_slice/cases/09-abstain-ambiguous-reach.json": "sha256:3ce375cecd2c839ccd48555208823f25a2f69c1f18433f7db1bfc27fc74ff48a",
+    "fixtures/domains/hydrology/proof_slice/cases/10-deny-nfhl-as-observed-event.json": "sha256:257dbf669480b981098961ecb12545c32eeba0148a893ae1cb2f46952f640560",
+    "fixtures/domains/hydrology/proof_slice/cases/11-answer-stale.json": "sha256:a04bbabcaf937afcd28a36831990a6c1e299777ff89f37a710de96a7fab0edb5",
+    "fixtures/domains/hydrology/proof_slice/cases/12-abstain-no-results.json": "sha256:5973298bd811ee39f4ac4b7473aeb079029ba1538735a8c74523affb42434985",
+    "fixtures/domains/hydrology/proof_slice/cases/13-error-artifact-unavailable.json": "sha256:04eda5f8794150a9d2df9f634cd039c9f6b1bc71e941197f39e7d4b7b89fbf98",
+    "fixtures/domains/hydrology/proof_slice/cases/14-abstain-evidence-tampered.json": "sha256:6a8bb33939bae01b7da38bc4a2756ed5a3c65f60c14c7035c6c5a0b8dea61324",
+    "fixtures/domains/hydrology/proof_slice/evidence_bundle.json": "sha256:0cf4f128c3bd3c3656cb12af3cb1be22dcf6ee53c13cec046b72a2e3f8588c5c",
+    "fixtures/domains/hydrology/proof_slice/evidence_bundle_tampered.json": "sha256:8877da578586ca2caab2e125d3cc788c2eef5b410294c7394d301ea98e7fed20",
+    "fixtures/domains/hydrology/proof_slice/evidence_bundle_unknown_rights.json": "sha256:cc81afa8209cd0ebb9b45cebab50133443f4377e9f39ca18ae97ea3b7b4e8226",
+    "pipelines/domains/hydrology/proof_slice.py": "sha256:b9ea40c524c2590ad2277f36a70c46ede7c2c0ee3b189e50b2a225cf6082ffcf",
+    "schemas/contracts/v1/domains/hydrology/proof_slice_case.schema.json": "sha256:d99ee3d2b1b4604645bc8791d877ff3574d034a4bf885f336a77d19239fea692",
+    "schemas/contracts/v1/domains/hydrology/proof_slice_profile.schema.json": "sha256:0f244785dee1eacc32b9e0a7c6d104257465209b3e30101e9f0da4ee9c00cb51",
+    "schemas/contracts/v1/domains/hydrology/proof_slice_record.schema.json": "sha256:fb77819f5acb570a45c493d8d9e013517eea58ece02b97e33220f06c98ec0945",
+    "schemas/contracts/v1/domains/hydrology/proof_slice_request.schema.json": "sha256:f1e2507fb004a91a3cee11b643d3816b46b40fbb290ee2461e300df3d2bfbc65",
+    "tests/ci/test_readiness_lanes.py": "sha256:04914db5d0c3141b14dae03b0564dbc79033aa9ec31e9e125969fd13716994b8",
+    "tests/domains/hydrology/test_proof_slice.py": "sha256:9292f3cd74645bd47e309cd95fa79e881c835a8f28fd0764500540f81ff1d048",
+    "tests/e2e/README.md": "sha256:630bb1f0c67e563c77725bc1e0631fda7554ce5192845f92379d5eed1312309a",
+    "tests/e2e/test_hydrology_proof_slice.py": "sha256:46a37a8ae8b1fd67b8c47d12a537f1e661919757b6fb3cb2844da657fa355176",
+    "tests/validators/test_e2e_readiness.py": "sha256:6aa2c1aeb0dff7a74bacb617c4cfb734cc8969c712c786a15ccc1b38ec422ce5",
+    "tools/qa/scaffold_baseline.json": "sha256:fd7ba5f6ace0fcd259e88c423bf806300262689dc0ea2ffae061e1f825f89a65",
+    "tools/readiness/run_lane.py": "sha256:c74af0a380b7986e6cf898f835d57da4838690f9754b9070c784f50f1bb171bf",
+    "tools/validators/e2e_readiness.py": "sha256:33b26744ebfc1f74569a5a0bf6cfca277557d46ba773c3f698834014880fe52f"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/4324e239ecc5aa6fa4d58b104e28eb12d5e596ee",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/4324e239ecc5aa6fa4d58b104e28eb12d5e596ee/docs/domains/hydrology/THIN_SLICE.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/4324e239ecc5aa6fa4d58b104e28eb12d5e596ee/docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/4324e239ecc5aa6fa4d58b104e28eb12d5e596ee/docs/KFM_Unified_Implementation_Architecture_Build_Manual.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/4324e239ecc5aa6fa4d58b104e28eb12d5e596ee/control_plane/readiness/lanes.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/4324e239ecc5aa6fa4d58b104e28eb12d5e596ee/fixtures/contracts/v1/domains/hydrology/living_waters_fixture_packet/valid/first_proof.json"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/domain-hydrology.yml": "CONFIRMED",
+    ".github/workflows/hydrology-proof-slice.yml": "CONFIRMED",
+    "CONTRIBUTING.md": "CONFIRMED",
+    "Makefile": "CONFIRMED",
+    "contracts/domains/hydrology/proof_slice.md": "CONFIRMED",
+    "control_plane/readiness/hydrology-proof-slice-profile.json": "CONFIRMED",
+    "control_plane/readiness/lanes.json": "CONFIRMED",
+    "data/catalog/domain/hydrology/README.md": "CONFIRMED",
+    "docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md": "CONFIRMED",
+    "fixtures/domains/hydrology/proof_slice/README.md": "CONFIRMED",
+    "fixtures/domains/hydrology/proof_slice/base_request.json": "CONFIRMED",
+    "fixtures/domains/hydrology/proof_slice/cases/01-answer-current.json": "CONFIRMED",
+    "fixtures/domains/hydrology/proof_slice/cases/02-abstain-missing-evidence.json": "CONFIRMED",
+    "fixtures/domains/hydrology/proof_slice/cases/03-deny-sensitive-exact-geometry.json": "CONFIRMED",
+    "fixtures/domains/hydrology/proof_slice/cases/04-deny-unknown-rights.json": "CONFIRMED",
+    "fixtures/domains/hydrology/proof_slice/cases/05-error-policy-evaluator-unavailable.json": "CONFIRMED",
+    "fixtures/domains/hydrology/proof_slice/cases/06-deny-release-missing-rollback.json": "CONFIRMED",
+    "fixtures/domains/hydrology/proof_slice/cases/07-deny-ui-direct-model-call.json": "CONFIRMED",
+    "fixtures/domains/hydrology/proof_slice/cases/08-deny-public-raw-path.json": "CONFIRMED",
+    "fixtures/domains/hydrology/proof_slice/cases/09-abstain-ambiguous-reach.json": "CONFIRMED",
+    "fixtures/domains/hydrology/proof_slice/cases/10-deny-nfhl-as-observed-event.json": "CONFIRMED",
+    "fixtures/domains/hydrology/proof_slice/cases/11-answer-stale.json": "CONFIRMED",
+    "fixtures/domains/hydrology/proof_slice/cases/12-abstain-no-results.json": "CONFIRMED",
+    "fixtures/domains/hydrology/proof_slice/cases/13-error-artifact-unavailable.json": "CONFIRMED",
+    "fixtures/domains/hydrology/proof_slice/cases/14-abstain-evidence-tampered.json": "CONFIRMED",
+    "fixtures/domains/hydrology/proof_slice/evidence_bundle.json": "CONFIRMED",
+    "fixtures/domains/hydrology/proof_slice/evidence_bundle_tampered.json": "CONFIRMED",
+    "fixtures/domains/hydrology/proof_slice/evidence_bundle_unknown_rights.json": "CONFIRMED",
+    "pipelines/domains/hydrology/proof_slice.py": "CONFIRMED",
+    "schemas/contracts/v1/domains/hydrology/proof_slice_case.schema.json": "CONFIRMED",
+    "schemas/contracts/v1/domains/hydrology/proof_slice_profile.schema.json": "CONFIRMED",
+    "schemas/contracts/v1/domains/hydrology/proof_slice_record.schema.json": "CONFIRMED",
+    "schemas/contracts/v1/domains/hydrology/proof_slice_request.schema.json": "CONFIRMED",
+    "tests/ci/test_readiness_lanes.py": "CONFIRMED",
+    "tests/domains/hydrology/test_proof_slice.py": "CONFIRMED",
+    "tests/e2e/README.md": "CONFIRMED",
+    "tests/e2e/test_hydrology_proof_slice.py": "CONFIRMED",
+    "tests/validators/test_e2e_readiness.py": "CONFIRMED",
+    "tools/qa/scaffold_baseline.json": "CONFIRMED",
+    "tools/readiness/run_lane.py": "CONFIRMED",
+    "tools/validators/e2e_readiness.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Proof slice",
+      "outcome": "PASS",
+      "reason": "tools/readiness/run_lane.py proof-slice exits 0 with PASS; 14 cases (all ten THIN_SLICE assertions plus stale, no-results, unavailable, and tampered-evidence cases) reach their pinned outcomes under the kfm_no_network guard, and two in-process runs are byte-identical."
+    },
+    {
+      "gate": "Focused suites",
+      "outcome": "PASS",
+      "reason": "tests/domains/hydrology/test_proof_slice.py (32), tests/ci/test_readiness_lanes.py, tests/e2e/test_hydrology_proof_slice.py and tests/validators/test_e2e_readiness.py pass."
+    },
+    {
+      "gate": "Workflow steps replayed locally",
+      "outcome": "PASS",
+      "reason": "The build-proof-slice steps of hydrology-proof-slice.yml and the build-proof-hydrology step of domain-hydrology.yml exit 0 when run locally; e2e_readiness.py still reports the composed-suite hold."
+    },
+    {
+      "gate": "Repository guardrails",
+      "outcome": "PASS",
+      "reason": "make workflow-security, repository-topology, docs-critical-structure, validator-registry-check, root registry and scaffold_inventory --check pass; the baseline drops the two resolved e2e placeholder findings (1243 -> 1241)."
+    },
+    {
+      "gate": "Broad offline suites",
+      "outcome": "PASS",
+      "reason": "tests/validators, schemas, contracts, domains/hydrology, qa, ci, e2e, pipelines and policy: 5800 passed. The remaining failures reproduce on the unmodified base in this environment: kanplan needs the separate geo-transforms profile (pyproj), one IPv6 guard case, and a parity check tripped by a run-created .hypothesis directory (passes after cleanup)."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push."
+    },
+    {
+      "gate": "Real-source proof, source admission, policy evaluator, release",
+      "outcome": "SKIPPED",
+      "reason": "Synthetic fixtures only; ADR-0009 gates 2-12 remain open. No source is admitted, no PolicyDecision is emitted, nothing is written to lifecycle storage, released, or published."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/4324e239ecc5aa6fa4d58b104e28eb12d5e596ee"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-29T04:18:54Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md"
+  },
+  "notes": "Implements the proof-slice readiness lane at the repository owner's direction: pipelines/domains/hydrology/proof_slice.py replays a digest-pinned synthetic fixture set (Living Waters packet plus 14 request cases) through ordered fail-closed gates and emits schema-validated DecisionEnvelopes, EvidenceBundle spec_hash and packet-binding checks, and a dry-run rollback rehearsal. The lane moves from HOLD to IMPLEMENTED; the workflows, e2e readiness pin, docs, and tests move with it. Real-source proof remains held."
+}

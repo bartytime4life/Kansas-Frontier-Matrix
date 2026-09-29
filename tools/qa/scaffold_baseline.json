@@ -2,10 +2,9 @@
  "schema_version": "kfm.scaffold-inventory/v1",
  "summary": {
   "by_kind": {
-   "PLACEHOLDER_MARKER": 893,
+   "PLACEHOLDER_MARKER": 892,
    "STUB_MODULE": 332,
-   "UNRESOLVED_DESCRIPTOR": 17,
-   "VACUOUS_TEST": 1
+   "UNRESOLVED_DESCRIPTOR": 17
   },
   "by_surface": {
    "apps": 34,
@@ -16,11 +15,11 @@
    "policy": 112,
    "schemas": 387,
    "scripts": 2,
-   "tests": 188,
+   "tests": 186,
    "tools": 52
   },
-  "files": 895,
-  "total": 1243
+  "files": 894,
+  "total": 1241
  },
  "findings": [
   {"kind": "PLACEHOLDER_MARKER", "path": "apps/cli/pyproject.toml"},
@@ -1212,8 +1211,6 @@
   {"kind": "STUB_MODULE", "path": "tests/domains/soil/test_mukey_cokey_chkey_lineage.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/soil/test_support_type_separation.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/soil/test_support_type_separation.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/e2e/test_hydrology_proof_slice.py"},
-  {"kind": "VACUOUS_TEST", "path": "tests/e2e/test_hydrology_proof_slice.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tools/ingest/hydrology/usgs_streamflow_gate.py"},
   {"kind": "STUB_MODULE", "path": "tools/ingest/hydrology/usgs_streamflow_gate.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tools/scripts/aggregate.py"},

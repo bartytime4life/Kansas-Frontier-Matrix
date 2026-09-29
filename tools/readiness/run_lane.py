@@ -152,6 +152,68 @@ def run_policy(lane: dict[str, Any]) -> tuple[int, dict[str, Any]]:
     return 0, result(lane, "PASS", "BOUNDED_REGO_PAIR_PASSED", receipt=receipt)
 
 
+def run_proof_slice(lane: dict[str, Any]) -> tuple[int, dict[str, Any]]:
+    missing = required_paths(lane)
+    if missing:
+        return 3, result(
+            lane,
+            "HOLD",
+            "REQUIRED_PATH_MISSING",
+            missing_paths=missing,
+        )
+
+    command = [sys.executable, *lane["command"][1:]]
+    environment = os.environ.copy()
+    guard = str(ROOT / "tools" / "ci" / "kfm_no_network")
+    environment.update(
+        {
+            "KFM_NO_NETWORK": "1",
+            "PYTHONHASHSEED": "0",
+            "PYTHONDONTWRITEBYTECODE": "1",
+            "PYTHONPATH": os.pathsep.join(
+                [guard, *filter(None, [environment.get("PYTHONPATH")])]
+            ),
+            "TZ": "UTC",
+        }
+    )
+    try:
+        completed = subprocess.run(
+            command,
+            cwd=ROOT,
+            env=environment,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+            timeout=120,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return 2, result(lane, "ERROR", "PROOF_SLICE_EXECUTION_ERROR")
+
+    stdout = completed.stdout[: MAX_OUTPUT + 1]
+    if len(stdout) > MAX_OUTPUT or len(completed.stderr) > MAX_OUTPUT:
+        return 2, result(lane, "ERROR", "PROOF_SLICE_OUTPUT_LIMIT")
+    receipt = {
+        "command": ["python", *lane["command"][1:]],
+        "exit_code": completed.returncode,
+        "record_sha256": digest(stdout),
+    }
+    try:
+        record = json.loads(stdout)
+    except json.JSONDecodeError:
+        return 2, result(lane, "ERROR", "PROOF_SLICE_OUTPUT_INVALID", receipt=receipt)
+    if completed.returncode != 0 or record.get("outcome") != "PASS":
+        return 1, result(lane, "FAIL", "PROOF_SLICE_FAILED", receipt=receipt)
+    return 0, result(
+        lane,
+        "PASS",
+        "SYNTHETIC_PROOF_SLICE_PASSED",
+        receipt=receipt,
+        cases=len(record["cases"]),
+        record_spec_hash=record["spec_hash"]["value"],
+    )
+
+
 def run_lane(lane: dict[str, Any]) -> tuple[int, dict[str, Any]]:
     if lane["status"] == "HOLD":
         return 3, result(
@@ -162,6 +224,8 @@ def run_lane(lane: dict[str, Any]) -> tuple[int, dict[str, Any]]:
         )
     if lane["id"] == "policy":
         return run_policy(lane)
+    if lane["id"] == "proof-slice":
+        return run_proof_slice(lane)
     raise ReadinessError(f"no runner for implemented lane: {lane['id']}")
 
 

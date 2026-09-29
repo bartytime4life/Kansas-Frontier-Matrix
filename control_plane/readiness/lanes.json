@@ -35,15 +35,20 @@
     },
     {
       "id": "proof-slice",
-      "status": "HOLD",
-      "scope": "Run the bounded Hydrology source-to-proof slice entirely from admitted fixtures.",
-      "command": null,
+      "status": "IMPLEMENTED",
+      "scope": "Run the bounded synthetic Hydrology proof slice from digest-pinned fixtures without network access.",
+      "command": [
+        "python",
+        "pipelines/domains/hydrology/proof_slice.py",
+        "--profile",
+        "control_plane/readiness/hydrology-proof-slice-profile.json"
+      ],
       "required_paths": [
         "pipelines/domains/hydrology/proof_slice.py",
         "control_plane/readiness/hydrology-proof-slice-profile.json"
       ],
-      "hold_reason": "The Hydrology proof producer and accepted execution profile are not implemented.",
-      "authority_boundary": "A proof-slice run cannot admit a live source, approve a release candidate, publish, deploy, or satisfy independent review by itself."
+      "hold_reason": null,
+      "authority_boundary": "A synthetic proof-slice PASS cannot admit a live source, emit a PolicyDecision, approve a release candidate, publish, deploy, or satisfy independent review by itself."
     },
     {
       "id": "catalog",

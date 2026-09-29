@@ -1,0 +1,8 @@
+{
+  "case_id": "05-error-policy-evaluator-unavailable",
+  "thin_slice_assertion": 5,
+  "description": "An unavailable policy evaluator is a finite ERROR, never a silent pass.",
+  "overrides": {
+    "policy_evaluator": "unavailable"
+  }
+}

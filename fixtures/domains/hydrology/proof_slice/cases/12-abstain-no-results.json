@@ -1,0 +1,8 @@
+{
+  "case_id": "12-abstain-no-results",
+  "thin_slice_assertion": null,
+  "description": "An empty bounded query abstains.",
+  "overrides": {
+    "scenario_id": "no-results"
+  }
+}

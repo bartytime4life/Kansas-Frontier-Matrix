@@ -1,0 +1,37 @@
+{
+  "bundle_id": "hydrology:proof-slice:bundle:fixture-v1",
+  "claim_scope": "synthetic hydrology proof slice: fixture HUC12 102600150101 gauge fixture-ks-06864500 discharge 00060",
+  "evidence_refs": [
+    {
+      "ref": "fixture://hydrology/snapshot/watershed-reaches@fixture-v1",
+      "kind": "dataset"
+    },
+    {
+      "ref": "fixture:hydrology:living-waters:first-proof#series",
+      "kind": "measurement"
+    }
+  ],
+  "source_records": [
+    "src:fixture-hydrology-living-waters"
+  ],
+  "citations": [
+    "KFM synthetic Living Waters fixture packet (fixture-v1); not a real observation."
+  ],
+  "rights": {
+    "license": "CC0-1.0"
+  },
+  "sensitivity": {
+    "level": "generalized",
+    "reason": "Gauge spatial support is generalized to county; no exact site geometry is carried.",
+    "applied_at": "2026-09-29T00:00:00Z"
+  },
+  "transforms": [
+    "none: synthetic fixture values are carried unchanged"
+  ],
+  "checksums": {
+    "living_waters_packet": "sha256:7d8d31973dccc6eaaa2470ab046e3feb7518c74f0b05cd1281a37c04c095f08c"
+  },
+  "spec_hash": {
+    "value": "sha256:63473909c2229b211757e45609e5c656e3292bd4736ddb7d2ecefac8e943766a"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "case_id": "14-abstain-evidence-tampered",
+  "thin_slice_assertion": null,
+  "description": "An EvidenceBundle edited after hashing fails closure and abstains.",
+  "overrides": {
+    "evidence_bundle": "fixtures/domains/hydrology/proof_slice/evidence_bundle_tampered.json"
+  }
+}

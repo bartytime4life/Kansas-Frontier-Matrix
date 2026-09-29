@@ -102,8 +102,8 @@ help:
 	@echo
 	@echo "Bounded readiness lanes (HOLD exits 3):"
 	@echo "  policy                Run only the accepted Pass 12 Rego source/test pair"
+	@echo "  proof-slice           Run the synthetic no-network Hydrology proof slice"
 	@echo "  fixtures              Report fixture-regeneration implementation HOLD"
-	@echo "  proof-slice           Report Hydrology proof-producer implementation HOLD"
 	@echo "  catalog               Report catalog-builder implementation HOLD"
 	@echo
 	@echo "Cleanup targets:"
@@ -213,8 +213,9 @@ hazards-validate:
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python -m unittest discover --start-directory tests/domains/hazards --top-level-directory . --pattern 'test_validate_drought_families.py' --verbose
 	KFM_NO_NETWORK=1 PYTHONHASHSEED=0 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 TZ=UTC python tools/validators/hazards/validate_drought_families.py --fixtures
 
-# Bounded readiness lanes. Policy executes only the accepted Pass 12 pair.
-# Unimplemented producers return a named HOLD with exit status 3.
+# Bounded readiness lanes. Policy executes only the accepted Pass 12 pair and
+# proof-slice runs the synthetic Hydrology slice. Unimplemented producers return
+# a named HOLD with exit status 3.
 policy:
 	$(KFM_VALIDATION_ENV) python tools/readiness/run_lane.py policy
 

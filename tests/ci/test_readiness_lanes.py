@@ -16,19 +16,19 @@ TOOL = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(TOOL)
 
 
-def test_registry_has_one_bounded_implementation_and_three_named_holds() -> None:
+def test_registry_has_two_bounded_implementations_and_two_named_holds() -> None:
     registry = TOOL.load_registry()
     assert tuple(item["id"] for item in registry["lanes"]) == TOOL.LANE_IDS
     statuses = {item["id"]: item["status"] for item in registry["lanes"]}
     assert statuses == {
         "policy": "IMPLEMENTED",
         "fixtures": "HOLD",
-        "proof-slice": "HOLD",
+        "proof-slice": "IMPLEMENTED",
         "catalog": "HOLD",
     }
 
 
-@pytest.mark.parametrize("lane_id", ["fixtures", "proof-slice", "catalog"])
+@pytest.mark.parametrize("lane_id", ["fixtures", "catalog"])
 def test_unimplemented_lanes_fail_closed_with_named_hold(lane_id: str) -> None:
     lane = TOOL.lane_by_id(TOOL.load_registry(), lane_id)
     code, payload = TOOL.run_lane(lane)
@@ -66,3 +66,34 @@ def test_policy_registry_never_uses_repository_wide_policy_directory() -> None:
     assert "policy/rego/release_gate_v1.rego" in command
     assert "policy/rego/release_gate_v1_test.rego" in command
     assert "opa test policy/ -v" not in command
+
+
+def test_proof_slice_runner_passes_without_side_effects() -> None:
+    lane = TOOL.lane_by_id(TOOL.load_registry(), "proof-slice")
+    code, payload = TOOL.run_lane(lane)
+    assert code == 0, payload
+    assert payload["status"] == "PASS"
+    assert payload["receipt"]["command"] == ["python", *lane["command"][1:]]
+    assert all(value is False for value in payload["effects"].values())
+
+
+def test_proof_slice_runner_reports_failure_when_the_harness_fails() -> None:
+    lane = dict(TOOL.lane_by_id(TOOL.load_registry(), "proof-slice"))
+    lane["command"] = [
+        "python",
+        "pipelines/domains/hydrology/proof_slice.py",
+        "--profile",
+        "control_plane/readiness/does-not-exist.json",
+    ]
+    code, payload = TOOL.run_lane(lane)
+    assert code == 1
+    assert payload["status"] == "FAIL"
+    assert payload["reason"] == "PROOF_SLICE_FAILED"
+
+
+def test_proof_slice_runner_holds_when_a_required_path_is_missing() -> None:
+    lane = dict(TOOL.lane_by_id(TOOL.load_registry(), "proof-slice"))
+    lane["required_paths"] = ["pipelines/domains/hydrology/not_here.py"]
+    code, payload = TOOL.run_lane(lane)
+    assert code == 3
+    assert payload["reason"] == "REQUIRED_PATH_MISSING"
