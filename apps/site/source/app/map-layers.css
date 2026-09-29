@@ -90,9 +90,43 @@
 .official-context-catalog > header h2 { margin: 0; font-size: 14px; }
 .official-context-catalog > header .official-context-registry-summary { display: block; margin-top: 3px; color: #9bb4ae; font-size: 11px; }
 .official-context-catalog > p { order: 1; margin: 0; padding: 0 17px 8px; color: #a9c1ba; font-size: 11px; line-height: 1.45; }
-.official-context-catalog > .official-context-list { order: 2; }
-.official-context-catalog > .official-context-pulse { order: 3; margin-top: 14px; }
-.official-context-catalog > footer { order: 4; }
+.official-context-catalog > .official-context-pulse { order: 2; margin-top: 14px; }
+.official-context-catalog > .daylight-layer-card { order: 3; }
+.official-context-catalog > .official-context-list { order: 4; }
+.official-context-catalog > footer { order: 5; }
+.daylight-layer-card { display: grid; gap: 10px; margin: 0 10px 12px; border: 1px solid #42666a; border-radius: 9px; background: linear-gradient(135deg, #15363a, #102a30 75%); padding: 12px; }
+.daylight-layer-card > header { display: flex; align-items: center; gap: 10px; }
+.daylight-layer-card > header > div { display: grid; gap: 3px; min-width: 0; }
+.daylight-layer-card > header strong { color: #f0f4e9; font-size: 14px; }
+.daylight-layer-card > header small { color: #a8c7bd; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; }
+.daylight-layer-card > header .visibility-switch { flex: none; margin-left: auto; }
+.daylight-layer-card > p { margin: 0; color: #b4c9c2; font-size: 11px; line-height: 1.45; }
+.daylight-date { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px; color: #c3d6ce; font-size: 12px; font-weight: 650; }
+.daylight-date input { width: 165px; min-height: 38px; border: 1px solid #46666b; border-radius: 6px; background: #0c2226; color: #f0f4ec; padding: 0 8px; font: 600 12px system-ui, sans-serif; color-scheme: dark; }
+.daylight-date input:focus-visible, .daylight-layer-card button:focus-visible, .daylight-scrubber input:focus-visible { outline: 2px solid #8cddd7; outline-offset: 2px; }
+.daylight-clock-row { display: flex; align-items: center; gap: 12px; }
+.daylight-clock-row > button { flex: none; min-width: 84px; min-height: 39px; border: 1px solid #56827f; border-radius: 6px; background: #21474a; color: #c8eee5; padding: 0 10px; font: 750 12px system-ui, sans-serif; cursor: pointer; }
+.daylight-clock-row > button:disabled { border-color: #344f51; background: #1b3135; color: #9db0aa; cursor: not-allowed; }
+.daylight-clock-row output { display: grid; gap: 2px; min-width: 0; }
+.daylight-clock-row output strong { overflow: hidden; color: #f3f2e9; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.daylight-clock-row output small { color: #a7c2ba; font-size: 10px; }
+.daylight-scrubber { display: grid; gap: 3px; }
+.daylight-scrubber > input { width: 100%; margin: 0; accent-color: #8cddd7; }
+.daylight-scrubber > input:disabled { opacity: .52; }
+.daylight-scrubber > span { display: flex; justify-content: space-between; gap: 6px; color: #95b3ad; font-size: 9px; }
+.daylight-scrubber > span > span:nth-child(2) { color: #b7d1c9; text-align: center; }
+.daylight-band-key { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; color: #a9bfb8; font-size: 9px; line-height: 1.5; }
+.daylight-band-key i { width: 9px; height: 9px; border-radius: 50%; background: #243b52; box-shadow: 0 0 0 1px #68878a; }
+.daylight-band-key i:nth-of-type(2) { background: #40546a; }
+.daylight-band-key i:nth-of-type(3) { background: #62705f; }
+.daylight-band-key i:nth-of-type(4) { background: #937c59; }
+@media (max-width: 460px) {
+  .daylight-date { grid-template-columns: 1fr; gap: 5px; }
+  .daylight-date input { width: 100%; }
+  .daylight-clock-row { align-items: flex-start; gap: 8px; }
+  .daylight-clock-row > button { min-width: 78px; padding-inline: 6px; }
+  .daylight-band-key { gap: 4px; }
+}
 .official-context-row { position: relative; min-height: 71px; border-bottom: 1px solid #29474b; background: #0d2529; }
 .official-context-row[data-visible="true"] { background: #153338; }
 .official-context-row .official-context-primary { display: grid; grid-template-columns: 44px 8px minmax(0, 1fr); gap: 8px; min-height: 71px; padding: 8px 82px 8px 15px; }

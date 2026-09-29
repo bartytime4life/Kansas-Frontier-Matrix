@@ -1,0 +1,125 @@
+{
+  "receipt_id": "genrec-calculated-daylight-twilight-20260929",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/README.md",
+    "apps/site/source/app/daylight-layer.ts",
+    "apps/site/source/app/map-layer-composition.ts",
+    "apps/site/source/app/map-layers.css",
+    "apps/site/source/app/map-runtime.ts",
+    "apps/site/source/app/page.tsx",
+    "apps/site/source/package-lock.json",
+    "apps/site/source/package.json",
+    "apps/site/source/tests/daylight-layer.test.mjs",
+    "apps/site/source/tests/snapshot-workflows.test.mjs",
+    "apps/site/source/tests/wind-arrow-terrain.test.mjs"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/README.md": "sha256:bea73b0fe0e94666844cac24cf9a4aa4db3b0371314e67c644740c51cf5951c0",
+    "apps/site/source/app/daylight-layer.ts": "sha256:e317d99bd3c02d298c32d7b75ceac6c293331d2912420a08f6a79c020a7ac91c",
+    "apps/site/source/app/map-layer-composition.ts": "sha256:37fb07b6e83288006809f66406525b9954e3a89c49e42bf521d73f65c536d07b",
+    "apps/site/source/app/map-layers.css": "sha256:bcffeca8a0cda2e10c0f377111215e7249b26568e4a2025ed091edae45fcce35",
+    "apps/site/source/app/map-runtime.ts": "sha256:fc3b932eea78563c0e370839f2607f1b6daffd8cb3dc9fd9d2f3f66a782b555d",
+    "apps/site/source/app/page.tsx": "sha256:b26ad1897745918b9204050c99eacd7d481fb9f19a7ff01e50d5a5e63421c8cd",
+    "apps/site/source/package-lock.json": "sha256:5bab87229b2559a949aa082ca19592b17cc071e3cf56c135c45f760c813540e5",
+    "apps/site/source/package.json": "sha256:988389106e20ec414fdb9b89b8c6de5a545cbd4d74b07e8a785a66b1c7480fb3",
+    "apps/site/source/tests/daylight-layer.test.mjs": "sha256:615ff5e3a51f5d0965ca04271ab9b4502784123ccc8476ea1ce6fdb1ed7102e7",
+    "apps/site/source/tests/snapshot-workflows.test.mjs": "sha256:0c7cf1f02b03bca178bef1e3f662df5f5dfb8c522a10c1d039c70d24202e0b33",
+    "apps/site/source/tests/wind-arrow-terrain.test.mjs": "sha256:cf2fc7cf7dc4f07a9dff715414d1719180f6bf65453b5c531cc6c0f4b20e4948"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Codex session, 2026-09-29"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix@fdbe95b1928f80dffaf1ad6bc6c3d4ebfd334632 (isolated feature validation base)",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@4eabceb95fcb8728697239489c02373775929ec0 (current integration base)",
+      "repo:docs/doctrine/ai-build-operating-contract.md@ea0faee4a049c9edc035a583a36c1296b4c303e6",
+      "https://www.nrel.gov/docs/fy08osti/34302.pdf",
+      "https://aa.usno.navy.mil/data/api"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/README.md": "CONFIRMED",
+    "apps/site/source/app/daylight-layer.ts": "CONFIRMED",
+    "apps/site/source/app/map-layer-composition.ts": "CONFIRMED",
+    "apps/site/source/app/map-layers.css": "CONFIRMED",
+    "apps/site/source/app/map-runtime.ts": "CONFIRMED",
+    "apps/site/source/app/page.tsx": "CONFIRMED",
+    "apps/site/source/package-lock.json": "CONFIRMED",
+    "apps/site/source/package.json": "CONFIRMED",
+    "apps/site/source/tests/daylight-layer.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/snapshot-workflows.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/wind-arrow-terrain.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Monorepo Site build",
+      "outcome": "PASS",
+      "reason": "npm ci and npm run build passed on the isolated apps/site/source feature overlay based on main@fdbe95b1928f80dffaf1ad6bc6c3d4ebfd334632; Vite emitted its existing large-chunk advisory."
+    },
+    {
+      "gate": "Monorepo Site tests",
+      "outcome": "PASS",
+      "reason": "node --test tests/*.test.mjs passed 220/220 tests on the isolated apps/site/source feature overlay based on main@fdbe95b1928f80dffaf1ad6bc6c3d4ebfd334632."
+    },
+    {
+      "gate": "Targeted ESLint",
+      "outcome": "PASS",
+      "reason": "Zero errors; six page-level warnings remain outside the daylight implementation."
+    },
+    {
+      "gate": "Standalone Site build",
+      "outcome": "PASS",
+      "reason": "npm run build passed against the current same-Site source checkout."
+    },
+    {
+      "gate": "Standalone Site tests",
+      "outcome": "PASS",
+      "reason": "node --test tests/*.test.mjs passed 212/212 tests."
+    },
+    {
+      "gate": "Owner-only production Site deployment",
+      "outcome": "PASS",
+      "reason": "Pushed Site source 62e2fa0cc1e26e4ba13038ccde4e6f0b743594c0; deployment appgdep_6abc28f49f5081919764a0d5a1a320b3 succeeded for saved version appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_d312a782fee88191967f7bfbe4636ab7."
+    },
+    {
+      "gate": "Rendered map visual verification",
+      "outcome": "SKIPPED",
+      "reason": "A supported browser visual check was unavailable in this run; source build and automated tests do not prove the rendered map appearance."
+    },
+    {
+      "gate": "GitHub hosted checks and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Checks run after branch publication; human review remains pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "NREL-Solar-Position-Algorithm",
+      "validated": true,
+      "evidence_ref": "https://www.nrel.gov/docs/fy08osti/34302.pdf"
+    },
+    {
+      "id": "USNO-daily-sun-data-API",
+      "validated": true,
+      "evidence_ref": "https://aa.usno.navy.mil/data/api"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-29T21:15:21Z",
+  "emitter": "Codex"
+}

@@ -2,6 +2,7 @@ import type { Map as MapLibreMap } from "./maplibre-seam";
 import { LAYER_REGISTRY } from "./explorer-data";
 
 const registryIds = new Set(LAYER_REGISTRY.flatMap((record) => record.renderers.map((renderer) => renderer.id)));
+const daylightLayerId = "kfm-daylight-context-fill";
 const systemIds = new Set([
   "kfm-import-preview-fill", "kfm-import-preview-line", "kfm-import-preview-point",
   "kfm-analysis-area-fill", "kfm-analysis-area-line", "kfm-selection-fill",
@@ -11,7 +12,7 @@ const systemIds = new Set([
 
 type LayerLike = { id: string; type: string };
 const isOverlay = (layer: LayerLike) => registryIds.has(layer.id) || systemIds.has(layer.id)
-  || layer.id.startsWith("external-") || layer.id.startsWith("kfm-ee-context-layer-");
+  || layer.id === daylightLayerId || layer.id.startsWith("external-") || layer.id.startsWith("kfm-ee-context-layer-");
 
 type RasterFamily = "surface" | "water" | "fire" | "air" | "radar" | "other";
 const rasterFamily = (id: string): RasterFamily => {
@@ -33,6 +34,7 @@ export const orderedOverlayIds = (layers: readonly LayerLike[]): string[] => lay
   .map((layer, index) => ({ layer, index }))
   .sort((left, right) => {
     const tier = (layer: LayerLike) => systemIds.has(layer.id) ? 5
+      : layer.id === daylightLayerId ? 0.5
       : layer.type === "raster" || layer.type === "hillshade" ? 0
       : layer.type === "fill" || layer.type === "fill-extrusion" ? 1
       : layer.type === "line" ? 2

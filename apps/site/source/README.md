@@ -528,6 +528,23 @@ exports, source admission, release state, and EvidenceBundle resolution. Failed,
 partial, empty, and refreshed states remain visible instead of being converted
 into inferred facts.
 
+## Calculated daylight and twilight
+
+The optional **Daylight & twilight** map layer calculates solar position with
+the NREL Solar Position Algorithm through `sunrise-sunset-js` and shades night,
+astronomical, nautical, and civil twilight, including the conventional apparent
+sunrise/sunset boundary. Select a Kansas Central calendar day to start a
+60-second full-day loop; 23- and 25-hour daylight-saving days use their actual
+local-day length. The control shows Central and UTC time, supports pause and
+scrubbing, and stores the selected day and cursor in the map URL. Restored links
+open paused, and reduced-motion settings disable autoplay. This calculated
+solar geometry is map context, not measured ground-level brightness. It is not
+a provider feed and does not use GOES or VIIRS imagery as a solar input; those
+layers remain independently controlled visual context. The NREL method is
+described in the [Solar Position Algorithm report](https://www.nrel.gov/docs/fy08osti/34302.pdf);
+the [USNO daily service](https://aa.usno.navy.mil/data/api) provides independent
+event-time checks.
+
 ## Backend connection posture
 
 - `/api/hydrology/streamflow` is the fixed, read-only USGS Water Data API v1

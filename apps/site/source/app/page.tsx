@@ -54,6 +54,7 @@ import {
   setTerrainHeightOverlay as applyTerrainHeightOverlay,
   setTerrainPresentation as applyTerrainPresentation,
   setElevationExaggeration,
+  setDaylightMapLayer,
   shouldFallbackStandardBasemap,
   terrainSourceLoadState,
   unexaggeratedTerrainElevation,
@@ -244,6 +245,16 @@ import {
   parseNoaaGaugeNetwork,
   type NoaaGaugeFeatureProperties,
 } from "./noaa-hydrology";
+import {
+  currentKansasCalendarDay,
+  dayFractionAtInstant,
+  daylightLoopFraction,
+  daylightShouldAutoplay,
+  formatKansasSolarTime,
+  instantAtDayFraction,
+  kansasLocalDayInterval,
+  restoreDaylightView,
+} from "./daylight-layer";
 
 const KNOWN_TEMPORAL_FRAMES = new Set<number>([
   ...TIME_STEPS,
@@ -1037,6 +1048,15 @@ const anchorDistanceMiles = (left: Pick<FeatureProperties, "focusLng" | "focusLa
 export default function Home() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const windArrowCanvasRef = useRef<HTMLCanvasElement>(null);
+  const daylightDayInitial = currentKansasCalendarDay();
+  const [daylightDay, setDaylightDay] = useState(daylightDayInitial);
+  const [daylightInstant, setDaylightInstant] = useState<number>(() => kansasLocalDayInterval(daylightDayInitial).startMs);
+  const [daylightEnabled, setDaylightEnabled] = useState(false);
+  const [daylightPlaying, setDaylightPlaying] = useState(false);
+  const daylightDayRef = useRef(daylightDay);
+  const daylightInstantRef = useRef(daylightInstant);
+  const daylightEnabledRef = useRef(false);
+  const daylightPlayingRef = useRef(false);
   const mapRef = useRef<MapLibreMap | null>(null);
   const earthEngineContext = useEarthEngineContext();
   const [earthEngineDisplay, setEarthEngineDisplay] = useState<EarthEngineDisplayState>({ visible: {}, opacity: {} });
@@ -1472,11 +1492,51 @@ export default function Home() {
       if (preference.matches) {
         setPlaying(false);
         setNoaaRadarPlaying(false);
+        daylightPlayingRef.current = false;
+        setDaylightPlaying(false);
       }
     };
     syncPreference();
     preference.addEventListener("change", syncPreference);
     return () => preference.removeEventListener("change", syncPreference);
+  }, []);
+  useEffect(() => {
+    if (!daylightPlaying || !daylightEnabled || reducedMotion || document.hidden) return;
+    let animationFrame = 0;
+    let lastMapUpdate = 0;
+    let lastClockUpdate = 0;
+    const day = daylightDay;
+    const startFraction = dayFractionAtInstant(daylightInstantRef.current, day);
+    const startedAt = performance.now();
+    const tick = (now: number) => {
+      if (!daylightPlayingRef.current || document.hidden) return;
+      const fraction = daylightLoopFraction(startFraction, now - startedAt);
+      const instant = instantAtDayFraction(day, fraction);
+      if (now - lastMapUpdate >= 100) {
+        daylightInstantRef.current = instant;
+        if (mapRef.current && styleGenerationReadyRef.current && daylightEnabledRef.current) {
+          setDaylightMapLayer(mapRef.current, true, instant);
+        }
+        lastMapUpdate = now;
+      }
+      if (now - lastClockUpdate >= 250) {
+        setDaylightInstant(instant);
+        lastClockUpdate = now;
+      }
+      animationFrame = window.requestAnimationFrame(tick);
+    };
+    animationFrame = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(animationFrame);
+  }, [daylightDay, daylightEnabled, daylightPlaying, reducedMotion]);
+
+  useEffect(() => {
+    const pauseWhenHidden = () => {
+      if (!document.hidden) return;
+      daylightPlayingRef.current = false;
+      setDaylightPlaying(false);
+    };
+    document.addEventListener("visibilitychange", pauseWhenHidden);
+    return () => document.removeEventListener("visibilitychange", pauseWhenHidden);
   }, []);
   useEffect(() => {
     const restoreSavedWorkspaces = window.setTimeout(() => {
@@ -2315,6 +2375,9 @@ export default function Home() {
     params.set("o", LAYER_REGISTRY.map((layer) => `${layer.id}:${(opacity[layer.id] ?? layer.defaultOpacity).toFixed(2)}`).join(","));
     params.set("ctx", visibleOfficialSources.map((source) => source.id).join(","));
     params.set("ctxo", OFFICIAL_CONTEXT_SOURCES.map((source) => `${source.id}:${(officialOpacity[source.id] ?? source.defaultOpacity).toFixed(2)}`).join(","));
+    params.set("sunDay", daylightDay);
+    params.set("sunAt", new Date(daylightInstant).toISOString());
+    if (daylightEnabled) params.set("sun", "on");
     serializeSoilMapState(params, soilMapState);
     if (officialVisibility["nws-radar"] && noaaRadarFrameTime) {
       params.set("radarTime", noaaRadarFrameTime);
@@ -2366,12 +2429,54 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [activeLayers, analysisArea, atmospherePreset, basemap, compareLeft.id, compareRight.id, compareTimeA, compareTimeB, currentWorkspace, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, soilMapState, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
+  }, [activeLayers, analysisArea, atmospherePreset, basemap, compareLeft.id, compareRight.id, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, soilMapState, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
     window.setTimeout(() => setToast(""), 3600);
   }, []);
+
+  const setDaylightPlayback = useCallback((playing: boolean) => {
+    daylightPlayingRef.current = playing;
+    setDaylightPlaying(playing);
+  }, []);
+
+  const selectDaylightDate = useCallback((day: string) => {
+    if (!day) return;
+    try {
+      const interval = kansasLocalDayInterval(day);
+      daylightDayRef.current = day;
+      daylightInstantRef.current = interval.startMs;
+      daylightEnabledRef.current = true;
+      setDaylightDay(day);
+      setDaylightInstant(interval.startMs);
+      setDaylightEnabled(true);
+      const shouldPlay = daylightShouldAutoplay(reducedMotion, document.hidden);
+      setDaylightPlayback(shouldPlay);
+      if (mapRef.current && styleGenerationReadyRef.current) setDaylightMapLayer(mapRef.current, true, interval.startMs);
+    } catch {
+      announce("Choose a valid Kansas calendar day");
+    }
+  }, [announce, reducedMotion, setDaylightPlayback]);
+
+  const toggleDaylightVisibility = useCallback((enabled: boolean) => {
+    daylightEnabledRef.current = enabled;
+    setDaylightEnabled(enabled);
+    if (!enabled || document.hidden) setDaylightPlayback(false);
+    if (mapRef.current && styleGenerationReadyRef.current) {
+      setDaylightMapLayer(mapRef.current, enabled, daylightInstantRef.current);
+    }
+  }, [setDaylightPlayback]);
+
+  const seekDaylight = useCallback((fraction: number) => {
+    const instant = instantAtDayFraction(daylightDayRef.current, Math.min(fraction, 0.9999999));
+    daylightInstantRef.current = instant;
+    setDaylightPlayback(false);
+    setDaylightInstant(instant);
+    if (mapRef.current && styleGenerationReadyRef.current && daylightEnabledRef.current) {
+      setDaylightMapLayer(mapRef.current, true, instant);
+    }
+  }, [setDaylightPlayback]);
 
   const commitTemporalFrame = useCallback((next: number, message?: string) => {
     setSweepRangeStart((current) => Math.min(current, next));
@@ -4019,6 +4124,18 @@ export default function Home() {
 
   const restoreExplorerFromUrl = useCallback(() => {
       const params = new URLSearchParams(window.location.search);
+      const restoredSolar = restoreDaylightView(params.get("sunDay"), params.get("sunAt"), params.get("sun") === "on");
+      daylightDayRef.current = restoredSolar.day;
+      daylightInstantRef.current = restoredSolar.instantMs;
+      daylightEnabledRef.current = restoredSolar.enabled;
+      daylightPlayingRef.current = false;
+      setDaylightDay(restoredSolar.day);
+      setDaylightInstant(restoredSolar.instantMs);
+      setDaylightEnabled(restoredSolar.enabled);
+      setDaylightPlaying(restoredSolar.playing);
+      if (mapRef.current && styleGenerationReadyRef.current) {
+        setDaylightMapLayer(mapRef.current, restoredSolar.enabled, restoredSolar.instantMs);
+      }
       const restoringGlobe = params.get("proj") === "globe";
       const centerParam = params.get("c")?.split(",").map((token) => token.trim() === "" ? Number.NaN : Number(token));
       const center: [number, number] = centerParam?.length === 2 && centerParam.every(Number.isFinite)
@@ -4432,6 +4549,8 @@ export default function Home() {
               && noaaRadarManifestIsFresh(noaaRadarManifestRef.current, Date.now()),
             );
             applyOfficialContextState(map, runtimeOfficialVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
+            styleStep = "DAYLIGHT_CONTEXT";
+            setDaylightMapLayer(map, daylightEnabledRef.current, daylightInstantRef.current);
             styleStep = "ELEVATION_SCALE";
             setElevationExaggeration(map, verticalExaggerationRef.current);
             styleStep = "PROJECTION";
@@ -7501,6 +7620,9 @@ export default function Home() {
   };
 
   const fireImageDay = officialPayloads["nasa-gibs-fire-points"]?.sourceDay;
+  const daylightDisplayTime = formatKansasSolarTime(daylightInstant);
+  const daylightDurationHours = kansasLocalDayInterval(daylightDay).durationMs / 3_600_000;
+  const daylightSliderValue = Math.round(dayFractionAtInstant(daylightInstant, daylightDay) * 10_000);
   const sourceIssues = OFFICIAL_CONTEXT_SOURCES.filter((source) =>
     officialVisibility[source.id] && (officialStates[source.id] === "error"
       || (officialStates[source.id] === "partial" && officialRasterFailuresRef.current.has(source.id))
@@ -7991,6 +8113,14 @@ export default function Home() {
               <div><span><small>SELECTED FEATURES</small><strong>{officialFeatureCount.toLocaleString("en-US")}</strong></span><span><small>SELECTED FEEDS</small><strong>{officialReadyCount}/{visibleOfficialSources.length} settled</strong></span><span><small>SELECTED RETRIEVAL</small><strong>{officialLatestRetrievedAt ? new Date(officialLatestRetrievedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "Not yet"}</strong></span></div>
               <nav aria-label="Official data actions"><button type="button" disabled={!buildYearCurrent || officialRefreshPlan.count === 0 || officialLoadingCount > 0} onClick={refreshVisibleOfficialContext}>{!buildYearCurrent ? "Rebuild required" : officialRefreshPlan.reason === "historical" ? `Held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : officialLoadingCount > 0 ? "Refreshing…" : `Refresh ${officialRefreshPlan.count} selected`}</button><button type="button" disabled={visibleOfficialCount === 0} onClick={hideAllOfficialContext}>Hide all</button></nav>
             </div>
+            <section className="daylight-layer-card" aria-label="Daylight and twilight controls">
+              <header><div><strong>Daylight &amp; twilight</strong><small>Calculated solar geometry · map context</small></div><label className="visibility-switch"><input type="checkbox" checked={daylightEnabled} aria-label={daylightEnabled ? "Hide Daylight and twilight" : "Show Daylight and twilight"} onChange={(event) => toggleDaylightVisibility(event.target.checked)} /><span aria-hidden="true" /></label></header>
+              <p>Estimated Sun position and twilight boundaries. This is not measured ground-level brightness.</p>
+              <label className="daylight-date">Kansas Central day<input type="date" value={daylightDay} onChange={(event) => selectDaylightDate(event.target.value)} /></label>
+              <div className="daylight-clock-row"><button type="button" disabled={!daylightEnabled || reducedMotion} onClick={() => setDaylightPlayback(!daylightPlaying)}>{reducedMotion ? "Paused · reduced motion" : daylightPlaying ? "Pause" : "Resume"}</button><output aria-live="off" aria-label={`Kansas Central ${daylightDisplayTime.central}; ${daylightDisplayTime.utc}`}><strong>{daylightDisplayTime.central}</strong><small>{daylightDisplayTime.utc}</small></output></div>
+              <label className="daylight-scrubber"><span className="sr-only">Solar time within selected Kansas Central day</span><input type="range" min="0" max="10000" step="1" value={daylightSliderValue} disabled={!daylightEnabled} aria-valuetext={`${daylightDisplayTime.central}; ${daylightDisplayTime.utc}`} onChange={(event) => seekDaylight(Number(event.target.value) / 10_000)} /><span><span>Midnight</span><span>Full local day · {daylightDurationHours} hours · 60-second loop</span><span>Midnight</span></span></label>
+              <small className="daylight-band-key"><i aria-hidden="true" /> Night <i aria-hidden="true" /> Astronomical twilight <i aria-hidden="true" /> Nautical twilight <i aria-hidden="true" /> Civil twilight · apparent sunrise/sunset</small>
+            </section>
             <div className="official-context-list"><SoilMoistureControl mapRef={mapRef} styleReady={styleReady} is2D={projection !== "globe" && scenePreset !== "elevation-3d"} state={soilMapState} onChange={next => setSoilMapState(current => ({ ...current, ...next }))} />{listedOfficialSources.map((source) => {
               const state = officialStates[source.id];
               const heldAtFrame = officialVisibility[source.id] && !effectiveOfficialVisibility[source.id];
