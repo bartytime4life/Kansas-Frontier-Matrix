@@ -1200,7 +1200,7 @@ export default function Home() {
   const [streamflowArchiveDraftDay, setStreamflowArchiveDraftDay] = useState(currentUtcDay);
   const [streamflowCoverage, setStreamflowCoverage] = useState<{ station: string; continuous: { start: string; end: string } | null; daily: { start: string; end: string } | null; partial: boolean } | null>(null);
   const [streamflowCoverageMessage, setStreamflowCoverageMessage] = useState("Choose a station to check its provider-declared record span.");
-  const [liveInstrument, setLiveInstrument] = useState<"river" | "radar">("river");
+  const [liveInstrument, setLiveInstrument] = useState<"river" | "radar" | "lightning">("river");
   const [layerOrder, setLayerOrder] = useState<string[]>(defaultOrder);
   const [basemap, setBasemap] = useState<BasemapKey>("standard");
   const [view, setView] = useState<ViewState>(KANSAS_VIEW);
@@ -1668,9 +1668,17 @@ export default function Home() {
   const noaaRadarAgeMinutes = noaaRadarActiveFrame ? noaaRadarFrameAgeMinutes(noaaRadarActiveFrame, noaaRadarClock) : null;
   const noaaRadarLatestAgeMinutes = noaaRadarLatestFrame ? noaaRadarFrameAgeMinutes(noaaRadarLatestFrame, noaaRadarClock) : null;
   const noaaRadarSelectedAtPresent = buildYearCurrent && officialVisibility["nws-radar"] && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
-  const liveDockVisible = instrumentOpen && (streamflowSelectedAtPresent || noaaRadarSelectedAtPresent);
-  const showStreamflowDock = streamflowSelectedAtPresent && (liveInstrument === "river" || !noaaRadarSelectedAtPresent);
-  const showRadarDock = noaaRadarSelectedAtPresent && (liveInstrument === "radar" || !streamflowSelectedAtPresent);
+  const lightningSelectedAtPresent = buildYearCurrent && officialVisibility["noaa-lightning-density"] && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
+  const availableLiveInstruments = [
+    ...(streamflowSelectedAtPresent ? ["river" as const] : []),
+    ...(noaaRadarSelectedAtPresent ? ["radar" as const] : []),
+    ...(lightningSelectedAtPresent ? ["lightning" as const] : []),
+  ];
+  const activeLiveInstrument = availableLiveInstruments.includes(liveInstrument) ? liveInstrument : availableLiveInstruments[0] ?? null;
+  const liveDockVisible = instrumentOpen && activeLiveInstrument !== null;
+  const showStreamflowDock = activeLiveInstrument === "river";
+  const showRadarDock = activeLiveInstrument === "radar";
+  const showLightningDock = activeLiveInstrument === "lightning";
   const noaaRadarSelectedIsLatest = Boolean(noaaRadarActiveFrame && noaaRadarLatestFrame && noaaRadarActiveFrame === noaaRadarLatestFrame);
   const noaaRadarFrameError = noaaRadarManifestError
     || (noaaRadarManifest && !noaaRadarManifestFresh ? "The newest advertised NOAA observation is more than 15 minutes old." : "")
@@ -2320,7 +2328,7 @@ export default function Home() {
       if (streamflowFrameTime) params.set("hydroTime", streamflowFrameTime);
       if (streamflowSelectedStationId) params.set("hydroStation", streamflowSelectedStationId);
     }
-    if (officialVisibility["usgs-streamflow"] || officialVisibility["nws-radar"]) params.set("live", liveInstrument);
+    if (officialVisibility["usgs-streamflow"] || officialVisibility["nws-radar"] || officialVisibility["noaa-lightning-density"]) params.set("live", liveInstrument);
     params.set("t", String(year));
     params.set("tm", temporalMode);
     params.set("tstep", temporalStepRule);
@@ -3136,6 +3144,7 @@ export default function Home() {
     if (id === "noaa-lightning-density") {
       lightningAutoStartRef.current = visible;
       setLightningPlaying(false);
+      if (visible) { setLiveInstrument("lightning"); setInstrumentOpen(true); }
     }
     if (id === "usgs-streamflow" && !visible) setStreamflowPlaying(false);
     const map = mapRef.current;
@@ -4106,7 +4115,7 @@ export default function Home() {
       setStreamflowPlaybackSpeed(restoredHydroSpeed === 0.5 || restoredHydroSpeed === 2 ? restoredHydroSpeed : 1);
       setStreamflowPlaying(false);
       const restoredLiveInstrument = params.get("live");
-      setLiveInstrument(restoredLiveInstrument === "radar" ? "radar" : "river");
+      setLiveInstrument(restoredLiveInstrument === "radar" || restoredLiveInstrument === "lightning" ? restoredLiveInstrument : "river");
       for (const source of OFFICIAL_CONTEXT_SOURCES) {
         if (nextOfficialVisibility[source.id] && source.apiPath && !officialPayloadsRef.current[source.id as OfficialContextFeedId]) void refreshOfficialContext(source.id as OfficialContextFeedId);
       }
@@ -7509,6 +7518,15 @@ export default function Home() {
         : undefined,
   }));
 
+  const liveObservationSwitcher = availableLiveInstruments.length > 1 ? <nav className="live-observation-switcher" aria-label="Observation controls">
+    {availableLiveInstruments.map((instrument) => <button key={instrument} type="button" aria-pressed={activeLiveInstrument === instrument} onClick={() => {
+      setLiveInstrument(instrument);
+      if (instrument !== "river") setStreamflowPlaying(false);
+      if (instrument !== "radar") setNoaaRadarPlaying(false);
+      if (instrument !== "lightning") setLightningPlaying(false);
+    }}>{instrument === "river" ? "River Pulse" : instrument === "radar" ? "Radar Loop" : "Lightning"}</button>)}
+  </nav> : null;
+
   return (
     <div className="site-root">
       <a className="skip-link" href="#map-canvas">Skip to the map</a>
@@ -8010,15 +8028,10 @@ export default function Home() {
                     <ArchiveDaySlider sourceLabel="NOAA radar" minDay="1995-01-01" maxDay={currentUtcDay()} day={radarArchiveDraftDay} onSelect={setRadarArchiveDraftDay} nextAction="Check in Observatory" />
                     <small>1995 is the archive adapter’s earliest query bound, not proof that every day has radar imagery. The selected older day opens a separate map.</small>
                   </> : source.id === "noaa-lightning-density" ? <div className="lightning-source-control" data-signal={lightningPreview}>
-                    <p>Ground-network strike density in 8 × 8 km cells for each advertised 15-minute interval. The map glow follows only returned NOAA image cells.</p>
-                    <div className="lightning-clock"><strong>{lightningFrame ? `${lightningFrame.slice(0, 16).replace("T", " ")} UTC` : "No frame loaded"}</strong><span>{lightningManifest ? `${lightningFrameIndex + 1} / ${lightningManifest.frames.length} frames` : lightningManifestState === "loading" ? "Checking NOAA times" : "NOAA times unavailable"}</span></div>
-                    <output aria-live="polite">{!officialVisibility[source.id] ? "Layer off" : heldAtFrame ? "Held by atlas time" : lightningPreview === "loading" ? "Loading and sampling the visible map area…" : lightningPreview === "signal" ? "NOAA density visible in the sampled map area for this frame" : lightningPreview === "none" ? "No NOAA density in the sampled map area for this frame · earlier frames may differ; not an all-clear" : lightningPreview === "error" || lightningManifestState === "error" ? "Visible-area signal unconfirmed or NOAA unavailable · no simulated flashes" : "Select the layer to check exact NOAA frames"}</output>
-                    <input type="range" min="0" max={Math.max(0, (lightningManifest?.frames.length ?? 1) - 1)} value={Math.max(0, lightningFrameIndex)} disabled={!lightningManifest || !officialVisibility[source.id] || heldAtFrame} onChange={(event) => { setLightningPlaying(false); setLightningFrame(lightningManifest?.frames[Number(event.target.value)] ?? null); }} aria-label="NOAA lightning 15-minute density frame" aria-valuetext={lightningFrame ?? "No frame"} />
-                    <div className="lightning-transport"><button type="button" disabled={!lightningManifest || lightningFrameIndex <= 0} onClick={() => { setLightningPlaying(false); setLightningFrame(lightningManifest?.frames[lightningFrameIndex - 1] ?? null); }} aria-label="Previous lightning density frame">‹</button><button type="button" aria-pressed={lightningPlaying} disabled={!lightningPlaying && (reducedMotion || !lightningManifest || lightningManifest.frames.length < 2 || !lightningSelected || lightningManifestState !== "ready" || !lightningPlaybackReady)} onClick={() => { if (lightningPlaying) setLightningPlaying(false); else { setLightningFrame(lightningManifest?.frames[0] ?? null); setLightningPlaying(true); } }}>{lightningPlaying ? "Ⅱ Pause" : "▶ Replay frames"}</button><button type="button" disabled={!lightningManifest || lightningFrameIndex >= lightningManifest.frames.length - 1} onClick={() => { setLightningPlaying(false); setLightningFrame(lightningManifest?.frames[lightningFrameIndex + 1] ?? null); }} aria-label="Next lightning density frame">›</button><button type="button" disabled={!lightningManifest} onClick={() => { setLightningPlaying(false); setLightningFrame(lightningManifest?.latest ?? null); }}>Latest</button></div>
-                    <div className="lightning-density-key"><img src="/api/lightning/legend" width="292" height="46" alt="NOAA nowCOAST lightning density legend with the provider's numeric bins and units" loading="lazy" /><a href={NOAA_LIGHTNING_LEGEND_URL} target="_blank" rel="noreferrer">NOAA density legend ↗</a></div>
-                    <small>NOAA frame {lightningFrame ? `${lightningFrame.slice(0, 16).replace("T", " ")} UTC` : "not selected"} · 15-minute density product. Exact interval boundaries are not supplied here. Frame list checked {lightningManifest ? `${lightningManifest.retrievedAt.slice(11, 16)} UTC` : "not yet"}. Empty pixels do not establish safety.</small>
-                    {reducedMotion && <small>Reduced motion: autoplay and glow are off. Frame steps remain available.</small>}
-                    <a href={source.sourceUrl} target="_blank" rel="noreferrer">NOAA layer and time metadata ↗</a>
+                    <p>Ground-network strike density in 8 × 8 km cells for each advertised 15-minute interval.</p>
+                    <output>{lightningFrame ? `Selected frame ${lightningFrame.slice(0, 16).replace("T", " ")} UTC` : "No NOAA frame loaded"}</output>
+                    <button type="button" onClick={() => { setLiveInstrument("lightning"); setInstrumentOpen(true); }} disabled={!officialVisibility[source.id] || heldAtFrame}>Open lightning controls on map</button>
+                    <small>Exact time, playback, source status, and legend are in the map controls.</small>
                   </div> : source.id === "nasa-lightning-climatology" ? <div className="lightning-climate-control"><p>NASA LIS/OTD combined flash-rate climatology from 1995–2014. This broad 0.5° climate field does not show fine local variation, this storm, or today’s lightning.</p><output>Fixed multi-year composite · no 15-minute playback</output><small>GIBS WMTS date 1995-05-04 is a tile carrier key, not a single observed lightning event.</small><a href={source.sourceUrl} target="_blank" rel="noreferrer">NASA GIBS collection metadata ↗</a></div> : source.id === "nifc-fire-reports" ? <>
                     <p>Interagency working incident reports discovered in Kansas during the last 30 days. A record confirms provider reporting; status, area, and cause can change. Satellite detections are compared only by proximity.</p>
                     <output>{!officialVisibility[source.id] ? "Report layer off." : heldAtFrame ? "Held by atlas year · Return to Present." : state === "loading" ? "Checking NIFC reports…" : state === "error" ? "NIFC reports unavailable · no substitute claims." : `${officialPayloads["nifc-fire-reports"]?.featureCount ?? 0} reports in the loaded response${state === "partial" ? " · partial" : ""}. No report is not an all-clear.`}</output>
@@ -8183,7 +8196,7 @@ export default function Home() {
             <label className="map-basemap-select"><span>Basemap</span><select value={basemap} onChange={(event) => setBasemap(event.target.value as BasemapKey)} aria-label="Choose basemap style">{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title}</option>)}</select></label>
             <button className="map-control-launch" type="button" onClick={() => openMapUtility("navigate")}><span aria-hidden="true">⌖</span><strong>Controls</strong></button>
             <button className="map-control-launch" type="button" onClick={() => { setSourceStatusOpen((open) => !open); setLeftOpen(false); }} aria-expanded={sourceStatusOpen} aria-controls="map-source-status"><strong>Source status</strong></button>
-            <button className="map-control-launch" type="button" onClick={() => setInstrumentOpen((open) => !open)} aria-pressed={instrumentOpen}><strong>Charts</strong></button>
+            <button className="map-control-launch" type="button" onClick={() => setInstrumentOpen((open) => !open)} aria-pressed={instrumentOpen} aria-label="Toggle observation controls"><strong>Live controls</strong></button>
             <button className="map-control-launch" type="button" onClick={() => window.location.assign("/")} title={`Open a fresh baseline for ${baselineDay} UTC`}><strong>Today’s baseline</strong></button>
             <Link className="map-control-launch" href="/data"><strong>Contribute data</strong></Link>
           </nav>
@@ -8236,10 +8249,6 @@ export default function Home() {
             <p className="map-legend-note">{basemap === "standard" ? "OpenFreeMap vector context · counties, places, roads, rail, water, and labels are display context; KFM overlays remain explicit." : basemap === "imagery" ? "Satellite imagery is display context only · overlays are synthetic or generalized." : basemap === "streets" ? "OpenStreetMap reference only · overlays are synthetic or generalized." : basemap === "topo" ? "USGS The National Map topographic tiles are display context only · KFM evidence remains separate." : "Site-local display style · overlays are synthetic or generalized."}</p>
           </aside>
           </aside>}
-          {instrumentOpen && streamflowSelectedAtPresent && noaaRadarSelectedAtPresent && <nav className="live-observation-switcher" aria-label="Live observation display">
-            <button type="button" aria-pressed={liveInstrument === "river"} onClick={() => { setLiveInstrument("river"); setNoaaRadarPlaying(false); }}>River Pulse</button>
-            <button type="button" aria-pressed={liveInstrument === "radar"} onClick={() => { setLiveInstrument("radar"); setStreamflowPlaying(false); }}>Radar Loop</button>
-          </nav>}
           {instrumentOpen && showStreamflowDock && <HydrologyObservatory
             bundle={streamflowBundle}
             state={streamflowDisplayState}
@@ -8252,6 +8261,7 @@ export default function Home() {
             selectedStationId={streamflowSelectedStationId}
             frameTimes={streamflowFrames}
             reducedMotion={reducedMotion}
+            sourceSwitcher={liveObservationSwitcher}
             onRefresh={() => { void refreshStreamflow(streamflowRange, streamflowSelectedStationId, false, streamflowArchiveDayRef.current); }}
             onTogglePlay={toggleStreamflowPlayback}
             onStep={stepStreamflow}
@@ -8274,6 +8284,7 @@ export default function Home() {
               if (event.key === "Home") { event.preventDefault(); jumpNoaaRadarToLatest(); }
             }}
           >
+            {liveObservationSwitcher}
             <header>
               <div><span>OBSERVED RADAR · EXTERNAL CONTEXT</span><strong>{NOAA_RADAR_PRODUCT_TITLE}</strong></div>
               <b>{noaaRadarDisplayState}</b>
@@ -8313,6 +8324,20 @@ export default function Home() {
             {noaaRadarFrameError && <div className="noaa-radar-error" role="alert"><strong>{noaaRadarRenderable ? "Frozen on the last confirmed observation" : "Radar withheld"}</strong><span>{noaaRadarFrameError} No untimed or synthetic fallback was used.</span></div>}
             {reducedMotion && <p className="noaa-radar-motion-note">Reduced motion is active. Automatic looping is off; exact-frame stepping remains available.</p>}
             <footer>Situational display only · not an emergency warning service · times remain separate from the atlas year</footer>
+          </aside>}
+          {instrumentOpen && showLightningDock && <aside className="lightning-observatory" data-signal={lightningPreview} aria-label="NOAA lightning density controls">
+            {liveObservationSwitcher}
+            <header>
+              <div><span>NOAA LIGHTNING · EXTERNAL CONTEXT</span><strong>15-minute strike density</strong></div>
+              <button type="button" onClick={() => setLightningReloadToken((value) => value + 1)} disabled={lightningManifestState === "loading"}>Refresh</button>
+            </header>
+            <div className="lightning-clock"><strong>{lightningFrame ? `${lightningFrame.slice(0, 16).replace("T", " ")} UTC` : "No frame loaded"}</strong><span>{lightningManifest ? `${Math.max(0, lightningFrameIndex + 1)} / ${lightningManifest.frames.length} frames` : lightningManifestState === "loading" ? "Checking NOAA times" : "NOAA times unavailable"}</span></div>
+            <output role="status" aria-live={lightningPlaying ? "off" : "polite"}>{!lightningSelected ? projection === "globe" ? "Lightning display is available on the flat map" : "Held by atlas time" : lightningPreview === "loading" ? "Loading and sampling the visible map area…" : lightningPreview === "signal" ? "NOAA density visible in the sampled map area for this frame" : lightningPreview === "none" ? "No NOAA density in the sampled map area for this frame · earlier frames may differ; not an all-clear" : lightningPreview === "error" || lightningManifestState === "error" ? "Visible-area signal unconfirmed or NOAA unavailable · no simulated flashes" : "Checking exact NOAA frames"}</output>
+            <input type="range" min="0" max={Math.max(0, (lightningManifest?.frames.length ?? 1) - 1)} value={Math.max(0, lightningFrameIndex)} disabled={!lightningManifest || !lightningSelected} onChange={(event) => { setLightningPlaying(false); setLightningFrame(lightningManifest?.frames[Number(event.target.value)] ?? null); }} aria-label="NOAA lightning 15-minute density frame" aria-valuetext={lightningFrame ?? "No frame"} />
+            <div className="lightning-transport" aria-label="Lightning playback"><button type="button" disabled={!lightningSelected || !lightningManifest || lightningFrameIndex <= 0} onClick={() => { setLightningPlaying(false); setLightningFrame(lightningManifest?.frames[lightningFrameIndex - 1] ?? null); }} aria-label="Previous lightning density frame">‹</button><button type="button" aria-pressed={lightningPlaying} disabled={!lightningPlaying && (reducedMotion || !lightningManifest || lightningManifest.frames.length < 2 || !lightningSelected || lightningManifestState !== "ready" || !lightningPlaybackReady)} onClick={() => { if (lightningPlaying) setLightningPlaying(false); else { setLightningFrame(lightningManifest?.frames[0] ?? null); setLightningPlaying(true); } }}>{lightningPlaying ? "Ⅱ Pause" : "▶ Replay frames"}</button><button type="button" disabled={!lightningSelected || !lightningManifest || lightningFrameIndex >= lightningManifest.frames.length - 1} onClick={() => { setLightningPlaying(false); setLightningFrame(lightningManifest?.frames[lightningFrameIndex + 1] ?? null); }} aria-label="Next lightning density frame">›</button><button type="button" disabled={!lightningManifest || !lightningSelected} onClick={() => { setLightningPlaying(false); setLightningFrame(lightningManifest?.latest ?? null); }}>Latest</button></div>
+            <details className="lightning-details"><summary>Density legend + source</summary><div className="lightning-density-key"><img src="/api/lightning/legend" width="292" height="46" alt="NOAA nowCOAST lightning density legend with the provider's numeric bins and units" loading="lazy" /><a href={NOAA_LIGHTNING_LEGEND_URL} target="_blank" rel="noreferrer">NOAA density legend ↗</a></div><p>Ground-network strike density in 8 × 8 km cells. The glow follows returned image cells only. This 15-minute product does not supply exact interval boundaries here. Frame list checked {lightningManifest ? `${lightningManifest.retrievedAt.slice(11, 16)} UTC` : "not yet"}. Empty pixels do not establish safety.</p><a href={OFFICIAL_CONTEXT_BY_ID["noaa-lightning-density"].sourceUrl} target="_blank" rel="noreferrer">NOAA layer and time metadata ↗</a></details>
+            {reducedMotion && <p className="lightning-motion-note">Reduced motion: autoplay and glow are off. Frame steps remain available.</p>}
+            <footer>Situational display only · not an emergency warning service · time remains separate from the atlas year</footer>
           </aside>}
           <button className="qwen-map-launch" type="button" onClick={qwenOpen ? closeQwenCompanion : openQwenCompanion} aria-expanded={qwenOpen} aria-controls="qwen-map-panel" data-open={qwenOpen}>
             <span className="qwen-launch-mark" aria-hidden="true">Q</span>
