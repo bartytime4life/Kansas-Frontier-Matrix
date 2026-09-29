@@ -383,7 +383,7 @@ Agriculture public-facing cases should default to synthetic aggregate metadata. 
 |---|---|---|
 | `python tools/validators/domains/agriculture/validate_catalog_matrix.py` | Raises `NotImplementedError`. | CatalogMatrix validity. |
 | `python -m pytest tests/domains/agriculture/test_catalog_closure.py -q` | The inspected module contains only a docstring placeholder. | Collected closure coverage. |
-| `make fixtures` | Prints `TODO: regenerate deterministic fixtures`. | Fixture generation or freshness. |
+| `make fixtures` | Runs the `fixtures` readiness lane, which reports HOLD and exits 3. | Fixture generation or freshness. |
 | Agriculture CI readiness job | Confirms known placeholder boundaries and records holds. | Validation, proof, release readiness, or publication safety. |
 
 Do not paste these commands into automation as gates until the underlying implementation is reviewed and the expected exit behavior is established.

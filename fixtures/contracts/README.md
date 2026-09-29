@@ -370,14 +370,15 @@ make test
 make validate
 ```
 
-The Makefile also exposes a `fixtures` target, but it is not an implemented generator:
+The Makefile also exposes a `fixtures` target, but it is not an implemented generator; it runs the `fixtures` readiness lane:
 
 ```bash
 make fixtures
-# Current result: prints "TODO: regenerate deterministic fixtures" and exits successfully.
+# Current result: prints a kfm.readiness-lane-result/v1 HOLD naming the missing
+# regeneration producer and digest manifest, then exits 3.
 ```
 
-That zero exit status is a readiness marker, not proof that fixtures were generated, refreshed, normalized, or validated.
+That HOLD is a readiness marker, not proof that fixtures were generated, refreshed, normalized, or validated.
 
 Interpret the commands narrowly:
 
