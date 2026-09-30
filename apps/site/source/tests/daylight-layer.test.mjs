@@ -7,12 +7,15 @@ import { getSunrise, getTwilight } from "sunrise-sunset-js";
 
 const modules = new Map();
 const spaUrl = new URL("../node_modules/sunrise-sunset-js/dist/index.js", import.meta.url).href;
+const clippingUrl = new URL("../node_modules/polygon-clipping/dist/polygon-clipping.esm.js", import.meta.url).href;
 async function moduleUrl(file) {
   file = path.resolve(file);
   if (modules.has(file)) return modules.get(file);
   let javascript = ts.transpileModule(await readFile(file, "utf8"), {
     compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
-  }).outputText.replaceAll('from "sunrise-sunset-js"', `from ${JSON.stringify(spaUrl)}`);
+  }).outputText
+    .replaceAll('from "sunrise-sunset-js"', `from ${JSON.stringify(spaUrl)}`)
+    .replaceAll('from "polygon-clipping"', `from ${JSON.stringify(clippingUrl)}`);
   for (const match of [...javascript.matchAll(/from ["'](\.[^"']+)["']/g)]) {
     javascript = javascript.replace(match[0], `from ${JSON.stringify(await moduleUrl(path.resolve(path.dirname(file), match[1]) + ".ts"))}`);
   }
@@ -23,6 +26,23 @@ async function moduleUrl(file) {
 
 const solar = await import(await moduleUrl("app/daylight-layer.ts"));
 const runtime = await import(await moduleUrl("app/map-runtime.ts"));
+
+const pointInRing = (point, ring) => {
+  let inside = false;
+  for (let index = 0, previous = ring.length - 1; index < ring.length; previous = index, index += 1) {
+    const [x, y] = ring[index];
+    const [previousX, previousY] = ring[previous];
+    const crosses = (y > point[1]) !== (previousY > point[1])
+      && point[0] < ((previousX - x) * (point[1] - y)) / (previousY - y) + x;
+    if (crosses) inside = !inside;
+  }
+  return inside;
+};
+
+const pointInFeature = (point, feature) => feature.geometry.coordinates.some((polygon) =>
+  pointInRing(point, polygon[0]) && !polygon.slice(1).some((hole) => pointInRing(point, hole)));
+
+const bandAt = (geometry, point) => geometry.features.find((feature) => pointInFeature(point, feature))?.properties.band ?? "day";
 
 test("SPA-backed solar position matches the published NREL Golden, Colorado example", () => {
   const result = solar.solarPositionAt(Date.parse("2003-10-17T19:30:30Z"), 39.742476, -105.1786, {
@@ -87,14 +107,46 @@ test("equinox, solstice, and polar day/night geometry remain bounded", () => {
   assert.ok(solar.solarPositionAt(Date.parse("2026-12-21T12:00:00Z"), 89, 0).elevationDegrees < 0);
 
   const geometry = solar.buildDaylightGeometry(Date.parse("2026-06-21T12:00:00Z"));
-  assert.equal(geometry.features.length, 36);
+  assert.equal(geometry.features.length, 4);
   assert.ok(geometry.features.some((feature) => feature.properties.band === "astronomical"));
   assert.ok(geometry.features.some((feature) => feature.properties.band === "nautical"));
   assert.ok(geometry.features.some((feature) => feature.properties.band === "civil"));
-  for (const feature of geometry.features) for (const ring of feature.geometry.coordinates) {
-    assert.deepEqual(ring[0], ring.at(-1));
-    assert.ok(ring.length >= 361);
-    assert.ok(ring.every(([longitude, latitude]) => longitude >= -180 && longitude <= 180 && latitude >= -90 && latitude <= 90));
+  for (const feature of geometry.features) {
+    assert.equal(feature.geometry.type, "MultiPolygon");
+    for (const polygon of feature.geometry.coordinates) for (const ring of polygon) {
+      assert.deepEqual(ring[0], ring.at(-1));
+      assert.ok(ring.length >= 4);
+      assert.ok(ring.every(([longitude, latitude]) => longitude >= -180 && longitude <= 180 && latitude >= -90 && latitude <= 90));
+      for (let index = 1; index < ring.length; index += 1) {
+        const longitudeSpan = Math.abs(ring[index][0] - ring[index - 1][0]);
+        assert.ok(longitudeSpan <= 180 || Math.abs(Math.abs(ring[index][1]) - 90) < 1e-8, "no polygon edge jumps across the antimeridian");
+      }
+    }
+  }
+});
+
+test("daylight polygons preserve the physical band on both sides of the antimeridian", () => {
+  const instants = [
+    Date.parse("2026-03-20T00:00:00Z"),
+    Date.parse("2026-05-01T00:00:00Z"),
+    Date.parse("2026-06-21T00:00:00Z"),
+    Date.parse("2026-09-22T00:00:00Z"),
+    Date.parse("2026-11-01T00:00:00Z"),
+    Date.parse("2026-12-21T00:00:00Z"),
+  ];
+  for (const instant of instants) {
+    const geometry = solar.buildDaylightGeometry(instant);
+    for (const latitude of [-80, -55, -25, 0, 25, 55, 80]) {
+      const east = [179.999, latitude];
+      const west = [-179.999, latitude];
+      const eastBand = bandAt(geometry, east);
+      const westBand = bandAt(geometry, west);
+      assert.equal(eastBand, westBand, `adjacent positions at ${latitude}° share a band at ${new Date(instant).toISOString()}`);
+      const expected = solar.solarPositionAt(instant, latitude, 179.999).elevationDegrees;
+      const expectedBand = expected <= -18 ? "night" : expected <= -12 ? "astronomical" : expected <= -6 ? "nautical" : expected <= -0.833 ? "civil" : "day";
+      const nearBoundary = [-18, -12, -6, -0.833].some((boundary) => Math.abs(expected - boundary) < 0.4);
+      if (!nearBoundary) assert.equal(eastBand, expectedBand, `band at ${latitude}° agrees with SPA at ${new Date(instant).toISOString()}`);
+    }
   }
 });
 
@@ -128,7 +180,8 @@ test("daylight tints basemap and imagery, then yields to observation overlays an
   assert.ok(ids.indexOf("external-goes-geocolor") < ids.indexOf(runtime.DAYLIGHT_FILL_LAYER_ID));
   assert.ok(ids.indexOf(runtime.DAYLIGHT_FILL_LAYER_ID) < ids.indexOf("external-hydrology"));
   assert.ok(ids.indexOf(runtime.DAYLIGHT_FILL_LAYER_ID) < ids.indexOf("external-streamflow-observations"));
-  assert.equal(sources.get(runtime.DAYLIGHT_GEOJSON_SOURCE_ID).data.features.length, 36);
+  assert.equal(sources.get(runtime.DAYLIGHT_GEOJSON_SOURCE_ID).data.features.length, 4);
+  assert.equal(sources.get(runtime.DAYLIGHT_GEOJSON_SOURCE_ID).data.features[0].geometry.type, "MultiPolygon");
   assert.equal(runtime.setDaylightMapLayer(map, false, 0), true);
   assert.equal(map.getLayer(runtime.DAYLIGHT_FILL_LAYER_ID).layout.visibility, "none");
 });

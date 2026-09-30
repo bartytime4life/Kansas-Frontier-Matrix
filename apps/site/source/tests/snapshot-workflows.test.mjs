@@ -5,12 +5,14 @@ import ts from "typescript";
 
 const urls = new Map();
 const spaUrl = import.meta.resolve("sunrise-sunset-js");
+const clippingUrl = new URL("../node_modules/polygon-clipping/dist/polygon-clipping.esm.js", import.meta.url).href;
 async function moduleUrl(name) {
   if (urls.has(name)) return urls.get(name);
   let js = ts.transpileModule(await readFile(new URL(`../app/${name}.ts`, import.meta.url), "utf8"), {
     compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
   }).outputText;
   js = js.replaceAll('from "sunrise-sunset-js"', `from ${JSON.stringify(spaUrl)}`);
+  js = js.replaceAll('from "polygon-clipping"', `from ${JSON.stringify(clippingUrl)}`);
   for (const [, dependency] of [...js.matchAll(/from "\.\/([a-z-]+)"/g)]) js = js.replaceAll(`from "./${dependency}"`, `from "${await moduleUrl(dependency)}"`);
   const url = `data:text/javascript;base64,${Buffer.from(js).toString("base64")}`;
   urls.set(name, url);

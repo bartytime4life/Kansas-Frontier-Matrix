@@ -1,4 +1,5 @@
-import type { Feature, FeatureCollection, Polygon, Position } from "geojson";
+import type { Feature, FeatureCollection, MultiPolygon, Polygon, Position } from "geojson";
+import polygonClipping, { type MultiPolygon as ClippingMultiPolygon, type Polygon as ClippingPolygon, type Ring as ClippingRing } from "polygon-clipping";
 import { getSolarPosition } from "sunrise-sunset-js";
 import type { SpaOptions } from "sunrise-sunset-js";
 
@@ -17,6 +18,8 @@ export type SolarPosition = Readonly<{
 }>;
 export type DaylightBand = "night" | "astronomical" | "nautical" | "civil";
 type DaylightProperties = Readonly<{ band: DaylightBand; shade: number }>;
+type DaylightGeometry = Polygon | MultiPolygon;
+const { difference, intersection } = polygonClipping;
 
 const mod = (value: number, divisor: number): number => ((value % divisor) + divisor) % divisor;
 const signedDegrees = (value: number): number => mod(value + 180, 360) - 180;
@@ -206,45 +209,138 @@ const destination = (centerLongitude: number, centerLatitude: number, angularRad
   return [signedDegrees(lambda2 * DEG), phi2 * DEG];
 };
 
-const circle = (longitude: number, latitude: number, radius: number, samples = 360): Position[] => {
-  const points = Array.from({ length: samples }, (_, index) => destination(longitude, latitude, radius, index * 360 / samples));
-  // RFC 7946 asks for counter-clockwise exterior and clockwise interior rings.
-  points.reverse();
-  return [...points, points[0]];
+const unwrapLongitude = (longitude: number, reference: number): number =>
+  longitude + 360 * Math.round((reference - longitude) / 360);
+
+/** Keep each circular boundary continuous in longitude before clipping it to
+ * RFC 7946 world strips. A radius that encloses a pole winds by one world. */
+const unwrappedCircle = (longitude: number, latitude: number, radius: number, samples: number): Position[] => {
+  const startBearing = latitude < 0 ? 0 : 180; // begin away from the nearer pole
+  const points: Position[] = [];
+  let previousLongitude = longitude;
+  for (let index = 0; index < samples; index += 1) {
+    const [normalizedLongitude, pointLatitude] = destination(longitude, latitude, radius, startBearing + index * 360 / samples);
+    const pointLongitude = unwrapLongitude(normalizedLongitude, previousLongitude);
+    points.push([pointLongitude, pointLatitude]);
+    previousLongitude = pointLongitude;
+  }
+  const [firstLongitude, firstLatitude] = points[0];
+  return [...points, [unwrapLongitude(firstLongitude, previousLongitude), firstLatitude]];
 };
 
-const clockwiseRing = (ring: Position[]): Position[] => {
-  const reversedVertices = ring.slice(0, -1).reverse();
-  return [...reversedVertices, reversedVertices[0]];
+const ringArea = (ring: readonly Position[]): number => {
+  let sum = 0;
+  for (let index = 0; index < ring.length - 1; index += 1) {
+    const [x1, y1] = ring[index];
+    const [x2, y2] = ring[index + 1];
+    sum += x1 * y2 - x2 * y1;
+  }
+  return sum / 2;
 };
 
-const annulus = (longitude: number, latitude: number, inner: number, outer: number): Polygon => ({
-  type: "Polygon",
-  coordinates: [circle(longitude, latitude, outer), clockwiseRing(circle(longitude, latitude, inner))],
-});
+const counterClockwise = (ring: Position[]): Position[] => ringArea(ring) >= 0 ? ring : [...ring].reverse();
 
-/** Build native map polygons for the night cap and twilight bands. Each band
- * uses sub-degree rings so the color transition reads smoothly at world scale. */
-export const buildDaylightGeometry = (instant: Date | number): FeatureCollection<Polygon, DaylightProperties> => {
+/** Convert a spherical circle to a simple longitude/latitude disk. When the
+ * boundary surrounds a pole, close it along that pole before clipping. */
+const circleDisk = (longitude: number, latitude: number, radius: number, samples: number): ClippingPolygon => {
+  const boundary = unwrappedCircle(longitude, latitude, radius, samples);
+  const start = boundary[0];
+  const end = boundary.at(-1)!;
+  const winding = Math.round((end[0] - start[0]) / 360);
+  let ring = boundary;
+  if (winding !== 0) {
+    const northDistance = 90 - latitude;
+    const southDistance = 90 + latitude;
+    const poleLatitude = northDistance <= radius + 1e-8 ? 90 : southDistance <= radius + 1e-8 ? -90 : null;
+    if (poleLatitude === null) throw new RangeError("A winding solar circle must enclose a geographic pole.");
+    ring = [...boundary, [end[0], poleLatitude], [start[0], poleLatitude], start];
+  }
+  return [counterClockwise(ring)];
+};
+
+const geometryBounds = (geometry: ClippingPolygon | ClippingMultiPolygon): [number, number] => {
+  let minLongitude = Number.POSITIVE_INFINITY;
+  let maxLongitude = Number.NEGATIVE_INFINITY;
+  const polygons = geometry.length > 0 && Array.isArray(geometry[0]?.[0]?.[0])
+    ? geometry as ClippingMultiPolygon
+    : [geometry as ClippingPolygon];
+  for (const polygon of polygons) for (const ring of polygon) for (const [longitude] of ring) {
+    minLongitude = Math.min(minLongitude, longitude);
+    maxLongitude = Math.max(maxLongitude, longitude);
+  }
+  return [minLongitude, maxLongitude];
+};
+
+const canonicalRing = (ring: ClippingRing, world: number, exterior: boolean): Position[] => {
+  const shifted = ring.map(([longitude, latitude]) => [longitude - 360 * world, latitude] as Position);
+  if (shifted.length && (shifted[0][0] !== shifted.at(-1)![0] || shifted[0][1] !== shifted.at(-1)![1])) shifted.push(shifted[0]);
+  const densified: Position[] = [];
+  for (let index = 0; index < shifted.length - 1; index += 1) {
+    const point = shifted[index];
+    const next = shifted[index + 1];
+    densified.push(point);
+    const longitudeSpan = next[0] - point[0];
+    if (Math.abs(longitudeSpan) > 180 && Math.abs(Math.abs(point[1]) - 90) < 1e-8 && Math.abs(Math.abs(next[1]) - 90) < 1e-8) {
+      densified.push([(point[0] + next[0]) / 2, point[1]]);
+    }
+  }
+  if (densified.length) densified.push(densified[0]);
+  const isCounterClockwise = ringArea(densified) >= 0;
+  return isCounterClockwise === exterior ? densified : [...densified].reverse();
+};
+
+/** Clip polygons to each 360-degree world strip, then shift the pieces into
+ * canonical longitudes so neither flat nor globe rendering sees a dateline
+ * edge that spans the map. Polygon clipping also preserves annulus holes. */
+const clipToWorldStrips = (geometry: ClippingPolygon | ClippingMultiPolygon): MultiPolygon => {
+  const [minLongitude, maxLongitude] = geometryBounds(geometry);
+  if (!Number.isFinite(minLongitude) || !Number.isFinite(maxLongitude)) return { type: "MultiPolygon", coordinates: [] };
+  const firstWorld = Math.floor((minLongitude + 180) / 360);
+  const lastWorld = Math.floor((maxLongitude + 180) / 360);
+  const coordinates: MultiPolygon["coordinates"] = [];
+  for (let world = firstWorld; world <= lastWorld; world += 1) {
+    const left = -180 + world * 360;
+    const right = 180 + world * 360;
+    const strip: ClippingPolygon = [[[left, -90], [right, -90], [right, 90], [left, 90], [left, -90]]];
+    const clipped = intersection(geometry, strip);
+    for (const polygon of clipped) {
+      const rings = polygon.map((ring, index) => canonicalRing(ring, world, index === 0));
+      if (rings.length && rings[0].length >= 4 && Math.abs(ringArea(rings[0])) > 1e-10) coordinates.push(rings);
+    }
+  }
+  return { type: "MultiPolygon", coordinates };
+};
+
+/** Build projection-aware native map polygons for the night cap and twilight
+ * bands. Every shape is clipped at the antimeridian before it reaches MapLibre. */
+export const buildDaylightGeometry = (instant: Date | number, samples = 360): FeatureCollection<DaylightGeometry, DaylightProperties> => {
   const sun = solarPositionAt(instant);
   const antiLongitude = signedDegrees(sun.subsolarLongitudeDegrees + 180);
   const antiLatitude = -sun.declinationDegrees;
-  const features: Array<Feature<Polygon, DaylightProperties>> = [];
+  const disks = new Map<number, ClippingPolygon>();
+  const diskAt = (radius: number): ClippingPolygon => {
+    const existing = disks.get(radius);
+    if (existing) return existing;
+    const created = circleDisk(antiLongitude, antiLatitude, radius, samples);
+    disks.set(radius, created);
+    return created;
+  };
+  const features: Array<Feature<DaylightGeometry, DaylightProperties>> = [];
   features.push({
     type: "Feature",
     properties: { band: "night", shade: -18 },
-    geometry: { type: "Polygon", coordinates: [circle(antiLongitude, antiLatitude, 72)] },
+    geometry: clipToWorldStrips(diskAt(72)),
   });
-  const startRadius = 72;
-  const endRadius = 89.167; // center-of-Sun altitude -0.833° (conventional apparent sunrise)
-  for (let inner = startRadius; inner < endRadius; inner += 0.5) {
-    const outer = Math.min(endRadius, inner + 0.5);
-    const centerAltitude = -18 + ((inner + outer) / 2 - startRadius) / (endRadius - startRadius) * 17.167;
-    const band: DaylightBand = centerAltitude >= -6 ? "civil" : centerAltitude >= -12 ? "nautical" : "astronomical";
+  const twilightBands: ReadonlyArray<{ inner: number; outer: number; band: Exclude<DaylightBand, "night">; shade: number }> = [
+    { inner: 72, outer: 78, band: "astronomical", shade: -15 },
+    { inner: 78, outer: 84, band: "nautical", shade: -9 },
+    { inner: 84, outer: 89.167, band: "civil", shade: -3.4165 }, // outer edge is the conventional -0.833° sunrise boundary
+  ];
+  for (const { inner, outer, band, shade } of twilightBands) {
     features.push({
       type: "Feature",
-      properties: { band, shade: centerAltitude },
-      geometry: annulus(antiLongitude, antiLatitude, inner, outer),
+      properties: { band, shade },
+      geometry: clipToWorldStrips(difference(diskAt(outer), diskAt(inner))),
     });
   }
   return { type: "FeatureCollection", features };
