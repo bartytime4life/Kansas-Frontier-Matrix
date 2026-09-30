@@ -9,8 +9,8 @@ local browser journey and private Site acceptance/rollback gates.
 
 Implementation starts at monorepo `6994a65843c4999313fda01183b63333213134f3`.
 The standalone Site is authoritative for application source. This candidate
-rebases on owner-private Site v129, source
-`625749841d4bd9c42a55a917f46b72eb1fba5e62`; the earlier security scan pins v126.
+rebases on owner-private Site v130, source
+`8d82d9af72930e2df9e3b14e15b0a5bf6463799c`; the earlier security scan pins v126.
 Site version, deployed version, source commit, local build and package identity
 are independent. The mirror receipt names the unpublished candidate commit;
 it does not attest to hosted equivalence.
@@ -43,7 +43,7 @@ services or fetch source data.
 ## Bounded acquisition and replay
 
 The source profile is `configs/domains/hydrology/usgs-water-pilot.json`.
-It fixes USGS OGC v1, discharge 00060, stations USGS-06892518 and USGS-07156900,
+It fixes USGS OGC v1, discharge 00060, stations USGS-06892558 and USGS-07156900,
 a maximum 24-hour interval and a two-hour freshness threshold. Transport limits:
 25-second requests, five-second connection setup, 180-second total budget,
 2 MiB/page, 8 MiB total, twelve pages and bounded retries. Redirects and changed
@@ -70,7 +70,7 @@ Revision conflicts and malformed completeness claims fail validation.
 The dated acceptance capture returned four HTTP 200 responses and 193 discharge
 observations across two stations (96 and 97), for the interval above.
 Capture `sha256:c20610cad951f2c830647f6f967572a38c356c353409415baf25640b7f67ec52`;
-candidate `sha256:5718217864b88c2511effd7c4653a376a08e93ae952532fb1632d8ed0c8850bc`;
+candidate `sha256:5718217864b88c2551effd7c4653a376a08e93ae952532fb1632d8ed0c8850bc`;
 review package `sha256:5dde4c0463677549a5a27f437812e389ca78c2c66dc6d610f59d7d403e710ec5`.
 Repeated replay reproduced the candidate. This is a dated capture, not a
 continuously current observation claim. Private raw bytes are not committed.

@@ -527,6 +527,8 @@ this does not infer strikes or densities between observations.
 
 ## External network disclosure
 
+The **Historic maps** map control queries the official [USGS topoView catalog](https://ngmdb.usgs.gov/topoview/help/) for up to 24 real sheet editions per page near the current map center. Name, printed year, scale, datum, scan ID, and the selected sheet’s catalog footprint remain separate from the Site’s active time and KFM evidence. Only an explicitly selected footprint appears on the map at its source geometry; the original scanned sheet opens in USGS TopoView. The Site does not rehost or render historical scan pixels. Searches from a browser-location-derived camera are held until the user returns to a shareable map location. Provider failure leaves other map layers available. The [USGS catalog service](https://ngmdb.usgs.gov/arcgis/rest/services/topoview/ustOverlay/MapServer/0) was queried for Kansas editions on September 30, 2026; future availability remains provider-dependent.
+
 The map can request five external display carriers. Their endpoints,
 activation rules, attribution, fallbacks, and evidence exclusions live in one
 typed registry: `app/external-context-sources.ts`. The Sources workbench shows

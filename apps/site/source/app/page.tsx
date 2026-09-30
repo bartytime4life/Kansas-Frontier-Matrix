@@ -16,6 +16,7 @@ import { sourceDownloadHref } from "./source-downloads";
 import { planOfficialRefresh } from "./official-refresh-plan";
 import { ArchiveDaySlider } from "./archive-day-slider";
 import { SoilMoistureControl, type SoilMoistureEngineContext } from "./soil-moisture-control";
+import { HistoricalTopoControl } from "./historical-topo-control";
 import { DataNotices, LayerSceneControls, RenderQualityControl } from "./map-toolbar";
 import { drawWindFlowCanvas, nearestWindFlowSample, windToCompass } from "./wind-arrow-canvas";
 import { drawWaterMotionCanvas } from "./water-motion-canvas";
@@ -543,6 +544,7 @@ const mapUtilityLabels: Record<MapUtilityView, string> = {
   navigate: "Navigate",
   inspect: "Inspect",
   scene: "Scene",
+  history: "Historic maps",
   connections: "Sources",
   import: "Import",
   compare: "Compare",
@@ -555,6 +557,7 @@ const mapUtilityDescriptions: Record<MapUtilityView, string> = {
   inspect: "Find a feature and inspect its evidence context.",
   navigate: "Move the map by camera, coordinates, or location.",
   scene: "Adjust the current terrain and 3D view.",
+  history: "Find dated USGS sheet editions near this map view.",
   connections: "Check the sources behind the current map.",
   import: "Preview a local KML or GeoJSON file in this browser.",
   compare: "Compare selected layers and times.",
@@ -4165,7 +4168,7 @@ export default function Home() {
       const restoredMapUtilityView = params.get("maptab");
       const nextMapUtilityView: MapUtilityView = nextTemporalMode === "comparison"
         ? "compare"
-        : restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "scene" || restoredMapUtilityView === "connections" || restoredMapUtilityView === "import" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "navigate";
+        : restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "scene" || restoredMapUtilityView === "history" || restoredMapUtilityView === "connections" || restoredMapUtilityView === "import" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "navigate";
       setMapUtilityView(nextMapUtilityView);
       const restoredComparisonTimes = params.get("times")?.split(",").map(Number) ?? [];
       if (restoredComparisonTimes.length === 2 && restoredComparisonTimes.every((value) => TIME_STEPS.includes(value as (typeof TIME_STEPS)[number]))) {
@@ -8140,6 +8143,7 @@ export default function Home() {
               <span aria-hidden="true">≡</span><strong>Map layers</strong><b>{selectedMapLayerCount}</b>
             </button>
             <button className="map-control-launch" type="button" onClick={() => openAtlasPanel("places")} aria-pressed={leftOpen && leftPanelMode === "places"}><strong>Places</strong><b>{savedWorkspaces.length}</b></button>
+            <button className="map-control-launch" type="button" onClick={(event) => openMapUtility("history", event.currentTarget)} aria-pressed={mapUtilityOpen && mapUtilityView === "history"}><strong>Historic maps</strong></button>
             <div className="quick-live-toggle-list" aria-label="Quick live data layer toggles">
               {QUICK_LIVE_CONTEXT_IDS.map((sourceId) => {
                 const source = OFFICIAL_CONTEXT_BY_ID[sourceId];
@@ -8503,6 +8507,8 @@ export default function Home() {
                 <aside className="map-utility-boundary" data-tone="privacy"><strong>Location privacy</strong><p>Browser location is used only to move the local camera. While that camera remains location-derived, shared URLs use generalized Kansas defaults plus a redaction marker, receipts and exports use withheld markers, and diagnostics omit coordinates. Fit Kansas clears the private camera.</p></aside>
                 <aside className="map-utility-boundary"><strong>Keyboard alternative</strong><p>Use Inspect for a searchable feature list, Layer Catalog for visibility and opacity, and these controls for camera actions without relying on pointer gestures.</p></aside>
               </section>}
+
+              {mapUtilityView === "history" && <HistoricalTopoControl map={mapRef.current} styleReady={styleReady} locationPrivate={locationCameraRedacted} />}
 
               {mapUtilityView === "inspect" && <section id="map-utility-view-inspect" role="region" aria-labelledby="map-utility-title" className="map-utility-section">
                 <div className="map-utility-section-heading"><span>INSPECT</span><h3>Feature index + context receipt</h3><p>Map hover appears as a preview in the Evidence Drawer. A click or explicit Inspect action selects one feature for full details.</p></div>
