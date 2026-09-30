@@ -6,6 +6,9 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 import unittest
 
+if any(importlib.util.find_spec(package) is None for package in ("numpy", "PIL", "rasterio")):
+    raise unittest.SkipTest("historical topo tile tests require the hash-locked geospatial preparation extra")
+
 import numpy as np
 from PIL import Image
 import rasterio
