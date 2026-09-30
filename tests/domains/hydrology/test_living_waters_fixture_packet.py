@@ -167,7 +167,7 @@ def test_workflow_runs_living_waters_with_pytest_and_reaches_later_checks(tmp_pa
         "test_aquifer_observation.py", "test_aquifer_context_link.py",
         "test_nhdplus_hr_ambiguity.py", "test_adaptive_threshold_proposal.py",
         "test_hydro_identity_bridge.py", "test_streamflow_qc_context_assessment.py",
-        "test_living_waters_fixture_packet.py",
+        "test_living_waters_fixture_packet.py", "test_usgs_water_normalizer.py",
     ]
     expected_exact_option_adapter_modules = [
         "test_hydrology_catalog_matrix_validator_entrypoint.py",

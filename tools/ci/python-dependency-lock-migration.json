@@ -888,13 +888,14 @@
     {
       "path": ".github/workflows/domain-hydrology.yml",
       "base_sha256": "sha256:603af477fd9f9a76da6734318d845b8f95aeed0ad167328497f15266368c2ada",
-      "current_sha256": "sha256:e5853220445d547f6911948bb299a0cadf0d0c0c1d642527b84fe55fc5c0213f",
+      "current_sha256": "sha256:717653ef42aa8e4303c02c6251853d5e4af5154ebfae05606413e493830dcce6",
       "profiles": [
         "water-pilot"
       ],
       "superseded_receipt_sha256s": [
         "sha256:0ef0bb564f914acc25a35c21ceced6059bf254f25a80c5e86535c2d99c740d2f",
-        "sha256:6abacc80fb4e65971cc4cca4e7bf4a9e7c2a49ecdab942a4748a0bee4c8b7e86"
+        "sha256:6abacc80fb4e65971cc4cca4e7bf4a9e7c2a49ecdab942a4748a0bee4c8b7e86",
+        "sha256:e5853220445d547f6911948bb299a0cadf0d0c0c1d642527b84fe55fc5c0213f"
       ]
     },
     {
