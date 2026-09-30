@@ -43,6 +43,43 @@ const pointInFeature = (point, feature) => feature.geometry.coordinates.some((po
   pointInRing(point, polygon[0]) && !polygon.slice(1).some((hole) => pointInRing(point, hole)));
 
 const bandAt = (geometry, point) => geometry.features.find((feature) => pointInFeature(point, feature))?.properties.band ?? "day";
+const bandsAt = (geometry, point) => geometry.features.filter((feature) => pointInFeature(point, feature)).map((feature) => feature.properties.band);
+const bandForElevation = (elevation) => elevation <= -18 ? "night"
+  : elevation <= -12 ? "astronomical"
+    : elevation <= -6 ? "nautical"
+      : elevation <= -0.833 ? "civil" : "day";
+
+const signedDegrees = (degrees) => ((degrees + 180) % 360 + 360) % 360 - 180;
+
+const destinationPoint = (longitude, latitude, angularRadius, bearingDegrees) => {
+  const radians = Math.PI / 180;
+  const phi1 = latitude * radians;
+  const lambda1 = longitude * radians;
+  const delta = angularRadius * radians;
+  const bearing = bearingDegrees * radians;
+  const phi2 = Math.asin(Math.sin(phi1) * Math.cos(delta) + Math.cos(phi1) * Math.sin(delta) * Math.cos(bearing));
+  const lambda2 = lambda1 + Math.atan2(
+    Math.sin(bearing) * Math.sin(delta) * Math.cos(phi1),
+    Math.cos(delta) - Math.sin(phi1) * Math.sin(phi2),
+  );
+  return [signedDegrees(lambda2 / radians), phi2 / radians];
+};
+
+const crossingForDeclination = (samples, target) => {
+  for (let index = 1; index < samples.length; index += 1) {
+    let left = samples[index - 1];
+    let right = samples[index];
+    if ((left.declination - target) * (right.declination - target) > 0) continue;
+    for (let step = 0; step < 32; step += 1) {
+      const middleMs = Math.floor((left.instant + right.instant) / 2);
+      const middle = { instant: middleMs, declination: solar.solarPositionAt(middleMs).declinationDegrees };
+      if ((left.declination - target) * (middle.declination - target) <= 0) right = middle;
+      else left = middle;
+    }
+    return Math.floor((left.instant + right.instant) / 2);
+  }
+  assert.fail(`No 2026 solar-declination crossing found for ${target}°`);
+};
 
 test("SPA-backed solar position matches the published NREL Golden, Colorado example", () => {
   const result = solar.solarPositionAt(Date.parse("2003-10-17T19:30:30Z"), 39.742476, -105.1786, {
@@ -146,6 +183,49 @@ test("daylight polygons preserve the physical band on both sides of the antimeri
       const expectedBand = expected <= -18 ? "night" : expected <= -12 ? "astronomical" : expected <= -6 ? "nautical" : expected <= -0.833 ? "civil" : "day";
       const nearBoundary = [-18, -12, -6, -0.833].some((boundary) => Math.abs(expected - boundary) < 0.4);
       if (!nearBoundary) assert.equal(eastBand, expectedBand, `band at ${latitude}° agrees with SPA at ${new Date(instant).toISOString()}`);
+    }
+  }
+});
+
+test("polar twilight subtraction stays correct across every pole-enclosure threshold and the seam", () => {
+  const samples = [];
+  const yearStart = Date.parse("2026-01-01T00:00:00Z");
+  for (let instant = yearStart; instant <= Date.parse("2027-01-01T00:00:00Z"); instant += 12 * 60 * 60 * 1000) {
+    samples.push({ instant, declination: solar.solarPositionAt(instant).declinationDegrees });
+  }
+  const thresholds = [0.833, 6, 12, 18];
+  for (const threshold of thresholds) for (const declinationThreshold of [-threshold, threshold]) {
+    const crossing = crossingForDeclination(samples, declinationThreshold);
+    for (const instant of [crossing - 15 * 60_000, crossing + 15 * 60_000]) {
+      const sun = solar.solarPositionAt(instant);
+      const antiLongitude = signedDegrees(sun.subsolarLongitudeDegrees + 180);
+      const geometry = solar.buildDaylightGeometry(instant);
+      const innerRadii = { astronomical: 72, nautical: 78, civil: 84 };
+      for (const feature of geometry.features.filter(({ properties }) => properties.band !== "night")) {
+        const innerRadius = innerRadii[feature.properties.band];
+        for (const radius of [30, 60, innerRadius - 1]) for (let bearing = 0; bearing < 360; bearing += 30) {
+          const point = destinationPoint(antiLongitude, -sun.declinationDegrees, radius, bearing);
+          if (Math.abs(signedDegrees(point[0] - antiLongitude)) < 0.01) continue; // avoid the artificial branch-cut edge itself
+          assert.equal(
+            bandsAt(geometry, point).includes(feature.properties.band),
+            false,
+            `${feature.properties.band} does not overlap its inner disk at declination ${sun.declinationDegrees.toFixed(3)}°, radius ${radius}°, bearing ${bearing}°`,
+          );
+        }
+      }
+      const polewardSign = -Math.sign(sun.declinationDegrees);
+      const latitudes = [70, 80, 85, 88, 89.5, 89.9].map((latitude) => polewardSign * latitude);
+      const longitudes = [antiLongitude, 179.999, -179.999, signedDegrees(antiLongitude + 90), signedDegrees(antiLongitude - 90)];
+      for (const latitude of latitudes) for (const longitude of longitudes) {
+        const point = [longitude, latitude];
+        const actual = solar.solarPositionAt(instant, latitude, longitude).elevationDegrees;
+        if ([-18, -12, -6, -0.833].some((boundary) => Math.abs(actual - boundary) < 0.6)) continue;
+        assert.equal(
+          bandAt(geometry, point),
+          bandForElevation(actual),
+          `twilight band matches SPA at declination ${sun.declinationDegrees.toFixed(3)}°, point ${longitude.toFixed(3)}°, ${latitude.toFixed(3)}°`,
+        );
+      }
     }
   }
 });
