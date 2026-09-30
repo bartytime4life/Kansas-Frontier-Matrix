@@ -193,9 +193,12 @@ import {
   OFFICIAL_CONTEXT_SOURCES,
   OFFICIAL_CONTEXT_TEMPORAL_SUPPORT,
   TERRAIN_DISPLAY_MIN_ZOOM,
+  commitNoaaRadarObservationTime,
+  discardNoaaRadarStagedFrame,
   noaaRadarObservationTimeIsApplied,
   officialContextVisibilityForFrame,
   setNoaaRadarObservationTime,
+  stageNoaaRadarObservationTime,
   setNoaaLightningObservationTime,
   setNoaaLightningGlow,
   setNoaaSatelliteFrame,
@@ -2506,8 +2509,9 @@ export default function Home() {
       setOfficialStates((current) => ({ ...current, "nws-radar": "loading" }));
       let settled = false;
       let timeout = 0;
+      let stagedSourceId = "";
       const onSourceData = (event: MapSourceDataEvent) => {
-        if (event.sourceId !== OFFICIAL_CONTEXT_BY_ID["nws-radar"].sourceId || !event.tile || !event.isSourceLoaded) return;
+        if (event.sourceId !== stagedSourceId || !event.isSourceLoaded || !map.isSourceLoaded(stagedSourceId)) return;
         if (!noaaRadarObservationTimeIsApplied(map, observedAt)) return;
         if (!noaaRadarManifestRef.current?.frames.includes(observedAt) || !noaaRadarManifestIsFresh(noaaRadarManifestRef.current, Date.now())) {
           finish("error", "The NOAA frame manifest became stale before the requested image settled.");
@@ -2528,6 +2532,7 @@ export default function Home() {
         }
         setNoaaRadarFrameLoadState(state);
         if (state === "ready") {
+          commitNoaaRadarObservationTime(map, stagedSourceId, officialVisibilityRef.current["nws-radar"], officialOpacityRef.current["nws-radar"]);
           noaaRadarFrameTimeRef.current = observedAt;
           noaaRadarReadyRef.current = true;
           setNoaaRadarFrameTime(observedAt);
@@ -2543,9 +2548,7 @@ export default function Home() {
         } else {
           setNoaaRadarPlaying(false);
           noaaRadarReadyRef.current = Boolean(previousConfirmedFrame);
-          if (previousConfirmedFrame) {
-            try { setNoaaRadarObservationTime(map, previousConfirmedFrame); } catch { noaaRadarReadyRef.current = false; }
-          }
+          discardNoaaRadarStagedFrame(map, stagedSourceId);
           applyOfficialContextState(
             map,
             runtimeOfficialVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, previousConfirmedFrame),
@@ -2566,7 +2569,8 @@ export default function Home() {
         window.clearTimeout(timeout);
         noaaRadarFrameFailureRef.current = null;
       };
-      const sourceUpdate = setNoaaRadarObservationTime(map, observedAt);
+      const sourceUpdate = previousConfirmedFrame ? "changed" : setNoaaRadarObservationTime(map, observedAt);
+      stagedSourceId = previousConfirmedFrame ? stageNoaaRadarObservationTime(map, observedAt) : OFFICIAL_CONTEXT_BY_ID["nws-radar"].sourceId;
       if (sourceUpdate === null) throw new Error("The fixed NOAA raster source could not be initialized.");
       if (previousConfirmedFrame || !officialVisibilityRef.current["nws-radar"] || temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) {
         applyOfficialContextState(
@@ -2576,7 +2580,7 @@ export default function Home() {
           officialPayloadsRef.current,
         );
       }
-      if (sourceUpdate === "unchanged" && previousConfirmedFrame === observedAt) window.requestAnimationFrame(() => finish("ready"));
+      if ((sourceUpdate === "unchanged" && previousConfirmedFrame === observedAt) || map.isSourceLoaded(stagedSourceId)) window.requestAnimationFrame(() => finish("ready"));
     } catch (error) {
       noaaRadarFrameFailureRef.current?.(error instanceof Error ? error.message : "The NOAA radar frame could not be applied.");
     }
@@ -4068,8 +4072,8 @@ export default function Home() {
       const nextOfficialOpacity = { ...defaultOfficialOpacity, ...restoredOfficialOpacity };
       officialOpacityRef.current = nextOfficialOpacity;
       setOfficialOpacity(nextOfficialOpacity);
-      const restoredRadarSpan = Number(params.get("radarSpan"));
-      setNoaaRadarLoopSpan(restoredRadarSpan === 30 || restoredRadarSpan === 120 ? restoredRadarSpan : 60);
+      const restoredRadarSpan = params.get("radarSpan");
+      setNoaaRadarLoopSpan(restoredRadarSpan === "all" ? "all" : restoredRadarSpan === "30" || restoredRadarSpan === "120" ? Number(restoredRadarSpan) as NoaaRadarLoopSpanMinutes : 60);
       const restoredRadarSpeed = Number(params.get("radarSpeed"));
       setNoaaRadarPlaybackSpeed(restoredRadarSpeed === 0.5 || restoredRadarSpeed === 2 ? restoredRadarSpeed : 1);
       const restoredRadarTime = params.get("radarTime");
@@ -8026,7 +8030,7 @@ export default function Home() {
                     <small>{noaaSatelliteManifest ? `Catalog checked ${drawerTimestamp(noaaSatelliteManifest.retrievedAt)}. ${noaaSatelliteManifest.product === "visible" ? "GeoColor is unavailable; this is daylight-dependent GOES visible imagery from NOAA nowCOAST." : "GeoColor imagery is locked to the selected NOAA raster ID."} Older selected frames are not live. This is visual cloud context, not a fire or smoke finding.` : "A dated source image is required before any tile is shown. NOAA imagery is informational."}</small>
                     <div className="source-time-actions"><button type="button" disabled={!noaaSatelliteManifest || state === "loading"} onClick={() => { const latest = noaaSatelliteManifest?.frames.at(-1); if (latest) selectNoaaSatelliteFrame(latest); }}>Newest image</button><button type="button" disabled={state === "loading" || heldAtFrame} onClick={() => void refreshNoaaSatelliteFrames()}>Refresh frames</button><a href="https://www.nesdis.noaa.gov/imagery/satellite-maps/earth-real-time" target="_blank" rel="noreferrer">NOAA Earth in Real-Time ↗</a><a href="https://satellitemaps.nesdis.noaa.gov/arcgis/rest/services/MERGEDGC_Last_24hr/ImageServer" target="_blank" rel="noreferrer">GeoColor catalog ↗</a>{noaaSatelliteManifest?.product === "visible" && <a href="https://nowcoast.noaa.gov/" target="_blank" rel="noreferrer">NOAA nowCOAST ↗</a>}</div>
                   </> : source.id === "nws-radar" ? <>
-                    <p>{noaaRadarManifest ? `${noaaRadarLoopFrames.length} exact scans in the selected ${noaaRadarLoopSpan}-minute loop · ${noaaRadarManifest.gapCount} detected gaps` : noaaRadarManifestState === "loading" ? "Checking NOAA frames" : "No verified radar manifest loaded"}</p>
+                    <p>{noaaRadarManifest ? `${noaaRadarLoopFrames.length} exact scans in ${noaaRadarLoopSpan === "all" ? "the full NOAA live window" : `the selected ${noaaRadarLoopSpan}-minute loop`} · ${noaaRadarManifest.gapCount} detected gaps` : noaaRadarManifestState === "loading" ? "Checking NOAA frames" : "No verified radar manifest loaded"}</p>
                     <input type="range" min="0" max={Math.max(0, noaaRadarLoopFrames.length - 1)} value={Math.max(0, noaaRadarFrameIndex)} disabled={!noaaRadarRenderable || noaaRadarLoopFrames.length < 2 || noaaRadarFrameLoadState === "loading" || !officialVisibility[source.id] || heldAtFrame} onChange={(event) => { const index = Number(event.target.value); const frame = noaaRadarLoopFrames[index]; if (!frame) return; setNoaaRadarPlaying(false); setNoaaRadarFollowLatest(index === noaaRadarLoopFrames.length - 1); applyNoaaRadarFrame(frame); }} aria-label="NOAA radar exact scan time" aria-valuetext={noaaRadarActiveFrame ?? "No confirmed radar scan"} />
                     <output>{noaaRadarFrameTime ? `${noaaRadarFrameTime.slice(0, 19).replace("T", " ")} UTC · ${noaaRadarFrameLoadState === "loading" ? "loading" : noaaRadarDisplayState.toLowerCase()}` : "No confirmed scan rendered"}</output>
                     <small>Rolling confirmed scans only. Older radar days open in the separate Event Observatory map; they are not replayed on this map.</small>
@@ -8265,6 +8269,7 @@ export default function Home() {
               <div><strong>{noaaRadarFrameHeadline}</strong><small>{noaaRadarFrameDetail}</small></div>
               <span>{noaaRadarLoopFrames.length > 0 ? `${noaaRadarFrameIndex >= 0 ? noaaRadarFrameIndex + 1 : 0} / ${noaaRadarLoopFrames.length}` : "0 / 0"}</span>
             </div>
+            {noaaRadarLoopSpan === "all" && noaaRadarLoopFrames.length > 1 && <p className="noaa-radar-motion-note">Available NOAA scans: {formatNoaaRadarLocalTime(noaaRadarLoopFrames[0])} to {formatNoaaRadarLocalTime(noaaRadarLoopFrames.at(-1)!)} · {noaaRadarLoopFrames.length} exact frames</p>}
             <div className="noaa-radar-transport" aria-label="Radar playback">
               <button type="button" onClick={() => stepNoaaRadar("reverse")} disabled={!noaaRadarRenderable || noaaRadarFrameIndex <= 0 || noaaRadarFrameLoadState === "loading"} aria-label="Previous NOAA radar observation">‹</button>
               <button className="noaa-radar-play" type="button" aria-pressed={noaaRadarPlaying} onClick={toggleNoaaRadarPlayback} disabled={reducedMotion || noaaRadarLoopFrames.length < 2 || noaaRadarManifestState === "loading" || !noaaRadarRenderable}>{noaaRadarPlaying ? "Ⅱ Pause" : "▶ Restart loop"}</button>
@@ -8280,7 +8285,7 @@ export default function Home() {
               <button className="noaa-radar-live" type="button" aria-pressed={noaaRadarFollowLatest && noaaRadarSelectedIsLatest} onClick={jumpNoaaRadarToLatest}>Latest</button>
             </div>
             <div className="noaa-radar-settings">
-              <label><span>Loop</span><select value={noaaRadarLoopSpan} onChange={(event) => { setNoaaRadarPlaying(false); setNoaaRadarLoopSpan(Number(event.target.value) as NoaaRadarLoopSpanMinutes); }}><option value={30}>30 min</option><option value={60}>1 hour</option><option value={120}>2 hours</option></select></label>
+              <label><span>Loop</span><select value={noaaRadarLoopSpan} onChange={(event) => { setNoaaRadarPlaying(false); setNoaaRadarLoopSpan(event.target.value === "all" ? "all" : Number(event.target.value) as NoaaRadarLoopSpanMinutes); }}><option value={30}>30 min</option><option value={60}>1 hour</option><option value={120}>2 hours</option><option value="all">All available</option></select></label>
               <label><span>Speed</span><select value={noaaRadarPlaybackSpeed} onChange={(event) => setNoaaRadarPlaybackSpeed(Number(event.target.value) as NoaaRadarPlaybackSpeed)}><option value={0.5}>0.5×</option><option value={1}>1×</option><option value={2}>2×</option></select></label>
               <label><span>Opacity</span><input type="range" min="10" max="100" value={Math.round(officialOpacity["nws-radar"] * 100)} onChange={(event) => setOfficialContextOpacity("nws-radar", Number(event.target.value) / 100)} aria-valuetext={`${Math.round(officialOpacity["nws-radar"] * 100)} percent`} /></label>
               <button type="button" onClick={() => void refreshNoaaRadarManifest()} disabled={noaaRadarManifestState === "loading"}>Refresh</button>
@@ -8508,7 +8513,7 @@ export default function Home() {
                 <aside className="map-utility-boundary"><strong>Keyboard alternative</strong><p>Use Inspect for a searchable feature list, Layer Catalog for visibility and opacity, and these controls for camera actions without relying on pointer gestures.</p></aside>
               </section>}
 
-              {mapUtilityView === "history" && <HistoricalTopoControl map={mapRef.current} styleReady={styleReady} locationPrivate={locationCameraRedacted} />}
+              {mapUtilityView === "history" && <HistoricalTopoControl map={mapRef.current} styleReady={styleReady} locationPrivate={locationCameraRedacted} flatMap={projection === "mercator" && scenePreset !== "elevation-3d"} onFlatMap={() => activateMapRepresentation("2d")} />}
 
               {mapUtilityView === "inspect" && <section id="map-utility-view-inspect" role="region" aria-labelledby="map-utility-title" className="map-utility-section">
                 <div className="map-utility-section-heading"><span>INSPECT</span><h3>Feature index + context receipt</h3><p>Map hover appears as a preview in the Evidence Drawer. A click or explicit Inspect action selects one feature for full details.</p></div>

@@ -163,6 +163,12 @@ test("loop span selection is inclusive, bounded, sorted, and navigation obeys st
     "2026-09-10T11:30:00.000Z",
     "2026-09-10T12:00:00.000Z",
   ]);
+  assert.deepEqual(radar.selectNoaaRadarLoopFrames(frames, "all", 2), [
+    "2026-09-10T10:30:00.000Z",
+    "2026-09-10T11:00:00.000Z",
+    "2026-09-10T11:30:00.000Z",
+    "2026-09-10T12:00:00.000Z",
+  ]);
   assert.deepEqual(radar.selectNoaaRadarLoopFrames([], 30), []);
 
   assert.equal(radar.nextNoaaRadarFrameIndex(3, 1, "forward", false), 2);
@@ -171,6 +177,15 @@ test("loop span selection is inclusive, bounded, sorted, and navigation obeys st
   assert.equal(radar.nextNoaaRadarFrameIndex(3, 0, "reverse", false), null);
   assert.equal(radar.nextNoaaRadarFrameIndex(3, 0, "reverse", true), 2);
   assert.equal(radar.nextNoaaRadarFrameIndex(0, 0, "forward", true), null);
+});
+
+test("all available never silently drops the oldest advertised scan", () => {
+  const times = Array.from({ length: 181 }, (_, index) => new Date(Date.UTC(2026, 8, 10, 0, index * 4)).toISOString()).join(",");
+  const manifest = radar.buildNoaaRadarManifest(capabilities({ times }), "2026-09-10T12:05:00Z");
+  assert.equal(manifest.frames.length, 181);
+  assert.equal(radar.selectNoaaRadarLoopFrames(manifest.frames, "all")[0], "2026-09-10T00:00:00.000Z");
+  const overflow = Array.from({ length: radar.NOAA_RADAR_MAX_SOURCE_FRAMES + 1 }, (_, index) => new Date(Date.UTC(2026, 8, 1, 0, index * 4)).toISOString()).join(",");
+  assert.throws(() => radar.parseNoaaRadarCapabilities(capabilities({ times: overflow })), /exceeded its bounded capacity/i);
 });
 
 test("tile requests always include one normalized exact TIME and reject untimed input", () => {

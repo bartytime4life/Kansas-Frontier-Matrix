@@ -9,10 +9,14 @@ import type { GeoJSONSource, Map as MapLibreMap } from "./maplibre-seam";
 const SOURCE = "kfm-historical-topo-footprint";
 const FILL = "kfm-historical-topo-footprint-fill";
 const LINE = "kfm-historical-topo-footprint-line";
+const RASTER_SOURCE = "kfm-historical-topo-reviewed-source";
+const RASTER_LAYER = "kfm-historical-topo-reviewed-raster";
 const empty: FeatureCollection<Polygon> = { type: "FeatureCollection", features: [] };
 type CatalogResponse = { state: string; sheets: TopoSheet[]; more: boolean; retrievedAt: string; message?: string };
+type OverlayResponse = { state: "ready"; sheet: { id: number; scanId: number }; bounds: [number, number, number, number]; minZoom: number; maxZoom: number; sourceUrl: string; sourceSha256: string; packageId: string; reviewedAt: string; tileTemplate: string } | { state: "preparing" | "unavailable"; scanId: number; message: string };
+type ReviewCandidate = { state: "staged"; rollback?: boolean; scanId: number; packageId: string; manifestSha256: string; sheet: { id: number; scanId: number }; bounds: [number, number, number, number]; minZoom: number; maxZoom: number; sourceUrl: string; sourceSha256: string; tileCount: number; previewTileTemplate: string; stagedAt?: string };
 
-export function HistoricalTopoControl({ map, styleReady, locationPrivate }: { map: MapLibreMap | null; styleReady: boolean; locationPrivate: boolean }) {
+export function HistoricalTopoControl({ map, styleReady, locationPrivate, flatMap, onFlatMap }: { map: MapLibreMap | null; styleReady: boolean; locationPrivate: boolean; flatMap: boolean; onFlatMap: () => void }) {
   const [from, setFrom] = useState("1930");
   const [through, setThrough] = useState("1960");
   const [scale, setScale] = useState<TopoSearch["scale"]>("all");
@@ -28,7 +32,68 @@ export function HistoricalTopoControl({ map, styleReady, locationPrivate }: { ma
   const [error, setError] = useState("");
   const [retrievedAt, setRetrievedAt] = useState("");
   const [retry, setRetry] = useState(0);
+  const [overlay, setOverlay] = useState<OverlayResponse | null>(null);
+  const [overlayLoading, setOverlayLoading] = useState(false);
+  const [overlayError, setOverlayError] = useState("");
+  const [overlayRetry, setOverlayRetry] = useState(0);
+  const [overlayVisible, setOverlayVisible] = useState(true);
+  const [overlayOpacity, setOverlayOpacity] = useState(0.65);
+  const [mapZoom, setMapZoom] = useState(() => map?.getZoom() ?? 0);
+  const [mapPitch, setMapPitch] = useState(() => map?.getPitch() ?? 0);
+  const [reviewCandidate, setReviewCandidate] = useState<ReviewCandidate | null>(null);
+  const [reviewPreview, setReviewPreview] = useState(false);
+  const [reviewNote, setReviewNote] = useState("");
+  const [reviewBusy, setReviewBusy] = useState(false);
   const selected = useMemo(() => rows.find((row) => row.id === selectedId) ?? null, [rows, selectedId]);
+  const display = reviewPreview && reviewCandidate ? { ...reviewCandidate, tileTemplate: reviewCandidate.previewTileTemplate } : overlay?.state === "ready" ? overlay : null;
+
+  useEffect(() => {
+    if (!selected) { setOverlay(null); return; }
+    const controller = new AbortController();
+    const scanId = selected.scanId;
+    void (async () => {
+      setOverlay(null); setOverlayError(""); setOverlayLoading(true);
+      try {
+        const response = await fetch(`/api/historical-topo/overlay?scan=${scanId}`, { signal: controller.signal });
+        const body = await readBoundedJson(response, 16 * 1024) as OverlayResponse & { error?: string };
+        if (!response.ok || !["ready", "preparing", "unavailable"].includes(body.state)) throw new Error(body.error || "Map overlay status is unavailable.");
+        if (body.state === "ready" && (body.sheet.id !== selected.id || body.sheet.scanId !== scanId)) throw new Error("The reviewed image does not match this sheet edition.");
+        if (!controller.signal.aborted) setOverlay(body);
+      } catch (cause) {
+        if (!controller.signal.aborted) setOverlayError(cause instanceof Error ? cause.message : "Map overlay status is unavailable.");
+      } finally { if (!controller.signal.aborted) setOverlayLoading(false); }
+    })();
+    return () => controller.abort();
+  }, [selected, overlayRetry]);
+
+  useEffect(() => {
+    if (!map || !styleReady || !display || !overlayVisible || !flatMap || mapPitch > 0) return;
+    try {
+      if (map.getLayer(RASTER_LAYER)) map.removeLayer(RASTER_LAYER);
+      if (map.getSource(RASTER_SOURCE)) map.removeSource(RASTER_SOURCE);
+      map.addSource(RASTER_SOURCE, { type: "raster", tiles: [display.tileTemplate], tileSize: 256, bounds: display.bounds,
+        minzoom: display.minZoom, maxzoom: display.maxZoom, attribution: reviewPreview ? "USGS Historical Topographic Map Collection · private review preview" : "USGS Historical Topographic Map Collection · reviewed KFM display carrier" });
+      map.addLayer({ id: RASTER_LAYER, type: "raster", source: RASTER_SOURCE, paint: { "raster-opacity": overlayOpacity, "raster-fade-duration": 0 } }, map.getLayer(FILL) ? FILL : undefined);
+    } catch { return; }
+    return () => {
+      try {
+        if (map.getLayer(RASTER_LAYER)) map.removeLayer(RASTER_LAYER);
+        if (map.getSource(RASTER_SOURCE)) map.removeSource(RASTER_SOURCE);
+      } catch { /* A basemap change may have already removed the raster. */ }
+    };
+  }, [map, styleReady, display?.tileTemplate, overlayVisible, flatMap, mapPitch]);
+
+  useEffect(() => {
+    if (!map || !styleReady || !map.getLayer(RASTER_LAYER)) return;
+    try { map.setPaintProperty(RASTER_LAYER, "raster-opacity", overlayOpacity); } catch { /* Style replacement. */ }
+  }, [map, styleReady, overlayOpacity]);
+
+  useEffect(() => {
+    if (!map) return;
+    const update = () => { setMapZoom(map.getZoom()); setMapPitch(map.getPitch()); };
+    map.on("moveend", update);
+    return () => { map.off("moveend", update); };
+  }, [map]);
 
   useEffect(() => {
     if (locationPrivate) return;
@@ -112,15 +177,51 @@ export function HistoricalTopoControl({ map, styleReady, locationPrivate }: { ma
   function fitSheet(sheet: TopoSheet) {
     if (!map) return;
     const points = sheet.footprint.geometry.coordinates.flat();
-    const west = Math.min(...points.map((point) => point[0]));
-    const east = Math.max(...points.map((point) => point[0]));
-    const south = Math.min(...points.map((point) => point[1]));
-    const north = Math.max(...points.map((point) => point[1]));
+    const [west, south, east, north] = display ? display.bounds : [
+      Math.min(...points.map((point) => point[0])), Math.min(...points.map((point) => point[1])),
+      Math.max(...points.map((point) => point[0])), Math.max(...points.map((point) => point[1])),
+    ];
     const compact = window.innerWidth <= 760;
     map.fitBounds([[west, south], [east, north]], {
       padding: compact ? { top: 55, left: 30, right: 30, bottom: Math.round(window.innerHeight * 0.48) } : { top: 80, left: 80, right: 480, bottom: 80 },
       maxZoom: 12, duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 650,
     });
+  }
+
+  async function requestOverlay(sheet: TopoSheet) {
+    setOverlayError(""); setOverlayLoading(true);
+    try {
+      const response = await fetch("/api/historical-topo/overlay", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: sheet.id }) });
+      const result = await readBoundedJson(response, 4096) as { state?: string; error?: string };
+      if (!response.ok || !["ready", "preparing"].includes(result.state ?? "")) throw new Error(result.error || "Map request could not be queued.");
+      setOverlayRetry((value) => value + 1);
+    } catch (cause) { setOverlayError(cause instanceof Error ? cause.message : "Map request could not be queued."); }
+    finally { setOverlayLoading(false); }
+  }
+
+  async function checkReview(sheet: TopoSheet, previous = false) {
+    setReviewBusy(true); setOverlayError("");
+    try {
+      const response = await fetch(`/api/historical-topo/review?scan=${sheet.scanId}${previous ? "&mode=previous" : ""}`);
+      const body = await readBoundedJson(response, 16 * 1024) as ReviewCandidate & { error?: string };
+      if (!response.ok) throw new Error(body.error || "Review candidate is unavailable.");
+      if (body.state !== "staged") { setReviewCandidate(null); setOverlayError(previous ? "No prior reviewed map is available for rollback." : "This sheet has no staged candidate yet."); return; }
+      if (body.sheet.id !== sheet.id || body.sheet.scanId !== sheet.scanId) throw new Error("Prepared candidate does not match this Kansas sheet.");
+      setReviewCandidate(body); setReviewPreview(false); setReviewNote("");
+    } catch (cause) { setOverlayError(cause instanceof Error ? cause.message : "Review candidate is unavailable."); }
+    finally { setReviewBusy(false); }
+  }
+
+  async function activateCandidate() {
+    if (!reviewCandidate || reviewNote.trim().length < 10) return;
+    setReviewBusy(true); setOverlayError("");
+    try {
+      const response = await fetch("/api/historical-topo/activate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ scanId: reviewCandidate.scanId, packageId: reviewCandidate.packageId, manifestSha256: reviewCandidate.manifestSha256, note: reviewNote.trim(), ...(reviewCandidate.rollback ? { rollback: true } : {}) }) });
+      const body = await readBoundedJson(response, 4096) as { active?: boolean; error?: string };
+      if (!response.ok || !body.active) throw new Error(body.error || "Candidate activation failed.");
+      setReviewPreview(false); setReviewCandidate(null); setReviewNote(""); setOverlayRetry((value) => value + 1);
+    } catch (cause) { setOverlayError(cause instanceof Error ? cause.message : "Map activation failed."); }
+    finally { setReviewBusy(false); }
   }
 
   return <section className="map-utility-section historical-topo-control" aria-label="Historical topographic sheets">
@@ -133,11 +234,25 @@ export function HistoricalTopoControl({ map, styleReady, locationPrivate }: { ma
     </form>
     {locationPrivate && <div className="map-utility-boundary" data-tone="privacy"><strong>Private location</strong><p>Use Fit Kansas before searching. This prevents a browser-location-derived camera from being sent to the USGS catalog.</p></div>}
     <div className="historical-topo-status" role="status" aria-live="polite">{locationPrivate ? "Search held while map location is private." : loading ? `Checking USGS Kansas catalog…${rows.length ? " Previous results remain below." : ""}` : error ? `${error}${rows.length ? " Previous search results remain below." : ""}` : `${rows.length} Kansas sheet${rows.length === 1 ? "" : "s"} shown${more ? " · more available" : ""} near ${search.lat.toFixed(2)}°, ${search.lng.toFixed(2)}°`}</div>
-    {rows.length > 0 && <div className="historical-topo-results" aria-label="Historical map editions" aria-busy={loading}>{rows.map((sheet) => <button key={sheet.id} type="button" className="historical-topo-result" disabled={loading} aria-pressed={selectedId === sheet.id} onClick={() => setSelectedId(sheet.id)}><span className="historical-topo-year">{sheet.year}</span><span><strong>{sheet.name}, {sheet.state}</strong><small>1:{sheet.scale.toLocaleString()} · {sheet.series} · scan {sheet.scanId}</small></span><span aria-hidden="true">⌖</span></button>)}</div>}
+    {rows.length > 0 && <div className="historical-topo-results" aria-label="Historical map editions" aria-busy={loading}>{rows.map((sheet) => <button key={sheet.id} type="button" className="historical-topo-result" disabled={loading} aria-pressed={selectedId === sheet.id} onClick={() => { setSelectedId(sheet.id); setOverlayVisible(true); setReviewPreview(false); setReviewCandidate(null); setReviewNote(""); }}><span className="historical-topo-year">{sheet.year}</span><span><strong>{sheet.name}, {sheet.state}</strong><small>1:{sheet.scale.toLocaleString()} · {sheet.series} · scan {sheet.scanId}</small></span><span aria-hidden="true">⌖</span></button>)}</div>}
     {more && search.offset < 240 && <button className="historical-topo-more" type="button" disabled={loading} onClick={() => setSearch((current) => ({ ...current, offset: current.offset + TOPO_PAGE_SIZE }))}>Show more editions</button>}
     {more && search.offset >= 240 && <p className="historical-topo-limit">More catalog sheets may exist. Narrow the years, scale, name, or map area to continue.</p>}
     {!loading && !error && rows.length === 0 && <div className="map-utility-empty"><strong>No Kansas catalog sheets match this view</strong><p>Use Fit Kansas or move the map into Kansas, widen the years, or remove the name filter. An empty search does not establish that no historical map exists.</p></div>}
-    {selected && <article className="historical-topo-detail"><header><span>SELECTED USGS SHEET</span><strong>{selected.name} · {selected.year}</strong></header><dl><div><dt>Printed map year</dt><dd>{selected.year}</dd></div><div><dt>Imprint year</dt><dd>{selected.imprintYear ?? "Not listed"}</dd></div><div><dt>Scale</dt><dd>1:{selected.scale.toLocaleString()}</dd></div><div><dt>Scan ID</dt><dd>{selected.scanId}</dd></div><div><dt>Datum</dt><dd>{selected.datum}</dd></div></dl><div className="historical-topo-actions"><button type="button" onClick={() => fitSheet(selected)}>Fit actual footprint</button><a href={selected.viewerHref} target="_blank" rel="noreferrer">Open USGS TopoView ↗</a></div><p>The outline shows catalog coverage, not scanned map pixels. TopoView provides the original preview, metadata, and downloads.</p></article>}
+    {selected && <article className="historical-topo-detail"><header><span>SELECTED USGS SHEET</span><strong>{selected.name} · {selected.year}</strong></header><dl><div><dt>Printed map year</dt><dd>{selected.year}</dd></div><div><dt>Imprint year</dt><dd>{selected.imprintYear ?? "Not listed"}</dd></div><div><dt>Print scale</dt><dd>1:{selected.scale.toLocaleString()}</dd></div><div><dt>Scan ID</dt><dd>{selected.scanId}</dd></div><div><dt>Datum</dt><dd>{selected.datum}</dd></div></dl><div className="historical-topo-actions"><button type="button" onClick={() => fitSheet(selected)}>{overlay?.state === "ready" ? "Fit map image" : "Fit actual footprint"}</button><a href={selected.viewerHref} target="_blank" rel="noreferrer">Open USGS TopoView ↗</a></div>
+      <div className="historical-topo-overlay-controls" aria-live="polite">
+        <strong>{overlayLoading ? "Checking prepared image…" : overlay?.state === "ready" ? "Reviewed map image ready" : overlay?.state === "preparing" ? "Requested for preparation and review" : "Map image not prepared"}</strong>
+        {overlay?.state === "ready" && <button type="button" onClick={() => void checkReview(selected, true)} disabled={reviewBusy}>Inspect previous reviewed version</button>}
+        {display ? <>
+          {(!flatMap || mapPitch > 0) && <button type="button" onClick={onFlatMap}>View at scale on flat map</button>}
+          <label><input type="checkbox" checked={overlayVisible} onChange={(event) => setOverlayVisible(event.target.checked)} /> Show sheet over basemap</label>
+          <label>Image opacity <input type="range" min="0" max="100" value={Math.round(overlayOpacity * 100)} onChange={(event) => setOverlayOpacity(Number(event.target.value) / 100)} disabled={!overlayVisible} aria-valuetext={`${Math.round(overlayOpacity * 100)} percent`} /><output>{Math.round(overlayOpacity * 100)}%</output></label>
+          <small>USGS scan {selected.scanId} · {reviewPreview ? "private preview; not active" : overlay?.state === "ready" ? `reviewed ${new Date(overlay.reviewedAt).toLocaleString()}` : "not released"} · native detail through map zoom {display.maxZoom}</small>
+          {mapZoom > display.maxZoom && <small>Zoomed beyond this scan’s native detail; pixels are enlarged, not new map information.</small>}
+        </> : overlay?.state === "preparing" ? <><p>The catalog outline remains visible until the scanned image is prepared, checked, and reviewed.</p><button type="button" onClick={() => setOverlayRetry((value) => value + 1)}>Check status</button><button type="button" onClick={() => void checkReview(selected)} disabled={reviewBusy}>Inspect prepared candidate</button></> : !overlayLoading && <button type="button" onClick={() => void requestOverlay(selected)}>Prepare this Kansas sheet</button>}
+        {reviewCandidate && <div className="historical-topo-review"><strong>{reviewCandidate.rollback ? "Owner rollback review" : "Owner candidate review"} · {reviewCandidate.tileCount} verified tile addresses</strong><small>Source digest {reviewCandidate.sourceSha256.slice(0, 16)}… · package {reviewCandidate.packageId}</small><label><input type="checkbox" checked={reviewPreview} onChange={(event) => setReviewPreview(event.target.checked)} /> Preview {reviewCandidate.rollback ? "previous version" : "candidate"} on map</label><label>Review note <textarea value={reviewNote} onChange={(event) => setReviewNote(event.target.value)} maxLength={1000} placeholder="Record image alignment and source checks" /></label><button type="button" disabled={reviewBusy || reviewNote.trim().length < 10} onClick={() => void activateCandidate()}>{reviewCandidate.rollback ? "Restore previous reviewed image" : "Activate reviewed image"}</button></div>}
+        {overlayError && <p role="alert">{overlayError}</p>}
+      </div>
+      <p>The historical image is display context. Printed dates do not date every road, building, or other feature shown.</p></article>}
     <aside className="map-utility-boundary"><strong>Historical map context</strong><p>Only sheets whose USGS primary state is Kansas appear here. A border sheet can extend beyond the state line. Edition and imprint years do not date every feature printed on a sheet. This browser is external context only; it does not add a KFM evidence record or change the active map time.</p><a href="https://ngmdb.usgs.gov/topoview/help/" target="_blank" rel="noreferrer">How USGS TopoView works ↗</a>{retrievedAt && <small>Catalog checked {new Date(retrievedAt).toLocaleString()}</small>}</aside>
   </section>;
 }
