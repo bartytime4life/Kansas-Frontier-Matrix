@@ -7,7 +7,7 @@ import json
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
-RECEIPT = ROOT / "data/receipts/generated/site-water-mirror-20260930.json"
+RECEIPT = ROOT / "data/receipts/generated/site-historical-overlay-mirror-20260930.json"
 DESTINATION = ROOT / "apps/site/source"
 
 
@@ -46,7 +46,15 @@ def compare(source):
 
 def check():
     receipt = json.loads(RECEIPT.read_text())
-    expected = receipt["file_digests"]
+    if receipt["profile"] != "kfm.site-mirror-receipt/v1" or receipt["destination"] != "apps/site/source":
+        raise ValueError("MIRROR_RECEIPT_PROFILE_DRIFT")
+    if receipt["counts"]["missing"] or receipt["counts"]["unexpected_difference"]:
+        raise ValueError("MIRROR_RECEIPT_INCOMPLETE")
+    expected = {name: "sha256:" + entry["mirror_sha256"] for name, entry in receipt["comparison"].items()}
+    overlays = {name: "sha256:" + digest for name, digest in receipt["repository_only_overlays"].items()}
+    if set(expected) & set(overlays):
+        raise ValueError("MIRROR_RECEIPT_OVERLAP")
+    expected.update(overlays)
     names = {p.removeprefix("apps/site/source/") for p in files(ROOT) if p.startswith("apps/site/source/")}
     if names != set(expected):
         raise ValueError("MIRROR_FILE_SET_DRIFT")

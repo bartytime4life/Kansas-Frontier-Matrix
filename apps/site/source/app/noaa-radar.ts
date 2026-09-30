@@ -7,10 +7,12 @@ export const NOAA_RADAR_LEGEND_URL = "https://nowcoast.noaa.gov/geoserver/observ
 export const NOAA_RADAR_FRAME_API_PATH = "/api/noaa-radar/frames";
 export const NOAA_RADAR_EXPECTED_CADENCE_SECONDS = 240;
 export const NOAA_RADAR_MAX_FRESH_AGE_SECONDS = 15 * 60;
-export const NOAA_RADAR_MAX_SOURCE_FRAMES = 180;
+// The capabilities response is already byte-bounded by the route. Refuse an
+// unexpectedly large list instead of silently losing its oldest observation.
+export const NOAA_RADAR_MAX_SOURCE_FRAMES = 4096;
 export const NOAA_RADAR_MAX_LOOP_FRAMES = 32;
 
-export type NoaaRadarLoopSpanMinutes = 30 | 60 | 120;
+export type NoaaRadarLoopSpanMinutes = 30 | 60 | 120 | "all";
 export type NoaaRadarPlaybackSpeed = 0.5 | 1 | 2;
 export type NoaaRadarManifestState = "idle" | "loading" | "ready" | "error";
 export type NoaaRadarFreshness = "current" | "delayed";
@@ -76,8 +78,8 @@ export const parseNoaaRadarCapabilities = (xml: string): Readonly<{
   const parsed = rawTokens.map(toIsoTimestamp);
   if (parsed.some((value) => value === null)) throw new Error("The NOAA radar time dimension contained an invalid timestamp.");
   const frames = [...new Set(parsed as string[])]
-    .sort((left, right) => Date.parse(left) - Date.parse(right))
-    .slice(-NOAA_RADAR_MAX_SOURCE_FRAMES);
+    .sort((left, right) => Date.parse(left) - Date.parse(right));
+  if (frames.length > NOAA_RADAR_MAX_SOURCE_FRAMES) throw new Error("The NOAA radar frame list exceeded its bounded capacity.");
   if (frames.length < 2) throw new Error("The NOAA radar loop exposed fewer than two usable observation frames.");
   return Object.freeze({ frames: Object.freeze(frames), upstreamDefaultTime });
 };
@@ -142,6 +144,7 @@ export const selectNoaaRadarLoopFrames = (
   if (frames.length === 0) return Object.freeze([]);
   const sorted = [...new Set(frames.map(toIsoTimestamp).filter((value): value is string => Boolean(value)))]
     .sort((left, right) => Date.parse(left) - Date.parse(right));
+  if (spanMinutes === "all") return Object.freeze(sorted);
   const latest = Date.parse(sorted.at(-1)!);
   const cutoff = latest - spanMinutes * 60_000;
   return Object.freeze(sorted.filter((frame) => Date.parse(frame) >= cutoff).slice(-Math.max(2, Math.floor(maxFrames))));

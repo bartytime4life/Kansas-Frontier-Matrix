@@ -491,11 +491,16 @@ The optional radar control uses the NOAA nowCOAST WMS endpoint
 accepts only its explicit advertised ISO observation times. MapLibre then asks
 for each selected image with that exact `TIME`; the Site does not invent
 intermediate times, interpolate imagery, or make an untimed “latest” request.
-Raster transitions use a short visual fade for readability; every frame still
-comes from an explicit NOAA observation time.
+The renderer keeps the last complete scan visible while a second raster source
+loads the next exact scan. It swaps sources only after the new viewport tiles
+settle, with zero tile fade and nearest-neighbor display sampling. This avoids
+blending colors from different observation times; it cannot add detail beyond
+the NOAA image or smooth genuine changes between scans.
 
-The dock can step or play up to 32 available observations from a rolling
-30-minute, 1-hour, or 2-hour view. Its default is 1 hour. Availability,
+The dock offers rolling 30-minute, 1-hour, and 2-hour views, plus **All
+available** for the full explicit live list advertised by nowCOAST. The default
+is 1 hour. The capabilities response remains byte-bounded, and an unexpectedly
+large frame list is rejected rather than silently dropping its oldest times. Availability,
 retention, and cadence remain controlled by NOAA and can change; the interface
 reports the discovered median cadence and gaps rather than promising a fixed
 archive. The frame manifest is checked every four minutes while radar is
@@ -527,7 +532,9 @@ this does not infer strikes or densities between observations.
 
 ## External network disclosure
 
-The **Kansas historic maps** control queries the official [USGS topoView catalog](https://ngmdb.usgs.gov/topoview/help/) for up to 24 sheet editions per page near the current map center. The provider request restricts `primary_state` to `KS`, and response parsing independently excludes other or missing state labels. The USGS defines primary state by the majority of a sheet's mapped area, so a Kansas border sheet can still extend across the state line. A map center outside Kansas may return no matching sheets; the interface directs the user to Fit Kansas. Name, printed year, scale, datum, scan ID, and the selected sheet’s catalog footprint remain separate from the Site’s active time and KFM evidence. Only an explicitly selected footprint appears on the map at its source geometry; the original scanned sheet opens in USGS TopoView. The Site does not rehost or render historical scan pixels. Searches from a browser-location-derived camera are held until the user returns to a shareable map location. Provider failure leaves other map layers available. The [USGS catalog service](https://ngmdb.usgs.gov/arcgis/rest/services/topoview/ustOverlay/MapServer/0) was queried for Kansas editions on September 30, 2026; future availability remains provider-dependent.
+The **Kansas historic maps** control queries the official [USGS topoView catalog](https://ngmdb.usgs.gov/topoview/help/) for up to 24 sheet editions per page near the current map center. The provider request restricts `primary_state` to `KS`, and response parsing independently excludes other or missing state labels. The USGS defines primary state by the majority of a sheet's mapped area, so a Kansas border sheet can still extend across the state line. A map center outside Kansas may return no matching sheets; the interface directs the user to Fit Kansas. Name, printed year, scale, datum, scan ID, and the selected sheet’s catalog footprint remain separate from the Site’s active time and KFM evidence. A selected catalog footprint appears immediately. Its scanned GeoTIFF becomes an optional 2D raster layer with visibility and opacity controls only after an on-demand capture, georeferenced tile preparation, integrity checks, and owner review. An unprepared or held image stays an outline with a USGS TopoView link; it is never stretched from a preview JPEG. Searches from a browser-location-derived camera are held until the user returns to a shareable map location. Provider failure leaves other map layers available. The [USGS catalog service](https://ngmdb.usgs.gov/arcgis/rest/services/topoview/ustOverlay/MapServer/0) and [TNM product API](https://tnmaccess.nationalmap.gov/api/v1/) were checked for Kansas editions on September 30, 2026; future availability remains provider-dependent.
+
+The on-demand request is stored under `historical-topo/v1/requests/` in the existing R2 binding. A separately configured local worker reads the bounded queue, matches the exact Kansas scan in TNM, saves the original GeoTIFF and retrieval receipt outside the Git checkout, and produces an immutable PNG tile package. The Site's staging route checks a worker bearer token, content type, size, and digest; the candidate remains owner-only. An explicitly configured owner inspects its preview, records a review note, and activates it. The active pointer retains its previous package for rollback, while ordinary tile reads verify the reviewed manifest and tile digest. Configure `KFM_HISTORICAL_WORKER_TOKEN` and `KFM_HISTORICAL_OWNER_IDS` or `KFM_HISTORICAL_OWNER_EMAILS` in Sites runtime settings before running the worker; the worker uses the same bearer token and, when private Site dispatch requires it, a separate `KFM_SITES_BYPASS_TOKEN`. A missing configuration leaves preparation and review closed. Automation stages candidates only and never activates them.
 
 The map can request five external display carriers. Their endpoints,
 activation rules, attribution, fallbacks, and evidence exclusions live in one

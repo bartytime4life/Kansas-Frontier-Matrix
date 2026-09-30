@@ -891,7 +891,7 @@ test("adds an exact-time NOAA nowCOAST radar loop and a fail-closed control surf
   assert.match(page, /aria-label="Previous NOAA radar observation"/);
   assert.match(page, /aria-label="Next NOAA radar observation"/);
   assert.match(page, /aria-label="Select an exact NOAA radar observation"/);
-  assert.match(page, /<option value=\{30\}>30 min<\/option><option value=\{60\}>1 hour<\/option><option value=\{120\}>2 hours<\/option>/);
+  assert.match(page, /<option value=\{30\}>30 min<\/option><option value=\{60\}>1 hour<\/option><option value=\{120\}>2 hours<\/option><option value="all">All available<\/option>/);
   assert.match(page, /<option value=\{0\.5\}>0\.5×<\/option><option value=\{1\}>1×<\/option><option value=\{2\}>2×<\/option>/);
   assert.match(page, /Reflectivity legend \+ source/);
   assert.match(page, /noaaRadarManifestIsFresh/);
@@ -901,7 +901,9 @@ test("adds an exact-time NOAA nowCOAST radar loop and a fail-closed control surf
   assert.match(page, /noaaRadarPendingFrameTimeRef/);
   assert.match(page, /noaaRadarFrameFailureRef/);
   assert.match(page, /temporalQueryRef\.current\.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME[\s\S]*NOAA radar remains held outside/);
-  assert.match(page, /event\.sourceId !== OFFICIAL_CONTEXT_BY_ID\["nws-radar"\]\.sourceId \|\| !event\.tile \|\| !event\.isSourceLoaded/);
+  assert.match(page, /event\.sourceId !== stagedSourceId \|\| !event\.isSourceLoaded \|\| !map\.isSourceLoaded\(stagedSourceId\)/);
+  assert.match(page, /commitNoaaRadarObservationTime\(map, stagedSourceId/);
+  assert.match(liveContext, /"raster-fade-duration": 0, "raster-resampling": "nearest"/);
   assert.match(page, /if \(!noaaRadarObservationTimeIsApplied\(map, observedAt\)\) return/);
   assert.match(page, /pendingRadarFrame[\s\S]*noaaRadarFrameLoadCleanupRef\.current\?\.\(\)[\s\S]*setNoaaRadarFrameLoadState\("idle"\)[\s\S]*map\.setStyle/);
   assert.match(page, /Reduced motion is active\. Automatic looping is off/);

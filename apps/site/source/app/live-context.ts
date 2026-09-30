@@ -841,6 +841,16 @@ export const applyOfficialContextState = (
       if (layer?.type === "symbol") setPaintIfChanged(map, layerId, "text-opacity", safeOpacity);
     }
   }
+  const radar = OFFICIAL_CONTEXT_BY_ID["nws-radar"];
+  const radarBuffer = radarBufferIds();
+  const radarVisible = visibility["nws-radar"] && !globeView;
+  const activeRadarSource = radarActiveBuffer.get(map) === true ? radarBuffer.source : radar.sourceId;
+  for (const ids of [{ source: radar.sourceId, layer: radar.layerIds[0] }, radarBuffer]) {
+    if (!map.getLayer(ids.layer)) continue;
+    // The inactive layer stays eligible to load tiles, but contributes no pixels.
+    setVisibleIfChanged(map, ids.layer, radarVisible);
+    setPaintIfChanged(map, ids.layer, "raster-opacity", radarVisible && ids.source === activeRadarSource ? Math.max(0, Math.min(1, opacity["nws-radar"])) : 0);
+  }
   balanceMapFills(map);
   balanceMapRasters(map);
   composeMapLayers(map);
@@ -875,8 +885,50 @@ export const clearNoaaSatelliteFrame = (map: MapLibreMap): void => {
 /** Checks the renderer source without mutating or reloading it. */
 export const noaaRadarObservationTimeIsApplied = (map: MapLibreMap, observedAt: string): boolean => {
   const radar = OFFICIAL_CONTEXT_BY_ID["nws-radar"];
-  const source = map.getSource(radar.sourceId) as RasterTileSource | undefined;
-  return Boolean(source && map.getLayer(radar.layerIds[0]) && source.serialize().tiles?.[0] === noaaRadarTileUrl(observedAt));
+  return [radar.sourceId, `${radar.sourceId}-buffer`].some((sourceId) => {
+    const source = map.getSource(sourceId) as RasterTileSource | undefined;
+    return Boolean(source && source.serialize().tiles?.[0] === noaaRadarTileUrl(observedAt));
+  });
+};
+
+const radarActiveBuffer = new WeakMap<MapLibreMap, boolean>();
+const radarBufferIds = () => {
+  const radar = OFFICIAL_CONTEXT_BY_ID["nws-radar"];
+  return { source: `${radar.sourceId}-buffer`, layer: `${radar.layerIds[0]}-buffer` };
+};
+
+/** Keep the inactive raster loading at zero opacity; only a settled exact frame is shown. */
+export const stageNoaaRadarObservationTime = (map: MapLibreMap, observedAt: string): string => {
+  const radar = OFFICIAL_CONTEXT_BY_ID["nws-radar"];
+  const buffered = radarActiveBuffer.get(map) === true;
+  const ids = buffered ? { source: radar.sourceId, layer: radar.layerIds[0] } : radarBufferIds();
+  const tileUrl = noaaRadarTileUrl(observedAt);
+  const source = map.getSource(ids.source) as RasterTileSource | undefined;
+  if (!source) map.addSource(ids.source, { type: "raster", tiles: [tileUrl], tileSize: 256, attribution: radar.attribution, minzoom: 3, maxzoom: 12 });
+  else if (source.serialize().tiles?.[0] !== tileUrl) source.setTiles([tileUrl]);
+  ensureLayer(map, { id: ids.layer, type: "raster", source: ids.source, paint: { "raster-opacity": 0, "raster-fade-duration": 0, "raster-resampling": "nearest" } }, firstRegistryLayer(map));
+  setVisibleIfChanged(map, ids.layer, true);
+  setPaintIfChanged(map, ids.layer, "raster-opacity", 0);
+  return ids.source;
+};
+
+export const commitNoaaRadarObservationTime = (map: MapLibreMap, sourceId: string, visible: boolean, opacity: number): void => {
+  const radar = OFFICIAL_CONTEXT_BY_ID["nws-radar"];
+  const buffer = radarBufferIds();
+  if (sourceId !== radar.sourceId && sourceId !== buffer.source) throw new Error("Unknown NOAA radar frame source.");
+  radarActiveBuffer.set(map, sourceId === buffer.source);
+  for (const ids of [{ source: radar.sourceId, layer: radar.layerIds[0] }, buffer]) {
+    if (!map.getLayer(ids.layer)) continue;
+    setVisibleIfChanged(map, ids.layer, visible);
+    setPaintIfChanged(map, ids.layer, "raster-opacity", visible && ids.source === sourceId ? Math.max(0, Math.min(1, opacity)) : 0);
+  }
+};
+
+export const discardNoaaRadarStagedFrame = (map: MapLibreMap, sourceId: string): void => {
+  const radar = OFFICIAL_CONTEXT_BY_ID["nws-radar"];
+  const buffer = radarBufferIds();
+  const layer = sourceId === buffer.source ? buffer.layer : sourceId === radar.sourceId ? radar.layerIds[0] : null;
+  if (layer && map.getLayer(layer)) setPaintIfChanged(map, layer, "raster-opacity", 0);
 };
 
 /** Switches the fixed NOAA raster source to one advertised observation time.
@@ -894,7 +946,10 @@ export const setNoaaRadarObservationTime = (map: MapLibreMap, observedAt: string
     source.setTiles([tileUrl]);
     changed = true;
   }
-  ensureLayer(map, { id: radar.layerIds[0], type: "raster", source: radar.sourceId, paint: { "raster-opacity": radar.defaultOpacity, "raster-fade-duration": 420 } }, firstRegistryLayer(map));
+  ensureLayer(map, { id: radar.layerIds[0], type: "raster", source: radar.sourceId, paint: { "raster-opacity": radar.defaultOpacity, "raster-fade-duration": 0, "raster-resampling": "nearest" } }, firstRegistryLayer(map));
+  radarActiveBuffer.set(map, false);
+  const buffer = radarBufferIds();
+  if (map.getLayer(buffer.layer)) setPaintIfChanged(map, buffer.layer, "raster-opacity", 0);
   requestRasterOpacity(map, radar.layerIds[0], radar.defaultOpacity);
   balanceMapRasters(map);
   composeMapLayers(map);
