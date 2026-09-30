@@ -19,7 +19,7 @@ export type SolarPosition = Readonly<{
 export type DaylightBand = "night" | "astronomical" | "nautical" | "civil";
 type DaylightProperties = Readonly<{ band: DaylightBand; shade: number }>;
 type DaylightGeometry = Polygon | MultiPolygon;
-const { difference, intersection } = polygonClipping;
+const { difference, intersection, union } = polygonClipping;
 
 const mod = (value: number, divisor: number): number => ((value % divisor) + divisor) % divisor;
 const signedDegrees = (value: number): number => mod(value + 180, 360) - 180;
@@ -271,6 +271,24 @@ const geometryBounds = (geometry: ClippingPolygon | ClippingMultiPolygon): [numb
   return [minLongitude, maxLongitude];
 };
 
+/** Subtract every periodic copy of the inner disk that overlaps the outer
+ * disk's unwrapped longitude branch. A pole-wrapping outer disk spans one
+ * full world while a smaller non-wrapping disk can straddle its branch edge. */
+const subtractAlignedDisk = (outer: ClippingPolygon, inner: ClippingPolygon): ClippingMultiPolygon => {
+  const [outerMin, outerMax] = geometryBounds(outer);
+  const [innerMin, innerMax] = geometryBounds(inner);
+  const firstShift = Math.ceil((outerMin - innerMax) / 360);
+  const lastShift = Math.floor((outerMax - innerMin) / 360);
+  const alignedCopies: ClippingPolygon[] = [];
+  for (let world = firstShift; world <= lastShift; world += 1) {
+    const shift = world * 360;
+    const overlap = Math.min(outerMax, innerMax + shift) - Math.max(outerMin, innerMin + shift);
+    if (overlap <= 1e-9) continue;
+    alignedCopies.push(inner.map((ring) => ring.map(([longitude, latitude]) => [longitude + shift, latitude] as Position)));
+  }
+  return alignedCopies.length ? difference(outer, union(...alignedCopies)) : [outer];
+};
+
 const canonicalRing = (ring: ClippingRing, world: number, exterior: boolean): Position[] => {
   const shifted = ring.map(([longitude, latitude]) => [longitude - 360 * world, latitude] as Position);
   if (shifted.length && (shifted[0][0] !== shifted.at(-1)![0] || shifted[0][1] !== shifted.at(-1)![1])) shifted.push(shifted[0]);
@@ -340,7 +358,7 @@ export const buildDaylightGeometry = (instant: Date | number, samples = 360): Fe
     features.push({
       type: "Feature",
       properties: { band, shade },
-      geometry: clipToWorldStrips(difference(diskAt(outer), diskAt(inner))),
+      geometry: clipToWorldStrips(subtractAlignedDisk(diskAt(outer), diskAt(inner))),
     });
   }
   return { type: "FeatureCollection", features };
