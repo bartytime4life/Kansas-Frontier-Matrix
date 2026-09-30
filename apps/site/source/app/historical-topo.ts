@@ -28,7 +28,7 @@ export function parseTopoSearch(url: string): TopoSearch {
 }
 
 export function topoProviderUrl(search: TopoSearch): string {
-  const where = [`date_on_map >= ${search.from}`, `date_on_map <= ${search.through}`];
+  const where = ["primary_state = 'KS'", `date_on_map >= ${search.from}`, `date_on_map <= ${search.through}`];
   if (search.scale !== "all") where.push(`map_scale = ${search.scale}`);
   if (search.name) where.push(`map_name LIKE '%${search.name.replaceAll("'", "''")}%'`);
   const query = new URL(TOPO_CATALOG_URL);
@@ -56,7 +56,9 @@ export function parseTopoCatalog(payload: unknown): { sheets: TopoSheet[]; more:
     const entry = raw as { attributes?: Record<string, unknown>; geometry?: { rings?: unknown } };
     const a = entry.attributes;
     const rings = entry.geometry?.rings;
-    if (!a || !integer(a.OBJECTID, 1, 1e10) || !integer(a.scan_id, 1, 1e10)
+    // The USGS primary-state label is the catalog's jurisdiction for a sheet.
+    // Keep this check even if the upstream WHERE clause is ignored or changes.
+    if (!a || a.primary_state !== "KS" || !integer(a.OBJECTID, 1, 1e10) || !integer(a.scan_id, 1, 1e10)
       || !integer(a.date_on_map, 1800, 2100) || !integer(a.map_scale, 1, 1e7)
       || !text(a.map_name) || !text(a.primary_state, 3) || !Array.isArray(rings) || rings.length < 1 || rings.length > 8) return [];
     const coordinates: number[][][] = [];

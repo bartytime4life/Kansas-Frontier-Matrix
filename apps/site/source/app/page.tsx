@@ -544,7 +544,7 @@ const mapUtilityLabels: Record<MapUtilityView, string> = {
   navigate: "Navigate",
   inspect: "Inspect",
   scene: "Scene",
-  history: "Historic maps",
+  history: "Kansas historic maps",
   connections: "Sources",
   import: "Import",
   compare: "Compare",
@@ -8143,7 +8143,7 @@ export default function Home() {
               <span aria-hidden="true">≡</span><strong>Map layers</strong><b>{selectedMapLayerCount}</b>
             </button>
             <button className="map-control-launch" type="button" onClick={() => openAtlasPanel("places")} aria-pressed={leftOpen && leftPanelMode === "places"}><strong>Places</strong><b>{savedWorkspaces.length}</b></button>
-            <button className="map-control-launch" type="button" onClick={(event) => openMapUtility("history", event.currentTarget)} aria-pressed={mapUtilityOpen && mapUtilityView === "history"}><strong>Historic maps</strong></button>
+            <button className="map-control-launch" type="button" onClick={(event) => openMapUtility("history", event.currentTarget)} aria-pressed={mapUtilityOpen && mapUtilityView === "history"}><strong>Kansas historic maps</strong></button>
             <div className="quick-live-toggle-list" aria-label="Quick live data layer toggles">
               {QUICK_LIVE_CONTEXT_IDS.map((sourceId) => {
                 const source = OFFICIAL_CONTEXT_BY_ID[sourceId];
