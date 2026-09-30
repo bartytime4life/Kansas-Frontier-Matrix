@@ -5,6 +5,7 @@ One entry per artifact reconciles duplicate detector markers. A populated queue
 is an inventory, not proof of working behavior. Uninspected gaps retain HOLD.
 """
 import argparse
+from datetime import date
 from collections import defaultdict
 import hashlib
 import json
@@ -35,7 +36,7 @@ def queue():
     shared = [digest(blob(path)) for path in GOVERNING]
     result = yaml.safe_load(BACKLOG.read_text())
     result.update(base_ref=BASE, completeness="partial", implementation_status="PARTIAL", owner_role="maintainer", entries=[])
-    result["meta"].update(owner="maintainer", last_reviewed="2026-09-30", description="Pinned 949-marker inventory, reconciled to 747 artifact entries. Open entries are holds, not implemented capabilities.")
+    result["meta"].update(owner="maintainer", last_reviewed=date(2026, 9, 30), description="Pinned 949-marker inventory, reconciled to 747 artifact entries. Open entries are holds, not implemented capabilities.")
     for path, kinds in sorted(grouped.items()):
         root = path.split("/")[0]
         pilot = any(word in path for word in ("hydrology", "governed-api", "catalog", "release/", "policy-runtime", "evidence-resolver", "workers"))

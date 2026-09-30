@@ -1,4 +1,4 @@
-"""Internal injected transport facade; no live transport implementation is provided."""
+"""Injected transport facade; bounded_curl supplies the optional live transport."""
 from ._transport_execute import execute_retrieval
 from ._transport_protocols import CancellationToken, Clock, JitterSource, Sleeper, Transport
 from ._transport_request import (

@@ -1,6 +1,6 @@
 {
   "profile": "kfm.site-mirror-receipt/v1",
-  "source_commit": "68f888227b5560076355d1475e679530feab60c9",
+  "source_commit": "981b958ea59882af6b96142d4a8b19c9427bb639",
   "source_base_commit": "625749841d4bd9c42a55a917f46b72eb1fba5e62",
   "source_base_site_version": 129,
   "candidate_site_version": null,
@@ -95,7 +95,7 @@
     "app/global-error.tsx": "sha256:654dbe92e91efcfeaac26e47db9731bacbbdcf246d2a447276c053d9fe989d2e",
     "app/globals.css": "sha256:c2dd3589b872edb4991ef5b670631d474cdbacb0ddbfd0ea4477559465eecbb8",
     "app/globe-context.ts": "sha256:273ab0bf2693fd33577f82d06074c09a7baf6812243d97d20756972c49f0010c",
-    "app/governed-water-control.tsx": "sha256:30ab835015826538ee26259981e756d0fb9e9551e1769271ed93e2beefcc125c",
+    "app/governed-water-control.tsx": "sha256:ed98fe75f18f8ab97d6096070f918945d450ebade4bf439cffe872ffc7a169c3",
     "app/governed-water-server.ts": "sha256:4faf6c4041f7abb44beaaaf1e08813248220088745570b918d761bc403e43b32",
     "app/governed-water.ts": "sha256:951378cc9156ac41ce9ee122b16ec374185c92d4ae73d758c3846f078b0c3674",
     "app/hydrology-observatory.tsx": "sha256:539ea43b4aa81b045692d0b23729f44f82db74c3258d48d2aa29a991ab651f3e",

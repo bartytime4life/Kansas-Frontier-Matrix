@@ -187,3 +187,20 @@ D1/R2 integration tests; rendered local/hosted selection-to-evidence acceptance;
 production telemetry retention and recovery; host adoption of timers; hosted
 rollback. After these gates, expand Census, PRISM/wind, terrain/imagery/soil,
 weather/hazards and other domains through the same governed workflow.
+
+## CI integration and historical receipts
+
+Legacy scaffold API imports stay independent of optional water packages. The
+water and domain hydrology lanes install the `water-pilot` profile and execute
+the new normalization/denial tests. The OPA and synthetic proof guards recognize
+this bounded implementation without granting broader policy or release readiness.
+The NWIS v0 authoring receipt is checked against its original ancestor
+`597897584478820f051388bc2a7c734429be7a16`; current v1 tests run separately.
+The dependency-migration replay reads both ledger and workflow bytes from its
+pinned historical revision. Current workflow exceptions remain hash-bound to the
+current ledger; historical receipt files are preserved.
+
+The source-neutral bounded curl transport now owns temporary network-response
+files under `packages/connectors-core`. The USGS connector still owns its exact
+provider profile, request scope, pagination and capture. This follows the
+existing shared-transport responsibility and adds no lifecycle write authority.

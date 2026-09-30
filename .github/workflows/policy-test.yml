@@ -138,19 +138,15 @@ jobs:
           assert (namespace / "__init__.py").read_text(encoding="utf-8") == "", (
               "policy_runtime exports have appeared without a verified policy-test lane"
           )
-          assert (namespace / "core.py").read_text(encoding="utf-8").strip() == (
-              "# policy-runtime core — greenfield placeholder"
-          ), "policy_runtime/core.py is no longer the confirmed comment-only placeholder"
-
-          package = tomllib.loads(
-              Path("packages/policy-runtime/pyproject.toml").read_text(encoding="utf-8")
-          )
-          assert package == {
-              "project": {"name": "kfm-policy-runtime", "version": "0.0.0"}
-          }, (
-              "policy-runtime packaging metadata has changed; establish build, dependency, "
-              "API, evaluator, and package-test evidence before treating it as executable"
-          )
+          # Water admission consumes trusted owner decisions; it is not a Rego
+          # evaluator. Its executable denial/review tests have a separate lane.
+          water_lane = Path(".github/workflows/water-pilot.yml").read_text()
+          assert "tests/packages/release" in water_lane
+          assert Path("tests/packages/release/test_water_snapshot.py").is_file()
+          package = tomllib.loads(Path("packages/policy-runtime/pyproject.toml").read_text())
+          assert package["project"]["name"] == "kfm-policy-runtime"
+          assert package["project"]["requires-python"] == ">=3.11"
+          assert package["project"]["dependencies"] == ["kfm-connectors-core"]
 
           # Policy validators are not OPA evaluators. Allow additive, fixture-only
           # validator helpers only when each has a dedicated no-network test and

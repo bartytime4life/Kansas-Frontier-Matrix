@@ -2,7 +2,7 @@ meta:
   status: PROPOSED
   owner: maintainer
   description: Pinned 949-marker inventory, reconciled to 747 artifact entries. Open entries are holds, not implemented capabilities.
-  last_reviewed: '2026-09-30'
+  last_reviewed: 2026-09-30
   related_doctrine:
   - docs/doctrine/directory-rules.md
 schema_version: 1.0.0

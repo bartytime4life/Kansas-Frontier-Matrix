@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
-import type { Map as MapLibreMap } from "maplibre-gl";
+import type { Map as MapLibreMap } from "./maplibre-seam";
 import { readBoundedJson } from "./bounded-json";
 import type { WaterResponse } from "./governed-water";
 

@@ -1745,3 +1745,12 @@ Before changing this package:
 Its current value is a governed package boundary and a pair of detailed source contracts. The next sound change is not a broad framework build. It is to resolve SourceDescriptor authority drift, complete minimal Python packaging, prove import safety, and implement a small set of pure, bounded, no-network primitives with negative-first tests.
 
 <p align="right"><a href="#top">Back to top</a></p>
+
+### Bounded water transport (2026-09-30)
+
+`connectors_core.bounded_curl.BoundedCurlTransport` implements the injected
+transport protocol for fixed-host profiles. It enforces a total process timeout,
+response-size cap, HTTPS-only transport, no redirects and temporary response
+files. The USGS pilot supplies the exact provider and path profile; the shared
+transport does not choose sources or write lifecycle stores. Regression tests
+are in `tests/packages/connectors_core/test_bounded_curl.py`.

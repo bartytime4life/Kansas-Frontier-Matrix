@@ -2,7 +2,6 @@ import json
 from wsgiref.simple_server import make_server, WSGIServer, WSGIRequestHandler
 
 from governed_api.routes.registry import ROUTES
-from governed_api import water
 
 _RELEASE_STORE = None
 from governed_api.stub import invoke_sync_fixture_operation, make_error_envelope
@@ -49,7 +48,9 @@ def app(environ, start_response):
     path = environ.get("PATH_INFO", "")
     if path == "/healthz" and environ.get("REQUEST_METHOD", "GET") == "GET":
         return _json_response(start_response, "200 OK", {"process": "LIVE", "release_store": "CONFIGURED" if _RELEASE_STORE is not None else "NOT_CONFIGURED", "evidence_readiness": "NOT_ESTABLISHED", "build": "kfm-water-v1"})
-    if path in water.ROUTES:
+    if path in {"/v1/bootstrap", "/v1/layers", "/v1/evidence"}:
+        # Compatibility routes do not need the optional water serving package.
+        from governed_api import water
         return water.respond(environ, start_response, _RELEASE_STORE)
     method = environ.get("REQUEST_METHOD", "GET")
 

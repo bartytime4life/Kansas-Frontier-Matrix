@@ -52,7 +52,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install Hydrology validation dependencies
-        run: python tools/ci/install_python_ci.py project-test
+        run: python tools/ci/install_python_ci.py water-pilot
 
       - name: Evaluate Hydrology validation readiness
         shell: bash
@@ -145,8 +145,9 @@ jobs:
               test_root / "test_living_waters_fixture_packet.py",
               test_root / "test_no_network_proof.py",
               test_root / "test_proof_slice.py",
+              test_root / "test_usgs_water_normalizer.py",
           }
-          test_inventory = sorted(path for path in test_root.rglob("*") if path.is_file())
+          test_inventory = sorted(path for path in test_root.rglob("*") if path.is_file() and "__pycache__" not in path.parts)
           test_symlinks = sorted(path for path in test_root.rglob("*") if path.is_symlink())
           if test_symlinks:
               raise SystemExit(
@@ -580,6 +581,7 @@ jobs:
 
           echo "EXPECTED_REJECTION: invalid Hydrology water-level fixture"
 
+          python -m pytest -q tests/domains/hydrology/test_usgs_water_normalizer.py
           python tools/validators/domains/hydrology/validate_catalog_matrix.py --fixtures
           python tools/validators/domains/hydrology/validate_schema.py
           python tools/validators/domains/hydrology/validate_source_descriptor.py --fixtures

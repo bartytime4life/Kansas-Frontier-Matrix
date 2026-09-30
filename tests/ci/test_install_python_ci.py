@@ -93,6 +93,15 @@ class InstallPythonCiTests(unittest.TestCase):
         self.assertEqual(module.MIGRATION_ENTRY_COUNT, len(entries))
         self.assertEqual(sorted(entries), list(entries))
 
+    def test_historical_replay_loads_ledger_from_the_same_exact_revision(self) -> None:
+        raw = (REPO_ROOT / module.MIGRATION_MANIFEST).read_bytes()
+        with mock.patch.object(module, "_read_commit_workflows", return_value={module.MIGRATION_MANIFEST: raw}) as read:
+            manifest, _entries = module.load_workflow_migration_manifest(commit_sha="1" * 40)
+        read.assert_called_once_with("1" * 40, (module.MIGRATION_MANIFEST,))
+        self.assertEqual(module.MIGRATION_ID, manifest["migration_id"])
+        with self.assertRaises(module.InstallConfigurationError):
+            module.load_workflow_migration_manifest(commit_sha="main")
+
     def test_migration_hash_failure_reports_every_mismatched_workflow(self) -> None:
         manifest, entries = module.load_workflow_migration_manifest(REPO_ROOT)
         migration_head = module.subprocess.run(
