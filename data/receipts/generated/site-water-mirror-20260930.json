@@ -1,6 +1,6 @@
 {
   "profile": "kfm.site-mirror-receipt/v1",
-  "source_commit": "681b4775e92041ba2fb7cc64619f251303293fa5",
+  "source_commit": "68f888227b5560076355d1475e679530feab60c9",
   "source_base_commit": "625749841d4bd9c42a55a917f46b72eb1fba5e62",
   "source_base_site_version": 129,
   "candidate_site_version": null,
@@ -142,7 +142,7 @@
     "app/site-features.ts": "sha256:7f5d68e6f952598972d0cd80d64cbe9431525a395350a865661ca66c926ed2ae",
     "app/site-identity.ts": "sha256:79c4c7192c54d979654f2b8f966a6bd87a5506ad1cfd56425199e933120eae21",
     "app/site-registry.ts": "sha256:32d81a913d123ea2cc3d283eb225399dd44b1259f77f9b860fab31e25666b7e2",
-    "app/snapshot-map.tsx": "sha256:745e35703c526f6759ae85ae075a33a0993e7391ce1ae30a4dbff3227ce1ceb3",
+    "app/snapshot-map.tsx": "sha256:23752dce40d3d726ae39f0c25f6488563d7d9cdced80d1458667c025ae33d3d3",
     "app/soil-moisture-control.tsx": "sha256:60a20f36a4689802861512bc918409a28be35b925439e8e5a10bc64e36d69939",
     "app/soil-moisture-server.ts": "sha256:cef575ad87024bfaccbe3080c6164319f8ca17b00342344c9f8cb9d90112ded7",
     "app/soil-moisture.ts": "sha256:e61322093bfb3d6acb6c3c0a36b86d5aac3b167d44df6a7402611f428c5659a5",

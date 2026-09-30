@@ -148,4 +148,3 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
     <figcaption role="status">{status}</figcaption>
   </figure>;
 }
-
