@@ -19,7 +19,9 @@ from urllib.parse import urlencode
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 ROOT = Path(__file__).resolve().parents[1]
-FETCH = ROOT / "connectors/usgs/topoview/fetch_sheet.py"
+sys.path.insert(0, str(ROOT))
+from connectors.usgs.topoview.fetch_sheet import stream_geotiff
+
 TRANSFORM = ROOT / "pipelines/normalize/geography/historical_topo_tiles.py"
 SITE_ORIGIN = "https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site"
 
@@ -69,6 +71,36 @@ def stage(url: str, token: str, scan: int, package: str, address: str, path: Pat
             time.sleep(2 ** attempt)
 
 
+def capture_raw(item: dict, raw: Path, scan: int) -> Path:
+    """Persist the original and its receipt without exposing a partial capture."""
+    original = raw / f"{scan}.tif"
+    receipt = raw / f"{scan}.capture.json"
+    if receipt.exists():
+        if not original.is_file():
+            raise ValueError("RAW receipt exists without its original GeoTIFF")
+        return receipt
+    if original.exists():
+        raise ValueError("RAW GeoTIFF exists without its capture receipt")
+    partial = raw / f"{scan}.tif.part"
+    receipt_partial = raw / f"{scan}.capture.json.part"
+    try:
+        with partial.open("xb") as output:
+            record = stream_geotiff(item, output.write)
+            output.flush()
+            os.fsync(output.fileno())
+        with receipt_partial.open("x", encoding="utf-8") as output:
+            json.dump(record, output, sort_keys=True, indent=2)
+            output.write("\n")
+            output.flush()
+            os.fsync(output.fileno())
+        partial.rename(original)
+        receipt_partial.rename(receipt)
+    finally:
+        partial.unlink(missing_ok=True)
+        receipt_partial.unlink(missing_ok=True)
+    return receipt
+
+
 def run(site: str, raw: Path, packages: Path, token: str, dry_run: bool, request_file_input: Path | None) -> None:
     if site != SITE_ORIGIN:
         raise ValueError("use the exact HTTPS owner-private Site origin")
@@ -91,9 +123,7 @@ def run(site: str, raw: Path, packages: Path, token: str, dry_run: bool, request
         request_file.write_text(json.dumps(item, sort_keys=True) + "\n", encoding="utf-8")
     elif json.loads(request_file.read_text(encoding="utf-8")) != item:
         raise ValueError("queued sheet identity changed after capture")
-    receipt = raw / f"{scan}.capture.json"
-    if not receipt.exists():
-        subprocess.run([sys.executable, str(FETCH), "--request", str(request_file), "--output", str(raw)], check=True)
+    receipt = capture_raw(item, raw, scan)
     capture = json.loads(receipt.read_text(encoding="utf-8"))
     package = capture["geotiff"]["sha256"][:24]
     folder = packages / f"{scan}-{package}"

@@ -2,8 +2,8 @@
 
 `fetch_sheet.py` accepts one Kansas sheet request returned by the Site queue.
 It searches the official TNM product API, requires a unique GeoTIFF match for
-the scan ID, edition, name and scale, then writes the unmodified source bytes
-and retrieval receipt to an external RAW directory. It rejects redirects,
+the scan ID, edition, name and scale, then streams the unmodified source bytes
+to the worker, which writes the RAW original and retrieval receipt. It rejects redirects,
 unexpected media, oversize or incomplete downloads, non-Kansas requests, and
 ambiguous matches. It never creates an activated Site layer.
 

@@ -1296,6 +1296,23 @@
   "latest_live_site_version_at_check": 131,
   "profile": "kfm.site-mirror-receipt/v1",
   "repository_base": "961385e77a4b1742ee6c3f4e604d225bb080dbdd",
+  "repository_only_overlays": {
+    "app/api/governed/v1/[view]/route.ts": "de1bf475cc93cec2427e5e76982d0d10e5f6a212665c163fc977092b4ffbbea0",
+    "app/governed-water-control.tsx": "ed98fe75f18f8ab97d6096070f918945d450ebade4bf439cffe872ffc7a169c3",
+    "app/governed-water-server.ts": "4faf6c4041f7abb44beaaaf1e08813248220088745570b918d761bc403e43b32",
+    "app/governed-water.ts": "951378cc9156ac41ce9ee122b16ec374185c92d4ae73d758c3846f078b0c3674",
+    "docs/governed-water.md": "dcb159a6f2db86f8820dc75c371721568ad244cad11427047013027f4dd29e75",
+    "drizzle/0001_governed_water.sql": "2f47e08ca16884457926aa654824e089161a9dc276adc5edf40cd1bf238f9352",
+    "tests/fixtures/governed-water/bootstrap.json": "3b8f8f893847ac82f37f6b3866b14c6a3b41cdf4fe20f505173e768051300777",
+    "tests/fixtures/governed-water/decision.json": "0eb0606e4b48bcc3809a3d2fb1e3193de0dd6989ce465ef403565607e8159c8f",
+    "tests/fixtures/governed-water/evidence.json": "28557dde8addaabb37b2a084850670f692728a2125d0828b7217fe9dee966c8f",
+    "tests/fixtures/governed-water/held-snapshot.json": "c3ead381a91831af161f8fdd7f9c43c1a26f22652e24d7a39e489aa210199b57",
+    "tests/fixtures/governed-water/layers.json": "1cc867a3f4621815269482ffd9c6cbf9e77e8c5e6fb0830150cf13bc905287ee",
+    "tests/fixtures/governed-water/snapshot.json": "c5e9ab17e9ec6a6a1995c06ae3050e7e66d8e8c02db9736955911c31040930f1",
+    "tests/governed-water-storage.test.mjs": "f9b968928cc43ac19768580d5e066a6f400c7c8570f4ea549348e68e177620fb",
+    "tests/governed-water.test.mjs": "99345a718aec4b90961d104263dbe5765f0cc94478d4af562fec057f6f1f9c22",
+    "tests/soil-map-state.test.mjs": "7b7cbed1ce754f56adb39698ba44dd2df4ddcceec7c33cd45bb18ba5663895fe"
+  },
   "site_changed_files": [
     "README.md",
     "app/api/historical-topo/activate/route.ts",

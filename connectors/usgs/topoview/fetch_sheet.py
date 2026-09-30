@@ -1,18 +1,15 @@
-"""Capture one queued Kansas topoView scan from the official TNM product API.
+"""Select and stream one exact Kansas topoView GeoTIFF from the official TNM API.
 
-This connector writes immutable RAW bytes and a retrieval receipt to an
-operator-selected external directory. It never publishes a map or accepts a
-client-supplied download URL.
+The worker owns RAW persistence; this connector never publishes a map or
+accepts a client-supplied download URL.
 """
 from __future__ import annotations
 
-import argparse
 import hashlib
 import json
-import os
-from pathlib import Path
 import re
 import time
+from collections.abc import Callable
 from urllib.parse import urlencode, urlparse
 from urllib.request import Request, build_opener, HTTPRedirectHandler
 
@@ -83,53 +80,26 @@ def product_for_request(item: dict) -> dict:
     return candidates[0]
 
 
-def capture(item: dict, destination: Path) -> Path:
+def stream_geotiff(item: dict, emit: Callable[[bytes], None]) -> dict:
+    """Transport validated source chunks to a caller-owned RAW writer."""
     product = product_for_request(item)
     url = product["urls"]["GeoTIFF"]
-    target = destination / f"{item['scanId']}.tif"
-    receipt = destination / f"{item['scanId']}.capture.json"
-    destination.mkdir(parents=True, exist_ok=True)
-    if target.exists() or receipt.exists():
-        raise FileExistsError("capture already exists; preserve it and use a new external directory")
-    temporary = target.with_suffix(".part")
     sha = hashlib.sha256()
     size = 0
-    try:
-        with OPENER.open(Request(url, headers={"Accept": "image/tiff", "User-Agent": "KFM-historical-topo-capture/1.0"}), timeout=45) as response:
-            if response.status != 200 or response.headers.get("Content-Type", "").split(";")[0] != "image/tiff":
-                raise ValueError("official download did not return a GeoTIFF")
-            declared = int(response.headers.get("Content-Length", "0"))
-            if not 1024 <= declared <= MAX_CAPTURE_BYTES:
-                raise ValueError("official GeoTIFF size is outside the capture limit")
-            with temporary.open("xb") as output:
-                while chunk := response.read(1 << 20):
-                    size += len(chunk)
-                    if size > MAX_CAPTURE_BYTES:
-                        raise ValueError("official GeoTIFF exceeded the capture limit")
-                    sha.update(chunk)
-                    output.write(chunk)
-                output.flush()
-                os.fsync(output.fileno())
+    with OPENER.open(Request(url, headers={"Accept": "image/tiff", "User-Agent": "KFM-historical-topo-capture/1.0"}), timeout=45) as response:
+        if response.status != 200 or response.headers.get("Content-Type", "").split(";")[0] != "image/tiff":
+            raise ValueError("official download did not return a GeoTIFF")
+        declared = int(response.headers.get("Content-Length", "0"))
+        if not 1024 <= declared <= MAX_CAPTURE_BYTES:
+            raise ValueError("official GeoTIFF size is outside the capture limit")
+        while chunk := response.read(1 << 20):
+            size += len(chunk)
+            if size > MAX_CAPTURE_BYTES:
+                raise ValueError("official GeoTIFF exceeded the capture limit")
+            sha.update(chunk)
+            emit(chunk)
         if size != declared:
             raise ValueError("official GeoTIFF download was incomplete")
-        temporary.rename(target)
-        record = {"version": 1, "sheet": {k: item[k] for k in ("id", "scanId", "name", "year", "scale", "state")},
-                  "geotiff": {"url": url, "sha256": sha.hexdigest(), "bytes": size}, "retrievedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-                  "tnmSourceId": product.get("sourceId"), "tnmMetadataUrl": product.get("vendorMetaUrl")}
-        receipt.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-        return receipt
-    finally:
-        temporary.unlink(missing_ok=True)
-
-
-def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--request", type=Path, required=True, help="JSON request returned by the Site preparation queue")
-    parser.add_argument("--output", type=Path, required=True, help="external RAW capture directory")
-    args = parser.parse_args()
-    item = json.loads(args.request.read_text(encoding="utf-8"))
-    print(capture(item, args.output))
-
-
-if __name__ == "__main__":
-    main()
+    return {"version": 1, "sheet": {k: item[k] for k in ("id", "scanId", "name", "year", "scale", "state")},
+            "geotiff": {"url": url, "sha256": sha.hexdigest(), "bytes": size}, "retrievedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            "tnmSourceId": product.get("sourceId"), "tnmMetadataUrl": product.get("vendorMetaUrl")}
