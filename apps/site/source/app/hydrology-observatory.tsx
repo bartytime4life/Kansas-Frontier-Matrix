@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useMemo, type KeyboardEvent, type ReactNode } from "react";
+import { waterReadingCue } from "./water-flow-context";
 import {
   buildHydrographSegments,
   stationObservations,
@@ -27,6 +28,8 @@ export type HydrologyObservatoryProps = Readonly<{
   selectedStationId: string | null;
   frameTimes?: readonly string[];
   reducedMotion: boolean;
+  downstreamState: "idle" | "loading" | "ready" | "empty" | "error";
+  downstreamPathCount: number;
   sourceSwitcher?: ReactNode;
   onRefresh: () => void;
   onTogglePlay: () => void;
@@ -36,6 +39,7 @@ export type HydrologyObservatoryProps = Readonly<{
   onSpeed: (speed: HydrologyPlaybackSpeed) => void;
   onRange: (range: HydrologyRange) => void;
   onSelectStation: (stationId: string | null) => void;
+  onShowDirection: () => void;
 }>;
 
 const CHART_WIDTH = 640;
@@ -167,6 +171,8 @@ export function HydrologyObservatory({
   selectedStationId,
   frameTimes,
   reducedMotion,
+  downstreamState,
+  downstreamPathCount,
   sourceSwitcher,
   onRefresh,
   onTogglePlay,
@@ -176,6 +182,7 @@ export function HydrologyObservatory({
   onSpeed,
   onRange,
   onSelectStation,
+  onShowDirection,
 }: HydrologyObservatoryProps) {
   const chartTitleId = useId();
   const chartDescriptionId = useId();
@@ -215,6 +222,9 @@ export function HydrologyObservatory({
   const missingCount = Math.max(explicitMissingCount, Math.max(0, stationOptions.length - reportingCount));
   const provisionalCount = frameValues.filter((properties) => stringValue(properties.approvalStatus)?.toLowerCase().includes("provisional")).length;
   const selectedFrameProperties = frameValues.find((properties) => stringValue(properties.stationId) === selectedStationId) ?? null;
+  const selectedWaterCue = waterReadingCue(frame?.features.find((feature) => feature.properties.stationId === selectedStationId)?.properties ?? null, selectedSeries);
+  const relativePosition = selectedWaterCue.rangePosition === null ? null
+    : selectedWaterCue.rangePosition <= 0.2 ? "Near loaded low" : selectedWaterCue.rangePosition >= 0.8 ? "Near loaded high" : "Between loaded low and high";
   const activeObservationTime = selectedFrameProperties ? stringValue(selectedFrameProperties.observedAt) : null;
   const activeObservation = activeObservationTime
     ? selectedSeries.find((observation) => observation.observedAt === activeObservationTime) ?? null
@@ -329,6 +339,20 @@ export function HydrologyObservatory({
       <article><span>MISSING</span><strong>{missingCount}</strong><small>not zero flow</small></article>
       <article><span>PROVISIONAL</span><strong>{provisionalCount}</strong><small>subject to revision</small></article>
     </div>
+
+    <section className="hydrology-water-reading" aria-label="Selected station water movement and range">
+      <div className="hydrology-water-reading-head"><span>WATER AT SELECTED GAUGE</span><strong>{selectedStation ? selectedWaterCue.kind === "missing" ? "No reading at this frame" : formatDischarge(selectedWaterCue.value, hydrographSummary.unit) : "Choose a station to inspect flow"}</strong></div>
+      {selectedStation && <>
+        <p>{selectedWaterCue.kind === "zero" ? "Observed zero discharge at this gauge. The extent of dry channel is unknown."
+          : selectedWaterCue.kind === "missing" ? "Missing is unknown, not zero or dry."
+          : selectedWaterCue.change !== null ? `${selectedWaterCue.change > 0 ? "Rising" : selectedWaterCue.change < 0 ? "Falling" : "Steady"} by ${formatDischarge(Math.abs(selectedWaterCue.change), hydrographSummary.unit)} since the prior reported observation.`
+          : "No prior reported value is available for comparison in this frame."}</p>
+        {relativePosition && <div className="hydrology-range-position"><div role="meter" aria-label="Position within loaded station observations" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(selectedWaterCue.rangePosition! * 100)} aria-valuetext={relativePosition}><i style={{ left: `${selectedWaterCue.rangePosition! * 100}%` }} /></div><small>{relativePosition} · {formatDischarge(selectedWaterCue.rangeMinimum, hydrographSummary.unit)} to {formatDischarge(selectedWaterCue.rangeMaximum, hydrographSummary.unit)} in loaded station range</small></div>}
+      </>}
+      <div className="hydrology-direction-status" role="status"><strong>MAPPED FLOW DIRECTION</strong><span>{!selectedStation ? "Show direction to choose a reporting gauge and inspect its nearby mapped channels." : downstreamState === "ready" ? `${downstreamPathCount} USGS 3DHP channel segment${downstreamPathCount === 1 ? "" : "s"} near this gauge. Longer trails follow digitized downstream lines; with motion enabled they keep moving while the observation clock is paused. Trail length and pace are illustrative, not measured travel or proof of a connected wet channel.` : downstreamState === "loading" ? "Checking mapped channel direction…" : downstreamState === "empty" ? "No verified directional channel segment nearby; arrows hidden. Try another gauge." : downstreamState === "error" ? "Mapped channel direction unavailable; arrows hidden." : "Mapped direction is not loaded."}</span></div>
+      <button className="hydrology-direction-action" type="button" onClick={onShowDirection} disabled={!bundle?.stations.length}>{selectedStation ? "Zoom to flow direction" : "Show flow direction on map"}</button>
+      <small className="hydrology-reading-boundary">Gauge rings show change at a station. Relative low or high describes only the loaded station readings; it is not a drought or flood threshold.</small>
+    </section>
 
     {(state === "loading" || state === "empty" || state === "stale" || state === "error" || error) && <div className="hydrology-message" data-state={state} role={state === "error" ? "alert" : "status"}>
       <strong>{state === "loading" ? "Loading source observations" : state === "empty" ? "No observations returned" : state === "stale" ? "Last confirmed observations are stale" : state === "error" ? "Streamflow is unavailable" : "Source notice"}</strong>

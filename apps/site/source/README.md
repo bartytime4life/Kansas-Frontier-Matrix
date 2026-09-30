@@ -1,3 +1,10 @@
+
+
+> **Unpublished water integration candidate:** [governed water notes](docs/governed-water.md)
+> describe the read-only snapshot adapter, evidence/export control, dependency
+> reconciliation and explicit review/deployment holds. It is based on Site v129;
+> the historical deployment entries below retain their original dates and scope.
+
 # Kansas Frontier Matrix Explorer
 
 A map-first Kansas explorer with real provider baselines, dated archive replay,
@@ -32,6 +39,15 @@ Kansas viewpoints share the map camera, with sampled camera readings and explici
 source-time/recipe-year boundaries. Global display movement does not expand the
 Kansas recipe area or activate Earth Engine data. The full discovery page remains
 available for metadata comparisons and review drafts.
+
+In globe overview, provider point symbols, glows, strokes, and Census county
+outlines shrink continuously with zoom, and River Pulse rings, mapped trails,
+and wind flow wisps shrink with them. Whole-Earth view hides canvas motion;
+canvas effects on the globe's far side are not drawn. Close views restore their
+regular sizes. These changes affect screen presentation only: provider
+coordinates, Kansas geometry, source coverage, measurements, and evidence roles
+are unchanged. Regional image services remain subject to their existing globe
+visibility limits.
 
 The **Full catalog & comparison** link opens `/earth-engine`: eight curated
 dataset records, text/topic search, a three-dataset metadata comparison, and
@@ -164,12 +180,17 @@ browser FPS or universal speedup. Source research:
 ## Daily baseline and data commons — September 12, 2026
 
 The initial map enables actual Census county boundaries/counts, USGS streamflow,
-and hydrography. Synthetic interaction examples remain explicitly labeled in
-collapsed legacy controls and do not start enabled. The archive defaults to
+and hydrography. The synthetic domain layer registry and its guided examples
+have been retired; Map layers opens on provider-backed source context. The archive defaults to
 today in UTC, selects the latest available frame, and refreshes every five
 minutes while following today. Choosing historical time pauses following.
 All 24 hours remain visible; historical gaps and the older deep-time axis remain.
 Population and housing retain their independent 2010/2020 Census edition.
+
+Dropdown choices throughout the Site open with a click and remain available
+until a choice, outside click, or Escape. The shared menu keeps the original
+select's form value and change handler; keyboard users can use Enter or Space
+to open, arrow keys to move, and Enter to choose.
 
 Sources & data quality includes direct downloads and source-specific update
 links. `/data` accepts authenticated proposals (up to 10 MB per file), stores
@@ -201,7 +222,7 @@ package-owned renderer and newer dependency work retain their own history.
 ## Current public scope
 
 - Real USGS, NOAA, Census, NWS, and Raspberry Shake connections provide attributed
-  source context. Legacy synthetic examples are separately labeled and opt-in.
+  source context. No synthetic KFM domain layer is selectable.
 - The default Kansas Overview may show an attributed OpenStreetMap context basemap; it is display context, not evidence.
 - Nothing in this build is a released operational KFM dataset.
 - Evidence resolution fails closed: missing, stale, restricted, denied, and
@@ -401,6 +422,31 @@ values are not directly comparable across differently sized basins and are
 never painted onto 3DHP reaches or generalized into WBD watershed conditions.
 Flood categories are displayed only when NOAA supplies them.
 
+The River Pulse map now adds observation-linked gauge rings and a selected
+station readout. Rising rings expand; falling rings contract; steady, unknown,
+and reported-zero rings remain still. Ring color distinguishes the reading's
+change, and a missing frame has no ring. The selected station shows the numeric
+change from its prior reported observation and, where multiple distinct values
+exist, its position between the low and high of the **loaded station range**.
+That position is not a drought or flood threshold. A reported zero applies to
+the gauge only and does not map the extent of a dry channel.
+
+For a selected gauge, `/api/hydrology/direction` queries a fixed, bounded USGS
+3DHP Flowline endpoint. It accepts only explicit downstream channel lines and
+draws directional arrows along their digitized coordinates. The **Show flow
+direction on map** control chooses a reporting gauge near the map center when
+none is selected and zooms to a scale where the nearby channel guide can be
+seen. The arrows and longer luminous trails move along those mapped lines at
+a constant illustrative screen pace independently of the exact gauge
+observation clock; trail length and pace are not measured water travel distance
+or velocity. A visible short segment retains a moving direction marker.
+Reduced motion keeps the arrows still. Missing or zero discharge stops the
+moving arrows, while the mapped direction can remain visible. If 3DHP lacks a
+verified nearby line or is unavailable, arrows are hidden and the dock says
+why. Nearby segments are not proof of connected or currently wet water. This
+map guide does not infer wet extent, downstream travel time, flood stage, or
+local drought conditions.
+
 The Evidence Drawer resolves a selected USGS gauge against the current River
 Pulse frame and response. It shows the discharge, observation/frame/retrieval
 times, connection state, sample count, provider status and qualifiers, and a
@@ -409,6 +455,13 @@ retained sample as a prior response. Other official context selections show
 their feed state and response clocks. These are provider display observations;
 the drawer keeps KFM EvidenceBundle, admission, review, and release status
 separate. Site telemetry does not establish a KFM evidence claim.
+
+Map hover previews now appear in the Evidence Drawer, away from River Pulse
+flow trails. A brief desktop hover over an interactive source opens the drawer; on compact layouts,
+selecting a feature opens it. The preview remains labeled as the last map
+hover after the pointer leaves, and never replaces a clicked selection or
+establishes a KFM claim. Clicking a feature opens its full drawer details
+without a second popup over the map.
 
 Every selectable map record now has a bounded data view drawn from explicitly
 allowed source fields. Provider records follow the latest loaded response when
@@ -438,6 +491,8 @@ The optional radar control uses the NOAA nowCOAST WMS endpoint
 accepts only its explicit advertised ISO observation times. MapLibre then asks
 for each selected image with that exact `TIME`; the Site does not invent
 intermediate times, interpolate imagery, or make an untimed “latest” request.
+Raster transitions use a short visual fade for readability; every frame still
+comes from an explicit NOAA observation time.
 
 The dock can step or play up to 32 available observations from a rolling
 30-minute, 1-hour, or 2-hour view. Its default is 1 hour. Availability,
@@ -467,6 +522,8 @@ replays available frames, returns to the latest frame, and shows the provider
 legend and visible-area status. The layer's sidebar Options link opens this
 same panel. The NASA 1995–2014 climatology layer is a fixed composite and has
 no short-interval playback. Empty density pixels do not establish safety.
+The density raster also uses a short visual fade between exact NOAA frames;
+this does not infer strikes or densities between observations.
 
 ## External network disclosure
 
@@ -490,11 +547,15 @@ path; terrain failure returns to the 2D evidence path.
 
 ## NASA SMAP soil moisture display — September 29, 2026
 
-The owner-private Explorer has one optional **Soil moisture** control under Official sources. It is off by default. The four fixed NASA GIBS SPL4SMAU V008 views are surface (0–5 cm) and root-zone (0–100 cm) modeled moisture, each with an uncertainty view. The selected view renders as one dated raster at a time with its matching NASA legend. The source time is a daily 12:00 UTC snapshot at approximately 9 km product resolution. Color is not a numeric point reading, a local sensor observation, or an all-clear.
+The owner-private Explorer has one optional **Soil moisture** control under Official sources. It is off by default. Four fixed NASA GIBS SPL4SMAU V008 views are available: modeled surface (0–5 cm) and root-zone (0–100 cm) moisture, plus a corresponding uncertainty view for each depth. The selected view is a colorized raster with NASA’s matching legend. It drapes over the full SMAP latitude coverage on flat, terrain, and globe views; it is not a fabricated 3D moisture volume. NASA GIBS provides daily 12:00 UTC display snapshots at approximately 9 km product resolution.
 
-`/api/soil-moisture/availability` reads NASA WMTS capabilities on open or retry, exposes days within the last 30 UTC calendar days for each fixed view, and selects the latest shared day. It caches successful availability for 15 minutes. `/api/soil-moisture/tile` accepts only the four fixed layer IDs, an advertised shared UTC day, and valid zoom 0–6 tile coordinates; it rejects redirects and non-PNG or oversized responses. The UI reports source, backend, and map tile states separately. Switching day or view removes the prior raster source before requesting the next one. Terrain 3D and globe views hold the regional raster.
+The date controls loop over exact UTC days advertised for all four selected views, beginning with the product’s 2015-03-31 history and ending at the latest shared available date. Smooth visual mode keeps the current complete frame visible while the next frame loads, then crossfades adjacent daily color images and uses bilinear screen resampling to soften block edges. This blend is a display effect, not a numeric estimate or an additional observation. Missing-day jumps and loop resets fade through the basemap instead of implying an intermediate measurement. Exact image cells mode disables the blend and uses nearest-neighbor display. Reduced-motion preference pauses playback and keeps exact still frames. `/api/soil-moisture/availability` reads NASA WMTS capabilities on open or retry and caches successful availability for 15 minutes. `/api/soil-moisture/tile` accepts only the four fixed layer IDs, an advertised shared UTC day, and valid zoom 0–6 tile coordinates; it rejects redirects and non-PNG or oversized responses. The UI reports source, backend, and map tile states separately. A failed or missing frame remains unavailable, retaining the last complete visible frame when possible.
 
-This is external visual context only. It does not enter KFM RAW, catalog, EvidenceBundle, reports, exports, admission, or release. Missing days and failed tiles remain unavailable. [NASA GIBS layer metadata](https://gibs.earthdata.nasa.gov/layer-metadata/v1.0/SMAP_L4_Analyzed_Surface_Soil_Moisture.json) · [NSIDC SPL4SMAU Version 8](https://nsidc.org/data/spl4smau/versions/8). Kansas Mesonet remains a separate candidate requiring written consent for automated ingestion under its [usage policy](https://mesonet.k-state.edu/about/usage/).
+The underlying NSIDC SPL4SMAU product is distributed as native 3-hourly instantaneous analysis snapshots in HDF5. This Site’s GIBS images are daily colorized tiles, so their PNG pixel colors are not numeric map samples supplied to the Qwen science/context engine. Its structured context identifies the exact selected view/day, the confirmed rendered frame or visual transition endpoints and blend fraction, product cadence, coverage, and `EXTERNAL_CONTEXT_ONLY` role, and explicitly marks numeric pixels unavailable. Use the [NSIDC product guide](https://nsidc.org/data/spl4smau/versions/8) for source-level native data and numeric analysis. Color is not a local sensor reading, a numeric point value, or an all-clear.
+
+NSIDC’s notice checked on September 30, 2026 flags a geolocation issue for May 14–July 28, 2026; the card calls this out when one of those days is selected and links to the current NSIDC notice. Check the source’s reprocessing status before analyzing that interval.
+
+This is external visual context only. It does not enter KFM RAW, catalog, EvidenceBundle, reports, exports, admission, or release. [NASA GIBS layer metadata](https://gibs.earthdata.nasa.gov/layer-metadata/v1.0/SMAP_L4_Analyzed_Surface_Soil_Moisture.json) · [NSIDC SPL4SMAU Version 8](https://nsidc.org/data/spl4smau/versions/8). Kansas Mesonet remains a separate candidate requiring written consent for automated ingestion under its [usage policy](https://mesonet.k-state.edu/about/usage/).
 
 ## Official Kansas context adapters
 
@@ -527,25 +588,6 @@ Every connection is `EXTERNAL_CONTEXT_ONLY`. It is excluded from KFM reports,
 exports, source admission, release state, and EvidenceBundle resolution. Failed,
 partial, empty, and refreshed states remain visible instead of being converted
 into inferred facts.
-
-## Calculated daylight and twilight
-
-The optional **Daylight & twilight** map layer calculates solar position with
-the NREL Solar Position Algorithm through `sunrise-sunset-js` and shades night,
-astronomical, nautical, and civil twilight, including the conventional apparent
-sunrise/sunset boundary. Select a Kansas Central calendar day to start a
-60-second full-day loop; 23- and 25-hour daylight-saving days use their actual
-local-day length. The control shows Central and UTC time, supports pause and
-scrubbing, and stores the selected day and cursor in the map URL. Restored links
-open paused, and reduced-motion settings disable autoplay. This calculated
-solar geometry is map context, not measured ground-level brightness. It is not
-a provider feed and does not use GOES or VIIRS imagery as a solar input; those
-layers remain independently controlled visual context. Solar polygons are
-clipped at the antimeridian so the same twilight boundary continues across
-globe and flat map views. The NREL method is described in the
-[Solar Position Algorithm report](https://www.nrel.gov/docs/fy08osti/34302.pdf);
-the [USNO daily service](https://aa.usno.navy.mil/data/api) provides independent
-event-time checks.
 
 ## Backend connection posture
 
@@ -677,6 +719,11 @@ Scripts that need writable project-scoped home, npm, XDG, and temporary paths us
   tolerance-bounded map frames, and breaks hydrographs across gaps
 - `app/hydrology-observatory.tsx` owns the accessible River Pulse transport,
   completeness readout, legends, station selection, and hydrograph
+- `app/water-flow-context.ts` checks bounded downstream geometry and computes
+  exact station change and loaded-range cues; `app/water-motion-canvas.ts`
+  renders the illustrative map motion
+- `app/api/hydrology/direction/route.ts` exposes only bounded USGS 3DHP
+  downstream channel geometry near a selected Kansas gauge
 - `app/api/hydrology/streamflow/route.ts` exposes bounded USGS Water Data API v1
   network and selected-station queries
 - `app/noaa-hydrology.ts` validates the bounded NOAA Kansas gauge network for
@@ -688,6 +735,8 @@ Scripts that need writable project-scoped home, npm, XDG, and temporary paths us
 - `app/api/noaa-radar/frames/route.ts` exposes the bounded radar frame manifest
 - `app/noaa-satellite.ts` keeps exact GeoColor raster IDs and validates the
   separately labeled, daylight-dependent nowCOAST GOES visible fallback times
+- `app/daylight-layer.ts` computes solar day and twilight bands and clips them
+  at the antimeridian so their boundaries stay continuous in map views
 - `app/api/noaa-satellite/frames/route.ts` tries the fixed NOAA GeoColor catalog
   first, then the fixed dated visible WMS only if the catalog is unavailable;
   neither path substitutes an undated image
@@ -783,9 +832,9 @@ The timeout defaults can be overridden for a controlled canary with `SITES_INSTA
 ## Current map-to-draft work
 
 The React Explorer includes inherited map snapshots, validated device-local report
-and story drafts, attributed print and Markdown exports, and synchronized A/B
-snapshot maps. Synthetic ANSWER/CORRECTED fixtures retain their demonstration
-trust label. Source-backed counts do not count synthetic support states.
+and story drafts, and attributed print and Markdown exports. The retired synthetic
+domain records are not reportable; source-backed context keeps its provider and
+time labels and does not become admitted KFM evidence.
 
 This replacement packages the Vinext Worker output (`dist/server` and
 `dist/client`). Legacy static build files are excluded. Source dependencies,

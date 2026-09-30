@@ -5,11 +5,11 @@ import { SITE_IDENTITY } from "../site-identity";
 
 export const metadata: Metadata = {
   title: "About · Kansas Frontier Matrix Explorer",
-  description: "How to use the Kansas Frontier Matrix map, vector basemap context, Qwen companion, evidence states, and public-safe demonstration boundaries.",
+  description: "How to use the Kansas Frontier Matrix map, vector basemap context, Qwen companion, evidence states, and source boundaries.",
 };
 
 const evidenceStates = [
-  ["ANSWER", "A visible record has a matching demonstration evidence reference for its bounded claim."],
+  ["ANSWER", "A released record needs a matching evidence reference for its bounded claim. No KFM domain records are currently released in this Site."],
   ["CORRECTED", "A correction remains attached to the current record and report output."],
   ["MISSING_EVIDENCE", "The Explorer shows the gap and declines to infer an answer."],
   ["SOURCE_STALE", "The source context is too old for a current claim without additional review."],
@@ -52,7 +52,7 @@ export default function AboutPage() {
     <main className="about-content">
       <header className="about-hero">
         <div><span>ABOUT THE EXPLORER</span><h1>A map-first Living Atlas for seeing Kansas in context.</h1><p>The Explorer opens on a real MapLibre Kansas vector map with time, layers, and place context. Start with a view, then bring in evidence, reports, and Qwen interpretation only when they help answer the question.</p></div>
-        <aside><strong>Current data posture</strong><p>The map combines site-local demonstration records with separately labeled live and historical source context. External map layers and model views are display context, not admitted KFM evidence. This is not a released operational KFM data service.</p></aside>
+        <aside><strong>Current data posture</strong><p>The map presents attributed provider-backed layers such as Census counties, USGS water sources, and NOAA context. These sources have separate clocks and availability. No KFM domain layer has been admitted for this Site.</p></aside>
       </header>
 
       <section className="about-section">
@@ -68,22 +68,22 @@ export default function AboutPage() {
       <section className="about-section">
         <div className="about-section-heading"><span>MAP CAPABILITIES</span><h2>The main interface is built for action, not presentation.</h2></div>
         <div className="about-capability-grid">
-          <article><h3>Real map + context</h3><p>The default view is an attributed Kansas vector basemap with counties, places, roads, rail, water, and labels. Satellite imagery, terrain, and live source layers are optional display context; local KFM demonstration overlays remain separately labeled.</p></article>
-          <article><h3>Views + layers + time</h3><p>Start from a named Living Atlas investigation, then control visibility, opacity, order, temporal steps, evidence filters, and basemap treatments across the domain atlas.</p></article>
-          <article><h3>Search + inspect</h3><p>Search layers, feature IDs, evidence states, and places. From a committed feature, discover nearby cross-domain records using generalized anchors and fit or reveal the represented layers.</p></article>
-          <article><h3>Qwen map companion</h3><p>Ask Qwen about the active place, time, visible layers, or selected record. The bridge receives a bounded map-context packet; it never becomes the evidence authority and stays usable with local Qwen/Ollama when the Site endpoint is not configured.</p></article>
-          <article><h3>Spatial analysis + motion</h3><p>Shift-drag a MapLibre report area, move through camera history, compare records, or use reduced-motion-aware water, smoke, fire, hazard, habitat, transport, and city effects that change paint only—not evidence.</p></article>
-          <article><h3>Places, stories + reports</h3><p>Save complete map states as ordered device-local investigation stops, play the paused four-step story, and produce printable HTML or structured JSON with filters, evidence, attribution, and redactions.</p></article>
+          <article><h3>Real map + context</h3><p>The default view is an attributed Kansas vector basemap with counties, places, roads, rail, water, and labels. Satellite imagery, terrain, and provider-backed source layers are optional display context. No synthetic KFM domain overlays are offered.</p></article>
+          <article><h3>Views + layers + time</h3><p>Start from a named source-backed view, then control source visibility, opacity, order, provider time, and basemap treatment.</p></article>
+          <article><h3>Search + inspect</h3><p>Search source layers and places, then inspect mapped features with their provider and time information.</p></article>
+          <article><h3>Qwen map companion</h3><p>Ask Qwen about the active place, time, visible sources, or selected map feature. The bridge receives bounded context and is not an evidence authority.</p></article>
+          <article><h3>Spatial analysis + motion</h3><p>Shift-drag a report area, move through camera history, and inspect provider-backed water, smoke, and terrain context. Map presentation does not establish evidence.</p></article>
+          <article><h3>Places, stories + reports</h3><p>Save map states as device-local investigation stops and produce reports that retain attribution and limitations.</p></article>
         </div>
       </section>
 
       <section className="about-section">
-        <div className="about-section-heading"><span>DOMAIN ATLAS</span><h2>Broad relationships, bounded claims.</h2></div>
+        <div className="about-section-heading"><span>REAL SOURCE CONTEXT</span><h2>Inspect mapped sources on their own terms.</h2></div>
         <div className="about-capability-grid">
-          <article><h3>Water + living systems</h3><p>Water, habitat connectivity, fauna guilds, flora communities, and prairie concepts support regional comparison. Rare-species and protected occurrence coordinates are absent or denied.</p></article>
-          <article><h3>Fire, smoke + hazards</h3><p>Year-specific synthetic fire and smoke envelopes sit beside coarse drought, wind, and flood concepts. None are current conditions, forecasts, warnings, perimeters, or life-safety guidance.</p></article>
-          <article><h3>People + DNA governance</h3><p>The layer visualizes aggregate-only, consent-required, and denied policy postures. It contains no people, households, tribal affiliation, genealogy, kinship, genomic sequence, ancestry inference, or living-person data.</p></article>
-          <article><h3>Rail, roads + settlements</h3><p>Distinct generalized road and rail styles connect clustered, labeled settlement points for exploration—not routing, schedules, operations, asset condition, boundaries, or population claims.</p></article>
+          <article><h3>Water + living systems</h3><p>USGS stream gauges, mapped hydrography, and watershed boundaries offer separate views of water. A gauge reading does not establish flow throughout a mapped river.</p></article>
+          <article><h3>Fire, smoke + hazards</h3><p>NOAA smoke analyses and radar images carry provider times and coverage limits. They do not establish surface exposure or a fire perimeter.</p></article>
+          <article><h3>People + DNA governance</h3><p>Census county counts provide an edition-specific population and housing baseline. Individual and protected records are not mapped.</p></article>
+          <article><h3>Rail, roads + settlements</h3><p>Roads, railways, and places in the vector basemap provide orientation. Their display does not verify routing, schedules, operations, or asset condition.</p></article>
         </div>
       </section>
 
@@ -95,7 +95,7 @@ export default function AboutPage() {
       <section className="about-section">
         <div className="about-section-heading"><span>TRUST BOUNDARY</span><h2>Useful spatial work without turning the renderer into an authority.</h2></div>
         <div className="about-boundary">
-          <article><h3>What the Explorer can do</h3><ul><li>Display site demonstration fixtures and labeled external context on MapLibre.</li><li>Filter and summarize visible, selected, or viewport-scoped records.</li><li>Preview supported local KML or GeoJSON geometry without upload or external fetch.</li><li>Carry citations, attribution, uncertainty, corrections, and limitations into reports.</li><li>Withhold a browser-location-derived camera from shares, receipts, exports, and diagnostics.</li></ul></article>
+          <article><h3>What the Explorer can do</h3><ul><li>Display attributed provider-backed map context on MapLibre.</li><li>Inspect visible source features and their stated limits.</li><li>Preview supported local KML or GeoJSON geometry without upload or external fetch.</li><li>Carry citations, attribution, uncertainty, corrections, and limitations into reports.</li><li>Withhold a browser-location-derived camera from shares, receipts, exports, and diagnostics.</li></ul></article>
           <article><h3>What it does not claim</h3><ul><li>A map pixel, overlap, or proximity is not evidence.</li><li>A generated report or local-file preview cannot release, publish, admit, approve, or authorize data.</li><li>Screen measurements are not survey, cadastral, engineering, legal, or navigational results.</li><li>Protected geometry and unsupported claims are not reconstructed or inferred.</li></ul></article>
         </div>
       </section>
@@ -104,13 +104,13 @@ export default function AboutPage() {
         <div className="about-section-heading"><span>PROJECT CONTEXT</span><h2>Repository evidence and site behavior remain distinguishable.</h2></div>
         <div className="about-boundary">
           <article><h3>Repository checkpoint</h3><ul><li>{REPOSITORY_SNAPSHOT.repository}</li><li>Inspected main@{REPOSITORY_SNAPSHOT.shortCommit}</li><li>{REPOSITORY_SNAPSHOT.inspectedAt}</li><li>Architecture, functions, feature maturity, and transition records are read-only context in this Site.</li></ul></article>
-          <article><h3>Site-local runtime</h3><ul><li>MapLibre GL JS 6.9.0 with same-origin worker assets</li><li>OpenFreeMap / OpenMapTiles / OpenStreetMap vector context plus optional attributed raster basemaps; not evidence</li><li>Local GeoJSON demonstration sources and separately labeled external source layers</li><li>Optional Mapzen or USGS 3DEP DEM terrain display; source elevation remains external and non-authoritative</li><li>Optional Qwen/Ollama bridge; no inference endpoint is configured by default</li><li>No release, deployment, promotion, or publication authority</li></ul></article>
+          <article><h3>Site-local runtime</h3><ul><li>MapLibre GL JS 6.9.0 with same-origin worker assets</li><li>OpenFreeMap / OpenMapTiles / OpenStreetMap vector context plus optional attributed raster basemaps; not evidence</li><li>Separately labeled provider-backed source layers; no synthetic KFM domain registry</li><li>Optional Mapzen or USGS 3DEP DEM terrain display; source elevation remains external and non-authoritative</li><li>Optional Qwen/Ollama bridge; no inference endpoint is configured by default</li><li>No release, deployment, promotion, or publication authority</li></ul></article>
           <article><h3>Sites identity + domain</h3><ul><li>{SITE_IDENTITY.provider} · {SITE_IDENTITY.slug}</li><li>Canonical host: <a href={SITE_IDENTITY.canonicalUrl} target="_blank" rel="noreferrer">{SITE_IDENTITY.canonicalUrl.replace("https://", "")}</a></li><li>{SITE_IDENTITY.customDomainStatus.replaceAll("_", " ")} as checked {SITE_IDENTITY.checkedAt}</li><li>GitHub child manifest status: {SITE_IDENTITY.repositoryManifestStatus.replaceAll("_", " ")} · {SITE_IDENTITY.repositoryManifestProjectId}. Source histories remain separate.</li></ul></article>
         </div>
       </section>
 
       <section className="about-section" id="implementation">
-        <div className="about-section-heading"><span>IMPLEMENTATION PROGRAM</span><h2>Advance from a capable demonstration to a governed operational atlas.</h2><p>This sequence preserves the working map while converting candidate sources into reproducible, public-safe products. A track may be prototyped early, but it cannot be promoted ahead of its evidence and release gates.</p></div>
+        <div className="about-section-heading"><span>IMPLEMENTATION PROGRAM</span><h2>Advance the source-backed map to a governed operational atlas.</h2><p>This sequence preserves the working map while converting candidate sources into reproducible, public-safe products. A track may be prototyped early, but it cannot be promoted ahead of its evidence and release gates.</p></div>
         <div className="about-implementation-grid">
           {implementationTracks.map(([number, title, description]) => <article key={number}><span>{number}</span><div><h3>{title}</h3><p>{description}</p></div></article>)}
         </div>

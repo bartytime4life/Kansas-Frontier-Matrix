@@ -1,3 +1,5 @@
+> **Water delivery candidate — 2026-09-30:** source/ now mirrors unpublished standalone candidate `681b4775e92041ba2fb7cc64619f251303293fa5`, based on private Site v129. The [file-level receipt](../../data/receipts/generated/site-water-mirror-20260930.json) records all source digests and the reviewed synthetic-recipe retirement. Repository-only Earth Engine and soil-state fixes were reconciled first. The dated checkpoints below are historical; hosted parity is not claimed. See the [water runbook](../../docs/runbooks/water-pilot.md).
+
 # GPT Site source
 
 > **Repository checkpoint (2026-09-28):** `main@de2dcbd38a70af7668a18eac968e2b217390adfb`

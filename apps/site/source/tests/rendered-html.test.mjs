@@ -46,7 +46,8 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /Layer Catalog/i);
   assert.match(html, /MapLibre/i);
   assert.match(html, /Build report/i);
-  assert.match(html, /bounded demonstration data/i);
+  assert.match(html, /Real data layers/i);
+  assert.doesNotMatch(html, /Hydrology context<|Watershed &amp; storage context<|demonstration · selected/i);
   assert.match(html, /Repository briefing/i);
   assert.match(html, /main@(?:<!-- -->)?bb08d3e/i);
   assert.match(html, /Scenario review/i);
@@ -78,43 +79,10 @@ test("centers the primary workflow on map-scoped custom reports", async () => {
   assert.match(source, /const \[scenePreset, setScenePreset\] = useState<ScenePresetId>\("overview-2d"\)/);
   assert.match(source, /restoredScene[^\n]+\? restoredScene : "overview-2d"/);
   assert.match(source, /const defaultReportLayerIds = LAYER_REGISTRY\.filter\(\(layer\) => defaultVisibility\[layer\.id\]\)/);
-  assert.match(mapInterface, /id: "overview"[\s\S]+transport-context/);
   assert.match(about, /Start with a question, finish with a report/);
   assert.match(about, /EVIDENCE STATES/);
   assert.match(css, /\.report-builder-grid/);
   assert.match(css, /\.about-page/);
-});
-
-test("adds reusable analysis recipes, device-local workspaces, report filters, and richer fixtures", async () => {
-  const ts = await import("typescript");
-  const recipeSource = await readFile(new URL("../app/analysis-recipes.ts", import.meta.url), "utf8");
-  const explorerSource = await readFile(new URL("../app/explorer-data.ts", import.meta.url), "utf8");
-  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
-  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
-  const compile = (source, fileName) => ts.transpileModule(source, {
-    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
-    fileName,
-  }).outputText;
-  const recipes = await import(`data:text/javascript;base64,${Buffer.from(compile(recipeSource, "analysis-recipes.ts")).toString("base64")}`);
-  const explorer = await import(`data:text/javascript;base64,${Buffer.from(compile(withBuildClock(explorerSource), "explorer-data.ts")).toString("base64")}`);
-  const layer = (id) => explorer.LAYER_REGISTRY.find((candidate) => candidate.id === id);
-
-  assert.equal(recipes.ANALYSIS_RECIPES.length, 11);
-  assert.equal(recipes.ANALYSIS_RECIPES.every((recipe) => recipe.layerIds.every((id) => Boolean(layer(id)))), true);
-  assert.equal(layer("water-context").data.features.length, 4);
-  assert.equal(layer("agriculture-context").data.features.length, 3);
-  assert.equal(layer("communities").data.features.length, 12);
-  assert.equal(layer("transport-context").data.features.length, 3);
-  assert.equal(["water-context", "watershed-context", "prairie-context", "atmosphere-observations", "communities", "transport-context"].every((id) => layer(id).defaultVisibility), true);
-  assert.match(page, /kfm-map-workspaces-v1/);
-  assert.match(page, /saveCurrentWorkspace/);
-  assert.match(page, /loadSavedWorkspace/);
-  assert.match(page, /reportEvidenceFilter/);
-  assert.match(page, /handleWorkspaceShortcut/);
-  assert.match(page, /shortcut R/);
-  assert.match(css, /\.analysis-recipes/);
-  assert.match(css, /\.saved-workspace-list/);
-  assert.match(css, /\.report-active-filters/);
 });
 
 test("adds bounded smoke, water, elevation, tile, and scene navigation features", async () => {
@@ -131,16 +99,7 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   const explorer = await import(`data:text/javascript;base64,${Buffer.from(compiled).toString("base64")}`);
   const layer = (id) => explorer.LAYER_REGISTRY.find((candidate) => candidate.id === id);
 
-  assert.equal(explorer.LAYER_REGISTRY.length, 20);
-  assert.equal(layer("watershed-context").data.features.length, 3);
-  assert.equal(layer("smoke-context").data.features.length, 3);
-  assert.equal(layer("elevation-concept").data.features.length, 6);
-  assert.equal(layer("tile-matrix-grid").data.features.length, 24);
-  assert.equal(layer("water-context").sourceOptions.lineMetrics, true);
-  assert.match(explorerSource, /"line-gradient"/);
-  assert.match(explorerSource, /type: "fill-extrusion"/);
-  assert.match(explorerSource, /not observed smoke, a forecast, an advisory/i);
-  assert.match(explorerSource, /not a fetched vector tile, PMTiles archive/i);
+  assert.equal(explorer.LAYER_REGISTRY.length, 0);
   assert.match(runtime, /setElevationExaggeration/);
   assert.match(runtime, /type: "color-relief"/);
   assert.match(runtime, /"color-relief-color"/);
@@ -198,85 +157,6 @@ test("keeps representation switching atomic across 2D, terrain, and globe", asyn
   assert.match(source, /scenePresetRef\.current = nextScenePreset/);
   assert.match(source, /setTerrainPresentation\(map, false, 1\)[\s\S]+map\.setProjection[\s\S]+setTerrainPresentation\(map, true, 1\)/);
   assert.match(source, /map\.triggerRepaint\(\)/);
-});
-
-test("adds governed living systems, hazards, people, transport, settlement, and dynamic MapLibre layers", async () => {
-  const ts = await import("typescript");
-  const explorerSource = await readFile(new URL("../app/explorer-data.ts", import.meta.url), "utf8");
-  const runtime = await readFile(new URL("../app/map-runtime.ts", import.meta.url), "utf8");
-  const mapInterface = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
-  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
-  const about = await readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8");
-  const compiled = ts.transpileModule(withBuildClock(explorerSource), {
-    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
-    fileName: "explorer-data.ts",
-  }).outputText;
-  const explorer = await import(`data:text/javascript;base64,${Buffer.from(compiled).toString("base64")}`);
-  const layer = (id) => explorer.LAYER_REGISTRY.find((candidate) => candidate.id === id);
-  const requiredLayers = [
-    "water-context", "smoke-context", "fire-context", "habitat-connectivity",
-    "fauna-range-context", "flora-communities", "people-dna-context",
-    "hazards-context", "transport-context", "communities",
-  ];
-
-  assert.deepEqual(requiredLayers.filter((id) => !layer(id)), []);
-  assert.equal(layer("fire-context").data.features.length, 3);
-  assert.equal(layer("hazards-context").data.features.length, 3);
-  assert.equal(layer("habitat-connectivity").data.features.length, 3);
-  assert.equal(layer("fauna-range-context").data.features.length, 2);
-  assert.equal(layer("flora-communities").data.features.length, 3);
-  assert.equal(layer("people-dna-context").data.features.length, 3);
-  assert.equal(layer("people-dna-context").publicStatus, "RESTRICTED");
-  assert.equal(layer("people-dna-context").releaseState, "RESTRICTED");
-  assert.deepEqual(layer("fire-context").temporal.years, [2022, 2024, 2026]);
-  assert.deepEqual(new Set(layer("transport-context").data.features.map((feature) => feature.properties.transportMode)), new Set(["ROAD", "RAIL"]));
-  assert.deepEqual(new Set(layer("communities").data.features.map((feature) => feature.properties.settlementClass)), new Set(["METRO", "REGIONAL", "LOCAL"]));
-  assert.equal(explorer.LAYER_REGISTRY.flatMap((record) => record.data.features).every((feature) => feature.id === feature.properties.fid), true);
-  assert.equal(new Set(explorer.LAYER_REGISTRY.map((record) => record.sourceId)).size, explorer.LAYER_REGISTRY.length);
-  assert.match(explorerSource, /No species occurrence, population, nest, migration track/i);
-  assert.match(explorerSource, /Contains no individual, household, tribal affiliation/i);
-  assert.match(explorerSource, /Not an active fire, ignition, burn severity product/i);
-  assert.match(runtime, /applyDynamicMapEffects/);
-  assert.match(runtime, /water-context-flow/);
-  assert.match(runtime, /transport-context-rail/);
-  assert.doesNotMatch(page, /<strong id="scene-motion-title">Dynamic map effects/);
-  assert.match(page, /prefers-reduced-motion: reduce/);
-  assert.match(page, /requestAnimationFrame\(renderEffects\)/);
-  assert.match(mapInterface, /Habitat \+ living systems/);
-  assert.match(mapInterface, /People, movement \+ places/);
-  assert.match(about, /Broad relationships, bounded claims/);
-});
-
-test("makes the Explorer faster to compose, filter, and investigate across domains", async () => {
-  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
-  const runtime = await readFile(new URL("../app/map-runtime.ts", import.meta.url), "utf8");
-  const about = await readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8");
-  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
-
-  assert.match(page, /Quick lenses/);
-  assert.match(page, /Browse map layers/);
-  assert.match(page, /Reset layer defaults/);
-  assert.match(page, /catalogCategorySlug/);
-  assert.match(page, /MAP_VIEW_PROFILES\.map/);
-  assert.match(page, /Map evidence filter/);
-  assert.match(page, /mapCompatibleFeatureCount/);
-  assert.match(page, /params\.set\("ef", mapEvidenceFilter\)/);
-  assert.match(page, /mapEvidenceFilter\?: RegistryEvidenceFilter/);
-  assert.match(page, /mapEvidenceState: mapEvidenceFilter/);
-  assert.match(page, /Nearby context/);
-  assert.match(page, /anchorDistanceMiles/);
-  assert.match(page, /showNearbyContextLayers/);
-  assert.match(page, /fitNearbyContext/);
-  assert.match(page, /Distances use generalized feature anchors/);
-  assert.match(runtime, /RegistryEvidenceFilter/);
-  assert.match(runtime, /evidenceFilterForRecord/);
-  assert.match(runtime, /map\.setFilter\(renderer\.id, filter \?\? null\)/);
-  assert.match(about, /discover nearby cross-domain records/i);
-  assert.match(css, /\.catalog-quick-lenses/);
-  assert.match(page, /className="catalog-group"/);
-  assert.match(css, /catalog-groups \{ flex: none/);
-  assert.match(css, /\.catalog-evidence-filter/);
-  assert.match(css, /\.nearby-context-card/);
 });
 
 test("adds a MapLibre area-of-interest workflow and browser-local camera history", async () => {
@@ -430,53 +310,14 @@ test("adds a no-upload KML and GeoJSON inspection preview without admission effe
   assert.match(css, /\.import-check-list/);
 });
 
-test("keeps optional guided examples while moving explanatory copy to About", async () => {
-  const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
-  const about = await readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8");
-  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
-
-  assert.match(source, /GUIDED_EXAMPLES/);
-  assert.match(source, /atmo-topeka-2026/);
-  assert.match(source, /atmo-hays-2024/);
-  assert.match(source, /planning-generalized-envelope/);
-  assert.match(source, /These guided examples use synthetic or generalized demonstration records/);
-  assert.match(source, /live source layers provide display context; they do not become admitted KFM evidence/);
-  assert.match(source, /Guided material remains available from About/);
-  assert.match(about, /site-local demonstration records with separately labeled live and historical source context/);
-  assert.match(about, /not admitted KFM evidence/);
-  assert.match(source, /kfm-guided-start-dismissed-v1/);
-  assert.match(source, /openGuidedExample/);
-  assert.match(css, /\.guided-start/);
-  assert.match(css, /\.guided-example-list button/);
-});
-
-test("adds a bounded guided story and read-only layer comparison", async () => {
-  const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
-  const mapInterface = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
-  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
-
-  assert.match(source, /KFM_STORY_TRAIL/);
-  assert.match(source, /A correction stays attached to the record/);
-  assert.match(source, /Fixture-first 2D guidance only/);
-  assert.match(source, /no live StoryManifest playback/);
-  assert.match(source, /kfm-site-layer-comparison-v1/);
-  assert.match(source, /Comparison is a read-only projection/);
-  assert.match(source, /params\.set\("compare"/);
-  assert.match(mapInterface, /"compare"/);
-  assert.match(css, /\.story-trail/);
-  assert.match(css, /\.layer-compare-grid/);
-});
-
 test("retired demonstration layers stay out of the catalog and temporal comparison keeps its scope", async () => {
   const explorerSource = await readFile(new URL("../app/explorer-data.ts", import.meta.url), "utf8");
-  const recipeSource = await readFile(new URL("../app/analysis-recipes.ts", import.meta.url), "utf8");
   const temporalSource = await readFile(new URL("../app/temporal-comparison.ts", import.meta.url), "utf8");
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const mapInterface = await readFile(new URL("../app/map-interface.ts", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
   assert.doesNotMatch(explorerSource, /Kansas demonstration extent|id: "kansas-extent"/);
-  assert.doesNotMatch(recipeSource, /county-starter-points|kansas-extent/);
   assert.doesNotMatch(mapInterface, /county-starter-points|kansas-extent/);
   assert.doesNotMatch(page, /COUNTY_STARTER_LAYER|county-starter-slice/);
   assert.match(page, /TIME A \/ TIME B CATALOG AVAILABILITY/);
@@ -549,8 +390,6 @@ test("adds device-local Places trails and faster layer isolation controls", asyn
   assert.match(page, /Google Earth–inspired, KFM-governed/);
   assert.match(page, /locationCameraRedacted \|\| locationDerivedViewRef\.current/);
   assert.match(page, /isolateLayer/);
-  assert.match(page, /Hide local layers/);
-  assert.match(page, />Solo</);
   assert.match(css, /\.place-trail-list/);
   assert.match(css, /\.catalog-group-heading/);
 
@@ -741,13 +580,12 @@ test("keeps the MapLibre Workbench complete, bounded, and responsive", async () 
   assert.match(explorerData, /-11_700/);
   assert.match(source, /mapQueryCandidates/);
   assert.match(source, /selected && !selectedTimeMismatch && !selectedLayerHidden/);
-  assert.match(source, /VISIBLE LAYERS/);
+  assert.match(source, /SELECTED LAYERS/);
   assert.match(mapInterface, /Renderer architecture[\s\S]*ACCEPTED/);
   assert.match(mapInterface, /MapRuntimePort \+ Null runtime[\s\S]*VERIFIED SLICE/);
   assert.match(mapInterface, /Dependency compatibility[\s\S]*SITE 6\.9\.0 \/ REPO 6\.9\.0/);
   assert.match(mapInterface, /Concrete MapLibre adapter[\s\S]*VERIFIED SLICE/);
   assert.match(mapInterface, /Browser readiness[\s\S]*BOUNDED FIXTURE/);
-  assert.match(explorerData, /"fill-outline-color": \["case", \["boolean", \["feature-state", "hover"\]/);
   assert.match(css, /\.map-utility-panel\[data-open="true"\]/);
   assert.match(css, /\.mobile-hidden-control/);
   assert.match(css, /grid-template-columns: repeat\(5,1fr\)/);
@@ -845,9 +683,11 @@ test("connects twenty-one bounded official context sources without admitting evi
   const lightningUrl = `data:text/javascript;base64,${Buffer.from(compile(lightningSource, "lightning-data.ts")).toString("base64")}`;
   const performanceSource = await readFile(new URL("../app/map-performance.ts", import.meta.url), "utf8");
   const performanceUrl = `data:text/javascript;base64,${Buffer.from(compile(performanceSource, "map-performance.ts")).toString("base64")}`;
+  const globeSource = await readFile(new URL("../app/globe-context.ts", import.meta.url), "utf8");
+  const globeUrl = `data:text/javascript;base64,${Buffer.from(compile(globeSource, "globe-context.ts")).toString("base64")}`;
   // This metadata test imports a data URL; provide no-op map render helpers here.
   const compositionUrl = `data:text/javascript;base64,${Buffer.from("export const balanceMapFills=()=>{}; export const balanceMapRasters=()=>{}; export const composeMapLayers=()=>{}; export const requestFillOpacity=()=>{}; export const requestRasterOpacity=()=>{};").toString("base64")}`;
-  const javascript = compile(withBuildClock(registrySource).replace('from "./noaa-radar";', `from "${radarUrl}";`).replace('from "./noaa-satellite";', `from "${satelliteUrl}";`).replace('from "./lightning-data";', `from "${lightningUrl}";`).replace('from "./map-performance";', `from "${performanceUrl}";`).replace('from "./map-layer-composition";', `from "${compositionUrl}";`), "live-context.ts");
+  const javascript = compile(withBuildClock(registrySource).replace('from "./noaa-radar";', `from "${radarUrl}";`).replace('from "./noaa-satellite";', `from "${satelliteUrl}";`).replace('from "./lightning-data";', `from "${lightningUrl}";`).replace('from "./map-performance";', `from "${performanceUrl}";`).replace('from "./map-layer-composition";', `from "${compositionUrl}";`).replace('from "./globe-context";', `from "${globeUrl}";`), "live-context.ts");
   const registry = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
 
   assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.map((record) => record.id), [
@@ -892,10 +732,10 @@ test("connects twenty-one bounded official context sources without admitting evi
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"].serviceUrl, /^https?:\/\/stationview\.raspberryshake\.org(?:\/|$)/);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"].boundary, /not realtime/i);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"].mapUrl, /^\/api\/terrain-tile\?kind=slope&z=\{z\}&x=\{x\}&y=\{y\}$/);
-  assert.match(page, /External map context/);
+  assert.match(page, /Real data layers/);
   assert.match(page, /Operational sources have their own observation clocks/);
   assert.match(page, /Refresh \$\{officialRefreshPlan\.count\} selected/);
-  assert.match(page, /Find an external source/);
+  assert.match(page, /Find a source/);
   assert.match(page, /params\.set\("ctx"/);
   assert.match(page, /params\.set\("ctxo"/);
   assert.match(page, /zero mapped features[\s\S]*not an all-clear/i);
@@ -1258,7 +1098,6 @@ test("binds a governed temporal sweep to map filters, live-source holds, compari
 
   assert.match(page, /Explore the map by year/);
   assert.match(page, /applyTemporalRegistryFilters/);
-  assert.match(page, /setTemporalMode\("snapshot"\)[\s\S]+selectStoredFeature\(example\.layerId/);
   assert.match(page, /selection\.kind !== "registry"[\s\S]+filter === "ALL"/);
   assert.match(page, /officialContextIdForSelection/);
   assert.match(page, /data-committed=\{step === temporalQuery\.frame\}/);
@@ -1307,7 +1146,6 @@ test("keeps the complete function inventory three-axis and runtime seam fail clo
   assert.match(page, /All 38 repository feature families/);
   assert.match(page, /Compose/);
   assert.match(page, /<Link className="about-action"/);
-  assert.match(page, /ANALYSIS_RECIPES/);
 });
 
 test("keeps the feature, connection, action, and coding registries aligned", async () => {
@@ -1347,9 +1185,8 @@ test("keeps layer controls direct and source clocks in progressive detail", asyn
 
   assert.match(page, /type LeftPanelMode = "views" \| "layers" \| "live"/);
   assert.match(page, /aria-label="Layer sources"/);
-  assert.match(page, /Map layers <span>\{visibleCount\} on<\/span>/);
-  assert.match(page, /External context <span>\{visibleOfficialCount\} selected<\/span>/);
-  assert.match(page, /placeholder=\{layerCatalogView === "local" \? "Find a layer" : "Find an external source"\}/);
+  assert.match(page, /Real data layers/);
+  assert.match(page, /Find a source/);
   assert.match(page, /className="layer-map-time"/);
   assert.match(page, /Change time/);
   assert.match(page, /className="official-context-catalog"[^>]*hidden=\{layerCatalogView !== "official"\}/);
@@ -1357,8 +1194,9 @@ test("keeps layer controls direct and source clocks in progressive detail", asyn
   assert.match(page, /className="visibility-switch"/);
   assert.match(page, /className="official-context-options"/);
   assert.match(page, /className="map-layer-advanced"/);
+  assert.match(page, /className="reviewed-imagery-section"/);
+  assert.doesNotMatch(page, /aria-label="Open installed Earth Engine layers"/);
   assert.match(page, /source-time-control/);
-  assert.match(page, /data-time-state=\{noData \? "unavailable" : "available"\}/);
   assert.match(css, /\.layer-panel \[hidden\] \{ display: none !important; \}/);
   assert.match(css, /\.layer-panel\[data-panel-mode="layers"\] \.layer-catalog-body,[\s\S]*overflow-y: auto/);
   assert.match(css, /\.layer-panel \.visibility-switch \{ width: 44px; height: 44px; \}/);

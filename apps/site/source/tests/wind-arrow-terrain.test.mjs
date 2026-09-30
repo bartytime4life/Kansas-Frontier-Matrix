@@ -179,6 +179,42 @@ test("wind flow moves curved wisps without drawing arrowheads or stationary labe
   }
 });
 
+test("wind wisps and hover shrink with Kansas on the globe and stop behind it", () => {
+  const previousWindow = globalThis.window;
+  globalThis.window = { devicePixelRatio: 1 };
+  try {
+    const widths = [];
+    const context = {
+      setTransform() {}, clearRect() {}, save() {}, restore() {}, beginPath() {}, moveTo() {}, quadraticCurveTo() {},
+      stroke() { widths.push(this.lineWidth); }, createLinearGradient() { return { addColorStop() {} }; },
+    };
+    const canvas = { width: 0, height: 0, getContext: () => context };
+    let zoom = 0.6, center = { lng: -98, lat: 39 };
+    const map = {
+      getCanvas: () => ({ clientWidth: 800, clientHeight: 600 }), getZoom: () => zoom,
+      getProjection: () => ({ type: "globe" }), getCenter: () => center,
+      project: ([longitude, latitude]) => ({ x: (longitude + 99) * 100, y: (latitude - 38) * 100 }),
+    };
+    const frame = { samples: [{ latitude: 39, longitude: -98, speedMetersPerSecond: 5, windFromDegrees: 270, windToDegrees: 90 }] };
+    windCanvas.drawWindFlowCanvas(canvas, map, frame, 0, true);
+    assert.deepEqual(widths, []);
+    assert.equal(windCanvas.nearestWindFlowSample(map, frame, 100, 100), null);
+    zoom = 5.45;
+    windCanvas.drawWindFlowCanvas(canvas, map, frame, 0, true);
+    assert.ok(widths.length > 0);
+    assert.ok(widths[0] < 3.2);
+    assert.equal(windCanvas.nearestWindFlowSample(map, frame, 100, 100), frame.samples[0]);
+    center = { lng: 82, lat: 39 };
+    widths.length = 0;
+    windCanvas.drawWindFlowCanvas(canvas, map, frame, 0, true);
+    assert.deepEqual(widths, []);
+    assert.equal(windCanvas.nearestWindFlowSample(map, frame, 100, 100), null);
+  } finally {
+    if (previousWindow === undefined) delete globalThis.window;
+    else globalThis.window = previousWindow;
+  }
+});
+
 test("terrain hover and profile readings remove display exaggeration", () => {
   const map = { getTerrain: () => ({ source: "terrain", exaggeration: 1.6 }), queryTerrainElevation: () => 480 };
   assert.equal(terrain.unexaggeratedTerrainElevation(map, [-97, 39]), 300);

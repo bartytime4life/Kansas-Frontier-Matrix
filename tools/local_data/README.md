@@ -13,6 +13,11 @@ responsibility: Describe bounded workstation inspection and offline quarantine c
 truth_posture: CONFIRMED main@bb08d3e9b9 implementation and exact-schema policy decision; hosted validation and native host acceptance need verification.
 [/KFM_META_BLOCK_V2] -->
 
+> **Water pilot addition — 2026-09-30:** `water_pilot.py` captures/replays bounded
+> USGS v1 data into quarantine and WORK; `water_job.py` prepares hourly candidates.
+> Both preserve review/release holds. `doctor.py --water-runtime` inspects dependencies
+> and configuration. See [the runbook](../../docs/runbooks/water-pilot.md).
+
 # Local PC data tools
 
 These Python 3 standard-library tools prepare a local checkout and preserve

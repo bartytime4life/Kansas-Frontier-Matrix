@@ -1,0 +1,26 @@
+[Unit]
+Description=KFM loopback read-only approved snapshot API
+
+[Service]
+Type=simple
+WorkingDirectory=%h/Projects/Kansas-Frontier-Matrix
+Environment=KFM_RELEASE_STORE=%h/KFM-release-serving
+ExecStartPre=%h/Projects/Kansas-Frontier-Matrix/.venv/bin/python tools/local_data/doctor.py --water-runtime
+ExecStart=%h/Projects/Kansas-Frontier-Matrix/.venv/bin/kfm-governed-api
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=10
+UMask=0077
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=read-only
+MemoryMax=256M
+TasksMax=8
+CPUQuota=50%
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target

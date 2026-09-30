@@ -1,7 +1,10 @@
 import json
-from wsgiref.simple_server import make_server
+from wsgiref.simple_server import make_server, WSGIServer, WSGIRequestHandler
 
 from governed_api.routes.registry import ROUTES
+from governed_api import water
+
+_RELEASE_STORE = None
 from governed_api.stub import invoke_sync_fixture_operation, make_error_envelope
 
 
@@ -44,6 +47,10 @@ def _transport_status(payload: dict, failure_kind: str | None) -> str:
 
 def app(environ, start_response):
     path = environ.get("PATH_INFO", "")
+    if path == "/healthz" and environ.get("REQUEST_METHOD", "GET") == "GET":
+        return _json_response(start_response, "200 OK", {"process": "LIVE", "release_store": "CONFIGURED" if _RELEASE_STORE is not None else "NOT_CONFIGURED", "evidence_readiness": "NOT_ESTABLISHED", "build": "kfm-water-v1"})
+    if path in water.ROUTES:
+        return water.respond(environ, start_response, _RELEASE_STORE)
     method = environ.get("REQUEST_METHOD", "GET")
 
     if path in ROUTES and method != "GET":
@@ -71,7 +78,26 @@ def app(environ, start_response):
 
 
 def serve(host: str = "127.0.0.1", port: int = 8000) -> None:
-    with make_server(host, port, app) as server:
+    import os
+    import logging
+    from release.local_store import LocalReleaseStore
+    global _RELEASE_STORE
+    if host != "127.0.0.1":
+        raise ValueError("LOOPBACK_REQUIRED")
+    configured = os.environ.get("KFM_RELEASE_STORE")
+    _RELEASE_STORE = LocalReleaseStore(configured) if configured else None
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
+    class BoundedServer(WSGIServer):
+        def get_request(self):
+            connection, address = super().get_request()
+            connection.settimeout(10)
+            return connection, address
+    class SafeHandler(WSGIRequestHandler):
+        def log_message(self, format, *args):
+            # Versioned routes emit bounded safe events. Default access logs
+            # would reflect arbitrary private query text and request targets.
+            return
+    with make_server(host, port, app, server_class=BoundedServer, handler_class=SafeHandler) as server:
         server.serve_forever()
 
 

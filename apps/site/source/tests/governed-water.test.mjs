@@ -1,0 +1,34 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import { createRequire } from "node:module";
+const require = createRequire(import.meta.url), ts = require("typescript");
+const source = await readFile(new URL("../app/governed-water.ts", import.meta.url), "utf8");
+const compiled = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
+const water = await import("data:text/javascript;base64," + Buffer.from(compiled).toString("base64"));
+const fixture = async name => JSON.parse(await readFile(new URL(`./fixtures/governed-water/${name}.json`, import.meta.url), "utf8"));
+const NOW = "2026-09-30T19:00:00Z";
+test("Worker and Python return identical synthetic released responses", async () => {
+  const pkg = await water.parseWaterPackage(JSON.stringify(await fixture("snapshot")));
+  for (const view of ["bootstrap", "layers", "evidence"]) assert.deepEqual(await water.projectWater(pkg, await fixture("decision"), view, NOW), await fixture(view));
+});
+test("missing review, withdrawal, expiry and quarantine omit data", async () => {
+  const pkg = await water.parseWaterPackage(JSON.stringify(await fixture("snapshot"))), decision = await fixture("decision");
+  for (const denied of [null, { ...decision, correction_state: "WITHDRAWN" }, { ...decision, rights_ref: null }, { ...decision, expires_at: "2026-09-30T18:59:00Z" }]) {
+    const result = await water.projectWater(pkg, denied, "layers", NOW); assert.equal(result.envelope.outcome, "ABSTAIN"); assert.equal(result.data, undefined);
+  }
+  const held = await water.parseWaterPackage(JSON.stringify(await fixture("held-snapshot")));
+  assert.equal((await water.projectWater(held, { ...decision, package_id: held.manifest.package_id }, "layers", NOW)).envelope.reason_code, "RIGHTS_OR_SENSITIVITY_HOLD");
+});
+test("tampered artifacts and unexpected paths fail before serving", async () => {
+  const snapshot = await fixture("snapshot"); snapshot.artifacts["candidate.json"] += " ";
+  await assert.rejects(water.parseWaterPackage(JSON.stringify(snapshot)), /ARTIFACT_DIGEST/);
+  const injected = await fixture("snapshot"); injected.artifacts["../../private"] = "{}";
+  await assert.rejects(water.parseWaterPackage(JSON.stringify(injected)), /ARTIFACT_CLOSURE/);
+});
+
+test("duplicate escaped keys and excessive nesting are rejected", () => {
+  assert.throws(() => water.parseWaterJson('{"decision":1,"deci\\u0073ion":2}'), /DUPLICATE/);
+  assert.throws(() => water.parseWaterJson('['.repeat(33) + '0' + ']'.repeat(33)), /DEPTH/);
+  assert.deepEqual(water.parseWaterJson('{"list":[{"a":1},{"a":2}]}'), {list:[{a:1},{a:2}]});
+});

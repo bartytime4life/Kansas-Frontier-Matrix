@@ -118,6 +118,32 @@ test("Kansas Central dates convert across standard time and 23/25-hour DST days"
   assert.equal(solar.isInstantInKansasDay(solar.kansasLocalDayInterval("2026-11-01").endMs, "2026-11-01"), false);
 });
 
+test("historical date ranges use inclusive Kansas midnights and preserve DST elapsed time", () => {
+  const spring = solar.kansasLocalDateRangeInterval("2026-03-07", "2026-03-09");
+  assert.equal(new Date(spring.startMs).toISOString(), "2026-03-07T06:00:00.000Z");
+  assert.equal(new Date(spring.endMs).toISOString(), "2026-03-10T05:00:00.000Z");
+  assert.equal(spring.durationMs, 71 * 3_600_000);
+  assert.equal(solar.kansasCalendarDaysInclusive("2026-03-07", "2026-03-09"), 3);
+  assert.equal(solar.kansasCalendarDaysInclusive("2026-09-22", "2026-09-29"), 8);
+  assert.equal(solar.intervalFractionAtInstant(spring.startMs + spring.durationMs / 2, spring), 0.5);
+  assert.equal(solar.instantAtIntervalFraction(spring, 0.5), spring.startMs + spring.durationMs / 2);
+  const springSecondDay = solar.kansasLocalDayInterval("2026-03-08").startMs;
+  const springThirdDay = solar.kansasLocalDayInterval("2026-03-09").startMs;
+  assert.equal(solar.dateRangeLoopFractionAtInstant(springSecondDay, "2026-03-07", "2026-03-09"), 1 / 3);
+  assert.equal(solar.dateRangeLoopFractionAtInstant(springThirdDay, "2026-03-07", "2026-03-09"), 2 / 3);
+  assert.equal(solar.instantAtDateRangeLoopFraction("2026-03-07", "2026-03-09", 1 / 3), springSecondDay);
+  assert.equal(solar.instantAtDateRangeLoopFraction("2026-03-07", "2026-03-09", 2 / 3), springThirdDay);
+  const springMidday = solar.instantAtDayFraction("2026-03-08", 0.5);
+  const springMiddayLoopPosition = solar.dateRangeLoopFractionAtInstant(springMidday, "2026-03-07", "2026-03-09");
+  assert.equal(solar.instantAtDateRangeLoopFraction("2026-03-07", "2026-03-09", springMiddayLoopPosition), springMidday);
+  assert.ok(Math.abs(solar.daylightLoopFraction(0, 60_000, 3 * 60_000) - 1 / 3) < 1e-12);
+  assert.equal(solar.isInstantInKansasDateRange(spring.endMs - 1, "2026-03-07", "2026-03-09"), true);
+  assert.equal(solar.isInstantInKansasDateRange(spring.endMs, "2026-03-07", "2026-03-09"), false);
+  assert.equal(solar.kansasCalendarDaysInclusive("0001-01-01", "0001-01-02"), 2);
+  assert.equal(solar.kansasLocalDateRangeInterval("0001-01-01", "0001-01-02").durationMs, 48 * 3_600_000);
+  assert.throws(() => solar.kansasLocalDateRangeInterval("2026-03-09", "2026-03-07"), RangeError);
+});
+
 test("loop, date-change, scrub, and URL-restore state stay bounded and paused when restored", () => {
   assert.equal(solar.daylightLoopFraction(0, 30_000), 0.5);
   assert.equal(solar.daylightLoopFraction(0.75, 30_000), 0.25);
@@ -126,11 +152,16 @@ test("loop, date-change, scrub, and URL-restore state stay bounded and paused wh
   assert.equal(solar.daylightShouldAutoplay(true, false), false);
   assert.equal(solar.daylightShouldAutoplay(false, true), false);
   assert.equal(solar.instantAtDayFraction("2026-03-08", 0.5), solar.kansasLocalDayInterval("2026-03-08").startMs + 11.5 * 3_600_000);
-  const restored = solar.restoreDaylightView("2026-11-01", "2026-11-01T17:00:00.000Z", true, "2026-09-29");
-  assert.deepEqual(restored, { day: "2026-11-01", instantMs: Date.parse("2026-11-01T17:00:00Z"), enabled: true, playing: false });
-  const outOfDay = solar.restoreDaylightView("2026-11-01", "2026-11-02T12:00:00.000Z", false, "2026-09-29");
-  assert.equal(outOfDay.instantMs, solar.kansasLocalDayInterval("2026-11-01").startMs);
-  assert.equal(outOfDay.playing, false);
+  const restored = solar.restoreDaylightView("2026-11-01", "2026-11-01T17:00:00.000Z", true, "2026-12-01");
+  assert.deepEqual(restored, { day: "2026-11-01", throughDay: "2026-12-01", instantMs: Date.parse("2026-11-01T17:00:00Z"), enabled: true, playing: false });
+  const historical = solar.restoreDaylightView("2026-09-22", "2026-09-23T00:55:12.000Z", true, "2026-09-29");
+  assert.deepEqual(historical, { day: "2026-09-22", throughDay: "2026-09-29", instantMs: Date.parse("2026-09-23T00:55:12Z"), enabled: true, playing: false });
+  const outOfRange = solar.restoreDaylightView("2026-11-01", "2026-11-02T12:00:00.000Z", false, "2026-12-01", "2026-11-01");
+  assert.equal(outOfRange.instantMs, solar.kansasLocalDayInterval("2026-11-01").startMs);
+  assert.equal(outOfRange.throughDay, "2026-11-01");
+  const future = solar.restoreDaylightView("2027-01-01", null, true, "2026-09-29", "2027-01-02");
+  assert.deepEqual(future, { day: "2026-09-29", throughDay: "2026-09-29", instantMs: solar.kansasLocalDayInterval("2026-09-29").startMs, enabled: true, playing: false });
+  assert.equal(outOfRange.playing, false);
 });
 
 test("equinox, solstice, and polar day/night geometry remain bounded", () => {
@@ -270,16 +301,19 @@ test("page persists selected solar cursor and restores the layer paused with red
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const requiredStateContracts = [
     ['params.set("sunDay", daylightDay)', "day is saved in shared map state"],
+    ['params.set("sunThrough", daylightThroughDay)', "range end is saved in shared map state"],
     ['params.set("sunAt", new Date(daylightInstant).toISOString())', "cursor is saved in shared map state"],
-    ['restoreDaylightView(params.get("sunDay"), params.get("sunAt"), params.get("sun") === "on")', "URL restore uses the validated paused state helper"],
-    [/daylightPlayingRef\.current = false;\s+setDaylightDay\(restoredSolar\.day\)/, "URL restore pauses playback"],
+    ['restoreDaylightView(params.get("sunDay"), params.get("sunAt"), params.get("sun") === "on", currentKansasCalendarDay(), params.get("sunThrough"))', "URL restore validates the historical range"],
+    [/daylightPlayingRef\.current = false;\s+setDaylightDay\(restoredSolar\.day\);\s+setDaylightThroughDay\(restoredSolar\.throughDay\)/, "URL restore applies the range paused"],
     ["daylightShouldAutoplay(reducedMotion, document.hidden)", "date selection honors reduced motion and hidden tabs"],
     ["if (!enabled || document.hidden) setDaylightPlayback(false)", "hiding the layer pauses its invisible loop"],
-    ["now - lastMapUpdate >= 100", "map geometry updates at a bounded 10 Hz"],
-    ["now - lastClockUpdate >= 250", "clock display rerenders at a bounded 4 Hz"],
+    ["now - lastMapUpdate >= 33", "map geometry updates at a bounded smooth 30 Hz"],
+    ["now - lastClockUpdate >= 100", "clock and range scrubber advance at a bounded 10 Hz"],
+    ["kansasCalendarDaysInclusive(daylightDay, daylightThroughDay) * DAYLIGHT_LOOP_DURATION_MS", "each Kansas date keeps its 60-second solar cycle"],
     ["if (!document.hidden) return", "tab visibility change pauses playback"],
     ['daylightPlaying ? "Pause" : "Resume"', "control toggles pause and resume"],
-    [/seekDaylight\(Number\(event\.target\.value\) \/ 10_000\)/, "scrubber seeks within the selected day"],
+    [/Solar time from \{daylightDay\} through \{daylightThroughDay\}/, "scrubber covers the selected historical range"],
+    [/aria-label="Daylight loop end date"[\s\S]*?max=\{daylightToday\}/, "date range cannot extend beyond the current Kansas day"],
   ];
   for (const [contract, description] of requiredStateContracts) {
     assert.ok(typeof contract === "string" ? page.includes(contract) : contract.test(page), description);

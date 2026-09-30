@@ -223,6 +223,14 @@ html, body { width: 100%; height: 100%; }
 body { margin: 0; min-width: 320px; overflow: hidden; background: var(--bg); color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; text-rendering: optimizeLegibility; }
 button, input, select { font: inherit; }
 button, a, input, select { -webkit-tap-highlight-color: transparent; }
+.site-persistent-select-menu { position: fixed; z-index: 10000; overflow-y: auto; overscroll-behavior: contain; border: 1px solid #668d8e; border-radius: 9px; background: #0a252b; color: #edf5ef; box-shadow: 0 18px 55px #0009; padding: 5px; color-scheme: dark; }
+.site-persistent-select-menu > div { min-width: 0; }
+.site-persistent-select-menu button { display: block; width: 100%; min-height: 36px; border: 0; border-radius: 5px; background: transparent; color: inherit; padding: 7px 10px; text-align: left; font: inherit; cursor: pointer; }
+.site-persistent-select-menu button:hover, .site-persistent-select-menu button[data-active="true"] { background: #245057; }
+.site-persistent-select-menu button[aria-selected="true"] { color: #f5d990; font-weight: 750; }
+.site-persistent-select-menu button:disabled { opacity: .48; cursor: not-allowed; }
+.site-persistent-select-menu button:focus-visible { outline: 2px solid #a5e7e2; outline-offset: -2px; }
+.site-persistent-select-group { padding: 9px 10px 4px; color: #a6c3c0; font-size: 11px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
 button { cursor: pointer; }
 button:disabled { cursor: not-allowed; opacity: .42; }
 :focus-visible { outline: 3px solid var(--gold-soft); outline-offset: 2px; }
@@ -1261,12 +1269,6 @@ input[type="range"] { accent-color: var(--gold); }
 .maplibregl-ctrl-scale { border-color: rgba(239,245,239,.55); background: rgba(7,25,27,.78); color: var(--muted); font-size: 12px; }
 .maplibregl-ctrl-attrib { border-radius: 5px; background: rgba(7,25,27,.78) !important; color: var(--muted); font-size: 12px; }
 .maplibregl-ctrl-attrib a { color: var(--water); }
-.maplibregl-popup-content { border: 1px solid var(--line-strong); border-radius: 11px; background: #0a2022; color: var(--ink); padding: 13px 32px 13px 13px; box-shadow: 0 18px 50px rgba(0,0,0,.42); }
-.maplibregl-popup-tip { border-top-color: #0a2022 !important; }
-.maplibregl-popup-close-button { color: var(--muted); font-size: 18px; }
-.map-popup-content { display: grid; gap: 6px; }
-.map-popup-content strong { font-size: 12px; }
-.map-popup-content span { color: var(--gold); font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: .08em; }
 
 .drawer-heading { border-bottom: 1px solid var(--line); }
 .drawer-heading h2 { max-width: 285px; font-size: 18px; }
@@ -1274,6 +1276,12 @@ input[type="range"] { accent-color: var(--gold); }
 .drawer-empty > span { display: grid; place-items: center; width: 58px; height: 58px; border: 1px solid var(--line-strong); border-radius: 18px; color: var(--gold); font-size: 25px; }
 .drawer-empty h3 { margin: 22px 0 8px; }
 .drawer-empty p { max-width: 270px; margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.drawer-hover-preview { display: grid; gap: 5px; flex: none; margin: 11px 12px; border: 1px solid rgba(115, 199, 210, .4); border-radius: 11px; background: rgba(115, 199, 210, .075); padding: 11px 12px; }
+.drawer-hover-preview header { color: var(--water); font-size: 10px; font-weight: 900; letter-spacing: .1em; }
+.drawer-hover-preview > strong { color: var(--ink); font-size: 15px; line-height: 1.2; overflow-wrap: anywhere; }
+.drawer-hover-preview > span { color: var(--gold-soft); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; }
+.drawer-hover-preview > p { margin: 0; color: var(--ink); font-size: 12px; }
+.drawer-hover-preview > small { color: var(--muted); font-size: 11px; line-height: 1.4; }
 .drawer-state { display: flex; align-items: center; gap: 11px; margin: 14px 14px 8px; border: 1px solid rgba(224,186,109,.28); border-radius: 11px; background: rgba(224,186,109,.045); padding: 10px; }
 .state-icon { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid var(--gold); border-radius: 50%; color: var(--gold); font-size: 12px; font-weight: 950; }
 .drawer-state > span:last-child { display: grid; gap: 3px; }
@@ -2590,10 +2598,6 @@ body { font-size: 14px; }
 .scene-editor-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 18px; }
 .scene-editor-actions button:last-child { border-color: rgba(255, 155, 136, .3); color: #ffad9e; }
 
-.map-hover-summary { position: absolute; z-index: 13; display: grid; gap: 3px; width: min(250px, calc(100% - 32px)); pointer-events: none; border: 1px solid rgba(224, 186, 109, .4); border-radius: 10px; background: rgba(6, 20, 22, .95); padding: 10px 11px; box-shadow: 0 15px 40px rgba(0, 0, 0, .42); backdrop-filter: blur(10px); }
-.map-hover-summary > span { color: #e0ba6d; font-size: .75rem; font-weight: 900; letter-spacing: .07em; text-transform: uppercase; }
-.map-hover-summary > strong { overflow: hidden; font-size: .85rem; text-overflow: ellipsis; white-space: nowrap; }
-.map-hover-summary > small { color: #a4b7b0; font-size: .75rem; }
 .timeline-commit-actions { display: flex; gap: 5px; }
 .timeline-commit-actions > button { min-width: 78px; min-height: 34px; border: 1px solid rgba(224, 186, 109, .38); border-radius: 8px; background: #d4aa57; color: #102421; padding: 0 9px; font-size: .75rem; font-weight: 900; }
 .timeline-commit-actions > button:disabled { border-color: var(--line); background: rgba(255, 255, 255, .02); color: var(--dim); }
@@ -2654,7 +2658,6 @@ body { font-size: 14px; }
   .timeline-compact { grid-template-columns: 125px auto minmax(160px, 1fr) auto; gap: 7px; }
   .timeline-commit-actions { display: grid; }
   .timeline-commit-actions > button { min-width: 58px; min-height: 30px; padding: 0 5px; font-size: .75rem; }
-  .map-hover-summary { display: none; }
   .source-admission-legend { grid-template-columns: repeat(3,minmax(0,1fr)); }
 }
 
@@ -2670,7 +2673,7 @@ body { font-size: 14px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .primary-workspace-surface *, .map-hover-summary { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+  .primary-workspace-surface * { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
 
 @media print {
@@ -3384,7 +3387,7 @@ body { font-size: 14px; }
   isolation: isolate;
   display: grid;
   width: min(900px, calc(100% - 190px));
-  max-height: 288px;
+  max-height: 360px;
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -3523,6 +3526,25 @@ body { font-size: 14px; }
 .hydrology-stats span { align-self: center; color: var(--dim); font-size: 9px; font-weight: 950; letter-spacing: .08em; }
 .hydrology-stats strong { grid-row: 1 / 3; grid-column: 2; align-self: center; color: #dffbfc; font-size: 20px; font-variant-numeric: tabular-nums; }
 .hydrology-stats small { color: var(--muted); font-size: 10px; }
+.hydrology-water-reading { display: grid; gap: 5px; border: 1px solid rgba(98, 216, 229, .26); border-radius: 8px; background: rgba(98, 216, 229, .045); padding: 8px 10px; }
+.hydrology-water-reading-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.hydrology-water-reading-head span,
+.hydrology-direction-status strong { color: #8bdde7; font-size: 9px; font-weight: 950; letter-spacing: .08em; }
+.hydrology-water-reading-head strong { color: var(--gold-soft); font-size: 13px; font-variant-numeric: tabular-nums; }
+.hydrology-water-reading p,
+.hydrology-reading-boundary,
+.hydrology-direction-status span,
+.hydrology-range-position small { margin: 0; color: var(--muted); font-size: 10px; line-height: 1.4; }
+.hydrology-direction-status { display: grid; gap: 4px; border-top: 1px solid var(--line); padding-top: 5px; }
+.hydrology-direction-status strong { flex: none; }
+.hydrology-direction-action { justify-self: start; min-height: 36px; border: 1px solid rgba(98, 216, 229, .6); border-radius: 7px; background: rgba(98, 216, 229, .12); color: #dffbfc; padding: 6px 11px; font-size: 12px; font-weight: 800; cursor: pointer; }
+.hydrology-direction-action:not(:disabled):hover { background: rgba(98, 216, 229, .22); }
+.hydrology-direction-action:focus-visible { outline: 2px solid var(--gold-soft); outline-offset: 2px; }
+.hydrology-direction-action:disabled { opacity: .5; cursor: not-allowed; }
+.hydrology-range-position { display: grid; gap: 3px; }
+.hydrology-range-position > div { position: relative; height: 5px; border-radius: 999px; background: linear-gradient(90deg, #e1b775, #68d6e2); }
+.hydrology-range-position i { position: absolute; top: -4px; width: 4px; height: 13px; border: 1px solid #081c25; border-radius: 3px; background: #f5f0dc; transform: translateX(-50%); }
+.hydrology-reading-boundary { color: var(--dim); }
 .hydrology-message { display: grid; gap: 3px; border-left: 3px solid var(--gold); background: rgba(224, 186, 109, .07); padding: 8px 9px; }
 .hydrology-message strong { color: var(--gold-soft); font-size: 11px; }
 .hydrology-message span { color: var(--muted); font-size: 10px; line-height: 1.45; }
@@ -3625,7 +3647,7 @@ body { font-size: 14px; }
 .live-observation-switcher button[data-active="true"] { border-color: rgba(98, 216, 229, .52); background: linear-gradient(135deg, rgba(98, 216, 229, .18), rgba(224, 186, 109, .09)); color: #e2fbfc; box-shadow: inset 0 1px rgba(255, 255, 255, .06); }
 
 .map-stage[data-live-dock="true"] { --live-dock-clearance: 252px; }
-.map-stage[data-live-dock="true"]:has(.hydrology-observatory) { --live-dock-clearance: 310px; }
+.map-stage[data-live-dock="true"]:has(.hydrology-observatory) { --live-dock-clearance: 382px; }
 .map-stage[data-live-dock="true"]:has(.lightning-observatory) { --live-dock-clearance: 285px; }
 .map-stage[data-live-dock="true"] .qwen-map-launch,
 .map-stage[data-live-dock="true"] .map-legend-dock,
@@ -4345,6 +4367,7 @@ body { font-size: 14px; }
 @media (max-width: 380px) { .status-terrain-readout { gap: 5px; } .status-terrain-readout em { font-size: 9px; } .status-terrain-readout strong { font-size: 13px; } }
 
 .wind-arrow-canvas { position: absolute; inset: 0; z-index: 8; width: 100%; height: 100%; pointer-events: none; }
+.water-motion-canvas { position: absolute; inset: 0; z-index: 9; width: 100%; height: 100%; pointer-events: none; }
 .wind-arrow-map-badge { position: absolute; z-index: 14; right: 54px; bottom: 64px; display: grid; gap: 2px; max-width: min(270px, 42vw); border: 1px solid rgba(102, 223, 233, .5); border-radius: 8px; background: rgba(2, 28, 36, .9); box-shadow: 0 9px 26px rgba(0, 16, 21, .35); padding: 7px 10px; pointer-events: none; backdrop-filter: blur(8px); }
 .wind-arrow-map-badge strong { color: #ffe0a2; font-size: 9px; font-weight: 900; letter-spacing: .13em; }
 .wind-arrow-map-badge span { color: #d4eff0; font-size: 10px; }

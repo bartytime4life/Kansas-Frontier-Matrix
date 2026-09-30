@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import ts from "typescript";
+import { validateStyleMin } from "@maplibre/maplibre-gl-style-spec";
 
 const source = await readFile(new URL("../app/globe-context.ts", import.meta.url), "utf8");
 const js = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
@@ -57,7 +58,31 @@ test("globe viewpoints remain distinct while Earth Engine opens installed map la
   }
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   assert.match(page, /onClick={\(\) => activateMapRepresentation\("globe"\)}/);
-  assert.match(page, /aria-controls="earth-engine-context-controls" onClick={openEarthEngineLayers}/);
+  assert.match(page, /const openEarthEngineLayers = useCallback/);
+  assert.match(page, /setPendingCatalogTarget\("earth-engine-context-controls"\)/);
   assert.doesNotMatch(page, /<EarthEngineGlobe/);
   assert.match(page, /restoringGlobe \? 0 : 4/);
+});
+
+test("globe cue sizing is continuous and returns to full size at close view", () => {
+  assert.equal(globe.globeOverviewSizeScale(0), 0);
+  assert.ok(globe.globeOverviewSizeScale(2) < globe.globeOverviewSizeScale(4));
+  assert.ok(globe.globeOverviewSizeScale(4) < globe.globeOverviewSizeScale(5.45));
+  assert.ok(globe.globeOverviewSizeScale(5.45) < globe.globeOverviewSizeScale(10));
+  assert.equal(globe.globeOverviewSizeScale(10), 1);
+  assert.equal(globe.globeOverviewSizeScale(18), 1);
+  const paint = globe.globeOverviewPaintSize(["interpolate", ["linear"], ["zoom"], 4, 20, 10, 34]);
+  assert.deepEqual(paint.slice(0, 9), ["interpolate", ["linear"], ["zoom"], 0, 0, 2, 1.6, 4, 4.4]);
+  assert.deepEqual(paint.slice(-2), [10, 34]);
+  const style = {
+    version: 8,
+    sources: { sample: { type: "geojson", data: { type: "FeatureCollection", features: [] } } },
+    layers: [{ id: "sample", type: "circle", source: "sample", paint: {
+      "circle-radius": globe.globeOverviewPaintSize(["interpolate", ["linear"], ["zoom"], 4, ["+", 7, ["get", "magnitude"]], 10, ["+", 12, ["get", "magnitude"]]]),
+      "circle-stroke-width": globe.globeOverviewPaintSize(["case", ["get", "selected"], 3.4, 1.4]),
+    } }],
+  };
+  assert.deepEqual(validateStyleMin(style).map((error) => error.message), []);
+  assert.equal(globe.onVisibleGlobeHemisphere({ lng: -98, lat: 39 }, [-97, 39]), true);
+  assert.equal(globe.onVisibleGlobeHemisphere({ lng: 82, lat: 39 }, [-97, 39]), false);
 });

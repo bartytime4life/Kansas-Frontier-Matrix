@@ -1,5 +1,6 @@
 import type { Map as MapLibreMap } from "./maplibre-seam";
 import type { WindArrowFrame, WindArrowSample } from "./wind-arrow-data";
+import { globeOverviewSizeScale, onVisibleGlobeHemisphere } from "./globe-context";
 
 /** Meteorological directions describe where wind comes from. Flow moves toward
  * where it blows; screen motion is an illustrative cue, not a trajectory. */
@@ -11,10 +12,15 @@ export const windToCompass = (heading: number): string =>
 /** Flow wisps are spread around forecast grid points. Only report a nearby
  * model sample; visual positions between samples are not measurements. */
 export function nearestWindFlowSample(map: MapLibreMap, frame: WindArrowFrame, x: number, y: number, radius = 90): WindArrowSample | null {
+  const globe = map.getProjection?.()?.type === "globe";
+  const scale = globe ? globeOverviewSizeScale(map.getZoom()) : 1;
+  if (scale < 0.06) return null;
+  const center = globe ? map.getCenter() : null;
   let nearest: WindArrowSample | null = null;
-  let distanceSquared = radius * radius;
+  let distanceSquared = (radius * scale) ** 2;
   for (const sample of frame.samples) {
     if (sample.speedMetersPerSecond < 0.4) continue; // No arrow is drawn for calm samples.
+    if (center && !onVisibleGlobeHemisphere(center, [sample.longitude, sample.latitude])) continue;
     const point = map.project([sample.longitude, sample.latitude]);
     const candidateDistance = (point.x - x) ** 2 + (point.y - y) ** 2;
     if (candidateDistance < distanceSquared) {
@@ -59,28 +65,33 @@ export function drawWindFlowCanvas(canvas: HTMLCanvasElement, map: MapLibreMap, 
   if (!context) return;
   context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
   context.clearRect(0, 0, width, height);
+  const globe = map.getProjection?.()?.type === "globe";
+  const visualScale = globe ? globeOverviewSizeScale(map.getZoom()) : 1;
+  if (visualScale < 0.06) return;
+  const center = globe ? map.getCenter() : null;
   frame.samples.forEach((sample, index) => {
     if (sample.speedMetersPerSecond < 0.4) return;
+    if (center && !onVisibleGlobeHemisphere(center, [sample.longitude, sample.latitude])) return;
     const origin = map.project([sample.longitude, sample.latitude]);
     if (origin.x < -170 || origin.y < -170 || origin.x > width + 170 || origin.y > height + 170) return;
     const [dx, dy] = directionOnScreen(map, sample);
     const crossX = -dy;
     const crossY = dx;
     const pace = Math.max(2000, 5400 - sample.speedMetersPerSecond * 340);
-    const lanes = map.getZoom() < 5 ? 4 : 7;
+    const lanes = globe && map.getZoom() < 4 ? 1 : map.getZoom() < 5 ? 4 : 7;
     for (let lane = 0; lane < lanes; lane += 1) {
       const seed = index * 13 + lane * 7 + 1;
       const phase = animate ? (elapsedMs / (pace * (0.82 + unitHash(seed + 2) * 0.36)) + unitHash(seed)) % 1 : unitHash(seed);
-      const lateral = (unitHash(seed + 3) - 0.5) * 100;
-      const along = (unitHash(seed + 4) - 0.5) * 55 + (phase - 0.5) * 145;
-      const curl = Math.sin(phase * Math.PI * 2 + seed) * (2 + unitHash(seed + 5) * 3);
-      const length = 25 + Math.min(35, sample.speedMetersPerSecond * 3.4) + unitHash(seed + 6) * 16;
+      const lateral = (unitHash(seed + 3) - 0.5) * 100 * visualScale;
+      const along = ((unitHash(seed + 4) - 0.5) * 55 + (phase - 0.5) * 145) * visualScale;
+      const curl = Math.sin(phase * Math.PI * 2 + seed) * (2 + unitHash(seed + 5) * 3) * visualScale;
+      const length = (25 + Math.min(35, sample.speedMetersPerSecond * 3.4) + unitHash(seed + 6) * 16) * visualScale;
       const headX = origin.x + dx * along + crossX * (lateral + curl);
       const headY = origin.y + dy * along + crossY * (lateral + curl);
-      const tailX = headX - dx * length + crossX * 2.5;
-      const tailY = headY - dy * length + crossY * 2.5;
-      const middleX = (tailX + headX) / 2 - crossX * (3 + unitHash(seed + 7) * 4);
-      const middleY = (tailY + headY) / 2 - crossY * (3 + unitHash(seed + 7) * 4);
+      const tailX = headX - dx * length + crossX * 2.5 * visualScale;
+      const tailY = headY - dy * length + crossY * 2.5 * visualScale;
+      const middleX = (tailX + headX) / 2 - crossX * (3 + unitHash(seed + 7) * 4) * visualScale;
+      const middleY = (tailY + headY) / 2 - crossY * (3 + unitHash(seed + 7) * 4) * visualScale;
       const fade = Math.min(1, phase * 8, (1 - phase) * 8);
       const opacity = (0.48 + Math.min(0.25, sample.speedMetersPerSecond * 0.025)) * fade;
       const gradient = context.createLinearGradient(tailX, tailY, headX, headY);
@@ -90,16 +101,16 @@ export function drawWindFlowCanvas(canvas: HTMLCanvasElement, map: MapLibreMap, 
       context.save();
       context.lineCap = "round";
       context.shadowColor = `rgba(15, 172, 191, ${opacity * 0.7})`;
-      context.shadowBlur = 10;
+      context.shadowBlur = 10 * visualScale;
       context.strokeStyle = gradient;
-      context.lineWidth = 3.2;
+      context.lineWidth = 3.2 * visualScale;
       context.beginPath();
       context.moveTo(tailX, tailY);
       context.quadraticCurveTo(middleX, middleY, headX, headY);
       context.stroke();
       context.shadowBlur = 0;
       context.strokeStyle = `rgba(3, 59, 74, ${opacity * 0.42})`;
-      context.lineWidth = 0.8;
+      context.lineWidth = 0.8 * visualScale;
       context.stroke();
       context.restore();
     }

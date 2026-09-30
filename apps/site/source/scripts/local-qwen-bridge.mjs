@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 
 export const SITE_ORIGIN = "https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site";
 export const LOCAL_PREVIEW_ORIGIN = "http://127.0.0.1:5173";
+export const LOCAL_EXPLORER_ORIGIN = "http://127.0.0.1:4173";
 export const LOCAL_BRIDGE_PORT = 8768;
 export const LOCAL_QWEN_MODEL = "qwen2.5:7b-instruct-fp16";
 const OLLAMA_URL = "http://127.0.0.1:11434";
@@ -58,10 +59,11 @@ async function boundedBody(req) {
 
 function validContext(context) {
   return isRecord(context)
-    && Object.keys(context).every((key) => ["camera", "basemap", "time", "visibleLayers", "officialSources", "telemetry", "selection", "nearbyContext"].includes(key))
+    && Object.keys(context).every((key) => ["camera", "basemap", "time", "visibleLayers", "officialSources", "soilMoisture", "telemetry", "selection", "nearbyContext"].includes(key))
     && isRecord(context.camera)
     && Array.isArray(context.visibleLayers) && context.visibleLayers.length <= 14
-    && Array.isArray(context.officialSources) && context.officialSources.length <= 15
+    && Array.isArray(context.officialSources) && context.officialSources.length <= 32
+    && (context.soilMoisture === undefined || context.soilMoisture === null || isRecord(context.soilMoisture))
     && isRecord(context.telemetry)
     && context.telemetry.authority === "SITE_LOCAL_REDACTED_DIAGNOSTIC"
     && (context.selection === null || isRecord(context.selection))
@@ -78,12 +80,12 @@ function promptFor(question, context) {
   ].join("\n\n");
 }
 
-export function createLocalQwenBridge({ fetcher = fetch, ollamaUrl = OLLAMA_URL, model = LOCAL_QWEN_MODEL, siteOrigin = SITE_ORIGIN, localPreviewOrigin = LOCAL_PREVIEW_ORIGIN } = {}) {
+export function createLocalQwenBridge({ fetcher = fetch, ollamaUrl = OLLAMA_URL, model = LOCAL_QWEN_MODEL, siteOrigin = SITE_ORIGIN, localPreviewOrigin = LOCAL_PREVIEW_ORIGIN, localExplorerOrigin = LOCAL_EXPLORER_ORIGIN } = {}) {
   let busy = false;
   return createServer(async (req, res) => {
     const origin = req.headers.origin;
     const path = req.url?.split("?", 1)[0];
-    const allowedOrigin = origin === siteOrigin || origin === localPreviewOrigin ? origin : null;
+    const allowedOrigin = origin === siteOrigin || origin === localPreviewOrigin || origin === localExplorerOrigin ? origin : null;
     if (!allowedOrigin || !["/health", "/ask"].includes(path) || req.url !== path) {
       send(res, siteOrigin, 403, { status: "error", message: "This bridge accepts only the Explorer Site." });
       return;

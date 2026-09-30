@@ -81,7 +81,7 @@ export const EXTERNAL_CONTEXT_SOURCES: readonly ExternalContextSource[] = Object
     attribution: "© OpenStreetMap contributors",
     evidenceRole: "DISPLAY_CONTEXT_ONLY",
     exportEffect: "ATTRIBUTION_ONLY",
-    fallback: "A failed tile request leaves the local styles and site-local evidence layers available.",
+    fallback: "A failed tile request leaves the local styles and provider-backed source layers available.",
     boundary: "Raster tiles provide normal interactive navigation context only; the Site does not prefetch or offer offline use. Completeness, update time, legal status, routing, and KFM evidence support are not asserted.",
   }),
   Object.freeze({
@@ -98,7 +98,7 @@ export const EXTERNAL_CONTEXT_SOURCES: readonly ExternalContextSource[] = Object
     attribution: "USGS The National Map",
     evidenceRole: "DISPLAY_CONTEXT_ONLY",
     exportEffect: "ATTRIBUTION_ONLY",
-    fallback: "A failed USGS topographic tile request leaves local styles and site-local evidence layers available.",
+    fallback: "A failed USGS topographic tile request leaves local styles and provider-backed source layers available.",
     boundary: "The National Map tiles are cartographic display context. Contours, names, symbology, currency, scale fitness, and KFM evidence support are not asserted by this Site.",
   }),
   Object.freeze({

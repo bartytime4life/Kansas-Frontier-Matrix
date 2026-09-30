@@ -117,8 +117,31 @@ def main(argv: list[str] | None = None) -> int:
         "--repo-root", type=Path, default=REPO_ROOT,
         help="source directory to inspect (default: this tool's repository)",
     )
+    parser.add_argument("--water-runtime", action="store_true", help="also inspect water runtime packages and release-store configuration")
     args = parser.parse_args(argv)
     report = inspect(args.repo_root)
+    if args.water_runtime:
+        import importlib.util
+        import os
+        checks = []
+        for name in ("pytest", "jsonschema", "referencing", "rfc8785", "connectors_core", "catalog", "evidence_resolver", "policy_runtime", "release", "governed_api"):
+            try:
+                present = importlib.util.find_spec(name) is not None
+            except (ImportError, ValueError):
+                present = False
+            checks.append({"id": "dependency", "name": name, "status": "PASS" if present else "FAIL"})
+        configured = os.environ.get("KFM_RELEASE_STORE")
+        state = "NOT_CONFIGURED"
+        if configured:
+            try:
+                from release.local_store import LocalReleaseStore
+                active = LocalReleaseStore(configured).active()
+                state = "ACTIVE_METADATA_PRESENT_UNVERIFIED" if active else "NO_ACTIVE_PACKAGE"
+            except Exception:
+                state = "UNAVAILABLE"
+        report["water_runtime"] = {"dependencies": checks, "release_store": state, "service_connectivity": "NOT_CHECKED", "evidence_readiness": "NOT_ESTABLISHED"}
+        if any(c["status"] != "PASS" for c in checks) or state == "UNAVAILABLE":
+            report["outcome"] = "FAIL"
     print(json.dumps(report, sort_keys=True, separators=(",", ":")))
     return 0 if report["outcome"] == "PASS" else 1
 

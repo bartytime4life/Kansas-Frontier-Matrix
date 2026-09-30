@@ -111,6 +111,12 @@ PROFILES = {
             "./packages/schema-registry[test]",
         ),
     ),
+    "water-pilot": InstallProfile(
+        "tools/ci/python-test.lock",
+        (".[test]", "./packages/connectors-core", "./packages/hashing",
+         "./packages/catalog", "./packages/evidence-resolver", "./packages/policy-runtime",
+         "./packages/release", "./apps/governed-api"),
+    ),
     "audit-tool": InstallProfile("tools/ci/python-audit.lock"),
     "connectors-core": InstallProfile(
         "tools/ci/python-test.lock", ("./packages/connectors-core",)

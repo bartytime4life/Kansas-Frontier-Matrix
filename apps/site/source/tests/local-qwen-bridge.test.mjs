@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createLocalQwenBridge, LOCAL_PREVIEW_ORIGIN, LOCAL_QWEN_MODEL, SITE_ORIGIN } from "../scripts/local-qwen-bridge.mjs";
+import { createLocalQwenBridge, LOCAL_EXPLORER_ORIGIN, LOCAL_PREVIEW_ORIGIN, LOCAL_QWEN_MODEL, SITE_ORIGIN } from "../scripts/local-qwen-bridge.mjs";
 
 const context = {
   camera: { center: [-98, 38.5], zoom: 5, locationRedacted: true },
@@ -73,4 +73,34 @@ test("local bridge rejects other origins and malformed context without reaching 
     assert.equal(oversized.status, 413);
   });
   assert.equal(calls, 0);
+});
+
+test("installed Explorer origin accepts current soil context and all bounded source states", async () => {
+  let calls = 0;
+  await withBridge(async () => {
+    calls++;
+    return Response.json({ message: { content: "Source context only." } });
+  }, async (base) => {
+    const current = { ...context, soilMoisture: { selectedDay: "2026-09-29", renderedDay: null },
+      officialSources: Array.from({ length: 18 }, (_, index) => ({ ...context.officialSources[0], id: String(index) })) };
+    const answer = await fetch(`${base}/ask`, { method: "POST",
+      headers: { origin: LOCAL_EXPLORER_ORIGIN, "content-type": "application/json" },
+      body: JSON.stringify({ question: "What is confirmed?", context: current }) });
+    assert.equal(answer.status, 200);
+    assert.equal(answer.headers.get("access-control-allow-origin"), LOCAL_EXPLORER_ORIGIN);
+    for (const origin of ["http://localhost:4173", "http://127.0.0.1:4174", "http://127.0.0.1:4173.evil.test", "null"]) {
+      assert.equal((await fetch(`${base}/health`, { headers: { origin } })).status, 403);
+    }
+    for (const invalid of [
+      { ...current, soilMoisture: [] },
+      { ...current, officialSources: Array.from({ length: 33 }, () => context.officialSources[0]) },
+      { ...current, credentials: "forbidden" },
+    ]) {
+      const denied = await fetch(`${base}/ask`, { method: "POST",
+        headers: { origin: LOCAL_EXPLORER_ORIGIN, "content-type": "application/json" },
+        body: JSON.stringify({ question: "x", context: invalid }) });
+      assert.equal(denied.status, 400);
+    }
+  });
+  assert.equal(calls, 1);
 });

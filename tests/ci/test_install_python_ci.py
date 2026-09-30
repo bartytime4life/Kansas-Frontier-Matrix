@@ -34,6 +34,7 @@ class InstallPythonCiTests(unittest.TestCase):
                 "project-test-schema-registry-test",
                 "project-test-wheel",
                 "test-dependencies",
+                "water-pilot",
             },
             set(module.PROFILES),
         )

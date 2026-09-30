@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/release/water_snapshot_manifest.schema.json",
+  "title": "water_snapshot_manifest",
+  "description": "Bounded water carrier profile. Digest/interval/content closure requires release.core validation; this manifest grants no approval.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "package_id",
+    "candidate_id",
+    "source_id",
+    "start",
+    "end",
+    "created_at",
+    "artifacts",
+    "review_requirements",
+    "rollback_target"
+  ],
+  "properties": {
+    "profile": {
+      "const": "kfm.water-snapshot/v1"
+    },
+    "package_id": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "source_id": {
+      "const": "usgs-nwis"
+    },
+    "start": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "end": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate.json",
+        "catalog.json",
+        "evidence.json",
+        "validation.json"
+      ],
+      "properties": {
+        "candidate.json": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "catalog.json": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "evidence.json": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "validation.json": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      }
+    },
+    "review_requirements": {
+      "const": [
+        "source_admission",
+        "rights",
+        "sensitivity",
+        "policy",
+        "independent_review",
+        "release"
+      ]
+    },
+    "rollback_target": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  }
+}

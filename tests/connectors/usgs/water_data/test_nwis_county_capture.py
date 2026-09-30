@@ -43,11 +43,11 @@ def test_request_plan_uses_modern_api_without_credentials() -> None:
         "USGS-00000001", "2026-07-01", "2026-07-03", "00060", "00003"
     )
     assert location["url"] == (
-        "https://api.waterdata.usgs.gov/ogcapi/v0/collections/monitoring-locations/items"
+        "https://api.waterdata.usgs.gov/ogcapi/v1/collections/monitoring-locations/items"
         "?f=json&county_code=20045&limit=1000"
     )
     assert daily["url"] == (
-        "https://api.waterdata.usgs.gov/ogcapi/v0/collections/daily/items"
+        "https://api.waterdata.usgs.gov/ogcapi/v1/collections/daily/items"
         "?f=json&monitoring_location_id=USGS-00000001&parameter_code=00060"
         "&statistic_id=00003&datetime=2026-07-01%2F2026-07-03&limit=1000"
     )

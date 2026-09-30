@@ -34,6 +34,4 @@ test("mobile map keeps layers, live data, sources, time, and style reachable wit
   assert.ok((page.match(/visibleFocusableElements\(/g) ?? []).length >= 4);
   assert.doesNotMatch(page, /filter\(\(element\) => !element\.hasAttribute\("hidden"\)\)/);
 
-  assert.match(page, /selectStoredFeature\(step\.layerId, step\.featureId\);\s*if \(isCompact\) setRightOpen\(false\);/);
-  assert.match(page, /\[announce, commitTemporalFrame, isCompact, selectStoredFeature\]/);
 });

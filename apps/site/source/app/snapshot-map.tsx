@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { loadMapLibre, type Map as MapLibreMap } from "./maplibre-seam";
 import { LAYER_REGISTRY } from "./explorer-data";
 import { applyRegistryState, BASEMAPS, setTerrainPresentation, updateAnalysisAreaSource, updateSelectionSource } from "./map-runtime";
@@ -149,26 +149,3 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
   </figure>;
 }
 
-export function SynchronizedComparison({ snapshot, layerA, layerB, timeA, timeB }: {
-  snapshot: MapSnapshot; layerA: string; layerB: string; timeA: number; timeB: number;
-}) {
-  const [camera, setCamera] = useState<Camera>();
-  const scenes = useMemo(() => [layerA, layerB].map((id, index): MapSnapshot => {
-    const layer = LAYER_REGISTRY.find((item) => item.id === id)!;
-    const time = index === 0 ? timeA : timeB;
-    return { ...snapshot, id: `comparison-${index}`, representation: "2D", projection: "mercator", selection: null,
-      committedTime: { start: time, end: time, label: String(time), mode: "instant" },
-      temporalSweep: { mode: "snapshot", frame: time, rangeStart: time, rangeEnd: time, windowStart: time, windowFrames: 1, stepRule: "available-events", interpolation: false },
-      visibleLayers: [{ id, title: layer.title, domain: layer.domain, order: 0, opacity: 0.85, trustState: "Site-local demo" }],
-    };
-  }), [snapshot, layerA, layerB, timeA, timeB]);
-  // Stable keys preserve both renderers while camera and time are synchronized.
-  return <section className="synchronized-comparison" aria-label="Synchronized A/B map comparison">
-    <p>Display and demonstration comparison. No admitted change-detection pair; dated fixtures remain discrete. Pan or zoom either map to move both.</p>
-    <div className="comparison-maps">{scenes.map((scene, index) => <article key={index}>
-      <h4>{index === 0 ? "A" : "B"} · {scene.visibleLayers[0].title} · {scene.committedTime.start}</h4>
-      <SnapshotMap snapshot={scene} label={`Comparison ${index === 0 ? "A" : "B"}`} syncCamera={camera} onCameraChange={setCamera} />
-    </article>)}</div>
-    <p>Keyboard and text alternative: use the Time A / Time B availability table and layer summaries below. Geographic overlap does not establish change or causation.</p>
-  </section>;
-}

@@ -1,0 +1,16 @@
+{
+  "profile": "kfm.water-fixture-regeneration/v1",
+  "posture": "SYNTHETIC_TEST_ONLY",
+  "evaluated_at": "2026-09-30T19:00:00Z",
+  "input_path": "fixtures/packages/release/water-v1/input-capture.json",
+  "input_digest": "sha256:2928fc8a8b3ab134802d5d274e10bbea3b66f1b72d597c5ed066ada8ce51b5c2",
+  "reviewed_root": "fixtures/packages/release/water-v1",
+  "outputs": {
+    "bootstrap.json": "sha256:3b8f8f893847ac82f37f6b3866b14c6a3b41cdf4fe20f505173e768051300777",
+    "decision.json": "sha256:0eb0606e4b48bcc3809a3d2fb1e3193de0dd6989ce465ef403565607e8159c8f",
+    "evidence.json": "sha256:28557dde8addaabb37b2a084850670f692728a2125d0828b7217fe9dee966c8f",
+    "held-snapshot.json": "sha256:c3ead381a91831af161f8fdd7f9c43c1a26f22652e24d7a39e489aa210199b57",
+    "layers.json": "sha256:1cc867a3f4621815269482ffd9c6cbf9e77e8c5e6fb0830150cf13bc905287ee",
+    "snapshot.json": "sha256:c5e9ab17e9ec6a6a1995c06ae3050e7e66d8e8c02db9736955911c31040930f1"
+  }
+}

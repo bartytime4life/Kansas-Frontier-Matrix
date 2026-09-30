@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/release/water_snapshot.schema.json",
+  "title": "water_snapshot",
+  "description": "Immutable UTF-8 artifact texts; exact bytes hashed, never reserialized for object integrity. Maximum complete serialized package 8 MiB.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "manifest",
+    "artifacts"
+  ],
+  "properties": {
+    "manifest": {
+      "$ref": "https://schemas.kfm.local/contracts/v1/release/water_snapshot_manifest.schema.json"
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate.json",
+        "catalog.json",
+        "evidence.json",
+        "validation.json"
+      ],
+      "properties": {
+        "candidate.json": {
+          "type": "string",
+          "maxLength": 8388608
+        },
+        "catalog.json": {
+          "type": "string",
+          "maxLength": 8388608
+        },
+        "evidence.json": {
+          "type": "string",
+          "maxLength": 8388608
+        },
+        "validation.json": {
+          "type": "string",
+          "maxLength": 8388608
+        }
+      }
+    }
+  }
+}
