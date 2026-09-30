@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SITE_IDENTITY } from "./site-identity";
+import { PersistentSelectMenus } from "./persistent-select-menus";
 import "./globals.css";
 import "./map-layers.css";
 
@@ -14,14 +15,14 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase,
     openGraph: {
       title: "Kansas Frontier Matrix Explorer",
-      description: "Start on a real MapLibre Kansas vector context, inspect place and time context, and ask Qwen about bounded demonstration data.",
+      description: "Start on a real MapLibre Kansas vector context, inspect place and time context, and ask Qwen about bounded map context.",
       type: "website",
-      images: [{ url: socialImage, width: 1731, height: 909, alt: "Kansas Frontier Matrix demonstration evidence network" }],
+      images: [{ url: socialImage, width: 1731, height: 909, alt: "Kansas Frontier Matrix map and source context" }],
     },
     twitter: {
       card: "summary_large_image",
       title: "Kansas Frontier Matrix Explorer",
-      description: "Start on a real MapLibre Kansas vector context, inspect place and time context, and ask Qwen about bounded demonstration data.",
+      description: "Start on a real MapLibre Kansas vector context, inspect place and time context, and ask Qwen about bounded map context.",
       images: [socialImage],
     },
     icons: {
@@ -38,7 +39,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">{children}<PersistentSelectMenus /></body>
     </html>
   );
 }

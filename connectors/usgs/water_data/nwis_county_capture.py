@@ -17,7 +17,7 @@ import re
 from typing import Any, Mapping, Sequence
 from urllib.parse import parse_qs, urlencode, urlparse
 
-BASE = "https://api.waterdata.usgs.gov/ogcapi/v0/collections"
+BASE = "https://api.waterdata.usgs.gov/ogcapi/v1/collections"
 MAX_INPUT_BYTES = 8 * 1024 * 1024
 MAX_PAGES = 100
 MAX_FEATURES_PER_PAGE = 10_000
@@ -205,13 +205,15 @@ def _safe_next_href(
 ) -> None:
     text = _string(href, label, 16, 2048)
     parsed = urlparse(text)
-    expected_path = f"/ogcapi/v0/collections/{collection}/items"
+    # Historical captured v0 fixtures remain replayable; new plans use v1.
+    expected_paths = {f"/ogcapi/{version}/collections/{collection}/items" for version in ("v0", "v1")}
     if (
         parsed.scheme != "https"
         or parsed.hostname != "api.waterdata.usgs.gov"
         or parsed.username is not None
         or parsed.password is not None
-        or parsed.path != expected_path
+        or parsed.path not in expected_paths
+        or parsed.port not in (None, 443)
         or parsed.fragment
     ):
         raise CaptureError(f"{label} is not a safe modern USGS Water Data URL")

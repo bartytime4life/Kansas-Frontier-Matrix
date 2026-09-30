@@ -29,6 +29,12 @@ notes:
   - "Rollback target for this expansion is previous blob SHA `4898799e1ee774bb2f49ceb5a477396701c03e5e`."
 [/KFM_META_BLOCK_V2] -->
 
+> **Water operational profile — 2026-09-30:** the existing RunReceipt now accepts
+> an optional closed `operational` object for bounded component/source/correlation,
+> outcome and reason metadata. `tools/generators/telemetry/water_operational_receipt.py`
+> produces it and the existing SourceHealthAssessment shape. This is not an OCI
+> attestation or source/release approval; see the water runbook.
+
 <a id="top"></a>
 
 # RunReceipt Contract

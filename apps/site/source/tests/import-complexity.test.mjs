@@ -23,3 +23,13 @@ test("namespaced elements, quoted attributes, and extended fields remain support
   assert.equal(result.attribution, "Synthetic & fixture");
   assert.equal(result.featureCollection.features[0].properties.year, "2026");
 });
+
+test("decoded angle brackets stay text and oversized CDATA fails without a suffix scan", () => {
+  const kml = (name) => `<kml><Placemark><name>${name}</name><Point><coordinates>-98,38</coordinates></Point></Placemark></kml>`;
+  const normal = preview(kml("A &lt; B &amp; C &gt; D"));
+  assert.equal(normal.featureCollection.features[0].properties.name, "A < B & C > D");
+  for (const value of ["&lt;".repeat(100_000), `<![CDATA[${"<".repeat(100_000)}]]>`]) {
+    assert.throws(() => preview(kml(value)), /complexity/);
+    assert.throws(() => preview(`<kml><Placemark><SimpleData name="notes">${value}</SimpleData><Point><coordinates>-98,38</coordinates></Point></Placemark></kml>`), /complexity/);
+  }
+});

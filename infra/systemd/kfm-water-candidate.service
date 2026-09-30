@@ -1,0 +1,22 @@
+[Unit]
+Description=KFM bounded water candidate capture (no release authority)
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/Projects/Kansas-Frontier-Matrix
+ExecStart=%h/Projects/Kansas-Frontier-Matrix/.venv/bin/python tools/local_data/water_job.py --root %h/KFM-data
+TimeoutStartSec=240
+TimeoutStopSec=10
+UMask=0077
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=%h/KFM-data
+MemoryMax=384M
+TasksMax=16
+CPUQuota=50%
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+StandardOutput=journal
+StandardError=journal

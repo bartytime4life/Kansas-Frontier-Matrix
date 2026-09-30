@@ -58,17 +58,23 @@ Searches also found duplicate retained artifacts, including two identical Pass 1
 
 ## Current Site capability inventory
 
-`CONFIRMED` from the mounted Site checkout:
+Historical inventory below records earlier implementation slices. The current
+Site checkout has no selectable synthetic domain layers: `LAYER_REGISTRY` is
+empty, and Map layers starts with provider-backed context. External sources
+remain context until governed admission. Entries describing fixtures below
+are historical evidence or open gaps, not current map availability.
+
+`CONFIRMED` from the mounted Site checkout at the time of the original inventory:
 
 - MapLibre GL JS `6.6.0` is the installed browser renderer, with same-origin worker assets.
 - The MapLibre instance stays mounted while the Layer Catalog, Evidence Drawer, timeline, tools, and responsive sheets change state.
-- Twenty registry-driven, site-local GeoJSON layers cover public-safe demonstration categories: hydrology, ecology, geology, agriculture, atmosphere, fire and hazards, people/DNA governance, communities, transport, historical geography, generalized planning, and diagnostics. The demonstration extent and county starter locator layers have been retired; real Census county boundaries remain separate external context.
+- The original inventory counted twenty registry-driven site-local GeoJSON demonstration layers. All twenty have since been retired from the active registry; real Census county boundaries remain separate external context.
 - Stable source, layer, renderer, and feature IDs are used; GeoJSON sources use `promoteId: "fid"`.
 - Style switching restores custom sources, layers, selection, measurement state, and draw order.
 - Layer search, visibility, opacity, legends, metadata, attribution, zoom, draw order, valid-time notes, freshness, release labels, sensitivity notes, and unavailable-time explanations are working.
-- Hover, click selection, clusters, popups, zoom-to-feature/layer, clear selection, distance/area measurement, and keyboard-accessible catalog inspection are implemented.
+- Hover, click selection, clusters, zoom-to-feature/layer, clear selection, distance/area measurement, and keyboard-accessible catalog inspection are implemented. The former map popups were retired in favor of a transient Evidence Drawer hover preview and full drawer selection, keeping mapped animation visible.
 - The Evidence Drawer exposes source role, citation/reference, spatial/temporal scope, freshness, review/release state, rights, generalization, uncertainty, correction, and lineage; the Map Workbench adds explicit preflight before public-safe export.
-- Timeline steps, playback, exact observation time, cumulative historical vintage, availability indicators, and no-data messaging are implemented with site-local fixtures.
+- Timeline and playback controls predate retirement of the site-local fixtures. Provider-backed sources retain their individual time and availability rules.
 - Search covers layers, datasets, feature names, and stable IDs.
 - Explicit Share links preserve camera, visible layers, opacity, time, basemap, projection, layer order, workspace, map-workbench view, selection, Drawer/Focus state, and a restored privacy-redaction marker. Ordinary embedded map changes leave host-controlled history untouched.
 - Responsive panels become focus-trapped modal sheets on compact layouts; map status has a screen-reader live region; reduced-motion and forced-colors handling exist.
@@ -211,7 +217,7 @@ Searches also found duplicate retained artifacts, including two identical Pass 1
 
 - Category: Delivery / backend.
 - Sources: `SRC-MAP-OPS` §§10–14; `SRC-MAP-MASTER` PMTiles governance; `SRC-PIPE` §§18–21.
-- Current Site evidence: twenty-two registry-driven layers remain bounded site-local GeoJSON fixtures; no released remote adapter is claimed.
+- Historical Site evidence counted twenty-two bounded site-local fixtures. The current Site registry has no active domain fixtures; no released KFM domain adapter is claimed.
 - Desired state: manifest-bound, release-linked adapters with range/header, rights, stale, correction, and error proof.
 - Truth label: `UNKNOWN`.
 - Dependencies: governed backend or admitted public artifact, manifest, rights review, cache/correction rules.
@@ -220,7 +226,7 @@ Searches also found duplicate retained artifacts, including two identical Pass 1
 - Performance: must be measured before activation.
 - Effort / risk / priority: large / high / P1 dependency.
 - Acceptance: exact-negative source failures, release/correction propagation, and attribution survive export.
-- Rollback: adapter removal returns to site-local fixtures.
+- Rollback: adapter removal returns to an empty domain registry and provider-backed context.
 - Disposition: `DEFER_DEPENDENCY`.
 
 ### `GAP-P2-009` — County Focus Mode package

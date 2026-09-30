@@ -223,7 +223,7 @@
       "properties": {
         "method": {"const": "GET"},
         "collection": {"enum": ["monitoring-locations", "daily"]},
-        "url": {"type": "string", "pattern": "^https://api\\.waterdata\\.usgs\\.gov/ogcapi/v0/collections/(monitoring-locations|daily)/items\\?"},
+        "url": {"type": "string", "pattern": "^https://api\\.waterdata\\.usgs\\.gov/ogcapi/v[01]/collections/(monitoring-locations|daily)/items\\?"},
         "expected_media_type": {"const": "application/geo+json"},
         "pagination_strategy": {"const": "FOLLOW_REL_NEXT_UNTIL_ABSENT"},
         "api_key_included": {"const": false}

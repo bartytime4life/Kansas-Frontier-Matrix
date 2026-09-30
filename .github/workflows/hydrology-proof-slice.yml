@@ -215,14 +215,16 @@ jobs:
           import re
           from pathlib import Path
 
+          # normalize/validate now have an independent no-network water lane.
+          water_lane = Path(".github/workflows/water-pilot.yml").read_text()
+          assert "tests/domains/hydrology/test_usgs_water_normalizer.py" in water_lane
+          assert "tests/packages/release" in water_lane
           placeholder_pipeline_files = {
               "catalog.py": "# hydrology :: catalog — greenfield placeholder",
               "ingest.py": "# hydrology :: ingest — greenfield placeholder",
-              "normalize.py": "# hydrology :: normalize — greenfield placeholder",
               "publish.py": "# hydrology :: publish — greenfield placeholder",
               "rollback.py": "# hydrology :: rollback — greenfield placeholder",
               "triplets.py": "# hydrology :: triplets — greenfield placeholder",
-              "validate.py": "# hydrology :: validate — greenfield placeholder",
           }
           pipeline_root = Path("pipelines/domains/hydrology")
           for name, expected in placeholder_pipeline_files.items():

@@ -308,7 +308,7 @@ evidence-closed, released, or published.
 | Contract | Semantic role | Contract-declared schema posture |
 |---|---|---|
 | [`domain_observation.md`](./domain_observation.md) | Shared observation meaning and source/time/evidence boundary. | [Minimal `id` envelope](../../../schemas/contracts/v1/domains/hydrology/domain_observation.schema.json); permissive beyond three generic properties. |
-| [`flow_observation.md`](./flow_observation.md) | Observed discharge/flow meaning with unit and qualifier expectations. | [Permissive empty-object scaffold](../../../schemas/contracts/v1/domains/hydrology/flow_observation.schema.json). |
+| [`flow_observation.md`](./flow_observation.md) | Observed discharge/flow meaning with unit and qualifier expectations. | [Closed discharge pilot profile](../../../schemas/contracts/v1/domains/hydrology/flow_observation.schema.json); broader source/release acceptance remains held. |
 | [`water_level_observation.md`](./water_level_observation.md) | Observed level/stage meaning. | [Permissive empty-object scaffold](../../../schemas/contracts/v1/domains/hydrology/water_level_observation.schema.json). |
 | [`water_quality_observation.md`](./water_quality_observation.md) | Water-quality measurement meaning. | [Permissive empty-object scaffold](../../../schemas/contracts/v1/domains/hydrology/water_quality_observation.schema.json). |
 | [`aquifer_observation.md`](./aquifer_observation.md) | First-class groundwater-level or aquifer-state measurement. | [Closed bounded schema](../../../schemas/contracts/v1/domains/hydrology/aquifer_observation.schema.json) with dedicated fixtures, validator, and offline tests. |

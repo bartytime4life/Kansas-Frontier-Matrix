@@ -111,6 +111,12 @@ PROFILES = {
             "./packages/schema-registry[test]",
         ),
     ),
+    "water-pilot": InstallProfile(
+        "tools/ci/python-test.lock",
+        (".[test]", "./packages/connectors-core", "./packages/hashing",
+         "./packages/catalog", "./packages/evidence-resolver", "./packages/policy-runtime",
+         "./packages/release", "./apps/governed-api"),
+    ),
     "audit-tool": InstallProfile("tools/ci/python-audit.lock"),
     "connectors-core": InstallProfile(
         "tools/ci/python-test.lock", ("./packages/connectors-core",)
@@ -140,17 +146,30 @@ PROFILES = {
 
 def load_workflow_migration_manifest(
     repo_root: Path = REPO_ROOT,
+    *,
+    commit_sha: str | None = None,
 ) -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
     """Load and strictly validate the one-time workflow migration ledger."""
 
     path = repo_root / MIGRATION_MANIFEST
-    if path.is_symlink() or not path.is_file():
-        raise InstallConfigurationError("MIGRATION_MANIFEST_UNSAFE")
+    if commit_sha is not None:
+        if repo_root != REPO_ROOT or not COMMIT_SHA.fullmatch(commit_sha):
+            raise InstallConfigurationError("MIGRATION_HEAD_INVALID")
+        raw = _read_commit_workflows(commit_sha, (MIGRATION_MANIFEST,))[MIGRATION_MANIFEST]
+    else:
+        if path.is_symlink() or not path.is_file():
+            raise InstallConfigurationError("MIGRATION_MANIFEST_UNSAFE")
+        try:
+            if not 0 < path.stat().st_size <= LOCK_LIMIT_BYTES:
+                raise InstallConfigurationError("MIGRATION_MANIFEST_SIZE_INVALID")
+            raw = path.read_bytes()
+        except OSError as exc:
+            raise InstallConfigurationError("MIGRATION_MANIFEST_INVALID") from exc
     try:
-        if not 0 < path.stat().st_size <= LOCK_LIMIT_BYTES:
+        if not 0 < len(raw) <= LOCK_LIMIT_BYTES:
             raise InstallConfigurationError("MIGRATION_MANIFEST_SIZE_INVALID")
         value = json.loads(
-            path.read_text(encoding="utf-8"), object_pairs_hook=_unique_object
+            raw.decode("utf-8"), object_pairs_hook=_unique_object
         )
     except InstallConfigurationError:
         raise
@@ -343,11 +362,13 @@ def _require_migration_ancestry(base_commit: str, migration_head: str) -> None:
 def verify_workflow_receipts() -> None:
     """Verify changed workflows through their immutable receipts plus new locks."""
 
-    manifest, entries = load_workflow_migration_manifest()
-    base_commit = manifest["base_commit"]
     migration_head = os.environ.get("KFM_MIGRATION_HEAD", "")
     if not COMMIT_SHA.fullmatch(migration_head):
         raise InstallConfigurationError("MIGRATION_HEAD_INVALID")
+    # Replay the ledger and workflow bytes from the same historical revision.
+    # Later package graduations must not retroactively change that receipt.
+    manifest, entries = load_workflow_migration_manifest(commit_sha=migration_head)
+    base_commit = manifest["base_commit"]
     _require_migration_ancestry(base_commit, migration_head)
     workflow_paths = tuple(entries)
     base_workflows = _read_commit_workflows(base_commit, workflow_paths)

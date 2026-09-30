@@ -32,7 +32,7 @@ test("shared soil visibility, view, UTC day, and opacity restore as one map stat
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   assert.match(page, /serializeSoilMapState\(params, soilMapState\)/);
   assert.match(page, /setSoilMapState\(restoreSoilMapState\(params\)\)/);
-  assert.match(page, /state=\{soilMapState\} onChange=\{next => setSoilMapState\(current => \(\{ \.\.\.current, \.\.\.next \}\)\)\}/);
+  assert.match(page, /state=\{soilMapState\} onChange=\{changeSoilMapState\}/);
 });
 
 test("invalid soil share state falls back safely while valid off-state settings round-trip", () => {

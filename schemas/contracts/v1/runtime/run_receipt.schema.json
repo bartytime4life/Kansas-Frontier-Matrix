@@ -145,6 +145,48 @@
         "PARTIAL",
         "FAIL"
       ]
+    },
+    "operational": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Optional bounded local water-operation projection. Process success grants no source or release authority. No raw payloads, prompts, paths or credentials.",
+      "required": [
+        "component",
+        "correlation_id",
+        "source_id",
+        "occurred_at",
+        "reason_code",
+        "source_admitted",
+        "release_authorized"
+      ],
+      "properties": {
+        "component": {
+          "const": "water-pilot"
+        },
+        "correlation_id": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "source_id": {
+          "const": "usgs-nwis"
+        },
+        "occurred_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "reason_code": {
+          "enum": [
+            "REVIEW_REQUIRED",
+            "CAPTURE_OR_NORMALIZATION_INVALID"
+          ]
+        },
+        "source_admitted": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        }
+      }
     }
   },
   "required": [

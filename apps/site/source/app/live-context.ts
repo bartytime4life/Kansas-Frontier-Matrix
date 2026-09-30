@@ -6,6 +6,7 @@ import { noaaSatelliteTileUrl, type NoaaSatelliteFrame } from "./noaa-satellite"
 import { rememberGeoJSON, updateGeoJSON, setVisibleIfChanged, setPaintIfChanged } from "./map-performance";
 import { balanceMapFills, balanceMapRasters, composeMapLayers, requestFillOpacity, requestRasterOpacity } from "./map-layer-composition";
 import { BUILD_UTC_YEAR } from "./build-clock";
+import { globeOverviewPaintSize } from "./globe-context";
 
 export type OfficialContextId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar" | "nws-forecast-wind" | "nasa-lightning-climatology" | "noaa-lightning-density";
 export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations";
@@ -693,6 +694,22 @@ export const clearOfficialContextFeed = (map: MapLibreMap, feed: OfficialContext
   updateGeoJSON(map.getSource(OFFICIAL_CONTEXT_BY_ID[feed].sourceId) as GeoJSONSource | undefined, EMPTY_CONTEXT);
 const ensureLayer = (map: MapLibreMap, specification: LayerSpecification, beforeId?: string) => {
   if (!map.getLayer(specification.id)) map.addLayer(specification, beforeId);
+  if (specification.type !== "circle" && specification.type !== "line") return;
+  const property = specification.type === "circle" ? "circle-radius" : "line-width";
+  const base = specification.type === "circle" ? specification.paint?.["circle-radius"] : specification.paint?.["line-width"];
+  if (base === undefined) return;
+  const globe = map.getProjection()?.type === "globe";
+  const size = globe ? globeOverviewPaintSize(base as number | unknown[]) : base;
+  if (JSON.stringify(map.getPaintProperty(specification.id, property)) !== JSON.stringify(size)) {
+    map.setPaintProperty(specification.id, property, size as typeof base);
+  }
+  if (specification.type === "circle" && specification.paint?.["circle-stroke-width"] !== undefined) {
+    const stroke = specification.paint["circle-stroke-width"];
+    const strokeSize = globe ? globeOverviewPaintSize(stroke as number | unknown[]) : stroke;
+    if (JSON.stringify(map.getPaintProperty(specification.id, "circle-stroke-width")) !== JSON.stringify(strokeSize)) {
+      map.setPaintProperty(specification.id, "circle-stroke-width", strokeSize as typeof stroke);
+    }
+  }
 };
 
 export const applyOfficialContextState = (
@@ -877,7 +894,7 @@ export const setNoaaRadarObservationTime = (map: MapLibreMap, observedAt: string
     source.setTiles([tileUrl]);
     changed = true;
   }
-  ensureLayer(map, { id: radar.layerIds[0], type: "raster", source: radar.sourceId, paint: { "raster-opacity": radar.defaultOpacity, "raster-fade-duration": 0 } }, firstRegistryLayer(map));
+  ensureLayer(map, { id: radar.layerIds[0], type: "raster", source: radar.sourceId, paint: { "raster-opacity": radar.defaultOpacity, "raster-fade-duration": 420 } }, firstRegistryLayer(map));
   requestRasterOpacity(map, radar.layerIds[0], radar.defaultOpacity);
   balanceMapRasters(map);
   composeMapLayers(map);
@@ -897,7 +914,7 @@ export const setNoaaLightningObservationTime = (map: MapLibreMap, observedAt: st
   } else if (source.serialize().tiles?.[0] !== tileUrl) {
     source.setTiles([tileUrl]);
   }
-  ensureLayer(map, { id: lightning.layerIds[0], type: "raster", source: lightning.sourceId, paint: { "raster-opacity": opacity, "raster-fade-duration": 180, "raster-saturation": 0.2, "raster-contrast": 0.12 } }, firstRegistryLayer(map));
+  ensureLayer(map, { id: lightning.layerIds[0], type: "raster", source: lightning.sourceId, paint: { "raster-opacity": opacity, "raster-fade-duration": 420, "raster-saturation": 0.2, "raster-contrast": 0.12 } }, firstRegistryLayer(map));
   ensureLayer(map, { id: lightning.layerIds[1], type: "raster", source: lightning.sourceId, paint: { "raster-opacity": 0, "raster-fade-duration": 0, "raster-saturation": 0.45, "raster-contrast": 0.3, "raster-brightness-max": 1 } }, firstRegistryLayer(map));
   for (const id of lightning.layerIds) setVisibleIfChanged(map, id, visible && map.getProjection?.()?.type !== "globe");
   requestRasterOpacity(map, lightning.layerIds[0], opacity);

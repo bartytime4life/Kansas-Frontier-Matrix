@@ -16,6 +16,7 @@ test("production worker serves discoverable Earth Engine workspace with honest a
   assert.equal(home.status, 200);
   const homeHtml = await home.text();
   assert.match(homeHtml, /href="\/earth-engine"/);
-  assert.match(homeHtml, /aria-label="Open installed Earth Engine layers"/);
-  assert.match(homeHtml, /aria-controls="earth-engine-context-controls"/);
+  assert.match(homeHtml, /id="earth-engine-context-controls"/);
+  assert.match(homeHtml, /Reviewed imagery/);
+  assert.doesNotMatch(homeHtml, /aria-label="Open installed Earth Engine layers"/);
 });

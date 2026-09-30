@@ -215,11 +215,13 @@
     {
       "path": ".github/workflows/api-test.yml",
       "base_sha256": "sha256:c8a5a56d72aa86d872ad3efc2d7d2a0825d794bf444a34ae97974cf4c13f5b28",
-      "current_sha256": "sha256:f7a3061d5d1c139eb3b1033af5b977250033d8b0979fe4ce4b4d729e4fcf6ea8",
+      "current_sha256": "sha256:5adf78a2138d984fbfef2cc6f4efdbac1c573d0a3bca73abdd76c74cec8fe153",
       "profiles": [
-        "project-test"
+        "water-pilot"
       ],
-      "superseded_receipt_sha256s": []
+      "superseded_receipt_sha256s": [
+        "sha256:f7a3061d5d1c139eb3b1033af5b977250033d8b0979fe4ce4b4d729e4fcf6ea8"
+      ]
     },
     {
       "path": ".github/workflows/archaeological-volume-measurement-assessment.yml",
@@ -886,12 +888,14 @@
     {
       "path": ".github/workflows/domain-hydrology.yml",
       "base_sha256": "sha256:603af477fd9f9a76da6734318d845b8f95aeed0ad167328497f15266368c2ada",
-      "current_sha256": "sha256:6abacc80fb4e65971cc4cca4e7bf4a9e7c2a49ecdab942a4748a0bee4c8b7e86",
+      "current_sha256": "sha256:717653ef42aa8e4303c02c6251853d5e4af5154ebfae05606413e493830dcce6",
       "profiles": [
-        "project-test"
+        "water-pilot"
       ],
       "superseded_receipt_sha256s": [
-        "sha256:0ef0bb564f914acc25a35c21ceced6059bf254f25a80c5e86535c2d99c740d2f"
+        "sha256:0ef0bb564f914acc25a35c21ceced6059bf254f25a80c5e86535c2d99c740d2f",
+        "sha256:6abacc80fb4e65971cc4cca4e7bf4a9e7c2a49ecdab942a4748a0bee4c8b7e86",
+        "sha256:e5853220445d547f6911948bb299a0cadf0d0c0c1d642527b84fe55fc5c0213f"
       ]
     },
     {
@@ -1453,11 +1457,13 @@
     {
       "path": ".github/workflows/hydrology-nwis-county-capture.yml",
       "base_sha256": "sha256:cd8b1076059d6efb31b7430beba3940c400386c3173ae4756f51d4dfe879a37c",
-      "current_sha256": "sha256:839ede9fbb26ced5d3158369ea5604ab88c036c1e3b52e45cd4718403f26025d",
+      "current_sha256": "sha256:9693d733b98f0a1c6503925aeee6c0d7b4155ca555080cad704e3d70e3352fac",
       "profiles": [
         "project-test"
       ],
-      "superseded_receipt_sha256s": []
+      "superseded_receipt_sha256s": [
+        "sha256:839ede9fbb26ced5d3158369ea5604ab88c036c1e3b52e45cd4718403f26025d"
+      ]
     },
     {
       "path": ".github/workflows/hydrology-usgs-water-api-cutover.yml",
@@ -3233,11 +3239,12 @@
     {
       "path": ".github/workflows/telemetry-policy.yml",
       "base_sha256": "sha256:6109037915e4cad7e4e0aff621e6cb4ab484b4540658c99eba41b95e448fb18e",
-      "current_sha256": "sha256:1eba138cfede99e2b443b026a71b1cb9e8ee9c76a323bb4a129d6ebe20096f05",
+      "current_sha256": "sha256:24ae18bf6fd151e71bf51bc111de6c90ec7b747049170c26e5b4a8acf52fe222",
       "profiles": [
         "project-test"
       ],
       "superseded_receipt_sha256s": [
+        "sha256:1eba138cfede99e2b443b026a71b1cb9e8ee9c76a323bb4a129d6ebe20096f05",
         "sha256:ac9f75e694406789d9fa5d2ddf88632251b9aa2503dfb29abd67d3aab279672e"
       ]
     },

@@ -301,11 +301,17 @@ class RetryPolicy:
         )
         base = min(exponential, self.max_delay_seconds)
         if retry_after_seconds is not None:
-            base = max(base, min(retry_after_seconds, self.max_delay_seconds))
+            # A provider's not-before time is a lower bound, not a delay to
+            # truncate. If it cannot fit our budget, retain the prior artifact.
+            if retry_after_seconds > self.max_delay_seconds:
+                return RetryDecision(False, 0.0, None, "deadline_would_be_exceeded")
+            base = max(base, retry_after_seconds)
 
         # Symmetric deterministic jitter around the base delay.
         factor = 1.0 + self.jitter_fraction * ((2.0 * jitter_unit) - 1.0)
         delay = max(0.0, min(base * factor, self.max_delay_seconds))
+        if retry_after_seconds is not None:
+            delay = max(delay, retry_after_seconds)
         remaining = self.deadline_seconds - elapsed_seconds
         if delay >= remaining:
             return RetryDecision(False, 0.0, None, "deadline_would_be_exceeded")

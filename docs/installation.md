@@ -19,6 +19,12 @@ related:
   - ../scripts/dev/BOOTSTRAP.md
 [/KFM_META_BLOCK_V2] -->
 
+> **Water pilot setup — 2026-09-30:** use supported Python and the hash-locked
+> `water-pilot` installer profile. The setup doctor, runnable read API, external
+> candidate store and separate Site npm boundary are documented in
+> [the water runbook](runbooks/water-pilot.md). No service or timer is installed
+> merely by installing the packages.
+
 # Install and configure KFM locally
 
 This guide covers the current repository checkout. Choose the component you need; the root Python tools, root JavaScript workspace, and Explorer Site have separate dependency installs. Run commands from the repository root unless a step changes directory.

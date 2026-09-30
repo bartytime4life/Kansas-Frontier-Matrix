@@ -1,5 +1,5 @@
 import type { Feature, FeatureCollection, MultiPolygon, Polygon, Position } from "geojson";
-import polygonClipping, { type MultiPolygon as ClippingMultiPolygon, type Polygon as ClippingPolygon, type Ring as ClippingRing } from "polygon-clipping";
+import polygonClipping, { type MultiPolygon as ClippingMultiPolygon, type Pair as ClippingPair, type Polygon as ClippingPolygon, type Ring as ClippingRing } from "polygon-clipping";
 import { getSolarPosition } from "sunrise-sunset-js";
 import type { SpaOptions } from "sunrise-sunset-js";
 
@@ -27,6 +27,7 @@ const signedDegrees = (value: number): number => mod(value + 180, 360) - 180;
 const partsForDate = (date: Date, timeZone: string) => {
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone,
+    era: "short",
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -35,34 +36,49 @@ const partsForDate = (date: Date, timeZone: string) => {
     second: "2-digit",
     hourCycle: "h23",
   }).formatToParts(date);
-  return Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  if (/^\d{1,4}$/.test(values.year)) {
+    const year = Number(values.era === "BC" ? 1 - Number(values.year) : values.year);
+    values.year = String(year).padStart(4, "0");
+  }
+  return values;
 };
 
 const validCalendarDay = (day: string): boolean => {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) return false;
   const [year, month, date] = day.split("-").map(Number);
-  const check = new Date(Date.UTC(year, month - 1, date));
+  if (year < 1) return false;
+  const check = new Date(0);
+  check.setUTCHours(0, 0, 0, 0);
+  check.setUTCFullYear(year, month - 1, date);
   return check.getUTCFullYear() === year && check.getUTCMonth() === month - 1 && check.getUTCDate() === date;
 };
 
 const addCalendarDays = (day: string, amount: number): string => {
   const [year, month, date] = day.split("-").map(Number);
-  const next = new Date(Date.UTC(year, month - 1, date + amount));
-  return `${next.getUTCFullYear()}-${String(next.getUTCMonth() + 1).padStart(2, "0")}-${String(next.getUTCDate()).padStart(2, "0")}`;
+  const next = new Date(0);
+  next.setUTCHours(0, 0, 0, 0);
+  next.setUTCFullYear(year, month - 1, date + amount);
+  return `${String(next.getUTCFullYear()).padStart(4, "0")}-${String(next.getUTCMonth() + 1).padStart(2, "0")}-${String(next.getUTCDate()).padStart(2, "0")}`;
+};
+
+const calendarDayAsUtcMs = (day: string): number => {
+  const [year, month, date] = day.split("-").map(Number);
+  const utc = new Date(0);
+  utc.setUTCHours(0, 0, 0, 0);
+  utc.setUTCFullYear(year, month - 1, date);
+  return utc.getTime();
 };
 
 /** Convert a wall-clock midnight in a named IANA zone to its UTC instant. */
 const zonedMidnight = (day: string, timeZone: string): number => {
   if (!validCalendarDay(day)) throw new RangeError("A real YYYY-MM-DD calendar day is required.");
-  const [year, month, date] = day.split("-").map(Number);
-  const targetWallAsUtc = Date.UTC(year, month - 1, date);
+  const targetWallAsUtc = calendarDayAsUtcMs(day);
   let instant = targetWallAsUtc;
   for (let attempt = 0; attempt < 4; attempt += 1) {
     const parts = partsForDate(new Date(instant), timeZone);
-    const representedWallAsUtc = Date.UTC(
-      Number(parts.year), Number(parts.month) - 1, Number(parts.day),
-      Number(parts.hour), Number(parts.minute), Number(parts.second),
-    );
+    const representedWallAsUtc = calendarDayAsUtcMs(`${parts.year}-${parts.month}-${parts.day}`)
+      + Number(parts.hour) * 3_600_000 + Number(parts.minute) * 60_000 + Number(parts.second) * 1000;
     const correction = targetWallAsUtc - representedWallAsUtc;
     instant += correction;
     if (correction === 0) break;
@@ -79,6 +95,54 @@ export const kansasLocalDayInterval = (day: string): KansasDayInterval => {
   const startMs = zonedMidnight(day, KANSAS_DAYLIGHT_TIME_ZONE);
   const endMs = zonedMidnight(addCalendarDays(day, 1), KANSAS_DAYLIGHT_TIME_ZONE);
   return { startMs, endMs, durationMs: endMs - startMs };
+};
+
+/** Inclusive calendar-date range represented by real Kansas-local midnight boundaries. */
+export const kansasLocalDateRangeInterval = (fromDay: string, throughDay: string): KansasDayInterval => {
+  if (!validCalendarDay(fromDay) || !validCalendarDay(throughDay) || throughDay < fromDay) {
+    throw new RangeError("Choose a valid Kansas date range with its end on or after its start.");
+  }
+  const startMs = zonedMidnight(fromDay, KANSAS_DAYLIGHT_TIME_ZONE);
+  const endMs = zonedMidnight(addCalendarDays(throughDay, 1), KANSAS_DAYLIGHT_TIME_ZONE);
+  return { startMs, endMs, durationMs: endMs - startMs };
+};
+
+export const kansasCalendarDaysInclusive = (fromDay: string, throughDay: string): number => {
+  if (!validCalendarDay(fromDay) || !validCalendarDay(throughDay) || throughDay < fromDay) {
+    throw new RangeError("Choose a valid Kansas date range with its end on or after its start.");
+  }
+  return Math.floor((calendarDayAsUtcMs(throughDay) - calendarDayAsUtcMs(fromDay)) / 86_400_000) + 1;
+};
+
+/** Timeline position with equal playback time assigned to each local date. */
+export const dateRangeLoopFractionAtInstant = (instantMs: number, fromDay: string, throughDay: string): number => {
+  const range = kansasLocalDateRangeInterval(fromDay, throughDay);
+  if (!Number.isFinite(instantMs) || instantMs <= range.startMs) return 0;
+  if (instantMs >= range.endMs) return 1;
+  const day = currentKansasCalendarDay(new Date(instantMs));
+  const dayCount = kansasCalendarDaysInclusive(fromDay, throughDay);
+  const dayIndex = kansasCalendarDaysInclusive(fromDay, day) - 1;
+  return (dayIndex + dayFractionAtInstant(instantMs, day)) / dayCount;
+};
+
+/** Map equal-duration date-loop steps onto each date's actual 23/24/25-hour span. */
+export const instantAtDateRangeLoopFraction = (fromDay: string, throughDay: string, fraction: number): number => {
+  const dayCount = kansasCalendarDaysInclusive(fromDay, throughDay);
+  const bounded = Math.max(0, Math.min(1, Number.isFinite(fraction) ? fraction : 0));
+  const datePosition = bounded * dayCount;
+  const dayIndex = Math.min(dayCount - 1, Math.floor(datePosition));
+  const dayFraction = Math.max(0, datePosition - dayIndex);
+  return instantAtDayFraction(addCalendarDays(fromDay, dayIndex), dayFraction);
+};
+
+export const isInstantInKansasDateRange = (instantMs: number, fromDay: string, throughDay: string): boolean => {
+  if (!Number.isFinite(instantMs)) return false;
+  try {
+    const { startMs, endMs } = kansasLocalDateRangeInterval(fromDay, throughDay);
+    return instantMs >= startMs && instantMs < endMs;
+  } catch {
+    return false;
+  }
 };
 
 export const isInstantInKansasDay = (instantMs: number, day: string): boolean => {
@@ -102,8 +166,23 @@ export const dayFractionAtInstant = (instantMs: number, day: string): number => 
   return Math.max(0, Math.min(1, (instantMs - interval.startMs) / interval.durationMs));
 };
 
-export const daylightLoopFraction = (startFraction: number, elapsedWallMs: number): number =>
-  mod((Number.isFinite(startFraction) ? startFraction : 0) + Math.max(0, elapsedWallMs) / DAYLIGHT_LOOP_DURATION_MS, 1);
+export const instantAtIntervalFraction = (interval: KansasDayInterval, fraction: number): number => {
+  const bounded = Math.max(0, Math.min(1, Number.isFinite(fraction) ? fraction : 0));
+  return interval.startMs + bounded * interval.durationMs;
+};
+
+export const intervalFractionAtInstant = (instantMs: number, interval: KansasDayInterval): number =>
+  Math.max(0, Math.min(1, (instantMs - interval.startMs) / interval.durationMs));
+
+export const daylightLoopFraction = (
+  startFraction: number,
+  elapsedWallMs: number,
+  loopDurationMs = DAYLIGHT_LOOP_DURATION_MS,
+): number => mod(
+  (Number.isFinite(startFraction) ? startFraction : 0)
+    + Math.max(0, elapsedWallMs) / Math.max(1, loopDurationMs),
+  1,
+);
 
 export const daylightShouldAutoplay = (reducedMotion: boolean, documentHidden: boolean): boolean =>
   !reducedMotion && !documentHidden;
@@ -113,19 +192,19 @@ export const restoreDaylightView = (
   instantValue: string | null,
   enabled: boolean,
   fallbackDay = currentKansasCalendarDay(),
-): Readonly<{ day: string; instantMs: number; enabled: boolean; playing: false }> => {
-  let day = dayValue ?? fallbackDay;
-  let interval: KansasDayInterval;
-  try {
-    interval = kansasLocalDayInterval(day);
-  } catch {
-    day = fallbackDay;
-    interval = kansasLocalDayInterval(day);
-  }
+  throughValue: string | null = null,
+): Readonly<{ day: string; throughDay: string; instantMs: number; enabled: boolean; playing: false }> => {
+  const day = dayValue && validCalendarDay(dayValue) && dayValue <= fallbackDay ? dayValue : fallbackDay;
+  const requestedThrough = throughValue && validCalendarDay(throughValue) && throughValue <= fallbackDay
+    ? throughValue
+    : fallbackDay;
+  const throughDay = requestedThrough < day ? day : requestedThrough;
+  const interval = kansasLocalDateRangeInterval(day, throughDay);
   const requested = instantValue ? Date.parse(instantValue) : Number.NaN;
   return {
     day,
-    instantMs: isInstantInKansasDay(requested, day) ? requested : interval.startMs,
+    throughDay,
+    instantMs: isInstantInKansasDateRange(requested, day, throughDay) ? requested : interval.startMs,
     enabled,
     playing: false,
   };
@@ -195,7 +274,7 @@ export const solarPositionAt = (
   };
 };
 
-const destination = (centerLongitude: number, centerLatitude: number, angularRadius: number, bearingDegrees: number): Position => {
+const destination = (centerLongitude: number, centerLatitude: number, angularRadius: number, bearingDegrees: number): ClippingPair => {
   const phi1 = centerLatitude * RAD;
   const lambda1 = centerLongitude * RAD;
   const delta = angularRadius * RAD;
@@ -214,9 +293,9 @@ const unwrapLongitude = (longitude: number, reference: number): number =>
 
 /** Keep each circular boundary continuous in longitude before clipping it to
  * RFC 7946 world strips. A radius that encloses a pole winds by one world. */
-const unwrappedCircle = (longitude: number, latitude: number, radius: number, samples: number): Position[] => {
+const unwrappedCircle = (longitude: number, latitude: number, radius: number, samples: number): ClippingRing => {
   const startBearing = latitude < 0 ? 0 : 180; // begin away from the nearer pole
-  const points: Position[] = [];
+  const points: ClippingRing = [];
   let previousLongitude = longitude;
   for (let index = 0; index < samples; index += 1) {
     const [normalizedLongitude, pointLatitude] = destination(longitude, latitude, radius, startBearing + index * 360 / samples);
@@ -238,7 +317,7 @@ const ringArea = (ring: readonly Position[]): number => {
   return sum / 2;
 };
 
-const counterClockwise = (ring: Position[]): Position[] => ringArea(ring) >= 0 ? ring : [...ring].reverse();
+const counterClockwise = (ring: ClippingRing): ClippingRing => ringArea(ring) >= 0 ? ring : [...ring].reverse();
 
 /** Convert a spherical circle to a simple longitude/latitude disk. When the
  * boundary surrounds a pole, close it along that pole before clipping. */
@@ -284,9 +363,10 @@ const subtractAlignedDisk = (outer: ClippingPolygon, inner: ClippingPolygon): Cl
     const shift = world * 360;
     const overlap = Math.min(outerMax, innerMax + shift) - Math.max(outerMin, innerMin + shift);
     if (overlap <= 1e-9) continue;
-    alignedCopies.push(inner.map((ring) => ring.map(([longitude, latitude]) => [longitude + shift, latitude] as Position)));
+    alignedCopies.push(inner.map((ring) => ring.map(([longitude, latitude]) => [longitude + shift, latitude] as ClippingPair)));
   }
-  return alignedCopies.length ? difference(outer, union(...alignedCopies)) : [outer];
+  const [first, ...rest] = alignedCopies;
+  return first ? difference(outer, union(first, ...rest)) : [outer];
 };
 
 const canonicalRing = (ring: ClippingRing, world: number, exterior: boolean): Position[] => {

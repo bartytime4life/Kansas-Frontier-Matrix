@@ -1,3 +1,5 @@
+import type { SoilMoistureEngineContext } from "./soil-moisture-control";
+
 export type QwenLayerContext = Readonly<{
   id: string;
   title: string;
@@ -44,6 +46,7 @@ export type QwenMapContext = Readonly<{
     retrievedAt: string | null;
     evidenceRole: "EXTERNAL_CONTEXT_ONLY";
   }>[];
+  soilMoisture?: SoilMoistureEngineContext | null;
   telemetry?: Readonly<{
     authority: "SITE_LOCAL_REDACTED_DIAGNOSTIC";
     renderer: Readonly<{ state: string; styleLoaded: boolean; canvasReady: boolean; tilesLoaded: boolean; failedChecks: readonly string[] }>;
@@ -66,6 +69,7 @@ export const QWEN_SYSTEM_PROMPT = [
   "You are the Qwen contextual companion for the Kansas Frontier Matrix Explorer.",
   "Use only the supplied map context and evidence labels; do not invent sources, current conditions, people, DNA, sensitive coordinates, releases, or safety guidance.",
   "Treat imagery, tiles, labels, overlays, measurements, and model language as context carriers rather than authority.",
+  "For soil moisture, distinguish a selected frame from a confirmed rendered frame. A visualTransition is only a color-image blend between exact NASA daily frames, or a fade through the basemap across a missing-day/loop reset; it is not a numeric temporal or spatial estimate. Colorized GIBS tiles contain no numeric pixel samples in this context; do not infer point values, local wetness, or water travel from their colors.",
   "Keep observations separate from inferences. If the supplied context cannot support an answer, say so plainly and identify the missing gate.",
   "Never upgrade synthetic or generalized fixtures into operational data. Never reveal protected precision.",
   "Answer briefly, with the active place, time, visible layers, and evidence boundary in view.",

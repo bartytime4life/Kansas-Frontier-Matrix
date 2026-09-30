@@ -248,10 +248,27 @@ const kmlElements = (text: string, wanted: string) => {
 
 const tagFragments = (text: string, name: string) => kmlElements(text, name).map((element) => element.content);
 
-const firstTagText = (text: string, name: string) => decodeXmlText(tagFragments(text, name)[0] ?? "")
-  .replace(/<[^>]*>/g, " ")
-  .replace(/\s+/g, " ")
-  .trim();
+// Strip actual markup in one pass before entity decoding. Decoded '<' is text,
+// not another tag start. Bound each derived field independently of file size.
+const kmlText = (text: string, maxLength = 16_384) => {
+  const parts: string[] = [];
+  let inTag = false;
+  let quote: string | null = null;
+  for (const character of text) {
+    if (!inTag) {
+      if (character === "<") { inTag = true; parts.push(" "); }
+      else parts.push(character);
+    } else if (quote !== null) {
+      if (character === quote) quote = null;
+    } else if (character === "'" || character === '"') quote = character;
+    else if (character === ">") inTag = false;
+  }
+  const decoded = decodeXmlText(parts.join("")).replace(/\s+/g, " ").trim();
+  if (decoded.length > maxLength) throw new Error("KML text exceeds the preview complexity limit.");
+  return decoded;
+};
+
+const firstTagText = (text: string, name: string) => kmlText(tagFragments(text, name)[0] ?? "", name === "coordinates" ? 2 * 1024 * 1024 : 16_384);
 
 const geometryFromKmlFragment = (kind: "Point" | "LineString" | "Polygon", fragment: string): Geometry | null => {
   if (kind === "Point") {
@@ -285,7 +302,7 @@ const extendedDataForPlacemark = (placemark: string): Record<string, string> => 
   });
   const simpleDataEntries = kmlElements(placemark, "SimpleData").map(({ attributes, content }) => {
     const key = decodeXmlText(attributes.match(/\bname\s*=\s*(["'])(.*?)\1/i)?.[2] ?? "").trim();
-    const value = decodeXmlText(content).replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+    const value = kmlText(content);
     return [key, value];
   });
   return Object.fromEntries([...dataEntries, ...simpleDataEntries].filter(([key]) => key));

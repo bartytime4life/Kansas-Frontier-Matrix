@@ -329,9 +329,10 @@ jobs:
           for root in [Path("runtime"), Path("apps"), Path("packages"), Path("pipelines")]:
               for path in root.rglob("*"):
                   if path.is_file() and path.suffix in {".py", ".ts", ".tsx", ".js"}:
-                      if code_pattern.search(
-                          path.read_text(encoding="utf-8", errors="ignore")
-                      ):
+                      text = path.read_text(encoding="utf-8", errors="ignore")
+                      # ARIA meter is an accessibility role, not an OTEL meter.
+                      text = re.sub(r'role=[\"\']meter[\"\']', "", text)
+                      if code_pattern.search(text):
                           surfaced_code.append(path.as_posix())
           assert not surfaced_code, (
               "operational telemetry instrumentation surfaced; wire accepted event "

@@ -43,6 +43,14 @@ notes:
   - "Execution results belong to exact-head PR/check records; this README does not claim continuously passing CI."
 [/KFM_META_BLOCK_V2] -->
 
+> **Current water implementation — 2026-09-30:** the versioned `/v1/bootstrap`,
+> `/v1/layers` and `/v1/evidence` reads now serve only eligible immutable water
+> snapshots through a read-only store. `/healthz` reports process/configuration
+> without granting evidence readiness. The existing legacy scaffold routes and
+> their finite-failure contracts remain intact. The historical scaffold inventory
+> below applies to those legacy routes. Install/run, package/review boundaries,
+> conformance and rollback: [water runbook](../../docs/runbooks/water-pilot.md).
+
 <a id="top"></a>
 
 # Governed API App

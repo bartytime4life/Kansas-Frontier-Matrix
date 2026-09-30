@@ -1,0 +1,30 @@
+name: water-pilot
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: water-pilot-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  water-conformance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+      - name: Install hash-locked water dependencies
+        run: python tools/ci/install_python_ci.py water-pilot
+      - name: Execute synthetic acquisition, serving, denial and recovery tests
+        run: python -m pytest -q tests/connectors/usgs/water_data tests/domains/hydrology/test_usgs_water_normalizer.py tests/packages/release tests/packages/connectors_core apps/governed-api/tests tests/tools/test_water_job.py
+      - name: Regenerate isolated synthetic conformance fixtures
+        run: python tools/fixtures/regenerate.py
+      - name: Check reviewed mirror digests
+        run: python tools/qa/site_mirror.py --check

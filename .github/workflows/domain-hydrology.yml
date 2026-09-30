@@ -52,7 +52,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install Hydrology validation dependencies
-        run: python tools/ci/install_python_ci.py project-test
+        run: python tools/ci/install_python_ci.py water-pilot
 
       - name: Evaluate Hydrology validation readiness
         shell: bash
@@ -145,8 +145,9 @@ jobs:
               test_root / "test_living_waters_fixture_packet.py",
               test_root / "test_no_network_proof.py",
               test_root / "test_proof_slice.py",
+              test_root / "test_usgs_water_normalizer.py",
           }
-          test_inventory = sorted(path for path in test_root.rglob("*") if path.is_file())
+          test_inventory = sorted(path for path in test_root.rglob("*") if path.is_file() and "__pycache__" not in path.parts)
           test_symlinks = sorted(path for path in test_root.rglob("*") if path.is_symlink())
           if test_symlinks:
               raise SystemExit(
@@ -522,6 +523,7 @@ jobs:
             tests/domains/hydrology/test_hydro_identity_bridge.py \
             tests/domains/hydrology/test_streamflow_qc_context_assessment.py \
             tests/domains/hydrology/test_living_waters_fixture_packet.py \
+            tests/domains/hydrology/test_usgs_water_normalizer.py \
             tests/validators/domains/hydrology/test_hydrology_catalog_matrix_validator_entrypoint.py \
             tests/validators/domains/hydrology/test_hydrology_source_descriptor_validator_entrypoint.py \
             tests/validators/domains/hydrology/test_domain_schema_validator.py

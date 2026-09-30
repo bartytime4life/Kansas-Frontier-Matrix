@@ -1,4 +1,15 @@
-# apps/governed-api pyproject — greenfield placeholder
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "kfm-governed-api"
-version = "0.0.0"
+version = "0.0.1"
+requires-python = ">=3.11"
+dependencies = ["kfm-release", "kfm-policy-runtime", "kfm-evidence-resolver"]
+
+[project.scripts]
+kfm-governed-api = "governed_api.main:serve"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/governed_api"]

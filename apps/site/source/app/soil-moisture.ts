@@ -27,15 +27,53 @@ export function restoreSoilMapState(params: URLSearchParams): SoilMapState {
 export const SOIL_METADATA_URL = "https://gibs.earthdata.nasa.gov/layer-metadata/v1.0/SMAP_L4_Analyzed_Surface_Soil_Moisture.json";
 export const SOIL_GUIDE_URL = "https://nsidc.org/data/spl4smau/versions/8";
 export const soilLegendUrl = (view: SoilView) => `https://gibs.earthdata.nasa.gov/legends/${SOIL_VIEWS[view].legend}`;
+export const SOIL_PRODUCT_FIRST_DAY = "2015-03-31";
+export const SOIL_GLOBAL_BOUNDS_WGS84: [number, number, number, number] = [-180, -85.044, 180, 85.044];
+export const SOIL_GEOLOCATION_NOTICE = {
+  startDay: "2026-05-14",
+  endDay: "2026-07-28",
+  checkedDay: "2026-09-30",
+  sourceUrl: SOIL_GUIDE_URL,
+} as const;
+export const SOIL_PRODUCT_METADATA = {
+  product: "SPL4SMAU",
+  version: "008",
+  displayCadence: "daily",
+  displayFrameTimeUtc: "12:00",
+  nativeCadence: "3-hourly instantaneous analysis updates",
+  approximateResolutionKm: 9,
+  nativeFormat: "HDF5",
+  role: "EXTERNAL_CONTEXT_ONLY",
+  dataKind: "colorized-raster-tiles",
+  numericPixelsAvailable: false,
+} as const;
+export type SoilVisualTransitionKind = "adjacent-visual-blend" | "gap-or-loop-reset";
 
-export function validSoilDay(day: string, now = new Date()): boolean {
-  if (!isSoilCalendarDay(day)) return false;
-  const today = now.toISOString().slice(0, 10);
-  const first = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - 29)).toISOString().slice(0, 10);
-  return day >= first && day <= today;
+/** These weights apply only to colorized map images, never to numeric soil values. */
+export function soilVisualTransition(fromDay: string, toDay: string, sameView: boolean): SoilVisualTransitionKind {
+  const fromMs = Date.parse(fromDay + "T12:00:00Z");
+  const toMs = Date.parse(toDay + "T12:00:00Z");
+  return sameView && Number.isFinite(fromMs) && Number.isFinite(toMs) && Math.abs(toMs - fromMs) === 86_400_000
+    ? "adjacent-visual-blend" : "gap-or-loop-reset";
 }
 
-/** Parse only named WMTS Layer/Time elements, expanding daily ranges within 30 days. */
+export function soilVisualOpacities(kind: SoilVisualTransitionKind, progress: number, opacity: number): readonly [number, number] {
+  const p = Math.max(0, Math.min(1, progress));
+  const amount = Math.max(0, Math.min(1, opacity));
+  return kind === "adjacent-visual-blend"
+    ? [amount, amount * p]
+    : [amount * Math.max(0, 1 - 2 * p), amount * Math.max(0, 2 * p - 1)];
+}
+const MAX_ADVERTISED_SOIL_DAYS = 5_000;
+
+export function validSoilDay(day: string, now = new Date()): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || Number.isNaN(Date.parse(`${day}T00:00:00Z`))) return false;
+  if (new Date(`${day}T00:00:00Z`).toISOString().slice(0, 10) !== day) return false;
+  const today = now.toISOString().slice(0, 10);
+  return day >= SOIL_PRODUCT_FIRST_DAY && day <= today;
+}
+
+/** Parse only named WMTS Layer/Time elements, expanding the bounded product archive. */
 export function parseSoilAvailability(xml: string, now = new Date()): Record<SoilView, string[]> {
   if (!xml.includes("<Capabilities") && !xml.includes(":Capabilities")) throw new Error("Invalid NASA WMTS capabilities.");
   const result = {} as Record<SoilView, string[]>;
@@ -53,13 +91,14 @@ export function parseSoilAvailability(xml: string, now = new Date()): Record<Soi
         return Number.isFinite(stamp) && new Date(stamp).toISOString().slice(0, 10) === value;
       };
       if (!canonical(match[1]) || !canonical(match[2]) || match[1] > match[2]) throw new Error(`Invalid NASA time range for ${view}.`);
-      for (let t = Date.parse(`${match[1]}T00:00:00Z`), end = Date.parse(`${match[2]}T00:00:00Z`), n = 0; t <= end && n < 31; t += 86400000, n++) {
-        const day = new Date(t).toISOString().slice(0, 10);
-        if (validSoilDay(day, now)) days.add(day);
-      }
-      // Long historical ranges may start before the window. Expand their overlap separately.
-      const first = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - 29);
-      for (let t = Math.max(first, Date.parse(`${match[1]}T00:00:00Z`)), end = Math.min(Date.parse(`${match[2]}T00:00:00Z`), Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())), n = 0; t <= end && n < 30; t += 86400000, n++) days.add(new Date(t).toISOString().slice(0, 10));
+      const first = Date.parse(`${match[1]}T00:00:00Z`);
+      const last = Date.parse(`${match[2]}T00:00:00Z`);
+      const start = Math.max(first, Date.parse(`${SOIL_PRODUCT_FIRST_DAY}T00:00:00Z`));
+      const end = Math.min(last, Date.parse(`${now.toISOString().slice(0, 10)}T00:00:00Z`));
+      if (start > end) continue;
+      const dayCount = Math.floor((end - start) / 86400000) + 1;
+      if (dayCount > MAX_ADVERTISED_SOIL_DAYS) throw new Error(`NASA time range exceeds the supported product history for ${view}.`);
+      for (let t = start; t <= end; t += 86400000) days.add(new Date(t).toISOString().slice(0, 10));
     }
     result[view] = [...days].sort().reverse();
   }
