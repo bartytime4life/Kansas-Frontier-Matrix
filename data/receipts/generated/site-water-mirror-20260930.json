@@ -1,6 +1,6 @@
 {
   "profile": "kfm.site-mirror-receipt/v1",
-  "source_commit": "98eeb0d9a7f7c2ff5135018d5c648b68f54301c0",
+  "source_commit": "6aced94d7bc935723c92441a7caa0bba416aeab1",
   "source_base_commit": "8d82d9af72930e2df9e3b14e15b0a5bf6463799c",
   "source_base_site_version": 130,
   "candidate_site_version": null,
@@ -12,7 +12,7 @@
     ".npmrc": "sha256:494e64a8818b6158e89321250500ad5ad018e33ad5cfea06a1cacd2cf4da75fa",
     ".openai/hosting.json": "sha256:c5fdac3f5d324116aa6b13bedf730f0c3600cf728c7c7c71cdb3757313388f11",
     "AGENTS.md": "sha256:0b6e1ad45d719742fd442064ab8c7cc6b35487c4abe795acc5e010bcec899c7b",
-    "README.md": "sha256:91d54d04e6b13a1b602aa6f8ae27b7946c8d9e0b801c8c6e5728b6eadc56dc7e",
+    "README.md": "sha256:ac873517e659ddbda07e648ba1269184fc7f36105f9be98482c2eda15c76615b",
     "app/3dep-dem-tiles.ts": "sha256:67b3e84c88bb0f5d58555f6264153034763eebc9972f24c5eb863f09d3f3c791",
     "app/about/page.tsx": "sha256:c33b382e23a62d8ddd2c9e5995ccb4675b44496df84b8f83c0ceb464b6e9f0f6",
     "app/airflow-tiles.ts": "sha256:c78e10c1e6f309ac1f756b55140e9d5a98ccd93d9a677f8970c7e927c1b9e52e",
@@ -99,8 +99,8 @@
     "app/governed-water-control.tsx": "sha256:ed98fe75f18f8ab97d6096070f918945d450ebade4bf439cffe872ffc7a169c3",
     "app/governed-water-server.ts": "sha256:4faf6c4041f7abb44beaaaf1e08813248220088745570b918d761bc403e43b32",
     "app/governed-water.ts": "sha256:951378cc9156ac41ce9ee122b16ec374185c92d4ae73d758c3846f078b0c3674",
-    "app/historical-topo-control.tsx": "sha256:352421c8998105473621e5687e11da37678e3c41a341ae366e5fba625e57653e",
-    "app/historical-topo.ts": "sha256:6b33a4c0e20efbab4d249a793fc258f93b9b7b642ed92332f7f7feb8ca9e36a2",
+    "app/historical-topo-control.tsx": "sha256:b55a3ea9170080190344ca0d162bfdc40cdcb16aed303360935d2aed9fbe217b",
+    "app/historical-topo.ts": "sha256:4f89b3efd298b9f517541ae292fa8684dd13379a50919dd0c548065c4c87cdf1",
     "app/hydrology-observatory.tsx": "sha256:539ea43b4aa81b045692d0b23729f44f82db74c3258d48d2aa29a991ab651f3e",
     "app/import-preview.ts": "sha256:413dd73bbdc5c0e499da28cb29afa3ece242d4b9ade41810b01bc2a98fa02d41",
     "app/layout.tsx": "sha256:3129b65e24dbdd17055b2c500d65ccd8beda1a7a2527eb6148afce7a9e84972e",
@@ -123,10 +123,10 @@
     "app/noaa-satellite.ts": "sha256:d5b721e9b5c24e6d8b45c8a35a26d86fd3970329dc21147b49bf91ad8071ac5a",
     "app/observatory/follow-today.ts": "sha256:e947c485841650a78000f5262a453903fbef8badaa1407ac9483a3900a631b1b",
     "app/observatory/page.tsx": "sha256:a2bd85d1a082209ce8ffb3d4d3beec9623007649709fc47932fb5c71b163f70e",
-    "app/observatory/sources/page.tsx": "sha256:6b3ccb67d15b11e6d3af28e090a5b5e30496fddea8cb23c07303d78de83fd7de",
+    "app/observatory/sources/page.tsx": "sha256:c064f9563206d040b786900fd6bb4bc14611c77b9c1862234c800447b58977ee",
     "app/observatory/workspace.tsx": "sha256:62294c99b541bf9cc52afe27ef1558c4774d6ea61ebbf17c476de1c9ba0ba0c4",
     "app/official-refresh-plan.ts": "sha256:436cada3230c87679c2ec31af0357889bb1dcf3bb9ce96a8b581f6a17eb5504a",
-    "app/page.tsx": "sha256:327bcb909edcdeabf625ef3162bf319a61db1375879c6125e3c5dbe1187acbec",
+    "app/page.tsx": "sha256:3d5da66ff5275aff07d1db7afd6511ffbdfc6c0b017eb87bcd89332a3e327e0a",
     "app/persistent-select-menus.tsx": "sha256:b7e30eccf2a1f3f8af5943aa046ad61da2a342a753218ea0a134e15d10b6fdf9",
     "app/places-trail.ts": "sha256:336b54ef8cc7a45f9848ac72c7f10afcee3dff4b59532e1828d52f9b750a530f",
     "app/planning-scenario.ts": "sha256:464942b4c69e5127d3a4ff35bbacc9bd97ad79233726f64898070772a84b44ba",
@@ -225,7 +225,7 @@
     "tests/globe-context.test.mjs": "sha256:0b97ad9eb7288c32c25190dfe14798a26d0ad45ad31fbc141ca00c562e20a175",
     "tests/governed-water-storage.test.mjs": "sha256:f9b968928cc43ac19768580d5e066a6f400c7c8570f4ea549348e68e177620fb",
     "tests/governed-water.test.mjs": "sha256:99345a718aec4b90961d104263dbe5765f0cc94478d4af562fec057f6f1f9c22",
-    "tests/historical-topo.test.mjs": "sha256:3923032e27827f9e0f98a8beb3ebc9d8a82e66a7b40f0f4116a7b5fdddce2d2b",
+    "tests/historical-topo.test.mjs": "sha256:c6b3ae771dd10a5306eb4e825fe8fb528b2653395ce9aa3185341013378b0098",
     "tests/import-complexity.test.mjs": "sha256:df138e94367bfdfbb2b2961e8e244b2749200785d7eba76ca3fa8eb05d4c0759",
     "tests/intake-worker.test.mjs": "sha256:a72ace9a0f6374bacd384c218b530ad0f45e668b79303dfacba472efdd1d1a64",
     "tests/kansas-geoportal-source.test.mjs": "sha256:ea571296da6579806d9ff64dc9ce9f719f06702b30104c5af4cc7514e600fb6b",
@@ -593,5 +593,46 @@
     "Two adapter tests cover D1/R2 failure and expiry after storage read"
   ],
   "review_state": "INDEPENDENT_DELIVERY_REVIEW_PENDING",
-  "authority": "CONTENT_PARITY_ONLY"
+  "authority": "CONTENT_PARITY_ONLY",
+  "followup": {
+    "reason": "Restrict historical USGS topo catalog results to Kansas primary-state sheets",
+    "previous_source_commit": "98eeb0d9a7f7c2ff5135018d5c648b68f54301c0",
+    "changes": [
+      {
+        "path": "README.md",
+        "before": "sha256:91d54d04e6b13a1b602aa6f8ae27b7946c8d9e0b801c8c6e5728b6eadc56dc7e",
+        "after": "sha256:ac873517e659ddbda07e648ba1269184fc7f36105f9be98482c2eda15c76615b"
+      },
+      {
+        "path": "app/historical-topo-control.tsx",
+        "before": "sha256:352421c8998105473621e5687e11da37678e3c41a341ae366e5fba625e57653e",
+        "after": "sha256:b55a3ea9170080190344ca0d162bfdc40cdcb16aed303360935d2aed9fbe217b"
+      },
+      {
+        "path": "app/historical-topo.ts",
+        "before": "sha256:6b33a4c0e20efbab4d249a793fc258f93b9b7b642ed92332f7f7feb8ca9e36a2",
+        "after": "sha256:4f89b3efd298b9f517541ae292fa8684dd13379a50919dd0c548065c4c87cdf1"
+      },
+      {
+        "path": "app/observatory/sources/page.tsx",
+        "before": "sha256:6b3ccb67d15b11e6d3af28e090a5b5e30496fddea8cb23c07303d78de83fd7de",
+        "after": "sha256:c064f9563206d040b786900fd6bb4bc14611c77b9c1862234c800447b58977ee"
+      },
+      {
+        "path": "app/page.tsx",
+        "before": "sha256:327bcb909edcdeabf625ef3162bf319a61db1375879c6125e3c5dbe1187acbec",
+        "after": "sha256:3d5da66ff5275aff07d1db7afd6511ffbdfc6c0b017eb87bcd89332a3e327e0a"
+      },
+      {
+        "path": "tests/historical-topo.test.mjs",
+        "before": "sha256:3923032e27827f9e0f98a8beb3ebc9d8a82e66a7b40f0f4116a7b5fdddce2d2b",
+        "after": "sha256:c6b3ae771dd10a5306eb4e825fe8fb528b2653395ce9aa3185341013378b0098"
+      }
+    ],
+    "validation": [
+      "242 Site tests passed",
+      "Site TypeScript passed",
+      "Site production build passed"
+    ]
+  }
 }

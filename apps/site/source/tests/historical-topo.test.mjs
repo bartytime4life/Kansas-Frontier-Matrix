@@ -21,7 +21,7 @@ test("historical sheet search binds the official catalog to a bounded place, edi
   assert.equal(url.origin, "https://ngmdb.usgs.gov");
   assert.equal(url.searchParams.get("resultRecordCount"), "24");
   assert.equal(url.searchParams.get("returnGeometry"), "true");
-  assert.match(url.searchParams.get("where"), /date_on_map >= 1880 AND date_on_map <= 1960 AND map_scale = 125000 AND map_name LIKE '%Topeka%'/);
+  assert.match(url.searchParams.get("where"), /^primary_state = 'KS' AND date_on_map >= 1880 AND date_on_map <= 1960 AND map_scale = 125000 AND map_name LIKE '%Topeka%'$/);
   const bounds = url.searchParams.get("geometry").split(",").map(Number);
   assert.deepEqual(bounds.map(value => Number(value.toFixed(2))), [-96.33, 38.6, -95.03, 39.5]);
 });
@@ -44,9 +44,19 @@ test("catalog parsing preserves actual footprint, scan identity, and distinct ed
   assert.deepEqual(topo.parseTopoCatalog({ features: [{ ...record, geometry: { rings: [[[999, 0], [1, 1], [2, 2], [999, 0]]] } }] }).sheets, []);
 });
 
+test("Oklahoma and unlabeled sheets cannot enter Kansas results even if the provider ignores its state filter", () => {
+  const oklahoma = { ...record, attributes: { ...record.attributes, OBJECTID: 4629, map_name: "Enid", primary_state: "OK" } };
+  const unlabeled = { ...record, attributes: { ...record.attributes, OBJECTID: 4630, primary_state: null } };
+  const mixed = topo.parseTopoCatalog({ features: [oklahoma, record, unlabeled], exceededTransferLimit: false });
+  assert.deepEqual(mixed.sheets.map(sheet => [sheet.name, sheet.state]), [["Topeka", "KS"]]);
+  assert.deepEqual(topo.parseTopoCatalog({ features: [oklahoma], exceededTransferLimit: false }).sheets, []);
+});
+
 test("the route returns external context and fails closed when USGS is unavailable", async () => {
+  const foreign = { ...record, attributes: { ...record.attributes, OBJECTID: 4629, map_name: "Enid", primary_state: "OK" } };
+  let providerUrl = "";
   const route = await compile("api/historical-topo/route", {
-    "../event-atlas/upstream": { boundedFetch: async () => ({ text: () => JSON.stringify({ features: [record], exceededTransferLimit: false }) }) },
+    "../event-atlas/upstream": { boundedFetch: async (url) => { providerUrl = url; return { text: () => JSON.stringify({ features: [foreign, record], exceededTransferLimit: false }) }; } },
     "../../historical-topo": topo,
   });
   const response = await route.GET(new Request(request));
@@ -54,6 +64,8 @@ test("the route returns external context and fails closed when USGS is unavailab
   assert.equal(response.status, 200);
   assert.equal(body.role, "EXTERNAL_CONTEXT_ONLY");
   assert.equal(body.sheets.length, 1);
+  assert.equal(body.sheets[0].state, "KS");
+  assert.match(new URL(providerUrl).searchParams.get("where"), /primary_state = 'KS'/);
   assert.match(body.note, /No scanned raster/);
   const invalid = await route.GET(new Request(`${request}&bad=1`));
   assert.equal(invalid.status, 400);
