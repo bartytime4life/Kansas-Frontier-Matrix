@@ -43,7 +43,7 @@ services or fetch source data.
 ## Bounded acquisition and replay
 
 The source profile is `configs/domains/hydrology/usgs-water-pilot.json`.
-It fixes USGS OGC v1, discharge 00060, stations USGS-06892558 and USGS-07156900,
+It fixes USGS OGC v1, discharge 00060, stations USGS-06892518 and USGS-07156900,
 a maximum 24-hour interval and a two-hour freshness threshold. Transport limits:
 25-second requests, five-second connection setup, 180-second total budget,
 2 MiB/page, 8 MiB total, twelve pages and bounded retries. Redirects and changed
@@ -74,6 +74,9 @@ candidate `sha256:5718217864b88c2551effd7c4653a376a08e93ae952532fb1632d8ed0c8850
 review package `sha256:5dde4c0463677549a5a27f437812e389ca78c2c66dc6d610f59d7d403e710ec5`.
 Repeated replay reproduced the candidate. This is a dated capture, not a
 continuously current observation claim. Private raw bytes are not committed.
+The preserved capture manifest and page hashes bind the 96 and 97 discharge
+observations to USGS-06892518 and USGS-07156900, respectively; the review
+package names the same stations and remains unreleased.
 
 ## Catalog, evidence and release
 
