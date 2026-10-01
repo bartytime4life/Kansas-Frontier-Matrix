@@ -1,5 +1,6 @@
 import { buildQwenPrompt, normalizeQwenQuestion, QWEN_SYSTEM_PROMPT, type QwenMapContext } from "../../qwen-context";
 import { JsonLimitError, readBoundedJson } from "../../bounded-json";
+import { hasSafeQwenContextShape } from "../../qwen-context-safety.mjs";
 
 export const dynamic = "force-dynamic";
 
@@ -45,7 +46,7 @@ export async function POST(request: Request) {
       : "The Qwen request body was not valid JSON." }, error instanceof JsonLimitError ? 413 : 400);
   }
   if (!isRecord(body) || Object.keys(body).some((key) => key !== "question" && key !== "context")
-    || (body.context !== undefined && !isRecord(body.context))) {
+    || (body.context !== undefined && !hasSafeQwenContextShape(body.context))) {
     return reply({ status: "error", message: "The Qwen request has an invalid shape." }, 400);
   }
 

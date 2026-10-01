@@ -69,6 +69,8 @@ test("local bridge rejects other origins and malformed context without reaching 
     assert.equal(foreign.headers.get("access-control-allow-origin"), SITE_ORIGIN);
     const malformed = await fetch(`${base}/ask`, { method: "POST", headers: { origin: SITE_ORIGIN, "content-type": "application/json" }, body: JSON.stringify({ question: "x", context: { ...context, telemetry: { authority: "UNVERIFIED" } } }) });
     assert.equal(malformed.status, 400);
+    const nested = await fetch(`${base}/ask`, { method: "POST", headers: { origin: SITE_ORIGIN, "content-type": "application/json" }, body: JSON.stringify({ question: "x", context: { ...context, telemetry: { ...context.telemetry, privateToken: "DO_NOT_FORWARD" } } }) });
+    assert.equal(nested.status, 400);
     const oversized = await fetch(`${base}/ask`, { method: "POST", headers: { origin: SITE_ORIGIN, "content-type": "application/json" }, body: JSON.stringify({ question: "x", context: { ...context, padding: "x".repeat(34 * 1024) } }) });
     assert.equal(oversized.status, 413);
   });
@@ -81,7 +83,22 @@ test("installed Explorer origin accepts current soil context and all bounded sou
     calls++;
     return Response.json({ message: { content: "Source context only." } });
   }, async (base) => {
-    const current = { ...context, soilMoisture: { selectedDay: "2026-09-29", renderedDay: null },
+    const current = { ...context, soilMoisture: {
+      enabled: true, availabilityState: "available", mapState: "rendered",
+      selectedView: "surface", selectedDepthCm: [0, 5],
+      selectedUtcDay: "2026-09-29", selectedFrameTimeUtc: "2026-09-29T12:00:00Z",
+      renderedFrameTimeUtc: "2026-09-29T12:00:00Z", renderedAtUtc: "2026-09-29T12:01:00Z",
+      retainedFrameTimeUtc: "2026-09-29T12:00:00Z", visualTransition: null,
+      displaySmoothing: "exact daily image cells", playing: false,
+      rangeStartUtcDay: null, rangeEndUtcDay: null, rangeFrameCount: 0,
+      availableFrameCount: 1, latestAvailableUtcDay: "2026-09-29", sourceCheckedAtUtc: null,
+      product: "SPL4SMAU", version: "008", displayCadence: "daily",
+      nativeCadence: "3-hourly instantaneous analysis updates", nativeFormat: "HDF5",
+      approximateResolutionKm: 9, coverageBoundsWgs84: [-180, -90, 180, 90],
+      evidenceRole: "EXTERNAL_CONTEXT_ONLY", dataKind: "colorized-raster-tiles",
+      numericPixelsAvailable: false, qualityNotice: null,
+      sourceUrl: "https://example.test/metadata", productGuideUrl: "https://example.test/guide",
+    },
       officialSources: Array.from({ length: 18 }, (_, index) => ({ ...context.officialSources[0], id: String(index) })) };
     const answer = await fetch(`${base}/ask`, { method: "POST",
       headers: { origin: LOCAL_EXPLORER_ORIGIN, "content-type": "application/json" },

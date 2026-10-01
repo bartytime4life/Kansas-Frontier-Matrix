@@ -327,3 +327,17 @@ its boundary before implementing a substantive replacement guard. The
 historical `tests/ui/README.md` and proposed ADR-0005 are marked with a
 currentness correction. A passing unrelated policy suite is not proof of
 public-client boundary or browser coverage.
+
+### Site Qwen context boundary — 2026-10-01
+
+`MOD-16` / P1 / **CONFIRMED on `main@4f28130de544974e9af8e5b3225aff6f44dcfe45`**:
+the hosted `/api/qwen` route accepted arbitrary nested context fields and
+forwarded the whole object to a configured model. The local Qwen bridge
+checked only top-level fields and a few nested values, so an undeclared
+telemetry or camera field could also reach local inference. The Site source
+owner is `apps/site/source/`; its app-local tests and README own the executable
+boundary and behavior description. This slice rejects undeclared context
+fields recursively in both paths before any inference request. It does not
+authenticate declared user-supplied context, resolve EvidenceBundles, constrain
+free-form questions, admit a model, or authorize an answer as KFM truth. The
+Site mirror review hold and browser acceptance remain **NEEDS VERIFICATION**.

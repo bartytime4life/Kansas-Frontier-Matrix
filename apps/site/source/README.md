@@ -664,6 +664,11 @@ seed cards and MapLibre/pipeline manuals are planning inputs, not runtime proof.
 
 The Qwen route rejects non-object JSON, unknown request keys, malformed context,
 questions longer than 1200 characters, cross-origin requests and non-JSON content.
+The hosted route and local bridge also reject undeclared fields at every known
+map-context level before inference. This prevents an extra field hidden inside
+camera, telemetry, selection, or soil context from being forwarded to a
+configured model; the bounded question and declared fields remain user-supplied
+interpretive context, not authenticated KFM evidence or a release decision.
 It bounds actual streamed request bytes at 32 KiB and upstream JSON at 64 KiB,
 disables redirects, and withholds upstream error details. Owner-configured model
 URLs must use HTTPS, or HTTP on local loopback, without URL credentials, query
