@@ -638,8 +638,11 @@ into inferred facts.
   origin `http://127.0.0.1:5173`, and calls only the installed
   `qwen2.5:7b-instruct-fp16` model on loopback Ollama. Other devices need their
   own approved connection; a browser may ask for local-network permission.
-  The Qwen panel checks local health when opened, reports availability, and
-  preserves the existing copy-prompt and hosted `/api/qwen` paths. The map
+  The Qwen panel checks whether loopback Ollama lists the installed model when
+  opened. That check does not prove inference: the panel separately labels an
+  observed local answer or hosted fallback answer. A hosted answer never marks
+  the local bridge as installed or answered. The panel preserves the existing
+  copy-prompt and hosted `/api/qwen` paths. The map
   remains usable if the bridge or model is unavailable.
 - Qwen receives the current map, time, selected feature, nearby context,
   registered layers, all 18 official context source states, and redacted

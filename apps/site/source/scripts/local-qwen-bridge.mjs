@@ -102,7 +102,7 @@ export function createLocalQwenBridge({ fetcher = fetch, ollamaUrl = OLLAMA_URL,
         if (!upstream.ok) throw new Error("OLLAMA_UNAVAILABLE");
         const tags = await boundedJson(upstream, MAX_REPLY_BYTES);
         const installed = Array.isArray(tags?.models) && tags.models.some((item) => item?.name === model);
-        send(res, allowedOrigin, installed ? 200 : 503, { status: installed ? "ready" : "not_configured", model: installed ? model : null });
+        send(res, allowedOrigin, installed ? 200 : 503, { status: installed ? "installed" : "not_configured", model: installed ? model : null });
       } catch {
         send(res, allowedOrigin, 503, { status: "unavailable", message: "Local Ollama is unavailable." });
       }

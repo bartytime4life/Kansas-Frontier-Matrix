@@ -341,3 +341,17 @@ fields recursively in both paths before any inference request. It does not
 authenticate declared user-supplied context, resolve EvidenceBundles, constrain
 free-form questions, admit a model, or authorize an answer as KFM truth. The
 Site mirror review hold and browser acceptance remain **NEEDS VERIFICATION**.
+
+### Qwen availability state semantics — 2026-10-01
+
+`MOD-17` / P2 / **CONFIRMED on `main@46d4d399c7d17869b315e9ef791d0821a7ec61b4`**:
+the local bridge's `/health` checked whether Ollama listed the configured
+model but returned `ready`; the Site displayed `LOCAL QWEN READY`. A successful
+hosted fallback also set the same local-ready UI state. Neither observation
+proved a local inference response. The existing Site source and app-local tests
+own this behavior. This slice labels the model-list check `installed`, records
+local and hosted answers separately, and keeps endpoint selection bound to the
+local state. A label after one response is a dated interaction observation, not
+continuous connectivity. The visual browser check was blocked by the
+admin-enforced browser security policy; normal-scale acceptance remains
+**NEEDS VERIFICATION**. The Site mirror review hold remains unchanged.
