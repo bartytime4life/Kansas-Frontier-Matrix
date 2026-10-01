@@ -43,7 +43,8 @@ def project(raw: bytes, decision: dict | None, *, view: str, now: str, station_i
             return negative("EVIDENCE_UNRESOLVED", now=now)
     refs = [entry["evidence_ref"] for entry in selected]
     observations = [r for r in candidate["observations"] if r["station_id"] in {e["station_id"] for e in selected}]
-    latest = max((utc_time(r["observed_at"]) for r in observations), default=None)
+    # A timestamp with no discharge value cannot make a measurement current.
+    latest = max((utc_time(r["observed_at"]) for r in observations if r["value"] is not None), default=None)
     freshness = "unknown" if latest is None else "stale-accepted" if (utc_time(now) - latest).total_seconds() > candidate["stale_after_seconds"] else "current"
     precision = {"spatial": {"representation": "point", "resolution": "Provider station coordinates, EPSG:4326", "accuracy": "See station horizontal accuracy metadata; no inferred positional accuracy", "generalization_applied": False},
                  "temporal": {"granularity": "Provider observation instants", "observation_interval": {"start": manifest["start"], "end": manifest["end"]}, "freshness_class": freshness},
