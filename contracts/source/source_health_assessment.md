@@ -2,7 +2,7 @@
 doc_id: kfm://contract/source/source-health-assessment
 title: SourceHealthAssessment Contract
 type: contract
-version: v0.3.0
+version: v0.4.0
 status: proposed; offline-validation; non-authoritative
 owners: OWNER_TBD — Source steward · Contract steward · Validation steward
 created: 2026-08-07
@@ -68,6 +68,14 @@ Each assessment records:
 
 Finite health outcomes are `HEALTHY`, `DEGRADED`, `STALE`, `UNAVAILABLE`, and `UNKNOWN`. Retrieval classes are `SUCCESS`, `NOT_MODIFIED`, `EMPTY`, `TIMEOUT`, `HTTP_ERROR`, `ACQUISITION_ERROR`, `PARSE_ERROR`, `AUTH_ERROR`, and `NOT_PROBED`. `ACQUISITION_ERROR` covers failed acquisition whose cause cannot be classified more precisely from the recorded evidence; it carries `RETRIEVAL_FAILED` and cannot be `HEALTHY`.
 
+`CAPTURE_INCOMPLETE` records that the shared capture did not produce a closed
+candidate. If a station's last retrieval succeeded, its result is `SUCCESS`
+and usable health is `UNKNOWN`, without copying another station's timeout.
+An unattempted station remains `NOT_PROBED` / `UNKNOWN`. A successful attempt
+in this capture may populate `last_success_at` even when a later page fails;
+`NO_PRIOR_SUCCESS` means no successful attempt is recorded in this capture.
+This producer does not infer success from historical captures.
+
 ## Fail-closed consistency rules
 
 The validator denies an assessment when any of these conditions are present:
@@ -80,6 +88,7 @@ The validator denies an assessment when any of these conditions are present:
 - `last_success_at` occurs after `probed_at`;
 - an elapsed freshness deadline is labeled `HEALTHY`; or
 - a healthy assessment lacks `WITHIN_FRESHNESS`.
+- `CAPTURE_INCOMPLETE` is labeled `HEALTHY`.
 
 An empty or failed probe never clears a prior condition. An `UNKNOWN` or `NOT_PROBED` assessment is internally valid but returns `ABSTAIN`, so downstream review cannot mistake missing observation evidence for health.
 
@@ -120,4 +129,10 @@ Accepted ADR-0029 adopts `docs/doctrine/directory-rules.md`. Under its responsib
 
 The v0.3 addition of `ACQUISITION_ERROR` preserves existing values and fields, but consumers that exhaustively switch on `result_class` must handle the new value. Repository search at `main@a1c92e239a260751ee16c9d37e5bc92830cece51` found no such consumer beyond the water producer and this validator; external consumers remain `NEEDS VERIFICATION`.
 
-Rollback is a revert of the enum, water producer, validator, tests, workflow replay change, and behavior-linked documentation together. The historical authoring receipt stays immutable. Existing lifecycle objects are not relabeled or rewritten by a code revert; correction of any emitted assessment requires its own governed action.
+Version 0.4 adds only the `CAPTURE_INCOMPLETE` reason and station-scoped water
+producer behavior. Existing result and outcome values remain unchanged, but
+consumers of water health receipts must handle a previously misreported station
+as `SUCCESS` / `UNKNOWN` with an explicit capture-incomplete reason. External
+consumer readiness remains `NEEDS VERIFICATION`.
+
+Rollback is a revert of the enum, water producer, validator, tests, and behavior-linked documentation together. The historical authoring receipt stays immutable. Existing lifecycle objects are not relabeled or rewritten by a code revert; correction of any emitted assessment requires its own governed action.

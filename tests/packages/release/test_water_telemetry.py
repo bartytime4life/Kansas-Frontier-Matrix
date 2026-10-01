@@ -3,7 +3,7 @@ from copy import deepcopy
 
 import pytest
 from jsonschema import Draft202012Validator, FormatChecker
-from tests.domains.hydrology.test_usgs_water_normalizer import acquired, ROOT, Clock, START, END
+from tests.domains.hydrology.test_usgs_water_normalizer import acquired, FixtureTransport, ROOT, Clock, START, END
 from connectors.usgs.water_data.pilot_capture import capture
 from pipelines.domains.hydrology.normalize import normalize_capture
 from pipelines.domains.hydrology.validate import validate_candidate
@@ -42,20 +42,48 @@ def test_empty_and_failed_capture_never_report_healthy():
     ([{'outcome': 'AUTH_REQUIRED'}], 'AUTH_ERROR', 'AUTH_FAILURE'),
     ([{'outcome': 'RATE_LIMITED'}], 'HTTP_ERROR', None),
     ([{'outcome': 'TRANSPORT_ERROR'}], 'ACQUISITION_ERROR', None),
-    ([{'outcome': 'SUCCESS'}], 'ACQUISITION_ERROR', None),
+    ([{'outcome': 'SUCCESS'}], 'SUCCESS', 'CAPTURE_INCOMPLETE'),
 ])
 def test_failed_capture_health_uses_recorded_attempt_class(attempts, expected, reason):
     manifest = deepcopy(acquired().manifest)
     manifest['complete'] = False
-    manifest['attempts'] = attempts
+    manifest['attempts'] = [dict(item, station_id='USGS-06892518', observed_at=manifest['captured_at']) for item in attempts]
     health = source_health(manifest, None, station_id='USGS-06892518')
     assert health['result_class'] == expected
-    assert health['health_outcome'] == 'UNAVAILABLE'
+    assert health['health_outcome'] == ('UNKNOWN' if expected == 'SUCCESS' else 'UNAVAILABLE')
+    assert (health['last_success_at'] is not None) == any(item['outcome'] == 'SUCCESS' for item in attempts)
+    assert ('NO_PRIOR_SUCCESS' in health['reasons']) == all(item['outcome'] != 'SUCCESS' for item in attempts)
     if reason:
         assert reason in health['reasons']
     else:
         assert 'SCHEMA_OR_PARSE_FAILURE' not in health['reasons']
-    assert validate_payload(health).ok
+    assert validate_payload(health).outcome == ('ABSTAIN' if expected == 'SUCCESS' else 'PASS')
+
+
+def test_second_station_failure_does_not_mislabel_first_station(tmp_path):
+    class MixedTransport(FixtureTransport):
+        def send(self, request, **options):
+            if '07156900' in request.url:
+                raise TimeoutError
+            return super().send(request, **options)
+
+    source = capture(START, END, transport=MixedTransport(), clock=Clock())
+    assert source.manifest['complete'] is False
+    assert [item['outcome'] for item in source.manifest['attempts'] if item['station_id'] == 'USGS-06892518'] == ['SUCCESS', 'SUCCESS']
+    first = source_health(source.manifest, None, station_id='USGS-06892518')
+    second = source_health(source.manifest, None, station_id='USGS-07156900')
+    assert (first['result_class'], first['health_outcome'], first['reasons']) == ('SUCCESS', 'UNKNOWN', ['CAPTURE_INCOMPLETE'])
+    assert first['last_success_at'] is not None
+    assert (second['result_class'], second['health_outcome']) == ('TIMEOUT', 'UNAVAILABLE')
+    assert second['last_success_at'] is None
+    assert validate_payload(first).outcome == 'ABSTAIN'
+    assert validate_payload(second).ok
+    root = tmp_path / 'store'
+    init_store(root)
+    assert stage(root, source)['outcome'] == 'QUARANTINED'
+    receipts = [json.loads(path.read_text()) for path in root.glob('data/receipts/ingest/usgs-nwis/*/health/*.json')]
+    assert {item['source_id']: item['result_class'] for item in receipts} == {
+        'usgs-nwis:USGS-06892518': 'SUCCESS', 'usgs-nwis:USGS-07156900': 'TIMEOUT'}
 
 
 def test_timeout_capture_persists_truthful_station_health(tmp_path):
@@ -71,4 +99,4 @@ def test_timeout_capture_persists_truthful_station_health(tmp_path):
     assert stage(root, source)['outcome'] == 'QUARANTINED'
     receipts = list(root.glob('data/receipts/ingest/usgs-nwis/*/health/*.json'))
     assert len(receipts) == 2
-    assert {json.loads(path.read_text())['result_class'] for path in receipts} == {'TIMEOUT'}
+    assert {json.loads(path.read_text())['result_class'] for path in receipts} == {'TIMEOUT', 'NOT_PROBED'}

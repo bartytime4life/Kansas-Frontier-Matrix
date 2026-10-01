@@ -174,6 +174,8 @@ def _semantic_findings(value: Mapping[str, Any]) -> tuple[Finding, ...]:
             findings.add(Finding("SOURCE_HEALTH_NOT_PROBED_OUTCOME_INVALID", "/health_outcome"))
         if "NOT_PROBED" not in reasons:
             findings.add(Finding("SOURCE_HEALTH_NOT_PROBED_REASON_REQUIRED", "/reasons"))
+    if "CAPTURE_INCOMPLETE" in reasons and health_outcome == "HEALTHY":
+        findings.add(Finding("SOURCE_HEALTH_INCOMPLETE_AS_HEALTHY", "/health_outcome"))
 
     material_change = value.get("material_change")
     if material_change is True and "MATERIAL_CHANGE" not in reasons:

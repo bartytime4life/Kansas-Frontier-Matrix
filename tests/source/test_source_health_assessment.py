@@ -123,6 +123,17 @@ class SourceHealthAssessmentTests(unittest.TestCase):
         value["health_outcome"] = "HEALTHY"
         self.assertEqual(MODULE.validate_payload(value).outcome, "DENY")
 
+    def test_incomplete_capture_reason_abstains_and_cannot_be_healthy(self) -> None:
+        value = _load("valid/unknown_not_probed.json")
+        value.update(result_class="SUCCESS", last_success_at=value["probed_at"],
+                     reasons=["CAPTURE_INCOMPLETE"])
+        self.assertEqual(MODULE.validate_payload(value).outcome, "ABSTAIN")
+        value["health_outcome"] = "HEALTHY"
+        self.assertEqual(
+            [finding.code for finding in MODULE.validate_payload(value).findings],
+            ["SOURCE_HEALTH_FRESH_REASON_REQUIRED", "SOURCE_HEALTH_INCOMPLETE_AS_HEALTHY"],
+        )
+
     def test_compatibility_wrapper_returns_finite_denial_codes(self) -> None:
         codes = MODULE.validate_doc(_load("invalid/material_change_without_reason.json"))
         self.assertEqual(codes, ["SOURCE_HEALTH_MATERIAL_REASON_REQUIRED"])
