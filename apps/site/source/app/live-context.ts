@@ -874,7 +874,8 @@ export const applyOfficialContextState = (
     if (!map.getSource(raster.sourceId)) map.addSource(raster.sourceId, {
       type: "raster", tiles: [raster.mapUrl!], tileSize: 256, attribution: raster.attribution,
       ...(raster.id === "nasa-lightning-climatology" ? {} : { bounds: [-104.8, 34.8, -92, 42.2] as [number, number, number, number] }),
-      minzoom: raster.id === "nasa-lightning-climatology" ? 0 : raster.id === "blm-plss-sections" ? 8 : raster.id === "blm-plss-intersected" ? 10 : terrainDisplay ? TERRAIN_DISPLAY_MIN_ZOOM : 3,
+      // BLM source-layer minScale: township 1:4m, section 1:500k, intersected 1:200k.
+      minzoom: raster.id === "nasa-lightning-climatology" ? 0 : raster.id === "blm-plss-townships" ? 8 : raster.id === "blm-plss-sections" ? 11 : raster.id === "blm-plss-intersected" ? 12 : terrainDisplay ? TERRAIN_DISPLAY_MIN_ZOOM : 3,
       maxzoom: raster.id === "nasa-lightning-climatology" ? 6 : terrainDisplay ? TERRAIN_DISPLAY_MAX_ZOOM : 16,
     });
     ensureLayer(map, {

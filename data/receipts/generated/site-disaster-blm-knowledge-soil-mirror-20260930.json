@@ -600,8 +600,8 @@
       "state": "identical"
     },
     "app/live-context.ts": {
-      "mirror_sha256": "34c958c57da36f7fe016464e334552137a11b32dc9369bfecf8b4a2e69440b6c",
-      "site_sha256": "34c958c57da36f7fe016464e334552137a11b32dc9369bfecf8b4a2e69440b6c",
+      "mirror_sha256": "e6c7b801e62eb0ca45465aed9859fe7e60f4e85f86768289e406039e1aa0dff3",
+      "site_sha256": "e6c7b801e62eb0ca45465aed9859fe7e60f4e85f86768289e406039e1aa0dff3",
       "state": "identical"
     },
     "app/living-atlas.ts": {
@@ -1119,8 +1119,8 @@
       "state": "identical"
     },
     "tests/disaster-blm-layers.test.mjs": {
-      "mirror_sha256": "a7ec909f0cb0a4bdf2536d500cd3f97497bb4bed5307ebc3f029f04d1669e575",
-      "site_sha256": "a7ec909f0cb0a4bdf2536d500cd3f97497bb4bed5307ebc3f029f04d1669e575",
+      "mirror_sha256": "55e341dbae1e1dac76e79adf21919aba70dd73790a24ae28dad6cb51a4fce5cc",
+      "site_sha256": "55e341dbae1e1dac76e79adf21919aba70dd73790a24ae28dad6cb51a4fce5cc",
       "state": "identical"
     },
     "tests/earth-engine-context-worker.test.mjs": {
@@ -1428,7 +1428,7 @@
   },
   "site_base_source_commit": "75d749ed5711ab20e3edabeb1c6ba135417ec1c0",
   "site_base_version": 131,
-  "site_candidate_commit": "f700e696fce74bdb354b838aeebeba58ec7f3d54",
+  "site_candidate_commit": "f35a996f2ddd1a67d49661efc9817254431249b9",
   "site_candidate_deployed": false,
   "site_candidate_parent": "6e8d79e507741608e8f5475c53fe82fb668b44fa",
   "site_candidate_version": null,

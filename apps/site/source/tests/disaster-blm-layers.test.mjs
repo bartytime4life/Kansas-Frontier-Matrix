@@ -40,6 +40,7 @@ test("BLM image URLs are fixed to Kansas filters and source scale", async () => 
   assert.match(source, /blmPlssImageUrl\(1, "STATEABBR='KS'"\)/);
   assert.match(source, /blmPlssImageUrl\(2, "PLSSID LIKE 'KS%'"\)/);
   assert.match(source, /blmPlssImageUrl\(3, "STATEABBR='KS'"\)/);
-  assert.match(source, /raster\.id === "blm-plss-sections" \? 8/);
-  assert.match(source, /raster\.id === "blm-plss-intersected" \? 10/);
+  assert.match(source, /raster\.id === "blm-plss-townships" \? 8/);
+  assert.match(source, /raster\.id === "blm-plss-sections" \? 11/);
+  assert.match(source, /raster\.id === "blm-plss-intersected" \? 12/);
 });
