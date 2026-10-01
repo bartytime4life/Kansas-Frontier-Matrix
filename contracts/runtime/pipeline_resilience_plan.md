@@ -155,6 +155,8 @@ factor = 1 + jitter_fraction * (2 * jitter_unit - 1)
 delay = min(base * factor, max_delay)
 ```
 
+For `RATE_LIMITED`, the bounded `retry_after_seconds` is a minimum delay: apply jitter to the exponential backoff, then take the greater of that delay and the capped Retry-After value, still capped at `max_delay`. The planner checks the deadline against this final delay.
+
 The planner samples no randomness and reads no clock. A governed caller supplies elapsed time, `retry_after_seconds`, and `jitter_unit`.
 Oversized numeric inputs receive a bounded `NUMBER_NOT_FINITE` error. If an intermediate exponentiation exceeds the numeric range, the planner computes the bounded backoff without that intermediate value before jitter and deadline checks; a zero base delay remains zero.
 

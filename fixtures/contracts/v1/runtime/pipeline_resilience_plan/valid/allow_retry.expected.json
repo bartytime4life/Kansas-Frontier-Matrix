@@ -69,7 +69,7 @@
   "retry": {
     "classification": "RATE_LIMITED",
     "decision": "RETRY",
-    "delay_seconds": 22.5,
+    "delay_seconds": 20.0,
     "idempotency_retention_seconds": 604800,
     "next_attempt": 3,
     "reason_codes": [
