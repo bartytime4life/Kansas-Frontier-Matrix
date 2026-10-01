@@ -149,6 +149,8 @@ hourly `water_job.py` can acquire and prepare candidates only. Tests assert that
 it creates no activation database or approval records. Service/timer templates
 in `infra/systemd/` are not installed or enabled. Review host paths, ownership,
 provider rate limits and service-manager support before enabling them.
+Injected job clocks must be timezone-aware; the job converts them to UTC and
+rejects invalid clocks before initializing its local candidate store.
 The proposed cadence remains: probes 15 minutes, candidate capture hourly,
 source drift daily and dependency review weekly. Broad unattended operations
 remain held until their actual deployed checks and recovery are proven.

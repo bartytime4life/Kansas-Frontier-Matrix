@@ -14,8 +14,12 @@ from tools.release.water_snapshot import prepare
 
 
 def run(root, *, now=None, acquire=capture):
-    root = external_root(str(root)); init_store(root)
-    end = (now or datetime.now(timezone.utc)).astimezone(timezone.utc).replace(minute=0, second=0, microsecond=0)
+    root = external_root(str(root))
+    current = datetime.now(timezone.utc) if now is None else now
+    if not isinstance(current, datetime) or current.tzinfo is None or current.utcoffset() is None:
+        raise ValueError("WATER_JOB_NOW_NOT_TIMEZONE_AWARE")
+    end = current.astimezone(timezone.utc).replace(minute=0, second=0, microsecond=0)
+    init_store(root)
     stamp = lambda t: t.strftime("%Y-%m-%dT%H:%M:%SZ")
     receipt = stage(root, acquire(stamp(end - timedelta(hours=24)), stamp(end)))
     if receipt["outcome"] != "CANDIDATE_READY":
