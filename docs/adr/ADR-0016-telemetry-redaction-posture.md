@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr/0016-telemetry-redaction-posture
 title: "ADR-0016 — Telemetry Redaction Posture"
 type: adr
 adr_id: ADR-0016
-version: v1.4.1
+version: v1.4.2
 status: proposed
 owners:
   - "NEEDS VERIFICATION — architecture decision owner"
@@ -24,7 +24,7 @@ reviewers_required:
   - Infrastructure and operations reviewer
   - Governed API and public-surface maintainers
 created: 2026-05-11
-updated: 2026-09-25
+updated: 2026-10-01
 policy_label: public
 truth_posture: cite-or-abstain
 owning_root: docs/
@@ -95,11 +95,18 @@ notes:
   - "The successful telemetry-policy run at the previously pinned SHA proves bounded repository-local profile checks and explicit holds only; this v1.4 refresh does not claim a current hosted run."
   - "v1.4 is a same-path currentness refresh against main@21dcad05435bc5e5227905ba1747aa616a6f3713. It retains `proposed` status and records only direct source readback of telemetry contracts, schemas, receipt documentation, policy stubs, the general validator placeholder, and the bounded workflow. No telemetry, logger, validator, workflow, collector, export, sink, release, deployment, or publication operation was executed."
   - "v1.4.1 records the current bounded four-profile dispatcher at main@f6a42fdddc2c2afee2ca129b9edd20598eaee623, preserving historical evidence snapshots and proposed decision status."
+  - "v1.4.2 corrects current-status wording against main@752e0a5363f19822041b6d9c63f42b0a21ecb391: the named safety validator is a bounded four-profile dispatcher, while general event validation and operational enforcement remain absent. Historical pinned snapshots are unchanged."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # ADR-0016 — Telemetry Redaction Posture
+
+> **Current-status correction (2026-10-01, `main@752e0a5363f19822041b6d9c63f42b0a21ecb391`).**
+> The named safety validator still dispatches exactly four fixture-only profiles.
+> References below to its `NotImplementedError` placeholder describe the pinned
+> v1.4 historical snapshot. No general telemetry-event validator, operational
+> policy enforcement, emitter, redactor, receipt sink, or deployment is established.
 
 > **Currentness addendum (2026-09-25, `main@f6a42fdddc2c2afee2ca129b9edd20598eaee623`).**
 > The older `evidence_snapshot` and historical tables below preserve their
@@ -118,7 +125,7 @@ notes:
 [![ADR ID: confirmed](https://img.shields.io/badge/ADR--0016-confirmed-0969da?style=flat-square)](#current-repository-evidence)
 [![Profiles: four fixture-only](https://img.shields.io/badge/profiles-4%20fixture--only-1f6feb?style=flat-square)](#current-profile-register)
 [![General policy: hold](https://img.shields.io/badge/general%20policy-WORKFLOW__HOLD-b42318?style=flat-square)](#current-enforcement-maturity)
-[![General validator: placeholder](https://img.shields.io/badge/general%20validator-placeholder-f59e0b?style=flat-square)](#current-enforcement-maturity)
+[![General validator: fixture dispatcher only](https://img.shields.io/badge/general%20validator-fixture%20dispatcher%20only-f59e0b?style=flat-square)](#current-enforcement-maturity)
 [![Redaction: source first](https://img.shields.io/badge/redaction-source%20first-8250df?style=flat-square)](#decision)
 [![Publication: none](https://img.shields.io/badge/publication-none-6e7781?style=flat-square)](#authority-and-publication-boundary)
 
@@ -829,7 +836,7 @@ KFM now has a meaningful fixture-first telemetry profile lane and a bounded loca
 | 3 | Fail-closed policy bundle | **HOLD — current modules allow by default** |
 | 4 | Source or shared-emitter redactor implementation | **HOLD / not established** |
 | 5 | Positive and negative deterministic fixtures | **PARTIAL — confirmed for four bounded profiles only** |
-| 6 | Static and runtime validators | **PARTIAL — profile validators exist; general safety validator is a placeholder** |
+| 6 | Static and runtime validators | **PARTIAL — four fixture profiles have validators and a bounded dispatcher; no general event validator** |
 | 7 | Receipt production and validation | **HOLD — linkage fixtures exist; no receipt instances** |
 | 8 | Restricted collectors, sinks, dashboards, alerts, and retention | **UNKNOWN** |
 | 9 | Incident, revocation, correction, deletion, and rollback integration | **UNKNOWN** |
@@ -844,7 +851,7 @@ The current `telemetry-policy` jobs succeed when they confirm both the admitted 
 - their focused validators and tests pass;
 - admitted schema and fixture content does not use the forbidden raw-payload, prompt, or coordinate-bearing keys checked by the workflow;
 - inactive and no-authority constants remain pinned where required;
-- the general validator and three Rego stubs remain visibly unimplemented;
+- the named safety validator remains a fixture-only dispatcher, while general event validation and enforcement by the three Rego stubs remain unimplemented;
 - no operational telemetry receipt payload appears in the parent lane;
 - the bounded code scan did not surface instrumentation in the selected roots;
 - no event was sent to a collector, exporter, sink, dashboard, or public API.
@@ -1110,7 +1117,7 @@ No gate is satisfied merely because a document, README, Rego file, schema, workf
 | Risk | Current posture | Control |
 |---|---|---|
 | Allow-by-default policy stubs | **CONFIRMED** | Do not execute as enforcement; replace with accepted fail-closed bundle and tests |
-| General validator placeholder | **CONFIRMED** | Implement closed general validator and polarity tests |
+| General event validator absent; fixture dispatcher present | **CONFIRMED** | Implement closed general event validator and polarity tests before operational use |
 | Fixture-only profiles mistaken for runtime telemetry | **OPEN** | Preserve inactive and no-authority constants; add activation-denial tests |
 | Policy split across UI and telemetry lanes | **CONFLICTED** | Select bundle ownership and import contract before migration |
 | Free-form logging | **UNKNOWN** | Inventory and replace with closed builders |
@@ -1317,7 +1324,7 @@ Rollback MUST NOT restore raw prompt, evidence, coordinate, secret, or payload l
 - [x] Exact four fixture-profile directories confirmed.
 - [x] Profile validator inventory confirmed.
 - [x] Telemetry receipt parent lane reviewed.
-- [x] General validator placeholder confirmed.
+- [x] Bounded fixture dispatcher confirmed; general event validator remains absent.
 - [x] Three telemetry policy stubs confirmed.
 - [x] Current telemetry readiness workflow reviewed.
 - [x] Hosted run `31812628187` confirmed successful at the telemetry inspection SHA.
@@ -1331,7 +1338,7 @@ Rollback MUST NOT restore raw prompt, evidence, coordinate, secret, or payload l
 - [ ] Confirm complete producer, SDK, sink, dashboard, alert, archive, and third-party inventory.
 - [ ] Resolve telemetry policy bundle ownership and imports.
 - [ ] Accept general event, policy-input, redaction, and receipt object profiles.
-- [ ] Implement fail-closed policy and the general validator.
+- [ ] Implement fail-closed policy and a general event validator.
 - [ ] Implement safe emitter, redactor, and fake sink.
 - [ ] Verify secrets, protected values, and prompt content never reach CI output or deployed sinks.
 - [ ] Verify retention, deletion, revocation, backup, and legal-hold behavior.
@@ -1425,6 +1432,8 @@ The supplied KFM corpus consistently treats sensitive exposure as policy-governe
 
 | Version | Date | Change |
 |---|---|---|
+| `v1.4.2` | 2026-10-01 | Corrected current-status references to the bounded four-profile dispatcher while preserving historical placeholder evidence and operational holds. |
+| `v1.4.1` | 2026-09-25 | Recorded the bounded four-profile dispatcher at the then-current main; retained proposed decision status. |
 | `v1.4` | 2026-09-13 | Same-path currentness refresh against `main@21dcad05435bc5e5227905ba1747aa616a6f3713`. Added a bounded source readback for proposed telemetry contracts and schemas, receipt-lane documentation, allow-by-default policy scaffolds, the general-validator placeholder, and the bounded workflow definition. No telemetry, logger, validator, workflow, collector, export, sink, release, deployment, or publication operation was executed; status remains `proposed`. |
 | `v1.3` | 2026-08-14 | Same-path current-main evidence refresh reconciled through `main@6a9c4665...`: recognized accepted ADR-0029 placement authority; replaced stale schema, fixture, test, and workflow-absence claims with the exact four fixture-only profile families; documented profile validators and hosted workflow success; preserved explicit general-policy, validator, emitter, receipt, sink, retention, and runtime holds; added profile lifecycle and activation guardrails; preserved status `proposed`. |
 | `v1.2` | 2026-07-23 | Same-path repository-grounded modernization: confirmed ADR identity; distinguished governed emission from lifecycle publication; pinned standards, contracts, policy, validator, receipt, workflow, UI, and ownership evidence; documented allow-by-default stubs and explicit holds; strengthened minimization, reconstruction, AI, secret, crash, sink, retention, receipt, incident, fixture, migration, acceptance, and rollback controls; preserved status `proposed`. |
@@ -1433,4 +1442,4 @@ The supplied KFM corpus consistently treats sensitive exposure as policy-governe
 
 ---
 
-**Last updated:** 2026-09-13 · **Decision status:** `proposed` · **Current enforcement:** four fixture-only profiles + explicit operational holds · **Publication:** none · **Path:** `docs/adr/ADR-0016-telemetry-redaction-posture.md` · [Back to top](#top)
+**Last updated:** 2026-10-01 · **Decision status:** `proposed` · **Current enforcement:** four fixture-only profiles + explicit operational holds · **Publication:** none · **Path:** `docs/adr/ADR-0016-telemetry-redaction-posture.md` · [Back to top](#top)
