@@ -355,3 +355,15 @@ local state. A label after one response is a dated interaction observation, not
 continuous connectivity. The visual browser check was blocked by the
 admin-enforced browser security policy; normal-scale acceptance remains
 **NEEDS VERIFICATION**. The Site mirror review hold remains unchanged.
+
+### Current Site client store boundary — 2026-10-01
+
+`MOD-15` / P2 / **PARTIAL resolution on `main@f0fe4794f87cda30d65b51a6add5922a10ad8f16`**:
+the retired Explorer boundary test was absent, while the owned Site has 23
+`use client` entrypoints. An app-local static guard now follows those
+entrypoints' relative runtime import graph and rejects reachable server store
+modules, route handlers, and server-only capabilities. The existing Site test
+command collects the guard. This establishes a source-level module boundary
+for the inspected checkout; complete network, browser, governed-release, and
+public artifact boundaries remain **NEEDS VERIFICATION**. The Site mirror
+review hold remains unchanged.
