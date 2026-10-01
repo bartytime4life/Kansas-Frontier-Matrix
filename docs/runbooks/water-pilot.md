@@ -196,6 +196,10 @@ freshness. No prompts, raw observations, private paths, credentials or restricte
 coordinates are included in telemetry. The optional operational receipt profile
 adds component/source identity, correlation, outcome and safe reason codes.
 Health grants no approval. Full OCI trace-to-receipt attestation is not claimed.
+Incomplete multi-station captures preserve each station's recorded retrieval
+result. A station whose pages succeeded but whose shared candidate did not close
+is `SUCCESS` / `UNKNOWN` with `CAPTURE_INCOMPLETE`; an unattempted station is
+`NOT_PROBED` / `UNKNOWN`. Neither is a healthy or released observation.
 
 Ingest/validate/catalog worker entry points delegate to bounded tools. The
 hourly `water_job.py` can acquire and prepare candidates only. Tests assert that

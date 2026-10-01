@@ -26,25 +26,39 @@ def operational_receipt(manifest: dict, candidate: dict | None, validation: dict
     return receipt
 
 
-def _failed_probe(manifest: dict) -> tuple[str, list[str]]:
-    if manifest.get("complete") is True:
-        return "PARSE_ERROR", ["RETRIEVAL_FAILED", "SCHEMA_OR_PARSE_FAILURE", "NO_PRIOR_SUCCESS"]
+def _failed_probe(manifest: dict, station_id: str) -> tuple[str, str, list[str], str | None]:
     attempts = manifest.get("attempts")
-    last = attempts[-1] if isinstance(attempts, list) and attempts else None
-    if (isinstance(last, dict) and last.get("outcome") == "RETRY_EXHAUSTED"
-            and last.get("code") == "RETRY_DEADLINE_REACHED"):
-        return "TIMEOUT", ["RETRIEVAL_FAILED", "NO_PRIOR_SUCCESS"]
-    terminal = None
-    if isinstance(attempts, list):
-        terminal = next((item.get("outcome") for item in reversed(attempts)
-                         if isinstance(item, dict) and item.get("outcome") != "RETRY_EXHAUSTED"), None)
+    scoped = ([item for item in attempts
+               if isinstance(item, dict) and item.get("station_id") == station_id]
+              if isinstance(attempts, list) else [])
+    last_success = max(
+        (item["observed_at"] for item in scoped
+         if item.get("outcome") == "SUCCESS" and isinstance(item.get("observed_at"), str)),
+        default=None,
+    )
+    if manifest.get("complete") is True:
+        reasons = ["RETRIEVAL_FAILED", "SCHEMA_OR_PARSE_FAILURE"]
+        if last_success is None:
+            reasons.append("NO_PRIOR_SUCCESS")
+        return "PARSE_ERROR", "UNAVAILABLE", reasons, last_success
+    if not scoped:
+        return "NOT_PROBED", "UNKNOWN", ["NOT_PROBED", "NO_PRIOR_SUCCESS", "CAPTURE_INCOMPLETE"], None
+    last = scoped[-1]
+    if last.get("outcome") == "RETRY_EXHAUSTED" and last.get("code") == "RETRY_DEADLINE_REACHED":
+        terminal = "TIMEOUT"
+    else:
+        terminal = next((item.get("outcome") for item in reversed(scoped)
+                         if item.get("outcome") != "RETRY_EXHAUSTED"), None)
+    if terminal == "SUCCESS":
+        return "SUCCESS", "UNKNOWN", ["CAPTURE_INCOMPLETE"], last_success
+    reasons = ["RETRIEVAL_FAILED"] + (["NO_PRIOR_SUCCESS"] if last_success is None else [])
     if terminal == "TIMEOUT":
-        return "TIMEOUT", ["RETRIEVAL_FAILED", "NO_PRIOR_SUCCESS"]
+        return "TIMEOUT", "UNAVAILABLE", reasons, last_success
     if terminal in {"AUTH_REQUIRED", "ACCESS_DENIED"}:
-        return "AUTH_ERROR", ["RETRIEVAL_FAILED", "AUTH_FAILURE", "NO_PRIOR_SUCCESS"]
+        return "AUTH_ERROR", "UNAVAILABLE", reasons + ["AUTH_FAILURE"], last_success
     if terminal in {"RATE_LIMITED", "NOT_FOUND"}:
-        return "HTTP_ERROR", ["RETRIEVAL_FAILED", "NO_PRIOR_SUCCESS"]
-    return "ACQUISITION_ERROR", ["RETRIEVAL_FAILED", "NO_PRIOR_SUCCESS"]
+        return "HTTP_ERROR", "UNAVAILABLE", reasons, last_success
+    return "ACQUISITION_ERROR", "UNAVAILABLE", reasons, last_success
 
 
 def source_health(manifest: dict, candidate: dict | None, *, station_id: str) -> dict:
@@ -53,8 +67,7 @@ def source_health(manifest: dict, candidate: dict | None, *, station_id: str) ->
     latest = max((utc_time(r["observed_at"]) for r in records), default=None)
     deadline = latest + timedelta(seconds=candidate["stale_after_seconds"] if candidate else 7200) if latest else None
     if candidate is None:
-        result, reasons = _failed_probe(manifest)
-        outcome = "UNAVAILABLE"
+        result, outcome, reasons, last_success = _failed_probe(manifest, station_id)
     elif latest is None:
         result, outcome, reasons = "EMPTY", "DEGRADED", ["EMPTY_NOT_CLEAR"]
     elif utc_time(probed) > deadline:
@@ -63,5 +76,5 @@ def source_health(manifest: dict, candidate: dict | None, *, station_id: str) ->
         result, outcome, reasons = "SUCCESS", "HEALTHY", ["WITHIN_FRESHNESS"]
     return {"assessment_id": "kfm:source-health:water:" + station_id.lower() + ":" + manifest["capture_id"].split(":")[1],
             "source_id": "usgs-nwis:" + station_id, "probed_at": probed,
-            "last_success_at": probed if candidate else None, "freshness_deadline": timestamp(deadline) if deadline else None,
+            "last_success_at": probed if candidate else last_success, "freshness_deadline": timestamp(deadline) if deadline else None,
             "result_class": result, "health_outcome": outcome, "material_change": False, "reasons": reasons}

@@ -78,6 +78,7 @@
           "SCHEMA_OR_PARSE_FAILURE",
           "AUTH_FAILURE",
           "NO_PRIOR_SUCCESS",
+          "CAPTURE_INCOMPLETE",
           "NOT_PROBED",
           "MATERIAL_CHANGE"
         ]
