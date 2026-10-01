@@ -21,6 +21,8 @@ from connectors_core.transport import TransportProfile, TransportRequest, Transp
 from tools.local_data.candidate_capture import create_candidate, write_candidate
 
 ITEM_ID = "0d15901ab05142bd8e8346bbf7ee59f7"
+ITEM_OWNER = "jkastens_KU"
+LICENSE_SHA256 = "22ef725155f2b7a03f56a01f30e10730f371a5453e199a141582e5b322fdb57b"
 SERVICE = "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/WBDHU12/FeatureServer"
 LAYER = f"{SERVICE}/0"
 ITEM = f"https://www.arcgis.com/sharing/rest/content/items/{ITEM_ID}"
@@ -127,18 +129,18 @@ def _json(body: bytes, limit: int) -> dict:
     return value
 
 
-def parse_item(body: bytes) -> tuple[int, str]:
+def parse_item(body: bytes) -> tuple[int, str, str]:
     value = _json(body, 1_048_576)
     if (value.get("id") != ITEM_ID or value.get("access") != "public"
-            or value.get("url") != SERVICE or not isinstance(value.get("owner"), str)
+            or value.get("url") != SERVICE or value.get("owner") != ITEM_OWNER
             or not isinstance(value.get("licenseInfo"), str)
-            or not value["licenseInfo"].strip()
+            or sha256(value["licenseInfo"].encode("utf-8")).hexdigest() != LICENSE_SHA256
             or type(value.get("modified")) is not int):
         raise CaptureError("ITEM_IDENTITY")
-    return value["modified"], value["owner"]
+    return value["modified"], value["owner"], LICENSE_SHA256
 
 
-def parse_layer(body: bytes) -> tuple[int | None, str]:
+def parse_layer(body: bytes) -> tuple[int, str]:
     value = _json(body, 1_048_576)
     capabilities = value.get("advancedQueryCapabilities")
     fields = value.get("fields")
@@ -159,7 +161,7 @@ def parse_layer(body: bytes) -> tuple[int | None, str]:
     if not isinstance(edit, dict):
         raise CaptureError("LAYER_SCHEMA")
     revision = edit.get("dataLastEditDate")
-    if revision is not None and type(revision) is not int:
+    if type(revision) is not int:
         raise CaptureError("LAYER_SCHEMA")
     schema = json.dumps([(field, types[field]) for field in FIELDS], separators=(",", ":"))
     return revision, _digest(schema.encode("utf-8"))
@@ -190,7 +192,7 @@ def _rings(geometry: object):
             yield ring
 
 
-def parse_page(body: bytes, *, expected: int, previous_id: int, seen_hucs: set[str]) -> tuple[int, set[str]]:
+def parse_page(body: bytes, *, expected: int, previous_id: int, seen_hucs: set[str], terminal: bool = False) -> tuple[int, set[str]]:
     value = _json(body, MAX_PAGE_BYTES)
     features = value.get("features")
     if value.get("type") != "FeatureCollection" or not isinstance(features, list) or len(features) != expected:
@@ -198,6 +200,8 @@ def parse_page(body: bytes, *, expected: int, previous_id: int, seen_hucs: set[s
     properties = value.get("properties", {})
     if not isinstance(properties, dict) or type(properties.get("exceededTransferLimit", False)) is not bool:
         raise CaptureError("PAGE_SHAPE")
+    if terminal and properties.get("exceededTransferLimit", False):
+        raise CaptureError("TERMINAL_PAGE_TRUNCATED")
     new_hucs: set[str] = set()
     vertices = 0
     for feature in features:
@@ -254,6 +258,8 @@ def capture(destination: Path, *, service_transport=None, item_transport=None, c
         if result.category is not TransportCategory.SUCCESS or result.payload is None:
             raise CaptureError("UPSTREAM_UNAVAILABLE")
         body = b"".join(result.payload.chunks)
+        if manifest["total_bytes"] + len(body) > MAX_TOTAL_BYTES:
+            raise CaptureError("TOTAL_BYTE_LIMIT")
         write_candidate(destination, name, body)
         head = result.source_head
         manifest["objects"].append({
@@ -263,8 +269,6 @@ def capture(destination: Path, *, service_transport=None, item_transport=None, c
             "etag": head.etag.render() if head and head.etag else None,
         })
         manifest["total_bytes"] += len(body)
-        if manifest["total_bytes"] > MAX_TOTAL_BYTES:
-            raise CaptureError("TOTAL_BYTE_LIMIT")
         return body
 
     try:
@@ -278,7 +282,8 @@ def capture(destination: Path, *, service_transport=None, item_transport=None, c
         for number, offset in enumerate(range(0, expected, PAGE_SIZE)):
             body = get(page_url(offset), service_transport, f"page-{number:04d}.geojson", SERVICE_PROFILE)
             previous_id, new_hucs = parse_page(body, expected=min(PAGE_SIZE, expected - offset),
-                                               previous_id=previous_id, seen_hucs=seen_hucs)
+                                               previous_id=previous_id, seen_hucs=seen_hucs,
+                                               terminal=offset + PAGE_SIZE >= expected)
             seen_hucs.update(new_hucs)
             manifest["feature_count"] += len(new_hucs)
         manifest["count_after"] = parse_count(get(count_url(), service_transport, "count-after.json", SERVICE_PROFILE))
@@ -290,6 +295,7 @@ def capture(destination: Path, *, service_transport=None, item_transport=None, c
             raise CaptureError("COUNT_CHANGED")
         manifest.update({"state": "COMPLETE_CANDIDATE", "reason_code": None,
                          "item_modified_ms": first_item[0], "item_owner": first_item[1],
+                         "item_license_sha256": first_item[2],
                          "layer_data_edit_ms": first_layer[0], "field_schema_digest": first_layer[1]})
     except CaptureError as error:
         manifest["reason_code"] = str(error)

@@ -53,6 +53,10 @@ Kansas scope, and bounded polygon coordinates. Original item metadata, layer
 metadata, count responses, and GeoJSON pages are preserved with SHA-256
 digests and retrieval times in a private candidate directory. A failed or
 drifting run leaves an `INCOMPLETE` manifest and cannot become a released layer.
+The known item owner and exact item rights text are pinned; a changed value
+holds the capture for renewed review. The layer data-edit revision must be
+present, and the final page must report no additional results. Aggregate byte
+limits are checked before each immutable object write.
 
 Run from the repository root with `PYTHONPATH=packages/connectors-core/src:.`
 and `python3 -m connectors.kansas.dasc_geoportal /absolute/new/candidate-path`.

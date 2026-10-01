@@ -1,0 +1,8 @@
+{
+  "access": "public",
+  "id": "0d15901ab05142bd8e8346bbf7ee59f7",
+  "licenseInfo": "<span style='font-family:&quot;Avenir Next W01&quot;, &quot;Avenir Next W00&quot;, &quot;Avenir Next&quot;, Avenir, &quot;Helvetica Neue&quot;, sans-serif; font-size:16px;'>No constraints for the use of this dataset. However, when you use the data, please acknowledge the Kansas Biological Survey at the University of Kansas as appropriate. The Kansas Biological Survey (KBS) and its representatives make no warranty or representation, either expressed or implied, with respect to the digital data and their documentation, their quality, performance, merchantability, or fitness for a particular purpose. The digital data are distributed on &quot;as is&quot; basis, and the user assumes all risk as to their quality, the results obtained from their use, and the performance of the data. In no event will the KBS or its representatives be liable for any direct, indirect, special, incidental or consequential damages resulting from and defect in the KBS's digital data or in their documentation. This disclaimer of warranty is exclusive and in lieu of all others, oral or written, expressed or implied. No agent or employee is authorized to make any modification, extension, or addition to this warranty.</span>",
+  "modified": 1678372109000,
+  "owner": "jkastens_KU",
+  "url": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/WBDHU12/FeatureServer"
+}
