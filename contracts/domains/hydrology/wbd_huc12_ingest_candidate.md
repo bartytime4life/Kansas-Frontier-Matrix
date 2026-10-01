@@ -6,7 +6,7 @@ version: v1.0.0
 status: implemented; fixture-first; no-network; non-publisher
 owners: OWNER_TBD — Hydrology steward; USGS source steward; pipeline steward; validation steward; evidence steward
 created: 2026-08-07
-updated: 2026-08-07
+updated: 2026-10-01
 policy_label: repository-facing; hydrology; source-admission; fixture-only; fail-closed
 owning_root: contracts/
 responsibility: Define the meaning and non-authority boundary of captured WBD HUC12 source packages and their deterministic ingest-candidate projection.
@@ -74,7 +74,8 @@ A `RAW_CANDIDATE` identifies only an admissible next-step candidate. Its declare
 
 The implementation must fail closed on:
 
-- invalid, oversized, non-UTF-8, duplicate-key, non-finite, symlink, or non-object JSON input;
+- invalid, oversized, non-UTF-8, duplicate-key, non-finite (including exponent
+  overflow), symlink, or non-object JSON input;
 - source-package schema failure or `spec_hash` mismatch;
 - response body digest mismatch;
 - a `304` response carrying body bytes or lacking a prior snapshot;
@@ -85,6 +86,8 @@ The implementation must fail closed on:
 - an unsafe output path or overwrite request.
 
 Diagnostics contain stable codes and bounded paths. They do not echo source payload values.
+Programmatic source-package inputs with values that cannot be canonically
+serialized also return a finite diagnostic instead of raising an exception.
 
 ## Non-effects
 

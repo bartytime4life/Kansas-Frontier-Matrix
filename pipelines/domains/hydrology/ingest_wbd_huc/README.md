@@ -2,11 +2,11 @@
 doc_id: kfm://doc/pipelines-domains-hydrology-ingest-wbd-huc-readme
 title: Hydrology WBD HUC Ingest Pipeline README
 type: readme
-version: v0.2
+version: v0.3
 status: implemented; fixture-first; no-network; non-publisher
 owners: OWNER_TBD — Hydrology pipeline owner; Hydrology domain steward; USGS source steward; validation steward
 created: 2026-06-13
-updated: 2026-08-07
+updated: 2026-10-01
 policy_label: repository-facing; hydrology; source-admission; fixture-only; no-public-path
 owning_root: pipelines/
 responsibility: Own executable transformation of already captured WBD HUC12 source packages into deterministic source-admission candidate projections without fetching, persisting lifecycle data, or publishing.
@@ -76,6 +76,11 @@ captured WbdHuc12SourcePackage fixture
 - `RAW_CANDIDATE / FEATURE_REMOVED`
 - `RAW_CANDIDATE / FEATURE_MATERIAL_CHANGE`
 - nonzero exit with stable findings for malformed or contradictory inputs
+
+Overflowing JSON exponents (for example `1e999`) are rejected as non-finite
+before candidate hashing. Direct programmatic calls with values that cannot be
+canonically serialized return a bounded finding. Neither path echoes the input
+value in its diagnostic.
 
 ## Commands
 

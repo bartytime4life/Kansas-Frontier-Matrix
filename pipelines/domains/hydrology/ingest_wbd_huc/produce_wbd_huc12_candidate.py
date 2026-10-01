@@ -97,6 +97,13 @@ def _reject_nonfinite(value: str) -> None:
     raise NonFiniteNumberError(value)
 
 
+def _finite_float(value: str) -> float:
+    parsed = float(value)
+    if not math.isfinite(parsed):
+        raise NonFiniteNumberError(value)
+    return parsed
+
+
 def _pointer(parts: Iterable[object]) -> str:
     encoded = [str(item).replace("~", "~0").replace("/", "~1") for item in parts]
     return "/" + "/".join(encoded) if encoded else "/"
@@ -114,6 +121,7 @@ def read_json_object(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
             path.read_text(encoding="utf-8"),
             object_pairs_hook=_unique_object,
             parse_constant=_reject_nonfinite,
+            parse_float=_finite_float,
         )
     except UnicodeError:
         return None, [Finding("JSON_NOT_UTF8", "/")]
@@ -122,6 +130,8 @@ def read_json_object(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
     except NonFiniteNumberError:
         return None, [Finding("JSON_NONFINITE_NUMBER", "/")]
     except json.JSONDecodeError:
+        return None, [Finding("JSON_INVALID", "/")]
+    except (ValueError, RecursionError):
         return None, [Finding("JSON_INVALID", "/")]
     except OSError:
         return None, [Finding("INPUT_UNREADABLE", "/")]
@@ -304,7 +314,11 @@ def build_candidate(package: Mapping[str, Any]) -> BuildResult:
     if findings:
         return BuildResult(None, tuple(sorted(set(findings))))
 
-    if package.get("spec_hash") != canonical_hash(package):
+    try:
+        expected_hash = canonical_hash(package)
+    except (TypeError, ValueError, OverflowError, RecursionError):
+        return BuildResult(None, (Finding("SOURCE_PACKAGE_CANONICALIZATION_INVALID", "/"),))
+    if package.get("spec_hash") != expected_hash:
         findings.append(Finding("SOURCE_PACKAGE_SPEC_HASH_MISMATCH", "/spec_hash"))
 
     response = package["response"]

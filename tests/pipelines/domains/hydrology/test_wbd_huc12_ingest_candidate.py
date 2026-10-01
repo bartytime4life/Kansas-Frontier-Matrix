@@ -8,6 +8,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 REPO_ROOT = Path(__file__).resolve().parents[4]
 MODULE_PATH = (
     REPO_ROOT
@@ -111,6 +113,43 @@ def test_source_package_spec_hash_mismatch_fails_closed() -> None:
         "SOURCE_PACKAGE_SPEC_HASH_MISMATCH",
         "/spec_hash",
     ) in result.findings
+
+
+@pytest.mark.parametrize(
+    ("literal", "reason"),
+    [
+        ("1e999", "JSON_NONFINITE_NUMBER"),
+        ("-1e999", "JSON_NONFINITE_NUMBER"),
+        ("1" * 5000, "JSON_INVALID"),
+    ],
+)
+def test_extreme_numeric_input_has_finite_cli_diagnostic(
+    tmp_path: Path, literal: str, reason: str
+) -> None:
+    fixture = (FIXTURES / "valid/no_change.json").read_text(encoding="utf-8")
+    target = '"areasqkm": 12.3456784'
+    assert fixture.count(target) == 1
+    source = tmp_path / "extreme.json"
+    source.write_text(fixture.replace(target, f'"areasqkm": {literal}'), encoding="utf-8")
+
+    completed = subprocess.run(
+        [sys.executable, str(MODULE_PATH), str(source)],
+        check=False, capture_output=True, text=True,
+    )
+
+    assert completed.returncode == 2
+    assert json.loads(completed.stdout)["findings"] == [{"code": reason, "path": "/"}]
+    assert completed.stderr == ""
+
+
+def test_nonfinite_programmatic_package_has_finite_diagnostic() -> None:
+    package = load("valid", "no_change.json")
+    package["response"]["feature_collection"]["features"][0]["properties"]["areasqkm"] = float("inf")
+
+    result = MODULE.build_candidate(package)
+
+    assert not result.ok
+    assert result.findings == (MODULE.Finding("SOURCE_PACKAGE_CANONICALIZATION_INVALID", "/"),)
 
 
 def test_cli_is_deterministic_and_value_bounded() -> None:

@@ -257,3 +257,16 @@ The local-data operator and hydrology test owners are `tools/local_data/` and
 before loading referenced page objects. Synthetic positive and negative replay
 tests verify the boundary. Hosted validation and operational replay remain
 unverified; this creates no source admission or release authority.
+
+### WBD HUC12 numeric input closure — 2026-10-01
+
+`MOD-11` / P1 / **CONFIRMED on `main@c7c88c0c949442fd0a76e696c9fe876652009ff6`**:
+the fixture-first WBD HUC12 producer parsed JSON exponent overflow such as
+`1e999` to an infinite float, then raised an uncaught exception during
+canonical hashing. Its promised finite, value-free diagnostic was absent.
+The pipeline owner is `pipelines/domains/hydrology/ingest_wbd_huc/`, with
+semantics in `contracts/domains/hydrology/` and executable conformance in
+`tests/pipelines/domains/hydrology/`. This slice rejects overflowing exponents
+at parse time and returns a finite finding for non-serializable programmatic
+inputs. It does not enable retrieval, lifecycle writes, source admission,
+release, or publication. Hosted validation remains open.
