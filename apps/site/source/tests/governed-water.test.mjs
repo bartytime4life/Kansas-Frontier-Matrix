@@ -45,6 +45,13 @@ test("impossible release and package dates are rejected rather than normalized",
   snapshot.manifest.package_id = await water.digest(water.canonical(unsignedManifest));
   await assert.rejects(water.parseWaterPackage(JSON.stringify(snapshot)), /TIME_INVALID/);
 });
+test("approval expiry checks withhold invalid, missing, and elapsed dates", () => {
+  const now = Date.parse(NOW);
+  assert.equal(water.approvalRemainingMs("2026-10-01T00:00:00Z", now), 5 * 60 * 60 * 1000);
+  for (const expiry of [undefined, null, "bad", "2026-09-31T00:00:00Z", "2026-09-30T18:59:59Z"]) {
+    assert.equal(water.approvalRemainingMs(expiry, now), 0);
+  }
+});
 test("tampered artifacts and unexpected paths fail before serving", async () => {
   const snapshot = await fixture("snapshot"); snapshot.artifacts["candidate.json"] += " ";
   await assert.rejects(water.parseWaterPackage(JSON.stringify(snapshot)), /ARTIFACT_DIGEST/);

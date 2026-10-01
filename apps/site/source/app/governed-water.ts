@@ -33,6 +33,14 @@ function time(value: unknown): number {
       || parsed.getUTCMinutes() !== Number(match[5]) || parsed.getUTCSeconds() !== Number(match[6])) throw new Error("TIME_INVALID");
   return instant;
 }
+export function approvalRemainingMs(expiry: unknown, nowMs: number): number {
+  try {
+    const remaining = time(expiry) - nowMs;
+    return Number.isFinite(remaining) && remaining > 0 ? remaining : 0;
+  } catch {
+    return 0;
+  }
+}
 function same(a: unknown, b: unknown) { return canonical(a) === canonical(b); }
 export function parseWaterJson(text: string): unknown {
   // Linear duplicate-key/depth guard, followed by the platform JSON grammar.
