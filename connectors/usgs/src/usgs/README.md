@@ -37,6 +37,13 @@ notes:
 
 # USGS Connector Python Package
 
+> **Implementation update, 2026-09-30:** `gnis.py` captures one exact Kansas
+> populated-place name from the official National Map GNIS service. It preserves
+> original response bytes and a checksum, rejects ambiguous/out-of-scope/error
+> results, and marks every candidate unreleased. This is a narrow USGS-family
+> placement while the wider GNIS product/lifecycle placement is reviewed. Run
+> `python3.12 -m unittest discover -s connectors/usgs/tests -p 'test_gnis.py'`.
+
 > Draft package boundary for importable USGS connector helper code. This package supports governed source admission; it is not a source-family authority or publication path.
 
 <p>

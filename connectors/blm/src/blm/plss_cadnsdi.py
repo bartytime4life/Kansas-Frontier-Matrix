@@ -1,4 +1,4 @@
-"""Offline BLM PLSS (CadNSDI) query planning and GeoJSON parsing; never fetches.
+"""BLM PLSS (CadNSDI) Kansas query planning and GeoJSON page validation.
 
 A PLSS township or first-division polygon is survey and cadastral *reference* geometry:
 never county parcel ownership, legal title, deed authority, or access permission. This
@@ -6,10 +6,10 @@ module plans one canonical, paged ArcGIS REST ``query`` URL for Kansas features 
 CadNSDI layer and parses an *already supplied* GeoJSON page into frozen per-feature
 candidates with properties kept verbatim.
 
-The service path, layer ids, identifier fields and the ``STATEABBR`` attribute are NEEDS
-VERIFICATION against current BLM service metadata: any unexpected shape or out-of-scope
-feature rejects the whole page rather than being coerced. Pagination, dissolves, parcel
-joins, persistence and publication belong to owning layers.
+Layer fields and counts were checked against the BLM ArcGIS service on 2026-09-30.
+Sections have no ``STATEABBR`` field, so their scope is the ``PLSSID`` prefix.
+Unexpected shape or out-of-scope features reject the whole page. Persistence and
+publication belong to owning layers.
 """
 from __future__ import annotations
 
@@ -24,8 +24,10 @@ from urllib.parse import parse_qsl, urlencode, urlsplit
 HOST = "https://gis.blm.gov"
 SERVICE = "/arcgis/rest/services/Cadastral/BLM_Natl_PLSS_CadNSDI/MapServer"
 STATE = "KS"
-# layer name -> (layer id, identifier field). NEEDS VERIFICATION against service metadata.
-LAYERS = {"township": (1, "PLSSID"), "first_division": (2, "FRSTDIVID")}
+# layer name -> (layer id, identifier field). The intersected service can contain
+# multiple subdivisions under one FRSTDIVID, so its OBJECTID is page identity.
+LAYERS = {"township": (1, "PLSSID"), "first_division": (2, "FRSTDIVID"),
+          "intersected": (3, "OBJECTID")}
 MAX_PAGE = 1000
 MAX_OFFSET = 1_000_000
 # Kansas extent (WGS84) with a small tolerance for boundary-straddling survey polygons.
@@ -101,7 +103,8 @@ class QueryRequest:
 
 
 def _params(layer: str, offset: int, count: int) -> dict[str, str]:
-    return {"where": f"STATEABBR='{STATE}'", "outFields": "*", "returnGeometry": "true",
+    where = "PLSSID LIKE 'KS%'" if layer == "first_division" else f"STATEABBR='{STATE}'"
+    return {"where": where, "outFields": "*", "returnGeometry": "true",
             "outSR": "4326", "orderByFields": "OBJECTID", "resultOffset": str(offset),
             "resultRecordCount": str(count), "f": "geojson"}
 
@@ -116,6 +119,31 @@ def query_url(layer: str, *, offset: int = 0, count: int = MAX_PAGE) -> str:
         raise PlssInputError("PAGE_SIZE")
     return (f"{HOST}{SERVICE}/{LAYERS[layer][0]}/query?"
             + urlencode(_params(layer, offset, count)))
+
+
+def count_url(layer: str) -> str:
+    """Return the matching provider count query for a Kansas PLSS layer."""
+    if layer not in LAYERS:
+        raise PlssInputError("LAYER")
+    where = _params(layer, 0, MAX_PAGE)["where"]
+    return (f"{HOST}{SERVICE}/{LAYERS[layer][0]}/query?"
+            + urlencode({"where": where, "returnCountOnly": "true", "f": "json"}))
+
+
+def parse_count(body: bytes, *, status: int, layer: str) -> int:
+    """Reject ArcGIS's HTTP-200 error bodies and unbounded or malformed counts."""
+    count_url(layer)
+    if status != 200 or not isinstance(body, bytes) or len(body) > 1_048_576:
+        raise PlssInputError("COUNT_RESPONSE")
+    try:
+        value = json.loads(body.decode("utf-8"))
+    except (UnicodeError, ValueError):
+        raise PlssInputError("COUNT_RESPONSE") from None
+    if not isinstance(value, dict) or "error" in value or type(value.get("count")) is not int:
+        raise PlssInputError("COUNT_RESPONSE")
+    if not 0 <= value["count"] <= MAX_OFFSET:
+        raise PlssInputError("COUNT_BOUND")
+    return value["count"]
 
 
 def parse_request(source_url: object) -> QueryRequest:
@@ -198,17 +226,22 @@ def _rings(geometry: object) -> tuple[str, list[list[tuple[float, float]]]]:
     return geometry["type"], rings
 
 
-def _feature(item: object, id_field: str) -> PlssFeature:
+def _feature(item: object, layer: str, id_field: str) -> PlssFeature:
     if not isinstance(item, dict) or item.get("type") != "Feature":
         raise PlssInputError("FEATURE_SHAPE")
     properties = item.get("properties")
     if not isinstance(properties, dict):
         raise PlssInputError("FEATURE_SHAPE")
-    if properties.get("STATEABBR") != STATE:
+    if layer == "first_division":
+        if not isinstance(properties.get("PLSSID"), str) or not properties["PLSSID"].startswith("KS"):
+            raise PlssInputError("STATE_SCOPE")
+    elif properties.get("STATEABBR") != STATE:
         raise PlssInputError("STATE_SCOPE")
     object_id, identifier = properties.get("OBJECTID"), properties.get(id_field)
     if isinstance(object_id, bool) or not isinstance(object_id, int) or object_id < 0:
         raise PlssInputError("OBJECT_ID")
+    if id_field == "OBJECTID":
+        identifier = str(object_id)
     if not isinstance(identifier, str) or not IDENTIFIER.fullmatch(identifier):
         raise PlssInputError("IDENTIFIER")
     geometry_type, rings = _rings(item.get("geometry"))
@@ -293,13 +326,15 @@ def parse_page(body: bytes, *, status: int, source_url: str, retrieved_at: str,
         raise PlssInputError("COLLECTION_SHAPE")
     exceeded = any(flags)
     id_field = LAYERS[request.layer][1]
-    parsed = tuple(_feature(item, id_field) for item in features)
+    parsed = tuple(_feature(item, request.layer, id_field) for item in features)
     object_ids = [feature.object_id for feature in parsed]
     if object_ids != sorted(set(object_ids)):
         # orderByFields=OBJECTID makes paging stable only if ids are strictly increasing.
         raise PlssInputError("OBJECT_ID_ORDER")
+    # The section service can publish more than one OBJECTID for a FRSTDIVID.
+    # Preserve both source records; only OBJECTID identifies a page feature.
     identifiers = [feature.identifier for feature in parsed]
-    if len(set(identifiers)) != len(identifiers):
+    if request.layer == "township" and len(set(identifiers)) != len(identifiers):
         raise PlssInputError("DUPLICATE_IDENTIFIER")
     return PlssPageCandidate(source_url, request, retrieved,
                              "sha256:" + sha256(body).hexdigest(), parsed,

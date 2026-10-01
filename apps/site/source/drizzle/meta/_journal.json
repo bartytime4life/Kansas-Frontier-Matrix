@@ -15,6 +15,20 @@
       "when": 1790797081526,
       "tag": "0001_governed_water",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1790797081527,
+      "tag": "0002_kansas_knowledge",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1790797081528,
+      "tag": "0003_crop_casma",
+      "breakpoints": true
     }
   ]
 }

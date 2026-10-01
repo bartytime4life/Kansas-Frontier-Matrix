@@ -2,6 +2,10 @@ import type { OfficialContextId } from "./live-context";
 
 const nationalMap = "https://apps.nationalmap.gov/downloader/";
 export const SOURCE_DOWNLOADS: Record<OfficialContextId, { href: string; label: string }> = {
+  "fema-disaster-declarations": { href: "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries", label: "OpenFEMA declaration records" },
+  "blm-plss-townships": { href: "https://gis.blm.gov/arcgis/rest/services/Cadastral/BLM_Natl_PLSS_CadNSDI/MapServer/1", label: "BLM township service" },
+  "blm-plss-sections": { href: "https://gis.blm.gov/arcgis/rest/services/Cadastral/BLM_Natl_PLSS_CadNSDI/MapServer/2", label: "BLM section service" },
+  "blm-plss-intersected": { href: "https://gis.blm.gov/arcgis/rest/services/Cadastral/BLM_Natl_PLSS_CadNSDI/MapServer/3", label: "BLM intersected division service" },
   "nasa-firms-active-fire": { href: "https://gibs.earthdata.nasa.gov/layer-metadata/v1.0/VIIRS_NOAA20_Thermal_Anomalies_375m_All.json", label: "NASA GIBS image source metadata" },
   "nasa-gibs-fire-points": { href: "/api/source-download?source=nasa-gibs-fire-points", label: "Download mapped detections · GeoJSON" },
   "nifc-fire-reports": { href: "/api/source-download?source=nifc-fire-reports", label: "Download recent reports · GeoJSON" },

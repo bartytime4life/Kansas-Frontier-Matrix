@@ -665,7 +665,7 @@ test("keeps every top-level external map carrier in a display-only disclosure re
   assert.match(page, /NO REQUEST FROM CURRENT VIEW/);
 });
 
-test("connects twenty-one bounded official context sources without admitting evidence", async () => {
+test("connects bounded official context sources without admitting evidence", async () => {
   const ts = await import("typescript");
   const registrySource = await readFile(new URL("../app/live-context.ts", import.meta.url), "utf8");
   const radarSource = await readFile(new URL("../app/noaa-radar.ts", import.meta.url), "utf8");
@@ -691,6 +691,10 @@ test("connects twenty-one bounded official context sources without admitting evi
   const registry = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
 
   assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.map((record) => record.id), [
+    "fema-disaster-declarations",
+    "blm-plss-townships",
+    "blm-plss-sections",
+    "blm-plss-intersected",
     "census-counties",
     "usgs-streamflow",
     "noaa-nwps-gauges",

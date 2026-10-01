@@ -99,6 +99,15 @@
 .official-context-catalog > header { order: 0; align-items: center; padding: 13px 17px 5px; }
 .official-context-catalog > header h2 { margin: 0; font-size: 14px; }
 .official-context-catalog > header .official-context-registry-summary { display: block; margin-top: 3px; color: #9bb4ae; font-size: 11px; }
+.official-workspace-tabs { order: 0; display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 12px; }
+.official-workspace-tabs button { border: 1px solid rgba(132, 192, 191, .38); border-radius: 999px; background: rgba(8, 31, 34, .8); color: #cce5df; padding: 6px 10px; font-size: 11px; font-weight: 700; cursor: pointer; }
+.official-workspace-tabs button[aria-pressed="true"] { border-color: #eac27a; background: rgba(234, 194, 122, .17); color: #ffe8b5; }
+.official-workspace-ledger { order: 1; margin: 0 12px 10px; padding: 10px; border: 1px solid rgba(234, 194, 122, .3); border-radius: 9px; background: rgba(234, 194, 122, .05); color: #d4e5df; font-size: 11px; line-height: 1.45; }
+.official-workspace-ledger > strong { color: #ffe0a2; }
+.official-workspace-ledger p { margin: 5px 0; }
+.official-workspace-ledger summary { cursor: pointer; color: #f4d29c; font-weight: 700; }
+.official-workspace-ledger details p { padding: 6px 0; border-top: 1px solid rgba(234, 194, 122, .16); }
+.official-workspace-land-note { border-left: 2px solid #e9bd74; }
 .official-context-catalog > p { order: 1; margin: 0; padding: 0 17px 8px; color: #a9c1ba; font-size: 11px; line-height: 1.45; }
 .official-context-catalog > .official-context-pulse { order: 2; margin: 0 10px 12px; }
 .official-context-catalog .official-context-pulse > div { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: 8px; }
@@ -156,6 +165,14 @@
 .official-context-option-body .source-time-control { margin: 0 0 12px; }
 .official-context-option-body .official-context-actions { margin: 0; }
 .soil-moisture-control .official-context-primary { padding-right: 15px; }
+.crop-casma-control .official-context-option-body { display: grid; gap: 10px; }
+.crop-casma-control .official-context-option-body > p,.crop-casma-control .official-context-option-body > small { color: #b9d4c9; font-size: 11px; line-height: 1.5; margin: 0; }
+.crop-casma-opacity { display: flex; align-items: center; gap: 9px; color: #d8e8dc; font-size: 11px; }
+.crop-casma-opacity input { flex: 1; min-width: 0; accent-color: #8acdb4; }
+.crop-casma-opacity output { min-width: 3em; text-align: right; font-variant-numeric: tabular-nums; }
+.soil-source-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; font-size: 11px; }
+.soil-source-actions button { border: 1px solid #54847e; border-radius: 6px; background: #1a4142; color: #dcefe8; padding: 6px 9px; cursor: pointer; }
+.soil-source-actions a { color: #e0ca8a; }
 .soil-moisture-control .official-context-option-body { display: grid; gap: 12px; }
 .soil-display-panel { display: flex; align-items: start; justify-content: space-between; gap: 10px; border: 1px solid #3c7373; border-radius: 10px; background: radial-gradient(circle at 85% 10%, rgba(100, 218, 201, .17), transparent 43%), linear-gradient(135deg, #102e34, #0b222b); padding: 13px; }
 .soil-display-panel > div { display: grid; gap: 4px; min-width: 0; }

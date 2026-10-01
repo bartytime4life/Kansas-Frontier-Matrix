@@ -20,7 +20,7 @@
     "@mapbox/vector-tile": "2.0.4",
     "lerc": "2.0.0",
     "maplibre-gl": "6.9.0",
-    "next": "16.3.7",
+    "next": "16.3.8",
     "pbf": "4.0.1",
     "polygon-clipping": "0.15.7",
     "react": "19.2.8",
@@ -36,7 +36,7 @@
     "@vitejs/plugin-react": "6.0.2",
     "@vitejs/plugin-rsc": "0.5.26",
     "eslint": "9.39.4",
-    "eslint-config-next": "16.3.7",
+    "eslint-config-next": "16.3.8",
     "react-server-dom-webpack": "19.2.8",
     "tailwindcss": "4.2.1",
     "typescript": "5.9.3",
@@ -47,6 +47,7 @@
   "type": "module",
   "displayName": "Kansas Frontier Matrix",
   "overrides": {
+    "fast-uri": "3.1.8",
     "vinext": {
       "image-size": "2.0.4"
     },
@@ -54,7 +55,6 @@
       "sharp": "0.35.4",
       "undici": "7.29.1"
     },
-    "fast-uri": "3.1.8",
     "@esbuild-kit/core-utils": {
       "esbuild": "0.25.12"
     }

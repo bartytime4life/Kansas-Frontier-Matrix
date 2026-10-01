@@ -35,6 +35,8 @@ notes:
 
 # BLM Connector
 
+> **Live Kansas PLSS candidate capture (2026-09-30):** `src/blm/live_capture.py` now fetches provider counts and all bounded GeoJSON pages for township, first division, or intersected division into a new external directory. `plss_cadnsdi.py` uses the current service fields: `STATEABBR='KS'` for township/intersected and `PLSSID LIKE 'KS%'` for sections, whose layer has no `STATEABBR`. HTTP-200 ArcGIS error bodies are rejected. The capture compares counts before/after, validates every page and geometry, records request URLs and SHA-256 hashes, and remains `UNRELEASED` pending source admission and review. The section service can repeat a `FRSTDIVID` under distinct `OBJECTID` records; both are preserved with `OBJECTID` as page identity. The earlier 2026-09-27 note below describes the previous two-layer fixture planner and is superseded for these facts. This executable slice does not prepare tiles or certify legal title.
+
 > Governed source-admission support for U.S. Bureau of Land Management source families. This lane may fetch, inspect, and stage BLM material; it does not establish land truth, legal title, public access, policy, proof, release, or publication authority.
 
 > [!NOTE]
