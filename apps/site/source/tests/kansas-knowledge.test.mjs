@@ -53,6 +53,15 @@ test("released Kansas record is traceable through a versioned read", async () =>
   assert.equal(body.data.release_id, releaseId);
 });
 
+test("record detail selects exactly one released identifier", async () => {
+  const selected = await (await read("?id=ks-place-1")).json();
+  assert.equal(selected.envelope.reason_code, "RELEASED");
+  assert.deepEqual(selected.data.records.map(item => item.record_id), ["ks-place-1"]);
+  const absent = await (await read("?id=ks-place-2")).json();
+  assert.equal(absent.envelope.reason_code, "RECORD_NOT_FOUND");
+  assert.equal(absent.data, undefined);
+});
+
 test("missing review, withdrawal, and unreleased rows never enter search", async () => {
   try {
     selectedRelease = null;

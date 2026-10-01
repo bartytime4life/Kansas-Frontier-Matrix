@@ -559,14 +559,19 @@
       "site_sha256": "4cc3aded483e7418ded8cad84d89e35281eb711587523f2d5b2129c5b72de628",
       "state": "identical"
     },
+    "app/knowledge/[id]/page.tsx": {
+      "mirror_sha256": "ed1e60faa7ee9618f0c377635531bdae27304db81ca17ca025208a7e6deeb654",
+      "site_sha256": "ed1e60faa7ee9618f0c377635531bdae27304db81ca17ca025208a7e6deeb654",
+      "state": "identical"
+    },
     "app/knowledge/knowledge.module.css": {
       "mirror_sha256": "107cf138624aa97af0d3bea3cfab8247a1cbdaa43da0d212a53c63571c72d1c8",
       "site_sha256": "107cf138624aa97af0d3bea3cfab8247a1cbdaa43da0d212a53c63571c72d1c8",
       "state": "identical"
     },
     "app/knowledge/page.tsx": {
-      "mirror_sha256": "f566fc4728848f3354b4d9eb13d1d4f7a3f0033783b327f213dcb7044338b940",
-      "site_sha256": "f566fc4728848f3354b4d9eb13d1d4f7a3f0033783b327f213dcb7044338b940",
+      "mirror_sha256": "7c9f0c920fc88d5026016b4a8a86cf8a7baac10b106cc77d7dfa78ca8e138600",
+      "site_sha256": "7c9f0c920fc88d5026016b4a8a86cf8a7baac10b106cc77d7dfa78ca8e138600",
       "state": "identical"
     },
     "app/layer-workspaces.ts": {
@@ -1239,8 +1244,8 @@
       "state": "identical"
     },
     "tests/kansas-knowledge.test.mjs": {
-      "mirror_sha256": "bb8e8c140b23a4473ceb09a908153e0a279d0b9a018590012dcbf90f7ff72a56",
-      "site_sha256": "bb8e8c140b23a4473ceb09a908153e0a279d0b9a018590012dcbf90f7ff72a56",
+      "mirror_sha256": "0bfc3ee21ddcbc5b7f085cb59509ea9290d7dcfde01f283c62e53b8b60eb8212",
+      "site_sha256": "0bfc3ee21ddcbc5b7f085cb59509ea9290d7dcfde01f283c62e53b8b60eb8212",
       "state": "identical"
     },
     "tests/lightning-data.test.mjs": {
@@ -1409,7 +1414,7 @@
     }
   },
   "counts": {
-    "identical": 263,
+    "identical": 264,
     "inherited_repository_overlay": 15,
     "merged_water_overlay": 1,
     "repository_only_water_overlay": 3
@@ -1423,7 +1428,7 @@
   },
   "site_base_source_commit": "75d749ed5711ab20e3edabeb1c6ba135417ec1c0",
   "site_base_version": 131,
-  "site_candidate_commit": "c88270c45f5a251153522a6305b5e33b7ae2576f",
+  "site_candidate_commit": "f700e696fce74bdb354b838aeebeba58ec7f3d54",
   "site_candidate_deployed": false,
   "site_candidate_parent": "6e8d79e507741608e8f5475c53fe82fb668b44fa",
   "site_candidate_version": null,
@@ -1441,6 +1446,7 @@
     "app/governed-water.ts",
     "app/kansas-knowledge-server.ts",
     "app/kansas-knowledge.ts",
+    "app/knowledge/[id]/page.tsx",
     "app/knowledge/knowledge.module.css",
     "app/knowledge/page.tsx",
     "app/layer-workspaces.ts",
@@ -1474,9 +1480,9 @@
   "status": "unpublished_candidate",
   "validation": {
     "browser": "BLOCKED: browser admin security check unavailable",
-    "repository_mirror": "npm test: 255 passed; tsc --noEmit: passed; npm audit: zero vulnerabilities",
+    "repository_mirror": "npm test: 256 passed; tsc --noEmit: passed; npm audit: zero vulnerabilities",
     "security": "Codex Security scan 155856a2-afd7-4b8c-bb91-b2b9c6a27e67: zero reportable findings on earlier pinned application diff; final SQL key and dependency updates checked separately",
-    "site": "npm test: 247 passed; tsc --noEmit: passed; npm audit: zero vulnerabilities",
+    "site": "npm test: 248 passed; tsc --noEmit: passed; npm audit: zero vulnerabilities",
     "storage": "D1 migrations and R2 packages not applied or activated"
   }
 }
