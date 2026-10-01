@@ -34,7 +34,7 @@ test("local bridge grants the exact Site origin and fixed installed model", asyn
     assert.equal(health.status, 200);
     assert.equal(health.headers.get("access-control-allow-origin"), SITE_ORIGIN);
     assert.equal(health.headers.get("cache-control"), "no-store");
-    assert.deepEqual(await health.json(), { status: "ready", model: LOCAL_QWEN_MODEL });
+    assert.deepEqual(await health.json(), { status: "installed", model: LOCAL_QWEN_MODEL });
     const preflight = await fetch(`${base}/ask`, { method: "OPTIONS", headers: { origin: SITE_ORIGIN, "access-control-request-private-network": "true" } });
     assert.equal(preflight.status, 204);
     assert.equal(preflight.headers.get("access-control-allow-private-network"), "true");

@@ -154,6 +154,7 @@ import {
   type TemporalSweepQuery,
 } from "./temporal-sweep";
 import { buildQwenPrompt, type QwenMapContext } from "./qwen-context";
+import { qwenStatusLabel, successfulQwenState, shouldUseLocalQwen, type QwenBridgeState } from "./qwen-availability";
 import {
   buildLocalImportPreview,
   IMPORT_PREVIEW_MAX_BYTES,
@@ -374,7 +375,6 @@ type MapQueryCandidate = Readonly<{
 }>;
 type ScenePresetId = "overview-2d" | "globe-overview" | "water-systems" | "smoke-context" | "elevation-3d" | "tile-grid";
 type QwenMessage = Readonly<{ role: "user" | "assistant"; content: string }>;
-type QwenBridgeState = "checking" | "ready" | "not-configured" | "error";
 type HoverSummary = Readonly<{
   id: string;
   title: string;
@@ -3400,7 +3400,7 @@ export default function Home() {
     void fetch(`${LOCAL_QWEN_BRIDGE}/health`, { cache: "no-store", credentials: "omit", redirect: "error", signal: controller.signal })
       .then(async (response) => {
         const payload = await response.json() as { status?: string };
-        if (!controller.signal.aborted) setQwenBridgeState(response.ok && payload.status === "ready" ? "ready" : "not-configured");
+        if (!controller.signal.aborted) setQwenBridgeState(response.ok && payload.status === "installed" ? "installed" : "not-configured");
       })
       .catch(() => { if (!controller.signal.aborted) setQwenBridgeState("not-configured"); });
     return () => controller.abort();
@@ -3427,7 +3427,8 @@ export default function Home() {
     setQwenMessages((current) => [...current, { role: "user" as const, content: question }].slice(-8));
     setQwenQuestion("");
     try {
-      const response = await fetch(qwenBridgeState === "ready" ? `${LOCAL_QWEN_BRIDGE}/ask` : "/api/qwen", {
+      const local = shouldUseLocalQwen(qwenBridgeState);
+      const response = await fetch(local ? `${LOCAL_QWEN_BRIDGE}/ask` : "/api/qwen", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ question, context: qwenContext }),
@@ -3447,7 +3448,7 @@ export default function Home() {
         }].slice(-8));
         return;
       }
-      setQwenBridgeState("ready");
+      setQwenBridgeState(successfulQwenState(local));
       setQwenMessages((current) => [...current, { role: "assistant" as const, content: payload.answer! }].slice(-8));
     } catch {
       setQwenBridgeState("error");
@@ -8351,7 +8352,7 @@ export default function Home() {
             </div>
             <form className="qwen-form" onSubmit={(event) => { event.preventDefault(); void askQwen(); }}>
               <label><span className="sr-only">Ask Qwen about the map</span><textarea value={qwenQuestion} onChange={(event) => setQwenQuestion(event.target.value)} placeholder="Ask about this place, time, or layer context…" rows={3} maxLength={1200} /></label>
-              <div><span data-bridge-state={qwenBridgeState}>{qwenBridgeState === "ready" ? "LOCAL QWEN READY" : qwenBridgeState === "checking" ? "CHECKING LOCAL QWEN" : qwenBridgeState === "error" ? "BRIDGE UNAVAILABLE" : "LOCAL QWEN UNAVAILABLE"}</span><button type="submit" disabled={!qwenQuestion.trim() || qwenBusy || qwenBridgeState === "checking"}>{qwenBusy ? "Thinking…" : "Ask Qwen"}</button></div>
+              <div><span data-bridge-state={qwenBridgeState}>{qwenStatusLabel(qwenBridgeState)}</span><button type="submit" disabled={!qwenQuestion.trim() || qwenBusy || qwenBridgeState === "checking"}>{qwenBusy ? "Thinking…" : "Ask Qwen"}</button></div>
             </form>
             <footer className="qwen-panel-footer"><p>Qwen is interpretive only. It cannot establish evidence, policy, release, or publication authority.</p><button type="button" onClick={() => void copyQwenPrompt()}>Copy grounded prompt</button></footer>
           </aside>}
