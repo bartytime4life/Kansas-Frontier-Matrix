@@ -245,3 +245,15 @@ under `tests/tools/`. This slice checks requested and stored identity before
 package construction. A negative test verifies the mismatch writes no snapshot,
 and a positive test preserves normal preparation. Hosted validation and review
 remain open; no activation or release is implied.
+
+### Water replay request identity — 2026-10-01
+
+`MOD-10` / P1 / **CONFIRMED on `main@9123ace195b8b3e3cc3d12d9f054e43fdec8168b`**:
+`tools/local_data/water_pilot.py` accepted a valid capture manifest copied
+under a different run digest path. Replay returned `CANDIDATE_READY` for the
+manifest's actual capture ID even though the caller requested another ID.
+The local-data operator and hydrology test owners are `tools/local_data/` and
+`tests/domains/hydrology/`. This slice rejects a path/content identity mismatch
+before loading referenced page objects. Synthetic positive and negative replay
+tests verify the boundary. Hosted validation and operational replay remain
+unverified; this creates no source admission or release authority.

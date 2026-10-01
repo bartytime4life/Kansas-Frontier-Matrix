@@ -101,6 +101,8 @@ def replay(root: Path, capture_id: str) -> dict:
         raise ValueError("INVALID_CAPTURE_ID")
     path = root / "data/quarantine/usgs-nwis/runs" / capture_id.split(":")[1] / "manifest.json"
     manifest = decode_object(read_regular(path, 256 * 1024), limit=256 * 1024)
+    if manifest.get("capture_id") != capture_id:
+        raise ValueError("CAPTURE_PATH_ID_MISMATCH")
     if not isinstance(manifest.get("pages"), list) or len(manifest["pages"]) > MAX_PAGES:
         raise ValueError("CAPTURE_PAGE_LIMIT")
     objects = {page["sha256"]: read_regular(object_path(root, page["sha256"]), MAX_PAGE_BYTES)
