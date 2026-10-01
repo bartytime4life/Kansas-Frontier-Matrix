@@ -10,7 +10,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 from connectors_core.captured_json import canonical_bytes, digest_bytes
 from connectors_core.transport import TransportResponse
-from connectors.usgs.water_data.pilot_capture import Capture, STATIONS, capture
+from connectors.usgs.water_data.pilot_capture import Capture, MAX_PAGE_BYTES, STATIONS, capture
 from pipelines.domains.hydrology.normalize import normalize_capture
 from pipelines.domains.hydrology.validate import validate_candidate
 from tools.local_data.manage import init_store
@@ -185,6 +185,81 @@ def test_private_store_replay_and_failed_capture_preserves_candidate(tmp_path):
     assert before == {p.relative_to(root): p.read_bytes() for p in (root / "data/work").rglob("*.json")}
     assert not list((root / "data/published").rglob("*"))
     assert not list((root / "data/processed").rglob("*"))
+
+
+def test_stage_rejects_excess_objects_before_writing(tmp_path):
+    root = tmp_path / "store"
+    init_store(root)
+    source = acquired()
+    source.manifest["complete"] = False
+    reseal(source.manifest)
+    for number in range(9):
+        raw = f"extra page {number}".encode()
+        source.objects[digest_bytes(raw)] = raw
+
+    with pytest.raises(ValueError, match="CAPTURE_OBJECT_BUDGET_EXCEEDED"):
+        stage(root, source)
+
+    assert not list((root / "data/quarantine/usgs-nwis").rglob("payload"))
+    assert not list((root / "data/quarantine/usgs-nwis").rglob("manifest.json"))
+    assert not list((root / "data/receipts/ingest/usgs-nwis").rglob("*.json"))
+
+
+def test_stage_rejects_excess_bytes_before_writing(tmp_path):
+    root = tmp_path / "store"
+    init_store(root)
+    source = acquired()
+    source.manifest["complete"] = False
+    reseal(source.manifest)
+    source.objects = {}
+    for number in range(6):
+        raw = bytes([number]) * MAX_PAGE_BYTES
+        source.objects[digest_bytes(raw)] = raw
+
+    with pytest.raises(ValueError, match="CAPTURE_OBJECT_BUDGET_EXCEEDED"):
+        stage(root, source)
+
+    assert not list((root / "data/quarantine/usgs-nwis").rglob("payload"))
+
+
+def test_stage_rejects_bad_later_digest_before_writing(tmp_path):
+    root = tmp_path / "store"
+    init_store(root)
+    source = acquired()
+    source.objects["sha256:" + "0" * 64] = b"wrong digest"
+
+    with pytest.raises(ValueError, match="PAGE_DIGEST_MISMATCH"):
+        stage(root, source)
+
+    assert not list((root / "data/quarantine/usgs-nwis").rglob("payload"))
+
+
+def test_replay_rejects_excess_page_refs_before_loading_objects(tmp_path):
+    root = tmp_path / "store"
+    init_store(root)
+    source = acquired()
+    source.manifest["pages"] *= 4
+    reseal(source.manifest)
+    capture_id = source.manifest["capture_id"]
+    path = root / "data/quarantine/usgs-nwis/runs" / capture_id.split(":")[1] / "manifest.json"
+    path.parent.mkdir(parents=True)
+    path.write_bytes(canonical_bytes(source.manifest))
+
+    with pytest.raises(ValueError, match="CAPTURE_PAGE_LIMIT"):
+        replay(root, capture_id)
+
+
+def test_stage_rejects_excess_page_refs_before_writing(tmp_path):
+    root = tmp_path / "store"
+    init_store(root)
+    source = acquired()
+    source.manifest["pages"] *= 4
+    reseal(source.manifest)
+
+    with pytest.raises(ValueError, match="CAPTURE_PAGE_LIMIT"):
+        stage(root, source)
+
+    assert not list((root / "data/quarantine/usgs-nwis").rglob("payload"))
 
 
 def test_candidate_storage_conflict_is_not_reported_as_invalid_source(tmp_path):

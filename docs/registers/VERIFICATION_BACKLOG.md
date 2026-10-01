@@ -219,3 +219,17 @@ link, freshness, graph, and topology checks; attribute any inherited failure
 separately from a new one. Revert this section to roll back the checkpoint.
 It does not change a validator baseline, receipt, source state, policy rule,
 pipeline activation, release, deployment, publication, or owner acceptance.
+
+### Water staging resource boundary — 2026-10-01
+
+`MOD-08` / P1 / **CONFIRMED on `main@e429853f575dcc05781c4d6fafab66bd47c771b9`**:
+`tools/local_data/water_pilot.py` wrote quarantine objects before checking the
+capture's aggregate object count or bytes. A synthetic incomplete capture with
+thirteen objects wrote all thirteen before normalization quarantined it.
+The operator and hydrology test owners are `tools/local_data/` and
+`tests/domains/hydrology/`. This slice adds pre-write count, byte, digest, and
+manifest checks, plus a replay page-reference check. The staging byte ceiling
+accounts for the final over-budget page that acquisition retains for quarantine.
+Changed-area tests must demonstrate rejected input leaves no new lifecycle
+objects; exact-head hosted checks and operational replay remain separate
+verification. This change grants no source admission, release, or publication.

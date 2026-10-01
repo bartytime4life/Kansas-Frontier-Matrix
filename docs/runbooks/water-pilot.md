@@ -125,6 +125,12 @@ a maximum 24-hour interval and a two-hour freshness threshold. Transport limits:
 2 MiB/page, 8 MiB total, twelve pages and bounded retries. Redirects and changed
 pagination scope are rejected. A long Retry-After does not cause an early retry.
 An HTTP success, empty response or stale latest record never establishes recency.
+Before staging, the operator verifies all object digests and enforces twelve
+distinct objects, 2 MiB per object, 10 MiB of retained raw objects and a 256 KiB
+manifest. The 10 MiB staging ceiling allows the final successful page that
+capture retains for quarantine when it crosses the 8 MiB acquisition limit.
+Replay rejects manifests with more than twelve page references before reading
+objects. Inputs rejected by these preflight checks write no lifecycle objects.
 
 Use an absolute, owner-private external data root (not inside the checkout):
 
