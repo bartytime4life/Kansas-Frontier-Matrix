@@ -94,6 +94,7 @@
         "EMPTY",
         "TIMEOUT",
         "HTTP_ERROR",
+        "ACQUISITION_ERROR",
         "PARSE_ERROR",
         "AUTH_ERROR",
         "NOT_PROBED"

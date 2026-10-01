@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[3]
 SCHEMA = ROOT / "schemas/contracts/v1/source/source_health_assessment.schema.json"
 MAX_BYTES = 1024 * 1024
 MAX_SCHEMA_FINDINGS = 100
-FAILED_RESULTS = frozenset({"TIMEOUT", "HTTP_ERROR", "PARSE_ERROR", "AUTH_ERROR"})
+FAILED_RESULTS = frozenset({"TIMEOUT", "HTTP_ERROR", "ACQUISITION_ERROR", "PARSE_ERROR", "AUTH_ERROR"})
 SCOPE = "source.health_assessment.offline.v1"
 NON_EFFECTS = (
     "no_network_request",

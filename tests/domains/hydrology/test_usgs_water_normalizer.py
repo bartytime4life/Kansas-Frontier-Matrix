@@ -187,6 +187,22 @@ def test_private_store_replay_and_failed_capture_preserves_candidate(tmp_path):
     assert not list((root / "data/processed").rglob("*"))
 
 
+def test_candidate_storage_conflict_is_not_reported_as_invalid_source(tmp_path):
+    root = tmp_path / "store"
+    init_store(root)
+    source = acquired()
+    candidate = normalize_capture(source.manifest, source.objects)
+    path = root / "data/work/hydrology/usgs-nwis" / candidate["candidate_id"].split(":")[1] / "candidate.json"
+    path.parent.mkdir(parents=True)
+    path.write_bytes(b"conflicting local bytes")
+
+    with pytest.raises(ValueError, match="IMMUTABLE_OBJECT_CONFLICT"):
+        stage(root, source)
+
+    assert path.read_bytes() == b"conflicting local bytes"
+    assert not list((root / "data/receipts/ingest/usgs-nwis").rglob("quarantined.json"))
+
+
 def test_symlink_object_rejected(tmp_path):
     root = tmp_path / "store"
     init_store(root)

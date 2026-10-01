@@ -26,13 +26,35 @@ def operational_receipt(manifest: dict, candidate: dict | None, validation: dict
     return receipt
 
 
+def _failed_probe(manifest: dict) -> tuple[str, list[str]]:
+    if manifest.get("complete") is True:
+        return "PARSE_ERROR", ["RETRIEVAL_FAILED", "SCHEMA_OR_PARSE_FAILURE", "NO_PRIOR_SUCCESS"]
+    attempts = manifest.get("attempts")
+    last = attempts[-1] if isinstance(attempts, list) and attempts else None
+    if (isinstance(last, dict) and last.get("outcome") == "RETRY_EXHAUSTED"
+            and last.get("code") == "RETRY_DEADLINE_REACHED"):
+        return "TIMEOUT", ["RETRIEVAL_FAILED", "NO_PRIOR_SUCCESS"]
+    terminal = None
+    if isinstance(attempts, list):
+        terminal = next((item.get("outcome") for item in reversed(attempts)
+                         if isinstance(item, dict) and item.get("outcome") != "RETRY_EXHAUSTED"), None)
+    if terminal == "TIMEOUT":
+        return "TIMEOUT", ["RETRIEVAL_FAILED", "NO_PRIOR_SUCCESS"]
+    if terminal in {"AUTH_REQUIRED", "ACCESS_DENIED"}:
+        return "AUTH_ERROR", ["RETRIEVAL_FAILED", "AUTH_FAILURE", "NO_PRIOR_SUCCESS"]
+    if terminal in {"RATE_LIMITED", "NOT_FOUND"}:
+        return "HTTP_ERROR", ["RETRIEVAL_FAILED", "NO_PRIOR_SUCCESS"]
+    return "ACQUISITION_ERROR", ["RETRIEVAL_FAILED", "NO_PRIOR_SUCCESS"]
+
+
 def source_health(manifest: dict, candidate: dict | None, *, station_id: str) -> dict:
     probed = manifest["captured_at"]
     records = [] if candidate is None else [r for r in candidate["observations"] if r["station_id"] == station_id and r["value"] is not None]
     latest = max((utc_time(r["observed_at"]) for r in records), default=None)
     deadline = latest + timedelta(seconds=candidate["stale_after_seconds"] if candidate else 7200) if latest else None
     if candidate is None:
-        result, outcome, reasons = "PARSE_ERROR", "UNAVAILABLE", ["RETRIEVAL_FAILED", "SCHEMA_OR_PARSE_FAILURE", "NO_PRIOR_SUCCESS"]
+        result, reasons = _failed_probe(manifest)
+        outcome = "UNAVAILABLE"
     elif latest is None:
         result, outcome, reasons = "EMPTY", "DEGRADED", ["EMPTY_NOT_CLEAR"]
     elif utc_time(probed) > deadline:
