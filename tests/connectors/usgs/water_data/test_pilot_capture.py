@@ -1,14 +1,26 @@
 """Deterministic transport tests; no provider requests or source admission."""
+import re
 from datetime import datetime, timezone
+from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
 import pytest
 
 from connectors_core.captured_json import canonical_bytes, decode_object
 from connectors_core.transport import TransportResponse
-from connectors.usgs.water_data.pilot_capture import capture, request_plan, safe_page_url
+from connectors.usgs.water_data.pilot_capture import STATIONS, capture, request_plan, safe_page_url
 
 START, END = "2026-09-29T18:00:00Z", "2026-09-30T18:00:00Z"
+
+
+def test_runbook_station_scope_matches_source_profile():
+    runbook = (Path(__file__).resolve().parents[4] / "docs/runbooks/water-pilot.md").read_text()
+    stated_scope = re.search(
+        r"^It fixes USGS OGC v1, discharge 00060, stations (USGS-\d{8}) and (USGS-\d{8}),$",
+        runbook, re.MULTILINE,
+    )
+    assert stated_scope is not None
+    assert stated_scope.groups() == STATIONS
 
 
 class Clock:
