@@ -270,3 +270,17 @@ semantics in `contracts/domains/hydrology/` and executable conformance in
 at parse time and returns a finite finding for non-serializable programmatic
 inputs. It does not enable retrieval, lifecycle writes, source admission,
 release, or publication. Hosted validation remains open.
+
+### WBD HUC12 review-output boundary — 2026-10-01
+
+`MOD-12` / P1 / **CONFIRMED on `cfba3bf97d957caa865fab52936473d61aca17b3`**:
+the fixture-first WBD HUC12 producer's optional `--output` followed a
+symlinked parent directory. A temporary-directory reproduction returned
+success and wrote the candidate through that alias. The existing path check
+also permitted repository lifecycle paths despite the declaration's
+`writes_targets: false` posture. The pipeline owner is
+`pipelines/domains/hydrology/ingest_wbd_huc/`; the output contract and tests
+stay in their existing responsibility roots. This follow-up requires an
+existing external directory, rejects symlinked parents and repository paths,
+and creates files without overwriting. It is stacked on the numeric-input
+repair and grants no lifecycle write, admission, release, or publication.
