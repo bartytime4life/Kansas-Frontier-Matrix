@@ -1,34 +1,21 @@
-"""Hydrology promotion gate stub.
+"""Hydrology promotion is held until a governed decision path is implemented.
 
-Creates minimal governed artifacts for a promotion decision run.
+The historical automation-smoke record is not evidence of review or approval.
+This entry point deliberately creates no release or lifecycle artifact.
 """
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
-from pathlib import Path
 
 
-def emit_stub(run_id: str) -> None:
-    root = Path(__file__).resolve().parents[3]
-    decided_at = datetime.now(timezone.utc).isoformat()
-    decision = {
-        "id": f"promo:hydrology:{run_id}",
-        "version": "v1",
-        "domain": "hydrology",
-        "run_id": run_id,
-        "decision": "APPROVE",
-        "evidence_ref": f"evidence:hydrology:bundle:{run_id}",
-        "evidence_bundle_uri": f"data/proofs/hydrology/{run_id}.promotion_proof.json",
-        "rollback_card_uri": f"release/rollback_cards/hydrology/{run_id}.md",
-        "policy_bundle": "policy/promotion/hydrology@v1",
-        "decided_at": decided_at,
-        "review": {"reviewer": "automation-smoke", "ticket": "REL-SMOKE"},
-    }
-    out = root / "release" / "promotion_decisions" / "hydrology" / f"{run_id}.json"
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(decision, indent=2), encoding="utf-8")
+def main() -> int:
+    print(json.dumps({
+        "outcome": "HOLD",
+        "reason_code": "PROMOTION_NOT_IMPLEMENTED",
+        "promotion_authorized": False,
+    }, sort_keys=True, separators=(",", ":")))
+    return 2
 
 
 if __name__ == "__main__":
-    emit_stub("run-local-smoke")
+    raise SystemExit(main())

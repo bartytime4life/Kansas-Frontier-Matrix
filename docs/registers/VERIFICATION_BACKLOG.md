@@ -298,3 +298,29 @@ It preserves the historical receipt and the `MOD-01` Site mirror hold. A clean
 local Site commit currently has 51 differing shared paths and lacks 50
 monorepo mirror paths; source/overlay review, successor receipt, browser
 behavior, and publication remain **NEEDS VERIFICATION**.
+
+### Hydrology promotion entry-point hold — 2026-10-01
+
+`MOD-14` / P1 / **CONFIRMED on `main@9ec5ccda4e8a664424e9d994167147e5415d5310`**:
+`pipelines/domains/hydrology/promote.py` could be run directly to write an
+`APPROVE` decision with fabricated automation review and unresolved proof and
+rollback references. The promotion and proof workflows deliberately avoided
+executing it but asserted that those unsafe markers remained. The broader
+Hydrology workflow also requires explicit admission of substantive tests. The pipeline
+owner is `pipelines/domains/hydrology/`; existing workflow, test, policy,
+runbook, and review-console roots own their respective safeguards and status
+text. This slice makes the entry point return `HOLD` /
+`PROMOTION_NOT_IMPLEMENTED` without writing, tests it in isolation, updates
+workflow assertions, and admits that test to the Hydrology workflow's bounded
+test set. The tracked smoke record remains historical
+held evidence, not an active decision. Promotion, release, and publication
+remain **NOT IMPLEMENTED / NOT AUTHORIZED**.
+
+`MOD-15` / P2 / **CONFIRMED absent on the same base; NEEDS VERIFICATION for
+coverage**: `policy/data/README.md` and other historical guidance referenced
+`tests/policy/test_explorer_web_adapter_boundary.py`, but that file is absent
+from the current tracked tree. This slice removes the broken metadata link and
+labels the claimed Explorer path-literal guard unverified. The policy and UI
+test owners should trace current Explorer adapters and public-client
+boundaries, then implement a substantive replacement test if no equivalent
+guard exists. A passing unrelated policy suite is not proof of this coverage.

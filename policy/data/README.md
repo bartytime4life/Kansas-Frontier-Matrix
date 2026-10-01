@@ -3,11 +3,11 @@ doc_id: kfm://policy/data
 title: policy/data/ — Lifecycle Admissibility and Public-Exposure Boundary
 type: policy-boundary
 readme_profile: BOUNDARY_COMPACT
-version: v0.4
+version: v0.5
 status: draft; repository-grounded; documentation-plus-empty-marker; accepted-placement; bounded-validation-evidence; executable-data-policy-not-established; non-release; non-publication
 owner: NEEDS VERIFICATION — CODEOWNERS routes /policy/ to @bartytime4life; accepted data-policy stewardship, independent review, and an executable local scope ID were not established
 created: 2026-06-15
-updated: 2026-08-13
+updated: 2026-10-01
 prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
 policy_label: "repository-facing; internal-policy-source; data-lifecycle-policy; fail-closed; no-data-storage; no-release-authority; no-publication-authority"
 current_path: policy/data/README.md
@@ -15,7 +15,7 @@ owning_root: policy/
 root_registry_id: root.policy
 local_scope_id: "kfm://policy/data — stable document identity; executable evaluator scope not accepted"
 responsibility: define and index admissibility posture for lifecycle transitions and public exposure without storing lifecycle data, evaluating policy as runtime authority, emitting receipts or proofs, approving release, or publishing artifacts
-truth_posture: CONFIRMED same-path target and stable document identity, accepted ADR-0029 placement, active root.policy projection, README plus empty marker inventory, lifecycle and release-root separation, one bounded inactive Rego release-gate profile outside this lane, explicit PolicyInputBundle profile, closed proposed PolicyDecision shape, 18-test structural boundary suite, structural connector output scanner, legacy pipeline lexical canary, abstain-only governed API scaffold, bounded fixture-only promotion and review profiles, no-write publication-denial dry run, proposed rollback-card fixture validator, placeholder general policy runtime and executable root RollbackCard compatibility shim, empty proposed policy/release registers, hydrology automation-smoke APPROVE artifact, and the pipeline canary's composed-path blind spot / PROPOSED data-action classes, transition identifiers, obligations, reviewer classes, and executable implementation sequence / UNKNOWN accepted data evaluator, active bundle selection, production consumers, authenticated decision emission, branch-protection requirements, runtime enforcement, promotion integration, and public deployment / NEEDS VERIFICATION accepted owners, local scope ID, direct policy/data rule modules, dedicated fixtures and tests, data-policy validator entry point, reason-code registry, receipt/proof bindings, quarantine-exit enforcement, correction propagation, independent review, rollback execution, and disposition of the hydrology promotion scaffold
+truth_posture: CONFIRMED same-path target and stable document identity, accepted ADR-0029 placement, active root.policy projection, README plus empty marker inventory, lifecycle and release-root separation, one bounded inactive Rego release-gate profile outside this lane, explicit PolicyInputBundle profile, closed proposed PolicyDecision shape, 18-test structural boundary suite, structural connector output scanner, legacy pipeline lexical canary, abstain-only governed API scaffold, bounded fixture-only promotion and review profiles, no-write publication-denial dry run, proposed rollback-card fixture validator, placeholder general policy runtime and executable root RollbackCard compatibility shim, empty proposed policy/release registers, historical hydrology automation-smoke APPROVE artifact, disabled promoter entry point, and the pipeline canary's composed-path blind spot / PROPOSED data-action classes, transition identifiers, obligations, reviewer classes, and executable implementation sequence / UNKNOWN accepted data evaluator, active bundle selection, production consumers, authenticated decision emission, branch-protection requirements, runtime enforcement, promotion integration, and public deployment / NEEDS VERIFICATION accepted owners, local scope ID, direct policy/data rule modules, dedicated fixtures and tests, data-policy validator entry point, reason-code registry, receipt/proof bindings, quarantine-exit enforcement, correction propagation, independent review, rollback execution, and disposition of the historical hydrology smoke artifact
 evidence_repository: bartytime4life/Kansas-Frontier-Matrix
 evidence_visibility: public
 evidence_base_ref: main
@@ -71,7 +71,6 @@ related:
   - ../../tests/policy/boundary_constants.py
   - ../../tests/policy/test_control_plane_register_meta_contract.py
   - ../../tests/policy/test_pipeline_connector_non_publisher.py
-  - ../../tests/policy/test_explorer_web_adapter_boundary.py
   - ../../apps/governed-api/tests/test_boundary_guards.py
   - ../../apps/governed-api/src/governed_api/stub.py
   - ../../pipelines/domains/hydrology/promote.py
@@ -111,7 +110,7 @@ notes:
 **Quick navigation:** [Status](#status-and-evidence-boundary) · [Purpose](#purpose) · [Authority](#authority-boundary) · [Scope](#scope) · [Actions](#data-action-classes) · [Inputs](#required-policy-input) · [Transitions](#lifecycle-transition-matrix) · [Outcomes](#finite-outcomes-and-normalization) · [Obligations](#obligations) · [Public boundary](#public-interface-and-non-publisher-boundary) · [Sensitive data](#rights-sensitivity-and-data-minimization) · [Validation](#validation-tests-and-ci) · [Implementation](#smallest-sound-implementation-sequence) · [Rollback](#correction-withdrawal-supersession-and-rollback) · [Done](#definition-of-done) · [Evidence](#evidence-ledger) · [Open](#open-verification-register)
 
 > [!IMPORTANT]
-> **Safe current conclusion:** this README and an empty marker are the entire direct lane; no data-policy module is established here. Accepted Directory Rules v2 confirms the placement, while current code proves only bounded pieces: an 18-test structural boundary suite, a structural connector-output scanner, an abstain-only three-route governed API, fixture-only promotion and review readiness, a proposed RollbackCard validator profile, and five deterministic no-write publication-denial cases. The legacy pipeline canary still misses the hydrology helper's composed `release/promotion_decisions` destination, and that helper can emit `APPROVE` with unresolved support references. None of these surfaces proves data-policy evaluation, lifecycle authorization, EvidenceBundle closure, accountable review, release approval, correction propagation, rollback execution, or publication.
+> **Safe current conclusion:** this README and an empty marker are the entire direct lane; no data-policy module is established here. Accepted Directory Rules v2 confirms the placement, while current code proves only bounded pieces: an 18-test structural boundary suite, a structural connector-output scanner, an abstain-only three-route governed API, fixture-only promotion and review readiness, a proposed RollbackCard validator profile, and five deterministic no-write publication-denial cases. The legacy pipeline canary still misses composed release destinations. The hydrology entry point now returns `HOLD` without writing; its historical `APPROVE` smoke record remains unresolved. None of these surfaces proves data-policy evaluation, lifecycle authorization, EvidenceBundle closure, accountable review, release approval, correction propagation, rollback execution, or publication.
 
 > [!CAUTION]
 > `policy/data/` must never become a second `data/` root. A file under `data/published/`, a passing validator, a catalog record, a triplet, a tile, a merged pull request, or a generated receipt does not by itself prove that publication was authorized.
@@ -135,7 +134,7 @@ notes:
 | Structural boundary suite | **CONFIRMED 18 tests in four modules** | Control-plane metadata, Explorer imports/stores, connector/pipeline outputs, and governed API routes/stores are checked through `make boundary-guards-ci`. |
 | Connector output guard | **CONFIRMED structural scanner** | Selected Python, shell, and YAML connector sinks fail closed unless repository output is statically confined to `data/raw`, `data/quarantine`, or `data/receipts`. It is not runtime confinement. |
 | Pipeline non-publisher canary | **CONFIRMED legacy lexical scan** | Pipeline write contexts still use a five-line contiguous-literal canary for `data/catalog`, `data/published`, and `release/`; computed destinations remain outside that proof. |
-| Hydrology promotion smoke path | **CONFIRMED unsafe scaffold / workflow hold** | The helper composes a release path and emits `APPROVE` with automation review and unresolved evidence/rollback references; CI inspects but does not execute it. |
+| Hydrology promotion smoke path | **CONFIRMED inert entry point / historical record held** | The entry point returns `HOLD` without writing. The old `APPROVE` smoke record has unresolved evidence and rollback references and remains non-authoritative. |
 | Promotion and review readiness | **CONFIRMED bounded fixture-only execution** | `make publish-check` exercises A–G promotion readiness and synthetic ReviewRecord declarations; `PASS` means `APPROVE_READY` for review only. |
 | Publication-denial dry run | **CONFIRMED deterministic no-write execution** | Five synthetic evidence, policy, integrity, sensitivity, and review failures remain blocked without assembling a candidate or writing authority. |
 | Rollback-card readiness | **CONFIRMED mixed** | A schema-declared fixture validator is implemented; the root compatibility entry point delegates to it, the apply helper remains synthetic-only, and no production rollback executes. |
@@ -409,11 +408,11 @@ They do not prove:
 
 ### Confirmed promotion and static-guard gap
 
-`tests/policy/test_pipeline_connector_non_publisher.py` uses the structural scanner for connectors but retains a bounded five-line contiguous-literal scan for selected pipeline write contexts. The hydrology promotion scaffold instead builds its output as `root / "release" / "promotion_decisions" / ...`, so no contiguous `release/` literal appears in that pipeline window. The scaffold then writes a timestamped `APPROVE` record whose EvidenceBundle and rollback-card paths are unresolved and whose reviewer is `automation-smoke`.
+`tests/policy/test_pipeline_connector_non_publisher.py` uses the structural scanner for connectors but retains a bounded five-line contiguous-literal scan for selected pipeline write contexts. At `main@9ec5ccda4e8a664424e9d994167147e5415d5310`, the hydrology promotion scaffold built its output as `root / "release" / "promotion_decisions" / ...`, so no contiguous `release/` literal appeared in that pipeline window. It wrote a timestamped `APPROVE` record with unresolved support and reviewer `automation-smoke`. The entry point now returns a finite hold without writing; the scanner limitation remains for other composed paths.
 
-The all-PR `promotion-gate` workflow currently treats this as a hold, verifies the unsafe markers remain visible, and deliberately does **not** run the helper. It also runs bounded fixture-first A–G promotion and ReviewRecord checks, where `PASS` means `APPROVE_READY` for review only. That containment is useful but incomplete: direct or future invocation outside the holding workflow remains unproved, and the pipeline canary does not cover equivalent composed paths.
+The all-PR `promotion-gate` workflow still holds the historical smoke record, but now checks that the promoter's unsafe write markers are absent. A focused test executes an isolated copy and verifies a finite hold with no file creation. The workflow also runs bounded fixture-first A–G promotion and ReviewRecord checks, where `PASS` means `APPROVE_READY` for review only. The pipeline canary still does not cover equivalent composed paths elsewhere.
 
-Until the scaffold is removed, converted into a non-authoritative dry-run candidate, or protected by a structural destination check and governed support resolution, its output must not be treated as a valid promotion decision, review record, lifecycle transition, release approval, or publication authority.
+The historical smoke record must not be treated as a valid promotion decision, review record, lifecycle transition, release approval, or publication authority. Operational promotion remains held until governed support resolution and accountable review are implemented.
 
 Public clients must use governed interfaces and released public-safe artifacts. No UI, API, map, export, graph, search, embedding, screenshot, cache, or AI answer may treat internal lifecycle data as an ordinary public source.
 
@@ -489,7 +488,7 @@ Anti-patterns include allow-by-default stubs, hidden fetches, path-as-state, UI-
 |---|---|
 | `tests/policy/test_control_plane_register_meta_contract.py` | Control-plane policy/release register metadata contract checks. |
 | `tools/validators/connector_gate/output_paths.py` plus `tests/policy/test_pipeline_connector_non_publisher.py` | Structural/static connector output analysis for selected Python, shell, and YAML sinks, plus a legacy lexical publication-target canary for selected pipelines. |
-| `tests/policy/test_explorer_web_adapter_boundary.py` | Explorer internal-store path-literal guard. |
+| `tests/policy/test_explorer_web_adapter_boundary.py` | **ABSENT at the reviewed base.** Explorer internal-store path-literal guard coverage needs verification; related historical guidance must not be treated as an executable test. |
 | `apps/governed-api/tests/test_boundary_guards.py` | Governed API method/route and internal-store literal guards. |
 | `apps/governed-api/src/governed_api/stub.py` | All three registered routes produce `ABSTAIN` / `NOT_IMPLEMENTED` scaffolds. |
 | `tests/policy/boundary_constants.py` | Shared forbidden internal path literals. |
@@ -497,7 +496,7 @@ Anti-patterns include allow-by-default stubs, hidden fetches, path-as-state, UI-
 | `policy_input_bundle_profile_v1` schema, validator, fixtures, tests, and workflow | A `PROPOSED_INACTIVE`, fixture-only explicit-input profile for five declared contexts; it validates shape and does not evaluate policy. |
 | Bounded Pass 12 Rego profile, native tests, and dedicated OPA CI | One checksum-pinned, `PROPOSED_INACTIVE` release-gate profile outside this lane; it does not establish data-policy execution. |
 | `.github/workflows/policy-test.yml` and twelve focused validator families | The general evaluator remains held while additive fixture-first Python policy checks execute. Passing those checks does not activate this lane. |
-| `pipelines/domains/hydrology/promote.py` and tracked smoke record | A composed-path helper can emit `APPROVE` with automation review and unresolved support references. |
+| `pipelines/domains/hydrology/promote.py` and tracked smoke record | The entry point returns `HOLD` without writing; the historical `APPROVE` smoke record has unresolved support. The pipeline canary's composed-path blind spot remains. |
 | Promotion-gate and ReviewRecord validators plus `.github/workflows/promotion-gate.yml` | Bounded fixture-only readiness runs; the workflow inspects but deliberately does not execute the hydrology helper, and `APPROVE_READY` is not approval. |
 | `tools/release/release_dry_run.py` plus `.github/workflows/release-dry-run.yml` | Five deterministic synthetic denial cases remain `BLOCKED`; the run assembles no candidate and performs no write, network call, release, or publication. |
 | `tools/validators/release/validate_rollback_card.py` and root compatibility shim | Proposed RollbackCard fixtures receive shape/local-consistency validation; the root shim delegates to the canonical validator while the apply helper remains synthetic-only. |
@@ -619,9 +618,9 @@ This lane is not implementation-complete until:
 | seven `schemas/contracts/v1/data/*.json` policy pointers | Each points to `policy/data/` while remaining proposed/inactive; the pointers do not supply executable rules. | CONFIRMED metadata linkage only |
 | `policy_input_bundle_profile_v1` and `PolicyDecision` schema families | Explicit fixture-only input contexts and a closed four-outcome decision shape exist; no accepted data-specific binding is established. | CONFIRMED proposed/inactive shapes |
 | parent policy root, Pass 12 Rego lane, policy-test, and twelve focused validators | Bounded execution exists outside this lane while the general runtime/evaluator remains held or placeholder. | CONFIRMED bounded readiness / no local activation |
-| boundary test files, connector output scanner, and workflow | Eighteen tests cover control metadata, structural/static connector outputs, a legacy pipeline canary, Explorer imports/stores, and governed API routes/stores. | CONFIRMED code/workflow / coverage bounded |
+| boundary test files, connector output scanner, and workflow | The three remaining modules collect 18 tests for control metadata, structural/static connector outputs, a legacy pipeline canary, and governed API routes/stores. The historical Explorer guard module is absent. | CONFIRMED code/workflow / Explorer coverage unverified |
 | governed API route registry and stub | Three routes exist and return `ABSTAIN` / `NOT_IMPLEMENTED`. | CONFIRMED fail-closed scaffold |
-| hydrology promoter, tracked smoke record, promotion/review validators, and `promotion-gate.yml` | Helper emits `APPROVE` through a composed release path; support refs are unresolved; fixture checks run while the workflow holds and does not execute the helper. | CONFIRMED unsafe scaffold / contained in inspected CI |
+| hydrology promoter, tracked smoke record, promotion/review validators, and `promotion-gate.yml` | Promoter returns `PROMOTION_NOT_IMPLEMENTED` without writing; the historical `APPROVE` smoke record has unresolved support; fixture checks do not authorize a transition. | CONFIRMED inert entry point / historical record held |
 | release dry-run tool and workflow | Five synthetic failure profiles deterministically block without candidate assembly, writes, network, authority, release, or publication. | CONFIRMED no-write denial profile |
 | declared RollbackCard validator, root shim, and rollback apply helper | Fixture shape/local consistency is implemented in one profile; the compatibility shim delegates to it, the apply helper remains synthetic-only, and no production rollback executes. | CONFIRMED mixed readiness |
 | open PR, branch-name, and duplicate-identity searches | No overlapping open PR, matching open branch, or competing `kfm://policy/data` document surfaced. | CONFIRMED bounded search |
