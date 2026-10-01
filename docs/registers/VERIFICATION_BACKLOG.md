@@ -158,3 +158,48 @@ Revert this one documentation commit or restore prior blob `fe8aab2f7d3a22c0112a
 The existing documentation checks remain the changed-area validation surface. Hosted checks must classify any failure as introduced or inherited against `main@97f5f965d1a684eedd3f0c61be8af774ee7790a0`.
 
 Rollback is one documentation commit: remove this bounded refresh section and restore the prior `docs/registers/VERIFICATION_BACKLOG.md` blob. No source, contract, schema, policy, fixture, validator, runtime, release, deployment, publication, or repository setting changes with this ledger update.
+
+## Modernization campaign checkpoint — 2026-10-01
+
+**Status:** partial, read-only repository checkpoint. This section records the
+inspected surfaces and next dependencies; it does not declare repository-wide
+completion. **Base:** `main@8a40477bc6f8f102cb6b8fe852a739ded02838fa`.
+Accepted ADR-0029 and the adopted Directory Rules place this human-readable
+checkpoint in the existing `docs/registers/` responsibility root. It creates no
+new register or authority. No live source, hosted Site, deployed API, activated
+release, or rendered browser journey was exercised for this checkpoint.
+
+### Resolved reviewed slices
+
+The following are **CONFIRMED merged** in the GitHub pull-request readback at
+this checkpoint. Each resolves only its stated scope:
+
+| Scope | Merged changes | Boundary retained |
+|---|---|---|
+| Bounded input and pipeline planning | [#4818](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4818), [#4820](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4820), [#4825](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4825) | Numeric and retry behavior was repaired; this does not activate declarative pipelines. |
+| Water capture, freshness, health, and serving | [#4821](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4821), [#4822](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4822), [#4823](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4823), [#4826](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4826), [#4827](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4827) | These changes establish bounded local behavior, not source admission, a public release, or browser acceptance with activated data. |
+| Claim and mirror documentation | [#4819](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4819), [#4824](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4824) | Historical telemetry claims were corrected and the Site mirror hold was recorded, not cleared. |
+
+### Open gap ledger
+
+Priority orders the next investigation or review, not permission to activate
+data or accept a proposed decision. `CONFIRMED` applies only to the cited
+repository fact; a proposed fix remains `PROPOSED` until reviewed.
+
+| ID / priority / status | Evidence and impact | Dependency, owning responsibility root, proposed next slice, and verification |
+|---|---|---|
+| `MOD-01` / P1 / **CONFIRMED hold** | [Water runbook](../runbooks/water-pilot.md#site-mirror-review-checkpoint--2026-10-01) and `tools/qa/site_mirror.py --check` report `MIRROR_REVIEW_REQUIRED`. The monorepo Site and pinned standalone candidate differ; later Site edits increase the successor comparison scope. | Site source owner, `apps/site/source/`, and existing `data/receipts/generated/` and `tools/qa/` roots. Review the next immutable same-Site source commit and each repository overlay before producing a successor receipt. Verify exact hashes, Site tests/build, mirror check, and rendered behavior. Do not overwrite the historical receipt or infer deployment. |
+| `MOD-02` / P1 / **NEEDS VERIFICATION** | `connectors/usgs/water_data/pilot_capture.py` records station IDs per attempt, while `tools/generators/telemetry/water_operational_receipt.py` selects the final failed attempt across the whole capture for each station health object. A second-station failure may be attributed to the first station. No station-specific failure reproduction was run for this checkpoint. | Connector and telemetry owners, `connectors/` and `tools/generators/telemetry/`. Reproduce a mixed-station capture, identify whether the existing SourceHealthAssessment vocabulary can truthfully represent global incompleteness and station-local retrieval, then make a contract-closed change with per-station tests and validator coverage. Preserve `UNAVAILABLE` until candidate closure is proven. |
+| `MOD-03` / P2 / **CONFIRMED inactive; PROPOSED implementation** | [Pipeline specifications](../../pipeline_specs/README.md) say 109 YAML declarations are `NOT_IMPLEMENTED`, and the generic `pipelines/{ingest,validate,catalog,triplets,rollback}/main.py` files are comments only. A named stage is not an executable lifecycle transition. | Pipeline and domain owners, `pipeline_specs/` and `pipelines/`. Select one fixture-first, dependency-closed stage after contract, source-role, evidence, policy, receipt, idempotency, quarantine, and rollback review. Verify its declared profile, negative paths, changed-area tests, and no unauthorized lifecycle write. Do not turn the placeholders into apparent success. |
+| `MOD-04` / P1 / **CONFIRMED proposed hold** | [Telemetry policy boundary](../../policy/telemetry/README.md) labels `no_restricted_coords.rego` a proposed stub with `default deny := false`; the file has no operative denial rule. Its presence cannot be cited as runtime redaction enforcement. | Policy and telemetry owners, `policy/telemetry/`. First settle proposed ADR-0016 and the policy input/consumer boundary, then review a fail-closed rule with restricted-coordinate negative fixtures and active-consumer proof. Until then, keep this module explicitly inactive and do not claim it protects exposed telemetry. |
+| `MOD-05` / P2 / **CONFIRMED partial projection** | `control_plane/verification_backlog.yaml` currently has 747 entries, declares `completeness: partial`, and pins `base_ref: 6994a65843c4999313fda01183b63333213134f3`. The 2026-08-12 statement above that it had zero entries is historical, not current. Human and machine ledger parity is still unverified. | Register and control-plane owners, `docs/registers/` and `control_plane/`. Use the existing projection producer and validator to reconcile only reviewed entries against an exact base. Verify stable IDs, digests, completeness labels, and historical preservation; do not hand-edit a generated registry to imply closure. |
+| `MOD-06` / P2 / **NEEDS VERIFICATION** | Local water package/API/Site tests and Site builds passed for the reviewed slices, but no activated release was used in a browser. A build and an `ANSWER` fixture do not prove the station, evidence, expiry, withdrawal, and export journey is visible and usable. | Site and release owners, `apps/site/source/`, `apps/governed-api/`, and `packages/release/`. After a separately reviewed synthetic or authorized release setup, exercise the normal-scale browser flow, expiry and withdrawal, map rendering, evidence, and export. Record version, source identity, timestamps, and failure states without converting the exercise into owner acceptance or publication. |
+| `MOD-07` / P3 / **UNKNOWN** | This checkpoint did not trace every domain, source adapter, policy bundle, registry, API consumer, scheduled workflow, or public artifact end to end. The machine backlog itself is partial. | Each existing owning responsibility root. Continue the contract-to-implementation-to-test-to-runtime inventory in dependency order; classify each new finding with evidence before editing. Repository-wide completion remains unclaimed. |
+
+### Validation and non-effects
+
+This checkpoint is documentation only. Run the register's current metadata,
+link, freshness, graph, and topology checks; attribute any inherited failure
+separately from a new one. Revert this section to roll back the checkpoint.
+It does not change a validator baseline, receipt, source state, policy rule,
+pipeline activation, release, deployment, publication, or owner acceptance.
