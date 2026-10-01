@@ -305,6 +305,7 @@ jobs:
               Path("tools/validators/promotion_gate/README.md"),
               Path("fixtures/release/promotion_gate/README.md"),
               Path("tests/release/test_promotion_gate.py"),
+              Path("tests/domains/hydrology/test_promotion_hold.py"),
               Path("tests/release/test_review_record.py"),
               Path("policy/promotion/promotion_prerequisites.rego"),
               Path("policy/promotion/rollback_card_required.rego"),
@@ -348,15 +349,17 @@ jobs:
               encoding="utf-8"
           )
           for marker in (
-              "Hydrology promotion gate stub.",
-              '"decision": "APPROVE"',
-              '"reviewer": "automation-smoke"',
-              'emit_stub("run-local-smoke")',
+              "Hydrology promotion is held",
+              '"reason_code": "PROMOTION_NOT_IMPLEMENTED"',
+              '"promotion_authorized": False',
           ):
               assert marker in promoter, (
                   "hydrology promoter changed; review the implementation and wire real "
                   f"fail-closed tests before executing it in CI: missing marker {marker}"
               )
+          assert not any(marker in promoter for marker in (
+              '"decision": "APPROVE"', "emit_stub(", "write_text(", "write_bytes(", "mkdir("
+          )), "hydrology promoter regained approval or write behavior"
 
           review_validator = Path("tools/validators/validate_review_record.py").read_text(
               encoding="utf-8"
@@ -441,8 +444,8 @@ jobs:
           print("CONFIRMED: the separately tested promotion-verification executor inventory is recognized with every authority flag false.")
           print("CONFIRMED: canonical identity syntax and review-time issuance, supplied authority/validity intervals, explicit supersession marking, and empty approving-review obligations were enforced over synthetic context.")
           print("CONFIRMED: the fixture projection creates no governed ReviewRecord or actor authority.")
-          print("WORKFLOW_SKIPPED_EXPLICIT: the hydrology promoter was not executed.")
-          print("WORKFLOW_HOLD: its automation-approved smoke decision has unresolved support refs.")
+          print("WORKFLOW_SKIPPED_EXPLICIT: operational hydrology promotion was not executed.")
+          print("WORKFLOW_HOLD: the historical automation-approved smoke decision has unresolved support refs.")
           print("No review, promotion, release, or publication authority was created.")
           PY
 
@@ -462,7 +465,7 @@ jobs:
             echo "- The bounded promotion gate and fixture-only ReviewRecord profile re-ran here; canonical identity syntax, issuance by review time, a declared authority interval covering evaluation, and an empty approving-review obligations list were checked. PASS is only APPROVE_READY over synthetic declarations."
             echo "- The known promotion-verification execution package is inventory-checked here, but its dedicated workflow remains the authority for its deterministic fixture execution; every lifecycle, promotion, release, deployment, and publication effect remains false."
             echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** no governed release ReviewRecord is present, and no live actor identity or authority assignment was authenticated."
-            echo "- The hydrology promoter was intentionally not run: it writes a timestamped automation-approved smoke decision whose EvidenceBundle and rollback-card paths are unresolved."
+            echo "- The operational hydrology promoter was not run. This job checked its inert markers; the Hydrology proof workflow runs the isolated no-write test. The historical automation-approved smoke decision still has unresolved support paths."
             echo "- Result: ${{ job.status }}. This readiness inventory is not reviewer approval, separation-of-duties proof, promotion, release, rollback readiness, or publication authority."
             echo "- **NEEDS VERIFICATION:** governed review records, authority resolution, support resolution, and the held hydrology promoter remain separate future work."
           } >> "$GITHUB_STEP_SUMMARY"

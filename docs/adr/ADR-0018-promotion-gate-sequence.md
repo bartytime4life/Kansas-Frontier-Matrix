@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0018-promotion-gate-sequence
 title: ADR-0018 — Promotion Gate Sequence
 type: adr
 adr_id: ADR-0018
-version: v1.6
+version: v1.7
 status: proposed
 effective_decision_status: proposed
 owners:
@@ -22,7 +22,7 @@ reviewers_required:
   - Validation and CI stewards
   - Docs steward
 created: 2026-05-09
-updated: 2026-09-13
+updated: 2026-10-01
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -767,7 +767,7 @@ transition.
 | Policy gate register | **CONFIRMED empty PROPOSED register** | No active promotion policy gate is registered |
 | Verification execution adapter | **CONFIRMED fixture-first** | Uses bounded local/fake tool paths; not production signer or policy proof |
 | Release review lane | **CONFIRMED guidance/placeholder inventory** | No authenticated governed review packet established in this evidence set |
-| Hydrology promoter/smoke decision | **CONFIRMED held scaffold** | Automation-authored `APPROVE` with unresolved support; workflow intentionally does not execute it |
+| Hydrology promoter/smoke decision | **CONFIRMED held** | Promoter entry point returns `HOLD` without writing; the historical automation-authored `APPROVE` record has unresolved support and remains non-authoritative |
 | Actual transition/release/publication | **NOT ESTABLISHED** | No authoritative state mutation or public serving proved |
 
 ### Bounded A–G proof
@@ -791,14 +791,16 @@ The current validator establishes a real implementation slice:
 
 It does **not** dereference or authenticate the claims it checks.
 
-### Current dangerous shortcut
+### Hydrology promoter containment — 2026-10-01
 
-The tracked hydrology promoter remains an explicit scaffold that writes an
-automation-smoke `APPROVE` decision with unresolved evidence and rollback
-references. The workflow's correct current behavior is to inspect and hold it,
-not execute it. Graduation requires a separate dependency-closed change with
-real evidence, policy, review, rollback, release, correction, and negative-path
-proof.
+At `main@9ec5ccda4e8a664424e9d994167147e5415d5310`, the tracked
+hydrology promoter still wrote an automation-smoke `APPROVE` decision with
+unresolved evidence and rollback references. The entry point now emits a
+finite `PROMOTION_NOT_IMPLEMENTED` hold and creates no decision file. The
+historical smoke record remains held. Workflow assertions and a focused
+no-write test guard this boundary. Graduation still requires a separate
+dependency-closed change with real evidence, policy, review, rollback,
+release, correction, and negative-path proof.
 
 [Back to top](#top)
 

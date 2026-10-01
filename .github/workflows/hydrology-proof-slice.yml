@@ -198,6 +198,7 @@ jobs:
             "schemas/contracts/v1/governance/readiness_lanes.schema.json"
             "tests/ci/test_readiness_lanes.py"
             "tests/domains/hydrology/test_proof_slice.py"
+            "tests/domains/hydrology/test_promotion_hold.py"
             "tests/e2e/test_hydrology_proof_slice.py"
             "tools/readiness/run_lane.py"
           )
@@ -240,16 +241,19 @@ jobs:
           promotion_text = promotion_path.read_text(encoding="utf-8")
           ast.parse(promotion_text, filename=str(promotion_path))
           for marker in (
-              "Hydrology promotion gate stub",
-              '"decision": "APPROVE"',
-              '"promotion_decisions"',
-              'emit_stub("run-local-smoke")',
+              "Hydrology promotion is held",
+              '"reason_code": "PROMOTION_NOT_IMPLEMENTED"',
+              '"promotion_authorized": False',
           ):
               if marker not in promotion_text:
                   raise SystemExit(
                       "Hydrology promotion code changed. Reassess authority, review, "
                       f"receipts, rollback, and workflow isolation; missing marker: {marker}"
                   )
+          if any(marker in promotion_text for marker in (
+              '"decision": "APPROVE"', "emit_stub(", "write_text(", "write_bytes(", "mkdir("
+          )):
+              raise SystemExit("Hydrology promoter regained approval or write behavior")
 
           makefile = Path("Makefile").read_text(encoding="utf-8")
           target = re.search(
@@ -286,7 +290,7 @@ jobs:
                   "The proof-slice profile is no longer synthetic-only. Real-source proof "
                   "requires source admission under ADR-0009 before CI may run it."
               )
-          print("Proof-slice boundaries are intact; the promotion stub was inspected, not run.")
+          print("Proof-slice boundaries are intact; the promotion hold was inspected, not run.")
           PY
 
       - name: Run the synthetic proof slice
@@ -296,7 +300,7 @@ jobs:
         run: |
           set -euo pipefail
           python tools/readiness/run_lane.py proof-slice | tee proof-slice-result.json
-          python -m pytest -q tests/ci/test_readiness_lanes.py tests/domains/hydrology/test_proof_slice.py tests/e2e/test_hydrology_proof_slice.py
+          python -m pytest -q tests/ci/test_readiness_lanes.py tests/domains/hydrology/test_proof_slice.py tests/domains/hydrology/test_promotion_hold.py tests/e2e/test_hydrology_proof_slice.py
 
           proof_payload="$(find data/proofs/hydrology -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
           if [[ -n "$proof_payload" ]]; then

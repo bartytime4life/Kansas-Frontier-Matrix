@@ -2,13 +2,15 @@
 doc_id: kfm://doc/runbook-hydrology-promotion
 title: Hydrology Promotion Runbook
 type: operational-runbook
-version: v2.0.0
+version: v2.1.0
 status: DRAFT_REPOSITORY_GROUNDED; BOUNDED_PROMOTION_READINESS_ONLY; OPERATIONAL_PROMOTION_HELD; NOT_FOR_LIFE_SAFETY; NON_RELEASE; NON_PUBLICATION
 owners: "@bartytime4life — verified CODEOWNERS route; accountable Hydrology, source, evidence, policy, rights, sensitivity, review, release, operations, correction, and rollback stewardship NEEDS VERIFICATION"
 created: 2026-05-12
-updated: 2026-08-27
+updated: 2026-10-01
 policy_label: repository-facing; hydrology; promotion-preflight; fail-closed; not-for-life-safety; non-publisher
 owning_root: docs/
+responsibility: Prepare bounded Hydrology promotion readiness review without authorizing or executing a lifecycle transition.
+truth_posture: Repository-grounded preflight; operational promotion, source admission, release, and publication remain held.
 path_authority: same-path modernization under accepted ADR-0029 and Directory Rules v2
 authority_effect: none
 source_activation_effect: none
@@ -40,15 +42,9 @@ evidence_snapshot:
   hydrology_published_lane_payloads: 0
   open_pull_requests_touching_target_before_branch: 0
 source_lineage:
-  - title: KFM_Hydrology_Extended_Pro_PDF_Only_Reference_Report_2026-04-21.pdf
-    source_class: PLANNING_LINEAGE
-    use: hydrology-first, source-role, temporal, evidence, no-network, promotion, and rollback framing only
-  - title: KFM Evidence, Documentation & Ideas Atlas — 2026-08-24
-    source_class: NOTION_COORDINATION_ONLY
-    use: preserve documentation, validation, review, merge, release, deployment, promotion, and publication as separate states
-  - title: KFM Markdown Update & Modernization Agent v1.0
-    source_class: CURRENT_TASK_GUIDANCE
-    use: same-path repository-grounded Markdown modernization and focused draft-pull-request delivery
+  - "KFM_Hydrology_Extended_Pro_PDF_Only_Reference_Report_2026-04-21.pdf — PLANNING_LINEAGE; hydrology-first, source-role, temporal, evidence, no-network, promotion, and rollback framing only"
+  - "KFM Evidence, Documentation & Ideas Atlas — 2026-08-24 — NOTION_COORDINATION_ONLY; preserve documentation, validation, review, merge, release, deployment, promotion, and publication as separate states"
+  - "KFM Markdown Update & Modernization Agent v1.0 — CURRENT_TASK_GUIDANCE; same-path repository-grounded Markdown modernization and focused draft-pull-request delivery"
 related:
   - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../doctrine/directory-rules.md
@@ -79,7 +75,7 @@ related:
 notes:
   - The repository implements deterministic, no-network A-G promotion-readiness validation and bounded Hydrology fixture validation; neither is operational promotion.
   - The Hydrology candidate, proof, receipt, and published-data lanes contain guidance or placeholders but no candidate dossier, proof instance, receipt instance, or published payload at the pinned base.
-  - The checked-in Hydrology promoter and automation-smoke decision are explicitly held because they write or declare APPROVE while their EvidenceBundle and rollback references remain unresolved.
+  - The pinned historical Hydrology promoter wrote APPROVE; the current entry point returns HOLD without writing. The automation-smoke decision remains held because its EvidenceBundle and rollback references are unresolved.
   - This runbook prepares and interprets a preflight and review handoff. It never creates a PromotionDecision, ReleaseManifest, review authority, lifecycle transition, release, deployment, promotion, or publication event.
 [/KFM_META_BLOCK_V2] -->
 
@@ -231,7 +227,7 @@ The observations below are pinned to `main@b7663990b81cb3b29fd2891c24720cc1064eb
 | Hydrology receipt lane | `data/receipts/hydrology/` contains `.gitkeep` and a README only | No Hydrology receipt instance exists |
 | Hydrology published lane | `data/published/hydrology/` contains `.gitkeep` and a README only | No released Hydrology payload is established there |
 | Review records | `release/reviews/` contains guidance and an Atmosphere directory; no Hydrology review record is present | Accountable Hydrology review remains absent |
-| Hydrology promoter | `pipelines/domains/hydrology/promote.py` is a timestamped automation-smoke stub that writes `APPROVE` | Do not execute it as a promotion mechanism |
+| Hydrology promoter | `pipelines/domains/hydrology/promote.py` returns `HOLD` / `PROMOTION_NOT_IMPLEMENTED` and writes no decision | It is not a promotion mechanism |
 | Checked-in smoke decision | `run-local-smoke.json` declares `APPROVE` and references missing Hydrology proof and rollback paths | It is held test/scaffold evidence, not an operational decision |
 | Deployment and public read-back | No deployed route, release alias, runtime log, public carrier, invalidation result, or public read-back was established for this procedure | Operational promotion and public recovery remain unknown and held |
 
@@ -509,7 +505,7 @@ Record `SKIPPED`, `NOT_RUN`, `PENDING`, or missing-run evidence exactly. A succe
 | Candidate dossier is absent | No candidate can be promoted | `HOLD` regardless of validator result |
 | Proof, receipt, policy evaluator, review authority, or rollback target is absent | Governance closure is incomplete | `HOLD`, `ABSTAIN`, or `DENY` according to consequence |
 | `run-local-smoke.json` says `APPROVE` | Checked-in scaffold/smoke declaration exists | Ignore as operational authority; retain hold |
-| Promotion workflow passes its promoter-hold job | The stub remained unexecuted and unresolved refs remained visible | `HOLD` remains correct |
+| Promotion workflow passes its promoter-hold job | The inert entry point and unresolved historical smoke refs remain visible | `HOLD` remains correct |
 | Pull request merges | Repository history changed | No candidate, release, deployment, promotion, or publication inference |
 | Public-looking layer or API response is observed without immutable release and evidence support | Exposure does not prove governance | Contain and escalate; do not call it published-safe |
 
@@ -668,7 +664,7 @@ The current synthetic rollback and release profiles do not establish an operatio
 | PromotionDecision profile | **PROPOSED BOUNDED SHAPE** | Accept the semantic/machine profile and authenticate authority before operational use |
 | ReleaseManifest profile | **DUAL PROFILE / FIXTURE ONLY** | Resolve common-versus-Hydrology profile authority and close ref, byte, signature, policy, review, persistence, and consumer behavior |
 | Accountable review | **ABSENT / NEEDS VERIFICATION** | Establish authenticated Hydrology/release roles, authority intervals, separation, obligations, and revocation |
-| Hydrology promoter | **STUB / HOLD** | Replace or retire the timestamped automation-approve stub only through a separately reviewed implementation with no-write dry runs and fail-closed tests |
+| Hydrology promoter | **INERT / HOLD** | Replace the non-writing entry point only through a separately reviewed implementation with no-write dry runs and fail-closed tests |
 | Operational transition executor | **ABSENT / HOLD** | Implement an accepted plan/apply boundary with authorization, idempotency, receipts, partial-failure handling, and rollback |
 | Published carrier and governed consumer parity | **ABSENT / UNKNOWN** | Demonstrate one immutable public-safe carrier through the governed API, map/Evidence Drawer, finite response, citation, correction, and public read-back |
 | Invalidation and rollback | **UNVERIFIED / HOLD** | Exercise real consumer adapters in an approved non-public environment before operational graduation |
