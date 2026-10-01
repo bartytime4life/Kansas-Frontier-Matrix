@@ -1,7 +1,7 @@
 """Bounded public S3 capture of NOAA monthly normals; no admission or publication."""
 from __future__ import annotations
 
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from hashlib import sha256
@@ -76,33 +76,61 @@ def capture(*, fetcher=fetch_object) -> Capture:
     """Capture all Kansas stations in NOAA inventory or mark the result incomplete."""
     started = time.monotonic()
     inventory, metadata = fetcher(INVENTORY_KEY, MAX_INVENTORY_BYTES)
+    if len(inventory) > MAX_INVENTORY_BYTES or len(inventory) > MAX_TOTAL_BYTES:
+        raise NormalsError("CAPTURE_BYTE_LIMIT")
     stations = parse_inventory(inventory)
     if len(stations) > MAX_STATIONS:
         raise NormalsError("STATION_LIMIT")
     inventory_hash = _digest(inventory)
     objects = {inventory_hash: inventory}
     entries, failures = [], []
+    acquired_bytes = len(inventory)
     def bounded_fetch(key, limit):
         if time.monotonic() - started >= MAX_DURATION_SECONDS:
             raise NormalsError("CAPTURE_DEADLINE")
         return fetcher(key, limit)
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as pool:
-        future_to_station = {pool.submit(bounded_fetch, station_key(s["station_id"]), MAX_STATION_BYTES): s
-                             for s in stations}
-        for future in as_completed(future_to_station):
-            station = future_to_station[future]
-            key = station_key(station["station_id"])
-            try:
-                raw, head = future.result()
-                digest = _digest(raw)
-                objects[digest] = raw
-                entries.append({"station_id": station["station_id"], "key": key,
-                                "sha256": digest, "bytes": len(raw), **head})
-            except (NormalsError, OSError, ValueError):
-                failures.append(station["station_id"])
+        pending = {}
+        remaining = iter(stations)
+        def submit_available():
+            while len(pending) < MAX_WORKERS:
+                available = MAX_TOTAL_BYTES - acquired_bytes - sum(reserved for _, reserved in pending.values())
+                # Wait for in-flight reservations to settle before reducing a station's limit.
+                if available < 2 or (pending and available < MAX_STATION_BYTES + 1):
+                    return
+                try:
+                    station = next(remaining)
+                except StopIteration:
+                    return
+                reserved = min(MAX_STATION_BYTES + 1, available)
+                future = pool.submit(bounded_fetch, station_key(station["station_id"]), reserved - 1)
+                pending[future] = (station, reserved)
+        submit_available()
+        while pending:
+            done, _ = wait(pending, return_when=FIRST_COMPLETED)
+            for future in done:
+                station, reserved = pending.pop(future)
+                key = station_key(station["station_id"])
+                try:
+                    raw, head = future.result()
+                    if not raw or len(raw) >= reserved:
+                        raise NormalsError("CAPTURE_BYTE_LIMIT" if reserved < MAX_STATION_BYTES + 1
+                                           else "PROVIDER_SIZE")
+                    acquired_bytes += len(raw)
+                    digest = _digest(raw)
+                    objects[digest] = raw
+                    entries.append({"station_id": station["station_id"], "key": key,
+                                    "sha256": digest, "bytes": len(raw), **head})
+                except NormalsError as exc:
+                    if reserved < MAX_STATION_BYTES + 1 and str(exc) in {"PROVIDER_SIZE", "CAPTURE_BYTE_LIMIT"}:
+                        raise NormalsError("CAPTURE_BYTE_LIMIT") from None
+                    failures.append(station["station_id"])
+                except (OSError, ValueError):
+                    failures.append(station["station_id"])
+            submit_available()
+        if len(entries) + len(failures) < len(stations):
+            raise NormalsError("CAPTURE_BYTE_LIMIT")
     entries.sort(key=lambda item: item["station_id"])
-    if sum(len(value) for value in objects.values()) > MAX_TOTAL_BYTES:
-        raise NormalsError("CAPTURE_BYTE_LIMIT")
     complete = not failures and len(entries) == len(stations) and time.monotonic() - started <= MAX_DURATION_SECONDS
     manifest = {"profile": "kfm.noaa-monthly-normals-capture/v1", "source_id": "noaa-ncei-climate-normals",
                 "period": "1991-2020", "product": "normals-monthly", "state": "KS",

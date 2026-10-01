@@ -6,7 +6,10 @@ from hashlib import sha256
 from io import StringIO
 from pathlib import Path
 import sys
+from threading import Lock
+import time
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
@@ -123,6 +126,36 @@ class NormalTests(unittest.TestCase):
         self.assertEqual(acquired.manifest["failed_station_ids"], ["USC00140010"])
         with self.assertRaises(ValueError):
             normalize_capture(acquired.manifest, acquired.objects)
+
+    def test_total_budget_bounds_in_flight_fetches_and_stops_oversized_capture(self):
+        inventory = ("\n".join(inventory_line(f"USC0014{i:04d}") for i in range(10)) + "\n").encode()
+        budget = len(inventory) + 300
+        lock = Lock()
+        active = peak = 0
+        requested = []
+
+        def fake(key, limit):
+            nonlocal active, peak
+            if key == INVENTORY_KEY:
+                return inventory, {"retrieved_at": "2026-10-01T00:00:00Z", "status": 200}
+            with lock:
+                active += limit + 1  # The real fetcher may read one byte past its limit.
+                peak = max(peak, active)
+                requested.append(key)
+            try:
+                time.sleep(0.02)
+                if limit < 100:
+                    raise NormalsError("PROVIDER_SIZE")
+                return b"x" * 100, {"retrieved_at": "2026-10-01T00:00:01Z", "status": 200}
+            finally:
+                with lock:
+                    active -= limit + 1
+
+        with patch("noaa.climate_normals_capture.MAX_TOTAL_BYTES", budget):
+            with self.assertRaisesRegex(NormalsError, "CAPTURE_BYTE_LIMIT"):
+                capture(fetcher=fake)
+        self.assertLessEqual(peak, budget - len(inventory))
+        self.assertEqual(len(requested), 3)
 
 
 if __name__ == "__main__":
