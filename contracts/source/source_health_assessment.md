@@ -1,13 +1,16 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://contract/source/source-health-assessment
 title: SourceHealthAssessment Contract
-type: semantic-contract; source-health; watcher-sidecar
-version: v0.2.0
+type: contract
+version: v0.3.0
 status: proposed; offline-validation; non-authoritative
 owners: OWNER_TBD — Source steward · Contract steward · Validation steward
 created: 2026-08-07
-updated: 2026-08-14
+updated: 2026-10-01
 policy_label: public; source; source-health; non-publisher; no-network
+owning_root: contracts/
+responsibility: Define finite non-publishing source-health states and their fail-closed validation semantics.
+truth_posture: CONFIRMED bounded offline validation / NEEDS VERIFICATION live source integration
 related:
   - ../../schemas/contracts/v1/source/source_health_assessment.schema.json
   - ../../fixtures/contracts/v1/source/source_health_assessment/
@@ -63,7 +66,7 @@ Each assessment records:
 - a material-change signal; and
 - one or more finite reason codes.
 
-Finite health outcomes are `HEALTHY`, `DEGRADED`, `STALE`, `UNAVAILABLE`, and `UNKNOWN`. Retrieval classes are `SUCCESS`, `NOT_MODIFIED`, `EMPTY`, `TIMEOUT`, `HTTP_ERROR`, `PARSE_ERROR`, `AUTH_ERROR`, and `NOT_PROBED`.
+Finite health outcomes are `HEALTHY`, `DEGRADED`, `STALE`, `UNAVAILABLE`, and `UNKNOWN`. Retrieval classes are `SUCCESS`, `NOT_MODIFIED`, `EMPTY`, `TIMEOUT`, `HTTP_ERROR`, `ACQUISITION_ERROR`, `PARSE_ERROR`, `AUTH_ERROR`, and `NOT_PROBED`. `ACQUISITION_ERROR` covers failed acquisition whose cause cannot be classified more precisely from the recorded evidence; it carries `RETRIEVAL_FAILED` and cannot be `HEALTHY`.
 
 ## Fail-closed consistency rules
 
@@ -107,7 +110,7 @@ python tools/validators/source/validate_source_health_assessment.py \
   fixtures/contracts/v1/source/source_health_assessment/valid/healthy_not_modified.json
 ```
 
-The focused suite covers healthy, stale, unavailable, and unknown observations; exact negative cases; Draft 2020-12 schema validity; bounded input; symbolic links; duplicate keys; non-finite numbers; root shape; value-minimized findings; deterministic JSON output; credential-free execution; and a no-network assertion.
+The focused suite covers healthy, stale, unavailable, unknown, and unclassified acquisition observations; exact negative cases; Draft 2020-12 schema validity; bounded input; symbolic links; duplicate keys; non-finite numbers; root shape; value-minimized findings; deterministic JSON output; credential-free execution; and a no-network assertion. The workflow replays the immutable 2026-08-14 authoring receipt against its exact ancestor commit; current behavior is checked by the current tests, not inferred from that historical receipt.
 
 ## Directory Rules basis
 
@@ -115,6 +118,6 @@ Accepted ADR-0029 adopts `docs/doctrine/directory-rules.md`. Under its responsib
 
 ## Compatibility and rollback
 
-The object name, required core fields, existing enums, optional ETag/Last-Modified posture, and documented fail-closed rules remain compatible with v0.1. The validator CLI now emits a deterministic finite JSON envelope instead of free-form `valid` or error text; repository search found no caller other than its focused test at the implementation baseline.
+The v0.3 addition of `ACQUISITION_ERROR` preserves existing values and fields, but consumers that exhaustively switch on `result_class` must handle the new value. Repository search at `main@a1c92e239a260751ee16c9d37e5bc92830cece51` found no such consumer beyond the water producer and this validator; external consumers remain `NEEDS VERIFICATION`.
 
-Before merge, close the draft pull request and retire its branch. After an authorized merge, revert the additive workflow, fixtures, receipt, contract expansion, schema constraints, validator, and tests together. No live source, external state, lifecycle record, release, or public artifact requires operational rollback.
+Rollback is a revert of the enum, water producer, validator, tests, workflow replay change, and behavior-linked documentation together. The historical authoring receipt stays immutable. Existing lifecycle objects are not relabeled or rewritten by a code revert; correction of any emitted assessment requires its own governed action.

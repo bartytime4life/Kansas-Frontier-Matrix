@@ -68,6 +68,10 @@ headers and content hashes survive normalization. Null remains missing, not zero
 Candidate freshness and coverage count only observations with a non-null flow
 value; a timestamp on a null reading cannot make a station recent.
 Revision conflicts and malformed completeness claims fail validation.
+Station-health receipts distinguish recorded timeout, HTTP and access failures
+from a complete capture that fails normalization. Incomplete acquisition without
+a more specific recorded cause is `ACQUISITION_ERROR`, not a claimed parse error.
+An immutable candidate-store conflict is an operation error, not source quarantine.
 
 The dated acceptance capture returned four HTTP 200 responses and 193 discharge
 observations across two stations (96 and 97), for the interval above.

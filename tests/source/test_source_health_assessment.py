@@ -116,6 +116,13 @@ class SourceHealthAssessmentTests(unittest.TestCase):
         self.assertNotIn("etag", _load("valid/unknown_not_probed.json"))
         self.assertNotIn("last_modified", _load("valid/unknown_not_probed.json"))
 
+    def test_acquisition_error_is_a_failed_unavailable_probe(self) -> None:
+        value = _load("valid/unavailable_timeout.json")
+        value["result_class"] = "ACQUISITION_ERROR"
+        self.assertEqual(MODULE.validate_payload(value).outcome, "PASS")
+        value["health_outcome"] = "HEALTHY"
+        self.assertEqual(MODULE.validate_payload(value).outcome, "DENY")
+
     def test_compatibility_wrapper_returns_finite_denial_codes(self) -> None:
         codes = MODULE.validate_doc(_load("invalid/material_change_without_reason.json"))
         self.assertEqual(codes, ["SOURCE_HEALTH_MATERIAL_REASON_REQUIRED"])

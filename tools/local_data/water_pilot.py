@@ -57,6 +57,9 @@ def stage(root: Path, acquired: Capture) -> dict:
         try:
             candidate = normalize_capture(manifest, acquired.objects)
             validation = validate_candidate(candidate)
+        except (ValueError, KeyError, TypeError):
+            outcome, reason, candidate_id, counts = "QUARANTINED", "CAPTURE_OR_NORMALIZATION_INVALID", None, {}
+        else:
             candidate_path = root / "data/work/hydrology/usgs-nwis" / candidate["candidate_id"].split(":")[1] / "candidate.json"
             immutable(candidate_path, canonical_bytes(candidate))
             immutable(root / "data/receipts/validation/hydrology" / candidate["candidate_id"].split(":")[1] / "validation.json",
@@ -64,8 +67,6 @@ def stage(root: Path, acquired: Capture) -> dict:
             outcome, reason = "CANDIDATE_READY", "REVIEW_REQUIRED"
             candidate_id = candidate["candidate_id"]
             counts = {"stations": len(candidate["stations"]), "observations": len(candidate["observations"])}
-        except (ValueError, KeyError, TypeError):
-            outcome, reason, candidate_id, counts = "QUARANTINED", "CAPTURE_OR_NORMALIZATION_INVALID", None, {}
         receipt = {"profile": "kfm.water-pilot-run/v1", "run_id": run,
                    "capture_id": expected, "candidate_id": candidate_id,
                    "outcome": outcome, "reason_code": reason, "counts": counts,
