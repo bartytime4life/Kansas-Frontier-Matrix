@@ -16,6 +16,7 @@ import time
 from connectors_core.bounded_curl import BoundedCurlTransport
 from connectors_core.core import RetryPolicy, TransportCategory
 from connectors_core.transport import TransportProfile, TransportRequest, execute_retrieval
+from tools.local_data.candidate_capture import create_candidate, write_candidate
 
 from . import plss_cadnsdi as plss
 
@@ -60,12 +61,6 @@ def _digest(body: bytes) -> str:
     return "sha256:" + sha256(body).hexdigest()
 
 
-def _write_new(path: Path, body: bytes) -> None:
-    with path.open("xb") as target:
-        target.write(body)
-        target.flush()
-
-
 def capture(layer: str, destination: Path, *, transport=None, clock=None) -> CaptureResult:
     """Capture a whole Kansas layer or leave an explicit incomplete candidate.
 
@@ -78,7 +73,7 @@ def capture(layer: str, destination: Path, *, transport=None, clock=None) -> Cap
         raise ValueError("DESTINATION_PATH")
     clock = clock or SystemClock()
     transport = transport or LiveTransport()
-    destination.mkdir(mode=0o700, parents=False, exist_ok=False)
+    create_candidate(destination)
     began = clock.monotonic()
     manifest = {
         "profile": "kfm.blm-plss-capture/v1", "source_id": "blm.plss-cadnsdi",
@@ -104,7 +99,7 @@ def capture(layer: str, destination: Path, *, transport=None, clock=None) -> Cap
 
     try:
         count_body = get(plss.count_url(layer))
-        _write_new(destination / "count-before.json", count_body)
+        write_candidate(destination, "count-before.json", count_body)
         expected = plss.parse_count(count_body, status=200, layer=layer)
         manifest["count_before"] = expected
         if expected > plss.MAX_PAGE * MAX_PAGES:
@@ -116,7 +111,7 @@ def capture(layer: str, destination: Path, *, transport=None, clock=None) -> Cap
             url = plss.query_url(layer, offset=offset)
             body = get(url)
             name = f"page-{page_number:04d}.geojson"
-            _write_new(destination / name, body)
+            write_candidate(destination, name, body)
             manifest["total_bytes"] += len(body)
             manifest["pages"].append({"file": name, "url": url, "sha256": _digest(body),
                                       "bytes": len(body), "retrieved_at": _stamp(clock),
@@ -135,7 +130,7 @@ def capture(layer: str, destination: Path, *, transport=None, clock=None) -> Cap
                 previous_id = parsed.features[-1].object_id
             manifest["feature_count"] += len(parsed.features)
         after_body = get(plss.count_url(layer))
-        _write_new(destination / "count-after.json", after_body)
+        write_candidate(destination, "count-after.json", after_body)
         manifest["count_after"] = plss.parse_count(after_body, status=200, layer=layer)
         if manifest["feature_count"] != expected or manifest["count_after"] != expected:
             raise ValueError("COUNT_CHANGED")
@@ -149,7 +144,7 @@ def capture(layer: str, destination: Path, *, transport=None, clock=None) -> Cap
     manifest["finished_at"] = _stamp(clock)
     canonical = json.dumps(manifest, sort_keys=True, separators=(",", ":")).encode("utf-8")
     manifest["capture_id"] = _digest(canonical)
-    _write_new(destination / "manifest.json", json.dumps(manifest, sort_keys=True, indent=2).encode("utf-8") + b"\n")
+    write_candidate(destination, "manifest.json", json.dumps(manifest, sort_keys=True, indent=2).encode("utf-8") + b"\n")
     return CaptureResult(destination, manifest)
 
 

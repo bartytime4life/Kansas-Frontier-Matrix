@@ -559,19 +559,19 @@
       "site_sha256": "4cc3aded483e7418ded8cad84d89e35281eb711587523f2d5b2129c5b72de628",
       "state": "identical"
     },
-    "app/knowledge/[id]/page.tsx": {
-      "mirror_sha256": "ed1e60faa7ee9618f0c377635531bdae27304db81ca17ca025208a7e6deeb654",
-      "site_sha256": "ed1e60faa7ee9618f0c377635531bdae27304db81ca17ca025208a7e6deeb654",
-      "state": "identical"
-    },
     "app/knowledge/knowledge.module.css": {
       "mirror_sha256": "107cf138624aa97af0d3bea3cfab8247a1cbdaa43da0d212a53c63571c72d1c8",
       "site_sha256": "107cf138624aa97af0d3bea3cfab8247a1cbdaa43da0d212a53c63571c72d1c8",
       "state": "identical"
     },
     "app/knowledge/page.tsx": {
-      "mirror_sha256": "7c9f0c920fc88d5026016b4a8a86cf8a7baac10b106cc77d7dfa78ca8e138600",
-      "site_sha256": "7c9f0c920fc88d5026016b4a8a86cf8a7baac10b106cc77d7dfa78ca8e138600",
+      "mirror_sha256": "9b92d03a4fabd7151c69232999bc2e7cd3a7e707e2797f2cf8e18cb6ee8faa00",
+      "site_sha256": "9b92d03a4fabd7151c69232999bc2e7cd3a7e707e2797f2cf8e18cb6ee8faa00",
+      "state": "identical"
+    },
+    "app/knowledge/record/page.tsx": {
+      "mirror_sha256": "48e1a3696a7938ec4a2744d5cbb4ac095abad9c0a812cd810d2941b3dcfbe700",
+      "site_sha256": "48e1a3696a7938ec4a2744d5cbb4ac095abad9c0a812cd810d2941b3dcfbe700",
       "state": "identical"
     },
     "app/layer-workspaces.ts": {
@@ -1428,9 +1428,9 @@
   },
   "site_base_source_commit": "75d749ed5711ab20e3edabeb1c6ba135417ec1c0",
   "site_base_version": 131,
-  "site_candidate_commit": "f35a996f2ddd1a67d49661efc9817254431249b9",
+  "site_candidate_commit": "041f626585804e5c90b8075cc506aeff5333d3b1",
   "site_candidate_deployed": false,
-  "site_candidate_parent": "6e8d79e507741608e8f5475c53fe82fb668b44fa",
+  "site_candidate_parent": "f35a996f2ddd1a67d49661efc9817254431249b9",
   "site_candidate_version": null,
   "site_changed_files": [
     "app/api/crop-casma/availability/route.ts",
@@ -1446,9 +1446,9 @@
     "app/governed-water.ts",
     "app/kansas-knowledge-server.ts",
     "app/kansas-knowledge.ts",
-    "app/knowledge/[id]/page.tsx",
     "app/knowledge/knowledge.module.css",
     "app/knowledge/page.tsx",
+    "app/knowledge/record/page.tsx",
     "app/layer-workspaces.ts",
     "app/live-context.ts",
     "app/map-layers.css",

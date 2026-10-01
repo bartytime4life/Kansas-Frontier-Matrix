@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import Link from "next/link";
 import styles from "../knowledge.module.css";
 
@@ -15,12 +14,11 @@ type KnowledgeRecord = {
 type Result = { envelope: { outcome: string; reason_code: string }; data?: { records: KnowledgeRecord[]; release_id: string; reviewed_at: string; released_at: string } };
 
 export default function KnowledgeRecordPage() {
-  const params = useParams<{ id: string }>();
-  const id = params?.id ?? "";
   const [result, setResult] = useState<Result | null>(null);
   const [busy, setBusy] = useState(true);
   useEffect(() => {
     const abort = new AbortController();
+    const id = new URLSearchParams(window.location.search).get("id") ?? "";
     setBusy(true);
     fetch(`/api/governed/v1/knowledge?id=${encodeURIComponent(id)}`, { signal: abort.signal, cache: "no-store" })
       .then(async response => {
@@ -31,7 +29,7 @@ export default function KnowledgeRecordPage() {
       .catch(error => { if (error.name !== "AbortError") setResult({ envelope: { outcome: "ERROR", reason_code: "STORE_UNAVAILABLE" } }); })
       .finally(() => { if (!abort.signal.aborted) setBusy(false); });
     return () => abort.abort();
-  }, [id]);
+  }, []);
 
   const record = result?.data?.records?.[0];
   return <main className={styles.page}>

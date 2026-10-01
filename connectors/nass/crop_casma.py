@@ -14,6 +14,7 @@ from xml.etree import ElementTree
 import argparse
 import json
 import re
+from tools.local_data.candidate_capture import create_candidate, write_candidate
 
 BASE = "https://cloud.csiss.gmu.edu/smap_server/cgi-bin/mapserv"
 KANSAS_BOUNDS_5070 = (-534000, 1549000, 125000, 1904000)
@@ -86,19 +87,19 @@ def bounded_fetch(url: str, media: str, limit: int) -> bytes:
 
 def capture(day: str, destination: Path) -> dict:
     capabilities_url, coverage_url = request_urls(day)
-    destination.mkdir(mode=0o700, parents=False, exist_ok=False)
+    create_candidate(destination)
     manifest = {"profile": "kfm.crop-casma-capture/v1", "day": day, "layer": layer_name(day),
         "state": "HOLD", "release_state": "UNRELEASED", "source_id": "usda-nass-crop-casma-1km",
         "bounds_5070": KANSAS_BOUNDS_5070, "capabilities_url": capabilities_url,
         "coverage_url": coverage_url, "retrieved_at": datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")}
     try:
         capabilities = bounded_fetch(capabilities_url, "text/xml", MAX_CAPABILITIES)
-        (destination / "capabilities.xml").write_bytes(capabilities)
+        write_candidate(destination, "capabilities.xml", capabilities)
         manifest["capabilities_sha256"] = "sha256:" + sha256(capabilities).hexdigest()
         if not advertised(capabilities, day):
             raise CaptureError("DAY_NOT_ADVERTISED")
         coverage = bounded_fetch(coverage_url, "image/tiff", MAX_COVERAGE)
-        (destination / "source.tif").write_bytes(coverage)
+        write_candidate(destination, "source.tif", coverage)
         manifest["source_sha256"] = "sha256:" + sha256(coverage).hexdigest()
         if coverage[:4] not in (b"II*\x00", b"MM\x00*"):
             raise CaptureError("NOT_TIFF")
@@ -106,7 +107,7 @@ def capture(day: str, destination: Path) -> dict:
         manifest["reason_code"] = None
     except CaptureError as error:
         manifest["reason_code"] = str(error)
-    (destination / "manifest.json").write_text(json.dumps(manifest, sort_keys=True, indent=2) + "\n")
+    write_candidate(destination, "manifest.json", (json.dumps(manifest, sort_keys=True, indent=2) + "\n").encode("utf-8"))
     return manifest
 
 

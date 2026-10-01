@@ -13,6 +13,7 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable
+from tools.local_data.candidate_capture import create_candidate, write_candidate
 
 SERVICE = "https://carto.nationalmap.gov/arcgis/rest/services/geonames/MapServer/3/query"
 NAME = re.compile(r"[A-Za-z0-9 .-]{1,120}\Z")
@@ -97,7 +98,7 @@ def parse(body: bytes, name: str) -> tuple[str, list[dict]]:
 
 def capture(name: str, directory: Path, transport: Fetch = fetch, now: Callable[[], datetime] = lambda: datetime.now(timezone.utc)) -> dict:
     url = query_url(name)
-    directory.mkdir(parents=True, exist_ok=False)
+    create_candidate(directory)
     retrieved_at = now().astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
     status = "INCOMPLETE"
     records: list[dict] = []
@@ -111,7 +112,7 @@ def capture(name: str, directory: Path, transport: Fetch = fetch, now: Callable[
             raise ValueError("PROVIDER_HTTP_ERROR")
         if len(body) > MAX_BYTES:
             raise ValueError("PROVIDER_SIZE_LIMIT")
-        (directory / "source.geojson").write_bytes(body)
+        write_candidate(directory, "source.geojson", body)
         status, records = parse(body, name)
     except ValueError as error:
         reason = str(error)
@@ -124,7 +125,7 @@ def capture(name: str, directory: Path, transport: Fetch = fetch, now: Callable[
         "source_admission": "PENDING", "rights_review": "PENDING", "sensitivity_review": "PENDING",
         "release_state": "UNRELEASED",
     }
-    (directory / "manifest.json").write_text(json.dumps(manifest, sort_keys=True, indent=2) + "\n")
+    write_candidate(directory, "manifest.json", (json.dumps(manifest, sort_keys=True, indent=2) + "\n").encode("utf-8"))
     return manifest
 
 

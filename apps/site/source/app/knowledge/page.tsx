@@ -49,7 +49,7 @@ export default function KansasKnowledgePage() {
       {!busy && result?.envelope.reason_code === "RELEASED" && <><p className={styles.release}>Released {result.data?.released_at?.slice(0, 10)} · {records.length} shown{result.data?.has_more ? " · more results exist; narrow your search" : ""}</p>
         <div className={styles.cards}>{records.map(record => <article key={record.record_id} className={styles.card}>
           <div className={styles.tags}><span>{record.kind}</span><span>{record.geometry_role}</span><span>{record.time_start ? `${record.time_start}${record.time_end && record.time_end !== record.time_start ? `–${record.time_end}` : ""}` : "Time unspecified"}</span></div>
-          <h2><Link href={`/knowledge/${encodeURIComponent(record.record_id)}`}>{record.title}</Link></h2><p>{record.summary}</p><p className={styles.place}>{record.location_label}</p>
+          <h2><Link href={`/knowledge/record?id=${encodeURIComponent(record.record_id)}`}>{record.title}</Link></h2><p>{record.summary}</p><p className={styles.place}>{record.location_label}</p>
           <div className={styles.assertions}>{record.assertions.map((item, index) => <p key={`${record.record_id}-${index}`}><strong>{item.status === "documented" ? "Documented" : item.status === "conflicting" ? "Conflicting account" : "Narrative interpretation"}</strong> {item.text}</p>)}</div>
           <footer><a href={record.source_url} target="_blank" rel="noopener noreferrer">Official source ↗</a><small>Evidence {record.evidence_ref} · review {record.review_ref}</small></footer>
         </article>)}</div>
