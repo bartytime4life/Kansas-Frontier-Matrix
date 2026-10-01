@@ -187,6 +187,25 @@ def test_private_store_replay_and_failed_capture_preserves_candidate(tmp_path):
     assert not list((root / "data/processed").rglob("*"))
 
 
+def test_replay_binds_requested_capture_to_stored_manifest(tmp_path):
+    root = tmp_path / "store"
+    init_store(root)
+    source = acquired()
+    actual_id = source.manifest["capture_id"]
+    first = stage(root, source)
+    wrong_id = "sha256:" + "0" * 64
+    original = root / "data/quarantine/usgs-nwis/runs" / actual_id.split(":")[1] / "manifest.json"
+    misplaced = root / "data/quarantine/usgs-nwis/runs" / wrong_id.split(":")[1] / "manifest.json"
+    misplaced.parent.mkdir(parents=True)
+    misplaced.write_bytes(original.read_bytes())
+
+    with pytest.raises(ValueError, match="CAPTURE_PATH_ID_MISMATCH"):
+        replay(root, wrong_id)
+
+    assert not (root / "data/receipts/ingest/usgs-nwis" / wrong_id.split(":")[1]).exists()
+    assert replay(root, actual_id) == first
+
+
 def test_stage_rejects_excess_objects_before_writing(tmp_path):
     root = tmp_path / "store"
     init_store(root)

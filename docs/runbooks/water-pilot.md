@@ -141,8 +141,10 @@ Use an absolute, owner-private external data root (not inside the checkout):
 ```
 
 Replace digest placeholders with returned identities. Rerunning replay never
-changes captured bytes or invents approvals. Failed validation preserves raw
-bytes and writes a quarantine outcome. Valid candidates remain WORK;
+changes captured bytes or invents approvals. Replay requires the manifest's
+capture ID to match the requested immutable run path before loading page
+objects. A mismatched path is an operation error. Failed validation preserves
+raw bytes and writes a quarantine outcome. Valid candidates remain WORK;
 source admission, rights and release remain pending. Earlier valid candidates
 are not overwritten. Package preparation checks that the requested candidate
 digest matches the identity inside the stored WORK candidate before writing a
