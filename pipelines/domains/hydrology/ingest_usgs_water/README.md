@@ -2,7 +2,7 @@
 doc_id: kfm://doc/pipelines-domains-hydrology-ingest-usgs-water-readme
 title: Hydrology USGS Water Ingest Pipeline README
 type: readme
-version: v0.1
+version: v0.2
 status: draft
 owners:
   - <hydrology-pipeline-owner>
@@ -14,7 +14,7 @@ owners:
   - <release-steward>
   - <docs-steward>
 created: 2026-06-13
-updated: 2026-06-13
+updated: 2026-10-01
 policy_label: public
 path: pipelines/domains/hydrology/ingest_usgs_water/README.md
 related:
@@ -30,7 +30,7 @@ related:
   - docs/domains/hydrology/PUBLICATION_POSTURE.md
   - docs/sources/catalog/usgs/nwis-water.md
   - docs/sources/catalog/usgs/README.md
-  - pipeline_specs/hydrology/ingest_usgs_water.yaml
+  - pipeline_specs/hydrology/ingest_usgs_nwis.yaml
   - contracts/domains/hydrology/
   - schemas/contracts/v1/domains/hydrology/
   - policy/domains/hydrology/
@@ -41,13 +41,10 @@ related:
   - data/quarantine/hydrology/
   - data/processed/hydrology/
   - data/catalog/domain/hydrology/
-  - data/triplets/hydrology/
   - data/registry/sources/hydrology/
-  - data/registry/sources/usgs/
   - data/receipts/pipeline/
   - data/proofs/evidence_bundle/
   - release/candidates/hydrology/
-  - release/manifests/hydrology/
 tags:
   - kfm
   - pipelines
@@ -69,7 +66,7 @@ tags:
   - policy
   - governance
 notes:
-  - "This README fills the blank pipelines/domains/hydrology/ingest_usgs_water path as a nested executable USGS Water ingest sublane."
+  - "This README defines a proposed USGS Water ingest sublane; this directory contains no executable implementation at the checked revision."
   - "USGS Water ingest logic is executable implementation support only; it does not own USGS source descriptors, source catalog profiles, connector/fetch logic, schemas, policy, lifecycle data, catalog truth, hydrologic truth, operational decisions, or release decisions."
   - "The subdirectory name uses the requested underscore form ingest_usgs_water; if repo slug rules prefer hyphenated names, record the path decision with ADR/path-map/rollback notes before moving."
   - "USGS Water source-role split must be preserved: instantaneous values and peak flows are observed, daily values and annual statistics are aggregates, and site metadata is administrative."
@@ -82,7 +79,7 @@ notes:
 
 # USGS Water Hydrology Ingest Pipeline
 
-> Executable Hydrology sublane for normalizing admitted USGS Water Data / NWIS source captures into governed work candidates, quarantine records, validation handoffs, receipts, and downstream catalog/release-review packages — without collapsing provisional values into approved values, instantaneous observations into daily aggregates, site metadata into observations, or observed readings into official current guidance.
+> Proposed Hydrology sublane for normalizing admitted USGS Water Data / NWIS source captures into governed work candidates, quarantine records, validation handoffs, receipts, and downstream catalog/release-review packages — without collapsing provisional values into approved values, instantaneous observations into daily aggregates, site metadata into observations, or observed readings into official current guidance.
 
 ![status](https://img.shields.io/badge/status-draft-blue)
 ![root](https://img.shields.io/badge/root-pipelines%2F-0a7ea4)
@@ -100,6 +97,18 @@ notes:
 **Sublane:** USGS Water ingest / station time-series normalization  
 **Placement posture:** nested executable sublane under `pipelines/domains/hydrology/`; concrete executable behavior remains `PROPOSED / NEEDS VERIFICATION` unless backed by tests and repo evidence  
 **Public posture:** no direct publication; USGS Water-derived output is work/quarantine/validation input only and requires downstream evidence, policy, catalog, release, correction, and rollback closure
+
+**Currentness — `main@02cce9e8f187c3ae7c79a206102f88c8462803e9` (2026-10-01):**
+This directory contains only this README. The related
+`pipeline_specs/hydrology/ingest_usgs_nwis.yaml` declaration remains
+`PROPOSED_INACTIVE` and `NOT_IMPLEMENTED`, with no implementation binding.
+A separate bounded water pilot runs through
+`connectors/usgs/water_data/pilot_capture.py`,
+`pipelines/domains/hydrology/normalize.py`,
+`pipelines/domains/hydrology/validate.py`, and
+`tools/local_data/water_pilot.py`; its existence does not activate this proposed
+sublane or its pipeline declaration. The scope and handoffs below describe a
+design for review, not verified behavior in this directory.
 
 ---
 
@@ -125,9 +134,10 @@ notes:
 
 ## 1. Purpose
 
-`pipelines/domains/hydrology/ingest_usgs_water/` is the executable sublane for USGS Water Data / NWIS normalization inside the Hydrology domain.
+`pipelines/domains/hydrology/ingest_usgs_water/` is a proposed home for USGS
+Water Data / NWIS normalization inside the Hydrology domain.
 
-It supports candidate processing for:
+The proposed scope includes candidate processing for:
 
 - USGS site metadata, station identity, site location, datum, and monitoring-program context;
 - instantaneous values (IV) such as discharge, gage height, water temperature, precipitation, and groundwater level where admitted;
@@ -140,7 +150,11 @@ It supports candidate processing for:
 - quarantine records for missing site identity, missing parameter code, missing approval status, provisional/approved collapse, observed/aggregate collapse, cadence/time ambiguity, unit ambiguity, schema drift, or validation failure;
 - validation, catalog, triplet, EvidenceBundle, release-review, correction, and rollback handoff packages.
 
-This directory implements or will implement the **how** of USGS Water ingest normalization. It does not fetch USGS data directly, define USGS source identity, define Hydrology object meaning, define schemas, encode policy, store lifecycle data, decide release, issue current operational guidance, enforce water rights, or certify engineering use.
+If implemented, this directory would own the **how** of USGS Water ingest
+normalization. It would not fetch USGS data directly, define USGS source
+identity, define Hydrology object meaning, define schemas, encode policy, store
+lifecycle data, decide release, issue current operational guidance, enforce
+water rights, or certify engineering use.
 
 [⬆ Back to top](#top)
 
@@ -152,14 +166,14 @@ This directory implements or will implement the **how** of USGS Water ingest nor
 |---|---|---|
 | Why `pipelines/`? | This is executable pipeline logic: the **how**. | CONFIRMED root responsibility |
 | Why `domains/hydrology/`? | Hydrology is the domain lane used by Hydrology docs and the Hydrology pipeline README. | CONFIRMED documentation pattern; behavior NEEDS VERIFICATION |
-| Why `ingest_usgs_water/`? | This is a narrow executable sublane for USGS Water / NWIS station time-series input normalization. | PROPOSED / NEEDS VERIFICATION |
+| Why `ingest_usgs_water/`? | This is a proposed narrow sublane for USGS Water / NWIS station time-series input normalization. | PROPOSED / NEEDS VERIFICATION |
 | Is this a connector? | No. Source fetching belongs in `connectors/usgs/` or an accepted source-edge home. This sublane reads admitted lifecycle inputs or fixtures. | CONFIRMED separation |
 | Does this own the USGS Water source profile? | No. Source profile content lives under `docs/sources/catalog/usgs/nwis-water.md` and source descriptors live in registry homes. | CONFIRMED source-doc separation |
 | Where do declarative run specs live? | `pipeline_specs/hydrology/ingest_usgs_water.yaml` or accepted spec home. | PROPOSED / NEEDS VERIFICATION |
 | Can this sublane publish? | No. It may emit work candidates, quarantine records, validation handoffs, and receipts only through governed workflow. | CONFIRMED doctrine posture |
 
 > [!IMPORTANT]
-> USGS Water ingest is not publication, not a safety bulletin, not a water-rights determination, not engineering certification, and not release approval. It prepares evidence-bound site/time-series candidates for downstream validation and review.
+> USGS Water ingest is not publication, a safety bulletin, a water-rights determination, engineering certification, or release approval. This proposed sublane would prepare evidence-bound site/time-series candidates for downstream validation and review.
 
 [⬆ Back to top](#top)
 
@@ -492,7 +506,7 @@ Correction and rollback posture:
 This README is done when it:
 
 - fills the blank `pipelines/domains/hydrology/ingest_usgs_water/README.md` file;
-- identifies this directory as a nested executable Hydrology USGS Water ingest sublane;
+- identifies this directory as a proposed Hydrology USGS Water ingest sublane;
 - prevents connector, source-profile, schema, contract, policy, fixture, test, data, proof, catalog, and release authority from being placed here;
 - preserves USGS source-role split, site identity, parameter codes, provisional/approved status, IV/DV/annual/peak/water-quality distinctions, endpoint migration lineage, evidence, policy, lifecycle, catalog/triplet, release, correction, and rollback boundaries;
 - blocks provisional-as-approved, aggregate-as-observation, site-metadata-as-observation, generated-summary-as-evidence, and direct catalog/release writes;
