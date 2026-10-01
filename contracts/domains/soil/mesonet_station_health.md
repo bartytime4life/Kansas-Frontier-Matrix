@@ -39,6 +39,7 @@ Precise station coordinates are denied. Statistical diagnostics are treated as s
 | The candidate is structurally unreadable | `ERROR` |
 
 Threshold boundary operators are intentional: the source packet describes degradation at `>= 3×` the interval, a roster-loss trigger at `>= 10%`, z-score anomalies at `> 4`, and relative jumps at `>= 50%`.
+Numeric inputs and the derived station-age threshold must be finite; oversized values produce a bounded `DENY` result rather than an unhandled runtime error or a falsely healthy station.
 
 ## Output
 

@@ -63,11 +63,12 @@ def _nonempty_string(value: object) -> bool:
 
 
 def _finite_number(value: object) -> bool:
-    return (
-        isinstance(value, (int, float))
-        and not isinstance(value, bool)
-        and math.isfinite(float(value))
-    )
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        return False
+    try:
+        return math.isfinite(float(value))
+    except OverflowError:
+        return False
 
 
 def _canonical_utc(value: object) -> datetime | None:
@@ -158,6 +159,15 @@ def _validate_thresholds(findings: set[Finding], thresholds: object) -> None:
         value = thresholds.get(field)
         if not _finite_number(value) or float(value) <= 0:
             _add(findings, "THRESHOLD_INVALID", f"/thresholds/{field}")
+
+    interval = thresholds.get("expected_interval_minutes")
+    multiplier = thresholds.get("degraded_after_multiplier")
+    if (
+        _finite_number(interval)
+        and _finite_number(multiplier)
+        and not math.isfinite(float(interval) * float(multiplier))
+    ):
+        _add(findings, "THRESHOLD_INVALID", "/thresholds/degraded_after_multiplier")
 
     for field in ("minimum_coverage_fraction", "maximum_degraded_fraction"):
         value = thresholds.get(field)

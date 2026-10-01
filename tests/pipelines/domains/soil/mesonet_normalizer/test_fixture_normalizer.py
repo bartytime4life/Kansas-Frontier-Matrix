@@ -163,3 +163,25 @@ def test_non_object_input_returns_safe_error() -> None:
     assert result.reason_code == "MESONET_FIXTURE_INPUT_ERROR"
     assert result.candidate is None
     assert result.findings == (MODULE.Finding("CANDIDATE_NOT_OBJECT", "/"),)
+
+
+def test_oversized_numeric_input_is_denied_without_runtime_error() -> None:
+    candidate = _fixture()
+    candidate["observation"]["depth_cm"] = 10**1000
+
+    result = normalize_fixture(candidate)
+
+    assert result.outcome == "DENY"
+    assert result.candidate is None
+    assert MODULE.Finding("DEPTH_INVALID", "/observation/depth_cm") in result.findings
+
+    candidate = _fixture()
+    candidate["observation"]["native_cadence_minutes"] = 10**1000
+
+    result = normalize_fixture(candidate)
+
+    assert result.outcome == "DENY"
+    assert result.candidate is None
+    assert MODULE.Finding(
+        "NATIVE_CADENCE_INVALID", "/observation/native_cadence_minutes"
+    ) in result.findings
