@@ -156,7 +156,7 @@ delay = min(base * factor, max_delay)
 ```
 
 The planner samples no randomness and reads no clock. A governed caller supplies elapsed time, `retry_after_seconds`, and `jitter_unit`.
-Oversized numeric inputs receive a bounded `NUMBER_NOT_FINITE` error. If exponential backoff exceeds the numeric range, it clips to `max_delay` before jitter and deadline checks; a zero base delay remains zero.
+Oversized numeric inputs receive a bounded `NUMBER_NOT_FINITE` error. If an intermediate exponentiation exceeds the numeric range, the planner computes the bounded backoff without that intermediate value before jitter and deadline checks; a zero base delay remains zero.
 
 This pipeline-step taxonomy is distinct from `packages/connectors-core` transport retry. Connector retry decides whether a transport observation may be attempted again. Pipeline resilience decides whether a governed orchestration step may start, retry, pause, quarantine, or require review.
 

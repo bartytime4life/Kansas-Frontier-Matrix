@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 import subprocess
 import sys
 from copy import deepcopy
@@ -173,6 +174,39 @@ def test_large_attempt_clips_backoff_without_overflow() -> None:
     plan = plan_pipeline_resilience(request)
     assert plan["retry"]["decision"] == "RETRY"
     assert plan["retry"]["delay_seconds"] == 0.0
+
+
+def test_large_attempt_with_tiny_base_keeps_finite_backoff_and_budgets() -> None:
+    request = _request("allow_retry")
+    request["retry_context"].update(
+        {"error_class": "TRANSIENT", "attempt_number": 1025, "retry_after_seconds": None}
+    )
+    request["policy"]["retry"].update(
+        {
+            "max_attempts": 1026,
+            "base_delay_seconds": 1e-300,
+            "multiplier": 2,
+            "max_delay_seconds": 1e10,
+            "deadline_seconds": 1e10,
+            "jitter_fraction": 0,
+        }
+    )
+    request["retry_context"]["elapsed_seconds"] = 0
+
+    expected = math.ldexp(1e-300, 1024)
+    plan = plan_pipeline_resilience(request)
+    assert plan["retry"]["decision"] == "RETRY"
+    assert plan["retry"]["delay_seconds"] == pytest.approx(expected)
+
+    request["policy"]["retry"]["jitter_fraction"] = 0.5
+    request["retry_context"]["jitter_unit"] = 1
+    plan = plan_pipeline_resilience(request)
+    assert plan["retry"]["delay_seconds"] == pytest.approx(expected * 1.5)
+
+    request["policy"]["retry"]["deadline_seconds"] = 1e8
+    plan = plan_pipeline_resilience(request)
+    assert plan["retry"]["decision"] == "STOP"
+    assert plan["retry"]["reason_codes"] == ["RETRY_DEADLINE_WOULD_BE_EXCEEDED"]
 
 
 def test_pull_request_cannot_target_production() -> None:
