@@ -7,7 +7,7 @@ import json
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
-RECEIPT = ROOT / "data/receipts/generated/site-historical-overlay-mirror-20260930.json"
+RECEIPT = ROOT / "data/receipts/generated/site-disaster-blm-knowledge-soil-mirror-20260930.json"
 DESTINATION = ROOT / "apps/site/source"
 
 
@@ -48,20 +48,30 @@ def check():
     receipt = json.loads(RECEIPT.read_text())
     if receipt["profile"] != "kfm.site-mirror-receipt/v1" or receipt["destination"] != "apps/site/source":
         raise ValueError("MIRROR_RECEIPT_PROFILE_DRIFT")
-    if receipt["counts"]["missing"] or receipt["counts"]["unexpected_difference"]:
+    if receipt["counts"].get("missing", 0) or receipt["counts"].get("unexpected_difference", 0):
         raise ValueError("MIRROR_RECEIPT_INCOMPLETE")
-    expected = {name: "sha256:" + entry["mirror_sha256"] for name, entry in receipt["comparison"].items()}
-    overlays = {name: "sha256:" + digest for name, digest in receipt["repository_only_overlays"].items()}
-    if set(expected) & set(overlays):
-        raise ValueError("MIRROR_RECEIPT_OVERLAP")
-    expected.update(overlays)
+    allowed = {"identical", "inherited_repository_overlay", "merged_water_overlay", "repository_only_water_overlay"}
+    comparison = receipt["comparison"]
+    if not comparison or any(entry.get("state") not in allowed for entry in comparison.values()):
+        raise ValueError("MIRROR_RECEIPT_STATE_INVALID")
+    actual_counts = {state: sum(entry["state"] == state for entry in comparison.values()) for state in allowed}
+    if any(receipt["counts"].get(state, 0) != count for state, count in actual_counts.items()):
+        raise ValueError("MIRROR_RECEIPT_COUNTS_DRIFT")
+    expected = {}
+    for name, entry in comparison.items():
+        digest = entry["mirror_sha256"]
+        if len(digest) != 64 or any(char not in "0123456789abcdef" for char in digest):
+            raise ValueError("MIRROR_DIGEST_INVALID")
+        if entry["state"] == "identical" and entry.get("site_sha256") != digest:
+            raise ValueError("MIRROR_IDENTICAL_MISMATCH")
+        expected[name] = "sha256:" + digest
     names = {p.removeprefix("apps/site/source/") for p in files(ROOT) if p.startswith("apps/site/source/")}
     if names != set(expected):
         raise ValueError("MIRROR_FILE_SET_DRIFT")
     for name, digest in expected.items():
         if sha(safe(DESTINATION,name).read_bytes()) != digest:
             raise ValueError("MIRROR_CONTENT_DRIFT:"+name)
-    return {"outcome":"PASS","files":len(expected),"source_commit":receipt["source_commit"],"hosted_equivalence":False,"authority":"CONTENT_PARITY_ONLY"}
+    return {"outcome":"PASS","files":len(expected),"source_commit":receipt["site_candidate_commit"],"hosted_equivalence":False,"authority":"CONTENT_PARITY_ONLY"}
 
 
 def main():

@@ -24,6 +24,10 @@ export type SiteConnectionRecord = Readonly<{
 }>;
 
 const CONNECTION_CODE_PATHS: Record<OfficialContextId, readonly string[]> = {
+  "fema-disaster-declarations": ["app/fema-declarations.ts", "app/api/live-context/route.ts", "app/live-context.ts", "app/page.tsx"],
+  "blm-plss-townships": ["app/live-context.ts", "app/layer-workspaces.ts", "app/page.tsx"],
+  "blm-plss-sections": ["app/live-context.ts", "app/layer-workspaces.ts", "app/page.tsx"],
+  "blm-plss-intersected": ["app/live-context.ts", "app/layer-workspaces.ts", "app/page.tsx"],
   "census-counties": ["app/live-context.ts", "app/api/live-context/route.ts", "app/page.tsx"],
   "usgs-streamflow": ["app/live-context.ts", "app/streamflow.ts", "app/hydrology-observatory.tsx", "app/api/hydrology/streamflow/route.ts"],
   "noaa-nwps-gauges": ["app/live-context.ts", "app/noaa-hydrology.ts", "app/hydrology-observatory.tsx", "app/api/hydrology/noaa/route.ts"],
@@ -48,6 +52,7 @@ const CONNECTION_CODE_PATHS: Record<OfficialContextId, readonly string[]> = {
 };
 
 const CONNECTION_FEEDS: Partial<Record<OfficialContextId, OfficialContextFeedId>> = {
+  "fema-disaster-declarations": "fema-disaster-declarations",
   "census-counties": "census-counties",
   "usgs-streamflow": "usgs-streamflow",
   "noaa-nwps-gauges": "noaa-nwps-gauges",
@@ -60,6 +65,10 @@ const CONNECTION_FEEDS: Partial<Record<OfficialContextId, OfficialContextFeedId>
 };
 
 const CONNECTION_ACTIONS: Record<OfficialContextId, readonly SiteActionId[]> = {
+  "fema-disaster-declarations": ["toggle-context-connection", "refresh-visible-context", "set-context-opacity", "open-provider-source"],
+  "blm-plss-townships": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+  "blm-plss-sections": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+  "blm-plss-intersected": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
   "census-counties": ["toggle-context-connection", "refresh-visible-context", "set-context-opacity", "open-provider-source"],
   "usgs-streamflow": ["toggle-context-connection", "refresh-visible-context", "refresh-streamflow", "change-hydrology-range", "step-exact-observation", "set-context-opacity", "open-provider-source"],
   "noaa-nwps-gauges": ["toggle-context-connection", "refresh-visible-context", "change-hydrology-range", "set-context-opacity", "open-provider-source"],

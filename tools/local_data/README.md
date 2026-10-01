@@ -18,6 +18,14 @@ truth_posture: CONFIRMED main@bb08d3e9b9 implementation and exact-schema policy 
 > Both preserve review/release holds. `doctor.py --water-runtime` inspects dependencies
 > and configuration. See [the runbook](../../docs/runbooks/water-pilot.md).
 
+> **Kansas source candidate addition — 2026-09-30:** `candidate_capture.py`
+> owns private, immutable output for bounded BLM, GNIS, and Crop-CASMA connectors.
+> It accepts temporary candidate directories or the configured external
+> `KFM_DATA_ROOT/data/raw` lane, and rejects published/store-crossing paths,
+> checkout paths, symlink ancestors, duplicate names, traversal, and oversized
+> objects. Captures remain unreleased; this
+> helper does not implement source admission or package activation.
+
 # Local PC data tools
 
 These Python 3 standard-library tools prepare a local checkout and preserve

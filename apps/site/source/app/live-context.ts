@@ -8,8 +8,8 @@ import { balanceMapFills, balanceMapRasters, composeMapLayers, requestFillOpacit
 import { BUILD_UTC_YEAR } from "./build-clock";
 import { globeOverviewPaintSize } from "./globe-context";
 
-export type OfficialContextId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar" | "nws-forecast-wind" | "nasa-lightning-climatology" | "noaa-lightning-density";
-export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations";
+export type OfficialContextId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar" | "nws-forecast-wind" | "nasa-lightning-climatology" | "noaa-lightning-density" | "blm-plss-townships" | "blm-plss-sections" | "blm-plss-intersected" | "fema-disaster-declarations";
+export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations";
 export type OfficialContextState = "idle" | "loading" | "ready" | "empty" | "partial" | "error";
 
 export type OfficialContextPayload = Readonly<{
@@ -52,8 +52,60 @@ export type OfficialContextSource = Readonly<{
   fallback: string;
 }>;
 
+const BLM_PLSS_SERVICE = "https://gis.blm.gov/arcgis/rest/services/Cadastral/BLM_Natl_PLSS_CadNSDI/MapServer";
+const blmPlssImageUrl = (layer: 1 | 2 | 3, where: string) =>
+  `${BLM_PLSS_SERVICE}/export?bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&size=256%2C256&format=png32&transparent=true&layers=show%3A${layer}&layerDefs=${encodeURIComponent(JSON.stringify({ [layer]: where }))}&f=image`;
+
 /** Fixed allowlist of public external context. These sources never enter KFM evidence, reports, exports, or admission state. */
 export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object.freeze([
+  Object.freeze({
+    id: "fema-disaster-declarations", title: "FEMA Kansas disaster declaration areas", shortTitle: "FEMA declarations",
+    organization: "Federal Emergency Management Agency", domain: "Weather & hazards", kind: "OPERATIONAL_GEOJSON",
+    sourceId: "external-fema-disaster-declarations", layerIds: Object.freeze(["external-fema-disaster-declarations-fill", "external-fema-disaster-declarations-line"]), interactiveLayerIds: Object.freeze(["external-fema-disaster-declarations-fill"]),
+    apiPath: "/api/live-context?feed=fema-disaster-declarations", endpointLabel: "OpenFEMA v2 · latest Kansas county declarations",
+    sourceUrl: "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries", serviceUrl: "https://www.fema.gov/about/openfema/data-sets",
+    cadence: "Provider-published declaration records; checked on request", freshness: "Recent returned declarations, not current hazard conditions",
+    defaultVisibility: false, defaultOpacity: 0.43, color: "#f1ad84", attribution: "FEMA OpenFEMA · U.S. Census Bureau 2020 county geometry",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    boundary: "A dated federal declaration names a designated county, not the disaster's observed footprint, warning polygon, current danger, or a KFM evidence release. The displayed outline is 2020 Census reference geography even for older declarations. This bounded recent-record view is not the complete FEMA history.",
+    fallback: "Unmatched, statewide, invalid, or over-cap records are withheld and disclosed. Missing declarations never mean no disaster or no assistance.",
+  }),
+  Object.freeze({
+    id: "blm-plss-townships", title: "BLM Kansas PLSS townships", shortTitle: "BLM survey townships",
+    organization: "Bureau of Land Management", domain: "Land records & survey", kind: "OPERATIONAL_WMS",
+    sourceId: "external-blm-plss-townships", layerIds: Object.freeze(["external-blm-plss-townships-raster"]), interactiveLayerIds: Object.freeze([]),
+    mapUrl: blmPlssImageUrl(1, "STATEABBR='KS'"), endpointLabel: "BLM CadNSDI · Kansas township reference geometry",
+    sourceUrl: `${BLM_PLSS_SERVICE}/1`, serviceUrl: BLM_PLSS_SERVICE,
+    cadence: "Provider-current cadastral reference service", freshness: "Current service display; survey source dates vary by feature",
+    defaultVisibility: false, defaultOpacity: 0.7, color: "#e9bd74", attribution: "BLM National PLSS CadNSDI",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    boundary: "Kansas PLSSID township survey reference only. These lines are not county parcels, present ownership, legal title, public access, or a reviewed KFM land release. Features may straddle the Kansas border.",
+    fallback: "When BLM image tiles fail, no substitute boundaries or ownership claims are drawn.",
+  }),
+  Object.freeze({
+    id: "blm-plss-sections", title: "BLM Kansas PLSS sections", shortTitle: "BLM survey sections",
+    organization: "Bureau of Land Management", domain: "Land records & survey", kind: "OPERATIONAL_WMS",
+    sourceId: "external-blm-plss-sections", layerIds: Object.freeze(["external-blm-plss-sections-raster"]), interactiveLayerIds: Object.freeze([]),
+    mapUrl: blmPlssImageUrl(2, "PLSSID LIKE 'KS%'"), endpointLabel: "BLM CadNSDI · Kansas section reference geometry",
+    sourceUrl: `${BLM_PLSS_SERVICE}/2`, serviceUrl: BLM_PLSS_SERVICE,
+    cadence: "Provider-current cadastral reference service", freshness: "Visible at local scale; source dates vary by feature",
+    defaultVisibility: false, defaultOpacity: 0.72, color: "#f1d6a2", attribution: "BLM National PLSS CadNSDI",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    boundary: "Kansas PLSSID section survey reference only. The section layer has no STATEABBR field; its fixed server filter uses the Kansas PLSSID prefix. Sections are not ownership or patent footprints.",
+    fallback: "At overview scale or on provider failure, sections are absent rather than estimated.",
+  }),
+  Object.freeze({
+    id: "blm-plss-intersected", title: "BLM Kansas PLSS intersected divisions", shortTitle: "BLM survey divisions",
+    organization: "Bureau of Land Management", domain: "Land records & survey", kind: "OPERATIONAL_WMS",
+    sourceId: "external-blm-plss-intersected", layerIds: Object.freeze(["external-blm-plss-intersected-raster"]), interactiveLayerIds: Object.freeze([]),
+    mapUrl: blmPlssImageUrl(3, "STATEABBR='KS'"), endpointLabel: "BLM CadNSDI · Kansas intersected survey divisions",
+    sourceUrl: `${BLM_PLSS_SERVICE}/3`, serviceUrl: BLM_PLSS_SERVICE,
+    cadence: "Provider-current cadastral reference service", freshness: "Visible at close scale; source dates vary by feature",
+    defaultVisibility: false, defaultOpacity: 0.68, color: "#e6d3ae", attribution: "BLM National PLSS CadNSDI",
+    evidenceRole: "EXTERNAL_CONTEXT_ONLY",
+    boundary: "Intersected division geometry is survey reference, not legal title, a parcel, or public access. Density and source dates vary; no feature-level review is implied by this image carrier.",
+    fallback: "At overview scale or on provider failure, no subdivisions are inferred.",
+  }),
   Object.freeze({
     id: "census-counties",
     title: "Census Kansas counties + population",
@@ -554,6 +606,10 @@ export type OfficialContextTemporalSupport = Readonly<{
  * the operational-present UI frame; it is not asserted as every source's
  * observation, publication, or acquisition year. */
 export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextId, OfficialContextTemporalSupport>> = Object.freeze({
+  "fema-disaster-declarations": Object.freeze({ axis: "provider-observation-history", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Dated historical declaration records with 2020 county locator geometry. The current atlas frame does not turn their declaration dates into present hazard conditions." }),
+  "blm-plss-townships": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current Kansas township survey image. Feature-level survey dates are not a selectable historical series or a KFM release." }),
+  "blm-plss-sections": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current Kansas section survey image, shown at local scale. No parcel or historical title time axis is connected." }),
+  "blm-plss-intersected": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current intersected survey divisions at close scale. No feature-level review or title inference is provided." }),
   "census-counties": Object.freeze({
     axis: "joined-source-snapshot",
     supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
@@ -806,14 +862,20 @@ export const applyOfficialContextState = (
   ensureLayer(map, { id: alerts.layerIds[0], type: "fill", source: alerts.sourceId, paint: { "fill-color": severityColor, "fill-opacity": 0.34 } });
   ensureLayer(map, { id: alerts.layerIds[1], type: "line", source: alerts.sourceId, paint: { "line-color": severityColor, "line-width": 2.4, "line-opacity": 0.94 } });
 
-  for (const raster of [OFFICIAL_CONTEXT_BY_ID["usgs-3dhp-hydrography"], OFFICIAL_CONTEXT_BY_ID["usgs-wbd-watersheds"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-analysis"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"], OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"], OFFICIAL_CONTEXT_BY_ID["nasa-lightning-climatology"]]) {
+  const declarations = OFFICIAL_CONTEXT_BY_ID["fema-disaster-declarations"];
+  ensureGeoJsonSource(map, declarations, payloads["fema-disaster-declarations"]?.data ?? emptyCollection());
+  ensureLayer(map, { id: declarations.layerIds[0], type: "fill", source: declarations.sourceId, paint: { "fill-color": declarations.color, "fill-opacity": 0.28 } });
+  ensureLayer(map, { id: declarations.layerIds[1], type: "line", source: declarations.sourceId, paint: { "line-color": declarations.color, "line-width": 1.7, "line-opacity": 0.72 } });
+
+  for (const raster of [OFFICIAL_CONTEXT_BY_ID["usgs-3dhp-hydrography"], OFFICIAL_CONTEXT_BY_ID["usgs-wbd-watersheds"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-analysis"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"], OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"], OFFICIAL_CONTEXT_BY_ID["nasa-lightning-climatology"], OFFICIAL_CONTEXT_BY_ID["blm-plss-townships"], OFFICIAL_CONTEXT_BY_ID["blm-plss-sections"], OFFICIAL_CONTEXT_BY_ID["blm-plss-intersected"]]) {
     // Disabled services should not download tiles during startup or style swaps.
     if (!visibility[raster.id] && !map.getSource(raster.sourceId)) continue;
     const terrainDisplay = raster.id === "usgs-3dep-hillshade" || raster.id === "usgs-3dep-slope";
     if (!map.getSource(raster.sourceId)) map.addSource(raster.sourceId, {
       type: "raster", tiles: [raster.mapUrl!], tileSize: 256, attribution: raster.attribution,
       ...(raster.id === "nasa-lightning-climatology" ? {} : { bounds: [-104.8, 34.8, -92, 42.2] as [number, number, number, number] }),
-      minzoom: raster.id === "nasa-lightning-climatology" ? 0 : terrainDisplay ? TERRAIN_DISPLAY_MIN_ZOOM : 3,
+      // BLM source-layer minScale: township 1:4m, section 1:500k, intersected 1:200k.
+      minzoom: raster.id === "nasa-lightning-climatology" ? 0 : raster.id === "blm-plss-townships" ? 8 : raster.id === "blm-plss-sections" ? 11 : raster.id === "blm-plss-intersected" ? 12 : terrainDisplay ? TERRAIN_DISPLAY_MIN_ZOOM : 3,
       maxzoom: raster.id === "nasa-lightning-climatology" ? 6 : terrainDisplay ? TERRAIN_DISPLAY_MAX_ZOOM : 16,
     });
     ensureLayer(map, {

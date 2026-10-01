@@ -4,6 +4,7 @@ import type { Feature, FeatureCollection, Geometry, GeoJsonProperties } from "ge
 import { EVENT_BOUNDS, eventDay, advanceEventDay, intervalDays, parseSmokeKml, smokeUrl } from "../../event-atlas";
 import { boundedFetch } from "../event-atlas/upstream";
 import { countyBaseline } from "../../county-baseline";
+import { FEMA_DECLARATION_LIMIT, parseFemaDeclarations } from "../../fema-declarations";
 import { VectorTile } from "@mapbox/vector-tile";
 import Pbf from "pbf";
 
@@ -14,6 +15,7 @@ const USGS_EARTHQUAKE_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query";
 const NWS_ALERTS_URL = "https://api.weather.gov/alerts/active?area=KS";
 const RASPBERRY_SHAKE_STATION_URL = "https://data.raspberryshake.org/fdsnws/station/1/query";
 const NIFC_INCIDENT_URL = "https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Incident_Locations_YearToDate/FeatureServer/0/query";
+const FEMA_DECLARATIONS_URL = "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries";
 const NWS_USER_AGENT = "KansasFrontierMatrixExplorer/1.0 (https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site)";
 const MAX_RESPONSE_BYTES = 8 * 1024 * 1024;
 const MAX_NWS_ZONE_REQUESTS = 36;
@@ -28,7 +30,7 @@ const GIBS_FIRE_TILE_ROW = 5;
 const MAX_GIBS_FIRE_TILE_BYTES = 1024 * 1024;
 const MAX_GIBS_FIRE_FEATURES = 5000;
 
-type Feed = "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations";
+type Feed = "census-counties" | "usgs-streamflow" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations";
 type JsonRecord = Record<string, unknown>;
 
 class UpstreamError extends Error {
@@ -102,6 +104,20 @@ const envelope = (
 const censusCounties = async () => {
   const baseline = await countyBaseline("2020");
   return envelope("census-counties", baseline.data, baseline.source, baseline.limitation, baseline.retrievedAt, null, false);
+};
+
+const recentFemaDeclarations = async () => {
+  const retrievedAt = new Date().toISOString();
+  const url = new URL(FEMA_DECLARATIONS_URL);
+  url.searchParams.set("$filter", "state eq 'KS'");
+  url.searchParams.set("$orderby", "declarationDate desc");
+  url.searchParams.set("$top", String(FEMA_DECLARATION_LIMIT + 1));
+  const [payload, counties] = await Promise.all([fetchBoundedJson(url.toString(), 12_000), countyBaseline("2020")]);
+  const result = parseFemaDeclarations(payload, counties.data, retrievedAt);
+  return envelope("fema-disaster-declarations", result.data,
+    "FEMA OpenFEMA DisasterDeclarationsSummaries v2 · U.S. Census Bureau 2020 county geography",
+    `Latest ${FEMA_DECLARATION_LIMIT} Kansas declaration designations at most; ${result.skipped} unmatched or invalid rows withheld${result.truncated ? "; older records exist beyond this bounded view" : ""}. The 2020 county outlines locate designated areas, not observed impact footprints or current danger. A missing declaration is not an all-clear.`,
+    retrievedAt, result.upstreamUpdatedAt, result.partial, result.truncated);
 };
 
 const latestStreamflow = async () => {
@@ -605,17 +621,17 @@ const nifcFireReports = async () => {
     retrievedAt, newestTimestamp, skipped > 0 || truncated, truncated);
 };
 
-const cacheSeconds: Record<Feed, number> = { "census-counties": 86_400, "usgs-streamflow": 120, "usgs-earthquakes": 300, "nws-alerts": 30, "noaa-hms-smoke": 900, "nasa-gibs-fire-points": 900, "nifc-fire-reports": 900, "raspberry-shake-stations": 900 };
+const cacheSeconds: Record<Feed, number> = { "census-counties": 86_400, "usgs-streamflow": 120, "usgs-earthquakes": 300, "nws-alerts": 30, "noaa-hms-smoke": 900, "nasa-gibs-fire-points": 900, "nifc-fire-reports": 900, "raspberry-shake-stations": 900, "fema-disaster-declarations": 3600 };
 
 export async function GET(request: NextRequest) {
   const feed = request.nextUrl.searchParams.get("feed");
   const day = request.nextUrl.searchParams.get("day");
   if (request.nextUrl.searchParams.has("day") && (!day || !eventDay(day) || day < (feed === "nasa-gibs-fire-points" ? "2018-01-01" : "1800-01-01") || day > new Date().toISOString().slice(0, 10) || !["usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(feed ?? "")) || [...request.nextUrl.searchParams.keys()].some((key) => !["feed", "day"].includes(key) || request.nextUrl.searchParams.getAll(key).length !== 1)) return NextResponse.json({ error: "Choose an exact supported calendar date and source." }, { status: 400 });
-  if (feed !== "census-counties" && feed !== "usgs-streamflow" && feed !== "usgs-earthquakes" && feed !== "nws-alerts" && feed !== "noaa-hms-smoke" && feed !== "nasa-gibs-fire-points" && feed !== "nifc-fire-reports" && feed !== "raspberry-shake-stations") {
+  if (feed !== "census-counties" && feed !== "usgs-streamflow" && feed !== "usgs-earthquakes" && feed !== "nws-alerts" && feed !== "noaa-hms-smoke" && feed !== "nasa-gibs-fire-points" && feed !== "nifc-fire-reports" && feed !== "raspberry-shake-stations" && feed !== "fema-disaster-declarations") {
     return NextResponse.json({ error: "Unknown live-context feed. The adapter accepts only its fixed allowlist." }, { status: 400, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } });
   }
   try {
-    const result = feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes(day) : feed === "nws-alerts" ? await activeNwsAlerts() : feed === "noaa-hms-smoke" ? await currentHmsSmoke(day) : feed === "nasa-gibs-fire-points" ? await nasaGibsFirePoints(day) : feed === "nifc-fire-reports" ? await nifcFireReports() : await raspberryShakeStations(day);
+    const result = feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes(day) : feed === "nws-alerts" ? await activeNwsAlerts() : feed === "noaa-hms-smoke" ? await currentHmsSmoke(day) : feed === "nasa-gibs-fire-points" ? await nasaGibsFirePoints(day) : feed === "nifc-fire-reports" ? await nifcFireReports() : feed === "fema-disaster-declarations" ? await recentFemaDeclarations() : await raspberryShakeStations(day);
     return NextResponse.json(result, { headers: { "Cache-Control": `public, max-age=0, s-maxage=${cacheSeconds[feed]}, stale-while-revalidate=${cacheSeconds[feed]}`, "X-KFM-Context-State": result.state, "X-Content-Type-Options": "nosniff" } });
   } catch (error) {
     const timeout = error instanceof UpstreamError && error.timeout;

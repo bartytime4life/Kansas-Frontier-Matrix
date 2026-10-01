@@ -50,6 +50,14 @@ notes:
 
 # GNIS Compatibility Pointer
 
+> **Implementation update, 2026-09-30:** An on-demand, Kansas-scoped, unreleased
+> name-capture candidate now lives at `connectors/usgs/src/usgs/gnis.py` under the
+> existing USGS connector family. This `connectors/gnis/` path remains a
+> compatibility pointer and has no second fetcher. Statements below that no
+> GNIS code exists describe the earlier inventory. Product-wide descriptor,
+> admission, cultural/sensitivity review, full-state coverage, and release
+> placement remain unresolved; this narrow capture does not settle them.
+
 > Documentation-only compatibility, navigation, and path-conflict surface for the U.S. Geological Survey Geographic Names Information System. The current standalone path performs no source access, parsing, activation, storage, testing, lifecycle handoff, identity resolution, cultural-policy decision, or publication.
 
 <p>

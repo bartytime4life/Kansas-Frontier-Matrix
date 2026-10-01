@@ -16,6 +16,7 @@ import { sourceDownloadHref } from "./source-downloads";
 import { planOfficialRefresh } from "./official-refresh-plan";
 import { ArchiveDaySlider } from "./archive-day-slider";
 import { SoilMoistureControl, type SoilMoistureEngineContext } from "./soil-moisture-control";
+import { CropCasmaControl } from "./crop-casma-control";
 import { HistoricalTopoControl } from "./historical-topo-control";
 import { DataNotices, LayerSceneControls, RenderQualityControl } from "./map-toolbar";
 import { drawWindFlowCanvas, nearestWindFlowSample, windToCompass } from "./wind-arrow-canvas";
@@ -180,6 +181,7 @@ import {
 } from "./workspace-model";
 import { STRUCTURE_3D_SOURCE, TERRAIN_SOURCES, TERRARIUM_RENDER_MAX_ZOOM, terrainSourceFor, type TerrainProvider } from "./terrain-sources";
 import { EXTERNAL_CONTEXT_SOURCES } from "./external-context-sources";
+import { DISASTER_COVERAGE_HOLDS, filterOfficialSources, type LayerWorkspace } from "./layer-workspaces";
 import {
   applyOfficialContextState,
   clearOfficialContextFeed,
@@ -1266,6 +1268,7 @@ export default function Home() {
   const [leftPanelMode, setLeftPanelMode] = useState<LeftPanelMode>("layers");
   const [layerCatalogView, setLayerCatalogView] = useState<"local" | "official">("official");
   const [officialSourceQuery, setOfficialSourceQuery] = useState("");
+  const [officialWorkspace, setOfficialWorkspace] = useState<LayerWorkspace>("all");
   const [rightOpen, setRightOpen] = useState(false);
   const [timelineOpen, setTimelineOpen] = useState(false);
   const [drawerView, setDrawerView] = useState<DrawerView>("evidence");
@@ -2123,10 +2126,8 @@ export default function Home() {
     }).map((layer) => layer.id));
   }, [debouncedLayerQuery]);
   const listedOfficialSources = useMemo(() => {
-    const query = officialSourceQuery.trim().toLowerCase();
-    return OFFICIAL_CONTEXT_SOURCES.filter((source) => !query || `${source.title} ${source.shortTitle} ${source.organization} ${source.domain}`.toLowerCase().includes(query))
-      .sort((a, b) => Number(b.defaultVisibility) - Number(a.defaultVisibility));
-  }, [officialSourceQuery]);
+    return filterOfficialSources(OFFICIAL_CONTEXT_SOURCES, officialWorkspace, officialSourceQuery);
+  }, [officialSourceQuery, officialWorkspace]);
   const searchResults = useMemo<GlobalSearchItem[]>(() => {
     const query = debouncedGlobalQuery.trim().toLowerCase();
     if (!query) return [];
@@ -7981,10 +7982,19 @@ export default function Home() {
             <button type="button" onClick={() => { setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); dismissMapUtilityWithoutFocus(); announce(`Opened the map timeline at ${temporalScopeLabel}`); }}>Change time</button>
           </div>
           {layerCatalogView === "official" && <p className="layer-journey-intro">Choose source backed layers and inspect their records. Each source keeps its own observation time and limits.</p>}
+          {layerCatalogView === "official" && <p className="layer-journey-intro"><Link href="/knowledge">Search steward-reviewed Kansas knowledge ↗</Link></p>}
           {composedSurfaceCount > 1 && <p className="layer-balance-note">Multiple surfaces are active. The map balances their opacity so boundaries and points stay readable; each slider keeps your selected value.</p>}
           {mapSignals.length > 0 && <section className="map-signal-panel" aria-label="Patterns supported by selected data"><strong>Signals in selected data</strong>{mapSignals.map((signal) => <article key={`${signal.kind}:${signal.title}`}><span>{signal.kind === "forecast" ? "PROVIDER FORECAST" : signal.kind === "observed" ? "OBSERVED" : "CATALOG TIME"}</span><b>{signal.title}</b><small>{signal.detail}</small></article>)}</section>}
           <section className="official-context-catalog" id="official-context-catalog" tabIndex={-1} hidden={layerCatalogView !== "official"} aria-labelledby="official-context-title">
             <header><div><h2 id="official-context-title">Real data layers</h2><small className="official-context-registry-summary">{visibleOfficialCount} selected · {officialReadyCount} settled</small></div></header>
+            <nav className="official-workspace-tabs" aria-label="Real data workspaces">
+              {([ ["all", "All sources"], ["disaster", "Disasters"], ["land", "BLM land survey"] ] as const).map(([id, label]) => <button key={id} type="button" aria-pressed={officialWorkspace === id} onClick={() => setOfficialWorkspace(id)}>{label}</button>)}
+            </nav>
+            {officialWorkspace === "disaster" && <section className="official-workspace-ledger" aria-label="Disaster source coverage">
+              <strong>Disaster source coverage</strong><p>Connected layers below keep independent visibility, opacity, source time, and quality settings. A missing feed is never an all-clear.</p>
+              <details><summary>{DISASTER_COVERAGE_HOLDS.length} source families held for verification</summary>{DISASTER_COVERAGE_HOLDS.map(item => <p key={item.title}><b>{item.title} · HELD</b><br />{item.detail} <a href={item.sourceUrl} target="_blank" rel="noreferrer">Source ↗</a></p>)}</details>
+            </section>}
+            {officialWorkspace === "land" && <p className="official-workspace-land-note">BLM PLSS images are provider-current Kansas survey reference. Zoom in for sections and divisions. They do not establish parcels, current ownership, title, or access. <a href="https://glorecords.blm.gov/" target="_blank" rel="noreferrer">Search official GLO patents, plats, and field notes ↗</a> Reviewed record overlays and KFM land releases remain pending.</p>}
             <p>{!buildYearCurrent ? `Current sources are held because this site was built for ${OFFICIAL_CONTEXT_PRESENT_FRAME}. NASA’s fixed lightning climatology remains available as historical context.` : year === OFFICIAL_CONTEXT_PRESENT_FRAME ? "Operational sources have their own observation clocks. NASA lightning climatology is a separate 1995–2014 historical composite. Both are map context only." : `Operational sources selected for the map are held at ${temporalScopeLabel}; choose Present to display them. NASA’s fixed climate field is independent of this atlas year.`}</p>
             <div className="official-context-pulse" aria-label="Live source connection status">
               <div><span><small>RETURNED FEATURES</small><strong>{officialFeatureCount.toLocaleString("en-US")}</strong></span><span><small>SELECTED SOURCES</small><strong>{officialReadyCount}/{visibleOfficialCount} settled</strong></span><span><small>LATEST RETRIEVAL</small><strong>{officialLatestRetrievedAt ? `${new Date(officialLatestRetrievedAt).toLocaleString("en-US", { timeZone: "UTC", year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "2-digit", hour12: false })} UTC` : "Not yet"}</strong></span></div>
@@ -8001,7 +8011,7 @@ export default function Home() {
               <label className="daylight-scrubber"><span className="sr-only">Solar time from {daylightDay} through {daylightThroughDay}, Kansas Central time</span><input type="range" min="0" max="10000" step="1" value={daylightSliderValue} disabled={!daylightEnabled} aria-valuetext={`${daylightDisplayTime.central}; ${daylightDisplayTime.utc}`} onChange={(event) => seekDaylight(Number(event.target.value) / 10_000)} /><span><span>{daylightDay} · midnight</span><span>{daylightRangeSummary}</span><span>{daylightThroughDay} · end</span></span></label>
               <small className="daylight-band-key"><i aria-hidden="true" /> Night <i aria-hidden="true" /> Astronomical twilight <i aria-hidden="true" /> Nautical twilight <i aria-hidden="true" /> Civil twilight · apparent sunrise/sunset</small>
             </section>
-            <div className="official-context-list"><GovernedWaterControl mapRef={mapRef} styleReady={styleReady} /><SoilMoistureControl mapRef={mapRef} styleReady={styleReady} state={soilMapState} onChange={changeSoilMapState} onEngineContextChange={setSoilMoistureContext} />{listedOfficialSources.map((source) => {
+            <div className="official-context-list"><div hidden={officialWorkspace !== "all"}><GovernedWaterControl mapRef={mapRef} styleReady={styleReady} /><SoilMoistureControl mapRef={mapRef} styleReady={styleReady} state={soilMapState} onChange={changeSoilMapState} onEngineContextChange={setSoilMoistureContext} /><CropCasmaControl mapRef={mapRef} styleReady={styleReady} /></div>{listedOfficialSources.map((source) => {
               const state = officialStates[source.id];
               const heldAtFrame = officialVisibility[source.id] && !effectiveOfficialVisibility[source.id];
               const needsCloserView = officialVisibility[source.id] && !heldAtFrame && state !== "error" && view.zoom < TERRAIN_DISPLAY_MIN_ZOOM && (source.id === "usgs-3dep-hillshade" || source.id === "usgs-3dep-slope");

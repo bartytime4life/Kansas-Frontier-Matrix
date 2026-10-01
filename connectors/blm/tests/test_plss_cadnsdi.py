@@ -47,6 +47,17 @@ class PlannerTests(unittest.TestCase):
         self.assertEqual(pl.parse_request(URL), pl.QueryRequest("township", 0, 10))
         section = pl.query_url("first_division", offset=2000, count=1000)
         self.assertEqual(pl.parse_request(section), pl.QueryRequest("first_division", 2000, 1000))
+        self.assertIn("PLSSID+LIKE+%27KS%25%27", section)
+        self.assertNotIn("STATEABBR", section)
+        intersected = pl.query_url("intersected")
+        self.assertEqual(pl.parse_request(intersected).layer, "intersected")
+        self.assertIn("STATEABBR%3D%27KS%27", intersected)
+
+    def test_count_response_rejects_arcgis_error_inside_http_200(self):
+        self.assertEqual(pl.parse_count(b'{"count": 82466}', status=200, layer="first_division"), 82466)
+        for body in (b'{"error":{"code":400}}', b'{"count":true}', b'{"count":-1}', b'<html>'):
+            with self.subTest(body=body), self.assertRaises(pl.PlssInputError):
+                pl.parse_count(body, status=200, layer="first_division")
 
     def test_bounded_planning(self):
         for kwargs, code in (({"layer": "parcels"}, "LAYER"), ({"offset": -1}, "OFFSET"),
@@ -76,6 +87,29 @@ class PlannerTests(unittest.TestCase):
 
 
 class ParserTests(unittest.TestCase):
+    def test_section_scope_uses_plssid_without_nonexistent_state_field(self):
+        section_url = pl.query_url("first_division", count=10)
+        section = feature(1, FRSTDIVID="KS060001S0010W0SN010", STATEABBR=...)
+        self.assertEqual(parse(body([section]), url=section_url).features[0].identifier,
+                         "KS060001S0010W0SN010")
+        section["properties"]["PLSSID"] = "OK170001N0010W0"
+        with self.assertRaises(pl.PlssInputError) as ctx:
+            parse(body([section]), url=section_url)
+        self.assertEqual(str(ctx.exception), "STATE_SCOPE")
+
+    def test_provider_sections_can_share_frstdivid_without_losing_objectids(self):
+        section_url = pl.query_url("first_division", count=10)
+        sections = [feature(1, FRSTDIVID="KS060001S0010W0SN010", STATEABBR=...),
+                    feature(2, FRSTDIVID="KS060001S0010W0SN010", STATEABBR=...)]
+        parsed = parse(body(sections), url=section_url)
+        self.assertEqual([item.object_id for item in parsed.features], [1, 2])
+        self.assertEqual([item.identifier for item in parsed.features], [sections[0]["properties"]["FRSTDIVID"]] * 2)
+
+    def test_intersected_object_id_is_unique_page_identity(self):
+        url = pl.query_url("intersected", count=10)
+        features = [feature(1, FRSTDIVID="SAME"), feature(2, FRSTDIVID="SAME")]
+        self.assertEqual([item.identifier for item in parse(body(features), url=url).features], ["1", "2"])
+
     def test_features_are_reference_geometry_candidates(self):
         page = parse()
         item = page.features[0]
