@@ -241,16 +241,19 @@ def _retry_decision(
                 max_delay if log_delay >= math.log(max_delay) else math.exp(log_delay)
             )
     reasons = ["TRANSIENT_RETRY"]
+    retry_after_floor: float | None = None
     if error_class == "RATE_LIMITED":
         reasons = ["RATE_LIMIT_RETRY"]
         if retry_after_seconds is not None:
-            delay_base = max(delay_base, min(retry_after_seconds, max_delay))
+            retry_after_floor = min(retry_after_seconds, max_delay)
             reasons.append("RETRY_AFTER_HONORED")
         else:
             reasons.append("RETRY_AFTER_ABSENT")
 
     jitter_factor = 1.0 + jitter_fraction * ((2.0 * jitter_unit) - 1.0)
     delay = max(0.0, min(delay_base * jitter_factor, max_delay))
+    if retry_after_floor is not None:
+        delay = max(delay, retry_after_floor)
     remaining = deadline - elapsed_seconds
     if delay >= remaining:
         return {

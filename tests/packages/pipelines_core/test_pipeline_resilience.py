@@ -116,10 +116,31 @@ def test_rate_limit_retry_honors_bounded_retry_after() -> None:
     request = _request("allow_retry")
     plan = plan_pipeline_resilience(request)
     assert plan["retry"]["classification"] == "RATE_LIMITED"
-    assert plan["retry"]["delay_seconds"] == 22.5
+    assert plan["retry"]["delay_seconds"] == 20
     assert plan["retry"]["reason_codes"] == [
         "RATE_LIMIT_RETRY",
         "RETRY_AFTER_HONORED",
+    ]
+
+
+def test_rate_limit_retry_after_is_a_floor_after_jitter_and_deadline_check() -> None:
+    request = _request("allow_retry")
+    request["retry_context"]["jitter_unit"] = 0
+
+    plan = plan_pipeline_resilience(request)
+    assert plan["retry"]["delay_seconds"] == 20
+
+    request["retry_context"]["retry_after_seconds"] = 1000
+    plan = plan_pipeline_resilience(request)
+    assert plan["retry"]["delay_seconds"] == 60
+
+    request["retry_context"]["retry_after_seconds"] = 20
+    request["policy"]["retry"]["deadline_seconds"] = 35
+    plan = plan_pipeline_resilience(request)
+    assert plan["retry"]["decision"] == "STOP"
+    assert plan["retry"]["delay_seconds"] == 0.0
+    assert plan["retry"]["reason_codes"] == [
+        "RETRY_DEADLINE_WOULD_BE_EXCEEDED"
     ]
 
 
