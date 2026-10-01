@@ -1,13 +1,15 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/docs-sources-catalog-kansas-dasc-geoportal
 title: Kansas Geoportal (DASC) — Live ArcGIS Source-Family Registration
-type: source-family-page; live-discovery-registration; no-source-activation
+type: source-family-page
 version: v0.3.0
 status: verified live discovery and HUC12 candidate capture; no admission or publication
 owners: NEEDS VERIFICATION — Kansas source steward + affected domain steward + rights + sensitivity + release reviewer
 created: 2026-09-20
 updated: 2026-10-01
 policy_label: public-review; discovery-live; cite-or-abstain; fail-closed; no-activation; no-publication
+owning_root: docs/
+responsibility: Document DASC item discovery and the bounded private HUC12 candidate capture without granting source admission or public release.
 current_path: docs/sources/catalog/kansas/dasc-geoportal.md
 truth_posture: >
   CONFIRMED public Kansas Geoportal ArcGIS Hub availability, ArcGIS organization
