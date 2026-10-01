@@ -10,6 +10,10 @@
 A map-first Kansas explorer with real provider baselines, dated archive replay,
 source downloads, and private data contribution and steward review workflows.
 
+The reviewed Crop-CASMA 1 km raster is shown only in 2D Mercator. Globe view holds
+it because its regional Web Mercator tiles cannot provide trustworthy globe
+placement. In 2D it uses the shared map layer order and raster opacity budget.
+
 The owner-preserved application baseline is Site version 68. See
 [preservation and recovery](docs/SITE_PRESERVATION.md) and root `AGENTS.md`
 before importing, replacing, synchronizing or publishing other Site copies.

@@ -88,6 +88,17 @@ export const balanceMapRasters = (map: MapLibreMap): void => {
   }
 };
 
+// Regional Web Mercator tiles cannot be displayed as trustworthy globe imagery.
+export const syncMercatorRaster = (map: MapLibreMap, id: string, opacity: number, requestedProjection: "mercator" | "globe" = "mercator"): void => {
+  if (!map.getLayer(id)) { balanceMapRasters(map); return; }
+  const visible = requestedProjection === "mercator" && map.getProjection()?.type === "mercator";
+  if (map.getLayoutProperty(id, "visibility") !== (visible ? "visible" : "none"))
+    map.setLayoutProperty(id, "visibility", visible ? "visible" : "none");
+  requestRasterOpacity(map, id, opacity);
+  balanceMapRasters(map);
+  composeMapLayers(map);
+};
+
 export const requestFillOpacity = (map: MapLibreMap, id: string, opacity: number): void => {
   let requests = fillRequests.get(map);
   if (!requests) { requests = new Map(); fillRequests.set(map, requests); }

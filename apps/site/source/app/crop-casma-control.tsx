@@ -1,22 +1,27 @@
 "use client";
 
-import { useEffect, useState, type RefObject } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type RefObject } from "react";
 import type { Map as MapLibreMap } from "./maplibre-seam";
+import { balanceMapRasters, syncMercatorRaster } from "./map-layer-composition";
 
 const SOURCE = "external-crop-casma-1km";
 const LAYER = "external-crop-casma-1km-raster";
 type Availability = { state: "available" | "held" | "error"; day?: string; validCells?: number; dataMin?: number; dataMax?: number; sourceUrl?: string; code?: string; coverageState?: string; coverageCheckpoints?: Record<string, number | null> };
 
-export function CropCasmaControl({ mapRef, styleReady }: { mapRef: RefObject<MapLibreMap | null>; styleReady: boolean }) {
+export function CropCasmaControl({ mapRef, styleReady, projection }: { mapRef: RefObject<MapLibreMap | null>; styleReady: boolean; projection: "mercator" | "globe" }) {
   const [availability, setAvailability] = useState<Availability | null>(null);
   const [checking, setChecking] = useState(false);
   const [enabled, setEnabled] = useState(false);
   const [opacity, setOpacity] = useState(0.7);
   const [renderState, setRenderState] = useState<"off" | "loading" | "rendered" | "partial">("off");
   const [revision, setRevision] = useState(0);
+  const opacityRef = useRef(opacity);
+  const projectionRef = useRef(projection);
 
   useEffect(() => {
     const abort = new AbortController();
+    // This state marks the start of the release check owned by this effect.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setChecking(true);
     fetch("/api/crop-casma/availability", { signal: abort.signal, cache: "no-store" })
       .then(async response => {
@@ -28,11 +33,13 @@ export function CropCasmaControl({ mapRef, styleReady }: { mapRef: RefObject<Map
     return () => abort.abort();
   }, [revision]);
 
+  /* eslint-disable react-hooks/set-state-in-effect -- Map source lifecycle reports loading and failure from this effect. */
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !styleReady || !enabled || availability?.state !== "available" || !availability.day) {
       if (map?.getLayer(LAYER)) map.removeLayer(LAYER);
       if (map?.getSource(SOURCE)) map.removeSource(SOURCE);
+      if (map) balanceMapRasters(map);
       return;
     }
     let active = true, failed = false;
@@ -44,9 +51,16 @@ export function CropCasmaControl({ mapRef, styleReady }: { mapRef: RefObject<Map
         tiles: [`/api/crop-casma/tile?day=${availability.day}&z={z}&x={x}&y={y}`], tileSize: 256,
         minzoom: 4, maxzoom: 9, bounds: [-102.1, 36.95, -94.55, 40.05],
         attribution: "USDA NASS Crop-CASMA · SMAP Hybrid 1 km · reviewed snapshot" });
-      map.addLayer({ id: LAYER, type: "raster", source: SOURCE,
-        paint: { "raster-opacity": opacity, "raster-resampling": "nearest", "raster-fade-duration": 0 } });
-    } catch { setRenderState("partial"); return; }
+      map.addLayer({ id: LAYER, type: "raster", source: SOURCE, layout: { visibility: projectionRef.current === "mercator" && map.getProjection()?.type === "mercator" ? "visible" : "none" },
+        paint: { "raster-opacity": opacityRef.current, "raster-resampling": "nearest", "raster-fade-duration": 0 } });
+      syncMercatorRaster(map, LAYER, opacityRef.current, projectionRef.current);
+    } catch {
+      if (map.getLayer(LAYER)) map.removeLayer(LAYER);
+      if (map.getSource(SOURCE)) map.removeSource(SOURCE);
+      balanceMapRasters(map);
+      setRenderState("partial");
+      return;
+    }
     const onSource = (event: { sourceId?: string; isSourceLoaded?: boolean }) => {
       if (active && event.sourceId === SOURCE && event.isSourceLoaded) setRenderState(failed ? "partial" : "rendered");
     };
@@ -55,21 +69,32 @@ export function CropCasmaControl({ mapRef, styleReady }: { mapRef: RefObject<Map
     };
     map.on("sourcedata", onSource);
     map.on("error", onError);
+    const onRender = () => {
+      if (map.getLayer(LAYER) && map.getLayoutProperty(LAYER, "visibility") !== (projectionRef.current === "mercator" && map.getProjection()?.type === "mercator" ? "visible" : "none"))
+        syncMercatorRaster(map, LAYER, opacityRef.current, projectionRef.current);
+    };
+    map.on("render", onRender);
     return () => {
       active = false;
       map.off("sourcedata", onSource);
       map.off("error", onError);
+      map.off("render", onRender);
       if (map.getLayer(LAYER)) map.removeLayer(LAYER);
       if (map.getSource(SOURCE)) map.removeSource(SOURCE);
+      balanceMapRasters(map);
     };
   }, [availability?.day, availability?.state, enabled, mapRef, styleReady]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    opacityRef.current = opacity;
+    projectionRef.current = projection;
     const map = mapRef.current;
-    if (map?.getLayer(LAYER)) map.setPaintProperty(LAYER, "raster-opacity", opacity);
-  }, [mapRef, opacity]);
+    if (map?.getLayer(LAYER)) syncMercatorRaster(map, LAYER, opacity, projection);
+  }, [mapRef, opacity, projection, styleReady]);
 
-  return <article className="official-context-row crop-casma-control" data-state={renderState} data-visible={enabled}>
+  const globeHeld = projection === "globe";
+  return <article className="official-context-row crop-casma-control" data-state={globeHeld && enabled ? "held" : renderState} data-visible={enabled && !globeHeld}>
     <div className="official-context-primary">
       <label className="visibility-switch"><input type="checkbox" checked={enabled} disabled={availability?.state !== "available"}
         aria-label={enabled ? "Hide Crop-CASMA 1 km soil moisture" : "Show Crop-CASMA 1 km soil moisture"}
@@ -78,7 +103,7 @@ export function CropCasmaControl({ mapRef, styleReady }: { mapRef: RefObject<Map
       <div><strong>Soil moisture · 1 km hybrid</strong><small>USDA NASS Crop-CASMA · derived numeric cells · {checking ? "checking" : availability?.state ?? "unchecked"}</small></div>
     </div>
     <div className="official-context-option-body">
-      <div className="soil-display-panel"><div><span>SEPARATE REVIEWED PRODUCT</span><strong>{availability?.day ?? "No active day"}</strong><small>1,000 m source grid · volumetric moisture (m³/m³) · no value interpolation</small></div><b data-state={renderState}>{enabled ? renderState.toUpperCase() : availability?.state === "available" ? "READY" : "HELD"}</b></div>
+      <div className="soil-display-panel"><div><span>SEPARATE REVIEWED PRODUCT</span><strong>{availability?.day ?? "No active day"}</strong><small>1,000 m source grid · volumetric moisture (m³/m³) · no value interpolation</small></div><b data-state={globeHeld && enabled ? "held" : renderState}>{enabled ? globeHeld ? "GLOBE HELD" : renderState.toUpperCase() : availability?.state === "available" ? "READY" : "HELD"}</b></div>
       {availability?.state === "available" ? <>
         <label className="crop-casma-opacity">Opacity <input type="range" min="0" max="100" value={Math.round(opacity * 100)} onChange={event => setOpacity(Number(event.target.value) / 100)} /><output>{Math.round(opacity * 100)}%</output></label>
         <small>Available {availability.day}. Values span {availability.dataMin?.toFixed(3)}–{availability.dataMax?.toFixed(3)} m³/m³ across {availability.validCells?.toLocaleString("en-US")} source cells. Transparent cells have no source value. This is a derived product, not a station observation.</small>
