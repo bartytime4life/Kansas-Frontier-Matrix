@@ -319,7 +319,18 @@ At the pinned historical snapshot, `tests/policy/test_explorer_web_adapter_bound
 1. MapLibre/Cesium imports in inspected Explorer source files must remain inside the adapter directory.
 2. Explorer source files must not contain configured internal-store path literals.
 
-This is useful, nonvacuous static boundary evidence because the helper now rejects a missing source root or empty source inventory. It is not proof of:
+At `main@f0fe4794f87cda30d65b51a6add5922a10ad8f16`, the owned Site source
+is the current inspected public client. Its app-local
+`tests/client-store-boundary.test.mjs` starts from every `use client` entrypoint,
+follows relative runtime imports and literal dynamic imports, and rejects
+reachable server store modules, route handlers, and server-only capabilities.
+The Site test command collects this guard. It does not re-establish the retired
+Explorer shell, prove all network destinations or runtime behavior, or replace
+browser, release, and publication verification.
+
+The retired guard was nonvacuous at its pinned snapshot because it rejected a
+missing source root or empty source inventory. Neither historical guard nor the
+current Site import guard proves:
 
 - runtime import behavior;
 - network behavior;
