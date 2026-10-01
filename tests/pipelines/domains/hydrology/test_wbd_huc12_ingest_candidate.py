@@ -200,3 +200,73 @@ def test_cli_does_not_overwrite_output(tmp_path: Path) -> None:
     assert output.read_text(encoding="utf-8") == "preserve"
     payload = json.loads(completed.stdout)
     assert payload["findings"] == [{"code": "OUTPUT_PATH_UNSAFE", "path": "/"}]
+
+
+def test_cli_creates_external_output_without_overwrite(tmp_path: Path) -> None:
+    output = tmp_path / "candidate.json"
+    completed = subprocess.run(
+        [sys.executable, str(MODULE_PATH), str(FIXTURES / "valid/no_change.json"),
+         "--output", str(output)],
+        check=False, capture_output=True, text=True,
+    )
+
+    assert completed.returncode == 0
+    assert json.loads(output.read_text(encoding="utf-8")) == json.loads(completed.stdout)
+    assert output.stat().st_mode & 0o077 == 0
+
+
+def test_cli_rejects_symlinked_output_parent(tmp_path: Path) -> None:
+    destination = tmp_path / "destination"
+    destination.mkdir()
+    alias = tmp_path / "alias"
+    alias.symlink_to(destination, target_is_directory=True)
+    completed = subprocess.run(
+        [sys.executable, str(MODULE_PATH), str(FIXTURES / "valid/no_change.json"),
+         "--output", str(alias / "candidate.json")],
+        check=False, capture_output=True, text=True,
+    )
+
+    assert completed.returncode == 2
+    assert json.loads(completed.stdout)["findings"] == [
+        {"code": "OUTPUT_PATH_UNSAFE", "path": "/"}
+    ]
+    assert not (destination / "candidate.json").exists()
+
+
+def test_cli_rejects_dangling_output_symlink(tmp_path: Path) -> None:
+    target = tmp_path / "missing.json"
+    output = tmp_path / "candidate.json"
+    output.symlink_to(target)
+    completed = subprocess.run(
+        [sys.executable, str(MODULE_PATH), str(FIXTURES / "valid/no_change.json"),
+         "--output", str(output)],
+        check=False, capture_output=True, text=True,
+    )
+
+    assert completed.returncode == 2
+    assert json.loads(completed.stdout)["findings"] == [
+        {"code": "OUTPUT_PATH_UNSAFE", "path": "/"}
+    ]
+    assert output.is_symlink() and not target.exists()
+
+
+def test_output_rejects_repository_lifecycle_path_before_write(monkeypatch: pytest.MonkeyPatch) -> None:
+    def unexpected_tempfile(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("repository lifecycle output was opened")
+
+    monkeypatch.setattr(MODULE.tempfile, "mkstemp", unexpected_tempfile)
+    output = REPO_ROOT / "data/raw/hydrology/wbd-huc12-test-output.json"
+    with pytest.raises(OSError, match="OUTPUT_PATH_UNSAFE"):
+        MODULE.write_output(output, "{}")
+
+
+def test_output_link_failure_leaves_no_partial_target(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def fail_link(*_args: object, **_kwargs: object) -> None:
+        raise OSError("synthetic link failure")
+
+    monkeypatch.setattr(MODULE.os, "link", fail_link)
+    with pytest.raises(OSError, match="OUTPUT_PATH_UNSAFE"):
+        MODULE.write_output(tmp_path / "candidate.json", "{}")
+    assert not list(tmp_path.iterdir())

@@ -2,7 +2,7 @@
 doc_id: kfm://doc/pipelines-domains-hydrology-ingest-wbd-huc-readme
 title: Hydrology WBD HUC Ingest Pipeline README
 type: readme
-version: v0.3
+version: v0.4
 status: implemented; fixture-first; no-network; non-publisher
 owners: OWNER_TBD — Hydrology pipeline owner; Hydrology domain steward; USGS source steward; validation steward
 created: 2026-06-13
@@ -81,6 +81,11 @@ Overflowing JSON exponents (for example `1e999`) are rejected as non-finite
 before candidate hashing. Direct programmatic calls with values that cannot be
 canonically serialized return a bounded finding. Neither path echoes the input
 value in its diagnostic.
+
+The optional `--output` creates one owner-selected review file in an existing
+directory outside the repository. It rejects symlinked parent paths and
+existing targets. The default remains stdout. The file is a candidate
+projection, not a governed RAW or QUARANTINE lifecycle write.
 
 ## Commands
 

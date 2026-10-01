@@ -14,7 +14,9 @@ import hashlib
 import importlib.util
 import json
 import math
+import os
 import sys
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
@@ -445,6 +447,30 @@ def _parser() -> argparse.ArgumentParser:
     return parser
 
 
+def write_output(path: Path, serialized: str) -> None:
+    """Create one review artifact outside the repository, never through a symlink."""
+    if path.name in {"", ".", ".."}:
+        raise OSError("OUTPUT_PATH_UNSAFE")
+    candidate = path if path.is_absolute() else Path.cwd() / path
+    try:
+        if any(parent.is_symlink() for parent in (candidate.parent, *candidate.parent.parents)):
+            raise OSError("OUTPUT_PATH_UNSAFE")
+        parent = candidate.parent.resolve(strict=True)
+        if not parent.is_dir() or parent.is_relative_to(REPO_ROOT.resolve(strict=True)):
+            raise OSError("OUTPUT_PATH_UNSAFE")
+        descriptor, temporary = tempfile.mkstemp(dir=parent, prefix=".wbd-candidate-")
+        try:
+            with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
+                stream.write(serialized + "\n")
+                stream.flush()
+                os.fsync(stream.fileno())
+            os.link(temporary, parent / candidate.name)
+        finally:
+            Path(temporary).unlink(missing_ok=True)
+    except (OSError, RuntimeError) as error:
+        raise OSError("OUTPUT_PATH_UNSAFE") from error
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     package, input_findings = read_json_object(args.source_package)
@@ -462,14 +488,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         separators=(",", ":"),
     )
     if args.output is not None:
-        if args.output.exists() or not args.output.parent.is_dir():
+        try:
+            write_output(args.output, serialized)
+        except OSError:
             print(
                 _serialize_findings(
                     [Finding("OUTPUT_PATH_UNSAFE", "/")]
                 )
             )
             return 2
-        args.output.write_text(serialized + "\n", encoding="utf-8")
     print(serialized)
     return 0
 

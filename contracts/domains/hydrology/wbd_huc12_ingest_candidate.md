@@ -88,6 +88,10 @@ The implementation must fail closed on:
 Diagnostics contain stable codes and bounded paths. They do not echo source payload values.
 Programmatic source-package inputs with values that cannot be canonically
 serialized also return a finite diagnostic instead of raising an exception.
+When an output file is requested, it is a create-only review artifact in an
+existing directory outside the repository. Symlinked parents and existing
+targets are denied. The output option does not grant RAW or QUARANTINE
+lifecycle-write authority.
 
 ## Non-effects
 
