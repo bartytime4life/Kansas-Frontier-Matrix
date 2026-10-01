@@ -2,17 +2,17 @@
 doc_id: kfm://doc/docs-sources-catalog-kansas-dasc-geoportal
 title: Kansas Geoportal (DASC) — Live ArcGIS Source-Family Registration
 type: source-family-page; live-discovery-registration; no-source-activation
-version: v0.2.0
-status: verified live discovery surface; candidate items; no admission or publication
+version: v0.3.0
+status: verified live discovery and HUC12 candidate capture; no admission or publication
 owners: NEEDS VERIFICATION — Kansas source steward + affected domain steward + rights + sensitivity + release reviewer
 created: 2026-09-20
-updated: 2026-09-20
+updated: 2026-10-01
 policy_label: public-review; discovery-live; cite-or-abstain; fail-closed; no-activation; no-publication
 current_path: docs/sources/catalog/kansas/dasc-geoportal.md
 truth_posture: >
   CONFIRMED public Kansas Geoportal ArcGIS Hub availability, ArcGIS organization
-  identity, representative public Feature Service metadata and bounded count queries /
-  PROPOSED reuse of existing bounded ArcGIS REST acquisition machinery and per-item
+  identity, public Feature Service metadata, bounded count queries, and one
+  complete private HUC12 candidate capture / PROPOSED per-item
   SourceDescriptor intake / NEEDS VERIFICATION per-item publisher authority, scope,
   currentness, rights, attribution, sensitivity, schema, correction behavior, and
   downstream fitness / DENY portal-wide admission, parcel-title truth, owner-data
@@ -27,14 +27,60 @@ related:
 notes:
   - "Live means the public discovery and REST surfaces responded during the dated probe; it does not mean admitted, scheduled, released, deployed, promoted, or published."
   - "DASC is an aggregator. Each ArcGIS item retains its own publisher, role, version, rights, sensitivity, and fitness decision."
-  - "No parallel adapter is authorized: the existing bounded ArcGIS REST request pattern is the proposed protocol-level reuse point."
+  - "The HUC12 source profile reuses bounded transport and candidate storage; it does not establish generic WBD/NHDPlus intake or portal-wide admission."
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas Geoportal (DASC) — live ArcGIS source-family registration
 
+## 2026-10-01 HUC12 live-capture implementation checkpoint
+
+The repository now has an on-demand, **unreleased** HUC12 candidate capture at
+`connectors/kansas/dasc_geoportal.py`. It reuses `connectors_core.bounded_curl`
+and the external immutable candidate writer, with a DASC-specific query and
+validator. This is protocol and lifecycle reuse; the WBD/NHDPlus connector is
+not a generic DASC ingestion adapter. The capture deliberately selects only
+features whose provider `states` field includes `KS`; a selected watershed's
+full cross-border polygon is preserved.
+
+The profile pins ArcGIS item `0d15901ab05142bd8e8346bbf7ee59f7`, its
+service/layer, public access, owner and rights text, OID `FID`, selected fields,
+polygon type, and pagination capabilities. It checks item modification and
+service data-edit timestamps before and after capture, verifies complete
+provider counts, strict OID order, unique 12-character HUC identifiers,
+Kansas scope, and bounded polygon coordinates. Original item metadata, layer
+metadata, count responses, and GeoJSON pages are preserved with SHA-256
+digests and retrieval times in a private candidate directory. A failed or
+drifting run leaves an `INCOMPLETE` manifest and cannot become a released layer.
+
+Run from the repository root with `PYTHONPATH=packages/connectors-core/src:.`
+and `python3 -m connectors.kansas.dasc_geoportal /absolute/new/candidate-path`.
+The destination must be a new directory under `KFM_DATA_ROOT/data/raw` or
+`/tmp`; the latter is suitable only for a local rehearsal, not durable storage.
+The command makes no source-admission, rights, sensitivity, evidence, release,
+or Site-activation decision. The ArcGIS server currently returns malformed,
+unquoted ETags; the DASC transport ignores those headers and relies on exact
+response digests plus item/service revision checks instead of manufacturing
+valid-looking ETags.
+
+The live count query on 2026-10-01 returned **2,057 provider-labelled Kansas
+HUC12 features**. This is a capture scope count, not proof of independent
+geometric Kansas intersection, current federal WBD equivalence, completeness
+of every Kansas watershed, or permission to publish. Streams, PLSS, parcels,
+and other portal layers remain separate item-level work. The rejected
+non-Kansas parcel item below stays excluded.
+
+The local rehearsal completed 83 pages and 2,057 features, with 2,057 counted
+both before and after. Its candidate ID is
+`sha256:09a5498fdd2d4c15ab341088e019a0c0b7eab67601dfdaef1f764b965f459ce8`.
+An independent readback checked all 89 saved object digests, the manifest
+digest, page feature counts, and the unreleased state. The bytes reside in a
+private `/tmp` directory for this rehearsal; no durable-store admission,
+processing, catalog projection, evidence bundle, Site connection, or release
+was performed.
+
 The [Kansas Geoportal](https://hub.kansasgis.org/) is registered here as a **verified live discovery source family**. The portal is an ArcGIS Hub surface backed by ArcGIS item metadata and public REST services in organization `ZOdjAzAQ2B0f85zi`.
 
-This registration does not flatten the portal into one authority. It does not admit every item, activate a connector or scheduler, fetch RAW payloads, create evidence, approve rights or sensitivity, release a layer, deploy code, or publish data.
+The original September registration did not flatten the portal into one authority or fetch RAW payloads. The October HUC12 capture above adds only a private, on-demand candidate. Neither step admits every item, activates a scheduler, closes evidence, approves rights or sensitivity, releases a layer, deploys code, or publishes data.
 
 ## Verified access pattern
 
@@ -47,7 +93,7 @@ Observed on `2026-09-20`:
 | Feature Service metadata | `https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/{service}/FeatureServer?f=pjson` | Public service and layer metadata returned |
 | Bounded query | `.../FeatureServer/{layer}/query?where=1%3D1&returnCountOnly=true&f=json` | Public count-only queries returned for the sampled services |
 
-The request and response family matches the ArcGIS REST/Feature Service pattern already used by KFM's WBD and other bounded ArcGIS source work. **ArcGIS protocol compatibility is confirmed; no new adapter is added by this intake.** End-to-end reuse of the existing WBD/NHDPlus acquisition path is not yet proven. The inspected KanPlan transport is synthetic-only, and no general live pagination implementation was established by this review. Each selected item still needs a product-specific configuration, schema mapping, pagination limit, stable identity rule, negative fixtures, and failure behavior.
+At the 2026-09-20 checkpoint, the request and response family matched the ArcGIS REST/Feature Service pattern already used by other bounded ArcGIS source work. That established protocol compatibility, **not** end-to-end reuse of the WBD/NHDPlus ingestion path. KanPlan was synthetic-only, and no general live pagination implementation was established by that review. The HUC12-specific implementation above now supplies its own bounded query, validation, and failure behavior while reusing shared transport and candidate storage. Other items still require item-specific profiles and review.
 
 ## Representative live items
 
@@ -62,7 +108,7 @@ These examples prove catalog and service availability only. Counts are dated pro
 
 Correction to the initial catalog probe: the parcel-labelled item has longitude bounds -74.5531 to -74.0311 and does not intersect Kansas. Sharing the university ArcGIS organization does not establish DASC catalog membership or Kansas coverage. This item is rejected from Kansas intake; the initial count is historical metadata, not evidence of Kansas parcels. Any owner/person field, private-land linkage, assessor interpretation, legal-boundary claim, or exact sensitive join remains deny-by-default.
 
-## Registration boundary
+## Registration boundary at the 2026-09-20 checkpoint
 
 | Decision | State |
 |---|---|
