@@ -15,6 +15,7 @@ const { readBoundedJson, JsonLimitError } = await import(boundedUrl);
 const { POST } = await import(await compile("api/qwen/route.ts", {
   "../../bounded-json": boundedUrl,
   "../../qwen-context": await compile("qwen-context.ts"),
+  "../../qwen-context-safety.mjs": new URL("../app/qwen-context-safety.mjs", import.meta.url).href,
 }));
 const request = (body, headers = {}) => new Request("https://site.test/api/qwen", {
   method: "POST", headers: { "content-type": "application/json", ...headers }, body: JSON.stringify(body),
@@ -73,6 +74,9 @@ test("Qwen configuration, redirects, upstream errors and replies remain bounded"
       captured = { url, options };
       return Response.json({ error: "PRIVATE_UPSTREAM_DETAIL" }, { status: 500 });
     };
+    const hiddenContext = { camera: { center: [-98, 38], privateToken: "DO_NOT_FORWARD" } };
+    assert.equal((await POST(request({ question: "x", context: hiddenContext }))).status, 400);
+    assert.equal(captured, undefined);
     const failure = await POST(request({ question: "x", context: {} }));
     assert.equal(failure.status, 502);
     assert.doesNotMatch(await failure.text(), /PRIVATE_UPSTREAM_DETAIL/);

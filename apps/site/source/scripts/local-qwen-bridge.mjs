@@ -1,5 +1,6 @@
 import { createServer } from "node:http";
 import { fileURLToPath } from "node:url";
+import { hasSafeQwenContextShape } from "../app/qwen-context-safety.mjs";
 
 export const SITE_ORIGIN = "https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site";
 export const LOCAL_PREVIEW_ORIGIN = "http://127.0.0.1:5173";
@@ -58,7 +59,7 @@ async function boundedBody(req) {
 }
 
 function validContext(context) {
-  return isRecord(context)
+  return hasSafeQwenContextShape(context)
     && Object.keys(context).every((key) => ["camera", "basemap", "time", "visibleLayers", "officialSources", "soilMoisture", "telemetry", "selection", "nearbyContext"].includes(key))
     && isRecord(context.camera)
     && Array.isArray(context.visibleLayers) && context.visibleLayers.length <= 14
