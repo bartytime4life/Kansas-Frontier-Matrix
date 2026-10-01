@@ -78,7 +78,8 @@ test("Crop-CASMA follows 2D and globe visibility, map order, and shared raster b
   const crop = "external-crop-casma-1km-raster", soil = "external-nasa-smap-soil-raster-a";
   const layers = [
     { id: "base", type: "background" }, { id: "external-streamflow-points", type: "circle" },
-    { id: "kfm-selection-point", type: "circle" }, { id: soil, type: "raster" }, { id: crop, type: "raster" },
+    { id: "external-streamflow-label", type: "symbol" }, { id: "kfm-selection-point", type: "circle" },
+    { id: soil, type: "raster" }, { id: crop, type: "raster" },
   ];
   const layout = new Map(), paint = new Map();
   let projection = "mercator";
@@ -93,7 +94,7 @@ test("Crop-CASMA follows 2D and globe visibility, map order, and shared raster b
   };
   composition.requestRasterOpacity(map, soil, 0.6);
   composition.syncMercatorRaster(map, crop, 0.7);
-  assert.deepEqual(layers.map(({ id }) => id), ["base", soil, crop, "external-streamflow-points", "kfm-selection-point"]);
+  assert.deepEqual(layers.map(({ id }) => id), ["base", soil, crop, "external-streamflow-points", "external-streamflow-label", "kfm-selection-point"]);
   assert.ok(Math.abs(paint.get(soil) + paint.get(crop) - 0.9) < 1e-10);
   composition.syncMercatorRaster(map, crop, 0.7, "globe");
   assert.equal(layout.get(crop), "none");
