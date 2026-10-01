@@ -219,7 +219,7 @@ Authority is **referential**. A path or identifier in a register is usable only 
 | Lane path and README | `CONFIRMED` | `control_plane/registers/README.md` exists with stable `kfm://doc/control-plane-registers-readme` identity; this update keeps the same path. |
 | Placement authority | `CONFIRMED / ACCEPTED` | ADR-0029 adopts the exact Directory Rules v2 bytes. It does not move the required root packet into this sublane. |
 | Required root packet | `CONFIRMED / ENFORCED` | Nine exact files are required: eight legacy metadata profiles and one schema-governed `object_family_register.yaml`. |
-| Required population | `CONFIRMED BOUNDED` | Three required registers contain entries: document (1), object family (19), and domain lane (13); six required registers are empty. |
+| Required population | `CONFIRMED BOUNDED` | Four required registers contain entries: document (1), object family (19), domain lane (13), and verification backlog (747); five required registers are empty at the 2026-10-01 correction. |
 | Legacy metadata profile | `CONFIRMED / ENFORCED` | The current test checks eight files for `meta`, status, owner, review date, doctrine references, and an `entries` body. |
 | Object-family profile | `CONFIRMED / DEDICATED` | The `.yaml` path contains JSON-compatible data with a schema, contract, validator, fixtures, tests, workflow, and generated-receipt support. |
 | Root YAML syntax | `CONFIRMED / ENFORCED` | `docs-control-plane` parses every direct `control_plane/*.yaml`, rejects duplicate keys, and requires a mapping root. |
@@ -227,7 +227,7 @@ Authority is **referential**. A path or identifier in a register is usable only 
 | Child Markdown profiles | `CONFIRMED BOUNDED` | This README and `registers/DRIFT_REGISTER.md` are present; the latter is a profile, not a machine register. |
 | Proposed child YAML | `CONFIRMED ABSENT AT SNAPSHOT` | Seven v0.1 child YAML paths were probed on current `main` and were absent. |
 | Human drift and verification | `CONFIRMED` | Human drift and verification files contain dated material entries; their existence does not populate the machine registers. |
-| Machine drift representation | `UNKNOWN / PARTIAL` | No `control_plane/registers/drift_register.yaml` is established; the required machine verification, contradiction, and deprecation registers remain empty. |
+| Machine drift representation | `UNKNOWN / PARTIAL` | No `control_plane/registers/drift_register.yaml` is established. The root verification backlog contains 747 partial projection entries; contradiction and deprecation registers remain empty. |
 | Review routing | `CONFIRMED ROUTING / NEEDS VERIFICATION ENFORCEMENT` | CODEOWNERS routes `/control_plane/` and `/docs/registers/` to `@bartytime4life`; this does not prove independent review or required enforcement. |
 | Direct public use | `DENY` | Placement and validation do not authorize raw register reads by public clients. |
 
@@ -236,7 +236,7 @@ Authority is **referential**. A path or identifier in a register is usable only 
 1. **Root packet versus optional sublane.** The required packet remains at tested root paths; this sublane documents profiles and pairing.
 2. **Mixed validation profiles.** The object-family profile has dedicated semantic machinery; the eight legacy files do not share equivalent field-level validation.
 3. **Sparse versus authoritative wording.** Nonempty entries are projections and do not create object, source, policy, evidence, release, or publication authority.
-4. **Human detail versus machine sparsity.** Human drift/verification narratives remain richer than the empty machine verification, contradiction, and deprecation registers.
+4. **Human detail versus machine sparsity.** Human drift/verification narratives remain richer than the partial machine verification projection; contradiction and deprecation registers remain empty.
 5. **Historical pins versus currentness.** Coordination artifacts may preserve older main snapshots; this README records the current-main pin used for this update.
 
 [Back to top](#top)
@@ -420,7 +420,7 @@ That route proves GitHub ownership configuration only. It does not prove account
 | [`docs/registers/OBJECT_FAMILY_MAP.md`](../../docs/registers/OBJECT_FAMILY_MAP.md) | Older proposed Markdown mirror retained as lineage; not a second authority. |
 | [`docs/registers/DOMAIN_LANE.md`](../../docs/registers/DOMAIN_LANE.md) | Human domain-lane narrative paired with the root projection. |
 | [`docs/registers/DRIFT_REGISTER.md`](../../docs/registers/DRIFT_REGISTER.md) | Human drift history with dated entries. |
-| [`docs/registers/VERIFICATION_BACKLOG.md`](../../docs/registers/VERIFICATION_BACKLOG.md) | Human verification backlog; machine emptiness does not close it. |
+| [`docs/registers/VERIFICATION_BACKLOG.md`](../../docs/registers/VERIFICATION_BACKLOG.md) | Human verification backlog; 747 machine projection entries do not establish human-ledger parity or closure. |
 | [`contracts/governance/control_plane_registry_packet.md`](../../contracts/governance/control_plane_registry_packet.md) | Proposed normalized packet contract and no-self-authority boundary. |
 | [`schemas/contracts/v1/governance/object_family_register.schema.json`](../../schemas/contracts/v1/governance/object_family_register.schema.json) | Dedicated shape contract for `object_family_register.yaml`. |
 | [`tools/validators/control_plane/validate_object_family_register.py`](../../tools/validators/control_plane/validate_object_family_register.py) | Dedicated object-family validator implementation. |
@@ -855,6 +855,9 @@ A rollback does not erase the defect or correction history.
 <a id="evidence-ledger"></a>
 
 ## Evidence ledger
+
+The results in this table are the 2026-09-06 snapshot. The dated 2026-10-01
+correction above supersedes its population and verification-register counts.
 
 | Evidence | Verified result | Limitation |
 |---|---|---|

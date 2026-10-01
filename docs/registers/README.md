@@ -7,7 +7,7 @@ status: "active; repository-grounded; mixed-maturity"
 owners:
   - "@bartytime4life"
 created: 2026-05-08
-updated: 2026-08-15
+updated: 2026-10-01
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "Define the human-readable governance-register lane, inventory its current direct children, bound their authority, and route machine-readable projections to control_plane/."
@@ -25,6 +25,7 @@ related:
   - docs/registers/source-corpus-reconciliation-2026-08-15.md
   - .github/CODEOWNERS
 notes:
+  - "At main@5dc0ec2785663ea226a493a8f4ca7de6fe40e2e3 the machine verification backlog contains 747 partial projection entries; the earlier empty-backlog observation is historical and human-ledger parity remains unverified."
   - "Same-path documentation inventory refresh; no register entry, machine projection, ADR status, policy, release state, lifecycle state, or publication state is changed."
   - "Current path presence is implementation evidence, not automatic semantic or governance authority for every child."
 [/KFM_META_BLOCK_V2] -->
@@ -40,6 +41,13 @@ notes:
 
 > [!WARNING]
 > **This lane has mixed maturity.** The directory and all 18 current direct-child files are confirmed on the evidence snapshot, but several children remain placeholders, dated drafts, sparse registers, or unresolved naming pairs. Path presence must not be reported as semantic completeness.
+
+> **Verification backlog currentness — 2026-10-01, `main@5dc0ec2785663ea226a493a8f4ca7de6fe40e2e3`.**
+> `control_plane/verification_backlog.yaml` contains 747 artifact entries and
+> remains `PROPOSED`, `projection_only`, and `partial`. The earlier
+> empty-machine-backlog observation is historical; the direct-child inventory
+> below is otherwise pinned to its older evidence snapshot. These entries do
+> not establish parity with the human backlog or completed verification.
 
 **Quick navigation:** [Purpose](#purpose) · [Authority and status](#authority-and-status) · [Belongs and prohibited](#belongs-and-prohibited) · [Inputs and outputs](#inputs-and-outputs) · [Exposure and retention](#exposure-and-retention) · [Current inventory](#current-inventory) · [Human-machine pairings](#human-machine-pairings) · [Operating contract](#operating-contract) · [Validation](#validation) · [Ownership](#ownership-and-review) · [Change protocol](#change-protocol) · [Correction and rollback](#correction-and-rollback) · [Open verification](#open-verification) · [Status](#status-summary)
 
@@ -234,7 +242,7 @@ docs/registers/
 ├── RELEASE_REGISTER.md                  # domain-derived proposed scaffold
 ├── RELEASE_STATE.md                     # substantial draft; machine entries are empty
 ├── SOURCE_AUTHORITY.md                  # substantial draft with unresolved metadata; machine entries are empty
-├── VERIFICATION_BACKLOG.md              # dated human backlog; machine entries are empty
+├── VERIFICATION_BACKLOG.md              # dated human backlog; machine projection has 747 partial entries
 └── source-corpus-reconciliation-2026-08-15.md # dated repository-grounded source/proposal reconciliation ledger
 ```
 
@@ -271,7 +279,7 @@ A human register and a machine projection are related surfaces, not interchangea
 | [`POLICY_GATE.md`](./POLICY_GATE.md) | [`control_plane/policy_gate_register.yaml`](../../control_plane/policy_gate_register.yaml) | Human draft exists; machine `entries` list is empty |
 | [`RELEASE_STATE.md`](./RELEASE_STATE.md) | [`control_plane/release_state_register.yaml`](../../control_plane/release_state_register.yaml) | Human draft exists; machine `entries` list is empty |
 | [`SOURCE_AUTHORITY.md`](./SOURCE_AUTHORITY.md) | [`control_plane/source_authority_register.yaml`](../../control_plane/source_authority_register.yaml) | Human draft exists; machine `entries` list is empty |
-| [`VERIFICATION_BACKLOG.md`](./VERIFICATION_BACKLOG.md) | [`control_plane/verification_backlog.yaml`](../../control_plane/verification_backlog.yaml) | The human backlog has open material; the machine `entries` list is empty |
+| [`VERIFICATION_BACKLOG.md`](./VERIFICATION_BACKLOG.md) | [`control_plane/verification_backlog.yaml`](../../control_plane/verification_backlog.yaml) | The human backlog has open material; the machine projection has 747 partial entries, without proven human-ledger parity or closure |
 
 No direct machine counterpart is confirmed for `CANONICAL_LINEAGE_EXPLORATORY.md`, `CONTINUITY_INVENTORY.md`, `DRIFT_REGISTER.md`, `RELEASE_REGISTER.md`, or `source-corpus-reconciliation-2026-08-15.md` on the evidence snapshot. Do not invent one from naming symmetry.
 
