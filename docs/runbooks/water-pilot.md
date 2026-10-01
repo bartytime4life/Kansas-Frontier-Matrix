@@ -23,6 +23,46 @@ schemas/contracts define machine shapes; contracts explain semantics; infra
 contains deployment templates; control_plane retains projections; external data
 stores preserve lifecycle bytes. Synced project sources remain read-only.
 
+## Site mirror review checkpoint — 2026-10-01
+
+**CONFIRMED at monorepo `main@6c57290f9c729c8036dcf3d9d5d674a3e767b695`:**
+the [reviewed mirror receipt](../../data/receipts/generated/site-disaster-blm-knowledge-soil-mirror-20260930.json)
+records standalone Site candidate `041f626585804e5c90b8075cc506aeff5333d3b1`
+and 283 monorepo mirror files. A read-only comparison of that exact Site commit
+found all 280 candidate-file hashes equal to the receipt's `site_sha256` values.
+The monorepo has 21 files whose bytes differ from that candidate and three
+repository-only water files, consistent with the receipt's explicit overlay
+model. The standalone Site working checkout has unfinished edits; these were
+not included in the commit-pinned comparison or changed by this review.
+
+Seven **monorepo** files now differ from their recorded `mirror_sha256` values:
+
+| Receipt state | Paths with current mirror drift | Recorded monorepo changes after the receipt |
+|---|---|---|
+| `inherited_repository_overlay` | `README.md` | `00450b00caf6e0227e37cbef93e76c4799e1ddff` |
+| `merged_water_overlay` | `app/page.tsx` | `00450b00caf6e0227e37cbef93e76c4799e1ddff` |
+| `identical` at receipt time | `app/crop-casma-control.tsx`, `app/map-layer-composition.ts`, `app/map-layers.css`, `tests/crop-casma-storage.test.mjs`, `tests/map-composition.test.mjs` | `00450b00caf6e0227e37cbef93e76c4799e1ddff`; the last test also changed in `2457ef08694805139a0a1018a1209d512a864cb0` |
+
+The receipt was last committed at `4793bb07f80506f35ed3515439e10c9906737e2e`.
+[`site_mirror.py --check`](../../tools/qa/site_mirror.py) therefore returns
+`MIRROR_REVIEW_REQUIRED`, as the `water-conformance` job reports. This is a
+content-parity hold, not evidence that the seven newer overlays are wrong or
+that the standalone candidate was deployed. The receipt declares that candidate
+unpublished; hosted equivalence and current deployment remain **UNKNOWN**.
+
+**NEEDS VERIFICATION before a successor receipt:** the Site owner must establish
+which newer monorepo overlays belong in the next standalone Site source commit,
+and which remain explicitly governed repository overlays. Compare the resulting
+immutable Site commit against every mirror file; independently review overlay
+reasons and source identity; run Site and monorepo changed-area tests, type checks,
+mirror integrity, and the relevant browser journey. Preserve the existing
+receipt as historical evidence. A successor receipt may record reviewed current
+bytes only after that review; a matching digest alone does not authorize Site
+deployment, water activation, release, publication, or owner acceptance.
+
+This checkpoint changes documentation only. Reverting it restores the previous
+runbook text; it does not alter the held mirror check or any Site/data state.
+
 ## Reproducible environment
 
 Use Python 3.11 or newer; this batch used Python 3.12.3. From the repository root:
