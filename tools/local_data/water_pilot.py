@@ -15,7 +15,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
 from connectors_core.captured_json import canonical_bytes, decode_object, digest_bytes
-from connectors.usgs.water_data.pilot_capture import Capture, capture, MAX_PAGE_BYTES
+from connectors.usgs.water_data.pilot_capture import Capture, capture, MAX_PAGE_BYTES, MAX_PAGES, MAX_TOTAL_BYTES
 from pipelines.domains.hydrology.normalize import normalize_capture
 from pipelines.domains.hydrology.validate import validate_candidate
 from tools.generators.telemetry.water_operational_receipt import operational_receipt, source_health
@@ -42,17 +42,31 @@ def object_path(root: Path, digest: str) -> Path:
 
 def stage(root: Path, acquired: Capture) -> dict:
     manifest = acquired.manifest
+    manifest_bytes = canonical_bytes(manifest)
+    if len(manifest_bytes) > 256 * 1024:
+        raise ValueError("CAPTURE_MANIFEST_BYTE_LIMIT")
     expected = digest_bytes(canonical_bytes({k: v for k, v in manifest.items() if k != "capture_id"}))
     if expected != manifest.get("capture_id"):
         raise ValueError("CAPTURE_DIGEST_MISMATCH")
+    if not isinstance(manifest.get("pages"), list) or len(manifest["pages"]) > MAX_PAGES:
+        raise ValueError("CAPTURE_PAGE_LIMIT")
+    if len(acquired.objects) > MAX_PAGES:
+        raise ValueError("CAPTURE_OBJECT_BUDGET_EXCEEDED")
+    total_bytes = 0
+    for digest, raw in acquired.objects.items():
+        object_path(root, digest)
+        if not isinstance(raw, bytes) or len(raw) > MAX_PAGE_BYTES or digest_bytes(raw) != digest:
+            raise ValueError("PAGE_DIGEST_MISMATCH")
+        total_bytes += len(raw)
+        # Capture preserves the last successful page even when it crosses 8 MiB.
+        if total_bytes > MAX_TOTAL_BYTES + MAX_PAGE_BYTES:
+            raise ValueError("CAPTURE_OBJECT_BUDGET_EXCEEDED")
     run = expected.split(":")[1]
     with store_lock(root):
         for digest, raw in acquired.objects.items():
-            if len(raw) > MAX_PAGE_BYTES or digest_bytes(raw) != digest:
-                raise ValueError("PAGE_DIGEST_MISMATCH")
             immutable(object_path(root, digest), raw)
         manifest_path = root / "data/quarantine/usgs-nwis/runs" / run / "manifest.json"
-        immutable(manifest_path, canonical_bytes(manifest))
+        immutable(manifest_path, manifest_bytes)
         candidate = validation = None
         try:
             candidate = normalize_capture(manifest, acquired.objects)
@@ -87,6 +101,8 @@ def replay(root: Path, capture_id: str) -> dict:
         raise ValueError("INVALID_CAPTURE_ID")
     path = root / "data/quarantine/usgs-nwis/runs" / capture_id.split(":")[1] / "manifest.json"
     manifest = decode_object(read_regular(path, 256 * 1024), limit=256 * 1024)
+    if not isinstance(manifest.get("pages"), list) or len(manifest["pages"]) > MAX_PAGES:
+        raise ValueError("CAPTURE_PAGE_LIMIT")
     objects = {page["sha256"]: read_regular(object_path(root, page["sha256"]), MAX_PAGE_BYTES)
                for page in manifest["pages"]}
     return stage(root, Capture(manifest, objects))
