@@ -6,7 +6,7 @@ version: v0.2
 status: draft
 owners: <PLACEHOLDER — Docs steward + Source steward for noaa + Atmosphere/Air/Climate steward>
 created: 2026-05-20
-updated: 2026-05-22
+updated: 2026-10-01
 policy_label: public
 related:
   - docs/sources/catalog/noaa/README.md
@@ -24,7 +24,7 @@ related:
   - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 tags: [kfm, docs, sources, catalog, noaa, ncei, coop, asos, awos, station-observations, climate-normals, climate-anomalies, reanalysis, atmosphere-air, multi-role]
 notes:
-  - "PROPOSED product-page scaffold; sibling-link presence and repo path NEEDS VERIFICATION."
+  - "Draft bundle product page. The 1991–2020 Kansas monthly-normal intake is implemented as an unreleased candidate; other bundle components remain proposed."
   - "PROPOSED path under docs/sources/catalog/noaa/ — per-family-folder convention; unprefixed filename follows goes-abi-aod.md / hms-fire-smoke.md / hrrr-smoke.md / nws-api.md."
   - "MOST MULTI-ROLE PRODUCT in the catalog. Defaults span three distinct source_roles in one bundle: observation (stations) + modeled (reanalyses) + aggregate (climate normals, anomalies). Components MUST be admitted separately."
   - "Dominant anti-collapse: climate normal cited as per-place truth (CONFIRMED — NOAA family entry §5.2). Plus all DOM-AIR §I anti-collapses apply at least partially across components."
@@ -32,12 +32,28 @@ notes:
   - "Distinguish from USCRN (reference-grade), NWS API (operational), HRRR-Smoke (active-forecast). This product covers Mesonet-adjacent / non-reference station obs + historical archive + derived climate products."
 owning_root: docs/
 responsibility: "Documentation for NOAA/NWS Station Observations and Climate Products; not evidence, policy, release, or publication authority."
-truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
+truth_posture: CONFIRMED for the dated Kansas monthly-normal capture and local replay below; other bundle components and release readiness remain NEEDS VERIFICATION.
 [/KFM_META_BLOCK_V2] -->
 
 # NOAA/NWS Station Observations and Climate Products
 
 > A **bundle product** spanning NOAA/NCEI/NWS station observations (COOP, ASOS, AWOS, historical archive), **climate normals** and **anomalies**, and **reanalysis** model fields (e.g., NARR). Three default `source_role`s — `observation`, `aggregate`, `modeled` — in one product slice. A 30-year climate normal is **not** "what the temperature is today"; a reanalysis grid is **not** an observation.
+
+## Implemented 1991–2020 Kansas monthly-normal intake (2026-10-01)
+
+This narrow component now has an executable **candidate** path. It does not change the draft/admission posture of the larger station-climate bundle. `connectors/noaa/src/noaa/climate_normals_capture.py` fetches the exact [public AWS monthly-normal inventory and station CSV objects](https://registry.opendata.aws/noaa-climate-normals/) without an AWS account. The source inventory selects Kansas by NOAA's station state field; it is not a county scrape, a gridded raster, or proof of complete climatic coverage. `pipelines/domains/atmosphere/noaa_normals.py` replays preserved bytes into a deterministic station aggregate; `tools/local_data/noaa_climate_normals.py` stores originals in external `QUARANTINE` and candidates and station-point map previews in `WORK`. No Site or public API reads these directories.
+
+The 2026-10-01 capture selected and retrieved **568 of 568** Kansas inventory stations. Its capture ID is `sha256:bf749d4a29aaf97e7bf9aeeb6f7286a1b6b5f54bcdf5038b4cc4864623def341`; replay produced candidate `sha256:03eea29f4f55872d2fda4a8e8a1974267dc796cfa0568cb6e71fa433f93c2e06` again. Sampled monthly temperature and precipitation fields for three different station types matched NOAA's [CDO access service](https://www.ncei.noaa.gov/access/services/data/v1?dataset=normals-monthly-1991-2020&stations=USC00140010&dataTypes=MLY-TAVG-NORMAL%2CMLY-PRCP-NORMAL&format=json) in 60 checked values. That spot check does not verify every published field. The capture includes 6,816 station-month rows; temperature is present in 2,112 and precipitation in 6,780. Some stations publish only precipitation. Missing values stay missing; `S/R/P/E` completeness flags and year counts remain with each value according to [NOAA's monthly documentation](https://www.ncei.noaa.gov/pub/data/cdo/documentation/normals-monthly-1991-2020_documentation.pdf). All map previews are **points at inventory station coordinates**, with no interpolation or county fill.
+
+Run with a separate external store root (never the repository or Site source):
+
+```bash
+python3 tools/local_data/noaa_climate_normals.py --root /absolute/external/store capture
+python3 tools/local_data/noaa_climate_normals.py --root /absolute/external/store replay --capture-id sha256:bf749d4a29aaf97e7bf9aeeb6f7286a1b6b5f54bcdf5038b4cc4864623def341
+python3 tools/local_data/noaa_climate_normals.py --root /absolute/external/store map-preview --candidate-id sha256:03eea29f4f55872d2fda4a8e8a1974267dc796cfa0568cb6e71fa433f93c2e06 --month 1 --variable temperature_f
+```
+
+The first command may produce a **different** candidate on a later run if NOAA corrects objects; that requires a new comparison and review. The preview is for local steward inspection only. Source admission, rights and sensitivity checks, an EvidenceBundle, independent release review, a governed Site package, and an activated Site pointer remain open. Until then the Explorer climate layer must remain held, and this candidate cannot be called a released Kansas climate surface.
 
 [![Status: draft](https://img.shields.io/badge/status-draft-lightgrey)](#status)
 [![Lane: PROPOSED](https://img.shields.io/badge/lane-PROPOSED-blue)](#status)
@@ -49,7 +65,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 [![Truth posture: cite-or-abstain](https://img.shields.io/badge/posture-cite--or--abstain-purple)](../../../doctrine/directory-rules.md)
 <!-- TODO: replace placeholder Shields.io targets once CI/badge generation is wired (see KFM-P3-FEAT-0005). -->
 
-**Status:** PROPOSED — scaffold only · **Family:** [`noaa`](./README.md) · **Default `source_role`:** *multi-role bundle* (stations = `observation`; normals/anomalies = `aggregate`; reanalysis = `modeled`) · **Domains served:** `atmosphere-air` (primary), `agriculture` and `hydrology` (adjacencies) · **Owners:** *PLACEHOLDER* · **Last reviewed:** 2026-05-22
+**Status:** Draft bundle; Kansas monthly-normal intake candidate implemented · **Family:** [`noaa`](./README.md) · **Default `source_role`:** *multi-role bundle* (stations = `observation`; normals/anomalies = `aggregate`; reanalysis = `modeled`) · **Domains served:** `atmosphere-air` (primary), `agriculture` and `hydrology` (adjacencies) · **Owners:** *PLACEHOLDER* · **Kansas intake checked:** 2026-10-01
 
 ---
 
@@ -83,7 +99,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 ## Overview
 
 > [!NOTE]
-> **PROPOSED scaffold.** This page describes a candidate **bundle** product of the `noaa` source family. Specific endpoint URLs, station counts, normal periods, reanalysis identifiers, cadence values, and rights terms are **NEEDS VERIFICATION** and must be settled against `data/registry/sources/` and current NOAA documentation before any catalog promotion.
+> **Draft bundle.** The 1991–2020 Kansas monthly-normal endpoint, inventory count, period, and local candidate path were checked on 2026-10-01 above. Other station, anomaly, and reanalysis products in this bundle, rights decisions, and release readiness remain **NEEDS VERIFICATION** before catalog promotion.
 
 > [!CAUTION]
 > **This is a bundle.** A single product-page covers three doctrinally distinct things that NOAA/NCEI distributes through related (but not identical) pipelines:
