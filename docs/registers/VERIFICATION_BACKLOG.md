@@ -233,3 +233,15 @@ accounts for the final over-budget page that acquisition retains for quarantine.
 Changed-area tests must demonstrate rejected input leaves no new lifecycle
 objects; exact-head hosted checks and operational replay remain separate
 verification. This change grants no source admission, release, or publication.
+
+### Water package request identity — 2026-10-01
+
+`MOD-09` / P1 / **CONFIRMED on `main@02cce9e8f187c3ae7c79a206102f88c8462803e9`**:
+`tools/release/water_snapshot.py` accepted a valid WORK candidate copied under
+a different digest path and returned `PREPARED` with the requested, incorrect
+candidate ID. The package itself was built from the candidate's actual ID.
+The release-operator owner is `tools/release/`; executable conformance belongs
+under `tests/tools/`. This slice checks requested and stored identity before
+package construction. A negative test verifies the mismatch writes no snapshot,
+and a positive test preserves normal preparation. Hosted validation and review
+remain open; no activation or release is implied.

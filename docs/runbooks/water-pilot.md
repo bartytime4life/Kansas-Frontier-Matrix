@@ -144,8 +144,11 @@ Replace digest placeholders with returned identities. Rerunning replay never
 changes captured bytes or invents approvals. Failed validation preserves raw
 bytes and writes a quarantine outcome. Valid candidates remain WORK;
 source admission, rights and release remain pending. Earlier valid candidates
-are not overwritten. Provider values, units, qualifiers, provisional status,
-observation and revision instants, station geometry, retrieval time, response
+are not overwritten. Package preparation checks that the requested candidate
+digest matches the identity inside the stored WORK candidate before writing a
+review package; a mismatch is an operation error. Provider values, units,
+qualifiers, provisional status, observation and revision instants, station
+geometry, retrieval time, response
 headers and content hashes survive normalization. Null remains missing, not zero.
 Candidate freshness and coverage count only observations with a non-null flow
 value; a timestamp on a null reading cannot make a station recent.
