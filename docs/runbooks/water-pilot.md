@@ -63,6 +63,42 @@ deployment, water activation, release, publication, or owner acceptance.
 This checkpoint changes documentation only. Reverting it restores the previous
 runbook text; it does not alter the held mirror check or any Site/data state.
 
+## Site mirror currentness — 2026-10-01
+
+**CONFIRMED at monorepo `main@bc4b3ca4ad4defa390166741b21b714b6ab85f87`:**
+a read-only SHA-256 comparison of every tracked file in standalone candidate
+`041f626585804e5c90b8075cc506aeff5333d3b1` against the historical mirror
+receipt found no candidate/receipt hash mismatch. The monorepo still has 283
+tracked mirror files and the candidate has 280; neither file set drifted from
+the receipt. Current monorepo bytes differ from the receipt for ten files,
+up from seven at the earlier checkpoint. Current monorepo bytes differ from
+the pinned candidate for 23 files. These counts do not include uncommitted
+standalone Site work or establish hosted equivalence.
+
+The three newly drifted mirror paths are `app/governed-water-control.tsx`
+(`repository_only_water_overlay`), `app/governed-water.ts` and
+`tests/governed-water.test.mjs` (both `identical` at receipt time). Their
+post-receipt changes are in `91656a5e0a`, `1344ad677b`, and `1beb3a1a8b`;
+the control component changed in the last of these. The earlier seven drifted
+paths remain listed above. The current `site_mirror.py --check` still returns
+`MIRROR_REVIEW_REQUIRED`; changing that result requires a reviewed successor
+source/overlay decision and receipt, not a digest update to historical proof.
+
+The standalone checkout at the pinned candidate commit also has 11 unfinished
+tracked edits, including `app/page.tsx`, which overlaps an existing monorepo
+mirror drift. Its other edited paths are `app/earth-engine-display.tsx`,
+`app/fire-report-analysis.ts`, `app/globals.css`,
+`app/report-story-workspaces.tsx`, `app/workspace-model.ts`,
+`app/workspace-storage.ts`, `docs/EARTH_ENGINE_CONTEXT.md`,
+`tests/earth-engine-rendered.test.mjs`, `tests/fire-report-analysis.test.mjs`,
+and `tests/snapshot-workflows.test.mjs`. These edits were preserved and were
+not treated as an immutable Site source commit. Before a successor receipt,
+the Site owner must select which monorepo overlays belong in a new standalone
+source commit and which remain reviewed repository overlays, then resolve the
+unfinished source edits independently. Site tests, rendered browser behavior,
+deployment, source admission, release, publication, and owner acceptance were
+not established by this read-only comparison.
+
 ## Reproducible environment
 
 Use Python 3.11 or newer; this batch used Python 3.12.3. From the repository root:
