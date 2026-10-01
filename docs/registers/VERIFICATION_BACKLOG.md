@@ -284,3 +284,17 @@ stay in their existing responsibility roots. This follow-up requires an
 existing external directory, rejects symlinked parents and repository paths,
 and creates files without overwriting. It is stacked on the numeric-input
 repair and grants no lifecycle write, admission, release, or publication.
+
+### Site mirror source-identity guard — 2026-10-01
+
+`MOD-13` / P1 / **CONFIRMED on `main@9465a573d8859cd1564124897d10d848f9c7c350`**:
+`tools/qa/site_mirror.py --source` read standalone Site working-tree bytes
+while reporting the checkout's `HEAD` as `source_commit`. A dirty checkout
+could therefore be represented as the immutable commit. The Site comparison
+owner is `tools/qa/`; synthetic conformance belongs under `tests/qa/` and
+operational context under `docs/runbooks/`. This slice rejects a dirty source
+before comparison and rechecks its commit and worktree status after file reads.
+It preserves the historical receipt and the `MOD-01` Site mirror hold. A clean
+local Site commit currently has 51 differing shared paths and lacks 50
+monorepo mirror paths; source/overlay review, successor receipt, browser
+behavior, and publication remain **NEEDS VERIFICATION**.
