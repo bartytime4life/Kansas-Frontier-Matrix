@@ -6,8 +6,7 @@ type: README
 status: "draft; repository-grounded; canonical-root-confirmed; directory-rules-v2-adopted; required-register-packet-enforced; mixed-validation-profiles; register-population-partial; specialized-projections-present; non-authoritative"
 owners: "OWNER_TBD — Control-plane steward · Register steward · Architecture steward · Docs steward · affected authority-root owners · Validation/CI steward; CODEOWNERS routes /control_plane/ to @bartytime4life"
 created: 2026-06-24
-updated: 2026-09-06
-supersedes: v0.6 control-plane root README at the same path
+updated: 2026-10-01
 prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
 policy_label: "repository-facing; control-plane; machine-registers; authority-index; no-parallel-authority; no-direct-public-path; cite-or-abstain; correction-aware; rollback-aware"
 current_path: control_plane/README.md
@@ -79,6 +78,7 @@ related:
   - registers/README.md
 tags: [kfm, control-plane, machine-registers, governance-index, crosswalks, authority, directory-rules-v2, drift, verification, deprecation, policy-gates, release-state, validation, correction, rollback]
 notes:
+  - "Earlier v0.6 content at this same path remains available in Git history; no separate superseded document path is asserted."
   - "v0.7 repins the same-path README to current main, reconciles the direct-child map, records the topology-correction projection, and adds named current-main validation outcomes without changing authority."
   - "The first twelve H2 sections implement the adopted Directory Rules v2 ROOT_FULL field order."
   - "A validation pass proves only the boundary exercised by that validator."
@@ -92,10 +92,20 @@ notes:
 [![Status: repository-grounded draft](https://img.shields.io/badge/status-repository--grounded%20draft-f59e0b?style=flat-square)](#status)
 [![Directory Rules: v2 adopted](https://img.shields.io/badge/directory%20rules-v2%20adopted-1a7f37?style=flat-square)](#related-folders-adrs-migrations-and-aliases)
 [![Required registers: nine](https://img.shields.io/badge/required%20registers-9-1f6feb?style=flat-square)](#current-bounded-inventory)
-[![Population: three populated, six empty](https://img.shields.io/badge/required%20bodies-3%20populated%20%7C%206%20empty-f59e0b?style=flat-square)](#register-population-and-maturity)
+[![Population: four populated, five empty](https://img.shields.io/badge/required%20bodies-4%20populated%20%7C%205%20empty-f59e0b?style=flat-square)](#register-population-and-maturity)
 [![Validation: mixed profiles](https://img.shields.io/badge/validation-meta%20%2B%20schema%20profiles-1a7f37?style=flat-square)](#validation)
 [![Public path: denied](https://img.shields.io/badge/public%20path-denied%20by%20default-b42318?style=flat-square)](#public-exposure-and-sensitivity-posture)
 [![Truth: cite or abstain](https://img.shields.io/badge/truth-cite%20or%20abstain-1a7f37?style=flat-square)](#register-rules-and-failure-controls)
+
+> **Currentness correction — 2026-10-01, `main@5dc0ec2785663ea226a493a8f4ca7de6fe40e2e3`.**
+> Four required registers contain entries and five are empty. In particular,
+> `verification_backlog.yaml` has 747 artifact entries (732 `NOT_INSPECTED`,
+> 15 `PARTIAL`), declares `completeness: partial`, and remains a
+> `projection_only` proposed register. The `completion_queue.py --check`
+> producer check passed with 949 pinned markers reconciled to those 747 entries.
+> The three-populated/six-empty counts and empty-verification statements in
+> the dated 2026-09-06 snapshot below are historical. This projection does not
+> establish human-ledger parity or completed verification.
 
 > **One-line purpose.** `control_plane/` stores validated machine-readable indexes, crosswalks, and governance projections that answer **what governs what** without becoming the contract, schema, policy, source, evidence, lifecycle, release, runtime, or public authority being indexed.
 
@@ -485,6 +495,10 @@ Re-review when a required register is added, moved, populated, or retired; valid
 
 ## Current bounded inventory
 
+The tables in this section retain the 2026-09-06 evidence snapshot. For the
+verification register and required-packet counts, use the dated 2026-10-01
+currentness correction above.
+
 ### Required register packet
 
 | Register | Body | Profile | Authority limit |
@@ -811,9 +825,9 @@ Revert the M01 program-baseline instance, contract, schema, fixture cases, valid
 
 ## Status summary
 
-`control_plane/` is the canonical machine-readable governance-projection root under Directory Rules v2 as adopted by ADR-0029. Current repository evidence establishes a mixed nine-file required register packet, three nonempty required registers, six empty required registers, 29 direct children (27 files and two directories), dedicated root/alias/domain/seam/object-family validation profiles, a pinned historical MRTS-01 trust-spine snapshot, a pinned proposed M01 program baseline, a proposed topology-correction projection, specialized inactive readiness matrices, CODEOWNERS routing, and bounded Makefile/CI entrypoints.
+`control_plane/` is the canonical machine-readable governance-projection root under Directory Rules v2 as adopted by ADR-0029. The 2026-09-06 snapshot established a mixed nine-file required register packet, then with three nonempty and six empty registers, 29 direct children (27 files and two directories), dedicated root/alias/domain/seam/object-family validation profiles, a pinned historical MRTS-01 trust-spine snapshot, a pinned proposed M01 program baseline, a proposed topology-correction projection, specialized inactive readiness matrices, CODEOWNERS routing, and bounded Makefile/CI entrypoints. The dated currentness correction above supersedes only the register population counts.
 
-That evidence does **not** establish a complete or semantically closed control plane. Six required register bodies are empty; the object-family projection declares eleven conflicted required families; the topology-correction entry has no accepted commit; schema and reference closure are uneven; JSON and nested-lane coverage are not unified; consumers and correction propagation are incomplete; and no raw register is a public truth surface. Current main's named validation is mixed: the control-plane packet, object-family, and trust-spine profiles pass, while validator-suite, governance parity, M01 program-baseline receipt integrity, and schema validation remain failed for their recorded bounded reasons.
+That snapshot does **not** establish a complete or semantically closed control plane. It recorded six empty required register bodies; the object-family projection declared eleven conflicted required families; the topology-correction entry had no accepted commit; schema and reference closure were uneven; JSON and nested-lane coverage were not unified; consumers and correction propagation were incomplete; and no raw register was a public truth surface. Its named validation was mixed: the control-plane packet, object-family, and trust-spine profiles passed, while validator-suite, governance parity, M01 program-baseline receipt integrity, and schema validation failed for their recorded bounded reasons. These old check outcomes are not current-main results.
 
 The next safe corrections are separately attributable: reconcile the expected-topology/parity projection with the current evidence without expanding the baseline, repair the M01 receipt binding, and repair the aggregate validator-test syntax issue. None of those follow-ups should be folded into this README update, used to consume the proposed correction entry, or treated as authority for broad activation.
 

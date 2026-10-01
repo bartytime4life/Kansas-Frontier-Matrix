@@ -2,21 +2,22 @@
 doc_id: kfm://doc/control-plane-registers-readme
 title: control_plane/registers/README.md — Control-Plane Register Profile and Pairing Lane
 version: v0.3
-type: readme; control-plane-register-profile; nested-folder-contract; human-machine-pairing-guide
+type: README
 status: "repository-grounded currentness update; root-packet-mixed-profiles; directory-rules-v2-adopted; specialized-projections-present; semantic-validation-partial; non-authoritative"
 owners: "NEEDS VERIFICATION — Control-plane steward · Register steward · Docs steward · Policy steward · Evidence steward · Release steward · Validation/CI steward; CODEOWNERS routes /control_plane/ to @bartytime4life"
-created: NEEDS VERIFICATION — blank placeholder existed before v0.1 expansion
-updated: 2026-09-06
-supersedes: v0.2 at the same path
+created: 2026-06-24
+updated: 2026-10-01
 prepared_under_prompt: KFM same-path README currentness update
 policy_label: "repository-facing; control-plane; registers; governance-index; no-parallel-authority; no-direct-public-path; cite-or-abstain; correction-aware; rollback-aware"
 current_path: control_plane/registers/README.md
+owning_root: control_plane/
+responsibility: document the control-plane register profile, human-machine pairing, and currentness boundary without creating register authority
 truth_posture: >
   CONFIRMED the tracked register-lane README, canonical control_plane responsibility root,
   accepted ADR-0029 adoption of the exact Directory Rules v2 bytes, nine required root
   register paths, the split validation profiles (eight legacy metadata files plus one
-  schema-governed object-family register), three required registers with entries, six
-  empty required registers, current root projection files, the child DRIFT_REGISTER.md
+  schema-governed object-family register), three required registers with entries and six
+  empty at the pinned 2026-09-06 snapshot, current root projection files, the child DRIFT_REGISTER.md
   profile, absence of the seven previously proposed child YAML paths, human drift and
   verification entries, current workflow/test definitions, and CODEOWNERS routing /
   PROPOSED human-machine pairing rules, register maturity and consumer admission,
@@ -115,15 +116,16 @@ related:
   - ../../.github/CODEOWNERS
 tags: [kfm, control-plane, registers, governance-index, human-machine-pairing, drift, verification, authority, deprecation, correction, rollback]
 notes:
+  - "Earlier v0.2 content at this same path remains available in Git history; no separate superseded document path is asserted."
   - "v0.3 is a same-path currentness correction of the v0.2 register-lane README."
   - "ADR-0029 is accepted; it adopts Directory Rules v2 but does not move the required packet into this sublane."
   - "The required packet remains at control_plane/ root: eight legacy metadata profiles plus one dedicated object-family profile."
-  - "Current bounded population is three nonempty required registers and six empty required registers."
+  - "The pinned 2026-09-06 population was three nonempty required registers and six empty required registers; see the dated currentness correction below."
   - "The object-family register uses a JSON-compatible payload at a .yaml path with dedicated schema, contract, validator, fixtures, tests, workflow, and receipt support."
   - "Seven child YAML paths proposed by v0.1 were probed on current main and were absent."
   - "Adjacent draft PR #4325 changes only control_plane/README.md and draft PR #4326 changes only control_plane/registers/DRIFT_REGISTER.md; neither changes this target path. Re-pin if either lands before review."
   - "control_plane/registers/DRIFT_REGISTER.md is a Markdown profile, not a validated machine drift register."
-  - "Human drift and verification narratives remain richer than the empty machine verification, contradiction, and deprecation registers."
+  - "At the pinned 2026-09-06 snapshot, machine verification, contradiction, and deprecation registers were empty; see the dated currentness correction below."
   - "This README does not populate registers, create schemas, accept an ADR, approve policy, alter release state, promote data, expose a public route, deploy, or publish."
 [/KFM_META_BLOCK_V2] -->
 
@@ -134,9 +136,18 @@ notes:
 [![Status: repository-grounded currentness update](https://img.shields.io/badge/status-repository--grounded%20currentness%20update-f59e0b?style=flat-square)](#status)
 [![Directory Rules: v2 adopted](https://img.shields.io/badge/directory%20rules-v2%20adopted-1a7f37?style=flat-square)](#adrs)
 [![Required root registers: nine](https://img.shields.io/badge/required%20root%20registers-9-1f6feb?style=flat-square)](#current-bounded-inventory)
-[![Population: three of nine](https://img.shields.io/badge/populated-3%20of%209-f59e0b?style=flat-square)](#root-register-population)
+[![Population: four of nine](https://img.shields.io/badge/populated-4%20of%209-f59e0b?style=flat-square)](#root-register-population)
 [![Validation: mixed profiles](https://img.shields.io/badge/validation-mixed%20profiles-1a7f37?style=flat-square)](#validation)
 [![Public path: denied](https://img.shields.io/badge/public%20path-denied%20by%20default-b42318?style=flat-square)](#outputs)
+
+> **Currentness correction — 2026-10-01, `main@5dc0ec2785663ea226a493a8f4ca7de6fe40e2e3`.**
+> The required root packet now has four populated registers and five empty
+> registers. `control_plane/verification_backlog.yaml` contains 747 projected
+> artifact entries (732 `NOT_INSPECTED`, 15 `PARTIAL`); its producer check
+> passed for 949 pinned markers. It remains `PROPOSED`, `projection_only`,
+> and `partial`. The three-populated/six-empty counts and empty-verification
+> statements in the 2026-09-06 snapshot below are historical. Machine and
+> human verification ledgers have not been proven equivalent.
 
 > **One-line purpose.** `control_plane/registers/` documents register profiles, human–machine pairing rules, and unresolved placement questions while the required packet and specialized machine projections remain at the canonical `control_plane/` root.
 
@@ -146,7 +157,7 @@ notes:
 > **The required machine-register packet remains root-level.** Nine exact files under `control_plane/` are required: eight legacy metadata-profile files plus one dedicated schema-governed object-family register. Specialized projections are separate root files; this sublane does not authorize child copies, moves, aliases, or divergent registers.
 
 > [!WARNING]
-> **Population is partial and validation is mixed.** Three required registers contain entries and six remain empty. The object-family register has a dedicated schema/validator/workflow, while the other eight files share a narrower metadata contract. A green check, valid YAML shell, badge, commit, pull request, or merge is not semantic closure.
+> **Population is partial and validation is mixed.** Four required registers contain entries and five remain empty at the 2026-10-01 correction above. The object-family register has a dedicated schema/validator/workflow, while the other eight files share a narrower metadata contract. A green check, valid YAML shell, badge, commit, pull request, or merge is not semantic closure.
 
 > [!CAUTION]
 > **No ordinary public client reads this lane or a raw register directly.** Public and semi-public surfaces consume governed APIs and released, policy-allowed artifacts. A register may guide a backend validator or reviewer only after its consumer contract and maturity are verified.
@@ -208,7 +219,7 @@ Authority is **referential**. A path or identifier in a register is usable only 
 | Lane path and README | `CONFIRMED` | `control_plane/registers/README.md` exists with stable `kfm://doc/control-plane-registers-readme` identity; this update keeps the same path. |
 | Placement authority | `CONFIRMED / ACCEPTED` | ADR-0029 adopts the exact Directory Rules v2 bytes. It does not move the required root packet into this sublane. |
 | Required root packet | `CONFIRMED / ENFORCED` | Nine exact files are required: eight legacy metadata profiles and one schema-governed `object_family_register.yaml`. |
-| Required population | `CONFIRMED BOUNDED` | Three required registers contain entries: document (1), object family (19), and domain lane (13); six required registers are empty. |
+| Required population | `CONFIRMED BOUNDED` | Four required registers contain entries: document (1), object family (19), domain lane (13), and verification backlog (747); five required registers are empty at the 2026-10-01 correction. |
 | Legacy metadata profile | `CONFIRMED / ENFORCED` | The current test checks eight files for `meta`, status, owner, review date, doctrine references, and an `entries` body. |
 | Object-family profile | `CONFIRMED / DEDICATED` | The `.yaml` path contains JSON-compatible data with a schema, contract, validator, fixtures, tests, workflow, and generated-receipt support. |
 | Root YAML syntax | `CONFIRMED / ENFORCED` | `docs-control-plane` parses every direct `control_plane/*.yaml`, rejects duplicate keys, and requires a mapping root. |
@@ -216,7 +227,7 @@ Authority is **referential**. A path or identifier in a register is usable only 
 | Child Markdown profiles | `CONFIRMED BOUNDED` | This README and `registers/DRIFT_REGISTER.md` are present; the latter is a profile, not a machine register. |
 | Proposed child YAML | `CONFIRMED ABSENT AT SNAPSHOT` | Seven v0.1 child YAML paths were probed on current `main` and were absent. |
 | Human drift and verification | `CONFIRMED` | Human drift and verification files contain dated material entries; their existence does not populate the machine registers. |
-| Machine drift representation | `UNKNOWN / PARTIAL` | No `control_plane/registers/drift_register.yaml` is established; the required machine verification, contradiction, and deprecation registers remain empty. |
+| Machine drift representation | `UNKNOWN / PARTIAL` | No `control_plane/registers/drift_register.yaml` is established. The root verification backlog contains 747 partial projection entries; contradiction and deprecation registers remain empty. |
 | Review routing | `CONFIRMED ROUTING / NEEDS VERIFICATION ENFORCEMENT` | CODEOWNERS routes `/control_plane/` and `/docs/registers/` to `@bartytime4life`; this does not prove independent review or required enforcement. |
 | Direct public use | `DENY` | Placement and validation do not authorize raw register reads by public clients. |
 
@@ -225,7 +236,7 @@ Authority is **referential**. A path or identifier in a register is usable only 
 1. **Root packet versus optional sublane.** The required packet remains at tested root paths; this sublane documents profiles and pairing.
 2. **Mixed validation profiles.** The object-family profile has dedicated semantic machinery; the eight legacy files do not share equivalent field-level validation.
 3. **Sparse versus authoritative wording.** Nonempty entries are projections and do not create object, source, policy, evidence, release, or publication authority.
-4. **Human detail versus machine sparsity.** Human drift/verification narratives remain richer than the empty machine verification, contradiction, and deprecation registers.
+4. **Human detail versus machine sparsity.** Human drift/verification narratives remain richer than the partial machine verification projection; contradiction and deprecation registers remain empty.
 5. **Historical pins versus currentness.** Coordination artifacts may preserve older main snapshots; this README records the current-main pin used for this update.
 
 [Back to top](#top)
@@ -409,7 +420,7 @@ That route proves GitHub ownership configuration only. It does not prove account
 | [`docs/registers/OBJECT_FAMILY_MAP.md`](../../docs/registers/OBJECT_FAMILY_MAP.md) | Older proposed Markdown mirror retained as lineage; not a second authority. |
 | [`docs/registers/DOMAIN_LANE.md`](../../docs/registers/DOMAIN_LANE.md) | Human domain-lane narrative paired with the root projection. |
 | [`docs/registers/DRIFT_REGISTER.md`](../../docs/registers/DRIFT_REGISTER.md) | Human drift history with dated entries. |
-| [`docs/registers/VERIFICATION_BACKLOG.md`](../../docs/registers/VERIFICATION_BACKLOG.md) | Human verification backlog; machine emptiness does not close it. |
+| [`docs/registers/VERIFICATION_BACKLOG.md`](../../docs/registers/VERIFICATION_BACKLOG.md) | Human verification backlog; 747 machine projection entries do not establish human-ledger parity or closure. |
 | [`contracts/governance/control_plane_registry_packet.md`](../../contracts/governance/control_plane_registry_packet.md) | Proposed normalized packet contract and no-self-authority boundary. |
 | [`schemas/contracts/v1/governance/object_family_register.schema.json`](../../schemas/contracts/v1/governance/object_family_register.schema.json) | Dedicated shape contract for `object_family_register.yaml`. |
 | [`tools/validators/control_plane/validate_object_family_register.py`](../../tools/validators/control_plane/validate_object_family_register.py) | Dedicated object-family validator implementation. |
@@ -470,6 +481,10 @@ Re-review when a required register is added, moved, populated, or retired; a pro
 
 ## Current bounded inventory
 
+The tables in this section retain the 2026-09-06 evidence snapshot. For the
+verification register and required-packet counts, use the dated 2026-10-01
+currentness correction above.
+
 ### Required root register packet
 
 | File | Required profile | Current body state | Authority limit |
@@ -527,7 +542,11 @@ Absence supports the current boundary: this sublane is not an alternative popula
 
 ## Root register population
 
-Current required-register population is **three populated / six empty**.
+The three-populated/six-empty table below records the 2026-09-06 snapshot.
+The 2026-10-01 correction above records the current four-populated/five-empty
+count; no register authority is inferred from population alone.
+
+At the 2026-09-06 snapshot, required-register population was **three populated / six empty**.
 
 | Register family | Current machine state | Human-side pressure and limit |
 |---|---|---|
@@ -837,6 +856,9 @@ A rollback does not erase the defect or correction history.
 
 ## Evidence ledger
 
+The results in this table are the 2026-09-06 snapshot. The dated 2026-10-01
+correction above supersedes its population and verification-register counts.
+
 | Evidence | Verified result | Limitation |
 |---|---|---|
 | Target README | Existing v0.2 lane document at blob `aee5412b9c4ebd8b6343a07f628dd7210bc30695`. | Its July snapshot and one/eight population claims were stale against current main. |
@@ -884,12 +906,15 @@ No register was created, moved, populated, accepted, promoted, released, or publ
 
 ## Status summary
 
+This table retains the 2026-09-06 snapshot. The current population correction
+is recorded near the top of this README.
+
 | Dimension | Current result |
 |---|---|
 | Document outcome | **UPDATED** — same path and stable ID; v0.3 currentness correction with no parallel README. |
 | Placement authority | Required packet remains at `control_plane/` root under accepted ADR-0029 / Directory Rules v2. |
 | Required packet | Nine files: eight legacy metadata profiles plus one dedicated object-family profile. |
-| Required population | Three populated, six empty. |
+| Required population | Three populated, six empty at the 2026-09-06 snapshot; four populated, five empty at the 2026-10-01 correction above. |
 | Sublane machine files | Zero of seven v0.1 proposed child YAML paths confirmed present. |
 | Specialized projections | Present at explicit root paths with bounded non-effects; not child copies or general authority. |
 | Drift representation | Human drift/verification records exist; machine drift synchronization and several machine registers remain unresolved. |
