@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
 import type { Map as MapLibreMap } from "./maplibre-seam";
 import { readBoundedJson } from "./bounded-json";
-import type { WaterResponse } from "./governed-water";
+import { approvalRemainingMs, type WaterResponse } from "./governed-water";
 
 const SOURCE = "kfm-reviewed-water", LAYER = "kfm-reviewed-water-points";
 const reasonText: Record<string, string> = { NO_APPROVED_SNAPSHOT: "No reviewed water snapshot is active.", AUTHENTICATION_REQUIRED: "Sign in to check reviewed water.", RELEASE_STORE_UNAVAILABLE: "Reviewed water storage is unavailable.", REVIEW_REQUIRED: "This water package is waiting for review.", RIGHTS_OR_SENSITIVITY_HOLD: "Rights or sensitivity review is still required.", CORRECTION_HOLD: "This snapshot has been corrected or withdrawn.", RELEASE_TIME_INVALID: "The release approval has expired or is not yet valid." };
@@ -27,7 +27,7 @@ export function GovernedWaterControl({ mapRef, styleReady }: { mapRef: RefObject
   useEffect(() => {
     const expiry = response?.data?.approval_expires_at;
     if (!response?.data) return;
-    const remaining = typeof expiry === "string" ? Date.parse(expiry) - Date.now() : 0;
+    const remaining = approvalRemainingMs(expiry, Date.now());
     const withhold = () => { setResponse(null); setEvidence(null); setStatus("Release approval expired. Check for a reviewed update."); };
     if (!Number.isFinite(remaining) || remaining <= 0) { withhold(); return; }
     const timer = setTimeout(withhold, Math.min(remaining, 2147483647));
@@ -64,7 +64,7 @@ export function GovernedWaterControl({ mapRef, styleReady }: { mapRef: RefObject
     try {
       const fresh = await fetch(`/api/governed/v1/layers?station_id=${encodeURIComponent(selected)}`, { cache: "no-store", signal: AbortSignal.timeout(15000) }).then(r => readBoundedJson(r, 2 * 1024 * 1024)) as WaterResponse;
       const refs = await fetch(`/api/governed/v1/evidence?station_id=${encodeURIComponent(selected)}`, { cache: "no-store", signal: AbortSignal.timeout(15000) }).then(r => readBoundedJson(r, 512 * 1024)) as WaterResponse;
-      if (fresh.envelope?.outcome !== "ANSWER" || refs.envelope?.outcome !== "ANSWER" || fresh.data?.package_id !== refs.data?.package_id || (fresh.data?.observations?.length ?? 0) > 127 || Date.parse(String(fresh.data?.approval_expires_at)) <= Date.now() || Date.parse(String(refs.data?.approval_expires_at)) <= Date.now()) throw new Error("WITHHELD");
+      if (fresh.envelope?.outcome !== "ANSWER" || refs.envelope?.outcome !== "ANSWER" || fresh.data?.package_id !== refs.data?.package_id || (fresh.data?.observations?.length ?? 0) > 127 || approvalRemainingMs(fresh.data?.approval_expires_at, Date.now()) <= 0 || approvalRemainingMs(refs.data?.approval_expires_at, Date.now()) <= 0) throw new Error("WITHHELD");
       const blob = new Blob([JSON.stringify({ observations: fresh, evidence: refs }, null, 2)], { type: "application/json" }), url = URL.createObjectURL(blob);
       const link = document.createElement("a"); link.href = url; link.download = `kfm-reviewed-water-${selected}.json`; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); setExportStatus("Export includes source, evidence and release references.");
     } catch { setExportStatus("Export withheld: current evidence or release could not be verified."); }
