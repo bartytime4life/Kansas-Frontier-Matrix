@@ -72,6 +72,45 @@ test("balances related rasters while retaining a separate visible radar frame", 
   assert.equal(paint.get("external-usgs-3dep-hillshade-raster"), 0.46);
 });
 
+test("Crop-CASMA follows 2D and globe visibility, map order, and shared raster budget", async () => {
+  const registryUrl = `data:text/javascript;base64,${Buffer.from('export const LAYER_REGISTRY=[];').toString("base64")}`;
+  const composition = await loadSource("../app/map-layer-composition.ts", [['from "./explorer-data";', `from "${registryUrl}";`]]);
+  const crop = "external-crop-casma-1km-raster", soil = "external-nasa-smap-soil-raster-a";
+  const layers = [
+    { id: "base", type: "background" }, { id: "external-streamflow-points", type: "circle" },
+    { id: "external-streamflow-label", type: "symbol" }, { id: "kfm-selection-point", type: "circle" },
+    { id: soil, type: "raster" }, { id: crop, type: "raster" },
+  ];
+  const layout = new Map(), paint = new Map();
+  let projection = "mercator";
+  const map = {
+    getProjection: () => ({ type: projection }), getStyle: () => ({ layers }),
+    getLayer: id => layers.find(layer => layer.id === id),
+    moveLayer(id) { layers.push(layers.splice(layers.findIndex(layer => layer.id === id), 1)[0]); },
+    getLayoutProperty: id => layout.get(id) ?? "visible",
+    setLayoutProperty: (id, key, value) => layout.set(id, value),
+    getPaintProperty: id => paint.get(id),
+    setPaintProperty: (id, key, value) => paint.set(id, value),
+  };
+  composition.requestRasterOpacity(map, soil, 0.6);
+  composition.syncMercatorRaster(map, crop, 0.7);
+  assert.deepEqual(layers.map(({ id }) => id), ["base", soil, crop, "external-streamflow-points", "external-streamflow-label", "kfm-selection-point"]);
+  assert.ok(Math.abs(paint.get(soil) + paint.get(crop) - 0.9) < 1e-10);
+  composition.syncMercatorRaster(map, crop, 0.7, "globe");
+  assert.equal(layout.get(crop), "none");
+  assert.equal(paint.get(soil), 0.6);
+  projection = "globe";
+  composition.syncMercatorRaster(map, crop, 0.7, "globe");
+  assert.equal(layout.get(crop), "none");
+  assert.equal(paint.get(soil), 0.6);
+  composition.syncMercatorRaster(map, crop, 0.7, "mercator");
+  assert.equal(layout.get(crop), "none");
+  projection = "mercator";
+  composition.syncMercatorRaster(map, crop, 0.7, "mercator");
+  assert.equal(layout.get(crop), "visible");
+  assert.ok(Math.abs(paint.get(soil) + paint.get(crop) - 0.9) < 1e-10);
+});
+
 test("bounded time bins keep gaps and omit invented counts", async () => {
   const { buildAvailabilityBins } = await loadSource("../app/timeline-availability.ts");
   const bins = buildAvailabilityBins([1800, 1801, 1802, 1803, 1804, 1805], { 1801: 3, 1805: 1 }, 3);

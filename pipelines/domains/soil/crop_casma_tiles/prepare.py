@@ -31,6 +31,20 @@ CHECKPOINTS = {"Dodge City": (-100.017, 37.752), "Wichita": (-97.336, 37.688),
                "Kansas City": (-94.627, 39.114)}
 
 
+def canonical_candidate_bytes(value: dict) -> bytes:
+    """Match the Site verifier's JSON.stringify for integral float values."""
+    def normalize(item):
+        if type(item) is float and item.is_integer():
+            return int(item)
+        if isinstance(item, dict):
+            return {key: normalize(child) for key, child in item.items()}
+        if isinstance(item, (list, tuple)):
+            return [normalize(child) for child in item]
+        return item
+
+    return json.dumps(normalize(value), sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+
+
 def tile_range(zoom: int):
     west, south, east, north = KANSAS_BOUNDS
     n = 2 ** zoom
@@ -113,7 +127,7 @@ def prepare(capture_dir: Path, destination: Path) -> dict:
             "coverage_state": "PARTIAL_AT_CHECKPOINTS" if any(value is None for value in samples.values()) else "SAMPLED_ONLY",
             "bounds_wgs84": KANSAS_BOUNDS, "zooms": [min(ZOOMS), max(ZOOMS)],
             "palette": PALETTE, "tiles": tiles}
-    identity = json.dumps(summary, sort_keys=True, separators=(",", ":")).encode()
+    identity = canonical_candidate_bytes(summary)
     summary["candidate_id"] = "sha256:" + sha256(identity).hexdigest()
     (destination / "manifest.json").write_text(json.dumps(summary, sort_keys=True, indent=2) + "\n")
     return summary

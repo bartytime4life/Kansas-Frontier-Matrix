@@ -23,6 +23,18 @@ const bucket = { get: async key => {
 } };
 const read = (view, query = "") => readCropCasma(new Request(`https://example.test/api/crop-casma/${view}${query}`), view, db, bucket);
 
+test("Python integral-float candidate identity verifies after JSON parsing", async () => {
+  const sample = JSON.parse('{"min":0.0,"max":1.0,"points":[0.0,0.25],"source_nodata":-9999}');
+  assert.equal(sha(canonical(sample)), "sha256:766a276fe639d4e6195e13f12ad3f886314ed0f424709d95aef745aa11005f21");
+  const withZero = { ...unsigned, min: 0, coverage_checkpoints_m3_m3: { ...unsigned.coverage_checkpoints_m3_m3, Wichita: 0 } };
+  const zeroId = sha(canonical(withZero));
+  try {
+    active = { ...activeRow, package_id: zeroId, manifest_key: `crop-casma/v1/objects/${zeroId.slice(7)}/manifest.json` };
+    manifestBytes = Buffer.from(JSON.stringify({ ...withZero, candidate_id: zeroId }).replace('"min":0', '"min":0.0').replace('"Wichita":0', '"Wichita":0.0'));
+    assert.equal((await (await read("availability")).json()).state, "available");
+  } finally { active = activeRow; manifestBytes = Buffer.from(JSON.stringify({ ...unsigned, candidate_id: id })); }
+});
+
 test("approved exact-day source exposes validated availability and tile", async () => {
   const availability = await (await read("availability")).json();
   assert.equal(availability.state, "available");

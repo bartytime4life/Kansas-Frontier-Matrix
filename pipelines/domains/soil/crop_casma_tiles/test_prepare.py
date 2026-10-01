@@ -18,12 +18,19 @@ spec.loader.exec_module(prepare)
 
 
 class CropCasmaTilesTest(unittest.TestCase):
+    def test_integral_float_candidate_identity_matches_site_number_serialization(self):
+        value = {"min": 0.0, "max": 1.0, "points": [0.0, 0.25], "source_nodata": -9999}
+        identity = prepare.canonical_candidate_bytes(value)
+        self.assertEqual(identity, b'{"max":1,"min":0,"points":[0,0.25],"source_nodata":-9999}')
+        self.assertEqual(sha256(identity).hexdigest(), "766a276fe639d4e6195e13f12ad3f886314ed0f424709d95aef745aa11005f21")
+
     def test_native_values_nodata_and_deterministic_tiles(self):
         with TemporaryDirectory() as folder:
             root = Path(folder)
             capture = root / "capture"
             capture.mkdir()
             data = np.full((355, 659), 0.2, dtype=np.float32)
+            data[0, 0] = 0.0
             data[180:, :] = -9999
             with rasterio.open(capture / "source.tif", "w", driver="GTiff", width=659, height=355,
                                count=1, dtype="float32", crs="EPSG:5070", nodata=-9999,
@@ -38,6 +45,7 @@ class CropCasmaTilesTest(unittest.TestCase):
             second = prepare.prepare(capture, root / "second")
             self.assertEqual(first["candidate_id"], second["candidate_id"])
             self.assertEqual(first["valid_cells"], 180 * 659)
+            self.assertEqual(first["min"], 0.0)
             self.assertEqual(first["coverage_state"], "PARTIAL_AT_CHECKPOINTS")
             self.assertEqual([item["sha256"] for item in first["tiles"]], [item["sha256"] for item in second["tiles"]])
             # A Topeka pixel resolves to the original 0.2 cell, not a blended value.

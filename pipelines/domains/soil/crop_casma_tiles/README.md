@@ -4,6 +4,8 @@ This soil-domain pipeline consumes an unreleased `kfm.crop-casma-capture/v1` dir
 
 This directory owns transformation under the existing `pipelines/domains/soil/` responsibility; source acquisition stays in `connectors/nass/`, and release decisions remain outside both. The output is always `UNRELEASED`. Run with a fresh external output directory and the isolated Python environment declared in `requirements-tiles.txt`:
 
+Candidate identity serializes integral floating statistics and checkpoints as JSON integers before hashing, matching the Site verifier's JavaScript number representation (for example, `0.0` hashes as `0`). The saved manifest keeps the original numeric values; this only fixes deterministic identity.
+
 ```sh
 python pipelines/domains/soil/crop_casma_tiles/prepare.py CAPTURE_DIR NEW_OUTPUT_DIR
 python -m unittest discover -s pipelines/domains/soil/crop_casma_tiles -p 'test_*.py' -v
