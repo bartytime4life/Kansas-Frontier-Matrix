@@ -163,7 +163,8 @@ def test_workflow_runs_living_waters_with_pytest_and_reaches_later_checks(tmp_pa
     pytest_calls = [call for call in calls if call[:2] == ["-m", "pytest"]]
     assert len(pytest_calls) == 1
     expected_modules = [
-        "test_no_network_proof.py", "test_hydrology_smoke.py",
+        "test_no_network_proof.py", "test_promotion_hold.py",
+        "test_hydrology_smoke.py",
         "test_aquifer_observation.py", "test_aquifer_context_link.py",
         "test_nhdplus_hr_ambiguity.py", "test_adaptive_threshold_proposal.py",
         "test_hydro_identity_bridge.py", "test_streamflow_qc_context_assessment.py",
