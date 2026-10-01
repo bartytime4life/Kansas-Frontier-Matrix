@@ -367,3 +367,17 @@ command collects the guard. This establishes a source-level module boundary
 for the inspected checkout; complete network, browser, governed-release, and
 public artifact boundaries remain **NEEDS VERIFICATION**. The Site mirror
 review hold remains unchanged.
+
+### Reviewed-water browser status — 2026-10-01
+
+`MOD-18` / P2 / **CONFIRMED on `main@4cd427e2732bfa0584ed1d070d58455cf8300b00`**:
+the Site reviewed-water control cleared data on failed requests but labeled
+every empty browser state `No released data`, including transport failures,
+storage errors, evidence timeouts, and withdrawn or expired responses. That
+label could imply an absent release without a successful negative answer. The
+Site source owner, existing app-local tests, and governed-water notes own this
+slice. It now labels the observed browser state as checking, received, no
+reviewed release active, withheld, or unavailable. This changes presentation
+only; the governed API, source admission, activation, and release gates remain
+unchanged. Browser visual acceptance and the Site mirror review remain
+**NEEDS VERIFICATION**.

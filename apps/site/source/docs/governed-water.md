@@ -17,6 +17,10 @@ and revalidates bounded exports. Refresh/failure/withdrawal/expiry withholds pri
 data while retaining station selection. Existing provider-context layers remain
 external context. Hosted audience enforcement remains a platform prerequisite;
 this read-only route supplies approved public-safe data, not owner administration.
+The current monorepo control distinguishes a browser request failure from a
+successful response that reports no active reviewed release. It labels other
+successful negative responses as withheld; none establishes that no source
+observation exists.
 
 Do not stage or activate a package via an ordinary client. Hosted authenticated
 staging, review and activation operations are still pending. A manifest does not
