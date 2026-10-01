@@ -65,6 +65,8 @@ source admission, rights and release remain pending. Earlier valid candidates
 are not overwritten. Provider values, units, qualifiers, provisional status,
 observation and revision instants, station geometry, retrieval time, response
 headers and content hashes survive normalization. Null remains missing, not zero.
+Candidate freshness and coverage count only observations with a non-null flow
+value; a timestamp on a null reading cannot make a station recent.
 Revision conflicts and malformed completeness claims fail validation.
 
 The dated acceptance capture returned four HTTP 200 responses and 193 discharge

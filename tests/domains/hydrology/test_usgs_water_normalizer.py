@@ -12,6 +12,7 @@ from connectors_core.captured_json import canonical_bytes, digest_bytes
 from connectors_core.transport import TransportResponse
 from connectors.usgs.water_data.pilot_capture import Capture, STATIONS, capture
 from pipelines.domains.hydrology.normalize import normalize_capture
+from pipelines.domains.hydrology.validate import validate_candidate
 from tools.local_data.manage import init_store
 from tools.local_data.water_pilot import replay, stage
 
@@ -125,7 +126,30 @@ def test_empty_and_null_are_not_no_flow():
         records[0]["properties"]["value"] = None
         return records
     source = acquired(missing)
-    assert normalize_capture(source.manifest, source.objects)["observations"][0]["value"] is None
+    candidate = normalize_capture(source.manifest, source.objects)
+    assert candidate["observations"][0]["value"] is None
+    assert candidate["coverage"] == "EMPTY"
+    assert set(candidate["freshness_at_capture"].values()) == {"EMPTY"}
+
+
+def test_null_value_does_not_make_station_recent():
+    def one_missing(records):
+        if records[0]["properties"]["monitoring_location_id"] == STATIONS[0]:
+            records[0]["properties"]["value"] = None
+        return records
+
+    source = acquired(one_missing)
+    candidate = normalize_capture(source.manifest, source.objects)
+    assert candidate["coverage"] == "PARTIAL"
+    assert candidate["freshness_at_capture"] == {STATIONS[0]: "EMPTY", STATIONS[1]: "RECENT"}
+    assert validate_candidate(candidate)["outcome"] == "PASS"
+
+    misleading = deepcopy(candidate)
+    misleading["freshness_at_capture"][STATIONS[0]] = "RECENT"
+    misleading["coverage"] = "COMPLETE"
+    misleading["candidate_id"] = digest_bytes(canonical_bytes({k: v for k, v in misleading.items() if k != "candidate_id"}))
+    with pytest.raises(ValueError, match="COVERAGE_OR_FRESHNESS_MISMATCH"):
+        validate_candidate(misleading)
 
 
 def test_old_observations_are_explicitly_stale():

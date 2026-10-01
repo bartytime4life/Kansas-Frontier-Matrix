@@ -151,7 +151,9 @@ def normalize_capture(manifest: dict, objects: dict[str, bytes], *, stale_after_
     for record in sorted(revisions.values(), key=lambda r: (utc_time(r["provider_revision_at"]), r["record_digest"])):
         latest[record["id"]] = record
     observations = sorted(latest.values(), key=lambda r: (r["station_id"], r["observed_at"], r["id"]))
-    latest_times = {station: max((r["observed_at"] for r in observations if r["station_id"] == station), default=None) for station in STATIONS}
+    latest_times = {station: max((r["observed_at"] for r in observations
+                                  if r["station_id"] == station and r["value"] is not None), default=None)
+                    for station in STATIONS}
     freshness = {station: ("EMPTY" if when is None else
                            "STALE" if (retrieved - utc_time(when)).total_seconds() > stale_after_seconds else "RECENT")
                  for station, when in latest_times.items()}
@@ -161,7 +163,7 @@ def normalize_capture(manifest: dict, objects: dict[str, bytes], *, stale_after_
                  "observations": observations,
                  "revision_history": sorted(revisions.values(), key=lambda r: (r["id"], utc_time(r["provider_revision_at"]))),
                  "freshness_at_capture": freshness, "stale_after_seconds": stale_after_seconds,
-                 "coverage": "EMPTY" if not observations else "PARTIAL" if "EMPTY" in freshness.values() else "COMPLETE",
+                 "coverage": "EMPTY" if all(state == "EMPTY" for state in freshness.values()) else "PARTIAL" if "EMPTY" in freshness.values() else "COMPLETE",
                  "review_state": "PENDING", "source_admission": "PENDING", "release_state": "UNRELEASED"}
     candidate["candidate_id"] = digest_bytes(canonical_bytes(candidate))
     return candidate

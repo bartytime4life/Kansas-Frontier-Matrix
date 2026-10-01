@@ -83,9 +83,11 @@ def validate_candidate(candidate: dict) -> dict:
         latest[record["id"]] = record
     if candidate["observations"] != sorted(latest.values(), key=lambda r: (r["station_id"], r["observed_at"], r["id"])):
         raise ValueError("LATEST_REVISION_MISMATCH")
-    latest_times = {station: max((utc_time(r["observed_at"]) for r in candidate["observations"] if r["station_id"] == station), default=None) for station in STATIONS}
+    latest_times = {station: max((utc_time(r["observed_at"]) for r in candidate["observations"]
+                                  if r["station_id"] == station and r["value"] is not None), default=None)
+                    for station in STATIONS}
     freshness = {station: "EMPTY" if when is None else "STALE" if (retrieved - when).total_seconds() > STALE_AFTER_SECONDS else "RECENT" for station, when in latest_times.items()}
-    coverage = "EMPTY" if not candidate["observations"] else "PARTIAL" if "EMPTY" in freshness.values() else "COMPLETE"
+    coverage = "EMPTY" if all(state == "EMPTY" for state in freshness.values()) else "PARTIAL" if "EMPTY" in freshness.values() else "COMPLETE"
     if candidate["freshness_at_capture"] != freshness or candidate["coverage"] != coverage:
         raise ValueError("COVERAGE_OR_FRESHNESS_MISMATCH")
     report = {"profile": "kfm.water-pilot-validation/v1", "candidate_id": expected,
