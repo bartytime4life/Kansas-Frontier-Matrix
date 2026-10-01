@@ -2,6 +2,7 @@
 from collections import deque
 from datetime import datetime, timedelta, timezone
 import json
+from hashlib import sha256
 from pathlib import Path
 import sys
 from tempfile import TemporaryDirectory
@@ -22,9 +23,18 @@ def encoded(value):
     return json.dumps(value, separators=(",", ":")).encode("utf-8")
 
 
-def item(modified=10):
-    return encoded({"id": dasc.ITEM_ID, "access": "public", "url": dasc.SERVICE,
-                    "owner": "jkastens_KU", "modified": modified, "licenseInfo": "Acknowledge KBS"})
+PINNED_ITEM = json.loads((ROOT / "fixtures/connectors/kansas/dasc_geoportal/item-pinned.json").read_text())
+
+
+def item(modified=None, *, owner=None, license_info=None):
+    value = PINNED_ITEM.copy()
+    if modified is not None:
+        value["modified"] = modified
+    if owner is not None:
+        value["owner"] = owner
+    if license_info is not None:
+        value["licenseInfo"] = license_info
+    return encoded(value)
 
 
 def layer(revision=20):
@@ -42,9 +52,9 @@ def feature(oid=1, huc="110400040101", states="KS,CO"):
                 [-101.0, 40.1], [-102.0, 39.0]]]}}
 
 
-def page(features):
+def page(features, *, more=False):
     return encoded({"type": "FeatureCollection", "features": features,
-                    "properties": {"exceededTransferLimit": False}})
+                    "properties": {"exceededTransferLimit": more}})
 
 
 class Clock:
@@ -99,6 +109,32 @@ class DascCaptureTests(unittest.TestCase):
         self.assertIn("states+LIKE+%27%25KS%25%27", urls[2])
         self.assertEqual(len(manifest["objects"]), 7)
         self.assertEqual(manifest["objects"][3]["url"], urls[2])
+        self.assertEqual(manifest["item_license_sha256"], dasc.LICENSE_SHA256)
+
+    def test_pinned_item_owner_rights_and_revision_are_required(self):
+        self.assertEqual(sha256(PINNED_ITEM["licenseInfo"].encode()).hexdigest(), dasc.LICENSE_SHA256)
+        for bodies in ([item(owner="different"), item()],
+                       [item(license_info="Changed terms"), item()],
+                       [item(), item(license_info="Changed terms")]):
+            with self.subTest(bodies=bodies):
+                held, _, _, _ = self.run_capture(item_bodies=bodies)
+                self.assertEqual((held["state"], held["reason_code"]),
+                                 ("INCOMPLETE", "ITEM_IDENTITY"))
+
+    def test_terminal_page_requires_no_more_results(self):
+        held, _, _, _ = self.run_capture(service_bodies=[layer(), b'{"count":1}',
+            page([feature()], more=True)])
+        self.assertEqual((held["state"], held["reason_code"]),
+                         ("INCOMPLETE", "TERMINAL_PAGE_TRUNCATED"))
+        dasc.parse_page(page([feature()], more=True), expected=1, previous_id=-1,
+                        seen_hucs=set(), terminal=False)
+
+    def test_missing_layer_revision_is_rejected(self):
+        missing = json.loads(layer())
+        del missing["editingInfo"]["dataLastEditDate"]
+        held, _, _, _ = self.run_capture(service_bodies=[encoded(missing)])
+        self.assertEqual((held["state"], held["reason_code"]),
+                         ("INCOMPLETE", "LAYER_SCHEMA"))
 
     def test_http_200_error_and_non_kansas_feature_fail_closed(self):
         errored, _, names, _ = self.run_capture(service_bodies=[layer(), b'{"error":{"code":400}}'])
@@ -126,6 +162,32 @@ class DascCaptureTests(unittest.TestCase):
         with self.assertRaisesRegex(dasc.CaptureError, "ITEM_IDENTITY"):
             dasc.parse_item(encoded({"id": dasc.ITEM_ID, "access": "public", "url": dasc.SERVICE,
                                      "owner": "x", "modified": 10, "licenseInfo": ""}))
+
+    def test_page_bounds_and_order(self):
+        with self.assertRaisesRegex(dasc.CaptureError, "PAGE_COUNT_CHANGED"):
+            dasc.parse_page(page([]), expected=1, previous_id=-1, seen_hucs=set())
+        with self.assertRaisesRegex(dasc.CaptureError, "ID_ORDER"):
+            dasc.parse_page(page([feature(oid=1)]), expected=1, previous_id=1, seen_hucs=set())
+        bad = feature()
+        bad["geometry"]["coordinates"][0][0][0] = -181
+        bad["geometry"]["coordinates"][0][-1][0] = -181
+        with self.assertRaisesRegex(dasc.CaptureError, "GEOMETRY_COORDINATE"):
+            dasc.parse_page(page([bad]), expected=1, previous_id=-1, seen_hucs=set())
+
+    def test_candidate_destination_is_immutable(self):
+        with TemporaryDirectory() as temporary:
+            destination = Path(temporary) / "capture"
+            destination.mkdir()
+            with self.assertRaises(FileExistsError):
+                dasc.capture(destination, item_transport=Transport([], Clock()),
+                             service_transport=Transport([], Clock()), clock=Clock())
+
+    def test_total_byte_limit_applies_before_object_write(self):
+        with patch.object(dasc, "MAX_TOTAL_BYTES", 1):
+            held, _, names, _ = self.run_capture()
+        self.assertEqual((held["state"], held["reason_code"]),
+                         ("INCOMPLETE", "TOTAL_BYTE_LIMIT"))
+        self.assertNotIn("item-before.json", names)
 
     def test_unquoted_arcgis_etag_is_ignored_without_changing_body(self):
         body = b'{"count":1}'
