@@ -1,8 +1,10 @@
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import pytest
+from tools.local_data.manage import init_store
 from tools.local_data.water_job import run
-from tools.local_data.water_pilot import main
+from tools.local_data.water_pilot import main, stage
+from tools.release.water_snapshot import prepare
 from tests.domains.hydrology.test_usgs_water_normalizer import acquired
 
 
@@ -49,3 +51,20 @@ def test_job_normalizes_aware_clock_before_acquisition(tmp_path):
     )
 
     assert calls == [("2026-09-29T18:00:00Z", "2026-09-30T18:00:00Z")]
+
+
+def test_package_preparation_binds_requested_candidate_to_stored_identity(tmp_path):
+    root = tmp_path / "store"
+    init_store(root)
+    candidate_id = stage(root, acquired())["candidate_id"]
+    candidate_path = root / "data/work/hydrology/usgs-nwis" / candidate_id.split(":")[1] / "candidate.json"
+    wrong_id = "sha256:" + "0" * 64
+    wrong_path = root / "data/work/hydrology/usgs-nwis" / wrong_id.split(":")[1] / "candidate.json"
+    wrong_path.parent.mkdir(parents=True)
+    wrong_path.write_bytes(candidate_path.read_bytes())
+
+    with pytest.raises(ValueError, match="CANDIDATE_PATH_ID_MISMATCH"):
+        prepare(root, wrong_id)
+
+    assert not list((root / "release/candidates/hydrology").rglob("snapshot.json"))
+    assert prepare(root, candidate_id)["candidate_id"] == candidate_id

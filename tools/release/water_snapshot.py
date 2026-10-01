@@ -18,6 +18,8 @@ def prepare(root: Path, candidate_id: str, *, rollback_target=None) -> dict:
     if not DIGEST.fullmatch(candidate_id):
         raise ValueError("INVALID_CANDIDATE_ID")
     candidate = decode_object(read_regular(root / "data/work/hydrology/usgs-nwis" / candidate_id.split(":")[1] / "candidate.json", 8*1024*1024), limit=8*1024*1024)
+    if candidate.get("candidate_id") != candidate_id:
+        raise ValueError("CANDIDATE_PATH_ID_MISMATCH")
     package = prepare_water_package(candidate, rollback_target=rollback_target)
     raw = canonical_bytes(package)
     manifest, _ = validate_snapshot(raw)
