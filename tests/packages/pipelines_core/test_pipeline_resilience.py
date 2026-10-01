@@ -145,6 +145,36 @@ def test_retry_attempt_limit_stops_without_sleep() -> None:
     ]
 
 
+def test_oversized_numeric_input_returns_bounded_error() -> None:
+    request = _request()
+    request["queue"]["oldest_age_seconds"] = 10**1000
+
+    with pytest.raises(PipelineResiliencePlanError) as exc:
+        plan_pipeline_resilience(request)
+
+    assert exc.value.code == "NUMBER_NOT_FINITE"
+    assert exc.value.field == "/queue/oldest_age_seconds"
+
+
+def test_large_attempt_clips_backoff_without_overflow() -> None:
+    request = _request("allow_retry")
+    request["retry_context"]["attempt_number"] = 1026
+    request["policy"]["retry"]["max_attempts"] = 1027
+
+    plan = plan_pipeline_resilience(request)
+
+    assert plan["retry"]["decision"] == "RETRY"
+    assert plan["retry"]["delay_seconds"] == 60.0
+    assert plan["retry"]["next_attempt"] == 1027
+
+    request["policy"]["retry"]["base_delay_seconds"] = 0
+    request["retry_context"]["error_class"] = "TRANSIENT"
+    request["retry_context"]["retry_after_seconds"] = None
+    plan = plan_pipeline_resilience(request)
+    assert plan["retry"]["decision"] == "RETRY"
+    assert plan["retry"]["delay_seconds"] == 0.0
+
+
 def test_pull_request_cannot_target_production() -> None:
     request = _request()
     request["trigger"].update(
