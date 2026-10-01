@@ -108,7 +108,10 @@ def _require_number(
 ) -> float:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise PipelineResiliencePlanError("NUMBER_INVALID", field)
-    number = float(value)
+    try:
+        number = float(value)
+    except OverflowError as exc:
+        raise PipelineResiliencePlanError("NUMBER_NOT_FINITE", field) from exc
     if not math.isfinite(number):
         raise PipelineResiliencePlanError("NUMBER_NOT_FINITE", field)
     if strictly_positive and number <= 0:
@@ -130,5 +133,4 @@ def _require_ref(value: object, field: str, *, nullable: bool = True) -> str | N
 
 def _dedupe_codes(*groups: list[str]) -> list[str]:
     return sorted({code for group in groups for code in group})
-
 

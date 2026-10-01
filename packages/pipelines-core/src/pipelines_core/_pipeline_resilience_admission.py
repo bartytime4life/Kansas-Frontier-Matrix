@@ -223,8 +223,13 @@ def _retry_decision(
             "reason_codes": ["RETRY_DEADLINE_REACHED"],
         }
 
-    exponential = base_delay * (multiplier ** (attempt_number - 1))
-    delay_base = min(exponential, max_delay)
+    if base_delay == 0:
+        delay_base = 0.0
+    else:
+        try:
+            delay_base = min(base_delay * (multiplier ** (attempt_number - 1)), max_delay)
+        except OverflowError:
+            delay_base = max_delay
     reasons = ["TRANSIENT_RETRY"]
     if error_class == "RATE_LIMITED":
         reasons = ["RATE_LIMIT_RETRY"]
@@ -255,5 +260,4 @@ def _retry_decision(
         "idempotency_retention_seconds": retention,
         "reason_codes": sorted(reasons),
     }
-
 

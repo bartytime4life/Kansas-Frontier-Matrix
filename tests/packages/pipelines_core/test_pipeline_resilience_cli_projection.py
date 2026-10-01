@@ -31,3 +31,26 @@ def test_cli_operator_projection_omits_restricted_access_metadata() -> None:
     assert payload["plan"]["projection"] == "operator-safe-v1"
     assert payload["plan"]["decision"] == "ALLOW_START"
     assert set(payload["authority"].values()) == {False}
+
+
+def test_cli_oversized_number_returns_finite_denial(tmp_path: Path) -> None:
+    request = json.loads(FIXTURE.read_text(encoding="utf-8"))
+    request["queue"]["oldest_age_seconds"] = 10**1000
+    path = tmp_path / "oversized.request.json"
+    path.write_text(json.dumps(request), encoding="utf-8")
+
+    completed = subprocess.run(
+        [sys.executable, str(CLI), str(path)],
+        cwd=REPO_ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert completed.returncode == 1
+    payload = json.loads(completed.stdout)
+    assert payload["outcome"] == "DENY"
+    assert payload["plan"] is None
+    assert payload["findings"] == [
+        {"code": "NUMBER_NOT_FINITE", "path": "/queue/oldest_age_seconds"}
+    ]
