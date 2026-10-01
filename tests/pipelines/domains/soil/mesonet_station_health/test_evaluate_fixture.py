@@ -144,3 +144,41 @@ def test_non_object_input_fails_closed() -> None:
     assert result.reason_code == "MESONET_HEALTH_INPUT_ERROR"
     assert result.assessment is None
     assert result.findings == (MODULE.Finding("CANDIDATE_NOT_OBJECT", "/"),)
+
+
+def test_oversized_numeric_input_is_denied_without_runtime_error() -> None:
+    candidate = _fixture()
+    candidate["thresholds"]["expected_interval_minutes"] = 10**1000
+
+    result = evaluate_fixture(candidate)
+
+    assert result.outcome == "DENY"
+    assert result.assessment is None
+    assert MODULE.Finding(
+        "THRESHOLD_INVALID", "/thresholds/expected_interval_minutes"
+    ) in result.findings
+
+    candidate = _fixture()
+    candidate["stations"][0]["samples"][0]["value"] = 10**1000
+
+    result = evaluate_fixture(candidate)
+
+    assert result.outcome == "DENY"
+    assert result.assessment is None
+    assert MODULE.Finding(
+        "SAMPLE_VALUE_OUT_OF_RANGE", "/stations/0/samples/0/value"
+    ) in result.findings
+
+
+def test_finite_thresholds_with_overflowing_age_limit_are_denied() -> None:
+    candidate = _fixture()
+    candidate["thresholds"]["expected_interval_minutes"] = 1e308
+    candidate["thresholds"]["degraded_after_multiplier"] = 1e308
+
+    result = evaluate_fixture(candidate)
+
+    assert result.outcome == "DENY"
+    assert result.assessment is None
+    assert MODULE.Finding(
+        "THRESHOLD_INVALID", "/thresholds/degraded_after_multiplier"
+    ) in result.findings
