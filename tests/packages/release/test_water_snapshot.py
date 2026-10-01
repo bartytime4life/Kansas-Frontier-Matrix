@@ -19,8 +19,8 @@ from tools.validators._common.local_resolver import build_registry
 NOW = "2026-09-30T19:00:00Z"
 
 
-def synthetic_snapshot(*, cleared=False):
-    raw = acquired()
+def synthetic_snapshot(*, cleared=False, mutate=lambda records: records):
+    raw = acquired(mutate)
     snapshot = prepare_water_package(normalize_capture(raw.manifest, raw.objects))
     if cleared:
         # Explicitly synthetic clearance. Never applied to captured real bytes.
@@ -62,6 +62,32 @@ def test_synthetic_released_projection_satisfies_closed_envelope(view):
     assert "data" in response and "data" not in response["envelope"]
     schema = json.loads((ROOT / "schemas/contracts/v1/runtime/runtime_response_envelope.schema.json").read_text())
     Draft202012Validator(schema, registry=build_registry(ROOT), format_checker=FormatChecker()).validate(response["envelope"])
+
+
+def test_null_discharge_does_not_refresh_served_measurements():
+    def old_value_then_recent_null(records):
+        old = deepcopy(records[0])
+        old["properties"]["time"] = "2026-09-29T18:00:00Z"
+        old["properties"]["last_modified"] = "2026-09-29T18:00:01Z"
+        records[0]["properties"]["value"] = None
+        return [old, records[0]]
+
+    snapshot = synthetic_snapshot(cleared=True, mutate=old_value_then_recent_null)
+    response = project(canonical_bytes(snapshot), synthetic_decision(snapshot), view="layers", now=NOW)
+    assert response["envelope"]["outcome"] == "ANSWER"
+    assert response["envelope"]["freshness"] == "stale-accepted"
+    assert response["envelope"]["precision_actually_used"]["temporal"]["freshness_class"] == "stale-accepted"
+    assert any(record["value"] is None for record in response["data"]["observations"])
+
+    def only_null(records):
+        records[0]["properties"]["value"] = None
+        return records
+
+    empty = synthetic_snapshot(cleared=True, mutate=only_null)
+    response = project(canonical_bytes(empty), synthetic_decision(empty), view="layers", now=NOW)
+    assert response["envelope"]["outcome"] == "ANSWER"
+    assert response["envelope"]["freshness"] == "unknown"
+    assert response["data"]["coverage"] == "EMPTY"
 
 
 @pytest.mark.parametrize("change,reason", [

@@ -178,6 +178,9 @@ review operations remain to be implemented and independently exercised.
 The new reviewed-water control keeps provider context separate, preserves
 station selection across refresh/failure, shows independent source/retrieval/
 review/release times and approval expiry, links evidence and bounds exports.
+Serving freshness uses the latest non-null discharge measurement among the
+selected stations. Null readings remain in the released record, but do not
+make an older measurement current; if none has a value, freshness is `unknown`.
 Refresh, evidence denial and expiry clear prior water observations. Browser
 fetch, map frame, source coverage and evidence eligibility are distinct states.
 A successful build or server HTML check is not rendered-browser acceptance.

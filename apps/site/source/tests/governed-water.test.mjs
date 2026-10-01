@@ -12,6 +12,19 @@ test("Worker and Python return identical synthetic released responses", async ()
   const pkg = await water.parseWaterPackage(JSON.stringify(await fixture("snapshot")));
   for (const view of ["bootstrap", "layers", "evidence"]) assert.deepEqual(await water.projectWater(pkg, await fixture("decision"), view, NOW), await fixture(view));
 });
+test("null discharge does not refresh the served measurement", async () => {
+  const pkg = await water.parseWaterPackage(JSON.stringify(await fixture("snapshot")));
+  const decision = await fixture("decision");
+  const old = { ...pkg.candidate.observations[0], observed_at: "2026-09-29T18:00:00Z" };
+  const recentNull = { ...pkg.candidate.observations[0], value: null };
+  pkg.candidate.observations = [old, recentNull];
+  const stale = await water.projectWater(pkg, decision, "layers", NOW);
+  assert.equal(stale.envelope.freshness, "stale-accepted");
+  assert.equal(stale.envelope.precision_actually_used.temporal.freshness_class, "stale-accepted");
+  pkg.candidate.observations = [recentNull];
+  const empty = await water.projectWater(pkg, decision, "layers", NOW);
+  assert.equal(empty.envelope.freshness, "unknown");
+});
 test("missing review, withdrawal, expiry and quarantine omit data", async () => {
   const pkg = await water.parseWaterPackage(JSON.stringify(await fixture("snapshot"))), decision = await fixture("decision");
   for (const denied of [null, { ...decision, correction_state: "WITHDRAWN" }, { ...decision, rights_ref: null }, { ...decision, expires_at: "2026-09-30T18:59:00Z" }]) {
