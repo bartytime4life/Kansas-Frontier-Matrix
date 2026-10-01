@@ -181,6 +181,8 @@ review/release times and approval expiry, links evidence and bounds exports.
 Serving freshness uses the latest non-null discharge measurement among the
 selected stations. Null readings remain in the released record, but do not
 make an older measurement current; if none has a value, freshness is `unknown`.
+The Site serving boundary rejects impossible calendar dates in release metadata
+and package timestamps instead of accepting JavaScript date normalization.
 Refresh, evidence denial and expiry clear prior water observations. Browser
 fetch, map frame, source coverage and evidence eligibility are distinct states.
 A successful build or server HTML check is not rendered-browser acceptance.

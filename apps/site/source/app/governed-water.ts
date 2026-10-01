@@ -21,7 +21,18 @@ export function canonical(value: unknown): string {
   return `{${Object.keys(source).sort().map(key => `${JSON.stringify(key)}:${canonical(source[key])}`).join(",")}}`;
 }
 export async function digest(text: string): Promise<string> { return "sha256:" + Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text))), b => b.toString(16).padStart(2, "0")).join(""); }
-function time(value: unknown): number { if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?Z$/.test(value) || !Number.isFinite(Date.parse(value))) throw new Error("TIME_INVALID"); return Date.parse(value); }
+function time(value: unknown): number {
+  const match = typeof value === "string" && /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d{1,6})?Z$/.exec(value);
+  if (!match || Number(match[1]) === 0) throw new Error("TIME_INVALID");
+  const instant = Date.parse(value as string);
+  if (!Number.isFinite(instant)) throw new Error("TIME_INVALID");
+  // Date.parse normalizes impossible dates such as September 31; release times must not.
+  const parsed = new Date(instant);
+  if (parsed.getUTCFullYear() !== Number(match[1]) || parsed.getUTCMonth() + 1 !== Number(match[2])
+      || parsed.getUTCDate() !== Number(match[3]) || parsed.getUTCHours() !== Number(match[4])
+      || parsed.getUTCMinutes() !== Number(match[5]) || parsed.getUTCSeconds() !== Number(match[6])) throw new Error("TIME_INVALID");
+  return instant;
+}
 function same(a: unknown, b: unknown) { return canonical(a) === canonical(b); }
 export function parseWaterJson(text: string): unknown {
   // Linear duplicate-key/depth guard, followed by the platform JSON grammar.

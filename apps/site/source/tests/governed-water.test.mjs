@@ -33,6 +33,18 @@ test("missing review, withdrawal, expiry and quarantine omit data", async () => 
   const held = await water.parseWaterPackage(JSON.stringify(await fixture("held-snapshot")));
   assert.equal((await water.projectWater(held, { ...decision, package_id: held.manifest.package_id }, "layers", NOW)).envelope.reason_code, "RIGHTS_OR_SENSITIVITY_HOLD");
 });
+test("impossible release and package dates are rejected rather than normalized", async () => {
+  const pkg = await water.parseWaterPackage(JSON.stringify(await fixture("snapshot")));
+  const decision = await fixture("decision");
+  for (const expires_at of ["2026-09-31T00:00:00Z", "0000-10-01T00:00:00Z"]) {
+    assert.equal(water.waterGate(pkg, { ...decision, expires_at }, NOW), "RELEASE_TIME_INVALID");
+  }
+  const snapshot = await fixture("snapshot");
+  snapshot.manifest.end = "2026-09-31T18:00:00Z";
+  const { package_id, ...unsignedManifest } = snapshot.manifest;
+  snapshot.manifest.package_id = await water.digest(water.canonical(unsignedManifest));
+  await assert.rejects(water.parseWaterPackage(JSON.stringify(snapshot)), /TIME_INVALID/);
+});
 test("tampered artifacts and unexpected paths fail before serving", async () => {
   const snapshot = await fixture("snapshot"); snapshot.artifacts["candidate.json"] += " ";
   await assert.rejects(water.parseWaterPackage(JSON.stringify(snapshot)), /ARTIFACT_DIGEST/);

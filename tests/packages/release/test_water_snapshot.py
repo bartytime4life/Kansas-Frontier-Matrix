@@ -97,6 +97,7 @@ def test_null_discharge_does_not_refresh_served_measurements():
     ({"correction_state": "WITHDRAWN"}, "CORRECTION_HOLD"),
     ({"correction_state": "SUPERSEDED"}, "CORRECTION_HOLD"),
     ({"expires_at": "2026-09-30T18:59:59Z"}, "RELEASE_TIME_INVALID"),
+    ({"expires_at": "2026-09-31T00:00:00Z"}, "RELEASE_TIME_INVALID"),
     ({"released_at": "2026-10-01T00:00:00Z"}, "RELEASE_TIME_INVALID"),
 ])
 def test_missing_review_tampered_binding_correction_and_expiry_withhold_data(change, reason):
