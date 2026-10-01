@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 from typing import Any, Mapping
 
 from ._pipeline_resilience_common import (
@@ -229,7 +230,16 @@ def _retry_decision(
         try:
             delay_base = min(base_delay * (multiplier ** (attempt_number - 1)), max_delay)
         except OverflowError:
-            delay_base = max_delay
+            # The exponent may overflow while its product with a tiny base is finite.
+            try:
+                log_delay = math.log(base_delay) + (
+                    attempt_number - 1
+                ) * math.log(multiplier)
+            except OverflowError:
+                log_delay = math.inf
+            delay_base = (
+                max_delay if log_delay >= math.log(max_delay) else math.exp(log_delay)
+            )
     reasons = ["TRANSIENT_RETRY"]
     if error_class == "RATE_LIMITED":
         reasons = ["RATE_LIMIT_RETRY"]
@@ -260,4 +270,3 @@ def _retry_decision(
         "idempotency_retention_seconds": retention,
         "reason_codes": sorted(reasons),
     }
-
