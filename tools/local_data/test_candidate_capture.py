@@ -2,6 +2,7 @@
 
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from unittest.mock import patch
 import unittest
 
 from tools.local_data.candidate_capture import REPOSITORY, create_candidate, write_candidate
@@ -28,6 +29,15 @@ class CandidateCaptureTests(unittest.TestCase):
             (root / "link").symlink_to(root, target_is_directory=True)
             with self.assertRaisesRegex(ValueError, "DIRECTORY_SYMLINK_OR_SPECIAL"):
                 create_candidate(root / "link" / "candidate")
+
+    def test_only_raw_lane_of_configured_store_accepts_candidates(self):
+        with TemporaryDirectory() as folder, patch.dict("os.environ", {"KFM_DATA_ROOT": folder}):
+            root = Path(folder)
+            (root / "data" / "raw").mkdir(parents=True)
+            (root / "data" / "published").mkdir(parents=True)
+            create_candidate(root / "data" / "raw" / "candidate")
+            with self.assertRaisesRegex(ValueError, "CANDIDATE_OUTPUT_NOT_RAW"):
+                create_candidate(root / "data" / "published" / "candidate")
 
 
 if __name__ == "__main__":

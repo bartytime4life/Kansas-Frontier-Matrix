@@ -10,6 +10,7 @@ from __future__ import annotations
 import os
 import re
 import stat
+import tempfile
 from pathlib import Path
 
 from tools.local_data.file_io import check_directory, fsync_directory
@@ -26,6 +27,20 @@ def _external(path: Path) -> Path:
     absolute = path.absolute()
     if absolute == REPOSITORY or REPOSITORY in absolute.parents:
         raise ValueError("CANDIDATE_INSIDE_REPOSITORY")
+    configured = os.environ.get("KFM_DATA_ROOT")
+    if configured:
+        store = Path(configured)
+        if not store.is_absolute() or ".." in store.parts:
+            raise ValueError("CANDIDATE_STORE_ROOT_INVALID")
+        if absolute == store or store in absolute.parents:
+            raw = store / "data" / "raw"
+            if raw not in absolute.parents:
+                raise ValueError("CANDIDATE_OUTPUT_NOT_RAW")
+    scratch = Path(tempfile.gettempdir()).absolute()
+    if scratch not in absolute.parents and (
+        not configured or (Path(configured) / "data" / "raw") not in absolute.parents
+    ):
+        raise ValueError("CANDIDATE_OUTSIDE_LOCAL_STORE")
     return absolute
 
 

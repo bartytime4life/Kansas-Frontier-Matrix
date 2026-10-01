@@ -2,7 +2,7 @@
 
 This record covers the isolated implementation branches based on repository main `fe47624f32d7f355f69309048f6624c4d64bdb98` and the standalone owner-private Site candidate descended from source `75d749ed5711ab20e3edabeb1c6ba135417ec1c0` (deployed Site v131 at inspection). The Site candidate is separate from the deployed version. Historical-map/radar PR #4810 was merged before these edits. No data admission, source approval, Site activation, or publication is asserted here.
 
-The current Site candidate commit is `041f626585804e5c90b8075cc506aeff5333d3b1`. Its reviewed record route uses `/knowledge/record?id=…`; the mirror receipt pins its tracked file digests. Repository connector writes now pass through `tools/local_data/candidate_capture.py`, which accepts only new private directories outside the checkout and immutable, bounded objects. The topology baseline was regenerated only to remove the NASS scaffold-leaf member now that the connector has implementation; the trusted-base shrinkage check passed with no new drift.
+The current Site candidate commit is `041f626585804e5c90b8075cc506aeff5333d3b1`. Its reviewed record route uses `/knowledge/record?id=…`; the mirror receipt pins its tracked file digests. Repository connector writes now pass through `tools/local_data/candidate_capture.py`, which accepts new private temporary directories or the external `KFM_DATA_ROOT/data/raw` lane and immutable, bounded objects; it denies the published lane. The topology baseline was regenerated only to remove the NASS scaffold-leaf member now that the connector has implementation; the trusted-base shrinkage check passed with no new drift.
 
 ## Implemented boundaries
 
