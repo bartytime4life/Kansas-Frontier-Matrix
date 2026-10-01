@@ -196,6 +196,22 @@ repository fact; a proposed fix remains `PROPOSED` until reviewed.
 | `MOD-06` / P2 / **NEEDS VERIFICATION** | Local water package/API/Site tests and Site builds passed for the reviewed slices, but no activated release was used in a browser. A build and an `ANSWER` fixture do not prove the station, evidence, expiry, withdrawal, and export journey is visible and usable. | Site and release owners, `apps/site/source/`, `apps/governed-api/`, and `packages/release/`. After a separately reviewed synthetic or authorized release setup, exercise the normal-scale browser flow, expiry and withdrawal, map rendering, evidence, and export. Record version, source identity, timestamps, and failure states without converting the exercise into owner acceptance or publication. |
 | `MOD-07` / P3 / **UNKNOWN** | This checkpoint did not trace every domain, source adapter, policy bundle, registry, API consumer, scheduled workflow, or public artifact end to end. The machine backlog itself is partial. | Each existing owning responsibility root. Continue the contract-to-implementation-to-test-to-runtime inventory in dependency order; classify each new finding with evidence before editing. Repository-wide completion remains unclaimed. |
 
+### Modernization currentness — 2026-10-01
+
+At `main@5dc0ec2785663ea226a493a8f4ca7de6fe40e2e3`, `MOD-02` is
+**CONFIRMED resolved for station-local water health classification** by merged
+[PR #4829](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4829).
+A synthetic mixed-station capture reproduced the cross-station timeout error;
+the producer, SourceHealthAssessment schema and validator, tests, and runbook
+were changed together. The water workflow selection passed 251 tests locally.
+This does not prove live source admission, release, external consumer readiness,
+or browser behavior. The original `MOD-02` row remains the dated pre-fix finding.
+
+`MOD-05` remains **CONFIRMED partial**: the projection producer's read-only
+check reconciles 949 pinned markers to 747 artifact entries, but human/machine
+parity and implementation closure are unverified. The control-plane README
+population correction in this tranche changes documentation only.
+
 ### Validation and non-effects
 
 This checkpoint is documentation only. Run the register's current metadata,
