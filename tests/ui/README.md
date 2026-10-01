@@ -2,17 +2,17 @@
 doc_id: kfm://doc/tests-ui-readme
 title: tests/ui/README.md — Governed UI Trust-State Test Boundary
 type: README
-version: v0.3
-status: draft; repository-grounded; readme-only-direct-lane; bounded-app-local-unit-and-browser-tests; nonvacuous-static-boundary-guard; partial-accessibility-enforcement; axe-hold; non-authoritative
+version: v0.4
+status: draft; historical-explorer-snapshot; readme-only-direct-lane; current-browser-and-boundary-coverage-unverified; non-authoritative
 owners: OWNER_TBD — QA steward · UI steward · Explorer Web steward · Shared UI package steward · Accessibility steward · Evidence steward · Policy steward · Sensitivity and rights stewards · Release steward · Map steward · Runtime steward · Security reviewer · CI steward · Docs steward
 created: 2026-07-07
-updated: 2026-08-31
+updated: 2026-10-01
 supersedes: v0.1
 policy_label: public-doctrine; tests; ui; trust-visible; map-first; governed-payloads-only; no-network-default; synthetic-only; accessibility-required; no-sensitive-leakage; correction-aware; rollback-aware; no-publication
 current_path: tests/ui/README.md
 owning_root: tests/
 responsibility: document shared UI trust-state test placement, verified app-local execution surfaces, failure interpretation, and authority limits without becoming component, application, contract, schema, policy, evidence, release, deployment, or publication authority
-truth_posture: CONFIRMED README-only direct lane, app-local Vitest and Playwright runners, eight keyboard/focus browser specifications in the accessibility workflow, nonempty static boundary scanning, active ui-build workflow, and explicit axe hold at the pinned snapshot / PROPOSED shared cross-implementation trust-state cases, complete accessibility coverage, visual regression, and promotion blocking / UNKNOWN coverage, flake rate, production parity, required-check status, accountable ownership, correction propagation, and operational rollback
+truth_posture: CONFIRMED README-only direct lane at current head and retired Explorer app, guard, and workflows in commit 1142ff16c50af20dd3496bbea79b694d6cbd809b / HISTORICAL app-local Vitest and Playwright runners, eight keyboard/focus specifications, and static boundary scan at the pinned snapshot / PROPOSED shared cross-implementation trust-state cases / UNKNOWN current replacement coverage, production parity, accountable ownership, and operational rollback
 evidence_repository: bartytime4life/Kansas-Frontier-Matrix
 evidence_visibility: public
 evidence_base_ref: main
@@ -23,7 +23,6 @@ direct_lane_file_count: 1
 accessibility_browser_spec_count: 8
 related:
   - ../README.md
-  - ../policy/test_explorer_web_adapter_boundary.py
   - ../fixtures/ui/README.md
   - ../e2e/README.md
   - ../maplibre/README.md
@@ -32,8 +31,6 @@ related:
   - ../../contracts/ui/README.md
   - ../../packages/ui/README.md
   - ../../packages/ui/src/README.md
-  - ../../apps/explorer-web/README.md
-  - ../../apps/explorer-web/src/README.md
   - ../../apps/governed-api/README.md
   - ../../schemas/contracts/v1/ui/
   - ../../policy/ui/
@@ -46,6 +43,7 @@ related:
   - ../../.github/workflows/accessibility.yml
   - ../../Makefile
 notes:
+  - "2026-10-01 currentness correction: Explorer app, its static guard, and its app workflows were retired; bounded snapshot observations below are historical."
   - "v0.2 replaces a planning-heavy proposed test tree with a commit-pinned current-state and routing boundary."
   - "The direct tests/ui lane is README-only at the bounded snapshot."
   - "The Explorer app has real unit and Playwright commands; the accessibility workflow runs eight bounded keyboard/focus specifications while axe remains explicitly held."
@@ -55,6 +53,15 @@ notes:
 [/KFM_META_BLOCK_V2] -->
 
 # `tests/ui/` — Governed UI Trust-State Test Boundary
+
+> **Currentness correction (2026-10-01, `main@0fb7054948486e057f50a7b4d8b4c8bccdd310ca`):**
+> commit `1142ff16c50af20dd3496bbea79b694d6cbd809b` retired
+> `apps/explorer-web/`, `tests/policy/test_explorer_web_adapter_boundary.py`,
+> and the `ui-build` and `accessibility` workflows. The app, its tests, and
+> those workflows described below are **historical snapshot evidence**, not
+> current executable coverage. The intended test responsibilities remain
+> proposed routing guidance; current UI behavior and replacement coverage
+> require separate verification. See `MOD-15` in the verification backlog.
 
 > Repository-grounded test boundary for proving that KFM user interfaces preserve governed evidence, policy, release, review, correction, rollback, time, sensitivity, and finite-outcome state without turning rendered pixels, browser state, component success, accessibility checks, or visual snapshots into truth or publication authority.
 
@@ -80,15 +87,15 @@ notes:
 > **Evidence base:** `main@5d835798e09a4dd14735779cb44206a8a3e8b2d3`
 > **Prior target blob:** `f3d9b14c46b6ebbb5952592b9619a25f8f1cf500`
 > **Direct lane:** `tests/ui/README.md` remains documentation-only
-> **App-local suites:** Vitest unit tests plus Playwright browser specifications
+> **App-local suites at the pinned historical snapshot:** Vitest unit tests plus Playwright browser specifications
 > **Checked absent:** direct `tests/ui` harness/test/config and representative fixture payloads
 > **Makefile:** `make test` runs `tests/schemas` and `tests/contracts`, not this lane
-> **Explorer scripts:** real Vite build, Vitest unit, and Playwright browser commands with exact direct dependency versions
-> **Workflows:** `ui-build` runs the app build/test command; `accessibility` runs eight bounded keyboard/focus specifications while axe remains held
+> **Historical Explorer scripts:** Vite build, Vitest unit, and Playwright browser commands with exact direct dependency versions
+> **Historical workflows:** `ui-build` ran the app build/test command; `accessibility` selected eight bounded keyboard/focus specifications while axe remained held
 
-`tests/ui/` remains a documented cross-cutting boundary, not an executable component, browser, accessibility, or visual-regression suite. The bounded Explorer app now owns its shell unit tests locally.
+`tests/ui/` remains a documented cross-cutting boundary, not an executable component, browser, accessibility, or visual-regression suite. The retired Explorer app owned shell unit tests at the pinned historical snapshot.
 
-### Safe conclusions
+### Historical snapshot conclusions (not current coverage)
 
 - **CONFIRMED:** the direct README exists.
 - **CONFIRMED:** the canonical tests root assigns UI trust-state component testing to this lane.
@@ -130,7 +137,7 @@ notes:
 
 | Label | Meaning in this README |
 |---|---|
-| `CONFIRMED` | Verified from current repository files, executable code, workflows, or checked paths. |
+| `CONFIRMED` | Verified at the pinned historical snapshot unless a newer commit is named explicitly. |
 | `PROPOSED` | A test contract, path, state, or procedure not established in implementation. |
 | `CONFLICTED` | Current structure exposes competing ownership or naming choices. |
 | `UNKNOWN` | Not established by inspected code, tests, CI, runtime, or release evidence. |
@@ -305,9 +312,9 @@ App-local Vitest suites cover bounded shell and projection behavior. App-local P
 
 `packages/ui/package.json` identifies a private `@kfm/ui` `0.0.0` package but declares no scripts. `packages/ui/src/index.ts` is a greenfield placeholder.
 
-### Confirmed static guard
+### Historical static guard
 
-`tests/policy/test_explorer_web_adapter_boundary.py` performs two static checks:
+At the pinned historical snapshot, `tests/policy/test_explorer_web_adapter_boundary.py` performed two static checks; the test was later retired and is absent from the current tracked tree:
 
 1. MapLibre/Cesium imports in inspected Explorer source files must remain inside the adapter directory.
 2. Explorer source files must not contain configured internal-store path literals.
