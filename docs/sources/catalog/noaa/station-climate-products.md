@@ -6,7 +6,7 @@ version: v0.2
 status: draft
 owners: <PLACEHOLDER — Docs steward + Source steward for noaa + Atmosphere/Air/Climate steward>
 created: 2026-05-20
-updated: 2026-05-22
+updated: 2026-10-01
 policy_label: public
 related:
   - docs/sources/catalog/noaa/README.md
@@ -24,7 +24,7 @@ related:
   - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
 tags: [kfm, docs, sources, catalog, noaa, ncei, coop, asos, awos, station-observations, climate-normals, climate-anomalies, reanalysis, atmosphere-air, multi-role]
 notes:
-  - "PROPOSED product-page scaffold; sibling-link presence and repo path NEEDS VERIFICATION."
+  - "Draft bundle product page. The 1991–2020 Kansas monthly-normal intake is implemented as an unreleased candidate; other bundle components remain proposed."
   - "PROPOSED path under docs/sources/catalog/noaa/ — per-family-folder convention; unprefixed filename follows goes-abi-aod.md / hms-fire-smoke.md / hrrr-smoke.md / nws-api.md."
   - "MOST MULTI-ROLE PRODUCT in the catalog. Defaults span three distinct source_roles in one bundle: observation (stations) + modeled (reanalyses) + aggregate (climate normals, anomalies). Components MUST be admitted separately."
   - "Dominant anti-collapse: climate normal cited as per-place truth (CONFIRMED — NOAA family entry §5.2). Plus all DOM-AIR §I anti-collapses apply at least partially across components."
@@ -32,7 +32,7 @@ notes:
   - "Distinguish from USCRN (reference-grade), NWS API (operational), HRRR-Smoke (active-forecast). This product covers Mesonet-adjacent / non-reference station obs + historical archive + derived climate products."
 owning_root: docs/
 responsibility: "Documentation for NOAA/NWS Station Observations and Climate Products; not evidence, policy, release, or publication authority."
-truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
+truth_posture: CONFIRMED for the dated Kansas monthly-normal capture and local replay below; other bundle components and release readiness remain NEEDS VERIFICATION.
 [/KFM_META_BLOCK_V2] -->
 
 # NOAA/NWS Station Observations and Climate Products
@@ -65,7 +65,7 @@ The first command may produce a **different** candidate on a later run if NOAA c
 [![Truth posture: cite-or-abstain](https://img.shields.io/badge/posture-cite--or--abstain-purple)](../../../doctrine/directory-rules.md)
 <!-- TODO: replace placeholder Shields.io targets once CI/badge generation is wired (see KFM-P3-FEAT-0005). -->
 
-**Status:** PROPOSED — scaffold only · **Family:** [`noaa`](./README.md) · **Default `source_role`:** *multi-role bundle* (stations = `observation`; normals/anomalies = `aggregate`; reanalysis = `modeled`) · **Domains served:** `atmosphere-air` (primary), `agriculture` and `hydrology` (adjacencies) · **Owners:** *PLACEHOLDER* · **Last reviewed:** 2026-05-22
+**Status:** Draft bundle; Kansas monthly-normal intake candidate implemented · **Family:** [`noaa`](./README.md) · **Default `source_role`:** *multi-role bundle* (stations = `observation`; normals/anomalies = `aggregate`; reanalysis = `modeled`) · **Domains served:** `atmosphere-air` (primary), `agriculture` and `hydrology` (adjacencies) · **Owners:** *PLACEHOLDER* · **Kansas intake checked:** 2026-10-01
 
 ---
 
@@ -99,7 +99,7 @@ The first command may produce a **different** candidate on a later run if NOAA c
 ## Overview
 
 > [!NOTE]
-> **PROPOSED scaffold.** This page describes a candidate **bundle** product of the `noaa` source family. Specific endpoint URLs, station counts, normal periods, reanalysis identifiers, cadence values, and rights terms are **NEEDS VERIFICATION** and must be settled against `data/registry/sources/` and current NOAA documentation before any catalog promotion.
+> **Draft bundle.** The 1991–2020 Kansas monthly-normal endpoint, inventory count, period, and local candidate path were checked on 2026-10-01 above. Other station, anomaly, and reanalysis products in this bundle, rights decisions, and release readiness remain **NEEDS VERIFICATION** before catalog promotion.
 
 > [!CAUTION]
 > **This is a bundle.** A single product-page covers three doctrinally distinct things that NOAA/NCEI distributes through related (but not identical) pipelines:
