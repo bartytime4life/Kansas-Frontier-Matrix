@@ -3,7 +3,7 @@ doc_id: kfm://doc/adr-0005-apps-explorer-web-canonical-map-first-shell
 title: "ADR-0005 — `apps/explorer-web/` is the canonical map-first shell"
 type: adr
 adr_id: ADR-0005
-version: v1.3
+version: v1.4
 status: proposed
 owners:
   - "NEEDS VERIFICATION — architecture decision owner"
@@ -20,11 +20,11 @@ reviewers_required:
   - Policy and evidence reviewer
   - "at least one affected map-runtime or client owner"
 created: 2026-05-09
-updated: 2026-09-12
+updated: 2026-10-01
 policy_label: public
 truth_posture: cite-or-abstain
 owning_root: docs/
-responsibility: "records the proposed canonical Explorer shell boundary, current implementation evidence, authority limits, graduation checks, rollback, and renderer relationship without granting acceptance, release, deployment, or publication authority"
+responsibility: "records the proposed canonical Explorer shell boundary, historical pinned implementation evidence, currentness correction, authority limits, graduation checks, rollback, and renderer relationship without granting acceptance, release, deployment, or publication authority"
 current_path: docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md
 supersedes: []
 superseded_by: []
@@ -77,14 +77,6 @@ related:
   - docs/architecture/map-shell.md
   - docs/architecture/ui/BOUNDARIES.md
   - apps/README.md
-  - apps/explorer-web/README.md
-  - apps/explorer-web/src/main.ts
-  - apps/explorer-web/src/site/mount-explorer-site.ts
-  - apps/explorer-web/src/site/mount-living-atlas.ts
-  - apps/explorer-web/src/adapters/GovernedClient.ts
-  - apps/explorer-web/src/adapters/map_runtime_evidence_adapter.ts
-  - apps/explorer-web/src/features/map_runtime/index.tsx
-  - apps/explorer-web/src/features/living_atlas/map-style.ts
   - packages/maplibre/README.md
   - packages/maplibre/package.json
   - packages/maplibre/src/map-runtime-port.ts
@@ -92,9 +84,6 @@ related:
   - packages/maplibre/src/maplibre-vite-adapter.ts
   - package.json
   - pnpm-lock.yaml
-  - .github/workflows/ui-build.yml
-  - .github/workflows/maplibre-webgl-probe.yml
-  - tests/policy/test_explorer_web_adapter_boundary.py
 tags: [kfm, adr, explorer-web, map-first, shell, trust-membrane, governed-api, maplibre, ui, accessibility, static-delivery, fail-closed, rollback]
 notes:
   - "v1.3 is a same-path, documentation-only current-state reconciliation. It preserves ADR-0005 source/effective status as proposed and changes no executable behavior."
@@ -106,6 +95,16 @@ notes:
 <a id="top"></a>
 
 # ADR-0005 — `apps/explorer-web` is the canonical map-first shell
+
+> **Currentness correction (2026-10-01):** This ADR remains a proposal, and
+> its implementation inventory below describes a historical pinned snapshot.
+> Commit `1142ff16c50af20dd3496bbea79b694d6cbd809b` retired the
+> `apps/explorer-web/` implementation, its policy guard, and its app workflows.
+> At `main@0fb7054948486e057f50a7b4d8b4c8bccdd310ca`, those paths are
+> absent. References below to mounted composition, configured commands, and
+> current enforcement do not establish present implementation or coverage.
+> `apps/site/source/` has its own preservation boundary and is not silently
+> substituted for this proposed shell.
 
 > **Proposed decision.** `apps/explorer-web/` is KFM's single canonical deployable composition root for the public and semi-public map-first browser shell. It renders governed finite outcomes and already released public-safe artifacts; it does not own truth, evidence, policy, release, correction, rollback, source admission, or model execution. Dynamic trust-bearing responses pass through `apps/governed-api/`. A governed static edge may serve immutable released artifacts with verified release and integrity context, but it is not a parallel API or publication authority.
 
@@ -134,13 +133,13 @@ notes:
 | **ADR ID** | `ADR-0005` — unique in [`INDEX.md`](./INDEX.md) |
 | **Source/effective status** | `proposed` / `proposed` — not binding until the record and index carry matching reviewed `accepted` status |
 | **Decision class** | Canonical shell placement, client authority boundary, dynamic/static delivery boundary, and no-parallel-shell rule |
-| **Configured app path** | [`apps/explorer-web/`](../../apps/explorer-web/) |
-| **Current implementation** | Default map-first Living Atlas composition with an inline-style, package-owned MapLibre runtime; fixture/registry-bound trust and evidence views; no established live governed data path |
+| **Proposed app path** | `apps/explorer-web/`; implementation retired at the current head |
+| **Historical implementation** | At the pinned snapshot, default map-first Living Atlas composition with an inline-style, package-owned MapLibre runtime and fixture/registry-bound views; no established live governed data path |
 | **Related accepted architecture** | [ADR-0006](./ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) fixes the package/port/adapter seam; [ADR-0007](<./ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) fixes the normal browser renderer family |
-| **Current enforcement** | Explorer build/unit/browser commands, a scoped MapLibre WebGL probe workflow, and bounded import/store-path guards are configured. Their existence is not a claim about a particular run outcome. |
+| **Historical enforcement** | Explorer build/unit/browser commands, scoped MapLibre WebGL probe workflow, and import/store-path guard existed at the pinned snapshot; they were retired and provide no current coverage. |
 | **Publication effect** | None. ADRs, routes, packages, tests, workflows, commits, PRs, merges, builds, and deployments do not publish KFM data or claims. |
 
-The proposed shell home remains stable. Since the v1.2 snapshot, its default source composition has moved beyond a static abstention screen: it constructs a Living Atlas workspace and requests a MapLibre runtime through the accepted package seam. The data and authority holds remain material.
+The proposed shell home is a design position. The pinned historical source constructed a Living Atlas workspace and requested a MapLibre runtime through the accepted package seam. That implementation was retired; the data and authority holds remain material.
 
 [Back to top](#top)
 
@@ -148,27 +147,27 @@ The proposed shell home remains stable. Since the v1.2 snapshot, its default sou
 
 <a id="evidence"></a>
 
-## Current repository evidence
+## Pinned historical repository evidence
 
-The findings below are **CONFIRMED at `main@ca79de9b61b0a2da948940b07c89c558f480470e`** unless marked otherwise.
+The findings below are **CONFIRMED at historical `main@ca79de9b61b0a2da948940b07c89c558f480470e`** unless marked otherwise; they are not current coverage.
 
 | Surface | Verified state | Limit |
 |---|---|---|
 | ADR index | ADR-0005 is uniquely indexed with source and effective status `proposed`. ADR-0006, ADR-0007, ADR-0029, and ADR-0038 are currently indexed `accepted`. | Status inventory, not acceptance of ADR-0005 or proof of implementation readiness. |
 | [Directory Rules](../doctrine/directory-rules.md) and [ADR-0029](./ADR-0029-adopt-directory-governance-standard-v2.md) | `apps/` is the deployable responsibility root and `packages/` is the reusable-code root. | Does not accept ADR-0005, a dependency, a source, a release, or a deployment. |
 | [ADR-0006](./ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md) and [ADR-0007](<./ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md>) | The package-owned `MapRuntimePort` / `MapLibreAdapter` seam and MapLibre GL JS renderer family are accepted architecture. | Current source implementation must still be evaluated against their downstream admission, conformance, security, and runtime gates; this ADR does not amend either record. |
-| [`src/main.ts`](../../apps/explorer-web/src/main.ts) → [`mount-explorer-site.ts`](../../apps/explorer-web/src/site/mount-explorer-site.ts) → [`mount-living-atlas.ts`](../../apps/explorer-web/src/site/mount-living-atlas.ts) | The default entrypoint mounts Explorer, then the map-first Living Atlas workspace. That workspace creates and initializes `createViteMapLibreAdapter` for `#kfm-living-atlas-map`. | Source composition is not deployment or a successful browser run. |
+| `src/main.ts` → `mount-explorer-site.ts` → `mount-living-atlas.ts` | The default entrypoint mounts Explorer, then the map-first Living Atlas workspace. That workspace creates and initializes `createViteMapLibreAdapter` for `#kfm-living-atlas-map`. | Source composition is not deployment or a successful browser run. |
 | [`packages/maplibre/package.json`](../../packages/maplibre/package.json) and package source | Private `@kfm/maplibre` declares `maplibre-gl` `6.7.0`, exposes port, adapter, and Vite-adapter entries, and owns the raw renderer import. The Vite adapter configures a local worker before constructing the adapter. | A manifest/source fact is not, by itself, a complete dependency-admission, supply-chain, CSP, or long-session readiness record. |
 | [`MapLibreAdapter`](../../packages/maplibre/src/maplibre-adapter.ts) | The package implementation checks WebGL2, accepts a serializable inline-only style, rejects external resource locators before acquisition, exposes finite runtime state, and tears down its renderer. | It performs no external source discovery or transport; source/layer/protocol/plugin admission remains separate. |
-| [Living Atlas style](../../apps/explorer-web/src/features/living_atlas/map-style.ts) and registry | The default style is built from repository-defined inline GeoJSON and current synthetic/fixture-bound layer records; the UI labels generalized synthetic geometry and explicitly excludes external tiles and live observations. | Rendered geometry, catalog labels, and source candidates do not constitute admitted or released data. |
-| [GovernedClient](../../apps/explorer-web/src/adapters/GovernedClient.ts), [map-evidence bridge](../../apps/explorer-web/src/adapters/map_runtime_evidence_adapter.ts), and map-runtime feature | Explorer validates bounded fixture-shaped projections and can inject a resolver for a renderer-neutral selection-to-drawer bridge. | No live `apps/governed-api` transport, accepted cross-root client envelope, session/auth binding, or EvidenceBundle end-to-end path is wired by the inspected default source. |
+| `Living Atlas style` and registry | The default style is built from repository-defined inline GeoJSON and current synthetic/fixture-bound layer records; the UI labels generalized synthetic geometry and explicitly excludes external tiles and live observations. | Rendered geometry, catalog labels, and source candidates do not constitute admitted or released data. |
+| `GovernedClient`, `map-evidence bridge`, and map-runtime feature | Explorer validates bounded fixture-shaped projections and can inject a resolver for a renderer-neutral selection-to-drawer bridge. | No live `apps/governed-api` transport, accepted cross-root client envelope, session/auth binding, or EvidenceBundle end-to-end path is wired by the inspected default source. |
 | Explorer inventory | At the pinned tree, `apps/explorer-web` contains 134 `.ts/.tsx` source files, 64 app-local unit-test files, and 41 browser `.spec.ts` files. | Inventory neither proves composition of every module nor test success. |
-| [Living Atlas browser spec](../../apps/explorer-web/tests/browser/living-atlas.spec.ts), [Vite adapter spec](../../apps/explorer-web/tests/browser/maplibre-vite-adapter.spec.ts), and [WebGL probe](../../apps/explorer-web/tests/browser/maplibre-webgl-probe.spec.ts) | These tests configure local browser checks for default map mounting, no external HTTP(S) requests, adapter disposal, WebGL2 capability, and a review-only receipt. | Test design and source are not a completed CI receipt, a production network proof, or operational acceptance. |
-| [`ui-build.yml`](../../.github/workflows/ui-build.yml) and [`maplibre-webgl-probe.yml`](../../.github/workflows/maplibre-webgl-probe.yml) | The UI workflow runs locked install, build, and Explorer test commands; the scoped WebGL workflow records a QA-only browser receipt and explicitly excludes dependency, release, deployment, and publication decisions. | Workflow configuration does not establish current run success or a deployed environment. |
-| [Explorer policy guard](../../tests/policy/test_explorer_web_adapter_boundary.py) | Explorer source is scanned for raw renderer imports and configured internal-store path literals. | It is a bounded static guard, not a complete network, CSP, information-flow, or deployed-isolation proof. |
+| `Living Atlas browser spec`, `Vite adapter spec`, and `WebGL probe` | These tests configure local browser checks for default map mounting, no external HTTP(S) requests, adapter disposal, WebGL2 capability, and a review-only receipt. | Test design and source are not a completed CI receipt, a production network proof, or operational acceptance. |
+| `ui-build.yml` and `maplibre-webgl-probe.yml` | The UI workflow runs locked install, build, and Explorer test commands; the scoped WebGL workflow records a QA-only browser receipt and explicitly excludes dependency, release, deployment, and publication decisions. | Workflow configuration does not establish current run success or a deployed environment. |
+| `Explorer policy guard` | Explorer source is scanned for raw renderer imports and configured internal-store path literals. | It is a bounded static guard, not a complete network, CSP, information-flow, or deployed-isolation proof. |
 | Deployment, auth, CSP, observability, service health, external source activation, and public operation | **UNKNOWN** | No admissible deployed-system evidence was inspected. |
 
-The safe current description is **implemented local map rendering with fixture/registry-bound content and explicit authority holds**—not a released, source-backed, or public governed map service.
+The safe description at the pinned snapshot was **implemented local map rendering with fixture/registry-bound content and explicit authority holds**. The retired app supplies no current public-client proof.
 
 [Back to top](#top)
 
@@ -219,9 +218,9 @@ It **must not** own source admission, canonical evidence, policy, release/correc
 
 Dynamic claim-bearing requests **must** return through a reviewed client envelope from the Governed API:
 
-```text
+``text
 ANSWER | ABSTAIN | DENY | ERROR
-```
+``
 
 Internal states such as `restrict`, `hold`, or `needs_review` remain obligations, reason codes, state fields, or versioned extensions—not accidental public outcomes.
 
@@ -236,8 +235,8 @@ The renderer architecture is no longer an open naming decision in this ADR:
 | Surface | Current state | Authority / limit |
 |---|---|---|
 | [`packages/maplibre/`](../../packages/maplibre/README.md) | Private `@kfm/maplibre` implementation with `MapRuntimePort`, Null runtime, concrete `MapLibreAdapter`, Vite adapter, and package-owned `maplibre-gl` `6.7.0` dependency. | ADR-0006 is the accepted sole reusable browser-renderer adapter home. Current implementation remains subject to its downstream gates. |
-| [`mount-living-atlas.ts`](../../apps/explorer-web/src/site/mount-living-atlas.ts) | Default Explorer composition calls `createViteMapLibreAdapter` with an inline Living Atlas style and an 8-second initialization deadline. | App composes the accepted package seam; it does not acquire MapLibre directly. |
-| [`apps/explorer-web/src/adapters/MapLibreAdapter.ts`](../../apps/explorer-web/src/adapters/MapLibreAdapter.ts) | Comment-only legacy/boundary marker. | It is not the active renderer implementation or an authority to create a second adapter. |
+| `mount-living-atlas.ts` | Default Explorer composition calls `createViteMapLibreAdapter` with an inline Living Atlas style and an 8-second initialization deadline. | App composes the accepted package seam; it does not acquire MapLibre directly. |
+| `apps/explorer-web/src/adapters/MapLibreAdapter.ts` | Comment-only legacy/boundary marker. | It is not the active renderer implementation or an authority to create a second adapter. |
 | `packages/maplibre-runtime/` | Absent at the pinned tree. | Historical/proposal lineage only; do not create it as a peer package. |
 | `packages/cesium/` | Absent at the pinned tree. | Do not create it as a side effect. A peer renderer needs separate governance. |
 | ADR-0006 / ADR-0007 | Accepted architecture records. | They bind the package seam and normal MapLibre GL JS family; ADR-0005 remains proposed. |
@@ -260,7 +259,7 @@ The shell preserves keyboard/focus, skip links/landmarks, status announcements, 
 
 ## Canonical architecture
 
-```mermaid
+``mermaid
 flowchart TB
     USER["Public / semi-public user"]
     subgraph EXPLORER["apps/explorer-web"]
@@ -278,7 +277,7 @@ flowchart TB
     SHELL -. "future dynamic claim path" .-> API
     SHELL -. "future released static artifact" .-> RELEASE
     SHELL -. "DENY direct path" .-> FORBIDDEN
-```
+``
 
 This diagram distinguishes the **implemented local renderer edge** from future dynamic/static trust edges. It is responsibility/allowed traffic, not deployed topology; it does not claim that an API, source, release carrier, public origin, or production map interaction is live.
 
@@ -364,7 +363,7 @@ At the pinned tree, the repository configures executable Explorer and renderer c
 
 Suggested changed-area checks:
 
-```bash
+``bash
 python tools/validators/validate_adr_index.py
 python -m pytest tests/validators/test_validate_adr_index.py -q --strict-config --strict-markers
 python -m pytest tests/policy/test_explorer_web_adapter_boundary.py -q --strict-config --strict-markers
@@ -372,7 +371,7 @@ pnpm --filter explorer-web build
 pnpm --filter explorer-web test
 pnpm --filter @kfm/maplibre test
 pnpm --filter explorer-web exec playwright test --config=playwright.config.ts tests/browser/living-atlas.spec.ts tests/browser/maplibre-vite-adapter.spec.ts tests/browser/maplibre-webgl-probe.spec.ts
-```
+``
 
 The `maplibre-webgl-probe` workflow is intentionally QA-only: its receipt sets release, deployment, publication, dependency-admission, and source-activation effects to false. The `docs-build` workflow is also an explicit generator/publication hold. Any passing validation is CI/conformance evidence only—not ADR acceptance, source admission, release approval, deployment proof, or publication authority.
 
@@ -386,9 +385,9 @@ The `maplibre-webgl-probe` workflow is intentionally QA-only: its receipt sets r
 
 Restore the prior target blob:
 
-```text
+``text
 7cd1b6fcf03193603d0e6bba49ff6ab43a5cb02f
-```
+``
 
 or revert the v1.3 documentation commit. No executable path requires rollback because this revision changes only this ADR.
 
@@ -431,6 +430,7 @@ Future executable changes revert coherently: routes return to a finite hold/erro
 
 | Version | Date | Change |
 |---|---|---|
+| `v1.4` | 2026-10-01 | Marked the Explorer implementation, guard, and workflow evidence as historical after their explicit retirement in `1142ff16c50af20dd3496bbea79b694d6cbd809b`; preserved proposed decision status and Site source boundary. |
 | `v1.3` | 2026-09-12 | Same-path documentation-only reconciliation of the default Explorer composition: recorded the mounted Living Atlas, package-owned Vite MapLibre adapter, inline synthetic/fixture-bound style, test/workflow configuration, accepted ADR-0006/0007 relationship, and remaining data/operational holds; preserved proposed status. |
 | `v1.2` | 2026-08-14 | Reconciled the ADR to the locked Explorer build/test baseline and static abstaining entrypoint; documented fixture-first Evidence Drawer and synthetic map-selection seams, current package/renderer holds, remaining live-integration gap, acceptance burden, and rollback; preserved proposed status. |
 | `v1.1` | 2026-07-23 | Same-path repository-grounded modernization: confirmed ADR identity/status and Explorer scaffold; separated shell placement from renderer decisions; documented placeholder/readiness state, static guards, dynamic/static delivery, finite outcomes, accessibility, acceptance gates, incremental graduation, rollback, and verification backlog; preserved proposed status. |
@@ -438,4 +438,4 @@ Future executable changes revert coherently: routes return to a finite hold/erro
 
 ---
 
-**Last updated:** 2026-09-12 · **Source metadata:** `proposed` · **Effective decision status:** `proposed` · **Path:** `docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md` · [Back to top](#top)
+**Last updated:** 2026-10-01 · **Source metadata:** `proposed` · **Effective decision status:** `proposed` · **Path:** `docs/adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md` · [Back to top](#top)
