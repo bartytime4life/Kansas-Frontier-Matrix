@@ -31,6 +31,9 @@ def safe(root, name):
 
 
 def compare(source):
+    source_commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=source, text=True).strip()
+    if subprocess.check_output(["git", "status", "--porcelain"], cwd=source):
+        raise ValueError("SOURCE_WORKTREE_DIRTY")
     names = files(source)
     changes = []
     for name in names:
@@ -41,7 +44,10 @@ def compare(source):
         if before != after:
             changes.append({"path": name, "before": before, "after": after})
     mirrored = {p.removeprefix("apps/site/source/") for p in files(ROOT) if p.startswith("apps/site/source/")}
-    return {"profile":"kfm.site-mirror-comparison/v1", "source_commit": subprocess.check_output(["git","rev-parse","HEAD"],cwd=source,text=True).strip(), "source_dirty": bool(subprocess.check_output(["git","status","--porcelain"],cwd=source)), "changes":changes,"unexpected_deletions": sorted(mirrored-set(names)),"authority":"REVIEW_ONLY"}
+    if (subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=source, text=True).strip() != source_commit
+            or subprocess.check_output(["git", "status", "--porcelain"], cwd=source)):
+        raise ValueError("SOURCE_WORKTREE_CHANGED")
+    return {"profile":"kfm.site-mirror-comparison/v1", "source_commit": source_commit, "source_dirty": False, "changes":changes,"unexpected_deletions": sorted(mirrored-set(names)),"authority":"REVIEW_ONLY"}
 
 
 def check():

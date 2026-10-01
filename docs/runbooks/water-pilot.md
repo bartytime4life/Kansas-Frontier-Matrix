@@ -99,6 +99,26 @@ unfinished source edits independently. Site tests, rendered browser behavior,
 deployment, source admission, release, publication, and owner acceptance were
 not established by this read-only comparison.
 
+## Site mirror source-identity guard — 2026-10-01
+
+**CONFIRMED at monorepo `main@9465a573d8859cd1564124897d10d848f9c7c350`:**
+`site_mirror.py --source` previously read working-tree bytes but labeled its
+comparison with `git rev-parse HEAD`. On a dirty standalone checkout, that
+could associate uncommitted Site content with an immutable commit ID. The
+comparison now requires a clean source before reading files and rechecks the
+commit and worktree status afterward. A dirty or changed source returns the
+existing finite `MIRROR_REVIEW_REQUIRED` failure; synthetic tests cover both
+conditions. The held historical receipt and `--check` decision are unchanged.
+
+A read-only comparison of the **clean local** standalone Site checkout at
+`58aac81757639c2226187810b486b8a8de4b9c22` reported 51 differing shared
+paths and 50 monorepo mirror paths absent from that checkout. These counts
+describe this local commit against the current working monorepo tree, not a
+reviewed successor source, deployed Site, or approved overlay set. The Site
+preservation instructions prohibit bulk replacement. `MOD-01` therefore
+remains held until the source owner reviews the source lineage and each overlay
+before a new receipt is authored. No historical receipt is rewritten here.
+
 ## Reproducible environment
 
 Use Python 3.11 or newer; this batch used Python 3.12.3. From the repository root:
