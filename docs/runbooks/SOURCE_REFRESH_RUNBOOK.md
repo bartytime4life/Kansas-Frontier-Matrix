@@ -17,19 +17,17 @@ related:
   - docs/standards/SMART_SYNC.md
   - docs/standards/PROVENANCE.md
   - docs/standards/SIGNING.md
-  - docs/runbooks/event-driven-ingest.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - schemas/contracts/v1/source/source-descriptor.json
-  - schemas/contracts/v1/receipts/run-receipt.json
-  - schemas/contracts/v1/watcher/watcher-schema.json
   - policy/promotion/
-  - tools/ingest/watchers/
-  - tools/validators/attest/
 tags: [kfm, sources, ingestion, watcher, refresh, provenance, smart-sync, runbook]
 notes:
   - Doctrine basis CONFIRMED from project corpus (lifecycle law, watcher-as-non-publisher, cite-or-abstain, PR-first promotion, conditional fetch + spec_hash + receipt + policy gate).
   - All quoted paths, validator names, route names, schema IDs, and tool names are PROPOSED unless verified against mounted-repo evidence.
   - Implementation maturity UNKNOWN in current session — no mounted repo, tests, workflows, or runtime logs available.
+owning_root: docs/
+responsibility: "Documentation for Source Refresh Runbook; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -608,7 +606,7 @@ jobs:
 - [`docs/standards/SMART_SYNC.md`](../standards/SMART_SYNC.md) *(PROPOSED)* — conditional fetch, debounce/coalesce, per-source windows.
 - [`docs/standards/PROVENANCE.md`](../standards/PROVENANCE.md) *(PROPOSED)* — SLSA / in-toto predicate conventions.
 - [`docs/standards/SIGNING.md`](../standards/SIGNING.md) *(PROPOSED)* — cosign keyless vs KMS.
-- [`docs/runbooks/event-driven-ingest.md`](./event-driven-ingest.md) *(PROPOSED)* — bucket-event handler shape.
+- `docs/runbooks/event-driven-ingest.md` (PROPOSED; not present) *(PROPOSED)* — bucket-event handler shape.
 - [`docs/runbooks/ui_ROLLBACK.md`](./ui_ROLLBACK.md) *(PROPOSED)* — UI side of layer rollback.
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) *(PROPOSED)* — where open items in §14 live.
 

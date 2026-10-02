@@ -60,7 +60,7 @@ inspection_boundary: >-
 related:
   - ../doctrine/directory-rules.md
   - ../adr/ADR-0027-county-focus-mode-control-plane.md
-  - "../adr/ADR-0028 — State-scale Focus Mode scope.md"
+  - ../adr/ADR-0028 — State-scale Focus Mode scope.md
   - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ./CONSENT_PATTERN.md
   - ./counties/README.md
@@ -72,8 +72,6 @@ related:
   - ../../contracts/focus/README.md
   - ../../schemas/contracts/v1/focus/README.md
   - ../../policy/focus/README.md
-  - ../../apps/explorer-web/src/features/focus_panel/README.md
-  - ../../apps/explorer-web/tests/focus-composed-claim.test.ts
   - ../../.github/workflows/focus-mock-test.yml
   - ../../tools/validators/validate_focus_mode_index.py
   - ../../tools/validators/validator_registry.json
@@ -893,8 +891,8 @@ No. Consent is necessary where applicable but not sufficient. Evidence, rights, 
 | Payload semantics | [`../../contracts/focus_mode/README.md`](../../contracts/focus_mode/README.md) | Draft semantic lane |
 | Machine shape | [`../../schemas/contracts/v1/focus/README.md`](../../schemas/contracts/v1/focus/README.md) | Mixed scaffolds and alias |
 | Policy | [`../../policy/focus/README.md`](../../policy/focus/README.md) | Repository-grounded inactive boundary |
-| Explorer feature | [`../../apps/explorer-web/src/features/focus_panel/README.md`](../../apps/explorer-web/src/features/focus_panel/README.md) | Bounded implementation and open runtime work |
-| Explorer test | [`../../apps/explorer-web/tests/focus-composed-claim.test.ts`](../../apps/explorer-web/tests/focus-composed-claim.test.ts) | Synthetic unit proof; execution state separate |
+| Explorer feature | `../../apps/explorer-web/src/features/focus_panel/README.md` (retired) | Bounded implementation and open runtime work |
+| Explorer test | `../../apps/explorer-web/tests/focus-composed-claim.test.ts` (retired) | Synthetic unit proof; execution state separate |
 | Mock workflow | [`../../.github/workflows/focus-mock-test.yml`](../../.github/workflows/focus-mock-test.yml) | Read-only bounded workflow and explicit hold |
 | County index validator | [`../../tools/validators/validate_focus_mode_index.py`](../../tools/validators/validate_focus_mode_index.py) | Proposed and not aligned to current lane |
 | Validator registry | [`../../tools/validators/validator_registry.json`](../../tools/validators/validator_registry.json) | Focus index validator not registered |

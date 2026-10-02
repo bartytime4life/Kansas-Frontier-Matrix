@@ -26,11 +26,6 @@ related:
   - schemas/contracts/v1/ui/evidence_drawer_payload.schema.json
   - fixtures/ui/evidence_drawer_payload/
   - tools/validators/ui/validate_evidence_drawer_payload.py
-  - apps/explorer-web/src/adapters/GovernedClient.ts
-  - apps/explorer-web/src/features/trust_header/index.tsx
-  - apps/explorer-web/src/features/evidence_drawer/index.tsx
-  - apps/explorer-web/tests/trust-header.test.ts
-  - apps/explorer-web/README.md
   - packages/maplibre/README.md
 notes:
   - "v2.0 replaces a proposal-era nine-label universal state model with a repository-grounded multi-axis profile."
@@ -169,7 +164,7 @@ This document owns **human-readable vocabulary reconciliation, projection bounda
 | Evidence Drawer machine shape | [`schemas/contracts/v1/ui/evidence_drawer_payload.schema.json`](../../schemas/contracts/v1/ui/evidence_drawer_payload.schema.json) | Crosswalk exact current enums |
 | Admissibility | `policy/` and governed review | Never infer allow/deny here |
 | Evidence support | Evidence contracts, resolver, and evidence objects | Never turn UI state into evidence |
-| Browser projection | [`apps/explorer-web/`](../../apps/explorer-web/) | Report implemented bounded behavior |
+| Browser projection | `apps/explorer-web/` (retired) | Report implemented bounded behavior |
 | Renderer and map lifecycle | [`packages/maplibre/`](../../packages/maplibre/) and an accepted adapter decision | Record current HOLD/scaffold posture |
 | Visual design | [`docs/brand/trust-state-visuals.md`](../brand/trust-state-visuals.md) plus future verified tokens/components | Separate proposal from implementation |
 | Release, withdrawal, rollback | `release/` plus correction and rollback authorities | Do not approve or perform transitions |
@@ -941,14 +936,14 @@ A change to this page should additionally verify:
 
 ### Implementation and proof
 
-- [`apps/explorer-web/src/adapters/GovernedClient.ts`](../../apps/explorer-web/src/adapters/GovernedClient.ts) — strict app-local parser.
-- [`apps/explorer-web/src/features/trust_header/index.tsx`](../../apps/explorer-web/src/features/trust_header/index.tsx) — current Trust Header projection.
-- [`apps/explorer-web/src/features/evidence_drawer/index.tsx`](../../apps/explorer-web/src/features/evidence_drawer/index.tsx) — current Evidence Drawer projection.
-- [`apps/explorer-web/tests/trust-header.test.ts`](../../apps/explorer-web/tests/trust-header.test.ts) — Trust Header unit evidence.
+- `apps/explorer-web/src/adapters/GovernedClient.ts` (retired) — strict app-local parser.
+- `apps/explorer-web/src/features/trust_header/index.tsx` (retired) — current Trust Header projection.
+- `apps/explorer-web/src/features/evidence_drawer/index.tsx` (retired) — current Evidence Drawer projection.
+- `apps/explorer-web/tests/trust-header.test.ts` (retired) — Trust Header unit evidence.
 - [`fixtures/ui/evidence_drawer_payload/README.md`](../../fixtures/ui/evidence_drawer_payload/README.md) — fixture scope and non-effects.
 - [`tools/validators/ui/validate_evidence_drawer_payload.py`](../../tools/validators/ui/validate_evidence_drawer_payload.py) — no-network validator.
 - [`.github/workflows/evidence-drawer-payload.yml`](../../.github/workflows/evidence-drawer-payload.yml) — read-only bounded workflow.
-- [`apps/explorer-web/README.md`](../../apps/explorer-web/README.md) — current app maturity boundary.
+- `apps/explorer-web/README.md` (retired) — current app maturity boundary.
 - [`packages/maplibre/README.md`](../../packages/maplibre/README.md) — renderer-package scaffold and HOLDs.
 
 [Back to top](#top)

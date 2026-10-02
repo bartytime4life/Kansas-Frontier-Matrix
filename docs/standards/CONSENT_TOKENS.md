@@ -66,7 +66,6 @@ related:
   - ../../schemas/contracts/v1/runtime/consent_grant.schema.json
   - ../../schemas/contracts/v1/consent/README.md
   - ../../schemas/governance/consent_receipt.schema.json
-  - ../../apps/explorer-web/src/adapters/ConsentCardProjection.ts
 notes:
   - "Same-path standards-document modernization plus one generated-work receipt."
   - "No consent profile, token format, claim namespace, issuer, verifier, trust registry, status service, policy rule, runtime route, source, release, or publication is adopted or activated by this revision."
@@ -174,7 +173,7 @@ This page does not decide whether consent is the correct legal or ethical basis 
 | [`PolicyDecision`](../../contracts/policy/policy_decision.md) | Outward vocabulary `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`; `consent` is a policy family | Implemented consent evaluator |
 | [`ConsentedGenealogyOverlayCandidate`](../../contracts/domains/people-dna-land/consented_genealogy_overlay.md) | Synthetic restricted candidate profile with validation/tests | Real people, actual consent, source rights, release authority, or public use |
 | [`ConsentRevocationPropagationAssessment`](../../contracts/domains/people-dna-land/consent_revocation_propagation_assessment.md) | Synthetic assessment over read/answer/export/tile/graph/index/cache targets | Withdrawal execution, cleanup, SLOs, or production propagation |
-| [`ConsentCardProjection.ts`](../../apps/explorer-web/src/adapters/ConsentCardProjection.ts) | Strict public-safe fixture projection with finite UI outcomes and no transport or policy execution | Consent capture, issuance, revocation, identity proof, or runtime authorization |
+| `ConsentCardProjection.ts` (retired) | Strict public-safe fixture projection with finite UI outcomes and no transport or policy execution | Consent capture, issuance, revocation, identity proof, or runtime authorization |
 
 **CONFIRMED:** KFM has useful synthetic and documentation-level consent building blocks, but they do not close a production consent credential path.
 
@@ -627,7 +626,7 @@ Until resolved by accountable authority and current evidence, these remain `NEED
 | [`consent_receipt.schema.json`](../../schemas/governance/consent_receipt.schema.json) | Current permissive governance scaffold |
 | [`ConsentedGenealogyOverlayCandidate`](../../contracts/domains/people-dna-land/consented_genealogy_overlay.md) | Bounded synthetic domain proof |
 | [`ConsentRevocationPropagationAssessment`](../../contracts/domains/people-dna-land/consent_revocation_propagation_assessment.md) | Bounded synthetic propagation assessment |
-| [`ConsentCardProjection.ts`](../../apps/explorer-web/src/adapters/ConsentCardProjection.ts) | Fixture-first UI projection boundary |
+| `ConsentCardProjection.ts` (retired) | Fixture-first UI projection boundary |
 | [`CONSENT_PATTERN.md`](../focus-mode/CONSENT_PATTERN.md) | Focus Mode consent planning context |
 | [`DUO_MAPPING.md`](./DUO_MAPPING.md) | External controlled-use term mapping context |
 | [`REDACTION_PROFILES.md`](./REDACTION_PROFILES.md), [`SENSITIVITY_RUBRIC.md`](./SENSITIVITY_RUBRIC.md), [`DATA_CLASSIFICATION.md`](../security/DATA_CLASSIFICATION.md) | Public-safe transformation and handling guidance |

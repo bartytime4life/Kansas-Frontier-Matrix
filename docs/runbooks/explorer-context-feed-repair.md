@@ -41,7 +41,7 @@ Before operational integration, retrieve the active Site's exact source, saved
 version, archive identity, access/bindings and immediately saved predecessor.
 Preserve project `appgprj_6aa0b1c41bc08191bfd86003920f1631`, slug
 `kansas-frontier-matrix-explorer` and the existing URL. See the repository's
-[Site alignment boundary](../../apps/kansas-frontier-matrix-explorer/docs/sites-source-alignment.md).
+Site alignment boundary (retired).
 Do not use that older dated alignment document as a live version readback either.
 
 Recheck main, open PRs, candidate heads, path overlap and applicable AGENTS/README

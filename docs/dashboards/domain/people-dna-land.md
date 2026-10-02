@@ -278,7 +278,7 @@ For policy-significant release, authoring, policy/sensitivity review, and releas
 | [`domain-people-dna-land.yml`](../../../.github/workflows/domain-people-dna-land.yml) | Two synthetic no-network profiles and explicit proof/release holds | Not dashboard telemetry or production policy |
 | [`consented_genealogy_overlay.schema.json`](../../../schemas/contracts/v1/domains/people-dna-land/consented_genealogy_overlay.schema.json) | Closed fixture-only shape with non-public governance flags | Not production consent or overlay |
 | [`policy/domains/people-dna-land/README.md`](../../../policy/domains/people-dna-land/README.md) | Policy boundary and maturity inventory | Evaluator and consumer unbound |
-| [`apps/explorer-web/.../people_dna_land/README.md`](../../../apps/explorer-web/src/features/domains/people_dna_land/README.md) | Candidate restricted/public-safe feature boundary | No verified route, panel, adapter, or dashboard |
+| `apps/explorer-web/.../people_dna_land/README.md` (retired) | Candidate restricted/public-safe feature boundary | No verified route, panel, adapter, or dashboard |
 | [`data/proofs/people-dna-land/README.md`](../../../data/proofs/people-dna-land/README.md) | Proof-lane boundary | Producer absent |
 | [`release/candidates/people-dna-land/README.md`](../../../release/candidates/people-dna-land/README.md) | Candidate-release boundary | Release held |
 
@@ -400,7 +400,7 @@ A periodic interval may be adopted later through an accountable review contract.
 
 - [Fixture lane](../../../fixtures/domains/people-dna-land/README.md)
 - [Domain workflow](../../../.github/workflows/domain-people-dna-land.yml)
-- [Explorer feature boundary](../../../apps/explorer-web/src/features/domains/people_dna_land/README.md)
+- Explorer feature boundary (retired)
 - [Proof-lane boundary](../../../data/proofs/people-dna-land/README.md)
 - [Release-candidate boundary](../../../release/candidates/people-dna-land/README.md)
 

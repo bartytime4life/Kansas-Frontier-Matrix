@@ -15,7 +15,6 @@ related:
   - docs/doctrine/directory-rules.md
   - docs/security/THREAT_MODEL.md
   - docs/security/EXPOSURE_PLAN.md
-  - docs/governance/ROLES.md
   - docs/runbooks/
   - release/correction_notices/
   - release/rollback_cards/
@@ -25,6 +24,9 @@ notes:
   - Path docs/security/INCIDENT_RESPONSE.md is endorsed by directory-rules.md §6.1.
   - Owners, dates, SLA numbers, and intake channels are placeholders pending governance sign-off.
   - Repository not mounted in authoring session; all repo-state claims labeled accordingly.
+owning_root: docs/
+responsibility: "Documentation for KFM Security Incident Response; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🛡️ KFM Security Incident Response
@@ -384,7 +386,7 @@ PROPOSED — verify each path on first link-check pass. Several siblings may not
 - [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — placement law and the `docs/security/` charter.
 - [`docs/security/THREAT_MODEL.md`](./THREAT_MODEL.md) — system-level threat model. *(TODO — stub if absent.)*
 - [`docs/security/EXPOSURE_PLAN.md`](./EXPOSURE_PLAN.md) — deny-by-default and least-privilege posture. *(TODO.)*
-- [`docs/governance/ROLES.md`](../governance/ROLES.md) — role definitions and separation-of-duties matrix. *(TODO.)*
+- `docs/governance/ROLES.md` (PROPOSED; not present) — role definitions and separation-of-duties matrix. *(TODO.)*
 - [`docs/runbooks/`](../runbooks/) — operational runbooks (rollback drills, validation runs, secret rotation).
 - [`docs/registers/DRIFT_REGISTER.md`](../registers/DRIFT_REGISTER.md) — drift entries that may originate from incident postmortems.
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) — open verification items.

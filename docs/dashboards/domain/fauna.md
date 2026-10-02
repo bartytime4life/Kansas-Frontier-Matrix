@@ -10,9 +10,7 @@ updated: 2026-08-21
 policy_label: public
 related:
   - kfm://doc/dashboards-domain-readme
-  - kfm://doc/domains-fauna-dossier
   - ../../domains/fauna/README.md
-  - ../../../apps/explorer-web/src/features/domains/fauna/README.md
   - ../../../contracts/domains/fauna/occurrence_evidence.md
   - ../../../policy/domains/fauna/README.md
   - ../../../policy/sensitivity/fauna/README.md
@@ -21,6 +19,9 @@ notes:
   - Same-path modernization of the per-domain dashboard specification; no dashboard route, release, or publication is created.
   - Dashboard indicators report derived posture. Contracts define meaning, schemas define shape, policy decides, review records disposition, and release artifacts authorize public use.
   - Sensitive Fauna occurrence and site information remains deny-by-default; this document contains no exact locations or exposure-aiding thresholds.
+owning_root: docs/
+responsibility: "Documentation for Fauna Dashboard Specification; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # Fauna Dashboard Specification
@@ -182,9 +183,9 @@ remain separate transitions.
 |:---|:---|:---|
 | [`docs/domains/fauna/README.md`](../../domains/fauna/README.md) | Draft Fauna domain lane with deny-by-default sensitive-occurrence posture. | Doctrine and domain context, not runtime enforcement. |
 | [`contracts/domains/fauna/occurrence_evidence.md`](../../../contracts/domains/fauna/occurrence_evidence.md), [schema](../../../schemas/contracts/v1/domains/fauna/occurrence_evidence.schema.json), [validator](../../../tools/validators/domains/fauna/occurrence/validate_occurrence_evidence.py), and [tests](../../../tests/domains/fauna/test_occurrence_evidence.py) | Fixture-first draft profile with deterministic identity, finite outcomes, and fail-closed checks. | Does not admit live sources, resolve EvidenceBundles, authorize public derivatives, or release data. |
-| [`apps/explorer-web/src/features/domains/fauna/EvidenceDrawer.tsx`](../../../apps/explorer-web/src/features/domains/fauna/EvidenceDrawer.tsx) | Re-exports the shared Evidence Drawer controller and view model. | Confirms an adapter surface, not a routed Fauna dashboard or runtime data. |
-| [`fauna-evidence-drawer-convergence.yml`](../../../.github/workflows/fauna-evidence-drawer-convergence.yml) | Read-only, no-network schema/convergence test definition. | A workflow definition or passing run is not evidence truth or release authority. |
-| [`FocusFlow.tsx`](../../../apps/explorer-web/src/features/domains/fauna/FocusFlow.tsx) and [`layers.ts`](../../../apps/explorer-web/src/features/domains/fauna/layers.ts) | Greenfield placeholders. | Must not be described as implemented Focus Mode or map-layer behavior. |
+| `apps/explorer-web/src/features/domains/fauna/EvidenceDrawer.tsx` (retired) | Re-exports the shared Evidence Drawer controller and view model. | Confirms an adapter surface, not a routed Fauna dashboard or runtime data. |
+| `fauna-evidence-drawer-convergence.yml` (PROPOSED; not present) | Read-only, no-network schema/convergence test definition. | A workflow definition or passing run is not evidence truth or release authority. |
+| `FocusFlow.tsx` (retired) and `layers.ts` (retired) | Greenfield placeholders. | Must not be described as implemented Focus Mode or map-layer behavior. |
 | [`fauna-tile-field-allowlist.yml`](../../../.github/workflows/fauna-tile-field-allowlist.yml) | Deterministic inactive, fixture-only allowlist validation. | Does not inspect production tile bytes or approve a public field set. |
 | [`domain-fauna.yml`](../../../.github/workflows/domain-fauna.yml) | Runs the accepted synthetic smoke slice and preserves explicit proof and release-dry-run holds. | Performs no source access, transform, promotion, release, deployment, or publication. |
 | [`data/registry/sources/fauna/`](../../../data/registry/sources/fauna/README.md) | Source-registry boundary exists. | Current rights, terms, cadence, field mapping, and source activation remain individually governed. |
@@ -284,7 +285,7 @@ on 2026-08-21.
 | [Parent dashboard specification](./README.md) | **CONFIRMED file / PROPOSED lane** | Per-domain scope, indicator-instance boundary, anti-collapse rule, and open sensitive-domain review question. | Accepted dashboard authority, implementation, or reviewer assignment. |
 | [Fauna domain lane](../../domains/fauna/README.md) and [sensitivity posture](../../domains/fauna/SENSITIVITY.md) | **CONFIRMED draft documentation** | T4 deny-by-default posture, geoprivacy boundary, finite public outcomes, and governed API path. | Executable policy, reviewed release, or current source truth. |
 | [Occurrence Evidence contract](../../../contracts/domains/fauna/occurrence_evidence.md) and [focused workflow](../../../.github/workflows/fauna-occurrence-evidence.yml) | **CONFIRMED draft machinery** | Finite disposition states, deterministic validation, source-role separation, synthetic fixture coverage, and explicit holds. | Live-source admission, EvidenceBundle closure, public derivative, or publication. |
-| [Explorer Web Fauna feature boundary](../../../apps/explorer-web/src/features/domains/fauna/README.md) and current TypeScript files | **CONFIRMED repository surfaces** | Evidence Drawer adapter exists; FocusFlow and layers are placeholders. | A dashboard route, complete feature, runtime behavior, deployment, or public availability. |
+| Explorer Web Fauna feature boundary (retired) and current TypeScript files | **CONFIRMED repository surfaces** | Evidence Drawer adapter exists; FocusFlow and layers are placeholders. | A dashboard route, complete feature, runtime behavior, deployment, or public availability. |
 | [Fauna domain workflow](../../../.github/workflows/domain-fauna.yml) | **CONFIRMED read-only workflow definition** | Synthetic smoke validation and explicit proof/release holds. | Hosted pass at an arbitrary head, proof, release readiness, or publication. |
 | [Directory Rules](../../doctrine/directory-rules.md) and [accepted ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | **CONFIRMED adopted placement authority** | Documentation may reference every responsibility root but gains no executable authority through prose; public clients use governed APIs or released carriers. | That the separately proposed `docs/dashboards/` lane has been independently adopted as canonical. |
 | [CODEOWNERS](../../../.github/CODEOWNERS) | **CONFIRMED review routing** | `@bartytime4life` is the verified default repository review route. | Human review, domain stewardship, sensitivity approval, or branch-protection enforcement. |

@@ -11,18 +11,18 @@ policy_label: public
 related:
   - docs/standards/RUN_RECEIPT.md
   - docs/standards/DEBOUNCE_WINDOWS.md
-  - docs/standards/AGENT_CONTRACT.md
   - docs/standards/SENSITIVITY_RUBRIC.md
-  - docs/runbooks/event-driven-ingest.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/directory-rules.md
-  - tools/ingest/watchers/
   - tools/validators/
   - schemas/contracts/v1/runtime/run_receipt.schema.json
 tags: [kfm, ingestion, smart-sync, watchers, http-validators, etag, manifest-checksum, debounce, cdc, run-receipt]
 notes:
   - All path claims are PROPOSED until repo evidence is mounted.
   - Doctrine grounded in Pass 10 §6.3 (Category C3) and converging evidence in Pass 18, Master MapLibre v1.7/v1.8, and New Ideas 5-8-26.
+owning_root: docs/
+responsibility: "Documentation for Smart Sync — Layered Ingest Doctrine for Event-Driven, Conditional, Fail-Closed Source Refresh; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -46,7 +46,7 @@ notes:
 | **Authority level** | doctrine / standard |
 | **Owners** | `NEEDS VERIFICATION` (CODEOWNERS not inspected) |
 | **Last reviewed** | 2026-05-14 |
-| **Companion docs** | [`RUN_RECEIPT.md`](./RUN_RECEIPT.md) · [`DEBOUNCE_WINDOWS.md`](./DEBOUNCE_WINDOWS.md) · [`AGENT_CONTRACT.md`](./AGENT_CONTRACT.md) |
+| **Companion docs** | [`RUN_RECEIPT.md`](./RUN_RECEIPT.md) · [`DEBOUNCE_WINDOWS.md`](./DEBOUNCE_WINDOWS.md) · `AGENT_CONTRACT.md` (PROPOSED; not present) |
 | **Implementation home (PROPOSED)** | `tools/ingest/watchers/` · `tools/validators/` · `schemas/contracts/v1/runtime/` |
 
 > [!IMPORTANT]
@@ -94,7 +94,7 @@ It exists because the alternative — naive polling, every-poll re-downloads, fi
 
 - The full `RunReceipt` envelope — see [`RUN_RECEIPT.md`](./RUN_RECEIPT.md) (PROPOSED).
 - Per-source debounce window numbers — see [`DEBOUNCE_WINDOWS.md`](./DEBOUNCE_WINDOWS.md) (PROPOSED).
-- The watcher's lease/expiry semantics — see [`AGENT_CONTRACT.md`](./AGENT_CONTRACT.md) (PROPOSED).
+- The watcher's lease/expiry semantics — see `AGENT_CONTRACT.md` (PROPOSED; not present) (PROPOSED).
 - Sensitivity classification of fetched bytes — see [`SENSITIVITY_RUBRIC.md`](./SENSITIVITY_RUBRIC.md) (PROPOSED).
 - Release/promotion policy — see `policy/promotion/` (PROPOSED).
 
@@ -579,7 +579,7 @@ The following are **explicitly unresolved** in the corpus. They are tracked here
 4. **No-op receipt cadence.** Every cycle, every N cycles, or only on `change ↔ no-change` transitions? *(C3-04 open question.)*
 5. **CDC source inventory.** Which Kansas authoritative database, if any, is amenable to CDC? *(C3-05 open question.)*
 6. **Per-source debounce window numbers.** The corpus offers ranges (5–30 s, 30–120 s, 120–300 s) but not per-source specifics. Owned by [`DEBOUNCE_WINDOWS.md`](./DEBOUNCE_WINDOWS.md).
-7. **Lease duration per source class.** What lease duration fits high-churn sensors, moderate feeds, heavy batch sources? *(C2-04 open question; owned by [`AGENT_CONTRACT.md`](./AGENT_CONTRACT.md).)*
+7. **Lease duration per source class.** What lease duration fits high-churn sensors, moderate feeds, heavy batch sources? *(C2-04 open question; owned by `AGENT_CONTRACT.md` (PROPOSED; not present).)*
 8. **Receipt field-name canonicalization.** Final reconciliation of `fetch_time` vs `fetched_at`, `http_validators` vs `source_validators`. *(NEEDS VERIFICATION against any pre-existing receipts in the repo.)*
 9. **Schema home for `WatcherDescriptor`.** `schemas/contracts/v1/runtime/` (ADR-0001 default) vs. `contracts/runtime/`. *(Directory Rules §18 open item.)*
 10. **Apache NiFi adoption.** C3-07 is PROPOSED; justification over Airbyte and Debezium needed before adoption.
@@ -596,9 +596,9 @@ The following are **explicitly unresolved** in the corpus. They are tracked here
 |---|---|---|
 | [`docs/standards/RUN_RECEIPT.md`](./RUN_RECEIPT.md) | Canonical `RunReceipt` envelope and field semantics | PROPOSED |
 | [`docs/standards/DEBOUNCE_WINDOWS.md`](./DEBOUNCE_WINDOWS.md) | Per-source debounce window numbers | PROPOSED |
-| [`docs/standards/AGENT_CONTRACT.md`](./AGENT_CONTRACT.md) | Watcher lease/expiry semantics; START/COMPLETE/FAIL events | PROPOSED |
+| `docs/standards/AGENT_CONTRACT.md` (PROPOSED; not present) | Watcher lease/expiry semantics; START/COMPLETE/FAIL events | PROPOSED |
 | [`docs/standards/SENSITIVITY_RUBRIC.md`](./SENSITIVITY_RUBRIC.md) | Sensitivity classes that govern admission to RAW vs. quarantine | PROPOSED |
-| [`docs/runbooks/event-driven-ingest.md`](../runbooks/event-driven-ingest.md) | Tier 3 handler operational shape | PROPOSED |
+| `docs/runbooks/event-driven-ingest.md` (PROPOSED; not present) | Tier 3 handler operational shape | PROPOSED |
 | [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) | The `RAW → … → PUBLISHED` invariant | PROPOSED |
 | [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) | Responsibility-root placement rules | CONFIRMED (project-mounted) |
 | `tools/ingest/watchers/` | Watcher implementations | PROPOSED |
@@ -800,7 +800,7 @@ signature_ref: oci://kfm/watcher-signatures/ssurgo_state_packages@sha256:<hex>
 
 - [`docs/standards/RUN_RECEIPT.md`](./RUN_RECEIPT.md) (PROPOSED) — RunReceipt envelope and signing contract.
 - [`docs/standards/DEBOUNCE_WINDOWS.md`](./DEBOUNCE_WINDOWS.md) (PROPOSED) — per-source window numbers.
-- [`docs/standards/AGENT_CONTRACT.md`](./AGENT_CONTRACT.md) (PROPOSED) — watcher lease semantics.
+- `docs/standards/AGENT_CONTRACT.md` (PROPOSED; not present) (PROPOSED) — watcher lease semantics.
 - [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) (PROPOSED) — RAW → PUBLISHED invariant.
 - [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — responsibility-root placement.
 

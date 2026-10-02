@@ -1,0 +1,184 @@
+{
+  "receipt_id": "genrec-docs-link-repair-batch5-20261002",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/brand/README.md",
+    "docs/brand/accessibility-commitments.md",
+    "docs/dashboards/domain/atmosphere.md",
+    "docs/dashboards/domain/fauna.md",
+    "docs/dashboards/domain/habitat.md",
+    "docs/dashboards/domain/hazards.md",
+    "docs/dashboards/domain/hydrology.md",
+    "docs/dashboards/domain/people-dna-land.md",
+    "docs/dashboards/domain/roads-rail-trade.md",
+    "docs/dashboards/domain/settlements-infrastructure.md",
+    "docs/dashboards/domain/soil.md",
+    "docs/doctrine/README.md",
+    "docs/doctrine/authority-ladder.md",
+    "docs/doctrine/encyclopedia.md",
+    "docs/focus-mode/CONSENT_PATTERN.md",
+    "docs/focus-mode/README.md",
+    "docs/intake/exploratory/full-atlas-semantic-disposition-crosswalk.md",
+    "docs/intake/exploratory/main-system-updates-source-map.md",
+    "docs/quality/explorer-eslint10-compatibility.md",
+    "docs/runbooks/ROLLBACK_RUNBOOK.md",
+    "docs/runbooks/SOURCE_REFRESH_RUNBOOK.md",
+    "docs/runbooks/explorer-context-feed-repair.md",
+    "docs/runbooks/local-pc-data-store.md",
+    "docs/runbooks/usgs-earthquake-live-history.md",
+    "docs/security/INCIDENT_RESPONSE.md",
+    "docs/security/KEY_ROTATION.md",
+    "docs/security/SECRETS.md",
+    "docs/standards/ARCHIVAL-STANDARDS.md",
+    "docs/standards/CONSENT_TOKENS.md",
+    "docs/standards/MAP_TRUST_STATES.md",
+    "docs/standards/REDACTION_DETERMINISM.md",
+    "docs/standards/SMART_SYNC.md",
+    "docs/standards/STAC-DwC.md",
+    "docs/standards/STAC.md",
+    "docs/standards/STAC_DWC_PROFILE.md",
+    "docs/standards/WMTS.md",
+    "docs/standards/stac.md",
+    "tests/pipelines/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/brand/README.md": "sha256:2196f1ff783201aa4260c4c760d06edb1228680345779fcfffb9e6abebc55e49",
+    "docs/brand/accessibility-commitments.md": "sha256:c06afbd5af899b9181a8765225cdfd5b09fb2de2eda4267ec526069eb514ab0a",
+    "docs/dashboards/domain/atmosphere.md": "sha256:ffe8ee4dea52aebe2152e1deebc65da195c144a486a0202335ead96ffbd8445c",
+    "docs/dashboards/domain/fauna.md": "sha256:f200e2ef345132f3c204e299e04e8836020d4bccbc81af8ff87188d1a70410c5",
+    "docs/dashboards/domain/habitat.md": "sha256:fc6c0cddbdce7e2faef4d6c679cc65605636802c3e8d15a9970bd9390d53b6bf",
+    "docs/dashboards/domain/hazards.md": "sha256:8f45030731163a9f0cc4fe451bd9c7115d66f723ae3e85b650b85b8139bf5a88",
+    "docs/dashboards/domain/hydrology.md": "sha256:4e38b7da5644722ffaa4d5398a7dd8d4533b971591c052e6b70da505b7c75845",
+    "docs/dashboards/domain/people-dna-land.md": "sha256:b45dc473cc01dfbbeffebae5ccdf6e8fd71cc1e57f7f32c980c608bdcd590265",
+    "docs/dashboards/domain/roads-rail-trade.md": "sha256:85e51551f518f6f1bc0ea9aed75ca627b9839eec228e5bed99143400aa32312c",
+    "docs/dashboards/domain/settlements-infrastructure.md": "sha256:11dd74e4c42b43ef99bf136f1cfd741e9ffcb7df5f0f628246b14c7e894d9845",
+    "docs/dashboards/domain/soil.md": "sha256:6a8089f472050459395b83c3e8bc706e9b6903f94404f4b564bebd4cb74cf859",
+    "docs/doctrine/README.md": "sha256:46e8dc126335e9cbad681207a54b17e1e61c290b5058f4a5da8355a8dbcdc738",
+    "docs/doctrine/authority-ladder.md": "sha256:01a9c2c7a233c5e7cafff8a46a9429ab2438eeb40e7fca54ccf9b37a3b3c10fe",
+    "docs/doctrine/encyclopedia.md": "sha256:ecdb9a4cfea74974d1414737434815c6da01a972d0b40bb2fec2c514e15bec0a",
+    "docs/focus-mode/CONSENT_PATTERN.md": "sha256:a500c99694b69f2b287be11de79205abdeccbd0bd724f732a04fe079a7e8c090",
+    "docs/focus-mode/README.md": "sha256:10bebd2ff48b6313d68fe26e13fe213e297110d42fa651db930eabb81eab54d8",
+    "docs/intake/exploratory/full-atlas-semantic-disposition-crosswalk.md": "sha256:4aeb002ffb03ec07adc1f839f2ced12eba16813ed579a91c0d58f683782fafab",
+    "docs/intake/exploratory/main-system-updates-source-map.md": "sha256:5e6e93dcde5f9875d7358f995ef0b8bf335a204d9cc8236052b688be44091754",
+    "docs/quality/explorer-eslint10-compatibility.md": "sha256:6c8db28b164dab3f1fbdb3d9f4baf9287ff9f09214e85db0d627ff301cb7d44e",
+    "docs/runbooks/ROLLBACK_RUNBOOK.md": "sha256:abd13e2460581771d21f8ac850373b3749744aef4289ea83ad1715080d489da5",
+    "docs/runbooks/SOURCE_REFRESH_RUNBOOK.md": "sha256:df8df417b27b229c40919201c90dc6a6b71b8daeabfc92696b03c1ff9789c7ec",
+    "docs/runbooks/explorer-context-feed-repair.md": "sha256:23e28c77bd5b8059dcf956242ed4abdea97ab1ccee25ca95f1652eb5af975eb2",
+    "docs/runbooks/local-pc-data-store.md": "sha256:5b9455cbdaced02be35679e019de30d558fef5573988bac38331953ed431d12f",
+    "docs/runbooks/usgs-earthquake-live-history.md": "sha256:2c8450e53716037a90e9c4357f20d5caf30cfecd90593243c5b89de957167199",
+    "docs/security/INCIDENT_RESPONSE.md": "sha256:be9498df20c326e021422b65d3024b25a2eb4a6b5eaa302033f7477aa9db55a5",
+    "docs/security/KEY_ROTATION.md": "sha256:55cb6cc136c94c7591ed3ebdeddd6922f8070f212e60cdfa4d9e98112237c5ef",
+    "docs/security/SECRETS.md": "sha256:1e9e3d98b8065d9805150b93812684f6601108101a22d2f590735505aa2a9b5f",
+    "docs/standards/ARCHIVAL-STANDARDS.md": "sha256:11c483fd54040be5cce36235c97a7da8a27c927af5edf5cd03585e9744f3cf85",
+    "docs/standards/CONSENT_TOKENS.md": "sha256:2f7c60dad28a103cf5660b1b6092dc8664896cc480b3efc1275683a21a0f81df",
+    "docs/standards/MAP_TRUST_STATES.md": "sha256:6f217ed4e27112d2de4a94d341e956449fc00eed85196465c5f4724a01ff4bd2",
+    "docs/standards/REDACTION_DETERMINISM.md": "sha256:7adf1b8a296146a19c43e177352e9da0aa795a60f55ff6ab46c772d273e0dbe0",
+    "docs/standards/SMART_SYNC.md": "sha256:2298008ded5a8d81b7b313d3fc6df399822f8e80bfa7d27e3aecc1c6b1e1e09e",
+    "docs/standards/STAC-DwC.md": "sha256:28a9af9adedf542b0107c13f1a20a3d0dae12929d723290c9e74874f9c9f2c5f",
+    "docs/standards/STAC.md": "sha256:df49699c9775fde72701a12e3ceda8803783fe4abec6ca1ad37830a9f932cc72",
+    "docs/standards/STAC_DWC_PROFILE.md": "sha256:47c17999a16de6189184d4b562ff9e1d038b15b4f7c6cefe57b7c729ac1670b7",
+    "docs/standards/WMTS.md": "sha256:dac6723fea6f1a4cf899a97a2f34a3cb6de1ebec6e8ed3977fd0169a2c44de73",
+    "docs/standards/stac.md": "sha256:a7cacb60966ad082372c1938420018a417c95aaa60d8245176b4a2dac850c238",
+    "tests/pipelines/README.md": "sha256:9178ae8889c2830b61f6d974edfedbacf156f2068831fbfe443e483bb06dae37"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:faff7c1df24294ff7b3d390b3fe8eb16be77c09f4975580ecee714f6d9559a15",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/a0253534f98e862997f811966d33bfcbd754751b",
+      "repo:tools/validators/docs/link-check/check_links.py"
+    ]
+  },
+  "truth_labels": {
+    "docs/brand/README.md": "CONFIRMED",
+    "docs/brand/accessibility-commitments.md": "CONFIRMED",
+    "docs/dashboards/domain/atmosphere.md": "CONFIRMED",
+    "docs/dashboards/domain/fauna.md": "CONFIRMED",
+    "docs/dashboards/domain/habitat.md": "CONFIRMED",
+    "docs/dashboards/domain/hazards.md": "CONFIRMED",
+    "docs/dashboards/domain/hydrology.md": "CONFIRMED",
+    "docs/dashboards/domain/people-dna-land.md": "CONFIRMED",
+    "docs/dashboards/domain/roads-rail-trade.md": "CONFIRMED",
+    "docs/dashboards/domain/settlements-infrastructure.md": "CONFIRMED",
+    "docs/dashboards/domain/soil.md": "CONFIRMED",
+    "docs/doctrine/README.md": "CONFIRMED",
+    "docs/doctrine/authority-ladder.md": "CONFIRMED",
+    "docs/doctrine/encyclopedia.md": "CONFIRMED",
+    "docs/focus-mode/CONSENT_PATTERN.md": "CONFIRMED",
+    "docs/focus-mode/README.md": "CONFIRMED",
+    "docs/intake/exploratory/full-atlas-semantic-disposition-crosswalk.md": "CONFIRMED",
+    "docs/intake/exploratory/main-system-updates-source-map.md": "CONFIRMED",
+    "docs/quality/explorer-eslint10-compatibility.md": "CONFIRMED",
+    "docs/runbooks/ROLLBACK_RUNBOOK.md": "CONFIRMED",
+    "docs/runbooks/SOURCE_REFRESH_RUNBOOK.md": "CONFIRMED",
+    "docs/runbooks/explorer-context-feed-repair.md": "CONFIRMED",
+    "docs/runbooks/local-pc-data-store.md": "CONFIRMED",
+    "docs/runbooks/usgs-earthquake-live-history.md": "CONFIRMED",
+    "docs/security/INCIDENT_RESPONSE.md": "CONFIRMED",
+    "docs/security/KEY_ROTATION.md": "CONFIRMED",
+    "docs/security/SECRETS.md": "CONFIRMED",
+    "docs/standards/ARCHIVAL-STANDARDS.md": "CONFIRMED",
+    "docs/standards/CONSENT_TOKENS.md": "CONFIRMED",
+    "docs/standards/MAP_TRUST_STATES.md": "CONFIRMED",
+    "docs/standards/REDACTION_DETERMINISM.md": "CONFIRMED",
+    "docs/standards/SMART_SYNC.md": "CONFIRMED",
+    "docs/standards/STAC-DwC.md": "CONFIRMED",
+    "docs/standards/STAC.md": "CONFIRMED",
+    "docs/standards/STAC_DWC_PROFILE.md": "CONFIRMED",
+    "docs/standards/WMTS.md": "CONFIRMED",
+    "docs/standards/stac.md": "CONFIRMED",
+    "tests/pipelines/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Link check",
+      "outcome": "PASS",
+      "reason": "All broken local links in these 38 files are repaired: 9 redirected to renamed targets (directory-rules.md, the ADR-0001 schema-home decision, and same-folder renames such as Evidence_Bundle.md to EVIDENCE_BUNDLE.md), 1 depth-corrected, 1 anchor corrected, 3 unmatched anchors dropped from otherwise valid links, 62 links into the retired Explorer apps made plain text marked (retired), and 45 links to planned but absent targets made plain text marked (PROPOSED; not present) per P-03 step 5. check_links.py reports none remaining."
+    },
+    {
+      "gate": "Metadata block, document graph, and stale docs",
+      "outcome": "PASS",
+      "reason": "16 metadata blocks gain owning_root, responsibility, and truth_posture (NEEDS VERIFICATION). Related lists in 27 files keep every entry that resolved on the base commit (0 valid edges lost across 457 entries). check_meta_blocks.py, check_document_graph.py, and check_stale_docs.py report no FAIL findings for the diff."
+    },
+    {
+      "gate": "Gap scan and triggered workflows",
+      "outcome": "PASS",
+      "reason": "gap_scan.py BROKEN_LOCAL_LINK falls from 456 to 339 and the baseline is tightened to match. Local replay of the run steps of the 13 workflows these paths trigger reports no failures other than a policy-boundary-guards summary step that reads a GitHub step output unavailable locally."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/a0253534f98e862997f811966d33bfcbd754751b"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-02T16:20:52Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "46 further documents with broken links are left unchanged: they contain links to DOC-DOC-002/003 held targets (which must stay as they are until the naming decision, and which make check_links fail any edit to the file) or have metadata that already fails check_meta_blocks or check_document_graph. docs/architecture/ui/map-context-evidence-drawer-admission.md stays byte-identical for its workflow receipt, and docs/doctrine/directory-rules.md and docs/registers/DOMAIN_LANE.md stay pinned. ADRs under docs/adr/ are append-only and are not edited."
+}

@@ -298,7 +298,7 @@ revision and manifest together. Recovery is not a release or publication action.
 ## What remains before the local map is production-ready
 
 The GitHub source checkout and the hosted Explorer have separate histories.
-The earlier v0.2 readback recorded Explorer v44. The [Site application guide](../../apps/kansas-frontier-matrix-explorer/README.md)
+The earlier v0.2 readback recorded Explorer v44. The Site application guide (retired)
 records a later v45 deployment. Neither historical observation establishes the
 currently active Site version, source parity, or a browser connection to this PC's
 files. Compose remains a placeholder.
