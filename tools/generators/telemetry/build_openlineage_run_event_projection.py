@@ -429,10 +429,12 @@ def build_document(
     public_safe: bool = False,
     evidence_release_state: str = "PROCESSED",
     sensitivity_level: str = "public",
-    telemetry_allowed: bool = True,
+    telemetry_allowed: bool = False,
     public_use_allowed: bool = False,
     event_time: str = "2026-08-07T02:00:00Z",
 ) -> dict[str, Any]:
+    if any(type(value) is not bool for value in (public_safe, telemetry_allowed, public_use_allowed)):
+        raise ValueError("permission flags must be boolean")
     if visibility not in {"INTERNAL", "PUBLIC"}:
         raise ValueError("unsupported visibility")
     if run_outcome not in {"SUCCESS", "PARTIAL", "FAIL"}:

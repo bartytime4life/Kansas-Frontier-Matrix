@@ -61,6 +61,7 @@ class RemoteSensingLineageActivityTests(unittest.TestCase):
 
     def test_missing_or_non_boolean_permission_fails_closed(self) -> None:
         self.assertEqual(BUILDER.build_case({})["decision"]["outcome"], "DENY")
+        self.assertEqual(BUILDER.build_document()["decision"]["outcome"], "DENY")
         with self.assertRaises(ValueError):
             BUILDER.build_document(telemetry_allowed="false")  # type: ignore[arg-type]
 
@@ -127,8 +128,8 @@ class RemoteSensingLineageActivityTests(unittest.TestCase):
         self.assertEqual(len(report["cases"]), 11)
 
     def test_activity_is_deterministic_and_binds_source_projection(self) -> None:
-        first = BUILDER.build_document()
-        second = BUILDER.build_document()
+        first = BUILDER.build_document(telemetry_allowed=True)
+        second = BUILDER.build_document(telemetry_allowed=True)
         self.assertEqual(first, second)
         self.assertTrue(first["activity_id"].startswith("kfm:remote-sensing-activity:"))
         self.assertEqual(first["decision"]["outcome"], "PASS")
@@ -142,12 +143,13 @@ class RemoteSensingLineageActivityTests(unittest.TestCase):
         )
 
     def test_success_and_failure_metrics_are_recorded_without_authority(self) -> None:
-        success = BUILDER.build_document()
+        success = BUILDER.build_document(telemetry_allowed=True)
         failed = BUILDER.build_document(
             processed_scene_count=7,
             failed_scene_count=1,
             retry_count=2,
             run_outcome="FAIL",
+            telemetry_allowed=True,
         )
         self.assertIn(
             "REMOTE_SENSING_SUCCESS_RECORDED",
@@ -164,7 +166,7 @@ class RemoteSensingLineageActivityTests(unittest.TestCase):
         self.assertEqual(failed["authority"], "NONE")
 
     def test_partial_or_policy_denied_source_never_becomes_pass(self) -> None:
-        partial = BUILDER.build_document(run_outcome="PARTIAL")
+        partial = BUILDER.build_document(run_outcome="PARTIAL", telemetry_allowed=True)
         denied = BUILDER.build_document(telemetry_allowed=False)
         self.assertEqual(partial["decision"]["outcome"], "ABSTAIN")
         self.assertEqual(denied["decision"]["outcome"], "DENY")
@@ -176,13 +178,13 @@ class RemoteSensingLineageActivityTests(unittest.TestCase):
             ("SOURCE_LINK_MISSING", "SOURCE_LINK_CLOSURE_MISMATCH"),
         ):
             with self.subTest(mutation=mutation):
-                document = BUILDER.build_case({"mutation": mutation})
+                document = BUILDER.build_case({"mutation": mutation, "telemetry_allowed": True})
                 self.assertEqual(document["decision"]["outcome"], "DENY")
                 self.assertIn(reason, document["decision"]["reason_codes"])
                 self.assertEqual(VALIDATOR.validate_document(document).outcome, "PASS")
 
     def test_invalid_embedded_openlineage_projection_fails_companion(self) -> None:
-        document = BUILDER.build_document()
+        document = BUILDER.build_document(telemetry_allowed=True)
         document["source_openlineage_projection"]["spec_hash"] = "sha256:" + "f" * 64
         BUILDER._reidentify(document)
         result = VALIDATOR.validate_document(document)
@@ -193,7 +195,7 @@ class RemoteSensingLineageActivityTests(unittest.TestCase):
         )
 
     def test_validator_does_not_mutate_candidate(self) -> None:
-        document = BUILDER.build_document()
+        document = BUILDER.build_document(telemetry_allowed=True)
         before = copy.deepcopy(document)
         self.assertEqual(VALIDATOR.validate_document(document).outcome, "PASS")
         self.assertEqual(document, before)
