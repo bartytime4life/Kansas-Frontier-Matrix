@@ -77,6 +77,7 @@ jobs:
             "tests/domains/hydrology/README.md"
             "tests/domains/hydrology/test_no_network_proof.py"
             "tests/domains/hydrology/test_promotion_hold.py"
+            "tests/domains/hydrology/test_pipeline_stage_holds.py"
             "tests/domains/hydrology/test_public_safe_flow_fixture.py"
             "tests/domains/hydrology/test_public_safe_water_level_fixture.py"
             "tests/domains/hydrology/test_living_waters_fixture_packet.py"
@@ -146,6 +147,7 @@ jobs:
               test_root / "test_living_waters_fixture_packet.py",
               test_root / "test_no_network_proof.py",
               test_root / "test_promotion_hold.py",
+              test_root / "test_pipeline_stage_holds.py",
               test_root / "test_proof_slice.py",
               test_root / "test_usgs_water_normalizer.py",
           }

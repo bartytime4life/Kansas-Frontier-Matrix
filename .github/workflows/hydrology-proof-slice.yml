@@ -199,6 +199,7 @@ jobs:
             "tests/ci/test_readiness_lanes.py"
             "tests/domains/hydrology/test_proof_slice.py"
             "tests/domains/hydrology/test_promotion_hold.py"
+            "tests/domains/hydrology/test_pipeline_stage_holds.py"
             "tests/e2e/test_hydrology_proof_slice.py"
             "tools/readiness/run_lane.py"
           )
@@ -222,10 +223,6 @@ jobs:
           assert "tests/packages/release" in water_lane
           placeholder_pipeline_files = {
               "catalog.py": "# hydrology :: catalog — greenfield placeholder",
-              "ingest.py": "# hydrology :: ingest — greenfield placeholder",
-              "publish.py": "# hydrology :: publish — greenfield placeholder",
-              "rollback.py": "# hydrology :: rollback — greenfield placeholder",
-              "triplets.py": "# hydrology :: triplets — greenfield placeholder",
           }
           pipeline_root = Path("pipelines/domains/hydrology")
           for name, expected in placeholder_pipeline_files.items():
@@ -236,6 +233,27 @@ jobs:
                       f"{path} is no longer the reviewed placeholder. The synthetic proof "
                       "slice does not cover it; wire it deliberately with its own tests."
                   )
+
+          # Held stage entry points: tests/domains/hydrology/test_pipeline_stage_holds.py
+          # proves each one exits HOLD without writing; this guards the inert shape.
+          held_stage_files = {
+              "ingest.py": ('"reason_code": "INGEST_NOT_IMPLEMENTED"', '"ingestion_authorized": False'),
+              "publish.py": ('"reason_code": "PUBLISH_NOT_IMPLEMENTED"', '"publication_authorized": False'),
+              "rollback.py": ('"reason_code": "ROLLBACK_NOT_IMPLEMENTED"', '"rollback_authorized": False'),
+              "triplets.py": ('"reason_code": "TRIPLETS_NOT_IMPLEMENTED"', '"triplet_emission_authorized": False'),
+          }
+          for name, markers in held_stage_files.items():
+              path = pipeline_root / name
+              text = path.read_text(encoding="utf-8")
+              ast.parse(text, filename=str(path))
+              for marker in ('"outcome": "HOLD"', *markers):
+                  if marker not in text:
+                      raise SystemExit(
+                          f"{path} is no longer the reviewed HOLD entry point; review it as "
+                          f"an implementation with its own tests. Missing marker: {marker}"
+                      )
+              if any(marker in text for marker in ("write_text(", "write_bytes(", "mkdir(", "open(")):
+                  raise SystemExit(f"{path} regained write behavior")
 
           promotion_path = pipeline_root / "promote.py"
           promotion_text = promotion_path.read_text(encoding="utf-8")
@@ -300,7 +318,7 @@ jobs:
         run: |
           set -euo pipefail
           python tools/readiness/run_lane.py proof-slice | tee proof-slice-result.json
-          python -m pytest -q tests/ci/test_readiness_lanes.py tests/domains/hydrology/test_proof_slice.py tests/domains/hydrology/test_promotion_hold.py tests/e2e/test_hydrology_proof_slice.py
+          python -m pytest -q tests/ci/test_readiness_lanes.py tests/domains/hydrology/test_proof_slice.py tests/domains/hydrology/test_promotion_hold.py tests/domains/hydrology/test_pipeline_stage_holds.py tests/e2e/test_hydrology_proof_slice.py
 
           proof_payload="$(find data/proofs/hydrology -type f ! -name 'README.md' ! -name '.gitkeep' -print -quit)"
           if [[ -n "$proof_payload" ]]; then

@@ -2,8 +2,8 @@
  "schema_version": "kfm.scaffold-inventory/v1",
  "summary": {
   "by_kind": {
-   "PLACEHOLDER_MARKER": 731,
-   "STUB_MODULE": 182,
+   "PLACEHOLDER_MARKER": 727,
+   "STUB_MODULE": 178,
    "UNRESOLVED_DESCRIPTOR": 12
   },
   "by_surface": {
@@ -11,15 +11,15 @@
    "connectors": 68,
    "contracts": 3,
    "packages": 32,
-   "pipelines": 92,
+   "pipelines": 84,
    "policy": 112,
    "schemas": 386,
    "scripts": 2,
    "tests": 176,
    "tools": 44
   },
-  "files": 732,
-  "total": 925
+  "files": 728,
+  "total": 917
  },
  "findings": [
   {"kind": "PLACEHOLDER_MARKER", "path": "apps/workers/src/ai_focus_worker/main.py"},
@@ -175,14 +175,6 @@
   {"kind": "STUB_MODULE", "path": "pipelines/domains/hazards/validate.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "pipelines/domains/hydrology/catalog.py"},
   {"kind": "STUB_MODULE", "path": "pipelines/domains/hydrology/catalog.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "pipelines/domains/hydrology/ingest.py"},
-  {"kind": "STUB_MODULE", "path": "pipelines/domains/hydrology/ingest.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "pipelines/domains/hydrology/publish.py"},
-  {"kind": "STUB_MODULE", "path": "pipelines/domains/hydrology/publish.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "pipelines/domains/hydrology/rollback.py"},
-  {"kind": "STUB_MODULE", "path": "pipelines/domains/hydrology/rollback.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "pipelines/domains/hydrology/triplets.py"},
-  {"kind": "STUB_MODULE", "path": "pipelines/domains/hydrology/triplets.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "pipelines/domains/roads-rail-trade/build_corridor_route.py"},
   {"kind": "STUB_MODULE", "path": "pipelines/domains/roads-rail-trade/build_corridor_route.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "pipelines/domains/roads-rail-trade/build_historic_route_claim.py"},
