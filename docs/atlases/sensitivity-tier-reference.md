@@ -16,18 +16,12 @@ related:
   - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf
   - docs/atlases/source-role-anti-collapse.md
   - docs/atlases/stale-state-reference.md
-  - docs/atlases/decision-outcome-envelope.md
-  - docs/atlases/master-api-surface.md
-  - docs/adr/ADR-S-05-sensitivity-tier-scheme.md
+  - docs/atlas/master-api-surface.md
   - docs/standards/SENSITIVITY_RUBRIC.md
   - docs/standards/REDACTION_DETERMINISM.md
   - docs/registers/DRIFT_REGISTER.md
-  - contracts/correction/redaction_receipt.md
   - contracts/correction/correction_notice.md
-  - contracts/correction/representation_receipt.md
-  - contracts/data/aggregation_receipt.md
-  - contracts/governance/review_record.md
-  - contracts/governance/policy_decision.md
+  - contracts/governance/ReviewRecord.md
   - contracts/release/release_manifest.md
   - contracts/release/rollback_card.md
   - schemas/contracts/v1/
@@ -63,10 +57,10 @@ notes:
 > **Status:** `draft`.
 > **Authority:** Navigational extract. `CONFIRMED` doctrine for the §24.5 register body (extracted faithfully). The tier scheme itself is explicitly labeled `PROPOSED` in §24.5.1 of the source; ADR-S-05 governs canonical adoption.
 > **Truth posture:** `CONFIRMED` doctrine framing (safest-representation principle, five tier classes, governed transitions) / `PROPOSED` tier names, transform vocabulary, per-domain defaults, schema paths, policy packages / `NEEDS VERIFICATION` mounted-repo presence of every contract, schema, policy, validator, receipt family / `UNKNOWN` repo implementation depth.
-> **Open ADR:** [`ADR-S-05`](../adr/ADR-S-05-sensitivity-tier-scheme.md) — Sensitivity tier scheme (T0–T4) — adopt as canonical or revise (reconcile with Pass 10 C6-01 0–5 rubric).
+> **Open ADR:** `ADR-S-05` (not present) — Sensitivity tier scheme (T0–T4) — adopt as canonical or revise (reconcile with Pass 10 C6-01 0–5 rubric).
 > **Owner:** `OWNER_TBD`.
 
-**Quick jumps:** [Purpose](#1-purpose-and-doctrine-framing) · [Tier scheme](#2-tier-scheme-§2451) · [Allowed transforms](#3-allowed-transforms-vocabulary) · [Per-domain tier matrix](#4-per-domain-tier-matrix-§2452) · [Tier transitions](#5-tier-transitions-§2453) · [Deny-by-Default Register cross-reference](#6-deny-by-default-register-cross-reference-§205) · [Enforcement surfaces](#7-enforcement-surfaces) · [Validators required](#8-validators-required) · [Implementation surface](#9-implementation-surface-proposed) · [Cross-references](#10-cross-references) · [Verification checklist](#11-verification-checklist) · [Open questions](#12-open-questions-and-verification-backlog)
+**Quick jumps:** [Purpose](#1-purpose-and-doctrine-framing) · [Tier scheme](#2-tier-scheme-2451) · [Allowed transforms](#3-allowed-transforms-vocabulary) · [Per-domain tier matrix](#4-per-domain-tier-matrix-2452) · [Tier transitions](#5-tier-transitions-2453) · [Deny-by-Default Register cross-reference](#6-deny-by-default-register-cross-reference-205) · [Enforcement surfaces](#7-enforcement-surfaces) · [Validators required](#8-validators-required) · [Implementation surface](#9-implementation-surface-proposed) · [Cross-references](#10-cross-references) · [Verification checklist](#11-verification-checklist) · [Open questions](#12-open-questions-and-verification-backlog)
 
 ---
 
@@ -429,8 +423,8 @@ Each contract above has a corresponding schema home per ADR-0001 (`schemas/contr
 |---|---|
 | [`docs/atlases/source-role-anti-collapse.md`](./source-role-anti-collapse.md) *(extract of §24.1)* | Source role and sensitivity tier are sibling fields on `SourceDescriptor`, both fixed at admission. Synthetic content (collapse pattern 6) and sensitive-domain interlock (§7 row 7 of source-role register) interact directly with §4 row 13 of this register. |
 | [`docs/atlases/stale-state-reference.md`](./stale-state-reference.md) *(extract of §24.8)* | Stale-state marker 7 (Rights status changed) interacts directly with §5 tier-transitions: a rights change can demote a published tier. §5.2 derivative-invalidation rule cross-references the §6 correction-vs-stale decision rule in stale-state. |
-| [`docs/atlases/decision-outcome-envelope.md`](./decision-outcome-envelope.md) *(extract of §24.3)* | §7 enforcement surfaces use the envelope vocabulary `DENY` / `ABSTAIN` / `HOLD` / `ERROR` for sensitivity outcomes. |
-| [`docs/atlases/master-api-surface.md`](./master-api-surface.md) *(extract of §20.3)* | Every governed API family carries `sensitivity_tier` in its DTO; the API-family enforcement is at §7 row 2 (release) and row 3 (render). |
+| `docs/atlases/decision-outcome-envelope.md` (not present) *(extract of §24.3)* | §7 enforcement surfaces use the envelope vocabulary `DENY` / `ABSTAIN` / `HOLD` / `ERROR` for sensitivity outcomes. |
+| [`docs/atlases/master-api-surface.md`](../atlas/master-api-surface.md) *(extract of §20.3)* | Every governed API family carries `sensitivity_tier` in its DTO; the API-family enforcement is at §7 row 2 (release) and row 3 (render). |
 
 ### 10.2 Other Atlas v1.1 Chapter 24 registers
 

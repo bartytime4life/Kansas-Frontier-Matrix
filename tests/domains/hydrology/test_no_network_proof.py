@@ -21,6 +21,29 @@ GUARD_ROOT = REPO_ROOT / "tools/ci/kfm_no_network"
 DENIAL_MESSAGE = "KFM no-network guard denied Python network egress"
 
 
+def _host_can_create_ipv6_socket() -> bool:
+    """Report whether socket creation (not egress) for AF_INET6 is possible.
+
+    Some sandboxes and containers disable IPv6 at the kernel, so
+    ``socket.socket(AF_INET6)`` raises EAFNOSUPPORT before the guarded
+    ``connect`` is reached. That host limitation is not a guard failure.
+    No network traffic is attempted by this probe.
+    """
+    import socket
+
+    if not socket.has_ipv6:
+        return False
+    try:
+        probe = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
+    except OSError:
+        return False
+    probe.close()
+    return True
+
+
+_HOST_CAN_CREATE_IPV6_SOCKET = _host_can_create_ipv6_socket()
+
+
 def _guarded_python(source: str, *, enabled: bool = True) -> subprocess.CompletedProcess[str]:
     env = os.environ.copy()
     env["KFM_NO_NETWORK"] = "1" if enabled else "0"
@@ -58,10 +81,17 @@ def test_guard_requires_explicit_no_network_posture() -> None:
             "socket.connect",
             "import socket; socket.socket().connect(('192.0.2.1', 443))",
         ),
-        (
+        pytest.param(
             "socket.connect",
             "import socket; "
             "socket.socket(socket.AF_INET6).connect(('2001:db8::1', 443, 0, 0))",
+            marks=pytest.mark.skipif(
+                not _HOST_CAN_CREATE_IPV6_SOCKET,
+                reason=(
+                    "host kernel cannot create AF_INET6 sockets, so connect() is "
+                    "never reached; the IPv4 connect case still proves the guard"
+                ),
+            ),
         ),
         (
             "socket.connect_ex",

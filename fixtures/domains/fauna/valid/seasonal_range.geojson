@@ -1,1 +1,11 @@
-# PROPOSED placeholder created from docs/domains/fauna/MISSING_OR_PLANNED_FILES.md for fixtures/domains/fauna/valid/seasonal_range.geojson.
+{
+  "type": "FeatureCollection",
+  "kfm:placeholder": {
+    "status": "PROPOSED placeholder",
+    "slot": "fixtures/domains/fauna/valid/seasonal_range.geojson",
+    "created_from": "docs/domains/fauna/MISSING_OR_PLANNED_FILES.md",
+    "schema": "schemas/contracts/v1/domains/fauna/seasonal_range.schema.json",
+    "note": "Parseable empty slot. Contains no features or coordinates and is not evidence, a canonical range layer, or a passing positive-path fixture. Replace with a reviewed synthetic, public-safe fixture once the schema is defined."
+  },
+  "features": []
+}

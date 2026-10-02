@@ -15,11 +15,17 @@ VALIDATOR_ORCHESTRATOR := python tools/validate_all.py
 
 .PHONY: offline-pipeline-check native-explorer-check
 
-.PHONY: scaffold-inventory deny-suites
+.PHONY: scaffold-inventory deny-suites gap-scan
 
 # Ratchet: tracked placeholder/stub/blank/vacuous files must match the reviewed baseline.
 scaffold-inventory:
 	$(KFM_VALIDATION_ENV) python tools/qa/scaffold_inventory.py --check
+
+# Ratchet: parse errors and shadowing test packages stay at zero; broken-link and
+# unratcheted-placeholder counts may only fall below tools/qa/gap_scan_baseline.json.
+gap-scan:
+	$(KFM_VALIDATION_ENV) python -m pytest -q -p no:cacheprovider tests/qa/test_gap_scan.py
+	$(KFM_VALIDATION_ENV) python tools/qa/gap_scan.py --check
 
 # Every registered deny suite; a suite that collects no tests fails.
 deny-suites:
@@ -78,6 +84,7 @@ help:
 	@echo "  deny-test             Run bounded public route, store, and runtime-import guards"
 	@echo "  deny-suites           Run every registered deny suite and fail on empty suites"
 	@echo "  scaffold-inventory    Ratchet placeholder, stub, blank, and vacuous files against the baseline"
+	@echo "  gap-scan              Ratchet parse errors, test-package shadowing, broken links, and stray placeholders"
 	@echo "  ui-build              Retired workbench check (explicit HOLD)"
 	@echo "  publish-check         Run bounded promotion-gate fixtures and tests"
 	@echo "  release-dry-run       Prove five synthetic publication-denial paths"
