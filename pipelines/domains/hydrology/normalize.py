@@ -84,12 +84,20 @@ def normalize_capture(manifest: dict, objects: dict[str, bytes], *, stale_after_
                         or p.get("monitoring_location_number") != key[0].removeprefix("USGS-")
                         or str(p.get("state_code")) not in {"20", "US:20"}):
                     raise ValueError("STATION_IDENTITY_MISMATCH")
+                station_revision = p.get("revision_modified")
+                if station_revision is not None:
+                    try:
+                        revision_time = utc_time(station_revision)
+                    except ValueError as exc:
+                        raise ValueError("STATION_PROVENANCE_INVALID") from exc
+                    if revision_time > utc_time(page_time):
+                        raise ValueError("STATION_PROVENANCE_INVALID")
                 station = {"id": key[0], "name": _text(p.get("monitoring_location_name"), "STATION_NAME"),
                            "geometry": _geometry(feature.get("geometry")), "page_digest": page["sha256"],
                            "retrieved_at": page_time,
                            "horizontal_accuracy": p.get("horizontal_positional_accuracy"),
                            "original_horizontal_datum": p.get("original_horizontal_datum"),
-                           "provider_revision_at": p.get("revision_modified")}
+                           "provider_revision_at": station_revision}
                 if key[0] in stations and stations[key[0]] != station:
                     raise ValueError("CONFLICTING_STATION_METADATA")
                 stations[key[0]] = station

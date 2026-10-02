@@ -193,6 +193,11 @@ headers and content hashes survive normalization. Null remains missing, not zero
 Candidate freshness and coverage count only observations with a non-null flow
 value; a timestamp on a null reading cannot make a station recent.
 Revision conflicts and malformed completeness claims fail validation.
+When station metadata supplies a provider revision time, normalization and
+candidate validation require a valid timezone-aware timestamp no later than
+that station page's retrieval time. Missing station revision time remains
+unknown. Invalid or future revision metadata leaves the capture quarantined
+without a WORK candidate.
 Station-health receipts distinguish recorded timeout, HTTP and access failures
 from a complete capture that fails normalization. Incomplete acquisition without
 a more specific recorded cause is `ACQUISITION_ERROR`, not a claimed parse error.

@@ -80,6 +80,48 @@ def test_candidate_replay_preserves_times_identity_and_no_authority():
         Draft202012Validator(schema, format_checker=FormatChecker()).validate(record)
 
 
+def _with_station_revision(source: Capture, revision: str) -> Capture:
+    page = next(item for item in source.manifest["pages"]
+                if item["collection"] == "monitoring-locations")
+    old_digest = page["sha256"]
+    payload = json.loads(source.objects[old_digest])
+    payload["features"][0]["properties"]["revision_modified"] = revision
+    raw = canonical_bytes(payload)
+    page["sha256"] = digest_bytes(raw)
+    page["bytes"] = len(raw)
+    source.objects.pop(old_digest)
+    source.objects[page["sha256"]] = raw
+    reseal(source.manifest)
+    return source
+
+
+@pytest.mark.parametrize("revision", ["2099-01-01T00:00:00Z", "not-a-time"])
+def test_station_revision_must_be_valid_and_no_later_than_retrieval(revision, tmp_path):
+    source = _with_station_revision(acquired(), revision)
+    with pytest.raises(ValueError, match="STATION_PROVENANCE_INVALID"):
+        normalize_capture(source.manifest, source.objects)
+    root = tmp_path / "private-store"
+    init_store(root)
+    assert stage(root, source)["outcome"] == "QUARANTINED"
+    assert not list(root.glob("data/work/hydrology/usgs-nwis/*/candidate.json"))
+
+    source = acquired()
+    candidate = normalize_capture(source.manifest, source.objects)
+    candidate["stations"][0]["provider_revision_at"] = revision
+    candidate["candidate_id"] = digest_bytes(canonical_bytes({
+        key: value for key, value in candidate.items() if key != "candidate_id"
+    }))
+    with pytest.raises(ValueError, match="STATION_PROVENANCE_INVALID"):
+        validate_candidate(candidate)
+
+
+def test_station_revision_before_retrieval_remains_valid():
+    source = _with_station_revision(acquired(), "2026-09-30T18:00:30Z")
+    candidate = normalize_capture(source.manifest, source.objects)
+    assert candidate["stations"][0]["provider_revision_at"] == "2026-09-30T18:00:30Z"
+    assert validate_candidate(candidate)["outcome"] == "PASS"
+
+
 def test_duplicates_and_new_revisions():
     def mutate(records):
         revised = deepcopy(records[0])

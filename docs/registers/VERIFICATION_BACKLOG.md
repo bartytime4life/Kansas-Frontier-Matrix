@@ -312,6 +312,21 @@ existing truncation finding; a streaming regression checks bounded retention
 and stable ordering. It does not bound total schema evaluation time, admit a
 source, write lifecycle state, or permit release or publication.
 
+### Water station revision chronology — 2026-10-01
+
+`MOD-22` / P1 / **CONFIRMED on `main@711fb0eefdab7fa8be39fabfb7914bd809e948f7`**:
+the water candidate validator checked station page retrieval times but did not
+parse or order an optional station `provider_revision_at`. A candidate rehashed
+with a malformed or future station revision time returned a `PASS` validation
+receipt. The normalizer also copied this field without checking it. The
+Hydrology pipeline owner is `pipelines/domains/hydrology/`; regression tests
+belong in `tests/domains/hydrology/` and operator behavior in the existing
+water runbook. This slice requires a supplied revision time to be valid and no
+later than station retrieval; absent revision remains unknown. Synthetic tests
+cover valid, malformed, and future values, validator rejection, and quarantine
+without a WORK candidate. This does not authenticate USGS metadata, admit the
+source, promote data, or authorize a release or publication.
+
 ### Site mirror source-identity guard — 2026-10-01
 
 `MOD-13` / P1 / **CONFIRMED on `main@9465a573d8859cd1564124897d10d848f9c7c350`**:
