@@ -15,11 +15,7 @@ related:
   - docs/atlases/KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.md
   - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf
   - docs/atlases/source-role-anti-collapse.md
-  - docs/atlases/decision-outcome-envelope.md
-  - docs/atlases/master-api-surface.md
-  - docs/adr/ADR-S-10-stale-state-propagation.md
-  - docs/adr/ADR-S-08-frontier-matrix-cell-semantics.md
-  - docs/adr/ADR-S-15-atlas-supplement-lifecycle.md
+  - docs/atlas/master-api-surface.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - contracts/source/source_descriptor.md
@@ -27,7 +23,7 @@ related:
   - contracts/correction/correction_notice.md
   - contracts/release/release_manifest.md
   - contracts/release/rollback_card.md
-  - contracts/governance/review_record.md
+  - contracts/governance/ReviewRecord.md
   - contracts/runtime/ai_receipt.md
   - schemas/contracts/v1/
   - policy/
@@ -59,10 +55,10 @@ notes:
 > **Status:** `draft`.
 > **Authority:** Navigational extract. `CONFIRMED` doctrine for the §24.8 register body (extracted faithfully). Implementation surface is `PROPOSED` throughout. `EvidenceBundle`, source dossiers, and `schemas/contracts/v1/…` remain canonical for any specific claim *(Atlas v1.1 Ch. 24 preamble)*.
 > **Truth posture:** `CONFIRMED` doctrine framing (stale vs wrong; 8 markers; 8 supersession object classes; AIReceipt non-retroactivity) / `PROPOSED` UI signals, validator wiring, schema headers, ADR filenames / `NEEDS VERIFICATION` mounted-repo presence of every contract, schema, policy, validator, and ADR named below / `UNKNOWN` repo implementation depth.
-> **Open ADR:** [`ADR-S-10`](../adr/ADR-S-10-stale-state-propagation.md) — cross-lane stale-state propagation rules.
+> **Open ADR:** `ADR-S-10` (not present) — cross-lane stale-state propagation rules.
 > **Owner:** `OWNER_TBD`.
 
-**Quick jumps:** [Purpose](#1-purpose-and-doctrine-framing) · [Stale-state markers](#2-stale-state-markers-§2481) · [Supersession lineage](#3-supersession-lineage-§2482) · [AIReceipt non-retroactivity](#4-aireceipt-non-retroactivity) · [Stale-state on public surfaces](#5-stale-state-on-public-surfaces) · [Correction vs stale](#6-correction-vs-stale-when-to-emit-correctionnotice) · [Cross-lane propagation](#7-cross-lane-propagation-adr-s-10-open) · [Lineage artifacts inventory](#8-lineage-artifacts-inventory) · [Implementation surface](#9-implementation-surface-proposed) · [Validators required](#10-validators-required) · [Cross-references](#11-cross-references) · [Verification checklist](#12-verification-checklist) · [Open questions](#13-open-questions-and-verification-backlog)
+**Quick jumps:** [Purpose](#1-purpose-and-doctrine-framing) · [Stale-state markers](#2-stale-state-markers-2481) · [Supersession lineage](#3-supersession-lineage-2482) · [AIReceipt non-retroactivity](#4-aireceipt-non-retroactivity) · [Stale-state on public surfaces](#5-stale-state-on-public-surfaces) · [Correction vs stale](#6-correction-vs-stale-when-to-emit-correctionnotice) · [Cross-lane propagation](#7-cross-lane-propagation-adr-s-10-open) · [Lineage artifacts inventory](#8-lineage-artifacts-inventory) · [Implementation surface](#9-implementation-surface-proposed) · [Validators required](#10-validators-required) · [Cross-references](#11-cross-references) · [Verification checklist](#12-verification-checklist) · [Open questions](#13-open-questions-and-verification-backlog)
 
 ---
 
@@ -404,7 +400,7 @@ Each contract above has a corresponding schema home per ADR-0001 (`schemas/contr
 |---|---|
 | [`docs/atlases/source-role-anti-collapse.md`](./source-role-anti-collapse.md) *(extract of §24.1)* | Source role is fixed at admission; supersession does not upgrade roles. Marker 1 + 7 + lineage row 1 interact directly with `SourceDescriptor`. |
 | Atlas v1.1 §24.2 Master Receipt Catalog | Defines the 16 receipt types referenced in §9.4 above. |
-| [`docs/atlases/decision-outcome-envelope.md`](./decision-outcome-envelope.md) *(extract of §24.3)* | Stale-state markers and supersession events both produce finite outcomes via the Decision Outcome Envelope vocabulary (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR` / `HOLD`). |
+| `docs/atlases/decision-outcome-envelope.md` (not present) *(extract of §24.3)* | Stale-state markers and supersession events both produce finite outcomes via the Decision Outcome Envelope vocabulary (`ANSWER` / `ABSTAIN` / `DENY` / `ERROR` / `HOLD`). |
 | Atlas v1.1 §24.5 Sensitivity / Rights Tier Reference | Marker 6 (Review aged out) and marker 7 (Rights status changed) interact directly with the tier scheme. |
 | Atlas v1.1 §24.6 Pipeline Gate Reference (RAW → PUBLISHED) | §6 of this register implements the Correction and Rollback transitions from §24.6.1. |
 | Atlas v1.1 §24.7 Reviewer Role and Separation-of-Duties Matrix | Correction reviewer and release authority must be separate when materiality applies (§24.7.2). |

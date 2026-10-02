@@ -609,11 +609,11 @@ A compact, expandable reference for each Habitat object family. Each card restat
 
 ### Related docs (quick links)
 
-- [Habitat contract README](../../../contracts/habitat/README.md) *(PROPOSED home; TBD)*
-- [Fauna contract README](../../../contracts/fauna/README.md) *(PROPOSED home; TBD)*
-- [Cross-lane join policy](../../architecture/cross-lane-join-policy.md) *(PROPOSED — ADR-S-14)*
-- [PROV standard profile](../../standards/PROV.md)
-- [Fauna source-refresh runbook](../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md)
+- [Habitat contract README](../../contracts/habitat/README.md) *(PROPOSED home; TBD)*
+- [Fauna contract README](../../contracts/fauna/README.md) *(PROPOSED home; TBD)*
+- [Cross-lane join policy](../architecture/cross-lane-join-policy.md) *(PROPOSED — ADR-S-14)*
+- [PROV standard profile](../standards/PROV.md)
+- [Fauna source-refresh runbook](../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md)
 - [AI Build Operating Contract](../../ai-build-operating-contract.md) *(`CONTRACT_VERSION = "3.0.0"`)*
 
 **Last updated:** 2026-06-05 &middot; **Doc version:** v1.1 (draft) &middot; **Contract:** `CONTRACT_VERSION = "3.0.0"` &middot; **Citation short-names:** [DOM-HAB], [DOM-HF], [DOM-FAUNA], [DOM-FLORA], [ENCY], [DIRRULES], [MAP-MASTER], [GAI]

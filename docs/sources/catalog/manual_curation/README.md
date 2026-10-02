@@ -105,7 +105,7 @@ Manual curation is the **human-governed path** for source material that cannot s
 
 Manual curation exists because:
 
-1. **Source role cannot be inferred from convenience.** A source may be observational, regulatory, administrative, modeled, aggregate, candidate, synthetic, legal authority, context, or corroborating evidence. These roles are not interchangeable. The source role must be assigned deliberately and preserved downstream. See [`docs/sources/source-roles.md`](../../source-roles.md).
+1. **Source role cannot be inferred from convenience.** A source may be observational, regulatory, administrative, modeled, aggregate, candidate, synthetic, legal authority, context, or corroborating evidence. These roles are not interchangeable. The source role must be assigned deliberately and preserved downstream. See [`docs/sources/source-roles.md`](../source-roles.md).
 2. **Rights and sensitivity fail closed.** Unknown rights, unknown consent, unclear sovereignty, rare-species precision, archaeology precision, DNA/genomics, living-person data, and critical-infrastructure exposure do not become public by default.
 3. **Catalog closure is gated.** A release candidate is not catalog-closed until source descriptors, receipts, validation, EvidenceBundle references, policy decisions, review records, catalog metadata, correction path, and rollback target agree.
 4. **AI and watchers are advisory, not approving authorities.** They may fetch, summarize, score, compare, or explain. They may not approve admission, validation, catalog closure, publication, or source-role upgrade. EvidenceBundle outranks generated language.
@@ -167,10 +167,10 @@ This document covers steward-led steps from **admission** through **catalog clos
 
 | Sibling doc | Role | Preferred path | Status |
 |---|---|---|---|
-| Source roles | Cross-lane source-role vocabulary and anti-collapse rule. | [`../source-roles.md`](../../source-roles.md) | PROPOSED file; authored in workspace. |
+| Source roles | Cross-lane source-role vocabulary and anti-collapse rule. | [`../source-roles.md`](../source-roles.md) | PROPOSED file; authored in workspace. |
 | Catalog lane README | Orientation for the source-to-catalog documentation lane. | [`./README.md`](./README.md) | PROPOSED path; v0.4 workspace artifact. |
 | Family governance — `local_upload` | Family-level admission defaults, accepted inputs, exclusions, and sensitive-content posture. | `./local_upload/README.md` | PROPOSED preferred folder form. Flat `./local_upload.md` may exist as legacy or alternative; verify. |
-| Product page — user file upload | One product within `local_upload`: user-initiated drop, picker, or CLI import. | [`./local_upload/user-file-upload.md`](../local_upload/user-file-upload.md) | PROPOSED. |
+| Product page — user file upload | One product within `local_upload`: user-initiated drop, picker, or CLI import. | [`./local_upload/user-file-upload.md`](./local_upload/user-file-upload.md) | PROPOSED. |
 | Product page — LOC IIIF Presentations | Versioned-publisher counter-example within the `loc` family. | [`./loc/iiif-presentations.md`](./loc/iiif-presentations.md) | PROPOSED. |
 
 [Back to top](#manual-curation--sources-to-catalog)
@@ -489,11 +489,11 @@ The gates are identical. The defaults and failure rate are different.
 | [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) | Placement law, compatibility roots, lifecycle invariant. | CONFIRMED doctrine. |
 | [`docs/doctrine/trust-membrane.md`](../../../doctrine/trust-membrane.md) | Public-path discipline and governed API boundary. | PROPOSED path; doctrine referenced. |
 | [`docs/doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md) | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED. | PROPOSED path; doctrine referenced. |
-| [`docs/sources/source-roles.md`](../../source-roles.md) | Source-role vocabulary and anti-collapse guidance. | Workspace artifact; repo merge NEEDS VERIFICATION. |
+| [`docs/sources/source-roles.md`](../source-roles.md) | Source-role vocabulary and anti-collapse guidance. | Workspace artifact; repo merge NEEDS VERIFICATION. |
 | [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../SOURCE_DESCRIPTOR_STANDARD.md) | Descriptor field standard. | PROPOSED. |
 | [`docs/sources/catalog/README.md`](./README.md) | Catalog lane orientation. | Workspace artifact v0.4; repo merge NEEDS VERIFICATION. |
 | `docs/sources/catalog/local_upload/README.md` | `local_upload` family governance. | PROPOSED preferred path. |
-| [`docs/sources/catalog/local_upload/user-file-upload.md`](../local_upload/user-file-upload.md) | User-file-upload product page. | PROPOSED. |
+| [`docs/sources/catalog/local_upload/user-file-upload.md`](./local_upload/user-file-upload.md) | User-file-upload product page. | PROPOSED. |
 | [`docs/sources/catalog/loc/iiif-presentations.md`](./loc/iiif-presentations.md) | LOC IIIF Presentations product page. | PROPOSED. |
 | `docs/architecture/contract-schema-policy-split.md` | Contracts / schemas / policy responsibility split. | PROPOSED. |
 | `docs/architecture/review/README.md` | Review queues and decision envelopes. | PROPOSED. |

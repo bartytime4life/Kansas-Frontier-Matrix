@@ -480,12 +480,12 @@ graph LR
 > [!NOTE]
 > Links below mix **CONFIRMED-authored** docs (prior session) with **PROPOSED-in-corpus** docs that are not yet authored. Anchors are best-effort; expect breakage on those marked `TODO`.
 
-- [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — **CONFIRMED doctrine** for path placement.
-- [`docs/doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md) — **CONFIRMED in §6.1 docs/doctrine tree**; presence **NEEDS VERIFICATION**.
-- [`docs/doctrine/trust-membrane.md`](../../../doctrine/trust-membrane.md) — **CONFIRMED in §6.1 docs/doctrine tree**; presence **NEEDS VERIFICATION**.
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — **CONFIRMED doctrine** for path placement.
+- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — **CONFIRMED in §6.1 docs/doctrine tree**; presence **NEEDS VERIFICATION**.
+- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — **CONFIRMED in §6.1 docs/doctrine tree**; presence **NEEDS VERIFICATION**.
 - `docs/standards/SENSITIVITY_RUBRIC.md` — **PROPOSED in corpus** (Pass-10 `C6-01`); referenced for the T0–T4 tier framework.
 - `docs/standards/REDACTION_DETERMINISM.md` — **PROPOSED in corpus** (Pass-10 `C6-03`); referenced for the geoprivacy machinery.
-- [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) — **CONFIRMED authored (prior session)**; refresh procedure for fauna sources including USFWS.
+- [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) — **CONFIRMED authored (prior session)**; refresh procedure for fauna sources including USFWS.
 - `docs/domains/fauna/README.md` — **PROPOSED**; `ConservationStatus` & sensitive-occurrence semantics.
 - `docs/domains/habitat/README.md` — **PROPOSED**; `RangePolygon` & critical-habitat semantics.
 - `docs/sources/catalog/natureserve.md` — **TODO** (sibling source catalog).
