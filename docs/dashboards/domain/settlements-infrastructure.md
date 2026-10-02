@@ -16,7 +16,6 @@ related:
   - README.md
   - ../../domains/settlements-infrastructure/README.md
   - ../../domains/settlements-infrastructure/DENY_BY_DEFAULT.md
-  - ../../../apps/explorer-web/src/features/domains/settlements_infrastructure/README.md
   - ../../../contracts/domains/settlements-infrastructure/README.md
   - ../../../schemas/contracts/v1/domains/settlements-infrastructure/README.md
   - ../../../policy/domains/settlements-infrastructure/README.md
@@ -146,7 +145,7 @@ Governed outcomes converge on `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`. `HOLD` is
 | Surface | Status at the pinned checkpoint | What it proves | What it does not prove |
 |---|---|---|---|
 | [`docs/domains/settlements-infrastructure/README.md`](../../domains/settlements-infrastructure/README.md) and [`DENY_BY_DEFAULT.md`](../../domains/settlements-infrastructure/DENY_BY_DEFAULT.md) | **CONFIRMED docs** | Scope, object-family separation, sensitivity, public-safe, correction, and release boundaries are documented. | Executable enforcement, admitted sources, current real-world claims, or release state. |
-| [`apps/explorer-web/src/features/domains/settlements_infrastructure/`](../../../apps/explorer-web/src/features/domains/settlements_infrastructure/README.md) | **CONFIRMED directory** | App-local boundary exists. [`EvidenceDrawer.tsx`](../../../apps/explorer-web/src/features/domains/settlements_infrastructure/EvidenceDrawer.tsx) and [`layers.ts`](../../../apps/explorer-web/src/features/domains/settlements_infrastructure/layers.ts) are present. | Both inspected files export only greenfield placeholders; no route, panel, map binding, producer, or telemetry is established. |
+| `apps/explorer-web/src/features/domains/settlements_infrastructure/` (retired) | **CONFIRMED directory** | App-local boundary exists. `EvidenceDrawer.tsx` (retired) and `layers.ts` (retired) are present. | Both inspected files export only greenfield placeholders; no route, panel, map binding, producer, or telemetry is established. |
 | [`contracts/domains/settlements-infrastructure/`](../../../contracts/domains/settlements-infrastructure/README.md) | **CONFIRMED semantic family** | Domain object meanings and delivery/evidence concepts have documented homes. | Adoption, producer/consumer conformance, policy approval, or runtime use. |
 | [`schemas/contracts/v1/domains/settlements-infrastructure/`](../../../schemas/contracts/v1/domains/settlements-infrastructure/README.md) | **CONFIRMED schema lane** | Machine-shape family exists. The [`EvidenceBundle` projection](../../../schemas/contracts/v1/domains/settlements-infrastructure/evidence_bundle.schema.json) delegates to the shared closed shape and grants no exposure or release authority. | Evidence authenticity, source truth, policy approval, public use, or full domain-schema maturity. |
 | [`schemas/contracts/v1/settlements-infrastructure/README.md`](../../../schemas/contracts/v1/settlements-infrastructure/README.md) | **CONFIRMED compatibility index** | The flat path identifies itself as compatibility-only and points to the domain lane. | A second canonical schema home or an authorized migration. |

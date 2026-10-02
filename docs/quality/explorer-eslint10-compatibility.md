@@ -19,7 +19,7 @@ This is a lint-only continuation stacked on the separately frozen TypeScript/Wor
 
 ## Scope and ownership
 
-The existing application owns [its ESLint configuration](../../apps/kansas-frontier-matrix-explorer/eslint.config.mjs) and the adjacent [context adapter](../../apps/kansas-frontier-matrix-explorer/eslint-react-context.mjs). Cross-surface executable regressions live under [tests/ui](../../tests/ui/test_explorer_lint_compat.mjs). This explanation stays in the existing `docs/quality/` human-readable lane under accepted [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md); it does not canonize or migrate that lane. No new root or parallel validator is introduced.
+The existing application owns its ESLint configuration (retired) and the adjacent context adapter (retired). Cross-surface executable regressions live under [tests/ui](../../tests/ui). This explanation stays in the existing `docs/quality/` human-readable lane under accepted [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md); it does not canonize or migrate that lane. No new root or parallel validator is introduced.
 
 ## Why a narrow bridge
 

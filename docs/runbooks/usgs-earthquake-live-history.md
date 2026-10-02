@@ -30,7 +30,7 @@ SourceDescriptor, SourceActivationDecision, SourceArtifact, IngestReceipt,
 EvidenceBundle, policy or release authority. New helpers live in the existing
 USGS implementation package; no competing earthquake connector root is created.
 
-The [app-local HTTP 204 decoder](../../apps/kansas-frontier-matrix-explorer/docs/usgs-earthquake-response-candidate.md)
+The app-local HTTP 204 decoder (retired)
 from PR #4667 is a different consumer boundary. Its merge did not wire a live
 caller. Neither that TypeScript helper nor the active Site is overwritten here.
 

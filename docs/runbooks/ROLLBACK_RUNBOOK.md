@@ -13,13 +13,15 @@ related:
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
   - docs/runbooks/ui_ROLLBACK.md
-  - docs/runbooks/governed_ai_ROLLBACK.md
   - docs/adr/README.md
   - release/README.md
 tags: [kfm, runbook, rollback, release, correction, governance]
 notes:
   - PROPOSED file; not verified against mounted repo evidence in this session.
   - All referenced sibling paths are PROPOSED per Directory Rules §0.
+owning_root: docs/
+responsibility: "Documentation for KFM Rollback Runbook; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # 🔄 KFM Rollback Runbook
@@ -532,7 +534,7 @@ Reviewer-side checklist applied **before** a release is allowed to PUBLISHED. Fa
 
 ---
 
-> **Related docs:** [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) · [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) · [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) · [`docs/runbooks/ui_ROLLBACK.md`](./ui_ROLLBACK.md) · [`docs/runbooks/governed_ai_ROLLBACK.md`](./governed_ai_ROLLBACK.md) · [`release/README.md`](../../release/README.md)
+> **Related docs:** [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) · [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) · [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) · [`docs/runbooks/ui_ROLLBACK.md`](./ui_ROLLBACK.md) · `docs/runbooks/governed_ai_ROLLBACK.md` (PROPOSED; not present) · [`release/README.md`](../../release/README.md)
 >
 > **Last updated:** `2026-05-12` · **Doctrine status:** CONFIRMED · **File status:** PROPOSED — not verified against mounted repo evidence in this session.
 >

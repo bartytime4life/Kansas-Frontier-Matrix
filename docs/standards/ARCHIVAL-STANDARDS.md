@@ -51,7 +51,7 @@ related:
   - ./OAI-PMH.md
   - ./oai-pmh.md
   - ./IIIF.md
-  - ./iiif.md
+  - IIIF.md
   - ./DUBLIN-CORE.md
   - ./CIDOC-CRM.md
   - ./PROV-O.md
@@ -993,7 +993,7 @@ Keep source activation, conformance claims, structural consolidation, and public
 - [`CODEOWNERS`](../../.github/CODEOWNERS) — verified default GitHub review route and negative authority statement.
 - [`snac-eac-cpf.md`](./snac-eac-cpf.md) — current repository archival-authority guidance; upstream-currentness follow-up required.
 - [`OAI-PMH.md`](./OAI-PMH.md) and [`oai-pmh.md`](./oai-pmh.md) — current case-collision pair; no disposition implied here.
-- [`IIIF.md`](./IIIF.md) and [`iiif.md`](./iiif.md) — current case-collision pair.
+- [`IIIF.md`](./IIIF.md) and [`iiif.md`](IIIF.md) — current case-collision pair.
 - [`PROV-O.md`](./PROV-O.md), [`PROV.md`](./PROV.md), [`PROVENANCE.md`](./PROVENANCE.md), and [`PROV/README.md`](./PROV/README.md) — unresolved provenance family.
 - [`contracts/source/source_descriptor.md`](../../contracts/source/source_descriptor.md) — semantic source-descriptor surface.
 - [`schemas/contracts/v1/source/source_descriptor.schema.json`](../../schemas/contracts/v1/source/source_descriptor.schema.json) and [`schemas/contracts/v1/sources/source_descriptor.schema.json`](../../schemas/contracts/v1/sources/source_descriptor.schema.json) — current singular/plural machine-shape surfaces.

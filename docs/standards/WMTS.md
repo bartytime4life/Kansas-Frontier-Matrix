@@ -15,12 +15,14 @@ related:
   - docs/architecture/map-shell.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/directory-rules.md
-  - contracts/source/source-descriptor.md
-  - contracts/release/release-manifest.md
+  - contracts/release/release_manifest.md
 tags: [kfm, standards, geospatial, tiles, ogc, wmts, external-services]
 notes:
   - All KFM repo-shaped claims (paths, schemas, validators) are PROPOSED until verified against the mounted repository.
   - WMTS spec facts are EXTERNAL; cited inline.
+owning_root: docs/
+responsibility: "Documentation for WMTS — Web Map Tile Service (Standards Conformance); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # WMTS — Web Map Tile Service
@@ -349,8 +351,8 @@ These are explicit NEEDS VERIFICATION / OPEN items for this doc and the WMTS han
 - [`docs/doctrine/trust-membrane.md`](../doctrine/trust-membrane.md) — Public/canonical separation; finite outcomes.
 - [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — RAW → … → PUBLISHED invariant.
 - [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — Placement law; §6.1 governs `docs/standards/`.
-- [`contracts/source/source-descriptor.md`](../../contracts/source/source-descriptor.md) — `SourceDescriptor` object meaning. _PROPOSED_
-- [`contracts/release/release-manifest.md`](../../contracts/release/release-manifest.md) — `MapReleaseManifest` object meaning. _PROPOSED_
+- `contracts/source/source-descriptor.md` (PROPOSED; not present) — `SourceDescriptor` object meaning. _PROPOSED_
+- [`contracts/release/release-manifest.md`](../../contracts/release/release_manifest.md) — `MapReleaseManifest` object meaning. _PROPOSED_
 - [`policy/runtime/`](../../policy/runtime/) — Runtime gate policies for ALLOW/DENY/ABSTAIN/ERROR. _PROPOSED_
 
 ---

@@ -50,17 +50,12 @@ related:
   - ../../domains/hydrology/PUBLICATION_POSTURE.md
   - ../../domains/hydrology/THIN_SLICE.md
   - ../../domains/hydrology/RELEASE_INDEX.md
-  - ../../../apps/explorer-web/src/features/domains/hydrology/README.md
-  - ../../../apps/explorer-web/src/features/domains/hydrology/EvidenceDrawer.tsx
-  - ../../../apps/explorer-web/src/features/domains/hydrology/layers.ts
   - ../../../contracts/domains/hydrology/README.md
   - ../../../schemas/contracts/v1/domains/hydrology/README.md
   - ../../../schemas/contracts/v1/domains/hydrology/evidence_drawer_payload.schema.json
   - ../../../policy/domains/hydrology/README.md
   - ../../../packages/evidence-resolver/README.md
-  - ../../../tests/validators/domains/hydrology/test_evidence_drawer_convergence.py
   - ../../../tests/packages/evidence_resolver/test_hydrology_fixture_adapter.py
-  - ../../../.github/workflows/hydrology-evidence-drawer-convergence.yml
   - ../../../.github/workflows/domain-hydrology.yml
   - ../../../apps/governed-api/src/governed_api/routes/registry.py
   - ../../adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md
@@ -218,8 +213,8 @@ Governed outward outcomes converge on `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`.
 | [`docs/domains/hydrology/README.md`](../../domains/hydrology/README.md) and boundary companions | **CONFIRMED docs** | Hydrology scope, object families, source-role anti-collapse, lifecycle, no-life-safety boundary, and public-client posture are documented. | Current real-world claims, source admission, policy enforcement, dashboard runtime, release, or publication. |
 | [`contracts/domains/hydrology/`](../../../contracts/domains/hydrology/README.md) | **CONFIRMED semantic family / mixed maturity** | Twenty-five direct semantic contract documents and explicit source-role, evidence, correction, and release boundaries exist. | Adoption, source truth, complete schema pairing, public use, or production consumer conformance. |
 | [`schemas/contracts/v1/domains/hydrology/`](../../../schemas/contracts/v1/domains/hydrology/README.md) | **CONFIRMED mixed schema lane** | Three closed bounded schemas, three shared aliases, four minimal open envelopes, eleven permissive scaffolds, and four missing contract-declared schemas are indexed. | Schema-complete Hydrology, real-world correctness, evidence authenticity, policy, proof, or release. |
-| Hydrology Evidence Drawer projection | **CONFIRMED bounded executable** | The [domain schema](../../../schemas/contracts/v1/domains/hydrology/evidence_drawer_payload.schema.json) is a field-free `$ref` projection to the shared closed UI profile; the [component](../../../apps/explorer-web/src/features/domains/hydrology/EvidenceDrawer.tsx) delegates to the shared renderer; focused [tests](../../../tests/validators/domains/hydrology/test_evidence_drawer_convergence.py) and a no-network [workflow](../../../.github/workflows/hydrology-evidence-drawer-convergence.yml) enforce convergence. | Live API transport, evidence authenticity, policy/review/release binding, map-click wiring, telemetry, deployment, or publication. |
-| Explorer Hydrology layer seam | **CONFIRMED placeholder** | [`layers.ts`](../../../apps/explorer-web/src/features/domains/hydrology/layers.ts) exists. | It exports only `placeholder = true`; no Hydrology layer adapter, dashboard panel, metric producer, or map binding is established. |
+| Hydrology Evidence Drawer projection | **CONFIRMED bounded executable** | The [domain schema](../../../schemas/contracts/v1/domains/hydrology/evidence_drawer_payload.schema.json) is a field-free `$ref` projection to the shared closed UI profile; the component (retired) delegates to the shared renderer; focused tests (PROPOSED; not present) and a no-network workflow (PROPOSED; not present) enforce convergence. | Live API transport, evidence authenticity, policy/review/release binding, map-click wiring, telemetry, deployment, or publication. |
+| Explorer Hydrology layer seam | **CONFIRMED placeholder** | `layers.ts` (retired) exists. | It exports only `placeholder = true`; no Hydrology layer adapter, dashboard panel, metric producer, or map binding is established. |
 | Internal Hydrology fixture resolution | **CONFIRMED issue-scoped bounded executable** | [`packages/evidence-resolver/`](../../../packages/evidence-resolver/README.md) resolves stable ID `hb1` through one closed manifest to one synthetic fixture with complete-object digest verification; focused tests cover deterministic success and fail-closed tamper, path, manifest, correction, policy, and no-network cases. | Authoritative registry access, source admission, public `ANSWER`, renderability, policy evaluation, review, release, deployment, or production behavior. |
 | Hydrology domain workflow | **CONFIRMED readiness and bounded validation** | [`.github/workflows/domain-hydrology.yml`](../../../.github/workflows/domain-hydrology.yml) runs selected schema, fixture-polarity, identity, observation, and crosswalk checks while preserving explicit wider holds. | Hydrologic truth, source activation, active policy, emitted proof, candidate release, rollback rehearsal, deployment, or publication. |
 | Hydrology policy lane | **CONFIRMED lane / unbound mixed scaffolding** | [`policy/domains/hydrology/README.md`](../../../policy/domains/hydrology/README.md) inventories eight Rego sources and their conflicting allow/deny scaffold polarity. | An accepted bundle, evaluator, native policy tests, decision emitter, obligation enforcement, production consumer, or release authorization. |

@@ -9,18 +9,20 @@ created: 2026-05-14
 updated: 2026-05-14
 policy_label: public
 related:
-  - docs/standards/dcat.md            # PROPOSED — companion doc
-  - docs/standards/prov.md            # PROPOSED — companion doc
-  - docs/standards/canonicalization.md # PROPOSED — companion doc (JCS vs URDNA2015)
-  - docs/doctrine/directory-rules.md  # CONFIRMED — placement authority
-  - docs/doctrine/truth-posture.md    # CONFIRMED — cite-or-abstain
-  - docs/doctrine/lifecycle-law.md    # CONFIRMED — RAW → … → PUBLISHED
-  - schemas/contracts/v1/stac/        # PROPOSED — profile schema home (ADR-0001 default)
-  - policy/stac/                      # PROPOSED — OPA bundle for STAC publication
+  - docs/standards/DCAT.md
+  - docs/standards/PROV.md
+  - docs/standards/canonicalization.md
+  - docs/doctrine/directory-rules.md
+  - docs/doctrine/truth-posture.md
+  - docs/doctrine/lifecycle-law.md
+  - schemas/contracts/v1/stac/
 tags: [kfm, stac, catalog, standards, profile, governance]
 notes:
   - "Doctrine is CONFIRMED from Pass 10 §6.4 and Master MapLibre v1.8. Repo paths are PROPOSED until verified against a mounted repo."
   - "Namespace choice (kfm: vs ks-kfm:) is an open question carried from C4-01 — see §3.2."
+owning_root: docs/
+responsibility: "Documentation for STAC in KFM — Standard Conformance and `kfm-stac-profile-v1`; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # STAC in KFM — Standard Conformance and `kfm-stac-profile-v1`
@@ -666,4 +668,4 @@ The CI workflow that gates STAC promotion is **PROPOSED** at `.github/workflows/
 
 **Last reviewed:** 2026-05-14 · **Next review:** flagged at 2026-11-14 (per Directory Rules §15 — older than 6 months)
 
-**Related docs:** [`directory-rules.md`](../doctrine/directory-rules.md) · [`dcat.md`](./dcat.md) *(PROPOSED)* · [`prov.md`](./prov.md) *(PROPOSED)* · [`canonicalization.md`](./canonicalization.md) *(PROPOSED)*
+**Related docs:** [`directory-rules.md`](../doctrine/directory-rules.md) · [`dcat.md`](DCAT.md) *(PROPOSED)* · [`prov.md`](PROV.md) *(PROPOSED)* · [`canonicalization.md`](./canonicalization.md) *(PROPOSED)*

@@ -29,7 +29,6 @@ related:
   - ../../domains/habitat/SENSITIVITY.md
   - ../../domains/habitat/MODEL_VS_OBSERVATION.md
   - ../../domains/habitat/MAP_UI_CONTRACTS.md
-  - ../../../apps/explorer-web/src/features/domains/habitat/README.md
   - ../../../contracts/cross_domain/fauna_habitat/public_safe_assignment_profile.md
   - ../../../.github/workflows/domain-habitat.yml
   - ../../../.github/workflows/habitat-critical-habitat-source-role.yml
@@ -285,10 +284,10 @@ The panel itself needs explicit loading, unavailable, stale, restricted, malform
 
 | Surface | Pinned observation | What it proves | What it does not prove |
 |---|---|---|---|
-| [`apps/explorer-web/.../habitat/README.md`](../../../apps/explorer-web/src/features/domains/habitat/README.md) | Detailed proposed feature boundary | Intended governed API, sensitivity, evidence, release, correction, and UI constraints | Route, runtime, or deployment |
-| [`EvidenceDrawer.tsx`](../../../apps/explorer-web/src/features/domains/habitat/EvidenceDrawer.tsx) | Literal greenfield placeholder exporting `placeholder = true` | Path exists | Evidence Drawer behavior or EvidenceBundle resolution |
-| [`FocusFlow.tsx`](../../../apps/explorer-web/src/features/domains/habitat/FocusFlow.tsx) | Literal greenfield placeholder exporting `placeholder = true` | Path exists | Focus Mode, citation, or AI behavior |
-| [`layers.ts`](../../../apps/explorer-web/src/features/domains/habitat/layers.ts) | Literal greenfield placeholder exporting `placeholder = true` | Path exists | Layer adapter, released tiles, or MapLibre behavior |
+| `apps/explorer-web/.../habitat/README.md` (retired) | Detailed proposed feature boundary | Intended governed API, sensitivity, evidence, release, correction, and UI constraints | Route, runtime, or deployment |
+| `EvidenceDrawer.tsx` (retired) | Literal greenfield placeholder exporting `placeholder = true` | Path exists | Evidence Drawer behavior or EvidenceBundle resolution |
+| `FocusFlow.tsx` (retired) | Literal greenfield placeholder exporting `placeholder = true` | Path exists | Focus Mode, citation, or AI behavior |
+| `layers.ts` (retired) | Literal greenfield placeholder exporting `placeholder = true` | Path exists | Layer adapter, released tiles, or MapLibre behavior |
 | [`evidence_drawer_payload.schema.json`](../../../schemas/contracts/v1/domains/habitat/evidence_drawer_payload.schema.json) | Proposed schema stub with `additionalProperties: true` | Placeholder shape exists | Complete, accepted, or enforced payload contract |
 | [`evidence_bundle.schema.json`](../../../schemas/contracts/v1/domains/habitat/evidence_bundle.schema.json) | Proposed projection of the shared EvidenceBundle schema | Projection relationship exists | Independent evidence semantics or public-release authority |
 | [Habitat land-cover materiality workflow](../../../.github/workflows/habitat-land-cover-materiality.yml) | Deterministic synthetic no-network validator/test commands | Bounded fixture-profile conformance when exact-head checks pass | Source admission, scientific threshold acceptance, promotion, or release |
@@ -465,7 +464,7 @@ Recheck this specification when:
 - [Habitat model-versus-observation boundary](../../domains/habitat/MODEL_VS_OBSERVATION.md)
 - [Habitat map and UI contract](../../domains/habitat/MAP_UI_CONTRACTS.md)
 - [Habitat verification backlog](../../domains/habitat/VERIFICATION_BACKLOG.md)
-- [Explorer Habitat feature boundary](../../../apps/explorer-web/src/features/domains/habitat/README.md)
+- Explorer Habitat feature boundary (retired)
 - [Habitat contracts boundary](../../../contracts/domains/habitat/README.md)
 - [Fauna–Habitat public-safe candidate profile](../../../contracts/cross_domain/fauna_habitat/public_safe_assignment_profile.md)
 - [Habitat EvidenceBundle projection](../../../schemas/contracts/v1/domains/habitat/evidence_bundle.schema.json)

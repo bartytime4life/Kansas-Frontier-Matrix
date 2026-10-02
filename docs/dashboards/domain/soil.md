@@ -44,7 +44,6 @@ related:
   - ../../../data/registry/sources/soil/README.md
   - ../../../data/proofs/soil/README.md
   - ../../../release/candidates/soil/README.md
-  - ../../../apps/explorer-web/src/features/domains/soil/README.md
   - ../../../.github/workflows/domain-soil.yml
 tags:
   - kfm
@@ -513,7 +512,7 @@ deployment, and publication.
 | [`soil-mukey-properties.yml`](../../../.github/workflows/soil-mukey-properties.yml) | Fixture-only aggregate validation for lineage, continuity, ranges, weighting, and hash binding. | Authoritative Soil properties or an admitted aggregate |
 | [`soil-moisture-observation.yml`](../../../.github/workflows/soil-moisture-observation.yml) | Fixture-first SoilMoistureObservation identity, support, depth, unit, QC, time, evidence, and finite-outcome checks. | Live observations or current field condition |
 | [`soil-ssurgo-sda-micro-snapshot.yml`](../../../.github/workflows/soil-ssurgo-sda-micro-snapshot.yml) | Deterministic no-network micro-snapshot candidate and change-report profile. | Live SDA retrieval, source authority, or automatic promotion |
-| [`apps/explorer-web/src/features/domains/soil/README.md`](../../../apps/explorer-web/src/features/domains/soil/README.md) | Proposed app-local Soil feature boundary and UI obligations. | Implemented route, panel, transport, metric producer, or deployed dashboard |
+| `apps/explorer-web/src/features/domains/soil/README.md` (retired) | Proposed app-local Soil feature boundary and UI obligations. | Implemented route, panel, transport, metric producer, or deployed dashboard |
 | [`data/proofs/soil/README.md`](../../../data/proofs/soil/README.md) | Soil proof-support guidance and anti-collapse boundaries. | Emitted proof object or proof-bearing release |
 | [`release/candidates/soil/README.md`](../../../release/candidates/soil/README.md) | Candidate review guidance stating that a candidate is not a release. | Candidate manifest, approval, release, deployment, or publication |
 | [`policy/domains/soil/README.md`](../../../policy/domains/soil/README.md) | Soil policy lane documentation. | Bound evaluator, production decision, or enforcement |

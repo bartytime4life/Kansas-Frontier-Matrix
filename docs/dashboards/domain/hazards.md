@@ -85,7 +85,6 @@ related:
   - ../../../tools/validators/domains/hazards/validate_usdm_materiality.py
   - ../../../.github/workflows/domain-hazards.yml
   - ../../../apps/review-console/README.md
-  - ../../../apps/explorer-web/src/features/domains/hazards/README.md
   - ../../../data/registry/sources/hazards/README.md
   - ../../../data/proofs/hazards/README.md
   - ../../../release/candidates/hazards/README.md
@@ -366,7 +365,7 @@ No dashboard status may imply that an unassigned role approved a metric, warning
 
 - **Specification:** this file under `docs/dashboards/domain/`.
 - **Proposed steward surface:** [`apps/review-console/`](../../../apps/review-console/README.md); no Hazards panel, query, or telemetry integration is verified.
-- **Proposed public/semi-public feature seam:** [`apps/explorer-web/src/features/domains/hazards/`](../../../apps/explorer-web/src/features/domains/hazards/README.md); the README exists, but route, panel, adapter, Evidence Drawer, Focus Mode, export, tests, and deployment remain unverified.
+- **Proposed public/semi-public feature seam:** `apps/explorer-web/src/features/domains/hazards/` (retired); the README exists, but route, panel, adapter, Evidence Drawer, Focus Mode, export, tests, and deployment remain unverified.
 - **Current executable proof:** `make hazards-validate`, exercised by [`.github/workflows/domain-hazards.yml`](../../../.github/workflows/domain-hazards.yml), for deterministic fixture-only USDM materiality validation.
 - **Current policy posture:** documented and fail-closed at integration, but no accepted executable Hazards policy bundle/evaluator is established.
 - **Current proof/release posture:** explicit workflow holds; no active Hazards proof producer or release-dry-run command/candidate contract is established.
@@ -486,7 +485,7 @@ A review should include:
 | [`policy/domains/hazards/README.md`](../../../policy/domains/hazards/README.md) | CONFIRMED repository-grounded policy inventory | Default-only/inactive policy posture and integration gaps. | Active bundle, evaluator, decision, or consumer enforcement. |
 | [`validate_usdm_materiality.py`](../../../tools/validators/domains/hazards/validate_usdm_materiality.py), [`cases.json`](../../../fixtures/domains/hazards/usdm_materiality/cases.json), and [`test_validate_usdm_materiality.py`](../../../tests/domains/hazards/test_validate_usdm_materiality.py) | CONFIRMED executable source and synthetic fixtures/tests | Deterministic no-network USDM materiality semantics and exact fixture polarity. | Current drought conditions, scientific validity, source admission, evidence, policy, promotion, release, or publication. |
 | [`.github/workflows/domain-hazards.yml`](../../../.github/workflows/domain-hazards.yml) | CONFIRMED workflow source | `make hazards-validate` wiring and explicit proof/release holds. | Current branch pass, production operation, or release readiness. |
-| [`apps/explorer-web/src/features/domains/hazards/README.md`](../../../apps/explorer-web/src/features/domains/hazards/README.md) | CONFIRMED feature README | Proposed public-safe UI boundary and finite-state obligations. | Route/panel/runtime implementation. |
+| `apps/explorer-web/src/features/domains/hazards/README.md` (retired) | CONFIRMED feature README | Proposed public-safe UI boundary and finite-state obligations. | Route/panel/runtime implementation. |
 | [`apps/review-console/README.md`](../../../apps/review-console/README.md) | CONFIRMED app README | Proposed role-gated steward surface boundary. | Hazards dashboard or deployed review workflow. |
 | [`control_plane/domain_lane_register.yaml`](../../../control_plane/domain_lane_register.yaml) | CONFIRMED machine projection / proposed authority | Hazards lane ID, alias, T0 baseline, unresolved ownership/authority. | Final sensitivity decision or implementation maturity. |
 | [`CODEOWNERS`](../../../.github/CODEOWNERS) | CONFIRMED review-routing file | `@bartytime4life` review route. | Functional stewardship, approval, separation of duties, or completed review. |

@@ -15,7 +15,6 @@ related:
   - ./README.md
   - ../DASHBOARD_CATALOG.md
   - ../../domains/atmosphere/README.md
-  - ../../../apps/explorer-web/src/features/domains/atmosphere/README.md
   - ../../../contracts/domains/atmosphere/pm_sensor_trust_profile.md
   - ../../../schemas/contracts/v1/domains/atmosphere/pm_sensor_trust_profile.schema.json
   - ../../../policy/domains/atmosphere/README.md
@@ -69,7 +68,7 @@ It does not own the underlying objects or their admissibility.
 | Machine shape | [`schemas/contracts/v1/domains/atmosphere/`](../../../schemas/contracts/v1/domains/atmosphere/README.md) | Validate payload shape before presentation. |
 | Admissibility | [`policy/domains/atmosphere/`](../../../policy/domains/atmosphere/README.md) | Display finite policy outcomes; do not decide them in the UI. |
 | Executable evidence | [`tools/validators/domains/atmosphere/`](../../../tools/validators/domains/atmosphere/) and [`tests/validators/domains/atmosphere/`](../../../tests/validators/domains/atmosphere/) | Report bounded results with their fixture or artifact identity. |
-| UI composition | [`apps/explorer-web/`](../../../apps/explorer-web/README.md) and a future verified review surface | Render governed envelopes; do not read canonical/internal stores directly. |
+| UI composition | `apps/explorer-web/` (retired) and a future verified review surface | Render governed envelopes; do not read canonical/internal stores directly. |
 | Release, correction, and rollback | [`release/`](../../../release/README.md) | Display released state only when a governing record exists. |
 
 The lifecycle shorthand remains `RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED`. A dashboard, green test, badge, screenshot, commit, or pull request does not perform a lifecycle promotion.
@@ -140,10 +139,10 @@ Current repository bytes support a partial implementation picture rather than a 
 | Surface | Repository evidence | Status and limit |
 |---|---|---|
 | Atmosphere dashboard specification | [`atmosphere.md`](./atmosphere.md) | `CONFIRMED` document; implementation authority absent. |
-| Explorer Atmosphere feature boundary | [`README.md`](../../../apps/explorer-web/src/features/domains/atmosphere/README.md) | `CONFIRMED` feature documentation; several claims in that README require repinning against current code. |
-| Evidence Drawer seam | [`EvidenceDrawer.tsx`](../../../apps/explorer-web/src/features/domains/atmosphere/EvidenceDrawer.tsx), [payload schema](../../../schemas/contracts/v1/domains/atmosphere/evidence_drawer_payload.schema.json), [focused test](../../../tests/validators/domains/atmosphere/test_evidence_drawer_convergence.py), and [workflow](../../../.github/workflows/atmosphere-evidence-drawer-convergence.yml) | `CONFIRMED` bounded re-export and convergence packet; not a complete dashboard. |
-| Atmosphere layers | [`layers.ts`](../../../apps/explorer-web/src/features/domains/atmosphere/layers.ts) | `CONFIRMED` placeholder only; no layer implementation claim. |
-| Atmosphere Focus Flow | [`FocusFlow.tsx`](../../../apps/explorer-web/src/features/domains/atmosphere/FocusFlow.tsx) | `CONFIRMED` placeholder only; no governed-AI route claim. |
+| Explorer Atmosphere feature boundary | `README.md` (retired) | `CONFIRMED` feature documentation; several claims in that README require repinning against current code. |
+| Evidence Drawer seam | `EvidenceDrawer.tsx` (retired), [payload schema](../../../schemas/contracts/v1/domains/atmosphere/evidence_drawer_payload.schema.json), focused test (PROPOSED; not present), and workflow (PROPOSED; not present) | `CONFIRMED` bounded re-export and convergence packet; not a complete dashboard. |
+| Atmosphere layers | `layers.ts` (retired) | `CONFIRMED` placeholder only; no layer implementation claim. |
+| Atmosphere Focus Flow | `FocusFlow.tsx` (retired) | `CONFIRMED` placeholder only; no governed-AI route claim. |
 | Review Console | [`apps/review-console/`](../../../apps/review-console/README.md) | App exists, but no Atmosphere-specific file was found at the pinned snapshot; dashboard route `UNKNOWN`. |
 | PM-sensor trust packet | [contract](../../../contracts/domains/atmosphere/pm_sensor_trust_profile.md), [schema](../../../schemas/contracts/v1/domains/atmosphere/pm_sensor_trust_profile.schema.json), [fixtures](../../../fixtures/contracts/v1/domains/atmosphere/pm_sensor_trust_profile/cases.json), [validator](../../../tools/validators/domains/atmosphere/validate_pm_sensor_trust_profile.py), and [tests](../../../tests/validators/domains/atmosphere/test_pm_sensor_trust_profile.py) | `CONFIRMED` proposed-inactive, fixture-only packet; no live sensor or public-health authority. |
 | Telemetry | No `runtime/observability/` or Atmosphere dashboard telemetry path was found at the pinned snapshot. | `UNKNOWN`; do not infer absence across external systems. |
@@ -193,7 +192,7 @@ Review is event-driven until a steward adopts a periodic cadence.
 | [Dashboard catalog](../DASHBOARD_CATALOG.md) | Current inventory relationship for this file. | Catalog presence does not prove implementation. |
 | [Atmosphere domain README](../../domains/atmosphere/README.md) | Domain scope, object families, source-role and public-safety boundaries. | Several implementation and external-source items remain proposed or unverified. |
 | [Accepted ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) and [Directory Rules](../../doctrine/directory-rules.md) | Responsibility-root separation and canonical human Directory Rules authority. | Same-path edits do not settle the proposed dashboard-lane placement question. |
-| [Explorer Atmosphere files](../../../apps/explorer-web/src/features/domains/atmosphere/) | Exact current source state: one Evidence Drawer re-export and two placeholders. | No complete Atmosphere dashboard, route, telemetry, or deployment proof. |
+| Explorer Atmosphere files (retired) | Exact current source state: one Evidence Drawer re-export and two placeholders. | No complete Atmosphere dashboard, route, telemetry, or deployment proof. |
 | [Atmosphere contract/schema/policy/test roots](../../../contracts/domains/atmosphere/README.md) | Current bounded object and validator surfaces. | File presence is not source admission, scientific validity, release, or publication. |
 | [PM Sensor Trust Profile candidate](../../../contracts/domains/atmosphere/pm_sensor_trust_profile.md) | Exact fixture-only trust dimensions and non-authority controls. | No live sensor, composite trust score, dashboard, or public-health claim. |
 

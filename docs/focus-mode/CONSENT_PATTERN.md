@@ -103,9 +103,6 @@ related:
   - ../../schemas/contracts/v1/consent/README.md
   - ../../contracts/domains/people-dna-land/consented_genealogy_overlay.md
   - ../../contracts/domains/people-dna-land/consent_revocation_propagation_assessment.md
-  - ../../apps/explorer-web/src/adapters/ConsentCardProjection.ts
-  - ../../apps/explorer-web/src/features/consent_card/README.md
-  - ../../apps/explorer-web/tests/consent-card.test.ts
 tags: [kfm, focus-mode, consent, privacy, identity, policy, evidence, ui-projection, finite-outcomes, withdrawal, correction, fail-closed, compatibility, non-publication]
 notes:
   - "v1.0 is a same-path repository-grounded modernization of the v0.1 pattern."
@@ -353,8 +350,8 @@ The safe default is not “hide the button but keep the payload.” The safe def
 | [`FocusResponse`](../../contracts/ui/focus_response.md) | A UI-facing projection concept downstream of the runtime envelope | A closed production response schema or deployed Focus UI route |
 | [`ConsentedGenealogyOverlayCandidate`](../../contracts/domains/people-dna-land/consented_genealogy_overlay.md) | A closed, synthetic, restricted, no-network fixture profile with explicit non-release rules | Real identity, real consent, real DNA, evidence closure, policy approval, release, or public use |
 | [`ConsentRevocationPropagationAssessment`](../../contracts/domains/people-dna-land/consent_revocation_propagation_assessment.md) | A synthetic assessment over `READ`, `ANSWER`, `EXPORT`, `TILE`, `GRAPH`, `INDEX`, and `CACHE` dependencies | Execution of withdrawal, deletion, invalidation, purge, cleanup, SLOs, or public correction |
-| [`ConsentCardProjection.ts`](../../apps/explorer-web/src/adapters/ConsentCardProjection.ts) | A strict app-local parser for one public-safe fixture profile with finite outcomes and closed fields | Transport, evidence resolution, policy evaluation, consent issuance, status checking, or revocation |
-| [`consent-card.test.ts`](../../apps/explorer-web/tests/consent-card.test.ts) | Deterministic tests for valid display, negative states, expiry, malformed payload rejection, no-leak copy, and absence of network/lifecycle-store reads | Production API, real consent records, operational policy, or deployment |
+| `ConsentCardProjection.ts` (retired) | A strict app-local parser for one public-safe fixture profile with finite outcomes and closed fields | Transport, evidence resolution, policy evaluation, consent issuance, status checking, or revocation |
+| `consent-card.test.ts` (retired) | Deterministic tests for valid display, negative states, expiry, malformed payload rejection, no-leak copy, and absence of network/lifecycle-store reads | Production API, real consent records, operational policy, or deployment |
 | [`REDACTION_PROFILES.md`](../standards/REDACTION_PROFILES.md) | No active profile catalog, no functional transform runtime, and fixture-only receipt proof | An approved k-anonymity threshold, radius, cell size, privacy budget, or safe transform |
 
 ### Confirmed bounded Explorer behavior
@@ -952,7 +949,7 @@ Passing one gate does not waive another.
 | Redaction profile selection or transform parameters | Accepted policy/profile catalog and controlled transform implementation |
 | Runtime finite response meaning | [`contracts/runtime/runtime_response_envelope.md`](../../contracts/runtime/runtime_response_envelope.md) |
 | UI response meaning | [`contracts/ui/focus_response.md`](../../contracts/ui/focus_response.md) |
-| Explorer projection implementation | [`apps/explorer-web/`](../../apps/explorer-web/) |
+| Explorer projection implementation | `apps/explorer-web/` (retired) |
 | Release, correction, withdrawal, and rollback decisions | [`release/`](../../release/README.md) and their semantic/machine authorities |
 | Production consent, legal, privacy, or sovereignty approval | Qualified accountable authorities outside this document |
 

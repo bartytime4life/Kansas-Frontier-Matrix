@@ -12,8 +12,7 @@ related:
   - docs/standards/STAC_KFM_PROFILE.md
   - docs/standards/SENSITIVITY_RUBRIC.md
   - docs/standards/EVIDENCE_BUNDLE.md
-  - docs/standards/DCAT_PROFILE.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - schemas/contracts/v1/domains/fauna/
   - schemas/contracts/v1/domains/flora/
   - policy/sensitivity/
@@ -23,6 +22,9 @@ notes:
   - This document is doctrine; implementation paths are PROPOSED until repo-mounted verification.
   - Namespace choice kfm: vs ks-kfm: is OPEN per C4-01 (Pass 10 Idea Index).
   - DwC-A round-trip canonicalization is OPEN per C4-03 (Pass 10 Idea Index).
+owning_root: docs/
+responsibility: "Documentation for STAC × Darwin Core Hybrid Profile (kfm-stac-dwc-profile-v1); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # STAC × Darwin Core Hybrid Profile
@@ -573,9 +575,9 @@ These are explicitly **not resolved** by this document and should be tracked in 
 - [`docs/standards/STAC_KFM_PROFILE.md`](./STAC_KFM_PROFILE.md) — base STAC profile (`kfm:provenance` namespace) that this profile extends · **PROPOSED** path
 - [`docs/standards/SENSITIVITY_RUBRIC.md`](./SENSITIVITY_RUBRIC.md) — C6-01 rubric in full, including non-biodiversity extensions · **PROPOSED** path
 - [`docs/standards/EVIDENCE_BUNDLE.md`](./EVIDENCE_BUNDLE.md) — JSON-LD bundle shape, content-addressing, JCS/URDNA2015 decision · **PROPOSED** path
-- [`docs/standards/DCAT_PROFILE.md`](./DCAT_PROFILE.md) — DCAT distribution profile for non-spatiotemporal data, including the `kfm:care` extension · **PROPOSED** path
+- `docs/standards/DCAT_PROFILE.md` (PROPOSED; not present) — DCAT distribution profile for non-spatiotemporal data, including the `kfm:care` extension · **PROPOSED** path
 - [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — placement law (§6.1 places this file in `docs/standards/`)
-- [`docs/adr/ADR-0001-schema-home.md`](../adr/ADR-0001-schema-home.md) — default schema home is `schemas/contracts/v1/...`
+- [`docs/adr/ADR-0001-schema-home.md`](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — default schema home is `schemas/contracts/v1/...`
 - [`docs/domains/fauna/README.md`](../domains/fauna/README.md) — fauna domain dossier (Taxon, Occurrence Evidence/Restricted/Public, RangePolygon, MigrationRoute, SensitiveSite) · **PROPOSED** path
 - [`docs/domains/flora/README.md`](../domains/flora/README.md) — flora domain dossier (Plant Taxon, Flora Occurrence, SpecimenRecord, Rare Plant Record) · **PROPOSED** path
 - [`control_plane/object_family_register.yaml`](../../control_plane/object_family_register.yaml) — canonical object-family ledger · **PROPOSED** path

@@ -40,6 +40,9 @@ notes:
   - "Counts describe source-defined test functions at the pinned base commit, not a hosted collection receipt."
   - "The Makefile has no aggregate target for these modules at the pinned base commit."
   - "Each executable module is collected by a dedicated workflow, but those workflows exclude this parent README from their path filters."
+owning_root: docs/
+responsibility: "Documentation for tests/pipelines/README.md — Pipeline Test Inventory and Evidence Boundary; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -65,7 +68,7 @@ rights, sensitivity, lifecycle state, or release decisions.
 | [`domains/hydrology/test_wbd_huc12_ingest_candidate.py`](domains/hydrology/test_wbd_huc12_ingest_candidate.py) | 9 | [`produce_wbd_huc12_candidate.py`](../../pipelines/domains/hydrology/ingest_wbd_huc/produce_wbd_huc12_candidate.py) | [`fixtures/domains/hydrology/wbd_huc12_ingest/`](../../fixtures/domains/hydrology/wbd_huc12_ingest/) |
 | [`domains/soil/mesonet_normalizer/test_fixture_normalizer.py`](domains/soil/mesonet_normalizer/test_fixture_normalizer.py) | 9 | [`fixture_normalizer.py`](../../pipelines/domains/soil/mesonet_normalizer/fixture_normalizer.py) | [`native_station_record.json`](../../fixtures/domains/soil/mesonet_normalizer/valid/native_station_record.json) |
 | [`domains/soil/mesonet_station_health/test_evaluate_fixture.py`](domains/soil/mesonet_station_health/test_evaluate_fixture.py) | 5 | [`evaluate_fixture.py`](../../pipelines/domains/soil/mesonet_station_health/evaluate_fixture.py) | [`healthy_batch.json`](../../fixtures/domains/soil/mesonet_station_health/valid/healthy_batch.json) and [`mesonet_station_health.schema.json`](../../schemas/contracts/v1/domains/soil/mesonet_station_health.schema.json) |
-| [`__init__.py`](__init__.py) | 0 | Package marker only | None |
+| `__init__.py` (PROPOSED; not present) | 0 | Package marker only | None |
 
 The count is a static inventory of functions defined at the pinned base. It
 does not establish current pass status, dynamic collection completeness, code

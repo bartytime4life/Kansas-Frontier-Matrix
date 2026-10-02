@@ -21,6 +21,9 @@ notes:
   - "kfm: vs ks-kfm: namespace decision is OPEN; see §9."
   - "Path is PROPOSED until repo evidence is mounted."
   - "Distinct from STAC_KFM_PROFILE.md (strict profile + schemas)."
+owning_root: docs/
+responsibility: "Documentation for STAC — SpatioTemporal Asset Catalog (KFM Adoption Reference); not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
 [/KFM_META_BLOCK_V2] -->
 
 # STAC — SpatioTemporal Asset Catalog (KFM Adoption Reference)
@@ -517,7 +520,7 @@ A fixture that **must fail** the validator: the Item declares `evidence_bundle_r
 - [`docs/standards/DCAT.md`](./DCAT.md) — DCAT for non-spatial datasets and DCAT mirror of STAC Collections. **PROPOSED**.
 - [`docs/standards/PROV.md`](./PROV.md) — PROV-O / OpenLineage relationship to STAC links. **PROPOSED**.
 - [`docs/standards/Darwin_Core.md`](./Darwin_Core.md) — Darwin Core hybridization rules. **PROPOSED**.
-- [`docs/standards/Evidence_Bundle.md`](./Evidence_Bundle.md) — content-addressed JSON-LD bundles referenced from STAC. **PROPOSED**.
+- [`docs/standards/Evidence_Bundle.md`](EVIDENCE_BUNDLE.md) — content-addressed JSON-LD bundles referenced from STAC. **PROPOSED**.
 - [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — RAW → PUBLISHED lifecycle.
 - [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — where this document lives and why.
 - [`contracts/evidence/`](../../contracts/evidence/) — meaning of `EvidenceRef`, `EvidenceBundle`. **PROPOSED path per ADR-0001**.
@@ -576,6 +579,6 @@ A fixture that **must fail** the validator: the Item declares `evidence_bundle_r
 
 ---
 
-**Related:** [STAC_KFM_PROFILE.md](./STAC_KFM_PROFILE.md) · [DCAT.md](./DCAT.md) · [Darwin_Core.md](./Darwin_Core.md) · [PROV.md](./PROV.md) · [Evidence_Bundle.md](./Evidence_Bundle.md)
+**Related:** [STAC_KFM_PROFILE.md](./STAC_KFM_PROFILE.md) · [DCAT.md](./DCAT.md) · [Darwin_Core.md](./Darwin_Core.md) · [PROV.md](./PROV.md) · [Evidence_Bundle.md](EVIDENCE_BUNDLE.md)
 **Last updated:** 2026-05-14
 [Back to top](#stac--spatiotemporal-asset-catalog-kfm-adoption-reference)

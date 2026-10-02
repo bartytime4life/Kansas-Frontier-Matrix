@@ -41,10 +41,6 @@ related:
   - ../architecture/ui/ACCESSIBILITY.md
   - ../doctrine/directory-rules.md
   - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
-  - ../../.github/workflows/accessibility.yml
-  - ../../tests/ci/test_accessibility_workflow.py
-  - ../../apps/explorer-web/package.json
-  - ../../apps/explorer-web/playwright.config.ts
   - ../../artifacts/qa/reports/a11y/README.md
 tags: [kfm, brand, accessibility, a11y, keyboard, focus, wcag, trust-visible-states]
 notes:
@@ -79,14 +75,14 @@ The placement is intentionally narrow. Under accepted [ADR-0029](../adr/ADR-0029
 
 ### Implemented checks
 
-The [`accessibility` workflow](../../.github/workflows/accessibility.yml) preserves two stable job surfaces with different meanings:
+The `accessibility` workflow (PROPOSED; not present) preserves two stable job surfaces with different meanings:
 
 | Job | Current behavior | What a success means | What it does not mean |
 |---|---|---|---|
 | `keyboard-navigation` | Installs the locked workspace and runs eight named Playwright specifications against local Vite fixtures. | The bounded fixture journeys completed at the tested revision. | Whole-app keyboard completion, screen-reader parity, WCAG conformance, release approval, deployment, or publication. |
 | `axe` | Emits `WORKFLOW_SKIPPED_EXPLICIT` and `WORKFLOW_HOLD`; it runs no axe ruleset. | The explicit hold-reporting step completed. | An accessibility scan or an axe pass. |
 
-The workflow contract is regression-tested by [`tests/ci/test_accessibility_workflow.py`](../../tests/ci/test_accessibility_workflow.py). Those tests assert the stable job names, exact browser-spec list, read-only permissions, pinned actions, local no-publication posture, and the continuing axe hold.
+The workflow contract is regression-tested by `tests/ci/test_accessibility_workflow.py` (PROPOSED; not present). Those tests assert the stable job names, exact browser-spec list, read-only permissions, pinned actions, local no-publication posture, and the continuing axe hold.
 
 ### Executed browser scope
 

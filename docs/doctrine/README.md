@@ -355,7 +355,7 @@ Repository-native hosted checks remain **PENDING** until the draft pull request 
 | [`../../tests/README.md`](../../tests/README.md) | Enforceability root |
 | [`../../release/README.md`](../../release/README.md) | Release decision root |
 | [`../../apps/governed-api/README.md`](../../apps/governed-api/README.md) | Governed public-client boundary documentation |
-| [`../../apps/explorer-web/README.md`](../../apps/explorer-web/README.md) | Map-first client documentation |
+| `../../apps/explorer-web/README.md` (retired) | Map-first client documentation |
 
 [Back to top](#top)
 
