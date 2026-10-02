@@ -270,7 +270,7 @@ This document is done enough to enter the repository when:
 
 - [`docs/domains/settlements-infrastructure/README.md`](./README.md) *(PROPOSED neighbor — verify)*
 - [`directory-rules.md`](../../../doctrine/directory-rules.md) — **placement authority**; §12 Domain Placement Law; §13 / §24.9.1 parallel-authority anti-pattern
-- `ai-build-operating-contract.md` (not present) — operating law; `CONTRACT_VERSION = "3.0.0"`
+- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"`
 - Atlas §24.13 — Atlas Section ↔ Dossier ↔ Responsibility Root crosswalk *(authoritative source-root mapping)*
 - `policy/sensitivity/infrastructure/` — critical-asset deny lane *(PROPOSED)*
 - `data/published/layers/settlements-infrastructure/` — public-safe release home *(PROPOSED)*

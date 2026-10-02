@@ -440,7 +440,7 @@ This dossier is done enough to enter the repository when:
 - **Object-family grouping** — `docs/domains/settlements-infrastructure/OBJECT_FAMILIES.md` (not present) (this is the infrastructure-side detail companion)
 - **Lane path crosswalk** — `docs/domains/settlements-infrastructure/PATHS.md` (not present)
 - **Lane glossary** — `docs/domains/settlements-infrastructure/UBIQUITOUS_LANGUAGE.md` *(TODO)*
-- **Doctrine** — [`directory-rules.md`](../../../doctrine/directory-rules.md) (§12 Domain Placement Law; §2.4 ADR triggers); `ai-build-operating-contract.md` (not present) (`CONTRACT_VERSION = "3.0.0"`)
+- **Doctrine** — [`directory-rules.md`](../../../doctrine/directory-rules.md) (§12 Domain Placement Law; §2.4 ADR triggers); [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) (`CONTRACT_VERSION = "3.0.0"`)
 - **Dossier source** — Atlas ch.14 (Settlements & Infrastructure); §24.5 (sensitivity tiers); §24.1 (source-role); §24.14 (object-family × domain matrix)
 - **Standards** — `docs/standards/PROV.md` *(naming variance vs `PROVENANCE.md` — NEEDS VERIFICATION)*
 - **Registers** — `docs/registers/DRIFT_REGISTER.md`, `docs/registers/VERIFICATION_BACKLOG.md`
@@ -492,7 +492,7 @@ pipelines/domains/settlements-infrastructure/                                   
 
 ---
 
-**Related:** Parent dossier (not present) · Object families (not present) · Paths (not present) · [Directory Rules](../../../doctrine/directory-rules.md)
+**Related:** [Parent dossier](../README.md) · Object families (not present) · Paths (not present) · [Directory Rules](../../../doctrine/directory-rules.md)
 
 *Last updated: 2026-06-07 · Doc version: v2 (draft) · `CONTRACT_VERSION = "3.0.0"`*
 
