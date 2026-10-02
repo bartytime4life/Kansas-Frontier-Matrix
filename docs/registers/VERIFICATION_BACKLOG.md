@@ -347,6 +347,20 @@ The touched OpenLineage contract's inherited multi-label metadata `type` was
 also corrected to the existing `semantic-contract` value so changed-document
 validation can pass; that edit creates no new authority.
 
+### Local water snapshot validation replay — 2026-10-01
+
+`MOD-24` / P1 / **CONFIRMED on `main@b2fccd98d084b01f01f6e8c905aa369725c6f955`**:
+the local release carrier accepted a fully resealed water package whose embedded
+`PASS` receipt falsely set `release_authorized` to `true`, although a fresh
+candidate validation returned `false`. Local staging and activation called only
+the carrier hash/reference validator. The owning implementation and conformance
+roots are `packages/release/` and `tests/packages/release/`. This slice replays
+the domain candidate validator and requires exact receipt equality before either
+local transition; a rejected stage creates no release store, and activation
+rejects a previously staged fabricated package. The existing water contract and
+runbook describe the boundary. This does not authenticate independent review,
+change the Site Worker, implement hosted administration, or approve any release.
+
 ### Site mirror source-identity guard — 2026-10-01
 
 `MOD-13` / P1 / **CONFIRMED on `main@9465a573d8859cd1564124897d10d848f9c7c350`**:

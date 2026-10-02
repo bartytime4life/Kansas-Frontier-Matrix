@@ -23,6 +23,21 @@ CREATE TABLE IF NOT EXISTS water_activation_events(event_id TEXT PRIMARY KEY, pa
 """
 
 
+def _validated_review_snapshot(raw: bytes) -> dict:
+    manifest, values = validate_snapshot(raw)
+    # The carrier binds bytes, but its embedded PASS receipt is untrusted input.
+    # Replay the domain validator at both owner-controlled transition points.
+    from pipelines.domains.hydrology.validate import validate_candidate
+
+    try:
+        expected = validate_candidate(values["candidate.json"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ValueError("CANDIDATE_VALIDATION_FAILED") from exc
+    if values["validation.json"] != expected:
+        raise ValueError("VALIDATION_RECEIPT_MISMATCH")
+    return manifest
+
+
 def initialize(root: Path):
     if not root.is_absolute() or root.is_symlink() or any(p.is_symlink() for p in root.parents):
         raise ValueError("PRIVATE_ABSOLUTE_STORE_REQUIRED")
@@ -41,7 +56,7 @@ def initialize(root: Path):
 
 
 def stage(root: Path, raw: bytes, *, actor: str, now: str) -> str:
-    manifest, _ = validate_snapshot(raw)
+    manifest = _validated_review_snapshot(raw)
     initialize(root)
     name = manifest["package_id"].split(":")[1] + ".json"
     path = root / "objects" / name
@@ -67,7 +82,7 @@ def activate(root: Path, package_id: str, trusted_decision: dict, *, expected_ac
     if not DIGEST.fullmatch(package_id):
         raise ValueError("PACKAGE_ID_INVALID")
     raw = regular_bytes(root / "objects" / (package_id.split(":")[1] + ".json"), MAX_PACKAGE_BYTES)
-    manifest, _ = validate_snapshot(raw)
+    manifest = _validated_review_snapshot(raw)
     if manifest["package_id"] != package_id or trusted_decision.get("package_id") != package_id:
         raise ValueError("ACTIVATION_BINDING_MISMATCH")
     response = project(raw, trusted_decision, view="layers", now=now)

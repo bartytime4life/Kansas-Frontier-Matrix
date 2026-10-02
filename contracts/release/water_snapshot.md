@@ -11,6 +11,11 @@ and Site Worker preserve these bytes and use shared synthetic conformance fixtur
 Candidate and validation identities retain the existing Python canonical profile;
 the Worker verifies exact artifact hashes and their cross-references, while
 candidate schema/semantic validation belongs to Python preparation and review.
+The local owner staging and activation operations replay that validator and
+require the embedded validation receipt to equal its result. Rehashing a
+different `PASS` receipt does not satisfy these transitions. The read-only
+Python and Site projections retain their bounded carrier checks; this local
+operator safeguard does not implement hosted review or authorize release.
 
 Only separately trusted operator metadata can authorize reads. It binds the exact
 package, six governance references, distinct reviewer/releaser, ordered UTC review/
