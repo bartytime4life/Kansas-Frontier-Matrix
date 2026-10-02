@@ -8,7 +8,7 @@ owners: PLACEHOLDER-roads-rail-trade-domain-steward, PLACEHOLDER-docs-steward
 created: 2026-06-07
 updated: 2026-06-07
 policy_label: public
-related: [../../doctrine/ai-build-operating-contract.md, ../../doctrine/directory-rules.md, docs/domains/roads-rail-trade/README.md, docs/domains/roads-rail-trade/SOURCES.md, contracts/domains/roads-rail-trade/, schemas/contracts/v1/domains/roads-rail-trade/]
+related: [../../doctrine/directory-rules.md, docs/domains/roads-rail-trade/README.md, docs/domains/roads-rail-trade/SOURCES.md, contracts/domains/roads-rail-trade/, schemas/contracts/v1/domains/roads-rail-trade/]
 tags: [kfm, roads-rail-trade, ubiquitous-language, ddd, glossary, bounded-context]
 notes: [Doctrine-adjacent; CONTRACT_VERSION = "3.0.0" pinned. Bounded-context vocabulary for the Roads/Rail/Trade lane. Terms are CONFIRMED from Atlas v1.1 ch.13 §C; field realization is PROPOSED. CONFLICTED: dossier §B informal labels vs §C canonical compound forms — both preserved and mapped in §4.]
 owning_root: docs/
@@ -313,7 +313,7 @@ This document is done enough to enter the repository when:
 - `contracts/domains/roads-rail-trade/` — object-meaning home this glossary mirrors *(PROPOSED)*
 - `schemas/contracts/v1/domains/roads-rail-trade/` — field-shape home *(PROPOSED)*
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — Domain Placement Law §12
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"`
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating law; `CONTRACT_VERSION = "3.0.0"`
 - `DomainDriven_Design_Reference.pdf` — ubiquitous-language pattern `[DDD]`
 
 ---

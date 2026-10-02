@@ -17,7 +17,6 @@ related:
   - docs/domains/roads-rail-trade/EXPANSION_BACKLOG.md
   - docs/domains/archaeology/SENSITIVITY.md
   - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, roads-rail-trade, transport, historic-routes, sensitivity, sovereignty, generalization, governance]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned; doctrine-adjacent standard doc on a SENSITIVE domain.
@@ -369,7 +368,7 @@ Placeholders below are PROPOSED targets. Mounted-repo presence is NEEDS VERIFICA
 - [`docs/domains/archaeology/SENSITIVITY.md`](../archaeology/SENSITIVITY.md) — the cultural-side sensitivity policy this lane consumes — TODO: NEEDS VERIFICATION.
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law.
 - [`docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf`](../../atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf) — Ch. 13 (Roads/Rail), Ch. 24.5 (tiers), Ch. 24.4.13 (Archaeology edges).
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract; `CONTRACT_VERSION = "3.0.0"`; §23.2 sensitive-domain matrix.
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating contract; `CONTRACT_VERSION = "3.0.0"`; §23.2 sensitive-domain matrix.
 
 Atlas / corpus references (not repo paths):
 

@@ -10,7 +10,6 @@ updated: 2026-05-28
 policy_label: public
 contract_version: "3.0.0"
 related:
-  - ../../doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/trust-membrane.md
   - docs/architecture/contract-schema-policy-split.md
@@ -634,7 +633,7 @@ This document is done enough to enter the repository when:
 
 > Placeholder links — verify paths against mounted repo before merging.
 
-- [AI Build Operating Contract](../../doctrine/ai-build-operating-contract.md) — `CONTRACT_VERSION = "3.0.0"`; canonical operating law.
+- AI Build Operating Contract (held: DOC-DOC-002) — `CONTRACT_VERSION = "3.0.0"`; canonical operating law.
 - [Directory Rules](../../doctrine/directory-rules.md) — Domain Placement Law (§12), schema-home rule (§7.4).
 - [Trust Membrane](../../doctrine/trust-membrane.md) — `TODO` verify path.
 - [Lifecycle Law](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED governed transitions; `TODO` verify path.

@@ -16,7 +16,6 @@ related:
   - docs/domains/people-dna-land/CHAIN_OF_TITLE_NOTES.md
   - docs/domains/people-dna-land/CONSENT_MODEL.md
   - ../../doctrine/directory-rules.md
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, people-dna-land, cross-lane, edges, joins, sensitivity, governance]
 notes:
   # CONTRACT_VERSION = "3.0.0"
@@ -319,7 +318,7 @@ PROPOSED; homes use the **whole-domain** `people-dna-land` segment per §12. Cro
 - [`./CHAIN_OF_TITLE_NOTES.md`](./CHAIN_OF_TITLE_NOTES.md) — land edge to Frontier-owned land-office records
 - [`./CONSENT_MODEL.md`](./CONSENT_MODEL.md) · [`./CONTINUITY_INVENTORY.md`](./CONTINUITY_INVENTORY.md)
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — placement law (§12)
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - Atlas anchors: §16.F (People/DNA/Land per-domain relations) · §24.4.11–§24.4.15 (edge-ownership lattice) · §17.F (Frontier↔People/Land edge) · §24.14 (object-family × domain sensitivity) · §24.9.2 (trust-membrane anti-patterns) · §24.10 (cross-lane inference risk)
 
 -----

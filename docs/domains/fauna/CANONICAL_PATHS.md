@@ -10,7 +10,6 @@ updated: 2026-05-29
 policy_label: public
 related:
   - docs/doctrine/directory-rules.md
-  - ../../doctrine/ai-build-operating-contract.md
   - docs/domains/fauna/README.md
   - docs/domains/README.md
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
@@ -639,7 +638,7 @@ docs/architecture/sensitivity.md                # cross-domain sensitivity doctr
 
 ### Footer
 
-**Related docs:** [`directory-rules.md`](../../doctrine/directory-rules.md) · [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) · [`docs/domains/fauna/README.md`](./README.md) · [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) · [`docs/runbooks/fauna/ROLLBACK_RUNBOOK.md`](../../runbooks/fauna/ROLLBACK_RUNBOOK.md) · `ADR-0001-schema-home.md` (not present)
+**Related docs:** [`directory-rules.md`](../../doctrine/directory-rules.md) · `ai-build-operating-contract.md` (held: DOC-DOC-002) · [`docs/domains/fauna/README.md`](./README.md) · [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) · [`docs/runbooks/fauna/ROLLBACK_RUNBOOK.md`](../../runbooks/fauna/ROLLBACK_RUNBOOK.md) · `ADR-0001-schema-home.md` (not present)
 
 **Last updated:** 2026-05-29 · **Version:** v1 · **Status:** draft · **`CONTRACT_VERSION = "3.0.0"`**
 

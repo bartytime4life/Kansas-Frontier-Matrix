@@ -10,7 +10,6 @@ updated: 2026-06-05
 policy_label: public
 contract_version: "3.0.0"
 related:
-  - ../../doctrine/ai-build-operating-contract.md
   - ../../doctrine/directory-rules.md
   - docs/domains/hazards/README.md
   - docs/domains/hazards/DATA_LIFECYCLE.md
@@ -372,7 +371,7 @@ This document is done enough to enter the repository when:
 
 > Sibling-doc placement under `docs/domains/hazards/` is CONFIRMED by Directory Rules §12; specific file presence is NEEDS VERIFICATION.
 
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law; deny-by-default; `CONTRACT_VERSION = "3.0.0"` *(CONFIRMED authority)*
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating law; deny-by-default; `CONTRACT_VERSION = "3.0.0"` *(CONFIRMED authority)*
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — placement; §12 Domain Placement Law; cross-cutting files *(CONFIRMED)*
 - [`docs/domains/hazards/README.md`](./README.md) — Hazards lane orientation *(file presence NEEDS VERIFICATION)*
 - [`docs/domains/hazards/DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — lifecycle, freshness rules, receipt matrix *(sibling doc)*

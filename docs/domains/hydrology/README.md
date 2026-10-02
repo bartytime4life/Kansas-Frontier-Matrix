@@ -9,7 +9,6 @@ created: 2026-05-17
 updated: 2026-07-31
 policy_label: public
 related:
-  - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/architecture/
   - docs/registers/DRIFT_REGISTER.md

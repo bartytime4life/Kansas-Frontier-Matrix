@@ -14,7 +14,6 @@ related:
   - docs/doctrine/trust-membrane.md
   - docs/architecture/contract-schema-policy-split.md
   - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
-  - docs/doctrine/ai-build-operating-contract.md
   - docs/domains/README.md
   - docs/domains/hydrology/README.md
   - control_plane/domain_lane_register.yaml

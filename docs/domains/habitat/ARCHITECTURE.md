@@ -20,7 +20,6 @@ related:
   - docs/domains/flora/ARCHITECTURE.md
   - docs/standards/PROV.md
   - docs/standards/PMTILES.md
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, habitat, ecology, lane-architecture]
 notes:
   - CONTRACT_VERSION = "3.0.0"
@@ -574,7 +573,7 @@ flowchart LR
 - **ADRs:** [`ADR-habitat-schema-home.md`](../../adr/ADR-habitat-schema-home.md) *(maps to ADR-S-01)* · [`ADR-habitat-source-roles.md`](../../adr/ADR-habitat-source-roles.md) · [`ADR-habitat-modeled-vs-critical.md`](../../adr/ADR-habitat-modeled-vs-critical.md) · [`ADR-habitat-stewardship-zone-policy.md`](../../adr/ADR-habitat-stewardship-zone-policy.md) · [`ADR-habitat-fauna-thin-slice.md`](../../adr/ADR-habitat-fauna-thin-slice.md) *(all TODO link targets)*
 - **Runbooks:** `runbooks/habitat-ingest.md` · `runbooks/habitat-promotion.md` · `runbooks/habitat-rollback.md` · `runbooks/dom-hf-thin-slice.md` *(TODO link targets; flat-vs-`<domain>/`-subfolder naming is OPEN-DR-02)*
 - **Cross-domain neighbors:** [`../fauna/ARCHITECTURE.md`](../fauna/ARCHITECTURE.md) · [`../flora/ARCHITECTURE.md`](../flora/ARCHITECTURE.md) · [`../soil/ARCHITECTURE.md`](../soil/ARCHITECTURE.md) · [`../hydrology/ARCHITECTURE.md`](../hydrology/ARCHITECTURE.md) · [`../agriculture/ARCHITECTURE.md`](../agriculture/ARCHITECTURE.md) · [`../hazards/ARCHITECTURE.md`](../hazards/ARCHITECTURE.md)
-- **Doctrine roots:** [`../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`../../doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) · [`../../doctrine/truth-posture.md`](../../doctrine/truth-posture.md) *(filename NEEDS VERIFICATION)* · [`../../doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) · [`../../../ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) *(`CONTRACT_VERSION = "3.0.0"`)*
+- **Doctrine roots:** [`../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`../../doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) · [`../../doctrine/truth-posture.md`](../../doctrine/truth-posture.md) *(filename NEEDS VERIFICATION)* · [`../../doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) · `../../../ai-build-operating-contract.md` (held: DOC-DOC-002) *(`CONTRACT_VERSION = "3.0.0"`)*
 - **Standards:** [`../../standards/PROV.md`](../../standards/PROV.md) *(vs `PROVENANCE.md`, OPEN-DR-01)* · [`../../standards/PMTILES.md`](../../standards/PMTILES.md) · [`../../standards/OGC-API-TILES.md`](../../standards/OGC-API-TILES.md) · [`../../standards/ISO-19115.md`](../../standards/ISO-19115.md)
 
 </details>

@@ -10,7 +10,6 @@ updated: 2026-06-06
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
-  - ../../doctrine/ai-build-operating-contract.md
   - ../../doctrine/directory-rules.md
   - docs/domains/hydrology/README.md
   - docs/domains/hydrology/INDEX.md
@@ -531,7 +530,7 @@ ADR-linked rows reference the open-ADR backlog (Atlas §24.12, Directory Rules �
 
 > Many of these are PROPOSED paths; replace with actual repo paths once verified. Inbound links from these docs SHOULD point to this contract.
 
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract; `CONTRACT_VERSION = "3.0.0"`
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating contract; `CONTRACT_VERSION = "3.0.0"`
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — placement law (§12), compatibility roots, OPEN-DR-01/03
 - [`docs/domains/hydrology/INDEX.md`](./INDEX.md) — hydrology lane index (companion)
 - [`docs/domains/hydrology/README.md`](./README.md) — hydrology lane landing page (PROPOSED)

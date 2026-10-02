@@ -19,7 +19,6 @@ related:
   - docs/domains/flora/README.md
   - docs/doctrine/directory-rules.md
   - docs/standards/PROV.md
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain:habitat, cross-lane, relations, joins, ownership, sensitivity, governance]
 notes:
   - "FILENAME NOTE: requested as docs/domains/habitat/cross-domain.md (lowercase-hyphenated). Authored at docs/domains/habitat/CROSS_LANE_RELATIONS.md to match the lane's UPPERCASE_WITH_UNDERSCORES convention and the domain-suite CROSS_LANE_RELATIONS member name. Casing/naming is a low-stakes drift item — tracked as OQ-HAB-XL-01 — not a placement-root conflict."
@@ -337,7 +336,7 @@ This document is done enough to enter the repository when:
 - [`docs/domains/flora/README.md`](../flora/README.md) — Flora owns plant taxonomy & rare-plant records (the §6 relation).
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — §12 Domain Placement Law + multi-domain validator rule.
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance vocabulary for join EvidenceBundles.
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — §23 sensitive-domain matrix; ADR-S-14 cross-lane join policy; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — §23 sensitive-domain matrix; ADR-S-14 cross-lane join policy; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
 
 ---
 

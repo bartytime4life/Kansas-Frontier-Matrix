@@ -11,7 +11,6 @@ policy_label: restricted
 related:
   # NEEDS VERIFICATION — repo presence PROPOSED until checked against a mounted repo
   - ../../doctrine/directory-rules.md
-  - ../../doctrine/ai-build-operating-contract.md
   - docs/domains/people-dna-land/README.md
   - docs/domains/people-dna-land/ARCHITECTURE.md
   - docs/domains/people-dna-land/API_CONTRACTS.md

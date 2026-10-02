@@ -9,7 +9,6 @@ created: 2026-05-16
 updated: 2026-06-03
 policy_label: public
 related:
-  - ../../doctrine/ai-build-operating-contract.md
   - ../../doctrine/directory-rules.md
   - docs/domains/flora/README.md
   - docs/domains/flora/IDENTITY_MODEL.md
@@ -666,7 +665,7 @@ This document is done enough to enter the repository when:
 
 > Links are repo-relative. Targets marked **TODO** / **NEEDS VERIFICATION** are placeholders pending verification of the mounted layout.
 
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"` *(authored)*
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"` *(authored)*
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — placement authority (§6.4/§7.4 schema home, §11 sole-renderer, §12 Domain Placement Law, §13 anti-patterns) *(authored)*
 - `docs/architecture/maplibre-3d.md` (not present) — sole-renderer doctrine; renderer-decision ADR text *(authored; ADR PROPOSED)*
 - [`docs/domains/flora/README.md`](./README.md) — Flora domain README *(NEEDS VERIFICATION)*

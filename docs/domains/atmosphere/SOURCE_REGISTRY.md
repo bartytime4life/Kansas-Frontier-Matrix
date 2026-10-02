@@ -8,7 +8,7 @@ owners: TBD — atmosphere-domain-steward (placeholder)
 created: 2026-05-16
 updated: 2026-05-29
 policy_label: public
-related: [docs/domains/atmosphere/README.md, docs/domains/atmosphere/SOURCE_INDEX.md, docs/domains/atmosphere/SOURCE_FAMILIES.md, docs/domains/atmosphere/SOURCES.md, docs/standards/PROV.md, data/registry/sources/atmosphere/, schemas/contracts/v1/source/source-descriptor.json, policy/sensitivity/atmosphere/, docs/doctrine/ai-build-operating-contract.md]
+related: [docs/domains/atmosphere/README.md, docs/domains/atmosphere/SOURCE_INDEX.md, docs/domains/atmosphere/SOURCE_FAMILIES.md, docs/domains/atmosphere/SOURCES.md, docs/standards/PROV.md, data/registry/sources/atmosphere/, schemas/contracts/v1/source/source-descriptor.json, policy/sensitivity/atmosphere/]
 tags: [kfm, atmosphere, source-registry, source-admission, governance]
 notes: [CONTRACT_VERSION pinned 3.0.0 # PROPOSED placement per Directory Rules §3 Step 3 and §12 # doctrinal artifact only; canonical machine-readable registry lives under data/registry/sources/atmosphere/ # filename reconciliation with sibling source docs flagged OQ-AIR-REG-01]
 owning_root: docs/

@@ -413,7 +413,7 @@ This document is done enough to enter the repository when:
 
 > Placeholder links — verify paths against mounted repo before merging.
 
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED present in project.)*
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED present in project.)*
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — lifecycle (§9.1), release split (§9.2), placement law (§12). *(CONFIRMED present in project.)*
 - [`docs/domains/atmosphere/ARCHITECTURE.md`](./ARCHITECTURE.md) — domain architecture. *(PROPOSED.)*
 - [`docs/domains/atmosphere/CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) — lane registry; segment ADR posture. *(PROPOSED.)*

@@ -17,7 +17,6 @@ related:
   - docs/doctrine/authority-ladder.md
   - docs/architecture/governed-api/README.md
   - docs/architecture/contract-schema-policy-split.md
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, geology, natural-resources, architecture]
 notes:
   - Doctrine-adjacent; CONTRACT_VERSION pinned to 3.0.0 per ai-build-operating-contract.md.
@@ -568,7 +567,7 @@ This document is done enough to enter the repository when:
 - [`docs/domains/geology/API_CONTRACTS.md`](./API_CONTRACTS.md) — Geology governed API contracts (companion)
 - [`docs/domains/geology/surficial.md`](./surficial.md) — Surficial sublane doctrine (companion; PROPOSED)
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — Authority for placement, lane pattern, schema-home rule (§6.4), and anti-patterns (§13)
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — Canonical operating contract (`CONTRACT_VERSION = "3.0.0"`)
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — Canonical operating contract (`CONTRACT_VERSION = "3.0.0"`)
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED invariant
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Governed-API-only public path
 - [`docs/doctrine/authority-ladder.md`](../../doctrine/authority-ladder.md) — Truth-source ranking

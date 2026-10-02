@@ -8,7 +8,7 @@ owners: PLACEHOLDER-roads-rail-trade-domain-steward, PLACEHOLDER-docs-steward
 created: 2026-05-19
 updated: 2026-06-07
 policy_label: public
-related: [../../doctrine/ai-build-operating-contract.md, ../../doctrine/directory-rules.md, docs/registers/VERIFICATION_BACKLOG.md, docs/registers/DRIFT_REGISTER.md, docs/adr/, docs/domains/roads-rail-trade/README.md, docs/domains/roads-rail-trade/SOURCES.md, docs/domains/roads-rail-trade/SOURCE_REGISTRY.md, docs/domains/roads-rail-trade/UBIQUITOUS_LANGUAGE.md]
+related: [../../doctrine/directory-rules.md, docs/registers/VERIFICATION_BACKLOG.md, docs/registers/DRIFT_REGISTER.md, docs/adr/, docs/domains/roads-rail-trade/README.md, docs/domains/roads-rail-trade/SOURCES.md, docs/domains/roads-rail-trade/SOURCE_REGISTRY.md, docs/domains/roads-rail-trade/UBIQUITOUS_LANGUAGE.md]
 tags: [kfm, register, roads-rail-trade, verification, governance]
 notes: [Domain-scoped sub-register; CONTRACT_VERSION = "3.0.0" pinned. Roll-ups, cross-domain triage, and ADR-class questions flow to the repo-wide register and the Master Open-ADR Backlog. CONFLICTED: source-role enum — §D informal labels (authority/observation/context/model) vs canonical §24.1/ADR-S-04 seven roles; reconciled in §1 and §8. All implementation paths, route names, and schema homes remain PROPOSED until verified against mounted-repo evidence.]
 owning_root: docs/
@@ -368,7 +368,7 @@ This register is healthy enough to enter the repository when:
 - **Doctrinal source** — Atlas v1.0 Ch. 13 *(Roads, Rail, and Trade Routes)*; local copy `Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas.md`.
 - **Open-ADR backlog (roll-up)** — Atlas v1.1 Ch. 24.12.
 - **Placement authority** — [`directory-rules.md`](../../doctrine/directory-rules.md), §12 (Domain Placement Law), §18 (Open questions).
-- **Operating law** — [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md); `CONTRACT_VERSION = "3.0.0"`.
+- **Operating law** — `ai-build-operating-contract.md` (held: DOC-DOC-002); `CONTRACT_VERSION = "3.0.0"`.
 - **Lane siblings** — [`SOURCES.md`](./SOURCES.md) · [`SOURCE_REGISTRY.md`](./SOURCE_REGISTRY.md) · [`UBIQUITOUS_LANGUAGE.md`](./UBIQUITOUS_LANGUAGE.md).
 - **Repo-wide register (roll-up target)** — `docs/registers/VERIFICATION_BACKLOG.md` *(PROPOSED)*.
 - **Drift register** — `docs/registers/DRIFT_REGISTER.md` *(PROPOSED)*.

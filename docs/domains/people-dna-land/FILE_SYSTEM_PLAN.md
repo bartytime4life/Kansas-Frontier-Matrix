@@ -10,7 +10,6 @@ updated: 2026-06-07
 policy_label: public
 related:
   - ../../doctrine/directory-rules.md
-  - ../../doctrine/ai-build-operating-contract.md
   - ./README.md
   - ./DATA_LIFECYCLE.md
   - ./DEFINITION_OF_DONE.md
@@ -567,7 +566,7 @@ For any PR that proposes, creates, moves, or renames a People/DNA/Land file:
 <!-- Placeholders preserved where target docs are PROPOSED. -->
 
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules v1.3; placement authority and lifecycle invariant. **Authoritative.**
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract v3.0 (`CONTRACT_VERSION = "3.0.0"`).
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating contract v3.0 (`CONTRACT_VERSION = "3.0.0"`).
 - [`./README.md`](./README.md) — People/DNA/Land domain landing page. **PROPOSED / TODO.**
 - [`./DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — lifecycle, tiers, receipts (sibling).
 - [`./DEFINITION_OF_DONE.md`](./DEFINITION_OF_DONE.md) — promotion-readiness checklist (sibling).

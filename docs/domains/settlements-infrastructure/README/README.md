@@ -8,7 +8,7 @@ owners: PLACEHOLDER-settlements-infrastructure-domain-steward, PLACEHOLDER-docs-
 created: 2026-06-07
 updated: 2026-06-07
 policy_label: public
-related: [docs/doctrine/ai-build-operating-contract.md, docs/doctrine/directory-rules.md, schemas/contracts/v1/domains/settlements-infrastructure/, policy/sensitivity/infrastructure/, data/published/layers/settlements-infrastructure/]
+related: [docs/doctrine/directory-rules.md, schemas/contracts/v1/domains/settlements-infrastructure/, policy/sensitivity/infrastructure/, data/published/layers/settlements-infrastructure/]
 tags: [kfm, settlements-infrastructure, domain, readme, lane]
 notes: [Doctrine-adjacent; CONTRACT_VERSION = "3.0.0" pinned. Lane landing page for Settlements/Infrastructure. Object families, source families, pipeline, sensitivity, and cross-lane relations are CONFIRMED from Atlas ch.14; field realization and all repo paths are PROPOSED until verified against a mounted repo. Critical-asset detail defaults to T4.]
 owning_root: docs/
@@ -291,7 +291,7 @@ This lane README is done enough to enter the repository when:
 
 - `docs/domains/settlements-infrastructure/PATHS.md` (not present) — lane path crosswalk
 - [`directory-rules.md`](../../../doctrine/directory-rules.md) — placement authority; §12 Domain Placement Law
-- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"`
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating law; `CONTRACT_VERSION = "3.0.0"`
 - Atlas ch.14 (Settlements & Infrastructure) and §24.13 (root crosswalk) — dossier
 - `schemas/contracts/v1/domains/settlements-infrastructure/` — object shape *(PROPOSED)*
 - `policy/sensitivity/infrastructure/` — critical-asset deny lane *(PROPOSED)*

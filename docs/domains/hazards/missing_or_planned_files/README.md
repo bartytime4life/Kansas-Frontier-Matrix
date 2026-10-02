@@ -20,7 +20,6 @@ related:
   - policy/domains/hazards/
   - policy/release/hazards/
   - data/registry/sources/hazards/
-  - ../../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain:hazards, missing-files, planned-files, inventory, governance, needs-verification]
 notes:
   - "FOLDER + CASING: requested as docs/domains/hazards/missing_or_planned_files/README.md — folder form (permitted, §6.1.a) with a lowercase_with_underscores folder name. The domain-suite member name is MISSING_OR_PLANNED_FILES; Directory Rules §6.1.a recommends UPPERCASE for doc artifacts. The lowercase folder + file-vs-folder choice is a low-stakes casing/structure drift item, tracked as OQ-HAZ-MPF-01 (same class as OPEN-DR-04). Honored as requested; flagged not split."
@@ -355,7 +354,7 @@ This inventory is done enough to enter the repository when:
 - `contracts/domains/hazards/` — planned contract home *(PROPOSED)*.
 - `policy/domains/hazards/`, `policy/release/hazards/` — planned policy homes *(PROPOSED; §24.13)*.
 - `data/registry/sources/hazards/` — planned registry home *(PROPOSED)*.
-- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — §20.5 emergency-alert boundary; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — §20.5 emergency-alert boundary; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
 
 ---
 

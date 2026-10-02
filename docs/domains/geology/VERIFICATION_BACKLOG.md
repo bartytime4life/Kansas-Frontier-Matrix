@@ -15,7 +15,6 @@ related:
   - docs/domains/geology/README.md
   - docs/domains/geology/OPEN_QUESTIONS.md
   - docs/adr/
-  - ../../doctrine/ai-build-operating-contract.md
   - ../../doctrine/directory-rules.md
 tags: [kfm, domain, geology, verification, governance, backlog, register]
 notes:
@@ -488,7 +487,7 @@ they SHOULD be elevated to the global register or to ADRs as they harden.
 - [`docs/domains/geology/README.md`](./README.md) — geology domain landing page. *(TODO if not yet present.)*
 - [`docs/domains/geology/OPEN_QUESTIONS.md`](./OPEN_QUESTIONS.md) — geology open-questions register (`OQ-GEOL-NN`).
 - [`docs/adr/`](../../adr/) — Architecture Decision Records, including any ADRs raised from [Section E](#section-e--open-adr-class-questions).
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law, §23 sensitive-domain matrix (`CONTRACT_VERSION = "3.0.0"`).
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating law, §23 sensitive-domain matrix (`CONTRACT_VERSION = "3.0.0"`).
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — placement law (§12) and open-questions guidance (§18).
 - Atlas §10 (Geology and Natural Resources) and §24.12 (Master Open-ADR Backlog) — doctrinal source for this register.
 - Encyclopedia §7.8 (Geology and Natural Resources) — feature backlog and risk register.

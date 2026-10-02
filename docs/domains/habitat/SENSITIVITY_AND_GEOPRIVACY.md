@@ -19,7 +19,6 @@ related:
   - docs/doctrine/sensitivity.md
   - docs/doctrine/policy-aware.md
   - docs/standards/PROV.md
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain:habitat, sensitivity, geoprivacy, deny-by-default, redaction, generalization, rare-species, governance]
 notes:
   - "Sensitive-domain document. Disposition is routed through the ai-build-operating-contract.md §23.2 sensitive-domain decision matrix; this doc does NOT re-derive disposition."
@@ -404,7 +403,7 @@ This document is done enough to enter the repository when:
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance vocabulary for transform receipts.
 - `docs/standards/DARWIN-CORE.md` — Darwin Core geoprivacy terms the `geoprivacy_status` enum binds to *(PROPOSED — NEEDS VERIFICATION)*.
 - `policy/sensitivity/fauna/` — Fauna geoprivacy rules Habitat inherits through on join *(CONFIRMED home for Fauna; PROPOSED Habitat binding)*.
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — §23 sensitive-domain matrix; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — §23 sensitive-domain matrix; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
 
 ---
 

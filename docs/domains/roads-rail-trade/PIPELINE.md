@@ -8,7 +8,7 @@ owners: TODO-roads-rail-domain-steward
 created: 2026-06-07
 updated: 2026-06-07
 policy_label: public
-related: [docs/domains/roads-rail-trade/OBJECT_FAMILIES.md, docs/domains/roads-rail-trade/README.md, pipeline_specs/roads-rail-trade/, pipelines/domains/, release/candidates/roads-rail-trade/, ../../doctrine/ai-build-operating-contract.md]
+related: [docs/domains/roads-rail-trade/OBJECT_FAMILIES.md, docs/domains/roads-rail-trade/README.md, pipeline_specs/roads-rail-trade/, pipelines/domains/, release/candidates/roads-rail-trade/]
 tags: [kfm]
 notes: [CONTRACT_VERSION = "3.0.0" pinned; lifecycle and gate doctrine grounded in Atlas Ch.13 §H, Atlas Ch.24.6, Build Manual §6.1/§6.2 Gates A-G, and repo guiding document data/ lifecycle paths; stage Status values are PROPOSED lane application of CONFIRMED doctrine; route names and schema bodies NEEDS VERIFICATION; lane slug roads-rail-trade confirmed for docs/pipelines/pipeline_specs, roads-rail used for schemas/contracts per Atlas crosswalk - ADR candidate]
 owning_root: docs/
@@ -318,6 +318,6 @@ This document is done enough to enter the repository when:
 - [`pipeline_specs/roads-rail-trade/`](../../../pipeline_specs/roads-rail-trade/) — declarative pipeline specs *(PROPOSED presence)*
 - `schemas/contracts/v1/domains/roads-rail/` (not present) — schema home *(PROPOSED)*
 - `policy/sensitivity/roads-rail/` (not present) — sensitivity policy *(PROPOSED)*
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — `CONTRACT_VERSION = "3.0.0"`
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — `CONTRACT_VERSION = "3.0.0"`
 
 *Last updated: 2026-06-07 · [↑ Back to top](#top)*

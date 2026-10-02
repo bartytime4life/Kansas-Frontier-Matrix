@@ -10,7 +10,6 @@ updated: 2026-07-30
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
-  - ../../doctrine/ai-build-operating-contract.md
   - ../../doctrine/directory-rules.md
   - docs/domains/hydrology/README.md
   - docs/domains/hydrology/INDEX.md
@@ -408,7 +407,7 @@ Published hydrology claims are **amendable** but never quietly. The corrections 
 
 ## 13 · Related docs
 
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract; `CONTRACT_VERSION = "3.0.0"`, §34 GENERATED_RECEIPT.
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating contract; `CONTRACT_VERSION = "3.0.0"`, §34 GENERATED_RECEIPT.
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — lifecycle law, Domain Placement Law §12, README contract §15.
 - [`docs/domains/hydrology/README.md`](./README.md) — lane landing page.
 - [`docs/domains/hydrology/INDEX.md`](./INDEX.md) — lane navigation hub.

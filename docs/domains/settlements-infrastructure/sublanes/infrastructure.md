@@ -8,7 +8,7 @@ owners: PLACEHOLDER-settlements-infrastructure-domain-steward, PLACEHOLDER-infra
 created: 2026-05-19
 updated: 2026-06-07
 policy_label: mixed (T0 manifest / T1 generalized / T2 reviewer / T4 critical-asset deny)
-related: [docs/doctrine/ai-build-operating-contract.md, docs/doctrine/directory-rules.md, docs/domains/settlements-infrastructure/README.md, contracts/domains/settlements-infrastructure/, schemas/contracts/v1/domains/settlements-infrastructure/, policy/sensitivity/infrastructure/]
+related: [docs/doctrine/directory-rules.md, docs/domains/settlements-infrastructure/README.md, contracts/domains/settlements-infrastructure/, schemas/contracts/v1/domains/settlements-infrastructure/, policy/sensitivity/infrastructure/]
 notes: [Doctrine-adjacent; CONTRACT_VERSION = "3.0.0" pinned. v2 re-homes the prior "Infrastructure sublane" content as an infrastructure-side OBJECT-FAMILY dossier — "sublane" is not a KFM structural unit; domains subdivide by object family (Directory Rules §12; Atlas §24.14). Companion to OBJECT_FAMILIES.md (infrastructure-side half). Critical-asset detail and condition/vulnerability default to T4. Sibling "sublane" files cited in v1 were NOT verified and are downgraded.]
 owning_root: docs/
 responsibility: "Documentation for Infrastructure — Settlements / Infrastructure (object-family dossier); not evidence, policy, release, or publication authority."
@@ -440,7 +440,7 @@ This dossier is done enough to enter the repository when:
 - **Object-family grouping** — `docs/domains/settlements-infrastructure/OBJECT_FAMILIES.md` (not present) (this is the infrastructure-side detail companion)
 - **Lane path crosswalk** — `docs/domains/settlements-infrastructure/PATHS.md` (not present)
 - **Lane glossary** — `docs/domains/settlements-infrastructure/UBIQUITOUS_LANGUAGE.md` *(TODO)*
-- **Doctrine** — [`directory-rules.md`](../../../doctrine/directory-rules.md) (§12 Domain Placement Law; §2.4 ADR triggers); [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) (`CONTRACT_VERSION = "3.0.0"`)
+- **Doctrine** — [`directory-rules.md`](../../../doctrine/directory-rules.md) (§12 Domain Placement Law; §2.4 ADR triggers); `ai-build-operating-contract.md` (held: DOC-DOC-002) (`CONTRACT_VERSION = "3.0.0"`)
 - **Dossier source** — Atlas ch.14 (Settlements & Infrastructure); §24.5 (sensitivity tiers); §24.1 (source-role); §24.14 (object-family × domain matrix)
 - **Standards** — `docs/standards/PROV.md` *(naming variance vs `PROVENANCE.md` — NEEDS VERIFICATION)*
 - **Registers** — `docs/registers/DRIFT_REGISTER.md`, `docs/registers/VERIFICATION_BACKLOG.md`

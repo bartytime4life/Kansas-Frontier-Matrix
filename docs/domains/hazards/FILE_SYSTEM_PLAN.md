@@ -10,7 +10,6 @@ updated: 2026-06-05
 policy_label: public
 contract_version: "3.0.0"
 related:
-  - ../../doctrine/ai-build-operating-contract.md
   - ../../doctrine/directory-rules.md
   - docs/domains/hazards/README.md
   - docs/domains/hazards/DATA_LIFECYCLE.md
@@ -668,7 +667,7 @@ This document is done enough to enter the repository when:
 
 ## 17. Related docs
 
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"`. **CONFIRMED authority**.
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating law; `CONTRACT_VERSION = "3.0.0"`. **CONFIRMED authority**.
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — root Directory Rules; authoritative for placement. **CONFIRMED**.
 - [`docs/domains/hazards/README.md`](./README.md) — Hazards lane landing page (PROPOSED).
 - [`docs/domains/hazards/DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — Hazards lifecycle companion (sibling doc).

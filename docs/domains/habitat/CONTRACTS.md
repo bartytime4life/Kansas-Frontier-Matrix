@@ -16,7 +16,6 @@ related:
   - docs/architecture/contract-schema-policy-split.md
   - docs/doctrine/directory-rules.md
   - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
-  - docs/doctrine/ai-build-operating-contract.md
   - contracts/domains/habitat/
   - schemas/contracts/v1/domains/habitat/
   - policy/domains/habitat/

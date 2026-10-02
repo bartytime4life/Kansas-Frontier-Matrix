@@ -11,7 +11,6 @@ policy_label: public
 contract_version: "3.0.0"
 related:
   - docs/doctrine/directory-rules.md
-  - ../../doctrine/ai-build-operating-contract.md
   - docs/domains/fauna/README.md
   - docs/domains/fauna/IDENTITY_MODEL.md
   - docs/domains/fauna/MAP_UI_CONTRACTS.md
@@ -333,7 +332,7 @@ This register is done enough to enter the repository when:
 - [`docs/domains/fauna/OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) — family roster (source of §4 items). *(PROPOSED — companion; duplication with `OBJECTS.md`, OQ-FAUNA-04)*
 - [`docs/domains/fauna/MISSING_OR_PLANNED_FILES.md`](./MISSING_OR_PLANNED_FILES.md) — planned-files register (source of §5 items). *(PROPOSED — companion)*
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law. *(CONFIRMED)*
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED)*
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED)*
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — where CONFLICTED items are logged. *(NEEDS VERIFICATION present)*
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — repo-wide backlog. *(NEEDS VERIFICATION present)*
 - [`control_plane/verification_backlog.yaml`](../../../control_plane/verification_backlog.yaml) — machine-readable mirror. *(NEEDS VERIFICATION present)*

@@ -20,7 +20,6 @@ related:
   - schemas/contracts/v1/ui/
   - schemas/contracts/v1/ai/
   - schemas/contracts/v1/runtime/decision_envelope.schema.json
-  - docs/doctrine/ai-build-operating-contract.md
 tags: [kfm, domain:roads-rail-trade, ui, maplibre, contracts, governance]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned; doctrine-adjacent map-UI contract profile.

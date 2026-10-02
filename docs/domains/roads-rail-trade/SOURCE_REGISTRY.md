@@ -8,7 +8,7 @@ owners: PLACEHOLDER-roads-rail-trade-domain-steward, PLACEHOLDER-source-steward
 created: 2026-05-19
 updated: 2026-06-07
 policy_label: public
-related: [../../doctrine/ai-build-operating-contract.md, ../../doctrine/directory-rules.md, docs/domains/roads-rail-trade/SOURCES.md, docs/domains/roads-rail-trade/SOURCE_FAMILIES.md, docs/domains/roads-rail-trade/SOURCE_INDEX.md, schemas/contracts/v1/source/source-descriptor.json, data/registry/sources/roads-rail-trade/, policy/domains/roads-rail-trade/]
+related: [../../doctrine/directory-rules.md, docs/domains/roads-rail-trade/SOURCES.md, docs/domains/roads-rail-trade/SOURCE_FAMILIES.md, docs/domains/roads-rail-trade/SOURCE_INDEX.md, schemas/contracts/v1/source/source-descriptor.json, data/registry/sources/roads-rail-trade/, policy/domains/roads-rail-trade/]
 tags: [kfm, roads-rail-trade, source-registry, governance, doctrine]
 notes: [Doctrine-adjacent; CONTRACT_VERSION = "3.0.0" pinned. Governs the RULES the machine-readable registry must obey; the records live under data/registry/sources/roads-rail-trade/. SOURCES.md is the authoritative lane Source Ledger; this file is the admission-doctrine surface. All implementation-layer paths are PROPOSED until verified against a mounted repo. Directory Rules version is NEEDS VERIFICATION (corpus evidences v1.2/v1.3).]
 owning_root: docs/
@@ -468,7 +468,7 @@ This document is done enough to enter the repository when:
 - [`docs/domains/roads-rail-trade/SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md) — deep per-family reference
 - [`docs/domains/roads-rail-trade/SOURCE_INDEX.md`](./SOURCE_INDEX.md) — navigation hub
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — placement law; §12 Domain Placement Law; §13.1/§24.9.1 parallel-authority anti-pattern *(repo-root location CONFIRMED in project files; `docs/doctrine/` variant PROPOSED)*
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"`
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating law; `CONTRACT_VERSION = "3.0.0"`
 - `schemas/contracts/v1/source/source-descriptor.json` — canonical descriptor schema home (ADR-0001); NEEDS VERIFICATION
 - `docs/standards/PROV.md` — provenance standard *(naming variance `PROV.md` vs `PROVENANCE.md`; NEEDS VERIFICATION)*
 - `docs/runbooks/roads-rail-trade/SOURCE_REFRESH_RUNBOOK.md` — operational refresh procedure *(PROPOSED; runbook-subfolder convention pending verification)*

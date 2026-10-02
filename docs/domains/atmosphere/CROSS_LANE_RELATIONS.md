@@ -8,7 +8,7 @@ owners: <atmosphere-domain-steward> (PLACEHOLDER — assign before review)
 created: 2026-05-28
 updated: 2026-05-28
 policy_label: public
-related: [../../doctrine/ai-build-operating-contract.md, ../../doctrine/directory-rules.md, docs/domains/atmosphere/README.md]
+related: [../../doctrine/directory-rules.md, docs/domains/atmosphere/README.md]
 tags: [kfm, atmosphere, air, cross-lane, governance]
 notes: [CONTRACT_VERSION = "3.0.0"; repo presence of every path below is PROPOSED until a mounted repo is inspected; schema/contract segment is "air/" while docs segment is "atmosphere/" — see Open Questions OQ-AIR-XL-02]
 owning_root: docs/
@@ -107,7 +107,7 @@ docs/
 > [OQ-AIR-XL-02](#open-questions-register) before promotion. `CONFLICTED` until resolved.
 
 **Upstream / downstream**
-- **Upstream doctrine:** [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) v3.0, [`directory-rules.md`](../../doctrine/directory-rules.md).
+- **Upstream doctrine:** `ai-build-operating-contract.md` (held: DOC-DOC-002) v3.0, [`directory-rules.md`](../../doctrine/directory-rules.md).
 - **Sibling source:** Atmosphere / Air chapter *F. Cross-lane relations* in the Domains Atlas (`LINEAGE`).
 - **Downstream consumer:** the master Cross-Lane Relation Atlas *(PROPOSED `docs/atlases/`)*.
 
@@ -378,7 +378,7 @@ This document is done enough to enter the repository when:
 
 ## Related docs
 
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract v3.0 *(verify relative path)*
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating contract v3.0 *(verify relative path)*
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — placement authority *(verify relative path)*
 - `docs/domains/atmosphere/README.md` — domain landing page *(TODO — confirm exists)*
 - `docs/atlases/cross-lane-relation-atlas.md` — master owner-by-owner matrix *(TODO — confirm path)*

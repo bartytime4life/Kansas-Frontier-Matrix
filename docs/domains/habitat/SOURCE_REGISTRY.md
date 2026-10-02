@@ -20,7 +20,6 @@ related:
   - schemas/contracts/v1/source/source-descriptor.json
   - data/registry/sources/habitat/
   - policy/domains/habitat/
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, habitat, source-registry, governance, admission]
 notes:
   - Path placement follows Directory Rules §12 domain lane pattern.
@@ -462,7 +461,7 @@ This registry is done enough to enter the repository when:
 - `schemas/contracts/v1/source/source-descriptor.json` — Descriptor schema *(PROPOSED home; NEEDS VERIFICATION)*
 - `policy/domains/habitat/` — Habitat-specific admissibility and sensitivity policy *(PROPOSED)*
 - `data/registry/sources/habitat/` — Machine-readable habitat source registry *(PROPOSED)*
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract (`CONTRACT_VERSION = "3.0.0"`)
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — canonical operating contract (`CONTRACT_VERSION = "3.0.0"`)
 
 [⬆ back to top](#contents)
 

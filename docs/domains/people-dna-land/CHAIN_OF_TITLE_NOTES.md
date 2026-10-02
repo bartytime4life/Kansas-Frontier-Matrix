@@ -14,7 +14,6 @@ related:
   - docs/domains/people-dna-land/API_CONTRACTS.md
   - docs/domains/people-dna-land/CANONICAL_PATHS.md
   - ../../doctrine/directory-rules.md
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, people-dna-land, land, chain-of-title, ownership-interval, title, hypothesis]
 notes:
   # CONTRACT_VERSION = "3.0.0"
@@ -347,7 +346,7 @@ OwnershipInterval #3   valid: 1904-02-?? .. 1920-..   source: deed recorded 1904
 - [`./CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) — path register and conflict log
 - `./sublanes/land/README.md` — Land sublane *(path pending the `sublanes/` ADR, ADR-NNNN)*
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — placement law (§3, §12)
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - Atlas Ch. 16 (`[DOM-PEOPLE]`) §A/§B/§C/§E/§I/§K/§L · Ch. 17 (Frontier Matrix, owns Land Office / Public Land records) · §24.1 (source-role anti-collapse) · §24.5.3 (tier transitions)
 
 -----

@@ -16,7 +16,6 @@ related:
   - docs/standards/PMTILES.md
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
   - ../../doctrine/directory-rules.md
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, fauna, directory-rules, placement, sensitivity, geoprivacy]
 notes:
   - CONTRACT_VERSION = "3.0.0".
@@ -564,7 +563,7 @@ For any new fauna-bearing file, walk Directory Rules §4 Steps 1–5 in order:
 ## 16. Related docs
 
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — Authoritative placement protocol (§§3, 4, 7, 12, 13; README contract §15 in this edition).
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — `CONTRACT_VERSION = "3.0.0"`; T0–T4, finite outcomes, `RuntimeResponseEnvelope`.
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — `CONTRACT_VERSION = "3.0.0"`; T0–T4, finite outcomes, `RuntimeResponseEnvelope`.
 - [`docs/domains/fauna/README.md`](./README.md) — *(PROPOSED)* lane README and entry point.
 - `docs/domains/fauna/FAUNA_DATA_LIFECYCLE.md` (not present) — *(PROPOSED)* lifecycle companion.
 - [`docs/domains/fauna/EXPANSION_BACKLOG.md`](./EXPANSION_BACKLOG.md) — *(PROPOSED)* backlog register.

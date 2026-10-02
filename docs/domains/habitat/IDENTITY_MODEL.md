@@ -18,7 +18,6 @@ related:
   - docs/standards/PROVENANCE.md
   - docs/architecture/contract-schema-policy-split.md
   - schemas/contracts/v1/domains/habitat/
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, habitat, identity, evidence, ddd, spec_hash]
 notes:
   - 'CONTRACT_VERSION = "3.0.0"'
@@ -454,7 +453,7 @@ Per `directory-rules.md`, a rename that changes what an object **means** is a co
 - [`docs/domains/fauna/IDENTITY_MODEL.md`](../fauna/IDENTITY_MODEL.md) — Fauna identity (counterparty for Habitat × Fauna thin slice). *(TODO if absent.)*
 - [`docs/standards/PROVENANCE.md`](../../standards/PROVENANCE.md) — W3C PROV-O profile (`PROV.md` vs `PROVENANCE.md` is OPEN-DR-01).
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — Contract/schema/policy split.
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law; §23.2 sensitive-domain matrix (`CONTRACT_VERSION = "3.0.0"`).
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating law; §23.2 sensitive-domain matrix (`CONTRACT_VERSION = "3.0.0"`).
 - `schemas/contracts/v1/domains/habitat/` — Habitat schemas (PROPOSED path; slug **CONFLICTED**, §2).
 - `control_plane/object_family_register.yaml` — Cross-domain object-family register.
 

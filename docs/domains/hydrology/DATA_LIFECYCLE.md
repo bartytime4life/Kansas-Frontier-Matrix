@@ -10,7 +10,6 @@ updated: 2026-06-06
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
-  - ../../doctrine/ai-build-operating-contract.md
   - ../../doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
@@ -473,7 +472,7 @@ This document is done enough to enter the repository when:
 
 ## 16 · Related docs
 
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract; `CONTRACT_VERSION = "3.0.0"`.
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — canonical operating contract; `CONTRACT_VERSION = "3.0.0"`.
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — placement law, lifecycle invariant, anti-patterns.
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED invariant (canonical).
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — public surface boundary.

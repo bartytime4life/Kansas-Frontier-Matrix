@@ -10,7 +10,6 @@ updated: 2026-06-05
 policy_label: public
 contract_version: "3.0.0"
 related:
-  - ../../doctrine/ai-build-operating-contract.md
   - ../../doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
@@ -702,7 +701,7 @@ This document is done enough to enter the repository when:
 > Sibling-doc paths are PROPOSED unless verified; placement under `docs/domains/hazards/` is CONFIRMED
 > by Directory Rules §12.
 
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"` *(CONFIRMED authority)*
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating law; `CONTRACT_VERSION = "3.0.0"` *(CONFIRMED authority)*
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — placement, Domain Placement Law §12, drift §13 *(CONFIRMED authority)*
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — universal RAW → PUBLISHED invariant *(PROPOSED path)*
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — public surfaces, governed APIs, no-bypass rule *(PROPOSED path)*

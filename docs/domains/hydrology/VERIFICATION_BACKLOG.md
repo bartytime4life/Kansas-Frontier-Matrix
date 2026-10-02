@@ -10,7 +10,6 @@ created: 2026-05-18
 updated: 2026-06-07
 policy_label: public
 related:
-  - ../../doctrine/ai-build-operating-contract.md
   - ../../doctrine/directory-rules.md
   - docs/domains/hydrology/README.md
   - docs/domains/hydrology/SOURCE_FAMILIES.md

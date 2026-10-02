@@ -17,7 +17,6 @@ related:
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
-  - docs/doctrine/ai-build-operating-contract.md
 tags: [kfm, habitat, domain, tracker, planning, directory-rules]
 notes:
   - All path claims are PROPOSED until verified against mounted-repo evidence.

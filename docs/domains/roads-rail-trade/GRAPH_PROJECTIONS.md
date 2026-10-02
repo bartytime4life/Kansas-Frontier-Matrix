@@ -15,7 +15,6 @@ related:
   - docs/domains/roads-rail-trade/FILE_SYSTEM_PLAN.md
   - docs/domains/roads-rail-trade/EXPANSION_BACKLOG.md
   - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, roads-rail-trade, transport, graph, triplets, projection, derived, governance]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned; doctrine-adjacent standard doc.
@@ -381,7 +380,7 @@ Placeholders below are PROPOSED targets. Mounted-repo presence is NEEDS VERIFICA
 - [`docs/domains/roads-rail-trade/EXPANSION_BACKLOG.md`](./EXPANSION_BACKLOG.md) — backlog (graph projection + rollback items).
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law; `data/triplets/` canonical name.
 - [`docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf`](../../atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf) — Ch. 13 (Roads/Rail) + Ch. 24.4.11 (Frontier Matrix access cells).
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract; `CONTRACT_VERSION = "3.0.0"`.
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating contract; `CONTRACT_VERSION = "3.0.0"`.
 
 Atlas / corpus references (not repo paths):
 

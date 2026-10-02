@@ -339,7 +339,7 @@ This document is done enough to enter the repository when:
 [⬆ Back to top](#mini-toc)
 ---
 ## 14. Related docs
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED present in project; PROPOSED relative link.)*
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED present in project; PROPOSED relative link.)*
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — Canonical placement and lifecycle doctrine (v1.3); **authoritative** for any path question this document leaves OPEN. *(CONFIRMED present in project; PROPOSED relative link.)*
 - [`docs/domains/atmosphere/README.md`](./README.md) — Domain landing page (TODO; placeholder).
 - [`docs/architecture/`](../../architecture/) — Cross-domain doctrine (placement target for any Atmosphere doctrine spanning multiple domains).
