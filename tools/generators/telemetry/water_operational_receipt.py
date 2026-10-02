@@ -33,17 +33,24 @@ def _station_attempts(manifest: dict, station_id: str) -> list[dict]:
             if isinstance(attempts, list) else [])
 
 
-def _last_success(scoped: list[dict]) -> str | None:
-    return max(
-        (item["observed_at"] for item in scoped
-         if item.get("outcome") == "SUCCESS" and isinstance(item.get("observed_at"), str)),
-        default=None,
-    )
+def _last_success(scoped: list[dict], probed_at: str) -> str | None:
+    limit = utc_time(probed_at)
+    observed = []
+    for item in scoped:
+        if item.get("outcome") != "SUCCESS" or not isinstance(item.get("observed_at"), str):
+            continue
+        try:
+            when = utc_time(item["observed_at"])
+        except ValueError:
+            continue
+        if when <= limit:
+            observed.append(when)
+    return timestamp(max(observed)) if observed else None
 
 
 def _failed_probe(manifest: dict, station_id: str) -> tuple[str, str, list[str], str | None]:
     scoped = _station_attempts(manifest, station_id)
-    last_success = _last_success(scoped)
+    last_success = _last_success(scoped, manifest["captured_at"])
     if manifest.get("complete") is True:
         reasons = ["RETRIEVAL_FAILED", "SCHEMA_OR_PARSE_FAILURE"]
         if last_success is None:
@@ -77,7 +84,7 @@ def source_health(manifest: dict, candidate: dict | None, *, station_id: str) ->
     if candidate is None:
         result, outcome, reasons, last_success = _failed_probe(manifest, station_id)
     else:
-        last_success = _last_success(_station_attempts(manifest, station_id))
+        last_success = _last_success(_station_attempts(manifest, station_id), probed)
         if latest is None:
             result, outcome, reasons = "EMPTY", "DEGRADED", ["EMPTY_NOT_CLEAR"]
         elif utc_time(probed) > deadline:

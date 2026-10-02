@@ -298,6 +298,11 @@ Incomplete multi-station captures preserve each station's recorded retrieval
 result. A station whose pages succeeded but whose shared candidate did not close
 is `SUCCESS` / `UNKNOWN` with `CAPTURE_INCOMPLETE`; an unattempted station is
 `NOT_PROBED` / `UNKNOWN`. Neither is a healthy or released observation.
+A complete local candidate also requires each captured page to have a matching
+successful retrieval attempt for its station and collection, with the attempt
+no later than that page's retrieval time. A rehashed manifest with missing,
+extra, mis-scoped, or future success attempts is quarantined. This checks
+internal capture consistency; it does not authenticate the provider.
 
 Ingest/validate/catalog worker entry points delegate to bounded tools. The
 hourly `water_job.py` can acquire and prepare candidates only. Tests assert that

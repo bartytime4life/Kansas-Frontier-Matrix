@@ -405,6 +405,20 @@ includes the telemetry producer bytes so this change affects its code
 identity as well. It does not authenticate live source health, admit the
 source, or approve release.
 
+### Water capture attempt-page consistency — 2026-10-02
+
+`MOD-28` / P1 / **CONFIRMED on `main@774b0d24d98a4eea8f4cf9adc25efe710ee080b5`**:
+`normalize_capture` accepted a rehashed, complete-looking manifest with
+valid page bytes but no recorded retrieval attempts. It produced a `COMPLETE`
+candidate and the local health producer labeled both stations `HEALTHY`
+despite `last_success_at: null`. The hydrology normalizer now reconciles
+bounded successful attempts to pages by station, collection, count, status,
+and time before candidate creation. Negative tests cover absent, mis-scoped,
+future, malformed-status, and extra success attempts; a retry followed by
+success remains valid. The quarantine path retains finite, valid health
+receipts and excludes future-dated success. This is internal consistency,
+not proof of provider origin, source admission, or release.
+
 ### Site mirror source-identity guard — 2026-10-01
 
 `MOD-13` / P1 / **CONFIRMED on `main@9465a573d8859cd1564124897d10d848f9c7c350`**:
