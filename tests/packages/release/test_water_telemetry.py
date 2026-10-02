@@ -94,7 +94,12 @@ def test_empty_and_failed_capture_never_report_healthy():
 def test_failed_capture_health_uses_recorded_attempt_class(attempts, expected, reason):
     manifest = deepcopy(acquired().manifest)
     manifest['complete'] = False
-    manifest['attempts'] = [dict(item, station_id='USGS-06892518', observed_at=manifest['captured_at']) for item in attempts]
+    manifest['attempts'] = [
+        dict(item, station_id='USGS-06892518', observed_at=manifest['captured_at'],
+             code=item.get('code', 'FETCH_SUCCESS' if item['outcome'] == 'SUCCESS' else None),
+             status=200 if item['outcome'] == 'SUCCESS' else None)
+        for item in attempts
+    ]
     health = source_health(manifest, None, station_id='USGS-06892518')
     assert health['result_class'] == expected
     assert health['health_outcome'] == ('UNKNOWN' if expected == 'SUCCESS' else 'UNAVAILABLE')

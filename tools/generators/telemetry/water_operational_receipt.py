@@ -37,7 +37,8 @@ def _last_success(scoped: list[dict], probed_at: str) -> str | None:
     limit = utc_time(probed_at)
     observed = []
     for item in scoped:
-        if item.get("outcome") != "SUCCESS" or not isinstance(item.get("observed_at"), str):
+        if (item.get("outcome") != "SUCCESS" or item.get("code") != "FETCH_SUCCESS"
+                or item.get("status") != 200 or not isinstance(item.get("observed_at"), str)):
             continue
         try:
             when = utc_time(item["observed_at"])
@@ -65,7 +66,9 @@ def _failed_probe(manifest: dict, station_id: str) -> tuple[str, str, list[str],
         terminal = next((item.get("outcome") for item in reversed(scoped)
                          if item.get("outcome") != "RETRY_EXHAUSTED"), None)
     if terminal == "SUCCESS":
-        return "SUCCESS", "UNKNOWN", ["CAPTURE_INCOMPLETE"], last_success
+        if last_success is not None:
+            return "SUCCESS", "UNKNOWN", ["CAPTURE_INCOMPLETE"], last_success
+        return "ACQUISITION_ERROR", "UNAVAILABLE", ["RETRIEVAL_FAILED", "NO_PRIOR_SUCCESS"], None
     reasons = ["RETRIEVAL_FAILED"] + (["NO_PRIOR_SUCCESS"] if last_success is None else [])
     if terminal == "TIMEOUT":
         return "TIMEOUT", "UNAVAILABLE", reasons, last_success

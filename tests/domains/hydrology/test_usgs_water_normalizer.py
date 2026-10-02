@@ -226,6 +226,7 @@ def test_rehashed_complete_capture_requires_page_success_attempts(tamper, tmp_pa
         attempts[0]["observed_at"] = "2026-09-30T18:02:00Z"
     elif tamper == "bad_status":
         attempts[0]["status"] = 503
+        attempts[1]["observed_at"] = "2026-09-30T18:00:59Z"
     else:
         attempts.append(deepcopy(attempts[0]))
     reseal(source.manifest)
@@ -242,6 +243,9 @@ def test_rehashed_complete_capture_requires_page_success_attempts(tamper, tmp_pa
     assert len(health) == 2
     assert all(validate_payload(item).ok for item in health)
     assert all(item["health_outcome"] == "UNAVAILABLE" for item in health)
+    if tamper in {"future", "bad_status"}:
+        first = next(item for item in health if item["source_id"] == "usgs-nwis:USGS-06892518")
+        assert first["last_success_at"] == source.manifest["attempts"][1]["observed_at"]
 
 
 def test_retry_before_success_does_not_break_page_binding():

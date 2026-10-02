@@ -416,8 +416,9 @@ bounded successful attempts to pages by station, collection, count, status,
 and time before candidate creation. Negative tests cover absent, mis-scoped,
 future, malformed-status, and extra success attempts; a retry followed by
 success remains valid. The quarantine path retains finite, valid health
-receipts and excludes future-dated success. This is internal consistency,
-not proof of provider origin, source admission, or release.
+receipts and excludes future-dated or contradictory success metadata from
+`last_success_at`. These checks establish internal consistency, not proof
+of provider origin, source admission, or release.
 
 ### Site mirror source-identity guard — 2026-10-01
 

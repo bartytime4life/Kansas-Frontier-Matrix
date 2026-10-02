@@ -303,6 +303,8 @@ successful retrieval attempt for its station and collection, with the attempt
 no later than that page's retrieval time. A rehashed manifest with missing,
 extra, mis-scoped, or future success attempts is quarantined. This checks
 internal capture consistency; it does not authenticate the provider.
+Quarantine health counts a prior station success only when the attempt has
+`FETCH_SUCCESS`, HTTP 200, and a valid time no later than capture completion.
 
 Ingest/validate/catalog worker entry points delegate to bounded tools. The
 hourly `water_job.py` can acquire and prepare candidates only. Tests assert that
