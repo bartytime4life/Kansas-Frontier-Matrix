@@ -362,6 +362,19 @@ rejects a previously staged fabricated package. The existing water contract and
 runbook describe the boundary. This does not authenticate independent review,
 change the Site Worker, implement hosted administration, or approve any release.
 
+### WBD HUC12 request-scope binding — 2026-10-01
+
+`MOD-25` / P1 / **CONFIRMED on `main@4920447692b6c4a066fc82e45491193fa55d99dc`**:
+the fixture-first WBD producer accepted a rehashed source package whose declared
+HUC12 disagreed with its request clause or encoded query URL, and still emitted
+a `NO_CHANGE_RECEIPT`. The existing `pipelines/domains/hydrology/ingest_wbd_huc/`
+owner now checks the declared clause, endpoint, and bounded query parameters
+before candidate projection. Adversarial tests cover the wrong HUC, endpoint
+suffix, duplicate query key, and `304` path. The domain contract and lane
+README describe these semantics. This checks internal request evidence only;
+it does not authenticate capture bytes, activate the source, write RAW or
+QUARANTINE, promote, release, or publish data.
+
 ### Site mirror source-identity guard — 2026-10-01
 
 `MOD-13` / P1 / **CONFIRMED on `main@9465a573d8859cd1564124897d10d848f9c7c350`**:

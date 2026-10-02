@@ -118,6 +118,39 @@ def test_source_package_spec_hash_mismatch_fails_closed() -> None:
 
 
 @pytest.mark.parametrize(
+    ("field", "replacement", "finding"),
+    [
+        ("where_clause", "huc12='999999999999'", "REQUEST_WHERE_MISMATCH"),
+        ("url", "https://hydro.nationalmap.gov/arcgis/rest/services/wbd/MapServer/6/query?where=huc12%3D%27999999999999%27&f=geojson", "REQUEST_URL_SCOPE_INVALID"),
+        ("url", "https://hydro.nationalmap.gov/arcgis/rest/services/wbd/MapServer/6/query/other?where=huc12%3D%27102600030504%27&f=geojson", "REQUEST_URL_SCOPE_INVALID"),
+        ("url", "https://hydro.nationalmap.gov/arcgis/rest/services/wbd/MapServer/6/query?where=huc12%3D%27102600030504%27&where=huc12%3D%27102600030504%27&f=geojson", "REQUEST_URL_SCOPE_INVALID"),
+    ],
+)
+def test_rehashed_request_scope_drift_fails_closed(
+    field: str, replacement: str, finding: str
+) -> None:
+    package = load("valid", "no_change.json")
+    package["request"][field] = replacement
+    package["spec_hash"] = MODULE.canonical_hash(package)
+
+    result = MODULE.build_candidate(package)
+
+    assert not result.ok
+    assert MODULE.Finding(finding, f"/request/{field}") in result.findings
+
+
+def test_not_modified_request_still_binds_declared_huc12() -> None:
+    package = load("valid", "not_modified.json")
+    package["request"]["where_clause"] = "huc12='999999999999'"
+    package["spec_hash"] = MODULE.canonical_hash(package)
+
+    result = MODULE.build_candidate(package)
+
+    assert not result.ok
+    assert MODULE.Finding("REQUEST_WHERE_MISMATCH", "/request/where_clause") in result.findings
+
+
+@pytest.mark.parametrize(
     ("literal", "reason"),
     [
         ("1e999", "JSON_NONFINITE_NUMBER"),
