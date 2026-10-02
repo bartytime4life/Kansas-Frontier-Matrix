@@ -65,6 +65,7 @@ class OpenLineageRunEventProjectionTests(unittest.TestCase):
 
     def test_missing_or_non_boolean_permissions_fail_closed(self) -> None:
         self.assertEqual(BUILDER.build_case({})["decision"]["outcome"], "DENY")
+        self.assertEqual(BUILDER.build_document()["decision"]["outcome"], "DENY")
         with self.assertRaises(ValueError):
             BUILDER.build_document(telemetry_allowed="false")  # type: ignore[arg-type]
 

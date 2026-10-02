@@ -202,8 +202,10 @@ def build_document(
     started_at: str = "2026-08-10T18:00:00Z",
     ended_at: str = "2026-08-10T18:20:00Z",
     run_outcome: str = "SUCCESS",
-    telemetry_allowed: bool = True,
+    telemetry_allowed: bool = False,
 ) -> dict[str, Any]:
+    if type(telemetry_allowed) is not bool:
+        raise ValueError("telemetry permission must be boolean")
     source_projection = _OPENLINEAGE_BUILDER.build_document(
         run_outcome=run_outcome,
         sensitivity_level="internal",
