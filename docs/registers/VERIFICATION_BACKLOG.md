@@ -381,3 +381,15 @@ reviewed release active, withheld, or unavailable. This changes presentation
 only; the governed API, source admission, activation, and release gates remain
 unchanged. Browser visual acceptance and the Site mirror review remain
 **NEEDS VERIFICATION**.
+
+### Site mirror drift diagnostics — 2026-10-01
+
+`MOD-19` / P2 / **CONFIRMED on `main@5021bc0a686a9b0df67858ac8ddf624ec1663030`**:
+the mirror conformance CLI returned only `MIRROR_REVIEW_REQUIRED` for current
+drift, requiring manual receipt parsing to identify affected paths. The
+existing `tools/qa/` owner now provides a read-only `--diagnose` mode that
+reports changed working-tree hashes and file-set differences, explicitly marks
+dirty checkout state, and exits nonzero while review is needed. The original
+`--check` hold and historical receipt are unchanged. This supports per-file
+overlay review; source equivalence, successor receipt approval, Site deployment,
+and browser acceptance remain **NEEDS VERIFICATION**.
