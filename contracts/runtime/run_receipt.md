@@ -34,6 +34,8 @@ notes:
 > outcome and reason metadata. `tools/generators/telemetry/water_operational_receipt.py`
 > produces it and the existing SourceHealthAssessment shape. This is not an OCI
 > attestation or source/release approval; see the water runbook.
+> The local water `code_ref` digest includes that telemetry producer as well
+> as capture, normalization, validation, and staging code.
 
 <a id="top"></a>
 

@@ -400,8 +400,10 @@ synthetic capture with an advancing clock showed successful attempts at
 18:01:08Z. The producer now reads each station's latest recorded successful
 attempt and keeps completion in `probed_at`. Focused tests check both
 returned and persisted health receipts. This changes local candidate
-telemetry and receipt digests; it does not authenticate live source health,
-admit the source, or approve release.
+telemetry and receipt digests. The operational receipt's `code_ref` now
+includes the telemetry producer bytes so this change affects its code
+identity as well. It does not authenticate live source health, admit the
+source, or approve release.
 
 ### Site mirror source-identity guard — 2026-10-01
 

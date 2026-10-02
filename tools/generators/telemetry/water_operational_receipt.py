@@ -6,7 +6,7 @@ from connectors_core.captured_json import canonical_bytes, digest_bytes, timesta
 from hashing import compute_spec_hash
 
 ROOT = Path(__file__).resolve().parents[3]
-BUILD_FILES = ("connectors/usgs/water_data/pilot_capture.py", "pipelines/domains/hydrology/normalize.py", "pipelines/domains/hydrology/validate.py", "tools/local_data/water_pilot.py")
+BUILD_FILES = ("connectors/usgs/water_data/pilot_capture.py", "pipelines/domains/hydrology/normalize.py", "pipelines/domains/hydrology/validate.py", "tools/local_data/water_pilot.py", "tools/generators/telemetry/water_operational_receipt.py")
 
 
 def build_identity():

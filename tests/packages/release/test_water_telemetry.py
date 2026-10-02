@@ -8,6 +8,7 @@ from tests.domains.hydrology.test_usgs_water_normalizer import acquired, Fixture
 from connectors.usgs.water_data.pilot_capture import capture
 from pipelines.domains.hydrology.normalize import normalize_capture
 from pipelines.domains.hydrology.validate import validate_candidate
+from tools.generators.telemetry import water_operational_receipt as telemetry
 from tools.generators.telemetry.water_operational_receipt import operational_receipt, source_health
 from tools.local_data.manage import init_store
 from tools.local_data.water_pilot import stage
@@ -24,6 +25,17 @@ def test_local_receipt_matches_existing_contract_and_has_no_sensitive_content():
         assert forbidden not in text
     assert receipt['operational']['release_authorized'] is False
     assert validate_payload(source_health(source.manifest, candidate, station_id='USGS-06892518')).ok
+
+
+def test_operational_code_ref_tracks_telemetry_producer_bytes(monkeypatch, tmp_path):
+    for name in telemetry.BUILD_FILES:
+        path = tmp_path / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(b'original')
+    monkeypatch.setattr(telemetry, 'ROOT', tmp_path)
+    before = telemetry.build_identity()
+    (tmp_path / 'tools/generators/telemetry/water_operational_receipt.py').write_bytes(b'changed')
+    assert telemetry.build_identity() != before
 
 
 def test_complete_capture_uses_each_station_success_attempt_time(tmp_path):
