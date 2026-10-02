@@ -9,6 +9,7 @@ import subprocess
 import sys
 import weakref
 from pathlib import Path
+from urllib.parse import quote
 
 import pytest
 
@@ -18,6 +19,7 @@ MODULE_PATH = (
     / "pipelines/domains/hydrology/ingest_wbd_huc/produce_wbd_huc12_candidate.py"
 )
 FIXTURES = REPO_ROOT / "fixtures/domains/hydrology/wbd_huc12_ingest"
+FIELDS_PARAMETER = "&outFields=areasqkm%2Chuc12%2ClastEditDate%2CLoadDate"
 
 SPEC = importlib.util.spec_from_file_location("kfm_wbd_huc12_ingest_candidate", MODULE_PATH)
 assert SPEC and SPEC.loader
@@ -121,9 +123,9 @@ def test_source_package_spec_hash_mismatch_fails_closed() -> None:
     ("field", "replacement", "finding"),
     [
         ("where_clause", "huc12='999999999999'", "REQUEST_WHERE_MISMATCH"),
-        ("url", "https://hydro.nationalmap.gov/arcgis/rest/services/wbd/MapServer/6/query?where=huc12%3D%27999999999999%27&f=geojson", "REQUEST_URL_SCOPE_INVALID"),
-        ("url", "https://hydro.nationalmap.gov/arcgis/rest/services/wbd/MapServer/6/query/other?where=huc12%3D%27102600030504%27&f=geojson", "REQUEST_URL_SCOPE_INVALID"),
-        ("url", "https://hydro.nationalmap.gov/arcgis/rest/services/wbd/MapServer/6/query?where=huc12%3D%27102600030504%27&where=huc12%3D%27102600030504%27&f=geojson", "REQUEST_URL_SCOPE_INVALID"),
+        ("url", "https://hydro.nationalmap.gov/arcgis/rest/services/wbd/MapServer/6/query?where=huc12%3D%27999999999999%27&f=geojson" + FIELDS_PARAMETER, "REQUEST_URL_SCOPE_INVALID"),
+        ("url", "https://hydro.nationalmap.gov/arcgis/rest/services/wbd/MapServer/6/query/other?where=huc12%3D%27102600030504%27&f=geojson" + FIELDS_PARAMETER, "REQUEST_URL_SCOPE_INVALID"),
+        ("url", "https://hydro.nationalmap.gov/arcgis/rest/services/wbd/MapServer/6/query?where=huc12%3D%27102600030504%27&where=huc12%3D%27102600030504%27&f=geojson" + FIELDS_PARAMETER, "REQUEST_URL_SCOPE_INVALID"),
     ],
 )
 def test_rehashed_request_scope_drift_fails_closed(
@@ -137,6 +139,41 @@ def test_rehashed_request_scope_drift_fails_closed(
 
     assert not result.ok
     assert MODULE.Finding(finding, f"/request/{field}") in result.findings
+
+
+@pytest.mark.parametrize("kind", ["no_change", "not_modified"])
+@pytest.mark.parametrize("drift", ["missing", "different", "duplicate", "declared"])
+def test_rehashed_requested_fields_must_match_url(kind: str, drift: str) -> None:
+    package = load("valid", f"{kind}.json")
+    request = package["request"]
+    encoded = quote(",".join(request["out_fields"]), safe="")
+    parameter = f"&outFields={encoded}"
+    assert parameter in request["url"]
+    if drift == "missing":
+        request["url"] = request["url"].replace(parameter, "")
+    elif drift == "different":
+        request["url"] = request["url"].replace(parameter, "&outFields=huc12")
+    elif drift == "duplicate":
+        request["url"] += parameter
+    else:
+        request["out_fields"] = ["huc12", "areasqkm"]
+    package["spec_hash"] = MODULE.canonical_hash(package)
+
+    result = MODULE.build_candidate(package)
+
+    assert not result.ok
+    assert MODULE.Finding("REQUEST_URL_SCOPE_INVALID", "/request/url") in result.findings
+
+
+def test_requested_field_name_cannot_ambiguously_encode_multiple_fields() -> None:
+    package = load("valid", "no_change.json")
+    package["request"]["out_fields"] = ["areasqkm,huc12", "lastEditDate", "LoadDate"]
+    package["spec_hash"] = MODULE.canonical_hash(package)
+
+    result = MODULE.build_candidate(package)
+
+    assert not result.ok
+    assert MODULE.Finding("SOURCE_PACKAGE_SCHEMA_INVALID", "/request/out_fields/0") in result.findings
 
 
 def test_not_modified_request_still_binds_declared_huc12() -> None:

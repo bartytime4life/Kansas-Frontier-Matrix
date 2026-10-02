@@ -375,6 +375,21 @@ README describe these semantics. This checks internal request evidence only;
 it does not authenticate capture bytes, activate the source, write RAW or
 QUARANTINE, promote, release, or publish data.
 
+### WBD HUC12 requested-field binding — 2026-10-01
+
+`MOD-26` / P1 / **CONFIRMED on `main@4193bfdd29b46ea95fe75bd7213bd3f23a39c481`**:
+all six fixture source packages declared four `request.out_fields` values,
+but their recorded GET URLs omitted `outFields`. The fixture-first producer
+accepted a rehashed package with a different declared field list and emitted
+a candidate. The owning `pipelines/domains/hydrology/ingest_wbd_huc/` producer
+now requires one encoded `outFields` parameter matching the ordered declared
+list. Fixture hashes were recomputed, the contract was updated, and focused
+tests cover missing, different, duplicate, and conflicting values for HTTP
+`200` and `304`. The historical generated receipt remains pinned to its
+original Git artifact ref. This is internal request consistency only; live
+capture authenticity, source admission, lifecycle writes, and release remain
+**NEEDS VERIFICATION**.
+
 ### Site mirror source-identity guard — 2026-10-01
 
 `MOD-13` / P1 / **CONFIRMED on `main@9465a573d8859cd1564124897d10d848f9c7c350`**:
