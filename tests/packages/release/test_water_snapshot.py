@@ -146,6 +146,107 @@ def reseal_evidence(snapshot, evidence):
     snapshot["manifest"]["package_id"] = compute_spec_hash({k: v for k, v in snapshot["manifest"].items() if k != "package_id"})
 
 
+def reseal_validation(snapshot, validation):
+    validation["receipt_digest"] = digest_bytes(canonical_bytes({k: v for k, v in validation.items() if k != "receipt_digest"}))
+    evidence = json.loads(snapshot["artifacts"]["evidence.json"])
+    for entry in evidence["entries"]:
+        bundle = entry["bundle"]
+        bundle["checksums"]["validation"] = validation["receipt_digest"]
+        bundle["spec_hash"] = {"value": compute_spec_hash({k: v for k, v in bundle.items() if k != "spec_hash"})}
+    snapshot["artifacts"]["validation.json"] = canonical_bytes(validation).decode()
+    snapshot["manifest"]["artifacts"]["validation.json"] = digest_bytes(snapshot["artifacts"]["validation.json"].encode())
+    reseal_evidence(snapshot, evidence)
+
+
+def test_staging_replays_validation_receipt_before_writing(tmp_path):
+    from release.local_admin import stage
+
+    snapshot = synthetic_snapshot(cleared=True)
+    validation = json.loads(snapshot["artifacts"]["validation.json"])
+    validation["release_authorized"] = True
+    reseal_validation(snapshot, validation)
+    raw = canonical_bytes(snapshot)
+    # All carrier hashes and references are consistent; only replay exposes the lie.
+    validate_snapshot(raw)
+    root = tmp_path / "uncreated-release-store"
+    with pytest.raises(ValueError, match="VALIDATION_RECEIPT_MISMATCH"):
+        stage(root, raw, actor="synthetic-owner", now=NOW)
+    assert not root.exists()
+
+
+def test_staging_revalidates_fully_resealed_candidate(tmp_path):
+    from evidence_resolver.verification_history import canonical_spec_hash
+    from release.local_admin import stage
+
+    snapshot = synthetic_snapshot(cleared=True)
+    candidate = json.loads(snapshot["artifacts"]["candidate.json"])
+    old_id = candidate["candidate_id"]
+    candidate["stale_after_seconds"] = 3600
+    candidate["candidate_id"] = digest_bytes(canonical_bytes({k: v for k, v in candidate.items() if k != "candidate_id"}))
+    new_id = candidate["candidate_id"]
+    snapshot["artifacts"]["candidate.json"] = canonical_bytes(candidate).decode()
+    snapshot["manifest"]["artifacts"]["candidate.json"] = digest_bytes(snapshot["artifacts"]["candidate.json"].encode())
+    snapshot["manifest"]["candidate_id"] = new_id
+
+    validation = json.loads(snapshot["artifacts"]["validation.json"])
+    validation["candidate_id"] = new_id
+    validation["receipt_digest"] = digest_bytes(canonical_bytes({k: v for k, v in validation.items() if k != "receipt_digest"}))
+    catalog = json.loads(snapshot["artifacts"]["catalog.json"])
+    catalog["candidate_id"] = new_id
+    for entry in catalog["entries"]:
+        entry["evidence_ref"] = entry["evidence_ref"].replace(old_id.split(":")[1], new_id.split(":")[1])
+        entry["validation_ref"] = validation["receipt_digest"]
+    snapshot["artifacts"]["catalog.json"] = canonical_bytes(catalog).decode()
+    snapshot["manifest"]["artifacts"]["catalog.json"] = digest_bytes(snapshot["artifacts"]["catalog.json"].encode())
+
+    evidence = json.loads(snapshot["artifacts"]["evidence.json"])
+    evidence["candidate_id"] = new_id
+    for entry in evidence["entries"]:
+        bundle = entry["bundle"]
+        bundle["bundle_id"] = bundle["bundle_id"].replace(old_id.split(":")[1], new_id.split(":")[1])
+        entry["evidence_ref"]["ref"] = entry["evidence_ref"]["ref"].replace(old_id.split(":")[1], new_id.split(":")[1])
+        entry["evidence_ref"]["bundle_ref"] = bundle["bundle_id"]
+        for ref in bundle["evidence_refs"]:
+            ref["bundle_ref"] = bundle["bundle_id"]
+        bundle["evidence_refs"][0] = entry["evidence_ref"]
+        bundle["checksums"] = {"candidate": new_id, "validation": validation["receipt_digest"]}
+        bundle["spec_hash"] = {"value": compute_spec_hash({k: v for k, v in bundle.items() if k != "spec_hash"})}
+        history = entry["verification_history"]
+        history["subject_ref"] = entry["evidence_ref"]["ref"]
+        history["events"][0]["basis_refs"] = ["kfm://receipt/validation/" + validation["receipt_digest"].split(":")[1]]
+        history["spec_hash"] = canonical_spec_hash(history)
+    snapshot["artifacts"]["validation.json"] = canonical_bytes(validation).decode()
+    snapshot["manifest"]["artifacts"]["validation.json"] = digest_bytes(snapshot["artifacts"]["validation.json"].encode())
+    reseal_evidence(snapshot, evidence)
+    raw = canonical_bytes(snapshot)
+    validate_snapshot(raw)
+    root = tmp_path / "invalid-candidate-store"
+    with pytest.raises(ValueError, match="CANDIDATE_VALIDATION_FAILED"):
+        stage(root, raw, actor="synthetic-owner", now=NOW)
+    assert not root.exists()
+
+
+def test_activation_replays_previously_staged_validation_receipt(tmp_path):
+    from release.local_admin import activate, initialize
+
+    snapshot = synthetic_snapshot(cleared=True)
+    validation = json.loads(snapshot["artifacts"]["validation.json"])
+    validation["release_authorized"] = True
+    reseal_validation(snapshot, validation)
+    raw = canonical_bytes(snapshot)
+    validate_snapshot(raw)
+    root = tmp_path / "legacy-release-store"
+    initialize(root)
+    package_id = snapshot["manifest"]["package_id"]
+    name = package_id.split(":")[1] + ".json"
+    (root / "objects" / name).write_bytes(raw)
+    with sqlite3.connect(root / "activation.sqlite") as db:
+        db.execute("INSERT INTO water_packages VALUES(?,?,?,?,?)", (package_id, name, NOW, "synthetic-owner", "STAGED"))
+    with pytest.raises(ValueError, match="VALIDATION_RECEIPT_MISMATCH"):
+        activate(root, package_id, synthetic_decision(snapshot), expected_active=None, now=NOW)
+    assert LocalReleaseStore(str(root)).active() is None
+
+
 def test_revoked_second_station_cannot_leak_through_filtered_layers():
     from evidence_resolver.verification_history import canonical_spec_hash
     snapshot = synthetic_snapshot(cleared=True)
