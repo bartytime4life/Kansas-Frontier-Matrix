@@ -7,6 +7,7 @@ import json
 import os
 import subprocess
 import sys
+import weakref
 from pathlib import Path
 
 import pytest
@@ -187,6 +188,43 @@ def test_input_rejects_symlinked_parent(tmp_path: Path) -> None:
 
     assert package is None
     assert findings == [MODULE.Finding("INPUT_SYMLINK_DENIED", "/")]
+
+
+def test_schema_findings_keep_only_bounded_sorted_diagnostics(
+    monkeypatch: pytest.MonkeyPatch
+) -> None:
+    live: weakref.WeakSet[object] = weakref.WeakSet()
+    peak_live = 0
+
+    class Error:
+        def __init__(self, index: int) -> None:
+            self.absolute_path = [f"{index:03d}"]
+            self.validator = "type"
+
+    class Validator:
+        def __init__(self, *_args: object, **_kwargs: object) -> None:
+            pass
+
+        @staticmethod
+        def check_schema(_schema: object) -> None:
+            pass
+
+        def iter_errors(self, _value: object):
+            nonlocal peak_live
+            for index in reversed(range(250)):
+                error = Error(index)
+                live.add(error)
+                peak_live = max(peak_live, len(live))
+                yield error
+
+    monkeypatch.setattr(MODULE, "Draft202012Validator", Validator)
+    findings = MODULE._schema_findings({}, MODULE.SOURCE_SCHEMA, prefix="SOURCE_PACKAGE")
+
+    assert findings == [
+        MODULE.Finding("SOURCE_PACKAGE_SCHEMA_INVALID", f"/{index:03d}")
+        for index in range(MODULE.MAX_SCHEMA_FINDINGS)
+    ] + [MODULE.Finding("SOURCE_PACKAGE_SCHEMA_FINDINGS_TRUNCATED", "/")]
+    assert peak_live <= 3
 
 
 def test_cli_is_deterministic_and_value_bounded() -> None:

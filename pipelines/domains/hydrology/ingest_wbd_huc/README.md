@@ -88,6 +88,11 @@ parents, non-regular files, and files whose size or modification metadata
 changes while read. It still consumes caller-supplied capture bytes; these
 checks do not establish source authenticity or admission.
 
+Schema validation keeps at most 100 sorted error keys while consuming the
+validator's error stream. If more errors occur, the output includes the
+existing truncation finding. This bounds retained diagnostic state; schema
+evaluation still visits the input and may take time on a large invalid package.
+
 The optional `--output` creates one owner-selected review file in an existing
 directory outside the repository. It rejects symlinked parent paths and
 existing targets. The default remains stdout. The file is a candidate

@@ -9,6 +9,7 @@ output path.
 from __future__ import annotations
 
 import argparse
+import bisect
 import copy
 import errno
 import hashlib
@@ -193,17 +194,20 @@ def _schema_findings(
             schema,
             format_checker=FormatChecker(),
         )
-        errors = list(validator.iter_errors(value))
+        ordered: list[tuple[str, str]] = []
+        total = 0
+        for error in validator.iter_errors(value):
+            total += 1
+            bisect.insort(ordered, (_pointer(error.absolute_path), str(error.validator)))
+            if len(ordered) > MAX_SCHEMA_FINDINGS:
+                ordered.pop()
     except (OSError, UnicodeError, json.JSONDecodeError, ValueError, RecursionError):
         return [Finding(f"{prefix}_SCHEMA_UNAVAILABLE", "/")]
-    ordered = sorted(
-        errors, key=lambda item: (_pointer(item.absolute_path), str(item.validator))
-    )
     findings = [
-        Finding(f"{prefix}_SCHEMA_INVALID", _pointer(item.absolute_path))
-        for item in ordered[:MAX_SCHEMA_FINDINGS]
+        Finding(f"{prefix}_SCHEMA_INVALID", path)
+        for path, _validator in ordered
     ]
-    if len(ordered) > MAX_SCHEMA_FINDINGS:
+    if total > MAX_SCHEMA_FINDINGS:
         findings.append(Finding(f"{prefix}_SCHEMA_FINDINGS_TRUNCATED", "/"))
     return findings
 

@@ -87,6 +87,9 @@ The implementation must fail closed on:
 - an unsafe output path or overwrite request.
 
 Diagnostics contain stable codes and bounded paths. They do not echo source payload values.
+Schema diagnostics retain the first 100 findings in stable path/validator order
+and append a truncation finding when more errors exist; the producer does not
+retain every schema error in memory to produce that report.
 The producer opens only a regular file, refuses symlinked paths and observed
 symlinked parents, and reads at most 8 MiB plus one byte. A captured package
 must be stable during that read. This check does not authenticate its origin or
