@@ -231,7 +231,7 @@ def _request_scope_findings(package: Mapping[str, Any]) -> list[Finding]:
     try:
         url = urlsplit(request["url"])
         query = parse_qsl(
-            url.query, keep_blank_values=True, strict_parsing=True, max_num_fields=2
+            url.query, keep_blank_values=True, strict_parsing=True, max_num_fields=3
         )
     except ValueError:
         query = []
@@ -243,7 +243,11 @@ def _request_scope_findings(package: Mapping[str, Any]) -> list[Finding]:
         or url.path != QUERY_PATH
         or url.geturl() != request["url"]
         or url.fragment
-        or sorted(query) != sorted([("where", expected_where), ("f", "geojson")])
+        or sorted(query) != sorted([
+            ("where", expected_where),
+            ("outFields", ",".join(request["out_fields"])),
+            ("f", "geojson"),
+        ])
     ):
         findings.append(Finding("REQUEST_URL_SCOPE_INVALID", "/request/url"))
     return findings

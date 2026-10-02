@@ -80,7 +80,9 @@ The implementation must fail closed on:
 - source-package schema failure or `spec_hash` mismatch;
 - disagreement between the declared HUC12, the exact `huc12='<12 digits>'`
   request clause, and the single encoded `where` parameter on the declared
-  WBD query URL; unexpected query parameters, endpoint paths, or fragments;
+  WBD query URL; a missing or different `outFields` parameter relative to
+  the ordered `request.out_fields` list; unexpected query parameters,
+  endpoint paths, or fragments;
 - response body digest mismatch;
 - a `304` response carrying body bytes or lacking a prior snapshot;
 - a `200` response lacking a FeatureCollection;
@@ -93,6 +95,10 @@ Diagnostics contain stable codes and bounded paths. They do not echo source payl
 Request-scope failures use `REQUEST_WHERE_MISMATCH` at `/request/where_clause`
 or `REQUEST_URL_SCOPE_INVALID` at `/request/url`; this checks the package's
 internal consistency, not whether the request was sent to USGS.
+The `outFields` comparison binds the declared requested fields to the
+recorded GET URL. Each field name is a simple identifier so a comma cannot
+masquerade as a boundary between two fields. This does not verify that a
+server returned those fields.
 Schema diagnostics retain the first 100 findings in stable path/validator order
 and append a truncation finding when more errors exist; the producer does not
 retain every schema error in memory to produce that report.

@@ -6,7 +6,7 @@
   "source_descriptor_ref": "data/registry/hydrology/sources/wbd_huc12.yaml",
   "huc12": "102600030504",
   "request": {
-    "url": "https://hydro.nationalmap.gov/arcgis/rest/services/wbd/MapServer/6/query?where=huc12%3D%27102600030504%27&f=geojson",
+    "url": "https://hydro.nationalmap.gov/arcgis/rest/services/wbd/MapServer/6/query?where=huc12%3D%27102600030504%27&outFields=areasqkm%2Chuc12%2ClastEditDate%2CLoadDate&f=geojson",
     "method": "GET",
     "where_clause": "huc12='102600030504'",
     "out_fields": [
@@ -111,5 +111,5 @@
     "promotion_allowed": false,
     "publication_allowed": false
   },
-  "spec_hash": "sha256:6efc52e4368a8036a0525c6321229d5b5f4c408e3ee8325b5b5f51bc0e36b472"
+  "spec_hash": "sha256:a9fa01a030f5e45815c38b5fb96d52f252f598483b51fe8cc715705679ed3a76"
 }
