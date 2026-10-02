@@ -390,6 +390,21 @@ original Git artifact ref. This is internal request consistency only; live
 capture authenticity, source admission, lifecycle writes, and release remain
 **NEEDS VERIFICATION**.
 
+### Water station last-success time — 2026-10-01
+
+`MOD-27` / P1 / **CONFIRMED on `main@a479bf40da10c13f5f740bd7e9bdd1b3c4d08643`**:
+the local water telemetry producer set every station's `last_success_at` to
+the capture completion time whenever a normalized candidate existed. A
+synthetic capture with an advancing clock showed successful attempts at
+18:01:02Z and 18:01:06Z but both health records reported completion at
+18:01:08Z. The producer now reads each station's latest recorded successful
+attempt and keeps completion in `probed_at`. Focused tests check both
+returned and persisted health receipts. This changes local candidate
+telemetry and receipt digests. The operational receipt's `code_ref` now
+includes the telemetry producer bytes so this change affects its code
+identity as well. It does not authenticate live source health, admit the
+source, or approve release.
+
 ### Site mirror source-identity guard — 2026-10-01
 
 `MOD-13` / P1 / **CONFIRMED on `main@9465a573d8859cd1564124897d10d848f9c7c350`**:

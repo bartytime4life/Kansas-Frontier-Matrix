@@ -6,7 +6,7 @@ from connectors_core.captured_json import canonical_bytes, digest_bytes, timesta
 from hashing import compute_spec_hash
 
 ROOT = Path(__file__).resolve().parents[3]
-BUILD_FILES = ("connectors/usgs/water_data/pilot_capture.py", "pipelines/domains/hydrology/normalize.py", "pipelines/domains/hydrology/validate.py", "tools/local_data/water_pilot.py")
+BUILD_FILES = ("connectors/usgs/water_data/pilot_capture.py", "pipelines/domains/hydrology/normalize.py", "pipelines/domains/hydrology/validate.py", "tools/local_data/water_pilot.py", "tools/generators/telemetry/water_operational_receipt.py")
 
 
 def build_identity():
@@ -26,16 +26,24 @@ def operational_receipt(manifest: dict, candidate: dict | None, validation: dict
     return receipt
 
 
-def _failed_probe(manifest: dict, station_id: str) -> tuple[str, str, list[str], str | None]:
+def _station_attempts(manifest: dict, station_id: str) -> list[dict]:
     attempts = manifest.get("attempts")
-    scoped = ([item for item in attempts
-               if isinstance(item, dict) and item.get("station_id") == station_id]
-              if isinstance(attempts, list) else [])
-    last_success = max(
+    return ([item for item in attempts
+             if isinstance(item, dict) and item.get("station_id") == station_id]
+            if isinstance(attempts, list) else [])
+
+
+def _last_success(scoped: list[dict]) -> str | None:
+    return max(
         (item["observed_at"] for item in scoped
          if item.get("outcome") == "SUCCESS" and isinstance(item.get("observed_at"), str)),
         default=None,
     )
+
+
+def _failed_probe(manifest: dict, station_id: str) -> tuple[str, str, list[str], str | None]:
+    scoped = _station_attempts(manifest, station_id)
+    last_success = _last_success(scoped)
     if manifest.get("complete") is True:
         reasons = ["RETRIEVAL_FAILED", "SCHEMA_OR_PARSE_FAILURE"]
         if last_success is None:
@@ -68,13 +76,15 @@ def source_health(manifest: dict, candidate: dict | None, *, station_id: str) ->
     deadline = latest + timedelta(seconds=candidate["stale_after_seconds"] if candidate else 7200) if latest else None
     if candidate is None:
         result, outcome, reasons, last_success = _failed_probe(manifest, station_id)
-    elif latest is None:
-        result, outcome, reasons = "EMPTY", "DEGRADED", ["EMPTY_NOT_CLEAR"]
-    elif utc_time(probed) > deadline:
-        result, outcome, reasons = "SUCCESS", "STALE", ["FRESHNESS_EXPIRED"]
     else:
-        result, outcome, reasons = "SUCCESS", "HEALTHY", ["WITHIN_FRESHNESS"]
+        last_success = _last_success(_station_attempts(manifest, station_id))
+        if latest is None:
+            result, outcome, reasons = "EMPTY", "DEGRADED", ["EMPTY_NOT_CLEAR"]
+        elif utc_time(probed) > deadline:
+            result, outcome, reasons = "SUCCESS", "STALE", ["FRESHNESS_EXPIRED"]
+        else:
+            result, outcome, reasons = "SUCCESS", "HEALTHY", ["WITHIN_FRESHNESS"]
     return {"assessment_id": "kfm:source-health:water:" + station_id.lower() + ":" + manifest["capture_id"].split(":")[1],
             "source_id": "usgs-nwis:" + station_id, "probed_at": probed,
-            "last_success_at": probed if candidate else last_success, "freshness_deadline": timestamp(deadline) if deadline else None,
+            "last_success_at": last_success, "freshness_deadline": timestamp(deadline) if deadline else None,
             "result_class": result, "health_outcome": outcome, "material_change": False, "reasons": reasons}
