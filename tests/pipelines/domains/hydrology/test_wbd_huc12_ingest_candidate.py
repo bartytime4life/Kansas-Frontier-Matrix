@@ -4,6 +4,7 @@ from __future__ import annotations
 import copy
 import importlib.util
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -150,6 +151,42 @@ def test_nonfinite_programmatic_package_has_finite_diagnostic() -> None:
 
     assert not result.ok
     assert result.findings == (MODULE.Finding("SOURCE_PACKAGE_CANONICALIZATION_INVALID", "/"),)
+
+
+def test_input_limit_applies_to_bytes_read_even_if_path_size_appears_small(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source = tmp_path / "growing.json"
+    fixture = (FIXTURES / "valid/no_change.json").read_bytes()
+    source.write_bytes(fixture + b" " * (MODULE.MAX_INPUT_BYTES + 1 - len(fixture)))
+    real_stat = Path.stat
+
+    def stale_stat(path: Path, *args: object, **kwargs: object) -> os.stat_result:
+        result = real_stat(path, *args, **kwargs)
+        if path == source:
+            fields = list(result)
+            fields[6] = len(fixture)
+            return os.stat_result(fields)
+        return result
+
+    monkeypatch.setattr(Path, "stat", stale_stat)
+    package, findings = MODULE.read_json_object(source)
+
+    assert package is None
+    assert findings == [MODULE.Finding("INPUT_TOO_LARGE", "/")]
+
+
+def test_input_rejects_symlinked_parent(tmp_path: Path) -> None:
+    capture = tmp_path / "capture"
+    capture.mkdir()
+    (capture / "package.json").write_bytes((FIXTURES / "valid/no_change.json").read_bytes())
+    alias = tmp_path / "alias"
+    alias.symlink_to(capture, target_is_directory=True)
+
+    package, findings = MODULE.read_json_object(alias / "package.json")
+
+    assert package is None
+    assert findings == [MODULE.Finding("INPUT_SYMLINK_DENIED", "/")]
 
 
 def test_cli_is_deterministic_and_value_bounded() -> None:

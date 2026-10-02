@@ -10,11 +10,13 @@ from __future__ import annotations
 
 import argparse
 import copy
+import errno
 import hashlib
 import importlib.util
 import json
 import math
 import os
+import stat
 import sys
 import tempfile
 from dataclasses import dataclass
@@ -113,14 +115,25 @@ def _pointer(parts: Iterable[object]) -> str:
 
 def read_json_object(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
     try:
-        if path.is_symlink():
+        if path.is_symlink() or any(parent.is_symlink() for parent in path.parents):
             return None, [Finding("INPUT_SYMLINK_DENIED", "/")]
-        if not path.is_file():
-            return None, [Finding("INPUT_NOT_FILE", "/")]
-        if path.stat().st_size > MAX_INPUT_BYTES:
-            return None, [Finding("INPUT_TOO_LARGE", "/")]
+        descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        with os.fdopen(descriptor, "rb") as stream:
+            before = os.fstat(stream.fileno())
+            if not stat.S_ISREG(before.st_mode):
+                return None, [Finding("INPUT_NOT_FILE", "/")]
+            if before.st_size > MAX_INPUT_BYTES:
+                return None, [Finding("INPUT_TOO_LARGE", "/")]
+            payload = stream.read(MAX_INPUT_BYTES + 1)
+            if len(payload) > MAX_INPUT_BYTES:
+                return None, [Finding("INPUT_TOO_LARGE", "/")]
+            after = os.fstat(stream.fileno())
+            if (before.st_size, before.st_mtime_ns, before.st_ctime_ns) != (
+                after.st_size, after.st_mtime_ns, after.st_ctime_ns
+            ):
+                return None, [Finding("INPUT_CHANGED_DURING_READ", "/")]
         value = json.loads(
-            path.read_text(encoding="utf-8"),
+            payload.decode("utf-8"),
             object_pairs_hook=_unique_object,
             parse_constant=_reject_nonfinite,
             parse_float=_finite_float,
@@ -135,7 +148,11 @@ def read_json_object(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
         return None, [Finding("JSON_INVALID", "/")]
     except (ValueError, RecursionError):
         return None, [Finding("JSON_INVALID", "/")]
-    except OSError:
+    except (FileNotFoundError, NotADirectoryError):
+        return None, [Finding("INPUT_NOT_FILE", "/")]
+    except OSError as error:
+        if error.errno == errno.ELOOP:
+            return None, [Finding("INPUT_SYMLINK_DENIED", "/")]
         return None, [Finding("INPUT_UNREADABLE", "/")]
     if not isinstance(value, dict):
         return None, [Finding("ROOT_NOT_OBJECT", "/")]

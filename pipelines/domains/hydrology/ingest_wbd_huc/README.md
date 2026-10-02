@@ -82,6 +82,12 @@ before candidate hashing. Direct programmatic calls with values that cannot be
 canonically serialized return a bounded finding. Neither path echoes the input
 value in its diagnostic.
 
+Input reading is capped at 8 MiB plus one byte even if a prior size check is
+stale. The producer rejects symlinked input paths and observed symlinked
+parents, non-regular files, and files whose size or modification metadata
+changes while read. It still consumes caller-supplied capture bytes; these
+checks do not establish source authenticity or admission.
+
 The optional `--output` creates one owner-selected review file in an existing
 directory outside the repository. It rejects symlinked parent paths and
 existing targets. The default remains stdout. The file is a candidate
