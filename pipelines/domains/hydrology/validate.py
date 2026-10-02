@@ -44,6 +44,13 @@ def validate_candidate(candidate: dict) -> dict:
                 or not re.fullmatch(r"sha256:[a-f0-9]{64}", station["page_digest"])
                 or utc_time(station["retrieved_at"]) > retrieved):
             raise ValueError("STATION_PROVENANCE_INVALID")
+        if station["provider_revision_at"] is not None:
+            try:
+                revision_time = utc_time(station["provider_revision_at"])
+            except ValueError as exc:
+                raise ValueError("STATION_PROVENANCE_INVALID") from exc
+            if revision_time > utc_time(station["retrieved_at"]):
+                raise ValueError("STATION_PROVENANCE_INVALID")
         geometry = station["geometry"]
         if set(geometry) != {"type", "coordinates"} or geometry["type"] != "Point":
             raise ValueError("STATION_GEOMETRY_INVALID")
