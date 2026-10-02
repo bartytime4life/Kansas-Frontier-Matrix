@@ -703,13 +703,6 @@
       "subject": "artifacts/qa/coverage/coverage.xml"
     },
     {
-      "evidence_sha256": "sha256:cbfaa350ae6037e7126529f9ab34165dbe471e14e51aacf13eb4dfa8bd511bac",
-      "evidence_zlib_base64": "eNpLyU8u1i/OLy1KTi3WT04sSczJT9cvLU4rL45PTc4v1g9ydXTxddXLTWFIIaAyuSizJDM5MUc3IzEpsySxBKgHAGxrIww=",
-      "fingerprint": "sha256:ec7f1851fda5bd2f6a84325c437561686180a99ec22de453e99c220cb12f69f6",
-      "rule_id": "KFM-TOPO-016",
-      "subject": "doc-id:kfm://doc/source-catalog/usfws-ecos"
-    },
-    {
       "evidence_sha256": "sha256:0fc8f4158e50495b824661219a53d11f50188274c8ba237542ab11e5a7cea9e7",
       "evidence_zlib_base64": "eNpLyU8u1i8uScxLSSxKKdZ3dvTz9/N0dvTxjHIM8fT308tNYUhBVZKcmJefl5mcmJNZlViSmZ8HVAIAT3YY4Q==",
       "fingerprint": "sha256:edf486954b70d48eccaced53190d57d76a58dcbb3c211075e39cabf86d86cf2b",
