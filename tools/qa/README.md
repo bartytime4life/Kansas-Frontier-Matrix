@@ -82,6 +82,8 @@ A QA report is a review aid. It is not final acceptance by itself.
 - Last-reviewed scans.
 - CI reviewer-summary renderers.
 - QA report formatters.
+- Read-only Site mirror drift diagnostics; reviewed receipt admission remains
+  with the existing conformance check and source owner.
 
 ---
 

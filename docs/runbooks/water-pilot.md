@@ -119,6 +119,24 @@ preservation instructions prohibit bulk replacement. `MOD-01` therefore
 remains held until the source owner reviews the source lineage and each overlay
 before a new receipt is authored. No historical receipt is rewritten here.
 
+## Site mirror drift diagnostic — 2026-10-01
+
+From the repository root, `python tools/qa/site_mirror.py --diagnose` reports
+tracked mirror files whose working-tree hashes differ from the reviewed receipt,
+plus recorded paths that are missing and newly tracked paths absent from that
+receipt. It exits nonzero when review is required. The output identifies its
+byte source as the working tree and reports whether the repository is dirty;
+`repository_head` must not be treated as the identity of dirty bytes. No file
+contents are printed. Run `--check` separately for the unchanged conformance
+decision. Diagnostic hashes and path lists organize overlay review; they do not
+approve a source commit, update a receipt, or establish hosted equivalence.
+
+At monorepo `main@5021bc0a686a9b0df67858ac8ddf624ec1663030`, the
+diagnostic found 15 tracked paths with changed digests and six newly tracked
+mirror paths absent from the historical receipt. The comparison was run from a
+working tree with tool edits, so the result is a dated review inventory, not a
+commit-bound source artifact. The mirror hold remains in force.
+
 ## Reproducible environment
 
 Use Python 3.11 or newer; this batch used Python 3.12.3. From the repository root:
