@@ -128,8 +128,8 @@ class RemoteSensingLineageActivityTests(unittest.TestCase):
         self.assertEqual(len(report["cases"]), 11)
 
     def test_activity_is_deterministic_and_binds_source_projection(self) -> None:
-        first = BUILDER.build_document()
-        second = BUILDER.build_document()
+        first = BUILDER.build_document(telemetry_allowed=True)
+        second = BUILDER.build_document(telemetry_allowed=True)
         self.assertEqual(first, second)
         self.assertTrue(first["activity_id"].startswith("kfm:remote-sensing-activity:"))
         self.assertEqual(first["decision"]["outcome"], "PASS")

@@ -123,8 +123,8 @@ class OpenLineageRunEventProjectionTests(unittest.TestCase):
         self.assertTrue(all(case["ok"] for case in report["cases"]))
 
     def test_internal_projection_is_deterministic_and_pinned(self) -> None:
-        first = BUILDER.build_document(sensitivity_level="internal")
-        second = BUILDER.build_document(sensitivity_level="internal")
+        first = BUILDER.build_document(sensitivity_level="internal", telemetry_allowed=True)
+        second = BUILDER.build_document(sensitivity_level="internal", telemetry_allowed=True)
         self.assertEqual(first, second)
         self.assertEqual(
             first["projection_id"],
@@ -140,17 +140,19 @@ class OpenLineageRunEventProjectionTests(unittest.TestCase):
         document = BUILDER.build_document(
             sensitivity_level="internal",
             event_time="2026-08-06T21:00:00-05:00",
+            telemetry_allowed=True,
         )
         self.assertEqual(document["request"]["event_time"], "2026-08-07T02:00:00Z")
         self.assertEqual(document["event"]["eventTime"], "2026-08-07T02:00:00Z")
 
     def test_success_and_failed_receipts_map_to_terminal_event_types(self) -> None:
-        complete = BUILDER.build_document(sensitivity_level="internal")
+        complete = BUILDER.build_document(sensitivity_level="internal", telemetry_allowed=True)
         failed = BUILDER.build_document(
             run_outcome="FAIL",
             dataset_stage="WORK",
             evidence_release_state="WORK",
             sensitivity_level="internal",
+            telemetry_allowed=True,
         )
         self.assertEqual(complete["event"]["eventType"], "COMPLETE")
         self.assertEqual(failed["decision"]["outcome"], "PASS")
@@ -163,6 +165,7 @@ class OpenLineageRunEventProjectionTests(unittest.TestCase):
             dataset_stage="WORK",
             evidence_release_state="WORK",
             sensitivity_level="internal",
+            telemetry_allowed=True,
         )
         self.assertEqual(partial["decision"], {
             "outcome": "ABSTAIN",
@@ -179,6 +182,7 @@ class OpenLineageRunEventProjectionTests(unittest.TestCase):
             evidence_release_state="PUBLISHED",
             sensitivity_level="generalized",
             public_use_allowed=True,
+            telemetry_allowed=True,
         )
         denied = BUILDER.build_document(
             visibility="PUBLIC",
@@ -201,7 +205,7 @@ class OpenLineageRunEventProjectionTests(unittest.TestCase):
         self.assertIsNone(denied["event"])
 
     def test_event_binds_receipt_and_evidence_bundle_digests_without_payload(self) -> None:
-        event = BUILDER.build_document(sensitivity_level="internal")["event"]
+        event = BUILDER.build_document(sensitivity_level="internal", telemetry_allowed=True)["event"]
         run_facet = event["run"]["facets"]["kfm_run_receipt"]
         dataset_facet = event["outputs"][0]["facets"]["kfm_dataset_state"]
         projection_facet = event["job"]["facets"]["kfm_projection"]
@@ -241,7 +245,7 @@ class OpenLineageRunEventProjectionTests(unittest.TestCase):
         self.assertEqual({item.code for item in result.findings}, {"SCHEMA_INVALID"})
 
     def test_projection_identity_and_run_uuid_change_with_receipt_identity(self) -> None:
-        first = BUILDER.build_document(sensitivity_level="internal")
+        first = BUILDER.build_document(sensitivity_level="internal", telemetry_allowed=True)
         changed = copy.deepcopy(first)
         changed["source_run_receipt"]["spec_hash"] = "sha256:" + "9" * 64
         BUILDER.finalize(changed)
@@ -251,7 +255,7 @@ class OpenLineageRunEventProjectionTests(unittest.TestCase):
         )
 
     def test_validator_does_not_mutate_candidate(self) -> None:
-        document = BUILDER.build_document(sensitivity_level="internal")
+        document = BUILDER.build_document(sensitivity_level="internal", telemetry_allowed=True)
         before = copy.deepcopy(document)
         result = VALIDATOR.validate_document(document)
         self.assertEqual(result.outcome, "PASS")
