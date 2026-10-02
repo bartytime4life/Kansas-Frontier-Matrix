@@ -21,7 +21,7 @@ for import_path in (REPO_ROOT, PACKAGE_SRC):
     if str(import_path) not in sys.path:
         sys.path.insert(0, str(import_path))
 
-from hashing import compute_spec_hash  # noqa: E402
+from hashing import JsonInputError, compute_spec_hash, load_json_file  # noqa: E402
 
 PROFILE = "kfm.telemetry.openlineage-run-event-projection.v1"
 PROFILE_STATUS = "PROPOSED_INACTIVE"
@@ -473,17 +473,23 @@ def build_document(
 
 
 def build_case(case: Mapping[str, Any]) -> dict[str, Any]:
+    def flag(name: str, default: bool) -> bool:
+        value = case.get(name, default)
+        if type(value) is not bool:
+            raise ValueError("fixture flag must be boolean")
+        return value
+
     document = build_document(
         visibility=str(case.get("visibility", "INTERNAL")),
         run_outcome=str(case.get("run_outcome", "SUCCESS")),
         dataset_stage=str(case.get("dataset_stage", "PROCESSED")),
-        public_safe=bool(case.get("public_safe", False)),
+        public_safe=flag("public_safe", False),
         evidence_release_state=str(
             case.get("evidence_release_state", "PROCESSED")
         ),
         sensitivity_level=str(case.get("sensitivity_level", "public")),
-        telemetry_allowed=bool(case.get("telemetry_allowed", True)),
-        public_use_allowed=bool(case.get("public_use_allowed", False)),
+        telemetry_allowed=flag("telemetry_allowed", True),
+        public_use_allowed=flag("public_use_allowed", False),
         event_time=str(case.get("event_time", "2026-08-07T02:00:00Z")),
     )
     mutation = case.get("mutation")
@@ -560,8 +566,14 @@ def main(argv: Sequence[str] | None = None) -> int:
         ),
     )
     args = parser.parse_args(argv)
-    manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
-    document = render_case(args.case, manifest)
+    try:
+        manifest = load_json_file(args.manifest)
+        if not isinstance(manifest, dict):
+            raise ValueError("fixture manifest must be an object")
+        document = render_case(args.case, manifest)
+    except (JsonInputError, KeyError, TypeError, ValueError, AttributeError):
+        print('{"ok":false,"reason_code":"FIXTURE_MANIFEST_INVALID"}')
+        return 2
     print(json.dumps(document, sort_keys=True, separators=(",", ":")))
     return 0
 

@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/contracts-telemetry-openlineage-run-event-projection
 title: OpenLineage RunEvent Projection Contract
-type: semantic-contract; telemetry; lineage; projection
+type: semantic-contract
 version: v0.1.0
 status: draft; PROPOSED; fixture-first; local-only; no-network; non-authoritative
 owners:
@@ -96,6 +96,9 @@ A candidate contains the following bounded inputs:
 | `evidence_resolutions` | Resolution summaries that bind each EvidenceRef to an EvidenceBundle ID and `spec_hash`, release state, sensitivity level, telemetry permission, and public-use permission. |
 
 The candidate must use sorted, unique bindings. Dataset references must match the receipt's declared inputs and outputs exactly, and the set of dataset EvidenceRefs must match the resolution set exactly.
+Fixture manifest values for `public_safe`, `telemetry_allowed`, and
+`public_use_allowed` must be JSON booleans. The local generator rejects other
+types rather than coercing them into permissions.
 
 ## Finite decision model
 

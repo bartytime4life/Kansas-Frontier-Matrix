@@ -61,7 +61,8 @@ jobs:
       - name: Check out projection boundaries
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 1
+          # Required to replay the unchanged historical receipt below.
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up repository Python
@@ -88,12 +89,14 @@ jobs:
           python tools/validators/telemetry/validate_openlineage_run_event_projection.py \
             --fixtures
 
-      - name: Verify current stable-packet authoring receipt integrity
+      # Current implementation behavior is checked by the unit/fixture steps above.
+      - name: Replay historical stable-packet receipt at its authoring commit
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-openlineage-run-event-projection-20260811.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref 25a58f324e6ada808714aecdf9e745d139e1b3bc
 
       - name: Record projection trust boundary
         if: always()

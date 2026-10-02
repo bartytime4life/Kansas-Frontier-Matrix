@@ -36,6 +36,11 @@ This lane owns deterministic construction of reviewable telemetry projection can
 | `build_remote_sensing_lineage_activity.py` | Composes coherent remote-sensing scene metrics and a PROV-shaped activity with an existing governed terminal projection. | Reads an explicit local manifest and writes JSON to stdout; no source access, network, exporter, or repository write. |
 
 The executable reuses the repository hashing package for RFC 8785 JCS plus SHA-256 identity. It references the canonical runtime `RunReceipt` object rather than inventing a telemetry receipt.
+Both command-line generators read manifests through the shared bounded JSON
+loader. An oversized, duplicate-key, malformed, or non-object manifest exits
+with a finite `FIXTURE_MANIFEST_INVALID` diagnostic. Fixture permission flags
+must be JSON booleans; a string such as `"false"` cannot become `true` through
+Python truthiness.
 
 ## Run
 

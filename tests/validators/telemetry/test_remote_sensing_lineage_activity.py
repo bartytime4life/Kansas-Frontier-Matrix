@@ -5,7 +5,9 @@ from __future__ import annotations
 import copy
 import importlib.util
 import json
+import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 from typing import Any
@@ -53,6 +55,32 @@ VALIDATOR = _load_module("test_kfm_remote_sensing_validator", VALIDATOR_PATH)
 
 
 class RemoteSensingLineageActivityTests(unittest.TestCase):
+    def test_telemetry_flag_must_be_json_boolean(self) -> None:
+        with self.assertRaises(ValueError):
+            BUILDER.build_case({"telemetry_allowed": "false"})
+
+    def test_cli_rejects_unsafe_manifest_with_finite_diagnostic(self) -> None:
+        invalid = (
+            '{"cases":[{"case_id":"unsafe","telemetry_allowed":"false"}]}',
+            '{"cases":[{"case_id":"unsafe","telemetry_allowed":false,'
+            '"telemetry_allowed":true}]}',
+            '{"cases":[{"case_id":"unsafe"}]}' + " " * 1_000_000,
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "cases.json"
+            for content in invalid:
+                with self.subTest(length=len(content)):
+                    path.write_text(content, encoding="utf-8")
+                    completed = subprocess.run(
+                        [sys.executable, str(BUILDER_PATH), "--case", "unsafe",
+                         "--manifest", str(path)],
+                        check=False, capture_output=True, text=True,
+                    )
+                    self.assertEqual(completed.returncode, 2)
+                    self.assertEqual(completed.stdout.strip(),
+                                     '{"ok":false,"reason_code":"FIXTURE_MANIFEST_INVALID"}')
+                    self.assertEqual(completed.stderr, "")
+
     def test_schema_is_draft_2020_12_valid_and_composes_openlineage(self) -> None:
         schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
         Draft202012Validator.check_schema(schema)

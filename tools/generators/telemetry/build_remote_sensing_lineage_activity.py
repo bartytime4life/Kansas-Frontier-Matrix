@@ -21,7 +21,7 @@ for import_path in (REPO_ROOT, PACKAGE_SRC):
     if str(import_path) not in sys.path:
         sys.path.insert(0, str(import_path))
 
-from hashing import compute_spec_hash  # noqa: E402
+from hashing import JsonInputError, compute_spec_hash, load_json_file  # noqa: E402
 
 
 def _load_module(name: str, path: Path) -> Any:
@@ -244,6 +244,9 @@ def build_document(
 
 
 def build_case(case: Mapping[str, Any]) -> dict[str, Any]:
+    telemetry_allowed = case.get("telemetry_allowed", True)
+    if type(telemetry_allowed) is not bool:
+        raise ValueError("fixture telemetry flag must be boolean")
     document = build_document(
         scene_count=int(case.get("scene_count", 8)),
         processed_scene_count=int(case.get("processed_scene_count", 8)),
@@ -253,7 +256,7 @@ def build_case(case: Mapping[str, Any]) -> dict[str, Any]:
         started_at=str(case.get("started_at", "2026-08-10T18:00:00Z")),
         ended_at=str(case.get("ended_at", "2026-08-10T18:20:00Z")),
         run_outcome=str(case.get("run_outcome", "SUCCESS")),
-        telemetry_allowed=bool(case.get("telemetry_allowed", True)),
+        telemetry_allowed=telemetry_allowed,
     )
     mutation = case.get("mutation")
     if mutation is None:
@@ -313,10 +316,17 @@ def main(argv: Sequence[str] | None = None) -> int:
         ),
     )
     args = parser.parse_args(argv)
-    manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
+    try:
+        manifest = load_json_file(args.manifest)
+        if not isinstance(manifest, dict):
+            raise ValueError("fixture manifest must be an object")
+        document = render_case(args.case, manifest)
+    except (JsonInputError, KeyError, TypeError, ValueError, AttributeError):
+        print('{"ok":false,"reason_code":"FIXTURE_MANIFEST_INVALID"}')
+        return 2
     print(
         json.dumps(
-            render_case(args.case, manifest),
+            document,
             sort_keys=True,
             separators=(",", ":"),
         )
