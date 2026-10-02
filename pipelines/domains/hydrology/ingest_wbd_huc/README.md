@@ -61,6 +61,7 @@ WBD polygons remain administrative hydrography context. They are not observed st
 ```text
 captured WbdHuc12SourcePackage fixture
   -> schema + spec_hash + response-digest checks
+  -> declared HUC12 / request clause / encoded URL scope agreement
   -> one exact HUC12 selection
   -> normalized geometry-plus-area fingerprint
   -> existing WbdHuc12MaterialChangeAssessment
@@ -87,6 +88,11 @@ stale. The producer rejects symlinked input paths and observed symlinked
 parents, non-regular files, and files whose size or modification metadata
 changes while read. It still consumes caller-supplied capture bytes; these
 checks do not establish source authenticity or admission.
+
+The request-scope check requires the fixture URL to use the declared WBD query
+endpoint with exactly one `where` for the package HUC12 and `f=geojson`. It
+rejects an internally contradictory or extra-filtered request description,
+including on `304` no-change receipts. It does not prove the URL was contacted.
 
 Schema validation keeps at most 100 sorted error keys while consuming the
 validator's error stream. If more errors occur, the output includes the

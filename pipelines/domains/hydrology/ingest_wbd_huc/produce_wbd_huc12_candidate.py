@@ -23,6 +23,7 @@ import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
+from urllib.parse import parse_qsl, urlsplit
 
 from jsonschema import Draft202012Validator, FormatChecker
 
@@ -48,6 +49,8 @@ ALLOWED_TARGETS = [
     "data/quarantine/hydrology/wbd_huc12/",
     "data/raw/hydrology/wbd_huc12/",
 ]
+QUERY_ORIGIN = "hydro.nationalmap.gov"
+QUERY_PATH = "/arcgis/rest/services/wbd/MapServer/6/query"
 
 
 class DuplicateKeyError(ValueError):
@@ -219,6 +222,33 @@ def _property(properties: Mapping[str, Any], *names: str) -> Any:
     return None
 
 
+def _request_scope_findings(package: Mapping[str, Any]) -> list[Finding]:
+    request = package["request"]
+    expected_where = f"huc12='{package['huc12']}'"
+    findings: list[Finding] = []
+    if request["where_clause"] != expected_where:
+        findings.append(Finding("REQUEST_WHERE_MISMATCH", "/request/where_clause"))
+    try:
+        url = urlsplit(request["url"])
+        query = parse_qsl(
+            url.query, keep_blank_values=True, strict_parsing=True, max_num_fields=2
+        )
+    except ValueError:
+        query = []
+        url = None
+    if (
+        url is None
+        or url.scheme != "https"
+        or url.netloc != QUERY_ORIGIN
+        or url.path != QUERY_PATH
+        or url.geturl() != request["url"]
+        or url.fragment
+        or sorted(query) != sorted([("where", expected_where), ("f", "geojson")])
+    ):
+        findings.append(Finding("REQUEST_URL_SCOPE_INVALID", "/request/url"))
+    return findings
+
+
 def _normalize_feature(
     raw: Mapping[str, Any], expected_huc12: str, request: Mapping[str, Any]
 ) -> tuple[dict[str, Any] | None, list[Finding]]:
@@ -360,6 +390,8 @@ def build_candidate(package: Mapping[str, Any]) -> BuildResult:
             findings.append(Finding("HTTP_OK_BODY_MISSING", "/response/feature_collection"))
         elif response["body_sha256"] != expected_body_hash:
             findings.append(Finding("RESPONSE_BODY_HASH_MISMATCH", "/response/body_sha256"))
+
+    findings.extend(_request_scope_findings(package))
 
     if findings:
         return BuildResult(None, tuple(sorted(set(findings))))
