@@ -2754,7 +2754,7 @@ entries:
   path: pipelines/domains/hydrology/rollback.py
   path_sha256: sha256:48ae751d40df507e187ba71fe2dc09137c2a7f1552b4d6ec3ba433de7a803c8e
   authority_status: CONFIRMED
-  implementation_status: NOT_INSPECTED
+  implementation_status: PARTIAL
   owner_role: pipelines_steward
   governing_refs: *id001
   source_digests:
@@ -2765,13 +2765,13 @@ entries:
   reason_codes:
   - placeholder_marker
   - stub_module
-  notes: '{"priority":"P1","disposition":"retain_explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Pinned
-    detector findings only; runtime behavior is not established by this inventory.","user_consequence":"Do not advertise this
-    artifact as an operational capability until its consumer and behavior pass review.","dependencies":["source-integrity","evidence-review-release-boundary"],"next_change":"Inspect
-    the owning consumer and choose a bounded implementation, consolidation or retirement with changed-area tests.","acceptance_command":"python
-    tools/qa/completion_queue.py --check","expected_result":"All pinned markers accounted for; implementation acceptance additionally
-    requires behavior tests, docs and rollback linked in the delivery review.","rollback":"Revert the isolated delivery patch;
-    preserve historical receipts and source bytes."}'
+  notes: '{"priority":"P1","disposition":"explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Inspected:
+    the entry point prints a HOLD envelope with reason ROLLBACK_NOT_IMPLEMENTED, exits 2, and reads or writes nothing.","user_consequence":"Do
+    not advertise this artifact as an operational capability until its consumer and behavior pass review.","dependencies":["source-integrity","evidence-review-release-boundary"],"next_change":"Implement
+    only after the governing source-admission, catalog, release and rollback decisions are reviewed.","acceptance_command":"python
+    -m pytest -q tests/domains/hydrology/test_pipeline_stage_holds.py","expected_result":"Each held stage exits 2 with its
+    HOLD reason code and leaves no file behind; no lifecycle authority is conferred.","rollback":"Revert the isolated delivery
+    patch; preserve historical receipts and source bytes."}'
 - entry_id: gap-273d10c27ebb9c7ad56f68c3
   subject_id: kfm://artifact/connectors/loc/src/loc/fetch.py
   kind: scaffold_gap
@@ -3058,7 +3058,7 @@ entries:
   path: pipelines/domains/hydrology/publish.py
   path_sha256: sha256:33025c73ecdb0c1f8cd66cf7043adac2b08a573978311de107c62537411af1ad
   authority_status: CONFIRMED
-  implementation_status: NOT_INSPECTED
+  implementation_status: PARTIAL
   owner_role: pipelines_steward
   governing_refs: *id001
   source_digests:
@@ -3069,13 +3069,13 @@ entries:
   reason_codes:
   - placeholder_marker
   - stub_module
-  notes: '{"priority":"P1","disposition":"retain_explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Pinned
-    detector findings only; runtime behavior is not established by this inventory.","user_consequence":"Do not advertise this
-    artifact as an operational capability until its consumer and behavior pass review.","dependencies":["source-integrity","evidence-review-release-boundary"],"next_change":"Inspect
-    the owning consumer and choose a bounded implementation, consolidation or retirement with changed-area tests.","acceptance_command":"python
-    tools/qa/completion_queue.py --check","expected_result":"All pinned markers accounted for; implementation acceptance additionally
-    requires behavior tests, docs and rollback linked in the delivery review.","rollback":"Revert the isolated delivery patch;
-    preserve historical receipts and source bytes."}'
+  notes: '{"priority":"P1","disposition":"explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Inspected:
+    the entry point prints a HOLD envelope with reason PUBLISH_NOT_IMPLEMENTED, exits 2, and reads or writes nothing.","user_consequence":"Do
+    not advertise this artifact as an operational capability until its consumer and behavior pass review.","dependencies":["source-integrity","evidence-review-release-boundary"],"next_change":"Implement
+    only after the governing source-admission, catalog, release and rollback decisions are reviewed.","acceptance_command":"python
+    -m pytest -q tests/domains/hydrology/test_pipeline_stage_holds.py","expected_result":"Each held stage exits 2 with its
+    HOLD reason code and leaves no file behind; no lifecycle authority is conferred.","rollback":"Revert the isolated delivery
+    patch; preserve historical receipts and source bytes."}'
 - entry_id: gap-2c3d56ccae321031fa2e464f
   subject_id: kfm://artifact/schemas/contracts/v1/domains/archaeology/decision_envelope.schema.json
   kind: scaffold_gap
@@ -4688,7 +4688,7 @@ entries:
   path: pipelines/domains/hydrology/triplets.py
   path_sha256: sha256:1a139e14f1ec5df84bbbdc2d8502dfd7135b28fca3af7c722bf9a6df6f643e21
   authority_status: CONFIRMED
-  implementation_status: NOT_INSPECTED
+  implementation_status: PARTIAL
   owner_role: pipelines_steward
   governing_refs: *id001
   source_digests:
@@ -4699,13 +4699,13 @@ entries:
   reason_codes:
   - placeholder_marker
   - stub_module
-  notes: '{"priority":"P1","disposition":"retain_explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Pinned
-    detector findings only; runtime behavior is not established by this inventory.","user_consequence":"Do not advertise this
-    artifact as an operational capability until its consumer and behavior pass review.","dependencies":["source-integrity","evidence-review-release-boundary"],"next_change":"Inspect
-    the owning consumer and choose a bounded implementation, consolidation or retirement with changed-area tests.","acceptance_command":"python
-    tools/qa/completion_queue.py --check","expected_result":"All pinned markers accounted for; implementation acceptance additionally
-    requires behavior tests, docs and rollback linked in the delivery review.","rollback":"Revert the isolated delivery patch;
-    preserve historical receipts and source bytes."}'
+  notes: '{"priority":"P1","disposition":"explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Inspected:
+    the entry point prints a HOLD envelope with reason TRIPLETS_NOT_IMPLEMENTED, exits 2, and reads or writes nothing.","user_consequence":"Do
+    not advertise this artifact as an operational capability until its consumer and behavior pass review.","dependencies":["source-integrity","evidence-review-release-boundary"],"next_change":"Implement
+    only after the governing source-admission, catalog, release and rollback decisions are reviewed.","acceptance_command":"python
+    -m pytest -q tests/domains/hydrology/test_pipeline_stage_holds.py","expected_result":"Each held stage exits 2 with its
+    HOLD reason code and leaves no file behind; no lifecycle authority is conferred.","rollback":"Revert the isolated delivery
+    patch; preserve historical receipts and source bytes."}'
 - entry_id: gap-4534e1e14c390967abdbfa40
   subject_id: kfm://artifact/schemas/contracts/v1/domains/soil/source_state_hash.schema.json
   kind: scaffold_gap
@@ -10666,7 +10666,7 @@ entries:
   path: pipelines/domains/hydrology/ingest.py
   path_sha256: sha256:edc1c87e6102cfd6161e854a42c05b7a19184520b5d894a8545485cfc0f24f70
   authority_status: CONFIRMED
-  implementation_status: NOT_INSPECTED
+  implementation_status: PARTIAL
   owner_role: pipelines_steward
   governing_refs: *id001
   source_digests:
@@ -10677,13 +10677,13 @@ entries:
   reason_codes:
   - placeholder_marker
   - stub_module
-  notes: '{"priority":"P1","disposition":"retain_explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Pinned
-    detector findings only; runtime behavior is not established by this inventory.","user_consequence":"Do not advertise this
-    artifact as an operational capability until its consumer and behavior pass review.","dependencies":["source-integrity","evidence-review-release-boundary"],"next_change":"Inspect
-    the owning consumer and choose a bounded implementation, consolidation or retirement with changed-area tests.","acceptance_command":"python
-    tools/qa/completion_queue.py --check","expected_result":"All pinned markers accounted for; implementation acceptance additionally
-    requires behavior tests, docs and rollback linked in the delivery review.","rollback":"Revert the isolated delivery patch;
-    preserve historical receipts and source bytes."}'
+  notes: '{"priority":"P1","disposition":"explicit_hold","markers":["PLACEHOLDER_MARKER","STUB_MODULE"],"current_behavior":"Inspected:
+    the entry point prints a HOLD envelope with reason INGEST_NOT_IMPLEMENTED, exits 2, and reads or writes nothing.","user_consequence":"Do
+    not advertise this artifact as an operational capability until its consumer and behavior pass review.","dependencies":["source-integrity","evidence-review-release-boundary"],"next_change":"Implement
+    only after the governing source-admission, catalog, release and rollback decisions are reviewed.","acceptance_command":"python
+    -m pytest -q tests/domains/hydrology/test_pipeline_stage_holds.py","expected_result":"Each held stage exits 2 with its
+    HOLD reason code and leaves no file behind; no lifecycle authority is conferred.","rollback":"Revert the isolated delivery
+    patch; preserve historical receipts and source bytes."}'
 - entry_id: gap-9d46cd50ec57b1130f2a7357
   subject_id: kfm://artifact/connectors/ksu_research_extension/src/ksu_research_extension/descriptor.yaml
   kind: scaffold_gap

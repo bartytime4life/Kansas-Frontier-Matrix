@@ -388,6 +388,10 @@ pipelines/domains/hydrology/
 ├── README.md                         # this file
 ├── PIPELINE_CONTRACT.md              # PROPOSED: Hydrology execution contract
 ├── promote.py                        # EXISTING / NEEDS VERIFICATION: promotion decision stub emitter
+├── ingest.py                         # EXISTING: HOLD entry point (INGEST_NOT_IMPLEMENTED); reads and writes nothing
+├── publish.py                        # EXISTING: HOLD entry point (PUBLISH_NOT_IMPLEMENTED); reads and writes nothing
+├── rollback.py                       # EXISTING: HOLD entry point (ROLLBACK_NOT_IMPLEMENTED); reads and writes nothing
+├── triplets.py                       # EXISTING: HOLD entry point (TRIPLETS_NOT_IMPLEMENTED); reads and writes nothing
 ├── run_dry_fixture.py                # PROPOSED if repo Python convention is accepted
 ├── normalize_watershed.py            # PROPOSED
 ├── normalize_hydro_feature.py        # PROPOSED
