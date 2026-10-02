@@ -285,6 +285,19 @@ existing external directory, rejects symlinked parents and repository paths,
 and creates files without overwriting. It is stacked on the numeric-input
 repair and grants no lifecycle write, admission, release, or publication.
 
+### WBD HUC12 bounded input read — 2026-10-01
+
+`MOD-20` / P1 / **CONFIRMED on `main@30b244361c2eabe4cd92161c6afff5b1592da600`**:
+the fixture-first producer checked a source package's size, then used an
+unbounded text read. A file that grew after the size check could exceed the
+declared 8 MiB cap. The input path also accepted an observed symlinked parent.
+The owning implementation root is `pipelines/domains/hydrology/ingest_wbd_huc/`,
+with existing contract and test roots. This slice bounds the actual read,
+requires a stable regular file, and denies observed symlinked parents. Tests
+cover stale path-size metadata and a symlinked parent. Filesystem paths remain
+caller-controlled and mutable; the fix does not authenticate the capture,
+admit a source, write lifecycle state, or permit release or publication.
+
 ### Site mirror source-identity guard — 2026-10-01
 
 `MOD-13` / P1 / **CONFIRMED on `main@9465a573d8859cd1564124897d10d848f9c7c350`**:

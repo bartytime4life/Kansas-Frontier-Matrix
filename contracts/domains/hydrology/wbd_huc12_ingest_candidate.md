@@ -76,6 +76,7 @@ The implementation must fail closed on:
 
 - invalid, oversized, non-UTF-8, duplicate-key, non-finite (including exponent
   overflow), symlink, or non-object JSON input;
+- input growth beyond the 8 MiB read limit, or a file changing while it is read;
 - source-package schema failure or `spec_hash` mismatch;
 - response body digest mismatch;
 - a `304` response carrying body bytes or lacking a prior snapshot;
@@ -86,6 +87,10 @@ The implementation must fail closed on:
 - an unsafe output path or overwrite request.
 
 Diagnostics contain stable codes and bounded paths. They do not echo source payload values.
+The producer opens only a regular file, refuses symlinked paths and observed
+symlinked parents, and reads at most 8 MiB plus one byte. A captured package
+must be stable during that read. This check does not authenticate its origin or
+make mutable filesystem paths immutable capture identities.
 Programmatic source-package inputs with values that cannot be canonically
 serialized also return a finite diagnostic instead of raising an exception.
 When an output file is requested, it is a create-only review artifact in an
