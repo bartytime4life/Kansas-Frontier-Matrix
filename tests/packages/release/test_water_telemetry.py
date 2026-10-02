@@ -1,5 +1,6 @@
 import json
 from copy import deepcopy
+from datetime import datetime, timedelta, timezone
 
 import pytest
 from jsonschema import Draft202012Validator, FormatChecker
@@ -23,6 +24,40 @@ def test_local_receipt_matches_existing_contract_and_has_no_sensitive_content():
         assert forbidden not in text
     assert receipt['operational']['release_authorized'] is False
     assert validate_payload(source_health(source.manifest, candidate, station_id='USGS-06892518')).ok
+
+
+def test_complete_capture_uses_each_station_success_attempt_time(tmp_path):
+    class AdvancingClock(Clock):
+        tick = 0
+
+        def now(self):
+            result = datetime(2026, 9, 30, 18, 1, tzinfo=timezone.utc) + timedelta(seconds=self.tick)
+            self.tick += 1
+            return result
+
+    source = capture(START, END, transport=FixtureTransport(), clock=AdvancingClock())
+    candidate = normalize_capture(source.manifest, source.objects)
+    completion_time = source.manifest['captured_at']
+    station_times = []
+    for station_id in ('USGS-06892518', 'USGS-07156900'):
+        expected = max(item['observed_at'] for item in source.manifest['attempts']
+                       if item['station_id'] == station_id and item['outcome'] == 'SUCCESS')
+        health = source_health(source.manifest, candidate, station_id=station_id)
+        assert health['last_success_at'] == expected
+        assert health['probed_at'] == completion_time
+        assert validate_payload(health).ok
+        station_times.append(expected)
+    assert station_times[0] < station_times[1] < completion_time
+    root = tmp_path / 'store'
+    init_store(root)
+    assert stage(root, source)['outcome'] == 'CANDIDATE_READY'
+    stored = [json.loads(path.read_text()) for path in root.glob(
+        'data/receipts/ingest/usgs-nwis/*/health/*.json')]
+    assert {item['source_id']: item['last_success_at'] for item in stored} == {
+        f'usgs-nwis:{station_id}': last_success
+        for station_id, last_success in zip(
+            ('USGS-06892518', 'USGS-07156900'), station_times)
+    }
 
 
 def test_empty_and_failed_capture_never_report_healthy():

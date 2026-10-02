@@ -75,6 +75,9 @@ An unattempted station remains `NOT_PROBED` / `UNKNOWN`. A successful attempt
 in this capture may populate `last_success_at` even when a later page fails;
 `NO_PRIOR_SUCCESS` means no successful attempt is recorded in this capture.
 This producer does not infer success from historical captures.
+For the local water producer, `last_success_at` is the latest successful
+retrieval-attempt timestamp for that station. `probed_at` is the capture's
+completion timestamp; it must not be substituted for an earlier attempt time.
 
 ## Fail-closed consistency rules
 
