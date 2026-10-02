@@ -18,7 +18,6 @@ related:
   - data/registry/sources/hazards/
   - policy/domains/hazards/
   - policy/release/hazards/
-  - ../../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain:hazards, source-registry, governance, admission, emergency-alert-boundary]
 notes:
   - "FOLDER FORM: requested as docs/domains/hazards/SOURCE_REGISTRY/README.md — i.e. SOURCE_REGISTRY as a FOLDER with a README index, holding per-source-family entry files. This diverges from the single-file docs/domains/habitat/SOURCE_REGISTRY.md used in the Habitat lane. Both are doctrine-permitted (Directory Rules §6.1.a: same-named folder when a profile warrants splitting). The file-vs-folder inconsistency across lanes is a low-stakes drift item, tracked as OQ-HAZ-SR-01."
@@ -343,7 +342,7 @@ This index is done enough to enter the repository when:
 - `schemas/contracts/v1/source/source-descriptor.json` — descriptor schema *(PROPOSED home; NEEDS VERIFICATION)*.
 - `policy/domains/hazards/` and `policy/release/hazards/` — Hazards admissibility + release policy *(PROPOSED)*.
 - `data/registry/sources/hazards/` — machine-readable hazards source registry *(PROPOSED)*.
-- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — §20.5 emergency-alert boundary; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — §20.5 emergency-alert boundary; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
 
 ---
 

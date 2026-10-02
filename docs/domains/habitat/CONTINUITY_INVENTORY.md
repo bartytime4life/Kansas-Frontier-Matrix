@@ -16,7 +16,6 @@ related:
   - docs/doctrine/directory-rules.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/registers/DRIFT_REGISTER.md
-  - docs/doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, habitat, continuity, lineage, governance]
 notes:
   - CONTRACT_VERSION = "3.0.0"

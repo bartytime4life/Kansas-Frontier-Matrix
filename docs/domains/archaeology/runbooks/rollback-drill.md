@@ -454,7 +454,7 @@ This runbook is done enough to enter the repository when:
 
 PROPOSED links. All paths are PROPOSED until verified against a mounted repo. Relative paths below assume the canonical location `docs/runbooks/archaeology/rollback-drill.md`.
 
-- [`docs/doctrine/ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — _TODO_ — operating contract v3.0; §§10.1, 21, 33, 34, 37, 38.
+- `docs/doctrine/ai-build-operating-contract.md` (held: DOC-DOC-002) — _TODO_ — operating contract v3.0; §§10.1, 21, 33, 34, 37, 38.
 - [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — _TODO_ — §6.1.b runbooks placement contract; §4 placement protocol; §13.5 drift; §18.b OPEN-DR-02 / OPEN-DR-04.
 - [`./README.md`](./README.md) — _TODO_ — Archaeology runbooks-folder README (`docs/runbooks/archaeology/`).
 - [`docs/runbooks/README.md`](../README.md) — _TODO_ — canonical runbooks root.

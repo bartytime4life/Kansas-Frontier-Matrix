@@ -15,7 +15,6 @@ related:
   - docs/domains/fauna/SENSITIVITY.md
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
   - docs/standards/PROV.md
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, fauna, lifecycle, governance, sensitivity]
 notes:
   - CONTRACT_VERSION = "3.0.0".
@@ -520,7 +519,7 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — TODO link target; canonical lifecycle invariant.
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — TODO link target; placement protocol and Domain Placement Law (§12).
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — TODO link target; public clients consume governed APIs only.
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — TODO link target; `CONTRACT_VERSION = "3.0.0"`; finite-outcome and `RuntimeResponseEnvelope` definitions.
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — TODO link target; `CONTRACT_VERSION = "3.0.0"`; finite-outcome and `RuntimeResponseEnvelope` definitions.
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance standards profile (`PROV.md` vs `PROVENANCE.md` filename open item — NEEDS VERIFICATION).
 
 </details>

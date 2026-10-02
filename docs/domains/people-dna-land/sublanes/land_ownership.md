@@ -15,7 +15,6 @@ related:
   - docs/domains/people-dna-land/sublanes/land.md
   - docs/domains/people-dna-land/sublanes/people/README.md
   - ../../../doctrine/directory-rules.md
-  - ../../../doctrine/ai-build-operating-contract.md
   - docs/standards/PROV.md
 tags: [kfm, domain, people-dna-land, land-ownership, sublane]
 notes:
@@ -546,7 +545,7 @@ sequenceDiagram
 - `docs/domains/people-dna-land/sublanes/genealogy/README.md` (not present) — sibling sublane (PROPOSED)
 - `docs/domains/frontier-matrix/README.md` (not present) — owner of `Land Office Record` / `Public Land Record` (PROPOSED)
 - [`directory-rules.md`](../../../doctrine/directory-rules.md) — placement law (§3, §12, §2.4, §7.4) (CONFIRMED file role)
-- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - [`docs/standards/PROV.md`](../../../standards/PROV.md) — provenance crosswalk
 - `docs/registers/VERIFICATION_BACKLOG.md` · `docs/registers/DRIFT_REGISTER.md` — open items + drift (PROPOSED paths)
 

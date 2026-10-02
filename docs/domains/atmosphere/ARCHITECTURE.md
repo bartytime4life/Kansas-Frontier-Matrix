@@ -10,7 +10,6 @@ updated: 2026-05-28
 policy_label: public
 contract_version: "3.0.0"
 related:
-  - ../../doctrine/ai-build-operating-contract.md
   - docs/domains/README.md
   - docs/doctrine/directory-rules.md
   - docs/architecture/governed-api/README.md
@@ -519,7 +518,7 @@ Fixtures should be **no-network** by default. Co-location windows (e.g., 2–6 w
 > [!NOTE]
 > All paths below are **PROPOSED** until mounted-repo verification. Resolve links once the corresponding docs land.
 
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract `CONTRACT_VERSION = "3.0.0"` *(CONFIRMED present in project)*
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — canonical operating contract `CONTRACT_VERSION = "3.0.0"` *(CONFIRMED present in project)*
 - [`docs/domains/README.md`](../README.md) — domains landing page *(PROPOSED)*
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law, v1.3 *(CONFIRMED present in project; PROPOSED in repo path)*
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED lifecycle *(PROPOSED)*
@@ -624,7 +623,7 @@ These items are explicitly unresolved by this document and should be tracked in 
 > [!NOTE]
 > This document is **draft** and reflects CONFIRMED doctrine from the KFM Domains Culmination Atlas (Ch. 11), the KFM Encyclopedia (Atmosphere/Air/Climate), and Directory Rules v1.3. Implementation depth is **PROPOSED** until mounted-repo evidence is available. Operating contract `CONTRACT_VERSION = "3.0.0"`.
 
-**Related docs:** [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) · [`docs/domains/README.md`](../README.md) · [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) · sibling domains under [`docs/domains/`](../README.md)
+**Related docs:** `ai-build-operating-contract.md` (held: DOC-DOC-002) · [`docs/domains/README.md`](../README.md) · [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) · [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) · sibling domains under [`docs/domains/`](../README.md)
 
 **Last reviewed:** 2026-05-28 · **Next review:** within 6 months (per Directory Rules §15 README contract: docs older than 6 months are flagged for review)
 

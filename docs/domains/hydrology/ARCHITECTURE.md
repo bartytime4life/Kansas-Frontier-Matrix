@@ -13,7 +13,6 @@ related:
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
   - docs/architecture/contract-schema-policy-split.md
-  - docs/doctrine/ai-build-operating-contract.md
   - docs/domains/hydrology/README.md
   - contracts/domains/hydrology/
   - schemas/contracts/v1/domains/hydrology/

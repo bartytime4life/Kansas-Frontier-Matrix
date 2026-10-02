@@ -21,7 +21,6 @@ related:
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/doctrine/directory-rules.md
-  - docs/doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, people, dna, land, release, sensitivity, governance]
 notes:
   - "CONTRACT_VERSION pinned to 3.0.0 per ai-build-operating-contract.md."

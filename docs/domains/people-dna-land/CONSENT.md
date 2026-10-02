@@ -14,7 +14,6 @@ related:
   - docs/domains/people-dna-land/API_CONTRACTS.md
   - docs/domains/people-dna-land/CANONICAL_PATHS.md
   - ../../doctrine/directory-rules.md
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, people-dna-land, consent, revocation, dna, living-person, render-gate]
 notes:
   # CONTRACT_VERSION = "3.0.0"
@@ -369,7 +368,7 @@ PROPOSED; homes use the **whole-domain** `people-dna-land` segment (or the cross
 - [`./CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) — consent-lane placement conflict (§9.3, VB-PDL-04)
 - `./sublanes/dna/README.md` — DNA sublane *(path pending the `sublanes/` ADR, ADR-NNNN)*
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — placement law (§6.5 `policy/`, §2.4 ADR triggers)
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - Corpus anchors: Atlas Ch. 16 §C (`ConsentGrant`, `RevocationReceipt`, `DNAKitToken`) · §L (governed AI) · §24.5.3 (tier transitions) · KFM-P5-PROG-0005/0006/0007 (sidecar, VC formats, render gate) · Pass-10 C6-07 (consent tokens), C6-08 (revocation/cache), C5-09 (tombstones), C9-02/03/04 (FamilySearch / DTC / GA4GH)
 
 -----

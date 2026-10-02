@@ -428,7 +428,7 @@ See [`_examples/stac-item-example.json`](../_examples/stac-item-example.json) fo
 - [`docs/sources/catalog/epa/RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) — Family-level rights map (PROPOSED placement).
 - [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — Authority boundaries and schema-home discipline.
 - [`docs/standards/STAC_KFM_PROFILE.md`](../../../standards/STAC_KFM_PROFILE.md) — STAC `kfm:provenance` profile (PROPOSED).
-- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — §34 GENERATED\_RECEIPT / ModelRunReceipt discipline (CONFIRMED contract).
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — §34 GENERATED\_RECEIPT / ModelRunReceipt discipline (CONFIRMED contract).
 - [`data/registry/sources/`](../../../../data/registry/sources/) — Canonical SourceDescriptor home (ADR-0001).
 - `policy/correction/barkjohn/` (not present) — Version pin and allow rule (PROPOSED).
 - `docs/adr/ADR-0001-schema-home.md` (not present) — Schema-home rule.

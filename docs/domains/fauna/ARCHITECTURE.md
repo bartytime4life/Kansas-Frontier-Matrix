@@ -8,7 +8,7 @@ owners: <fauna-lane-owner@kfm> <governance-steward@kfm> <sensitivity-reviewer@kf
 created: 2026-05-16
 updated: 2026-05-29
 policy_label: public
-related: [docs/domains/README.md, docs/domains/fauna/README.md, docs/domains/fauna/API_CONTRACTS.md, docs/domains/fauna/adr/README.md, docs/domains/habitat/ARCHITECTURE.md, docs/domains/flora/ARCHITECTURE.md, docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md, docs/doctrine/directory-rules.md, docs/standards/PROV.md, docs/adr/README.md, ../../doctrine/ai-build-operating-contract.md]
+related: [docs/domains/README.md, docs/domains/fauna/README.md, docs/domains/fauna/API_CONTRACTS.md, docs/domains/fauna/adr/README.md, docs/domains/habitat/ARCHITECTURE.md, docs/domains/flora/ARCHITECTURE.md, docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md, docs/doctrine/directory-rules.md, docs/standards/PROV.md, docs/adr/README.md]
 tags: [kfm, domain, fauna, biodiversity, geoprivacy, governance]
 notes: [CONTRACT_VERSION pinned 3.0.0 # implementation-layer claims PROPOSED; no mounted repo verification this session # schema-home discrepancy schemas/contracts/v1/fauna/ (Atlas §24.13) vs schemas/contracts/v1/domains/fauna/ (Directory Rules §12) flagged for ADR — see §2.1 # fauna is a sensitive lane: T4 default for sensitive occurrences/sites]
 owning_root: docs/
@@ -522,7 +522,7 @@ This document is done enough to enter the repository when:
 - [`docs/domains/flora/ARCHITECTURE.md`](../flora/ARCHITECTURE.md) — sibling species-related lane. *(TODO link target)*
 - [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) — operational source refresh procedure.
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Domain Placement Law and root authority split.
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`).
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating law (`CONTRACT_VERSION = "3.0.0"`).
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O / PAV profile and canonicalization stack.
 - [`docs/standards/PMTILES.md`](../../standards/PMTILES.md) — PMTiles governance for any published Fauna tile artifacts.
 - [`docs/adr/`](../../adr/) — repo-wide ADR index (look for `ADR-fauna-schema-home` / `ADR-domain-slug` once raised).

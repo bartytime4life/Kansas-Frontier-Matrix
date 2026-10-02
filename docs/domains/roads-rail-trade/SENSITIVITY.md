@@ -8,7 +8,7 @@ owners: TODO — Roads/Rail/Trade domain steward + sensitivity reviewer + rights
 created: 2026-06-07
 updated: 2026-06-07
 policy_label: public
-related: [docs/domains/roads-rail-trade/README.md, docs/domains/roads-rail-trade/PRESERVATION_MATRIX.md, docs/domains/roads-rail-trade/PIPELINE.md, docs/domains/roads-rail-trade/OBJECT_FAMILIES.md, policy/sensitivity/transport/, ../../doctrine/ai-build-operating-contract.md, docs/standards/SENSITIVITY_RUBRIC.md]
+related: [docs/domains/roads-rail-trade/README.md, docs/domains/roads-rail-trade/PRESERVATION_MATRIX.md, docs/domains/roads-rail-trade/PIPELINE.md, docs/domains/roads-rail-trade/OBJECT_FAMILIES.md, policy/sensitivity/transport/, docs/standards/SENSITIVITY_RUBRIC.md]
 tags: [kfm, domain, roads-rail-trade, sensitivity, rights, tiers, redaction, sovereignty]
 notes:
   - "CONTRACT_VERSION = 3.0.0 pinned for this doctrine-adjacent doc."
@@ -307,7 +307,7 @@ This document is done enough to enter the repository when:
 - [`docs/domains/roads-rail-trade/PIPELINE.md`](./PIPELINE.md) — RAW → PUBLISHED lifecycle & gates
 - [`docs/domains/roads-rail-trade/OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) — object identity & roles
 - [`policy/sensitivity/transport/`](../../../policy/sensitivity/transport/) — sensitivity policy home *(PROPOSED)*
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — §23 sensitive-domain matrix; `CONTRACT_VERSION = "3.0.0"`
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — §23 sensitive-domain matrix; `CONTRACT_VERSION = "3.0.0"`
 - `docs/standards/SENSITIVITY_RUBRIC.md` — cross-cutting rubric *(PROPOSED; not yet authored)*
 
 *Last updated: 2026-06-07 · [↑ Back to top](#top)*

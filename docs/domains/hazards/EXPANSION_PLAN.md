@@ -10,7 +10,6 @@ updated: 2026-06-05
 policy_label: public
 contract_version: "3.0.0"
 related:
-  - ../../doctrine/ai-build-operating-contract.md
   - ../../doctrine/directory-rules.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/lifecycle-law.md

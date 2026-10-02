@@ -18,7 +18,6 @@ related:
   - release/README.md
   - data/published/layers/atmosphere/README.md
   - docs/doctrine/directory-rules.md
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, atmosphere, air, release, governance, index]
 notes:
   - CONTRACT_VERSION 3.0.0 pinned; doctrine-adjacent navigation index.
@@ -536,7 +535,7 @@ This document is done enough to enter the repository when:
 - [`./SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md) — Atmosphere source roster *(PROPOSED neighbor)*
 - [`../README.md`](../README.md) — `docs/domains/` landing
 - [`../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules (§9.2 release, §12 Domain Placement, §10 anti-patterns)
-- [`../../../ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract (CONTRACT_VERSION 3.0.0)
+- `../../../ai-build-operating-contract.md` (held: DOC-DOC-002) — canonical operating contract (CONTRACT_VERSION 3.0.0)
 - [`../../standards/PROV.md`](../../standards/PROV.md) — Provenance profile *(name pending ADR — see open questions)*
 - [`../../standards/PMTILES.md`](../../standards/PMTILES.md) — PMTiles governance profile
 - [`../../standards/OGC-API-TILES.md`](../../standards/OGC-API-TILES.md) — Tile delivery standard
@@ -552,7 +551,7 @@ This document is done enough to enter the repository when:
 
 ---
 
-**Related:** [README](./README.md) · [Pipeline](./PIPELINE.md) · [Publication Posture](./PUBLICATION_POSTURE.md) · [Preservation Matrix](./PRESERVATION_MATRIX.md) · [Directory Rules](../../doctrine/directory-rules.md) · [Operating Contract](../../doctrine/ai-build-operating-contract.md) · [release/](../../../release/README.md)
+**Related:** [README](./README.md) · [Pipeline](./PIPELINE.md) · [Publication Posture](./PUBLICATION_POSTURE.md) · [Preservation Matrix](./PRESERVATION_MATRIX.md) · [Directory Rules](../../doctrine/directory-rules.md) · Operating Contract (held: DOC-DOC-002) · [release/](../../../release/README.md)
 
 **Last reviewed:** 2026-05-29 · **Doc type:** Release index (human-facing navigation; not a release decision authority) · **Authority anchor:** Directory Rules §9.2, §12 · **Truth posture:** cite-or-abstain · **Version:** v2 · **CONTRACT_VERSION = "3.0.0"**
 

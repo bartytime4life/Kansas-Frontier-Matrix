@@ -16,7 +16,6 @@ related:
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - ../../doctrine/directory-rules.md
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, people-dna-land, continuity, governance, sensitivity]
 notes:
   # CONTRACT_VERSION = "3.0.0"
@@ -470,7 +469,7 @@ PROPOSED neighbors. All paths PROPOSED pending Directory Rules verification and 
 - `docs/registers/VERIFICATION_BACKLOG.md` — V1–V10 above propagate here · **PROPOSED**
 - `docs/adr/` — ADRs for canonical-form choice, schema home, sep-of-duties, sublanes, consent lane · **PROPOSED**
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — §12 Domain Placement Law (CONFIRMED authority for this doc’s path)
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`; §8 truth labels)
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating law (`CONTRACT_VERSION = "3.0.0"`; §8 truth labels)
 - Atlas §16 (`[DOM-PEOPLE]`) · §17 (Frontier Matrix) · §24.1/§24.2/§24.3/§24.5/§24.9 · Encyclopedia §7.14
 
 [Back to top](#contents)

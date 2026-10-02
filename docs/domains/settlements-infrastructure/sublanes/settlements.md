@@ -9,7 +9,6 @@ created: 2026-05-19
 updated: 2026-06-07
 policy_label: public (sublane scaffold) — content tiers vary; Settlement / Municipality / GhostTown default T0; sovereignty-sensitive surfaces (ReservationCommunity, archaeology-adjacent townsites) escalate per per-source review
 related:
-  - docs/doctrine/ai-build-operating-contract.md
   - docs/domains/settlements-infrastructure/README.md
   - docs/domains/settlements-infrastructure/sublanes/infrastructure.md
   - docs/domains/roads-rail-trade/README.md

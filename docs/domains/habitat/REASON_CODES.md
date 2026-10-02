@@ -18,7 +18,6 @@ related:
   - docs/standards/PROV.md
   - control_plane/policy_gate_register.yaml
   - control_plane/release_state_register.yaml
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, habitat, reason-codes, policy, deny, abstain, quarantine, governance]
 notes:
   - "Reason-code catalog localizes the Atlas §24.6.3 master gate-failure reason codes and the §24.3 finite-outcome classes to the Habitat lane."
@@ -395,7 +394,7 @@ This document is done enough to enter the repository when:
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance vocabulary for receipts that carry codes.
 - [`control_plane/policy_gate_register.yaml`](../../../control_plane/policy_gate_register.yaml) — operational registry for these codes *(NEEDS VERIFICATION)*.
 - [`control_plane/release_state_register.yaml`](../../../control_plane/release_state_register.yaml) — release-state vocabulary referenced by `HOLD` outcomes *(NEEDS VERIFICATION)*.
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
 
 ---
 

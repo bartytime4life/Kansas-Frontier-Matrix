@@ -8,7 +8,7 @@ owners: KFM Atmosphere/Air domain stewards  # PLACEHOLDER — confirm steward ro
 created: 2026-05-29
 updated: 2026-05-29
 policy_label: public
-related: [../../doctrine/ai-build-operating-contract.md, ../../doctrine/directory-rules.md, docs/domains/atmosphere/SOURCE_FAMILIES.md, docs/domains/atmosphere/SOURCES.md, docs/domains/atmosphere/README.md, control_plane/]
+related: [../../doctrine/directory-rules.md, docs/domains/atmosphere/SOURCE_FAMILIES.md, docs/domains/atmosphere/SOURCES.md, docs/domains/atmosphere/README.md, control_plane/]
 tags: [kfm]
 notes: [CONTRACT_VERSION pinned 3.0.0; this file is a HUMAN-FACING POINTER PAGE under docs/ — it indexes/links, it is NOT the machine-readable control_plane register; three-file relationship flagged OQ-AIR-IDX-01]
 owning_root: docs/
@@ -216,7 +216,7 @@ This document is done enough to enter the repository when:
 - [`SOURCE_FAMILIES.md`](./SOURCE_FAMILIES.md) — the family catalog *(PROPOSED)*
 - [`SOURCES.md`](./SOURCES.md) — descriptor discipline + admission flow *(PROPOSED)*
 - [`docs/domains/atmosphere/README.md`](./README.md) — domain landing page *(NEEDS VERIFICATION)*
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — placement doctrine *(path PROPOSED — verify)*
 
 ---

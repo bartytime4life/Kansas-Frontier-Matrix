@@ -9,7 +9,6 @@ created: 2026-05-27
 updated: 2026-05-29
 policy_label: public                                  # Document is public; subject content is sensitivity-gated
 related:
-  - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/authority-ladder.md
   - docs/doctrine/lifecycle-law.md

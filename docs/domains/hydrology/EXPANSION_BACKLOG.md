@@ -10,7 +10,6 @@ updated: 2026-07-30
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
-  - ../../doctrine/ai-build-operating-contract.md
   - ../../doctrine/directory-rules.md
   - docs/domains/hydrology/README.md
   - docs/domains/hydrology/DATA_LIFECYCLE.md
@@ -424,7 +423,7 @@ These ideas surface in the project corpus but are **not** in scope for hydrology
 > [!NOTE]
 > Links are repository-relative. Targets marked **TODO** are referenced for completeness; the file may not yet exist and should be created or linked as the lane matures.
 
-- [Operating contract](../../doctrine/ai-build-operating-contract.md) — canonical; `CONTRACT_VERSION = "3.0.0"`
+- Operating contract (held: DOC-DOC-002) — canonical; `CONTRACT_VERSION = "3.0.0"`
 - [Directory Rules](../../doctrine/directory-rules.md)
 - [Domain README — Hydrology](./README.md) — **TODO**
 - [Hydrology — Data Lifecycle](./DATA_LIFECYCLE.md) — companion lane doc

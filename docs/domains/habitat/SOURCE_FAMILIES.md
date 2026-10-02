@@ -20,7 +20,6 @@ related:
   - docs/doctrine/directory-rules.md
   - data/registry/sources/habitat/
   - schemas/contracts/v1/source/source-descriptor.json
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain:habitat, sources, source-families, source-descriptor, dossier, rights, governance]
 notes:
   - "Per-family DEEP DOSSIERS. Companion to docs/domains/habitat/SOURCES.md (the one-row-per-family index). This doc holds one detailed profile per source family; SOURCES.md stays the lightweight index. Division of responsibility recorded in §1 and OQ-HAB-SF-01."
@@ -372,7 +371,7 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — §7.4 source schema home; §12 Domain Placement Law.
 - `data/registry/sources/habitat/` — append-only descriptor authority *(CONFIRMED home / PROPOSED presence)*.
 - `schemas/contracts/v1/source/source-descriptor.json` — `SourceDescriptor` schema *(CONFIRMED default home / PROPOSED presence)*.
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — gates A–G; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — gates A–G; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
 
 ---
 

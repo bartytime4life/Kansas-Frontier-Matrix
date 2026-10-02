@@ -9,7 +9,6 @@ created: 2026-05-15
 updated: 2026-05-28
 policy_label: public
 related:
-  - ../../doctrine/ai-build-operating-contract.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/trust-membrane.md
@@ -607,7 +606,7 @@ This document is done enough to enter the repository when:
 
 > Paths below are **PROPOSED** until verified.
 
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract v3.0 (canonical). *(Verify relative path.)*
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating contract v3.0 (canonical). *(Verify relative path.)*
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — CONFIRMED canonical statement of the lifecycle invariant.
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Domain Placement Law and per-root authority.
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Public surfaces consume governed APIs only.

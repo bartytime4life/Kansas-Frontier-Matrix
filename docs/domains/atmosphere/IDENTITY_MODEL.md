@@ -18,7 +18,6 @@ related:
   - docs/doctrine/truth-posture.md
   - docs/architecture/contract-schema-policy-split.md
   - docs/standards/PROV.md
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, atmosphere, air, identity, evidence, governance, doctrine]
 notes:
   # Implementation-layer claims are PROPOSED pending mounted-repo inspection.
@@ -656,7 +655,7 @@ The following are **PROPOSED** sibling and ancestor documents per Directory Rule
 - [`docs/standards/OAI-PMH.md`](../../standards/OAI-PMH.md) — OAI-PMH 2.0 harvest *(CONFIRMED — drafted in this project series)*
 - [`docs/standards/ISO-19115.md`](../../standards/ISO-19115.md) — ISO 19115 crosswalk *(CONFIRMED — drafted in this project series)*
 - `docs/adr/ADR-0001-schema-home.md` (not present) — default machine-schema home *(CONFIRMED — cited by Directory Rules)*
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract *(CONFIRMED — `CONTRACT_VERSION = "3.0.0"`)*
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating contract *(CONFIRMED — `CONTRACT_VERSION = "3.0.0"`)*
 - `schemas/contracts/v1/domains/atmosphere/` — Atmosphere machine-shape home *(PROPOSED — §12 lane pattern; presence NEEDS VERIFICATION)*
 - `contracts/domains/atmosphere/` — Atmosphere object meaning *(PROPOSED — NEEDS VERIFICATION)*
 - `policy/domains/atmosphere/` — Atmosphere admissibility / sensitivity bundles *(PROPOSED — NEEDS VERIFICATION)*

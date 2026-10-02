@@ -15,7 +15,6 @@ related:
   - docs/standards/PROV.md
   - docs/standards/ISO-19115.md
   - docs/runbooks/roads-rail-trade/
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, lifecycle, roads-rail-trade, transport, governance]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned; doctrine-adjacent doc.
@@ -426,7 +425,7 @@ Placeholders below are PROPOSED targets. Mounted-repo presence is NEEDS VERIFICA
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — provenance external-standard profile (filename pending §18 OPEN-DR-01: `PROV.md` vs `PROVENANCE.md`).
 - [`docs/standards/ISO-19115.md`](../../standards/ISO-19115.md) — metadata external-standard profile — NEEDS VERIFICATION.
 - [`docs/runbooks/roads-rail-trade/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/roads-rail-trade/SOURCE_REFRESH_RUNBOOK.md) — TODO: PROPOSED; subfolder convention pending per §18 OPEN-DR-02.
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract; `CONTRACT_VERSION = "3.0.0"`.
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating contract; `CONTRACT_VERSION = "3.0.0"`.
 - [`docs/adr/`](../../adr/) — relevant ADRs once authored: ADR-0001 (schema home), ADR-S-04 (source-role vocabulary), ADR-S-05 (sensitivity tier scheme), ADR-S-09 (reviewer separation-of-duties).
 
 Atlas / corpus references (not repo paths):

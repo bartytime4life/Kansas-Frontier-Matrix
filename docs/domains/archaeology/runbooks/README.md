@@ -429,7 +429,7 @@ This README (and the folder it documents) is done enough to enter the repository
 
 PROPOSED links. All paths are PROPOSED until verified against a mounted repo. Relative paths assume the canonical location `docs/runbooks/archaeology/README.md`.
 
-- [`docs/doctrine/ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — _TODO_ — operating contract v3.0; `CONTRACT_VERSION = "3.0.0"`; §§33, 34, 37, 38.
+- `docs/doctrine/ai-build-operating-contract.md` (held: DOC-DOC-002) — _TODO_ — operating contract v3.0; `CONTRACT_VERSION = "3.0.0"`; §§33, 34, 37, 38.
 - [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — _TODO_ — placement; §6.1.b runbooks contract; §15 per-folder README contract; §18.b OPEN-DR-02 / OPEN-DR-04.
 - [`./rollback-drill.md`](./rollback-drill.md) — rollback drill runbook (drafted; sibling in this folder).
 - [`docs/runbooks/README.md`](../README.md) — _TODO_ — canonical runbooks root README.

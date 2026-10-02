@@ -9,7 +9,6 @@ created: 2026-05-19
 updated: 2026-06-08
 policy_label: public
 related:
-  - ../../doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/domains/README.md
   - docs/standards/PROV.md
@@ -374,7 +373,7 @@ Tracked here for triage; resolutions migrate to `docs/registers/VERIFICATION_BAC
 
 ## 12 · Related docs
 
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"`
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"`
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement authority, **v1.3** *(CONFIRMED reference)*
 - [`docs/domains/README.md`](../README.md) — domain-index landing *(PROPOSED — confirm presence)*
 - [`docs/domains/settlements-infrastructure/README.md`](./README.md) — domain operating manual *(PROPOSED — planned sibling)*

@@ -18,7 +18,6 @@ related:
   - docs/standards/CANONICALIZATION.md
   - schemas/contracts/v1/source/source-descriptor.json
   - docs/registers/DRIFT_REGISTER.md
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, roads-rail-trade, identity, spec_hash, source-role, governance]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned; doctrine-adjacent identity standard.
@@ -416,7 +415,7 @@ This document is done enough to enter the repository when:
 - [`docs/standards/CANONICALIZATION.md`](../../standards/CANONICALIZATION.md) — *JCS vs URDNA2015 decision matrix (Pass-10 C8-05)*
 - [`schemas/contracts/v1/source/source-descriptor.json`](../../../schemas/contracts/v1/source/source-descriptor.json) — *CONFIRMED default SourceDescriptor home (DR §7.4 / ADR-0001); NEEDS VERIFICATION*
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — *where to file the schema-home naming conflict (OQ-01)*
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — *operating contract; `CONTRACT_VERSION = "3.0.0"`*
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — *operating contract; `CONTRACT_VERSION = "3.0.0"`*
 
 ---
 

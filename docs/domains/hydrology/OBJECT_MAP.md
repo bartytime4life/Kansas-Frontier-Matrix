@@ -10,7 +10,6 @@ updated: 2026-07-30
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
-  - ../../doctrine/ai-build-operating-contract.md
   - ../../doctrine/directory-rules.md
   - docs/domains/hydrology/README.md
   - docs/domains/hydrology/INDEX.md
@@ -204,7 +203,7 @@ Every edge in this map — intra- or cross-lane — obeys these (CONFIRMED) [DOM
 - [`README.md`](./README.md) · [`INDEX.md`](./INDEX.md) — lane landing page / navigation.
 - [`DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — how objects (and their edges) move `Pre-RAW → PUBLISHED`.
 - [`MAP_UI_CONTRACTS.md`](./MAP_UI_CONTRACTS.md) — how these objects and edges surface on the map.
-- [`directory-rules.md`](../../doctrine/directory-rules.md) · [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — placement law; `CONTRACT_VERSION = "3.0.0"`.
+- [`directory-rules.md`](../../doctrine/directory-rules.md) · `ai-build-operating-contract.md` (held: DOC-DOC-002) — placement law; `CONTRACT_VERSION = "3.0.0"`.
 
 ---
 

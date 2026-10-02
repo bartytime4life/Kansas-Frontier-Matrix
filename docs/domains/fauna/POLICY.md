@@ -8,7 +8,7 @@ owners: <fauna-domain-steward>, <policy-steward>, <sensitivity-reviewer>
 created: 2026-06-02
 updated: 2026-06-02
 policy_label: public
-related: [../../doctrine/ai-build-operating-contract.md, ../../doctrine/directory-rules.md, docs/domains/fauna/CANONICAL_PATHS.md, docs/domains/fauna/CROSS_LANE_RELATIONS.md, policy/sensitivity/fauna/, policy/domains/fauna/, schemas/contracts/v1/domains/fauna/]
+related: [../../doctrine/directory-rules.md, docs/domains/fauna/CANONICAL_PATHS.md, docs/domains/fauna/CROSS_LANE_RELATIONS.md, policy/sensitivity/fauna/, policy/domains/fauna/, schemas/contracts/v1/domains/fauna/]
 tags: [kfm, fauna, policy, sensitivity, geoprivacy, deny-by-default]
 notes: [Doctrine-adjacent. CONTRACT_VERSION = "3.0.0". Encodes the Fauna deny-by-default posture and tier dispositions; canonical enforcement lives in policy/, not here.]
 owning_root: docs/
@@ -368,7 +368,7 @@ This document is done enough to enter the repository when:
 - [`README.md`](./README.md) — Fauna lane overview *(TODO: confirm presence)*
 - [`CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) — Fauna canonical paths
 - [`CROSS_LANE_RELATIONS.md`](./CROSS_LANE_RELATIONS.md) — Fauna ↔ Habitat / Flora / Hydrology / Hazards joins
-- [`../../../ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law, §23.2 sensitive-domain matrix `(CONTRACT_VERSION = "3.0.0")`
+- `../../../ai-build-operating-contract.md` (held: DOC-DOC-002) — operating law, §23.2 sensitive-domain matrix `(CONTRACT_VERSION = "3.0.0")`
 - [`../../../directory-rules.md`](../../doctrine/directory-rules.md) — placement, `policy/` root contract
 - `policy/sensitivity/fauna/` — canonical enforcement *(NEEDS VERIFICATION)*
 

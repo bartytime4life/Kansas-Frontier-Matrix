@@ -10,7 +10,6 @@ updated: 2026-06-07
 policy_label: restricted-by-default
 related:
   - ../../doctrine/directory-rules.md
-  - ../../doctrine/ai-build-operating-contract.md
   - ./DATA_LIFECYCLE.md
   - ./DEFINITION_OF_DONE.md
   - ./DNA_HANDLING.md
@@ -477,7 +476,7 @@ flowchart TB
 ## 15. Related docs
 
 - [`../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules v1.3; placement authority (responsibility roots, lifecycle, compatibility roots).
-- [`../../../ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract v3.0 (`CONTRACT_VERSION = "3.0.0"`).
+- `../../../ai-build-operating-contract.md` (held: DOC-DOC-002) — operating contract v3.0 (`CONTRACT_VERSION = "3.0.0"`).
 - [`./DATA_LIFECYCLE.md`](./DATA_LIFECYCLE.md) — domain lifecycle, tiers, receipts (sibling; in-flight).
 - [`./DEFINITION_OF_DONE.md`](./DEFINITION_OF_DONE.md) — per-domain promotion-readiness checklist (sibling; in-flight; closes D-PDL-01).
 - [`./DNA_HANDLING.md`](./DNA_HANDLING.md) — DNA & genomic handling sub-policy (sibling; in-flight; closes D-PDL-08).

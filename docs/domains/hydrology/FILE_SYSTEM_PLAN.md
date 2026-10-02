@@ -10,7 +10,6 @@ updated: 2026-07-30
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md v3.0
 related:
-  - ../../doctrine/ai-build-operating-contract.md
   - ../../doctrine/directory-rules.md
   - docs/domains/README.md
   - docs/domains/hydrology/README.md
@@ -676,7 +675,7 @@ ADR-linked rows reference the open-ADR backlog in Atlas §24.12 and Directory Ru
 
 ## 13 · Related docs
 
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract; `CONTRACT_VERSION = "3.0.0"`.
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — canonical operating contract; `CONTRACT_VERSION = "3.0.0"`.
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — placement law; this plan never overrides it.
 - [`docs/domains/README.md`](../README.md) — domain index. *(TODO: verify presence.)*
 - [`docs/domains/hydrology/README.md`](./README.md) — hydrology domain landing page. *(TODO: verify presence.)*

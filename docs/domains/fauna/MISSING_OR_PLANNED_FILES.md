@@ -11,7 +11,6 @@ policy_label: public
 contract_version: "3.0.0"
 related:
   - docs/doctrine/directory-rules.md
-  - ../../doctrine/ai-build-operating-contract.md
   - docs/domains/fauna/README.md
   - docs/domains/fauna/IDENTITY_MODEL.md
   - docs/domains/fauna/MAP_UI_CONTRACTS.md
@@ -649,7 +648,7 @@ This register is done enough to enter the repository when:
 ## 12. Related docs
 
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — canonical placement law and lifecycle invariant. *(CONFIRMED)*
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED)*
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED)*
 - [`docs/domains/fauna/README.md`](./README.md) *(NEEDS VERIFICATION present)* — fauna domain dossier
 - [`docs/domains/fauna/IDENTITY_MODEL.md`](./IDENTITY_MODEL.md) *(PROPOSED — companion)* — fauna identity model
 - [`docs/domains/fauna/MAP_UI_CONTRACTS.md`](./MAP_UI_CONTRACTS.md) *(PROPOSED — companion)* — fauna × Map UI seam

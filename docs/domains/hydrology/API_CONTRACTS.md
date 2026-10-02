@@ -15,7 +15,6 @@ related:
   - docs/architecture/contract-schema-policy-split.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/directory-rules.md
-  - docs/doctrine/ai-build-operating-contract.md
   - contracts/domains/hydrology/
   - schemas/contracts/v1/domains/hydrology/
   - policy/domains/hydrology/

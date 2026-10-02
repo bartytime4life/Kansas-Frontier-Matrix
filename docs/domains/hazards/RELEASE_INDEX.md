@@ -9,7 +9,6 @@ created: 2026-05-17
 updated: 2026-06-05
 policy_label: public
 related:
-  - ../../doctrine/ai-build-operating-contract.md
   - docs/domains/hazards/README.md
   - docs/domains/hazards/PUBLICATION_AND_BOUNDARY.md
   - docs/domains/hazards/PRESERVATION_MATRIX.md
@@ -662,7 +661,7 @@ A complete Hazards rollback drill (NEEDS VERIFICATION in CI) should:
 - [`docs/domains/hazards/PUBLICATION_AND_BOUNDARY.md`](./PUBLICATION_AND_BOUNDARY.md) — publication path + not-for-life-safety boundary (PROPOSED)
 - [`docs/domains/hazards/PRESERVATION_MATRIX.md`](./PRESERVATION_MATRIX.md) — preservation per lifecycle stage and tier (PROPOSED)
 - [`docs/domains/hazards/MISSING_OR_PLANNED_FILES.md`](./MISSING_OR_PLANNED_FILES.md) — lane planning inventory (PROPOSED)
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract (`CONTRACT_VERSION = "3.0.0"`)
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating contract (`CONTRACT_VERSION = "3.0.0"`)
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules (Domain Placement Law §12, `data/` §9.1, `release/` §9.2, anti-patterns §13)
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O profile *(see open naming question in §17)*
 - [`docs/standards/PMTILES.md`](../../standards/PMTILES.md) — PMTiles release discipline

@@ -584,7 +584,7 @@ See [`_examples/`](../_examples/) for the minimal place-anchor decision record +
 - `data/registry/sources/people-genealogy-dna-land/` (not present) — Canonical SourceDescriptor home (ADR-0001).
 - `data/crosswalks/places/` (not present) — Place-anchor crosswalk artifact (PROPOSED placement).
 - [`policy/genealogy/publication.rego`](../../../../policy/genealogy/publication.rego) — OPA publication gate (PROPOSED).
-- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — §34 RunReceipt / GENERATED_RECEIPT discipline (CONFIRMED).
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — §34 RunReceipt / GENERATED_RECEIPT discipline (CONFIRMED).
 - `docs/adr/ADR-0001-schema-home.md` (not present) — Schema-home rule.
 
 ---

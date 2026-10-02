@@ -8,7 +8,7 @@ owners: PLACEHOLDER-settlements-infrastructure-domain-steward, PLACEHOLDER-docs-
 created: 2026-06-07
 updated: 2026-06-07
 policy_label: public
-related: [docs/doctrine/ai-build-operating-contract.md, docs/doctrine/directory-rules.md, docs/domains/settlements-infrastructure/README.md, schemas/contracts/v1/domains/settlements-infrastructure/, policy/sensitivity/infrastructure/, data/published/layers/settlements-infrastructure/]
+related: [docs/doctrine/directory-rules.md, docs/domains/settlements-infrastructure/README.md, schemas/contracts/v1/domains/settlements-infrastructure/, policy/sensitivity/infrastructure/, data/published/layers/settlements-infrastructure/]
 tags: [kfm, settlements-infrastructure, paths, crosswalk, placement, directory-rules]
 notes: [Doctrine-adjacent; CONTRACT_VERSION = "3.0.0" pinned. This is a READ-ONLY lane crosswalk that RESTATES Directory Rules §12 + Atlas §24.13 — it is NOT a placement authority. directory-rules.md governs. Created via Option A instead of the requested CANONICAL_PATHS/ folder to avoid a parallel-authority / singleton-folder smell. All concrete paths are PROPOSED until verified against a mounted repo.]
 owning_root: docs/
@@ -270,7 +270,7 @@ This document is done enough to enter the repository when:
 
 - [`docs/domains/settlements-infrastructure/README.md`](./README.md) *(PROPOSED neighbor — verify)*
 - [`directory-rules.md`](../../../doctrine/directory-rules.md) — **placement authority**; §12 Domain Placement Law; §13 / §24.9.1 parallel-authority anti-pattern
-- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"`
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating law; `CONTRACT_VERSION = "3.0.0"`
 - Atlas §24.13 — Atlas Section ↔ Dossier ↔ Responsibility Root crosswalk *(authoritative source-root mapping)*
 - `policy/sensitivity/infrastructure/` — critical-asset deny lane *(PROPOSED)*
 - `data/published/layers/settlements-infrastructure/` — public-safe release home *(PROPOSED)*

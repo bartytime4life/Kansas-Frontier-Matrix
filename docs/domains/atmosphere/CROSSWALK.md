@@ -10,7 +10,6 @@ updated: 2026-05-28
 policy_label: public
 contract_version: "3.0.0"
 related:
-  - ../../doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/domains/atmosphere/README.md
   - docs/domains/atmosphere/CANONICAL_PATHS.md
@@ -374,7 +373,7 @@ This document is done enough to enter the repository when:
 
 > Placeholder links — verify paths against mounted repo before merging.
 
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED present in project.)*
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED present in project.)*
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — placement law §12; ADR-class rule §2.4(5); conflict rule §2.5. *(CONFIRMED present in project.)*
 - [`docs/domains/atmosphere/README.md`](./README.md) — domain landing page. *(TODO.)*
 - [`docs/domains/atmosphere/CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) — lane registry; segment ADR posture. *(PROPOSED.)*

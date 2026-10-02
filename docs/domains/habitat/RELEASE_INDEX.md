@@ -24,7 +24,6 @@ related:
   - data/published/layers/habitat/
   - data/registry/sources/habitat/
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain:habitat, release, index, navigation, governance]
 notes:
   - This doc is a human-readable navigation index, not the release authority store.
@@ -486,7 +485,7 @@ This index is done enough to enter the repository when:
 - `docs/registers/VERIFICATION_BACKLOG.md` — verification backlog *(PROPOSED — `NEEDS VERIFICATION`)*
 - `docs/registers/DRIFT_REGISTER.md` — drift register *(PROPOSED — `NEEDS VERIFICATION`)*
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) *(CONFIRMED doctrine; canonical path `PROPOSED`)*
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract (`CONTRACT_VERSION = "3.0.0"`)
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — canonical operating contract (`CONTRACT_VERSION = "3.0.0"`)
 
 ---
 

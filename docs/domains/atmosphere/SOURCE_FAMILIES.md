@@ -8,7 +8,7 @@ owners: KFM Atmosphere/Air domain stewards  # PLACEHOLDER — confirm steward ro
 created: 2026-05-29
 updated: 2026-05-29
 policy_label: public
-related: [../../doctrine/ai-build-operating-contract.md, ../../doctrine/directory-rules.md, docs/domains/atmosphere/SOURCES.md, docs/domains/atmosphere/README.md, schemas/contracts/v1/source/source-descriptor.json]
+related: [../../doctrine/directory-rules.md, docs/domains/atmosphere/SOURCES.md, docs/domains/atmosphere/README.md, schemas/contracts/v1/source/source-descriptor.json]
 tags: [kfm]
 notes: [CONTRACT_VERSION pinned 3.0.0; this file = Atlas Ch.11 §D source-family catalog; descriptor discipline + admission flow live in SOURCES.md; relationship flagged OQ-AIR-SF-01]
 owning_root: docs/
@@ -250,7 +250,7 @@ This document is done enough to enter the repository when:
 
 - [`SOURCES.md`](./SOURCES.md) — descriptor discipline, admission flow, anti-collapse rules *(PROPOSED)*
 - [`docs/domains/atmosphere/README.md`](./README.md) — domain landing page *(NEEDS VERIFICATION)*
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — placement doctrine *(path PROPOSED — verify)*
 - `schemas/contracts/v1/source/source-descriptor.json` — descriptor shape *(PROPOSED)*
 

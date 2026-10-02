@@ -19,7 +19,6 @@ related:
   - docs/doctrine/directory-rules.md
   - data/registry/sources/habitat/
   - data/raw/habitat/
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain:habitat, runbook, source-refresh, ops, watcher, promotion, governance]
 notes:
   - "PLACEMENT CONFLICT: requested at docs/domains/habitat/SOURCE_REFRESH_RUNBOOK.md, but Directory Rules §6.1.b makes docs/runbooks/ the canonical home for operational procedures. A runbook under docs/domains/ is a responsibility-root violation (a runbook is procedure, not domain documentation). This artifact is placed at docs/runbooks/habitat/SOURCE_REFRESH_RUNBOOK.md (Pattern A — domain subfolder, matching the fauna runbook). The requested path is recorded as a drift candidate (OQ-HAB-RB-01)."
@@ -336,7 +335,7 @@ This runbook is done enough to enter the repository when:
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — §6.1.b runbook placement; OPEN-DR-02.
 - `data/registry/sources/habitat/` — append-only descriptor authority *(CONFIRMED home / PROPOSED presence)*.
 - `data/raw/habitat/` — RAW capture home *(PROPOSED)*.
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — gates A–G; §23 runbooks-to-create; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — gates A–G; §23 runbooks-to-create; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
 
 ---
 

@@ -18,7 +18,6 @@ related:
   - ../../../contracts/transport/
   - ../../../schemas/contracts/v1/transport/
   - ../../../policy/sensitivity/transport/
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, roads, rail, trade-routes, transport]
 notes:
   - "CONTRACT_VERSION = 3.0.0 pinned for this doctrine-adjacent README."
@@ -692,7 +691,7 @@ KDOT / FHWA / county / state authoritative records. — [DOM-ROADS §D, §K]
 | Architecture             | [`../../architecture/governed-api/README.md`](../../architecture/governed-api/README.md)               | Public-path discipline            |
 | Architecture             | [`../../architecture/map-shell.md`](../../architecture/map-shell.md)                     | MapLibre + Evidence Drawer        |
 | ADR home                 | [`../../adr/`](../../adr/)                                                               | ADR-0001 (schema home), more      |
-| Operating contract       | [`../../../ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md)     | `CONTRACT_VERSION = "3.0.0"`       |
+| Operating contract       | `../../../ai-build-operating-contract.md` (held: DOC-DOC-002)     | `CONTRACT_VERSION = "3.0.0"`       |
 | Atlases                  | `../../atlases/` (NEEDS VERIFICATION)                                                    | Versioned domain atlases          |
 | Registers                | `../../registers/VERIFICATION_BACKLOG.md` (NEEDS VERIFICATION)                           | Backlog mirror                    |
 | Registers                | `../../registers/DRIFT_REGISTER.md` (NEEDS VERIFICATION)                                 | For naming-variance entries       |

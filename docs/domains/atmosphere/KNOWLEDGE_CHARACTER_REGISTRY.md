@@ -15,7 +15,6 @@ related:
   - docs/domains/atmosphere/EXPANSION_BACKLOG.md
   - docs/doctrine/directory-rules.md
   - docs/registers/DRIFT_REGISTER.md
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, atmosphere, air, knowledge-character, registry, controlled-vocabulary, governance, doctrine]
 notes:
   # NAMING COLLISION (CONFIRMED in this session): sibling docs reference BOTH this filename and KNOWLEDGE_CHARACTERS.md for the same vocabulary. This file does NOT duplicate the prose; it is a controlled-vocabulary registry surface that defers all explanation to KNOWLEDGE_CHARACTERS.md.
@@ -188,7 +187,7 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules §13.1 (parallel-home anti-pattern), §2.5 (drift handling) *(CONFIRMED)*
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — receives the OQ-REG-01 naming-collision entry *(PROPOSED)*
 - `docs/adr/ADR-0001-schema-home.md` (not present) — default schema home *(CONFIRMED)*
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract *(CONFIRMED — `CONTRACT_VERSION = "3.0.0"`)*
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating contract *(CONFIRMED — `CONTRACT_VERSION = "3.0.0"`)*
 
 External (doctrinal) — names only; not links:
 

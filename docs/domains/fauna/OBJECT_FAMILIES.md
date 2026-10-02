@@ -11,7 +11,6 @@ policy_label: public
 contract_version: "3.0.0"
 related:
   - docs/doctrine/directory-rules.md
-  - ../../doctrine/ai-build-operating-contract.md
   - docs/domains/fauna/README.md
   - docs/domains/fauna/IDENTITY_MODEL.md
   - docs/domains/fauna/MAP_UI_CONTRACTS.md
@@ -436,7 +435,7 @@ This document is done enough to enter the repository when:
 - [`docs/domains/fauna/MAP_UI_CONTRACTS.md`](./MAP_UI_CONTRACTS.md) — how these families render and resolve at the Map UI seam. *(PROPOSED — companion)*
 - [`docs/domains/fauna/MISSING_OR_PLANNED_FILES.md`](./MISSING_OR_PLANNED_FILES.md) — where each family's contract / schema / test is expected to land. *(PROPOSED — companion)*
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement law. *(CONFIRMED)*
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED)*
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating contract, `CONTRACT_VERSION = "3.0.0"`. *(CONFIRMED)*
 - `contracts/domains/fauna/` — per-family semantic specs. *(PROPOSED)*
 - `schemas/contracts/v1/domains/fauna/` — per-family JSON Schema. *(PROPOSED)*
 - `policy/sensitivity/fauna/` — sensitivity classes and geoprivacy transform rules. *(PROPOSED)*

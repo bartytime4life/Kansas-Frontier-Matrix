@@ -14,7 +14,6 @@ related:
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
   - docs/standards/PROV.md
   - ../../doctrine/directory-rules.md
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, fauna, backlog, domain, governance, expansion]
 notes:
   - CONTRACT_VERSION = "3.0.0".

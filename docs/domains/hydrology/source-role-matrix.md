@@ -8,7 +8,7 @@ owners: <Hydrology domain steward — PLACEHOLDER>, <Source steward — PLACEHOL
 created: 2026-06-06
 updated: 2026-06-06
 policy_label: public
-related: [../../doctrine/ai-build-operating-contract.md, ../../doctrine/directory-rules.md, docs/domains/hydrology/README.md, schemas/contracts/v1/source/source-descriptor.json]
+related: [../../doctrine/directory-rules.md, docs/domains/hydrology/README.md, schemas/contracts/v1/source/source-descriptor.json]
 tags: [kfm, hydrology, source-role, anti-collapse, governance]
 notes: [CONTRACT_VERSION = "3.0.0"; sources Atlas v1.1 §24.1 canonical roles + Hydrology dossier source families; schema home PROPOSED per ADR-0001]
 owning_root: docs/
@@ -30,7 +30,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 ![updated](https://img.shields.io/badge/updated-2026--06--06-blue)
 
 **Status:** `draft` · **Owners:** `<Hydrology domain steward — PLACEHOLDER>` / `<Source steward — PLACEHOLDER>` · **Updated:** 2026-06-06
-**`CONTRACT_VERSION = "3.0.0"`** — governed by [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) and [`directory-rules.md`](../../doctrine/directory-rules.md).
+**`CONTRACT_VERSION = "3.0.0"`** — governed by `ai-build-operating-contract.md` (held: DOC-DOC-002) and [`directory-rules.md`](../../doctrine/directory-rules.md).
 
 ---
 
@@ -307,7 +307,7 @@ This document is done enough to enter the repository when:
 
 ## Related docs
 
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — placement authority (§3, §7.4, §12, §2.4)
 - `docs/domains/hydrology/README.md` — Hydrology lane landing page *(TODO — verify path)*
 - `docs/domains/hydrology/SOURCE_REGISTRY.md` — per-family source ledger *(TODO — verify path)*

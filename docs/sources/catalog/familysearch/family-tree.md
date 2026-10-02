@@ -516,7 +516,7 @@ See [`_examples/`](../_examples/) for the minimal CIDOC-CRM projection + Evidenc
 - `docs/policy/familysearch-retention.md` (not present) — Retention policy (PROPOSED).
 - `data/registry/sources/people-genealogy-dna-land/` (not present) — Canonical SourceDescriptor home (ADR-0001).
 - [`policy/genealogy/publication.rego`](../../../../policy/genealogy/publication.rego) — OPA publication gate (PROPOSED).
-- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — §34 RunReceipt / GENERATED_RECEIPT discipline (CONFIRMED).
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — §34 RunReceipt / GENERATED_RECEIPT discipline (CONFIRMED).
 - `docs/adr/ADR-0001-schema-home.md` (not present) — Schema-home rule.
 
 ---

@@ -14,7 +14,6 @@ related:
   - docs/domains/people-dna-land/sublanes/README.md
   - docs/domains/people-dna-land/sublanes/land.md
   - ../../../doctrine/directory-rules.md
-  - ../../../doctrine/ai-build-operating-contract.md
   - docs/standards/PROV.md
 tags: [kfm, domain, people, sublane, person-assertion, identity, life-events, residence, migration]
 notes:
@@ -463,7 +462,7 @@ The finite outcome set is `ANSWER` / `ABSTAIN` / `DENY` / `ERROR`. Every Focus M
 - `sublanes/dna(.md|/README.md)` — DNA sublane *(PROPOSED)*
 - `sublanes/land(.md)` — Land sublane *(PROPOSED)*
 - [`directory-rules.md`](../../../doctrine/directory-rules.md) — Directory Rules (placement law §3, §12, §2.5, §18 OPEN-DR-02)
-- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - [`docs/standards/PROV.md`](../../../standards/PROV.md) — provenance crosswalk
 - `docs/registers/VERIFICATION_BACKLOG.md` · `docs/registers/DRIFT_REGISTER.md` — open items + drift (PROPOSED paths)
 - _TODO: link to the `sublanes/` ADR (OQ-PEOPLE-SUB-01/02/13) once authored._

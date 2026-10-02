@@ -9,7 +9,6 @@ created: 2026-05-29
 updated: 2026-05-29
 policy_label: public
 related:
-  - ../../doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/domains/fauna/README.md
   - docs/domains/fauna/CANONICAL_PATHS.md
@@ -427,7 +426,7 @@ This document is done enough to enter the repository when:
 
 ### Footer
 
-**Related docs:** [`directory-rules.md`](../../doctrine/directory-rules.md) · [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) · [`README.md`](./README.md) · [`CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) · [`CONTINUITY_INVENTORY.md`](./CONTINUITY_INVENTORY.md)
+**Related docs:** [`directory-rules.md`](../../doctrine/directory-rules.md) · `ai-build-operating-contract.md` (held: DOC-DOC-002) · [`README.md`](./README.md) · [`CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) · [`CONTINUITY_INVENTORY.md`](./CONTINUITY_INVENTORY.md)
 
 **Last updated:** 2026-05-29 · **Version:** v1 · **Status:** draft · **`CONTRACT_VERSION = "3.0.0"`**
 

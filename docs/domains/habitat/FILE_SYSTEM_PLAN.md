@@ -18,7 +18,6 @@ related:
   - docs/architecture/contract-schema-policy-split.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, habitat, directory, governance, placement, ddd]
 notes:
   - CONTRACT_VERSION = "3.0.0"
@@ -555,7 +554,7 @@ Use this list for any PR that adds, moves, or renames a file inside a Habitat la
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — contract vs schema vs policy boundary. **PROPOSED home.**
 - `docs/architecture/habitat-fauna-thin-slice.md` (not present) — cross-lane thin-slice doctrine (corrected home, §8). **PROPOSED.**
 - [`docs/architecture/ecology-cross-domain.md`](../../architecture/ecology-cross-domain.md) — cross-domain ecology doctrine. **PROPOSED home.**
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law; §23.2 sensitive-domain matrix. **CONFIRMED** (`CONTRACT_VERSION = "3.0.0"`).
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating law; §23.2 sensitive-domain matrix. **CONFIRMED** (`CONTRACT_VERSION = "3.0.0"`).
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — where mounted-repo vs plan conflicts get recorded (incl. the §3 schema-slug conflict).
 - [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — `NEEDS VERIFICATION` items from §12.
 

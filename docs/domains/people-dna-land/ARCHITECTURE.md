@@ -15,7 +15,6 @@ related:
   - docs/domains/people-dna-land/API_CONTRACTS.md
   - docs/domains/people-dna-land/sublanes/README.md
   - ../../doctrine/directory-rules.md
-  - ../../doctrine/ai-build-operating-contract.md
   - docs/standards/PROV.md
 tags: [kfm, domain, people, genealogy, dna, land, sensitive, assertion-first]
 notes:
@@ -581,7 +580,7 @@ When evidence is insufficient, the AI must **ABSTAIN** with a reason; when polic
 - [`docs/domains/people-dna-land/sublanes/README.md`](./sublanes/README.md) — sublanes index *(convention pending ADR-NNNN)*
 - `docs/adr/ADR-NNNN-sublanes-docs-convention.md` (not present) — `sublanes/` convention ADR
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — Path authority and responsibility roots (§3, §12, §2.4, §2.5)
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O profile *(see open question #11)*
 - `docs/adr/` — Accepted ADRs *(enumeration NEEDS VERIFICATION)*
 - `contracts/domains/people-dna-land/` · `schemas/contracts/v1/domains/people-dna-land/` · `policy/domains/people-dna-land/` — object meaning / shape / policy *(PROPOSED)*

@@ -21,7 +21,6 @@ related:
   - contracts/domains/habitat/
   - schemas/contracts/v1/domains/habitat/
   - policy/domains/habitat/
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, habitat, api, contracts, governed-api, decision-envelope]
 notes:
   - CONTRACT_VERSION = "3.0.0"
@@ -680,7 +679,7 @@ The following reason codes are referenced by Habitat envelopes. Each must resolv
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV profile _(naming `PROV.md` vs `PROVENANCE.md` is a tracked drift item)_
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Trust-membrane doctrine _(`PROPOSED`)_
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — Lifecycle invariant _(`PROPOSED`)_
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — Canonical operating contract (`CONTRACT_VERSION = "3.0.0"`)
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — Canonical operating contract (`CONTRACT_VERSION = "3.0.0"`)
 
 **Governance**
 

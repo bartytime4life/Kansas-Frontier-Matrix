@@ -14,7 +14,6 @@ related:
   - docs/domains/people-dna-land/sublanes/README.md
   - docs/domains/people-dna-land/sublanes/people/README.md
   - ../../../doctrine/directory-rules.md
-  - ../../../doctrine/ai-build-operating-contract.md
   - docs/standards/PROV.md
   - docs/standards/ISO-19115.md
 tags: [kfm, land, people-dna-land, sublane, ownership, parcel, deed, title, governance]
@@ -378,7 +377,7 @@ Every release of a land artifact requires: `ReleaseManifest`; `EvidenceBundle` c
 - `./dna/README.md` (not present) — DNA sublane: DNAMatchEvidence, restricted access *(PROPOSED)*
 - `./genealogy/README.md` (not present) — Genealogy sublane: kinship, life events *(PROPOSED)*
 - [`directory-rules.md`](../../../doctrine/directory-rules.md) — placement law (§3, §12, §2.4, §18 OPEN-DR-02)
-- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — operating law (`CONTRACT_VERSION = "3.0.0"`)
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating law (`CONTRACT_VERSION = "3.0.0"`)
 - [`docs/standards/PROV.md`](../../../standards/PROV.md) — provenance vocabulary profile
 - [`docs/standards/ISO-19115.md`](../../../standards/ISO-19115.md) — metadata profile
 - Atlas v1.1 Ch. 16 — People/Genealogy/DNA/Land dossier *(reference view, not authority)*

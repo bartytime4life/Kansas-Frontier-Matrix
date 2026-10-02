@@ -10,7 +10,6 @@ updated: 2026-05-29
 policy_label: public                                       # Document is public; subject matter is sensitivity-gated by §23.2
 contract_version: "3.0.0"
 related:
-  - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/authority-ladder.md
   - docs/doctrine/lifecycle-law.md

@@ -15,7 +15,6 @@ related:
   - docs/domains/roads-rail-trade/DATA_LIFECYCLE.md
   - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf
   - docs/doctrine/directory-rules.md
-  - ../../doctrine/ai-build-operating-contract.md
 tags: [kfm, domain, roads-rail-trade, transport, backlog, planning]
 notes:
   - CONTRACT_VERSION = "3.0.0" pinned; doctrine-adjacent planning artifact.
@@ -440,7 +439,7 @@ Linked targets are **PROPOSED** repo placements per Directory Rules unless other
 - [`docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf`](../../atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf) — Domain Atlas v1.1, Ch. 13 _(PROPOSED path, per Atlas App. G)_
 - [`docs/registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — drift register _(PROPOSED path)_
 - [`docs/registers/ADR_INDEX.md`](../../registers/ADR_INDEX.md) — ADR index, including ADR-0001 (schema home) _(PROPOSED path)_
-- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract; `CONTRACT_VERSION = "3.0.0"`
+- `ai-build-operating-contract.md` (held: DOC-DOC-002) — operating contract; `CONTRACT_VERSION = "3.0.0"`
 
 Atlas / corpus references (not repo paths):
 

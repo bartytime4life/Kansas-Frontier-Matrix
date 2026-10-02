@@ -16,7 +16,6 @@ related:
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/directory-rules.md
-  - docs/doctrine/ai-build-operating-contract.md
   - docs/standards/PROV.md
   - docs/standards/PMTILES.md
   - docs/standards/OGC-API-TILES.md
