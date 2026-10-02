@@ -10,6 +10,7 @@ from connectors_core.captured_json import canonical_bytes, digest_bytes
 from hashing import compute_spec_hash
 from pipelines.domains.hydrology.normalize import normalize_capture
 from pipelines.domains.hydrology.package import prepare_water_package
+from pipelines.domains.hydrology.validate import validate_candidate
 from release.core import validate_snapshot
 from release.local_store import LocalReleaseStore
 from release.water_projection import project
@@ -170,7 +171,7 @@ def test_staging_replays_validation_receipt_before_writing(tmp_path):
     validate_snapshot(raw)
     root = tmp_path / "uncreated-release-store"
     with pytest.raises(ValueError, match="VALIDATION_RECEIPT_MISMATCH"):
-        stage(root, raw, actor="synthetic-owner", now=NOW)
+        stage(root, raw, actor="synthetic-owner", now=NOW, validator=validate_candidate)
     assert not root.exists()
 
 
@@ -222,7 +223,7 @@ def test_staging_revalidates_fully_resealed_candidate(tmp_path):
     validate_snapshot(raw)
     root = tmp_path / "invalid-candidate-store"
     with pytest.raises(ValueError, match="CANDIDATE_VALIDATION_FAILED"):
-        stage(root, raw, actor="synthetic-owner", now=NOW)
+        stage(root, raw, actor="synthetic-owner", now=NOW, validator=validate_candidate)
     assert not root.exists()
 
 
@@ -243,7 +244,7 @@ def test_activation_replays_previously_staged_validation_receipt(tmp_path):
     with sqlite3.connect(root / "activation.sqlite") as db:
         db.execute("INSERT INTO water_packages VALUES(?,?,?,?,?)", (package_id, name, NOW, "synthetic-owner", "STAGED"))
     with pytest.raises(ValueError, match="VALIDATION_RECEIPT_MISMATCH"):
-        activate(root, package_id, synthetic_decision(snapshot), expected_active=None, now=NOW)
+        activate(root, package_id, synthetic_decision(snapshot), expected_active=None, now=NOW, validator=validate_candidate)
     assert LocalReleaseStore(str(root)).active() is None
 
 
@@ -283,22 +284,22 @@ def test_staging_cannot_activate_and_atomic_rollback_rehearsal(tmp_path):
     from release.local_admin import stage, activate
     root = tmp_path / "release-only"
     held = synthetic_snapshot()
-    held_id = stage(root, canonical_bytes(held), actor="synthetic-owner", now=NOW)
+    held_id = stage(root, canonical_bytes(held), actor="synthetic-owner", now=NOW, validator=validate_candidate)
     assert LocalReleaseStore(str(root)).active() is None
     with pytest.raises(ValueError, match="HOLD"):
-        activate(root, held_id, synthetic_decision(held), expected_active=None, now=NOW)
+        activate(root, held_id, synthetic_decision(held), expected_active=None, now=NOW, validator=validate_candidate)
     first = synthetic_snapshot(cleared=True)
-    first_id = stage(root, canonical_bytes(first), actor="synthetic-owner", now=NOW)
-    activate(root, first_id, synthetic_decision(first), expected_active=None, now=NOW)
+    first_id = stage(root, canonical_bytes(first), actor="synthetic-owner", now=NOW, validator=validate_candidate)
+    activate(root, first_id, synthetic_decision(first), expected_active=None, now=NOW, validator=validate_candidate)
     second = deepcopy(first)
     second["manifest"]["rollback_target"] = first_id
     second["manifest"]["package_id"] = compute_spec_hash({k: v for k, v in second["manifest"].items() if k != "package_id"})
-    second_id = stage(root, canonical_bytes(second), actor="synthetic-owner", now=NOW)
+    second_id = stage(root, canonical_bytes(second), actor="synthetic-owner", now=NOW, validator=validate_candidate)
     with pytest.raises(ValueError, match="CONFLICT"):
-        activate(root, second_id, synthetic_decision(second), expected_active=None, now=NOW)
+        activate(root, second_id, synthetic_decision(second), expected_active=None, now=NOW, validator=validate_candidate)
     assert json.loads(LocalReleaseStore(str(root)).active()[0])["manifest"]["package_id"] == first_id
-    activate(root, second_id, synthetic_decision(second), expected_active=first_id, now=NOW)
-    activate(root, first_id, synthetic_decision(first), expected_active=second_id, now=NOW, rollback=True)
+    activate(root, second_id, synthetic_decision(second), expected_active=first_id, now=NOW, validator=validate_candidate)
+    activate(root, first_id, synthetic_decision(first), expected_active=second_id, now=NOW, validator=validate_candidate, rollback=True)
     restored = project(*LocalReleaseStore(str(root)).active(), view="evidence", now=NOW)
     assert restored == project(canonical_bytes(first), synthetic_decision(first), view="evidence", now=NOW)
     with sqlite3.connect(root / "activation.sqlite") as db:
@@ -309,13 +310,13 @@ def test_withdrawn_package_state_immediately_withholds_active_data(tmp_path):
     from release.local_admin import stage, activate
     root = tmp_path / "withdrawal"
     snapshot = synthetic_snapshot(cleared=True)
-    package_id = stage(root, canonical_bytes(snapshot), actor="synthetic-owner", now=NOW)
-    activate(root, package_id, synthetic_decision(snapshot), expected_active=None, now=NOW)
+    package_id = stage(root, canonical_bytes(snapshot), actor="synthetic-owner", now=NOW, validator=validate_candidate)
+    activate(root, package_id, synthetic_decision(snapshot), expected_active=None, now=NOW, validator=validate_candidate)
     with sqlite3.connect(root / "activation.sqlite") as db:
         db.execute("UPDATE water_packages SET state='WITHDRAWN' WHERE package_id=?", (package_id,))
     assert LocalReleaseStore(str(root)).active() is None
     with pytest.raises(ValueError, match="PACKAGE_NOT_STAGED|ROLLBACK_BINDING_MISMATCH"):
-        activate(root, package_id, synthetic_decision(snapshot), expected_active=package_id, now=NOW)
+        activate(root, package_id, synthetic_decision(snapshot), expected_active=package_id, now=NOW, validator=validate_candidate)
 
 
 def test_package_and_trusted_decision_have_canonical_closed_schemas():

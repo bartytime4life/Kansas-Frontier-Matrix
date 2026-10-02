@@ -10,6 +10,7 @@ import os
 import sqlite3
 import tempfile
 import uuid
+from typing import Callable
 
 from connectors_core.captured_json import canonical_bytes
 from .core import MAX_PACKAGE_BYTES, validate_snapshot
@@ -23,14 +24,12 @@ CREATE TABLE IF NOT EXISTS water_activation_events(event_id TEXT PRIMARY KEY, pa
 """
 
 
-def _validated_review_snapshot(raw: bytes) -> dict:
+def _validated_review_snapshot(raw: bytes, validator: Callable[[dict], dict]) -> dict:
     manifest, values = validate_snapshot(raw)
     # The carrier binds bytes, but its embedded PASS receipt is untrusted input.
-    # Replay the domain validator at both owner-controlled transition points.
-    from pipelines.domains.hydrology.validate import validate_candidate
-
+    # The owner supplies the domain validator; packages do not import pipelines.
     try:
-        expected = validate_candidate(values["candidate.json"])
+        expected = validator(values["candidate.json"])
     except (KeyError, TypeError, ValueError) as exc:
         raise ValueError("CANDIDATE_VALIDATION_FAILED") from exc
     if values["validation.json"] != expected:
@@ -55,8 +54,8 @@ def initialize(root: Path):
     os.chmod(database, 0o600)
 
 
-def stage(root: Path, raw: bytes, *, actor: str, now: str) -> str:
-    manifest = _validated_review_snapshot(raw)
+def stage(root: Path, raw: bytes, *, actor: str, now: str, validator: Callable[[dict], dict]) -> str:
+    manifest = _validated_review_snapshot(raw, validator)
     initialize(root)
     name = manifest["package_id"].split(":")[1] + ".json"
     path = root / "objects" / name
@@ -76,13 +75,13 @@ def stage(root: Path, raw: bytes, *, actor: str, now: str) -> str:
     return manifest["package_id"]
 
 
-def activate(root: Path, package_id: str, trusted_decision: dict, *, expected_active: str | None, now: str, rollback=False):
+def activate(root: Path, package_id: str, trusted_decision: dict, *, expected_active: str | None, now: str, validator: Callable[[dict], dict], rollback=False):
     from .core import DIGEST
     LocalReleaseStore(str(root))
     if not DIGEST.fullmatch(package_id):
         raise ValueError("PACKAGE_ID_INVALID")
     raw = regular_bytes(root / "objects" / (package_id.split(":")[1] + ".json"), MAX_PACKAGE_BYTES)
-    manifest = _validated_review_snapshot(raw)
+    manifest = _validated_review_snapshot(raw, validator)
     if manifest["package_id"] != package_id or trusted_decision.get("package_id") != package_id:
         raise ValueError("ACTIVATION_BINDING_MISMATCH")
     response = project(raw, trusted_decision, view="layers", now=now)
