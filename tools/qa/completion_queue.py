@@ -17,7 +17,23 @@ ROOT = Path(__file__).resolve().parents[2]
 BASE = "6994a65843c4999313fda01183b63333213134f3"
 BACKLOG = ROOT / "control_plane/verification_backlog.yaml"
 DELIVERED_WATER_PATHS = {'pipelines/domains/hydrology/validate.py', 'packages/release/src/release/core.py', 'tests/domains/hydrology/test_usgs_water_normalizer.py', 'apps/governed-api/pyproject.toml', 'packages/policy-runtime/pyproject.toml', 'packages/catalog/src/catalog/core.py', 'apps/workers/src/catalog_worker/main.py', 'apps/workers/src/validate_worker/main.py', 'packages/release/pyproject.toml', 'schemas/contracts/v1/domains/hydrology/flow_observation.schema.json', 'packages/evidence-resolver/pyproject.toml', 'packages/policy-runtime/src/policy_runtime/core.py', 'apps/workers/src/ingest_worker/main.py', 'pipelines/domains/hydrology/normalize.py', 'packages/catalog/pyproject.toml'}
-HELD_STAGE_PATHS = {"pipelines/domains/hydrology/ingest.py": "INGEST_NOT_IMPLEMENTED", "pipelines/domains/hydrology/publish.py": "PUBLISH_NOT_IMPLEMENTED", "pipelines/domains/hydrology/rollback.py": "ROLLBACK_NOT_IMPLEMENTED", "pipelines/domains/hydrology/triplets.py": "TRIPLETS_NOT_IMPLEMENTED"}
+HELD_STAGE_PATHS = {
+    "pipelines/domains/hydrology/ingest.py": ("INGEST_NOT_IMPLEMENTED", "tests/domains/hydrology/test_pipeline_stage_holds.py"),
+    "pipelines/domains/hydrology/publish.py": ("PUBLISH_NOT_IMPLEMENTED", "tests/domains/hydrology/test_pipeline_stage_holds.py"),
+    "pipelines/domains/hydrology/rollback.py": ("ROLLBACK_NOT_IMPLEMENTED", "tests/domains/hydrology/test_pipeline_stage_holds.py"),
+    "pipelines/domains/hydrology/triplets.py": ("TRIPLETS_NOT_IMPLEMENTED", "tests/domains/hydrology/test_pipeline_stage_holds.py"),
+    "apps/workers/src/ai_focus_worker/main.py": ("AI_FOCUS_WORKER_NOT_IMPLEMENTED", "tests/qa/test_held_entry_points.py"),
+    "apps/workers/src/correction_worker/main.py": ("CORRECTION_WORKER_NOT_IMPLEMENTED", "tests/qa/test_held_entry_points.py"),
+    "apps/workers/src/quarantine_review_worker/main.py": ("QUARANTINE_REVIEW_WORKER_NOT_IMPLEMENTED", "tests/qa/test_held_entry_points.py"),
+    "apps/workers/src/receipt_worker/main.py": ("RECEIPT_WORKER_NOT_IMPLEMENTED", "tests/qa/test_held_entry_points.py"),
+    "apps/workers/src/tile_worker/main.py": ("TILE_WORKER_NOT_IMPLEMENTED", "tests/qa/test_held_entry_points.py"),
+    "pipelines/catalog/main.py": ("CATALOG_NOT_IMPLEMENTED", "tests/qa/test_held_entry_points.py"),
+    "pipelines/domains/agriculture/catalog.py": ("CATALOG_NOT_IMPLEMENTED", "tests/qa/test_held_entry_points.py"),
+    "pipelines/domains/hazards/catalog.py": ("CATALOG_NOT_IMPLEMENTED", "tests/qa/test_held_entry_points.py"),
+    "pipelines/domains/roads-rail-trade/emit_catalog_records.py": ("CATALOG_NOT_IMPLEMENTED", "tests/qa/test_held_entry_points.py"),
+    "tools/ingest/hydrology/usgs_streamflow_gate.py": ("USGS_STREAMFLOW_GATE_NOT_IMPLEMENTED", "tests/qa/test_held_entry_points.py"),
+    "tools/validators/validate_catalog_matrix.py": ("CATALOG_MATRIX_VALIDATOR_NOT_IMPLEMENTED", "tests/qa/test_held_entry_points.py"),
+}
 GOVERNING = ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "docs/doctrine/directory-rules.md", "tools/qa/scaffold_baseline.json"]
 
 
@@ -58,9 +74,9 @@ def queue():
                          expected_result="Changed-area water tests pass; no real source/release authority is conferred.",
                          delivery_docs="docs/runbooks/water-pilot.md")
         if path in HELD_STAGE_PATHS:
-            notes.update(disposition="explicit_hold", current_behavior="Inspected: the entry point prints a HOLD envelope with reason " + HELD_STAGE_PATHS[path] + ", exits 2, and reads or writes nothing.",
+            notes.update(disposition="explicit_hold", current_behavior="Inspected: the entry point prints a HOLD envelope with reason " + HELD_STAGE_PATHS[path][0] + ", exits 2, and reads or writes nothing.",
                          next_change="Implement only after the governing source-admission, catalog, release and rollback decisions are reviewed.",
-                         acceptance_command="python -m pytest -q tests/domains/hydrology/test_pipeline_stage_holds.py",
+                         acceptance_command="python -m pytest -q " + HELD_STAGE_PATHS[path][1],
                          expected_result="Each held stage exits 2 with its HOLD reason code and leaves no file behind; no lifecycle authority is conferred.")
         result["entries"].append({"entry_id": "gap-" + hashlib.sha256(path.encode()).hexdigest()[:24], "subject_id": "kfm://artifact/" + path,
             "kind": "scaffold_gap", "path": path, "path_sha256": evidence, "authority_status": "CONFIRMED", "implementation_status": "PARTIAL" if path in DELIVERED_WATER_PATHS or path in HELD_STAGE_PATHS else "NOT_INSPECTED",
