@@ -81,6 +81,9 @@ No parallel source, evidence, receipt, policy, lineage sink, release, or publica
 | `decision` | Finite companion disposition with sorted stable reason codes. |
 
 The closed schema rejects additional properties, including geometry and coordinates.
+The fixture manifest's `telemetry_allowed` value must be a JSON boolean. The
+local generator rejects strings and other types rather than coercing them into
+permission.
 
 ## Finite decision model
 

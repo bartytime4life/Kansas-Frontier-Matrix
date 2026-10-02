@@ -327,6 +327,26 @@ cover valid, malformed, and future values, validator rejection, and quarantine
 without a WORK candidate. This does not authenticate USGS metadata, admit the
 source, promote data, or authorize a release or publication.
 
+### Telemetry fixture manifest truth and bounds — 2026-10-01
+
+`MOD-23` / P1 / **CONFIRMED on `main@c24354c64ce07184eb31453abc8fc770ae76dc8b`**:
+both fixture-only lineage generators converted the manifest value
+`"telemetry_allowed": "false"` to `True`, producing a `PASS` projection. Their
+CLI entry points also read manifest text without a byte limit or duplicate-key
+check, unlike the corresponding validators. The owners are the existing
+`tools/generators/telemetry/`, `contracts/telemetry/`, and
+`tests/validators/telemetry/` roots. This slice requires real JSON booleans,
+uses the shared bounded JSON loader, and emits a finite manifest diagnostic.
+Focused tests cover both generators, string flags, duplicate keys, and
+oversized input. It does not activate telemetry export, settle proposed
+telemetry policy, or grant public-use, release, or publication authority.
+The two workflow receipt checks now replay their unchanged historical artifact
+bytes at authoring commit `25a58f324e6ada808714aecdf9e745d139e1b3bc`;
+current generator behavior remains covered by the unit and fixture checks.
+The touched OpenLineage contract's inherited multi-label metadata `type` was
+also corrected to the existing `semantic-contract` value so changed-document
+validation can pass; that edit creates no new authority.
+
 ### Site mirror source-identity guard — 2026-10-01
 
 `MOD-13` / P1 / **CONFIRMED on `main@9465a573d8859cd1564124897d10d848f9c7c350`**:

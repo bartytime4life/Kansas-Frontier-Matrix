@@ -58,6 +58,33 @@ VALIDATOR = _load_module("test_kfm_openlineage_validator", VALIDATOR_PATH)
 
 
 class OpenLineageRunEventProjectionTests(unittest.TestCase):
+    def test_fixture_flags_must_be_json_booleans(self) -> None:
+        for field in ("public_safe", "telemetry_allowed", "public_use_allowed"):
+            with self.subTest(field=field), self.assertRaises(ValueError):
+                BUILDER.build_case({field: "false"})
+
+    def test_cli_rejects_unsafe_manifest_with_finite_diagnostic(self) -> None:
+        invalid = (
+            '{"cases":[{"case_id":"unsafe","telemetry_allowed":"false"}]}',
+            '{"cases":[{"case_id":"unsafe","telemetry_allowed":false,'
+            '"telemetry_allowed":true}]}',
+            '{"cases":[{"case_id":"unsafe"}]}' + " " * 1_000_000,
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "cases.json"
+            for content in invalid:
+                with self.subTest(length=len(content)):
+                    path.write_text(content, encoding="utf-8")
+                    completed = subprocess.run(
+                        [sys.executable, str(BUILDER_PATH), "--case", "unsafe",
+                         "--manifest", str(path)],
+                        check=False, capture_output=True, text=True,
+                    )
+                    self.assertEqual(completed.returncode, 2)
+                    self.assertEqual(completed.stdout.strip(),
+                                     '{"ok":false,"reason_code":"FIXTURE_MANIFEST_INVALID"}')
+                    self.assertEqual(completed.stderr, "")
+
     def test_schema_is_draft_2020_12_valid_and_resolves_runtime_receipt(self) -> None:
         schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
         Draft202012Validator.check_schema(schema)
