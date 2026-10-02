@@ -232,11 +232,14 @@ The earlier candidate identity retains its Python canonical JSON profile.
 The package is capped at 8 MiB. Evidence membership, page hashes, validation,
 station scope, verification history and correction state are bound together.
 Technical verification is not permission to answer.
-The local owner staging and activation functions rerun candidate validation and
-compare the embedded receipt with the fresh result before changing state. A
+The local owner staging and activation functions require the operator to supply
+`pipelines.domains.hydrology.validate.validate_candidate` as their `validator`
+argument at both transitions. They compare the embedded receipt with the fresh
+result before changing state. A
 resealed but fabricated `PASS` receipt is rejected even when carrier hashes
 match. This check applies to local staging and activation; hosted administrative
-review and activation remain unimplemented.
+review and activation remain unimplemented. Other callers of these local
+functions must pass that validator explicitly; omitting it is a call error.
 
 Serving also requires separately trusted activation metadata with source,
 rights, sensitivity, policy, independent review and release references. Review

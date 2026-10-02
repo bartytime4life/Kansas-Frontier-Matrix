@@ -10,14 +10,15 @@ from connectors_core.captured_json import canonical_bytes
 from governed_api import main, water
 from release.local_admin import stage, activate
 from release.local_store import LocalReleaseStore
+from pipelines.domains.hydrology.validate import validate_candidate
 from tests.packages.release.test_water_snapshot import synthetic_snapshot, synthetic_decision, NOW
 
 
 def test_http_selection_evidence_withdrawal_and_health(tmp_path, monkeypatch):
     snapshot = synthetic_snapshot(cleared=True)
     root = tmp_path / "synthetic-serving"
-    package_id = stage(root, canonical_bytes(snapshot), actor="synthetic-owner", now=NOW)
-    activate(root, package_id, synthetic_decision(snapshot), expected_active=None, now=NOW)
+    package_id = stage(root, canonical_bytes(snapshot), actor="synthetic-owner", now=NOW, validator=validate_candidate)
+    activate(root, package_id, synthetic_decision(snapshot), expected_active=None, now=NOW, validator=validate_candidate)
     monkeypatch.setattr(main, "_RELEASE_STORE", LocalReleaseStore(str(root)))
     class Clock:
         @staticmethod

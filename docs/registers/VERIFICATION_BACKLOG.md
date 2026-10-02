@@ -354,9 +354,10 @@ the local release carrier accepted a fully resealed water package whose embedded
 `PASS` receipt falsely set `release_authorized` to `true`, although a fresh
 candidate validation returned `false`. Local staging and activation called only
 the carrier hash/reference validator. The owning implementation and conformance
-roots are `packages/release/` and `tests/packages/release/`. This slice replays
-the domain candidate validator and requires exact receipt equality before either
-local transition; a rejected stage creates no release store, and activation
+roots are `packages/release/` and `tests/packages/release/`. This slice requires
+the local owner caller to supply the domain candidate validator and checks exact
+receipt equality before either transition, preserving package-to-pipeline
+dependency direction; a rejected stage creates no release store, and activation
 rejects a previously staged fabricated package. The existing water contract and
 runbook describe the boundary. This does not authenticate independent review,
 change the Site Worker, implement hosted administration, or approve any release.

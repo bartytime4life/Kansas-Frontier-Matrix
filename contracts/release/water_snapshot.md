@@ -11,8 +11,10 @@ and Site Worker preserve these bytes and use shared synthetic conformance fixtur
 Candidate and validation identities retain the existing Python canonical profile;
 the Worker verifies exact artifact hashes and their cross-references, while
 candidate schema/semantic validation belongs to Python preparation and review.
-The local owner staging and activation operations replay that validator and
-require the embedded validation receipt to equal its result. Rehashing a
+The local owner staging and activation operations require a caller-supplied
+domain validator and compare the embedded validation receipt with its result.
+The trusted operator must supply the canonical hydrology validator at both
+transitions; the reusable release package does not import a pipeline. Rehashing a
 different `PASS` receipt does not satisfy these transitions. The read-only
 Python and Site projections retain their bounded carrier checks; this local
 operator safeguard does not implement hosted review or authorize release.
