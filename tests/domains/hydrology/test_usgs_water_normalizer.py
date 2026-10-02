@@ -15,6 +15,7 @@ from pipelines.domains.hydrology.normalize import normalize_capture
 from pipelines.domains.hydrology.validate import validate_candidate
 from tools.local_data.manage import init_store
 from tools.local_data.water_pilot import replay, stage
+from tools.validators.source.validate_source_health_assessment import validate_payload
 
 START, END = "2026-09-29T18:00:00Z", "2026-09-30T18:00:00Z"
 ROOT = Path(__file__).resolve().parents[3]
@@ -211,6 +212,51 @@ def test_manifest_and_raw_tampering_rejected():
     source.objects[source.manifest["pages"][0]["sha256"]] = b"{}"
     with pytest.raises(ValueError, match="PAGE_DIGEST"):
         normalize_capture(source.manifest, source.objects)
+
+
+@pytest.mark.parametrize("tamper", ["missing", "wrong_station", "future", "bad_status", "duplicate"])
+def test_rehashed_complete_capture_requires_page_success_attempts(tamper, tmp_path):
+    source = acquired()
+    attempts = source.manifest["attempts"]
+    if tamper == "missing":
+        attempts.clear()
+    elif tamper == "wrong_station":
+        attempts[0]["station_id"] = "USGS-07156900"
+    elif tamper == "future":
+        attempts[0]["observed_at"] = "2026-09-30T18:02:00Z"
+    elif tamper == "bad_status":
+        attempts[0]["status"] = 503
+        attempts[1]["observed_at"] = "2026-09-30T18:00:59Z"
+    else:
+        attempts.append(deepcopy(attempts[0]))
+    reseal(source.manifest)
+
+    with pytest.raises(ValueError, match="CAPTURE_ATTEMPT_CHAIN_MISMATCH"):
+        normalize_capture(source.manifest, source.objects)
+
+    root = tmp_path / "store"
+    init_store(root)
+    assert stage(root, source)["outcome"] == "QUARANTINED"
+    assert not list((root / "data/work").rglob("candidate.json"))
+    health = [json.loads(path.read_text()) for path in root.glob(
+        "data/receipts/ingest/usgs-nwis/*/health/*.json")]
+    assert len(health) == 2
+    assert all(validate_payload(item).ok for item in health)
+    assert all(item["health_outcome"] == "UNAVAILABLE" for item in health)
+    if tamper in {"future", "bad_status"}:
+        first = next(item for item in health if item["source_id"] == "usgs-nwis:USGS-06892518")
+        assert first["last_success_at"] == source.manifest["attempts"][1]["observed_at"]
+
+
+def test_retry_before_success_does_not_break_page_binding():
+    source = acquired()
+    prior = deepcopy(source.manifest["attempts"][0])
+    prior.update(number=1, outcome="TIMEOUT", code="RETRY_TIMEOUT", status=None)
+    source.manifest["attempts"][0]["number"] = 2
+    source.manifest["attempts"].insert(0, prior)
+    reseal(source.manifest)
+
+    assert normalize_capture(source.manifest, source.objects)["coverage"] == "COMPLETE"
 
 
 def test_private_store_replay_and_failed_capture_preserves_candidate(tmp_path):

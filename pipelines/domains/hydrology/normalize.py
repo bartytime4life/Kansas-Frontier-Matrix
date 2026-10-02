@@ -5,11 +5,12 @@ nor evidence eligibility. Observation identity stays stable across revisions.
 """
 from __future__ import annotations
 
+from collections import defaultdict
 from decimal import Decimal, InvalidOperation
 import math
 
 from connectors_core.captured_json import canonical_bytes, decode_object, digest_bytes, timestamp, utc_time
-from connectors.usgs.water_data.pilot_capture import MAX_PAGE_BYTES, MAX_TOTAL_BYTES, STATIONS, STALE_AFTER_SECONDS, request_plan, safe_page_url
+from connectors.usgs.water_data.pilot_capture import MAX_PAGE_BYTES, MAX_PAGES, MAX_TOTAL_BYTES, STATIONS, STALE_AFTER_SECONDS, request_plan, safe_page_url
 
 
 def _text(value, label, maximum=256):
@@ -27,6 +28,35 @@ def _geometry(value):
             or not -180 <= coordinates[0] <= 180 or not -90 <= coordinates[1] <= 90):
         raise ValueError("INVALID_STATION_GEOMETRY")
     return {"type": "Point", "coordinates": coordinates}
+
+
+def _validate_attempt_page_binding(manifest: dict, pages: list[dict], planned: set[tuple[str, str]], captured_at) -> None:
+    attempts = manifest.get("attempts")
+    if not isinstance(attempts, list) or len(attempts) > MAX_PAGES * 2:
+        raise ValueError("CAPTURE_ATTEMPT_CHAIN_MISMATCH")
+    successes = defaultdict(list)
+    page_times = defaultdict(list)
+    try:
+        for item in attempts:
+            key = (item["station_id"], item["collection"])
+            if key not in planned:
+                raise ValueError
+            when = utc_time(item["observed_at"])
+            if when > captured_at:
+                raise ValueError
+            if item["outcome"] == "SUCCESS":
+                if item.get("code") != "FETCH_SUCCESS" or item.get("status") != 200:
+                    raise ValueError
+                successes[key].append(when)
+        for page in pages:
+            page_times[(page["station_id"], page["collection"])].append(utc_time(page["retrieved_at"]))
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ValueError("CAPTURE_ATTEMPT_CHAIN_MISMATCH") from exc
+    for key in set(successes) | set(page_times):
+        observed = successes[key]
+        retrieved = page_times[key]
+        if len(observed) != len(retrieved) or any(attempt > page for attempt, page in zip(observed, retrieved)):
+            raise ValueError("CAPTURE_ATTEMPT_CHAIN_MISMATCH")
 
 
 def normalize_capture(manifest: dict, objects: dict[str, bytes], *, stale_after_seconds=STALE_AFTER_SECONDS) -> dict:
@@ -156,6 +186,7 @@ def normalize_capture(manifest: dict, objects: dict[str, bytes], *, stale_after_
                 revisions[revision_key] = record
     if any(expected.values()) or set(stations) != set(STATIONS):
         raise ValueError("CAPTURE_CLOSURE_INCOMPLETE")
+    _validate_attempt_page_binding(manifest, pages, set(plan), retrieved)
     latest = {}
     for record in sorted(revisions.values(), key=lambda r: (utc_time(r["provider_revision_at"]), r["record_digest"])):
         latest[record["id"]] = record
