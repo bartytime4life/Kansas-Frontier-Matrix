@@ -291,7 +291,7 @@ This lane README is done enough to enter the repository when:
 
 - `docs/domains/settlements-infrastructure/PATHS.md` (not present) — lane path crosswalk
 - [`directory-rules.md`](../../../doctrine/directory-rules.md) — placement authority; §12 Domain Placement Law
-- `ai-build-operating-contract.md` (not present) — operating law; `CONTRACT_VERSION = "3.0.0"`
+- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — operating law; `CONTRACT_VERSION = "3.0.0"`
 - Atlas ch.14 (Settlements & Infrastructure) and §24.13 (root crosswalk) — dossier
 - `schemas/contracts/v1/domains/settlements-infrastructure/` — object shape *(PROPOSED)*
 - `policy/sensitivity/infrastructure/` — critical-asset deny lane *(PROPOSED)*
