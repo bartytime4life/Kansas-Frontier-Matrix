@@ -488,7 +488,7 @@ def build_case(case: Mapping[str, Any]) -> dict[str, Any]:
             case.get("evidence_release_state", "PROCESSED")
         ),
         sensitivity_level=str(case.get("sensitivity_level", "public")),
-        telemetry_allowed=flag("telemetry_allowed", True),
+        telemetry_allowed=flag("telemetry_allowed", False),
         public_use_allowed=flag("public_use_allowed", False),
         event_time=str(case.get("event_time", "2026-08-07T02:00:00Z")),
     )

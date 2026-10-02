@@ -84,6 +84,7 @@ The closed schema rejects additional properties, including geometry and coordina
 The fixture manifest's `telemetry_allowed` value must be a JSON boolean. The
 local generator rejects strings and other types rather than coercing them into
 permission.
+An omitted permission defaults to `false`; fixture permission must be explicit.
 
 ## Finite decision model
 

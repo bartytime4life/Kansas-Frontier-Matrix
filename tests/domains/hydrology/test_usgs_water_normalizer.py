@@ -115,8 +115,8 @@ def test_station_revision_must_be_valid_and_no_later_than_retrieval(revision, tm
         validate_candidate(candidate)
 
 
-def test_station_revision_before_retrieval_remains_valid():
-    source = _with_station_revision(acquired(), "2026-09-30T18:00:30Z")
+def test_station_revision_before_retrieval_is_normalized_to_utc():
+    source = _with_station_revision(acquired(), "2026-09-30T13:00:30-05:00")
     candidate = normalize_capture(source.manifest, source.objects)
     assert candidate["stations"][0]["provider_revision_at"] == "2026-09-30T18:00:30Z"
     assert validate_candidate(candidate)["outcome"] == "PASS"

@@ -63,6 +63,11 @@ class OpenLineageRunEventProjectionTests(unittest.TestCase):
             with self.subTest(field=field), self.assertRaises(ValueError):
                 BUILDER.build_case({field: "false"})
 
+    def test_missing_or_non_boolean_permissions_fail_closed(self) -> None:
+        self.assertEqual(BUILDER.build_case({})["decision"]["outcome"], "DENY")
+        with self.assertRaises(ValueError):
+            BUILDER.build_document(telemetry_allowed="false")  # type: ignore[arg-type]
+
     def test_cli_rejects_unsafe_manifest_with_finite_diagnostic(self) -> None:
         invalid = (
             '{"cases":[{"case_id":"unsafe","telemetry_allowed":"false"}]}',
@@ -84,6 +89,21 @@ class OpenLineageRunEventProjectionTests(unittest.TestCase):
                     self.assertEqual(completed.stdout.strip(),
                                      '{"ok":false,"reason_code":"FIXTURE_MANIFEST_INVALID"}')
                     self.assertEqual(completed.stderr, "")
+
+    def test_cli_maps_unreadable_manifest_to_finite_diagnostic(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            missing = Path(directory) / "missing.json"
+            completed = subprocess.run(
+                [sys.executable, str(BUILDER_PATH), "--case", "unsafe",
+                 "--manifest", str(missing)],
+                check=False, capture_output=True, text=True,
+            )
+        self.assertEqual(completed.returncode, 2)
+        self.assertEqual(
+            completed.stdout.strip(),
+            '{"ok":false,"reason_code":"FIXTURE_MANIFEST_INVALID"}',
+        )
+        self.assertEqual(completed.stderr, "")
 
     def test_schema_is_draft_2020_12_valid_and_resolves_runtime_receipt(self) -> None:
         schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))

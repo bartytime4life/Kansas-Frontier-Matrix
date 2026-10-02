@@ -174,6 +174,7 @@
     },
     {
       "case_id": "invalid-projection-id-drift",
+      "telemetry_allowed": true,
       "expected": {
         "finding_codes": [
           "PROJECTION_ID_MISMATCH"
@@ -184,6 +185,7 @@
     },
     {
       "case_id": "invalid-spec-hash-drift",
+      "telemetry_allowed": true,
       "expected": {
         "finding_codes": [
           "SPEC_HASH_MISMATCH"
@@ -194,6 +196,7 @@
     },
     {
       "case_id": "invalid-decision-reason-drift",
+      "telemetry_allowed": true,
       "expected": {
         "finding_codes": [
           "REASON_CODES_MISMATCH"
@@ -222,6 +225,7 @@
     },
     {
       "case_id": "invalid-event-run-id-drift",
+      "telemetry_allowed": true,
       "expected": {
         "finding_codes": [
           "EVENT_RUN_ID_MISMATCH"
@@ -232,6 +236,7 @@
     },
     {
       "case_id": "invalid-event-time-drift",
+      "telemetry_allowed": true,
       "expected": {
         "finding_codes": [
           "EVENT_TIME_MISMATCH"
@@ -242,6 +247,7 @@
     },
     {
       "case_id": "invalid-unsorted-datasets",
+      "telemetry_allowed": true,
       "expected": {
         "finding_codes": [
           "DATASETS_NOT_SORTED"
@@ -252,6 +258,7 @@
     },
     {
       "case_id": "invalid-extra-geometry",
+      "telemetry_allowed": true,
       "expected": {
         "finding_codes": [
           "SCHEMA_INVALID"
@@ -262,6 +269,7 @@
     },
     {
       "case_id": "invalid-non-effects-drift",
+      "telemetry_allowed": true,
       "expected": {
         "finding_codes": [
           "SCHEMA_INVALID"

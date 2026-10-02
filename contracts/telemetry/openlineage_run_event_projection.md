@@ -99,6 +99,7 @@ The candidate must use sorted, unique bindings. Dataset references must match th
 Fixture manifest values for `public_safe`, `telemetry_allowed`, and
 `public_use_allowed` must be JSON booleans. The local generator rejects other
 types rather than coercing them into permissions.
+An omitted permission defaults to `false`; fixture permission must be explicit.
 
 ## Finite decision model
 
