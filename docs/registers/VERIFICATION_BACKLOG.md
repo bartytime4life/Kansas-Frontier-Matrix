@@ -298,6 +298,20 @@ cover stale path-size metadata and a symlinked parent. Filesystem paths remain
 caller-controlled and mutable; the fix does not authenticate the capture,
 admit a source, write lifecycle state, or permit release or publication.
 
+### WBD HUC12 schema diagnostic memory bound — 2026-10-01
+
+`MOD-21` / P2 / **CONFIRMED on `main@1c20868b1bfecd47d4b565867411b7c2d56a6b65`**:
+the fixture-first producer converted every schema validation error to a list
+and sorted the entire list before applying `MAX_SCHEMA_FINDINGS = 100`.
+The source-package schema permits an unbounded `request.out_fields` array, so
+a package within the 8 MiB input limit can produce many more than 100 errors.
+The owning implementation root is `pipelines/domains/hydrology/ingest_wbd_huc/`,
+with semantics and regression tests in their existing `contracts/` and `tests/`
+roots. This slice retains only the 100 smallest path/validator keys and the
+existing truncation finding; a streaming regression checks bounded retention
+and stable ordering. It does not bound total schema evaluation time, admit a
+source, write lifecycle state, or permit release or publication.
+
 ### Site mirror source-identity guard — 2026-10-01
 
 `MOD-13` / P1 / **CONFIRMED on `main@9465a573d8859cd1564124897d10d848f9c7c350`**:
