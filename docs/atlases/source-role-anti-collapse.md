@@ -407,7 +407,7 @@ Until ADR-S-04 is accepted, the vocabulary is `CONFIRMED doctrinally` (seven cla
 |---|---|
 | [`docs/atlases/stale-state-reference.md`](./stale-state-reference.md) *(extract of §24.8)* | `SourceDescriptor` is the subject of supersession-lineage row 1 (`Replaced by a newer descriptor; old descriptor retained with superseded_by link`). §3.2 of this register details the in-place-edit prohibition; stale-state markers 1 and 7 surface on `SourceDescriptor` fields. |
 | [`docs/atlases/decision-outcome-envelope.md`](./decision-outcome-envelope.md) *(extract of §24.3)* | §4 of this register uses `DENY` / `ABSTAIN` / `HOLD` from the envelope vocabulary. |
-| [`docs/atlases/master-api-surface.md`](./master-api-surface.md) *(extract of §20.3)* | The "Source summary resolver" API family (§20.3 row 1) carries `SourceDescriptor` projection and is the public-surface enforcement point for §4 collapse patterns. |
+| [`docs/atlases/master-api-surface.md`](../atlas/master-api-surface.md) *(extract of §20.3)* | The "Source summary resolver" API family (§20.3 row 1) carries `SourceDescriptor` projection and is the public-surface enforcement point for §4 collapse patterns. |
 
 ### 10.2 Other Atlas v1.1 Chapter 24 registers
 

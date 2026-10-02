@@ -430,7 +430,7 @@ Each contract above has a corresponding schema home per ADR-0001 (`schemas/contr
 | [`docs/atlases/source-role-anti-collapse.md`](./source-role-anti-collapse.md) *(extract of §24.1)* | Source role and sensitivity tier are sibling fields on `SourceDescriptor`, both fixed at admission. Synthetic content (collapse pattern 6) and sensitive-domain interlock (§7 row 7 of source-role register) interact directly with §4 row 13 of this register. |
 | [`docs/atlases/stale-state-reference.md`](./stale-state-reference.md) *(extract of §24.8)* | Stale-state marker 7 (Rights status changed) interacts directly with §5 tier-transitions: a rights change can demote a published tier. §5.2 derivative-invalidation rule cross-references the §6 correction-vs-stale decision rule in stale-state. |
 | [`docs/atlases/decision-outcome-envelope.md`](./decision-outcome-envelope.md) *(extract of §24.3)* | §7 enforcement surfaces use the envelope vocabulary `DENY` / `ABSTAIN` / `HOLD` / `ERROR` for sensitivity outcomes. |
-| [`docs/atlases/master-api-surface.md`](./master-api-surface.md) *(extract of §20.3)* | Every governed API family carries `sensitivity_tier` in its DTO; the API-family enforcement is at §7 row 2 (release) and row 3 (render). |
+| [`docs/atlases/master-api-surface.md`](../atlas/master-api-surface.md) *(extract of §20.3)* | Every governed API family carries `sensitivity_tier` in its DTO; the API-family enforcement is at §7 row 2 (release) and row 3 (render). |
 
 ### 10.2 Other Atlas v1.1 Chapter 24 registers
 

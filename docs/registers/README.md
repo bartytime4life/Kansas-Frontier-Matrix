@@ -23,6 +23,7 @@ related:
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/registers/source-corpus-reconciliation-2026-08-15.md
+  - docs/registers/repository-gap-fill-goal-2026-10-02.md
   - .github/CODEOWNERS
 notes:
   - "At main@5dc0ec2785663ea226a493a8f4ca7de6fe40e2e3 the machine verification backlog contains 747 partial projection entries; the earlier empty-backlog observation is historical and human-ledger parity remains unverified."
@@ -40,7 +41,7 @@ notes:
 > **A register records or explains authority; it does not manufacture authority.** A path, row, badge, digest, workflow result, receipt, pull request, or merged commit does not by itself establish source truth, policy approval, review, release, promotion, or publication.
 
 > [!WARNING]
-> **This lane has mixed maturity.** The directory and all 18 current direct-child files are confirmed on the evidence snapshot, but several children remain placeholders, dated drafts, sparse registers, or unresolved naming pairs. Path presence must not be reported as semantic completeness.
+> **This lane has mixed maturity.** The directory and all 19 current direct-child files are confirmed on the evidence snapshot, but several children remain placeholders, dated drafts, sparse registers, or unresolved naming pairs. Path presence must not be reported as semantic completeness.
 
 > **Verification backlog currentness — 2026-10-01, `main@5dc0ec2785663ea226a493a8f4ca7de6fe40e2e3`.**
 > `control_plane/verification_backlog.yaml` contains 747 artifact entries and
@@ -94,7 +95,7 @@ Neither branch may silently redefine the source authority it references.
 | Local lane | `docs/registers/` — human-readable governance registers and cross-register views |
 | Directory Rules outcome | `PLACE` for this same-path boundary README |
 | Governing decision | [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) accepts the exact Directory Rules v2 bytes |
-| Current path state | **CONFIRMED** — the lane and 18 direct-child files exist on the evidence snapshot |
+| Current path state | **CONFIRMED** — the lane and 19 direct-child files exist on the evidence snapshot |
 | Content maturity | **PARTIAL / MIXED** — repository-grounded pointers, active historical logs, substantial drafts, sparse machine counterparts, and proposed scaffolds coexist |
 | Review route | `@bartytime4life` through [`.github/CODEOWNERS`](../../.github/CODEOWNERS) |
 | Public effect | Repository-facing documentation only; no normal public-data or runtime API |
@@ -243,6 +244,7 @@ docs/registers/
 ├── RELEASE_STATE.md                     # substantial draft; machine entries are empty
 ├── SOURCE_AUTHORITY.md                  # substantial draft with unresolved metadata; machine entries are empty
 ├── VERIFICATION_BACKLOG.md              # dated human backlog; machine projection has 747 partial entries
+├── repository-gap-fill-goal-2026-10-02.md # dated gap-fill goal, gap register, and fill procedures
 └── source-corpus-reconciliation-2026-08-15.md # dated repository-grounded source/proposal reconciliation ledger
 ```
 
@@ -251,7 +253,7 @@ docs/registers/
 | Group | Current members | What the group proves |
 |---|---|---|
 | Repository-grounded cross-register pointer | [`ADR_INDEX.md`](./ADR_INDEX.md) | Current path, canonical target, summary, and validator relationship are documented against repository evidence |
-| Dated human logs and baselines | [`DRIFT_REGISTER.md`](./DRIFT_REGISTER.md), [`VERIFICATION_BACKLOG.md`](./VERIFICATION_BACKLOG.md), [`source-corpus-reconciliation-2026-08-15.md`](./source-corpus-reconciliation-2026-08-15.md) | Historical observations, open checks, and a dated source/proposal reconciliation ledger exist; completeness and machine parity are not implied |
+| Dated human logs and baselines | [`DRIFT_REGISTER.md`](./DRIFT_REGISTER.md), [`VERIFICATION_BACKLOG.md`](./VERIFICATION_BACKLOG.md), [`source-corpus-reconciliation-2026-08-15.md`](./source-corpus-reconciliation-2026-08-15.md), [`repository-gap-fill-goal-2026-10-02.md`](./repository-gap-fill-goal-2026-10-02.md) | Historical observations, open checks, a dated source/proposal reconciliation ledger, and a dated gap-fill goal exist; completeness and machine parity are not implied |
 | Small proposed scaffolds | [`AUTHORITY_LADDER.md`](./AUTHORITY_LADDER.md), [`CANONICAL_LINEAGE_EXPLORATORY.md`](./CANONICAL_LINEAGE_EXPLORATORY.md), [`CONTINUITY_INVENTORY.md`](./CONTINUITY_INVENTORY.md), [`OBJECT_FAMILY_MAP.md`](./OBJECT_FAMILY_MAP.md), [`RELEASE_REGISTER.md`](./RELEASE_REGISTER.md) | A named path and limited intent exist; operational maturity is not established |
 | Substantial draft narrative registers | [`CONTRADICTION.md`](./CONTRADICTION.md), [`DEPRECATION.md`](./DEPRECATION.md), [`DOCUMENT_REGISTRY.md`](./DOCUMENT_REGISTRY.md), [`DOMAIN_LANE.md`](./DOMAIN_LANE.md), [`OBJECT_FAMILY.md`](./OBJECT_FAMILY.md), [`POLICY_GATE.md`](./POLICY_GATE.md), [`RELEASE_STATE.md`](./RELEASE_STATE.md), [`SOURCE_AUTHORITY.md`](./SOURCE_AUTHORITY.md) | Detailed prose exists; current semantics, ownership, machine parity, and consumer readiness remain file-specific |
 
@@ -281,7 +283,7 @@ A human register and a machine projection are related surfaces, not interchangea
 | [`SOURCE_AUTHORITY.md`](./SOURCE_AUTHORITY.md) | [`control_plane/source_authority_register.yaml`](../../control_plane/source_authority_register.yaml) | Human draft exists; machine `entries` list is empty |
 | [`VERIFICATION_BACKLOG.md`](./VERIFICATION_BACKLOG.md) | [`control_plane/verification_backlog.yaml`](../../control_plane/verification_backlog.yaml) | The human backlog has open material; the machine projection has 747 partial entries, without proven human-ledger parity or closure |
 
-No direct machine counterpart is confirmed for `CANONICAL_LINEAGE_EXPLORATORY.md`, `CONTINUITY_INVENTORY.md`, `DRIFT_REGISTER.md`, `RELEASE_REGISTER.md`, or `source-corpus-reconciliation-2026-08-15.md` on the evidence snapshot. Do not invent one from naming symmetry.
+No direct machine counterpart is confirmed for `CANONICAL_LINEAGE_EXPLORATORY.md`, `CONTINUITY_INVENTORY.md`, `DRIFT_REGISTER.md`, `RELEASE_REGISTER.md`, `source-corpus-reconciliation-2026-08-15.md`, or `repository-gap-fill-goal-2026-10-02.md` on the evidence snapshot; the gap-fill goal's census baseline is the QA aid `tools/qa/gap_scan_baseline.json`, not a control-plane register. Do not invent one from naming symmetry.
 
 ### Conflict rule
 
@@ -490,7 +492,7 @@ These items are documentation and governance work. None authorizes source activa
 
 ## Status summary
 
-**CONFIRMED:** `docs/registers/` is the adopted human-readable register lane under `docs/`; 18 direct-child files exist on the evidence snapshot; CODEOWNERS routes review to `@bartytime4life`; current human and machine surfaces have been inspected for this README inventory refresh.
+**CONFIRMED:** `docs/registers/` is the adopted human-readable register lane under `docs/`; 19 direct-child files exist on the evidence snapshot; CODEOWNERS routes review to `@bartytime4life`; current human and machine surfaces have been inspected for this README inventory refresh.
 
 **PARTIAL / MIXED:** register maturity, metadata quality, semantic currency, human-machine parity, and consumer readiness vary by file.
 

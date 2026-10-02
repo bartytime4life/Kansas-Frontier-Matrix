@@ -410,7 +410,7 @@ Each contract above has a corresponding schema home per ADR-0001 (`schemas/contr
 | Atlas v1.1 §24.7 Reviewer Role and Separation-of-Duties Matrix | Correction reviewer and release authority must be separate when materiality applies (§24.7.2). |
 | Atlas v1.1 §24.9.2 Trust-membrane anti-patterns | "Release without `ReleaseManifest` or rollback target" — release-discipline failure mode adjacent to §6. |
 | Atlas v1.1 §24.11.5 Documentation and drift indicator "Atlas / supplement lineage clarity" | Health indicator: "Each Atlas/supplement carries a current supersession entry. 100%." |
-| [`docs/atlases/master-api-surface.md`](./master-api-surface.md) *(extract of §20.3)* | The six governed API families must surface stale-state in their DTOs. |
+| [`docs/atlases/master-api-surface.md`](../atlas/master-api-surface.md) *(extract of §20.3)* | The six governed API families must surface stale-state in their DTOs. |
 
 ### 11.2 Atlas v1.0 anchors (retained verbatim in v1.1)
 

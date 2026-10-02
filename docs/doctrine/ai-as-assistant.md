@@ -135,7 +135,7 @@ This doctrine governs all uses of generative AI, retrieval-augmented generation 
 | **Provider adapter** | The component that translates a `RuntimeResponseEnvelope` request into a vendor- or model-specific API call and back. Four canonical adapters defined in [Adapter order and runtime selection](#adapter-order-and-runtime-selection). |
 | **`EvidenceBundle`** | The closure of source, observation, validation, policy, and release citations supporting a claim. AI cannot replace this. Lives in `data/proofs/evidence_bundle/`. See [`encyclopedia.md` §10](./encyclopedia.md). |
 | **`EvidenceRef`** | A reference that must resolve to an `EvidenceBundle` before any answer is returned. See [`encyclopedia.md` §10](./encyclopedia.md). |
-| **`RuntimeResponseEnvelope`** | The finite-outcome envelope returned by every AI call: `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`, with reason codes and citations. Schema home: `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` per [`KFM_Unified_Implementation_Architecture_Build_Manual` §20.1](../../KFM_Unified_Implementation_Architecture_Build_Manual.md). |
+| **`RuntimeResponseEnvelope`** | The finite-outcome envelope returned by every AI call: `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`, with reason codes and citations. Schema home: `schemas/contracts/v1/runtime/runtime_response_envelope.schema.json` per [`KFM_Unified_Implementation_Architecture_Build_Manual` §20.1](../KFM_Unified_Implementation_Architecture_Build_Manual.md). |
 | **`AIReceipt`** | The append-only audit record emitted by every AI call. Schema home: `schemas/contracts/v1/runtime/ai_receipt.schema.json` (PROPOSED; see [§AIReceipt and observability](#aireceipt-and-observability)). |
 | **Released evidence** | An `EvidenceBundle` whose source has been activated, whose candidate has cleared review, and whose release manifest is current. |
 | **Candidate** | Material that has been processed but not released. AI may help review candidates; AI may not publish them. |
@@ -265,7 +265,7 @@ The full denied-actions register lives at [`ai-build-operating-contract.md` §15
 
 ## The AI request lifecycle
 
-Every AI call passes through the same three-phase envelope. This is the canonical flow per [`KFM_Unified_Implementation_Architecture_Build_Manual` §15.3 / §21.1](../../KFM_Unified_Implementation_Architecture_Build_Manual.md).
+Every AI call passes through the same three-phase envelope. This is the canonical flow per [`KFM_Unified_Implementation_Architecture_Build_Manual` §15.3 / §21.1](../KFM_Unified_Implementation_Architecture_Build_Manual.md).
 
 ```mermaid
 sequenceDiagram
@@ -312,7 +312,7 @@ sequenceDiagram
 
 ## Adapter order and runtime selection
 
-KFM's adapter doctrine is **MockAdapter-first**, then progressively wider scope. The four canonical adapters and their build-phase ordering are fixed by [`KFM_Unified_Implementation_Architecture_Build_Manual` §15.2](../../KFM_Unified_Implementation_Architecture_Build_Manual.md) and [`ai-build-operating-contract.md` §21.3](../../ai-build-operating-contract.md).
+KFM's adapter doctrine is **MockAdapter-first**, then progressively wider scope. The four canonical adapters and their build-phase ordering are fixed by [`KFM_Unified_Implementation_Architecture_Build_Manual` §15.2](../KFM_Unified_Implementation_Architecture_Build_Manual.md) and [`ai-build-operating-contract.md` §21.3](../../ai-build-operating-contract.md).
 
 | Adapter | Role | Build phase | Network |
 |---|---|---|---|
@@ -418,7 +418,7 @@ Local runtimes (for example, Ollama on a steward workstation, or a self-hosted i
 | Reproducibility | The model id, weights provenance, and configuration must be reproducible. Recorded in an ADR. |
 | Choice rationale | Hosted vs. local choice is itself an ADR; either choice MUST be reproducible. |
 | Build-phase order | Local runtimes (OllamaAdapter) come **after** MockAdapter and NullAdapter prove envelope and policy behavior. See [Adapter order and runtime selection](#adapter-order-and-runtime-selection). |
-| Deployment posture | Per [`KFM_Unified_Implementation_Architecture_Build_Manual` §16.3](../../KFM_Unified_Implementation_Architecture_Build_Manual.md): "Do not expose Ollama or equivalent model APIs directly." Deny-by-default; admin/debug routes require authentication; no direct public traffic to local model runtimes. |
+| Deployment posture | Per [`KFM_Unified_Implementation_Architecture_Build_Manual` §16.3](../KFM_Unified_Implementation_Architecture_Build_Manual.md): "Do not expose Ollama or equivalent model APIs directly." Deny-by-default; admin/debug routes require authentication; no direct public traffic to local model runtimes. |
 
 `[CONFIRMED doctrine for the constraints; NEEDS VERIFICATION for specific binding, model-pin, and reproducibility details once a runtime is selected. The "L1 conformance" tier label is NEEDS VERIFICATION — KFM corpus uses sensitivity tiers T0–T4 and promotion gates A–G, not L0–LN conformance tiers. See OPEN-AI-02.]`
 
@@ -543,7 +543,7 @@ per-root README.
 ### Operating law and build manual
 
 - [`ai-build-operating-contract.md` §12, §14, §15, §21](../../ai-build-operating-contract.md) — AI builder operating law: allowed actions, denied actions, prompt-injection posture, governed AI runtime contract, MockAdapter-first rule, chain-of-thought non-persistence, provider neutrality.
-- [`KFM_Unified_Implementation_Architecture_Build_Manual.md` §15, §16, §21](../../KFM_Unified_Implementation_Architecture_Build_Manual.md) — Governed AI flow, adapter order (Mock → Null → Ollama → OpenAI-compatible), `RuntimeResponseEnvelope` sketch, AI hard denials, security trust boundaries, deployment rules (no direct public traffic to local model runtimes).
+- [`KFM_Unified_Implementation_Architecture_Build_Manual.md` §15, §16, §21](../KFM_Unified_Implementation_Architecture_Build_Manual.md) — Governed AI flow, adapter order (Mock → Null → Ollama → OpenAI-compatible), `RuntimeResponseEnvelope` sketch, AI hard denials, security trust boundaries, deployment rules (no direct public traffic to local model runtimes).
 
 ### Security and registers
 

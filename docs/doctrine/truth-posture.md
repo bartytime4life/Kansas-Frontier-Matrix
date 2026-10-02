@@ -590,7 +590,7 @@ Surface the conflict in an ADR and resolve it explicitly. Trust Membrane MUST NO
 **Contracts and registers**
 
 - [`schemas/contracts/v1/release_manifest.schema.json`](../../schemas/contracts/v1/release_manifest.schema.json) — `ReleaseManifest` schema. `[PROPOSED path.]`
-- [`schemas/contracts/v1/proof_pack.schema.json`](../../schemas/contracts/v1/proof_pack.schema.json) — `ProofPack` schema. `[PROPOSED path.]`
+- [`schemas/contracts/v1/proof_pack.schema.json`](../../schemas/contracts/v1/evidence/proof_pack.schema.json) — `ProofPack` schema. `[PROPOSED path.]`
 - [`schemas/contracts/v1/evidence_bundle.schema.json`](../../schemas/contracts/v1/evidence_bundle.schema.json) — `EvidenceBundle` schema. `[PROPOSED path.]`
 - [`schemas/contracts/v1/runtime_response_envelope.schema.json`](../../schemas/contracts/v1/runtime_response_envelope.schema.json) — `RuntimeResponseEnvelope` schema. `[PROPOSED path.]`
 - [`schemas/contracts/v1/receipts/generated_receipt.schema.json`](../../schemas/contracts/v1/receipts/generated_receipt.schema.json) — `GENERATED_RECEIPT` schema. `[PROPOSED path — operating contract §47.]`
