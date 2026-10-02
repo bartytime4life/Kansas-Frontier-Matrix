@@ -92,6 +92,7 @@ def normalize_capture(manifest: dict, objects: dict[str, bytes], *, stale_after_
                         raise ValueError("STATION_PROVENANCE_INVALID") from exc
                     if revision_time > utc_time(page_time):
                         raise ValueError("STATION_PROVENANCE_INVALID")
+                    station_revision = timestamp(revision_time)
                 station = {"id": key[0], "name": _text(p.get("monitoring_location_name"), "STATION_NAME"),
                            "geometry": _geometry(feature.get("geometry")), "page_digest": page["sha256"],
                            "retrieved_at": page_time,

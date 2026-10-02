@@ -244,7 +244,7 @@ def build_document(
 
 
 def build_case(case: Mapping[str, Any]) -> dict[str, Any]:
-    telemetry_allowed = case.get("telemetry_allowed", True)
+    telemetry_allowed = case.get("telemetry_allowed", False)
     if type(telemetry_allowed) is not bool:
         raise ValueError("fixture telemetry flag must be boolean")
     document = build_document(
