@@ -162,9 +162,13 @@ receipt lists all 21 changed paths with their previous state and digest:
 Validation on a copy of the mirror: `npm test` passed 267 of 267, and
 `tsc --noEmit` passed. `npm audit` reports eight high-severity advisories, all
 through `braces`; they are recorded, not fixed. The browser journey was not run.
-`site_mirror.py --check` now passes. That is content parity only. Whether each
-overlay belongs in the next standalone Site commit, hosted equivalence,
-deployment, and water activation remain **NEEDS VERIFICATION**.
+On 2026-10-03, `@bartytime4life`, as repository and Site owner, accepted all
+21 paths as governed monorepo overlays with the states recorded in the receipt.
+This meets the prerequisite in the review checkpoint above, and the receipt
+records the decision under `refresh.overlay_acceptance`. `site_mirror.py --check`
+now passes. That is content parity only. Whether each accepted overlay is
+folded into a successor standalone Site commit, hosted equivalence, deployment,
+and water activation remain **NEEDS VERIFICATION**.
 
 ## Reproducible environment
 
