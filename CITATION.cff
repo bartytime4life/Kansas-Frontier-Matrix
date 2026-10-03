@@ -1,8 +1,23 @@
-# KFM citation file — greenfield placeholder.
+# Repository citation metadata. Authors mirror the curated, verified list in AUTHORS.md;
+# Git history remains the complete contribution record. Citation grants no license,
+# governance, review, release, or publication authority.
 cff-version: 1.2.0
+message: "If you use or refer to the Kansas Frontier Matrix, please cite it using these metadata."
 title: "Kansas Frontier Matrix"
-message: "Cite KFM as below."
 type: software
+abstract: >-
+  KFM is a Kansas-first, map-first, time-aware, evidence-first, trust-visible
+  spatial knowledge and publication system. It governs how sources become claims
+  that are traceable, reviewable, publishable, correctable, and reversible.
 authors:
-  - family-names: "Maintainers"
-    given-names: "KFM"
+  - given-names: "Andy"
+    alias: "bartytime4life"
+repository-code: "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
+url: "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
+license: Apache-2.0
+keywords:
+  - Kansas
+  - geospatial
+  - provenance
+  - evidence
+  - data governance

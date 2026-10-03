@@ -813,25 +813,25 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/trust-posture.md`](./trust-posture.md) — Truth-label vocabulary; finite outcomes (`ANSWER`/`ABSTAIN`/`DENY`/`ERROR`/`NARROWED`/`BOUNDED`/`SOURCE_STALE`). `[NEEDS VERIFICATION — confirm exact filename.]`
 - [`docs/doctrine/ai-as-assistant.md`](./ai-as-assistant.md) — Why AI explanations of map features run through governed Focus Mode (`FocusModeRequest` → `FocusModeResponse` + `AIReceipt`), never directly from the renderer. `[CONFIRMED sibling.]`
 - [`docs/architecture/map-architecture.md`](../architecture/map-architecture.md) — Renderer choice, layer registry, tile strategy, click-flow contract. `[NEEDS VERIFICATION — exact path.]`
-- [`docs/architecture/ui-trust-surface.md`](../architecture/ui-trust-surface.md) — Evidence Drawer, trust badges, Focus Mode, negative-state UI. `[NEEDS VERIFICATION — exact path.]`
-- [`docs/architecture/evidence-model.md`](../architecture/evidence-model.md) — Evidence object graph, resolver responsibilities. `[NEEDS VERIFICATION — exact path.]`
+- [`docs/architecture/ui/README.md`](../architecture/ui/README.md) — Evidence Drawer, trust badges, Focus Mode, negative-state UI. `[PROPOSED mapping — planned `docs/architecture/ui-trust-surface.md` is not present; this is the existing page that covers it.]`
+- [`docs/architecture/evidence-identity.md`](../architecture/evidence-identity.md) — Evidence object graph, resolver responsibilities. `[PROPOSED mapping — planned `docs/architecture/evidence-model.md` is not present; this is the existing page that covers it.]`
 - [`docs/standards/Master_MapLibre_Components-Functions-Features_v2_1_FULL.md`](../standards/Master_MapLibre_Components-Functions-Features_v2_1_FULL.md) — Master MapLibre doctrine; source of canonical object families (`LayerManifest`, `StyleManifest`, `TileArtifactManifest`, `MapReleaseManifest`, `EvidenceDrawerPayload`, `MapContextEnvelope`, `FocusModeRequest`/`FocusModeResponse`, `AIReceipt`, `CitationValidationReport`, `PolicyDecision`, `PromotionDecision`, `RunReceipt`, `VerifyReceipt`, `RuntimeProbeResult`, `ReleaseRuntimeGate`, `AutomationBadgePayload`). `[PROPOSED path.]`
 - [`control_plane/map_layer_registry.yaml`](../../control_plane/map_layer_registry.yaml) — Indexed `LayerManifest` set. `[PROPOSED path.]`
 - [`packages/maplibre-runtime/`](../../packages/maplibre-runtime/) — Sole governed browser-side renderer adapter per directory-rules v1.3 §13.5. `[PROPOSED path.]`
 - [`policy/maplibre/3d-admission.rego`](../../policy/maplibre/3d-admission.rego) — `3D Admission Decision` policy. `[PROPOSED path.]`
 - [`policy/maplibre/plugin-admission.rego`](../../policy/maplibre/plugin-admission.rego) — `Plugin Admission` policy. `[PROPOSED path.]`
 - [`schemas/contracts/v1/layer_manifest.schema.json`](../../schemas/contracts/v1/layer_manifest.schema.json) — Machine-checkable `LayerManifest` shape. `[PROPOSED path.]`
-- [`schemas/contracts/v1/style_manifest.schema.json`](../../schemas/contracts/v1/style_manifest.schema.json) — `StyleManifest` schema. `[PROPOSED path.]`
-- [`schemas/contracts/v1/tile_artifact_manifest.schema.json`](../../schemas/contracts/v1/tile_artifact_manifest.schema.json) — `TileArtifactManifest` schema. `[PROPOSED path.]`
-- [`schemas/contracts/v1/map_release_manifest.schema.json`](../../schemas/contracts/v1/map_release_manifest.schema.json) — `MapReleaseManifest` schema. `[PROPOSED path.]`
+- [`schemas/contracts/v1/map/style_manifest.schema.json`](../../schemas/contracts/v1/map/style_manifest.schema.json) — `StyleManifest` schema. `[PROPOSED path.]`
+- [`schemas/contracts/v1/map/tile_artifact_manifest.schema.json`](../../schemas/contracts/v1/map/tile_artifact_manifest.schema.json) — `TileArtifactManifest` schema. `[PROPOSED path.]`
+- [`schemas/contracts/v1/map/map_release_manifest.schema.json`](../../schemas/contracts/v1/map/map_release_manifest.schema.json) — `MapReleaseManifest` schema. `[PROPOSED path.]`
 - [`schemas/contracts/v1/evidence_drawer_payload.schema.json`](../../schemas/contracts/v1/evidence_drawer_payload.schema.json) — `EvidenceDrawerPayload` schema. `[PROPOSED path.]`
-- [`schemas/contracts/v1/map_context_envelope.schema.json`](../../schemas/contracts/v1/map_context_envelope.schema.json) — `MapContextEnvelope` schema. `[PROPOSED path.]`
-- [`schemas/contracts/v1/focus_mode_request.schema.json`](../../schemas/contracts/v1/focus_mode_request.schema.json) and `focus_mode_response.schema.json` — Focus Mode contract schemas. `[PROPOSED paths.]`
+- [`schemas/contracts/v1/ui/map_context_envelope.schema.json`](../../schemas/contracts/v1/ui/map_context_envelope.schema.json) — `MapContextEnvelope` schema. `[PROPOSED path.]`
+- [`schemas/contracts/v1/ai/focus_mode_request.schema.json`](../../schemas/contracts/v1/ai/focus_mode_request.schema.json) and `focus_mode_response.schema.json` — Focus Mode contract schemas. `[PROPOSED paths.]`
 - [`schemas/contracts/v1/runtime_response_envelope.schema.json`](../../schemas/contracts/v1/runtime_response_envelope.schema.json) — Canonical runtime envelope (renamed from `decision_envelope.schema.json`). `[PROPOSED path.]`
 - [`schemas/contracts/v1/policy/3d_admission_decision.schema.json`](../../schemas/contracts/v1/policy/3d_admission_decision.schema.json) — `3D Admission Decision` schema. `[PROPOSED path per directory-rules v1.3.]`
 - [`schemas/contracts/v1/policy/plugin_admission.schema.json`](../../schemas/contracts/v1/policy/plugin_admission.schema.json) — `Plugin Admission` schema. `[PROPOSED path per directory-rules v1.3.]`
-- [`schemas/contracts/v1/maplibre/representation_receipt.schema.json`](../../schemas/contracts/v1/maplibre/representation_receipt.schema.json) — `RepresentationReceipt` schema. `[PROPOSED path per directory-rules v1.3.]`
-- [`schemas/contracts/v1/3d/reality_boundary_note.schema.json`](../../schemas/contracts/v1/3d/reality_boundary_note.schema.json) — `Reality Boundary Note` schema. `[PROPOSED path per directory-rules v1.3.]`
+- [`schemas/contracts/v1/receipts/representation_receipt.schema.json`](../../schemas/contracts/v1/receipts/representation_receipt.schema.json) — `RepresentationReceipt` schema. `[PROPOSED path per directory-rules v1.3.]`
+- [`schemas/contracts/v1/evidence/reality_boundary_note.schema.json`](../../schemas/contracts/v1/evidence/reality_boundary_note.schema.json) — `Reality Boundary Note` schema. `[PROPOSED path per directory-rules v1.3.]`
 - ADR — *Retirement of `STALE` in favor of `SOURCE_STALE` + `ABSTAIN freshness.stale`*. `[TODO — single ADR can close OQ-MF-01 + Authority Ladder OQ-AL-01 + Corrections OQ-CF-01 + Evidence First OQ-EF-01 + Lifecycle Law OQ-LL-01.]`
 - ADR — *Retirement of `DecisionEnvelope` in favor of `RuntimeResponseEnvelope`*. `[TODO — single ADR can close OQ-MF-02 + Lifecycle Law OQ-LL-02 + Evidence First OQ-EF-05.]`
 - ADR — *Map-domain object families join contract §29 glossary*. `[TODO — see OQ-MF-07.]`

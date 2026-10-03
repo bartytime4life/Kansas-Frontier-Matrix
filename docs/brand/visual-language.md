@@ -707,7 +707,7 @@ When printed in grayscale, the doc header keeps its rhythm (whitespace, weight c
 - [`docs/doctrine/evidence-first.md`](../doctrine/evidence-first.md) — Evidence visibility doctrine. `[CONFIRMED concept; exact path NEEDS VERIFICATION.]`
 - [`docs/doctrine/time-aware.md`](../doctrine/time-aware.md) — Six time kinds and freshness window. `[CONFIRMED.]`
 - [`docs/doctrine/policy-aware.md`](../doctrine/policy-aware.md) — Policy gate, reason-code vocabulary. `[CONFIRMED.]`
-- [`docs/architecture/ui-trust-surface.md`](../architecture/ui-trust-surface.md) — UI Trust Surface. `[CONFIRMED concept; exact path NEEDS VERIFICATION.]`
+- [`docs/architecture/ui/README.md`](../architecture/ui/README.md) — UI Trust Surface. `[CONFIRMED concept; PROPOSED mapping — planned `docs/architecture/ui-trust-surface.md` is not present; this is the existing page that covers it.]`
 - [`docs/architecture/map-architecture.md`](../architecture/map-architecture.md) — Map architecture; per-layer style is governed there. `[CONFIRMED concept; exact path NEEDS VERIFICATION.]`
 - _TODO_ `docs/brand/popup-microcopy.md` <sub>PROPOSED sibling.</sub>
 - _TODO_ `docs/brand/layer-card-microcopy.md` <sub>PROPOSED sibling.</sub>

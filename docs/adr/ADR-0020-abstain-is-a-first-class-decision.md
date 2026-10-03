@@ -1145,8 +1145,8 @@ Remote file reads and hosted checks can prove tracked shape, deterministic synth
 - [MockAdapter](../../runtime/model_adapters/MockAdapter.py)
 - [Governed API ABSTAIN scaffold](../../apps/governed-api/src/governed_api/stub.py)
 - [Governed API route registry](../../apps/governed-api/src/governed_api/routes/registry.py)
-- [Explorer governed projection adapter](../../apps/explorer-web/src/adapters/GovernedClient.ts)
-- [Explorer Focus composed-claim parser](../../apps/explorer-web/src/features/focus_panel/parsers.ts)
+- [Explorer governed projection adapter](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/apps/explorer-web/src/adapters/GovernedClient.ts)
+- [Explorer Focus composed-claim parser](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/apps/explorer-web/src/features/focus_panel/parsers.ts)
 - [Runtime policy boundary](../../policy/runtime/README.md)
 - [Policy-gate register](../../control_plane/policy_gate_register.yaml)
 
@@ -1156,8 +1156,8 @@ Remote file reads and hosted checks can prove tracked shape, deterministic synth
 - [RuntimeResponseEnvelope validator](../../tools/validators/validate_runtime_response_envelope.py)
 - [Finite-envelope proof](../../tests/runtime_proof/test_envelope_finite_outcomes.py)
 - [MockAdapter proof](../../tests/runtime_proof/test_mock_adapter_finite_outcomes.py)
-- [Evidence Drawer tests](../../apps/explorer-web/tests/evidence-drawer.test.ts)
-- [Focus composed-claim tests](../../apps/explorer-web/tests/focus-composed-claim.test.ts)
+- [Evidence Drawer tests](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/apps/explorer-web/tests/evidence-drawer.test.ts)
+- [Focus composed-claim tests](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/apps/explorer-web/tests/focus-composed-claim.test.ts)
 - [Focus mock workflow](../../.github/workflows/focus-mock-test.yml)
 
 ---

@@ -114,6 +114,18 @@ class RootRegistryValidatorTests(unittest.TestCase):
         self.assertEqual("FAIL_NEW_DRIFT", result.outcome)
         self.assertIn("UNREGISTERED_ROOT", {item.code for item in result.findings})
 
+    def test_local_tool_cache_roots_are_not_drift(self) -> None:
+        register = resolve_registry(json.loads(REGISTER_PATH.read_text(encoding="utf-8")))
+        with tempfile.TemporaryDirectory() as directory:
+            projected = Path(directory)
+            for entry in register["roots"]:
+                if entry["status"] != "RETIRED":
+                    (projected / entry["path"]).mkdir(parents=True, exist_ok=True)
+            for cache in (".hypothesis", ".pytest_cache", ".mypy_cache"):
+                (projected / cache).mkdir()
+            result = validate_register(REGISTER_PATH, repo_root=projected)
+        self.assertTrue(result.ok, result.findings)
+
     def test_missing_active_root_is_new_drift(self) -> None:
         register = resolve_registry(json.loads(REGISTER_PATH.read_text(encoding="utf-8")))
         with tempfile.TemporaryDirectory() as directory:

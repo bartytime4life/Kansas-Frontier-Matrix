@@ -728,7 +728,7 @@ Before any Drawer fixture or release ships, the following must be verifiable. `[
 - [`docs/doctrine/trust-posture.md`](../doctrine/trust-posture.md) — Truth-label vocabulary; finite outcomes. <sub>NEEDS VERIFICATION — confirm exact filename.</sub>
 - [`docs/doctrine/corrections-first-class.md`](../doctrine/corrections-first-class.md) — `CorrectionNotice`, `superseded_by`, `withdrawn`. `[CONFIRMED sibling.]`
 - [`docs/doctrine/ai-as-assistant.md`](../doctrine/ai-as-assistant.md) — Why `model` source role is not standalone evidence on public surfaces. `[CONFIRMED sibling.]`
-- [`docs/architecture/ui-trust-surface.md`](../architecture/ui-trust-surface.md) — Drawer, focus mode, trust badges, negative-state UI. <sub>NEEDS VERIFICATION — exact path.</sub>
+- [`docs/architecture/ui/README.md`](../architecture/ui/README.md) — Drawer, focus mode, trust badges, negative-state UI. <sub>PROPOSED mapping — planned `docs/architecture/ui-trust-surface.md` is not present; this is the existing page that covers it.</sub>
 - [`docs/architecture/map-architecture.md`](../architecture/map-architecture.md) — Renderer choice, layer registry, tile strategy, click-flow contract. <sub>NEEDS VERIFICATION — exact path.</sub>
 - `control_plane/string_registry.yaml` — Canonical en-US source-of-truth + translations. <sub>PROPOSED path.</sub>
 - `control_plane/policy_gate_register.yaml` — Canonical reason-code vocabulary. <sub>PROPOSED path.</sub>

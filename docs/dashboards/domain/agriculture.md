@@ -206,7 +206,7 @@ The current file remains under the existing `docs/` responsibility root. Accepte
 | [`schemas/contracts/v1/domains/agriculture/`](../../../schemas/contracts/v1/domains/agriculture/README.md) | Proposed Agriculture machine-shape lane | Mixed permissive scaffolds and bounded dedicated shapes; not full conformance |
 | [`policy/sensitivity/agriculture/`](../../../policy/sensitivity/agriculture/) | Agriculture sensitivity policy surface | Two inspected scaffolds; accepted evaluator and complete rule set unverified |
 | [`apps/review-console/`](../../../apps/review-console/README.md) | Candidate role-gated review surface | README boundary confirmed; dashboard implementation unknown |
-| [`apps/explorer-web/.../agriculture/`](../../../apps/explorer-web/src/features/domains/agriculture/README.md) | Candidate public-safe Agriculture feature boundary | README confirmed; route/panel/runtime unknown |
+| [`apps/explorer-web/.../agriculture/`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/apps/explorer-web/src/features/domains/agriculture/README.md) | Candidate public-safe Agriculture feature boundary | README confirmed; route/panel/runtime unknown |
 | [`apps/governed-api/.../agriculture/`](../../../apps/governed-api/src/routes/agriculture/README.md) | Candidate Agriculture trust-membrane route source | README confirmed; handlers and runtime unknown |
 
 This update creates no path, move, rename, deletion, machine registry, new authority root, or structural migration.
@@ -389,7 +389,7 @@ The panel itself must have explicit loading, unavailable, stale, denied, restric
 ### Verified boundary surfaces
 
 - [Review Console README](../../../apps/review-console/README.md) — candidate role-gated steward surface; runtime remains unverified.
-- [Explorer Web Agriculture README](../../../apps/explorer-web/src/features/domains/agriculture/README.md) — candidate public-safe Agriculture feature boundary; implementation remains unverified.
+- [Explorer Web Agriculture README](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/apps/explorer-web/src/features/domains/agriculture/README.md) — candidate public-safe Agriculture feature boundary; implementation remains unverified.
 - [Governed API Agriculture route README](../../../apps/governed-api/src/routes/agriculture/README.md) — candidate trust-membrane route boundary; implementation remains unverified.
 - [Agriculture CI workflow](../../../.github/workflows/domain-agriculture.yml) — current readiness and fixture-only execution definition; not a dashboard feed.
 - [NASS connector coordination README](../../../connectors/nass/README.md) — source-intake placement conflict and placeholder maturity; not live access.
@@ -552,7 +552,7 @@ Recheck this specification when:
 - [Agriculture CI readiness workflow](../../../.github/workflows/domain-agriculture.yml)
 - [Repository review routing](../../../.github/CODEOWNERS)
 - [Review Console boundary](../../../apps/review-console/README.md)
-- [Explorer Web Agriculture boundary](../../../apps/explorer-web/src/features/domains/agriculture/README.md)
+- [Explorer Web Agriculture boundary](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/apps/explorer-web/src/features/domains/agriculture/README.md)
 - [Governed API Agriculture route boundary](../../../apps/governed-api/src/routes/agriculture/README.md)
 - [Accepted Directory Rules decision](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
 - [Directory Rules v2](../../doctrine/directory-rules.md)

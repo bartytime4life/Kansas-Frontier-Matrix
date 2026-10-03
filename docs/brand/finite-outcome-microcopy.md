@@ -695,7 +695,7 @@ Before a surface that renders outcomes ships, the following MUST be verifiable. 
 - [`docs/doctrine/corrections-first-class.md`](../doctrine/corrections-first-class.md) — `CorrectionNotice`, `superseded_by`, `withdrawn`. `[CONFIRMED sibling.]`
 - [`docs/doctrine/ai-as-assistant.md`](../doctrine/ai-as-assistant.md) — Why AI returns `ABSTAIN`, not fluent filler, when evidence does not close. `[CONFIRMED sibling.]`
 - [`docs/architecture/trust-membrane.md`](../architecture/trust-membrane.md) — The warranty contract; outcome semantics; non-conflation. <sub>NEEDS VERIFICATION — exact path.</sub>
-- [`docs/architecture/ui-trust-surface.md`](../architecture/ui-trust-surface.md) — Drawer, focus mode, trust badges, negative-state UI. <sub>NEEDS VERIFICATION — exact path.</sub>
+- [`docs/architecture/ui/README.md`](../architecture/ui/README.md) — Drawer, focus mode, trust badges, negative-state UI. <sub>PROPOSED mapping — planned `docs/architecture/ui-trust-surface.md` is not present; this is the existing page that covers it.</sub>
 - `schemas/contracts/v1/decision_envelope.schema.json` — Envelope shape carrying the outcomes. <sub>PROPOSED path.</sub>
 - `schemas/contracts/v1/runtime_response_envelope.schema.json` — AI runtime envelope. <sub>PROPOSED path.</sub>
 - `control_plane/policy_gate_register.yaml` — Canonical reason-code vocabulary. <sub>PROPOSED path.</sub>

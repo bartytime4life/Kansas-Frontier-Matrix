@@ -281,7 +281,7 @@ A repository file proves that bytes exist at a revision. It does not by itself p
 | [`fixtures/domains/atmosphere/invalid/`](../../fixtures/domains/atmosphere/invalid/README.md) | Contains documentation/placeholders and unrelated fixture directories; no advisory-context negative payload was inspected. | Negative life-safety fixture coverage. |
 | [`POLICY.md`](../domains/atmosphere/POLICY.md) and [`PUBLICATION_POSTURE.md`](../domains/atmosphere/PUBLICATION_POSTURE.md) | Describe referral-only and non-life-safety intent. | Executable or released behavior. |
 | [`LIFE_SAFETY_BOUNDARY.md`](../domains/hazards/LIFE_SAFETY_BOUNDARY.md) | Describes the shared no-alert-authority boundary across Hazards, Hydrology, and Atmosphere/Air. | Final cross-lane field ownership or evaluator placement. |
-| [Explorer Web Atmosphere README](../../apps/explorer-web/src/features/domains/atmosphere/README.md) | Describes contextual rendering and issuer referral. | Wired components, tested redirects, runtime policy, or released UI. |
+| [Explorer Web Atmosphere README](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/apps/explorer-web/src/features/domains/atmosphere/README.md) | Describes contextual rendering and issuer referral. | Wired components, tested redirects, runtime policy, or released UI. |
 
 ### Evidence correction made by this revision
 
@@ -950,7 +950,7 @@ If the decision is later assigned and accepted:
 - [Valid advisory-context fixture lane](../../fixtures/domains/atmosphere/valid/advisory-context/README.md)
 - [Invalid Atmosphere fixture lane](../../fixtures/domains/atmosphere/invalid/README.md)
 - [Atmosphere advisory test placeholder](../../tests/domains/atmosphere/test_advisory_no_life_safety.py)
-- [Explorer Web Atmosphere feature boundary](../../apps/explorer-web/src/features/domains/atmosphere/README.md)
+- [Explorer Web Atmosphere feature boundary](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/apps/explorer-web/src/features/domains/atmosphere/README.md)
 
 [Back to top](#top)
 

@@ -697,7 +697,7 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/corrections-are-first-class.md`](./corrections-are-first-class.md) — `CorrectionNotice` inherits the citation closure rule; uncited corrections are rejected. Note: v1 of this doc referenced `corrections-first-class.md`; canonical filename TBD per [OQ-EF-02](#16-open-questions-register). `[CONFIRMED sibling, filename CONFLICTED.]`
 - [`docs/doctrine/trust-posture.md`](./trust-posture.md) — Truth-label vocabulary (`CONFIRMED`, `PROPOSED`, `NEEDS VERIFICATION`, `UNKNOWN`, `CONFLICTED`, `LINEAGE`, `EXPLORATORY`) used alongside the runtime outcomes here. `[NEEDS VERIFICATION — confirm exact filename.]`
 - [`docs/doctrine/ai-as-assistant.md`](./ai-as-assistant.md) — How AI carriers honor the cite-or-abstain rule and `EvidenceBundle` resolution. `[CONFIRMED sibling.]`
-- [`docs/architecture/evidence-model.md`](../architecture/evidence-model.md) — Full object graph, schemas, and resolver responsibilities. `[NEEDS VERIFICATION — exact path.]`
+- [`docs/architecture/evidence-identity.md`](../architecture/evidence-identity.md) — Full object graph, schemas, and resolver responsibilities. `[PROPOSED mapping — planned `docs/architecture/evidence-model.md` is not present; this is the existing page that covers it.]`
 - [`docs/architecture/release-and-publication.md`](../architecture/release-and-publication.md) — Where bundles cross into `PUBLISHED`. `[NEEDS VERIFICATION — exact path.]`
 - `schemas/contracts/v1/inspectable_claim.schema.json` — `InspectableClaim` schema. `[PROPOSED path.]`
 - `schemas/contracts/v1/evidence_ref.schema.json` — `EvidenceRef` schema. `[PROPOSED path.]`

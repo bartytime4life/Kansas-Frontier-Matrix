@@ -33,6 +33,7 @@ notes:
   - "v0.6 conforms the metadata envelope and re-pins unchanged policy-test and workflow evidence to current main."
   - "This file remains authored Markdown at its canonical same-path location; it is not generated or mirrored."
   - "Source-defined counts are static source inventory, not a pytest collection report or current pass result."
+  - "2026-10-03 (after the pinned snapshot): test_doctrine_artifact_required.py gains two OPA-backed deny tests and test_rego_compile_census.py adds three compile tests; the doctrine table and the Rego compile census section reflect them, while the header counts stay pinned to the snapshot."
 [/KFM_META_BLOCK_V2] -->
 
 # `tests/policy/` — Policy and Doctrine Boundary Tests
@@ -121,7 +122,7 @@ safety.
 | [`test_doctrine_artifact_provenance_snapshots.py`](test_doctrine_artifact_provenance_snapshots.py) | 3 | Stored checker/synchronizer output snapshots. |
 | [`test_doctrine_artifact_registry_status_alignment.py`](test_doctrine_artifact_registry_status_alignment.py) | 1 | Registry `present` status mismatch failure. |
 | [`test_doctrine_artifact_registry_validation.py`](test_doctrine_artifact_registry_validation.py) | 7 | Duplicate, malformed, empty, invalid-status, comment, and missing-file registry cases. |
-| [`test_doctrine_artifact_required.py`](test_doctrine_artifact_required.py) | 3 | Required Rego source presence, fail-closed missing-artifact posture, and receipt output. |
+| [`test_doctrine_artifact_required.py`](test_doctrine_artifact_required.py) | 5 | Required Rego source presence, fail-closed missing-artifact posture, receipt output, and `opa eval` of `deny` (skips with `OPA_BINARY_UNAVAILABLE` when no OPA is installed). |
 | [`test_doctrine_artifact_test_bundle.py`](test_doctrine_artifact_test_bundle.py) | 1 | Focused shell test-bundle orchestration. |
 | [`test_doctrine_registry_alignment.py`](test_doctrine_registry_alignment.py) | 2 | Required-artifact and provenance registry filename alignment. |
 | [`test_enforce_doctrine_preflight_gates.py`](test_enforce_doctrine_preflight_gates.py) | 3 | Strict wrapper failure propagation and argument forwarding. |
@@ -132,10 +133,21 @@ safety.
 | [`test_sync_doctrine_artifact_provenance_status.py`](test_sync_doctrine_artifact_provenance_status.py) | 3 | No-change/write behavior and synchronization receipt output. |
 | [`test_sync_doctrine_artifact_registry_status.py`](test_sync_doctrine_artifact_registry_status.py) | 4 | Present-state synchronization, dry-run, fail-on-change, and missing-registry behavior. |
 
-These 48 tests primarily exercise local files, temporary directories, subprocess
+These 50 tests primarily exercise local files, temporary directories, subprocess
 exit codes, and structured JSON. Several tests intentionally prove a hold or failure
 is visible. A green test in that family does not mean a doctrine artifact is present,
 authoritative, rights-cleared, reviewed, adopted, or publishable.
+
+### Rego compile census
+
+| Module | Tests | Primary implementation under test |
+|---|---:|---|
+| [`test_rego_compile_census.py`](test_rego_compile_census.py) | 3 | `opa check` over every tracked `.rego` file at once. The only tolerated error is the disclosed duplicate `living_person_redaction.rego` pair (CONFLICTED / HOLD in [`living_persons_geoprivacy.md`](../../docs/policy/living_persons_geoprivacy.md)); each copy must still compile alone. |
+
+These tests and the OPA-backed doctrine tests skip with `OPA_BINARY_UNAVAILABLE` when
+no `opa` is on `PATH` and `OPA_BIN` is unset. CI does not install OPA for this lane
+today, so hosted runs skip them. A pass proves compilation and the evaluated `deny`
+cases only, not policy correctness, bundle selection, or runtime binding.
 
 ## Implementation bindings
 

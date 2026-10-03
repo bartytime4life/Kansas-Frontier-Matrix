@@ -14,9 +14,12 @@ complementary gaps found while auditing the tree:
                                (``docs/archive/`` is frozen lineage and is excluded)
 * ``UNRATCHETED_PLACEHOLDER``  non-Markdown file outside the scaffold surfaces whose header
                                declares a PROPOSED/greenfield placeholder or scaffold
+* ``MARKDOWN_PLACEHOLDER``     Markdown file whose header (first lines only, so prose that quotes
+                               the marker is not counted) declares a PROPOSED/greenfield
+                               placeholder or scaffold (``docs/archive/`` is excluded)
 
 Parse errors and shadowing packages are invariants: ``--check`` fails on any.
-Broken links and unratcheted placeholders are census counts: ``--check`` fails
+Broken links and both placeholder classes are census counts: ``--check`` fails
 only when a count rises above ``gap_scan_baseline.json``. Lower counts pass and
 print a reminder to tighten the baseline with ``--write-baseline``.
 
@@ -42,7 +45,7 @@ ROOT = Path(__file__).resolve().parents[2]
 BASELINE = ROOT / "tools" / "qa" / "gap_scan_baseline.json"
 SCHEMA_VERSION = "kfm.gap-scan/v1"
 INVARIANT_KINDS = ("STRUCTURED_PARSE_ERROR", "TEST_PACKAGE_SHADOW")
-CENSUS_KINDS = ("BROKEN_LOCAL_LINK", "UNRATCHETED_PLACEHOLDER")
+CENSUS_KINDS = ("BROKEN_LOCAL_LINK", "UNRATCHETED_PLACEHOLDER", "MARKDOWN_PLACEHOLDER")
 
 # Kept in step with scaffold_inventory.SURFACES; files there are already ratcheted.
 SCAFFOLD_SURFACES = ("scripts", "tools", "pipelines", "pipeline_specs", "connectors",
@@ -51,7 +54,10 @@ SCAFFOLD_SURFACES = ("scripts", "tools", "pipelines", "pipeline_specs", "connect
 STRUCTURED_SUFFIXES = frozenset({".json", ".geojson", ".yaml", ".yml", ".toml"})
 NEGATIVE_SEGMENTS = frozenset({"invalid", "malformed", "negative", "bad", "broken"})
 NEGATIVE_NAME = re.compile(r"(?:^|[_.-])(?:invalid|malformed|bad|broken|corrupt)(?:[_.-]|$)")
-MARKER = re.compile(r"\b(?:greenfield|PROPOSED)\s+(?:placeholder|scaffold)\b", re.IGNORECASE)
+# Accepts the prose form ("PROPOSED placeholder") and status tokens ("greenfield-scaffold",
+# "proposed-scaffold-corpus"), but not a component token such as "policy-greenfield-scaffold".
+MARKER = re.compile(r"(?<![\w-])(?:greenfield|PROPOSED)[\s_-]+(?:placeholder|scaffold)\b",
+                    re.IGNORECASE)
 HEADER_LINES = 6
 LINK = re.compile(r'(?<!!)\[[^\]]*\]\(\s*(?:<([^>]+)>|([^)\s]+))(?:\s+"[^"]*")?\s*\)')
 FENCE = re.compile(r"^\s*(?:```|~~~)")
@@ -189,10 +195,25 @@ def scan_placeholders(root: Path, files: list[str]) -> list[dict[str, str]]:
     return findings
 
 
+def scan_markdown_placeholders(root: Path, files: list[str]) -> list[dict[str, str]]:
+    findings = []
+    for path in files:
+        if not path.endswith(".md") or path.startswith("docs/archive/"):
+            continue
+        try:
+            head = (root / path).read_text(encoding="utf-8").splitlines()[:HEADER_LINES]
+        except (OSError, UnicodeDecodeError):
+            continue
+        if MARKER.search("\n".join(head)):
+            findings.append({"kind": "MARKDOWN_PLACEHOLDER", "path": path, "detail": ""})
+    return findings
+
+
 def scan(root: Path = ROOT) -> list[dict[str, str]]:
     files = tracked_files(root)
     return (scan_parse_errors(root, files) + scan_test_shadows(root, files)
-            + scan_links(root, files) + scan_placeholders(root, files))
+            + scan_links(root, files) + scan_placeholders(root, files)
+            + scan_markdown_placeholders(root, files))
 
 
 def _root_of(finding: dict[str, str]) -> str:
