@@ -168,3 +168,31 @@ def test_diagnostic_cannot_accept_an_invalid_reviewed_receipt(
     for validate in (TOOL.check, TOOL.diagnose):
         with pytest.raises(ValueError, match="MIRROR_IDENTICAL_MISMATCH"):
             validate()
+
+
+def test_repository_only_overlay_state_is_counted_and_unknown_states_fail(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _, destination, commit = _repos(tmp_path, monkeypatch)
+    _receipt(tmp_path, monkeypatch, commit)
+    extra = destination / "app/new-client.ts"
+    extra.write_text("export const added = true;\n", encoding="utf-8")
+    _git(destination.parents[2], "add", ".")
+    document = json.loads(TOOL.RECEIPT.read_text(encoding="utf-8"))
+    document["comparison"]["app/new-client.ts"] = {
+        "state": "repository_only_overlay",
+        "mirror_sha256": TOOL.sha(b"export const added = true;\n").removeprefix("sha256:"),
+    }
+    document["counts"]["repository_only_overlay"] = 1
+    TOOL.RECEIPT.write_text(json.dumps(document), encoding="utf-8")
+    assert TOOL.check()["files"] == 2
+
+    document["counts"]["repository_only_overlay"] = 0
+    TOOL.RECEIPT.write_text(json.dumps(document), encoding="utf-8")
+    with pytest.raises(ValueError, match="MIRROR_RECEIPT_COUNTS_DRIFT"):
+        TOOL.check()
+
+    document["comparison"]["app/new-client.ts"]["state"] = "unreviewed_overlay"
+    TOOL.RECEIPT.write_text(json.dumps(document), encoding="utf-8")
+    with pytest.raises(ValueError, match="MIRROR_RECEIPT_STATE_INVALID"):
+        TOOL.check()
