@@ -54,7 +54,10 @@ SCAFFOLD_SURFACES = ("scripts", "tools", "pipelines", "pipeline_specs", "connect
 STRUCTURED_SUFFIXES = frozenset({".json", ".geojson", ".yaml", ".yml", ".toml"})
 NEGATIVE_SEGMENTS = frozenset({"invalid", "malformed", "negative", "bad", "broken"})
 NEGATIVE_NAME = re.compile(r"(?:^|[_.-])(?:invalid|malformed|bad|broken|corrupt)(?:[_.-]|$)")
-MARKER = re.compile(r"\b(?:greenfield|PROPOSED)\s+(?:placeholder|scaffold)\b", re.IGNORECASE)
+# Accepts the prose form ("PROPOSED placeholder") and status tokens ("greenfield-scaffold",
+# "proposed-scaffold-corpus"), but not a component token such as "policy-greenfield-scaffold".
+MARKER = re.compile(r"(?<![\w-])(?:greenfield|PROPOSED)[\s_-]+(?:placeholder|scaffold)\b",
+                    re.IGNORECASE)
 HEADER_LINES = 6
 LINK = re.compile(r'(?<!!)\[[^\]]*\]\(\s*(?:<([^>]+)>|([^)\s]+))(?:\s+"[^"]*")?\s*\)')
 FENCE = re.compile(r"^\s*(?:```|~~~)")

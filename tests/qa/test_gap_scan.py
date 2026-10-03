@@ -101,13 +101,18 @@ def test_markdown_placeholders_count_header_markers_only(tmp_path: Path) -> None
     root = _repo(tmp_path, {
         "docs/stub.md": "# Stub\n\n> PROPOSED placeholder\n",
         "fixtures/x/README.md": "greenfield scaffold\n",
+        "packages/x/README.md": "status: draft; greenfield-scaffold\n",
+        "policy/x/README.md": "status: draft; proposed-scaffold-corpus\n",
+        "tests/x/README.md": "status: draft; policy-greenfield-scaffold; validator-executable\n",
         "docs/prose.md": "\n".join(["# Prose"] + ["text"] * 6 + ["A PROPOSED placeholder is ..."]),
         "docs/archive/old.md": "PROPOSED placeholder\n",
         "infra/compose/docker-compose.yml": "# PROPOSED placeholder\n",
     })
     found = TOOL.scan_markdown_placeholders(root, TOOL.tracked_files(root))
     assert _kinds(found) == [("MARKDOWN_PLACEHOLDER", "docs/stub.md"),
-                             ("MARKDOWN_PLACEHOLDER", "fixtures/x/README.md")]
+                             ("MARKDOWN_PLACEHOLDER", "fixtures/x/README.md"),
+                             ("MARKDOWN_PLACEHOLDER", "packages/x/README.md"),
+                             ("MARKDOWN_PLACEHOLDER", "policy/x/README.md")]
 
 
 def _summary(**counts):
