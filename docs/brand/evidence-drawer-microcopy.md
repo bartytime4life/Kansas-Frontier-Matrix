@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<TODO-uuid>
+doc_id: kfm://doc/brand/evidence-drawer-microcopy
 title: Evidence Drawer — Microcopy & Voice Reference
 type: standard
 version: v1
@@ -8,23 +8,22 @@ owners: <TODO: brand / design-system maintainers + Map Architecture Lead>
 created: 2026-05-15
 updated: 2026-05-15
 policy_label: public
+owning_root: docs/
+responsibility: "Human-readable documentation for Evidence Drawer — Microcopy & Voice Reference; not policy, evidence, review, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — metadata normalization does not re-review document claims.
 related:
   - docs/doctrine/map-first.md
   - docs/doctrine/evidence-first.md
   - docs/doctrine/policy-aware.md
   - docs/doctrine/time-aware.md
-  - docs/doctrine/trust-posture.md
+  - docs/doctrine/truth-posture.md
   - docs/doctrine/corrections-first-class.md
   - docs/doctrine/ai-as-assistant.md
-  - docs/architecture/ui-trust-surface.md
-  - docs/architecture/map-architecture.md
-  - schemas/contracts/v1/decision_envelope.schema.json
-  - schemas/contracts/v1/evidence_bundle.schema.json
-  - schemas/contracts/v1/correction_notice.schema.json
+  - docs/architecture/ui/README.md
+  - docs/architecture/map-shell.md
+  - schemas/contracts/v1/evidence/evidence_bundle.schema.json
   - control_plane/policy_gate_register.yaml
-  - control_plane/string_registry.yaml
   - tests/ui/
-  - tests/a11y/
 tags: [kfm, brand, microcopy, ui, evidence-drawer, accessibility, i18n, governance]
 notes:
   - Codifies the user-facing wording the Evidence Drawer renders for every envelope outcome and reason code.
@@ -725,11 +724,11 @@ Before any Drawer fixture or release ships, the following must be verifiable. `[
 - [`docs/doctrine/evidence-first.md`](../doctrine/evidence-first.md) — `EvidenceBundle`, `EvidenceRef`, source roles. `[CONFIRMED sibling.]`
 - [`docs/doctrine/policy-aware.md`](../doctrine/policy-aware.md) — The six-dimension policy gate, reason-code vocabulary, operator-hint rule. `[CONFIRMED sibling.]`
 - [`docs/doctrine/time-aware.md`](../doctrine/time-aware.md) — Six time kinds; freshness window; `STALE`. <sub>NEEDS VERIFICATION — confirm exact filename.</sub>
-- [`docs/doctrine/trust-posture.md`](../doctrine/trust-posture.md) — Truth-label vocabulary; finite outcomes. <sub>NEEDS VERIFICATION — confirm exact filename.</sub>
+- [`docs/doctrine/trust-posture.md`](../doctrine/truth-posture.md) — Truth-label vocabulary; finite outcomes. <sub>NEEDS VERIFICATION — confirm exact filename.</sub>
 - [`docs/doctrine/corrections-first-class.md`](../doctrine/corrections-first-class.md) — `CorrectionNotice`, `superseded_by`, `withdrawn`. `[CONFIRMED sibling.]`
 - [`docs/doctrine/ai-as-assistant.md`](../doctrine/ai-as-assistant.md) — Why `model` source role is not standalone evidence on public surfaces. `[CONFIRMED sibling.]`
 - [`docs/architecture/ui/README.md`](../architecture/ui/README.md) — Drawer, focus mode, trust badges, negative-state UI. <sub>PROPOSED mapping — planned `docs/architecture/ui-trust-surface.md` is not present; this is the existing page that covers it.</sub>
-- [`docs/architecture/map-architecture.md`](../architecture/map-architecture.md) — Renderer choice, layer registry, tile strategy, click-flow contract. <sub>NEEDS VERIFICATION — exact path.</sub>
+- [`docs/architecture/map-architecture.md`](../architecture/map-shell.md) — Renderer choice, layer registry, tile strategy, click-flow contract. <sub>NEEDS VERIFICATION — exact path.</sub>
 - `control_plane/string_registry.yaml` — Canonical en-US source-of-truth + translations. <sub>PROPOSED path.</sub>
 - `control_plane/policy_gate_register.yaml` — Canonical reason-code vocabulary. <sub>PROPOSED path.</sub>
 - `schemas/contracts/v1/decision_envelope.schema.json` — Envelope shape this Drawer renders. <sub>PROPOSED path.</sub>

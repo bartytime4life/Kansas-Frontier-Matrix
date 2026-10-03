@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<TODO-uuid>
+doc_id: kfm://doc/brand/trust-state-visuals
 title: Trust-State Visuals — color, shape, iconography, and motion for KFM trust outcomes
 type: standard
 version: v1
@@ -8,6 +8,9 @@ owners: <TODO: brand / design-system maintainers + Trust Membrane Lead + Map Arc
 created: 2026-05-15
 updated: 2026-05-15
 policy_label: public
+owning_root: docs/
+responsibility: "Human-readable documentation for Trust-State Visuals — color, shape, iconography, and motion for KFM trust outcomes; not policy, evidence, review, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — metadata normalization does not re-review document claims.
 related:
   - docs/brand/evidence-drawer-microcopy.md
   - docs/brand/finite-outcome-microcopy.md
@@ -15,7 +18,7 @@ related:
   - docs/doctrine/policy-aware.md
   - docs/doctrine/time-aware.md
   - docs/architecture/trust-membrane.md
-  - docs/architecture/ui-trust-surface.md
+  - docs/architecture/ui/README.md
 tags: [kfm, brand, design-system, accessibility, trust, visuals, tokens]
 notes:
   - Owns visual treatment of trust state across every KFM surface.

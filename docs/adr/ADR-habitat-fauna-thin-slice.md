@@ -34,7 +34,7 @@ owning_root: docs/
 responsibility: "Record the proposed ownership-preserving, fixture-first Habitat × Fauna proof boundary and its current repository maturity without assigning an ADR number, accepting the decision, implementing the seam, or authorizing release."
 current_path: docs/adr/ADR-habitat-fauna-thin-slice.md
 supersedes: []
-superseded_by: null
+superseded_by: []
 classification: "PROPOSED scaffold; slug-only unassigned ADR record"
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
@@ -123,7 +123,6 @@ related:
   - tools/validators/domains/fauna/occurrence/validate_occurrence_evidence.py
   - pipelines/proofs/habitat_fauna_thin_slice/README.md
   - release/candidates/habitat/habitat_fauna_thin_slice/README.md
-  - apps/explorer-web/src/features/domains/fauna/EvidenceDrawer.tsx
   - schemas/contracts/v1/domains/fauna/evidence_drawer_payload.schema.json
   - .github/workflows/domain-habitat.yml
   - .github/workflows/domain-fauna.yml
@@ -1146,7 +1145,7 @@ If this scaffold is numbered, update the filename, H1, metadata, and canonical i
 - [Fauna fixture smoke tests](../../tests/domains/fauna/test_fauna_smoke.py).
 - [Fauna Evidence Drawer component](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/apps/explorer-web/src/features/domains/fauna/EvidenceDrawer.tsx).
 - [Fauna Evidence Drawer schema projection](../../schemas/contracts/v1/domains/fauna/evidence_drawer_payload.schema.json).
-- [Fauna Evidence Drawer convergence tests](../../tests/validators/domains/fauna/test_evidence_drawer_convergence.py).
+- [Fauna Evidence Drawer convergence tests](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/tests/validators/domains/fauna/test_evidence_drawer_convergence.py).
 - [Habitat workflow](../../.github/workflows/domain-habitat.yml).
 - [Fauna workflow](../../.github/workflows/domain-fauna.yml).
 

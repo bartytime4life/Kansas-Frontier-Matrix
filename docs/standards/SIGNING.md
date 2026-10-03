@@ -8,22 +8,18 @@ owners: ["Docs steward", "Security/Signing steward (NEEDS VERIFICATION)"]
 created: 2026-05-14
 updated: 2026-05-14
 policy_label: public
-related: [
-  "docs/standards/PROVENANCE.md",
-  "docs/standards/CANONICALIZATION.md",
-  "docs/doctrine/trust-membrane.md",
-  "docs/doctrine/lifecycle-law.md",
-  "docs/doctrine/directory-rules.md",
-  "docs/architecture/contract-schema-policy-split.md",
-  "docs/adr/ADR-0001-schema-home.md",
-  "contracts/runtime/run_receipt.md",
-  "schemas/contracts/v1/runtime/run_receipt.schema.json",
-  "policy/promotion/",
-  "tools/attest/",
-  "tools/validators/attest/",
-  "runbooks/key-rotation.md",
-  ".github/workflows/promote.yml"
-]
+related:
+  - docs/standards/PROVENANCE.md
+  - docs/standards/CANONICALIZATION.md
+  - docs/doctrine/trust-membrane.md
+  - docs/doctrine/lifecycle-law.md
+  - docs/doctrine/directory-rules.md
+  - docs/architecture/contract-schema-policy-split.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
+  - contracts/runtime/run_receipt.md
+  - schemas/contracts/v1/runtime/run_receipt.schema.json
+  - policy/promotion/
+  - tools/attest/
 tags: ["kfm", "signing", "attestation", "dsse", "cosign", "sigstore", "slsa", "in-toto", "provenance", "fail-closed"]
 notes: [
   "All path claims under tools/, schemas/, policy/, contracts/, .github/, and runbooks/ are PROPOSED until verified against mounted-repo evidence.",
@@ -640,7 +636,7 @@ The following items are explicitly **not resolved** by this standard and SHOULD 
 - [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) _(PROPOSED)_ — RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED
 - [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) _(canonical placement rules)_
 - [`docs/architecture/contract-schema-policy-split.md`](../architecture/contract-schema-policy-split.md) _(PROPOSED)_
-- [`docs/adr/ADR-0001-schema-home.md`](../adr/ADR-0001-schema-home.md) _(schema-home rule)_
+- [`docs/adr/ADR-0001-schema-home.md`](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) _(schema-home rule)_
 - `contracts/runtime/run_receipt.md` _(PROPOSED — semantic meaning)_
 - `schemas/contracts/v1/runtime/run_receipt.schema.json` _(PROPOSED — machine shape)_
 - `policy/promotion/` _(PROPOSED — admissibility)_

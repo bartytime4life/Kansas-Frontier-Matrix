@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<uuid-placeholder>
+doc_id: kfm://doc/domains/flora/identity-model
 title: Flora Identity Model
 type: standard
 version: v1.1
@@ -8,16 +8,19 @@ owners: <flora domain steward> · <data architecture lead>
 created: 2026-05-16
 updated: 2026-06-03
 policy_label: public
+owning_root: docs/
+responsibility: "Human-readable documentation for Flora Identity Model; not policy, evidence, review, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — metadata normalization does not re-review document claims.
 related:
-  - ai-build-operating-contract.md           # CONFIRMED canonical operating contract (CONTRACT_VERSION 3.0.0)
-  - directory-rules.md                        # CONFIRMED path authority (§7.4 schema home, §12 Domain Placement Law)
-  - docs/standards/PROV.md                    # NEEDS VERIFICATION (mounted-repo presence)
-  - docs/standards/ISO-19115.md               # NEEDS VERIFICATION
-  - docs/standards/CANONICALIZATION.md        # PROPOSED home for JCS vs URDNA2015 policy (C1-02 / C8-05)
-  - docs/domains/fauna/IDENTITY_MODEL.md      # NEEDS VERIFICATION (parallel charter)
-  - contracts/flora/                          # PROPOSED semantic-contract home (Markdown meaning)
-  - schemas/contracts/v1/flora/               # PROPOSED canonical machine-schema home (ADR-0001)
-  - policy/sensitivity/flora/                 # CONFIRMED sensitivity-policy home (Encyclopedia §7.6 / Atlas Ch.24.13)
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
+  - docs/standards/PROV.md
+  - docs/standards/ISO-19115.md
+  - docs/standards/CANONICALIZATION.md
+  - docs/domains/fauna/IDENTITY_MODEL.md
+  - contracts/flora/
+  - schemas/contracts/v1/flora/
+  - policy/sensitivity/flora/
 tags: [kfm, flora, identity, evidence, spec_hash, deterministic-identity, taxonomy]
 notes:
   # CONTRACT_VERSION pin: this doc is doctrine-adjacent; it tracks ai-build-operating-contract.md v3.0.0.
@@ -502,7 +505,7 @@ This document is done enough to enter the repository when:
 
 > Links are repo-relative. Targets marked **TODO** are placeholders pending verification of the mounted layout.
 
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"` *(authored)*
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"` *(authored)*
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — path authority (§7.4 schema home, §12 Domain Placement Law, §13.1 contracts-vs-schemas drift) *(authored)*
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O + PAV provenance profile *(NEEDS VERIFICATION)*
 - [`docs/standards/ISO-19115.md`](../../standards/ISO-19115.md) — ISO 19115 crosswalk and conformance profile *(NEEDS VERIFICATION)*

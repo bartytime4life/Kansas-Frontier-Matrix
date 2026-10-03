@@ -52,15 +52,8 @@ related:
   - packages/maplibre/src/map-runtime-port.ts
   - packages/maplibre/src/maplibre-adapter.ts
   - packages/maplibre/src/maplibre-vite-adapter.ts
-  - apps/explorer-web/src/site/mount-living-atlas.ts
-  - apps/explorer-web/src/features/living_atlas/map-style.ts
-  - apps/explorer-web/tests/browser/living-atlas.spec.ts
-  - apps/explorer-web/tests/browser/maplibre-webgl-probe.spec.ts
-  - tests/policy/test_explorer_web_adapter_boundary.py
   - tests/maplibre/test_package_exports.py
   - tools/validators/maplibre/validate_v6_readiness.py
-  - scripts/maplibre-smoke-perf.mjs
-  - .github/workflows/maplibre-webgl-probe.yml
   - .github/workflows/maplibre-perf-governance.yml
 tags: [kfm, adr, maplibre, browser-renderer, renderer-family, peer-renderer, currentness-correction, no-parallel-authority]
 notes:
@@ -309,11 +302,11 @@ Replacing MapLibre as the sole normal browser renderer family, adding a durable 
 - [MapLibre Vite adapter](../../packages/maplibre/src/maplibre-vite-adapter.ts)
 - [Explorer composition](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/apps/explorer-web/src/site/mount-living-atlas.ts)
 - [Explorer inline style](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/apps/explorer-web/src/features/living_atlas/map-style.ts)
-- [Explorer raw-renderer boundary test](../../tests/policy/test_explorer_web_adapter_boundary.py)
+- [Explorer raw-renderer boundary test](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/tests/policy/test_explorer_web_adapter_boundary.py)
 - [Living Atlas browser fixture](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/apps/explorer-web/tests/browser/living-atlas.spec.ts)
 - [MapLibre WebGL2 probe](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/apps/explorer-web/tests/browser/maplibre-webgl-probe.spec.ts)
 - [Readiness validator](../../tools/validators/maplibre/validate_v6_readiness.py)
-- [Retired legacy performance harness](../../scripts/maplibre-smoke-perf.mjs)
+- [Retired legacy performance harness](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/scripts/maplibre-smoke-perf.mjs)
 
 ### 7.2 Supporting design lineage — non-authoritative
 

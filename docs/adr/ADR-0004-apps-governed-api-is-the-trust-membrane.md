@@ -25,7 +25,7 @@ responsibility: record the proposed governed API trust-membrane decision, its ve
 responsibility_root: docs/
 current_path: docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
 supersedes: []
-superseded_by: null
+superseded_by: []
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
@@ -82,7 +82,6 @@ related:
   - docs/architecture/governed-api/README.md
   - apps/README.md
   - apps/governed-api/README.md
-  - apps/explorer-web/src/adapters/GovernedClient.ts
   - control_plane/root_registry.yaml
   - contracts/runtime/decision_envelope.md
   - contracts/runtime/runtime_response_envelope.md

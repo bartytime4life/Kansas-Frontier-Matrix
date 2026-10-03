@@ -118,7 +118,6 @@ related:
   - fixtures/domains/atmosphere/valid/advisory-context/README.md
   - fixtures/domains/atmosphere/invalid/README.md
   - tests/domains/atmosphere/test_advisory_no_life_safety.py
-  - apps/explorer-web/src/features/domains/atmosphere/README.md
 tags: [kfm, adr, atmosphere, air, advisory-context, life-safety, referral-only, source-role, temporal-state, fail-closed, governed-api, maplibre, focus-mode, correction, rollback]
 notes:
   - "v0.3 is a same-path, documentation-only, repository-grounded refresh. It preserves ADR-XXXX and not-assigned status and does not accept, number, implement, release, deploy, or publish this decision."
