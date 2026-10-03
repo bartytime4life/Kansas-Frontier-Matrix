@@ -1,0 +1,94 @@
+{
+  "receipt_id": "genrec-object-family-runtime-envelope-alias-20261003",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/object-family-register.yml",
+    "control_plane/object_family_register.yaml",
+    "docs/registers/OBJECT_FAMILY.md",
+    "tests/validators/test_validate_object_family_register.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/object-family-register.yml": "sha256:ee4aafe81b9a9d16449e540e33f664c4596590ee0c30e4751614934112cdaa5c",
+    "control_plane/object_family_register.yaml": "sha256:405902fb35305f58cfa48a8db8fa1c136c17bb9817ca2d4d6bf30d4b1c8006b1",
+    "docs/registers/OBJECT_FAMILY.md": "sha256:5b1846a9bfd604e584255d29c169e25f790096625274c2d3f4f37de8a8bcba81",
+    "tests/validators/test_validate_object_family_register.py": "sha256:70572fab28e878bb75162ba8697417e4ef5136223a604f27b16f14a23c6ae7e1"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:f005fbd6633c6fb14f1df785c08b6cf147f2c4469b3e6b1d3be4ab60fb13058f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/4ba7e57fad810b035a6ac6b330115a88ee7518d1",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/e5a1ca670d25a798fadc797dbc84237788bddca9",
+      "repo:schemas/contracts/v1/focus/runtime_response_envelope.schema.json",
+      "repo:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/object-family-register.yml": "CONFIRMED",
+    "control_plane/object_family_register.yaml": "CONFIRMED",
+    "docs/registers/OBJECT_FAMILY.md": "CONFIRMED",
+    "tests/validators/test_validate_object_family_register.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Object-family register",
+      "outcome": "PASS",
+      "reason": "test_validate_object_family_register.py 16 passed with 276 subtests; validate_object_family_register.py --fixtures and the current-register run pass."
+    },
+    {
+      "gate": "Alias evidence",
+      "outcome": "PASS",
+      "reason": "The Focus schema declares x-kfm.role compatibility-alias, x-kfm.canonical_schema naming the runtime schema, and a $ref to the runtime schema $id."
+    },
+    {
+      "gate": "Workflow security",
+      "outcome": "PASS",
+      "reason": "make workflow-security: 491 workflows, 0 invariant, 0 new drift."
+    },
+    {
+      "gate": "Docs",
+      "outcome": "PASS",
+      "reason": "Diff-scoped check_links.py (38 local targets), check_meta_blocks.py --profile present, check_document_graph.py, and check_stale_docs.py --profile advisory pass against the base commit."
+    },
+    {
+      "gate": "Topology and parity",
+      "outcome": "PASS",
+      "reason": "make repository-topology and make repository-governance-parity pass on an unshallowed clone without the gitignored root receipts/ directory."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/4ba7e57fad810b035a6ac6b330115a88ee7518d1"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-03T05:08:06Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to the unmerged agent/object-family-runtime-envelope-alias-20260917 branch, whose receipt bound pre-port bytes and is not carried. The register remains a navigational index: recording the alias does not select, approve, or retire either schema path. Accountable semantic acceptance and deployed-consumer inspection remain open."
+}
