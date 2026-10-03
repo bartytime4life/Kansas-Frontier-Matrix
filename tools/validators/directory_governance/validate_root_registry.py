@@ -58,7 +58,9 @@ CANONICAL_ROOTS = (
     "tests/",
     "tools/",
 )
-IGNORED_TOP_LEVEL_DIRS = {".git", ".pytest_cache", ".mypy_cache", ".ruff_cache", "__pycache__", ".venv", "venv"}
+IGNORED_TOP_LEVEL_DIRS = {
+    ".git", ".pytest_cache", ".mypy_cache", ".ruff_cache", ".hypothesis", "__pycache__", ".venv", "venv",
+}
 
 
 class DuplicateKeyError(ValueError):

@@ -69,6 +69,8 @@ def test_preflight_runner_strict_mode_fails_when_artifacts_missing(tmp_path: Pat
         str(registry),
         "--artifacts-dir",
         str(artifacts),
+        "--output-dir",
+        str(tmp_path / "receipts"),
         "--strict",
     ]
     res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
@@ -114,6 +116,8 @@ def test_preflight_skips_render_when_check_has_registry_error(tmp_path: Path):
         str(registry),
         "--artifacts-dir",
         str(artifacts),
+        "--output-dir",
+        str(tmp_path / "receipts"),
     ]
     res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
     assert res.returncode == 2
@@ -173,6 +177,8 @@ def test_preflight_runner_strict_provenance_mode_fails_when_provenance_gate_fail
         str(registry),
         "--artifacts-dir",
         str(artifacts),
+        "--output-dir",
+        str(tmp_path / "receipts"),
         "--strict-provenance",
     ]
     res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
@@ -194,6 +200,8 @@ def test_preflight_runner_emit_normalized_only_drops_legacy_fields(tmp_path: Pat
         str(registry),
         "--artifacts-dir",
         str(artifacts),
+        "--output-dir",
+        str(tmp_path / "receipts"),
         "--emit-normalized-only",
     ]
     res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)
@@ -221,6 +229,8 @@ def test_preflight_runner_require_consumer_readiness_flag(tmp_path: Path):
         str(registry),
         "--artifacts-dir",
         str(artifacts),
+        "--output-dir",
+        str(tmp_path / "receipts"),
         "--require-consumer-readiness",
     ]
     res = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True)

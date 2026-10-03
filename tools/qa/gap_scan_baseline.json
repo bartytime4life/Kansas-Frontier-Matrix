@@ -1,7 +1,7 @@
 {
   "census": {
     "BROKEN_LOCAL_LINK": 324,
-    "UNRATCHETED_PLACEHOLDER": 10
+    "UNRATCHETED_PLACEHOLDER": 9
   },
   "schema_version": "kfm.gap-scan/v1"
 }
