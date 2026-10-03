@@ -304,13 +304,6 @@
       "subject": "release/manifest/->release/manifests/"
     },
     {
-      "evidence_sha256": "sha256:b070bf0d3b713c5333bb0d1b282aa6bfcf2ad6499c1737b35961da953079c65b",
-      "evidence_zlib_base64": "eNpLyU8u1k/Jz03MzCvWT0/Nz8lPr9QvLk3KScxLLQYyitIykzMTc/RyUxhSsCtFqAAAaesdPQ==",
-      "fingerprint": "sha256:6b78e528037568d4cde192597df9a98875d2555eb2ffc57bc826ef670fbb489c",
-      "rule_id": "KFM-TOPO-016",
-      "subject": "doc-id:kfm://doc/geology-sublane-surficial"
-    },
-    {
       "evidence_sha256": "sha256:825f3567f6774fa8dc50dbedc0ba6681de151d0aa6624cb0669ab8944a197049",
       "evidence_zlib_base64": "eNrLzU9JtTU0MDAzMWEoLkhMTgUALjQFHg==",
       "fingerprint": "sha256:6dccd2a876f400e69fa76640438638ef623328ccb1e65afc370d769114db20ba",

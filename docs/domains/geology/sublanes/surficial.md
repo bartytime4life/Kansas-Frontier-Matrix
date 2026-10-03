@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/geology-sublane-surficial
+doc_id: kfm://doc/domains/geology/sublanes/surficial
 title: Geology · Surficial Sublane
 type: standard
 version: v0.2
@@ -8,7 +8,14 @@ owners: <kfm-geology-stewards>   # placeholder — confirm against CODEOWNERS
 created: 2026-05-17
 updated: 2026-06-03
 policy_label: public-with-gates
-related: [ai-build-operating-contract.md, directory-rules.md, docs/domains/geology/README.md, docs/standards/PMTILES.md]
+owning_root: docs/
+responsibility: "Human-readable documentation for Geology · Surficial Sublane; not policy, evidence, review, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — metadata normalization does not re-review document claims.
+related:
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
+  - docs/domains/geology/README.md
+  - docs/standards/PMTILES.md
 tags: [kfm]
 notes: [doctrine-adjacent; CONTRACT_VERSION pinned to 3.0.0; sublanes/ segment is PROPOSED pending ADR]
 [/KFM_META_BLOCK_V2] -->
@@ -448,7 +455,7 @@ This document is done enough to enter the repository when:
 
 - [`docs/domains/geology/README.md`](../README.md) — Geology domain landing *(PROPOSED parent — NEEDS VERIFICATION)*
 - [`directory-rules.md`](../../../doctrine/directory-rules.md) — Repository placement law
-- [`ai-build-operating-contract.md`](../../../../ai-build-operating-contract.md) — Canonical operating contract (`CONTRACT_VERSION = "3.0.0"`)
+- [`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) — Canonical operating contract (`CONTRACT_VERSION = "3.0.0"`)
 - [`docs/standards/PROV.md`](../../../standards/PROV.md) — W3C PROV-O / PAV provenance profile
 - [`docs/standards/PMTILES.md`](../../../standards/PMTILES.md) — PMTiles v3 governance and conformance profile
 - [`docs/standards/OGC-API-TILES.md`](../../../standards/OGC-API-TILES.md) — OGC API Tiles delivery

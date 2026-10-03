@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<TODO-uuid>
+doc_id: kfm://doc/doctrine/map-first
 title: Map First
 type: standard
 version: v1.1
@@ -8,39 +8,34 @@ owners: <TODO: doctrine maintainers (e.g., Governance Steward + Map Architecture
 created: 2026-05-12
 updated: 2026-05-26
 policy_label: public
+owning_root: docs/
+responsibility: "Human-readable documentation for Map First; not policy, evidence, review, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — metadata normalization does not re-review document claims.
 related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/evidence-first.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/derived-stays-derived.md
-  - docs/doctrine/corrections-are-first-class.md
+  - docs/doctrine/corrections-first-class.md
   - docs/doctrine/authority-ladder.md
   - docs/doctrine/time-aware.md
-  - docs/doctrine/trust-posture.md
+  - docs/doctrine/truth-posture.md
   - docs/doctrine/ai-as-assistant.md
-  - docs/architecture/map-architecture.md
-  - docs/architecture/ui-trust-surface.md
-  - docs/architecture/evidence-model.md
-  - docs/standards/Master_MapLibre_Components-Functions-Features_v2_1_FULL.md
-  - schemas/contracts/v1/layer_manifest.schema.json
-  - schemas/contracts/v1/style_manifest.schema.json
-  - schemas/contracts/v1/tile_artifact_manifest.schema.json
-  - schemas/contracts/v1/map_release_manifest.schema.json
-  - schemas/contracts/v1/evidence_drawer_payload.schema.json
-  - schemas/contracts/v1/map_context_envelope.schema.json
-  - schemas/contracts/v1/focus_mode_request.schema.json
-  - schemas/contracts/v1/focus_mode_response.schema.json
-  - schemas/contracts/v1/runtime_response_envelope.schema.json
-  - schemas/contracts/v1/inspectable_claim.schema.json
-  - schemas/contracts/v1/policy/3d_admission_decision.schema.json
-  - schemas/contracts/v1/policy/plugin_admission.schema.json
-  - schemas/contracts/v1/maplibre/representation_receipt.schema.json
-  - schemas/contracts/v1/3d/reality_boundary_note.schema.json
-  - control_plane/map_layer_registry.yaml
-  - packages/maplibre-runtime/
-  - policy/maplibre/3d-admission.rego
-  - policy/maplibre/plugin-admission.rego
+  - docs/architecture/map-shell.md
+  - docs/architecture/ui/README.md
+  - docs/architecture/evidence-identity.md
+  - schemas/contracts/v1/map/layer_manifest.schema.json
+  - schemas/contracts/v1/map/style_manifest.schema.json
+  - schemas/contracts/v1/map/tile_artifact_manifest.schema.json
+  - schemas/contracts/v1/map/map_release_manifest.schema.json
+  - schemas/contracts/v1/ui/evidence_drawer_payload.schema.json
+  - schemas/contracts/v1/ui/map_context_envelope.schema.json
+  - schemas/contracts/v1/ai/focus_mode_request.schema.json
+  - schemas/contracts/v1/ai/focus_mode_response.schema.json
+  - schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
+  - schemas/contracts/v1/receipts/representation_receipt.schema.json
+  - schemas/contracts/v1/evidence/reality_boundary_note.schema.json
   - tests/map/
   - tests/ui/
 tags: [kfm, doctrine, map, ui, spatial, governance, trust]
@@ -169,7 +164,7 @@ This doctrine governs every **map surface** in KFM — public map UI, steward ma
 | **Trust badge** | Compact, accessible visual signal of evidence / policy / review / release state on a layer or feature. |
 | **Carrier** | A derived product (map, tile, graph, dashboard, summary, scene, export) that *displays* evidence. Carriers never replace evidence. See [`derived-stays-derived.md`](./derived-stays-derived.md). |
 
-Lifecycle stage names (`RAW`, `WORK`, `QUARANTINE`, `PROCESSED`, `CATALOG`, `TRIPLET`, `PUBLISHED`), finite outcomes (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, `NARROWED`, `BOUNDED`, `SOURCE_STALE`), and the evidence object graph carry the meanings defined in [`lifecycle-law.md`](./lifecycle-law.md), [`trust-posture.md`](./trust-posture.md), and [`evidence-first.md`](./evidence-first.md) and MUST NOT be paraphrased.
+Lifecycle stage names (`RAW`, `WORK`, `QUARANTINE`, `PROCESSED`, `CATALOG`, `TRIPLET`, `PUBLISHED`), finite outcomes (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, `NARROWED`, `BOUNDED`, `SOURCE_STALE`), and the evidence object graph carry the meanings defined in [`lifecycle-law.md`](./lifecycle-law.md), [`trust-posture.md`](truth-posture.md), and [`evidence-first.md`](./evidence-first.md) and MUST NOT be paraphrased.
 
 [⬆ Back to top](#map-first)
 
@@ -250,10 +245,10 @@ flowchart LR
 | **Source role** | Layer legend and feature popup indicate `authority` / `observation` / `context` / `model` / `aggregate` — never collapsed. | [`evidence-first.md`](./evidence-first.md) §6 |
 | **Time** | Time slider distinguishes the six time kinds; per-feature popups label the time being shown. | [`time-aware.md`](./time-aware.md) <sub>NEEDS VERIFICATION</sub> |
 | **Release state** | Layer card and popups indicate `PUBLISHED` release id and rollback target; unreleased layers cannot be added. | [`lifecycle-law.md`](./lifecycle-law.md) |
-| **Freshness state** | Layers / features past their freshness window display `SOURCE_STALE` visibly; runtime outcome `ABSTAIN freshness.stale`. | [`trust-posture.md`](./trust-posture.md) <sub>NEEDS VERIFICATION</sub> |
-| **Correction lineage** | `CorrectionNotice`, `superseded_by`, and `withdrawn` states surface on the layer card and feature popups. | [`corrections-are-first-class.md`](./corrections-are-first-class.md) |
+| **Freshness state** | Layers / features past their freshness window display `SOURCE_STALE` visibly; runtime outcome `ABSTAIN freshness.stale`. | [`trust-posture.md`](truth-posture.md) <sub>NEEDS VERIFICATION</sub> |
+| **Correction lineage** | `CorrectionNotice`, `superseded_by`, and `withdrawn` states surface on the layer card and feature popups. | [`corrections-are-first-class.md`](corrections-first-class.md) |
 | **Policy posture** | Trust badge indicates rights, sensitivity, and review state; restricted exact geometry is denied at the layer level. | [`authority-ladder.md`](./authority-ladder.md) |
-| **Negative states** | `ABSTAIN`, `DENY`, `ERROR`, `NARROWED`, `BOUNDED`, `SOURCE_STALE` render as first-class popups with reason codes — never as silent failures or generic spinners. | [`trust-posture.md`](./trust-posture.md) <sub>NEEDS VERIFICATION</sub> |
+| **Negative states** | `ABSTAIN`, `DENY`, `ERROR`, `NARROWED`, `BOUNDED`, `SOURCE_STALE` render as first-class popups with reason codes — never as silent failures or generic spinners. | [`trust-posture.md`](truth-posture.md) <sub>NEEDS VERIFICATION</sub> |
 | **Reality Boundary Note** | Any 3D / synthetic-surface layer surfaces a `Reality Boundary Note` in the Evidence Drawer declaring which geometry is synthetic vs. observed. | `contracts/3d/reality-boundary-notes.md` |
 | **Accessibility** | A non-visual evidence summary is available; trust badges have text, not color alone; keyboard reaches every trust-significant control. | WCAG 2.2 AA |
 
@@ -460,7 +455,7 @@ This doctrine uses RFC 2119 / RFC 8174 conformance language (aligned with `direc
 ## 12. Worked example
 
 > [!NOTE]
-> Illustrative — synthetic identifiers; specifics are PROPOSED at implementation level. This walkthrough uses the canonical hydrology proof lane, with USGS gage **07142000** for cross-doc consistency with [`corrections-are-first-class.md`](./corrections-are-first-class.md) §11, [`derived-stays-derived.md`](./derived-stays-derived.md) §13, and [`evidence-first.md`](./evidence-first.md) §12. v1 of this doc used gage `06892350`; v1.1 adopts `07142000`. See [OQ-MF-06](#17-open-questions-register).
+> Illustrative — synthetic identifiers; specifics are PROPOSED at implementation level. This walkthrough uses the canonical hydrology proof lane, with USGS gage **07142000** for cross-doc consistency with [`corrections-are-first-class.md`](corrections-first-class.md) §11, [`derived-stays-derived.md`](./derived-stays-derived.md) §13, and [`evidence-first.md`](./evidence-first.md) §12. v1 of this doc used gage `06892350`; v1.1 adopts `07142000`. See [OQ-MF-06](#17-open-questions-register).
 
 A user opens the public map and clicks a streamgage symbol near DeSoto, KS, on 1951-07-14.
 
@@ -657,7 +652,7 @@ The six doctrines fit together as concentric rings:
   - [`lifecycle-law.md`](./lifecycle-law.md) — where data lives at each moment (the data plane).
   - [`evidence-first.md`](./evidence-first.md) — what counts as evidence at runtime (the trust plane).
   - [`derived-stays-derived.md`](./derived-stays-derived.md) — how carriers behave (the artifact plane).
-  - [`corrections-are-first-class.md`](./corrections-are-first-class.md) — what happens when canonical sources change (the lifecycle-correction plane).
+  - [`corrections-are-first-class.md`](corrections-first-class.md) — what happens when canonical sources change (the lifecycle-correction plane).
   - [`authority-ladder.md`](./authority-ladder.md) — documentation and decision authority (the documentation plane).
   - **Map First** (this doc) — how spatial trust renders to a public audience (the **surface plane**).
 
@@ -807,29 +802,29 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/evidence-first.md`](./evidence-first.md) — Root trust doctrine; `EvidenceRef` → `EvidenceBundle` resolution; cite-or-abstain; carriers-vs-sovereign-truth at runtime. `[CONFIRMED sibling.]`
 - [`docs/doctrine/lifecycle-law.md`](./lifecycle-law.md) — `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED`; what "released" means; eleven-step transition. `[CONFIRMED sibling.]`
 - [`docs/doctrine/derived-stays-derived.md`](./derived-stays-derived.md) — Carriers vs. canonical sources; D-1 through D-5 invariants; §11 no-self-citation rule for AI responses. `[CONFIRMED sibling.]`
-- [`docs/doctrine/corrections-are-first-class.md`](./corrections-are-first-class.md) — How `CorrectionNotice`, `superseded_by`, and `withdrawn` surface on the map. Note: v1 of this doc referenced `corrections-first-class.md`; canonical filename TBD per [OQ-MF-04](#17-open-questions-register). `[CONFIRMED sibling, filename CONFLICTED.]`
+- [`docs/doctrine/corrections-are-first-class.md`](corrections-first-class.md) — How `CorrectionNotice`, `superseded_by`, and `withdrawn` surface on the map. Note: v1 of this doc referenced `corrections-first-class.md`; canonical filename TBD per [OQ-MF-04](#17-open-questions-register). `[CONFIRMED sibling, filename CONFLICTED.]`
 - [`docs/doctrine/authority-ladder.md`](./authority-ladder.md) — Primary / Secondary / Tertiary authority for documentation. `[CONFIRMED sibling.]`
 - [`docs/doctrine/time-aware.md`](./time-aware.md) — Six time kinds, freshness windows, `SOURCE_STALE` semantics. `[NEEDS VERIFICATION — confirm exact filename.]`
-- [`docs/doctrine/trust-posture.md`](./trust-posture.md) — Truth-label vocabulary; finite outcomes (`ANSWER`/`ABSTAIN`/`DENY`/`ERROR`/`NARROWED`/`BOUNDED`/`SOURCE_STALE`). `[NEEDS VERIFICATION — confirm exact filename.]`
+- [`docs/doctrine/trust-posture.md`](truth-posture.md) — Truth-label vocabulary; finite outcomes (`ANSWER`/`ABSTAIN`/`DENY`/`ERROR`/`NARROWED`/`BOUNDED`/`SOURCE_STALE`). `[NEEDS VERIFICATION — confirm exact filename.]`
 - [`docs/doctrine/ai-as-assistant.md`](./ai-as-assistant.md) — Why AI explanations of map features run through governed Focus Mode (`FocusModeRequest` → `FocusModeResponse` + `AIReceipt`), never directly from the renderer. `[CONFIRMED sibling.]`
-- [`docs/architecture/map-architecture.md`](../architecture/map-architecture.md) — Renderer choice, layer registry, tile strategy, click-flow contract. `[NEEDS VERIFICATION — exact path.]`
+- [`docs/architecture/map-architecture.md`](../architecture/map-shell.md) — Renderer choice, layer registry, tile strategy, click-flow contract. `[NEEDS VERIFICATION — exact path.]`
 - [`docs/architecture/ui/README.md`](../architecture/ui/README.md) — Evidence Drawer, trust badges, Focus Mode, negative-state UI. `[PROPOSED mapping — planned `docs/architecture/ui-trust-surface.md` is not present; this is the existing page that covers it.]`
 - [`docs/architecture/evidence-identity.md`](../architecture/evidence-identity.md) — Evidence object graph, resolver responsibilities. `[PROPOSED mapping — planned `docs/architecture/evidence-model.md` is not present; this is the existing page that covers it.]`
-- [`docs/standards/Master_MapLibre_Components-Functions-Features_v2_1_FULL.md`](../standards/Master_MapLibre_Components-Functions-Features_v2_1_FULL.md) — Master MapLibre doctrine; source of canonical object families (`LayerManifest`, `StyleManifest`, `TileArtifactManifest`, `MapReleaseManifest`, `EvidenceDrawerPayload`, `MapContextEnvelope`, `FocusModeRequest`/`FocusModeResponse`, `AIReceipt`, `CitationValidationReport`, `PolicyDecision`, `PromotionDecision`, `RunReceipt`, `VerifyReceipt`, `RuntimeProbeResult`, `ReleaseRuntimeGate`, `AutomationBadgePayload`). `[PROPOSED path.]`
-- [`control_plane/map_layer_registry.yaml`](../../control_plane/map_layer_registry.yaml) — Indexed `LayerManifest` set. `[PROPOSED path.]`
-- [`packages/maplibre-runtime/`](../../packages/maplibre-runtime/) — Sole governed browser-side renderer adapter per directory-rules v1.3 §13.5. `[PROPOSED path.]`
-- [`policy/maplibre/3d-admission.rego`](../../policy/maplibre/3d-admission.rego) — `3D Admission Decision` policy. `[PROPOSED path.]`
-- [`policy/maplibre/plugin-admission.rego`](../../policy/maplibre/plugin-admission.rego) — `Plugin Admission` policy. `[PROPOSED path.]`
-- [`schemas/contracts/v1/layer_manifest.schema.json`](../../schemas/contracts/v1/layer_manifest.schema.json) — Machine-checkable `LayerManifest` shape. `[PROPOSED path.]`
+- [`docs/standards/Master_MapLibre_Components-Functions-Features_v2_1_FULL.md`](../architecture/maplibre-master.md) — Master MapLibre doctrine; source of canonical object families (`LayerManifest`, `StyleManifest`, `TileArtifactManifest`, `MapReleaseManifest`, `EvidenceDrawerPayload`, `MapContextEnvelope`, `FocusModeRequest`/`FocusModeResponse`, `AIReceipt`, `CitationValidationReport`, `PolicyDecision`, `PromotionDecision`, `RunReceipt`, `VerifyReceipt`, `RuntimeProbeResult`, `ReleaseRuntimeGate`, `AutomationBadgePayload`). `[PROPOSED path.]`
+- `control_plane/map_layer_registry.yaml` — Indexed `LayerManifest` set. `[PROPOSED path.]`
+- `packages/maplibre-runtime/` — Sole governed browser-side renderer adapter per directory-rules v1.3 §13.5. `[PROPOSED path.]`
+- `policy/maplibre/3d-admission.rego` — `3D Admission Decision` policy. `[PROPOSED path.]`
+- `policy/maplibre/plugin-admission.rego` — `Plugin Admission` policy. `[PROPOSED path.]`
+- [`schemas/contracts/v1/layer_manifest.schema.json`](../../schemas/contracts/v1/map/layer_manifest.schema.json) — Machine-checkable `LayerManifest` shape. `[PROPOSED path.]`
 - [`schemas/contracts/v1/map/style_manifest.schema.json`](../../schemas/contracts/v1/map/style_manifest.schema.json) — `StyleManifest` schema. `[PROPOSED path.]`
 - [`schemas/contracts/v1/map/tile_artifact_manifest.schema.json`](../../schemas/contracts/v1/map/tile_artifact_manifest.schema.json) — `TileArtifactManifest` schema. `[PROPOSED path.]`
 - [`schemas/contracts/v1/map/map_release_manifest.schema.json`](../../schemas/contracts/v1/map/map_release_manifest.schema.json) — `MapReleaseManifest` schema. `[PROPOSED path.]`
-- [`schemas/contracts/v1/evidence_drawer_payload.schema.json`](../../schemas/contracts/v1/evidence_drawer_payload.schema.json) — `EvidenceDrawerPayload` schema. `[PROPOSED path.]`
+- [`schemas/contracts/v1/evidence_drawer_payload.schema.json`](../../schemas/contracts/v1/ui/evidence_drawer_payload.schema.json) — `EvidenceDrawerPayload` schema. `[PROPOSED path.]`
 - [`schemas/contracts/v1/ui/map_context_envelope.schema.json`](../../schemas/contracts/v1/ui/map_context_envelope.schema.json) — `MapContextEnvelope` schema. `[PROPOSED path.]`
 - [`schemas/contracts/v1/ai/focus_mode_request.schema.json`](../../schemas/contracts/v1/ai/focus_mode_request.schema.json) and `focus_mode_response.schema.json` — Focus Mode contract schemas. `[PROPOSED paths.]`
-- [`schemas/contracts/v1/runtime_response_envelope.schema.json`](../../schemas/contracts/v1/runtime_response_envelope.schema.json) — Canonical runtime envelope (renamed from `decision_envelope.schema.json`). `[PROPOSED path.]`
-- [`schemas/contracts/v1/policy/3d_admission_decision.schema.json`](../../schemas/contracts/v1/policy/3d_admission_decision.schema.json) — `3D Admission Decision` schema. `[PROPOSED path per directory-rules v1.3.]`
-- [`schemas/contracts/v1/policy/plugin_admission.schema.json`](../../schemas/contracts/v1/policy/plugin_admission.schema.json) — `Plugin Admission` schema. `[PROPOSED path per directory-rules v1.3.]`
+- [`schemas/contracts/v1/runtime_response_envelope.schema.json`](../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) — Canonical runtime envelope (renamed from `decision_envelope.schema.json`). `[PROPOSED path.]`
+- `schemas/contracts/v1/policy/3d_admission_decision.schema.json` — `3D Admission Decision` schema. `[PROPOSED path per directory-rules v1.3.]`
+- `schemas/contracts/v1/policy/plugin_admission.schema.json` — `Plugin Admission` schema. `[PROPOSED path per directory-rules v1.3.]`
 - [`schemas/contracts/v1/receipts/representation_receipt.schema.json`](../../schemas/contracts/v1/receipts/representation_receipt.schema.json) — `RepresentationReceipt` schema. `[PROPOSED path per directory-rules v1.3.]`
 - [`schemas/contracts/v1/evidence/reality_boundary_note.schema.json`](../../schemas/contracts/v1/evidence/reality_boundary_note.schema.json) — `Reality Boundary Note` schema. `[PROPOSED path per directory-rules v1.3.]`
 - ADR — *Retirement of `STALE` in favor of `SOURCE_STALE` + `ABSTAIN freshness.stale`*. `[TODO — single ADR can close OQ-MF-01 + Authority Ladder OQ-AL-01 + Corrections OQ-CF-01 + Evidence First OQ-EF-01 + Lifecycle Law OQ-LL-01.]`

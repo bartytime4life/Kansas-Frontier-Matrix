@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/doctrine/ai-as-assistant-not-authority
 title: AI as Assistant, Not Authority
-type: doctrine                                                      # corrected from v1 (was: standard) — this is KFM-internal doctrine, not an external standard profile
+type: doctrine
 subtype: ai-governance
 version: v1.1 (refresh — adapter-order doctrine added; truth-posture typo fixed; v1.4/v0.1 doctrine-peer cross-references added; top anchor; revision history)
 prior_version: v1 (2026-05-12)
@@ -10,27 +10,25 @@ owners: <TODO doctrine maintainers (e.g., Governance Steward + Engineering Lead)
 created: 2026-05-12
 updated: 2026-05-25
 policy_label: public
+owning_root: docs/
+responsibility: "Human-readable documentation for AI as Assistant, Not Authority; not policy, evidence, review, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — metadata normalization does not re-review document claims.
 proposed_home: docs/doctrine/ai-as-assistant-not-authority.md
 related:
-  - docs/doctrine/directory-rules.md                                # v1.4 — presentation refresh of v1.3 renderer-decision refresh
-  - docs/doctrine/encyclopedia.md                                   # v0.1 — doctrine-rank vocabulary + concept index (~80 entries)
-  - docs/doctrine/authority-ladder.md                               # PROPOSED — standalone authored file
-  - docs/doctrine/truth-posture.md                                  # PROPOSED — cite-or-abstain operational rule (corrected from v1's "trust-posture.md")
-  - docs/doctrine/trust-membrane.md                                 # PROPOSED — governed-API boundary
-  - docs/doctrine/lifecycle-law.md                                  # PROPOSED — RAW → … → PUBLISHED invariant
-  - docs/doctrine/README.md                                         # v0.2 — doctrine-folder landing page
-  - docs/architecture/governed-ai/README.md                         # NEEDS VERIFICATION — exact path/length
-  - docs/architecture/governed-api/README.md                               # trust membrane in executable form
-  - docs/architecture/map-shell.md                                  # map-first shell architecture
-  - docs/architecture/maplibre-3d.md                                # v1.3 — sole-renderer doctrine (renderer-decision ADR PROPOSED)
-  - docs/security/threat-model.md                                   # TODO — confirm filename
+  - docs/doctrine/directory-rules.md
+  - docs/doctrine/encyclopedia.md
+  - docs/doctrine/authority-ladder.md
+  - docs/doctrine/truth-posture.md
+  - docs/doctrine/trust-membrane.md
+  - docs/doctrine/lifecycle-law.md
+  - docs/doctrine/README.md
+  - docs/architecture/governed-ai/README.md
+  - docs/architecture/governed-api/README.md
+  - docs/architecture/map-shell.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
-  - control_plane/policy_gate_register.yaml                         # NEEDS VERIFICATION — exact path
-  - ai-build-operating-contract.md §12, §14, §15, §21               # AI builder operating law (allowed / denied actions; governed AI runtime contract)
-  - KFM_Unified_Implementation_Architecture_Build_Manual.md §15, §21 # governed AI + Focus Mode flow + adapter order + RuntimeResponseEnvelope sketch
-  - docs/adr/ADR-NNNN-hosted-vs-local-ai-runtime-selection.md       # TODO — ADR not yet authored
-  - docs/adr/ADR-NNNN-chain-of-thought-non-persistence.md           # TODO — ADR not yet authored
+  - control_plane/policy_gate_register.yaml
+  - docs/doctrine/ai-build-operating-contract.md
 truth_labels: [CONFIRMED, PROPOSED, INFERRED, NEEDS VERIFICATION, UNKNOWN, EXTERNAL]
 authority_class: governance doctrine
 authority_rank: doctrine-layer (peer to directory-rules.md, authority-ladder.md, truth-posture.md, trust-membrane.md, lifecycle-law.md, encyclopedia.md)
@@ -119,7 +117,7 @@ This doctrine names the boundaries that prevent those properties from contaminat
 > [!NOTE]
 > KFM doctrine is **fail-closed by default**. Where AI cannot meet the bar set here, the runtime returns `DENY`, `ABSTAIN`, or `ERROR` — never a generated guess.
 
-This doctrine is one of two **interpretive-not-authoritative** invariants in KFM. The other is *watcher-as-non-publisher* — workers, watchers, and connectors emit receipts and candidate decisions only, never publish, mutate canonical records, or bypass review (see [`directory-rules.md` §2.1](./directory-rules.md#21-authority-order) and [`encyclopedia.md` §3 I-4](./encyclopedia.md)). The pattern is identical: a system that *produces* artifacts is subordinate to the systems that *decide* whether those artifacts become public truth.
+This doctrine is one of two **interpretive-not-authoritative** invariants in KFM. The other is *watcher-as-non-publisher* — workers, watchers, and connectors emit receipts and candidate decisions only, never publish, mutate canonical records, or bypass review (see [`directory-rules.md` §2.1](./directory-rules.md) and [`encyclopedia.md` §3 I-4](./encyclopedia.md)). The pattern is identical: a system that *produces* artifacts is subordinate to the systems that *decide* whether those artifacts become public truth.
 
 [↑ Back to top](#top)
 
@@ -139,8 +137,8 @@ This doctrine governs all uses of generative AI, retrieval-augmented generation 
 | **`AIReceipt`** | The append-only audit record emitted by every AI call. Schema home: `schemas/contracts/v1/runtime/ai_receipt.schema.json` (PROPOSED; see [§AIReceipt and observability](#aireceipt-and-observability)). |
 | **Released evidence** | An `EvidenceBundle` whose source has been activated, whose candidate has cleared review, and whose release manifest is current. |
 | **Candidate** | Material that has been processed but not released. AI may help review candidates; AI may not publish them. |
-| **MapContextEnvelope** *(v1.2)* | The context envelope a Focus Mode AI surface receives; bounds AI to the active spatial frame + evidence set. See [`encyclopedia.md` §14](./encyclopedia.md) and [`directory-rules.md` §6.7](./directory-rules.md#67-focus-modes--proof-slice-placement-contract-v12). |
-| **Focus Mode** *(v1.2)* | A county- or region-scale governed proof slice that is *also* the AI surface within the map shell. Receives `MapContextEnvelope`; returns `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` finite outcomes. Placement governed by [`directory-rules.md` §6.7](./directory-rules.md#67-focus-modes--proof-slice-placement-contract-v12). |
+| **MapContextEnvelope** *(v1.2)* | The context envelope a Focus Mode AI surface receives; bounds AI to the active spatial frame + evidence set. See [`encyclopedia.md` §14](./encyclopedia.md) and [`directory-rules.md` §6.7](./directory-rules.md). |
+| **Focus Mode** *(v1.2)* | A county- or region-scale governed proof slice that is *also* the AI surface within the map shell. Receives `MapContextEnvelope`; returns `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` finite outcomes. Placement governed by [`directory-rules.md` §6.7](./directory-rules.md). |
 
 The terms `RAW`, `WORK`, `QUARANTINE`, `PROCESSED`, `CATALOG`, `TRIPLET`, and `PUBLISHED` carry the lifecycle meaning defined in [`docs/doctrine/lifecycle-law.md`](./lifecycle-law.md) and [`encyclopedia.md` §5](./encyclopedia.md).
 
@@ -199,7 +197,7 @@ flowchart LR
 
 ### Map-shell context (v1.3 sole-renderer)
 
-When the AI surface lives inside a Focus Mode (county- or region-scale proof slice), the map shell hosting it is [`apps/explorer-web/`](../../apps/explorer-web/) and the renderer adapter is [`packages/maplibre-runtime/`](../../packages/maplibre-runtime/) (the sole governed browser-side renderer per [`directory-rules.md` §11](./directory-rules.md) and [`docs/architecture/maplibre-3d.md`](../architecture/maplibre-3d.md); v1.3 retired Cesium as a peer renderer). The AI surface receives a `MapContextEnvelope` bounded to the area's released layer set; it never reads `data/raw/`, `data/work/`, `data/quarantine/`, or any model output as if it were evidence. See [`directory-rules.md` §6.7.1](./directory-rules.md#671-definition) for the two-role definition of Focus Mode (AI surface + proof-slice composition).
+When the AI surface lives inside a Focus Mode (county- or region-scale proof slice), the map shell hosting it is [`apps/explorer-web/`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/apps/explorer-web) and the renderer adapter is `packages/maplibre-runtime/` (the sole governed browser-side renderer per [`directory-rules.md` §11](./directory-rules.md) and [`docs/architecture/maplibre-3d.md`](../architecture/maplibre-master.md); v1.3 retired Cesium as a peer renderer). The AI surface receives a `MapContextEnvelope` bounded to the area's released layer set; it never reads `data/raw/`, `data/work/`, `data/quarantine/`, or any model output as if it were evidence. See [`directory-rules.md` §6.7.1](./directory-rules.md) for the two-role definition of Focus Mode (AI surface + proof-slice composition).
 
 > [!NOTE]
 > **The v1.3 sole-renderer decision is PROPOSED** pending the renderer-decision ADR (`directory-rules.md` §18.e OPEN-DR-10). It does not affect the AI-as-assistant invariant — which is unchanged whether the renderer is MapLibre, Cesium, or anything else.
@@ -227,7 +225,7 @@ AI may participate in any task that **summarizes, drafts, extracts, classifies, 
 > [!TIP]
 > Useful AI work in KFM tends to look like *editorial leverage* — turning twelve already-validated facts into one readable paragraph — rather than *epistemic shortcutting*. If a prompt is being asked to "decide," it is in the wrong category.
 
-The full allowed-actions register lives at [`ai-build-operating-contract.md` §14](../../ai-build-operating-contract.md) (17 categories).
+The full allowed-actions register lives at [`ai-build-operating-contract.md` §14](ai-build-operating-contract.md) (17 categories).
 
 [↑ Back to top](#top)
 
@@ -257,7 +255,7 @@ The following uses are denied regardless of who requests them and regardless of 
 > [!WARNING]
 > **KFM is never the alert authority.** A model that summarizes a hazard observation is not issuing a warning, and the surrounding UI must not present it as one. This rule is enforced by validators in the hazards, atmosphere, and hydrology lanes. `[CONFIRMED doctrine — see hazards / atmosphere validator notes and ai-build-operating-contract.md §15.]`
 
-The full denied-actions register lives at [`ai-build-operating-contract.md` §15](../../ai-build-operating-contract.md) (12+ categories).
+The full denied-actions register lives at [`ai-build-operating-contract.md` §15](ai-build-operating-contract.md) (12+ categories).
 
 [↑ Back to top](#top)
 
@@ -312,7 +310,7 @@ sequenceDiagram
 
 ## Adapter order and runtime selection
 
-KFM's adapter doctrine is **MockAdapter-first**, then progressively wider scope. The four canonical adapters and their build-phase ordering are fixed by [`KFM_Unified_Implementation_Architecture_Build_Manual` §15.2](../KFM_Unified_Implementation_Architecture_Build_Manual.md) and [`ai-build-operating-contract.md` §21.3](../../ai-build-operating-contract.md).
+KFM's adapter doctrine is **MockAdapter-first**, then progressively wider scope. The four canonical adapters and their build-phase ordering are fixed by [`KFM_Unified_Implementation_Architecture_Build_Manual` §15.2](../KFM_Unified_Implementation_Architecture_Build_Manual.md) and [`ai-build-operating-contract.md` §21.3](ai-build-operating-contract.md).
 
 | Adapter | Role | Build phase | Network |
 |---|---|---|---|
@@ -323,7 +321,7 @@ KFM's adapter doctrine is **MockAdapter-first**, then progressively wider scope.
 
 ### MockAdapter-first rule
 
-Before any live model integration, a governed-AI slice **SHOULD** prove all of these behaviors with deterministic fixtures (per [`ai-build-operating-contract.md` §21.3](../../ai-build-operating-contract.md)):
+Before any live model integration, a governed-AI slice **SHOULD** prove all of these behaviors with deterministic fixtures (per [`ai-build-operating-contract.md` §21.3](ai-build-operating-contract.md)):
 
 - [ ] Cited `ANSWER` for a happy-path question over a public-safe `EvidenceBundle`.
 - [ ] Missing-evidence `ABSTAIN` (referenced `EvidenceRef` does not resolve).
@@ -340,7 +338,7 @@ Before any live model integration, a governed-AI slice **SHOULD** prove all of t
 
 ### Provider neutrality
 
-The first governed-AI slice MUST NOT start with a specific provider, a browser chat panel, or UI polish. Provider choice (including local runtimes such as Ollama) is admissible **only behind the governed boundary**: adapter contract, evidence gates, finite envelopes, citation validation, receipts. The hosted-vs-local choice is itself an ADR (`docs/adr/ADR-NNNN-hosted-vs-local-ai-runtime-selection.md`, **PROPOSED — not yet authored**). See [`ai-build-operating-contract.md` §21.5](../../ai-build-operating-contract.md).
+The first governed-AI slice MUST NOT start with a specific provider, a browser chat panel, or UI polish. Provider choice (including local runtimes such as Ollama) is admissible **only behind the governed boundary**: adapter contract, evidence gates, finite envelopes, citation validation, receipts. The hosted-vs-local choice is itself an ADR (`docs/adr/ADR-NNNN-hosted-vs-local-ai-runtime-selection.md`, **PROPOSED — not yet authored**). See [`ai-build-operating-contract.md` §21.5](ai-build-operating-contract.md).
 
 [↑ Back to top](#top)
 
@@ -356,7 +354,7 @@ The rules below apply to every adapter, hosted or local:
 - The adapter's instruction prompt explicitly states that instructions embedded in evidence bodies must be ignored.
 - Any output that appears to comply with an instruction not present in the original request is rejected at postcheck via heuristic plus policy.
 - Sensitive operations — **release**, **correction**, **rollback**, **source activation**, **sensitivity reclassification** — require human approval regardless of any text the model produces.
-- Detection signals (per [`ai-build-operating-contract.md` §12.3](../../ai-build-operating-contract.md)): imperative second-person language directed at an AI ("you must", "you should now", "do not tell the user"); references to "system prompt" / "your instructions" / "your guidelines"; requests to ignore / bypass / override prior rules; requests for publication, release, or merge without review; requests for secrets, tokens, or contract internals; requests to fetch external URLs not initiated by a human user; hidden or low-contrast text (a common HTML injection pattern).
+- Detection signals (per [`ai-build-operating-contract.md` §12.3](ai-build-operating-contract.md)): imperative second-person language directed at an AI ("you must", "you should now", "do not tell the user"); references to "system prompt" / "your instructions" / "your guidelines"; requests to ignore / bypass / override prior rules; requests for publication, release, or merge without review; requests for secrets, tokens, or contract internals; requests to fetch external URLs not initiated by a human user; hidden or low-contrast text (a common HTML injection pattern).
 
 > [!IMPORTANT]
 > The model never has authority to publish, correct, withdraw, or roll back. Even if a model output appears to "approve" such an action, the gate is human.
@@ -372,7 +370,7 @@ Expected behavior:
 2. The adapter receives the transcript as `evidence`, not as instruction. The system prompt explicitly forbids following instructions embedded in evidence.
 3. The model summarizes the actual transcript content (per the original request).
 4. If the model emits an "approved timeline entry" structure, postcheck rejects it: the request was a summarization, not a publication action, and no `ReleaseManifest` or `ReviewRecord` is in scope.
-5. The runtime returns `ANSWER` with the legitimate summary and no fabricated timeline entry. The injected instruction is recorded in the `AIReceipt` as a noted adversarial-content event for steward review (per [`ai-build-operating-contract.md` §12.4](../../ai-build-operating-contract.md): *"Possible prompt-injection signal in ingested content `[source]`: `[quoted line]`. Surfaced for review; not acted on."*).
+5. The runtime returns `ANSWER` with the legitimate summary and no fabricated timeline entry. The injected instruction is recorded in the `AIReceipt` as a noted adversarial-content event for steward review (per [`ai-build-operating-contract.md` §12.4](ai-build-operating-contract.md): *"Possible prompt-injection signal in ingested content `[source]`: `[quoted line]`. Surfaced for review; not acted on."*).
 
 </details>
 
@@ -398,7 +396,7 @@ Every AI call — successful or not — emits an `AIReceipt` to an append-only a
 | `prompt_injection_flags` | Any detected adversarial-content signals from this call (per [Prompt-injection posture](#prompt-injection-and-adversarial-content-posture)) |
 
 > [!NOTE]
-> **Chain-of-thought is not persisted.** `AIReceipt` records inputs, outputs, validation, and metrics — not private reasoning traces. This is a deliberate doctrinal choice: persisted chain-of-thought becomes a liability surface and can encourage treating model reasoning as evidence. See [`ai-build-operating-contract.md` §21.4](../../ai-build-operating-contract.md) and the proposed ADR `docs/adr/ADR-NNNN-chain-of-thought-non-persistence.md`.
+> **Chain-of-thought is not persisted.** `AIReceipt` records inputs, outputs, validation, and metrics — not private reasoning traces. This is a deliberate doctrinal choice: persisted chain-of-thought becomes a liability surface and can encourage treating model reasoning as evidence. See [`ai-build-operating-contract.md` §21.4](ai-build-operating-contract.md) and the proposed ADR `docs/adr/ADR-NNNN-chain-of-thought-non-persistence.md`.
 
 `AIReceipt` shape and storage are `[PROPOSED at schema level — see proposed schema home under `schemas/contracts/v1/runtime/ai_receipt.schema.json` or, alternatively, `schemas/contracts/v1/ai/ai_receipt.schema.json` — the runtime-vs-ai sibling is an open question]`. The runtime-vs-ai schema-segment question is recorded as **OPEN-AI-01** in [Open questions](#open-questions--needs-verification).
 
@@ -437,11 +435,11 @@ AI calls return one of four outcomes. There is no fifth.
 | `DENY` | Policy, rights, sensitivity, or release rule blocks the request | Display the denial reason code; never retry under a different guise |
 | `ERROR` | System-level failure (upstream unavailable, integrity check failed, etc.) | Alert on-call; do not invent a user-facing explanation |
 
-Optional contract extensions: `NARROWED` or `BOUNDED` outcomes are admissible **only if** the contract schemas define them (per [`ai-build-operating-contract.md` §21.2](../../ai-build-operating-contract.md)). Until those extensions are formalized, the canonical four-outcome envelope is the only legal surface.
+Optional contract extensions: `NARROWED` or `BOUNDED` outcomes are admissible **only if** the contract schemas define them (per [`ai-build-operating-contract.md` §21.2](ai-build-operating-contract.md)). Until those extensions are formalized, the canonical four-outcome envelope is the only legal surface.
 
 ### UI negative states
 
-The UI surfacing the envelope MUST distinguish (per [`ai-build-operating-contract.md` §22.2](../../ai-build-operating-contract.md)):
+The UI surfacing the envelope MUST distinguish (per [`ai-build-operating-contract.md` §22.2](ai-build-operating-contract.md)):
 
 `MISSING_EVIDENCE` · `SOURCE_STALE` · `DENIED_BY_POLICY` · `GENERALIZED_GEOMETRY` · `RESTRICTED_ACCESS` · `CONFLICTED_SUPPORT` · `CITATION_FAILED` · `RELEASE_WITHDRAWN` · `RUNTIME_ERROR`.
 
@@ -468,10 +466,10 @@ Reject these patterns wherever they appear — in design proposals, PRs, dashboa
 | Source content in the system prompt | Opens prompt-injection surface |
 | Model-driven alerts (AQI, weather, flood, hazard) | KFM is never the alert authority |
 | **Skipping MockAdapter** to start with OllamaAdapter or OpenAICompatibleAdapter | Skips the test that proves envelope and policy fail closed; violates [Adapter order and runtime selection](#adapter-order-and-runtime-selection) |
-| **AI generation routed through admin shortcut** | Admin bypass becomes a normal-path public route; trust-membrane violation per [`directory-rules.md` §13.5](./directory-rules.md#135-additional-anti-patterns) |
+| **AI generation routed through admin shortcut** | Admin bypass becomes a normal-path public route; trust-membrane violation per [`directory-rules.md` §13.5](./directory-rules.md) |
 | **AI "source-role upgrade" by paraphrase** (e.g., quoting an aggregate as a per-place fact; treating modeled output as observed) | Source-role collapse; source role is fixed at admission and is not paraphrasable. See [`encyclopedia.md` §19](./encyclopedia.md). |
-| **Synthetic 3D / reconstruction presented without `RealityBoundaryNote`** *(v1.3)* | Reconstruction read as observation. Surfaced via the Evidence Drawer per [`docs/architecture/maplibre-3d.md`](../architecture/maplibre-3d.md) and [`encyclopedia.md` §10](./encyclopedia.md). |
-| **AI surface in a renderer-switch UI** *(v1.3)* | No second renderer exists at v1.3; a renderer-switch UI is doctrinally empty per [`directory-rules.md` §13.5](./directory-rules.md#135-additional-anti-patterns). Mode boundaries (`mode-2d` / `mode-2_5d` / `mode-globe` / `mode-true-3d`) are *within* MapLibre. |
+| **Synthetic 3D / reconstruction presented without `RealityBoundaryNote`** *(v1.3)* | Reconstruction read as observation. Surfaced via the Evidence Drawer per [`docs/architecture/maplibre-3d.md`](../architecture/maplibre-master.md) and [`encyclopedia.md` §10](./encyclopedia.md). |
+| **AI surface in a renderer-switch UI** *(v1.3)* | No second renderer exists at v1.3; a renderer-switch UI is doctrinally empty per [`directory-rules.md` §13.5](./directory-rules.md). Mode boundaries (`mode-2d` / `mode-2_5d` / `mode-globe` / `mode-true-3d`) are *within* MapLibre. |
 
 [↑ Back to top](#top)
 
@@ -498,7 +496,7 @@ Before any AI-touching route, surface, or pipeline goes to L1, the following mus
 - [ ] **No direct renderer import in AI surface code.** AI surface code in `apps/explorer-web/src/focus-modes/<area>/` does NOT import `maplibre-gl`, `three`, `3d-tiles-renderer`, `deck.gl`, `maplibre-gl-lidar`, or `maplibre-three-plugin` directly; all renderer access goes through `packages/maplibre-runtime/` per [`directory-rules.md` §7.2.a](./directory-rules.md). *(v1.3)*
 - [ ] **3D Admission Decision honored.** When an AI surface references a 3D scene, the surrounding renderer call has passed `3D Admission Decision` and `Plugin Admission`. *(v1.3)*
 - [ ] **No `RealityBoundaryNote` omission.** When an AI surface summarizes a Synthetic Surface or interpretive 3D layer, the Evidence Drawer surfaces the `RealityBoundaryNote`. *(v1.3)*
-- [ ] **Focus Mode placement honored.** When the AI surface lives inside a Focus Mode, files land in `apps/explorer-web/src/focus-modes/<area>/` per [`directory-rules.md` §6.7](./directory-rules.md#67-focus-modes--proof-slice-placement-contract-v12); not `apps/web/...`. *(v1.2)*
+- [ ] **Focus Mode placement honored.** When the AI surface lives inside a Focus Mode, files land in `apps/explorer-web/src/focus-modes/<area>/` per [`directory-rules.md` §6.7](./directory-rules.md); not `apps/web/...`. *(v1.2)*
 
 [↑ Back to top](#top)
 
@@ -510,12 +508,12 @@ These items are **not** resolved by this doctrine. They should be tracked in
 [`../registers/VERIFICATION_BACKLOG.md`](../registers/VERIFICATION_BACKLOG.md) and resolved via ADR or
 per-root README.
 
-- **OPEN-AI-01** *(v1.1)* — `AIReceipt` schema home: `schemas/contracts/v1/runtime/ai_receipt.schema.json` (alongside `runtime_response_envelope.schema.json`) vs `schemas/contracts/v1/ai/ai_receipt.schema.json` (its own family segment). Per [`directory-rules.md` §2.4(5)](./directory-rules.md#24-changes-that-require-an-adr), a new family segment under `schemas/contracts/v1/` is ADR-class. **Resolution required by ADR.** Recommendation pending ADR: place under `runtime/` (alongside `runtime_response_envelope.schema.json`) until a critical mass of AI-specific schemas justifies splitting into `ai/`.
-- **OPEN-AI-02** *(v1.1)* — `L1 conformance` tier label. The v1 doc uses "L1 target" and "L1 conformance" framing for local-runtime admission. KFM corpus does not yet define L0–LN conformance tiers (corpus uses sensitivity tiers T0–T4 and promotion gates A–G). **Resolution required:** either define L0–LN tiers in a doctrine doc (ADR-class per [`directory-rules.md` §2.4(6)](./directory-rules.md#24-changes-that-require-an-adr)) or revise to use canonical T-tier / gate-letter vocabulary.
-- **OPEN-AI-03** *(v1.1)* — ADRs not yet authored: `ADR-NNNN-hosted-vs-local-ai-runtime-selection.md` and `ADR-NNNN-chain-of-thought-non-persistence.md`. Both are listed in [Related docs](#related-docs) as PROPOSED; routine-PR per [`directory-rules.md` §17](./directory-rules.md#17-document-change-discipline) (each is a single decision, not a doctrine reversal).
+- **OPEN-AI-01** *(v1.1)* — `AIReceipt` schema home: `schemas/contracts/v1/runtime/ai_receipt.schema.json` (alongside `runtime_response_envelope.schema.json`) vs `schemas/contracts/v1/ai/ai_receipt.schema.json` (its own family segment). Per [`directory-rules.md` §2.4(5)](./directory-rules.md), a new family segment under `schemas/contracts/v1/` is ADR-class. **Resolution required by ADR.** Recommendation pending ADR: place under `runtime/` (alongside `runtime_response_envelope.schema.json`) until a critical mass of AI-specific schemas justifies splitting into `ai/`.
+- **OPEN-AI-02** *(v1.1)* — `L1 conformance` tier label. The v1 doc uses "L1 target" and "L1 conformance" framing for local-runtime admission. KFM corpus does not yet define L0–LN conformance tiers (corpus uses sensitivity tiers T0–T4 and promotion gates A–G). **Resolution required:** either define L0–LN tiers in a doctrine doc (ADR-class per [`directory-rules.md` §2.4(6)](./directory-rules.md)) or revise to use canonical T-tier / gate-letter vocabulary.
+- **OPEN-AI-03** *(v1.1)* — ADRs not yet authored: `ADR-NNNN-hosted-vs-local-ai-runtime-selection.md` and `ADR-NNNN-chain-of-thought-non-persistence.md`. Both are listed in [Related docs](#related-docs) as PROPOSED; routine-PR per [`directory-rules.md` §17](./directory-rules.md) (each is a single decision, not a doctrine reversal).
 - **NEEDS VERIFICATION** *(carried forward from v1)* — exact path of `docs/architecture/governed-ai/README.md`; exact filename of `docs/security/threat-model.md`; exact path of `control_plane/policy_gate_register.yaml`.
 - **NEEDS VERIFICATION** — mounted-repo presence of the doctrine peers (`authority-ladder.md`, `truth-posture.md`, `trust-membrane.md`, `lifecycle-law.md`, `encyclopedia.md`). All are PROPOSED per [`docs/doctrine/README.md` v0.2](./README.md).
-- **OPEN-DR-10** *(carried forward from [`directory-rules.md` §18.e](./directory-rules.md#18e-new-in-v13))* — the renderer-decision ADR is **PROPOSED, not yet filed**. Until acceptance, the v1.3 sole-renderer context referenced in this doc is **doctrine-target / PROPOSED**; the §11 freeze rule (no new `cesium*` code, schemas, policies, or tests) is the bridging measure.
+- **OPEN-DR-10** *(carried forward from [`directory-rules.md` §18.e](./directory-rules.md))* — the renderer-decision ADR is **PROPOSED, not yet filed**. Until acceptance, the v1.3 sole-renderer context referenced in this doc is **doctrine-target / PROPOSED**; the §11 freeze rule (no new `cesium*` code, schemas, policies, or tests) is the bridging measure.
 
 [↑ Back to top](#top)
 
@@ -538,11 +536,11 @@ per-root README.
 - [`docs/architecture/governed-ai/README.md`](../architecture/governed-ai/README.md) — Architecture of the AI runtime, adapters, and envelopes (companion to this doctrine doc). `[NEEDS VERIFICATION — exact path/length.]`
 - [`docs/architecture/governed-api/README.md`](../architecture/governed-api/README.md) — Trust membrane in executable form.
 - [`docs/architecture/map-shell.md`](../architecture/map-shell.md) — Map-first shell architecture (the surface where Focus Mode AI lives).
-- [`docs/architecture/maplibre-3d.md`](../architecture/maplibre-3d.md) — v1.3 sole-renderer doctrine + 3D Admission Decision + Plugin Admission. Relevant because the AI surface inside Focus Mode reads layers rendered by `packages/maplibre-runtime/`.
+- [`docs/architecture/maplibre-3d.md`](../architecture/maplibre-master.md) — v1.3 sole-renderer doctrine + 3D Admission Decision + Plugin Admission. Relevant because the AI surface inside Focus Mode reads layers rendered by `packages/maplibre-runtime/`.
 
 ### Operating law and build manual
 
-- [`ai-build-operating-contract.md` §12, §14, §15, §21](../../ai-build-operating-contract.md) — AI builder operating law: allowed actions, denied actions, prompt-injection posture, governed AI runtime contract, MockAdapter-first rule, chain-of-thought non-persistence, provider neutrality.
+- [`ai-build-operating-contract.md` §12, §14, §15, §21](ai-build-operating-contract.md) — AI builder operating law: allowed actions, denied actions, prompt-injection posture, governed AI runtime contract, MockAdapter-first rule, chain-of-thought non-persistence, provider neutrality.
 - [`KFM_Unified_Implementation_Architecture_Build_Manual.md` §15, §16, §21](../KFM_Unified_Implementation_Architecture_Build_Manual.md) — Governed AI flow, adapter order (Mock → Null → Ollama → OpenAI-compatible), `RuntimeResponseEnvelope` sketch, AI hard denials, security trust boundaries, deployment rules (no direct public traffic to local model runtimes).
 
 ### Security and registers
@@ -567,7 +565,7 @@ per-root README.
 
 | Edition | Date | Change | Authority class |
 |---|---|---|---|
-| **v1.1** | 2026-05-25 | Refresh. (1) Corrected `docs/doctrine/trust-posture.md` → `docs/doctrine/truth-posture.md` filename typo throughout (canonical per `kfm_unified_doctrine_synthesis.md` §2). (2) Corrected `type: standard` → `type: doctrine` in KFM Meta Block v2 (this is KFM-internal doctrine, not an external standard profile). (3) Added new section [Adapter order and runtime selection](#adapter-order-and-runtime-selection) with the canonical four-adapter order Mock → Null → Ollama → OpenAI-compatible (Build Manual §15.2) and the MockAdapter-first rule (ai-build-operating-contract.md §21.3). (4) Added cross-references to doctrine peers authored in prior turns: `directory-rules.md` v1.4, `encyclopedia.md` v0.1, `README.md` v0.2. (5) Added v1.2 Focus Mode and v1.3 sole-renderer context (Map-shell context paragraph in [Architectural boundaries](#architectural-boundaries); new anti-pattern rows; new verification-checklist items). (6) Added explicit `<a id="top"></a>` top anchor; retargeted back-to-top links from `#ai-as-assistant-not-authority` to `#top`. (7) Added [Open questions](#open-questions--needs-verification) section with OPEN-AI-01, OPEN-AI-02, OPEN-AI-03 plus carry-forward NEEDS VERIFICATION items. (8) Added three badges (edition, directory-rules version, finite-outcomes); preserved v1's five badges. (9) Added [Revision history](#revision-history) table. **No doctrine claim reversed.** | Routine PR + reviewer sign-off per [`directory-rules.md` §17](./directory-rules.md#17-document-change-discipline). |
+| **v1.1** | 2026-05-25 | Refresh. (1) Corrected `docs/doctrine/trust-posture.md` → `docs/doctrine/truth-posture.md` filename typo throughout (canonical per `kfm_unified_doctrine_synthesis.md` §2). (2) Corrected `type: standard` → `type: doctrine` in KFM Meta Block v2 (this is KFM-internal doctrine, not an external standard profile). (3) Added new section [Adapter order and runtime selection](#adapter-order-and-runtime-selection) with the canonical four-adapter order Mock → Null → Ollama → OpenAI-compatible (Build Manual §15.2) and the MockAdapter-first rule (ai-build-operating-contract.md §21.3). (4) Added cross-references to doctrine peers authored in prior turns: `directory-rules.md` v1.4, `encyclopedia.md` v0.1, `README.md` v0.2. (5) Added v1.2 Focus Mode and v1.3 sole-renderer context (Map-shell context paragraph in [Architectural boundaries](#architectural-boundaries); new anti-pattern rows; new verification-checklist items). (6) Added explicit `<a id="top"></a>` top anchor; retargeted back-to-top links from `#ai-as-assistant-not-authority` to `#top`. (7) Added [Open questions](#open-questions--needs-verification) section with OPEN-AI-01, OPEN-AI-02, OPEN-AI-03 plus carry-forward NEEDS VERIFICATION items. (8) Added three badges (edition, directory-rules version, finite-outcomes); preserved v1's five badges. (9) Added [Revision history](#revision-history) table. **No doctrine claim reversed.** | Routine PR + reviewer sign-off per [`directory-rules.md` §17](./directory-rules.md). |
 | **v1** | 2026-05-12 | Initial doctrine document. | — |
 
 ---

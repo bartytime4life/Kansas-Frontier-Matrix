@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<TODO-uuid>
+doc_id: kfm://doc/doctrine/lifecycle-law
 title: Lifecycle Law
 type: standard
 version: v1.1
@@ -8,34 +8,32 @@ owners: <TODO: doctrine maintainers (e.g., Governance Steward + Release Authorit
 created: 2026-05-12
 updated: 2026-05-26
 policy_label: public
+owning_root: docs/
+responsibility: "Human-readable documentation for Lifecycle Law; not policy, evidence, review, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — metadata normalization does not re-review document claims.
 related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/authority-ladder.md
   - docs/doctrine/evidence-first.md
   - docs/doctrine/derived-stays-derived.md
-  - docs/doctrine/corrections-are-first-class.md
-  - docs/doctrine/trust-posture.md
-  - docs/doctrine/truth-labels.md
-  - docs/doctrine/evidence-model.md
+  - docs/doctrine/corrections-first-class.md
+  - docs/doctrine/truth-posture.md
+  - docs/architecture/evidence-identity.md
   - docs/doctrine/ai-as-assistant.md
-  - docs/architecture/release-and-publication.md
-  - schemas/contracts/v1/release_manifest.schema.json
-  - schemas/contracts/v1/proof_pack.schema.json
+  - docs/architecture/publication/README.md
+  - schemas/contracts/v1/release/release_manifest.schema.json
   - data/raw/
   - data/work/
   - data/quarantine/
   - data/processed/
   - data/catalog/
   - data/triplets/
-  - data/tiles/
-  - data/releases/
   - data/receipts/
   - data/proofs/
   - data/published/
   - data/rollback/
   - data/registry/
-  - data/fixtures/
   - release/
 tags: [kfm, doctrine, lifecycle, pipeline, release, governance, trust]
 notes:
@@ -66,7 +64,7 @@ notes:
 **Status:** Draft · **Edition:** v1.1 · **Owners:** _TODO — Governance Steward + Release Authority + Data Lifecycle Steward_ <sub>NEEDS VERIFICATION</sub> · **Pins:** `CONTRACT_VERSION = "3.0.0"` · **Last updated:** 2026-05-26
 
 > [!IMPORTANT]
-> **Lifecycle Law is foundational doctrine.** Several sibling doctrine docs — [`evidence-first.md`](./evidence-first.md), [`derived-stays-derived.md`](./derived-stays-derived.md), [`corrections-are-first-class.md`](./corrections-are-first-class.md), [`authority-ladder.md`](./authority-ladder.md), [`ai-as-assistant.md`](./ai-as-assistant.md) — operationalize rules that this document fixes. Changes to the invariant, the stage names, or the publication transition require an ADR and cascade through every sibling doc.
+> **Lifecycle Law is foundational doctrine.** Several sibling doctrine docs — [`evidence-first.md`](./evidence-first.md), [`derived-stays-derived.md`](./derived-stays-derived.md), [`corrections-are-first-class.md`](corrections-first-class.md), [`authority-ladder.md`](./authority-ladder.md), [`ai-as-assistant.md`](./ai-as-assistant.md) — operationalize rules that this document fixes. Changes to the invariant, the stage names, or the publication transition require an ADR and cascade through every sibling doc.
 
 > [!NOTE]
 > **Where this doc sits.** Lifecycle Law is a Tier 1 doctrine doc subordinate to `ai-build-operating-contract.md` v3.0 (`CONTRACT_VERSION = "3.0.0"`). It elaborates the contract's §1.6 lifecycle invariant, §10.1 lifecycle law, §10.8 *"Promotion is auditable,"* and §10.11 *"Reversible change is the default."* If a conflict arises between this doc and the contract, the contract wins and the conflict becomes a `CONFLICTED` candidate for ADR resolution.
@@ -254,7 +252,7 @@ Each stage is a typed contract. The required receipt is the artifact whose exist
 - **Writers.** Release authority **only** — never pipelines acting alone.
 - **Readers.** Public, via governed routes.
 - **Required receipt.** `PublicationReceipt` accompanying a backing `ReleaseManifest` and `ProofPack`.
-- **Failure outcome.** Withdrawal or supersession **with public notice**, per [`corrections-are-first-class.md`](./corrections-are-first-class.md).
+- **Failure outcome.** Withdrawal or supersession **with public notice**, per [`corrections-are-first-class.md`](corrections-first-class.md).
 
 [⬆ Back to top](#lifecycle-law)
 
@@ -327,7 +325,7 @@ data/
 ```
 
 > [!IMPORTANT]
-> `data/releases/` is **not** the release decision authority. The decision authority lives at the root `release/` directory. Conflating the two is the canonical anti-pattern called out in [§7](#7-the-two-tier-release-pattern) and is repeated in [`corrections-are-first-class.md`](./corrections-are-first-class.md).
+> `data/releases/` is **not** the release decision authority. The decision authority lives at the root `release/` directory. Conflating the two is the canonical anti-pattern called out in [§7](#7-the-two-tier-release-pattern) and is repeated in [`corrections-are-first-class.md`](corrections-first-class.md).
 
 <details>
 <summary><strong>Why every directory has a README</strong> — orientation, scope, and exclusions</summary>
@@ -354,7 +352,7 @@ This is the README-like doc rule from project doctrine — directory READMEs are
 
 ### 6.1 The eleven-step transition
 
-`[CONFIRMED doctrine.]` Reproduced verbatim from project doctrine. The canonical state-machine drawing lives in [`docs/architecture/release-and-publication.md`](../architecture/release-and-publication.md) `[NEEDS VERIFICATION — exact path]`; this section is the doctrinal foothold.
+`[CONFIRMED doctrine.]` Reproduced verbatim from project doctrine. The canonical state-machine drawing lives in [`docs/architecture/release-and-publication.md`](../architecture/publication/README.md) `[NEEDS VERIFICATION — exact path]`; this section is the doctrinal foothold.
 
 | # | Step | Artifact produced | Failure outcome |
 |---:|---|---|---|
@@ -371,7 +369,7 @@ This is the README-like doc rule from project doctrine — directory READMEs are
 | 11 | **Rollback path** — `RollbackPlan` and `target_release_id` are ready; a rollback rehearsal exists. | `RollbackPlan` + rehearsal artifact | `DENY release.unreviewed` |
 
 > [!IMPORTANT]
-> Steps 10 and 11 are the **foothold of [`corrections-are-first-class.md`](./corrections-are-first-class.md)**. A `ReleaseManifest` missing `correction_path` or `rollback_target` is `DENY release.unreviewed` — the release does not happen.
+> Steps 10 and 11 are the **foothold of [`corrections-are-first-class.md`](corrections-first-class.md)**. A `ReleaseManifest` missing `correction_path` or `rollback_target` is `DENY release.unreviewed` — the release does not happen.
 
 ### 6.2 What the transition produces
 
@@ -532,12 +530,12 @@ Lifecycle Law is the data-side doctrine that other doctrine docs hook into. The 
 | [`ai-build-operating-contract.md`](./ai-build-operating-contract.md) | §1.6 lifecycle invariant; §10.1 lifecycle law; §10.8 promotion-is-auditable. | **Defines** — this doc is the data-plane elaboration of the contract's invariants. `[CONFIRMED canonical contract.]` |
 | [`evidence-first.md`](./evidence-first.md) | Every transition — `EvidenceBundle` closure is required at promotion. | **Extends** — defines what evidence is, what counts, and what does not, in terms compatible with the lifecycle. `[CONFIRMED sibling.]` |
 | [`derived-stays-derived.md`](./derived-stays-derived.md) | The derivation boundary between `RAW` and `WORK/QUARANTINE`; the rebuild rule at every later stage. | **Restricts** — derivation is monotonic; no later stage may relabel an artifact as `RAW`; carriers MUST be rebuildable from canonical sources. `[CONFIRMED sibling.]` |
-| [`corrections-are-first-class.md`](./corrections-are-first-class.md) | Steps 10 + 11 of the eleven-step transition. | **Extends** — adds named operations (`CorrectionNotice`, `SupersessionRecord`, `RollbackPlan`, withdrawal) and a public notice path. `[CONFIRMED sibling.]` |
+| [`corrections-are-first-class.md`](corrections-first-class.md) | Steps 10 + 11 of the eleven-step transition. | **Extends** — adds named operations (`CorrectionNotice`, `SupersessionRecord`, `RollbackPlan`, withdrawal) and a public notice path. `[CONFIRMED sibling.]` |
 | [`authority-ladder.md`](./authority-ladder.md) | Doctrine governance over the invariant itself. | **Orthogonal** — the lifecycle governs *data*; the authority ladder governs *documentation, decisions, claims*. They collaborate at publication. `[CONFIRMED sibling.]` |
 | [`ai-as-assistant.md`](./ai-as-assistant.md) | `EvidenceBundle` resolution; the policy gate (step 3); the §15 denied actions list. | **Restricts** — AI MUST NOT publish, supersede, or rollback; AI outputs are not citation sources. `[CONFIRMED sibling.]` |
-| [`trust-posture.md`](./trust-posture.md) `[NEEDS VERIFICATION — exact filename]` | Cite-or-abstain at every public surface. | **Extends** — defines how missing or stale evidence yields `ABSTAIN`. |
-| [`truth-labels.md`](./truth-labels.md) `[PROPOSED]` | The runtime outcomes (`ANSWER`/`ABSTAIN`/`DENY`/`ERROR`/`NARROWED`/`BOUNDED`/`SOURCE_STALE`). | **Defines** — fixes the vocabulary the lifecycle emits. |
-| [`evidence-model.md`](./evidence-model.md) `[PROPOSED]` | `EvidenceRef` / `EvidenceBundle` semantics. | **Extends** — specifies how claims close to source through the lifecycle. |
+| [`trust-posture.md`](truth-posture.md) `[NEEDS VERIFICATION — exact filename]` | Cite-or-abstain at every public surface. | **Extends** — defines how missing or stale evidence yields `ABSTAIN`. |
+| [`truth-labels.md`](truth-posture.md) `[PROPOSED]` | The runtime outcomes (`ANSWER`/`ABSTAIN`/`DENY`/`ERROR`/`NARROWED`/`BOUNDED`/`SOURCE_STALE`). | **Defines** — fixes the vocabulary the lifecycle emits. |
+| [`evidence-model.md`](../architecture/evidence-identity.md) `[PROPOSED]` | `EvidenceRef` / `EvidenceBundle` semantics. | **Extends** — specifies how claims close to source through the lifecycle. |
 
 [⬆ Back to top](#lifecycle-law)
 
@@ -576,7 +574,7 @@ All validators and CI jobs below are **PROPOSED to create**. The greenfield base
 | `generated-receipt-presence` | When AI-authored Markdown / schemas / runbooks touch the lifecycle, a `GENERATED_RECEIPT.json` accompanies the merge per `ai-build-operating-contract.md` §34. | Missing receipt fails. |
 
 > [!TIP]
-> The `rollback-rehearsal` job is doctrinal, not optional. A release whose rollback has never been rehearsed has no rollback — see [`corrections-are-first-class.md`](./corrections-are-first-class.md).
+> The `rollback-rehearsal` job is doctrinal, not optional. A release whose rollback has never been rehearsed has no rollback — see [`corrections-are-first-class.md`](corrections-first-class.md).
 
 [⬆ Back to top](#lifecycle-law)
 
@@ -647,7 +645,7 @@ No. An artifact occupies exactly one stage at a time; movement between stages pr
 <details>
 <summary><b>What about emergency hot-fixes to a published asset?</b></summary>
 
-There are no hot-fixes. A change to a `PUBLISHED` asset is a correction (`CorrectionNotice` + superseding release) or a withdrawal — both with public notice. See [`corrections-are-first-class.md`](./corrections-are-first-class.md). Speed is achieved by rehearsing the path, not by skipping it.
+There are no hot-fixes. A change to a `PUBLISHED` asset is a correction (`CorrectionNotice` + superseding release) or a withdrawal — both with public notice. See [`corrections-are-first-class.md`](corrections-first-class.md). Speed is achieved by rehearsing the path, not by skipping it.
 
 </details>
 
@@ -701,7 +699,7 @@ The five doctrine docs fit together as concentric rings:
 - **Lifecycle Law** (this doc) — where data lives at each moment (the data plane).
 - [`evidence-first`](./evidence-first.md) — what counts as evidence at runtime (the trust plane).
 - [`derived-stays-derived`](./derived-stays-derived.md) — how carriers behave (the artifact plane).
-- [`corrections-are-first-class`](./corrections-are-first-class.md) — what happens when canonical sources change (the lifecycle-correction plane).
+- [`corrections-are-first-class`](corrections-first-class.md) — what happens when canonical sources change (the lifecycle-correction plane).
 - [`authority-ladder`](./authority-ladder.md) — documentation and decision authority (the documentation plane).
 
 All five subordinate to **`ai-build-operating-contract.md`** v3.0 (the operating law).
@@ -833,15 +831,15 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/directory-rules.md`](./directory-rules.md) — Placement law; §9.1 canonical `data/` layout; RFC 2119 alignment basis. `[CONFIRMED sibling.]`
 - [`docs/doctrine/evidence-first.md`](./evidence-first.md) — Citation-closure rule; defines what evidence is and how claims resolve through the lifecycle. `[CONFIRMED sibling.]`
 - [`docs/doctrine/derived-stays-derived.md`](./derived-stays-derived.md) — Monotonic derivation; carrier rebuild rules; D-2 reproducibility anchor referenced by §12. `[CONFIRMED sibling.]`
-- [`docs/doctrine/corrections-are-first-class.md`](./corrections-are-first-class.md) — Operationalizes steps 10 + 11 of the eleven-step transition; defines `CorrectionNotice`, `SupersessionRecord`, `RollbackPlan`, withdrawal. Note: v1 of this doc referenced `corrections-first-class.md`; canonical filename TBD per [OQ-LL-03](#16-open-questions-register). `[CONFIRMED sibling, filename CONFLICTED.]`
+- [`docs/doctrine/corrections-are-first-class.md`](corrections-first-class.md) — Operationalizes steps 10 + 11 of the eleven-step transition; defines `CorrectionNotice`, `SupersessionRecord`, `RollbackPlan`, withdrawal. Note: v1 of this doc referenced `corrections-first-class.md`; canonical filename TBD per [OQ-LL-03](#16-open-questions-register). `[CONFIRMED sibling, filename CONFLICTED.]`
 - [`docs/doctrine/authority-ladder.md`](./authority-ladder.md) — Primary / Secondary / Tertiary hierarchy governing documentation, decisions, claims. `[CONFIRMED sibling.]`
 - [`docs/doctrine/ai-as-assistant.md`](./ai-as-assistant.md) — AI boundary; AI MUST NOT publish, supersede, or rollback. `[CONFIRMED sibling.]`
-- [`docs/doctrine/trust-posture.md`](./trust-posture.md) — Cite-or-abstain rule at every public surface. `[NEEDS VERIFICATION — exact filename.]`
-- [`docs/doctrine/truth-labels.md`](./truth-labels.md) — Definitions of authoring labels (`CONFIRMED`, `PROPOSED`, `NEEDS VERIFICATION`, `UNKNOWN`, `CONFLICTED`, `LINEAGE`, `EXPLORATORY`) and runtime outcomes (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, `NARROWED`, `BOUNDED`, `SOURCE_STALE`). `[PROPOSED path.]`
-- [`docs/doctrine/source-roles.md`](./source-roles.md) — Data source-role taxonomy (`authority`, `observation`, `context`, `model`, `aggregate`, `admin`, `candidate`). `[PROPOSED path.]`
-- [`docs/doctrine/evidence-model.md`](./evidence-model.md) — `EvidenceRef`, `EvidenceBundle`, citation closure rule. `[PROPOSED path.]`
-- [`docs/architecture/release-and-publication.md`](../architecture/release-and-publication.md) — Canonical state-machine drawing for the eleven-step transition. `[NEEDS VERIFICATION — exact path.]`
-- [`docs/runbooks/RB-CORRECTION-ROUTINE.md`](../runbooks/RB-CORRECTION-ROUTINE.md) — Day-2 routine correction. `[TODO — confirm path.]`
+- [`docs/doctrine/trust-posture.md`](truth-posture.md) — Cite-or-abstain rule at every public surface. `[NEEDS VERIFICATION — exact filename.]`
+- [`docs/doctrine/truth-labels.md`](truth-posture.md) — Definitions of authoring labels (`CONFIRMED`, `PROPOSED`, `NEEDS VERIFICATION`, `UNKNOWN`, `CONFLICTED`, `LINEAGE`, `EXPLORATORY`) and runtime outcomes (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, `NARROWED`, `BOUNDED`, `SOURCE_STALE`). `[PROPOSED path.]`
+- [`docs/doctrine/source-roles.md`](../architecture/source-roles.md) — Data source-role taxonomy (`authority`, `observation`, `context`, `model`, `aggregate`, `admin`, `candidate`). `[PROPOSED path.]`
+- [`docs/doctrine/evidence-model.md`](../architecture/evidence-identity.md) — `EvidenceRef`, `EvidenceBundle`, citation closure rule. `[PROPOSED path.]`
+- [`docs/architecture/release-and-publication.md`](../architecture/publication/README.md) — Canonical state-machine drawing for the eleven-step transition. `[NEEDS VERIFICATION — exact path.]`
+- [`docs/runbooks/RB-CORRECTION-ROUTINE.md`](../runbooks/EVIDENCE_CORRECTION.md) — Day-2 routine correction. `[TODO — confirm path.]`
 - [`docs/runbooks/ROLLBACK_RUNBOOK.md`](../runbooks/ROLLBACK_RUNBOOK.md) — Day-2 rollback execution. `[PROPOSED mapping — planned `docs/runbooks/RB-ROLLBACK-EXECUTION.md` is not present; this is the existing page that covers it.]`
 - `schemas/contracts/v1/release_manifest.schema.json` — Machine-readable schema for `ReleaseManifest`. `[PROPOSED path.]`
 - `schemas/contracts/v1/proof_pack.schema.json` — Machine-readable schema for `ProofPack`. `[PROPOSED path.]`

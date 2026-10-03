@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<TODO-uuid>
+doc_id: kfm://doc/brand/visual-language
 title: Visual Language — the foundational brand visual system for Kansas Frontier Matrix
 type: standard
 version: v1
@@ -8,6 +8,9 @@ owners: <TODO: brand / design-system maintainers + Map Architecture Lead + Acces
 created: 2026-05-15
 updated: 2026-05-15
 policy_label: public
+owning_root: docs/
+responsibility: "Human-readable documentation for Visual Language — the foundational brand visual system for Kansas Frontier Matrix; not policy, evidence, review, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — metadata normalization does not re-review document claims.
 related:
   - docs/brand/trust-state-visuals.md
   - docs/brand/evidence-drawer-microcopy.md
@@ -16,8 +19,8 @@ related:
   - docs/doctrine/time-aware.md
   - docs/doctrine/policy-aware.md
   - docs/doctrine/evidence-first.md
-  - docs/architecture/ui-trust-surface.md
-  - docs/architecture/map-architecture.md
+  - docs/architecture/ui/README.md
+  - docs/architecture/map-shell.md
 tags: [kfm, brand, design-system, visual-language, typography, color, iconography, cartography, accessibility, tokens]
 notes:
   - Parent visual document for the docs/brand/ family.
@@ -708,7 +711,7 @@ When printed in grayscale, the doc header keeps its rhythm (whitespace, weight c
 - [`docs/doctrine/time-aware.md`](../doctrine/time-aware.md) — Six time kinds and freshness window. `[CONFIRMED.]`
 - [`docs/doctrine/policy-aware.md`](../doctrine/policy-aware.md) — Policy gate, reason-code vocabulary. `[CONFIRMED.]`
 - [`docs/architecture/ui/README.md`](../architecture/ui/README.md) — UI Trust Surface. `[CONFIRMED concept; PROPOSED mapping — planned `docs/architecture/ui-trust-surface.md` is not present; this is the existing page that covers it.]`
-- [`docs/architecture/map-architecture.md`](../architecture/map-architecture.md) — Map architecture; per-layer style is governed there. `[CONFIRMED concept; exact path NEEDS VERIFICATION.]`
+- [`docs/architecture/map-architecture.md`](../architecture/map-shell.md) — Map architecture; per-layer style is governed there. `[CONFIRMED concept; exact path NEEDS VERIFICATION.]`
 - _TODO_ `docs/brand/popup-microcopy.md` <sub>PROPOSED sibling.</sub>
 - _TODO_ `docs/brand/layer-card-microcopy.md` <sub>PROPOSED sibling.</sub>
 - _TODO_ `docs/brand/time-slider-microcopy.md` <sub>PROPOSED sibling.</sub>

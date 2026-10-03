@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<TODO-uuid>
+doc_id: kfm://doc/doctrine/corrections-first-class
 title: Corrections Are First-Class
 type: standard
 version: v1.1
@@ -8,22 +8,17 @@ owners: <TODO: doctrine maintainers (e.g., Governance Steward + Release Authorit
 created: 2026-05-12
 updated: 2026-05-26
 policy_label: public
+owning_root: docs/
+responsibility: "Human-readable documentation for Corrections Are First-Class; not policy, evidence, review, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — metadata normalization does not re-review document claims.
 related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/trust-posture.md
+  - docs/doctrine/truth-posture.md
   - docs/doctrine/ai-as-assistant.md
-  - docs/architecture/release-and-publication.md
-  - docs/runbooks/RB-CORRECTION-ROUTINE.md
-  - docs/runbooks/RB-ROLLBACK-EXECUTION.md
-  - docs/runbooks/RB-PRIVACY-REQUEST.md
-  - docs/runbooks/RB-INCIDENT-INTEGRITY-FAILURE.md
-  - schemas/contracts/v1/correction_notice.schema.json
-  - schemas/contracts/v1/rollback_plan.schema.json
-  - schemas/contracts/v1/supersession_record.schema.json
-  - tests/corrections/
-  - tests/rollback/
+  - docs/architecture/publication/README.md
+  - docs/runbooks/EVIDENCE_CORRECTION.md
 tags: [kfm, doctrine, corrections, rollback, release, governance, trust]
 notes:
   - Codifies "Corrections are first-class" as a normative KFM doctrine.
@@ -48,7 +43,7 @@ notes:
 
 > **Status:** draft · **Edition:** v1.1 · **Owners:** `<TODO: Governance Steward + Release Authority>` · **Pins:** `CONTRACT_VERSION = "3.0.0"` · **Last updated:** 2026-05-26
 >
-> **Doctrine track:** [`docs/doctrine/`](./) · **Companion docs:** [`ai-build-operating-contract.md`](./ai-build-operating-contract.md) · [`directory-rules.md`](./directory-rules.md) · [`lifecycle-law.md`](./lifecycle-law.md) · [`trust-posture.md`](./trust-posture.md) · [`ai-as-assistant.md`](./ai-as-assistant.md)
+> **Doctrine track:** [`docs/doctrine/`](./) · **Companion docs:** [`ai-build-operating-contract.md`](./ai-build-operating-contract.md) · [`directory-rules.md`](./directory-rules.md) · [`lifecycle-law.md`](./lifecycle-law.md) · [`trust-posture.md`](truth-posture.md) · [`ai-as-assistant.md`](./ai-as-assistant.md)
 
 > [!NOTE]
 > **Where this doc sits.** Corrections Are First-Class is a Tier 1 doctrine doc subordinate to `ai-build-operating-contract.md` v3.0 (`CONTRACT_VERSION = "3.0.0"`). The contract's §1 Operating Law is the canonical spine; this doc elaborates the contract's invariant *"Corrections are first-class"* (contract §10.9) and *"Reversible change is the default"* (contract §10.11). If a conflict arises between this doc and the contract, the contract wins and the conflict becomes a `CONFLICTED` candidate for ADR resolution.
@@ -191,7 +186,7 @@ The primary public artifact of this doctrine. Every correction emits one.
 }
 ```
 
-> This payload is illustrative. The canonical example is the worked hydrology slice in [`docs/architecture/release-and-publication.md`](../architecture/release-and-publication.md) (`NEEDS VERIFICATION` — path is `PROPOSED`).
+> This payload is illustrative. The canonical example is the worked hydrology slice in [`docs/architecture/release-and-publication.md`](../architecture/publication/README.md) (`NEEDS VERIFICATION` — path is `PROPOSED`).
 
 </details>
 
@@ -273,7 +268,7 @@ The human-facing artifact derived from a `CorrectionNotice`. Lives at a stable U
 
 ## Correction-and-rollback flow
 
-The diagram below shows how the eight triggering scenarios route through the doctrine. It reflects the PROPOSED implementation of the doctrine; the canonical state machine is the release state machine in [`docs/architecture/release-and-publication.md`](../architecture/release-and-publication.md) (`NEEDS VERIFICATION` — exact path).
+The diagram below shows how the eight triggering scenarios route through the doctrine. It reflects the PROPOSED implementation of the doctrine; the canonical state machine is the release state machine in [`docs/architecture/release-and-publication.md`](../architecture/publication/README.md) (`NEEDS VERIFICATION` — exact path).
 
 ```mermaid
 flowchart TB
@@ -353,7 +348,7 @@ Correction artifacts are public-by-default because invisibility defeats the doct
 Routes and paths above are `PROPOSED`. The CONFIRMED doctrinal claim is that **for every approved correction there exists at least one stable public URL** at which its existence, scope, and reason can be inspected.
 
 > [!TIP]
-> When a correction is in `draft` or `steward_review`, the **runtime** SHOULD return `ABSTAIN` with reason `evidence.under_review` for queries that touch the affected claim, rather than serve the pre-correction answer with no caveat. This is consistent with KFM's cite-or-abstain posture under [`trust-posture.md`](./trust-posture.md).
+> When a correction is in `draft` or `steward_review`, the **runtime** SHOULD return `ABSTAIN` with reason `evidence.under_review` for queries that touch the affected claim, rather than serve the pre-correction answer with no caveat. This is consistent with KFM's cite-or-abstain posture under [`trust-posture.md`](truth-posture.md).
 
 [⬆ Back to top](#corrections-are-first-class)
 
@@ -574,13 +569,13 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/ai-build-operating-contract.md`](./ai-build-operating-contract.md) — Canonical operating contract (`CONTRACT_VERSION = "3.0.0"`); §1 Operating Law is the spine this doc subordinates to; §12 anti-injection rule; §23.2 sensitive-domain matrix; §33 separation of duties; §34 `GENERATED_RECEIPT`. `[CONFIRMED sibling.]`
 - [`docs/doctrine/directory-rules.md`](./directory-rules.md) — Placement law; the responsibility-root system used by Tier 1. `[CONFIRMED sibling.]`
 - [`docs/doctrine/lifecycle-law.md`](./lifecycle-law.md) — `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED` and the publication state transition this doctrine extends. `[CONFIRMED sibling.]`
-- [`docs/doctrine/trust-posture.md`](./trust-posture.md) — Cite-or-abstain rule that governs how corrections-in-progress surface to users. `[NEEDS VERIFICATION — confirm exact filename.]`
+- [`docs/doctrine/trust-posture.md`](truth-posture.md) — Cite-or-abstain rule that governs how corrections-in-progress surface to users. `[NEEDS VERIFICATION — confirm exact filename.]`
 - [`docs/doctrine/ai-as-assistant.md`](./ai-as-assistant.md) — Operationalized by the [AI boundary section](#ai-boundary-in-corrections) of this doc. `[CONFIRMED sibling.]`
-- [`docs/architecture/release-and-publication.md`](../architecture/release-and-publication.md) — The eleven-step release state machine; canonical source for steps 1–9 that precede the correction-and-rollback steps. `[NEEDS VERIFICATION — exact path.]`
-- [`docs/runbooks/RB-CORRECTION-ROUTINE.md`](../runbooks/RB-CORRECTION-ROUTINE.md) — Day-2 routine correction. `[TODO — confirm path.]`
+- [`docs/architecture/release-and-publication.md`](../architecture/publication/README.md) — The eleven-step release state machine; canonical source for steps 1–9 that precede the correction-and-rollback steps. `[NEEDS VERIFICATION — exact path.]`
+- [`docs/runbooks/RB-CORRECTION-ROUTINE.md`](../runbooks/EVIDENCE_CORRECTION.md) — Day-2 routine correction. `[TODO — confirm path.]`
 - [`docs/runbooks/ROLLBACK_RUNBOOK.md`](../runbooks/ROLLBACK_RUNBOOK.md) — Day-2 rollback execution. `[PROPOSED mapping — planned `docs/runbooks/RB-ROLLBACK-EXECUTION.md` is not present; this is the existing page that covers it.]`
-- [`docs/runbooks/RB-PRIVACY-REQUEST.md`](../runbooks/RB-PRIVACY-REQUEST.md) — Day-2 privacy / takedown handling. `[TODO — confirm path.]`
-- [`docs/runbooks/RB-INCIDENT-INTEGRITY-FAILURE.md`](../runbooks/RB-INCIDENT-INTEGRITY-FAILURE.md) — Day-2 integrity failure. `[TODO — confirm path.]`
+- `docs/runbooks/RB-PRIVACY-REQUEST.md` — Day-2 privacy / takedown handling. `[TODO — confirm path.]`
+- `docs/runbooks/RB-INCIDENT-INTEGRITY-FAILURE.md` — Day-2 integrity failure. `[TODO — confirm path.]`
 - `schemas/contracts/v1/correction_notice.schema.json` — Machine-readable schema. `[PROPOSED path.]`
 - `schemas/contracts/v1/rollback_plan.schema.json` — Machine-readable schema. `[PROPOSED path.]`
 - `schemas/contracts/v1/supersession_record.schema.json` — Machine-readable schema. `[PROPOSED path.]`

@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<TODO-uuid-retention>
+doc_id: kfm://doc/doctrine/retention
 title: Retention
 type: standard
 version: v1.0
@@ -8,34 +8,23 @@ owners: <TODO: doctrine maintainers (e.g., Governance Steward + Data Lifecycle S
 created: 2026-05-26
 updated: 2026-05-26
 policy_label: public
+owning_root: docs/
+responsibility: "Human-readable documentation for Retention; not policy, evidence, review, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — metadata normalization does not re-review document claims.
 related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/evidence-first.md
   - docs/doctrine/derived-stays-derived.md
-  - docs/doctrine/corrections-are-first-class.md
+  - docs/doctrine/corrections-first-class.md
   - docs/doctrine/policy-aware.md
   - docs/doctrine/authority-ladder.md
   - docs/doctrine/ai-as-assistant.md
   - docs/doctrine/map-first.md
-  - docs/doctrine/trust-posture.md
-  - docs/architecture/release-and-publication.md
-  - docs/runbooks/RB-CORRECTION-ROUTINE.md
-  - docs/runbooks/RB-ROLLBACK-EXECUTION.md
-  - docs/runbooks/RB-ERASURE-EXECUTION.md
-  - docs/security/threat-model.md
-  - schemas/contracts/v1/retention_class.schema.json
-  - schemas/contracts/v1/retention_policy.schema.json
-  - schemas/contracts/v1/tombstone_receipt.schema.json
-  - schemas/contracts/v1/erasure_receipt.schema.json
-  - schemas/contracts/v1/archive_manifest.schema.json
-  - schemas/contracts/v1/vacuuming_receipt.schema.json
-  - schemas/contracts/v1/cache_invalidation_receipt.schema.json
-  - control_plane/retention_class_register.yaml
-  - control_plane/erasure_request_register.yaml
-  - policy/retention/
-  - tests/retention/
+  - docs/doctrine/truth-posture.md
+  - docs/architecture/publication/README.md
+  - docs/runbooks/EVIDENCE_CORRECTION.md
 tags: [kfm, doctrine, retention, audit, tombstones, erasure, archival, governance]
 notes:
   - Codifies retention as a normative KFM doctrine.
@@ -67,7 +56,7 @@ notes:
 > **One sentence.** KFM is **append-only by default**: receipts, proofs, releases, tombstones, and the lineage chain that explains how a public claim came to be ALL persist for the retention class they were born under, and **deletion is a narrow, audited, receipted exception** — never a side effect of storage optimization, cache turnover, or convenience.
 
 > [!NOTE]
-> **Where this doc sits.** Retention is a Tier 1 doctrine doc subordinate to `ai-build-operating-contract.md` v3.0 (`CONTRACT_VERSION = "3.0.0"`) and to `directory-rules.md`. It elaborates the contract's §10.8 *"Promotion is auditable"* invariant, §10.9 *"Corrections are first-class"* invariant, and §10.10 *"Deterministic identity where practical"* invariant, applied across the time dimension. It is the partner to [`lifecycle-law.md`](./lifecycle-law.md) (where data lives), [`corrections-are-first-class.md`](./corrections-are-first-class.md) (what happens when canonical sources change), and [`policy-aware.md`](./policy-aware.md) (what gates exposure). If a conflict arises between this doc and the contract, the contract wins and the conflict becomes a `CONFLICTED` candidate for ADR resolution.
+> **Where this doc sits.** Retention is a Tier 1 doctrine doc subordinate to `ai-build-operating-contract.md` v3.0 (`CONTRACT_VERSION = "3.0.0"`) and to `directory-rules.md`. It elaborates the contract's §10.8 *"Promotion is auditable"* invariant, §10.9 *"Corrections are first-class"* invariant, and §10.10 *"Deterministic identity where practical"* invariant, applied across the time dimension. It is the partner to [`lifecycle-law.md`](./lifecycle-law.md) (where data lives), [`corrections-are-first-class.md`](corrections-first-class.md) (what happens when canonical sources change), and [`policy-aware.md`](./policy-aware.md) (what gates exposure). If a conflict arises between this doc and the contract, the contract wins and the conflict becomes a `CONFLICTED` candidate for ADR resolution.
 
 ---
 
@@ -126,7 +115,7 @@ This doctrine governs every artifact KFM stores — receipts, proofs, releases, 
 | **Append-only** | The property that records are added but never edited or deleted in place. Append-only is enforced through content-addressed storage, object-lock policies, bucket versioning, write-once filesystems, or equivalents. |
 | **Tombstone** | A signed, appended record that retracts a prior artifact without deleting it. The tombstone names the retracted `run_id` / `release_id` / `claim_id`, the reason, the supersession reference (if any), and the timestamp. Tombstones are the **default revocation primitive**. |
 | **Erasure** | The narrow, audited, receipted *true deletion* of underlying content, permitted only for specific privacy / sovereignty / legal obligations and recorded by an `ErasureReceipt`. Erasure is the **exception**, not the default. |
-| **Supersession** | The replacement of one artifact by a new one, with the prior artifact preserved as `LINEAGE`. Tombstones may name a supersession reference; supersession itself is governed by [`corrections-are-first-class.md`](./corrections-are-first-class.md). |
+| **Supersession** | The replacement of one artifact by a new one, with the prior artifact preserved as `LINEAGE`. Tombstones may name a supersession reference; supersession itself is governed by [`corrections-are-first-class.md`](corrections-first-class.md). |
 | **Vacuuming** | The deletion or rewriting of "old" rows / blobs / receipts for storage optimization. Vacuuming a retention-bound artifact is a doctrine violation; vacuuming a non-retention-bound cache layer is permitted with a `VacuumingReceipt`. |
 | **Archival** | The relocation of retained artifacts from hot storage to cold storage (or to an external durable backend) without changing their existence. Archival emits an `ArchiveManifest`. |
 | **`TombstoneReceipt`** | The signed retraction record. Schema at `schemas/contracts/v1/tombstone_receipt.schema.json` <sub>PROPOSED</sub>. |
@@ -135,7 +124,7 @@ This doctrine governs every artifact KFM stores — receipts, proofs, releases, 
 | **`VacuumingReceipt`** | The record of a permitted vacuuming pass on a non-retention-bound cache. Schema at `schemas/contracts/v1/vacuuming_receipt.schema.json` <sub>PROPOSED</sub>. |
 | **`CacheInvalidationReceipt`** | The record of a cache purge tied to a tombstone or erasure event. Schema at `schemas/contracts/v1/cache_invalidation_receipt.schema.json` <sub>PROPOSED</sub>. |
 
-Lifecycle stage names (`RAW`, `WORK`, `QUARANTINE`, `PROCESSED`, `CATALOG`, `TRIPLET`, `PUBLISHED`), finite outcomes (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, `NARROWED`, `BOUNDED`, `SOURCE_STALE`), evidence objects (`EvidenceRef`, `EvidenceBundle`), and release objects (`ReleaseManifest`, `ProofPack`, `CorrectionNotice`, `RollbackPlan`) carry the meanings defined in [`lifecycle-law.md`](./lifecycle-law.md), [`evidence-first.md`](./evidence-first.md), [`policy-aware.md`](./policy-aware.md), and [`corrections-are-first-class.md`](./corrections-are-first-class.md).
+Lifecycle stage names (`RAW`, `WORK`, `QUARANTINE`, `PROCESSED`, `CATALOG`, `TRIPLET`, `PUBLISHED`), finite outcomes (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, `NARROWED`, `BOUNDED`, `SOURCE_STALE`), evidence objects (`EvidenceRef`, `EvidenceBundle`), and release objects (`ReleaseManifest`, `ProofPack`, `CorrectionNotice`, `RollbackPlan`) carry the meanings defined in [`lifecycle-law.md`](./lifecycle-law.md), [`evidence-first.md`](./evidence-first.md), [`policy-aware.md`](./policy-aware.md), and [`corrections-are-first-class.md`](corrections-first-class.md).
 
 [⬆ Back to top](#retention)
 
@@ -146,7 +135,7 @@ Lifecycle stage names (`RAW`, `WORK`, `QUARANTINE`, `PROCESSED`, `CATALOG`, `TRI
 `[CONFIRMED doctrine — `ai-build-operating-contract.md` §10.8 (Promotion is auditable) + Pass 10 C1-06 (Immutable, Append-Only Audit Ledger of Receipts).]` Every KFM object family is born under a retention class, and the **default class is append-only**. Concretely:
 
 1. **Receipts are never edited.** An `IntakeReceipt`, `TransformReceipt`, `ValidationReport`, `PolicyDecision`, `ReviewRecord`, `PublicationReceipt`, `AIReceipt`, `GENERATED_RECEIPT`, `RunReceipt`, `RepresentationReceipt`, `RedactionReceipt`, or `EventRunReceipt` is written once and never mutated.
-2. **Releases are never overwritten.** A `ReleaseManifest`, `MapReleaseManifest`, or `ProofPack` is content-addressed; updating a release means producing a new release with a new `release_id` and emitting a `SupersessionRecord` per [`corrections-are-first-class.md`](./corrections-are-first-class.md).
+2. **Releases are never overwritten.** A `ReleaseManifest`, `MapReleaseManifest`, or `ProofPack` is content-addressed; updating a release means producing a new release with a new `release_id` and emitting a `SupersessionRecord` per [`corrections-are-first-class.md`](corrections-first-class.md).
 3. **Sources are append-only.** A `SourceDescriptor` revision creates a new descriptor version; the old version persists with `LINEAGE` status.
 4. **Lineage chains do not shorten.** The chain from a public claim back to `EvidenceBundle` → `SourceDescriptor` → `IntakeReceipt` MUST remain resolvable for the full retention period of its weakest link.
 5. **Tombstones add memory, they do not subtract.** A revocation appends a `TombstoneReceipt`; UI clients hide tombstoned content from public views, but the audit graph remains explorable.
@@ -296,7 +285,7 @@ The table below assigns retention classes to the canonical KFM object families. 
 - Hide the retracted content from public surfaces (UI, public API, search results, map layers, downloads).
 - Preserve the explainability chain: investigators MAY ask *why* an item disappeared and reach a resolvable answer.
 - Trigger cache invalidation per [§9](#9-cache-invalidation-as-part-of-retention).
-- Trigger downstream effects: derived carriers per [`derived-stays-derived.md`](./derived-stays-derived.md) D-4 (withdrawable); `CorrectionNotice` per [`corrections-are-first-class.md`](./corrections-are-first-class.md); `RollbackPlan` execution if the tombstone scope warrants.
+- Trigger downstream effects: derived carriers per [`derived-stays-derived.md`](./derived-stays-derived.md) D-4 (withdrawable); `CorrectionNotice` per [`corrections-are-first-class.md`](corrections-first-class.md); `RollbackPlan` execution if the tombstone scope warrants.
 
 ### 6.3 What tombstones DO NOT do
 
@@ -760,7 +749,7 @@ These items remain `NEEDS VERIFICATION` before this doc is promoted from `draft`
 | Added §15 FAQ with nine entries | new | Standard for v3.0 doctrine docs. |
 | Added §§16–19 companion sections | new | Standard companion sections for KFM doctrine docs under v3.0. Mirrors Authority Ladder v1.1, Corrections v1.1, Derived Stays Derived v1.0, Evidence First v1.1, Lifecycle Law v1.1, Map First v1.1, Policy Aware v1.1. |
 
-> **Cross-doc consistency.** This doc completes the eight-doctrine concentric-ring set. The retention doctrine's R0 indefinite-audit assignment for `TombstoneReceipt`, `ErasureReceipt`, `SupersessionRecord`, `RollbackPlan`/`RollbackCard`, `CorrectionNotice` is the operational backbone of [`corrections-are-first-class.md`](./corrections-are-first-class.md); the R4 cache-bound assignment for derived carriers is the operational backbone of [`derived-stays-derived.md`](./derived-stays-derived.md) D-2 / D-4; the §7 erasure procedure interlocks with [`policy-aware.md`](./policy-aware.md) §6 C4 / C5 classification.
+> **Cross-doc consistency.** This doc completes the eight-doctrine concentric-ring set. The retention doctrine's R0 indefinite-audit assignment for `TombstoneReceipt`, `ErasureReceipt`, `SupersessionRecord`, `RollbackPlan`/`RollbackCard`, `CorrectionNotice` is the operational backbone of [`corrections-are-first-class.md`](corrections-first-class.md); the R4 cache-bound assignment for derived carriers is the operational backbone of [`derived-stays-derived.md`](./derived-stays-derived.md) D-2 / D-4; the §7 erasure procedure interlocks with [`policy-aware.md`](./policy-aware.md) §6 C4 / C5 classification.
 
 [⬆ Back to top](#retention)
 
@@ -799,15 +788,15 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/lifecycle-law.md`](./lifecycle-law.md) — `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`; the lifecycle stage that owns each artifact informs its retention class. `[CONFIRMED sibling.]`
 - [`docs/doctrine/evidence-first.md`](./evidence-first.md) — `EvidenceBundle` retention is R1; the citation-closure rule requires retained bundles for as long as released claims cite them. `[CONFIRMED sibling.]`
 - [`docs/doctrine/derived-stays-derived.md`](./derived-stays-derived.md) — D-2 (rebuildable) is what makes R4 cache eviction safe; D-4 (withdrawable) is what tombstones operationalize. `[CONFIRMED sibling.]`
-- [`docs/doctrine/corrections-are-first-class.md`](./corrections-are-first-class.md) — Tombstones, supersessions, withdrawals, rollback all interlock with retention. `[CONFIRMED sibling.]`
+- [`docs/doctrine/corrections-are-first-class.md`](corrections-first-class.md) — Tombstones, supersessions, withdrawals, rollback all interlock with retention. `[CONFIRMED sibling.]`
 - [`docs/doctrine/policy-aware.md`](./policy-aware.md) — C4 / C5 classifications drive erasure decisions; §10 finite outcomes include `policy.rights_revoked` which routes through this doctrine's §6. `[CONFIRMED sibling.]`
 - [`docs/doctrine/authority-ladder.md`](./authority-ladder.md) — `LINEAGE` truth-label is the documentation-plane parallel to R1 long-retention for receipts. `[CONFIRMED sibling.]`
 - [`docs/doctrine/ai-as-assistant.md`](./ai-as-assistant.md) — AI cannot emit tombstones or erasures; AI-authored retention-policy updates carry `GENERATED_RECEIPT`. `[CONFIRMED sibling.]`
 - [`docs/doctrine/map-first.md`](./map-first.md) — Tombstoned layers surface `release.withdrawn`; erased content surfaces `content.erased` (proposed code per OQ-RT-12). `[CONFIRMED sibling.]`
-- [`docs/doctrine/trust-posture.md`](./trust-posture.md) — `LINEAGE` authoring label is the doc-plane analog to R1 retention. `[NEEDS VERIFICATION — exact filename.]`
-- [`docs/runbooks/RB-CORRECTION-ROUTINE.md`](../runbooks/RB-CORRECTION-ROUTINE.md) — Day-2 routine correction; emits `TombstoneReceipt`. `[TODO — confirm path.]`
+- [`docs/doctrine/trust-posture.md`](truth-posture.md) — `LINEAGE` authoring label is the doc-plane analog to R1 retention. `[NEEDS VERIFICATION — exact filename.]`
+- [`docs/runbooks/RB-CORRECTION-ROUTINE.md`](../runbooks/EVIDENCE_CORRECTION.md) — Day-2 routine correction; emits `TombstoneReceipt`. `[TODO — confirm path.]`
 - [`docs/runbooks/ROLLBACK_RUNBOOK.md`](../runbooks/ROLLBACK_RUNBOOK.md) — Day-2 rollback; emits `TombstoneReceipt` for rolled-forward release. `[PROPOSED mapping — planned `docs/runbooks/RB-ROLLBACK-EXECUTION.md` is not present; this is the existing page that covers it.]`
-- [`docs/runbooks/RB-ERASURE-EXECUTION.md`](../runbooks/RB-ERASURE-EXECUTION.md) — Day-2 erasure procedure (new runbook proposed by this doctrine). `[TODO — runbook not yet authored.]`
+- `docs/runbooks/RB-ERASURE-EXECUTION.md` — Day-2 erasure procedure (new runbook proposed by this doctrine). `[TODO — runbook not yet authored.]`
 - [`docs/security/THREAT_MODEL.md`](../security/THREAT_MODEL.md) — STRIDE coverage including retention-related trust boundaries (audit-log tampering, erasure-bypass paths). `[TODO — confirm filename.]`
 - `schemas/contracts/v1/retention_class.schema.json` — `RetentionClass` schema. `[PROPOSED path.]`
 - `schemas/contracts/v1/retention_policy.schema.json` — `RetentionPolicy` schema. `[PROPOSED path.]`

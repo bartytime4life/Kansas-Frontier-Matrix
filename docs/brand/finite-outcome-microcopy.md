@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<TODO-uuid>
+doc_id: kfm://doc/brand/finite-outcome-microcopy
 title: Finite Outcome Microcopy — ANSWER · ABSTAIN · DENY · ERROR · STALE
 type: standard
 version: v1
@@ -8,9 +8,12 @@ owners: <TODO: brand / design-system maintainers + Trust Membrane Lead + Map Arc
 created: 2026-05-15
 updated: 2026-05-15
 policy_label: public
+owning_root: docs/
+responsibility: "Human-readable documentation for Finite Outcome Microcopy — ANSWER · ABSTAIN · DENY · ERROR · STALE; not policy, evidence, review, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — metadata normalization does not re-review document claims.
 related:
   - docs/brand/evidence-drawer-microcopy.md
-  - docs/doctrine/trust-posture.md
+  - docs/doctrine/truth-posture.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/policy-aware.md
   - docs/doctrine/evidence-first.md
@@ -19,14 +22,11 @@ related:
   - docs/doctrine/corrections-first-class.md
   - docs/doctrine/ai-as-assistant.md
   - docs/architecture/trust-membrane.md
-  - docs/architecture/ui-trust-surface.md
-  - schemas/contracts/v1/decision_envelope.schema.json
-  - schemas/contracts/v1/runtime_response_envelope.schema.json
+  - docs/architecture/ui/README.md
+  - schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
   - control_plane/policy_gate_register.yaml
-  - control_plane/string_registry.yaml
   - tests/contracts/
   - tests/ui/
-  - tests/a11y/
 tags: [kfm, brand, microcopy, finite-outcomes, governance, accessibility, i18n, decision-envelope]
 notes:
   - Canonical user-facing wording for the five finite outcomes (ANSWER, ABSTAIN, DENY, ERROR, STALE) across every KFM surface.
@@ -686,7 +686,7 @@ Before a surface that renders outcomes ships, the following MUST be verifiable. 
 ## 19. Related docs
 
 - [`docs/brand/evidence-drawer-microcopy.md`](./evidence-drawer-microcopy.md) — Surface-axis sibling: every label rendered inside the Evidence Drawer. `[CONFIRMED sibling.]`
-- [`docs/doctrine/trust-posture.md`](../doctrine/trust-posture.md) — Truth-label vocabulary; finite outcomes. <sub>NEEDS VERIFICATION — confirm exact filename.</sub>
+- [`docs/doctrine/trust-posture.md`](../doctrine/truth-posture.md) — Truth-label vocabulary; finite outcomes. <sub>NEEDS VERIFICATION — confirm exact filename.</sub>
 - [`docs/doctrine/lifecycle-law.md`](../doctrine/lifecycle-law.md) — Fail-closed mappings of stage transitions to outcomes. `[CONFIRMED sibling.]`
 - [`docs/doctrine/policy-aware.md`](../doctrine/policy-aware.md) — The six policy dimensions; reason-code vocabulary; operator-hint rule. `[CONFIRMED sibling.]`
 - [`docs/doctrine/evidence-first.md`](../doctrine/evidence-first.md) — `EvidenceBundle`, `EvidenceRef`, source roles. `[CONFIRMED sibling.]`

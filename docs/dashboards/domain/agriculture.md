@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/dashboards-domain-agriculture
 title: Agriculture Dashboard Specification
-type: dashboard-spec; domain-health; boundary-compact
+type: dashboard-spec
 version: v1.0
 status: repository-grounded; specification-only; placement-hold; runtime-needs-verification; non-release; non-publication
 owners:
@@ -93,7 +93,6 @@ related:
   - tests/domains/agriculture/test_policy_denial_field_level_nass.py
   - .github/workflows/domain-agriculture.yml
   - apps/review-console/README.md
-  - apps/explorer-web/src/features/domains/agriculture/README.md
   - apps/governed-api/src/routes/agriculture/README.md
 tags: [kfm, dashboards, agriculture, evidence, source-role, aggregation, sensitivity, correction, rollback, specification]
 notes:

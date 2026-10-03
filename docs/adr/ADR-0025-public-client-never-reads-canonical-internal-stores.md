@@ -29,7 +29,7 @@ owning_root: docs/
 responsibility: "Record the proposed rule that public clients never read canonical or internal stores directly."
 current_path: docs/adr/ADR-0025-public-client-never-reads-canonical-internal-stores.md
 supersedes: []
-superseded_by: null
+superseded_by: []
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
@@ -88,15 +88,12 @@ related:
   - docs/adr/ADR-0024-steward-separation-of-duties-for-release.md
   - docs/doctrine/directory-rules.md
   - apps/governed-api/README.md
-  - apps/explorer-web/README.md
   - contracts/runtime/runtime_response_envelope.md
   - schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
   - apps/governed-api/tests/test_boundary_guards.py
-  - tests/policy/test_explorer_web_adapter_boundary.py
   - data/published/README.md
   - infra/reverse_proxy/README.md
   - .github/workflows/api-test.yml
-  - .github/workflows/ui-build.yml
   - Makefile
 tags: [kfm, adr, public-client, trust-membrane, governed-api, explorer-web, static-delivery, internal-store, deny-by-default, evidence, release, correction, rollback]
 notes:
@@ -927,11 +924,11 @@ Do not flip an accepted record back to `proposed`, delete audit history, or crea
 | [RuntimeResponseEnvelope contract](../../contracts/runtime/runtime_response_envelope.md) | Draft client-facing semantic contract |
 | [RuntimeResponseEnvelope schema](../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) | Proposed closed machine shape |
 | [API boundary tests](../../apps/governed-api/tests/test_boundary_guards.py) | Selected route/import/path-literal checks |
-| [Explorer boundary test](../../tests/policy/test_explorer_web_adapter_boundary.py) | Selected renderer/path-literal scan; non-vacuity unresolved |
+| [Explorer boundary test](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/tests/policy/test_explorer_web_adapter_boundary.py) | Selected renderer/path-literal scan; non-vacuity unresolved |
 | [Published lane](../../data/published/README.md) | Released-carrier responsibility; public serving unverified |
 | [Reverse proxy guidance](../../infra/reverse_proxy/README.md) | Draft edge contract; no deployment proof |
 | [API workflow](../../.github/workflows/api-test.yml) | Command-bearing scaffold checks |
-| [UI workflow](../../.github/workflows/ui-build.yml) | Intentional Explorer implementation hold |
+| [UI workflow](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/.github/workflows/ui-build.yml) | Intentional Explorer implementation hold |
 | [Makefile](../../Makefile) | Partial boundary targets and TODO public deny/UI markers |
 
 [Back to top](#top)

@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<TODO-uuid>
+doc_id: kfm://doc/doctrine/evidence-first
 title: Evidence First
 type: standard
 version: v1.1
@@ -8,23 +8,22 @@ owners: <TODO: doctrine maintainers (e.g., Governance Steward + Engineering Lead
 created: 2026-05-12
 updated: 2026-05-26
 policy_label: public
+owning_root: docs/
+responsibility: "Human-readable documentation for Evidence First; not policy, evidence, review, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — metadata normalization does not re-review document claims.
 related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/authority-ladder.md
   - docs/doctrine/derived-stays-derived.md
-  - docs/doctrine/corrections-are-first-class.md
-  - docs/doctrine/trust-posture.md
+  - docs/doctrine/corrections-first-class.md
+  - docs/doctrine/truth-posture.md
   - docs/doctrine/ai-as-assistant.md
-  - docs/architecture/evidence-model.md
-  - docs/architecture/release-and-publication.md
-  - schemas/contracts/v1/inspectable_claim.schema.json
-  - schemas/contracts/v1/evidence_ref.schema.json
-  - schemas/contracts/v1/evidence_bundle.schema.json
-  - schemas/contracts/v1/source_descriptor.schema.json
+  - docs/architecture/evidence-identity.md
+  - docs/architecture/publication/README.md
+  - schemas/contracts/v1/evidence/evidence_bundle.schema.json
   - tests/evidence/
-  - tests/runtime/
 tags: [kfm, doctrine, evidence, citation, governance, trust]
 notes:
   - Codifies "Evidence first" as the foundational KFM trust doctrine.
@@ -50,7 +49,7 @@ notes:
 **Status:** Draft · **Edition:** v1.1 · **Owners:** _TODO doctrine maintainers_ <sub>NEEDS VERIFICATION</sub> · **Pins:** `CONTRACT_VERSION = "3.0.0"` · **Updated:** 2026-05-26
 
 > [!IMPORTANT]
-> **This is the root trust doctrine of KFM.** Every other doctrine — [`lifecycle-law`](./lifecycle-law.md), [`authority-ladder`](./authority-ladder.md), [`derived-stays-derived`](./derived-stays-derived.md), [`corrections-are-first-class`](./corrections-are-first-class.md), [`ai-as-assistant`](./ai-as-assistant.md) — operationalizes the rule defined here. If a lower-layer design appears to permit a public claim without resolvable evidence, this doctrine wins until the lower-layer design is amended through an ADR.
+> **This is the root trust doctrine of KFM.** Every other doctrine — [`lifecycle-law`](./lifecycle-law.md), [`authority-ladder`](./authority-ladder.md), [`derived-stays-derived`](./derived-stays-derived.md), [`corrections-are-first-class`](corrections-first-class.md), [`ai-as-assistant`](./ai-as-assistant.md) — operationalizes the rule defined here. If a lower-layer design appears to permit a public claim without resolvable evidence, this doctrine wins until the lower-layer design is amended through an ADR.
 
 > [!NOTE]
 > **Where this doc sits.** Evidence First is a Tier 1 doctrine doc subordinate to `ai-build-operating-contract.md` v3.0 (`CONTRACT_VERSION = "3.0.0"`). It elaborates the contract's §1.6 cite-or-abstain invariant, §10.3 cite-or-abstain rule, and §10.6 *"EvidenceBundle outranks generated language."* If a conflict arises between this doc and the contract, the contract wins and the conflict becomes a `CONFLICTED` candidate for ADR resolution.
@@ -440,7 +439,7 @@ This doctrine uses RFC 2119 / RFC 8174 conformance language (aligned with `direc
 <summary><b>Hydrology: a streamflow trend claim under the doctrine</b></summary>
 
 > [!NOTE]
-> This example uses USGS gage **07142000 (Kansas River near DeSoto / Bonner Springs area)** to align with the hydrology thread carried through [`corrections-are-first-class.md`](./corrections-are-first-class.md) §11 and [`derived-stays-derived.md`](./derived-stays-derived.md) §13. Specific gage identifier is `PROPOSED` at the worked-example level; the doctrine carries regardless of the specific station chosen.
+> This example uses USGS gage **07142000 (Kansas River near DeSoto / Bonner Springs area)** to align with the hydrology thread carried through [`corrections-are-first-class.md`](corrections-first-class.md) §11 and [`derived-stays-derived.md`](./derived-stays-derived.md) §13. Specific gage identifier is `PROPOSED` at the worked-example level; the doctrine carries regardless of the specific station chosen.
 
 **Claim** (`cl-streamflow-trend-001`):
 
@@ -572,7 +571,7 @@ The four doctrines fit together as concentric rings:
 - [`authority-ladder`](./authority-ladder.md) ranks *sources of authority* for documentation and decisions (the documentation plane).
 - **Evidence first** (this doc) defines *what counts as evidence at runtime* (the trust plane).
 - [`derived-stays-derived`](./derived-stays-derived.md) governs *how derived artifacts react when canonical sources change* (the artifact plane).
-- [`corrections-are-first-class`](./corrections-are-first-class.md) governs *what to do when canonical sources change or are wrong* (the lifecycle plane).
+- [`corrections-are-first-class`](corrections-first-class.md) governs *what to do when canonical sources change or are wrong* (the lifecycle plane).
 
 They collaborate at publication: a release manifest is grounded by all four — authority ladder for *what we decided*, evidence-first for *what we cited*, derived-stays-derived for *what we projected*, corrections-are-first-class for *how we can withdraw*. A `CorrectionNotice` whose `source_refs` do not resolve to real `EvidenceBundle`s is rejected by the Citation validator at the runtime envelope.
 
@@ -694,11 +693,11 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/lifecycle-law.md`](./lifecycle-law.md) — `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED` and the publication state transition that produces released `EvidenceBundle`s. `[CONFIRMED sibling.]`
 - [`docs/doctrine/authority-ladder.md`](./authority-ladder.md) — Primary / Secondary / Tertiary authority for documentation; collaborates with this doctrine at publication. `[CONFIRMED sibling.]`
 - [`docs/doctrine/derived-stays-derived.md`](./derived-stays-derived.md) — Carriers vs. canonical sources; §8 of this doc routes carrier-rebuild rules there. `[CONFIRMED sibling.]`
-- [`docs/doctrine/corrections-are-first-class.md`](./corrections-are-first-class.md) — `CorrectionNotice` inherits the citation closure rule; uncited corrections are rejected. Note: v1 of this doc referenced `corrections-first-class.md`; canonical filename TBD per [OQ-EF-02](#16-open-questions-register). `[CONFIRMED sibling, filename CONFLICTED.]`
-- [`docs/doctrine/trust-posture.md`](./trust-posture.md) — Truth-label vocabulary (`CONFIRMED`, `PROPOSED`, `NEEDS VERIFICATION`, `UNKNOWN`, `CONFLICTED`, `LINEAGE`, `EXPLORATORY`) used alongside the runtime outcomes here. `[NEEDS VERIFICATION — confirm exact filename.]`
+- [`docs/doctrine/corrections-are-first-class.md`](corrections-first-class.md) — `CorrectionNotice` inherits the citation closure rule; uncited corrections are rejected. Note: v1 of this doc referenced `corrections-first-class.md`; canonical filename TBD per [OQ-EF-02](#16-open-questions-register). `[CONFIRMED sibling, filename CONFLICTED.]`
+- [`docs/doctrine/trust-posture.md`](truth-posture.md) — Truth-label vocabulary (`CONFIRMED`, `PROPOSED`, `NEEDS VERIFICATION`, `UNKNOWN`, `CONFLICTED`, `LINEAGE`, `EXPLORATORY`) used alongside the runtime outcomes here. `[NEEDS VERIFICATION — confirm exact filename.]`
 - [`docs/doctrine/ai-as-assistant.md`](./ai-as-assistant.md) — How AI carriers honor the cite-or-abstain rule and `EvidenceBundle` resolution. `[CONFIRMED sibling.]`
 - [`docs/architecture/evidence-identity.md`](../architecture/evidence-identity.md) — Full object graph, schemas, and resolver responsibilities. `[PROPOSED mapping — planned `docs/architecture/evidence-model.md` is not present; this is the existing page that covers it.]`
-- [`docs/architecture/release-and-publication.md`](../architecture/release-and-publication.md) — Where bundles cross into `PUBLISHED`. `[NEEDS VERIFICATION — exact path.]`
+- [`docs/architecture/release-and-publication.md`](../architecture/publication/README.md) — Where bundles cross into `PUBLISHED`. `[NEEDS VERIFICATION — exact path.]`
 - `schemas/contracts/v1/inspectable_claim.schema.json` — `InspectableClaim` schema. `[PROPOSED path.]`
 - `schemas/contracts/v1/evidence_ref.schema.json` — `EvidenceRef` schema. `[PROPOSED path.]`
 - `schemas/contracts/v1/evidence_bundle.schema.json` — `EvidenceBundle` schema. `[PROPOSED path.]`

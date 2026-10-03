@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<TODO-uuid>
+doc_id: kfm://doc/domains/fauna/expansion-plan
 title: Fauna — Expansion Plan
 type: standard
 version: v2
@@ -8,17 +8,20 @@ owners: <TODO: fauna-domain-steward, security-and-privacy-reviewer, release-mana
 created: 2026-05-16
 updated: 2026-06-02
 policy_label: public
+owning_root: docs/
+responsibility: "Human-readable documentation for Fauna — Expansion Plan; not policy, evidence, review, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — metadata normalization does not re-review document claims.
 related:
   - docs/domains/fauna/README.md
-  - docs/domains/fauna/FAUNA_DATA_LIFECYCLE.md
+  - docs/domains/fauna/DATA_LIFECYCLE.md
   - docs/domains/fauna/EXPANSION_BACKLOG.md
   - docs/domains/habitat/README.md
   - docs/domains/flora/README.md
   - docs/domains/spatial-foundation/README.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
-  - ai-build-operating-contract.md
-  - directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
 tags: [kfm, domain, fauna, expansion, roadmap, deny-by-default, sensitive-species, T4]
 notes:
   - CONTRACT_VERSION = "3.0.0".
@@ -647,14 +650,14 @@ This plan previously used three local schemes that do **not** match canonical KF
 ## 21. Related docs
 
 - [`docs/domains/fauna/README.md`](./README.md) — Fauna field spec. `[PROPOSED path; existence NEEDS VERIFICATION]`
-- [`docs/domains/fauna/FAUNA_DATA_LIFECYCLE.md`](./FAUNA_DATA_LIFECYCLE.md) — Fauna lifecycle companion. `[PROPOSED path]`
+- [`docs/domains/fauna/FAUNA_DATA_LIFECYCLE.md`](DATA_LIFECYCLE.md) — Fauna lifecycle companion. `[PROPOSED path]`
 - [`docs/domains/fauna/EXPANSION_BACKLOG.md`](./EXPANSION_BACKLOG.md) — Fauna backlog register. `[PROPOSED path]`
 - [`docs/domains/habitat/README.md`](../habitat/README.md) — upstream covariate lane. `[PROPOSED path]`
 - [`docs/domains/flora/README.md`](../flora/README.md) — sibling sensitive-occurrence lane. `[PROPOSED path]`
 - [`docs/domains/spatial-foundation/README.md`](../spatial-foundation/README.md) — owns CRS, GeographyVersion, generalization receipts. `[PROPOSED path]`
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED`. `[PROPOSED path]`
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — public surfaces consume governed APIs only. `[PROPOSED path]`
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — `CONTRACT_VERSION = "3.0.0"`; T0–T4, finite outcomes, `RuntimeResponseEnvelope`.
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — `CONTRACT_VERSION = "3.0.0"`; T0–T4, finite outcomes, `RuntimeResponseEnvelope`.
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — placement (§12), anti-patterns (§13), README contract (§9).
 - The doctrine files `evidence-first.md` / `policy-aware.md` / `map-first.md` / `ai-as-assistant.md` / `corrections-first-class.md` cited in the prior draft are `[NEEDS VERIFICATION]` as standalone files; their content is CONFIRMED in the operating contract and Atlas.
 
@@ -731,7 +734,7 @@ This plan previously used three local schemes that do **not** match canonical KF
 
 ---
 
-**Related docs:** [Fauna README](./README.md) `[PROPOSED]` · [Fauna Lifecycle](./FAUNA_DATA_LIFECYCLE.md) `[PROPOSED]` · [Fauna Backlog](./EXPANSION_BACKLOG.md) `[PROPOSED]` · [Habitat README](../habitat/README.md) `[PROPOSED]` · [Spatial Foundation README](../spatial-foundation/README.md) `[PROPOSED]` · [lifecycle-law.md](../../doctrine/lifecycle-law.md) · [trust-membrane.md](../../doctrine/trust-membrane.md) · [ai-build-operating-contract.md](../../../ai-build-operating-contract.md)
+**Related docs:** [Fauna README](./README.md) `[PROPOSED]` · [Fauna Lifecycle](DATA_LIFECYCLE.md) `[PROPOSED]` · [Fauna Backlog](./EXPANSION_BACKLOG.md) `[PROPOSED]` · [Habitat README](../habitat/README.md) `[PROPOSED]` · [Spatial Foundation README](../spatial-foundation/README.md) `[PROPOSED]` · [lifecycle-law.md](../../doctrine/lifecycle-law.md) · [trust-membrane.md](../../doctrine/trust-membrane.md) · [ai-build-operating-contract.md](../../doctrine/ai-build-operating-contract.md)
 
 **Last updated:** 2026-06-02 · **Version:** v2 (draft) · **Status:** awaiting steward and security review
 

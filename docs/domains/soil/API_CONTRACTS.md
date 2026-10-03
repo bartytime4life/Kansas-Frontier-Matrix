@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<uuid>
+doc_id: kfm://doc/domains/soil/api-contracts
 title: Soil Domain — API Contracts
 type: standard
 version: v1
@@ -8,6 +8,9 @@ owners: <TBD: docs steward + soil domain steward>
 created: 2026-05-19
 updated: 2026-05-19
 policy_label: public
+owning_root: docs/
+responsibility: "Human-readable documentation for Soil Domain — API Contracts; not policy, evidence, review, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — metadata normalization does not re-review document claims.
 related:
   - docs/domains/soil/README.md
   - docs/domains/soil/SOURCES.md
@@ -439,7 +442,7 @@ Order of operations for every Focus Mode call (PROPOSED):
 - [`docs/architecture/governed-api/README.md`](../../architecture/governed-api/README.md) — Trust-membrane architecture (PROPOSED).
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Why public clients consume only governed API (PROPOSED).
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED` (PROPOSED).
-- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — Schema home rule (PROPOSED; CONFIRMED authored in prior session; mounted presence NEEDS VERIFICATION).
+- [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — Schema home rule (PROPOSED; CONFIRMED authored in prior session; mounted presence NEEDS VERIFICATION).
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O / PAV profile (CONFIRMED authored in prior session).
 - [`directory-rules.md`](../../doctrine/directory-rules.md) — Placement authority for all paths in this doc.
 - Atlas v1.0 §5 (Soil), §20.3 (Master API Surface Table), §24.3 (Decision Outcome Envelope), §24.13 (Atlas ↔ Dossier ↔ Responsibility Root Crosswalk).
@@ -566,6 +569,6 @@ CONFIRMED doctrine (Atlas v1.0 §5.F, §24.14): Soil **publishes** to the consum
 
 ### Related docs
 
-- [Soil README](./README.md) · [Architecture: governed-api](../../architecture/governed-api/README.md) · [Doctrine: trust membrane](../../doctrine/trust-membrane.md) · [ADR-0001 schema home](../../adr/ADR-0001-schema-home.md) · [Directory Rules](../../doctrine/directory-rules.md)
+- [Soil README](./README.md) · [Architecture: governed-api](../../architecture/governed-api/README.md) · [Doctrine: trust membrane](../../doctrine/trust-membrane.md) · [ADR-0001 schema home](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) · [Directory Rules](../../doctrine/directory-rules.md)
 
 **Last updated:** 2026-05-19 · **Doctrine:** Domains Atlas v1.0 §5, §20.3, §24.3, §24.13 · **Implementation:** PROPOSED · [⬆ Back to top](#top)

@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<TODO-uuid-policy-aware>
+doc_id: kfm://doc/doctrine/policy-aware
 title: Policy Aware
 type: standard
 version: v1.1
@@ -8,37 +8,26 @@ owners: <TODO: doctrine maintainers (e.g., Governance Steward + Policy Reviewer 
 created: 2026-05-12
 updated: 2026-05-26
 policy_label: public
+owning_root: docs/
+responsibility: "Human-readable documentation for Policy Aware; not policy, evidence, review, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — metadata normalization does not re-review document claims.
 related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - docs/doctrine/evidence-first.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/derived-stays-derived.md
-  - docs/doctrine/corrections-are-first-class.md
+  - docs/doctrine/corrections-first-class.md
   - docs/doctrine/authority-ladder.md
   - docs/doctrine/ai-as-assistant.md
   - docs/doctrine/map-first.md
   - docs/doctrine/time-aware.md
-  - docs/doctrine/trust-posture.md
-  - docs/architecture/release-and-publication.md
+  - docs/doctrine/truth-posture.md
+  - docs/architecture/publication/README.md
   - docs/architecture/governed-ai/README.md
-  - docs/security/threat-model.md
-  - schemas/contracts/v1/source_rights_assessment.schema.json
-  - schemas/contracts/v1/sensitivity_assessment.schema.json
-  - schemas/contracts/v1/source_activation_decision.schema.json
-  - schemas/contracts/v1/policy_decision.schema.json
-  - schemas/contracts/v1/runtime_response_envelope.schema.json
-  - schemas/contracts/v1/review_record.schema.json
-  - schemas/contracts/v1/release_manifest.schema.json
-  - schemas/contracts/v1/redaction_receipt.schema.json
-  - schemas/contracts/v1/generalization_transform.schema.json
-  - policy/public_exposure.rego
-  - policy/rights.rego
-  - policy/source_roles.rego
-  - policy/sensitivity/living_persons.rego
-  - policy/ai/no_public_model.rego
+  - schemas/contracts/v1/runtime/runtime_response_envelope.schema.json
+  - schemas/contracts/v1/release/release_manifest.schema.json
   - control_plane/policy_gate_register.yaml
-  - control_plane/role_register.yaml
   - tests/policy/
 tags: [kfm, doctrine, policy, rights, sensitivity, governance, trust]
 notes:
@@ -153,7 +142,7 @@ The terms below are preserved verbatim from project doctrine and MUST NOT be par
 | **Access role** | The named role of the requester — `public`, `steward`, `admin`, `maintainer`, `ai_assistant`, `internal_job`. `[CONFIRMED vocabulary.]` |
 | **Policy-as-code** | Rego (or equivalent — see [§7.3](#73-policy-as-code)) rules under `policy/` that implement the gate; each rule ships with positive and negative fixtures. `[CONFIRMED principle; engine choice PROPOSED default.]` |
 
-Lifecycle stage names (`RAW`, `WORK`, `QUARANTINE`, `PROCESSED`, `CATALOG`, `TRIPLET`, `PUBLISHED`), finite outcomes (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, `NARROWED`, `BOUNDED`, `SOURCE_STALE`), evidence objects (`EvidenceRef`, `EvidenceBundle`), and release objects (`ReleaseManifest`, `ProofPack`, `CorrectionNotice`, `RollbackPlan`) carry the meanings defined in [`lifecycle-law.md`](./lifecycle-law.md), [`evidence-first.md`](./evidence-first.md), and [`corrections-are-first-class.md`](./corrections-are-first-class.md).
+Lifecycle stage names (`RAW`, `WORK`, `QUARANTINE`, `PROCESSED`, `CATALOG`, `TRIPLET`, `PUBLISHED`), finite outcomes (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, `NARROWED`, `BOUNDED`, `SOURCE_STALE`), evidence objects (`EvidenceRef`, `EvidenceBundle`), and release objects (`ReleaseManifest`, `ProofPack`, `CorrectionNotice`, `RollbackPlan`) carry the meanings defined in [`lifecycle-law.md`](./lifecycle-law.md), [`evidence-first.md`](./evidence-first.md), and [`corrections-are-first-class.md`](corrections-first-class.md).
 
 [⬆ Back to top](#policy-aware)
 
@@ -525,11 +514,11 @@ Policy Aware is one of the seven **CONFIRMED Trust Principles**. The matrix belo
 | [`lifecycle-law.md`](./lifecycle-law.md) | Step 3 of the eleven-step publication transition is the policy gate. Re-evaluation triggers come from lifecycle events. | **Operationalizes** — the policy gate is a named transition in the lifecycle invariant. `[CONFIRMED sibling.]` |
 | [`derived-stays-derived.md`](./derived-stays-derived.md) | The policy gate is what makes a derived artifact *withdrawable* (D-4); the generalization-receipt rule binds to the carrier-rebuild rule (D-2). | **Composes** — derived carriers honor the gate at every rebuild. `[CONFIRMED sibling.]` |
 | [`authority-ladder.md`](./authority-ladder.md) | The Primary / Secondary / Tertiary ladder governs *what counts as authoritative documentation*; the policy gate governs *what may be exposed*. The two are orthogonal but collaborate at release. | **Orthogonal** — both ground a `ReleaseManifest` from different angles. `[CONFIRMED sibling.]` |
-| [`corrections-are-first-class.md`](./corrections-are-first-class.md) | A `CorrectionNotice` re-runs the policy gate on the corrected record. Unreviewed corrections fail with `DENY release.unreviewed`. | **Extends** — corrections inherit the gate. `[CONFIRMED sibling.]` |
+| [`corrections-are-first-class.md`](corrections-first-class.md) | A `CorrectionNotice` re-runs the policy gate on the corrected record. Unreviewed corrections fail with `DENY release.unreviewed`. | **Extends** — corrections inherit the gate. `[CONFIRMED sibling.]` |
 | [`ai-as-assistant.md`](./ai-as-assistant.md) | AI never decides rights, sensitivity, or release. `policy/ai/no_public_model.rego` enforces the no-direct-public-model rule. Public → model bypass is `DENY policy.no_public_model`. AI-drafted `SensitivityAssessment` / `SourceRightsAssessment` candidates carry `AIReceipt` + `GENERATED_RECEIPT`. | **Restricts** — AI is bounded by the gate; it cannot vote at it. `[CONFIRMED sibling.]` |
 | [`map-first.md`](./map-first.md) | Trust badges, the Evidence Drawer, and layer admission all surface policy state. Sensitive exact geometry is denied at the layer level; `NARROWED` outcomes surface generalized layers visibly. | **Operationalizes** — the map surface renders the policy gate's outcomes visibly. `[CONFIRMED sibling.]` |
 | [`time-aware.md`](./time-aware.md) | The freshness window contributes to the `ABSTAIN freshness.stale` runtime outcome + `SOURCE_STALE` UI state; expired freshness re-runs the gate. | **Composes** — temporal posture feeds the gate. `[NEEDS VERIFICATION — exact filename.]` |
-| [`trust-posture.md`](./trust-posture.md) | Truth labels (`CONFIRMED`, `PROPOSED`, `NEEDS VERIFICATION`, `UNKNOWN`, `CONFLICTED`, `LINEAGE`, `EXPLORATORY`) live alongside runtime outcomes (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, `NARROWED`, `BOUNDED`, `SOURCE_STALE`). Policy emits the runtime outcomes. | **Composes** — runtime outcomes from this doctrine populate the trust posture vocabulary. `[NEEDS VERIFICATION — exact filename.]` |
+| [`trust-posture.md`](truth-posture.md) | Truth labels (`CONFIRMED`, `PROPOSED`, `NEEDS VERIFICATION`, `UNKNOWN`, `CONFLICTED`, `LINEAGE`, `EXPLORATORY`) live alongside runtime outcomes (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, `NARROWED`, `BOUNDED`, `SOURCE_STALE`). Policy emits the runtime outcomes. | **Composes** — runtime outcomes from this doctrine populate the trust posture vocabulary. `[NEEDS VERIFICATION — exact filename.]` |
 
 [⬆ Back to top](#policy-aware)
 
@@ -549,7 +538,7 @@ The anti-patterns below are CONFIRMED-rejection cases. Each represents a real fa
 | Client-side simplification of C4 geometry presented as "generalized." | Real generalization is a governed transform with a receipt, applied before release. | §6.2, generalization receipts + [`derived-stays-derived.md`](./derived-stays-derived.md) §14 Pattern E. |
 | AI summary that "considers" rights / sensitivity instead of the policy gate. | AI is not a policy authority; it cannot vote at the gate. | §12, `ai-as-assistant.md` row. |
 | `SourceRightsAssessment` marked "unknown" but the source activated anyway. | Activation requires a recorded decision; "unknown" is `DENY policy.rights_unclear`. | §5.1, activation row. |
-| A new C4 sensitivity decision is silently applied to old releases without a `CorrectionNotice`. | Re-classification IS a public event; old derivatives MUST be withdrawn or superseded with notice. | §8.1, re-evaluation triggers; [`corrections-are-first-class.md`](./corrections-are-first-class.md). |
+| A new C4 sensitivity decision is silently applied to old releases without a `CorrectionNotice`. | Re-classification IS a public event; old derivatives MUST be withdrawn or superseded with notice. | §8.1, re-evaluation triggers; [`corrections-are-first-class.md`](corrections-first-class.md). |
 | Public route returns a raw row from the source table, "just for debugging." | Public routes consume only `RuntimeResponseEnvelope` payloads. There is no "debug-public" tier. | §7.2, API classes; [`map-first.md`](./map-first.md) anti-patterns. |
 | Combining "missing citation" and "denied by sensitivity" into one outcome. | Different dimensions produce different codes (`ABSTAIN evidence.missing` vs `DENY policy.sensitive_geometry`). | §9, canonical mappings. |
 | Treating an old `PolicyDecision` as still valid after the underlying `SensitivityAssessment` changed. | Decisions are anchored to assessment versions; assessment change re-runs the gate. | §8.1, re-evaluation triggers. |
@@ -614,7 +603,7 @@ That is precisely why "rights" and "source terms" are separate dimensions. A C0 
 <details>
 <summary><b>How does a public user appeal a <code>DENY</code>?</b></summary>
 
-A public `DENY` carries a stable `reason_code` and an operator hint that does not leak the denied content. The public path forward is the [`corrections-are-first-class.md`](./corrections-are-first-class.md) intake — submit a correction request citing the public claim id. A steward reviews; if the underlying `SensitivityAssessment` or `SourceRightsAssessment` was wrong, the correction triggers a new release. There is no "ask an admin nicely" route, and no override field on the public surface.
+A public `DENY` carries a stable `reason_code` and an operator hint that does not leak the denied content. The public path forward is the [`corrections-are-first-class.md`](corrections-first-class.md) intake — submit a correction request citing the public claim id. A steward reviews; if the underlying `SensitivityAssessment` or `SourceRightsAssessment` was wrong, the correction triggers a new release. There is no "ask an admin nicely" route, and no override field on the public surface.
 
 </details>
 
@@ -778,12 +767,12 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/lifecycle-law.md`](./lifecycle-law.md) — `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED`; the policy gate is step 3 of the eleven-step transition. `[CONFIRMED sibling.]`
 - [`docs/doctrine/derived-stays-derived.md`](./derived-stays-derived.md) — Carriers vs. canonical sources; D-2 (rebuildable) anchors the generalization-receipt reproducibility commitment; D-3 (subordinate) backs §6.2 anti-pattern on client-side simplification. `[CONFIRMED sibling.]`
 - [`docs/doctrine/authority-ladder.md`](./authority-ladder.md) — Primary / Secondary / Tertiary documentation authority; orthogonal to the policy gate. `[CONFIRMED sibling.]`
-- [`docs/doctrine/corrections-are-first-class.md`](./corrections-are-first-class.md) — `CorrectionNotice` re-runs the policy gate; unreviewed corrections `DENY`. Note: v1 of this doc referenced `corrections-first-class.md`; canonical filename TBD per [OQ-PA-03](#16-open-questions-register). `[CONFIRMED sibling, filename CONFLICTED.]`
+- [`docs/doctrine/corrections-are-first-class.md`](corrections-first-class.md) — `CorrectionNotice` re-runs the policy gate; unreviewed corrections `DENY`. Note: v1 of this doc referenced `corrections-first-class.md`; canonical filename TBD per [OQ-PA-03](#16-open-questions-register). `[CONFIRMED sibling, filename CONFLICTED.]`
 - [`docs/doctrine/ai-as-assistant.md`](./ai-as-assistant.md) — AI is bounded by the policy gate; it cannot vote at it. AI-drafted assessments carry `AIReceipt` + `GENERATED_RECEIPT`. `[CONFIRMED sibling.]`
 - [`docs/doctrine/map-first.md`](./map-first.md) — Trust badges, Evidence Drawer, and layer admission surface the policy state. `NARROWED` renders the generalized derivative visibly. `[CONFIRMED sibling.]`
 - [`docs/doctrine/time-aware.md`](./time-aware.md) — Freshness windows feed `ABSTAIN freshness.stale` + `SOURCE_STALE`. `[NEEDS VERIFICATION — confirm exact filename.]`
-- [`docs/doctrine/trust-posture.md`](./trust-posture.md) — Authoring labels (`CONFIRMED`, `PROPOSED`, `NEEDS VERIFICATION`, `UNKNOWN`, `CONFLICTED`, `LINEAGE`, `EXPLORATORY`) alongside runtime outcomes (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, `NARROWED`, `BOUNDED`, `SOURCE_STALE`). `[NEEDS VERIFICATION — confirm exact filename.]`
-- [`docs/architecture/release-and-publication.md`](../architecture/release-and-publication.md) — The eleven-step release state machine; canonical source for steps 1–11. `[NEEDS VERIFICATION — exact path.]`
+- [`docs/doctrine/trust-posture.md`](truth-posture.md) — Authoring labels (`CONFIRMED`, `PROPOSED`, `NEEDS VERIFICATION`, `UNKNOWN`, `CONFLICTED`, `LINEAGE`, `EXPLORATORY`) alongside runtime outcomes (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, `NARROWED`, `BOUNDED`, `SOURCE_STALE`). `[NEEDS VERIFICATION — confirm exact filename.]`
+- [`docs/architecture/release-and-publication.md`](../architecture/publication/README.md) — The eleven-step release state machine; canonical source for steps 1–11. `[NEEDS VERIFICATION — exact path.]`
 - [`docs/security/THREAT_MODEL.md`](../security/THREAT_MODEL.md) — STRIDE coverage including policy-gate trust boundaries. `[TODO — confirm filename.]`
 - `schemas/contracts/v1/source_rights_assessment.schema.json` — `SourceRightsAssessment` schema. `[PROPOSED path.]`
 - `schemas/contracts/v1/sensitivity_assessment.schema.json` — `SensitivityAssessment` schema. `[PROPOSED path.]`
