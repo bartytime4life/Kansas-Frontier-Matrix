@@ -585,12 +585,12 @@ Surface the conflict in an ADR and resolve it explicitly. Trust Membrane MUST NO
 **Architecture and security**
 
 - [`docs/architecture/release-and-publication.md`](../architecture/release-and-publication.md) — release / publication architecture. `[PROPOSED path.]`
-- [`docs/security/threat-model.md`](../security/threat-model.md) — threat model, including direct-model bypass. `[PROPOSED path.]`
+- [`docs/security/THREAT_MODEL.md`](../security/THREAT_MODEL.md) — threat model, including direct-model bypass. `[PROPOSED path.]`
 
 **Contracts and registers**
 
 - [`schemas/contracts/v1/release_manifest.schema.json`](../../schemas/contracts/v1/release_manifest.schema.json) — `ReleaseManifest` schema. `[PROPOSED path.]`
-- [`schemas/contracts/v1/proof_pack.schema.json`](../../schemas/contracts/v1/proof_pack.schema.json) — `ProofPack` schema. `[PROPOSED path.]`
+- [`schemas/contracts/v1/evidence/proof_pack.schema.json`](../../schemas/contracts/v1/evidence/proof_pack.schema.json) — `ProofPack` schema. `[PROPOSED path.]`
 - [`schemas/contracts/v1/evidence_bundle.schema.json`](../../schemas/contracts/v1/evidence_bundle.schema.json) — `EvidenceBundle` schema. `[PROPOSED path.]`
 - [`schemas/contracts/v1/runtime_response_envelope.schema.json`](../../schemas/contracts/v1/runtime_response_envelope.schema.json) — `RuntimeResponseEnvelope` schema. `[PROPOSED path.]`
 - [`schemas/contracts/v1/receipts/generated_receipt.schema.json`](../../schemas/contracts/v1/receipts/generated_receipt.schema.json) — `GENERATED_RECEIPT` schema. `[PROPOSED path — operating contract §47.]`

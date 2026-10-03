@@ -784,7 +784,7 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/time-aware.md`](./time-aware.md) — Freshness windows feed `ABSTAIN freshness.stale` + `SOURCE_STALE`. `[NEEDS VERIFICATION — confirm exact filename.]`
 - [`docs/doctrine/trust-posture.md`](./trust-posture.md) — Authoring labels (`CONFIRMED`, `PROPOSED`, `NEEDS VERIFICATION`, `UNKNOWN`, `CONFLICTED`, `LINEAGE`, `EXPLORATORY`) alongside runtime outcomes (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, `NARROWED`, `BOUNDED`, `SOURCE_STALE`). `[NEEDS VERIFICATION — confirm exact filename.]`
 - [`docs/architecture/release-and-publication.md`](../architecture/release-and-publication.md) — The eleven-step release state machine; canonical source for steps 1–11. `[NEEDS VERIFICATION — exact path.]`
-- [`docs/security/threat-model.md`](../security/threat-model.md) — STRIDE coverage including policy-gate trust boundaries. `[TODO — confirm filename.]`
+- [`docs/security/THREAT_MODEL.md`](../security/THREAT_MODEL.md) — STRIDE coverage including policy-gate trust boundaries. `[TODO — confirm filename.]`
 - `schemas/contracts/v1/source_rights_assessment.schema.json` — `SourceRightsAssessment` schema. `[PROPOSED path.]`
 - `schemas/contracts/v1/sensitivity_assessment.schema.json` — `SensitivityAssessment` schema. `[PROPOSED path.]`
 - `schemas/contracts/v1/source_activation_decision.schema.json` — `SourceActivationDecision` schema. `[PROPOSED path.]`

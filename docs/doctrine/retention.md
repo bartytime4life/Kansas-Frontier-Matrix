@@ -808,7 +808,7 @@ This document is done enough to enter the repository when:
 - [`docs/runbooks/RB-CORRECTION-ROUTINE.md`](../runbooks/RB-CORRECTION-ROUTINE.md) — Day-2 routine correction; emits `TombstoneReceipt`. `[TODO — confirm path.]`
 - [`docs/runbooks/RB-ROLLBACK-EXECUTION.md`](../runbooks/RB-ROLLBACK-EXECUTION.md) — Day-2 rollback; emits `TombstoneReceipt` for rolled-forward release. `[TODO — confirm path.]`
 - [`docs/runbooks/RB-ERASURE-EXECUTION.md`](../runbooks/RB-ERASURE-EXECUTION.md) — Day-2 erasure procedure (new runbook proposed by this doctrine). `[TODO — runbook not yet authored.]`
-- [`docs/security/threat-model.md`](../security/threat-model.md) — STRIDE coverage including retention-related trust boundaries (audit-log tampering, erasure-bypass paths). `[TODO — confirm filename.]`
+- [`docs/security/THREAT_MODEL.md`](../security/THREAT_MODEL.md) — STRIDE coverage including retention-related trust boundaries (audit-log tampering, erasure-bypass paths). `[TODO — confirm filename.]`
 - `schemas/contracts/v1/retention_class.schema.json` — `RetentionClass` schema. `[PROPOSED path.]`
 - `schemas/contracts/v1/retention_policy.schema.json` — `RetentionPolicy` schema. `[PROPOSED path.]`
 - `schemas/contracts/v1/tombstone_receipt.schema.json` — `TombstoneReceipt` schema. `[PROPOSED path.]`

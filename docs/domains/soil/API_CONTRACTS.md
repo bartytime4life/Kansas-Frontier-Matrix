@@ -441,7 +441,7 @@ Order of operations for every Focus Mode call (PROPOSED):
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED` (PROPOSED).
 - [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home.md) — Schema home rule (PROPOSED; CONFIRMED authored in prior session; mounted presence NEEDS VERIFICATION).
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O / PAV profile (CONFIRMED authored in prior session).
-- [`directory-rules.md`](../../../directory-rules.md) — Placement authority for all paths in this doc.
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — Placement authority for all paths in this doc.
 - Atlas v1.0 §5 (Soil), §20.3 (Master API Surface Table), §24.3 (Decision Outcome Envelope), §24.13 (Atlas ↔ Dossier ↔ Responsibility Root Crosswalk).
 
 [Back to top](#top)
@@ -566,6 +566,6 @@ CONFIRMED doctrine (Atlas v1.0 §5.F, §24.14): Soil **publishes** to the consum
 
 ### Related docs
 
-- [Soil README](./README.md) · [Architecture: governed-api](../../architecture/governed-api/README.md) · [Doctrine: trust membrane](../../doctrine/trust-membrane.md) · [ADR-0001 schema home](../../adr/ADR-0001-schema-home.md) · [Directory Rules](../../../directory-rules.md)
+- [Soil README](./README.md) · [Architecture: governed-api](../../architecture/governed-api/README.md) · [Doctrine: trust membrane](../../doctrine/trust-membrane.md) · [ADR-0001 schema home](../../adr/ADR-0001-schema-home.md) · [Directory Rules](../../doctrine/directory-rules.md)
 
 **Last updated:** 2026-05-19 · **Doctrine:** Domains Atlas v1.0 §5, §20.3, §24.3, §24.13 · **Implementation:** PROPOSED · [⬆ Back to top](#top)

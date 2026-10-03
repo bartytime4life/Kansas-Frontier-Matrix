@@ -526,7 +526,7 @@ Trust roots resolve signing identities and key material. Mis-configuration here 
 ### Rotation
 
 > [!IMPORTANT]
-> Key/identity rotation is **runbook-governed**, not improvisational. See [`runbooks/key-rotation.md`](../../runbooks/key-rotation.md) _(PROPOSED)_. Rotation MUST cover: superseding the old key in the trust root, re-issuing affected receipts (or recording a `CorrectionNotice` per affected `spec_hash`), and persisting the rotation as a `decision_log` entry in an append-only ledger.
+> Key/identity rotation is **runbook-governed**, not improvisational. See [`docs/security/KEY_ROTATION.md`](../security/KEY_ROTATION.md) _(PROPOSED)_. Rotation MUST cover: superseding the old key in the trust root, re-issuing affected receipts (or recording a `CorrectionNotice` per affected `spec_hash`), and persisting the rotation as a `decision_log` entry in an append-only ledger.
 
 ### Compromise response
 

@@ -503,7 +503,7 @@ This document is done enough to enter the repository when:
 > Links are repo-relative. Targets marked **TODO** are placeholders pending verification of the mounted layout.
 
 - [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — canonical operating contract, `CONTRACT_VERSION = "3.0.0"` *(authored)*
-- [`directory-rules.md`](../../../directory-rules.md) — path authority (§7.4 schema home, §12 Domain Placement Law, §13.1 contracts-vs-schemas drift) *(authored)*
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — path authority (§7.4 schema home, §12 Domain Placement Law, §13.1 contracts-vs-schemas drift) *(authored)*
 - [`docs/standards/PROV.md`](../../standards/PROV.md) — W3C PROV-O + PAV provenance profile *(NEEDS VERIFICATION)*
 - [`docs/standards/ISO-19115.md`](../../standards/ISO-19115.md) — ISO 19115 crosswalk and conformance profile *(NEEDS VERIFICATION)*
 - `docs/standards/CANONICALIZATION.md` — **TODO**; JCS vs URDNA2015 policy with worked examples (C1-02 / C8-05)

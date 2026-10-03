@@ -447,7 +447,7 @@ This document is done enough to enter the repository when:
 ## 16. Related docs
 
 - [`docs/domains/geology/README.md`](../README.md) — Geology domain landing *(PROPOSED parent — NEEDS VERIFICATION)*
-- [`directory-rules.md`](../../../../directory-rules.md) — Repository placement law
+- [`directory-rules.md`](../../../doctrine/directory-rules.md) — Repository placement law
 - [`ai-build-operating-contract.md`](../../../../ai-build-operating-contract.md) — Canonical operating contract (`CONTRACT_VERSION = "3.0.0"`)
 - [`docs/standards/PROV.md`](../../../standards/PROV.md) — W3C PROV-O / PAV provenance profile
 - [`docs/standards/PMTILES.md`](../../../standards/PMTILES.md) — PMTiles v3 governance and conformance profile

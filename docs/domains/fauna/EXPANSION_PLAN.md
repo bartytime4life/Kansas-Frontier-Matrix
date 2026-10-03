@@ -655,7 +655,7 @@ This plan previously used three local schemes that do **not** match canonical KF
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED`. `[PROPOSED path]`
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — public surfaces consume governed APIs only. `[PROPOSED path]`
 - [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — `CONTRACT_VERSION = "3.0.0"`; T0–T4, finite outcomes, `RuntimeResponseEnvelope`.
-- [`directory-rules.md`](../../../directory-rules.md) — placement (§12), anti-patterns (§13), README contract (§9).
+- [`directory-rules.md`](../../doctrine/directory-rules.md) — placement (§12), anti-patterns (§13), README contract (§9).
 - The doctrine files `evidence-first.md` / `policy-aware.md` / `map-first.md` / `ai-as-assistant.md` / `corrections-first-class.md` cited in the prior draft are `[NEEDS VERIFICATION]` as standalone files; their content is CONFIRMED in the operating contract and Atlas.
 
 [⬆ Back to top](#fauna--expansion-plan)
