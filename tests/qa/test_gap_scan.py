@@ -97,6 +97,19 @@ def test_placeholders_only_outside_scaffold_surfaces(tmp_path: Path) -> None:
     assert _kinds(found) == [("UNRATCHETED_PLACEHOLDER", "infra/compose/docker-compose.yml")]
 
 
+def test_markdown_placeholders_count_header_markers_only(tmp_path: Path) -> None:
+    root = _repo(tmp_path, {
+        "docs/stub.md": "# Stub\n\n> PROPOSED placeholder\n",
+        "fixtures/x/README.md": "greenfield scaffold\n",
+        "docs/prose.md": "\n".join(["# Prose"] + ["text"] * 6 + ["A PROPOSED placeholder is ..."]),
+        "docs/archive/old.md": "PROPOSED placeholder\n",
+        "infra/compose/docker-compose.yml": "# PROPOSED placeholder\n",
+    })
+    found = TOOL.scan_markdown_placeholders(root, TOOL.tracked_files(root))
+    assert _kinds(found) == [("MARKDOWN_PLACEHOLDER", "docs/stub.md"),
+                             ("MARKDOWN_PLACEHOLDER", "fixtures/x/README.md")]
+
+
 def _summary(**counts):
     base = {kind: 0 for kind in TOOL.INVARIANT_KINDS + TOOL.CENSUS_KINDS}
     base.update(counts)
@@ -104,11 +117,12 @@ def _summary(**counts):
 
 
 def test_evaluate_invariants_fail_and_census_ratchets() -> None:
-    baseline = {"BROKEN_LOCAL_LINK": 10, "UNRATCHETED_PLACEHOLDER": 2}
+    baseline = {"BROKEN_LOCAL_LINK": 10, "UNRATCHETED_PLACEHOLDER": 2, "MARKDOWN_PLACEHOLDER": 4}
     assert TOOL.evaluate(_summary(BROKEN_LOCAL_LINK=10, UNRATCHETED_PLACEHOLDER=2), baseline)[0] == 0
     assert TOOL.evaluate(_summary(STRUCTURED_PARSE_ERROR=1), baseline)[0] == 1
     assert TOOL.evaluate(_summary(TEST_PACKAGE_SHADOW=1), baseline)[0] == 1
     assert TOOL.evaluate(_summary(BROKEN_LOCAL_LINK=11), baseline)[0] == 1
+    assert TOOL.evaluate(_summary(MARKDOWN_PLACEHOLDER=5), baseline)[0] == 1
     status, messages = TOOL.evaluate(_summary(BROKEN_LOCAL_LINK=3), baseline)
     assert status == 0 and any("--write-baseline" in m for m in messages)
 
