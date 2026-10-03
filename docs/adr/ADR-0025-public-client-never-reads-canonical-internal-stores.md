@@ -923,7 +923,7 @@ Do not flip an accepted record back to `proposed`, delete audit history, or crea
 | [ADR-0024](./ADR-0024-steward-separation-of-duties-for-release.md) | Independent review for public release and restoration |
 | [Directory Rules](../doctrine/directory-rules.md) | Responsibility roots, trust membrane, lifecycle, migration discipline |
 | [Governed API README](../../apps/governed-api/README.md) | Draft app boundary and candidate route families |
-| [Explorer Web README](../../apps/explorer-web/README.md) | Draft public UI boundary and direct-read prohibition |
+| [Explorer Web README](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/apps/explorer-web/README.md) | Draft public UI boundary and direct-read prohibition |
 | [RuntimeResponseEnvelope contract](../../contracts/runtime/runtime_response_envelope.md) | Draft client-facing semantic contract |
 | [RuntimeResponseEnvelope schema](../../schemas/contracts/v1/runtime/runtime_response_envelope.schema.json) | Proposed closed machine shape |
 | [API boundary tests](../../apps/governed-api/tests/test_boundary_guards.py) | Selected route/import/path-literal checks |

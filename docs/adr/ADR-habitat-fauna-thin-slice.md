@@ -1144,7 +1144,7 @@ If this scaffold is numbered, update the filename, H1, metadata, and canonical i
 - [Sensitive-withheld Fauna fixture](../../fixtures/domains/fauna/valid/sensitive_withheld_occurrence.json).
 - [Fauna public-safe fixture validator](../../tools/validators/domains/fauna/validate_public_safe_fixture.py).
 - [Fauna fixture smoke tests](../../tests/domains/fauna/test_fauna_smoke.py).
-- [Fauna Evidence Drawer component](../../apps/explorer-web/src/features/domains/fauna/EvidenceDrawer.tsx).
+- [Fauna Evidence Drawer component](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/apps/explorer-web/src/features/domains/fauna/EvidenceDrawer.tsx).
 - [Fauna Evidence Drawer schema projection](../../schemas/contracts/v1/domains/fauna/evidence_drawer_payload.schema.json).
 - [Fauna Evidence Drawer convergence tests](../../tests/validators/domains/fauna/test_evidence_drawer_convergence.py).
 - [Habitat workflow](../../.github/workflows/domain-habitat.yml).
