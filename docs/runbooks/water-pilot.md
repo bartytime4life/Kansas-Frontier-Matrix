@@ -170,6 +170,33 @@ now passes. That is content parity only. Whether each accepted overlay is
 folded into a successor standalone Site commit, hosted equivalence, deployment,
 and water activation remain **NEEDS VERIFICATION**.
 
+## Saved Site v135 mirror candidate — 2026-10-03
+
+The [v135 successor receipt](../../data/receipts/generated/site-mirror-v135-candidate-20261003.json)
+pins owner-private Site source `14d131abe3918dfdecdee8d928ef5448ffe8705b`
+and repository base `ef9c5e19e373d51c2bf878aaf8c3a5ddf0deb35e`. A clean,
+isolated copy of that Site source supplied the tracked files. The repository
+mirror now has the same 334 tracked paths and bytes: 230 were already equal,
+59 existing paths changed to the Site version, and 45 Site paths were added.
+There were no mirrored paths to delete. The prior receipt and its overlay
+decision remain in history; this new candidate does not retroactively change
+them. `site_mirror.py --check` checks the new receipt for content parity only.
+
+The mirrored Site passed its locked `npm ci`, production build, 344 Node tests,
+TypeScript `--noEmit`, and eight mirror-tool tests. Full Site lint failed with
+six `react-hooks/set-state-in-effect` errors and 39 warnings: three errors are
+in the unchanged water control; three came with the new smoke and lightning
+controls. A fresh `npm audit` found eight high findings and no critical ones
+through the unchanged lockfile. These are review holds, not green checks.
+Browser acceptance remains unrun because the available browser control failed
+its security verification.
+The saved Site v135 is **not deployed**; deployed version v131, hosted
+equivalence, source/overlay review of this successor, activation, publication,
+and water admission are separate pending decisions. No D1/R2 binding, active
+pointer, or hosted Site source changed in this mirror batch. To roll back the
+mirror, revert this candidate commit and restore the previous receipt selector;
+do not change the deployed Site or stored data as part of that rollback.
+
 ## Reproducible environment
 
 Use Python 3.11 or newer; this batch used Python 3.12.3. From the repository root:

@@ -36,6 +36,8 @@ LAYERS = {
     "ee-sentinel2": {"source": "COPERNICUS/S2_SR_HARMONIZED", "bands": 4, "unit": "surface reflectance", "resampling": "bilinear", "maxZoom": 12, "coverage": 0.95, "period": "2024 calendar year", "resolution": 30, "attribution": "Contains modified Copernicus Sentinel data 2024 · European Union / ESA", "legend": "Natural color · SCL screened annual median"},
     "ee-3dep": {"source": "USGS/3DEP/10m_collection", "bands": 1, "unit": "meters", "resampling": "bilinear", "maxZoom": 12, "coverage": 0.995, "period": "Mixed acquisition dates · source mosaic", "resolution": 30, "attribution": "USGS 3D Elevation Program", "legend": "Elevation · meters; 200–1300 display ramp"},
 }
+SOURCE_YEARS = {"ee-cdl": (2008, 2024), "ee-chirps": (1981, 2025),
+                "ee-terraclimate": (1958, 2024), "ee-sentinel2": (2019, 2025)}
 
 
 def sha256(path: Path) -> str:
@@ -53,7 +55,11 @@ def dump(path: Path, value: object) -> str:
     return hashlib.sha256(raw).hexdigest()
 
 
-def review(path: Path, layer_id: str, boundary_hash: str, palette_hash: str) -> dict:
+def expected_days(year: int) -> int:
+    return (date(year + 1, 1, 1) - date(year, 1, 1)).days
+
+
+def review(path: Path, layer_id: str, year: int, boundary_hash: str, palette_hash: str) -> dict:
     record = json.loads(path.read_text())
     spec = LAYERS[layer_id]
     required = ("sourceImageIds", "sourceInventoryTaskId", "sourceInventorySha256", "sampleTaskId", "statewideTaskId", "sampleGeoTiffSha256", "statewideGeoTiffSha256", "masks", "terms", "processingParameters", "reviewer", "approvedAt", "limits")
@@ -61,22 +67,22 @@ def review(path: Path, layer_id: str, boundary_hash: str, palette_hash: str) -> 
         raise ValueError("review status, layer or source mismatch")
     if any(not record.get(key) for key in required) or not isinstance(record["sourceImageIds"], list) or not all(isinstance(value, str) and value for value in record["sourceImageIds"]):
         raise ValueError("review provenance is incomplete")
-    expected_images = 1 if layer_id == "ee-cdl" else 366 if layer_id == "ee-chirps" else 12 if layer_id == "ee-terraclimate" else None
+    expected_images = 1 if layer_id == "ee-cdl" else expected_days(year) if layer_id == "ee-chirps" else 12 if layer_id == "ee-terraclimate" else None
     if expected_images and len(record["sourceImageIds"]) != expected_images:
         raise ValueError("source image ID count does not match the complete period")
     if len(set(record["sourceImageIds"])) != len(record["sourceImageIds"]):
         raise ValueError("source image IDs contain duplicates")
     ids = set(record["sourceImageIds"])
-    if layer_id == "ee-cdl" and ids != {"USDA/NASS/CDL/2024"}:
-        raise ValueError("CDL source is not the exact 2024 annual image")
+    if layer_id == "ee-cdl" and ids != {f"USDA/NASS/CDL/{year}"}:
+        raise ValueError(f"CDL source is not the exact {year} annual image")
     if layer_id == "ee-chirps":
-        days = (date(2024, 1, 1) + timedelta(days=offset) for offset in range(366))
+        days = (date(year, 1, 1) + timedelta(days=offset) for offset in range(expected_days(year)))
         if ids != {"UCSB-CHG/CHIRPS/DAILY/" + day.strftime("%Y%m%d") for day in days}:
-            raise ValueError("CHIRPS source inventory does not cover every 2024 day")
-    if layer_id == "ee-terraclimate" and ids != {f"IDAHO_EPSCOR/TERRACLIMATE/2024{month:02d}" for month in range(1, 13)}:
-        raise ValueError("TerraClimate source inventory does not cover every 2024 month")
-    if layer_id == "ee-sentinel2" and (not ids or not all(value.startswith("COPERNICUS/S2_SR_HARMONIZED/2024") for value in ids)):
-        raise ValueError("Sentinel-2 source inventory is not entirely from 2024")
+            raise ValueError(f"CHIRPS source inventory does not cover every {year} day")
+    if layer_id == "ee-terraclimate" and ids != {f"IDAHO_EPSCOR/TERRACLIMATE/{year}{month:02d}" for month in range(1, 13)}:
+        raise ValueError(f"TerraClimate source inventory does not cover every {year} month")
+    if layer_id == "ee-sentinel2" and (not ids or not all(value.startswith(f"COPERNICUS/S2_SR_HARMONIZED/{year}") for value in ids)):
+        raise ValueError(f"Sentinel-2 source inventory is not entirely from {year}")
     if layer_id == "ee-3dep" and (not ids or not all(value.startswith("USGS/3DEP/10m_collection/") for value in ids)):
         raise ValueError("3DEP source inventory contains another collection")
     if not all(record.get(key) is True for key in ("samplePassed", "statewidePassed", "driveCapacityChecked", "termsChecked")):
@@ -85,6 +91,8 @@ def review(path: Path, layer_id: str, boundary_hash: str, palette_hash: str) -> 
         raise ValueError("boundary, units or resampling mismatch")
     if layer_id == "ee-cdl" and record.get("paletteSha256") != palette_hash:
         raise ValueError("CDL palette hash mismatch")
+    if layer_id == "ee-cdl" and year != 2024 and record.get("historicalClassKeyChecked") is not True:
+        raise ValueError("historical CDL class meanings and palette require explicit review")
     if layer_id == "ee-3dep" and (not record.get("acquisitionDateReview") or not record.get("verticalDatumReview")):
         raise ValueError("3DEP date or vertical datum review missing")
     for key in ("sampleGeoTiffSha256", "statewideGeoTiffSha256", "sourceInventorySha256"):
@@ -127,7 +135,7 @@ def check_grid(src, layer_id: str) -> None:
             raise ValueError("climate product was not retained at its native grid")
 
 
-def coverage(src, geometry: dict, layer_id: str, sample: bool) -> float:
+def coverage(src, geometry: dict, layer_id: str, sample: bool, year: int) -> float:
     local = transform_geom("EPSG:4326", src.crs, geometry)
     all_bounds = rasterio.features.bounds(local)
     tolerance = max(abs(src.transform.a), abs(src.transform.e)) * 2
@@ -136,7 +144,7 @@ def coverage(src, geometry: dict, layer_id: str, sample: bool) -> float:
     total = valid = 0
     low = math.inf
     high = -math.inf
-    expected_count = 366 if layer_id == "ee-chirps" else 12 if layer_id == "ee-terraclimate" else None
+    expected_count = expected_days(year) if layer_id == "ee-chirps" else 12 if layer_id == "ee-terraclimate" else None
     for _, window in src.block_windows(1):
         transform = src.window_transform(window)
         inside = geometry_mask([local], out_shape=(int(window.height), int(window.width)), transform=transform, invert=True)
@@ -215,7 +223,7 @@ def colorize(data: np.ndarray, good: np.ndarray, layer_id: str, palette: dict) -
     return rgba
 
 
-def render_tiles(src, layer_id: str, set_dir: Path, set_id: str, geometry: dict, palette: dict) -> dict:
+def render_tiles(src, layer_id: str, set_dir: Path, set_id: str, geometry: dict, palette: dict, year: int) -> dict:
     spec = LAYERS[layer_id]
     projected_boundary = transform_geom("EPSG:4326", "EPSG:3857", geometry)
     boundary_bounds = rasterio.features.bounds(projected_boundary)
@@ -240,7 +248,7 @@ def render_tiles(src, layer_id: str, set_dir: Path, set_id: str, geometry: dict,
                 if layer_id == "ee-sentinel2":
                     good &= np.all(np.isfinite(data[:3]) & (data[:3] != fill), axis=0) & (data[3] >= 1)
                 elif layer_id == "ee-chirps":
-                    good &= data[1] == 366
+                    good &= data[1] == expected_days(year)
                 elif layer_id == "ee-terraclimate":
                     good &= data[1] == 12
                 # Include transparent tiles across the declared Kansas bounds.
@@ -269,6 +277,9 @@ def render_tiles(src, layer_id: str, set_dir: Path, set_id: str, geometry: dict,
 
 
 def prepare(args) -> int:
+    year = args.year
+    if not isinstance(year, int) or not 1958 <= year <= 2025:
+        raise ValueError("year must be a complete supported source year, 1958–2025")
     root = args.data_root.resolve()
     repository = Path(__file__).resolve().parents[2]
     if root == repository or repository in root.parents:
@@ -282,10 +293,14 @@ def prepare(args) -> int:
     approved = []
     held = {}
     for layer_id in LAYERS:
-        folder = root / "exports" / layer_id
+        if layer_id == "ee-3dep" and year != 2024:
+            continue  # Mixed-date terrain is held in the baseline set, never relabeled as an annual product.
+        if layer_id != "ee-3dep" and not SOURCE_YEARS[layer_id][0] <= year <= SOURCE_YEARS[layer_id][1]:
+            continue
+        folder = root / "exports" / layer_id if year == 2024 else root / "exports" / str(year) / layer_id
         try:
             record_path = folder / "review.json"
-            record = review(record_path, layer_id, boundary_hash, palette_hash)
+            record = review(record_path, layer_id, year, boundary_hash, palette_hash)
             inventory_path = folder / "source_ids.csv"
             if sha256(inventory_path) != record["sourceInventorySha256"]:
                 raise ValueError("source image inventory hash mismatch")
@@ -298,18 +313,18 @@ def prepare(args) -> int:
                 raise ValueError("GeoTIFF hash mismatch")
             with rasterio.open(sample) as src:
                 check_grid(src, layer_id)
-                sample_coverage = coverage(src, SAMPLE, layer_id, True)
+                sample_coverage = coverage(src, SAMPLE, layer_id, True, year)
             with rasterio.open(statewide) as src:
                 check_grid(src, layer_id)
-                statewide_coverage = coverage(src, boundary, layer_id, False)
+                statewide_coverage = coverage(src, boundary, layer_id, False, year)
             approved.append((layer_id, record, record_path, statewide, sample_coverage, statewide_coverage))
         except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError) as error:
             held[layer_id] = str(error)
     if not approved:
         print(json.dumps({"approved": [], "held": held}, indent=2))
         return 2
-    identity = "|".join(["v1", boundary_hash, palette_hash] + [f"{item[0]}:{item[1]['statewideGeoTiffSha256']}:{sha256(item[2])}" for item in approved])
-    set_id = "ks-2024-" + hashlib.sha256(identity.encode()).hexdigest()[:20]
+    identity = "|".join(["v1"] + ([] if year == 2024 else [str(year)]) + [boundary_hash, palette_hash] + [f"{item[0]}:{item[1]['statewideGeoTiffSha256']}:{sha256(item[2])}" for item in approved])
+    set_id = f"ks-{year}-" + hashlib.sha256(identity.encode()).hexdigest()[:20]
     set_dir = root / "display-sets" / set_id
     if set_dir.exists():
         raise ValueError("immutable display-set directory already exists; review the existing result")
@@ -317,10 +332,13 @@ def prepare(args) -> int:
     for layer_id, record, record_path, statewide, sample_coverage, statewide_coverage in approved:
         try:
             with rasterio.open(statewide) as src:
-                indexes = render_tiles(src, layer_id, set_dir, set_id, boundary, palette)
+                indexes = render_tiles(src, layer_id, set_dir, set_id, boundary, palette, year)
             spec = LAYERS[layer_id]
-            layers.append({"id": layer_id, "status": "approved", "source": spec["source"], "period": spec["period"], "resolutionMeters": spec["resolution"],
-                           "attribution": spec["attribution"], "limits": record["limits"], "legend": spec["legend"],
+            period = f"{year} harvest year" if layer_id == "ee-cdl" else spec["period"] if layer_id == "ee-3dep" else f"{year} calendar year"
+            attribution = f"Contains modified Copernicus Sentinel data {year} · European Union / ESA" if layer_id == "ee-sentinel2" else spec["attribution"]
+            legend = f"USDA {year} CDL crop classes · official class colors" if layer_id == "ee-cdl" else spec["legend"]
+            layers.append({"id": layer_id, "status": "approved", "source": spec["source"], "period": period, "resolutionMeters": spec["resolution"],
+                           "attribution": attribution, "limits": record["limits"], "legend": legend,
                            "geotiffSha256": record["statewideGeoTiffSha256"], "reviewSha256": sha256(record_path), "tileIndexes": indexes})
             print(f"APPROVED {layer_id}: sample {sample_coverage:.2%}, statewide {statewide_coverage:.2%}, {sum(item['count'] for item in indexes.values())} tiles")
         except (OSError, ValueError) as error:
@@ -335,7 +353,7 @@ def prepare(args) -> int:
     manifest_path = set_dir / PREFIX / "sets" / set_id / "manifest.json"
     manifest_hash = dump(manifest_path, manifest)
     dump(set_dir / PREFIX / "active.json", {"schema": "kfm-earth-engine-context-pointer/v1", "setId": set_id, "manifestSha256": manifest_hash})
-    dump(set_dir / "preparation.json", {"setId": set_id, "approved": [item["id"] for item in layers], "held": held, "manifestSha256": manifest_hash,
+    dump(set_dir / "preparation.json", {"setId": set_id, "year": year, "approved": [item["id"] for item in layers], "held": held, "manifestSha256": manifest_hash,
                                          "installation": "Upload immutable sets/ objects first; switch active.json only after readback and owner-only visual review."})
     print(json.dumps({"setId": set_id, "approved": [item["id"] for item in layers], "held": held, "path": str(set_dir)}, indent=2))
     return 0
@@ -344,4 +362,5 @@ def prepare(args) -> int:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data-root", required=True, type=Path, help="External private KFM data root, never a Git checkout")
+    parser.add_argument("--year", type=int, default=2024, help="Annual imagery year; 2024 retains the legacy external export layout")
     raise SystemExit(prepare(parser.parse_args()))

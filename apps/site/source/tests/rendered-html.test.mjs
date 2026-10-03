@@ -47,6 +47,8 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /MapLibre/i);
   assert.match(html, /Build report/i);
   assert.match(html, /Real data layers/i);
+  assert.match(html, /aria-label="Layer topics"/);
+  for (const label of ["Full archive → latest", "Bridges · historic designation", "Bridges · recorded closed", "Historical roads · 1918", "BLM land records", "BLM leases · authorized", "BLM leases · closed", "Roads, rail &amp; bridges", "Hazards", "Roads &amp; highways", "Railroads · active", "Railroads · abandoned", "FEMA flood zones"]) assert.ok(html.includes(label), `Missing discoverable layer control: ${label}`);
   assert.doesNotMatch(html, /Hydrology context<|Watershed &amp; storage context<|demonstration · selected/i);
   assert.match(html, /Repository briefing/i);
   assert.match(html, /main@(?:<!-- -->)?bb08d3e/i);
@@ -687,10 +689,15 @@ test("connects bounded official context sources without admitting evidence", asy
   const globeUrl = `data:text/javascript;base64,${Buffer.from(compile(globeSource, "globe-context.ts")).toString("base64")}`;
   // This metadata test imports a data URL; provide no-op map render helpers here.
   const compositionUrl = `data:text/javascript;base64,${Buffer.from("export const balanceMapFills=()=>{}; export const balanceMapRasters=()=>{}; export const composeMapLayers=()=>{}; export const requestFillOpacity=()=>{}; export const requestRasterOpacity=()=>{};").toString("base64")}`;
-  const javascript = compile(withBuildClock(registrySource).replace('from "./noaa-radar";', `from "${radarUrl}";`).replace('from "./noaa-satellite";', `from "${satelliteUrl}";`).replace('from "./lightning-data";', `from "${lightningUrl}";`).replace('from "./map-performance";', `from "${performanceUrl}";`).replace('from "./map-layer-composition";', `from "${compositionUrl}";`).replace('from "./globe-context";', `from "${globeUrl}";`), "live-context.ts");
+  const bridgeUrl = `data:text/javascript;base64,${Buffer.from(compile(await readFile(new URL("../app/kansas-bridge-records.ts", import.meta.url), "utf8"), "kansas-bridge-records.ts")).toString("base64")}`;
+  const referenceUrl = `data:text/javascript;base64,${Buffer.from(compile((await readFile(new URL("../app/kansas-reference-layers.ts", import.meta.url), "utf8")).replace('from "./kansas-bridge-records";', `from "${bridgeUrl}";`), "kansas-reference-layers.ts")).toString("base64")}`;
+  const javascript = compile(withBuildClock(registrySource).replace('from "./kansas-reference-layers";', `from "${referenceUrl}";`).replace('from "./noaa-radar";', `from "${radarUrl}";`).replace('from "./noaa-satellite";', `from "${satelliteUrl}";`).replace('from "./lightning-data";', `from "${lightningUrl}";`).replace('from "./map-performance";', `from "${performanceUrl}";`).replace('from "./map-layer-composition";', `from "${compositionUrl}";`).replace('from "./globe-context";', `from "${globeUrl}";`), "live-context.ts");
   const registry = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
 
   assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.map((record) => record.id), [
+    "blm-mlrs-leases-authorized", "blm-mlrs-leases-closed",
+    "kdot-bridges-state", "kdot-bridges-local", "kdot-bridges-historic", "kdot-bridges-old", "kdot-bridges-closed", "kdot-roads-1918",
+    "kdot-roads", "kdot-rail-active", "kdot-rail-abandoned", "fema-flood-zones",
     "fema-disaster-declarations",
     "blm-plss-townships",
     "blm-plss-sections",

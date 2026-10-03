@@ -6,7 +6,7 @@ export const EVENT_MAX_HOURS = 24;
 export const RADAR_STEP_MS = 300_000;
 export type RadarProduct = "n0r" | "n0q";
 export type RadarScan = { time: string; product: RadarProduct; artifact: string };
-export type SmokeProperties = { start: string; end: string; startMs: number; endMs: number; density: "Light" | "Medium" | "Heavy" | "NA"; satellite: string; artifact: string; featureId?: string };
+export type SmokeProperties = { start: string; end: string; startMs: number; endMs: number; timeSupport?: "interval" | "timestamp-only"; density: "Light" | "Medium" | "Heavy" | "NA"; satellite: string; artifact: string; featureId?: string };
 export type SmokeCollection = FeatureCollection<Polygon, SmokeProperties>;
 export type EventManifest = {
   format: "kfm-event-atlas-v1"; start: string; end: string; retrievedAt: string;
@@ -146,7 +146,7 @@ export function parseSmokeKml(kml: string, artifact: string): SmokeCollection {
     const start = hmsTime(block.match(/Start Time:\s*(\d{7} \d{4})(?:UTC)?/)?.[1] ?? "");
     const end = hmsTime(block.match(/End Time:\s*(\d{7} \d{4})(?:UTC)?/)?.[1] ?? "");
     const density = block.match(/Density:\s*(Light|Medium|Heavy|NA)(?:<|\s)/)?.[1] as SmokeProperties["density"] | undefined;
-    if (!start || !end || end <= start || !density) throw new Error("A NOAA smoke record lacks a valid observation interval or density category.");
+    if (!start || !end || end < start || !density) throw new Error("A NOAA smoke record lacks a valid observation interval or density category.");
     const satellite = (block.match(/Satellite:\s*([^<\r\n]{1,80})/)?.[1] ?? "Not supplied").trim();
     const rings: number[][][] = [];
     for (const coordinates of block.matchAll(/<coordinates\b[^>]*>([\s\S]*?)<\/coordinates>/g)) {
@@ -162,14 +162,20 @@ export function parseSmokeKml(kml: string, artifact: string): SmokeCollection {
     if (!rings.length || (block.match(/<Polygon\b/g)?.length ?? 0) !== 1) throw new Error("Unsupported smoke geometry.");
     const bounds = rings[0].reduce((b,p) => [Math.min(b[0],p[0]),Math.min(b[1],p[1]),Math.max(b[2],p[0]),Math.max(b[3],p[1])], [Infinity,Infinity,-Infinity,-Infinity]);
     if (bounds[2] < EVENT_BOUNDS[0] || bounds[0] > EVENT_BOUNDS[2] || bounds[3] < EVENT_BOUNDS[1] || bounds[1] > EVENT_BOUNDS[3]) continue;
-    data.features.push({ type: "Feature", geometry: { type: "Polygon", coordinates: rings }, properties: { start, end, startMs: Date.parse(start), endMs: Date.parse(end), density, satellite, artifact } });
+    data.features.push({ type: "Feature", geometry: { type: "Polygon", coordinates: rings }, properties: { start, end, startMs: Date.parse(start), endMs: Date.parse(end), timeSupport: start === end ? "timestamp-only" : "interval", density, satellite, artifact } });
   }
   return data;
 }
 
+export function smokeOverlaps(properties: Pick<SmokeProperties, "startMs" | "endMs">, start: number, end: number): boolean {
+  return properties.startMs === properties.endMs
+    ? properties.startMs >= start && properties.startMs < end
+    : properties.startMs < end && properties.endMs > start;
+}
+
 export function smokeAt(data: SmokeCollection, cursor: string): SmokeCollection {
   const ms = Date.parse(cursor);
-  return { type: "FeatureCollection", features: data.features.filter((f) => f.properties.startMs <= ms && ms < f.properties.endMs) };
+  return { type: "FeatureCollection", features: data.features.filter((f) => f.properties.startMs === f.properties.endMs ? ms === f.properties.startMs : f.properties.startMs <= ms && ms < f.properties.endMs) };
 }
 
 export function eventFrames(manifest: EventManifest, observations: readonly { observedAt: string }[] = []): string[] {
@@ -201,7 +207,7 @@ export function eventHourAvailability(
       return Number.isFinite(scanStart) && scanStart < slotEnd && scanStart + RADAR_STEP_MS > slotStart;
     });
     const smoke = intersectsQuery && manifest.smoke.data.features.some((feature) => (
-      feature.properties.startMs < slotEnd && feature.properties.endMs > slotStart
+      smokeOverlaps(feature.properties, slotStart, slotEnd)
     ));
     const river = intersectsQuery && observations.some((observation) => {
       const observationStart = Date.parse(observation.observedAt);

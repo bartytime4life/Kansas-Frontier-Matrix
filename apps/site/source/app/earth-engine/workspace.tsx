@@ -1,14 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { EARTH_ENGINE_ACCESS, EARTH_ENGINE_CATALOG, EARTH_ENGINE_CHECKED_AT, EARTH_ENGINE_DATASETS, buildEarthEngineRecipe, earthEngineReviewPacket, earthEngineUrl, findEarthEngineDatasets } from "../earth-engine-data";
-import { EARTH_ENGINE_CONTEXT_LAYERS, type EarthEngineContextLayerId } from "../earth-engine-context";
+import { EARTH_ENGINE_CONTEXT_LAYERS, EARTH_ENGINE_SOURCE_YEARS, type EarthEngineContextLayerId } from "../earth-engine-context";
 import { useEarthEngineContext } from "../earth-engine-context-client";
 import { buildEarthEngineExportRecipe } from "../earth-engine-export";
 import styles from "./workspace.module.css";
 
 const topics = ["All", ...new Set(EARTH_ENGINE_DATASETS.map((d) => d.topic))];
+const listenToLocation = (notify: () => void) => { window.addEventListener("popstate", notify); return () => window.removeEventListener("popstate", notify); };
+const browserSearch = () => window.location.search;
+const serverSearch = () => "";
 
 function download(text: string, name: string, type: string) {
   const url = URL.createObjectURL(new Blob([text], { type }));
@@ -21,8 +24,14 @@ export default function EarthEngineWorkspace() {
   const context = useEarthEngineContext();
   const [query, setQuery] = useState("");
   const [topic, setTopic] = useState("All");
-  const [selectedId, setSelectedId] = useState(EARTH_ENGINE_DATASETS[0].id);
-  const [yearText, setYearText] = useState("2024");
+  const search = useSyncExternalStore(listenToLocation, browserSearch, serverSearch);
+  const params = new URLSearchParams(search);
+  const requested = EARTH_ENGINE_DATASETS.find((dataset) => dataset.id === params.get("dataset"));
+  const requestedYear = Number(params.get("year"));
+  const [selection, setSelection] = useState<{ id: string; yearText: string } | null>(null);
+  const selectedId = selection?.id ?? requested?.id ?? EARTH_ENGINE_DATASETS[0].id;
+  const yearText = selection?.yearText ?? String(requested?.temporalMode === "annual" && Number.isInteger(requestedYear)
+    && requestedYear >= requested.firstYear! && requestedYear <= requested.lastYear! ? requestedYear : requested?.lastYear ?? 2024);
   const [compared, setCompared] = useState<string[]>([]);
   const [notice, setNotice] = useState("");
   const selected = EARTH_ENGINE_DATASETS.find((d) => d.id === selectedId)!;
@@ -33,11 +42,15 @@ export default function EarthEngineWorkspace() {
   let error = "";
   try { recipe = buildEarthEngineRecipe(selected.id, year); } catch (cause) { error = cause instanceof Error ? cause.message : "Check the selected recipe."; }
   const comparison = EARTH_ENGINE_DATASETS.filter((d) => compared.includes(d.id));
-  const exportable = EARTH_ENGINE_CONTEXT_LAYERS.some((layer) => layer.id === selected.id) && (!annual || year === 2024);
+  const exportLayer = EARTH_ENGINE_CONTEXT_LAYERS.find((layer) => layer.id === selected.id);
+  const exportBounds = exportLayer ? EARTH_ENGINE_SOURCE_YEARS[exportLayer.id] : undefined;
+  const exportable = Boolean(exportLayer && !error && (exportBounds
+    ? Number.isInteger(year) && year! >= exportBounds[0] && year! <= exportBounds[1]
+    : !annual));
 
   function choose(id: string) {
     const dataset = EARTH_ENGINE_DATASETS.find((d) => d.id === id)!;
-    setSelectedId(id); setYearText(String(dataset.lastYear ?? 2024)); setNotice("");
+    setSelection({ id, yearText: String(dataset.lastYear ?? 2024) }); setNotice("");
   }
   function compare(id: string) {
     if (compared.includes(id)) setCompared(compared.filter((current) => current !== id));
@@ -56,10 +69,10 @@ export default function EarthEngineWorkspace() {
   }
   function saveExport(scope: "sample" | "statewide") {
     try {
-      const script = buildEarthEngineExportRecipe(selected.id as EarthEngineContextLayerId, scope);
-      download(script, `kfm-${selected.id}-${scope}-drive-export.js`, "text/javascript");
+      const script = buildEarthEngineExportRecipe(selected.id as EarthEngineContextLayerId, scope, year);
+      download(script, `kfm-${selected.id}-${year ?? "mixed-dates"}-${scope}-drive-export.js`, "text/javascript");
       setNotice(`${scope === "sample" ? "Small-area" : "Statewide"} Drive export recipe prepared. It has not been run; check source counts and review the output before approval.`);
-    } catch { setNotice("This dataset or year is outside the reviewed 2024 display set."); }
+    } catch { setNotice("This dataset or year is outside the supported export recipe range."); }
   }
 
   return <main className={styles.page}>
@@ -96,12 +109,12 @@ export default function EarthEngineWorkspace() {
         <p className={styles.eyebrow}>PREPARE A KANSAS STUDY</p><h2 id="recipe-title">{selected.title}</h2><code className={styles.asset}>{selected.asset}</code>
         <p>{selected.recipe}</p>
         <dl className={styles.details}><div><dt>Area</dt><dd>Kansas · Census TIGER 2018 state boundary (FIPS 20)</dd></div><div><dt>Time</dt><dd>{selected.coverage}</dd></div><div><dt>Reuse</dt><dd>{selected.terms} <a href={`${earthEngineUrl(selected)}#terms-of-use`} target="_blank" rel="noreferrer">Read terms ↗</a></dd></div></dl>
-        {annual ? <label className={styles.year}>Analysis year<input type="number" min={selected.firstYear!} max={selected.lastYear!} step="1" value={yearText} aria-invalid={Boolean(error)} aria-describedby="recipe-time-note recipe-error" onChange={(event) => { setYearText(event.target.value); setNotice(""); }} /><small id="recipe-time-note">Complete calendar years {selected.firstYear}–{selected.lastYear}. End date is January 1 of the following year, exclusive. Actual data availability is checked when run.</small></label> : <p className={styles.fixed}>Fixed product: year selection is unavailable. {selected.temporalMode === "period-summary" ? "The recipe shows the full historical summary." : "The recipe uses a source mosaic with mixed acquisition dates."}</p>}
+        {annual ? <label className={styles.year}>Analysis year<input type="number" min={selected.firstYear!} max={selected.lastYear!} step="1" value={yearText} aria-invalid={Boolean(error)} aria-describedby="recipe-time-note recipe-error" onChange={(event) => { setSelection({ id: selectedId, yearText: event.target.value }); setNotice(""); }} /><small id="recipe-time-note">Complete calendar years {selected.firstYear}–{selected.lastYear}. End date is January 1 of the following year, exclusive. Actual data availability is checked when run.</small></label> : <p className={styles.fixed}>Fixed product: year selection is unavailable. {selected.temporalMode === "period-summary" ? "The recipe shows the full historical summary." : "The recipe uses a source mosaic with mixed acquisition dates."}</p>}
         <p id="recipe-error" className={styles.error} role="alert">{error}</p>
         <div className={styles.limit}><strong>Interpret with care</strong><p>{selected.limitation}</p></div>
         <div className={styles.recipeActions}><button type="button" className={styles.primary} disabled={Boolean(error)} onClick={() => save("recipe")}>Download recipe · .js</button><button type="button" disabled={Boolean(error)} onClick={() => void copyRecipe()}>Copy recipe</button><button type="button" disabled={Boolean(error)} onClick={() => save("review")}>Download review draft · .json</button></div>
         {exportable && <div className={styles.recipeActions}><button type="button" onClick={() => saveExport("sample")}>Download small-area Drive export</button><button type="button" onClick={() => saveExport("statewide")}>Download statewide Drive export</button></div>}
-        {exportable && <p className={styles.footnote}>Run the small-area export first. Keep task IDs, source image IDs, projection, masks, coverage, terms and file hashes in the external private review store. Statewide execution waits for the sample review and Drive capacity check.</p>}
+        {exportable && <p className={styles.footnote}>This prepares a {year ?? "mixed-date"} candidate; it does not install imagery. Run the small-area export first. Keep task IDs, source image IDs, projection, masks, coverage, terms and file hashes in the external private review store. Statewide execution waits for the sample review and Drive capacity check.</p>}
         <p role="status" className={styles.notice}>{notice}</p>
         <details className={styles.instructions}><summary>How to run and review</summary><ol><li><a href={EARTH_ENGINE_ACCESS} target="_blank" rel="noreferrer">Register an Earth Engine project</a> with the access appropriate to your use.</li><li>Copy the script into the <a href="https://code.earthengine.google.com/" target="_blank" rel="noreferrer">Earth Engine Code Editor</a>. Review it, then run it there.</li><li>Inspect source IDs, coverage, quality flags and missing pixels. Keep the complete inputs and processing record before exporting any data.</li><li>Prepare source files and provenance for KFM review. Acceptance for preparation is separate from admission and release.</li></ol><p>These generated recipes have not been executed against Earth Engine. They do not automatically export files, publish layers, or write back to KFM.</p></details>
         <details className={styles.code}><summary>Inspect generated script</summary><pre tabIndex={0} aria-label="Generated Earth Engine JavaScript"><code>{recipe || "Choose a valid year to generate the recipe."}</code></pre></details>

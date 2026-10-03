@@ -153,7 +153,7 @@ test("every installed layer has a legend swatch and discovery previews use the i
 });
 
 // A local EE double checks the generated control flow and task parameters, not provider execution.
-function runExport(id, scope, count) {
+function runExport(id, scope, count, year = id === "ee-3dep" ? undefined : 2024) {
   const layers = [], images = [], tables = [];
   const chain = new Proxy(function () {}, {
     get(_target, key) {
@@ -163,7 +163,7 @@ function runExport(id, scope, count) {
     },
     apply: () => chain,
   });
-  const script = exporter.buildEarthEngineExportRecipe(id, scope);
+  const script = exporter.buildEarthEngineExportRecipe(id, scope, year);
   let error = null;
   try {
     vm.runInNewContext(script, {
@@ -199,6 +199,12 @@ test("Drive export recipes export the complete source inventory, the documented 
   assert.deepEqual(cdl.layers[0].vis, {});
   assert.match(cdl.script, /Map\.addLayer\(ee\.Image\(source\.first\(\)\)\.select\('cropland'\)\.clip\(region\), \{\}/);
   assert.deepEqual(runExport("ee-sentinel2", "sample", 10).layers[0].vis, { min: 0, max: 0.3, gamma: 1.2 });
+  const priorYear = runExport("ee-chirps", "statewide", 365, 2023);
+  assert.equal(priorYear.error, null);
+  assert.equal(priorYear.images.length, 1);
+  assert.equal(priorYear.tables[0].description, "kfm_ee_chirps_2023_statewide_source_ids");
+  assert.deepEqual(priorYear.layers[0].vis, runExport("ee-chirps", "statewide", 366, 2024).layers[0].vis);
+  assert.match(String(runExport("ee-chirps", "statewide", 364, 2023).error), /Export held/);
   for (const [id, count] of [["ee-cdl", 2], ["ee-chirps", 365], ["ee-terraclimate", 11], ["ee-sentinel2", 0], ["ee-3dep", 0]]) {
     const held = runExport(id, "statewide", count);
     assert.match(String(held.error), /Export held/);

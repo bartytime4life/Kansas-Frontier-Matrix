@@ -2,10 +2,23 @@ import type { OfficialContextId } from "./live-context";
 
 const nationalMap = "https://apps.nationalmap.gov/downloader/";
 export const SOURCE_DOWNLOADS: Record<OfficialContextId, { href: string; label: string }> = {
+  "kdot-bridges-state": { href: "https://kanplan.ksdot.gov/arcgis_web_adaptor/rest/services/Structures/State_Bridges/MapServer/0", label: "KDOT provider inventory and fields" },
+  "kdot-bridges-local": { href: "https://kanplan.ksdot.gov/arcgis_web_adaptor/rest/services/Structures/Non_State_Bridges/MapServer/0", label: "KDOT provider inventory and fields" },
+  "kdot-bridges-historic": { href: "https://kanplan.ksdot.gov/arcgis_web_adaptor/rest/services/Structures/Non_State_Bridges/MapServer/0", label: "KDOT provider inventory and fields" },
+  "kdot-bridges-old": { href: "https://kanplan.ksdot.gov/arcgis_web_adaptor/rest/services/Structures/Non_State_Bridges/MapServer/0", label: "KDOT provider inventory and fields" },
+  "kdot-bridges-closed": { href: "https://kanplan.ksdot.gov/arcgis_web_adaptor/rest/services/Structures/Non_State_Bridges/MapServer/0", label: "KDOT provider inventory and fields" },
+  "kdot-roads-1918": { href: "https://kanplan.ksdot.gov/arcgis_web_adaptor/rest/services/Transportation/Historical_Roads/MapServer/0", label: "KDOT provider inventory and fields" },
+  "kdot-roads": { href: "https://kanplan.ksdot.gov/arcgis_web_adaptor/rest/services/Transportation/LRS_County/MapServer/4", label: "KDOT public road reference" },
+  "kdot-rail-active": { href: "https://kanplan.ksdot.gov/arcgis_web_adaptor/rest/services/Transportation/Railroads/MapServer/0", label: "KDOT active railroad reference" },
+  "kdot-rail-abandoned": { href: "https://kanplan.ksdot.gov/arcgis_web_adaptor/rest/services/Transportation/Railroads/MapServer/1", label: "KDOT abandoned railroad reference" },
+  "fema-flood-zones": { href: "https://msc.fema.gov/portal/home", label: "FEMA effective maps and amendments" },
+
   "fema-disaster-declarations": { href: "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries", label: "OpenFEMA declaration records" },
   "blm-plss-townships": { href: "https://gis.blm.gov/arcgis/rest/services/Cadastral/BLM_Natl_PLSS_CadNSDI/MapServer/1", label: "BLM township service" },
   "blm-plss-sections": { href: "https://gis.blm.gov/arcgis/rest/services/Cadastral/BLM_Natl_PLSS_CadNSDI/MapServer/2", label: "BLM section service" },
   "blm-plss-intersected": { href: "https://gis.blm.gov/arcgis/rest/services/Cadastral/BLM_Natl_PLSS_CadNSDI/MapServer/3", label: "BLM intersected division service" },
+  "blm-mlrs-leases-authorized": { href: "https://gis.blm.gov/nlsdb/rest/services/Fluid_Minerals/Oil_Gas_Leases_Case_Disp/MapServer/0", label: "BLM MLRS authorized oil and gas lease cases" },
+  "blm-mlrs-leases-closed": { href: "https://gis.blm.gov/nlsdb/rest/services/Fluid_Minerals/Oil_Gas_Leases_Case_Disp/MapServer/3", label: "BLM MLRS closed oil and gas lease cases" },
   "nasa-firms-active-fire": { href: "https://gibs.earthdata.nasa.gov/layer-metadata/v1.0/VIIRS_NOAA20_Thermal_Anomalies_375m_All.json", label: "NASA GIBS image source metadata" },
   "nasa-gibs-fire-points": { href: "/api/source-download?source=nasa-gibs-fire-points", label: "Download mapped detections · GeoJSON" },
   "nifc-fire-reports": { href: "/api/source-download?source=nifc-fire-reports", label: "Download recent reports · GeoJSON" },

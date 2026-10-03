@@ -1,3 +1,4 @@
+import { KANSAS_REFERENCE_SOURCES, KANSAS_REFERENCE_BOUNDS } from "./kansas-reference-layers";
 import type { FeatureCollection } from "geojson";
 import type { GeoJSONSource, LayerSpecification, Map as MapLibreMap, RasterTileSource } from "./maplibre-seam";
 import { noaaRadarTileUrl } from "./noaa-radar";
@@ -8,11 +9,12 @@ import { balanceMapFills, balanceMapRasters, composeMapLayers, requestFillOpacit
 import { BUILD_UTC_YEAR } from "./build-clock";
 import { globeOverviewPaintSize } from "./globe-context";
 
-export type OfficialContextId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar" | "nws-forecast-wind" | "nasa-lightning-climatology" | "noaa-lightning-density" | "blm-plss-townships" | "blm-plss-sections" | "blm-plss-intersected" | "fema-disaster-declarations";
+export type OfficialContextId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar" | "nws-forecast-wind" | "nasa-lightning-climatology" | "noaa-lightning-density" | "blm-plss-townships" | "blm-plss-sections" | "blm-plss-intersected" | "blm-mlrs-leases-authorized" | "blm-mlrs-leases-closed" | "fema-disaster-declarations" | "kdot-roads" | "kdot-rail-active" | "kdot-rail-abandoned" | "kdot-bridges-state" | "kdot-bridges-local" | "kdot-bridges-historic" | "kdot-bridges-old" | "kdot-bridges-closed" | "kdot-roads-1918" | "fema-flood-zones";
 export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations";
 export type OfficialContextState = "idle" | "loading" | "ready" | "empty" | "partial" | "error";
 
 export type OfficialContextPayload = Readonly<{
+  smokeCoverage?: { day: string | null; firstDay: string; availableDays: string[]; missingDays: string[] };
   feed: OfficialContextFeedId;
   state: "ready" | "empty" | "partial";
   retrievedAt: string;
@@ -38,6 +40,10 @@ export type OfficialContextSource = Readonly<{
   apiPath?: `/api/live-context?feed=${OfficialContextFeedId}`;
   managedAdapterPath?: string;
   mapUrl?: string;
+  minDisplayZoom?: number;
+  maxNativeZoom?: number;
+  legend?: string;
+  legendUrl?: string;
   endpointLabel: string;
   sourceUrl: string;
   serviceUrl: string;
@@ -58,6 +64,7 @@ const blmPlssImageUrl = (layer: 1 | 2 | 3, where: string) =>
 
 /** Fixed allowlist of public external context. These sources never enter KFM evidence, reports, exports, or admission state. */
 export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object.freeze([
+  ...KANSAS_REFERENCE_SOURCES,
   Object.freeze({
     id: "fema-disaster-declarations", title: "FEMA Kansas disaster declaration areas", shortTitle: "FEMA declarations",
     organization: "Federal Emergency Management Agency", domain: "Weather & hazards", kind: "OPERATIONAL_GEOJSON",
@@ -71,6 +78,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     fallback: "Unmatched, statewide, invalid, or over-cap records are withheld and disclosed. Missing declarations never mean no disaster or no assistance.",
   }),
   Object.freeze({
+    minDisplayZoom: 8, legendUrl: `${BLM_PLSS_SERVICE}/legend`,
     id: "blm-plss-townships", title: "BLM Kansas PLSS townships", shortTitle: "BLM survey townships",
     organization: "Bureau of Land Management", domain: "Land records & survey", kind: "OPERATIONAL_WMS",
     sourceId: "external-blm-plss-townships", layerIds: Object.freeze(["external-blm-plss-townships-raster"]), interactiveLayerIds: Object.freeze([]),
@@ -83,6 +91,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     fallback: "When BLM image tiles fail, no substitute boundaries or ownership claims are drawn.",
   }),
   Object.freeze({
+    minDisplayZoom: 11, legendUrl: `${BLM_PLSS_SERVICE}/legend`,
     id: "blm-plss-sections", title: "BLM Kansas PLSS sections", shortTitle: "BLM survey sections",
     organization: "Bureau of Land Management", domain: "Land records & survey", kind: "OPERATIONAL_WMS",
     sourceId: "external-blm-plss-sections", layerIds: Object.freeze(["external-blm-plss-sections-raster"]), interactiveLayerIds: Object.freeze([]),
@@ -95,6 +104,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     fallback: "At overview scale or on provider failure, sections are absent rather than estimated.",
   }),
   Object.freeze({
+    minDisplayZoom: 12, legendUrl: `${BLM_PLSS_SERVICE}/legend`,
     id: "blm-plss-intersected", title: "BLM Kansas PLSS intersected divisions", shortTitle: "BLM survey divisions",
     organization: "Bureau of Land Management", domain: "Land records & survey", kind: "OPERATIONAL_WMS",
     sourceId: "external-blm-plss-intersected", layerIds: Object.freeze(["external-blm-plss-intersected-raster"]), interactiveLayerIds: Object.freeze([]),
@@ -586,6 +596,19 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
   }),
 ]);
 
+const smokeFade = new WeakMap<MapLibreMap, number>();
+/** Drop a cancelled style's fade even when its layers no longer exist. */
+export function resetHmsSmokeFade(map: MapLibreMap) { smokeFade.delete(map); }
+export function setHmsSmokeFade(map: MapLibreMap, value: number, opacity: number) {
+  smokeFade.set(map, Math.max(0, Math.min(1, value)));
+  const source = OFFICIAL_CONTEXT_BY_ID["noaa-hms-smoke"];
+  for (const id of source.layerIds) if (map.getLayer(id)) {
+    const amount = Math.max(0, Math.min(1, opacity)) * value;
+    if (map.getLayer(id)?.type === "fill") requestFillOpacity(map, id, amount);
+    else setPaintIfChanged(map, id, "line-opacity", id.endsWith("-glow") ? amount * .3 : amount);
+  }
+  balanceMapFills(map);
+}
 export const OFFICIAL_CONTEXT_BY_ID = Object.freeze(Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, source])) as Record<OfficialContextId, OfficialContextSource>);
 export const OFFICIAL_CONTEXT_BY_SOURCE_ID = Object.freeze(Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.sourceId, source])) as Record<string, OfficialContextSource>);
 export const OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS = Object.freeze(OFFICIAL_CONTEXT_SOURCES.flatMap((source) => source.interactiveLayerIds));
@@ -606,10 +629,23 @@ export type OfficialContextTemporalSupport = Readonly<{
  * the operational-present UI frame; it is not asserted as every source's
  * observation, publication, or acquisition year. */
 export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextId, OfficialContextTemporalSupport>> = Object.freeze({
+  "kdot-bridges-state": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current provider inventory with feature-specific dates. Classification is not a live condition or a reconstruction at map time." }),
+  "kdot-bridges-local": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current provider inventory with feature-specific dates. Classification is not a live condition or a reconstruction at map time." }),
+  "kdot-bridges-historic": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current provider inventory with feature-specific dates. Classification is not a live condition or a reconstruction at map time." }),
+  "kdot-bridges-old": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current provider inventory with feature-specific dates. Classification is not a live condition or a reconstruction at map time." }),
+  "kdot-bridges-closed": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current provider inventory with feature-specific dates. Classification is not a live condition or a reconstruction at map time." }),
+  "kdot-roads-1918": Object.freeze({ axis: "fixed-historical-composite", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Digitized 1918 source map; no present closure status is inferred." }),
+  "kdot-roads": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current map reference; feature and panel dates vary. This is not a historical reconstruction or current incident observation." }),
+  "kdot-rail-active": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current map reference; feature and panel dates vary. This is not a historical reconstruction or current incident observation." }),
+  "kdot-rail-abandoned": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current map reference; feature and panel dates vary. This is not a historical reconstruction or current incident observation." }),
+  "fema-flood-zones": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current map reference; feature and panel dates vary. This is not a historical reconstruction or current incident observation." }),
+
   "fema-disaster-declarations": Object.freeze({ axis: "provider-observation-history", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Dated historical declaration records with 2020 county locator geometry. The current atlas frame does not turn their declaration dates into present hazard conditions." }),
   "blm-plss-townships": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current Kansas township survey image. Feature-level survey dates are not a selectable historical series or a KFM release." }),
   "blm-plss-sections": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current Kansas section survey image, shown at local scale. No parcel or historical title time axis is connected." }),
-  "blm-plss-intersected": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current intersected survey divisions at close scale. No feature-level review or title inference is provided." }),
+  "blm-plss-intersected": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Provider-current intersected survey divisions at close scale. A bounded point lookup can show identifiers; no title inference or historical survey series is provided." }),
+  "blm-mlrs-leases-authorized": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current MLRS authorized-case image for Kansas direct PLSS matches only. Neither authorization nor source retrieval is a timestamp for operations, production, or a historical lease reconstruction." }),
+  "blm-mlrs-leases-closed": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current MLRS closed-case image for Kansas direct PLSS matches only. Closed is a provider disposition, not a dated map of when a lease ended." }),
   "census-counties": Object.freeze({
     axis: "joined-source-snapshot",
     supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]),
@@ -867,20 +903,20 @@ export const applyOfficialContextState = (
   ensureLayer(map, { id: declarations.layerIds[0], type: "fill", source: declarations.sourceId, paint: { "fill-color": declarations.color, "fill-opacity": 0.28 } });
   ensureLayer(map, { id: declarations.layerIds[1], type: "line", source: declarations.sourceId, paint: { "line-color": declarations.color, "line-width": 1.7, "line-opacity": 0.72 } });
 
-  for (const raster of [OFFICIAL_CONTEXT_BY_ID["usgs-3dhp-hydrography"], OFFICIAL_CONTEXT_BY_ID["usgs-wbd-watersheds"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-analysis"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"], OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"], OFFICIAL_CONTEXT_BY_ID["nasa-lightning-climatology"], OFFICIAL_CONTEXT_BY_ID["blm-plss-townships"], OFFICIAL_CONTEXT_BY_ID["blm-plss-sections"], OFFICIAL_CONTEXT_BY_ID["blm-plss-intersected"]]) {
+  for (const raster of [...KANSAS_REFERENCE_SOURCES, OFFICIAL_CONTEXT_BY_ID["usgs-3dhp-hydrography"], OFFICIAL_CONTEXT_BY_ID["usgs-wbd-watersheds"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-analysis"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"], OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"], OFFICIAL_CONTEXT_BY_ID["nasa-lightning-climatology"], OFFICIAL_CONTEXT_BY_ID["blm-plss-townships"], OFFICIAL_CONTEXT_BY_ID["blm-plss-sections"], OFFICIAL_CONTEXT_BY_ID["blm-plss-intersected"]]) {
     // Disabled services should not download tiles during startup or style swaps.
     if (!visibility[raster.id] && !map.getSource(raster.sourceId)) continue;
     const terrainDisplay = raster.id === "usgs-3dep-hillshade" || raster.id === "usgs-3dep-slope";
     if (!map.getSource(raster.sourceId)) map.addSource(raster.sourceId, {
       type: "raster", tiles: [raster.mapUrl!], tileSize: 256, attribution: raster.attribution,
-      ...(raster.id === "nasa-lightning-climatology" ? {} : { bounds: [-104.8, 34.8, -92, 42.2] as [number, number, number, number] }),
+      ...(raster.id === "nasa-lightning-climatology" ? {} : { bounds: [...(KANSAS_REFERENCE_SOURCES.some(source => source.id === raster.id) || raster.id.startsWith("blm-") ? KANSAS_REFERENCE_BOUNDS : [-104.8, 34.8, -92, 42.2])] as [number, number, number, number] }),
       // BLM source-layer minScale: township 1:4m, section 1:500k, intersected 1:200k.
-      minzoom: raster.id === "nasa-lightning-climatology" ? 0 : raster.id === "blm-plss-townships" ? 8 : raster.id === "blm-plss-sections" ? 11 : raster.id === "blm-plss-intersected" ? 12 : terrainDisplay ? TERRAIN_DISPLAY_MIN_ZOOM : 3,
-      maxzoom: raster.id === "nasa-lightning-climatology" ? 6 : terrainDisplay ? TERRAIN_DISPLAY_MAX_ZOOM : 16,
+      minzoom: raster.minDisplayZoom ?? (raster.id === "nasa-lightning-climatology" ? 0 : terrainDisplay ? TERRAIN_DISPLAY_MIN_ZOOM : 3),
+      maxzoom: raster.maxNativeZoom ?? (raster.id === "nasa-lightning-climatology" ? 6 : terrainDisplay ? TERRAIN_DISPLAY_MAX_ZOOM : 16),
     });
     ensureLayer(map, {
       id: raster.layerIds[0], type: "raster", source: raster.sourceId,
-      ...(terrainDisplay ? { minzoom: TERRAIN_DISPLAY_MIN_ZOOM } : {}),
+      ...(raster.minDisplayZoom !== undefined ? { minzoom: raster.minDisplayZoom } : terrainDisplay ? { minzoom: TERRAIN_DISPLAY_MIN_ZOOM } : {}),
       paint: { "raster-opacity": raster.defaultOpacity, "raster-fade-duration": terrainDisplay ? 0 : 120 },
     }, firstRegistryLayer(map));
   }
@@ -893,7 +929,7 @@ export const applyOfficialContextState = (
       // prevents stretched imagery and false-looking color fields at global scale.
       const globeSafeVisibility = (source.kind === "OPERATIONAL_WMS" || source.kind === "HISTORICAL_RASTER") && globeView ? false : visibility[source.id];
       setVisibleIfChanged(map, layerId, globeSafeVisibility);
-      const safeOpacity = Math.max(0, Math.min(1, opacity[source.id] ?? source.defaultOpacity));
+      const safeOpacity = Math.max(0, Math.min(1, opacity[source.id] ?? source.defaultOpacity)) * (source.id === "noaa-hms-smoke" ? smokeFade.get(map) ?? 1 : 1);
       const layer = map.getLayer(layerId);
       if (layer?.type === "circle") setPaintIfChanged(map, layerId, "circle-opacity", layerId.endsWith("-glow") || layerId.endsWith("-halo") ? safeOpacity * 0.3 : safeOpacity);
       if (layer?.type === "circle") setPaintIfChanged(map, layerId, "circle-stroke-opacity", safeOpacity);

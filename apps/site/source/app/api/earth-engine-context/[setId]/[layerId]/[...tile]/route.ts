@@ -1,8 +1,8 @@
-import { earthEngineFailure, earthEngineOwner, earthEnginePrivateHeaders, earthEngineTile } from "../../../../../earth-engine-context-server";
+import { earthEngineFailure, earthEngineReader, earthEnginePrivateHeaders, earthEngineTile } from "../../../../../earth-engine-context-server";
 
-export async function GET(_request: Request, context: { params: Promise<{ setId: string; layerId: string; tile: string[] }> }) {
+export async function GET(request: Request, context: { params: Promise<{ setId: string; layerId: string; tile: string[] }> }) {
   try {
-    await earthEngineOwner();
+    await earthEngineReader(request);
     const { setId, layerId, tile } = await context.params;
     if (!Array.isArray(tile) || tile.length !== 3) return new Response(null, { status: 404, headers: earthEnginePrivateHeaders });
     const image = await earthEngineTile(setId, layerId, tile[0], tile[1], tile[2]);

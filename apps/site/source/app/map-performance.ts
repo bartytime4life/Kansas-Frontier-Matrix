@@ -95,13 +95,32 @@ export function sampleMapRuntimeHealth(
 // Source identity changes on style replacement. Weak keys cannot retain an old
 // map or a discarded payload. Feature-reference comparison also skips identical
 // filtered smoke/station frames without dropping changed observation values.
+const uploads = new WeakMap<GeoJSONSource, Promise<void>>();
+export async function waitForGeoJSON(source: GeoJSONSource, signal?: AbortSignal) {
+  signal?.throwIfAborted();
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  let abort: (() => void) | undefined;
+  try {
+    await Promise.race([uploads.get(source) ?? Promise.resolve(), new Promise<never>((_, reject) => {
+      abort = () => reject(new DOMException("Cancelled", "AbortError"));
+      signal?.addEventListener("abort", abort, { once: true });
+      timer = setTimeout(() => reject(new Error("Map geometry upload timed out")), 10_000);
+    })]);
+  } finally { if (timer) clearTimeout(timer); if (abort) signal?.removeEventListener("abort", abort); }
+}
 const uploaded = new WeakMap<GeoJSONSource, FeatureCollection>();
+export function geoJSONHasData(source: GeoJSONSource, data: FeatureCollection): boolean {
+  const prior = uploaded.get(source);
+  return prior === data || Boolean(prior && prior.features.length === data.features.length && prior.features.every((feature, index) => feature === data.features[index]));
+}
 export function rememberGeoJSON(source: GeoJSONSource, data: FeatureCollection) { uploaded.set(source, data); }
 export function updateGeoJSON(source: GeoJSONSource | undefined, data: FeatureCollection): boolean {
   if (!source) return false;
-  const prior = uploaded.get(source);
-  if (prior === data || prior && prior.features.length === data.features.length && prior.features.every((feature, index) => feature === data.features[index])) return false;
-  source.setData(data); uploaded.set(source, data); return true;
+  if (geoJSONHasData(source, data)) return false;
+  const pending = Promise.resolve(source.setData(data));
+  uploads.set(source, pending);
+  void pending.catch(() => { if (uploaded.get(source) === data) uploaded.delete(source); });
+  uploaded.set(source, data); return true;
 }
 export function setVisibleIfChanged(map: GLMap, id: string, visible: boolean) {
   const next = visible ? "visible" : "none";

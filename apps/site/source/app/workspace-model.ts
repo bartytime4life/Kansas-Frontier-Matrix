@@ -1,5 +1,6 @@
 import type { EvidenceState, LayerRecord } from "./explorer-data";
 import type { TemporalStepRule, TemporalSweepMode } from "./temporal-sweep";
+import type { FireReportContext } from "./fire-report-analysis";
 
 export type { LayerRecord };
 
@@ -136,6 +137,7 @@ export type ReportDraft = Readonly<{
   title: string;
   researchQuestion: string;
   includedEvidenceIds: readonly string[];
+  fireContext?: FireReportContext;
   sections: Readonly<{
     summary: string;
     observations: string;
@@ -194,7 +196,7 @@ export const policyDecisionFromEvidenceState = (state?: EvidenceState): PolicyDe
   return { outcome: "ALLOW", reason: "The bounded demonstration record may be cited within its declared scope.", publicEffect: "DRAFT_ONLY" };
 };
 
-export const createReportDraft = (snapshot: MapSnapshot, evidence: readonly EvidenceRecord[]): ReportDraft => {
+export const createReportDraft = (snapshot: MapSnapshot, evidence: readonly EvidenceRecord[], fireContext?: FireReportContext): ReportDraft => {
   const included = evidence.filter((record) => snapshot.evidenceRefs.includes(record.citation) && record.includedByDefault
     && (snapshot.inspectableFeatureIds ? snapshot.inspectableFeatureIds.includes(record.featureId) || snapshot.selection?.featureId === record.featureId : snapshot.visibleLayers.some((layer) => layer.id === record.layerId)));
   return {
@@ -202,16 +204,17 @@ export const createReportDraft = (snapshot: MapSnapshot, evidence: readonly Evid
     status: "DRAFT",
     updatedAt: snapshot.createdAt,
     snapshot,
-    title: snapshot.selection ? `${snapshot.selection.title} evidence note` : "Kansas map investigation",
-    researchQuestion: "What does the current map state support, and what remains uncertain?",
+    title: fireContext ? `${fireContext.title} fire report draft` : snapshot.selection ? `${snapshot.selection.title} evidence note` : "Kansas map investigation",
+    researchQuestion: fireContext ? "What do the selected fire source and its dated context actually report?" : "What does the current map state support, and what remains uncertain?",
     includedEvidenceIds: included.map((record) => record.id),
+    ...(fireContext ? { fireContext } : {}),
     sections: {
-      summary: "This draft records the current map selection and its evidence posture.",
-      observations: "Visible geometry and proximity are map observations only; they are not proof of a relationship.",
+      summary: fireContext ? `Draft from ${fireContext.kind === "nifc-fire-reports" ? "a NIFC working incident record" : "a NASA thermal detection"}. Check the source record before making any claim.` : "This draft records the current map selection and its evidence posture.",
+      observations: fireContext ? `Provider event/acquisition time: ${fireContext.observedAt ?? "not supplied"}. KFM retrieval time: ${fireContext.retrievedAt ?? "not supplied"}. Feed: ${fireContext.feedState}. Nearby records are comparison context, not an incident match.` : "Visible geometry and proximity are map observations only; they are not proof of a relationship.",
       findings: "No consequential finding has been asserted. Add a scoped finding only when the included evidence supports it.",
-      limitations: "Basemap, terrain, synthetic, generalized, stale, held, and denied material remain visibly bounded by their source and policy states.",
+      limitations: fireContext ? "NIFC locations are approximate working records; NASA thermal points may be non-wildfire heat sources. News links are research leads, not matched articles. No perimeter, current activity, safety status, or independent corroboration is established." : "Basemap, terrain, synthetic, generalized, stale, held, and denied material remain visibly bounded by their source and policy states.",
       openQuestions: "Which source, temporal, spatial, rights, or review gate should be closed next?",
-      sources: included.length
+      sources: fireContext ? `${fireContext.sourceUrl}\nhttps://inciweb.wildfire.gov/\nhttps://www.nifc.gov/fire-information\nNo news article has been matched to this selected record.` : included.length
         ? included.map((record) => `${record.citation} — ${record.sourceOrganization}`).join("\n")
         : "No included evidence references yet.",
     },

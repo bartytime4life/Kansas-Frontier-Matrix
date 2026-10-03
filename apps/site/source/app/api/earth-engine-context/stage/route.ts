@@ -6,7 +6,7 @@ function checkedKey(value: string | null): { key: string; maximum: number; conte
   const tail = value.slice(`${EARTH_ENGINE_CONTEXT_PREFIX}/sets/`.length);
   const parts = tail.split("/");
   const setId = parts[0];
-  if (!/^ks-(?:2024|terrain)-[a-z0-9-]{6,64}$/.test(setId)) return null;
+  if (!/^ks-(?:19[5-9]\d|20[0-2]\d|terrain)-[a-z0-9-]{6,64}$/.test(setId)) return null;
   if (parts.length === 2 && parts[1] === "manifest.json") return { key: value, maximum: 96_000, contentType: "application/json" };
   if (!EARTH_ENGINE_CONTEXT_LAYERS.some((layer) => layer.id === parts[2])) return null;
   if (parts.length === 4 && parts[1] === "indexes" && /^(0|[1-9]\d?)\.json$/.test(parts[3]) && Number(parts[3].slice(0, -5)) <= 18) return { key: value, maximum: 4_000_000, contentType: "application/json" };

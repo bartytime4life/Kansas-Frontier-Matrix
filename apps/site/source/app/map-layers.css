@@ -226,3 +226,13 @@
 @media (max-width: 760px) {
   .layer-panel[data-panel-mode="layers"], .layer-panel[data-panel-mode="live"] { top: auto; right: 0; bottom: var(--status); left: 0; width: 100%; height: min(84dvh, 760px); max-height: none; border-radius: 17px 17px 0 0; }
 }
+
+/* Focused topics stay visible above the scroll area without replacing the HUD. */
+.layer-panel-controls .official-workspace-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; padding: 10px 0 0; }
+.layer-panel-controls .official-workspace-tabs button { min-height: 36px; border-radius: 6px; font-size: 12px; }
+.official-workspace-tabs button:focus-visible, .reference-layer-guidance button:focus-visible { outline: 2px solid #8cddd7; outline-offset: 2px; }
+.reference-layer-guidance { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 0 14px 10px; color: #c7d8cf; }
+.reference-layer-guidance small { flex: 1 1 170px; font-size: 11px; line-height: 1.5; }
+.reference-layer-guidance button, .layer-search-empty button { min-height: 36px; border: 1px solid #547873; border-radius: 6px; background: #183a3e; color: #a8e3db; padding: 5px 10px; cursor: pointer; }
+.reference-layer-legend { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; line-height: 1.5; color: #d2e1d8; }
+.reference-layer-legend i { flex: none; display: inline-block; width: 18px; height: 3px; margin-top: 7px; }

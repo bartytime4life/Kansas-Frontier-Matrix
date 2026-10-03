@@ -1,15 +1,30 @@
 // Reviewed visual context only. This schema is deliberately separate from KFM evidence and source admission.
 export const EARTH_ENGINE_CONTEXT_PREFIX = "earth-engine-context/v1";
 export const EARTH_ENGINE_CONTEXT_ACTIVE_KEY = `${EARTH_ENGINE_CONTEXT_PREFIX}/active.json`;
+export const earthEngineYearPointerKey = (year: number) => `${EARTH_ENGINE_CONTEXT_PREFIX}/active-years/${year}.json`;
 export const EARTH_ENGINE_CONTEXT_LAYERS = [
-  { id: "ee-cdl", title: "2024 crop classes", source: "USDA/NASS/CDL", period: "2024 harvest year", attribution: "USDA NASS Cropland Data Layer", legend: "Crop classes; consult the USDA class table" },
-  { id: "ee-chirps", title: "2024 rainfall", source: "UCSB-CHG/CHIRPS/DAILY", period: "2024 calendar year", attribution: "UCSB Climate Hazards Center · CHIRPS", legend: "Annual precipitation · mm" },
-  { id: "ee-terraclimate", title: "2024 drought index", source: "IDAHO_EPSCOR/TERRACLIMATE", period: "2024 calendar year", attribution: "University of Idaho / UC Merced · TerraClimate", legend: "Annual mean PDSI · unitless" },
-  { id: "ee-sentinel2", title: "2024 satellite composite", source: "COPERNICUS/S2_SR_HARMONIZED", period: "2024 calendar year", attribution: "Contains modified Copernicus Sentinel data 2024 · European Union / ESA", legend: "Natural color · quality screened annual median" },
+  { id: "ee-cdl", title: "crop classes", source: "USDA/NASS/CDL", period: "2024 harvest year", attribution: "USDA NASS Cropland Data Layer", legend: "Crop classes; consult the USDA class table" },
+  { id: "ee-chirps", title: "rainfall", source: "UCSB-CHG/CHIRPS/DAILY", period: "2024 calendar year", attribution: "UCSB Climate Hazards Center · CHIRPS", legend: "Annual precipitation · mm" },
+  { id: "ee-terraclimate", title: "drought index", source: "IDAHO_EPSCOR/TERRACLIMATE", period: "2024 calendar year", attribution: "University of Idaho / UC Merced · TerraClimate", legend: "Annual mean PDSI · unitless" },
+  { id: "ee-sentinel2", title: "satellite composite", source: "COPERNICUS/S2_SR_HARMONIZED", period: "2024 calendar year", attribution: "Contains modified Copernicus Sentinel data 2024 · European Union / ESA", legend: "Natural color · quality screened annual median" },
   { id: "ee-3dep", title: "Elevation mosaic", source: "USGS/3DEP/10m_collection", period: "Mixed acquisition dates · source mosaic", attribution: "USGS 3D Elevation Program", legend: "Elevation · meters" },
 ] as const;
 
 export type EarthEngineContextLayerId = typeof EARTH_ENGINE_CONTEXT_LAYERS[number]["id"];
+// These are source/recipe bounds, not proof that a reviewed map tile exists.
+export const EARTH_ENGINE_SOURCE_YEARS: Readonly<Partial<Record<EarthEngineContextLayerId, readonly [number, number]>>> = {
+  "ee-cdl": [2008, 2024], "ee-chirps": [1981, 2025], "ee-terraclimate": [1958, 2024], "ee-sentinel2": [2019, 2025],
+};
+export function earthEngineSetYear(value: { setId: string } | null): number | null {
+  const match = /^ks-(19[5-9]\d|20[0-2]\d)-[a-z0-9-]{6,64}$/.exec(value?.setId ?? "");
+  return match ? Number(match[1]) : null;
+}
+export function earthEngineLayerPeriod(id: EarthEngineContextLayerId, year: number): string {
+  return id === "ee-cdl" ? `${year} harvest year` : id === "ee-3dep" ? "Mixed acquisition dates · source mosaic" : `${year} calendar year`;
+}
+export function earthEngineLayerAttribution(id: EarthEngineContextLayerId, year: number): string {
+  return id === "ee-sentinel2" ? `Contains modified Copernicus Sentinel data ${year} · European Union / ESA` : EARTH_ENGINE_CONTEXT_LAYERS.find((entry) => entry.id === id)!.attribution;
+}
 export type EarthEngineTileIndex = { sha256: string; count: number; minX: number; maxX: number; minY: number; maxY: number };
 export type EarthEngineContextLayer = {
   id: EarthEngineContextLayerId;
@@ -37,7 +52,7 @@ export type EarthEngineContextManifest = {
 export type EarthEngineContextPointer = { schema: "kfm-earth-engine-context-pointer/v1"; setId: string; manifestSha256: string };
 
 const hash = (value: unknown): value is string => typeof value === "string" && /^[0-9a-f]{64}$/.test(value);
-const setId = (value: unknown): value is string => typeof value === "string" && /^ks-(?:2024|terrain)-[a-z0-9-]{6,64}$/.test(value);
+const setId = (value: unknown): value is string => typeof value === "string" && /^ks-(?:19[5-9]\d|20[0-2]\d|terrain)-[a-z0-9-]{6,64}$/.test(value);
 const plain = (value: unknown): value is Record<string, unknown> => Boolean(value && typeof value === "object" && !Array.isArray(value));
 const text = (value: unknown, max = 1000): value is string => typeof value === "string" && value.length > 0 && value.length <= max;
 const coord = (value: unknown) => Number.isInteger(value) && Number(value) >= 0 && Number(value) <= 1_073_741_823;
@@ -54,11 +69,16 @@ export function parseEarthEngineManifest(value: unknown): EarthEngineContextMani
     || value.evidence !== "NOT_CLAIM_EVIDENCE" || !text(value.approvedAt, 40)
     || !Array.isArray(value.layers) || value.layers.length < 1 || value.layers.length > 5) return null;
   const seen = new Set<string>();
+  const year = earthEngineSetYear(value as { setId: string });
   for (const layer of value.layers) {
     const descriptor = EARTH_ENGINE_CONTEXT_LAYERS.find((d) => d.id === layer?.id);
     const resolution = layer?.id === "ee-chirps" ? 5566 : layer?.id === "ee-terraclimate" ? 4638 : 30;
-    if (!plain(layer) || !descriptor || descriptor.source !== layer.source || descriptor.period !== layer.period
-      || descriptor.attribution !== layer.attribution || layer.resolutionMeters !== resolution
+    const bounds = descriptor ? EARTH_ENGINE_SOURCE_YEARS[descriptor.id] : undefined;
+    if (!plain(layer) || !descriptor || descriptor.source !== layer.source
+      || (descriptor.id === "ee-3dep" && year !== 2024 && !String(value.setId).startsWith("ks-terrain-"))
+      || (descriptor.id !== "ee-3dep" && (year === null || !bounds || year < bounds[0] || year > bounds[1]))
+      || earthEngineLayerPeriod(descriptor.id, year ?? 2024) !== layer.period
+      || earthEngineLayerAttribution(descriptor.id, year ?? 2024) !== layer.attribution || layer.resolutionMeters !== resolution
       || seen.has(String(layer.id)) || !["approved", "held"].includes(String(layer.status))
       || !text(layer.period, 100) || !Number.isFinite(layer.resolutionMeters) || Number(layer.resolutionMeters) <= 0
       || !text(layer.attribution) || !text(layer.limits, 3000) || !text(layer.legend)
@@ -95,4 +115,4 @@ export function parseEarthEngineTileIndex(value: unknown, expected: EarthEngineT
 export const earthEngineManifestKey = (id: string) => `${EARTH_ENGINE_CONTEXT_PREFIX}/sets/${id}/manifest.json`;
 export const earthEngineIndexKey = (id: string, layer: string, z: number) => `${EARTH_ENGINE_CONTEXT_PREFIX}/sets/${id}/indexes/${layer}/${z}.json`;
 export const earthEngineTileKey = (id: string, layer: string, z: number, x: number, y: number) => `${EARTH_ENGINE_CONTEXT_PREFIX}/sets/${id}/tiles/${layer}/${z}/${x}/${y}.png`;
-export const earthEngineTileVisibleAtYear = (layer: EarthEngineContextLayerId, year: number) => layer === "ee-3dep" || year === 2024;
+export const earthEngineTileVisibleAtYear = (layer: EarthEngineContextLayerId, year: number, installedYear = 2024) => layer === "ee-3dep" || year === installedYear;

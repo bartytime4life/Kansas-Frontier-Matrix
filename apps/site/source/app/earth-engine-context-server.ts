@@ -1,10 +1,14 @@
+import { localImageryReadAllowed } from "./earth-engine-local-read";
 import { env } from "cloudflare:workers";
 import { getChatGPTUser } from "./chatgpt-auth";
 import {
   EARTH_ENGINE_CONTEXT_ACTIVE_KEY,
+  EARTH_ENGINE_CONTEXT_PREFIX,
   earthEngineIndexKey,
   earthEngineManifestKey,
   earthEngineTileKey,
+  earthEngineYearPointerKey,
+  earthEngineSetYear,
   parseEarthEngineManifest,
   parseEarthEnginePointer,
   parseEarthEngineTileIndex,
@@ -27,6 +31,13 @@ export async function earthEngineOwner() {
   const emails = String(env.KFM_EARTH_ENGINE_OWNER_EMAILS ?? "").split(",").map((email) => email.trim().toLowerCase()).filter(Boolean);
   if (!ids.length && !emails.length) throw new EarthEngineContextError("Earth Engine context is not configured.", 503);
   if (!(user.id && ids.includes(user.id)) && !emails.includes(user.email.toLowerCase())) throw new EarthEngineContextError("Earth Engine context is unavailable.", 403);
+}
+
+/** Local reads still use the activated pointer and every existing digest check.
+ * Staging/activation and installer pages always call earthEngineOwner directly. */
+export async function earthEngineReader(request: Request) {
+  if (localImageryReadAllowed(request, env.KFM_LOCAL_REVIEWED_IMAGERY_ORIGIN)) return;
+  await earthEngineOwner();
 }
 
 export function earthEngineBucket(): EarthEngineBucket {
@@ -61,6 +72,33 @@ export async function activeEarthEngineManifest(): Promise<EarthEngineContextMan
   return earthEngineManifestForPointer(pointer);
 }
 
+export async function activeEarthEngineManifestForYear(year: number): Promise<EarthEngineContextManifest | null> {
+  if (!Number.isInteger(year) || year < 1958 || year > 2025) return null;
+  const pointerBytes = await bytes(year === 2024 ? EARTH_ENGINE_CONTEXT_ACTIVE_KEY : earthEngineYearPointerKey(year), 2048);
+  if (!pointerBytes) return null;
+  const pointer = parseEarthEnginePointer(json(pointerBytes));
+  if (!pointer || earthEngineSetYear(pointer) !== year) throw new EarthEngineContextError("Earth Engine year pointer failed validation.", 503);
+  return earthEngineManifestForPointer(pointer);
+}
+
+export async function activeEarthEngineCatalog(): Promise<EarthEngineContextManifest[]> {
+  const manifests: EarthEngineContextManifest[] = [];
+  const baseline = await activeEarthEngineManifest();
+  if (baseline) manifests.push(baseline);
+  const prefix = `${EARTH_ENGINE_CONTEXT_PREFIX}/active-years/`;
+  const bucket = earthEngineBucket();
+  const page = await bucket.list({ prefix, limit: 100 });
+  if (page.truncated) throw new EarthEngineContextError("Earth Engine year catalog exceeds its limit.", 503);
+  for (const object of page.objects) {
+    const match = /^earth-engine-context\/v1\/active-years\/(19[5-9]\d|20[0-2]\d)\.json$/.exec(object.key);
+    if (!match || Number(match[1]) === 2024) throw new EarthEngineContextError("Earth Engine year catalog failed validation.", 503);
+    const manifest = await activeEarthEngineManifestForYear(Number(match[1]));
+    if (!manifest) throw new EarthEngineContextError("Earth Engine year catalog failed validation.", 503);
+    manifests.push(manifest);
+  }
+  return manifests;
+}
+
 export async function earthEngineManifestForPointer(pointer: { setId: string; manifestSha256: string }): Promise<EarthEngineContextManifest> {
   const manifestBytes = await bytes(earthEngineManifestKey(pointer.setId), 96_000);
   if (!manifestBytes || await earthEngineDigest(manifestBytes) !== pointer.manifestSha256) throw new EarthEngineContextError("Earth Engine context manifest failed validation.", 503);
@@ -70,7 +108,8 @@ export async function earthEngineManifestForPointer(pointer: { setId: string; ma
 }
 
 export async function earthEngineTile(setId: string, layerId: string, zText: string, xText: string, yFile: string): Promise<ArrayBuffer | null> {
-  const manifest = await activeEarthEngineManifest();
+  const setYear = earthEngineSetYear({ setId });
+  const manifest = setYear === null ? await activeEarthEngineManifest() : await activeEarthEngineManifestForYear(setYear);
   if (!manifest || manifest.setId !== setId) return null;
   if (!/^(0|[1-9]\d*)$/.test(zText) || !/^(0|[1-9]\d*)$/.test(xText) || !/^(0|[1-9]\d*)\.png$/.test(yFile)) return null;
   const z = Number(zText), x = Number(xText), y = Number(yFile.slice(0, -4));

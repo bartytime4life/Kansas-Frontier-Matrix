@@ -137,6 +137,17 @@ export const SITE_ACTIONS = Object.freeze([
     boundary: "Navigation is read-only and does not imply provider approval, source admission, or an official warning handoff.",
   },
   {
+    id: "inspect-plss-identifiers",
+    label: "Inspect BLM PLSS identifiers at the map center",
+    category: "connections",
+    mode: "READ_ONLY_CONNECTOR",
+    handlerPath: "app/blm-plss-inspector.tsx:inspect",
+    connectorIds: ["blm-plss-townships", "blm-plss-sections", "blm-plss-intersected"],
+    inputs: ["selected PLSS layer", "Kansas map center"],
+    outcomes: ["bounded BLM identifiers and source dates", "explicit empty, partial, or unavailable state"],
+    boundary: "Provider survey attributes are external context, not parcel ownership, title, access, or a KFM land release.",
+  },
+  {
     id: "refresh-streamflow",
     label: "Refresh River Pulse observations",
     category: "hydrology",

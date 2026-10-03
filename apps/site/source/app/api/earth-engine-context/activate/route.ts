@@ -1,4 +1,4 @@
-import { EARTH_ENGINE_CONTEXT_ACTIVE_KEY, EARTH_ENGINE_CONTEXT_PREFIX, earthEngineTileKey, parseEarthEnginePointer } from "../../../earth-engine-context";
+import { EARTH_ENGINE_CONTEXT_ACTIVE_KEY, EARTH_ENGINE_CONTEXT_PREFIX, earthEngineSetYear, earthEngineTileKey, earthEngineYearPointerKey, parseEarthEnginePointer } from "../../../earth-engine-context";
 import { EarthEngineContextError, earthEngineBucket, earthEngineDigest, earthEngineFailure, earthEngineManifestForPointer, earthEngineOwner, earthEnginePrivateHeaders, earthEngineReadIndex } from "../../../earth-engine-context-server";
 
 export async function POST(request: Request) {
@@ -39,16 +39,19 @@ export async function POST(request: Request) {
       }
     }
     if (!tileCount) throw new EarthEngineContextError("Display set has no approved tiles.", 409);
-    // The active pointer is the only mutable object in this separate R2 prefix.
-    const prior = await bucket.get(EARTH_ENGINE_CONTEXT_ACTIVE_KEY);
+    const year = earthEngineSetYear(pointer);
+    if (year === null) throw new EarthEngineContextError("Only year-specific reviewed sets can be activated.", 400);
+    const activeKey = year === 2024 ? EARTH_ENGINE_CONTEXT_ACTIVE_KEY : earthEngineYearPointerKey(year);
+    // Each year has one mutable reviewed pointer; old bytes are retained for rollback.
+    const prior = await bucket.get(activeKey);
     if (prior && prior.size <= 2048) {
       const previous = await prior.arrayBuffer();
       const archival = `${EARTH_ENGINE_CONTEXT_PREFIX}/history/${Date.now()}-${await earthEngineDigest(previous)}.json`;
       await bucket.put(archival, previous, { httpMetadata: { contentType: "application/json" } });
     }
-    await bucket.put(EARTH_ENGINE_CONTEXT_ACTIVE_KEY, raw, { httpMetadata: { contentType: "application/json" } });
-    const active = await bucket.get(EARTH_ENGINE_CONTEXT_ACTIVE_KEY);
+    await bucket.put(activeKey, raw, { httpMetadata: { contentType: "application/json" } });
+    const active = await bucket.get(activeKey);
     if (!active || await earthEngineDigest(await active.arrayBuffer()) !== await earthEngineDigest(raw)) throw new EarthEngineContextError("Active display pointer readback failed.", 503);
-    return Response.json({ active: true, setId: pointer.setId, layers: manifest.layers.filter((item) => item.status === "approved").map((item) => item.id), tileCount }, { headers: earthEnginePrivateHeaders });
+    return Response.json({ active: true, year, setId: pointer.setId, layers: manifest.layers.filter((item) => item.status === "approved").map((item) => item.id), tileCount }, { headers: earthEnginePrivateHeaders });
   } catch (error) { return earthEngineFailure(error); }
 }

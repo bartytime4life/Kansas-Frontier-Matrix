@@ -192,3 +192,15 @@ test("saved Worker serves the event mixer and navigable cited research without b
   const sources=await worker.fetch(new Request("http://localhost/observatory/sources"),env,ctx);assert.equal(sources.status,200);const report=await sources.text();
   assert.match(report,/Sources and references/);assert.match(report,/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/);assert.match(report,/HRRR flow is therefore researched but not activated/);
 });
+
+
+test("legacy HMS equal Start and End remains timestamp-only without inventing duration", () => {
+  const data = atlas.parseSmokeKml(kml("2005217 0000", "2005217 0000", "NA"), "synthetic-regression.kml");
+  const props = data.features[0].properties;
+  assert.equal(props.timeSupport, "timestamp-only");
+  assert.equal(props.startMs, props.endMs);
+  assert.equal(atlas.smokeAt(data, "2005-08-05T00:00:00.000Z").features.length, 1);
+  assert.equal(atlas.smokeAt(data, "2005-08-05T00:00:01.000Z").features.length, 0);
+  assert.equal(atlas.smokeOverlaps(props, Date.parse("2005-08-05T00:00:00Z"), Date.parse("2005-08-06T00:00:00Z")), true);
+  assert.equal(atlas.smokeOverlaps(props, Date.parse("2005-08-04T00:00:00Z"), Date.parse("2005-08-05T00:00:00Z")), false);
+});

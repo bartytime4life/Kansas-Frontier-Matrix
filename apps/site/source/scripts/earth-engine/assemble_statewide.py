@@ -30,10 +30,12 @@ def overlaps(left: tuple[int, int, int, int], right: tuple[int, int, int, int]) 
     return left[0] < right[2] and right[0] < left[2] and left[1] < right[3] and right[1] < left[3]
 
 
-def assemble(root: Path, layer: str) -> None:
+def assemble(root: Path, layer: str, year: int = 2024) -> None:
     if layer not in ("ee-cdl", "ee-sentinel2", "ee-3dep"):
         raise ValueError("only the three 30 m products use Drive shards")
-    folder = root.resolve() / "exports" / layer
+    if not 1958 <= year <= 2025 or (layer == "ee-3dep" and year != 2024):
+        raise ValueError("unsupported export year; terrain remains a mixed-date 2024 baseline product")
+    folder = root.resolve() / "exports" / layer if year == 2024 else root.resolve() / "exports" / str(year) / layer
     shards = sorted((folder / "shards").glob("*.tif"))
     if not shards:
         raise ValueError("no Drive GeoTIFF shards found")
@@ -86,7 +88,7 @@ def assemble(root: Path, layer: str) -> None:
     except Exception:
         partial.unlink(missing_ok=True)
         raise
-    metadata = {"schema": "kfm-earth-engine-shard-assembly/v1", "layer": layer, "outputSha256": sha256(output),
+    metadata = {"schema": "kfm-earth-engine-shard-assembly/v1", "layer": layer, "year": year if layer != "ee-3dep" else None, "outputSha256": sha256(output),
                 "width": width, "height": height, "shards": [{"file": path.name, "sha256": sha256(path), "bounds": list(extent)} for path, extent in zip(shards, extents)]}
     dump(folder / "assembly.json", metadata)
     print(json.dumps({"layer": layer, "shardCount": len(shards), "width": width, "height": height,
@@ -97,5 +99,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data-root", required=True, type=Path)
     parser.add_argument("--layer", choices=("ee-cdl", "ee-sentinel2", "ee-3dep"), required=True)
+    parser.add_argument("--year", type=int, default=2024)
     args = parser.parse_args()
-    assemble(args.data_root, args.layer)
+    assemble(args.data_root, args.layer, args.year)

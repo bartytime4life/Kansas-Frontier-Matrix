@@ -1,4 +1,5 @@
 import { createServer } from "node:http";
+import { realpathSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { hasSafeQwenContextShape } from "../app/qwen-context-safety.mjs";
 
@@ -157,7 +158,13 @@ export function createLocalQwenBridge({ fetcher = fetch, ollamaUrl = OLLAMA_URL,
   });
 }
 
-if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
+export function isDirectEntryPoint(moduleUrl, entryPath = process.argv[1]) {
+  if (!entryPath) return false;
+  try { return realpathSync(fileURLToPath(moduleUrl)) === realpathSync(entryPath); }
+  catch { return false; }
+}
+
+if (isDirectEntryPoint(import.meta.url)) {
   createLocalQwenBridge().listen(LOCAL_BRIDGE_PORT, "127.0.0.1", () => {
     process.stdout.write("KFM local Qwen bridge listening on loopback\n");
   });
