@@ -10,7 +10,7 @@ The project owner reports written permission for a Kansas 3D digital-twin use. T
 
 ## What the Site can do now
 
-The [local map archive browser](LOCAL_MAP_ARCHIVE.md) restores source-sheet
+The [local map archive browser](local-map-archive.md) restores source-sheet
 discovery and byte verification for all six local collections (596 PDFs),
 including the 100-sheet historic county/township workflow from the earlier local
 checkout. Open it from **Map layers → Roads, rail & bridges → Local road & bridge

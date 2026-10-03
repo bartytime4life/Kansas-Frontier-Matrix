@@ -49,5 +49,5 @@ In Map layers, choose **Earth Engine imagery**. The five prepared-display slots 
 The fire-news links in the disaster workspace lead to a device-local Fire report builder. It records the selected NIFC or NASA source, provider event/acquisition time, KFM retrieval time, feed and comparison status, and official InciWeb/NIFC research links. It does not ingest or match news articles, promote provider context to EvidenceBundles, or publish a report. The editable draft and its export retain those boundaries.
 
 The optional loopback-only PC reader and validated restoration procedure are
-specified in [local imagery recovery](SMOKE_IMAGERY_BRIDGES.md). Hosted owner
+specified in [local imagery recovery](smoke-imagery-bridges.md). Hosted owner
 checks and all staging/activation writes keep the existing owner boundary.

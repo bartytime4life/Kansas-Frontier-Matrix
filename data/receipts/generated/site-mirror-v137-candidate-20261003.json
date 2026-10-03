@@ -22,8 +22,8 @@
       "state": "identical"
     },
     "README.md": {
-      "mirror_sha256": "bdee7bcf9c60a98b16f8f4cf3a30592ca677d74ee1390014ce396f832ce485ae",
-      "site_sha256": "bdee7bcf9c60a98b16f8f4cf3a30592ca677d74ee1390014ce396f832ce485ae",
+      "mirror_sha256": "f9249c54add1c1fde286bc483b06126c1b24f66b25e0a2c85e6ac08dc008a1c8",
+      "site_sha256": "f9249c54add1c1fde286bc483b06126c1b24f66b25e0a2c85e6ac08dc008a1c8",
       "state": "identical"
     },
     "app/3dep-dem-tiles.ts": {
@@ -1067,8 +1067,8 @@
       "state": "identical"
     },
     "docs/EARTH_ENGINE_CONTEXT.md": {
-      "mirror_sha256": "8872bb976906647c4bd0afe614eb190a26481cf2f408af0cba76a4722b65f7c7",
-      "site_sha256": "8872bb976906647c4bd0afe614eb190a26481cf2f408af0cba76a4722b65f7c7",
+      "mirror_sha256": "96e8b8aa06a06bb0960a94f12c2a7e2a38e6bd463b527f0528f80febd4ea63fe",
+      "site_sha256": "96e8b8aa06a06bb0960a94f12c2a7e2a38e6bd463b527f0528f80febd4ea63fe",
       "state": "identical"
     },
     "docs/EARTH_ENGINE_DISCOVERY.md": {
@@ -1077,33 +1077,13 @@
       "state": "identical"
     },
     "docs/HISTORIC_ROAD_MAP_STUDY.md": {
-      "mirror_sha256": "a5714b5d1add3ac7d4906ef6d40b4049f9a5786f06f907c306cc67e3964eebf1",
-      "site_sha256": "a5714b5d1add3ac7d4906ef6d40b4049f9a5786f06f907c306cc67e3964eebf1",
-      "state": "identical"
-    },
-    "docs/KANSAS_REFERENCE_LAYERS.md": {
-      "mirror_sha256": "2559c921142de98cb6e5bdb6c0377bd7b1c450133fb7273f3b20bd5cb6aeb928",
-      "site_sha256": "2559c921142de98cb6e5bdb6c0377bd7b1c450133fb7273f3b20bd5cb6aeb928",
+      "mirror_sha256": "7598dbef722ab72856356e86d0e1b1160e999d321a93f7f084ca261993e7ecbf",
+      "site_sha256": "7598dbef722ab72856356e86d0e1b1160e999d321a93f7f084ca261993e7ecbf",
       "state": "identical"
     },
     "docs/KFM_SOURCE_GAP_REGISTER.md": {
       "mirror_sha256": "52662fedb73e77e067a5b41be77733c8c28de3bfe52e9aa35c2a5965aed1db21",
       "site_sha256": "52662fedb73e77e067a5b41be77733c8c28de3bfe52e9aa35c2a5965aed1db21",
-      "state": "identical"
-    },
-    "docs/LIGHTNING_FLASH_LOOP.md": {
-      "mirror_sha256": "1832cdc66db7bb1d25799574b782cedb31942fd8fdc4f7b7278ff3b914ca54b1",
-      "site_sha256": "1832cdc66db7bb1d25799574b782cedb31942fd8fdc4f7b7278ff3b914ca54b1",
-      "state": "identical"
-    },
-    "docs/LOCAL_MAP_ARCHIVE.md": {
-      "mirror_sha256": "2915936e40824d6bfc40f9b652e61c204739e45ca9e5899c4848cae029d95271",
-      "site_sha256": "2915936e40824d6bfc40f9b652e61c204739e45ca9e5899c4848cae029d95271",
-      "state": "identical"
-    },
-    "docs/LOCAL_PC_CONSOLIDATION.md": {
-      "mirror_sha256": "0bf0fe2c0cf2438c614923f3d685113f5e1a51753e8ed8c4da6347b5b84d2918",
-      "site_sha256": "0bf0fe2c0cf2438c614923f3d685113f5e1a51753e8ed8c4da6347b5b84d2918",
       "state": "identical"
     },
     "docs/LOCAL_PC_SITE_FILES.md": {
@@ -1121,14 +1101,34 @@
       "site_sha256": "454dfc83453c7b755151cd0aa9bf5b0756ad8fc6fc805f8f3571c436dae10a83",
       "state": "identical"
     },
-    "docs/SMOKE_IMAGERY_BRIDGES.md": {
-      "mirror_sha256": "f19021c15d92045aca5e49cfed1b05e7fd5c7d8db469057dba9004c04f286ebf",
-      "site_sha256": "f19021c15d92045aca5e49cfed1b05e7fd5c7d8db469057dba9004c04f286ebf",
-      "state": "identical"
-    },
     "docs/governed-water.md": {
       "mirror_sha256": "75fdecc4c1e888698b38b3ec90c8321b74e9cf3fb58858e0317b20bad97ff988",
       "site_sha256": "75fdecc4c1e888698b38b3ec90c8321b74e9cf3fb58858e0317b20bad97ff988",
+      "state": "identical"
+    },
+    "docs/kansas-reference-layers.md": {
+      "mirror_sha256": "2559c921142de98cb6e5bdb6c0377bd7b1c450133fb7273f3b20bd5cb6aeb928",
+      "site_sha256": "2559c921142de98cb6e5bdb6c0377bd7b1c450133fb7273f3b20bd5cb6aeb928",
+      "state": "identical"
+    },
+    "docs/lightning-flash-loop.md": {
+      "mirror_sha256": "1832cdc66db7bb1d25799574b782cedb31942fd8fdc4f7b7278ff3b914ca54b1",
+      "site_sha256": "1832cdc66db7bb1d25799574b782cedb31942fd8fdc4f7b7278ff3b914ca54b1",
+      "state": "identical"
+    },
+    "docs/local-map-archive.md": {
+      "mirror_sha256": "2915936e40824d6bfc40f9b652e61c204739e45ca9e5899c4848cae029d95271",
+      "site_sha256": "2915936e40824d6bfc40f9b652e61c204739e45ca9e5899c4848cae029d95271",
+      "state": "identical"
+    },
+    "docs/local-pc-consolidation.md": {
+      "mirror_sha256": "0bf0fe2c0cf2438c614923f3d685113f5e1a51753e8ed8c4da6347b5b84d2918",
+      "site_sha256": "0bf0fe2c0cf2438c614923f3d685113f5e1a51753e8ed8c4da6347b5b84d2918",
+      "state": "identical"
+    },
+    "docs/smoke-imagery-bridges.md": {
+      "mirror_sha256": "f19021c15d92045aca5e49cfed1b05e7fd5c7d8db469057dba9004c04f286ebf",
+      "site_sha256": "f19021c15d92045aca5e49cfed1b05e7fd5c7d8db469057dba9004c04f286ebf",
       "state": "identical"
     },
     "drizzle/0000_tired_swordsman.sql": {
@@ -1696,22 +1696,25 @@
   },
   "rollback": {
     "mirror": "Restore the previous receipt selector and revert this mirror candidate commit; the previous receipt and source bytes remain in Git history.",
-    "site": "Saved v135 remains available for source recovery; v136 is not deployed. Retain deployed v131 and its storage bindings unless a separate deployment or data recovery decision is made."
+    "site": "Saved v136 and v135 remain available for source recovery; v137 is not deployed. Retain deployed v131 and its storage bindings unless a separate deployment or data recovery decision is made."
   },
-  "site_archive_sha256": "3c5f2a47f15291f1cdaec91175d41fc7e0c7d029a5f55086d063fd464b75d5db",
-  "site_candidate_commit": "ec91fb30fb1372461174eece05f06c4e9e98e4fd",
+  "site_archive_sha256": "c6672c434cfad03216817ed0d1128921c79f5cad7cbf3536c39a354d961a7d9c",
+  "site_candidate_commit": "4eb9624f55b969dabe22edbf604ab04ab480756b",
   "site_candidate_deployed": false,
   "site_project": "appgprj_6aa0b1c41bc08191bfd86003920f1631",
-  "site_saved_version": 136,
-  "site_saved_version_id": "appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_ff1e0b921d988191b2f4b14c47e1c2a9",
-  "site_source_tree": "4ac35743d58e9073112af5cf3ab0a69e2b9eec57",
+  "site_saved_version": 137,
+  "site_saved_version_id": "appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_f2b2a93c32588191995795d698bdfb50",
+  "site_source_tree": "4a3888d7b321754e7690cd5d07d9cb9ca7319445",
   "status": "review_pending",
   "supersedes": "data/receipts/generated/site-mirror-overlay-refresh-20261003.json",
-  "tracked_digest_manifest_sha256": "48da2b7da9b30d5e745104b29a8be13326e2a43950e46aa2e40303d16dafd525",
+  "tracked_digest_manifest_sha256": "f4dd2441bf74384b29ded2c775d90c61f767793410488e08e31fd0b2d4e3982d",
   "tracked_file_count": 334,
   "transition": {
     "changed_existing_paths": 60,
-    "intermediate_saved_version": 135,
+    "intermediate_saved_versions": [
+      135,
+      136
+    ],
     "new_site_path_names": [
       "app/api/blm-plss-records/route.ts",
       "app/api/bridge-records/route.ts",
@@ -1738,11 +1741,11 @@
       "app/local-map-archive-loader.tsx",
       "app/local-map-archive.ts",
       "app/local-signin-notice.tsx",
-      "docs/KANSAS_REFERENCE_LAYERS.md",
-      "docs/LIGHTNING_FLASH_LOOP.md",
-      "docs/LOCAL_MAP_ARCHIVE.md",
-      "docs/LOCAL_PC_CONSOLIDATION.md",
-      "docs/SMOKE_IMAGERY_BRIDGES.md",
+      "docs/kansas-reference-layers.md",
+      "docs/lightning-flash-loop.md",
+      "docs/local-map-archive.md",
+      "docs/local-pc-consolidation.md",
+      "docs/smoke-imagery-bridges.md",
       "scripts/earth-engine/restore-local-display.mjs",
       "scripts/project-local-map-archive.py",
       "scripts/serve-local-worker.mjs",
@@ -1775,10 +1778,11 @@
     "mirror_tool_tests": "PASS: .venv/bin/python -m pytest -q tests/qa/test_site_mirror.py; 8/8",
     "node_version": "v22.13.1",
     "npm_audit": "FAIL: 8 high, 0 critical; same unchanged lockfile; no dependency remediation in this mirror candidate",
+    "repository_topology": "PASS: 0 invariant, 0 new drift, 0 stale baseline entries; baseline unchanged",
     "site_install": "PASS: npm run install:ci; locked npm ci completed",
     "site_lint": "FAIL: 6 react-hooks/set-state-in-effect errors and 39 warnings; 3 errors in unchanged governed-water-control.tsx, 3 in new smoke/lightning controls",
-    "site_tests": "PASS: npm test on saved Site v136 source; production build and 344/344 Node tests",
+    "site_tests": "PASS: npm test on saved Site v137 source; production build and 344/344 Node tests",
     "site_typecheck": "PASS: ./node_modules/.bin/tsc --noEmit on v136 source",
-    "source_comparison": "PASS: --source clean saved Site v136 commit; zero changes and zero unexpected deletions"
+    "source_comparison": "PASS: --source clean saved Site v137 commit; zero changes and zero unexpected deletions"
   }
 }

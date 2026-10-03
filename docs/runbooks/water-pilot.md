@@ -170,10 +170,10 @@ now passes. That is content parity only. Whether each accepted overlay is
 folded into a successor standalone Site commit, hosted equivalence, deployment,
 and water activation remain **NEEDS VERIFICATION**.
 
-## Saved Site v136 mirror candidate — 2026-10-03
+## Saved Site v137 mirror candidate — 2026-10-03
 
-The [v136 successor receipt](../../data/receipts/generated/site-mirror-v136-candidate-20261003.json)
-pins owner-private Site source `ec91fb30fb1372461174eece05f06c4e9e98e4fd`
+The [v137 successor receipt](../../data/receipts/generated/site-mirror-v137-candidate-20261003.json)
+pins owner-private Site source `4eb9624f55b969dabe22edbf604ab04ab480756b`
 and repository base `ef9c5e19e373d51c2bf878aaf8c3a5ddf0deb35e`. A clean,
 isolated copy of that Site source supplied the tracked files. The repository
 mirror now has the same 334 tracked paths and bytes: 229 were already equal,
@@ -182,10 +182,14 @@ There were no mirrored paths to delete. The prior receipt and its overlay
 decision remain in history; this new candidate does not retroactively change
 them. `site_mirror.py --check` checks the new receipt for content parity only.
 
-Saved v136 moves device-only GeoPDF protocol registration through the Site's
+Saved v136 moved device-only GeoPDF protocol registration through the Site's
 existing `maplibre-seam.ts`, without changing the tile callback or teardown.
 The acquisition inventory now returns its inherited `HOLD` for the accepted
 candidate seam, rather than the new outside-seam `FAIL` seen on the first draft.
+Saved v137 renamed five new Site documentation files to lowercase names and
+updated their three links. The repository topology ratchet now reports zero
+new drift, zero stale baseline entries, and no invariant failures; its
+baseline was not expanded.
 
 The mirrored Site passed its locked `npm ci`, production build, 344 Node tests,
 TypeScript `--noEmit`, and eight mirror-tool tests. Full Site lint failed with
@@ -195,13 +199,14 @@ controls. A fresh `npm audit` found eight high findings and no critical ones
 through the unchanged lockfile. These are review holds, not green checks.
 Browser acceptance remains unrun because the available browser control failed
 its security verification.
-The saved Site v136 is **not deployed**; deployed version v131, hosted
+The saved Site v137 is **not deployed**; deployed version v131, hosted
 equivalence, source/overlay review of this successor, activation, publication,
 and water admission are separate pending decisions. The Site source repository
-advanced to saved v136, while D1/R2 bindings and the deployed Site stayed as
+advanced to saved v137, while D1/R2 bindings and the deployed Site stayed as
 they were. To roll back the mirror, revert this candidate commit and restore
 the previous receipt selector; do not change deployed Site or stored data as
-part of that rollback. Saved v135 remains available as a source recovery point.
+part of that rollback. Saved v136 and v135 remain available as source recovery
+points.
 
 ## Reproducible environment
 
