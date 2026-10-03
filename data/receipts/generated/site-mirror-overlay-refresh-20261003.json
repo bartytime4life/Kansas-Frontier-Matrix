@@ -208,11 +208,18 @@
         "mirror_sha256": "ea27a8f890d6b43abbd1dfcd5d21fb61ba12caeb0a07bfa1717f04be4b98ad39"
       }
     ],
+    "overlay_acceptance": {
+      "decision": "ACCEPTED_AS_GOVERNED_MONOREPO_OVERLAYS",
+      "accepted_by": "@bartytime4life (repository owner and Site owner)",
+      "date": "2026-10-03",
+      "scope": "All 21 paths in changed_paths, with the states recorded here",
+      "record": "Decision given to Claude Code in the authoring session after the Codex review on bartytime4life/Kansas-Frontier-Matrix#4874; the PR review is the reviewable trace."
+    },
     "not_established": [
-      "Site owner acceptance of each overlay for a successor standalone Site commit",
       "hosted equivalence",
       "deployment",
-      "water activation, release, or publication"
+      "water activation, release, or publication",
+      "Whether each accepted overlay is folded into a successor standalone Site commit"
     ]
   },
   "validation": {
