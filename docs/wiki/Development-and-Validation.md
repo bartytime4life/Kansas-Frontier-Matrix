@@ -25,7 +25,7 @@ evidence_checkpoint: main@0abdce42ea0a41f88e86b7d97df0ebd79961e37b
 | Need | Current repository entry point | Bounded meaning |
 |---|---|---|
 | Python environment | Python `>=3.11`; `python tools/ci/install_python_ci.py project-test` | Uses the committed hash locked test profile and local metadata-only root distribution |
-| JavaScript environment | Root: Node `>=22.13 <23`, `pnpm@11.17.0`; Site: Node `>=22.13.0`, npm | Root workspace and Site have separate lockfiles; see [Installation](../installation.md) |
+| JavaScript environment | Root: Node `>=22.13 <23`, `pnpm@11.17.0`; Site: Node `>=22.13.0`, npm | Root workspace and Site have separate lockfiles; see [Installation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/installation.md) |
 | Schema/contract baseline | `make validate` | Aggregate schema validators plus configured schema and contract tests |
 | Complete registered profile | `make validator-full` | Every entry in the current validator registry exactly once—not every checker in the repository |
 | Focused trust-spine profile | `make validator-focused` | Smaller registry-declared evidence, decision, and receipt subset |
