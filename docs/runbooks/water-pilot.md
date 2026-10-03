@@ -137,6 +137,35 @@ mirror paths absent from the historical receipt. The comparison was run from a
 working tree with tool edits, so the result is a dated review inventory, not a
 commit-bound source artifact. The mirror hold remains in force.
 
+## Site mirror successor receipt — 2026-10-03
+
+At the repository owner's request, the
+[successor mirror receipt](../../data/receipts/generated/site-mirror-overlay-refresh-20261003.json)
+records the 289 mirror files at monorepo `main@2da0fd9f8134b87bdc3f1a0642a301a7b6350dba`,
+and [`site_mirror.py`](../../tools/qa/site_mirror.py) now checks against it. The
+[2026-09-30 receipt](../../data/receipts/generated/site-disaster-blm-knowledge-soil-mirror-20260930.json)
+is unchanged and is named in the successor's `supersedes` field.
+
+The successor compares against the same pinned standalone candidate
+`041f626585804e5c90b8075cc506aeff5333d3b1`. No newer standalone Site commit was
+available, so its `site_sha256` values are carried from the earlier receipt. The
+receipt lists all 21 changed paths with their previous state and digest:
+
+- The 15 drifted paths keep their overlay state. A path that was `identical`
+  becomes `inherited_repository_overlay`.
+- `app/governed-water-availability.ts` and its test are
+  `repository_only_water_overlay`.
+- The Qwen availability, Qwen context-safety, and client-store boundary files
+  use a new `repository_only_overlay` state for monorepo-only files outside the
+  water slice.
+
+Validation on a copy of the mirror: `npm test` passed 267 of 267, and
+`tsc --noEmit` passed. `npm audit` reports eight high-severity advisories, all
+through `braces`; they are recorded, not fixed. The browser journey was not run.
+`site_mirror.py --check` now passes. That is content parity only. Whether each
+overlay belongs in the next standalone Site commit, hosted equivalence,
+deployment, and water activation remain **NEEDS VERIFICATION**.
+
 ## Reproducible environment
 
 Use Python 3.11 or newer; this batch used Python 3.12.3. From the repository root:
