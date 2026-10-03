@@ -2,8 +2,9 @@
 #
 # Responsibility:
 #   Exercise five deterministic publication-denial paths over the synthetic
-#   promotion packet, run the bounded A-G readiness proof, and verify rollback-
-#   card readiness without assembling or writing release records.
+#   promotion packet, prove its catalog/provenance/rollback identity closure,
+#   run the bounded A-G readiness proof, and verify rollback-card readiness
+#   without assembling or writing release records.
 #
 # Trigger and trust boundary:
 #   Pull requests, pushes to main, and explicit dispatch. Pull-request content
@@ -73,6 +74,7 @@ jobs:
               Path("tools/release/README.md"),
               Path("tools/release/release_dry_run.py"),
               Path("tests/release/test_publication_deny_dry_run.py"),
+              Path("tests/release/test_synthetic_release_closure.py"),
               Path("fixtures/release/promotion_gate/valid/pass__complete_candidate.json"),
               Path("release/candidates/README.md"),
               Path("data/receipts/generated/genrec-publication-deny-dry-run-20260809.json"),
@@ -106,6 +108,10 @@ jobs:
           body = target.group("body")
           assert "python tools/release/release_dry_run.py" in body
           assert "python -m unittest -q tests.release.test_publication_deny_dry_run" in body
+          assert (
+              "python -m pytest -q -p no:cacheprovider "
+              "tests/release/test_synthetic_release_closure.py"
+          ) in body
           assert "TODO: tools/release dry-run" not in body
 
           print(
@@ -113,6 +119,7 @@ jobs:
               "exist and no candidate packet payload is present."
           )
           print("CONFIRMED: the Make target invokes the bounded dry run and its no-write tests.")
+          print("CONFIRMED: the Make target invokes the shared synthetic identity-closure proof.")
           print("CONFIRMED: historical authoring receipts are retained and the current rollback-card-presence successor binding is present.")
           PY
 
@@ -144,6 +151,7 @@ jobs:
             echo
             echo "- The bounded helper exercised evidence-missing, policy-denied, integrity-mismatch, non-public-safe rights/sensitivity, and review-absent cases over the synthetic promotion packet."
             echo "- Every case remained BLOCKED and produced finite gate findings; ABSTAIN also denies publication."
+            echo "- The fixture-only catalog, EvidenceBundle, STAC, DCAT, PROV, rollback, and carrier references retained one manifest identity; the dry run created no authority."
             echo "- Historical authoring receipts remain immutable and replay from exact authoring tree 8383a722a619df64c7eaa668c9e6427540f2df80; successor workflow and Makefile bytes do not rewrite earlier evidence."
             echo "- **WORKFLOW_HOLD:** no real candidate was assembled, no live policy/evidence/reference authentication ran, and no release decision was created."
             echo "- Result: ${{ job.status }}. No candidate, manifest, receipt, proof, release record, or publication authority was created."

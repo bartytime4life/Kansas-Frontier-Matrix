@@ -1,0 +1,93 @@
+{
+  "receipt_id": "genrec-release-closure-ci-binding-port-20261003",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/release-dry-run.yml",
+    "Makefile",
+    "release/README.md",
+    "tools/release/README.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/release-dry-run.yml": "sha256:40a35910cc3fde3c1897f623b9be5147092ca14257fe157449cdeee218dad60d",
+    "Makefile": "sha256:289ad6fdf98eef2702b2e28f20b865f3a6a14384dee4a8db3db30927a1b2dc78",
+    "release/README.md": "sha256:611e2a97bb04f321cd46dd602fc23c8747dba50f7ea75cc94c287fb1199ae656",
+    "tools/release/README.md": "sha256:deb01368dd1aee34b5754fe02aedbeea445f0dace9c7351b46ad4a1c79b4c30f"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:c589adac7b7d84bf1bc5c4be514e072c0cac7b643475674b1916c80b84cbf4c1",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/4ba7e57fad810b035a6ac6b330115a88ee7518d1",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/0829cd1fccde795c767c9925a4823970c99715e7",
+      "repo:tests/release/test_synthetic_release_closure.py"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/release-dry-run.yml": "CONFIRMED",
+    "Makefile": "CONFIRMED",
+    "release/README.md": "CONFIRMED",
+    "tools/release/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Release dry run",
+      "outcome": "PASS",
+      "reason": "make release-dry-run passes: five denial paths BLOCKED, publication-deny unittest OK, test_synthetic_release_closure.py 2 passed."
+    },
+    {
+      "gate": "Workflow inline checks",
+      "outcome": "PASS",
+      "reason": "The three expression-free inline Python steps of release-dry-run.yml pass locally, including the new assertion that the Make body invokes the closure proof."
+    },
+    {
+      "gate": "Workflow security",
+      "outcome": "PASS",
+      "reason": "make workflow-security: 491 workflows, 0 invariant, 0 new drift."
+    },
+    {
+      "gate": "Docs",
+      "outcome": "PASS",
+      "reason": "Diff-scoped check_links.py (86 local targets), check_meta_blocks.py --profile present, check_document_graph.py, and check_stale_docs.py --profile advisory pass against the base commit."
+    },
+    {
+      "gate": "Receipt replay",
+      "outcome": "PASS",
+      "reason": "All 341 expression-free validate_generated_receipt.py calls in workflows give identical results on the base and on this branch; the 47 that fail locally also fail on the base (shallow clone lacks pinned artifact refs)."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/4ba7e57fad810b035a6ac6b330115a88ee7518d1"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-03T04:58:54Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to the unmerged agent/release-closure-ci-binding-20260916 branch. Its receipt genrec-release-closure-ci-binding-20260916 bound pre-port bytes and is not carried. tests/release/README.md already described the closure proof on main and is unchanged. No release candidate, decision, rollback, or publication authority is created."
+}
