@@ -82,8 +82,16 @@ class ObjectFamilyRegisterValidatorTests(unittest.TestCase):
             if entry["required_by_milestone"]
             and entry["implementation_status"] == "CONFLICTED"
         }
-        self.assertEqual(11, len(conflicted))
-        self.assertEqual(11, register["conflicted_required_count"])
+        self.assertEqual(10, len(conflicted))
+        self.assertEqual(10, register["conflicted_required_count"])
+        envelope = by_id["runtime_response_envelope"]
+        self.assertEqual("PARTIAL", envelope["implementation_status"])
+        self.assertEqual("IMPLEMENTED", envelope["surface_status"]["schemas"])
+        self.assertEqual("PARTIAL", envelope["identity"]["status"])
+        self.assertEqual(
+            "legacy_alias_retained",
+            envelope["compatibility"]["posture"],
+        )
         self.assertEqual("PARTIAL", by_id["withdrawal_notice"]["implementation_status"])
         self.assertEqual([], by_id["withdrawal_notice"]["validator_paths"])
         for family_id in conflicted:
