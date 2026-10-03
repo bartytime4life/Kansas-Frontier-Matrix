@@ -180,7 +180,7 @@ The helper is an **anticorruption adapter** between bounded models. It must not 
 ### Current HOLDs
 
 - No application or governed-API import of the helper was found in the current symbol search.
-- Explorer's current [`GovernedClient.ts`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/13f66982ef1db9dc733ed3588d42bf1b92e19e8d/apps/explorer-web/src/adapters/GovernedClient.ts) is fixture-only and explicitly performs no network or lifecycle-store access.
+- Explorer's current [`GovernedClient.ts`](../../../apps/explorer-web/src/adapters/GovernedClient.ts) is fixture-only and explicitly performs no network or lifecycle-store access.
 - Evidence-reference resolution, render policy, caller authentication, active release lookup, correction propagation, and deployed use remain unproved.
 - The `DecisionEnvelope` contract and paired schema remain proposed rather than accepted runtime authority.
 - The drawer's final semantic authority split between UI-facing projection and evidence-family material remains unresolved.
