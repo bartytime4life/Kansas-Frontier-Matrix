@@ -161,7 +161,8 @@ jobs:
             --artifact-git-ref 49d6b59d2d52a156b339410fce6f731ca63080a8
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-object-family-runtime-envelope-alias-20261003.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref af0fb22c95512d9b06c99900dc2051b1a33e95a7
 
       - name: Record validation boundary
         if: always()
@@ -172,7 +173,7 @@ jobs:
             echo
             echo "- Result: ${{ job.status }}."
             echo "- Scope: the exact sixteen-family milestone set, three retained families, schema shape, canonical ordering, relationship closure, responsibility-root placement, path existence, per-surface status, and structural classification."
-            echo "- Receipt boundary: the immutable 2026-08-25 authoring receipt is checked against its pinned authoring commit; the current alias-reconciliation receipt is checked against the workflow checkout."
+            echo "- Receipt boundary: the immutable 2026-08-25 authoring receipt is checked against its pinned authoring commit; the 2026-10-03 alias-reconciliation receipt is checked against its pinned authoring commit."
             echo "- Known gaps: ten required families retain unresolved candidate conflicts; RuntimeResponseEnvelope and EvidenceRef identity remain partial, and WithdrawalNotice remains structurally partial."
             echo "- Boundary: the register is a navigational index. It cannot select conflicting candidates, add, rename, remove, approve, release, deploy, promote, or publish an object family."
           } >> "$GITHUB_STEP_SUMMARY"
