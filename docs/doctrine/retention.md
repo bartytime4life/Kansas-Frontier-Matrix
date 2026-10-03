@@ -806,7 +806,7 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/map-first.md`](./map-first.md) — Tombstoned layers surface `release.withdrawn`; erased content surfaces `content.erased` (proposed code per OQ-RT-12). `[CONFIRMED sibling.]`
 - [`docs/doctrine/trust-posture.md`](./trust-posture.md) — `LINEAGE` authoring label is the doc-plane analog to R1 retention. `[NEEDS VERIFICATION — exact filename.]`
 - [`docs/runbooks/RB-CORRECTION-ROUTINE.md`](../runbooks/RB-CORRECTION-ROUTINE.md) — Day-2 routine correction; emits `TombstoneReceipt`. `[TODO — confirm path.]`
-- [`docs/runbooks/RB-ROLLBACK-EXECUTION.md`](../runbooks/RB-ROLLBACK-EXECUTION.md) — Day-2 rollback; emits `TombstoneReceipt` for rolled-forward release. `[TODO — confirm path.]`
+- [`docs/runbooks/ROLLBACK_RUNBOOK.md`](../runbooks/ROLLBACK_RUNBOOK.md) — Day-2 rollback; emits `TombstoneReceipt` for rolled-forward release. `[PROPOSED mapping — planned `docs/runbooks/RB-ROLLBACK-EXECUTION.md` is not present; this is the existing page that covers it.]`
 - [`docs/runbooks/RB-ERASURE-EXECUTION.md`](../runbooks/RB-ERASURE-EXECUTION.md) — Day-2 erasure procedure (new runbook proposed by this doctrine). `[TODO — runbook not yet authored.]`
 - [`docs/security/THREAT_MODEL.md`](../security/THREAT_MODEL.md) — STRIDE coverage including retention-related trust boundaries (audit-log tampering, erasure-bypass paths). `[TODO — confirm filename.]`
 - `schemas/contracts/v1/retention_class.schema.json` — `RetentionClass` schema. `[PROPOSED path.]`

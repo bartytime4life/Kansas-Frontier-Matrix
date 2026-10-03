@@ -704,7 +704,7 @@ The user prints the page. In grayscale, the `STALE` badge keeps its outline + di
 - [`docs/doctrine/policy-aware.md`](../doctrine/policy-aware.md) — The six-dimension policy gate, reason-code vocabulary, operator-hint rule (the leak-test applied here at the visual layer). `[CONFIRMED.]`
 - [`docs/doctrine/time-aware.md`](../doctrine/time-aware.md) — Six time kinds and freshness window; the doctrinal origin of `STALE`. `[CONFIRMED.]`
 - [`docs/architecture/trust-membrane.md`](../architecture/trust-membrane.md) — The membrane that emits the outcomes this doc renders. `[CONFIRMED.]`
-- [`docs/architecture/ui-trust-surface.md`](../architecture/ui-trust-surface.md) — UI Trust Surface; trust-badge vocabulary. `[CONFIRMED concept; exact path NEEDS VERIFICATION.]`
+- [`docs/architecture/ui/README.md`](../architecture/ui/README.md) — UI Trust Surface; trust-badge vocabulary. `[CONFIRMED concept; PROPOSED mapping — planned `docs/architecture/ui-trust-surface.md` is not present; this is the existing page that covers it.]`
 - _TODO_ `docs/brand/popup-microcopy.md` <sub>PROPOSED sibling — will reference the visual treatments here.</sub>
 - _TODO_ `docs/brand/layer-card-microcopy.md` <sub>PROPOSED sibling — will reference the visual treatments here.</sub>
 - _TODO_ `docs/brand/time-slider-microcopy.md` <sub>PROPOSED sibling — will reference the visual treatments here.</sub>

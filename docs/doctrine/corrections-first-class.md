@@ -578,7 +578,7 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/ai-as-assistant.md`](./ai-as-assistant.md) — Operationalized by the [AI boundary section](#ai-boundary-in-corrections) of this doc. `[CONFIRMED sibling.]`
 - [`docs/architecture/release-and-publication.md`](../architecture/release-and-publication.md) — The eleven-step release state machine; canonical source for steps 1–9 that precede the correction-and-rollback steps. `[NEEDS VERIFICATION — exact path.]`
 - [`docs/runbooks/RB-CORRECTION-ROUTINE.md`](../runbooks/RB-CORRECTION-ROUTINE.md) — Day-2 routine correction. `[TODO — confirm path.]`
-- [`docs/runbooks/RB-ROLLBACK-EXECUTION.md`](../runbooks/RB-ROLLBACK-EXECUTION.md) — Day-2 rollback execution. `[TODO — confirm path.]`
+- [`docs/runbooks/ROLLBACK_RUNBOOK.md`](../runbooks/ROLLBACK_RUNBOOK.md) — Day-2 rollback execution. `[PROPOSED mapping — planned `docs/runbooks/RB-ROLLBACK-EXECUTION.md` is not present; this is the existing page that covers it.]`
 - [`docs/runbooks/RB-PRIVACY-REQUEST.md`](../runbooks/RB-PRIVACY-REQUEST.md) — Day-2 privacy / takedown handling. `[TODO — confirm path.]`
 - [`docs/runbooks/RB-INCIDENT-INTEGRITY-FAILURE.md`](../runbooks/RB-INCIDENT-INTEGRITY-FAILURE.md) — Day-2 integrity failure. `[TODO — confirm path.]`
 - `schemas/contracts/v1/correction_notice.schema.json` — Machine-readable schema. `[PROPOSED path.]`
