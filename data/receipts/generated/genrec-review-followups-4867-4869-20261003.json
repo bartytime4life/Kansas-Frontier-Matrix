@@ -1,0 +1,88 @@
+{
+  "receipt_id": "genrec-review-followups-4867-4869-20261003",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/object-family-register.yml",
+    "docs/adr/NORMALIZED_SUMMARY_CONSUMER_READINESS_CHECKLIST.md",
+    "docs/registers/OBJECT_FAMILY.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/object-family-register.yml": "sha256:44ba559b2eb49126aa45c6c71d1ebf56632eb80480c662f3395cd471f2379062",
+    "docs/adr/NORMALIZED_SUMMARY_CONSUMER_READINESS_CHECKLIST.md": "sha256:1c27f0b641ed3b0feb577e49fb4e8da0f59fa4d63cc4a86e40f7169b29393dec",
+    "docs/registers/OBJECT_FAMILY.md": "sha256:7dbb7688b1f793804ab5202895e6b1fdf442968fb032e5632a50444a4b36e3c0"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:f522af98bcaa8a99767729a591278c6c038ee3785ebbc237625e4c05745af629",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/ae73141e15c80bb0cffc14d44669421343e3a46a",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4867#discussion_r4171763188",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4869#discussion_r4171800887",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4869#discussion_r4171800882",
+      "repo:scripts/maintenance/check_normalized_summary_consumer_readiness.py",
+      "repo:tests/policy/test_normalized_summary_consumer_readiness.py"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/object-family-register.yml": "CONFIRMED",
+    "docs/adr/NORMALIZED_SUMMARY_CONSUMER_READINESS_CHECKLIST.md": "CONFIRMED",
+    "docs/registers/OBJECT_FAMILY.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Focused regressions",
+      "outcome": "PASS",
+      "reason": "make normalized-summary-check 75 passed; test_validate_object_family_register.py 16 passed with 276 subtests."
+    },
+    {
+      "gate": "Receipt pin",
+      "outcome": "PASS",
+      "reason": "genrec-object-family-runtime-envelope-alias-20261003 validates with --artifact-git-ref af0fb22c95 and fails with ARTIFACT_DIGEST_MISMATCH against the edited checkout, confirming the finding."
+    },
+    {
+      "gate": "Workflow security",
+      "outcome": "PASS",
+      "reason": "make workflow-security: 491 workflows, 0 new drift."
+    },
+    {
+      "gate": "Docs",
+      "outcome": "PASS",
+      "reason": "Diff-scoped check_links.py (91 local targets), check_meta_blocks.py --profile present, check_document_graph.py, and check_stale_docs.py --profile advisory pass against the base commit."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/ae73141e15c80bb0cffc14d44669421343e3a46a"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-03T05:21:58Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Documentation currentness and receipt pinning only. Earlier receipts are not rewritten: genrec-normalized-summary-checklist-forward-correction-20260916 and genrec-object-family-runtime-envelope-alias-20261003 remain historical for their authoring bytes."
+}
