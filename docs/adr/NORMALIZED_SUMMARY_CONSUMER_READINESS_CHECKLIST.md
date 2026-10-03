@@ -2,14 +2,14 @@
 doc_id: kfm://doc/normalized-summary-consumer-readiness-checklist
 title: "Normalized Summary Consumer Readiness Checklist"
 type: checklist
-version: v1.5
+version: v1.6
 status: draft; repository-grounded; validation-guidance-only
 owners:
   - "NEEDS VERIFICATION — doctrine-preflight steward"
   - "NEEDS VERIFICATION — normalized-summary consumer owners"
   - "NEEDS VERIFICATION — docs steward"
 created: 2026-05-13
-updated: 2026-09-16
+updated: 2026-10-03
 policy_label: public
 truth_posture: cite-or-abstain
 responsibility_root: docs/
@@ -36,7 +36,7 @@ evidence_preflight_runbook_blob: 65978a535b38b1dbc7a314decb0aa699e51ed608
 evidence_maintenance_readme_blob: bd4ef697d7118074be44d00e6e77a8a311afe5f4
 inspection_boundary: "The evidence_base and blob pins describe the historical v1.2 source-only inspection. The v1.3 follow-up below separately records a three-path validator/test/documentation repair and local validation against its named base; no external consumer or hosted acceptance is inferred."
 followup_base_commit: b6bdc3c13d03cf1050e03c06496796822b6421b1
-currentness_base_commit: fd03c91c88a06fc7d4e097775ec62ede6d3b498c
+currentness_base_commit: ae73141e15c80bb0cffc14d44669421343e3a46a
 
 related:
   - docs/adr/INDEX.md
@@ -59,6 +59,7 @@ notes:
   - "v1.3 closes strict normalized-map presence and key-set validation in the existing validator. Full schema validation, artifact-byte verification, consumer acceptance, and default cutover remain separate."
   - "v1.4 removes residual statements that predated the v1.3 validator repair; it changes documentation only and grants no acceptance or cutover authority."
   - "v1.5 corrects the remaining repository-native-validation checklist item missed by v1.4; it changes documentation only and grants no acceptance or cutover authority."
+  - "v1.6 re-pins currentness to the merged v1.5 tree and records the empty-inventory rejection and fourth readiness test that merged with PR #4608; it changes documentation only and grants no acceptance or cutover authority."
   - "The machine registry currently records two internal consumers as validated; exhaustive in-repository and external-consumer coverage remains unverified."
 [/KFM_META_BLOCK_V2] -->
 
@@ -89,7 +90,7 @@ Use this checklist before representing any parser, workflow, operator tool, dash
 |---|---|
 | **Document role** | ADR support document and human migration checklist |
 | **Decision authority** | None; [`INDEX.md`](./INDEX.md) classifies this file as “Validation guidance only” |
-| **Record edition** | `v1.5` — post-merge forward correction |
+| **Record edition** | `v1.6` — readiness-checker currentness |
 | **Current emitter default** | Compatibility output; normalized-only emission requires `--emit-normalized-only` |
 | **Normalized-only implementation** | Present as an optional emitter mode, consistency-validator mode, fixture/test path, and shadow check |
 | **Machine readiness registry** | Two recorded internal consumers; both carry `status: validated` in the tracked registry |
@@ -137,7 +138,7 @@ would restore the demonstrated false-pass gap and must be reviewed explicitly.
 
 ### Preserved v1.2 source inspection
 
-The observations below are historical and pinned to `main@53d61809c4c99c65700d63fbcbcf42069ed7f3a4`. They describe tracked repository bytes at that checkpoint; the v1.3 follow-up above supersedes only the missing-map and consistency-test observations. They do not establish production deployment, exhaustive consumer inventory, or readiness/cutover authorization.
+The observations below are historical and pinned to `main@53d61809c4c99c65700d63fbcbcf42069ed7f3a4`. They describe tracked repository bytes at that checkpoint; the v1.3 follow-up above supersedes the missing-map and consistency-test observations, and the v1.6 currentness pass supersedes the readiness-checker and readiness-test rows. They do not establish production deployment, exhaustive consumer inventory, or readiness/cutover authorization.
 
 | Surface | CONFIRMED repository observation | Limit |
 |---|---|---|
@@ -145,9 +146,9 @@ The observations below are historical and pinned to `main@53d61809c4c99c65700d63
 | [`run_doctrine_artifact_preflight.py`](../../scripts/maintenance/run_doctrine_artifact_preflight.py) | Always builds `artifact_paths` and `artifact_digests`; `--emit-normalized-only` removes six legacy standalone fields. | The flag is optional, so normalized-only is not the default. |
 | [Preflight summary schema](../../schemas/contracts/v1/source/doctrine_artifact_preflight_summary.schema.json) | Defines normalized maps, exact keys, nullable `presence_output`, and 64-character lowercase hexadecimal digest shapes. | The normalized maps are properties but are not in the schema’s top-level `required` list. |
 | [Consistency validator](../../tools/validators/source/validate_doctrine_preflight_summary_consistency.py) | Checks map↔standalone parity in compatibility mode; in normalized-only mode it requires both maps to be objects with exactly the three registered keys and rejects all six legacy fields. | It does not validate map value types, path/digest null pairing, referenced artifact bytes, path confinement, or consumer behavior. |
-| [Readiness checker](../../scripts/maintenance/check_normalized_summary_consumer_readiness.py) | Accepts `validated`, `pending`, or `blocked`; requires six non-empty fields; can require all entries to be `validated`. | It does not authenticate owners, resolve evidence, validate date format, or enforce evidence freshness. |
+| [Readiness checker](../../scripts/maintenance/check_normalized_summary_consumer_readiness.py) | Accepts `validated`, `pending`, or `blocked`; requires six non-empty fields; rejects an empty, comment-only, or null consumer inventory; can require all entries to be `validated`. | It does not authenticate owners, resolve evidence, validate date format, or enforce evidence freshness. |
 | [Machine registry](../../control_plane/normalized_summary_consumer_readiness.yaml) | Remains `PROPOSED`, names the docs steward, and contains exactly two internal `validated` entries, both recorded on 2026-05-16. | Registry completeness, owner authenticity, evidence freshness, and current execution remain unverified. |
-| [Readiness tests](../../tests/policy/test_normalized_summary_consumer_readiness.py) | Contain three focused cases: tracked-registry pass, malformed/invalid entry failure, and strict failure for a `pending` consumer. | Tests prove bounded checker behavior, not exhaustive consumer discovery, current execution, or consumer readiness. |
+| [Readiness tests](../../tests/policy/test_normalized_summary_consumer_readiness.py) | Contain four focused tests: empty-inventory failure (four inventory shapes, with and without `--require-all-validated`), tracked-registry pass, malformed/invalid entry failure, and strict failure for a `pending` consumer. | Tests prove bounded checker behavior, not exhaustive consumer discovery, current execution, or consumer readiness. |
 | [Consistency tests](../../tests/policy/test_preflight_summary_consistency.py) | Cover missing/non-object maps, missing and unexpected keys, non-object summaries, finite CLI failures, compatibility parity, legacy-field rejection, map-only pass, and end-to-end normalized-only emission. | They prove bounded validator behavior, not artifact-byte integrity, path confinement, consumer readiness, or hosted acceptance. |
 | [Doctrine test suite](../../scripts/maintenance/run_doctrine_artifact_test_suite.sh) | Builds a temporary normalized-only shadow summary, checks it with strict normalized-only consistency, requires every registered consumer to be validated, and invokes fifteen focused test modules. | Source inspection does not prove the suite was run for this update, is currently green, covers every consumer, or is required by repository protection. |
 | [`scripts/maintenance/README.md`](../../scripts/maintenance/README.md) | Classifies the lane as mixed maturity, warns that current pass/production use is unknown, and records an unresolved receipt-output-path conflict. | This checklist cannot resolve tool graduation or output-home authority. |
@@ -633,6 +634,7 @@ Before integration, abandon the documentation branch. After integration, revert 
 | 2026-09-15 | `v1.3` | Reproduced and repaired missing/non-object maps and incorrect key sets in strict consistency validation; added negative and CLI proof while preserving historical evidence. | Bounded validator repair only; default cutover and independent/hosted acceptance remain on `HOLD`. |
 | 2026-09-16 | `v1.4` | Corrected residual caution, evidence-table, rollback, and backlog text that still described the pre-v1.3 false-pass gap after the validator repair merged. | Documentation currentness only; emitter, validator, schema, consumers, registry, cutover, release, and publication are unchanged. |
 | 2026-09-16 | `v1.5` | Corrected the remaining repository-native-validation checklist item after v1.4 merged with the obsolete claim that strict consistency validation did not enforce map presence. | Documentation currentness only; emitter, validator, schema, tests, consumers, registry, cutover, release, and publication are unchanged. |
+| 2026-10-03 | `v1.6` | Re-pinned currentness to `main@ae73141e`; recorded that the readiness checker rejects empty inventories and that its test module has four focused tests (both merged with PR #4608). | Documentation currentness only; emitter, validator, schema, tests, consumers, registry, cutover, release, and publication are unchanged. |
 
 ### No-loss reconciliation
 

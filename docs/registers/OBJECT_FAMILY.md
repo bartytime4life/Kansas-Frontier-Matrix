@@ -131,8 +131,8 @@ EVID -. outranks .-> REG
 | Required milestone families registered | 16 of 16 | Every required stable family ID has an entry. |
 | Other pre-existing families retained | 3 | `DecisionEnvelope`, `GeneratedRuntimeProofArtifact`, and `RuntimeVerificationReceiptAndProof` remain navigable. |
 | Required families structurally `IMPLEMENTED` | 4 | `EvidenceRef`, `PromotionReceipt`, `ProofPack`, and `RollbackCard` have the six declared structural surfaces; this is not evidence closure, release, or runtime approval. |
-| Required families `PARTIAL` | 1 | `WithdrawalNotice` lacks a focused fixture, validator, test, workflow, and observed emitter. |
-| Required families `CONFLICTED` | 11 | Multiple repository-wide contract or schema candidates remain unresolved and no candidate is silently selected. |
+| Required families `PARTIAL` | 2 | `WithdrawalNotice` lacks a focused fixture, validator, test, workflow, and observed emitter. `RuntimeResponseEnvelope` has one canonical runtime schema and a Focus compatibility alias; semantic acceptance and deployed-consumer inspection remain open. |
+| Required families `CONFLICTED` | 10 | Multiple repository-wide contract or schema candidates remain unresolved and no candidate is silently selected. |
 
 Each machine entry records contract and schema candidates, policy dependencies, fixture/validator/test/workflow/emitter surfaces, per-surface implementation state, role-level producers and consumers, lifecycle placement, identity-rule references, compatibility posture, evidence dependencies, and release/correction/rollback relationships. Every relationship closes over a registered family ID. `UNKNOWN` and `NOT_INSPECTED` remain explicit evidence states.
 
