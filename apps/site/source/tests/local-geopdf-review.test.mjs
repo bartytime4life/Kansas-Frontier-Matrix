@@ -53,7 +53,9 @@ test('cancellation discards a native file read and starts no following read',asy
  const pending=inspectLocalReview(f,abort.signal);abort.abort();release(payloads.get('candidate.json').slice(0));
  await assert.rejects(pending,{name:'AbortError'});assert.equal(reads,1);
 });
-const {attachLocalReview,LOCAL_REVIEW_SOURCE,LOCAL_REVIEW_LAYER}=await import(compile(await readFile('app/local-geopdf-map.ts','utf8')));
+const seamModule=compile(await readFile('app/maplibre-seam.ts','utf8'));
+const mapModule=(await readFile('app/local-geopdf-map.ts','utf8')).replace('from "./maplibre-seam"',`from "${seamModule}"`);
+const {attachLocalReview,LOCAL_REVIEW_SOURCE,LOCAL_REVIEW_LAYER}=await import(compile(mapModule));
 function harness(){
  const sources=new Map(),layers=new Map(),listeners=new Map(),protocols=new Map();let state;
  const map={pitch:0,terrain:null,projection:'mercator',getPitch(){return this.pitch},getTerrain(){return this.terrain},getProjection(){return{type:this.projection}},addSource:(n,s)=>sources.set(n,s),getSource:n=>sources.get(n),removeSource:n=>sources.delete(n),addLayer:l=>layers.set(l.id,structuredClone(l)),getLayer:n=>layers.get(n),removeLayer:n=>layers.delete(n),setLayoutProperty:(n,k,v)=>{layers.get(n).layout[k]=v},setPaintProperty:(n,k,v)=>{layers.get(n).paint[k]=v},on:(n,f)=>listeners.set(n,f),off:(n,f)=>{if(listeners.get(n)===f)listeners.delete(n)}};
@@ -95,8 +97,9 @@ test('overview uses the original coarsest tile at its Mercator corners with a no
 test('initial review UI exposes local file selection and no activation control or loaded original',async()=>{
  const {createElement}=await import('react'),{renderToStaticMarkup}=await import('react-dom/server');
  let js=ts.transpileModule(await readFile('app/local-geopdf-review-control.tsx','utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX}}).outputText;
- const seam=compile('export const loadMapLibre=()=>{throw new Error("renderer must stay unloaded during static render")};');
- for(const [from,to] of [['react',import.meta.resolve('react')],['react/jsx-runtime',import.meta.resolve('react/jsx-runtime')],['./maplibre-seam',seam],['./local-geopdf-review',compile(source)],['./local-geopdf-map',compile(await readFile('app/local-geopdf-map.ts','utf8'))]])js=js.replaceAll(`from "${from}"`,`from "${to}"`);
+ const seam=compile((await readFile('app/maplibre-seam.ts','utf8')).replace(/export const loadMapLibre = .*?;/, 'export const loadMapLibre=()=>{throw new Error("renderer must stay unloaded during static render")};'));
+ const mapForStatic=(await readFile('app/local-geopdf-map.ts','utf8')).replace('from "./maplibre-seam"',`from "${seam}"`);
+ for(const [from,to] of [['react',import.meta.resolve('react')],['react/jsx-runtime',import.meta.resolve('react/jsx-runtime')],['./maplibre-seam',seam],['./local-geopdf-review',compile(source)],['./local-geopdf-map',compile(mapForStatic)]])js=js.replaceAll(`from "${from}"`,`from "${to}"`);
  const {default:Control}=await import(`data:text/javascript;base64,${Buffer.from(js).toString('base64')}`);
  const html=renderToStaticMarkup(createElement(Control,{map:null,styleReady:false,flatMap:true,onFlatMap(){}}));
  assert.match(html,/Device only/);assert.match(html,/Choose prepared folder/);assert.match(html,/No prepared map loaded/);assert.doesNotMatch(html,/<iframe|<img|blob:|Activate reviewed|Approve/);

@@ -7,3 +7,10 @@ export type MapLibreModule = typeof import("maplibre-gl");
 
 // Loaded on demand so the renderer stays out of the initial bundle.
 export const loadMapLibre = (): Promise<MapLibreModule> => import("maplibre-gl");
+
+// Keep renderer protocol registration at the same acquisition seam as the
+// module import. Callers provide only the bounded tile loader and own teardown.
+export function installMapProtocol(runtime: MapLibreModule, name: string,
+  load: Parameters<MapLibreModule["addProtocol"]>[1]): void {
+  runtime.addProtocol(name, load);
+}

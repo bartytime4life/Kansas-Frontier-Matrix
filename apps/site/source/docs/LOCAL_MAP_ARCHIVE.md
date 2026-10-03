@@ -156,6 +156,10 @@ feature cannot identify constructed, closed, or abandoned roads or bridges.
 
 Application files `local-geopdf-review.ts`, `local-geopdf-map.ts` and
 `local-geopdf-review-control.tsx` own bounded local inspection and rendering.
+The custom renderer protocol is registered through the existing
+`maplibre-seam.ts`; local review retains its tile callback and teardown. This
+keeps the Site's single renderer acquisition boundary while preserving exact
+in-memory tile bytes.
 The constant pin is an application review input, not a canonical source registry.
 Acquisition, preparation and lifecycle authority remain in their existing
 monorepo and external-store responsibilities. No schema migration is introduced.

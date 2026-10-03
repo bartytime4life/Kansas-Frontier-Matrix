@@ -702,8 +702,8 @@
       "state": "identical"
     },
     "app/local-geopdf-map.ts": {
-      "mirror_sha256": "8728c5ae6812688e9f568ea2cffc3e1e973d65202c08fe3c68c49f4f6d09d94d",
-      "site_sha256": "8728c5ae6812688e9f568ea2cffc3e1e973d65202c08fe3c68c49f4f6d09d94d",
+      "mirror_sha256": "0e65bdf20a2a3a0c7adaf8743ab17782f1d76e1850504319bd2e175013c4a42f",
+      "site_sha256": "0e65bdf20a2a3a0c7adaf8743ab17782f1d76e1850504319bd2e175013c4a42f",
       "state": "identical"
     },
     "app/local-geopdf-review-control.tsx": {
@@ -782,8 +782,8 @@
       "state": "identical"
     },
     "app/maplibre-seam.ts": {
-      "mirror_sha256": "d0d098db8ef29f504533ecd3111a2aae83158b050a790e83ab341502195c3304",
-      "site_sha256": "d0d098db8ef29f504533ecd3111a2aae83158b050a790e83ab341502195c3304",
+      "mirror_sha256": "c3d22a47715c24ba3c8f3b1a494011b77d1e826fe534fd5e5eeba905c298fc9b",
+      "site_sha256": "c3d22a47715c24ba3c8f3b1a494011b77d1e826fe534fd5e5eeba905c298fc9b",
       "state": "identical"
     },
     "app/noaa-hydrology.ts": {
@@ -1097,8 +1097,8 @@
       "state": "identical"
     },
     "docs/LOCAL_MAP_ARCHIVE.md": {
-      "mirror_sha256": "f89cb1b2026ac33933519b6ba6cc9204ed2d5cec46c51be764fe3192a804d5a7",
-      "site_sha256": "f89cb1b2026ac33933519b6ba6cc9204ed2d5cec46c51be764fe3192a804d5a7",
+      "mirror_sha256": "2915936e40824d6bfc40f9b652e61c204739e45ca9e5899c4848cae029d95271",
+      "site_sha256": "2915936e40824d6bfc40f9b652e61c204739e45ca9e5899c4848cae029d95271",
       "state": "identical"
     },
     "docs/LOCAL_PC_CONSOLIDATION.md": {
@@ -1492,8 +1492,8 @@
       "state": "identical"
     },
     "tests/local-geopdf-review.test.mjs": {
-      "mirror_sha256": "e639b35ab7ead51ba5751a475fa8ca9662cce44cb6b9764d4acd3c2c50bf0333",
-      "site_sha256": "e639b35ab7ead51ba5751a475fa8ca9662cce44cb6b9764d4acd3c2c50bf0333",
+      "mirror_sha256": "b93827eb5ec8956df9a0a4674462f8f00fa95fb75cab6b4bd35ad2108aa095d3",
+      "site_sha256": "b93827eb5ec8956df9a0a4674462f8f00fa95fb75cab6b4bd35ad2108aa095d3",
       "state": "identical"
     },
     "tests/local-map-archive.test.mjs": {
@@ -1696,19 +1696,22 @@
   },
   "rollback": {
     "mirror": "Restore the previous receipt selector and revert this mirror candidate commit; the previous receipt and source bytes remain in Git history.",
-    "site": "Retain the current deployed Site version; this candidate does not deploy or change storage."
+    "site": "Saved v135 remains available for source recovery; v136 is not deployed. Retain deployed v131 and its storage bindings unless a separate deployment or data recovery decision is made."
   },
-  "site_candidate_commit": "14d131abe3918dfdecdee8d928ef5448ffe8705b",
+  "site_archive_sha256": "3c5f2a47f15291f1cdaec91175d41fc7e0c7d029a5f55086d063fd464b75d5db",
+  "site_candidate_commit": "ec91fb30fb1372461174eece05f06c4e9e98e4fd",
   "site_candidate_deployed": false,
   "site_project": "appgprj_6aa0b1c41bc08191bfd86003920f1631",
-  "site_saved_version": 135,
-  "site_source_tree": "bf136e62ad289335ba21db8f3591a8c8d1cc5eef",
+  "site_saved_version": 136,
+  "site_saved_version_id": "appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_ff1e0b921d988191b2f4b14c47e1c2a9",
+  "site_source_tree": "4ac35743d58e9073112af5cf3ab0a69e2b9eec57",
   "status": "review_pending",
   "supersedes": "data/receipts/generated/site-mirror-overlay-refresh-20261003.json",
-  "tracked_digest_manifest_sha256": "f91ddd459adb918a74b63d4ce200969f29e12cca0c46f5d784633a206a35b028",
+  "tracked_digest_manifest_sha256": "48da2b7da9b30d5e745104b29a8be13326e2a43950e46aa2e40303d16dafd525",
   "tracked_file_count": 334,
   "transition": {
-    "changed_existing_paths": 59,
+    "changed_existing_paths": 60,
+    "intermediate_saved_version": 135,
     "new_site_path_names": [
       "app/api/blm-plss-records/route.ts",
       "app/api/bridge-records/route.ts",
@@ -1763,17 +1766,19 @@
   },
   "validation": {
     "browser": "NOT RUN; browser policy verification unavailable",
+    "changed_file_lint": "PASS: maplibre-seam.ts, local-geopdf-map.ts, local-geopdf-review.test.mjs",
     "dependency_lock_sha256": "52d15d279429cc03d0e3eb21ffc6bd620b247a29ae1574e953a4c7ceb93fff8b",
     "diff_check": "PASS: git diff --cached --check",
     "hosted_equivalence": false,
+    "maplibre_inventory": "HOLD: accepted Site seam only; no acquisition outside candidate seam (same outcome as repository base)",
     "mirror_check": "PASS: python3 tools/qa/site_mirror.py --check; 334 tracked files",
     "mirror_tool_tests": "PASS: .venv/bin/python -m pytest -q tests/qa/test_site_mirror.py; 8/8",
     "node_version": "v22.13.1",
     "npm_audit": "FAIL: 8 high, 0 critical; same unchanged lockfile; no dependency remediation in this mirror candidate",
     "site_install": "PASS: npm run install:ci; locked npm ci completed",
     "site_lint": "FAIL: 6 react-hooks/set-state-in-effect errors and 39 warnings; 3 errors in unchanged governed-water-control.tsx, 3 in new smoke/lightning controls",
-    "site_tests": "PASS: npm test; production build and 344/344 Node tests",
-    "site_typecheck": "PASS: ./node_modules/.bin/tsc --noEmit",
-    "source_comparison": "PASS: --source clean Site commit; zero changes and zero unexpected deletions"
+    "site_tests": "PASS: npm test on saved Site v136 source; production build and 344/344 Node tests",
+    "site_typecheck": "PASS: ./node_modules/.bin/tsc --noEmit on v136 source",
+    "source_comparison": "PASS: --source clean saved Site v136 commit; zero changes and zero unexpected deletions"
   }
 }

@@ -1,4 +1,4 @@
-import type { Map as MapLibreMap, MapLibreModule } from "./maplibre-seam";
+import { installMapProtocol, type Map as MapLibreMap, type MapLibreModule } from "./maplibre-seam";
 import type { LocalReviewPackage } from "./local-geopdf-review";
 
 export const LOCAL_REVIEW_SOURCE = "kfm-device-geopdf-source";
@@ -39,7 +39,7 @@ export function attachLocalReview(map: MapLibreMap, runtime: MapLibreModule, pac
   const error = (event: unknown) => {
     if (event && typeof event === "object" && "sourceId" in event && sourceIds.includes(String(event.sourceId))) { failed = true; update(); }
   };
-  runtime.addProtocol(protocol, async (params, abort) => {
+  installMapProtocol(runtime, protocol, async (params, abort) => {
     if (disposed || abort.signal.aborted) throw new DOMException("Review removed.", "AbortError");
     const address = params.url.slice(`${protocol}://`.length);
     const tile = params.url.startsWith(`${protocol}://`) && /^\d{1,2}\/\d{1,5}\/\d{1,5}\.png$/.test(address)
