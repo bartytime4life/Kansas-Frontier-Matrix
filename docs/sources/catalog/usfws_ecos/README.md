@@ -17,10 +17,8 @@ related:
   - docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md
   - docs/domains/fauna/README.md
   - docs/domains/habitat/README.md
-  - <PROPOSED> connectors/usfws/
-  - <PROPOSED> data/registry/sources/usfws-ecos/
-  - <PROPOSED> policy/sources/usfws/
-  - <PROPOSED> policy/sensitivity/fauna/
+  - connectors/usfws/
+  - policy/sensitivity/fauna/
 adr_refs:
   - ADR-0001 (schema home)
   - <PROPOSED> ADR-S-04 (source-role vocabulary v1)
@@ -32,6 +30,7 @@ notes:
   - Path docs/sources/catalog/<source>.md is PROPOSED — catalog/ subfolder convention is not enumerated in Directory Rules §6.1 (see Open Questions Q-1).
   - Filename convention lowercase-with-hyphens is PROPOSED — docs/standards/ uses UPPERCASE-WITH-HYPHENS (Directory Rules §6.1.a). Q-2 remains open.
   - v1.1 — PROPOSED CORRECTION applied to fauna RangePolygon sensitivity tier per Atlas §24.5.2 + KFM-P20-PROG-0002 (T1 generalized public-safe is doctrine default; T0 was overclaimed in v1.0 of this page). See §6.2.
+  - "PROPOSED related paths, not present in the repository and so kept out of related: data/registry/sources/usfws-ecos/, policy/sources/usfws/"
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -480,12 +479,12 @@ graph LR
 > [!NOTE]
 > Links below mix **CONFIRMED-authored** docs (prior session) with **PROPOSED-in-corpus** docs that are not yet authored. Anchors are best-effort; expect breakage on those marked `TODO`.
 
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — **CONFIRMED doctrine** for path placement.
-- [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — **CONFIRMED in §6.1 docs/doctrine tree**; presence **NEEDS VERIFICATION**.
-- [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — **CONFIRMED in §6.1 docs/doctrine tree**; presence **NEEDS VERIFICATION**.
+- [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — **CONFIRMED doctrine** for path placement.
+- [`docs/doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md) — **CONFIRMED in §6.1 docs/doctrine tree**; presence **NEEDS VERIFICATION**.
+- [`docs/doctrine/trust-membrane.md`](../../../doctrine/trust-membrane.md) — **CONFIRMED in §6.1 docs/doctrine tree**; presence **NEEDS VERIFICATION**.
 - `docs/standards/SENSITIVITY_RUBRIC.md` — **PROPOSED in corpus** (Pass-10 `C6-01`); referenced for the T0–T4 tier framework.
 - `docs/standards/REDACTION_DETERMINISM.md` — **PROPOSED in corpus** (Pass-10 `C6-03`); referenced for the geoprivacy machinery.
-- [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) — **CONFIRMED authored (prior session)**; refresh procedure for fauna sources including USFWS.
+- [`docs/runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md`](../../../runbooks/fauna/SOURCE_REFRESH_RUNBOOK.md) — **CONFIRMED authored (prior session)**; refresh procedure for fauna sources including USFWS.
 - `docs/domains/fauna/README.md` — **PROPOSED**; `ConservationStatus` & sensitive-occurrence semantics.
 - `docs/domains/habitat/README.md` — **PROPOSED**; `RangePolygon` & critical-habitat semantics.
 - `docs/sources/catalog/natureserve.md` — **TODO** (sibling source catalog).
