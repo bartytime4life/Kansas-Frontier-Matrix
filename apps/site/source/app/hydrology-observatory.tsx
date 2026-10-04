@@ -1,6 +1,10 @@
 "use client";
 
-import { useId, useMemo, type KeyboardEvent, type ReactNode } from "react";
+import { useId, useMemo, useState, type KeyboardEvent, type ReactNode } from "react";
+import { RiverNetworkSignal } from "./river-network-signal";
+import { nearestRiverSample } from "./river-pulse-visuals";
+import { WaterTerrainProfile } from "./water-terrain-profile";
+import type { WaterPathAnalysis } from "./water-path-analysis";
 import { waterReadingCue } from "./water-flow-context";
 import {
   buildHydrographSegments,
@@ -30,6 +34,7 @@ export type HydrologyObservatoryProps = Readonly<{
   reducedMotion: boolean;
   downstreamState: "idle" | "loading" | "ready" | "empty" | "error";
   downstreamPathCount: number;
+  downstreamAnalysis?: WaterPathAnalysis | null;
   sourceSwitcher?: ReactNode;
   onRefresh: () => void;
   onTogglePlay: () => void;
@@ -106,7 +111,7 @@ const stationLabel = (station: StreamflowStation) => station.name === station.st
 
 const formatDischarge = (value: number | null, unit: string | null) => value === null
   ? "not reported"
-  : `${value.toLocaleString("en-US", { maximumFractionDigits: value >= 100 ? 0 : 2 })} ${unit ?? "unknown unit"}`;
+  : `${value.toLocaleString("en-US", { maximumFractionDigits: value >= 100 ? 0 : 2 })} ${unit === "ft^3/s" ? "ft³/s" : unit ?? "unknown unit"}`;
 
 const observationGapMinutes = (observations: readonly StreamflowObservation[]) => {
   const deltas = observations.slice(1).flatMap((observation, index) => {
@@ -173,6 +178,7 @@ export function HydrologyObservatory({
   reducedMotion,
   downstreamState,
   downstreamPathCount,
+  downstreamAnalysis = null,
   sourceSwitcher,
   onRefresh,
   onTogglePlay,
@@ -185,6 +191,9 @@ export function HydrologyObservatory({
   onShowDirection,
 }: HydrologyObservatoryProps) {
   const chartTitleId = useId();
+  const chartGradientId = useId();
+  const [expanded, setExpanded] = useState(false);
+  const [sampleProbe, setSampleProbe] = useState<{ station: string; time: string } | null>(null);
   const chartDescriptionId = useId();
   const stationOptions = useMemo(
     () => [...(bundle?.stations ?? [])].sort((left, right) => stationLabel(left).localeCompare(stationLabel(right))),
@@ -230,8 +239,13 @@ export function HydrologyObservatory({
     ? selectedSeries.find((observation) => observation.observedAt === activeObservationTime) ?? null
     : null;
   const latestPoint = pointForObservation(hydrographSummary.latest, hydrographSummary, selectedSeries);
-  const activePoint = pointForObservation(activeObservation, hydrographSummary, selectedSeries);
+  const activePoint = selectedFrameProperties?.missing ? null : pointForObservation(activeObservation, hydrographSummary, selectedSeries);
   const gapCount = Math.max(0, hydrographSegments.length - 1);
+  const probeIndex = sampleProbe?.station === selectedStationId ? selectedSeries.findIndex(sample => sample.observedAt === sampleProbe.time) : -1;
+  const probeObservation = probeIndex >= 0 ? selectedSeries[probeIndex] : activeObservation ?? selectedSeries.at(-1) ?? null;
+  const probePoint = pointForObservation(probeObservation, hydrographSummary, selectedSeries);
+  const inspectIndex = (index: number) => { const sample = selectedSeries[index]; if (sample && selectedStationId) setSampleProbe({ station: selectedStationId, time: sample.observedAt }); };
+
   const safeFrameIndex = Math.max(0, Math.min(frameIndex, Math.max(0, observationTimes.length - 1)));
   const canPlay = !reducedMotion && observationTimes.length > 1 && state !== "loading" && state !== "empty" && state !== "error";
   const canStep = observationTimes.length > 1 && state !== "loading";
@@ -267,6 +281,7 @@ export function HydrologyObservatory({
     className="hydrology-observatory"
     data-state={state}
     data-playing={playing}
+    data-expanded={expanded}
     tabIndex={0}
     aria-label="River Pulse streamflow observation controls"
     aria-busy={state === "loading"}
@@ -279,18 +294,21 @@ export function HydrologyObservatory({
         <strong>Current and historical Kansas streamflow</strong>
       </div>
       <div className="hydrology-header-actions">
+        <button type="button" className="river-follow" onClick={() => { setExpanded(false); onShowDirection(); }} disabled={!bundle?.stations.length}>Follow a river</button>
+        <button type="button" className="river-expand" aria-expanded={expanded} onClick={() => setExpanded(value => !value)}>{expanded ? "Compact" : "Expand details"}</button>
         <b className="hydrology-state" role="status" aria-live={playing ? "off" : "polite"}>{displayState}</b>
         <button type="button" onClick={onRefresh} disabled={state === "loading"}>{state === "loading" ? "Refreshing…" : "Refresh"}</button>
       </div>
     </header>
 
+    <RiverNetworkSignal frame={frame} selected={selectedStationId} onSelect={onSelectStation} />
     <div className="hydrology-clock" role="status" aria-live={playing ? "off" : "polite"} aria-atomic="true">
       <div>
-        <span>EXACT OBSERVATION FRAME</span>
+        <span>{observationTimes.length ? "EXACT OBSERVATION FRAME" : "REQUEST END · NO OBSERVATIONS"}</span>
         <strong><time dateTime={frameTime ?? undefined}>{formatLocalTime(frameTime)}</time></strong>
         <small><time dateTime={frameTime ?? undefined}>{formatUtcTime(frameTime)}</time> · {queryMode}</small>
       </div>
-      <span>{observationTimes.length ? `${safeFrameIndex + 1} / ${observationTimes.length}` : "0 / 0"}</span>
+      <span>{observationTimes.length ? `${safeFrameIndex + 1} / ${observationTimes.length}` : "No frames"}</span>
     </div>
 
     <div className="hydrology-transport" aria-label="Streamflow playback">
@@ -334,22 +352,21 @@ export function HydrologyObservatory({
       </label>
     </div>
 
-    <div className="hydrology-stats" aria-label="Current streamflow frame completeness">
-      <article><span>REPORTING</span><strong>{reportingCount}</strong><small>at this frame</small></article>
-      <article><span>MISSING</span><strong>{missingCount}</strong><small>not zero flow</small></article>
-      <article><span>PROVISIONAL</span><strong>{provisionalCount}</strong><small>subject to revision</small></article>
-    </div>
 
-    <section className="hydrology-water-reading" aria-label="Selected station water movement and range">
-      <div className="hydrology-water-reading-head"><span>WATER AT SELECTED GAUGE</span><strong>{selectedStation ? selectedWaterCue.kind === "missing" ? "No reading at this frame" : formatDischarge(selectedWaterCue.value, hydrographSummary.unit) : "Choose a station to inspect flow"}</strong></div>
+    <section className="hydrology-water-reading" data-reading={selectedWaterCue.kind} aria-label="Selected station water movement and range">
+      <div className="hydrology-water-reading-head"><span>{selectedStation?.name ?? "WATER AT SELECTED GAUGE"}</span><strong>{selectedStation ? selectedWaterCue.kind === "missing" ? "No reading at this frame" : formatDischarge(selectedWaterCue.value, hydrographSummary.unit) : "Choose a station to inspect flow"}</strong></div>
       {selectedStation && <>
+        <div className="river-reading-meta"><b>{selectedWaterCue.kind === "missing" ? "NO FRESH MEASUREMENT" : selectedWaterCue.kind === "zero" ? "MEASURED ZERO" : selectedWaterCue.kind.toUpperCase()}</b><span>{activeObservationTime ? formatLocalTime(activeObservationTime) : "No source timestamp"}</span><span>{stringValue(selectedFrameProperties?.approvalStatus) ?? "Quality not supplied"}</span></div>
         <p>{selectedWaterCue.kind === "zero" ? "Observed zero discharge at this gauge. The extent of dry channel is unknown."
           : selectedWaterCue.kind === "missing" ? "Missing is unknown, not zero or dry."
           : selectedWaterCue.change !== null ? `${selectedWaterCue.change > 0 ? "Rising" : selectedWaterCue.change < 0 ? "Falling" : "Steady"} by ${formatDischarge(Math.abs(selectedWaterCue.change), hydrographSummary.unit)} since the prior reported observation.`
           : "No prior reported value is available for comparison in this frame."}</p>
         {relativePosition && <div className="hydrology-range-position"><div role="meter" aria-label="Position within loaded station observations" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(selectedWaterCue.rangePosition! * 100)} aria-valuetext={relativePosition}><i style={{ left: `${selectedWaterCue.rangePosition! * 100}%` }} /></div><small>{relativePosition} · {formatDischarge(selectedWaterCue.rangeMinimum, hydrographSummary.unit)} to {formatDischarge(selectedWaterCue.rangeMaximum, hydrographSummary.unit)} in loaded station range</small></div>}
       </>}
-      <div className="hydrology-direction-status" role="status"><strong>MAPPED FLOW DIRECTION</strong><span>{!selectedStation ? "Show direction to choose a reporting gauge and inspect its nearby mapped channels." : downstreamState === "ready" ? `${downstreamPathCount} USGS 3DHP channel segment${downstreamPathCount === 1 ? "" : "s"} near this gauge. Longer trails follow digitized downstream lines; with motion enabled they keep moving while the observation clock is paused. Trail length and pace are illustrative, not measured travel or proof of a connected wet channel.` : downstreamState === "loading" ? "Checking mapped channel direction…" : downstreamState === "empty" ? "No verified directional channel segment nearby; arrows hidden. Try another gauge." : downstreamState === "error" ? "Mapped channel direction unavailable; arrows hidden." : "Mapped direction is not loaded."}</span></div>
+      <details className="river-path-details"><summary>Channel direction &amp; terrain</summary>
+      <div className="hydrology-direction-status" role="status"><strong>MAPPED FLOW DIRECTION</strong><span>{!selectedStation ? "Show direction to choose a reporting gauge and inspect its nearby mapped channels." : downstreamState === "ready" ? `Downstream guide follows ${downstreamAnalysis?.segments ?? downstreamPathCount} USGS mapped reach${(downstreamAnalysis?.segments ?? downstreamPathCount) === 1 ? "" : "es"}. ${selectedWaterCue.kind === "zero" ? "Measured zero: the amber guide is stationary, with no moving arrows." : selectedWaterCue.kind === "missing" ? "Measurement unavailable: the dashed guide is stationary, with no arrows." : "Motion follows a positive reading and pauses when the feed is unavailable or stale."} Luminous trails show mapped direction; their pace is illustrative, not measured water speed.` : downstreamState === "loading" ? "Checking mapped channel direction…" : downstreamState === "empty" ? "No verified directional channel segment nearby; arrows hidden. Try another gauge." : downstreamState === "error" ? "Mapped channel direction unavailable; arrows hidden." : "Mapped direction is not loaded."}</span></div>
+      {downstreamState === "ready" && downstreamAnalysis && <WaterTerrainProfile analysis={downstreamAnalysis} />}
+      </details>
       <button className="hydrology-direction-action" type="button" onClick={onShowDirection} disabled={!bundle?.stations.length}>{selectedStation ? "Zoom to flow direction" : "Show flow direction on map"}</button>
       <small className="hydrology-reading-boundary">Gauge rings show change at a station. Relative low or high describes only the loaded station readings; it is not a drought or flood threshold.</small>
     </section>
@@ -374,7 +391,7 @@ export function HydrologyObservatory({
         </section>
         <section aria-label="Observation quality">
           <strong>QUALITY / AVAILABILITY</strong>
-          <div className="hydrology-quality-key"><span data-quality="approved"><i />Approved</span><span data-quality="provisional"><i />Provisional</span><span data-quality="missing"><i />No frame value</span></div>
+          <div className="hydrology-quality-key"><span data-quality="approved"><i />Approved</span><span data-quality="provisional"><i />Provisional</span><span data-quality="missing"><i />Dashed ×: missing or too old</span><span data-quality="zero"><i />Amber −: measured zero</span></div>
           <p>Missing stations remain hollow. Provisional USGS values may be revised.</p>
         </section>
       </div>
@@ -398,18 +415,35 @@ export function HydrologyObservatory({
           preserveAspectRatio="none"
           role="img"
           aria-labelledby={`${chartTitleId} ${chartDescriptionId}`}
+          onPointerMove={(event) => {
+            if (!selectedSeries.length) return;
+            const bounds = event.currentTarget.getBoundingClientRect();
+            const fraction = Math.max(0, Math.min(1, ((event.clientX - bounds.left) / bounds.width * CHART_WIDTH - CHART_PADDING) / (CHART_WIDTH - CHART_PADDING * 2)));
+            inspectIndex(nearestRiverSample(selectedSeries, Date.parse(selectedSeries[0].observedAt) + fraction * (Date.parse(selectedSeries.at(-1)!.observedAt) - Date.parse(selectedSeries[0].observedAt))));
+          }}
         >
+          <defs><linearGradient id={chartGradientId} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#5ef0e6" stopOpacity=".35" /><stop offset="100%" stopColor="#5ef0e6" stopOpacity="0" /></linearGradient></defs>
           <desc id={chartDescriptionId}>{chartSummary}</desc>
           <line className="hydrology-chart-grid" x1={CHART_PADDING} y1={CHART_PADDING} x2={CHART_WIDTH - CHART_PADDING} y2={CHART_PADDING} />
           <line className="hydrology-chart-grid" x1={CHART_PADDING} y1={CHART_HEIGHT / 2} x2={CHART_WIDTH - CHART_PADDING} y2={CHART_HEIGHT / 2} />
           <line className="hydrology-chart-grid" x1={CHART_PADDING} y1={CHART_HEIGHT - CHART_PADDING} x2={CHART_WIDTH - CHART_PADDING} y2={CHART_HEIGHT - CHART_PADDING} />
+          {hydrographSegments.map((segment, index) => {
+            const start = pointForObservation(selectedSeries.find(sample => sample.observedAt === segment.startTime) ?? null, hydrographSummary, selectedSeries);
+            const end = pointForObservation(selectedSeries.find(sample => sample.observedAt === segment.endTime) ?? null, hydrographSummary, selectedSeries);
+            return start && end && segment.pointCount > 1 ? <path key={`area-${index}`} d={`${segment.path} L${end.x},${CHART_HEIGHT - CHART_PADDING} L${start.x},${CHART_HEIGHT - CHART_PADDING} Z`} fill={`url(#${chartGradientId})`} /> : null;
+          })}
+          <text className="river-chart-axis" x={CHART_WIDTH - CHART_PADDING} y="14" textAnchor="end">{formatDischarge(hydrographSummary.maximum, hydrographSummary.unit)}</text>
           {hydrographSegments.map((segment, index) => <path key={`${segment.startTime}:${segment.endTime}:${index}`} className="hydrology-chart-segment" d={segment.path} fill="none" vectorEffect="non-scaling-stroke" />)}
           {latestPoint && <circle className="hydrology-chart-latest" cx={latestPoint.x} cy={latestPoint.y} r="4.5" vectorEffect="non-scaling-stroke" />}
+          {probePoint && <><line className="river-probe-line" x1={probePoint.x} x2={probePoint.x} y1={CHART_PADDING} y2={CHART_HEIGHT - CHART_PADDING} /><circle className="river-probe-halo" cx={probePoint.x} cy={probePoint.y} r="11" /><circle className="river-probe-dot" cx={probePoint.x} cy={probePoint.y} r="4" /></>}
           {activePoint && <>
             <line className="hydrology-chart-cursor" x1={activePoint.x} y1={CHART_PADDING} x2={activePoint.x} y2={CHART_HEIGHT - CHART_PADDING} vectorEffect="non-scaling-stroke" />
             <circle className="hydrology-chart-active" cx={activePoint.x} cy={activePoint.y} r="6" vectorEffect="non-scaling-stroke" />
           </>}
         </svg>
+        <div className="river-sample-probe" aria-label="Exact source sample inspector"><div><span>INSPECTED SAMPLE</span><strong>{formatDischarge(probeObservation?.value ?? null, probeObservation?.unit ?? null)}</strong><time>{formatLocalTime(probeObservation?.observedAt ?? null)}</time></div><small>{probeObservation?.approvalStatus ?? "No sample"} · {probeObservation?.value === null ? "Missing value; no point invented." : "Exact reported value. Inspection does not change map time."}</small>
+          <input type="range" min="0" max={Math.max(0, selectedSeries.length - 1)} value={probeIndex >= 0 ? probeIndex : Math.max(0, selectedSeries.indexOf(probeObservation!))} disabled={!selectedSeries.length} onChange={event => inspectIndex(Number(event.target.value))} aria-label="Inspect exact station sample" aria-valuetext={`${formatDischarge(probeObservation?.value ?? null, probeObservation?.unit ?? null)} at ${formatLocalTime(probeObservation?.observedAt ?? null)}`} />
+        </div>
         <figcaption className="hydrology-chart-caption">
           <span>{formatLocalTime(selectedSeries[0]?.observedAt ?? null)}</span>
           <strong>Exact values · gaps break the path</strong>

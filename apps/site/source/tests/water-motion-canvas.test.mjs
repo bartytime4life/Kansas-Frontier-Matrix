@@ -27,7 +27,7 @@ function draw(length, elapsedMs, animateDirection, value = 10, options = {}) {
   };
   const canvas = { width: 0, height: 0, getContext: () => context };
   const map = {
-    getCanvas: () => ({ clientWidth: 200, clientHeight: 100 }), project: ([x, y]) => ({ x, y }),
+    getCanvas: () => ({ clientWidth: options.width ?? 200, clientHeight: options.height ?? 100 }), project: ([x, y]) => ({ x, y }),
     getProjection: () => ({ type: options.globe ? "globe" : "mercator" }),
     getZoom: () => options.zoom ?? 6,
     getCenter: () => ({ lng: options.center?.[0] ?? 0, lat: options.center?.[1] ?? 40 }),
@@ -36,7 +36,7 @@ function draw(length, elapsedMs, animateDirection, value = 10, options = {}) {
   globalThis.window = { devicePixelRatio: 1 };
   try {
     drawWaterMotionCanvas(canvas, map, { features: options.features ?? [] }, "USGS-06864500",
-      [{ id: "river", coordinates: [[0, 40], [length, 40]] }],
+      [{ id: "river", coordinates: options.coordinates ?? [[0, 40], [length, 40]] }],
       { value }, elapsedMs, false, animateDirection);
   } finally {
     globalThis.window = priorWindow;
@@ -61,6 +61,14 @@ test("longer motion trails remain on positive-flow mapped channels", () => {
   assert.ok(mapped.trailLengths.some(length => length > 100 && length <= 200));
 });
 
+test("expanded trails reach 240 pixels and follow bends without motion for missing readings", () => {
+  const long = draw(400, 4400, true, 10, { width: 500 });
+  assert.ok(long.trailLengths.some(length => Math.abs(length - 240) < 0.01));
+  const bend = draw(240, 3000, true, 10, { width: 300, height: 200, coordinates: [[0, 40], [120, 40], [120, 160]] });
+  assert.deepEqual(bend.arrows, [[120, 88]]);
+  assert.equal(draw(400, 4400, true, null, { width: 500 }).trailLengths.length, 0);
+});
+
 test("globe overview shrinks and hides pulse rings as Kansas recedes", () => {
   const feature = { geometry: { type: "Point", coordinates: [0, 40] }, properties: { stationId: "USGS-06864500", missing: false, value: 10, trend: "rising" } };
   const flat = draw(100, 400, false, 10, { features: [feature] });
@@ -69,4 +77,16 @@ test("globe overview shrinks and hides pulse rings as Kansas recedes", () => {
   assert.ok(flat.rings[0] > regional.rings[0]);
   assert.deepEqual(earth.rings, []);
   assert.deepEqual(draw(100, 400, false, 10, { globe: true, zoom: 5.45, center: [180, 40], features: [feature] }).rings, []);
+});
+
+test("zero and missing gauges have stationary marks and no downstream arrows", () => {
+  for (const value of [0, null]) {
+    const feature = { geometry: { type: "Point", coordinates: [50, 40] }, properties: { stationId: "USGS-06864500", missing: value === null, value, trend: "steady" } };
+    const first = draw(100, 0, true, value, { features: [feature] });
+    const later = draw(100, 1200, true, value, { features: [feature] });
+    assert.equal(first.rings.length, 1);
+    assert.deepEqual(first.rings, later.rings);
+    assert.deepEqual(first.arrows, []);
+    assert.deepEqual(first.trailLengths, []);
+  }
 });

@@ -1,6 +1,6 @@
 import type { OfficialContextId, OfficialContextSource } from "./live-context";
 
-export type LayerWorkspace = "all" | "disaster" | "land" | "transport";
+export type LayerWorkspace = "groundwater" | "all" | "disaster" | "land" | "transport";
 
 export const DISASTER_SOURCE_IDS: readonly OfficialContextId[] = Object.freeze([
   "fema-disaster-declarations", "fema-flood-zones",
@@ -18,7 +18,7 @@ export const LAND_SOURCE_IDS: readonly OfficialContextId[] = Object.freeze([
 export const TRANSPORT_SOURCE_IDS: readonly OfficialContextId[] = Object.freeze(["kdot-bridges-state", "kdot-bridges-local", "kdot-bridges-historic", "kdot-bridges-old", "kdot-bridges-closed", "kdot-roads-1918", "kdot-roads", "kdot-rail-active", "kdot-rail-abandoned"]);
 
 export const LAYER_WORKSPACES: readonly (readonly [LayerWorkspace, string])[] = Object.freeze([
-  ["all", "All sources"], ["land", "BLM land records"], ["transport", "Roads, rail & bridges"], ["disaster", "Hazards"],
+  ["all", "All sources"], ["groundwater", "Aquifers & groundwater"], ["land", "BLM land records"], ["transport", "Roads, rail & bridges"], ["disaster", "Hazards"],
 ]);
 
 export function sourceMinimumZoom(source: OfficialContextSource): number {
@@ -39,7 +39,7 @@ export function filterOfficialSources(
   sources: readonly OfficialContextSource[], workspace: LayerWorkspace, query: string,
 ): OfficialContextSource[] {
   const term = query.trim().toLowerCase();
-  const ids = workspace === "disaster" ? new Set(DISASTER_SOURCE_IDS)
+  const ids = workspace === "groundwater" ? new Set(sources.filter(source => source.id.startsWith("kgs-")).map(source => source.id)) : workspace === "disaster" ? new Set(DISASTER_SOURCE_IDS)
     : workspace === "land" ? new Set(LAND_SOURCE_IDS) : workspace === "transport" ? new Set(TRANSPORT_SOURCE_IDS) : null;
   return sources.filter(source => (!ids || ids.has(source.id))
     && (!term || `${source.id} ${source.title} ${source.shortTitle} ${source.organization} ${source.domain}`.toLowerCase().includes(term)))

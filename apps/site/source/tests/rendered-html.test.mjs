@@ -691,13 +691,16 @@ test("connects bounded official context sources without admitting evidence", asy
   const compositionUrl = `data:text/javascript;base64,${Buffer.from("export const balanceMapFills=()=>{}; export const balanceMapRasters=()=>{}; export const composeMapLayers=()=>{}; export const requestFillOpacity=()=>{}; export const requestRasterOpacity=()=>{};").toString("base64")}`;
   const bridgeUrl = `data:text/javascript;base64,${Buffer.from(compile(await readFile(new URL("../app/kansas-bridge-records.ts", import.meta.url), "utf8"), "kansas-bridge-records.ts")).toString("base64")}`;
   const referenceUrl = `data:text/javascript;base64,${Buffer.from(compile((await readFile(new URL("../app/kansas-reference-layers.ts", import.meta.url), "utf8")).replace('from "./kansas-bridge-records";', `from "${bridgeUrl}";`), "kansas-reference-layers.ts")).toString("base64")}`;
-  const javascript = compile(withBuildClock(registrySource).replace('from "./kansas-reference-layers";', `from "${referenceUrl}";`).replace('from "./noaa-radar";', `from "${radarUrl}";`).replace('from "./noaa-satellite";', `from "${satelliteUrl}";`).replace('from "./lightning-data";', `from "${lightningUrl}";`).replace('from "./map-performance";', `from "${performanceUrl}";`).replace('from "./map-layer-composition";', `from "${compositionUrl}";`).replace('from "./globe-context";', `from "${globeUrl}";`), "live-context.ts");
+  const aquiferUrl = `data:text/javascript;base64,${Buffer.from(compile(await readFile(new URL("../app/aquifer-layers.ts", import.meta.url), "utf8"), "aquifer-layers.ts")).toString("base64")}`;
+  const javascript = compile(withBuildClock(registrySource).replace('from "./aquifer-layers";', `from "${aquiferUrl}";`).replace('from "./kansas-reference-layers";', `from "${referenceUrl}";`).replace('from "./noaa-radar";', `from "${radarUrl}";`).replace('from "./noaa-satellite";', `from "${satelliteUrl}";`).replace('from "./lightning-data";', `from "${lightningUrl}";`).replace('from "./map-performance";', `from "${performanceUrl}";`).replace('from "./map-layer-composition";', `from "${compositionUrl}";`).replace('from "./globe-context";', `from "${globeUrl}";`), "live-context.ts");
   const registry = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
 
   assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.map((record) => record.id), [
     "blm-mlrs-leases-authorized", "blm-mlrs-leases-closed",
     "kdot-bridges-state", "kdot-bridges-local", "kdot-bridges-historic", "kdot-bridges-old", "kdot-bridges-closed", "kdot-roads-1918",
     "kdot-roads", "kdot-rail-active", "kdot-rail-abandoned", "fema-flood-zones",
+    "kgs-aquifer-alluvial", "kgs-aquifer-dakota", "kgs-aquifer-glacial-drift", "kgs-aquifer-high-plains", "kgs-aquifer-ozark", "kgs-aquifer-osage", "kgs-aquifer-flint-hills",
+    "kgs-water-table", "kgs-saturated-thickness", "kgs-depth-to-water", "kgs-monitoring-wells",
     "fema-disaster-declarations",
     "blm-plss-townships",
     "blm-plss-sections",
@@ -792,7 +795,7 @@ test("adds bounded exact-time streamflow, NOAA hydrology roles, and a gap-aware 
   assert.match(usgsRoute, /daily\/items/);
   assert.match(usgsRoute, /monitoring-locations\/items/);
   assert.match(usgsRoute, /ALLOWED_UPSTREAM_PATHS/);
-  assert.match(usgsRoute, /NETWORK_STATION_CAP = 72/);
+  assert.match(usgsRoute, /NETWORK_STATION_CAP = 512/);
   assert.match(usgsRoute, /geographicallySpread/);
   assert.match(usgsRoute, /Network mode supports only range=24h and parameter 00060/);
   assert.match(usgsRoute, /const statisticId = daily \? "00003" : null/);

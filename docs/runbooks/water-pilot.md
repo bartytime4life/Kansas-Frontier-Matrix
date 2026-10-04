@@ -277,6 +277,34 @@ not changed. Roll back the repository candidate by reverting its mirror commit
 and restoring the v139 receipt selector. Saved v139 remains a source recovery
 point; any future deployed rollback requires its own release review.
 
+## Saved Site v150 mirror candidate — 2026-10-04
+
+The [v150 mirror receipt](../../data/receipts/generated/site-mirror-v150-candidate-20261004.json)
+pins owner-private Site source `ba7438a9820a0b2d9beed675b96cf1dfac510d43`
+and repository base `0835f02f0bcf7c19c9a4fdcbe509dc1770e9b0f3`.
+Its 369 tracked Site paths are byte-identical to this mirror candidate: 64
+changed paths, including 32 additions, and no deletions. The previous mirror
+receipt remains as dated evidence. Site v147 is deployed; v150 is saved with a
+build archive and has no deployment. Neither parity nor deployment grants water
+source admission or release authority.
+
+Saved Site versions v148 (`c16269b8`) and v149 (`0d588909`) were superseded
+before mirror review. Their lightning fixture note and three local
+timestamp filenames added one topology path-grammar drift. V150 uses lowercase
+fixture paths without changing the captured NOAA bytes or runtime code. The
+topology ratchet now reports zero new drift and 113 baselined warnings.
+
+The saved Site includes the A→B→A water-export selection guard and keeps newer
+lightning archive, river, smoke, and groundwater work from the authoritative
+Site. Its locked install, production build, 379 Node tests, TypeScript check,
+and lint passed; lint reported 42 warnings. The lockfile audit reported eight
+high development-dependency findings and zero findings with `--omit=dev`.
+Source/security review, browser acceptance, hosted equivalence, and any real
+water-package admission remain separate gates. Roll back this repository
+candidate by reverting its mirror commit and restoring the prior receipt
+selector; v147 remains the live Site recovery point until a separately
+reviewed deployment changes that fact.
+
 ## Reproducible environment
 
 Use Python 3.11 or newer; this batch used Python 3.12.3. From the repository root:

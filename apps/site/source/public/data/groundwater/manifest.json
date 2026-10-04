@@ -1,0 +1,249 @@
+[
+  {
+    "id": "kgs-water-table",
+    "title": "Water-table elevation",
+    "serviceUrl": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/Kansas_HPA_water_table_elevation/FeatureServer/0",
+    "retrievedAt": "2026-10-04T06:16:24.110758+00:00",
+    "featureCount": 25,
+    "generalizationDegrees": 0.0005,
+    "field": "wte_2022_2024_MANUAL",
+    "legend": [
+      {
+        "value": 1,
+        "label": "1300 to 1500",
+        "color": "#ffd3c9"
+      },
+      {
+        "value": 2,
+        "label": "1500 to 1600",
+        "color": "#f2bcb1"
+      },
+      {
+        "value": 3,
+        "label": "1600 to 1700",
+        "color": "#e8aa9e"
+      },
+      {
+        "value": 4,
+        "label": "1700 to 1800",
+        "color": "#e09f8d"
+      },
+      {
+        "value": 5,
+        "label": "1800 to 1900",
+        "color": "#d9997e"
+      },
+      {
+        "value": 6,
+        "label": "1900 to 2000",
+        "color": "#d49670"
+      },
+      {
+        "value": 7,
+        "label": "2000 to 2100",
+        "color": "#d99b6f"
+      },
+      {
+        "value": 8,
+        "label": "2100 to 2200",
+        "color": "#dea06a"
+      },
+      {
+        "value": 9,
+        "label": "2200 to 2300",
+        "color": "#e3a766"
+      },
+      {
+        "value": 10,
+        "label": "2300 to 2400",
+        "color": "#ebb26c"
+      },
+      {
+        "value": 11,
+        "label": "2400 to 2500",
+        "color": "#f2c074"
+      },
+      {
+        "value": 12,
+        "label": "2500 to 2600",
+        "color": "#facb7a"
+      },
+      {
+        "value": 13,
+        "label": "2600 to 2700",
+        "color": "#ffd782"
+      },
+      {
+        "value": 14,
+        "label": "2700 to 2800",
+        "color": "#ffe587"
+      },
+      {
+        "value": 15,
+        "label": "2800 to 2900",
+        "color": "#fff08f"
+      },
+      {
+        "value": 16,
+        "label": "2900 to 3000",
+        "color": "#fffa94"
+      },
+      {
+        "value": 17,
+        "label": "3000 to 3100",
+        "color": "#f6f78f"
+      },
+      {
+        "value": 18,
+        "label": "3100 to 3200",
+        "color": "#e1e683"
+      },
+      {
+        "value": 19,
+        "label": "3200 to 3300",
+        "color": "#cdd678"
+      },
+      {
+        "value": 20,
+        "label": "3300 to 3400",
+        "color": "#b9c76d"
+      },
+      {
+        "value": 21,
+        "label": "3400 to 3500",
+        "color": "#a8b863"
+      },
+      {
+        "value": 22,
+        "label": "3500 to 3600",
+        "color": "#95a858"
+      },
+      {
+        "value": 23,
+        "label": "3600 to 3700",
+        "color": "#82964d"
+      },
+      {
+        "value": 24,
+        "label": "3700 to 3900",
+        "color": "#718744"
+      }
+    ],
+    "bytes": 207331
+  },
+  {
+    "id": "kgs-saturated-thickness",
+    "title": "Saturated thickness",
+    "serviceUrl": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/Kansas_HPA_thickness_2022_2024/FeatureServer/0",
+    "retrievedAt": "2026-10-04T06:16:24.630206+00:00",
+    "featureCount": 8,
+    "generalizationDegrees": 0.0005,
+    "field": "satthick_2022_2024_MANUAL",
+    "legend": [
+      {
+        "value": 1,
+        "label": "Under 50",
+        "color": "#ffff73"
+      },
+      {
+        "value": 2,
+        "label": "50 to 100",
+        "color": "#95ff5e"
+      },
+      {
+        "value": 3,
+        "label": "100 to 150",
+        "color": "#00f240"
+      },
+      {
+        "value": 4,
+        "label": "150 to 200",
+        "color": "#00ab73"
+      },
+      {
+        "value": 5,
+        "label": "200 to 250",
+        "color": "#1d9eb9"
+      },
+      {
+        "value": 6,
+        "label": "250 to 300",
+        "color": "#225ea8"
+      },
+      {
+        "value": 7,
+        "label": "Over 300",
+        "color": "#0c2c84"
+      }
+    ],
+    "bytes": 468448
+  },
+  {
+    "id": "kgs-depth-to-water",
+    "title": "Depth to water",
+    "serviceUrl": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/Kansas_HPA_Depth_to_Water/FeatureServer/0",
+    "retrievedAt": "2026-10-04T06:16:24.148578+00:00",
+    "featureCount": 10,
+    "generalizationDegrees": 0.0005,
+    "field": "dtw_2022_2024_MANUAL_RANGE",
+    "legend": [
+      {
+        "value": "0.000000 - 25.000000",
+        "label": "Under 25",
+        "color": "#ffff80"
+      },
+      {
+        "value": "25.000001 - 50.000000",
+        "label": "25 to 50",
+        "color": "#fde86a"
+      },
+      {
+        "value": "50.000001 - 100.000000",
+        "label": "50 to 100",
+        "color": "#fbd255"
+      },
+      {
+        "value": "100.000001 - 150.000000",
+        "label": "100 to 150",
+        "color": "#f7bc41"
+      },
+      {
+        "value": "150.000001 - 200.000000",
+        "label": "150 to 200",
+        "color": "#f2a72e"
+      },
+      {
+        "value": "200.000001 - 250.000000",
+        "label": "200 to 250",
+        "color": "#ce7b20"
+      },
+      {
+        "value": "250.000001 - 300.000000",
+        "label": "250 to 300",
+        "color": "#ac5213"
+      },
+      {
+        "value": "300.000001 - 350.000000",
+        "label": "300 to 350",
+        "color": "#8b2e09"
+      },
+      {
+        "value": "350.000001 - 800.000000",
+        "label": "Over 350",
+        "color": "#6b0000"
+      }
+    ],
+    "bytes": 673788
+  },
+  {
+    "id": "kgs-monitoring-wells",
+    "title": "Monitoring locations",
+    "serviceUrl": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/Annual_measurement_wells_2026/FeatureServer/0",
+    "retrievedAt": "2026-10-04T06:16:24.364474+00:00",
+    "featureCount": 1384,
+    "generalizationDegrees": 0,
+    "field": null,
+    "legend": [],
+    "bytes": 614393
+  }
+]

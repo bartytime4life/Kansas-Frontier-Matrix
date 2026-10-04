@@ -8,7 +8,7 @@ async function load(file) {
   for (const match of [...js.matchAll(/from ["'](\.[^"']+)["']/g)]) js = js.replace(match[0], `from ${JSON.stringify(await load(path.resolve(path.dirname(file), match[1]) + ".ts"))}`);
   return `data:text/javascript;base64,${Buffer.from(js).toString("base64")}`;
 }
-const { HmsFrameCache, hmsValidDay, hmsAdvance, HMS_FIRST_DAY } = await import(await load("app/hms-smoke-playback.ts"));
+const { HmsFrameCache, findRecentSmoke, hmsValidDay, hmsAdvance, HMS_FIRST_DAY } = await import(await load("app/hms-smoke-playback.ts"));
 const { localImageryReadAllowed } = await import(await load("app/earth-engine-local-read.ts"));
 const frame = day => ({ retrievedAt: "2026-10-02T12:00:00Z", feed: "noaa-hms-smoke", state: "empty", smokeCoverage: { day, availableDays: [day], missingDays: [] }, data: { type: "FeatureCollection", features: [] }, featureCount: 0 });
 test("HMS archive starts at the connected KML publication and uses exact UTC days", () => {
@@ -33,6 +33,27 @@ test("HMS cancellation cannot populate the next frame", async () => {
   const abort = new AbortController();
   const cache = new HmsFrameCache(async () => { abort.abort(); return Response.json(frame("2005-08-05")); });
   await assert.rejects(cache.get("2005-08-05", abort.signal)); assert.equal(cache.size, 0);
+});
+test("recent smoke search distinguishes empty days, missing publications and a dated footprint", async () => {
+  const cache = new HmsFrameCache(async url => {
+    const day = new URL(url, "https://local.test").searchParams.get("day");
+    if (day === "2026-10-02") throw new Error("missing publication");
+    const result = frame(day);
+    if (day === "2026-10-01") { result.state = "ready"; result.data.features = [{ type: "Feature" }]; result.featureCount = 1; }
+    return Response.json(result);
+  });
+  const found = await findRecentSmoke(cache, "2026-10-03", new AbortController().signal);
+  assert.equal(found.day, "2026-10-01"); assert.equal(found.payload.featureCount, 1);
+  assert.deepEqual(found.missingDays, ["2026-10-02"]);
+});
+test("recent smoke search stops at seven days and aborts before another request", async () => {
+  let count = 0;
+  const cache = new HmsFrameCache(async url => { count++; return Response.json(frame(new URL(url, "https://local.test").searchParams.get("day"))); });
+  const result = await findRecentSmoke(cache, "2026-10-03", new AbortController().signal);
+  assert.equal(count, 7); assert.equal(result.day, null);
+  const abort = new AbortController();
+  await assert.rejects(findRecentSmoke(cache, "2026-10-03", abort.signal, () => abort.abort()), /abort/i);
+  assert.equal(count, 7);
 });
 test("local imagery read mode is explicit, exact-origin, read-only and denies cross-site requests", () => {
   const origin = "http://127.0.0.1:4173", route = "/api/earth-engine-context/catalog";

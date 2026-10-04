@@ -1,4 +1,5 @@
 "use client";
+import { GROUNDWATER_MANIFEST, safeKgsWellUrl } from "./aquifer-layers";
 import { DEFAULT_SOIL_MAP_STATE, hideSoilContext, restoreSoilMapState, serializeSoilMapState, visibleExternalContextCount, type SoilMapState } from "./soil-moisture";
 import { GovernedWaterControl } from "./governed-water-control";
 
@@ -29,6 +30,7 @@ import { CropCasmaControl } from "./crop-casma-control";
 import { HistoricalTopoControl } from "./historical-topo-control";
 import { DataNotices, LayerSceneControls, RenderQualityControl } from "./map-toolbar";
 import { drawWindFlowCanvas, nearestWindFlowSample, windToCompass } from "./wind-arrow-canvas";
+import type { WaterPathAnalysis } from "./water-path-analysis";
 import { drawWaterMotionCanvas } from "./water-motion-canvas";
 import { parseDownstreamGuide, waterReadingCue, type DownstreamPath } from "./water-flow-context";
 import { applyTerrainReliefStyle, applyTopographicRasterDepth } from "./terrain-relief-style";
@@ -715,6 +717,7 @@ const numberContextProperty = (properties: Record<string, unknown>, key: string)
 };
 
 const officialContextSummary = (source: OfficialContextId, title: string, properties: Record<string, unknown>) => {
+  if (source.startsWith("kgs-")) return source === "kgs-monitoring-wells" ? `${title}: 2026 monitoring location. Open the KGS well record for dated observations; no water-level measurement is attached to this point.` : `${title} feet · regional 2022–2024 classified estimate. Unclassified areas are blank. This is not a present measurement or a groundwater-flow calculation.`;
   if (source === "nifc-fire-reports") {
     const type = stringContextProperty(properties, "incidentType") ?? "incident";
     const discoveryAt = stringContextProperty(properties, "discoveryAt");
@@ -830,7 +833,7 @@ const buildBasemapContext = (candidate: BasemapFeatureCandidate, longitude: numb
     description: officialSource.boundary,
     domain: officialSource.domain,
     category: officialSource.id === "census-counties" ? "Reference boundaries & locators"
-      : ["usgs-streamflow", "noaa-nwps-gauges", "usgs-3dhp-hydrography", "usgs-wbd-watersheds", "noaa-nwm-analysis", "noaa-nwm-short-range"].includes(officialSource.id) ? "Hydrology & water"
+      : ["kgs-monitoring-wells", "kgs-water-table", "kgs-depth-to-water", "kgs-saturated-thickness", "usgs-streamflow", "noaa-nwps-gauges", "usgs-3dhp-hydrography", "usgs-wbd-watersheds", "noaa-nwm-analysis", "noaa-nwm-short-range"].includes(officialSource.id) ? "Hydrology & water"
         : officialSource.id === "usgs-3dep-hillshade" || officialSource.id === "usgs-earthquakes" ? "Geology & landforms"
           : "Weather & hazards",
     sourceType: officialSource.kind === "OPERATIONAL_WMS" ? "Raster" : "GeoJSON",
@@ -1002,6 +1005,7 @@ const anchorDistanceMiles = (left: Pick<FeatureProperties, "focusLng" | "focusLa
 export default function Home() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const windArrowCanvasRef = useRef<HTMLCanvasElement>(null);
+  const riverPathFocusRef = useRef<string | null>(null);
   const waterMotionCanvasRef = useRef<HTMLCanvasElement>(null);
   const daylightDayInitial = currentKansasCalendarDay();
   const [daylightDay, setDaylightDay] = useState(daylightDayInitial);
@@ -1175,7 +1179,11 @@ export default function Home() {
   const [streamflowPlaybackSpeed, setStreamflowPlaybackSpeed] = useState<HydrologyPlaybackSpeed>(1);
   const [streamflowRange, setStreamflowRange] = useState<HydrologyRange>("24h");
   const [streamflowSelectedStationId, setStreamflowSelectedStationId] = useState<string | null>(null);
-  const [downstreamPaths, setDownstreamPaths] = useState<readonly DownstreamPath[]>([]);
+  const [loadedDownstreamAnalysis, setDownstreamAnalysis] = useState<WaterPathAnalysis | null>(null);
+  const [loadedDownstreamPaths, setDownstreamPaths] = useState<readonly DownstreamPath[]>([]);
+  const [downstreamStationId, setDownstreamStationId] = useState<string | null>(null);
+  const downstreamPaths = useMemo(() => downstreamStationId === streamflowSelectedStationId ? loadedDownstreamPaths : [], [downstreamStationId, streamflowSelectedStationId, loadedDownstreamPaths]);
+  const downstreamAnalysis = downstreamStationId === streamflowSelectedStationId ? loadedDownstreamAnalysis : null;
   const [downstreamState, setDownstreamState] = useState<"idle" | "loading" | "ready" | "empty" | "error">("idle");
   const [streamflowArchiveDay, setStreamflowArchiveDay] = useState<string | null>(null);
   const [streamflowArchiveDraftDay, setStreamflowArchiveDraftDay] = useState(currentUtcDay);
@@ -1623,7 +1631,7 @@ export default function Home() {
     selected
     && (selectedIsHeldOfficialContext || !isFeatureAvailableForTemporalQuery(selected.layer, selected.properties.year, temporalQuery)),
   );
-  const officialFeatureCount = visibleOfficialSources.reduce((total, source) => total + (effectiveOfficialVisibility[source.id] ? officialPayloads[source.id as OfficialContextFeedId]?.featureCount ?? 0 : 0), 0);
+  const officialFeatureCount = visibleOfficialSources.reduce((total, source) => total + (effectiveOfficialVisibility[source.id] ? officialPayloads[source.id as OfficialContextFeedId]?.featureCount ?? (officialStates[source.id] === "ready" ? GROUNDWATER_MANIFEST.find(item => item.id === source.id)?.featureCount ?? 0 : 0) : 0), 0);
   const officialReadyCount = visibleOfficialSources.filter((source) => effectiveOfficialVisibility[source.id] && ["ready", "partial", "empty"].includes(officialStates[source.id])).length;
   const officialLoadingCount = visibleOfficialSources.filter((source) => effectiveOfficialVisibility[source.id] && officialStates[source.id] === "loading").length;
   const officialRefreshPlan = planOfficialRefresh(OFFICIAL_CONTEXT_SOURCES, officialVisibility, temporalQuery.frame, OFFICIAL_CONTEXT_PRESENT_FRAME, Boolean(streamflowArchiveDay), officialArchiveDays);
@@ -1650,7 +1658,7 @@ export default function Home() {
     ? streamflowArchiveDay ? streamflowExactFrames(streamflowBundle) : streamflowDisplayFrames(streamflowBundle)
     : [], [streamflowArchiveDay, streamflowBundle]);
   const safeStreamflowFrameIndex = streamflowFrames.length === 0 ? -1 : clamp(streamflowFrameIndex, 0, streamflowFrames.length - 1);
-  const streamflowFrameTime = safeStreamflowFrameIndex >= 0 ? streamflowFrames[safeStreamflowFrameIndex] : null;
+  const streamflowFrameTime = safeStreamflowFrameIndex >= 0 ? streamflowFrames[safeStreamflowFrameIndex] : streamflowBundle?.query.end ?? null;
   const streamflowFrame = useMemo<StreamflowFrame | null>(() => {
     if (!streamflowBundle || !streamflowFrameTime) return null;
     const toleranceMinutes = streamflowRange === "1y" ? 36 * 60 : streamflowRange === "24h" ? 30 : 90;
@@ -1868,13 +1876,14 @@ export default function Home() {
   }, [connectionFilter, connectionQuery, sourceConnections]);
   const officialContextConnections = useMemo(() => OFFICIAL_CONTEXT_SOURCES.map((source) => {
     const payload = source.apiPath || source.managedAdapterPath ? officialPayloads[source.id as OfficialContextFeedId] : undefined;
+    const snapshot = GROUNDWATER_MANIFEST.find(item => item.id === source.id);
     return {
       source,
       visible: officialVisibility[source.id],
       activeAtFrame: effectiveOfficialVisibility[source.id],
       state: officialStates[source.id],
-      featureCount: payload?.featureCount,
-      retrievedAt: source.id === "noaa-goes-geocolor" ? noaaSatelliteManifest?.retrievedAt : source.id === "noaa-lightning-density" ? lightningManifest?.retrievedAt : source.id === "nws-forecast-wind" ? windArrowFrame?.retrievedAtUtc : payload?.retrievedAt,
+      featureCount: payload?.featureCount ?? (officialStates[source.id] === "ready" ? snapshot?.featureCount : undefined),
+      retrievedAt: source.id === "noaa-goes-geocolor" ? noaaSatelliteManifest?.retrievedAt : source.id === "noaa-lightning-density" ? lightningManifest?.retrievedAt : source.id === "nws-forecast-wind" ? windArrowFrame?.retrievedAtUtc : payload?.retrievedAt ?? snapshot?.retrievedAt,
       limitation: source.id === "noaa-goes-geocolor" ? noaaSatelliteManifest?.limitation : payload?.limitation,
       temporalSupport: OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id],
     };
@@ -2850,7 +2859,7 @@ export default function Home() {
       : `/api/hydrology/streamflow?mode=station&range=${requestedRange}&station=${encodeURIComponent(stationId!)}&parameter=00060`;
     try {
       const response = await fetch(path, { cache: "no-store", headers: { Accept: "application/json" }, signal: controller.signal });
-      const candidate = await response.json() as unknown;
+      const candidate = await readBoundedJson(response, 64 * 1024 * 1024) as unknown;
       if (!response.ok) {
         const message = candidate && typeof candidate === "object" && ("error" in candidate || "message" in candidate)
           ? String((candidate as { error?: unknown; message?: unknown }).error ?? (candidate as { message?: unknown }).message ?? `HTTP ${response.status}`)
@@ -2995,6 +3004,7 @@ export default function Home() {
 
   const selectStreamflowStation = useCallback((stationId: string | null) => {
     const normalized = stationId ? normalizeUsgsStationId(stationId) : null;
+    riverPathFocusRef.current = null;
     setStreamflowPlaying(false);
     setStreamflowSelectedStationId(normalized);
     setLiveInstrument("river");
@@ -3031,14 +3041,21 @@ export default function Home() {
       }, null);
     if (!station) return;
     if (station.stationId !== streamflowSelectedStationId) selectStreamflowStation(station.stationId);
-    map.easeTo({
+    const pathPoints = station.stationId === streamflowSelectedStationId ? downstreamPaths.flatMap(path => path.coordinates) : [];
+    riverPathFocusRef.current = pathPoints.length ? null : station.stationId;
+    if (pathPoints.length) {
+      const longitudes = pathPoints.map(point => point[0]), latitudes = pathPoints.map(point => point[1]);
+      map.fitBounds([[Math.min(...longitudes), Math.min(...latitudes)], [Math.max(...longitudes), Math.max(...latitudes)]], {
+        padding: { top: 50, left: 55, right: 55, bottom: Math.min(300, map.getCanvas().clientHeight * 0.4) }, maxZoom: 13, duration: reducedMotion ? 0 : 650,
+      });
+    } else map.easeTo({
       center: [station.longitude, station.latitude],
       zoom: Math.max(map.getZoom(), 11.5),
       offset: [0, -Math.min(150, map.getCanvas().clientHeight * 0.22)],
       duration: reducedMotion ? 0 : 650,
     });
     announce(`Showing mapped flow direction near ${station.name}; arrow pace is illustrative`);
-  }, [announce, reducedMotion, selectStreamflowStation, streamflowBundle, streamflowFrame, streamflowSelectedAtPresent, streamflowSelectedStation, streamflowSelectedStationId]);
+  }, [announce, downstreamPaths, reducedMotion, selectStreamflowStation, streamflowBundle, streamflowFrame, streamflowSelectedAtPresent, streamflowSelectedStation, streamflowSelectedStationId]);
 
   const loadStreamflowArchiveDay = useCallback(() => {
     if (!streamflowArchiveDraftDay || !streamflowSelectedStationId) return;
@@ -5092,11 +5109,14 @@ export default function Home() {
   useEffect(() => {
     if (!streamflowSelectedAtPresent || !streamflowSelectedStation) {
       setDownstreamPaths([]);
+      setDownstreamAnalysis(null);
       setDownstreamState("idle");
       return;
     }
     const controller = new AbortController();
     setDownstreamPaths([]);
+    setDownstreamAnalysis(null);
+    setDownstreamStationId(null);
     setDownstreamState("loading");
     const load = async () => {
       try {
@@ -5106,10 +5126,13 @@ export default function Home() {
         const guide = parseDownstreamGuide(await readBoundedJson(response, 512 * 1024));
         if (controller.signal.aborted) return;
         setDownstreamPaths(guide.paths);
+        setDownstreamAnalysis(guide.analysis ?? null);
+        setDownstreamStationId(streamflowSelectedStation.stationId);
         setDownstreamState(guide.state);
       } catch {
         if (!controller.signal.aborted) {
           setDownstreamPaths([]);
+          setDownstreamAnalysis(null);
           setDownstreamState("error");
         }
       }
@@ -5119,44 +5142,58 @@ export default function Home() {
   }, [streamflowSelectedAtPresent, streamflowSelectedStation]);
 
   useEffect(() => {
+    if (!downstreamStationId || riverPathFocusRef.current !== downstreamStationId || downstreamStationId !== streamflowSelectedStationId || !downstreamPaths.length) return;
+    const map = mapRef.current;
+    if (!map) return;
+    riverPathFocusRef.current = null;
+    const points = downstreamPaths.flatMap(path => path.coordinates);
+    const longitudes = points.map(point => point[0]), latitudes = points.map(point => point[1]);
+    map.fitBounds([[Math.min(...longitudes), Math.min(...latitudes)], [Math.max(...longitudes), Math.max(...latitudes)]], {
+      padding: { top: 60, left: 55, right: 55, bottom: Math.min(450, map.getCanvas().clientHeight * .6) }, maxZoom: 13, duration: reducedMotion ? 0 : 1000,
+    });
+  }, [downstreamPaths, downstreamStationId, reducedMotion, streamflowSelectedStationId]);
+
+  useEffect(() => {
     const map = mapRef.current;
     const canvas = waterMotionCanvasRef.current;
     if (!map || !canvas || !styleReady || !streamflowSelectedAtPresent || !streamflowFrame) {
       canvas?.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height);
       return;
     }
-    const animateReadings = dynamicEffects && !reducedMotion && streamflowPlaying;
-    const animateDirection = dynamicEffects && !reducedMotion && downstreamPaths.length > 0
+    const motionHealthy = streamflowDisplayState === "ready" || streamflowDisplayState === "partial";
+    const animateReadings = motionHealthy && dynamicEffects && !reducedMotion && streamflowPlaying;
+    const animateDirection = motionHealthy && dynamicEffects && !reducedMotion && downstreamPaths.length > 0
       && selectedWaterCue.value !== null && selectedWaterCue.value > 0;
     const animate = animateReadings || animateDirection;
     let timer = 0;
+    let lastDraw = 0;
     const render = () => {
       if (!document.hidden) drawWaterMotionCanvas(canvas, map, streamflowFrame, streamflowSelectedStationId,
         downstreamPaths, selectedWaterCue, performance.now(), animateReadings, animateDirection);
     };
-    const tick = () => {
+    const tick = (now: number) => {
       timer = 0;
-      render();
-      if (animate && !document.hidden) timer = window.setTimeout(tick, 50);
+      if (now - lastDraw >= 1000 / 30) { render(); lastDraw = now; }
+      if (animate && !document.hidden) timer = window.requestAnimationFrame(tick);
     };
     const visibility = () => {
-      window.clearTimeout(timer);
+      window.cancelAnimationFrame(timer);
       timer = 0;
-      if (!document.hidden) { render(); if (animate) timer = window.setTimeout(tick, 50); }
+      if (!document.hidden) { render(); if (animate) timer = window.requestAnimationFrame(tick); }
     };
     map.on("move", render);
     map.on("resize", render);
     document.addEventListener("visibilitychange", visibility);
     render();
-    if (animate) timer = window.setTimeout(tick, 50);
+    if (animate) timer = window.requestAnimationFrame(tick);
     return () => {
       map.off("move", render);
       map.off("resize", render);
       document.removeEventListener("visibilitychange", visibility);
-      window.clearTimeout(timer);
+      window.cancelAnimationFrame(timer);
       canvas.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height);
     };
-  }, [downstreamPaths, dynamicEffects, reducedMotion, selectedWaterCue, streamflowFrame, streamflowPlaying, streamflowSelectedAtPresent, streamflowSelectedStationId, styleReady]);
+  }, [streamflowDisplayState, downstreamPaths, dynamicEffects, reducedMotion, selectedWaterCue, streamflowFrame, streamflowPlaying, streamflowSelectedAtPresent, streamflowSelectedStationId, styleReady]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -8069,6 +8106,7 @@ export default function Home() {
               <strong>Hazard source coverage</strong><p>Connected layers below keep independent visibility, opacity, source time, and quality settings. A missing feed is never an all-clear.</p>
               <details><summary>{DISASTER_COVERAGE_HOLDS.length} source families held for verification</summary>{DISASTER_COVERAGE_HOLDS.map(item => <p key={item.title}><b>{item.title} · HELD</b><br />{item.detail} <a href={item.sourceUrl} target="_blank" rel="noreferrer">Source ↗</a></p>)}</details>
             </section>}
+            {officialWorkspace === "groundwater" && <section className="official-workspace-ledger" aria-label="Aquifers and groundwater guide"><h3>Beneath Kansas</h3><p>Start with an aquifer extent, then select one High Plains map to explore depth to water, saturated thickness, or water-table elevation. Each overlay has independent opacity. Click a region for its range, or a monitoring point for its KGS well record.</p><p>High Plains maps: <strong>2022–2024</strong>. Monitoring locations: <strong>2026</strong>. Snapshots checked October 4, 2026. Overlapping aquifers may occupy different depths. These maps do not calculate underground flow.</p><button type="button" onClick={() => { setOfficialContextVisible("kgs-aquifer-high-plains", true); mapRef.current?.fitBounds([[-102.06, 36.99], [-97.1, 40.01]], { padding: 70, duration: reducedMotion ? 0 : 700 }); }}>Explore the High Plains aquifer</button><a href="https://www.kgs.ku.edu/HighPlains/HPA_Atlas/index.html" target="_blank" rel="noreferrer">KGS High Plains Atlas ↗</a></section>}
             {officialWorkspace === "transport" && <p className="official-workspace-land-note">Kansas roads and active or abandoned railroad references from KDOT. Each overlay has its own visibility and opacity, over your chosen basemap. Source designations are not live traffic, train movement, public access, or historical reconstruction.</p>}
             {officialWorkspace === "land" && <p className="official-workspace-land-note">BLM PLSS images are provider-current Kansas survey reference; inspect identifiers at the map center from a layer’s Options. The separate MLRS oil-and-gas lease overlays show only authorized or closed Kansas cases with direct PLSS match scores 0–3. They omit generalized and unmapped cases and are not exact lease boundaries, ownership, drilling, or production. <a href="https://glorecords.blm.gov/" target="_blank" rel="noreferrer">Search official GLO patents, plats, and field notes ↗</a> Reviewed GLO overlays and KFM land releases remain pending.</p>}
             {officialWorkspace === "transport" && <button className="map-catalog-launch" type="button" onClick={(event) => openMapUtility("compare", event.currentTarget)}>Local road &amp; bridge map archive</button>}
@@ -8112,6 +8150,8 @@ export default function Home() {
                 {source.legend && <p className="reference-layer-legend"><i style={{ backgroundColor: source.color }} aria-hidden="true" />{source.legend}</p>}
                 {isBridgeLayer(source.id) && <BridgeRecordInspector layer={source.id} mapRef={mapRef} enabled={Boolean(effectiveOfficialVisibility[source.id]) && projection !== "globe" && styleReady} reducedMotion={reducedMotion} />}
                 {isBlmPlssLayer(source.id) && <BlmPlssInspector layer={source.id} mapRef={mapRef} enabled={Boolean(effectiveOfficialVisibility[source.id]) && projection !== "globe" && styleReady} />}
+                {GROUNDWATER_MANIFEST.find(item => item.id === source.id)?.legend.map(item => <p className="reference-layer-legend" key={item.value}><i style={{ backgroundColor: item.color }} aria-hidden="true" />{item.label} ft</p>)}
+                {source.id.startsWith("kgs-") && <small>{source.freshness}. {source.cadence}.</small>}
                 {source.legendUrl && <a href={source.legendUrl} target="_blank" rel="noreferrer">Provider legend ↗</a>}
                 {source.id === "fema-flood-zones" && <a href="https://msc.fema.gov/portal/home" target="_blank" rel="noreferrer">Check effective FEMA map and amendments ↗</a>}
                 {source.id === "usgs-3dep-slope" && <small className="terrain-layer-key">USGS slope colors: gray flatter · yellow shallow · red-brown steeper. This is visual context, not a slope measurement.</small>}
@@ -8120,7 +8160,7 @@ export default function Home() {
                   {source.id === "usgs-streamflow" ? <>
                     <p>{streamflowArchiveDay ? "Selected UTC day · every returned observation time" : "Loaded River Pulse window · bounded sample of exact times. Station points may use a prior sample within the declared 30-minute tolerance."}{streamflowBundle ? ` · ${streamflowBundle.observations.length.toLocaleString("en-US")} observations${streamflowBundle.truncated ? " · PARTIAL / TRUNCATED" : ""}` : streamflowState === "loading" ? " · checking source" : " · no loaded frame"}</p>
                     <input type="range" min="0" max={Math.max(0, streamflowFrames.length - 1)} value={Math.max(0, safeStreamflowFrameIndex)} disabled={streamflowFrames.length < 2 || streamflowState === "loading" || !officialVisibility[source.id] || heldAtFrame} onChange={(event) => seekStreamflow(Number(event.target.value))} aria-label="River Pulse exact observation time" aria-valuetext={streamflowFrameTime ? `${streamflowFrameTime} UTC observation cursor` : "No confirmed observation"} />
-                    <output>{streamflowFrameTime ? `${streamflowFrameTime.slice(0, 19).replace("T", " ")} UTC · frame ${safeStreamflowFrameIndex + 1}/${streamflowFrames.length}` : streamflowState === "error" ? "Source unavailable · no archive point displayed" : "No observed frame loaded"}</output>
+                    <output>{streamflowFrames.length > 0 && streamflowFrameTime ? `${streamflowFrameTime.slice(0, 19).replace("T", " ")} UTC · frame ${safeStreamflowFrameIndex + 1}/${streamflowFrames.length}` : streamflowState === "error" ? "Source unavailable · no archive point displayed" : "No observed frame loaded"}</output>
                     <small>{streamflowBundle ? `Loaded ${streamflowBundle.query.start.slice(0, 10)} → ${streamflowBundle.query.end.slice(0, 10)} UTC; this is the checked request window, not the station’s full record.` : "Choose a station to check an older day. Provider coverage differs by station."}</small>
                     <small>{streamflowCoverage?.continuous ? `Station continuous record: ${streamflowCoverage.continuous.start.slice(0, 10)} → ${streamflowCoverage.continuous.end.slice(0, 10)} UTC${streamflowCoverage.partial ? " · partial metadata" : ""}. Gaps may occur within this span.${streamflowCoverage.daily ? ` Daily means start ${streamflowCoverage.daily.start.slice(0, 10)}; inspect that older resolution in Observatory.` : ""}` : streamflowCoverage?.daily ? `No continuous span declared in this response. Daily mean record starts ${streamflowCoverage.daily.start.slice(0, 10)}; daily values are not intraday frames.` : streamflowCoverageMessage}</small>
                     <div className="source-time-actions"><label>Station<select value={streamflowSelectedStationId ?? ""} onChange={(event) => selectStreamflowStation(event.target.value || null)}><option value="">Choose a loaded station</option>{streamflowSelectedStationId && !(streamflowBundle?.stations ?? []).some((station) => station.stationId === streamflowSelectedStationId) && <option value={streamflowSelectedStationId}>{streamflowSelectedStationId} · selected</option>}{(streamflowBundle?.stations ?? []).map((station) => <option key={station.stationId} value={station.stationId}>{station.name} · {station.stationId}</option>)}</select></label><label>Older UTC day<input type="date" value={streamflowArchiveDraftDay} min={riverArchiveMinDay} max={riverArchiveMaxDay ?? currentUtcDay()} onChange={(event) => setStreamflowArchiveDraftDay(event.target.value)} /></label><button type="button" disabled={!streamflowSelectedStationId || !streamflowArchiveDraftDay || streamflowState === "loading" || heldAtFrame} onClick={loadStreamflowArchiveDay}>Check day on map</button>{streamflowArchiveDay && <button type="button" onClick={() => void refreshStreamflow("24h", null)}>Recent network</button>}<Link href={`/observatory?start=${encodeURIComponent(`${streamflowArchiveDraftDay || streamflowArchiveDay || currentUtcDay()}T00:00`)}&hours=24&layers=river,counties${streamflowSelectedStationId ? `&station=${encodeURIComponent(streamflowSelectedStationId)}` : ""}`}>Full station archive ↗</Link></div>
@@ -8149,8 +8189,8 @@ export default function Home() {
                     <p>NASA LIS/OTD combined flash-rate climatology from 1995–2014. This broad 0.5° climate field does not show fine local variation, this storm, or today’s lightning.</p>
                     <output>Fixed multi-year composite · no event playback</output>
                     <small>GIBS WMTS date 1995-05-04 is a tile carrier key, not a single observed lightning event.</small>
-                    <button type="button" onClick={() => { setGlmFlashesEnabled(true); setInstrumentOpen(false); }} disabled={!glmFlashesAllowed}>Open separate observed flash loop</button>
-                    <small>GOES-19 shows recent satellite flash centroids; these are not animated from this historical climate layer.</small>
+                    <button type="button" onClick={() => { setOfficialContextVisible("nasa-lightning-climatology", false); setOfficialContextVisible("noaa-lightning-density", false); setGlmFlashesEnabled(true); setInstrumentOpen(false); }} disabled={!glmFlashesAllowed}>Switch to timed lightning</button>
+                    <small>Explore observed flashes in 15-minute, half-hour and hourly slices, or play individual pulses. Switching hides the climate average so it does not obscure the flashes. Use the year / month archive to select older dates and load a 15-minute, half-hour or hourly interval.</small>
                     {!glmFlashesAllowed && <small>Return to Present and use the flat map for observed flashes.</small>}
                     <a href={source.sourceUrl} target="_blank" rel="noreferrer">NASA GIBS collection metadata ↗</a>
                   </div> : source.id === "nifc-fire-reports" ? <>
@@ -8344,6 +8384,7 @@ export default function Home() {
             reducedMotion={reducedMotion}
             downstreamState={downstreamState}
             downstreamPathCount={downstreamPaths.length}
+            downstreamAnalysis={downstreamAnalysis}
             sourceSwitcher={liveObservationSwitcher}
             onRefresh={() => { void refreshStreamflow(streamflowRange, streamflowSelectedStationId, false, streamflowArchiveDayRef.current); }}
             onTogglePlay={toggleStreamflowPlayback}
@@ -8456,7 +8497,7 @@ export default function Home() {
           </aside>}
           <div id="map-canvas" ref={mapContainerRef} className="map-canvas" tabIndex={runtime.kind === "unsupported" ? -1 : 0} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." />
           <canvas ref={windArrowCanvasRef} className="wind-arrow-canvas" aria-hidden="true" />
-          <canvas ref={waterMotionCanvasRef} className="water-motion-canvas" aria-hidden="true" />
+          <canvas ref={waterMotionCanvasRef} className="water-motion-canvas" style={{ opacity: officialOpacity["usgs-streamflow"] }} aria-hidden="true" />
           {buildYearCurrent && officialVisibility["nws-forecast-wind"] && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME && <output className="wind-arrow-map-badge" data-state={windArrowState} aria-live="polite"><strong>OPEN-METEO · GFS WIND FLOW</strong><span>{windArrowState === "READY" && windArrowFrame ? `10 m forecast · valid ${windArrowFrame.validTimeUtc.replace("T", " ").slice(0, 16)} UTC · ${windArrowFrame.samples.length} grid points` : windArrowState === "ERROR" ? "Forecast unavailable · flow hidden" : "Loading forecast wind flow…"}</span></output>}
           {windArrowState === "READY" && windArrowFrame && windArrowHover && <output className="wind-arrow-hover" style={{ left: windArrowHover.screenX, top: windArrowHover.screenY }} aria-label="Nearest wind model grid point"><span>GFS MODEL GRID POINT · VALID {windArrowFrame.validTimeUtc.replace("T", " ").slice(0, 16)} UTC</span><strong>{Math.round(windArrowHover.sample.speedMetersPerSecond * 2.23694)} mph <b>→ {windToCompass(windArrowHover.sample.windToDegrees)}</b></strong><small>{windArrowHover.sample.latitude.toFixed(3)}°, {windArrowHover.sample.longitude.toFixed(3)}° · 10 m forecast</small></output>}
           {runtime.kind === "unsupported" && earthEngineContext.manifests.length > 0 && <EarthEngineRasterFallback manifests={earthEngineContext.manifests} display={earthEngineDisplay} onOpenLayers={openEarthEngineLayers} />}
@@ -8768,8 +8809,8 @@ export default function Home() {
                   <p>Only allowlisted endpoints are connected. Feed failures stay visible; zero features is time-stamped and never interpreted as statewide safety or completeness.</p>
                   <div className="official-connection-grid">{filteredOfficialContextConnections.map(({ source, visible, activeAtFrame, state, featureCount, retrievedAt, limitation, temporalSupport }) => <article className="official-connection-card" key={source.id} data-state={state} data-held={visible && !activeAtFrame}>
                     <header><div><span>{source.kind.replaceAll("_", " ")}</span><h5>{source.title}</h5><code>{source.endpointLabel}</code></div><strong>{visible && !activeAtFrame ? "HELD" : state.toUpperCase()}</strong></header>
-                    <div className="official-connection-path"><span>OFFICIAL</span><i>→</i><span>{source.apiPath || source.managedAdapterPath ? "FIXED ADAPTER" : "WMS / TILES"}</span><i>→</i><span>MAP CONTEXT</span><i>⊣</i><span>EVIDENCE HELD</span></div>
-                    <dl><div><dt>Mapped</dt><dd>{featureCount ?? (source.apiPath || source.managedAdapterPath ? "NOT LOADED" : "RASTER TILES · NO FEATURES")}</dd></div><div><dt>Retrieved</dt><dd>{retrievedAt ? new Date(retrievedAt).toLocaleString() : "No tile retrieval clock"}</dd></div><div><dt>Cadence</dt><dd>{source.cadence}</dd></div><div><dt>Temporal support</dt><dd>{temporalSupport.axis.replaceAll("-", " ")} · {temporalSupport.supportedFrames.map(formatTimelineStep).join(", ")}</dd></div><div><dt>Evidence role</dt><dd>{source.evidenceRole.replaceAll("_", " ")}</dd></div></dl>
+                    <div className="official-connection-path"><span>OFFICIAL</span><i>→</i><span>{source.kind === "SNAPSHOT_GEOJSON" ? "DATED SNAPSHOT" : source.apiPath || source.managedAdapterPath ? "FIXED ADAPTER" : "WMS / TILES"}</span><i>→</i><span>MAP CONTEXT</span><i>⊣</i><span>EVIDENCE HELD</span></div>
+                    <dl><div><dt>Mapped</dt><dd>{featureCount ?? (source.apiPath || source.managedAdapterPath || source.kind === "SNAPSHOT_GEOJSON" ? "NOT LOADED" : "RASTER TILES · NO FEATURES")}</dd></div><div><dt>Retrieved</dt><dd>{retrievedAt ? new Date(retrievedAt).toLocaleString() : "No tile retrieval clock"}</dd></div><div><dt>Cadence</dt><dd>{source.cadence}</dd></div><div><dt>Temporal support</dt><dd>{temporalSupport.axis.replaceAll("-", " ")} · {temporalSupport.supportedFrames.map(formatTimelineStep).join(", ")}</dd></div><div><dt>Evidence role</dt><dd>{source.evidenceRole.replaceAll("_", " ")}</dd></div></dl>
                     <p>{limitation ?? source.boundary}</p><aside><strong>Failure boundary</strong><span>{source.fallback}</span></aside>
                     <footer><button type="button" onClick={() => setOfficialContextVisible(source.id, !visible)}>{visible ? "Hide" : "Show"}</button>{source.apiPath && <button type="button" disabled={state === "loading"} onClick={() => void refreshOfficialContext(source.id as OfficialContextFeedId)}>Refresh</button>}{source.id === "usgs-streamflow" && <button type="button" disabled={state === "loading" || !activeAtFrame} onClick={() => void refreshStreamflow(streamflowRange, streamflowSelectedStationId)}>Refresh observations</button>}{source.id === "noaa-nwps-gauges" && <button type="button" disabled={state === "loading" || !activeAtFrame} onClick={() => void refreshNoaaHydrologyNetwork()}>Refresh status</button>}<a href={source.sourceUrl} target="_blank" rel="noreferrer">Source ↗</a><a href={source.serviceUrl} target="_blank" rel="noreferrer">{source.id === "raspberry-shake-stations" ? "StationView ↗" : "Service ↗"}</a></footer>
                   </article>)}</div>
@@ -8966,6 +9007,7 @@ export default function Home() {
               {drawerView === "evidence" && <section role="tabpanel" id="drawer-panel-evidence" aria-labelledby="drawer-tab-evidence" className="drawer-section">
                 <p className="summary">{selectedRiverObservation ? `${selectedRiverObservation.stationName ?? selected.properties.title} is a USGS monitoring location. The observation follows the selected map frame; a missing frame remains a gap.` : selectedOfficialConnection ? `Selected map snapshot: ${selected.properties.summary} Re-select this feature after a feed update to refresh its mapped properties.` : selected.properties.summary}</p>
                 {!selectedRiverObservation && <section className="drawer-data-block" aria-label="Selected artifact data"><header><h3>Selected artifact data</h3><small>{selected.kind === "registry" ? "Site-local record" : selectedAttributesCurrent ? "Current loaded provider response" : "Captured map properties"}</small></header>
+                  {selectedOfficialContextId === "kgs-monitoring-wells" && safeKgsWellUrl(selectedArtifactAttributes.find(item => item.label === "KGS well record")?.value) && <a href={safeKgsWellUrl(selectedArtifactAttributes.find(item => item.label === "KGS well record")?.value)!} target="_blank" rel="noreferrer">Open this well’s KGS observations ↗</a>}
                   {selectedArtifactAttributes.length > 0 ? <dl className="drawer-attribute-list">{selectedArtifactAttributes.map((attribute) => <div key={attribute.label}><dt>{attribute.label}</dt><dd>{attribute.value}</dd></div>)}</dl> : <p>No measured feature attributes are available in this map carrier. Source and trust metadata are available below.</p>}
                 </section>}
                 {selectedFireComparisonId && <section className="drawer-data-block" aria-label="Fire report builder context"><header><h3>Fire report builder</h3><small>Source report and satellite signal kept separate</small></header>

@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { HMS_FIRST_DAY, HmsFrameCache, hmsAdvance, hmsDayNumber, hmsToday, hmsValidDay } from "./hms-smoke-playback";
+import { HMS_FIRST_DAY, HmsFrameCache, findRecentSmoke, hmsAdvance, hmsDayNumber, hmsToday, hmsValidDay } from "./hms-smoke-playback";
 import type { OfficialContextPayload } from "./live-context";
 
 export function HmsSmokePlayback({ enabled, reducedMotion, displayedDay, payload, onReserve, onFrame, onCurrent }: {
@@ -12,7 +12,7 @@ export function HmsSmokePlayback({ enabled, reducedMotion, displayedDay, payload
   const [today, setToday] = useState(hmsToday);
   const [from, setFrom] = useState(() => hmsAdvance(hmsToday(), -6));
   const [through, setThrough] = useState(hmsToday);
-  const [cursor, setCursor] = useState(hmsToday);
+  const [cursor, setCursor] = useState(() => hmsAdvance(hmsToday(), -6));
   const [playing, setPlaying] = useState(false), [busy, setBusy] = useState(false);
   const [smooth, setSmooth] = useState(true), [loop, setLoop] = useState(false), [speed, setSpeed] = useState(1500);
   const [status, setStatus] = useState("Select a range and play daily NOAA publications.");
@@ -62,8 +62,30 @@ export function HmsSmokePlayback({ enabled, reducedMotion, displayedDay, payload
     return () => clearTimeout(timer);
   }, [playing, busy, valid, enabled, reducedMotion, cursor, through, loop, from, show, speed]);
   const choose = (start: string) => { stop(); setFrom(start); setThrough(today); setCursor(start); };
+  const findSmoke = async () => {
+    stop();
+    const token = ++generation.current, controller = new AbortController(); request.current = controller;
+    setBusy(true);
+    try {
+      const found = await findRecentSmoke(cache.current, today, controller.signal, day => setStatus(`Looking for Kansas-area smoke: checking ${day} UTC…`));
+      if (generation.current !== token) return;
+      if (!found.day || !found.payload) {
+        setStatus(`No footprints found in the checked publications from the last seven days.${found.missingDays.length ? ` ${found.missingDays.length} publication day(s) could not be checked.` : ""} This is not an all-clear.`);
+        return;
+      }
+      onReserve(found.day);
+      await onFrame(found.day, found.payload, controller.signal, smooth && !reducedMotion);
+      if (generation.current !== token) return;
+      setFrom(hmsAdvance(today, -6)); setThrough(today); setCursor(found.day);
+      setStatus(`Showing ${found.payload.featureCount} Kansas-area footprints from ${found.day} UTC.${found.missingDays.length ? ` ${found.missingDays.length} newer publication day(s) unavailable; this may not be the latest smoke.` : ""} Historical daily footprint, not current smoke.`);
+    } catch {
+      if (generation.current === token && !controller.signal.aborted) setStatus("Smoke search or map update could not finish. The last displayed frame is retained.");
+    } finally { if (generation.current === token) setBusy(false); }
+  };
   return <div className="hms-playback">
     <p>Daily analyzed smoke footprints, not live measurements or inferred plume motion. Archive begins August 5, 2005; missing publications remain gaps.</p>
+    <div className="hms-visibility-status" role="status"><strong>{!enabled ? "Turn on HMS smoke at Present and wait for the map." : !payload ? "No smoke publication loaded yet." : payload.featureCount ? `${payload.featureCount} Kansas-area footprints loaded` : "No Kansas-area footprints in this time window"}</strong><span>{payload?.featureCount === 0 ? "The map can be empty even when the source works. Check another day or find a recent footprint below." : "Light, medium and heavy describe satellite-analyzed smoke in the atmospheric column."}</span></div>
+    <button type="button" disabled={!enabled || busy} onClick={() => void findSmoke()}>Find smoke in the last 7 days</button>
     <div className="source-time-actions"><button type="button" onClick={() => choose(hmsAdvance(today, -6))}>7 days</button><button type="button" onClick={() => choose(hmsAdvance(today, -29))}>30 days</button><button type="button" onClick={() => choose(HMS_FIRST_DAY)}>Full archive → latest</button></div>
     <div className="source-time-actions"><label>From UTC<input aria-label="HMS from date" type="date" min={HMS_FIRST_DAY} max={today} value={from} onChange={e => { stop(); setFrom(e.target.value); setCursor(e.target.value); }} /></label><label>Through UTC<input aria-label="HMS through date" type="date" min={from || HMS_FIRST_DAY} max={today} value={through} onChange={e => { stop(); setThrough(e.target.value); }} /></label></div>
     <label>Requested day<input aria-label="HMS playback day" type="date" min={from} max={through} value={cursor} onChange={e => { stop(); setCursor(e.target.value); }} /></label>

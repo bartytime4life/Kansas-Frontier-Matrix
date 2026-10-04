@@ -44,6 +44,22 @@ export class HmsFrameCache {
   get size() { return this.frames.size; }
 }
 
+/** Search a small explicit range; unavailable publications are never clear-air days. */
+export async function findRecentSmoke(cache: HmsFrameCache, today: string, signal: AbortSignal, checking: (day: string) => void = () => {}) {
+  const missingDays: string[] = [];
+  for (let offset = 0; offset < 7; offset++) {
+    const day = hmsAdvance(today, -offset);
+    if (!hmsValidDay(day, today)) break;
+    signal.throwIfAborted(); checking(day);
+    let payload: OfficialContextPayload;
+    try { payload = await cache.get(day, signal); }
+    catch { signal.throwIfAborted(); missingDays.push(day); continue; }
+    signal.throwIfAborted();
+    if (payload.featureCount > 0) return { day, payload, missingDays };
+  }
+  return { day: null, payload: null, missingDays };
+}
+
 /** Serialize map mutations, including restoration of an interrupted upload.
  * A newer request cancels older work, but cannot read its tentative frame as
  * the last confirmed frame while that work is still cleaning up. */

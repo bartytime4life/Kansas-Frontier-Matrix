@@ -1,7 +1,9 @@
 # Reviewed water delivery candidate
 
-This is an unpublished candidate based on owner-private Site v139. Existing
-DB/BUCKET bindings and audience are retained. No real water package is active.
+This documents the owner-private Site's reviewed-water boundary. Site v147 was
+deployed on 2026-10-04; a Site deployment alone does not establish whether a
+real water package is active. Existing DB/BUCKET bindings and audience remain
+the same in this correction candidate.
 
 `app/governed-water.ts` verifies the bounded snapshot carrier and projects the
 same synthetic bootstrap/layers/evidence responses as the monorepo Python API.
@@ -23,6 +25,9 @@ contain only that station; changing selection while its requests are in flight
 withholds the download. These checks protect the browser journey if a response
 is unexpectedly broad or malformed; server-side projection and release checks
 remain authoritative.
+The export also tracks station-selection generation. A rapid A→B→A selection
+round trip during either request withholds the older in-flight download even
+though the station name has returned to A.
 The current monorepo control distinguishes a browser request failure from a
 successful response that reports no active reviewed release. It labels other
 successful negative responses as withheld; none establishes that no source

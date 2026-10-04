@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
   const value = Number(params.get("minutes") ?? "15");
-  if ([...params.keys()].some((key) => key !== "minutes" || params.getAll(key).length !== 1) || !GLM_FLASH_WINDOWS.includes(value as GlmFlashWindow)) return NextResponse.json({ state: "error", message: "Choose a 5, 15, 30 or 60 minute GLM window." }, { status: 400, headers: { "Cache-Control": "no-store" } });
+  if ([...params.keys()].some((key) => key !== "minutes" || params.getAll(key).length !== 1) || !GLM_FLASH_WINDOWS.includes(value as GlmFlashWindow)) return NextResponse.json({ state: "error", message: "Choose a 5, 15, 30, 60 or 180 minute GLM window." }, { status: 400, headers: { "Cache-Control": "no-store" } });
   try {
     return NextResponse.json(await getGlmFlashSnapshot(value as GlmFlashWindow), { headers: { "Cache-Control": "public, max-age=20", "X-Content-Type-Options": "nosniff" } });
   } catch (error) {

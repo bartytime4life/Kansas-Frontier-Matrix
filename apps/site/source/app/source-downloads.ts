@@ -2,6 +2,18 @@ import type { OfficialContextId } from "./live-context";
 
 const nationalMap = "https://apps.nationalmap.gov/downloader/";
 export const SOURCE_DOWNLOADS: Record<OfficialContextId, { href: string; label: string }> = {
+"kgs-aquifer-alluvial": { href: "https://services.kansasgis.org/arcgis8/rest/services/wwc5/wwc5_v2/MapServer/4", label: "KGS boundary service" },
+"kgs-aquifer-dakota": { href: "https://services.kansasgis.org/arcgis8/rest/services/wwc5/wwc5_v2/MapServer/5", label: "KGS boundary service" },
+"kgs-aquifer-glacial-drift": { href: "https://services.kansasgis.org/arcgis8/rest/services/wwc5/wwc5_v2/MapServer/6", label: "KGS boundary service" },
+"kgs-aquifer-high-plains": { href: "https://services.kansasgis.org/arcgis8/rest/services/wwc5/wwc5_v2/MapServer/7", label: "KGS boundary service" },
+"kgs-aquifer-ozark": { href: "https://services.kansasgis.org/arcgis8/rest/services/wwc5/wwc5_v2/MapServer/8", label: "KGS boundary service" },
+"kgs-aquifer-osage": { href: "https://services.kansasgis.org/arcgis8/rest/services/wwc5/wwc5_v2/MapServer/10", label: "KGS boundary service" },
+"kgs-aquifer-flint-hills": { href: "https://services.kansasgis.org/arcgis8/rest/services/wwc5/wwc5_v2/MapServer/11", label: "KGS boundary service" },
+"kgs-water-table": { href: "/data/groundwater/kgs-water-table.geojson", label: "Download dated KGS GeoJSON snapshot" },
+"kgs-saturated-thickness": { href: "/data/groundwater/kgs-saturated-thickness.geojson", label: "Download dated KGS GeoJSON snapshot" },
+"kgs-depth-to-water": { href: "/data/groundwater/kgs-depth-to-water.geojson", label: "Download dated KGS GeoJSON snapshot" },
+"kgs-monitoring-wells": { href: "/data/groundwater/kgs-monitoring-wells.geojson", label: "Download dated KGS GeoJSON snapshot" },
+
   "kdot-bridges-state": { href: "https://kanplan.ksdot.gov/arcgis_web_adaptor/rest/services/Structures/State_Bridges/MapServer/0", label: "KDOT provider inventory and fields" },
   "kdot-bridges-local": { href: "https://kanplan.ksdot.gov/arcgis_web_adaptor/rest/services/Structures/Non_State_Bridges/MapServer/0", label: "KDOT provider inventory and fields" },
   "kdot-bridges-historic": { href: "https://kanplan.ksdot.gov/arcgis_web_adaptor/rest/services/Structures/Non_State_Bridges/MapServer/0", label: "KDOT provider inventory and fields" },

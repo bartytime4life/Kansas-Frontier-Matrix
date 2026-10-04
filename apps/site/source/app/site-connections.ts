@@ -24,6 +24,18 @@ export type SiteConnectionRecord = Readonly<{
 }>;
 
 const CONNECTION_CODE_PATHS: Record<OfficialContextId, readonly string[]> = {
+"kgs-aquifer-alluvial": ["app/aquifer-layers.ts", "app/live-context.ts", "app/page.tsx"],
+"kgs-aquifer-dakota": ["app/aquifer-layers.ts", "app/live-context.ts", "app/page.tsx"],
+"kgs-aquifer-glacial-drift": ["app/aquifer-layers.ts", "app/live-context.ts", "app/page.tsx"],
+"kgs-aquifer-high-plains": ["app/aquifer-layers.ts", "app/live-context.ts", "app/page.tsx"],
+"kgs-aquifer-ozark": ["app/aquifer-layers.ts", "app/live-context.ts", "app/page.tsx"],
+"kgs-aquifer-osage": ["app/aquifer-layers.ts", "app/live-context.ts", "app/page.tsx"],
+"kgs-aquifer-flint-hills": ["app/aquifer-layers.ts", "app/live-context.ts", "app/page.tsx"],
+"kgs-water-table": ["app/aquifer-layers.ts", "app/live-context.ts", "app/page.tsx"],
+"kgs-saturated-thickness": ["app/aquifer-layers.ts", "app/live-context.ts", "app/page.tsx"],
+"kgs-depth-to-water": ["app/aquifer-layers.ts", "app/live-context.ts", "app/page.tsx"],
+"kgs-monitoring-wells": ["app/aquifer-layers.ts", "app/live-context.ts", "app/page.tsx"],
+
   "kdot-bridges-state": ["app/kansas-reference-layers.ts", "app/live-context.ts", "app/page.tsx"],
   "kdot-bridges-local": ["app/kansas-reference-layers.ts", "app/live-context.ts", "app/page.tsx"],
   "kdot-bridges-historic": ["app/kansas-reference-layers.ts", "app/live-context.ts", "app/page.tsx"],
@@ -78,6 +90,18 @@ const CONNECTION_FEEDS: Partial<Record<OfficialContextId, OfficialContextFeedId>
 };
 
 const CONNECTION_ACTIONS: Record<OfficialContextId, readonly SiteActionId[]> = {
+"kgs-aquifer-alluvial": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+"kgs-aquifer-dakota": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+"kgs-aquifer-glacial-drift": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+"kgs-aquifer-high-plains": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+"kgs-aquifer-ozark": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+"kgs-aquifer-osage": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+"kgs-aquifer-flint-hills": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+"kgs-water-table": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+"kgs-saturated-thickness": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+"kgs-depth-to-water": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+"kgs-monitoring-wells": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+
   "kdot-bridges-state": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
   "kdot-bridges-local": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
   "kdot-bridges-historic": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
@@ -119,7 +143,7 @@ const CONNECTION_ACTIONS: Record<OfficialContextId, readonly SiteActionId[]> = {
 };
 
 const connectionKind = (source: (typeof OFFICIAL_CONTEXT_SOURCES)[number]): SiteConnectionKind => {
-  if (source.apiPath) return "GEOJSON_FEED";
+  if (source.apiPath || source.kind === "SNAPSHOT_GEOJSON") return "GEOJSON_FEED";
   if (source.managedAdapterPath) return "ADAPTER_FEED";
   return "WMS_RASTER";
 };
