@@ -62,11 +62,21 @@ deliberately outside the repository's root pnpm workspace. Run its npm commands
 from `apps/site/source/`.
 
 After a build, `../smoke-local.sh` (run from `apps/site/source/`) starts the
-launcher on a temporary empty state, checks that the D1-backed governed water,
-Kansas knowledge, crop CASMA and data-submission routes give their expected
-empty-store answers, and stops it. It needs no provider network. The `explorer-site` workflow runs
-lint, typecheck, `npm test` and this smoke check for changes under `apps/site/`;
-a green run is not evidence of hosted behaviour or release.
+launcher on a temporary empty state and checks every API route that can answer
+without a provider: D1-backed reads give their empty-store answers, and the
+other routes give their deliberate validation (400), sign-in (401),
+same-origin (403) or not-configured (503) refusals. It then stops the launcher.
+It needs no provider network. The script lists every `app/api` route as either
+smoke-checked or provider-only, and fails if a route file is in neither list.
+The `explorer-site` workflow runs lint, typecheck, `npm test` and this smoke
+check for changes under `apps/site/`; a green run is not evidence of hosted
+behaviour or release.
+
+Under `serve-local.sh`, Wrangler's development proxy can return an
+intermittent 500 for the request after one whose body the Worker never read.
+The smoke check therefore sends bodies only to routes that read them. The
+Site's direct-runtime launcher, `source/scripts/serve-local-worker.mjs`,
+avoids this proxy; see `source/docs/local-pc-consolidation.md`.
 
 ### Local configuration
 

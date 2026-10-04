@@ -1,10 +1,50 @@
 #!/usr/bin/env bash
-# Launch the built Site with serve-local.sh and check that its storage-backed
-# routes answer from a migrated local D1 schema. Needs no provider network, and
-# no answer here is evidence of hosted behaviour, data admission, or release.
+# Launch the built Site with serve-local.sh and check that every API route that
+# can answer without a provider is mounted and gives its deliberate offline
+# answer: storage-backed reads from a migrated empty local D1 schema, and
+# validation, sign-in, same-origin or not-configured refusals elsewhere. Needs
+# no provider network, and no answer here is evidence of hosted behaviour,
+# data admission, or release.
 set -euo pipefail
 
 site_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+api_root="$site_root/source/app/api"
+
+# Every app/api route must appear in exactly one list, so a new route cannot
+# go unchecked by accident. Routes in smoke_routes are exercised below.
+smoke_routes=(
+  3dep-dem-tile airflow-tile blm-plss-records bridge-records
+  crop-casma/availability crop-casma/tile
+  data-submissions "data-submissions/[id]"
+  "earth-engine-context/[setId]/[layerId]/[...tile]" earth-engine-context/activate
+  earth-engine-context/active earth-engine-context/catalog earth-engine-context/stage
+  event-atlas/manifest event-atlas/weather
+  "governed/v1/[view]" governed/v1/knowledge
+  historical-topo historical-topo/activate historical-topo/overlay historical-topo/queue
+  historical-topo/review "historical-topo/review/tiles/[scan]/[package]/[z]/[x]/[y]"
+  historical-topo/stage "historical-topo/tiles/[scan]/[package]/[z]/[x]/[y]"
+  hydrology/coverage hydrology/direction hydrology/streamflow
+  lightning/archive live-context qwen soil-moisture/tile source-download
+  terrain-tile wind-arrows
+)
+# These answer only from a live upstream provider even when called without
+# parameters, so an offline check cannot tell a healthy route from a broken one.
+network_routes=(
+  event-atlas/counties event-atlas/geology-legend event-atlas/radar-frame
+  event-atlas/resources event-atlas/tile hydrology/noaa
+  lightning/flashes lightning/frames lightning/legend lightning/preview
+  "lightning/tiles/[frame]/[z]/[x]/[y]" noaa-radar/frames noaa-satellite/frames
+  repository-status soil-moisture/availability
+)
+inventory_drift="$(diff \
+  <(cd "$api_root" && find . -name route.ts | sed 's|^\./||; s|/route\.ts$||' | LC_ALL=C sort) \
+  <(printf '%s\n' "${smoke_routes[@]}" "${network_routes[@]}" | LC_ALL=C sort) || true)"
+if [[ -n "$inventory_drift" ]]; then
+  printf 'API route inventory drift (< route files, > listed here):\n%s\n' "$inventory_drift" >&2
+  printf 'Add each route to smoke_routes with a check below, or to network_routes.\n' >&2
+  exit 1
+fi
+
 port="${SITE_PORT:-4173}"
 base="http://127.0.0.1:${port}"
 log="$(mktemp)"
@@ -33,11 +73,14 @@ for _ in $(seq 1 120); do
 done
 
 failures=0
-# expect PATH STATUS [JSON-FIELD EXPECTED-VALUE]
+checks=0
+# expect METHOD PATH STATUS [JSON-FIELD EXPECTED-VALUE [JSON-BODY]]
 expect() {
-  local path="$1" status="$2" field="${3:-}" want="${4:-}" body code got
+  local method="$1" path="$2" status="$3" field="${4:-}" want="${5:-}" json="${6:-}" body code got
   body="$(mktemp)"
-  code="$(curl -sS -m 30 -o "$body" -w '%{http_code}' "$base$path" || true)"
+  local -a request=(-sS -m 30 -X "$method" -o "$body" -w '%{http_code}')
+  [[ -z "$json" ]] || request+=(-H 'content-type: application/json' --data "$json")
+  code="$(curl "${request[@]}" "$base$path" || true)"
   got=""
   if [[ -n "$field" ]]; then
     got="$(node -e '
@@ -46,27 +89,73 @@ expect() {
       for (const key of process.argv[2].split(".")) value = value?.[key];
       process.stdout.write(String(value ?? ""));' "$body" "$field")"
   fi
+  checks=$((checks + 1))
   if [[ "$code" == "$status" && "$got" == "$want" ]]; then
-    printf 'ok   %s %s %s\n' "$code" "$path" "$got"
+    printf 'ok   %s %-6s %s %s\n' "$code" "$method" "$path" "$got"
   else
-    printf 'FAIL %s %s (wanted %s %s=%s, got %s=%s)\n' "$code" "$path" "$status" "$field" "$want" "$field" "$got" >&2
+    printf 'FAIL %s %-6s %s (wanted %s %s=%s, got %s=%s)\n' "$code" "$method" "$path" "$status" "$field" "$want" "$field" "$got" >&2
     head -c 400 "$body" >&2; printf '\n' >&2
     failures=$((failures + 1))
   fi
   rm -f "$body"
 }
 
-expect / 200
-expect /api/governed/v1/bootstrap 200 envelope.reason_code NO_APPROVED_SNAPSHOT
-expect /api/governed/v1/layers 200 envelope.reason_code NO_APPROVED_SNAPSHOT
-expect /api/governed/v1/evidence 200 envelope.reason_code NO_APPROVED_SNAPSHOT
-expect /api/governed/v1/unknown-view 404 envelope.reason_code ROUTE_NOT_FOUND
-expect /api/governed/v1/knowledge 200 envelope.reason_code NO_APPROVED_KNOWLEDGE
-expect /api/crop-casma/availability 200 code NO_APPROVED_SOIL_PACKAGE
-expect /api/data-submissions 401
+expect GET / 200
+
+# Storage-backed reads answer from the empty migrated D1 schema.
+expect GET /api/governed/v1/bootstrap 200 envelope.reason_code NO_APPROVED_SNAPSHOT
+expect GET /api/governed/v1/layers 200 envelope.reason_code NO_APPROVED_SNAPSHOT
+expect GET /api/governed/v1/evidence 200 envelope.reason_code NO_APPROVED_SNAPSHOT
+expect GET /api/governed/v1/unknown-view 404 envelope.reason_code ROUTE_NOT_FOUND
+expect GET /api/governed/v1/knowledge 200 envelope.reason_code NO_APPROVED_KNOWLEDGE
+expect GET /api/crop-casma/availability 200 code NO_APPROVED_SOIL_PACKAGE
+
+# Requests without the required parameters are refused before any upstream call.
+expect GET /api/3dep-dem-tile 400
+expect GET /api/airflow-tile 400
+expect GET /api/blm-plss-records 400 state error
+expect GET /api/bridge-records 400 state error
+expect GET /api/crop-casma/tile 400 code INVALID_TILE_REQUEST
+expect GET /api/event-atlas/manifest 400
+expect GET /api/event-atlas/weather 400
+expect GET /api/historical-topo 400 state error
+expect GET /api/hydrology/coverage 400
+expect GET /api/hydrology/direction 400
+expect GET /api/hydrology/streamflow 400 code USGS_STREAMFLOW_INVALID_QUERY
+expect GET /api/lightning/archive 400
+expect GET /api/live-context 400
+expect GET /api/soil-moisture/tile 400 code INVALID_TILE_REQUEST
+expect GET /api/source-download 400
+expect GET /api/terrain-tile 400
+expect GET /api/wind-arrows 400
+
+# Signed-out readers and owner routes are refused.
+expect GET /api/data-submissions 401
+expect GET /api/data-submissions/unknown 401
+expect GET /api/earth-engine-context/catalog 401
+expect GET /api/earth-engine-context/active 401
+expect GET /api/earth-engine-context/set/layer/0/0/0.png 401
+expect POST /api/earth-engine-context/activate 401
+expect PUT /api/earth-engine-context/stage 401
+expect GET /api/historical-topo/overlay 401
+expect GET /api/historical-topo/review 401
+expect GET /api/historical-topo/review/tiles/1/package/0/0/0.png 401
+expect GET /api/historical-topo/tiles/1/package/0/0/0.png 401
+
+# Writes without this Site's origin are refused before authentication.
+expect POST /api/data-submissions 403
+expect PATCH /api/data-submissions/unknown 403
+expect POST /api/historical-topo/overlay 403
+expect POST /api/historical-topo/activate 403
+
+# Features whose secret or endpoint is unset stay closed.
+expect GET /api/historical-topo/queue 503
+expect PUT /api/historical-topo/stage 503
+expect POST /api/qwen 503 status not_configured '{"question":"Where is Topeka?","context":{}}'
 
 if (( failures > 0 )); then
-  printf '%d local Site backend check(s) failed.\n' "$failures" >&2
+  printf '%d of %d local Site backend checks failed.\n' "$failures" "$checks" >&2
   exit 1
 fi
-printf 'Local Site backend checks passed.\n'
+printf 'Local Site backend checks passed: %d checks across %d routes; %d provider-only routes listed.\n' \
+  "$checks" "${#smoke_routes[@]}" "${#network_routes[@]}"
