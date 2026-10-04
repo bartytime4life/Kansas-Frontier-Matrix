@@ -373,7 +373,8 @@ This file is evaluated against the accepted Directory Rules v2 `ROOT_FULL` profi
 | `make governed-api-verify` | App tests plus blocking forbidden renderer/model import scan | Import/source boundary, not runtime isolation |
 | `make local-data-check` | Offline `tests/local_data` capture, manifest, recovery, and boundary tests | Synthetic/local test scope; no source admission or host acceptance |
 | `make offline-pipeline-check` | `tests/pipelines` plus the Hydrology no-network proof test under Python and PROJ network guards | Named synthetic pipeline scope; no live connector or full-suite claim |
-| `make native-explorer-check` | Retired monorepo Explorer check | Explicit `WORKFLOW_HOLD`; use the standalone Site source branch for app validation |
+| `make native-explorer-check` | Retired monorepo Explorer check | Explicit `WORKFLOW_HOLD`; use `make site-check` for the mirrored Site |
+| `make site-check` | Mirrored Explorer Site lint, typecheck, build, node tests and local Worker smoke | Same steps as the `explorer-site` workflow; no hosted behavior or release claim |
 | `make normalized-summary-check` | Doctrine-summary validator fixtures and focused policy/source/CI tests | Summary structure and failure propagation only; no cutover authority |
 | `make docs-critical-structure` | Sentinel tests and the `CONTRIBUTING.md` structure check | Critical document structure only |
 | `make workflow-security` | Workflow-security tests and static ratchet | Workflow source check, not hosted behavior or ruleset state |

@@ -629,6 +629,7 @@ At `main@57d153cd6b55`, the tracked direct children of `scripts/` remain the two
 | `make local-data-check` | [`tests/local_data/`](../tests/local_data/README.md) | Synthetic offline capture, manifest, recovery, and boundary test results. |
 | `make offline-pipeline-check` | [`tests/pipelines/`](../tests/pipelines/README.md) and Hydrology no-network test | Named synthetic pipeline behavior under a bounded network guard. |
 | `make native-explorer-check` | Retired monorepo Explorer app | Explicit `WORKFLOW_HOLD`; current source is in the [Site v74-derived mirror](../apps/site/README.md). |
+| `make site-check` | [`apps/site/`](../apps/site/README.md) and the `explorer-site` workflow | Site lint, typecheck, build, node tests and a local Worker smoke on temporary storage; no hosted parity. |
 | `make normalized-summary-check` | Doctrine-summary validator and focused policy/source/CI tests | Summary structure and failure-propagation checks. |
 | `make repository-topology` | Directory-governance validator and tests | Exact-head topology diagnostic; inherited drift needs base/head comparison. |
 

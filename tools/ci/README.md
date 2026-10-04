@@ -180,6 +180,7 @@ advance a lifecycle state.
 |---|---|---|
 | `make offline-pipeline-check` | Synthetic KanPlan capture, geometry conversion, evidence resolution, refresh and rollback checks; WBD HUC12 candidates; Mesonet normalization and station health; the people/DNA/land assessment adapter; Python egress-denial proof | [offline-pipeline-check](../../.github/workflows/offline-pipeline-check.yml), Python 3.11 and 3.12 |
 | `make native-explorer-check` | Retired monorepo Explorer app | Explicit `WORKFLOW_HOLD` for a retired target |
+| `make site-check` | Mirrored Explorer Site lint, typecheck, build, node tests and local Worker smoke on temporary storage | [explorer-site](../../.github/workflows/explorer-site.yml), on `apps/site/**` changes |
 
 Prepare the pipeline dependencies before enabling the test-process network guard:
 
