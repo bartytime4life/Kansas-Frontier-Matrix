@@ -29,6 +29,9 @@ its existing local R2 store. It refuses conflicting objects or a different activ
 pointer. `--package PATH --reviewed-set SET_ID` validates only; adding
 `--persist-to PATH/.wrangler/local-state/v3/r2` restores a previously reviewed
 2024 pointer after object readback. No remote data or credentials are accessed.
+Package reads verify the opened Linux file descriptor stays within the selected
+root and enforce a byte limit while reading; changing a path or symlink between
+checks cannot redirect a read outside that root.
 Retain the prior state backup; this command is not a new imagery review.
 
 Only 2024 is present in that package. Earlier year options remain preparation

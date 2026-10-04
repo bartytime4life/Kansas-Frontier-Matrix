@@ -1127,8 +1127,8 @@
       "state": "identical"
     },
     "docs/smoke-imagery-bridges.md": {
-      "mirror_sha256": "f19021c15d92045aca5e49cfed1b05e7fd5c7d8db469057dba9004c04f286ebf",
-      "site_sha256": "f19021c15d92045aca5e49cfed1b05e7fd5c7d8db469057dba9004c04f286ebf",
+      "mirror_sha256": "568ec79aad7aea70c9c9758873992f1ca0c16022fcaa9a20f77d46ec3f221b2b",
+      "site_sha256": "568ec79aad7aea70c9c9758873992f1ca0c16022fcaa9a20f77d46ec3f221b2b",
       "state": "identical"
     },
     "drizzle/0000_tired_swordsman.sql": {
@@ -1227,8 +1227,13 @@
       "state": "identical"
     },
     "scripts/earth-engine/restore-local-display.mjs": {
-      "mirror_sha256": "f8dec94bd1439f6f892539e8d2c4ffc87c7c7f54ffca89ceff676ea53a8b0d3f",
-      "site_sha256": "f8dec94bd1439f6f892539e8d2c4ffc87c7c7f54ffca89ceff676ea53a8b0d3f",
+      "mirror_sha256": "b2b7de17c383fb39396fd066c7b2021de0f2dcf0b42bd9050ab0371cc0b7e127",
+      "site_sha256": "b2b7de17c383fb39396fd066c7b2021de0f2dcf0b42bd9050ab0371cc0b7e127",
+      "state": "identical"
+    },
+    "scripts/earth-engine/secure-local-read.mjs": {
+      "mirror_sha256": "c1786cb4900e635c5aca41b4e8c1eaa6f2f62061e2bc41b1d8e6192e4ea76c50",
+      "site_sha256": "c1786cb4900e635c5aca41b4e8c1eaa6f2f62061e2bc41b1d8e6192e4ea76c50",
       "state": "identical"
     },
     "scripts/install-ci.sh": {
@@ -1576,6 +1581,11 @@
       "site_sha256": "96cab3bcbd4b81a9a9e071874210d020e05ab46070c2c347df57d2d21e151b74",
       "state": "identical"
     },
+    "tests/secure-local-read.test.mjs": {
+      "mirror_sha256": "5849a768ecda550f2ad0ce24cff3c12d7af48870eba309316ffb85394752ba90",
+      "site_sha256": "5849a768ecda550f2ad0ce24cff3c12d7af48870eba309316ffb85394752ba90",
+      "state": "identical"
+    },
     "tests/security-boundaries.test.mjs": {
       "mirror_sha256": "ea27a8f890d6b43abbd1dfcd5d21fb61ba12caeb0a07bfa1717f04be4b98ad39",
       "site_sha256": "ea27a8f890d6b43abbd1dfcd5d21fb61ba12caeb0a07bfa1717f04be4b98ad39",
@@ -1673,7 +1683,7 @@
     }
   },
   "counts": {
-    "identical": 334,
+    "identical": 336,
     "inherited_repository_overlay": 0,
     "merged_water_overlay": 0,
     "missing": 0,
@@ -1696,24 +1706,25 @@
   },
   "rollback": {
     "mirror": "Restore the previous receipt selector and revert this mirror candidate commit; the previous receipt and source bytes remain in Git history.",
-    "site": "Saved v136 and v135 remain available for source recovery; v137 is not deployed. Retain deployed v131 and its storage bindings unless a separate deployment or data recovery decision is made."
+    "site": "Saved v137, v136, and v135 remain available for source recovery; v138 is not deployed. Retain deployed v131 and its storage bindings unless a separate deployment or data recovery decision is made."
   },
-  "site_archive_sha256": "c6672c434cfad03216817ed0d1128921c79f5cad7cbf3536c39a354d961a7d9c",
-  "site_candidate_commit": "4eb9624f55b969dabe22edbf604ab04ab480756b",
+  "site_archive_sha256": "78f71659b5cc9a73643b9b08a171b7d10174558542c9dca07ad4b3f43865b142",
+  "site_candidate_commit": "cdbab7bc0f599d3e2d199a310c803d98565bbbd7",
   "site_candidate_deployed": false,
   "site_project": "appgprj_6aa0b1c41bc08191bfd86003920f1631",
-  "site_saved_version": 137,
-  "site_saved_version_id": "appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_f2b2a93c32588191995795d698bdfb50",
-  "site_source_tree": "4a3888d7b321754e7690cd5d07d9cb9ca7319445",
+  "site_saved_version": 138,
+  "site_saved_version_id": "appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_7bbea1fc52d88191bd260148b3b9f5ad",
+  "site_source_tree": "6158c4e681d5528d1441bbec2adcfaa4df53d534",
   "status": "review_pending",
   "supersedes": "data/receipts/generated/site-mirror-overlay-refresh-20261003.json",
-  "tracked_digest_manifest_sha256": "f4dd2441bf74384b29ded2c775d90c61f767793410488e08e31fd0b2d4e3982d",
-  "tracked_file_count": 334,
+  "tracked_digest_manifest_sha256": "447f60b31f81bcb8c3b25e62fd1eee4556588e12e31c7aa279cb43eaf003279e",
+  "tracked_file_count": 336,
   "transition": {
     "changed_existing_paths": 60,
     "intermediate_saved_versions": [
       135,
-      136
+      136,
+      137
     ],
     "new_site_path_names": [
       "app/api/blm-plss-records/route.ts",
@@ -1747,6 +1758,7 @@
       "docs/local-pc-consolidation.md",
       "docs/smoke-imagery-bridges.md",
       "scripts/earth-engine/restore-local-display.mjs",
+      "scripts/earth-engine/secure-local-read.mjs",
       "scripts/project-local-map-archive.py",
       "scripts/serve-local-worker.mjs",
       "tests/blm-plss-records.test.mjs",
@@ -1760,9 +1772,10 @@
       "tests/lightning-flashes.test.mjs",
       "tests/local-geopdf-review.test.mjs",
       "tests/local-map-archive.test.mjs",
-      "tests/local-worker-runtime.test.mjs"
+      "tests/local-worker-runtime.test.mjs",
+      "tests/secure-local-read.test.mjs"
     ],
-    "new_site_paths": 45,
+    "new_site_paths": 47,
     "previous_receipt_preserved": true,
     "previous_recorded_paths": 289,
     "removed_mirror_paths": []
@@ -1770,6 +1783,7 @@
   "validation": {
     "browser": "NOT RUN; browser policy verification unavailable",
     "changed_file_lint": "PASS: maplibre-seam.ts, local-geopdf-map.ts, local-geopdf-review.test.mjs",
+    "codeql": "PENDING: CI rescan of descriptor-based local package reader",
     "dependency_lock_sha256": "52d15d279429cc03d0e3eb21ffc6bd620b247a29ae1574e953a4c7ceb93fff8b",
     "diff_check": "PASS: git diff --cached --check",
     "hosted_equivalence": false,
@@ -1779,10 +1793,11 @@
     "node_version": "v22.13.1",
     "npm_audit": "FAIL: 8 high, 0 critical; same unchanged lockfile; no dependency remediation in this mirror candidate",
     "repository_topology": "PASS: 0 invariant, 0 new drift, 0 stale baseline entries; baseline unchanged",
+    "secure_local_read": "PASS: opened-descriptor containment and byte-limit tests, including leaf and ancestor symlinks",
     "site_install": "PASS: npm run install:ci; locked npm ci completed",
     "site_lint": "FAIL: 6 react-hooks/set-state-in-effect errors and 39 warnings; 3 errors in unchanged governed-water-control.tsx, 3 in new smoke/lightning controls",
-    "site_tests": "PASS: npm test on saved Site v137 source; production build and 344/344 Node tests",
+    "site_tests": "PASS: npm test on saved Site v138 source; production build and 346/346 Node tests",
     "site_typecheck": "PASS: ./node_modules/.bin/tsc --noEmit on v136 source",
-    "source_comparison": "PASS: --source clean saved Site v137 commit; zero changes and zero unexpected deletions"
+    "source_comparison": "PASS: --source clean saved Site v138 commit; zero changes and zero unexpected deletions"
   }
 }

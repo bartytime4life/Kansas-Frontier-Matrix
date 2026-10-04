@@ -1,10 +1,11 @@
 // Restore an already reviewed display package to a STOPPED loopback preview.
 // No network, Earth Engine credentials, hosted storage, or approval writes.
-import { readFile, realpath, stat } from "node:fs/promises";
+import { readFile, realpath } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import path from "node:path";
 import { Miniflare, convertV4MiniflareOptions } from "miniflare";
 import ts from "typescript";
+import { readPackageObject } from "./secure-local-read.mjs";
 const args = process.argv.slice(2);
 const option = name => args[args.indexOf(name) + 1];
 if (!args.includes("--package") || !args.includes("--reviewed-set")) throw new Error("Require --package DIR --reviewed-set SET_ID; optionally --persist-to LOCAL_STATE/v3/r2");
@@ -13,11 +14,7 @@ const hash = bytes => createHash("sha256").update(bytes).digest("hex");
 const source = await readFile(new URL("../../app/earth-engine-context.ts", import.meta.url), "utf8");
 const js = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext } }).outputText;
 const schema = await import(`data:text/javascript;base64,${Buffer.from(js).toString("base64")}`);
-const read = async (key, max) => {
-  const file = await realpath(path.join(root, key));
-  if (!file.startsWith(root + path.sep) || (await stat(file)).size > max) throw new Error("Invalid package path or size");
-  return readFile(file);
-};
+const read = (key, max) => readPackageObject(root, key, max);
 const pointerKey = schema.EARTH_ENGINE_CONTEXT_ACTIVE_KEY;
 const pointerBytes = await read(pointerKey, 2048), pointer = schema.parseEarthEnginePointer(JSON.parse(pointerBytes));
 if (!pointer || pointer.setId !== option("--reviewed-set") || schema.earthEngineSetYear(pointer) !== 2024) throw new Error("Exact reviewed 2024 restoration identity required");
