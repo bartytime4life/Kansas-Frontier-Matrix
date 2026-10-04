@@ -1,0 +1,75 @@
+# Explorer Site build, tests and local backend smoke.
+#
+# Installs the Site's own npm lockfile, then runs lint, typecheck, the bounded
+# build with its node tests, and apps/site/smoke-local.sh against the built
+# Worker with a freshly migrated local D1 schema. The tests and the smoke need no
+# provider network. A green run proves only that this source builds and that its
+# routes answer locally; it grants no deployment, hosted-parity, source
+# admission, release, or publication authority.
+name: explorer-site
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/explorer-site.yml"
+      - "apps/site/**"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/explorer-site.yml"
+      - "apps/site/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: explorer-site-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  site:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: apps/site/source
+    env:
+      CI: "true"
+      SITES_BUILD_TIMEOUT: 8m
+      TZ: UTC
+    steps:
+      - name: Check out tested revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node 22
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22"
+
+      - name: Install the Site's locked dependencies
+        run: npm run install:ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: node_modules/.bin/tsc --noEmit -p .
+
+      - name: Build and run Site tests
+        run: npm test
+
+      - name: Smoke the local Worker backend
+        run: ../smoke-local.sh
+
+      - name: Record Site check scope
+        if: always()
+        run: |
+          {
+            echo "## explorer-site"
+            echo
+            echo "Lint, typecheck, build, node tests and a local D1-backed route smoke for apps/site."
+            echo "It is a review aid; it grants no deployment, release, or publication authority."
+          } >> "$GITHUB_STEP_SUMMARY"

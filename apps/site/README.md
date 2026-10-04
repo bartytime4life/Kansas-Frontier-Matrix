@@ -55,23 +55,37 @@ a local Cloudflare Worker simulator, creates an empty local D1 schema on first
 run, reapplies the additive `drizzle/` migrations (governed water, Kansas
 knowledge and crop CASMA tables) on every launch, and keeps local D1/R2 state
 under the ignored `source/.wrangler/` directory across builds. It refuses to
-start if a later migration is not purely `CREATE ... IF NOT EXISTS`. It binds to `127.0.0.1:4173` by default; set `SITE_HOST` or
-`SITE_PORT` to change the listening address or port. The Site source has its own
-npm lockfile and is deliberately outside the repository's root pnpm workspace.
-Run its npm commands from `apps/site/source/`.
+start if a later migration is not purely `CREATE ... IF NOT EXISTS`. It binds
+to `127.0.0.1:4173` by default; set `SITE_HOST` or `SITE_PORT` to change the
+listening address or port. The Site source has its own npm lockfile and is
+deliberately outside the repository's root pnpm workspace. Run its npm commands
+from `apps/site/source/`.
+
+After a build, `../smoke-local.sh` (run from `apps/site/source/`) starts the
+launcher on a temporary empty state, checks that the D1-backed governed water,
+Kansas knowledge, crop CASMA and data-submission routes give their expected
+empty-store answers, and stops it. It needs no provider network. The `explorer-site` workflow runs
+lint, typecheck, `npm test` and this smoke check for changes under `apps/site/`;
+a green run is not evidence of hosted behaviour or release.
 
 ### Local configuration
 
 | Setting or binding | Current use |
 | --- | --- |
 | `SITE_HOST`, `SITE_PORT` | Read by `serve-local.sh`; default `127.0.0.1:4173`. |
+| `SITE_STATE_DIR` | Optional local D1/R2 state directory for `serve-local.sh`; default `source/.wrangler/local-state`. `smoke-local.sh` sets it to a temporary directory that it removes afterwards. |
 | `DB`, `BUCKET` | Names declared in `source/.openai/hosting.json`; local Vite/Worker configuration supplies simulated D1/R2 bindings. |
 | `KFM_STEWARD_EMAILS`, optional `KFM_STEWARD_USER_IDS` | Private server-side allowlists for hosted steward review. Do not commit values. |
+| `KFM_EARTH_ENGINE_OWNER_EMAILS`, `KFM_EARTH_ENGINE_OWNER_IDS` | Comma-separated owner allowlists for the Earth Engine context API (catalog, staging, activation, tiles) and its installer page. Unset, the API answers 503 "not configured" to signed-in users (401 when signed out) and the installer page is a 404. |
+| `KFM_HISTORICAL_OWNER_EMAILS`, `KFM_HISTORICAL_OWNER_IDS` | Comma-separated owner allowlists for historical-map review and activation. Unset answers 503 "not configured" to signed-in users. |
+| `KFM_HISTORICAL_WORKER_TOKEN` | Bearer secret of at least 32 characters shared with the local historical-map worker for `/api/historical-topo/queue` and `/stage`. Unset answers 503 "not configured". Do not commit it. |
+| `KFM_LOCAL_REVIEWED_IMAGERY_ORIGIN` | Set only by `scripts/serve-local-worker.mjs --local-reviewed-imagery`; allows reviewed Earth Engine imagery reads from that exact loopback origin. |
+| `QWEN_ENDPOINT` (or `QWEN_OLLAMA_URL`, `OLLAMA_BASE_URL`), `QWEN_MODEL` (or `OLLAMA_MODEL`, default `qwen3:8b`), optional `QWEN_API_KEY` | Server-side Qwen/Ollama endpoint for `/api/qwen`; it must be HTTPS or loopback HTTP. Unset answers 503 `not_configured`, and the browser offers the copyable grounded prompt instead. |
 | `.wrangler/local-state/`, `.sites-runtime/` | Ignored local simulator state and install cache; neither contains hosted data. |
 
 The local launcher uses the built Worker and binds to loopback by default. The source's `npm run dev` uses Vite's separate development configuration, which currently binds to `0.0.0.0`; choose the launcher for a loopback-only check. Changing a template environment variable does not change a hosted Site setting.
 
-The snapshot includes checked-in static assets and the D1 schema migration.
+The snapshot includes checked-in static assets and the D1 schema migrations.
 Live provider responses, private D1 submission and review records, private R2
 uploads, and external local archives are not copied into Git. Local D1/R2
 development bindings do not grant access to production records. Read the
