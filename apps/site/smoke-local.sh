@@ -18,23 +18,26 @@ smoke_routes=(
   data-submissions "data-submissions/[id]"
   "earth-engine-context/[setId]/[layerId]/[...tile]" earth-engine-context/activate
   earth-engine-context/active earth-engine-context/catalog earth-engine-context/stage
-  event-atlas/manifest event-atlas/weather
+  event-atlas/counties event-atlas/geology-legend event-atlas/manifest
+  event-atlas/resources event-atlas/weather
   "governed/v1/[view]" governed/v1/knowledge
   historical-topo historical-topo/activate historical-topo/overlay historical-topo/queue
   historical-topo/review "historical-topo/review/tiles/[scan]/[package]/[z]/[x]/[y]"
   historical-topo/stage "historical-topo/tiles/[scan]/[package]/[z]/[x]/[y]"
-  hydrology/coverage hydrology/direction hydrology/streamflow
-  lightning/archive live-context qwen soil-moisture/tile source-download
+  hydrology/coverage hydrology/direction hydrology/noaa hydrology/streamflow
+  lightning/archive lightning/flashes live-context qwen
+  soil-moisture/availability soil-moisture/tile source-download
   terrain-tile wind-arrows
 )
-# These answer only from a live upstream provider even when called without
-# parameters, so an offline check cannot tell a healthy route from a broken one.
+# These have no request they refuse with a distinct status before contacting
+# their provider: they take no input, fetch a provider manifest first, or report
+# invalid input and provider failure alike as 502. An offline check cannot tell
+# a healthy route from a broken one.
 network_routes=(
-  event-atlas/counties event-atlas/geology-legend event-atlas/radar-frame
-  event-atlas/resources event-atlas/tile hydrology/noaa
-  lightning/flashes lightning/frames lightning/legend lightning/preview
+  event-atlas/radar-frame event-atlas/tile
+  lightning/frames lightning/legend lightning/preview
   "lightning/tiles/[frame]/[z]/[x]/[y]" noaa-radar/frames noaa-satellite/frames
-  repository-status soil-moisture/availability
+  repository-status
 )
 inventory_drift="$(diff \
   <(cd "$api_root" && find . -name route.ts | sed 's|^\./||; s|/route\.ts$||' | LC_ALL=C sort) \
@@ -110,20 +113,26 @@ expect GET /api/governed/v1/unknown-view 404 envelope.reason_code ROUTE_NOT_FOUN
 expect GET /api/governed/v1/knowledge 200 envelope.reason_code NO_APPROVED_KNOWLEDGE
 expect GET /api/crop-casma/availability 200 code NO_APPROVED_SOIL_PACKAGE
 
-# Requests without the required parameters are refused before any upstream call.
+# Missing or invalid parameters are refused before any upstream call.
 expect GET /api/3dep-dem-tile 400
 expect GET /api/airflow-tile 400
 expect GET /api/blm-plss-records 400 state error
 expect GET /api/bridge-records 400 state error
 expect GET /api/crop-casma/tile 400 code INVALID_TILE_REQUEST
+expect GET '/api/event-atlas/counties?edition=1999' 400
+expect GET '/api/event-atlas/geology-legend?unsupported=1' 400
 expect GET /api/event-atlas/manifest 400
+expect GET '/api/event-atlas/resources?edition=1900' 400
 expect GET /api/event-atlas/weather 400
 expect GET /api/historical-topo 400 state error
 expect GET /api/hydrology/coverage 400
 expect GET /api/hydrology/direction 400
+expect GET '/api/hydrology/noaa?mode=unsupported' 400 error.code INVALID_MODE
 expect GET /api/hydrology/streamflow 400 code USGS_STREAMFLOW_INVALID_QUERY
 expect GET /api/lightning/archive 400
+expect GET '/api/lightning/flashes?minutes=7' 400 state error
 expect GET /api/live-context 400
+expect GET '/api/soil-moisture/availability?retry=2' 400 code INVALID_REQUEST
 expect GET /api/soil-moisture/tile 400 code INVALID_TILE_REQUEST
 expect GET /api/source-download 400
 expect GET /api/terrain-tile 400
