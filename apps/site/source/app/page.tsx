@@ -8424,7 +8424,7 @@ export default function Home() {
             {reducedMotion && <p className="lightning-motion-note">Reduced motion: autoplay and glow are off. Frame steps remain available.</p>}
             <footer>Situational display only · not an emergency warning service · time remains separate from the atlas year</footer>
           </aside>}
-          <LightningFlashLoop map={styleReady ? mapRef.current : null} enabled={glmFlashesEnabled && glmFlashesAllowed} reducedMotion={reducedMotion} onClose={() => setGlmFlashesEnabled(false)} />
+          <LightningFlashLoop key={glmFlashesEnabled && glmFlashesAllowed ? "enabled" : "disabled"} map={styleReady ? mapRef.current : null} enabled={glmFlashesEnabled && glmFlashesAllowed} reducedMotion={reducedMotion} onClose={() => setGlmFlashesEnabled(false)} />
           <button className="qwen-map-launch" type="button" onClick={qwenOpen ? closeQwenCompanion : openQwenCompanion} aria-expanded={qwenOpen} aria-controls="qwen-map-panel" data-open={qwenOpen}>
             <span className="qwen-launch-mark" aria-hidden="true">Q</span>
             <span><strong>Ask Qwen</strong><small>About this map view</small></span>

@@ -212,6 +212,39 @@ the previous receipt selector; do not change deployed Site or stored data as
 part of that rollback. Saved v137, v136 and v135 remain available as source
 recovery points.
 
+## Saved Site v139 mirror candidate — 2026-10-04
+
+The [v139 successor receipt](../../data/receipts/generated/site-mirror-v139-candidate-20261004.json)
+pins owner-private Site source `25238b376ef5cbfc1918a2e48f1e508ad8017fd6`
+and repository base `3315c6712145a00af5ba8a732743085df0a20523`,
+which includes the merged v138 mirror PR #4876. Five existing Site paths
+changed and no paths were added or removed. The preceding v138 receipt remains
+in Git history. This mirror is a content-parity candidate, not hosted
+equivalence or a data release.
+
+The reviewed-water control now derives visibility from the release approval
+time and associates evidence with the selected station and package, so stale
+evidence is hidden immediately on selection or expiry. The lightning loop
+remounts after its external layer is disabled; an old play action cannot
+resume on re-enable. HMS playback cancels outstanding publication and map
+requests when disabled and ends after the selected frame hold. The Site's HUD,
+data bindings, and existing map layers are unchanged by this slice.
+
+The authoritative Site v139 source passed full lint with zero errors and 39
+warnings, TypeScript checking, and `npm test` (production build and 346 Node
+tests). Browser acceptance is unrun because browser control remains
+unavailable. A fresh audit of the unchanged dependency lockfile found eight
+high findings and no critical findings; reachability and remediation remain
+open. The mirror check passed for all 336 tracked files, the eight mirror-tool
+tests passed, topology showed zero new drift, and the MapLibre acquisition
+inventory retained its accepted-seam `HOLD`. New-head CI is separate evidence.
+Site v139 was saved with an archive and is **not
+deployed**; deployed v131, release activation, source review, and publication
+remain distinct. Restore the previous mirror commit and v138 receipt selector
+to roll back this repository candidate. Saved v138 remains a Site source
+recovery point; do not alter D1/R2 or the deployed Site as part of a mirror
+rollback.
+
 ## Reproducible environment
 
 Use Python 3.11 or newer; this batch used Python 3.12.3. From the repository root:
