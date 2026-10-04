@@ -511,3 +511,31 @@ The source-neutral bounded curl transport now owns temporary network-response
 files under `packages/connectors-core`. The USGS connector still owns its exact
 provider profile, request scope, pagination and capture. This follows the
 existing shared-transport responsibility and adds no lifecycle write authority.
+
+## Repository selection-generation repair — 2026-10-04
+
+At `main@d5d4337e8ecfae45e32a195abcb6f1e84f92e642`, the exact-head
+PR #4878 P2 still matched the export handler despite the resolved review thread.
+An export from A could survive A→B→A because only its final station ID was
+checked. The repository repair increments a generation for each station change
+through the shared dropdown/map handler and captures it when export begins.
+A changed generation withholds the download after the sequential layer and
+evidence requests. Reselecting the same station does not invalidate an export.
+
+The component-handler regressions fail on unrepaired main for A→B→A during
+either request and pass with the repair; unchanged selection still exports.
+Validation passed 17 focused governed-water tests, the production build and
+352 Site tests on Node 22.13.1, TypeScript, lint (0 errors, 39 existing warnings),
+280 water/mirror tests, isolated synthetic fixture regeneration, and 28 workflow
+security tests plus the security ratchet. The initial Node 24 run rejected the
+runtime's required Node 22 version; the supported-version rerun passed.
+
+The [overlay receipt](../../data/receipts/generated/site-v140-water-selection-overlay-20261004.json)
+preserves the historical v140 receipt and records one changed source file plus
+one repository-only regression file. It verifies 337 repository paths against
+recorded digests; it does not assert byte parity for the two overlays with saved
+Site v140. No Site synchronization or deployment occurred in this repair.
+New-head hosted checks and independent review remain separate. Existing
+dependency-audit holds remain open. Water admission, release activation, Site
+deployment, hosted equivalence, release, publication, rendered-browser
+acceptance, and owner acceptance are not established by these tests.

@@ -16,7 +16,11 @@ export function GovernedWaterControl({ mapRef, styleReady }: { mapRef: RefObject
   const [exportStatus, setExportStatus] = useState("");
   const controller = useRef<AbortController | null>(null);
   const selectedRef = useRef(selected);
-  const chooseStation = useCallback((id: string) => { selectedRef.current = id; setSelected(id); setExportStatus(""); }, []);
+  const selectionGeneration = useRef(0);
+  const chooseStation = useCallback((id: string) => {
+    if (selectedRef.current !== id) selectionGeneration.current += 1;
+    selectedRef.current = id; setSelected(id); setExportStatus("");
+  }, []);
   const refresh = useCallback(async () => {
     controller.current?.abort(); const abort = new AbortController(); controller.current = abort; setLoading(true); setResponse(null); setEvidenceRecord(null); setStatus("Checking current release…"); setBrowserState("checking"); setRender("Waiting for map frame");
     const timeout = setTimeout(() => abort.abort(), 15000);
@@ -77,11 +81,11 @@ export function GovernedWaterControl({ mapRef, styleReady }: { mapRef: RefObject
   }, [selected, data, response]);
   async function exportObservation() {
     setExportStatus("Checking current release…");
-    const requested = selected;
+    const requested = selected, requestedGeneration = selectionGeneration.current;
     try {
       const fresh = await fetch(`/api/governed/v1/layers?station_id=${encodeURIComponent(requested)}`, { cache: "no-store", signal: AbortSignal.timeout(15000) }).then(r => readBoundedJson(r, 2 * 1024 * 1024)) as WaterResponse;
       const refs = await fetch(`/api/governed/v1/evidence?station_id=${encodeURIComponent(requested)}`, { cache: "no-store", signal: AbortSignal.timeout(15000) }).then(r => readBoundedJson(r, 512 * 1024)) as WaterResponse;
-      if (selectedRef.current !== requested || !waterExportMatchesSelection(fresh, refs, requested)
+      if (selectionGeneration.current !== requestedGeneration || selectedRef.current !== requested || !waterExportMatchesSelection(fresh, refs, requested)
           || approvalRemainingMs(fresh.data?.approval_expires_at, Date.now()) <= 0
           || approvalRemainingMs(refs.data?.approval_expires_at, Date.now()) <= 0) throw new Error("WITHHELD");
       const blob = new Blob([JSON.stringify({ observations: fresh, evidence: refs }, null, 2)], { type: "application/json" }), url = URL.createObjectURL(blob);
