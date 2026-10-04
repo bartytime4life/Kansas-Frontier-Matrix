@@ -7,6 +7,8 @@
 
 # Kansas Frontier Matrix Explorer
 
+See [the local PC reconciliation record](docs/local-pc-consolidation.md) for the 2026-10-02 local source, storage, validation, and recovery boundaries.
+
 A map-first Kansas explorer with real provider baselines, dated archive replay,
 source downloads, and private data contribution and steward review workflows.
 

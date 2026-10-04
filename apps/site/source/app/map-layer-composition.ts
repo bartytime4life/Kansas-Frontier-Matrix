@@ -14,8 +14,9 @@ type LayerLike = { id: string; type: string };
 const isOverlay = (layer: LayerLike) => registryIds.has(layer.id) || systemIds.has(layer.id)
   || layer.id === daylightLayerId || layer.id.startsWith("external-") || layer.id.startsWith("kfm-ee-context-layer-");
 
-type RasterFamily = "surface" | "water" | "fire" | "air" | "radar" | "other";
+type RasterFamily = "surface" | "water" | "fire" | "air" | "radar" | "reference" | "other";
 const rasterFamily = (id: string): RasterFamily => {
+  if (id.startsWith("external-blm-plss-") || id.startsWith("external-blm-mlrs-") || id.startsWith("external-kdot-")) return "reference";
   if (id.includes("3dep-") || id.includes("goes-geocolor") || id.startsWith("kfm-ee-context-layer-")) return "surface";
   if (id.includes("3dhp-") || id.includes("wbd-") || id.includes("nwm-")) return "water";
   if (id.includes("firms-active-fire")) return "fire";
@@ -24,10 +25,10 @@ const rasterFamily = (id: string): RasterFamily => {
   if (id.includes("nws-radar")) return "radar";
   return "other";
 };
-const rasterFamilyOrder: Record<RasterFamily, number> = { surface: 0, water: 1, other: 2, fire: 3, air: 4, radar: 5 };
+const rasterFamilyOrder: Record<RasterFamily, number> = { surface: 0, water: 1, other: 2, reference: 6, fire: 3, air: 4, radar: 5 };
 // These are display budgets within one visual family. Transparent provider pixels
 // still allow unrelated observations to be seen without dividing all layers by 14.
-const rasterFamilyLimit: Record<RasterFamily, number> = { surface: 0.68, water: 0.82, fire: 0.72, air: 0.78, radar: 0.76, other: 0.9 };
+const rasterFamilyLimit: Record<RasterFamily, number> = { surface: 0.68, water: 0.82, fire: 0.72, air: 0.78, radar: 0.76, other: 0.9, reference: 1 };
 
 export const orderedOverlayIds = (layers: readonly LayerLike[]): string[] => layers
   .filter(isOverlay)
@@ -80,7 +81,7 @@ export const balanceMapRasters = (map: MapLibreMap): void => {
   }
   for (const [family, group] of families) {
     const total = group.reduce((sum, [, opacity]) => sum + opacity, 0);
-    const scale = group.length > 1 && total > rasterFamilyLimit[family] ? rasterFamilyLimit[family] / total : 1;
+    const scale = family !== "reference" && group.length > 1 && total > rasterFamilyLimit[family] ? rasterFamilyLimit[family] / total : 1;
     for (const [id, opacity] of group) {
       const effective = opacity * scale;
       if (map.getPaintProperty(id, "raster-opacity") !== effective) map.setPaintProperty(id, "raster-opacity", effective);

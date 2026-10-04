@@ -1,6 +1,22 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createLocalQwenBridge, LOCAL_EXPLORER_ORIGIN, LOCAL_PREVIEW_ORIGIN, LOCAL_QWEN_MODEL, SITE_ORIGIN } from "../scripts/local-qwen-bridge.mjs";
+import { mkdtemp, symlink, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { createLocalQwenBridge, isDirectEntryPoint, LOCAL_EXPLORER_ORIGIN, LOCAL_PREVIEW_ORIGIN, LOCAL_QWEN_MODEL, SITE_ORIGIN } from "../scripts/local-qwen-bridge.mjs";
+
+test("direct startup follows the stable Site symlink without starting on import", async () => {
+  const directory = await mkdtemp(join(tmpdir(), "kfm-bridge-alias-"));
+  const moduleUrl = new URL("../scripts/local-qwen-bridge.mjs", import.meta.url);
+  try {
+    const alias = join(directory, "current.mjs");
+    await symlink(fileURLToPath(moduleUrl), alias);
+    assert.equal(isDirectEntryPoint(moduleUrl, alias), true);
+    assert.equal(isDirectEntryPoint(moduleUrl, fileURLToPath(import.meta.url)), false);
+    assert.equal(isDirectEntryPoint(moduleUrl, join(directory, "missing.mjs")), false);
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
 
 const context = {
   camera: { center: [-98, 38.5], zoom: 5, locationRedacted: true },

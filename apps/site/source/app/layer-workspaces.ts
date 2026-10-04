@@ -1,9 +1,9 @@
 import type { OfficialContextId, OfficialContextSource } from "./live-context";
 
-export type LayerWorkspace = "all" | "disaster" | "land";
+export type LayerWorkspace = "all" | "disaster" | "land" | "transport";
 
 export const DISASTER_SOURCE_IDS: readonly OfficialContextId[] = Object.freeze([
-  "fema-disaster-declarations",
+  "fema-disaster-declarations", "fema-flood-zones",
   "usgs-streamflow", "noaa-nwps-gauges", "noaa-nwm-analysis", "noaa-nwm-short-range",
   "usgs-earthquakes", "raspberry-shake-stations", "noaa-hms-smoke",
   "nasa-firms-active-fire", "nasa-gibs-fire-points", "nifc-fire-reports",
@@ -11,12 +11,26 @@ export const DISASTER_SOURCE_IDS: readonly OfficialContextId[] = Object.freeze([
   "noaa-lightning-density", "nasa-lightning-climatology",
 ]);
 export const LAND_SOURCE_IDS: readonly OfficialContextId[] = Object.freeze([
+  "blm-mlrs-leases-authorized", "blm-mlrs-leases-closed",
   "blm-plss-townships", "blm-plss-sections", "blm-plss-intersected",
 ]);
 
+export const TRANSPORT_SOURCE_IDS: readonly OfficialContextId[] = Object.freeze(["kdot-bridges-state", "kdot-bridges-local", "kdot-bridges-historic", "kdot-bridges-old", "kdot-bridges-closed", "kdot-roads-1918", "kdot-roads", "kdot-rail-active", "kdot-rail-abandoned"]);
+
+export const LAYER_WORKSPACES: readonly (readonly [LayerWorkspace, string])[] = Object.freeze([
+  ["all", "All sources"], ["land", "BLM land records"], ["transport", "Roads, rail & bridges"], ["disaster", "Hazards"],
+]);
+
+export function sourceMinimumZoom(source: OfficialContextSource): number {
+  return source.minDisplayZoom ?? (source.id === "usgs-3dep-hillshade" || source.id === "usgs-3dep-slope" ? 7 : 0);
+}
+
+export function sourceNeedsCloserView(source: OfficialContextSource, selected: boolean, held: boolean, state: string, zoom: number): boolean {
+  return selected && !held && state !== "error" && zoom < sourceMinimumZoom(source);
+}
+
 /** These families remain visible as holds until an adapter and its geometry are verified. */
 export const DISASTER_COVERAGE_HOLDS = Object.freeze([
-  { title: "FEMA flood hazard areas", detail: "NFHL effective dates and zone meaning require a separate regulated-map adapter.", sourceUrl: "https://www.fema.gov/flood-maps/national-flood-hazard-layer" },
   { title: "NOAA Storm Events", detail: "Historical event points, county records, and reported impacts cannot share one footprint.", sourceUrl: "https://www.ncei.noaa.gov/access/storm-events-database/" },
   { title: "Drought and harmful algal blooms", detail: "Source-specific dates, scale, and waterbody extent remain to be validated.", sourceUrl: "https://www.drought.gov/states/kansas" },
 ]);
@@ -26,8 +40,8 @@ export function filterOfficialSources(
 ): OfficialContextSource[] {
   const term = query.trim().toLowerCase();
   const ids = workspace === "disaster" ? new Set(DISASTER_SOURCE_IDS)
-    : workspace === "land" ? new Set(LAND_SOURCE_IDS) : null;
+    : workspace === "land" ? new Set(LAND_SOURCE_IDS) : workspace === "transport" ? new Set(TRANSPORT_SOURCE_IDS) : null;
   return sources.filter(source => (!ids || ids.has(source.id))
-    && (!term || `${source.title} ${source.shortTitle} ${source.organization} ${source.domain}`.toLowerCase().includes(term)))
+    && (!term || `${source.id} ${source.title} ${source.shortTitle} ${source.organization} ${source.domain}`.toLowerCase().includes(term)))
     .sort((a, b) => Number(b.defaultVisibility) - Number(a.defaultVisibility));
 }

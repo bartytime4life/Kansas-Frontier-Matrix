@@ -1,6 +1,7 @@
 import { requireChatGPTUser } from "../chatgpt-auth";
 import { intakeUser } from "../data-intake-server";
 import DataWorkspace from "./workspace";
+import { localSignInNotice } from "../local-signin-notice";
 export const dynamic = "force-dynamic";
 export default async function DataPage({ searchParams }: { searchParams: Promise<{ source?: string }> }) {
   const params = await searchParams;
@@ -8,6 +9,8 @@ export default async function DataPage({ searchParams }: { searchParams: Promise
   return <SignedInData initialSourceId={source} returnTo={source ? `/data?source=${encodeURIComponent(source)}` : "/data"} />;
 }
 async function SignedInData({ returnTo, initialSourceId }: { returnTo: string; initialSourceId: string }) {
+  const notice = await localSignInNotice("/data");
+  if (notice) return notice;
   await requireChatGPTUser(returnTo);
   const user = await intakeUser();
   return <DataWorkspace initialSourceId={initialSourceId} mode="submit" name={user.name} steward={user.steward} />;

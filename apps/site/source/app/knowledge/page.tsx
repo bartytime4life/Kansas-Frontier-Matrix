@@ -2,32 +2,20 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { readKnowledge, knowledgeUnavailable, type KnowledgeResult } from "../knowledge-read";
 import styles from "./knowledge.module.css";
-
-type RecordItem = {
-  record_id: string; kind: string; title: string; summary: string; location_label: string;
-  geometry_role: string; time_start: string | null; time_end: string | null;
-  source_url: string; evidence_ref: string; review_ref: string;
-  assertions: { text: string; status: "documented" | "conflicting" | "narrative"; source_ref: string; evidence_ref: string }[];
-};
-type Result = { envelope: { outcome: string; reason_code: string }; data?: { records: RecordItem[]; release_id: string; released_at: string; has_more: boolean } };
 
 export default function KansasKnowledgePage() {
   const [query, setQuery] = useState("");
-  const [submitted, setSubmitted] = useState("");
-  const [result, setResult] = useState<Result | null>(null);
-  const [busy, setBusy] = useState(true);
+  const [submitted, setSubmitted] = useState({ term: "" });
+  const [completed, setCompleted] = useState<{ request: typeof submitted; result: KnowledgeResult } | null>(null);
+  const result = completed?.request === submitted ? completed.result : null;
+  const busy = result === null;
   useEffect(() => {
     const abort = new AbortController();
-    setBusy(true);
-    fetch(`/api/governed/v1/knowledge?term=${encodeURIComponent(submitted)}`, { signal: abort.signal, cache: "no-store" })
-      .then(async response => {
-        const body = await response.json() as Result;
-        if (!response.ok && body.envelope?.reason_code !== "INVALID_QUERY") throw new Error("STORE_UNAVAILABLE");
-        setResult(body);
-      })
-      .catch(error => { if (error.name !== "AbortError") setResult({ envelope: { outcome: "ERROR", reason_code: "STORE_UNAVAILABLE" } }); })
-      .finally(() => { if (!abort.signal.aborted) setBusy(false); });
+    void readKnowledge({ kind: "search", term: submitted.term }, abort.signal)
+      .then(result => { if (!abort.signal.aborted) setCompleted({ request: submitted, result }); })
+      .catch(() => { if (!abort.signal.aborted) setCompleted({ request: submitted, result: knowledgeUnavailable() }); });
     return () => abort.abort();
   }, [submitted]);
 
@@ -36,7 +24,7 @@ export default function KansasKnowledgePage() {
     <header className={styles.header}><Link href="/">← Kansas map</Link><span>REVIEWED KNOWLEDGE</span></header>
     <div className={styles.intro}><p>KANSAS KNOWLEDGE</p><h1>Places, facts, people, events, and stories</h1>
       <p>Search only entries whose sources, rights, sensitivity, evidence, and release have been reviewed. Narratives and conflicting accounts remain labeled. A place label is not an exact site location.</p></div>
-    <form className={styles.search} onSubmit={event => { event.preventDefault(); setSubmitted(query.trim()); }}>
+    <form className={styles.search} onSubmit={event => { event.preventDefault(); setSubmitted({ term: query.trim() }); }}>
       <label htmlFor="knowledge-term">Search released entries</label>
       <div><input id="knowledge-term" type="search" maxLength={80} value={query} onChange={event => setQuery(event.target.value)} placeholder="Kansas place, event, or topic" /><button type="submit" disabled={busy}>Search</button></div>
     </form>
@@ -45,6 +33,7 @@ export default function KansasKnowledgePage() {
       {!busy && result?.envelope.reason_code === "NO_APPROVED_KNOWLEDGE" && <p>No knowledge release is active yet. Source discovery and candidate preparation do not publish entries.</p>}
       {!busy && result?.envelope.reason_code === "RECORD_NOT_FOUND" && <p>No released record matches this search. This does not mean no source record exists.</p>}
       {!busy && result?.envelope.reason_code === "RELEASE_HELD" && <p>The current knowledge release is held or withdrawn.</p>}
+      {!busy && result?.envelope.reason_code === "INVALID_QUERY" && <p>The search is invalid. Use at most 80 characters.</p>}
       {!busy && result?.envelope.outcome === "ERROR" && <p>The reviewed knowledge store is unavailable. Try again later.</p>}
       {!busy && result?.envelope.reason_code === "RELEASED" && <><p className={styles.release}>Released {result.data?.released_at?.slice(0, 10)} · {records.length} shown{result.data?.has_more ? " · more results exist; narrow your search" : ""}</p>
         <div className={styles.cards}>{records.map(record => <article key={record.record_id} className={styles.card}>

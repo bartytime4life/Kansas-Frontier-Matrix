@@ -70,8 +70,10 @@ test("unchanged GeoJSON frames skip worker uploads but changed observations and 
   const feature = { type:"Feature",geometry:{type:"Point",coordinates:[-98,38]},properties:{value:1} };
   const data={type:"FeatureCollection",features:[feature]};
   assert.equal(perf.updateGeoJSON(source,data),true);
+  assert.equal(perf.geoJSONHasData(source, data), true);
   assert.equal(perf.updateGeoJSON(source,{...data,features:[feature]}),false);
   assert.equal(perf.updateGeoJSON(source,{...data,features:[{...feature,properties:{value:2}}]}),true);
+  assert.equal(perf.geoJSONHasData(source, data), false);
   assert.equal(uploads,2);
   assert.equal(perf.updateGeoJSON({setData:()=>uploads++},data),true); assert.equal(uploads,3);
 });

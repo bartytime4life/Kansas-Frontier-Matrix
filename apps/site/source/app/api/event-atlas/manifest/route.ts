@@ -1,4 +1,4 @@
-import { eventInterval, intervalDays, parseRadarDirectory, radarDirectory, parseSmokeKml, smokeUrl, imageryDomainUrl, domainIncludes, type EventManifest, type RadarScan, type SmokeCollection } from "../../../event-atlas";
+import { eventInterval, intervalDays, parseRadarDirectory, radarDirectory, parseSmokeKml, smokeOverlaps, smokeUrl, imageryDomainUrl, domainIncludes, type EventManifest, type RadarScan, type SmokeCollection } from "../../../event-atlas";
 import { boundedFetch, jsonHeaders } from "../upstream";
 export const dynamic = "force-dynamic";
 
@@ -24,7 +24,7 @@ export async function GET(request: Request) {
         if (day < "2005-08-05") { smokeGaps.push(day); return; }
         try {
           const body = await boundedFetch(smokeUrl(day), 2 * 1024 * 1024);
-          smoke.features.push(...parseSmokeKml(body.text(), smokeUrl(day)).features.filter((f) => f.properties.start < end && f.properties.end > start));
+          smoke.features.push(...parseSmokeKml(body.text(), smokeUrl(day)).features.filter((f) => smokeOverlaps(f.properties, Date.parse(start), Date.parse(end))));
         } catch { smokeGaps.push(day); }
       }),
       ...days.map(async (day) => {

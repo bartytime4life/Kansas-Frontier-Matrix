@@ -14,6 +14,7 @@ import {
 
 import SnapshotMap from "./snapshot-map";
 import { readDraft, REPORT_STORAGE_KEY, STORY_STORAGE_KEY } from "./workspace-storage";
+import { FIRE_REPORT_SOURCES, type FireReportContext } from "./fire-report-analysis";
 
 type WorkspaceMode = "reports" | "stories";
 
@@ -21,6 +22,7 @@ type ReportStoryWorkspacesProps = Readonly<{
   mode: WorkspaceMode;
   snapshot: MapSnapshot;
   evidenceRecords: readonly EvidenceRecord[];
+  fireContext?: FireReportContext | null;
   onModeChange: (mode: WorkspaceMode) => void;
   onReturnToMap: () => void;
   onInspectEvidence: (record: EvidenceRecord) => void;
@@ -79,6 +81,20 @@ const reportMarkdown = (draft: ReportDraft, evidence: readonly EvidenceRecord[])
     `**Basemap:** ${draft.snapshot.basemap} (display context)` ,
     "**Map attribution:** " + (draft.snapshot.basemap === "standard" ? "OpenFreeMap · OpenMapTiles · © OpenStreetMap contributors" : draft.snapshot.basemap === "imagery" ? "Tiles © Esri" : draft.snapshot.basemap === "streets" ? "© OpenStreetMap contributors" : "KFM local background style"),
     ...(terrainDescription ? [`**Display terrain:** ${terrainDescription}`] : []),
+    ...(draft.fireContext ? [
+      "",
+      "## Fire source context · not claim evidence",
+      "",
+      `- Source: ${draft.fireContext.kind === "nifc-fire-reports" ? "NIFC working incident record" : "NASA VIIRS thermal detection"} — ${draft.fireContext.sourceUrl}`,
+      `- Selected record: ${draft.fireContext.title}${draft.fireContext.featureId ? ` (${draft.fireContext.featureId})` : ""}`,
+      `- Provider event/acquisition time: ${draft.fireContext.observedAt ?? "not supplied"}`,
+      `- KFM retrieval time: ${draft.fireContext.retrievedAt ?? "not supplied"}`,
+      `- Feed state: ${draft.fireContext.feedState}; comparison feed: ${draft.fireContext.comparisonState}`,
+      ...draft.fireContext.nearby.map((item) => `- Nearby context: ${item.name}, ${item.distanceKm.toFixed(1)} km, ${item.eventTime ?? "time not supplied"}; no event match established`),
+      `- Incident updates: ${FIRE_REPORT_SOURCES.inciweb}`,
+      `- National fire news: ${FIRE_REPORT_SOURCES.news}`,
+      "- No article is automatically matched. Working points and thermal pixels are not fire perimeters or safety guidance.",
+    ] : []),
     "",
     "## Visible layer stack",
     "",
@@ -127,6 +143,7 @@ export default function ReportStoryWorkspaces({
   mode,
   snapshot,
   evidenceRecords,
+  fireContext,
   onModeChange,
   onReturnToMap,
   onInspectEvidence,
@@ -136,7 +153,7 @@ export default function ReportStoryWorkspaces({
   const headingRef = useRef<HTMLHeadingElement>(null);
   const [storageState, setStorageState] = useState<"saved" | "saving" | "unavailable">("saving");
   const [report, setReport] = useState<ReportDraft>(() =>
-    readStored<ReportDraft>(REPORT_STORAGE_KEY, snapshot.id) ?? createReportDraft(snapshot, evidenceRecords),
+    readStored<ReportDraft>(REPORT_STORAGE_KEY, snapshot.id) ?? createReportDraft(snapshot, evidenceRecords, fireContext ?? undefined),
   );
   const [story, setStory] = useState<StoryDraft>(() =>
     readStored<StoryDraft>(STORY_STORAGE_KEY, snapshot.id) ?? createTrustStory(snapshot, evidenceRecords),
@@ -297,8 +314,8 @@ export default function ReportStoryWorkspaces({
       <header className="primary-workspace-header">
         <div>
           <span>KANSAS FRONTIER MATRIX · DEVICE-LOCAL WORKSPACE</span>
-          <h1 id="primary-workspace-title" ref={headingRef} tabIndex={-1}>{mode === "reports" ? "Evidence report builder" : "Guided story builder"}</h1>
-          <p>{mode === "reports" ? "Write from the exact inherited map state and keep evidence limits beside every claim." : "Compose ordered map scenes without turning camera motion into evidence."}</p>
+          <h1 id="primary-workspace-title" ref={headingRef} tabIndex={-1}>{mode === "reports" ? report.fireContext ? "Fire report builder" : "Evidence report builder" : "Guided story builder"}</h1>
+          <p>{mode === "reports" ? report.fireContext ? "Build a source-linked fire brief from the selected record. Add article findings only after checking the article yourself." : "Write from the exact inherited map state and keep evidence limits beside every claim." : "Compose ordered map scenes without turning camera motion into evidence."}</p>
         </div>
         <nav aria-label="Report and story workspaces">
           <button type="button" aria-current={mode === "reports" ? "page" : undefined} onClick={() => onModeChange("reports")}>Reports</button>
@@ -329,6 +346,13 @@ export default function ReportStoryWorkspaces({
 
         <main className="report-paper" aria-label="Editable report draft">
           <div className="paper-rule"><span>KFM FIELD NOTE</span><strong>DRAFT</strong></div>
+          {report.fireContext && <section className="fire-report-source-card" aria-label="Fire report source context">
+            <strong>{report.fireContext.kind === "nifc-fire-reports" ? "NIFC working incident record" : "NASA thermal detection"} · {report.fireContext.title}</strong>
+            <p>Provider event/acquisition: {report.fireContext.observedAt ?? "not supplied"} · Retrieved: {report.fireContext.retrievedAt ?? "not supplied"}</p>
+            <p>Source feed: {report.fireContext.feedState} · Comparison feed: {report.fireContext.comparisonState}. Nearby points do not establish the same incident.</p>
+            <div className="source-time-actions"><a href={report.fireContext.sourceUrl} target="_blank" rel="noreferrer">Open selected provider source ↗</a><a href={FIRE_REPORT_SOURCES.inciweb} target="_blank" rel="noreferrer">InciWeb updates ↗</a><a href={FIRE_REPORT_SOURCES.news} target="_blank" rel="noreferrer">NIFC news ↗</a></div>
+            <small>These links are research leads. No article has been fetched, attached, or matched to this record.</small>
+          </section>}
           <label className="report-title-field"><span>Report title</span><input value={report.title} maxLength={120} onChange={(event) => updateReport((current) => replaceReport(current, { title: event.target.value }))} /></label>
           <label className="report-question-field"><span>Research question</span><textarea rows={2} value={report.researchQuestion} maxLength={400} onChange={(event) => updateReport((current) => replaceReport(current, { researchQuestion: event.target.value }))} /></label>
           {(Object.keys(report.sections) as Array<keyof ReportDraft["sections"]>).map((section) => <label className="report-section-field" key={section}>

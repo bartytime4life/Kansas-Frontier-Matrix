@@ -84,7 +84,7 @@ export const smokeValidAt = (original: OfficialContextPayload, day: string, curs
   const features = cursor >= startOfDay && cursor < endOfDay ? original.data.features.filter((feature) => {
     const start = feature.properties?.start;
     const end = feature.properties?.end;
-    return typeof start === "string" && typeof end === "string" && start <= cursor && cursor < end;
+    return typeof start === "string" && typeof end === "string" && (start === end ? cursor === start : start <= cursor && cursor < end);
   }) : [];
   return {
     ...original,

@@ -170,6 +170,48 @@ now passes. That is content parity only. Whether each accepted overlay is
 folded into a successor standalone Site commit, hosted equivalence, deployment,
 and water activation remain **NEEDS VERIFICATION**.
 
+## Saved Site v138 mirror candidate — 2026-10-04
+
+The [v138 successor receipt](../../data/receipts/generated/site-mirror-v138-candidate-20261004.json)
+pins owner-private Site source `cdbab7bc0f599d3e2d199a310c803d98565bbbd7`
+and repository base `ef9c5e19e373d51c2bf878aaf8c3a5ddf0deb35e`. A clean,
+isolated copy of that Site source supplied the tracked files. The repository
+mirror now has the same 336 tracked paths and bytes: 229 were already equal,
+60 existing paths changed to the Site version, and 47 Site paths were added.
+There were no mirrored paths to delete. The prior receipt and its overlay
+decision remain in history; this new candidate does not retroactively change
+them. `site_mirror.py --check` checks the new receipt for content parity only.
+
+Saved v136 moved device-only GeoPDF protocol registration through the Site's
+existing `maplibre-seam.ts`, without changing the tile callback or teardown.
+The acquisition inventory now returns its inherited `HOLD` for the accepted
+candidate seam, rather than the new outside-seam `FAIL` seen on the first draft.
+Saved v137 renamed five new Site documentation files to lowercase names and
+updated their three links. The repository topology ratchet now reports zero
+new drift, zero stale baseline entries, and no invariant failures; its
+baseline was not expanded.
+Saved v138 makes local Earth Engine package reads verify the opened Linux file
+descriptor and enforce a byte limit during reading. Focused tests reject
+traversal, leaf and ancestor symlinks, and oversized files. This addresses the
+CodeQL high finding on the first draft; CI rescan of the new source is pending.
+
+The mirrored Site passed its locked `npm ci`, production build, 346 Node tests,
+TypeScript `--noEmit`, and eight mirror-tool tests. Full Site lint failed with
+six `react-hooks/set-state-in-effect` errors and 39 warnings: three errors are
+in the unchanged water control; three came with the new smoke and lightning
+controls. A fresh `npm audit` found eight high findings and no critical ones
+through the unchanged lockfile. These are review holds, not green checks.
+Browser acceptance remains unrun because the available browser control failed
+its security verification.
+The saved Site v138 is **not deployed**; deployed version v131, hosted
+equivalence, source/overlay review of this successor, activation, publication,
+and water admission are separate pending decisions. The Site source repository
+advanced to saved v138, while D1/R2 bindings and the deployed Site stayed as
+they were. To roll back the mirror, revert this candidate commit and restore
+the previous receipt selector; do not change deployed Site or stored data as
+part of that rollback. Saved v137, v136 and v135 remain available as source
+recovery points.
+
 ## Reproducible environment
 
 Use Python 3.11 or newer; this batch used Python 3.12.3. From the repository root:

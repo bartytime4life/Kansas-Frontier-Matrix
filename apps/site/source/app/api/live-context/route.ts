@@ -1,7 +1,7 @@
 import { readBoundedJson } from "../../bounded-json";
 import { NextRequest, NextResponse } from "next/server";
 import type { Feature, FeatureCollection, Geometry, GeoJsonProperties } from "geojson";
-import { EVENT_BOUNDS, eventDay, advanceEventDay, intervalDays, parseSmokeKml, smokeUrl } from "../../event-atlas";
+import { EVENT_BOUNDS, eventDay, advanceEventDay, intervalDays, parseSmokeKml, smokeOverlaps, smokeUrl } from "../../event-atlas";
 import { boundedFetch } from "../event-atlas/upstream";
 import { countyBaseline } from "../../county-baseline";
 import { FEMA_DECLARATION_LIMIT, parseFemaDeclarations } from "../../fema-declarations";
@@ -328,7 +328,7 @@ const activeNwsAlerts = async () => {
   );
 };
 
-const currentHmsSmoke = async (day: string | null = null) => {
+const currentHmsSmoke = async (day: string | null = null, signal?: AbortSignal) => {
   const retrievedAt = new Date().toISOString();
   const endMs = day ? Date.parse(`${advanceEventDay(day, 1)}T00:00:00Z`) : Date.now();
   const startMs = endMs - 24 * 60 * 60 * 1000;
@@ -342,7 +342,7 @@ const currentHmsSmoke = async (day: string | null = null) => {
   const results = await Promise.all(days.map(async (day) => {
     const artifact = smokeUrl(day);
     try {
-      const response = await boundedFetch(artifact, 2 * 1024 * 1024);
+      const response = await boundedFetch(artifact, 2 * 1024 * 1024, { signal });
       return { day, artifact, collection: parseSmokeKml(response.text(), artifact), error: null };
     } catch {
       return { day, artifact, collection: null, error: "NOAA HMS publication unavailable." };
@@ -355,7 +355,7 @@ const currentHmsSmoke = async (day: string | null = null) => {
   let newestTimestamp: string | null = null;
   for (const result of results) {
     for (const feature of result.collection?.features ?? []) {
-      if (feature.properties.endMs <= startMs || feature.properties.startMs >= endMs) continue;
+      if (!smokeOverlaps(feature.properties, startMs, endMs)) continue;
       const key = JSON.stringify([feature.properties.start, feature.properties.end, feature.properties.density, feature.geometry]);
       if (seen.has(key)) continue;
       seen.add(key);
@@ -369,15 +369,15 @@ const currentHmsSmoke = async (day: string | null = null) => {
     }
   }
   const data: FeatureCollection = { type: "FeatureCollection", features };
-  return envelope(
+  return { ...envelope(
     "noaa-hms-smoke",
     data,
     "NOAA HMS Smoke Polygons KML (daily publications)",
-    `NOAA HMS satellite-analyzed smoke polygons intersecting Kansas during the ${day ? "selected UTC day" : "rolling 24-hour window"} ${start} through ${end}. ${failures.length ? `Unavailable daily publication${failures.length === 1 ? "" : "s"}: ${failures.join("; ")}. ` : ""}${priorOutsideConnectedArchive ? "A prior-day publication falls before the connected archive start, so midnight overlap cannot be fully checked. " : ""}Density and Start/End are provider fields. A polygon is not a fire perimeter, plume altitude, surface PM2.5, exposure, measured transport, health guidance, warning, or all-clear; missing polygons do not prove clear air.`,
+    `NOAA HMS satellite-analyzed smoke polygons intersecting Kansas during the ${day ? "selected UTC day" : "rolling 24-hour window"} ${start} through ${end}. ${failures.length ? `Unavailable daily publication${failures.length === 1 ? "" : "s"}: ${failures.join("; ")}. ` : ""}${priorOutsideConnectedArchive ? "A prior-day publication falls before the connected archive start, so midnight overlap cannot be fully checked. " : ""}Density and Start/End are provider fields. Equal Start/End denotes timestamp-only support, with no duration inferred. A polygon is not a fire perimeter, plume altitude, surface PM2.5, exposure, measured transport, health guidance, warning, or all-clear; missing polygons do not prove clear air.`,
     retrievedAt,
     newestTimestamp,
     failures.length > 0 || priorOutsideConnectedArchive,
-  );
+  ), smokeCoverage: { day, availableDays: results.filter(result => !result.error).map(result => result.day), missingDays: results.filter(result => result.error).map(result => result.day), firstDay: "2005-08-05" } };
 };
 
 const normalizedFdsnHeader = (line: string) => line.replace(/^\s*#\s*/, "").split("|").map((value) => value.trim().toLowerCase().replace(/[^a-z0-9]/g, ""));
@@ -626,12 +626,12 @@ const cacheSeconds: Record<Feed, number> = { "census-counties": 86_400, "usgs-st
 export async function GET(request: NextRequest) {
   const feed = request.nextUrl.searchParams.get("feed");
   const day = request.nextUrl.searchParams.get("day");
-  if (request.nextUrl.searchParams.has("day") && (!day || !eventDay(day) || day < (feed === "nasa-gibs-fire-points" ? "2018-01-01" : "1800-01-01") || day > new Date().toISOString().slice(0, 10) || !["usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(feed ?? "")) || [...request.nextUrl.searchParams.keys()].some((key) => !["feed", "day"].includes(key) || request.nextUrl.searchParams.getAll(key).length !== 1)) return NextResponse.json({ error: "Choose an exact supported calendar date and source." }, { status: 400 });
+  if (request.nextUrl.searchParams.has("day") && (!day || !eventDay(day) || day < (feed === "nasa-gibs-fire-points" ? "2018-01-01" : feed === "noaa-hms-smoke" ? "2005-08-05" : "1800-01-01") || day > new Date().toISOString().slice(0, 10) || !["usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(feed ?? "")) || [...request.nextUrl.searchParams.keys()].some((key) => !["feed", "day"].includes(key) || request.nextUrl.searchParams.getAll(key).length !== 1)) return NextResponse.json({ error: "Choose an exact supported calendar date and source." }, { status: 400 });
   if (feed !== "census-counties" && feed !== "usgs-streamflow" && feed !== "usgs-earthquakes" && feed !== "nws-alerts" && feed !== "noaa-hms-smoke" && feed !== "nasa-gibs-fire-points" && feed !== "nifc-fire-reports" && feed !== "raspberry-shake-stations" && feed !== "fema-disaster-declarations") {
     return NextResponse.json({ error: "Unknown live-context feed. The adapter accepts only its fixed allowlist." }, { status: 400, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } });
   }
   try {
-    const result = feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes(day) : feed === "nws-alerts" ? await activeNwsAlerts() : feed === "noaa-hms-smoke" ? await currentHmsSmoke(day) : feed === "nasa-gibs-fire-points" ? await nasaGibsFirePoints(day) : feed === "nifc-fire-reports" ? await nifcFireReports() : feed === "fema-disaster-declarations" ? await recentFemaDeclarations() : await raspberryShakeStations(day);
+    const result = feed === "census-counties" ? await censusCounties() : feed === "usgs-streamflow" ? await latestStreamflow() : feed === "usgs-earthquakes" ? await recentEarthquakes(day) : feed === "nws-alerts" ? await activeNwsAlerts() : feed === "noaa-hms-smoke" ? await currentHmsSmoke(day, request.signal) : feed === "nasa-gibs-fire-points" ? await nasaGibsFirePoints(day) : feed === "nifc-fire-reports" ? await nifcFireReports() : feed === "fema-disaster-declarations" ? await recentFemaDeclarations() : await raspberryShakeStations(day);
     return NextResponse.json(result, { headers: { "Cache-Control": `public, max-age=0, s-maxage=${cacheSeconds[feed]}, stale-while-revalidate=${cacheSeconds[feed]}`, "X-KFM-Context-State": result.state, "X-Content-Type-Options": "nosniff" } });
   } catch (error) {
     const timeout = error instanceof UpstreamError && error.timeout;

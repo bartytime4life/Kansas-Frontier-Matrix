@@ -6,9 +6,9 @@ import ts from "typescript";
 async function compile(path, imports = {}) {
   const source = await readFile(new URL(`../app/${path}.ts`, import.meta.url), "utf8");
   const code = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
-  const module = { exports: {} };
-  new Function("require", "module", "exports", code)((key) => imports[key], module, module.exports);
-  return module.exports;
+  const compiledModule = { exports: {} };
+  new Function("require", "module", "exports", code)((key) => imports[key], compiledModule, compiledModule.exports);
+  return compiledModule.exports;
 }
 
 const topo = await compile("historical-topo");

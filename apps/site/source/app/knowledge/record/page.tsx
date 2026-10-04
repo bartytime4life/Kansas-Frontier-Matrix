@@ -1,35 +1,31 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { readKnowledge, knowledgeUnavailable, type KnowledgeResult } from "../../knowledge-read";
 import styles from "../knowledge.module.css";
 
-type Assertion = { text: string; status: "documented" | "conflicting" | "narrative"; source_ref: string; evidence_ref: string };
-type KnowledgeRecord = {
-  record_id: string; kind: string; title: string; summary: string; location_label: string;
-  geometry_role: string; time_start: string | null; time_end: string | null;
-  source_url: string; source_ref: string; evidence_ref: string; review_ref: string;
-  assertions: Assertion[];
-};
-type Result = { envelope: { outcome: string; reason_code: string }; data?: { records: KnowledgeRecord[]; release_id: string; reviewed_at: string; released_at: string } };
-
 export default function KnowledgeRecordPage() {
-  const [result, setResult] = useState<Result | null>(null);
-  const [busy, setBusy] = useState(true);
+  return <Suspense fallback={<main className={styles.page}><p role="status">Checking reviewed record…</p></main>}><SelectedRecord /></Suspense>;
+}
+
+function SelectedRecord() {
+  const params = useSearchParams();
+  const id = params.get("id") ?? "";
+  return <KnowledgeRecordContent key={id} id={id} />;
+}
+
+function KnowledgeRecordContent({ id }: { id: string }) {
+  const [result, setResult] = useState<KnowledgeResult | null>(null);
+  const busy = result === null;
   useEffect(() => {
     const abort = new AbortController();
-    const id = new URLSearchParams(window.location.search).get("id") ?? "";
-    setBusy(true);
-    fetch(`/api/governed/v1/knowledge?id=${encodeURIComponent(id)}`, { signal: abort.signal, cache: "no-store" })
-      .then(async response => {
-        const body = await response.json() as Result;
-        if (!response.ok && body.envelope?.reason_code !== "INVALID_QUERY") throw new Error("STORE_UNAVAILABLE");
-        setResult(body);
-      })
-      .catch(error => { if (error.name !== "AbortError") setResult({ envelope: { outcome: "ERROR", reason_code: "STORE_UNAVAILABLE" } }); })
-      .finally(() => { if (!abort.signal.aborted) setBusy(false); });
+    void readKnowledge({ kind: "record", id }, abort.signal)
+      .then(result => { if (!abort.signal.aborted) setResult(result); })
+      .catch(() => { if (!abort.signal.aborted) setResult(knowledgeUnavailable()); });
     return () => abort.abort();
-  }, []);
+  }, [id]);
 
   const record = result?.data?.records?.[0];
   return <main className={styles.page}>

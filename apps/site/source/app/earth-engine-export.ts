@@ -1,5 +1,5 @@
 import { EARTH_ENGINE_DATASETS, EARTH_ENGINE_DISPLAY_RAMPS, EARTH_ENGINE_REFLECTANCE_VIS, KANSAS_BOUNDARY, earthEngineUrl, earthEngineVisParams } from "./earth-engine-data";
-import { EARTH_ENGINE_CONTEXT_LAYERS, type EarthEngineContextLayerId } from "./earth-engine-context";
+import { EARTH_ENGINE_CONTEXT_LAYERS, EARTH_ENGINE_SOURCE_YEARS, type EarthEngineContextLayerId } from "./earth-engine-context";
 
 export type EarthEngineExportScope = "sample" | "statewide";
 const GRID_30M = { crs: "EPSG:5070", crsTransform: [30, 0, -1200000, 0, -30, 2400000] };
@@ -9,12 +9,16 @@ const NATIVE_CLIMATE_GRIDS = {
   "ee-terraclimate": [1 / 24, 0, -180, 0, -(1 / 24), 90],
 } as const;
 
-export function buildEarthEngineExportRecipe(id: EarthEngineContextLayerId, scope: EarthEngineExportScope): string {
+export function buildEarthEngineExportRecipe(id: EarthEngineContextLayerId, scope: EarthEngineExportScope, year?: number): string {
   const selected = EARTH_ENGINE_CONTEXT_LAYERS.find((layer) => layer.id === id);
   const catalog = EARTH_ENGINE_DATASETS.find((layer) => layer.id === id);
   if (!selected || !catalog || !["sample", "statewide"].includes(scope)) throw new Error("Choose one of the five reviewed display products.");
+  const bounds = EARTH_ENGINE_SOURCE_YEARS[id];
+  if (bounds ? !Number.isInteger(year) || year! < bounds[0] || year! > bounds[1] : year !== undefined) throw new Error("Choose a supported complete source year; elevation has mixed acquisition dates.");
+  const endYear = year === undefined ? undefined : year + 1;
+  const dayCount = year === undefined ? undefined : (Date.UTC(endYear!, 0, 1) - Date.UTC(year, 0, 1)) / 86_400_000;
   const highResolution = id === "ee-cdl" || id === "ee-sentinel2" || id === "ee-3dep";
-  const name = `kfm_${id.replaceAll("-", "_")}_${id === "ee-3dep" ? "mixed_dates" : "2024"}_${scope}`;
+  const name = `kfm_${id.replaceAll("-", "_")}_${year ?? "mixed_dates"}_${scope}`;
   const lines = [
     "// KFM Earth Engine Drive export recipe v1. Run only in the owner's registered noncommercial project.",
     "// REVIEW CONTEXT ONLY: neither an admitted KFM source nor claim evidence.",
@@ -28,7 +32,7 @@ export function buildEarthEngineExportRecipe(id: EarthEngineContextLayerId, scop
     `var region = ${scope === "sample" ? "sample" : "kansas"};`,
     `var source = ee.ImageCollection('${catalog.asset}').filterBounds(region).sort('system:index');`,
   ];
-  if (id !== "ee-3dep") lines.push("source = source.filterDate('2024-01-01', '2025-01-01');");
+  if (year !== undefined) lines.push(`source = source.filterDate('${year}-01-01', '${endYear}-01-01');`);
   lines.push(
     "print('Input collection count', source.size());",
     "print('Source image IDs (console lists truncate; the CSV task below holds the complete inventory)', source.aggregate_array('system:id'));",
@@ -45,17 +49,17 @@ export function buildEarthEngineExportRecipe(id: EarthEngineContextLayerId, scop
   );
   if (id === "ee-cdl") lines.push(
     "// One annual categorical raster; nearest-neighbor sampling only.",
-    "if (source.size().getInfo() !== 1) throw new Error('Expected exactly one 2024 CDL source image. Export held.');",
+    `if (source.size().getInfo() !== 1) throw new Error('Expected exactly one ${year} CDL source image. Export held.');`,
     "var image = ee.Image(source.first()).select('cropland').rename('crop_class').toUint16();",
-    "print('Expected one 2024 CDL image', source.size());",
+    `print('Expected one ${year} CDL image', source.size());`,
     "print('CDL class histogram in validation sample', image.reduceRegion({reducer: ee.Reducer.frequencyHistogram(), geometry: sample, scale: 30, maxPixels: 1e8}));",
   );
   if (id === "ee-chirps") lines.push(
-    "// 2024 has 366 daily periods. Mask pixels missing any daily observation.",
-    "var expected = 366;",
+    `// ${year} has ${dayCount} daily periods. Mask pixels missing any daily observation.`,
+    `var expected = ${dayCount};`,
     "var periods = source.aggregate_array('system:time_start').map(function(t) { return ee.Date(t).format('YYYY-MM-dd'); }).distinct().size();",
-    "print('Expected 366 images and unique dates', source.size(), periods);",
-    "if (source.size().getInfo() !== expected || periods.getInfo() !== expected) throw new Error('CHIRPS 2024 time coverage is incomplete or duplicated. Export held.');",
+    `print('Expected ${dayCount} images and unique dates', source.size(), periods);`,
+    `if (source.size().getInfo() !== expected || periods.getInfo() !== expected) throw new Error('CHIRPS ${year} time coverage is incomplete or duplicated. Export held.');`,
     "var values = source.select('precipitation');",
     "var image = values.sum().updateMask(values.count().eq(expected)).rename('annual_precip_mm').toFloat().addBands(values.count().rename('retained_count').toFloat());",
     "print('Retained-observation count', values.count());",
@@ -65,14 +69,14 @@ export function buildEarthEngineExportRecipe(id: EarthEngineContextLayerId, scop
     "var expected = 12;",
     "var periods = source.aggregate_array('system:time_start').map(function(t) { return ee.Date(t).format('YYYY-MM'); }).distinct().size();",
     "print('Expected 12 images and unique months', source.size(), periods);",
-    "if (source.size().getInfo() !== expected || periods.getInfo() !== expected) throw new Error('TerraClimate 2024 time coverage is incomplete or duplicated. Export held.');",
+    `if (source.size().getInfo() !== expected || periods.getInfo() !== expected) throw new Error('TerraClimate ${year} time coverage is incomplete or duplicated. Export held.');`,
     "var values = source.select('pdsi');",
     "var image = values.mean().multiply(0.01).updateMask(values.count().eq(expected)).rename('annual_mean_pdsi').toFloat().addBands(values.count().rename('retained_count').toFloat());",
     "print('Retained-observation count', values.count());",
   );
   if (id === "ee-sentinel2") lines.push(
     "// SCL 4 vegetation, 5 bare soil and 6 water. Cloud, shadow, snow and unclassified pixels are held.",
-    "if (source.size().getInfo() < 1) throw new Error('No 2024 Sentinel-2 source images. Export held.');",
+    `if (source.size().getInfo() < 1) throw new Error('No ${year} Sentinel-2 source images. Export held.');`,
     "var clean = source.map(function(scene) {",
     "  var scl = scene.select('SCL');",
     "  var good = scl.eq(4).or(scl.eq(5)).or(scl.eq(6));",

@@ -21,6 +21,7 @@ async function moduleUrl(name) {
 }
 const model = await import(await moduleUrl("workspace-model"));
 const storage = await import(await moduleUrl("workspace-storage"));
+const fire = await import(await moduleUrl("fire-report-analysis"));
 const { LAYER_REGISTRY } = await import(await moduleUrl("explorer-data"));
 const snapshot = {
   id: "snapshot-test", createdAt: "2026-09-09T00:00:00Z", area: { kind: "viewport", label: "Kansas" },
@@ -48,6 +49,16 @@ test("empty domain registry yields a valid draft with no invented evidence", () 
   assert.equal(report.status, "DRAFT");
   assert.equal(storage.validReportDraft(JSON.parse(JSON.stringify(report))), true);
   assert.equal(storage.validReportDraft({ ...report, status: "PUBLISHED" }), false);
+});
+
+test("fire report draft persists provider context without promoting it to evidence", () => {
+  const context = fire.buildFireReportContext("nifc-fire-reports", null, "2026-09-24T14:00:00Z", "partial", "unavailable", []);
+  const report = model.createReportDraft(snapshot, [], context);
+  assert.equal(report.fireContext.kind, "nifc-fire-reports");
+  assert.deepEqual(report.includedEvidenceIds, []);
+  assert.match(report.sections.limitations, /No perimeter, current activity/);
+  assert.equal(storage.validReportDraft(JSON.parse(JSON.stringify(report))), true);
+  assert.equal(storage.validReportDraft({ ...report, fireContext: { ...context, sourceUrl: "https://example.org/" } }), false);
 });
 
 test("shared or stored snapshots reject unknown layers, references and invalid cameras", () => {

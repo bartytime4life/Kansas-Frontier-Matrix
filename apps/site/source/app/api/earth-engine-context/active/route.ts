@@ -1,8 +1,8 @@
-import { activeEarthEngineManifest, earthEngineFailure, earthEngineOwner, earthEnginePrivateHeaders } from "../../../earth-engine-context-server";
+import { activeEarthEngineManifest, earthEngineFailure, earthEngineReader, earthEnginePrivateHeaders } from "../../../earth-engine-context-server";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    await earthEngineOwner();
+    await earthEngineReader(request);
     const manifest = await activeEarthEngineManifest();
     return Response.json({ available: Boolean(manifest), manifest }, { headers: earthEnginePrivateHeaders });
   } catch (error) { return earthEngineFailure(error); }

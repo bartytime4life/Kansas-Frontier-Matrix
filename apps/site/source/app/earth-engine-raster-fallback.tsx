@@ -1,20 +1,20 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { EARTH_ENGINE_CONTEXT_LAYERS, earthEngineTileVisibleAtYear, type EarthEngineContextLayerId, type EarthEngineContextManifest } from "./earth-engine-context";
+import { EARTH_ENGINE_CONTEXT_LAYERS, earthEngineSetYear, type EarthEngineContextLayerId, type EarthEngineContextManifest } from "./earth-engine-context";
 import styles from "./earth-engine-raster-fallback.module.css";
 
 export type EarthEngineDisplayState = {
   visible: Partial<Record<EarthEngineContextLayerId, boolean>>;
   opacity: Partial<Record<EarthEngineContextLayerId, number>>;
+  years: Partial<Record<EarthEngineContextLayerId, number>>;
 };
 
 const tileSize = 256;
 const overviewZoom = 8;
 
-export function EarthEngineRasterFallback({ manifest, mapYear, display, onOpenLayers }: {
-  manifest: EarthEngineContextManifest;
-  mapYear: number;
+export function EarthEngineRasterFallback({ manifests, display, onOpenLayers }: {
+  manifests: EarthEngineContextManifest[];
   display: EarthEngineDisplayState;
   onOpenLayers: () => void;
 }) {
@@ -37,12 +37,12 @@ export function EarthEngineRasterFallback({ manifest, mapYear, display, onOpenLa
   }, []);
 
   const layers = useMemo(() => EARTH_ENGINE_CONTEXT_LAYERS.flatMap((descriptor) => {
-    const layer = manifest.layers.find((item) => item.id === descriptor.id);
+    const manifest = manifests.find((item) => earthEngineSetYear(item) === (descriptor.id === "ee-3dep" ? 2024 : display.years[descriptor.id]));
+    const layer = manifest?.layers.find((item) => item.id === descriptor.id);
     const index = layer?.tileIndexes[String(overviewZoom)];
     return layer?.status === "approved" && index && display.visible[descriptor.id]
-      && earthEngineTileVisibleAtYear(descriptor.id, mapYear)
-      ? [{ layer, index }] : [];
-  }), [display.visible, manifest, mapYear]);
+      ? [{ layer, index, setId: manifest!.setId }] : [];
+  }), [display.visible, display.years, manifests]);
 
   const bounds = useMemo(() => layers.length ? {
     minX: Math.min(...layers.map(({ index }) => index.minX)),
@@ -51,13 +51,13 @@ export function EarthEngineRasterFallback({ manifest, mapYear, display, onOpenLa
     maxY: Math.max(...layers.map(({ index }) => index.maxY)),
   } : null, [layers]);
 
-  const imageUrls = useMemo(() => layers.flatMap(({ layer, index }) => {
+  const imageUrls = useMemo(() => layers.flatMap(({ layer, index, setId }) => {
     const urls: string[] = [];
     for (let y = index.minY; y <= index.maxY; y++) for (let x = index.minX; x <= index.maxX; x++) {
-      urls.push(`/api/earth-engine-context/${encodeURIComponent(manifest.setId)}/${layer.id}/${overviewZoom}/${x}/${y}.png`);
+      urls.push(`/api/earth-engine-context/${encodeURIComponent(setId)}/${layer.id}/${overviewZoom}/${x}/${y}.png`);
     }
     return urls;
-  }), [layers, manifest.setId]);
+  }), [layers]);
   const loadedCount = imageUrls.filter((url) => loaded.has(url)).length;
   const failedCount = imageUrls.filter((url) => failed.has(url)).length;
   const width = bounds ? (bounds.maxX - bounds.minX + 1) * tileSize : 0;
@@ -85,10 +85,10 @@ export function EarthEngineRasterFallback({ manifest, mapYear, display, onOpenLa
       onPointerCancel={() => { dragRef.current = null; }}>
       {!bounds ? <div className={styles.empty}><strong>Select an Earth Engine layer</strong><p>The installed snapshots will display here without the WebGL map.</p><button type="button" onClick={onOpenLayers}>Open layers</button></div> :
         <div className={styles.mosaic} style={{ width, height, left: (size.width - width * scale) / 2 + offset.x, top: (size.height - height * scale) / 2 + offset.y, transform: `scale(${scale})` }}>
-          {layers.map(({ layer, index }) => <div key={layer.id} className={styles.layer} style={{ opacity: display.opacity[layer.id] ?? 0.72 }}>
+          {layers.map(({ layer, index, setId }) => <div key={layer.id} className={styles.layer} style={{ opacity: display.opacity[layer.id] ?? 0.72 }}>
             {Array.from({ length: index.maxY - index.minY + 1 }, (_, yi) => index.minY + yi).flatMap((y) =>
               Array.from({ length: index.maxX - index.minX + 1 }, (_, xi) => index.minX + xi).map((x) => {
-                const url = `/api/earth-engine-context/${encodeURIComponent(manifest.setId)}/${layer.id}/${overviewZoom}/${x}/${y}.png`;
+                const url = `/api/earth-engine-context/${encodeURIComponent(setId)}/${layer.id}/${overviewZoom}/${x}/${y}.png`;
                 return failed.has(url) ? null : <img key={url} src={url} alt="" draggable={false} width={tileSize} height={tileSize}
                   style={{ left: (x - bounds.minX) * tileSize, top: (y - bounds.minY) * tileSize }}
                   onLoad={() => reportLoad(url)} onError={() => reportFailure(url)} />;

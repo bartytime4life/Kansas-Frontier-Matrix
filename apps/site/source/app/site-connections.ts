@@ -24,10 +24,23 @@ export type SiteConnectionRecord = Readonly<{
 }>;
 
 const CONNECTION_CODE_PATHS: Record<OfficialContextId, readonly string[]> = {
+  "kdot-bridges-state": ["app/kansas-reference-layers.ts", "app/live-context.ts", "app/page.tsx"],
+  "kdot-bridges-local": ["app/kansas-reference-layers.ts", "app/live-context.ts", "app/page.tsx"],
+  "kdot-bridges-historic": ["app/kansas-reference-layers.ts", "app/live-context.ts", "app/page.tsx"],
+  "kdot-bridges-old": ["app/kansas-reference-layers.ts", "app/live-context.ts", "app/page.tsx"],
+  "kdot-bridges-closed": ["app/kansas-reference-layers.ts", "app/live-context.ts", "app/page.tsx"],
+  "kdot-roads-1918": ["app/kansas-reference-layers.ts", "app/live-context.ts", "app/page.tsx"],
+  "kdot-roads": ["app/kansas-reference-layers.ts", "app/live-context.ts", "app/page.tsx"],
+  "kdot-rail-active": ["app/kansas-reference-layers.ts", "app/live-context.ts", "app/page.tsx"],
+  "kdot-rail-abandoned": ["app/kansas-reference-layers.ts", "app/live-context.ts", "app/page.tsx"],
+  "fema-flood-zones": ["app/kansas-reference-layers.ts", "app/live-context.ts", "app/page.tsx"],
+
   "fema-disaster-declarations": ["app/fema-declarations.ts", "app/api/live-context/route.ts", "app/live-context.ts", "app/page.tsx"],
-  "blm-plss-townships": ["app/live-context.ts", "app/layer-workspaces.ts", "app/page.tsx"],
-  "blm-plss-sections": ["app/live-context.ts", "app/layer-workspaces.ts", "app/page.tsx"],
-  "blm-plss-intersected": ["app/live-context.ts", "app/layer-workspaces.ts", "app/page.tsx"],
+  "blm-plss-townships": ["app/live-context.ts", "app/blm-plss-records.ts", "app/api/blm-plss-records/route.ts", "app/blm-plss-inspector.tsx", "app/page.tsx"],
+  "blm-plss-sections": ["app/live-context.ts", "app/blm-plss-records.ts", "app/api/blm-plss-records/route.ts", "app/blm-plss-inspector.tsx", "app/page.tsx"],
+  "blm-plss-intersected": ["app/live-context.ts", "app/blm-plss-records.ts", "app/api/blm-plss-records/route.ts", "app/blm-plss-inspector.tsx", "app/page.tsx"],
+  "blm-mlrs-leases-authorized": ["app/kansas-reference-layers.ts", "app/live-context.ts", "app/page.tsx"],
+  "blm-mlrs-leases-closed": ["app/kansas-reference-layers.ts", "app/live-context.ts", "app/page.tsx"],
   "census-counties": ["app/live-context.ts", "app/api/live-context/route.ts", "app/page.tsx"],
   "usgs-streamflow": ["app/live-context.ts", "app/streamflow.ts", "app/hydrology-observatory.tsx", "app/api/hydrology/streamflow/route.ts"],
   "noaa-nwps-gauges": ["app/live-context.ts", "app/noaa-hydrology.ts", "app/hydrology-observatory.tsx", "app/api/hydrology/noaa/route.ts"],
@@ -65,10 +78,23 @@ const CONNECTION_FEEDS: Partial<Record<OfficialContextId, OfficialContextFeedId>
 };
 
 const CONNECTION_ACTIONS: Record<OfficialContextId, readonly SiteActionId[]> = {
+  "kdot-bridges-state": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+  "kdot-bridges-local": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+  "kdot-bridges-historic": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+  "kdot-bridges-old": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+  "kdot-bridges-closed": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+  "kdot-roads-1918": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+  "kdot-roads": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+  "kdot-rail-active": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+  "kdot-rail-abandoned": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+  "fema-flood-zones": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+
   "fema-disaster-declarations": ["toggle-context-connection", "refresh-visible-context", "set-context-opacity", "open-provider-source"],
-  "blm-plss-townships": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
-  "blm-plss-sections": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
-  "blm-plss-intersected": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+  "blm-plss-townships": ["toggle-context-connection", "set-context-opacity", "inspect-plss-identifiers", "open-provider-source"],
+  "blm-plss-sections": ["toggle-context-connection", "set-context-opacity", "inspect-plss-identifiers", "open-provider-source"],
+  "blm-plss-intersected": ["toggle-context-connection", "set-context-opacity", "inspect-plss-identifiers", "open-provider-source"],
+  "blm-mlrs-leases-authorized": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
+  "blm-mlrs-leases-closed": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
   "census-counties": ["toggle-context-connection", "refresh-visible-context", "set-context-opacity", "open-provider-source"],
   "usgs-streamflow": ["toggle-context-connection", "refresh-visible-context", "refresh-streamflow", "change-hydrology-range", "step-exact-observation", "set-context-opacity", "open-provider-source"],
   "noaa-nwps-gauges": ["toggle-context-connection", "refresh-visible-context", "change-hydrology-range", "set-context-opacity", "open-provider-source"],
