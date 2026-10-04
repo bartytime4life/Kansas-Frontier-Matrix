@@ -13,7 +13,7 @@ VALIDATOR_ORCHESTRATOR := python tools/validate_all.py
 
 .PHONY: local-data-check local-data-doctor
 
-.PHONY: offline-pipeline-check native-explorer-check
+.PHONY: offline-pipeline-check native-explorer-check site-check
 
 .PHONY: scaffold-inventory deny-suites gap-scan
 
@@ -39,7 +39,13 @@ offline-pipeline-check:
 # Retired repository mirror. Keep a fail-closed compatibility target so a
 # request for the old app check cannot report a passing result.
 native-explorer-check:
-	@echo "WORKFLOW_HOLD: the legacy monorepo Explorer app was retired; use the separate live Site source branch"; exit 3
+	@echo "WORKFLOW_HOLD: the legacy monorepo Explorer app was retired; run make site-check for the mirrored Site in apps/site/"; exit 3
+
+# Mirrored Explorer Site: the same steps as .github/workflows/explorer-site.yml.
+# Installs the Site's own npm lockfile under apps/site/source/ and runs a local
+# Worker on a temporary D1/R2 state; it needs no provider network.
+site-check:
+	cd apps/site/source && npm run install:ci && npm run lint && node_modules/.bin/tsc --noEmit -p . && npm test && ../smoke-local.sh
 
 local-data-check:
 	$(KFM_VALIDATION_ENV) PYTHONPATH="$(CURDIR)/tools/ci/kfm_no_network:$(CURDIR)" python -m pytest -q -p no:cacheprovider --strict-config --strict-markers tests/local_data
@@ -66,6 +72,7 @@ help:
 	@echo "  local-data-check      Test offline local-data capture, safety, and recovery"
 	@echo "  offline-pipeline-check Test synthetic ingestion, normalization, replay and rollback boundaries"
 	@echo "  native-explorer-check Retired app check (explicit HOLD)"
+	@echo "  site-check            Lint, typecheck, test and smoke the mirrored Explorer Site"
 	@echo "  docs-critical-structure Test and run the critical-document structure sentinel"
 	@echo "  workflow-security     Test and run the 20-rule workflow-security ratchet"
 	@echo "  repository-topology  Test and run the 20-rule directory-topology ratchet"
