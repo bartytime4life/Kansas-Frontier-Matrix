@@ -9,7 +9,7 @@ if [[ ! -x node_modules/.bin/wrangler || ! -f dist/server/wrangler.json ]]; then
   exit 1
 fi
 
-local_state="$site_dir/.wrangler/local-state"
+local_state="${SITE_STATE_DIR:-$site_dir/.wrangler/local-state}"
 export XDG_CONFIG_HOME="$site_dir/.wrangler/config"
 export WRANGLER_LOG_PATH="$site_dir/.wrangler/wrangler.log"
 export WRANGLER_WRITE_LOGS=false

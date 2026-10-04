@@ -62,9 +62,9 @@ deliberately outside the repository's root pnpm workspace. Run its npm commands
 from `apps/site/source/`.
 
 After a build, `../smoke-local.sh` (run from `apps/site/source/`) starts the
-launcher, checks that the D1-backed governed water, Kansas knowledge, crop
-CASMA and data-submission routes give their expected empty-store answers, and
-stops it. It needs no provider network. The `explorer-site` workflow runs
+launcher on a temporary empty state, checks that the D1-backed governed water,
+Kansas knowledge, crop CASMA and data-submission routes give their expected
+empty-store answers, and stops it. It needs no provider network. The `explorer-site` workflow runs
 lint, typecheck, `npm test` and this smoke check for changes under `apps/site/`;
 a green run is not evidence of hosted behaviour or release.
 
@@ -73,6 +73,7 @@ a green run is not evidence of hosted behaviour or release.
 | Setting or binding | Current use |
 | --- | --- |
 | `SITE_HOST`, `SITE_PORT` | Read by `serve-local.sh`; default `127.0.0.1:4173`. |
+| `SITE_STATE_DIR` | Optional local D1/R2 state directory for `serve-local.sh`; default `source/.wrangler/local-state`. `smoke-local.sh` sets it to a temporary directory that it removes afterwards. |
 | `DB`, `BUCKET` | Names declared in `source/.openai/hosting.json`; local Vite/Worker configuration supplies simulated D1/R2 bindings. |
 | `KFM_STEWARD_EMAILS`, optional `KFM_STEWARD_USER_IDS` | Private server-side allowlists for hosted steward review. Do not commit values. |
 | `KFM_EARTH_ENGINE_OWNER_EMAILS`, `KFM_EARTH_ENGINE_OWNER_IDS` | Comma-separated owner allowlists for the Earth Engine context API (catalog, staging, activation, tiles) and its installer page. Unset, the API answers 503 "not configured" to signed-in users (401 when signed out) and the installer page is a 404. |

@@ -8,13 +8,17 @@ site_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 port="${SITE_PORT:-4173}"
 base="http://127.0.0.1:${port}"
 log="$(mktemp)"
+# A throwaway D1/R2 state keeps the empty-store assertions independent of any
+# records in the developer's persistent .wrangler/local-state.
+state="$(mktemp -d)"
 
-SITE_HOST=127.0.0.1 SITE_PORT="$port" setsid "$site_root/serve-local.sh" >"$log" 2>&1 &
+SITE_HOST=127.0.0.1 SITE_PORT="$port" SITE_STATE_DIR="$state" \
+  setsid "$site_root/serve-local.sh" >"$log" 2>&1 &
 server=$!
 cleanup() {
   kill -TERM -- "-$server" 2>/dev/null || true
   wait "$server" 2>/dev/null || true
-  rm -f "$log"
+  rm -rf "$log" "$state"
 }
 trap cleanup EXIT
 
