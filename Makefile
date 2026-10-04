@@ -41,11 +41,13 @@ offline-pipeline-check:
 native-explorer-check:
 	@echo "WORKFLOW_HOLD: the legacy monorepo Explorer app was retired; run make site-check for the mirrored Site in apps/site/"; exit 3
 
-# Mirrored Explorer Site: the same steps as .github/workflows/explorer-site.yml.
-# Installs the Site's own npm lockfile under apps/site/source/ and runs a local
-# Worker on a temporary D1/R2 state; it needs no provider network.
+# Mirrored Explorer Site: the same steps and environment as
+# .github/workflows/explorer-site.yml (CI, TZ and the 8m build timeout; set
+# SITES_BUILD_TIMEOUT to override). Installs the Site's own npm lockfile under
+# apps/site/source/ and runs a local Worker on a temporary D1/R2 state; it needs
+# no provider network.
 site-check:
-	cd apps/site/source && npm run install:ci && npm run lint && node_modules/.bin/tsc --noEmit -p . && npm test && ../smoke-local.sh
+	export CI=true TZ=UTC SITES_BUILD_TIMEOUT="$${SITES_BUILD_TIMEOUT:-8m}" && cd apps/site/source && npm run install:ci && npm run lint && node_modules/.bin/tsc --noEmit -p . && npm test && ../smoke-local.sh
 
 local-data-check:
 	$(KFM_VALIDATION_ENV) PYTHONPATH="$(CURDIR)/tools/ci/kfm_no_network:$(CURDIR)" python -m pytest -q -p no:cacheprovider --strict-config --strict-markers tests/local_data
