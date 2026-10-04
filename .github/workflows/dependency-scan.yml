@@ -1,5 +1,5 @@
 # KFM dependency vulnerability scanning workflow.
-# Status: executable Python audit plus locked pnpm audit.
+# Status: executable Python audit, locked pnpm audit, and the Explorer Site npm audit.
 #
 # Authority boundary:
 # - This workflow queries public vulnerability advisory services and reports
@@ -164,5 +164,90 @@ jobs:
             echo "- Root classifier: \`${pnpm_classification}\`"
             echo "- Network: point-in-time queries to the configured Node package registry advisory services"
             echo "- Failure posture: threshold findings, registry errors, malformed reports, and command/report polarity mismatches fail closed"
+            echo "- Authority: dependency CI signal only; not vulnerability absence, provenance, compatibility, rights, release, deployment, or publication approval"
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+  site-npm-audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: apps/site/source
+
+    steps:
+      - name: Check out scanned revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up readiness validator runtime
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+
+      # The Explorer Site keeps its own npm lockfile outside the root pnpm
+      # workspace. Production dependencies ship in its Worker and gate this job;
+      # development tooling findings are reported but fixed in the standalone
+      # Site project, not in this mirror.
+      - name: Audit the Site's production npm graph
+        run: |
+          set -euo pipefail
+          report_path="${RUNNER_TEMP}/site-npm-audit.json"
+          classification_path="${RUNNER_TEMP}/site-npm-audit-classification.json"
+
+          set +e
+          npm audit --omit=dev --audit-level "${PNPM_AUDIT_LEVEL}" --json > "${report_path}"
+          audit_status=$?
+          set -e
+
+          set +e
+          python "${GITHUB_WORKSPACE}/tools/validators/dependencies/pnpm_audit_readiness.py" \
+            classify-audit \
+            --report "${report_path}" \
+            --command-exit-code "${audit_status}" \
+            --audit-level "${PNPM_AUDIT_LEVEL}" \
+            --manager "npm" \
+            | tee "${classification_path}"
+          classification_status=${PIPESTATUS[0]}
+          set -e
+
+          if (( classification_status != 0 )); then
+            exit 1
+          fi
+
+      - name: Count all Site findings, including development tooling
+        if: always()
+        run: |
+          set -euo pipefail
+          npm audit --json > "${RUNNER_TEMP}/site-npm-audit-all.json" || true
+          node -e '
+            let counts = "unavailable";
+            try { counts = JSON.stringify(JSON.parse(require("fs").readFileSync(process.argv[1], "utf8")).metadata.vulnerabilities); } catch {}
+            require("fs").writeFileSync(process.argv[2], counts);' \
+            "${RUNNER_TEMP}/site-npm-audit-all.json" "${RUNNER_TEMP}/site-npm-audit-all-counts.txt"
+
+      - name: Record Site audit boundaries
+        if: always()
+        run: |
+          set -euo pipefail
+          classification="$(tr -d '\n' < "${RUNNER_TEMP}/site-npm-audit-classification.json" 2>/dev/null || true)"
+          [[ -n "${classification}" ]] || classification='{"outcome":"ERROR","reason_codes":["CLASSIFICATION_NOT_PRODUCED"]}'
+          all_counts="$(cat "${RUNNER_TEMP}/site-npm-audit-all-counts.txt" 2>/dev/null || echo unavailable)"
+          {
+            echo "### Explorer Site npm audit boundaries"
+            echo
+            echo "- Result: \`${{ job.status }}\`"
+            echo "- Graph: \`apps/site/source/package-lock.json\` (outside the root pnpm workspace)"
+            echo "- Gating command: \`npm audit --omit=dev --audit-level ${PNPM_AUDIT_LEVEL} --json\`"
+            echo "- Production classifier: \`${classification}\`"
+            echo "- All findings including development tooling (not gating): \`${all_counts}\`"
+            echo "- Failure posture: production threshold findings, registry errors, malformed reports, and command/report polarity mismatches fail closed"
             echo "- Authority: dependency CI signal only; not vulnerability absence, provenance, compatibility, rights, release, deployment, or publication approval"
           } >> "${GITHUB_STEP_SUMMARY}"

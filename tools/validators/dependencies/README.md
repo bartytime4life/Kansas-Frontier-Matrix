@@ -98,8 +98,14 @@ The `dependency-scan` workflow:
 4. passes that report and command exit code to the classifier, then fails if
    the graph reports a regression or error.
 
-The retired monorepo Explorer graph is no longer audited here. The standalone
-Site source has its own dependency graph and requires its own review.
+The retired monorepo Explorer graph is no longer audited here. The mirrored
+Explorer Site keeps its own npm lockfile in `apps/site/source/`, outside the
+root workspace. The separate `site-npm-audit` job runs
+`npm audit --omit=dev --audit-level high --json` there and passes the report
+to the same classifier with `--manager npm`, so production dependencies gate
+the job. It also records the count of all findings, including development
+tooling, in the step summary without gating on them; those are fixed in the
+standalone Site project and reach this repository through a reviewed mirror.
 
 The workflow does not use `--ignore-registry-errors`. An unavailable registry,
 unparseable response, command failure without qualifying findings, or
