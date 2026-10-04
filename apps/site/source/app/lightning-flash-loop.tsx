@@ -41,7 +41,7 @@ export function LightningFlashLoop({ map, enabled, reducedMotion, onClose }: {
   const collection = useMemo(() => snapshot ? flashCollection(snapshot) : empty, [snapshot]);
 
   useEffect(() => {
-    if (!enabled) { setPlaying(false); return; }
+    if (!enabled) return;
     const abort = new AbortController();
     let disposed = false;
     const refresh = async () => {

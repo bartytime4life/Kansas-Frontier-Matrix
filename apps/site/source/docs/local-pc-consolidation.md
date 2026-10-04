@@ -102,9 +102,14 @@ Validation: `node --test tests/browser-request-lifecycle.test.mjs
  tests/historical-topo*.test.mjs tests/kansas-knowledge.test.mjs` covers response
 limits, cancellation, stalled bodies, late results, identity mismatches,
 withheld records, and the existing server-side review/activation boundaries.
-Run the production build, complete Node suite, TypeScript, and changed-file
-lint before installing the local application. Full-tree lint still includes
-pre-existing water/smoke/lightning lifecycle errors; report them separately.
+Run the production build, complete Node suite, TypeScript, and full-tree lint
+before installing the local application. The reviewed-water control derives
+release expiry and evidence visibility from the active package and selection;
+an expired release is withheld without waiting for a follow-up fetch. The
+observed-lightning loop remounts when its external layer is disabled, so a
+previous play action cannot resume after re-enabling it. HMS still cancels
+pending publication and map requests when visibility or reduced-motion state
+changes; it stops at the range end after the selected frame hold.
 Browser map selection and record-navigation journeys remain a separate check.
 
 Placement remains application implementation under `app/`, application

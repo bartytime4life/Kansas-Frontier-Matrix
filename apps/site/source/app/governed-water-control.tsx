@@ -9,12 +9,14 @@ const SOURCE = "kfm-reviewed-water", LAYER = "kfm-reviewed-water-points";
 const reasonText: Record<string, string> = { NO_APPROVED_SNAPSHOT: "No reviewed water snapshot is active.", AUTHENTICATION_REQUIRED: "Sign in to check reviewed water.", RELEASE_STORE_UNAVAILABLE: "Reviewed water storage is unavailable.", REVIEW_REQUIRED: "This water package is waiting for review.", RIGHTS_OR_SENSITIVITY_HOLD: "Rights or sensitivity review is still required.", CORRECTION_HOLD: "This snapshot has been corrected or withdrawn.", RELEASE_TIME_INVALID: "The release approval has expired or is not yet valid." };
 export function GovernedWaterControl({ mapRef, styleReady }: { mapRef: RefObject<MapLibreMap | null>; styleReady: boolean }) {
   const [response, setResponse] = useState<WaterResponse | null>(null), [status, setStatus] = useState("Not checked"), [loading, setLoading] = useState(false);
+  const [clock, setClock] = useState(Date.now);
   const [browserState, setBrowserState] = useState<WaterBrowserState>("not-checked");
-  const [visible, setVisible] = useState(false), [selected, setSelected] = useState("USGS-06892518"), [render, setRender] = useState("Hidden"), [evidence, setEvidence] = useState<WaterResponse | null>(null);
+  const [visible, setVisible] = useState(false), [selected, setSelected] = useState("USGS-06892518"), [render, setRender] = useState("Hidden");
+  const [evidenceRecord, setEvidenceRecord] = useState<{ stationId: string; packageId: unknown; value: WaterResponse } | null>(null);
   const [exportStatus, setExportStatus] = useState("");
   const controller = useRef<AbortController | null>(null);
   const refresh = useCallback(async () => {
-    controller.current?.abort(); const abort = new AbortController(); controller.current = abort; setLoading(true); setResponse(null); setEvidence(null); setStatus("Checking current release…"); setBrowserState("checking");
+    controller.current?.abort(); const abort = new AbortController(); controller.current = abort; setLoading(true); setResponse(null); setEvidenceRecord(null); setStatus("Checking current release…"); setBrowserState("checking"); setRender("Waiting for map frame");
     const timeout = setTimeout(() => abort.abort(), 15000);
     try {
       const fetched = await fetch("/api/governed/v1/layers", { signal: abort.signal, cache: "no-store", credentials: "same-origin" });
@@ -22,45 +24,53 @@ export function GovernedWaterControl({ mapRef, styleReady }: { mapRef: RefObject
       if (abort.signal.aborted) return;
       const nextBrowserState = waterBrowserStateForResponse(value, fetched.ok);
       setBrowserState(nextBrowserState);
-      if (nextBrowserState !== "received") { setResponse(null); setEvidence(null); setStatus(reasonText[value?.envelope?.reason_code] ?? (nextBrowserState === "unavailable" ? "Browser request unavailable. Try again." : "Water evidence is withheld.")); }
-      else { setResponse(value); setStatus("Reviewed snapshot received"); }
-    } catch { if (controller.current === abort) { setResponse(null); setEvidence(null); setBrowserState("unavailable"); setStatus("Browser request unavailable. Try again."); } }
+      if (nextBrowserState !== "received") { setResponse(null); setEvidenceRecord(null); setStatus(reasonText[value?.envelope?.reason_code] ?? (nextBrowserState === "unavailable" ? "Browser request unavailable. Try again." : "Water evidence is withheld.")); }
+      else { setClock(Date.now()); setResponse(value); setStatus("Reviewed snapshot received"); }
+    } catch { if (controller.current === abort) { setResponse(null); setEvidenceRecord(null); setBrowserState("unavailable"); setStatus("Browser request unavailable. Try again."); } }
     finally { clearTimeout(timeout); if (controller.current === abort) setLoading(false); }
   }, []);
-  useEffect(() => { void refresh(); const interval = setInterval(() => void refresh(), 60000); return () => { controller.current?.abort(); controller.current = null; clearInterval(interval); }; }, [refresh]);
+  useEffect(() => { const initial = setTimeout(() => void refresh(), 0); const interval = setInterval(() => void refresh(), 60000); return () => { clearTimeout(initial); controller.current?.abort(); controller.current = null; clearInterval(interval); }; }, [refresh]);
   useEffect(() => {
     const expiry = response?.data?.approval_expires_at;
     if (!response?.data) return;
     const remaining = approvalRemainingMs(expiry, Date.now());
-    const withhold = () => { setResponse(null); setEvidence(null); setBrowserState("withheld"); setStatus("Release approval expired. Check for a reviewed update."); };
-    if (!Number.isFinite(remaining) || remaining <= 0) { withhold(); return; }
-    const timer = setTimeout(withhold, Math.min(remaining, 2147483647));
+    if (remaining <= 0) return;
+    const timer = setTimeout(() => setClock(Date.now()), Math.min(remaining, 2147483647));
     return () => clearTimeout(timer);
   }, [response]);
-  const data = response?.data, station = data?.stations?.find(s => s.id === selected);
+  const expired = Boolean(response?.data && approvalRemainingMs(response.data.approval_expires_at, clock) <= 0);
+  const data = expired ? null : response?.data, station = data?.stations?.find(s => s.id === selected);
+  const evidence = evidenceRecord?.stationId === selected && evidenceRecord.packageId === data?.package_id ? evidenceRecord.value : null;
+  const shownStatus = expired ? "Release approval expired. Check for a reviewed update." : status;
+  const shownBrowserState = expired ? "withheld" : browserState;
+  const shownRender = !visible || !data ? "Hidden" : !styleReady ? "Not ready" : render;
   const observations = data?.observations?.filter(r => r.station_id === selected) ?? [];
   const latest = [...observations].sort((a, b) => b.observed_at.localeCompare(a.observed_at))[0];
   useEffect(() => {
     const map = mapRef.current; if (!map || !styleReady) return;
     const remove = () => { try { if (map.getLayer(LAYER)) map.removeLayer(LAYER); if (map.getSource(SOURCE)) map.removeSource(SOURCE); } catch { /* Map teardown already removed its sources. */ } };
     remove();
-    if (!visible || !data?.stations) { setRender("Hidden"); return; }
+    if (!visible || !data?.stations) return;
     try {
       map.addSource(SOURCE, { type: "geojson", data: { type: "FeatureCollection", features: data.stations.map(s => ({ type: "Feature", id: s.id, geometry: s.geometry, properties: { stationId: s.id } })) } });
       map.addLayer({ id: LAYER, type: "circle", source: SOURCE, paint: { "circle-radius": 7, "circle-color": "#80f6dd", "circle-stroke-color": "#063c3b", "circle-stroke-width": 2 } });
       const clicked = (event: { features?: { properties: Record<string, unknown> | null }[] }) => { const id = event.features?.[0]?.properties?.stationId; if (typeof id === "string") setSelected(id); };
       const rendered = () => setRender("Map frame drawn");
-      map.on("click", LAYER, clicked); map.once("idle", rendered); setRender("Waiting for map frame");
+      map.on("click", LAYER, clicked); map.once("idle", rendered);
       return () => { map.off("click", LAYER, clicked); map.off("idle", rendered); remove(); };
-    } catch { setRender("Map rendering unavailable"); remove(); }
+    } catch {
+      // The external renderer failed during source installation; surface that failure immediately.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setRender("Map rendering unavailable"); remove();
+    }
   }, [mapRef, styleReady, visible, data]);
   useEffect(() => {
-    setEvidence(null); if (!data) return;
-    const abort = new AbortController(), timeout = setTimeout(() => { abort.abort(); setResponse(null); setEvidence(null); setBrowserState("unavailable"); setStatus("Evidence request timed out. Data withheld."); }, 15000);
+    if (!data) return;
+    const abort = new AbortController(), timeout = setTimeout(() => { abort.abort(); setResponse(null); setEvidenceRecord(null); setBrowserState("unavailable"); setStatus("Evidence request timed out. Data withheld."); }, 15000);
     void fetch(`/api/governed/v1/evidence?station_id=${encodeURIComponent(selected)}`, { signal: abort.signal, cache: "no-store" }).then(r => readBoundedJson(r, 512 * 1024)).then(value => { const next = value as WaterResponse; clearTimeout(timeout); if (abort.signal.aborted) return;
-      if (next.envelope?.outcome === "ANSWER" && next.data?.package_id === data.package_id) setEvidence(next);
-      else { setResponse(null); setEvidence(null); setBrowserState("withheld"); setStatus("Evidence or release changed. Check the connection again."); }
-    }).catch(() => { clearTimeout(timeout); if (!abort.signal.aborted) { setResponse(null); setEvidence(null); setBrowserState("unavailable"); setStatus("Evidence request unavailable. Data withheld."); } });
+      if (next.envelope?.outcome === "ANSWER" && next.data?.package_id === data.package_id) setEvidenceRecord({ stationId: selected, packageId: data.package_id, value: next });
+      else { setResponse(null); setEvidenceRecord(null); setBrowserState("withheld"); setStatus("Evidence or release changed. Check the connection again."); }
+    }).catch(() => { clearTimeout(timeout); if (!abort.signal.aborted) { setResponse(null); setEvidenceRecord(null); setBrowserState("unavailable"); setStatus("Evidence request unavailable. Data withheld."); } });
     return () => { abort.abort(); clearTimeout(timeout); };
   }, [selected, data]);
   async function exportObservation() {
@@ -75,8 +85,8 @@ export function GovernedWaterControl({ mapRef, styleReady }: { mapRef: RefObject
   }
   return <section className="official-context-row" aria-label="Reviewed water snapshot">
     <header><strong>Reviewed water snapshot</strong><button type="button" onClick={() => void refresh()} disabled={loading}>{loading ? "Checking…" : "Check connection"}</button></header>
-    <p role="status">{status}</p><small>Acquisition: {data ? "Preserved capture" : "Not established"} · Browser: {waterBrowserLabel(browserState)} · Map: {styleReady ? render : "Not ready"} · Evidence: {evidence ? "Resolved and released" : "Withheld"}</small>
-    {data && <><label>Show reviewed stations <input type="checkbox" checked={visible} onChange={e => setVisible(e.target.checked)} /></label>
+    <p role="status">{shownStatus}</p><small>Acquisition: {data ? "Preserved capture" : "Not established"} · Browser: {waterBrowserLabel(shownBrowserState)} · Map: {shownRender} · Evidence: {evidence ? "Resolved and released" : "Withheld"}</small>
+    {data && <><label>Show reviewed stations <input type="checkbox" checked={visible} onChange={e => { setVisible(e.target.checked); if (e.target.checked) setRender("Waiting for map frame"); }} /></label>
       <label>Station<select value={selected} onChange={e => setSelected(e.target.value)}>{data.stations?.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}</select></label>
       <p>Coverage: {String(data.coverage)} · Freshness: {String(response?.envelope.freshness)} · Correction: {String(data.correction_state)}</p>
       {latest && <p><strong>{latest.value === null ? "No reported value" : `${latest.value} ${latest.unit}`}</strong> {latest.provisional ? "· Provisional" : "· Provider approved"}</p>}

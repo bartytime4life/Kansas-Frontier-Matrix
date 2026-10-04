@@ -21,6 +21,8 @@ export function HmsSmokePlayback({ enabled, reducedMotion, displayedDay, payload
   const valid = hmsValidDay(from, today) && hmsValidDay(through, today) && from <= through;
   const stop = useCallback(() => { generation.current++; request.current?.abort(); prefetch.current?.abort(); setBusy(false); setPlaying(false); }, []);
   useEffect(() => {
+    // A parent map/motion change must cancel outstanding publication and frame requests immediately.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (!enabled || reducedMotion) stop();
   }, [enabled, reducedMotion, stop]);
   useEffect(() => {
@@ -56,8 +58,7 @@ export function HmsSmokePlayback({ enabled, reducedMotion, displayedDay, payload
   useEffect(() => {
     if (!playing || busy || !valid || !enabled || reducedMotion) return;
     const next = cursor < through ? hmsAdvance(cursor, 1) : loop ? from : null;
-    if (!next) { setPlaying(false); return; }
-    const timer = setTimeout(() => void show(next), speed);
+    const timer = setTimeout(() => { if (next) void show(next); else setPlaying(false); }, speed);
     return () => clearTimeout(timer);
   }, [playing, busy, valid, enabled, reducedMotion, cursor, through, loop, from, show, speed]);
   const choose = (start: string) => { stop(); setFrom(start); setThrough(today); setCursor(start); };
