@@ -78,7 +78,8 @@ development proxy can return an intermittent 500 for the request after one
 whose body the Worker never read; see `source/docs/local-pc-consolidation.md`.
 The direct launcher binds only to loopback, requires Node 22.x and refuses
 `.dev.vars`. When `SITE_HOST` is not `127.0.0.1`, `SITE_PORT` is below 1024,
-Node is not 22.x or a `.dev.vars` file is present, the launcher falls back to
+Node is not 22.x or a `.dev.vars` or `.env` file is present (Wrangler loads
+local secrets from either), the launcher falls back to
 `wrangler dev` and prints why. Both runtimes read the same local D1/R2 state.
 The smoke check sends bodies only to routes that read them, so it also passes
 under that fallback.

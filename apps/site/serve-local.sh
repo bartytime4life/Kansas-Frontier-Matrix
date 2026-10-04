@@ -62,8 +62,9 @@ port="${SITE_PORT:-4173}"
 
 # Prefer the Site's direct Miniflare launcher. Wrangler's development proxy can
 # answer 500 to the request after one whose body the Worker never read. The
-# direct launcher binds only to loopback, requires Node 22.x and refuses
-# .dev.vars, so anything else keeps the previous wrangler dev runtime.
+# direct launcher binds only to loopback, requires Node 22.x, refuses .dev.vars
+# and ignores the .env files Wrangler would load, so anything else keeps the
+# previous wrangler dev runtime.
 fallback=""
 if [[ "$host" != 127.0.0.1 ]]; then
   fallback="SITE_HOST=$host is not loopback"
@@ -71,8 +72,8 @@ elif [[ ! "$port" =~ ^[1-9][0-9]{3,4}$ ]] || (( port < 1024 || port > 65535 )); 
   fallback="SITE_PORT=$port is outside 1024-65535"
 elif [[ "$(node -p 'process.versions.node.split(".")[0]')" != 22 ]]; then
   fallback="Node $(node -p 'process.versions.node') is not 22.x"
-elif compgen -G '.dev.vars*' >/dev/null; then
-  fallback=".dev.vars is present"
+elif local_vars="$(compgen -G '.dev.vars*' || compgen -G '.env*')"; then
+  fallback="${local_vars%%$'\n'*} is present"
 fi
 
 if [[ -z "$fallback" ]]; then
