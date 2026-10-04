@@ -196,6 +196,17 @@ repository fact; a proposed fix remains `PROPOSED` until reviewed.
 | `MOD-06` / P2 / **NEEDS VERIFICATION** | Local water package/API/Site tests and Site builds passed for the reviewed slices, but no activated release was used in a browser. A build and an `ANSWER` fixture do not prove the station, evidence, expiry, withdrawal, and export journey is visible and usable. | Site and release owners, `apps/site/source/`, `apps/governed-api/`, and `packages/release/`. After a separately reviewed synthetic or authorized release setup, exercise the normal-scale browser flow, expiry and withdrawal, map rendering, evidence, and export. Record version, source identity, timestamps, and failure states without converting the exercise into owner acceptance or publication. |
 | `MOD-07` / P3 / **UNKNOWN** | This checkpoint did not trace every domain, source adapter, policy bundle, registry, API consumer, scheduled workflow, or public artifact end to end. The machine backlog itself is partial. | Each existing owning responsibility root. Continue the contract-to-implementation-to-test-to-runtime inventory in dependency order; classify each new finding with evidence before editing. Repository-wide completion remains unclaimed. |
 
+### MOD-01 currentness — 2026-10-04
+
+The [saved v140 Site candidate](../runbooks/water-pilot.md#saved-site-v140-mirror-candidate--2026-10-04)
+supersedes the v139 source and mirror checkpoint in the `MOD-01` row above.
+Its four changed existing paths add selected-station evidence and export
+identity checks; the 336-file mirror comparison and receipt check pass locally.
+The Site build, TypeScript, 349 Node tests, and lint with zero errors pass.
+The eight high development-dependency audit findings, browser acceptance,
+source review, new-head CI, and hosted equivalence remain open. The row above
+is retained as the prior checkpoint, not as a claim that v139 is current.
+
 ### Modernization currentness — 2026-10-01
 
 At `main@5dc0ec2785663ea226a493a8f4ca7de6fe40e2e3`, `MOD-02` is
