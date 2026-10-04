@@ -1898,7 +1898,7 @@
     "hosted_equivalence": false,
     "mirror_check": "PASS: 370 tracked paths; exact v151 source comparison has zero changes and zero deletions; no hosted equivalence",
     "security_followup": "PENDING: saved v151 source requires review of the bounded route follow-up",
-    "site_audit": "Inherited v150 audit: 8 high development dependency findings; npm audit --omit=dev found 0. Not rerun on v151; lockfile unchanged.",
+    "site_audit": "v151 npm audit: 8 high development dependency findings; npm audit --omit=dev: 0 findings.",
     "site_install": "PASS: locked npm install on v151 source",
     "site_lint": "PASS: zero errors, 42 warnings on v151 source",
     "site_tests": "PASS: production build and 383/383 Node tests on v151 source",
