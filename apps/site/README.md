@@ -50,8 +50,8 @@ npm run build
 ../serve-local.sh
 ```
 
-Open the local address printed by Wrangler. The launcher uses the built Site in
-a local Cloudflare Worker simulator, creates an empty local D1 schema on first
+Open the printed local address. The launcher uses the built Site in a local
+Cloudflare Worker simulator, creates an empty local D1 schema on first
 run, reapplies the additive `drizzle/` migrations (governed water, Kansas
 knowledge and crop CASMA tables) on every launch, and keeps local D1/R2 state
 under the ignored `source/.wrangler/` directory across builds. It refuses to
@@ -72,17 +72,22 @@ The `explorer-site` workflow runs lint, typecheck, `npm test` and this smoke
 check for changes under `apps/site/`; a green run is not evidence of hosted
 behaviour or release.
 
-Under `serve-local.sh`, Wrangler's development proxy can return an
-intermittent 500 for the request after one whose body the Worker never read.
-The smoke check therefore sends bodies only to routes that read them. The
-Site's direct-runtime launcher, `source/scripts/serve-local-worker.mjs`,
-avoids this proxy; see `source/docs/local-pc-consolidation.md`.
+After applying migrations, `serve-local.sh` serves through the Site's direct
+Miniflare launcher, `source/scripts/serve-local-worker.mjs`. Wrangler's
+development proxy can return an intermittent 500 for the request after one
+whose body the Worker never read; see `source/docs/local-pc-consolidation.md`.
+The direct launcher binds only to loopback, requires Node 22.x and refuses
+`.dev.vars`. When `SITE_HOST` is not `127.0.0.1`, `SITE_PORT` is below 1024,
+Node is not 22.x or a `.dev.vars` file is present, the launcher falls back to
+`wrangler dev` and prints why. Both runtimes read the same local D1/R2 state.
+The smoke check sends bodies only to routes that read them, so it also passes
+under that fallback.
 
 ### Local configuration
 
 | Setting or binding | Current use |
 | --- | --- |
-| `SITE_HOST`, `SITE_PORT` | Read by `serve-local.sh`; default `127.0.0.1:4173`. |
+| `SITE_HOST`, `SITE_PORT` | Read by `serve-local.sh`; default `127.0.0.1:4173`. A non-loopback host or a port below 1024 selects the `wrangler dev` fallback. |
 | `SITE_STATE_DIR` | Optional local D1/R2 state directory for `serve-local.sh`; default `source/.wrangler/local-state`. `smoke-local.sh` sets it to a temporary directory that it removes afterwards. |
 | `DB`, `BUCKET` | Names declared in `source/.openai/hosting.json`; local Vite/Worker configuration supplies simulated D1/R2 bindings. |
 | `KFM_STEWARD_EMAILS`, optional `KFM_STEWARD_USER_IDS` | Private server-side allowlists for hosted steward review. Do not commit values. |

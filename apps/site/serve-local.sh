@@ -57,6 +57,30 @@ while IFS= read -r migration; do
     --persist-to "$local_state" --file "$migration" >/dev/null
 done <<<"$additive_migrations"
 
+host="${SITE_HOST:-127.0.0.1}"
+port="${SITE_PORT:-4173}"
+
+# Prefer the Site's direct Miniflare launcher. Wrangler's development proxy can
+# answer 500 to the request after one whose body the Worker never read. The
+# direct launcher binds only to loopback, requires Node 22.x and refuses
+# .dev.vars, so anything else keeps the previous wrangler dev runtime.
+fallback=""
+if [[ "$host" != 127.0.0.1 ]]; then
+  fallback="SITE_HOST=$host is not loopback"
+elif [[ ! "$port" =~ ^[1-9][0-9]{3,4}$ ]] || (( port < 1024 || port > 65535 )); then
+  fallback="SITE_PORT=$port is outside 1024-65535"
+elif [[ "$(node -p 'process.versions.node.split(".")[0]')" != 22 ]]; then
+  fallback="Node $(node -p 'process.versions.node') is not 22.x"
+elif compgen -G '.dev.vars*' >/dev/null; then
+  fallback=".dev.vars is present"
+fi
+
+if [[ -z "$fallback" ]]; then
+  mkdir -p "$local_state/v3/d1" "$local_state/v3/r2"
+  printf 'Starting the direct local Worker runtime on http://%s:%s\n' "$host" "$port" >&2
+  exec node scripts/serve-local-worker.mjs --state "$(realpath "$local_state")" --port "$port"
+fi
+
+printf 'Starting wrangler dev (%s); its proxy can return a stray 500 after a rejected request.\n' "$fallback" >&2
 exec "$wrangler" dev --config "$config" --local \
-  --persist-to "$local_state" --ip "${SITE_HOST:-127.0.0.1}" \
-  --port "${SITE_PORT:-4173}"
+  --persist-to "$local_state" --ip "$host" --port "$port"
