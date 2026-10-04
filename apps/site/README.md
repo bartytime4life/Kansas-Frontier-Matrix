@@ -1,3 +1,9 @@
+> **Current mirror candidate — 2026-10-04:** the [v151 file-level receipt](../../data/receipts/generated/site-mirror-v151-candidate-20261004.json)
+> pins 370 byte-identical Site source paths at `c390a9b1fbb9a079d23325ad21c52f226ed105c8`.
+> Site v151 is saved and undeployed; v147 is deployed. Source parity does not
+> establish hosted behavior, reviewed data, or acceptance. The dated notes
+> below are historical. See the [water runbook](../../docs/runbooks/water-pilot.md).
+
 > **Water delivery candidate — 2026-09-30:** source/ mirrors unpublished standalone candidate `6aced94d7bc935723c92441a7caa0bba416aeab1`, based on private Site v130 and including the Kansas-only historical-map filter. The live owner-private Site v131 was separately built from v130 with only that six-file fix, source `75d749ed5711ab20e3edabeb1c6ba135417ec1c0`. The [file-level receipt](../../data/receipts/generated/site-water-mirror-20260930.json) records source digests, the reviewed synthetic-recipe retirement, this follow-up, and the distinct hosted checkpoint. Repository-only Earth Engine and soil-state fixes were reconciled first. The dated checkpoints below are historical; hosted parity is not claimed. See the [water runbook](../../docs/runbooks/water-pilot.md).
 
 > **Historical overlay and radar candidate — 2026-09-30:** The standalone Site candidate `6e8d79e507741608e8f5475c53fe82fb668b44fa` adds on-demand Kansas GeoTIFF layers and the complete bounded NOAA live loop. The [file-level comparison](../../data/receipts/generated/site-historical-overlay-mirror-20260930.json) records 232 identical files, 19 inherited repository overlays, and no missing or unexpected differences. This candidate is not deployed or activated; local browser acceptance was blocked by the admin browser security check. The repository retains its separate water and soil controls.

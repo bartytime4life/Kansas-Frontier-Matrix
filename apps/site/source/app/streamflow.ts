@@ -115,6 +115,7 @@ export type StreamflowFrameProperties = Readonly<{
   trend: StreamflowTrend;
   ageMinutes: number | null;
   missing: boolean;
+  readingState: "measured" | "zero" | "missing" | "stale";
   interpolation: false;
   evidenceRole: "EXTERNAL_CONTEXT_ONLY";
 }>;
@@ -140,7 +141,7 @@ export const streamflowContextPayload = (
     feed: STREAMFLOW_FEED,
     state: bundle.state,
     retrievedAt: bundle.retrievedAt,
-    upstreamUpdatedAt: frame && frameTime ? frameTime : null,
+    upstreamUpdatedAt: bundle.observations.length > 0 && frame && frameTime ? frameTime : null,
     featureCount: features.length,
     data: { type: "FeatureCollection", features },
     source: bundle.source,
@@ -473,7 +474,9 @@ export const buildStreamflowFrame = (
       && previous?.value !== null
       && previous?.value !== undefined
       && previousGap !== null
-      && previousGap <= toleranceMilliseconds;
+      && previousGap <= toleranceMilliseconds
+      && previous?.unit === selected?.unit
+      && previous?.statisticId === selected?.statisticId;
     const changePercent = comparable && previous!.value !== 0
       ? rounded(((selected!.value! - previous!.value!) / Math.abs(previous!.value!)) * 100)
       : comparable && selected!.value === 0
@@ -504,7 +507,7 @@ export const buildStreamflowFrame = (
           ? `${value.toLocaleString("en-US", { maximumFractionDigits: 3 })} ${unit}`
           : withinTolerance && selected?.value === null
             ? "Value not reported"
-            : "No observation in tolerance",
+            : selected ? "Reading too old for this frame" : "No measurement at this frame",
         unit,
         parameterCode: STREAMFLOW_PARAMETER_CODE,
         statisticId: selected?.statisticId ?? null,
@@ -517,6 +520,7 @@ export const buildStreamflowFrame = (
         trend,
         ageMinutes,
         missing,
+        readingState: missing ? selected && !withinTolerance ? "stale" : "missing" : value === 0 ? "zero" : "measured",
         interpolation: false,
         evidenceRole: "EXTERNAL_CONTEXT_ONLY",
       }),

@@ -1,5 +1,5 @@
 /** NOAA GOES-19 GLM flash centroids, supplied by the independent Atmostorm mirror. */
-export const GLM_FLASH_WINDOWS = [5, 15, 30, 60] as const;
+export const GLM_FLASH_WINDOWS = [5, 15, 30, 60, 180] as const;
 export type GlmFlashWindow = typeof GLM_FLASH_WINDOWS[number];
 export const GLM_FLASH_LIMIT = 5_000;
 export const GLM_FLASH_SOURCE = "https://atmostorm.com/api/v1/lightning";
@@ -16,7 +16,7 @@ export type GlmFlash = Readonly<{
 }>;
 
 export type GlmFlashSnapshot = Readonly<{
-  source: "NOAA_GOES19_GLM_VIA_ATMOSTORM";
+  source: "NOAA_GOES19_GLM_VIA_ATMOSTORM" | "NOAA_GOES_GLM_ARCHIVE";
   evidenceRole: "EXTERNAL_CONTEXT_ONLY";
   windowMinutes: GlmFlashWindow;
   requestedAt: string;
@@ -28,6 +28,7 @@ export type GlmFlashSnapshot = Readonly<{
   providerCount: number;
   nearBorderCount: number;
   flashes: readonly GlmFlash[];
+  archive?: { start: string; end: string; files: number; expectedFiles: number; missingFiles: number; omittedQuality: number };
 }>;
 
 const object = (value: unknown): value is Record<string, unknown> => Boolean(value) && typeof value === "object" && !Array.isArray(value);
@@ -78,6 +79,22 @@ export function parseGlmFlashSnapshot(raw: unknown, windowMinutes: GlmFlashWindo
 }
 
 export function glmFlashPlaybackBounds(snapshot: GlmFlashSnapshot): { start: number; end: number } {
+  if (snapshot.archive) return { start: Date.parse(snapshot.archive.start), end: Date.parse(snapshot.archive.end) };
   const end = Date.parse(snapshot.providerGeneratedAt);
   return { start: end - snapshot.windowMinutes * 60_000, end };
+}
+
+/** Disjoint time slices of returned observations; empty slices stay empty. */
+export function glmFlashBins(snapshot: GlmFlashSnapshot, minutes: 15 | 30 | 60) {
+  const { start, end } = glmFlashPlaybackBounds(snapshot);
+  const width = minutes * 60_000;
+  const bins = Array.from({ length: Math.ceil((end - start) / width) }, (_, index) => ({
+    start: start + index * width, end: Math.min(end, start + (index + 1) * width), count: 0,
+  }));
+  for (const flash of snapshot.flashes) {
+    if (flash.timeMs < start || flash.timeMs > end) continue;
+    const index = Math.min(bins.length - 1, Math.floor((flash.timeMs - start) / width));
+    bins[index].count++;
+  }
+  return bins;
 }

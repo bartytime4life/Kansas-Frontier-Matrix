@@ -1,6 +1,7 @@
+import { AQUIFER_RASTER_SOURCES, GROUNDWATER_SNAPSHOT_SOURCES } from "./aquifer-layers";
 import { KANSAS_REFERENCE_SOURCES, KANSAS_REFERENCE_BOUNDS } from "./kansas-reference-layers";
 import type { FeatureCollection } from "geojson";
-import type { GeoJSONSource, LayerSpecification, Map as MapLibreMap, RasterTileSource } from "./maplibre-seam";
+import type { ExpressionSpecification, GeoJSONSource, LayerSpecification, Map as MapLibreMap, RasterTileSource } from "./maplibre-seam";
 import { noaaRadarTileUrl } from "./noaa-radar";
 import { lightningTilePath, NASA_LIGHTNING_METADATA_URL, NASA_LIGHTNING_TILES } from "./lightning-data";
 import { noaaSatelliteTileUrl, type NoaaSatelliteFrame } from "./noaa-satellite";
@@ -9,7 +10,7 @@ import { balanceMapFills, balanceMapRasters, composeMapLayers, requestFillOpacit
 import { BUILD_UTC_YEAR } from "./build-clock";
 import { globeOverviewPaintSize } from "./globe-context";
 
-export type OfficialContextId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar" | "nws-forecast-wind" | "nasa-lightning-climatology" | "noaa-lightning-density" | "blm-plss-townships" | "blm-plss-sections" | "blm-plss-intersected" | "blm-mlrs-leases-authorized" | "blm-mlrs-leases-closed" | "fema-disaster-declarations" | "kdot-roads" | "kdot-rail-active" | "kdot-rail-abandoned" | "kdot-bridges-state" | "kdot-bridges-local" | "kdot-bridges-historic" | "kdot-bridges-old" | "kdot-bridges-closed" | "kdot-roads-1918" | "fema-flood-zones";
+export type OfficialContextId = "kgs-aquifer-alluvial" | "kgs-aquifer-dakota" | "kgs-aquifer-glacial-drift" | "kgs-aquifer-high-plains" | "kgs-aquifer-ozark" | "kgs-aquifer-osage" | "kgs-aquifer-flint-hills" | "kgs-water-table" | "kgs-saturated-thickness" | "kgs-depth-to-water" | "kgs-monitoring-wells" | "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar" | "nws-forecast-wind" | "nasa-lightning-climatology" | "noaa-lightning-density" | "blm-plss-townships" | "blm-plss-sections" | "blm-plss-intersected" | "blm-mlrs-leases-authorized" | "blm-mlrs-leases-closed" | "fema-disaster-declarations" | "kdot-roads" | "kdot-rail-active" | "kdot-rail-abandoned" | "kdot-bridges-state" | "kdot-bridges-local" | "kdot-bridges-historic" | "kdot-bridges-old" | "kdot-bridges-closed" | "kdot-roads-1918" | "fema-flood-zones";
 export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations";
 export type OfficialContextState = "idle" | "loading" | "ready" | "empty" | "partial" | "error";
 
@@ -65,6 +66,7 @@ const blmPlssImageUrl = (layer: 1 | 2 | 3, where: string) =>
 /** Fixed allowlist of public external context. These sources never enter KFM evidence, reports, exports, or admission state. */
 export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object.freeze([
   ...KANSAS_REFERENCE_SOURCES,
+  ...AQUIFER_RASTER_SOURCES, ...GROUNDWATER_SNAPSHOT_SOURCES,
   Object.freeze({
     id: "fema-disaster-declarations", title: "FEMA Kansas disaster declaration areas", shortTitle: "FEMA declarations",
     organization: "Federal Emergency Management Agency", domain: "Weather & hazards", kind: "OPERATIONAL_GEOJSON",
@@ -583,7 +585,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     fallback: "When capabilities, a selected image, or a current-view preview fails, no untimed or synthetic flashes are substituted. Playback stops and the frame remains labeled by its provider UTC time.",
   }),
   Object.freeze({
-    id: "nasa-lightning-climatology", title: "NASA LIS/OTD historical lightning flash-rate climatology", shortTitle: "Lightning · 1995–2014 climate",
+    id: "nasa-lightning-climatology", title: "NASA LIS/OTD historical lightning flash-rate climatology", shortTitle: "Lightning average · 1995–2014",
     organization: "NASA Earthdata · GIBS", domain: "Weather & hazards", kind: "HISTORICAL_RASTER",
     sourceId: "external-nasa-lightning-climatology", layerIds: Object.freeze(["external-nasa-lightning-climatology-raster"]), interactiveLayerIds: Object.freeze([]),
     mapUrl: NASA_LIGHTNING_TILES, endpointLabel: "NASA GIBS · LIS/OTD full flash-rate climatology",
@@ -629,6 +631,18 @@ export type OfficialContextTemporalSupport = Readonly<{
  * the operational-present UI frame; it is not asserted as every source's
  * observation, publication, or acquisition year. */
 export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextId, OfficialContextTemporalSupport>> = Object.freeze({
+  "kgs-aquifer-alluvial": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Reference aquifer extent; source vintage not supplied. No groundwater measurement time axis." }),
+  "kgs-aquifer-dakota": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Reference aquifer extent; source vintage not supplied. No groundwater measurement time axis." }),
+  "kgs-aquifer-glacial-drift": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Reference aquifer extent; source vintage not supplied. No groundwater measurement time axis." }),
+  "kgs-aquifer-high-plains": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Reference aquifer extent; source vintage not supplied. No groundwater measurement time axis." }),
+  "kgs-aquifer-ozark": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Reference aquifer extent; source vintage not supplied. No groundwater measurement time axis." }),
+  "kgs-aquifer-osage": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Reference aquifer extent; source vintage not supplied. No groundwater measurement time axis." }),
+  "kgs-aquifer-flint-hills": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Reference aquifer extent; source vintage not supplied. No groundwater measurement time axis." }),
+  "kgs-water-table": Object.freeze({ axis: "joined-source-snapshot", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Pinned KGS snapshot retrieved 2026-10-04. 2022\u20132024 regional classified estimates, not current conditions or a precise head surface." }),
+  "kgs-saturated-thickness": Object.freeze({ axis: "joined-source-snapshot", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Pinned KGS snapshot retrieved 2026-10-04. 2022\u20132024 regional classified estimates, not current conditions or a precise head surface." }),
+  "kgs-depth-to-water": Object.freeze({ axis: "joined-source-snapshot", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Pinned KGS snapshot retrieved 2026-10-04. 2022\u20132024 regional classified estimates, not current conditions or a precise head surface." }),
+  "kgs-monitoring-wells": Object.freeze({ axis: "joined-source-snapshot", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Pinned KGS snapshot retrieved 2026-10-04. 2026 monitoring locations, not current water-level measurements." }),
+
   "kdot-bridges-state": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current provider inventory with feature-specific dates. Classification is not a live condition or a reconstruction at map time." }),
   "kdot-bridges-local": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current provider inventory with feature-specific dates. Classification is not a live condition or a reconstruction at map time." }),
   "kdot-bridges-historic": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current provider inventory with feature-specific dates. Classification is not a live condition or a reconstruction at map time." }),
@@ -817,13 +831,13 @@ export const applyOfficialContextState = (
 
   const streamflow = OFFICIAL_CONTEXT_BY_ID["usgs-streamflow"];
   ensureGeoJsonSource(map, streamflow, payloads["usgs-streamflow"]?.data ?? emptyCollection());
-  ensureLayer(map, { id: streamflow.layerIds[0], type: "circle", source: streamflow.sourceId, filter: ["!=", ["get", "missing"], true], paint: {
-    "circle-color": ["case", ["==", ["get", "trend"], "rising"], "#67e8f9", ["==", ["get", "trend"], "falling"], "#f3c969", ["==", ["get", "trend"], "steady"], "#72d5a7", streamflow.color],
+  ensureLayer(map, { id: streamflow.layerIds[0], type: "circle", source: streamflow.sourceId, filter: ["all", ["!=", ["get", "missing"], true], [">", ["get", "value"], 0]], paint: {
+    "circle-color": ["case", ["==", ["get", "trend"], "rising"], "#67e8f9", ["==", ["get", "trend"], "falling"], "#a5b4ff", ["==", ["get", "trend"], "steady"], "#72d5a7", streamflow.color],
     "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, ["interpolate", ["linear"], ["coalesce", ["get", "visualMagnitude"], 0], 0, 7, 4, 20], 10, ["interpolate", ["linear"], ["coalesce", ["get", "visualMagnitude"], 0], 0, 12, 4, 34]],
     "circle-blur": 0.72, "circle-opacity": 0.3,
   } });
   ensureLayer(map, { id: streamflow.layerIds[1], type: "circle", source: streamflow.sourceId, paint: {
-    "circle-color": ["case", ["==", ["get", "missing"], true], "#17343b", ["==", ["get", "trend"], "rising"], "#55e6ff", ["==", ["get", "trend"], "falling"], "#f0c56c", ["==", ["get", "trend"], "steady"], "#73cfa8", streamflow.color],
+    "circle-color": ["case", ["==", ["get", "missing"], true], "#17343b", ["==", ["get", "value"], 0], "#ffb869", ["==", ["get", "trend"], "rising"], "#55e6ff", ["==", ["get", "trend"], "falling"], "#a5b4ff", ["==", ["get", "trend"], "steady"], "#73cfa8", streamflow.color],
     "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, ["interpolate", ["linear"], ["coalesce", ["get", "visualMagnitude"], 0], 0, 3.5, 4, 8.5], 10, ["interpolate", ["linear"], ["coalesce", ["get", "visualMagnitude"], 0], 0, 6, 4, 13]],
     "circle-opacity": ["case", ["==", ["get", "missing"], true], 0.38, 0.96],
     "circle-stroke-color": ["case", ["==", ["get", "selected"], true], "#ffe5a4", ["==", ["get", "missing"], true], "#a4bdc2", ["==", ["get", "approvalStatus"], "Approved"], "#d5fff0", "#f3c969"],
@@ -903,13 +917,13 @@ export const applyOfficialContextState = (
   ensureLayer(map, { id: declarations.layerIds[0], type: "fill", source: declarations.sourceId, paint: { "fill-color": declarations.color, "fill-opacity": 0.28 } });
   ensureLayer(map, { id: declarations.layerIds[1], type: "line", source: declarations.sourceId, paint: { "line-color": declarations.color, "line-width": 1.7, "line-opacity": 0.72 } });
 
-  for (const raster of [...KANSAS_REFERENCE_SOURCES, OFFICIAL_CONTEXT_BY_ID["usgs-3dhp-hydrography"], OFFICIAL_CONTEXT_BY_ID["usgs-wbd-watersheds"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-analysis"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"], OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"], OFFICIAL_CONTEXT_BY_ID["nasa-lightning-climatology"], OFFICIAL_CONTEXT_BY_ID["blm-plss-townships"], OFFICIAL_CONTEXT_BY_ID["blm-plss-sections"], OFFICIAL_CONTEXT_BY_ID["blm-plss-intersected"]]) {
+  for (const raster of [...KANSAS_REFERENCE_SOURCES, ...AQUIFER_RASTER_SOURCES, OFFICIAL_CONTEXT_BY_ID["usgs-3dhp-hydrography"], OFFICIAL_CONTEXT_BY_ID["usgs-wbd-watersheds"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-analysis"], OFFICIAL_CONTEXT_BY_ID["noaa-nwm-short-range"], OFFICIAL_CONTEXT_BY_ID["nasa-firms-active-fire"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-hillshade"], OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"], OFFICIAL_CONTEXT_BY_ID["nasa-lightning-climatology"], OFFICIAL_CONTEXT_BY_ID["blm-plss-townships"], OFFICIAL_CONTEXT_BY_ID["blm-plss-sections"], OFFICIAL_CONTEXT_BY_ID["blm-plss-intersected"]]) {
     // Disabled services should not download tiles during startup or style swaps.
     if (!visibility[raster.id] && !map.getSource(raster.sourceId)) continue;
     const terrainDisplay = raster.id === "usgs-3dep-hillshade" || raster.id === "usgs-3dep-slope";
     if (!map.getSource(raster.sourceId)) map.addSource(raster.sourceId, {
       type: "raster", tiles: [raster.mapUrl!], tileSize: 256, attribution: raster.attribution,
-      ...(raster.id === "nasa-lightning-climatology" ? {} : { bounds: [...(KANSAS_REFERENCE_SOURCES.some(source => source.id === raster.id) || raster.id.startsWith("blm-") ? KANSAS_REFERENCE_BOUNDS : [-104.8, 34.8, -92, 42.2])] as [number, number, number, number] }),
+      ...(raster.id === "nasa-lightning-climatology" ? {} : { bounds: [...([...KANSAS_REFERENCE_SOURCES, ...AQUIFER_RASTER_SOURCES].some(source => source.id === raster.id) || raster.id.startsWith("blm-") ? KANSAS_REFERENCE_BOUNDS : [-104.8, 34.8, -92, 42.2])] as [number, number, number, number] }),
       // BLM source-layer minScale: township 1:4m, section 1:500k, intersected 1:200k.
       minzoom: raster.minDisplayZoom ?? (raster.id === "nasa-lightning-climatology" ? 0 : terrainDisplay ? TERRAIN_DISPLAY_MIN_ZOOM : 3),
       maxzoom: raster.maxNativeZoom ?? (raster.id === "nasa-lightning-climatology" ? 6 : terrainDisplay ? TERRAIN_DISPLAY_MAX_ZOOM : 16),
@@ -919,6 +933,21 @@ export const applyOfficialContextState = (
       ...(raster.minDisplayZoom !== undefined ? { minzoom: raster.minDisplayZoom } : terrainDisplay ? { minzoom: TERRAIN_DISPLAY_MIN_ZOOM } : {}),
       paint: { "raster-opacity": raster.defaultOpacity, "raster-fade-duration": terrainDisplay ? 0 : 120 },
     }, firstRegistryLayer(map));
+  }
+
+  for (const source of GROUNDWATER_SNAPSHOT_SOURCES) {
+    if (!visibility[source.id] && !map.getSource(source.sourceId)) continue;
+    if (!map.getSource(source.sourceId)) map.addSource(source.sourceId, { type: "geojson", data: source.mapUrl!, attribution: source.attribution });
+    if (source.id === "kgs-monitoring-wells") {
+      ensureLayer(map, { id: source.layerIds[0], type: "circle", source: source.sourceId, paint: {
+        "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 2.5, 10, 5], "circle-color": source.color,
+        "circle-stroke-color": "#092b31", "circle-stroke-width": 1, "circle-opacity": source.defaultOpacity,
+      } });
+    } else {
+      ensureLayer(map, { id: source.layerIds[0], type: "fill", source: source.sourceId, filter: ["==", ["get", "hasValue"], true], paint: {
+        "fill-color": ["get", "color"], "fill-opacity": source.defaultOpacity,
+      } }, firstRegistryLayer(map));
+    }
   }
 
   const globeView = map.getProjection?.()?.type === "globe";
@@ -931,7 +960,12 @@ export const applyOfficialContextState = (
       setVisibleIfChanged(map, layerId, globeSafeVisibility);
       const safeOpacity = Math.max(0, Math.min(1, opacity[source.id] ?? source.defaultOpacity)) * (source.id === "noaa-hms-smoke" ? smokeFade.get(map) ?? 1 : 1);
       const layer = map.getLayer(layerId);
-      if (layer?.type === "circle") setPaintIfChanged(map, layerId, "circle-opacity", layerId.endsWith("-glow") || layerId.endsWith("-halo") ? safeOpacity * 0.3 : safeOpacity);
+      if (layer?.type === "circle") {
+        if (source.id === "usgs-streamflow" && layerId.endsWith("-points")) {
+          const expression: ExpressionSpecification = ["case", ["==", ["get", "missing"], true], safeOpacity * 0.18, safeOpacity];
+          if (JSON.stringify(map.getPaintProperty(layerId, "circle-opacity")) !== JSON.stringify(expression)) map.setPaintProperty(layerId, "circle-opacity", expression);
+        } else setPaintIfChanged(map, layerId, "circle-opacity", layerId.endsWith("-glow") || layerId.endsWith("-halo") ? safeOpacity * 0.3 : safeOpacity);
+      }
       if (layer?.type === "circle") setPaintIfChanged(map, layerId, "circle-stroke-opacity", safeOpacity);
       if (layer?.type === "fill") requestFillOpacity(map, layerId, source.id === "census-counties" ? safeOpacity * 0.18 : safeOpacity);
       if (layer?.type === "line") setPaintIfChanged(map, layerId, "line-opacity", layerId.endsWith("-glow") ? safeOpacity * 0.3 : source.id === "census-counties" ? safeOpacity * 0.58 : safeOpacity);

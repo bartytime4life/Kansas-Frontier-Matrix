@@ -45,3 +45,23 @@ test("empty, stale, border and capped responses disclose their limits", () => {
   assert.match(capped.partialReason, /older flashes may be missing/i);
   assert.throws(() => glm.parseGlmFlashSnapshot(feed(Array.from({ length: 5001 }, (_, i) => feature(i))), 15, requestedAt), /count/i);
 });
+
+test("three-hour source window is supported and slices partition observed timestamps", () => {
+  const x = glm.parseGlmFlashSnapshot(feed([
+    feature(1, "2026-09-30T23:00:00Z"),
+    feature(2, "2026-09-30T23:15:00Z"),
+    feature(3, "2026-10-01T02:00:00Z"),
+  ], { window_minutes: 180 }), 180, requestedAt);
+  for (const minutes of [15, 30, 60]) {
+    const bins = glm.glmFlashBins(x, minutes);
+    assert.equal(bins.length, 180 / minutes);
+    assert.equal(bins.reduce((sum, bin) => sum + bin.count, 0), 3);
+    assert.equal(bins.at(-1).count, 1);
+    assert.equal(bins[0].start, Date.parse("2026-09-30T23:00:00Z"));
+    assert.equal(bins.at(-1).end, Date.parse(generatedAt));
+  }
+  assert.equal(glm.glmFlashBins(x, 15)[0].count, 1);
+  assert.equal(glm.glmFlashBins(x, 15)[1].count, 1);
+  assert.equal(glm.glmFlashBins(x, 15)[2].count, 0);
+  assert.throws(() => glm.parseGlmFlashSnapshot(feed([], { window_minutes: 1440 }), 1440, requestedAt));
+});

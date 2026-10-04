@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Installed, pinned third-party browser decoder; not application source.
+    "public/vendor/h5wasm/**",
   ]),
 ]);
 

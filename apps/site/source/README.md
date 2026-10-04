@@ -408,8 +408,15 @@ cue only; it does not establish correlation, lag, direction, or causation.
 
 River Pulse uses the fixed `/api/hydrology/streamflow` adapter for the USGS
 Water Data APIs' OGC API v1 collections. The statewide view requests discharge
-parameter `00060` for a rolling 24-hour window and deterministically samples at
-most 72 geographically distributed Kansas stream gauges. Selected-station
+parameter `00060` for a rolling 24-hour window. It discovers Kansas stream
+gauges reporting in the preceding 30 days and queries up to 512 in groups of
+48; if discovery exceeds that cap, it selects a geographically distributed
+sample and marks coverage truncated. The complete network request has a
+60-second and 24 MiB upstream-response budget, keeps at most 100,000 parsed
+observations, and permits one network request at a time per Worker instance.
+If a budget is reached, returned stations and observations remain explicitly
+partial; a request that cannot capture a usable inventory fails. These local
+limits do not replace a host-wide rate limit across Worker instances. Selected-station
 views provide 7-day and 30-day continuous series; the 1-year view uses daily
 mean statistic `00003`. These ranges are bounded displays, not an all-stations
 inventory or a permanent local archive.

@@ -229,8 +229,10 @@ test("frame construction uses the latest prior sample only inside tolerance and 
   const absent = frame.features.find((feature) => feature.properties.stationId === "USGS-06861000").properties;
   assert.equal(absent.observedAt, null);
   assert.equal(absent.ageMinutes, null);
-  assert.equal(absent.displayValue, "No observation in tolerance");
+  assert.equal(absent.displayValue, "No measurement at this frame");
   assert.equal(absent.missing, true);
+  assert.equal(absent.readingState, "missing");
+  assert.equal(nullValue.readingState, "missing");
   assert.equal(frame.features.some((feature) => feature.properties.value === 999), false, "future observations are never selected");
   assert.throws(() => streamflow.buildStreamflowFrame(bundle, "latest", 20), /explicit UTC ISO cursor/i);
   assert.throws(() => streamflow.buildStreamflowFrame(bundle, "2026-09-10T12:30:00Z", -1), /non-negative tolerance/i);

@@ -15,7 +15,11 @@ const ALLOWED_UPSTREAM_PATHS: ReadonlySet<string> = new Set(Object.values(COLLEC
 const USER_AGENT = "KansasFrontierMatrixExplorer/1.0 (https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site)";
 const RESPONSE_BYTE_LIMIT = 12 * 1024 * 1024;
 const REQUEST_TIMEOUT_MS = 25_000;
-const NETWORK_STATION_CAP = 72;
+const NETWORK_STATION_CAP = 512;
+const NETWORK_BATCH_SIZE = 48;
+const NETWORK_OBSERVATION_CAP = 100_000;
+const NETWORK_RESPONSE_BYTES_CAP = 24 * 1024 * 1024;
+const NETWORK_DEADLINE_MS = 60_000;
 const OBSERVATION_CAP = 20_000;
 const STATION_ID_PATTERN = /^USGS-(\d{8,15})$/;
 const PARAMETER_PATTERN = /^0006[05]$/;
@@ -99,6 +103,10 @@ class UsgsUpstreamError extends Error {
 }
 
 class StationNotFoundError extends Error {}
+
+class NetworkBudgetExceeded extends Error {}
+type NetworkBudget = { deadline: number; remainingBytes: number; exhausted: boolean };
+let networkInFlight = false;
 
 const isRecord = (value: unknown): value is JsonRecord => (
   Boolean(value) && typeof value === "object" && !Array.isArray(value)
@@ -212,7 +220,7 @@ const assertFixedUpstream = (url: URL) => {
   }
 };
 
-const readBoundedBody = async (response: Response, controller: AbortController): Promise<string> => {
+const readBoundedBody = async (response: Response, controller: AbortController, budget?: NetworkBudget): Promise<string> => {
   const declaredLength = response.headers.get("content-length")?.trim();
   if (declaredLength) {
     if (!/^\d+$/.test(declaredLength)) throw new UsgsUpstreamError("USGS returned an invalid Content-Length header.");
@@ -229,6 +237,13 @@ const readBoundedBody = async (response: Response, controller: AbortController):
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
+    if (budget && (Date.now() >= budget.deadline || value.byteLength > budget.remainingBytes)) {
+      budget.exhausted = true;
+      controller.abort();
+      await reader.cancel().catch(() => undefined);
+      throw new NetworkBudgetExceeded("USGS network request reached its aggregate work budget.");
+    }
+    if (budget) budget.remainingBytes -= value.byteLength;
     total += value.byteLength;
     if (total > RESPONSE_BYTE_LIMIT) {
       controller.abort();
@@ -268,10 +283,14 @@ const parseCollection = (value: unknown): Collection => {
   return { features, hasNextPage, responseTimestamp };
 };
 
-const fetchCollection = async (url: URL): Promise<Collection> => {
+const fetchCollection = async (url: URL, budget?: NetworkBudget): Promise<Collection> => {
   assertFixedUpstream(url);
+  if (budget && (budget.exhausted || Date.now() >= budget.deadline)) {
+    budget.exhausted = true;
+    throw new NetworkBudgetExceeded("USGS network request reached its aggregate work budget.");
+  }
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  const timeout = setTimeout(() => controller.abort(), budget ? Math.max(1, Math.min(REQUEST_TIMEOUT_MS, budget.deadline - Date.now())) : REQUEST_TIMEOUT_MS);
   try {
     const response = await fetch(url, {
       cache: "no-store",
@@ -285,7 +304,7 @@ const fetchCollection = async (url: URL): Promise<Collection> => {
     if (!response.ok) throw new UsgsUpstreamError(`USGS Water Data returned HTTP ${response.status}.`);
     const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
     if (!contentType.includes("json")) throw new UsgsUpstreamError("USGS Water Data returned an unexpected media type.");
-    const body = await readBoundedBody(response, controller);
+    const body = await readBoundedBody(response, controller, budget);
     let parsed: unknown;
     try {
       parsed = JSON.parse(body) as unknown;
@@ -294,8 +313,13 @@ const fetchCollection = async (url: URL): Promise<Collection> => {
     }
     return parseCollection(parsed);
   } catch (error) {
+    if (error instanceof NetworkBudgetExceeded) throw error;
     if (error instanceof UsgsUpstreamError) throw error;
     if (error instanceof Error && error.name === "AbortError") {
+      if (budget && Date.now() >= budget.deadline) {
+        budget.exhausted = true;
+        throw new NetworkBudgetExceeded("USGS network request reached its deadline.");
+      }
       throw new UsgsUpstreamError("USGS Water Data request exceeded the 25 second timeout.", true);
     }
     throw new UsgsUpstreamError(error instanceof Error ? error.message : "USGS Water Data request failed.");
@@ -430,7 +454,7 @@ const latestCandidates = (features: readonly JsonRecord[]): LatestCandidate[] =>
 };
 
 /**
- * Deliberately caps the statewide animation at 72 gauges. Starting at the
+ * Safety fallback only when the statewide inventory exceeds 512 gauges. Starting at the
  * westernmost gauge, deterministic farthest-point sampling in normalized
  * lon/lat space retains geographic coverage instead of selecting API order.
  */
@@ -609,21 +633,24 @@ const parserContract = (
 } : {};
 
 const networkBundle = async (query: ParsedQuery, queryStart: string, queryEnd: string) => {
+  const budget: NetworkBudget = { deadline: Date.now() + NETWORK_DEADLINE_MS, remainingBytes: NETWORK_RESPONSE_BYTES_CAP, exhausted: false };
+  const inventoryStart = new Date(Date.parse(queryEnd) - 30 * 86400_000).toISOString();
   const latestUrl = collectionUrl("latest", {
     limit: String(OBSERVATION_CAP),
     state_code: "20",
     agency_code: "USGS",
     site_type_code: "ST",
     parameter_code: "00060",
-    datetime: `${queryStart}/${queryEnd}`,
+    datetime: `${inventoryStart}/${queryEnd}`,
   });
-  const latest = await fetchCollection(latestUrl);
-  const candidates = geographicallySpread(latestCandidates(latest.features));
+  const latest = await fetchCollection(latestUrl, budget);
+  const inventory = latestCandidates(latest.features);
+  const candidates = geographicallySpread(inventory);
   const expectedIds = new Set(candidates.map((candidate) => candidate.stationId));
   const retrievedAt = new Date().toISOString();
 
   if (candidates.length === 0) {
-    const limitation = "No qualifying Kansas USGS stream-gauge observation was returned in the requested 24-hour window. No synthetic, interpolated, or stale fallback was substituted.";
+    const limitation = "No qualifying Kansas USGS stream-gauge observation was returned in the 30-day discovery window. No synthetic, interpolated, or stale fallback was substituted.";
     const source = `${USGS_API_ORIGIN}${OGC_ROOT}/continuous`;
     return {
       kind: "usgs-streamflow-bundle" as const,
@@ -645,39 +672,55 @@ const networkBundle = async (query: ParsedQuery, queryStart: string, queryEnd: s
     };
   }
 
-  const stationNumbers = candidates.map((candidate) => candidate.stationNumber).join(",");
-  const stationIds = candidates.map((candidate) => candidate.stationId).join(",");
-  const metadataUrl = collectionUrl("stations", {
-    limit: String(NETWORK_STATION_CAP),
-    agency_code: "USGS",
-    monitoring_location_number: stationNumbers,
-  });
-  const observationsUrl = collectionUrl("continuous", {
-    limit: String(OBSERVATION_CAP),
-    monitoring_location_id: stationIds,
-    parameter_code: "00060",
-    datetime: `${queryStart}/${queryEnd}`,
-  });
-  const [metadata, series] = await Promise.all([
-    fetchCollection(metadataUrl),
-    fetchCollection(observationsUrl),
-  ]);
-  const stations = parseStations(metadata, expectedIds);
-  const stationIdsWithMetadata = new Set(stations.map((station) => station.stationId));
-  const parsedObservations = parseObservations(series, expectedIds, "00060", null);
-  const observations = parsedObservations.filter((observation) => stationIdsWithMetadata.has(observation.stationId));
-  const observationStationIds = new Set(observations.map((observation) => observation.stationId));
-  const metadataIncomplete = stationIdsWithMetadata.size !== expectedIds.size;
-  const seriesIncomplete = stations.some((station) => !observationStationIds.has(station.stationId));
-  const truncated = latest.hasNextPage || metadata.hasNextPage || responseHasMoreThanObservationCap(series);
-  const partial = truncated || metadataIncomplete || seriesIncomplete;
+  const batches: LatestCandidate[][] = [];
+  for (let offset = 0; offset < candidates.length; offset += NETWORK_BATCH_SIZE) batches.push(candidates.slice(offset, offset + NETWORK_BATCH_SIZE));
+  const allStations: Station[] = [], allObservations: Observation[] = [];
+  let batchIncomplete = false, collectionTruncated = false, successfulBatches = 0;
+  // Three batches at a time bound provider pressure and preserve healthy batches
+  // when a separate station group fails. A failed series still retains metadata.
+  for (let offset = 0; offset < batches.length; offset += 3) {
+    if (budget.exhausted || Date.now() >= budget.deadline) { budget.exhausted = true; break; }
+    await Promise.all(batches.slice(offset, offset + 3).map(async batch => {
+      if (budget.exhausted) return;
+      const ids = new Set(batch.map(candidate => candidate.stationId));
+      const [metadataResult, seriesResult] = await Promise.allSettled([
+        fetchCollection(collectionUrl("stations", { limit: String(NETWORK_BATCH_SIZE), agency_code: "USGS", monitoring_location_number: batch.map(candidate => candidate.stationNumber).join(",") }), budget),
+        fetchCollection(collectionUrl("continuous", { limit: String(OBSERVATION_CAP), monitoring_location_id: [...ids].join(","), parameter_code: "00060", datetime: `${queryStart}/${queryEnd}` }), budget),
+      ]);
+      if (metadataResult.status !== "fulfilled") { batchIncomplete = true; return; }
+      let stations: Station[];
+      try { stations = parseStations(metadataResult.value, ids); } catch { batchIncomplete = true; return; }
+      allStations.push(...stations);
+      collectionTruncated ||= metadataResult.value.hasNextPage && stations.length < ids.size;
+      if (seriesResult.status !== "fulfilled") { batchIncomplete = true; return; }
+      try {
+        const available = new Set(stations.map(station => station.stationId));
+        const parsed = parseObservations(seriesResult.value, ids, "00060", null).filter(observation => available.has(observation.stationId));
+        const remaining = NETWORK_OBSERVATION_CAP - allObservations.length;
+        allObservations.push(...parsed.slice(0, Math.max(0, remaining)));
+        if (parsed.length > remaining || allObservations.length >= NETWORK_OBSERVATION_CAP) budget.exhausted = true;
+        collectionTruncated ||= responseHasMoreThanObservationCap(seriesResult.value);
+        successfulBatches++;
+      } catch { batchIncomplete = true; }
+    }));
+  }
+  if (!allStations.length && !successfulBatches) throw new UsgsUpstreamError("USGS network batches were unavailable.");
+  const stations = allStations.sort((a, b) => a.stationId.localeCompare(b.stationId));
+  const observations = allObservations.sort((a, b) => Date.parse(a.observedAt) - Date.parse(b.observedAt) || a.stationId.localeCompare(b.stationId)).slice(-NETWORK_OBSERVATION_CAP);
+  const metadataIncomplete = stations.length !== expectedIds.size;
+  const observationStationIds = new Set(observations.map(observation => observation.stationId));
+  const seriesIncomplete = stations.some(station => !observationStationIds.has(station.stationId));
+  const truncated = latest.hasNextPage || inventory.length > NETWORK_STATION_CAP || collectionTruncated || budget.exhausted;
+  const partial = truncated || metadataIncomplete || seriesIncomplete || batchIncomplete;
   const statisticIds = [...new Set(observations.map((observation) => observation.statisticId).filter((value): value is string => value !== null))];
   const limitation = [
-    "Kansas network mode is deliberately capped at 72 stream gauges, selected by deterministic farthest-point geographic sampling rather than API order; it is not an all-stations inventory.",
+    `Kansas network: ${stations.length} of ${inventory.length} discovered stream gauges, queried in groups of 48. Discovery includes gauges reporting in the past 30 days; only observations from the requested 24 hours animate. Safety limits are 512 gauges and 100,000 observations, not an all-time inventory.`,
     "The animation uses exact USGS samples without spatial or temporal interpolation. Values may be provisional, qualified, delayed, revised, missing, or incomparable across differently sized basins; this is not flood guidance.",
-    truncated ? "At least one OGC collection advertised additional records beyond the fixed 20,000-observation page cap, so this bundle is truncated." : null,
-    metadataIncomplete ? "Metadata was unavailable for one or more sampled gauges; their observations were omitted rather than shown without provenance." : null,
-    seriesIncomplete ? "One or more sampled gauges had no continuous-series observation in the query window." : null,
+    truncated ? "A collection or network safety limit was reached; coverage is explicitly truncated." : null,
+    budget.exhausted ? "The request-wide time, byte, or observation budget ended acquisition; unqueried groups remain unavailable rather than inferred." : null,
+    batchIncomplete ? "One or more provider batches failed; successful groups remain available and failed-series locations show missing measurements." : null,
+    metadataIncomplete ? "Metadata was unavailable for one or more discovered gauges; their observations were omitted rather than shown without provenance." : null,
+    seriesIncomplete ? "One or more discovered gauges had no continuous-series observation in the query window; their locations remain visible as unavailable." : null,
   ].filter((value): value is string => value !== null).join(" ");
   const source = `${USGS_API_ORIGIN}${OGC_ROOT}/continuous`;
   return {
@@ -688,7 +731,7 @@ const networkBundle = async (query: ParsedQuery, queryStart: string, queryEnd: s
     statisticId: statisticIds.length === 1 ? statisticIds[0] : null,
     queryStart,
     queryEnd,
-    retrievedAt,
+    retrievedAt: new Date().toISOString(),
     sourceUpdatedAt: sourceUpdatedAt(observations, candidates.map((candidate) => candidate.lastModified)),
     stations,
     observations,
@@ -782,14 +825,23 @@ export async function GET(request: NextRequest) {
     const queryEndDate = query.archiveEnd ? new Date(query.archiveEnd) : new Date();
     const queryEnd = queryEndDate.toISOString();
     const queryStart = subtractRange(queryEndDate, query.range).toISOString();
-    const bundle = query.mode === "network"
-      ? await networkBundle(query, queryStart, queryEnd)
-      : await stationBundle(query, queryStart, queryEnd);
+    if (query.mode === "network" && networkInFlight) {
+      return errorResponse(429, "USGS_STREAMFLOW_NETWORK_BUSY", "A statewide network request is already running on this worker; retry after it completes.");
+    }
+    let bundle;
+    if (query.mode === "network") {
+      networkInFlight = true;
+      try { bundle = await networkBundle(query, queryStart, queryEnd); }
+      finally { networkInFlight = false; }
+    } else bundle = await stationBundle(query, queryStart, queryEnd);
     return NextResponse.json(bundle, {
       status: 200,
       headers: successfulHeaders(cacheSeconds(query)),
     });
   } catch (error) {
+    if (error instanceof NetworkBudgetExceeded) {
+      return errorResponse(503, "USGS_STREAMFLOW_BUDGET_EXCEEDED", "The statewide source request reached its work limit before a usable inventory was captured.");
+    }
     if (error instanceof QueryError) {
       return errorResponse(400, "USGS_STREAMFLOW_INVALID_QUERY", error.message);
     }

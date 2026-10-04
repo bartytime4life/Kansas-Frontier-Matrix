@@ -3,6 +3,18 @@ import type { OfficialContextId } from "./live-context";
 export type DrawerAttribute = Readonly<{ label: string; value: string }>;
 
 const FIELDS: Readonly<Record<OfficialContextId | "registry" | "basemap", readonly (readonly [string, string])[]>> = {
+  "kgs-aquifer-alluvial": [["classLabel", "Provider range \u00b7 feet"], ["period", "Source period"]],
+  "kgs-aquifer-dakota": [["classLabel", "Provider range \u00b7 feet"], ["period", "Source period"]],
+  "kgs-aquifer-glacial-drift": [["classLabel", "Provider range \u00b7 feet"], ["period", "Source period"]],
+  "kgs-aquifer-high-plains": [["classLabel", "Provider range \u00b7 feet"], ["period", "Source period"]],
+  "kgs-aquifer-ozark": [["classLabel", "Provider range \u00b7 feet"], ["period", "Source period"]],
+  "kgs-aquifer-osage": [["classLabel", "Provider range \u00b7 feet"], ["period", "Source period"]],
+  "kgs-aquifer-flint-hills": [["classLabel", "Provider range \u00b7 feet"], ["period", "Source period"]],
+  "kgs-water-table": [["classLabel", "Provider range \u00b7 feet"], ["period", "Source period"]],
+  "kgs-saturated-thickness": [["classLabel", "Provider range \u00b7 feet"], ["period", "Source period"]],
+  "kgs-depth-to-water": [["classLabel", "Provider range \u00b7 feet"], ["period", "Source period"]],
+  "kgs-monitoring-wells": [["LOCAL_WELL", "Local well"], ["USGS_ID", "USGS identifier"], ["recordUrl", "KGS well record"], ["period", "Edition"]],
+
   "census-counties": [["geoid", "County GEOID"], ["name", "County"], ["vintage", "Census edition"], ["population", "Population count"], ["housingUnits", "Housing units"], ["landSquareMiles", "Land · sq mi"], ["waterSquareMiles", "Water · sq mi"]],
   "usgs-streamflow": [["stationId", "USGS station"], ["displayValue", "Discharge at frame"], ["observedAt", "Observed at"], ["approvalStatus", "USGS status"], ["trend", "Trend at frame"]],
   "noaa-nwps-gauges": [["lid", "NOAA gauge"], ["observedValue", "Observed value"], ["observedUnit", "Observed unit"], ["observedAt", "Observed at"], ["forecastValue", "Forecast value"], ["forecastUnit", "Forecast unit"], ["forecastAt", "Forecast valid at"], ["floodCategory", "Provider flood category"]],

@@ -1,0 +1,80 @@
+# Water-flow paths and terrain context
+
+October 4, 2026 UTC: the selected-gauge direction adapter now returns `kfm-3dhp-direction-v2`; the browser retains v1 parsing for compatibility. This change stays within the preserved standalone Site and does not activate or admit governed water data.
+
+The earlier adapter searched within 1,200 m of a gauge, kept the first 20 river features, and discarded individual lines with more than 300 vertices. That excluded detailed reaches and 3DHP waterbody connectors representing much of the Smoky Hill River. The updated adapter finds the nearest explicit downstream line within 1,200 m, then requests the same provider levelpath within 25 km. It follows `dnhydrosequence` to a unique `hydrosequence` and requires adjacent endpoints within 10 m. The line starts at the nearest point on the mapped feature, without drawing a gauge-to-channel connector. The gauge offset is disclosed; matching by proximity is not an authoritative gauge/network association.
+
+Only flowdirection=1 and feature types 1 (river), 4 (surface connector), 5 (waterbody connector), and 6 (elevation breaching connector) are accepted. The returned path stops at missing or ambiguous topology, a geometric gap, a cycle, 40 km, 80 reaches, or 5,000 output vertices. No downhill shortcut or invented channel joins are supplied. Routes containing abstract connectors have a dashed guide and a visible connector count. Their mapped centerlines are not a wetted-channel footprint. The provider definitions are at https://www.usgs.gov/ngp-standards-and-specifications/3d-hydrography-program-3dhpall-flowline.
+
+The fixed upstream requests permit at most 400 features and 4 MiB per hydrography response, 80,000 accepted input vertices, 25 elevation points and 128 KiB of elevation response. The total request has a 35-second deadline and propagates client cancellation. A truncated initial gauge inventory fails rather than claiming the nearest candidate; a limited or failed extension is disclosed. No provider URL is accepted from the client. Successful responses are private-cacheable for one hour. No DB/R2 writes, background job or new external account is introduced.
+
+The 25 samples are equally spaced along geodesic path length. USGS 3DEP `getSamples` uses multipoint EPSG:4326 coordinates, `rasterFunction: None`, bilinear interpolation, and reported vertical datum metadata. Sample identity/location is checked; null, empty and NoData values remain missing. Endpoint fall is start elevation minus end elevation; mean terrain slope is 100 × fall / path distance. These two quantities require valid endpoint values and equal, non-unknown reported datums. The chart breaks at missing samples or datum changes. It reports sample counts, terrain range and provider resolution. Elevation failure preserves the mapped direction and marks terrain values unavailable.
+
+Terrain elevation is not channel-bed bathymetry, river depth, water-surface elevation, hydraulic grade or a velocity model. Provider flow direction remains authoritative for display; terrain rises at dams or from mixed survey sources do not reverse arrows. Existing gauge discharge and timeline provenance are retained.
+
+Canvas trails now extend up to 240 screen pixels (previously 136), with layered shorter highlights. Precomputed cumulative screen distances and binary search replace repeated full-line scans for each trail point. Positive reported gauge discharge enables illustrative motion; zero or missing readings retain still direction guides. Reduced motion and hidden-tab behavior remain respected. Paths and terrain are keyed to the selected station so a previous gauge's geometry is not rendered for a new selection. The zoom action fits the full loaded path.
+
+Validation: live adapter readback at USGS-06864500 (Smoky Hill River at Ellsworth; provider coordinate -98.2336683810657, 38.7266758875074) returned 40,000 m, 30 linked waterbody-connector reaches, 436 vertices, a 7.3 m gauge offset and 25/25 valid terrain samples. Endpoint fall was approximately 13.8 m, mean terrain fall approximately 0.035%. Another central-Kansas sample returned 2.77 km and stopped at missing downstream metadata. These dated checks do not establish statewide completeness or physical flow velocity. Regression coverage checks network gaps/ambiguity/cycles, long geometries, sample identity/NoData/datums, connector disclosure, upstream truncation, elevation-service failure and canvas direction/trail behavior. Rendered-browser acceptance is separate.
+
+## River Pulse coverage and motion repair — 2026-10-04
+
+The network now discovers Kansas USGS stream gauges with discharge reports in the
+past 30 days, including recently silent gauges, then requests the selected last
+24 hours in batches of 48 (three concurrent groups). The old 72-gauge sampling
+limit is replaced by a 512-gauge safety cap and 100,000 returned-observation cap.
+Provider next-page flags and missing metadata/series remain disclosed. A full
+metadata batch is complete when all explicitly requested IDs have returned,
+even when the provider emits a next link at the exact page size. Failed series
+batches retain their verified station locations and no invented measurements.
+This is not an inventory of every historical or non-USGS gauge.
+
+Missing/null/out-of-tolerance samples use stationary dashed cross markers;
+measured zero uses a stationary amber ring and bar. Neither produces downstream
+arrows or trails. An all-empty observation window can still display known gauge
+locations at the request end time; that cursor is not an invented observation.
+Missing-value opacity is preserved through slider updates. Gauges retain exact
+source timestamps, qualifiers, and provisional/approved status. Trend comparisons
+require matching units and statistic IDs as well as the existing time tolerance.
+
+Rings use staggered phases with eased travel and a smooth fade. Direction follows
+provider-mapped geometry at illustrative screen speed; no velocity is derived
+from discharge. Motion uses animation frames capped at 30 draws/second and
+pauses while hidden, reduced-motion is enabled, or the feed is loading, stale,
+or failed. The canvas now follows the River Pulse opacity control.
+
+Validation includes batched retrieval beyond 72 gauges, partial batch failures,
+retained silent locations, measured zero, missing/no-arrow drawing, and the full
+Site regression suite. A live adapter request loaded 181 gauges and 17,165
+observations, with no truncation or partial-response flag; this is a dated check, not a guaranteed live count. Browser/WebGL
+visual acceptance remains unavailable because the required preview browser skill
+is not available in this session.
+
+## River observatory presentation — 2026-10-04
+
+The River Pulse dock now has a six-part network dial and gauge-condition buttons.
+Each category is mutually exclusive: measured zero is separate from rising,
+falling, steady and uncompared measurements; missing/stale values remain separate.
+Clicking a condition cycles through its station IDs. The dial reports the fraction
+with a value at the selected frame, not basin coverage or real-time availability.
+
+The selected-station view emphasizes discharge, source time, quality and the
+loaded range. Expand details increases the scrollable dock, and channel/terrain
+information remains available in a disclosure. Follow a river collapses the dock,
+selects a nearby gauge when needed, and fits the provider route after it arrives;
+ordinary station selection does not trigger an unsolicited camera move.
+
+Hydrographs retain unsmoothed, gap-separated source paths and add area shading
+only within each valid segment. Pointer inspection and a keyboard/touch range
+control select an actual sample, including null values. The readout is explicitly
+separate from map time. No value is interpolated across a data gap. Stale frame
+values do not receive the active-observation marker.
+
+Mapped motion now uses tapered bands along the path and a selected-gauge beacon.
+Projected paths are cached until geometry or camera state changes. Existing
+positive-value, missing/zero, provider-failure and reduced-motion gates remain.
+Colors are consistent across network categories and gauge symbols: cyan rising,
+lavender falling, mint steady, amber measured zero, slate unavailable.
+
+Validation: 376 automated tests, TypeScript and production build pass. The required
+control-browser skill is absent from the available skill catalog, so browser
+visual acceptance remains unverified; no alternate browser path was used.

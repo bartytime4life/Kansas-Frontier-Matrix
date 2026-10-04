@@ -40,3 +40,5 @@ next-env.d.ts
 /work/
 /public/maplibre/
 __pycache__/
+
+/public/vendor/h5wasm/

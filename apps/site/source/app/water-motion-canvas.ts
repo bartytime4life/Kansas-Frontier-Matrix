@@ -5,32 +5,28 @@ import { globeOverviewSizeScale, onVisibleGlobeHemisphere } from "./globe-contex
 
 type ScreenPoint = Readonly<{ x: number; y: number }>;
 
-function pointAlong(points: readonly ScreenPoint[], distance: number): Readonly<{ x: number; y: number; angle: number }> | null {
-  let remaining = distance;
-  for (let index = 1; index < points.length; index += 1) {
-    const from = points[index - 1];
-    const to = points[index];
-    const length = Math.hypot(to.x - from.x, to.y - from.y);
-    if (length < 0.1) continue;
-    if (remaining <= length) {
-      const fraction = remaining / length;
-      return { x: from.x + (to.x - from.x) * fraction, y: from.y + (to.y - from.y) * fraction, angle: Math.atan2(to.y - from.y, to.x - from.x) };
-    }
-    remaining -= length;
-  }
-  return null;
+/** Precomputed distances keep long river trails from rescanning every vertex. */
+function pointAlong(points: readonly ScreenPoint[], cumulative: readonly number[], distance: number): Readonly<{ x: number; y: number; angle: number }> | null {
+  if (distance < 0 || distance > cumulative.at(-1)!) return null;
+  let low = 1, high = points.length - 1;
+  while (low < high) { const middle = (low + high) >>> 1; if (cumulative[middle] < distance) low = middle + 1; else high = middle; }
+  while (low < points.length - 1 && cumulative[low] - cumulative[low - 1] < 0.1) low++;
+  const from = points[low - 1], to = points[low], length = cumulative[low] - cumulative[low - 1];
+  if (length < 0.1) return null;
+  const fraction = Math.max(0, Math.min(1, (distance - cumulative[low - 1]) / length));
+  return { x: from.x + (to.x - from.x) * fraction, y: from.y + (to.y - from.y) * fraction, angle: Math.atan2(to.y - from.y, to.x - from.x) };
 }
 
 /** A screen-space streak stays on the provider's mapped line. Its length is illustrative. */
-function strokeMappedTrail(context: CanvasRenderingContext2D, points: readonly ScreenPoint[], head: number, reach: number, width: number, opacity: number): void {
+function strokeMappedTrail(context: CanvasRenderingContext2D, points: readonly ScreenPoint[], cumulative: readonly number[], head: number, reach: number, width: number, opacity: number): void {
   const start = Math.max(0, head - reach);
-  const tail = pointAlong(points, start);
-  const tip = pointAlong(points, head);
+  const tail = pointAlong(points, cumulative, start);
+  const tip = pointAlong(points, cumulative, head);
   if (!tail || !tip || head - start < 2) return;
   context.beginPath();
   context.moveTo(tail.x, tail.y);
   for (let distance = start + 7; distance < head; distance += 7) {
-    const point = pointAlong(points, distance);
+    const point = pointAlong(points, cumulative, distance);
     if (point) context.lineTo(point.x, point.y);
   }
   context.lineTo(tip.x, tip.y);
@@ -39,6 +35,37 @@ function strokeMappedTrail(context: CanvasRenderingContext2D, points: readonly S
   context.shadowColor = "rgba(19, 67, 101, .9)";
   context.shadowBlur = width * 2;
   context.stroke();
+}
+
+type ProjectedPath = { path: DownstreamPath; points: ScreenPoint[]; cumulative: number[]; length: number };
+const projectedPathCache = new WeakMap<MapLibreMap, { paths: readonly DownstreamPath[]; camera: string; result: ProjectedPath[] }>();
+function projectPaths(map: MapLibreMap, paths: readonly DownstreamPath[], width: number, height: number): ProjectedPath[] {
+  const center = map.getCenter();
+  const camera = [center.lng, center.lat, map.getZoom(), map.getBearing?.() ?? 0, map.getPitch?.() ?? 0, width, height, map.getProjection()?.type].join(":");
+  const cached = projectedPathCache.get(map);
+  if (cached?.paths === paths && cached.camera === camera) return cached.result;
+  const result = paths.flatMap(path => {
+    const points = path.coordinates.map(coordinate => map.project(coordinate as [number, number]));
+    if (points.some(point => !Number.isFinite(point.x) || !Number.isFinite(point.y))) return [];
+    const cumulative = [0];
+    for (let i = 1; i < points.length; i++) cumulative.push(cumulative[i - 1] + Math.hypot(points[i].x - points[i - 1].x, points[i].y - points[i - 1].y));
+    return [{ path, points, cumulative, length: cumulative.at(-1)! }];
+  });
+  projectedPathCache.set(map, { paths, camera, result });
+  return result;
+}
+
+/** Layered short bands create a tapered tail along bends, not across them. */
+function luminousTrail(context: CanvasRenderingContext2D, points: readonly ScreenPoint[], cumulative: readonly number[], head: number, scale: number) {
+  const reach = 240 * scale;
+  strokeMappedTrail(context, points, cumulative, head, reach, 11 * scale, .10);
+  const start = Math.max(0, head - reach), length = head - start;
+  for (let band = 0; band < 10; band++) {
+    const fraction = (band + 1) / 10;
+    const tip = start + length * fraction;
+    strokeMappedTrail(context, points, cumulative, tip, length / 10 + 1, (1 + fraction * 3.5) * scale, fraction * fraction * .88);
+  }
+  strokeMappedTrail(context, points, cumulative, head, 25 * scale, 2 * scale, .98);
 }
 
 /** The particle pace is constant screen motion, never a measured water velocity. */
@@ -73,39 +100,60 @@ export function drawWaterMotionCanvas(
 
   // Rings report change at each gauge. They do not spread water over the map.
   for (const feature of frame.features) {
-    if (feature.geometry.type !== "Point" || feature.properties.missing || feature.properties.value === null) continue;
+    if (feature.geometry.type !== "Point") continue;
     if (!onVisibleHemisphere(feature.geometry.coordinates)) continue;
     const point = map.project(feature.geometry.coordinates as [number, number]);
     if (point.x < -24 || point.y < -24 || point.x > width + 24 || point.y > height + 24) continue;
     const selected = feature.properties.stationId === selectedStationId;
-    const trend = feature.properties.value === 0 ? "zero" : feature.properties.trend;
-    const color = trend === "rising" ? "102, 233, 239" : trend === "falling" || trend === "zero" ? "255, 184, 135" : trend === "steady" ? "162, 218, 190" : "204, 216, 220";
+    const unavailable = feature.properties.missing || feature.properties.value === null;
+    const trend = unavailable ? "missing" : feature.properties.value === 0 ? "zero" : feature.properties.trend;
+    if (unavailable || trend === "zero") {
+      const radius = (selected ? 11 : 7) * visualScale;
+      context.save();
+      context.strokeStyle = unavailable ? "rgba(199, 212, 221, .9)" : "rgba(255, 184, 105, .98)";
+      context.lineWidth = (selected ? 2.3 : 1.8) * visualScale;
+      context.setLineDash(unavailable ? [2 * visualScale, 3 * visualScale] : []);
+      context.beginPath(); context.arc(point.x, point.y, radius, 0, Math.PI * 2); context.stroke();
+      context.setLineDash([]);
+      context.beginPath();
+      const mark = 3 * visualScale;
+      context.moveTo(point.x - mark, point.y - (unavailable ? mark : 0));
+      context.lineTo(point.x + mark, point.y + (unavailable ? mark : 0));
+      if (unavailable) { context.moveTo(point.x - mark, point.y + mark); context.lineTo(point.x + mark, point.y - mark); }
+      context.stroke(); context.restore();
+      continue;
+    }
+    const color = trend === "rising" ? "102, 233, 239" : trend === "falling" ? "165, 180, 255" : trend === "steady" ? "162, 218, 190" : "204, 216, 220";
     const pulsing = animateReadings && (trend === "rising" || trend === "falling");
-    const phase = pulsing ? (elapsedMs / (selected ? 1400 : 2200)) % 1 : 0.45;
-    const travel = trend === "falling" ? 1 - phase : phase;
+    if (selected) {
+      context.save();
+      context.strokeStyle = "rgba(192, 255, 240, .85)";
+      context.lineWidth = 1.8 * visualScale;
+      const rotation = animateDirection || animateReadings ? elapsedMs / 9000 : 0;
+      for (let segment = 0; segment < 4; segment++) {
+        const angle = rotation + segment * Math.PI / 2;
+        context.beginPath(); context.arc(point.x, point.y, 21 * visualScale, angle, angle + .38); context.stroke();
+      }
+      context.restore();
+    }
+    const seed = [...feature.properties.stationId].reduce((sum, character) => (sum * 31 + character.charCodeAt(0)) % 997, 0) / 997;
+    const phase = pulsing ? (elapsedMs / (selected ? 1800 : 2600) + seed) % 1 : 0.45;
+    const eased = phase * phase * (3 - 2 * phase);
+    const travel = trend === "falling" ? 1 - eased : eased;
     const radius = (selected ? 10 + travel * 14 : 6 + travel * 8) * visualScale;
     context.beginPath();
     context.arc(point.x, point.y, radius, 0, Math.PI * 2);
-    const opacity = pulsing ? (trend === "falling" ? phase : 1 - phase) : 0.46;
+    const opacity = pulsing ? Math.sin(Math.PI * phase) : 0.46;
     context.strokeStyle = `rgba(${color}, ${(selected ? 0.62 : 0.35) * opacity})`;
     context.lineWidth = (selected ? 2.5 : 1.5) * visualScale;
     context.stroke();
-    if (trend === "zero" && selected) {
-      context.beginPath();
-      context.moveTo(point.x - 4 * visualScale, point.y + 4 * visualScale);
-      context.lineTo(point.x + 4 * visualScale, point.y - 4 * visualScale);
-      context.strokeStyle = "rgba(255, 184, 135, .85)";
-      context.lineWidth = 2 * visualScale;
-      context.stroke();
-    }
+
   }
 
   if (!selectedStationId || !selectedCue || paths.length === 0) return;
   const moving = selectedCue.value !== null && selectedCue.value > 0;
-  for (const path of paths) {
-    if (path.coordinates.some((coordinate) => !onVisibleHemisphere(coordinate))) continue;
-    const points = path.coordinates.map((coordinate) => map.project(coordinate as [number, number]));
-    const length = points.slice(1).reduce((sum, point, index) => sum + Math.hypot(point.x - points[index].x, point.y - points[index].y), 0);
+  for (const { path, points, cumulative, length } of projectPaths(map, paths, width, height)) {
+    if (path.coordinates.some(coordinate => !onVisibleHemisphere(coordinate))) continue;
     if (length < 12) continue;
     context.save();
     context.lineJoin = "round";
@@ -115,23 +163,22 @@ export function drawWaterMotionCanvas(
     context.strokeStyle = moving ? "rgba(8, 40, 53, .74)" : "rgba(8, 40, 53, .62)";
     context.lineWidth = 6 * visualScale;
     context.stroke();
-    context.strokeStyle = moving ? "rgba(112, 235, 241, .76)" : "rgba(180, 220, 220, .48)";
+    context.strokeStyle = moving ? "rgba(112, 235, 241, .76)" : selectedCue.value === 0 ? "rgba(255, 184, 105, .62)" : "rgba(180, 195, 207, .48)";
     context.lineWidth = 2.3 * visualScale;
-    context.setLineDash(moving ? [] : [4, 5]);
+    context.setLineDash(moving && !path.hasConnectors ? [] : [4, 5]);
     context.stroke();
     context.setLineDash([]);
+    if (!moving) { context.restore(); continue; }
     // Keep at least one moving marker on short mapped segments. Longer gaps
     // between heads make the luminous trail legible without suggesting speed.
-    const spacing = length >= 180 ? 150 : Math.max(12, length - 6);
+    const spacing = length >= 320 ? 280 : Math.max(12, length - 6);
     const offset = moving && animateDirection && length >= 30 ? (elapsedMs * 0.055) % spacing : 0;
     const firstArrow = length < 30 ? length / 2 : moving && animateDirection ? 3 + offset : 16;
     for (let distance = firstArrow; distance < length - 3; distance += spacing) {
-      const position = pointAlong(points, distance);
+      const position = pointAlong(points, cumulative, distance);
       if (!position || position.x < -20 || position.y < -20 || position.x > width + 20 || position.y > height + 20) continue;
       if (moving && animateDirection) {
-        strokeMappedTrail(context, points, distance, 136 * visualScale, 8 * visualScale, 0.35);
-        strokeMappedTrail(context, points, distance, 96 * visualScale, 4.5 * visualScale, 0.62);
-        strokeMappedTrail(context, points, distance, 52 * visualScale, 2.4 * visualScale, 0.95);
+        luminousTrail(context, points, cumulative, distance, visualScale);
       }
       context.translate(position.x, position.y);
       context.rotate(position.angle);
