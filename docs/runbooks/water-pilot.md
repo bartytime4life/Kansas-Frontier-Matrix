@@ -277,12 +277,26 @@ not changed. Roll back the repository candidate by reverting its mirror commit
 and restoring the v139 receipt selector. Saved v139 remains a source recovery
 point; any future deployed rollback requires its own release review.
 
+## Saved Site v151 mirror candidate — 2026-10-04
+
+The [v151 mirror receipt](../../data/receipts/generated/site-mirror-v151-candidate-20261004.json)
+pins owner-private Site source `c390a9b1fbb9a079d23325ad21c52f226ed105c8`
+and 370 byte-identical tracked paths. It preserves the v150 candidate and adds
+an aggregate time, response-byte, and observation budget to statewide USGS
+streamflow requests, plus a per-Worker concurrent-request guard. When a budget
+ends acquisition, the response discloses partial coverage or fails without a
+usable inventory. A host-wide limit across Worker instances is still not
+established. The locked install, production build, 383 Node tests, TypeScript
+check, and lint passed; lint reported 42 warnings. The security follow-up,
+provider provenance, browser acceptance, and new-head CI remain review gates.
+Site v151 is saved with an archive but is not deployed; v147 remains live.
+
 ## Saved Site v150 mirror candidate — 2026-10-04
 
 The [v150 mirror receipt](../../data/receipts/generated/site-mirror-v150-candidate-20261004.json)
 pins owner-private Site source `ba7438a9820a0b2d9beed675b96cf1dfac510d43`
 and repository base `0835f02f0bcf7c19c9a4fdcbe509dc1770e9b0f3`.
-Its 369 tracked Site paths are byte-identical to this mirror candidate: 64
+Its 369 tracked Site paths were byte-identical to the v150 mirror candidate: 64
 changed paths, including 32 additions, and no deletions. The previous mirror
 receipt remains as dated evidence. Site v147 is deployed; v150 is saved with a
 build archive and has no deployment. Neither parity nor deployment grants water
