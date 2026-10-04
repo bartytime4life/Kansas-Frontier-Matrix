@@ -45,7 +45,8 @@ const listed = journal.entries.map(({ tag }) => `${tag}.sql`);
 const present = fs.readdirSync("drizzle").filter((name) => name.endsWith(".sql"));
 const unlisted = present.filter((name) => !listed.includes(name));
 const missing = listed.filter((name) => !present.includes(name));
-const misnumbered = [...journal.entries].sort((a, b) => a.idx - b.idx)
+// Check array order as written: consumers may apply entries in that order.
+const misnumbered = journal.entries
   .filter(({ idx, tag }, position) => idx !== position || !tag.startsWith(`${String(idx).padStart(4, "0")}_`));
 if (unlisted.length || missing.length || misnumbered.length) {
   process.stderr.write(`drizzle/*.sql and drizzle/meta/_journal.json disagree:${
