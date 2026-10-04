@@ -55,7 +55,9 @@ Cloudflare Worker simulator, creates an empty local D1 schema on first
 run, reapplies the additive `drizzle/` migrations (governed water, Kansas
 knowledge and crop CASMA tables) on every launch, and keeps local D1/R2 state
 under the ignored `source/.wrangler/` directory across builds. It refuses to
-start if a later migration is not purely `CREATE ... IF NOT EXISTS`. It binds
+start if a later migration is not purely `CREATE ... IF NOT EXISTS`, or if
+the `drizzle/*.sql` files and `drizzle/meta/_journal.json` disagree (an
+unlisted file, a listed file that is missing, or entries out of sequence). It binds
 to `127.0.0.1:4173` by default; set `SITE_HOST` or `SITE_PORT` to change the
 listening address or port. The Site source has its own npm lockfile and is
 deliberately outside the repository's root pnpm workspace. Run its npm commands

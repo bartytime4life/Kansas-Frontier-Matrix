@@ -39,6 +39,23 @@ fi
 additive_migrations="$(node -e '
 const fs = require("fs");
 const journal = JSON.parse(fs.readFileSync("drizzle/meta/_journal.json", "utf8"));
+// A migration file missing from the hand-edited journal would be skipped here
+// and wherever else the journal drives migration; fail instead.
+const listed = journal.entries.map(({ tag }) => `${tag}.sql`);
+const present = fs.readdirSync("drizzle").filter((name) => name.endsWith(".sql"));
+const unlisted = present.filter((name) => !listed.includes(name));
+const missing = listed.filter((name) => !present.includes(name));
+// Check array order as written: consumers may apply entries in that order.
+const misnumbered = journal.entries
+  .filter(({ idx, tag }, position) => idx !== position || !tag.startsWith(`${String(idx).padStart(4, "0")}_`));
+if (unlisted.length || missing.length || misnumbered.length) {
+  process.stderr.write(`drizzle/*.sql and drizzle/meta/_journal.json disagree:${
+    unlisted.length ? ` not in the journal: ${unlisted.join(", ")};` : ""}${
+    missing.length ? ` listed but missing: ${missing.join(", ")};` : ""}${
+    misnumbered.length ? ` out of sequence: ${misnumbered.map(({ tag }) => tag).join(", ")};` : ""
+  } fix the journal before launching.\n`);
+  process.exit(2);
+}
 for (const { idx, tag } of [...journal.entries].sort((a, b) => a.idx - b.idx)) {
   if (idx === 0) continue;
   const file = `drizzle/${tag}.sql`;
