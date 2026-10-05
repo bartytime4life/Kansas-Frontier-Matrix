@@ -1,5 +1,32 @@
 # Water-flow paths and terrain context
 
+## Progressive direction loading — 2026-10-05
+
+The selected-gauge map now requests a bounded NDJSON stream from the existing
+direction route. The first event contains only a verified path traced from the
+1,200 m USGS 3DHP gauge search. It is visibly labeled as a nearby preview while
+the same request continues to the 25 km levelpath expansion and 3DEP terrain
+samples. The final event replaces the preview with the existing v2 guide and
+analysis. Map fitting waits for the final path. A failed or interrupted stream
+clears the preview instead of treating it as a complete route; malformed,
+out-of-order, and oversized events are rejected. The original JSON route remains
+available to existing clients. Neither route changes the provider geometry,
+connection rules, 40 km limit, source status, or release authority.
+
+The client keys retrieval to station identity and coordinates rather than the
+whole observation bundle, so new readings at the same station do not restart a
+geometry request. A completed guide is reused within the same browser page for
+15 minutes, for at most 24 stations. This is a display cache, not a governed
+release or a new provider observation; it disappears on page reload. Streaming
+responses are not stored by HTTP caches.
+
+In a local live-provider timing check at USGS-06864500 on 2026-10-05, the nearby
+verified segment arrived in 1.64 s, while the full 40 km path and terrain arrived
+in 10.65 s. A preceding unmodified JSON request took 8.70 s, with 1.74 s on
+the nearby query, 5.95 s on expansion, and 0.99 s on elevation. These are
+sample timings, not a latency guarantee. The longer path still depends on USGS
+service time; browser rendering and hosted streaming remain separate checks.
+
 October 4, 2026 UTC: the selected-gauge direction adapter now returns `kfm-3dhp-direction-v2`; the browser retains v1 parsing for compatibility. This change stays within the preserved standalone Site and does not activate or admit governed water data.
 
 The earlier adapter searched within 1,200 m of a gauge, kept the first 20 river features, and discarded individual lines with more than 300 vertices. That excluded detailed reaches and 3DHP waterbody connectors representing much of the Smoky Hill River. The updated adapter finds the nearest explicit downstream line within 1,200 m, then requests the same provider levelpath within 25 km. It follows `dnhydrosequence` to a unique `hydrosequence` and requires adjacent endpoints within 10 m. The line starts at the nearest point on the mapped feature, without drawing a gauge-to-channel connector. The gauge offset is disclosed; matching by proximity is not an authoritative gauge/network association.

@@ -1,6 +1,6 @@
-> **Current mirror candidate — 2026-10-04:** the [v151 file-level receipt](../../data/receipts/generated/site-mirror-v151-candidate-20261004.json)
-> pins 370 byte-identical Site source paths at `c390a9b1fbb9a079d23325ad21c52f226ed105c8`.
-> Site v151 is saved and undeployed; v147 is deployed. Source parity does not
+> **Current mirror candidate — 2026-10-05:** the [v153 file-level receipt](../../data/receipts/generated/site-mirror-v153-water-paths-candidate-20261005.json)
+> pins 370 byte-identical Site source paths at `da94de300c1b20dc98e9f527ba54613cfd696f8b`.
+> Site v153 is saved and privately deployed; v152 is the previous deployed version. Source parity does not
 > establish hosted behavior, reviewed data, or acceptance. The dated notes
 > below are historical. See the [water runbook](../../docs/runbooks/water-pilot.md).
 
