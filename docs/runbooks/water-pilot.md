@@ -293,10 +293,14 @@ repository topology ratchet reported no new drift. The dependency audit
 reported eight high development-dependency findings and zero production
 findings.
 
-Site v152 is saved with an archive but is not deployed. V147 remains the last
-confirmed live version. Browser acceptance is blocked by an unavailable
-admin-enforced security check; v151 security follow-up, v152 changed-area
-review, source provenance and repository review remain separate gates.
+At candidate capture, Site v152 was saved with an archive and not deployed.
+Following the owner's explicit deployment request, the private deployment
+`appgdep_6ac3b4f9d6c48191b47c3232b82a062c` succeeded on 2026-10-05 at
+14:32:39 UTC for the exact saved v152 version. V147 remains the previous
+deployed recovery version. Browser acceptance is still unverified because the
+admin-enforced security check was unavailable; v151 security follow-up, v152
+changed-area review, source provenance and repository review remain separate
+gates. Deployment did not activate a governed water release or admit a source.
 
 ## Saved Site v151 mirror candidate — 2026-10-04
 
