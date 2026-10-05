@@ -6,12 +6,12 @@ version: v1
 status: repository-grounded; local-development-only
 owners: ["@bartytime4life"]
 created: 2026-09-27
-updated: 2026-09-27
+updated: 2026-10-05
 policy_label: public-documentation
 current_path: docs/installation.md
 owning_root: docs/
 responsibility: current local dependency installation and configuration paths
-truth_posture: CONFIRMED local command definitions at main@0bcdc2e784 and GitHub Site manifest at main@788fdf4829c7; runtime results require separate execution evidence
+truth_posture: CONFIRMED local command definitions at main@0bcdc2e784, GitHub Site manifest at main@788fdf4829c7, and Site launcher, smoke and make site-check behavior at main@a9fc3e7e; runtime results require separate execution evidence
 related:
   - ../README.md
   - ../apps/site/README.md
@@ -81,7 +81,9 @@ npm run build
 ../serve-local.sh
 ```
 
-The launcher prints its URL and defaults to `127.0.0.1:4173`. It initializes an empty local D1 schema on first use and retains local D1/R2 simulator state in ignored `.wrangler/local-state/`. Set `SITE_PORT` if the port is occupied. Set `SITE_HOST` only for a deliberately reviewed listening address. `npm run dev` is a separate development command; the launcher above exercises the built local Worker. The source tree and local bindings contain no hosted private D1 rows, R2 uploads, or live provider snapshot. See [Site setup](../apps/site/README.md) and the Site's [feature notes](../apps/site/source/README.md).
+The launcher prints its URL and defaults to `127.0.0.1:4173`. It initializes an empty local D1 schema on first use, reapplies the additive `drizzle/` migrations on every launch, and retains local D1/R2 simulator state in ignored `.wrangler/local-state/` (set `SITE_STATE_DIR` to use another directory). It refuses to start if the migration files and `drizzle/meta/_journal.json` disagree. It then serves through the Site's direct Miniflare launcher. It falls back to `wrangler dev`, printing why, for a non-loopback `SITE_HOST`, a port below 1024, a Node version other than 22.x, or a `.dev.vars` or `.env` file in `apps/site/source/`. Set `SITE_PORT` if the port is occupied. Set `SITE_HOST` only for a deliberately reviewed listening address. `npm run dev` is a separate development command; the launcher above exercises the built local Worker. The source tree and local bindings contain no hosted private D1 rows, R2 uploads, or live provider snapshot.
+
+To check the Site the same way the `explorer-site` workflow does, run `make site-check` from the repository root. It installs from the Site's lockfile, then runs lint, typecheck, the build with its node tests, and `apps/site/smoke-local.sh`, which checks every API route that can answer without a provider against a temporary local state. Neither the tests nor the smoke need provider network. See [Site setup](../apps/site/README.md) and the Site's [feature notes](../apps/site/source/README.md).
 
 ## Local data and configuration
 
@@ -95,6 +97,6 @@ python3 tools/local_data/manage.py init
 
 Use [the local data runbook](runbooks/local-pc-data-store.md) before moving originals or preparing imports. Storage initialization is not source admission, map display, or publication.
 
-The root [`.env.example`](../.env.example) is a reference template, not an automatically loaded file. Export a value explicitly for the program that reads it. The current fixture API starts with `make governed-api-dev` on `127.0.0.1:8000`; `KFM_API_BIND` and `KFM_API_PORT` in the template are illustrative and do not change that listener. `KFM_MODEL_RUNTIME=mock` is the local readiness default; the template's `OLLAMA_HOST` is inactive under mock mode. Site runtime steward allowlists (`KFM_STEWARD_EMAILS` and optional `KFM_STEWARD_USER_IDS`) belong in private server configuration, never tracked files. Site local D1/R2 bindings are simulated separately from production bindings.
+The root [`.env.example`](../.env.example) is a reference template, not an automatically loaded file. Export a value explicitly for the program that reads it. The current fixture API starts with `make governed-api-dev` on `127.0.0.1:8000`; `KFM_API_BIND` and `KFM_API_PORT` in the template are illustrative and do not change that listener. `KFM_MODEL_RUNTIME=mock` is the local readiness default; the template's `OLLAMA_HOST` is inactive under mock mode. Site runtime settings, such as the steward, Earth Engine and historical-map owner allowlists, the historical-map worker token and the Qwen endpoint, belong in private server configuration, never tracked files. The [Site setup](../apps/site/README.md#local-configuration) table lists each one and what its routes answer when it is unset. Site local D1/R2 bindings are simulated separately from production bindings.
 
 Do not commit `.env`, credentials, downloaded source files, local D1/R2 state, or external data archives. A successful install or local launch proves only that the named local command worked; it does not establish hosted availability, admitted data, release, or publication.
