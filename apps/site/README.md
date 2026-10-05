@@ -1,4 +1,12 @@
-> **Current mirror candidate — 2026-10-05:** the [v153 file-level receipt](../../data/receipts/generated/site-mirror-v153-water-paths-candidate-20261005.json)
+> **Local maintenance candidate — 2026-10-05:** five files under `source/`
+> carry local candidate `aa10a86fde8ca80cdd52a1c02bf50def4a4ab2e8` on top of
+> Site v153: dotenv startup refusal, its regression, and three setup/recovery
+> documents. This candidate has not been saved or deployed through Sites.
+> `site_mirror.py --diagnose` lists the five differences; `--check` retains
+> `MIRROR_REVIEW_REQUIRED` until source reconciliation and mirror review.
+> The historical receipt is preserved, not rewritten to approve these changes.
+
+> **Recorded v153 source checkpoint — 2026-10-05:** the [v153 file-level receipt](../../data/receipts/generated/site-mirror-v153-water-paths-candidate-20261005.json)
 > pins 370 byte-identical Site source paths at `da94de300c1b20dc98e9f527ba54613cfd696f8b`.
 > Site v153 is saved and privately deployed; v152 is the previous deployed version. Source parity does not
 > establish hosted behavior, reviewed data, or acceptance. The dated notes
@@ -74,6 +82,14 @@ The `explorer-site` workflow runs lint, typecheck, `npm test` and this smoke
 check for changes under `apps/site/`; a green run is not evidence of hosted
 behaviour or release.
 
+The smoke runner refuses an occupied or invalid port before launching or making
+HTTP requests. If the normal local Site already uses 4173, run
+`SITE_PORT=4175 ../smoke-local.sh` with an unused port. It verifies its launched
+process remains alive and stops with a startup failure if bounded readiness
+checks expire; that failure is not reported as a set of route failures.
+Startup regressions run with `python3 tests/qa/test_site_smoke.py` from the
+repository root and use disposable stub processes, never the operator's store.
+
 After applying migrations, `serve-local.sh` serves through the Site's direct
 Miniflare launcher, `source/scripts/serve-local-worker.mjs`. Wrangler's
 development proxy can return an intermittent 500 for the request after one
@@ -85,6 +101,37 @@ local secrets from either), the launcher falls back to
 `wrangler dev` and prints why. Both runtimes read the same local D1/R2 state.
 The smoke check sends bodies only to routes that read them, so it also passes
 under that fallback.
+
+### Local audit scope — 2026-10-05
+
+At repository base `8537dc9a1f650ccdcbfe8d08d9d440562e4488db`, the local Site
+served its home, Earth Engine, Data, Stewards, and Knowledge pages. Its reviewed
+water, knowledge, and soil reads reported their explicit no-active-package
+states; the local reviewed-imagery catalog answered successfully. These are
+HTTP checks, not rendered map acceptance. Browser inspection was denied because
+the admin-enforced security check could not be verified.
+
+The local source candidate passed build, lint, TypeScript, and 386 Node tests.
+The repository smoke runner passed 48 checks across 41 routes with disposable
+storage; nine provider-only routes remained unprobed. Three new startup tests
+first failed on the original runner, then passed with busy-port, invalid-port,
+and failed-readiness guards. This audit changed no provider adapters, data
+admission, active packages, hosted storage, or Site audience.
+
+The initial repository documentation scan checked 1,813 documents and 62,208
+local targets, finding 141 missing targets and 39 missing anchors. Twelve
+unambiguous navigation links in the atmosphere/fauna runbooks and source
+descriptor standard were repaired; the changed-document link check passes.
+The remaining 168 findings include unresolved authority documents, proposed
+paths, retired application references and historical navigation. They remain
+open; no placeholder file or doctrine redirect was created to silence them.
+External links were not requested. Earlier audit and dependency results in
+dated documents remain historical.
+
+Rollback the local runtime by selecting the preserved v153 source/build and
+restarting only its local service with the same explicit physical state path.
+Reverting the repository candidate restores its previous smoke runner and
+documentation. Neither operation changes hosted versions or releases.
 
 ### Local configuration
 

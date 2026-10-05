@@ -49,6 +49,25 @@ if [[ -n "$inventory_drift" ]]; then
 fi
 
 port="${SITE_PORT:-4173}"
+# Refuse a busy port before starting migrations or issuing any HTTP request.
+# Otherwise an existing operator Site can satisfy the first readiness probe.
+node --input-type=module - "$port" <<'NODE'
+import { createServer } from "node:net";
+const raw = process.argv[2];
+const port = Number(raw);
+if (!/^[1-9][0-9]{3,4}$/.test(raw) || port < 1024 || port > 65535) {
+  console.error("SITE_PORT must be an integer from 1024 through 65535.");
+  process.exit(1);
+}
+const probe = createServer();
+probe.once("error", (error) => {
+  console.error(error.code === "EADDRINUSE"
+    ? `Local smoke port ${port} is already in use; select an unused SITE_PORT.`
+    : `Local smoke port cannot be reserved: ${error.code ?? "UNKNOWN"}`);
+  process.exitCode = 1;
+});
+probe.listen({ host: "127.0.0.1", port, exclusive: true }, () => probe.close());
+NODE
 base="http://127.0.0.1:${port}"
 log="$(mktemp)"
 # A throwaway D1/R2 state keeps the empty-store assertions independent of any
@@ -65,15 +84,24 @@ cleanup() {
 }
 trap cleanup EXIT
 
+ready=0
 for _ in $(seq 1 120); do
-  if curl -fs -o /dev/null "$base/"; then break; fi
   if ! kill -0 "$server" 2>/dev/null; then
     cat "$log" >&2
     printf 'serve-local.sh exited before the Site answered.\n' >&2
     exit 1
   fi
+  if curl -fs --connect-timeout 1 --max-time 2 -o /dev/null "$base/" && kill -0 "$server" 2>/dev/null; then
+    ready=1
+    break
+  fi
   sleep 1
 done
+if (( ready == 0 )); then
+  cat "$log" >&2
+  printf 'Local smoke server did not become ready; no route assertions were run.\n' >&2
+  exit 1
+fi
 
 failures=0
 checks=0

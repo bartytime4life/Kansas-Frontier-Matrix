@@ -1,13 +1,17 @@
 
 
-> **Unpublished water integration candidate:** [governed water notes](docs/governed-water.md)
-> describe the read-only snapshot adapter, evidence/export control, dependency
-> reconciliation and explicit review/deployment holds. It is based on Site v129;
-> the historical deployment entries below retain their original dates and scope.
+> **Local maintenance checkpoint — 2026-10-05:** this source builds on saved and
+> privately deployed Site v153, `da94de300c1b20dc98e9f527ba54613cfd696f8b`.
+> The local runtime repair in this branch is a candidate; a local build or GitHub
+> merge does not publish it. [Local operation and recovery](docs/local-pc-consolidation.md)
+> records the physical data path separately from the current source alias.
+> [Governed water](docs/governed-water.md) remains subject to package review and
+> activation even when the application is deployed. Dated sections below retain
+> their original scope and are not current runtime or dependency-audit results.
 
 # Kansas Frontier Matrix Explorer
 
-See [the local PC reconciliation record](docs/local-pc-consolidation.md) for the 2026-10-02 local source, storage, validation, and recovery boundaries.
+See [the local PC reconciliation record](docs/local-pc-consolidation.md) for current local source, storage, validation, and recovery instructions and earlier dated checkpoints.
 
 A map-first Kansas explorer with real provider baselines, dated archive replay,
 source downloads, and private data contribution and steward review workflows.

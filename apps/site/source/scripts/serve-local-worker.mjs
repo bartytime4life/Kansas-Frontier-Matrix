@@ -40,6 +40,14 @@ export function checkedPath(target, directory = false) {
   return info;
 }
 
+export function assertNoLocalSecretFiles(root) {
+  // Wrangler reads both dotenv and .dev.vars files. The direct runtime must
+  // not silently ignore an operator's configuration or read its secret values.
+  if (readdirSync(root).some((name) => name === ".env" || name.startsWith(".env.") || name === ".dev.vars" || name.startsWith(".dev.vars."))) {
+    fail("LOCAL_SECRET_CONFIGURATION_REQUIRES_REVIEW");
+  }
+}
+
 export function validateConfiguration(config, hosting) {
   if (hosting.project_id !== "appgprj_6aa0b1c41bc08191bfd86003920f1631") fail("WRONG_SITE_PROJECT");
   if (config.name !== "kansas-frontier-matrix-explorer" || config.main !== "index.js" || config.no_bundle !== true) fail("UNSUPPORTED_BUILD");
@@ -113,7 +121,7 @@ export async function serve(args = process.argv.slice(2)) {
   const client = path.join(siteRoot, "dist/client");
   for (const directory of [client, settings.state, path.join(settings.state, "v3/d1"), path.join(settings.state, "v3/r2")]) checkedPath(directory, true);
   // Do not silently ignore developer secrets that Wrangler dev would load.
-  if (readdirSync(siteRoot).some((name) => name === ".dev.vars" || name.startsWith(".dev.vars."))) fail("LOCAL_SECRET_CONFIGURATION_REQUIRES_REVIEW");
+  assertNoLocalSecretFiles(siteRoot);
   const configPath = path.join(server, "wrangler.json");
   checkedPath(configPath);
   const configBytes = readFileSync(configPath);

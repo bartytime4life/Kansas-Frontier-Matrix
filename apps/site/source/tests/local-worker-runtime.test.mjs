@@ -7,7 +7,7 @@ import { spawn } from "node:child_process";
 import { request as httpRequest } from "node:http";
 import { createServer } from "node:net";
 import { fileURLToPath } from "node:url";
-import { checkedPath, collectModules, localEntry, parseArguments, prepareWorker, validateConfiguration } from "../scripts/serve-local-worker.mjs";
+import { assertNoLocalSecretFiles, checkedPath, collectModules, localEntry, parseArguments, prepareWorker, validateConfiguration } from "../scripts/serve-local-worker.mjs";
 
 const config = JSON.parse(readFileSync(new URL("../dist/server/wrangler.json", import.meta.url)));
 const hosting = JSON.parse(readFileSync(new URL("../.openai/hosting.json", import.meta.url)));
@@ -45,6 +45,17 @@ function withDirectory(fn) {
   const directory = mkdtempSync(path.join(tmpdir(), "kfm-runtime-test-"));
   try { fn(directory); } finally { rmSync(directory, { recursive: true, force: true }); }
 }
+
+test("direct runtime refuses dotenv and dev-vars configuration without reading secrets", () => withDirectory((directory) => {
+  writeFileSync(path.join(directory, "environment-notes.md"), "ordinary documentation");
+  assert.doesNotThrow(() => assertNoLocalSecretFiles(directory));
+  for (const name of [".env", ".env.local", ".env.production", ".dev.vars", ".dev.vars.local"]) {
+    const file = path.join(directory, name);
+    writeFileSync(file, "PRIVATE_TEST_VALUE=do-not-read", { mode: 0o000 });
+    assert.throws(() => assertNoLocalSecretFiles(directory), /^Error: LOCAL_SECRET_CONFIGURATION_REQUIRES_REVIEW$/);
+    rmSync(file);
+  }
+}));
 
 test("state paths reject missing, symlinked, and publicly writable directories", () => withDirectory((directory) => {
   checkedPath(directory, true);

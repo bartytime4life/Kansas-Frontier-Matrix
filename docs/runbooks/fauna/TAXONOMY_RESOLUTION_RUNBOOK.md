@@ -114,7 +114,7 @@ notes:
 > [!WARNING]
 > **Taxonomy can change downstream sensitivity.** A taxon label may be public in isolation yet become harmful when joined to an exact occurrence, nest, den, roost, hibernaculum, spawning site, telemetry path, private parcel, or reverse-engineerable derivative. Do not expose those joins through this procedure.
 
-**Quick navigation:** [Purpose](#1-purpose-scope-and-non-goals) · [Authority](#2-authority-placement-and-current-evidence) · [State model](#3-taxonomy-resolution-state-model) · [Invariants](#4-non-negotiable-invariants) · [Preflight](#5-preflight-and-stop-conditions) · [Procedure](#6-bounded-resolution-procedure) · [Relationships](#7-mapping-relationship-guide) · [Outcomes](#8-outcomes-and-reason-codes) · [Commands](#9-current-executable-boundary) · [Handoff](#10-review-handoff-packet) · [Downstream impact](#11-downstream-impact-and-correction) · [Sensitivity](#12-rights-sensitivity-and-public-surface-controls) · [Validation](#13-validation-and-test-matrix) · [Troubleshooting](#14-troubleshooting) · [Open work](#15-current-holds-and-open-verification) · [Maintenance](#16-maintenance-document-correction-and-rollback) · [Checklist](#appendix-a-operator-checklist) · [Template](#appendix-b-illustrative-handoff-template) · [Anti-patterns](#appendix-c-anti-patterns)
+**Quick navigation:** [Purpose](#1-purpose-scope-and-non-goals) · [Authority](#2-authority-placement-and-current-evidence) · [State model](#3-taxonomy-resolution-state-model) · [Invariants](#4-non-negotiable-invariants) · [Preflight](#5-preflight-and-stop-conditions) · [Procedure](#6-bounded-resolution-procedure) · [Relationships](#7-mapping-relationship-guide) · [Outcomes](#8-outcomes-and-reason-codes) · [Commands](#9-current-executable-boundary) · [Handoff](#10-review-handoff-packet) · [Downstream impact](#11-downstream-impact-and-correction) · [Sensitivity](#12-rights-sensitivity-and-public-surface-controls) · [Validation](#13-validation-and-test-matrix) · [Troubleshooting](#14-troubleshooting) · [Open work](#15-current-holds-and-open-verification) · [Maintenance](#16-maintenance-document-correction-and-rollback) · [Checklist](#appendix-a--operator-checklist) · [Template](#appendix-b--illustrative-handoff-template) · [Anti-patterns](#appendix-c--anti-patterns)
 
 ---
 
@@ -468,7 +468,7 @@ Prepare a value-minimized handoff containing:
 - correction and rollback targets;
 - finite operator outcome and reason codes.
 
-Use [Appendix B](#appendix-b-illustrative-handoff-template) only as a documentation aid. It is not a canonical schema.
+Use [Appendix B](#appendix-b--illustrative-handoff-template) only as a documentation aid. It is not a canonical schema.
 
 ### Step 10 — Obtain authorized review
 

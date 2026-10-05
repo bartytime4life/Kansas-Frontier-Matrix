@@ -16,7 +16,8 @@ move, upload, import, or publish your existing PC files.
 
 ## Prepare the folders
 
-From a fresh extracted copy of this Site, with Node.js 22.13 or newer:
+From a fresh extracted copy of this Site, use Node.js 22.13 or a later 22.x
+release for the direct local Worker launcher:
 
 ```bash
 cd "$HOME/Projects/KFM-Explorer-Site-<version>"
@@ -47,7 +48,14 @@ extension alone cannot decide the role: a book and a scanned map may both be
 PDFs. Record publisher, edition, acquisition time, and rights alongside each
 item. Moving a file between these homes never admits or releases it.
 
-Prepare KFM's independent data store from the **KFM monorepo** checkout:
+Before preparing a new store, inspect the existing configuration and physical
+data locations. The owner's workstation inventory on 2026-10-05 found an
+existing lifecycle store at `~/Projects/KFM-data`; `~/KFM-data` below is the
+private capture-tool default, not a command to relocate or overwrite that store.
+Choose the tool and existing store described in its runbook. Do not initialize
+a second empty store and treat it as a replacement for existing data.
+
+For a genuinely new private capture-tool store, from the **KFM monorepo**:
 
 ```bash
 cd "$HOME/Projects/Kansas-Frontier-Matrix"
