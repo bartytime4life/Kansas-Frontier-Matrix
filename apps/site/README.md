@@ -1,12 +1,17 @@
-> **Local maintenance candidate — 2026-10-05:** sixteen files under `source/`
-> carry local candidate `5e87610` on top of Site v153: dotenv startup refusal,
+> **Local maintenance candidate — 2026-10-05:** 23 files under `source/`
+> carry local candidate `87bd864` on top of Site v153: dotenv startup refusal,
 > setup/recovery documentation, river trail geometry/viewport fixes, and larger
 > 3DHP tiles with scale guidance, USGS cooldown handling, saved station locations, private key support and a 15-minute network cache. The local service serves this candidate.
 > It has not been saved or deployed through Sites. Historical receipt unchanged;
 > `MIRROR_REVIEW_REQUIRED` remains until source reconciliation and mirror review.
-> Water validation: 392 tests, TypeScript and production build pass; lint has
+> Water validation: 396 tests, TypeScript and production build pass; lint has
 > no errors and 43 warnings. Browser visual acceptance remains blocked.
 > See [water repair details](source/docs/water-flow-paths.md).
+
+> **River corridor update — 2026-10-05:** local candidate extends verified
+> mainstem geometry up to 100 km each way, with separate extents, progressive
+> network/terrain loading, and viewport-bounded motion work. Live Ellsworth
+> verification reached both caps; see the water repair details below.
 
 > **Recorded v153 source checkpoint — 2026-10-05:** the [v153 file-level receipt](../../data/receipts/generated/site-mirror-v153-water-paths-candidate-20261005.json)
 > pins 370 byte-identical Site source paths at `da94de300c1b20dc98e9f527ba54613cfd696f8b`.

@@ -55,3 +55,33 @@ test("terrain samples use along-path distance and require matched endpoint datum
   payload.samples[0].location.x = -97;
   assert.throws(() => water.parseWaterElevations(payload, samples), /location/);
 });
+
+
+test("corridor extends before and after gauge while all arrows retain downstream order", () => {
+  const seed=water.nearestWaterReach([b],[-97.985,38]);
+  const corridor=water.traceWaterCorridor(seed,[a,b,c]);
+  assert.deepEqual(corridor.path.coordinates[0],a.coordinates[0]);
+  assert.deepEqual(corridor.path.coordinates.at(-1),c.coordinates.at(-1));
+  assert.ok(corridor.upstreamM>1000 && corridor.downstreamM>1000);
+  assert.equal(corridor.lengthM,corridor.upstreamM+corridor.downstreamM);
+  assert.equal(corridor.segments,3);
+  assert.ok(corridor.path.coordinates.every((p,i,all)=>i===0||p[0]>=all[i-1][0]));
+});
+test("upstream mainstem requires reciprocal topology and never guesses a tributary", () => {
+  const tributary={...a,id:"D",sequence:40,coordinates:[[-97.99,38.01],[-97.99,38]]};
+  const seed=water.nearestWaterReach([b],[-97.985,38]);
+  const ambiguous=water.traceWaterCorridor(seed,[a,tributary,b,c]);
+  assert.deepEqual(ambiguous.path.coordinates[0],b.coordinates[0]);
+  assert.match(ambiguous.upstreamStop,/ambiguous/);
+  const explicit={...b,upstream:30};
+  assert.deepEqual(water.traceWaterCorridor({...seed,reach:explicit},[a,tributary,explicit,c]).path.coordinates[0],a.coordinates[0]);
+  const wrong={...b,upstream:999};
+  assert.deepEqual(water.traceWaterCorridor({...seed,reach:wrong},[a,wrong,c]).path.coordinates[0],b.coordinates[0]);
+});
+test("long corridors stop at 100 km each way and preserve mapped geometry", () => {
+  const river=reach("LONG",1,null,[[-100,38],[-98,38],[-96,38]]);
+  const corridor=water.traceWaterCorridor(water.nearestWaterReach([river],[-98,38]),[river]);
+  assert.equal(corridor.upstreamM,100000);assert.equal(corridor.downstreamM,100000);
+  assert.equal(corridor.lengthM,200000);
+  assert.ok(corridor.path.coordinates.every(p=>p[1]===38));
+});

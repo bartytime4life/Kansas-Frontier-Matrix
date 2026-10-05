@@ -47,7 +47,7 @@ test("direction route expands the same river and returns derived elevations with
   try {
     const response = await GET(request()); assert.equal(response.status, 200);
     const guide = parseDownstreamGuide(await response.json());
-    assert.equal(guide.format, "kfm-3dhp-direction-v2"); assert.equal(calls, 3);
+    assert.equal(guide.format, "kfm-3dhp-direction-v3"); assert.equal(calls, 3);
     assert.equal(guide.analysis.segments, 2); assert.equal(guide.analysis.connectors, 1); assert.equal(guide.paths[0].hasConnectors, true);
     assert.equal(guide.analysis.elevation.dropM, 24); assert.equal(guide.analysis.elevation.samples.length, 25);
   } finally { globalThis.fetch = original; }
@@ -75,8 +75,9 @@ test("truncated gauge search remains unavailable, and invalid coordinates do not
 
 test("clicking Zoom to flow direction after the nearby event still refits the final route", async () => {
   const original = globalThis.fetch;
-  let releaseExtension;
+  let releaseExtension, releaseTerrain;
   const extension = new Promise(resolve => { releaseExtension = resolve; });
+  const terrain = new Promise(resolve => { releaseTerrain = resolve; });
   const station = { stationId: "06864500", name: "Fixture gauge", longitude: -97.995, latitude: 38 };
   const fits = [];
   const context = createContext({
@@ -85,7 +86,7 @@ test("clicking Zoom to flow direction after the nearby event still refits the fi
     streamflowFrame: { features: [{ properties: { stationId: station.stationId, missing: false, value: 10 } }] },
     streamflowSelectedStation: station, streamflowSelectedStationId: station.stationId,
     selectStreamflowStation: () => assert.fail("station is already selected"),
-    downstreamPaths: [], downstreamState: "loading", downstreamStationId: station.stationId,
+    downstreamPaths: [], downstreamAnalysis: null, downstreamState: "loading", downstreamStationId: station.stationId,
     riverPathFocusRef: { current: null }, reducedMotion: true, announce: () => {},
   });
   const { click, fitReady } = await pageDirectionCallbacks(context);
@@ -96,6 +97,7 @@ test("clicking Zoom to flow direction after the nearby event still refits the fi
       await extension;
       return Response.json({ features: [first, second] });
     }
+    await terrain;
     const points = JSON.parse(u.searchParams.get("geometry")).points;
     return Response.json({ samples: points.map((p, i) => ({ locationId: i, location: { x: p[0], y: p[1], spatialReference: { wkid: 4326 } }, value: 500 - i, attributes: { VerticalDatum: "NAVD88" } })) });
   };
@@ -103,16 +105,25 @@ test("clicking Zoom to flow direction after the nearby event still refits the fi
     const response = await GET(request("lon=-97.995&lat=38&stream=1"));
     assert.equal(response.headers.get("content-type"), "application/x-ndjson; charset=utf-8");
     assert.equal(response.headers.get("cache-control"), "no-store");
-    let nearby;
+    let nearby, network;
     const pending = readProgressiveDownstreamGuide(response, guide => {
-      nearby = guide;
       context.downstreamPaths = guide.paths;
-      click(); // The user clicks Zoom to flow direction while the longer path is still loading.
-      releaseExtension();
-      assert.equal(context.riverPathFocusRef.current, station.stationId);
-      assert.equal(fits.length, 1, "the nearby preview is fitted immediately");
-      fitReady();
-      assert.equal(fits.length, 1, "the loading preview cannot consume the pending final fit");
+      context.downstreamAnalysis = guide.analysis ?? null;
+      if (guide.format === "kfm-3dhp-direction-v2") {
+        nearby = guide;
+        click(); // Zoom to flow direction after the nearby event, before the network and terrain.
+        releaseExtension();
+        assert.equal(context.riverPathFocusRef.current, station.stationId);
+        assert.equal(fits.length, 1, "the nearby preview is fitted immediately");
+        fitReady();
+        assert.equal(fits.length, 1, "the nearby preview cannot consume the pending focus");
+      } else {
+        network = guide;
+        fitReady();
+        releaseTerrain();
+        assert.equal(fits.length, 2, "the full network fits while terrain is loading");
+        assert.equal(context.riverPathFocusRef.current, station.stationId, "network preview retains focus for ready");
+      }
     }, new AbortController().signal);
     const complete = await pending;
     assert.equal(nearby.state, "ready");
@@ -121,15 +132,17 @@ test("clicking Zoom to flow direction after the nearby event still refits the fi
     assert.equal(complete.analysis.segments, 2);
     assert.equal(complete.analysis.elevation.state, "ready");
     assert.ok(complete.paths[0].coordinates.length > nearby.paths[0].coordinates.length);
+    assert.equal(network.format, "kfm-3dhp-direction-v3");
     context.downstreamPaths = complete.paths;
+    context.downstreamAnalysis = complete.analysis;
     context.downstreamState = complete.state;
     fitReady();
     const points = complete.paths.flatMap(path => path.coordinates);
-    assert.equal(fits.length, 2, "the final ready route must refit after the preview click");
-    assert.deepEqual(fits[1], [[Math.min(...points.map(point => point[0])), Math.min(...points.map(point => point[1]))], [Math.max(...points.map(point => point[0])), Math.max(...points.map(point => point[1]))]]);
-    assert.notDeepEqual(fits[1], fits[0]);
+    assert.equal(fits.length, 3, "the final ready route must refit after both previews");
+    assert.deepEqual(fits[2], [[Math.min(...points.map(point => point[0])), Math.min(...points.map(point => point[1]))], [Math.max(...points.map(point => point[0])), Math.max(...points.map(point => point[1]))]]);
+    assert.notDeepEqual(fits[2], fits[0]);
     assert.equal(context.riverPathFocusRef.current, null);
-  } finally { globalThis.fetch = original; }
+  } finally { releaseExtension(); releaseTerrain(); globalThis.fetch = original; }
 });
 
 test("an incomplete or hostile direction stream cannot become a final path", async () => {
@@ -139,4 +152,22 @@ test("an incomplete or hostile direction stream cannot become a final path", asy
   await assert.rejects(readProgressiveDownstreamGuide(response('{"phase":"nearby","guide":{}}\n'), () => {}, signal));
   await assert.rejects(readProgressiveDownstreamGuide(response('x'.repeat(512 * 1024 + 1)), () => {}, signal));
   assert.equal((await GET(request("lon=-97.995&lat=38&stream=0"))).status, 400);
+});
+
+
+test("the extended network becomes drawable before delayed terrain samples", async () => {
+  const original=globalThis.fetch; let releaseTerrain;
+  const wait=new Promise(resolve=>{releaseTerrain=resolve;});let sawNetwork=false;
+  globalThis.fetch=async url=>{
+    if(new URL(url).hostname==="3dhp.nationalmap.gov") return Response.json({features:[first,second]});
+    await wait;return new Response("unavailable",{status:503});
+  };
+  try {
+    const response=await GET(request("lon=-97.995&lat=38&stream=1"));
+    const complete=await readProgressiveDownstreamGuide(response,guide=>{
+      if(guide.format==="kfm-3dhp-direction-v3") {sawNetwork=true;assert.ok(guide.analysis.upstreamM>0);releaseTerrain();}
+    },new AbortController().signal);
+    assert.equal(sawNetwork,true);assert.equal(complete.state,"ready");assert.equal(complete.analysis.elevation.state,"unavailable");
+    const forged=structuredClone(complete);forged.analysis.upstreamM=200000;assert.throws(()=>parseDownstreamGuide(forged));
+  } finally {releaseTerrain();globalThis.fetch=original;}
 });
