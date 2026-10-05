@@ -148,6 +148,11 @@ not a single simultaneous snapshot or measured plume motion. Early NOAA records
 can have identical Start/End times: these retain timestamp-only support, with no
 invented duration. They appear in their daily frame and at the exact timestamp
 in the existing Observatory; reversed intervals still fail validation.
+When an operator checks a dated day on the map, its first displayed frame is
+the first provider-supported smoke interval. Midnight remains available in the
+time sweep when it is genuinely empty. The layer row names a checked window
+with zero Kansas footprints and separately marks partial publication coverage;
+neither state is an all-clear.
 
 Only one day and a next-day preload are requested, with a three-frame cache,
 30-second request deadlines, 4-MiB response bounds, and existing upstream

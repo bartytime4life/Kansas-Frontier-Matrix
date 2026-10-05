@@ -65,8 +65,14 @@ test("smoke sweep changes only at provider validity boundaries", () => {
   assert.deepEqual(time.smokeValidityTimes(original, "2026-09-23"), [
     "2026-09-23T00:00:00.000Z", "2026-09-23T01:00:00.000Z", "2026-09-23T02:00:00.000Z", "2026-09-23T03:00:00.000Z",
   ]);
+  assert.equal(time.smokeInitialFrameIndex(original, "2026-09-23"), 1);
   assert.equal(time.smokeValidAt(original, "2026-09-23", "2026-09-23T00:00:00.000Z").featureCount, 0);
   assert.deepEqual(time.smokeValidAt(original, "2026-09-23", "2026-09-23T01:00:00.000Z").data.features.map((item) => item.properties.id), ["morning"]);
   assert.deepEqual(time.smokeValidAt(original, "2026-09-23", "2026-09-23T02:00:00.000Z").data.features.map((item) => item.properties.id), ["later"]);
   assert.equal(time.smokeValidAt(original, "2026-09-22", "2026-09-22T02:00:00.000Z").featureCount, 0);
+  assert.equal(time.smokeInitialFrameIndex(payload("noaa-hms-smoke", []), "2026-09-23"), -1);
+  const carried = payload("noaa-hms-smoke", [feature({ start: "2026-09-22T23:00:00.000Z", end: "2026-09-23T01:00:00.000Z" })]);
+  assert.equal(time.smokeInitialFrameIndex(carried, "2026-09-23"), 0);
+  const timestamp = payload("noaa-hms-smoke", [feature({ start: "2026-09-23T12:00:00.000Z", end: "2026-09-23T12:00:00.000Z" })]);
+  assert.equal(time.smokeInitialFrameIndex(timestamp, "2026-09-23"), 1);
 });
