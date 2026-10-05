@@ -597,3 +597,19 @@ export const buildHydrographSegments = (
   flush();
   return Object.freeze(segments);
 };
+
+
+/** Device-local station locations only: never retain a reading as a live fallback. */
+export function savedStreamflowLocations(bundle: StreamflowBundle): string {
+  return JSON.stringify({ ...bundle, state: "partial", observations: [],
+    limitation: "Saved station locations only; no current measurements are available." });
+}
+export function restoreStreamflowLocations(saved: string | null, now = Date.now()): StreamflowBundle | null {
+  if (!saved || saved.length > 1024 * 1024) return null;
+  try {
+    const bundle = parseStreamflowBundle(JSON.parse(saved));
+    const age = now - Date.parse(bundle.retrievedAt);
+    if (age < 0 || age > 7 * 86400000 || bundle.query.mode !== "recent-series") return null;
+    return parseStreamflowBundle(JSON.parse(savedStreamflowLocations(bundle)));
+  } catch { return null; }
+}

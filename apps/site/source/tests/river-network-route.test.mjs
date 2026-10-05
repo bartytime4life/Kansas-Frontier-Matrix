@@ -30,3 +30,14 @@ test('network retains more than 72 gauges, true zero and silent gauge metadata',
 test('failed observation batch keeps its locations and healthy groups without invented readings',async()=>{
  const{body}=await run(true);assert.equal(body.stations.length,100);assert.equal(body.observations.length,51);assert.equal(body.partial,true);assert.equal(body.truncated,false);assert.equal(body.observations.some(o=>o.stationId===ids[50]),false);assert.match(body.limitation,/batches failed/);
 });
+
+test('provider rate limits are disclosed and repeated requests respect cooldown',async()=>{
+ const original=globalThis.fetch;let calls=0;
+ globalThis.fetch=async()=>{calls++;return new Response('',{status:429,headers:{'Retry-After':'600'}});};
+ try {
+  const first=await GET(request());assert.equal(first.status,429);
+  assert.equal((await first.json()).code,'USGS_STREAMFLOW_RATE_LIMITED');
+  assert.ok(Number(first.headers.get('Retry-After'))>=599);
+  assert.equal((await GET(request())).status,429);assert.equal(calls,1);
+ } finally {globalThis.fetch=original;}
+});

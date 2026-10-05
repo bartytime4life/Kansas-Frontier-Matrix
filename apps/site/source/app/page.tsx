@@ -244,6 +244,8 @@ import { isNoaaSatelliteManifest, NOAA_SATELLITE_FRAMES_PATH, type NoaaSatellite
 import {
   buildStreamflowFrame,
   streamflowContextPayload,
+  savedStreamflowLocations,
+  restoreStreamflowLocations,
   normalizeUsgsStationId,
   parseStreamflowBundle,
   streamflowDisplayFrames,
@@ -2876,6 +2878,9 @@ export default function Home() {
         ? frames.reduce((matched, frame, index) => Date.parse(frame) <= Date.parse(requestedTime) ? index : matched, -1)
         : -1;
       streamflowRequestedTimeRef.current = null;
+      if (!archiveDay && requestedRange === "24h") {
+        try { localStorage.setItem("kfm-river-station-locations-v1", savedStreamflowLocations(bundle)); } catch { /* Optional location cache. */ }
+      }
       streamflowBundleRef.current = bundle;
       setStreamflowBundle(bundle);
       setStreamflowRange(requestedRange);
@@ -2891,6 +2896,12 @@ export default function Home() {
       if (controller.signal.aborted || generation !== streamflowRequestGenerationRef.current) return;
       const message = error instanceof Error ? error.message : "The USGS streamflow request failed.";
       setStreamflowPlaying(false);
+      if (!streamflowBundleRef.current && !archiveDay && requestedRange === "24h") {
+        try {
+          const locations = restoreStreamflowLocations(localStorage.getItem("kfm-river-station-locations-v1"));
+          if (locations) { streamflowBundleRef.current = locations; setStreamflowBundle(locations); setStreamflowFrameIndex(-1); }
+        } catch { /* No saved locations are available. */ }
+      }
       setStreamflowState(streamflowBundleRef.current ? "stale" : "error");
       setStreamflowError(message);
       setOfficialStates((current) => ({ ...current, "usgs-streamflow": "error" }));

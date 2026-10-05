@@ -131,3 +131,24 @@ lavender falling, mint steady, amber measured zero, slate unavailable.
 Validation: 376 automated tests, TypeScript and production build pass. The required
 control-browser skill is absent from the available skill catalog, so browser
 visual acceptance remains unverified; no alternate browser path was used.
+
+## Missing station dots during USGS rate limiting — 2026-10-05
+
+A local network request returned 502; a direct USGS check confirmed HTTP 429
+with OVER_RATE_LIMIT. This is independent of the 3DHP image zoom threshold.
+The adapter now exposes HTTP 429 and Retry-After and holds further calls within
+that worker for the bounded provider cooldown (five minutes by default, up to
+one day). Other failures retain their existing handling.
+
+Successful recent-network loads now save only validated station locations in
+optional device-local storage. On a failed fresh load, locations captured within
+seven days may return as missing-value markers; observations are stripped,
+original retrieval time retained, and motion remains stopped. Malformed, future,
+expired, or oversized saved data is rejected. There is no bundled synthetic
+inventory and no recovery promise for browsers that never saved a successful
+load. A provider recovery is still required for fresh readings and animation.
+
+Regression tests cover cooldown request suppression and retained station dots
+without values. This does not change source admission or hosted data storage.
+Rollback: preceding local source fb6bd1e and its retained build; optional key
+`kfm-river-station-locations-v1` may be removed without affecting source data.

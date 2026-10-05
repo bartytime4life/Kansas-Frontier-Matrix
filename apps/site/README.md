@@ -1,10 +1,10 @@
-> **Local maintenance candidate — 2026-10-05:** eleven files under `source/`
-> carry local candidate `fb6bd1e` on top of Site v153: dotenv startup refusal,
+> **Local maintenance candidate — 2026-10-05:** fifteen files under `source/`
+> carry local candidate `3b183a0` on top of Site v153: dotenv startup refusal,
 > setup/recovery documentation, river trail geometry/viewport fixes, and larger
-> 3DHP tiles with scale guidance. The local service serves this candidate.
+> 3DHP tiles with scale guidance, USGS cooldown handling and saved station locations. The local service serves this candidate.
 > It has not been saved or deployed through Sites. Historical receipt unchanged;
 > `MIRROR_REVIEW_REQUIRED` remains until source reconciliation and mirror review.
-> Water validation: 388 tests, TypeScript and production build pass; lint has
+> Water validation: 390 tests, TypeScript and production build pass; lint has
 > no errors and 43 warnings. Browser visual acceptance remains blocked.
 > See [water repair details](source/docs/water-flow-paths.md).
 

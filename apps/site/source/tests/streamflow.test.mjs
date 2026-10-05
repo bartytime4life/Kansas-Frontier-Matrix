@@ -307,3 +307,22 @@ test("accepted empty streamflow refresh replaces old map geometry and later data
   assert.equal(mapped.data.features[0].properties.selected, false);
   assert.equal(mapped.source, bundle.source);
 });
+
+test('saved station locations survive reload without retaining readings or enabling motion', () => {
+ const bundle=streamflow.parseStreamflowBundle(payload());
+ const now=Date.parse(bundle.retrievedAt)+1000;
+ const saved=streamflow.savedStreamflowLocations(bundle);
+ const restored=streamflow.restoreStreamflowLocations(saved,now);
+ assert.equal(restored.stations.length,1);
+ assert.equal(restored.observations.length,0);
+ assert.equal(restored.state,'partial');
+ assert.equal(restored.retrievedAt,bundle.retrievedAt);
+ const frame=streamflow.buildStreamflowFrame(restored,restored.query.end,30);
+ assert.equal(frame.features.length,1);
+ assert.equal(frame.features[0].properties.value,null);
+ assert.equal(frame.features[0].properties.missing,true);
+ assert.equal(streamflow.restoreStreamflowLocations(saved,now+8*86400000),null);
+ assert.equal(streamflow.restoreStreamflowLocations(saved,now-2000),null);
+ assert.equal(streamflow.restoreStreamflowLocations('not json',now),null);
+ assert.equal(streamflow.restoreStreamflowLocations('x'.repeat(1024*1024+1),now),null);
+});
