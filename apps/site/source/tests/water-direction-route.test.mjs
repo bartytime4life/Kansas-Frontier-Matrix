@@ -11,7 +11,7 @@ async function compile(file) {
   return `data:text/javascript;base64,${Buffer.from(js).toString("base64")}`;
 }
 const { GET } = await import(await compile("app/api/hydrology/direction/route.ts"));
-const { parseDownstreamGuide } = await import(await compile("app/water-flow-context.ts"));
+const { parseDownstreamGuide, readProgressiveDownstreamGuide } = await import(await compile("app/water-flow-context.ts"));
 const request = (suffix = "lon=-97.995&lat=38") => ({ nextUrl: new URL(`https://local/api/hydrology/direction?${suffix}`), signal: new AbortController().signal });
 const feature = (id, sequence, downstream, coordinates, featuretype = 1) => ({ properties: { id3dhp: id, hydrosequence: sequence, dnhydrosequence: downstream, levelpath: 10, flowdirection: 1, featuretype, gnisidlabel: "Fixture river" }, geometry: { type: "LineString", coordinates } });
 const first = feature("A", 30, 20, [[-98, 38], [-97.99, 38]]);
@@ -54,4 +54,43 @@ test("truncated gauge search remains unavailable, and invalid coordinates do not
     assert.equal((await GET(request("lon=0&lat=0"))).status, 400); assert.equal(calls, 1);
     assert.equal((await GET(request("lon=-98&lon=-97&lat=38"))).status, 400); assert.equal(calls, 1);
   } finally { globalThis.fetch = original; }
+});
+
+test("a nearby mapped segment arrives before the slow extension, then the full terrain-backed path replaces it", async () => {
+  const original = globalThis.fetch;
+  let releaseExtension;
+  const extension = new Promise(resolve => { releaseExtension = resolve; });
+  globalThis.fetch = async url => {
+    const u = new URL(url);
+    if (u.hostname === "3dhp.nationalmap.gov") {
+      if (u.searchParams.get("distance") === "1200") return Response.json({ features: [first] });
+      await extension;
+      return Response.json({ features: [first, second] });
+    }
+    const points = JSON.parse(u.searchParams.get("geometry")).points;
+    return Response.json({ samples: points.map((p, i) => ({ locationId: i, location: { x: p[0], y: p[1], spatialReference: { wkid: 4326 } }, value: 500 - i, attributes: { VerticalDatum: "NAVD88" } })) });
+  };
+  try {
+    const response = await GET(request("lon=-97.995&lat=38&stream=1"));
+    assert.equal(response.headers.get("content-type"), "application/x-ndjson; charset=utf-8");
+    assert.equal(response.headers.get("cache-control"), "no-store");
+    let nearby;
+    const pending = readProgressiveDownstreamGuide(response, guide => { nearby = guide; releaseExtension(); }, new AbortController().signal);
+    const complete = await pending;
+    assert.equal(nearby.state, "ready");
+    assert.equal(nearby.analysis.segments, 1);
+    assert.match(nearby.analysis.stopReason, /Nearby preview/);
+    assert.equal(complete.analysis.segments, 2);
+    assert.equal(complete.analysis.elevation.state, "ready");
+    assert.ok(complete.paths[0].coordinates.length > nearby.paths[0].coordinates.length);
+  } finally { globalThis.fetch = original; }
+});
+
+test("an incomplete or hostile direction stream cannot become a final path", async () => {
+  const response = (lines) => new Response(lines, { headers: { "content-type": "application/x-ndjson" } });
+  const signal = new AbortController().signal;
+  await assert.rejects(readProgressiveDownstreamGuide(response('{"phase":"error"}\n'), () => {}, signal));
+  await assert.rejects(readProgressiveDownstreamGuide(response('{"phase":"nearby","guide":{}}\n'), () => {}, signal));
+  await assert.rejects(readProgressiveDownstreamGuide(response('x'.repeat(512 * 1024 + 1)), () => {}, signal));
+  assert.equal((await GET(request("lon=-97.995&lat=38&stream=0"))).status, 400);
 });

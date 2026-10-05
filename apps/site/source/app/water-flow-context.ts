@@ -93,6 +93,55 @@ export function parseDownstreamGuide(value: unknown): DownstreamGuide {
   return guide as DownstreamGuide;
 }
 
+/** Read bounded, ordered map previews without accepting an incomplete route as final. */
+export async function readProgressiveDownstreamGuide(
+  response: Response, onNearby: (guide: DownstreamGuide) => void, signal: AbortSignal,
+): Promise<DownstreamGuide> {
+  if (!response.body || !response.headers.get("content-type")?.startsWith("application/x-ndjson")) throw new Error("Direction stream is unavailable.");
+  const reader = response.body.getReader(), decoder = new TextDecoder();
+  const cancel = () => { void reader.cancel(); };
+  signal.addEventListener("abort", cancel, { once: true });
+  let text = "", bytes = 0, nearbySeen = false, complete: DownstreamGuide | null = null;
+  const acceptLine = (line: string) => {
+    if (!line) return;
+    if (line.length > 512 * 1024) throw new Error("Direction stream line is too large.");
+    const event = JSON.parse(line) as { phase?: unknown; guide?: unknown };
+    if (event.phase === "nearby" && !nearbySeen && !complete) {
+      nearbySeen = true;
+      onNearby(parseDownstreamGuide(event.guide));
+    } else if (event.phase === "complete" && !complete) {
+      complete = parseDownstreamGuide(event.guide);
+    } else {
+      throw new Error("Direction stream failed or was out of order.");
+    }
+  };
+  try {
+    while (true) {
+      signal.throwIfAborted();
+      const chunk = await reader.read();
+      if (chunk.done) break;
+      bytes += chunk.value.byteLength;
+      if (bytes > 1024 * 1024) throw new Error("Direction stream is too large.");
+      text += decoder.decode(chunk.value, { stream: true });
+      let end: number;
+      while ((end = text.indexOf("\n")) >= 0) {
+        acceptLine(text.slice(0, end));
+        text = text.slice(end + 1);
+      }
+      if (text.length > 512 * 1024) throw new Error("Direction stream line is too large.");
+    }
+    text += decoder.decode();
+    if (text.trim()) acceptLine(text.trim());
+    signal.throwIfAborted();
+    if (!complete) throw new Error("Direction stream ended before the full route.");
+    return complete;
+  } finally {
+    signal.removeEventListener("abort", cancel);
+    if (!complete) await reader.cancel().catch(() => {});
+    reader.releaseLock();
+  }
+}
+
 export type WaterReadingCue = Readonly<{
   kind: "missing" | "zero" | "rising" | "falling" | "steady" | "uncompared";
   value: number | null;

@@ -32,7 +32,7 @@ import { DataNotices, LayerSceneControls, RenderQualityControl } from "./map-too
 import { drawWindFlowCanvas, nearestWindFlowSample, windToCompass } from "./wind-arrow-canvas";
 import type { WaterPathAnalysis } from "./water-path-analysis";
 import { drawWaterMotionCanvas } from "./water-motion-canvas";
-import { parseDownstreamGuide, waterReadingCue, type DownstreamPath } from "./water-flow-context";
+import { readProgressiveDownstreamGuide, waterReadingCue, type DownstreamGuide, type DownstreamPath } from "./water-flow-context";
 import { applyTerrainReliefStyle, applyTopographicRasterDepth } from "./terrain-relief-style";
 import { TerrainRasterViewTracker, terrainRasterErrorTile, terrainRasterTileInView, type TerrainRasterId } from "./terrain-raster-status";
 import type { WindArrowFrame, WindArrowSample } from "./wind-arrow-data";
@@ -1182,6 +1182,7 @@ export default function Home() {
   const [loadedDownstreamAnalysis, setDownstreamAnalysis] = useState<WaterPathAnalysis | null>(null);
   const [loadedDownstreamPaths, setDownstreamPaths] = useState<readonly DownstreamPath[]>([]);
   const [downstreamStationId, setDownstreamStationId] = useState<string | null>(null);
+  const directionGuideCacheRef = useRef(new Map<string, { guide: DownstreamGuide; expiresAt: number }>());
   const downstreamPaths = useMemo(() => downstreamStationId === streamflowSelectedStationId ? loadedDownstreamPaths : [], [downstreamStationId, streamflowSelectedStationId, loadedDownstreamPaths]);
   const downstreamAnalysis = downstreamStationId === streamflowSelectedStationId ? loadedDownstreamAnalysis : null;
   const [downstreamState, setDownstreamState] = useState<"idle" | "loading" | "ready" | "empty" | "error">("idle");
@@ -5107,13 +5108,27 @@ export default function Home() {
     });
   }, [applyNoaaRadarFrame, effectiveOfficialVisibility, noaaRadarFrameLoadState, noaaRadarFrameTime, noaaRadarPendingFrameTime, noaaRadarRenderable, noaaRadarSelectedAtPresent, officialOpacity, officialPayloads, runMapMutation, styleReady]);
 
+  const directionStationId = streamflowSelectedStation?.stationId ?? null;
+  const directionLongitude = streamflowSelectedStation?.longitude ?? null;
+  const directionLatitude = streamflowSelectedStation?.latitude ?? null;
   useEffect(() => {
-    if (!streamflowSelectedAtPresent || !streamflowSelectedStation) {
+    if (!streamflowSelectedAtPresent || !directionStationId || directionLongitude === null || directionLatitude === null) {
       setDownstreamPaths([]);
       setDownstreamAnalysis(null);
+      setDownstreamStationId(null);
       setDownstreamState("idle");
       return;
     }
+    const cacheKey = `${directionStationId}:${directionLongitude}:${directionLatitude}`;
+    const cached = directionGuideCacheRef.current.get(cacheKey);
+    if (cached && cached.expiresAt > Date.now()) {
+      setDownstreamPaths(cached.guide.paths);
+      setDownstreamAnalysis(cached.guide.analysis ?? null);
+      setDownstreamStationId(directionStationId);
+      setDownstreamState(cached.guide.state);
+      return;
+    }
+    directionGuideCacheRef.current.delete(cacheKey);
     const controller = new AbortController();
     setDownstreamPaths([]);
     setDownstreamAnalysis(null);
@@ -5121,17 +5136,24 @@ export default function Home() {
     setDownstreamState("loading");
     const load = async () => {
       try {
-        const params = new URLSearchParams({ lon: String(streamflowSelectedStation.longitude), lat: String(streamflowSelectedStation.latitude) });
-        const response = await fetch(`/api/hydrology/direction?${params}`, { signal: controller.signal, headers: { Accept: "application/json" } });
+        const params = new URLSearchParams({ lon: String(directionLongitude), lat: String(directionLatitude), stream: "1" });
+        const response = await fetch(`/api/hydrology/direction?${params}`, { signal: controller.signal, headers: { Accept: "application/x-ndjson" } });
         if (!response.ok) throw new Error("Mapped direction unavailable.");
-        const guide = parseDownstreamGuide(await readBoundedJson(response, 512 * 1024));
+        const guide = await readProgressiveDownstreamGuide(response, nearby => {
+          if (controller.signal.aborted) return;
+          setDownstreamPaths(nearby.paths);
+          setDownstreamStationId(directionStationId);
+        }, controller.signal);
         if (controller.signal.aborted) return;
+        if (directionGuideCacheRef.current.size >= 24) directionGuideCacheRef.current.delete(directionGuideCacheRef.current.keys().next().value!);
+        directionGuideCacheRef.current.set(cacheKey, { guide, expiresAt: Date.now() + 15 * 60_000 });
         setDownstreamPaths(guide.paths);
         setDownstreamAnalysis(guide.analysis ?? null);
-        setDownstreamStationId(streamflowSelectedStation.stationId);
+        setDownstreamStationId(directionStationId);
         setDownstreamState(guide.state);
       } catch {
         if (!controller.signal.aborted) {
+          controller.abort();
           setDownstreamPaths([]);
           setDownstreamAnalysis(null);
           setDownstreamState("error");
@@ -5140,10 +5162,10 @@ export default function Home() {
     };
     void load();
     return () => controller.abort();
-  }, [streamflowSelectedAtPresent, streamflowSelectedStation]);
+  }, [streamflowSelectedAtPresent, directionStationId, directionLongitude, directionLatitude]);
 
   useEffect(() => {
-    if (!downstreamStationId || riverPathFocusRef.current !== downstreamStationId || downstreamStationId !== streamflowSelectedStationId || !downstreamPaths.length) return;
+    if (!downstreamStationId || downstreamState !== "ready" || riverPathFocusRef.current !== downstreamStationId || downstreamStationId !== streamflowSelectedStationId || !downstreamPaths.length) return;
     const map = mapRef.current;
     if (!map) return;
     riverPathFocusRef.current = null;
@@ -5152,7 +5174,7 @@ export default function Home() {
     map.fitBounds([[Math.min(...longitudes), Math.min(...latitudes)], [Math.max(...longitudes), Math.max(...latitudes)]], {
       padding: { top: 60, left: 55, right: 55, bottom: Math.min(450, map.getCanvas().clientHeight * .6) }, maxZoom: 13, duration: reducedMotion ? 0 : 1000,
     });
-  }, [downstreamPaths, downstreamStationId, reducedMotion, streamflowSelectedStationId]);
+  }, [downstreamPaths, downstreamState, downstreamStationId, reducedMotion, streamflowSelectedStationId]);
 
   useEffect(() => {
     const map = mapRef.current;

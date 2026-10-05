@@ -277,6 +277,31 @@ not changed. Roll back the repository candidate by reverting its mirror commit
 and restoring the v139 receipt selector. Saved v139 remains a source recovery
 point; any future deployed rollback requires its own release review.
 
+## Deployed Site v153 progressive water paths — 2026-10-05
+
+The [v153 mirror receipt](../../data/receipts/generated/site-mirror-v153-water-paths-candidate-20261005.json)
+pins owner-private Site source `da94de300c1b20dc98e9f527ba54613cfd696f8b`.
+Six changed Site paths preserve 370 tracked paths with no deletions. A selected
+gauge now displays the verified nearby USGS 3DHP segment while the same request
+continues to the longer downstream route and 3DEP terrain; interrupted or
+malformed streams cannot be presented as a completed route. Station identity
+and coordinates, rather than changing observations, key the request. Completed
+routes are reused for 15 minutes within the page for at most 24 stations. The
+original JSON route remains compatible. This is external context and does not
+admit, approve, or release water data.
+
+At one local live-provider gauge, the nearby segment arrived in 1.64 s and the
+full route with terrain in 10.65 s. Through the local Site HTTP route, the
+nearby segment arrived in 1.52 s and the full 40 km route in 6.37 s. These
+dated samples show earlier first display, not a guaranteed provider response
+time. TypeScript, production build, and 385 Node tests passed on the exact
+v153 source. The owner-private v153 deployment
+`appgdep_6ac3bc6ea4148191adb9c80575feb842` succeeded. V152 remains saved
+and was the immediately preceding deployed version. Browser visual acceptance
+was blocked by the unavailable admin-enforced browser security check; hosted
+streaming, repository review, and v153 changed-area security review remain
+separate checks. Rollback is saved Site v152 plus the previous mirror receipt.
+
 ## Saved Site v152 smoke repair candidate — 2026-10-05
 
 The [v152 mirror receipt](../../data/receipts/generated/site-mirror-v152-smoke-candidate-20261005.json)

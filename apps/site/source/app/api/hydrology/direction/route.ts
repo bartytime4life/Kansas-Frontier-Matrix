@@ -5,11 +5,17 @@ import { ELEVATION_SOURCE, nearestWaterReach, parseWaterElevations, parseWaterRe
 export const dynamic = "force-dynamic";
 const SERVICE = "https://3dhp.nationalmap.gov/arcgis/rest/services/usgs_3dhp_all/MapServer/50/query";
 const LIMITATION = "Nearest USGS mapped river, followed only through supplied downstream network identifiers and meeting endpoints. Direction is provider-supplied; terrain sampling does not establish hydraulic velocity, wet-channel extent, water depth or flood level.";
+type Guide = {
+  format: "kfm-3dhp-direction-v2"; state: "ready" | "empty";
+  paths: ReturnType<typeof traceWaterPath>["path"][]; analysis: WaterPathAnalysis | null;
+  source: string; retrievedAt: string; evidenceRole: "EXTERNAL_CONTEXT_ONLY"; limitation: string;
+};
 
 export async function GET(request: NextRequest) {
   const query = request.nextUrl.searchParams;
   const longitude = Number(query.get("lon")), latitude = Number(query.get("lat"));
-  if (query.size !== 2 || query.getAll("lon").length !== 1 || query.getAll("lat").length !== 1
+  const progressive = query.get("stream") === "1";
+  if (query.size !== (progressive ? 3 : 2) || query.getAll("lon").length !== 1 || query.getAll("lat").length !== 1
     || !query.get("lon") || !query.get("lat") || !Number.isFinite(longitude) || !Number.isFinite(latitude)
     || longitude < -102.1 || longitude > -94.5 || latitude < 36.9 || latitude > 40.1) {
     return NextResponse.json({ error: "A Kansas gauge coordinate is required." }, { status: 400 });
@@ -31,7 +37,11 @@ export async function GET(request: NextRequest) {
     const raw = await read(upstream, 4 * 1024 * 1024) as { exceededTransferLimit?: boolean };
     return { reaches: parseWaterReaches(raw), truncated: raw.exceededTransferLimit === true };
   };
-  try {
+  const guide = (paths: Guide["paths"], analysis: WaterPathAnalysis | null): Guide => ({
+    format: "kfm-3dhp-direction-v2", state: paths.length ? "ready" : "empty", paths, analysis,
+    source: SERVICE, retrievedAt: new Date().toISOString(), evidenceRole: "EXTERNAL_CONTEXT_ONLY", limitation: LIMITATION,
+  });
+  const run = async (onPreview?: (value: Guide) => void): Promise<Guide> => {
     const nearby = await channels(1200);
     if (nearby.truncated) throw new Error("Nearby channel inventory incomplete.");
     const seed = nearestWaterReach(nearby.reaches, [longitude, latitude]);
@@ -39,6 +49,17 @@ export async function GET(request: NextRequest) {
     const paths = [];
     if (seed) {
       let network = nearby.reaches, notice = "";
+      if (onPreview) {
+        const nearbyTrace = traceWaterPath(seed, nearby.reaches);
+        if (nearbyTrace.path.coordinates.length >= 2 && nearbyTrace.lengthM >= 1) {
+          onPreview(guide([nearbyTrace.path], {
+            lengthM: nearbyTrace.lengthM, gaugeOffsetM: nearbyTrace.gaugeOffsetM,
+            segments: nearbyTrace.segments, connectors: nearbyTrace.connectors, name: nearbyTrace.name,
+            stopReason: `${nearbyTrace.stopReason} Nearby preview; checking the longer river path.`,
+            elevation: { state: "unavailable", samples: [], dropM: null, slopePercent: null, source: ELEVATION_SOURCE, retrievedAt: null, notice: "Terrain sampling awaits the full path." },
+          }));
+        }
+      }
       if (seed.reach.levelpath) {
         try {
           const expanded = await channels(25000, seed.reach.levelpath);
@@ -60,9 +81,26 @@ export async function GET(request: NextRequest) {
         analysis = { lengthM: traced.lengthM, gaugeOffsetM: traced.gaugeOffsetM, segments: traced.segments, connectors: traced.connectors, name: traced.name, stopReason: traced.stopReason + notice, elevation };
       }
     }
-    return NextResponse.json({ format: "kfm-3dhp-direction-v2", state: paths.length ? "ready" : "empty", paths, analysis,
-      source: SERVICE, retrievedAt: new Date().toISOString(), evidenceRole: "EXTERNAL_CONTEXT_ONLY", limitation: LIMITATION,
-    }, { headers: { "Cache-Control": "private, max-age=3600" } });
+    return guide(paths, analysis);
+  };
+  if (progressive) {
+    const encoder = new TextEncoder();
+    const body = new ReadableStream<Uint8Array>({
+      start(controller) {
+        const emit = (phase: "nearby" | "complete", value: Guide) => {
+          if (!signal.aborted) try { controller.enqueue(encoder.encode(JSON.stringify({ phase, guide: value }) + "\n")); } catch { /* Canceled stream. */ }
+        };
+        void run(value => emit("nearby", value)).then(value => {
+          emit("complete", value);
+        }).catch(() => {
+          if (!signal.aborted) try { controller.enqueue(encoder.encode('{"phase":"error"}\n')); } catch { /* Canceled stream. */ }
+        }).finally(() => { try { controller.close(); } catch { /* Canceled stream. */ } });
+      },
+    });
+    return new Response(body, { headers: { "Content-Type": "application/x-ndjson; charset=utf-8", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } });
+  }
+  try {
+    return NextResponse.json(await run(), { headers: { "Cache-Control": "private, max-age=3600" } });
   } catch {
     return NextResponse.json({ error: "USGS mapped downstream direction is unavailable for this gauge." }, { status: 503, headers: { "Cache-Control": "no-store" } });
   }
