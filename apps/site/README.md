@@ -1,10 +1,12 @@
-> **Local maintenance candidate — 2026-10-05:** five files under `source/`
-> carry local candidate `aa10a86fde8ca80cdd52a1c02bf50def4a4ab2e8` on top of
-> Site v153: dotenv startup refusal, its regression, and three setup/recovery
-> documents. This candidate has not been saved or deployed through Sites.
-> `site_mirror.py --diagnose` lists the five differences; `--check` retains
-> `MIRROR_REVIEW_REQUIRED` until source reconciliation and mirror review.
-> The historical receipt is preserved, not rewritten to approve these changes.
+> **Local maintenance candidate — 2026-10-05:** eleven files under `source/`
+> carry local candidate `fb6bd1e` on top of Site v153: dotenv startup refusal,
+> setup/recovery documentation, river trail geometry/viewport fixes, and larger
+> 3DHP tiles with scale guidance. The local service serves this candidate.
+> It has not been saved or deployed through Sites. Historical receipt unchanged;
+> `MIRROR_REVIEW_REQUIRED` remains until source reconciliation and mirror review.
+> Water validation: 388 tests, TypeScript and production build pass; lint has
+> no errors and 43 warnings. Browser visual acceptance remains blocked.
+> See [water repair details](source/docs/water-flow-paths.md).
 
 > **Recorded v153 source checkpoint — 2026-10-05:** the [v153 file-level receipt](../../data/receipts/generated/site-mirror-v153-water-paths-candidate-20261005.json)
 > pins 370 byte-identical Site source paths at `da94de300c1b20dc98e9f527ba54613cfd696f8b`.

@@ -25,9 +25,12 @@ function strokeMappedTrail(context: CanvasRenderingContext2D, points: readonly S
   if (!tail || !tip || head - start < 2) return;
   context.beginPath();
   context.moveTo(tail.x, tail.y);
-  for (let distance = start + 7; distance < head; distance += 7) {
-    const point = pointAlong(points, cumulative, distance);
-    if (point) context.lineTo(point.x, point.y);
+  // Retain every provider bend between the clipped endpoints. Fixed-distance
+  // sampling drew chords across short bends and could leave the river line.
+  let low = 1, high = cumulative.length;
+  while (low < high) { const middle = (low + high) >>> 1; if (cumulative[middle] <= start) low = middle + 1; else high = middle; }
+  for (let index = low; index < points.length && cumulative[index] < head; index++) {
+    context.lineTo(points[index].x, points[index].y);
   }
   context.lineTo(tip.x, tip.y);
   context.lineWidth = width;
@@ -176,10 +179,12 @@ export function drawWaterMotionCanvas(
     const firstArrow = length < 30 ? length / 2 : moving && animateDirection ? 3 + offset : 16;
     for (let distance = firstArrow; distance < length - 3; distance += spacing) {
       const position = pointAlong(points, cumulative, distance);
-      if (!position || position.x < -20 || position.y < -20 || position.x > width + 20 || position.y > height + 20) continue;
+      if (!position) continue;
       if (moving && animateDirection) {
         luminousTrail(context, points, cumulative, distance, visualScale);
       }
+      // The tail may still be visible after its head leaves the viewport.
+      if (position.x < -20 || position.y < -20 || position.x > width + 20 || position.y > height + 20) continue;
       context.translate(position.x, position.y);
       context.rotate(position.angle);
       context.beginPath();

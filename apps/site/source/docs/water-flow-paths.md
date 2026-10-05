@@ -1,5 +1,31 @@
 # Water-flow paths and terrain context
 
+## Local rendering repair — 2026-10-05
+
+River trails retain every mapped vertex between their endpoints, rather than
+sampling every seven screen pixels and cutting across tight bends. A trailing
+segment remains drawable when its arrowhead leaves the viewport. Missing/zero
+readings, reduced motion, and illustrative-speed labels remain unchanged.
+
+The 3DHP image layer requests 512-pixel images with a matching renderer tile size,
+reducing four image requests to one for an equivalent aligned area at the same
+ground pixel resolution. USGS layers 50 and 60 advertise a 1:300,000 minimum
+scale; the layer now starts at map zoom 10 and uses the existing zoom guidance
+and controls. Both zoom buttons use the selected source minimum. Other sources
+retain their tile sizes. No new source, geometry simplification, data activation,
+or provider cache freshness claim is introduced.
+
+A local provider probe near Ellsworth compared four concurrent 256-pixel images
+with one 512-pixel image over the same area: 1.206 s versus 0.831 s, with valid
+PNG dimensions. This single sample demonstrates compatibility, not a sustained
+performance guarantee. Provider details: https://3dhp.nationalmap.gov/arcgis/rest/services/usgs_3dhp_all/MapServer?f=pjson
+
+These edits belong to the existing Site application, tests, and documentation
+responsibilities. Browser visual acceptance remains unverified because browser
+access was rejected by the admin security check. Hosted deployment is separate.
+Rollback is the preceding local candidate aa10a86 and its retained build; no
+DB/R2 data changes are required.
+
 ## Progressive direction loading — 2026-10-05
 
 The selected-gauge map now requests a bounded NDJSON stream from the existing

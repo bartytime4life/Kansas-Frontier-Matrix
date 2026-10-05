@@ -102,6 +102,15 @@ test("opacity changes do not re-upload provider data or create disabled raster s
   context.applyOfficialContextState(map,{...visibility,"usgs-3dep-hillshade":true},opacity,payloads);
   const source=sources.get("external-usgs-3dep-hillshade");assert.equal(source.minzoom,context.TERRAIN_DISPLAY_MIN_ZOOM);assert.equal(source.maxzoom,context.TERRAIN_DISPLAY_MAX_ZOOM);assert.match(source.tiles[0],/^\/api\/terrain-tile\?/);
   const terrainLayer=layers.get("external-usgs-3dep-hillshade-raster");assert.equal(terrainLayer.minzoom,context.TERRAIN_DISPLAY_MIN_ZOOM);assert.equal(terrainLayer.paint["raster-fade-duration"],0);
+  context.applyOfficialContextState(map,{...visibility,"usgs-3dhp-hydrography":true},opacity,payloads);
+  const hydro = sources.get("external-usgs-3dhp-hydrography");
+  assert.equal(hydro.tileSize,512);
+  assert.equal(new URL(hydro.tiles[0]).searchParams.get("size"),"512,512");
+  assert.equal(hydro.minzoom,10);
+  assert.equal(layers.get("external-usgs-3dhp-hydrography-raster").minzoom,10);
+  const retained = hydro;
+  context.applyOfficialContextState(map,{...visibility,"usgs-3dhp-hydrography":true},{...opacity,"usgs-3dhp-hydrography":0.4},payloads);
+  assert.equal(sources.get("external-usgs-3dhp-hydrography"),retained);
   activeProjection={type:"globe"};
   context.applyOfficialContextState(map,{...visibility,"usgs-3dep-hillshade":true},opacity,payloads);
   assert.equal(terrainLayer.layout.visibility,"none");
