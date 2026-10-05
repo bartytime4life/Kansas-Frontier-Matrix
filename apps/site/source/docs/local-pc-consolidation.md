@@ -1,5 +1,35 @@
 # Local Explorer consolidation — 2026-10-02
 
+## Local operation checkpoint — 2026-10-05
+
+The source-alignment session installed Site v153 from
+`da94de300c1b20dc98e9f527ba54613cfd696f8b`. The stable
+`~/Projects/KFM-Explorer-Site-current` alias selected that source, while the
+service's explicit storage argument remained
+`~/Projects/KFM-Explorer-Site-v109/.wrangler/local-state`. These paths have
+different responsibilities: changing the source alias does not move the store.
+The stopped-service backup is
+`~/Projects/KFM-Explorer-local-state-pre-v153-20261005`. Preserve both the
+physical store and its backup; an older folder name does not make data obsolete.
+
+Resolve the current source with `readlink -f` and inspect the effective
+`systemctl --user cat kfm-explorer-local.service` before any further update.
+Use its physical `--state` argument; do not substitute the new source folder's
+empty `.wrangler` directory. Keep origin `http://127.0.0.1:4173` to retain
+device-local Places, reports, stories and the reviewed-imagery read exception.
+
+The direct launcher requires Node 22.13 or a later 22.x release. It now refuses
+both `.env` / `.env.*` and `.dev.vars` / `.dev.vars.*` without reading their
+contents. Previously it could silently ignore dotenv configuration that Wrangler
+would load. Reconcile those settings explicitly before selecting a runtime.
+Do not rename or remove secret files just to make the startup check pass.
+
+Local pages and held governed reads were reachable at the start of this audit;
+`NO_APPROVED_SNAPSHOT`, `NO_APPROVED_KNOWLEDGE`, and `NO_APPROVED_SOIL_PACKAGE`
+are successful withheld responses, not missing observations or broken routes.
+Application HTTP availability does not prove map rendering or evidence release.
+The sections below retain their dated implementation and recovery history.
+
 This local candidate starts from the authoritative Site v134 source
 `daf4905a8216103ecfcde5c0b8fe09b3cca5eb52` and reconciles the Site application in
 repository main `7d38bc5e906523dd0d666ee97af2a86130485390`. The common Site
@@ -150,7 +180,7 @@ same-origin requests continue to the unchanged application authorization.
 
 Startup rejects changed storage identities, unsupported module rules,
 additional Worker bindings, symlinked build/state paths, unexpected runtime
-versions, and `.dev.vars` files requiring configuration review. A future
+versions, and `.env` / `.dev.vars` files requiring configuration review. A future
 runtime/configuration change must be explicitly reconciled and retested.
 Generated build modules are enumerated within bounded depth, size and count.
 The launcher logs readiness, pinned versions, configuration and entry digests;

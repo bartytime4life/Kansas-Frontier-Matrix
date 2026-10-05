@@ -1,5 +1,31 @@
 # Water-flow paths and terrain context
 
+## Local rendering repair — 2026-10-05
+
+River trails retain every mapped vertex between their endpoints, rather than
+sampling every seven screen pixels and cutting across tight bends. A trailing
+segment remains drawable when its arrowhead leaves the viewport. Missing/zero
+readings, reduced motion, and illustrative-speed labels remain unchanged.
+
+The 3DHP image layer requests 512-pixel images with a matching renderer tile size,
+reducing four image requests to one for an equivalent aligned area at the same
+ground pixel resolution. USGS layers 50 and 60 advertise a 1:300,000 minimum
+scale; the layer now starts at map zoom 10 and uses the existing zoom guidance
+and controls. Both zoom buttons use the selected source minimum. Other sources
+retain their tile sizes. No new source, geometry simplification, data activation,
+or provider cache freshness claim is introduced.
+
+A local provider probe near Ellsworth compared four concurrent 256-pixel images
+with one 512-pixel image over the same area: 1.206 s versus 0.831 s, with valid
+PNG dimensions. This single sample demonstrates compatibility, not a sustained
+performance guarantee. Provider details: https://3dhp.nationalmap.gov/arcgis/rest/services/usgs_3dhp_all/MapServer?f=pjson
+
+These edits belong to the existing Site application, tests, and documentation
+responsibilities. Browser visual acceptance remains unverified because browser
+access was rejected by the admin security check. Hosted deployment is separate.
+Rollback is the preceding local candidate aa10a86 and its retained build; no
+DB/R2 data changes are required.
+
 ## Progressive direction loading — 2026-10-05
 
 The selected-gauge map now requests a bounded NDJSON stream from the existing
@@ -105,3 +131,42 @@ lavender falling, mint steady, amber measured zero, slate unavailable.
 Validation: 376 automated tests, TypeScript and production build pass. The required
 control-browser skill is absent from the available skill catalog, so browser
 visual acceptance remains unverified; no alternate browser path was used.
+
+## Missing station dots during USGS rate limiting — 2026-10-05
+
+A local network request returned 502; a direct USGS check confirmed HTTP 429
+with OVER_RATE_LIMIT. This is independent of the 3DHP image zoom threshold.
+The adapter now exposes HTTP 429 and Retry-After and holds further calls within
+that worker for the bounded provider cooldown (five minutes by default, up to
+one day). Other failures retain their existing handling.
+
+Successful recent-network loads now save only validated station locations in
+optional device-local storage. On a failed fresh load, locations captured within
+seven days may return as missing-value markers; observations are stripped,
+original retrieval time retained, and motion remains stopped. Malformed, future,
+expired, or oversized saved data is rejected. There is no bundled synthetic
+inventory and no recovery promise for browsers that never saved a successful
+load. A provider recovery is still required for fresh readings and animation.
+
+Regression tests cover cooldown request suppression and retained station dots
+without values. This does not change source admission or hosted data storage.
+Rollback: preceding local source fb6bd1e and its retained build; optional key
+`kfm-river-station-locations-v1` may be removed without affecting source data.
+
+## USGS request capacity and local key setup
+
+The same worker now reuses a validated network bundle for 15 minutes, retaining
+its original query and retrieval times. Multiple page reloads no longer repeat
+statewide acquisition during that interval. A bounded in-memory cache is neither
+a new observation nor durable storage. This reduces load but cannot override
+an existing provider rate limit or guarantee capacity across worker instances.
+
+Free key registration: https://api.waterdata.usgs.gov/signup/
+The local launcher optionally reads `~/.config/kfm/usgs-water-api-key` as an
+owner-only regular file (0600), at most 256 bytes, outside the application.
+The key is injected into the worker binding `USGS_WATER_API_KEY` and sent only
+in the `X-Api-Key` header to fixed USGS URLs. Redirects remain refused. Do not
+commit the file, paste its contents into chat, or put it in a request URL.
+Restart the local service after saving the emailed key. Hosted secret setup is
+separate. Missing keys retain anonymous behavior; invalid files fail startup.
+No key has been provisioned or authenticated as part of this change.

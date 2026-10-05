@@ -1,3 +1,4 @@
+import { env } from "cloudflare:workers";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -102,11 +103,15 @@ class UsgsUpstreamError extends Error {
   }
 }
 
+class UsgsRateLimitError extends Error {}
+let upstreamRetryAt = 0;
+
 class StationNotFoundError extends Error {}
 
 class NetworkBudgetExceeded extends Error {}
 type NetworkBudget = { deadline: number; remainingBytes: number; exhausted: boolean };
 let networkInFlight = false;
+let networkCache: { body: string; expiresAt: number } | null = null;
 
 const isRecord = (value: unknown): value is JsonRecord => (
   Boolean(value) && typeof value === "object" && !Array.isArray(value)
@@ -285,6 +290,7 @@ const parseCollection = (value: unknown): Collection => {
 
 const fetchCollection = async (url: URL, budget?: NetworkBudget): Promise<Collection> => {
   assertFixedUpstream(url);
+  if (Date.now() < upstreamRetryAt) throw new UsgsRateLimitError();
   if (budget && (budget.exhausted || Date.now() >= budget.deadline)) {
     budget.exhausted = true;
     throw new NetworkBudgetExceeded("USGS network request reached its aggregate work budget.");
@@ -299,8 +305,15 @@ const fetchCollection = async (url: URL, budget?: NetworkBudget): Promise<Collec
       headers: {
         Accept: "application/geo+json,application/json;q=0.9",
         "User-Agent": USER_AGENT,
+        ...((env as { USGS_WATER_API_KEY?: string }).USGS_WATER_API_KEY ? { "X-Api-Key": (env as { USGS_WATER_API_KEY: string }).USGS_WATER_API_KEY } : {}),
       },
     });
+    if (response.status === 429) {
+      const retry = response.headers.get("Retry-After");
+      const seconds = retry && /^\d+$/.test(retry) ? Number(retry) : retry ? (Date.parse(retry) - Date.now()) / 1000 : 300;
+      upstreamRetryAt = Date.now() + Math.min(86400, Math.max(300, Number.isFinite(seconds) ? seconds : 300)) * 1000;
+      throw new UsgsRateLimitError();
+    }
     if (!response.ok) throw new UsgsUpstreamError(`USGS Water Data returned HTTP ${response.status}.`);
     const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
     if (!contentType.includes("json")) throw new UsgsUpstreamError("USGS Water Data returned an unexpected media type.");
@@ -313,6 +326,7 @@ const fetchCollection = async (url: URL, budget?: NetworkBudget): Promise<Collec
     }
     return parseCollection(parsed);
   } catch (error) {
+    if (error instanceof UsgsRateLimitError) throw error;
     if (error instanceof NetworkBudgetExceeded) throw error;
     if (error instanceof UsgsUpstreamError) throw error;
     if (error instanceof Error && error.name === "AbortError") {
@@ -822,6 +836,10 @@ const errorResponse = (status: number, code: string, message: string) => NextRes
 export async function GET(request: NextRequest) {
   try {
     const query = parseQuery(request);
+    if (query.mode === "network" && networkCache && Date.now() < networkCache.expiresAt) {
+      return new Response(networkCache.body, { headers: { "Content-Type": "application/json", "Cache-Control": "no-store", "X-KFM-Network-Cache": "HIT" } });
+    }
+    if (Date.now() < upstreamRetryAt) throw new UsgsRateLimitError();
     const queryEndDate = query.archiveEnd ? new Date(query.archiveEnd) : new Date();
     const queryEnd = queryEndDate.toISOString();
     const queryStart = subtractRange(queryEndDate, query.range).toISOString();
@@ -831,7 +849,11 @@ export async function GET(request: NextRequest) {
     let bundle;
     if (query.mode === "network") {
       networkInFlight = true;
-      try { bundle = await networkBundle(query, queryStart, queryEnd); }
+      try {
+        bundle = await networkBundle(query, queryStart, queryEnd);
+        const body = JSON.stringify(bundle);
+        if (body.length <= 24 * 1024 * 1024) networkCache = { body, expiresAt: Date.now() + 15 * 60_000 };
+      }
       finally { networkInFlight = false; }
     } else bundle = await stationBundle(query, queryStart, queryEnd);
     return NextResponse.json(bundle, {
@@ -839,6 +861,11 @@ export async function GET(request: NextRequest) {
       headers: successfulHeaders(cacheSeconds(query)),
     });
   } catch (error) {
+    if (error instanceof UsgsRateLimitError || Date.now() < upstreamRetryAt && error instanceof UsgsUpstreamError) {
+      const response = errorResponse(429, "USGS_STREAMFLOW_RATE_LIMITED", "USGS temporarily limited requests. Current readings and flow motion are unavailable. Retry after the provider cooldown.");
+      response.headers.set("Retry-After", String(Math.max(1, Math.ceil((upstreamRetryAt - Date.now()) / 1000))));
+      return response;
+    }
     if (error instanceof NetworkBudgetExceeded) {
       return errorResponse(503, "USGS_STREAMFLOW_BUDGET_EXCEEDED", "The statewide source request reached its work limit before a usable inventory was captured.");
     }

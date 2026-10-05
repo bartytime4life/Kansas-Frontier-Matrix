@@ -3,14 +3,16 @@ doc_id: kfm://doc/runbook-atmosphere-validation
 title: Atmosphere Validation Runbook
 type: standard
 profile: repository-grounded-bounded-fixture-validation
-version: v1.0
+version: v1.0.1
 prior_version: proposed-scaffold
 status: draft; repository-grounded; fixture-first; broader-validation-hold; non-authoritative; non-publisher; not-for-life-safety
 owners:
   - "@bartytime4life — verified GitHub review route only"
 owner_status: "Atmosphere, validation, evidence, policy, source-rights, sensitivity, Hazards-seam, review, release, and operations assignments remain NEEDS VERIFICATION; CODEOWNERS routing does not create those authorities."
-created: NEEDS VERIFICATION — scaffold predates this repository-grounded replacement
-updated: 2026-08-24
+created: 2026-05-19
+creation_basis: First tracked addition at bb6cbad6b0edfddf470bfa8880ae351501c0b22a; earlier draft creation remains UNKNOWN.
+updated: 2026-10-05
+maintenance_scope: Metadata grammar and local navigation only; earlier substantive evidence snapshots are not refreshed.
 policy_label: public; atmosphere; validation; fixture-first; no-network; non-release; not-for-life-safety
 current_path: docs/runbooks/atmosphere/VALIDATION_RUNBOOK.md
 owning_root: docs/
@@ -118,7 +120,7 @@ notes:
 > [!CAUTION]
 > **Default execution is no-network and fixture-only.** Do not add credentials, contact live EPA, KDHE, NOAA/NWS, Kansas Mesonet, community-sensor, satellite, model, or other upstream services, or point a test at production data merely to make this procedure feel realistic. Live-source admission and operational validation are separate governed work.
 
-**Quick navigation:** [Purpose](#1-purpose-scope-and-non-goals) · [Authority](#2-authority-placement-and-current-evidence) · [Model](#3-validation-model-and-state-separation) · [Guardrails](#4-atmosphere-validation-invariants) · [Preflight](#5-preflight-and-mandatory-stop-conditions) · [Modes](#6-supported-validation-modes) · [Profiles](#7-current-executable-profile-inventory) · [Core procedure](#8-core-domain-validation-procedure) · [Specialty procedure](#9-specialty-profile-procedures) · [Reports](#10-validationreport-and-domainvalidationreport-boundary) · [Outcomes](#11-outcome-and-evidence-labels) · [CI](#12-hosted-ci-and-exact-head-evidence) · [Handoff](#13-review-handoff-packet) · [Troubleshooting](#14-troubleshooting-and-failure-classification) · [Sensitive boundaries](#15-rights-sensitivity-security-and-life-safety) · [Release boundary](#16-proof-policy-review-and-release-boundary) · [Open work](#17-current-holds-and-open-verification) · [Maintenance](#18-maintenance-correction-and-document-rollback) · [Checklist](#appendix-a-operator-checklist) · [Command matrix](#appendix-b-command-and-path-matrix) · [Anti-patterns](#appendix-c-anti-patterns)
+**Quick navigation:** [Purpose](#1-purpose-scope-and-non-goals) · [Authority](#2-authority-placement-and-current-evidence) · [Model](#3-validation-model-and-state-separation) · [Guardrails](#4-atmosphere-validation-invariants) · [Preflight](#5-preflight-and-mandatory-stop-conditions) · [Modes](#6-supported-validation-modes) · [Profiles](#7-current-executable-profile-inventory) · [Core procedure](#8-core-domain-validation-procedure) · [Specialty procedure](#9-specialty-profile-procedures) · [Reports](#10-validationreport-and-domainvalidationreport-boundary) · [Outcomes](#11-outcome-and-evidence-labels) · [CI](#12-hosted-ci-and-exact-head-evidence) · [Handoff](#13-review-handoff-packet) · [Troubleshooting](#14-troubleshooting-and-failure-classification) · [Sensitive boundaries](#15-rights-sensitivity-security-and-life-safety) · [Release boundary](#16-proof-policy-review-and-release-boundary) · [Open work](#17-current-holds-and-open-verification) · [Maintenance](#18-maintenance-correction-and-document-rollback) · [Checklist](#appendix-a--operator-checklist) · [Command matrix](#appendix-b--command-and-path-matrix) · [Anti-patterns](#appendix-c--anti-patterns)
 
 ---
 

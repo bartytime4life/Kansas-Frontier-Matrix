@@ -25,7 +25,7 @@ async function routeWithLimits(byteCap, observationCap = 100_000, deadlineMs = 6
     .replace('const NETWORK_OBSERVATION_CAP = 100_000;', `const NETWORK_OBSERVATION_CAP = ${observationCap};`)
     .replace('const NETWORK_DEADLINE_MS = 60_000;', `const NETWORK_DEADLINE_MS = ${deadlineMs};`);
   assert.match(source, new RegExp(`NETWORK_RESPONSE_BYTES_CAP = ${byteCap}`));
-  const js = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText
+  const js = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText.replace('import { env } from "cloudflare:workers";', 'const env = { USGS_WATER_API_KEY: "test-key-only-not-a-real-key" };')
     .replace('from "next/server"', `from ${JSON.stringify(pathToFileURL(path.resolve('node_modules/next/server.js')).href)}`);
   return (await import(`data:text/javascript;base64,${Buffer.from(js).toString('base64')}`)).GET;
 }

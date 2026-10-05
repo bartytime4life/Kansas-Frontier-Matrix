@@ -43,6 +43,7 @@ export type OfficialContextSource = Readonly<{
   mapUrl?: string;
   minDisplayZoom?: number;
   maxNativeZoom?: number;
+  tileSize?: 256 | 512;
   legend?: string;
   legendUrl?: string;
   endpointLabel: string;
@@ -191,6 +192,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     fallback: "Sentinel values, invalid dates, missing geometry, and failed requests are withheld. A missing or stale NOAA record is never shown as normal, safe, or zero flow.",
   }),
   Object.freeze({
+    minDisplayZoom: 10, tileSize: 512,
     id: "usgs-3dhp-hydrography",
     title: "USGS 3D Hydrography Program network",
     shortTitle: "3DHP hydrography",
@@ -200,7 +202,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     sourceId: "external-usgs-3dhp-hydrography",
     layerIds: Object.freeze(["external-usgs-3dhp-hydrography-raster"]),
     interactiveLayerIds: Object.freeze([]),
-    mapUrl: "https://3dhp.nationalmap.gov/arcgis/rest/services/usgs_3dhp_all/MapServer/export?bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&size=256%2C256&format=png32&transparent=true&layers=show%3A50%2C60&f=image",
+    mapUrl: "https://3dhp.nationalmap.gov/arcgis/rest/services/usgs_3dhp_all/MapServer/export?bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&size=512%2C512&format=png32&transparent=true&layers=show%3A50%2C60&f=image",
     endpointLabel: "3dhp.nationalmap.gov · usgs_3dhp_all flowlines + waterbodies",
     sourceUrl: "https://3dhp.nationalmap.gov/arcgis/rest/services/usgs_3dhp_all/MapServer",
     serviceUrl: "https://www.usgs.gov/3d-hydrography-program",
@@ -922,7 +924,7 @@ export const applyOfficialContextState = (
     if (!visibility[raster.id] && !map.getSource(raster.sourceId)) continue;
     const terrainDisplay = raster.id === "usgs-3dep-hillshade" || raster.id === "usgs-3dep-slope";
     if (!map.getSource(raster.sourceId)) map.addSource(raster.sourceId, {
-      type: "raster", tiles: [raster.mapUrl!], tileSize: 256, attribution: raster.attribution,
+      type: "raster", tiles: [raster.mapUrl!], tileSize: raster.tileSize ?? 256, attribution: raster.attribution,
       ...(raster.id === "nasa-lightning-climatology" ? {} : { bounds: [...([...KANSAS_REFERENCE_SOURCES, ...AQUIFER_RASTER_SOURCES].some(source => source.id === raster.id) || raster.id.startsWith("blm-") ? KANSAS_REFERENCE_BOUNDS : [-104.8, 34.8, -92, 42.2])] as [number, number, number, number] }),
       // BLM source-layer minScale: township 1:4m, section 1:500k, intersected 1:200k.
       minzoom: raster.minDisplayZoom ?? (raster.id === "nasa-lightning-climatology" ? 0 : terrainDisplay ? TERRAIN_DISPLAY_MIN_ZOOM : 3),

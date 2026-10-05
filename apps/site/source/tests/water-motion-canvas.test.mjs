@@ -17,11 +17,12 @@ function draw(length, elapsedMs, animateDirection, value = 10, options = {}) {
   const rings = [];
   let strokes = 0;
   const trailLengths = [];
+  const trailVertices = [];
   const context = {
     setTransform() {}, clearRect() {}, save() {}, restore() {}, beginPath() {},
     arc(_x, _y, radius) { rings.push(radius); },
-    moveTo(x) { this.startX = x; this.lastX = x; }, lineTo(x) { this.lastX = x; },
-    stroke() { strokes += 1; if (this.strokeStyle?.startsWith("rgba(231, 255, 249")) trailLengths.push(this.lastX - this.startX); },
+    moveTo(x, y) { this.startX = x; this.lastX = x; this.vertices = [[x, y]]; }, lineTo(x, y) { this.lastX = x; this.vertices.push([x, y]); },
+    stroke() { strokes += 1; if (this.strokeStyle?.startsWith("rgba(231, 255, 249")) { trailLengths.push(this.lastX - this.startX); trailVertices.push(this.vertices); } },
     setLineDash() {}, rotate() {},
     closePath() {}, fill() {}, translate(x, y) { arrows.push([x, y]); },
   };
@@ -41,7 +42,7 @@ function draw(length, elapsedMs, animateDirection, value = 10, options = {}) {
   } finally {
     globalThis.window = priorWindow;
   }
-  return { arrows, rings, strokes, trailLengths };
+  return { arrows, rings, strokes, trailLengths, trailVertices };
 }
 
 test("mapped downstream arrows move while the observation frame is paused", () => {
@@ -89,4 +90,16 @@ test("zero and missing gauges have stationary marks and no downstream arrows", (
     assert.deepEqual(first.arrows, []);
     assert.deepEqual(first.trailLengths, []);
   }
+});
+
+
+test("trails preserve tight provider bends instead of drawing chords", () => {
+  const result = draw(100, 400, true, 10, { coordinates: [[0,40],[4,40],[4,44],[8,44],[8,40],[100,40]] });
+  assert.ok(result.trailVertices.some(vertices => [[4,40],[4,44],[8,44],[8,40]].every(point => vertices.some(v => v[0] === point[0] && v[1] === point[1]))));
+});
+
+test("a visible tail survives when its leading arrow is outside the viewport", () => {
+  const result = draw(400, 4400, true, 10, { width: 200 });
+  assert.equal(result.arrows.length, 0);
+  assert.ok(result.trailLengths.some(length => length >= 200));
 });

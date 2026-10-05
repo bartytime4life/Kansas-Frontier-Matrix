@@ -244,6 +244,8 @@ import { isNoaaSatelliteManifest, NOAA_SATELLITE_FRAMES_PATH, type NoaaSatellite
 import {
   buildStreamflowFrame,
   streamflowContextPayload,
+  savedStreamflowLocations,
+  restoreStreamflowLocations,
   normalizeUsgsStationId,
   parseStreamflowBundle,
   streamflowDisplayFrames,
@@ -2876,6 +2878,9 @@ export default function Home() {
         ? frames.reduce((matched, frame, index) => Date.parse(frame) <= Date.parse(requestedTime) ? index : matched, -1)
         : -1;
       streamflowRequestedTimeRef.current = null;
+      if (!archiveDay && requestedRange === "24h") {
+        try { localStorage.setItem("kfm-river-station-locations-v1", savedStreamflowLocations(bundle)); } catch { /* Optional location cache. */ }
+      }
       streamflowBundleRef.current = bundle;
       setStreamflowBundle(bundle);
       setStreamflowRange(requestedRange);
@@ -2891,6 +2896,12 @@ export default function Home() {
       if (controller.signal.aborted || generation !== streamflowRequestGenerationRef.current) return;
       const message = error instanceof Error ? error.message : "The USGS streamflow request failed.";
       setStreamflowPlaying(false);
+      if (!streamflowBundleRef.current && !archiveDay && requestedRange === "24h") {
+        try {
+          const locations = restoreStreamflowLocations(localStorage.getItem("kfm-river-station-locations-v1"));
+          if (locations) { streamflowBundleRef.current = locations; setStreamflowBundle(locations); setStreamflowFrameIndex(-1); }
+        } catch { /* No saved locations are available. */ }
+      }
       setStreamflowState(streamflowBundleRef.current ? "stale" : "error");
       setStreamflowError(message);
       setOfficialStates((current) => ({ ...current, "usgs-streamflow": "error" }));
@@ -8240,7 +8251,7 @@ export default function Home() {
                   </details>}
                   <button type="button" onClick={() => setWindArrowReloadToken(value => value + 1)} disabled={!officialVisibility[source.id] || windArrowState === "LOADING" || heldAtFrame}>Refresh wind forecast</button>
                 </div>}
-                <div className="official-context-actions"><button type="button" onClick={() => { setSourceStatusOpen(true); setLeftOpen(false); }}>Source details & quality</button>{needsCloserView && <button type="button" onClick={() => { mapRef.current?.easeTo({ zoom: TERRAIN_DISPLAY_MIN_ZOOM + 0.25, duration: motionDuration(600) }); announce(`${source.shortTitle}: zoomed in to its display range`); }}>Zoom to view</button>}{["usgs-streamflow", "noaa-hms-smoke", "raspberry-shake-stations", "usgs-earthquakes", "nws-radar", "census-counties"].includes(source.id) && <Link href={`/observatory?layers=${({ "usgs-streamflow": "river", "noaa-hms-smoke": "smoke", "raspberry-shake-stations": "shake", "usgs-earthquakes": "earthquakes", "nws-radar": "radar", "census-counties": "counties" } as Record<string,string>)[source.id]},counties`}>Explore dated records ↗</Link>}</div>
+                <div className="official-context-actions"><button type="button" onClick={() => { setSourceStatusOpen(true); setLeftOpen(false); }}>Source details & quality</button>{needsCloserView && <button type="button" onClick={() => { mapRef.current?.easeTo({ zoom: minimumZoom + 0.25, duration: motionDuration(600) }); announce(`${source.shortTitle}: zoomed in to its display range`); }}>Zoom to view</button>}{["usgs-streamflow", "noaa-hms-smoke", "raspberry-shake-stations", "usgs-earthquakes", "nws-radar", "census-counties"].includes(source.id) && <Link href={`/observatory?layers=${({ "usgs-streamflow": "river", "noaa-hms-smoke": "smoke", "raspberry-shake-stations": "shake", "usgs-earthquakes": "earthquakes", "nws-radar": "radar", "census-counties": "counties" } as Record<string,string>)[source.id]},counties`}>Explore dated records ↗</Link>}</div>
                 </div></details>
               </article>;
             })}{listedOfficialSources.length === 0 && <div className="catalog-empty"><strong>No sources found</strong><p>Try a provider or source name.</p></div>}</div>
