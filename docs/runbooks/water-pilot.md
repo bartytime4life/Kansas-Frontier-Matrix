@@ -277,6 +277,31 @@ not changed. Roll back the repository candidate by reverting its mirror commit
 and restoring the v139 receipt selector. Saved v139 remains a source recovery
 point; any future deployed rollback requires its own release review.
 
+## Saved Site v152 smoke repair candidate — 2026-10-05
+
+The [v152 mirror receipt](../../data/receipts/generated/site-mirror-v152-smoke-candidate-20261005.json)
+pins owner-private Site source `c7718fe5c8ee5f002c9ed522d16f4dcb48e51782`.
+Four changed paths preserve 370 tracked Site paths with no deletions. Checking
+a dated HMS smoke publication now opens at its first provider-supported
+footprint rather than the empty midnight stop; midnight remains available in
+the time sweep. The layer row distinguishes zero Kansas footprints in a checked
+window from a failed source. NOAA daily KML and the local API returned two
+Kansas polygons for 2026-10-02 and zero for 2026-10-04. This does not establish
+live-browser rendering. TypeScript, the production build and 383 Node tests
+passed on the exact v152 source. Lint had zero errors and 42 warnings. The
+repository topology ratchet reported no new drift. The dependency audit
+reported eight high development-dependency findings and zero production
+findings.
+
+At candidate capture, Site v152 was saved with an archive and not deployed.
+Following the owner's explicit deployment request, the private deployment
+`appgdep_6ac3b4f9d6c48191b47c3232b82a062c` succeeded on 2026-10-05 at
+14:32:39 UTC for the exact saved v152 version. V147 remains the previous
+deployed recovery version. Browser acceptance is still unverified because the
+admin-enforced security check was unavailable; v151 security follow-up, v152
+changed-area review, source provenance and repository review remain separate
+gates. Deployment did not activate a governed water release or admit a source.
+
 ## Saved Site v151 mirror candidate — 2026-10-04
 
 The [v151 mirror receipt](../../data/receipts/generated/site-mirror-v151-candidate-20261004.json)

@@ -78,6 +78,25 @@ export const smokeValidityTimes = (payload: OfficialContextPayload, day: string)
     .sort());
 };
 
+/** Open a checked publication at its first supported footprint, rather than
+ * the always-present midnight stop when the first analysis begins later. */
+export const smokeInitialFrameIndex = (payload: OfficialContextPayload, day: string): number => {
+  const times = smokeValidityTimes(payload, day);
+  if (!times.length) return -1;
+  const dayStart = `${day}T00:00:00.000Z`;
+  const dayEnd = new Date(Date.parse(dayStart) + UTC_DAY_MS).toISOString();
+  let first: string | null = null;
+  for (const feature of payload.data.features) {
+    const start = feature.properties?.start;
+    const end = feature.properties?.end;
+    if (typeof start !== "string" || typeof end !== "string") continue;
+    const candidate = start < dayStart ? dayStart : start;
+    const supported = start === end ? candidate === start : start <= candidate && candidate < end;
+    if (supported && candidate < dayEnd && (first === null || candidate < first)) first = candidate;
+  }
+  return first === null ? -1 : times.indexOf(first);
+};
+
 export const smokeValidAt = (original: OfficialContextPayload, day: string, cursor: string): OfficialContextPayload => {
   const startOfDay = `${day}T00:00:00.000Z`;
   const endOfDay = new Date(Date.parse(startOfDay) + 86_400_000).toISOString();

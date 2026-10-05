@@ -260,7 +260,7 @@ import { HydrologyObservatory,
   type HydrologyPlaybackSpeed,
   type HydrologyRange,
 } from "./hydrology-observatory";
-import { boundedUtcDay, datedSourceDisplayStatus, earthquakeEventTimes, earthquakesThroughEvent, smokeValidityTimes, smokeValidAt } from "./source-time";
+import { boundedUtcDay, datedSourceDisplayStatus, earthquakeEventTimes, earthquakesThroughEvent, smokeInitialFrameIndex, smokeValidityTimes, smokeValidAt } from "./source-time";
 import {
   NOAA_HYDROLOGY_NETWORK_API_PATH,
   noaaGaugeNetworkGeoJson,
@@ -3200,11 +3200,12 @@ export default function Home() {
       const payload = candidate as OfficialContextPayload;
       officialArchivePayloadsRef.current = { ...officialArchivePayloadsRef.current, [feed]: payload };
       const smokeTimes = feed === "noaa-hms-smoke" ? smokeValidityTimes(payload, day) : [];
-      const visiblePayload = feed === "noaa-hms-smoke" && smokeTimes.length ? smokeValidAt(payload, day, smokeTimes[0]) : payload;
+      const smokeFrameIndex = feed === "noaa-hms-smoke" ? smokeInitialFrameIndex(payload, day) : -1;
+      const visiblePayload = feed === "noaa-hms-smoke" && smokeFrameIndex >= 0 ? smokeValidAt(payload, day, smokeTimes[smokeFrameIndex]) : payload;
       officialPayloadsRef.current = { ...officialPayloadsRef.current, [feed]: visiblePayload };
       setOfficialPayloads(officialPayloadsRef.current);
       setOfficialStates((current) => ({ ...current, [feed]: payload.state }));
-      if (feed === "noaa-hms-smoke") setSmokeArchiveFrameIndex(smokeTimes.length ? 0 : -1);
+      if (feed === "noaa-hms-smoke") setSmokeArchiveFrameIndex(smokeFrameIndex);
       if (feed === "usgs-earthquakes") {
         const times = earthquakeEventTimes(payload, day);
         setEarthquakeArchiveFrameIndex(times.length - 1);
@@ -8138,7 +8139,7 @@ export default function Home() {
               const riverArchiveMinDay = riverArchiveSpan?.start.slice(0, 10);
               const riverArchiveMaxDay = riverArchiveSpan ? [currentUtcDay(), riverArchiveSpan.end.slice(0, 10)].sort()[0] : undefined;
               return <article key={source.id} className="official-context-row" data-state={state} data-visible={officialVisibility[source.id]} data-held={heldAtFrame}>
-                    <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.shortTitle}</strong><small>{source.organization}{source.kind === "HISTORICAL_RASTER" ? " · historical composite" : ""}{source.id === "noaa-goes-geocolor" && noaaSatelliteManifest ? ` · ${noaaSatelliteManifest.product === "visible" ? "GOES visible fallback" : "GeoColor"}` : ""} · {!officialVisibility[source.id] ? "off" : heldAtFrame ? !buildYearCurrent ? "held until site rebuild" : "held for this map time" : needsFlatMap ? "switch to flat map" : needsCloserView ? `zoom to ${minimumZoom}+` : source.id === "noaa-lightning-density" && state === "empty" ? `no density in view${lightningFrame ? ` · ${lightningFrame.slice(11, 16)} UTC` : ""}` : officialContextStateLabel(state).toLowerCase()}</small></div></div>
+                    <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.shortTitle}</strong><small>{source.organization}{source.kind === "HISTORICAL_RASTER" ? " · historical composite" : ""}{source.id === "noaa-goes-geocolor" && noaaSatelliteManifest ? ` · ${noaaSatelliteManifest.product === "visible" ? "GOES visible fallback" : "GeoColor"}` : ""} · {!officialVisibility[source.id] ? "off" : heldAtFrame ? !buildYearCurrent ? "held until site rebuild" : "held for this map time" : needsFlatMap ? "switch to flat map" : needsCloserView ? `zoom to ${minimumZoom}+` : source.id === "noaa-hms-smoke" && officialPayloads[source.id]?.featureCount === 0 ? `no Kansas footprints ${officialArchiveDays[source.id] ? "on selected day" : "in checked window"}${state === "partial" ? " · partial source" : ""}` : source.id === "noaa-lightning-density" && state === "empty" ? `no density in view${lightningFrame ? ` · ${lightningFrame.slice(11, 16)} UTC` : ""}` : officialContextStateLabel(state).toLowerCase()}</small></div></div>
                 {(needsCloserView || needsFlatMap || heldAtFrame || source.minDisplayZoom !== undefined) && <div className="reference-layer-guidance">
                   <small>{heldAtFrame ? "This source is held at the selected map year." : needsFlatMap ? "This regional image layer requires the flat map." : `Visible at zoom ${minimumZoom}+ · your view ${view.zoom.toFixed(1)}. Source dates vary.`}</small>
                   {heldAtFrame && buildYearCurrent && <button type="button" onClick={() => { setPlaying(false); commitTemporalFrame(OFFICIAL_CONTEXT_PRESENT_FRAME, "Returned to Present; each layer retains its own source dates"); }}>Use Present</button>}
