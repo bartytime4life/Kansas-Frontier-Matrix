@@ -1,3 +1,4 @@
+import { env } from "cloudflare:workers";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -110,6 +111,7 @@ class StationNotFoundError extends Error {}
 class NetworkBudgetExceeded extends Error {}
 type NetworkBudget = { deadline: number; remainingBytes: number; exhausted: boolean };
 let networkInFlight = false;
+let networkCache: { body: string; expiresAt: number } | null = null;
 
 const isRecord = (value: unknown): value is JsonRecord => (
   Boolean(value) && typeof value === "object" && !Array.isArray(value)
@@ -303,6 +305,7 @@ const fetchCollection = async (url: URL, budget?: NetworkBudget): Promise<Collec
       headers: {
         Accept: "application/geo+json,application/json;q=0.9",
         "User-Agent": USER_AGENT,
+        ...((env as { USGS_WATER_API_KEY?: string }).USGS_WATER_API_KEY ? { "X-Api-Key": (env as { USGS_WATER_API_KEY: string }).USGS_WATER_API_KEY } : {}),
       },
     });
     if (response.status === 429) {
@@ -833,6 +836,9 @@ const errorResponse = (status: number, code: string, message: string) => NextRes
 export async function GET(request: NextRequest) {
   try {
     const query = parseQuery(request);
+    if (query.mode === "network" && networkCache && Date.now() < networkCache.expiresAt) {
+      return new Response(networkCache.body, { headers: { "Content-Type": "application/json", "Cache-Control": "no-store", "X-KFM-Network-Cache": "HIT" } });
+    }
     if (Date.now() < upstreamRetryAt) throw new UsgsRateLimitError();
     const queryEndDate = query.archiveEnd ? new Date(query.archiveEnd) : new Date();
     const queryEnd = queryEndDate.toISOString();
@@ -843,7 +849,11 @@ export async function GET(request: NextRequest) {
     let bundle;
     if (query.mode === "network") {
       networkInFlight = true;
-      try { bundle = await networkBundle(query, queryStart, queryEnd); }
+      try {
+        bundle = await networkBundle(query, queryStart, queryEnd);
+        const body = JSON.stringify(bundle);
+        if (body.length <= 24 * 1024 * 1024) networkCache = { body, expiresAt: Date.now() + 15 * 60_000 };
+      }
       finally { networkInFlight = false; }
     } else bundle = await stationBundle(query, queryStart, queryEnd);
     return NextResponse.json(bundle, {

@@ -152,3 +152,21 @@ Regression tests cover cooldown request suppression and retained station dots
 without values. This does not change source admission or hosted data storage.
 Rollback: preceding local source fb6bd1e and its retained build; optional key
 `kfm-river-station-locations-v1` may be removed without affecting source data.
+
+## USGS request capacity and local key setup
+
+The same worker now reuses a validated network bundle for 15 minutes, retaining
+its original query and retrieval times. Multiple page reloads no longer repeat
+statewide acquisition during that interval. A bounded in-memory cache is neither
+a new observation nor durable storage. This reduces load but cannot override
+an existing provider rate limit or guarantee capacity across worker instances.
+
+Free key registration: https://api.waterdata.usgs.gov/signup/
+The local launcher optionally reads `~/.config/kfm/usgs-water-api-key` as an
+owner-only regular file (0600), at most 256 bytes, outside the application.
+The key is injected into the worker binding `USGS_WATER_API_KEY` and sent only
+in the `X-Api-Key` header to fixed USGS URLs. Redirects remain refused. Do not
+commit the file, paste its contents into chat, or put it in a request URL.
+Restart the local service after saving the emailed key. Hosted secret setup is
+separate. Missing keys retain anonymous behavior; invalid files fail startup.
+No key has been provisioned or authenticated as part of this change.

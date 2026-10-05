@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /** Serve the built Site on loopback using the lockfile's local Worker runtime. */
 import { createHash } from "node:crypto";
-import { lstatSync, mkdtempSync, readFileSync, readdirSync, realpathSync, rmSync } from "node:fs";
+import { openSync, closeSync, fstatSync, constants, lstatSync, mkdtempSync, readFileSync, readdirSync, realpathSync, rmSync } from "node:fs";
 import { createRequire } from "node:module";
-import { tmpdir } from "node:os";
+import { homedir, tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -12,6 +12,19 @@ const versions = { wrangler: "4.127.1", miniflare: "5.20260828.0-alpha" };
 const fail = (code) => { throw new Error(code); };
 const equal = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 const populated = (value) => value && (typeof value !== "object" || Object.values(value).some(populated));
+
+export function readUsgsApiKey(file = path.join(homedir(), ".config/kfm/usgs-water-api-key")) {
+  let descriptor;
+  try { descriptor = openSync(file, constants.O_RDONLY | constants.O_NOFOLLOW); }
+  catch (error) { if (error.code === "ENOENT") return null; fail("USGS_KEY_FILE_UNSAFE"); }
+  try {
+    const info = fstatSync(descriptor);
+    if (!info.isFile() || info.uid !== process.getuid() || (info.mode & 0o077) || info.size > 256) fail("USGS_KEY_FILE_UNSAFE");
+    const key = readFileSync(descriptor, "utf8").trim();
+    if (!/^[A-Za-z0-9_-]{20,128}$/.test(key)) fail("USGS_KEY_FILE_INVALID");
+    return key;
+  } finally { closeSync(descriptor); }
+}
 
 export function parseArguments(args) {
   const result = { port: 4173, state: null, localReviewedImagery: false };
@@ -135,6 +148,8 @@ export async function serve(args = process.argv.slice(2)) {
   const { Miniflare, convertV4MiniflareOptions, Log, LogLevel } = runtimeRequire("miniflare");
   const translated = unstable_getMiniflareWorkerOptions(configPath);
   const worker = prepareWorker(translated, server, client, modules, settings.localReviewedImagery, settings.port);
+  const usgsKey = readUsgsApiKey();
+  if (usgsKey) worker.bindings.USGS_WATER_API_KEY = usgsKey;
   const temporary = mkdtempSync(path.join(tmpdir(), "kfm-local-worker-"));
   let runtime;
   let stopping;

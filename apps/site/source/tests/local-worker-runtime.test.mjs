@@ -7,7 +7,7 @@ import { spawn } from "node:child_process";
 import { request as httpRequest } from "node:http";
 import { createServer } from "node:net";
 import { fileURLToPath } from "node:url";
-import { assertNoLocalSecretFiles, checkedPath, collectModules, localEntry, parseArguments, prepareWorker, validateConfiguration } from "../scripts/serve-local-worker.mjs";
+import { readUsgsApiKey, assertNoLocalSecretFiles, checkedPath, collectModules, localEntry, parseArguments, prepareWorker, validateConfiguration } from "../scripts/serve-local-worker.mjs";
 
 const config = JSON.parse(readFileSync(new URL("../dist/server/wrangler.json", import.meta.url)));
 const hosting = JSON.parse(readFileSync(new URL("../.openai/hosting.json", import.meta.url)));
@@ -170,4 +170,19 @@ test("built local runtime survives abandoned denials and rejects forged authorit
     const timer = setTimeout(() => child.kill("SIGKILL"), 5000);
     try { assert.equal(await exited, 0); } finally { clearTimeout(timer); rmSync(directory, { recursive: true, force: true }); }
   }
+});
+
+
+test("USGS key file is optional, private, bounded and never follows symlinks", () => {
+  const root=mkdtempSync(path.join(tmpdir(),"kfm-usgs-key-"));
+  const file=path.join(root,"key");
+  try {
+    assert.equal(readUsgsApiKey(file),null);
+    writeFileSync(file,"test-key-only-not-a-real-key",{mode:0o600});
+    assert.equal(readUsgsApiKey(file),"test-key-only-not-a-real-key");
+    chmodSync(file,0o644);assert.throws(()=>readUsgsApiKey(file),/USGS_KEY_FILE_UNSAFE/);
+    chmodSync(file,0o600);symlinkSync(file,path.join(root,"link"));assert.throws(()=>readUsgsApiKey(path.join(root,"link")),/USGS_KEY_FILE_UNSAFE/);
+    writeFileSync(file,"x".repeat(257));assert.throws(()=>readUsgsApiKey(file),/USGS_KEY_FILE_UNSAFE/);
+    writeFileSync(file,"bad\nheader");assert.throws(()=>readUsgsApiKey(file),/USGS_KEY_FILE_INVALID/);
+  } finally { rmSync(root,{recursive:true,force:true}); }
 });

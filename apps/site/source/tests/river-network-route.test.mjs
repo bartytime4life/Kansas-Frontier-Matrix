@@ -4,8 +4,8 @@ import {pathToFileURL} from 'node:url';
 import path from 'node:path';
 import test from 'node:test';
 import ts from 'typescript';
-let js=ts.transpileModule(await readFile('app/api/hydrology/streamflow/route.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace('from "next/server"',`from ${JSON.stringify(pathToFileURL(path.resolve('node_modules/next/server.js')).href)}`);
-const {GET}=await import(`data:text/javascript;base64,${Buffer.from(js).toString('base64')}`);
+let js=ts.transpileModule(await readFile('app/api/hydrology/streamflow/route.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace('import { env } from "cloudflare:workers";', 'const env = { USGS_WATER_API_KEY: "test-key-only-not-a-real-key" };').replace('from "next/server"',`from ${JSON.stringify(pathToFileURL(path.resolve('node_modules/next/server.js')).href)}`);
+let {GET}=await import(`data:text/javascript;base64,${Buffer.from(js).toString('base64')}`);
 const time=new Date(Date.now()-600000).toISOString();
 const ids=Array.from({length:100},(_,i)=>`USGS-${String(6800000+i).padStart(8,'0')}`);
 const observation=(id,value=10)=>({type:'Feature',id,geometry:{type:'Point',coordinates:[-98,38]},properties:{time_series_id:id,monitoring_location_id:id,parameter_code:'00060',statistic_id:'00011',time,value,unit_of_measure:'ft^3/s',approval_status:'Provisional',qualifier:null,last_modified:time}});
@@ -13,8 +13,10 @@ const metadata=id=>({type:'Feature',id,geometry:{type:'Point',coordinates:[-98,3
 const collection=features=>Response.json({type:'FeatureCollection',features,numberReturned:features.length,links:[],timeStamp:time});
 const request=()=>({nextUrl:new URL('https://local/api/hydrology/streamflow?mode=network&range=24h')});
 async function run(failed=false){
+ ({GET}=await import(`data:text/javascript;base64,${Buffer.from(js+`\n//${Math.random()}`).toString("base64")}`));
  const original=globalThis.fetch;const batches=[];
- globalThis.fetch=async input=>{
+ globalThis.fetch=async (input,options)=>{
+  assert.equal(options.headers["X-Api-Key"],"test-key-only-not-a-real-key");
   const url=new URL(input);
   if(url.pathname.includes('latest-continuous')){const [a,b]=url.searchParams.get('datetime').split('/');assert.equal(Date.parse(b)-Date.parse(a),30*86400000);return collection(ids.map(id=>observation(id)));}
   if(url.pathname.includes('monitoring-locations'))return collection(url.searchParams.get('monitoring_location_number').split(',').map(n=>metadata('USGS-'+n)));
@@ -32,6 +34,7 @@ test('failed observation batch keeps its locations and healthy groups without in
 });
 
 test('provider rate limits are disclosed and repeated requests respect cooldown',async()=>{
+ ({GET}=await import(`data:text/javascript;base64,${Buffer.from(js+"\n//cooldown").toString("base64")}`));
  const original=globalThis.fetch;let calls=0;
  globalThis.fetch=async()=>{calls++;return new Response('',{status:429,headers:{'Retry-After':'600'}});};
  try {
@@ -40,4 +43,10 @@ test('provider rate limits are disclosed and repeated requests respect cooldown'
   assert.ok(Number(first.headers.get('Retry-After'))>=599);
   assert.equal((await GET(request())).status,429);assert.equal(calls,1);
  } finally {globalThis.fetch=original;}
+});
+
+test('network cache preserves original timestamps and avoids another provider fan-out',async()=>{
+ const {body}=await run();const original=globalThis.fetch;
+ globalThis.fetch=async()=>{throw new Error('cache must avoid upstream');};
+ try{const response=await GET(request());assert.equal(response.headers.get('X-KFM-Network-Cache'),'HIT');assert.deepEqual(await response.json(),body);}finally{globalThis.fetch=original;}
 });
