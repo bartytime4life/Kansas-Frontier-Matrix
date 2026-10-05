@@ -30,7 +30,7 @@ test("direction route expands the same river and returns derived elevations with
   try {
     const response = await GET(request()); assert.equal(response.status, 200);
     const guide = parseDownstreamGuide(await response.json());
-    assert.equal(guide.format, "kfm-3dhp-direction-v2"); assert.equal(calls, 3);
+    assert.equal(guide.format, "kfm-3dhp-direction-v3"); assert.equal(calls, 3);
     assert.equal(guide.analysis.segments, 2); assert.equal(guide.analysis.connectors, 1); assert.equal(guide.paths[0].hasConnectors, true);
     assert.equal(guide.analysis.elevation.dropM, 24); assert.equal(guide.analysis.elevation.samples.length, 25);
   } finally { globalThis.fetch = original; }
@@ -75,7 +75,7 @@ test("a nearby mapped segment arrives before the slow extension, then the full t
     assert.equal(response.headers.get("content-type"), "application/x-ndjson; charset=utf-8");
     assert.equal(response.headers.get("cache-control"), "no-store");
     let nearby;
-    const pending = readProgressiveDownstreamGuide(response, guide => { nearby = guide; releaseExtension(); }, new AbortController().signal);
+    const pending = readProgressiveDownstreamGuide(response, guide => { if (guide.format === "kfm-3dhp-direction-v2") nearby = guide; releaseExtension(); }, new AbortController().signal);
     const complete = await pending;
     assert.equal(nearby.state, "ready");
     assert.equal(nearby.analysis.segments, 1);
@@ -93,4 +93,22 @@ test("an incomplete or hostile direction stream cannot become a final path", asy
   await assert.rejects(readProgressiveDownstreamGuide(response('{"phase":"nearby","guide":{}}\n'), () => {}, signal));
   await assert.rejects(readProgressiveDownstreamGuide(response('x'.repeat(512 * 1024 + 1)), () => {}, signal));
   assert.equal((await GET(request("lon=-97.995&lat=38&stream=0"))).status, 400);
+});
+
+
+test("the extended network becomes drawable before delayed terrain samples", async () => {
+  const original=globalThis.fetch; let releaseTerrain;
+  const wait=new Promise(resolve=>{releaseTerrain=resolve;});let sawNetwork=false;
+  globalThis.fetch=async url=>{
+    if(new URL(url).hostname==="3dhp.nationalmap.gov") return Response.json({features:[first,second]});
+    await wait;return new Response("unavailable",{status:503});
+  };
+  try {
+    const response=await GET(request("lon=-97.995&lat=38&stream=1"));
+    const complete=await readProgressiveDownstreamGuide(response,guide=>{
+      if(guide.format==="kfm-3dhp-direction-v3") {sawNetwork=true;assert.ok(guide.analysis.upstreamM>0);releaseTerrain();}
+    },new AbortController().signal);
+    assert.equal(sawNetwork,true);assert.equal(complete.state,"ready");assert.equal(complete.analysis.elevation.state,"unavailable");
+    const forged=structuredClone(complete);forged.analysis.upstreamM=200000;assert.throws(()=>parseDownstreamGuide(forged));
+  } finally {releaseTerrain();globalThis.fetch=original;}
 });

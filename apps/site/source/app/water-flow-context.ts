@@ -8,7 +8,7 @@ export type DownstreamPath = Readonly<{
 }>;
 
 export type DownstreamGuide = Readonly<{
-  format: "kfm-3dhp-direction-v1" | "kfm-3dhp-direction-v2";
+  format: "kfm-3dhp-direction-v1" | "kfm-3dhp-direction-v2" | "kfm-3dhp-direction-v3";
   state: "ready" | "empty";
   paths: readonly DownstreamPath[];
   source: string;
@@ -44,7 +44,7 @@ export function boundedDirectionPaths(payload: unknown): DownstreamPath[] {
 export function parseDownstreamGuide(value: unknown): DownstreamGuide {
   if (!value || typeof value !== "object") throw new Error("Downstream guide is invalid.");
   const guide = value as Partial<DownstreamGuide>;
-  if (!["kfm-3dhp-direction-v1", "kfm-3dhp-direction-v2"].includes(String(guide.format))
+  if (!["kfm-3dhp-direction-v1", "kfm-3dhp-direction-v2", "kfm-3dhp-direction-v3"].includes(String(guide.format))
     || !["ready", "empty"].includes(String(guide.state))
     || !Array.isArray(guide.paths) || guide.paths.length > 20
     || typeof guide.source !== "string" || !guide.source.startsWith("https://3dhp.nationalmap.gov/")
@@ -54,7 +54,7 @@ export function parseDownstreamGuide(value: unknown): DownstreamGuide {
   for (const path of guide.paths) {
     if (!path || typeof path.id !== "string" || !/^[A-Za-z0-9]{1,16}$/.test(path.id)
       || !(path.hasConnectors === undefined || typeof path.hasConnectors === "boolean")
-      || !Array.isArray(path.coordinates) || path.coordinates.length < 2 || path.coordinates.length > (guide.format === "kfm-3dhp-direction-v2" ? 5000 : 300)
+      || !Array.isArray(path.coordinates) || path.coordinates.length < 2 || path.coordinates.length > (guide.format === "kfm-3dhp-direction-v3" ? 9999 : guide.format === "kfm-3dhp-direction-v2" ? 5000 : 300)
       || !path.coordinates.every((point: unknown) => {
         if (!Array.isArray(point) || point.length !== 2) return false;
         const [longitude, latitude] = point;
@@ -66,18 +66,22 @@ export function parseDownstreamGuide(value: unknown): DownstreamGuide {
     }
   }
   if ((guide.state === "ready") !== (guide.paths.length > 0)) throw new Error("Downstream guide state is inconsistent.");
-  if (guide.format === "kfm-3dhp-direction-v2") {
+  if (guide.format !== "kfm-3dhp-direction-v1") {
     if (guide.paths.length > 1 || (guide.state === "ready") !== Boolean(guide.analysis)) throw new Error("Downstream analysis is inconsistent.");
     const a = guide.analysis;
     if (a) {
       const finite = (v: unknown): v is number => typeof v === "number" && Number.isFinite(v);
-      if (!finite(a.lengthM) || a.lengthM < 1 || a.lengthM > 40001 || !finite(a.gaugeOffsetM) || a.gaugeOffsetM < 0 || a.gaugeOffsetM > 1200
-        || !Number.isInteger(a.segments) || a.segments < 1 || a.segments > 80 || !Number.isInteger(a.connectors) || a.connectors < 0 || a.connectors > a.segments || !(a.name === null || typeof a.name === "string" && a.name.length <= 160)
+      if (!finite(a.lengthM) || a.lengthM < 1 || a.lengthM > (guide.format === "kfm-3dhp-direction-v3" ? 200001 : 40001) || !finite(a.gaugeOffsetM) || a.gaugeOffsetM < 0 || a.gaugeOffsetM > 1200
+        || !Number.isInteger(a.segments) || a.segments < 1 || a.segments > (guide.format === "kfm-3dhp-direction-v3" ? 399 : 80) || !Number.isInteger(a.connectors) || a.connectors < 0 || a.connectors > a.segments || !(a.name === null || typeof a.name === "string" && a.name.length <= 160)
         || typeof a.stopReason !== "string" || a.stopReason.length > 500 || !a.elevation || !["ready", "partial", "unavailable"].includes(a.elevation.state)
         || !Array.isArray(a.elevation.samples) || a.elevation.samples.length > 25 || typeof a.elevation.notice !== "string"
         || a.elevation.source !== "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer/getSamples"
         || !(a.elevation.retrievedAt === null || typeof a.elevation.retrievedAt === "string" && Number.isFinite(Date.parse(a.elevation.retrievedAt)))
         || !(a.elevation.dropM === null || finite(a.elevation.dropM)) || !(a.elevation.slopePercent === null || finite(a.elevation.slopePercent))) throw new Error("Downstream analysis is invalid.");
+      if (guide.format === "kfm-3dhp-direction-v3" && (!finite(a.upstreamM) || !finite(a.downstreamM)
+        || a.upstreamM < 0 || a.upstreamM > 100001 || a.downstreamM < 0 || a.downstreamM > 100001
+        || Math.abs(a.upstreamM + a.downstreamM - a.lengthM) > 1
+        || typeof a.upstreamStop !== "string" || typeof a.downstreamStop !== "string")) throw new Error("Corridor extent is invalid.");
       let previousDistance = -1;
       for (const sample of a.elevation.samples) {
         if (!finite(sample.distanceM) || sample.distanceM < previousDistance || sample.distanceM > a.lengthM + 1
@@ -101,13 +105,16 @@ export async function readProgressiveDownstreamGuide(
   const reader = response.body.getReader(), decoder = new TextDecoder();
   const cancel = () => { void reader.cancel(); };
   signal.addEventListener("abort", cancel, { once: true });
-  let text = "", bytes = 0, nearbySeen = false, complete: DownstreamGuide | null = null;
+  let text = "", bytes = 0, nearbySeen = false, networkSeen = false, complete: DownstreamGuide | null = null;
   const acceptLine = (line: string) => {
     if (!line) return;
     if (line.length > 512 * 1024) throw new Error("Direction stream line is too large.");
     const event = JSON.parse(line) as { phase?: unknown; guide?: unknown };
-    if (event.phase === "nearby" && !nearbySeen && !complete) {
+    if (event.phase === "nearby" && !nearbySeen && !networkSeen && !complete) {
       nearbySeen = true;
+      onNearby(parseDownstreamGuide(event.guide));
+    } else if (event.phase === "network" && !networkSeen && !complete) {
+      networkSeen = true;
       onNearby(parseDownstreamGuide(event.guide));
     } else if (event.phase === "complete" && !complete) {
       complete = parseDownstreamGuide(event.guide);
@@ -121,7 +128,7 @@ export async function readProgressiveDownstreamGuide(
       const chunk = await reader.read();
       if (chunk.done) break;
       bytes += chunk.value.byteLength;
-      if (bytes > 1024 * 1024) throw new Error("Direction stream is too large.");
+      if (bytes > 2 * 1024 * 1024) throw new Error("Direction stream is too large.");
       text += decoder.decode(chunk.value, { stream: true });
       let end: number;
       while ((end = text.indexOf("\n")) >= 0) {
