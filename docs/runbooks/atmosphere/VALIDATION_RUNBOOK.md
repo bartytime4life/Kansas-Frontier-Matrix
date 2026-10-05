@@ -3,14 +3,16 @@ doc_id: kfm://doc/runbook-atmosphere-validation
 title: Atmosphere Validation Runbook
 type: standard
 profile: repository-grounded-bounded-fixture-validation
-version: v1.0
+version: v1.0.1
 prior_version: proposed-scaffold
 status: draft; repository-grounded; fixture-first; broader-validation-hold; non-authoritative; non-publisher; not-for-life-safety
 owners:
   - "@bartytime4life — verified GitHub review route only"
 owner_status: "Atmosphere, validation, evidence, policy, source-rights, sensitivity, Hazards-seam, review, release, and operations assignments remain NEEDS VERIFICATION; CODEOWNERS routing does not create those authorities."
-created: NEEDS VERIFICATION — scaffold predates this repository-grounded replacement
-updated: 2026-08-24
+created: 2026-05-19
+creation_basis: First tracked addition at bb6cbad6b0edfddf470bfa8880ae351501c0b22a; earlier draft creation remains UNKNOWN.
+updated: 2026-10-05
+maintenance_scope: Metadata grammar and local navigation only; earlier substantive evidence snapshots are not refreshed.
 policy_label: public; atmosphere; validation; fixture-first; no-network; non-release; not-for-life-safety
 current_path: docs/runbooks/atmosphere/VALIDATION_RUNBOOK.md
 owning_root: docs/

@@ -2,12 +2,16 @@
 doc_id: kfm://doc/source-descriptor-standard
 title: Source Descriptor Standard
 type: standard
-version: v1
+version: v1.1
 status: draft
 owners: TBD — Docs steward + Source/Catalog subsystem owner
 created: 2026-05-13
-updated: 2026-05-13
+updated: 2026-10-05
+maintenance_scope: Metadata completeness and local navigation only; substantive standard and authority unchanged.
 policy_label: public
+owning_root: docs/
+responsibility: Describe the draft SourceDescriptor fields and source-role vocabulary without admitting sources or asserting runtime conformance.
+truth_posture: PROPOSED standard; implementation conformance and source admission NEEDS VERIFICATION.
 related:
   - docs/doctrine/directory-rules.md
   - docs/doctrine/authority-ladder.md

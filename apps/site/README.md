@@ -128,6 +128,13 @@ open; no placeholder file or doctrine redirect was created to silence them.
 External links were not requested. Earlier audit and dependency results in
 dated documents remain historical.
 
+The same four documents also had eleven metadata-validation failures. Metadata
+now uses the bounded grammar and declares its documentation responsibility.
+Unknown creation dates are distinguished from the verified first tracked
+addition (`bb6cbad6b0edfddf470bfa8880ae351501c0b22a`, 2026-05-19); earlier draft
+origins remain unknown. Their substantive evidence snapshots were not refreshed.
+The changed metadata check passes with existing warnings still reported.
+
 Rollback the local runtime by selecting the preserved v153 source/build and
 restarting only its local service with the same explicit physical state path.
 Reverting the repository candidate restores its previous smoke runner and

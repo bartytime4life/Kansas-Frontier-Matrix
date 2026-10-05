@@ -1,8 +1,9 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runbooks/fauna/ebd-derivative-release
 title: Fauna — eBird Basic Dataset Derivative Release Runbook
-type: runbook; operational-procedure; restricted-source; pre-publication; non-authoritative
-version: v1.0
+type: runbook
+document_roles: operational-procedure; restricted-source; pre-publication; non-authoritative
+version: v1.0.1
 prior_version: PROPOSED scaffold
 status: draft; repository-grounded; rights-sensitive; release-held; non-publisher
 owners:
@@ -11,8 +12,10 @@ owner_status: >-
   Fauna, eBird/EBD source, rights, sensitivity, privacy, scientific-method,
   evidence, policy, release, independent-review, and operations assignments
   remain NEEDS VERIFICATION; CODEOWNERS routing does not create those authorities.
-created: NEEDS VERIFICATION — the prior scaffold carried no creation date
-updated: 2026-08-24
+created: 2026-05-19
+creation_basis: First tracked addition at bb6cbad6b0edfddf470bfa8880ae351501c0b22a; earlier draft creation remains UNKNOWN.
+updated: 2026-10-05
+maintenance_scope: Metadata grammar and local navigation only; earlier substantive evidence snapshots are not refreshed.
 policy_label: public-review; fauna; ebird; ebd; derivative-release; restricted-source; fail-closed; no-publication-authority
 current_path: docs/runbooks/fauna/EBD_DERIVATIVE_RELEASE.md
 owning_root: docs/
@@ -45,10 +48,9 @@ evidence_snapshot:
   fauna_domain_workflow_blob: 0edc73a77ee0ddb3193db2c0386ed6ac685b139a
   occurrence_retrieval_contract_blob: ab145d3c22bc7152c3eae0219f9081f1edc75601
   occurrence_retrieval_workflow_blob: d25591809843134492ee42a18d5aceb5a94ff0b0
-external_authority_snapshot:
-  checked_at: 2026-08-24
-  authority: Cornell Lab of Ornithology / eBird official pages
-  checked_surfaces:
+external_authority_checked_at: 2026-08-24
+external_authority_name: Cornell Lab of Ornithology / eBird official pages
+external_authority_checked_surfaces:
     - https://www.birds.cornell.edu/home/ebird-data-access-terms-of-use/
     - https://support.ebird.org/en/support/solutions/articles/48001078113-ebird-data-privacy-and-data-use
     - https://support.ebird.org/en/support/solutions/articles/48000838205-download-ebird-data

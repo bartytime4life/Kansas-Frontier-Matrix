@@ -3,14 +3,16 @@ doc_id: kfm://doc/runbook-fauna-taxonomy-resolution
 title: Fauna Taxonomy Resolution Runbook
 type: standard
 profile: repository-grounded-taxonomy-resolution-handoff
-version: v1.0
+version: v1.0.1
 prior_version: proposed-scaffold
 status: draft; repository-grounded; manual-handoff; executable-resolution-hold; no-network-by-default; fail-closed; non-authoritative; non-publisher
 owners:
   - "@bartytime4life — verified GitHub review route only"
 owner_status: "Fauna, taxonomy, source, rights, evidence, policy, sensitivity, schema, validation, review, correction, release, and independent-review assignments remain NEEDS VERIFICATION; CODEOWNERS routing does not create those authorities."
-created: NEEDS VERIFICATION — scaffold predates this repository-grounded replacement
-updated: 2026-08-24
+created: 2026-05-19
+creation_basis: First tracked addition at bb6cbad6b0edfddf470bfa8880ae351501c0b22a; earlier draft creation remains UNKNOWN.
+updated: 2026-10-05
+maintenance_scope: Metadata grammar and local navigation only; earlier substantive evidence snapshots are not refreshed.
 policy_label: public; fauna; taxonomy; no-network; ambiguity-abstain; source-role-aware; correction-aware; non-release
 current_path: docs/runbooks/fauna/TAXONOMY_RESOLUTION_RUNBOOK.md
 owning_root: docs/
