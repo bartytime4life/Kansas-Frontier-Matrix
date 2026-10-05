@@ -170,3 +170,44 @@ commit the file, paste its contents into chat, or put it in a request URL.
 Restart the local service after saving the emailed key. Hosted secret setup is
 separate. Missing keys retain anonymous behavior; invalid files fail startup.
 No key has been provisioned or authenticated as part of this change.
+
+## Bidirectional mapped corridor — 2026-10-05
+
+The v3 direction response adds up to 100 km upstream and 100 km downstream
+within the existing Kansas-adjacent coordinate bounds. The 100 km radius query
+selects the seed's provider levelpath; it is not an entire watershed or all
+tributaries. Returned topology, endpoint gaps, cycles, 200 reaches per direction,
+5,000 vertices per direction, 400 features per upstream response, 4 MiB per
+response, and the 35-second deadline can stop it sooner. Truncated acquisition
+is disclosed. V1/v2 parsing remains supported; v3 checks separate distances and
+their sum. The response format and progressive network phase are versioned.
+
+Upstream tracing uses uphydrosequence only with reciprocal dnhydrosequence;
+without an explicit mainstem it follows only a unique returned incoming reach.
+Ambiguity stops the path. All output coordinates remain ordered downstream,
+including the part before the gauge. A gauge reading is not propagated as a
+measurement at every point along the corridor. Zero/missing readings and stale
+feeds retain the existing no-motion rules. Official topology definitions:
+https://www.usgs.gov/3d-hydrography-program/3dhp-flow-network-derivatives
+
+Terrain remains 25 samples of the existing USGS 3DEP product, with reported
+resolution and datum. No new raw LiDAR dataset is acquired; no assumption is
+made that every sample is LiDAR-derived. Terrain does not invent a channel,
+reverse provider direction, or establish depth, wetted extent or water velocity.
+The profile marks the gauge and reports separate upstream/downstream extents.
+
+Loading emits nearby, network, then terrain-complete events. The extended line
+can animate and fit the map before terrain finishes. Cancellation aborts provider
+work; malformed or incomplete streams still fail closed. The existing per-page
+15-minute/24-station cache remains. Canvas projection caches clipped distance
+intervals so zoomed-in rendering skips off-screen particle heads while retaining
+visible tails and exact mapped bends.
+
+Live Ellsworth check (USGS-06864500): nearby 1.432 s, 200 km corridor with 5,874
+vertices 7.112 s, terrain ready 17.068 s. Both sides reached the 100 km cap.
+These are single-run source timings, not browser performance guarantees.
+396 automated tests, TypeScript and production build passed before local
+installation. Visual/browser acceptance remains blocked by the admin browser
+security check. Hosted deployment is separate. Rollback uses local 5e87610 and
+its retained build; no DB/R2 changes. Placement reuses existing Site app/tests/
+docs responsibilities under the repository's ADR-0029 directory rules.

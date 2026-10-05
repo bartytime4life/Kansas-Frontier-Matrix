@@ -40,7 +40,7 @@ function strokeMappedTrail(context: CanvasRenderingContext2D, points: readonly S
   context.stroke();
 }
 
-type ProjectedPath = { path: DownstreamPath; points: ScreenPoint[]; cumulative: number[]; length: number };
+type ProjectedPath = { path: DownstreamPath; points: ScreenPoint[]; cumulative: number[]; length: number; visible: [number, number][] };
 const projectedPathCache = new WeakMap<MapLibreMap, { paths: readonly DownstreamPath[]; camera: string; result: ProjectedPath[] }>();
 function projectPaths(map: MapLibreMap, paths: readonly DownstreamPath[], width: number, height: number): ProjectedPath[] {
   const center = map.getCenter();
@@ -52,7 +52,25 @@ function projectPaths(map: MapLibreMap, paths: readonly DownstreamPath[], width:
     if (points.some(point => !Number.isFinite(point.x) || !Number.isFinite(point.y))) return [];
     const cumulative = [0];
     for (let i = 1; i < points.length; i++) cumulative.push(cumulative[i - 1] + Math.hypot(points[i].x - points[i - 1].x, points[i].y - points[i - 1].y));
-    return [{ path, points, cumulative, length: cumulative.at(-1)! }];
+    // Clip possible head positions to a viewport padded by the maximum tail.
+    // Distance intervals avoid iterating miles of off-screen particles at high zoom.
+    const visible: [number, number][] = [];
+    for (let i = 1; i < points.length; i++) {
+      let low = 0, high = 1;
+      const from = points[i - 1], to = points[i];
+      for (const [start, delta, minimum, maximum] of [[from.x, to.x - from.x, -260, width + 260], [from.y, to.y - from.y, -260, height + 260]]) {
+        if (delta === 0) { if (start < minimum || start > maximum) high = -1; continue; }
+        const a = (minimum - start) / delta, b = (maximum - start) / delta;
+        low = Math.max(low, Math.min(a, b)); high = Math.min(high, Math.max(a, b));
+      }
+      if (high < low) continue;
+      const distance = cumulative[i] - cumulative[i - 1];
+      const start = cumulative[i - 1] + low * distance, end = cumulative[i - 1] + high * distance;
+      const previous = visible.at(-1);
+      if (previous && start <= previous[1] + .01) previous[1] = end;
+      else visible.push([start, end]);
+    }
+    return [{ path, points, cumulative, length: cumulative.at(-1)!, visible }];
   });
   projectedPathCache.set(map, { paths, camera, result });
   return result;
@@ -155,7 +173,7 @@ export function drawWaterMotionCanvas(
 
   if (!selectedStationId || !selectedCue || paths.length === 0) return;
   const moving = selectedCue.value !== null && selectedCue.value > 0;
-  for (const { path, points, cumulative, length } of projectPaths(map, paths, width, height)) {
+  for (const { path, points, cumulative, length, visible } of projectPaths(map, paths, width, height)) {
     if (path.coordinates.some(coordinate => !onVisibleHemisphere(coordinate))) continue;
     if (length < 12) continue;
     context.save();
@@ -177,9 +195,13 @@ export function drawWaterMotionCanvas(
     const spacing = length >= 320 ? 280 : Math.max(12, length - 6);
     const offset = moving && animateDirection && length >= 30 ? (elapsedMs * 0.055) % spacing : 0;
     const firstArrow = length < 30 ? length / 2 : moving && animateDirection ? 3 + offset : 16;
-    for (let distance = firstArrow; distance < length - 3; distance += spacing) {
+    for (const [start, end] of visible) for (let distance = firstArrow + Math.max(0, Math.ceil((start - firstArrow) / spacing)) * spacing; distance < Math.min(length - 3, end + .001); distance += spacing) {
       const position = pointAlong(points, cumulative, distance);
       if (!position) continue;
+      // A trail is at most 240 screen pixels long. Skip only heads farther
+      // than that from the viewport, retaining tails that can still be seen.
+      const margin = 240 * visualScale + 20;
+      if (position.x < -margin || position.y < -margin || position.x > width + margin || position.y > height + margin) continue;
       if (moving && animateDirection) {
         luminousTrail(context, points, cumulative, distance, visualScale);
       }

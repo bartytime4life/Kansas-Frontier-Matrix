@@ -5153,6 +5153,7 @@ export default function Home() {
         const guide = await readProgressiveDownstreamGuide(response, nearby => {
           if (controller.signal.aborted) return;
           setDownstreamPaths(nearby.paths);
+          setDownstreamAnalysis(nearby.analysis ?? null);
           setDownstreamStationId(directionStationId);
         }, controller.signal);
         if (controller.signal.aborted) return;
@@ -5176,7 +5177,7 @@ export default function Home() {
   }, [streamflowSelectedAtPresent, directionStationId, directionLongitude, directionLatitude]);
 
   useEffect(() => {
-    if (!downstreamStationId || downstreamState !== "ready" || riverPathFocusRef.current !== downstreamStationId || downstreamStationId !== streamflowSelectedStationId || !downstreamPaths.length) return;
+    if (!downstreamStationId || (downstreamState !== "ready" && downstreamAnalysis?.upstreamM === undefined) || riverPathFocusRef.current !== downstreamStationId || downstreamStationId !== streamflowSelectedStationId || !downstreamPaths.length) return;
     const map = mapRef.current;
     if (!map) return;
     riverPathFocusRef.current = null;
@@ -5185,7 +5186,7 @@ export default function Home() {
     map.fitBounds([[Math.min(...longitudes), Math.min(...latitudes)], [Math.max(...longitudes), Math.max(...latitudes)]], {
       padding: { top: 60, left: 55, right: 55, bottom: Math.min(450, map.getCanvas().clientHeight * .6) }, maxZoom: 13, duration: reducedMotion ? 0 : 1000,
     });
-  }, [downstreamPaths, downstreamState, downstreamStationId, reducedMotion, streamflowSelectedStationId]);
+  }, [downstreamAnalysis, downstreamPaths, downstreamState, downstreamStationId, reducedMotion, streamflowSelectedStationId]);
 
   useEffect(() => {
     const map = mapRef.current;

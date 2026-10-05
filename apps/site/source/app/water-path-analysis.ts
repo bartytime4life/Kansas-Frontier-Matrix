@@ -1,9 +1,10 @@
 import type { DownstreamPath } from "./water-flow-context";
 
 export type Coordinate = readonly [number, number];
-export type WaterReach = DownstreamPath & { sequence: number | null; downstream: number | null; levelpath: number | null; name: string | null; featureType?: number };
+export type WaterReach = DownstreamPath & { sequence: number | null; upstream?: number | null; downstream: number | null; levelpath: number | null; name: string | null; featureType?: number };
 export type TerrainSample = { distanceM: number; coordinate: Coordinate; elevationM: number | null; datum: string | null; resolutionM: number | null };
 export type WaterPathAnalysis = {
+  upstreamM?: number; downstreamM?: number; upstreamStop?: string; downstreamStop?: string;
   lengthM: number; gaugeOffsetM: number; segments: number; connectors: number; name: string | null; stopReason: string;
   elevation: { state: "ready" | "partial" | "unavailable"; samples: TerrainSample[]; dropM: number | null; slopePercent: number | null; source: string; retrievedAt: string | null; notice: string };
 };
@@ -34,13 +35,13 @@ export function parseWaterReaches(raw: unknown): WaterReach[] {
     if (g.coordinates.length < 2 || g.coordinates.length > 10000 || !g.coordinates.every(validCoordinate)) return [];
     vertices += g.coordinates.length; if (vertices > 80000) throw new Error("USGS flowline geometry limit exceeded.");
     ids.add(p.id3dhp);
-    return [{ id: p.id3dhp, coordinates: g.coordinates as Coordinate[], featureType: p.featuretype as number, sequence: sequence(p.hydrosequence), downstream: sequence(p.dnhydrosequence), levelpath: sequence(p.levelpath), name: typeof p.gnisidlabel === "string" ? p.gnisidlabel.slice(0, 160) : null }];
+    return [{ id: p.id3dhp, coordinates: g.coordinates as Coordinate[], featureType: p.featuretype as number, sequence: sequence(p.hydrosequence), upstream: sequence(p.uphydrosequence), downstream: sequence(p.dnhydrosequence), levelpath: sequence(p.levelpath), name: typeof p.gnisidlabel === "string" ? p.gnisidlabel.slice(0, 160) : null }];
   });
 }
 
 /** Snap only to a mapped line, never draw an invented gauge-to-river connector. */
 export function nearestWaterReach(reaches: readonly WaterReach[], gauge: Coordinate) {
-  let best: { reach: WaterReach; offsetM: number; tail: Coordinate[] } | null = null;
+  let best: { reach: WaterReach; offsetM: number; head: Coordinate[]; tail: Coordinate[] } | null = null;
   const scale = Math.cos(gauge[1] * radians);
   for (const reach of reaches) for (let i = 1; i < reach.coordinates.length; i++) {
     const a = reach.coordinates[i - 1], b = reach.coordinates[i];
@@ -50,26 +51,26 @@ export function nearestWaterReach(reaches: readonly WaterReach[], gauge: Coordin
     const t = Math.max(0, Math.min(1, (((gauge[0] - a[0]) * scale * dx) + (gauge[1] - a[1]) * dy) / denom));
     const point: Coordinate = [a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])];
     const offsetM = waterDistance(point, gauge);
-    if (offsetM <= 1200 && (!best || offsetM < best.offsetM)) best = { reach, offsetM, tail: [point, ...reach.coordinates.slice(i)] };
+    if (offsetM <= 1200 && (!best || offsetM < best.offsetM)) best = { reach, offsetM, head: [...reach.coordinates.slice(0, i), point], tail: [point, ...reach.coordinates.slice(i)] };
   }
   return best;
 }
 
-export function traceWaterPath(seed: NonNullable<ReturnType<typeof nearestWaterReach>>, reaches: readonly WaterReach[]) {
+export function traceWaterPath(seed: NonNullable<ReturnType<typeof nearestWaterReach>>, reaches: readonly WaterReach[], maxDistance = MAX_WATER_PATH_M, maxReaches = 80) {
   const bySequence = new Map<number, WaterReach[]>();
   for (const reach of reaches) if (reach.sequence !== null) bySequence.set(reach.sequence, [...(bySequence.get(reach.sequence) ?? []), reach]);
   const points: Coordinate[] = [seed.tail[0]], visited = new Set<string>();
   let current = seed.reach, tail = seed.tail.slice(1), lengthM = 0, segments = 0, connectors = 0, stopReason = "End of returned downstream connections.";
-  while (segments < 80) {
+  while (segments < maxReaches) {
     visited.add(current.id); segments++; if (current.featureType && current.featureType !== 1) connectors++;
     for (const point of tail) {
       const last = points.at(-1)!, distance = waterDistance(last, point);
       if (distance < 0.01) continue;
       if (points.length >= MAX_WATER_VERTICES) { stopReason = "Path vertex limit reached."; return finish(); }
-      if (lengthM + distance >= MAX_WATER_PATH_M) {
-        const fraction = (MAX_WATER_PATH_M - lengthM) / distance;
+      if (lengthM + distance >= maxDistance) {
+        const fraction = (maxDistance - lengthM) / distance;
         points.push([last[0] + fraction * (point[0] - last[0]), last[1] + fraction * (point[1] - last[1])]);
-        lengthM = MAX_WATER_PATH_M; stopReason = "40 km exploration limit reached."; return finish();
+        lengthM = maxDistance; stopReason = `${maxDistance / 1000} km exploration limit reached.`; return finish();
       }
       points.push(point); lengthM += distance;
     }
@@ -80,12 +81,35 @@ export function traceWaterPath(seed: NonNullable<ReturnType<typeof nearestWaterR
     if (visited.has(next.id)) { stopReason = "Repeated downstream connection; path stopped."; break; }
     if (waterDistance(points.at(-1)!, next.coordinates[0]) > 10) { stopReason = "Mapped endpoints do not meet; path stopped at the gap."; break; }
     current = next; tail = [...next.coordinates];
-    if (segments === 80) stopReason = "80-reach exploration limit reached.";
+    if (segments === maxReaches) stopReason = `${maxReaches}-reach exploration limit reached.`;
   }
   return finish();
   function finish() {
     return { path: { id: seed.reach.id, coordinates: points, hasConnectors: connectors > 0 } satisfies DownstreamPath, lengthM, segments, connectors, gaugeOffsetM: seed.offsetM, name: seed.reach.name, stopReason };
   }
+}
+
+/** Follow the supplied mainstem upstream, then restore downstream drawing order. */
+export function traceWaterCorridor(seed: NonNullable<ReturnType<typeof nearestWaterReach>>, reaches: readonly WaterReach[]) {
+  const reversed = reaches.map(reach => {
+    const incoming = reach.sequence === null ? [] : reaches.filter(candidate => candidate.downstream === reach.sequence && candidate.sequence !== null);
+    // Explicit mainstem wins only when reciprocal topology agrees. Without it,
+    // multiple tributaries remain ambiguous; never choose by slope or proximity.
+    const chosen = reach.upstream ? incoming.filter(candidate => candidate.sequence === reach.upstream) : incoming;
+    return { ...reach, coordinates: [...reach.coordinates].reverse(), downstream: chosen.length === 1 ? chosen[0].sequence : null };
+  });
+  const reverseSeed = reversed.find(reach => reach.id === seed.reach.id)!;
+  const up = traceWaterPath({ ...seed, reach: reverseSeed, tail: [...seed.head].reverse() }, reversed, 100_000, 200);
+  const down = traceWaterPath(seed, reaches, 100_000, 200);
+  const upstreamStop = up.stopReason.replaceAll("downstream", "upstream").replace("No upstream network identifier supplied.", "No unique reciprocal upstream connection in returned data (missing, inconsistent or ambiguous).");
+  return { ...down,
+    path: { ...down.path, coordinates: [...up.path.coordinates].reverse().concat(down.path.coordinates.slice(1)), hasConnectors: up.path.hasConnectors || down.path.hasConnectors },
+    lengthM: up.lengthM + down.lengthM, upstreamM: up.lengthM, downstreamM: down.lengthM,
+    upstreamStop, downstreamStop: down.stopReason,
+    segments: up.segments + down.segments - 1,
+    connectors: up.connectors + down.connectors - (seed.reach.featureType && seed.reach.featureType !== 1 ? 1 : 0),
+    stopReason: `Upstream: ${upstreamStop} Downstream: ${down.stopReason}`,
+  };
 }
 
 export function sampleWaterPath(points: readonly Coordinate[], count = 25): TerrainSample[] {
