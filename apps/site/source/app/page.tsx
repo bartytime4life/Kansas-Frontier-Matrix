@@ -3054,7 +3054,7 @@ export default function Home() {
     if (!station) return;
     if (station.stationId !== streamflowSelectedStationId) selectStreamflowStation(station.stationId);
     const pathPoints = station.stationId === streamflowSelectedStationId ? downstreamPaths.flatMap(path => path.coordinates) : [];
-    riverPathFocusRef.current = pathPoints.length ? null : station.stationId;
+    riverPathFocusRef.current = downstreamState === "ready" && pathPoints.length ? null : station.stationId;
     if (pathPoints.length) {
       const longitudes = pathPoints.map(point => point[0]), latitudes = pathPoints.map(point => point[1]);
       map.fitBounds([[Math.min(...longitudes), Math.min(...latitudes)], [Math.max(...longitudes), Math.max(...latitudes)]], {
@@ -3067,7 +3067,7 @@ export default function Home() {
       duration: reducedMotion ? 0 : 650,
     });
     announce(`Showing mapped flow direction near ${station.name}; arrow pace is illustrative`);
-  }, [announce, downstreamPaths, reducedMotion, selectStreamflowStation, streamflowBundle, streamflowFrame, streamflowSelectedAtPresent, streamflowSelectedStation, streamflowSelectedStationId]);
+  }, [announce, downstreamPaths, downstreamState, reducedMotion, selectStreamflowStation, streamflowBundle, streamflowFrame, streamflowSelectedAtPresent, streamflowSelectedStation, streamflowSelectedStationId]);
 
   const loadStreamflowArchiveDay = useCallback(() => {
     if (!streamflowArchiveDraftDay || !streamflowSelectedStationId) return;
@@ -5180,7 +5180,7 @@ export default function Home() {
     if (!downstreamStationId || (downstreamState !== "ready" && downstreamAnalysis?.upstreamM === undefined) || riverPathFocusRef.current !== downstreamStationId || downstreamStationId !== streamflowSelectedStationId || !downstreamPaths.length) return;
     const map = mapRef.current;
     if (!map) return;
-    riverPathFocusRef.current = null;
+    if (downstreamState === "ready") riverPathFocusRef.current = null;
     const points = downstreamPaths.flatMap(path => path.coordinates);
     const longitudes = points.map(point => point[0]), latitudes = points.map(point => point[1]);
     map.fitBounds([[Math.min(...longitudes), Math.min(...latitudes)], [Math.max(...longitudes), Math.max(...latitudes)]], {
