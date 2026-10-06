@@ -28,11 +28,21 @@ truth_posture: CONFIRMED main@bb08d3e9b9 implementation and exact-schema policy 
 
 # Local PC data tools
 
-These Python 3 standard-library tools prepare a local checkout and preserve
+The offline `manage.py` and filesystem helpers prepare a local checkout and preserve
 explicitly selected, already downloaded files in a private external QUARANTINE
-store. They do not download, interpret, extract, normalize, activate, promote,
+store. That offline importer does not download, interpret, extract, normalize, activate, promote,
 publish, or serve data. See the [local-PC runbook](../../docs/runbooks/local-pc-data-store.md)
 for the complete setup and update sequence.
+
+The explicit `acquisition.py` operator separately plans and transfers selected
+public HTTPS objects into a **100 GB decimal** private replaceable cache, with
+SHA-256 verification, validated resume, protected-file handling and receipts.
+`discover_3dep.py` and `discover_water.py` capture bounded provider metadata only;
+`candidate_queue.py` renders dated catalog options without contacting providers.
+See [free data acquisition](../../docs/runbooks/free-data-acquisition.md) for
+the provider/destination allowlists, full-history selection, actual-state
+semantics and independent admission/release boundaries. No paid fallback or
+automatic bulk selection is included.
 
 The repository records [owner decision #4613](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4613)
 for the exact manifest schema and contract used by private, offline quarantine
