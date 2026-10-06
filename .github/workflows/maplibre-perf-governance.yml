@@ -331,7 +331,7 @@ jobs:
                   "The @kfm/maplibre package must select one exact MapLibre GL JS 6.x "
                   "version; ranges and unreviewed majors are not accepted by this gate."
               )
-          if dev_dependencies != {"vitest": "5.0.2"}:
+          if dev_dependencies != {"vitest": "5.0.3"}:
               raise SystemExit(
                   "The reviewed @kfm/maplibre development dependency boundary changed. "
                   "Reconcile package tests and install behavior before changing CI."
@@ -351,7 +351,7 @@ jobs:
               f"        version: {selected_version}\n"
               "    devDependencies:\n"
               "      vitest:\n"
-              "        specifier: 5.0.2\n"
+              "        specifier: 5.0.3\n"
           )
           if importer_marker not in lock_text:
               raise SystemExit(
