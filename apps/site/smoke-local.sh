@@ -26,7 +26,7 @@ smoke_routes=(
   historical-topo/stage "historical-topo/tiles/[scan]/[package]/[z]/[x]/[y]"
   hydrology/coverage hydrology/direction hydrology/noaa hydrology/streamflow
   lightning/archive lightning/flashes live-context qwen
-  soil-moisture/availability soil-moisture/tile source-download
+  soil-moisture/availability soil-moisture/tile source-download subsurface/soil
   terrain-tile wind-arrows
 )
 # These have no request they refuse with a distinct status before contacting
@@ -163,6 +163,7 @@ expect GET /api/live-context 400
 expect GET '/api/soil-moisture/availability?retry=2' 400 code INVALID_REQUEST
 expect GET /api/soil-moisture/tile 400 code INVALID_TILE_REQUEST
 expect GET /api/source-download 400
+expect GET /api/subsurface/soil 400 error "A Kansas coordinate is required."
 expect GET /api/terrain-tile 400
 expect GET /api/wind-arrows 400
 

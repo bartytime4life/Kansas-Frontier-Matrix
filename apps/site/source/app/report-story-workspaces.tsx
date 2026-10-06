@@ -15,6 +15,7 @@ import {
 import SnapshotMap from "./snapshot-map";
 import { readDraft, REPORT_STORAGE_KEY, STORY_STORAGE_KEY } from "./workspace-storage";
 import { FIRE_REPORT_SOURCES, type FireReportContext } from "./fire-report-analysis";
+import { subsurfaceMarkdown, sectionSvg, intervalCsv, type SubsurfaceContext } from "./subsurface-model";
 import { researchMarkdown, type ResearchContext } from "./research-context";
 
 type WorkspaceMode = "reports" | "stories";
@@ -25,6 +26,7 @@ type ReportStoryWorkspacesProps = Readonly<{
   evidenceRecords: readonly EvidenceRecord[];
   fireContext?: FireReportContext | null;
   researchContext?: ResearchContext | null;
+  subsurfaceContext?: SubsurfaceContext | null;
   onModeChange: (mode: WorkspaceMode) => void;
   onReturnToMap: () => void;
   onInspectEvidence: (record: EvidenceRecord) => void;
@@ -83,6 +85,7 @@ const reportMarkdown = (draft: ReportDraft, evidence: readonly EvidenceRecord[])
     `**Basemap:** ${draft.snapshot.basemap} (display context)` ,
     "**Map attribution:** " + (draft.snapshot.basemap === "standard" ? "OpenFreeMap · OpenMapTiles · © OpenStreetMap contributors" : draft.snapshot.basemap === "imagery" ? "Tiles © Esri" : draft.snapshot.basemap === "streets" ? "© OpenStreetMap contributors" : "KFM local background style"),
     ...(terrainDescription ? [`**Display terrain:** ${terrainDescription}`] : []),
+    ...(draft.subsurfaceContext ? ["", subsurfaceMarkdown(draft.subsurfaceContext), ""] : []),
     ...(draft.researchContext ? ["", researchMarkdown(draft.researchContext), ""] : []),
     ...(draft.fireContext ? [
       "",
@@ -148,6 +151,7 @@ export default function ReportStoryWorkspaces({
   evidenceRecords,
   fireContext,
   researchContext,
+  subsurfaceContext,
   onModeChange,
   onReturnToMap,
   onInspectEvidence,
@@ -157,7 +161,7 @@ export default function ReportStoryWorkspaces({
   const headingRef = useRef<HTMLHeadingElement>(null);
   const [storageState, setStorageState] = useState<"saved" | "saving" | "unavailable">("saving");
   const [report, setReport] = useState<ReportDraft>(() =>
-    readStored<ReportDraft>(REPORT_STORAGE_KEY, snapshot.id) ?? createReportDraft(snapshot, evidenceRecords, fireContext ?? undefined, researchContext ?? undefined),
+    readStored<ReportDraft>(REPORT_STORAGE_KEY, snapshot.id) ?? createReportDraft(snapshot, evidenceRecords, fireContext ?? undefined, researchContext ?? undefined, subsurfaceContext ?? undefined),
   );
   const [story, setStory] = useState<StoryDraft>(() =>
     readStored<StoryDraft>(STORY_STORAGE_KEY, snapshot.id) ?? createTrustStory(snapshot, evidenceRecords),
@@ -350,6 +354,13 @@ export default function ReportStoryWorkspaces({
 
         <main className="report-paper" aria-label="Editable report draft">
           <div className="paper-rule"><span>KFM FIELD NOTE</span><strong>DRAFT</strong></div>
+          {report.subsurfaceContext && <section className="fire-report-source-card" aria-label="Captured underground context">
+            <strong>Underground · dated source snapshot</strong><p>Captured {report.subsurfaceContext.capturedAt}. Provider context remains separate from included evidence.</p>
+            <img alt="Captured recorded-depth columns, with source gaps retained" style={{ width: "100%" }} src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(sectionSvg(report.subsurfaceContext) ?? "")}`} />
+            <button type="button" onClick={() => downloadText("kfm-underground-intervals.csv", intervalCsv(report.subsurfaceContext!) ?? "", "text/csv")}>Export captured intervals</button>
+            <button type="button" onClick={() => downloadText("kfm-underground-section.svg", sectionSvg(report.subsurfaceContext!) ?? "", "image/svg+xml")}>Export captured section image</button>
+            <details><summary>Captured sources and limitations</summary><pre style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{subsurfaceMarkdown(report.subsurfaceContext)}</pre></details>
+          </section>}
           {report.researchContext && <section className="fire-report-source-card" aria-label="Captured place dossier">
             <strong>Near {report.researchContext.anchor.title} · {report.researchContext.radiusMiles} miles</strong>
             <p>Captured {report.researchContext.capturedAt} · {report.researchContext.mapTime} · {report.researchContext.records.length} of {report.researchContext.total} available records.</p>

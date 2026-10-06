@@ -1,3 +1,4 @@
+import { validSubsurfaceContext } from "./subsurface-model";
 import { validResearchContext } from "./research-context";
 
 export type SavedWorkspaceParseResult = Readonly<{
@@ -25,6 +26,7 @@ export const validSavedWorkspaceRecord = (value: unknown): value is Record<strin
     || !record(value.report.sections) || typeof value.report.query !== "string" || value.report.query.length > 500) return false;
   if (value.selection !== null && value.selection !== undefined && (!record(value.selection) || !text(value.selection.layerId, 160) || !text(value.selection.featureId, 240))) return false;
   if (value.researchContext !== undefined && (value.locationCameraRedacted !== false || !validResearchContext(value.researchContext))) return false;
+  if (value.subsurfaceContext !== undefined && (value.locationCameraRedacted !== false || !validSubsurfaceContext(value.subsurfaceContext))) return false;
   return true;
 };
 

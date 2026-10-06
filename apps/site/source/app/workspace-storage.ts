@@ -3,6 +3,7 @@ import { BASEMAPS } from "./map-runtime";
 import { BUILD_UTC_YEAR } from "./build-clock";
 import type { MapSnapshot, ReportDraft, StoryDraft } from "./workspace-model";
 import { validFireReportContext } from "./fire-report-analysis";
+import { validSubsurfaceContext } from "./subsurface-model";
 import { validResearchContext } from "./research-context";
 
 export const REPORT_STORAGE_KEY = "kfm-report-draft-v2";
@@ -63,6 +64,7 @@ export function validReportDraft(value: unknown): value is ReportDraft {
   return object(value) && value.status === "DRAFT" && text(value.id) && text(value.title) && text(value.updatedAt) && text(value.researchQuestion)
     && validMapSnapshot(value.snapshot) && strings(value.includedEvidenceIds) && strings(value.generatedFields) && object(value.sections)
     && (value.fireContext === undefined || validFireReportContext(value.fireContext))
+    && (value.subsurfaceContext === undefined || (value.snapshot.camera.center !== "WITHHELD_BROWSER_LOCATION" && validSubsurfaceContext(value.subsurfaceContext)))
     && (value.researchContext === undefined || (value.snapshot.camera.center !== "WITHHELD_BROWSER_LOCATION" && validResearchContext(value.researchContext)))
     && ["summary", "observations", "findings", "limitations", "openQuestions", "sources"].every((key) => text((value.sections as Record<string, unknown>)[key]));
 }
