@@ -4705,3 +4705,12 @@ body { font-size: 14px; }
 @media (max-width: 640px) {
  .map-stage[data-live-dock="true"]:has(.hydrology-observatory) { --live-dock-clearance: min(462px, calc(53dvh + 22px)); }
 }
+
+/* Underground shares the existing map stage and its surface controls. */
+.map-stage[data-underground="true"] .map-canvas{bottom:var(--underground-height,48%)}
+.map-stage[data-underground="true"] .measurement-readout{bottom:calc(var(--underground-height,48%) + 12px);z-index:9}
+.map-stage[data-underground="true"] .map-mobile-actions{bottom:calc(var(--underground-height,48%) + 8px)}
+.map-stage[data-underground="true"] .map-view-mode-strip{z-index:9}
+@media(max-width:800px){.map-stage[data-underground="true"] .map-command-bar,.map-stage[data-underground="true"] .map-control-strip{display:none}.map-stage[data-underground="true"] .map-view-mode-strip{top:6px}.map-stage[data-underground="true"] .map-mobile-actions{display:none}}
+
+.map-stage[data-underground="true"] .map-canvas::after{content:"+";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:32px system-ui;color:#a34e2d;text-shadow:0 0 4px white;pointer-events:none;z-index:2}

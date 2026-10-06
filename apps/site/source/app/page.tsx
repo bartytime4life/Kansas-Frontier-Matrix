@@ -21,6 +21,8 @@ import { parseRepositoryObservation, type RepositoryConnection } from "./reposit
 import { replaceExplorerHistory } from "./embed-runtime";
 import { parseSavedWorkspaceList, writeSavedWorkspaceList } from "./saved-workspaces";
 import ResearchPanel from "./research-panel";
+import UndergroundPanel, { SubsurfaceInspector, type SubsurfaceInspection } from "./underground-panel";
+import { persistableSubsurface, validSubsurfaceContext, type SubsurfaceContext } from "./subsurface-model";
 import researchStyles from "./research.module.css";
 import { chooseResearchAnchor, readResearchInventory, nearbyResearch, providerResearchPoints, persistableResearch, researchIdentity, researchSourceUrl, validResearchRecord, validResearchContext, type ResearchContext, type ResearchCoverage, type ResearchRecord, type ResearchRadius } from "./research-context";
 import { catalogDisplayStatus, catalogFilterMatches, type CatalogFilter, type CatalogStatus } from "./layer-workspaces";
@@ -340,6 +342,7 @@ type WorkspaceSnapshot = Readonly<{
   // Optional for device-local v1 compatibility; missing legacy markers fail closed on restore.
   locationCameraRedacted?: boolean;
   researchContext?: ResearchContext;
+  subsurfaceContext?: SubsurfaceContext;
   visibility: Record<string, boolean>;
   opacity: Record<string, number>;
   layerOrder: string[];
@@ -1293,6 +1296,15 @@ export default function Home() {
   const [workspaceSnapshot, setWorkspaceSnapshot] = useState<MapSnapshot | null>(null);
   const [fireReportContext, setFireReportContext] = useState<FireReportContext | null>(null);
   const [researchReportContext, setResearchReportContext] = useState<ResearchContext | null>(null);
+  const [undergroundOpen, setUndergroundOpen] = useState(false);
+  const undergroundOpenRef = useRef(false);
+  undergroundOpenRef.current = undergroundOpen;
+  const [subsurfaceContext, setSubsurfaceContext] = useState<SubsurfaceContext | null>(null);
+  const [subsurfaceReportContext, setSubsurfaceReportContext] = useState<SubsurfaceContext | null>(null);
+  const [subsurfaceInspection, setSubsurfaceInspection] = useState<SubsurfaceInspection | null>(null);
+  const [subsurfacePrivate, setSubsurfacePrivate] = useState(false);
+  const [undergroundRestoreKey, setUndergroundRestoreKey] = useState(0);
+  useEffect(() => { if (undergroundOpen && locationCameraRedacted) setSubsurfacePrivate(true); }, [undergroundOpen, locationCameraRedacted]);
   const [researchAnchor, setResearchAnchor] = useState<ResearchRecord | null>(null);
   const [researchLocationRedacted, setResearchLocationRedacted] = useState(false);
   const [researchOpen, setResearchOpen] = useState(false);
@@ -3918,6 +3930,7 @@ export default function Home() {
   }, [isCompact]);
 
   const openSelection = useCallback((context: SelectedContext, returnElement?: HTMLElement | null) => {
+    setSubsurfaceInspection(null);
     if (hoverDrawerTimerRef.current !== null) window.clearTimeout(hoverDrawerTimerRef.current);
     hoverDrawerTimerRef.current = null;
     hoverCandidateIdRef.current = null;
@@ -4049,17 +4062,18 @@ export default function Home() {
   }, [analysisArea, basemap, buildYearCurrent, compareTimeA, compareTimeB, layerOrder, locationCameraRedacted, mapContextRecords, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, mapViewportBounds, movingWindowFrames, opacity, projection, scenePreset, selected, selectedTimeMismatch, supportedMapContextCount, temporalMode, temporalQuery, temporalStepRule, terrainProvider, verticalExaggeration, view, visibility]);
 
 
-  const openPrimaryWorkspace = useCallback((mode: Exclude<PrimaryWorkspace, "map">, freshFromMap = false, fireContext: FireReportContext | null = null, research: ResearchContext | null = null) => {
+  const openPrimaryWorkspace = useCallback((mode: Exclude<PrimaryWorkspace, "map">, freshFromMap = false, fireContext: FireReportContext | null = null, research: ResearchContext | null = null, subsurface: SubsurfaceContext | null = null) => {
     if (freshFromMap || !workspaceSnapshot) setWorkspaceSnapshot(freshFromMap ? captureMapSnapshot() : readDraftSnapshot(mode) ?? captureMapSnapshot());
     setFireReportContext(mode === "reports" ? fireContext : null);
     setResearchReportContext(mode === "reports" ? persistableResearch(research && { ...research, capturedAt: new Date().toISOString() }, researchLocationRedacted || locationCameraRedacted || locationDerivedViewRef.current) ?? null : null);
+    setSubsurfaceReportContext(mode === "reports" ? persistableSubsurface(subsurface && { ...subsurface, capturedAt: new Date().toISOString() }, subsurfacePrivate || locationCameraRedacted || locationDerivedViewRef.current) ?? null : null);
     setPrimaryWorkspace(mode);
     setMapContextOpen(false);
     setHelpOpen(false);
     setQwenOpen(false);
     setToolsExpanded(false);
     announce(`${mode === "reports" ? "Report" : "Story"} workspace opened from the current governed map state`);
-  }, [announce, captureMapSnapshot, locationCameraRedacted, researchLocationRedacted, workspaceSnapshot]);
+  }, [announce, captureMapSnapshot, locationCameraRedacted, researchLocationRedacted, subsurfacePrivate, workspaceSnapshot]);
 
   const returnToPrimaryMap = useCallback(() => {
     setPrimaryWorkspace("map");
@@ -4689,6 +4703,7 @@ export default function Home() {
         };
         let lastHoverSample = -Infinity;
         map.on("mousemove", (event) => {
+          if (undergroundOpenRef.current && !measureModeRef.current) return;
           const now = performance.now();
           if (map.isMoving()) { clearHoverCandidate(); return; }
           if (now - lastHoverSample < 80) return;
@@ -4777,6 +4792,7 @@ export default function Home() {
         map.on("movestart", clearHoverCandidate);
 
         map.on("click", (event) => {
+          if (undergroundOpenRef.current && !measureModeRef.current) return;
           if (measureModeRef.current) {
             measureCoordinatesRef.current = measureModeRef.current === "point"
               ? [[event.lngLat.lng, event.lngLat.lat]]
@@ -6760,7 +6776,7 @@ export default function Home() {
 
   const saveCurrentWorkspace = () => {
     const savedAt = new Date().toISOString();
-    const redactWorkspaceCamera = locationCameraRedacted || locationDerivedViewRef.current || researchLocationRedacted;
+    const redactWorkspaceCamera = locationCameraRedacted || locationDerivedViewRef.current || researchLocationRedacted || subsurfacePrivate;
     const snapshot: WorkspaceSnapshot = {
       id: `workspace-${Date.now()}`,
       name: normalizePlaceStopName(workspaceName || (!redactWorkspaceCamera && researchOpen && researchAnchor ? `Near ${researchAnchor.title}` : ""), savedWorkspaces.length + 1),
@@ -6770,6 +6786,7 @@ export default function Home() {
         : { center: [...view.center] as [number, number], zoom: view.zoom, bearing: view.bearing, pitch: view.pitch },
       locationCameraRedacted: redactWorkspaceCamera,
       researchContext: persistableResearch(researchContext && { ...researchContext, capturedAt: savedAt }, redactWorkspaceCamera, true),
+      subsurfaceContext: persistableSubsurface(subsurfaceContext && { ...subsurfaceContext, capturedAt: savedAt }, redactWorkspaceCamera, true),
       visibility: { ...visibility },
       opacity: { ...opacity },
       layerOrder: [...layerOrder],
@@ -6932,6 +6949,12 @@ export default function Home() {
     selectedRef.current = restoredSelection;
     setSelected(restoredSelection);
     setActivePlaceId(snapshot.id);
+    const savedSubsurface = !restoredLocationCameraRedaction && validSubsurfaceContext(snapshot.subsurfaceContext) ? snapshot.subsurfaceContext : null;
+    setSubsurfaceContext(savedSubsurface);
+    setSubsurfacePrivate(false);
+    setSubsurfaceInspection(null);
+    setUndergroundOpen(Boolean(savedSubsurface));
+    setUndergroundRestoreKey(v => v + 1);
     const savedResearch = !restoredLocationCameraRedaction && validResearchContext(snapshot.researchContext) ? snapshot.researchContext : null;
     setResearchAnchor(savedResearch?.anchor ?? null);
     setResearchLocationRedacted(false);
@@ -7902,6 +7925,7 @@ export default function Home() {
         snapshot={workspaceSnapshot}
         fireContext={fireReportContext}
         researchContext={researchReportContext}
+        subsurfaceContext={subsurfaceReportContext}
         evidenceRecords={allEvidenceRecords}
         onModeChange={(mode) => setPrimaryWorkspace(mode)}
         onReturnToMap={returnToPrimaryMap}
@@ -8450,6 +8474,7 @@ export default function Home() {
           </div>
           <nav className="map-view-mode-strip" aria-label="Map representation">
             <span className="map-view-mode-heading">MAP REPRESENTATION <small>{mapRepresentationLabel}</small></span>
+            <button type="button" aria-pressed={undergroundOpen} onClick={() => { setUndergroundOpen(v => !v); setSubsurfacePrivate(v => v || locationCameraRedacted || locationDerivedViewRef.current); setTimelineOpen(false); setLeftOpen(false); setRightOpen(false); setMapUtilityOpen(false); }}><b>Underground</b><span>Logs &amp; sections</span></button>
             <button type="button" aria-pressed={projection === "mercator" && scenePreset !== "elevation-3d"} data-active={projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => activateMapRepresentation("2d")}><b>2D</b><span>Map</span></button>
             <button type="button" aria-pressed={scenePreset === "elevation-3d"} data-active={scenePreset === "elevation-3d"} onClick={() => activateMapRepresentation("terrain")}><b>Terrain 3D</b><span>{verticalExaggeration.toFixed(1)}×</span></button>
             {scenePreset === "elevation-3d" && <output className="terrain-mode-source" data-state={terrainState.toLowerCase()} aria-live="polite">{terrainProvider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} · {terrainState === "READY" && attachedTerrainProviderRef.current === terrainProvider ? "DEM ready" : terrainState === "ERROR" ? "DEM unavailable" : "DEM loading"}{terrainProvider === "mapzen" && terrainState === "READY" && view.zoom > TERRARIUM_RENDER_MAX_ZOOM ? ` · coarse beyond z${TERRARIUM_RENDER_MAX_ZOOM}` : ""}</output>}
@@ -9139,15 +9164,26 @@ export default function Home() {
             <button type="button" onClick={openMapSettings}>Style</button>
           </nav>
 
+          {undergroundOpen && <UndergroundPanel key={undergroundRestoreKey} map={mapRef.current} initialContext={subsurfaceContext} year={year}
+            redacted={subsurfacePrivate || locationCameraRedacted || locationDerivedViewRef.current}
+            onTerrain={() => activateMapRepresentation("terrain")} readElevation={point => mapRef.current && terrainState === "READY" ? unexaggeratedTerrainElevation(mapRef.current, point) : null}
+            isDrawing={() => Boolean(measureModeRef.current)} onDraw={() => toggleMeasure("distance")}
+            readTransect={() => measurementGeometryModeRef.current === "distance" && !measureModeRef.current ? measureCoordinatesRef.current.map(p => [...p] as [number, number]) : []}
+            onContext={setSubsurfaceContext}
+            onInspect={inspection => { returnFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null; setSubsurfaceInspection(inspection); setResearchOpen(false); setRightOpen(true); window.requestAnimationFrame(() => rightPanelRef.current?.querySelector<HTMLElement>("[data-subsurface-inspector]")?.focus()); }}
+            onClose={() => { setUndergroundOpen(false); mapContainerRef.current?.focus(); }} onSave={saveCurrentWorkspace}
+            onReport={() => openPrimaryWorkspace("reports", true, null, null, subsurfaceContext)} />}
           <div className="screenreader-status sr-only" aria-live="polite">{runtime.message}. Map center {formatCoordinate(view.center[1], "N", "S")}, {formatCoordinate(view.center[0], "E", "W")}. {visibleCount} layers visible. {selected ? `Selected ${selected.properties.title}; evidence state ${selectedEvidence?.label}.` : "No feature selected."}</div>
         </section>
 
         <aside ref={rightPanelRef} className="evidence-drawer" data-open={rightOpen} data-state={selected?.properties.evidenceState ?? "EMPTY"} aria-label="Evidence Drawer" aria-hidden={!rightOpen} inert={!rightOpen} aria-modal={isCompact && rightOpen || undefined} role={isCompact && rightOpen ? "dialog" : undefined}>
           <div className="panel-heading drawer-heading">
-            <div><p className="panel-kicker">EVIDENCE DRAWER</p><h2>{researchOpen && researchAnchor ? `Near ${researchAnchor.title}` : selected?.properties.title ?? (hoverSummary ? "Map hover preview" : "Select a map feature")}</h2></div>
+            <div><p className="panel-kicker">EVIDENCE DRAWER</p><h2>{subsurfaceInspection ? subsurfaceInspection.record.name : researchOpen && researchAnchor ? `Near ${researchAnchor.title}` : selected?.properties.title ?? (hoverSummary ? "Map hover preview" : "Select a map feature")}</h2></div>
             <button className="icon-close" type="button" onClick={closeRightPanel} aria-label="Close Evidence Drawer">×</button>
           </div>
-          {researchOpen && researchContext ? <div className="drawer-scroll">
+          {subsurfaceInspection ? <SubsurfaceInspector inspection={subsurfaceInspection}
+            onCenter={() => mapRef.current?.easeTo({ center: subsurfaceInspection.record.coordinates, zoom: 13, duration: motionDuration(400) })}
+            onSave={saveCurrentWorkspace} onReport={() => openPrimaryWorkspace("reports", true, null, null, subsurfaceContext)} /> : researchOpen && researchContext ? <div className="drawer-scroll">
             {selected && <button className="map-catalog-launch" type="button" onClick={() => { setResearchOpen(false); window.requestAnimationFrame(() => rightPanelRef.current?.querySelector<HTMLElement>("[data-selection-summary]")?.focus()); }}>Back to selected record</button>}
             <ResearchPanel key={researchIdentity(researchContext.anchor)} context={researchContext} anchorAvailable={researchAnchorAvailable} onRadius={setNearbyRadiusMiles}
               onInspect={inspectResearchRecord} onCenter={centerResearchRecord} onSave={saveCurrentWorkspace}

@@ -1,6 +1,7 @@
 import type { EvidenceState, LayerRecord } from "./explorer-data";
 import type { TemporalStepRule, TemporalSweepMode } from "./temporal-sweep";
 import type { FireReportContext } from "./fire-report-analysis";
+import { persistableSubsurface, type SubsurfaceContext } from "./subsurface-model";
 import { persistableResearch, type ResearchContext } from "./research-context";
 
 export type { LayerRecord };
@@ -140,6 +141,7 @@ export type ReportDraft = Readonly<{
   includedEvidenceIds: readonly string[];
   fireContext?: FireReportContext;
   researchContext?: ResearchContext;
+  subsurfaceContext?: SubsurfaceContext;
   sections: Readonly<{
     summary: string;
     observations: string;
@@ -198,7 +200,8 @@ export const policyDecisionFromEvidenceState = (state?: EvidenceState): PolicyDe
   return { outcome: "ALLOW", reason: "The bounded demonstration record may be cited within its declared scope.", publicEffect: "DRAFT_ONLY" };
 };
 
-export const createReportDraft = (snapshot: MapSnapshot, evidence: readonly EvidenceRecord[], fireContext?: FireReportContext, research?: ResearchContext): ReportDraft => {
+export const createReportDraft = (snapshot: MapSnapshot, evidence: readonly EvidenceRecord[], fireContext?: FireReportContext, research?: ResearchContext, subsurface?: SubsurfaceContext): ReportDraft => {
+  const subsurfaceContext = persistableSubsurface(subsurface ?? null, snapshot.camera.center === "WITHHELD_BROWSER_LOCATION");
   const researchContext = persistableResearch(research ?? null, snapshot.camera.center === "WITHHELD_BROWSER_LOCATION");
   const included = evidence.filter((record) => snapshot.evidenceRefs.includes(record.citation) && record.includedByDefault
     && (snapshot.inspectableFeatureIds ? snapshot.inspectableFeatureIds.includes(record.featureId) || snapshot.selection?.featureId === record.featureId : snapshot.visibleLayers.some((layer) => layer.id === record.layerId)));
@@ -212,6 +215,7 @@ export const createReportDraft = (snapshot: MapSnapshot, evidence: readonly Evid
     includedEvidenceIds: included.map((record) => record.id),
     ...(fireContext ? { fireContext } : {}),
     ...(researchContext ? { researchContext } : {}),
+    ...(subsurfaceContext ? { subsurfaceContext } : {}),
     sections: {
       summary: fireContext ? `Draft from ${fireContext.kind === "nifc-fire-reports" ? "a NIFC working incident record" : "a NASA thermal detection"}. Check the source record before making any claim.` : "This draft records the current map selection and its evidence posture.",
       observations: fireContext ? `Provider event/acquisition time: ${fireContext.observedAt ?? "not supplied"}. KFM retrieval time: ${fireContext.retrievedAt ?? "not supplied"}. Feed: ${fireContext.feedState}. Nearby records are comparison context, not an incident match.` : "Visible geometry and proximity are map observations only; they are not proof of a relationship.",
