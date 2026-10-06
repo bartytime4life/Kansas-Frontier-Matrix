@@ -69,6 +69,8 @@ async function run(q: Query, signal: AbortSignal) {
     coverage: `${selected.length - failures.length}/${selected.length} requested tiles loaded; ${eligible.length} intersect the 25 km search corridor. ${ranked.length} eligible records in loaded data; showing up to 50. ${timeHeld} date-incompatible/undated records held. ${rejected} invalid records rejected.` };
 }
 scope.onmessage = event => {
+  const expectedOrigin = self.location.origin;
+  if (event.origin && event.origin !== expectedOrigin) return;
   controller?.abort(); controller = new AbortController(); const current = controller; const q = event.data;
   void run(q, current.signal).then(result => { if (!current.signal.aborted) scope.postMessage({ id: q.id, ...result }); })
     .catch(error => { if (!current.signal.aborted) scope.postMessage({ id: q.id, error: error instanceof Error ? error.message : "Underground source unavailable" }); });
