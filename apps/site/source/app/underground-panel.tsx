@@ -1,9 +1,10 @@
 "use client";
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { GeoJSONSource, Map as MapLibreMap, MapMouseEvent } from "maplibre-gl";
+import type { GeoJSONSource, Map as MapLibreMap, MapMouseEvent } from "./maplibre-seam";
 import { distanceMeters, inKansas, intervalColor, intervalCsv, intervalIssues, meters, sectionSvg, sourceLink, SUBSURFACE_LIMIT, validPosition, validGeophysicalSurvey,
   type Borehole, type DepthInterval, type GeophysicalSurvey, type Position, type SectionRecord, type SubsurfaceContext, type SubsurfaceManifest } from "./subsurface-model";
 import s from "./subsurface.module.css";
+import { startSubsurfaceWorker } from "./subsurface-workers";
 import { atRecordYear, recordYear } from "./subsurface-materials";
 
 const AquiferView = lazy(() => import("./aquifer-volume-view"));
@@ -70,7 +71,7 @@ export default function UndergroundPanel(props: Props) {
   useEffect(() => { if (manifest) onContext(context); }, [context, manifest, onContext]);
   useEffect(() => {
     try {
-      const w = new Worker(new URL("./subsurface-worker.ts", import.meta.url), { type: "module" }); worker.current = w;
+      const w = startSubsurfaceWorker(); worker.current = w;
       w.onmessage = (event: MessageEvent<WorkerResult>) => {
         const r = event.data; if (r.id !== serial.current) return;
         setLoading(false); if (r.manifest) setManifest(r.manifest);
