@@ -9,6 +9,7 @@ import { EARTH_ENGINE_CONTEXT_LAYERS, EARTH_ENGINE_SOURCE_YEARS, earthEngineSetY
 import type { EarthEngineDisplayState } from "./earth-engine-raster-fallback";
 import styles from "./earth-engine-display.module.css";
 import { balanceMapRasters, composeMapLayers, requestRasterOpacity } from "./map-layer-composition";
+import { EarthEngineComparisonPanel } from "./earth-engine-comparison-panel";
 
 const sourceId = (id: string) => `kfm-ee-context-source-${id}`;
 const rasterId = (id: string) => `kfm-ee-context-layer-${id}`;
@@ -110,6 +111,7 @@ export function EarthEngineDisplayControls({ map, mapYear, manifests, loading, e
     {!loading && !manifests.length && <p><Link href="/earth-engine">Prepare Kansas Earth Engine imagery ↗</Link> · <Link href="/earth-engine-context/install">Install a reviewed display set ↗</Link></p>}
     {rendererState === "unsupported" && <p role="status">WebGL2 is unavailable here. Selected snapshots open in the 2D image viewer.</p>}
     <details className={styles.boundary}><summary>Display context only</summary><p>Pixel colors are map context, not a KFM evidence claim. A source year is not an installed map year. Each layer uses its own selected year, which may differ from map time {mapYear > 0 ? mapYear : "range"}.</p></details>
+    <EarthEngineComparisonPanel manifests={manifests} loading={loading} error={error} />
     <div className={styles.rows}>{EARTH_ENGINE_CONTEXT_LAYERS.map((descriptor) => {
       const bounds = EARTH_ENGINE_SOURCE_YEARS[descriptor.id];
       const selectedYear = descriptor.id === "ee-3dep" ? 2024 : selectedYears[descriptor.id] ?? 2024;

@@ -8,17 +8,32 @@ export const EARTH_ENGINE_CONTEXT_LAYERS = [
   { id: "ee-terraclimate", title: "drought index", source: "IDAHO_EPSCOR/TERRACLIMATE", period: "2024 calendar year", attribution: "University of Idaho / UC Merced · TerraClimate", legend: "Annual mean PDSI · unitless" },
   { id: "ee-sentinel2", title: "satellite composite", source: "COPERNICUS/S2_SR_HARMONIZED", period: "2024 calendar year", attribution: "Contains modified Copernicus Sentinel data 2024 · European Union / ESA", legend: "Natural color · quality screened annual median" },
   { id: "ee-3dep", title: "Elevation mosaic", source: "USGS/3DEP/10m_collection", period: "Mixed acquisition dates · source mosaic", attribution: "USGS 3D Elevation Program", legend: "Elevation · meters" },
+  { id: "ee-landsat4", title: "Landsat 4 satellite composite", source: "LANDSAT/LT04/C02/T1_L2", period: "2024 calendar year", attribution: "USGS Landsat 4 Collection 2", legend: "Natural color · QA screened annual median" },
+  { id: "ee-landsat5", title: "Landsat 5 satellite composite", source: "LANDSAT/LT05/C02/T1_L2", period: "2024 calendar year", attribution: "USGS Landsat 5 Collection 2", legend: "Natural color · QA screened annual median" },
+  { id: "ee-landsat7", title: "Landsat 7 satellite composite", source: "LANDSAT/LE07/C02/T1_L2", period: "2024 calendar year", attribution: "USGS Landsat 7 Collection 2", legend: "Natural color · QA screened annual median" },
+  { id: "ee-landsat8", title: "Landsat 8 satellite composite", source: "LANDSAT/LC08/C02/T1_L2", period: "2024 calendar year", attribution: "USGS Landsat 8 Collection 2", legend: "Natural color · QA screened annual median" },
+  { id: "ee-landsat9", title: "Landsat 9 satellite composite", source: "LANDSAT/LC09/C02/T1_L2", period: "2024 calendar year", attribution: "USGS Landsat 9 Collection 2", legend: "Natural color · QA screened annual median" },
+  { id: "ee-prism-monthly", title: "PRISM monthly rainfall", source: "OREGONSTATE/PRISM/ANm", period: "2024 calendar year", attribution: "PRISM Climate Group / Oregon State University", legend: "Annual precipitation · mm" },
+  { id: "ee-prism-daily", title: "PRISM daily rainfall", source: "OREGONSTATE/PRISM/ANd", period: "2024 calendar year", attribution: "PRISM Climate Group / Oregon State University", legend: "Annual precipitation · mm" },
 ] as const;
 
 export type EarthEngineContextLayerId = typeof EARTH_ENGINE_CONTEXT_LAYERS[number]["id"];
 // These are source/recipe bounds, not proof that a reviewed map tile exists.
 export const EARTH_ENGINE_SOURCE_YEARS: Readonly<Partial<Record<EarthEngineContextLayerId, readonly [number, number]>>> = {
+  "ee-prism-monthly": [1895, 2025], "ee-prism-daily": [1981, 2025],
+  "ee-landsat4": [1982, 1993], "ee-landsat5": [1984, 2012], "ee-landsat7": [1999, 2024], "ee-landsat8": [2013, 2025], "ee-landsat9": [2021, 2025],
   "ee-cdl": [2008, 2024], "ee-chirps": [1981, 2025], "ee-terraclimate": [1958, 2024], "ee-sentinel2": [2019, 2025],
 };
+export const EARTH_ENGINE_FIRST_YEAR = 1895;
+export const EARTH_ENGINE_LAST_YEAR = 2025;
+export const EARTH_ENGINE_MAX_YEAR_SETS = EARTH_ENGINE_LAST_YEAR - EARTH_ENGINE_FIRST_YEAR + 1;
+export const EARTH_ENGINE_CATALOG_MAX_BYTES = EARTH_ENGINE_MAX_YEAR_SETS * 96_000 + 1024;
+export const earthEngineSupportedYear = (year: number) => Number.isInteger(year) && year >= EARTH_ENGINE_FIRST_YEAR && year <= EARTH_ENGINE_LAST_YEAR;
 export function earthEngineSetYear(value: { setId: string } | null): number | null {
-  const match = /^ks-(19[5-9]\d|20[0-2]\d)-[a-z0-9-]{6,64}$/.exec(value?.setId ?? "");
-  return match ? Number(match[1]) : null;
+  const match = /^ks-(\d{4})-[a-z0-9-]{6,64}$/.exec(value?.setId ?? "");
+  return match && earthEngineSupportedYear(Number(match[1])) ? Number(match[1]) : null;
 }
+export const earthEngineSetId = (value: unknown): value is string => typeof value === "string" && (earthEngineSetYear({ setId: value }) !== null || /^ks-terrain-[a-z0-9-]{6,64}$/.test(value));
 export function earthEngineLayerPeriod(id: EarthEngineContextLayerId, year: number): string {
   return id === "ee-cdl" ? `${year} harvest year` : id === "ee-3dep" ? "Mixed acquisition dates · source mosaic" : `${year} calendar year`;
 }
@@ -52,7 +67,7 @@ export type EarthEngineContextManifest = {
 export type EarthEngineContextPointer = { schema: "kfm-earth-engine-context-pointer/v1"; setId: string; manifestSha256: string };
 
 const hash = (value: unknown): value is string => typeof value === "string" && /^[0-9a-f]{64}$/.test(value);
-const setId = (value: unknown): value is string => typeof value === "string" && /^ks-(?:19[5-9]\d|20[0-2]\d|terrain)-[a-z0-9-]{6,64}$/.test(value);
+const setId = earthEngineSetId;
 const plain = (value: unknown): value is Record<string, unknown> => Boolean(value && typeof value === "object" && !Array.isArray(value));
 const text = (value: unknown, max = 1000): value is string => typeof value === "string" && value.length > 0 && value.length <= max;
 const coord = (value: unknown) => Number.isInteger(value) && Number(value) >= 0 && Number(value) <= 1_073_741_823;
@@ -67,12 +82,12 @@ export function parseEarthEngineManifest(value: unknown): EarthEngineContextMani
     || value.boundary !== "Kansas · TIGER/2018/States · STATEFP 20"
     || value.reviewState !== "APPROVED_VISUAL_CONTEXT" || value.admission !== "NOT_ADMITTED"
     || value.evidence !== "NOT_CLAIM_EVIDENCE" || !text(value.approvedAt, 40)
-    || !Array.isArray(value.layers) || value.layers.length < 1 || value.layers.length > 5) return null;
+    || !Array.isArray(value.layers) || value.layers.length < 1 || value.layers.length > EARTH_ENGINE_CONTEXT_LAYERS.length) return null;
   const seen = new Set<string>();
   const year = earthEngineSetYear(value as { setId: string });
   for (const layer of value.layers) {
     const descriptor = EARTH_ENGINE_CONTEXT_LAYERS.find((d) => d.id === layer?.id);
-    const resolution = layer?.id === "ee-chirps" ? 5566 : layer?.id === "ee-terraclimate" ? 4638 : 30;
+    const resolution = layer?.id === "ee-chirps" ? 5566 : (layer?.id === "ee-terraclimate" || String(layer?.id).startsWith("ee-prism-")) ? 4638 : 30;
     const bounds = descriptor ? EARTH_ENGINE_SOURCE_YEARS[descriptor.id] : undefined;
     if (!plain(layer) || !descriptor || descriptor.source !== layer.source
       || (descriptor.id === "ee-3dep" && year !== 2024 && !String(value.setId).startsWith("ks-terrain-"))
@@ -110,6 +125,18 @@ export function parseEarthEngineTileIndex(value: unknown, expected: EarthEngineT
     tiles[key] = digest;
   }
   return tiles;
+}
+
+export function parseEarthEngineCatalog(value: unknown): EarthEngineContextManifest[] | null {
+  if (!plain(value) || !Array.isArray(value.manifests) || value.manifests.length > EARTH_ENGINE_MAX_YEAR_SETS) return null;
+  const manifests: EarthEngineContextManifest[] = [], years = new Set<number>();
+  for (const candidate of value.manifests) {
+    // The legacy terrain-only set occupies the existing baseline slot.
+    const manifest = parseEarthEngineManifest(candidate), year = earthEngineSetYear(manifest) ?? 2024;
+    if (!manifest || years.has(year)) return null;
+    years.add(year); manifests.push(manifest);
+  }
+  return manifests;
 }
 
 export const earthEngineManifestKey = (id: string) => `${EARTH_ENGINE_CONTEXT_PREFIX}/sets/${id}/manifest.json`;

@@ -16,7 +16,7 @@ import rasterio
 from rasterio.transform import Affine
 from rasterio.windows import Window
 
-from prepare_display_set import check_grid, dump, sha256
+from prepare_display_set import HIGH_RESOLUTION_LAYERS, check_grid, check_source_year, dump, sha256
 
 
 def aligned(value: float, step: float) -> int:
@@ -31,10 +31,9 @@ def overlaps(left: tuple[int, int, int, int], right: tuple[int, int, int, int]) 
 
 
 def assemble(root: Path, layer: str, year: int = 2024) -> None:
-    if layer not in ("ee-cdl", "ee-sentinel2", "ee-3dep"):
-        raise ValueError("only the three 30 m products use Drive shards")
-    if not 1958 <= year <= 2025 or (layer == "ee-3dep" and year != 2024):
-        raise ValueError("unsupported export year; terrain remains a mixed-date 2024 baseline product")
+    if layer not in HIGH_RESOLUTION_LAYERS:
+        raise ValueError("only documented 30 m products use Drive shards")
+    check_source_year(layer, year)
     folder = root.resolve() / "exports" / layer if year == 2024 else root.resolve() / "exports" / str(year) / layer
     shards = sorted((folder / "shards").glob("*.tif"))
     if not shards:
@@ -98,7 +97,7 @@ def assemble(root: Path, layer: str, year: int = 2024) -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data-root", required=True, type=Path)
-    parser.add_argument("--layer", choices=("ee-cdl", "ee-sentinel2", "ee-3dep"), required=True)
+    parser.add_argument("--layer", choices=sorted(HIGH_RESOLUTION_LAYERS), required=True)
     parser.add_argument("--year", type=int, default=2024)
     args = parser.parse_args()
     assemble(args.data_root, args.layer, args.year)

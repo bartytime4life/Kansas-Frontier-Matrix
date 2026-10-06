@@ -1,3 +1,5 @@
+> **History and local-data candidate - 2026-10-06:** this work preserves privately deployed Site v161 (`2d378eea9635c5f041af382b7b9f1363cf6013b9`) and adds full-history preparation, reviewed imagery comparison, and owner-only acquisition receipts. Selected Kansas data targets the local PC with a 500 GB replaceable cache. [Delivery evidence and limits](docs/free-data-history-delivery.md) records file preservation, source dates, tests and independent review holds.
+
 
 
 > **Reconciliation baseline — 2026-10-06:** this work incorporates the exact

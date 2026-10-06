@@ -37,6 +37,11 @@ for the complete setup and update sequence.
 The explicit `acquisition.py` operator separately plans and transfers selected
 public HTTPS objects into a **500 GB decimal** private replaceable cache, with
 SHA-256 verification, validated resume, protected-file handling and receipts.
+Selected Kansas data belongs in the local external store. Reuse existing files
+before capturing missing dates or reviewed revisions; remote services provide
+source access, processing or temporary transfer as needed. Generated downloads
+without provider-issued digests remain separate protected candidates: a local
+capture hash is not an upstream checksum verification.
 `discover_3dep.py` and `discover_water.py` capture bounded provider metadata only;
 `candidate_queue.py` renders dated catalog options without contacting providers.
 See [free data acquisition](../../docs/runbooks/free-data-acquisition.md) for

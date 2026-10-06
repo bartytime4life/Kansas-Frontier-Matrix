@@ -14,10 +14,14 @@ truth_posture: Local tests and captured metadata are bounded evidence; no releas
 # Free data discovery, selection and bounded acquisition
 
 The owner-selected local temporary/replaceable cache limit is **500 GB =
-500,000,000,000 bytes (about 465.7 GiB)**. This does not cap provider-hosted data or
-authorize paying for storage. Large original collections remain at their public
-providers; source-hosted access and remote processing are distinct from locally
-captured bytes. The operator chooses individual payloads and amounts. No paid
+500,000,000,000 bytes (about 465.7 GiB)**. Selected Kansas data is retained on the
+local PC under `KFM_DATA_ROOT`; provider originals remain available remotely.
+Earth Engine or Drive is used only for processing or temporary transfer when
+needed. Reuse existing local holdings before selecting missing dates or reviewed
+provider revisions. Source-hosted access, generated exports and captured local
+bytes have separate provenance. The cache limit does not cap provider-hosted
+data or authorize paying for storage. The operator chooses individual payloads
+and amounts. No paid
 subscription, requester-pays endpoint, paid fallback, account change, export
 charge, or billing activation is performed by these commands.
 
@@ -39,6 +43,13 @@ immutable candidate folders under `data/raw/`. Process receipts go under
 The tools never scan or evict the rest of the local data store. The existing
 offline local-upload manifest remains the separately reviewed path for verified
 bytes to enter immutable QUARANTINE; acquisition does not promote them.
+
+The generic acquisition worker requires an expected checksum before transfer.
+A generated Earth Engine download without a provider-issued digest therefore
+uses a separate protected candidate capture and review. Its post-download
+SHA-256 and stored-byte readback prove capture integrity; they must not be
+labeled verification against an upstream checksum. Do not weaken the generic
+transport allowlist to accommodate temporary authenticated download URLs.
 
 ## Discover metadata and review all historical choices
 

@@ -13,6 +13,9 @@ source inventories and review records stay outside Git and the Site.
 | Rainfall | [CHIRPS daily](https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY) | Annual recipe years 1981–2025 | Sum in mm; all 365 or 366 daily pixels required; native 0.05° grid |
 | Drought index | [TerraClimate](https://developers.google.com/earth-engine/datasets/catalog/IDAHO_EPSCOR_TERRACLIMATE) | Annual recipe years 1958–2024 | Mean PDSI × 0.01, unitless; all 12 monthly pixels required; native 1/24° grid |
 | Satellite composite | [Sentinel-2 SR harmonized](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR_HARMONIZED) | Annual recipe years 2019–2025 | SCL 4/5/6, B4/B3/B2 × 0.0001, median and retained-observation count; EPSG:5070 at 30 m |
+| Landsat 4 / 5 / 7 / 8 / 9 | [Collection 2 L2](https://developers.google.com/earth-engine/datasets/catalog/LANDSAT_LC08_C02_T1_L2), separate mission collections LT04 / LT05 / LE07 / LC08 / LC09 | 1982–1993 / 1984–2012 / 1999–2024 / 2013–2025 / 2021–2025 | Mission-specific RGB, QA_PIXEL bits 0–5 clear and QA_RADSAT zero, reflectance × 0.0000275 − 0.2; annual median plus retained count; EPSG:5070 at 30 m |
+| PRISM monthly precipitation | [PRISM ANm](https://developers.google.com/earth-engine/datasets/catalog/OREGONSTATE_PRISM_ANm) | Annual recipe years 1895–2025 | Sum in mm; every native calendar-month label and all 12 pixels required; verified EPSG:4269 NAD83 native grid |
+| PRISM daily precipitation | [PRISM ANd](https://developers.google.com/earth-engine/datasets/catalog/OREGONSTATE_PRISM_ANd) | Annual recipe years 1981–2025 | Sum in mm; every native calendar-day label and all 365/366 pixels required; verified EPSG:4269 NAD83 native grid |
 | Elevation | [3DEP 10 m collection](https://developers.google.com/earth-engine/datasets/catalog/USGS_3DEP_10m_collection) | Mixed acquisition dates | Ordered elevation mosaic in meters; EPSG:5070 at 30 m; dates and vertical datum require separate review |
 
 The study boundary is [TIGER/2018/States](https://developers.google.com/earth-engine/datasets/catalog/TIGER_2018_States), filtered to `STATEFP=20`. The 30 m display transform is `[30,0,-1200000,0,-30,2400000]`; it intentionally reduces the Sentinel-2 and 3DEP source resolution. The climate products retain their coarser source grids. These ranges authorize year-specific *recipes*, not claims that older pixels are installed. The Site shows each annual layer's chosen year only when that year's reviewed tile set has been activated. The selection is independent of global map time and explicitly labeled. Terrain remains a mixed-date product, never an annual image.
@@ -23,14 +26,44 @@ The study boundary is [TIGER/2018/States](https://developers.google.com/earth-en
 2. Choose the layer and year in the Site's Earth Engine workspace; download its year-specific small-area Drive recipe. Run it in the owner's Earth Engine Code Editor, review the count/time checks and task, then copy the completed GeoTIFF to `<private-data-root>/exports/<year>/<layer>/sample.tif`. The existing 2024 files retain the legacy path `<private-data-root>/exports/<layer>/sample.tif`. Keep the original Drive file and task ID. The sample is the fixed rectangle `[-99.5,38.2,-99.3,38.4]` intersected with Kansas.
 3. Capture the full source image ID inventory, not a truncated console list. Each Drive recipe queues a `<name>_source_ids` CSV table task with `source_image_id` and `time_start_ms` columns; run it with the statewide export and keep the CSV as `exports/<year>/<layer>/source_ids.csv` (or the legacy 2024 path). Its task ID is the review's `sourceInventoryTaskId`. Save the `TIGER/2018/States` Kansas feature privately as `kansas_tiger2018.geojson`. A Google GeoJSON export may wrap a polygon and a tiny detached line in a GeometryCollection; preserve the original and normalize the polygon explicitly for raster coverage checks. Record both hashes.
 4. Check the Google Drive free-space margin against a documented estimate before each statewide run. The high-resolution statewide recipes use 2048-pixel GeoTIFF shards so every file can be retrieved and checked independently. This changes file packaging, not area or pixel resolution. A quota or export failure holds the affected product; do not reduce its area or resolution to hide the failure. [Google's export guide](https://developers.google.com/earth-engine/guides/exporting_images) describes Drive export, CRS, affine transform and GeoTIFF options.
-5. Save prior-year statewide shards under `<private-data-root>/exports/<year>/<layer>/shards/` (the 2024 path remains unchanged). For CDL and Sentinel-2 run `scripts/earth-engine/assemble_statewide.py --data-root <private-data-root> --layer <layer> --year <year>`. It checks shard alignment, band layout and overlap, writes a BigTIFF with nodata in gaps, and records every shard hash in `assembly.json`. Climate exports are single `statewide.tif` files at native resolution. The mixed-date 3DEP baseline still uses the old path and no annual year.
-6. Review each product independently: completed task ID, sample and statewide hashes, exact source IDs, time coverage, units, masks, source terms, resampling, nodata, grid, Kansas coverage and visible appearance. Keep the complete Earth Engine ID export as `source_ids.csv` next to that year's export. Write a private `review.json` in the same folder only for a passing layer. Set `status` to `APPROVED_VISUAL_CONTEXT`, `samplePassed`, `statewidePassed`, `driveCapacityChecked` and `termsChecked` to true; include `sourceImageIds`, `sourceInventoryTaskId`, `sourceInventorySha256`, `sampleTaskId`, `statewideTaskId`, `sampleGeoTiffSha256`, `statewideGeoTiffSha256`, `boundarySha256`, `units`, `resampling`, `masks`, `terms`, `processingParameters`, `reviewer`, `approvedAt`, and `limits`. CDL also requires `paletteSha256`; for any pre-2024 CDL year, verify historical class meanings and set `historicalClassKeyChecked` to true. 3DEP requires `acquisitionDateReview` and `verticalDatumReview`. The preparation script compares the reviewed IDs with the hashed CSV and validates the actual rasters. Never use a passing QA number alone as review approval.
+5. Save prior-year statewide shards under `<private-data-root>/exports/<year>/<layer>/shards/` (the 2024 path remains unchanged). For CDL, Sentinel-2 and each Landsat mission run `scripts/earth-engine/assemble_statewide.py --data-root <private-data-root> --layer <layer> --year <year>`. It checks shard alignment, band layout and overlap, writes a BigTIFF with nodata in gaps, and records every shard hash in `assembly.json`. Climate exports are single `statewide.tif` files at native resolution. The mixed-date 3DEP baseline still uses the old path and no annual year.
+6. Review each product independently: completed task ID, sample and statewide hashes, exact source IDs, time coverage, units, masks, source terms, resampling, nodata, grid, Kansas coverage and visible appearance. Keep the complete Earth Engine ID export as `source_ids.csv` next to that year's export. Write a private `review.json` in the same folder only for a passing layer. Set `status` to `APPROVED_VISUAL_CONTEXT`, `samplePassed`, `statewidePassed`, `driveCapacityChecked` and `termsChecked` to true; include `sourceImageIds`, `sourceInventoryTaskId`, `sourceInventorySha256`, `sampleTaskId`, `statewideTaskId`, `sampleGeoTiffSha256`, `statewideGeoTiffSha256`, `boundarySha256`, `units`, `resampling`, `masks`, `terms`, `processingParameters`, `reviewer`, `approvedAt`, and `limits`. CDL also requires `paletteSha256`; for any pre-2024 CDL year, verify historical class meanings and set `historicalClassKeyChecked` to true. PRISM also requires `nativeGridChecked: true` and `periodBasis: "source-system-index"`; the exact complete monthly or daily image IDs must match the source-label year. Landsat IDs must match the selected mission, Collection 2 Tier 1 L2 collection and acquisition year; invalid dates and duplicate IDs are rejected. 3DEP requires `acquisitionDateReview` and `verticalDatumReview`. The preparation script compares the reviewed IDs with the hashed CSV and validates the actual rasters. Never use a passing QA number alone as review approval.
 7. Run `scripts/earth-engine/prepare_display_set.py --data-root <private-data-root> --year <year>` with the isolated Python dependencies in `scripts/earth-engine/requirements.txt`. The default remains 2024. It checks hashes, exact annual dates, grids, ranges and Kansas pixel coverage; holds failed products independently; generates immutable PNG tiles from zoom 0, per-zoom tile hashes, a manifest, and `active.json` under `display-sets/<set-id>/earth-engine-context/v1/`. Keep the entire output outside Git. One year may contain a subset of passing layers. Missing years and held layers must not reuse 2024 pixels.
 
 Code Editor previews, the map legend and rendered tiles share one set of display ramps (`EARTH_ENGINE_DISPLAY_RAMPS` in `app/earth-engine-data.ts`, mirrored in `prepare_display_set.py` and compared by tests). Unevenly spaced ramp stops are sampled into evenly spaced Earth Engine palettes so previews match the tiles. The CDL preview keeps the source `cropland` band so Earth Engine applies the catalog class palette. Display sets prepared before 2026-09-28 start at zoom 5; they remain valid but are hidden below zoom 5 until re-prepared.
 
 
-The minimum statewide coverage thresholds are 99.5% for CDL and 3DEP, 99% for CHIRPS and TerraClimate, and 95% for Sentinel-2, all evaluated inside the Kansas feature. A sample needs at least 95%. CHIRPS requires the exact 365 or 366 days for that year; TerraClimate requires 12 months. Sentinel-2 requires at least one retained clear observation per pixel. Each threshold is a review gate, not a claim of scientific accuracy.
+The minimum statewide coverage thresholds are 99.5% for CDL and 3DEP, 99% for CHIRPS, TerraClimate and both PRISM products, and 95% for Sentinel-2 and each Landsat mission, all evaluated inside the Kansas feature. A sample needs at least 95%. CHIRPS and PRISM daily require the exact 365 or 366 source days for that year; TerraClimate and PRISM monthly require 12 months. RGB products require all three finite reflectance channels and at least one integer retained clear-observation count per pixel. Missing observations remain transparent; Landsat 7 gaps are not filled. Partial first or final mission years remain partial observations within the selected calendar-year interval, even when spatial coverage passes. Each threshold is a review gate, not a claim of scientific accuracy.
+
+## PRISM native grid and source-day semantics
+
+Both current PRISM collections were queried in the owner’s authenticated Earth
+Engine session on 2026-10-06. Their first precipitation bands report EPSG:4269
+with transform `[0.041666666667,0,-125.0208333333335,0,-0.041666666667,49.9375000000005]`
+and nominal scale 4638.312116423505 m. This is independent native-grid evidence,
+not a TerraClimate grid assumption. The private capture is
+`Projects/KFM-data/data/raw/earth-engine-prism-native-grid-20261006/receipt.json`,
+SHA-256 `f74358d3ee5811434f80cb6c0a67b566a544b4a601b02bbb61d4eb32ad432846`.
+The first-image query does not prove uniformity over history: each export recipe
+checks every selected precipitation projection against that native CRS and
+transform and holds the task if any differ. The Python reader independently
+checks the exported datum, pixel size and cell alignment.
+
+PRISM daily labels name the **ending day** of a noon-UTC-to-noon-UTC interval,
+as described in the [PRISM dataset guide](https://prism.oregonstate.edu/documents/PRISM_datasets.pdf).
+For example, `ANd/19810101` has a start timestamp of 1980-12-31T12:00:00Z.
+Recipes select annual `system:index` calendar labels, retain actual UTC start
+metadata in the source CSV, and never use UTC-midnight date filtering for PRISM.
+Daily and monthly products remain separate comparison choices. Review must
+record source revisions, AN81/AN91 era differences and station-network limits;
+visual agreement is not proof of scientific comparability.
+
+The history catalog permits one approved installed set per year from 1895
+through 2025 (131 slots). It reads at most two bounded pointer-list pages and
+checks every year, pointer and digest. The client bounds the full catalog to
+`131 × 96,000 + 1,024` bytes. Unsupported years, duplicate years, malformed
+pointers and truncated pagination fail closed. These are available contract
+slots, not claims that data have been exported, reviewed or installed.
 
 ## Site installation and rollback
 
@@ -44,10 +77,21 @@ The installed map says “Processed snapshots available. Live Earth Engine remai
 
 ## Explorer controls and recovery
 
-In Map layers, choose **Earth Engine imagery**. The five prepared-display slots have independent visibility, opacity, period, attribution, and (for annual layers) year selection. Each year option says **installed** or **prepare**. A year with no approved activated tiles says **Year not installed** and links to a recipe for that exact year. A tile failure says **Tile unavailable**. These states do not assert that a Google export has run. The adjacent catalog describes eight Kansas source recipes; only the five products in the table above have a reviewed-display contract.
+In Map layers, choose **Earth Engine imagery**. The twelve prepared-display slots have independent visibility, opacity, period, attribution, and (for annual layers) year selection. Each year option says **installed** or **prepare**. A year with no approved activated tiles says **Year not installed** and links to a recipe for that exact year. A tile failure says **Tile unavailable**. These states do not assert that a Google export has run. The adjacent discovery catalog includes additional candidate sources. Only the twelve products in the table above have this reviewed-display contract; adding a recipe or discovery record never installs imagery.
 
 The fire-news links in the disaster workspace lead to a device-local Fire report builder. It records the selected NIFC or NASA source, provider event/acquisition time, KFM retrieval time, feed and comparison status, and official InciWeb/NIFC research links. It does not ingest or match news articles, promote provider context to EvidenceBundles, or publish a report. The editable draft and its export retain those boundaries.
 
 The optional loopback-only PC reader and validated restoration procedure are
 specified in [local imagery recovery](smoke-imagery-bridges.md). Hosted owner
 checks and all staging/activation writes keep the existing owner boundary.
+
+## Responsibility and validation
+
+This extends the existing Site display adapters in `app/`, private raster
+processors in `scripts/earth-engine/`, regressions in `tests/`, and this note in
+`docs/`, following adopted Directory Rules v2 and ADR-0029. It creates no parallel
+registry or release authority. Synthetic route tests, export-recipe execution
+doubles, and real tiny GeoTIFF tests cover the additive products; they do not
+prove a real statewide Earth Engine export, reviewer approval, activation or
+hosted browser acceptance. Restoring the prior Site code leaves all private
+rasters and immutable display sets intact.

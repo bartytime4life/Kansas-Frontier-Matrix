@@ -4,7 +4,11 @@ import { EARTH_ENGINE_CONTEXT_LAYERS, EARTH_ENGINE_SOURCE_YEARS, type EarthEngin
 export type EarthEngineExportScope = "sample" | "statewide";
 const GRID_30M = { crs: "EPSG:5070", crsTransform: [30, 0, -1200000, 0, -30, 2400000] };
 export const EARTH_ENGINE_EXPORT_GRID = Object.freeze(GRID_30M);
+// PRISM ANm/ANd projection read directly from authenticated GEE metadata on 2026-10-06.
+export const PRISM_NATIVE_GRID = { crs: "EPSG:4269", crsTransform: [0.041666666667, 0, -125.0208333333335, 0, -0.041666666667, 49.9375000000005] } as const;
 const NATIVE_CLIMATE_GRIDS = {
+  "ee-prism-monthly": PRISM_NATIVE_GRID.crsTransform,
+  "ee-prism-daily": PRISM_NATIVE_GRID.crsTransform,
   "ee-chirps": [0.05, 0, -180, 0, -0.05, 50],
   "ee-terraclimate": [1 / 24, 0, -180, 0, -(1 / 24), 90],
 } as const;
@@ -12,12 +16,14 @@ const NATIVE_CLIMATE_GRIDS = {
 export function buildEarthEngineExportRecipe(id: EarthEngineContextLayerId, scope: EarthEngineExportScope, year?: number): string {
   const selected = EARTH_ENGINE_CONTEXT_LAYERS.find((layer) => layer.id === id);
   const catalog = EARTH_ENGINE_DATASETS.find((layer) => layer.id === id);
-  if (!selected || !catalog || !["sample", "statewide"].includes(scope)) throw new Error("Choose one of the five reviewed display products.");
+  if (!selected || !catalog || !["sample", "statewide"].includes(scope)) throw new Error("Choose a supported display preparation product.");
   const bounds = EARTH_ENGINE_SOURCE_YEARS[id];
-  if (bounds ? !Number.isInteger(year) || year! < bounds[0] || year! > bounds[1] : year !== undefined) throw new Error("Choose a supported complete source year; elevation has mixed acquisition dates.");
+  if (bounds ? !Number.isInteger(year) || year! < bounds[0] || year! > bounds[1] : year !== undefined) throw new Error("Choose a supported source year; elevation has mixed acquisition dates.");
   const endYear = year === undefined ? undefined : year + 1;
   const dayCount = year === undefined ? undefined : (Date.UTC(endYear!, 0, 1) - Date.UTC(year, 0, 1)) / 86_400_000;
-  const highResolution = id === "ee-cdl" || id === "ee-sentinel2" || id === "ee-3dep";
+  const landsat = /^ee-landsat[45789]$/.test(id);
+  const rgb = landsat || id === "ee-sentinel2";
+  const highResolution = landsat || id === "ee-cdl" || id === "ee-sentinel2" || id === "ee-3dep";
   const name = `kfm_${id.replaceAll("-", "_")}_${year ?? "mixed_dates"}_${scope}`;
   const lines = [
     "// KFM Earth Engine Drive export recipe v1. Run only in the owner's registered noncommercial project.",
@@ -32,7 +38,19 @@ export function buildEarthEngineExportRecipe(id: EarthEngineContextLayerId, scop
     `var region = ${scope === "sample" ? "sample" : "kansas"};`,
     `var source = ee.ImageCollection('${catalog.asset}').filterBounds(region).sort('system:index');`,
   ];
-  if (year !== undefined) lines.push(`source = source.filterDate('${year}-01-01', '${endYear}-01-01');`);
+  if (id.startsWith("ee-prism-")) lines.push(
+    "// PRISM dates use the provider's native day/month labels. A daily label ends its noon-UTC observation interval.",
+    `source = source.filter(ee.Filter.gte('system:index', '${year}${id === "ee-prism-daily" ? "0101" : "01"}')).filter(ee.Filter.lt('system:index', '${endYear}${id === "ee-prism-daily" ? "0101" : "01"}'));`,
+    `var expectedProjection = ee.Projection('${PRISM_NATIVE_GRID.crs}', ${JSON.stringify(PRISM_NATIVE_GRID.crsTransform)});`,
+    "source = source.map(function(scene) {",
+    "  var native = scene.select('ppt').projection();",
+    "  var sameCrs = ee.Algorithms.IsEqual(native.crs(), expectedProjection.crs());",
+    "  var sameTransform = ee.Algorithms.IsEqual(native.transform(), expectedProjection.transform());",
+    "  return scene.set('kfm_native_grid_ok', ee.Algorithms.If(sameCrs, ee.Algorithms.If(sameTransform, 1, 0), 0));",
+    "});",
+    "if (source.aggregate_min('kfm_native_grid_ok').getInfo() !== 1) throw new Error('PRISM native grid differs or no scenes exist. Export held; inspect source projections.');",
+  );
+  else if (year !== undefined) lines.push(`source = source.filterDate('${year}-01-01', '${endYear}-01-01');`);
   lines.push(
     "print('Input collection count', source.size());",
     "print('Source image IDs (console lists truncate; the CSV task below holds the complete inventory)', source.aggregate_array('system:id'));",
@@ -64,6 +82,15 @@ export function buildEarthEngineExportRecipe(id: EarthEngineContextLayerId, scop
     "var image = values.sum().updateMask(values.count().eq(expected)).rename('annual_precip_mm').toFloat().addBands(values.count().rename('retained_count').toFloat());",
     "print('Retained-observation count', values.count());",
   );
+  if (id === "ee-prism-monthly" || id === "ee-prism-daily") lines.push(
+    "// Retain the observed native NAD83 grid; do not relabel it as WGS84.",
+    `var expected = ${id === "ee-prism-daily" ? dayCount : 12};`,
+    "var periods = source.aggregate_array('system:index').distinct().size();",
+    `if (source.size().getInfo() !== expected || periods.getInfo() !== expected) throw new Error('PRISM ${year} time coverage is incomplete or duplicated. Export held.');`,
+    "var values = source.select('ppt');",
+    "var image = values.sum().updateMask(values.count().eq(expected)).rename('annual_precip_mm').toFloat().addBands(values.count().rename('retained_count').toFloat());",
+    "print('Retained-observation count; source revisions and station-network limitations apply', values.count());",
+  );
   if (id === "ee-terraclimate") lines.push(
     "// 12 monthly periods. PDSI source scale factor is 0.01; index is unitless.",
     "var expected = 12;",
@@ -85,6 +112,17 @@ export function buildEarthEngineExportRecipe(id: EarthEngineContextLayerId, scop
     "var image = clean.median().rename(['red','green','blue']).toFloat().addBands(clean.select(0).count().rename('retained_count').toFloat());",
     "print('Retained per-pixel observation count', clean.select(0).count());",
   );
+  if (landsat) lines.push(
+    "// QA_PIXEL bits 0–5: fill, dilated cloud, cirrus (unused in TM/ETM+), cloud, shadow, snow.",
+    "// QA_RADSAT == 0 also rejects saturation and dropped pixels. No SLC gap filling or cross-sensor harmonization.",
+    `if (source.size().getInfo() < 1) throw new Error('No ${year} Landsat source images. Export held.');`,
+    "var clean = source.map(function(scene) {",
+    "  var good = scene.select('QA_PIXEL').bitwiseAnd(63).eq(0).and(scene.select('QA_RADSAT').eq(0));",
+    `  return scene.select(${/^ee-landsat[457]$/.test(id) ? "['SR_B3','SR_B2','SR_B1']" : "['SR_B4','SR_B3','SR_B2']"}).multiply(0.0000275).add(-0.2).updateMask(good).resample('bilinear');`,
+    "});",
+    "var image = clean.median().rename(['red','green','blue']).toFloat().addBands(clean.select(0).count().rename('retained_count').toFloat());",
+    "print('Retained per-pixel observation count; partial mission years and gaps remain explicit', clean.select(0).count());",
+  );
   if (id === "ee-3dep") lines.push(
     "// Deterministically ordered mosaic; source acquisition dates and vertical datum may differ.",
     "if (source.size().getInfo() < 1) throw new Error('No 3DEP source images. Export held.');",
@@ -94,11 +132,11 @@ export function buildEarthEngineExportRecipe(id: EarthEngineContextLayerId, scop
   const noData = id === "ee-cdl" ? "65535" : "-9999";
   const projection = highResolution
     ? `crs: '${GRID_30M.crs}', crsTransform: ${JSON.stringify(GRID_30M.crsTransform)},`
-    : `crs: 'EPSG:4326', crsTransform: ${JSON.stringify(NATIVE_CLIMATE_GRIDS[id as keyof typeof NATIVE_CLIMATE_GRIDS])},`;
+    : `crs: '${id.startsWith("ee-prism-") ? PRISM_NATIVE_GRID.crs : "EPSG:4326"}', crsTransform: ${JSON.stringify(NATIVE_CLIMATE_GRIDS[id as keyof typeof NATIVE_CLIMATE_GRIDS])},`;
   // Previews use the installed tile styling. CDL keeps its source band name so Earth Engine
   // applies the catalog class palette; the renamed uint16 band would stretch to black.
-  const preview = id === "ee-cdl" ? "ee.Image(source.first()).select('cropland')" : id === "ee-sentinel2" ? "image.select(['red','green','blue'])" : "image.select(0)";
-  const vis = id === "ee-cdl" ? "{}" : id === "ee-sentinel2" ? EARTH_ENGINE_REFLECTANCE_VIS : earthEngineVisParams(EARTH_ENGINE_DISPLAY_RAMPS[id]);
+  const preview = id === "ee-cdl" ? "ee.Image(source.first()).select('cropland')" : rgb ? "image.select(['red','green','blue'])" : "image.select(0)";
+  const vis = id === "ee-cdl" ? "{}" : rgb ? EARTH_ENGINE_REFLECTANCE_VIS : earthEngineVisParams(EARTH_ENGINE_DISPLAY_RAMPS[id]);
   lines.push(
     "print('Output band names and source projection', image.bandNames(), image.projection());",
     `print('Validation sample non-null pixel count on the export grid', image.reduceRegion({reducer: ee.Reducer.count(), geometry: sample, ${projection} maxPixels: 1e8}));`,

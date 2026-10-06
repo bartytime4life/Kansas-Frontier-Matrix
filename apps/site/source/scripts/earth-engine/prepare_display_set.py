@@ -13,6 +13,7 @@ import hashlib
 import io
 import json
 import math
+import re
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
@@ -39,6 +40,34 @@ LAYERS = {
 SOURCE_YEARS = {"ee-cdl": (2008, 2024), "ee-chirps": (1981, 2025),
                 "ee-terraclimate": (1958, 2024), "ee-sentinel2": (2019, 2025)}
 
+LANDSAT_MISSIONS = {"ee-landsat4": ("LT04", 1982, 1993), "ee-landsat5": ("LT05", 1984, 2012),
+                    "ee-landsat7": ("LE07", 1999, 2024), "ee-landsat8": ("LC08", 2013, 2025),
+                    "ee-landsat9": ("LC09", 2021, 2025)}
+for layer_id, (mission, first_year, last_year) in LANDSAT_MISSIONS.items():
+    number = int(layer_id.removeprefix("ee-landsat"))
+    LAYERS[layer_id] = {"source": f"LANDSAT/{mission}/C02/T1_L2", "bands": 4, "unit": "surface reflectance",
+                        "resampling": "bilinear", "maxZoom": 12, "coverage": 0.95, "period": "annual source composite",
+                        "resolution": 30, "attribution": f"USGS Landsat {number} Collection 2",
+                        "legend": "Natural color · QA screened annual median"}
+    SOURCE_YEARS[layer_id] = (first_year, last_year)
+# Confirmed from ANm and ANd image projection metadata, 2026-10-06; not inferred from TerraClimate.
+PRISM_GRID = (0.041666666667, 0, -125.0208333333335, 0, -0.041666666667, 49.9375000000005)
+for layer_id, collection, first_year in (("ee-prism-monthly", "ANm", 1895), ("ee-prism-daily", "ANd", 1981)):
+    LAYERS[layer_id] = {"source": f"OREGONSTATE/PRISM/{collection}", "bands": 2, "unit": "mm", "resampling": "native",
+                        "maxZoom": 8, "coverage": 0.99, "period": "annual source composite", "resolution": 4638,
+                        "attribution": "PRISM Climate Group / Oregon State University",
+                        "legend": "Annual precipitation · mm; 0–1200 display ramp"}
+    SOURCE_YEARS[layer_id] = (first_year, 2025)
+DAILY_LAYERS = {"ee-chirps", "ee-prism-daily"}
+MONTHLY_LAYERS = {"ee-terraclimate", "ee-prism-monthly"}
+RGB_LAYERS = {"ee-sentinel2", *LANDSAT_MISSIONS}
+HIGH_RESOLUTION_LAYERS = {"ee-cdl", "ee-3dep", *RGB_LAYERS}
+
+
+def check_source_year(layer_id: str, year: int) -> None:
+    if type(year) is not int or layer_id not in LAYERS or (year != 2024 if layer_id == "ee-3dep" else not SOURCE_YEARS[layer_id][0] <= year <= SOURCE_YEARS[layer_id][1]):
+        raise ValueError("unsupported source year; terrain retains its mixed-date 2024 baseline")
+
 
 def sha256(path: Path) -> str:
     value = hashlib.sha256()
@@ -60,6 +89,7 @@ def expected_days(year: int) -> int:
 
 
 def review(path: Path, layer_id: str, year: int, boundary_hash: str, palette_hash: str) -> dict:
+    check_source_year(layer_id, year)
     record = json.loads(path.read_text())
     spec = LAYERS[layer_id]
     required = ("sourceImageIds", "sourceInventoryTaskId", "sourceInventorySha256", "sampleTaskId", "statewideTaskId", "sampleGeoTiffSha256", "statewideGeoTiffSha256", "masks", "terms", "processingParameters", "reviewer", "approvedAt", "limits")
@@ -67,7 +97,7 @@ def review(path: Path, layer_id: str, year: int, boundary_hash: str, palette_has
         raise ValueError("review status, layer or source mismatch")
     if any(not record.get(key) for key in required) or not isinstance(record["sourceImageIds"], list) or not all(isinstance(value, str) and value for value in record["sourceImageIds"]):
         raise ValueError("review provenance is incomplete")
-    expected_images = 1 if layer_id == "ee-cdl" else expected_days(year) if layer_id == "ee-chirps" else 12 if layer_id == "ee-terraclimate" else None
+    expected_images = 1 if layer_id == "ee-cdl" else expected_days(year) if layer_id in DAILY_LAYERS else 12 if layer_id in MONTHLY_LAYERS else None
     if expected_images and len(record["sourceImageIds"]) != expected_images:
         raise ValueError("source image ID count does not match the complete period")
     if len(set(record["sourceImageIds"])) != len(record["sourceImageIds"]):
@@ -81,8 +111,28 @@ def review(path: Path, layer_id: str, year: int, boundary_hash: str, palette_has
             raise ValueError(f"CHIRPS source inventory does not cover every {year} day")
     if layer_id == "ee-terraclimate" and ids != {f"IDAHO_EPSCOR/TERRACLIMATE/{year}{month:02d}" for month in range(1, 13)}:
         raise ValueError(f"TerraClimate source inventory does not cover every {year} month")
+    if layer_id in ("ee-prism-monthly", "ee-prism-daily"):
+        if record.get("nativeGridChecked") is not True or record.get("periodBasis") != "source-system-index":
+            raise ValueError("PRISM native grid and source-label period review missing")
+        if layer_id == "ee-prism-monthly":
+            expected_ids = {f"{spec['source']}/{year}{month:02d}" for month in range(1, 13)}
+        else:
+            expected_ids = {spec["source"] + "/" + (date(year, 1, 1) + timedelta(days=offset)).strftime("%Y%m%d") for offset in range(expected_days(year))}
+        if ids != expected_ids:
+            raise ValueError(f"PRISM source inventory does not cover every {year} period")
     if layer_id == "ee-sentinel2" and (not ids or not all(value.startswith(f"COPERNICUS/S2_SR_HARMONIZED/{year}") for value in ids)):
         raise ValueError(f"Sentinel-2 source inventory is not entirely from {year}")
+    if layer_id in LANDSAT_MISSIONS:
+        mission = LANDSAT_MISSIONS[layer_id][0]
+        pattern = re.compile(re.escape(spec["source"]) + "/" + mission + r"_\d{6}_(\d{8})")
+        for identity in ids:
+            match = pattern.fullmatch(identity)
+            try:
+                acquired = datetime.strptime(match[1], "%Y%m%d").date() if match else None
+            except ValueError:
+                acquired = None
+            if acquired is None or acquired.year != year:
+                raise ValueError(f"Landsat source inventory has a wrong mission, collection or date for {year}")
     if layer_id == "ee-3dep" and (not ids or not all(value.startswith("USGS/3DEP/10m_collection/") for value in ids)):
         raise ValueError("3DEP source inventory contains another collection")
     if not all(record.get(key) is True for key in ("samplePassed", "statewidePassed", "driveCapacityChecked", "termsChecked")):
@@ -119,12 +169,19 @@ def check_grid(src, layer_id: str) -> None:
         raise ValueError("unexpected nodata value")
     if src.crs is None:
         raise ValueError("missing CRS")
-    if layer_id in ("ee-cdl", "ee-sentinel2", "ee-3dep"):
+    if layer_id in HIGH_RESOLUTION_LAYERS:
         t = src.transform
         if src.crs.to_epsg() != 5070 or abs(t.a - 30) > 1e-6 or abs(t.e + 30) > 1e-6 or abs(t.b) > 1e-8 or abs(t.d) > 1e-8:
             raise ValueError("high-resolution product is not on the documented 30 m EPSG:5070 grid")
         if abs((t.c + 1200000) / 30 - round((t.c + 1200000) / 30)) > 1e-5 or abs((2400000 - t.f) / 30 - round((2400000 - t.f) / 30)) > 1e-5:
             raise ValueError("30 m grid origin is shifted")
+    elif layer_id.startswith("ee-prism-"):
+        t = src.transform
+        step, _, left, _, negative_step, top = PRISM_GRID
+        if src.crs.to_epsg() != 4269 or abs(t.a - step) > 1e-10 or abs(t.e - negative_step) > 1e-10 or abs(t.b) > 1e-9 or abs(t.d) > 1e-9 \
+                or abs((t.c - left) / step - round((t.c - left) / step)) > 1e-5 \
+                or abs((top - t.f) / step - round((top - t.f) / step)) > 1e-5:
+            raise ValueError("PRISM product was not retained on its verified native NAD83 grid")
     else:
         expected = 0.05 if layer_id == "ee-chirps" else 1 / 24
         top_origin = 50 if layer_id == "ee-chirps" else 90
@@ -144,7 +201,7 @@ def coverage(src, geometry: dict, layer_id: str, sample: bool, year: int) -> flo
     total = valid = 0
     low = math.inf
     high = -math.inf
-    expected_count = expected_days(year) if layer_id == "ee-chirps" else 12 if layer_id == "ee-terraclimate" else None
+    expected_count = expected_days(year) if layer_id in DAILY_LAYERS else 12 if layer_id in MONTHLY_LAYERS else None
     for _, window in src.block_windows(1):
         transform = src.window_transform(window)
         inside = geometry_mask([local], out_shape=(int(window.height), int(window.width)), transform=transform, invert=True)
@@ -154,12 +211,12 @@ def coverage(src, geometry: dict, layer_id: str, sample: bool, year: int) -> flo
         data = src.read(window=window)
         primary = data[0]
         good = inside & np.isfinite(primary) & (primary != src.nodata)
-        if layer_id == "ee-sentinel2":
-            good &= np.all(np.isfinite(data[:3]) & (data[:3] != src.nodata), axis=0) & (data[3] >= 1)
+        if layer_id in RGB_LAYERS:
+            good &= np.all(np.isfinite(data[:3]) & (data[:3] != src.nodata), axis=0) & (data[3] >= 1) & np.isfinite(data[3]) & (data[3] == np.floor(data[3]))
         if expected_count is not None:
             good &= data[1] == expected_count
         if good.any():
-            observed = primary[good]
+            observed = data[:3, good] if layer_id in RGB_LAYERS else primary[good]
             low = min(low, float(observed.min()))
             high = max(high, float(observed.max()))
         total += amount
@@ -171,7 +228,7 @@ def coverage(src, geometry: dict, layer_id: str, sample: bool, year: int) -> flo
     if fraction < minimum:
         raise ValueError(f"pixel coverage {fraction:.2%} below {minimum:.1%}")
     ranges = {"ee-cdl": (0, 254), "ee-chirps": (0, 5000), "ee-terraclimate": (-20, 20), "ee-sentinel2": (-0.2, 1.5), "ee-3dep": (-100, 4500)}
-    bound = ranges[layer_id]
+    bound = (-0.2, 1.5) if layer_id in RGB_LAYERS else (0, 5000) if layer_id.startswith("ee-prism-") else ranges[layer_id]
     if low < bound[0] or high > bound[1]:
         raise ValueError(f"pixel values {low:g}–{high:g} outside reviewed {bound} range")
     return fraction
@@ -206,13 +263,15 @@ def colorize(data: np.ndarray, good: np.ndarray, layer_id: str, palette: dict) -
             if item is None:
                 raise ValueError(f"CDL class {value} has no official catalog color")
             rgba[:, :, :3][good & (data[0] == value)] = hex_rgb(item["color"])
-    elif layer_id == "ee-sentinel2":
+    elif layer_id in RGB_LAYERS:
         colors = np.clip(data[:3].transpose(1, 2, 0) / 0.3, 0, 1) ** (1 / 1.2)
         rgba[:, :, :3][good] = np.round(colors[good] * 255).astype(np.uint8)
     else:
         # Keep identical to EARTH_ENGINE_DISPLAY_RAMPS in app/earth-engine-data.ts.
         ramps = {
             "ee-chirps": ([0, 600, 1200], ["#fff4c2", "#79c9bc", "#235ca8"]),
+            "ee-prism-monthly": ([0, 600, 1200], ["#fff4c2", "#79c9bc", "#235ca8"]),
+            "ee-prism-daily": ([0, 600, 1200], ["#fff4c2", "#79c9bc", "#235ca8"]),
             "ee-terraclimate": ([-5, 0, 5], ["#a63603", "#f6eedb", "#0868ac"]),
             "ee-3dep": ([200, 600, 900, 1300], ["#28594e", "#c4c98a", "#a67e54", "#efe7d4"]),
         }
@@ -245,11 +304,11 @@ def render_tiles(src, layer_id: str, set_dir: Path, set_id: str, geometry: dict,
                               init_dest_nodata=True)
                 good = np.isfinite(data[0]) & (data[0] != fill)
                 good &= geometry_mask([projected_boundary], out_shape=(256, 256), transform=transform, invert=True)
-                if layer_id == "ee-sentinel2":
-                    good &= np.all(np.isfinite(data[:3]) & (data[:3] != fill), axis=0) & (data[3] >= 1)
-                elif layer_id == "ee-chirps":
+                if layer_id in RGB_LAYERS:
+                    good &= np.all(np.isfinite(data[:3]) & (data[:3] != fill), axis=0) & (data[3] >= 1) & np.isfinite(data[3]) & (data[3] == np.floor(data[3]))
+                elif layer_id in DAILY_LAYERS:
                     good &= data[1] == expected_days(year)
-                elif layer_id == "ee-terraclimate":
+                elif layer_id in MONTHLY_LAYERS:
                     good &= data[1] == 12
                 # Include transparent tiles across the declared Kansas bounds.
                 # MapLibre may request a tile within that box but outside the
@@ -278,8 +337,8 @@ def render_tiles(src, layer_id: str, set_dir: Path, set_id: str, geometry: dict,
 
 def prepare(args) -> int:
     year = args.year
-    if not isinstance(year, int) or not 1958 <= year <= 2025:
-        raise ValueError("year must be a complete supported source year, 1958–2025")
+    if type(year) is not int or not 1895 <= year <= 2025:
+        raise ValueError("year must be a supported source year, 1895–2025")
     root = args.data_root.resolve()
     repository = Path(__file__).resolve().parents[2]
     if root == repository or repository in root.parents:

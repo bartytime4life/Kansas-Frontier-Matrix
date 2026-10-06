@@ -40,7 +40,7 @@ test('real KGS snapshots match pinned hashes and produce a bounded example',asyn
 import vm from 'node:vm';
 import { webcrypto } from 'node:crypto';
 const workerText=ts.transpileModule(await readFile('app/aquifer-volume-worker.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText.replace(/^import[^;]+;/m,'const { AQUIFER_VOLUME_ASSETS, buildAquiferVolume } = model;');
-function harness(fetcher){const messages=[],scope={postMessage:v=>messages.push(v)};vm.runInNewContext(workerText,{self:scope,model:m,fetch:fetcher,AbortController,Uint8Array,TextDecoder,crypto:webcrypto,setTimeout,clearTimeout,console});return {messages,send:(id,b=bounds)=>scope.onmessage({data:{id,bounds:b}})};}
+function harness(fetcher){const messages=[],scope={postMessage:v=>messages.push(v),location:{origin:"https://kfm-worker.invalid"}};vm.runInNewContext(workerText,{self:scope,model:m,fetch:fetcher,AbortController,Uint8Array,TextDecoder,crypto:webcrypto,setTimeout,clearTimeout,console});return {messages,send:(id,b=bounds,origin="")=>scope.onmessage({origin,data:{id,bounds:b}})};}
 test('worker rejects tampered or oversized source bytes rather than rendering them',async()=>{
   for(const content of ['{}','x'.repeat(800001)]){const h=harness(async()=>new Response(content));await h.send(1);assert.equal(h.messages.length,1);assert.ok(h.messages[0].error);assert.equal(h.messages[0].volume,undefined);}
 });
@@ -49,4 +49,15 @@ test('worker caches verified bytes and interrupted requests cannot replace a new
   const h=harness(async(url,{signal})=>{requests++;if(requests<=2)await new Promise((resolve,reject)=>signal.addEventListener('abort',()=>reject(new Error('aborted')),{once:true}));return new Response(bytes[url===m.AQUIFER_VOLUME_ASSETS[0].url?0:1]);});
   const old=h.send(1);await h.send(2);await old;assert.deepEqual(h.messages.map(r=>r.id),[2]);assert.ok(h.messages[0].volume.envelopes.length>0);
   await h.send(3);assert.equal(requests,4);assert.deepEqual(h.messages.map(r=>r.id),[2,3]);
+});
+
+test('foreign aquifer worker messages cannot read sources or interrupt a trusted view',async()=>{
+  const bytes=await Promise.all(m.AQUIFER_VOLUME_ASSETS.map(a=>readFile(`public${a.url}`)));
+  const pending=[],signals=[];let reads=0;
+  const h=harness((url,{signal})=>{reads++;signals.push(signal);return new Promise(resolve=>pending.push(()=>resolve(new Response(bytes[url===m.AQUIFER_VOLUME_ASSETS[0].url?0:1]))));});
+  await h.send(0,bounds,'https://foreign.invalid');assert.equal(reads,0);assert.equal(h.messages.length,0);
+  const trusted=h.send(1);assert.equal(reads,2);
+  await h.send(2,bounds,'https://foreign.invalid');assert.equal(reads,2);assert.ok(signals.every(signal=>!signal.aborted));assert.equal(h.messages.length,0);
+  pending.forEach(resolve=>resolve());await trusted;assert.deepEqual(h.messages.map(message=>message.id),[1]);assert.ok(h.messages[0].volume.envelopes.length>0);
+  await h.send(3,bounds,'https://kfm-worker.invalid');assert.equal(reads,2);assert.deepEqual(h.messages.map(message=>message.id),[1,3]);
 });

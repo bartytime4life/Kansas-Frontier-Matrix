@@ -13,6 +13,7 @@ api_root="$site_root/source/app/api"
 # Every app/api route must appear in exactly one list, so a new route cannot
 # go unchecked by accident. Routes in smoke_routes are exercised below.
 smoke_routes=(
+  acquisition acquisition/terrain
   3dep-dem-tile airflow-tile blm-plss-records bridge-records
   crop-casma/availability crop-casma/tile
   data-submissions "data-submissions/[id]"
@@ -168,6 +169,10 @@ expect GET /api/terrain-tile 400
 expect GET /api/wind-arrows 400
 
 # Signed-out readers and owner routes are refused.
+expect GET /api/acquisition 401
+expect POST /api/acquisition 401
+expect GET /api/acquisition/terrain 401
+expect POST /api/acquisition/terrain 401
 expect GET /api/data-submissions 401
 expect GET /api/data-submissions/unknown 401
 expect GET /api/earth-engine-context/catalog 401
@@ -189,7 +194,7 @@ expect POST /api/historical-topo/activate 403
 # Features whose secret or endpoint is unset stay closed.
 expect GET /api/historical-topo/queue 503
 expect PUT /api/historical-topo/stage 503
-expect POST /api/qwen 503 status not_configured '{"question":"Where is Topeka?","context":{}}'
+expect POST /api/qwen 503 status disabled '{"question":"Where is Topeka?","context":{}}'
 
 if (( failures > 0 )); then
   printf '%d of %d local Site backend checks failed.\n' "$failures" "$checks" >&2
