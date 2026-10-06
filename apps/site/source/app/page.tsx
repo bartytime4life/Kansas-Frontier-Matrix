@@ -19,7 +19,11 @@ import { buildAvailabilityBins } from "./timeline-availability";
 import { deriveMapSignals } from "./map-signals";
 import { parseRepositoryObservation, type RepositoryConnection } from "./repository-status";
 import { replaceExplorerHistory } from "./embed-runtime";
-import { parseSavedWorkspaceList } from "./saved-workspaces";
+import { parseSavedWorkspaceList, writeSavedWorkspaceList } from "./saved-workspaces";
+import ResearchPanel from "./research-panel";
+import researchStyles from "./research.module.css";
+import { chooseResearchAnchor, readResearchInventory, nearbyResearch, providerResearchPoints, persistableResearch, researchIdentity, researchSourceUrl, validResearchRecord, validResearchContext, type ResearchContext, type ResearchCoverage, type ResearchRecord, type ResearchRadius } from "./research-context";
+import { catalogDisplayStatus, catalogFilterMatches, type CatalogFilter, type CatalogStatus } from "./layer-workspaces";
 import { BASELINE_STACKS, currentUtcDay } from "./daily-baseline";
 import { SourceQualityRow } from "./source-quality-row";
 import { sourceDownloadHref } from "./source-downloads";
@@ -43,7 +47,7 @@ import { useEarthEngineContext } from "./earth-engine-context-client";
 import { earthEngineSetYear } from "./earth-engine-context";
 import { applyProjectionNavigationLimits, GLOBE_VIEWPOINTS, REGIONAL_NAVIGATION_BOUNDS } from "./globe-context";
 import { browserRenderBudget, mapRuntimeErrorCode, readRenderQuality, sampleMapRuntimeHealth, QUALITY_STORAGE_KEY, type MapRuntimeCheckFailure, type RenderQuality } from "./map-performance";
-import type { Feature, Geometry } from "geojson";
+import type { Feature, FeatureCollection, Geometry } from "geojson";
 import { loadMapLibre, type GeoJSONSource, type Map as MapLibreMap, type MapSourceDataEvent, type ScaleControl } from "./maplibre-seam";
 import {
   CATEGORY_ORDER,
@@ -335,6 +339,7 @@ type WorkspaceSnapshot = Readonly<{
   view: ViewState;
   // Optional for device-local v1 compatibility; missing legacy markers fail closed on restore.
   locationCameraRedacted?: boolean;
+  researchContext?: ResearchContext;
   visibility: Record<string, boolean>;
   opacity: Record<string, number>;
   layerOrder: string[];
@@ -857,7 +862,7 @@ const buildBasemapContext = (candidate: BasemapFeatureCandidate, longitude: numb
     externalStationId: officialSource?.id === "usgs-streamflow"
       ? normalizeUsgsStationId(String(properties.stationId ?? properties.monitoringLocationId ?? ""))
       : null,
-    externalFeatureId: typeof properties.featureId === "string" ? properties.featureId : null,
+    externalFeatureId: typeof properties.featureId === "string" ? properties.featureId : officialSource && candidate.id !== undefined ? String(candidate.id) : null,
     externalAttributes: drawerArtifactAttributes(officialSource?.id ?? "basemap", properties),
     properties: {
       fid: featureId,
@@ -1287,12 +1292,20 @@ export default function Home() {
   const [primaryWorkspace, setPrimaryWorkspace] = useState<PrimaryWorkspace>("map");
   const [workspaceSnapshot, setWorkspaceSnapshot] = useState<MapSnapshot | null>(null);
   const [fireReportContext, setFireReportContext] = useState<FireReportContext | null>(null);
+  const [researchReportContext, setResearchReportContext] = useState<ResearchContext | null>(null);
+  const [researchAnchor, setResearchAnchor] = useState<ResearchRecord | null>(null);
+  const [researchLocationRedacted, setResearchLocationRedacted] = useState(false);
+  const [researchOpen, setResearchOpen] = useState(false);
+  const researchResultFocusRef = useRef<string | null>(null);
+  const [researchSnapshotPoints, setResearchSnapshotPoints] = useState<FeatureCollection | null>(null);
+  const [researchMissingSources, setResearchMissingSources] = useState<ResearchCoverage[]>([]);
   const [leftOpen, setLeftOpen] = useState(false);
   const [sourceStatusOpen, setSourceStatusOpen] = useState(false);
   const [instrumentOpen, setInstrumentOpen] = useState(false);
   const [leftPanelMode, setLeftPanelMode] = useState<LeftPanelMode>("layers");
   const [layerCatalogView, setLayerCatalogView] = useState<"local" | "official">("official");
   const [officialSourceQuery, setOfficialSourceQuery] = useState("");
+  const [officialCatalogFilter, setOfficialCatalogFilter] = useState<CatalogFilter>("all");
   const [officialWorkspace, setOfficialWorkspace] = useState<LayerWorkspace>("all");
   const [rightOpen, setRightOpen] = useState(false);
   const [timelineOpen, setTimelineOpen] = useState(false);
@@ -1342,8 +1355,8 @@ export default function Home() {
   const [mapQueryCandidates, setMapQueryCandidates] = useState<readonly MapQueryCandidate[]>([]);
   const [inspectViewportOnly, setInspectViewportOnly] = useState(false);
   const [inspectVisibleLayersOnly, setInspectVisibleLayersOnly] = useState(false);
-  const [nearbyRadiusMiles, setNearbyRadiusMiles] = useState(100);
-  const [nearbyVisibleLayersOnly, setNearbyVisibleLayersOnly] = useState(false);
+  const [nearbyRadiusMiles, setNearbyRadiusMiles] = useState<ResearchRadius>(25);
+  const nearbyVisibleLayersOnly = true;
   const [compareTimeA, setCompareTimeA] = useState<number>(1910);
   const [compareTimeB, setCompareTimeB] = useState<number>(OFFICIAL_CONTEXT_PRESENT_FRAME);
   const [coordinateLatitude, setCoordinateLatitude] = useState(String(KANSAS_VIEW.center[1]));
@@ -1891,6 +1904,71 @@ export default function Home() {
       temporalSupport: OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id],
     };
   }), [effectiveOfficialVisibility, lightningManifest?.retrievedAt, noaaSatelliteManifest, officialPayloads, officialStates, officialVisibility, windArrowFrame?.retrievedAtUtc]);
+  const researchWellInventoryReady = styleReady && effectiveOfficialVisibility["kgs-monitoring-wells"] && officialStates["kgs-monitoring-wells"] === "ready";
+  useEffect(() => {
+    setResearchSnapshotPoints(null);
+    if (!researchWellInventoryReady) return;
+    const source = mapRef.current?.getSource(OFFICIAL_CONTEXT_BY_ID["kgs-monitoring-wells"].sourceId) as GeoJSONSource | undefined;
+    if (!source?.getData) return;
+    const abort = new AbortController();
+    void readResearchInventory(() => source.getData(), abort.signal, data => {
+      if (data.type === "FeatureCollection") setResearchSnapshotPoints(data);
+    });
+    return () => abort.abort();
+  }, [basemap, researchWellInventoryReady]);
+
+  const researchData = useMemo(() => {
+    const records: ResearchRecord[] = [];
+    const coverage: ResearchCoverage[] = [...researchMissingSources];
+    for (const layer of LAYER_REGISTRY.filter(item => visibility[item.id])) {
+      const features = layer.data.features.filter(feature => layer.publicStatus !== "RESTRICTED"
+        && ["ANSWER", "CORRECTED", "GENERALIZED_GEOMETRY"].includes(feature.properties.evidenceState)
+        && isFeatureAvailableForTemporalQuery(layer, feature.properties.year, temporalQuery)
+        && (mapEvidenceFilter === "ALL" || feature.properties.evidenceState === mapEvidenceFilter));
+      for (const feature of features) {
+        const p = feature.properties;
+        const record: ResearchRecord = { kind: "registry", sourceId: layer.sourceId, featureId: p.fid, title: p.title,
+          coordinates: [p.focusLng, p.focusLat], sourceTitle: p.sourceOrganization, sourceUrl: researchSourceUrl(p.citation),
+          sourceTime: p.temporalScope, retrievedAt: null, evidenceLabel: p.evidenceState,
+          limitation: `${p.generalizationNote || layer.scaleNote} ${p.uncertainty || layer.sensitivityNote}`.trim() || "Registry display anchor, not a surveyed site." };
+        if (validResearchRecord(record)) records.push(record);
+      }
+      coverage.push({ sourceId: layer.id, title: layer.title, state: features.length ? "ready" : "empty", retrievedAt: null,
+        limitation: "Only eligible public-safe registry display anchors in the active time and evidence filter. No geometry-edge distance." });
+    }
+    for (const connection of officialContextConnections.filter(item => item.visible)) {
+      const { source, state, activeAtFrame } = connection;
+      const manifest = GROUNDWATER_MANIFEST.find(item => item.id === source.id);
+      const payload = source.id === "kgs-monitoring-wells" && researchSnapshotPoints && manifest
+        ? { feed: source.id, state: "ready", retrievedAt: manifest.retrievedAt, data: researchSnapshotPoints, truncated: false }
+        : officialPayloads[source.id as OfficialContextFeedId];
+      const eligible = activeAtFrame && (state === "ready" || state === "partial" || state === "empty");
+      const points = providerResearchPoints({ id: source.id, title: source.title, url: source.sourceUrl, time: source.freshness, limitation: source.boundary }, payload,
+        eligible, officialArchiveDays[source.id as OfficialContextFeedId], properties => officialContextTime(source.id, properties, source.freshness));
+      records.push(...points);
+      const coverageState: ResearchCoverage["state"] = !activeAtFrame ? "held" : state === "loading" ? "loading" : state === "error" ? "unavailable"
+        : !payload ? "not-spatial" : !eligible ? "unavailable" : state === "partial" || payload.truncated ? "partial" : points.length ? "ready" : "empty";
+      coverage.push({ sourceId: source.id, title: source.title, state: coverageState, retrievedAt: connection.retrievedAt ?? null,
+        limitation: `${points.length} eligible loaded points before radius filtering. ${connection.limitation ?? source.boundary} ${!payload ? "No point inventory available here; raster pixels, polygons and streamed tiles are excluded." : "Invalid or missing point coordinates and identities are excluded. Provider response extent and limits apply; absence does not prove no records exist."}`.slice(0, 2000) });
+    }
+    return { records, coverage };
+  }, [mapEvidenceFilter, officialArchiveDays, officialContextConnections, officialPayloads, researchMissingSources, researchSnapshotPoints, temporalQuery, visibility]);
+  const researchContext = useMemo<ResearchContext | null>(() => researchAnchor ? {
+    version: 1, anchor: researchAnchor, radiusMiles: nearbyRadiusMiles, mapTime: temporalScopeLabel,
+    capturedAt: new Date().toISOString(), ...nearbyResearch(researchAnchor, researchData.records, nearbyRadiusMiles), coverage: researchData.coverage,
+  } : null, [nearbyRadiusMiles, researchAnchor, researchData, temporalScopeLabel]);
+  const researchAnchorAvailable = Boolean(researchAnchor && researchData.records.some(record => researchIdentity(record) === researchIdentity(researchAnchor)));
+  const selectedResearchRecord = selected ? researchData.records.find(record => record.kind === "registry"
+    ? record.sourceId === selected.layer.sourceId && record.featureId === selected.featureId
+    : record.sourceId === officialContextIdForSelection(selected) && (record.featureId === selected.externalFeatureId
+      || selected.geometry.id !== undefined && record.featureId === String(selected.geometry.id))) ?? null : null;
+
+  const officialCatalogStatuses = useMemo(() => Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map(source => {
+    const held = officialVisibility[source.id] && (!effectiveOfficialVisibility[source.id]
+      || projection === "globe" && (source.kind === "OPERATIONAL_WMS" || source.kind === "HISTORICAL_RASTER"));
+    return [source.id, { selected: officialVisibility[source.id], held, state: officialStates[source.id],
+      canDisplay: styleReady && !held && view.zoom >= sourceMinimumZoom(source) && officialOpacity[source.id] > 0 }];
+  })) as Record<OfficialContextId, CatalogStatus>, [effectiveOfficialVisibility, officialOpacity, officialStates, officialVisibility, projection, styleReady, view.zoom]);
   const filteredOfficialContextConnections = useMemo(() => {
     const query = connectionQuery.trim().toLowerCase();
     return officialContextConnections.filter((connection) => {
@@ -2156,8 +2234,9 @@ export default function Home() {
     }).map((layer) => layer.id));
   }, [debouncedLayerQuery]);
   const listedOfficialSources = useMemo(() => {
-    return filterOfficialSources(OFFICIAL_CONTEXT_SOURCES, officialWorkspace, officialSourceQuery);
-  }, [officialSourceQuery, officialWorkspace]);
+    return filterOfficialSources(OFFICIAL_CONTEXT_SOURCES, officialWorkspace, officialSourceQuery)
+      .filter(source => catalogFilterMatches(officialCatalogFilter, officialCatalogStatuses[source.id]));
+  }, [officialCatalogFilter, officialCatalogStatuses, officialSourceQuery, officialWorkspace]);
   const searchResults = useMemo<GlobalSearchItem[]>(() => {
     const query = debouncedGlobalQuery.trim().toLowerCase();
     if (!query) return [];
@@ -3853,6 +3932,7 @@ export default function Home() {
     setPendingFocusAction(null);
     selectedRef.current = context;
     setSelected(context);
+    setResearchOpen(false);
     setDrawerView("evidence");
     setRightOpen(true);
     setCurrentWorkspace("trust");
@@ -3969,16 +4049,17 @@ export default function Home() {
   }, [analysisArea, basemap, buildYearCurrent, compareTimeA, compareTimeB, layerOrder, locationCameraRedacted, mapContextRecords, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, mapViewportBounds, movingWindowFrames, opacity, projection, scenePreset, selected, selectedTimeMismatch, supportedMapContextCount, temporalMode, temporalQuery, temporalStepRule, terrainProvider, verticalExaggeration, view, visibility]);
 
 
-  const openPrimaryWorkspace = useCallback((mode: Exclude<PrimaryWorkspace, "map">, freshFromMap = false, fireContext: FireReportContext | null = null) => {
+  const openPrimaryWorkspace = useCallback((mode: Exclude<PrimaryWorkspace, "map">, freshFromMap = false, fireContext: FireReportContext | null = null, research: ResearchContext | null = null) => {
     if (freshFromMap || !workspaceSnapshot) setWorkspaceSnapshot(freshFromMap ? captureMapSnapshot() : readDraftSnapshot(mode) ?? captureMapSnapshot());
     setFireReportContext(mode === "reports" ? fireContext : null);
+    setResearchReportContext(mode === "reports" ? persistableResearch(research && { ...research, capturedAt: new Date().toISOString() }, researchLocationRedacted || locationCameraRedacted || locationDerivedViewRef.current) ?? null : null);
     setPrimaryWorkspace(mode);
     setMapContextOpen(false);
     setHelpOpen(false);
     setQwenOpen(false);
     setToolsExpanded(false);
     announce(`${mode === "reports" ? "Report" : "Story"} workspace opened from the current governed map state`);
-  }, [announce, captureMapSnapshot, workspaceSnapshot]);
+  }, [announce, captureMapSnapshot, locationCameraRedacted, researchLocationRedacted, workspaceSnapshot]);
 
   const returnToPrimaryMap = useCallback(() => {
     setPrimaryWorkspace("map");
@@ -6670,21 +6751,25 @@ export default function Home() {
 
   const persistSavedWorkspaces = (next: WorkspaceSnapshot[]) => {
     const bounded = next.slice(0, MAX_PLACE_TRAIL_STOPS);
+    let saved = false;
+    try { saved = writeSavedWorkspaceList(window.localStorage, WORKSPACE_STORAGE_KEY, bounded); } catch { /* Browser may deny the storage getter itself. */ }
+    if (!saved) { announce("Investigation could not be saved on this device. Storage may be full or unavailable; your open map is unchanged."); return false; }
     setSavedWorkspaces(bounded);
-    try { window.localStorage.setItem(WORKSPACE_STORAGE_KEY, JSON.stringify(bounded)); } catch { /* Device-local workspace storage is optional. */ }
+    return true;
   };
 
   const saveCurrentWorkspace = () => {
     const savedAt = new Date().toISOString();
-    const redactWorkspaceCamera = locationCameraRedacted || locationDerivedViewRef.current;
+    const redactWorkspaceCamera = locationCameraRedacted || locationDerivedViewRef.current || researchLocationRedacted;
     const snapshot: WorkspaceSnapshot = {
       id: `workspace-${Date.now()}`,
-      name: normalizePlaceStopName(workspaceName, savedWorkspaces.length + 1),
+      name: normalizePlaceStopName(workspaceName || (!redactWorkspaceCamera && researchOpen && researchAnchor ? `Near ${researchAnchor.title}` : ""), savedWorkspaces.length + 1),
       savedAt,
       view: redactWorkspaceCamera
         ? { center: [...KANSAS_VIEW.center] as [number, number], zoom: KANSAS_VIEW.zoom, bearing: KANSAS_VIEW.bearing, pitch: KANSAS_VIEW.pitch }
         : { center: [...view.center] as [number, number], zoom: view.zoom, bearing: view.bearing, pitch: view.pitch },
       locationCameraRedacted: redactWorkspaceCamera,
+      researchContext: persistableResearch(researchContext && { ...researchContext, capturedAt: savedAt }, redactWorkspaceCamera, true),
       visibility: { ...visibility },
       opacity: { ...opacity },
       layerOrder: [...layerOrder],
@@ -6724,7 +6809,7 @@ export default function Home() {
       },
       selection: selected ? { layerId: selected.layerId, featureId: selected.featureId } : null,
     };
-    persistSavedWorkspaces([snapshot, ...savedWorkspaces]);
+    if (!persistSavedWorkspaces([snapshot, ...savedWorkspaces])) return;
     setActivePlaceId(snapshot.id);
     setWorkspaceName("");
     announce(`${snapshot.name} added to Places on this device`);
@@ -6847,9 +6932,26 @@ export default function Home() {
     selectedRef.current = restoredSelection;
     setSelected(restoredSelection);
     setActivePlaceId(snapshot.id);
-    setRightOpen(false);
+    const savedResearch = !restoredLocationCameraRedaction && validResearchContext(snapshot.researchContext) ? snapshot.researchContext : null;
+    setResearchAnchor(savedResearch?.anchor ?? null);
+    setResearchLocationRedacted(false);
+    setNearbyRadiusMiles(savedResearch?.radiusMiles ?? 25);
+    setResearchOpen(Boolean(savedResearch));
+    setRightOpen(Boolean(savedResearch));
+    if (savedResearch) {
+      const sourceIds = new Set(savedResearch.coverage.map(item => item.sourceId));
+      for (const source of OFFICIAL_CONTEXT_SOURCES) {
+        const visible = sourceIds.has(source.id);
+        if (officialVisibilityRef.current[source.id] !== visible) setOfficialContextVisible(source.id, visible);
+        // An explicit reopen refreshes existing eligible feeds as well as loading missing ones.
+        if (visible && officialPayloadsRef.current[source.id as OfficialContextFeedId]) retryOfficialLayer(source.id);
+      }
+      setResearchMissingSources(savedResearch.coverage.filter(item => !OFFICIAL_CONTEXT_SOURCES.some(source => source.id === item.sourceId) && !knownLayerIds.has(item.sourceId))
+        .map(item => ({ ...item, state: "unavailable", limitation: "This saved source is no longer available in this Site. Its old response is not restored." })));
+      if (isCompact) { setLeftOpen(false); setTimelineOpen(false); }
+    } else setResearchMissingSources([]);
     setMapQueryCandidates([]);
-    announce(`${snapshot.name} restored from Places on this device`);
+    announce(`${snapshot.name} restored from Places on this device${savedResearch ? "; dossier data reloads from eligible sources, saved rows are not reused" : ""}`);
   };
 
   const stopPlaceTour = (announceStop = true) => {
@@ -6894,13 +6996,13 @@ export default function Home() {
 
   const reorderSavedWorkspace = (snapshot: WorkspaceSnapshot, direction: -1 | 1) => {
     stopPlaceTour(false);
-    persistSavedWorkspaces(reorderPlaceStops(savedWorkspaces, snapshot.id, direction));
+    if (!persistSavedWorkspaces(reorderPlaceStops(savedWorkspaces, snapshot.id, direction))) return;
     announce(`${snapshot.name} moved ${direction < 0 ? "earlier" : "later"} in the Places trail`);
   };
 
   const deleteSavedWorkspace = (snapshot: WorkspaceSnapshot) => {
     stopPlaceTour(false);
-    persistSavedWorkspaces(savedWorkspaces.filter((candidate) => candidate.id !== snapshot.id));
+    if (!persistSavedWorkspaces(savedWorkspaces.filter((candidate) => candidate.id !== snapshot.id))) return;
     if (activePlaceId === snapshot.id) setActivePlaceId(null);
     announce(`${snapshot.name} removed from this device`);
   };
@@ -6911,34 +7013,61 @@ export default function Home() {
     announce(nextFilter === "ALL" ? "Showing every compatible evidence state" : `Map filtered to ${nextFilter.replaceAll("_", " ")}`);
   };
 
-  const showNearbyContextLayers = () => {
-    if (!selected || nearbyContext.length === 0) return;
-    const nearbyLayerIds = new Set([selected.layerId, ...nearbyContext.map((row) => row.layer.id)]);
-    setVisibility((current) => {
-      const next = { ...current };
-      nearbyLayerIds.forEach((id) => { next[id] = true; });
-      visibilityRef.current = next;
-      return next;
-    });
-    announce(`Shown ${nearbyLayerIds.size} layers represented near ${selected.properties.title}`);
+  const openResearchDossier = (replaceAnchor = false, returnElement?: HTMLElement) => {
+    const anchor = chooseResearchAnchor(researchAnchor, selectedResearchRecord, replaceAnchor);
+    if (!anchor) { announce("Select an eligible registry record or loaded provider point to start a dossier."); return; }
+    if (replaceAnchor || !researchAnchor) {
+      setResearchAnchor(anchor);
+      setResearchLocationRedacted(locationCameraRedacted || locationDerivedViewRef.current);
+      setResearchMissingSources([]);
+      researchResultFocusRef.current = null;
+    }
+    if (returnElement) returnFocusRef.current = returnElement;
+    setResearchOpen(true);
+    setRightOpen(true);
+    setMapUtilityOpen(false);
+    setCurrentWorkspace("trust");
+    if (isCompact) { setLeftOpen(false); setTimelineOpen(false); }
   };
 
-  const fitNearbyContext = () => {
-    if (!selected) return;
-    const anchors = [selected.properties, ...nearbyContext.map((row) => row.feature.properties)];
-    if (anchors.length === 1) {
-      mapRef.current?.easeTo({ center: [selected.properties.focusLng, selected.properties.focusLat], zoom: 9, duration: motionDuration(500) });
-      return;
-    }
-    const bounds = anchors.reduce((current, properties) => ({
-      west: Math.min(current.west, properties.focusLng),
-      south: Math.min(current.south, properties.focusLat),
-      east: Math.max(current.east, properties.focusLng),
-      north: Math.max(current.north, properties.focusLat),
-    }), { west: anchors[0].focusLng, south: anchors[0].focusLat, east: anchors[0].focusLng, north: anchors[0].focusLat });
-    mapRef.current?.fitBounds([[bounds.west, bounds.south], [bounds.east, bounds.north]], { padding: 70, maxZoom: 10, duration: motionDuration(600) });
-    announce(`Fit ${nearbyContext.length} nearby context records using generalized feature anchors`);
+  const centerResearchRecord = (record: ResearchRecord) => {
+    mapRef.current?.easeTo({ center: [...record.coordinates], zoom: Math.max(view.zoom, 8), duration: motionDuration(500) });
+    announce(`Centered ${record.title}; ${record.kind === "registry" ? "registry display anchor" : "provider point"}`);
   };
+
+  const inspectResearchRecord = (record: ResearchRecord) => {
+    if (!researchData.records.some(item => researchIdentity(item) === researchIdentity(record))) {
+      announce("This record is no longer in the eligible loaded data. Its captured source details remain in the dossier."); return;
+    }
+    researchResultFocusRef.current = researchIdentity(record);
+    if (record.kind === "registry") {
+      const layer = LAYER_REGISTRY.find(item => visibility[item.id] && item.sourceId === record.sourceId && item.data.features.some(feature => feature.properties.fid === record.featureId));
+      if (!layer) { announce("This registry source is no longer available."); return; }
+      selectIndexedFeature(layer.id, record.featureId);
+    }
+    else {
+      const source = OFFICIAL_CONTEXT_SOURCES.find(item => item.id === record.sourceId);
+      const data = record.sourceId === "kgs-monitoring-wells" ? researchSnapshotPoints : officialPayloads[record.sourceId as OfficialContextFeedId]?.data;
+      const feature = data?.features.find(item => String(item.properties?.featureId ?? item.id) === record.featureId);
+      if (!source || !feature) { announce("The selected provider record is unavailable. Refresh its source."); return; }
+      const context = buildBasemapContext({ ...feature, source: source.sourceId }, record.coordinates[0], record.coordinates[1]);
+      if (!context) return;
+      openSelection(context);
+      if (mapRef.current?.isStyleLoaded()) updateSelectionSource(mapRef.current, context.geometry);
+    }
+    setResearchOpen(false);
+    window.requestAnimationFrame(() => rightPanelRef.current?.querySelector<HTMLElement>("[data-selection-summary]")?.focus());
+  };
+
+  useEffect(() => {
+    if (!researchOpen || !rightOpen) return;
+    const frame = window.requestAnimationFrame(() => {
+      const previous = Array.from(rightPanelRef.current?.querySelectorAll<HTMLElement>("[data-research-record]") ?? [])
+        .find(element => element.dataset.researchRecord === researchResultFocusRef.current)?.querySelector<HTMLButtonElement>("button");
+      (previous ?? rightPanelRef.current?.querySelector<HTMLElement>("[data-research-heading]"))?.focus();
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [researchOpen, rightOpen]);
 
   const isolateLayer = (layer: LayerRecord) => {
     const next = Object.fromEntries(LAYER_REGISTRY.map((candidate) => [candidate.id, candidate.id === layer.id]));
@@ -7772,6 +7901,7 @@ export default function Home() {
         mode={primaryWorkspace}
         snapshot={workspaceSnapshot}
         fireContext={fireReportContext}
+        researchContext={researchReportContext}
         evidenceRecords={allEvidenceRecords}
         onModeChange={(mode) => setPrimaryWorkspace(mode)}
         onReturnToMap={returnToPrimaryMap}
@@ -8124,6 +8254,11 @@ export default function Home() {
               {LAYER_WORKSPACES.map(([id, label]) => <button key={id} type="button" aria-pressed={layerCatalogView === "official" && officialWorkspace === id} onClick={() => { setLayerCatalogView("official"); setOfficialWorkspace(id); setOfficialSourceQuery(""); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body")?.scrollTo(0, 0); }}>{label}</button>)}
             </nav>
             {layerCatalogView === "official" && <label className="catalog-search"><span aria-hidden="true">⌕</span><span className="sr-only">Find a provider source</span><input type="search" value={officialSourceQuery} onChange={(event) => setOfficialSourceQuery(event.target.value)} placeholder="Find a source" /></label>}
+            {layerCatalogView === "official" && <div className={researchStyles.filters} role="group" aria-label="Provider catalog filter">
+              {([["all", "All"], ["selected", "Selected"], ["attention", "Needs attention"]] as const).map(([filter, label]) => <button key={filter} type="button" aria-pressed={officialCatalogFilter === filter} onClick={() => setOfficialCatalogFilter(filter)}>{label}</button>)}
+              <small>{listedOfficialSources.length} sources · filtering keeps map selections</small>
+            </div>}
+
           </div>
 
           <div className="layer-catalog-body" hidden={leftPanelMode !== "layers" && leftPanelMode !== "live"}>
@@ -8162,7 +8297,7 @@ export default function Home() {
               <label className="daylight-scrubber"><span className="sr-only">Solar time from {daylightDay} through {daylightThroughDay}, Kansas Central time</span><input type="range" min="0" max="10000" step="1" value={daylightSliderValue} disabled={!daylightEnabled} aria-valuetext={`${daylightDisplayTime.central}; ${daylightDisplayTime.utc}`} onChange={(event) => seekDaylight(Number(event.target.value) / 10_000)} /><span><span>{daylightDay} · midnight</span><span>{daylightRangeSummary}</span><span>{daylightThroughDay} · end</span></span></label>
               <small className="daylight-band-key"><i aria-hidden="true" /> Night <i aria-hidden="true" /> Astronomical twilight <i aria-hidden="true" /> Nautical twilight <i aria-hidden="true" /> Civil twilight · apparent sunrise/sunset</small>
             </section>
-            {listedOfficialSources.length === 0 && <p className="layer-search-empty" role="status">No sources match this topic and search. <button type="button" onClick={() => setOfficialSourceQuery("")}>Clear search</button></p>}
+            {listedOfficialSources.length === 0 && <p className="layer-search-empty" role="status">No sources match these catalog filters. <button type="button" onClick={() => setOfficialSourceQuery("")}>Clear search</button></p>}
             <div className="official-context-list"><div hidden={officialWorkspace !== "all"}><GovernedWaterControl mapRef={mapRef} styleReady={styleReady} /><SoilMoistureControl mapRef={mapRef} styleReady={styleReady} state={soilMapState} onChange={changeSoilMapState} onEngineContextChange={setSoilMoistureContext} /><CropCasmaControl mapRef={mapRef} styleReady={styleReady} projection={projection} /></div>{listedOfficialSources.map((source) => {
               const state = officialStates[source.id];
               const heldAtFrame = officialVisibility[source.id] && !effectiveOfficialVisibility[source.id];
@@ -8172,8 +8307,9 @@ export default function Home() {
               const riverArchiveSpan = streamflowCoverage?.station === streamflowSelectedStationId && !streamflowCoverage.partial ? streamflowCoverage.continuous : null;
               const riverArchiveMinDay = riverArchiveSpan?.start.slice(0, 10);
               const riverArchiveMaxDay = riverArchiveSpan ? [currentUtcDay(), riverArchiveSpan.end.slice(0, 10)].sort()[0] : undefined;
-              return <article key={source.id} className="official-context-row" data-state={state} data-visible={officialVisibility[source.id]} data-held={heldAtFrame}>
-                    <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.shortTitle}</strong><small>{source.organization}{source.kind === "HISTORICAL_RASTER" ? " · historical composite" : ""}{source.id === "noaa-goes-geocolor" && noaaSatelliteManifest ? ` · ${noaaSatelliteManifest.product === "visible" ? "GOES visible fallback" : "GeoColor"}` : ""} · {!officialVisibility[source.id] ? "off" : heldAtFrame ? !buildYearCurrent ? "held until site rebuild" : "held for this map time" : needsFlatMap ? "switch to flat map" : needsCloserView ? `zoom to ${minimumZoom}+` : source.id === "noaa-hms-smoke" && officialPayloads[source.id]?.featureCount === 0 ? `no Kansas footprints ${officialArchiveDays[source.id] ? "on selected day" : "in checked window"}${state === "partial" ? " · partial source" : ""}` : source.id === "noaa-lightning-density" && state === "empty" ? `no density in view${lightningFrame ? ` · ${lightningFrame.slice(11, 16)} UTC` : ""}` : officialContextStateLabel(state).toLowerCase()}</small></div></div>
+              return <article key={source.id} className="official-context-row" style={{ borderInlineStart: "2px solid #8d4e37" }} data-state={state} data-visible={officialVisibility[source.id]} data-held={heldAtFrame}>
+                    <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.shortTitle}</strong><small>{source.organization}{source.kind === "HISTORICAL_RASTER" ? " · historical composite" : ""}{source.id === "noaa-goes-geocolor" && noaaSatelliteManifest ? ` · ${noaaSatelliteManifest.product === "visible" ? "GOES visible fallback" : "GeoColor"}` : ""} · {catalogDisplayStatus(officialCatalogStatuses[source.id])}</small></div></div>
+                <span className={researchStyles.status}>Source time: {officialArchiveDays[source.id as OfficialContextFeedId] ? `${officialArchiveDays[source.id as OfficialContextFeedId]} UTC` : source.freshness}</span>
                 {(needsCloserView || needsFlatMap || heldAtFrame || source.minDisplayZoom !== undefined) && <div className="reference-layer-guidance">
                   <small>{heldAtFrame ? "This source is held at the selected map year." : needsFlatMap ? "This regional image layer requires the flat map." : `Visible at zoom ${minimumZoom}+ · your view ${view.zoom.toFixed(1)}. Source dates vary.`}</small>
                   {heldAtFrame && buildYearCurrent && <button type="button" onClick={() => { setPlaying(false); commitTemporalFrame(OFFICIAL_CONTEXT_PRESENT_FRAME, "Returned to Present; each layer retains its own source dates"); }}>Use Present</button>}
@@ -8708,12 +8844,11 @@ export default function Home() {
                   <button type="button" onClick={() => void copyMapContextReceipt()}>Copy 15-minute map context receipt</button>
                 </article>
 
-                <section className="nearby-context-card" aria-labelledby="nearby-context-title" data-active={Boolean(selected)}>
-                  <header><div><span>CROSS-DOMAIN DISCOVERY</span><h4 id="nearby-context-title">Nearby context</h4></div><strong>{selected ? `${nearbyContext.length} FOUND` : "SELECT A FEATURE"}</strong></header>
-                  <div className="nearby-context-controls"><label><span>Anchor radius</span><select value={nearbyRadiusMiles} onChange={(event) => setNearbyRadiusMiles(Number(event.target.value))}>{[25, 50, 100, 200].map((radius) => <option key={radius} value={radius}>{radius} miles</option>)}</select></label><label><input type="checkbox" checked={nearbyVisibleLayersOnly} onChange={(event) => setNearbyVisibleLayersOnly(event.target.checked)} /><span>Visible layers only</span></label><button type="button" onClick={showNearbyContextLayers} disabled={!selected || nearbyContext.length === 0}>Show layers</button><button type="button" onClick={fitNearbyContext} disabled={!selected || nearbyContext.length === 0}>Fit context</button></div>
-                  {!selected && <p>Commit a feature selection to discover nearby public-safe records across domains.</p>}
-                  {selected && <div className="nearby-context-list">{nearbyContext.map(({ layer, feature, distanceMiles }) => <article key={`${layer.id}:${feature.properties.fid}`}><button type="button" onClick={() => selectIndexedFeature(layer.id, feature.properties.fid)}><span>{layer.title} · {distanceMiles < 1 ? "<1" : Math.round(distanceMiles)} mi</span><strong>{feature.properties.title}</strong><small>{feature.properties.evidenceState}</small></button></article>)}{nearbyContext.length === 0 && <p>No compatible anchors fall within this radius. Widen the radius or clear the evidence filter.</p>}</div>}
-                  <footer>Distances use generalized feature anchors—not geometry edges, route distance, survey measurement, causal connection, or evidence of a relationship.</footer>
+                <section className="nearby-context-card" aria-labelledby="nearby-context-title">
+                  <header><h4 id="nearby-context-title">Near here · place dossier</h4></header>
+                  <p>Explore eligible registry anchors and loaded provider points from selected layers. Source dates and coverage limits stay with each result.</p>
+                  <button type="button" disabled={!selectedResearchRecord && !researchAnchor} onClick={event => openResearchDossier(false, event.currentTarget)}>Open Near here</button>
+                  {!selectedResearchRecord && !researchAnchor && <p>Select a loaded provider point or an eligible registry record first.</p>}
                 </section>
 
                 {mapQueryCandidates.length > 1 && <section className="map-overlap-chooser" aria-labelledby="overlap-title">
@@ -9009,15 +9144,39 @@ export default function Home() {
 
         <aside ref={rightPanelRef} className="evidence-drawer" data-open={rightOpen} data-state={selected?.properties.evidenceState ?? "EMPTY"} aria-label="Evidence Drawer" aria-hidden={!rightOpen} inert={!rightOpen} aria-modal={isCompact && rightOpen || undefined} role={isCompact && rightOpen ? "dialog" : undefined}>
           <div className="panel-heading drawer-heading">
-            <div><p className="panel-kicker">EVIDENCE DRAWER</p><h2>{selected?.properties.title ?? (hoverSummary ? "Map hover preview" : "Select a map feature")}</h2></div>
+            <div><p className="panel-kicker">EVIDENCE DRAWER</p><h2>{researchOpen && researchAnchor ? `Near ${researchAnchor.title}` : selected?.properties.title ?? (hoverSummary ? "Map hover preview" : "Select a map feature")}</h2></div>
             <button className="icon-close" type="button" onClick={closeRightPanel} aria-label="Close Evidence Drawer">×</button>
           </div>
+          {researchOpen && researchContext ? <div className="drawer-scroll">
+            {selected && <button className="map-catalog-launch" type="button" onClick={() => { setResearchOpen(false); window.requestAnimationFrame(() => rightPanelRef.current?.querySelector<HTMLElement>("[data-selection-summary]")?.focus()); }}>Back to selected record</button>}
+            <ResearchPanel key={researchIdentity(researchContext.anchor)} context={researchContext} anchorAvailable={researchAnchorAvailable} onRadius={setNearbyRadiusMiles}
+              onInspect={inspectResearchRecord} onCenter={centerResearchRecord} onSave={saveCurrentWorkspace}
+              onReport={() => openPrimaryWorkspace("reports", true, null, researchContext)} redacted={researchLocationRedacted || locationCameraRedacted || locationDerivedViewRef.current} />
+          </div> : <>
           {hoverSummary && <section className="drawer-hover-preview" aria-label="Map hover preview">
             <header><span>{hoverActive ? "MAP HOVER" : "LAST MAP HOVER"} · PREVIEW ONLY</span></header>
             <strong>{hoverSummary.title}</strong><span>{hoverSummary.subtitle}</span><p>{hoverSummary.state}</p>
             <small>Select the feature on the map for source details and evidence context.</small>
           </section>}
           {!selected ? !hoverSummary && <div className="drawer-empty"><span aria-hidden="true">⌖</span><h3>No feature selected</h3><p>Choose a map feature or use a Layer Catalog “Features” action. The map identifies a candidate; the registry supplies the stable context.</p></div> : <>
+            <div className="drawer-scroll">
+            <section className={researchStyles.summary} aria-label="Selection summary">
+              <h3 data-selection-summary tabIndex={-1}>Selected record</h3>
+              <dl><div><dt>Source &amp; time</dt><dd>{selected.properties.sourceOrganization} · {selectedRiverObservation?.observedAt ?? selected.properties.temporalScope}</dd></div>
+                <div><dt>Evidence status</dt><dd>{selected.kind === "basemap" ? "External context only · no KFM EvidenceBundle" : selected.properties.evidenceState}</dd></div></dl>
+              <details><summary>What this supports and its limits</summary><p>{selected.kind === "basemap" ? "Inspection of a provider’s mapped record and reported attributes." : selected.properties.summary}</p><p>{selected.properties.generalizationNote} {selected.properties.uncertainty}</p></details>
+              <div className={researchStyles.actions}>
+                <button type="button" onClick={() => { activateDrawerView("evidence"); window.requestAnimationFrame(() => document.getElementById("drawer-tab-evidence")?.focus()); }}>Inspect</button>
+                {selectedResearchRecord && <button type="button" onClick={() => centerResearchRecord(selectedResearchRecord)}>Center</button>}
+                {researchSourceUrl(selectedOfficialConnection?.source.sourceUrl ?? selected.properties.citation) && <a href={researchSourceUrl(selectedOfficialConnection?.source.sourceUrl ?? selected.properties.citation)!} target="_blank" rel="noreferrer">Open source ↗</a>}
+                <button type="button" disabled={!selectedResearchRecord && !researchAnchor} onClick={event => openResearchDossier(false, event.currentTarget)}>Near here</button>
+                {researchAnchor && selectedResearchRecord && researchIdentity(researchAnchor) !== researchIdentity(selectedResearchRecord) && <button type="button" onClick={event => openResearchDossier(true, event.currentTarget)}>Start new dossier here</button>}
+                <button type="button" onClick={saveCurrentWorkspace}>Save investigation</button>
+                <button type="button" onClick={() => openPrimaryWorkspace("reports", true, null, researchContext)}>Create report</button>
+              </div>
+              {!selectedResearchRecord && !researchAnchor && <p>Near here requires an eligible registry record or loaded provider point. Raster pixels and polygon centroids are not used.</p>}
+            </section>
+
             {selectedOfficialConnection && <section className="drawer-live-source" data-state={selectedRiverObservation?.status ?? selectedOfficialConnection.state} aria-label="Selected external source and telemetry">
               <header><span>OFFICIAL SOURCE · {selectedOfficialConnection.source.shortTitle}</span><strong>{selectedRiverObservation?.status === "observation" ? "OBSERVATION LOADED" : selectedRiverObservation?.status === "gap" ? "NO SAMPLE AT FRAME" : selectedRiverObservation?.status === "stale" ? "LAST RESPONSE · CHECK SOURCE" : selectedRiverObservation?.status === "error" ? "SOURCE UNAVAILABLE" : selectedRiverObservation?.status === "loading" ? "REFRESHING" : selectedOfficialConnection.state.toUpperCase()}</strong></header>
               {selectedRiverObservation ? <>
@@ -9038,7 +9197,7 @@ export default function Home() {
             <div className="drawer-tabs" role="tablist" aria-label="Evidence Drawer views">
               {drawerViews.map((tab, index) => <button key={tab} ref={(node) => { drawerTabRefs.current[index] = node; }} id={`drawer-tab-${tab}`} type="button" role="tab" aria-selected={drawerView === tab} aria-controls={`drawer-panel-${tab}`} tabIndex={drawerView === tab ? 0 : -1} onClick={() => activateDrawerView(tab)} onKeyDown={(event) => handleDrawerTabKeyDown(event, index)}>{drawerViewLabels[tab]}</button>)}
             </div>
-            <div className="drawer-scroll">
+            <div>
               {drawerView === "evidence" && <section role="tabpanel" id="drawer-panel-evidence" aria-labelledby="drawer-tab-evidence" className="drawer-section">
                 <p className="summary">{selectedRiverObservation ? `${selectedRiverObservation.stationName ?? selected.properties.title} is a USGS monitoring location. The observation follows the selected map frame; a missing frame remains a gap.` : selectedOfficialConnection ? `Selected map snapshot: ${selected.properties.summary} Re-select this feature after a feed update to refresh its mapped properties.` : selected.properties.summary}</p>
                 {!selectedRiverObservation && <section className="drawer-data-block" aria-label="Selected artifact data"><header><h3>Selected artifact data</h3><small>{selected.kind === "registry" ? "Site-local record" : selectedAttributesCurrent ? "Current loaded provider response" : "Captured map properties"}</small></header>
@@ -9173,6 +9332,8 @@ export default function Home() {
                 <p className="focus-boundary">Outcomes cannot be manually overridden. Safe intents change the explanation only; action proposals change view state only.</p>
               </section>}
             </div>
+            </div>
+          </>}
           </>}
         </aside>
 
