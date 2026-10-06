@@ -199,7 +199,7 @@ class AcquisitionTests(unittest.TestCase):
             a.load_plan(path)
 
     def test_owner_selected_decimal_cap_and_unfamiliar_files_block_eviction(self):
-        self.assertEqual(a.CACHE_LIMIT, 100_000_000_000)
+        self.assertEqual(a.CACHE_LIMIT, 500_000_000_000)
         a.acquire(self.root, job(), transport=transport())
         foreign = a.cache_root(self.root) / a.job_id(job()) / "unregistered-original"
         foreign.write_bytes(BODY)
@@ -294,7 +294,7 @@ class DiscoveryTests(unittest.TestCase):
         self.assertEqual(len(result["jobs"]), 26)
         self.assertEqual({j["scope"] for j in result["jobs"]}, {"kansas", "global"})
         self.assertTrue(all(j["state"] == "blocked" and j["downloaded_bytes"] == 0 for j in result["jobs"]))
-        self.assertEqual(result["cache"]["limit_bytes"], 100_000_000_000)
+        self.assertEqual(result["cache"]["limit_bytes"], 500_000_000_000)
 
 
 if __name__ == "__main__":

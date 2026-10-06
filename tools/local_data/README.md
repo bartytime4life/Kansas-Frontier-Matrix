@@ -35,7 +35,7 @@ publish, or serve data. See the [local-PC runbook](../../docs/runbooks/local-pc-
 for the complete setup and update sequence.
 
 The explicit `acquisition.py` operator separately plans and transfers selected
-public HTTPS objects into a **100 GB decimal** private replaceable cache, with
+public HTTPS objects into a **500 GB decimal** private replaceable cache, with
 SHA-256 verification, validated resume, protected-file handling and receipts.
 `discover_3dep.py` and `discover_water.py` capture bounded provider metadata only;
 `candidate_queue.py` renders dated catalog options without contacting providers.

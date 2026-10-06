@@ -13,8 +13,8 @@ truth_posture: Local tests and captured metadata are bounded evidence; no releas
 
 # Free data discovery, selection and bounded acquisition
 
-The owner-selected local temporary/replaceable cache limit is **100 GB =
-100,000,000,000 bytes (about 93.1 GiB)**. This does not cap provider-hosted data or
+The owner-selected local temporary/replaceable cache limit is **500 GB =
+500,000,000,000 bytes (about 465.7 GiB)**. This does not cap provider-hosted data or
 authorize paying for storage. Large original collections remain at their public
 providers; source-hosted access and remote processing are distinct from locally
 captured bytes. The operator chooses individual payloads and amounts. No paid
