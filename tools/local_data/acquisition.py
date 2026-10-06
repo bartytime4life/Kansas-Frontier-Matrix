@@ -33,7 +33,7 @@ from tools.local_data.manage import (  # noqa: E402
     canonical, external_root, initialized, parse_json, utc_now,
 )
 
-CACHE_LIMIT = 100_000_000_000  # Owner-selected decimal 100 GB, about 93.1 GiB.
+CACHE_LIMIT = 500_000_000_000  # Owner-selected decimal 500 GB, about 465.7 GiB.
 METADATA_RESERVE = 1024**2
 CHUNK = 1024**2
 MAX_PLAN = 2 * 1024**2
