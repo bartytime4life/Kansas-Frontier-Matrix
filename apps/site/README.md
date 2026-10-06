@@ -1,3 +1,26 @@
+> **History year-selection repair — 2026-10-06:** the [four-path delta](../../data/receipts/generated/site-history-year-selection-delta-20261006.json)
+> matches owner-private Site v163 source `6b5477617a0f30bd70b266e3e45d4d0616dcccf8`
+> on repository base `fc92589a3041a8d63ee79f72f70cf70f212049bb`. Deployment
+> `appgdep_6ac53d7131b08191b3ef4edd0f9bda48` succeeded at 18:27:08 UTC.
+> Landsat 4/5 defaults now agree with their supported years in the dropdown,
+> source text and preparation link. Invalid selections retain the last valid
+> choice; supported uninstalled years stay unavailable without substituted imagery.
+> The source-recipe link no longer embeds a count. All 692 mirrored source paths
+> match the clean v163 commit. Both copies passed production builds, TypeScript,
+> 545 Node tests and lint with 0 errors and 46 inherited warnings.
+> Bounded hosted checks confirmed the 1993/2012 defaults, keyboard selection
+> updating the Landsat 4 year/link, unchanged approved 2024 imagery, and the saved
+> 79-job owner receipt with its 500 GB policy. These checks do not establish full
+> hosted equivalence or source admission. The v162 receipt below stays historical.
+> The guarded local v163 installation on port 4173 also passed bounded keyboard,
+> approved CDL raster, missing-year and one-year comparison/Escape checks.
+> CI attribution pinned PR #4906 base `35a3dc29` and head `8bd4bcf8`: the same
+> 12 renderer-acquisition findings, including four outside the permitted seam,
+> were already present. Its runbook metadata omission is separately repaired;
+> metadata validation reports zero failures with historical warnings remaining.
+> Water conformance retains the inherited `MIRROR_REVIEW_REQUIRED` hold.
+> The historical mirror guard and receipts remain unchanged; no review is waived.
+
 > **Kansas history and acquisition — 2026-10-06:** the [bounded feature delta](../../data/receipts/generated/site-history-acquisition-delta-20261006.json)
 > applies 46 paths from exact clean Site source `93ab891b1b28cc7c1bd14a4f6e12ca14097fdcb9`
 > to repository base `35a3dc29d7fdef1afbf523cd2d03ca6d2b594ebc`: 21 updates and 25 additions,

@@ -15,6 +15,10 @@ const sourceId = (id: string) => `kfm-ee-context-source-${id}`;
 const rasterId = (id: string) => `kfm-ee-context-layer-${id}`;
 const installedFor = (manifests: EarthEngineContextManifest[], id: EarthEngineContextLayerId, year: number) =>
   manifests.find((manifest) => earthEngineSetYear(manifest) === year && manifest.layers.some((layer) => layer.id === id && layer.status === "approved"));
+const isSourceYear = (id: EarthEngineContextLayerId, year: number | undefined): year is number => {
+  const bounds = EARTH_ENGINE_SOURCE_YEARS[id];
+  return year !== undefined && Number.isInteger(year) && Boolean(bounds && year >= bounds[0] && year <= bounds[1]);
+};
 
 export function EarthEngineDisplayControls({ map, mapYear, manifests, loading, error, onReload, onDisplayChange, rendererState }: {
   map: MapLibreMap | null; mapYear: number; manifests: EarthEngineContextManifest[];
@@ -36,9 +40,11 @@ export function EarthEngineDisplayControls({ map, mapYear, manifests, loading, e
   };
   const baseline = manifests.find((item) => earthEngineSetYear(item) === 2024);
   const selectedYears = useMemo(() => Object.fromEntries(EARTH_ENGINE_CONTEXT_LAYERS.filter((item) => item.id !== "ee-3dep").map((item) => {
+    const bounds = EARTH_ENGINE_SOURCE_YEARS[item.id]!;
     const installed = manifests.filter((manifest) => manifest.layers.some((layer) => layer.id === item.id && layer.status === "approved"))
-      .map(earthEngineSetYear).filter((year): year is number => year !== null).sort((a, b) => b - a);
-    return [item.id, yearChoice[item.id] ?? installed[0] ?? 2024];
+      .map(earthEngineSetYear).filter((year): year is number => year !== null && isSourceYear(item.id, year)).sort((a, b) => b - a);
+    const choice = yearChoice[item.id];
+    return [item.id, isSourceYear(item.id, choice) ? choice : installed[0] ?? Math.max(bounds[0], Math.min(bounds[1], 2024))];
   })) as Partial<Record<EarthEngineContextLayerId, number>>, [manifests, yearChoice]);
   const selectedVisible = useMemo(() => !visibilityTouched && rendererState === "unsupported"
     && baseline?.layers.some((layer) => layer.id === "ee-3dep" && layer.status === "approved")
@@ -129,7 +135,10 @@ export function EarthEngineDisplayControls({ map, mapYear, manifests, loading, e
           setVisibilityTouched(true);
           setVisible((current) => ({ ...current, [descriptor.id]: event.target.checked }));
         }} /><strong>{descriptor.title}</strong></label><span>{!installed ? "YEAR NOT INSTALLED" : failed ? "TILE UNAVAILABLE" : selected ? mapUnavailable ? "SELECTED · MAP UNAVAILABLE" : rendererState === "unsupported" ? "SELECTED · 2D VIEWER" : "SELECTED" : "READY"}</span></div>
-        {bounds ? <label className={styles.year}>Image year <select value={selectedYear} aria-label={`${descriptor.title} image year`} onChange={(event) => setYearChoice((current) => ({ ...current, [descriptor.id]: Number(event.target.value) }))}>{years.map((year) => <option key={year} value={year}>{year}{installedYears.includes(year) ? " · installed" : " · prepare"}</option>)}</select></label> : <small>Mixed acquisition dates · no annual year selection</small>}
+        {bounds ? <label className={styles.year}>Image year <select value={selectedYear} aria-label={`${descriptor.title} image year`} onChange={(event) => {
+          const year = Number(event.target.value);
+          if (isSourceYear(descriptor.id, year)) setYearChoice((current) => ({ ...current, [descriptor.id]: year }));
+        }}>{years.map((year) => <option key={year} value={year}>{year}{installedYears.includes(year) ? " · installed" : " · prepare"}</option>)}</select></label> : <small>Mixed acquisition dates · no annual year selection</small>}
         <small>{layer?.period ?? (bounds ? `${selectedYear} source year · imagery not prepared` : descriptor.period)} · {layer ? `${layer.resolutionMeters.toLocaleString()} m ${descriptor.id === "ee-chirps" || descriptor.id === "ee-terraclimate" ? "native source grid" : "display grid"}` : "no reviewed pixels for this choice"}</small>
         {!installed && bounds && <small><Link href={`/earth-engine?dataset=${descriptor.id}&year=${selectedYear}`}>Prepare {selectedYear} {descriptor.title} ↗</Link> · Source coverage does not confirm usable Kansas pixels.</small>}
         {selected && layer && <><small>{layer.attribution}</small><div className={styles.legend}><i aria-hidden="true" data-layer={descriptor.id} style={EARTH_ENGINE_DISPLAY_RAMPS[descriptor.id] ? { background: earthEngineLegendGradient(EARTH_ENGINE_DISPLAY_RAMPS[descriptor.id]) } : undefined} /><span>{layer.legend}</span></div>
