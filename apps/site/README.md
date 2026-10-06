@@ -1,7 +1,8 @@
 > **Map research tools — 2026-10-06:** the [bounded feature delta](../../data/receipts/generated/site-research-tools-delta-20261006.json)
 > projects standalone source `d8f2db1ee6e0fedd495ed538a85ad23b3302e2ae`
 > onto repository base `43ef1c22976b2114ec9a936b97651fba4970bed5`.
-> Site v155 is privately deployed from this source; v153 and v154 remain saved.
+> At that historical checkpoint, Site v155 was privately deployed from this
+> source; v153 and v154 remained saved.
 > It adds catalog filters, pinned place dossiers, and optional saved/report context.
 > All 12 feature paths apply cleanly; `app/page.tsx` retains the newer repository
 > overlay. Other maintenance paths and the installed local service are preserved.
@@ -173,7 +174,7 @@ documentation. Neither operation changes hosted versions or releases.
 | `KFM_HISTORICAL_OWNER_EMAILS`, `KFM_HISTORICAL_OWNER_IDS` | Comma-separated owner allowlists for historical-map review and activation. Unset answers 503 "not configured" to signed-in users. |
 | `KFM_HISTORICAL_WORKER_TOKEN` | Bearer secret of at least 32 characters shared with the local historical-map worker for `/api/historical-topo/queue` and `/stage`. Unset answers 503 "not configured". Do not commit it. |
 | `KFM_LOCAL_REVIEWED_IMAGERY_ORIGIN` | Set only by `scripts/serve-local-worker.mjs --local-reviewed-imagery`; allows reviewed Earth Engine imagery reads from that exact loopback origin. |
-| `QWEN_ENDPOINT` (or `QWEN_OLLAMA_URL`, `OLLAMA_BASE_URL`), `QWEN_MODEL` (or `OLLAMA_MODEL`, default `qwen3:8b`), optional `QWEN_API_KEY` | Server-side Qwen/Ollama endpoint for `/api/qwen`; it must be HTTPS or loopback HTTP. Unset answers 503 `not_configured`, and the browser offers the copyable grounded prompt instead. |
+| `source/scripts/qwen-local-contract.mjs` | Versioned, non-secret owner-local Qwen configuration shared by the UI, loopback companion, installer, and tests: `qwen3:8b`, bridge `127.0.0.1:8768`, and Ollama `127.0.0.1:11434`. The browser contacts only the companion. Hosted `/api/qwen` is dormant and fail-closed; endpoint/model environment aliases do not enable it and there is no hosted fallback. |
 | `.wrangler/local-state/`, `.sites-runtime/` | Ignored local simulator state and install cache; neither contains hosted data. |
 
 The local launcher uses the built Worker and binds to loopback by default. The source's `npm run dev` uses Vite's separate development configuration, which currently binds to `0.0.0.0`; choose the launcher for a loopback-only check. Changing a template environment variable does not change a hosted Site setting.

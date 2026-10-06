@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { chmodSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { chmodSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -42,7 +42,7 @@ test("built Site configuration is recognized without changing its storage identi
 });
 
 function withDirectory(fn) {
-  const directory = mkdtempSync(path.join(tmpdir(), "kfm-runtime-test-"));
+  const directory = mkdtempSync(path.join(realpathSync(tmpdir()), "kfm-runtime-test-"));
   try { fn(directory); } finally { rmSync(directory, { recursive: true, force: true }); }
 }
 
@@ -123,7 +123,7 @@ test("local entry rejects forged edge identity and a rebound Host before invokin
 });
 
 test("built local runtime survives abandoned denials and rejects forged authority over HTTP", { timeout: 30000 }, async () => {
-  const directory = mkdtempSync(path.join(tmpdir(), "kfm-runtime-http-"));
+  const directory = mkdtempSync(path.join(realpathSync(tmpdir()), "kfm-runtime-http-"));
   // Explicitly empty, disposable test stores; never the operator's data.
   mkdirSync(path.join(directory, "v3/d1"), { recursive: true });
   mkdirSync(path.join(directory, "v3/r2"), { recursive: true });
@@ -132,6 +132,8 @@ test("built local runtime survives abandoned denials and rejects forged authorit
   const port = reservation.address().port;
   await new Promise((resolve) => reservation.close(resolve));
   const child = spawn(process.execPath, [fileURLToPath(new URL("../scripts/serve-local-worker.mjs", import.meta.url)), "--state", directory, "--port", String(port)], { stdio: ["ignore", "pipe", "pipe"] });
+  let childStderr = "";
+  child.stderr.on("data", (chunk) => { childStderr = (childStderr + chunk.toString()).slice(-8192); });
   const exited = new Promise((resolve) => child.once("exit", (code) => resolve(code)));
   const origin = `http://127.0.0.1:${port}`;
   const probe = (pathname, method = "GET", headers = {}, abandon = false) => new Promise((resolve, reject) => {
@@ -152,7 +154,6 @@ test("built local runtime survives abandoned denials and rejects forged authorit
         output = (output + chunk.toString()).slice(-4096);
         if (output.includes('"event":"local_runtime_ready"')) { clearTimeout(timer); resolve(); }
       });
-      child.stderr.resume();
       child.once("error", (error) => { clearTimeout(timer); reject(error); });
       child.once("exit", (code) => { clearTimeout(timer); reject(new Error(`RUNTIME_EARLY_EXIT_${code}`)); });
     });
@@ -168,7 +169,7 @@ test("built local runtime survives abandoned denials and rejects forged authorit
   } finally {
     child.kill("SIGTERM");
     const timer = setTimeout(() => child.kill("SIGKILL"), 5000);
-    try { assert.equal(await exited, 0); } finally { clearTimeout(timer); rmSync(directory, { recursive: true, force: true }); }
+    try { assert.equal(await exited, 0, childStderr); } finally { clearTimeout(timer); rmSync(directory, { recursive: true, force: true }); }
   }
 });
 

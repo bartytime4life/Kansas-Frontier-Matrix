@@ -2,15 +2,15 @@
 doc_id: kfm://doc/runtime-ollama-readme
 title: runtime/ollama/ — Governed Local Ollama Runtime Lane
 type: readme; directory-readme; canonical-runtime-lane; provider-specific-local-runtime-boundary
-version: v1.1
+version: v1.2
 status: draft; canonical-lane-confirmed; scaffold-only; live-binding-deferred; NEEDS VERIFICATION
 policy_label: public
 owners: OWNER_TBD — Runtime steward · Governed-AI steward · API steward · Security steward · Policy steward · Evidence steward · Model-risk steward · Test steward · Operations steward · Docs steward
 created: NEEDS VERIFICATION — greenfield stub was replaced by v0.1 on 2026-07-05
-updated: 2026-07-15
+updated: 2026-10-06
 current_path: runtime/ollama/README.md
 canonical_adapter_lane: runtime/model_adapters/
-truth_posture: CONFIRMED target README, runtime responsibility root, canonical Ollama runtime lane, canonical provider-neutral adapter lane, one-line OllamaAdapter placeholder, loopback Ollama environment example with mock as the selected default runtime, proposed Ollama ADR and integration architecture, advisory governed-API boundary grep, DecisionEnvelope contract and paired schema, AIReceipt and RuntimeResponseEnvelope contract/schema families, and adjacent local/mock/service-config/envelope lanes at the pinned evidence snapshot / PROPOSED ADR-0008 acceptance, ADR-0019 acceptance, Ollama integration sequencing, model-admission fields, runtime profile format, and operational gates / UNKNOWN installed Ollama daemon, Ollama version, available or approved models, executable Ollama adapter, service unit, live configuration, health checks, model digests, model rights, policy enforcement, evidence resolution, citation validation, receipt persistence, public-client enforcement, runtime logs, CI results, deployment, and release state / NEEDS VERIFICATION canonical governed request contract, accepted adapter semantic contract, model registry, provider admission review, security approval, fail-closed boundary tests, CODEOWNERS enforcement, correction propagation, and runtime-specific tests
+truth_posture: CONFIRMED target README, runtime responsibility root, canonical Ollama runtime lane, canonical provider-neutral adapter lane, one-line OllamaAdapter placeholder, loopback Ollama environment example with mock as the repository default, proposed Ollama ADR and integration architecture, finite contract/schema families, and an owner-observed/test-pinned Site companion profile for Ollama 0.35.1 plus qwen3:8b on one Mac / PROPOSED ADR-0008 acceptance, ADR-0019 acceptance, canonical Ollama integration sequencing, model admission, and provider-neutral adapter implementation / UNKNOWN general governed-environment deployment, accepted model rights or registry status, receipt persistence, canonical policy integration, public release state, and portability beyond the recorded owner Mac / NEEDS VERIFICATION real logout/reboot auto-start, full uninstall rollback, canonical security approval, CODEOWNERS enforcement, and correction propagation
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   visibility: public
@@ -52,6 +52,7 @@ notes:
   - "runtime/model_adapters/OllamaAdapter.py is confirmed as a one-line greenfield placeholder, not an executable adapter."
   - ".env.example selects mock by default and documents a loopback Ollama host; configuration presence does not activate Ollama."
   - "ADR-0008 and the Ollama integration architecture are draft/proposed and do not prove runtime deployment."
+  - "The owner-local Site companion record is operational evidence for one Mac, not governing approval of Ollama, qwen3:8b, the proposed ADRs, or the provider-neutral runtime lane."
   - "This README does not install Ollama, pull a model, approve a model, activate a provider, grant network or tool access, establish policy, close evidence, validate citations, prove receipt persistence, expose a public endpoint, or publish KFM material."
 [/KFM_META_BLOCK_V2] -->
 
@@ -75,7 +76,7 @@ notes:
 
 ## Quick navigation
 
-[Status](#status-and-evidence-boundary) · [Purpose](#purpose-and-bounded-scope) · [Placement](#repository-fit-and-placement) · [Routing](#responsibility-routing) · [Authority](#authority-and-anti-collapse-rules) · [Inventory](#verified-repository-inventory) · [Sequencing](#mock-first-admission-sequencing) · [Runtime boundary](#provider-specific-runtime-boundary) · [Configuration](#configuration-and-environment-posture) · [Models](#model-profile-and-admission-posture) · [Flow](#governed-ollama-flow) · [Outcomes](#finite-runtime-outcomes) · [Evidence](#evidence-policy-citation-and-release-posture) · [Receipts](#receipts-reproducibility-and-observability) · [Security](#security-privacy-network-and-tool-boundary) · [Testing](#testing-validation-and-no-network-posture) · [Runtime profile](#minimal-ollama-runtime-profile) · [Activation](#activation-deactivation-and-kill-switch) · [Done](#definition-of-done) · [Maintenance](#maintenance-correction-and-rollback) · [Open](#open-verification-backlog) · [Evidence basis](#evidence-basis)
+[Status](#status-and-evidence-boundary) · [Owner-local record](#owner-local-site-companion-operating-record--2026-10-06) · [Purpose](#purpose-and-bounded-scope) · [Placement](#repository-fit-and-placement) · [Routing](#responsibility-routing) · [Authority](#authority-and-anti-collapse-rules) · [Inventory](#verified-repository-inventory) · [Sequencing](#mock-first-admission-sequencing) · [Runtime boundary](#provider-specific-runtime-boundary) · [Configuration](#configuration-and-environment-posture) · [Models](#model-profile-and-admission-posture) · [Flow](#governed-ollama-flow) · [Outcomes](#finite-runtime-outcomes) · [Evidence](#evidence-policy-citation-and-release-posture) · [Receipts](#receipts-reproducibility-and-observability) · [Security](#security-privacy-network-and-tool-boundary) · [Testing](#testing-validation-and-no-network-posture) · [Runtime profile](#minimal-ollama-runtime-profile) · [Activation](#activation-deactivation-and-kill-switch) · [Done](#definition-of-done) · [Maintenance](#maintenance-correction-and-rollback) · [Open](#open-verification-backlog) · [Evidence basis](#evidence-basis)
 
 ---
 
@@ -95,13 +96,39 @@ notes:
 | ADR-0019 | **CONFIRMED present; status proposed/draft** | Proposes a provider-neutral adapter and finite envelopes; does not authorize a live runtime. |
 | `DecisionEnvelope` contract and schema | **CONFIRMED present; status PROPOSED** | Finite runtime outcomes and policy-family context have a semantic contract and paired schema. |
 | `AIReceipt` and `RuntimeResponseEnvelope` contract/schema families | **CONFIRMED present; status PROPOSED** | Accountability and governed-client response shapes exist; presence does not prove runtime use. |
-| Direct Ollama imports or endpoint calls | **No implementation found in the scoped repository searches** | This is bounded search evidence, not proof of universal absence. Continue enforcing explicit boundary tests. |
-| Ollama daemon, models, versions, adapter code, service configs, tests, receipts, logs, deployment | **UNKNOWN** | Documentation, placeholders, and environment examples are not operational proof. |
+| Owner-local Site companion | **CONFIRMED implementation and owner-local observation** | `apps/site/source` contains a loopback bridge, shared non-secret contract, installer/uninstaller, UI adapter, and focused tests. This is a bounded Site responsibility, not the canonical provider-neutral adapter implementation. |
+| Direct Ollama endpoint calls | **CONFIRMED only in the owner-local companion** | The companion calls loopback `127.0.0.1:11434`; browser code and hosted routes do not. Explicit boundary tests remain required. |
+| General Ollama daemon, models, versions, adapter code, service configs, receipts, logs, deployment | **UNKNOWN outside the owner-local record below** | One observed Mac does not establish repository-wide admission, portability, policy integration, receipts, or release maturity. |
 
 > [!WARNING]
 > The prior README said no Ollama adapter file was confirmed. Current repository evidence confirms `runtime/model_adapters/OllamaAdapter.py`, but its entire content is a one-line greenfield placeholder. The correct maturity statement is therefore **CONFIRMED placeholder; executable implementation UNKNOWN**, not "file absent" and not "adapter implemented."
 
 **Document authority:** provider-specific local-runtime lane guidance and index only. Directory Rules, accepted ADRs, canonical contracts, schemas, policy, EvidenceBundles, validators, tests, implementation code, receipts, runtime envelopes, security reviews, release records, correction records, and steward decisions outrank this README.
+
+---
+
+## Owner-local Site companion operating record — 2026-10-06
+
+This is a bounded operating record for the owner-private Explorer on one Mac. It does not change this document's draft/scaffold status, accept the proposed AI ADRs, claim provider-neutral adapter maturity, or prove a public runtime deployment.
+
+| Item | Recorded state |
+|---|---|
+| Host | **CONFIRMED** — owner machine running macOS on an Apple M4 with 32 GB memory. |
+| Ollama | **CONFIRMED owner-local observation; test-pinned** — version `0.35.1`; upstream remains loopback-only at `127.0.0.1:11434` and is never exposed directly to the browser. This is not a governing version approval. |
+| Model | **CONFIRMED owner-local observation; test-pinned** — `qwen3:8b` (8.2B, GGUF `Q4_K_M`), digest `sha256:500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41`. This is not model-registry admission or a rights determination. |
+| Companion | **CONFIRMED** — binds only to `127.0.0.1:8768` and forwards only to the loopback Ollama upstream. |
+| Browser origins | **CONFIRMED** — fixed allowlist: `https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site`, `http://127.0.0.1:5173`, and `http://127.0.0.1:4173`. |
+| Inference mode | **CONFIRMED** — local-only; the browser has no silent hosted `/api/qwen` fallback. |
+| Response governance | **CONFIRMED implementation** — the companion accepts the registered official-source states up to the current bound of 48 and emits only `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`; evidence references must be a subset of the validated safe context. Model-authored prose is not returned. `ANSWER` is a deterministic projection of validated released-selection fields and its declared EvidenceRef. |
+| Service tooling | **CONFIRMED** — opt-in installer and uninstaller live at `apps/site/source/scripts/install-local-qwen-macos.sh` and `apps/site/source/scripts/uninstall-local-qwen-macos.sh`; they manage the owner-local companion rather than a public service. |
+| Login/reboot persistence | **NEEDS VERIFICATION** — the login-service installation exists, but successful restart after a real logout/reboot has not yet been observed in this record. |
+| Rollback | **NEEDS VERIFICATION end to end** — the uninstaller is the recorded unload/removal procedure, but a complete uninstall was not exercised because the working companion was retained. Ollama and the model remain unless separately authorized for removal. |
+
+The loopback and origin allowlists constrain browser access; they do not defend
+against a malicious process already running as the same macOS user. This profile
+assumes the owner account and its Application Support and LaunchAgent files are
+trusted. A compromised same-user process could call or replace a loopback service,
+so host-account controls—not a browser-embedded secret—own that residual risk.
 
 ---
 
@@ -286,6 +313,9 @@ The current repository exposes a mixed documentation-and-scaffold state.
 | `runtime/model_adapters/README.md` | Canonical provider-neutral adapter lane | Ollama-specific runtime must conform to that boundary. |
 | `runtime/service_configs/README.md` | README-only non-secret configuration lane | No Ollama service template was verified there in this pass. |
 | `runtime/local/README.md` | General local runtime wiring lane | Ollama-specific notes stay here only when broader harness context is needed. |
+| `apps/site/source/scripts/qwen-local-contract.mjs` | Versioned non-secret owner-local model, digest, origin, loopback, size, timeout, and envelope contract | Site-specific runtime profile; does not redefine canonical runtime contracts or approve the model. |
+| `apps/site/source/scripts/local-qwen-bridge.mjs` | Loopback-only, bounded companion with finite outcomes and deterministic released-selection projection | Executable owner-local integration; not a public endpoint or provider-neutral adapter. |
+| `apps/site/source/scripts/install-local-qwen-macos.sh` and `uninstall-local-qwen-macos.sh` | Opt-in macOS login-service lifecycle | Installation and service restart were observed; real logout/reboot and full uninstall remain **NEEDS VERIFICATION**. |
 
 ### Current maturity statement
 
@@ -296,25 +326,27 @@ The current repository exposes a mixed documentation-and-scaffold state.
 - a placeholder adapter file exists;
 - a public environment template defaults to mock and names a loopback host;
 - proposed architecture and ADR documents exist;
-- finite runtime contract/schema families exist.
+- finite runtime contract/schema families exist;
+- an owner-local Site companion and shared profile exist;
+- focused companion tests cover bounded positive and negative cases;
+- Ollama `0.35.1` and `qwen3:8b` with the recorded digest were observed on the
+  owner Mac.
 
 **UNKNOWN or NEEDS VERIFICATION:**
 
-- an installed Ollama daemon;
 - an importable and conforming Ollama adapter;
-- installed or approved model tags;
-- exact model digests;
+- approval of any Ollama version or model by the canonical registry/governance
+  lanes;
 - accepted model licenses and use restrictions;
-- local service configuration;
-- health and readiness checks;
-- resource budgets;
-- runtime tests;
-- boundary-test enforcement;
+- portability of the owner-local service configuration and resource budget;
+- real logout/reboot auto-start and a complete uninstall rollback;
+- repository-wide boundary-test enforcement outside the Site companion;
 - policy evaluation;
-- evidence and citation integration;
+- canonical evidence and citation integration outside the companion's bounded
+  released-selection projection;
 - receipts and observability;
 - security review;
-- deployment and release state.
+- public deployment and release state.
 
 ---
 
@@ -348,9 +380,9 @@ flowchart LR
 | AIReceipt | **Contract/schema family confirmed; status PROPOSED** | Persistence and joining remain UNKNOWN. |
 | Security review | **NEEDS VERIFICATION** | Live binding remains held. |
 | Ollama adapter | **CONFIRMED placeholder only** | Live binding remains held. |
-| Approved model profile | **UNKNOWN** | No model is approved by this README. |
-| Local integration tests | **UNKNOWN** | No successful run is claimed. |
-| Activation | **NOT AUTHORIZED by documentation** | Default remains mock or another explicitly governed non-live posture. |
+| Approved model profile | **UNKNOWN** | The owner-local `qwen3:8b` profile is observed and test-pinned, not approved by this README or admitted by a model registry. |
+| Local integration tests | **CONFIRMED for the bounded Site companion** | Focused mocked and owner-local checks do not satisfy canonical provider-admission, rights, receipt, or public-release gates. |
+| Activation | **CONFIRMED owner-local opt-in; NOT AUTHORIZED as canonical/public runtime** | The Site companion may serve the owner-private Explorer on the recorded Mac. Repository default remains mock and no public provider activation follows. |
 
 > [!CAUTION]
 > The presence of an Ollama daemon on a developer machine, a successful `curl`, or a model response is not sufficient admission evidence. The provider-neutral boundary, negative cases, policy/evidence/citation gates, receipts, security review, and reversible deactivation must be demonstrable.
@@ -470,7 +502,10 @@ These categories are **PROPOSED documentation fields**, not accepted environment
 
 ## Model profile and admission posture
 
-No Ollama model is approved by this README.
+No Ollama model is approved by this README. The owner-local record pins and tests
+`qwen3:8b` at one full digest with Ollama `0.35.1`; it is operational identity
+evidence for that Site companion, not canonical model admission, a rights
+determination, or acceptance of the proposed AI ADRs.
 
 Before a model profile advances beyond scaffold or held status, record and review:
 
@@ -700,6 +735,8 @@ Observability must not become a second evidence, policy, or publication surface.
 - Default outbound network access and model tools to disabled.
 - Require explicit allowlists for any network or tool capability.
 - Do not permit arbitrary filesystem, shell, database, or canonical-store access.
+- Treat loopback as a network-exposure control, not a security boundary against
+  another process running as the same OS user.
 
 ### Secrets and model artifacts
 
@@ -732,6 +769,11 @@ Observability must not become a second evidence, policy, or publication surface.
 ## Testing, validation, and no-network posture
 
 Default repository tests should not require a running Ollama daemon or network access.
+
+The owner-local Site companion keeps its mocked contract and negative tests in
+the Site package. A live smoke check on one Mac is useful operational evidence,
+but it does not replace the default no-network suite, a canonical adapter review,
+model-rights review, receipts, or public-release evidence.
 
 ### Required proof families before activation
 
@@ -1064,6 +1106,13 @@ For a future live Ollama binding:
 - verify that no public client can still reach the daemon;
 - record the model profile and configuration that were withdrawn.
 
+For the current owner-local Site companion, unload and remove the LaunchAgent and
+versioned Application Support artifact with the Site uninstaller, then verify
+that no process is listening on `127.0.0.1:8768`. Retain Ollama and `qwen3:8b`
+unless their removal is separately authorized. The procedure is documented but
+the complete uninstall is **NEEDS VERIFICATION**; only service restart has been
+observed. Site rollback separately redeploys the retained private v160 baseline.
+
 ---
 
 ## Open verification backlog
@@ -1086,7 +1135,9 @@ For a future live Ollama binding:
 
 ### Runtime and models
 
-- [ ] Confirm whether Ollama is installed in any governed development environment.
+- [ ] Decide whether the owner-observed Ollama installation belongs in any
+  governed development-environment inventory; do not infer that from this Site
+  companion record.
 - [ ] Confirm approved Ollama version range.
 - [ ] Confirm approved model profiles, exact references, digests, quantizations, and licenses.
 - [ ] Confirm model storage, provenance, scanning, and update controls.
@@ -1121,7 +1172,8 @@ For a future live Ollama binding:
 - [ ] Confirm CI workflow and required-check enforcement.
 - [ ] Confirm observability and safe diagnostics.
 - [ ] Confirm kill switch, incident response, deactivation, and rollback runbooks.
-- [ ] Record an actual validated local run before upgrading maturity.
+- [x] Record an owner-local Site companion run without upgrading canonical lane,
+  model-admission, or public-release maturity.
 
 ---
 
@@ -1143,7 +1195,9 @@ For a future live Ollama binding:
 | `RuntimeResponseEnvelope` contract/schema | Governed client response shape | Status PROPOSED; client wiring unverified. |
 | `runtime/service_configs/README.md` | Non-secret runtime configuration responsibility | README-only; no Ollama template confirmed. |
 | `runtime/local/README.md` | General local harness responsibility | Documentation surface only. |
-| Scoped repository searches | Ollama references and absence of discovered direct implementation imports/calls | Bounded by search index and query; not proof of universal absence. |
+| `apps/site/source/scripts/qwen-local-contract.mjs` and `local-qwen-bridge.mjs` | Owner-local profile, loopback companion, finite outcomes, bounded context, deterministic answer projection | Site-specific implementation; not canonical adapter/model approval or public deployment. |
+| Site companion installer, uninstaller, and focused tests | Owner-local lifecycle and negative-case evidence | Actual logout/reboot and complete uninstall remain unverified; tests do not establish model rights or canonical admission. |
+| Scoped repository searches | Ollama references and location of direct endpoint calls | Bounded by search index and query; not proof of universal absence. |
 
 ---
 
@@ -1151,9 +1205,9 @@ For a future live Ollama binding:
 
 | Field | Value |
 |---|---|
-| Last reviewed | 2026-07-15 |
-| Review status | v1.1 canonical-lane hardening; implementation remains scaffold-only and live binding remains deferred |
-| Evidence snapshot | `617ebd26fa362dfe3eeb501a155beebfae663914` |
+| Last reviewed | 2026-10-06 |
+| Review status | v1.2 records a bounded owner-local Site companion while preserving scaffold-only canonical adapter status and proposed ADR status |
+| Evidence snapshot | GitHub `main@02df7f7b21a111bbae753d22c8c5c84cf82e51a9`; Site reconciliation baseline v160 source `47c32510664e8c0189e7a405258d999121d08a0b` (v156 / `6e9b9e3` is historical ancestry) |
 | Next review trigger | Ollama adapter implementation, model profile approval, config change, ADR status change, mock test evidence, security review, live integration test, boundary enforcement change, receipt wiring, public-client change, or runtime activation proposal |
 
 [Back to top](#top)

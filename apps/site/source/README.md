@@ -1,9 +1,13 @@
 
 
-> **Local maintenance checkpoint — 2026-10-05:** this source builds on saved and
-> privately deployed Site v153, `da94de300c1b20dc98e9f527ba54613cfd696f8b`.
-> The local runtime repair in this branch is a candidate; a local build or GitHub
-> merge does not publish it. [Local operation and recovery](docs/local-pc-consolidation.md)
+> **Reconciliation baseline — 2026-10-06:** this work incorporates the exact
+> source behind saved and privately deployed Site v160,
+> `47c32510664e8c0189e7a405258d999121d08a0b`, including the v157–v160
+> underground, aquifer, and rendering repairs. Site v156 / `6e9b9e3` is the
+> historical starting point for the compact-chrome work. The compact chrome and local
+> runtime repair in this branch remain release candidates until a same-tree Site
+> version is saved and deployed; a local build or GitHub merge does not publish
+> them. [Local operation and recovery](docs/local-pc-consolidation.md)
 > records the physical data path separately from the current source alias.
 > [Governed water](docs/governed-water.md) remains subject to package review and
 > activation even when the application is deployed. Dated sections below retain
@@ -20,18 +24,50 @@ The reviewed Crop-CASMA 1 km raster is shown only in 2D Mercator. Globe view hol
 it because its regional Web Mercator tiles cannot provide trustworthy globe
 placement. In 2D it uses the shared map layer order and raster opacity budget.
 
-The owner-preserved application baseline is Site version 68. See
-[preservation and recovery](docs/SITE_PRESERVATION.md) and root `AGENTS.md`
-before importing, replacing, synchronizing or publishing other Site copies.
+The current reconciliation and rollback baseline is Site version 160. The older
+version-68 preservation record remains historical evidence in
+[preservation and recovery](docs/SITE_PRESERVATION.md); read it with root
+`AGENTS.md` before importing, replacing, synchronizing, or publishing another
+Site copy.
 
 For an Ubuntu PC, follow the [Site file layout and private data handoff](docs/LOCAL_PC_SITE_FILES.md).
 
+## Compact explorer chrome and owner-local Qwen — October 6, 2026
+
+On desktop and tablet, Explorer uses one 54 px global header plus one 44 px map
+dock, for a 98 px upper footprint. The dock keeps the representation controls,
+time/context, layers, places, basemap, and controls reachable without wrapping;
+below 1440 px, Basemap and Controls move into the dock overflow. The existing
+mobile primary tabs remain in a 96 px mobile header, the representation selector
+scrolls horizontally, and the 48 px bottom action dock remains available.
+
+Shared header, dock, and overlay variables own the map clearances. The removed
+command bar and its old fixed offsets are not compatibility surfaces. Run
+`npm run test:browser-geometry` to check 1920, 1440, 1024, 768, and 390 px
+viewports for visibility and placement, non-wrapping chrome, horizontal
+overflow, and minimum target sizes. The rendered keyboard walk covers every
+moved function: Data/Contribute, Compose, Map/Reports/Stories, all five map
+representations, Basemap, Controls, Time/Daily archive, Layers/historic maps,
+Places, Share/About, rendering quality, Status/source/live/baseline handoffs,
+Qwen, the 1024 px overflow replacements, and the retained 390 px tabs and
+bottom-dock routes. It also checks Escape and focus return on the applicable
+overlays.
+
+The Site remains owner-private. Rollback for this change is a same-Site
+redeployment of v160 plus unloading the local companion. Neither that Site
+redeployment nor a real logout/reboot cycle is claimed as exercised by this
+README; the latter remains **NEEDS VERIFICATION**. Removing Ollama or its model is
+outside this rollback unless separately requested.
+
 ## Documentation and telemetry alignment — September 24, 2026
 
-This source starts from the same-Site v69 preservation follow-up. The current
-repository reference is `main@bb08d3e9b92e9251c193debab6567be843136070`.
-The standalone Site and monorepo remain different applications, even though
-both manifests name the same project and both pin MapLibre 6.9.0.
+The October reconciliation began with same-Site v156, then incorporated the
+newer private v157–v160 source lineage above, and
+compares it with GitHub `main@02df7f7b21a111bbae753d22c8c5c84cf82e51a9`.
+The Sites source repository and GitHub `apps/site/source` retain separate Git
+histories, but both manifests bind the existing live project and both pin
+MapLibre 6.9.0. Their shared project identity does not establish source-tree
+parity; the release record must compare the tested application tree explicitly.
 
 Use the [feature, connection and telemetry map](docs/SITE_FEATURE_CONNECTION_ACTION_MAP.md)
 for implementation pointers and verification limits. The repository briefing
@@ -224,10 +260,10 @@ Verification: `node --test tests/data-intake.test.mjs tests/intake-worker.test.m
 checks real D1/R2 emulation, authentication, ownership, CSRF, uploads, download
 integrity, review history, conflicting decisions, and unknown-rights holds.
 
-This checkout is also the exact standalone Site source intended for the GitHub
-mirror branch `agent/kfm-site-source-sync-20260912`. That branch is a Site source
-snapshot, not a merge candidate for the distinct monorepo root. The monorepo's
-package-owned renderer and newer dependency work retain their own history.
+The Sites source repository and the GitHub monorepo keep separate Git histories.
+This reconciliation publishes one tested application tree to both histories and
+records their distinct commit identifiers in a reviewable draft pull request;
+it does not merge the GitHub branch or collapse either repository's authority.
 
 ## Current public scope
 
@@ -236,7 +272,7 @@ package-owned renderer and newer dependency work retain their own history.
 - The default Kansas Overview may show an attributed OpenStreetMap context basemap; it is display context, not evidence.
 - Nothing in this build is a released operational KFM dataset.
 - Evidence resolution fails closed: missing, stale, restricted, denied, and
-  error states never become unsupported answers.
+  error states never become `ANSWER` outcomes.
 - Public-safe exports preserve evidence context and withhold protected geometry.
 - “New from map” carries the current extent or selection, visible layers, time,
   representation, and evidence posture into the report or guided-story workflow.
@@ -254,15 +290,15 @@ package-owned renderer and newer dependency work retain their own history.
 - Its canonical host is
   `https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site`; no custom
   domain was attached when this checkpoint was checked on 2026-09-17.
-- The independently read GitHub checkpoint is
-  `bartytime4life/Kansas-Frontier-Matrix@91aeee1ca163bcb3f007577a541a825f60dcddc2`
-  (`main`, merged PR #4609). The Site also offers a
-  separate read-only current-main lookup.
+- The independently read reconciliation checkpoint is
+  `bartytime4life/Kansas-Frontier-Matrix@02df7f7b21a111bbae753d22c8c5c84cf82e51a9`
+  (`main`, observed 2026-10-06). The final draft PR records its exact base and
+  head separately. The Site also offers a read-only current-main lookup.
 - The Site and GitHub repository retain separate source histories. This Site’s
-  `.openai/hosting.json` is authoritative for its current binding; the GitHub
-  child manifest still names legacy project `appgprj_6a870a079c1c8191abb7401ef092a181`
-  and is not used by this Site; that project returned `NOT_FOUND` in the Sites
-  readback.
+  `.openai/hosting.json` is authoritative for its checkout, and the GitHub child
+  manifest names the same existing live project,
+  `appgprj_6aa0b1c41bc08191bfd86003920f1631`. Matching manifests do not collapse
+  the two Git histories or prove that their application trees are equal.
 - This Site and the repository manifest both pin MapLibre `6.9.0`. Matching
   versions remove one drift item; browser, worker, terrain, and release
   acceptance still require their own evidence. The Site reports only finite
@@ -642,23 +678,27 @@ into inferred facts.
 - The GitHub repository and this Site have separate source histories. The
   currentness check does not synchronize trees, write issues, mutate data,
   deploy a version, or publish the Site.
-- `/api/qwen` remains unavailable until a server-reachable endpoint is
-  configured. No hosted Qwen variables are currently required for the map.
-- On this PC, the owner-private Site can use `scripts/local-qwen-bridge.mjs`
-  while that process is running. Start it with `node scripts/local-qwen-bridge.mjs`
-  from the Explorer checkout, then open the Site on the same PC. It binds only
-  `127.0.0.1:8768`, accepts the exact hosted Site origin or the local preview
-  origin `http://127.0.0.1:5173`, and calls only the installed
-  `qwen2.5:7b-instruct-fp16` model on loopback Ollama. Other devices need their
-  own approved connection; a browser may ask for local-network permission.
-  The Qwen panel checks whether loopback Ollama lists the installed model when
-  opened. That check does not prove inference: the panel separately labels an
-  observed local answer or hosted fallback answer. A hosted answer never marks
-  the local bridge as installed or answered. The panel preserves the existing
-  copy-prompt and hosted `/api/qwen` paths. The map
-  remains usable if the bridge or model is unavailable.
+- The Qwen companion is local-only. It uses the separately started
+  `scripts/local-qwen-bridge.mjs` on the same PC and does not assume `/api/qwen`
+  or any hosted model as a fallback. The dormant hosted route remains
+  unconfigured and is not part of local companion availability.
+- The bridge binds only `127.0.0.1:8768`, calls only loopback Ollama, and accepts
+  only the exact hosted Site, `http://127.0.0.1:5173`, and
+  `http://127.0.0.1:4173` origins. A browser may require explicit loopback-network
+  permission. Other devices cannot use this bridge.
+- The owner-observed, test-pinned local runtime profile is Ollama `0.35.1` with
+  `qwen3:8b`, GGUF Q4_K_M, 8.2B parameters, pinned to
+  `sha256:500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41`.
+  This is an owner-local operating record, not model-registry admission,
+  provider approval, or acceptance of the proposed AI ADRs. `/health` becomes
+  ready only when the exact tag and full digest match; a same-name model with
+  another digest fails closed and cannot receive an `/ask` request.
+- Model installation, ready health, and a completed answer remain separate
+  observations. The map and copyable grounded prompt remain usable when the
+  bridge, Ollama, pinned model, or browser permission is unavailable.
 - Qwen receives the current map, time, selected feature, nearby context,
-  registered layers, all 18 official context source states, and redacted
+  registered layers, all registered official context source states (currently
+  bounded to 48), and redacted
   renderer/source/radar/streamflow diagnostics. This is a bounded, interpretive
   snapshot of Site state, not a telemetry ingest, source admission, model
   registry, evidence bundle, or publication path. A camera derived from device
@@ -669,6 +709,95 @@ into inferred facts.
   the intake capability. Reports, stories, places, and investigation workspaces
   remain device-local drafts; those bindings do not make them server-persisted.
 
+### Local Qwen companion setup (opt-in)
+
+Install and start Ollama, then explicitly pull the pinned model:
+
+```sh
+ollama pull qwen3:8b
+```
+
+For a foreground check from this Site checkout, run:
+
+```sh
+node scripts/local-qwen-bridge.mjs
+```
+
+On macOS, the opt-in installer verifies the running Ollama service, exact model
+tag, and full digest before copying the resolved Node executable plus the three
+non-secret bridge files into the versioned user Application Support directory
+and installing a loopback-only LaunchAgent. The agent therefore does not depend
+on a later shell `PATH` or the original Node installation path:
+
+```sh
+scripts/install-local-qwen-macos.sh
+```
+
+Pass `--pull-model` only when the model download is explicitly intended. Remove
+the bridge service without removing Ollama or its model with:
+
+```sh
+scripts/uninstall-local-qwen-macos.sh
+```
+
+Logs contain bridge lifecycle output only, never questions, prompts, map context,
+model answers, or raw Ollama responses. Add `--remove-logs` to the uninstall
+command to remove those lifecycle logs too.
+
+`scripts/qwen-local-contract.mjs` is the single versioned, non-secret runtime
+contract. The bridge imports it, the browser helper imports its validators, the
+installer reads it, and the focused tests exercise it directly. Model identity,
+digest, Ollama version, loopback addresses, exact origin allowlist, versions,
+finite states, structured-response schema, and public envelope validators are
+not maintained as separate component-specific settings.
+
+`GET /health` returns contract `kfm-qwen-local-v1`, bridge version `1.1.2`, the
+pinned tag and digest, and exactly one bounded status: `ready`,
+`ollama_unavailable`, `model_missing`, or `error`. `POST /ask` repeats the model
+and digest metadata and returns exactly one finite outcome: `ANSWER`, `ABSTAIN`,
+`DENY`, or `ERROR`. The bridge rechecks the pinned Ollama version and model
+digest immediately before inference, permits one active `/ask` inference request, caps
+request/reply sizes, times out inference, rejects
+redirects, disables model thinking and tools, and never returns raw upstream
+errors. Every request must carry an explicit boolean `camera.locationRedacted`
+marker; an absent or malformed marker is rejected before Ollama. The health
+probe reports `ollama_unavailable` only for recognized connection-refused
+or unreachable failures; timeouts, HTTP failures, malformed replies, and other
+runtime faults report `error` with `OLLAMA_RUNTIME_ERROR`. A supported
+selection must cite its exact declared KFM EvidenceRef and
+link to exactly one currently visible layer with the same EvidenceRef. Both the
+feature and layer must be `RELEASED`; the layer must be `PUBLIC_SAFE` or
+`GENERALIZED`, and the feature review posture must be explicitly `ACCEPTED`.
+Any restrictive selection evidence/release posture, visible-layer
+release/public posture, or nearby evidence posture takes deny precedence and
+bypasses Ollama, including context-only requests; absent, mismatched,
+unreleased, or unreviewed linkage abstains. Missing support abstains,
+and undeclared model-produced EvidenceRefs fail closed.
+The model must return a bounded structured disposition. A model declaration of
+support is necessary but never sufficient: the bridge also requires a supported
+released selection, a question explicitly tied to that selection, and only its
+declared EvidenceRef. Model-authored prose is never returned to the browser. On
+`ANSWER`, the companion emits a deterministic projection of the already
+validated selection fields and EvidenceRef; unsupported, uncited, malformed,
+restricted, over-precise, or undeclared-reference output becomes `ABSTAIN`,
+`DENY`, or `ERROR`. An unrelated question therefore abstains even if the model
+claims support. The bounded precision gate rejects decimal latitude/longitude,
+directional degrees-minutes-seconds or decimal-minutes coordinates, MGRS/UTM-like
+precise grids, plus codes, and labeled geohashes; it does not assert a broader
+location-text policy.
+
+The current `LAYER_REGISTRY` is intentionally empty, so the live Site has no
+released feature selection that can pass these positive gates and must abstain.
+Positive `ANSWER` tests use explicitly synthetic future-release contract
+fixtures; they do not assert or invent a live released record.
+
+Loopback and origin checks protect the browser-to-companion boundary, but they
+are not isolation from another process running as the same macOS user. The
+owner-local profile assumes that account and its Application Support and
+LaunchAgent files are trusted. A compromised same-user process could call or
+replace a loopback service; that risk requires host-account controls, not a
+secret embedded in public browser source.
+
 ## Security and progress checkpoint — 17 September 2026
 
 The repository briefing is pinned to `main@91aeee1ca163bcb3f007577a541a825f60dcddc2`.
@@ -678,20 +807,22 @@ Sites target mismatch, and the next same-candidate evidence/API/Explorer/recover
 Older feature cards retain their historical source links. The supplied Atlas
 seed cards and MapLibre/pipeline manuals are planning inputs, not runtime proof.
 
-The Qwen route rejects non-object JSON, unknown request keys, malformed context,
-questions longer than 1200 characters, cross-origin requests and non-JSON content.
-The hosted route and local bridge also reject undeclared fields at every known
-map-context level before inference. This prevents an extra field hidden inside
-camera, telemetry, selection, or soil context from being forwarded to a
-configured model; the bounded question and declared fields remain user-supplied
+The local Qwen bridge rejects non-object JSON, unknown request keys, malformed or
+incomplete context, questions longer than 1200 characters, non-loopback hosts,
+unlisted origins, query-bearing routes, and non-JSON content. It rejects
+undeclared fields at every known map-context level and validates the finite
+evidence state/reference relationship before inference. This prevents an extra
+field hidden inside camera, telemetry, selection, or soil context from reaching
+the model; the bounded question and declared fields remain user-supplied
 interpretive context, not authenticated KFM evidence or a release decision.
-It bounds actual streamed request bytes at 32 KiB and upstream JSON at 64 KiB,
-disables redirects, and withholds upstream error details. Owner-configured model
-URLs must use HTTPS, or HTTP on local loopback, without URL credentials, query
-strings or fragments. The existing 25-second upstream timeout remains. This is
-transport hardening, not evidence resolution, model-registry admission, a global
-rate limit or a verified Qwen/Focus transaction. No hosted model setting is
-changed; tests use mocked responses only. Repository status responses now enforce
+It bounds streamed request bytes at 32 KiB and upstream JSON at 64 KiB, caps the
+displayed answer, disables redirects/tools/thinking, and withholds upstream error
+details. The 90-second local inference timeout, single-active-`/ask` limit, exact
+origin allowlist, and pinned digest are transport and identity controls, not
+evidence resolution, model-registry admission, publication, or a verified
+Qwen/Focus transaction. The hosted `/api/qwen` route is not an availability
+fallback and no hosted model setting is changed. Tests use mocked model responses
+and do not prove a local Ollama installation or browser permission. Repository status responses now enforce
 their 512 KiB limit while streaming, rather than after buffering the entire body.
 Canonical social metadata uses the registered Site origin, not forwarded headers.
 
@@ -854,6 +985,7 @@ actions tied to the current ChatGPT user. Leave public content anonymous.
 - `npm run build`: build the deployable Sites artifact
 - `npm run start`: start the built Vinext application
 - `npm test`: build the deployable artifact and run the complete `tests/*.test.mjs` inventory
+- `npm run test:browser-geometry`: verify compact header/dock geometry at five release viewports and keyboard access, activation, 44 px targets, Escape, and focus return for all relocated desktop, overflow, and mobile functions
 
 Use build commands for targeted diagnosis after a remote failure, not as part of the normal checkpoint path.
 

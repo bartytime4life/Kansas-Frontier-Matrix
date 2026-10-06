@@ -66,3 +66,16 @@ Repository-wide editing instructions belong at root; explanatory records reuse
 responsibilities and accepted ADR-0029, plus this standalone Site's README.
 The sibling recovery directory is a task-local backup outside all source and
 deployment trees, not a new canonical KFM registry, policy or data store.
+
+### Compact map chrome reconciliation — 2026-10-06
+Private Site v157 briefly grouped representation and secondary actions in a
+separate compact HUD. That arrangement is historical and is not the current
+release surface. The reconciled Explorer uses a 54 px global header followed by
+one 44 px map dock: representation, Time, Layers, and Places remain direct;
+Basemap and Controls move into the dock's Map overflow below 1440 px. Zoom,
+north reset, Fit Kansas, fullscreen, and location remain in Controls. The
+single floating Qwen launcher remains available. Keyboard activation, Escape,
+focus return, responsive geometry, and minimum target sizes are covered by the
+current rendered-shell and browser-geometry checks. No layer, storage, source
+eligibility, or audience change is implied. Rollback is saved private Site
+v160 plus unloading the local companion.

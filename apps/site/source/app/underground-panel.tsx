@@ -4,12 +4,14 @@ import type { GeoJSONSource, Map as MapLibreMap, MapMouseEvent } from "maplibre-
 import { distanceMeters, inKansas, intervalColor, intervalCsv, intervalIssues, meters, sectionSvg, sourceLink, SUBSURFACE_LIMIT, validPosition, validGeophysicalSurvey,
   type Borehole, type DepthInterval, type GeophysicalSurvey, type Position, type SectionRecord, type SubsurfaceContext, type SubsurfaceManifest } from "./subsurface-model";
 import s from "./subsurface.module.css";
+import { atRecordYear, recordYear } from "./subsurface-materials";
 
+const AquiferView = lazy(() => import("./aquifer-volume-view"));
 const ThreeView = lazy(() => import("./subsurface-three"));
 export type SubsurfaceInspection = { record: Borehole; interval?: DepthInterval };
 type Props = {
   map: MapLibreMap | null; initialContext: SubsurfaceContext | null; year: number; redacted: boolean;
-  onTerrain: () => void; readElevation: (point: Position) => number | null;
+  onTerrain: () => void; onFlatMap: () => void; readElevation: (point: Position) => number | null;
   isDrawing: () => boolean; onDraw: () => void; readTransect: () => Position[];
   onContext: (context: SubsurfaceContext) => void; onInspect: (inspection: SubsurfaceInspection) => void;
   onClose: () => void; onSave: () => void; onReport: () => void;
@@ -21,33 +23,50 @@ const download = (name: string, value: string | null, type: string) => {
 };
 export default function UndergroundPanel(props: Props) {
   const { map, initialContext, year, redacted, onContext, onInspect } = props;
-  const [anchor, setAnchor] = useState<Position>(initialContext?.anchor ?? [-95.25, 39]);
+  const [anchor, setAnchor] = useState<Position>(initialContext?.anchor ?? (map ? [map.getCenter().lng, map.getCenter().lat] : [-95.25, 39]));
   const [pinned, setPinned] = useState(initialContext?.pinned ?? false);
   const [route, setRoute] = useState<Position[]>(initialContext?.transect ?? []);
   const [range, setRange] = useState<[number, number]>(initialContext?.depthRange ?? [0, 100]);
-  const [display, setDisplay] = useState<SubsurfaceContext["display"]>(initialContext?.display ?? "section");
+  const [display, setDisplay] = useState<SubsurfaceContext["display"]>(initialContext?.display ?? "aquifer");
   const [exaggeration, setExaggeration] = useState(initialContext?.exaggeration ?? 1);
   const [sources, setSources] = useState(initialContext?.selectedSources ?? ["kgs-wwc5", "kgs-core"]);
   const [manifest, setManifest] = useState<SubsurfaceManifest | null>(null);
-  const [columns, setColumns] = useState<SectionRecord[]>([]);
+  const [loadedColumns, setColumns] = useState<SectionRecord[]>([]);
+  const [recordCutoff, setRecordCutoff] = useState<number | null>(initialContext?.recordCutoff ?? null);
+  const [timePlaying, setTimePlaying] = useState(false);
+  const [timeStep, setTimeStep] = useState(1500);
+  const [reduceMotion, setReduceMotion] = useState(true);
+  const columns = useMemo(() => loadedColumns.filter(c => atRecordYear(c.record, recordCutoff)), [loadedColumns, recordCutoff]);
+  const visibleRecords = useMemo(() => columns.map(c => c.record), [columns]);
+  const recordYears = useMemo(() => [...new Set(loadedColumns.map(c => recordYear(c.record)).filter((y): y is number => y !== null))].sort((a,b) => a-b), [loadedColumns]);
+  useEffect(() => { const query = matchMedia("(prefers-reduced-motion: reduce)"); const changed = () => { setReduceMotion(query.matches); if (query.matches) setTimePlaying(false); }; changed(); query.addEventListener("change", changed); return () => query.removeEventListener("change", changed); }, []);
+  useEffect(() => { let cancelled = false; queueMicrotask(() => { if (!cancelled) setTimePlaying(false); }); return () => { cancelled = true; }; }, [anchor, route, sources, year, display]);
+  useEffect(() => { const pause = () => { if (document.hidden) setTimePlaying(false); }; document.addEventListener("visibilitychange", pause); return () => document.removeEventListener("visibilitychange", pause); }, []);
+  useEffect(() => {
+    if (!timePlaying || reduceMotion || recordYears.length < 2) return;
+    const index = recordYears.findIndex(y => y === recordCutoff);
+    if (index === recordYears.length - 1) { let cancelled = false; queueMicrotask(() => { if (!cancelled) setTimePlaying(false); }); return () => { cancelled = true; }; }
+    const timer = setTimeout(() => setRecordCutoff(recordYears[index + 1]), timeStep);
+    return () => clearTimeout(timer);
+  }, [timePlaying, reduceMotion, recordYears, recordCutoff, timeStep]);
   const [coverage, setCoverage] = useState("Source assets are loading.");
   const [loading, setLoading] = useState(true), [partial, setPartial] = useState(false);
   const [selectedId, setSelectedId] = useState(initialContext?.selectedRecordId ?? initialContext?.recordIds[0] ?? "");
   const [depth, setDepth] = useState(initialContext?.cursorDepth ?? initialContext?.depthRange[0] ?? 0);
   const [descriptionFilter, setDescriptionFilter] = useState(initialContext?.descriptionFilter ?? "");
-  const [height, setHeight] = useState(48);
+  const [height, setHeight] = useState(55);
   const [search, setSearch] = useState(""), [matches, setMatches] = useState<NonNullable<WorkerResult["matches"]>>([]);
   const [surveyMethod, setSurveyMethod] = useState("all"), [surveys, setSurveys] = useState<GeophysicalSurvey[]>([]);
   const [surveyError, setSurveyError] = useState("");
   const [surface, setSurface] = useState<{ distance: number; elevation: number | null }[]>([]);
   const worker = useRef<Worker | null>(null), serial = useRef(0), current = useRef(props), pinnedRef = useRef(pinned);
   useEffect(() => { current.current = props; pinnedRef.current = pinned; }, [props, pinned]);
-  const selected = columns.find(r => r.record.id === selectedId)?.record ?? columns[0]?.record;
+  const selected = columns.find(r => r.record.id === selectedId)?.record ?? columns.find(c => c.record.kind === "well" && c.record.intervals.length)?.record ?? columns[0]?.record;
   const sourceVersions = useMemo(() => manifest?.sources ?? [], [manifest]);
   const context = useMemo<SubsurfaceContext>(() => ({ version: 1, capturedAt: new Date().toISOString(), anchor, pinned, transect: route,
-    depthRange: range, display, exaggeration, cursorDepth: Math.max(range[0], Math.min(range[1], depth)), selectedRecordId: selectedId, descriptionFilter, selectedSources: sources, sourceVersions,
-    recordIds: columns.map(c => c.record.id), records: columns.map(c => c.record), coverage: [loading ? "Source loading: capture contains no current columns yet." : coverage, SUBSURFACE_LIMIT,
-      "Core inventory ranges are sampled-envelope descriptions, not verified recovery or true vertical depth. No common elevation datum is available."] }), [anchor, pinned, route, range, display, exaggeration, sources, sourceVersions, columns, coverage, loading, depth, selectedId, descriptionFilter]);
+    depthRange: range, display, exaggeration, recordCutoff, cursorDepth: Math.max(range[0], Math.min(range[1], depth)), selectedRecordId: selectedId, descriptionFilter, selectedSources: sources, sourceVersions,
+    recordIds: columns.map(c => c.record.id), records: columns.map(c => c.record), coverage: [display === "aquifer" ? "Aquifer envelope and locator image are temporary display derivatives and are not included in this saved KGS column snapshot. Aquifer source period: 2022–2024." : "Selected underground display remains source context.", recordCutoff === null ? "Record timeline: all loaded records, including undated records." : `Record timeline: dated records through ${recordCutoff}; undated records withheld. This is not past geology.`, loading ? "Source loading: capture contains no current columns yet." : coverage, SUBSURFACE_LIMIT,
+      "Core inventory ranges are sampled-envelope descriptions, not verified recovery or true vertical depth. No common elevation datum is available."] }), [anchor, pinned, route, range, display, exaggeration, sources, sourceVersions, columns, coverage, loading, depth, selectedId, descriptionFilter, recordCutoff]);
   useEffect(() => { if (manifest) onContext(context); }, [context, manifest, onContext]);
   useEffect(() => {
     try {
@@ -70,28 +89,41 @@ export default function UndergroundPanel(props: Props) {
   }, [anchor, route, sources, year]);
   useEffect(() => {
     if (!map) return;
+    current.current.onFlatMap();
+    const rotate=map.dragRotate.isEnabled(), pitch=map.touchPitch.isEnabled();
+    map.dragRotate.disable();map.touchPitch.disable();
+    const north=()=>{if(Math.abs(map.getBearing())>.01||Math.abs(map.getPitch())>.01)map.jumpTo({bearing:0,pitch:0});};map.on("rotateend",north);map.on("pitchend",north);
+    return()=>{map.off("rotateend",north);map.off("pitchend",north);if(rotate)map.dragRotate.enable();if(pitch)map.touchPitch.enable();};
+  },[map]);
+  useEffect(() => {
+    if (!map) return;
     const stage = map.getContainer().closest<HTMLElement>(".map-stage");
-    stage?.style.setProperty("--underground-height", `${height}%`); stage?.setAttribute("data-underground", "true");
+    stage?.style.setProperty("--underground-height", `${height}%`);
+    const observer = new ResizeObserver(() => map.resize()); observer.observe(map.getContainer());
     map.resize();
-    return () => { stage?.removeAttribute("data-underground"); stage?.style.removeProperty("--underground-height"); map.resize(); };
+    return () => { observer.disconnect(); stage?.style.removeProperty("--underground-height"); map.resize(); };
   }, [map, height]);
   useEffect(() => {
     if (!map) return;
     let last = 0;
     const move = (e: MapMouseEvent) => {
-      if (pinnedRef.current || current.current.isDrawing() || map.isMoving() || performance.now() - last < 300) return;
+      if (display === "aquifer" || pinnedRef.current || current.current.isDrawing() || map.isMoving() || performance.now() - last < 300) return;
       const p: Position = [e.lngLat.lng, e.lngLat.lat]; if (inKansas(p)) { last = performance.now(); setAnchor(p); }
     };
-    const click = (e: MapMouseEvent) => { if (current.current.isDrawing()) return; const p: Position = [e.lngLat.lng, e.lngLat.lat]; if (inKansas(p)) { setAnchor(p); setPinned(true); } };
+    const click = (e: MapMouseEvent) => { if (current.current.isDrawing()) return;
+      if (map.getLayer("kfm-underground-context")) {
+        const hit = map.queryRenderedFeatures(e.point, {layers:["kfm-underground-context"]}).find(f => typeof f.properties?.recordId === "string");
+        if (hit) { setSelectedId(hit.properties!.recordId); setDescriptionFilter(""); setPinned(true); return; }
+      } const p: Position = [e.lngLat.lng, e.lngLat.lat]; if (inKansas(p)) { setAnchor(p); setPinned(true); } };
     map.on("mousemove", move); map.on("click", click);
     return () => { map.off("mousemove", move); map.off("click", click); };
-  }, [map]);
+  }, [map, display]);
   useEffect(() => {
     if (!map) return;
     const update = () => {
       if (!map.isStyleLoaded()) return;
       const id = "kfm-underground-context";
-      const features: GeoJSON.Feature[] = columns.map(c => ({ type: "Feature", properties: { selected: c.record.id === selected?.id, kind: c.record.kind }, geometry: { type: "Point", coordinates: c.record.coordinates } }));
+      const features: GeoJSON.Feature[] = columns.map(c => ({ type: "Feature", properties: { recordId:c.record.id, selected: c.record.id === selected?.id, kind: c.record.kind }, geometry: { type: "Point", coordinates: c.record.coordinates } }));
       features.push({ type: "Feature", properties: { selected: true, kind: "probe" }, geometry: { type: "Point", coordinates: anchor } });
       if (route.length > 1) features.push({ type: "Feature", properties: {}, geometry: { type: "LineString", coordinates: route } });
       const data: GeoJSON.FeatureCollection = { type: "FeatureCollection", features };
@@ -112,15 +144,20 @@ export default function UndergroundPanel(props: Props) {
     return () => controller.abort();
   }, [display, surveys.length]);
   const inspect = useCallback((record: Borehole, interval?: DepthInterval) => {
-    setSelectedId(record.id); if (interval) setDepth(meters((interval.top + interval.bottom) / 2, record.depthUnit)); onInspect({ record, interval });
-  }, [onInspect]);
+    setSelectedId(record.id); if (interval) setDepth(Math.max(range[0], Math.min(range[1], meters((interval.top + interval.bottom) / 2, record.depthUnit)))); onInspect({ record, interval });
+  }, [onInspect, range]);
   const inspectHere = () => { const c = map?.getCenter(); if (c && inKansas([c.lng, c.lat])) { setAnchor([c.lng, c.lat]); setPinned(true); } };
   const changedVersions = initialContext?.sourceVersions.some(old => manifest?.sources.some(current => current.id === old.id && current.sha256 !== old.sha256));
   const missing = initialContext?.recordIds.filter(id => !loading && !columns.some(c => c.record.id === id)) ?? [];
   const changeDepth = (index: 0 | 1, value: number) => { if (!Number.isFinite(value)) return; const next: [number, number] = [...range]; next[index] = value; if (next[0] >= 0 && next[1] > next[0] && next[1] <= 12000) { setRange(next); setDepth(Math.max(next[0], Math.min(next[1], depth))); } };
-  return <section className={s.panel} aria-label="Underground workspace">
-    <header className={s.header}><div><h2>Underground</h2><p>Recorded columns · Kansas River field profiles</p></div><span className={s.badge}>Source context</span><label>Panel height <input type="range" min="35" max="68" value={height} onChange={e => setHeight(Number(e.target.value))} /></label><button type="button" onClick={props.onClose} aria-label="Close Underground">×</button></header>
+  return <><div className={s.locatorBar} aria-label="Underground 2D locator">
+    <strong>2D locator</strong><span>{pinned ? "Pinned" : "Pointer preview"} · {anchor[1].toFixed(4)}°, {anchor[0].toFixed(4)}°</span>
+    <button type="button" onClick={inspectHere}>Use map center</button><button type="button" onClick={() => { setPinned(true); map?.easeTo({center:anchor,zoom:Math.max(10,map.getZoom()),pitch:0,bearing:0,duration:reduceMotion?0:350}); }}>Find selection</button>
+    <button type="button" onClick={props.onFlatMap}>Reset to 2D</button>
+  </div><section className={s.panel} aria-label="Underground workspace">
+    <header className={s.header}><div><h2>Underground</h2><p>Depth · space · materials · record time</p></div><span className={s.badge}>Source context</span><label>Panel height <input type="range" min="35" max="70" value={height} onChange={e => setHeight(Number(e.target.value))} /></label><button type="button" onClick={props.onClose} aria-label="Close Underground">×</button></header>
     <div className={s.body}>
+      <details className={s.probeControls}><summary>Choose location, well or section · {pinned ? "pinned" : "pointer preview"}</summary>
       <div className={s.metrics}><span><b>{manifest?.totals.wellCount?.toLocaleString() ?? "…"}</b>mapped well records</span><span><b>{manifest?.totals.coreCount?.toLocaleString() ?? "…"}</b>core inventory locations</span><span><b>{pinned ? "Pinned" : "Pointer preview"}</b>{anchor[1].toFixed(4)}°, {anchor[0].toFixed(4)}°</span></div>
       <div className={s.actions}>
         <button type="button" aria-pressed={pinned} onClick={() => setPinned(v => !v)}>{pinned ? "Resume pointer preview" : "Pin this location"}</button>
@@ -134,15 +171,25 @@ export default function UndergroundPanel(props: Props) {
         {["kgs-wwc5", "kgs-core"].map(id => <button type="button" key={id} aria-pressed={sources.includes(id)} onClick={() => setSources(v => v.includes(id) ? v.filter(s => s !== id) : [...v, id])}>{id === "kgs-wwc5" ? "Well logs" : "Core inventory"}</button>)}
       </div>
       {matches.length > 0 && <details open><summary>First {matches.length} matching records · choose to inspect</summary><div className={s.cards}>{matches.map(([id, county, coordinates]) => <button className={s.card} type="button" key={id} onClick={() => { setAnchor(coordinates); setSelectedId(id); setPinned(true); setMatches([]); map?.easeTo({ center: coordinates, zoom: 13, duration: 0 }); }}>{id} · {county}</button>)}</div></details>}
-      <nav className={s.tabs} aria-label="Underground views">{([['section','Columns & section'],['3d','3D log'],['surveys','Geophysical surveys'],['soil','Soil horizons']] as const).map(([id, label]) => <button type="button" key={id} aria-pressed={display === id} onClick={() => setDisplay(id)}>{label}</button>)}</nav>
-      <div className={s.controls}><label>Depth from <input aria-label="Minimum depth in meters" type="number" min="0" max="11999" value={range[0]} onChange={e => changeDepth(0, Number(e.target.value))} /> to <input aria-label="Maximum depth in meters" type="number" min="1" max="12000" value={range[1]} onChange={e => changeDepth(1, Number(e.target.value))} /> m</label><label>Depth cursor <input type="range" min={range[0]} max={range[1]} step={(range[1] - range[0]) / 500} value={depth} onChange={e => setDepth(Number(e.target.value))} />{depth.toFixed(1)} m</label><label>Vertical scale <select value={exaggeration} onChange={e => setExaggeration(Number(e.target.value))}>{[1,2,5,10,20].map(v => <option value={v} key={v}>{v}×</option>)}</select></label><button type="button" onClick={() => setExaggeration(1)}>True scale</button></div>
+      </details>
+      <nav className={s.tabs} aria-label="Underground views">{([['aquifer','Aquifer shape'],['3d','4D material explorer'],['section','Columns & section'],['surveys','Geophysical surveys'],['soil','Soil horizons']] as const).map(([id, label]) => <button type="button" key={id} aria-pressed={display === id} onClick={() => { if(id === "aquifer") props.onFlatMap(); setDisplay(id); }}>{label}</button>)}</nav>
+      {display === "aquifer" && <Suspense fallback={<p>Loading aquifer view…</p>}><AquiferView map={map} records={visibleRecords} onFlatMap={props.onFlatMap} onLocate={point => { setAnchor(point); setPinned(true); map?.easeTo({center:point,zoom:12,pitch:0,bearing:0,duration:reduceMotion?0:420}); }} onInspect={inspect} /></Suspense>}
+      <section className={s.timeControls} aria-label="Underground record timeline">
+        <div><strong>4th dimension · record time</strong><small>Dates of loaded well/core records; aquifer (2022–2024), soil and survey views keep their own source times. Not changing geology.</small></div>
+        <label>Through <select value={recordCutoff ?? "all"} onChange={e => { setTimePlaying(false); setRecordCutoff(e.target.value === "all" ? null : Number(e.target.value)); }}><option value="all">All available records</option>{recordCutoff !== null && !recordYears.includes(recordCutoff) && <option value={recordCutoff}>{recordCutoff} · saved cutoff</option>}{recordYears.map(y => <option key={y} value={y}>{y}</option>)}</select></label>
+        <input type="range" aria-label="Underground record year" aria-valuetext={recordCutoff === null ? "All available records" : String(recordCutoff)} min="0" max={Math.max(0, recordYears.length - 1)} value={recordCutoff === null ? Math.max(0,recordYears.length-1) : Math.max(0,recordYears.findIndex(y => y >= recordCutoff))} disabled={!recordYears.length} onChange={e => { setTimePlaying(false); setRecordCutoff(recordYears[Number(e.target.value)]); }} />
+        <button type="button" aria-pressed={timePlaying} disabled={!timePlaying && (reduceMotion || recordYears.length < 2 || loading)} onClick={() => { if (!timePlaying && (recordCutoff === null || recordCutoff === recordYears.at(-1))) setRecordCutoff(recordYears[0]); setTimePlaying(v => !v); }}>{timePlaying ? "Pause" : "Play record history"}</button>
+        <label>Step <select value={timeStep} onChange={e => setTimeStep(Number(e.target.value))}><option value={1500}>1.5 seconds</option><option value={3000}>3 seconds</option><option value={5000}>5 seconds</option></select></label>
+        <small>{columns.length}/{loadedColumns.length} loaded records visible · {loadedColumns.filter(c => recordYear(c.record) === null).length} undated{reduceMotion ? " · use manual time steps with reduced motion" : ""}</small>
+      </section>
+      {display !== "aquifer" && <div className={s.controls}><label>Depth from <input aria-label="Minimum depth in meters" type="number" min="0" max="11999" value={range[0]} onChange={e => changeDepth(0, Number(e.target.value))} /> to <input aria-label="Maximum depth in meters" type="number" min="1" max="12000" value={range[1]} onChange={e => changeDepth(1, Number(e.target.value))} /> m</label><label>Depth cursor <input type="range" min={range[0]} max={range[1]} step={(range[1] - range[0]) / 500} value={depth} onChange={e => setDepth(Number(e.target.value))} />{depth.toFixed(1)} m</label><label>Vertical scale <select value={exaggeration} onChange={e => setExaggeration(Number(e.target.value))}>{[1,2,5,10,20].map(v => <option value={v} key={v}>{v}×</option>)}</select></label><button type="button" onClick={() => setExaggeration(1)}>1× vertical</button></div>}
       {route.length > 1 && <details><summary>Surface elevation context</summary><div className={s.actions}><button type="button" onClick={props.onTerrain}>Enable surface DEM</button><button type="button" onClick={() => { let distance = 0; const samples: { distance: number; elevation: number | null }[] = []; for (let i = 1; i < route.length; i++) { const a = route[i - 1], b = route[i], length = distanceMeters(a, b); for (let j = i === 1 ? 0 : 1; j <= 8; j++) { const f = j / 8; samples.push({ distance: distance + f * length, elevation: props.readElevation([a[0] + f * (b[0] - a[0]), a[1] + f * (b[1] - a[1])]) }); } distance += length; } setSurface(samples); }}>Sample loaded surface terrain</button></div><p className={s.muted}>Uses existing unexaggerated display DEM samples. Vertical reference is provider-dependent; this profile is deliberately separate from drilling depth and is not included in the underground snapshot.</p>{surface.length > 0 && <SurfaceProfile samples={surface} />}</details>}
       <p className={s.muted} role="status">{loading ? "Loading eligible source tiles…" : coverage} {partial ? "Partial coverage: shorten the section or move the pointer for more detail." : ""}</p>
       {changedVersions && <p className={s.limit}>A source edition changed since this investigation was saved. The view uses the current validated assets; prior captured reports retain their dated values.</p>}
       {missing.length > 0 && <p className={s.limit}>Reopened settings: {missing.length} previously captured records are not in the current eligible response. Saved rows have not been substituted.</p>}
       {display === "section" && <div className={s.grid}><div className={s.plotScroll}><SectionPlot columns={columns} route={route} range={range} exaggeration={exaggeration} depth={depth} selectedId={selected?.id} onInspect={inspect} /></div><div className={s.cards}>{columns.map(c => <button className={s.card} key={c.record.id} type="button" aria-pressed={selected?.id === c.record.id} onClick={() => inspect(c.record)}><strong>{c.record.name}</strong><small>{c.record.kind === "core" ? "Core inventory envelope" : "Logged description"} · {(c.distanceMeters / 1000).toFixed(2)} km from probe</small>{route.length > 1 && <small>{(c.offsetMeters / 1000).toFixed(2)} km off section</small>}<small>{c.record.intervals.length} intervals · {c.record.sourceTime}</small></button>)}</div></div>}
-      {display === "3d" && <div className={s.controls}><label>Recorded column <select value={selected?.id ?? ""} onChange={e => { setSelectedId(e.target.value); setDescriptionFilter(""); }}>{columns.map(c => <option key={c.record.id} value={c.record.id}>{c.record.name}</option>)}</select></label><label>Isolate logged description <select value={descriptionFilter} onChange={e => setDescriptionFilter(e.target.value)}><option value="">All recorded descriptions</option>{[...new Set(selected?.intervals.map(i => i.description) ?? [])].slice(0,100).map(d => <option key={d} value={d}>{d.slice(0,100)}</option>)}</select></label></div>}
-      {display === "3d" && (selected ? <Suspense fallback={<p>Loading optional 3D viewer…</p>}><ThreeView record={selected} descriptionFilter={descriptionFilter} depthRange={range} depth={depth} exaggeration={exaggeration} /></Suspense> : <p>No loaded column is available for a 3D log diagram.</p>)}
+      {display === "3d" && <div className={s.controls}><button type="button" disabled={!selected?.intervals.length} onClick={() => { if (!selected?.intervals.length) return; const top=Math.max(0,Math.min(...selected.intervals.map(i=>meters(i.top,selected.depthUnit)))),bottom=Math.min(12000,Math.max(...selected.intervals.map(i=>meters(i.bottom,selected.depthUnit)))); if(bottom>top){setRange([top,bottom]);setDepth(top);setDescriptionFilter("");} }}>Fit recorded depths</button><label>Recorded column <select value={selected?.id ?? ""} onChange={e => { setSelectedId(e.target.value); setDescriptionFilter(""); }}>{columns.map(c => <option key={c.record.id} value={c.record.id}>{c.record.name}</option>)}</select></label><label>Isolate logged description <select value={descriptionFilter} onChange={e => setDescriptionFilter(e.target.value)}><option value="">All recorded descriptions</option>{[...new Set(selected?.intervals.map(i => i.description) ?? [])].slice(0,100).map(d => <option key={d} value={d}>{d.slice(0,100)}</option>)}</select></label></div>}
+      {display === "3d" && (selected ? <Suspense fallback={<p>Loading optional 3D viewer…</p>}><ThreeView key={selected.id} record={selected} onInspect={interval => inspect(selected, interval)} descriptionFilter={descriptionFilter} depthRange={range} depth={depth} exaggeration={exaggeration} /></Suspense> : <p>No record qualifies at this location and time. Choose another year, county, or map location; unknown ground remains empty.</p>)}
       {display === "surveys" && <div><label>Survey method <select value={surveyMethod} onChange={e => setSurveyMethod(e.target.value)}>{["all", "gpr", "electromagnetic", "electrical", "seismic"].map(m => <option key={m} value={m}>{m === "gpr" ? "Ground-penetrating radar" : m}</option>)}</select></label>{surveyError && <p role="status">{surveyError}</p>}{surveys.filter(v => surveyMethod === "all" || v.method === surveyMethod).map(survey => <SurveyView key={survey.id} survey={survey} anchor={anchor} onLocate={p => { setAnchor(p); setPinned(true); map?.easeTo({ center: p, zoom: 13, duration: 0 }); }} />)}{surveys.length > 0 && !surveys.some(v => surveyMethod === "all" || v.method === surveyMethod) && <p>None in the verified available data for this method.</p>}<p className={s.limit}>Kansas River 3D sediment model: blocked until native numerical geometry, references, and reuse terms qualify. Published report images are not used as numerical surfaces. GPR time is not converted to depth without a documented velocity model.</p></div>}
       {display === "soil" && (redacted ? <p className={s.limit}>Location privacy is active. A soil lookup would send this coordinate to USDA, so it is withheld.</p> : <SoilView key={anchor.join(",")} anchor={anchor} />)}
       <p className={s.limit}>{SUBSURFACE_LIMIT} {display === "section" && "At true scale, shallow intervals may be too small to distinguish across a long transect. Increase the labeled vertical scale to inspect them."}</p>
@@ -150,7 +197,7 @@ export default function UndergroundPanel(props: Props) {
       {redacted && <p className={s.limit}>Location privacy is active. Underground coordinates, routes, records, and images are withheld from saves and exports.</p>}
       <details><summary>Source editions, rights &amp; coverage</summary>{manifest?.sources.map(source => <p key={source.id}><a href={sourceLink(source.url) ?? undefined} target="_blank" rel="noreferrer">{source.title} ↗</a> · edition {source.sourceTime} · retrieved {source.retrievedAt}<br />{source.limitation}</p>)}<p>The source of this material is the Kansas Geological Survey website at http://www.kgs.ku.edu/. All Rights Reserved. <a href="https://www.kgs.ku.edu/General/copyright.html" target="_blank" rel="noreferrer">KGS use terms</a></p></details>
     </div>
-  </section>;
+  </section></>;
 }
 
 function SectionPlot({ columns, route, range, exaggeration, depth, selectedId, onInspect }: { columns: SectionRecord[]; route: Position[]; range: [number, number]; exaggeration: number; depth: number; selectedId?: string; onInspect: (record: Borehole, interval?: DepthInterval) => void }) {

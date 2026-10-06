@@ -1,3 +1,4 @@
+import { atRecordYear } from "./subsurface-materials";
 /** Display context from published sources; never an EvidenceBundle or geological interpolation. */
 export type Position = [number, number];
 export type DepthUnit = "ft" | "m";
@@ -17,9 +18,10 @@ export type SubsurfaceManifest = {
 };
 export type SubsurfaceContext = {
   version: 1; capturedAt: string; anchor: Position; pinned: boolean; transect: Position[];
-  depthRange: [number, number]; display: "section" | "3d" | "surveys" | "soil";
+  depthRange: [number, number]; display: "section" | "3d" | "aquifer" | "surveys" | "soil";
   exaggeration: number; selectedSources: string[]; sourceVersions: DisplaySource[];
   recordIds: string[]; records: Borehole[]; coverage: string[];
+  recordCutoff?: number | null;
   cursorDepth?: number; selectedRecordId?: string; descriptionFilter?: string;
 };
 export type SectionRecord = { record: Borehole; alongMeters: number; offsetMeters: number; distanceMeters: number };
@@ -62,11 +64,12 @@ export function validSubsurfaceContext(v: unknown): v is SubsurfaceContext {
   return obj(v) && v.version === 1 && str(v.capturedAt) && Number.isFinite(Date.parse(v.capturedAt)) && validPosition(v.anchor) && inKansas(v.anchor)
     && typeof v.pinned === "boolean" && Array.isArray(v.transect) && v.transect.length <= 100 && v.transect.every(p => validPosition(p) && inKansas(p))
     && Array.isArray(v.depthRange) && v.depthRange.length === 2 && v.depthRange.every(num) && v.depthRange[0] >= 0 && v.depthRange[1] > v.depthRange[0] && v.depthRange[1] <= 12000
-    && ["section", "3d", "surveys", "soil"].includes(String(v.display)) && num(v.exaggeration) && v.exaggeration >= 1 && v.exaggeration <= 100
+    && ["section", "3d", "aquifer", "surveys", "soil"].includes(String(v.display)) && num(v.exaggeration) && v.exaggeration >= 1 && v.exaggeration <= 100
+    && (v.recordCutoff === undefined || v.recordCutoff === null || (Number.isInteger(v.recordCutoff) && num(v.recordCutoff) && v.recordCutoff >= 1800 && v.recordCutoff <= 2200))
     && (v.cursorDepth === undefined || (num(v.cursorDepth) && v.cursorDepth >= v.depthRange[0] && v.cursorDepth <= v.depthRange[1]))
     && (v.selectedRecordId === undefined || str(v.selectedRecordId, 160)) && (v.descriptionFilter === undefined || str(v.descriptionFilter, 10000))
     && strings(v.selectedSources, 20, 80) && strings(v.recordIds, 50, 160) && strings(v.coverage, 30, 3000)
-    && Array.isArray(v.records) && v.records.length <= 50 && v.records.every(validBorehole)
+    && Array.isArray(v.records) && v.records.length <= 50 && v.records.every(r => validBorehole(r) && atRecordYear(r, (v.recordCutoff as number | null | undefined) ?? null))
     && new Set(v.records.map(r => r.id)).size === v.records.length && v.records.every(r => (v.recordIds as string[]).includes(r.id))
     && Array.isArray(v.sourceVersions) && v.sourceVersions.length <= 20 && v.sourceVersions.every(s => obj(s) && str(s.id, 80) && str(s.title) && !!sourceLink(s.url)
       && str(s.retrievedAt) && Number.isFinite(Date.parse(s.retrievedAt)) && str(s.sourceTime) && str(s.limitation, 10000) && str(s.sha256, 64) && /^[a-f0-9]{64}$/.test(s.sha256));

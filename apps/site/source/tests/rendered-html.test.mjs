@@ -45,7 +45,7 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, new RegExp(`Map time · <strong>${buildYear}</strong>`));
   assert.match(html, /Layer Catalog/i);
   assert.match(html, /MapLibre/i);
-  assert.match(html, /Build report/i);
+  assert.match(html, /Reports/i);
   assert.match(html, /Real data layers/i);
   assert.match(html, /aria-label="Layer topics"/);
   for (const label of ["Full archive → latest", "Bridges · historic designation", "Bridges · recorded closed", "Historical roads · 1918", "BLM land records", "BLM leases · authorized", "BLM leases · closed", "Roads, rail &amp; bridges", "Hazards", "Roads &amp; highways", "Railroads · active", "Railroads · abandoned", "FEMA flood zones"]) assert.ok(html.includes(label), `Missing discoverable layer control: ${label}`);
@@ -386,7 +386,10 @@ test("adds device-local Places trails and faster layer isolation controls", asyn
 
   assert.match(page, /leftPanelMode !== "places"/);
   assert.match(page, /<div className="place-trail-list" aria-label="Saved investigation places">/);
-  assert.doesNotMatch(page, /MAP WORKBENCH|Map Workbench|className="map-utility-tabs"/);
+  assert.doesNotMatch(page, /MAP WORKBENCH|Map Workbench|map-tool-group-workbench|secondary-tools|More map tools/);
+  assert.match(page, /className="map-utility-tabs"/);
+  assert.match(page, /\["navigate", "inspect", "scene", "measure", "report", "export"\]/);
+  assert.match(page, /onClick=\{clearSelection\} disabled=\{!selected\}>Clear selection/);
   assert.match(page, /Preview local KML or GeoJSON/);
   assert.match(page, /onClick=\{openMapSettings\}>Style/);
   assert.match(page, /Google Earth–inspired, KFM-governed/);
@@ -1127,6 +1130,65 @@ test("binds a governed temporal sweep to map filters, live-source holds, compari
   assert.match(snapshotMap, /temporalQueryForSnapshot/);
   assert.match(snapshotMap, /applyRegistryState\([\s\S]+query\.frame[\s\S]+query\)/);
   assert.match(css, /\.timeline-sweep-setup/);
+});
+
+test("keeps the global header and map controls in a compact two-tier chrome", async () => {
+  const [page, css, toolbar] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/map-toolbar.tsx", import.meta.url), "utf8"),
+  ]);
+
+  assert.equal((page.match(/<header className="topbar">/g) ?? []).length, 1);
+  assert.equal((page.match(/<nav className="map-chrome-dock" aria-label="Map view and controls">/g) ?? []).length, 1);
+  assert.doesNotMatch(page, /className="top-context"/);
+  assert.doesNotMatch(page, /className="mission-band map-command-bar"/);
+  assert.doesNotMatch(page, /<nav className="map-view-mode-strip"/);
+  assert.doesNotMatch(page, /<nav className="map-control-strip"/);
+  assert.ok(page.indexOf('<div className="global-search">') < page.indexOf('<nav className="header-workflows"'), "search must precede workflow tabs in DOM focus order");
+  assert.match(page, /className="header-overflow-panel"[\s\S]*className="header-overflow-workspaces"[\s\S]*>Map<\/button>[\s\S]*>Reports<\/button>[\s\S]*>Stories<\/button>[\s\S]*className="share-action"[\s\S]*>Share current view<\/button>[\s\S]*className="about-action" href="\/about">About<\/Link>/);
+  assert.match(page, /const closeHeaderOverflow = useCallback[\s\S]*summary\?\.focus\(\{ preventScroll: true \}\)/);
+  assert.match(page, /openPrimaryWorkspace\("reports"\); closeHeaderOverflow\(event\.currentTarget\)/);
+  assert.match(page, /openPrimaryWorkspace\("stories"\); closeHeaderOverflow\(event\.currentTarget\)/);
+  assert.match(page, /closeHeaderOverflow\(event\.currentTarget\); void shareView\(\)/);
+  assert.match(page, /className="map-dock-context"[^>]*><strong>\{selectedLabel\}<\/strong><small>\{temporalScopeLabel\}/);
+  assert.match(page, /className="map-dock-representations" role="group" aria-label="Map representation"/);
+  assert.match(page, /aria-label="Underground Logs & sections" title="Underground Logs & sections"[\s\S]*?<b>Underground<\/b><span className="sr-only">Logs &amp; sections<\/span>/);
+  for (const label of ["Underground", "2D", "Terrain 3D", "Globe", "Compare", "Time", "Layers", "Places"]) {
+    assert.match(page, new RegExp(`>${label}(?:\\s|<)`));
+  }
+  for (const label of ["Style &amp; basemap", "Map controls", "Kansas historic maps", "Source status", "Live controls", "Today’s baseline"]) {
+    assert.match(page, new RegExp(`>${label}(?:\\s|<)`));
+  }
+  assert.match(toolbar, />Contribute data(?:\s|<)/);
+  assert.match(page, /className="layer-panel-explore"[\s\S]*?openMapUtility\("history"\); }}>Kansas historic maps<\/button>/);
+  assert.match(page, /className="timeline-primary-actions"><Link href="\/observatory">Daily archive ↗<\/Link>/);
+  assert.match(page, /className="map-dock-basemap map-dock-wide-only"/);
+  assert.match(page, /className="map-dock-action map-dock-wide-only"[\s\S]*?<span aria-hidden="true">⌖<\/span><strong>Controls<\/strong>/);
+  assert.match(page, /QUICK_LIVE_CONTEXT_IDS\.map/);
+  assert.match(page, /id="map-settings"[\s\S]*?<RenderQualityControl value=\{renderQuality\} onChange=\{chooseRenderQuality\} \/>/);
+  assert.doesNotMatch(page, /className="qwen-header-action"/);
+  assert.match(page, /className="qwen-map-launch"/);
+  assert.doesNotMatch(page, /["'`]\/api\/qwen/);
+  assert.match(page, /fetch\(`\$\{LOCAL_QWEN_BRIDGE\}\/ask`/);
+  assert.match(page, /else if \(qwenOpen\) closeQwenCompanion\(\);/);
+  assert.match(page, />Setup<\/button>/);
+  assert.match(page, />Retry<\/button>/);
+  assert.match(page, /LOCAL ONLY · NO HOSTED FALLBACK/);
+  assert.match(page, /fetch\(`\$\{LOCAL_QWEN_BRIDGE\}\/health`[\s\S]*?responseReceived = true;[\s\S]*?qwenStateFromTransportFailure\(controller\.signal\.aborted, responseReceived\)/);
+  assert.match(page, /responseReceived = true;[\s\S]*qwenStateFromTransportFailure\(timedOut, responseReceived\)/);
+  assert.match(page, /returned a malformed or oversized response, so it was withheld/);
+  assert.match(css, /--global-header-height:\s*54px/);
+  assert.match(css, /--mobile-header-height:\s*96px/);
+  assert.match(css, /--topbar:\s*var\(--global-header-height\)/);
+  assert.match(css, /--map-dock-height:\s*44px/);
+  assert.match(css, /grid-template-areas:\s*"brand search nav actions"/);
+  assert.match(css, /\.map-chrome-dock\s*\{[^}]*height:\s*var\(--map-dock-height\)/s);
+  assert.match(css, /\.map-dock-representations > button,[\s\S]*?min-height:\s*44px/);
+  assert.match(css, /\.qwen-panel\s*\{[^}]*top:\s*calc\(var\(--map-overlay-top\) \+ 8px\)/s);
+  assert.match(css, /@media \(min-width: 1440px\) \{[\s\S]*?\.map-dock-basemap\.map-dock-wide-only \{ display: flex; \}[\s\S]*?\.map-dock-action\.map-dock-wide-only \{ display: inline-flex; \}[\s\S]*?\.map-dock-map-menu \{ display: none; \}/);
+  assert.match(css, /@media \(min-width: 761px\) and \(max-width: 1100px\) \{[\s\S]*?\.header-overflow-workspaces \{ display: grid; \}/);
+  assert.doesNotMatch(css, /map-command-bar|map-view-mode-strip|map-control-strip/);
 });
 
 test("keeps the complete function inventory three-axis and runtime seam fail closed", async () => {
