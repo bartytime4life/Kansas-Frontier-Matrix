@@ -73,3 +73,11 @@ test('source-labelled exports escape SVG markup and spreadsheet formulas', () =>
   const svg=m.sectionSvg(c);assert.ok(!svg.includes('<script>'));assert.ok(svg.includes('&lt;script&gt;'));assert.ok(svg.includes('Unknown between observations'));
   assert.ok(m.subsurfaceMarkdown(c).includes('separate from included evidence'));
 });
+test('record timeline settings preserve old saves and privacy boundaries', () => {
+  const c=context();
+  for(const recordCutoff of [undefined,null,2000,2026]) { const next={...c,recordCutoff};assert.equal(m.validSubsurfaceContext(next),true);assert.equal(m.persistableSubsurface(next,true),undefined); }
+  for(const recordCutoff of [1799,2201,1980.5,'2000',NaN,Infinity]) assert.equal(m.validSubsurfaceContext({...c,recordCutoff}),false);
+  assert.equal(m.persistableSubsurface({...c,recordCutoff:2000},false,true).recordCutoff,2000);
+  assert.equal(m.validSubsurfaceContext({...c,recordCutoff:1980}),false);
+  assert.equal(m.validSubsurfaceContext({...c,recordCutoff:2026,records:[record({sourceTime:'unknown'})]}),false);
+});

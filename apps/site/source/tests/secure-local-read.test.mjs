@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { readPackageObject } from "../scripts/earth-engine/secure-local-read.mjs";
 
-test("local restore reads the opened package object within its byte limit", async () => {
+test("local restore reads the opened package object within its byte limit", { skip: process.platform !== "linux" && "descriptor-path verification requires Linux /proc" }, async () => {
   const temp = await mkdtemp(path.join(tmpdir(), "kfm-package-read-"));
   try {
     const root = path.join(temp, "package");
@@ -18,7 +18,7 @@ test("local restore reads the opened package object within its byte limit", asyn
   } finally { await rm(temp, { recursive: true, force: true }); }
 });
 
-test("local restore rejects leaf and ancestor symlinks outside the package", async () => {
+test("local restore rejects leaf and ancestor symlinks outside the package", { skip: process.platform !== "linux" && "descriptor-path verification requires Linux /proc" }, async () => {
   const temp = await mkdtemp(path.join(tmpdir(), "kfm-package-link-"));
   try {
     const root = path.join(temp, "package"), outside = path.join(temp, "outside");

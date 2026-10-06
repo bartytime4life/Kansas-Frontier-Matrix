@@ -1,3 +1,5 @@
+import { QWEN_LOCAL_MAX_OFFICIAL_SOURCES } from "../scripts/qwen-local-contract.mjs";
+
 /** Reject undeclared context fields before they can reach a configured model. */
 const record = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
 const string = (value) => typeof value === "string" && value.length <= 2048;
@@ -9,23 +11,28 @@ const tuple = (size) => (value) => Array.isArray(value) && value.length === size
 const shape = (fields) => (value) => record(value) && Object.keys(value).every(
   (key) => Object.hasOwn(fields, key) && fields[key](value[key]),
 );
+const completeShape = (fields) => (value) => shape(fields)(value)
+  && Object.keys(fields).every((key) => Object.hasOwn(value, key));
 
-const camera = shape({
+const cameraShape = shape({
   center: tuple(2), locationRedacted: boolean, zoom: number, bearing: number,
   pitch: number, projection: string, representation: string,
 });
+const camera = (value) => cameraShape(value)
+  && Object.hasOwn(value, "locationRedacted")
+  && typeof value.locationRedacted === "boolean";
 const basemap = shape({ key: string, title: string, note: string });
 const time = shape({ value: number, label: string, era: string });
 const layer = shape({
   id: string, title: string, domain: string, sourceType: string,
-  releaseState: string, publicStatus: string, freshnessState: string,
+  releaseState: string, publicStatus: string, freshnessState: string, evidenceReference: string,
 });
 const officialSource = shape({
   id: string, title: string, selected: boolean, displayed: boolean,
   state: string, featureCount: nullable(number), retrievedAt: nullable(string),
   evidenceRole: (value) => value === "EXTERNAL_CONTEXT_ONLY",
 });
-const visualTransition = shape({
+const visualTransition = completeShape({
   fromFrameTimeUtc: string, toFrameTimeUtc: string, fraction: number,
   kind: string, numericInterpolation: (value) => value === false,
 });
@@ -58,7 +65,7 @@ const telemetry = shape({
 const selection = shape({
   featureId: string, title: string, layerId: string, layerTitle: string,
   domain: string, evidenceState: string, evidenceReference: string,
-  sourceYear: number, spatialScope: string, summary: string,
+  reviewState: string, releaseState: string, sourceYear: number, spatialScope: string, summary: string,
 });
 const nearby = shape({
   title: string, layerTitle: string, distanceMiles: number, evidenceState: string,
@@ -66,6 +73,6 @@ const nearby = shape({
 
 export const hasSafeQwenContextShape = shape({
   camera, basemap, time, visibleLayers: array(layer, 14),
-  officialSources: array(officialSource, 32), soilMoisture: nullable(soilMoisture),
+  officialSources: array(officialSource, QWEN_LOCAL_MAX_OFFICIAL_SOURCES), soilMoisture: nullable(soilMoisture),
   telemetry, selection: nullable(selection), nearbyContext: array(nearby, 8),
 });

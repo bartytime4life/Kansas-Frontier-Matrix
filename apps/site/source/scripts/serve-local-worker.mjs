@@ -128,8 +128,8 @@ export function prepareWorker(translated, server, client, modules, localReviewed
 
 export async function serve(args = process.argv.slice(2)) {
   const settings = parseArguments(args);
-  const major = Number(process.versions.node.split(".")[0]);
-  if (major !== 22 || Number(process.versions.node.split(".")[1]) < 13) fail("REQUIRES_NODE_22_13_OR_LATER_22_X");
+  const [major, minor] = process.versions.node.split(".").map(Number);
+  if (major < 22 || (major === 22 && minor < 13)) fail("REQUIRES_NODE_22_13_OR_LATER");
   const server = path.join(siteRoot, "dist/server");
   const client = path.join(siteRoot, "dist/client");
   for (const directory of [client, settings.state, path.join(settings.state, "v3/d1"), path.join(settings.state, "v3/r2")]) checkedPath(directory, true);

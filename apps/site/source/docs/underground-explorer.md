@@ -4,7 +4,7 @@ This addition starts from owner-private Site v155, source `d8f2db1ee6e0fedd495ed
 
 ## Behavior
 
-Open **Underground** in the map representation strip. The surface map remains above a resizable panel. Hover for nearby recorded columns; click to pin. The fixed surface crosshair, directional buttons, and **Inspect here · map center** provide keyboard/touch navigation. A pin survives map movement. The probe is a search location, not a claim that the nearest borehole describes that precise location.
+Open **Underground** directly from the map dock. The surface map remains above a resizable panel. Hover for nearby recorded columns; click to pin. The fixed surface crosshair, directional buttons, and **Inspect here · map center** provide keyboard/touch navigation. A pin survives map movement. The probe is a search location, not a claim that the nearest borehole describes that precise location.
 
 County navigation and an on-demand statewide ID/county locator cover 314,844 mapped WWC5 records and 6,598 core locations. Well/core chips change the underground query only. Results cover up to eight spatial tiles around a 25 km probe/section corridor, return up to 50 records, and show up to 20 columns. Long sections, missing tiles, invalid records, and truncation are explicitly reported. Empty results mean none in the available data. Provider point markers and the selected interval remain linked without replacing existing map sources.
 
@@ -12,7 +12,11 @@ County navigation and an on-demand statewide ID/county locator cover 314,844 map
 
 Original log descriptions remain separate from KGS standardized interpretation codes. Invalid depths are excluded and accounted for by the preparer; valid gaps and overlaps remain. Core start/end values describe inventory envelopes, not recovered material throughout the range. Available photographs open the original KGS per-well pages; the display does not invent photographic coverage. Selecting a source interval opens its original description, unit, depth reference, source time, location method, limitations, source link, and photo link in the existing Evidence Drawer.
 
-**3D log** is an optional dynamically loaded Three.js recorded-depth diagram. It supports orbit/zoom, depth clipping, description isolation, visible exaggeration, and True scale. The nominal 5 m column width is explicitly illustrative. It is not a georeferenced well trajectory or continuous geological cutaway. No imported record supplies the required surveyed trajectory and shared elevation reference. Clipping animates over 180 ms, stops between interactions, and respects reduced motion. WebGL failure offers retry and the 2D view remains available. Pixel ratio is bounded and the 3D diagram draws at most 500 intervals.
+**Aquifer shape** is the default for a new underground investigation; an explicitly saved view is restored. **4D material explorer** is the dynamically loaded Three.js recorded-column view. It extrudes one selected record into a textured block whose horizontal width is illustrative and has no geographical footprint. Original depths and unknown gaps are preserved. Unambiguous original material descriptions receive deterministic soil, clay, sand, gravel, shale, sandstone, limestone, dolomite, salt, gypsum, coal or ore-mineral display textures; these are not photographs or measured grain sizes. Mixed, qualified and fluid descriptions stay neutral. Core inventory envelopes stay violet even if a title names a rock. No interpolated seams, fluid volumes, mineral reserves or mine tunnels are invented.
+
+Orbit/zoom, front/top/reset camera buttons, layer selection, description/material isolation, opacity, separated layers and depth slicing support inspection. Canvas clicks open the original interval in the existing inspector. The bounded list below the canvas offers keyboard and low-resource inspection. Separate-layer spacing is illustrative; slicing temporarily suppresses separation to retain recorded depths. Vertical scale is labeled, while horizontal scale is explicitly unknown. Changes to clipping, opacity and material isolation reuse geometry and the camera. The renderer draws only on interactions/resize, caps pixel ratio at 1.5 and meshes at 500 intervals, disposes textures/geometries/controls on teardown, and offers retry plus the list after WebGL failure.
+
+The fourth dimension is **record time**, not geological evolution. Choose an available year or play discrete years among the loaded well/core records. Cumulative dated records through that year qualify; undated records are withheld until All available records is selected. The bounded spatial subset is clearly identified: this does not claim every Kansas well in every year. Surface-map year eligibility still applies first. Playback stops at the last year, during location/source/tab changes, in a hidden document, and under reduced motion. Manual year stepping remains available. The optional validated `recordCutoff` persists in investigations and captured report context. Camera orientation, opacity, separation and material isolation are temporary inspection controls; exports remain source-labeled 2D columns, not screenshots of illustrative textures.
 
 **Geophysical surveys** distinguishes electrical, electromagnetic, GPR, and seismic methods. Four qualified KGS electrical collections provide 21 measured conductivity profiles and 25,479 original samples, shown in mS/m against depth below local land surface. The trace is decimated to at most approximately 600 display points without changing the retained source values. Approximate Google Earth positions do not establish a surveyed horizontal or elevation datum. Duplicate-series and invalid-location profiles remain held. GPR/tTEM entries remain reference links; no radar time is converted to depth without a qualified velocity model, and conductivity is never relabeled as lithology.
 
@@ -41,3 +45,69 @@ Review is separated into source assets/contracts, linked sections/persistence, a
 Validation covers full asset integrity and field exclusions, original workbook sample bounds, coordinate/depth/radar handling, gaps/overlaps, duplicate identity, section offsets, historical holds, canceled responses, unavailable/corrupt sources, legacy storage, quota failure, source-labelled exports, redaction, and bounded soil requests. Type check, production build, and full Site regressions run before packaging. Browser access still fails the admin policy security check; visual, keyboard-flow, mobile, and WebGL acceptance are pending and must not be inferred from unit/build success. Runtime UI controls and CSS have been implemented, but no browser performance or smoothness acceptance is claimed.
 
 Rollback retains saved v155 (`appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_769352625ae8819192b37861a2d0bc12`) and its source. No DB migration or binding change is required. The inherited repository `MIRROR_REVIEW_REQUIRED` receipt gate remains separate; feature checks cannot waive it.
+
+
+## Material-view delivery, 2026-10-06
+
+The material-view update starts from private Site v157 / `363f769aed44198c5f73da3cc4e2ef48b1bb6372`, whose then-live compact HUD was later superseded by the shared map dock. It adds `app/subsurface-materials.ts` within the existing application display responsibility and regression coverage under `tests/`; no source, registry or data-store root is added. No new remote acquisition, dependency, storage migration or source-admission operation is introduced. Revert to saved v157 to roll back this presentation update without changing DB/R2. The previous v155 rollback above is historical to the initial underground implementation.
+
+Material tests cover qualified/negative/mixed descriptions, inventory separation, fluid words, deterministic bounded textures, date eligibility, persistence and privacy. Build/type/tests do not establish visual, WebGL, touch or performance acceptance; browser access remains unavailable. Continuous extrapolation remains held for missing common elevation/trajectory registration and qualified numerical correlation surfaces. KGS describes correlation as a separate inference step: https://www.kgs.ku.edu/Publications/OFR/2002/OFR02_51/index.html. WWC5 originals and standardized interpretations are distinct: https://apps.kgs.ku.edu/web/Waterwell/index.
+
+## Linked locator and aquifer ranges — 2026-10-06
+
+This update starts from saved private Site v158, source `4fe2e09326dfcd88f0e6117a7474aad9908af262`. Rollback uses that saved version; no storage/binding migration is involved.
+
+Entering Underground selects a flat, north-up map and reserves at least a 300 px surface/header region above the panel. The locator remains outside the underground scroll area. Its marker selection, map-center action, find-selection action and 2D reset control point to the same loaded well/core records. Panel height can change without eliminating the locator. Resize observation keeps MapLibre's canvas synchronized during the 380 ms entry transition; reduced motion removes it. Mouse/touch rotation is constrained to keep this locator flat, and prior gesture availability is restored on exit. Floating weather docks are temporarily concealed without changing selected sources.
+
+**Aquifer shape** builds a browser-local possible depth envelope for the High Plains aquifer using existing, hash-pinned KGS depth-to-water and saturated-thickness snapshots for 2022–2024. Polygon intersection preserves source outlines and holes. At each overlap, the shallow outer bound is the lower depth-to-water class bound; the deep outer bound is the upper depth-to-water bound plus the upper saturated-thickness bound, converted from feet to metres. This is an uncertainty envelope, not evidence that its entire volume is occupied by groundwater. No class midpoint, hydraulic gradient, storage quantity or groundwater flow is inferred. Open-ended and missing classes remain withheld. These are regional classified estimates, with the original 0.0005-degree display generalization.
+
+The 3D scene includes a captured image of the flat locator at the same bounds as the clipped polygons. The surface plane stays at zero and all envelope depths below it under orbit; opacity controls are independent. This is a **flattened local-ground reference**, not surveyed surface terrain or an elevation-registered geological model. Snapshot capture is local to the browser, bounded to 1,024 pixels on its long side, and only accepted after locator tiles are complete. It is not uploaded, saved, or exported. View changes invalidate the prior locator identity; geometry can render over a neutral extent plane while a same-view image completes and attaches later. The linked 2D map remains available if 3D or capture fails.
+
+Loaded records are plotted at recorded horizontal positions, with approximate locations and their separate record-depth references. They are not verified vertical well trajectories. Logs use up to 50 records/400 intervals and clip 50 m below the deepest envelope (500 m if no envelope). No inferred strata connect them. The timeline changes eligible well/core records; the aquifer remains a single dated 2022–2024 surface pair. There is no historical aquifer-volume animation. Soil components and electrical survey measurements remain separate, rather than being converted into aquifer boundaries.
+
+Acquisition stays with existing groundwater snapshots; new `app/aquifer-volume*` files are application display/model derivatives in the existing Site root, with tests in `tests/`. The dedicated worker verifies digests, caps each input at 800,000 bytes, deadlines at 12 seconds, accepts views at most one degree wide/high in Kansas, and caps output at 64 overlaps, 256 polygons and 20,000 vertices. Rendering is on demand and GPU resources/listeners are disposed. Preparation adds no server endpoint, database, new provider query or dependency. Reports/save contexts state that aquifer geometry and surface images are not captured; the existing KGS column snapshot/export remains unchanged.
+
+Open qualification: historical numerical surfaces, precise vertical registration, other aquifer shapes, soil/core correlation models, and browser visual/touch/WebGL acceptance. Structural and data tests cannot certify seamless browser animation. The KGS Atlas and existing `docs/aquifers-groundwater.md` document source roles and units.
+
+
+## Rendering repair — 2026-10-06
+
+Repair baseline: saved/deployed private Site v159, source
+`2e03afb186fa8a5a934c72d8dccd678c24bc03b3`. The previous source made water/wind
+canvases span the entire map stage after Underground shortened the map canvas.
+Their dots could therefore stretch across the underground interface. Both effects
+and their hover label now share a clipped, isolated surface at exactly the
+locator's desktop/mobile bounds, below panels and controls. Reduced-motion
+behavior remains consistent. The geographic drawing functions and selected
+layers are unchanged.
+
+Aquifer geometry preparation now begins independently of locator tile completion.
+Previously, one incomplete weather/source tile could prevent all geometry from
+being prepared. Verified geometry can now appear while imagery is unavailable;
+the neutral outlined plane is explicitly labeled as an extent, not a basemap.
+A later complete image attaches without rebuilding the aquifer geometry or
+resetting the camera. Capture failure and an eight-second image timeout do not
+hide eligible shapes. Map movement cancels the previous display/request identity;
+late worker results cannot mix locations. No old geometry is relabeled as the
+current location. Source verification and bounded class/geometry limits are unchanged.
+
+A new investigation opens Aquifer shape, with **High Plains example** at the top
+and the scene before extended controls and record time. Saved view choices remain
+respected. The probe starts at the current map center; pointer movement does not
+continually replace well records while orbiting the aquifer view. Click, map-center,
+and explicit location actions still select records. **Fit recorded depths** lets
+the column view show deeper logged intervals outside its initial 0–100 m window.
+The aquifer remains a fixed 2022–2024 class-derived envelope, not a historical
+water-occupancy reconstruction. Other resource shapes remain subject to source
+qualification.
+
+The application-only session/mesh helpers remain in `app/`, regression checks in
+`tests/`, and this behavior record in `docs/`, following the responsibility basis
+above. No new datasets, source admission, database, credentials, or storage bindings
+are introduced. Tests exercise incomplete imagery, failed readback, late results,
+movement, teardown, real source meshes at two extents, holes, depth registration,
+and desktop/mobile effect containment. These are automated source/runtime-unit
+checks, not browser acceptance. The v160 repair session's browser attempt was denied because
+its admin-enforced security check was unavailable; visual, touch and device WebGL
+acceptance remain unverified. Rollback is the saved v159 application version;
+no data or schema rollback is required.

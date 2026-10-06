@@ -33,7 +33,7 @@ export function DataNotices({ issues = [], onRetry, onHide }: { issues?: SourceI
       {issues.length > 0 && <section className="source-issue-list" aria-label="Sources needing attention">{issues.map(issue => <article key={issue.id}><strong>{issue.title}</strong><p>{issue.detail ?? "Some data or tiles could not load. Other layers remain available."}</p><div>{onRetry && <button type="button" onClick={() => onRetry(issue.id)}>Retry layer</button>}{onHide && <button type="button" onClick={() => onHide(issue.id)}>Hide layer</button>}<a href={issue.downloadHref ?? SOURCE_DOWNLOADS[issue.id].href} target="_blank" rel="noreferrer">Source data ↗</a></div></article>)}</section>}
       <p className="download-intro">Original files and older archives need a provider download. Some sources also offer live map services.</p>
       {DOWNLOAD_NOTICES.map(item => <article className="download-notice" key={item.id}><div><h3>{item.title}</h3><small>{item.format}</small></div><p>{item.detail}</p><div className="download-notice-actions"><a href={item.href} target="_blank" rel="noreferrer">Open downloads ↗</a><Link href={`/data?source=${item.id}`}>Propose an update</Link></div></article>)}
-      <footer><Link href="/data">Upload data for KFM</Link><Link href="/stewards">Steward review</Link></footer>
+      <footer><Link href="/data">Contribute data</Link><Link href="/stewards">Steward review</Link></footer>
     </aside>}
   </div>;
 }
