@@ -14,8 +14,8 @@ const exporter = await import(transpile((await read("../app/earth-engine-export.
 const context = await import(contextUrl);
 
 test("discovery supports multi-word searches and combined topic filters", () => {
-  assert.equal(new Set(catalog.EARTH_ENGINE_DATASETS.map((d) => d.id)).size, 8);
-  assert.deepEqual(catalog.findEarthEngineDatasets("USGS reflectance", "Imagery").map((d) => d.id), ["ee-landsat8"]);
+  assert.equal(new Set(catalog.EARTH_ENGINE_DATASETS.map((d) => d.id)).size, 17);
+  assert.deepEqual(catalog.findEarthEngineDatasets("USGS reflectance", "Imagery").map((d) => d.id), ["ee-landsat8", "ee-landsat4", "ee-landsat5", "ee-landsat7", "ee-landsat9"]);
   assert.equal(catalog.findEarthEngineDatasets("  drought  ", "Climate").length, 1);
   assert.equal(catalog.findEarthEngineDatasets("no such source").length, 0);
   assert.equal(catalog.findEarthEngineDatasets("USGS", "Agriculture").length, 0);
@@ -43,11 +43,11 @@ function runRecipe(id, year, { count = 1, sourceError, periods, dateError } = {}
   const value = (result, error) => ({ evaluate(fn) { fn(result, error); } });
   const chain = new Proxy({}, { get(_target, key) {
     if (key === "size") return () => value(count, sourceError);
-    if (key === "aggregate_array") return () => ({ map: () => ({ distinct: () => ({ size: () => value(periods, dateError) }) }) });
+    if (key === "aggregate_array") return () => ({ map: () => ({ distinct: () => ({ size: () => value(periods, dateError) }) }), distinct: () => ({ size: () => value(periods, dateError) }) });
     if (key === "map") return (fn) => { fn(chain); return chain; };
     return (...args) => { operations.push([key, ...args]); return chain; };
   } });
-  const ee = { FeatureCollection: () => chain, ImageCollection: () => chain, Image: () => chain, Filter: { eq: () => chain }, Reducer: { max: () => chain } };
+  const ee = { FeatureCollection: () => chain, ImageCollection: () => chain, Image: () => chain, Filter: { eq: () => chain, gte: () => chain, lt: () => chain }, Reducer: { max: () => chain } };
   vm.runInNewContext(catalog.buildEarthEngineRecipe(id, year), {
     ee, Map: { centerObject() {}, addLayer(_image, _vis, title) { layers.push(title); } },
     print(...args) { messages.push(args.map((arg) => typeof arg === "object" ? "[EE object]" : String(arg)).join(" ")); },
@@ -69,7 +69,7 @@ test("empty collections and source errors do not fabricate preview data", () => 
 });
 
 test("annual climate results require all unique periods including leap days", () => {
-  for (const [id, year, expected] of [["ee-chirps", 2024, 366], ["ee-chirps", 2023, 365], ["ee-terraclimate", 2024, 12]]) {
+  for (const [id, year, expected] of [["ee-chirps", 2024, 366], ["ee-chirps", 2023, 365], ["ee-terraclimate", 2024, 12], ["ee-prism-monthly", 1895, 12], ["ee-prism-daily", 1984, 366], ["ee-prism-daily", 1981, 365]]) {
     assert.equal(runRecipe(id, year, { count: expected, periods: expected }).layers.length, 1);
     assert.equal(runRecipe(id, year, { count: expected - 1, periods: expected - 1 }).layers.length, 0);
     assert.equal(runRecipe(id, year, { count: expected, periods: expected - 1 }).layers.length, 0);
@@ -110,6 +110,25 @@ test("review drafts retain provenance questions without granting admission or ex
   for (const d of catalog.EARTH_ENGINE_DATASETS) assert.equal(new URL(catalog.earthEngineUrl(d)).hostname, "developers.google.com");
 });
 
+test("historical sensors keep band families and inventory-only products do not fabricate RGB", () => {
+  for (const [mission, year] of [[4, 1982], [5, 1984], [7, 1999]]) {
+    const result = runRecipe("ee-landsat" + mission, year);
+    assert.ok(result.operations.some(([name, bands]) => name === "select" && JSON.stringify(bands) === '["SR_B3","SR_B2","SR_B1"]'));
+    assert.ok(result.operations.some(([name, band]) => name === "select" && band === "QA_RADSAT"));
+  }
+  for (const [mission, year] of [[8, 2013], [9, 2021]]) {
+    const result = runRecipe("ee-landsat" + mission, year);
+    assert.ok(result.operations.some(([name, bands]) => name === "select" && JSON.stringify(bands) === '["SR_B4","SR_B3","SR_B2"]'));
+  }
+  for (const [id, year] of [["ee-landsat-mss", 1972], ["ee-era5", 1940], ["ee-era5-land", 1950]]) {
+    const result = runRecipe(id, year);
+    assert.equal(result.layers.length, 0);
+    assert.match(result.messages.join(" "), /INVENTORY ONLY/);
+  }
+  assert.ok(runRecipe("ee-sentinel2", 2017).layers.some((title) => title.includes("2017") && title.includes("RGB")));
+  assert.throws(() => exporter.buildEarthEngineExportRecipe("ee-sentinel2", "statewide", 2017));
+});
+
 const channels = (color) => [1, 3, 5].map((i) => parseInt(color.replace(/^#?/, "#").slice(i, i + 2), 16));
 function interp(value, stops, colors) {
   const i = Math.max(0, stops.findIndex((stop, index) => index > 0 && value <= stop) - 1);
@@ -119,7 +138,7 @@ function interp(value, stops, colors) {
 
 test("display ramps match the tile renderer and reproduce uneven stops as Earth Engine palettes", async () => {
   const python = await read("../scripts/earth-engine/prepare_display_set.py");
-  const rendered = Object.fromEntries([...python.matchAll(/"(ee-[a-z0-9]+)": \(\[([^\]]*)\], \[([^\]]*)\]\)/g)]
+  const rendered = Object.fromEntries([...python.matchAll(/"(ee-[a-z0-9-]+)": \(\[([^\]]*)\], \[([^\]]*)\]\)/g)]
     .map(([, id, stops, colors]) => [id, { stops: stops.split(",").map(Number), colors: [...colors.matchAll(/"(#[0-9a-f]{6})"/g)].map((m) => m[1]) }]));
   assert.deepEqual(rendered, JSON.parse(JSON.stringify(catalog.EARTH_ENGINE_DISPLAY_RAMPS)));
   assert.deepEqual(catalog.earthEnginePalette(catalog.EARTH_ENGINE_DISPLAY_RAMPS["ee-chirps"]), ["fff4c2", "79c9bc", "235ca8"]);
@@ -153,11 +172,12 @@ test("every installed layer has a legend swatch and discovery previews use the i
 });
 
 // A local EE double checks the generated control flow and task parameters, not provider execution.
-function runExport(id, scope, count, year = id === "ee-3dep" ? undefined : 2024) {
+function runExport(id, scope, count, year = id === "ee-3dep" ? undefined : Math.min(2024, context.EARTH_ENGINE_SOURCE_YEARS[id][1]), gridOkay = true) {
   const layers = [], images = [], tables = [];
   const chain = new Proxy(function () {}, {
     get(_target, key) {
       if (key === "getInfo") return () => count;
+      if (key === "aggregate_min") return () => ({ getInfo: () => gridOkay ? 1 : 0 });
       if (key === "map") return (fn) => { fn(chain); return chain; };
       return () => chain;
     },
@@ -176,7 +196,7 @@ function runExport(id, scope, count, year = id === "ee-3dep" ? undefined : 2024)
 }
 
 test("Drive export recipes export the complete source inventory, the documented grid and a styled preview", () => {
-  const expected = { "ee-cdl": 1, "ee-chirps": 366, "ee-terraclimate": 12, "ee-sentinel2": 4000, "ee-3dep": 40 };
+  const expected = { "ee-cdl": 1, "ee-chirps": 366, "ee-terraclimate": 12, "ee-sentinel2": 4000, "ee-3dep": 40, "ee-prism-monthly": 12, "ee-prism-daily": 366, "ee-landsat4": 40, "ee-landsat5": 40, "ee-landsat7": 40, "ee-landsat8": 40, "ee-landsat9": 40 };
   for (const layer of context.EARTH_ENGINE_CONTEXT_LAYERS) for (const scope of ["sample", "statewide"]) {
     const run = runExport(layer.id, scope, expected[layer.id]);
     assert.equal(run.error, null, `${layer.id} ${scope}: ${run.error}`);
@@ -186,9 +206,10 @@ test("Drive export recipes export the complete source inventory, the documented 
     assert.equal(run.tables[0].fileFormat, "CSV");
     assert.match(run.tables[0].description, new RegExp(`^kfm_${layer.id.replaceAll("-", "_")}_.*_${scope}_source_ids$`));
     assert.equal(run.images.length, 1);
-    const highResolution = !["ee-chirps", "ee-terraclimate"].includes(layer.id);
+    const highResolution = !["ee-chirps", "ee-terraclimate", "ee-prism-monthly", "ee-prism-daily"].includes(layer.id);
     assert.deepEqual(run.images[0].crsTransform, highResolution ? [30, 0, -1200000, 0, -30, 2400000]
-      : layer.id === "ee-chirps" ? [0.05, 0, -180, 0, -0.05, 50] : [1 / 24, 0, -180, 0, -(1 / 24), 90]);
+      : layer.id.startsWith("ee-prism-") ? [0.041666666667, 0, -125.0208333333335, 0, -0.041666666667, 49.9375000000005] : layer.id === "ee-chirps" ? [0.05, 0, -180, 0, -0.05, 50] : [1 / 24, 0, -180, 0, -(1 / 24), 90]);
+    assert.equal(run.images[0].crs, highResolution ? "EPSG:5070" : layer.id.startsWith("ee-prism-") ? "EPSG:4269" : "EPSG:4326");
     assert.equal(run.images[0].fileDimensions, scope === "statewide" && highResolution ? 2048 : undefined);
     assert.equal(run.layers.length, 1);
     const ramp = catalog.EARTH_ENGINE_DISPLAY_RAMPS[layer.id];
@@ -209,5 +230,35 @@ test("Drive export recipes export the complete source inventory, the documented 
     const held = runExport(id, "statewide", count);
     assert.match(String(held.error), /Export held/);
     assert.equal(held.images.length, 0);
+  }
+});
+
+
+test("PRISM exports retain the native day labels and reject changed scene grids before tasks", () => {
+  for (const [id, year, count, firstLabel, nextLabel] of [["ee-prism-monthly", 1895, 12, "189501", "189601"], ["ee-prism-daily", 1981, 365, "19810101", "19820101"]]) {
+    const result = runExport(id, "sample", count, year);
+    assert.equal(result.error, null); assert.equal(result.images.length, 1);
+    assert.match(result.script, new RegExp(`gte\\('system:index', '${firstLabel}'\\)`));
+    assert.match(result.script, new RegExp(`lt\\('system:index', '${nextLabel}'\\)`));
+    assert.doesNotMatch(result.script, /filterDate/);
+    assert.match(result.script, /aggregate_array\('system:index'\)\.distinct/);
+    assert.match(result.script, /time_start_ms: scene.get\('system:time_start'\)/);
+    const badGrid = runExport(id, "sample", count, year, false);
+    assert.match(String(badGrid.error), /native grid differs/); assert.equal(badGrid.images.length, 0); assert.equal(badGrid.tables.length, 0);
+    const missing = runExport(id, "sample", count - 1, year);
+    assert.match(String(missing.error), /time coverage is incomplete/); assert.equal(missing.images.length, 0);
+  }
+});
+
+test("Landsat exports use sensor-specific RGB, QA screening, common grid and retained-count band", () => {
+  for (const [mission, year] of [[4, 1982], [5, 1984], [7, 1999], [8, 2013], [9, 2021]]) {
+    const result = runExport(`ee-landsat${mission}`, "statewide", 40, year);
+    assert.equal(result.error, null); assert.equal(result.images[0].fileDimensions, 2048);
+    assert.match(result.script, /QA_PIXEL'\)\.bitwiseAnd\(63\)\.eq\(0\)\.and\(scene.select\('QA_RADSAT'\)\.eq\(0\)\)/);
+    assert.match(result.script, new RegExp(mission < 8 ? "SR_B3','SR_B2','SR_B1" : "SR_B4','SR_B3','SR_B2"));
+    assert.match(result.script, /multiply\(0.0000275\)\.add\(-0.2\)/);
+    assert.match(result.script, /addBands\(clean.select\(0\)\.count\(\)\.rename\('retained_count'\)/);
+    assert.deepEqual(result.layers[0].vis, { min: 0, max: 0.3, gamma: 1.2 });
+    assert.match(String(runExport(`ee-landsat${mission}`, "sample", 0, year).error), /No .* Landsat/);
   }
 });

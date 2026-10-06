@@ -278,3 +278,40 @@ are historical evidence or open gaps, not current map availability.
 - `NEEDS GOVERNED BACKEND`: released EvidenceBundle resolution, governed API, model adapter, citation validation, AIReceipt/audit linkage.
 - `EXPERIMENTAL`: governed terrain evidence, advanced 3D, point clouds, offline mode, field capture.
 - `NOT RECOMMENDED`: direct browser-to-model access, client database access, precise protected locations, invented live status, or treating Drive proposals as releases.
+
+## 2026-10-06 historical-data and 3D checkpoint
+
+This dated checkpoint supplements the historical entries above. Implementation
+does not close their data, rights, review or release dependencies. The full
+[delivery record](free-data-history-delivery.md) lists the supplied reference
+dispositions, storage boundaries and independent acceptance gates.
+
+| Existing gap | Implemented increment | Remaining requirement / next bounded idea |
+|---|---|---|
+| `GAP-P3-006` terrain provenance | Owner-selected EPT discovery preview shows 62 `KS_` candidate workunits, native bounds, reported CRS, source links/digests and unknown dates/datum. Verified EPSG:3857/4326 bounds can become explicitly rectangular dataset extents. | Prefix coverage is not full Kansas intersection coverage. Rectangles are not surveyed footprints or point density. Next: obtain official acquisition polygons, actual dates, vertical reference and accuracy with correction provenance before claiming those properties. |
+| `GAP-P2-007` imagery comparison | Same-product, compatible-grid approved-year selection; synchronized swipe/side-by-side controls and bounded non-WebGL mosaic. Missing pixels and years remain missing. | Only the approved 2024 set is installed; a genuine pair remains held until a second compatible year is prepared/reviewed. No color-derived change statistics or cross-sensor equivalence. See [comparison behavior](history-comparison.md). |
+| `GAP-P1-008` released delivery adapters | Owner-only acquisition receipt projection preserves nullable sizes, captured cache state, immutable receipt identity and candidate-only lifecycle. | It is not a transfer controller or release adapter. Source admission and released manifest/EvidenceBundle linkage remain outstanding. |
+
+Retain these future ideas within the existing advanced-rendering gap rather than
+creating another source registry or renderer roadmap:
+
+- **Acquisition extent explorer:** compare official workunit polygons with their
+  source bounds, inspect overlap and metadata gaps, and filter by verified dates.
+  No date inference from project names; missing datum remains visible.
+- **Bounded point-cloud/3D Tiles preview:** retain current Three.js and MapLibre;
+  first choose a real free payload, derive reproducible tiles, document CRS/datum
+  and sensitivity, and measure device/memory/network limits. Metadata capture
+  alone does not justify loading raw statewide or global point clouds.
+- **Terrain profile uncertainty:** show the exact elevation product, vertical
+  reference, sampling resolution, transforms and stated accuracy beside a profile.
+  Exaggerated relief and interpolated samples cannot become survey claims.
+- **Extruded or georeferenced models:** require licensed geometry, height units,
+  vertical alignment, location sensitivity and a useful 2D equivalent. The supplied
+  indoor and model examples do not provide KFM-ready buildings or interior data.
+- **Renderer alternatives:** deck.gl, Babylon.js, Flutter and MapLibre Native stay
+  deferred until a separate need outweighs integration and maintenance costs.
+  No added framework, paid basemap or subscription is part of this checkpoint.
+
+These ideas remain `PROPOSED` / `DEFER_DATA` and may be withdrawn without changing
+current evidence. Rollback of the delivered UI removes additive controls and
+restores the prior source; private data, receipts and active stores remain intact.

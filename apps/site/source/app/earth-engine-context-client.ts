@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { earthEngineSetYear, parseEarthEngineManifest, type EarthEngineContextManifest } from "./earth-engine-context";
+import { EARTH_ENGINE_CATALOG_MAX_BYTES, earthEngineSetYear, parseEarthEngineCatalog, type EarthEngineContextManifest } from "./earth-engine-context";
+import { browserJsonRequest } from "./browser-json-request";
 
 export function useEarthEngineContext() {
   const [manifest, setManifest] = useState<EarthEngineContextManifest | null>(null);
@@ -12,17 +13,13 @@ export function useEarthEngineContext() {
   const reload = useCallback(() => { setLoading(true); setGeneration((value) => value + 1); }, []);
   useEffect(() => {
     const abort = new AbortController();
-    void fetch("/api/earth-engine-context/catalog", { credentials: "same-origin", cache: "no-store", signal: abort.signal })
-      .then(async (response) => {
+    void browserJsonRequest("/api/earth-engine-context/catalog", { signal: abort.signal, maxBytes: EARTH_ENGINE_CATALOG_MAX_BYTES, timeoutMs: 30_000 })
+      .then(({ response, body: payload }) => {
         if (response.status === 401 || response.status === 403) throw new Error("Owner sign-in is required to load reviewed imagery. Local files alone do not establish an activated display set.");
         if (!response.ok) throw new Error("Reviewed snapshots are unavailable.");
-        const payload: unknown = await response.json();
-        if (!payload || typeof payload !== "object" || !("manifests" in payload) || !Array.isArray(payload.manifests) || payload.manifests.length > 70) throw new Error("Display-set details are invalid.");
-        const checked = payload.manifests.map(parseEarthEngineManifest);
-        if (checked.some((item) => !item)) throw new Error("Display-set details are invalid.");
-        const years = checked.map((item) => earthEngineSetYear(item));
-        if (years.some((year) => year === null) || new Set(years).size !== years.length) throw new Error("Display-set years are invalid.");
-        return checked as EarthEngineContextManifest[];
+        const checked = parseEarthEngineCatalog(payload);
+        if (!checked) throw new Error("Display-set details or years are invalid.");
+        return checked;
       })
       .then((checked) => { if (!abort.signal.aborted) { setManifests(checked); setManifest(checked.find((item) => earthEngineSetYear(item) === 2024) ?? checked[0] ?? null); setError(null); } })
       .catch((cause: unknown) => { if (!abort.signal.aborted) { setManifests([]); setManifest(null); setError(cause instanceof Error ? cause.message : "Reviewed snapshots are unavailable."); } })

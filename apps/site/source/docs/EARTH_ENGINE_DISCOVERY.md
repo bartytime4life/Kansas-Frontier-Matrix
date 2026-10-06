@@ -38,7 +38,7 @@ Each entry links to Google's official catalog page and its terms/citations:
 
 Recipes use [TIGER 2018 States](https://developers.google.com/earth-engine/datasets/catalog/TIGER_2018_States),
 filtered to `STATEFP=20`. This is a dated study boundary, not present legal
-boundary authority. Annual controls are bounded to complete years supported by
+boundary authority. Annual controls are bounded to recipe years supported by
 the metadata snapshot. The catalog's global coverage does not prove Kansas
 pixel availability. The CHIRPS page summary lagged its availability table;
 the record uses the table's observed 2026-08-31 endpoint and allows recipes only

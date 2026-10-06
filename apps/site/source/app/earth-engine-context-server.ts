@@ -9,6 +9,9 @@ import {
   earthEngineTileKey,
   earthEngineYearPointerKey,
   earthEngineSetYear,
+  earthEngineSupportedYear,
+  EARTH_ENGINE_FIRST_YEAR,
+  EARTH_ENGINE_LAST_YEAR,
   parseEarthEngineManifest,
   parseEarthEnginePointer,
   parseEarthEngineTileIndex,
@@ -73,7 +76,7 @@ export async function activeEarthEngineManifest(): Promise<EarthEngineContextMan
 }
 
 export async function activeEarthEngineManifestForYear(year: number): Promise<EarthEngineContextManifest | null> {
-  if (!Number.isInteger(year) || year < 1958 || year > 2025) return null;
+  if (!earthEngineSupportedYear(year)) return null;
   const pointerBytes = await bytes(year === 2024 ? EARTH_ENGINE_CONTEXT_ACTIVE_KEY : earthEngineYearPointerKey(year), 2048);
   if (!pointerBytes) return null;
   const pointer = parseEarthEnginePointer(json(pointerBytes));
@@ -87,16 +90,26 @@ export async function activeEarthEngineCatalog(): Promise<EarthEngineContextMani
   if (baseline) manifests.push(baseline);
   const prefix = `${EARTH_ENGINE_CONTEXT_PREFIX}/active-years/`;
   const bucket = earthEngineBucket();
-  const page = await bucket.list({ prefix, limit: 100 });
-  if (page.truncated) throw new EarthEngineContextError("Earth Engine year catalog exceeds its limit.", 503);
-  for (const object of page.objects) {
-    const match = /^earth-engine-context\/v1\/active-years\/(19[5-9]\d|20[0-2]\d)\.json$/.exec(object.key);
-    if (!match || Number(match[1]) === 2024) throw new EarthEngineContextError("Earth Engine year catalog failed validation.", 503);
-    const manifest = await activeEarthEngineManifestForYear(Number(match[1]));
-    if (!manifest) throw new EarthEngineContextError("Earth Engine year catalog failed validation.", 503);
-    manifests.push(manifest);
+  const seen = new Set<number>(), cursors = new Set<string>();
+  let cursor: string | undefined;
+  // At most one pointer for each supported year except the separately loaded 2024 baseline.
+  const maximum = EARTH_ENGINE_LAST_YEAR - EARTH_ENGINE_FIRST_YEAR;
+  for (let pageNumber = 0; pageNumber < Math.ceil(maximum / 100); pageNumber++) {
+    const page = await bucket.list({ prefix, limit: 100, ...(cursor ? { cursor } : {}) });
+    if (page.objects.length > 100) throw new EarthEngineContextError("Earth Engine year catalog exceeds its page limit.", 503);
+    for (const object of page.objects) {
+      const match = /^earth-engine-context\/v1\/active-years\/(\d{4})\.json$/.exec(object.key), year = Number(match?.[1]);
+      if (!match || !earthEngineSupportedYear(year) || year === 2024 || seen.has(year) || seen.size >= maximum) throw new EarthEngineContextError("Earth Engine year catalog failed validation.", 503);
+      seen.add(year);
+      const manifest = await activeEarthEngineManifestForYear(year);
+      if (!manifest) throw new EarthEngineContextError("Earth Engine year catalog failed validation.", 503);
+      manifests.push(manifest);
+    }
+    if (!page.truncated) return manifests;
+    if (!page.cursor || page.cursor.length > 1024 || cursors.has(page.cursor)) throw new EarthEngineContextError("Earth Engine year catalog cursor failed validation.", 503);
+    cursor = page.cursor; cursors.add(cursor);
   }
-  return manifests;
+  throw new EarthEngineContextError("Earth Engine year catalog exceeds its supported history.", 503);
 }
 
 export async function earthEngineManifestForPointer(pointer: { setId: string; manifestSha256: string }): Promise<EarthEngineContextManifest> {

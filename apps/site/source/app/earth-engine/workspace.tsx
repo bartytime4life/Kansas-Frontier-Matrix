@@ -6,6 +6,7 @@ import { EARTH_ENGINE_ACCESS, EARTH_ENGINE_CATALOG, EARTH_ENGINE_CHECKED_AT, EAR
 import { EARTH_ENGINE_CONTEXT_LAYERS, EARTH_ENGINE_SOURCE_YEARS, type EarthEngineContextLayerId } from "../earth-engine-context";
 import { useEarthEngineContext } from "../earth-engine-context-client";
 import { buildEarthEngineExportRecipe } from "../earth-engine-export";
+import { SourceHistory } from "../source-history";
 import styles from "./workspace.module.css";
 
 const topics = ["All", ...new Set(EARTH_ENGINE_DATASETS.map((d) => d.topic))];
@@ -78,11 +79,11 @@ export default function EarthEngineWorkspace() {
   return <main className={styles.page}>
     <header className={styles.header}>
       <Link href="/" className={styles.brand}>KFM <span>Kansas Frontier Matrix</span></Link>
-      <nav aria-label="Earth Engine navigation"><Link href="/">Explorer map</Link><Link href="/earth-engine" aria-current="page">Earth Engine</Link><Link href="/data">Contribute data</Link></nav>
+      <nav aria-label="Earth Engine navigation"><Link href="/">Explorer map</Link><Link href="/earth-engine" aria-current="page">Earth Engine</Link><Link href="/acquisition">Acquisition</Link><Link href="/data">Contribute data</Link></nav>
     </header>
     <section className={styles.intro} aria-labelledby="earth-engine-title">
       <div><p className={styles.eyebrow}>KANSAS / SOURCE DISCOVERY</p><h1 id="earth-engine-title">Earth Engine datasets & recipes</h1><p>Find a dataset, compare its limits, and prepare a Kansas analysis for review.</p></div>
-      <div className={styles.access}><strong>{context.manifest ? "Processed snapshots available · live Earth Engine disconnected" : "Discovery available · Earth Engine not connected"}</strong><p>{context.manifest ? "Reviewed visual snapshots are available in the map layer controls. They are not KFM claim evidence." : "Recipes run in the owner's registered Earth Engine project. No reviewed Earth Engine display set is installed in this Site."}</p><a href={EARTH_ENGINE_ACCESS} target="_blank" rel="noreferrer">Earth Engine access guide ↗</a></div>
+      <div className={styles.access}><strong>{context.loading ? "Checking reviewed imagery · live Earth Engine disconnected" : context.error ? "Display inventory unavailable · live Earth Engine disconnected" : context.manifest ? "Processed snapshots available · live Earth Engine disconnected" : "Discovery available · Earth Engine not connected"}</strong><p>{context.loading || context.error ? "Recipes run in the owner's registered Earth Engine project. Installed coverage cannot be confirmed until the display inventory loads." : context.manifest ? "Reviewed visual snapshots are available in the map layer controls. They are not KFM claim evidence." : "Recipes run in the owner's registered Earth Engine project. No reviewed Earth Engine display set is installed in this Site."}</p><a href={EARTH_ENGINE_ACCESS} target="_blank" rel="noreferrer">Earth Engine access guide ↗</a></div>
     </section>
     <div className={styles.layout}>
       <section aria-label="Earth Engine dataset discovery" className={styles.discovery}>
@@ -108,8 +109,9 @@ export default function EarthEngineWorkspace() {
       <aside className={styles.recipe} id="recipe-workspace" aria-labelledby="recipe-title">
         <p className={styles.eyebrow}>PREPARE A KANSAS STUDY</p><h2 id="recipe-title">{selected.title}</h2><code className={styles.asset}>{selected.asset}</code>
         <p>{selected.recipe}</p>
+        <SourceHistory dataset={selected} manifests={context.manifests} loading={context.loading} error={context.error} chooseYear={(value) => setSelection({ id: selectedId, yearText: String(value) })} />
         <dl className={styles.details}><div><dt>Area</dt><dd>Kansas · Census TIGER 2018 state boundary (FIPS 20)</dd></div><div><dt>Time</dt><dd>{selected.coverage}</dd></div><div><dt>Reuse</dt><dd>{selected.terms} <a href={`${earthEngineUrl(selected)}#terms-of-use`} target="_blank" rel="noreferrer">Read terms ↗</a></dd></div></dl>
-        {annual ? <label className={styles.year}>Analysis year<input type="number" min={selected.firstYear!} max={selected.lastYear!} step="1" value={yearText} aria-invalid={Boolean(error)} aria-describedby="recipe-time-note recipe-error" onChange={(event) => { setSelection({ id: selectedId, yearText: event.target.value }); setNotice(""); }} /><small id="recipe-time-note">Complete calendar years {selected.firstYear}–{selected.lastYear}. End date is January 1 of the following year, exclusive. Actual data availability is checked when run.</small></label> : <p className={styles.fixed}>Fixed product: year selection is unavailable. {selected.temporalMode === "period-summary" ? "The recipe shows the full historical summary." : "The recipe uses a source mosaic with mixed acquisition dates."}</p>}
+        {annual ? <label className={styles.year}>Analysis year<input type="number" min={selected.firstYear!} max={selected.lastYear!} step="1" value={yearText} aria-invalid={Boolean(error)} aria-describedby="recipe-time-note recipe-error" onChange={(event) => { setSelection({ id: selectedId, yearText: event.target.value }); setNotice(""); }} /><small id="recipe-time-note">Recipe range {selected.firstYear}–{selected.lastYear}. Some sensor boundary years are partial. End date is January 1 of the following year, exclusive. Actual data availability is checked when run.</small></label> : <p className={styles.fixed}>Fixed product: year selection is unavailable. {selected.temporalMode === "period-summary" ? "The recipe shows the full historical summary." : "The recipe uses a source mosaic with mixed acquisition dates."}</p>}
         <p id="recipe-error" className={styles.error} role="alert">{error}</p>
         <div className={styles.limit}><strong>Interpret with care</strong><p>{selected.limitation}</p></div>
         <div className={styles.recipeActions}><button type="button" className={styles.primary} disabled={Boolean(error)} onClick={() => save("recipe")}>Download recipe · .js</button><button type="button" disabled={Boolean(error)} onClick={() => void copyRecipe()}>Copy recipe</button><button type="button" disabled={Boolean(error)} onClick={() => save("review")}>Download review draft · .json</button></div>

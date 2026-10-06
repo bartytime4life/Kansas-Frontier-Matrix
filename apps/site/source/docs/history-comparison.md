@@ -1,0 +1,63 @@
+# Compare approved imagery years
+
+The Earth Engine layer controls now open **Compare imagery years**. Choose one
+product and two different approved, installed years. The comparison uses the
+existing owner-checked, manifest/hash-checked tile routes. It does not run Earth
+Engine, download an archive, activate a snapshot, or claim measured change.
+
+Swipe uses two synchronized flat Mercator maps. Its divider is a keyboard range
+control: arrow keys adjust the split, Home shows B, and End shows A. **Side by
+side** provides the same camera and scale without occlusion. Each side retains
+its own observation period, attribution, grid resolution, legend, limits, and
+immutable snapshot identity. Pan/zoom controls affect both maps. Closing the
+dialog preserves the main map, its terrain/globe view, and its layer choices.
+
+The pair requires the same annual product, source, display resolution, legend,
+and at least one common prepared tile zoom. Mixed-date elevation, held products,
+ambiguous duplicate years, missing years, and incompatible pairs are unavailable.
+PRISM monthly history can begin in 1895 and daily history in 1981, selected by
+provider calendar labels. Landsat 4, 5, 7, 8 and 9 remain separate products; the
+viewer never silently compares one mission with another. Partial mission years,
+Landsat 7 gaps, PRISM source revisions and differing observation conditions
+remain review limitations. New recipes do not imply that any year is installed.
+These checks support visual comparison; they do not prove scientific
+comparability of acquisition conditions, masks, processing, or historical crop
+class meanings. Those limits remain visible. No difference statistics, crop
+transitions, or causal findings are calculated from display colors.
+
+No current basemap fills imagery gaps. The checkerboard denotes transparency or
+unavailable imagery. Tile failures are visible and retryable. Every request has
+a 15-second deadline, a 512 KiB PNG limit, same-origin credentials, no browser
+cache, and no redirects. Pair changes, renderer switches, and closing abort
+outstanding reads. Removed renderers cannot deliver status or pixels to the next
+pair. Server admission, owner identity, and byte-integrity checks are unchanged.
+
+**Use 2D images** offers a synchronized tile mosaic without WebGL; it is also the
+automatic fallback when WebGL2 cannot initialize. It chooses a common prepared
+zoom no higher than 8 with no more than 96 rectangular tile positions per side,
+loads at most four tiles concurrently, and revokes temporary image URLs on close.
+The image viewer's zoom enlarges the overview; it does not add source detail.
+If no bounded overview exists, source details remain readable and the viewer
+reports that the overview is unavailable. Historical holes never reuse another
+year's pixels.
+
+## Ownership, validation, and rollback
+
+The deployable UI and its pure comparison/transport helpers remain under this
+Site's `app/`; regressions under `tests/`; this explanation under `docs/`. The
+monorepo mirror preserves those responsibilities under `apps/site/source/`,
+consistent with adopted Directory Rules v2 and ADR-0029. No canonical schema,
+registry, policy, data, or release home is introduced. The Site-local comparison
+types are display adapters, not source-admission contracts.
+
+Run `node --test tests/earth-engine-comparison.test.mjs`, TypeScript, production
+build, full Site tests, and lint. The focused suite covers approved/held/ambiguous
+years, incompatible pairs, missing zooms, bounded overviews, exact tile paths,
+same-origin access, PNG/size refusal, whole-request timeouts, cancellation and
+late results. Browser acceptance separately covers real approved pairs, swipe
+and side-by-side pan/zoom, keyboard divider, mobile layout, missing tiles,
+WebGL fallback, dialog focus/Escape, and unchanged main-map state.
+
+Rollback removes the additive comparison launch/component/helpers/styles and
+restores the prior Site source. No private records, display sets, active pointers,
+main-map storage, or Earth Engine exports need to be changed.

@@ -1,3 +1,21 @@
+> **Kansas history and acquisition — 2026-10-06:** the [bounded feature delta](../../data/receipts/generated/site-history-acquisition-delta-20261006.json)
+> applies 46 paths from exact clean Site source `93ab891b1b28cc7c1bd14a4f6e12ca14097fdcb9`
+> to repository base `35a3dc29d7fdef1afbf523cd2d03ca6d2b594ebc`: 21 updates and 25 additions,
+> with no deletions. Repository compact/Qwen/water behavior, dependency locks and
+> the aquifer-worker origin guard remain preserved. Site v162 deployment succeeded
+> at 18:00:13 UTC from this source; hosted browser acceptance and local service
+> cutover are separate. This mirror does not switch the local runtime.
+> It adds approved same-product imagery comparison, Landsat 4/5/7/8/9 and PRISM
+> preparation back to 1895, owner-only acquisition/terrain receipts, and the 500 GB
+> local Kansas cache policy. Captured local files without provider checksums stay
+> protected, unreviewed candidates. The mirrored source passed its build, TypeScript,
+> 540 Node tests, 16 raster tests and lint (0 errors, 46 warnings). Offline smoke
+> passed 53 checks across 44 routes; nine provider-only routes remained unprobed.
+> Eleven mirror/startup QA tests, 119 acquisition tests plus 24 subtests, changed
+> document links and the topology ratchet passed. All 691 mirrored source paths
+> match the pinned Site commit. The historical mirror receipt and
+> `MIRROR_REVIEW_REQUIRED` hold remain unchanged; this is not a release approval.
+
 > **Map research tools — 2026-10-06:** the [bounded feature delta](../../data/receipts/generated/site-research-tools-delta-20261006.json)
 > projects standalone source `d8f2db1ee6e0fedd495ed538a85ad23b3302e2ae`
 > onto repository base `43ef1c22976b2114ec9a936b97651fba4970bed5`.

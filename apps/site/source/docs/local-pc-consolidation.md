@@ -8,9 +8,11 @@ The source-alignment session installed Site v153 from
 service's explicit storage argument remained
 `~/Projects/KFM-Explorer-Site-v109/.wrangler/local-state`. These paths have
 different responsibilities: changing the source alias does not move the store.
-The stopped-service backup is
-`~/Projects/KFM-Explorer-local-state-pre-v153-20261005`. Preserve both the
-physical store and its backup; an older folder name does not make data obsolete.
+The stopped-service backup was created at
+`~/Projects/KFM-Explorer-local-state-pre-v153-20261005` and was verified and
+relocated on 2026-10-06 to
+`~/KFM-site-recovery/KFM-Explorer-local-state-pre-v153-20261005`. Preserve both
+the physical store and its backup; an older folder name does not make data obsolete.
 
 Resolve the current source with `readlink -f` and inspect the effective
 `systemctl --user cat kfm-explorer-local.service` before any further update.
@@ -66,8 +68,8 @@ environment files. Browser-local Places, reports, and stories belong to that
 origin and must not be cleared as part of a source update. The updated Qwen
 bridge accepts that exact origin and retains its request and concurrency bounds.
 
-The primary external data store, Earth Engine exports, raw source collections,
-and task-local candidate stores remain in their original locations. A private
+At the 2026-10-02 handoff, the primary external data store, Earth Engine exports,
+raw source collections, and task-local candidate stores remained in their original locations. A private
 operational index in the existing external store's `data/catalog` lane points to
 them. It is an inventory, not a source-admission or release record. PRISM
 acquisition may continue while inventory counts are collected. Do not merge
@@ -200,3 +202,33 @@ Placement: this is an existing Site `scripts/` runtime responsibility, with
 regressions under `tests/` and this runbook under `docs/`, following Directory
 Rules v2 / ADR-0029. Dependencies, hosted bindings, hosted deployment and data
 publication are unchanged.
+
+## Physical folder consolidation — 2026-10-06
+
+The private data catalog now records a completed relocation of 25 inactive
+directories: 18 Desktop reference folders into `~/KFM-references`, six prior
+build/state/sync recovery packages into `~/KFM-site-recovery`, and the existing
+Earth Engine working collection into
+`~/Projects/KFM-data/data/work/earth-engine`. A single Desktop shortcut opens
+the references. Only the empty former `~/KFM-data` container was removed;
+49,749 payload files (11,030,136,366 logical bytes) were preserved and hashed
+before and after each no-overwrite move.
+
+Use `~/KFM-site-recovery/KFM-Explorer-local-state-pre-v153-20261005` for the
+pre-v153 backup. Do not confuse it with live `.wrangler/local-state` or infer
+that it supersedes newer user records. The Earth Engine preparation tools take
+an explicit `--data-root`, and restoration takes an explicit `--package`;
+use the new path. Existing display-set IDs, manifests, review labels, and
+historical receipts remain byte-identical. No admission, activation, release,
+or publication state changed.
+
+The full manifest and rollback helper are private under
+`~/Projects/KFM-data/data/receipts/local-organization/20261006T163401Z/`, linked
+from the existing `data/catalog/KFM-LOCAL-DATA-CATALOG.md`. Rollback rejects
+content drift and occupied original paths. Source checkouts, unfinished work,
+synced project files, active PRISM acquisition, current Site source/alias, and
+actual D1/R2 persistence were preserved. Explorer, Qwen, and PRISM process IDs
+and service states were unchanged; Explorer and the origin-checked bridge
+returned HTTP 200. The relocated reviewed imagery package passed read-only
+validation for 15,839 objects with the same manifest digest. These are storage
+and HTTP checks, not a new browser acceptance or source-release decision.
