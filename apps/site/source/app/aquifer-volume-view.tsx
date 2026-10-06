@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import type { Map as MapLibreMap } from "maplibre-gl";
+import type { Map as MapLibreMap } from "./maplibre-seam";
+import { startAquiferVolumeWorker } from "./subsurface-workers";
 import { projectVolumePosition, volumeDepthScale } from "./aquifer-volume";
 import { materialFor, materialInfo } from "./subsurface-materials";
 import { meters, type Borehole, type DepthInterval } from "./subsurface-model";
@@ -29,7 +30,7 @@ export default function AquiferVolumeView({map,records,onFlatMap,onLocate,onInsp
     if(!map)return;
     let cancelled=false;
     let worker:Worker;
-    try{worker=new Worker(new URL("./aquifer-volume-worker.ts",import.meta.url),{type:"module"});}catch{queueMicrotask(()=>{if(!cancelled)setStatus("Aquifer preparation worker unavailable. The locator and logs remain usable.");});return()=>{cancelled=true;};}
+    try{worker=startAquiferVolumeWorker();}catch{queueMicrotask(()=>{if(!cancelled)setStatus("Aquifer preparation worker unavailable. The locator and logs remain usable.");});return()=>{cancelled=true;};}
     const stop=startAquiferView<HTMLCanvasElement>({map,worker,onSnapshot:setSnapshot,onStatus:setStatus,onSurfaceStatus:setSurfaceStatus,sampleSurface:()=>{
       const source=map.getCanvas(),image=document.createElement("canvas");
       const ratio=Math.min(1,1024/Math.max(source.width,source.height));image.width=Math.max(1,Math.round(source.width*ratio));image.height=Math.max(1,Math.round(source.height*ratio));
