@@ -8657,7 +8657,7 @@ export default function Home() {
           </section>
 
           <div className="local-layer-settings" hidden={layerCatalogView !== "local"}>
-            <p className="layer-journey-intro">Reviewed Kansas imagery appears here when an approved display set is installed. Each layer has its own visibility, opacity, source period, and limits. <Link href="/earth-engine">Explore all eight source recipes ↗</Link></p>
+            <p className="layer-journey-intro">Reviewed Kansas imagery appears here when an approved display set is installed. Each layer has its own visibility, opacity, source period, and limits. <Link href="/earth-engine">Explore all source recipes ↗</Link></p>
             <section className="reviewed-imagery-section" aria-label="Earth Engine imagery layers">
               <EarthEngineDisplayControls map={styleReady ? mapRef.current : null} mapYear={temporalMode === "snapshot" ? year : -1} manifests={earthEngineContext.manifests} loading={earthEngineContext.loading} error={earthEngineContext.error} rendererState={runtime.kind} onDisplayChange={setEarthEngineDisplay} onReload={earthEngineContext.reload} />
             </section>

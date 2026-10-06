@@ -61,3 +61,31 @@ WebGL fallback, dialog focus/Escape, and unchanged main-map state.
 Rollback removes the additive comparison launch/component/helpers/styles and
 restores the prior Site source. No private records, display sets, active pointers,
 main-map storage, or Earth Engine exports need to be changed.
+
+## Main-map year selection repair · 2026-10-06
+
+Browser acceptance found that the main-map Landsat 4 and 5 selectors visually
+fell back to their last option while their preparation links still used 2024.
+The controls now prefer the latest approved installed year of that same product
+within its source bounds. Without installed imagery, the 2024 default is bounded
+by the product's supported years: 1993 for Landsat 4 and 2012 for Landsat 5.
+The selection, source-period explanation, renderer state and preparation link
+use the same year. These source bounds do not establish usable Kansas imagery.
+
+Invalid or fractional selection events retain the previous valid choice. A
+deliberately selected supported year without installed imagery stays unavailable;
+the viewer removes the previous year's source rather than substituting pixels.
+Defaults do not activate layers. Mixed-date elevation is unchanged. The source
+recipe link uses count-free wording so adding recipes cannot stale its label.
+
+`tests/earth-engine-display-years.test.mjs` exercises rendered controls, actual
+selection handlers, renderer year projection and removal of the previous map
+source. It covers the two expired mission defaults, approved installed defaults,
+invalid input and supported missing years. This is a bounded display correction;
+it does not alter source approval, installation, tile authorization or admission.
+
+The bounded repair passed production builds, TypeScript and all 545 Node tests
+in both the standalone Site candidate and repository mirror. Full lint reported
+0 errors and the same 46 inherited warnings in each. The five new regression
+tests are included in that total. This record describes code validation;
+post-repair browser acceptance and deployment remain separate checks.

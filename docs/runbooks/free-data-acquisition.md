@@ -7,8 +7,10 @@ status: branch implementation; candidate-only
 owners: ["@bartytime4life"]
 created: 2026-10-06
 updated: 2026-10-06
+policy_label: repository-facing; candidate-only; no-release
 owning_root: docs/
-truth_posture: Local tests and captured metadata are bounded evidence; no release or public acceptance.
+responsibility: Explain free-source metadata discovery, explicit payload selection, bounded local capture, and receipt limits.
+truth_posture: CONFIRMED scoped local tests and captured metadata / NEEDS VERIFICATION source admission, independent review, and public acceptance.
 [/KFM_META_BLOCK_V2] -->
 
 # Free data discovery, selection and bounded acquisition
