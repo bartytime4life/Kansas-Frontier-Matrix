@@ -14,6 +14,7 @@ async function asset(index:0|1,signal:AbortSignal){
   const data=JSON.parse(new TextDecoder().decode(bytes)) as GeoJSON.FeatureCollection;cache.set(item.url,data);return data;
 }
 scope.onmessage=async(event:MessageEvent<{id:number;bounds:VolumeBounds}>)=>{
+  if(event.origin&&event.origin!==self.location.origin)return;
   controller?.abort();const active=new AbortController();controller=active;
   const timer=setTimeout(()=>active.abort(),12000);
   try{const [depth,thickness]=await Promise.all([asset(0,active.signal),asset(1,active.signal)]);if(active.signal.aborted)return;
