@@ -1,6 +1,25 @@
 import type { OfficialContextId, OfficialContextSource } from "./live-context";
 
 export type LayerWorkspace = "groundwater" | "all" | "disaster" | "land" | "transport";
+export type CatalogFilter = "all" | "selected" | "attention";
+export type CatalogStatus = Readonly<{ selected: boolean; held: boolean; state: string; canDisplay: boolean }>;
+
+export function catalogDisplayStatus(status: CatalogStatus): string {
+  if (!status.selected) return "Not selected";
+  if (status.held) return "Held";
+  if (status.state === "error") return "Unavailable";
+  if (status.state === "loading") return "Loading";
+  if (status.state === "empty") return "Selected · no features in response";
+  if (!status.canDisplay) return "Selected · not displayed";
+  if (status.state === "partial") return "Displayed · partial response";
+  return status.state === "ready" ? "Displayed" : "Selected";
+}
+
+/** Catalog filtering is a projection; it never writes visibility. */
+export function catalogFilterMatches(filter: CatalogFilter, status: CatalogStatus): boolean {
+  return filter === "all" || filter === "selected" && status.selected
+    || filter === "attention" && status.selected && (status.held || !status.canDisplay || ["error", "partial", "empty"].includes(status.state));
+}
 
 export const DISASTER_SOURCE_IDS: readonly OfficialContextId[] = Object.freeze([
   "fema-disaster-declarations", "fema-flood-zones",

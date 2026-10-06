@@ -15,6 +15,7 @@ import {
 import SnapshotMap from "./snapshot-map";
 import { readDraft, REPORT_STORAGE_KEY, STORY_STORAGE_KEY } from "./workspace-storage";
 import { FIRE_REPORT_SOURCES, type FireReportContext } from "./fire-report-analysis";
+import { researchMarkdown, type ResearchContext } from "./research-context";
 
 type WorkspaceMode = "reports" | "stories";
 
@@ -23,6 +24,7 @@ type ReportStoryWorkspacesProps = Readonly<{
   snapshot: MapSnapshot;
   evidenceRecords: readonly EvidenceRecord[];
   fireContext?: FireReportContext | null;
+  researchContext?: ResearchContext | null;
   onModeChange: (mode: WorkspaceMode) => void;
   onReturnToMap: () => void;
   onInspectEvidence: (record: EvidenceRecord) => void;
@@ -81,6 +83,7 @@ const reportMarkdown = (draft: ReportDraft, evidence: readonly EvidenceRecord[])
     `**Basemap:** ${draft.snapshot.basemap} (display context)` ,
     "**Map attribution:** " + (draft.snapshot.basemap === "standard" ? "OpenFreeMap · OpenMapTiles · © OpenStreetMap contributors" : draft.snapshot.basemap === "imagery" ? "Tiles © Esri" : draft.snapshot.basemap === "streets" ? "© OpenStreetMap contributors" : "KFM local background style"),
     ...(terrainDescription ? [`**Display terrain:** ${terrainDescription}`] : []),
+    ...(draft.researchContext ? ["", researchMarkdown(draft.researchContext), ""] : []),
     ...(draft.fireContext ? [
       "",
       "## Fire source context · not claim evidence",
@@ -144,6 +147,7 @@ export default function ReportStoryWorkspaces({
   snapshot,
   evidenceRecords,
   fireContext,
+  researchContext,
   onModeChange,
   onReturnToMap,
   onInspectEvidence,
@@ -153,7 +157,7 @@ export default function ReportStoryWorkspaces({
   const headingRef = useRef<HTMLHeadingElement>(null);
   const [storageState, setStorageState] = useState<"saved" | "saving" | "unavailable">("saving");
   const [report, setReport] = useState<ReportDraft>(() =>
-    readStored<ReportDraft>(REPORT_STORAGE_KEY, snapshot.id) ?? createReportDraft(snapshot, evidenceRecords, fireContext ?? undefined),
+    readStored<ReportDraft>(REPORT_STORAGE_KEY, snapshot.id) ?? createReportDraft(snapshot, evidenceRecords, fireContext ?? undefined, researchContext ?? undefined),
   );
   const [story, setStory] = useState<StoryDraft>(() =>
     readStored<StoryDraft>(STORY_STORAGE_KEY, snapshot.id) ?? createTrustStory(snapshot, evidenceRecords),
@@ -346,6 +350,12 @@ export default function ReportStoryWorkspaces({
 
         <main className="report-paper" aria-label="Editable report draft">
           <div className="paper-rule"><span>KFM FIELD NOTE</span><strong>DRAFT</strong></div>
+          {report.researchContext && <section className="fire-report-source-card" aria-label="Captured place dossier">
+            <strong>Near {report.researchContext.anchor.title} · {report.researchContext.radiusMiles} miles</strong>
+            <p>Captured {report.researchContext.capturedAt} · {report.researchContext.mapTime} · {report.researchContext.records.length} of {report.researchContext.total} available records.</p>
+            <p>This dated context stays fixed in this report. Provider records are separate from included evidence; coverage is limited to eligible loaded data.</p>
+            <details><summary>Captured sources and coverage</summary><pre style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{researchMarkdown(report.researchContext)}</pre></details>
+          </section>}
           {report.fireContext && <section className="fire-report-source-card" aria-label="Fire report source context">
             <strong>{report.fireContext.kind === "nifc-fire-reports" ? "NIFC working incident record" : "NASA thermal detection"} · {report.fireContext.title}</strong>
             <p>Provider event/acquisition: {report.fireContext.observedAt ?? "not supplied"} · Retrieved: {report.fireContext.retrievedAt ?? "not supplied"}</p>

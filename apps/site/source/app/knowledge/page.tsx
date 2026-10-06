@@ -1,13 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { readKnowledge, knowledgeUnavailable, type KnowledgeResult } from "../knowledge-read";
 import styles from "./knowledge.module.css";
 
+const subscribeLocation = (changed: () => void) => {
+  window.addEventListener("popstate", changed);
+  return () => window.removeEventListener("popstate", changed);
+};
+const locationTerm = () => new URLSearchParams(window.location.search).get("term") ?? "";
+const serverTerm = () => "";
+
 export default function KansasKnowledgePage() {
-  const [query, setQuery] = useState("");
-  const [submitted, setSubmitted] = useState({ term: "" });
+  const term = useSyncExternalStore(subscribeLocation, locationTerm, serverTerm);
+  return <KnowledgeSearch key={term} initialTerm={term} />;
+}
+
+function KnowledgeSearch({ initialTerm }: { initialTerm: string }) {
+  const [query, setQuery] = useState(initialTerm.slice(0, 80));
+  const [submitted, setSubmitted] = useState({ term: initialTerm });
   const [completed, setCompleted] = useState<{ request: typeof submitted; result: KnowledgeResult } | null>(null);
   const result = completed?.request === submitted ? completed.result : null;
   const busy = result === null;

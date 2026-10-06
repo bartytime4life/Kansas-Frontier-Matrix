@@ -1,3 +1,5 @@
+import { validResearchContext } from "./research-context";
+
 export type SavedWorkspaceParseResult = Readonly<{
   records: readonly Record<string, unknown>[];
   rejected: boolean;
@@ -22,6 +24,7 @@ export const validSavedWorkspaceRecord = (value: unknown): value is Record<strin
     || !["EXECUTIVE", "STANDARD", "TECHNICAL"].includes(String(value.report.detail)) || !stringList(value.report.layerIds, 100)
     || !record(value.report.sections) || typeof value.report.query !== "string" || value.report.query.length > 500) return false;
   if (value.selection !== null && value.selection !== undefined && (!record(value.selection) || !text(value.selection.layerId, 160) || !text(value.selection.featureId, 240))) return false;
+  if (value.researchContext !== undefined && (value.locationCameraRedacted !== false || !validResearchContext(value.researchContext))) return false;
   return true;
 };
 
@@ -38,3 +41,12 @@ export const parseSavedWorkspaceList = (raw: string | null, maxItems: number, ma
     return { records: Object.freeze([]), rejected: true };
   }
 };
+
+export function writeSavedWorkspaceList(storage: Pick<Storage, "setItem">, key: string, records: readonly unknown[]): boolean {
+  try {
+    const serialized = JSON.stringify(records);
+    if (serialized.length > 2_000_000 || !records.every(validSavedWorkspaceRecord)) return false;
+    storage.setItem(key, serialized);
+    return true;
+  } catch { return false; }
+}

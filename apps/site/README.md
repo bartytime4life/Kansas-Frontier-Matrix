@@ -1,3 +1,17 @@
+> **Map research tools — 2026-10-06:** the [bounded feature delta](../../data/receipts/generated/site-research-tools-delta-20261006.json)
+> projects standalone source `d8f2db1ee6e0fedd495ed538a85ad23b3302e2ae`
+> onto repository base `43ef1c22976b2114ec9a936b97651fba4970bed5`.
+> Site v155 is privately deployed from this source; v153 and v154 remain saved.
+> It adds catalog filters, pinned place dossiers, and optional saved/report context.
+> All 12 feature paths apply cleanly; `app/page.tsx` retains the newer repository
+> overlay. Other maintenance paths and the installed local service are preserved.
+> Validation: Site 397 tests and review tree 408 tests pass, both typechecks/builds
+> pass, lint has no errors (43/44 warnings), and local API smoke passes 48 checks.
+> Repository topology passes with no new drift. Browser acceptance remains
+> unverified because the admin browser security check is unavailable.
+> Site source and GitHub are distinct trees; the historical mirror receipt and
+> `MIRROR_REVIEW_REQUIRED` hold remain. See [behavior and verification scope](source/docs/map-research-tools.md).
+
 > **Local maintenance candidate — 2026-10-05:** 23 files under `source/`
 > carry local candidate `87bd864` on top of Site v153: dotenv startup refusal,
 > setup/recovery documentation, river trail geometry/viewport fixes, and larger

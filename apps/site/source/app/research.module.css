@@ -1,0 +1,30 @@
+.dossier,.summary { margin:12px; padding:16px; color:#302a24; background:#f5f0e5; border:1px solid #d5c8b7; border-radius:12px; overflow-wrap:anywhere; }
+.dossier h3 { font-family:Georgia,serif; font-size:1.3rem; line-height:1.25; margin:6px 0; }
+.dossier p,.summary p { font-size:.82rem; line-height:1.5; margin:8px 0; }
+.eyebrow { color:#88432f; font-size:.65rem; letter-spacing:.08em; font-weight:750; }
+.actions,.filters { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:10px 0; }
+.actions button,.actions a,.filters button,.knowledge button { background:#fffaf1; border:1px solid #bbaa92; border-radius:6px; padding:7px 10px; color:#563a2c; font-size:.75rem; cursor:pointer; text-decoration:none; }
+.actions button:disabled { opacity:.55; cursor:default; }
+.filters { padding:0 12px; }
+.filters button[aria-pressed="true"] { background:#874630; border-color:#874630; color:white; }
+.filters button:focus-visible,.actions :focus-visible,.dossier :focus-visible,.summary :focus-visible { outline:3px solid #a5502c; outline-offset:3px; }
+.count { font-weight:700; }
+.results { padding:0; margin:12px 0; list-style:none; }
+.results li { padding:12px 0; border-top:1px solid #d5c8b7; }
+.results strong,.results span,.results small,.coverage small { display:block; margin:4px 0; }
+.results small,.coverage small,.knowledge small { font-size:.73rem; line-height:1.5; color:#66564a; }
+.results span { font-size:.8rem; color:#874630; }
+.dossier summary { cursor:pointer; font-size:.8rem; padding:6px 0; }
+.coverage article { border-top:1px solid #d5c8b7; padding:9px 0; }
+.coverage strong { font-size:.8rem; }
+.warning { border-left:3px solid #a15a37; padding:8px; background:#eae0cf; }
+.knowledge { display:grid; gap:8px; margin:16px 0; }
+.knowledge label { font-size:.85rem; font-weight:650; }
+.knowledge input,.dossier select { min-width:0; max-width:100%; color:#302a24; background:#fffaf1; border:1px solid #bbaa92; border-radius:5px; padding:8px; }
+.status { display:block; font-size:.7rem; margin:5px 0; line-height:1.4; color:var(--text-secondary,#bbb); }
+.summary dl { display:grid; gap:8px; font-size:.78rem; }
+.summary dt { font-weight:750; color:#874630; }
+.summary dd { margin:2px 0 0; }
+.summary h3 { font-size:.88rem; margin:0; }
+.summary summary { cursor:pointer; font-size:.8rem; padding:8px 0; }
+@media(max-width:600px) { .dossier,.summary { margin:8px; padding:12px; } .actions button,.actions a,.filters button { min-height:40px; } }
