@@ -172,7 +172,7 @@ test("location-redacted workspaces and reports omit the entire dossier", () => {
 
 test("exports keep source links, observation versus retrieval time, roles and coverage limits", () => {
   const text = r.researchMarkdown(context([record("html", [-98, 38.1], { title: '<img src=x> [fake](https://evil.example)' })]));
-  assert.match(text, /https:\/\/example.org\/records/);
+  assert.match(text, /(?:^|[\s(])https:\/\/example\.org\/records(?:$|[\s)])/);
   assert.match(text, /Source time: Observed 2026-10-05/);
   assert.match(text, /Retrieved: 2026-10-06T00:00:00Z/);
   assert.match(text, /provider point/); assert.match(text, /partial/);
