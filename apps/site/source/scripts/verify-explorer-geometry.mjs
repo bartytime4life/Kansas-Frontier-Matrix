@@ -543,7 +543,10 @@ assert.deepEqual(await evaluate(`({
 })`), { open: false, focusRestored: true });
 for (const name of ["2D", "Terrain 3D", "Globe"]) {
   await activateMode(1024, name, `Tablet ${name}`);
-  await waitFor(`[...document.querySelectorAll('.map-dock-menu-representations button')].some((button) => button.querySelector('b')?.textContent === ${JSON.stringify(name)} && button.getAttribute('aria-pressed') === 'true')`);
+  await waitFor(
+    `((expectedName) => [...document.querySelectorAll('.map-dock-menu-representations button')].some((button) => button.querySelector('b')?.textContent === expectedName && button.getAttribute('aria-pressed') === 'true'))`,
+    name,
+  );
 }
 await activateMode(1024, "Compare", "Tablet Compare A/B");
 await waitFor(`document.querySelector('.map-utility-panel')?.getAttribute('data-open') === 'true' && document.querySelector('.map-utility-panel')?.getAttribute('data-view') === 'compare'`);
