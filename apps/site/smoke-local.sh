@@ -20,7 +20,7 @@ smoke_routes=(
   "earth-engine-context/[setId]/[layerId]/[...tile]" earth-engine-context/activate
   earth-engine-context/active earth-engine-context/catalog earth-engine-context/stage
   event-atlas/counties event-atlas/geology-legend event-atlas/manifest
-  event-atlas/resources event-atlas/weather
+  event-atlas/resources event-atlas/storms event-atlas/weather
   "governed/v1/[view]" governed/v1/knowledge
   historical-topo historical-topo/activate historical-topo/overlay historical-topo/queue
   historical-topo/review "historical-topo/review/tiles/[scan]/[package]/[z]/[x]/[y]"
@@ -153,6 +153,8 @@ expect GET '/api/event-atlas/geology-legend?unsupported=1' 400
 expect GET /api/event-atlas/manifest 400
 expect GET '/api/event-atlas/resources?edition=1900' 400
 expect GET /api/event-atlas/weather 400
+expect GET /api/event-atlas/storms 400
+expect GET '/api/event-atlas/storms?time=1999-01-01T00%3A00%3A00Z' 400
 expect GET /api/historical-topo 400 state error
 expect GET /api/hydrology/coverage 400
 expect GET /api/hydrology/direction 400
