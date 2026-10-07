@@ -72,6 +72,10 @@ test("display frame colors cells by rotation and draws a storm seen by two radar
   assert.equal(k7.properties.rotation, "tornado_signature");
   assert.equal(k7.properties.ageMinutes, 4);
   assert.match(storms.describeStormFeature(k7.properties), /not a confirmed tornado/);
+  // Only a radar whose rotation product was read can report "No rotation detected".
+  const cellsOnly = storms.stormFeatures([cells], "2024-05-19T23:20:00.000Z").features.filter((feature) => feature.properties.kind === "cell");
+  assert.ok(cellsOnly.every((feature) => feature.properties.rotation === "unknown"));
+  assert.ok(points.some((feature) => feature.properties.rotation === "none"));
 });
 
 test("storm route reads only allowlisted archive bytes, caches nothing to disk and reports per-radar gaps", async () => {
@@ -127,5 +131,8 @@ test("a failed rotation product keeps that radar's storm cells", async () => {
     assert.match(body.radars[0].message, /rotation unavailable/i);
     assert.equal(body.counts.cells, 34);
     assert.equal(body.counts.rotations, 0);
+    // Missing rotation data is never presented as "No rotation detected".
+    const cells = body.data.features.filter((feature) => feature.properties.kind === "cell");
+    assert.ok(cells.every((feature) => feature.properties.rotation === "unknown" && /not checked/i.test(feature.properties.rotationLabel)));
   } finally { globalThis.fetch = previous; }
 });

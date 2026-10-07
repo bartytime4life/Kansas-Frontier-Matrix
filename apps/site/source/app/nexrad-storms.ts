@@ -39,14 +39,18 @@ export const ROTATION_LABELS: Record<RotationClass, string> = {
   strong_aloft: "Strong rotation aloft",
   weak: "Weak rotation",
 };
-export const ROTATION_COLORS: Record<RotationClass | "none", string> = {
+/** "unknown": this radar's rotation product was missing or unreadable for the scan. */
+export type CellRotation = RotationClass | "none" | "unknown";
+export const ROTATION_NOT_CHECKED = "Rotation not checked (no rotation data for this scan)";
+export const ROTATION_COLORS: Record<CellRotation, string> = {
+  unknown: "#9aa7ab",
   tornado_signature: "#ff3fa4",
   strong_low: "#ff5a4f",
   strong_aloft: "#ffa53d",
   weak: "#ffe27a",
   none: "#e9f3f6",
 };
-const ROTATION_ORDER: readonly (RotationClass | "none")[] = ["none", "weak", "strong_aloft", "strong_low", "tornado_signature"];
+const ROTATION_ORDER: readonly CellRotation[] = ["unknown", "none", "weak", "strong_aloft", "strong_low", "tornado_signature"];
 
 export type StormMotion = Readonly<{ towardDeg: number; toward: string; speedKt: number; speedMph: number }>;
 export type StormCell = Readonly<{
@@ -268,7 +272,7 @@ export function parseStormProduct(raw: Uint8Array, key: string): StormProductRes
   return { radar: radar.id, product, volumeTime, cells, rotations };
 }
 
-const worst = (a: RotationClass | "none", b: RotationClass | "none") => ROTATION_ORDER.indexOf(b) > ROTATION_ORDER.indexOf(a) ? b : a;
+const worst = (a: CellRotation, b: CellRotation) => ROTATION_ORDER.indexOf(b) > ROTATION_ORDER.indexOf(a) ? b : a;
 
 /**
  * Build one display frame. Neighboring radars often track the same storm;
@@ -279,15 +283,17 @@ export function stormFeatures(products: readonly StormProductResult[], cursor: s
   const cursorMs = Date.parse(cursor);
   const cells = products.flatMap((product) => product.cells).sort((a, b) => a.rangeKm - b.rangeKm);
   const rotations = products.flatMap((product) => product.rotations).sort((a, b) => a.rangeKm - b.rangeKm);
-  const rotationByStorm = new Map<string, RotationClass | "none">();
+  // Only radars whose rotation product was read can say "no rotation".
+  const rotationChecked = new Set(products.filter((product) => product.product === "NMD").map((product) => product.radar));
+  const rotationByStorm = new Map<string, CellRotation>();
   for (const rotation of rotations) if (rotation.stormId) {
     const key = `${rotation.radar}:${rotation.stormId}`;
     rotationByStorm.set(key, worst(rotationByStorm.get(key) ?? "none", rotation.rotationClass));
   }
-  const keptCells: { cell: StormCell; alsoSeenBy: Set<string>; rotation: RotationClass | "none" }[] = [];
+  const keptCells: { cell: StormCell; alsoSeenBy: Set<string>; rotation: CellRotation }[] = [];
   for (const cell of cells) {
     const twin = keptCells.find((kept) => kept.cell.radar !== cell.radar && distanceKm(kept.cell.position, cell.position) < 10);
-    const rotation = rotationByStorm.get(`${cell.radar}:${cell.stormId}`) ?? "none";
+    const rotation = rotationByStorm.get(`${cell.radar}:${cell.stormId}`) ?? (rotationChecked.has(cell.radar) ? "none" : "unknown");
     if (twin) { twin.alsoSeenBy.add(stormRadar(cell.radar)!.name); twin.rotation = worst(twin.rotation, rotation); continue; }
     keptCells.push({ cell, alsoSeenBy: new Set(), rotation });
   }
@@ -302,7 +308,7 @@ export function stormFeatures(products: readonly StormProductResult[], cursor: s
     if (cell.forecast.length) features.push({ type: "Feature", geometry: { type: "LineString", coordinates: [cell.position, ...cell.forecast].map((p) => [...p]) } as LineString, properties: { ...base, kind: "forecast" } });
     features.push({ type: "Feature", geometry: { type: "Point", coordinates: [...cell.position] } as Point, properties: {
       ...base, kind: "cell", ageMinutes: ageMinutes(cell.volumeTime), rotation, rotationColor: ROTATION_COLORS[rotation],
-      rotationLabel: rotation === "none" ? "No rotation detected" : ROTATION_LABELS[rotation],
+      rotationLabel: rotation === "none" ? "No rotation detected" : rotation === "unknown" ? ROTATION_NOT_CHECKED : ROTATION_LABELS[rotation],
       toward: cell.motion?.toward ?? null, towardDeg: cell.motion?.towardDeg ?? null, speedMph: cell.motion?.speedMph ?? null,
       newCell: cell.newCell, alsoSeenBy: [...alsoSeenBy].join(", "), distanceFromRadarMiles: Math.round(cell.rangeKm / 1.609),
     } });
