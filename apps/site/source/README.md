@@ -195,8 +195,13 @@ heights come from the provider's mapped attributes; no heights are invented.
 Comparison maps also use a physical 1× default.
 
 **Data & downloads** stays on the top bar in Explorer and Event Observatory.
-It links to original LiDAR/elevation, historical maps, NOAA weather/radar
-archives, and National Water Model files, with source-specific proposal links.
+It links to original LiDAR/elevation, Kansas geologic maps, historical maps,
+NOAA weather/radar archives, and National Water Model files, with source-specific
+proposal links. The Kansas geologic maps entry uses the owner-selected NGMDB
+search with `State=KS` and `publisher_list=usgs`. It opens a provider catalog;
+individual records determine available files and formats. Selecting this link
+does not download or admit data automatically. Historical-route downloads and
+the historic topographic sheet browser retain their separate topoView links.
 Selected-source errors have Retry, Hide, and Source data actions. Optional tile
 failures no longer produce a map-wide degradation banner. Full renderer and
 basemap failures still retain their explicit recovery states.
