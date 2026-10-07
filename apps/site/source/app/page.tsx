@@ -4067,7 +4067,6 @@ export default function Home() {
     setMapContextOpen(false);
     setCurrentWorkspace("knowledge");
     setLeftPanelMode(mode);
-    if (mode === "live" || mode === "layers") setLayerCatalogView("official");
     setLeftOpen(true);
     setRightOpen(false);
     dismissMapUtilityWithoutFocus();
@@ -4076,7 +4075,6 @@ export default function Home() {
 
   const openMapSettings = useCallback(() => {
     openAtlasPanel("layers");
-    setLayerCatalogView("local");
     window.setTimeout(() => {
       const settings = leftPanelRef.current?.querySelector<HTMLDetailsElement>("#map-settings");
       if (!settings) return;
@@ -4614,7 +4612,6 @@ export default function Home() {
       }
       if (params.get("mapui") === "open" && restoredMapUtilityView === "display") {
         setLeftPanelMode("layers");
-        setLayerCatalogView("local");
         setLeftOpen(true);
         window.setTimeout(() => { const settings = leftPanelRef.current?.querySelector<HTMLDetailsElement>("#map-settings"); if (settings) settings.open = true; }, 0);
       }
@@ -8543,9 +8540,9 @@ export default function Home() {
               <button type="button" aria-pressed={layerCatalogView === "official"} data-active={layerCatalogView === "official"} onClick={() => { setLayerCatalogView("official"); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body")?.scrollTo(0, 0); }}>Real data layers <span>{visibleOfficialCount} selected</span></button>
               <button type="button" aria-pressed={layerCatalogView === "local"} data-active={layerCatalogView === "local"} onClick={() => { setLayerCatalogView("local"); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body")?.scrollTo(0, 0); }}>Earth Engine imagery <span>{selectedEarthEngineCount} selected</span></button>
             </nav>
-            <nav className="official-workspace-tabs" aria-label="Layer topics">
+            {layerCatalogView === "official" && <nav className="official-workspace-tabs" aria-label="Layer topics">
               {LAYER_WORKSPACES.map(([id, label]) => <button key={id} type="button" aria-pressed={layerCatalogView === "official" && officialWorkspace === id} onClick={() => { setLayerCatalogView("official"); setOfficialWorkspace(id); setOfficialSourceQuery(""); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body")?.scrollTo(0, 0); }}>{label}</button>)}
-            </nav>
+            </nav>}
             {layerCatalogView === "official" && <label className="catalog-search"><span aria-hidden="true">⌕</span><span className="sr-only">Find a provider source</span><input type="search" value={officialSourceQuery} onChange={(event) => setOfficialSourceQuery(event.target.value)} placeholder="Find a source" /></label>}
             {layerCatalogView === "official" && <div className={researchStyles.filters} role="group" aria-label="Provider catalog filter">
               {([["all", "All"], ["selected", "Selected"], ["attention", "Needs attention"]] as const).map(([filter, label]) => <button key={filter} type="button" aria-pressed={officialCatalogFilter === filter} onClick={() => setOfficialCatalogFilter(filter)}>{label}</button>)}
@@ -8603,6 +8600,7 @@ export default function Home() {
               return <article key={source.id} className="official-context-row" style={{ borderInlineStart: "2px solid #8d4e37" }} data-state={state} data-visible={officialVisibility[source.id]} data-held={heldAtFrame}>
                     <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.shortTitle}</strong><small>{source.organization}{source.kind === "HISTORICAL_RASTER" ? " · historical composite" : ""}{source.id === "noaa-goes-geocolor" && noaaSatelliteManifest ? ` · ${noaaSatelliteManifest.product === "visible" ? "GOES visible fallback" : "GeoColor"}` : ""} · {catalogDisplayStatus(officialCatalogStatuses[source.id])}</small></div></div>
                 <span className={researchStyles.status}>Source time: {officialArchiveDays[source.id as OfficialContextFeedId] ? `${officialArchiveDays[source.id as OfficialContextFeedId]} UTC` : source.freshness}</span>
+                {(source.id === "nasa-firms-active-fire" || source.id === "nasa-gibs-fire-points") && <p className="thermal-context-note"><strong>NASA THERMAL CONTEXT · NOT KFM EVIDENCE</strong><span>{source.id === "nasa-firms-active-fire" ? "Provider-default daily raster; its exact UTC image date is unresolved." : "One checked UTC image day; each returned point keeps its own acquisition time."} Thermal anomalies do not confirm a wildfire incident, and blank coverage is not an all-clear.</span></p>}
                 {(needsCloserView || needsFlatMap || heldAtFrame || source.minDisplayZoom !== undefined) && <div className="reference-layer-guidance">
                   <small>{heldAtFrame ? "This source is held at the selected map year." : needsFlatMap ? "This regional image layer requires the flat map." : `Visible at zoom ${minimumZoom}+ · your view ${view.zoom.toFixed(1)}. Source dates vary.`}</small>
                   {heldAtFrame && buildYearCurrent && <button type="button" onClick={() => { setPlaying(false); commitTemporalFrame(OFFICIAL_CONTEXT_PRESENT_FRAME, "Returned to Present; each layer retains its own source dates"); }}>Use Present</button>}
@@ -8693,6 +8691,7 @@ export default function Home() {
             <section className="reviewed-imagery-section" aria-label="Earth Engine imagery layers">
               <EarthEngineDisplayControls map={styleReady ? mapRef.current : null} mapYear={temporalMode === "snapshot" ? year : -1} manifests={earthEngineContext.manifests} loading={earthEngineContext.loading} error={earthEngineContext.error} rendererState={runtime.kind} onDisplayChange={setEarthEngineDisplay} onReload={earthEngineContext.reload} />
             </section>
+          </div>
             <details className="map-layer-advanced" id="map-settings">
               <summary>Tune this view</summary>
               <div className="map-layer-advanced-body">
@@ -8710,7 +8709,6 @@ export default function Home() {
                 <div className="panel-footer-actions"><button type="button" onClick={resetExplorer}>Reset map</button><Link href="/earth-engine">Earth Engine datasets</Link><Link href="/data">Propose a dataset</Link></div>
               </div>
             </details>
-          </div>
           </div>
           <details className="layer-panel-explore" hidden={leftPanelMode !== "layers" && leftPanelMode !== "live"}>
             <summary>Explore <span>Other map tools</span></summary>

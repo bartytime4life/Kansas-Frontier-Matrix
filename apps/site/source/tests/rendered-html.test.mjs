@@ -47,6 +47,10 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /MapLibre/i);
   assert.match(html, /Reports/i);
   assert.match(html, /Real data layers/i);
+  assert.match(html, /NASA THERMAL CONTEXT · NOT KFM EVIDENCE/);
+  assert.match(html, /Provider-default daily raster; its exact UTC image date is unresolved/);
+  assert.match(html, /One checked UTC image day; each returned point keeps its own acquisition time/);
+  assert.match(html, /Installed Earth Engine snapshots are visual display context, not KFM evidence/);
   assert.match(html, /aria-label="Layer topics"/);
   for (const label of ["Full archive → latest", "Bridges · historic designation", "Bridges · recorded closed", "Historical roads · 1918", "BLM land records", "BLM leases · authorized", "BLM leases · closed", "Roads, rail &amp; bridges", "Hazards", "Roads &amp; highways", "Railroads · active", "Railroads · abandoned", "FEMA flood zones"]) assert.ok(html.includes(label), `Missing discoverable layer control: ${label}`);
   assert.doesNotMatch(html, /Hydrology context<|Watershed &amp; storage context<|demonstration · selected/i);
@@ -1279,6 +1283,12 @@ test("keeps layer controls direct and source clocks in progressive detail", asyn
   assert.match(page, /className="visibility-switch"/);
   assert.match(page, /className="official-context-options"/);
   assert.match(page, /className="map-layer-advanced"/);
+  assert.match(page, /\{layerCatalogView === "official" && <nav className="official-workspace-tabs"/);
+  const mapSettingsStart = page.indexOf('<details className="map-layer-advanced" id="map-settings">');
+  const imageryEnd = page.indexOf("</div>", page.indexOf('<section className="reviewed-imagery-section"'));
+  assert.ok(mapSettingsStart > imageryEnd, "Map settings must follow the imagery section as a shared control");
+  const openMapSettings = page.slice(page.indexOf("const openMapSettings = useCallback"), page.indexOf("const openEarthEngineLayers = useCallback"));
+  assert.doesNotMatch(openMapSettings, /setLayerCatalogView\("local"\)/);
   assert.match(page, /className="reviewed-imagery-section"/);
   assert.doesNotMatch(page, /aria-label="Open installed Earth Engine layers"/);
   assert.match(page, /source-time-control/);
