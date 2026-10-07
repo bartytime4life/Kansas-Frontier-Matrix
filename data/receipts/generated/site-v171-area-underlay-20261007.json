@@ -1,0 +1,227 @@
+{
+  "profile": "kfm.site-feature-delta/v1",
+  "authority": "REVIEW_ONLY",
+  "created_at": "2026-10-07T14:24:35.846028+00:00",
+  "owning_root": "data/",
+  "responsibility": "Exact source and bounded delivery evidence; no human acceptance or dataset release approval.",
+  "directory_basis": [
+    "docs/doctrine/directory-rules.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "site_base_version": 170,
+  "site_base_commit": "54e3f661d3dcede372ef8ae90dee99cd0798e3b9",
+  "site_candidate_commit": "71bfe886b03b05ba142bdeafa1fd479f1f141b00",
+  "github_predecessor_commit": "d34cbb699cb97066b0204e2116e0bdf26e4a45df",
+  "github_branch_base_commit": "d34cbb699cb97066b0204e2116e0bdf26e4a45df",
+  "github_branch": "agent/site-area-underlay-20261007",
+  "destination": "apps/site/source",
+  "application_method": "Exact fifteen-path same-Site UI delta after all 707 predecessor paths matched; all 708 result paths match. Existing app documentation and roadmap updated separately.",
+  "counts": {
+    "changed_paths": 15,
+    "updated_paths": 14,
+    "new_paths": 1,
+    "deleted_paths": 0
+  },
+  "files": {
+    "app/aquifer-view-session.ts": {
+      "github_base_sha256": "44ddec6e320410ad6350f5dae1c23a2c552444f7d7a2aeb36192b9e1f35d2d3b",
+      "site_base_sha256": "44ddec6e320410ad6350f5dae1c23a2c552444f7d7a2aeb36192b9e1f35d2d3b",
+      "github_result_sha256": "343cacade70c530ac04b1313fece226ec226aefc55dd5708b56dbd6c5d1dbed7",
+      "site_source_sha256": "343cacade70c530ac04b1313fece226ec226aefc55dd5708b56dbd6c5d1dbed7"
+    },
+    "app/aquifer-volume-view.tsx": {
+      "github_base_sha256": "8b1afefca9a7b5549f84c3cb7b59a7ff881208cf5705a51ee4b03a26c7de65f4",
+      "site_base_sha256": "8b1afefca9a7b5549f84c3cb7b59a7ff881208cf5705a51ee4b03a26c7de65f4",
+      "github_result_sha256": "c697fc921848cf6c0aa1ac9f9bf3a413b9823e6dff463bc543580d381f8846af",
+      "site_source_sha256": "c697fc921848cf6c0aa1ac9f9bf3a413b9823e6dff463bc543580d381f8846af"
+    },
+    "app/cutaway-model.ts": {
+      "github_base_sha256": "7bbd5acc308f16bd7ec697c8cad8e5e44d8bd012aab424fa4c03b46e2363b624",
+      "site_base_sha256": "7bbd5acc308f16bd7ec697c8cad8e5e44d8bd012aab424fa4c03b46e2363b624",
+      "github_result_sha256": "ceea0fabd533667d81997a03b9839adabaa79dc16a3bc12bd5d78778ab57cc97",
+      "site_source_sha256": "ceea0fabd533667d81997a03b9839adabaa79dc16a3bc12bd5d78778ab57cc97"
+    },
+    "app/globals.css": {
+      "github_base_sha256": "93731d7f369ae3b436e1302034c49fe39ea62b87a539d971d5f22444a46c18b8",
+      "site_base_sha256": "93731d7f369ae3b436e1302034c49fe39ea62b87a539d971d5f22444a46c18b8",
+      "github_result_sha256": "0aa579e3fc367b29d08787acd5586794066671e04f1889df214376fdc209d2ca",
+      "site_source_sha256": "0aa579e3fc367b29d08787acd5586794066671e04f1889df214376fdc209d2ca"
+    },
+    "app/page.tsx": {
+      "github_base_sha256": "e98b123514be981f0067393f6aaa7da8ea3860fc749b68984121d0a885f7dacd",
+      "site_base_sha256": "e98b123514be981f0067393f6aaa7da8ea3860fc749b68984121d0a885f7dacd",
+      "github_result_sha256": "b1bc2005fd752dc714fc3768301b6fadc11fc10c7d51ce71bb813b33dd8ae228",
+      "site_source_sha256": "b1bc2005fd752dc714fc3768301b6fadc11fc10c7d51ce71bb813b33dd8ae228"
+    },
+    "app/subsurface-model.ts": {
+      "github_base_sha256": "0be6a898abbc3bc01635f3a3e06fd9e0f49fa490b002cdb3b03f82237e27567b",
+      "site_base_sha256": "0be6a898abbc3bc01635f3a3e06fd9e0f49fa490b002cdb3b03f82237e27567b",
+      "github_result_sha256": "70a5fcfd9122e89a8acec76ef80890dd461cd7984dcdd95b54f86e10e2fc7619",
+      "site_source_sha256": "70a5fcfd9122e89a8acec76ef80890dd461cd7984dcdd95b54f86e10e2fc7619"
+    },
+    "app/subsurface-worker.ts": {
+      "github_base_sha256": "e82ac799dd7e8b188b63770a0a1563ada0ffe43a7ad55467a5d2bafce1226094",
+      "site_base_sha256": "e82ac799dd7e8b188b63770a0a1563ada0ffe43a7ad55467a5d2bafce1226094",
+      "github_result_sha256": "2a584e8f6eac421b5ef1a2aa2b229cf916a1aadd7b4ac499cd02308cabad49fe",
+      "site_source_sha256": "2a584e8f6eac421b5ef1a2aa2b229cf916a1aadd7b4ac499cd02308cabad49fe"
+    },
+    "app/subsurface.module.css": {
+      "github_base_sha256": "b5029712319005771fa40f07678da795f889fecacb35802e1c3cd44037daaf45",
+      "site_base_sha256": "b5029712319005771fa40f07678da795f889fecacb35802e1c3cd44037daaf45",
+      "github_result_sha256": "bfd342c47782d3e003778388a5c2990db64ee3fd8d78b3f0d71b2b35794a86eb",
+      "site_source_sha256": "bfd342c47782d3e003778388a5c2990db64ee3fd8d78b3f0d71b2b35794a86eb"
+    },
+    "app/underground-panel.tsx": {
+      "github_base_sha256": "bac39c3784a703b87984446ffd4dc3f42ee7c9d1edce769c405ec67cb1d1b4de",
+      "site_base_sha256": "bac39c3784a703b87984446ffd4dc3f42ee7c9d1edce769c405ec67cb1d1b4de",
+      "github_result_sha256": "9ceb61df59bfef2cd5257d657c2661a44cef3dcb3705e596ceb2843945e9d793",
+      "site_source_sha256": "9ceb61df59bfef2cd5257d657c2661a44cef3dcb3705e596ceb2843945e9d793"
+    },
+    "docs/SITE_PRESERVATION.md": {
+      "github_base_sha256": "0928af81b22dc1145b0bbf6f3c5403c36e6327464a4441a3264ffdbf59649356",
+      "site_base_sha256": "0928af81b22dc1145b0bbf6f3c5403c36e6327464a4441a3264ffdbf59649356",
+      "github_result_sha256": "2da57c46c5cee3d3158974a946f67f7c64891d20dfa19da72d7176742791d33a",
+      "site_source_sha256": "2da57c46c5cee3d3158974a946f67f7c64891d20dfa19da72d7176742791d33a"
+    },
+    "docs/underground-explorer.md": {
+      "github_base_sha256": "03931d54fe18e0ef57414696ac4a420fd91478675ac675799b9b96f745575cea",
+      "site_base_sha256": "03931d54fe18e0ef57414696ac4a420fd91478675ac675799b9b96f745575cea",
+      "github_result_sha256": "b7d7f0a85ec24bd96cb084a5cda209d95634f5ed52b09fda767d191418080420",
+      "site_source_sha256": "b7d7f0a85ec24bd96cb084a5cda209d95634f5ed52b09fda767d191418080420"
+    },
+    "tests/aquifer-view-session.test.mjs": {
+      "github_base_sha256": "a0dc5205d465311e2c78ef9e743c6ce7fb81c9fac69bd41f026eb490fafdfdd8",
+      "site_base_sha256": "a0dc5205d465311e2c78ef9e743c6ce7fb81c9fac69bd41f026eb490fafdfdd8",
+      "github_result_sha256": "4f7a891f6e1b99d34800220a1f6502f6a6668d600a9ee5c9db843ea42ab1c0b5",
+      "site_source_sha256": "4f7a891f6e1b99d34800220a1f6502f6a6668d600a9ee5c9db843ea42ab1c0b5"
+    },
+    "tests/area-underlay.test.mjs": {
+      "github_base_sha256": null,
+      "site_base_sha256": null,
+      "github_result_sha256": "b8dc16624cd7cc2c5e72a18de109e2c91ea91edf08069cf5bbbea319db9ec2fd",
+      "site_source_sha256": "b8dc16624cd7cc2c5e72a18de109e2c91ea91edf08069cf5bbbea319db9ec2fd"
+    },
+    "tests/subsurface-slice.test.mjs": {
+      "github_base_sha256": "3747c865072cc872dfd7e055001a65dff62f234b39b57054f5204220bc49afbb",
+      "site_base_sha256": "3747c865072cc872dfd7e055001a65dff62f234b39b57054f5204220bc49afbb",
+      "github_result_sha256": "238b66ac751f65db1666ae892871e94db5f1139151f52c9728960240927b923a",
+      "site_source_sha256": "238b66ac751f65db1666ae892871e94db5f1139151f52c9728960240927b923a"
+    },
+    "tests/subsurface-worker.test.mjs": {
+      "github_base_sha256": "9c4972c0d4f40fcd6e3ea504de28fe4ac37e8f09e79ff43bec9ef3e6f9a967e4",
+      "site_base_sha256": "9c4972c0d4f40fcd6e3ea504de28fe4ac37e8f09e79ff43bec9ef3e6f9a967e4",
+      "github_result_sha256": "e1bb5e261acf9681cc4d2c700bd387d68507f31d99fdd6befdd51414d97f3df8",
+      "site_source_sha256": "e1bb5e261acf9681cc4d2c700bd387d68507f31d99fdd6befdd51414d97f3df8"
+    }
+  },
+  "exact_source_comparison": {
+    "source_commit": "71bfe886b03b05ba142bdeafa1fd479f1f141b00",
+    "source_dirty": false,
+    "mirrored_paths": 708,
+    "remaining_differences": 0,
+    "missing_paths": 0,
+    "unexpected_paths": 0,
+    "path_and_content_inventory_sha256": "87c3c68cde01a05b890a1e9bb6eda8e1e7f65722a01a956d9080136104b52057",
+    "inventory_encoding": "SHA-256 of sorted compact JSON array of path and lowercase sha256, with sorted object keys."
+  },
+  "deployment": {
+    "site_version": 171,
+    "source_commit": "71bfe886b03b05ba142bdeafa1fd479f1f141b00",
+    "status": "succeeded",
+    "completed_at": "2026-10-07T14:11:04.520068+00:00",
+    "audience": "Existing owner-private audience preserved",
+    "local_archive_sha256": "4b9e5ec95bdeddc7302f3c532fff950eac5d616f56f38e4df17053881ff3e56a",
+    "platform_canonical_tar_content_sha256": "sha256:b50dc252cb22464f92e5bd951b019b495d923ed1e76b2b50ab761890714d1821",
+    "platform_files": 382,
+    "platform_bytes": 48701440,
+    "evidence": "Native Sites saved-version and successful deployment readback; gzip and canonical-tar digests identify different forms.",
+    "deployment_id": "appgdep_6ac652e9930c8191a5ec120a5a9c6624"
+  },
+  "application_validation": {
+    "build": "PASS",
+    "typescript": "PASS",
+    "node_tests": {
+      "pass": 600,
+      "fail": 0,
+      "skipped": 0
+    },
+    "focused_tests": 60,
+    "independent_area_underlay_tests": 60,
+    "changed_lint": {
+      "errors": 0,
+      "warnings": 26,
+      "scope": "7 changed TypeScript files; warnings in app/page.tsx",
+      "baseline_commit": "54e3f661d3dcede372ef8ae90dee99cd0798e3b9",
+      "same_warning_fingerprint_multiset": true
+    },
+    "review": "PASS, round2, bounded source and behavior only",
+    "browser": "UNVERIFIED; fresh browser policy check unavailable; no bypass. Visual, touch, WebGL and full keyboard acceptance are not established."
+  },
+  "local_installation": {
+    "state": "VERIFIED_ACTUAL_LOCAL_STORE_AND_RUNTIME",
+    "site_version": 171,
+    "source_commit": "71bfe886b03b05ba142bdeafa1fd479f1f141b00",
+    "origin": "http://127.0.0.1:4173",
+    "physical_v109_state_retained": true,
+    "sqlite_checks_passed": 8,
+    "r2_blobs_verified": 15840,
+    "r2_blob_bytes_verified": 738852346,
+    "r2_blob_inventory_sha256": "2f390be87b05567bc4ed30c983485d8f48b094a0c21e4cc23006b9188c7f2ab6",
+    "d1_r2_counts_unchanged": true,
+    "service_configuration_unchanged": true,
+    "explorer_active": true,
+    "bridge_ready": true,
+    "prism_pid_preserved": 11880,
+    "rehearsal_http_checks": 12,
+    "private_installation_receipt_sha256": "e51a7bd44c9679a936f4f3cd0710f05b86e42cdf37f1f297515b85535e362328",
+    "private_actual_readback_sha256": "ca72a63e771f85b41bb69dfad80fa18a7f5f68851e9941c0cb003030ca47a81b",
+    "identity": {
+      "head": "71bfe886b03b05ba142bdeafa1fd479f1f141b00",
+      "source_build_sha256": "cb8d733e6b654b64e004a646de16aa3b217ec948f2f6e8023bbee545869db1c9",
+      "entry_sha256": "11d0b03e535f7d80e6e211c71c35317a32b9b9a420056235d476618dd8687f8a",
+      "config_sha256": "30a021f89bd857e1e85303f8f8ba70201f9925b237fbb58bebd4dac9df7f9cb1"
+    },
+    "prism_unchanged": true,
+    "private_backup_receipt_sha256": "0cee423723674ac1dd04ac446f9c3657797789db04c328dd8ee1a9e3ea2c223a",
+    "private_rehearsal_receipt_sha256": "86f21b9067f635f496939b00c47ca8f519a8ffd4a51956883340cecc592d4100"
+  },
+  "repository_validation": {
+    "exact_head_ci": "PENDING_AFTER_PUSH",
+    "mirror_comparison": "PASS; 708 paths, no content changes or unexpected deletions",
+    "historical_mirror_gate": {
+      "state": "MIRROR_REVIEW_REQUIRED",
+      "base_commit": "d34cbb699cb97066b0204e2116e0bdf26e4a45df",
+      "tool_and_active_receipt_unchanged_from_base": true,
+      "base_source_paths": 707,
+      "active_receipt_paths": 370,
+      "review_waived": false
+    }
+  },
+  "invariants": [
+    "Source assets, versions, rights, source-time eligibility and privacy/export rules unchanged",
+    "Applied area is bounded to one degree in Kansas; exact record filtering precedes the 50-record cap; existing eight-tile query and twelve-tile cache budgets retained",
+    "Three spatial dimensions plus record time; aquifer ranges retain the fixed 2022\u20132024 source period",
+    "Applied area bounds, surface image and inspection camera remain transient; reopen and Show this area again; saved settings and permitted IDs retain the existing schema",
+    "Legacy saved display enum 3d and individual-log inspection remain compatible",
+    "DB and BUCKET bindings, physical v109 store, local cache and PRISM remain unchanged",
+    "No dependencies, data acquisition, source admission or activation",
+    "Flat local-ground reference and separate recorded depths; no continuous geology, shared elevation datum or historical reconstruction"
+  ],
+  "rollback": "Saved private Site v170 or revert this bounded source delta through review. Local source rollback retains subsequent writes in the existing physical v109 store; no data migration or automatic store restore.",
+  "governance": {
+    "dataset_admission": false,
+    "source_activation": false,
+    "public_audience_expansion": false,
+    "independent_human_acceptance": false,
+    "merge_authorized_by_this_record": false
+  },
+  "evidence_sha256": {
+    "source-validation": "53109a9fa19901261909bf02af54b5e6efd2cb8589ace44e5f45a09ac539dcfd",
+    "source-manifest": "b75608d0ccd015d04180d01738a827903af809b281d39666c914688770fcfb1e",
+    "github-mirror-plan": "81a5a6070fd2e684abaf29cd2fcf6e8563ec30e8d37bf0abe5c8a78443075da6",
+    "native-delivery": "9a107532e2f9d7b86dc6174abf15fb26a954f44ff1c1eb955db6f600b8730226",
+    "lint-baseline-comparison": "9db3c81d45928d3047cd0b92ab8e2a09fedcae18e3d74f880136b94fe6826323",
+    "source-mirror-comparison": "01199e3131b59bf4f7c7ef9f23051452170ebe1aab888b5e65f9ea230f5d0b04",
+    "mirror-gate-attribution": "e47f4608c88dfedd41ae5f9f7fb56c41244ba27bc569e539a2eee69750bb5ae0"
+  }
+}

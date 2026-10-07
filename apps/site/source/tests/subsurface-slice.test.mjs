@@ -10,6 +10,7 @@ async function module(name,imports={}){const exports={};vm.runInNewContext(compi
 const materials=await module('subsurface-materials');
 const model=await module('subsurface-model',{'./subsurface-materials':materials});
 const slices=await module('subsurface-slice',{'./subsurface-model':model});
+const locatorPlacement=await module('cutaway-locator');
 const record={id:'well-a',sourceId:'kgs-wwc5',kind:'well',name:'WWC5 A',coordinates:[-100.5,38.5],coordinateReference:'WGS84',locationMethod:'approximate',sourceUrl:'https://example.test/a',sourceTime:'1990-01-01',depthUnit:'m',depthReference:'land-surface',totalDepth:30,intervals:[{top:0,bottom:10,description:'sand'},{top:20,bottom:30,description:'clay'}]};
 const other={...record,id:'well-b',name:'WWC5 B',intervals:[{top:100,bottom:180,description:'shale'}]};
 const empty={...record,id:'empty',name:'Empty log',intervals:[]};
@@ -43,37 +44,52 @@ test('core inventory remains an envelope and original interval identity survives
   assert.equal(materials.materialFor(core.intervals[0],core.kind),'inventory');
 });
 
-async function panelHarness(initialContext=null){
-  const messages=[],inspections=[],contexts=[],timers=[],focusCalls=[];const worker={postMessage:message=>messages.push(message),terminate(){}};
-  const h=await componentHarness('app/underground-panel.tsx',{'./subsurface-model':model,'./subsurface-materials':materials,'./subsurface-slice':slices,'./subsurface.module.css':{default:style},'./subsurface-workers':{startSubsurfaceWorker:()=>worker},'./cutaway-locator':{cutawayLocatorPlacement(){}}},{
-    matchMedia:()=>({matches:true,addEventListener(){},removeEventListener(){}}),document:{hidden:false,addEventListener(){},removeEventListener(){}},queueMicrotask,performance,
-    setTimeout:callback=>{timers.push(callback);return timers.length;},clearTimeout(){},
+async function panelHarness(initialContext=null,{failWorker=false,map=null,skipArea=false}={}){
+  const messages=[],inspections=[],contexts=[],timers=new Map(),frames=new Map(),focusCalls=[];let timerSerial=0,frameSerial=0;const worker={postMessage:message=>messages.push(message),terminate(){}};
+  const h=await componentHarness('app/underground-panel.tsx',{'./subsurface-model':model,'./subsurface-materials':materials,'./subsurface-slice':slices,'./subsurface.module.css':{default:style},'./subsurface-workers':{startSubsurfaceWorker:()=>{if(failWorker)throw new Error("unavailable");return worker;}},'./cutaway-locator':locatorPlacement},{
+    matchMedia:()=>({matches:true,addEventListener(){},removeEventListener(){}}),document:{hidden:false,addEventListener(){},removeEventListener(){}},window:{addEventListener(){},removeEventListener(){}},ResizeObserver:class{observe(){}disconnect(){}},requestAnimationFrame:fn=>{const id=++frameSerial;frames.set(id,fn);return id;},cancelAnimationFrame:id=>frames.delete(id),queueMicrotask,performance,
+    fetch:async()=>({ok:true,json:async()=>({version:1,surveys:[]})}),setTimeout:callback=>{const id=++timerSerial;timers.set(id,callback);return id;},clearTimeout:id=>timers.delete(id),
   });
-  const props={map:null,initialContext,year:2026,redacted:false,onFlatMap(){},onTerrain(){},readElevation(){return null;},isDrawing(){return false;},onDraw(){},readTransect(){return[];},onContext:context=>contexts.push(context),onInspect:value=>inspections.push(value),onClose(){},onSave(){},onReport(){}};
-  let tree;const render=()=>{tree=h.render(h.exports.default,props);const destination=findNode(tree,node=>node.props?.['aria-label']==='Slice a recorded column');if(destination)destination.props.ref.current={focus:options=>focusCalls.push(options)};h.commit();return tree;};render();timers.splice(0).forEach(fn=>fn());
-  const load=(records=[record,other,empty])=>{worker.onmessage({data:{id:messages.at(-1).id,manifest:{sources:[],totals:{},counties:[]},columns:records.map(record=>({record,distanceMeters:0,alongMeters:0,offsetMeters:0})),coverage:'loaded'}});return render();};load();
+  const props={map,initialContext,year:2026,redacted:false,onFlatMap(){},onTerrain(){},readElevation(){return null;},isDrawing(){return false;},onDraw(){},readTransect(){return[];},onContext:context=>contexts.push(context),onInspect:value=>inspections.push(value),onClose(){},onSave(){},onReport(){}};
+  let tree;const render=()=>{tree=h.render(h.exports.default,props);const destination=findNode(tree,node=>node.props?.['aria-label']==='Slice a recorded column');if(destination)destination.props.ref.current={focus:options=>focusCalls.push(options)};h.commit();return tree;};render();const flushTimers=()=>{for(const [id,fn] of [...timers]){timers.delete(id);fn();}};flushTimers();
+  if (!skipArea&&(!initialContext || initialContext.display === 'aquifer')) { findNode(tree,node=>node.props?.onArea).props.onArea([-100.7,38.3,-100.3,38.7]);render();flushTimers(); }
+  const load=(records=[record,other,empty])=>{worker.onmessage({data:{id:messages.at(-1).id,bounds:messages.at(-1).bounds,manifest:{sources:[],totals:{},counties:[]},columns:records.map(record=>({record,distanceMeters:0,alongMeters:0,offsetMeters:0})),coverage:'loaded'}});return render();};if(!failWorker&&!skipArea)load();
   const aquifer=()=>findNode(tree,node=>node.props?.sliceEntry);
   const viewer=()=>findNode(tree,node=>node.props?.onSlice);
-  return{h,render,load,aquifer,viewer,inspections,contexts,focusCalls,get tree(){return tree;}};
+  return{h,render,load,aquifer,viewer,inspections,contexts,focusCalls,messages,worker,flushTimers,flushFrames(){for(const [id,fn] of [...frames]){frames.delete(id);fn();}},props,get tree(){return tree;}};
 }
+test('fresh cutaway fits Kansas after locator placement and tool round trips keep the moved map',async()=>{
+  const fitted=[],mapEvents={isEnabled:()=>true,disable(){},enable(){}},style={setProperty(){},removeProperty(){}};
+  const stage={style,scrollLeft:0,scrollTop:0,getBoundingClientRect:()=>({left:0,top:0}),addEventListener(){},removeEventListener(){}};
+  const scroller={getBoundingClientRect:()=>({top:0,bottom:800}),addEventListener(){},removeEventListener(){}};
+  const container={closest:()=>stage,querySelector:()=>null};
+  const map={dragRotate:mapEvents,touchPitch:mapEvents,getContainer:()=>container,getCenter:()=>({lng:-100.5,lat:38.5}),getBearing:()=>0,getPitch:()=>0,isStyleLoaded:()=>false,on(){},off(){},resize(){fitted.push('resize')},fitBounds:(bounds,options)=>fitted.push({bounds,options}),getLayer:()=>false,getSource:()=>null};
+  const p=await panelHarness(null,{map,skipArea:true});
+  p.aquifer().props.onLocatorSlot({closest:()=>scroller,getBoundingClientRect:()=>({left:8,top:20,width:500,height:320,bottom:340})});p.render();
+  assert.equal(fitted.some(value=>typeof value==='object'),false,'fit waits until locator layout');p.flushFrames();
+  same(fitted.find(value=>typeof value==='object'),{bounds:[[-102.1,36.95],[-94.55,40.05]],options:{padding:18,duration:0}});
+  findNode(p.tree,n=>n.props?.['aria-label']==='Underground tool').props.onChange({target:{value:'surveys'}});p.render();
+  button(p.tree,'Back to cutaway').props.onClick();p.render();p.flushFrames();
+  assert.equal(fitted.filter(value=>typeof value==='object').length,1,'returning to cutaway preserves the moved selector');p.h.dispose();
+});
 test('cutaway offers a named loaded record and preserves a picked interval when opening the slice',async()=>{
   const p=await panelHarness();let entry=p.aquifer().props.sliceEntry;
   assert.equal(findNode(entry,n=>n.type==='select').props.value,record.id);
   assert.match(text(entry),/WWC5 A/);
   p.aquifer().props.onInspect(record,record.intervals[1]);p.render();entry=p.aquifer().props.sliceEntry;
-  button(entry,'Open 3D slice').props.onClick();p.render();const view=p.viewer();
+  button(entry,'Open selected log').props.onClick();p.render();const view=p.viewer();
   assert.equal(view.props.record,record);assert.equal(view.props.selectedIndex,1);assert.equal(view.props.slice,true);assert.equal(view.props.depth,25);same(view.props.depthRange,[0,30]);
   assert.equal(p.inspections.at(-1).interval,record.intervals[1]);
   const body=findNode(p.tree,n=>n.props?.['data-underground-scroll']!==undefined),children=body.props.children.flat(Infinity).filter(Boolean);
   assert.equal(children[0].type,'nav');assert.equal(children[1].props['aria-label'],'Slice a recorded column');
-  assert.match(text(children[0]),/3D slice & materials/);assert.doesNotMatch(text(p.tree),/Depth cursor/);
+  assert.match(text(children[0]),/Individual log/);assert.doesNotMatch(text(p.tree),/Depth cursor/);
   const range=view.props.depthRange;view.props.onDepth(27);p.render();assert.equal(p.viewer().props.depthRange,range);assert.equal(p.viewer().props.depth,27);
   p.viewer().props.onInspect(record.intervals[0]);p.render();assert.equal(p.viewer().props.depth,27,'source inspection does not move cut plane');assert.equal(p.viewer().props.selectedIndex,0);
   p.viewer().props.onSlice(false);p.render();p.viewer().props.onSlice(true);p.render();assert.equal(p.viewer().props.depth,27,'inspection must not override a useful slice cursor when re-enabled');
   p.h.dispose();
 });
 test('slice remains enabled across record selection and refits instead of showing an empty model',async()=>{
-  const p=await panelHarness();button(p.aquifer().props.sliceEntry,'Open 3D slice').props.onClick();p.render();
+  const p=await panelHarness();button(p.aquifer().props.sliceEntry,'Open selected log').props.onClick();p.render();
   findNode(p.tree,n=>n.props?.['aria-label']==='Slice source record').props.onChange({target:{value:other.id}});p.render();
   assert.equal(p.viewer().props.record,other);assert.equal(p.viewer().props.slice,true);assert.equal(p.viewer().props.depth,140);same(p.viewer().props.depthRange,[100,180]);
   p.viewer().props.onSlice(false);p.render();assert.equal(p.viewer().props.slice,false);
@@ -81,7 +97,7 @@ test('slice remains enabled across record selection and refits instead of showin
   p.h.dispose();
 });
 test('empty entry is disabled and a legacy saved 3d context restores without forced clipping',async()=>{
-  const p=await panelHarness();p.load([]);assert.equal(button(p.aquifer().props.sliceEntry,'Open 3D slice').props.disabled,true);assert.match(text(p.aquifer().props.sliceEntry),/Choose a point/);p.h.dispose();
+  const p=await panelHarness();p.load([]);assert.equal(button(p.aquifer().props.sliceEntry,'Open selected log').props.disabled,true);assert.match(text(p.aquifer().props.sliceEntry),/Show an area/);p.h.dispose();
   const context={version:1,capturedAt:'2026-10-07T00:00:00Z',anchor:record.coordinates,pinned:true,transect:[],depthRange:[0,100],display:'3d',exaggeration:1,selectedSources:['kgs-wwc5'],sourceVersions:[],recordIds:[record.id],records:[record],coverage:[],cursorDepth:8,selectedRecordId:record.id};
   const restored=await panelHarness(context);assert.equal(restored.viewer().props.slice,false);assert.equal(restored.viewer().props.depth,8);assert.equal(restored.contexts.at(-1).display,'3d');assert.equal('slice' in restored.contexts.at(-1),false);restored.h.dispose();
 });
@@ -136,8 +152,52 @@ test('empty filtered/window slice is disabled and parent callback cannot silentl
   }
 });
 test('deliberate entry focuses its new region once, while restore, tab entry and record changes do not steal focus',async()=>{
-  const p=await panelHarness();assert.equal(p.focusCalls.length,0);button(p.aquifer().props.sliceEntry,'Open 3D slice').props.onClick();p.render();assert.equal(p.focusCalls.length,1);same(p.focusCalls[0],{preventScroll:true});assert.equal(findNode(p.tree,n=>n.props?.['aria-label']==='Slice a recorded column').props.tabIndex,-1);
+  const p=await panelHarness();assert.equal(p.focusCalls.length,0);button(p.aquifer().props.sliceEntry,'Open selected log').props.onClick();p.render();assert.equal(p.focusCalls.length,1);same(p.focusCalls[0],{preventScroll:true});assert.equal(findNode(p.tree,n=>n.props?.['aria-label']==='Slice a recorded column').props.tabIndex,-1);
   p.viewer().props.onDepth(23);p.render();findNode(p.tree,n=>n.props?.['aria-label']==='Slice source record').props.onChange({target:{value:other.id}});p.render();assert.equal(p.focusCalls.length,1);
-  button(p.tree,'3D cutaway').props.onClick();p.render();button(p.tree,'3D slice & materials').props.onClick();p.render();assert.equal(p.focusCalls.length,1);p.h.dispose();
+  button(p.tree,'Back to cutaway').props.onClick();p.render();findNode(p.tree,n=>n.props?.['aria-label']==='Underground tool').props.onChange({target:{value:'3d'}});p.render();assert.equal(p.focusCalls.length,1);p.h.dispose();
   const restored=await panelHarness(savedSliceContext());restored.render();assert.equal(restored.focusCalls.length,0);restored.h.dispose();
+});
+
+test('area application sends exact bounds and rejects old or mismatched source results',async()=>{
+ const p=await panelHarness(),first=p.messages.at(-1);assert.equal(first.kind,'area');same(first.bounds,[-100.7,38.3,-100.3,38.7]);same(first.route,[]);
+ const bounds=[-99.8,38.2,-99.4,38.7];p.aquifer().props.onArea(bounds);p.render();p.flushTimers();const next=p.messages.at(-1);assert.equal(next.kind,'area');assert.equal(next.bounds,bounds);assert.notEqual(next.id,first.id);
+ p.worker.onmessage({data:{id:first.id,bounds:first.bounds,columns:[{record}],coverage:'stale'}});p.render();assert.equal(p.aquifer().props.records.length,0);
+ p.worker.onmessage({data:{id:next.id,bounds:first.bounds,columns:[{record}],coverage:'mismatch'}});p.render();assert.equal(p.aquifer().props.records.length,0);assert.match(p.aquifer().props.recordStatus,/did not match/);
+ p.aquifer().props.onArea(bounds);p.render();p.flushTimers();p.load([other]);assert.equal(p.aquifer().props.records[0],other);assert.equal(p.contexts.at(-1).display,'aquifer');assert.match(p.contexts.at(-1).coverage[0],/-99.8, 38.2/);p.h.dispose();
+});
+test('compact record time restores undated rows at its explicit All endpoint without a new area query',async()=>{
+ const p=await panelHarness();const dated={...other,sourceTime:'2000-01-01'},undated={...empty,id:'undated',intervals:record.intervals,sourceTime:'Unknown'};p.load([record,dated,undated]);const requests=p.messages.length;
+ const nav=()=>p.aquifer().props.recordNavigation,slider=()=>findNode(nav(),n=>n.props?.['aria-label']==='Underground record year');
+ assert.equal(slider().props.max,2);assert.equal(slider().props.value,2);assert.match(text(nav()),/All loaded records/);
+ slider().props.onChange({target:{value:'1'}});p.render();assert.equal(p.aquifer().props.records.length,2);assert.equal(p.contexts.at(-1).recordCutoff,2000);
+ slider().props.onChange({target:{value:'2'}});p.render();assert.equal(p.aquifer().props.records.length,3);assert.equal(p.contexts.at(-1).recordCutoff,null);assert.equal(p.messages.length,requests);
+ assert.match(text(nav()),/Atlas year\s+2026\s+applies first/);assert.match(text(nav()),/Aquifer ranges stay fixed to 2022–2024/);
+ p.aquifer().props.onArea([-99.8,38.2,-99.4,38.7]);p.render();assert.equal(button(p.aquifer().props.recordNavigation,'Play').props['aria-pressed'],false);p.h.dispose();
+});
+
+test('source and atlas-year transitions withhold stale rows and captures before the debounce runs',async()=>{
+ for(const change of ['source','year']){
+  const p=await panelHarness(),last=p.messages.at(-1);assert.equal(p.aquifer().props.records.length,3);
+  if(change==='source')button(p.aquifer().props.recordNavigation,'Well logs').props.onClick();else p.props.year=1900;
+  p.render();assert.equal(p.messages.at(-1),last,'the source request remains debounced');assert.equal(p.aquifer().props.records.length,0);assert.equal(p.aquifer().props.recordsLoading,true);
+  assert.equal(p.contexts.at(-1).records.length,0,'the first new context cannot pair changed eligibility with old rows');assert.match(p.contexts.at(-1).coverage.join(' '),/Source loading/);
+  if(change==='source')same(p.contexts.at(-1).selectedSources,['kgs-core']);
+  p.worker.onmessage({data:{id:last.id,bounds:last.bounds,columns:[{record}],coverage:'stale'}});p.render();assert.equal(p.aquifer().props.records.length,0);
+  p.flushTimers();assert.notEqual(p.messages.at(-1).id,last.id);p.load([]);assert.equal(p.aquifer().props.recordsLoading,false);assert.equal(p.aquifer().props.records.length,0);p.h.dispose();
+ }
+});
+
+test('specialist picker pauses the mounted cutaway and omits unrelated time/depth controls for surveys and soil',async()=>{
+ const p=await panelHarness(),visibleText=n=>n?.props?.hidden?'':typeof n==='string'?n:[n?.props?.children].flat(Infinity).filter(Boolean).map(visibleText).join(' '),original=p.aquifer().type;
+ for(const display of ['surveys','soil']){
+  findNode(p.tree,n=>n.props?.['aria-label']==='Underground tool').props.onChange({target:{value:display}});p.render();assert.equal(p.aquifer().type,original);assert.equal(p.aquifer().props.active,false);assert.doesNotMatch(visibleText(p.tree),/Depth cursor|Vertical scale|Through record year/);
+  button(p.tree,'Back to cutaway').props.onClick();p.render();assert.equal(p.aquifer().props.active,true);p.flushTimers();assert.deepEqual([...p.messages.at(-1).bounds],[-100.7,38.3,-100.3,38.7]);
+ }p.h.dispose();
+});
+test('record-worker startup or terminal failure remains recoverable after applying or changing eligibility',async()=>{
+ for(const failWorker of [true,false]){
+  const p=await panelHarness(null,{failWorker});await settle();if(!failWorker)p.worker.onerror();p.render();
+  const before=p.messages.length;p.aquifer().props.onArea([-100.7,38.3,-100.3,38.7]);p.render();p.flushTimers();p.render();assert.equal(p.aquifer().props.recordsLoading,false);assert.match(p.aquifer().props.recordStatus,/Close and reopen Underground/);assert.equal(p.aquifer().props.records.length,0);
+  p.props.year=1900;p.render();p.flushTimers();p.render();assert.equal(p.aquifer().props.recordsLoading,false);assert.equal(p.messages.length,before);p.h.dispose();
+ }
 });

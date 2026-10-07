@@ -1,6 +1,6 @@
-import { inKansas, nearbyColumns, validBorehole, validPosition, type Borehole, type Position, type SubsurfaceManifest } from "./subsurface-model";
+import { inKansas, nearbyColumns, areaColumns, validAreaBounds, validBorehole, validPosition, type AreaBounds, type Borehole, type Position, type SubsurfaceManifest } from "./subsurface-model";
 
-type Query = { id: number; kind: "probe" | "search"; anchor: Position; route: Position[]; sources: string[]; year: number; search?: string };
+type Query = { id: number; kind: "probe" | "search" | "area"; bounds?: AreaBounds; anchor: Position; route: Position[]; sources: string[]; year: number; search?: string };
 const scope = self as unknown as { onmessage: ((event: MessageEvent<Query>) => void) | null; postMessage: (message: unknown) => void };
 let controller: AbortController | null = null;
 let manifest: SubsurfaceManifest | null = null;
@@ -35,12 +35,15 @@ async function run(q: Query, signal: AbortSignal) {
     if (!locator && manifest.locator) locator = await readAsset(manifest.locator.url, signal, manifest.locator.sha256) as typeof locator;
     return { manifest, matches: (locator ?? []).filter(r => r[0].toLowerCase().includes(term) || r[1].toLowerCase().includes(term)).slice(0, 30) };
   }
-  if (!validPosition(q.anchor) || !inKansas(q.anchor) || !Array.isArray(q.route) || q.route.some(p => !validPosition(p) || !inKansas(p))) throw new Error("Choose a location inside Kansas");
-  const points = q.route.length > 1 ? q.route : [q.anchor];
-  const bounds = [Math.min(...points.map(p => p[0])) - .31, Math.min(...points.map(p => p[1])) - .23, Math.max(...points.map(p => p[0])) + .31, Math.max(...points.map(p => p[1])) + .23];
+  const area = q.kind === "area";
+  if (area && !validAreaBounds(q.bounds)) throw new Error("Choose a Kansas area no wider than one degree, then show that area.");
+  if (!area && (!validPosition(q.anchor) || !inKansas(q.anchor) || !Array.isArray(q.route) || q.route.some(p => !validPosition(p) || !inKansas(p)))) throw new Error("Choose a location inside Kansas");
+  const points = !area && q.route.length > 1 ? q.route : [q.anchor];
+  const bounds = area ? q.bounds! : [Math.min(...points.map(p => p[0])) - .31, Math.min(...points.map(p => p[1])) - .23, Math.max(...points.map(p => p[0])) + .31, Math.max(...points.map(p => p[1])) + .23];
+  const rankAnchor: Position = area ? [(bounds[0]+bounds[2])/2,(bounds[1]+bounds[3])/2] : q.anchor;
   const eligible = manifest.tiles.filter(t => t.bounds[2] >= bounds[0] && t.bounds[0] <= bounds[2] && t.bounds[3] >= bounds[1] && t.bounds[1] <= bounds[3]);
   const selected = eligible.sort((a, b) => {
-    const distance = (t: typeof a) => Math.hypot((t.bounds[0] + t.bounds[2]) / 2 - q.anchor[0], (t.bounds[1] + t.bounds[3]) / 2 - q.anchor[1]);
+    const distance = (t: typeof a) => Math.hypot((t.bounds[0] + t.bounds[2]) / 2 - rankAnchor[0], (t.bounds[1] + t.bounds[3]) / 2 - rankAnchor[1]);
     return distance(a) - distance(b) || a.id.localeCompare(b.id);
   }).slice(0, 8);
   const failures: string[] = []; let rejected = 0, timeHeld = 0;
@@ -56,6 +59,7 @@ async function run(q: Query, signal: AbortSignal) {
   }));
   const records = arrays.flat().filter(r => {
     if (!q.sources.includes(r.sourceId)) return false;
+    if (area && (r.coordinates[0]<bounds[0]||r.coordinates[0]>bounds[2]||r.coordinates[1]<bounds[1]||r.coordinates[1]>bounds[3])) return false;
     // Archive dates are not historical reconstructions. In historical views, dated records from later years are held.
     if (q.year < new Date().getUTCFullYear()) {
       const recordYear = /^\d{4}-/.test(r.sourceTime) ? Number(r.sourceTime.slice(0, 4)) : NaN;
@@ -63,10 +67,10 @@ async function run(q: Query, signal: AbortSignal) {
     }
     return true;
   });
-  const ranked = nearbyColumns(records, q.anchor, q.route);
-  return { manifest, columns: ranked.slice(0, 50), total: ranked.length, failures, rejected, timeHeld,
-    partial: eligible.length > selected.length || failures.length > 0,
-    coverage: `${selected.length - failures.length}/${selected.length} requested tiles loaded; ${eligible.length} intersect the 25 km search corridor. ${ranked.length} eligible records in loaded data; showing up to 50. ${timeHeld} date-incompatible/undated records held. ${rejected} invalid records rejected.` };
+  const ranked = area ? areaColumns(records, q.bounds!) : nearbyColumns(records, q.anchor, q.route);
+  return { manifest, ...(area ? {bounds:q.bounds} : {}), columns: ranked.slice(0, 50), total: ranked.length, failures, rejected, timeHeld,
+    partial: eligible.length > selected.length || failures.length > 0 || (area && ranked.length > 50),
+    coverage: `${selected.length - failures.length}/${selected.length} requested tiles loaded; ${eligible.length} intersect ${area ? "the selected map area" : "the 25 km search corridor"}. ${ranked.length} eligible records ${area ? "inside the area in loaded tiles" : "in loaded data"}; showing ${Math.min(50,ranked.length)} of up to 50.${area && ranked.length>50 ? " Record limit reached; zoom to a smaller area for more detail." : ""} ${timeHeld} date-incompatible/undated records held. ${rejected} invalid records rejected.` };
 }
 scope.onmessage = event => {
   const expectedOrigin = self.location.origin;

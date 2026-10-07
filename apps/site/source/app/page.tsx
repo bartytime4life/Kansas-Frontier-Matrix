@@ -7174,6 +7174,7 @@ export default function Home() {
     setSubsurfacePrivate(false);
     setSubsurfaceInspection(null);
     setUndergroundOpen(Boolean(savedSubsurface));
+    if (savedSubsurface) setPlaying(false);
     setUndergroundRestoreKey(v => v + 1);
     const savedResearch = !restoredLocationCameraRedaction && validResearchContext(snapshot.researchContext) ? snapshot.researchContext : null;
     setResearchAnchor(savedResearch?.anchor ?? null);
@@ -8058,7 +8059,7 @@ export default function Home() {
   </nav> : null;
 
   const mapRepresentationControls = () => <>
-              <button type="button" aria-label="Underground Logs & sections" title="Underground Logs & sections" aria-pressed={undergroundOpen} onClick={() => { if (!undergroundOpen) activateMapRepresentation("2d"); setUndergroundOpen(v => !v); setSubsurfacePrivate(v => v || locationCameraRedacted || locationDerivedViewRef.current); setTimelineOpen(false); setLeftOpen(false); setRightOpen(false); setMapUtilityOpen(false); }}><b>Underground</b><span className="sr-only">Logs &amp; sections</span></button>
+              <button type="button" aria-label="Underground Logs & sections" title="Underground Logs & sections" aria-pressed={undergroundOpen} onClick={() => { if (!undergroundOpen) activateMapRepresentation("2d"); setUndergroundOpen(v => !v); setPlaying(false); setSubsurfacePrivate(v => v || locationCameraRedacted || locationDerivedViewRef.current); setTimelineOpen(false); setLeftOpen(false); setRightOpen(false); setMapUtilityOpen(false); }}><b>Underground</b><span className="sr-only">Logs &amp; sections</span></button>
               <button type="button" aria-pressed={projection === "mercator" && scenePreset !== "elevation-3d"} data-active={projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => activateMapRepresentation("2d")}><b>2D</b><span>Map</span></button>
               <button type="button" aria-pressed={scenePreset === "elevation-3d"} data-active={scenePreset === "elevation-3d"} onClick={() => { setUndergroundOpen(false); activateMapRepresentation("terrain"); }}><b>Terrain 3D</b><span>{verticalExaggeration.toFixed(1)}×</span></button>
               {scenePreset === "elevation-3d" && <output className="terrain-mode-source" data-state={terrainState.toLowerCase()} aria-live="polite">{terrainProvider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} · {terrainState === "READY" && attachedTerrainProviderRef.current === terrainProvider ? "DEM ready" : terrainState === "ERROR" ? "DEM unavailable" : "DEM loading"}{terrainProvider === "mapzen" && terrainState === "READY" && view.zoom > TERRARIUM_RENDER_MAX_ZOOM ? ` · coarse beyond z${TERRARIUM_RENDER_MAX_ZOOM}` : ""}</output>}

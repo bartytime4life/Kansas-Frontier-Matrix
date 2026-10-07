@@ -1,8 +1,10 @@
 # Underground Explorer
 
+The current area-first flow is described in **Area underlay and record-time navigation — 2026-10-07** below. Earlier sections retain the progression of probe, cutaway and individual-log behavior.
+
 This addition starts from owner-private Site v155, source `d8f2db1ee6e0fedd495ed538a85ad23b3302e2ae`. It preserves the existing Map Library, place dossiers, Evidence Drawer, reports, Earth Engine controls, DB/R2 bindings, and Site audience. GitHub PR #4899 merged during implementation; the feature review starts from `8c955317117e53fa93ece5d0af4455d86fad17b3`, retaining its separate CodeQL test correction. The dirty owner maintenance checkout is not used as an import source.
 
-## Behavior
+## Original probe and workbench behavior
 
 Open **Underground** directly from the map dock. The surface map remains above a resizable panel. Hover for nearby recorded columns; click to pin. The fixed surface crosshair, directional buttons, and **Inspect here · map center** provide keyboard/touch navigation. A pin survives map movement. The probe is a search location, not a claim that the nearest borehole describes that precise location.
 
@@ -254,3 +256,183 @@ disabled and **Fit recorded depths** remains an explicit recovery action.
 Deliberate **Open 3D slice** transfers focus once to the named slice workspace,
 with its controls next in tab order. Restoring a workspace, switching tabs or
 records, and adjusting appearance do not trigger this focus transfer.
+
+
+## Area underlay and record-time navigation — 2026-10-07
+
+This revision starts from owner-private Site v170, source
+`54e3f661d3dcede372ef8ae90dee99cd0798e3b9`. A new investigation opens **Area
+underlay**. Frame a local Kansas area in the large 2D selector and choose **Show
+this area**. Pan and zoom in the selector are previews: the underlay retains its
+last applied area and image until another explicit application. The status says
+when the preview has moved away from that selected frame. A High Plains example
+and keyboard map movement remain available in **Map navigation & example**.
+The accepted frame must be flat/north-up Mercator, stopped, inside the existing
+Kansas display envelope and no wider or taller than one degree. A moving,
+unavailable or out-of-scope frame is held with guidance; it is not substituted
+with the old pin or a default probe.
+
+One accepted rectangle drives both the source query and clipped aquifer
+geometry. Source loading chooses at most eight intersecting spatial tiles,
+verifies their pinned hashes, filters selected sources and the exact rectangle,
+then applies the existing atlas-year eligibility gate. Date-held counts describe
+that frame's loaded tiles. Duplicate records are removed and ranked
+reproducibly by distance to the frame center, then ID/source ID, before the
+50-record cap. Unlike the secondary probe workbench, this query has no 25 km
+radius around a pin or section. Outside-frame records cannot use its display
+budget. Failed/missing tiles, an eight-tile truncation or a 50-record truncation
+are reported as partial coverage. A selected frame is therefore a **bounded
+loaded subset**, never a claim of exhaustive coverage. The 12-tile cache and
+400 drawn-interval budget are retained. The drawing model also filters the
+rectangle before its defensive 50-record cap.
+
+Applying a frame cancels record playback and makes old worker results ineligible
+immediately. A render-time query identity guard also withholds prior rows and
+captured context immediately when the selected sources or atlas year changes,
+before the 140 ms request debounce. The next accepted response must belong to
+that identity; the debounce cannot expose old rows under new eligibility labels. The parent checks the echoed frame as well as request identity;
+the geometry session checks its own response bounds. Imagery remains optional:
+it attaches only when the map is stopped, its tiles are complete, and its current
+bounds still exactly match the selected frame. Preview movement invalidates a
+pending capture and geometry reply. A completed underlay remains labeled as the
+selected area while the selector changes. If an unannounced bounds change is
+detected during capture, geometry may remain but the image is withheld.
+
+The dominant model retains the oblique flat map, independent record columns and
+fixed blue uncertainty ranges. Compact **Orbit**, **Move**, **Reset view** and
+zoom buttons sit with the model. Move changes the primary pointer and one-finger
+gesture to pan; orbit restores rotation. Keyboard controls and the alternate
+camera presets remain available. Appearance, vertical exaggeration, column
+visibility and presets move into **View settings**; the legend and provenance
+remain in **Aquifer legend & evidence**. Unknown ground stays empty. Camera pose
+survives appearance/navigation changes and same-frame record-time membership
+changes; a valid picked source remains selected, while a time-filtered-out
+source is cleared. If aquifer geometry arrives before the first records, that
+first settled record set fits its actual depth once, unless the user has already
+manipulated the camera. Later record-time/source changes preserve the view. A
+different geographic frame may fit a new view.
+
+**Record time** sits directly below the model. Its final slider position and
+select option are explicitly **All loaded records**, distinct from the latest
+dated year, so moving to the end can restore loaded undated records. Earlier
+positions show cumulative dated records through the selected year. The count
+states visible versus loaded records. **Time & sources** contains playback
+speed, source filters and the eligibility explanation. Atlas year still applies
+first: a historic atlas frame has already withheld later and undated rows;
+All loaded records does not bypass that gate. Aquifer ranges remain fixed to
+2022–2024 and never animate as past groundwater or changing material. Manual
+scrubbing and playback operate on the loaded subset, not a new statewide query.
+Reduced motion prevents automatic playback; hidden documents and source,
+area and tab changes stop it. The global Time sweep is folded away in the
+primary area view when it is not explicitly open. Toolbar **Time** restores it,
+and entering/restoring Underground pauses global playback without changing its
+committed atlas year.
+
+**Inspect an individual log** is a closed secondary disclosure below the scene.
+Selecting a plotted source can still open evidence; **Open selected log** then
+continues to the source-specific depth slice. The always-available **Individual
+log** tab retains the saved `3d` enum; Area underlay retains `aquifer`. Deliberate
+legacy saved `3d` views restore without a forced transition, and Area underlay
+provides the return path. Existing custom depth windows, description filters,
+original interval identity, source units and focus handoff for deliberate log
+entry remain intact. Probe/search/transect workbenches keep their existing
+secondary behavior.
+
+The applied frame and 3D camera/image are temporary display state. Workspace
+saves retain record IDs, source editions, the existing anchor, record cutoff and
+coverage text, with captured rows stripped by the existing settings-only path.
+Reports and source-labeled CSV exports can retain their bounded captured rows;
+coverage text includes the applied frame, and CSV rows retain source coordinates.
+No dedicated applied-rectangle field or surface image is serialized. A workspace
+may restore the selector's later preview while its earlier applied frame is not
+restored; choose and **Show this area** again before exploring an underlay. Source data assets/hashes, saved schema/storage keys, DB/BUCKET
+bindings, privacy/redaction, source-labeled CSV/SVG exports and owner-only
+audience are unchanged. There is no source acquisition, interpolation, common
+elevation registration or admission change.
+
+Implementation stays in the existing `app/` responsibility, callback/worker/model
+regressions in `tests/`, and this explanation in `docs/`, following Directory
+Rules and ADR-0029 as above. Tests exercise exact-bound filtering before caps,
+frame-local time holds, bounded requests, cancellation and echoed identity,
+manual preview/application, stale or mismatched images, compact composition,
+explicit All time, real component camera retention and legacy log controls.
+The component harness executes hooks and callbacks with real Three geometry and
+camera math while substituting the WebGL renderer; it does not certify browser
+rendering, touch, layout or accessibility. Browser review remains blocked by the
+admin-enforced security check. Build/test success, source publication and visual
+acceptance remain separate. Rollback is saved v170 with no storage migration.
+
+### Cutaway interaction repair after v171
+
+The v171 delivery above is historical. Its five-tab navigation and initial
+empty stage did not establish user acceptance. The current repair replaces
+those with one area-selection workspace and a closed **Other tools** picker.
+**Back to cutaway** retains the applied rectangle, surface capture and camera
+within the open Underground panel. Inactive cutaways release their worker and
+renderer; their source request/geometry state resumes without applying a later
+map preview. If an optional aquifer request was interrupted, the retained frame
+and independent records remain usable and the status offers another explicit
+apply to retry it. Closing the entire panel still discards this temporary scene;
+workspace saves and report/export meanings remain as described above.
+
+**Show this area** skips the global 2D animation when the map is already flat.
+When normalization or other movement is underway, it retains the user's request
+and continues after the map settles; resize events do not silently cancel that
+intent. An oversized Kansas frame offers **Zoom in & explore**, which keeps the
+current center, narrows the frame and applies it. The High Plains example remains
+an explicit choice. Accepted bounds still drive both record and aquifer queries;
+a selector preview cannot relabel a selected frame or its image.
+
+Accepting an eligible frame immediately permits independent well/core loading.
+The neutral reference plane contains no inferred geology or aquifer envelopes.
+Aquifer failure, construction failure or a 14-second timeout leaves those
+records usable. Image capture has its own 8-second bound; missing, tainted or
+mismatched imagery is labeled as unavailable while recorded columns remain
+visible. First settled records can fit the camera before optional aquifer data
+arrives. First aquifer settlement can fit separately; either respects prior
+user navigation, and later record-time/source changes retain the camera.
+Terminal record-worker failure clears records and keeps loading false across
+later apply/source/year changes, with a visible close-and-reopen recovery path.
+
+Before applying an area, the workspace shows the larger selector and a compact
+instruction, without an empty canvas, camera buttons or disabled timeline. A
+settled frame without logs or aquifer ranges shows recovery actions instead of
+a blank 3D stage. Once evidence is present, the cutaway offers Orbit, Move, zoom
+and adjacent record time. **All** still means all eligible loaded records;
+atlas-year source eligibility applies first. This is cumulative record
+availability, never simulated material change. Source bounds, uncertainty and
+partial coverage remain available in disclosures.
+
+Individual-log appearance/material controls and keyboard interval lists are
+closed disclosures (the keyboard list opens on WebGL failure). Section depth
+settings and source record lists, survey filters and interpretation limits,
+location/source tools, and export controls are also disclosed. Survey and soil
+views do not show unrelated record-time or depth controls. Existing display
+enums and deliberate legacy saved-view restoration are unchanged.
+
+This repair uses the existing `app/`, `tests/` and `docs/` responsibility roots;
+it changes no data assets, dependencies, schemas, storage or audience. The
+8-tile request limit, 12-tile cache, 50-record cap, source integrity checks,
+privacy/export boundaries and fixed 2022–2024 aquifer period are unchanged.
+Rollback is the v171 source commit
+`71bfe886b03b05ba142bdeafa1fd479f1f141b00`, without a storage migration.
+
+Callback regressions execute the actual page representation function, including
+its 420 ms animation and reduced-motion path, together with the area component
+and session. They cover one-click completion, resize/preview identity,
+independent records on optional-source failures, oversized-frame recovery,
+initial depth fitting, tool round trips and failed record workers. Real Three
+geometry and camera calculations are used with a substituted renderer. Browser
+visual, touch, device WebGL and full keyboard acceptance remain unverified
+because the supported browser interface is blocked by its administrative
+security check; these tests do not replace that acceptance.
+
+### Kansas selector start
+
+A fresh Underground cutaway opens the 2D selector at a statewide Kansas extent,
+after the selector reaches its compact size. The statewide view is a navigation
+starting point, not an applied cutaway or a statewide data claim. The user zooms
+to a local area and explicitly chooses **Show this area**; switching to another
+Underground tool and back keeps the moved selector position. The High Plains
+example remains optional. This changes display navigation only, with no new
+source, admission, storage or depth interpretation.

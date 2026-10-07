@@ -4586,3 +4586,7 @@ body { font-size: 14px; }
 .map-stage[data-underground="true"]:has([data-slice-panel="true"]) .map-canvas,
 .map-stage[data-underground="true"]:has([data-slice-panel="true"]) .map-effects,
 .map-stage[data-underground="true"]:has([data-slice-panel="true"]) .qwen-map-launch { visibility: hidden; }
+
+/* Area underlay has its own record-time navigation. Atlas Time stays reachable
+   from the toolbar and returns when explicitly opened; its committed year remains in force. */
+.explorer-shell[data-timeline="false"]:has([data-cutaway-panel="true"]) > .timeline-panel { display:none; }

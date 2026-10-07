@@ -1,0 +1,161 @@
+{
+  "receipt_id": "genrec-site-v171-area-underlay-20261007",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/README.md",
+    "docs/reports/kfm-explorer-layers-animation-3d-performance-roadmap-20260911.md",
+    "apps/site/source/app/aquifer-view-session.ts",
+    "apps/site/source/app/aquifer-volume-view.tsx",
+    "apps/site/source/app/cutaway-model.ts",
+    "apps/site/source/app/globals.css",
+    "apps/site/source/app/page.tsx",
+    "apps/site/source/app/subsurface-model.ts",
+    "apps/site/source/app/subsurface-worker.ts",
+    "apps/site/source/app/subsurface.module.css",
+    "apps/site/source/app/underground-panel.tsx",
+    "apps/site/source/docs/SITE_PRESERVATION.md",
+    "apps/site/source/docs/underground-explorer.md",
+    "apps/site/source/tests/aquifer-view-session.test.mjs",
+    "apps/site/source/tests/area-underlay.test.mjs",
+    "apps/site/source/tests/subsurface-slice.test.mjs",
+    "apps/site/source/tests/subsurface-worker.test.mjs",
+    "data/receipts/generated/site-v171-area-underlay-20261007.json"
+  ],
+  "artifact_hashes": {
+    "apps/site/README.md": "sha256:c8cc2db3cd9c2cb71dded7cfb7989d26460cbc0dc70a6d7b0451cc3f4db02b1f",
+    "docs/reports/kfm-explorer-layers-animation-3d-performance-roadmap-20260911.md": "sha256:c87c73158ca799b46fb1b90ad7c70aff30f21f22ecadc53638cd1b053c1934a8",
+    "apps/site/source/app/aquifer-view-session.ts": "sha256:343cacade70c530ac04b1313fece226ec226aefc55dd5708b56dbd6c5d1dbed7",
+    "apps/site/source/app/aquifer-volume-view.tsx": "sha256:c697fc921848cf6c0aa1ac9f9bf3a413b9823e6dff463bc543580d381f8846af",
+    "apps/site/source/app/cutaway-model.ts": "sha256:ceea0fabd533667d81997a03b9839adabaa79dc16a3bc12bd5d78778ab57cc97",
+    "apps/site/source/app/globals.css": "sha256:0aa579e3fc367b29d08787acd5586794066671e04f1889df214376fdc209d2ca",
+    "apps/site/source/app/page.tsx": "sha256:b1bc2005fd752dc714fc3768301b6fadc11fc10c7d51ce71bb813b33dd8ae228",
+    "apps/site/source/app/subsurface-model.ts": "sha256:70a5fcfd9122e89a8acec76ef80890dd461cd7984dcdd95b54f86e10e2fc7619",
+    "apps/site/source/app/subsurface-worker.ts": "sha256:2a584e8f6eac421b5ef1a2aa2b229cf916a1aadd7b4ac499cd02308cabad49fe",
+    "apps/site/source/app/subsurface.module.css": "sha256:bfd342c47782d3e003778388a5c2990db64ee3fd8d78b3f0d71b2b35794a86eb",
+    "apps/site/source/app/underground-panel.tsx": "sha256:9ceb61df59bfef2cd5257d657c2661a44cef3dcb3705e596ceb2843945e9d793",
+    "apps/site/source/docs/SITE_PRESERVATION.md": "sha256:2da57c46c5cee3d3158974a946f67f7c64891d20dfa19da72d7176742791d33a",
+    "apps/site/source/docs/underground-explorer.md": "sha256:b7d7f0a85ec24bd96cb084a5cda209d95634f5ed52b09fda767d191418080420",
+    "apps/site/source/tests/aquifer-view-session.test.mjs": "sha256:4f7a891f6e1b99d34800220a1f6502f6a6668d600a9ee5c9db843ea42ab1c0b5",
+    "apps/site/source/tests/area-underlay.test.mjs": "sha256:b8dc16624cd7cc2c5e72a18de109e2c91ea91edf08069cf5bbbea319db9ec2fd",
+    "apps/site/source/tests/subsurface-slice.test.mjs": "sha256:238b66ac751f65db1666ae892871e94db5f1139151f52c9728960240927b923a",
+    "apps/site/source/tests/subsurface-worker.test.mjs": "sha256:e1bb5e261acf9681cc4d2c700bd387d68507f31d99fdd6befdd51414d97f3df8",
+    "data/receipts/generated/site-v171-area-underlay-20261007.json": "sha256:4439a1ece0e3976215ca1dafe616b3c5d6d3f92a0b1f7a6f235d43703d05ab6a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "not-disclosed"
+  },
+  "prompt_or_contract": "sha256:3888ac8f7fbabf99d8bde680ad1f1db70ea2364c91769aeb3ad4dcb9355490ff",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "local-shell",
+      "Sites",
+      "GitHub-readback",
+      "independent-source-review"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "git:d34cbb699cb97066b0204e2116e0bdf26e4a45df",
+      "standalone-site-source:71bfe886b03b05ba142bdeafa1fd479f1f141b00",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ],
+    "evidence_hashes": [
+      "sha256:3888ac8f7fbabf99d8bde680ad1f1db70ea2364c91769aeb3ad4dcb9355490ff",
+      "sha256:53109a9fa19901261909bf02af54b5e6efd2cb8589ace44e5f45a09ac539dcfd",
+      "sha256:b75608d0ccd015d04180d01738a827903af809b281d39666c914688770fcfb1e",
+      "sha256:81a5a6070fd2e684abaf29cd2fcf6e8563ec30e8d37bf0abe5c8a78443075da6",
+      "sha256:9a107532e2f9d7b86dc6174abf15fb26a954f44ff1c1eb955db6f600b8730226",
+      "sha256:9db3c81d45928d3047cd0b92ab8e2a09fedcae18e3d74f880136b94fe6826323",
+      "sha256:01199e3131b59bf4f7c7ef9f23051452170ebe1aab888b5e65f9ea230f5d0b04",
+      "sha256:e47f4608c88dfedd41ae5f9f7fb56c41244ba27bc569e539a2eee69750bb5ae0"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/README.md": "CONFIRMED",
+    "docs/reports/kfm-explorer-layers-animation-3d-performance-roadmap-20260911.md": "CONFIRMED",
+    "apps/site/source/app/aquifer-view-session.ts": "CONFIRMED",
+    "apps/site/source/app/aquifer-volume-view.tsx": "CONFIRMED",
+    "apps/site/source/app/cutaway-model.ts": "CONFIRMED",
+    "apps/site/source/app/globals.css": "CONFIRMED",
+    "apps/site/source/app/page.tsx": "CONFIRMED",
+    "apps/site/source/app/subsurface-model.ts": "CONFIRMED",
+    "apps/site/source/app/subsurface-worker.ts": "CONFIRMED",
+    "apps/site/source/app/subsurface.module.css": "CONFIRMED",
+    "apps/site/source/app/underground-panel.tsx": "CONFIRMED",
+    "apps/site/source/docs/SITE_PRESERVATION.md": "CONFIRMED",
+    "apps/site/source/docs/underground-explorer.md": "CONFIRMED",
+    "apps/site/source/tests/aquifer-view-session.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/area-underlay.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/subsurface-slice.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/subsurface-worker.test.mjs": "CONFIRMED",
+    "data/receipts/generated/site-v171-area-underlay-20261007.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Exact source parity",
+      "outcome": "PASS",
+      "reason": "All 708 source paths match exact standalone source; fifteen changed paths, no deletions."
+    },
+    {
+      "gate": "Application validation",
+      "outcome": "PASS",
+      "reason": "Build, TypeScript and 600 Node tests pass; 60 focused and 60 independent tests pass. Changed-area lint has zero errors and the same 26 warning fingerprints as the exact source base."
+    },
+    {
+      "gate": "Fresh browser visual acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Fresh browser policy verification was unavailable; no bypass. Visual, touch, WebGL and full keyboard acceptance remain UNVERIFIED."
+    },
+    {
+      "gate": "Local install and data preservation",
+      "outcome": "PASS",
+      "reason": "Exact source/build installed; isolated 12-route rehearsal, eight local store checks and 15,840 blob hashes totaling 738,852,346 bytes verified; PRISM unchanged."
+    },
+    {
+      "gate": "Historical mirror review",
+      "outcome": "FAIL",
+      "reason": "MIRROR_REVIEW_REQUIRED retained. Active receipt and tool are unchanged from exact repository base; its 707 source paths already differ from the active receipt\u2019s 370-path set. No review waiver."
+    },
+    {
+      "gate": "Exact-head CI and independent human acceptance",
+      "outcome": "SKIPPED",
+      "reason": "CI follows push; no independent human acceptance supplied."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "adr-0029",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "source-comparison",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/site-v171-area-underlay-20261007.json"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-07T14:24:35.846028+00:00",
+  "emitter": "Codex",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Generation provenance only, binding final authored artifact bytes except this self-referential record. CONFIRMED labels identify verified artifact bytes and the bounded current checkpoint; older roadmap proposals retain their explicit status. No prompt contents, secrets, private locations, hidden reasoning or review approvals. Source, deployment, runtime, browser and dataset-release states remain separate."
+}
