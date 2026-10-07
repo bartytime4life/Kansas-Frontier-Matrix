@@ -139,6 +139,26 @@ const activateMatching = async (containerSelector, elementSelector, text, label,
   await pressKey(key);
   await pause(100);
 };
+const openMenu = async (selector, label) => {
+  if (!await evaluate(`document.querySelector(${JSON.stringify(selector)})?.open === true`)) {
+    await activateSelector(`${selector} > summary`, label, "Space");
+  }
+  assert.equal(await evaluate(`document.querySelector(${JSON.stringify(selector)})?.open`), true, `${label} did not open`);
+};
+const activateWorkspace = async (name, label = name) => {
+  await openMenu(".header-overflow-menu", "More site actions");
+  await activateMatching(".header-overflow-workspaces", "button", name, label);
+};
+const activateMode = async (width, name, label = name) => {
+  const container = width >= 1200 ? ".map-dock-representations" : ".map-dock-menu-representations";
+  if (width < 1200) await openMenu(".map-dock-map-menu", "Map views and controls");
+  await activateMatching(container, "button", name, label);
+  if (width < 1200) assert.equal(await evaluate(`document.querySelector(".map-dock-map-menu")?.open`), false, `${label} must close the Map menu`);
+};
+const activateStatus = async () => {
+  await openMenu(".header-overflow-menu", "More site actions");
+  await activateSelector(".status-header-action", "Status");
+};
 const assertMinimumTarget = async (selector, label) => {
   const box = await evaluate(`(() => {
     const element = document.querySelector(${JSON.stringify(selector)});
@@ -199,7 +219,7 @@ await call("Page.enable");
 await call("Runtime.enable");
 const observations = [];
 const undergroundObservations = [];
-for (const width of [1920, 1440, 1024, 768, 390]) {
+for (const width of [1920, 1800, 1799, 1440, 1200, 1199, 1024, 768, 760, 390]) {
   const height = width === 390 ? 844 : 900;
   await call("Emulation.clearDeviceMetricsOverride");
   await call("Emulation.setDeviceMetricsOverride", {
@@ -256,18 +276,23 @@ for (const width of [1920, 1440, 1024, 768, 390]) {
       width: innerWidth,
       header: rect(".topbar"),
       dock: rect(".map-chrome-dock"),
+      stage: rect(".map-stage"),
+      dockInHeader: Boolean(document.querySelector(".topbar > .map-chrome-dock")),
       horizontalOverflow: rootElement.scrollWidth > rootElement.clientWidth || body.scrollWidth > body.clientWidth,
       headerOverflow: outside(".topbar"),
       dockOverflow: outside(".map-chrome-dock"),
       smallestTarget: Math.min(...targets.map((target) => target.height)),
       targetsUnder44: targets.filter((target) => target.height < 43.5),
       headerFocusOrder,
+      directModes: visible(mode),
+      directQuickControls: visible(document.querySelector(".map-dock-actions > .map-dock-action")),
+      menuModes: visible(document.querySelector(".map-dock-menu-representations")),
+      menuQuickControls: visible(document.querySelector(".map-dock-menu-quick")),
       directBasemap: visible(document.querySelector(".map-dock-basemap")),
       directControls: visible(document.querySelector(".map-dock-action.map-dock-wide-only")),
       mapOverflow: visible(document.querySelector(".map-dock-map-menu > summary")),
       controlsInOverflow: [...document.querySelectorAll(".map-dock-map-menu button")].some((button) => visible(button) && button.textContent.includes("Map controls")),
       mobileBrand: visible(document.querySelector(".brand-lockup .mark")),
-      modeScroll: mode ? { client: mode.clientWidth, scroll: mode.scrollWidth, overflowX: getComputedStyle(mode).overflowX } : null,
       qwenClearsMobileDock: !launcher || !mobileDock || launcher.bottom <= mobileDock.top - 4,
     };
   })()`);
@@ -282,39 +307,31 @@ for (const width of [1920, 1440, 1024, 768, 390]) {
   assert.deepEqual(geometry.headerOverflow, [], `${width}px header child overflow`);
   assert.deepEqual(geometry.dockOverflow, [], `${width}px dock child overflow`);
   assert.ok(geometry.smallestTarget >= 43.5, `${width}px target below 44px: ${JSON.stringify(geometry.targetsUnder44)}`);
-  if (width > 760) {
-    assert.equal(geometry.header.height, 54, `${width}px desktop header height`);
-    assert.equal(geometry.dock.height, 44, `${width}px desktop dock height`);
-    assert.ok(geometry.header.height + geometry.dock.height <= 98);
-  }
-  if (width >= 1440) {
-    assert.equal(geometry.directBasemap, true);
-    assert.equal(geometry.directControls, true);
-    assert.equal(geometry.mapOverflow, false);
-    assert.deepEqual(geometry.headerFocusOrder.slice(0, 4), [
-      "Search places, layers, official data…", "⌖Map", "Reports", "Stories",
-    ]);
-  } else {
-    assert.equal(geometry.directBasemap, false);
-    assert.equal(geometry.directControls, false);
-    assert.equal(geometry.mapOverflow, true);
-    assert.equal(geometry.controlsInOverflow, true);
-  }
+  assert.equal(geometry.header.height, 54, `${width}px single toolbar height`);
+  assert.equal(geometry.dock.height, 44, `${width}px map control target height`);
+  assert.equal(geometry.dockInHeader, true, `${width}px map controls must share the global header`);
+  assert.ok(geometry.dock.top >= geometry.header.top && geometry.dock.bottom <= geometry.header.bottom,
+    `${width}px map controls escaped the single header row`);
+  assertNear(geometry.stage.top, geometry.header.bottom, `${width}px map starts directly below the header`);
+  assert.equal(geometry.headerFocusOrder[0], "Search places, layers, official data…");
+  assert.equal(geometry.directModes, width >= 1200, `${width}px representation placement`);
+  assert.equal(geometry.directQuickControls, width > 760, `${width}px quick control placement`);
+  assert.equal(geometry.menuModes, width < 1200, `${width}px menu representations`);
+  assert.equal(geometry.menuQuickControls, width <= 760, `${width}px menu quick controls`);
+  assert.equal(geometry.directBasemap, width >= 1800, `${width}px direct basemap`);
+  assert.equal(geometry.directControls, width >= 1800, `${width}px direct controls`);
+  assert.equal(geometry.mapOverflow, width < 1800, `${width}px Map menu`);
+  assert.equal(geometry.controlsInOverflow, width < 1800, `${width}px controls in Map menu`);
   if (width === 390) {
-    assert.equal(geometry.header.height, 96);
-    assert.equal(geometry.dock.height, 44);
     assert.equal(geometry.mobileBrand, true);
-    assert.equal(geometry.modeScroll.overflowX, "auto");
-    assert.ok(geometry.modeScroll.scroll > geometry.modeScroll.client);
     assert.equal(geometry.qwenClearsMobileDock, true);
-    assert.equal(geometry.headerFocusOrder[0], "Search places, layers, official data…");
   }
 
   await evaluate(`(() => {
     const mapMenu = document.querySelector(".map-dock-map-menu");
     if (mapMenu instanceof HTMLDetailsElement) mapMenu.open = false;
   })()`);
-  await activateSelector('.map-dock-representations button[aria-label="Underground Logs & sections"]', `${width}px Underground`);
+  await activateMode(width, "Underground", `${width}px Underground`);
   await waitFor(`document.querySelector('.map-stage')?.getAttribute('data-underground') === 'true'
     && Boolean(document.querySelector('[aria-label="Underground 2D locator"]'))
     && Boolean(document.querySelector('section[aria-label="Underground workspace"]'))`);
@@ -324,12 +341,15 @@ for (const width of [1920, 1440, 1024, 768, 390]) {
     const body = document.body;
     const stageElement = document.querySelector(".map-stage");
     const dockElement = document.querySelector(".map-chrome-dock");
+    const headerElement = document.querySelector(".topbar");
     const locatorElement = document.querySelector('[aria-label="Underground 2D locator"]');
     const canvasElement = document.querySelector(".map-canvas");
     const effectsElement = document.querySelector(".map-effects");
     const panelElement = document.querySelector('section[aria-label="Underground workspace"]');
     const launcherElement = document.querySelector(".qwen-map-launch");
-    const triggerElement = document.querySelector('.map-dock-representations button[aria-label="Underground Logs & sections"]');
+    const triggerElement = document.querySelector(innerWidth >= 1200
+      ? '.map-dock-representations button[aria-label="Underground Logs & sections"]'
+      : ".map-dock-map-menu > summary");
     const closeElement = document.querySelector('button[aria-label="Close Underground"]');
     const rect = (element) => {
       if (!(element instanceof Element)) return null;
@@ -363,14 +383,14 @@ for (const width of [1920, 1440, 1024, 768, 390]) {
       target(closeElement),
       target(launcherElement),
     ].filter(Boolean);
-    const withinStage = { dock, locator, canvas, effects, panel, launcher };
+    const withinStage = { locator, canvas, effects, panel, launcher };
     const outsideStage = !stage ? ["missing-stage"] : Object.entries(withinStage)
       .filter(([, box]) => !box || box.left < stage.left - 1 || box.right > stage.right + 1 || box.top < stage.top - 1 || box.bottom > stage.bottom + 1)
       .map(([name]) => name);
     return {
       width: innerWidth,
       mode: stageElement?.getAttribute("data-underground"),
-      stage, dock, locator, canvas, effects, panel, launcher,
+      stage, dock, header: rect(headerElement), locator, canvas, effects, panel, launcher,
       resolvedLocatorTop: locatorElement ? parseFloat(getComputedStyle(locatorElement).top) : null,
       resolvedSurfaceTop: canvasElement ? parseFloat(getComputedStyle(canvasElement).top) : null,
       horizontalOverflow: root.scrollWidth > root.clientWidth || body.scrollWidth > body.clientWidth,
@@ -390,10 +410,11 @@ for (const width of [1920, 1440, 1024, 768, 390]) {
   assert.deepEqual(underground.targetsUnder44, [], `${width}px Underground target below 44px`);
   assert.equal(underground.launcherVisible, true, `${width}px Qwen launcher hidden in Underground`);
   assert.equal(underground.launcherLabel, "Ask Qwen about this map view", `${width}px Qwen launcher lost its accessible name`);
-  assertNear(underground.dock.top, underground.stage.top, `${width}px Underground dock offset`);
+  assertNear(underground.header.bottom, underground.stage.top, `${width}px Underground starts below the single header`);
+  assert.ok(underground.dock.top >= underground.header.top && underground.dock.bottom <= underground.header.bottom, `${width}px Underground controls escaped the header`);
   assertNear(underground.locator.top - underground.stage.top, underground.resolvedLocatorTop, `${width}px Underground locator offset`);
   assertNear(underground.canvas.top - underground.stage.top, underground.resolvedSurfaceTop, `${width}px Underground map offset`);
-  assert.ok(underground.locator.top >= underground.dock.bottom + 7.5, `${width}px Underground locator overlaps the dock`);
+  assert.ok(underground.locator.top >= underground.stage.top + 7.5, `${width}px Underground locator overlaps the header`);
   assert.ok(underground.locator.bottom <= underground.canvas.top + 1, `${width}px Underground locator overlaps the map surface`);
   assertNear(underground.canvas.left, underground.effects.left, `${width}px Underground effect left edge`);
   assertNear(underground.canvas.top, underground.effects.top, `${width}px Underground effect top edge`);
@@ -405,7 +426,7 @@ for (const width of [1920, 1440, 1024, 768, 390]) {
   assert.ok(underground.launcher.top >= underground.canvas.top - 1 && underground.launcher.bottom <= underground.panel.top - 12,
     `${width}px Qwen launcher is not reachable in the exposed locator map`);
   for (const [selector, label] of [
-    ['.map-dock-representations button[aria-label="Underground Logs & sections"]', "Underground mode"],
+    [width >= 1200 ? '.map-dock-representations button[aria-label="Underground Logs & sections"]' : ".map-dock-map-menu > summary", "Underground mode access"],
     ['[aria-label="Underground 2D locator"] button:nth-of-type(1)', "Use map center"],
     ['[aria-label="Underground 2D locator"] button:nth-of-type(2)', "Find selection"],
     ['[aria-label="Underground 2D locator"] button:nth-of-type(3)', "Reset to 2D"],
@@ -437,6 +458,7 @@ await waitFor(`!document.querySelector("#data-notices-panel")`);
 assert.equal(await evaluate(`document.activeElement === document.querySelector(".data-notices-trigger")`), true);
 covered("Data & downloads / Contribute data", 1920);
 
+await openMenu(".header-overflow-menu", "More site actions");
 await activateSelector(".new-from-map-action", "Compose");
 await waitFor(`Boolean(document.querySelector("#map-context-card") && document.activeElement?.getAttribute("aria-label") === "Close map context composer")`);
 await assertMinimumTarget('#map-context-card button[aria-label="Close map context composer"]', "Compose close");
@@ -445,11 +467,11 @@ await waitFor(`!document.querySelector("#map-context-card")`);
 assert.equal(await evaluate(`document.activeElement === document.querySelector(".new-from-map-action")`), true);
 covered("Compose", 1920);
 
-await activateMatching(".header-workflows", "button", "Reports", "Reports workspace");
+await activateWorkspace("Reports", "Reports workspace");
 await waitFor(`document.querySelector('.primary-workspace-surface')?.getAttribute('data-workspace') === 'reports'`);
-await activateMatching(".header-workflows", "button", "Stories", "Stories workspace");
+await activateWorkspace("Stories", "Stories workspace");
 await waitFor(`document.querySelector('.primary-workspace-surface')?.getAttribute('data-workspace') === 'stories'`);
-await activateMatching(".header-workflows", "button", "Map", "Map workspace");
+await activateWorkspace("Map", "Map workspace");
 await waitFor(`!document.querySelector(".primary-workspace-surface")`);
 covered("Map / Reports / Stories", 1920);
 
@@ -508,6 +530,28 @@ await reloadAt(1920);
 await activateMatching(".map-dock-actions", "button", "Places", "Places");
 await waitFor(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden') === 'false' && document.querySelector('.layer-panel')?.getAttribute('data-panel-mode') === 'places'`);
 covered("Places", 1920);
+
+// Tablet: Map retains every representation after the inline row folds away.
+await reloadAt(1024);
+await openMenu(".map-dock-map-menu", "Map views and controls");
+await assertInViewport(".map-dock-menu-panel", "Tablet Map menu");
+await assertMinimumTarget('.map-dock-menu-representations button[aria-label="Underground Logs & sections"]', "Tablet Underground menu action");
+await pressKey("Escape");
+assert.deepEqual(await evaluate(`({
+  open: document.querySelector(".map-dock-map-menu")?.open,
+  focusRestored: document.activeElement === document.querySelector(".map-dock-map-menu > summary"),
+})`), { open: false, focusRestored: true });
+for (const name of ["2D", "Terrain 3D", "Globe"]) {
+  await activateMode(1024, name, `Tablet ${name}`);
+  await waitFor(
+    `((expectedName) => [...document.querySelectorAll('.map-dock-menu-representations button')].some((button) => button.querySelector('b')?.textContent === expectedName && button.getAttribute('aria-pressed') === 'true'))`,
+    name,
+  );
+}
+await activateMode(1024, "Compare", "Tablet Compare A/B");
+await waitFor(`document.querySelector('.map-utility-panel')?.getAttribute('data-open') === 'true' && document.querySelector('.map-utility-panel')?.getAttribute('data-view') === 'compare'`);
+await pressKey("Escape");
+covered("Map menu / 2D / Terrain / Globe / Compare / Escape and focus return", 1024);
 
 // Tablet: overflow replacements, status hand-offs, and the single Qwen launcher.
 await reloadAt(1024);
@@ -573,17 +617,17 @@ await pressKey("Escape");
 covered("Map controls overflow / Inspect / Scene / Measure / Report / Export", 1024);
 
 await reloadAt(1024);
-await activateSelector(".status-header-action", "Status");
+await activateStatus();
 await waitFor(`Boolean(document.querySelector(".repository-briefing") && !document.querySelector(".repository-overlay").hidden)`);
 await activateSelector('.status-map-actions [aria-controls="map-source-status"]', "Source status");
 await waitFor(`Boolean(document.querySelector("#map-source-status") && document.activeElement?.getAttribute("aria-label") === "Close source status")`);
 await assertMinimumTarget('#map-source-status button[aria-label="Close source status"]', "Source status close");
 await pressKey("Escape");
 await waitFor(`!document.querySelector("#map-source-status")`);
-assert.equal(await evaluate(`document.activeElement === document.querySelector(".status-header-action")`), true);
+assert.equal(await evaluate(`document.activeElement === document.querySelector(".header-overflow-menu > summary")`), true);
 covered("Status / Source status", 1024);
 
-await activateSelector(".status-header-action", "Status");
+await activateStatus();
 await waitFor(`!document.querySelector(".repository-overlay")?.hidden`);
 await activateMatching(".status-map-links", "button", "Live controls", "Live controls");
 await waitFor(`document.querySelector(".repository-overlay")?.hidden === true`);
@@ -591,7 +635,7 @@ assert.equal(await evaluate(`document.activeElement === document.querySelector("
 covered("Live controls", 1024);
 
 await reloadAt(1024);
-await activateSelector(".status-header-action", "Status");
+await activateStatus();
 await waitFor(`!document.querySelector(".repository-overlay")?.hidden`);
 const baselineTimeOrigin = await evaluate(`performance.timeOrigin`);
 await focusMatching(".status-map-links", "button", "Today’s baseline", "Today's baseline");
@@ -608,15 +652,35 @@ await waitFor(`!document.querySelector("#qwen-map-panel")`);
 assert.equal(await evaluate(`document.activeElement === document.querySelector(".qwen-map-launch")`), true);
 covered("Qwen", 1024);
 
-// Mobile: retain the primary tabs and each 48px bottom-dock route.
+// Mobile: the More menu retains workspaces; Map retains modes and quick controls.
+// Each 48px bottom-dock route remains independently reachable.
 await reloadAt(390);
-await activateMatching(".mobile-primary-tabs", "button", "Reports", "Mobile Reports");
+await activateWorkspace("Reports", "Mobile Reports");
 await waitFor(`document.querySelector('.primary-workspace-surface')?.getAttribute('data-workspace') === 'reports'`);
-await activateMatching(".mobile-primary-tabs", "button", "Stories", "Mobile Stories");
+await activateWorkspace("Stories", "Mobile Stories");
 await waitFor(`document.querySelector('.primary-workspace-surface')?.getAttribute('data-workspace') === 'stories'`);
-await activateMatching(".mobile-primary-tabs", "button", "Map", "Mobile Map");
+await activateWorkspace("Map", "Mobile Map");
 await waitFor(`!document.querySelector(".primary-workspace-surface")`);
-covered("Mobile Map / Reports / Stories tabs", 390);
+covered("Mobile Map / Reports / Stories through More", 390);
+
+for (const name of ["Time", "Layers", "Places"]) {
+  await reloadAt(390);
+  await openMenu(".map-dock-map-menu", "Mobile Map views and controls");
+  await assertInViewport(".map-dock-menu-panel", "Mobile Map menu");
+  await activateMatching(".map-dock-menu-quick", "button", name, `Mobile Map menu ${name}`);
+  assert.equal(await evaluate(`document.querySelector(".map-dock-map-menu")?.open`), false);
+  if (name === "Time") {
+    await waitFor(`Boolean(document.querySelector(".timeline-detail"))`);
+    await pressKey("Escape");
+    await waitFor(`!document.querySelector(".timeline-detail")`);
+  } else {
+    await waitFor(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden') === 'false' && document.querySelector('.layer-panel')?.getAttribute('data-panel-mode') === ${JSON.stringify(name.toLowerCase())}`);
+    await pressKey("Escape");
+    await waitFor(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden') === 'true'`);
+  }
+  covered(`Mobile Map menu ${name}`, 390);
+}
+await reloadAt(390);
 
 await activateMatching(".map-mobile-actions", "button", "Map layers", "Mobile Map layers");
 await waitFor(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden') === 'false' && document.querySelector('.layer-panel')?.getAttribute('data-panel-mode') === 'layers'`);
@@ -657,7 +721,7 @@ await reloadAt(390);
 await activateSelector(".qwen-map-launch", "Mobile Qwen launcher");
 await waitFor(`Boolean(document.querySelector("#qwen-map-panel") && document.activeElement?.getAttribute("aria-label") === "Close Qwen companion")`);
 assert.equal(await evaluate(`document.querySelector("#qwen-map-panel")?.getAttribute("aria-modal")`), "true");
-await waitFor(`document.querySelector(".topbar")?.inert === true && document.querySelector(".map-chrome-dock")?.inert === true && document.querySelector(".map-mobile-actions")?.inert === true`);
+await waitFor(`document.querySelector(".topbar")?.inert === true && Boolean(document.querySelector(".map-chrome-dock")?.closest("[inert]")) && document.querySelector(".map-mobile-actions")?.inert === true`);
 assert.deepEqual(await evaluate(`(() => {
   const panel = document.querySelector("#qwen-map-panel");
   const outsideButton = document.querySelector(".map-mobile-actions button");
@@ -666,7 +730,7 @@ assert.deepEqual(await evaluate(`(() => {
     panelHasInertAncestor: Boolean(panel?.closest("[inert]")),
     focusStayedInPanel: Boolean(panel?.contains(document.activeElement)),
     topbarInert: document.querySelector(".topbar")?.inert === true,
-    dockInert: document.querySelector(".map-chrome-dock")?.inert === true,
+    dockInert: Boolean(document.querySelector(".map-chrome-dock")?.closest("[inert]")),
     mobileActionsInert: document.querySelector(".map-mobile-actions")?.inert === true,
   };
 })()`), {

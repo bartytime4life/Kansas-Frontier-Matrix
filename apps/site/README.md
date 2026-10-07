@@ -1,3 +1,17 @@
+> **Single-toolbar Site v166 — 2026-10-06:** the [seven-path comparison](../../data/receipts/generated/site-v166-single-toolbar-20261006.json)
+> pins all 699 source paths to same-Site source
+> `a4d6b3dc69721fbfb270906a9ff3e44dd941d5c0` on repository base
+> `283ed3d32ffb0ea46d55cd53a92ee5e63d778e0b`. The private Site and local
+> Explorer now use one 54 px toolbar; the map begins directly below it.
+> Existing controls remain reachable through direct buttons and Map/More menus.
+> The final standalone source passed production build, TypeScript and 552 tests;
+> lint has zero errors and 46 inherited warnings. Bounded browser checks passed
+> desktop/mobile geometry and menu Escape/focus behavior. Source parity permits
+> reuse of those application checks; full accessibility/WebGL acceptance remains separate.
+> Local installation retained the physical store and verified 15,840 R2 blobs.
+> Historical mirror receipts and `MIRROR_REVIEW_REQUIRED` remain unchanged;
+> this layout update does not admit, activate or release data.
+
 > **Site v165 source reconciliation — 2026-10-06:** the [comparison record](../../data/receipts/generated/site-v165-source-reconciliation-20261006.json)
 > pins all 699 mirrored source paths to clean same-Site source
 > `64ee0a61e577a0455fd1180fd18d346c017876bf`, privately deployed as v165.

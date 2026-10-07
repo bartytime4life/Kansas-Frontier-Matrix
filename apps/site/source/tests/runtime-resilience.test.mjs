@@ -168,9 +168,9 @@ test("compact map chrome shares one overlay clearance with degraded and utility 
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
   const root = css.match(/:root\s*\{([^}]+)\}/)?.[1] ?? "";
   const banner = css.match(/\.runtime-degraded-banner\s*\{([^}]+)\}/)?.[1] ?? "";
-  assert.match(root, /--map-dock-height:\s*44px/);
+  assert.match(root, /--map-dock-height:\s*0px/);
   assert.match(root, /--map-overlay-top:\s*calc\(var\(--map-dock-height\) \+ var\(--map-overlay-gap\)\)/);
-  assert.match(css, /\.map-chrome-dock\s*\{[^}]*height:\s*var\(--map-dock-height\)/s);
+  assert.match(css, /\.map-chrome-dock\s*\{[^}]*height:\s*44px/s);
   assert.match(banner, /top:\s*var\(--map-overlay-top\)/);
   assert.match(banner, /left:\s*72px/);
   assert.match(banner, /width:\s*min\(460px, calc\(100% - 144px\)\)/);
@@ -179,7 +179,7 @@ test("compact map chrome shares one overlay clearance with degraded and utility 
   assert.match(css, /\.map-source-status\s*\{[^}]*top:\s*var\(--map-overlay-top\)/s);
   assert.match(css, /\.map-tool-rail\s*\{[^}]*top:\s*var\(--map-overlay-top\)/s);
   assert.match(root, /--global-header-height:\s*54px/);
-  assert.match(root, /--mobile-header-height:\s*96px/);
+  assert.match(root, /--mobile-header-height:\s*54px/);
   assert.match(root, /--topbar:\s*var\(--global-header-height\)/);
   assert.match(css, /@media \(max-width: 760px\) \{\s*:root \{ --topbar: var\(--mobile-header-height\); \}/);
   assert.doesNotMatch(css, /map-command-bar|map-view-mode-strip|map-control-strip/);

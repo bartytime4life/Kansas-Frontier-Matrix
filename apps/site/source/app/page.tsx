@@ -3979,7 +3979,7 @@ export default function Home() {
   const closeRepository = useCallback(() => {
     setRepositoryOpen(false);
     setCurrentWorkspace(rightOpen && selectedRef.current ? "trust" : "explore");
-    window.setTimeout(() => repositoryButtonRef.current?.focus(), 0);
+    window.setTimeout(() => (repositoryButtonRef.current?.closest("details")?.querySelector<HTMLElement>("summary") ?? repositoryButtonRef.current)?.focus(), 0);
   }, [rightOpen]);
 
   const closeRightPanel = useCallback(() => {
@@ -4023,7 +4023,7 @@ export default function Home() {
       const targetIsUsable = returnTarget?.isConnected
         && !returnTarget.closest("[inert]")
         && returnTarget.getClientRects().length > 0;
-      (targetIsUsable ? returnTarget : mapContainerRef.current)?.focus({ preventScroll: true });
+      (targetIsUsable ? returnTarget : returnTarget?.closest("details")?.querySelector<HTMLElement>("summary") ?? mapContainerRef.current)?.focus({ preventScroll: true });
     }, 0);
   }, []);
 
@@ -8056,6 +8056,17 @@ export default function Home() {
     }}>{instrument === "river" ? "River Pulse" : instrument === "radar" ? "Radar Loop" : "Lightning"}</button>)}
   </nav> : null;
 
+  const mapRepresentationControls = () => <>
+              <button type="button" aria-label="Underground Logs & sections" title="Underground Logs & sections" aria-pressed={undergroundOpen} onClick={() => { if (!undergroundOpen) activateMapRepresentation("2d"); setUndergroundOpen(v => !v); setSubsurfacePrivate(v => v || locationCameraRedacted || locationDerivedViewRef.current); setTimelineOpen(false); setLeftOpen(false); setRightOpen(false); setMapUtilityOpen(false); }}><b>Underground</b><span className="sr-only">Logs &amp; sections</span></button>
+              <button type="button" aria-pressed={projection === "mercator" && scenePreset !== "elevation-3d"} data-active={projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => activateMapRepresentation("2d")}><b>2D</b><span>Map</span></button>
+              <button type="button" aria-pressed={scenePreset === "elevation-3d"} data-active={scenePreset === "elevation-3d"} onClick={() => { setUndergroundOpen(false); activateMapRepresentation("terrain"); }}><b>Terrain 3D</b><span>{verticalExaggeration.toFixed(1)}×</span></button>
+              {scenePreset === "elevation-3d" && <output className="terrain-mode-source" data-state={terrainState.toLowerCase()} aria-live="polite">{terrainProvider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} · {terrainState === "READY" && attachedTerrainProviderRef.current === terrainProvider ? "DEM ready" : terrainState === "ERROR" ? "DEM unavailable" : "DEM loading"}{terrainProvider === "mapzen" && terrainState === "READY" && view.zoom > TERRARIUM_RENDER_MAX_ZOOM ? ` · coarse beyond z${TERRARIUM_RENDER_MAX_ZOOM}` : ""}</output>}
+              {scenePreset === "elevation-3d" && terrainProvider === "usgs-3dep" && terrainState === "ERROR" && <button className="terrain-mode-action" type="button" onClick={() => chooseTerrainProvider("mapzen")}>Use display DEM</button>}
+              {scenePreset === "elevation-3d" && terrainState === "READY" && basemap === "topo" && view.pitch < 56 && <button className="terrain-mode-action" type="button" onClick={() => orientSceneCamera(58, view.bearing)}>Oblique view ↗</button>}
+              <button type="button" aria-pressed={projection === "globe"} data-active={projection === "globe"} onClick={() => { setUndergroundOpen(false); activateMapRepresentation("globe"); }}><b>Globe</b><span>◎</span></button>
+              <button type="button" aria-pressed={mapUtilityOpen && mapUtilityView === "compare"} data-active={mapUtilityOpen && mapUtilityView === "compare"} onClick={() => mapUtilityOpen && mapUtilityView === "compare" ? closeMapUtility() : activateMapRepresentation("compare")}><b>Compare</b><span>A/B</span></button>
+  </>;
+
   return (
     <div className="site-root">
       <a className="skip-link" href="#map-canvas">Skip to the map</a>
@@ -8076,13 +8087,44 @@ export default function Home() {
             {searchResults.length === 0 && <p>No current place, layer, feature, or official source matches.</p>}
           </div>}
         </div>
-        <nav className="header-workflows" aria-label="Primary Explorer actions">
-          <button type="button" title="Return focus to the map" aria-current={primaryWorkspace === "map" ? "page" : undefined} onClick={returnToPrimaryMap}><span aria-hidden="true">⌖</span>Map</button>
-          <button type="button" title="Open the report workspace · shortcut R opens map report controls" aria-current={primaryWorkspace === "reports" ? "page" : undefined} onClick={() => openPrimaryWorkspace("reports")}>Reports</button>
-          <button type="button" title="Open guided stories" aria-current={primaryWorkspace === "stories" ? "page" : undefined} onClick={() => openPrimaryWorkspace("stories")}>Stories</button>
-        </nav>
+          <nav className="map-chrome-dock" aria-label="Map view and controls">
+          <span className="map-dock-context sr-only" title={`Current area: ${selectedLabel} · ${temporalScopeLabel}`}><strong>{selectedLabel}</strong><small>{temporalScopeLabel}{buildYearCurrent ? "" : " · build out of date"}</small></span>
+            <div className="map-dock-representations" role="group" aria-label="Map representation">
+              {mapRepresentationControls()}
+            </div>
+            <div className="map-dock-actions" role="group" aria-label="Quick map controls">
+              <button className="map-dock-action" type="button" aria-pressed={timelineOpen} onClick={() => setTimelineOpen((open) => !open)}><strong>Time</strong><b>{formatTimelineStep(year)}</b></button>
+              <button className="map-dock-action" type="button" onClick={() => openAtlasPanel("layers")} aria-pressed={leftOpen && leftPanelMode === "layers"} title="Open map layers"><span aria-hidden="true">≡</span><strong>Layers</strong><b>{selectedMapLayerCount}</b></button>
+              <button className="map-dock-action" type="button" onClick={() => openAtlasPanel("places")} aria-pressed={leftOpen && leftPanelMode === "places"}><strong>Places</strong><b>{savedWorkspaces.length}</b></button>
+              <label className="map-dock-basemap map-dock-wide-only"><span>Basemap</span><select value={basemap} onChange={(event) => setBasemap(event.target.value as BasemapKey)} aria-label="Choose basemap style">{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title}</option>)}</select></label>
+              <button className="map-dock-action map-dock-wide-only" type="button" onClick={(event) => openMapUtility("navigate", event.currentTarget)}><span aria-hidden="true">⌖</span><strong>Controls</strong></button>
+              <details className="map-dock-menu map-dock-map-menu" name="map-dock-menu" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) event.currentTarget.open = false; }} onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
+                <summary aria-label="Map views and controls">Map <span aria-hidden="true">⌄</span></summary>
+                <div className="map-dock-menu-panel">
+                  <div className="map-dock-menu-representations" role="group" aria-label="Map representation" onClick={(event) => { if ((event.target as HTMLElement).closest("button")) closeHeaderOverflow(event.currentTarget); }}>
+                    {mapRepresentationControls()}
+                  </div>
+                  <div className="map-dock-menu-quick" role="group" aria-label="Quick map controls">
+                    <button type="button" aria-pressed={timelineOpen} onClick={(event) => { closeHeaderOverflow(event.currentTarget); setTimelineOpen((open) => !open); }}>Time · {formatTimelineStep(year)}</button>
+                    <button type="button" aria-pressed={leftOpen && leftPanelMode === "layers"} onClick={(event) => { closeHeaderOverflow(event.currentTarget); openAtlasPanel("layers"); }}>Layers · {selectedMapLayerCount}</button>
+                    <button type="button" aria-pressed={leftOpen && leftPanelMode === "places"} onClick={(event) => { closeHeaderOverflow(event.currentTarget); openAtlasPanel("places"); }}>Places · {savedWorkspaces.length}</button>
+                  </div>
+                  <button className="map-dock-compact-only" type="button" onClick={(event) => { event.currentTarget.closest("details")?.removeAttribute("open"); openMapSettings(); }}><strong>Style &amp; basemap</strong><small>Rendering quality, terrain, and background</small></button>
+                  <button className="map-dock-compact-only" type="button" onClick={(event) => { const summary = event.currentTarget.closest("details")?.querySelector<HTMLElement>("summary"); event.currentTarget.closest("details")?.removeAttribute("open"); openMapUtility("navigate", summary); }}><strong>Map controls</strong><small>Coordinates, camera, and navigation</small></button>
+                </div>
+              </details>
+            </div>
+          </nav>
         <div className="top-actions">
           <DataNotices issues={sourceIssues} onRetry={retryOfficialLayer} onHide={id => setOfficialContextVisible(id, false)} />
+          <details className="header-overflow-menu" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) event.currentTarget.open = false; }} onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
+            <summary aria-label="More site actions" title="More site actions">More <span aria-hidden="true">⌄</span></summary>
+            <div className="header-overflow-panel">
+              <div className="header-overflow-workspaces" role="group" aria-label="Primary Explorer actions">
+                <button type="button" aria-current={primaryWorkspace === "map" ? "page" : undefined} onClick={(event) => { event.currentTarget.closest("details")?.removeAttribute("open"); returnToPrimaryMap(); }}>Map</button>
+                <button type="button" aria-current={primaryWorkspace === "reports" ? "page" : undefined} onClick={(event) => { openPrimaryWorkspace("reports"); closeHeaderOverflow(event.currentTarget); }}>Reports</button>
+                <button type="button" aria-current={primaryWorkspace === "stories" ? "page" : undefined} onClick={(event) => { openPrimaryWorkspace("stories"); closeHeaderOverflow(event.currentTarget); }}>Stories</button>
+              </div>
           <div className="map-context-composer">
             <button ref={composerTriggerRef} className="new-from-map-action" type="button" aria-expanded={mapContextOpen} aria-controls="map-context-card" onClick={() => { setMapContextOpen((current) => !current); setHelpOpen(false); }} title="Create from the current map context"><span aria-hidden="true">＋</span><span className="new-from-map-label">Compose</span><span className="new-from-map-caret" aria-hidden="true">⌄</span></button>
             {mapContextOpen && <aside ref={composerRef} id="map-context-card" className="map-context-card" role="dialog" aria-modal="false" aria-labelledby="map-context-title">
@@ -8113,24 +8155,12 @@ export default function Home() {
             </aside>}
           </div>
           <button ref={repositoryButtonRef} className="status-header-action" type="button" onClick={() => { setRepositoryView("updates"); setRepositoryOpen(true); }} aria-expanded={repositoryOpen} aria-controls="repository-briefing" title="Check Site, data, and repository connections"><span aria-hidden="true">⌁</span><span>Status</span></button>
-          <details className="header-overflow-menu" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) event.currentTarget.open = false; }} onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
-            <summary aria-label="More site actions" title="More site actions">•••</summary>
-            <div className="header-overflow-panel">
-              <div className="header-overflow-workspaces" role="group" aria-label="Primary Explorer actions">
-                <button type="button" aria-current={primaryWorkspace === "map" ? "page" : undefined} onClick={(event) => { event.currentTarget.closest("details")?.removeAttribute("open"); returnToPrimaryMap(); }}>Map</button>
-                <button type="button" aria-current={primaryWorkspace === "reports" ? "page" : undefined} onClick={(event) => { openPrimaryWorkspace("reports"); closeHeaderOverflow(event.currentTarget); }}>Reports</button>
-                <button type="button" aria-current={primaryWorkspace === "stories" ? "page" : undefined} onClick={(event) => { openPrimaryWorkspace("stories"); closeHeaderOverflow(event.currentTarget); }}>Stories</button>
-              </div>
               <button className="share-action" type="button" onClick={(event) => { closeHeaderOverflow(event.currentTarget); void shareView(); }}>Share current view</button>
               <Link className="about-action" href="/about">About</Link>
             </div>
           </details>
         </div>
-        <nav className="mobile-primary-tabs" aria-label="Primary Explorer workspaces">
-          <button type="button" aria-current={primaryWorkspace === "map" ? "page" : undefined} onClick={returnToPrimaryMap}>Map</button>
-          <button type="button" aria-current={primaryWorkspace === "reports" ? "page" : undefined} onClick={() => openPrimaryWorkspace("reports")}>Reports</button>
-          <button type="button" aria-current={primaryWorkspace === "stories" ? "page" : undefined} onClick={() => openPrimaryWorkspace("stories")}>Stories</button>
-        </nav>
+
         {helpOpen && <aside className="map-guide" role="dialog" aria-modal="false" aria-label="Map guide">
           <button className="icon-close" type="button" onClick={() => setHelpOpen(false)} aria-label="Close map guide">×</button>
           <p className="panel-kicker">MAP GUIDE</p><h2>Explore a feature, then check what supports it.</h2>
@@ -8181,7 +8211,7 @@ export default function Home() {
                 })}
               </div>
               <div className="status-map-links">
-                <button type="button" aria-expanded={sourceStatusOpen} aria-controls="map-source-status" onClick={() => { setRepositoryOpen(false); openSourceStatus(repositoryButtonRef.current); }}><strong>Source status</strong><small>Freshness, limits, and recovery</small></button>
+                <button type="button" aria-expanded={sourceStatusOpen} aria-controls="map-source-status" onClick={() => { setRepositoryOpen(false); openSourceStatus(repositoryButtonRef.current?.closest("details")?.querySelector<HTMLElement>("summary")); }}><strong>Source status</strong><small>Freshness, limits, and recovery</small></button>
                 <button type="button" aria-pressed={instrumentOpen} onClick={() => { setRepositoryOpen(false); setInstrumentOpen((open) => !open); setCurrentWorkspace("explore"); window.requestAnimationFrame(() => mapContainerRef.current?.focus({ preventScroll: true })); }}><strong>Live controls</strong><small>River, radar, and lightning playback</small></button>
                 <button type="button" onClick={() => window.location.assign("/")} title={`Open a fresh baseline for ${baselineDay} UTC`}><strong>Today’s baseline</strong><small>Reset to the current daily view</small></button>
               </div>
@@ -8693,33 +8723,7 @@ export default function Home() {
         </aside>
 
         <section className="map-stage" data-underground={undergroundOpen ? "true" : undefined} data-live-dock={liveDockVisible || glmFlashesEnabled} data-radar-loop={showRadarDock} data-raster-fallback={runtime.kind === "unsupported" && earthEngineContext.manifests.length > 0} aria-label="Kansas MapLibre Explorer">
-          <nav className="map-chrome-dock" aria-label="Map view and controls">
-            <span className="map-dock-context" title={`Current area: ${selectedLabel} · ${temporalScopeLabel}`}><strong>{selectedLabel}</strong><small>{temporalScopeLabel}{buildYearCurrent ? "" : " · build out of date"}</small></span>
-            <div className="map-dock-representations" role="group" aria-label="Map representation">
-              <button type="button" aria-label="Underground Logs & sections" title="Underground Logs & sections" aria-pressed={undergroundOpen} onClick={() => { if (!undergroundOpen) activateMapRepresentation("2d"); setUndergroundOpen(v => !v); setSubsurfacePrivate(v => v || locationCameraRedacted || locationDerivedViewRef.current); setTimelineOpen(false); setLeftOpen(false); setRightOpen(false); setMapUtilityOpen(false); }}><b>Underground</b><span className="sr-only">Logs &amp; sections</span></button>
-              <button type="button" aria-pressed={projection === "mercator" && scenePreset !== "elevation-3d"} data-active={projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => activateMapRepresentation("2d")}><b>2D</b><span>Map</span></button>
-              <button type="button" aria-pressed={scenePreset === "elevation-3d"} data-active={scenePreset === "elevation-3d"} onClick={() => { setUndergroundOpen(false); activateMapRepresentation("terrain"); }}><b>Terrain 3D</b><span>{verticalExaggeration.toFixed(1)}×</span></button>
-              {scenePreset === "elevation-3d" && <output className="terrain-mode-source" data-state={terrainState.toLowerCase()} aria-live="polite">{terrainProvider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} · {terrainState === "READY" && attachedTerrainProviderRef.current === terrainProvider ? "DEM ready" : terrainState === "ERROR" ? "DEM unavailable" : "DEM loading"}{terrainProvider === "mapzen" && terrainState === "READY" && view.zoom > TERRARIUM_RENDER_MAX_ZOOM ? ` · coarse beyond z${TERRARIUM_RENDER_MAX_ZOOM}` : ""}</output>}
-              {scenePreset === "elevation-3d" && terrainProvider === "usgs-3dep" && terrainState === "ERROR" && <button className="terrain-mode-action" type="button" onClick={() => chooseTerrainProvider("mapzen")}>Use display DEM</button>}
-              {scenePreset === "elevation-3d" && terrainState === "READY" && basemap === "topo" && view.pitch < 56 && <button className="terrain-mode-action" type="button" onClick={() => orientSceneCamera(58, view.bearing)}>Oblique view ↗</button>}
-              <button type="button" aria-pressed={projection === "globe"} data-active={projection === "globe"} onClick={() => { setUndergroundOpen(false); activateMapRepresentation("globe"); }}><b>Globe</b><span>◎</span></button>
-              <button type="button" aria-pressed={mapUtilityOpen && mapUtilityView === "compare"} data-active={mapUtilityOpen && mapUtilityView === "compare"} onClick={() => mapUtilityOpen && mapUtilityView === "compare" ? closeMapUtility() : activateMapRepresentation("compare")}><b>Compare</b><span>A/B</span></button>
-            </div>
-            <div className="map-dock-actions" role="group" aria-label="Quick map controls">
-              <button className="map-dock-action" type="button" aria-pressed={timelineOpen} onClick={() => setTimelineOpen((open) => !open)}><strong>Time</strong><b>{formatTimelineStep(year)}</b></button>
-              <button className="map-dock-action" type="button" onClick={() => openAtlasPanel("layers")} aria-pressed={leftOpen && leftPanelMode === "layers"} title="Open map layers"><span aria-hidden="true">≡</span><strong>Layers</strong><b>{selectedMapLayerCount}</b></button>
-              <button className="map-dock-action" type="button" onClick={() => openAtlasPanel("places")} aria-pressed={leftOpen && leftPanelMode === "places"}><strong>Places</strong><b>{savedWorkspaces.length}</b></button>
-              <label className="map-dock-basemap map-dock-wide-only"><span>Basemap</span><select value={basemap} onChange={(event) => setBasemap(event.target.value as BasemapKey)} aria-label="Choose basemap style">{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title}</option>)}</select></label>
-              <button className="map-dock-action map-dock-wide-only" type="button" onClick={(event) => openMapUtility("navigate", event.currentTarget)}><span aria-hidden="true">⌖</span><strong>Controls</strong></button>
-              <details className="map-dock-menu map-dock-map-menu" name="map-dock-menu" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) event.currentTarget.open = false; }} onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
-                <summary>Map <span aria-hidden="true">⌄</span></summary>
-                <div className="map-dock-menu-panel">
-                  <button className="map-dock-compact-only" type="button" onClick={(event) => { event.currentTarget.closest("details")?.removeAttribute("open"); openMapSettings(); }}><strong>Style &amp; basemap</strong><small>Rendering quality, terrain, and background</small></button>
-                  <button className="map-dock-compact-only" type="button" onClick={(event) => { const summary = event.currentTarget.closest("details")?.querySelector<HTMLElement>("summary"); event.currentTarget.closest("details")?.removeAttribute("open"); openMapUtility("navigate", summary); }}><strong>Map controls</strong><small>Coordinates, camera, and navigation</small></button>
-                </div>
-              </details>
-            </div>
-          </nav>
+
           {sourceStatusOpen && <aside ref={sourceStatusPanelRef} id="map-source-status" className="map-source-status" aria-label="Source status and data quality">
             <header><h2>Sources & data quality</h2><button type="button" onClick={() => closeSourceStatus()} aria-label="Close source status">×</button></header>
             <p>Today · {baselineDay} UTC. Live observations refresh as providers publish. County counts keep their Census edition, and historical gaps remain visible.</p>
