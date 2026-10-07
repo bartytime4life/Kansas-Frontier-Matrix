@@ -111,3 +111,50 @@ checks, not browser acceptance. The v160 repair session's browser attempt was de
 its admin-enforced security check was unavailable; visual, touch and device WebGL
 acceptance remain unverified. Rollback is the saved v159 application version;
 no data or schema rollback is required.
+
+## Immersive cutaway presentation — 2026-10-06
+
+This presentation starts from saved private Site v166, source
+`a4d6b3dc69721fbfb270906a9ff3e44dd941d5c0`. The **3D cutaway** label replaces
+Aquifer shape while its saved `aquifer` value remains compatible. The single
+54 px toolbar is preserved. A full-height charcoal workspace puts the scene
+before location forms, record time, source rights, and export controls. The
+live, north-up 2D locator is an inset with its original attribution disclosure;
+map effects retain the same inset bounds. The inset withdraws while scrolling
+to lower controls. Alternate underground displays keep their resizable locator
+and panel arrangement.
+
+**Explore this area** focuses the current map center at zoom 12; **High Plains
+example** provides the existing western Kansas example. Source-colored record
+columns descend from a captured, flat locator plane into a dark inspection
+frame. Copper frame edges and metre depth guides describe display extent, not
+geology. Columns use a readable screen-space diagram width (not a physical
+well diameter), preserve original interval heights, and highlight the picked
+record. Projected depth labels retain readable text size as the camera moves.
+The caption and camera controls occupy a separate band outside the renderer. Dark space is explicitly unobserved; no continuous layers or cave
+geometry are inferred. The current basemap supplies the optional map image.
+The compact appearance console exposes independent surface/aquifer opacity,
+vertical exaggeration, record visibility, source-range inspection, and refresh.
+Camera presets, rotation and zoom have button alternatives. Selecting a log
+continues to open its original interval in the Evidence Drawer.
+
+The renderer measures its actual scene container. Camera fitting includes both
+plotted log depths and aquifer depths, accounts for mobile aspect ratios, and
+updates its near/far planes when resized or vertically rescaled. Record plotting
+retains source interval objects and measured units, gaps and overlaps, existing
+50-record/400-interval budgets, and the existing aquifer-plus-50-metre / 500-metre
+clipping limits. A pure helper in `app/cutaway-model.ts` supplies these bounded
+display intervals and camera fitting; tests cover depth-only scenes, invalid or
+out-of-extent rows, clipping without source mutation, budgets and extreme camera
+fits. This is an application display responsibility under the same Directory
+Rules / ADR-0029 basis above, with regressions under `tests/` and the monorepo
+mirror under `apps/site/source`.
+
+No ground elevation datum, deviation survey, continuous lithology or qualified
+cave model has been introduced. Aquifer geometry remains fixed to 2022–2024;
+record-time controls filter eligible records only. Geometry still renders when
+an optional surface image fails. No new dataset, admission, external request,
+storage key, schema, dependency or binding is introduced. Saved v166 is the
+application rollback point. Production and browser validation are recorded by
+the delivery review; this authoring record does not claim deployment or browser
+acceptance. Older browser-blocked statements above describe their dated sessions.

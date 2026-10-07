@@ -1,0 +1,405 @@
+{
+  "profile": "kfm.site-feature-delta/v1",
+  "authority": "REVIEW_ONLY",
+  "created_at": "2026-10-07T05:19:55.001389Z",
+  "owning_root": "data/",
+  "responsibility": "Exact source comparison and bounded delivery validation; not independent review or dataset release approval.",
+  "directory_basis": [
+    "docs/doctrine/directory-rules.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "site_project_id": "appgprj_6aa0b1c41bc08191bfd86003920f1631",
+  "site_base_version": 166,
+  "site_base_commit": "a4d6b3dc69721fbfb270906a9ff3e44dd941d5c0",
+  "site_candidate_commit": "c74ca07a33f742eecef5461f13769167df3e1d9d",
+  "github_branch_base_commit": "3ad031ee05b8efe3ee4e06014b14cb0d08093e5f",
+  "latest_remote_main_observed": "c17013dfc0f6a227b17ab336590eef4c7ba9f2fb",
+  "remote_main_overlap_check": {
+    "outcome": "NO_SCOPE_OVERLAP",
+    "changed_path": "tools/readiness/run_lane.py",
+    "evidence": "Read-only GitHub compare from branch base to observed current main; root retained reviewed branch base."
+  },
+  "destination": "apps/site/source",
+  "application_method": "Eleven exact source paths mirrored in two guarded steps: v167 authoring then two-file startup correction. Existing owned work and README hashes verified before the correction; unowned or staged drift is refused.",
+  "counts": {
+    "changed_paths": 11,
+    "updated_paths": 9,
+    "new_paths": 2,
+    "deleted_paths": 0
+  },
+  "files": {
+    "app/aquifer-view-session.ts": {
+      "github_base_sha256": "14f13ff3c1fcc8a8d17f67df254b27aaecc73825d769170531c213ab4884da40",
+      "site_base_sha256": "14f13ff3c1fcc8a8d17f67df254b27aaecc73825d769170531c213ab4884da40",
+      "github_result_sha256": "44ddec6e320410ad6350f5dae1c23a2c552444f7d7a2aeb36192b9e1f35d2d3b",
+      "site_source_sha256": "44ddec6e320410ad6350f5dae1c23a2c552444f7d7a2aeb36192b9e1f35d2d3b"
+    },
+    "app/aquifer-volume-view.tsx": {
+      "github_base_sha256": "ae61e59f80c566d9d67e764df05b47b3ed838dc9c6da17fdc672bc531d1ac026",
+      "site_base_sha256": "ae61e59f80c566d9d67e764df05b47b3ed838dc9c6da17fdc672bc531d1ac026",
+      "github_result_sha256": "3ea80a25109c132aa0391ac35c5e9de592b647526cc78c0d20662457c20ae149",
+      "site_source_sha256": "3ea80a25109c132aa0391ac35c5e9de592b647526cc78c0d20662457c20ae149"
+    },
+    "app/cutaway-model.ts": {
+      "github_base_sha256": null,
+      "site_base_sha256": null,
+      "github_result_sha256": "7bbd5acc308f16bd7ec697c8cad8e5e44d8bd012aab424fa4c03b46e2363b624",
+      "site_source_sha256": "7bbd5acc308f16bd7ec697c8cad8e5e44d8bd012aab424fa4c03b46e2363b624"
+    },
+    "app/globals.css": {
+      "github_base_sha256": "cdb3ce8a3314914d24d95eecbac141ba79289869da728fc6c5182b1440ca8f25",
+      "site_base_sha256": "cdb3ce8a3314914d24d95eecbac141ba79289869da728fc6c5182b1440ca8f25",
+      "github_result_sha256": "441bcf55f6f1d566de8df0d4474bb524caf18e08f937aa5f2279e653b7edbb5f",
+      "site_source_sha256": "441bcf55f6f1d566de8df0d4474bb524caf18e08f937aa5f2279e653b7edbb5f"
+    },
+    "app/subsurface.module.css": {
+      "github_base_sha256": "3a85300b429b16db61461b572a0f8d893fe20702fb78171f853bfe1888b22d17",
+      "site_base_sha256": "3a85300b429b16db61461b572a0f8d893fe20702fb78171f853bfe1888b22d17",
+      "github_result_sha256": "2dfc12f494688ac51666cf5706f73a311e3c3fd8d3d29cc60a24484141aef323",
+      "site_source_sha256": "2dfc12f494688ac51666cf5706f73a311e3c3fd8d3d29cc60a24484141aef323"
+    },
+    "app/underground-panel.tsx": {
+      "github_base_sha256": "62131e363ef307adc447234659ca9c0cbe1b151408fff7227922c284c76e0fad",
+      "site_base_sha256": "62131e363ef307adc447234659ca9c0cbe1b151408fff7227922c284c76e0fad",
+      "github_result_sha256": "32210692406f9581b1306f7c696d0df822f43eebda9c6ee039352e4d85a91c8f",
+      "site_source_sha256": "32210692406f9581b1306f7c696d0df822f43eebda9c6ee039352e4d85a91c8f"
+    },
+    "docs/SITE_PRESERVATION.md": {
+      "github_base_sha256": "6552d9f21e18d47dbb92bb17005636c3f5f46cb2c2391b128066f4fb7f4065b6",
+      "site_base_sha256": "6552d9f21e18d47dbb92bb17005636c3f5f46cb2c2391b128066f4fb7f4065b6",
+      "github_result_sha256": "4e1f4e6957384a36ab2e5d64a3597626e29411905024cee32a89c7fee47525f5",
+      "site_source_sha256": "4e1f4e6957384a36ab2e5d64a3597626e29411905024cee32a89c7fee47525f5"
+    },
+    "docs/underground-explorer.md": {
+      "github_base_sha256": "5108cb9b0b79e8a4397b1fc0e0626d0567b5ccccb2aa835158594e99c59b3d49",
+      "site_base_sha256": "5108cb9b0b79e8a4397b1fc0e0626d0567b5ccccb2aa835158594e99c59b3d49",
+      "github_result_sha256": "e5b303a7300952fc6524733e327cf4f24e7dd3e53a2e7266f6db05c7b341821d",
+      "site_source_sha256": "e5b303a7300952fc6524733e327cf4f24e7dd3e53a2e7266f6db05c7b341821d"
+    },
+    "scripts/verify-explorer-geometry.mjs": {
+      "github_base_sha256": "abf3746655763ec04d454ccc1cbb4cb87a2a91c359b75555633c53ceab18033e",
+      "site_base_sha256": "2bb1ebb311c2db22d9df5999c28720e99306e503ec226a17ab539bc7e9bfc208",
+      "github_result_sha256": "bd6b9963cbc26be6e5ce5d2dc2859c06442c115dd83837afb813906f13edc4b8",
+      "site_source_sha256": "bd6b9963cbc26be6e5ce5d2dc2859c06442c115dd83837afb813906f13edc4b8"
+    },
+    "tests/aquifer-view-session.test.mjs": {
+      "github_base_sha256": "45c417e5b91865b88610ecf332fd7a27b1fb6be502f31426900da2ea5c731795",
+      "site_base_sha256": "45c417e5b91865b88610ecf332fd7a27b1fb6be502f31426900da2ea5c731795",
+      "github_result_sha256": "0c336ff701d305927280fcf1da9235e18d615fefd8037b6c60acf78249ec4319",
+      "site_source_sha256": "0c336ff701d305927280fcf1da9235e18d615fefd8037b6c60acf78249ec4319"
+    },
+    "tests/cutaway-model.test.mjs": {
+      "github_base_sha256": null,
+      "site_base_sha256": null,
+      "github_result_sha256": "5a63a73a00f1ea87052cdfbb5769894a5edca5cd19c5ad134bfc25df878ecfa8",
+      "site_source_sha256": "5a63a73a00f1ea87052cdfbb5769894a5edca5cd19c5ad134bfc25df878ecfa8"
+    }
+  },
+  "incoming_repository_helper": {
+    "commit": "c0be1c1027291556b3cfd90725cea146f7ec6fee",
+    "path": "scripts/verify-explorer-geometry.mjs",
+    "before_sha256": "abf3746655763ec04d454ccc1cbb4cb87a2a91c359b75555633c53ceab18033e",
+    "resolution": "Static mode/predicate pairs preserve the CodeQL sanitization intent while retaining one-argument waitFor and its numeric default timeout."
+  },
+  "exact_source_comparison": {
+    "source_commit": "c74ca07a33f742eecef5461f13769167df3e1d9d",
+    "source_dirty": false,
+    "mirrored_paths": 701,
+    "remaining_differences": 0,
+    "missing_paths": 0,
+    "unexpected_paths": 0,
+    "path_and_content_inventory_sha256": "197153df4bedcbfb0c40872cc153d4db5a99c40e52b6c2bea03bddb9953fb9b1",
+    "inventory_encoding": "SHA-256 of sorted compact JSON array of path and lowercase sha256, with sorted object keys."
+  },
+  "deployment": {
+    "site_version": 168,
+    "source_commit": "c74ca07a33f742eecef5461f13769167df3e1d9d",
+    "version_id": "appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_993d351487f08191a720183a08f6f430",
+    "deployment_id": "appgdep_6ac5d545037481918e7de0ed5222ac96",
+    "status": "succeeded",
+    "completed_at": "2026-10-07T05:14:56Z",
+    "audience": "owner-private existing audience retained",
+    "local_deployment_archive_sha256": "7327bd8ee1ccc84348f3a868c1e019e8fc07f26ef96456858d0be341936f4185",
+    "platform_canonical_tar_content_sha256": "96a20787c1a8e8e6748544f5863df02503fe420592785d8354fa032c17f29672",
+    "platform_files": 378,
+    "platform_bytes": 48599040,
+    "evidence": "Root native Sites readback. Local archive and canonical tar-content digests identify different packaging forms; byte equality is not asserted."
+  },
+  "application_validation": {
+    "evidence": "Root validation of the final corrected standalone source. Full mirror parity permits explicit reuse without duplicate application runs in this checkout.",
+    "production_build": "PASS",
+    "typescript": "PASS",
+    "node_tests": {
+      "passed": 563,
+      "failed": 0,
+      "skipped": 0
+    },
+    "lint": {
+      "errors": 0,
+      "inherited_warnings": 46
+    },
+    "independent_startup_review": {
+      "passed": 12,
+      "failed": 0
+    },
+    "geometry_verifier": "Syntax and isolated fake-DOM transition/timeout checks passed; no full CDP verifier execution claimed."
+  },
+  "browser_validation": {
+    "evidence": "Root-controlled browser observations and captures; independent design evaluator reviewed those captures.",
+    "viewports_px": [
+      [
+        1440,
+        900
+      ],
+      [
+        1280,
+        720
+      ],
+      [
+        375,
+        812
+      ]
+    ],
+    "horizontal_document_overflow": false,
+    "mobile_camera_minimum_target_px": 44,
+    "interactions_observed": [
+      "Top, Side, Reset camera controls",
+      "opacity control",
+      "actual source-column picking opens original Evidence Drawer interval"
+    ],
+    "picked_record": {
+      "id": "WWC5465949",
+      "original_interval_ft": [
+        56,
+        68
+      ]
+    },
+    "high_plains_observation": {
+      "tiles_ready": 4,
+      "tiles_expected": 4,
+      "eligible_records": 1051,
+      "loaded_records": 50,
+      "desktop_columns": 3,
+      "mobile_columns": 1
+    },
+    "design_evaluation": "PASS",
+    "correction_observation": {
+      "state": "PASS",
+      "sequence": [
+        "hosted reload",
+        "Terrain 3D",
+        "Underground",
+        "High Plains example"
+      ],
+      "visible_columns": 3,
+      "visible_aquifer_ranges": 1,
+      "surface": "captured locator image",
+      "new_console_errors_after_utc": "none after 2026-10-07T05:14:56Z"
+    },
+    "limit": "Bounded layouts and interactions; not full accessibility, touch, device WebGL or independent human acceptance."
+  },
+  "superseded_delivery": {
+    "site_version": 167,
+    "source_commit": "5623908f94c4e58b9bbcab1529913f4273d1bd7a",
+    "status": "SUPERSEDED_BY_V168",
+    "reason": "Hosted startup exposed a projection read before the map style was available when entering Underground from persisted Terrain 3D. The v168 session readiness guard and regression checks correct that condition. The preserved v167 source and local recovery receipts remain historical."
+  },
+  "local_installation": {
+    "state": "VERIFIED_ACTUAL_LOCAL_STORE_AND_RUNTIME",
+    "evidence": "Root guarded installation and browser readback; exact private installation/readback hashes independently verified in this delivery step.",
+    "site_version": 168,
+    "source_commit": "c74ca07a33f742eecef5461f13769167df3e1d9d",
+    "stable_alias_target": "KFM-Explorer-Site-v168",
+    "origin": "http://127.0.0.1:4173",
+    "physical_v109_state_retained": true,
+    "sqlite_checks_passed": 8,
+    "r2_blobs_verified": 15840,
+    "r2_blob_bytes_verified": 738852346,
+    "explorer_active": true,
+    "qwen_bridge": "READY",
+    "prism_pid_preserved": 11880,
+    "rehearsal_http_checks": 12,
+    "private_installation_receipt_sha256": "f29c8364948a3ef058213494f83dff32e13629441583a1c459e3f12fb8d3b10e",
+    "private_actual_readback_sha256": "000dbb6cb26c8874693cec440cfa8065243cbdeaa07ef944b8366269e7a26fd4",
+    "source_build_sha256": "cbb79d6c0f28ae0c54e55883ff0254168198d2984cd0259aa54bb14bd3d8f958",
+    "entry_sha256": "f961b649cceb7b518b62a3901d85b710a04ddf43e6ce871992414c814b50052d",
+    "config_sha256": "30a021f89bd857e1e85303f8f8ba70201f9925b237fbb58bebd4dac9df7f9cb1",
+    "browser_smoke": {
+      "outcome": "PASS",
+      "sequence": [
+        "reload local4173",
+        "Terrain3D",
+        "Underground",
+        "High Plains example"
+      ],
+      "visible_columns": 3,
+      "visible_aquifer_ranges": 1,
+      "surface": "captured locator image",
+      "new_console_errors_after_utc": "none after 2026-10-07T05:17:02Z",
+      "limit": "Root bounded visual/interaction smoke, not a full accessibility or keyboard audit."
+    }
+  },
+  "repository_validation": {
+    "documentation_links": {
+      "outcome": "PASS",
+      "reason": "Three changed Markdown documents and19 local targets pass;4 external targets classified unverified.",
+      "documents": 3,
+      "local_targets": 19,
+      "external_unverified": 4
+    },
+    "source_parity": {
+      "outcome": "PASS",
+      "source_commit": "c74ca07a33f742eecef5461f13769167df3e1d9d",
+      "paths": 701,
+      "remaining_differences": 0,
+      "unexpected_paths": 0
+    },
+    "whitespace": "PASS",
+    "repository_topology": {
+      "outcome": "FAIL",
+      "branch_base_commit": "3ad031ee05b8efe3ee4e06014b14cb0d08093e5f",
+      "base_and_candidate_failure_findings_identical": true,
+      "counts": {
+        "baselined_warning": 113,
+        "fail_invariant": 0,
+        "fail_new_drift": 6,
+        "finding": 119
+      },
+      "failures": [
+        {
+          "disposition": "FAIL_NEW_DRIFT",
+          "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+          "fingerprint": "sha256:94a86e4bf617c99cac21a7fa8c14f845d7b9c927cfd43402085a22bcc4bd2b4e",
+          "rule_id": "KFM-TOPO-017",
+          "subject": "artifacts/qa/reports/dp-15-inventory-20261007/classify.py"
+        },
+        {
+          "disposition": "FAIL_NEW_DRIFT",
+          "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+          "fingerprint": "sha256:5156d599303e36dab5765a45ea9d5f1a18f8822c8f8c7e52940a0d63d14822d6",
+          "rule_id": "KFM-TOPO-017",
+          "subject": "artifacts/qa/reports/dp-15-inventory-20261007/dp-declarations.json"
+        },
+        {
+          "disposition": "FAIL_NEW_DRIFT",
+          "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+          "fingerprint": "sha256:632c54df048ade863f12295591137838b0d10c23abbcdf6dc07613a7f8248b15",
+          "rule_id": "KFM-TOPO-017",
+          "subject": "artifacts/qa/reports/dp-15-inventory-20261007/hits.csv.gz"
+        },
+        {
+          "disposition": "FAIL_NEW_DRIFT",
+          "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+          "fingerprint": "sha256:8bd9c2d8c0255ba4fafe5c718cd0dfef47571cf1688d65dccefe7b2dbde9964d",
+          "rule_id": "KFM-TOPO-017",
+          "subject": "artifacts/qa/reports/dp-15-inventory-20261007/inventory.json.gz"
+        },
+        {
+          "disposition": "FAIL_NEW_DRIFT",
+          "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+          "fingerprint": "sha256:f8b30c168598bf0cb465452699fcdf0a738458c2ce3558d975ce63def27c5a61",
+          "rule_id": "KFM-TOPO-017",
+          "subject": "artifacts/qa/reports/dp-15-inventory-20261007/scan.py"
+        },
+        {
+          "disposition": "FAIL_NEW_DRIFT",
+          "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+          "fingerprint": "sha256:bbea9aa27fb2c21feca11e2ccdcc66a6eb46dfa7f9195c64823e27730807878f",
+          "rule_id": "KFM-TOPO-017",
+          "subject": "artifacts/qa/reports/dp-15-inventory-20261007/summary.json"
+        }
+      ],
+      "attribution": "Six unchanged KFM-TOPO-017 findings from existing DP-15 inventory payloads; no new source/docs/receipt failure. No baseline waiver modified."
+    },
+    "historical_mirror_check": {
+      "outcome": "FAIL",
+      "reason_code": "MIRROR_REVIEW_REQUIRED",
+      "review_hold_preserved": true
+    },
+    "generated_receipt": "PASS;13finalartifactbindings;human_reviewpending",
+    "historical_v166_generated_receipt_replay": "PASS atf07d1ad413f71b68fc3b33e91a41421d9f8099f9"
+  },
+  "inherited_repository_findings": {
+    "branch_base_commit": "3ad031ee05b8efe3ee4e06014b14cb0d08093e5f",
+    "topology_counts": {
+      "baselined_warning": 113,
+      "fail_invariant": 0,
+      "fail_new_drift": 6,
+      "finding": 119
+    },
+    "topology_failures": [
+      {
+        "disposition": "FAIL_NEW_DRIFT",
+        "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+        "fingerprint": "sha256:94a86e4bf617c99cac21a7fa8c14f845d7b9c927cfd43402085a22bcc4bd2b4e",
+        "rule_id": "KFM-TOPO-017",
+        "subject": "artifacts/qa/reports/dp-15-inventory-20261007/classify.py"
+      },
+      {
+        "disposition": "FAIL_NEW_DRIFT",
+        "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+        "fingerprint": "sha256:5156d599303e36dab5765a45ea9d5f1a18f8822c8f8c7e52940a0d63d14822d6",
+        "rule_id": "KFM-TOPO-017",
+        "subject": "artifacts/qa/reports/dp-15-inventory-20261007/dp-declarations.json"
+      },
+      {
+        "disposition": "FAIL_NEW_DRIFT",
+        "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+        "fingerprint": "sha256:632c54df048ade863f12295591137838b0d10c23abbcdf6dc07613a7f8248b15",
+        "rule_id": "KFM-TOPO-017",
+        "subject": "artifacts/qa/reports/dp-15-inventory-20261007/hits.csv.gz"
+      },
+      {
+        "disposition": "FAIL_NEW_DRIFT",
+        "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+        "fingerprint": "sha256:8bd9c2d8c0255ba4fafe5c718cd0dfef47571cf1688d65dccefe7b2dbde9964d",
+        "rule_id": "KFM-TOPO-017",
+        "subject": "artifacts/qa/reports/dp-15-inventory-20261007/inventory.json.gz"
+      },
+      {
+        "disposition": "FAIL_NEW_DRIFT",
+        "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+        "fingerprint": "sha256:f8b30c168598bf0cb465452699fcdf0a738458c2ce3558d975ce63def27c5a61",
+        "rule_id": "KFM-TOPO-017",
+        "subject": "artifacts/qa/reports/dp-15-inventory-20261007/scan.py"
+      },
+      {
+        "disposition": "FAIL_NEW_DRIFT",
+        "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+        "fingerprint": "sha256:bbea9aa27fb2c21feca11e2ccdcc66a6eb46dfa7f9195c64823e27730807878f",
+        "rule_id": "KFM-TOPO-017",
+        "subject": "artifacts/qa/reports/dp-15-inventory-20261007/summary.json"
+      }
+    ],
+    "malformed_json": {
+      "path": "artifacts/qa/reports/dp-15-inventory-20261007/summary.json",
+      "line": 549,
+      "column": 20,
+      "result": "JSON parse failure inherited from branch base"
+    },
+    "historical_mirror_hold": "MIRROR_REVIEW_REQUIRED"
+  },
+  "historical_receipts": [
+    {
+      "path": "data/receipts/generated/site-mirror-v153-water-paths-candidate-20261005.json",
+      "sha256": "1d96d6e2c19c2aa736e836a4217fa0b3b15c82a0a22078ef52fddc0b93722bfa",
+      "unchanged": true
+    },
+    {
+      "path": "data/receipts/generated/site-v166-single-toolbar-20261006.json",
+      "sha256": "6103c0dc70d797a81859dbd97b9f985ad568efae631b3763918899400454d364",
+      "unchanged": true
+    },
+    {
+      "path": "data/receipts/generated/genrec-site-v166-single-toolbar-20261006.json",
+      "sha256": "210b0059d1064f0cec8757121905075463b1f455962d00b0a5bd40f32381fe23",
+      "unchanged": true
+    }
+  ],
+  "limits": [
+    "No provider payload, source asset, dependency lock, API, DB/R2 binding, persisted data, admission, activation or dataset release change.",
+    "Independent human review and exact-head GitHub CI remain pending.",
+    "Inherited topology and historical mirror failures are retained, not waived."
+  ],
+  "rollback": "Revert this bounded repository change while retaining historical receipts. Hosted application recovery independently selects saved v166. Local source rollback preserves the physical v109 data store and subsequent writes; no database restoration is implied."
+}

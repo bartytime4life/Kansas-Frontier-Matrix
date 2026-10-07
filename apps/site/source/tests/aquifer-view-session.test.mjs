@@ -10,19 +10,80 @@ const m = await import(modelUrl);
 const session = await import(moduleUrl(compile(await readFile('app/aquifer-view-session.ts','utf8')).replace('from "./aquifer-volume"', `from ${JSON.stringify(modelUrl)}`)));
 const meshes = await import(moduleUrl(compile(await readFile('app/aquifer-volume-mesh.ts','utf8')).replace('from "./aquifer-volume"', `from ${JSON.stringify(modelUrl)}`)));
 const bounds = [-100.8,38.3,-100.2,38.7];
-function harness({ready=false,failCapture=false,extent=bounds}={}) {
+function harness({ready=false,failCapture=false,extent=bounds,defaultTimers=false,configureMap=()=>{}}={}) {
   const listeners=new Map(),tasks=new Map(),requests=[],snapshots=[],statuses=[],surfaceStatuses=[];let timerId=0,captures=0;
   const map={ready,extent,moving:false,projection:'mercator', getPitch:()=>0,getBearing:()=>0,getProjection(){return {type:this.projection}},
     getBounds(){return {getWest:()=>this.extent[0],getSouth:()=>this.extent[1],getEast:()=>this.extent[2],getNorth:()=>this.extent[3]}},
     isMoving(){return this.moving},areTilesLoaded(){return this.ready},triggerRepaint(){this.emit('render')},
     on(event,fn){if(!listeners.has(event))listeners.set(event,new Set());listeners.get(event).add(fn)},off(event,fn){listeners.get(event)?.delete(fn)},emit(event){for(const fn of [...(listeners.get(event)??[])])fn()}};
+  configureMap(map);
   const worker={onmessage:null,onerror:null,postMessage:message=>requests.push(message)};
   const stop=session.startAquiferView({map,worker,onSnapshot:v=>snapshots.push(v),onStatus:v=>statuses.push(v),onSurfaceStatus:v=>surfaceStatuses.push(v),
     sampleSurface:()=>{captures++;if(failCapture)throw new Error('tainted');return 'same-view-image'},
-    timers:{set:(cb,delay)=>{const id=++timerId;tasks.set(id,{cb,delay});return id},clear:id=>tasks.delete(id)}});
+    ...(defaultTimers?{}:{timers:{set:(cb,delay)=>{const id=++timerId;tasks.set(id,{cb,delay});return id},clear:id=>tasks.delete(id)}})});
   const reply=(id=requests.at(-1).id,volume={bounds:map.extent,envelopes:[{id:'verified-shape'}],heldClasses:0,truncated:false,period:'2022–2024'})=>worker.onmessage?.({data:{id,volume}});
   return {map,worker,stop,reply,requests,snapshots,statuses,surfaceStatuses,listeners,tasks,get captures(){return captures},flush(delay){for(const [id,task] of [...tasks])if(task.delay===delay){tasks.delete(id);task.cb()}}};
 }
+test('unavailable or throwing projection waits for style/load recovery without assuming Mercator',()=>{
+  for(const unavailable of [()=>undefined,()=>{throw new Error('style removed')}]){
+    const h=harness({configureMap:map=>{map.getProjection=unavailable;}});
+    assert.equal(h.requests.length,0);assert.match(h.statuses.at(-1),/Waiting for the locator/);
+    h.map.emit('styledata');h.flush(250);assert.equal(h.requests.length,0);
+    h.map.getProjection=()=>({type:'globe'});h.map.emit('styledata');h.flush(250);
+    assert.equal(h.requests.length,0);assert.match(h.statuses.at(-1),/Reset to 2D/);
+    h.map.getProjection=()=>({type:'mercator'});h.map.emit('load');h.flush(250);
+    assert.equal(h.requests.length,1);h.reply();const snapshot=h.snapshots.at(-1);
+    h.map.emit('styledata');h.flush(250);assert.equal(h.requests.length,1);assert.equal(h.snapshots.at(-1),snapshot);
+    h.stop();
+  }
+});
+test('projection disappearing during resize holds the next view instead of throwing',()=>{
+  const h=harness();h.reply();
+  h.map.getProjection=()=>{throw new Error('style not ready')};
+  assert.doesNotThrow(()=>{h.map.emit('resize');h.flush(250);});
+  assert.equal(h.requests.length,1);assert.equal(h.snapshots.at(-1),null);assert.match(h.statuses.at(-1),/Waiting for the locator/);
+  h.stop();
+});
+test('captured map, timer and worker callbacks are inert after disposal or map removal',()=>{
+  for(const remove of [false,true]){
+    const h=harness(),callbacks=[...[...h.listeners.values()].flatMap(set=>[...set]),...[...h.tasks.values()].map(task=>task.cb)];
+    const reply=h.worker.onmessage,error=h.worker.onerror;
+    h.map.emit('resize');callbacks.push(...[...h.tasks.values()].map(task=>task.cb));
+    if(remove)h.map.emit('remove');else h.stop();
+    const counts=[h.requests.length,h.snapshots.length,h.statuses.length,h.surfaceStatuses.length];
+    for(const name of ['getProjection','getPitch','getBearing','getBounds','isMoving','areTilesLoaded','triggerRepaint'])h.map[name]=()=>{throw new Error('destroyed map read')};
+    assert.doesNotThrow(()=>{callbacks.forEach(callback=>callback());reply({data:{id:1,volume:{}}});error();h.stop();});
+    assert.deepEqual([h.requests.length,h.snapshots.length,h.statuses.length,h.surfaceStatuses.length],counts);
+    assert.equal(h.tasks.size,0);assert.equal([...h.listeners.values()].reduce((n,set)=>n+set.size,0),0);
+  }
+});
+test('surface readiness failure does not escape the render callback or suppress geometry',()=>{
+  const h=harness();h.map.areTilesLoaded=()=>{throw new Error('style unavailable')};
+  assert.doesNotThrow(()=>h.map.emit('render'));h.reply();
+  assert.equal(h.snapshots.at(-1).volume.envelopes.length,1);assert.equal(h.snapshots.at(-1).image,null);assert.match(h.surfaceStatuses.at(-1),/unavailable/);h.stop();
+});
+test('default browser timers retain their global receiver through resize and disposal',t=>{
+  const tasks=new Map();let id=0;
+  t.mock.method(globalThis,'setTimeout',function(callback,delay){
+    assert.ok(this===globalThis||this===undefined,'browser timers reject a custom-object receiver');
+    const handle=++id;tasks.set(handle,{callback,delay});return handle;
+  });
+  t.mock.method(globalThis,'clearTimeout',function(handle){
+    assert.ok(this===globalThis||this===undefined,'browser timer cleanup rejects a custom-object receiver');
+    tasks.delete(handle);
+  });
+  const h=harness({defaultTimers:true});
+  try{
+    assert.deepEqual([...tasks.values()].map(task=>task.delay),[8000]);
+    h.map.emit('resize');
+    assert.deepEqual([...tasks.values()].map(task=>task.delay),[250]);
+    for(const [handle,task] of [...tasks]){tasks.delete(handle);task.callback();}
+    assert.equal(h.requests.length,2);
+    assert.deepEqual([...tasks.values()].map(task=>task.delay),[8000]);
+  }finally{h.stop();}
+  assert.equal(tasks.size,0);
+  assert.equal([...h.listeners.values()].reduce((count,listeners)=>count+listeners.size,0),0);
+});
 test('aquifer geometry appears while unrelated map tiles remain incomplete, including after timeout',()=>{
   const h=harness();assert.equal(h.requests.length,1,'must request geometry before any surface image');h.reply();
   assert.equal(h.snapshots.at(-1).volume.envelopes.length,1);assert.equal(h.snapshots.at(-1).image,null);

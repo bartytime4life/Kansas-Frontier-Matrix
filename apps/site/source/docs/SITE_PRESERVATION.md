@@ -90,3 +90,15 @@ remain in the representation controls. The map and Underground locator no
 longer reserve space for a second toolbar. This layout change preserves data,
 storage, audience, and source admission state. Revert the single-toolbar
 change to restore the previous two-row layout.
+
+### Immersive Underground cutaway — 2026-10-06
+This authoring change starts from the current owner-private Site v166, source
+`a4d6b3dc69721fbfb270906a9ff3e44dd941d5c0`, on the same project. It preserves the
+single 54 px toolbar, owner-only audience, DB and BUCKET bindings, saved-context
+keys, source assets and hashes, record-time eligibility, privacy/export rules,
+and existing local data stores. The existing aquifer display becomes an
+immersive source-bounded cutaway with a live inset locator, independent log
+columns, uncertainty envelopes and explicit unobserved space. No continuous
+geological or cave model is implied. Rollback is the saved v166 application;
+there is no database or source-data migration. Version, deployment and browser
+acceptance are separate delivery evidence and are not asserted by this record.

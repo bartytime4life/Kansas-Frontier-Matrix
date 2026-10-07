@@ -251,3 +251,40 @@ Live provider responses, private D1 submission and review records, private R2
 uploads, and external local archives are not copied into Git. Local D1/R2
 development bindings do not grant access to production records. Read the
 [Site README](source/README.md) for feature details and historical notes.
+
+### Immersive Underground cutaway — 2026-10-07
+
+The Explorer's 3D cutaway fills the Underground workspace below the single
+54 px toolbar. A live inset locator and direct controls support exploration of
+source log columns, aquifer uncertainty envelopes, and explicitly unobserved
+space. The camera fits plotted depths and projected scene corners on narrow
+and wide screens; labels remain readable, and record picking opens the
+original source interval in the Evidence Drawer. The saved `aquifer` value
+remains compatible with the new **3D cutaway** label.
+
+This checkpoint mirrors private Site v168, source
+`c74ca07a33f742eecef5461f13769167df3e1d9d`, from v166. The
+[comparison and validation record](../../data/receipts/generated/site-v168-underground-cutaway-20261007.json)
+separates source parity, native deployment, local installation and browser
+observations. Source assets, dependencies, APIs, dataset eligibility, DB/R2
+bindings and local storage are preserved. The geometry verifier reconciles
+the incoming CodeQL autofix with static predicates and its normal timeout.
+
+The final application passed its production build, TypeScript, 563 Node tests
+with no failures or skips, and lint with zero errors and 46 inherited warnings.
+Root-controlled captures at 1440 × 900, 1280 × 720 and 375 × 812 showed no
+horizontal overflow; camera presets, opacity and original-interval picking
+worked. Independent design evaluation passed using those captures. A hosted
+v167 startup failure when entering Underground from persisted Terrain 3D was
+found during delivery and corrected in v168. The corrected hosted transition
+restored the source columns and aquifer range without new console errors.
+These are bounded observations, not full accessibility, touch or WebGL acceptance.
+The local v168 installation also passed the same startup path. Guarded readback
+verified eight SQLite stores and all 15,840 R2 blobs while preserving the existing
+physical store, local origin, and active PRISM curator.
+
+Six inherited KFM-TOPO-017 findings and malformed DP-15 summary JSON remain on
+the exact branch base; the historical mirror-review hold remains separate.
+Neither authoring nor deployment changes dataset admission, activation,
+publication or independent review. Application rollback selects saved v166
+while retaining the physical local data store and subsequent writes.

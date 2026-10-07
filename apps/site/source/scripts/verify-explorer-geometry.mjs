@@ -541,12 +541,13 @@ assert.deepEqual(await evaluate(`({
   open: document.querySelector(".map-dock-map-menu")?.open,
   focusRestored: document.activeElement === document.querySelector(".map-dock-map-menu > summary"),
 })`), { open: false, focusRestored: true });
-for (const name of ["2D", "Terrain 3D", "Globe"]) {
+for (const [name, pressedExpression] of [
+  ["2D", `[...document.querySelectorAll('.map-dock-menu-representations button')].some((button) => button.querySelector('b')?.textContent === '2D' && button.getAttribute('aria-pressed') === 'true')`],
+  ["Terrain 3D", `[...document.querySelectorAll('.map-dock-menu-representations button')].some((button) => button.querySelector('b')?.textContent === 'Terrain 3D' && button.getAttribute('aria-pressed') === 'true')`],
+  ["Globe", `[...document.querySelectorAll('.map-dock-menu-representations button')].some((button) => button.querySelector('b')?.textContent === 'Globe' && button.getAttribute('aria-pressed') === 'true')`],
+]) {
   await activateMode(1024, name, `Tablet ${name}`);
-  await waitFor(
-    `((expectedName) => [...document.querySelectorAll('.map-dock-menu-representations button')].some((button) => button.querySelector('b')?.textContent === expectedName && button.getAttribute('aria-pressed') === 'true'))`,
-    name,
-  );
+  await waitFor(pressedExpression);
 }
 await activateMode(1024, "Compare", "Tablet Compare A/B");
 await waitFor(`document.querySelector('.map-utility-panel')?.getAttribute('data-open') === 'true' && document.querySelector('.map-utility-panel')?.getAttribute('data-view') === 'compare'`);

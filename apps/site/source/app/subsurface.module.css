@@ -8,3 +8,86 @@
 .probeControls{background:#e9e6da;border:1px solid #c4c6b7;padding:0 10px;border-radius:6px;margin-bottom:8px}.probeControls>summary{font-weight:600}.probeControls .metrics{margin-top:8px}
 
 .locatorBar{position:absolute;top:var(--underground-locator-top);left:12px;right:12px;z-index:10;display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#082129e8;border:1px solid #55847e;color:#d7ece5;padding:5px 9px;border-radius:6px;font:11px/1.4 system-ui;pointer-events:auto}.locatorBar strong{color:#e8c782}.locatorBar span{margin-right:auto}.locatorBar button{min-height:44px;font:inherit;padding:5px 8px;background:#183a40;color:#e0ece7;border:1px solid #567b7c;border-radius:4px;cursor:pointer}.locatorBar button:focus-visible{outline:2px solid #e8c782}.panel{animation:underground-enter 380ms cubic-bezier(.2,.7,.2,1)}@keyframes underground-enter{from{transform:translateY(46px);opacity:0}to{transform:translateY(0);opacity:1}}@media(max-width:800px){.locatorBar{left:6px;right:6px;top:var(--underground-locator-top);gap:4px;padding:4px 6px}.locatorBar span{font-size:10px}.header label{display:flex;align-items:center;gap:4px}.header label input{width:70px}}@media(prefers-reduced-motion:reduce){.panel{animation:none}}
+
+/* Immersive field desk. The locator remains a real, independently navigable map. */
+.cutawayPanel{height:100%;border-top:0;background:#101b20;color:#e3e5dc;box-shadow:none;animation:none;--cutaway-copper:#d5ab73;--cutaway-muted:#a5b4b3}
+.cutawayPanel .header{height:54px;min-height:54px;flex-wrap:nowrap;padding:4px 16px;border-color:#344044;background:#152126;box-sizing:border-box}
+.cutawayPanel .header h2{font-family:var(--font-display,Georgia,serif);font-size:21px;letter-spacing:-.025em;color:#f0eadd}
+.cutawayPanel .header p{font-size:10px;color:var(--cutaway-muted)}
+.cutawayPanel .header .badge{background:none;color:#a8b7ae;border-color:#40554e;font-size:10px;margin-left:10px}
+.cutawayPanel .header>button{margin-left:auto;background:transparent;border-color:#3d5055}
+.cutawayPanel .body{display:flex;flex-direction:column;gap:0;padding:0 16px 24px;scrollbar-color:#62706a #152126}
+.cutawayPanel .body>.tabs{order:-3;min-height:48px;flex-shrink:0;margin:0;border-bottom:1px solid #344348;align-items:center;gap:3px}
+.cutawayPanel .tabs button{border-radius:0;border:0;min-height:44px;background:transparent;color:#afbfbd;padding:8px 13px;font-size:12px}
+.cutawayPanel .tabs button[aria-pressed=true]{color:#f0d7b1;box-shadow:inset 0 -2px #d5ab73}
+.cutawayPanel .cutawayExplorer{order:-2;flex-shrink:0}
+.cutawayPanel .timeControls{order:-1;margin:14px 0;border-radius:0;background:#17272b;border-color:#35484c;color:#d9e3dd;padding:10px 12px}
+.cutawayPanel .timeControls strong{font-family:var(--font-display,Georgia,serif);font-size:15px;color:#edddbf}
+.cutawayPanel .timeControls small{max-width:320px;color:#aabbb7;line-height:1.45}
+.cutawayPanel .timeControls>input{accent-color:#d5ab73;flex:1;min-width:80px}
+.cutawayPanel button,.cutawayPanel select{background:#203136;color:#e7e6da;border:1px solid #496066;border-radius:4px;min-height:44px}
+.cutawayPanel input{accent-color:#d5ab73;background:#17272b;color:#e7e6da}
+.cutawayPanel button:hover,.cutawayPanel select:hover{border-color:#cfaa77;background:#2c3d40}
+.cutawayPanel button[aria-pressed=true]{background:#30443f;border-color:#6c8b78;color:#f0ead9}
+.cutawayPanel button:focus-visible,.cutawayPanel select:focus-visible,.cutawayPanel input:focus-visible,.cutawayPanel summary:focus-visible{outline:2px solid #f0bd78;outline-offset:3px}
+.cutawayPanel .muted{color:#a2b5b0}.cutawayPanel .limit{background:#222c2b;color:#c8c7b5;border-color:#a58052}
+.cutawayPanel .probeControls{border-radius:0;background:#15272c;color:#d8e4df;border-color:#3a4f54}
+.cutawayPanel details>summary{min-height:44px;box-sizing:border-box;align-content:center}
+.cutawayPanel .probeControls input{padding:9px;border:1px solid #5d716a;border-radius:4px}
+.cutawayPanel a{color:#bfd2bd}.cutawayPanel .body>p{max-width:1100px}.cutawayPanel .body>details:last-child{margin-top:12px;border-top:1px solid #3a4f54}
+.cutawayEyebrow{font:9px/1.4 var(--font-body,system-ui);font-weight:700;letter-spacing:.16em;color:#d5ab73}
+.cutawayHeading{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:80px;padding:12px 3px;box-sizing:border-box}
+.cutawayHeading h3{font:29px/1.15 var(--font-display,Georgia,serif);font-weight:500;letter-spacing:-.035em;margin:4px 0 0;color:#f0e8d8}
+.cutawayEntryActions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.cutawayEntryActions button:first-child{border-color:#bd9565;background:#3b3830;color:#f5dfbc}.cutawayEntryActions button span{margin-left:16px;font-size:16px}
+.cutawayWorkspace{display:grid;grid-template-columns:minmax(0,1fr) 234px;gap:0;border:1px solid #3f4e50;min-width:0}
+.cutawayStage{height:clamp(430px,calc(100dvh - 290px),760px);position:relative;min-width:0;overflow:hidden;background:radial-gradient(ellipse at 45% 55%,#253333,#101b20 72%)}
+.cutawayCanvas{position:absolute;inset:0}.cutawayCanvas canvas{display:block;touch-action:none;width:100%;height:100%}.cutawayCanvas canvas:focus-visible{outline:2px solid #d5ab73;outline-offset:-4px}
+.cutawayConsole{padding:16px;background:#19282c;border-left:1px solid #3f4e50;font-size:11px;min-width:0;overflow:auto;max-height:clamp(430px,calc(100dvh - 290px),760px);box-sizing:border-box;scrollbar-color:#657169 #19282c}
+.cutawayConsoleTitle{display:flex;justify-content:space-between;align-items:center;letter-spacing:.15em;font-size:10px;color:#dacaaf;margin-bottom:22px}.cutawayConsoleTitle>span:last-child{font-size:18px;color:#d5ab73}
+.cutawayRange{display:grid;grid-template-columns:1fr auto;align-items:center;gap:5px;font-size:12px;margin:16px 0;color:#d4e0db}.cutawayRange output{font:11px ui-monospace,monospace;color:#d5ab73}.cutawayRange input{grid-column:1/-1;width:100%;height:26px;cursor:pointer;margin:0}
+.cutawayScale{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;margin:12px 0}.cutawayScale select{width:80px}
+.cutawayPanel .cutawayLogToggle{width:100%;display:flex;gap:8px;align-items:center;background:none;border:0;border-top:1px solid #3b5053;border-bottom:1px solid #3b5053;border-radius:0;margin:8px 0 18px;padding:10px 0;color:#e3e4d5;font-size:12px}.cutawayLogToggle>span{font-size:18px;color:#d5ab73}.cutawayLogToggle b{margin-left:auto;font-size:11px;background:#31483f;padding:1px 6px;color:#cbddc8;border-radius:3px}
+.cutawayLegend{display:grid;gap:10px;font-size:10px;color:#bfcbc3}.cutawayLegend>span{display:flex;align-items:center;gap:8px}.cutawayLegend i{display:block;flex:none;width:10px;height:10px;border:1px solid #cabb9966;background:#c4955d}.cutawayLegend [data-kind=core]{background:#9c92b0}.cutawayLegend [data-kind=aquifer]{background:#238da9}.cutawayLegend [data-kind=unknown]{background:#101b20;border-style:dashed}
+.cutawayCaution{font-size:10px;line-height:1.65;color:#b5c1b9;padding:12px 0 0;margin:16px 0 12px;border-top:1px solid #3b5053}
+.cutawayEvidence{font-size:10px;color:#bbc8c0;line-height:1.65}.cutawayEvidence summary{display:flex;flex-wrap:wrap;gap:2px 6px;color:#e0d3b8;font-size:11px;list-style:revert!important}.cutawayEvidence summary span{font-size:9px;color:#a0b3ad}.cutawayEvidence a{display:block;margin:12px 0}.cutawayEvidence button{font-size:10px;width:100%}.cutawaySourceList{display:grid;gap:5px}.cutawayEvidence[open] summary{margin-bottom:8px}
+.cutawaySceneLabel{position:absolute;bottom:96px;left:20px;display:grid;gap:5px;pointer-events:none;max-width:calc(100% - 40px)}.cutawaySceneLabel strong{font:17px var(--font-display,Georgia,serif);color:#e1e2d0}.cutawaySceneLabel>span:last-child{font-size:10px;color:#aabbb6}
+.cutawayCompass{position:absolute;right:20px;top:20px;display:grid;justify-items:center;gap:1px;color:#d5ab73;font:10px ui-monospace,monospace;pointer-events:none}.cutawayCompass i{font-style:normal;font-size:26px;font-weight:200}
+.cutawayCamera{position:absolute;left:20px;bottom:39px;display:flex;gap:4px}.cutawayPanel .cutawayCamera button{font-size:11px;min-width:44px;background:#122329e8;padding:5px 10px;border-color:#496067}.cutawayPanel .cutawayCamera button:hover{border-color:#d5ab73}
+.cutawayStamp{position:absolute;left:20px;bottom:13px;font:9px ui-monospace,monospace;letter-spacing:.08em;color:#a5bab5;pointer-events:none}.cutawayStamp span{color:#d5ab73;margin:0 7px}
+.cutawayEmpty{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;flex-direction:column;padding:60px clamp(28px,8vw,120px) 80px;box-sizing:border-box;background:linear-gradient(135deg,#1c2e2e88,transparent)}
+.cutawayEmpty h4{font:clamp(24px,3vw,36px)/1.1 var(--font-display,Georgia,serif);color:#eee6d1;max-width:360px;margin:12px 0}.cutawayEmpty p{max-width:390px;line-height:1.7;color:#b3c3bc;font-size:12px}.cutawayEmpty button{border-color:#b8996b;background:#3b3830;padding-inline:16px}.cutawayEmpty .cutawayEmptyStatus{font-size:10px;max-width:370px}
+.cutawayReadout{display:flex;gap:14px;align-items:baseline;padding:11px 3px;border-bottom:1px solid #3c4b4b;color:#b8cac0;min-height:40px;box-sizing:border-box;font-size:11px;line-height:1.5}.cutawayReadout>.cutawayEyebrow{flex:none}
+.cutawayLocatorBar{top:194px;left:33px;right:auto;width:208px;padding:4px 8px;min-height:26px;box-sizing:border-box;border-radius:0;background:#13272de8;border-color:#637370;font-size:10px;z-index:11;pointer-events:none;flex-wrap:nowrap}.cutawayLocatorBar strong{font-size:10px;text-transform:uppercase;letter-spacing:.08em}.cutawayLocatorBar span{overflow:hidden;white-space:nowrap;font-size:9px;text-overflow:ellipsis}
+@media(max-width:1000px){.cutawayWorkspace{grid-template-columns:minmax(0,1fr) 206px}.cutawayConsole{padding:12px}.cutawayPanel .timeControls>div{width:100%;margin-bottom:4px}.cutawayPanel .timeControls small{max-width:none}.cutawayCamera{gap:3px}.cutawayPanel .cutawayCamera button{padding-inline:7px}}
+@media(max-width:650px){
+ .cutawayPanel .header{padding:4px 12px}.cutawayPanel .header h2{font-size:19px}.cutawayPanel .header p{font-size:9px}.cutawayPanel .header .badge{margin-left:auto;max-width:70px;font-size:9px}.cutawayPanel .header>button{margin-left:2px}
+ .cutawayPanel .body{padding:0 8px 20px}.cutawayPanel .body>.tabs{gap:0}.cutawayPanel .tabs button{padding-inline:11px;font-size:11px;flex:none}
+ .cutawayHeading{min-height:116px;align-items:flex-start;flex-direction:column;gap:10px;padding:12px 5px}.cutawayHeading h3{font-size:25px;margin-top:3px}.cutawayHeading .cutawayEyebrow{font-size:8px}.cutawayEntryActions{gap:5px;justify-content:flex-start;width:100%}.cutawayEntryActions button{font-size:11px;flex:1;white-space:nowrap;padding-inline:8px}.cutawayEntryActions button span{margin-left:8px}
+ .cutawayWorkspace{grid-template-columns:1fr}.cutawayStage{height:460px}.cutawayConsole{border-left:0;border-top:1px solid #3f4e50;max-height:none;padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:0 18px}.cutawayConsoleTitle{grid-column:1/-1;margin-bottom:0}.cutawayRange{margin:10px 0}.cutawayScale{margin-top:4px}.cutawayPanel .cutawayLogToggle{margin:4px 0 10px;border:0}.cutawayLegend,.cutawayCaution,.cutawayEvidence{grid-column:1/-1}.cutawayLegend{grid-template-columns:1fr 1fr;gap:10px 8px;padding-top:10px;border-top:1px solid #3b5053;font-size:9px}.cutawayCaution{margin:12px 0 0;padding-top:10px}.cutawayEvidence summary{gap:8px}.cutawaySceneLabel{left:14px;bottom:102px}.cutawaySceneLabel strong{font-size:15px}.cutawaySceneLabel .cutawayEyebrow{font-size:8px}.cutawaySceneLabel>span:last-child{font-size:9px}.cutawayCamera{left:12px;right:12px;bottom:43px;gap:3px}.cutawayPanel .cutawayCamera button{font-size:10px;min-width:36px;flex:1;padding-inline:4px}.cutawayPanel .cutawayCamera button:nth-child(1){flex:1.6}.cutawayStamp{left:14px;bottom:19px;font-size:8px}.cutawayCompass{right:14px;top:14px}.cutawayReadout{padding:10px 5px;font-size:10px;gap:10px}.cutawayEmpty{padding:128px 24px 126px;justify-content:flex-start}.cutawayEmpty h4{font-size:23px;margin:8px 0}.cutawayEmpty p{font-size:11px;margin:4px 0 10px}.cutawayEmpty .cutawayEyebrow{font-size:8px}.cutawayEmpty .cutawayEmptyStatus{font-size:9px}.cutawayLocatorBar{top:235px;left:23px;width:136px;min-height:23px;padding:3px 5px}.cutawayLocatorBar span{display:none}.cutawayLocatorBar strong{font-size:8px}.cutawayPanel .timeControls>input{flex-basis:100%}.cutawayPanel .timeControls{padding:10px;gap:8px}.cutawayPanel .timeControls>label{flex-wrap:wrap}.cutawayPanel .actions form{display:flex;flex-wrap:wrap;gap:6px;max-width:100%}.cutawayPanel .actions input{max-width:170px}.cutawayPanel .metrics{gap:12px}
+}
+.locatorHidden{visibility:hidden}
+@media(min-width:651px) and (max-height:780px){.cutawayStage{height:430px}.cutawayConsole{max-height:430px}.cutawayHeading{min-height:66px;padding-block:8px}.cutawayHeading h3{font-size:26px}.cutawayLocatorBar{top:181px}}
+
+/* Keep source objects apart from the annotation/control band. */
+.cutawayCanvas{bottom:148px}
+.cutawaySceneLabel{bottom:99px;gap:5px}.cutawaySceneLabel strong{font-size:16px}
+.cutawaySceneLabel>span:last-child{font-size:10px;line-height:1.5}
+.cutawayPanel .cutawayCamera button{min-width:44px;min-height:44px}
+/* The existing Evidence Drawer is dark; these intentionally pale source cards
+   and actions therefore need their own dark ink rather than inherited text. */
+.inspector .badge{color:#263d34}
+.inspector .selected{background:#eee8db;color:#263830;border-left-color:#bd8b53}
+.inspector .selected p,.inspector .selected strong{color:#263830}
+.inspector .actions button,.inspector .actions a{background:#f2eee2;color:#263830;border-color:#adbaa9;min-height:44px;box-sizing:border-box;align-content:center;text-decoration:none}
+.inspector .actions button:hover,.inspector .actions a:hover{background:#e0dbc9;border-color:#a06b36;color:#192e24}
+.inspector dt{color:#b1c4bb}
+.inspector .actions button:focus-visible,.inspector .actions a:focus-visible{outline:2px solid #e4b77a;outline-offset:3px}
+@media(max-width:650px){
+ .cutawayStage{height:530px}.cutawayCanvas{top:108px;bottom:158px}
+ .cutawaySceneLabel{left:14px;bottom:107px;right:12px;max-width:none;gap:5px}
+ .cutawaySceneLabel .cutawayEyebrow{font-size:9px}.cutawaySceneLabel strong{font-size:15px}.cutawaySceneLabel>span:last-child{font-size:10px}
+ .cutawayCamera{left:12px;right:12px;bottom:43px;display:grid;grid-template-columns:repeat(7,minmax(44px,1fr));gap:1px}
+ .cutawayPanel .cutawayCamera button{min-width:44px;min-height:44px;padding:4px 1px;font-size:10px;flex:none;white-space:nowrap}
+ .cutawayPanel .cutawayCamera button:first-child{font-size:9px}
+}
+@media(max-width:359px){.cutawayCamera{grid-template-columns:repeat(4,minmax(44px,1fr));gap:4px;bottom:35px}.cutawayCanvas{bottom:203px}.cutawaySceneLabel{bottom:156px}.cutawayStage{height:575px}}
