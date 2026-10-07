@@ -77,6 +77,7 @@ export default function UndergroundPanel(props: Props) {
   const sliceRecordRef = useRef("");
   const [height, setHeight] = useState(55);
   const [locatorSlot,setLocatorSlot] = useState<HTMLDivElement|null>(null);
+  const initialKansasLocator = useRef(false);
   const [search, setSearch] = useState(""), [matches, setMatches] = useState<NonNullable<WorkerResult["matches"]>>([]);
   const [surveyMethod, setSurveyMethod] = useState("all"), [surveys, setSurveys] = useState<GeophysicalSurvey[]>([]);
   const [surveyError, setSurveyError] = useState("");
@@ -196,7 +197,14 @@ export default function UndergroundPanel(props: Props) {
     };
     const observer=new ResizeObserver(position);observer.observe(locatorSlot);observer.observe(stage);observer.observe(scroller);
     scroller.addEventListener("scroll",position,{passive:true});stage.addEventListener("scroll",position,{passive:true});window.addEventListener("resize",position);position();
-    return()=>{observer.disconnect();scroller.removeEventListener("scroll",position);stage.removeEventListener("scroll",position);window.removeEventListener("resize",position);for(const key of ["left","top","width","height","clip","visibility"])stage.style.removeProperty(`--cutaway-locator-${key}`);};
+    // Fit after the selector has its actual compact size. A fresh Underground
+    // session starts with Kansas; tool switches keep the user's map position.
+    const initialFrame=!initialKansasLocator.current?requestAnimationFrame(()=>{
+      map.resize();
+      map.fitBounds([[-102.1,36.95],[-94.55,40.05]],{padding:18,duration:0});
+      initialKansasLocator.current=true;
+    }):null;
+    return()=>{if(initialFrame!==null)cancelAnimationFrame(initialFrame);observer.disconnect();scroller.removeEventListener("scroll",position);stage.removeEventListener("scroll",position);window.removeEventListener("resize",position);for(const key of ["left","top","width","height","clip","visibility"])stage.style.removeProperty(`--cutaway-locator-${key}`);};
   },[map,display,locatorSlot]);
   useEffect(() => {
     if (!map || display !== "aquifer") return;

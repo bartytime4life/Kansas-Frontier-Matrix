@@ -10,6 +10,7 @@ async function module(name,imports={}){const exports={};vm.runInNewContext(compi
 const materials=await module('subsurface-materials');
 const model=await module('subsurface-model',{'./subsurface-materials':materials});
 const slices=await module('subsurface-slice',{'./subsurface-model':model});
+const locatorPlacement=await module('cutaway-locator');
 const record={id:'well-a',sourceId:'kgs-wwc5',kind:'well',name:'WWC5 A',coordinates:[-100.5,38.5],coordinateReference:'WGS84',locationMethod:'approximate',sourceUrl:'https://example.test/a',sourceTime:'1990-01-01',depthUnit:'m',depthReference:'land-surface',totalDepth:30,intervals:[{top:0,bottom:10,description:'sand'},{top:20,bottom:30,description:'clay'}]};
 const other={...record,id:'well-b',name:'WWC5 B',intervals:[{top:100,bottom:180,description:'shale'}]};
 const empty={...record,id:'empty',name:'Empty log',intervals:[]};
@@ -43,20 +44,34 @@ test('core inventory remains an envelope and original interval identity survives
   assert.equal(materials.materialFor(core.intervals[0],core.kind),'inventory');
 });
 
-async function panelHarness(initialContext=null,{failWorker=false}={}){
-  const messages=[],inspections=[],contexts=[],timers=new Map(),focusCalls=[];let timerSerial=0;const worker={postMessage:message=>messages.push(message),terminate(){}};
-  const h=await componentHarness('app/underground-panel.tsx',{'./subsurface-model':model,'./subsurface-materials':materials,'./subsurface-slice':slices,'./subsurface.module.css':{default:style},'./subsurface-workers':{startSubsurfaceWorker:()=>{if(failWorker)throw new Error("unavailable");return worker;}},'./cutaway-locator':{cutawayLocatorPlacement(){}}},{
-    matchMedia:()=>({matches:true,addEventListener(){},removeEventListener(){}}),document:{hidden:false,addEventListener(){},removeEventListener(){}},queueMicrotask,performance,
+async function panelHarness(initialContext=null,{failWorker=false,map=null,skipArea=false}={}){
+  const messages=[],inspections=[],contexts=[],timers=new Map(),frames=new Map(),focusCalls=[];let timerSerial=0,frameSerial=0;const worker={postMessage:message=>messages.push(message),terminate(){}};
+  const h=await componentHarness('app/underground-panel.tsx',{'./subsurface-model':model,'./subsurface-materials':materials,'./subsurface-slice':slices,'./subsurface.module.css':{default:style},'./subsurface-workers':{startSubsurfaceWorker:()=>{if(failWorker)throw new Error("unavailable");return worker;}},'./cutaway-locator':locatorPlacement},{
+    matchMedia:()=>({matches:true,addEventListener(){},removeEventListener(){}}),document:{hidden:false,addEventListener(){},removeEventListener(){}},window:{addEventListener(){},removeEventListener(){}},ResizeObserver:class{observe(){}disconnect(){}},requestAnimationFrame:fn=>{const id=++frameSerial;frames.set(id,fn);return id;},cancelAnimationFrame:id=>frames.delete(id),queueMicrotask,performance,
     fetch:async()=>({ok:true,json:async()=>({version:1,surveys:[]})}),setTimeout:callback=>{const id=++timerSerial;timers.set(id,callback);return id;},clearTimeout:id=>timers.delete(id),
   });
-  const props={map:null,initialContext,year:2026,redacted:false,onFlatMap(){},onTerrain(){},readElevation(){return null;},isDrawing(){return false;},onDraw(){},readTransect(){return[];},onContext:context=>contexts.push(context),onInspect:value=>inspections.push(value),onClose(){},onSave(){},onReport(){}};
+  const props={map,initialContext,year:2026,redacted:false,onFlatMap(){},onTerrain(){},readElevation(){return null;},isDrawing(){return false;},onDraw(){},readTransect(){return[];},onContext:context=>contexts.push(context),onInspect:value=>inspections.push(value),onClose(){},onSave(){},onReport(){}};
   let tree;const render=()=>{tree=h.render(h.exports.default,props);const destination=findNode(tree,node=>node.props?.['aria-label']==='Slice a recorded column');if(destination)destination.props.ref.current={focus:options=>focusCalls.push(options)};h.commit();return tree;};render();const flushTimers=()=>{for(const [id,fn] of [...timers]){timers.delete(id);fn();}};flushTimers();
-  if (!initialContext || initialContext.display === 'aquifer') { findNode(tree,node=>node.props?.onArea).props.onArea([-100.7,38.3,-100.3,38.7]);render();flushTimers(); }
-  const load=(records=[record,other,empty])=>{worker.onmessage({data:{id:messages.at(-1).id,bounds:messages.at(-1).bounds,manifest:{sources:[],totals:{},counties:[]},columns:records.map(record=>({record,distanceMeters:0,alongMeters:0,offsetMeters:0})),coverage:'loaded'}});return render();};if(!failWorker)load();
+  if (!skipArea&&(!initialContext || initialContext.display === 'aquifer')) { findNode(tree,node=>node.props?.onArea).props.onArea([-100.7,38.3,-100.3,38.7]);render();flushTimers(); }
+  const load=(records=[record,other,empty])=>{worker.onmessage({data:{id:messages.at(-1).id,bounds:messages.at(-1).bounds,manifest:{sources:[],totals:{},counties:[]},columns:records.map(record=>({record,distanceMeters:0,alongMeters:0,offsetMeters:0})),coverage:'loaded'}});return render();};if(!failWorker&&!skipArea)load();
   const aquifer=()=>findNode(tree,node=>node.props?.sliceEntry);
   const viewer=()=>findNode(tree,node=>node.props?.onSlice);
-  return{h,render,load,aquifer,viewer,inspections,contexts,focusCalls,messages,worker,flushTimers,props,get tree(){return tree;}};
+  return{h,render,load,aquifer,viewer,inspections,contexts,focusCalls,messages,worker,flushTimers,flushFrames(){for(const [id,fn] of [...frames]){frames.delete(id);fn();}},props,get tree(){return tree;}};
 }
+test('fresh cutaway fits Kansas after locator placement and tool round trips keep the moved map',async()=>{
+  const fitted=[],mapEvents={isEnabled:()=>true,disable(){},enable(){}},style={setProperty(){},removeProperty(){}};
+  const stage={style,scrollLeft:0,scrollTop:0,getBoundingClientRect:()=>({left:0,top:0}),addEventListener(){},removeEventListener(){}};
+  const scroller={getBoundingClientRect:()=>({top:0,bottom:800}),addEventListener(){},removeEventListener(){}};
+  const container={closest:()=>stage,querySelector:()=>null};
+  const map={dragRotate:mapEvents,touchPitch:mapEvents,getContainer:()=>container,getCenter:()=>({lng:-100.5,lat:38.5}),getBearing:()=>0,getPitch:()=>0,isStyleLoaded:()=>false,on(){},off(){},resize(){fitted.push('resize')},fitBounds:(bounds,options)=>fitted.push({bounds,options}),getLayer:()=>false,getSource:()=>null};
+  const p=await panelHarness(null,{map,skipArea:true});
+  p.aquifer().props.onLocatorSlot({closest:()=>scroller,getBoundingClientRect:()=>({left:8,top:20,width:500,height:320,bottom:340})});p.render();
+  assert.equal(fitted.some(value=>typeof value==='object'),false,'fit waits until locator layout');p.flushFrames();
+  same(fitted.find(value=>typeof value==='object'),{bounds:[[-102.1,36.95],[-94.55,40.05]],options:{padding:18,duration:0}});
+  findNode(p.tree,n=>n.props?.['aria-label']==='Underground tool').props.onChange({target:{value:'surveys'}});p.render();
+  button(p.tree,'Back to cutaway').props.onClick();p.render();p.flushFrames();
+  assert.equal(fitted.filter(value=>typeof value==='object').length,1,'returning to cutaway preserves the moved selector');p.h.dispose();
+});
 test('cutaway offers a named loaded record and preserves a picked interval when opening the slice',async()=>{
   const p=await panelHarness();let entry=p.aquifer().props.sliceEntry;
   assert.equal(findNode(entry,n=>n.type==='select').props.value,record.id);

@@ -426,3 +426,13 @@ geometry and camera calculations are used with a substituted renderer. Browser
 visual, touch, device WebGL and full keyboard acceptance remain unverified
 because the supported browser interface is blocked by its administrative
 security check; these tests do not replace that acceptance.
+
+### Kansas selector start
+
+A fresh Underground cutaway opens the 2D selector at a statewide Kansas extent,
+after the selector reaches its compact size. The statewide view is a navigation
+starting point, not an applied cutaway or a statewide data claim. The user zooms
+to a local area and explicitly chooses **Show this area**; switching to another
+Underground tool and back keeps the moved selector position. The High Plains
+example remains optional. This changes display navigation only, with no new
+source, admission, storage or depth interpretation.
