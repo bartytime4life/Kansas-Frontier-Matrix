@@ -21,11 +21,11 @@
   ],
   "artifact_hashes": {
     ".github/workflows/local-data-store.yml": "sha256:94b55aa053cc41998a5a1f1ecff27340d53817779261316d7f1de50246517e85",
-    ".github/workflows/python-dependency-lock.yml": "sha256:3c4b0217b27296a9c2b4ba34c4821fead428da1f8cf7a66b4c0a81ae12ecc449",
-    "connectors/noaa/src/noaa/README.md": "sha256:87cfbfca10817f6d9eb64f0b0bffffa027ece6696574edca735ef4877ea2e430",
+    ".github/workflows/python-dependency-lock.yml": "sha256:648b8836f066eb436212dfdac43731db9b14bd23106b491f796da7ce3d5a8b0b",
+    "connectors/noaa/src/noaa/README.md": "sha256:65071e8f9e4add112486ec3024dedbb54a6603ea037f1fb08c80a7d78c6ad592",
     "connectors/noaa/src/noaa/nwm.py": "sha256:71e1054ac9fea5df19ca666f5c13cdffe81dfd5330919f995409b8eab0a75322",
     "data/receipts/generated/noaa-nwm-kansas-capture-20261007.json": "sha256:9cb2e1634933f6abcf68955035f92afaf52576154b7e46208473b0680c893f8d",
-    "docs/runbooks/free-data-acquisition.md": "sha256:48e834542f19390dabd05ce8354fc8ab67825ddd118c3e7315293cf8ca82212a",
+    "docs/runbooks/free-data-acquisition.md": "sha256:99ee09356d5fb07a054ef1ede19b18778156f4c15e3d111f04c864cc8db5ee9d",
     "docs/runbooks/noaa-nwm-local-capture.md": "sha256:0178390a079583bf6ba63ee296ed0fe1e76ed74c0cdcad549eacc1ed3c49390e",
     "pipelines/domains/hydrology/README.md": "sha256:d0ee97d36b91d63c474ba465690abd486fb7fb8b5c0c149aeea19112051fa5cb",
     "pipelines/domains/hydrology/nwm_subset.py": "sha256:ffafe6e0288d0f77960afc05b63bb2443f864fdae65d512a3c6624cafb42bcc4",
@@ -34,7 +34,7 @@
     "tools/ci/README.md": "sha256:7e7e4c62b973c427b750a0071cd296068612d9e2f8fc1d348e81e9c73046ec97",
     "tools/ci/install_python_ci.py": "sha256:a88035f082aa63f27a128c3219acb1913f999fc0346bb36c6bd0185b1fc47d6b",
     "tools/ci/python-nwm.lock": "sha256:7e264a8557043b8d226cf155bc954dbef085d8cf9652d29284b24ca61040655c",
-    "tools/local_data/README.md": "sha256:927ed32ac921ec4971fc35f288b7781c03ecb301b8773254ef2d50cfecfabfa4",
+    "tools/local_data/README.md": "sha256:d1dda6bc303b88f9788aa1392053518218b35bb45341ba8e86400236a50819b6",
     "tools/local_data/noaa_nwm.py": "sha256:33df8e07cec5376b3c45bdaae3a238593a9bf48830ab6f67589344b4a97bf5be"
   },
   "model_identity": {
@@ -125,5 +125,5 @@
     "pr_number": null,
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
   },
-  "notes": "Private RAW capture and WORK projection only; no source admission, independent human review, map activation, merge, deployment, release or publication claimed. The model/geometry version difference remains a review boundary."
+  "notes": "Private RAW capture and WORK projection only; no source admission, independent human review, map activation, merge, deployment, release or publication claimed. The model/geometry version difference remains a review boundary. Artifact hashes cover the conflict-resolved NWM and NEXRAD documentation and the workflow's historical receipt replay."
 }
