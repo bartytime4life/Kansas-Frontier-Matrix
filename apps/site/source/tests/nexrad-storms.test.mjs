@@ -72,6 +72,10 @@ test("display frame colors cells by rotation and draws a storm seen by two radar
   assert.equal(k7.properties.rotation, "tornado_signature");
   assert.equal(k7.properties.ageMinutes, 4);
   assert.match(storms.describeStormFeature(k7.properties), /not a confirmed tornado/);
+  // Only a radar whose rotation product was read can report "No rotation detected".
+  const cellsOnly = storms.stormFeatures([cells], "2024-05-19T23:20:00.000Z").features.filter((feature) => feature.properties.kind === "cell");
+  assert.ok(cellsOnly.every((feature) => feature.properties.rotation === "unknown"));
+  assert.ok(points.some((feature) => feature.properties.rotation === "none"));
 });
 
 test("storm route reads only allowlisted archive bytes, caches nothing to disk and reports per-radar gaps", async () => {
@@ -102,5 +106,33 @@ test("storm route reads only allowlisted archive bytes, caches nothing to disk a
     for (const query of ["time=latest", "time=2019-12-31T00%3A00%3A00Z", "time=2099-01-01T00%3A00%3A00Z", "start=2024-05-19T00%3A00%3A00Z&end=2024-05-21T00%3A00%3A00Z", "time=2024-05-19T23%3A20%3A00Z&url=https://evil.test"]) {
       assert.equal((await GET(new Request(`https://app.test/api/event-atlas/storms?${query}`))).status, 400, query);
     }
+  } finally { globalThis.fetch = previous; }
+});
+
+test("a failed rotation product keeps that radar's storm cells", async () => {
+  // A fresh module instance so the earlier test's in-memory cache is not reused.
+  const cached = await moduleUrl("../app/api/event-atlas/storms/route.ts");
+  const fresh = `data:text/javascript;base64,${Buffer.from(Buffer.from(cached.split(",")[1], "base64").toString() + "\n// fresh cache").toString("base64")}`;
+  const { GET } = await import(fresh);
+  const previous = globalThis.fetch;
+  const nst = await fixture(NST), nmd = await fixture(NMD);
+  globalThis.fetch = async (url) => {
+    const value = String(url);
+    if (value.includes("prefix=ICT_NST_2024_05_19_")) return new Response(listing([[NST, nst.length]]));
+    if (value.includes("prefix=ICT_NMD_2024_05_19_")) return new Response(listing([[NMD, nmd.length]]));
+    if (value.includes("?list-type=2")) return new Response(listing([]));
+    if (value.endsWith(NMD)) return new Response("down", { status: 503 });
+    if (value.endsWith(NST)) return new Response(nst);
+    return new Response("unexpected", { status: 404 });
+  };
+  try {
+    const body = await (await GET(new Request("https://app.test/api/event-atlas/storms?time=2024-05-19T23%3A20%3A00.000Z"))).json();
+    assert.equal(body.radars[0].status, "ok");
+    assert.match(body.radars[0].message, /rotation unavailable/i);
+    assert.equal(body.counts.cells, 34);
+    assert.equal(body.counts.rotations, 0);
+    // Missing rotation data is never presented as "No rotation detected".
+    const cells = body.data.features.filter((feature) => feature.properties.kind === "cell");
+    assert.ok(cells.every((feature) => feature.properties.rotation === "unknown" && /not checked/i.test(feature.properties.rotationLabel)));
   } finally { globalThis.fetch = previous; }
 });

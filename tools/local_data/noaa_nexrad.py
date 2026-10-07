@@ -17,6 +17,7 @@ from pathlib import Path
 import re
 import shutil
 import stat
+import struct
 import sys
 import time
 
@@ -181,9 +182,12 @@ def capture(root, run, fetcher=source.fetch, cap=DEFAULT_CAP, reserve=DEFAULT_RE
         def retrieve(row):
             try:
                 body, header = fetcher(row["key"], source.PRODUCT_BYTES)
+                # The storage cap was checked against planned sizes; never save more.
+                if len(body) != row["bytes"]:
+                    raise ValueError("SIZE_DIFFERS_FROM_PLAN")
                 parsed = source.parse_product(body, row["key"])
                 return row, body, header, parsed, None
-            except (OSError, ValueError, EOFError, UnicodeDecodeError) as error:
+            except (OSError, ValueError, EOFError, UnicodeDecodeError, struct.error) as error:
                 return row, None, None, None, f"{type(error).__name__}:{error}"[:120]
 
         # Four small in-flight requests; no unbounded queue and no automatic retries.

@@ -4,6 +4,7 @@ import { ROTATION_COLORS, ROTATION_LABELS, describeStormFeature, type StormFrame
 
 const KEY_ROWS = [
   { color: ROTATION_COLORS.none, label: "Storm cell" },
+  { color: ROTATION_COLORS.unknown, label: "Rotation not checked" },
   { color: ROTATION_COLORS.weak, label: ROTATION_LABELS.weak },
   { color: ROTATION_COLORS.strong_aloft, label: ROTATION_LABELS.strong_aloft },
   { color: ROTATION_COLORS.strong_low, label: ROTATION_LABELS.strong_low },
@@ -42,7 +43,7 @@ export function StormDetails({ frame, selected }: { frame: StormFrame | null; se
         {selected.kind === "rotation" && <div><dt>Strength rank</dt><dd>{String(selected.strengthRank)} of 25 · base {String(selected.baseKft)} kft · depth {String(selected.depthKft)} kft</dd></div>}
       </dl></>}
     <h3>{stormHeadline(frame)}</h3>
-    {frame && <ul className="event-storm-radars">{frame.radars.map((radar) => <li key={radar.id} data-status={radar.status}><b>{radar.name}</b> {radar.status === "ok" ? `scan ${radar.volumeTime?.slice(11, 19)} UTC` : radar.status === "no-scan" ? "no scan in the last 12 min" : "unavailable"}</li>)}</ul>}
+    {frame && <ul className="event-storm-radars">{frame.radars.map((radar) => <li key={radar.id} data-status={radar.status}><b>{radar.name}</b> {radar.status === "ok" ? `scan ${radar.volumeTime?.slice(11, 19)} UTC${radar.message.startsWith("Storm cells only") ? " · storm cells only, rotation not checked" : ""}` : radar.status === "no-scan" ? "no scan in the last 12 min" : "unavailable"}</li>)}</ul>}
     <p className="event-small">Each radar scans about every 4–10 minutes. The map shows each radar&apos;s latest scan at or before the clock (up to 12 minutes earlier) and never carries old storms forward. When two radars see the same storm, the closer radar&apos;s view is drawn once.</p>
   </section>;
 }

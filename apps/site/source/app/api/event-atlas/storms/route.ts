@@ -69,9 +69,14 @@ async function frame(time: string): Promise<StormFrame> {
       const nst = (await Promise.all(days.map((day) => listing(radar.id, "NST", day)))).flat();
       const volume = latestStormVolume(nst, time);
       if (!volume) return { status: { ...base, status: "no-scan", volumeTime: null, message: "No archived storm-tracking scan in the 12 minutes before this time." }, parsed: [] };
-      const nmd = (await Promise.all(days.map((day) => listing(radar.id, "NMD", day)))).flat().find((row) => row.time === volume.time);
-      const parsed = await Promise.all([product(volume.key), ...(nmd ? [product(nmd.key)] : [])]);
-      return { status: { ...base, status: "ok", volumeTime: volume.time, message: nmd ? "Storm cells and rotation" : "Storm cells only; no rotation product for this scan" }, parsed };
+      const cells = await product(volume.key);
+      // Rotation is optional: its failure degrades this radar to storm cells only.
+      let rotation: StormProductResult | null = null, message = "Storm cells only; no rotation product for this scan";
+      try {
+        const nmd = (await Promise.all(days.map((day) => listing(radar.id, "NMD", day)))).flat().find((row) => row.time === volume.time);
+        if (nmd) { rotation = await product(nmd.key); message = "Storm cells and rotation"; }
+      } catch { message = "Storm cells only; rotation unavailable for this scan"; }
+      return { status: { ...base, status: "ok", volumeTime: volume.time, message }, parsed: rotation ? [cells, rotation] : [cells] };
     } catch (error) {
       return { status: { ...base, status: "unavailable", volumeTime: null, message: error instanceof Error ? error.message : "Radar archive unavailable." }, parsed: [] };
     }
