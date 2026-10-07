@@ -1132,7 +1132,7 @@ test("binds a governed temporal sweep to map filters, live-source holds, compari
   assert.match(css, /\.timeline-sweep-setup/);
 });
 
-test("keeps the global header and map controls in a compact two-tier chrome", async () => {
+test("keeps the global header and map controls in one responsive toolbar", async () => {
   const [page, css, toolbar] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
@@ -1145,13 +1145,18 @@ test("keeps the global header and map controls in a compact two-tier chrome", as
   assert.doesNotMatch(page, /className="mission-band map-command-bar"/);
   assert.doesNotMatch(page, /<nav className="map-view-mode-strip"/);
   assert.doesNotMatch(page, /<nav className="map-control-strip"/);
-  assert.ok(page.indexOf('<div className="global-search">') < page.indexOf('<nav className="header-workflows"'), "search must precede workflow tabs in DOM focus order");
+  const headerStart = page.indexOf('<header className="topbar">');
+  const headerEnd = page.indexOf('      </header>', headerStart);
+  const mapControls = page.indexOf('<nav className="map-chrome-dock"');
+  assert.ok(mapControls > headerStart && mapControls < headerEnd, "map controls must share the global header");
+  assert.ok(page.indexOf('<div className="global-search">') < mapControls, "search must precede map actions in focus order");
+  assert.doesNotMatch(page, /className="mobile-primary-tabs"|className="header-workflows"/);
   assert.match(page, /className="header-overflow-panel"[\s\S]*className="header-overflow-workspaces"[\s\S]*>Map<\/button>[\s\S]*>Reports<\/button>[\s\S]*>Stories<\/button>[\s\S]*className="share-action"[\s\S]*>Share current view<\/button>[\s\S]*className="about-action" href="\/about">About<\/Link>/);
   assert.match(page, /const closeHeaderOverflow = useCallback[\s\S]*summary\?\.focus\(\{ preventScroll: true \}\)/);
   assert.match(page, /openPrimaryWorkspace\("reports"\); closeHeaderOverflow\(event\.currentTarget\)/);
   assert.match(page, /openPrimaryWorkspace\("stories"\); closeHeaderOverflow\(event\.currentTarget\)/);
   assert.match(page, /closeHeaderOverflow\(event\.currentTarget\); void shareView\(\)/);
-  assert.match(page, /className="map-dock-context"[^>]*><strong>\{selectedLabel\}<\/strong><small>\{temporalScopeLabel\}/);
+  assert.match(page, /className="map-dock-context sr-only"[^>]*><strong>\{selectedLabel\}<\/strong><small>\{temporalScopeLabel\}/);
   assert.match(page, /className="map-dock-representations" role="group" aria-label="Map representation"/);
   assert.match(page, /aria-label="Underground Logs & sections" title="Underground Logs & sections"[\s\S]*?<b>Underground<\/b><span className="sr-only">Logs &amp; sections<\/span>/);
   for (const label of ["Underground", "2D", "Terrain 3D", "Globe", "Compare", "Time", "Layers", "Places"]) {
@@ -1179,15 +1184,17 @@ test("keeps the global header and map controls in a compact two-tier chrome", as
   assert.match(page, /responseReceived = true;[\s\S]*qwenStateFromTransportFailure\(timedOut, responseReceived\)/);
   assert.match(page, /returned a malformed or oversized response, so it was withheld/);
   assert.match(css, /--global-header-height:\s*54px/);
-  assert.match(css, /--mobile-header-height:\s*96px/);
+  assert.match(css, /--mobile-header-height:\s*54px/);
   assert.match(css, /--topbar:\s*var\(--global-header-height\)/);
-  assert.match(css, /--map-dock-height:\s*44px/);
-  assert.match(css, /grid-template-areas:\s*"brand search nav actions"/);
-  assert.match(css, /\.map-chrome-dock\s*\{[^}]*height:\s*var\(--map-dock-height\)/s);
+  assert.match(css, /--map-dock-height:\s*0px/);
+  assert.match(css, /grid-template-areas:\s*"brand search map actions"/);
+  assert.match(css, /\.map-chrome-dock\s*\{[^}]*height:\s*44px/s);
   assert.match(css, /\.map-dock-representations > button,[\s\S]*?min-height:\s*44px/);
   assert.match(css, /\.qwen-panel\s*\{[^}]*top:\s*calc\(var\(--map-overlay-top\) \+ 8px\)/s);
-  assert.match(css, /@media \(min-width: 1440px\) \{[\s\S]*?\.map-dock-basemap\.map-dock-wide-only \{ display: flex; \}[\s\S]*?\.map-dock-action\.map-dock-wide-only \{ display: inline-flex; \}[\s\S]*?\.map-dock-map-menu \{ display: none; \}/);
-  assert.match(css, /@media \(min-width: 761px\) and \(max-width: 1100px\) \{[\s\S]*?\.header-overflow-workspaces \{ display: grid; \}/);
+  assert.match(css, /@media \(min-width: 1800px\) \{[\s\S]*?\.map-dock-basemap\.map-dock-wide-only \{ display: flex; \}[\s\S]*?\.map-dock-action\.map-dock-wide-only \{ display: inline-flex; \}[\s\S]*?\.map-dock-map-menu \{ display: none; \}/);
+  assert.match(page, /className="map-dock-menu-representations"[\s\S]*?\{mapRepresentationControls\(\)\}/);
+  assert.match(page, /className="map-dock-menu-quick" role="group" aria-label="Quick map controls"/);
+  assert.match(css, /\.header-overflow-workspaces \{ display: grid;/);
   assert.doesNotMatch(css, /map-command-bar|map-view-mode-strip|map-control-strip/);
 });
 

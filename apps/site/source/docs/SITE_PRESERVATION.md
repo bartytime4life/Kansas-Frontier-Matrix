@@ -79,3 +79,14 @@ focus return, responsive geometry, and minimum target sizes are covered by the
 current rendered-shell and browser-geometry checks. No layer, storage, source
 eligibility, or audience change is implied. Rollback is saved private Site
 v160 plus unloading the local companion.
+
+### Single toolbar — 2026-10-06
+The owner's toolbar request consolidates the global header and map dock into
+one 54 px row, including on mobile. Wide screens retain direct map modes,
+Time, Layers, and Places; the named Map menu provides those controls when
+space is limited. More contains Map/Reports/Stories, Compose, Status, Share,
+and About. Search and Data remain available. Terrain provider and DEM state
+remain in the representation controls. The map and Underground locator no
+longer reserve space for a second toolbar. This layout change preserves data,
+storage, audience, and source admission state. Revert the single-toolbar
+change to restore the previous two-row layout.
