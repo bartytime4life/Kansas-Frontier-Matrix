@@ -1,3 +1,10 @@
+<a id="current-site-checkpoint"></a>
+
+> **Current Site checkpoint — v169 / 2026-10-07:** the [delivery receipt](../../data/receipts/generated/site-v169-fluid-cutaway-controls-20261007.json) binds all 705 mirrored source paths to standalone source `82c73327119909f9b034976bbf7cfb5f727b6caf`. The existing owner-private Site has a larger linked 2D selector, interruptible camera transitions, stable source selection and camera pose, and repeated-rotation fitting. Production build, TypeScript and 575 Node tests pass; bounded desktop/phone interaction checks and independent design review pass. Full accessibility, device and long-session acceptance remain open.
+> The dated entries below remain historical evidence. Use the current receipt for
+> exact source parity, private deployment, local installation and validation;
+> each broader acceptance requirement remains separately tracked.
+
 > **Single-toolbar Site v166 — 2026-10-06:** the [seven-path comparison](../../data/receipts/generated/site-v166-single-toolbar-20261006.json)
 > pins all 699 source paths to same-Site source
 > `a4d6b3dc69721fbfb270906a9ff3e44dd941d5c0` on repository base

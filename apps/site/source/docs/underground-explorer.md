@@ -158,3 +158,51 @@ storage key, schema, dependency or binding is introduced. Saved v166 is the
 application rollback point. Production and browser validation are recorded by
 the delivery review; this authoring record does not claim deployment or browser
 acceptance. Older browser-blocked statements above describe their dated sessions.
+
+## Larger selector and fluid camera — 2026-10-07
+
+This update starts from saved private Site v168, source
+`c74ca07a33f742eecef5461f13769167df3e1d9d`. The cutaway now places its live
+2D selector in a dedicated column beside the 3D scene. Wide desktop map areas
+are 352–420 px wide and at least 230 px high; phones use the available width
+and a 240 px map height. Full probe coordinates, map-center and zoom actions
+remain beside the map. A measured DOM slot positions the existing MapLibre
+canvas and effects together and clips them to the workspace while scrolling;
+no second map instance is created. Attribution stays available through its
+native disclosure. Alternate Underground views retain their existing layout.
+The slot conversion includes ancestor scroll offsets, including browser focus
+scrolling, so the map remains clipped below the workspace header on phones.
+
+Camera buttons sit above the scene. Short orbit damping and interruptible
+preset/rotate/zoom transitions stop when direct manipulation starts. Reduced
+motion uses immediate changes. Transitions stop on tab hiding or disposal,
+and no permanent rendering loop is introduced. Rotation fits the new viewing
+direction and preserves zoom relative to a full fit, preventing the shallow
+frame and depth labels from clipping after repeated turns. Opacity, log
+visibility and source selection reuse the scene. Vertical scale retains the
+viewing direction and zoom while moving the camera with the depth center;
+container resizing retains the pose. A record-filter geometry rebuild restores
+the pose for the same map extent and retains a picked record if it still has
+plotted intervals. Reset, preset selection, or a new locator extent can fit a
+new view.
+Opening the Evidence Drawer skips the global layout effect's redundant
+MapLibre resize when the cutaway canvas dimensions already match. This avoids
+MapLibre's synthetic movement events clearing the selected source. Real
+dimension changes and locator movement still invalidate old bounds immediately.
+
+The selector distinguishes columns actually plotted within its extent from
+loaded records eligible after the record-time filter. The record timeline
+explicitly distinguishes its filter from the map's global Time sweep. Neither
+changes the fixed 2022–2024 aquifer source period or reconstructs past geology.
+
+`app/cutaway-camera.ts` owns this small application camera controller under the
+existing application responsibility root; `tests/cutaway-camera.test.mjs`
+covers actual transition timing, interruption, reduced motion, disposal, and
+repeated Three.js projection fits. Directory Rules and accepted ADR-0029
+remain the placement basis. `app/cutaway-locator.ts` owns the same display's
+measured placement and layout-resize guard; focused tests cover scroll clipping,
+both drawer resize callbacks and genuine size/extent invalidation in the actual
+aquifer session. There are no new data assets, requests, source
+roles, dependencies, storage formats, bindings, or acquisition permissions.
+Saved v168 is the application rollback point. Build, browser and deployment
+results belong to delivery evidence, not this authoring record.

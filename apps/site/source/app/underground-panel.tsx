@@ -1,11 +1,12 @@
 "use client";
-import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { GeoJSONSource, Map as MapLibreMap, MapMouseEvent } from "./maplibre-seam";
 import { distanceMeters, inKansas, intervalColor, intervalCsv, intervalIssues, meters, sectionSvg, sourceLink, SUBSURFACE_LIMIT, validPosition, validGeophysicalSurvey,
   type Borehole, type DepthInterval, type GeophysicalSurvey, type Position, type SectionRecord, type SubsurfaceContext, type SubsurfaceManifest } from "./subsurface-model";
 import s from "./subsurface.module.css";
 import { startSubsurfaceWorker } from "./subsurface-workers";
 import { atRecordYear, recordYear } from "./subsurface-materials";
+import { cutawayLocatorPlacement } from "./cutaway-locator";
 
 const AquiferView = lazy(() => import("./aquifer-volume-view"));
 const ThreeView = lazy(() => import("./subsurface-three"));
@@ -56,7 +57,7 @@ export default function UndergroundPanel(props: Props) {
   const [depth, setDepth] = useState(initialContext?.cursorDepth ?? initialContext?.depthRange[0] ?? 0);
   const [descriptionFilter, setDescriptionFilter] = useState(initialContext?.descriptionFilter ?? "");
   const [height, setHeight] = useState(55);
-  const [locatorHidden,setLocatorHidden] = useState(false);
+  const [locatorSlot,setLocatorSlot] = useState<HTMLDivElement|null>(null);
   const [search, setSearch] = useState(""), [matches, setMatches] = useState<NonNullable<WorkerResult["matches"]>>([]);
   const [surveyMethod, setSurveyMethod] = useState("all"), [surveys, setSurveys] = useState<GeophysicalSurvey[]>([]);
   const [surveyError, setSurveyError] = useState("");
@@ -105,6 +106,22 @@ export default function UndergroundPanel(props: Props) {
     map.resize();
     return () => { observer.disconnect(); stage?.style.removeProperty("--underground-height"); map.resize(); };
   }, [map, height, display]);
+  useLayoutEffect(() => {
+    if (!map || display !== "aquifer" || !locatorSlot) return;
+    const stage=map.getContainer().closest<HTMLElement>(".map-stage"),scroller=locatorSlot.closest<HTMLElement>("[data-underground-scroll]");
+    if(!stage||!scroller)return;
+    const position=()=>{
+      const a=locatorSlot.getBoundingClientRect(),b=stage.getBoundingClientRect(),clip=scroller.getBoundingClientRect();
+      const placement=cutawayLocatorPlacement(a,{left:b.left,top:b.top,scrollLeft:stage.scrollLeft,scrollTop:stage.scrollTop},clip);
+      stage.style.setProperty("--cutaway-locator-left",`${placement.left}px`);stage.style.setProperty("--cutaway-locator-top",`${placement.top}px`);
+      stage.style.setProperty("--cutaway-locator-width",`${placement.width}px`);stage.style.setProperty("--cutaway-locator-height",`${placement.height}px`);
+      stage.style.setProperty("--cutaway-locator-clip",`inset(${placement.clipTop}px 0 ${placement.clipBottom}px 0)`);
+      stage.style.setProperty("--cutaway-locator-visibility",placement.visible?"visible":"hidden");
+    };
+    const observer=new ResizeObserver(position);observer.observe(locatorSlot);observer.observe(stage);observer.observe(scroller);
+    scroller.addEventListener("scroll",position,{passive:true});stage.addEventListener("scroll",position,{passive:true});window.addEventListener("resize",position);position();
+    return()=>{observer.disconnect();scroller.removeEventListener("scroll",position);stage.removeEventListener("scroll",position);window.removeEventListener("resize",position);for(const key of ["left","top","width","height","clip","visibility"])stage.style.removeProperty(`--cutaway-locator-${key}`);};
+  },[map,display,locatorSlot]);
   useEffect(() => {
     if (!map || display !== "aquifer") return;
     // MapLibre's compact attribution starts expanded. Use its own accessible
@@ -162,13 +179,13 @@ export default function UndergroundPanel(props: Props) {
   const changedVersions = initialContext?.sourceVersions.some(old => manifest?.sources.some(current => current.id === old.id && current.sha256 !== old.sha256));
   const missing = initialContext?.recordIds.filter(id => !loading && !columns.some(c => c.record.id === id)) ?? [];
   const changeDepth = (index: 0 | 1, value: number) => { if (!Number.isFinite(value)) return; const next: [number, number] = [...range]; next[index] = value; if (next[0] >= 0 && next[1] > next[0] && next[1] <= 12000) { setRange(next); setDepth(Math.max(next[0], Math.min(next[1], depth))); } };
-  return <><div className={`${s.locatorBar} ${display === "aquifer" ? s.cutawayLocatorBar : ""} ${display === "aquifer" && locatorHidden ? s.locatorHidden : ""}`} aria-label="Underground 2D locator">
+  return <>{display !== "aquifer" && <div className={s.locatorBar} aria-label="Underground 2D locator">
     <strong>2D locator</strong><span>{pinned ? "Pinned" : "Pointer preview"} · {anchor[1].toFixed(4)}°, {anchor[0].toFixed(4)}°</span>
-    {display !== "aquifer" && <><button type="button" onClick={inspectHere}>Use map center</button><button type="button" onClick={() => { setPinned(true); map?.easeTo({center:anchor,zoom:Math.max(10,map.getZoom()),pitch:0,bearing:0,duration:reduceMotion?0:350}); }}>Find selection</button>
-    <button type="button" onClick={props.onFlatMap}>Reset to 2D</button></>}
-  </div><section className={`${s.panel} ${display === "aquifer" ? s.cutawayPanel : ""}`} data-cutaway-panel={display === "aquifer" ? "true" : undefined} data-cutaway-locator-hidden={locatorHidden ? "true" : undefined} aria-label="Underground workspace">
+    <button type="button" onClick={inspectHere}>Use map center</button><button type="button" onClick={() => { setPinned(true); map?.easeTo({center:anchor,zoom:Math.max(10,map.getZoom()),pitch:0,bearing:0,duration:reduceMotion?0:350}); }}>Find selection</button>
+    <button type="button" onClick={props.onFlatMap}>Reset to 2D</button>
+  </div>}<section className={`${s.panel} ${display === "aquifer" ? s.cutawayPanel : ""}`} data-cutaway-panel={display === "aquifer" ? "true" : undefined} aria-label="Underground workspace">
     <header className={s.header}><div><h2>Underground</h2><p>Depth · space · materials · record time</p></div><span className={s.badge}>Source context</span>{display !== "aquifer" && <label>Panel height <input type="range" min="35" max="70" value={height} onChange={e => setHeight(Number(e.target.value))} /></label>}<button type="button" onClick={props.onClose} aria-label="Close Underground">×</button></header>
-    <div className={s.body} onScroll={event=>setLocatorHidden(event.currentTarget.scrollTop>90)}>
+    <div className={s.body} data-underground-scroll>
       <details className={s.probeControls}><summary>Choose location, well or section · {pinned ? "pinned" : "pointer preview"}</summary>
       <div className={s.metrics}><span><b>{manifest?.totals.wellCount?.toLocaleString() ?? "…"}</b>mapped well records</span><span><b>{manifest?.totals.coreCount?.toLocaleString() ?? "…"}</b>core inventory locations</span><span><b>{pinned ? "Pinned" : "Pointer preview"}</b>{anchor[1].toFixed(4)}°, {anchor[0].toFixed(4)}°</span></div>
       <div className={s.actions}>
@@ -185,14 +202,14 @@ export default function UndergroundPanel(props: Props) {
       {matches.length > 0 && <details open><summary>First {matches.length} matching records · choose to inspect</summary><div className={s.cards}>{matches.map(([id, county, coordinates]) => <button className={s.card} type="button" key={id} onClick={() => { setAnchor(coordinates); setSelectedId(id); setPinned(true); setMatches([]); map?.easeTo({ center: coordinates, zoom: 13, duration: 0 }); }}>{id} · {county}</button>)}</div></details>}
       </details>
       <nav className={s.tabs} aria-label="Underground views">{([['aquifer','3D cutaway'],['3d','4D material explorer'],['section','Columns & section'],['surveys','Geophysical surveys'],['soil','Soil horizons']] as const).map(([id, label]) => <button type="button" key={id} aria-pressed={display === id} onClick={() => { if(id === "aquifer") props.onFlatMap(); setDisplay(id); }}>{label}</button>)}</nav>
-      {display === "aquifer" && <Suspense fallback={<p>Preparing the 3D cutaway…</p>}><AquiferView map={map} records={visibleRecords} onFlatMap={props.onFlatMap} onLocate={point => { setAnchor(point); setPinned(true); map?.easeTo({center:point,zoom:12,pitch:0,bearing:0,duration:reduceMotion?0:420}); }} onInspect={inspect} /></Suspense>}
+      {display === "aquifer" && <Suspense fallback={<p>Preparing the 3D cutaway…</p>}><AquiferView map={map} records={visibleRecords} locator={{anchor,pinned}} onLocatorSlot={setLocatorSlot} onFlatMap={props.onFlatMap} onLocate={(point,retainView) => { setAnchor(point); setPinned(true); if(!retainView)map?.easeTo({center:point,zoom:12,pitch:0,bearing:0,duration:reduceMotion?0:420}); }} onInspect={inspect} /></Suspense>}
       <section className={s.timeControls} aria-label="Underground record timeline">
-        <div><strong>Record time</strong><small>Filter loaded well/core records. Aquifer ranges stay fixed to 2022–2024; this is not changing geology.</small></div>
+        <div><strong>Record time</strong><small>Filter loaded well/core records, separate from the map’s Time sweep. Aquifer ranges stay fixed to 2022–2024; this is not changing geology.</small></div>
         <label>Through <select value={recordCutoff ?? "all"} onChange={e => { setTimePlaying(false); setRecordCutoff(e.target.value === "all" ? null : Number(e.target.value)); }}><option value="all">All available records</option>{recordCutoff !== null && !recordYears.includes(recordCutoff) && <option value={recordCutoff}>{recordCutoff} · saved cutoff</option>}{recordYears.map(y => <option key={y} value={y}>{y}</option>)}</select></label>
         <input type="range" aria-label="Underground record year" aria-valuetext={recordCutoff === null ? "All available records" : String(recordCutoff)} min="0" max={Math.max(0, recordYears.length - 1)} value={recordCutoff === null ? Math.max(0,recordYears.length-1) : Math.max(0,recordYears.findIndex(y => y >= recordCutoff))} disabled={!recordYears.length} onChange={e => { setTimePlaying(false); setRecordCutoff(recordYears[Number(e.target.value)]); }} />
         <button type="button" aria-pressed={timePlaying} disabled={!timePlaying && (reduceMotion || recordYears.length < 2 || loading)} onClick={() => { if (!timePlaying && (recordCutoff === null || recordCutoff === recordYears.at(-1))) setRecordCutoff(recordYears[0]); setTimePlaying(v => !v); }}>{timePlaying ? "Pause" : "Play record history"}</button>
         <label>Step <select value={timeStep} onChange={e => setTimeStep(Number(e.target.value))}><option value={1500}>1.5 seconds</option><option value={3000}>3 seconds</option><option value={5000}>5 seconds</option></select></label>
-        <small>{columns.length}/{loadedColumns.length} loaded records visible · {loadedColumns.filter(c => recordYear(c.record) === null).length} undated{reduceMotion ? " · use manual time steps with reduced motion" : ""}</small>
+        <small>{columns.length}/{loadedColumns.length} loaded records pass this time filter · {loadedColumns.filter(c => recordYear(c.record) === null).length} undated{reduceMotion ? " · use manual time steps with reduced motion" : ""}</small>
       </section>
       {display !== "aquifer" && <div className={s.controls}><label>Depth from <input aria-label="Minimum depth in meters" type="number" min="0" max="11999" value={range[0]} onChange={e => changeDepth(0, Number(e.target.value))} /> to <input aria-label="Maximum depth in meters" type="number" min="1" max="12000" value={range[1]} onChange={e => changeDepth(1, Number(e.target.value))} /> m</label><label>Depth cursor <input type="range" min={range[0]} max={range[1]} step={(range[1] - range[0]) / 500} value={depth} onChange={e => setDepth(Number(e.target.value))} />{depth.toFixed(1)} m</label><label>Vertical scale <select value={exaggeration} onChange={e => setExaggeration(Number(e.target.value))}>{[1,2,5,10,20].map(v => <option value={v} key={v}>{v}×</option>)}</select></label><button type="button" onClick={() => setExaggeration(1)}>1× vertical</button></div>}
       {route.length > 1 && <details><summary>Surface elevation context</summary><div className={s.actions}><button type="button" onClick={props.onTerrain}>Enable surface DEM</button><button type="button" onClick={() => { let distance = 0; const samples: { distance: number; elevation: number | null }[] = []; for (let i = 1; i < route.length; i++) { const a = route[i - 1], b = route[i], length = distanceMeters(a, b); for (let j = i === 1 ? 0 : 1; j <= 8; j++) { const f = j / 8; samples.push({ distance: distance + f * length, elevation: props.readElevation([a[0] + f * (b[0] - a[0]), a[1] + f * (b[1] - a[1])]) }); } distance += length; } setSurface(samples); }}>Sample loaded surface terrain</button></div><p className={s.muted}>Uses existing unexaggerated display DEM samples. Vertical reference is provider-dependent; this profile is deliberately separate from drilling depth and is not included in the underground snapshot.</p>{surface.length > 0 && <SurfaceProfile samples={surface} />}</details>}

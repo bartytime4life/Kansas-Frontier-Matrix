@@ -4566,29 +4566,18 @@ body { font-size: 14px; }
   .top-actions .data-notices-trigger b { min-width: 16px; padding-inline: 4px; font-size: 10px; }
 }
 
-/* In the cutaway workspace the linked locator becomes an inset. Its effects
-   retain exactly the same bounds; the full scene has its own Three.js camera. */
+/* One live MapLibre canvas occupies the measured selector slot. The map and
+   effects share the exact box and scroll clip; the Three.js scene is independent. */
 .map-stage[data-underground="true"]:has([data-cutaway-panel="true"]) .map-canvas,
 .map-stage[data-underground="true"]:has([data-cutaway-panel="true"]) .map-effects {
-  top: 220px; bottom: auto; left: 33px; right: auto; width: 208px; height: 128px;
+  top: var(--cutaway-locator-top, 0px); bottom: auto; left: var(--cutaway-locator-left, 0px); right: auto;
+  width: var(--cutaway-locator-width, 0px); height: var(--cutaway-locator-height, 0px);
+  clip-path: var(--cutaway-locator-clip, inset(0)); visibility: var(--cutaway-locator-visibility, hidden);
   z-index: 10; border: 1px solid #637370; box-sizing: border-box; transition: none;
 }
-.map-stage[data-underground="true"]:has([data-cutaway-panel="true"]) .map-effects { z-index: 10; }
-.map-stage[data-underground="true"]:has([data-cutaway-panel="true"]) .map-canvas::after { font-size: 19px; }
+.map-stage[data-underground="true"]:has([data-cutaway-panel="true"]) .map-canvas::after { font-size: 24px; }
 .map-stage[data-underground="true"]:has([data-cutaway-panel="true"]) .maplibregl-ctrl-top-right,
 .map-stage[data-underground="true"]:has([data-cutaway-panel="true"]) .maplibregl-ctrl-top-left,
 .map-stage[data-underground="true"]:has([data-cutaway-panel="true"]) .qwen-map-launch { display: none; }
-@media (max-width: 650px) {
-  .map-stage[data-underground="true"]:has([data-cutaway-panel="true"]) .map-canvas,
-  .map-stage[data-underground="true"]:has([data-cutaway-panel="true"]) .map-effects {
-    top: 258px; left: 23px; width: 136px; height: 92px;
-  }
-}
-.map-stage[data-underground="true"]:has([data-cutaway-panel="true"][data-cutaway-locator-hidden="true"]) .map-canvas,
-.map-stage[data-underground="true"]:has([data-cutaway-panel="true"][data-cutaway-locator-hidden="true"]) .map-effects { visibility: hidden; }
 .map-stage[data-underground="true"]:has([data-cutaway-panel="true"]) .maplibregl-ctrl-attrib { max-width: calc(100% - 12px); font-size: 10px; line-height: 1.45; }
 .map-stage[data-underground="true"]:has([data-cutaway-panel="true"]) .maplibregl-ctrl-attrib-inner { max-height: 84px; overflow: auto; }
-@media (min-width: 651px) and (max-height: 780px) {
-  .map-stage[data-underground="true"]:has([data-cutaway-panel="true"]) .map-canvas,
-  .map-stage[data-underground="true"]:has([data-cutaway-panel="true"]) .map-effects { top: 207px; }
-}

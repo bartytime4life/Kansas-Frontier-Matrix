@@ -6,6 +6,7 @@ import { projectVolumePosition, volumeDepthScale } from "./aquifer-volume";
 import { materialFor, materialInfo } from "./subsurface-materials";
 import { type Borehole, type DepthInterval } from "./subsurface-model";
 import { cutawayCameraFit, cutawayRecords, pickCutawaySource } from "./cutaway-model";
+import { bindCameraKeyboardInterruption, createCutawayCameraMotion, rotateCutawayCamera, type CameraPose } from "./cutaway-camera";
 import { KGS_ATLAS_URL } from "./aquifer-layers";
 import s from "./subsurface.module.css";
 import { aquiferGeometries } from "./aquifer-volume-mesh";
@@ -13,7 +14,7 @@ import { startAquiferView, type AquiferViewSnapshot } from "./aquifer-view-sessi
 type Snapshot = AquiferViewSnapshot<HTMLCanvasElement>;
 type CameraAction="reset"|"top"|"side"|"left"|"right"|"in"|"out";
 type Settings={surface:number;water:number;scale:number;logs:boolean};
-export default function AquiferVolumeView({map,records,onFlatMap,onLocate,onInspect}:{map:MapLibreMap|null;records:Borehole[];onFlatMap:()=>void;onLocate:(point:[number,number])=>void;onInspect:(record:Borehole,interval?:DepthInterval)=>void}){
+export default function AquiferVolumeView({map,records,onFlatMap,onLocate,onInspect,locator,onLocatorSlot}:{map:MapLibreMap|null;records:Borehole[];onFlatMap:()=>void;onLocate:(point:[number,number],retainView?:boolean)=>void;onInspect:(record:Borehole,interval?:DepthInterval)=>void;locator:{anchor:[number,number];pinned:boolean};onLocatorSlot:(slot:HTMLDivElement|null)=>void}){
   const [snapshot,setSnapshot]=useState<Snapshot|null>(null),[status,setStatus]=useState("Preparing the current locator area…"),[retry,setRetry]=useState(0);
   const [surfaceStatus,setSurfaceStatus]=useState("");
   const [surface,setSurface]=useState(.82),[water,setWater]=useState(.22),[scale,setScale]=useState(25),[logs,setLogs]=useState(true);
@@ -23,12 +24,15 @@ export default function AquiferVolumeView({map,records,onFlatMap,onLocate,onInsp
   const values=useRef<Settings>({surface,water,scale,logs});
   const inspectRef=useRef(onInspect);
   const snapshotRef=useRef(snapshot);
+  const pickedLogRef=useRef(pickedLog);
+  const cameraMemory=useRef<{area:string;pose:CameraPose}|null>(null);
   const volume=snapshot?.volume;
   const drawn = useMemo(() => volume ? cutawayRecords(volume, records) : null, [volume, records]);
   useEffect(()=>{values.current={surface,water,scale,logs};},[surface,water,scale,logs]);
   useEffect(()=>{inspectRef.current=onInspect;},[onInspect]);
   useEffect(()=>{snapshotRef.current=snapshot;},[snapshot]);
-  useEffect(()=>{let cancelled=false;queueMicrotask(()=>{if(!cancelled){setSelection(null);setPickedLog(null);}});return()=>{cancelled=true;};},[volume,records]);
+  useEffect(()=>{pickedLogRef.current=pickedLog;},[pickedLog]);
+  useEffect(()=>{let cancelled=false;queueMicrotask(()=>{if(cancelled)return;setSelection(id=>volume?.envelopes.some(e=>e.id===id)?id:null);setPickedLog(pick=>pick&&drawn?.intervals.some(i=>i.record.id===pick.recordId)?pick:null);});return()=>{cancelled=true;};},[volume,drawn]);
   useEffect(()=>{
     if(!map)return;
     let cancelled=false;
@@ -55,7 +59,8 @@ export default function AquiferVolumeView({map,records,onFlatMap,onLocate,onInsp
       const resources:{dispose:()=>void}[]=[];cleanup=()=>{resources.forEach(r=>r.dispose());renderer.dispose();renderer.domElement.remove();};
       renderer.domElement.tabIndex=0;renderer.domElement.setAttribute("aria-label","3D cutaway of independent well logs and aquifer source ranges below a flat locator map. Drag to orbit; camera buttons and source lists provide keyboard alternatives.");host.current.append(renderer.domElement);
       const scene=new T.Scene();scene.background=new T.Color("#101b20");const camera=new T.PerspectiveCamera(40,1,.01,500);
-      const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=false;controls.minDistance=.02;controls.maxPolarAngle=Math.PI*.92;resources.push(controls);
+      const controls=new OrbitControls(camera,renderer.domElement),motionPreference=matchMedia("(prefers-reduced-motion: reduce)");
+      controls.enableDamping=!motionPreference.matches;controls.dampingFactor=.14;controls.minDistance=.02;controls.maxPolarAngle=Math.PI*.92;controls.zoomToCursor=true;controls.listenToKeyEvents(renderer.domElement);resources.push(controls);
       const bounds=volume.bounds,k=volumeDepthScale(bounds);
       const north=projectVolumePosition(bounds[0],bounds[3],bounds).z,south=projectVolumePosition(bounds[0],bounds[1],bounds).z;
       const planeGeometry=new T.PlaneGeometry(6,south-north);planeGeometry.rotateX(-Math.PI/2);resources.push(planeGeometry);
@@ -109,7 +114,7 @@ export default function AquiferVolumeView({map,records,onFlatMap,onLocate,onInsp
       }
       const collars=new Set<string>();
       const diagramColumns:{mesh:InstanceType<typeof T.Mesh>;edge:InstanceType<typeof T.LineSegments>;edgePaint:InstanceType<typeof T.LineBasicMaterial>;recordId:string}[]=[];
-      let highlightedRecord:string|null=null;
+      let highlightedRecord:string|null=pickedLogRef.current?.recordId??null;
       for(const {record,interval,top,bottom} of plotted.intervals){
         const p=projectVolumePosition(...record.coordinates,bounds);
         const geometry=new T.CylinderGeometry(.5,.5,(bottom-top)*k,12),paint=new T.MeshBasicMaterial({color:materialInfo(materialFor(interval,record.kind)).color});resources.push(geometry,paint);
@@ -146,22 +151,42 @@ export default function AquiferVolumeView({map,records,onFlatMap,onLocate,onInsp
         renderer.render(scene,camera);
       };
       const fit=(direction:readonly [number,number,number])=>cutawayCameraFit(6,south-north,deepest*k*values.current.scale,camera.aspect,direction,renderer.domElement.clientHeight);
-      const orient=(action:CameraAction)=>{
-        const direction:readonly [number,number,number]=action==="top"?[0,1,.001]:action==="side"?[.2,0,1]:[.55,.6,1];
-        const center=controls.target,y=-deepest*k*values.current.scale/2,{distance,near,far,offsetX,offsetY}=fit(direction);
-        if(action==="reset"||action==="top"||action==="side"){const w=renderer.domElement.clientWidth,h=renderer.domElement.clientHeight;camera.setViewOffset(w,h,offsetX*w/2,-offsetY*h/2,w,h);}
-        controls.maxDistance=distance*8;camera.near=near;camera.far=far;camera.updateProjectionMatrix();
-        if(action==="left"||action==="right"){const d=camera.position.clone().sub(center);d.applyAxisAngle(new T.Vector3(0,1,0),action==="left"?-.3:.3);camera.position.copy(center).add(d);}
-        else if(action==="in"||action==="out")camera.position.sub(center).multiplyScalar(action==="in"?.8:1.25).add(center);
-        else{center.set(0,y,0);camera.position.copy(center).add(new T.Vector3(...direction).normalize().multiplyScalar(distance));}
-        controls.update();render();
+      let viewOffset:[number,number]=[0,0],dampingFrame:number|null=null;
+      const readPose=():CameraPose=>({position:camera.position.toArray(),target:controls.target.toArray(),offset:[...viewOffset]});
+      const applyPose=(pose:CameraPose)=>{
+        camera.position.fromArray(pose.position);controls.target.fromArray(pose.target);viewOffset=[...pose.offset];
+        const w=Math.max(1,renderer.domElement.clientWidth),h=Math.max(1,renderer.domElement.clientHeight);
+        camera.setViewOffset(w,h,viewOffset[0]*w/2,-viewOffset[1]*h/2,w,h);
+        const distance=camera.position.distanceTo(controls.target),extent=Math.max(6,south-north,deepest*k*values.current.scale);
+        camera.near=Math.max(.000001,Math.min(.01,distance/1000));camera.far=Math.max(100,distance+extent*20);controls.maxDistance=extent*20;
+        camera.updateProjectionMatrix();controls.update();render();
+      };
+      const motion=createCutawayCameraMotion({read:readPose,apply:applyPose,reducedMotion:()=>motionPreference.matches,
+        request:callback=>requestAnimationFrame(callback),cancel:id=>cancelAnimationFrame(id),now:()=>performance.now()});
+      const stopKeyboardInterruption=bindCameraKeyboardInterruption(renderer.domElement,motion.cancel);
+      const cancelDamping=()=>{if(dampingFrame!==null)cancelAnimationFrame(dampingFrame);dampingFrame=null;controls.enableDamping=false;controls.update();controls.enableDamping=!motionPreference.matches;};
+      const orient=(action:CameraAction,immediate=false)=>{
+        motion.cancel();cancelDamping();const pose=readPose();let next:CameraPose;
+        if(action==="left"||action==="right")next=rotateCutawayCamera(pose,action==="left"?-.3:.3,fit);
+        else if(action==="in"||action==="out"){
+          const delta=camera.position.clone().sub(controls.target),length=Math.max(controls.minDistance,Math.min(controls.maxDistance,delta.length()*(action==="in"?.8:1.25)));
+          next={...pose,position:delta.setLength(length).add(controls.target).toArray()};
+        }else{
+          const direction:readonly [number,number,number]=action==="top"?[0,1,.001]:action==="side"?[.2,0,1]:[.55,.6,1];
+          const target:[number,number,number]=[0,-deepest*k*values.current.scale/2,0],{distance,offsetX,offsetY}=fit(direction);
+          next={target,position:new T.Vector3(...direction).normalize().multiplyScalar(distance).add(new T.Vector3(...target)).toArray(),offset:[offsetX,offsetY]};
+        }
+        motion.move(next,immediate?0:action==="in"||action==="out"?180:320);
       };
       let lastScale=values.current.scale;
       const update=(v:Settings)=>{
         volumeGroup.scale.y=v.scale;logGroup.scale.y=v.scale;frameGroup.scale.y=v.scale;logGroup.visible=v.logs;
         tickSprites.forEach(({sprite,fraction})=>sprite.position.set(-3.42,-frameDepth*fraction*v.scale,south));
         planePaint.opacity=v.surface*(surfaceTexture?1:.15);waters.forEach(m=>{m.opacity=v.water;});
-        if(lastScale!==v.scale){lastScale=v.scale;orient("reset");}else render();
+        if(lastScale!==v.scale){
+          motion.cancel();cancelDamping();const pose=readPose(),delta=-deepest*k*(v.scale-lastScale)/2;
+          pose.position[1]+=delta;pose.target[1]+=delta;lastScale=v.scale;applyPose(pose);
+        }else render();
       };
       const setSurface=(image:HTMLCanvasElement|null)=>{
         surfaceTexture?.dispose();surfaceTexture=image?new T.CanvasTexture(image):null;
@@ -169,18 +194,25 @@ export default function AquiferVolumeView({map,records,onFlatMap,onLocate,onInsp
         planePaint.map=surfaceTexture;planePaint.color.set(image?"#ffffff":"#83a4a7");planePaint.needsUpdate=true;
         update(values.current);
       };
-      api.current={camera:orient,update,setSurface,highlightRecord:(id)=>{highlightedRecord=id;render();}};setSurface(snapshotRef.current?.volume===volume?snapshotRef.current.image:null);orient("reset");
-      const resize=()=>{if(!host.current)return;const w=Math.max(1,host.current.clientWidth),h=Math.max(1,host.current.clientHeight);renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();orient("reset");};
+      api.current={camera:orient,update,setSurface,highlightRecord:(id)=>{highlightedRecord=id;render();}};setSurface(snapshotRef.current?.volume===volume?snapshotRef.current.image:null);
+      const area=volume.bounds.join(",");let firstSize=true;
+      const resize=()=>{if(!host.current)return;motion.cancel();const pose=readPose(),w=Math.max(1,host.current.clientWidth),h=Math.max(1,host.current.clientHeight);renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();
+        if(firstSize){firstSize=false;if(cameraMemory.current?.area===area)applyPose(cameraMemory.current.pose);else orient("reset",true);}else applyPose(pose);
+      };
       const ray=new T.Raycaster(),point=new T.Vector2();let down=[0,0];
-      const pointerDown=(e:PointerEvent)=>{down=[e.clientX,e.clientY];};
+      const pointerDown=(e:PointerEvent)=>{motion.cancel();down=[e.clientX,e.clientY];};
       const pointerUp=(e:PointerEvent)=>{if(Math.hypot(e.clientX-down[0],e.clientY-down[1])>5)return;const b=renderer.domElement.getBoundingClientRect();point.set((e.clientX-b.left)/b.width*2-1,-(e.clientY-b.top)/b.height*2+1);ray.setFromCamera(point,camera);
         const hit=pickCutawaySource(ray,pickable.filter(m=>m.userData.record?values.current.logs:values.current.water>0));if(!hit)return;
         if(hit.object.userData.record){const r=hit.object.userData.record as Borehole,i=hit.object.userData.interval as DepthInterval|undefined;setSelection(null);setPickedLog({recordId:r.id,label:`${r.name}${i?` · ${i.top}–${i.bottom} ${r.depthUnit}: ${i.description}`:""}`});inspectRef.current(r,i);}else{setPickedLog(null);setSelection(hit.object.userData.envelope.id);}
       };
-      const lost=(e:Event)=>{e.preventDefault();setFailure("3D interrupted. The 2D locator and source ranges remain available below.");};
-      renderer.domElement.addEventListener("pointerdown",pointerDown);renderer.domElement.addEventListener("pointerup",pointerUp);renderer.domElement.addEventListener("webglcontextlost",lost);controls.addEventListener("change",render);document.addEventListener("visibilitychange",render);
+      const lost=(e:Event)=>{e.preventDefault();motion.cancel();setFailure("3D interrupted. The 2D locator and source ranges remain available below.");};
+      renderer.domElement.addEventListener("pointerdown",pointerDown);renderer.domElement.addEventListener("pointerup",pointerUp);renderer.domElement.addEventListener("webglcontextlost",lost);controls.addEventListener("start",motion.cancel);
+      const changed=()=>{render();if(controls.enableDamping&&dampingFrame===null&&!document.hidden)dampingFrame=requestAnimationFrame(()=>{dampingFrame=null;if(!disposed)controls.update();});};
+      const preferenceChanged=()=>{motion.cancel();cancelDamping();};
+      const visibilityChanged=()=>{if(document.hidden){motion.cancel();cancelDamping();}else render();};
+      controls.addEventListener("change",changed);motionPreference.addEventListener("change",preferenceChanged);document.addEventListener("visibilitychange",visibilityChanged);
       const observer=new ResizeObserver(resize);observer.observe(host.current);resize();const disposeResources=cleanup;
-      cleanup=()=>{observer.disconnect();controls.removeEventListener("change",render);document.removeEventListener("visibilitychange",render);renderer.domElement.removeEventListener("pointerdown",pointerDown);renderer.domElement.removeEventListener("pointerup",pointerUp);renderer.domElement.removeEventListener("webglcontextlost",lost);disposeResources();};
+      cleanup=()=>{cameraMemory.current={area,pose:readPose()};stopKeyboardInterruption();motion.dispose();if(dampingFrame!==null)cancelAnimationFrame(dampingFrame);observer.disconnect();controls.removeEventListener("start",motion.cancel);controls.removeEventListener("change",changed);motionPreference.removeEventListener("change",preferenceChanged);document.removeEventListener("visibilitychange",visibilityChanged);renderer.domElement.removeEventListener("pointerdown",pointerDown);renderer.domElement.removeEventListener("pointerup",pointerUp);renderer.domElement.removeEventListener("webglcontextlost",lost);disposeResources();};
     }).catch(()=>{cleanup?.();cleanup=undefined;if(!disposed)setFailure("Aquifer 3D is unavailable on this device. Read the source ranges below and continue on the 2D locator.");});
     return()=>{disposed=true;api.current=null;cleanup?.();};
   },[volume,records]);
@@ -189,12 +221,22 @@ export default function AquiferVolumeView({map,records,onFlatMap,onLocate,onInsp
   useEffect(()=>{api.current?.highlightRecord(pickedLog?.recordId??null);},[pickedLog]);
   const selected=snapshot?.volume.envelopes.find(e=>e.id===selection);
   const focusHere=()=>{const center=map?.getCenter();if(center){onFlatMap();onLocate([center.lng,center.lat]);}};
+  const probeCenter=()=>{const center=map?.getCenter();if(center)onLocate([center.lng,center.lat],true);};
   return <section className={s.cutawayExplorer} aria-label="3D cutaway from source records">
     <div className={s.cutawayHeading}>
       <div><span className={s.cutawayEyebrow}>KANSAS / BELOW THE SURFACE</span><h3>Read the ground.</h3></div>
       <div className={s.cutawayEntryActions}><button type="button" onClick={focusHere}>Explore this area <span aria-hidden="true">↗</span></button><button type="button" onClick={()=>{onFlatMap();onLocate([-100.5,38.5]);}}>High Plains example</button></div>
     </div>
     <div className={s.cutawayWorkspace}>
+      <aside className={s.cutawayLocator} aria-label="Choose the cutaway area">
+        <div className={s.cutawayLocatorTitle}><strong>2D selector</strong><span>DRAG · ZOOM · CHOOSE</span></div>
+        <div ref={onLocatorSlot} className={s.cutawayLocatorMap} aria-label="Linked 2D selector map position" />
+        <div className={s.cutawayLocatorPosition}><span>{locator.pinned?"Pinned probe":"Probe location"}</span><strong>{locator.anchor[1].toFixed(4)}° N, {Math.abs(locator.anchor[0]).toFixed(4)}° W</strong></div>
+        <p>Move the map to frame your cutaway. Choose a point to load nearby records.</p>
+        <div className={s.cutawayLocatorActions}><button type="button" onClick={probeCenter}>Use map center <span aria-hidden="true">↗</span></button><button type="button" aria-label="Zoom selector map in" onClick={()=>map?.zoomIn({duration:matchMedia("(prefers-reduced-motion: reduce)").matches?0:220})}>+</button><button type="button" aria-label="Zoom selector map out" onClick={()=>map?.zoomOut({duration:matchMedia("(prefers-reduced-motion: reduce)").matches?0:220})}>−</button></div>
+        <div className={s.cutawayCounts}><strong>{drawn?.recordCount??0}<span>plotted columns</span></strong><strong>{records.length}<span>eligible loaded records</span></strong></div>
+        {snapshot&&!drawn?.recordCount&&<p className={s.cutawayNoColumns}>No loaded intervals fall inside this map frame. Choose a point or use the High Plains example.</p>}
+      </aside>
       <div className={s.cutawayStage}>
         <div ref={host} className={s.cutawayCanvas} hidden={!snapshot||!!failure} />
         {!snapshot&&!failure&&<div className={s.cutawayEmpty}><span className={s.cutawayEyebrow}>A CLOSER LOOK</span><h4>Choose a piece of Kansas.</h4><p>Explore a local area to reveal recorded well columns and available aquifer ranges beneath the map.</p><button type="button" onClick={focusHere}>Explore this area</button><p className={s.cutawayEmptyStatus} role="status">{status}</p></div>}
@@ -209,7 +251,7 @@ export default function AquiferVolumeView({map,records,onFlatMap,onLocate,onInsp
         <label className={s.cutawayRange}>Surface map <output>{Math.round(surface*100)}%</output><input aria-label="Surface map opacity" type="range" min="0" max="100" value={surface*100} onChange={e=>setSurface(Number(e.target.value)/100)} /></label>
         <label className={s.cutawayRange}>Aquifer range <output>{Math.round(water*100)}%</output><input aria-label="Aquifer opacity" type="range" min="0" max="100" value={water*100} onChange={e=>setWater(Number(e.target.value)/100)} /></label>
         <label className={s.cutawayScale}>Vertical scale <select aria-label="Cutaway vertical scale" value={scale} onChange={e=>setScale(Number(e.target.value))}>{[1,10,25,50,100,250,500].map(n=><option key={n} value={n}>{n}×</option>)}</select></label>
-        <button className={s.cutawayLogToggle} type="button" aria-pressed={logs} onClick={()=>setLogs(v=>!v)}><span aria-hidden="true">{logs?"☑":"☐"}</span> Recorded columns <b>{drawn?.recordCount??0}</b></button>
+        <button className={s.cutawayLogToggle} type="button" aria-pressed={logs} onClick={()=>setLogs(v=>!v)}><span aria-hidden="true">{logs?"☑":"☐"}</span> Show columns <b>{drawn?.recordCount??0}</b></button>
         <div className={s.cutawayLegend}><span><i data-kind="log"/>Log descriptions · width illustrative</span><span><i data-kind="core"/>Core inventory envelopes</span><span><i data-kind="aquifer"/>Aquifer uncertainty · 2022–2024</span><span><i data-kind="unknown"/>Unobserved / unlogged</span></div>
         <p className={s.cutawayCaution}>Depths use each record’s own recorded depth reference. The flat map is not surveyed terrain. Choose imagery through Map → Basemap.</p>
         <details className={s.cutawayEvidence}><summary>Evidence &amp; source bounds <span>{snapshot?.volume.envelopes.length??0} ranges</span></summary>
@@ -220,6 +262,6 @@ export default function AquiferVolumeView({map,records,onFlatMap,onLocate,onInsp
         </details>
       </aside>
     </div>
-    <div className={s.cutawayReadout} aria-live="polite"><span className={s.cutawayEyebrow}>INSPECT</span>{pickedLog?<span>{pickedLog.label}</span>:selected?<span>Water-table depth {selected.depthFeet.join("–")} ft · thickness {selected.thicknessFeet.join("–")} ft · possible outer envelope {selected.shallowMeters.toFixed(1)}–{selected.deepMeters.toFixed(1)} m. Not wholly saturated.</span>:<span>{snapshot?"Drag to orbit · select a column or blue range to inspect its source.":"Use Explore this area or High Plains example to prepare a bounded local view."}</span>}</div>
+    <div className={s.cutawayReadout} aria-live="polite"><span className={s.cutawayEyebrow}>INSPECT</span>{pickedLog?<span>{pickedLog.label}</span>:selected?<span>Water-table depth {selected.depthFeet.join("–")} ft · thickness {selected.thicknessFeet.join("–")} ft · possible outer envelope {selected.shallowMeters.toFixed(1)}–{selected.deepMeters.toFixed(1)} m. Not wholly saturated.</span>:<span>{snapshot?"Drag to orbit · scroll to zoom · select a column or blue range to inspect its source.":"Use Explore this area or High Plains example to prepare a bounded local view."}</span>}</div>
   </section>;
 }

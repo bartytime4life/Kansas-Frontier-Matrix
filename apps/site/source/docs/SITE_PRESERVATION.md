@@ -102,3 +102,18 @@ columns, uncertainty envelopes and explicit unobserved space. No continuous
 geological or cave model is implied. Rollback is the saved v166 application;
 there is no database or source-data migration. Version, deployment and browser
 acceptance are separate delivery evidence and are not asserted by this record.
+
+### Larger Underground selector and fluid camera — 2026-10-07
+Starting from owner-private Site v168, source
+`c74ca07a33f742eecef5461f13769167df3e1d9d`, the cutaway gains a larger measured
+selector region and smooth, interruptible camera controls. The same MapLibre
+instance supplies the map and captured surface at matching bounds. Camera
+pose survives appearance changes, renderer resizing and same-extent record
+refreshes; changing the locator extent can fit a new view. Reduced motion and
+keyboard/button alternatives remain supported. Plotted-column counts are
+separated from eligible loaded-record counts. The single toolbar, owner-only
+audience, DB/BUCKET bindings, source bytes and hashes, saved schema, worker
+budgets, depth/uncertainty semantics, export privacy and local stores remain
+unchanged. No acquisition, geological interpolation or data admission is
+introduced. Rollback is the saved v168 application without a storage migration;
+deployment and browser acceptance are recorded separately by delivery.
