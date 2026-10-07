@@ -2,6 +2,29 @@
 
 Status: PROPOSED / documentation-only / staged roadmap. This document does not admit a source, activate a runtime feed, change a release or publication state, deploy a service, or authorize a warning product.
 
+## Current implementation checkpoint — 2026-10-07
+
+This authored checkpoint updates the standalone Explorer feature map for
+**Site v170**; the September 11 architecture and source proposals
+below remain proposals unless individually supported here. The
+[current Site checkpoint](../../apps/site/README.md#current-site-checkpoint)
+and its version receipt are the authority for source identity, delivery and
+validation. The final standalone source passed its production build, TypeScript and 586 Node tests. Independent source/behavior review verifies slice entry, depth control, camera retention and focus handoff. Fresh rendered-browser validation for v170 is UNVERIFIED because the admin policy check was unavailable; the earlier v169 desktop/phone checks remain historical and do not complete the broader acceptance matrix.
+
+| Feature or idea | Current disposition | Existing follow-up owner |
+| --- | --- | --- |
+| One top toolbar and source-backed 3D Underground cutaway | Implemented in the standalone Site; individual source intervals, core envelopes and bounded aquifer ranges retain their distinct meanings. | [M10 / #3375](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3375) |
+| Larger 2D area selector and fluid camera controls | Implemented: dedicated selector column (352–420 px wide on desktop, full-width on phones), interruptible/reduced-motion camera transitions, fit-preserving rotation, and stable pose/selection through display changes. | [M33 / #3397](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3397) |
+| Direct 3D slice entry and recorded-depth controls | Implemented: named record entry above the cutaway, an explicit 3D slice tab, useful initial depth, a visible cut guide, a single nearby depth slider, retained window/camera on toggles, and deliberate keyboard focus handoff. One source column only; no continuous geology is inferred. | [M33 / #3397](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3397) |
+| Hosted/source/local equivalence and recovery | Exact delivery evidence is bound in the linked receipt; full acceptance and saved-predecessor production rollback remain separate. | [M35 / #4418](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4418) |
+| Package-owned MapLibre runtime admission | NEEDS VERIFICATION: the standalone Site pins 6.9.0 while package/lock pins 6.11.2 and the readiness classifier targets 6.9.0. Site interaction checks do not retarget or satisfy the governed package-owned probe packet. | [M23 / #2906](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2906) |
+| Full keyboard, screen-reader, device, performance and long-session proof | Remains open beyond the bounded checks recorded for this version. | [#3397](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3397), [#2906](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2906) |
+| Surveyed terrain, continuous geology, common-elevation sections or cave geometry | PROPOSED / source-gated. The captured locator surface stays flat; individual logged depths do not imply a shared datum or continuous subsurface. Qualified source, rights, sensitivity and uncertainty evidence must precede any such feature. | [M05 / #3369](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3369), [program board / #2768](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2768) |
+
+This crosswalk preserves existing issue and native milestone ownership. It does
+not create a parallel execution queue, close milestones, admit data or waive
+review. New ideas below retain their stated source and validation gates.
+
 ## Executive decision
 
 Build the Explorer around one governed `LayerFrame` contract and one renderer-neutral `MapRuntimePort`. Every visible layer should be a time-bounded, source-identified frame with a finite trust state, a legend, rights/sensitivity policy, fallback behavior, and an EvidenceBundle route. Keep the map 2D-first, start playback paused, and treat 3D, live feeds, particles, historic overlays, and AI explanations as adapters behind the same contract.

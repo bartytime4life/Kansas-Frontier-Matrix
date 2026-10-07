@@ -1,3 +1,13 @@
+<a id="current-site-checkpoint"></a>
+
+> **Current Site checkpoint — v170 / 2026-10-07:** the [slice-access delivery receipt](../../data/receipts/generated/site-v170-slice-access-20261007.json) binds all 707 source paths to `54e3f661d3dcede372ef8ae90dee99cd0798e3b9`. Underground now exposes **Open 3D slice** above the cutaway and a **3D slice & materials** tab. A named recorded column opens at a useful interior depth; the adjacent slider and whole-column action preserve a chosen window, source selection and camera. Keyboard entry transfers focus once. The larger v169 selector remains. Production build, TypeScript and 586 tests pass; independent source/behavior review passes. Fresh browser visual acceptance is **UNVERIFIED** because the admin policy check was unavailable. Earlier browser checks below apply only to their recorded versions.
+> Existing source, rights, audience, storage and data-admission boundaries remain unchanged. This is a slice of one recorded column, not a continuous geological section.
+
+> **Previous Site checkpoint — v169 / 2026-10-07:** the [delivery receipt](../../data/receipts/generated/site-v169-fluid-cutaway-controls-20261007.json) binds all 705 mirrored source paths to standalone source `82c73327119909f9b034976bbf7cfb5f727b6caf`. The existing owner-private Site has a larger linked 2D selector, interruptible camera transitions, stable source selection and camera pose, and repeated-rotation fitting. Production build, TypeScript and 575 Node tests pass; bounded desktop/phone interaction checks and independent design review pass. Full accessibility, device and long-session acceptance remain open.
+> The dated entries below remain historical evidence. Use the current receipt for
+> exact source parity, private deployment, local installation and validation;
+> each broader acceptance requirement remains separately tracked.
+
 > **Single-toolbar Site v166 — 2026-10-06:** the [seven-path comparison](../../data/receipts/generated/site-v166-single-toolbar-20261006.json)
 > pins all 699 source paths to same-Site source
 > `a4d6b3dc69721fbfb270906a9ff3e44dd941d5c0` on repository base

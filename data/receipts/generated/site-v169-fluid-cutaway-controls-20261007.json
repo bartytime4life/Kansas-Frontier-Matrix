@@ -1,0 +1,377 @@
+{
+  "profile": "kfm.site-feature-delta/v1",
+  "authority": "REVIEW_ONLY",
+  "created_at": "2026-10-07T06:11:40.875361+00:00",
+  "owning_root": "data/",
+  "responsibility": "Exact source comparison and bounded delivery evidence; not independent human acceptance or dataset release approval.",
+  "directory_basis": [
+    "docs/doctrine/directory-rules.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "site_project_id": "appgprj_6aa0b1c41bc08191bfd86003920f1631",
+  "site_base_version": 168,
+  "site_base_commit": "c74ca07a33f742eecef5461f13769167df3e1d9d",
+  "site_candidate_commit": "82c73327119909f9b034976bbf7cfb5f727b6caf",
+  "github_branch_base_commit": "b94e002002f16351c532386bd7cb73dfa725ec21",
+  "github_branch": "agent/site-fluid-cutaway-controls-20261007",
+  "predecessor_integration": {
+    "pr": 4913,
+    "head": "bbb4cb336cc40b14aae5b070f9ef8cde003e1374",
+    "merge_commit": "b94e002002f16351c532386bd7cb73dfa725ec21",
+    "merged_at": "2026-10-07T05:42:49Z",
+    "method": "Observed external GitHub merge; no merge operation invoked by this work."
+  },
+  "destination": "apps/site/source",
+  "application_method": "Exact 12-path UI delta; all701 predecessor paths verified before copying, then all705 final paths compared. Authored root/app/roadmap documentation remains outside the source mirror.",
+  "counts": {
+    "changed_paths": 12,
+    "updated_paths": 8,
+    "new_paths": 4,
+    "deleted_paths": 0
+  },
+  "files": {
+    "app/aquifer-volume-view.tsx": {
+      "github_base_sha256": "3ea80a25109c132aa0391ac35c5e9de592b647526cc78c0d20662457c20ae149",
+      "site_base_sha256": "3ea80a25109c132aa0391ac35c5e9de592b647526cc78c0d20662457c20ae149",
+      "github_result_sha256": "99cc5f5dae444aed989df31441562a143a219bb2049a49dc9c4f15f607dfcb8c",
+      "site_source_sha256": "99cc5f5dae444aed989df31441562a143a219bb2049a49dc9c4f15f607dfcb8c"
+    },
+    "app/cutaway-camera.ts": {
+      "github_base_sha256": null,
+      "site_base_sha256": null,
+      "github_result_sha256": "1a062f0acb6110e1731689a81f27db872708494ca577f86790ae03ed3c9d5e09",
+      "site_source_sha256": "1a062f0acb6110e1731689a81f27db872708494ca577f86790ae03ed3c9d5e09"
+    },
+    "app/cutaway-locator.ts": {
+      "github_base_sha256": null,
+      "site_base_sha256": null,
+      "github_result_sha256": "c44514d25930c81a0347fe248b225f1cbd8edd8cb9f091898f6fd39053a10cfa",
+      "site_source_sha256": "c44514d25930c81a0347fe248b225f1cbd8edd8cb9f091898f6fd39053a10cfa"
+    },
+    "app/globals.css": {
+      "github_base_sha256": "441bcf55f6f1d566de8df0d4474bb524caf18e08f937aa5f2279e653b7edbb5f",
+      "site_base_sha256": "441bcf55f6f1d566de8df0d4474bb524caf18e08f937aa5f2279e653b7edbb5f",
+      "github_result_sha256": "6a59710ecb2d7f1be5124ffd3a66bdfad1978407e5e972685c8287f36dc3d9e9",
+      "site_source_sha256": "6a59710ecb2d7f1be5124ffd3a66bdfad1978407e5e972685c8287f36dc3d9e9"
+    },
+    "app/page.tsx": {
+      "github_base_sha256": "f0c51a9c6979763181fc2d2ac833e3fa09fc3200045e5c2aef2924532390723b",
+      "site_base_sha256": "f0c51a9c6979763181fc2d2ac833e3fa09fc3200045e5c2aef2924532390723b",
+      "github_result_sha256": "e98b123514be981f0067393f6aaa7da8ea3860fc749b68984121d0a885f7dacd",
+      "site_source_sha256": "e98b123514be981f0067393f6aaa7da8ea3860fc749b68984121d0a885f7dacd"
+    },
+    "app/subsurface.module.css": {
+      "github_base_sha256": "2dfc12f494688ac51666cf5706f73a311e3c3fd8d3d29cc60a24484141aef323",
+      "site_base_sha256": "2dfc12f494688ac51666cf5706f73a311e3c3fd8d3d29cc60a24484141aef323",
+      "github_result_sha256": "df6bb1882db6ff228e1ee1182a2194bafe5067aad5d98b8996ee88270304fa28",
+      "site_source_sha256": "df6bb1882db6ff228e1ee1182a2194bafe5067aad5d98b8996ee88270304fa28"
+    },
+    "app/underground-panel.tsx": {
+      "github_base_sha256": "32210692406f9581b1306f7c696d0df822f43eebda9c6ee039352e4d85a91c8f",
+      "site_base_sha256": "32210692406f9581b1306f7c696d0df822f43eebda9c6ee039352e4d85a91c8f",
+      "github_result_sha256": "ad2fb20acb6e353c9b97e9e493968859e75b9bd40c98440680911411d055a305",
+      "site_source_sha256": "ad2fb20acb6e353c9b97e9e493968859e75b9bd40c98440680911411d055a305"
+    },
+    "docs/SITE_PRESERVATION.md": {
+      "github_base_sha256": "4e1f4e6957384a36ab2e5d64a3597626e29411905024cee32a89c7fee47525f5",
+      "site_base_sha256": "4e1f4e6957384a36ab2e5d64a3597626e29411905024cee32a89c7fee47525f5",
+      "github_result_sha256": "9b34e98e1983fdb0ecb181a4447078253bee376ad98a4ede1c59c204f97dd3bf",
+      "site_source_sha256": "9b34e98e1983fdb0ecb181a4447078253bee376ad98a4ede1c59c204f97dd3bf"
+    },
+    "docs/underground-explorer.md": {
+      "github_base_sha256": "e5b303a7300952fc6524733e327cf4f24e7dd3e53a2e7266f6db05c7b341821d",
+      "site_base_sha256": "e5b303a7300952fc6524733e327cf4f24e7dd3e53a2e7266f6db05c7b341821d",
+      "github_result_sha256": "7c6d2b03849fdc2352d898f76cab848224a5268733622dd49f076158bb9427a9",
+      "site_source_sha256": "7c6d2b03849fdc2352d898f76cab848224a5268733622dd49f076158bb9427a9"
+    },
+    "tests/aquifer-view-session.test.mjs": {
+      "github_base_sha256": "0c336ff701d305927280fcf1da9235e18d615fefd8037b6c60acf78249ec4319",
+      "site_base_sha256": "0c336ff701d305927280fcf1da9235e18d615fefd8037b6c60acf78249ec4319",
+      "github_result_sha256": "a0dc5205d465311e2c78ef9e743c6ce7fb81c9fac69bd41f026eb490fafdfdd8",
+      "site_source_sha256": "a0dc5205d465311e2c78ef9e743c6ce7fb81c9fac69bd41f026eb490fafdfdd8"
+    },
+    "tests/cutaway-camera.test.mjs": {
+      "github_base_sha256": null,
+      "site_base_sha256": null,
+      "github_result_sha256": "56b509069dd251cc16524bcc89b38614001dfb7d68eb33d60f96652b1be10405",
+      "site_source_sha256": "56b509069dd251cc16524bcc89b38614001dfb7d68eb33d60f96652b1be10405"
+    },
+    "tests/cutaway-locator.test.mjs": {
+      "github_base_sha256": null,
+      "site_base_sha256": null,
+      "github_result_sha256": "24e98043c8a1b78630cb58849936e589e1ea8aded44bf9bf7710d458d60c1b26",
+      "site_source_sha256": "24e98043c8a1b78630cb58849936e589e1ea8aded44bf9bf7710d458d60c1b26"
+    }
+  },
+  "exact_source_comparison": {
+    "source_commit": "82c73327119909f9b034976bbf7cfb5f727b6caf",
+    "source_dirty": false,
+    "mirrored_paths": 705,
+    "remaining_differences": 0,
+    "missing_paths": 0,
+    "unexpected_paths": 0,
+    "path_and_content_inventory_sha256": "acc63e749617828ea67a46013d580e0ca7b1d90579b3a4a73daf96b978d86da5",
+    "inventory_encoding": "SHA-256 of sorted compact JSON array of path and lowercase sha256, with sorted object keys."
+  },
+  "deployment": {
+    "site_version": 169,
+    "source_commit": "82c73327119909f9b034976bbf7cfb5f727b6caf",
+    "version_id": "appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_2586855609148191a56f8037636189cb",
+    "deployment_id": "appgdep_6ac5e0cf8f60819196c246e8e9477760",
+    "status": "succeeded",
+    "completed_at": "2026-10-07T06:04:10Z",
+    "audience": "Existing owner-private audience preserved",
+    "local_deployment_archive_sha256": "43f23730613159a23d516b29e180049f7fbd9a8f7082f849f7c0201d1535d228",
+    "platform_canonical_tar_content_sha256": "4476fcf11596cd2ee94bda998293bc0364851c1740cf1aa334bf555cfbcbc9d0",
+    "platform_files": 378,
+    "platform_bytes": 48629760,
+    "evidence": "Root native Sites save/version/deployment readback. Gzip and canonical tar digests identify different packaging forms."
+  },
+  "application_validation": {
+    "evidence": "Root final standalone validation reused after exact full mirror parity.",
+    "production_build": "PASS",
+    "typescript": "PASS",
+    "node_tests": {
+      "pass": 575,
+      "fail": 0,
+      "skipped": 0
+    },
+    "focused_independent_tests": {
+      "pass": 30,
+      "fail": 0
+    },
+    "focused_lint": "PASS, zero errors; inherited warnings remain"
+  },
+  "browser_validation": {
+    "preview": {
+      "origin": "http://127.0.0.1:5174",
+      "state": "isolated preview state",
+      "sizes": [
+        [
+          1440,
+          900
+        ],
+        [
+          1280,
+          720
+        ],
+        [
+          375,
+          812
+        ]
+      ],
+      "confirmed": [
+        "Larger linked 2D selector and full coordinates",
+        "44px opacity controls",
+        "Direct orbit, rotation, opacity and scale controls usable",
+        "WWC5 461821 0-16 ft Top soil selection retained when evidence drawer opened/closed and opacity changed",
+        "Mobile horizontal document width 375px at375px viewport",
+        "Ancestor scroll27px: locator top -91.859375 plus clip159.859px matches Underground bodytop68px",
+        "One compact global toolbar retained"
+      ],
+      "limits": [
+        "Bounded visual and interaction checks, not complete accessibility/touch/long-session WebGL acceptance",
+        "Fresh isolated store correctly withholds uninstalled governed water and Crop-CASMA products"
+      ]
+    },
+    "independent_design_review": "PASS, round2; exact12-source-path hashes verified",
+    "hosted_and_local": {
+      "evidence": "Root supported-browser observations after private deployment and guarded local installation; bounded smoke only.",
+      "hosted": {
+        "outcome": "PASS",
+        "site_version": 169,
+        "source_commit": "82c73327119909f9b034976bbf7cfb5f727b6caf",
+        "sequence": [
+          "Terrain 3D 1.6x",
+          "keyboard entry to Underground",
+          "High Plains example"
+        ],
+        "plotted_records": 19,
+        "loaded_records": 50,
+        "aquifer_ranges": 1,
+        "surface": "captured satellite locator",
+        "new_console_errors": 0,
+        "observations": [
+          "larger selector visible",
+          "camera controls above scene"
+        ],
+        "viewport_px": [
+          1894,
+          1292
+        ],
+        "horizontal_document_overflow": false,
+        "selector_px": [
+          417,
+          284
+        ],
+        "baseline_selector_px": [
+          208,
+          128
+        ]
+      },
+      "local": {
+        "outcome": "PASS",
+        "site_version": 169,
+        "source_commit": "82c73327119909f9b034976bbf7cfb5f727b6caf",
+        "origin": "http://127.0.0.1:4173",
+        "viewport_px": [
+          1280,
+          720
+        ],
+        "selector_px": [
+          349,
+          228
+        ],
+        "horizontal_document_overflow": false,
+        "sequence": [
+          "Terrain 3D",
+          "keyboard entry to Underground",
+          "High Plains example",
+          "keyboard Rotate right",
+          "surface opacity 82 to 81"
+        ],
+        "plotted_records": 8,
+        "loaded_records": 50,
+        "aquifer_ranges": 1,
+        "surface": "captured satellite locator",
+        "new_console_errors": 0
+      },
+      "limit": "Different viewport extents produce different plotted counts. This is not complete accessibility, touch/device, long-session or independent human acceptance."
+    }
+  },
+  "local_installation": {
+    "state": "VERIFIED_ACTUAL_LOCAL_STORE_AND_RUNTIME",
+    "site_version": 169,
+    "source_commit": "82c73327119909f9b034976bbf7cfb5f727b6caf",
+    "stable_alias_target": "KFM-Explorer-Site-v169",
+    "origin": "http://127.0.0.1:4173",
+    "physical_v109_state_retained": true,
+    "sqlite_checks_passed": 8,
+    "r2_blobs_verified": 15840,
+    "r2_blob_bytes_verified": 738852346,
+    "r2_blob_inventory_sha256": "2f390be87b05567bc4ed30c983485d8f48b094a0c21e4cc23006b9188c7f2ab6",
+    "d1_r2_counts_unchanged": true,
+    "service_configuration_unchanged": true,
+    "explorer_active": true,
+    "qwen_bridge": "READY",
+    "prism_pid_preserved": 11880,
+    "rehearsal_http_checks": 12,
+    "private_installation_receipt_sha256": "7aa6f4b39eb0b35c4113925807d231217a2a57f146c1af7a152546fcf3b29f35",
+    "private_actual_readback_sha256": "6b8209c7f7c99542d5330245b7ef087297d242eb5ffeaaa70fa04cc634091155",
+    "source_build_sha256": "f3fc074d41ae353f708975aa3691702bbf688233cceedc80e12515fe2a55b219",
+    "entry_sha256": "ae4ff80cb1bbc7a46a88bf5e20613ee0e9acd9033a978d24a555d2c8ce75c48b",
+    "config_sha256": "30a021f89bd857e1e85303f8f8ba70201f9925b237fbb58bebd4dac9df7f9cb1",
+    "evidence": "Root guarded install; receipt/readback digests and source identity independently re-read by delivery agent."
+  },
+  "repository_validation": {
+    "source_parity": "PASS, native site_mirror --source returns no changes/deletions",
+    "documentation_links": {
+      "checked_documents": 5,
+      "checked_local_targets": 109,
+      "external_targets_unverified": 55,
+      "outcome": "DOC_LINK_CHECK_PASS",
+      "scope": "explicit_or_repository_markdown"
+    },
+    "documentation_metadata": {
+      "documents": 5,
+      "fail_findings": 0,
+      "info_findings": 0,
+      "invalid_metadata_blocks": 0,
+      "metadata_blocks": 1,
+      "missing_metadata_blocks": 4,
+      "registered_documents": 0,
+      "registry_add_candidates": 0,
+      "registry_conflicts": 0,
+      "valid_metadata_blocks": 1,
+      "warn_findings": 3
+    },
+    "repository_topology": {
+      "outcome": "FAIL",
+      "base_commit": "b94e002002f16351c532386bd7cb73dfa725ec21",
+      "counts": {
+        "baselined_warning": 113,
+        "fail_invariant": 0,
+        "fail_new_drift": 6,
+        "finding": 119
+      },
+      "failure_findings": [
+        {
+          "disposition": "FAIL_NEW_DRIFT",
+          "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+          "fingerprint": "sha256:94a86e4bf617c99cac21a7fa8c14f845d7b9c927cfd43402085a22bcc4bd2b4e",
+          "rule_id": "KFM-TOPO-017",
+          "subject": "artifacts/qa/reports/dp-15-inventory-20261007/classify.py"
+        },
+        {
+          "disposition": "FAIL_NEW_DRIFT",
+          "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+          "fingerprint": "sha256:5156d599303e36dab5765a45ea9d5f1a18f8822c8f8c7e52940a0d63d14822d6",
+          "rule_id": "KFM-TOPO-017",
+          "subject": "artifacts/qa/reports/dp-15-inventory-20261007/dp-declarations.json"
+        },
+        {
+          "disposition": "FAIL_NEW_DRIFT",
+          "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+          "fingerprint": "sha256:632c54df048ade863f12295591137838b0d10c23abbcdf6dc07613a7f8248b15",
+          "rule_id": "KFM-TOPO-017",
+          "subject": "artifacts/qa/reports/dp-15-inventory-20261007/hits.csv.gz"
+        },
+        {
+          "disposition": "FAIL_NEW_DRIFT",
+          "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+          "fingerprint": "sha256:8bd9c2d8c0255ba4fafe5c718cd0dfef47571cf1688d65dccefe7b2dbde9964d",
+          "rule_id": "KFM-TOPO-017",
+          "subject": "artifacts/qa/reports/dp-15-inventory-20261007/inventory.json.gz"
+        },
+        {
+          "disposition": "FAIL_NEW_DRIFT",
+          "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+          "fingerprint": "sha256:f8b30c168598bf0cb465452699fcdf0a738458c2ce3558d975ce63def27c5a61",
+          "rule_id": "KFM-TOPO-017",
+          "subject": "artifacts/qa/reports/dp-15-inventory-20261007/scan.py"
+        },
+        {
+          "disposition": "FAIL_NEW_DRIFT",
+          "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+          "fingerprint": "sha256:bbea9aa27fb2c21feca11e2ccdcc66a6eb46dfa7f9195c64823e27730807878f",
+          "rule_id": "KFM-TOPO-017",
+          "subject": "artifacts/qa/reports/dp-15-inventory-20261007/summary.json"
+        }
+      ],
+      "candidate_equality": true
+    },
+    "historical_mirror_review": {
+      "outcome": "FAIL",
+      "reason": "MIRROR_REVIEW_REQUIRED; prior reviewed receipts unchanged"
+    },
+    "exact_head_ci": "NOT_RUN before commit/push; live PR is separate evidence"
+  },
+  "tracking_alignment": {
+    "issues": [
+      3375,
+      2906,
+      3397,
+      4418,
+      2768
+    ],
+    "native_milestones": [
+      11,
+      24,
+      34,
+      36,
+      26
+    ],
+    "status": "Existing ownership and holds preserved; external checkpoints follow exact final GitHub head."
+  },
+  "invariants": [
+    "No source assets, dependencies, bindings, APIs, storage schema or data-lifecycle transitions changed"
+  ],
+  "rollback": "Select saved private Sitev168 or revert this bounded source/UI delta through review. Local source rollback retains the physical v109 store and subsequent writes; existing verified backups remain. No production rollback rehearsal or independent human acceptance is claimed.",
+  "governance": {
+    "dataset_admission": false,
+    "source_activation": false,
+    "public_audience_expansion": false,
+    "independent_human_acceptance": false,
+    "merge_authorized_by_this_record": false
+  }
+}

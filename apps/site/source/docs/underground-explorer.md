@@ -158,3 +158,99 @@ storage key, schema, dependency or binding is introduced. Saved v166 is the
 application rollback point. Production and browser validation are recorded by
 the delivery review; this authoring record does not claim deployment or browser
 acceptance. Older browser-blocked statements above describe their dated sessions.
+
+## Larger selector and fluid camera — 2026-10-07
+
+This update starts from saved private Site v168, source
+`c74ca07a33f742eecef5461f13769167df3e1d9d`. The cutaway now places its live
+2D selector in a dedicated column beside the 3D scene. Wide desktop map areas
+are 352–420 px wide and at least 230 px high; phones use the available width
+and a 240 px map height. Full probe coordinates, map-center and zoom actions
+remain beside the map. A measured DOM slot positions the existing MapLibre
+canvas and effects together and clips them to the workspace while scrolling;
+no second map instance is created. Attribution stays available through its
+native disclosure. Alternate Underground views retain their existing layout.
+The slot conversion includes ancestor scroll offsets, including browser focus
+scrolling, so the map remains clipped below the workspace header on phones.
+
+Camera buttons sit above the scene. Short orbit damping and interruptible
+preset/rotate/zoom transitions stop when direct manipulation starts. Reduced
+motion uses immediate changes. Transitions stop on tab hiding or disposal,
+and no permanent rendering loop is introduced. Rotation fits the new viewing
+direction and preserves zoom relative to a full fit, preventing the shallow
+frame and depth labels from clipping after repeated turns. Opacity, log
+visibility and source selection reuse the scene. Vertical scale retains the
+viewing direction and zoom while moving the camera with the depth center;
+container resizing retains the pose. A record-filter geometry rebuild restores
+the pose for the same map extent and retains a picked record if it still has
+plotted intervals. Reset, preset selection, or a new locator extent can fit a
+new view.
+Opening the Evidence Drawer skips the global layout effect's redundant
+MapLibre resize when the cutaway canvas dimensions already match. This avoids
+MapLibre's synthetic movement events clearing the selected source. Real
+dimension changes and locator movement still invalidate old bounds immediately.
+
+The selector distinguishes columns actually plotted within its extent from
+loaded records eligible after the record-time filter. The record timeline
+explicitly distinguishes its filter from the map's global Time sweep. Neither
+changes the fixed 2022–2024 aquifer source period or reconstructs past geology.
+
+`app/cutaway-camera.ts` owns this small application camera controller under the
+existing application responsibility root; `tests/cutaway-camera.test.mjs`
+covers actual transition timing, interruption, reduced motion, disposal, and
+repeated Three.js projection fits. Directory Rules and accepted ADR-0029
+remain the placement basis. `app/cutaway-locator.ts` owns the same display's
+measured placement and layout-resize guard; focused tests cover scroll clipping,
+both drawer resize callbacks and genuine size/extent invalidation in the actual
+aquifer session. There are no new data assets, requests, source
+roles, dependencies, storage formats, bindings, or acquisition permissions.
+Saved v168 is the application rollback point. Build, browser and deployment
+results belong to delivery evidence, not this authoring record.
+
+## Direct 3D slice access — 2026-10-07
+
+Starting from private Site v169 / `82c73327119909f9b034976bbf7cfb5f727b6caf`,
+**3D slice & materials** replaces the ambiguous material-view tab label while
+retaining the saved `3d` display value. The 3D cutaway now offers **Open 3D slice**
+above the map/model workspace, alongside a named loaded-source picker. Selecting
+a cutaway column retains its record and original interval for this continuation.
+Empty, invalid or out-of-window records show a reason rather than an invented
+column. Core choices remain explicitly inventory envelopes.
+
+A deliberate slice fits valid recorded depths within the existing 0–12,000 m
+window and starts inside an actual interval. A useful existing interior depth is
+retained; a picked interval takes priority. Otherwise entry chooses an interval
+near the fitted middepth so a thin topsoil does not leave the cut visually at the
+surface. Gaps remain gaps, and source intervals are never rewritten. A selected
+record change keeps slicing active and fits the new record when needed. Ordinary
+tab entry and saved view restoration retain general material browsing without
+forcing clipping; slicing itself remains temporary presentation state.
+
+The slice model leads its workspace, before record-time and location controls.
+One **Slice depth** slider, metre readout and **Show whole column** control sit
+immediately above the model; its amber horizontal outline is a UI cut guide, not
+a geological surface. Material above the chosen recorded depth is hidden.
+Opacity, slider and slice toggles reuse the renderer and preserve the camera,
+including toggling from separated layers. Ray selection ignores clipped hits and
+the cut guide; the interval list and Evidence Drawer preserve original source
+identity. Inspection no longer moves the cut plane. Depth-window, scale and
+original-description controls remain in a named disclosure. **Geographic columns
+& section** is a distinct action; this is a one-log diagram, not a regional model.
+
+Placement reuses application helpers, tests and behavior docs under the existing
+`app/`, `tests/`, and `docs/` roots and the repository `apps/site/source` mirror,
+following the Directory Rules / ADR-0029 responsibility basis above. No source
+assets, acquisition, dependency, data admission, binding or saved-schema change is
+introduced. Rollback is the saved v169 application; existing data is retained.
+Focused callback and Three geometry/lifecycle tests verify the entry, clipping,
+source selection and restoration behavior. Browser visual/touch/WebGL acceptance
+is separate and remains unavailable during this change because the browser admin
+security check could not complete.
+
+In-place whole/slice toggling preserves the current depth-window object,
+description filter and useful interior cursor; it never silently refits the
+record. If that window/filter contains no drawn interval, **Start 3D slice** is
+disabled and **Fit recorded depths** remains an explicit recovery action.
+Deliberate **Open 3D slice** transfers focus once to the named slice workspace,
+with its controls next in tab order. Restoring a workspace, switching tabs or
+records, and adjusting appearance do not trigger this focus transfer.

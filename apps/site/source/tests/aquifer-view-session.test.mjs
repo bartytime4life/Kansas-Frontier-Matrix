@@ -8,6 +8,7 @@ const moduleUrl = source => `data:text/javascript;base64,${Buffer.from(source).t
 const modelUrl = moduleUrl(compile(await readFile('app/aquifer-volume.ts','utf8')).replace('from "polygon-clipping"', `from ${JSON.stringify(new URL('../node_modules/polygon-clipping/dist/polygon-clipping.esm.js',import.meta.url).href)}`));
 const m = await import(modelUrl);
 const session = await import(moduleUrl(compile(await readFile('app/aquifer-view-session.ts','utf8')).replace('from "./aquifer-volume"', `from ${JSON.stringify(modelUrl)}`)));
+const {resizeMapAfterLayout}=await import(moduleUrl(compile(await readFile('app/cutaway-locator.ts','utf8'))));
 const meshes = await import(moduleUrl(compile(await readFile('app/aquifer-volume-mesh.ts','utf8')).replace('from "./aquifer-volume"', `from ${JSON.stringify(modelUrl)}`)));
 const bounds = [-100.8,38.3,-100.2,38.7];
 function harness({ready=false,failCapture=false,extent=bounds,defaultTimers=false,configureMap=()=>{}}={}) {
@@ -99,6 +100,15 @@ test('rapid movement invalidates old geometry and imagery; late responses cannot
   const h=harness();const old=h.requests[0].id;h.map.emit('movestart');h.reply(old);assert.equal(h.snapshots.at(-1),null);
   h.map.extent=[-101,38,-100.5,38.5];h.map.emit('moveend');h.map.emit('resize');h.flush(250);assert.equal(h.requests.length,2);
   h.reply(old);assert.equal(h.snapshots.at(-1),null);h.reply();assert.deepEqual(h.snapshots.at(-1).volume.bounds,h.map.extent);h.stop();
+});
+test('drawer RAF and delayed no-op resizes preserve the selected locator snapshot; real dimension changes invalidate it',()=>{
+  const h=harness({ready:true});h.reply();const snapshot=h.snapshots.at(-1),container={clientWidth:352,clientHeight:240,closest:()=>({querySelector:()=>({})})},canvas={style:{width:'352px',height:'240px'}};
+  h.map.getContainer=()=>container;h.map.getCanvas=()=>canvas;
+  h.map.resize=()=>{h.map.emit('movestart');h.map.emit('resize');h.map.emit('moveend');};
+  for(const callback of [()=>resizeMapAfterLayout(h.map),()=>resizeMapAfterLayout(h.map)]){assert.equal(callback(),false);h.flush(250);assert.equal(h.snapshots.at(-1),snapshot);}
+  assert.equal(h.requests.length,1,'opening evidence does not prepare another volume');
+  container.clientWidth=420;h.map.extent=[-100.85,38.3,-100.15,38.7];assert.equal(resizeMapAfterLayout(h.map),true);assert.equal(h.snapshots.at(-1),null,'actual resizing keeps fail-closed invalidation');
+  h.flush(250);assert.equal(h.requests.length,2);h.reply();assert.deepEqual(h.snapshots.at(-1).volume.bounds,h.map.extent);h.stop();
 });
 test('outside-scope view remains an explicit hold; disposal releases every listener and timer',()=>{
   const h=harness({extent:[-102,37,-94,40]});assert.equal(h.requests.length,0);assert.match(h.statuses.at(-1),/Zoom into Kansas/);h.stop();

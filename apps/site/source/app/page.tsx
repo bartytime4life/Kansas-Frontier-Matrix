@@ -2,6 +2,7 @@
 import { GROUNDWATER_MANIFEST, safeKgsWellUrl } from "./aquifer-layers";
 import { DEFAULT_SOIL_MAP_STATE, hideSoilContext, restoreSoilMapState, serializeSoilMapState, visibleExternalContextCount, type SoilMapState } from "./soil-moisture";
 import { GovernedWaterControl } from "./governed-water-control";
+import { resizeMapAfterLayout } from "./cutaway-locator";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
@@ -5825,8 +5826,8 @@ export default function Home() {
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    const first = window.requestAnimationFrame(() => runMapMutation("Map resize", () => map.resize()));
-    const second = window.setTimeout(() => runMapMutation("Map resize", () => map.resize()), 260);
+    const first = window.requestAnimationFrame(() => runMapMutation("Map resize", () => { resizeMapAfterLayout(map); }));
+    const second = window.setTimeout(() => runMapMutation("Map resize", () => { resizeMapAfterLayout(map); }), 260);
     return () => { window.cancelAnimationFrame(first); window.clearTimeout(second); };
   }, [leftOpen, rightOpen, runMapMutation, timelineOpen]);
 
