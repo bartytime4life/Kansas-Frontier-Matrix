@@ -28,6 +28,12 @@ truth_posture: CONFIRMED main@bb08d3e9b9 implementation and exact-schema policy 
 
 # Local PC data tools
 
+`noaa_nexrad.py` captures NOAA NEXRAD Level III storm-tracking (`NST`) and
+rotation (`NMD`) products for Kansas radars and one UTC day, with a 64 MiB
+storage cap checked before any product download. See the
+[NEXRAD runbook](../../docs/runbooks/noaa-nexrad-local-capture.md). These are
+unreviewed algorithm detections, not an activated map layer.
+
 `noaa_ghcnd.py` prepares, captures and verifies compressed Kansas daily station
 histories in the existing external RAW/WORK/receipt lanes, with a 384 MiB source
 storage cap and 100 GiB free-space reserve. See the
