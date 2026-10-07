@@ -24,8 +24,10 @@ import {
   type EventManifest,
 } from "../event-atlas";
 import { parseStreamflowBundle, buildStreamflowFrame, buildHydrographSegments, type StreamflowBundle } from "../streamflow";
+import { NEXRAD_EARLIEST_DAY, NEXRAD_SOURCE_PAGE, stormRadarSites, type StormAvailability, type StormFrame } from "../nexrad-storms";
+import { StormDetails, StormMapKey, stormHeadline } from "./storm-panel";
 
-type TrackId = "radar" | "smoke" | "river" | "geology" | "flora" | "fauna" | "resources" | "counties" | "weather" | "earthquakes" | "shake";
+type TrackId = "storms" | "radar" | "smoke" | "river" | "geology" | "flora" | "fauna" | "resources" | "counties" | "weather" | "earthquakes" | "shake";
 type ContextTrack = "counties" | "weather" | "earthquakes" | "shake";
 type ContextRecord = { data: GeoJSON.FeatureCollection; message: string; date: string; source: string };
 type RiverCoverage = { station: string; daily: { start: string; end: string } | null; continuous: { start: string; end: string } | null; partial: boolean; message: string };
@@ -35,6 +37,7 @@ type ArchiveDayLedger = Readonly<{ status: ArchiveDayStatus; supportedHours: rea
 type CalendarCellState = "supported" | "gap" | "checking" | "failed" | "unqueried" | "future";
 type TimelineLane = Readonly<{ name: string; color: string; kind: "interval" | "event" | "pinned"; detail: string; intervals: readonly (readonly [string, string])[] }>;
 const TRACKS: Track[] = [
+  { id: "storms", name: "Storm cells & rotation", axis: "Radar volume scan · every 4–10 min", color: "#ff8a5c", source: NEXRAD_SOURCE_PAGE, detail: "Individual thunderstorms tracked by the four Kansas NEXRAD radars (Wichita, Dodge City, Goodland, Topeka). Each dot is one storm cell: its tail shows where it has been, the dashed line where the radar expects it to go over the next hour. Color shows the strongest rotation the radar found in that storm. These are NOAA Level III algorithm detections (storm tracking and mesocyclone products), available from 2020; they are not confirmed tornadoes, hail, damage, or warnings." },
   { id: "earthquakes", name: "USGS earthquake history", axis: "Catalog event time", color: "#f2a58f", source: "https://earthquake.usgs.gov/fdsnws/event/1/", detail: "Actual USGS earthquake catalog events within the selected day. Points appear at their event time and remain for the loaded interval. Catalog completeness varies over time; no returned event is not proof of no earthquake." },
   { id: "shake", name: "Raspberry Shake stations", axis: "Station operating epoch", color: "#ec99cf", source: "https://manual.raspberryshake.org/fdsn.html", detail: "AM network station metadata for the selected day, including closed stations where their operating epoch overlaps. This is a real station connection; waveform traces remain on the provider's service. FDSN waveform delivery is delayed at least 30 minutes and is not an earthquake catalog." },
   { id: "weather", name: "NOAA daily weather history", axis: "Daily station summary", color: "#f1cc78", source: "https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily", detail: "NOAA GHCN daily station records: maximum/minimum temperature, precipitation, snowfall and snow depth. Includes historical cooperative stations and airports. Daily summaries stay pinned to their date throughout the 24-hour sweep and do not create hourly observations." },
@@ -47,10 +50,11 @@ const TRACKS: Track[] = [
   { id: "fauna", name: "Fauna occurrences", axis: "Observation year · aggregate", color: "#d4b5fa", source: "https://techdocs.gbif.org/en/openapi/v2/maps", detail: "GBIF Animalia (taxon 1), coarse dated occurrence density. No exact points or movement trajectories. Uneven sampling and mobilization strongly affect coverage; no records is not absence." },
   { id: "resources", name: "Resource-map symbols", axis: "Pinned topographic edition · county", color: "#e5c46b", source: "https://services.arcgis.com/v01gqwM5QqNysAAi/arcgis/rest/services/USGS_Topographic_Mine_Symbols/FeatureServer/8", detail: "USGS historical 1:24,000 topographic mine symbols aggregated by modern Census county before delivery. Map edition is not mine operating time. Counts are symbols, not unique mines, production, reserves, ownership, or economic potential. This is an older compilation, not the latest USMIN release." },
 ];
-const INITIAL = { radar: true, smoke: true, river: true, geology: false, flora: false, fauna: false, resources: false, counties: true, weather: false, earthquakes: false, shake: false };
-const INITIAL_OPACITY = { radar: .8, smoke: .45, river: 1, geology: .5, flora: .7, fauna: .7, resources: .65, counties: .25, weather: .85, earthquakes: .9, shake: .85 };
-const LAYERS: Record<TrackId, string[]> = { counties: ["ea-counties", "ea-county-lines"], weather: ["ea-weather"], earthquakes: ["ea-earthquakes"], shake: ["ea-shake"], radar: ["ea-radar"], smoke: ["ea-smoke-fill", "ea-smoke-edge"], river: ["ea-river-glow", "ea-river"], geology: ["ea-geology"], flora: ["ea-flora"], fauna: ["ea-fauna"], resources: ["ea-resources"] };
+const INITIAL = { storms: true, radar: true, smoke: true, river: true, geology: false, flora: false, fauna: false, resources: false, counties: true, weather: false, earthquakes: false, shake: false };
+const INITIAL_OPACITY = { storms: 1, radar: .8, smoke: .45, river: 1, geology: .5, flora: .7, fauna: .7, resources: .65, counties: .25, weather: .85, earthquakes: .9, shake: .85 };
+const LAYERS: Record<TrackId, string[]> = { storms: ["ea-storm-past", "ea-storm-forecast", "ea-storm-rotation-glow", "ea-storm-radars", "ea-storm-cells"], counties: ["ea-counties", "ea-county-lines"], weather: ["ea-weather"], earthquakes: ["ea-earthquakes"], shake: ["ea-shake"], radar: ["ea-radar"], smoke: ["ea-smoke-fill", "ea-smoke-edge"], river: ["ea-river-glow", "ea-river"], geology: ["ea-geology"], flora: ["ea-flora"], fauna: ["ea-fauna"], resources: ["ea-resources"] };
 const PRESETS = [
+  { label: "Storm tracks & rotation · May 19 2024", start: "2024-05-19T22:00", hours: 6 },
   { label: "Greensburg radar · May 2007", start: "2007-05-05T01:00", hours: 6 },
   { label: "Plains storms · May 2024", start: "2024-05-19T21:00", hours: 6 },
   { label: "Smoke archive · June 2023", start: "2023-06-07T12:00", hours: 6 },
@@ -110,6 +114,8 @@ export default function EventObservatory() {
   const [calendarAnchor, setCalendarAnchor] = useState(currentUtcDay);
   const [calendarLedger, setCalendarLedger] = useState<Record<string, ArchiveDayLedger>>({});
   const [calendarNow, setCalendarNow] = useState(() => Date.now());
+  const stormCache = useRef(new Map<string, StormFrame>());
+  const [stormFrame, setStormFrame] = useState<StormFrame | null>(null), [stormAvailability, setStormAvailability] = useState<StormAvailability | null>(null);
   const updateStart = useCallback((value: string) => {
     setStart(value);
     if (eventDayHours(value.slice(0, 10)).length) setCalendarAnchor(value.slice(0, 10));
@@ -125,8 +131,22 @@ export default function EventObservatory() {
           return Number.isFinite(Date.parse(time)) && time >= manifest.start && time < manifest.end ? [time] : [];
         })
       : [];
-    return [...new Set([...eventFrames(manifest, loadedRiverResolution === "daily" ? [] : river?.observations), ...earthquakeTimes])].sort();
-  }, [contextData.earthquakes, loadedRiverResolution, manifest, river]);
+    // Storm scans join the clock on five-minute slots (each slot shows scans at
+    // or before it), so the replay steps smoothly even without radar mosaics.
+    const stormTimes = visible.storms && stormAvailability?.start === manifest.start
+      ? stormAvailability.radars.flatMap((radar) => radar.times).map((time) => new Date(Math.ceil(Date.parse(time) / 300_000) * 300_000).toISOString()).filter((time) => time < manifest.end)
+      : [];
+    return [...new Set([...eventFrames(manifest, loadedRiverResolution === "daily" ? [] : river?.observations), ...earthquakeTimes, ...stormTimes])].sort();
+  }, [contextData.earthquakes, loadedRiverResolution, manifest, river, stormAvailability, visible.storms]);
+  const framesRef = useRef<string[]>([]);
+  useEffect(() => { framesRef.current = frames; }, [frames]);
+  // Later-arriving times (storm scans, earthquakes) extend the timeline; keep
+  // the slider position on the displayed clock instead of an old index.
+  const [framesSeen, setFramesSeen] = useState(frames);
+  if (framesSeen !== frames) {
+    setFramesSeen(frames);
+    if (cursor) { const position = frames.findIndex((time) => time >= cursor); if (position >= 0 && position !== index) setIndex(position); }
+  }
   const requested = cursor ?? frames[index] ?? null;
   const activeRadar = manifest && committed ? radarAt(manifest.radar.scans, committed) : null;
   const activeSmoke = useMemo(() => manifest && committed ? smokeAt(manifest.smoke.data, committed) : EMPTY, [manifest, committed]);
@@ -146,7 +166,9 @@ export default function EventObservatory() {
         })
       : [];
     const hasContext = (id: ContextTrack) => contextData[id]?.date === (id === "counties" ? countyEdition : day) && contextData[id]!.data.features.length > 0;
+    const stormTimes = stormAvailability?.start === manifest.start ? [...new Set(stormAvailability.radars.flatMap((radar) => radar.times))].sort() : [];
     return [
+      ...(visible.storms && stormTimes.length ? [{ name: "Storm scans", color: "#ff8a5c", kind: "event" as const, detail: "Kansas NEXRAD storm-tracking volume scans", intervals: stormTimes.map((time) => [time, time] as const) }] : []),
       { name: "Radar", color: "#81dec0", kind: "interval", detail: "Exact five-minute mosaic slots", intervals: manifest.radar.scans.map((scan) => [scan.time, new Date(Date.parse(scan.time) + 300_000).toISOString()] as const) },
       { name: "Smoke", color: "#dfb580", kind: "interval", detail: "NOAA HMS analysis intervals", intervals: manifest.smoke.data.features.map((feature) => [feature.properties.start, feature.properties.end] as const) },
       { name: loadedRiverResolution === "daily" ? "River · daily" : "River", color: "#7edceb", kind: loadedRiverResolution === "daily" ? "pinned" : "interval", detail: loadedRiverResolution === "daily" ? "Daily mean pinned across its date" : "Exact samples held no more than 30 minutes", intervals: loadedRiverResolution === "daily" ? series.some((observation) => observation.value !== null) ? fullDay : [] : series.filter((observation) => observation.value !== null).map((observation) => [observation.observedAt, new Date(Date.parse(observation.observedAt) + 30 * 60_000).toISOString()] as const) },
@@ -160,7 +182,7 @@ export default function EventObservatory() {
       ...(visible.resources && resourceData ? [{ name: `Resources · ${resourceEdition}`, color: "#e5c46b", kind: "pinned" as const, detail: "Topographic map-symbol edition", intervals: fullDay }] : []),
       ...(baseDay ? [{ name: "Satellite · daily", color: "#a5d7cb", kind: "pinned" as const, detail: "Confirmed daily acquisition mosaic", intervals: fullDay }] : []),
     ];
-  }, [baseDay, contextData, countyEdition, loadedRiverResolution, manifest, resourceData, resourceEdition, series, visible.fauna, visible.flora, visible.geology, visible.resources]);
+  }, [baseDay, contextData, countyEdition, loadedRiverResolution, manifest, resourceData, resourceEdition, series, stormAvailability, visible.fauna, visible.flora, visible.geology, visible.resources, visible.storms]);
   const chosen = TRACKS.find((track) => track.id === selectedTrack)!;
   const selectedCalendarDay = start.slice(0, 10);
   const calendarDays = useMemo(() => eventWeekDays(calendarAnchor), [calendarAnchor]);
@@ -175,7 +197,7 @@ export default function EventObservatory() {
   const hideEventLayers = useCallback((all = true) => {
     const map = mapRef.current;
     if (!map) return;
-    for (const key of Object.keys(LAYERS) as TrackId[]) if (all || ["radar","smoke","river","weather","earthquakes","shake"].includes(key)) for (const id of LAYERS[key]) if (map.getLayer(id)) map.setLayoutProperty(id, "visibility", "none");
+    for (const key of Object.keys(LAYERS) as TrackId[]) if (all || ["storms","radar","smoke","river","weather","earthquakes","shake"].includes(key)) for (const id of LAYERS[key]) if (map.getLayer(id)) map.setLayoutProperty(id, "visibility", "none");
     if (all && map.getLayer("ea-satellite")) map.setLayoutProperty("ea-satellite", "visibility", "none");
   }, []);
 
@@ -198,8 +220,8 @@ export default function EventObservatory() {
       if (p.get("resolution") === "daily") setRiverResolution("daily");
       if (["2010", "2020"].includes(p.get("county") ?? "")) setCountyEdition(p.get("county")!);
       if (/^\d{4}$/.test(p.get("edition") ?? "") && Number(p.get("edition")) >= 1934 && Number(p.get("edition")) <= 1996) setResourceEdition(p.get("edition")!);
-      if (p.has("order")) { const ids = p.get("order")!.split(","); if (ids.length === TRACKS.length && new Set(ids).size === TRACKS.length && ids.every((id) => TRACKS.some((t) => t.id === id))) setOrder(ids as TrackId[]); }
-      if (p.has("opacity")) { const values = p.get("opacity")!.split(",").map(Number); if (values.length === TRACKS.length && values.every((v) => Number.isFinite(v) && v >= 0 && v <= 1)) setOpacity(Object.fromEntries(TRACKS.map((t,i) => [t.id,values[i]])) as Record<TrackId,number>); }
+      if (p.has("order")) { const ids = p.get("order")!.split(","); if (ids.length === TRACKS.length - 1 && !ids.includes("storms")) ids.unshift("storms"); if (ids.length === TRACKS.length && new Set(ids).size === TRACKS.length && ids.every((id) => TRACKS.some((t) => t.id === id))) setOrder(ids as TrackId[]); }
+      if (p.has("opacity")) { const values = p.get("opacity")!.split(",").map(Number); if (values.length === TRACKS.length - 1) values.unshift(1); if (values.length === TRACKS.length && values.every((v) => Number.isFinite(v) && v >= 0 && v <= 1)) setOpacity(Object.fromEntries(TRACKS.map((t,i) => [t.id,values[i]])) as Record<TrackId,number>); }
     });
     return () => { disposed = true; media.removeEventListener("change", change); document.removeEventListener("visibilitychange", stop); window.removeEventListener("keydown", key); };
   }, [updateStart, updateStation]);
@@ -285,6 +307,13 @@ export default function EventObservatory() {
         map.addLayer({ id: "ea-counties", source: "ea-counties-data", type: "fill", layout: { visibility: "none" }, paint: { "fill-color": "#71a9a3", "fill-opacity": .25 } });
         map.addLayer({ id: "ea-county-lines", source: "ea-counties-data", type: "line", layout: { visibility: "none" }, paint: { "line-color": "#b9e9e0", "line-width": 1.3, "line-opacity": .6 } });
         for (const id of ["weather", "earthquakes", "shake"] as const) map.addLayer({ id: `ea-${id}`, source: `ea-${id}-data`, type: "circle", layout: { visibility: "none" }, paint: { "circle-radius": id === "earthquakes" ? ["+", 4, ["*", 2, ["max", 0, ["coalesce", ["get", "magnitude"], 0]]]] : 7, "circle-color": id === "weather" ? ["case", ["any", [">", ["coalesce", ["get", "snowfallInches"], 0], 0], [">", ["coalesce", ["get", "snowDepthInches"], 0], 0]], "#dff5ff", TRACKS.find((track) => track.id === id)!.color] : TRACKS.find((track) => track.id === id)!.color, "circle-stroke-color": "#123336", "circle-stroke-width": 1.5 } });
+        map.addSource("ea-storms-data", { type: "geojson", data: EMPTY });
+        map.addSource("ea-storm-radar-data", { type: "geojson", data: stormRadarSites() });
+        map.addLayer({ id: "ea-storm-past", source: "ea-storms-data", type: "line", layout: { visibility: "none", "line-cap": "round", "line-join": "round" }, filter: ["==", ["get", "kind"], "past"], paint: { "line-color": "#f4eadf", "line-width": 2, "line-opacity": 1 } });
+        map.addLayer({ id: "ea-storm-forecast", source: "ea-storms-data", type: "line", layout: { visibility: "none", "line-cap": "round" }, filter: ["==", ["get", "kind"], "forecast"], paint: { "line-color": "#ff8a5c", "line-width": 2, "line-dasharray": [1.5, 1.5], "line-opacity": 1 } });
+        map.addLayer({ id: "ea-storm-rotation-glow", source: "ea-storms-data", type: "circle", layout: { visibility: "none" }, filter: ["==", ["get", "kind"], "rotation"], paint: { "circle-radius": ["match", ["get", "rotation"], "tornado_signature", 17, "strong_low", 14, "strong_aloft", 12, 9], "circle-color": ["get", "rotationColor"], "circle-opacity": .2, "circle-stroke-color": ["get", "rotationColor"], "circle-stroke-width": 2.5 } });
+        map.addLayer({ id: "ea-storm-radars", source: "ea-storm-radar-data", type: "circle", layout: { visibility: "none" }, paint: { "circle-radius": 5, "circle-color": "#13383c", "circle-stroke-color": "#d9f1ea", "circle-stroke-width": 2 } });
+        map.addLayer({ id: "ea-storm-cells", source: "ea-storms-data", type: "circle", layout: { visibility: "none" }, filter: ["==", ["get", "kind"], "cell"], paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 4.5, 9, 8], "circle-color": ["get", "rotationColor"], "circle-stroke-color": "#1b1210", "circle-stroke-width": 1.5 } });
         map.addSource("ea-science-probe-data", { type: "geojson", data: EMPTY });
         map.addLayer({ id: "ea-science-probe-line", source: "ea-science-probe-data", type: "line", filter: ["==", ["get", "kind"], "line"], paint: { "line-color": "#fff0ae", "line-width": 3, "line-dasharray": [2, 1.5] } });
         map.addLayer({ id: "ea-science-probe-points", source: "ea-science-probe-data", type: "circle", filter: ["==", ["get", "kind"], "vertex"], paint: { "circle-radius": 6, "circle-color": "#fff0ae", "circle-stroke-color": "#173237", "circle-stroke-width": 2 } });
@@ -295,9 +324,9 @@ export default function EventObservatory() {
             setScienceProbePoints((current) => current.length >= 2 ? [coordinate] : [...current, coordinate]);
             return;
           }
-          const features = map.queryRenderedFeatures(event.point, { layers: ["ea-weather", "ea-earthquakes", "ea-shake", "ea-counties", "ea-river"] });
+          const features = map.queryRenderedFeatures(event.point, { layers: ["ea-storm-cells", "ea-storm-rotation-glow", "ea-storm-radars", "ea-weather", "ea-earthquakes", "ea-shake", "ea-counties", "ea-river"].filter((id) => map.getLayer(id)) });
           const feature = features[0]; if (!feature) return;
-          const track = feature.layer.id.replace("ea-", "") as TrackId;
+          const track = (feature.layer.id.startsWith("ea-storm") ? "storms" : feature.layer.id.replace("ea-", "")) as TrackId;
           setInspectedFeature({ track, properties: feature.properties }); setSelectedTrack(track); setDetailsOpen(true); setLayersOpen(false); setScienceOpen(false); setPlaying(false);
         });
         map.addLayer({ id: "ea-smoke-fill", source: "ea-smoke", type: "fill", layout: { visibility: "none" }, paint: { "fill-color": ["match", ["get", "density"], "Light", "#e5d9b1", "Medium", "#dca261", "Heavy", "#bd6242", "#a6acaf"], "fill-opacity": .45 } });
@@ -349,6 +378,7 @@ export default function EventObservatory() {
     setInspectedFeature(null);
     const controller = new AbortController(); requestRef.current = controller;
     if (fullDaySweep) setCalendarLedger((current) => ({ ...current, [calendarDay]: { status: "checking", supportedHours: [] } }));
+    setStormFrame(null); setStormAvailability(null);
     setPlaying(false); setLoading(true); setError(""); setCommitted(null); setManifest(null); setRiver(null); setIndex(0); setCursor(null); setSourceErrors({}); hideEventLayers();
     sourceFailures.current.clear(); radarSourceTime.current = null;
     const map = mapRef.current;
@@ -440,6 +470,25 @@ export default function EventObservatory() {
     return url;
   }, []);
 
+  const getStorms = useCallback(async (time: string, signal: AbortSignal) => {
+    const cached = stormCache.current.get(time); if (cached) return cached;
+    const response = await fetch(`/api/event-atlas/storms?time=${encodeURIComponent(time)}`, { signal });
+    const body = await response.json();
+    if (!response.ok || body.format !== "kfm-nexrad-storms-v1" || body.time !== time || body.data?.type !== "FeatureCollection") throw new Error(body.message ?? "Storm scans unavailable for this time.");
+    stormCache.current.set(time, body);
+    for (const key of stormCache.current.keys()) if (stormCache.current.size > 24) stormCache.current.delete(key);
+    return body as StormFrame;
+  }, []);
+
+  useEffect(() => {
+    if (!manifest || !visible.storms || manifest.start.slice(0, 10) < NEXRAD_EARLIEST_DAY) return;
+    const controller = new AbortController();
+    fetch(`/api/event-atlas/storms?${new URLSearchParams({ start: manifest.start, end: manifest.end })}`, { signal: controller.signal })
+      .then(async (response) => { const body = await response.json(); if (response.ok && body.format === "kfm-nexrad-storm-availability-v1" && !controller.signal.aborted) setStormAvailability(body); })
+      .catch(() => undefined);
+    return () => controller.abort();
+  }, [manifest, visible.storms]);
+
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !mapReady || !manifest || !requested || loading) return;
@@ -452,7 +501,15 @@ export default function EventObservatory() {
       let imageUrl: string | null = null;
       try { if (scan) imageUrl = await getRadarImage(scan.time, controller.signal); }
       catch (failure) { if (controller.signal.aborted) return; throw failure; }
+      // Storm scans are optional context: a failure hides only this layer and
+      // is reported, never replaced by an older scan.
+      let storms: StormFrame | null = null, stormFailure = "";
+      if (visible.storms && requested.slice(0, 10) >= NEXRAD_EARLIEST_DAY) {
+        try { storms = await getStorms(requested, controller.signal); }
+        catch (failure) { if (controller.signal.aborted) return; stormFailure = failure instanceof Error ? failure.message : "Storm scans unavailable."; }
+      }
       if (token !== frameGeneration.current || controller.signal.aborted) return;
+      updateGeoJSON(map.getSource("ea-storms-data") as GeoJSONSource, storms?.data ?? EMPTY);
       if (imageUrl && radarSourceTime.current !== scan?.time) {
           // Drop the prior texture before creating this exact frame: an image
           // error must never leave old radar pixels under a new timestamp.
@@ -496,7 +553,7 @@ export default function EventObservatory() {
       // Keep dynamic pixels hidden until the exact image source is ready. No
       // old frame is presented under the newly requested time while buffering.
       await new Promise<void>((resolve, reject) => {
-        const sourceIds = ["ea-smoke", "ea-river-data", "ea-resource-data", ...(imageUrl ? ["ea-radar-image"] : [])];
+        const sourceIds = ["ea-smoke", "ea-river-data", "ea-resource-data", "ea-storms-data", ...(imageUrl ? ["ea-radar-image"] : [])];
         const check = () => { if (sourceIds.some((id) => sourceFailures.current.has(id))) finish(new Error("A requested source failed; the frame was withheld.")); else if (sourceIds.every((id) => map.isSourceLoaded(id))) finish(); };
         const fail = () => finish(new Error("Radar image loading was cancelled."));
         const timer = window.setTimeout(() => finish(new Error("The requested map sources did not finish loading.")), 15_000);
@@ -513,7 +570,7 @@ export default function EventObservatory() {
       for (const id of [...order].reverse()) for (const layer of LAYERS[id]) {
         if (!map.getLayer(layer)) continue;
         map.moveLayer(layer);
-        map.setLayoutProperty(layer, "visibility", visible[id] && (id !== "radar" || !!imageUrl) ? "visible" : "none");
+        map.setLayoutProperty(layer, "visibility", visible[id] && (id !== "radar" || !!imageUrl) && (id !== "storms" || !!storms) ? "visible" : "none");
         const type = map.getLayer(layer)!.type;
         if (type === "raster") map.setPaintProperty(layer, "raster-opacity", opacityRef.current[id]);
         if (type === "fill") map.setPaintProperty(layer, "fill-opacity", opacityRef.current[id]);
@@ -524,18 +581,21 @@ export default function EventObservatory() {
       if (map.getLayer("ea-science-probe-line")) map.moveLayer("ea-science-probe-line");
       if (map.getLayer("ea-science-probe-points")) map.moveLayer("ea-science-probe-points");
       setCommitted(requested); setBuffering(false);
+      setStormFrame(storms);
+      setSourceErrors((current) => { const next = { ...current }; if (stormFailure) next["ea-storms"] = stormFailure; else delete next["ea-storms"]; return next; });
       // Bounded look-ahead, never a latest-frame fallback. Keep at most 8
       // decoded URLs; no complete-archive prefetch or unbounded image queue.
       const keep = new Set([scan?.time, ...manifest.radar.scans.filter((s) => s.time > requested).slice(0,2).map((s) => s.time)]);
       for (const [time,url] of urls.current) if (urls.current.size > 8 && !keep.has(time)) { URL.revokeObjectURL(url); urls.current.delete(time); }
       if (visible.radar) for (const next of manifest.radar.scans.filter((s) => s.time > requested).slice(0,2)) void getRadarImage(next.time, controller.signal).catch(() => undefined);
+      if (storms) for (const next of framesRef.current.filter((time) => time > requested).slice(0,2)) void getStorms(next, controller.signal).catch(() => undefined);
     };
     void apply().catch((failure) => {
       if (token !== frameGeneration.current || controller.signal.aborted) return;
       hideEventLayers(); setBuffering(false); setPlaying(false); setError(failure instanceof Error ? failure.message : "This frame is unavailable.");
     });
     return () => controller.abort();
-  }, [manifest, requested, river, loadedRiverResolution, resourceData, contextData, countyEdition, mapReady, visible, order, base, loading, getRadarImage, hideEventLayers]);
+  }, [manifest, requested, river, loadedRiverResolution, resourceData, contextData, countyEdition, mapReady, visible, order, base, loading, getRadarImage, getStorms, hideEventLayers]);
 
   useEffect(() => {
     if (!playing || buffering || loading || !committed || committed !== requested || error) return;
@@ -563,6 +623,7 @@ export default function EventObservatory() {
   const trackStatus = (id: TrackId) => {
     if (!manifest) return "Not loaded";
     if (sourceErrors[`ea-${id}`]) return "SOURCE TILES PARTIAL / FAILED";
+    if (id === "storms") return sourceErrors["ea-storms"] ? `Unavailable: ${sourceErrors["ea-storms"]}` : (requested ?? manifest.start).slice(0, 10) < NEXRAD_EARLIEST_DAY ? `Archive begins ${NEXRAD_EARLIEST_DAY}` : !visible.storms ? "Enable to load storm scans" : stormHeadline(stormFrame);
     if (id === "radar") return activeRadar ? `${activeRadar.product.toUpperCase()} · ${activeRadar.time.slice(11,16)} UTC` : "Gap · no supported mosaic";
     if (id === "smoke") return `${activeSmoke.features.length} supported polygons${manifest.smoke.gaps.length ? " · partial archive" : ""}`;
     if (["counties", "weather", "earthquakes", "shake"].includes(id)) {
@@ -687,6 +748,7 @@ export default function EventObservatory() {
       </aside>
       <section className="event-map-panel" aria-label="Layered historical Kansas map"><div ref={container} className="event-map" />
         <div className="event-map-caption"><span>{base === "satellite" ? baseDay ? `NASA MODIS · acquisition day ${baseDay}${sourceErrors["ea-satellite"] ? " · tiles partial / failed" : ""}` : "No confirmed imagery for this date" : mapMessage}</span><strong>{committed ? timestamp(committed) : "Choose an interval to begin"}</strong><small>{localTimestamp(committed)}</small></div>
+        {visible.storms && manifest && committed && committed.slice(0, 10) >= NEXRAD_EARLIEST_DAY && <StormMapKey frame={stormFrame} onDetails={() => { setSelectedTrack("storms"); setDetailsOpen(true); setLayersOpen(false); }} />}
         {(loading || buffering) && <div className="event-buffer" role="status">{loading ? "Reading dated source records…" : `Buffering ${requested?.slice(11,19)} UTC · temporal pixels withheld`}</div>}
         {error && <div className="event-error" role="alert">{error}{manifest && <button type="button" onClick={() => { setVisible((current) => ({ ...current, radar: false })); setError(""); }}>Continue without radar</button>}</div>}
         {!manifest && !loading && <div className="event-intro"><span>THE PAST, IN MOTION</span><h2>Layer an event.<br />See what changed.</h2><p>Choose a date or start with a Kansas archive window. Every layer states the time it actually represents.</p>{PRESETS.map((preset) => <button key={preset.start} type="button" disabled={!mapReady} onClick={() => { updateStart(preset.start); setHours(preset.hours); void load(preset.start,preset.hours); }}>{preset.label} <span>↗</span></button>)}</div>}
@@ -711,7 +773,8 @@ export default function EventObservatory() {
       <aside className="event-inspector" hidden={!detailsOpen}><div className="event-panel-heading"><strong>Sources & quality</strong><button type="button" onClick={() => setDetailsOpen(false)} aria-label="Close sources">×</button></div><select aria-label="Inspect a source" value={selectedTrack} onChange={(event) => setSelectedTrack(event.target.value as TrackId)}>{TRACKS.map((track) => <option key={track.id} value={track.id}>{track.name}</option>)}</select><span className="event-kicker">LAYER PASSPORT</span><h2>{chosen.name}</h2><p>{chosen.detail}</p><dl><div><dt>Clock</dt><dd>{chosen.axis}</dd></div><div><dt>Current support</dt><dd>{trackStatus(chosen.id)}</dd></div><div><dt>Archive query</dt><dd>{manifest ? `${timestamp(manifest.start)} → ${timestamp(manifest.end)} (end excluded)` : "Not loaded"}</dd></div><div><dt>Retrieved</dt><dd>{manifest ? timestamp(manifest.retrievedAt) : "Not yet"}</dd></div></dl><a href={chosen.source} target="_blank" rel="noreferrer">Inspect source & method ↗</a>
 {contextData[chosen.id as ContextTrack] && <p>{contextData[chosen.id as ContextTrack]?.message}</p>}
         {chosen.id === "river" && <p>{loadedRiverResolution === "daily" ? "Daily mean is pinned to its source date. It does not describe changes within the day." : "Continuous samples are held at most 30 minutes. Gaps stay empty."}</p>}
-        {inspectedFeature?.track === chosen.id && <section className="event-feature-values"><h3>{String(inspectedFeature.properties.name ?? inspectedFeature.properties.stationName ?? "Selected record")}</h3><dl>{Object.entries(inspectedFeature.properties).filter(([key]) => ["geoid", "population", "housingUnits", "landSquareMiles", "waterSquareMiles", "vintage", "station", "network", "startTime", "endTime", "day", "maximumF", "minimumF", "precipitationInches", "snowfallInches", "snowDepthInches", "magnitude", "observedAt", "depthKilometers", "approvalStatus"].includes(key)).map(([key,value]) => <div key={key}><dt>{({ geoid: "County FIPS", population: "Population", housingUnits: "Housing units", landSquareMiles: "Land · sq mi", waterSquareMiles: "Water · sq mi", maximumF: "Daily max · °F", minimumF: "Daily min · °F", precipitationInches: "Daily rain · in", snowfallInches: "Daily snowfall · in", snowDepthInches: "Snow depth · in", vintage: "Census edition", startTime: "Station epoch start", endTime: "Station epoch end", observedAt: "Observation time", depthKilometers: "Depth · km" } as Record<string,string>)[key] ?? key}</dt><dd>{value === null ? "Not supplied" : typeof value === "number" ? value.toLocaleString("en-US", { maximumFractionDigits: 2 }) : String(value)}</dd></div>)}</dl></section>}
+        {inspectedFeature?.track === chosen.id && chosen.id !== "storms" && <section className="event-feature-values"><h3>{String(inspectedFeature.properties.name ?? inspectedFeature.properties.stationName ?? "Selected record")}</h3><dl>{Object.entries(inspectedFeature.properties).filter(([key]) => ["geoid", "population", "housingUnits", "landSquareMiles", "waterSquareMiles", "vintage", "station", "network", "startTime", "endTime", "day", "maximumF", "minimumF", "precipitationInches", "snowfallInches", "snowDepthInches", "magnitude", "observedAt", "depthKilometers", "approvalStatus"].includes(key)).map(([key,value]) => <div key={key}><dt>{({ geoid: "County FIPS", population: "Population", housingUnits: "Housing units", landSquareMiles: "Land · sq mi", waterSquareMiles: "Water · sq mi", maximumF: "Daily max · °F", minimumF: "Daily min · °F", precipitationInches: "Daily rain · in", snowfallInches: "Daily snowfall · in", snowDepthInches: "Snow depth · in", vintage: "Census edition", startTime: "Station epoch start", endTime: "Station epoch end", observedAt: "Observation time", depthKilometers: "Depth · km" } as Record<string,string>)[key] ?? key}</dt><dd>{value === null ? "Not supplied" : typeof value === "number" ? value.toLocaleString("en-US", { maximumFractionDigits: 2 }) : String(value)}</dd></div>)}</dl></section>}
+        {chosen.id === "storms" && <StormDetails frame={stormFrame} selected={inspectedFeature?.track === "storms" ? inspectedFeature.properties : null} />}
         {chosen.id === "shake" && <a href="https://stationview.raspberryshake.org/" target="_blank" rel="noreferrer">Open Raspberry Shake waveform viewer ↗</a>}
         {chosen.id === "radar" && activeRadar && <a href={activeRadar.artifact} target="_blank" rel="noreferrer">Exact mosaic artifact ↗</a>}
         {chosen.id === "smoke" && <p className="event-small">Actual footprint changes are replayed without morphing. Wind tracers and 3D smoke require a verified modeled field and are not supplied by HMS polygons.</p>}

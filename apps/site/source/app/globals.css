@@ -4590,3 +4590,19 @@ body { font-size: 14px; }
 /* Area underlay has its own record-time navigation. Atlas Time stays reachable
    from the toolbar and returns when explicitly opened; its committed year remains in force. */
 .explorer-shell[data-timeline="false"]:has([data-cutaway-panel="true"]) > .timeline-panel { display:none; }
+
+/* Event Observatory · NEXRAD storm-cell key */
+.event-storm-key { position: absolute; z-index: 3; right: 68px; top: 12px; display: grid; gap: 6px; width: min(250px, calc(100% - 80px)); padding: 10px 12px; border: 1px solid #ffb08a55; border-radius: 8px; background: #0a1d21ef; color: #f4eadf; box-shadow: 0 8px 26px #0006; font-size: 11px; }
+.event-storm-key > strong { font-size: 13px; color: #ffd7c2; font-variant-numeric: tabular-nums; }
+.event-storm-key ul { display: grid; gap: 3px; margin: 0; padding: 0; list-style: none; }
+.event-storm-key li { display: flex; align-items: center; gap: 7px; }
+.event-storm-key li > i { flex: none; width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid #1b1210; }
+.event-storm-key li > i.event-storm-line { width: 18px; height: 0; border: 0; border-top: 2px solid #f4eadf; border-radius: 0; }
+.event-storm-key li > i.event-storm-line[data-dashed="true"] { border-top: 2px dashed #ff8a5c; }
+.event-storm-key small { color: #c9b9ad; font-size: 10px; line-height: 1.35; }
+.event-storm-key button { justify-self: start; padding: 3px 8px; border: 1px solid #ffb08a77; border-radius: 4px; background: transparent; color: #ffd7c2; font-size: 11px; cursor: pointer; }
+.event-storm-key button:focus-visible { outline: 2px solid #ffd7c2; outline-offset: 2px; }
+.event-storm-radars { display: grid; gap: 3px; margin: 6px 0; padding: 0; list-style: none; font-size: 12px; }
+.event-storm-radars li[data-status="unavailable"] { color: #f2a58f; }
+.event-storm-radars li[data-status="no-scan"] { color: #a6c4b6; }
+@media (max-width: 720px) { .event-storm-key { top: auto; bottom: 12px; right: 12px; width: min(230px, calc(100% - 24px)); } .event-storm-key ul { display: none; } }

@@ -90,6 +90,10 @@ does not prove an absence of actual gaps.
 
 ## Select exact bytes, plan offline, then acquire
 
+For Kansas NEXRAD storm tracks and rotation detections, use the bounded
+[Level III operator](noaa-nexrad-local-capture.md); it plans byte totals before
+downloading and never fetches Level II volumes.
+
 For the owner-selected Kansas GHCN Daily capture, use the bounded
 [station-history operator](noaa-ghcnd-local-capture.md). It retains compressed
 originals with local hashes and source headers in protected RAW candidate
