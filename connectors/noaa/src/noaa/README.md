@@ -62,6 +62,12 @@ notes:
 
 # NOAA Connector Python Package Boundary
 
+`ghcnd.py` adds a bounded Kansas station-history fetch and format-inspection
+adapter. It uses fixed NOAA HTTPS metadata/station paths, retains original
+quality/source flags, and does not admit data. The
+[local operator runbook](../../../../docs/runbooks/noaa-ghcnd-local-capture.md)
+documents storage limits, source receipts, retry and review boundaries.
+
 `connectors/noaa/src/noaa/`
 
 > Import-package boundary for NOAA source fetch, parse, provenance, and admission helpers. This package may prepare product-specific NOAA material for governed **RAW** or **QUARANTINE** handoff; it does not establish NOAA truth, issue alerts, approve publication, or bypass KFM governance.

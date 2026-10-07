@@ -28,6 +28,12 @@ truth_posture: CONFIRMED main@bb08d3e9b9 implementation and exact-schema policy 
 
 # Local PC data tools
 
+`noaa_ghcnd.py` prepares, captures and verifies compressed Kansas daily station
+histories in the existing external RAW/WORK/receipt lanes, with a 384 MiB source
+storage cap and 100 GiB free-space reserve. See the
+[GHCN Daily runbook](../../docs/runbooks/noaa-ghcnd-local-capture.md). These are
+unreviewed local captures, not an activated map layer.
+
 The offline `manage.py` and filesystem helpers prepare a local checkout and preserve
 explicitly selected, already downloaded files in a private external QUARANTINE
 store. That offline importer does not download, interpret, extract, normalize, activate, promote,

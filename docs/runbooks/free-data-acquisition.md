@@ -90,6 +90,11 @@ does not prove an absence of actual gaps.
 
 ## Select exact bytes, plan offline, then acquire
 
+For the owner-selected Kansas GHCN Daily capture, use the bounded
+[station-history operator](noaa-ghcnd-local-capture.md). It retains compressed
+originals with local hashes and source headers in protected RAW candidate
+storage; no provider checksum is invented to bypass the ordinary cache worker.
+
 A payload manifest is a private operator input with this shape:
 
 ```json
