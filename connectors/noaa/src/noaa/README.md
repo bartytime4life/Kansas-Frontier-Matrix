@@ -62,6 +62,11 @@ notes:
 
 # NOAA Connector Python Package Boundary
 
+`nwm.py` adds fixed NOAA NOMADS and reference-flowline capture primitives with
+complete-cycle selection and strict object/byte bounds. Model guidance remains
+separate from observations; the [NWM operator runbook](../../../../docs/runbooks/noaa-nwm-local-capture.md)
+records the private capture and review boundaries.
+
 `ghcnd.py` adds a bounded Kansas station-history fetch and format-inspection
 adapter. It uses fixed NOAA HTTPS metadata/station paths, retains original
 quality/source flags, and does not admit data. The

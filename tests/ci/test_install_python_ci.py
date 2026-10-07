@@ -26,6 +26,7 @@ class InstallPythonCiTests(unittest.TestCase):
                 "audit-tool",
                 "connectors-core",
                 "geo-transforms",
+                "nwm-netcdf",
                 "geoparquet-pyarrow-25",
                 "project-runtime",
                 "project-test",

@@ -77,6 +77,12 @@ notes:
 
 # 💧 Hydrology Domain Pipeline
 
+`nwm_subset.py` is a pure WORK-candidate projection of verified NWM source bytes
+and NOAA reference geometry. It joins by reach ID, preserves model/source
+versions, distinguishes initialization and valid times, and retains packed
+missing values. It performs no acquisition or release. See the
+[NWM local-capture runbook](../../../docs/runbooks/noaa-nwm-local-capture.md).
+
 > Executable Hydrology-domain pipeline lane for converting admitted watershed, HUC, stream/reach, gauge, groundwater, water-quality, regulatory-flood-context, terrain, topology, and cross-lane water-context source material into governed candidates, quarantine records, processed records, catalog/triplet handoffs, receipts, promotion-decision stubs, and release-review packages — **without acting as an emergency flood-warning system or collapsing observed, modeled, regulatory, and operational truth classes**.
 
 ![status](https://img.shields.io/badge/status-draft-blue)

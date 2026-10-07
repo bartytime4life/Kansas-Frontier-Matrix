@@ -122,6 +122,7 @@ PROFILES = {
         "tools/ci/python-test.lock", ("./packages/connectors-core",)
     ),
     "geo-transforms": InstallProfile("tools/ci/python-geo.lock"),
+    "nwm-netcdf": InstallProfile("tools/ci/python-nwm.lock"),
     "geoparquet-pyarrow-25": InstallProfile(
         "tools/ci/geoparquet-pyarrow-25.lock"
     ),
