@@ -28,6 +28,13 @@ truth_posture: CONFIRMED main@bb08d3e9b9 implementation and exact-schema policy 
 
 # Local PC data tools
 
+`noaa_nwm.py` captures one 18-hour National Water Model streamflow run and
+Kansas-envelope river geometry in private RAW/WORK lanes, with a 512 MiB
+aggregate cap and 100 GiB free-space reserve. The
+[NWM runbook](../../docs/runbooks/noaa-nwm-local-capture.md) describes the
+compressed subset, initialization/valid times, model-versus-geometry version
+review, and optional hash-locked binary reader. No map activation is implied.
+
 `noaa_nexrad.py` captures NOAA NEXRAD Level III storm-tracking (`NST`) and
 rotation (`NMD`) products for Kansas radars and one UTC day, with a 64 MiB
 storage cap checked before any product download. See the

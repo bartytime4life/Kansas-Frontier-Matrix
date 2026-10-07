@@ -9,6 +9,8 @@ name: local-data-store
       - ".github/workflows/local-data-store.yml"
       - "tools/local_data/**"
       - "connectors/local_upload/**"
+      - "connectors/noaa/src/noaa/nwm.py"
+      - "pipelines/domains/hydrology/nwm_subset.py"
       - "tests/local_data/**"
       - "schemas/contracts/v1/source/local_data_manifest.schema.json"
       - "schemas/contracts/v1/source/ingest_receipt.schema.json"
@@ -28,6 +30,8 @@ name: local-data-store
       - ".github/workflows/local-data-store.yml"
       - "tools/local_data/**"
       - "connectors/local_upload/**"
+      - "connectors/noaa/src/noaa/nwm.py"
+      - "pipelines/domains/hydrology/nwm_subset.py"
       - "tests/local_data/**"
       - "schemas/contracts/v1/source/local_data_manifest.schema.json"
       - "schemas/contracts/v1/source/ingest_receipt.schema.json"
@@ -66,5 +70,7 @@ jobs:
           python-version: "3.11"
       - name: Install declared test dependencies
         run: python tools/ci/install_python_ci.py project-test
+      - name: Install hash-locked optional NWM binary reader
+        run: python tools/ci/install_python_ci.py nwm-netcdf
       - name: Check local capture and operator contracts without network
         run: make local-data-check

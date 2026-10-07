@@ -19,6 +19,7 @@ name: python-dependency-lock
       - "tools/ci/python-audit.lock"
       - "tools/ci/python-test.lock"
       - "tools/ci/python-geo.lock"
+      - "tools/ci/python-nwm.lock"
       - "data/receipts/generated/genrec-pipeline-ci-migration-replay-20260918.json"
       - "tools/validators/validate_generated_receipt.py"
   push:
@@ -38,6 +39,7 @@ name: python-dependency-lock
       - "tools/ci/python-audit.lock"
       - "tools/ci/python-test.lock"
       - "tools/ci/python-geo.lock"
+      - "tools/ci/python-nwm.lock"
       - "data/receipts/generated/genrec-pipeline-ci-migration-replay-20260918.json"
       - "tools/validators/validate_generated_receipt.py"
   workflow_dispatch:
@@ -102,8 +104,9 @@ jobs:
           git merge-base --is-ancestor "$KFM_MIGRATION_HEAD" "$KFM_CURRENT_HEAD"
           python tools/ci/install_python_ci.py verify-workflows
 
-      - name: Validate the current workflow correction receipt
+      - name: Replay the historical workflow correction receipt
         run: |
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-pipeline-ci-migration-replay-20260918.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref d0c4e9a5108c7b0d82372a43f785ae10eeed6895

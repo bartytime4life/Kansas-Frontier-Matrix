@@ -90,6 +90,11 @@ does not prove an absence of actual gaps.
 
 ## Select exact bytes, plan offline, then acquire
 
+For the owner-selected National Water Model streamflow capture, use the
+[bounded NWM operator](noaa-nwm-local-capture.md). One frozen forecast plus
+Kansas-envelope geometry stays within a 512 MiB aggregate source cap and
+a 100 GiB free-space reserve; projected files remain private WORK candidates.
+
 For Kansas NEXRAD storm tracks and rotation detections, use the bounded
 [Level III operator](noaa-nexrad-local-capture.md); it plans byte totals before
 downloading and never fetches Level II volumes.

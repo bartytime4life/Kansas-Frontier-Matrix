@@ -190,6 +190,11 @@ python tools/ci/install_python_ci.py geo-transforms
 make offline-pipeline-check
 ```
 
+The optional `nwm-netcdf` profile uses `python-nwm.lock` for Linux x86_64
+Python 3.11/3.12 binary readers. The local-data workflow uses it for synthetic
+NetCDF4 time/packing/ID fixtures; no live NOAA requests run in CI. It does not
+change root runtime dependencies.
+
 The finite `geo-transforms` profile uses `python-geo.lock`: the optional
 `pyproj==3.7.2` declared by `packages/geo/pyproject.toml`, plus hash-pinned certifi.
 Wheel hashes cover Python 3.11/3.12; CI requires binary distributions. This adds

@@ -62,6 +62,11 @@ notes:
 
 # NOAA Connector Python Package Boundary
 
+`nwm.py` adds fixed NOAA NOMADS and reference-flowline capture primitives with
+complete-cycle selection and strict object/byte bounds. Model guidance remains
+separate from observations; the [NWM operator runbook](../../../../docs/runbooks/noaa-nwm-local-capture.md)
+records the private capture and review boundaries.
+
 `nexrad_level3.py` decodes the small NEXRAD Level III storm-tracking and
 mesocyclone products from the NOAA Open Data copy referenced by NCEI's NEXRAD
 page. It uses fixed bucket keys and size limits and does not admit data. See
