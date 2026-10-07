@@ -104,3 +104,28 @@ test("storm route reads only allowlisted archive bytes, caches nothing to disk a
     }
   } finally { globalThis.fetch = previous; }
 });
+
+test("a failed rotation product keeps that radar's storm cells", async () => {
+  // A fresh module instance so the earlier test's in-memory cache is not reused.
+  const cached = await moduleUrl("../app/api/event-atlas/storms/route.ts");
+  const fresh = `data:text/javascript;base64,${Buffer.from(Buffer.from(cached.split(",")[1], "base64").toString() + "\n// fresh cache").toString("base64")}`;
+  const { GET } = await import(fresh);
+  const previous = globalThis.fetch;
+  const nst = await fixture(NST), nmd = await fixture(NMD);
+  globalThis.fetch = async (url) => {
+    const value = String(url);
+    if (value.includes("prefix=ICT_NST_2024_05_19_")) return new Response(listing([[NST, nst.length]]));
+    if (value.includes("prefix=ICT_NMD_2024_05_19_")) return new Response(listing([[NMD, nmd.length]]));
+    if (value.includes("?list-type=2")) return new Response(listing([]));
+    if (value.endsWith(NMD)) return new Response("down", { status: 503 });
+    if (value.endsWith(NST)) return new Response(nst);
+    return new Response("unexpected", { status: 404 });
+  };
+  try {
+    const body = await (await GET(new Request("https://app.test/api/event-atlas/storms?time=2024-05-19T23%3A20%3A00.000Z"))).json();
+    assert.equal(body.radars[0].status, "ok");
+    assert.match(body.radars[0].message, /rotation unavailable/i);
+    assert.equal(body.counts.cells, 34);
+    assert.equal(body.counts.rotations, 0);
+  } finally { globalThis.fetch = previous; }
+});

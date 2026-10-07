@@ -164,6 +164,25 @@ class StoreTests(unittest.TestCase):
         self.assertEqual(report["failure_count"], 2)
         self.assertFalse((op.paths(self.root, RUN)[0] / NST).exists())
 
+    def test_binary_decoder_error_is_a_failed_product_and_run_resumes(self):
+        self.prepare()
+        def broken(*args):
+            raise s.struct.error("unpack requires a buffer of 6 bytes")
+        with patch.object(op.source, "_storm_geometry", side_effect=broken):
+            report = op.capture(self.root, RUN, fetcher=provider)
+        self.assertEqual(report["status"], "PARTIAL")
+        self.assertEqual([f["key"] for f in report["failures"]], [NST])
+        with patch.object(op.source, "utc_now", return_value="2026-10-07T18:30:00Z"):
+            again = op.capture(self.root, RUN, fetcher=provider)
+        self.assertEqual(again["status"], "CAPTURED_UNREVIEWED")
+
+    def test_body_that_differs_from_planned_size_is_rejected(self):
+        self.prepare()
+        report = op.capture(self.root, RUN, fetcher=lambda key, limit: (fixture(key) + b"x", {}))
+        self.assertEqual(report["failure_count"], 2)
+        self.assertTrue(all("SIZE_DIFFERS_FROM_PLAN" in f["error_type"] for f in report["failures"]))
+        self.assertFalse((op.paths(self.root, RUN)[0] / NST).exists())
+
     def test_invalid_selection_and_traversal_denied(self):
         for kwargs in ({"radars": ["XXX"]}, {"products": ["N0B"]}, {"start_hour": 20, "hours": 6}):
             with self.assertRaises(ValueError):

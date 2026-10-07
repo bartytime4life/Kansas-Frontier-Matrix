@@ -303,7 +303,15 @@ def parse_product(raw, key):
 
     The WMO/AWIPS envelope, product code, radar identity, message length and the
     volume time encoded in the key must agree; otherwise the file is rejected.
+    Any binary-structure error is reported as ValueError, like other rejections.
     """
+    try:
+        return _parse_product(raw, key)
+    except (struct.error, IndexError) as error:
+        raise ValueError("PRODUCT_STRUCTURE_INVALID") from error
+
+
+def _parse_product(raw, key):
     when = key_time(key)
     match = KEY.fullmatch(key)
     radar, product = match["radar"], match["product"]

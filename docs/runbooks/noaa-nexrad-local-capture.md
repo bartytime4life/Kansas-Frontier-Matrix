@@ -72,7 +72,8 @@ must be the existing private, initialized local store (see
 
 Each product is checked before it is saved: the WMO/AWIPS envelope must name
 the same product and radar as the key; the message length, product code,
-radar latitude/longitude/height and volume time must agree with the key. On
+radar latitude/longitude/height and volume time must agree with the key. Its byte size must also equal the size planned by `prepare`, so the
+storage cap holds even if NOAA replaces a file in between. On
 busy volumes the NST text table can list fewer cells than the graphic block
 (for example 34 of 38); both are merged and the declared cell count must match.
 A failed product is reported, not saved, and a repeat `capture` fetches only
