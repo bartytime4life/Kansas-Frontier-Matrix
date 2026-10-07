@@ -1,0 +1,108 @@
+{
+  "record_type": "private-local-capture-delivery",
+  "source": "NOAA GHCN Daily",
+  "source_url": "https://www.ncei.noaa.gov/pub/data/ghcn/daily/",
+  "recorded_at": "2026-10-07T17:47:17Z",
+  "implementation_commit": "10b528c825a36d217a11effeac4d42626b5cc5cc",
+  "implementation_base": "04dbf166f6db39604673ae1db08350f246c1bedf",
+  "implementation_pr": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4919",
+  "external_merge_commit": "4d9bf22a411b65f4cd36d1ce09a1f96e6bdfa8ef",
+  "external_merge_at": "2026-10-07T17:42:41Z",
+  "run_label": "20261007T182000Z",
+  "run_label_is_observation_or_retrieval_time": false,
+  "capture_created_at": "2026-10-07T17:26:49Z",
+  "capture_finished_at": "2026-10-07T17:41:41Z",
+  "verified_at": "2026-10-07T17:46:13Z",
+  "selection": "All 2519 stations with exact NOAA state code KS and valid Kansas-range coordinates in the captured metadata",
+  "capture_status": "CAPTURED_UNREVIEWED",
+  "verification_status": "VERIFIED_CAPTURE",
+  "counts": {
+    "stations": 2519,
+    "station_date_element_rows": 51522960,
+    "elements": 89,
+    "quality_flagged_rows_retained": 123488,
+    "missing_stations": 0,
+    "download_failures": 0
+  },
+  "observed_collection_span": {
+    "start": "1857-04-01",
+    "end": "2026-10-04",
+    "per_station_or_element_continuity_claimed": false
+  },
+  "core_element_rows": {
+    "PRCP": 13312045,
+    "TMAX": 5581595,
+    "TMIN": 5582727,
+    "SNOW": 11147233,
+    "SNWD": 8014648
+  },
+  "storage": {
+    "compressed_observation_bytes": 184215541,
+    "source_metadata_bytes": 68199260,
+    "retained_disk_bytes": 274100224,
+    "source_cap_bytes": 402653184,
+    "minimum_free_bytes": 107374182400,
+    "free_bytes_after": 2047040430080,
+    "expanded_observations_written": false,
+    "scratch_duplicates_removed_bytes": 31772816
+  },
+  "local_artifacts": {
+    "plan": {
+      "path_relative_to_KFM_DATA_ROOT": "data/work/noaa-ghcnd/20261007T182000Z/plan.json",
+      "sha256": "82c7081127ef3506b1abe810aac634150a52cfbcc49a341a665980fbb6770708",
+      "bytes": 1283468
+    },
+    "capture_receipt": {
+      "path_relative_to_KFM_DATA_ROOT": "data/receipts/ingest/noaa-ghcnd/20261007T182000Z/capture-20261007T174141Z.json",
+      "sha256": "5206fe7e9fd09c63da919e7518b1865011827fce0f7b63a6bfa5d45b6ad12ded",
+      "bytes": 2155302
+    },
+    "verification_receipt": {
+      "path_relative_to_KFM_DATA_ROOT": "data/receipts/ingest/noaa-ghcnd/20261007T182000Z/verification.json",
+      "sha256": "4be0ef89429cdf1fdbe3642d1a3fad602dba1d6aa0eb6a3040def98ba85bac4d",
+      "bytes": 610
+    },
+    "station_index": {
+      "path_relative_to_KFM_DATA_ROOT": "data/work/noaa-ghcnd/20261007T182000Z/station-index-c7bcebf333033411.geojson",
+      "sha256": "c7bcebf333033411ab8d2db257bdc0ac26b1a6d87625d2d06f64094e01e0b1e6",
+      "bytes": 2509260
+    },
+    "local_guide": {
+      "path_relative_to_KFM_DATA_ROOT": "data/work/noaa-ghcnd/20261007T182000Z/README.md",
+      "sha256": "5c0929a1eaa90dcb3b58160e20498d2c6a63e17eb0cfde694df69f18424af363",
+      "bytes": 1988
+    }
+  },
+  "integrity": {
+    "sha256_all_objects_rechecked": true,
+    "gzip_crc_all_stations_rechecked": true,
+    "all_rows_station_shape_calendar_checked": true,
+    "provider_checksum_available": false,
+    "local_hash_role": "captured-byte identity, not upstream checksum or scientific validity"
+  },
+  "lifecycle": {
+    "source_admitted": false,
+    "reviewed": false,
+    "map_activated": false,
+    "released": false,
+    "published": false,
+    "automatic_refresh": false,
+    "existing_datasets_modified": false
+  },
+  "validation": {
+    "python_tests": 71,
+    "python_subtests": 24,
+    "topology_inherited_findings": 6,
+    "topology_inherited_warnings": 113,
+    "topology_new_findings": 0,
+    "gap_scan_same_as_exact_base": true,
+    "mirror_review_required": true,
+    "full_repository_pass_claimed": false
+  },
+  "provenance": {
+    "generator": "tools/local_data/noaa_ghcnd.py with connectors/noaa/src/noaa/ghcnd.py; delivery summary assembled from capture/verification receipts",
+    "edit_policy": "append a successor for a later capture; retain original receipts",
+    "raw_files_in_git": false
+  },
+  "rollback": "Revert operator code as needed; retain external originals and receipts. No source-data deletion or activation performed."
+}
