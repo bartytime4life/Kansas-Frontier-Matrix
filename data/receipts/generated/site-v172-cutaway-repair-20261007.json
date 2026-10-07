@@ -1,0 +1,209 @@
+{
+  "profile": "kfm.site-feature-delta/v1",
+  "authority": "REVIEW_ONLY",
+  "created_at": "2026-10-07T15:08:15.032187+00:00",
+  "owning_root": "data/",
+  "responsibility": "Exact source and bounded delivery evidence; no human acceptance or dataset release approval.",
+  "directory_basis": [
+    "docs/doctrine/directory-rules.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "site_base_version": 171,
+  "site_base_commit": "71bfe886b03b05ba142bdeafa1fd479f1f141b00",
+  "site_candidate_commit": "88290afd1a974b62ffa0f1ccba5da48f7d8e4188",
+  "github_predecessor_commit": "c2631c68d37ddf143b95ca3e3990168509058aae",
+  "github_branch_base_commit": "d34cbb699cb97066b0204e2116e0bdf26e4a45df",
+  "github_branch": "agent/site-area-underlay-20261007",
+  "destination": "apps/site/source",
+  "application_method": "Exact nine-path successor delta after all 708 v171 predecessor paths matched; all 708 resulting source paths match. Branch also retains the prior v171 delivery commit, yielding sixteen source paths versus its main base.",
+  "counts": {
+    "changed_paths": 9,
+    "updated_paths": 9,
+    "new_paths": 0,
+    "deleted_paths": 0,
+    "branch_source_paths_vs_main_base": 16
+  },
+  "files": {
+    "app/aquifer-view-session.ts": {
+      "github_base_sha256": "343cacade70c530ac04b1313fece226ec226aefc55dd5708b56dbd6c5d1dbed7",
+      "site_base_sha256": "343cacade70c530ac04b1313fece226ec226aefc55dd5708b56dbd6c5d1dbed7",
+      "github_result_sha256": "e8388005ca079e1d821a1f0cc8712c949bd6d8ef14a8ed7a2d48907001004066",
+      "site_source_sha256": "e8388005ca079e1d821a1f0cc8712c949bd6d8ef14a8ed7a2d48907001004066"
+    },
+    "app/aquifer-volume-view.tsx": {
+      "github_base_sha256": "c697fc921848cf6c0aa1ac9f9bf3a413b9823e6dff463bc543580d381f8846af",
+      "site_base_sha256": "c697fc921848cf6c0aa1ac9f9bf3a413b9823e6dff463bc543580d381f8846af",
+      "github_result_sha256": "14bd43d6e3e6f1c1cd66ff9551b236368bb0404bcc6583376ba457c974adcd59",
+      "site_source_sha256": "14bd43d6e3e6f1c1cd66ff9551b236368bb0404bcc6583376ba457c974adcd59"
+    },
+    "app/subsurface-three.tsx": {
+      "github_base_sha256": "64c092d51546cf3cf06fc9b9a2a6a7fa9616968ae2e5f339c24cb36ae5bd814b",
+      "site_base_sha256": "64c092d51546cf3cf06fc9b9a2a6a7fa9616968ae2e5f339c24cb36ae5bd814b",
+      "github_result_sha256": "1ac980bf60e439fe7ac1fc26baf50f383dac09dbaceb7ee0cfed762a7b71fe5a",
+      "site_source_sha256": "1ac980bf60e439fe7ac1fc26baf50f383dac09dbaceb7ee0cfed762a7b71fe5a"
+    },
+    "app/subsurface.module.css": {
+      "github_base_sha256": "bfd342c47782d3e003778388a5c2990db64ee3fd8d78b3f0d71b2b35794a86eb",
+      "site_base_sha256": "bfd342c47782d3e003778388a5c2990db64ee3fd8d78b3f0d71b2b35794a86eb",
+      "github_result_sha256": "af70e64ffcfd471adec54f4c139ff3b6ec4a77ca4fa23b6ca35fa0b2881c9f6d",
+      "site_source_sha256": "af70e64ffcfd471adec54f4c139ff3b6ec4a77ca4fa23b6ca35fa0b2881c9f6d"
+    },
+    "app/underground-panel.tsx": {
+      "github_base_sha256": "9ceb61df59bfef2cd5257d657c2661a44cef3dcb3705e596ceb2843945e9d793",
+      "site_base_sha256": "9ceb61df59bfef2cd5257d657c2661a44cef3dcb3705e596ceb2843945e9d793",
+      "github_result_sha256": "fee5ce6c838fc13417704a1317d4e34cba2286fc9c7b41b623c464d0d8cb721e",
+      "site_source_sha256": "fee5ce6c838fc13417704a1317d4e34cba2286fc9c7b41b623c464d0d8cb721e"
+    },
+    "docs/underground-explorer.md": {
+      "github_base_sha256": "b7d7f0a85ec24bd96cb084a5cda209d95634f5ed52b09fda767d191418080420",
+      "site_base_sha256": "b7d7f0a85ec24bd96cb084a5cda209d95634f5ed52b09fda767d191418080420",
+      "github_result_sha256": "b110089b5082c0e36251a174bd88cb39da7027002d856fb29d692046a203972a",
+      "site_source_sha256": "b110089b5082c0e36251a174bd88cb39da7027002d856fb29d692046a203972a"
+    },
+    "tests/aquifer-view-session.test.mjs": {
+      "github_base_sha256": "4f7a891f6e1b99d34800220a1f6502f6a6668d600a9ee5c9db843ea42ab1c0b5",
+      "site_base_sha256": "4f7a891f6e1b99d34800220a1f6502f6a6668d600a9ee5c9db843ea42ab1c0b5",
+      "github_result_sha256": "77617b47ab64e4b58153ea85145d175b8d97bed07ff576cc71aa25629021970f",
+      "site_source_sha256": "77617b47ab64e4b58153ea85145d175b8d97bed07ff576cc71aa25629021970f"
+    },
+    "tests/area-underlay.test.mjs": {
+      "github_base_sha256": "b8dc16624cd7cc2c5e72a18de109e2c91ea91edf08069cf5bbbea319db9ec2fd",
+      "site_base_sha256": "b8dc16624cd7cc2c5e72a18de109e2c91ea91edf08069cf5bbbea319db9ec2fd",
+      "github_result_sha256": "15ddd63d16e2d01780b49c142b507338338768e0b16c6ca5ea3c0dfcef53d095",
+      "site_source_sha256": "15ddd63d16e2d01780b49c142b507338338768e0b16c6ca5ea3c0dfcef53d095"
+    },
+    "tests/subsurface-slice.test.mjs": {
+      "github_base_sha256": "238b66ac751f65db1666ae892871e94db5f1139151f52c9728960240927b923a",
+      "site_base_sha256": "238b66ac751f65db1666ae892871e94db5f1139151f52c9728960240927b923a",
+      "github_result_sha256": "324e5fb362be262ae57b24c02072e8b72cee76281a3658ff0a1f4e79fb02090e",
+      "site_source_sha256": "324e5fb362be262ae57b24c02072e8b72cee76281a3658ff0a1f4e79fb02090e"
+    }
+  },
+  "exact_source_comparison": {
+    "source_commit": "88290afd1a974b62ffa0f1ccba5da48f7d8e4188",
+    "source_dirty": false,
+    "mirrored_paths": 708,
+    "remaining_differences": 0,
+    "missing_paths": 0,
+    "unexpected_paths": 0,
+    "path_and_content_inventory_sha256": "5efc4cf91da1caa26fcd049b7318133170862b3211ea8dfbc319c2288e0efa29",
+    "inventory_encoding": "SHA-256 of sorted compact JSON array of path and lowercase sha256, with sorted object keys."
+  },
+  "deployment": {
+    "site_version": 172,
+    "source_commit": "88290afd1a974b62ffa0f1ccba5da48f7d8e4188",
+    "status": "succeeded",
+    "completed_at": "2026-10-07T15:02:07.160225+00:00",
+    "audience": "Existing owner-private audience preserved",
+    "local_archive_sha256": "46f4863bad2314f3cd5dd8b7e6bd98f2e60939b63d3dcf346d5aa1899d5f248a",
+    "platform_canonical_tar_content_sha256": "sha256:b747aae7f301b278a3619721315976e78c4ef2069eab237980bf2cb9e679dcad",
+    "platform_files": 382,
+    "platform_bytes": 48721920,
+    "evidence": "Native Sites saved-version and successful deployment readback; gzip and canonical-tar digests identify different forms.",
+    "deployment_id": "appgdep_6ac65ee2cc008191a1f76cdcb2d9e9c9"
+  },
+  "application_validation": {
+    "build": "PASS",
+    "typescript": "PASS",
+    "node_tests": {
+      "pass": 609,
+      "fail": 0,
+      "skipped": 0
+    },
+    "focused_tests": 77,
+    "independent_changed_area_tests": 43,
+    "changed_lint": {
+      "errors": 0,
+      "warnings": 0,
+      "scope": "Four changed TypeScript files; no whole-tree lint claim"
+    },
+    "review": "PASS, attempt1, independent same-provider bounded source and behavior only",
+    "browser": "UNVERIFIED; fresh supported browser policy check unavailable; no bypass. Visual, touch, device WebGL and full keyboard acceptance are not established."
+  },
+  "local_installation": {
+    "state": "VERIFIED_ACTUAL_LOCAL_STORE_AND_RUNTIME",
+    "site_version": 172,
+    "source_commit": "88290afd1a974b62ffa0f1ccba5da48f7d8e4188",
+    "origin": "http://127.0.0.1:4173",
+    "physical_v109_state_retained": true,
+    "sqlite_checks_passed": 8,
+    "r2_blobs_verified": 15840,
+    "r2_blob_bytes_verified": 738852346,
+    "r2_blob_inventory_sha256": "2f390be87b05567bc4ed30c983485d8f48b094a0c21e4cc23006b9188c7f2ab6",
+    "d1_r2_counts_unchanged": true,
+    "service_configuration_unchanged": true,
+    "explorer_active": true,
+    "bridge_ready": true,
+    "prism_pid_preserved": 11880,
+    "rehearsal_http_checks": 12,
+    "private_installation_receipt_sha256": "77c287703ac773404f792c15e0ab79ba7b80c23e139f33789b3cef87787975a3",
+    "private_actual_readback_sha256": "a3ae565be16a012425ef09b23f09552124702a931d354fbb5180729a13b5b85b",
+    "identity": {
+      "head": "88290afd1a974b62ffa0f1ccba5da48f7d8e4188",
+      "source_build_sha256": "bee6c4751c148656cf7373fe60c1c7f030eb4a6842ed1370a745bb125625e39a",
+      "entry_sha256": "c89fc68ba60156c2e87329225386a38e49f9345a0b589c37d7524f6907d99a9d",
+      "config_sha256": "30a021f89bd857e1e85303f8f8ba70201f9925b237fbb58bebd4dac9df7f9cb1"
+    },
+    "prism_unchanged": true,
+    "private_backup_receipt_sha256": "24614517c67f50bcaf66eacff6b2ad908e49733aebb17c1b57f14cda92b37e76",
+    "private_rehearsal_receipt_sha256": "376f1e312dfb0febdceaedfcd97d644e69c18d1a5a2750338b58d30496701f38"
+  },
+  "repository_validation": {
+    "exact_head_ci": "PENDING_AFTER_PUSH",
+    "mirror_comparison": "PASS; 708 paths, no content changes or unexpected deletions",
+    "historical_mirror_gate": {
+      "state": "MIRROR_REVIEW_REQUIRED",
+      "base_commit": "d34cbb699cb97066b0204e2116e0bdf26e4a45df",
+      "tool_and_active_receipt_unchanged_from_base": true,
+      "base_source_paths": 707,
+      "active_receipt_paths": 370,
+      "review_waived": false
+    }
+  },
+  "invariants": [
+    "Source assets, versions, rights, source-time eligibility and privacy/export rules unchanged",
+    "Applied area is bounded to one degree in Kansas; exact record filtering precedes the 50-record cap; existing eight-tile query and twelve-tile cache budgets retained",
+    "Three spatial dimensions plus record time; aquifer ranges retain the fixed 2022\u20132024 source period",
+    "Applied area bounds, surface image and inspection camera remain transient; reopen and Show this area again; saved settings and permitted IDs retain the existing schema",
+    "Legacy saved display enum 3d and individual-log inspection remain compatible",
+    "DB and BUCKET bindings, physical v109 store, local cache and PRISM remain unchanged",
+    "No dependencies, data acquisition, source admission or activation",
+    "Flat local-ground reference and separate recorded depths; no continuous geology, shared elevation datum or historical reconstruction"
+  ],
+  "rollback": "Saved private Site v171 or revert the bounded nine-path successor through review. Local source rollback preserves subsequent writes in the existing physical v109 store; no data migration or automatic store restore. v171 remains historical and had the reported interaction defects.",
+  "governance": {
+    "dataset_admission": false,
+    "source_activation": false,
+    "public_audience_expansion": false,
+    "independent_human_acceptance": false,
+    "merge_authorized_by_this_record": false
+  },
+  "evidence_sha256": {
+    "source-validation": "afb33d255c2a1620589066323adca21a8d85c07172e7f1a00d26a2b30ae47d39",
+    "source-manifest": "592b85671a7a3fb5304b4c06b4d41eb553363768d5bb3e28e31aa2eba791e505",
+    "native-delivery": "d5bce43f4a033a47e7d6943ac3f7075299b313ecdaa3ff28ad5de45307d2fe4d",
+    "github-mirror-applied": "b5bf7efaabbce6585c9986d14a4c12b4adf4e1bbbda5cbbd0b4c66c24ed3b8f1",
+    "source-mirror-comparison": "706c6e64dba6e06e1fd16bd545ed8daf90ae18812d62cb545a13e9cee010c0c8",
+    "private-completed-install": "c54a2dbf90c4db58eadbe4b394922b4ca820284b1449b1eccb62734b2486a8f6"
+  },
+  "historical_predecessor": {
+    "site_version": 171,
+    "state": "SUPERSEDED_AFTER_OWNER_REPORTED_APPLY_FAILURE_AND_SPECIALIST_CLUTTER",
+    "source_commit": "71bfe886b03b05ba142bdeafa1fd479f1f141b00",
+    "receipt_paths": [
+      "data/receipts/generated/site-v171-area-underlay-20261007.json",
+      "data/receipts/generated/genrec-site-v171-area-underlay-20261007.json"
+    ],
+    "receipts_unchanged": true,
+    "generated_receipt_replay_git_ref": "c2631c68d37ddf143b95ca3e3990168509058aae",
+    "replay_scope": "Historical artifact bytes at the v171 repository checkpoint, not current v172 bytes; prior tests and deployment did not establish rendered or owner acceptance."
+  },
+  "behavior": [
+    "Apply skips unnecessary flattening and retains intent through the production animation; applied area survives preview movement and resize.",
+    "Oversized Kansas previews offer visible center-preserving local framing; out-of-scope centers remain held without substitution.",
+    "A neutral accepted frame allows independent records despite optional aquifer or image failure; source absence and unavailable capture remain distinct.",
+    "First record and optional aquifer fitting settle independently unless the user has navigated; terminal record-worker failure stays non-loading with close/reopen recovery.",
+    "Initial and empty states omit unused scene/time controls. One Tools disclosure with Back replaces competing tabs; advanced specialist controls are disclosed.",
+    "Tools round trips retain the selected frame, image and camera while releasing inactive workers/renderers; full panel closure remains transient."
+  ]
+}

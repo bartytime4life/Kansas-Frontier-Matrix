@@ -1,0 +1,164 @@
+{
+  "receipt_id": "genrec-site-v172-cutaway-repair-20261007",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/README.md",
+    "docs/reports/kfm-explorer-layers-animation-3d-performance-roadmap-20260911.md",
+    "apps/site/source/app/aquifer-view-session.ts",
+    "apps/site/source/app/aquifer-volume-view.tsx",
+    "apps/site/source/app/cutaway-model.ts",
+    "apps/site/source/app/globals.css",
+    "apps/site/source/app/page.tsx",
+    "apps/site/source/app/subsurface-model.ts",
+    "apps/site/source/app/subsurface-three.tsx",
+    "apps/site/source/app/subsurface-worker.ts",
+    "apps/site/source/app/subsurface.module.css",
+    "apps/site/source/app/underground-panel.tsx",
+    "apps/site/source/docs/SITE_PRESERVATION.md",
+    "apps/site/source/docs/underground-explorer.md",
+    "apps/site/source/tests/aquifer-view-session.test.mjs",
+    "apps/site/source/tests/area-underlay.test.mjs",
+    "apps/site/source/tests/subsurface-slice.test.mjs",
+    "apps/site/source/tests/subsurface-worker.test.mjs",
+    "data/receipts/generated/site-v172-cutaway-repair-20261007.json"
+  ],
+  "artifact_hashes": {
+    "apps/site/README.md": "sha256:de3d8d0f1d168d7a2c7593fc81793ab543d368ce88cced3ce6833efbfdf65dfe",
+    "docs/reports/kfm-explorer-layers-animation-3d-performance-roadmap-20260911.md": "sha256:5b15276b3ccc7b3aebf8fae5a319085a19654484433ac0d3e3e595162e96f219",
+    "apps/site/source/app/aquifer-view-session.ts": "sha256:e8388005ca079e1d821a1f0cc8712c949bd6d8ef14a8ed7a2d48907001004066",
+    "apps/site/source/app/aquifer-volume-view.tsx": "sha256:14bd43d6e3e6f1c1cd66ff9551b236368bb0404bcc6583376ba457c974adcd59",
+    "apps/site/source/app/cutaway-model.ts": "sha256:ceea0fabd533667d81997a03b9839adabaa79dc16a3bc12bd5d78778ab57cc97",
+    "apps/site/source/app/globals.css": "sha256:0aa579e3fc367b29d08787acd5586794066671e04f1889df214376fdc209d2ca",
+    "apps/site/source/app/page.tsx": "sha256:b1bc2005fd752dc714fc3768301b6fadc11fc10c7d51ce71bb813b33dd8ae228",
+    "apps/site/source/app/subsurface-model.ts": "sha256:70a5fcfd9122e89a8acec76ef80890dd461cd7984dcdd95b54f86e10e2fc7619",
+    "apps/site/source/app/subsurface-three.tsx": "sha256:1ac980bf60e439fe7ac1fc26baf50f383dac09dbaceb7ee0cfed762a7b71fe5a",
+    "apps/site/source/app/subsurface-worker.ts": "sha256:2a584e8f6eac421b5ef1a2aa2b229cf916a1aadd7b4ac499cd02308cabad49fe",
+    "apps/site/source/app/subsurface.module.css": "sha256:af70e64ffcfd471adec54f4c139ff3b6ec4a77ca4fa23b6ca35fa0b2881c9f6d",
+    "apps/site/source/app/underground-panel.tsx": "sha256:fee5ce6c838fc13417704a1317d4e34cba2286fc9c7b41b623c464d0d8cb721e",
+    "apps/site/source/docs/SITE_PRESERVATION.md": "sha256:2da57c46c5cee3d3158974a946f67f7c64891d20dfa19da72d7176742791d33a",
+    "apps/site/source/docs/underground-explorer.md": "sha256:b110089b5082c0e36251a174bd88cb39da7027002d856fb29d692046a203972a",
+    "apps/site/source/tests/aquifer-view-session.test.mjs": "sha256:77617b47ab64e4b58153ea85145d175b8d97bed07ff576cc71aa25629021970f",
+    "apps/site/source/tests/area-underlay.test.mjs": "sha256:15ddd63d16e2d01780b49c142b507338338768e0b16c6ca5ea3c0dfcef53d095",
+    "apps/site/source/tests/subsurface-slice.test.mjs": "sha256:324e5fb362be262ae57b24c02072e8b72cee76281a3658ff0a1f4e79fb02090e",
+    "apps/site/source/tests/subsurface-worker.test.mjs": "sha256:e1bb5e261acf9681cc4d2c700bd387d68507f31d99fdd6befdd51414d97f3df8",
+    "data/receipts/generated/site-v172-cutaway-repair-20261007.json": "sha256:4e1803fb8479fc0ad835a7d557528f49eff66e2ef6eec07d0b1205d6d983d3ec"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "not-disclosed"
+  },
+  "prompt_or_contract": "sha256:865afc0512a4bb6009439daed9600f01616b5e7e8525e2d55a82c100589c324b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "local-shell",
+      "Sites",
+      "GitHub-readback",
+      "independent-source-review"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "git:d34cbb699cb97066b0204e2116e0bdf26e4a45df",
+      "git:c2631c68d37ddf143b95ca3e3990168509058aae",
+      "standalone-site-source:88290afd1a974b62ffa0f1ccba5da48f7d8e4188",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ],
+    "evidence_hashes": [
+      "sha256:865afc0512a4bb6009439daed9600f01616b5e7e8525e2d55a82c100589c324b",
+      "sha256:afb33d255c2a1620589066323adca21a8d85c07172e7f1a00d26a2b30ae47d39",
+      "sha256:592b85671a7a3fb5304b4c06b4d41eb553363768d5bb3e28e31aa2eba791e505",
+      "sha256:d5bce43f4a033a47e7d6943ac3f7075299b313ecdaa3ff28ad5de45307d2fe4d",
+      "sha256:b5bf7efaabbce6585c9986d14a4c12b4adf4e1bbbda5cbbd0b4c66c24ed3b8f1",
+      "sha256:706c6e64dba6e06e1fd16bd545ed8daf90ae18812d62cb545a13e9cee010c0c8",
+      "sha256:c54a2dbf90c4db58eadbe4b394922b4ca820284b1449b1eccb62734b2486a8f6"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/README.md": "CONFIRMED",
+    "docs/reports/kfm-explorer-layers-animation-3d-performance-roadmap-20260911.md": "CONFIRMED",
+    "apps/site/source/app/aquifer-view-session.ts": "CONFIRMED",
+    "apps/site/source/app/aquifer-volume-view.tsx": "CONFIRMED",
+    "apps/site/source/app/cutaway-model.ts": "CONFIRMED",
+    "apps/site/source/app/globals.css": "CONFIRMED",
+    "apps/site/source/app/page.tsx": "CONFIRMED",
+    "apps/site/source/app/subsurface-model.ts": "CONFIRMED",
+    "apps/site/source/app/subsurface-three.tsx": "CONFIRMED",
+    "apps/site/source/app/subsurface-worker.ts": "CONFIRMED",
+    "apps/site/source/app/subsurface.module.css": "CONFIRMED",
+    "apps/site/source/app/underground-panel.tsx": "CONFIRMED",
+    "apps/site/source/docs/SITE_PRESERVATION.md": "CONFIRMED",
+    "apps/site/source/docs/underground-explorer.md": "CONFIRMED",
+    "apps/site/source/tests/aquifer-view-session.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/area-underlay.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/subsurface-slice.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/subsurface-worker.test.mjs": "CONFIRMED",
+    "data/receipts/generated/site-v172-cutaway-repair-20261007.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Exact source parity",
+      "outcome": "PASS",
+      "reason": "All 708 source paths match exact standalone source. Nine successor paths; sixteen source paths versus the main base including the prior v171 commit; no successor additions/deletions."
+    },
+    {
+      "gate": "Application validation",
+      "outcome": "PASS",
+      "reason": "Build, TypeScript and 609 Node tests pass; 77 focused and 43 independent changed-area tests pass. Four changed TypeScript files have zero lint errors/warnings; no whole-tree lint claim."
+    },
+    {
+      "gate": "Fresh browser visual acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Fresh supported browser policy verification unavailable; no bypass. Visual, touch, device WebGL and full keyboard acceptance remain UNVERIFIED."
+    },
+    {
+      "gate": "Local install and data preservation",
+      "outcome": "PASS",
+      "reason": "Exact v172 source/build installed; isolated 12-route rehearsal, eight local store checks and 15,840 blob hashes totaling 738,852,346 bytes verified; PRISM unchanged."
+    },
+    {
+      "gate": "Historical mirror review",
+      "outcome": "FAIL",
+      "reason": "MIRROR_REVIEW_REQUIRED retained. Tool and active receipt remain unchanged from exact main base; no review waiver."
+    },
+    {
+      "gate": "Exact-head CI and independent human acceptance",
+      "outcome": "SKIPPED",
+      "reason": "CI follows push; no independent human acceptance supplied."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "adr-0029",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "source-comparison",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/site-v172-cutaway-repair-20261007.json"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-07T15:08:15.032187+00:00",
+  "emitter": "Codex",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Generation provenance only, binding nineteen current artifact byte sequences except this self-referential record. CONFIRMED labels identify verified bytes and bounded current checkpoint; roadmap proposals retain their explicit status. Historical v171 receipts are unchanged and replay against c2631c68d37ddf143b95ca3e3990168509058aae. No prompt contents, secrets, private filesystem paths, hidden reasoning or review approvals. Source, deployment, runtime, browser and dataset-release states remain separate."
+}

@@ -43,16 +43,16 @@ test('core inventory remains an envelope and original interval identity survives
   assert.equal(materials.materialFor(core.intervals[0],core.kind),'inventory');
 });
 
-async function panelHarness(initialContext=null){
+async function panelHarness(initialContext=null,{failWorker=false}={}){
   const messages=[],inspections=[],contexts=[],timers=new Map(),focusCalls=[];let timerSerial=0;const worker={postMessage:message=>messages.push(message),terminate(){}};
-  const h=await componentHarness('app/underground-panel.tsx',{'./subsurface-model':model,'./subsurface-materials':materials,'./subsurface-slice':slices,'./subsurface.module.css':{default:style},'./subsurface-workers':{startSubsurfaceWorker:()=>worker},'./cutaway-locator':{cutawayLocatorPlacement(){}}},{
+  const h=await componentHarness('app/underground-panel.tsx',{'./subsurface-model':model,'./subsurface-materials':materials,'./subsurface-slice':slices,'./subsurface.module.css':{default:style},'./subsurface-workers':{startSubsurfaceWorker:()=>{if(failWorker)throw new Error("unavailable");return worker;}},'./cutaway-locator':{cutawayLocatorPlacement(){}}},{
     matchMedia:()=>({matches:true,addEventListener(){},removeEventListener(){}}),document:{hidden:false,addEventListener(){},removeEventListener(){}},queueMicrotask,performance,
-    setTimeout:callback=>{const id=++timerSerial;timers.set(id,callback);return id;},clearTimeout:id=>timers.delete(id),
+    fetch:async()=>({ok:true,json:async()=>({version:1,surveys:[]})}),setTimeout:callback=>{const id=++timerSerial;timers.set(id,callback);return id;},clearTimeout:id=>timers.delete(id),
   });
   const props={map:null,initialContext,year:2026,redacted:false,onFlatMap(){},onTerrain(){},readElevation(){return null;},isDrawing(){return false;},onDraw(){},readTransect(){return[];},onContext:context=>contexts.push(context),onInspect:value=>inspections.push(value),onClose(){},onSave(){},onReport(){}};
   let tree;const render=()=>{tree=h.render(h.exports.default,props);const destination=findNode(tree,node=>node.props?.['aria-label']==='Slice a recorded column');if(destination)destination.props.ref.current={focus:options=>focusCalls.push(options)};h.commit();return tree;};render();const flushTimers=()=>{for(const [id,fn] of [...timers]){timers.delete(id);fn();}};flushTimers();
   if (!initialContext || initialContext.display === 'aquifer') { findNode(tree,node=>node.props?.onArea).props.onArea([-100.7,38.3,-100.3,38.7]);render();flushTimers(); }
-  const load=(records=[record,other,empty])=>{worker.onmessage({data:{id:messages.at(-1).id,bounds:messages.at(-1).bounds,manifest:{sources:[],totals:{},counties:[]},columns:records.map(record=>({record,distanceMeters:0,alongMeters:0,offsetMeters:0})),coverage:'loaded'}});return render();};load();
+  const load=(records=[record,other,empty])=>{worker.onmessage({data:{id:messages.at(-1).id,bounds:messages.at(-1).bounds,manifest:{sources:[],totals:{},counties:[]},columns:records.map(record=>({record,distanceMeters:0,alongMeters:0,offsetMeters:0})),coverage:'loaded'}});return render();};if(!failWorker)load();
   const aquifer=()=>findNode(tree,node=>node.props?.sliceEntry);
   const viewer=()=>findNode(tree,node=>node.props?.onSlice);
   return{h,render,load,aquifer,viewer,inspections,contexts,focusCalls,messages,worker,flushTimers,props,get tree(){return tree;}};
@@ -139,7 +139,7 @@ test('empty filtered/window slice is disabled and parent callback cannot silentl
 test('deliberate entry focuses its new region once, while restore, tab entry and record changes do not steal focus',async()=>{
   const p=await panelHarness();assert.equal(p.focusCalls.length,0);button(p.aquifer().props.sliceEntry,'Open selected log').props.onClick();p.render();assert.equal(p.focusCalls.length,1);same(p.focusCalls[0],{preventScroll:true});assert.equal(findNode(p.tree,n=>n.props?.['aria-label']==='Slice a recorded column').props.tabIndex,-1);
   p.viewer().props.onDepth(23);p.render();findNode(p.tree,n=>n.props?.['aria-label']==='Slice source record').props.onChange({target:{value:other.id}});p.render();assert.equal(p.focusCalls.length,1);
-  button(p.tree,'Area underlay').props.onClick();p.render();button(p.tree,'Individual log').props.onClick();p.render();assert.equal(p.focusCalls.length,1);p.h.dispose();
+  button(p.tree,'Back to cutaway').props.onClick();p.render();findNode(p.tree,n=>n.props?.['aria-label']==='Underground tool').props.onChange({target:{value:'3d'}});p.render();assert.equal(p.focusCalls.length,1);p.h.dispose();
   const restored=await panelHarness(savedSliceContext());restored.render();assert.equal(restored.focusCalls.length,0);restored.h.dispose();
 });
 
@@ -169,5 +169,20 @@ test('source and atlas-year transitions withhold stale rows and captures before 
   if(change==='source')same(p.contexts.at(-1).selectedSources,['kgs-core']);
   p.worker.onmessage({data:{id:last.id,bounds:last.bounds,columns:[{record}],coverage:'stale'}});p.render();assert.equal(p.aquifer().props.records.length,0);
   p.flushTimers();assert.notEqual(p.messages.at(-1).id,last.id);p.load([]);assert.equal(p.aquifer().props.recordsLoading,false);assert.equal(p.aquifer().props.records.length,0);p.h.dispose();
+ }
+});
+
+test('specialist picker pauses the mounted cutaway and omits unrelated time/depth controls for surveys and soil',async()=>{
+ const p=await panelHarness(),visibleText=n=>n?.props?.hidden?'':typeof n==='string'?n:[n?.props?.children].flat(Infinity).filter(Boolean).map(visibleText).join(' '),original=p.aquifer().type;
+ for(const display of ['surveys','soil']){
+  findNode(p.tree,n=>n.props?.['aria-label']==='Underground tool').props.onChange({target:{value:display}});p.render();assert.equal(p.aquifer().type,original);assert.equal(p.aquifer().props.active,false);assert.doesNotMatch(visibleText(p.tree),/Depth cursor|Vertical scale|Through record year/);
+  button(p.tree,'Back to cutaway').props.onClick();p.render();assert.equal(p.aquifer().props.active,true);p.flushTimers();assert.deepEqual([...p.messages.at(-1).bounds],[-100.7,38.3,-100.3,38.7]);
+ }p.h.dispose();
+});
+test('record-worker startup or terminal failure remains recoverable after applying or changing eligibility',async()=>{
+ for(const failWorker of [true,false]){
+  const p=await panelHarness(null,{failWorker});await settle();if(!failWorker)p.worker.onerror();p.render();
+  const before=p.messages.length;p.aquifer().props.onArea([-100.7,38.3,-100.3,38.7]);p.render();p.flushTimers();p.render();assert.equal(p.aquifer().props.recordsLoading,false);assert.match(p.aquifer().props.recordStatus,/Close and reopen Underground/);assert.equal(p.aquifer().props.records.length,0);
+  p.props.year=1900;p.render();p.flushTimers();p.render();assert.equal(p.aquifer().props.recordsLoading,false);assert.equal(p.messages.length,before);p.h.dispose();
  }
 });

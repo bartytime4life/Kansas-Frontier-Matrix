@@ -361,3 +361,68 @@ camera math while substituting the WebGL renderer; it does not certify browser
 rendering, touch, layout or accessibility. Browser review remains blocked by the
 admin-enforced security check. Build/test success, source publication and visual
 acceptance remain separate. Rollback is saved v170 with no storage migration.
+
+### Cutaway interaction repair after v171
+
+The v171 delivery above is historical. Its five-tab navigation and initial
+empty stage did not establish user acceptance. The current repair replaces
+those with one area-selection workspace and a closed **Other tools** picker.
+**Back to cutaway** retains the applied rectangle, surface capture and camera
+within the open Underground panel. Inactive cutaways release their worker and
+renderer; their source request/geometry state resumes without applying a later
+map preview. If an optional aquifer request was interrupted, the retained frame
+and independent records remain usable and the status offers another explicit
+apply to retry it. Closing the entire panel still discards this temporary scene;
+workspace saves and report/export meanings remain as described above.
+
+**Show this area** skips the global 2D animation when the map is already flat.
+When normalization or other movement is underway, it retains the user's request
+and continues after the map settles; resize events do not silently cancel that
+intent. An oversized Kansas frame offers **Zoom in & explore**, which keeps the
+current center, narrows the frame and applies it. The High Plains example remains
+an explicit choice. Accepted bounds still drive both record and aquifer queries;
+a selector preview cannot relabel a selected frame or its image.
+
+Accepting an eligible frame immediately permits independent well/core loading.
+The neutral reference plane contains no inferred geology or aquifer envelopes.
+Aquifer failure, construction failure or a 14-second timeout leaves those
+records usable. Image capture has its own 8-second bound; missing, tainted or
+mismatched imagery is labeled as unavailable while recorded columns remain
+visible. First settled records can fit the camera before optional aquifer data
+arrives. First aquifer settlement can fit separately; either respects prior
+user navigation, and later record-time/source changes retain the camera.
+Terminal record-worker failure clears records and keeps loading false across
+later apply/source/year changes, with a visible close-and-reopen recovery path.
+
+Before applying an area, the workspace shows the larger selector and a compact
+instruction, without an empty canvas, camera buttons or disabled timeline. A
+settled frame without logs or aquifer ranges shows recovery actions instead of
+a blank 3D stage. Once evidence is present, the cutaway offers Orbit, Move, zoom
+and adjacent record time. **All** still means all eligible loaded records;
+atlas-year source eligibility applies first. This is cumulative record
+availability, never simulated material change. Source bounds, uncertainty and
+partial coverage remain available in disclosures.
+
+Individual-log appearance/material controls and keyboard interval lists are
+closed disclosures (the keyboard list opens on WebGL failure). Section depth
+settings and source record lists, survey filters and interpretation limits,
+location/source tools, and export controls are also disclosed. Survey and soil
+views do not show unrelated record-time or depth controls. Existing display
+enums and deliberate legacy saved-view restoration are unchanged.
+
+This repair uses the existing `app/`, `tests/` and `docs/` responsibility roots;
+it changes no data assets, dependencies, schemas, storage or audience. The
+8-tile request limit, 12-tile cache, 50-record cap, source integrity checks,
+privacy/export boundaries and fixed 2022–2024 aquifer period are unchanged.
+Rollback is the v171 source commit
+`71bfe886b03b05ba142bdeafa1fd479f1f141b00`, without a storage migration.
+
+Callback regressions execute the actual page representation function, including
+its 420 ms animation and reduced-motion path, together with the area component
+and session. They cover one-click completion, resize/preview identity,
+independent records on optional-source failures, oversized-frame recovery,
+initial depth fitting, tool round trips and failed record workers. Real Three
+geometry and camera calculations are used with a substituted renderer. Browser
+visual, touch, device WebGL and full keyboard acceptance remain unverified
+because the supported browser interface is blocked by its administrative
+security check; these tests do not replace that acceptance.

@@ -28,10 +28,10 @@ function harness({ready=false,failCapture=false,extent=bounds,defaultTimers=fals
 test('unavailable or throwing projection waits for style/load recovery without assuming Mercator',()=>{
   for(const unavailable of [()=>undefined,()=>{throw new Error('style removed')}]){
     const h=harness({configureMap:map=>{map.getProjection=unavailable;}});
-    assert.equal(h.requests.length,0);assert.match(h.statuses.at(-1),/Waiting for the locator/);
+    assert.equal(h.requests.length,0);assert.match(h.statuses.at(-1),/Waiting for the map style/);
     h.map.emit('styledata');h.flush(250);assert.equal(h.requests.length,0);
     h.map.getProjection=()=>({type:'globe'});h.map.emit('styledata');h.flush(250);
-    assert.equal(h.requests.length,0);assert.match(h.statuses.at(-1),/Reset to 2D/);
+    assert.equal(h.requests.length,0);assert.match(h.statuses.at(-1),/return to 2D/);
     h.map.getProjection=()=>({type:'mercator'});h.map.emit('load');h.flush(250);
     assert.equal(h.requests.length,1);h.reply();const snapshot=h.snapshots.at(-1);
     h.map.emit('styledata');h.flush(250);assert.equal(h.requests.length,1);assert.equal(h.snapshots.at(-1),snapshot);
@@ -42,7 +42,7 @@ test('projection disappearing during resize holds the next view instead of throw
   const h=harness();h.reply();
   h.map.getProjection=()=>{throw new Error('style not ready')};
   assert.doesNotThrow(()=>{h.map.emit('resize');h.flush(250);});
-  assert.equal(h.requests.length,1);assert.equal(h.snapshots.at(-1),null);assert.match(h.statuses.at(-1),/Waiting for the locator/);
+  assert.equal(h.requests.length,1);assert.equal(h.snapshots.at(-1),null);assert.match(h.statuses.at(-1),/Waiting for the map style/);
   h.stop();
 });
 test('captured map, timer and worker callbacks are inert after disposal or map removal',()=>{
@@ -75,12 +75,12 @@ test('default browser timers retain their global receiver through resize and dis
   });
   const h=harness({defaultTimers:true});
   try{
-    assert.deepEqual([...tasks.values()].map(task=>task.delay),[8000]);
+    assert.deepEqual([...tasks.values()].map(task=>task.delay),[14000,8000]);
     h.map.emit('resize');
     assert.deepEqual([...tasks.values()].map(task=>task.delay),[250]);
     for(const [handle,task] of [...tasks]){tasks.delete(handle);task.callback();}
     assert.equal(h.requests.length,2);
-    assert.deepEqual([...tasks.values()].map(task=>task.delay),[8000]);
+    assert.deepEqual([...tasks.values()].map(task=>task.delay),[14000,8000]);
   }finally{h.stop();}
   assert.equal(tasks.size,0);
   assert.equal([...h.listeners.values()].reduce((count,listeners)=>count+listeners.size,0),0);
@@ -88,7 +88,7 @@ test('default browser timers retain their global receiver through resize and dis
 test('aquifer geometry appears while unrelated map tiles remain incomplete, including after timeout',()=>{
   const h=harness();assert.equal(h.requests.length,1,'must request geometry before any surface image');h.reply();
   assert.equal(h.snapshots.at(-1).volume.envelopes.length,1);assert.equal(h.snapshots.at(-1).image,null);
-  h.flush(8000);assert.equal(h.snapshots.at(-1).volume.envelopes.length,1);assert.match(h.surfaceStatuses.at(-1),/incomplete/);assert.equal(h.captures,0);h.stop();
+  h.flush(8000);assert.equal(h.snapshots.at(-1).volume.envelopes.length,1);assert.match(h.surfaceStatuses.at(-1),/tiles did not finish/);assert.equal(h.captures,0);h.stop();
 });
 test('failed canvas readback cannot suppress geometry',()=>{
   const h=harness({ready:true,failCapture:true});h.reply();assert.equal(h.snapshots.at(-1).volume.envelopes.length,1);assert.equal(h.snapshots.at(-1).image,null);assert.match(h.surfaceStatuses.at(-1),/unavailable/);h.stop();
@@ -111,7 +111,7 @@ test('drawer RAF and delayed no-op resizes preserve the selected locator snapsho
   h.flush(250);assert.equal(h.requests.length,2);h.reply();assert.deepEqual(h.snapshots.at(-1).volume.bounds,h.map.extent);h.stop();
 });
 test('outside-scope view remains an explicit hold; disposal releases every listener and timer',()=>{
-  const h=harness({extent:[-102,37,-94,40]});assert.equal(h.requests.length,0);assert.match(h.statuses.at(-1),/Zoom into Kansas/);h.stop();
+  const h=harness({extent:[-102,37,-94,40]});assert.equal(h.requests.length,0);assert.match(h.statuses.at(-1),/too wide or outside Kansas/);h.stop();
   assert.equal([...h.listeners.values()].reduce((n,s)=>n+s.size,0),0);assert.equal(h.tasks.size,0);assert.equal(h.worker.onmessage,null);assert.equal(h.worker.onerror,null);
 });
 test('actual source polygons create finite three-dimensional meshes below their registered surface',async()=>{
@@ -139,23 +139,23 @@ test('manual area commit shares exact bounds and preview movement preserves the 
  const h=harness({manual:true,ready:true});assert.equal(h.requests.length,0);assert.equal(h.areas.length,0);
  h.apply();assert.equal(h.requests.length,1);assert.equal(h.requests[0].bounds,h.areas[0],'one bounds object drives source and geometry queries');h.reply();const snapshot=h.snapshots.at(-1);
  const next=[-99.8,38.2,-99.4,38.7];h.map.emit('movestart');h.map.extent=next;h.map.emit('moveend');h.flush(250);
- assert.equal(h.requests.length,1);assert.equal(h.snapshots.at(-1),snapshot);assert.equal(h.previews.at(-1),true);assert.match(h.statuses.at(-1),/Show this area/);assert.equal(h.areas.length,1);
- h.apply();assert.equal(h.snapshots.at(-1),null);assert.equal(h.areas.at(-1),h.requests.at(-1).bounds);assert.deepEqual(h.areas.at(-1),next);h.reply();assert.deepEqual(h.snapshots.at(-1).volume.bounds,next);assert.equal(h.previews.at(-1),false);h.stop();
+ assert.equal(h.requests.length,1);assert.equal(h.snapshots.at(-1),snapshot);assert.equal(h.previews.at(-1),true);assert.equal(h.areas.length,1);
+ h.apply();assert.deepEqual(h.snapshots.at(-1).volume.envelopes,[]);assert.equal(h.snapshots.at(-1).aquiferState,"loading");assert.equal(h.areas.at(-1),h.requests.at(-1).bounds);assert.deepEqual(h.areas.at(-1),next);h.reply();assert.deepEqual(h.snapshots.at(-1).volume.bounds,next);assert.equal(h.previews.at(-1),false);h.stop();
 });
 test('manual preview interrupts pending captures and stale geometry cannot be relabeled as a new area',()=>{
  const h=harness({manual:true});h.apply();const old=h.requests[0],oldRender=[...h.listeners.get('render')][0];
  h.map.emit('movestart');h.map.extent=[-99.8,38.2,-99.4,38.7];h.map.ready=true;oldRender();h.reply(old.id,{bounds:old.bounds,envelopes:[],heldClasses:0,truncated:false,period:'2022–2024'});
- assert.equal(h.captures,0);assert.equal(h.snapshots.at(-1),null);h.map.emit('moveend');h.apply();
- h.reply(h.requests.at(-1).id,{bounds:old.bounds,envelopes:[],heldClasses:0,truncated:false,period:'2022–2024'});assert.equal(h.snapshots.at(-1),null);assert.match(h.statuses.at(-1),/did not match/);
+ assert.equal(h.captures,0);assert.equal(h.snapshots.at(-1).image,null);assert.deepEqual(h.snapshots.at(-1).volume.bounds,old.bounds);h.map.emit('moveend');h.apply();
+ h.reply(h.requests.at(-1).id,{bounds:old.bounds,envelopes:[],heldClasses:0,truncated:false,period:'2022–2024'});assert.deepEqual(h.snapshots.at(-1).volume.bounds,h.map.extent);assert.equal(h.snapshots.at(-1).aquiferState,"unavailable");assert.match(h.statuses.at(-1),/did not match/);
  h.apply();h.reply();assert.equal(h.snapshots.at(-1).volume.bounds,h.map.extent);h.stop();
 });
 test('invalid committed area clears source eligibility; map preview alone never requests new records',()=>{
  const h=harness({manual:true,extent:[-102,37,-95,40]});h.map.emit('moveend');h.flush(250);assert.equal(h.requests.length,0);assert.equal(h.areas.length,0);
- h.apply();assert.equal(h.requests.length,0);assert.equal(h.areas.at(-1),null);assert.match(h.statuses.at(-1),/one degree/);h.stop();
+ h.apply();assert.equal(h.requests.length,0);assert.equal(h.areas.at(-1),null);assert.match(h.statuses.at(-1),/too wide/);h.stop();
 });
 
-test('Show during existing map inertia is held, and silent extent drift never captures a mismatched surface',()=>{
- const h=harness({manual:true,ready:true});h.map.moving=true;h.apply();assert.equal(h.requests.length,0);assert.equal(h.areas.at(-1),null);assert.match(h.statuses.at(-1),/stop moving/);
- h.map.moving=false;h.map.ready=false;h.apply();const area=h.requests.at(-1).bounds;h.reply();
+test('Show during map inertia resumes once after movement; later extent drift cannot relabel the surface',()=>{
+ const h=harness({manual:true,ready:true});h.map.moving=true;h.apply();assert.equal(h.requests.length,0);assert.equal(h.areas.length,0);assert.match(h.statuses.at(-1),/Finishing the map movement/);
+ h.map.moving=false;h.map.ready=false;h.map.emit('moveend');h.map.emit('resize');h.flush(80);assert.equal(h.requests.length,1);const area=h.requests.at(-1).bounds;h.reply();
  h.map.extent=[-99.8,38.2,-99.4,38.7];h.map.ready=true;h.map.emit('render');assert.equal(h.captures,0);assert.equal(h.snapshots.at(-1).image,null);assert.deepEqual(h.snapshots.at(-1).volume.bounds,area);assert.match(h.surfaceStatuses.at(-1),/withheld/);h.stop();
 });
