@@ -2,11 +2,11 @@
 doc_id: kfm://doc/connectors-noaa-src-noaa-readme
 title: connectors/noaa/src/noaa/ — NOAA Connector Python Package Boundary
 type: readme
-version: v0.1
+version: v0.2
 status: draft
 owners: OWNER_TBD — Source steward · Connector steward · NOAA steward · Hazards steward · Atmosphere steward · Climate steward · Soil steward · Data steward · Validation steward · Security steward · Docs steward
 created: 2026-07-14
-updated: 2026-07-14
+updated: 2026-10-07
 policy_label: "public-doctrine; implementation-boundary; source-admission; multi-role; not-life-safety; import-safe; no-network-by-default; raw-quarantine-only; descriptor-gated; rights-aware; sensitivity-aware; finite-outcomes; replayable; rollback-aware; no-secrets"
 current_path: connectors/noaa/src/noaa/README.md
 truth_posture: CONFIRMED target path and prior empty blob, empty package __init__.py, parent NOAA connector README, NOAA source-root README, NOAA test-root README, connector-root contract, NOAA source-family catalog, proposed source-admission ADR, package project name and 0.0.0 version, and absence of client.py at the proposed path / PROPOSED package responsibility contract, import surface, configuration, transport, product adapters, parser interfaces, admission-candidate model, finite outcomes, error taxonomy, provenance capture, and test plan / UNKNOWN complete directory inventory, package installability, dependencies, import consumers, source descriptor IDs, active NOAA products, live endpoints, parsers, fixtures, runtime orchestration, emitted receipts, CI, schedules, deployment, and health / NEEDS VERIFICATION owners, package namespace, parent README drift, source-schema path drift, activation states, rights and sensitivity bindings, admission contract, validators, tests, CI, correction, and rollback automation

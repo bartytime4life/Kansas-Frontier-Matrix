@@ -1,0 +1,97 @@
+{
+  "receipt_id": "genrec-noaa-ghcnd-local-capture-20261007",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "connectors/noaa/src/noaa/README.md",
+    "connectors/noaa/src/noaa/ghcnd.py",
+    "data/receipts/generated/noaa-ghcnd-kansas-capture-20261007.json",
+    "docs/runbooks/free-data-acquisition.md",
+    "docs/runbooks/noaa-ghcnd-local-capture.md",
+    "tests/local_data/test_noaa_ghcnd.py",
+    "tools/local_data/README.md",
+    "tools/local_data/noaa_ghcnd.py"
+  ],
+  "artifact_hashes": {
+    "connectors/noaa/src/noaa/README.md": "sha256:cfd6c1fab86d8a5986c87497277fb015b2ffc178ebaac303eb6b5c3ae1e1bb51",
+    "connectors/noaa/src/noaa/ghcnd.py": "sha256:27411c189b0270312b457f7075a66103ec1cf902f135893952d535fded86d7ab",
+    "data/receipts/generated/noaa-ghcnd-kansas-capture-20261007.json": "sha256:28224e8c5b816652ed7aa216acca853587bf507e31fa04d850ced6e3ddbb655e",
+    "docs/runbooks/free-data-acquisition.md": "sha256:216a070f9edd4c7755bbc1c69a07cc280ac4bcdf4f9a994945bc95b7968f6130",
+    "docs/runbooks/noaa-ghcnd-local-capture.md": "sha256:aa1cc41ae1073279dc44cf8b92832c5b87322942ee2c7dd8438ef79032a2f057",
+    "tests/local_data/test_noaa_ghcnd.py": "sha256:9c8cacb01b532650d53ac488660a6dd663f4212eab794d58527995142c32567c",
+    "tools/local_data/README.md": "sha256:8bbde371d000172b6c03036fb0a2524ea29bd753f786b871204e6373b88d3669",
+    "tools/local_data/noaa_ghcnd.py": "sha256:1293b82790eaf6c28fbe5ce3eedf3397f2710676bd5984ca73264d986ec461b9"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:780fd1642dff0ff5ebc04d2d433607ad22994e9d12fd97990f73cead71651568",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@04dbf166f6db39604673ae1db08350f246c1bedf",
+      "https://www.ncei.noaa.gov/pub/data/ghcn/daily/",
+      "docs/doctrine/directory-rules.md",
+      "data/receipts/generated/noaa-ghcnd-kansas-capture-20261007.json",
+      "main@4d9bf22a411b65f4cd36d1ce09a1f96e6bdfa8ef",
+      "local verification sha256:4be0ef89429cdf1fdbe3642d1a3fad602dba1d6aa0eb6a3040def98ba85bac4d"
+    ]
+  },
+  "citations": [
+    {
+      "id": "NOAA GHCN Daily format",
+      "evidence_ref": "https://www.ncei.noaa.gov/pub/data/ghcn/daily/readme-by_station.txt",
+      "validated": true
+    }
+  ],
+  "truth_labels": {
+    "connectors/noaa/src/noaa/README.md": "CONFIRMED",
+    "connectors/noaa/src/noaa/ghcnd.py": "CONFIRMED",
+    "data/receipts/generated/noaa-ghcnd-kansas-capture-20261007.json": "CONFIRMED",
+    "docs/runbooks/free-data-acquisition.md": "CONFIRMED",
+    "docs/runbooks/noaa-ghcnd-local-capture.md": "CONFIRMED",
+    "tests/local_data/test_noaa_ghcnd.py": "CONFIRMED",
+    "tools/local_data/README.md": "CONFIRMED",
+    "tools/local_data/noaa_ghcnd.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Focused and adjacent Python checks",
+      "outcome": "PASS",
+      "reason": "71 tests and 24 subtests pass under Python 3.12; initial Python 3.10 broad run lacked pytest/jsonschema, then rerun with existing dependency environment."
+    },
+    {
+      "gate": "Repository topology",
+      "outcome": "FAIL",
+      "reason": "Exact base and changed index have the same six inherited KFM-TOPO-017 findings, 113 warnings and zero invariants; no new finding."
+    },
+    {
+      "gate": "Live local capture and full verification",
+      "outcome": "PASS",
+      "reason": "2519/2519 files, 51522960 station/date/element rows; all local SHA-256 values, gzip CRCs, IDs, row shapes and dates rechecked; 274100224 retained disk bytes including metadata, receipts, index and local guide. No source admission or map activation."
+    },
+    {
+      "gate": "Hosted checks on implementation head 10b528c825",
+      "outcome": "FAIL",
+      "reason": "107 successful checks, 2 skipped, 3 failures: gap-scan has exact-base census and unchanged structured parse-error bytes; run-validators has the same six topology findings; water-conformance retains MIRROR_REVIEW_REQUIRED. No full CI pass."
+    }
+  ],
+  "policy_decisions": [],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-07T17:47:17Z",
+  "emitter": "Codex repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Private immutable RAW capture and WORK inspection only. No source admission, rights approval, map activation, review approval, release, or publication. No automatic deletion or recurring download."
+}
