@@ -114,6 +114,7 @@ export function EarthEngineDisplayControls({ map, mapYear, manifests, loading, e
   return <section id="earth-engine-context-controls" tabIndex={-1} className={styles.panel} aria-labelledby="ee-context-title">
     <header><div><span>INSTALLED MAP LAYERS</span><h2 id="ee-context-title">Earth Engine</h2></div><button type="button" onClick={() => { retryTiles(); onReload(); }}>Refresh</button></header>
     <p role="status">{loading ? "Checking reviewed display sets…" : manifests.length ? `${manifests.length} approved year set${manifests.length === 1 ? "" : "s"} installed. Choose a year within each layer.` : error ?? "No reviewed display set is activated yet."}</p>
+    <p className={styles.disclosure}>Installed Earth Engine snapshots are visual display context, not KFM evidence. Each layer keeps its own source year, independent of map time.</p>
     {!loading && !manifests.length && <p><Link href="/earth-engine">Prepare Kansas Earth Engine imagery ↗</Link> · <Link href="/earth-engine-context/install">Install a reviewed display set ↗</Link></p>}
     {rendererState === "unsupported" && <p role="status">WebGL2 is unavailable here. Selected snapshots open in the 2D image viewer.</p>}
     <details className={styles.boundary}><summary>Display context only</summary><p>Pixel colors are map context, not a KFM evidence claim. A source year is not an installed map year. Each layer uses its own selected year, which may differ from map time {mapYear > 0 ? mapYear : "range"}.</p></details>
