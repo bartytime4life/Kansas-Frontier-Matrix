@@ -10,7 +10,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
-from typing import Any
+from typing import Any, Iterable, Sequence
 
 from jsonschema import Draft202012Validator
 
@@ -37,6 +37,50 @@ def read_json(path: Path) -> Any:
         return json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         raise ReadinessError(f"unreadable registry input: {path}") from exc
+
+
+def _normalized_basename(value: str) -> str:
+    return Path(value).name or ""
+
+
+def _validate_exec_list(command: Sequence[str], *, allowed_basenames: Iterable[str]) -> list[str]:
+    if not command:
+        raise ReadinessError("command cannot be empty")
+    cleaned: list[str] = []
+    allowed = {str(name) for name in allowed_basenames}
+    for index, item in enumerate(command):
+        if not isinstance(item, str):
+            raise ReadinessError(f"command[{index}] is not a string")
+        if "\x00" in item:
+            raise ReadinessError(f"command[{index}] contains NUL bytes")
+        if item in {"", ".", ".."}:
+            raise ReadinessError(f"command[{index}] is not a valid executable or argument")
+        cleaned.append(item)
+    exec_name = _normalized_basename(cleaned[0])
+    if exec_name not in allowed:
+        raise ReadinessError(f"executable is not allowlisted: {exec_name!r}")
+    for index, item in enumerate(cleaned[1:], start=1):
+        if any(token in item for token in (";", "&", "|", "&&", "||", "`", "$(", ">", "<")):
+            raise ReadinessError(f"command[{index}] contains shell metacharacters")
+    return cleaned
+
+
+def _validate_repo_script(command: Sequence[str], *, allowed_basenames: Iterable[str]) -> list[str]:
+    cleaned = _validate_exec_list(command, allowed_basenames=allowed_basenames)
+    if len(cleaned) < 2:
+        raise ReadinessError("script command is missing the target script")
+    script = Path(cleaned[1])
+    if script.is_absolute():
+        resolved = script.resolve(strict=False)
+    else:
+        resolved = (ROOT / script).resolve(strict=False)
+    try:
+        resolved.relative_to(ROOT)
+    except ValueError as exc:
+        raise ReadinessError(f"script path escapes repository root: {script}") from exc
+    if resolved.suffix != ".py":
+        raise ReadinessError(f"script path is not a Python file: {script}")
+    return cleaned
 
 
 def load_registry() -> dict[str, Any]:
@@ -112,7 +156,11 @@ def run_policy(lane: dict[str, Any]) -> tuple[int, dict[str, Any]]:
             command=lane["command"],
         )
 
-    command = [binary, *lane["command"][1:]]
+    try:
+        command = _validate_exec_list([binary, *lane["command"][1:]], allowed_basenames={"opa"})
+    except ReadinessError as exc:
+        return 2, result(lane, "ERROR", "OPA_COMMAND_INVALID", detail=str(exc))
+
     environment = os.environ.copy()
     environment.update(
         {
@@ -162,7 +210,14 @@ def run_proof_slice(lane: dict[str, Any]) -> tuple[int, dict[str, Any]]:
             missing_paths=missing,
         )
 
-    command = [sys.executable, *lane["command"][1:]]
+    try:
+        command = _validate_repo_script(
+            [sys.executable, *lane["command"][1:]],
+            allowed_basenames={sys.executable and Path(sys.executable).name or "python"},
+        )
+    except ReadinessError as exc:
+        return 2, result(lane, "ERROR", "PROOF_SLICE_COMMAND_INVALID", detail=str(exc))
+
     environment = os.environ.copy()
     guard = str(ROOT / "tools" / "ci" / "kfm_no_network")
     environment.update(
