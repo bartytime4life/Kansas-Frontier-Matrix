@@ -16,6 +16,7 @@ export type AquiferViewSnapshot<Image> = {volume: AquiferVolume; image: Image | 
 /** Geometry is independent of optional map imagery. A slow external layer cannot hold local polygons. */
 export function startAquiferView<Image>(options: {
   map: Locator; worker: WorkerPort; sampleSurface: () => Image;
+  manual?: boolean; onArea?: (bounds: VolumeBounds | null) => void; onPreview?: (changed: boolean) => void;
   onSnapshot: (snapshot: AquiferViewSnapshot<Image> | null) => void;
   onStatus: (status: string) => void; onSurfaceStatus: (status: string) => void;
   timers?: {set: (callback: () => void, delay: number) => unknown; clear: (handle: unknown) => void};
@@ -26,7 +27,7 @@ export function startAquiferView<Image>(options: {
     clear: (handle: unknown) => globalThis.clearTimeout(handle as ReturnType<typeof setTimeout>),
   };
   let serial = 0, disposed = false, awaitingLocator = false, timeout: unknown, debounce: unknown, capture: (() => void) | null = null;
-  let pending: {id: number; volume: AquiferVolume | null; image: Image | null} | null = null;
+  let pending: {id: number; bounds: VolumeBounds; volume: AquiferVolume | null; image: Image | null} | null = null;
   const clearCapture = () => { if (capture) map.off("render", capture); capture = null; timers.clear(timeout); };
   const publish = () => { if (pending?.volume) onSnapshot({volume: pending.volume, image: pending.image}); };
   const prepare = () => {
@@ -38,20 +39,22 @@ export function startAquiferView<Image>(options: {
     try {
       const projection = map.getProjection()?.type;
       if (typeof projection !== "string") {
-        onStatus("Waiting for the locator style and projection to become available…"); return;
+        options.onArea?.(null); onStatus("Waiting for the locator style and projection to become available…"); return;
       }
       if (Math.abs(map.getPitch()) > .1 || Math.abs(map.getBearing()) > .1 || projection !== "mercator") {
-        onStatus("Choose Reset to 2D above before preparing the aquifer shape."); return;
+        options.onArea?.(null); onStatus("Choose Reset to 2D before showing this area."); return;
       }
+      if (map.isMoving()) { options.onArea?.(null); onStatus("Wait for the selector to stop moving, then show this area."); return; }
       const b = map.getBounds(); bounds = [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()];
     } catch {
-      onStatus("Waiting for the locator style and projection to become available…"); return;
+      options.onArea?.(null); onStatus("Waiting for the locator style and projection to become available…"); return;
     }
     awaitingLocator = false;
     if (!validVolumeBounds(bounds)) {
-      onStatus("Zoom into Kansas to a view narrower than one degree, or choose the High Plains example."); return;
+      options.onArea?.(null); onStatus("Zoom into Kansas to a view narrower than one degree, or choose the High Plains example."); return;
     }
-    pending = {id, volume: null, image: null};
+    pending = {id, bounds, volume: null, image: null};
+    options.onPreview?.(false); options.onArea?.(bounds);
     onStatus("Preparing verified aquifer geometry…");
     onSurfaceStatus("Surface image loading separately. The locator above stays available.");
     // Start first: neither tile completeness nor canvas readback grants geometry eligibility.
@@ -60,6 +63,8 @@ export function startAquiferView<Image>(options: {
       if (disposed || id !== serial || !pending) return;
       try {
         if (map.isMoving() || !map.areTilesLoaded()) return;
+        const current = map.getBounds(), actual = [current.getWest(),current.getSouth(),current.getEast(),current.getNorth()];
+        if (actual.some((value,index)=>value!==pending!.bounds[index])) { clearCapture(); options.onPreview?.(true); onSurfaceStatus("Surface capture withheld: the selector no longer matches the selected area."); return; }
         const image = sampleSurface();
         if (disposed || id !== serial || !pending) return;
         pending.image = image;
@@ -80,6 +85,7 @@ export function startAquiferView<Image>(options: {
   worker.onmessage = ({data}) => {
     if (disposed || data.id !== serial || pending?.id !== data.id) return;
     if (data.volume) {
+      if (!data.volume.bounds || data.volume.bounds.some((value,index)=>value!==pending!.bounds[index])) { clearCapture(); onStatus("Area geometry did not match the selected frame; display held. Show this area again."); return; }
       pending.volume = data.volume; publish();
       onStatus(`${data.volume.envelopes.length} classified overlap regions · 2022–2024 snapshot${data.volume.heldClasses ? ` · ${data.volume.heldClasses} open-ended or missing classes withheld` : ""}${data.volume.truncated ? " · partial geometry: display budget reached" : ""}`);
     } else { clearCapture(); onStatus(data.error ?? "Aquifer preparation unavailable. Refresh to retry."); }
@@ -89,9 +95,13 @@ export function startAquiferView<Image>(options: {
     if (disposed) return;
     awaitingLocator = false;
     clearCapture(); pending = null; serial++; timers.clear(debounce);
-    onSnapshot(null); onSurfaceStatus(""); onStatus("Locator changed. Preparing the new area when movement stops…");
+    if (options.manual) {
+      options.onPreview?.(true);
+      onStatus("Selector preview changed. Show this area to apply it to the underlay.");
+      onSurfaceStatus("The underlay keeps its selected-area image while you frame a new area.");
+    } else { onSnapshot(null); onSurfaceStatus(""); onStatus("Locator changed. Preparing the new area when movement stops…"); }
   };
-  const schedule = () => { if (disposed) return; invalidate(); debounce = timers.set(prepare, 250); };
+  const schedule = () => { if (disposed) return; invalidate(); if (!options.manual) debounce = timers.set(prepare, 250); };
   const locatorReady = () => {
     if (disposed || !awaitingLocator) return;
     timers.clear(debounce); debounce = timers.set(prepare, 250);
@@ -105,6 +115,6 @@ export function startAquiferView<Image>(options: {
   };
   const removed = () => { if (disposed) return; stop(); onSnapshot(null); onSurfaceStatus(""); onStatus("Locator removed. Reopen Underground when the map is available."); };
   map.on("movestart", invalidate); map.on("moveend", schedule); map.on("resize", schedule);
-  map.on("styledata", locatorReady); map.on("load", locatorReady); map.on("remove", removed); prepare();
-  return stop;
+  map.on("styledata", locatorReady); map.on("load", locatorReady); map.on("remove", removed); if (!options.manual) prepare(); else onStatus("Frame a local area in the selector, then choose Show this area.");
+  return Object.assign(stop, {prepare});
 }

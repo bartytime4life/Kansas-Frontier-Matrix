@@ -11,19 +11,19 @@ const session = await import(moduleUrl(compile(await readFile('app/aquifer-view-
 const {resizeMapAfterLayout}=await import(moduleUrl(compile(await readFile('app/cutaway-locator.ts','utf8'))));
 const meshes = await import(moduleUrl(compile(await readFile('app/aquifer-volume-mesh.ts','utf8')).replace('from "./aquifer-volume"', `from ${JSON.stringify(modelUrl)}`)));
 const bounds = [-100.8,38.3,-100.2,38.7];
-function harness({ready=false,failCapture=false,extent=bounds,defaultTimers=false,configureMap=()=>{}}={}) {
-  const listeners=new Map(),tasks=new Map(),requests=[],snapshots=[],statuses=[],surfaceStatuses=[];let timerId=0,captures=0;
+function harness({ready=false,failCapture=false,extent=bounds,defaultTimers=false,configureMap=()=>{},manual=false}={}) {
+  const listeners=new Map(),tasks=new Map(),requests=[],snapshots=[],statuses=[],surfaceStatuses=[],areas=[],previews=[];let timerId=0,captures=0;
   const map={ready,extent,moving:false,projection:'mercator', getPitch:()=>0,getBearing:()=>0,getProjection(){return {type:this.projection}},
     getBounds(){return {getWest:()=>this.extent[0],getSouth:()=>this.extent[1],getEast:()=>this.extent[2],getNorth:()=>this.extent[3]}},
     isMoving(){return this.moving},areTilesLoaded(){return this.ready},triggerRepaint(){this.emit('render')},
     on(event,fn){if(!listeners.has(event))listeners.set(event,new Set());listeners.get(event).add(fn)},off(event,fn){listeners.get(event)?.delete(fn)},emit(event){for(const fn of [...(listeners.get(event)??[])])fn()}};
   configureMap(map);
   const worker={onmessage:null,onerror:null,postMessage:message=>requests.push(message)};
-  const stop=session.startAquiferView({map,worker,onSnapshot:v=>snapshots.push(v),onStatus:v=>statuses.push(v),onSurfaceStatus:v=>surfaceStatuses.push(v),
+  const stop=session.startAquiferView({map,worker,manual,onArea:bounds=>areas.push(bounds),onPreview:value=>previews.push(value),onSnapshot:v=>snapshots.push(v),onStatus:v=>statuses.push(v),onSurfaceStatus:v=>surfaceStatuses.push(v),
     sampleSurface:()=>{captures++;if(failCapture)throw new Error('tainted');return 'same-view-image'},
     ...(defaultTimers?{}:{timers:{set:(cb,delay)=>{const id=++timerId;tasks.set(id,{cb,delay});return id},clear:id=>tasks.delete(id)}})});
   const reply=(id=requests.at(-1).id,volume={bounds:map.extent,envelopes:[{id:'verified-shape'}],heldClasses:0,truncated:false,period:'2022–2024'})=>worker.onmessage?.({data:{id,volume}});
-  return {map,worker,stop,reply,requests,snapshots,statuses,surfaceStatuses,listeners,tasks,get captures(){return captures},flush(delay){for(const [id,task] of [...tasks])if(task.delay===delay){tasks.delete(id);task.cb()}}};
+  return {map,worker,stop,apply:stop.prepare,reply,requests,snapshots,statuses,surfaceStatuses,areas,previews,listeners,tasks,get captures(){return captures},flush(delay){for(const [id,task] of [...tasks])if(task.delay===delay){tasks.delete(id);task.cb()}}};
 }
 test('unavailable or throwing projection waits for style/load recovery without assuming Mercator',()=>{
   for(const unavailable of [()=>undefined,()=>{throw new Error('style removed')}]){
@@ -133,4 +133,29 @@ test('mesh extrusion preserves real holes instead of covering absent source area
   const [{geometry}]=meshes.aquiferGeometries(Three,volume),mesh=new Three.Mesh(geometry,new Three.MeshBasicMaterial({side:Three.DoubleSide}));mesh.updateMatrixWorld();
   const ray=new Three.Raycaster(new Three.Vector3(0,1,0),new Three.Vector3(0,-1,0));assert.equal(ray.intersectObject(mesh).length,0);
   const p=m.projectVolumePosition(-100.65,38.5,bounds);ray.set(new Three.Vector3(p.x,1,p.z),new Three.Vector3(0,-1,0));assert.ok(ray.intersectObject(mesh).length>0);geometry.dispose();mesh.material.dispose();
+});
+
+test('manual area commit shares exact bounds and preview movement preserves the selected model/image',()=>{
+ const h=harness({manual:true,ready:true});assert.equal(h.requests.length,0);assert.equal(h.areas.length,0);
+ h.apply();assert.equal(h.requests.length,1);assert.equal(h.requests[0].bounds,h.areas[0],'one bounds object drives source and geometry queries');h.reply();const snapshot=h.snapshots.at(-1);
+ const next=[-99.8,38.2,-99.4,38.7];h.map.emit('movestart');h.map.extent=next;h.map.emit('moveend');h.flush(250);
+ assert.equal(h.requests.length,1);assert.equal(h.snapshots.at(-1),snapshot);assert.equal(h.previews.at(-1),true);assert.match(h.statuses.at(-1),/Show this area/);assert.equal(h.areas.length,1);
+ h.apply();assert.equal(h.snapshots.at(-1),null);assert.equal(h.areas.at(-1),h.requests.at(-1).bounds);assert.deepEqual(h.areas.at(-1),next);h.reply();assert.deepEqual(h.snapshots.at(-1).volume.bounds,next);assert.equal(h.previews.at(-1),false);h.stop();
+});
+test('manual preview interrupts pending captures and stale geometry cannot be relabeled as a new area',()=>{
+ const h=harness({manual:true});h.apply();const old=h.requests[0],oldRender=[...h.listeners.get('render')][0];
+ h.map.emit('movestart');h.map.extent=[-99.8,38.2,-99.4,38.7];h.map.ready=true;oldRender();h.reply(old.id,{bounds:old.bounds,envelopes:[],heldClasses:0,truncated:false,period:'2022–2024'});
+ assert.equal(h.captures,0);assert.equal(h.snapshots.at(-1),null);h.map.emit('moveend');h.apply();
+ h.reply(h.requests.at(-1).id,{bounds:old.bounds,envelopes:[],heldClasses:0,truncated:false,period:'2022–2024'});assert.equal(h.snapshots.at(-1),null);assert.match(h.statuses.at(-1),/did not match/);
+ h.apply();h.reply();assert.equal(h.snapshots.at(-1).volume.bounds,h.map.extent);h.stop();
+});
+test('invalid committed area clears source eligibility; map preview alone never requests new records',()=>{
+ const h=harness({manual:true,extent:[-102,37,-95,40]});h.map.emit('moveend');h.flush(250);assert.equal(h.requests.length,0);assert.equal(h.areas.length,0);
+ h.apply();assert.equal(h.requests.length,0);assert.equal(h.areas.at(-1),null);assert.match(h.statuses.at(-1),/one degree/);h.stop();
+});
+
+test('Show during existing map inertia is held, and silent extent drift never captures a mismatched surface',()=>{
+ const h=harness({manual:true,ready:true});h.map.moving=true;h.apply();assert.equal(h.requests.length,0);assert.equal(h.areas.at(-1),null);assert.match(h.statuses.at(-1),/stop moving/);
+ h.map.moving=false;h.map.ready=false;h.apply();const area=h.requests.at(-1).bounds;h.reply();
+ h.map.extent=[-99.8,38.2,-99.4,38.7];h.map.ready=true;h.map.emit('render');assert.equal(h.captures,0);assert.equal(h.snapshots.at(-1).image,null);assert.deepEqual(h.snapshots.at(-1).volume.bounds,area);assert.match(h.surfaceStatuses.at(-1),/withheld/);h.stop();
 });

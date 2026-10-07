@@ -5,21 +5,27 @@ Status: PROPOSED / documentation-only / staged roadmap. This document does not a
 ## Current implementation checkpoint — 2026-10-07
 
 This authored checkpoint updates the standalone Explorer feature map for
-**Site v170**; the September 11 architecture and source proposals
-below remain proposals unless individually supported here. The
+**Site v171**; the September 11 architecture and source proposals below remain
+proposals unless individually supported here. The
 [current Site checkpoint](../../apps/site/README.md#current-site-checkpoint)
-and its version receipt are the authority for source identity, delivery and
-validation. The final standalone source passed its production build, TypeScript and 586 Node tests. Independent source/behavior review verifies slice entry, depth control, camera retention and focus handoff. Fresh rendered-browser validation for v170 is UNVERIFIED because the admin policy check was unavailable; the earlier v169 desktop/phone checks remain historical and do not complete the broader acceptance matrix.
+and its version receipt bind source identity, delivery and validation.
+Production build, TypeScript and 600 Node tests pass, together with 60 focused
+and 60 independent tests. Changed-area lint has zero errors and 26 warnings
+whose fingerprints match the exact v170 base. Bounded source/behavior review
+passes; fresh rendered-browser, touch, WebGL and full keyboard acceptance
+remain UNVERIFIED because the browser policy check was unavailable. Earlier
+v169 desktop/phone checks remain historical.
 
 | Feature or idea | Current disposition | Existing follow-up owner |
 | --- | --- | --- |
-| One top toolbar and source-backed 3D Underground cutaway | Implemented in the standalone Site; individual source intervals, core envelopes and bounded aquifer ranges retain their distinct meanings. | [M10 / #3375](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3375) |
-| Larger 2D area selector and fluid camera controls | Implemented: dedicated selector column (352–420 px wide on desktop, full-width on phones), interruptible/reduced-motion camera transitions, fit-preserving rotation, and stable pose/selection through display changes. | [M33 / #3397](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3397) |
-| Direct 3D slice entry and recorded-depth controls | Implemented: named record entry above the cutaway, an explicit 3D slice tab, useful initial depth, a visible cut guide, a single nearby depth slider, retained window/camera on toggles, and deliberate keyboard focus handoff. One source column only; no continuous geology is inferred. | [M33 / #3397](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3397) |
-| Hosted/source/local equivalence and recovery | Exact delivery evidence is bound in the linked receipt; full acceptance and saved-predecessor production rollback remain separate. | [M35 / #4418](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4418) |
+| One top toolbar and source-backed 3D Underground cutaway | Implemented; individual logged intervals, core inventory envelopes and bounded aquifer ranges retain their distinct meanings. | [M10 / #3375](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3375) |
+| Select an area, then explore its underlay | Implemented: frame the large 2D selector and choose **Show this area**. Records, geometry and the captured flat surface share the applied rectangle. Subsequent selector movement previews another area until applied. Area/source/year filtering precedes the 50-record cap; missing tiles and truncation remain explicit. | [M33 / #3397](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3397) |
+| 4D navigation and calmer controls | Implemented: orbit, move and zoom in 3D with nearby record-time scrub/playback; advanced controls are collapsed. Initial records fit unless the user has moved the camera; later time/source changes retain it. Record time filters available records, with explicit **All loaded records** and fixed 2022–2024 aquifer ranges; it does not reconstruct historical geology. | [M33 / #3397](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3397) |
+| Individual-log inspection and saved investigations | Retained as secondary entry with legacy saved `3d` views compatible. Existing settings and permitted IDs persist; the applied rectangle, captured image and inspection camera do not. After reopening, frame and **Show this area** again. Captured report/CSV rows remain distinct from settings-only workspace state. | [M33 / #3397](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3397) |
+| Hosted/source/local equivalence and recovery | The receipt binds all 708 source paths, private deployment and guarded local installation with eight stores and 15,840 R2 blobs preserved. Browser acceptance, historical mirror review and production rollback remain separate. | [M35 / #4418](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4418) |
 | Package-owned MapLibre runtime admission | NEEDS VERIFICATION: the standalone Site pins 6.9.0 while package/lock pins 6.11.2 and the readiness classifier targets 6.9.0. Site interaction checks do not retarget or satisfy the governed package-owned probe packet. | [M23 / #2906](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2906) |
-| Full keyboard, screen-reader, device, performance and long-session proof | Remains open beyond the bounded checks recorded for this version. | [#3397](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3397), [#2906](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2906) |
-| Surveyed terrain, continuous geology, common-elevation sections or cave geometry | PROPOSED / source-gated. The captured locator surface stays flat; individual logged depths do not imply a shared datum or continuous subsurface. Qualified source, rights, sensitivity and uncertainty evidence must precede any such feature. | [M05 / #3369](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3369), [program board / #2768](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2768) |
+| Full keyboard, screen-reader, device, performance and long-session proof | Remains open beyond this version's bounded checks. | [#3397](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3397), [#2906](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2906) |
+| Surveyed terrain, continuous geology, common-elevation sections or cave geometry | PROPOSED / source-gated. The captured locator surface stays flat; individual logged depths do not imply a shared datum or continuous subsurface. Qualified source, rights, sensitivity and uncertainty evidence must precede such features. | [M05 / #3369](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3369), [program board / #2768](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2768) |
 
 This crosswalk preserves existing issue and native milestone ownership. It does
 not create a parallel execution queue, close milestones, admit data or waive

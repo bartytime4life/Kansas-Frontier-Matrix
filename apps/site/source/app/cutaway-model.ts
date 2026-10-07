@@ -8,7 +8,7 @@ export function cutawayRecords(volume: AquiferVolume, records: Borehole[]) {
   const intervals: { record: Borehole; interval: DepthInterval; top: number; bottom: number }[] = [];
   const visible = new Set<string>();
   let clipped = false;
-  for (const record of records.slice(0, 50)) {
+  for (const record of records.filter(record => { const [lon,lat]=record.coordinates; return lon>=west&&lon<=east&&lat>=south&&lat<=north; }).slice(0, 50)) {
     const [lon, lat] = record.coordinates;
     if (lon < west || lon > east || lat < south || lat > north) continue;
     for (const interval of record.intervals) {

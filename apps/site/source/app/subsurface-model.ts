@@ -112,6 +112,22 @@ export function nearbyColumns(records: Borehole[], anchor: Position, route: Posi
     .filter(r => (route.length > 1 ? r.offsetMeters : r.distanceMeters) <= radius)
     .sort((a, b) => (route.length > 1 ? a.offsetMeters - b.offsetMeters : a.distanceMeters - b.distanceMeters) || a.record.id.localeCompare(b.record.id, "en"));
 }
+export type AreaBounds = [number, number, number, number];
+/** Same bounded Kansas frame accepted by the aquifer display; no probe-radius substitution. */
+export function validAreaBounds(value: unknown): value is AreaBounds {
+  return Array.isArray(value) && value.length === 4 && value.every(Number.isFinite) && value[0] >= -102.2 && value[2] <= -94.4 && value[1] >= 36.8 && value[3] <= 40.2 && value[2] > value[0] && value[3] > value[1] && value[2]-value[0] <= 1 && value[3]-value[1] <= 1;
+}
+export function areaColumns(records: Borehole[], bounds: AreaBounds): SectionRecord[] {
+  if (!validAreaBounds(bounds)) return [];
+  const center: Position = [(bounds[0]+bounds[2])/2,(bounds[1]+bounds[3])/2], seen = new Set<string>();
+  return records.filter(record => {
+    const [lon,lat]=record.coordinates, key=`${record.sourceId}:${record.id}`;
+    if (lon<bounds[0]||lon>bounds[2]||lat<bounds[1]||lat>bounds[3]||seen.has(key)) return false;
+    seen.add(key);return true;
+  }).map(record=>({record,distanceMeters:distanceMeters(center,record.coordinates),alongMeters:0,offsetMeters:0}))
+    .sort((a,b)=>a.distanceMeters-b.distanceMeters||a.record.id.localeCompare(b.record.id,"en")||a.record.sourceId.localeCompare(b.record.sourceId,"en"));
+}
+
 export function intervalIssues(intervals: DepthInterval[]): { gaps: [number, number][]; overlaps: [number, number][] } {
   const result = { gaps: [] as [number, number][], overlaps: [] as [number, number][] }; let end = 0;
   for (const i of [...intervals].sort((a, b) => a.top - b.top || a.bottom - b.bottom)) {

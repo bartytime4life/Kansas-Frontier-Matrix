@@ -128,3 +128,21 @@ The clipping outline is a display guide only. The owner-only audience, DB/BUCKET
 bindings, source assets, exports/privacy and local stores remain unchanged.
 Rollback uses the saved v169 application without a storage migration. Deployment,
 source validation and browser acceptance remain distinct delivery evidence.
+
+
+### Area-first underlay and record time — 2026-10-07
+Starting from owner-private Site v170, source
+`54e3f661d3dcede372ef8ae90dee99cd0798e3b9`, this change makes explicit geographic
+frame selection and compact 3D/record-time navigation the primary Underground
+flow. The live selector previews a new area until **Show this area** applies
+it; source records and geometry share accepted bounds. Area source filtering
+precedes the 50-record cap and retains source/year eligibility, hash checks,
+eight requested tiles, twelve cached tiles and partial-coverage labels. The
+source assets and depth/uncertainty semantics do not change. Individual-log
+slicing remains secondary and saved `aquifer`/`3d` values remain compatible.
+The selected rectangle and camera/image are temporary display state; restoring
+an area view requires applying a frame again. The single toolbar, owner-only
+audience, DB/BUCKET bindings, saved context schema/keys, exports/redaction and
+local stores are preserved. No new acquisition or data admission is introduced.
+Rollback uses saved v170 without a storage migration. Source checks, delivery
+and browser acceptance are distinct; no new visual acceptance is claimed.
