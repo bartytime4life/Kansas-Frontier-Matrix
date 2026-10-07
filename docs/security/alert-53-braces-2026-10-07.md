@@ -6,8 +6,11 @@ reports [GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm)
 That advisory marks `braces` versions through 3.0.3 affected and lists no
 patched version. The npm registry's latest release is 3.0.3; `braces@3.0.4`
 returns 404. The 3.0.4 override added at that head was therefore removed in
-this candidate. The checked-in lockfile continues to identify 3.0.3; this is
-not a vulnerability fix or an alert dismissal.
+this candidate. npm 11.4.2 then rejected the existing lockfile because its
+optional `next/node_modules/sharp` entry was missing. Regenerating the lockfile
+with npm 11 added that placeholder and normalized four development metadata
+flags; it did not change the locked `braces` version or any package tarball
+version. This is not a vulnerability fix or an alert dismissal.
 
 The Site lockfile places `braces@3.0.3` in the development dependency tree.
 Two paths reach it:
@@ -25,10 +28,11 @@ glob pattern reaching those tools is safe. Do not suppress the alert on that
 basis alone.
 
 Candidate verification: `npm ci --dry-run --ignore-scripts --no-audit --no-fund`
-completed after removal of the invalid override; `git diff --check` passed.
-This dry run does not prove a full install, build, deployment, or Site browser
-acceptance. Revisit when an upstream patched release exists or a separately
-reviewed toolchain replacement removes `braces`; update the manifest and lockfile
-together, run the Site install/build tests and both production/full audits, then
+completed with npm 10.9.2 and npm 11.4.2 after the manifest and lockfile
+changes; `git diff --check` passed. These dry runs do not prove a full install,
+build, deployment, or Site browser acceptance. Revisit when an upstream patched
+release exists or a separately reviewed toolchain replacement removes
+`braces`; update the manifest and lockfile together, run the Site install/build
+tests and both production/full audits, then
 confirm the Scorecard finding at the exact merged head. Keep alert 53 open until
 that evidence exists.
