@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-local-data-readme
 title: Local PC data tools
 type: readme
-version: v1.1
+version: v1.2
 status: repository-integrated; quarantine-only
 owners: ["@bartytime4life"]
 created: 2026-09-17
-updated: 2026-09-24
+updated: 2026-10-07
 policy_label: public
 owning_root: tools/
 responsibility: Describe bounded workstation inspection and offline quarantine capture tools.

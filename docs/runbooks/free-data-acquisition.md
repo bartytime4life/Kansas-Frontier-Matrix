@@ -2,11 +2,11 @@
 doc_id: kfm://doc/runbooks/free-data-acquisition
 title: Free data discovery, selection and bounded acquisition
 type: runbook
-version: v0.1
+version: v0.2
 status: branch implementation; candidate-only
 owners: ["@bartytime4life"]
 created: 2026-10-06
-updated: 2026-10-06
+updated: 2026-10-07
 policy_label: repository-facing; candidate-only; no-release
 owning_root: docs/
 responsibility: Explain free-source metadata discovery, explicit payload selection, bounded local capture, and receipt limits.
