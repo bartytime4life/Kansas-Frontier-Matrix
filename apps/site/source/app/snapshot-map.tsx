@@ -7,6 +7,7 @@ import { applyRegistryState, BASEMAPS, setTerrainPresentation, updateAnalysisAre
 import { isFeatureAvailableForTemporalQuery, type TemporalSweepQuery } from "./temporal-sweep";
 import type { MapSnapshot } from "./workspace-model";
 import { browserRenderBudget } from "./map-performance";
+import { terrainSourceFor } from "./terrain-sources";
 
 type Camera = { center: [number, number]; zoom: number; bearing: number; pitch: number };
 
@@ -46,6 +47,7 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
   const current = useRef(snapshot);
   const onMove = useRef(onCameraChange);
   const syncing = useRef(false);
+  const appliedBasemap = useRef<keyof typeof BASEMAPS | null>(null);
   const [status, setStatus] = useState("Loading map context…");
   const containMapMutation = useCallback((operation: string, mutation: () => void): boolean => {
     try {
@@ -56,6 +58,34 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
       return false;
     }
   }, []);
+
+  const applySnapshot = useCallback((): boolean => {
+    let applied = false;
+    const succeeded = containMapMutation("Snapshot map update", () => {
+    const map = mapRef.current;
+    if (!map?.isStyleLoaded()) return;
+    const state = current.current;
+    const visible = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, state.visibleLayers.some((item) => item.id === layer.id)]));
+    const opacity = Object.fromEntries(state.visibleLayers.map((layer) => [layer.id, layer.opacity]));
+    const query = temporalQueryForSnapshot(state);
+    applyRegistryState(map, visible, opacity, query.frame, state.visibleLayers.map((layer) => layer.id), state.evidenceFilter ?? "ALL", query);
+    map.setProjection({ type: state.projection });
+    const terrain = setTerrainPresentation(map, state.representation === "Terrain 3D", state.terrainExaggeration ?? 1, terrainSourceFor(state.terrainProvider ?? "mapzen"));
+    if (terrain === "ERROR") throw new Error("Snapshot terrain unavailable");
+    updateAnalysisAreaSource(map, state.area.kind === "aoi" ? state.area.bounds : undefined);
+    updateSelectionSource(map, selectionForSnapshot(state, query));
+    syncing.current = true;
+    try {
+      // Redacted scenes must not inherit a prior scene's precise location.
+      map.jumpTo(state.camera.center === "WITHHELD_BROWSER_LOCATION"
+        ? { center: [-98.38, 38.48], zoom: 5.4, bearing: 0, pitch: 0 }
+        : state.camera as Camera);
+    } finally { syncing.current = false; }
+    applied = true;
+    });
+    if (succeeded && applied) setStatus("Saved map context · provider overlays are not replayed in this preview.");
+    return succeeded && applied;
+  }, [containMapMutation]);
 
   useEffect(() => {
     current.current = snapshot;
@@ -69,19 +99,7 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
     if (!container.current) return;
     let disposed = false;
     let observer: ResizeObserver | undefined;
-    const apply = (): boolean => containMapMutation("Snapshot map update", () => {
-      const map = mapRef.current;
-      if (!map?.isStyleLoaded()) return;
-      const state = current.current;
-      const visible = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, state.visibleLayers.some((item) => item.id === layer.id)]));
-      const opacity = Object.fromEntries(state.visibleLayers.map((layer) => [layer.id, layer.opacity]));
-      const query = temporalQueryForSnapshot(state);
-      applyRegistryState(map, visible, opacity, query.frame, state.visibleLayers.map((layer) => layer.id), state.evidenceFilter ?? "ALL", query);
-      map.setProjection({ type: state.projection });
-      setTerrainPresentation(map, state.representation === "Terrain 3D", 1);
-      updateAnalysisAreaSource(map, state.area.kind === "aoi" ? state.area.bounds : undefined);
-      updateSelectionSource(map, selectionForSnapshot(state, query));
-    });
+    const apply = () => { applySnapshot(); };
     loadMapLibre().then((lib) => {
       if (disposed || !container.current) return;
       const probe = document.createElement("canvas").getContext("webgl2");
@@ -100,9 +118,10 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
       const budget = browserRenderBudget();
       const map = new lib.Map({ container: container.current, style: BASEMAPS[key].style, ...safeCamera, attributionControl: { compact: true }, pixelRatio: budget.pixelRatio, maxTileCacheSize: Math.min(48, budget.tileCache), maxPitch: 60, renderWorldCopies: false });
       mapRef.current = map;
+      appliedBasemap.current = key;
       map.addControl(new lib.NavigationControl(), "top-right");
       map.addControl(new lib.ScaleControl({ maxWidth: 80 }), "bottom-left");
-      map.on("load", () => { if (apply()) setStatus("Display context · bounded layers · no admission effect"); });
+      map.on("load", apply);
       map.on("style.load", apply);
       map.on("move", () => {
         if (syncing.current) return;
@@ -112,28 +131,21 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
       observer = new ResizeObserver(() => { containMapMutation("Snapshot map resize", () => map.resize()); });
       observer.observe(container.current);
     }).catch(() => { if (!disposed) setStatus("Map adapter unavailable. Scene details and evidence remain readable."); });
-    return () => { disposed = true; observer?.disconnect(); mapRef.current?.remove(); mapRef.current = null; };
-  }, [containMapMutation]);
+    return () => { disposed = true; observer?.disconnect(); mapRef.current?.remove(); mapRef.current = null; appliedBasemap.current = null; };
+  }, [applySnapshot, containMapMutation]);
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map?.isStyleLoaded()) return;
-    containMapMutation("Snapshot scene update", () => {
-      const visible = Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, snapshot.visibleLayers.some((item) => item.id === layer.id)]));
-      const query = temporalQueryForSnapshot(snapshot);
-      applyRegistryState(map, visible, Object.fromEntries(snapshot.visibleLayers.map((layer) => [layer.id, layer.opacity])), query.frame, snapshot.visibleLayers.map((layer) => layer.id), snapshot.evidenceFilter ?? "ALL", query);
-      map.setProjection({ type: snapshot.projection });
-      setTerrainPresentation(map, snapshot.representation === "Terrain 3D", 1);
-      updateAnalysisAreaSource(map, snapshot.area.kind === "aoi" ? snapshot.area.bounds : undefined);
-      syncing.current = true;
-      try {
-        if (snapshot.camera.center !== "WITHHELD_BROWSER_LOCATION") map.jumpTo(snapshot.camera as Camera);
-      } finally {
-        syncing.current = false;
-      }
-      updateSelectionSource(map, selectionForSnapshot(snapshot, query));
-    });
-  }, [containMapMutation, snapshot]);
+    if (!map) return;
+    const key = Object.prototype.hasOwnProperty.call(BASEMAPS, snapshot.basemap) ? snapshot.basemap as keyof typeof BASEMAPS : "standard";
+    if (appliedBasemap.current !== key) {
+      setStatus("Loading saved basemap…");
+      containMapMutation("Snapshot basemap update", () => {
+        map.setStyle(BASEMAPS[key].style);
+        appliedBasemap.current = key;
+      });
+    } else applySnapshot();
+  }, [applySnapshot, containMapMutation, snapshot]);
 
   useEffect(() => {
     if (!syncCamera || !mapRef.current) return;

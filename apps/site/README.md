@@ -1,3 +1,15 @@
+> **Site v165 source reconciliation — 2026-10-06:** the [comparison record](../../data/receipts/generated/site-v165-source-reconciliation-20261006.json)
+> pins all 699 mirrored source paths to clean same-Site source
+> `64ee0a61e577a0455fd1180fd18d346c017876bf`, privately deployed as v165.
+> Repository base `07e6b26c3ba0cd1c689de29fa2c07d0a30c26ae5` receives ten bounded
+> source paths: dropdown cleanup, saved-map state/privacy, knowledge retry,
+> tests and documentation. Existing sharp 0.35.5 and worker-seam fixes remain.
+> Production build, TypeScript, 552 Node tests and 53 local HTTP checks pass;
+> lint has no errors and 46 inherited warnings. See [scope and rollback](source/docs/site-synchronization-2026-10-06.md).
+> Historical mirror receipts and `MIRROR_REVIEW_REQUIRED` remain unchanged.
+> Source parity does not establish full browser acceptance or dataset admission,
+> activation or release. Local service installation is a separate operation.
+
 > **History year-selection repair — 2026-10-06:** the [four-path delta](../../data/receipts/generated/site-history-year-selection-delta-20261006.json)
 > matches owner-private Site v163 source `6b5477617a0f30bd70b266e3e45d4d0616dcccf8`
 > on repository base `fc92589a3041a8d63ee79f72f70cf70f212049bb`. Deployment
