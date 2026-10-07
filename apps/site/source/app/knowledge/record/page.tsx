@@ -18,6 +18,7 @@ function SelectedRecord() {
 
 function KnowledgeRecordContent({ id }: { id: string }) {
   const [result, setResult] = useState<KnowledgeResult | null>(null);
+  const [retry, setRetry] = useState(0);
   const busy = result === null;
   useEffect(() => {
     const abort = new AbortController();
@@ -25,7 +26,7 @@ function KnowledgeRecordContent({ id }: { id: string }) {
       .then(result => { if (!abort.signal.aborted) setResult(result); })
       .catch(() => { if (!abort.signal.aborted) setResult(knowledgeUnavailable()); });
     return () => abort.abort();
-  }, [id]);
+  }, [id, retry]);
 
   const record = result?.data?.records?.[0];
   return <main className={styles.page}>
@@ -37,7 +38,7 @@ function KnowledgeRecordContent({ id }: { id: string }) {
       {!busy && result?.envelope.reason_code === "NO_APPROVED_KNOWLEDGE" && <p>No knowledge release is active yet.</p>}
       {!busy && result?.envelope.reason_code === "RECORD_NOT_FOUND" && <p>No released record matches this identifier. A source record may still exist outside the released collection.</p>}
       {!busy && result?.envelope.reason_code === "RELEASE_HELD" && <p>The current knowledge release is held or withdrawn.</p>}
-      {!busy && result?.envelope.outcome === "ERROR" && <p>The reviewed knowledge store is unavailable. Try again later.</p>}
+      {!busy && result?.envelope.outcome === "ERROR" && <><p>The reviewed knowledge store is unavailable.</p><button type="button" onClick={() => { setResult(null); setRetry(value => value + 1); }}>Retry record</button></>}
       {!busy && result?.envelope.reason_code === "INVALID_QUERY" && <p>The record identifier is invalid.</p>}
       {!busy && result?.envelope.reason_code === "RELEASED" && record && <article className={styles.card}>
         <div className={styles.tags}><span>{record.kind}</span><span>{record.geometry_role}</span><span>{record.time_start ? `${record.time_start}${record.time_end && record.time_end !== record.time_start ? `–${record.time_end}` : ""}` : "Time unspecified"}</span></div>

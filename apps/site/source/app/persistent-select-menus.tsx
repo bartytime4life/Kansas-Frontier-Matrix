@@ -73,7 +73,11 @@ export function PersistentSelectMenus() {
 
   const choose = useCallback((current: Menu, index: number) => {
     const option = current.options[index];
-    if (!option || option.disabled || !current.select.isConnected) return;
+    const liveOption = current.select.options[index];
+    const group = liveOption?.parentElement;
+    if (!option || option.disabled || current.select.disabled || !current.select.isConnected
+      || !liveOption || liveOption.value !== option.value || liveOption.disabled
+      || (group instanceof HTMLOptGroupElement && group.disabled)) { update(null); return; }
     update(null);
     const setter = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, "value")?.set;
     setter?.call(current.select, option.value);
@@ -132,7 +136,7 @@ export function PersistentSelectMenus() {
         }
         return;
       }
-      if (event.key === "Escape") { event.preventDefault(); update(null); return; }
+      if (event.key === "Escape") { event.preventDefault(); event.stopImmediatePropagation(); update(null); return; }
       if (event.key === "Tab") { update(null); return; }
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
@@ -190,10 +194,12 @@ export function PersistentSelectMenus() {
       id={optionId(index)}
       type="button"
       role="option"
+      tabIndex={-1}
       aria-selected={menu.select.value === option.value}
       data-active={index === menu.active}
       disabled={option.disabled}
-      onPointerEnter={() => { if (index !== menuRef.current?.active) update({ ...menu, active: index }); }}
+      onPointerDown={event => event.preventDefault()}
+      onPointerEnter={() => { if (!option.disabled && index !== menuRef.current?.active) update({ ...menu, active: index }); }}
       onClick={() => choose(menu, index)}
     >{option.label}</button>
   </div>)}</div>, document.body);

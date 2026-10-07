@@ -17,6 +17,8 @@
 
 # Kansas Frontier Matrix Explorer
 
+The [2026-10-06 reliability review](docs/explorer-reliability-review-2026-10-06.md) records dropdown focus and Escape repairs, saved-scene basemap and terrain restoration, location-redacted preview cameras, and knowledge-record retries. Production-worker route checks and executable interaction tests remain separate from pending rendered browser/WebGL acceptance.
+
 See [the local PC reconciliation record](docs/local-pc-consolidation.md) for current local source, storage, validation, and recovery instructions and earlier dated checkpoints.
 
 A map-first Kansas explorer with real provider baselines, dated archive replay,
