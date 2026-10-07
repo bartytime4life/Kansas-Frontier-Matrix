@@ -206,3 +206,51 @@ aquifer session. There are no new data assets, requests, source
 roles, dependencies, storage formats, bindings, or acquisition permissions.
 Saved v168 is the application rollback point. Build, browser and deployment
 results belong to delivery evidence, not this authoring record.
+
+## Direct 3D slice access — 2026-10-07
+
+Starting from private Site v169 / `82c73327119909f9b034976bbf7cfb5f727b6caf`,
+**3D slice & materials** replaces the ambiguous material-view tab label while
+retaining the saved `3d` display value. The 3D cutaway now offers **Open 3D slice**
+above the map/model workspace, alongside a named loaded-source picker. Selecting
+a cutaway column retains its record and original interval for this continuation.
+Empty, invalid or out-of-window records show a reason rather than an invented
+column. Core choices remain explicitly inventory envelopes.
+
+A deliberate slice fits valid recorded depths within the existing 0–12,000 m
+window and starts inside an actual interval. A useful existing interior depth is
+retained; a picked interval takes priority. Otherwise entry chooses an interval
+near the fitted middepth so a thin topsoil does not leave the cut visually at the
+surface. Gaps remain gaps, and source intervals are never rewritten. A selected
+record change keeps slicing active and fits the new record when needed. Ordinary
+tab entry and saved view restoration retain general material browsing without
+forcing clipping; slicing itself remains temporary presentation state.
+
+The slice model leads its workspace, before record-time and location controls.
+One **Slice depth** slider, metre readout and **Show whole column** control sit
+immediately above the model; its amber horizontal outline is a UI cut guide, not
+a geological surface. Material above the chosen recorded depth is hidden.
+Opacity, slider and slice toggles reuse the renderer and preserve the camera,
+including toggling from separated layers. Ray selection ignores clipped hits and
+the cut guide; the interval list and Evidence Drawer preserve original source
+identity. Inspection no longer moves the cut plane. Depth-window, scale and
+original-description controls remain in a named disclosure. **Geographic columns
+& section** is a distinct action; this is a one-log diagram, not a regional model.
+
+Placement reuses application helpers, tests and behavior docs under the existing
+`app/`, `tests/`, and `docs/` roots and the repository `apps/site/source` mirror,
+following the Directory Rules / ADR-0029 responsibility basis above. No source
+assets, acquisition, dependency, data admission, binding or saved-schema change is
+introduced. Rollback is the saved v169 application; existing data is retained.
+Focused callback and Three geometry/lifecycle tests verify the entry, clipping,
+source selection and restoration behavior. Browser visual/touch/WebGL acceptance
+is separate and remains unavailable during this change because the browser admin
+security check could not complete.
+
+In-place whole/slice toggling preserves the current depth-window object,
+description filter and useful interior cursor; it never silently refits the
+record. If that window/filter contains no drawn interval, **Start 3D slice** is
+disabled and **Fit recorded depths** remains an explicit recovery action.
+Deliberate **Open 3D slice** transfers focus once to the named slice workspace,
+with its controls next in tab order. Restoring a workspace, switching tabs or
+records, and adjusting appearance do not trigger this focus transfer.

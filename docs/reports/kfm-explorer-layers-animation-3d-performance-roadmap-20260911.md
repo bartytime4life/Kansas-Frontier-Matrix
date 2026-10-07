@@ -5,16 +5,17 @@ Status: PROPOSED / documentation-only / staged roadmap. This document does not a
 ## Current implementation checkpoint — 2026-10-07
 
 This authored checkpoint updates the standalone Explorer feature map for
-**Site v169**; the September 11 architecture and source proposals
+**Site v170**; the September 11 architecture and source proposals
 below remain proposals unless individually supported here. The
 [current Site checkpoint](../../apps/site/README.md#current-site-checkpoint)
 and its version receipt are the authority for source identity, delivery and
-validation. The final standalone source passed its production build, TypeScript and 575 Node tests. Bounded desktop/phone checks exercised camera movement, selector placement and retained source selection; these do not complete the broader acceptance matrix.
+validation. The final standalone source passed its production build, TypeScript and 586 Node tests. Independent source/behavior review verifies slice entry, depth control, camera retention and focus handoff. Fresh rendered-browser validation for v170 is UNVERIFIED because the admin policy check was unavailable; the earlier v169 desktop/phone checks remain historical and do not complete the broader acceptance matrix.
 
 | Feature or idea | Current disposition | Existing follow-up owner |
 | --- | --- | --- |
 | One top toolbar and source-backed 3D Underground cutaway | Implemented in the standalone Site; individual source intervals, core envelopes and bounded aquifer ranges retain their distinct meanings. | [M10 / #3375](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3375) |
 | Larger 2D area selector and fluid camera controls | Implemented: dedicated selector column (352–420 px wide on desktop, full-width on phones), interruptible/reduced-motion camera transitions, fit-preserving rotation, and stable pose/selection through display changes. | [M33 / #3397](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3397) |
+| Direct 3D slice entry and recorded-depth controls | Implemented: named record entry above the cutaway, an explicit 3D slice tab, useful initial depth, a visible cut guide, a single nearby depth slider, retained window/camera on toggles, and deliberate keyboard focus handoff. One source column only; no continuous geology is inferred. | [M33 / #3397](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3397) |
 | Hosted/source/local equivalence and recovery | Exact delivery evidence is bound in the linked receipt; full acceptance and saved-predecessor production rollback remain separate. | [M35 / #4418](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4418) |
 | Package-owned MapLibre runtime admission | NEEDS VERIFICATION: the standalone Site pins 6.9.0 while package/lock pins 6.11.2 and the readiness classifier targets 6.9.0. Site interaction checks do not retarget or satisfy the governed package-owned probe packet. | [M23 / #2906](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2906) |
 | Full keyboard, screen-reader, device, performance and long-session proof | Remains open beyond the bounded checks recorded for this version. | [#3397](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3397), [#2906](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2906) |

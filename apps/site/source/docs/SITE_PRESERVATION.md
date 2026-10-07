@@ -117,3 +117,14 @@ budgets, depth/uncertainty semantics, export privacy and local stores remain
 unchanged. No acquisition, geological interpolation or data admission is
 introduced. Rollback is the saved v168 application without a storage migration;
 deployment and browser acceptance are recorded separately by delivery.
+
+### Direct recorded-column slice — 2026-10-07
+Starting from owner-private Site v169, source
+`82c73327119909f9b034976bbf7cfb5f727b6caf`, this presentation change exposes a
+named-source 3D slice continuation and co-located depth controls. It retains the
+saved `3d` enum and schema, existing cutaway/selector behavior, source intervals,
+depth units and references, inventory limitations, and record-time filtering.
+The clipping outline is a display guide only. The owner-only audience, DB/BUCKET
+bindings, source assets, exports/privacy and local stores remain unchanged.
+Rollback uses the saved v169 application without a storage migration. Deployment,
+source validation and browser acceptance remain distinct delivery evidence.

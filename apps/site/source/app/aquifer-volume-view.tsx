@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { Map as MapLibreMap } from "./maplibre-seam";
 import { startAquiferVolumeWorker } from "./subsurface-workers";
 import { projectVolumePosition, volumeDepthScale } from "./aquifer-volume";
@@ -14,7 +14,7 @@ import { startAquiferView, type AquiferViewSnapshot } from "./aquifer-view-sessi
 type Snapshot = AquiferViewSnapshot<HTMLCanvasElement>;
 type CameraAction="reset"|"top"|"side"|"left"|"right"|"in"|"out";
 type Settings={surface:number;water:number;scale:number;logs:boolean};
-export default function AquiferVolumeView({map,records,onFlatMap,onLocate,onInspect,locator,onLocatorSlot}:{map:MapLibreMap|null;records:Borehole[];onFlatMap:()=>void;onLocate:(point:[number,number],retainView?:boolean)=>void;onInspect:(record:Borehole,interval?:DepthInterval)=>void;locator:{anchor:[number,number];pinned:boolean};onLocatorSlot:(slot:HTMLDivElement|null)=>void}){
+export default function AquiferVolumeView({map,records,onFlatMap,onLocate,onInspect,locator,onLocatorSlot,sliceEntry}:{map:MapLibreMap|null;records:Borehole[];onFlatMap:()=>void;onLocate:(point:[number,number],retainView?:boolean)=>void;onInspect:(record:Borehole,interval?:DepthInterval)=>void;locator:{anchor:[number,number];pinned:boolean};onLocatorSlot:(slot:HTMLDivElement|null)=>void;sliceEntry?:ReactNode}){
   const [snapshot,setSnapshot]=useState<Snapshot|null>(null),[status,setStatus]=useState("Preparing the current locator area…"),[retry,setRetry]=useState(0);
   const [surfaceStatus,setSurfaceStatus]=useState("");
   const [surface,setSurface]=useState(.82),[water,setWater]=useState(.22),[scale,setScale]=useState(25),[logs,setLogs]=useState(true);
@@ -227,6 +227,7 @@ export default function AquiferVolumeView({map,records,onFlatMap,onLocate,onInsp
       <div><span className={s.cutawayEyebrow}>KANSAS / BELOW THE SURFACE</span><h3>Read the ground.</h3></div>
       <div className={s.cutawayEntryActions}><button type="button" onClick={focusHere}>Explore this area <span aria-hidden="true">↗</span></button><button type="button" onClick={()=>{onFlatMap();onLocate([-100.5,38.5]);}}>High Plains example</button></div>
     </div>
+    {sliceEntry}
     <div className={s.cutawayWorkspace}>
       <aside className={s.cutawayLocator} aria-label="Choose the cutaway area">
         <div className={s.cutawayLocatorTitle}><strong>2D selector</strong><span>DRAG · ZOOM · CHOOSE</span></div>

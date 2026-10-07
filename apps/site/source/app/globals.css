@@ -4581,3 +4581,8 @@ body { font-size: 14px; }
 .map-stage[data-underground="true"]:has([data-cutaway-panel="true"]) .qwen-map-launch { display: none; }
 .map-stage[data-underground="true"]:has([data-cutaway-panel="true"]) .maplibregl-ctrl-attrib { max-width: calc(100% - 12px); font-size: 10px; line-height: 1.45; }
 .map-stage[data-underground="true"]:has([data-cutaway-panel="true"]) .maplibregl-ctrl-attrib-inner { max-height: 84px; overflow: auto; }
+
+/* The single-column slice owns the workspace; return to Cutaway for its locator. */
+.map-stage[data-underground="true"]:has([data-slice-panel="true"]) .map-canvas,
+.map-stage[data-underground="true"]:has([data-slice-panel="true"]) .map-effects,
+.map-stage[data-underground="true"]:has([data-slice-panel="true"]) .qwen-map-launch { visibility: hidden; }

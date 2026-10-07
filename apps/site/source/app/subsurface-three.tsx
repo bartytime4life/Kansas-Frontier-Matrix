@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { meters, sourceLink, type Borehole, type DepthInterval } from "./subsurface-model";
 import { MATERIALS, materialFor, materialInfo, materialPixels, type MaterialId } from "./subsurface-materials";
+import { sliceIntervals, sliceHitVisible } from "./subsurface-slice";
 import s from "./subsurface.module.css";
 
 type ViewSettings = { opacity: number; exploded: boolean; slice: boolean; material: MaterialId | "all"; selected: number | null; depth: number };
@@ -9,18 +10,21 @@ type CameraAction = "oblique" | "front" | "top" | "left" | "right" | "in" | "out
 type SceneApi = { update: (settings: ViewSettings) => void; camera: (action: CameraAction) => void };
 
 /** A textured extrusion of ONE log. Width, texture and spacing are illustrative, not resource geometry. */
-export default function SubsurfaceThree({ record, descriptionFilter, depthRange, exaggeration, depth, onInspect }: { record: Borehole; descriptionFilter: string; depthRange: [number, number]; exaggeration: number; depth: number; onInspect: (interval: DepthInterval) => void }) {
+export default function SubsurfaceThree({ record, descriptionFilter, depthRange, exaggeration, depth, slice, selectedIndex, onDepth, onSlice, onInspect }: { record: Borehole; descriptionFilter: string; depthRange: [number, number]; exaggeration: number; depth: number; slice: boolean; selectedIndex: number | null; onDepth: (depth: number) => void; onSlice: (enabled: boolean) => void; onInspect: (interval: DepthInterval) => void }) {
   const container = useRef<HTMLDivElement>(null), api = useRef<SceneApi | null>(null);
   const [failure, setFailure] = useState(""), [retry, setRetry] = useState(0);
-  const [opacity, setOpacity] = useState(.95), [exploded, setExploded] = useState(false), [slice, setSlice] = useState(false);
-  const [material, setMaterial] = useState<MaterialId | "all">("all"), [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [opacity, setOpacity] = useState(.95), [exploded, setExploded] = useState(false);
+  const [materialChoice, setMaterialChoice] = useState<{recordId:string; value:MaterialId | "all"}>({recordId:record.id,value:"all"});
+  const material = materialChoice.recordId === record.id ? materialChoice.value : "all";
+  const setMaterial = (value: MaterialId | "all") => setMaterialChoice({recordId:record.id,value});
   const settings = useRef<ViewSettings>({ opacity, exploded, slice, material, selected: selectedIndex, depth });
   useEffect(() => { settings.current = { opacity, exploded, slice, material, selected: selectedIndex, depth }; }, [opacity, exploded, slice, material, selectedIndex, depth]);
-  const intervals = useMemo(() => record.intervals.map((interval, index) => ({ interval, index, material: materialFor(interval, record.kind) }))
-    .filter(({ interval }) => (!descriptionFilter || interval.description === descriptionFilter) && meters(interval.bottom, record.depthUnit) > depthRange[0] && meters(interval.top, record.depthUnit) < depthRange[1]), [record, descriptionFilter, depthRange]);
+  const intervals = useMemo(() => sliceIntervals(record, depthRange)
+    .filter(({ interval }) => !descriptionFilter || interval.description === descriptionFilter)
+    .map(row => ({ ...row, material: materialFor(row.interval, record.kind) })), [record, descriptionFilter, depthRange]);
   const rendered = useMemo(() => intervals.slice(0, 500), [intervals]);
   const selected = selectedIndex === null ? null : record.intervals[selectedIndex];
-  const pick = useCallback((index: number) => { setSelectedIndex(index); onInspect(record.intervals[index]); }, [onInspect, record]);
+  const pick = useCallback((index: number) => { const interval = record.intervals[index]; if (interval) onInspect(interval); }, [onInspect, record]);
   const pickRef = useRef(pick);
   useEffect(() => { pickRef.current = pick; }, [pick]);
 
@@ -63,6 +67,12 @@ export default function SubsurfaceThree({ record, descriptionFilter, depthRange,
       const outlineGeometry = new T.EdgesGeometry(outlineBox); outlineBox.dispose();
       const outlineMaterial = new T.LineBasicMaterial({ color: "#64888a", transparent: true, opacity: .4 });
       const outline = new T.LineSegments(outlineGeometry, outlineMaterial); outline.position.y = -height / 2; scene.add(outline); resources.push(outlineGeometry, outlineMaterial);
+      // This outline is a UI cut guide, never a geological boundary or a pick target.
+      const cutGeometry = new T.BufferGeometry().setFromPoints([
+        new T.Vector3(-1.46,0,-.96), new T.Vector3(1.46,0,-.96), new T.Vector3(1.46,0,.96), new T.Vector3(-1.46,0,.96),
+      ]);
+      const cutPaint = new T.LineBasicMaterial({color:"#f4bd6c",depthTest:false,transparent:true,opacity:.95});
+      const cutGuide = new T.LineLoop(cutGeometry,cutPaint); cutGuide.renderOrder=10; scene.add(cutGuide); resources.push(cutGeometry,cutPaint);
       scene.add(new T.HemisphereLight(0xffe9c9, 0x304854, 2.5));
       const light = new T.DirectionalLight(0xffffff, 3); light.position.set(4, 5, 6); scene.add(light);
       const rim = new T.DirectionalLight(0x73b3c2, 1.4); rim.position.set(-4, -2, -3); scene.add(rim);
@@ -80,8 +90,9 @@ export default function SubsurfaceThree({ record, descriptionFilter, depthRange,
         controls.update(); render();
       };
       const update = (v: ViewSettings) => {
-        const changed = currentExplosion !== (v.exploded && !v.slice); currentExplosion = v.exploded && !v.slice;
+        currentExplosion = v.exploded && !v.slice;
         outline.visible = !currentExplosion;
+        cutGuide.visible = v.slice && meshes.length > 0; cutGuide.position.y = -(v.depth-depthRange[0])*scale*vertical;
         for (const row of meshes) {
           row.mesh.position.y = row.center - (currentExplosion ? row.order * separation : 0);
           row.mesh.visible = v.material === "all" || v.material === row.id;
@@ -92,7 +103,7 @@ export default function SubsurfaceThree({ record, descriptionFilter, depthRange,
           if (wasSliced !== v.slice) row.paint.needsUpdate = true;
           row.paint.emissive.set(row.index === v.selected ? "#55451b" : "#000000");
         }
-        if (changed) moveCamera("oblique"); else render();
+        render();
       };
       api.current = { update, camera: moveCamera }; update(settings.current); moveCamera("oblique");
       const resize = () => { if (!container.current) return; const w = Math.max(1, container.current.clientWidth), h = w < 600 ? 330 : 440; renderer.setSize(w, h); camera.aspect = w/h; camera.updateProjectionMatrix(); render(); };
@@ -102,7 +113,7 @@ export default function SubsurfaceThree({ record, descriptionFilter, depthRange,
       const onUp = (event: PointerEvent) => {
         if (Math.hypot(event.clientX-down[0],event.clientY-down[1]) > 5) return;
         const bounds = renderer.domElement.getBoundingClientRect(); pointer.set((event.clientX-bounds.left)/bounds.width*2-1, -(event.clientY-bounds.top)/bounds.height*2+1); ray.setFromCamera(pointer,camera);
-        const hit = ray.intersectObjects(meshes.filter(row => row.mesh.visible && row.paint.opacity > 0).map(row => row.mesh)).find(h => !settings.current.slice || h.point.y <= -(settings.current.depth-depthRange[0])*scale*vertical + .0001);
+        const hit = ray.intersectObjects(meshes.filter(row => row.mesh.visible && row.paint.opacity > 0).map(row => row.mesh)).find(h => sliceHitVisible(h.point.y,settings.current.slice,settings.current.depth,depthRange[0],scale,vertical));
         if (hit) pickRef.current(hit.object.userData.index as number);
       };
       const onKey = (event: KeyboardEvent) => { const actions: Record<string,CameraAction> = { ArrowLeft:"left",ArrowRight:"right","+":"in","=":"in","-":"out",Home:"oblique" }; if(actions[event.key]) { event.preventDefault(); moveCamera(actions[event.key]); } };
@@ -117,22 +128,28 @@ export default function SubsurfaceThree({ record, descriptionFilter, depthRange,
   // Scrubbing, material isolation and opacity reuse the renderer and keep the camera position.
   useEffect(() => { api.current?.update(settings.current); }, [depth, opacity, exploded, slice, material, selectedIndex]);
 
-  return <section className={s.materialExplorer} aria-label="3D material and layer inspection">
-    <header className={s.materialHeading}><div><span>EARTH MATERIALS · RECORDED DEPTH</span><h3>{record.name}</h3></div><a href={sourceLink(record.sourceUrl) ?? undefined} target="_blank" rel="noreferrer">Source log ↗</a></header>
-    <p className={s.modelBoundary}>One source column, extruded to an illustrative width. Textures are illustrative—not photographs. Empty depth intervals remain unknown. No seams are inferred between wells.</p>
+  return <section className={s.materialExplorer} aria-label="3D slice and material inspection">
+    <header className={s.materialHeading}><div><span>3D SLICE · {record.kind === "core" ? "INVENTORY ENVELOPE" : "RECORDED LOG"}</span><h3>{record.name}</h3></div><a href={sourceLink(record.sourceUrl) ?? undefined} target="_blank" rel="noreferrer">Source log ↗</a></header>
+    <p className={s.modelBoundary}>{record.kind === "core" ? "One core inventory envelope, not verified recovered rock." : "One recorded log; horizontal width and material textures are illustrative."} Empty intervals remain unknown. This is separate from the geographic section across records.</p>
+    <div className={s.sliceDepthStrip} data-sliced={slice}>
+      <label htmlFor="recorded-slice-depth">Slice depth <output>{depth.toFixed(2)} <small>m</small></output></label>
+      <input id="recorded-slice-depth" aria-label="Slice depth in metres" aria-valuetext={`${depth.toFixed(2)} metres${slice ? ", material above hidden" : ", whole column shown"}`} type="range" min={depthRange[0]} max={depthRange[1]} step={(depthRange[1]-depthRange[0])/1000} value={depth} disabled={!rendered.length} onChange={e => onDepth(Number(e.target.value))} />
+      <button type="button" disabled={!slice && !rendered.length} aria-pressed={slice} onClick={() => onSlice(!slice)}>{slice ? "Show whole column" : "Start 3D slice"}</button>
+      <p>{slice ? "Slicing on · drag the slider to hide recorded material above that depth. Amber outline marks the cut." : "Whole column shown · start a slice to hide material above the chosen recorded depth."}</p>
+    </div>
+    <div className={s.modelCamera} aria-label="Underground camera controls">{([['oblique','Reset view'],['front','Front'],['top','Top'],['left','Rotate left'],['right','Rotate right'],['in','Zoom in'],['out','Zoom out']] as const).map(([action,label]) => <button type="button" key={action} onClick={() => api.current?.camera(action)} disabled={!!failure}>{label}</button>)}</div>
+    <div className={s.modelStage}><div ref={container} hidden={Boolean(failure)} /><div className={s.modelStamp}>DEPTH {depthRange.join("–")} m · {Math.min(exaggeration,20)}× vertical display{exploded && !slice ? " · separated spacing" : ""}<br />{record.depthReference} · horizontal extent unknown{slice ? ` · CUT ${depth.toFixed(2)} m` : " · WHOLE COLUMN"}</div></div>
     <div className={s.modelControls}>
       <button type="button" aria-pressed={exploded} disabled={slice} onClick={() => setExploded(v => !v)}>Separate layers</button>
-      <button type="button" aria-pressed={slice} onClick={() => setSlice(v => !v)}>Slice at depth cursor</button>
       <label>Opacity <input type="range" min="0" max="100" value={Math.round(opacity*100)} onChange={e => setOpacity(Number(e.target.value)/100)} />{Math.round(opacity*100)}%</label>
       <label>Material <select value={material} onChange={e => setMaterial(e.target.value as MaterialId | "all")}><option value="all">All materials</option>{MATERIALS.map(m => <option key={m.id} value={m.id} disabled={!rendered.some(row => row.material === m.id)}>{m.label} · {rendered.filter(row => row.material === m.id).length} intervals</option>)}</select></label>
     </div>
-    <div className={s.modelCamera} aria-label="Underground camera controls">{([['oblique','Reset view'],['front','Front'],['top','Top'],['left','Rotate left'],['right','Rotate right'],['in','Zoom in'],['out','Zoom out']] as const).map(([action,label]) => <button type="button" key={action} onClick={() => api.current?.camera(action)} disabled={!!failure}>{label}</button>)}</div>
-    <div className={s.modelStage}><div ref={container} hidden={Boolean(failure)} /><div className={s.modelStamp}>DEPTH {depthRange.join("–")} m · {Math.min(exaggeration,20)}× vertical display{exploded && !slice ? " · separated spacing" : ""}<br />{record.depthReference} · horizontal extent unknown</div></div>
     {failure && <p role="status">{failure} <button type="button" onClick={() => { setFailure(""); setRetry(v => v+1); }}>Retry 3D</button></p>}
     <p className={s.muted}>{rendered.length}/{intervals.length} intervals in this depth/description window drawn (500 maximum). {record.kind === "core" ? "Violet volumes represent inventory envelopes, not the recovered rock type." : "Textures encode unambiguous words in the original log. Mixed, qualified and fluid descriptions remain neutral."} Selection glows amber. Rotation and zoom render on demand.</p>
-    {!rendered.length && <p role="status">No logged interval intersects this depth and description filter. Adjust the depth window or choose another record.</p>}
+    {slice && rendered.length > 0 && !rendered.some(row => row.bottom > depth) && <p role="status">All displayed intervals are above this cut. Drag Slice depth upward or show the whole column.</p>}
+    {!rendered.length && <p role="status">No logged interval intersects this depth and description filter. Use Fit recorded depths, adjust the filter, or choose another record.</p>}
     <div className={s.materialLegend}>{MATERIALS.filter(m => rendered.some(row => row.material === m.id)).map(m => <button type="button" key={m.id} aria-pressed={material === m.id} onClick={() => setMaterial(material === m.id ? "all" : m.id)}><i style={{ background:m.color }} />{m.label}</button>)}</div>
-    {selected && <article className={s.selectedLayer} aria-live="polite"><strong>{selected.top}–{selected.bottom} {record.depthUnit} · {materialInfo(materialFor(selected,record.kind)).label}</strong><p>Original log: {selected.description}</p>{selected.interpreted && <p>KGS interpretation: {selected.interpreted}</p>}<small>Record date: {record.sourceTime || "not supplied"}. This interval describes the record location, not a surrounding deposit.</small></article>}
+    {selected && <article className={s.selectedLayer} aria-live="polite"><strong>{selected.top}–{selected.bottom} {record.depthUnit} · {materialInfo(materialFor(selected,record.kind)).label}</strong><p>Original log: {selected.description}</p>{selected.interpreted && <p>KGS interpretation: {selected.interpreted}</p>}<small>{slice && meters(selected.bottom, record.depthUnit) <= depth ? "Selected interval is above the cut and hidden in the model. " : ""}Record date: {record.sourceTime || "not supplied"}. This interval describes the record location, not a surrounding deposit.</small></article>}
     <details className={s.layerList} open><summary>Inspect individual layers · keyboard and low-resource view</summary><div>{rendered.filter(row => material === "all" || row.material === material).map(row => <button type="button" key={row.index} aria-pressed={selectedIndex === row.index} onClick={() => pick(row.index)}><i style={{background:materialInfo(row.material).color}} /><span><strong>{row.interval.top}–{row.interval.bottom} {record.depthUnit}</strong><small>{row.interval.description}</small></span></button>)}</div></details>
     <details><summary>Oil, gas, groundwater, ore and mine geometry</summary><p>These require their own measured or reviewed source geometry. A fluid word in a log is not a reservoir boundary; a core inventory is not an ore body. No inferred resource pockets, flooded layers or tunnels are drawn. Select a source interval to read its original description. SSURGO soil components and geophysical measurements remain in their separate tabs.</p><p>Continuous extrapolation is held until a qualified correlation model supplies elevation registration, uncertainty, coverage limits and source references. This view makes no claim about mineral ownership, reserves, drilling or excavation safety.</p></details>
   </section>;

@@ -8,6 +8,7 @@ export async function componentHarness(file, imports, globals = {}, extra = "") 
   let cursor = 0;
   const same = (a, b) => a && b && a.length === b.length && a.every((value, i) => Object.is(value, b[i]));
   const hooks = {
+    lazy: loader => ({ lazy: loader }), Suspense: "suspense",
     useRef(value) { const i = cursor++; return slots[i] ??= { current: value }; },
     useState(value) {
       const i = cursor++;
@@ -21,6 +22,7 @@ export async function componentHarness(file, imports, globals = {}, extra = "") 
       if (!same(slots[i]?.deps, deps)) pending.push(() => { slots[i]?.cleanup?.(); slots[i] = { deps, cleanup: fn() }; });
     },
   };
+  hooks.useLayoutEffect = hooks.useEffect;
   const jsx = (type, props) => ({ type, props });
   const exports = {};
   const code = ts.transpileModule(await readFile(file, "utf8") + extra, { compilerOptions: {
