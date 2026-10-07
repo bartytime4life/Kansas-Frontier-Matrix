@@ -2,14 +2,14 @@
 doc_id: kfm://doc/standards/dp-budgets
 title: KFM Standard — Differential Privacy Budgets
 type: standard
-version: v0.2.0
+version: v0.2.1
 status: draft; guidance-only; operational-use-hold
 owners:
   - NEEDS VERIFICATION — privacy steward
   - NEEDS VERIFICATION — data steward
   - NEEDS VERIFICATION — policy and security stewards
 created: 2026-05-14
-updated: 2026-08-18
+updated: 2026-10-07
 policy_label: public
 owning_root: docs/
 responsibility: Human-readable differential-privacy budget, accounting, validation, and graduation guidance; no contract, schema, policy, runtime, release, or publication authority.
@@ -17,20 +17,23 @@ truth_posture: >-
   CONFIRMED exact target, standards-lane boundary, accepted Directory Rules v2,
   current draft sensitivity doctrine, current aggregation-receipt placement hold,
   proposed-inactive typed-receipt aggregation contract, absence of a verified
-  DP-specific machine authority in the bounded current-repository inspection, and
+  DP-specific machine authority in the recursive current-tree inventory at the
+  2026-10-07 snapshot, and
   NIST SP 800-226 final publication / PROPOSED DP deployment profile, budget
   account, release-plan, receipt extensions, validation matrix, and graduation
   gates / UNKNOWN operative privacy parameters, accountant, ledger placement,
   runtime integration, release consumers, and accountable reviewers / NEEDS
-  VERIFICATION exhaustive repository coverage, accepted semantic and machine
+  VERIFICATION accepted semantic and machine
   contracts, policy enforcement, mechanism implementation, fixtures, validators,
   security review, utility review, correction propagation, and rollback rehearsal
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 31503aaadcf430499c5e3181f759db6b582a84c0
-  prior_blob: 294a987ded1cb2e4d2a39a4522bc4c63f43dbb4d
-  inspected_on: 2026-08-18
+  base_commit: c90836cdb7a34791669907053522de0458f21ae9
+  prior_blob: ae05701e304ff7e7f339035cc19116cd2e5f4d05
+  inspected_on: 2026-10-07
+  tree: 219cd776542fc79030897633acc77d4cb3e3b0e3
+  inventory_scope: all 14164 tracked blobs; DP-15 only; no deployed-runtime acceptance
 external_snapshot:
   nist_sp_800_226: final; published 2025-03; doi 10.6028/NIST.SP.800-226
   opendp_docs: stable documentation inspected 2026-08-18; not an admitted KFM dependency
@@ -120,7 +123,7 @@ This revision has four jobs:
 
 Accepted [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) makes the current Directory Rules v2 bytes the placement authority. This is a same-path update to an existing standards document. It creates no new authority root, object store, or runtime surface.
 
-### Current evidence used
+### Historical evidence used (2026-08-18)
 
 | Evidence | CONFIRMED bounded result | Consequence |
 |---|---|---|
@@ -131,6 +134,43 @@ Accepted [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
 | Bounded current-tree and exact-path inspection | No accepted DP-specific semantic contract, schema, ledger, policy rule, mechanism implementation, fixture family, validator, emitted receipt, or runtime consumer was verified | Operational use remains `HOLD`; exhaustive absence is not claimed |
 | NIST SP 800-226 | Final guidance published March 2025 | External evaluation framework; not KFM adoption |
 | OpenDP stable documentation | Describes privacy units, privacy loss, composition, budget-aware query contexts, and filters | Implementation reference only; no dependency admission |
+
+### DP-15 recursive inventory (2026-10-07)
+
+The recursive inventory at `main@c90836cdb7a34791669907053522de0458f21ae9`
+visited **all 14,164 tracked blobs (215,327,106 bytes)** in tree
+`219cd776542fc79030897633acc77d4cb3e3b0e3`, including authority roots,
+dependency locks, mechanisms/accountants, ledgers, validators, fixtures/tests,
+CI, receipts, release objects, runtime/API/map/AI source, compatibility homes,
+compressed payloads and relevant aliases. Every blob hash was recomputed;
+there were **zero read/decode failures**. The complete classified inventory
+contains 67,125 lexical hit rows across 5,653 paths/decoded representations,
+with zero unclassified rows.
+
+**Result:** no accepted or executable DP-specific semantic contract, schema,
+policy rule, admitted dependency, mechanism/accountant, budget ledger,
+fixture/test family, validator/CI enforcement, emitted DP receipt/release
+object, or DP runtime consumer was found. DP declarations remain guidance,
+proposals, exclusions, upstream-source claims or documentation provenance.
+Typed receipt aggregation has executable fixture-only validation for a
+separate proposed inactive declaration profile; it is not DP accounting.
+Darwin Core Data Package, Census DP05 identifiers, CDP/GDP aliases, geometry
+epsilon tolerances, Gaussian elimination and visual noise are non-DP hits.
+
+The [inventory review aid](../../artifacts/qa/reports/dp-15-inventory-20261007/README.md)
+provides every exact hit path, blob, declared status, authority classification,
+query and line number, plus reproducible read-only scripts and the full scan
+coverage digest. It is replaceable QA output, not canonical evidence, policy,
+accounting, release or acceptance authority.
+
+**DP-15 closes only the current-tree inventory uncertainty at this exact
+revision.** All tracked objects were visited using disclosed lexical searches
+and source review; this is not a proof about obfuscated machinery, Git history,
+other branches, untracked/remote artifacts, installed dependencies or deployed
+services. Runtime source was inspected; no deployment or live DP behavior was
+accepted. DP-01–DP-14 and every graduation gate retain their existing states.
+Operational use remains `HOLD`; no privacy parameter, mechanism, library,
+deployment profile, ledger writer or release is selected or authorized.
 
 ### Claim-strength rule
 
@@ -157,7 +197,7 @@ A commit proves that bytes exist at that commit. A green documentation check pro
 | Contract and schema | `NEEDS VERIFICATION`; no accepted DP-specific machine authority confirmed |
 | Policy and review | `NEEDS VERIFICATION`; no active DP release rule confirmed |
 | Fixtures, validator, and CI | `NEEDS VERIFICATION`; no DP-specific enforcement confirmed |
-| Emitted release or receipt | `UNKNOWN`; none verified in the bounded inspection |
+| Emitted release or receipt | `UNKNOWN`; none found in the pinned recursive current-tree inventory |
 | Public or semi-public use | **HOLD** |
 
 > [!CAUTION]
@@ -784,9 +824,9 @@ A rank-5, T4, or otherwise denied record remains denied even when a mathematical
 | DP-12 | How do correction, withdrawal, cache invalidation, and downstream AI/map/export propagation work? | End-to-end rehearsal | `UNKNOWN` |
 | DP-13 | What monitoring detects accuracy drift, assumption drift, abuse, and budget anomalies? | Runtime observability and review cadence | `UNKNOWN` |
 | DP-14 | What legal, rights, consent, sovereignty, and public-communication review applies? | Qualified steward/legal/privacy review | `UNKNOWN` |
-| DP-15 | Does an exhaustive current-tree inventory reveal existing DP implementation not found by the bounded search? | Recursive repository scan and runtime evidence | `NEEDS VERIFICATION` |
+| DP-15 | Does an exhaustive current-tree inventory reveal existing DP implementation not found by the bounded search? | All 14,164 tracked blobs, aliases, dependency and runtime-source readback at `c90836cdb7a34791669907053522de0458f21ae9`; [exact inventory](../../artifacts/qa/reports/dp-15-inventory-20261007/README.md) | `CLOSED — CURRENT_TREE_INVENTORY_ONLY`; no DP implementation or authority found; no other gate closes |
 
-Until these questions close for a named profile, the correct operational decision is `HOLD`.
+DP-15 is inventory-only closure at the pinned revision; DP-01–DP-14 remain open. Until the deployment-specific questions and all graduation gates close for a named profile, the correct operational decision is `HOLD`.
 
 [Back to top](#top)
 

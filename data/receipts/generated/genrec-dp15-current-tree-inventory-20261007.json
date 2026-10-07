@@ -1,0 +1,146 @@
+{
+  "receipt_id": "genrec-dp15-current-tree-inventory-20261007",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/standards/DP_BUDGETS.md",
+    "artifacts/qa/reports/dp-15-inventory-20261007/README.md",
+    "artifacts/qa/reports/dp-15-inventory-20261007/classify.py",
+    "artifacts/qa/reports/dp-15-inventory-20261007/dp-declarations.json",
+    "artifacts/qa/reports/dp-15-inventory-20261007/hits.csv.gz",
+    "artifacts/qa/reports/dp-15-inventory-20261007/inventory.json.gz",
+    "artifacts/qa/reports/dp-15-inventory-20261007/scan.py",
+    "artifacts/qa/reports/dp-15-inventory-20261007/summary.json"
+  ],
+  "artifact_hashes": {
+    "docs/standards/DP_BUDGETS.md": "sha256:b0a45eb6271dcd3b0cd957362a55679a05ae54ef6a7b51d4c9a26811fb0956c9",
+    "artifacts/qa/reports/dp-15-inventory-20261007/README.md": "sha256:5565dd4c8b4f72facf3ddf2bc725d811a5401b2a609d725b710902e10bfdbf11",
+    "artifacts/qa/reports/dp-15-inventory-20261007/classify.py": "sha256:c65c54d9e7ed9cb318a435aaa927c0b0fc3c742cd3b0d7658604e7f9790408e5",
+    "artifacts/qa/reports/dp-15-inventory-20261007/dp-declarations.json": "sha256:e9da8ce40008f399b3927c3c47695e906ebaa62ce0fede6a8ef140650f023f54",
+    "artifacts/qa/reports/dp-15-inventory-20261007/hits.csv.gz": "sha256:9e1f39bb3f59b0922fcb226b16750d21b17581af60a02ee746f5b25539c3acd7",
+    "artifacts/qa/reports/dp-15-inventory-20261007/inventory.json.gz": "sha256:e4e5816edc9ef84c29628ab2b7ac25344aecccc7a7ee176f419089d0cf96376b",
+    "artifacts/qa/reports/dp-15-inventory-20261007/scan.py": "sha256:ae1d006bea819a0b4aa90711d8b328895d0af7ff3f6e37b094579da9d97edc12",
+    "artifacts/qa/reports/dp-15-inventory-20261007/summary.json": "sha256:33c3c83eb04014af145db38e3e7d152b53ef06a0ab64c89a7947e88da369a50f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 (Codex)",
+    "version": "exact build not exposed; session 2026-10-07"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub read/write connector",
+      "Git recursive object inventory",
+      "local Python read-only lexical scan and source inspection"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix@c90836cdb7a34791669907053522de0458f21ae9",
+      "git-tree:219cd776542fc79030897633acc77d4cb3e3b0e3",
+      "git-blob:ae05701e304ff7e7f339035cc19116cd2e5f4d05",
+      "tree-manifest-sha256:12592fa8e5e55f4659adf2922a982cf66ed86ca58108d1980b344bd542f66296"
+    ]
+  },
+  "truth_labels": {
+    "docs/standards/DP_BUDGETS.md": "PROPOSED",
+    "artifacts/qa/reports/dp-15-inventory-20261007/README.md": "CONFIRMED",
+    "artifacts/qa/reports/dp-15-inventory-20261007/classify.py": "CONFIRMED",
+    "artifacts/qa/reports/dp-15-inventory-20261007/dp-declarations.json": "CONFIRMED",
+    "artifacts/qa/reports/dp-15-inventory-20261007/hits.csv.gz": "CONFIRMED",
+    "artifacts/qa/reports/dp-15-inventory-20261007/inventory.json.gz": "CONFIRMED",
+    "artifacts/qa/reports/dp-15-inventory-20261007/scan.py": "CONFIRMED",
+    "artifacts/qa/reports/dp-15-inventory-20261007/summary.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "complete-current-tree-coverage",
+      "outcome": "PASS",
+      "reason": "All 14,164 tracked blobs (215,327,106 bytes) visited, blob SHAs recomputed; all compressed text expanded; zero read/decode failures or excluded tracked paths."
+    },
+    {
+      "gate": "every-hit-classification",
+      "outcome": "PASS",
+      "reason": "67,125 hit rows across 5,653 exact paths/representations accounted; zero unclassified rows; source statuses and authority/disposition are separate."
+    },
+    {
+      "gate": "DP-authority-and-runtime-source-readback",
+      "outcome": "PASS",
+      "reason": "DP declarations are documentation/proposals/exclusions/upstream claims or generated authorship provenance. No DP-specific machine authority or implementation found; generic aliases and mechanisms independently inspected."
+    },
+    {
+      "gate": "DP15-only-scope",
+      "outcome": "PASS",
+      "reason": "DP-01 through DP-14 rows and the complete graduation-gates section are byte-identical to pinned main. Operational HOLD, no defaults, guidance-only authority and pending human review retained."
+    },
+    {
+      "gate": "markdown-and-links",
+      "outcome": "PASS",
+      "reason": "One H1 per document, balanced fences/metadata markers, final newlines, no trailing whitespace, all repository-relative link targets exist; git diff --check passed."
+    },
+    {
+      "gate": "deterministic-replay",
+      "outcome": "PASS",
+      "reason": "Independent complete rescan and classification replay after stable casefold+exact-term tie ordering; hits.csv.gz, inventory.json.gz, dp-declarations.json and summary.json compare byte-identical. No findings or coverage counts changed."
+    },
+    {
+      "gate": "generated-receipt-validation",
+      "outcome": "PASS",
+      "reason": "Native validate_generated_receipt.py passed schema, semantic and all eight artifact SHA-256 integrity bindings; review pending and approval claim absent."
+    },
+    {
+      "gate": "hosted-CI",
+      "outcome": "SKIPPED",
+      "reason": "Not yet run for this documentation/QA packet; hosted results are separate from local validation."
+    },
+    {
+      "gate": "live-runtime-and-external-state",
+      "outcome": "SKIPPED",
+      "reason": "No live services, deployments, remote release assets/Actions artifacts, model operations, DP mechanisms or host installed dependency inventory were requested or executed."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; no approval, owner acceptance or merge is claimed."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "current-main-inventory",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@c90836cdb7a34791669907053522de0458f21ae9"
+    },
+    {
+      "id": "target-prior-blob",
+      "validated": true,
+      "evidence_ref": "git-blob:ae05701e304ff7e7f339035cc19116cd2e5f4d05"
+    },
+    {
+      "id": "complete-tree",
+      "validated": true,
+      "evidence_ref": "git-tree:219cd776542fc79030897633acc77d4cb3e3b0e3"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-07T03:46:45.993607Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation and replaceable QA inventory only. DP-15 closure is exact-current-tree-only. No epsilon/delta, mechanism, dependency, deployment profile, privacy unit, ledger writer, source admission, policy, release, publication, owner acceptance or other DP graduation gate is selected or authorized. Receipt is authoring provenance, not a DP receipt or guarantee."
+}
