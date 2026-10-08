@@ -8,7 +8,7 @@ import unittest
 import urllib.request
 from unittest.mock import patch
 
-spec = importlib.util.spec_from_file_location('cache', 'scripts/basemap-cache.py')
+spec = importlib.util.spec_from_file_location('cache', str(Path(__file__).resolve().parents[2] / 'tools/local_data/basemap_cache.py'))
 m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
 
 class Tests(unittest.TestCase):
@@ -57,18 +57,30 @@ class Tests(unittest.TestCase):
         other=self.root/'linked';other.symlink_to(self.root,target_is_directory=True)
         with self.assertRaises(ValueError): m.Cache(other)
     def test_http_origin_host_session_guards(self):
-        saved_port=m.PORT;m.PORT=0;server=m.Server(self.cache);m.PORT=server.server_address[1];thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
-        origin=next(iter(m.ORIGINS));base=f'http://127.0.0.1:{m.PORT}'
-        try:
-            def request(path,headers,method='GET'):
-                return urllib.request.urlopen(urllib.request.Request(base+path,headers=headers,method=method))
-            for headers in [{},{'Origin':'https://evil.example'},{'Origin':origin,'Host':'evil.example'}]:
-                with self.assertRaises(urllib.error.HTTPError) as e: request('/status',headers)
-                self.assertEqual(e.exception.code,403)
-            with request('/status',{'Origin':origin}) as r: self.assertEqual(json.load(r)['schema'],'kfm-basemap-cache/v1')
-            with self.assertRaises(urllib.error.HTTPError):request('/resource?url='+urllib.parse.quote(self.url(1)),{'Origin':origin})
-            with request('/resource?url='+urllib.parse.quote(self.url(1)),{'Origin':origin,'X-KFM-Session':self.cache.token}) as r:self.assertEqual(r.read(),b'raw-provider-bytes')
-            with request('/status',{'Origin':origin},'OPTIONS') as r:self.assertEqual(r.headers['Access-Control-Allow-Private-Network'],'true')
-        finally:server.shutdown();server.server_close();thread.join();m.PORT=saved_port
+        # Real handlers, in-memory HTTP envelopes: compatible with KFM_NO_NETWORK.
+        from io import BytesIO
+        from types import SimpleNamespace
+        from email.message import Message
+        origin=next(iter(m.ORIGINS))
+        def request(path, headers, method='GET'):
+            h=m.Handler.__new__(m.Handler);h.server=SimpleNamespace(cache=self.cache)
+            h.path=path;h.headers=Message();h.wfile=BytesIO();h.rfile=BytesIO()
+            h.headers['Host']=f'127.0.0.1:{m.PORT}'
+            for key,value in headers.items():
+                if key in h.headers: del h.headers[key]
+                h.headers[key]=value
+            output={'headers':{}}
+            h.send_response=lambda code:output.update(code=code)
+            h.send_header=lambda key,value:output['headers'].update({key:value})
+            h.end_headers=lambda:None
+            getattr(h,'do_'+method)();output['body']=h.wfile.getvalue()
+            return output
+        for headers in [{},{'Origin':'https://evil.example'},{'Origin':origin,'Host':'evil.example'}]:
+            self.assertEqual(request('/status',headers)['code'],403)
+        self.assertEqual(json.loads(request('/status',{'Origin':origin})['body'])['schema'],'kfm-basemap-cache/v1')
+        path='/resource?url='+urllib.parse.quote(self.url(1))
+        self.assertEqual(request(path,{'Origin':origin})['code'],403)
+        self.assertEqual(request(path,{'Origin':origin,'X-KFM-Session':self.cache.token})['body'],b'raw-provider-bytes')
+        self.assertEqual(request('/status',{'Origin':origin},'OPTIONS')['headers']['Access-Control-Allow-Private-Network'],'true')
 
 if __name__ == '__main__': unittest.main()

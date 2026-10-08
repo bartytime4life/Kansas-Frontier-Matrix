@@ -20,6 +20,8 @@ Run with Python 3.11 or newer (standard library only):
 
 ```sh
 python3 scripts/basemap-cache.py --root /absolute/path/to/KFM-data
+# From the KFM monorepo root:
+python3 tools/local_data/basemap_cache.py --root /absolute/path/to/KFM-data
 ```
 
 The server listens only on `127.0.0.1:8770`. It requires the exact owner-private
@@ -101,8 +103,9 @@ activation, source-time, DB/R2 binding, or audience change is made.
 
 `node --test tests/basemap-cache.test.mjs` includes client transport/fallback,
 source exclusions, rendered GUI actions and Python filesystem/HTTP tests.
-`python3 tests/basemap_cache_test.py` can run the companion tests independently.
-Tests use a temporary initialized root, fake provider bytes and an ephemeral
-loopback port; they never alter the installed cache or fetch live providers.
+`python3 tests/basemap_cache_test.py` runs the standalone companion tests.
+From the KFM repository root, use `python3 tests/local_data/test_basemap_cache.py`.
+Tests use a temporary initialized root, fake provider bytes and in-memory
+HTTP requests; they never alter the installed cache or fetch live providers.
 Browser local-network access, actual provider availability and visual acceptance
 are separate from these checks and from private Site deployment.

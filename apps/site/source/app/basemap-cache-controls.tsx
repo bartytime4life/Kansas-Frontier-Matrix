@@ -9,8 +9,7 @@ export function BasemapCacheControls() {
   const [busy, setBusy] = useState(false);
   useEffect(() => {
     let active = true;
-    setEnabled(basemapCacheEnabled());
-    const refresh = () => { void connectBasemapCache(true).then(s => { if (active) { setStatus(s); setMessage(s ? "Connected to this PC" : "PC cache unavailable · maps use the provider directly"); } }); };
+    const refresh = () => { void connectBasemapCache(true).then(s => { if (active) { setEnabled(basemapCacheEnabled()); setStatus(s); setMessage(s ? "Connected to this PC" : "PC cache unavailable · maps use the provider directly"); } }); };
     refresh(); const timer = setInterval(refresh, 10_000);
     return () => { active = false; clearInterval(timer); };
   }, []);
@@ -29,6 +28,6 @@ export function BasemapCacheControls() {
     <div className="panel-footer-actions"><button type="button" disabled={busy} onClick={() => void action("connect")}>Reconnect</button><button type="button" disabled={!status || busy || status.job.state === "running"} onClick={() => void action("overview")}>Save Kansas overview</button>{status?.job.state === "running" && <button type="button" disabled={busy} onClick={() => void action("cancel")}>Stop download</button>}</div>
     <small>The overview saves Kansas aerial and USGS topo zooms 4–9, up to 512 MiB per run. Fine aerial detail saves as you zoom; whole-state high-resolution packages are excluded. Esri and OpenStreetMap raster stay online. This is a partial display cache, not an offline copy of the app.</small>
     <p><strong>Display context, not KFM evidence.</strong> Cached imagery keeps its original source date. Kansas aerial remains 2024; exact local flight date is unresolved. Download time is not observation time. Expired tiles refresh from their provider; failed refreshes remain unavailable.</p>
-    <details><summary>Set up another PC</summary><p>Run the basemap cache service from <code>scripts/basemap-cache.py</code> against an initialized <code>KFM_DATA_ROOT</code>. The <code>docs/BASEMAP_CACHE.md</code> runbook includes startup and removal. Your browser may ask to allow access to this PC.</p></details>
+    <details><summary>Set up another PC</summary><p>Install the local companion following <code>docs/basemap-cache.md</code>. It uses your initialized <code>KFM_DATA_ROOT</code>; the runbook includes standalone and KFM repository commands, startup and removal. Your browser may ask to allow access to this PC.</p></details>
   </section>;
 }

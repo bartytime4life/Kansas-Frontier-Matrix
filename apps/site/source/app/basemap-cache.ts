@@ -40,7 +40,7 @@ export async function connectBasemapCache(force = false): Promise<BasemapCacheSt
       const text = await r.text();
       if (text.length > 8192) throw new Error("Invalid status");
       const s = JSON.parse(text) as BasemapCacheStatus;
-      if (s.schema !== "kfm-basemap-cache/v1" || s.limitBytes !== 10_000_000_000 || !/^[A-Za-z0-9_-]{43}$/.test(s.sessionToken) || typeof s.destination !== "string" || !s.destination.endsWith("/data/work/basemap-cache") || !Number.isFinite(s.usedBytes) || s.usedBytes < 0 || s.usedBytes > s.limitBytes || !s.job) throw new Error("Invalid cache");
+      if (s.schema !== "kfm-basemap-cache/v1" || s.limitBytes !== 10_000_000_000 || !/^[A-Za-z0-9_-]{43}$/.test(s.sessionToken) || typeof s.destination !== "string" || !s.destination.startsWith("/") || !s.destination.endsWith("/basemap-cache") || !Number.isFinite(s.usedBytes) || s.usedBytes < 0 || s.usedBytes > s.limitBytes || !s.job) throw new Error("Invalid cache");
       status = s; retryAt = Date.now() + 30_000;
     } catch { status = null; retryAt = Date.now() + 30_000; }
     finally { connecting = null; }
