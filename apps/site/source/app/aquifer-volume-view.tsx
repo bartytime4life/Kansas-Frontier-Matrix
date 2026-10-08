@@ -14,7 +14,7 @@ import { startAquiferView, locatorBounds, type AquiferViewSnapshot } from "./aqu
 type VolumeBounds = [number,number,number,number];
 type Snapshot = AquiferViewSnapshot<HTMLCanvasElement>;
 type CameraAction="reset"|"top"|"side"|"left"|"right"|"in"|"out";
-type Settings={surface:number;water:number;scale:number;logs:boolean;navigation:"orbit"|"pan"};
+type Settings={surface:number;water:number;scale:number;logs:boolean;smooth:boolean;navigation:"orbit"|"pan"};
 export default function AquiferVolumeView({active=true,map,records,onFlatMap,onInspect,onLocatorSlot,sliceEntry,onArea,recordsLoading,recordStatus,partial,recordNavigation,recordsAvailable,onResetRecords}:{active?:boolean;map:MapLibreMap|null;records:Borehole[];onFlatMap:()=>void;onLocate:(point:[number,number],retainView?:boolean)=>void;onInspect:(record:Borehole,interval?:DepthInterval)=>void;locator:{anchor:[number,number];pinned:boolean};onLocatorSlot:(slot:HTMLDivElement|null)=>void;sliceEntry?:ReactNode;onArea:(bounds:VolumeBounds|null)=>void;recordsLoading:boolean;recordStatus:string;partial:boolean;recordNavigation:ReactNode;recordsAvailable:number;onResetRecords:()=>void}){
   const [snapshot,setSnapshot]=useState<Snapshot|null>(null),[status,setStatus]=useState("Preparing the current locator area…"),[retry,setRetry]=useState(0);
   const [surfaceStatus,setSurfaceStatus]=useState(""),[previewChanged,setPreviewChanged]=useState(false);
@@ -23,11 +23,11 @@ export default function AquiferVolumeView({active=true,map,records,onFlatMap,onI
   const [navigation,setNavigation]=useState<"orbit"|"pan">("orbit");
   const areaSession=useRef<{prepare:()=>void}|null>(null),onAreaRef=useRef(onArea);
   useEffect(()=>{onAreaRef.current=onArea;},[onArea]);
-  const [surface,setSurface]=useState(.82),[water,setWater]=useState(.22),[scale,setScale]=useState(25),[logs,setLogs]=useState(true);
+  const [surface,setSurface]=useState(.82),[water,setWater]=useState(.22),[scale,setScale]=useState(25),[logs,setLogs]=useState(true),[smooth,setSmooth]=useState(true);
   const [failure,setFailure]=useState(""),[selection,setSelection]=useState<string|null>(null);
   const [pickedLog,setPickedLog]=useState<{label:string;recordId:string}|null>(null);
   const host=useRef<HTMLDivElement>(null),api=useRef<{camera:(action:CameraAction)=>void;update:(v:Settings)=>void;setSurface:(image:HTMLCanvasElement|null)=>void;highlightRecord:(id:string|null)=>void}|null>(null);
-  const values=useRef<Settings>({surface,water,scale,logs,navigation});
+  const values=useRef<Settings>({surface,water,scale,logs,smooth,navigation});
   const inspectRef=useRef(onInspect);
   const snapshotRef=useRef(snapshot);
   const pickedLogRef=useRef(pickedLog);
@@ -38,7 +38,7 @@ export default function AquiferVolumeView({active=true,map,records,onFlatMap,onI
   useEffect(()=>{if(volume&&focusAfterApply.current){focusAfterApply.current=false;modelFocus.current?.focus({preventScroll:false});}},[volume]);
   const drawn = useMemo(() => volume ? cutawayRecords(volume, records) : null, [volume, records]);
   const sceneRenderable=Boolean(volume&&(recordsLoading||aquiferLoading||drawn?.recordCount||volume.envelopes.length));
-  useEffect(()=>{values.current={surface,water,scale,logs,navigation};},[surface,water,scale,logs,navigation]);
+  useEffect(()=>{values.current={surface,water,scale,logs,smooth,navigation};},[surface,water,scale,logs,smooth,navigation]);
   useEffect(()=>{inspectRef.current=onInspect;},[onInspect]);
   useEffect(()=>{snapshotRef.current=snapshot;},[snapshot]);
   useEffect(()=>{pickedLogRef.current=pickedLog;},[pickedLog]);
@@ -201,6 +201,7 @@ export default function AquiferVolumeView({active=true,map,records,onFlatMap,onI
         volumeGroup.scale.y=v.scale;logGroup.scale.y=v.scale;frameGroup.scale.y=v.scale;logGroup.visible=v.logs;
         tickSprites.forEach(({sprite,fraction})=>sprite.position.set(-3.42,-frameDepth*fraction*v.scale,south));
         planePaint.opacity=v.surface*(surfaceTexture?1:.15);waters.forEach(m=>{m.opacity=v.water;});
+        if(surfaceTexture){surfaceTexture.magFilter=v.smooth?T.LinearFilter:T.NearestFilter;surfaceTexture.minFilter=v.smooth?T.LinearFilter:T.NearestFilter;surfaceTexture.needsUpdate=true;}
         if(lastScale!==v.scale){
           motion.cancel();cancelDamping();const pose=readPose(),delta=-deepest*k*(v.scale-lastScale)/2;
           pose.position[1]+=delta;pose.target[1]+=delta;lastScale=v.scale;applyPose(pose);
@@ -235,7 +236,7 @@ export default function AquiferVolumeView({active=true,map,records,onFlatMap,onI
     return()=>{disposed=true;api.current=null;cleanup?.();};
   },[volume,records,recordsLoading,aquiferLoading,retry,active,sceneRenderable]);
   useEffect(()=>{api.current?.setSurface(snapshot?.image??null);},[snapshot?.image]);
-  useEffect(()=>{api.current?.update(values.current);},[surface,water,scale,logs,navigation]);
+  useEffect(()=>{api.current?.update(values.current);},[surface,water,scale,logs,smooth,navigation]);
   useEffect(()=>{api.current?.highlightRecord(pickedLog?.recordId??null);},[pickedLog]);
   const selected=snapshot?.volume.envelopes.find(e=>e.id===selection);
   const showArea=()=>{
@@ -254,6 +255,16 @@ export default function AquiferVolumeView({active=true,map,records,onFlatMap,onI
       map.jumpTo({zoom,pitch:0,bearing:0});showArea();
     }catch{setStatus("The map is not ready yet. Retry when the map appears.");}
   };
+  const zoomSelectedArea=(direction:"in"|"out")=>{
+    if(!map)return;
+    try{
+      const duration=matchMedia("(prefers-reduced-motion: reduce)").matches?0:220;
+      if(direction==="in")map.zoomIn({duration});else map.zoomOut({duration});
+      // The manual session waits for moveend and captures the new map extent.
+      // A normal drag remains only a preview until the user chooses Show.
+      areaSession.current?.prepare();
+    }catch{setStatus("The selector map is not ready to zoom. Retry when it appears.");}
+  };
   const example=()=>{if(!map)return;map.jumpTo({center:[-100.5,38.5],zoom:11,pitch:0,bearing:0});showArea();};
   const frameReady=frame&&validVolumeBounds(frame),hasScene=Boolean(snapshot);
   return <section className={`${s.cutawayExplorer} ${s.areaExplorer}`} data-ready={hasScene} aria-label="4D area underlay from source records">
@@ -261,8 +272,8 @@ export default function AquiferVolumeView({active=true,map,records,onFlatMap,onI
       <aside className={s.cutawayLocator} aria-label="Choose the underlay area">
         <div className={s.cutawayLocatorTitle}><strong>{hasScene?"Selected area":"Choose an area"}</strong><span>2D MAP</span></div>
         <div ref={onLocatorSlot} className={s.cutawayLocatorMap} aria-label="Linked 2D selector map position" />
-        <div className={s.cutawayLocatorActions}><button type="button" disabled={!map} onClick={frame&&!frameReady?zoomLocal:showArea}>{frame&&!frameReady?"Zoom in & explore":hasScene&&previewChanged?"Show new area":"Show this area"} <span aria-hidden="true">↗</span></button><button type="button" aria-label="Zoom selector map in" onClick={()=>map?.zoomIn({duration:matchMedia("(prefers-reduced-motion: reduce)").matches?0:220})}>+</button><button type="button" aria-label="Zoom selector map out" onClick={()=>map?.zoomOut({duration:matchMedia("(prefers-reduced-motion: reduce)").matches?0:220})}>−</button></div>
-        <p className={s.areaFrameState}>{previewChanged&&snapshot?"Map preview changed. The cutaway still shows your selected area.":frame&&!frameReady?"This view is too broad for a local cutaway. Zoom in & explore keeps the map center and frames a smaller area.":hasScene?"Pan the map and show a new area when you are ready.":"Pan to a place in Kansas, then show its recorded columns."}</p>
+        <div className={s.cutawayLocatorActions}><button type="button" disabled={!map} onClick={frame&&!frameReady?zoomLocal:showArea}>{frame&&!frameReady?"Zoom in & explore":hasScene&&previewChanged?"Show new area":"Show this area"} <span aria-hidden="true">↗</span></button><button type="button" aria-label="Zoom selector map and selected area in" title="Zoom the map and update the selected cutaway" onClick={()=>zoomSelectedArea("in")}>+</button><button type="button" aria-label="Zoom selector map and selected area out" title="Zoom the map and update the selected cutaway" onClick={()=>zoomSelectedArea("out")}>−</button></div>
+        <p className={s.areaFrameState}>{previewChanged&&snapshot?"Map preview changed. The cutaway still shows your selected area.":frame&&!frameReady?"This view is too broad for a local cutaway. Zoom in & explore keeps the map center and frames a smaller area.":hasScene?"Use the map +/− to zoom and update the selected area; pan, then Show for a new location.":"Pan to a place in Kansas, then show its recorded columns."}</p>
         <div className={s.areaProgress} role="status"><p>{status}</p>{snapshot&&<p>{recordsLoading?"Loading well and core records…":`${drawn?.recordCount??0} plotted columns · ${records.length} records at this time${partial?" · partial coverage":""}`}</p>}</div>
         <button type="button" className={s.areaExample} onClick={example}>Try High Plains example</button>
         <details className={s.areaLocationTools}><summary>Map movement</summary><div className={s.actions}>{[["←",-70,0],["↑",0,-70],["↓",0,70],["→",70,0]].map(([label,x,y])=><button type="button" key={String(label)} aria-label={`Pan selector ${label}`} onClick={()=>map?.panBy([Number(x),Number(y)],{duration:0})}>{label}</button>)}</div><button type="button" onClick={onFlatMap}>Reset to 2D</button></details>
@@ -274,7 +285,7 @@ export default function AquiferVolumeView({active=true,map,records,onFlatMap,onI
         {sceneRenderable&&<div className={s.cutawayStage}>
           <div ref={host} className={s.cutawayCanvas} hidden={!!failure} />
           {failure&&<div className={s.cutawayEmpty}><h4>3D view unavailable</h4><p role="alert">{failure}</p><button type="button" onClick={()=>{setFailure("");setRetry(v=>v+1);}}>Retry 3D view</button></div>}
-          {!failure&&<div className={s.cutawayCamera} aria-label="Area 3D navigation"><button type="button" aria-pressed={navigation==="orbit"} onClick={()=>setNavigation("orbit")}>Orbit</button><button type="button" aria-pressed={navigation==="pan"} onClick={()=>setNavigation("pan")}>Move</button>{([['reset','Reset view'],['in','+'],['out','−']] as const).map(([action,label])=><button type="button" key={action} aria-label={action==='in'?'Zoom in':action==='out'?'Zoom out':label} onClick={()=>api.current?.camera(action)}>{label}</button>)}</div>}
+          {!failure&&<div className={s.cutawayCamera} aria-label="Area 3D navigation"><button type="button" aria-pressed={navigation==="orbit"} onClick={()=>setNavigation("orbit")}>Orbit</button><button type="button" aria-pressed={navigation==="pan"} onClick={()=>setNavigation("pan")}>Move</button><button type="button" onClick={()=>api.current?.camera("top")}>Surface image</button><button type="button" aria-pressed={smooth} onClick={()=>setSmooth(v=>!v)}>{smooth?"Smooth image":"Exact pixels"}</button>{([['reset','Reset view'],['in','+'],['out','−']] as const).map(([action,label])=><button type="button" key={action} aria-label={action==='in'?'Zoom in':action==='out'?'Zoom out':label} onClick={()=>api.current?.camera(action)}>{label}</button>)}</div>}
           <div className={s.cutawaySceneLabel}><span>{navigation==="pan"?"Drag to move":"Drag to orbit"} · scroll to zoom · select a source</span></div>
           <div className={s.cutawayStamp}>{scale}× DEPTH <span>·</span> {snapshot?.image?"SELECTED-AREA MAP":"FLAT REFERENCE PLANE · MAP IMAGE UNAVAILABLE"}</div>
         </div>}
@@ -287,6 +298,7 @@ export default function AquiferVolumeView({active=true,map,records,onFlatMap,onI
     <div className={s.areaTools}>
       <details className={s.areaAppearance}><summary>View settings</summary><div className={s.areaAppearanceGrid}>
         <label className={s.cutawayRange}>Surface map <output>{Math.round(surface*100)}%</output><input aria-label="Surface map opacity" type="range" min="0" max="100" value={surface*100} onChange={e=>setSurface(Number(e.target.value)/100)} /></label>
+        <p className={s.muted}>Smooth image changes only how the captured basemap pixels are drawn. Recorded well and aquifer values are unchanged.</p>
         <label className={s.cutawayRange}>Aquifer range <output>{Math.round(water*100)}%</output><input aria-label="Aquifer opacity" type="range" min="0" max="100" value={water*100} onChange={e=>setWater(Number(e.target.value)/100)} /></label>
         <label className={s.cutawayScale}>Vertical scale <select aria-label="Cutaway vertical scale" value={scale} onChange={e=>setScale(Number(e.target.value))}>{[1,10,25,50,100,250,500].map(n=><option key={n} value={n}>{n}×</option>)}</select></label>
         <button type="button" aria-pressed={logs} onClick={()=>setLogs(v=>!v)}>Show recorded columns</button>
