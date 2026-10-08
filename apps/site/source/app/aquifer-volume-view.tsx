@@ -255,6 +255,16 @@ export default function AquiferVolumeView({active=true,map,records,onFlatMap,onI
       map.jumpTo({zoom,pitch:0,bearing:0});showArea();
     }catch{setStatus("The map is not ready yet. Retry when the map appears.");}
   };
+  const zoomSelectedArea=(direction:"in"|"out")=>{
+    if(!map)return;
+    try{
+      const duration=matchMedia("(prefers-reduced-motion: reduce)").matches?0:220;
+      if(direction==="in")map.zoomIn({duration});else map.zoomOut({duration});
+      // The manual session waits for moveend and captures the new map extent.
+      // A normal drag remains only a preview until the user chooses Show.
+      areaSession.current?.prepare();
+    }catch{setStatus("The selector map is not ready to zoom. Retry when it appears.");}
+  };
   const example=()=>{if(!map)return;map.jumpTo({center:[-100.5,38.5],zoom:11,pitch:0,bearing:0});showArea();};
   const frameReady=frame&&validVolumeBounds(frame),hasScene=Boolean(snapshot);
   return <section className={`${s.cutawayExplorer} ${s.areaExplorer}`} data-ready={hasScene} aria-label="4D area underlay from source records">
@@ -262,8 +272,8 @@ export default function AquiferVolumeView({active=true,map,records,onFlatMap,onI
       <aside className={s.cutawayLocator} aria-label="Choose the underlay area">
         <div className={s.cutawayLocatorTitle}><strong>{hasScene?"Selected area":"Choose an area"}</strong><span>2D MAP</span></div>
         <div ref={onLocatorSlot} className={s.cutawayLocatorMap} aria-label="Linked 2D selector map position" />
-        <div className={s.cutawayLocatorActions}><button type="button" disabled={!map} onClick={frame&&!frameReady?zoomLocal:showArea}>{frame&&!frameReady?"Zoom in & explore":hasScene&&previewChanged?"Show new area":"Show this area"} <span aria-hidden="true">↗</span></button><button type="button" aria-label="Zoom selector map in" onClick={()=>map?.zoomIn({duration:matchMedia("(prefers-reduced-motion: reduce)").matches?0:220})}>+</button><button type="button" aria-label="Zoom selector map out" onClick={()=>map?.zoomOut({duration:matchMedia("(prefers-reduced-motion: reduce)").matches?0:220})}>−</button></div>
-        <p className={s.areaFrameState}>{previewChanged&&snapshot?"Map preview changed. The cutaway still shows your selected area.":frame&&!frameReady?"This view is too broad for a local cutaway. Zoom in & explore keeps the map center and frames a smaller area.":hasScene?"Pan the map and show a new area when you are ready.":"Pan to a place in Kansas, then show its recorded columns."}</p>
+        <div className={s.cutawayLocatorActions}><button type="button" disabled={!map} onClick={frame&&!frameReady?zoomLocal:showArea}>{frame&&!frameReady?"Zoom in & explore":hasScene&&previewChanged?"Show new area":"Show this area"} <span aria-hidden="true">↗</span></button><button type="button" aria-label="Zoom selector map and selected area in" title="Zoom the map and update the selected cutaway" onClick={()=>zoomSelectedArea("in")}>+</button><button type="button" aria-label="Zoom selector map and selected area out" title="Zoom the map and update the selected cutaway" onClick={()=>zoomSelectedArea("out")}>−</button></div>
+        <p className={s.areaFrameState}>{previewChanged&&snapshot?"Map preview changed. The cutaway still shows your selected area.":frame&&!frameReady?"This view is too broad for a local cutaway. Zoom in & explore keeps the map center and frames a smaller area.":hasScene?"Use the map +/− to zoom and update the selected area; pan, then Show for a new location.":"Pan to a place in Kansas, then show its recorded columns."}</p>
         <div className={s.areaProgress} role="status"><p>{status}</p>{snapshot&&<p>{recordsLoading?"Loading well and core records…":`${drawn?.recordCount??0} plotted columns · ${records.length} records at this time${partial?" · partial coverage":""}`}</p>}</div>
         <button type="button" className={s.areaExample} onClick={example}>Try High Plains example</button>
         <details className={s.areaLocationTools}><summary>Map movement</summary><div className={s.actions}>{[["←",-70,0],["↑",0,-70],["↓",0,70],["→",70,0]].map(([label,x,y])=><button type="button" key={String(label)} aria-label={`Pan selector ${label}`} onClick={()=>map?.panBy([Number(x),Number(y)],{duration:0})}>{label}</button>)}</div><button type="button" onClick={onFlatMap}>Reset to 2D</button></details>
