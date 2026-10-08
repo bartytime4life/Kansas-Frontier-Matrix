@@ -10,7 +10,7 @@ updated: 2026-10-08
 policy_label: public-documentation
 owning_root: docs/
 responsibility: Explain bounded local library inspection, selected provider downloads, authorization, storage and recovery.
-truth_posture: Stored candidates and background jobs do not establish source admission or map readiness.
+truth_posture: CONFIRMED bounded local contracts; NEEDS VERIFICATION live provider authorization and source admission.
 [/KFM_META_BLOCK_V2] -->
 
 # Selected Earth Engine downloads

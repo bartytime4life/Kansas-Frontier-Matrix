@@ -10,7 +10,7 @@ updated: 2026-10-08
 policy_label: public-documentation
 owning_root: docs/
 responsibility: Record workstation storage, connection, repair and verification scope without granting source admission.
-truth_posture: Measured local observations; candidate data and hosted publication remain distinct.
+truth_posture: CONFIRMED dated local measurements and bounded checks; NEEDS VERIFICATION source admission and hosted equivalence.
 [/KFM_META_BLOCK_V2] -->
 
 # Local data integration and integrity audit
@@ -197,6 +197,11 @@ Final download-center checks:
   states have deterministic contract/callback coverage. The worker's job count
   is explicitly labeled Earth Engine and does not claim to monitor the separate
   PRISM acquisition service.
+- Both new documentation metadata blocks are valid. The metadata workbench's
+  overall result still fails on seven pre-existing structural findings in the
+  unchanged document registry (duplicate keys and malformed/incomplete entries).
+  The two new documents are review-only registry addition candidates; this audit
+  does not rewrite the governed registry to obtain a passing result.
 
 Private file-level audit and recovery records remain under the owner's existing
 external catalog/receipt/recovery lanes. No secrets, absolute personal inventory
