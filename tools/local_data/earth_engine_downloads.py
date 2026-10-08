@@ -145,9 +145,10 @@ def handler(manager):
             return self.headers.get("Host")==f"127.0.0.1:{PORT}" and self.headers.get("Origin") in ORIGINS
         def safe_origin(self):
             origin=self.headers.get("Origin")
-            if origin not in ORIGINS: return None
-            if any(ch in origin for ch in ("\r","\n")): return None
-            return origin
+            if any(ch in (origin or "") for ch in ("\r","\n")): return None
+            if origin=="http://127.0.0.1:4173": return "http://127.0.0.1:4173"
+            if origin=="https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site": return "https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site"
+            return None
         def answer(self,status,body):
             encoded=json.dumps(body).encode()
             self.send_response(status)
