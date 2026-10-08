@@ -77,3 +77,14 @@ test('repeated rotate commands refit shallow desktop corners and labels and pres
   const rotated=rotateCutawayCamera(pose,.3,fit),nextDelta=rotated.position.map((v,i)=>v-rotated.target[i]),nextFit=fit(nextDelta);
   assert.ok(Math.abs(Math.hypot(...nextDelta)/nextFit.distance-.7)<1e-10,'rotation retains the 70 percent fit distance');
 });
+
+test('real wheel controls reverse at the cutaway limits while retaining their inspection target',()=>{
+ const canvas=Object.assign(new EventTarget(),{clientWidth:800,clientHeight:500,style:{}});canvas.ownerDocument=canvas;canvas.getRootNode=()=>canvas;
+ const camera=new THREE.PerspectiveCamera(40,1.6,.01,500);camera.position.set(0,2,10);
+ const controls=new OrbitControls(camera,canvas);controls.zoomToCursor=false;controls.minDistance=.02;controls.maxDistance=40;
+ const target=controls.target.clone(),wheel=deltaY=>{const event=new Event('wheel',{cancelable:true});Object.assign(event,{deltaY,deltaMode:0,clientX:790,clientY:490});canvas.dispatchEvent(event);};
+ for(let i=0;i<100;i++)wheel(100);assert.ok(Math.abs(camera.position.distanceTo(target)-40)<1e-8);
+ wheel(-100);assert.ok(camera.position.distanceTo(target)<40);
+ for(let i=0;i<250;i++)wheel(-100);assert.ok(Math.abs(camera.position.distanceTo(target)-.02)<1e-8);
+ wheel(100);assert.ok(camera.position.distanceTo(target)>.02);assert.deepEqual(controls.target,target);controls.dispose();
+});

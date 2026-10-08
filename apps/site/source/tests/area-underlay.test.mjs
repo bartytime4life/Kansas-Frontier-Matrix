@@ -29,16 +29,16 @@ async function productionFlatMap(map,reduced=false){
  for(const name of ['stopSceneOrbit','applyProjectionNavigationLimits','setProjection','setScenePreset','setVerticalExaggeration','setAtmospherePreset','setLightAzimuth','setFieldOfView','announce'])context[name]=noop;
  vm.runInNewContext(compile(page.slice(start,end)+'\nexports.activate=activateMapRepresentation;'),context);return()=>exports.activate('2d');
 }
-async function harness({map=locator(),actualSession=false,failWorker=false,onFlatMap=()=>{},onArea=()=>{}}={}){
+async function harness({reduced=true,map=locator(),actualSession=false,failWorker=false,onFlatMap=()=>{},onArea=()=>{}}={}){
  const renders=[],renderers=[],controls=[],inspections=[],events=new Map(),tasks=new Map(),requests=[];let session,prepares=0,rayHits=[],timerId=0;const worker={terminate(){},postMessage:value=>requests.push(value)};
  const T={...Three,WebGLRenderer:class{
   constructor(){this.domElement={clientWidth:700,clientHeight:430,tabIndex:0,setAttribute(){},remove(){},addEventListener:(name,fn)=>events.set(name,fn),removeEventListener:name=>events.delete(name),getBoundingClientRect:()=>({left:0,top:0,width:700,height:430})};renderers.push(this);}
-  setPixelRatio(){}setSize(w,h){this.domElement.clientWidth=w;this.domElement.clientHeight=h;}dispose(){this.disposed=true;}render(scene,camera){renders.push({scene,camera});}
+  setPixelRatio(){}setSize(w,h){this.domElement.clientWidth=w;this.domElement.clientHeight=h;}dispose(){this.disposed=true;}forceContextLoss(){this.contextReleased=true;}render(scene,camera){renders.push({scene,camera});}
  },Raycaster:class{setFromCamera(){}intersectObjects(owners){return rayHits.filter(h=>owners.includes(h.object));}}};
  class OrbitControls{constructor(camera){this.camera=camera;this.target=new Three.Vector3();this.mouseButtons={};this.touches={};controls.push(this);}update(){this.camera.lookAt(this.target);}addEventListener(){}removeEventListener(){}listenToKeyEvents(){}dispose(){}}
  const h=await componentHarness('app/aquifer-volume-view.tsx',{
-  './subsurface-workers':{startAquiferVolumeWorker:()=>{if(failWorker)throw new Error('worker unavailable');return worker;}},'./aquifer-volume':volumeModel,'./subsurface-materials':materials,'./cutaway-model':cutaway,'./cutaway-camera':camera,'./aquifer-layers':{KGS_ATLAS_URL:'https://example.test/'},'./subsurface.module.css':{default:style},'./aquifer-volume-mesh':{aquiferGeometries:()=>[]},'./aquifer-view-session':{locatorBounds:viewSession.locatorBounds,startAquiferView:options=>{session=options;if(actualSession)return viewSession.startAquiferView({...options,timers:{set:(cb,delay)=>{const id=++timerId;tasks.set(id,{cb,delay});return id},clear:id=>tasks.delete(id)}});return Object.assign(()=>{},{prepare:()=>prepares++});}},three:T,'three/addons/controls/OrbitControls.js':{OrbitControls}
- },{devicePixelRatio:1,performance,queueMicrotask,matchMedia:()=>({matches:true,addEventListener(){},removeEventListener(){}}),document:{hidden:false,createElement:()=>({getContext:()=>({fillRect(){},fillText(){}})}),addEventListener(){},removeEventListener(){}},ResizeObserver:class{observe(){}disconnect(){}},requestAnimationFrame:()=>1,cancelAnimationFrame(){}});
+  './selected-surface-map':{default:()=>null},'./subsurface-workers':{startAquiferVolumeWorker:()=>{if(failWorker)throw new Error('worker unavailable');return worker;}},'./aquifer-volume':volumeModel,'./subsurface-materials':materials,'./cutaway-model':cutaway,'./cutaway-camera':camera,'./aquifer-layers':{KGS_ATLAS_URL:'https://example.test/'},'./subsurface.module.css':{default:style},'./aquifer-volume-mesh':{aquiferGeometries:()=>[]},'./aquifer-view-session':{locatorBounds:viewSession.locatorBounds,startAquiferView:options=>{session=options;if(actualSession)return viewSession.startAquiferView({...options,timers:{set:(cb,delay)=>{const id=++timerId;tasks.set(id,{cb,delay});return id},clear:id=>tasks.delete(id)}});return Object.assign(()=>{},{prepare:()=>prepares++});}},three:T,'three/addons/controls/OrbitControls.js':{OrbitControls}
+ },{devicePixelRatio:1,performance,queueMicrotask,matchMedia:()=>({matches:reduced,addEventListener(){},removeEventListener(){}}),document:{hidden:false,createElement:()=>({getContext:()=>({fillRect(){},fillText(){}})}),addEventListener(){},removeEventListener(){}},ResizeObserver:class{observe(){}disconnect(){}},requestAnimationFrame:()=>1,cancelAnimationFrame(){}});
  let props={map,records:[record,later],onFlatMap,onLocate(){},onInspect:(...args)=>inspections.push(args),locator:{anchor:record.coordinates,pinned:false},onLocatorSlot(){},sliceEntry:{type:'details',props:{children:'Inspect an individual log'}},onArea,recordsAvailable:2,onResetRecords(){},recordsLoading:false,recordStatus:'2 loaded records in selected area',partial:false,recordNavigation:{type:'nav',props:{'aria-label':'Record time navigation',children:'Record time'}}},tree;
  const host={clientWidth:700,clientHeight:430,append(){}};
  const render=async(patch={})=>{props={...props,...patch};tree=h.render(h.exports.default,props);const canvas=findNode(tree,n=>n.props?.className==='cutawayCanvas');if(canvas)canvas.props.ref.current=host;h.commit();await settle();return tree;};await render();await render();
@@ -60,7 +60,7 @@ test('actual area controls retain renderer and camera, while record-time members
  let column;h.renders.at(-1).scene.traverse(n=>{if(n.userData?.interval===record.intervals[0])column=n;});assert.ok(column);h.setHits([{object:column}]);h.events.get('pointerdown')({clientX:10,clientY:10});h.events.get('pointerup')({clientX:10,clientY:10});await h.render();assert.equal(h.inspections.at(-1)[0],record);assert.match(text(findNode(h.tree,n=>n.props?.className==='cutawayReadout')),/sand/);
  await h.render({records:[record]});assert.equal(h.renderers.length,2);assert.equal(h.renderers[0].disposed,true);assert.deepEqual(h.renders.at(-1).camera.position,pose);assert.deepEqual(h.controls.at(-1).target,target);assert.match(text(findNode(h.tree,n=>n.props?.className==='cutawayReadout')),/sand/);
  await h.render({records:[]});await h.render();assert.deepEqual(h.renders.at(-1).camera.position,pose);assert.deepEqual(h.controls.at(-1).target,target);assert.doesNotMatch(text(findNode(h.tree,n=>n.props?.className==='cutawayReadout')),/sand/);assert.match(text(h.tree),/No recorded intervals at this time/);
- h.h.dispose();assert.ok(h.renderers.every(r=>r.disposed));assert.equal(h.events.size,0);
+ h.h.dispose();assert.ok(h.renderers.every(r=>r.disposed&&r.contextReleased));assert.equal(h.events.size,0);
 });
 
 test('first settled records fit a geometry-first empty frame, unless the user has already moved its camera',async()=>{
@@ -125,4 +125,31 @@ test('a style-read exception preserves the apply intent and continues on map loa
 test('settled absence of both logs and aquifer uses compact recovery without empty camera or time chrome',async()=>{
  const h=await harness({actualSession:true});await h.render({records:[],recordsAvailable:0});button(h.tree,'Show this area ↗').props.onClick();h.worker.onerror();await h.render();
  assert.equal(findNode(h.tree,n=>n.props?.className==='cutawayCanvas'),undefined);assert.equal(findNode(h.tree,n=>n.props?.['aria-label']==='Area 3D navigation'),undefined);assert.equal(findNode(h.tree,n=>n.props?.['aria-label']==='Record time navigation'),undefined);assert.ok(button(h.tree,'Reset record filters'));assert.match(text(h.tree),/No recorded intervals at this time/);h.h.dispose();
+});
+
+
+test('surface inspection pauses the 3D renderer and returns to the same cutaway pose and bounds',async()=>{
+ const h=await harness();h.session.onSnapshot({volume,image:null});await h.render();
+ const camera=h.renders.at(-1).camera;camera.position.set(7,3,12);const pose=camera.position.clone();
+ button(h.tree,'Surface map').props.onClick();await h.render();assert.equal(h.renderers[0].disposed,true);
+ const surface=findNode(h.tree,n=>n.props?.source===h.map&&n.props?.bounds===volume.bounds);assert.ok(surface);assert.equal(surface.props.active,true);
+ h.session.onPreview(true);await h.render();assert.equal(h.prepares,0);
+ button(h.tree,'3D cutaway').props.onClick();await h.render();assert.deepEqual(h.renders.at(-1).camera.position,pose);assert.equal(h.prepares,0);h.h.dispose();
+});
+
+test('zoom reverses immediately at both limits without changing the slice or drifting the target',async()=>{
+ const h=await harness({reduced:false});h.session.onSnapshot({volume,image:null});await h.render();
+ const c=h.renders.at(-1).camera,controls=h.controls.at(-1),target=controls.target.clone();
+ const zoom=direction=>findNode(h.tree,n=>n.props?.['aria-label']===`Zoom ${direction}`).props.onClick();
+ for(let i=0;i<100;i++)zoom('out');
+ assert.ok(Math.abs(c.position.distanceTo(target)-controls.maxDistance)<1e-8);
+ const wide=c.position.distanceTo(target);zoom('in');assert.ok(c.position.distanceTo(target)<wide*.81);
+ for(let i=0;i<100;i++)zoom('in');
+ assert.ok(Math.abs(c.position.distanceTo(target)-controls.minDistance)<1e-8);
+ zoom('out');assert.ok(c.position.distanceTo(target)>controls.minDistance*1.2);
+ assert.deepEqual(controls.target,target);assert.equal(controls.zoomToCursor,false);assert.equal(h.prepares,0);
+ // Wheel navigation can change distance without applyPose: every render refreshes clipping.
+ c.position.set(400,300,200);
+ button(h.tree,'Smooth image').props.onClick();await h.render();assert.ok(c.far>c.position.length());
+ h.h.dispose();assert.ok(h.renderers.every(r=>r.contextReleased));
 });

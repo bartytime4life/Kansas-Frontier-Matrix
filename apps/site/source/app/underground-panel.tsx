@@ -179,9 +179,10 @@ export default function UndergroundPanel(props: Props) {
     if (!map) return;
     const stage = map.getContainer().closest<HTMLElement>(".map-stage");
     stage?.style.setProperty("--underground-height", `${height}%`);
-    const observer = new ResizeObserver(() => map.resize()); observer.observe(map.getContainer());
+    let resizeFrame:number|null=null;
+    const observer = new ResizeObserver(() => {if(resizeFrame!==null)cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(()=>{resizeFrame=null;map.resize();});}); observer.observe(map.getContainer());
     map.resize();
-    return () => { observer.disconnect(); stage?.style.removeProperty("--underground-height"); map.resize(); };
+    return () => { observer.disconnect(); if(resizeFrame!==null)cancelAnimationFrame(resizeFrame); stage?.style.removeProperty("--underground-height"); map.resize(); };
   }, [map, height, display]);
   useLayoutEffect(() => {
     if (!map || display !== "aquifer" || !locatorSlot) return;
@@ -195,7 +196,8 @@ export default function UndergroundPanel(props: Props) {
       stage.style.setProperty("--cutaway-locator-clip",`inset(${placement.clipTop}px 0 ${placement.clipBottom}px 0)`);
       stage.style.setProperty("--cutaway-locator-visibility",placement.visible?"visible":"hidden");
     };
-    const observer=new ResizeObserver(position);observer.observe(locatorSlot);observer.observe(stage);observer.observe(scroller);
+    let positionFrame:number|null=null;
+    const observer=new ResizeObserver(()=>{if(positionFrame!==null)cancelAnimationFrame(positionFrame);positionFrame=requestAnimationFrame(()=>{positionFrame=null;position();});});observer.observe(locatorSlot);observer.observe(stage);observer.observe(scroller);
     scroller.addEventListener("scroll",position,{passive:true});stage.addEventListener("scroll",position,{passive:true});window.addEventListener("resize",position);position();
     // Fit after the selector has its actual compact size. A fresh Underground
     // session starts with Kansas; tool switches keep the user's map position.
@@ -204,7 +206,7 @@ export default function UndergroundPanel(props: Props) {
       map.fitBounds([[-102.1,36.95],[-94.55,40.05]],{padding:18,duration:0});
       initialKansasLocator.current=true;
     }):null;
-    return()=>{if(initialFrame!==null)cancelAnimationFrame(initialFrame);observer.disconnect();scroller.removeEventListener("scroll",position);stage.removeEventListener("scroll",position);window.removeEventListener("resize",position);for(const key of ["left","top","width","height","clip","visibility"])stage.style.removeProperty(`--cutaway-locator-${key}`);};
+    return()=>{if(initialFrame!==null)cancelAnimationFrame(initialFrame);observer.disconnect();if(positionFrame!==null)cancelAnimationFrame(positionFrame);scroller.removeEventListener("scroll",position);stage.removeEventListener("scroll",position);window.removeEventListener("resize",position);for(const key of ["left","top","width","height","clip","visibility"])stage.style.removeProperty(`--cutaway-locator-${key}`);};
   },[map,display,locatorSlot]);
   useEffect(() => {
     if (!map || display !== "aquifer") return;
