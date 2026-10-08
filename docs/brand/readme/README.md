@@ -2,7 +2,7 @@
 doc_id: kfm://doc/brand/readme-artwork
 title: docs/brand/readme — README artwork
 type: readme
-version: v1.2
+version: v1.3
 status: draft
 owners: ["@bartytime4life"]
 created: 2026-10-08
@@ -116,6 +116,11 @@ Every image follows your GitHub theme. Open the light or dark file directly to s
 | [`kfm-divider.svg`](kfm-divider.svg) | Section breaks | A sunflower (the Kansas state flower) on a gold rule with a travelling glint; transparent, works in both themes |
 | [`kfm-footer.svg`](kfm-footer.svg) | Page footer | Prairie at dusk with stars, a grain elevator, a turning windmill and swaying grass |
 | [`kfm-social-preview.png`](kfm-social-preview.png) | Repository social card | 1280 × 640 still built from the hero plus four counted figures. To use it, a repository admin uploads it under **Settings → General → Social preview**; nothing in this repository applies it automatically |
+| [`kfm-local-store-flow.svg`](kfm-local-store-flow.svg) | Local-data runbook and tools README | doctor → init → describe → plan → sync → verify, and the private store kept apart from the checkout |
+| [`kfm-domain-constellation.svg`](kfm-domain-constellation.svg) | Domain atlas chapter | The thirteen domains around Kansas, each with the distinction it preserves |
+| [`kfm-sensitive-dispositions.svg`](kfm-sensitive-dispositions.svg) | Sensitive-material chapter | Six kinds of sensitive material → authorized review → five dispositions |
+| [`kfm-install-paths.svg`](kfm-install-paths.svg) | Installation guide | Four independent components with their tools and first command |
+| `kfm-banner-*.svg` (14) | Linked pages | 1280 × 220 page headers with a topic motif: trust membrane, lifecycle law, security, installation, local data store, local data tools, acquisition, verification backlog, brand, changelog, code of conduct, domain atlas, feature matrix, sensitive material |
 
 ### Light and dark themes
 
@@ -141,6 +146,33 @@ Re-count these when their sources change, and update the images and the README t
 - **Trust signals are never decorated** — outcome labels (`ABSTAIN`, `DENY`) are static text; no badge morphs between states, per [`trust-state-visuals.md`](../trust-state-visuals.md).
 - **Accessibility** — every SVG has `role="img"`, a `<title>` and a `<desc>`; the README `<img>` tags carry matching `alt` text. Text inside images duplicates content that also appears in the README.
 - **Self-contained** — no scripts, external fonts, `foreignObject` or remote references, so GitHub's image proxy renders them unchanged.
+
+## Showcase blocks on linked pages
+
+Pages linked from the project home carry a banner above their H1, a badge row (family, reading time, project home, tour), an optional topic graphic, and a footer navigation strip. Each block is wrapped in `<!-- kfm-showcase:start -->` … `<!-- kfm-showcase:end -->` so it can be found, refreshed or removed without touching the page's own text.
+
+| Page | Banner | Topic graphic |
+|---|---|---|
+| [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) | trust-membrane | trust membrane |
+| [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) | lifecycle-law | trust path |
+| [`SECURITY.md`](../../../SECURITY.md) | security | — |
+| [`docs/installation.md`](../../installation.md) | installation | install paths |
+| [`docs/runbooks/local-pc-data-store.md`](../../runbooks/local-pc-data-store.md) | local-data-store | local store flow |
+| [`tools/local_data/README.md`](../../../tools/local_data/README.md) | local-data-tools | local store flow |
+| [`docs/runbooks/free-data-acquisition.md`](../../runbooks/free-data-acquisition.md) | free-data-acquisition | time depth |
+| [`docs/registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) | verification-backlog | — |
+| [`docs/brand/README.md`](../README.md) | brand | layer stack |
+| [`CHANGELOG.md`](../../../CHANGELOG.md) | changelog | — |
+| [`CODE_OF_CONDUCT.md`](../../../CODE_OF_CONDUCT.md) | code-of-conduct | contributor paths |
+| [`05-master-domain-atlas.md`](../../encyclopedia/chapters/05-master-domain-atlas.md) | domain-atlas | domain constellation |
+| [`09-master-feature-matrix.md`](../../encyclopedia/chapters/09-master-feature-matrix.md) | feature-matrix | capability board |
+| [`13-sensitive-deny-by-default-register.md`](../../encyclopedia/chapters/13-sensitive-deny-by-default-register.md) | sensitive-material | sensitive dispositions |
+
+Not decorated, on purpose:
+
+- `apps/site/source/**` is a byte mirror of the separately versioned Site, checked by `tools/qa/site_mirror.py`. Change those guides in the Site source, not here.
+- `docs/doctrine/directory-rules.md` and ADR-0029 are adopted as exact bytes.
+- `docs/doctrine/truth-posture.md` currently duplicates the trust-membrane text, and `docs/doctrine/ai-build-operating-contract.md` holds an authoring-agent prompt. Each needs its own content fix before a banner would describe it truthfully.
 
 ## Changing an asset
 

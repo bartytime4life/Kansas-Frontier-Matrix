@@ -1,4 +1,19 @@
+<!-- kfm-showcase:start -->
+<p align="center">
+  <a href="../../README.md#see-it-in-action"><picture><source media="(prefers-color-scheme: dark)" srcset="../brand/readme/kfm-banner-verification-backlog-dark.svg" /><img src="../brand/readme/kfm-banner-verification-backlog.svg" alt="Register banner: know it, propose it, or check it." width="100%" /></picture></a>
+</p>
+<!-- kfm-showcase:end -->
+
 # VERIFICATION_BACKLOG register
+
+<!-- kfm-showcase:start -->
+<p>
+  <a href="#verificationbacklog-register"><img src="https://img.shields.io/badge/register-verification%20backlog-9a7a12?style=flat-square" alt="register page" /></a>
+  <a href="#verificationbacklog-register"><img src="https://img.shields.io/badge/read-~43%20min-6b6b6b?style=flat-square" alt="About 43 minutes to read" /></a>
+  <a href="../../README.md"><img src="https://img.shields.io/badge/%E2%86%A9-project%20home-0b1f3a?style=flat-square" alt="Back to the project home" /></a>
+  <a href="../../README.md#take-the-tour"><img src="https://img.shields.io/badge/tour-10%20workspaces-2f6f4e?style=flat-square" alt="Take the Explorer tour" /></a>
+</p>
+<!-- kfm-showcase:end -->
 
 Indexes the corresponding `control_plane/*.yaml` register.
 
@@ -539,3 +554,18 @@ dirty checkout state, and exits nonzero while review is needed. The original
 `--check` hold and historical receipt are unchanged. This supports per-file
 overlay review; source equivalence, successor receipt approval, Site deployment,
 and browser acceptance remain **NEEDS VERIFICATION**.
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <img src="../brand/readme/kfm-divider.svg" alt="" width="100%" />
+</p>
+
+<p align="center">
+  <a href="../../README.md"><b>↩ Project home</b></a> ·
+  <a href="../../README.md#see-it-in-action">See it in action</a> ·
+  <a href="../../README.md#take-the-tour">Tour</a> ·
+  <a href="../../README.md#things-to-try">Things to try</a> ·
+  <a href="../../README.md#faq">FAQ</a> ·
+  <a href="../brand/readme/README.md">Artwork</a>
+</p>
+<!-- kfm-showcase:end -->

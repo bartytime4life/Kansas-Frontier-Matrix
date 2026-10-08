@@ -13,7 +13,22 @@ responsibility: Explain free-source metadata discovery, explicit payload selecti
 truth_posture: CONFIRMED scoped local tests and captured metadata / NEEDS VERIFICATION source admission, independent review, and public acceptance.
 [/KFM_META_BLOCK_V2] -->
 
+<!-- kfm-showcase:start -->
+<p align="center">
+  <a href="../../README.md#see-it-in-action"><picture><source media="(prefers-color-scheme: dark)" srcset="../brand/readme/kfm-banner-free-data-acquisition-dark.svg" /><img src="../brand/readme/kfm-banner-free-data-acquisition.svg" alt="Acquisition banner: choose exact bytes, plan first, stay under the 500 GB cap." width="100%" /></picture></a>
+</p>
+<!-- kfm-showcase:end -->
+
 # Free data discovery, selection and bounded acquisition
+
+<!-- kfm-showcase:start -->
+<p>
+  <a href="#free-data-discovery-selection-and-bounded-acquisition"><img src="https://img.shields.io/badge/runbook-free%20data%20acquisition-3b7a57?style=flat-square" alt="runbook page" /></a>
+  <a href="#free-data-discovery-selection-and-bounded-acquisition"><img src="https://img.shields.io/badge/read-~8%20min-6b6b6b?style=flat-square" alt="About 8 minutes to read" /></a>
+  <a href="../../README.md"><img src="https://img.shields.io/badge/%E2%86%A9-project%20home-0b1f3a?style=flat-square" alt="Back to the project home" /></a>
+  <a href="../../README.md#take-the-tour"><img src="https://img.shields.io/badge/tour-10%20workspaces-2f6f4e?style=flat-square" alt="Take the Explorer tour" /></a>
+</p>
+<!-- kfm-showcase:end -->
 
 The owner-selected local temporary/replaceable cache limit is **500 GB =
 500,000,000,000 bytes (about 465.7 GiB)**. Selected Kansas data is retained on the
@@ -52,6 +67,14 @@ uses a separate protected candidate capture and review. Its post-download
 SHA-256 and stored-byte readback prove capture integrity; they must not be
 labeled verification against an upstream checksum. Do not weaken the generic
 transport allowlist to accommodate temporary authenticated download URLs.
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="../brand/readme/kfm-time-depth-dark.svg" /><img src="../brand/readme/kfm-time-depth.svg" alt="Timeline of how far back KFM sources reach, from 1800 to today." width="100%" /></picture>
+</p>
+
+<sub>Illustration, not a data product — this page's text is authoritative. See <a href="../brand/readme/README.md">README artwork</a>.</sub>
+<!-- kfm-showcase:end -->
 
 ## Discover metadata and review all historical choices
 
@@ -215,3 +238,18 @@ Run the existing local-data suite for compatibility. Tests use synthetic opaque
 bytes, not live bulk downloads. Revert these operator additions to roll back
 code; retain external metadata snapshots and receipts. Do not delete or relocate
 the existing data store as part of code rollback.
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <img src="../brand/readme/kfm-divider.svg" alt="" width="100%" />
+</p>
+
+<p align="center">
+  <a href="../../README.md"><b>↩ Project home</b></a> ·
+  <a href="../../README.md#see-it-in-action">See it in action</a> ·
+  <a href="../../README.md#take-the-tour">Tour</a> ·
+  <a href="../../README.md#things-to-try">Things to try</a> ·
+  <a href="../../README.md#faq">FAQ</a> ·
+  <a href="../brand/readme/README.md">Artwork</a>
+</p>
+<!-- kfm-showcase:end -->

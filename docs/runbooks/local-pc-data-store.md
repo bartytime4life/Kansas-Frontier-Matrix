@@ -14,13 +14,36 @@ truth_posture: CONFIRMED main@bb08d3e9b9 source and exact-schema policy receipt;
 notes: ["Directory Rules ADR-0029 and the bounded owner decision in issue #4613 apply. No source admission, release, deployment, or publication authority."]
 [/KFM_META_BLOCK_V2] -->
 
+<!-- kfm-showcase:start -->
+<p align="center">
+  <a href="../../README.md#see-it-in-action"><picture><source media="(prefers-color-scheme: dark)" srcset="../brand/readme/kfm-banner-local-data-store-dark.svg" /><img src="../brand/readme/kfm-banner-local-data-store.svg" alt="Runbook banner: your files, kept private and verifiable." width="100%" /></picture></a>
+</p>
+<!-- kfm-showcase:end -->
+
 # Prepare a local PC and maintain its data store
+
+<!-- kfm-showcase:start -->
+<p>
+  <a href="#prepare-a-local-pc-and-maintain-its-data-store"><img src="https://img.shields.io/badge/runbook-local%20data%20store-8e5a2a?style=flat-square" alt="runbook page" /></a>
+  <a href="#prepare-a-local-pc-and-maintain-its-data-store"><img src="https://img.shields.io/badge/read-~12%20min-6b6b6b?style=flat-square" alt="About 12 minutes to read" /></a>
+  <a href="../../README.md"><img src="https://img.shields.io/badge/%E2%86%A9-project%20home-0b1f3a?style=flat-square" alt="Back to the project home" /></a>
+  <a href="../../README.md#take-the-tour"><img src="https://img.shields.io/badge/tour-10%20workspaces-2f6f4e?style=flat-square" alt="Take the Explorer tour" /></a>
+</p>
+<!-- kfm-showcase:end -->
 
 This workflow prepares an Ubuntu/Linux checkout and a private external data
 store for already downloaded maps, photos, documents, archives, and other files.
 The local tools require Python 3.11 or newer and use only its standard library.
 They perform offline quarantine capture and integrity checks. This is not a
 complete offline Explorer installation or a production source-admission service.
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="../brand/readme/kfm-local-store-flow-dark.svg" /><img src="../brand/readme/kfm-local-store-flow.svg" alt="Local data workflow: doctor, init, describe, plan, sync and verify move downloaded files into a private quarantine store outside the Git checkout." width="100%" /></picture>
+</p>
+
+<sub>Illustration, not a data product — this page's text is authoritative. See <a href="../brand/readme/README.md">README artwork</a>.</sub>
+<!-- kfm-showcase:end -->
 
 ## Download the code and check the PC
 
@@ -349,3 +372,18 @@ exact bounded scope; a local test or merged change cannot expand that scope.
 See the [generated-receipt contract's validation gates](../doctrine/ai-build-operating-contract.md),
 the [PolicyDecision semantics](../../contracts/policy/policy_decision.md), and the
 [AI Builder Policy authority boundary](../../policy/ai_builder/README.md).
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <img src="../brand/readme/kfm-divider.svg" alt="" width="100%" />
+</p>
+
+<p align="center">
+  <a href="../../README.md"><b>↩ Project home</b></a> ·
+  <a href="../../README.md#see-it-in-action">See it in action</a> ·
+  <a href="../../README.md#take-the-tour">Tour</a> ·
+  <a href="../../README.md#things-to-try">Things to try</a> ·
+  <a href="../../README.md#faq">FAQ</a> ·
+  <a href="../brand/readme/README.md">Artwork</a>
+</p>
+<!-- kfm-showcase:end -->

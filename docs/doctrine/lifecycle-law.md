@@ -46,7 +46,22 @@ notes:
   - All concrete file paths, schema paths, runbook paths, and CI job names are PROPOSED until verified against the live repository.
 [/KFM_META_BLOCK_V2] -->
 
+<!-- kfm-showcase:start -->
+<p align="center">
+  <a href="../../README.md#see-it-in-action"><picture><source media="(prefers-color-scheme: dark)" srcset="../brand/readme/kfm-banner-lifecycle-law-dark.svg" /><img src="../brand/readme/kfm-banner-lifecycle-law.svg" alt="Doctrine banner: promotion is a decision, not a file move." width="100%" /></picture></a>
+</p>
+<!-- kfm-showcase:end -->
+
 # Lifecycle Law
+
+<!-- kfm-showcase:start -->
+<p>
+  <a href="#lifecycle-law"><img src="https://img.shields.io/badge/doctrine-lifecycle%20law-3b7a57?style=flat-square" alt="doctrine page" /></a>
+  <a href="#lifecycle-law"><img src="https://img.shields.io/badge/read-~43%20min-6b6b6b?style=flat-square" alt="About 43 minutes to read" /></a>
+  <a href="../../README.md"><img src="https://img.shields.io/badge/%E2%86%A9-project%20home-0b1f3a?style=flat-square" alt="Back to the project home" /></a>
+  <a href="../../README.md#take-the-tour"><img src="https://img.shields.io/badge/tour-10%20workspaces-2f6f4e?style=flat-square" alt="Take the Explorer tour" /></a>
+</p>
+<!-- kfm-showcase:end -->
 
 > **The shape of data movement inside Kansas Frontier Matrix — what each stage means, what each stage may expose, what each stage must record, and why publication is a state transition rather than a copy.**
 
@@ -70,6 +85,14 @@ notes:
 > **Where this doc sits.** Lifecycle Law is a Tier 1 doctrine doc subordinate to `ai-build-operating-contract.md` v3.0 (`CONTRACT_VERSION = "3.0.0"`). It elaborates the contract's §1.6 lifecycle invariant, §10.1 lifecycle law, §10.8 *"Promotion is auditable,"* and §10.11 *"Reversible change is the default."* If a conflict arises between this doc and the contract, the contract wins and the conflict becomes a `CONFLICTED` candidate for ADR resolution.
 
 ---
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="../brand/readme/kfm-trust-path-dark.svg" /><img src="../brand/readme/kfm-trust-path.svg" alt="The trust path: RAW, WORK/QUARANTINE, PROCESSED, CATALOG/TRIPLETS and PUBLISHED separated by gates, with hold and abstain/deny outcomes." width="100%" /></picture>
+</p>
+
+<sub>Illustration, not a data product — this page's text is authoritative. See <a href="../brand/readme/README.md">README artwork</a>.</sub>
+<!-- kfm-showcase:end -->
 
 ## Contents
 
@@ -856,3 +879,18 @@ This document is done enough to enter the repository when:
 ---
 
 <sub>**Last updated:** 2026-05-26 · **Edition:** v1.1 (draft) · `CONTRACT_VERSION = "3.0.0"` · **Doctrine track:** `docs/doctrine/` · <a href="#lifecycle-law">Back to top</a></sub>
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <img src="../brand/readme/kfm-divider.svg" alt="" width="100%" />
+</p>
+
+<p align="center">
+  <a href="../../README.md"><b>↩ Project home</b></a> ·
+  <a href="../../README.md#see-it-in-action">See it in action</a> ·
+  <a href="../../README.md#take-the-tour">Tour</a> ·
+  <a href="../../README.md#things-to-try">Things to try</a> ·
+  <a href="../../README.md#faq">FAQ</a> ·
+  <a href="../brand/readme/README.md">Artwork</a>
+</p>
+<!-- kfm-showcase:end -->

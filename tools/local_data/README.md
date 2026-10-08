@@ -26,7 +26,22 @@ truth_posture: CONFIRMED main@bb08d3e9b9 implementation and exact-schema policy 
 > objects. Captures remain unreleased; this
 > helper does not implement source admission or package activation.
 
+<!-- kfm-showcase:start -->
+<p align="center">
+  <a href="../../README.md#see-it-in-action"><picture><source media="(prefers-color-scheme: dark)" srcset="../../docs/brand/readme/kfm-banner-local-data-tools-dark.svg" /><img src="../../docs/brand/readme/kfm-banner-local-data-tools.svg" alt="Tools banner: capture exact bytes, prove them later." width="100%" /></picture></a>
+</p>
+<!-- kfm-showcase:end -->
+
 # Local PC data tools
+
+<!-- kfm-showcase:start -->
+<p>
+  <a href="#local-pc-data-tools"><img src="https://img.shields.io/badge/tools-local%20data%20tools-4a6fa5?style=flat-square" alt="tools page" /></a>
+  <a href="#local-pc-data-tools"><img src="https://img.shields.io/badge/read-~10%20min-6b6b6b?style=flat-square" alt="About 10 minutes to read" /></a>
+  <a href="../../README.md"><img src="https://img.shields.io/badge/%E2%86%A9-project%20home-0b1f3a?style=flat-square" alt="Back to the project home" /></a>
+  <a href="../../README.md#take-the-tour"><img src="https://img.shields.io/badge/tour-10%20workspaces-2f6f4e?style=flat-square" alt="Take the Explorer tour" /></a>
+</p>
+<!-- kfm-showcase:end -->
 
 `noaa_nwm.py` captures one 18-hour National Water Model streamflow run and
 Kansas-envelope river geometry in private RAW/WORK lanes, with a 512 MiB
@@ -82,6 +97,14 @@ rather than the connector output lane. Placement follows accepted
 [Directory Rules](../../docs/doctrine/directory-rules.md), especially DIR-EXEC-007,
 DIR-STORAGE-001 and source-first DIR-SOURCE-001. The local-upload connector
 remains unimplemented; its DIR-PLACE-003 output allowlist is unchanged.
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="../../docs/brand/readme/kfm-local-store-flow-dark.svg" /><img src="../../docs/brand/readme/kfm-local-store-flow.svg" alt="Local data workflow: doctor, init, describe, plan, sync and verify move downloaded files into a private quarantine store outside the Git checkout." width="100%" /></picture>
+</p>
+
+<sub>Illustration, not a data product — this page's text is authoritative. See <a href="../../docs/brand/readme/README.md">README artwork</a>.</sub>
+<!-- kfm-showcase:end -->
 
 ## Commands
 
@@ -241,3 +264,18 @@ make local-data-check
 The local tests exercise corruption, safe retry, multi-source backup restore,
 resource limits, explicit-file selection and filesystem boundaries. They do not
 prove a production downloader, governed map integration, or Windows acceptance.
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <img src="../../docs/brand/readme/kfm-divider.svg" alt="" width="100%" />
+</p>
+
+<p align="center">
+  <a href="../../README.md"><b>↩ Project home</b></a> ·
+  <a href="../../README.md#see-it-in-action">See it in action</a> ·
+  <a href="../../README.md#take-the-tour">Tour</a> ·
+  <a href="../../README.md#things-to-try">Things to try</a> ·
+  <a href="../../README.md#faq">FAQ</a> ·
+  <a href="../../docs/brand/readme/README.md">Artwork</a>
+</p>
+<!-- kfm-showcase:end -->
