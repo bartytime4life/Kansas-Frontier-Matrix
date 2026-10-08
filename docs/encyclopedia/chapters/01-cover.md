@@ -19,9 +19,19 @@ related:
 
 # Cover and reader guide
 
+<p align="center">
+  <a href="../../../README.md#see-it-in-action"><img src="../../brand/readme/kfm-hero.svg" alt="Kansas Frontier Matrix — Place. Time. Evidence. An illustrated Kansas outline with rivers and a time sweep." width="100%" /></a>
+</p>
+
 Evidence snapshot: `main@ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe`. Draft reference; formal lane acceptance remains pending.
 
 This encyclopedia is a working reference for people exploring Kansas through maps, source records, time series, and documented evidence. It connects the project vocabulary to repository components so a reader can distinguish a useful display from a verified claim.
+
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="../../brand/readme/kfm-layer-stack-dark.svg" /><img src="../../brand/readme/kfm-layer-stack.svg" alt="Six stylized Kansas map layers — places and boundaries, water, geology and soils, land cover and crops, live observations, evidence and limits — on one shared clock." width="100%" /></picture>
+</p>
+
+<sub>Illustrations, not data products — see <a href="../../brand/readme/README.md">README artwork</a>.</sub>
 
 ## Read by purpose
 

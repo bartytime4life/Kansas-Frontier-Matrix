@@ -2,7 +2,7 @@
 doc_id: kfm://doc/brand/readme-artwork
 title: docs/brand/readme — README artwork
 type: readme
-version: v1.1
+version: v1.2
 status: draft
 owners: ["@bartytime4life"]
 created: 2026-10-08
@@ -17,6 +17,7 @@ related:
   - apps/site/README.md
   - connectors/README.md
   - CONTRIBUTING.md
+  - docs/encyclopedia/chapters/01-cover.md
   - docs/brand/README.md
   - docs/brand/visual-language.md
 [/KFM_META_BLOCK_V2] -->
@@ -27,6 +28,65 @@ Illustrative, animated SVG artwork for the repository's front doors: the [root R
 
 > [!IMPORTANT]
 > **These images are artwork, not data.** They depict the *kind* of experience an Explorer workspace offers. They are not screenshots, map products, data displays, acceptance evidence, or released KFM layers. Kansas outlines and rivers are hand-simplified; grids, echoes, columns and curves are invented for illustration. Numbers that appear (for example the Underground record counts) are quoted from the linked Site guides at the README's evidence commit and are labelled there.
+
+## Gallery
+
+Every image follows your GitHub theme. Open the light or dark file directly to see it full size; on GitHub each one animates.
+
+<p align="center">
+  <img src="kfm-hero.svg" alt="Hero banner: Place. Time. Evidence." width="100%" />
+</p>
+
+<table>
+  <tr>
+    <td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="kfm-explorer-walkthrough-dark.svg" /><img src="kfm-explorer-walkthrough.svg" alt="Thumbnail: Explorer walkthrough" width="100%" /></picture><br/><sub><b>Explorer walkthrough</b> · <a href="kfm-explorer-walkthrough.svg">light</a> · <a href="kfm-explorer-walkthrough-dark.svg">dark</a></sub></td>
+    <td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="kfm-focus-mode-dark.svg" /><img src="kfm-focus-mode.svg" alt="Thumbnail: Focus Mode" width="100%" /></picture><br/><sub><b>Focus Mode</b> · <a href="kfm-focus-mode.svg">light</a> · <a href="kfm-focus-mode-dark.svg">dark</a></sub></td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="kfm-layer-stack-dark.svg" /><img src="kfm-layer-stack.svg" alt="Thumbnail: Layer stack" width="100%" /></picture><br/><sub><b>Layer stack</b> · <a href="kfm-layer-stack.svg">light</a> · <a href="kfm-layer-stack-dark.svg">dark</a></sub></td>
+    <td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="kfm-capability-board-dark.svg" /><img src="kfm-capability-board.svg" alt="Thumbnail: Capability board" width="100%" /></picture><br/><sub><b>Capability board</b> · <a href="kfm-capability-board.svg">light</a> · <a href="kfm-capability-board-dark.svg">dark</a></sub></td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="kfm-trust-membrane-dark.svg" /><img src="kfm-trust-membrane.svg" alt="Thumbnail: Trust membrane" width="100%" /></picture><br/><sub><b>Trust membrane</b> · <a href="kfm-trust-membrane.svg">light</a> · <a href="kfm-trust-membrane-dark.svg">dark</a></sub></td>
+    <td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="kfm-trust-path-dark.svg" /><img src="kfm-trust-path.svg" alt="Thumbnail: Trust path" width="100%" /></picture><br/><sub><b>Trust path</b> · <a href="kfm-trust-path.svg">light</a> · <a href="kfm-trust-path-dark.svg">dark</a></sub></td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="kfm-time-depth-dark.svg" /><img src="kfm-time-depth.svg" alt="Thumbnail: Time depth" width="100%" /></picture><br/><sub><b>Time depth</b> · <a href="kfm-time-depth.svg">light</a> · <a href="kfm-time-depth-dark.svg">dark</a></sub></td>
+    <td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="kfm-source-lanes-dark.svg" /><img src="kfm-source-lanes.svg" alt="Thumbnail: Source lanes" width="100%" /></picture><br/><sub><b>Source lanes</b> · <a href="kfm-source-lanes.svg">light</a> · <a href="kfm-source-lanes-dark.svg">dark</a></sub></td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="kfm-by-the-numbers-dark.svg" /><img src="kfm-by-the-numbers.svg" alt="Thumbnail: By the numbers" width="100%" /></picture><br/><sub><b>By the numbers</b> · <a href="kfm-by-the-numbers.svg">light</a> · <a href="kfm-by-the-numbers-dark.svg">dark</a></sub></td>
+    <td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="kfm-contributor-paths-dark.svg" /><img src="kfm-contributor-paths.svg" alt="Thumbnail: Contributor paths" width="100%" /></picture><br/><sub><b>Contributor paths</b> · <a href="kfm-contributor-paths.svg">light</a> · <a href="kfm-contributor-paths-dark.svg">dark</a></sub></td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="kfm-feature-river-pulse-dark.svg" /><img src="kfm-feature-river-pulse.svg" alt="Thumbnail: River Pulse" width="100%" /></picture><br/><sub><b>River Pulse</b> · <a href="kfm-feature-river-pulse.svg">light</a> · <a href="kfm-feature-river-pulse-dark.svg">dark</a></sub></td>
+    <td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="kfm-feature-observatory-dark.svg" /><img src="kfm-feature-observatory.svg" alt="Thumbnail: Event Observatory" width="100%" /></picture><br/><sub><b>Event Observatory</b> · <a href="kfm-feature-observatory.svg">light</a> · <a href="kfm-feature-observatory-dark.svg">dark</a></sub></td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="kfm-feature-underground-dark.svg" /><img src="kfm-feature-underground.svg" alt="Thumbnail: Underground 3D" width="100%" /></picture><br/><sub><b>Underground 3D</b> · <a href="kfm-feature-underground.svg">light</a> · <a href="kfm-feature-underground-dark.svg">dark</a></sub></td>
+    <td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="kfm-feature-evidence-drawer-dark.svg" /><img src="kfm-feature-evidence-drawer.svg" alt="Thumbnail: Evidence Drawer" width="100%" /></picture><br/><sub><b>Evidence Drawer</b> · <a href="kfm-feature-evidence-drawer.svg">light</a> · <a href="kfm-feature-evidence-drawer-dark.svg">dark</a></sub></td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="kfm-feature-history-dark.svg" /><img src="kfm-feature-history.svg" alt="Thumbnail: Kansas through time" width="100%" /></picture><br/><sub><b>Kansas through time</b> · <a href="kfm-feature-history.svg">light</a> · <a href="kfm-feature-history-dark.svg">dark</a></sub></td>
+    <td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="kfm-feature-atmosphere-dark.svg" /><img src="kfm-feature-atmosphere.svg" alt="Thumbnail: Sky to soil" width="100%" /></picture><br/><sub><b>Sky to soil</b> · <a href="kfm-feature-atmosphere.svg">light</a> · <a href="kfm-feature-atmosphere-dark.svg">dark</a></sub></td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="kfm-feature-roads-rail-dark.svg" /><img src="kfm-feature-roads-rail.svg" alt="Thumbnail: Roads, rail &amp; bridges" width="100%" /></picture><br/><sub><b>Roads, rail &amp; bridges</b> · <a href="kfm-feature-roads-rail.svg">light</a> · <a href="kfm-feature-roads-rail-dark.svg">dark</a></sub></td>
+    <td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="kfm-feature-hazards-dark.svg" /><img src="kfm-feature-hazards.svg" alt="Thumbnail: Hazards &amp; disasters" width="100%" /></picture><br/><sub><b>Hazards &amp; disasters</b> · <a href="kfm-feature-hazards.svg">light</a> · <a href="kfm-feature-hazards-dark.svg">dark</a></sub></td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="kfm-feature-survey-dark.svg" /><img src="kfm-feature-survey.svg" alt="Thumbnail: Survey &amp; land records" width="100%" /></picture><br/><sub><b>Survey &amp; land records</b> · <a href="kfm-feature-survey.svg">light</a> · <a href="kfm-feature-survey-dark.svg">dark</a></sub></td>
+    <td width="50%" valign="top"><picture><source media="(prefers-color-scheme: dark)" srcset="kfm-feature-reports-dark.svg" /><img src="kfm-feature-reports.svg" alt="Thumbnail: Reports &amp; stories" width="100%" /></picture><br/><sub><b>Reports &amp; stories</b> · <a href="kfm-feature-reports.svg">light</a> · <a href="kfm-feature-reports-dark.svg">dark</a></sub></td>
+  </tr>
+</table>
+
+<p align="center">
+  <img src="kfm-divider.svg" alt="" width="100%" />
+</p>
+
+<p align="center">
+  <img src="kfm-footer.svg" alt="Footer: Built in the open, for Kansas." width="100%" />
+</p>
 
 ## Assets
 
@@ -55,6 +115,7 @@ Illustrative, animated SVG artwork for the repository's front doors: the [root R
 | [`kfm-contributor-paths.svg`](kfm-contributor-paths.svg) | Contributing; `CONTRIBUTING.md` | Six contributor paths flowing into one draft pull request |
 | [`kfm-divider.svg`](kfm-divider.svg) | Section breaks | A sunflower (the Kansas state flower) on a gold rule with a travelling glint; transparent, works in both themes |
 | [`kfm-footer.svg`](kfm-footer.svg) | Page footer | Prairie at dusk with stars, a grain elevator, a turning windmill and swaying grass |
+| [`kfm-social-preview.png`](kfm-social-preview.png) | Repository social card | 1280 × 640 still built from the hero plus four counted figures. To use it, a repository admin uploads it under **Settings → General → Social preview**; nothing in this repository applies it automatically |
 
 ### Light and dark themes
 
