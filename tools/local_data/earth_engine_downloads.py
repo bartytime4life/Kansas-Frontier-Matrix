@@ -26,6 +26,7 @@ from tools.local_data.file_io import check_directory, read_regular, hash_regular
 from tools.local_data.manage import utc_now
 from tools.local_data.earth_engine_auth import SignIn, credentials as ee_credentials
 from tools.local_data.library import LocalLibrary
+from tools.local_data.public_map_downloads import PublicMapDownloads
 
 PORT=8769
 ORIGINS={"http://127.0.0.1:4173","https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site"}
@@ -50,6 +51,7 @@ class Downloads:
         self.active=None
         self.token=secrets.token_urlsafe(32)
         self.library=LocalLibrary(root)
+        self.public_maps=PublicMapDownloads(root)
         files=list((self.work/"jobs").glob("*.json"))
         if len(files)>1000: raise ValueError("JOB_HISTORY_LIMIT")
         for p in files:
@@ -87,7 +89,7 @@ class Downloads:
             if identifier in self.jobs:
                 if self.jobs[identifier]["selection"]!=value["selection"]: raise ValueError("REQUEST_ID_CONFLICT")
                 return dict(self.jobs[identifier])
-            if self.active: raise ValueError("DOWNLOAD_ALREADY_RUNNING")
+            if self.active or self.public_maps.active: raise ValueError("DOWNLOAD_ALREADY_RUNNING")
             if self.signin.status() in {"waiting","validating"}: raise ValueError("SIGN_IN_IN_PROGRESS")
             if len(self.jobs)>=1000: raise ValueError("JOB_HISTORY_LIMIT")
             if not self.health()["configured"]: raise ValueError("EARTH_ENGINE_SETUP_REQUIRED")
@@ -181,6 +183,8 @@ def handler(manager):
                 self.send_response(200);self.send_header("Content-Type","text/html; charset=utf-8");self.send_header("Content-Length",str(len(body)));self.send_header("Cache-Control","no-store");self.send_header("Referrer-Policy","no-referrer");self.send_header("Content-Security-Policy","default-src 'none'; frame-ancestors 'none'");self.end_headers();self.wfile.write(body)
                 return
             if not self.authorized(): return self.answer(403,{"error":"ORIGIN_REJECTED"})
+            if self.path=="/public-maps/catalog": return self.answer(200,manager.public_maps.catalog())
+            if self.path=="/public-maps/status": return self.answer(200,{**manager.public_maps.health(),"sessionToken":manager.token})
             if self.path=="/library": return self.answer(200,manager.library.snapshot(start=True))
             if self.path!="/status": return self.answer(404,{"error":"NOT_FOUND"})
             self.answer(200,manager.health())
@@ -192,7 +196,15 @@ def handler(manager):
                 if not 0<length<=16384: raise ValueError("REQUEST_BYTE_LIMIT")
                 self.connection.settimeout(5)
                 value=json.loads(self.rfile.read(length))
-                if self.path=="/auth/start":
+                if self.path=="/public-maps/downloads":
+                    with manager.lock:
+                        if manager.active: raise ValueError("DOWNLOAD_ALREADY_RUNNING")
+                        result=manager.public_maps.start(value)
+                elif self.path=="/public-maps/cancel" and isinstance(value,dict) and set(value)=={"id"}: result=manager.public_maps.cancel(value["id"])
+                elif self.path=="/public-maps/refresh":
+                    if not isinstance(value,dict) or value: raise ValueError("EMPTY_REFRESH_REQUIRED")
+                    result=manager.public_maps.refresh()
+                elif self.path=="/auth/start":
                     with manager.lock:
                         if manager.active:raise ValueError("DOWNLOAD_ALREADY_RUNNING")
                         result=manager.signin.start(value)
@@ -235,6 +247,6 @@ def main():
         server=ThreadingHTTPServer(("127.0.0.1",PORT),handler(manager))
         print(f"KFM Earth Engine download control: 127.0.0.1:{PORT}",flush=True)
         try: server.serve_forever()
-        finally: manager.cancel_event.set();server.server_close()
+        finally: manager.cancel_event.set();manager.public_maps.close();server.server_close()
 
 if __name__=="__main__": main()

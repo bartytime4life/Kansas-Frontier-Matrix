@@ -7,6 +7,7 @@ import { earthEngineSetYear } from "../earth-engine-context";
 import { EARTH_ENGINE_DATASETS } from "../earth-engine-data";
 import { formatDownloadBytes as bytes, libraryRoleLabels } from "../local-download-client";
 import { DownloadJob } from "../download-job";
+import PublicMapBrowser from "../public-map-browser";
 import styles from "./workspace.module.css";
 
 const pageSize = 12, jobsPerPage = 6;
@@ -59,7 +60,8 @@ export default function DownloadsWorkspace() {
           <button type="button" disabled={reviewed.loading} aria-busy={reviewed.loading} onClick={reviewed.reload}>Recheck map periods</button><Link href="/earth-engine-context/install">Open map installer →</Link>
         </aside>
       </div>
-      <section className={styles.jobs} aria-labelledby="jobs-heading"><header className={styles.sectionHeading}><div><p className={styles.eyebrow}>BACKGROUND WORK</p><h2 id="jobs-heading">Earth Engine downloads</h2></div><Link href="/earth-engine">Choose another dataset →</Link></header><p className={styles.muted}>Earth Engine downloads continue when you change datasets or leave this page. Other collection acquisition tasks are not shown in this job list; library totals cover raw, work, quarantine, and processed collections.</p>
+      <PublicMapBrowser />
+      <section className={styles.jobs} aria-labelledby="jobs-heading"><header className={styles.sectionHeading}><div><p className={styles.eyebrow}>BACKGROUND WORK</p><h2 id="jobs-heading">Earth Engine downloads</h2></div><Link href="/earth-engine">Choose another dataset →</Link></header><p className={styles.muted}>Earth Engine downloads continue when you change datasets or leave this page. Public-map files have their own job list above; library totals cover raw, work, quarantine, and processed collections.</p>
         {status && !connected && <p className={styles.alert}>These are last known jobs. Their current state is unavailable until the service reconnects.</p>}
         {downloads.actionNotice && <p className={styles.alert}>{downloads.actionNotice}</p>}
         {jobs.length ? <><div className={styles.jobList}>{jobs.slice(currentJobPage * jobsPerPage, (currentJobPage + 1) * jobsPerPage).map(job => <DownloadJob key={job.id} job={job} active={job.id === status?.active} connected={connected} cancelling={downloads.cancelling} onCancel={() => void downloads.cancelJob()} />)}</div>{jobPages > 1 && <nav className={styles.pagination} aria-label="Download pages"><button type="button" disabled={currentJobPage === 0} onClick={() => setJobPage(currentJobPage - 1)}>Previous downloads</button><span>Page {currentJobPage + 1} of {jobPages}</span><button type="button" disabled={currentJobPage + 1 >= jobPages} onClick={() => setJobPage(currentJobPage + 1)}>Next downloads</button></nav>}</>
