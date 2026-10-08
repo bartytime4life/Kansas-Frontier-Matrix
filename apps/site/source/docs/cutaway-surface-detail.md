@@ -6,7 +6,9 @@ The 3D cutaway renders the selected basemap and copied display layers in a
 separate MapLibre canvas. It requests detail for the visible portion of the
 accepted geographic slice after camera movement settles (200 ms). The default
 maximum dimension is 4096 pixels; the High option uses 2048. The renderer uses
-one disposable context, a 96-tile cache, and actual provider tiles. Crisp image
+one disposable context, a 96-tile cache, and actual provider tiles. During loading,
+available detail appears at most once per second as an explicitly partial preview;
+a slow optional overlay cannot hold back the basemap until global map load. Crisp image
 sampling and full surface opacity are the defaults. The selector screenshot
 is no longer the detail source as the user zooms in.
 
@@ -55,7 +57,7 @@ Standalone and mirror have separate production builds, TypeScript and focused
 lint checks. Regression tests cover footprint clipping, increased detail on
 zoom, 2048/4096 limits, source-time/value retention, debouncing, disposal,
 pre-load tile failure, timeout, view switching, zoom reversal and controls.
-The full suites contain 632 standalone tests and 636 mirror tests.
+The full suites contain 633 standalone tests and 637 mirror tests.
 
 Bounded local browser checks confirmed the 4096-pixel Kansas aerial surface,
 map detail zoom 13.0 to 14.9 while retaining the selected slice, basemap
