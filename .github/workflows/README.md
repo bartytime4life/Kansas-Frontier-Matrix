@@ -389,7 +389,7 @@ The author must not treat a self-generated check, badge, receipt, or pull reques
 
 | Path | Relationship |
 |---|---|
-| [`.github/`](../README.md) | Parent GitHub governance and collaboration surface. |
+| [`.github/`](../) | Parent GitHub governance and collaboration surface. |
 | [`tools/`](../../tools/README.md) | Repository-wide validators, builders, and checkers invoked by workflows. |
 | [`tests/`](../../tests/README.md) and [`fixtures/`](../../fixtures/README.md) | Deterministic positive, negative, and regression evidence. |
 | [`contracts/`](../../contracts/README.md) and [`schemas/`](../../schemas/README.md) | Semantic meaning and machine-checkable shape. |

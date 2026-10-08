@@ -55,6 +55,7 @@ Illustrative, animated SVG artwork for the repository's front doors: the [root R
 | [`kfm-contributor-paths.svg`](kfm-contributor-paths.svg) | Contributing; `CONTRIBUTING.md` | Six contributor paths flowing into one draft pull request |
 | [`kfm-divider.svg`](kfm-divider.svg) | Section breaks | A sunflower (the Kansas state flower) on a gold rule with a travelling glint; transparent, works in both themes |
 | [`kfm-footer.svg`](kfm-footer.svg) | Page footer | Prairie at dusk with stars, a grain elevator, a turning windmill and swaying grass |
+| [`kfm-social-preview.png`](kfm-social-preview.png) | Repository social card | 1280 × 640 still built from the hero plus four counted figures. To use it, a repository admin uploads it under **Settings → General → Social preview**; nothing in this repository applies it automatically |
 
 ### Light and dark themes
 
