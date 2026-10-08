@@ -54,6 +54,7 @@ const CONTROL_OWNED_SOURCE_PREFIXES = [
   "external-crop-casma-1km",
   "kfm-ee-context-source-",
   "kfm-device-geopdf-source",
+  "kfm-synthetic-living-waters",
 ] as const;
 
 export function controlOwnsMapSourceErrors(sourceId: string | undefined): boolean {

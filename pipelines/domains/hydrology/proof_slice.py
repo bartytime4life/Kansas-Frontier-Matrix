@@ -449,6 +449,56 @@ def render(record: Mapping[str, Any]) -> str:
     return json.dumps(record, indent=2, sort_keys=True) + "\n"
 
 
+SITE_CARRIER_PATH = "apps/site/source/app/living-waters-proof.json"
+SITE_SCENARIO_CASES = {
+    "current": "01-answer-current",
+    "stale": "11-answer-stale",
+    "no-results": "12-abstain-no-results",
+    "unavailable": "13-error-artifact-unavailable",
+    "ambiguous-reach": "09-abstain-ambiguous-reach",
+}
+
+
+def build_site_carrier() -> dict[str, Any]:
+    """Project only the pinned synthetic packet and its five proved decisions.
+
+    This is application fixture input, never a released artifact. The Site
+    supplies schematic display geometry because the packet has no geometry;
+    that drawing must not be presented as the named HUC12 or a gauge location.
+    """
+    record = build_record()
+    if record["outcome"] != "PASS" or any(record["effects"].values()):
+        raise ProofSliceError("Site carrier requires a passing, zero-effect synthetic proof")
+    profile = load_json_file(_resolve(DEFAULT_PROFILE))
+    inputs = PinnedInputs()
+    for entry in (profile["packet"], profile["base_request"], *profile["evidence_bundles"], *profile["cases"]):
+        inputs.pin(entry)
+    if record["profile_sha256"] != _sha256(_resolve(DEFAULT_PROFILE)) or record["inputs"] != inputs.manifest():
+        raise ProofSliceError("profile changed after proof evaluation; Site projection withheld")
+    inputs.verify_all()
+    packet = inputs.load(profile["packet"]["path"])
+    base = inputs.load(profile["base_request"]["path"])
+    bundle = inputs.load(base["evidence_bundle"])
+    cases = {item["case_id"]: item for item in record["cases"]}
+    return {
+        "schema_version": "kfm.site-living-waters-synthetic/v1",
+        "posture": record["posture"],
+        "proof_record_hash": record["spec_hash"]["value"],
+        "profile_sha256": record["profile_sha256"],
+        "packet_sha256": profile["packet"]["sha256"],
+        "packet": packet,
+        "evidence_bundle": bundle,
+        "feature_source_role": base["feature_source_role"],
+        "presented_as": base["presented_as"],
+        "scenarios": [
+            {"id": scenario_id, "envelope": cases[case_id]["envelope"]}
+            for scenario_id, case_id in SITE_SCENARIO_CASES.items()
+        ],
+        "rollback_rehearsal": record["rollback_rehearsal"],
+        "effects": record["effects"],
+    }
+
+
 def run(profile_relative: str = DEFAULT_PROFILE) -> tuple[int, str]:
     """Run twice, require identical bytes, and return (exit code, output)."""
 
@@ -465,12 +515,32 @@ def run(profile_relative: str = DEFAULT_PROFILE) -> tuple[int, str]:
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0], allow_abbrev=False)
     parser.add_argument("--profile", default=DEFAULT_PROFILE, help="repository-relative profile path")
+    site = parser.add_mutually_exclusive_group()
+    site.add_argument("--site-carrier", action="store_true", help="print the pinned synthetic Site projection")
+    site.add_argument("--check-site-carrier", action="store_true", help="check the committed Site projection without writing")
     parser.add_argument(
         "--output",
         type=Path,
         help="write the record here instead of stdout; must be outside the repository's data/ lifecycle root",
     )
     args = parser.parse_args(argv)
+    if args.site_carrier or args.check_site_carrier:
+        if args.profile != DEFAULT_PROFILE or args.output is not None:
+            parser.error("Site projection uses the canonical profile and stdout only")
+        try:
+            output = render(build_site_carrier())
+            if output != render(build_site_carrier()):
+                raise ProofSliceError("Site projection is not deterministic")
+            if args.check_site_carrier:
+                if _resolve(SITE_CARRIER_PATH).read_text(encoding="utf-8") != output:
+                    raise ProofSliceError("committed Site projection is stale; regenerate and review together")
+                print(json.dumps({"outcome": "PASS", "posture": "SYNTHETIC_FIXTURE_ONLY"}))
+            else:
+                sys.stdout.write(output)
+            return 0
+        except (ProofSliceError, OSError) as exc:
+            print(json.dumps({"outcome": "ERROR", "reason": str(exc)}), file=sys.stderr)
+            return 2
     if args.output is not None:
         resolved = args.output.resolve()
         if resolved.is_relative_to((REPO_ROOT / "data").resolve()):

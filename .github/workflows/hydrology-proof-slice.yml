@@ -60,6 +60,7 @@ name: hydrology-proof-slice
     paths:
       - ".github/workflows/hydrology-proof-slice.yml"
       - "Makefile"
+      - "apps/site/source/app/living-waters-*"
       - "contracts/data/catalog_matrix.md"
       - "contracts/domains/hydrology/**"
       - "control_plane/readiness/hydrology-proof-slice-profile.json"
@@ -103,6 +104,7 @@ name: hydrology-proof-slice
     paths:
       - ".github/workflows/hydrology-proof-slice.yml"
       - "Makefile"
+      - "apps/site/source/app/living-waters-*"
       - "contracts/data/catalog_matrix.md"
       - "contracts/domains/hydrology/**"
       - "control_plane/readiness/hydrology-proof-slice-profile.json"
