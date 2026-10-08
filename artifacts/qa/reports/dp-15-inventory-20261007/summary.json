@@ -1,6 +1,6 @@
 {
-  "generated_from": "artifacts/qa/reports/dp-15-inventory-20261007/classify.py",
-  "generator": "kfm.reports.dp15_inventory (scan.py + classify.py)",
+  "generated_from": "tools/qa/dp15_inventory_classify.py",
+  "generator": "kfm.reports.dp15_inventory (dp15_inventory_scan.py + dp15_inventory_classify.py)",
   "generator_version": "v1.0.0",
   "sha256": "sha256:33c3c83eb04014af145db38e3e7d152b53ef06a0ab64c89a7947e88da369a50f",
   "edit_policy": "generated_only",

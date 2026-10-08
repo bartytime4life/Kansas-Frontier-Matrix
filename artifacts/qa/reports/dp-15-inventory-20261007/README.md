@@ -12,8 +12,8 @@ owning_root: artifacts/
 responsibility: Replaceable lexical inventory and exact-source review aid; no policy, proof, release, or DP adoption authority.
 truth_posture: CONFIRMED tracked-blob visitation and classified lexical inventory at the pinned revision; UNKNOWN external/deployed state; no operational approval.
 generated_from: main@c90836cdb7a34791669907053522de0458f21ae9
-generator_identity: scan.py + classify.py v1.0.0 for machine inventory; AI-authored source-review narrative
-content_digests: data/receipts/generated/genrec-dp15-current-tree-inventory-20261007.json
+generator_identity: tools/qa/dp15_inventory_scan.py + tools/qa/dp15_inventory_classify.py v1.0.0 for machine inventory; AI-authored source-review narrative
+content_digests: data/receipts/generated/genrec-dp15-artifacts-placement-successor-20261008.json (current paths and bytes; supersedes the path bindings of genrec-dp15-current-tree-inventory-20261007.json, kept as historical provenance)
 edit_policy: Regenerate machine outputs; review narrative classifications against pinned bytes.
 [/KFM_META_BLOCK_V2] -->
 
@@ -78,10 +78,10 @@ All remaining tracked root files are enumerated in `summary.json`. `data/`, `rel
 
 The exact regular expressions and query counts are in [summary.json](summary.json). They cover differential privacy/differentially private, DPBudget/DPReceipt and `dp_*` budget/aggregate/noise/receipt/accounting terms; DP/RDP/zCDP/CDP/LDP/GDP, Rényi, pure/approximate/local DP, DP-SGD, DAS/TopDown/disclosure avoidance, DP05 data-profile identifiers and privacy-preserving aliases; OpenDP, Google DP, PyDP, diffprivlib, Opacus, TensorFlow Privacy, dp-accounting, PipelineDP, SmartNoise, Tumult, privacy-on-beam and related library names; epsilon/eps/Greek epsilon-delta, Laplace/Gaussian, accountants, filters/odometers, privacy-spent/noise-scale/add-noise terms, randomized response, geometric/exponential mechanisms, neighboring datasets and contribution bounds; and broad privacy/sensitivity/noise/clipping/budget/ledger/delta/composition/anonymity terms.
 
-- [inventory.json.gz](inventory.json.gz): every matching exact path, source Git blob, directly declared source status, authority level, disposition and per-query line list. Declared status is preserved as evidence, not treated as adoption proof.
-- [hits.csv.gz](hits.csv.gz): every one of the 67,125 matching line/path rows, matched terms, query family, authority level, disposition and reason. No hit is dropped because it is unrelated to DP.
-- [dp-declarations.json](dp-declarations.json): complete source lines for DP guidance, upstream claims and generated provenance, with classifications; 65 distinct exact paths.
-- [scan.py](scan.py) and [classify.py](classify.py): read-only reproduction scripts. These are QA tools, not a DP validator, enforcement rule or accepted dependency.
+- `inventory.json.gz` (regenerated, not tracked; see [Reproduce and check](#reproduce-and-check)): every matching exact path, source Git blob, directly declared source status, authority level, disposition and per-query line list. Declared status is preserved as evidence, not treated as adoption proof.
+- `hits.csv.gz` (regenerated, not tracked): every one of the 67,125 matching line/path rows, matched terms, query family, authority level, disposition and reason. No hit is dropped because it is unrelated to DP.
+- [dp-declarations.json](dp-declarations.json): complete source lines for DP guidance, upstream claims and generated provenance, with classifications; 65 distinct exact paths. The generator's array is stored under `declarations` beside the provenance keys required for tracked `artifacts/` payloads.
+- [dp15_inventory_scan.py](../../../../tools/qa/dp15_inventory_scan.py) and [dp15_inventory_classify.py](../../../../tools/qa/dp15_inventory_classify.py): read-only reproduction scripts, kept in `tools/qa/`. These are QA tools, not a DP validator, enforcement rule or accepted dependency.
 
 Classification separates the file's responsibility from the DP claim. Executable code can exist for a non-DP profile; an accepted placement rule cannot accept a DP mechanism; a document's `CONFIRMED` label can describe corpus wording without proving implementation.
 
@@ -195,12 +195,23 @@ Full lines and exact line numbers are in `dp-declarations.json`; all other lexic
 Requires Python 3, Git, `file` and `pdftotext`; executes no target-repository code, mechanism, API, CI job, service or model. Run from a checkout containing the pinned commit. Outputs go to a temporary directory; the target commit is read from Git objects even when the working tree has this documentation patch.
 
 ```bash
-python artifacts/qa/reports/dp-15-inventory-20261007/scan.py . c90836cdb7a34791669907053522de0458f21ae9 /tmp/kfm-dp15-raw
-python artifacts/qa/reports/dp-15-inventory-20261007/classify.py . /tmp/kfm-dp15-raw /tmp/kfm-dp15-classified
-cmp artifacts/qa/reports/dp-15-inventory-20261007/hits.csv.gz /tmp/kfm-dp15-classified/hits.csv.gz
-cmp artifacts/qa/reports/dp-15-inventory-20261007/inventory.json.gz /tmp/kfm-dp15-classified/inventory.json.gz
-cmp artifacts/qa/reports/dp-15-inventory-20261007/dp-declarations.json /tmp/kfm-dp15-classified/dp-declarations.json
+python tools/qa/dp15_inventory_scan.py . c90836cdb7a34791669907053522de0458f21ae9 /tmp/kfm-dp15-raw
+python tools/qa/dp15_inventory_classify.py . /tmp/kfm-dp15-raw /tmp/kfm-dp15-classified
+python - <<'PY'
+import gzip, hashlib, json
+out = "/tmp/kfm-dp15-classified/"
+hits = gzip.decompress(open(out + "hits.csv.gz", "rb").read())
+assert hashlib.sha256(hits).hexdigest() == "d0a6267c8416b602b8621a2af370e7624c6f6b5ffbd8fcdc38459340276c3be7"
+inventory = json.loads(gzip.decompress(open(out + "inventory.json.gz", "rb").read()))
+inventory.pop("tools")  # records the local Python/Git/pdftotext versions
+assert hashlib.sha256(json.dumps(inventory, sort_keys=True).encode()).hexdigest() == "6360982c95f5fd4c760cedf45af5a0589040ee17b48b197a96fcdbd79cb4b7a6"
+tracked = json.load(open("artifacts/qa/reports/dp-15-inventory-20261007/dp-declarations.json"))
+assert open(out + "dp-declarations.json").read() == json.dumps(tracked["declarations"], indent=2, ensure_ascii=False) + "\n"
+print("DP-15 outputs reproduce")
+PY
 ```
+
+`hits.csv.gz` and `inventory.json.gz` were tracked in the original commit (their gzip-byte digests are recorded in the original generation receipt, [`genrec-dp15-current-tree-inventory-20261007.json`](../../../../data/receipts/generated/genrec-dp15-current-tree-inventory-20261007.json), which stays as historical provenance). The successor receipt [`genrec-dp15-artifacts-placement-successor-20261008.json`](../../../../data/receipts/generated/genrec-dp15-artifacts-placement-successor-20261008.json) binds the current paths and bytes. They are no longer tracked because `artifacts/` admits only provenance-bearing JSON payloads (KFM-TOPO-017) and the Directory Rules direct regenerable QA output toward ignored or external CI storage. The digests above are of their decompressed content; regenerating at the pinned commit reproduced both on 2026-10-08, differing only in the recorded tool versions and the gzip header OS byte.
 
 The scan also emits the complete raw tree and decoded-representation manifests into the temporary output, allowing all 14,164 paths and every content digest to be audited. The checked-in tree digest binds the full enumerated source set. Binary type descriptions are observations from `file`; machine output may vary if extractor/tool versions change.
 
