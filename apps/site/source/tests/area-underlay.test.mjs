@@ -12,6 +12,7 @@ const materials=await module('subsurface-materials'),model=await module('subsurf
 const cutaway=await module('cutaway-model',{'./subsurface-model':model}),camera=await module('cutaway-camera');
 const volumeModel=await module('aquifer-volume',{'polygon-clipping':clipping});
 const viewSession=await module('aquifer-view-session',{'./aquifer-volume':volumeModel});
+const surfaceDetail=await module('cutaway-surface-detail',{'./maplibre-seam':{},'./selected-surface':{}});
 const style=new Proxy({},{get:(_,key)=>String(key)});
 const text=node=>typeof node==='string'||typeof node==='number'?String(node):[node?.props?.children].flat(Infinity).filter(Boolean).map(text).join(' ');
 const button=(tree,name)=>findNode(tree,n=>n.type==='button'&&text(n).replace(/\s+/g,' ').trim()===name);
@@ -34,10 +35,10 @@ async function harness({reduced=true,map=locator(),actualSession=false,failWorke
  const T={...Three,WebGLRenderer:class{
   constructor(){this.domElement={clientWidth:700,clientHeight:430,tabIndex:0,setAttribute(){},remove(){},addEventListener:(name,fn)=>events.set(name,fn),removeEventListener:name=>events.delete(name),getBoundingClientRect:()=>({left:0,top:0,width:700,height:430})};renderers.push(this);}
   setPixelRatio(){}setSize(w,h){this.domElement.clientWidth=w;this.domElement.clientHeight=h;}dispose(){this.disposed=true;}forceContextLoss(){this.contextReleased=true;}render(scene,camera){renders.push({scene,camera});}
- },Raycaster:class{setFromCamera(){}intersectObjects(owners){return rayHits.filter(h=>owners.includes(h.object));}}};
+ },Raycaster:class extends Three.Raycaster{intersectObjects(owners){return rayHits.filter(h=>owners.includes(h.object));}}};
  class OrbitControls{constructor(camera){this.camera=camera;this.target=new Three.Vector3();this.mouseButtons={};this.touches={};controls.push(this);}update(){this.camera.lookAt(this.target);}addEventListener(){}removeEventListener(){}listenToKeyEvents(){}dispose(){}}
  const h=await componentHarness('app/aquifer-volume-view.tsx',{
-  './selected-surface-map':{default:()=>null},'./subsurface-workers':{startAquiferVolumeWorker:()=>{if(failWorker)throw new Error('worker unavailable');return worker;}},'./aquifer-volume':volumeModel,'./subsurface-materials':materials,'./cutaway-model':cutaway,'./cutaway-camera':camera,'./aquifer-layers':{KGS_ATLAS_URL:'https://example.test/'},'./subsurface.module.css':{default:style},'./aquifer-volume-mesh':{aquiferGeometries:()=>[]},'./aquifer-view-session':{locatorBounds:viewSession.locatorBounds,startAquiferView:options=>{session=options;if(actualSession)return viewSession.startAquiferView({...options,timers:{set:(cb,delay)=>{const id=++timerId;tasks.set(id,{cb,delay});return id},clear:id=>tasks.delete(id)}});return Object.assign(()=>{},{prepare:()=>prepares++});}},three:T,'three/addons/controls/OrbitControls.js':{OrbitControls}
+  './selected-surface-map':{default:()=>null},'./cutaway-surface-detail':surfaceDetail,'./subsurface-workers':{startAquiferVolumeWorker:()=>{if(failWorker)throw new Error('worker unavailable');return worker;}},'./aquifer-volume':volumeModel,'./subsurface-materials':materials,'./cutaway-model':cutaway,'./cutaway-camera':camera,'./aquifer-layers':{KGS_ATLAS_URL:'https://example.test/'},'./subsurface.module.css':{default:style},'./aquifer-volume-mesh':{aquiferGeometries:()=>[]},'./aquifer-view-session':{locatorBounds:viewSession.locatorBounds,startAquiferView:options=>{session=options;if(actualSession)return viewSession.startAquiferView({...options,timers:{set:(cb,delay)=>{const id=++timerId;tasks.set(id,{cb,delay});return id},clear:id=>tasks.delete(id)}});return Object.assign(()=>{},{prepare:()=>prepares++});}},three:T,'three/addons/controls/OrbitControls.js':{OrbitControls}
  },{devicePixelRatio:1,performance,queueMicrotask,matchMedia:()=>({matches:reduced,addEventListener(){},removeEventListener(){}}),document:{hidden:false,createElement:()=>({getContext:()=>({fillRect(){},fillText(){}})}),addEventListener(){},removeEventListener(){}},ResizeObserver:class{observe(){}disconnect(){}},requestAnimationFrame:()=>1,cancelAnimationFrame(){}});
  let props={map,records:[record,later],onFlatMap,onLocate(){},onInspect:(...args)=>inspections.push(args),locator:{anchor:record.coordinates,pinned:false},onLocatorSlot(){},sliceEntry:{type:'details',props:{children:'Inspect an individual log'}},onArea,recordsAvailable:2,onResetRecords(){},recordsLoading:false,recordStatus:'2 loaded records in selected area',partial:false,recordNavigation:{type:'nav',props:{'aria-label':'Record time navigation',children:'Record time'}}},tree;
  const host={clientWidth:700,clientHeight:430,append(){}};
@@ -150,6 +151,16 @@ test('zoom reverses immediately at both limits without changing the slice or dri
  assert.deepEqual(controls.target,target);assert.equal(controls.zoomToCursor,false);assert.equal(h.prepares,0);
  // Wheel navigation can change distance without applyPose: every render refreshes clipping.
  c.position.set(400,300,200);
- button(h.tree,'Smooth image').props.onClick();await h.render();assert.ok(c.far>c.position.length());
+ button(h.tree,'Exact pixels').props.onClick();await h.render();assert.ok(c.far>c.position.length());
  h.h.dispose();assert.ok(h.renderers.every(r=>r.contextReleased));
+});
+
+test('cutaway exposes detailed basemaps and layer controls without reselecting geography or altering records',async()=>{
+ const h=await harness(),changes=[];h.session.onSnapshot({volume,image:null});await h.render({basemap:'standard',onBasemap:key=>changes.push(key),onLayers:()=>changes.push('layers')});
+ const select=findNode(h.tree,n=>n.props?.['aria-label']==='Cutaway basemap');assert.ok(select);
+ select.props.onChange({target:{value:'kansas-aerial'}});button(h.tree,'Choose map layers').props.onClick();
+ assert.deepEqual(changes,['kansas-aerial','layers']);assert.equal(h.prepares,0);
+ const quality=findNode(h.tree,n=>n.props?.['aria-label']==='Cutaway surface resolution');assert.equal(quality.props.value,4096);
+ quality.props.onChange({target:{value:'2048'}});await h.render();assert.equal(findNode(h.tree,n=>n.props?.['aria-label']==='Cutaway surface resolution').props.value,2048);
+ assert.match(text(h.tree),/Display context, not KFM evidence/);assert.ok(button(h.tree,'Exact pixels'));h.h.dispose();
 });

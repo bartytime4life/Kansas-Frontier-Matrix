@@ -1,11 +1,12 @@
 export type ExternalContextSourceId =
   | "openfreemap-liberty"
   | "esri-world-imagery"
+  | "kansas-ng911-2024"
   | "openstreetmap-standard"
   | "usgs-national-map-topo"
   | "aws-mapzen-terrarium";
 
-export type ExternalContextActivation = "standard" | "imagery" | "streets" | "topo" | "elevation-3d";
+export type ExternalContextActivation = "standard" | "imagery" | "kansas-aerial" | "streets" | "topo" | "elevation-3d";
 
 export type ExternalContextSource = Readonly<{
   id: ExternalContextSourceId;
@@ -66,6 +67,23 @@ export const EXTERNAL_CONTEXT_SOURCES: readonly ExternalContextSource[] = Object
     exportEffect: "ATTRIBUTION_ONLY",
     fallback: "A failed imagery request leaves the Site's local evidence layers and non-imagery styles available.",
     boundary: "Imagery is a visual reference only. Acquisition dates, sensor lineage, change claims, and KFM release state are not resolved by this Site.",
+  }),
+  Object.freeze({
+    id: "kansas-ng911-2024",
+    title: "Kansas NG911 aerial imagery · 2024 · 1 foot",
+    organization: "Kansas DASC / Kansas Geological Survey / Kansas 911 / Surdex",
+    kind: "RASTER_BASEMAP",
+    capabilities: Object.freeze(["BASEMAP"] as const),
+    activatesWhen: Object.freeze(["kansas-aerial"] as const),
+    requestMode: "OPT_IN_NETWORK",
+    requestUrl: "https://dascservices.kansasgis.org/arcgis/rest/services/IMAGERY_STATEWIDE/NG911_2024_1ft_Natural_Color/ImageServer/exportImage?bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&size=512,512&format=png32&interpolation=RSP_NearestNeighbor&f=image",
+    endpointLabel: "dascservices.kansasgis.org · NG911 2024",
+    sourceUrl: "https://storymaps.arcgis.com/stories/426fc98cba994ff99d0c9f21c96eef08",
+    attribution: "Kansas DASC / KGS · Kansas 911 · Surdex · 2024",
+    evidenceRole: "DISPLAY_CONTEXT_ONLY",
+    exportEffect: "ATTRIBUTION_ONLY",
+    fallback: "Unavailable or out-of-coverage imagery stays blank; choose the vector basemap for geographic context. No older imagery is substituted.",
+    boundary: "2024 leaf-off acquisition (February–April), approximately 1-foot source imagery. The exact local flight date is unresolved; this is not live and is independent of map time. Display context, not KFM evidence. Zooming beyond source resolution adds no measured detail.",
   }),
   Object.freeze({
     id: "openstreetmap-standard",

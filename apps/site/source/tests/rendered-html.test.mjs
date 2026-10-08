@@ -659,8 +659,8 @@ test("keeps every top-level external map carrier in a display-only disclosure re
   }).outputText;
   const registry = await import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
 
-  assert.equal(registry.EXTERNAL_CONTEXT_SOURCES.length, 5);
-  assert.equal(new Set(registry.EXTERNAL_CONTEXT_SOURCES.map((record) => record.id)).size, 5);
+  assert.equal(registry.EXTERNAL_CONTEXT_SOURCES.length, 6);
+  assert.equal(new Set(registry.EXTERNAL_CONTEXT_SOURCES.map((record) => record.id)).size, 6);
   assert.equal(registry.EXTERNAL_CONTEXT_SOURCES.every((record) => record.requestUrl.startsWith("https://")), true);
   assert.equal(registry.EXTERNAL_CONTEXT_SOURCES.every((record) => record.sourceUrl.startsWith("https://")), true);
   assert.equal(registry.EXTERNAL_CONTEXT_SOURCES.every((record) => record.attribution.length > 0 && record.fallback.length > 0), true);
@@ -668,6 +668,13 @@ test("keeps every top-level external map carrier in a display-only disclosure re
   assert.equal(registry.EXTERNAL_CONTEXT_SOURCES.every((record) => record.exportEffect === "ATTRIBUTION_ONLY"), true);
   assert.match(runtime, /externalContextSource\("openfreemap-liberty"\)/);
   assert.match(runtime, /externalContextSource\("esri-world-imagery"\)/);
+  const aerial = registry.externalContextSource("kansas-ng911-2024");
+  assert.deepEqual(aerial.activatesWhen, ["kansas-aerial"]);
+  assert.equal(aerial.requestMode, "OPT_IN_NETWORK");
+  assert.match(aerial.requestUrl, /NG911_2024_1ft_Natural_Color/);
+  assert.match(aerial.requestUrl, /interpolation=RSP_NearestNeighbor/);
+  assert.match(aerial.boundary, /February–April/);
+  assert.match(aerial.boundary, /independent of map time/);
   assert.match(runtime, /externalContextSource\("openstreetmap-standard"\)/);
   assert.match(runtime, /externalContextSource\("usgs-national-map-topo"\)/);
   assert.match(terrain, /externalContextSource\("aws-mapzen-terrarium"\)/);

@@ -4576,7 +4576,7 @@ export default function Home() {
       mapEvidenceFilterRef.current = nextEvidenceFilter;
       setMapEvidenceFilter(nextEvidenceFilter);
       const restoredBasemap = params.get("base");
-      const nextBasemap: BasemapKey = restoredBasemap === "standard" || restoredBasemap === "imagery" || restoredBasemap === "midnight" || restoredBasemap === "prairie" || restoredBasemap === "streets" || restoredBasemap === "topo" ? restoredBasemap : "standard";
+      const nextBasemap: BasemapKey = restoredBasemap === "standard" || restoredBasemap === "imagery" || restoredBasemap === "kansas-aerial" || restoredBasemap === "midnight" || restoredBasemap === "prairie" || restoredBasemap === "streets" || restoredBasemap === "topo" ? restoredBasemap : "standard";
       basemapRef.current = nextBasemap;
       setBasemap(nextBasemap);
       const restoredProjection = params.get("proj");
@@ -5263,6 +5263,13 @@ export default function Home() {
               }, attempt * 6000);
               rasterRetryTimers.set(id, timer);
             }
+            return;
+          }
+          // A missing display basemap tile must not block cutaway navigation or records.
+          const basemapStyle = BASEMAPS[basemapRef.current].style;
+          if (sourceId && typeof basemapStyle !== "string" && basemapStyle.sources[sourceId]?.type === "raster") {
+            degradedReason = "Some basemap tiles are unavailable. Gaps are unknown; choose another basemap or retry. Map controls and records remain available.";
+            setRuntime({ kind: "degraded", message: degradedReason });
             return;
           }
           runtimeError = message;
@@ -7100,7 +7107,7 @@ export default function Home() {
     const savedOrder = Array.isArray(snapshot.layerOrder) ? snapshot.layerOrder.filter((id) => knownLayerIds.has(id)) : [];
     const nextOrder = [...savedOrder, ...defaultOrder.filter((id) => !savedOrder.includes(id))];
     const nextYear = KNOWN_TEMPORAL_FRAMES.has(snapshot.year) ? snapshot.year : OFFICIAL_CONTEXT_PRESENT_FRAME;
-    const nextBasemap: BasemapKey = snapshot.basemap === "standard" || snapshot.basemap === "imagery" || snapshot.basemap === "midnight" || snapshot.basemap === "prairie" || snapshot.basemap === "streets" || snapshot.basemap === "topo" ? snapshot.basemap : "standard";
+    const nextBasemap: BasemapKey = snapshot.basemap === "standard" || snapshot.basemap === "imagery" || snapshot.basemap === "kansas-aerial" || snapshot.basemap === "midnight" || snapshot.basemap === "prairie" || snapshot.basemap === "streets" || snapshot.basemap === "topo" ? snapshot.basemap : "standard";
     const nextProjection = snapshot.projection === "globe" ? "globe" : "mercator";
     // Legacy snapshots predate the marker, so fail closed instead of exposing a possibly location-derived camera.
     const restoredLocationCameraRedaction = snapshot.locationCameraRedacted !== false;
@@ -8824,7 +8831,7 @@ export default function Home() {
               {activeLayers.length === 0 && <p>{visibleOfficialCount ? `${visibleOfficialCount} official context sources selected; connection states and record counts appear above.` : "No layers selected. Open Layer Catalog to choose a starting stack."}</p>}
             </div>
             {activeLayers.length > 5 && <footer>+{activeLayers.length - 5} more in Layer Catalog</footer>}
-            <p className="map-legend-note">{basemap === "standard" ? "OpenFreeMap vector context · counties, places, roads, rail, water, and labels are display context; KFM overlays remain explicit." : basemap === "imagery" ? "Satellite imagery and provider-backed overlays are display context only." : basemap === "streets" ? "OpenStreetMap reference and provider-backed overlays are display context only." : basemap === "topo" ? "USGS The National Map topographic tiles are display context only · KFM evidence remains separate." : "Site-local display style and provider-backed overlays are display context only."}</p>
+            <p className="map-legend-note">{basemap === "standard" ? "OpenFreeMap vector context · counties, places, roads, rail, water, and labels are display context; KFM overlays remain explicit." : basemap === "kansas-aerial" ? "Kansas NG911 aerial imagery · February–April 2024 · approximately 1 foot · display context, not KFM evidence. Local flight date unresolved; independent of map time." : basemap === "imagery" ? "Satellite imagery and provider-backed overlays are display context only." : basemap === "streets" ? "OpenStreetMap reference and provider-backed overlays are display context only." : basemap === "topo" ? "USGS The National Map topographic tiles are display context only · KFM evidence remains separate." : "Site-local display style and provider-backed overlays are display context only."}</p>
           </aside>
           </aside>}
           {instrumentOpen && !glmFlashesEnabled && showStreamflowDock && <HydrologyObservatory
@@ -9432,7 +9439,7 @@ export default function Home() {
             <button type="button" onClick={openMapSettings}>Style</button>
           </nav>
 
-          {undergroundOpen && <UndergroundPanel key={undergroundRestoreKey} map={mapRef.current} initialContext={subsurfaceContext} year={year}
+          {undergroundOpen && <UndergroundPanel basemap={basemap} onBasemap={setBasemap} onLayers={openLayerCatalogFromUtility} key={undergroundRestoreKey} map={mapRef.current} initialContext={subsurfaceContext} year={year}
             redacted={subsurfacePrivate || locationCameraRedacted || locationDerivedViewRef.current}
             onTerrain={() => activateMapRepresentation("terrain")} onFlatMap={() => activateMapRepresentation("2d")} readElevation={point => mapRef.current && terrainState === "READY" ? unexaggeratedTerrainElevation(mapRef.current, point) : null}
             isDrawing={() => Boolean(measureModeRef.current)} onDraw={() => toggleMeasure("distance")}

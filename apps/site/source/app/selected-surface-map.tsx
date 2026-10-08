@@ -5,8 +5,8 @@ import { browserRenderBudget } from "./map-performance";
 import { captureSelectedSurface, surfaceBoundsMatch, surfaceCameraBounds, surfaceSliceStyle, surfaceRasterSampling, constrainSurfaceCenter, type SurfaceCapture, type SurfaceBounds } from "./selected-surface";
 import s from "./subsurface.module.css";
 
-export default function SelectedSurfaceMap({ source, bounds, image, active, smooth, onSmooth }: {
-  source: GLMap | null; bounds: SurfaceBounds; image: HTMLCanvasElement | null; active: boolean; smooth: boolean; onSmooth: () => void;
+export default function SelectedSurfaceMap({ source, bounds, image, active, smooth, onSmooth, onCapture, refreshKey = "" }: {
+  source: GLMap | null; bounds: SurfaceBounds; image: HTMLCanvasElement | null; active: boolean; smooth: boolean; onSmooth: () => void; onCapture?: (capture: SurfaceCapture | null) => void; refreshKey?: string;
 }) {
   const host = useRef<HTMLDivElement>(null), view = useRef<GLMap | null>(null);
   const [capture, setCapture] = useState<SurfaceCapture | null>(null), [status, setStatus] = useState("Preparing the selected surface layers…");
@@ -21,6 +21,13 @@ export default function SelectedSurfaceMap({ source, bounds, image, active, smoo
     read(); source.on("moveend", read); source.on("styledata", read);
     return () => { source.off("moveend", read); source.off("styledata", read); };
   }, [source, area]);
+  useEffect(() => { onCapture?.(capture); }, [capture, onCapture]);
+  useEffect(() => {
+    if (!source) return;
+    const refreshed = () => { if (surfaceBoundsMatch(source, selectedBounds.current)) setReload(value => value + 1); };
+    source.on("style.load", refreshed);
+    return () => { source.off("style.load", refreshed); };
+  }, [source]);
   useEffect(() => {
     if (!source) return;
     try {
@@ -28,7 +35,7 @@ export default function SelectedSurfaceMap({ source, bounds, image, active, smoo
       if (next) setCapture(next);
       else setCapture(previous => previous?.bounds.join(",") === area ? previous : null);
     } catch { setStatus("Surface layers could not be copied. Return the selector to this slice and reload layers."); }
-  }, [source, area, image, reload]);
+  }, [source, area, image, reload, refreshKey]);
   useEffect(() => {
     if (!active || !capture || capturedArea !== area || !host.current) return;
     let disposed = false, failed = false, map: GLMap | null = null;
@@ -49,14 +56,14 @@ export default function SelectedSurfaceMap({ source, bounds, image, active, smoo
     loadMapLibre().then(lib => {
       if (disposed || !host.current) return;
       lib.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
-      const budget = browserRenderBudget();
+      const budget = browserRenderBudget("detail");
       map = new lib.Map({ container: host.current, style: surfaceSliceStyle(capture),
         bounds: frame, fitBoundsOptions: { padding: 12, duration: 0 }, maxBounds: frame,
         // The opaque outside mask permits fitting the entire rectangle at any aspect ratio.
         // Constrain the center instead of cropping the slice to fill the viewport.
         transformConstrain: (center, zoom) => ({ center: new lib.LngLat(...constrainSurfaceCenter(capture.bounds, center)), zoom: Math.max(map?.getMinZoom() ?? 0, Math.min(map?.getMaxZoom() ?? 22, zoom)) }),
         maxPitch: 0, dragRotate: false, pitchWithRotate: false, touchPitch: false, renderWorldCopies: false,
-        pixelRatio: budget.pixelRatio, maxTileCacheSize: Math.min(48, budget.tileCache), attributionControl: { compact: true } });
+        pixelRatio: budget.pixelRatio, maxTileCacheSize: budget.tileCache, attributionControl: { compact: true } });
       const surfaceMap = map; view.current = map;
       fitLimit();
       map.touchZoomRotate.disableRotation(); map.keyboard.disableRotation();
@@ -105,6 +112,8 @@ export default function SelectedSurfaceMap({ source, bounds, image, active, smoo
     <div ref={host} className={s.surfaceMap} role="region" aria-label="Interactive surface of the selected slice" />
     <div className={s.surfaceStatus} role="status"><strong>Display context · not KFM evidence</strong><span>{capture && capturedArea === area ? status : "Surface layers are unavailable for this slice. Show this area in the selector to prepare them."}</span><span>{zoom !== null ? `Surface zoom ${zoom.toFixed(1)} · ` : ""}Fixed slice: {bounds.map(n => n.toFixed(4)).join(", ")}</span></div>
     <details className={s.surfaceSources}><summary>Surface layers, clocks &amp; limits</summary>
+      <p>High detail rendering is enabled. Crisp imagery preserves source cells without smoothing. Vector roads and labels redraw at this zoom; raster zoom beyond a source limit only enlarges existing pixels.</p>
+      {capture && <ul>{Object.entries(capture.style.sources).filter(([, source]) => source.type === "raster").map(([id, source]) => <li key={id}>{id.replace(/^external-/, "").replaceAll("-", " ")} · {"maxzoom" in source && source.maxzoom !== undefined ? `source tile limit z${source.maxzoom}${zoom !== null && zoom > source.maxzoom ? " · enlarged source pixels at this zoom" : ""}` : "native resolution varies; tile limit not supplied"}</li>)}</ul>}
       <p>These are the selected map layers copied when the area was applied{capture ? ` (${capture.copiedAt})` : ""}. That is a copy time, not an observation time. Reload surface layers applies current styling and source frames while keeping this slice and its zoom.</p>
       {!canReload && <p>The left map is previewing another area. Return it to this slice, or use Show new area to replace the selection.</p>}
       <p>Raster and vector tiles load available detail as you zoom; provider resolution and coverage still limit detail. Point records keep their coordinates and source values. Live animations and custom canvas effects are not replayed here{capture?.omitted ? `; ${capture.omitted} visible render layers could not be copied` : ""}.</p>

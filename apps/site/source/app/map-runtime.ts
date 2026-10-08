@@ -14,10 +14,11 @@ import { terrainHillshadePaint } from "./terrain-relief-style";
 import type { TemporalSweepQuery } from "./temporal-sweep";
 import { buildDaylightGeometry } from "./daylight-layer";
 
-export type BasemapKey = "standard" | "imagery" | "midnight" | "prairie" | "streets" | "topo";
+export type BasemapKey = "standard" | "imagery" | "kansas-aerial" | "midnight" | "prairie" | "streets" | "topo";
 export type AtmospherePreset = "night" | "dusk" | "clear";
 
 const openFreeMapContext = externalContextSource("openfreemap-liberty");
+const kansasAerialContext = externalContextSource("kansas-ng911-2024");
 const esriImageryContext = externalContextSource("esri-world-imagery");
 const openStreetMapContext = externalContextSource("openstreetmap-standard");
 const usgsTopoContext = externalContextSource("usgs-national-map-topo");
@@ -56,6 +57,23 @@ export const BASEMAPS: Record<BasemapKey, { title: string; note: string; style: 
           "raster-fade-duration": 180,
         },
       }],
+    },
+  },
+  "kansas-aerial": {
+    title: "Kansas aerial · 2024 · 1 foot",
+    note: kansasAerialContext.boundary,
+    style: {
+      version: 8,
+      name: "Kansas NG911 2024 aerial display context",
+      sources: {
+        "kansas-ng911-2024": {
+          type: "raster", tiles: [kansasAerialContext.requestUrl], tileSize: 512,
+          bounds: [-102.071, 36.93, -94.556, 40.077],
+          attribution: kansasAerialContext.attribution, minzoom: 4, maxzoom: 18,
+        },
+      },
+      layers: [{ id: "kansas-ng911-2024-raster", type: "raster", source: "kansas-ng911-2024",
+        paint: { "raster-opacity": 1, "raster-resampling": "nearest", "raster-fade-duration": 0 } }],
     },
   },
   midnight: {
