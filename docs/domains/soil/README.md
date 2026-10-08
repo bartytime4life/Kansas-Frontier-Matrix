@@ -73,7 +73,7 @@ their original snapshot, not as a current inventory.
 | Review a join | [Cross-lane handoffs](CROSS_LANES.md) | Synthetic Soil–Agriculture and Soil–Hydrology relation profiles |
 | Understand current Site controls | [Map/UI guide](MAP_UI_CONTRACTS.md) | Source and local tests; no hosted acceptance claim |
 | Preserve evidence or reverse a change | [Preservation matrix](PRESERVATION_MATRIX.md) | Custody, lineage, corrections and rollback |
-| Assess completion or release | [Definition of done](DEFINITION_OF_DONE.md), [Release index](RELEASE_INDEX.md) | Fixture, review, release, deployment and acceptance remain distinct |
+| Assess completion or release | [Definition of done](DEFINITION_OF_DONE.md), [Release index](CATALOG_CLOSURE.md#release-and-candidate-navigation) | Fixture, review, release, deployment and acceptance remain distinct |
 
 The Soil-specific candidate and proof lanes contain README material at this
 snapshot. The domain workflow retains explicit proof and release dry-run holds.
