@@ -131,6 +131,9 @@ test("control-owned and buffered radar source failures never become a fatal map 
   assert.doesNotMatch(soilError, /\|\| settled\) return;/);
   assert.match(soilError, /if \(settled\) \{[\s\S]*state: "partial"/);
   assert.match(soil, /setMapState\(\{ state: failed \? "partial" : "rendered", loaded, failed,/);
+  // Play stays enabled for a partial frame, so playback must be able to step past it.
+  assert.match(soil, /const frameSettled = \(mapState\.state === "rendered" \|\| mapState\.state === "partial"\)/);
+  assert.match(soil, /rangeDays\.length < 2 \|\| !frameSettled\) return;/);
 
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const eventHandler = page.slice(page.indexOf('map.on("error", (event) => {'));

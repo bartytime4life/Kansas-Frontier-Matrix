@@ -119,6 +119,8 @@ export function SoilMoistureControl({
   const frameIndex = Math.max(0, rangeDays.indexOf(day));
   const sourceFrame = utcFrame(day);
   const renderedFrame = mapState.state === "rendered" && mapState.day === day && mapState.view === view && mapState.renderedAt ? sourceFrame : null;
+  // Playback may step past a frame with failed tiles; only a complete frame is reported as rendered.
+  const frameSettled = (mapState.state === "rendered" || mapState.state === "partial") && mapState.day === day && mapState.view === view;
   const knownIssue = day >= SOIL_GEOLOCATION_NOTICE.startDay && day <= SOIL_GEOLOCATION_NOTICE.endDay;
   const qualityNotice = knownIssue
     ? "NSIDC flagged this date for a geolocation issue; check its current reprocessing notice before analysis."
@@ -337,13 +339,13 @@ export function SoilMoistureControl({
   }, [mapRef, presentation, styleReady]);
 
   useEffect(() => {
-    if (!playing || !enabled || reducedMotion || rangeDays.length < 2 || !renderedFrame || mapState.state === "error") return;
+    if (!playing || !enabled || reducedMotion || rangeDays.length < 2 || !frameSettled) return;
     const timer = window.setTimeout(() => {
       const next = rangeDays[(rangeDays.indexOf(day) + 1) % rangeDays.length];
       chooseDay(next, false);
     }, 160 / speed);
     return () => window.clearTimeout(timer);
-  }, [chooseDay, day, enabled, mapState.state, playing, rangeDays, reducedMotion, renderedFrame, speed]);
+  }, [chooseDay, day, enabled, frameSettled, playing, rangeDays, reducedMotion, speed]);
 
   useEffect(() => {
     onEngineContextChange?.({
