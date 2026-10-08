@@ -234,12 +234,17 @@ class Server(ThreadingHTTPServer):
 
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, *_args): pass  # Never log URL coordinates or session tokens.
+    def _safe_origin(self):
+        origin = self.headers.get('Origin')
+        if origin in ORIGINS and '\r' not in origin and '\n' not in origin:
+            return origin
+        return None
     def allowed(self):
-        return self.headers.get('Host') == f'127.0.0.1:{PORT}' and self.headers.get('Origin') in ORIGINS
+        return self.headers.get('Host') == f'127.0.0.1:{PORT}' and self._safe_origin() is not None
     def reply(self, code, data, mime='application/json', cache=None):
         self.send_response(code)
         if self.allowed():
-            self.send_header('Access-Control-Allow-Origin', self.headers['Origin'])
+            self.send_header('Access-Control-Allow-Origin', self._safe_origin())
             self.send_header('Vary', 'Origin')
         self.send_header('Content-Type', mime)
         self.send_header('Content-Length', str(len(data)))
@@ -250,7 +255,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
         if not self.allowed(): return self.reply(403, b'{}')
         self.send_response(204)
-        self.send_header('Access-Control-Allow-Origin', self.headers['Origin'])
+        self.send_header('Access-Control-Allow-Origin', self._safe_origin())
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', 'X-KFM-Session, Content-Type')
         self.send_header('Access-Control-Allow-Private-Network', 'true')
