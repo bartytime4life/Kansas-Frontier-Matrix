@@ -81,3 +81,9 @@ test('custom surface constraint honors both zoom limits and immediately reverses
  assert.equal(map.zoom,22);button(h.tree,'Zoom selected surface out').props.onClick();assert.equal(map.zoom,21);
  assert.deepEqual(h.source.extent,slice);h.h.dispose();
 });
+
+test('surface opacity changes only the map canvas presentation without recreating its camera or sources',async()=>{
+ const h=await harness(),map=h.maps[0],before=JSON.stringify(map.options.style);await h.render({opacity:.35});
+ assert.equal(h.maps.length,1);const surface=findNode(h.tree,n=>n.props?.className==='surfaceMap');
+ assert.equal(surface.props.style['--surface-map-opacity'],.35);assert.equal(JSON.stringify(map.options.style),before);h.h.dispose();
+});

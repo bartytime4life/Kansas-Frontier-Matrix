@@ -57,7 +57,7 @@ test('area selection starts without an empty canvas or disabled timeline, then r
 test('actual area controls retain renderer and camera, while record-time membership changes preserve pose and valid inspection',async()=>{
  const h=await harness();h.session.onSnapshot({volume,image:null});await h.render();const camera=h.renders.at(-1).camera;camera.position.set(7,3,12);h.controls.at(-1).target.set(.2,-.3,.4);const pose=camera.position.clone(),target=h.controls.at(-1).target.clone();
  button(h.tree,'Move').props.onClick();await h.render();assert.equal(h.controls[0].mouseButtons.LEFT,Three.MOUSE.PAN);assert.equal(h.controls[0].touches.ONE,Three.TOUCH.PAN);assert.equal(h.renderers.length,1);assert.deepEqual(camera.position,pose);
- findNode(h.tree,n=>n.props?.['aria-label']==='Surface map opacity').props.onChange({target:{value:'50'}});await h.render();assert.equal(h.renderers.length,1);assert.deepEqual(camera.position,pose);
+ findNode(h.tree,n=>n.props?.['aria-label']==='Basemap opacity').props.onChange({target:{value:'50'}});await h.render();assert.equal(h.renderers.length,1);assert.deepEqual(camera.position,pose);
  let column;h.renders.at(-1).scene.traverse(n=>{if(n.userData?.interval===record.intervals[0])column=n;});assert.ok(column);h.setHits([{object:column}]);h.events.get('pointerdown')({clientX:10,clientY:10});h.events.get('pointerup')({clientX:10,clientY:10});await h.render();assert.equal(h.inspections.at(-1)[0],record);assert.match(text(findNode(h.tree,n=>n.props?.className==='cutawayReadout')),/sand/);
  await h.render({records:[record]});assert.equal(h.renderers.length,2);assert.equal(h.renderers[0].disposed,true);assert.deepEqual(h.renders.at(-1).camera.position,pose);assert.deepEqual(h.controls.at(-1).target,target);assert.match(text(findNode(h.tree,n=>n.props?.className==='cutawayReadout')),/sand/);
  await h.render({records:[]});await h.render();assert.deepEqual(h.renders.at(-1).camera.position,pose);assert.deepEqual(h.controls.at(-1).target,target);assert.doesNotMatch(text(findNode(h.tree,n=>n.props?.className==='cutawayReadout')),/sand/);assert.match(text(h.tree),/No recorded intervals at this time/);
@@ -163,4 +163,34 @@ test('cutaway exposes detailed basemaps and layer controls without reselecting g
  const quality=findNode(h.tree,n=>n.props?.['aria-label']==='Cutaway surface resolution');assert.equal(quality.props.value,4096);
  quality.props.onChange({target:{value:'2048'}});await h.render();assert.equal(findNode(h.tree,n=>n.props?.['aria-label']==='Cutaway surface resolution').props.value,2048);
  assert.match(text(h.tree),/Display context, not KFM evidence/);assert.ok(button(h.tree,'Exact pixels'));h.h.dispose();
+});
+
+test('well and core surface anchors stay at recorded ground coordinates through exaggeration and close zoom',async()=>{
+ const core={...later,kind:'core'},before=JSON.stringify([record,core]),h=await harness();
+ h.session.onSnapshot({volume,image:{width:256,height:256}});await h.render({records:[record,core]});
+ const {scene,camera}=h.renders.at(-1),anchors=[];scene.traverse(n=>{if(n.userData.surfaceAnchor)anchors.push(n)});assert.equal(anchors.length,2);
+ const expected=volumeModel.projectVolumePosition(...core.coordinates,volume.bounds),input=label=>findNode(h.tree,n=>n.props?.['aria-label']===label);
+ const checkAnchors=()=>{scene.updateMatrixWorld(true);for(const anchor of anchors){const p=volumeModel.projectVolumePosition(...anchor.userData.record.coordinates,volume.bounds),actual=anchor.getWorldPosition(new Three.Vector3());assert.ok(actual.distanceTo(new Three.Vector3(p.x,0,p.z))<1e-10,'marker center coincides with mapped coordinate and zero surface elevation');assert.equal(anchor.material.opacity,1)}};
+ for(const exaggeration of [1,25,500]){input('Cutaway vertical scale').props.onChange({target:{value:String(exaggeration)}});await h.render();checkAnchors()}
+ input('Sample location').props.onChange({target:{value:core.id}});await h.render();button(h.tree,'Zoom to sample').props.onClick();
+ const target=h.controls.at(-1).target;assert.deepEqual(target.toArray(),[expected.x,0,expected.z]);
+ const centered=new Three.Vector3(expected.x,0,expected.z).project(camera);assert.ok(Math.hypot(centered.x,centered.y)<1e-8,'selected recorded coordinate is centered');
+ const anchor=anchors.find(n=>n.userData.record.id===core.id),pixelWidth=()=>{scene.updateMatrixWorld(true);const a=anchor.localToWorld(new Three.Vector3(-.5,0,0)).project(camera),b=anchor.localToWorld(new Three.Vector3(.5,0,0)).project(camera);return Math.abs(a.x-b.x)*350};
+ assert.ok(Math.abs(pixelWidth()-18)<.01,'selection ring has a small screen footprint');
+ for(let i=0;i<30;i++)input('Zoom in').props.onClick();assert.ok(Math.abs(pixelWidth()-18)<.01,'marker cannot grow into an oversized circle');
+ assert.ok(camera.position.distanceTo(target)/volumeModel.volumeDepthScale(volume.bounds)<2.01,'close inspection is independent of slice width');checkAnchors();
+ input('Basemap opacity').props.onChange({target:{value:'0'}});await h.render();checkAnchors();let mappedPlane;scene.traverse(n=>{if(n.material?.map&&n.geometry?.type==='PlaneGeometry')mappedPlane=n});assert.ok(mappedPlane);assert.equal(mappedPlane.material.opacity,0);
+ input('Cutaway vertical scale').props.onChange({target:{value:'10'}});await h.render();assert.deepEqual(target.toArray(),[expected.x,0,expected.z]);checkAnchors();
+ const child=findNode(h.tree,n=>n.props?.source===h.map&&n.props?.bounds===volume.bounds);assert.equal(child.props.opacity,0);
+ assert.equal(h.prepares,0);assert.equal(JSON.stringify([record,core]),before);assert.match(text(h.tree),/Location accuracy is not supplied/);
+ button(h.tree,'Show recorded columns').props.onClick();await h.render();assert.equal(anchor.parent.visible,false);
+ h.h.dispose();
+});
+
+
+test('Top view targets the surface so close zoom never dives under a deep exaggerated log',async()=>{
+ const h=await harness(),deep={...record,intervals:[{top:0,bottom:500,description:'sand'}]};h.session.onSnapshot({volume,image:null});await h.render({records:[deep]});
+ button(h.tree,'Top view').props.onClick();const c=h.renders.at(-1).camera,target=h.controls.at(-1).target;assert.equal(target.y,0);
+ for(let i=0;i<100;i++)findNode(h.tree,n=>n.props?.['aria-label']==='Zoom in').props.onClick();
+ assert.ok(c.position.y>0,'camera stays above the geographic surface');assert.equal(target.y,0);assert.equal(h.prepares,0);h.h.dispose();
 });

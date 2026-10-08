@@ -1,12 +1,12 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { loadMapLibre, type Map as GLMap } from "./maplibre-seam";
 import { browserRenderBudget } from "./map-performance";
 import { captureSelectedSurface, surfaceBoundsMatch, surfaceCameraBounds, surfaceSliceStyle, surfaceRasterSampling, constrainSurfaceCenter, type SurfaceCapture, type SurfaceBounds } from "./selected-surface";
 import s from "./subsurface.module.css";
 
-export default function SelectedSurfaceMap({ source, bounds, image, active, smooth, onSmooth, onCapture, refreshKey = "" }: {
-  source: GLMap | null; bounds: SurfaceBounds; image: HTMLCanvasElement | null; active: boolean; smooth: boolean; onSmooth: () => void; onCapture?: (capture: SurfaceCapture | null) => void; refreshKey?: string;
+export default function SelectedSurfaceMap({ source, bounds, image, active, smooth, onSmooth, onCapture, opacity = 1, refreshKey = "" }: {
+  source: GLMap | null; bounds: SurfaceBounds; image: HTMLCanvasElement | null; active: boolean; smooth: boolean; onSmooth: () => void; onCapture?: (capture: SurfaceCapture | null) => void; refreshKey?: string; opacity?: number;
 }) {
   const host = useRef<HTMLDivElement>(null), view = useRef<GLMap | null>(null);
   const [capture, setCapture] = useState<SurfaceCapture | null>(null), [status, setStatus] = useState("Preparing the selected surface layers…");
@@ -109,7 +109,7 @@ export default function SelectedSurfaceMap({ source, bounds, image, active, smoo
       <button type="button" disabled={!canReload} onClick={() => setReload(value => value + 1)}>Reload surface layers</button>
     </div>
     <p className={s.surfaceHint}>Drag to pan · scroll or pinch to zoom · arrow keys move the map. The selected slice stays fixed.</p>
-    <div ref={host} className={s.surfaceMap} role="region" aria-label="Interactive surface of the selected slice" />
+    <div ref={host} className={s.surfaceMap} style={{"--surface-map-opacity":opacity} as CSSProperties} role="region" aria-label="Interactive surface of the selected slice" />
     <div className={s.surfaceStatus} role="status"><strong>Display context · not KFM evidence</strong><span>{capture && capturedArea === area ? status : "Surface layers are unavailable for this slice. Show this area in the selector to prepare them."}</span><span>{zoom !== null ? `Surface zoom ${zoom.toFixed(1)} · ` : ""}Fixed slice: {bounds.map(n => n.toFixed(4)).join(", ")}</span></div>
     <details className={s.surfaceSources}><summary>Surface layers, clocks &amp; limits</summary>
       <p>High detail rendering is enabled. Crisp imagery preserves source cells without smoothing. Vector roads and labels redraw at this zoom; raster zoom beyond a source limit only enlarges existing pixels.</p>

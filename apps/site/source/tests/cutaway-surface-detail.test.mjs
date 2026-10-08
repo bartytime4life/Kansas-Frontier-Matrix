@@ -62,3 +62,19 @@ test('a slow optional overlay cannot hold already rendered basemap detail until 
  map.emit('idle');assert.match(h.statuses.at(-1),/Partial surface detail/);
  controller.dispose();assert.equal(h.timers.size,0);
 });
+
+test('continuous camera movement cannot postpone the pending detail request and uses the latest footprint',async()=>{
+ const h=harness(),controller=h.start();await Promise.resolve();const map=h.maps[0];map.emit('load');map.emit('idle');
+ controller.update([-100.6,38.4,-100.4,38.6]);const scheduled=[...h.timers].find(([,t])=>t.ms===200)[0];
+ const latest=[-100.51,38.49,-100.49,38.51];controller.update(latest);
+ assert.ok(h.timers.has(scheduled),'moving again must not restart the refresh deadline');h.flush(200);
+ assert.equal(map.jumps.length,2);assert.deepEqual(Array.from(map.jumps.at(-1).center),Array.from(h.m.surfaceRenderFrame(latest,4096).center));
+ controller.update([-100.505,38.495,-100.495,38.505]);h.flush(200);assert.equal(map.jumps.length,3);controller.dispose();
+});
+test('a rendered image is bound synchronously to its geographic footprint before a later camera change',async()=>{
+ const h=harness(),controller=h.start();await Promise.resolve();const map=h.maps[0];map.emit('style.load');map.emit('render');
+ assert.equal(h.frames.length,1,'copy happens while the canvas and map transform describe the same frame');
+ const original=Array.from(h.frames[0].bounds);map.extent=[-100.51,38.49,-100.49,38.51];h.flush(1000);
+ assert.deepEqual(Array.from(h.frames[0].bounds),original);assert.equal(h.frames.length,1,'the throttle timer cannot relabel stale pixels with a newer extent');
+ map.emit('render');assert.deepEqual(Array.from(h.frames[1].bounds),map.extent);controller.dispose();
+});

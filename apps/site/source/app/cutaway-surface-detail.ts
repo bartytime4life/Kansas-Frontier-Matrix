@@ -23,7 +23,7 @@ export function detailBoundsFromSurface(area: SurfaceBounds, points: readonly { 
   return east > west && north > south ? [west, south, east, north] : null;
 }
 
-/** One bounded, disposable renderer. It refreshes the visible surface only after camera motion settles. */
+/** One bounded, disposable renderer. It refreshes visible detail during camera movement without starving tile requests. */
 export function startCutawaySurfaceDetail(options: {
   capture: SurfaceCapture; pixels: number; onFrame: (frame: SurfaceDetailFrame) => void; onStatus: (status: string) => void;
 }) {
@@ -73,12 +73,15 @@ export function startCutawaySurfaceDetail(options: {
     // A slow optional overlay must not hold back already rendered basemap tiles.
     // Copy at most once per second during active loading; idle publishes the final frame.
     view.on("render", () => {
-      if (!disposed && ready && pending && previewTimer === undefined) previewTimer = setTimeout(() => { previewTimer = undefined; copyFrame(false); }, 1000);
+      if (!disposed && ready && pending && previewTimer === undefined) {
+        // Capture in the render event: canvas pixels and geographic bounds share this frame.
+        copyFrame(false); previewTimer = setTimeout(() => { previewTimer = undefined; }, 1000);
+      }
     });
     view.on("idle", () => { if (view.areTilesLoaded()) copyFrame(true); });
   }).catch(() => { if (!disposed) options.onStatus("Surface detail is unavailable. Retry the surface or use the Surface map view."); });
   return {
-    update(bounds: SurfaceBounds) { if(bounds.map(n=>n.toFixed(6)).join(",")===requested.map(n=>n.toFixed(6)).join(","))return; requested = bounds; clearTimeout(timer); timer = setTimeout(apply, 200); },
+    update(bounds: SurfaceBounds) { if(bounds.map(n=>n.toFixed(6)).join(",")===requested.map(n=>n.toFixed(6)).join(","))return; requested = bounds; if (timer === undefined) timer = setTimeout(() => { timer = undefined; apply(); }, 200); },
     dispose() { disposed = true; clearTimeout(timer); clearTimeout(timeout); clearTimeout(previewTimer); map?.remove(); container.remove(); },
   };
 }

@@ -33,7 +33,7 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
   const [surface,setSurface]=useState(1),[water,setWater]=useState(.22),[scale,setScale]=useState(25),[logs,setLogs]=useState(true),[smooth,setSmooth]=useState(false);
   const [failure,setFailure]=useState(""),[selection,setSelection]=useState<string|null>(null);
   const [pickedLog,setPickedLog]=useState<{label:string;recordId:string}|null>(null);
-  const host=useRef<HTMLDivElement>(null),api=useRef<{camera:(action:CameraAction)=>void;update:(v:Settings)=>void;setSurface:(image:HTMLCanvasElement|null)=>void;setDetail:(frame:SurfaceDetailFrame|null)=>void;highlightRecord:(id:string|null)=>void}|null>(null);
+  const host=useRef<HTMLDivElement>(null),api=useRef<{camera:(action:CameraAction)=>void;update:(v:Settings)=>void;setSurface:(image:HTMLCanvasElement|null)=>void;setDetail:(frame:SurfaceDetailFrame|null)=>void;highlightRecord:(id:string|null)=>void;focusRecord:(id:string)=>void}|null>(null);
   const values=useRef<Settings>({surface,water,scale,logs,smooth,navigation});
   const inspectRef=useRef(onInspect);
   const snapshotRef=useRef(snapshot);
@@ -44,6 +44,8 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
   useEffect(()=>{if(!map)return;const read=()=>{try{setFrame(locatorBounds(map));}catch{setFrame(null);}};read();map.on("moveend",read);map.on("resize",read);map.on("load",read);return()=>{map.off("moveend",read);map.off("resize",read);map.off("load",read);};},[map]);
   useEffect(()=>{if(volume&&focusAfterApply.current){focusAfterApply.current=false;modelFocus.current?.focus({preventScroll:false});}},[volume]);
   const drawn = useMemo(() => volume ? cutawayRecords(volume, records) : null, [volume, records]);
+  const sampleRecords=useMemo(()=>Array.from(new Map(drawn?.intervals.map(({record})=>[record.id,record])).values()),[drawn]);
+  const pickedRecord=sampleRecords.find(record=>record.id===pickedLog?.recordId);
   const sceneRenderable=Boolean(volume&&(recordsLoading||aquiferLoading||drawn?.recordCount||volume.envelopes.length));
   useEffect(()=>{values.current={surface,water,scale,logs,smooth,navigation};},[surface,water,scale,logs,smooth,navigation]);
   useEffect(()=>{inspectRef.current=onInspect;},[onInspect]);
@@ -84,8 +86,9 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
       renderer.domElement.tabIndex=0;renderer.domElement.setAttribute("aria-label","3D cutaway of independent well logs and aquifer source ranges below a flat locator map. Drag to orbit or choose Move to pan; arrows pan, modified arrows rotate, and buttons provide alternatives. Zoom stays centered on your inspection target; Reset view recovers the full slice.");host.current.append(renderer.domElement);
       const scene=new T.Scene();scene.background=new T.Color("#101b20");const camera=new T.PerspectiveCamera(40,1,.01,500);
       const controls=new OrbitControls(camera,renderer.domElement),motionPreference=matchMedia("(prefers-reduced-motion: reduce)");
-      controls.enableDamping=!motionPreference.matches;controls.dampingFactor=.14;controls.minDistance=.02;controls.maxPolarAngle=Math.PI*.92;controls.zoomToCursor=false;controls.listenToKeyEvents(renderer.domElement);resources.push(controls);
+      controls.enableDamping=!motionPreference.matches;controls.dampingFactor=.14;controls.maxPolarAngle=Math.PI*.92;controls.zoomToCursor=false;controls.listenToKeyEvents(renderer.domElement);resources.push(controls);
       const bounds=volume.bounds,k=volumeDepthScale(bounds),area=bounds.join(",");
+      controls.minDistance=Math.max(.00001,2*k); // Two metres in this slice, independent of its width.
       const previousCamera=cameraMemory.current?.area===area?cameraMemory.current:null;
       let awaitingRecords=previousCamera?.awaitingRecords??recordsLoading,awaitingAquifer=previousCamera?.awaitingAquifer??aquiferLoading,interacted=previousCamera?.interacted??false;
       const fitFirstEvidence=!interacted&&((awaitingRecords&&!recordsLoading)||(awaitingAquifer&&!aquiferLoading));
@@ -96,13 +99,13 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
       const planePaint=new T.MeshBasicMaterial({color:"#697d77",transparent:true,opacity:values.current.surface*.15,side:T.DoubleSide,depthWrite:false});resources.push(planePaint);
       let surfaceTexture:InstanceType<typeof T.CanvasTexture>|null=null;
       resources.push({dispose:()=>surfaceTexture?.dispose()});
-      const plane=new T.Mesh(planeGeometry,planePaint);plane.position.y=.0005;plane.renderOrder=3;scene.add(plane);
+      const plane=new T.Mesh(planeGeometry,planePaint);plane.position.y=0;plane.renderOrder=3;scene.add(plane);
       const borderGeom=new T.EdgesGeometry(planeGeometry),borderPaint=new T.LineBasicMaterial({color:"#d2ad75"});resources.push(borderGeom,borderPaint);const border=new T.LineSegments(borderGeom,borderPaint);border.position.y=.001;scene.add(border);
       let detailMesh:InstanceType<typeof T.Mesh>|null=null,detailTexture:InstanceType<typeof T.CanvasTexture>|null=null;
       const clearDetail=()=>{if(detailMesh){scene.remove(detailMesh);detailMesh.geometry.dispose();(detailMesh.material as InstanceType<typeof T.Material>).dispose();detailMesh=null;}detailTexture?.dispose();detailTexture=null;};
       resources.push({dispose:clearDetail});
       const surfaceRay=new T.Raycaster(),surfacePlane=new T.Plane(new T.Vector3(0,1,0),0),surfaceHit=new T.Vector3();
-      const volumeGroup=new T.Group(),logGroup=new T.Group();scene.add(volumeGroup,logGroup);
+      const volumeGroup=new T.Group(),logGroup=new T.Group(),surfaceMarkers=new T.Group();scene.add(volumeGroup,logGroup,surfaceMarkers);
       const waters:InstanceType<typeof T.MeshStandardMaterial>[]=[],pickable:InstanceType<typeof T.Mesh>[]=[];
       for(const {envelope,geometry} of aquiferGeometries(T,volume)){
         resources.push(geometry);
@@ -146,6 +149,7 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
         const sprite=new T.Sprite(paint);sprite.scale.set(.72,.18,1);scene.add(sprite);tickSprites.push({sprite,fraction});
       }
       const collars=new Set<string>();
+      const anchors:InstanceType<typeof T.Mesh>[]=[];
       const diagramColumns:{mesh:InstanceType<typeof T.Mesh>;edge:InstanceType<typeof T.LineSegments>;edgePaint:InstanceType<typeof T.LineBasicMaterial>;recordId:string}[]=[];
       let highlightedRecord:string|null=pickedLogRef.current?.recordId??null;
       for(const {record,interval,top,bottom} of plotted.intervals){
@@ -155,9 +159,12 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
         const edgeGeometry=new T.EdgesGeometry(geometry,50),edgePaint=new T.LineBasicMaterial({color:"#c9c3af",transparent:true,opacity:.65});resources.push(edgeGeometry,edgePaint);
         const edge=new T.LineSegments(edgeGeometry,edgePaint);edge.renderOrder=5;mesh.add(edge);diagramColumns.push({mesh,edge,edgePaint,recordId:record.id});
         if(!collars.has(record.id)){
-          collars.add(record.id);const collarGeometry=new T.RingGeometry(.03,.047,16);collarGeometry.rotateX(-Math.PI/2);
-          const collarPaint=new T.MeshBasicMaterial({color:record.kind==="core"?"#baa2df":"#e0b46f",side:T.DoubleSide});resources.push(collarGeometry,collarPaint);
-          const collar=new T.Mesh(collarGeometry,collarPaint);collar.position.set(p.x,.004,p.z);collar.userData.record=record;logGroup.add(collar);pickable.push(collar);
+          // Recorded coordinates stay on the flat ground, outside exaggerated depth groups.
+          collars.add(record.id);const collarGeometry=new T.RingGeometry(.34,.5,32);collarGeometry.rotateX(-Math.PI/2);
+          const dotGeometry=new T.CircleGeometry(.09,16);dotGeometry.rotateX(-Math.PI/2);
+          const collarPaint=new T.MeshBasicMaterial({color:record.kind==="core"?"#baa2df":"#e0b46f",side:T.DoubleSide,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});resources.push(collarGeometry,dotGeometry,collarPaint);
+          const collar=new T.Mesh(collarGeometry,collarPaint);collar.position.set(p.x,0,p.z);collar.userData.record=record;collar.userData.surfaceAnchor=true;collar.renderOrder=6;surfaceMarkers.add(collar);
+          const dot=new T.Mesh(dotGeometry,collarPaint);dot.userData.record=record;dot.renderOrder=6;collar.add(dot);anchors.push(collar);pickable.push(collar,dot);
         }
       }
       scene.add(new T.HemisphereLight(0xd2eeff,0x194955,2.5));const light=new T.DirectionalLight(0xffffff,2);light.position.set(4,6,3);scene.add(light);
@@ -178,6 +185,10 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
           const chosen=recordId===highlightedRecord,diameter=worldPerPixel(mesh)*(chosen?11:9);
           mesh.scale.x=diameter;mesh.scale.z=diameter;
           edgePaint.color.set(chosen?"#ffe2a3":"#c9c3af");edgePaint.opacity=chosen?1:.65;
+        }
+        for(const anchor of anchors){
+          const diameter=worldPerPixel(anchor)*(anchor.userData.record.id===highlightedRecord?18:14);
+          anchor.scale.set(diameter,1,diameter);
         }
         const tickTop=tickSprites[0]?.sprite.position.clone().project(camera),tickBottom=tickSprites.at(-1)?.sprite.position.clone().project(camera);
         const tickPixels=tickTop&&tickBottom?Math.abs(tickTop.y-tickBottom.y)*renderer.domElement.clientHeight/2:0;
@@ -216,7 +227,7 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
           next={...pose,position:delta.setLength(length).add(controls.target).toArray()};
         }else{
           const direction:readonly [number,number,number]=action==="top"?[0,1,.001]:action==="side"?[.2,0,1]:[.55,.6,1];
-          const target:[number,number,number]=[0,-deepest*k*values.current.scale/2,0],{distance,offsetX,offsetY}=fit(direction);
+          const target:[number,number,number]=[0,action==="top"?0:-deepest*k*values.current.scale/2,0],{distance,offsetX,offsetY}=action==="top"?cutawayCameraFit(6,south-north,0,camera.aspect,direction,renderer.domElement.clientHeight):fit(direction);
           next={target,position:new T.Vector3(...direction).normalize().multiplyScalar(distance).add(new T.Vector3(...target)).toArray(),offset:[offsetX,offsetY]};
         }
         // Apply each zoom step immediately: repeated clicks must not cancel pending steps.
@@ -226,14 +237,14 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
       const update=(v:Settings)=>{
         controls.mouseButtons.LEFT=v.navigation==="pan"?T.MOUSE.PAN:T.MOUSE.ROTATE;
         controls.touches.ONE=v.navigation==="pan"?T.TOUCH.PAN:T.TOUCH.ROTATE;
-        volumeGroup.scale.y=v.scale;logGroup.scale.y=v.scale;frameGroup.scale.y=v.scale;logGroup.visible=v.logs;
+        volumeGroup.scale.y=v.scale;logGroup.scale.y=v.scale;frameGroup.scale.y=v.scale;logGroup.visible=v.logs;surfaceMarkers.visible=v.logs;
         tickSprites.forEach(({sprite,fraction})=>sprite.position.set(-3.42,-frameDepth*fraction*v.scale,south));
         planePaint.opacity=v.surface*(surfaceTexture?1:.15);waters.forEach(m=>{m.opacity=v.water;});
         if(detailMesh)(detailMesh.material as InstanceType<typeof T.MeshBasicMaterial>).opacity=v.surface;
         if(detailTexture){detailTexture.magFilter=v.smooth?T.LinearFilter:T.NearestFilter;detailTexture.minFilter=v.smooth?T.LinearFilter:T.NearestFilter;detailTexture.needsUpdate=true;}
         if(surfaceTexture){surfaceTexture.magFilter=v.smooth?T.LinearFilter:T.NearestFilter;surfaceTexture.minFilter=v.smooth?T.LinearFilter:T.NearestFilter;surfaceTexture.needsUpdate=true;}
         if(lastScale!==v.scale){
-          motion.cancel();cancelDamping();const pose=readPose(),delta=-deepest*k*(v.scale-lastScale)/2;
+          motion.cancel();cancelDamping();const pose=readPose(),delta=controls.target.y===0?0:-deepest*k*(v.scale-lastScale)/2;
           pose.position[1]+=delta;pose.target[1]+=delta;lastScale=v.scale;applyPose(pose);
         }else render();
       };
@@ -252,9 +263,15 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
         detailTexture.repeat.set((se.x-nw.x)/(wholeSE.x-wholeNW.x),(se.z-nw.z)/(wholeSE.z-wholeNW.z));detailTexture.offset.set((nw.x-wholeNW.x)/(wholeSE.x-wholeNW.x),(wholeSE.z-se.z)/(wholeSE.z-wholeNW.z));
         const geometry=new T.PlaneGeometry(se.x-nw.x,se.z-nw.z);geometry.rotateX(-Math.PI/2);
         const paint=new T.MeshBasicMaterial({map:detailTexture,transparent:true,opacity:values.current.surface,side:T.DoubleSide,depthWrite:false});
-        detailMesh=new T.Mesh(geometry,paint);detailMesh.position.set((nw.x+se.x)/2,.0006,(nw.z+se.z)/2);detailMesh.renderOrder=3;scene.add(detailMesh);plane.visible=false;render();
+        detailMesh=new T.Mesh(geometry,paint);detailMesh.position.set((nw.x+se.x)/2,0,(nw.z+se.z)/2);detailMesh.renderOrder=3;scene.add(detailMesh);plane.visible=false;render();
       };
-      api.current={camera:action=>{interacted=true;orient(action);},update,setSurface,setDetail,highlightRecord:(id)=>{highlightedRecord=id;render();}};setSurface(snapshotRef.current?.volume===volume?snapshotRef.current.image:null);if(detailFrame.current)setDetail(detailFrame.current);
+      const focusRecord=(id:string)=>{
+        const record=plotted.intervals.find(item=>item.record.id===id)?.record;if(!record)return;
+        interrupt();cancelDamping();const p=projectVolumePosition(...record.coordinates,bounds),target:[number,number,number]=[p.x,0,p.z];
+        const distance=Math.max(controls.minDistance,100*k/Math.tan(T.MathUtils.degToRad(camera.fov)/2));
+        motion.move({target,position:new T.Vector3(0,1,.001).normalize().multiplyScalar(distance).add(new T.Vector3(...target)).toArray(),offset:[0,0]},motionPreference.matches?0:320);
+      };
+      api.current={camera:action=>{interacted=true;orient(action);},update,setSurface,setDetail,highlightRecord:(id)=>{highlightedRecord=id;render();},focusRecord};setSurface(snapshotRef.current?.volume===volume?snapshotRef.current.image:null);if(detailFrame.current)setDetail(detailFrame.current);
       let firstSize=true;
       const resize=()=>{if(!host.current)return;motion.cancel();const pose=readPose(),w=Math.max(1,host.current.clientWidth),h=Math.max(1,host.current.clientHeight);renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();
         if(firstSize){firstSize=false;if(previousCamera&&!fitFirstEvidence)applyPose(previousCamera.pose);else orient("reset",true);}else applyPose(pose);
@@ -330,11 +347,18 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
           {onLayers&&<button type="button" onClick={onLayers}>Choose map layers</button>}
           <label>3D surface detail <select aria-label="Cutaway surface resolution" value={detailPixels} onChange={event=>setDetailPixels(Number(event.target.value))}><option value={2048}>High · 2048 px</option><option value={4096}>Maximum · 4096 px</option></select></label>
           <button type="button" onClick={()=>setDetailRetry(v=>v+1)}>Refresh surface</button>
+          <label className={s.cutawayRange}>Basemap opacity <output>{Math.round(surface*100)}%</output><input aria-label="Basemap opacity" type="range" min="0" max="100" value={surface*100} onChange={e=>setSurface(Number(e.target.value)/100)} /></label>
+          <p>Opacity changes the map image and its display overlays. Recorded sample markers and source values stay unchanged.</p>
           <p>{detailCapture?.style.sources["kansas-ng911-2024"]?"Kansas NG911 aerial · February–April 2024 · approximately 1-foot source resolution. Exact local flight date unresolved; independent of map time.":"Provider basemap tiles. Imagery dates and resolution vary by location; refreshing is not a new acquisition."} Display context, not KFM evidence. <a href={detailCapture?.style.sources["kansas-ng911-2024"]?"https://storymaps.arcgis.com/stories/426fc98cba994ff99d0c9f21c96eef08":basemap==="imagery"?"https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9":basemap==="topo"?"https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer":"https://openfreemap.org/"} target="_blank" rel="noreferrer">Provider &amp; imagery dates ↗</a> After changing layers, refresh the surface. If the selector has moved, show that area first.</p>
           {!surfaceMode&&<p role="status">{detailStatus} Crisp cells are the default; no detail is invented beyond the provider resolution.</p>}
         </div>
-        {snapshot&&<SelectedSurfaceMap onCapture={setDetailCapture} refreshKey={`${basemap}:${detailRetry}`} source={map} bounds={snapshot.volume.bounds} image={snapshot.image} active={active&&surfaceMode} smooth={smooth} onSmooth={()=>setSmooth(v=>!v)} />}
+        {snapshot&&<SelectedSurfaceMap onCapture={setDetailCapture} refreshKey={`${basemap}:${detailRetry}`} source={map} bounds={snapshot.volume.bounds} image={snapshot.image} active={active&&surfaceMode} opacity={surface} smooth={smooth} onSmooth={()=>setSmooth(v=>!v)} />}
         <div hidden={surfaceMode}>
+        {sampleRecords.length>0&&<div className={s.sampleLocationControls}>
+          <label>Sample location <select aria-label="Sample location" value={pickedLog?.recordId??""} onChange={event=>{const record=sampleRecords.find(item=>item.id===event.target.value);if(record){setSelection(null);setPickedLog({recordId:record.id,label:record.name});inspectRef.current(record);}else setPickedLog(null);}}><option value="">Select a recorded well or core</option>{sampleRecords.map(record=><option key={record.id} value={record.id}>{record.kind==="core"?"Core":"Well"} · {record.name}</option>)}</select></label>
+          <button type="button" disabled={!pickedRecord||!!failure} onClick={()=>{if(pickedRecord)api.current?.focusRecord(pickedRecord.id);}}>Zoom to sample</button>
+          <p>{pickedRecord?`Recorded location: ${pickedRecord.coordinates[1].toFixed(6)}, ${pickedRecord.coordinates[0].toFixed(6)}. `:""}The dot marks the recorded location on the flat map; rings are selection aids. Location accuracy is not supplied here.</p>
+        </div>}
         {sceneRenderable&&<div className={s.cutawayStage}>
           <div ref={host} className={s.cutawayCanvas} hidden={!!failure} />
           {failure&&<div className={s.cutawayEmpty}><h4>3D view unavailable</h4><p role="alert">{failure}</p><button type="button" onClick={()=>{setFailure("");setRetry(v=>v+1);}}>Retry 3D view</button></div>}
@@ -351,7 +375,6 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
     {hasScene&&<><div className={s.cutawayReadout} hidden={surfaceMode} aria-live="polite"><span className={s.cutawayEyebrow}>INSPECT</span>{pickedLog?<span>{pickedLog.label}</span>:selected?<span>Water-table depth {selected.depthFeet.join("–")} ft · thickness {selected.thicknessFeet.join("–")} ft · outer range {selected.shallowMeters.toFixed(1)}–{selected.deepMeters.toFixed(1)} m.</span>:<span>Select a column or blue range to read its source.</span>}</div>
     <div className={s.areaTools} hidden={surfaceMode}>
       <details className={s.areaAppearance}><summary>View settings</summary><div className={s.areaAppearanceGrid}>
-        <label className={s.cutawayRange}>Surface map <output>{Math.round(surface*100)}%</output><input aria-label="Surface map opacity" type="range" min="0" max="100" value={surface*100} onChange={e=>setSurface(Number(e.target.value)/100)} /></label>
         <p className={s.muted}>High-detail surface tiles refresh for the visible part of this fixed slice as you zoom. Optional smoothing changes only how pixels are drawn. Recorded well and aquifer values are unchanged.</p>
         <label className={s.cutawayRange}>Aquifer range <output>{Math.round(water*100)}%</output><input aria-label="Aquifer opacity" type="range" min="0" max="100" value={water*100} onChange={e=>setWater(Number(e.target.value)/100)} /></label>
         <label className={s.cutawayScale}>Vertical scale <select aria-label="Cutaway vertical scale" value={scale} onChange={e=>setScale(Number(e.target.value))}>{[1,10,25,50,100,250,500].map(n=><option key={n} value={n}>{n}×</option>)}</select></label>
