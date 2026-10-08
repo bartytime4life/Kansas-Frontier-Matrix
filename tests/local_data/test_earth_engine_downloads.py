@@ -173,10 +173,11 @@ class EnvelopeTests(unittest.TestCase):
             h.wfile = io.BytesIO()
             h.do_OPTIONS()
             return h.wfile.getvalue()
-        accepted = request()
-        self.assertIn(b" 204 ", accepted.split(b"\r\n", 1)[0])
-        self.assertIn(b"Access-Control-Allow-Origin: " + origin.encode() + b"\r\n", accepted)
-        self.assertIn(b"Access-Control-Allow-Private-Network: true\r\n", accepted)
+        for allowed_origin in operator.ORIGINS:
+            accepted = request(allowed_origin)
+            self.assertIn(b" 204 ", accepted.split(b"\r\n", 1)[0])
+            self.assertIn(b"Access-Control-Allow-Origin: " + allowed_origin.encode() + b"\r\n", accepted)
+            self.assertIn(b"Access-Control-Allow-Private-Network: true\r\n", accepted)
         for bad_origin, bad_host in [(None, host), ("https://evil.example", host),
                                       (origin + "\r\nX-Injected: true", host),
                                       (origin, None), (origin, "localhost:8769"),

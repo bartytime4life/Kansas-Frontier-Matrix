@@ -214,6 +214,13 @@ Final download-center checks:
   the deployable Site mirror. They were removed in favor of the existing
   canonical operator/test locations; launch guidance was corrected. No topology
   rule or baseline was weakened. The installed cache service is unchanged.
+- After reconciliation with main `55283f661bfa0e16e46da3ef303e1b8574321334`,
+  hosted local-data and repository validators passed. Two additional domain
+  review checks fail on files unchanged from that main: Soil release-index
+  wording no longer matches its required placeholder marker, and the
+  People/DNA/Land golden fixture marker no longer matches its expected content.
+  Those incoming documentation changes require their owning review; no marker,
+  hash expectation or workflow hold was changed to bypass them.
 - The incoming header-safety fix was retained and regression-tested against
   malformed Origin/Host requests and CR/LF header values. The idle local
   Earth Engine operator was updated with its configuration and jobs preserved.
