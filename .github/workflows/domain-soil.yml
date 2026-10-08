@@ -253,7 +253,10 @@ jobs:
             exit 1
           fi
 
-          if ! grep -Fq "Greenfield placeholder" "docs/domains/soil/RELEASE_INDEX.md"; then
+          # Pinned to the reviewed no-release index from 5c5f6238df. Any edit,
+          # including a new release row, must be re-reviewed here.
+          reviewed_release_index_sha256="e9f52167750346ef702bf8f7b2daa964953b5fb8470c609a47f34a1b1c34de26"
+          if ! echo "${reviewed_release_index_sha256}  docs/domains/soil/RELEASE_INDEX.md" | sha256sum --check --status; then
             echo "::error::The Soil release index changed. Wire the accepted fail-closed release dry-run instead of retaining this hold."
             exit 1
           fi

@@ -202,13 +202,14 @@ jobs:
               fixture_root / "consent_revocation_propagation",
               fixture_root / "source_descriptor",
           }
+          # Each marker is a documentation-only authoring guide; it must keep
+          # declaring that its lane holds no executable payloads.
           expected_markers = {
-              fixture_root / "golden/PLACEHOLDER.md":
-                  "Greenfield placeholder for golden fixture set.",
-              fixture_root / "invalid/PLACEHOLDER.md":
-                  "Greenfield placeholder for invalid fixture set.",
-              fixture_root / "valid/PLACEHOLDER.md":
-                  "Greenfield placeholder for valid fixture set.",
+              fixture_root / f"{lane}/PLACEHOLDER.md": (
+                  "This directory contains documentation only at the inspected "
+                  f"source revision; it has no executable {lane} payloads."
+              )
+              for lane in ("golden", "invalid", "valid")
           }
           observed_markers = set(fixture_root.rglob("PLACEHOLDER.md"))
           if observed_markers != set(expected_markers):
@@ -219,10 +220,11 @@ jobs:
               )
 
           for path, expected_text in expected_markers.items():
-              if path.read_text(encoding="utf-8").strip() != expected_text:
+              if expected_text not in " ".join(path.read_text(encoding="utf-8").split()):
                   raise SystemExit(
-                      f"People/DNA/Land fixture marker content changed at {path}; "
-                      "review it before accepting this workflow."
+                      "People/DNA/Land fixture marker no longer declares a "
+                      f"documentation-only lane at {path}; review it before "
+                      "accepting this workflow."
                   )
 
           surfaced_payloads = sorted(
