@@ -8,10 +8,10 @@ owners:
   - OWNER_TBD — Geology package/domain steward
   - OWNER_TBD — Validation and sensitivity reviewer
 created: 2026-07-17
-updated: 2026-07-17
+updated: 2026-10-08
 policy_label: public; packages; geology; implementation; non-authoritative; sensitive-location-aware
 path: packages/domains/geology/src/geology/README.md
-truth_posture: CONFIRMED package name and version, bounded namespace inventory, empty __init__.py, one-line placeholder modules, sibling README pattern, adjacent authority roots, and placeholder tests / UNKNOWN installed-package behavior, public API, consumers, dependencies, build backend, CI wiring, production behavior, evidence closure, policy enforcement, and release behavior / PROPOSED future helper behavior only
+truth_posture: CONFIRMED README and empty namespace at main@ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe; retired placeholder modules are absent; PROPOSED future helper behavior; earlier evidence_snapshot retained for history.
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
@@ -32,7 +32,23 @@ notes:
   - "This README records the namespace as found; it does not claim that placeholder modules implement behavior."
   - "Only importable Geology helper code belongs here; authority-bearing records remain in their governing roots."
   - "Exact borehole, well-log, resource, sample, extraction, and other sensitive locations remain restricted until evidence, rights, policy, review, and release gates permit a public-safe representation."
+owning_root: packages/
+responsibility: Explain the geology Python namespace, current absence of a supported API, and safe implementation handoffs.
 [/KFM_META_BLOCK_V2] -->
+
+## Source namespace guide — 2026-10-08
+
+At `main@ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe`, this namespace retains its README and empty `__init__.py`. It does not expose a supported domain API. The removed `identity.py`, `layers.py` and `observations.py` files described in the historical text below must not be imported or recreated solely to satisfy an old example.
+
+### Where to work now
+
+Use the [domain guide](../../../../../docs/domains/geology/README.md) for meaning and the [validator lane](../../../../../tools/validators/domains/geology/README.md) for current bounded executable profiles. Follow [domain tests](../../../../../tests/domains/geology/README.md) to the actual assertions before selecting a test command. An empty namespace import cannot validate a source record or prove a working library.
+
+A future reusable helper belongs here only when its inputs, outputs, consumers and dependency contract are clear. Keep acquisition/network side effects in the owning operator or connector; keep schema shape, policy, lifecycle data and release decisions in their existing roots. Begin with a caller-supplied deterministic case and a meaningful rejected case. Document the actual exported API and supported versions when implemented.
+
+### Review and recovery
+
+If a consumer still imports one of the retired modules, identify that consumer and its intended behavior before editing. Fix the caller or introduce a reviewed implementation; do not restore a placeholder that merely makes import succeed. Preserve the historical notes below as an earlier inventory, not current executable capability.
 
 # Geology Python Source Namespace
 
@@ -130,8 +146,8 @@ Reviewers must verify that code remains inside the importable-helper boundary, a
 
 ## Related folders
 
-- [`packages/domains/geology/`](../..): package overview and `pyproject.toml`.
-- [`packages/domains/geology/src/`](..): source-root boundary and explicit reference to this README.
+- [`packages/domains/geology/`](../../README.md): package overview and `pyproject.toml`.
+- [`packages/domains/geology/src/`](../README.md): source-root boundary and explicit reference to this README.
 - [`docs/domains/geology/`](../../../../../docs/domains/geology/): human-facing Geology domain documentation.
 - [`contracts/domains/geology/`](../../../../../contracts/domains/geology/): semantic-contract authority.
 - [`schemas/contracts/v1/domains/geology/`](../../../../../schemas/contracts/v1/domains/geology/): machine-shape authority.

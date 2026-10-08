@@ -1,8 +1,8 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/encyclopedia-readme
-title: docs/encyclopedia/ — Planning Scaffold Boundary
+title: KFM Encyclopedia draft reference and review boundary
 type: readme
-version: v2.0
+version: v2.1-draft
 status: draft; repository-grounded; scaffold-boundary; placement-hold; non-authoritative; no-publication
 owners:
   - "@bartytime4life via the default CODEOWNERS route"
@@ -12,7 +12,7 @@ reviewers_required:
   - Owner of any destination lane affected by a future migration
   - Relevant domain steward before substantive domain content is admitted
 created: 2026-05-09
-updated: 2026-08-14
+updated: 2026-10-08
 policy_label: public; planning-reference; scaffold; cite-or-abstain; no-sensitive-detail
 owning_root: docs/
 responsibility: >-
@@ -28,15 +28,9 @@ canonical_relationship: >-
   current repository-grounded planning index; docs/doctrine/encyclopedia.md is the
   distinct doctrine-vocabulary surface.
 truth_posture: >-
-  CONFIRMED current path, seven direct children, seventeen chapter files, sixteen
-  generic placeholder chapters, one bounded settlements/infrastructure scaffold,
-  accepted Directory Rules v2, the default CODEOWNERS route, and the distinct
-  planning-index and doctrine-vocabulary surfaces / CONFLICTED current folder
-  presence with the adopted docs/ direct-child map and overlapping encyclopedia
-  surfaces / UNKNOWN the source PDF's exact repository carrier, external consumers,
-  independent stewardship, and final disposition / NEEDS VERIFICATION an accepted
-  placement, migration, mirror, generation, or retirement decision; complete inbound
-  reference closure; exact-head hosted checks; and any substantive chapter admission.
+  PROPOSED draft chapters grounded in CONFIRMED source baseline main@ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe;
+  earlier evidence_snapshot and inspection_boundary below describe the retained
+  historical assessment. Formal lane acceptance and generated assembly remain held.
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   visibility: public
@@ -93,6 +87,54 @@ notes:
   - "The current planning index is docs/KFM-encyclopedia.md. The doctrine-vocabulary surface is docs/doctrine/encyclopedia.md. This README must not compete with either."
   - "All legacy README anchors are retained so existing inbound fragment links remain stable."
 [/KFM_META_BLOCK_V2] -->
+
+# KFM encyclopedia: draft reference chapters
+
+## Current reading guide — 2026-10-08
+
+The seventeen existing chapter paths now contain substantive original reference drafts: the sixteen-part structural spine and the retained settlements/infrastructure supplement. They replace one-line placeholders with reader routes, domain and capability tables, source-ledger fields, operating procedures, sensitivity review guidance, roadmap criteria and validation steps.
+
+Start with the [reader guide](chapters/01-cover.md), [executive summary](chapters/02-executive-summary.md), or [chapter index](INDEX.md). The [planning index](../KFM-encyclopedia.md) retains source-manuscript lineage. The [doctrine encyclopedia](../doctrine/encyclopedia.md) remains the vocabulary authority.
+
+### Draft content and formal acceptance
+
+This update fulfills the requested documentation authoring at existing paths. It does not accept proposed [ADR-0036](../adr/ADR-0036-planning-encyclopedia-carrier-single-writer-and-scaffold-disposition.md), decide a canonical carrier/single writer, reconstruct the historical PDF, migrate or renumber chapters, or create a generated whole-book edition. The lane's formal placement outcome remains **HOLD**. The chapters are explicitly non-authoritative drafts linked to their owning sources.
+
+### Inventory and evidence
+
+Repository source: `main@ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe`. The seventeen chapter files now have metadata, substantive bodies and source navigation. The duplicate `11-` supplement remains for compatibility. `encyclopedia.md` remains the reserved assembly target; no assembler or parity result is asserted.
+
+| Chapter | Current status |
+|---|---|
+| [Cover and reader guide](chapters/01-cover.md) | Draft reference; domain review pending |
+| [Executive summary](chapters/02-executive-summary.md) | Draft reference; domain review pending |
+| [Source ledger and evidence method](chapters/03-source-ledger.md) | Draft reference; domain review pending |
+| [Operating law in daily work](chapters/04-operating-law.md) | Draft reference; domain review pending |
+| [Master domain atlas](chapters/05-master-domain-atlas.md) | Draft reference; domain review pending |
+| [Cross-domain capability taxonomy](chapters/06-cross-domain-capability-taxonomy.md) | Draft reference; domain review pending |
+| [How to use domain chapters](chapters/07-domain-chapters.md) | Draft reference; domain review pending |
+| [Cross-domain systems](chapters/08-cross-domain-systems.md) | Draft reference; domain review pending |
+| [Master feature matrix](chapters/09-master-feature-matrix.md) | Draft reference; domain review pending |
+| [Master action matrix](chapters/10-master-action-matrix.md) | Draft reference; domain review pending |
+| [Master viewing-mode atlas](chapters/11-master-viewing-mode-atlas.md) | Draft reference; domain review pending |
+| [Settlements and infrastructure supplement](chapters/11-settlements-infrastructure.md) | Draft reference; domain review pending |
+| [Programming possibilities backlog](chapters/12-programming-possibilities-backlog.md) | Draft reference; domain review pending |
+| [Sensitive-material decision guide](chapters/13-sensitive-deny-by-default-register.md) | Draft reference; domain review pending |
+| [Implementation roadmap](chapters/14-implementation-roadmap.md) | Draft reference; domain review pending |
+| [Validation and acceptance plan](chapters/15-validation-and-acceptance-plan.md) | Draft reference; domain review pending |
+| [Appendices and maintenance checklist](chapters/16-appendices.md) | Draft reference; domain review pending |
+
+### Review and maintenance
+
+Check each draft against its owning domain, implementation and runbook. Keep source role, units, time and missing-data limits attached to claims. Use the [validation plan](chapters/15-validation-and-acceptance-plan.md) and record substantive updates in the [changelog](CHANGELOG.md). Separate authoring, metadata/link validation, human review, ADR acceptance and publication.
+
+The earlier boundary assessment follows intact for historical reference. Its statement that the chapters are empty is superseded by this draft inventory.
+
+<details>
+<summary>Historical boundary assessment — 2026-08-14 (retained for lineage)</summary>
+
+The inventory counts, no-population scope and currentness statements below describe the earlier assessment. Use the 2026-10-08 draft inventory above for present chapter content. The proposed ADR and formal placement hold remain unresolved.
+
 
 <a id="top"></a>
 <a id="kfm-domain--capability-encyclopedia"></a>
@@ -872,3 +914,5 @@ Re-review when:
 - six months elapse without a disposition review.
 
 [Back to top](#top)
+
+</details>

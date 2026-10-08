@@ -2,7 +2,7 @@
 doc_id: kfm://doc/domains/soil/readme
 title: Soil Domain
 type: domain-readme
-version: v1.2
+version: v1.3
 status: draft; repository-grounded; implementation-partial
 owners:
   - OWNER_TBD - Soil domain steward
@@ -10,7 +10,7 @@ owners:
   - OWNER_TBD - Source steward
   - OWNER_TBD - Policy and release steward
 created: 2026-05-19
-updated: 2026-08-03
+updated: 2026-10-08
 policy_label: public
 owning_root: docs/
 responsibility: Human-readable scope, boundaries, maturity, and navigation for the Soil domain lane
@@ -38,7 +38,7 @@ notes:
   - "Repository snapshot: main@d1a13a3c852944d8fd8754a887f0b35d3ea9a971 plus the bounded three-profile fixture-validator batch described below."
   - "Planning lineage: KFM Soil Architecture Extended Pro PDF-Only Planning Report, 25 pages, SHA-256 7c2d498212b9ad56f3ba37bf91f841e9f328794e8aa4940f8f665a4116c5aaea."
   - "The planning report explicitly had no mounted repository. Its proposed paths and implementation claims are not imported as current facts."
-truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
+truth_posture: CONFIRMED 2026-10-08 navigation and bounded source inspection; historical inventory explicitly scoped to its original snapshot; UNKNOWN source admission, governed release and hosted acceptance
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -51,13 +51,48 @@ source posture, lifecycle routing, public-surface constraints, and the
 dependency order for future implementation.
 
 > [!IMPORTANT]
-> **Current result:** Soil has extensive documentation, contract, schema,
-> registry, policy, pipeline, package, UI, and test scaffolding, but most
-> executable surfaces remain placeholders. Three bounded, deterministic,
-> no-network fixture suites are active: public-safe candidate, station soil
-> moisture, and profile-local SMAP L4 anti-collapse. No live source activation,
-> complete ingestion path, catalog closure, proof-bearing release, or published
-> Soil product is established by this README.
+> **Current reading:** Soil combines historical planning and fixture-era inventories
+> with later bounded identity, watcher, closure and cross-domain profiles. The
+> dated reconciliation below is the current navigation aid; the earlier snapshot
+> tables remain historical evidence. No completed Soil-domain release is
+> established by this README. Site visual context is a separate implementation.
+
+## Documentation reconciliation — 2026-10-08
+
+This reconciliation inspected source at
+`ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe`. It replaces thin companion guides
+with useful review procedures while preserving the prior README's evidence
+snapshot and history. Earlier counts and descriptions below must be read at
+their original snapshot, not as a current inventory.
+
+| Task | Start with | Evidence boundary |
+|---|---|---|
+| Understand terms and source roles | [Glossary](GLOSSARY.md), [Sources](SOURCES.md) | Profile tokens and source admission stay separate |
+| Plan a bounded implementation | [Expansion plan](EXPANSION_PLAN.md), [File placement](FILE_SYSTEM_PLAN.md) | Existing owning roots and dependency order |
+| Review a catalog candidate | [Catalog closure](CATALOG_CLOSURE.md) | Eleven declared dimensions; no reference resolution or catalog write |
+| Review a join | [Cross-lane handoffs](CROSS_LANES.md) | Synthetic Soil–Agriculture and Soil–Hydrology relation profiles |
+| Understand current Site controls | [Map/UI guide](MAP_UI_CONTRACTS.md) | Source and local tests; no hosted acceptance claim |
+| Preserve evidence or reverse a change | [Preservation matrix](PRESERVATION_MATRIX.md) | Custody, lineage, corrections and rollback |
+| Assess completion or release | [Definition of done](DEFINITION_OF_DONE.md), [Release index](RELEASE_INDEX.md) | Fixture, review, release, deployment and acceptance remain distinct |
+
+The Soil-specific candidate and proof lanes contain README material at this
+snapshot. The domain workflow retains explicit proof and release dry-run holds.
+Later executable profiles include the inactive catalog-closure assessment,
+identity candidate, fixture-only SSURGO watcher and bounded cross-domain relation
+checks. These do not establish live source activation or a complete governed
+Soil ingestion and release path.
+
+The Site separately implements NASA soil-moisture visual context and a bounded
+USDA soil query. Its source lives under `apps/site/source/`; the retired Explorer
+Web path appearing in older inventory is historical. See the map guide for
+precise display/test boundaries. Do not infer one lane's governance status from
+the other's rendering capability.
+
+## Historical fixture-era snapshot
+
+The following field table and detailed inventory preserve the earlier review.
+They are useful lineage, but their counts, pipeline descriptions and retirement
+status require current-source inspection before operational use.
 
 | Field | Value |
 |---|---|
@@ -234,7 +269,9 @@ Human source profiles include:
 
 ## Current repository maturity
 
-This matrix distinguishes path presence from substantive implementation.
+Historical matrix from the fixture-era snapshot above. It distinguishes path
+presence from substantive implementation; use the dated reconciliation for the
+current navigation and recheck exact bytes before relying on old counts.
 
 | Surface | Confirmed state at the evidence snapshot | Classification |
 |---|---|---|
@@ -363,6 +400,7 @@ docs/domains/soil/
 ├── API_CONTRACTS.md
 ├── ARCHITECTURE.md
 ├── CANONICAL_PATHS.md
+├── CATALOG_CLOSURE.md
 ├── CHANGELOG.md
 ├── CONTINUITY_INVENTORY.md
 ├── CROSS_LANES.md

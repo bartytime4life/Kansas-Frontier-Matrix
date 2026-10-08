@@ -1,3 +1,26 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/intake/promotions/readme
+title: Documentation intake promotion packets
+type: readme
+version: v1.0-draft
+status: draft; intake-review-guidance
+owners: ["@bartytime4life via CODEOWNERS"]
+created: 2026-10-08
+created_note: Metadata introduced for the existing guide; path predates this update.
+updated: 2026-10-08
+policy_label: public; intake
+owning_root: docs/
+responsibility: Route documentation intake packets to their review-state guidance.
+truth_posture: CONFIRMED current documentation links; PROPOSED human review guidance; no lifecycle or release effect.
+related:
+  - docs/intake/README.md
+  - docs/intake/promotion-criteria.md
+[/KFM_META_BLOCK_V2] -->
+
+## Usable intake guidance — 2026-10-08
+
+The [triage rules](../triage-rules.md) and [card guide](../cards/README.md) now provide substantive draft review procedures. The existing [promotion criteria](../promotion-criteria.md) was already a detailed guide at the inspected base. Older inventory statements below that call those three files placeholders are historical and superseded by this readback. Intake classification and human documentation review do not themselves admit a source or promote/release lifecycle data.
+
 <a id="top"></a>
 
 # Intake Promotions
