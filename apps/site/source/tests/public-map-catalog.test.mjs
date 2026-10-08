@@ -34,6 +34,29 @@ test('catalog parsing rejects duplicate assets, unsafe links, invalid extent and
   ]) { const v = catalog(); change(v); assert.equal(model.parsePublicMapCatalog(v), null); }
   const query = catalog(); query.records[0].assets[0].url = 'https://ngmdb.usgs.gov/ngm-bin/gems_download.pl?id=3200&pid=110305'; assert.ok(model.parsePublicMapCatalog(query), 'source reference query parameters are retained, not transport authority');
 });
+test('source navigation accepts bounded HTTPS references and older catalogs without sourceUrls', () => {
+  assert.ok(model.parsePublicMapCatalog(catalog()));
+  const withSources = catalog({ sourceUrls: seed.sourceUrls });
+  assert.deepEqual(model.parsePublicMapCatalog(withSources).sourceUrls, seed.sourceUrls);
+  for (const sourceUrls of ['https://mmr.osmre.gov/', [null], ['javascript:alert(1)'],
+    ['http://mmr.osmre.gov/'], ['https://user:secret@mmr.osmre.gov/'],
+    ['https://127.0.0.1/'], ['https://mmr.osmre.gov:8443/'], Array(33).fill('https://mmr.osmre.gov/')]) {
+    assert.equal(model.parsePublicMapCatalog(catalog({ sourceUrls })), null);
+  }
+});
+test('NMMR navigation uses only the pinned official search and request references', () => {
+  assert.deepEqual(model.publicMapNmmrLinks(model.parsePublicMapCatalog(seed)), {
+    search: 'https://mmr.osmre.gov/', request: 'https://mmr.osmre.gov/Request',
+  });
+  const input = structuredClone(seed);
+  input.sourceUrls = ['https://mmr.osmre.gov.attacker.example/', 'https://mmr.osmre.gov/?redirect=elsewhere'];
+  const request = input.records.find(r => r.sourceId === 'osmre-nmmr').assets.find(a => a.kind === 'request');
+  request.url = 'https://mmr.osmre.gov.attacker.example/Request';
+  assert.deepEqual(model.publicMapNmmrLinks(model.parsePublicMapCatalog(input)), { search: null, request: null });
+  assert.deepEqual(model.publicMapNmmrLinks(null), { search: null, request: null });
+  request.url = 'https://mmr.osmre.gov/Request'; request.kind = 'download'; request.availability = 'verified';
+  assert.equal(model.publicMapNmmrLinks(model.parsePublicMapCatalog(input)).request, null);
+});
 test('filters distinguish publication year, unknown counties, available files and request-only originals', () => {
   const first = catalog().records[0], other = { ...first, id: 'unknown', counties: [], mapYear: null, assets: [{ ...first.assets[0], kind: 'request', availability: 'request-only' }] };
   assert.equal(model.filterPublicMaps([first, other], { ...all, year: '2020' }).length, 0, 'digital year does not substitute for map year');

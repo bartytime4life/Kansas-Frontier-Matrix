@@ -1,7 +1,11 @@
 """Behavioral contracts for bounded public map metadata discovery."""
 import json
 import hashlib
+import ssl
+from types import SimpleNamespace
+from urllib.error import URLError
 from urllib.parse import parse_qs, urlsplit
+from urllib.request import HTTPSHandler, build_opener
 
 import pytest
 
@@ -120,6 +124,68 @@ def test_source_failure_preserves_existing_records_and_has_unavailable_coverage(
     assert all(c["recordCount"] == c["discoveredCount"] + c["seedReferenceCount"]
                for c in result["coverage"])
     assert result["discovery"]["mapBytesDownloaded"] == 0
+
+
+def test_fetch_uses_default_verifying_tls_and_does_not_retry_certificate_failure(monkeypatch):
+    calls = []
+    failure = URLError(ssl.SSLCertVerificationError("certificate verify failed: unable to get local issuer certificate"))
+    def factory(*handlers):
+        opener = build_opener(*handlers)
+        https = next(handler for handler in opener.handlers if isinstance(handler, HTTPSHandler))
+        context = https._context or ssl._create_default_https_context()
+        assert context.check_hostname and context.verify_mode == ssl.CERT_REQUIRED
+        redirect = next(handler for handler in handlers if isinstance(handler, catalog.NoRedirect))
+        assert redirect.redirect_request(None, None, 302, "Found", {}, "https://elsewhere.example/") is None
+        def open_request(request, timeout):
+            calls.append((request.full_url, timeout))
+            raise failure
+        return SimpleNamespace(open=open_request)
+    monkeypatch.setattr(catalog, "build_opener", factory)
+    url = catalog._query({"returnCountOnly": "true"})
+    with pytest.raises(URLError) as raised:
+        catalog.fetch(url)
+    assert raised.value is failure and calls == [(url, 20)]
+
+
+@pytest.mark.parametrize("count", [0, 1])
+def test_nmmr_recovers_from_tls_failure_with_checked_zero_or_index_points(count):
+    calls = []
+    def transport(failed):
+        def read(url):
+            calls.append(url)
+            if url.startswith(catalog.NMMR):
+                if failed:
+                    raise URLError(ssl.SSLCertVerificationError("certificate verify failed: unable to get local issuer certificate"))
+                query = parse_qs(urlsplit(url).query)
+                if "returnCountOnly" in query:
+                    return encoded({"count": count})
+                if "returnIdsOnly" in query:
+                    return encoded({"objectIds": [1] if count else []})
+                return encoded({"features": [point(1)]})
+            return page(1, 100, 1, [(12, "Synthetic regional geology", "U.S. Geological Survey")])
+        return read
+    failed = catalog.discover_catalog(transport=transport(True))
+    assert failed["coverage"][0]["state"] == "unavailable"
+    assert failed["coverage"][0]["expectedCount"] is None
+    recovered = catalog.discover_catalog(failed, transport=transport(False))
+    coverage = recovered["coverage"][0]
+    assert coverage["state"] == "complete" and coverage["discoveredCount"] == coverage["expectedCount"] == count
+    assert coverage["seedReferenceCount"] == 1 and coverage["recordCount"] == count + 1
+    assert "certificate" not in coverage["reason"]
+    assert "not exact state membership" in coverage["reason"] and "mine footprints" in coverage["reason"]
+    assert recovered["sourceUrls"] == failed["sourceUrls"] == catalog.load_seed()["sourceUrls"]
+    assert failed["discovery"]["mapBytesDownloaded"] == recovered["discovery"]["mapBytesDownloaded"] == 0
+    assert all(catalog.validate_metadata_url(url) == url for url in calls)
+    if count:
+        record = next(r for r in recovered["records"] if r["id"] == "nmmr-point-1")
+        assert record["geometryRole"] == "index-point" and record["bbox"] is None
+        assert all(asset["availability"] == "unverified" for asset in record["assets"])
+
+
+@pytest.mark.parametrize("url", ["https://mmr.osmre.gov/", "https://mmr.osmre.gov/Request"])
+def test_nmmr_navigation_destinations_are_not_metadata_transport_permissions(url):
+    with pytest.raises(ValueError, match="METADATA_URL_DENIED"):
+        catalog.validate_metadata_url(url)
 
 
 def test_failed_refresh_preserves_previous_discovery_but_marks_partial():

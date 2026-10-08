@@ -12,6 +12,23 @@ time; retained reference records are counted separately from discovered rows.
 A failed source keeps its prior records. Missing results never establish an
 absence of mines or complete geological coverage.
 
+The **Source coverage** section offers **Search official NMMR catalog** and
+**Request NMMR archival scans** directly, including when discovery is unavailable,
+the local operator is disconnected, or the current filters match no records.
+These keyboard-accessible links open a new tab and use the destinations already
+pinned in the reference catalog. A refreshed operator response cannot replace
+them. Search the official site by state (Kansas), county, commodity or document
+number; original scans require a separate request. Navigation neither submits
+an archival request nor starts a download. The official
+[search](https://mmr.osmre.gov/), [help](https://mmr.osmre.gov/Help) and
+[request page](https://mmr.osmre.gov/Request) describe that workflow.
+
+A failed local catalog read preserves the last checked metadata and its warning.
+The existing five-second status poll retries that read once the service responds;
+only a successfully parsed catalog clears the warning. A successful refresh with
+zero discovered points is a checked query result, distinct from unavailable
+discovery, and still does not establish absence of mining or complete coverage.
+
 For a **verified direct file**, select the original and enter a maximum in MiB
 (1 MiB = 1,048,576 bytes), at least its known size. Then press **Download selected
 original**. Follow confirmed job progress below. An uncertain response is not a
@@ -140,3 +157,31 @@ and known original filenames. Other ScienceBase query tokens remain denied.
 CNGM transfers likewise accept only the four pinned `gems_download.pl` queries.
 Local descriptive filenames are used where a publisher filename was not
 observed; the exact source URL remains pinned in each candidate's `source.json`.
+
+## NMMR TLS investigation — October 8, 2026
+
+The retained discovery receipt at
+`tools/local_data/catalogs/public-maps/discovery-20261008.json` records
+`CERTIFICATE_VERIFY_FAILED: unable to get local issuer certificate` for the
+automated ArcGIS discovery host, `geodata.osmre.gov`. The official navigation
+host is separately pinned as `mmr.osmre.gov`. The receipt does not distinguish
+a missing provider intermediate certificate from a local trust-store problem.
+
+Inspection of `tools/local_data/public_map_catalog.py` confirms fixed HTTPS
+metadata endpoints, the standard-library verifying TLS context, disabled
+redirects and bounded reads. A fresh fixed-endpoint count probe and a strict
+`openssl s_client -verify_return_error` probe both failed DNS resolution in this
+task environment before a certificate could be inspected. The runtime reports
+OpenSSL 3.5.8 and an environment-specific CA-file default. Provider chain and
+original-host trust-store diagnosis therefore remain **UNKNOWN**; the earlier
+TLS failure has not been reproduced or declared repaired here.
+
+No transport or trust-store change is justified by that evidence. On the original
+operator host, the next diagnostic is to inspect the presented chain and the
+configured CA bundle using normal verification. A provider-chain repair or an
+authorized trust-store repair must be followed by a verified request to the same
+fixed endpoint. Do not disable verification, trust a certificate retrieved from
+the failing connection, follow redirects or substitute an unverified endpoint.
+Focused offline tests cover default verifying TLS, a single failed request with
+no insecure retry, retained unavailable metadata, subsequent checked zero/point
+results, and denial of search/request URLs as metadata-transport destinations.
