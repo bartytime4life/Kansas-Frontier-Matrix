@@ -7,7 +7,7 @@ status: draft; repository-grounded; scaffold-inventory; placement-hold; non-auth
 owners:
   - "@bartytime4life via the current CODEOWNERS review route"
 created: 2026-05-15
-updated: 2026-08-14
+updated: 2026-10-08
 policy_label: public; planning-reference; no-sensitive-detail
 owning_root: docs/
 responsibility: >-
@@ -27,8 +27,41 @@ related:
 tags: [kfm, encyclopedia, index, scaffold, planning, hold]
 notes:
   - "This index is an inventory and navigation surface. It grants no lane admission, chapter authority, generation authority, release, or publication."
-  - "ADR-0036 is proposed. Until explicitly accepted, the chapter files and encyclopedia.md remain non-substantive scaffolds."
+  - "ADR-0036 remains proposed. Chapters now contain non-authoritative drafts; encyclopedia.md remains a reserved assembly target and formal lane acceptance remains pending."
+truth_posture: CONFIRMED documentation inventory; PROPOSED draft guidance; formal acceptance and publication remain unverified.
 [/KFM_META_BLOCK_V2] -->
+
+# KFM encyclopedia chapter index
+
+## Current draft edition — 2026-10-08
+
+Read these original repository-grounded drafts for orientation and review. All seventeen previously thin chapter files have substantive content. This draft-authoring update leaves ADR-0036 proposed and formal lane acceptance pending. It does not claim a generated manuscript or reproduce the source PDF.
+
+| Chapter | Current status |
+|---|---|
+| [Cover and reader guide](chapters/01-cover.md) | Draft reference; domain review pending |
+| [Executive summary](chapters/02-executive-summary.md) | Draft reference; domain review pending |
+| [Source ledger and evidence method](chapters/03-source-ledger.md) | Draft reference; domain review pending |
+| [Operating law in daily work](chapters/04-operating-law.md) | Draft reference; domain review pending |
+| [Master domain atlas](chapters/05-master-domain-atlas.md) | Draft reference; domain review pending |
+| [Cross-domain capability taxonomy](chapters/06-cross-domain-capability-taxonomy.md) | Draft reference; domain review pending |
+| [How to use domain chapters](chapters/07-domain-chapters.md) | Draft reference; domain review pending |
+| [Cross-domain systems](chapters/08-cross-domain-systems.md) | Draft reference; domain review pending |
+| [Master feature matrix](chapters/09-master-feature-matrix.md) | Draft reference; domain review pending |
+| [Master action matrix](chapters/10-master-action-matrix.md) | Draft reference; domain review pending |
+| [Master viewing-mode atlas](chapters/11-master-viewing-mode-atlas.md) | Draft reference; domain review pending |
+| [Settlements and infrastructure supplement](chapters/11-settlements-infrastructure.md) | Draft reference; domain review pending |
+| [Programming possibilities backlog](chapters/12-programming-possibilities-backlog.md) | Draft reference; domain review pending |
+| [Sensitive-material decision guide](chapters/13-sensitive-deny-by-default-register.md) | Draft reference; domain review pending |
+| [Implementation roadmap](chapters/14-implementation-roadmap.md) | Draft reference; domain review pending |
+| [Validation and acceptance plan](chapters/15-validation-and-acceptance-plan.md) | Draft reference; domain review pending |
+| [Appendices and maintenance checklist](chapters/16-appendices.md) | Draft reference; domain review pending |
+
+The extra settlements/infrastructure chapter retains its existing filename. The structural chapter 11 is the viewing-mode atlas. Use [README](README.md) for authority and review boundaries and [CHANGELOG](CHANGELOG.md) for edition history.
+
+## Historical scaffold index — 2026-08-14
+
+The following inventory and authoring scope are retained as the earlier checkpoint. Their empty-chapter descriptions are superseded by the current draft edition above; formal governance holds remain.
 
 <a id="top"></a>
 

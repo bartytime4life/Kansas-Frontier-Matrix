@@ -9,7 +9,7 @@ owners:
   - "@bartytime4life"
 created: 2026-08-08
 created_note: "2026-08-08 identifies the same-path root-README modernization revision recorded under Evidence review and triggers below, not the file's original repository-backed creation provenance, which predates this modernization and is outside this shallow-clone repository's available Git history."
-updated: 2026-08-08
+updated: 2026-10-08
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "Define the docs/ responsibility boundary, navigation contract, exposure posture, validation expectations, and relationships to KFM authority roots."
@@ -24,6 +24,21 @@ related:
   - policy/README.md
   - tests/README.md
 [/KFM_META_BLOCK_V2] -->
+
+## Practical reading routes — 2026-10-08
+
+| I want to… | Start here | Then use |
+|---|---|---|
+| Understand KFM | [Draft encyclopedia reader guide](encyclopedia/chapters/01-cover.md) | [Domain atlas](encyclopedia/chapters/05-master-domain-atlas.md) |
+| Run the Explorer locally | [Installation](installation.md) | [Site setup](../apps/site/README.md) |
+| Manage local data | [Local-PC store](runbooks/local-pc-data-store.md) | [Bounded acquisition](runbooks/free-data-acquisition.md) |
+| Understand map capabilities | [Feature matrix](encyclopedia/chapters/09-master-feature-matrix.md) | [Explorer source guide](../apps/site/source/README.md) |
+| Propose a new source or idea | [Intake triage](intake/triage-rules.md) | [Promotion criteria](intake/promotion-criteria.md) |
+| Review a documentation change | [Validation plan](encyclopedia/chapters/15-validation-and-acceptance-plan.md) | [PR reliability](runbooks/pr-reliability-guide.md) |
+
+The [enrichment inventory and review report](reports/documentation-enrichment-20261008.md) accounts for the initial placeholder scan and validation limits.
+
+The encyclopedia links are draft reference aids; they do not alter the formal lane-placement hold or accepted Directory Rules. Source-specific guides and executable owning roots remain authoritative for their respective facts.
 
 <a id="top"></a>
 

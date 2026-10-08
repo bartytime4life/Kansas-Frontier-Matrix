@@ -8,7 +8,7 @@ prior_version: v0.2
 status: draft; repository-grounded; planning-synthesis; non-authoritative; no-publication
 owners: "NEEDS VERIFICATION — .github/CODEOWNERS routes this path through the default @bartytime4life rule; no accepted encyclopedia stewardship assignment or independent approval control was verified"
 created: 2026-05-18
-updated: 2026-08-01
+updated: 2026-10-08
 policy_label: public; planning-reference; cite-or-abstain; no-sensitive-detail
 current_path: docs/KFM-encyclopedia.md
 owning_root: docs/
@@ -54,6 +54,12 @@ notes:
   - "The manuscript's sixteen-section map is preserved as source lineage; current repository state is reported separately and does not retroactively rewrite the PDF."
   - "Static badges summarize document posture only. The workflow badge reports the default-branch link-check workflow, not this document's review, release, or publication state."
 [/KFM_META_BLOCK_V2] -->
+
+## Draft chapter companion — 2026-10-08
+
+The [chapter index](encyclopedia/INDEX.md) now offers seventeen substantive, non-authoritative draft references grounded in `main@ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe`. They explain reader workflows, source identity, domain/capability boundaries, feature and action matrices, viewing modes, roadmap criteria and acceptance evidence. Start with the [reader guide](encyclopedia/chapters/01-cover.md).
+
+This index retains its historical manuscript crosswalk and source-PDF lineage. Draft chapter authoring is not acceptance of ADR-0036, a canonical-writer decision, a generated assembly, or a claim that the historical manuscript has been reproduced. Its PDF carrier remains unresolved.
 
 <a id="top"></a>
 
@@ -254,7 +260,7 @@ The manuscript's 16 chapter scopes and the current 13 human domain lanes are rel
 |---|---|---|
 | Spatial Foundation | Cross-domain foundation; not one of the 13 `docs/domains/` lane slugs | Spatial contracts, schemas, packages, and standards must be checked in their owning roots |
 | Hydrology | [`hydrology`](./domains/hydrology/README.md) | Early proof-lane documentation; flood context is not alert authority |
-| Soil | [`soil`](./domains/soil/README.md) | Human landing page remains a minimal placeholder |
+| [Soil](./domains/soil/README.md) | Substantive domain and operator guides with bounded validator/source references | Documentation and fixture profiles do not establish live-source admission or a complete domain pipeline |
 | Habitat | [`habitat`](./domains/habitat/README.md) | Suitability and connectivity are evidence- and sensitivity-dependent |
 | Fauna | [`fauna`](./domains/fauna/README.md) | Exact sensitive occurrences restrict or deny by default |
 | Flora | [`flora`](./domains/flora/README.md) | Rare and culturally sensitive detail fails closed |
