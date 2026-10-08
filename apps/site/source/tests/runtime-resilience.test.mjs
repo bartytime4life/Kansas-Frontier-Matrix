@@ -126,6 +126,12 @@ test("control-owned and buffered radar source failures never become a fatal map 
   assert.equal(context.officialContextForMapSource("osm-context"), undefined);
   assert.equal(context.officialContextForMapSource(undefined), undefined);
 
+  // The page skips these sources, so each control must report its own late failures.
+  const soilError = soil.slice(soil.indexOf("const onError = (event: unknown) => {"), soil.indexOf("const onRender = () => {"));
+  assert.doesNotMatch(soilError, /\|\| settled\) return;/);
+  assert.match(soilError, /if \(settled\) \{[\s\S]*state: "partial"/);
+  assert.match(soil, /setMapState\(\{ state: failed \? "partial" : "rendered", loaded, failed,/);
+
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const eventHandler = page.slice(page.indexOf('map.on("error", (event) => {'));
   const fatal = eventHandler.indexOf("Map runtime error:");

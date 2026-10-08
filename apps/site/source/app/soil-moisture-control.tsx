@@ -242,7 +242,7 @@ export function SoilMoistureControl({
       map.setPaintProperty(layer, "raster-opacity", opacityRef.current);
       if (previous) removeSlot(previous);
       currentSlotRef.current = { index, day, view };
-      setMapState({ state: "rendered", loaded, failed: 0, renderedAt: new Date().toISOString(), day, view });
+      setMapState({ state: failed ? "partial" : "rendered", loaded, failed, renderedAt: new Date().toISOString(), day, view });
     };
     const onData = (event: unknown) => {
       const item = event as { sourceId?: string; tile?: { state?: string }; coord?: unknown };
@@ -253,9 +253,16 @@ export function SoilMoistureControl({
     };
     const onError = (event: unknown) => {
       const item = event as { sourceId?: string };
-      if (!active || item.sourceId !== source || settled) return;
+      if (!active || item.sourceId !== source) return;
       failed += 1;
       setPlaying(false);
+      // A tile can still fail after the frame settles (a later pan or zoom).
+      // Report the gap instead of continuing to claim a complete frame.
+      if (settled) {
+        setMapState(current => current.day === day && current.view === view && current.state !== "blending"
+          ? { ...current, failed, state: "partial" } : current);
+        return;
+      }
       if (!previous && loaded > 0 && map.getLayer(layer)) {
         map.setPaintProperty(layer, "raster-opacity", opacityRef.current);
         currentSlotRef.current = { index, day, view };
@@ -281,7 +288,7 @@ export function SoilMoistureControl({
         const bucket = Math.floor(progress * 8);
         if (bucket !== lastBucket) {
           lastBucket = bucket;
-          setMapState({ state: "blending", loaded, failed: 0, renderedAt: null, day, view,
+          setMapState({ state: "blending", loaded, failed, renderedAt: null, day, view,
             fromDay: previous.day, toDay: day, transitionKind: kind, transitionFraction: progress });
         }
         if (progress < 1) animationRef.current = window.requestAnimationFrame(animate);
