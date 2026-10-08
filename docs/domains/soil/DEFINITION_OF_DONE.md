@@ -87,4 +87,4 @@ Reopen or supersede an item when source rights, product edition, support type,
 method, schema, policy or consumer assumptions change. Preserve the old evidence
 and explain why it no longer establishes the new claim. Use the
 [verification backlog](VERIFICATION_BACKLOG.md) for unresolved evidence and
-[release index](RELEASE_INDEX.md) for release navigation.
+[release index](CATALOG_CLOSURE.md#release-and-candidate-navigation) for release navigation.

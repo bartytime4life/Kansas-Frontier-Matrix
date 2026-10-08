@@ -46,20 +46,26 @@ Private document identities and contents remain in their connected workspaces ra
 
 ## Validation and limits
 
-The change contains 105 Markdown documents (104 existing files plus this report), including all 87 initial marker files smaller than 2,000 bytes. It adds approximately 47,600 net words across the existing files. Larger existing guides were preserved or selectively enriched.
+The change contains 104 Markdown documents (103 existing files plus this report). Of 87 initial marker files smaller than 2,000 bytes, 83 are replaced in place and four machine-checked markers retain exact bytes with completed guidance in companion documents. It adds approximately 47,600 net words across the existing files. Larger existing guides were preserved or selectively enriched.
 
 | Local check | Result |
 |---|---|
-| Changed-document links | PASS: 105 documents, 1,183 local targets |
-| Metadata | PASS: 105 valid blocks, no missing blocks or failures; 153 bounded-parser/truth-label warnings |
-| Scoped document graph | PASS: no failures; 127 navigation/metadata warnings |
+| Changed-document links | PASS: 104 enriched documents, 1,183 local targets |
+| Metadata | PASS: 104 valid blocks, no failures; 153 inherited/parser warnings retained |
+| Scoped document graph | PASS: no blocking failures; 127 navigation/metadata warnings retained |
 | ADR index | PASS: 43 numbered records and 11 unassigned records; no acceptance change |
-| Placeholder scan | 94 initial Markdown markers reduced to six retained implementation-status markers |
-| Existing broken links | 138 inherited findings; new report enters the tracked set before final gap check |
+| Placeholder scan | 94 initial Markdown markers reduced to ten: six implementation-status labels plus four machine-checked control markers |
+| Existing broken links | 138 inherited findings; no new missing targets after final tracked-set check |
 
-Final staged gap/whitespace checks and exact-commit metadata/graph checks are required before the draft PR is pushed. Warnings are recorded rather than hidden; graph reachability within a changed-file-only scope is not a repository-wide orphan assessment. Checks classify external links without asserting current remote availability. Source-linked contributor test commands are documented procedures unless a specific execution result is recorded.
+The repaired People/DNA/Land boundary-inventory step and Soil release-readiness step both pass with their original hold messages. The 11-file compatibility follow-up passes local links (97 targets), metadata, whitespace and the gap ratchet; full-scope checks are rerun at its exact commit before pushing. The initial PR was created as a draft and the owner subsequently marked it ready for review; this does not resolve any governance hold. Warnings are recorded rather than hidden; graph reachability within a changed-file-only scope is not a repository-wide orphan assessment. Checks classify external links without asserting current remote availability. Source-linked contributor test commands are documented procedures unless a specific execution result is recorded.
 
 This is an extensive placeholder and navigation pass, not a claim that all 1,821 documents were semantically re-reviewed or that every historical source statement was refreshed. The 138 inherited broken-link findings and executable implementation gaps are separate follow-up work; this change must introduce none. The gap baseline is retained unchanged.
+
+## Hosted compatibility findings and repair
+
+The first hosted run exposed two introduced compatibility failures. People/DNA/Land validates the exact bytes of its three generic fixture markers. Soil's release-readiness step requires its retained release-index marker. These control markers are preserved byte-for-byte from the authoring base. The completed People/DNA/Land guides now enrich the existing lane READMEs, and Soil release navigation lives in `CATALOG_CLOSURE.md`. No workflow, guard, baseline or release state is weakened.
+
+The separate `water-conformance` failure is `MIRROR_REVIEW_REQUIRED`. The mirror tool, receipt and all `apps/site/source` bytes are unchanged from the authoring base; this remains an inherited review hold.
 
 ## Placeholder disposition inventory
 
@@ -91,7 +97,7 @@ All 94 initial Markdown marker findings are accounted for below. Same-path docum
 | `docs/domains/soil/GLOSSARY.md` | Substantive guide authored or expanded in place |
 | `docs/domains/soil/MAP_UI_CONTRACTS.md` | Substantive guide authored or expanded in place |
 | `docs/domains/soil/PRESERVATION_MATRIX.md` | Substantive guide authored or expanded in place |
-| `docs/domains/soil/RELEASE_INDEX.md` | Substantive guide authored or expanded in place |
+| `docs/domains/soil/RELEASE_INDEX.md` | Exact machine-checked marker retained; substantive guidance completed in the existing companion README or catalog-closure guide |
 | `docs/domains/soil/SOURCES.md` | Substantive guide authored or expanded in place |
 | `docs/domains/spatial-foundation/README.md` | Substantive guide authored or expanded in place |
 | `docs/encyclopedia/chapters/01-cover.md` | Substantive guide authored or expanded in place |
@@ -136,9 +142,9 @@ All 94 initial Markdown marker findings are accounted for below. Same-path docum
 | `fixtures/domains/hazards/golden/PLACEHOLDER.md` | Substantive guide authored or expanded in place |
 | `fixtures/domains/hazards/valid/PLACEHOLDER.md` | Substantive guide authored or expanded in place |
 | `fixtures/domains/hydrology/golden/PLACEHOLDER.md` | Substantive guide authored or expanded in place |
-| `fixtures/domains/people-dna-land/golden/PLACEHOLDER.md` | Substantive guide authored or expanded in place |
-| `fixtures/domains/people-dna-land/invalid/PLACEHOLDER.md` | Substantive guide authored or expanded in place |
-| `fixtures/domains/people-dna-land/valid/PLACEHOLDER.md` | Substantive guide authored or expanded in place |
+| `fixtures/domains/people-dna-land/golden/PLACEHOLDER.md` | Exact machine-checked marker retained; substantive guidance completed in the existing companion README or catalog-closure guide |
+| `fixtures/domains/people-dna-land/invalid/PLACEHOLDER.md` | Exact machine-checked marker retained; substantive guidance completed in the existing companion README or catalog-closure guide |
+| `fixtures/domains/people-dna-land/valid/PLACEHOLDER.md` | Exact machine-checked marker retained; substantive guidance completed in the existing companion README or catalog-closure guide |
 | `fixtures/domains/roads-rail-trade/golden/PLACEHOLDER.md` | Substantive guide authored or expanded in place |
 | `fixtures/domains/roads-rail-trade/valid/PLACEHOLDER.md` | Substantive guide authored or expanded in place |
 | `fixtures/domains/settlements-infrastructure/golden/PLACEHOLDER.md` | Substantive guide authored or expanded in place |
