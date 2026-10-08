@@ -16,6 +16,7 @@ export type LivingAtlasView = Readonly<{
   status: LivingAtlasViewStatus;
   profileId?: MapViewProfile["id"];
   story?: boolean;
+  syntheticProof?: boolean;
   camera?: Readonly<{
     center: readonly [number, number];
     zoom: number;
@@ -87,6 +88,7 @@ export const LIVING_ATLAS_VIEWS: readonly LivingAtlasView[] = Object.freeze([
   }),
   Object.freeze({
     id: "living-waters",
+    syntheticProof: true,
     title: "Living Waters",
     question: "What connects this river, basin, and place?",
     scope: "Kansas river corridors",

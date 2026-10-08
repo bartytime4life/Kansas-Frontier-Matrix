@@ -1,0 +1,1338 @@
+{
+  "authority_mode": "process_evidence_only",
+  "controls": {
+    "approves_evidence": false,
+    "changes_settings": false,
+    "closes_issue_or_milestone": false,
+    "deploys": false,
+    "publishes": false,
+    "releases": false
+  },
+  "edit_policy": "manual_review_required",
+  "execution_limits": [
+    "Initial attempts lacked pinned ancestors in a shallow checkout; full-history retries above passed without source edits.",
+    "The schema labels unavailable checks CHECK_NOT_RUN; this evidence sidecar uses NOT_RUN.",
+    "Local validation used KFM_NO_NETWORK=1. GitHub metadata reads used the connected API separately.",
+    "No final milestone acceptance target was selected. The measured head is current main at the time of execution, not the later PR head."
+  ],
+  "generated_from": "clean-checkout:ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe; GitHub exact-head and prerequisite readback",
+  "generator": "OpenAI Codex evidence assembly",
+  "generator_version": "GPT-6-session-2026-10-08",
+  "governance_parity": {
+    "authority": {
+      "authorizes_baseline_expansion": false,
+      "authorizes_migration_or_deletion": false,
+      "authorizes_release": false,
+      "publishes": false
+    },
+    "conformance_outcome": "HOLD_INHERITED",
+    "findings": [],
+    "lane_results": {
+      "control-plane-registry-packet": "PASS",
+      "object-family-register": "PASS",
+      "path-alias-register": "PASS",
+      "public-boundary-guards": "PASS",
+      "repository-topology": "HOLD_INHERITED",
+      "root-registry": "PASS"
+    },
+    "profile_integrity_outcome": "PASS",
+    "scope": "validator-parity-inherited-versus-introduced-classification-only",
+    "topology": {
+      "base_tracked_path_count": 13701,
+      "baselined_warning": 113,
+      "fail_invariant": 0,
+      "fail_new_drift": 0,
+      "introduced_finding_count": 0,
+      "resolved_finding_count": 11,
+      "rule_count": 20,
+      "stale_fingerprints": 0,
+      "tracked_path_count": 14244
+    }
+  },
+  "historical_report": {
+    "execution_head": "c653d573c1641503215844c5c4fc85bc15060ced",
+    "file_sha256": "sha256:b051acc2bddfc73c003accc102b020b53404618ed116ab5b822da9a42e7f5fdb",
+    "observed_at": "2026-08-22T22:03:43Z",
+    "path": "artifacts/qa/validation/milestone-1/ci_conformance_report.json",
+    "preserved": true,
+    "report_digest": "sha256:c37d0afaea0b08419c443108ef08935907e6054f4659ed20b6a829f2239453d2"
+  },
+  "hosted_readback": {
+    "check_conclusions": {
+      "failure": 1,
+      "skipped": 2,
+      "success": 103
+    },
+    "check_count": 106,
+    "checks": [
+      {
+        "conclusion": "skipped",
+        "head_sha": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+        "id": 113395754193,
+        "name": "dependency-review",
+        "status": "completed",
+        "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/37801750960/job/113395754193"
+      },
+      {
+        "conclusion": "skipped",
+        "head_sha": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+        "id": 113395519680,
+        "name": "Trigger_APIsec_scan",
+        "status": "completed",
+        "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/37801750853/job/113395519680"
+      },
+      {
+        "conclusion": "success",
+        "head_sha": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+        "id": 113395466554,
+        "name": "run-validators",
+        "status": "completed",
+        "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/37801751356/job/113395466554"
+      },
+      {
+        "conclusion": "failure",
+        "head_sha": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+        "id": 113395460037,
+        "name": "water-conformance",
+        "status": "completed",
+        "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/37801751285/job/113395460037"
+      },
+      {
+        "conclusion": "success",
+        "head_sha": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+        "id": 113395458003,
+        "name": "validate-object-family-register",
+        "status": "completed",
+        "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/37801751124/job/113395458003"
+      }
+    ],
+    "dedicated_mrts_workflows": {
+      "ci-conformance-report": "NOT_RUN",
+      "control-plane-registry-packet": "NOT_RUN",
+      "repository-governance-parity": "NOT_RUN",
+      "trust-spine-baseline": "NOT_RUN",
+      "trust-spine-fixture-slice": "NOT_RUN"
+    },
+    "head_sha": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+    "observed_at": "2026-10-08T16:10:24.506Z",
+    "water_failure": {
+      "command": "python tools/qa/site_mirror.py --check",
+      "job_id": 113395460037,
+      "reason_code": "MIRROR_REVIEW_REQUIRED",
+      "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/37801751285/job/113395460037"
+    },
+    "workflow_run_count": 51,
+    "workflow_runs": [
+      {
+        "conclusion": "skipped",
+        "event": "push",
+        "head_sha": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+        "id": 37801750853,
+        "name": "APIsec",
+        "path": ".github/workflows/apisec-scan.yml",
+        "status": "completed",
+        "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/37801750853"
+      },
+      {
+        "conclusion": "success",
+        "event": "push",
+        "head_sha": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+        "id": 37801751356,
+        "name": "validator-suite",
+        "path": ".github/workflows/validator-suite.yml",
+        "status": "completed",
+        "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/37801751356"
+      },
+      {
+        "conclusion": "success",
+        "event": "push",
+        "head_sha": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+        "id": 37801751175,
+        "name": "release-dry-run",
+        "path": ".github/workflows/release-dry-run.yml",
+        "status": "completed",
+        "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/37801751175"
+      },
+      {
+        "conclusion": "failure",
+        "event": "push",
+        "head_sha": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+        "id": 37801751285,
+        "name": "water-pilot",
+        "path": ".github/workflows/water-pilot.yml",
+        "status": "completed",
+        "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/37801751285"
+      },
+      {
+        "conclusion": "success",
+        "event": "push",
+        "head_sha": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+        "id": 37801751124,
+        "name": "object-family-register",
+        "path": ".github/workflows/object-family-register.yml",
+        "status": "completed",
+        "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/37801751124"
+      }
+    ]
+  },
+  "local_checks": [
+    {
+      "command": [
+        "make",
+        "ci-conformance-report"
+      ],
+      "execution_head": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+      "execution_tree": "38627dfce30a75fff7951f516c09ae5b281a6a8f",
+      "exit_code": 0,
+      "finished_at": "2026-10-08T16:09:01.104333+00:00",
+      "id": "ci-conformance-report",
+      "output_sha256": "sha256:8e8b6f4cc74bc8ae90c70451016f4f9abce4b5688b94c9174d09cd69bf5f7048",
+      "started_at": "2026-10-08T16:08:52.923675+00:00",
+      "worktree_before": ""
+    },
+    {
+      "command": [
+        "make",
+        "control-plane-registry-packet"
+      ],
+      "execution_head": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+      "execution_tree": "38627dfce30a75fff7951f516c09ae5b281a6a8f",
+      "exit_code": 0,
+      "finished_at": "2026-10-08T16:10:13.214118+00:00",
+      "id": "control-plane-registry-packet",
+      "output_sha256": "sha256:181965cd2a59d23eabb237b729fc595c4a60e9c0cb365593f7d5f1dcbd8eb142",
+      "started_at": "2026-10-08T16:08:52.933383+00:00",
+      "worktree_before": ""
+    },
+    {
+      "command": [
+        "python",
+        "tools/validators/validate_generated_receipt.py",
+        "data/receipts/generated/genrec-release-dry-run-mrts-successor-20260822.json",
+        "--repo-root",
+        ".",
+        "--artifact-git-ref",
+        "8383a722a619df64c7eaa668c9e6427540f2df80"
+      ],
+      "execution_head": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+      "execution_tree": "38627dfce30a75fff7951f516c09ae5b281a6a8f",
+      "exit_code": 0,
+      "finished_at": "2026-10-08T16:09:20.304074+00:00",
+      "id": "dry-run-receipt",
+      "output_sha256": "sha256:cacad7aae7e3ff113b8b2e5caa43baab464809d290da848ed05030a7cb21fb3d",
+      "started_at": "2026-10-08T16:09:20.025976+00:00",
+      "worktree_before": ""
+    },
+    {
+      "command": [
+        "python",
+        "tools/validators/validate_fixture_root_contract.py",
+        "--repo-root",
+        "."
+      ],
+      "execution_head": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+      "execution_tree": "38627dfce30a75fff7951f516c09ae5b281a6a8f",
+      "exit_code": 0,
+      "finished_at": "2026-10-08T16:09:20.200294+00:00",
+      "id": "fixture-root-contract",
+      "output_sha256": "sha256:1c11b7db404c9ee74fca4733a49a3a1846410643f640ca9b9e996ec5ad3283e4",
+      "started_at": "2026-10-08T16:09:20.081928+00:00",
+      "worktree_before": ""
+    },
+    {
+      "command": [
+        "python",
+        "tools/validators/validate_generated_receipt.py",
+        "data/receipts/generated/genrec-pass7-release-manifest-mrts-successor-20260822.json",
+        "--repo-root",
+        ".",
+        "--artifact-git-ref",
+        "ca7a410382aef37bfa93185b149df70d35c1d279"
+      ],
+      "execution_head": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+      "execution_tree": "38627dfce30a75fff7951f516c09ae5b281a6a8f",
+      "exit_code": 0,
+      "finished_at": "2026-10-08T16:10:25.264850+00:00",
+      "id": "manifest-receipt",
+      "output_sha256": "sha256:eae1c3dc1514a426504610846bdd84fb7018a66db052b7b0036f876ce8ad3165",
+      "started_at": "2026-10-08T16:10:25.011222+00:00",
+      "worktree_before": ""
+    },
+    {
+      "command": [
+        "python",
+        "tools/validators/directory_governance/validate_repository_governance_parity.py"
+      ],
+      "execution_head": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+      "execution_tree": "38627dfce30a75fff7951f516c09ae5b281a6a8f",
+      "exit_code": 0,
+      "finished_at": "2026-10-08T16:10:07.067531+00:00",
+      "id": "parity-json",
+      "output_sha256": "sha256:cb5e2721eba83332eb359effea9ab207d559d3e056822c2a3ca65be14255ef96",
+      "started_at": "2026-10-08T16:09:19.995606+00:00",
+      "worktree_before": ""
+    },
+    {
+      "command": [
+        "python",
+        "tools/validators/validate_generated_receipt.py",
+        "data/receipts/generated/genrec-repository-governance-parity-mrts-04-20260822.json",
+        "--repo-root",
+        ".",
+        "--artifact-git-ref",
+        "f7c6ba4c73227858c2d7c8931adae37b57092ce1"
+      ],
+      "execution_head": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+      "execution_tree": "38627dfce30a75fff7951f516c09ae5b281a6a8f",
+      "exit_code": 0,
+      "finished_at": "2026-10-08T16:09:20.375356+00:00",
+      "id": "parity-receipt",
+      "output_sha256": "sha256:876bfe697983479c2244589de8e75119aa4ce4f6fc592927f977cf613253b661",
+      "started_at": "2026-10-08T16:09:20.007435+00:00",
+      "worktree_before": ""
+    },
+    {
+      "command": [
+        "python",
+        "tools/validators/validate_generated_receipt.py",
+        "data/receipts/generated/genrec-publication-deny-dry-run-mrts-successor-20260822.json",
+        "--repo-root",
+        ".",
+        "--artifact-git-ref",
+        "8383a722a619df64c7eaa668c9e6427540f2df80"
+      ],
+      "execution_head": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+      "execution_tree": "38627dfce30a75fff7951f516c09ae5b281a6a8f",
+      "exit_code": 0,
+      "finished_at": "2026-10-08T16:09:20.321550+00:00",
+      "id": "publication-receipt",
+      "output_sha256": "sha256:dcade84840db3395effbef38889836048e94f51f9492d11b33a4aa29ecfd24b0",
+      "started_at": "2026-10-08T16:09:20.027221+00:00",
+      "worktree_before": ""
+    },
+    {
+      "command": [
+        "make",
+        "release-dry-run"
+      ],
+      "execution_head": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+      "execution_tree": "38627dfce30a75fff7951f516c09ae5b281a6a8f",
+      "exit_code": 0,
+      "finished_at": "2026-10-08T16:09:22.730125+00:00",
+      "id": "release-dry-run",
+      "output_sha256": "sha256:e97c9b97d02d85ec403b54e9b6747136749e57e44f8ce037f12198dd191fad17",
+      "started_at": "2026-10-08T16:09:20.006538+00:00",
+      "worktree_before": ""
+    },
+    {
+      "command": [
+        "make",
+        "repository-governance-parity"
+      ],
+      "execution_head": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+      "execution_tree": "38627dfce30a75fff7951f516c09ae5b281a6a8f",
+      "exit_code": 0,
+      "finished_at": "2026-10-08T16:10:26.555034+00:00",
+      "id": "repository-governance-parity",
+      "output_sha256": "sha256:fc8cc886ce63309dcca2bd5187bbe047d39c3baf1bd53ff937304de385b0cc96",
+      "started_at": "2026-10-08T16:08:52.933384+00:00",
+      "worktree_before": ""
+    },
+    {
+      "command": [
+        "make",
+        "repository-topology"
+      ],
+      "execution_head": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+      "execution_tree": "38627dfce30a75fff7951f516c09ae5b281a6a8f",
+      "exit_code": 0,
+      "finished_at": "2026-10-08T16:09:16.685303+00:00",
+      "id": "repository-topology",
+      "output_sha256": "sha256:b69dcbf09edf1d0b19c6e5f1fa7d76e2a4a423ff4b2126f372c9409488a2d9d3",
+      "started_at": "2026-10-08T16:08:52.933605+00:00",
+      "worktree_before": ""
+    },
+    {
+      "command": [
+        "python",
+        "tools/validators/directory_governance/validate_repository_topology.py",
+        "--repo-root",
+        ".",
+        "--format",
+        "json"
+      ],
+      "execution_head": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+      "execution_tree": "38627dfce30a75fff7951f516c09ae5b281a6a8f",
+      "exit_code": 0,
+      "finished_at": "2026-10-08T16:09:23.133713+00:00",
+      "id": "topology-json",
+      "output_sha256": "sha256:8fd072d83b86691713811519b7fa475ed47e382b666275ab10a0f328d496b0df",
+      "started_at": "2026-10-08T16:09:20.057649+00:00",
+      "worktree_before": ""
+    },
+    {
+      "command": [
+        "make",
+        "trust-spine-baseline"
+      ],
+      "execution_head": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+      "execution_tree": "38627dfce30a75fff7951f516c09ae5b281a6a8f",
+      "exit_code": 0,
+      "finished_at": "2026-10-08T16:08:55.669889+00:00",
+      "id": "trust-spine-baseline",
+      "output_sha256": "sha256:d91515151468edc2c14a71d4ac278cded5d23c6ec581640b8984d5831f94a714",
+      "started_at": "2026-10-08T16:08:52.804972+00:00",
+      "worktree_before": ""
+    },
+    {
+      "command": [
+        "make",
+        "trust-spine-fixture-slice"
+      ],
+      "execution_head": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+      "execution_tree": "38627dfce30a75fff7951f516c09ae5b281a6a8f",
+      "exit_code": 0,
+      "finished_at": "2026-10-08T16:09:12.311605+00:00",
+      "id": "trust-spine-fixture-slice",
+      "output_sha256": "sha256:6253d72d4a71c6fd3a7f4bc8738803637d3c5544878985e85a992e1ab93b8c8c",
+      "started_at": "2026-10-08T16:08:52.933648+00:00",
+      "worktree_before": ""
+    },
+    {
+      "command": [
+        "make",
+        "validator-registry-check"
+      ],
+      "execution_head": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+      "execution_tree": "38627dfce30a75fff7951f516c09ae5b281a6a8f",
+      "exit_code": 0,
+      "finished_at": "2026-10-08T16:07:41.301720+00:00",
+      "id": "validator-registry-check",
+      "output_sha256": "sha256:3252bb6a16cd8afd59f6644e6aebd561125b82ec6a70a1b356dd0000b850c3a7",
+      "started_at": "2026-10-08T16:07:41.233670+00:00",
+      "worktree_before": ""
+    },
+    {
+      "command": [
+        "make",
+        "workflow-security"
+      ],
+      "execution_head": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+      "execution_tree": "38627dfce30a75fff7951f516c09ae5b281a6a8f",
+      "exit_code": 0,
+      "finished_at": "2026-10-08T16:07:48.143228+00:00",
+      "id": "workflow-security",
+      "output_sha256": "sha256:d74efd2d1b4247ea1030661877cc867f9dd49f1f4cfe33dcc96952982b45ab58",
+      "started_at": "2026-10-08T16:07:41.210577+00:00",
+      "worktree_before": ""
+    }
+  ],
+  "not_run": {
+    "browser_webgl": "NOT_RUN",
+    "full_repository_local_suite": "NOT_RUN",
+    "independent_acceptance": "NOT_RUN",
+    "operational_rollback": "NOT_RUN"
+  },
+  "observed_at": "2026-10-08T16:13:07.681977Z",
+  "prerequisite_readback": {
+    "independent_acceptance": "NOT_RUN",
+    "issues": [
+      {
+        "last_comment_id": null,
+        "number": 3358,
+        "state": "closed",
+        "title": "[MRTS-01] Pin current-main authority and implementation baseline",
+        "updated_at": "2026-08-22T18:25:23Z",
+        "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3358"
+      },
+      {
+        "last_comment_id": 5716935385,
+        "number": 3359,
+        "state": "open",
+        "title": "[MRTS-02] Normalize control-plane registry schemas and instances",
+        "updated_at": "2026-09-17T15:26:11Z",
+        "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3359"
+      },
+      {
+        "last_comment_id": 5965888848,
+        "number": 3360,
+        "state": "open",
+        "title": "[MRTS-03] Reconcile the canonical trust-object catalog",
+        "updated_at": "2026-10-03T05:19:00Z",
+        "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3360"
+      },
+      {
+        "last_comment_id": 5716935833,
+        "number": 3361,
+        "state": "open",
+        "title": "[MRTS-04] Implement registry parity, path governance, and drift-ratchet validation",
+        "updated_at": "2026-09-17T15:26:13Z",
+        "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3361"
+      },
+      {
+        "last_comment_id": 5716936309,
+        "number": 3363,
+        "state": "open",
+        "title": "[MRTS-05] Build the deterministic no-network trust-spine fixture slice",
+        "updated_at": "2026-09-17T15:26:15Z",
+        "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3363"
+      },
+      {
+        "last_comment_id": 6063053148,
+        "number": 3364,
+        "state": "open",
+        "title": "[MRTS-06] Emit CI conformance report, receipt, documentation, and rollback handoff",
+        "updated_at": "2026-10-08T15:17:20Z",
+        "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3364"
+      },
+      {
+        "last_comment_id": 5976883168,
+        "number": 4024,
+        "state": "open",
+        "title": "KFM automation draft-delivery incident and branch-first recovery",
+        "updated_at": "2026-10-04T05:20:08Z",
+        "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024"
+      },
+      {
+        "last_comment_id": 5765354691,
+        "number": 4228,
+        "state": "open",
+        "title": "Govern frozen `catalog/` containment-document corrections under the topology ratchet",
+        "updated_at": "2026-09-21T18:18:24Z",
+        "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228"
+      }
+    ],
+    "milestone": {
+      "due_on": "2026-09-18T00:00:00Z",
+      "number": 1,
+      "state": "open",
+      "title": "Milestone"
+    },
+    "object_family_conflicted_required_count": 10,
+    "observed_at": "2026-10-08T16:10:24.506Z"
+  },
+  "repository": {
+    "execution_head": "ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe",
+    "execution_tree": "38627dfce30a75fff7951f516c09ae5b281a6a8f",
+    "full_name": "bartytime4life/Kansas-Frontier-Matrix"
+  },
+  "schema_version": "kfm.qa.mrts-conformance-evidence.v1",
+  "sha256": "sha256:fcf2b91fe14f109f4da85465513d1b4629a714c6951868c7fc6b27e7e93f1fea",
+  "topology": {
+    "authority": {
+      "authorizes_migration": false,
+      "authorizes_release": false,
+      "authorizes_repository_write": false,
+      "publishes": false
+    },
+    "baseline": {
+      "applicable_count": 113,
+      "expires_on": "2026-11-10",
+      "stale_fingerprints": [],
+      "trusted_transition": "[REDACTED]"
+    },
+    "counts": {
+      "baselined_warning": 113,
+      "fail_invariant": 0,
+      "fail_new_drift": 0,
+      "finding": 113
+    },
+    "findings": [
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:825f3567f6774fa8dc50dbedc0ba6681de151d0aa6624cb0669ab8944a197049",
+        "fingerprint": "sha256:e26c2dae233ced7ed0116537e848b27f2d6a83c60ddf47c722ada7f0600eca86",
+        "rule_id": "KFM-TOPO-001",
+        "subject": "docs/DomainDriven Design Reference.pdf"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:825f3567f6774fa8dc50dbedc0ba6681de151d0aa6624cb0669ab8944a197049",
+        "fingerprint": "sha256:6dccd2a876f400e69fa76640438638ef623328ccb1e65afc370d769114db20ba",
+        "rule_id": "KFM-TOPO-001",
+        "subject": "docs/Kansas Frontier Matrix - Domains v1.1 + Pass 23_32 Consolidated Atlas.md"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:8f5bb01a698931d19f295c441a58de795fc27737747fe2ccdba3378f5822a064",
+        "fingerprint": "sha256:89996a501d9f73859b11ec468667147c5e9666d75e20837952f47bfcbaf9cafb",
+        "rule_id": "KFM-TOPO-001",
+        "subject": "docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:deabab266c4c3db854773714a6d44b5dc12158c51689a32b33ab9f82ff1a67db",
+        "fingerprint": "sha256:9470b11d549bdaec9bae97946e4fafb256de3bb5663ad4fccc5b51b3385d630d",
+        "rule_id": "KFM-TOPO-001",
+        "subject": "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:deabab266c4c3db854773714a6d44b5dc12158c51689a32b33ab9f82ff1a67db",
+        "fingerprint": "sha256:6e3aa36a6e142764f9a9a71cb6d602ab599417dd7a6d6b3e4fce0352dd5fba09",
+        "rule_id": "KFM-TOPO-001",
+        "subject": "docs/adr/ADR-0028 — State-scale Focus Mode scope.md"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:198c313880601c6429f9a41bbd66c7a4ca69f88314802709eb5a52ee52568c4c",
+        "fingerprint": "sha256:380f9e0d4ca00d303f40b4060d5427f06a28b2a89ff94cea5f3e8384fef8786f",
+        "rule_id": "KFM-TOPO-001",
+        "subject": "path-grammar:nonportable-punctuation"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:26d9dfa79a9608a65681ce189b73368a2f4130c5baf981605f9fd503b5c2ec3a",
+        "fingerprint": "sha256:b2c8a73700237b381072aac934dce461a3fbf05f528c3e42e0066fd799859671",
+        "rule_id": "KFM-TOPO-001",
+        "subject": "path-grammar:uppercase"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:304b679f591315a09c358d2aa286d5ed9f2910679d8f6ed39790b2c7f6811e9c",
+        "fingerprint": "sha256:71a120ae8ca2b69896266c9ddd52f6d03577ea91fa2de4390b7d57b9ceeb912f",
+        "rule_id": "KFM-TOPO-004",
+        "subject": "catalog/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:378df54d27d6b07db2112a0776092827897e8bde10009f170999d0e04c6f83da",
+        "fingerprint": "sha256:075416438d2ac6202043316b2adeb1189111907ddbc2a4ebe637cf806f4d6e0c",
+        "rule_id": "KFM-TOPO-005",
+        "subject": "artifacts/release/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:43145b92a489c0e0d4b7104ce4d04d6275b3bf5b8cd6b1d5441df51654de6049",
+        "fingerprint": "sha256:f23881363518e7e8616f129482c53c4901e45b0e191ba86807c772f15cf9b274",
+        "rule_id": "KFM-TOPO-006",
+        "subject": "scope-alias:air"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:7aa0cfa4c6644aed7df1d3e5aa135234e6168a4d6d3fef74da0def74d3e92978",
+        "fingerprint": "sha256:7e60eb86dda93ece41bfe860f4fe7a89dd44db102219b905bf99445a873a11a4",
+        "rule_id": "KFM-TOPO-006",
+        "subject": "scope-alias:hydro"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:ea71f568add95276daab632b24b466ee052285b4e6b9f5d708bec563f0b94e94",
+        "fingerprint": "sha256:ce9eb23152715b66a5c227e1dc29fa06981c9b71f420be8fd16a7d4ad11cdab9",
+        "rule_id": "KFM-TOPO-006",
+        "subject": "scope-alias:people"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:33abc0a306d4007bd5970d10cabc2b929e1e5e0d31976a780bc311b47555b70c",
+        "fingerprint": "sha256:773747b25979dd02a6a6c79a1ef4b41c066513265060cd0c76ddc20960c968c8",
+        "rule_id": "KFM-TOPO-006",
+        "subject": "scope-alias:settlement"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:8c60121d7e470e9193d66a004330818432752df1784ee4f9ffc223a85e43fdeb",
+        "fingerprint": "sha256:469383fa0bdd57649524c07d7c4aaf9cfcf98581570c159db12a5e545944bc25",
+        "rule_id": "KFM-TOPO-006",
+        "subject": "scope-alias:transport"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:c28a793a528b2d1887f961c7a1b8c60cf7ca9419fdddaaa9c63edb0956e2c4d4",
+        "fingerprint": "sha256:f34e26f3a71914b233dc68dc4c6e18600e9dd84cb99b8b4fc6b2bc403dd6a488",
+        "rule_id": "KFM-TOPO-007",
+        "subject": "casefold:contracts/source/source_descriptor.md"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:0fc8f4158e50495b824661219a53d11f50188274c8ba237542ab11e5a7cea9e7",
+        "fingerprint": "sha256:f4f1f94c4b45fa5e1378045bbf07679e8f0af99dd9665b7416bfba8e54e22de4",
+        "rule_id": "KFM-TOPO-007",
+        "subject": "casefold:docs/standards/canonicalization.md"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:752c925a6112c9cfdcf625484919daa2220b92f945c8137612ede0a8b881316d",
+        "fingerprint": "sha256:238d3aa621befa1b680e0e9243c7d783d514504b8445ccc6969449166158dd39",
+        "rule_id": "KFM-TOPO-007",
+        "subject": "casefold:docs/standards/oai-pmh.md"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:d3f92304035ea6ed29dbb69b21aebb82e190ce8eaa51d9c3ace28995e878e2f6",
+        "fingerprint": "sha256:f11867231a4ec310c4f527063739c0e860bb9a0dcc31fa3e51be8bc04ca5b0e7",
+        "rule_id": "KFM-TOPO-007",
+        "subject": "casefold:docs/standards/stac.md"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:867adc1763205ca6d8ecdc83f7f643d92e60bb8051ff4c70adfe526b8d7d74f0",
+        "fingerprint": "sha256:dac10301275769ce63ab4cb2250734076f5dc3cbcb5ef6da0ed5e4793f2025c7",
+        "rule_id": "KFM-TOPO-008",
+        "subject": "data/catalog/domain/->data/catalog/domains/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:66a47b7cb0f2d4e6dcacb1f5d405b2be65af9ba5a390bda575a3cd1434f4fe8a",
+        "fingerprint": "sha256:61aee41516368418566146a9658292146c22389c442836d99a2345cbef43eca2",
+        "rule_id": "KFM-TOPO-008",
+        "subject": "data/rollback/->data/receipts/rollback/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:bd597557db543ce1d71fd84b5277df572d2d03c0218c5031e4e1d9a887fd0f72",
+        "fingerprint": "sha256:80b3ed201e924894f6c6d99f87de70058696ea8770af04e6730a512f221bee40",
+        "rule_id": "KFM-TOPO-008",
+        "subject": "docs/atlas/->docs/atlases/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:c67c6ba5a6ce1b0ef14851b0b75a97b2681e610e2bd8720c4df669a800bd2ee2",
+        "fingerprint": "sha256:3639cdf807ce19defae231656917ffdc7106725633b63934d1be2921dc3e420d",
+        "rule_id": "KFM-TOPO-008",
+        "subject": "release/correction/->release/correction_notices/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:23a0341752bb619fdb21390d58934f6928634e016399d37751a174ad419e1fea",
+        "fingerprint": "sha256:c2d706a32530f6e9843374bf3e6a38a8dc74fc8b8229f0855aaa4f3e01708e43",
+        "rule_id": "KFM-TOPO-008",
+        "subject": "release/corrections/->release/correction_notices/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:450a041acec2ad07741f6fc8dad5d4b03f196795bfd7cb253a53ad115b007dc7",
+        "fingerprint": "sha256:66cf6e298f5a101c6be8f6208ede7198a78c25ab899aad692c541cadc21e4c14",
+        "rule_id": "KFM-TOPO-008",
+        "subject": "release/manifest/->release/manifests/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:63c1e51003dde2f8188f66a5fcdb4a9d3ff858014e5114cba6288866e24f9dcb",
+        "fingerprint": "sha256:c06117eab17e2a62b003da112d08da56e8dbdcf3dc3578d5859afcc43ce7a0be",
+        "rule_id": "KFM-TOPO-008",
+        "subject": "release/rollback/->release/rollback_cards/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:be38436fdc6b41d657f1e58120cabc9349768e7396ac9e37739fc2e1e6a93d59",
+        "fingerprint": "sha256:a967587d2e5f4006ac8dd26362b7d0f47394afb024ebf45e68289c278c36fa8a",
+        "rule_id": "KFM-TOPO-008",
+        "subject": "separator-alias:connectors/noaa_storm_events"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:d51845545bff6700ba536b43ee86776a58a3c66498269e2b78a35eacd4d7f734",
+        "fingerprint": "sha256:ca3be5a74fbe308e8fb28c4bd3301053d9f116c221270e5a132cd105be111824",
+        "rule_id": "KFM-TOPO-008",
+        "subject": "separator-alias:connectors/usda_plants"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:9ce519422354d717ca0241f1495e372a61c3439f0b7a9d78179281aca17ce9ec",
+        "fingerprint": "sha256:31c1fc85060a8bbef8eed6bf850a48f3877b903c758220bc9cfc7b6692ac4278",
+        "rule_id": "KFM-TOPO-008",
+        "subject": "separator-alias:connectors/usfws_ecos"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:3510d33e6e657537c97a9b00f17af6d0feab55efcb1aad7cab4755b5061a7465",
+        "fingerprint": "sha256:490a0de0249c45ec506852785ccc324557afa270656b4117457ef4b6aa10004e",
+        "rule_id": "KFM-TOPO-008",
+        "subject": "separator-alias:tests/domains/geology/catalog_closure"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:27fb1f9af41710db788a92f4fb83f6990a6af1e3687ad27a9da46ad97a30c2b3",
+        "fingerprint": "sha256:ff78c9e6ba545ff86586723f0f9f1aea506be2f21fda50cce38194c53f2fcb83",
+        "rule_id": "KFM-TOPO-008",
+        "subject": "separator-alias:tools/validators/common"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:32555f7828d78ee8b3bf6d5e057d02ab20bebdcd8b6a8ba1b33d58da5979eea2",
+        "fingerprint": "sha256:53db4a14b2f3af963d5ff4248f076103149bac0dff3617b80832fe6256d49622",
+        "rule_id": "KFM-TOPO-008",
+        "subject": "separator-alias:tools/validators/habitat_fauna"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:8ab49520f872da6edee38e139a8d7472a801b816fc5326a0106f5309793c8fab",
+        "fingerprint": "sha256:927a8475a2f867ddd8e6d05f8789d20dcb28efc7370773db7bac8522c687ba7b",
+        "rule_id": "KFM-TOPO-008",
+        "subject": "separator-alias:tools/validators/source_descriptor"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:e3d385ff721b2dd2835007407edfed3ec1c9e31ab72af9fb793df1976866ece6",
+        "fingerprint": "sha256:04d08ba8440a39fe2f7cce26bb2fc468d389992ba480a4e701cf45c85c9506f4",
+        "rule_id": "KFM-TOPO-009",
+        "subject": "scaffold-only-leaf-directories"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:964640eddfa5168c576d063d53c99219ba8d94494fb276603f9eb381f3d232e2",
+        "fingerprint": "sha256:1e6fe22069d219a1509419dbce96499aa8bf5e16fdfcf35cf2e15ee757c12847",
+        "rule_id": "KFM-TOPO-010",
+        "subject": "data/document/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:4d035c8dc503fb9d8d3963141113abaae2f330d878b57e0579e275b75b2033db",
+        "fingerprint": "sha256:19bc8d346cec3474556437a19ad99c220dfd03803eae4cbdd0257fa0c5fb2a71",
+        "rule_id": "KFM-TOPO-010",
+        "subject": "data/manifests/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:04eb09536052f254c0ae6a0742915e1af43cc5de9fa2c9f64f9ce8641f96834c",
+        "fingerprint": "sha256:f2cb20b8da2fb6cab980cc5d2f3f80b8623623fb231501de565d5df19655796f",
+        "rule_id": "KFM-TOPO-010",
+        "subject": "data/maps/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:872f2a8855772e5f600013fa17c8d57f16fe2190c428aad9515e4e3fa7d8c8f2",
+        "fingerprint": "sha256:0b204caec29547aa5bcb105d288db6256011742c79cd24890b73ee10d1edf59a",
+        "rule_id": "KFM-TOPO-010",
+        "subject": "data/prov/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:41ecc6203663c505ac447a1ca363d7a095687f83e3134707ef7560d8ad8e2ecd",
+        "fingerprint": "sha256:3a3ef35e70b1fda2f503a2e346fabaa3b601bfc84c0ab81d19169996bf8410b3",
+        "rule_id": "KFM-TOPO-010",
+        "subject": "data/reports/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:66a47b7cb0f2d4e6dcacb1f5d405b2be65af9ba5a390bda575a3cd1434f4fe8a",
+        "fingerprint": "sha256:85f3bdd160a555d2714e3ef114802de0e6920d6fa8fd7540bdaa1023ffd15581",
+        "rule_id": "KFM-TOPO-010",
+        "subject": "data/rollback/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:a3822fae229baf56a632b3d2684362716502b109ceba777cc44f936fb0461444",
+        "fingerprint": "sha256:d65d7d4784ae5b7cb1fb498f77016ef96e5ca2ac2729722afdc9b1fc8403e904",
+        "rule_id": "KFM-TOPO-010",
+        "subject": "data/trade-routes/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:4f57bdf06af664a6020e350ab537f3eb6e22c0604074dbd7a8dbad049c7777e8",
+        "fingerprint": "sha256:4a3a3524bc66128845c4545016896a7bd0c7d8eef5c386f5682ccd9e81cef4af",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/agriculture/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:c67c6ba5a6ce1b0ef14851b0b75a97b2681e610e2bd8720c4df669a800bd2ee2",
+        "fingerprint": "sha256:bc2d3e4508fca3b91363a699875db42790b7d1cdaaa82a3c5e06ebed44a3a739",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/correction/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:23a0341752bb619fdb21390d58934f6928634e016399d37751a174ad419e1fea",
+        "fingerprint": "sha256:470f0846ce9337b3a7716b70e84dc2b82e4bc1607b531b3a7a5f78b1a9cbc971",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/corrections/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:a5b74c2df465ca29d1094bada3ef45a52f43e9978600d36317a8bd91cf8962d2",
+        "fingerprint": "sha256:7f0be84c8db7e74c1950fbf7f4482754c291db52591c682454235569c954db39",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/decisions/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:fe8d69ff47d7af8472a2dd838ebfddb0aa4bba3df5423f82850f1c8b04b93f25",
+        "fingerprint": "sha256:f037bb9801d1690154bbb3058f863254d5644e1a126d0a7fe37cfa8fca4bee0c",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/hydrology_publication.rego"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:450a041acec2ad07741f6fc8dad5d4b03f196795bfd7cb253a53ad115b007dc7",
+        "fingerprint": "sha256:821f7daa9c5c2ab1961dba84f96eed5d3743fd3964503e0454f25ae29490215f",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/manifest/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+        "fingerprint": "sha256:bb382acfa086f4c69e44bd8cf57e622f7732b1651d4ac3beda9e662de0388218",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/manifests/agri-county-crop-progress-2026Q2-001.json"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+        "fingerprint": "sha256:8ee07b3380566c9eaf58fdbef087f35644ad925143a838d62e3eed70d68eb7d0",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/manifests/agri-soil-crop-suitability-v1-001.json"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+        "fingerprint": "sha256:04a881fbb2424119ee703fadb0fb4e9a3cc2f8b1d585f3adc7bab293f33bb087",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/manifests/hazards-r0001-v1.yaml"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+        "fingerprint": "sha256:1032c3d69b1769b08b5bfbae7715511d697161573bf87cc5ba6bbf4a4f0a671b",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/manifests/hazards-r0001.yaml"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+        "fingerprint": "sha256:f76dcc774cdaedcad7bc3080ebb9e1bec42be4ca6dc4abd207fff6153266dc92",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/manifests/hazards-r0002-v1.yaml"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+        "fingerprint": "sha256:711feb0503128bb4debb3fba518819783cd6ea4262373db7168248e71db97224",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/manifests/hazards-r0002.yaml"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+        "fingerprint": "sha256:0c79df58b5bd0172dc032f521b10df3819b287c12605e35029510a6c5765f34d",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/manifests/hazards-r0003-v1.yaml"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+        "fingerprint": "sha256:5102623cd91d0e9500ac0066229a9539ea1f6ec6bc9b831a18cd3bc9fd1dc155",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/manifests/hazards-r0003.yaml"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+        "fingerprint": "sha256:c9095384b221cd529033b9e38b36ad50b3a3a044e828bdddfd4b7b039efe1c0c",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/manifests/rel-fauna-density-grid-template.json"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+        "fingerprint": "sha256:31d6ec90bc39f3a763d11beedc1f26354289ebf8612b141de79051577a8e124d",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/manifests/rel-fauna-invasive-monitoring-template.json"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+        "fingerprint": "sha256:cb90565e46550748cb754b16078a0055338ddc54e36c753c10b64821fd902aef",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/manifests/rel-fauna-public-range-template.json"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+        "fingerprint": "sha256:9044a9b9988ee36914740529779eaf944ae8f43705a6a254e6696aff39e75200",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/manifests/rel-roads-corridor-trade-v1-template.json"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+        "fingerprint": "sha256:faf573130aebb37681bf241a03aa0087db5420efe310514fb0873038868e74d1",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/manifests/rel-roads-graph-connectivity-v1-template.json"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+        "fingerprint": "sha256:9451608884e49a56cf6fa1814cd724a597762b5c88bd96fb791be7d6ea170a24",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/manifests/rel-roads-historic-claim-v1-template.json"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+        "fingerprint": "sha256:c065ce01fc9f4ac4a3bc7cec2e03dbf918d436e9c0f04c5b18693dfe6158f092",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/manifests/rel-roads-modern-network-v1-template.json"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+        "fingerprint": "sha256:440b97e2ee2b9f5ddc8355e6c92f8ab57ba93c691dd401f77d980cb513b9750f",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/manifests/rel-roads-rail-alignment-v1-template.json"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:8f20ffede834f292a857988ed4582e7de36357548137d208ebda3d2296ec8754",
+        "fingerprint": "sha256:ff4542f9ab214f9f23132530d92793e9b2ab9d0d47d6a37fd02450013af0f368",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/people-dna-land/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:da4765183a5699667cb7124320ddda505a06ff5ee654b16816a05084ce664ae7",
+        "fingerprint": "sha256:f379bfe413c416ddc7a982104803525b2bdd8e1cb721384bd6bddf3ec9842e6d",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/policy/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+        "fingerprint": "sha256:241116cfa7feb2019e963acd1bd3660a2c508cc25e0810e2a4b0b56e838d012d",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/promotion_decisions/hazards-r0001-v1.yaml"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+        "fingerprint": "sha256:7c6d6a88931fb35a3a38351adb75c0f83b90346e60fc096447f8f2c9dae88010",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/promotion_decisions/hazards-r0001.yaml"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+        "fingerprint": "sha256:368db8dd36ec23ca848f2c5575fb0c560f44eba113f3de463fb145abcd8591f4",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/promotion_decisions/hazards-r0002-v1.yaml"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+        "fingerprint": "sha256:f025c1a05a10399dd2011d799e48db740c9e7529f852d015bd428b4996fe169c",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/promotion_decisions/hazards-r0002.yaml"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+        "fingerprint": "sha256:61dbfbd7838f0a0d8e40cdea7326f315bac96bbe7ea4125c9ec479bb5771da0d",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/promotion_decisions/hazards-r0003-v1.yaml"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+        "fingerprint": "sha256:a08096a90ddd2733965291e258ad2a2229c918bdaba0933f2de18c626f3fd499",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/promotion_decisions/hazards-r0003.yaml"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:fe8d69ff47d7af8472a2dd838ebfddb0aa4bba3df5423f82850f1c8b04b93f25",
+        "fingerprint": "sha256:953300d8e1d4ae0adf9c9f29288b0e91784d4965dc24016b3454d9177fa6087b",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/public_safe_geometry.rego"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:a0297328755694dbae4ceeb6952c527c8f510213b05f2b5a2aca41cd906be38b",
+        "fingerprint": "sha256:907acec7b03420430ad4e709c67286fcaec060ab6ab2b740b06776b155519679",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/reviews/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:63c1e51003dde2f8188f66a5fcdb4a9d3ff858014e5114cba6288866e24f9dcb",
+        "fingerprint": "sha256:3fa38dc0657823e4d0eb939166e02858bf1174e2c830549897df4864be433fed",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/rollback/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+        "fingerprint": "sha256:5732ad35446a917c3d36da85b364320a25ca8eb3a12d91baab1dba9bd57014eb",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/rollback_cards/agri-county-crop-progress-2026Q2-001.json"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
+        "fingerprint": "sha256:92c28545304b6d725a168dcebf9fff7cc3fb059084fb15626d9a8edfee2d3567",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/rollback_cards/rel-atmosphere-pm25-2026-001.card.json"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:fe8d69ff47d7af8472a2dd838ebfddb0aa4bba3df5423f82850f1c8b04b93f25",
+        "fingerprint": "sha256:5cc012601c1db89269624e39da827ef191725cad1e98fa4c695e87f9c4ad4606",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/source_role_anti_collapse.rego"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:d706e32adc8a2a3fbee2a312ee51a3237e10dbe29258b3353517b501908d3aa7",
+        "fingerprint": "sha256:797fcfd63d775ae1dbfcc4b88b8e825ce717721decc40a79803c800d1d1cd429",
+        "rule_id": "KFM-TOPO-011",
+        "subject": "release/source_role_anti_collapse/"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:1f5c479c39f75b9446340dcdf82bc7ac058b7e7df62924adbe7667c1efae293e",
+        "fingerprint": "sha256:da5a2accc8625952a68005b8ede2d1ca447e014160f09364abbbeee2e35db378",
+        "rule_id": "KFM-TOPO-012",
+        "subject": "release/hydrology_publication.rego"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:1f5c479c39f75b9446340dcdf82bc7ac058b7e7df62924adbe7667c1efae293e",
+        "fingerprint": "sha256:290f9efe3dbceff387c49f406c1c645dd647a956041670ba5a8c903f9808d691",
+        "rule_id": "KFM-TOPO-012",
+        "subject": "release/public_safe_geometry.rego"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:1f5c479c39f75b9446340dcdf82bc7ac058b7e7df62924adbe7667c1efae293e",
+        "fingerprint": "sha256:5f2fa42a92e70cecbcbfe568f31415e5abc51af354d84255e31cfe864d2f40d7",
+        "rule_id": "KFM-TOPO-012",
+        "subject": "release/source_role_anti_collapse.rego"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:1f5c479c39f75b9446340dcdf82bc7ac058b7e7df62924adbe7667c1efae293e",
+        "fingerprint": "sha256:2c4fb339ee8582a442da202a4a3f64b66a26f1e1abb9bb0caa0ff9888386f04e",
+        "rule_id": "KFM-TOPO-012",
+        "subject": "tools/validators/hydro/policy/hydro_publication.rego"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:c9220f9c5ef852f903155494ac71e22a2420cd90e7d28b41d6376c85dde902c8",
+        "fingerprint": "sha256:781cda6ebe07128b68bdf550abb550f8aa536fa56e4c7e3bf628cd68f6f4d12c",
+        "rule_id": "KFM-TOPO-013",
+        "subject": "artifacts/trust-shaped"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:2d0ae09f443f3f9e8db31cb0272a4802d5806e27b608c05707de9da23ec845dd",
+        "fingerprint": "sha256:b18a50338cfd9b9d4f667fe196867842294487e3b6ea471e718de6173a294ded",
+        "rule_id": "KFM-TOPO-016",
+        "subject": "doc-id:NEEDS_VERIFICATION"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:13c42f7f69a87a6dba2cd010f919ce66c9c62420243eb73089aef917200263a6",
+        "fingerprint": "sha256:b26c4f2f32601b8a1c8ad79ea26faebfb3d46e4aa0b7b818956a70c752b983cb",
+        "rule_id": "KFM-TOPO-016",
+        "subject": "doc-id:kfm://contract/domains/archaeology/publication-transform-receipt"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:047f5ccbbdacead1da1f3ae97997bb9ea5b11c9cbcc80efd535ecf404d30311d",
+        "fingerprint": "sha256:a20d1ec8834c7b3fc105ad3b01063e1ebc73b48fed9e5b7902d03ba1507de13b",
+        "rule_id": "KFM-TOPO-016",
+        "subject": "doc-id:kfm://doc/NEEDS-VERIFICATION"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:6fc5e1a6af6bbea74f793f07ecff89c4ad5b35e8636ee1afe04e45a2803dbe02",
+        "fingerprint": "sha256:3208223eb6d98528fe8e3d5756c63c39cf740d3a2a623d7e4a565a5cb9dcc689",
+        "rule_id": "KFM-TOPO-016",
+        "subject": "doc-id:kfm://doc/dashboards-observability-opentelemetry-stack"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:0da11cb0db8f766ffb908a6334fe83ad12c84bdb47bc697ca9379e49607b6cc7",
+        "fingerprint": "sha256:aef9bc6b02441d3aaa50026a24b24d2f8fdb7e7d8f04956d2731280d0735fb84",
+        "rule_id": "KFM-TOPO-016",
+        "subject": "doc-id:kfm://doc/docs-domains-flora-modalities-readme"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:9a0e16b3251c9c5702a36481e16debd1902ba392012cdc5fba7f4783da0cc330",
+        "fingerprint": "sha256:974227ae6d0b45a80e48ddf80eb49ee3cca067f159bef53134f50d29e1178c7c",
+        "rule_id": "KFM-TOPO-016",
+        "subject": "doc-id:kfm://doc/docs-domains-flora-readme"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:835246521d73db2eba2165cc1085ad5a139f55988489c7cc995af1bc885bb947",
+        "fingerprint": "sha256:a6887a9ca548ce1172b58fbfeb819e2284754ab519eb267aa60318d6fb1cd1d3",
+        "rule_id": "KFM-TOPO-016",
+        "subject": "doc-id:kfm://doc/docs-domains-roads-rail-trade-sublanes-trade-routes"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:cfee63c94967619a51a5a615792047c8ec0e5d42114554b423a27c0a3b60508b",
+        "fingerprint": "sha256:b32bad9eed7876b5632cf25c3974a20039c99fed1b551ed5b1a7638533bc3d9f",
+        "rule_id": "KFM-TOPO-016",
+        "subject": "doc-id:kfm://doc/docs-sources-catalog-ahgp-county-town-histories"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:2c07b4adc42c1389a9f784063e88921454f1be14c1bb0ccfd0a31109cdd03133",
+        "fingerprint": "sha256:61d96ec77bd27d31ebd718a52245ee6113e5593d15ab5f7b588c2286c8d47714",
+        "rule_id": "KFM-TOPO-016",
+        "subject": "doc-id:kfm://doc/docs-sources-catalog-blm-glo-field-notes"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:9e8a7f8c0b6f3f9d51fbc9f3b606dbf0bb5c83e578eff0aa0f147ee4ac7aa1cc",
+        "fingerprint": "sha256:bd4b35583c74b068e30d090084d9b27a1bb296b8c899de7886e10f8628403334",
+        "rule_id": "KFM-TOPO-016",
+        "subject": "doc-id:kfm://doc/domain/people-dna-land/scope-and-boundary"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:e4a2bfb4c146f4009225501aa7db12cd9160e6b03375d178edc3f7e19167f73f",
+        "fingerprint": "sha256:498ea80639644ea39631cf162ea65d8fc22cf46826e0af6b4061dbfeb9f96c73",
+        "rule_id": "KFM-TOPO-016",
+        "subject": "doc-id:kfm://doc/domains/habitat/sensitivity-policy-index"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:c3f09b0fea0077f88604076405b384691dee45eddad3af2380bb74edcd56ee68",
+        "fingerprint": "sha256:b0adb9881fc472ce28f247b0c9d4a8bda0041c295790fb054da7cf087b545813",
+        "rule_id": "KFM-TOPO-016",
+        "subject": "doc-id:kfm://doc/flora-missing-or-planned-files"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:e3002c5595c2f9b98f9972c4c996eb6461df3e1a54b623f89750aa4a1d3cf6fd",
+        "fingerprint": "sha256:5554ad2bea19f461a34996a4c049e309421089274453bfcb860bec3f5fca3f42",
+        "rule_id": "KFM-TOPO-016",
+        "subject": "doc-id:kfm://doc/geology-canonical-paths"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:4589a91ea9401f6ac90ad860716d92047a55b8417c818ad2d0559f5eaefdd0aa",
+        "fingerprint": "sha256:0ab79c6e739a48a51f3a587978404206d061bfaec5600eff93a8624238202063",
+        "rule_id": "KFM-TOPO-016",
+        "subject": "doc-id:kfm://doc/geology-sensitivity"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:773dd6a6de217fa2c645563d38695693edda954d93bd84694e1b7039d46b5a99",
+        "fingerprint": "sha256:f8793931ca840da4b7b2b59b09c47a313262a24c95ecb4089dc47457a3ffe5dd",
+        "rule_id": "KFM-TOPO-016",
+        "subject": "doc-id:kfm://doc/geology-sublane-bedrock"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:dee729e98f0f6a4ba92145b86efce5049431e2bb1af4c3611a64867f6b814e2e",
+        "fingerprint": "sha256:d53a1d9921c322ec3d706dded8cf64b9a5228eeb24188354ceeef839909334f7",
+        "rule_id": "KFM-TOPO-016",
+        "subject": "doc-id:kfm://doc/soil-continuity-inventory"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:96b6b742adf0170f6498372c4fcb9a5fca25db07e518ecb6493ff72729ac00c1",
+        "fingerprint": "sha256:703c7a860f51dd40bc0769b2559dfddf6187a50f471d419e11e0dae88f76826b",
+        "rule_id": "KFM-TOPO-016",
+        "subject": "doc-id:kfm://doc/sources-catalog-blm"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:00a0eaabe165e059510bcb90719a623730fbfbc1171ffad779099da4a87e0f2e",
+        "fingerprint": "sha256:28684800e5fd5535ce11a018d9926481608ff57ea6496b5a0b63663a48f9b38d",
+        "rule_id": "KFM-TOPO-016",
+        "subject": "doc-id:kfm://doc/sources-catalog-noaa"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:996cefb7e0aea5709a4c8d9610178a1687d46ef9997249309818708142883ab7",
+        "fingerprint": "sha256:3a6cd6375025692309d45fa77c85d7247391c0d72604a440a24d694743e1a08a",
+        "rule_id": "KFM-TOPO-016",
+        "subject": "doc-id:kfm://doc/sources-catalog-nrcs"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:0fc8f4158e50495b824661219a53d11f50188274c8ba237542ab11e5a7cea9e7",
+        "fingerprint": "sha256:edf486954b70d48eccaced53190d57d76a58dcbb3c211075e39cabf86d86cf2b",
+        "rule_id": "KFM-TOPO-016",
+        "subject": "doc-id:kfm://doc/standards/canonicalization"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:4169e26e4c2bb0014c87d62c322e5ab107e8d616019ecbc9bba2e26c161295ad",
+        "fingerprint": "sha256:3473f2281487d8a49f458e0ac4eb0ab95654c5ada4f73dde099328b364d53658",
+        "rule_id": "KFM-TOPO-017",
+        "subject": "artifacts/build/env/build-env.json"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+        "fingerprint": "sha256:31ad479a2fde39c4aaad196b34166ac14c3e9a5240a78217b8374b9589180fca",
+        "rule_id": "KFM-TOPO-017",
+        "subject": "artifacts/build/env/tool-versions.yaml"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+        "fingerprint": "sha256:e2f82d843a14e6606521f1bde3b7e0b9174b438bbcaf203400a8bee3d28acda2",
+        "rule_id": "KFM-TOPO-017",
+        "subject": "artifacts/qa/coverage/coverage.xml"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+        "fingerprint": "sha256:9f7caca1153d28bd7c05283f40fc287e04b3eb8d62061de3319afe9ae0e90de3",
+        "rule_id": "KFM-TOPO-017",
+        "subject": "artifacts/qa/coverage/lcov.info"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:4169e26e4c2bb0014c87d62c322e5ab107e8d616019ecbc9bba2e26c161295ad",
+        "fingerprint": "sha256:e16ed6e6f389e8a5022e3bc1aef48741e6e166724e63b283cd6cb0018e857fcc",
+        "rule_id": "KFM-TOPO-017",
+        "subject": "artifacts/qa/lint/eslint.json"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:4169e26e4c2bb0014c87d62c322e5ab107e8d616019ecbc9bba2e26c161295ad",
+        "fingerprint": "sha256:5d9bbcc4e195962be0428df9d0c6afeb99418d7801b702546ceb355d46bd748c",
+        "rule_id": "KFM-TOPO-017",
+        "subject": "artifacts/qa/lint/markdownlint.json"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:d3227aee26cf376497f7e03d317f6ef0b9a0b5e624ddcb63df795b4f0aa3c720",
+        "fingerprint": "sha256:d31766806deaf4f8615b36f7cfc2c174978844e45afec99227e3c6e873f4f3dc",
+        "rule_id": "KFM-TOPO-017",
+        "subject": "artifacts/qa/lint/mypy.txt"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:4169e26e4c2bb0014c87d62c322e5ab107e8d616019ecbc9bba2e26c161295ad",
+        "fingerprint": "sha256:8fa7362ea67f01335271f54f58181f716b575d96d70e0279fcc32862936b31fd",
+        "rule_id": "KFM-TOPO-017",
+        "subject": "artifacts/qa/lint/ruff.json"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:0273d7c5584cf504833372a53205e8b8f63c2075676e6efd00ba30f7af2e9017",
+        "fingerprint": "sha256:3b57fc23adb261e9d606e06c8e40c9a7e700f4fd270cce16d74fe35926c04327",
+        "rule_id": "KFM-TOPO-017",
+        "subject": "artifacts/qa/validation/validation_report.json"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:4169e26e4c2bb0014c87d62c322e5ab107e8d616019ecbc9bba2e26c161295ad",
+        "fingerprint": "sha256:7c1ece611590bfe7b44b1756077c687a9d4175f21712a04062ce1cb58fa8934b",
+        "rule_id": "KFM-TOPO-017",
+        "subject": "artifacts/release/people-dna-land/release_manifest.json"
+      },
+      {
+        "disposition": "BASELINED_WARNING",
+        "evidence_sha256": "sha256:fb6ecc9db892e569bd93289c809307379f30eec5a2d4bcf4fc0a9074c7330989",
+        "fingerprint": "sha256:911a8949240cb17321f3258d874a8dbf252f3cfa29f6405ebc485014e3d96ff3",
+        "rule_id": "KFM-TOPO-020",
+        "subject": "alias.directory-rules.legacy-architecture"
+      }
+    ],
+    "outcome": "PASS",
+    "rule_count": 20,
+    "schema_version": "kfm.repository-topology-report.v1",
+    "tracked_path_count": 14244
+  }
+}

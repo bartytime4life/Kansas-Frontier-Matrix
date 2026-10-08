@@ -1,0 +1,272 @@
+{
+  "effects": {
+    "lifecycle_written": false,
+    "network_accessed": false,
+    "policy_decision_emitted": false,
+    "published": false,
+    "released": false,
+    "source_admitted": false
+  },
+  "evidence_bundle": {
+    "bundle_id": "hydrology:proof-slice:bundle:fixture-v1",
+    "checksums": {
+      "living_waters_packet": "sha256:7d8d31973dccc6eaaa2470ab046e3feb7518c74f0b05cd1281a37c04c095f08c"
+    },
+    "citations": [
+      "KFM synthetic Living Waters fixture packet (fixture-v1); not a real observation."
+    ],
+    "claim_scope": "synthetic hydrology proof slice: fixture HUC12 102600150101 gauge fixture-ks-06864500 discharge 00060",
+    "evidence_refs": [
+      {
+        "kind": "dataset",
+        "ref": "fixture://hydrology/snapshot/watershed-reaches@fixture-v1"
+      },
+      {
+        "kind": "measurement",
+        "ref": "fixture:hydrology:living-waters:first-proof#series"
+      }
+    ],
+    "rights": {
+      "license": "CC0-1.0"
+    },
+    "sensitivity": {
+      "applied_at": "2026-09-29T00:00:00Z",
+      "level": "generalized",
+      "reason": "Gauge spatial support is generalized to county; no exact site geometry is carried."
+    },
+    "source_records": [
+      "src:fixture-hydrology-living-waters"
+    ],
+    "spec_hash": {
+      "value": "sha256:63473909c2229b211757e45609e5c656e3292bd4736ddb7d2ecefac8e943766a"
+    },
+    "transforms": [
+      "none: synthetic fixture values are carried unchanged"
+    ]
+  },
+  "feature_source_role": "synthetic_observation",
+  "packet": {
+    "gauge": {
+      "role": "synthetic_site_metadata",
+      "site_id": "fixture-ks-06864500",
+      "spatial_support": "generalized_county",
+      "state": "KS"
+    },
+    "governance": {
+      "deployed": false,
+      "fixture_only": true,
+      "policy_evaluated": false,
+      "published": false,
+      "released": false,
+      "source_activated": false,
+      "source_admitted": false
+    },
+    "packet_id": "fixture:hydrology:living-waters:first-proof",
+    "profile": "living-waters-fixture-v1",
+    "scenarios": [
+      {
+        "display_message": "Synthetic hydrograph available.",
+        "id": "current",
+        "join_outcome": "EXACT",
+        "reason_codes": [
+          "FIXTURE_EVIDENCE_RESOLVED"
+        ],
+        "state": "AVAILABLE"
+      },
+      {
+        "display_message": "Synthetic observations are stale.",
+        "id": "stale",
+        "join_outcome": "EXACT",
+        "reason_codes": [
+          "FRESHNESS_THRESHOLD_EXCEEDED"
+        ],
+        "state": "STALE"
+      },
+      {
+        "display_message": "The bounded synthetic query returned no observations.",
+        "id": "no-results",
+        "join_outcome": "NOT_ATTEMPTED",
+        "reason_codes": [
+          "BOUNDED_QUERY_EMPTY"
+        ],
+        "state": "NO_RESULTS"
+      },
+      {
+        "display_message": "The synthetic artifact is unavailable.",
+        "id": "unavailable",
+        "join_outcome": "NOT_ATTEMPTED",
+        "reason_codes": [
+          "ARTIFACT_UNAVAILABLE"
+        ],
+        "state": "UNAVAILABLE"
+      },
+      {
+        "display_message": "The gauge-to-reach join is ambiguous; KFM abstains.",
+        "id": "ambiguous-reach",
+        "join_outcome": "AMBIGUOUS",
+        "reason_codes": [
+          "MULTIPLE_REACH_CANDIDATES"
+        ],
+        "state": "ABSTAIN"
+      }
+    ],
+    "series": {
+      "parameter_code": "00060",
+      "parameter_name": "discharge",
+      "points": [
+        {
+          "observed_at": "2026-09-10T12:00:00Z",
+          "value": 118.0
+        },
+        {
+          "observed_at": "2026-09-10T12:15:00Z",
+          "value": 121.0
+        },
+        {
+          "observed_at": "2026-09-10T12:30:00Z",
+          "value": 125.0
+        }
+      ],
+      "qualifier_code": "P",
+      "qualifier_name": "provisional",
+      "statistic_code": "00000",
+      "statistic_name": "instantaneous",
+      "unit_code": "ft3/s"
+    },
+    "snapshot": {
+      "content_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "huc12": "102600150101",
+      "identity": "fixture://hydrology/snapshot/watershed-reaches",
+      "reach_ids": [
+        "fixture-reach-01",
+        "fixture-reach-02"
+      ],
+      "role": "synthetic_reference",
+      "version": "fixture-v1"
+    }
+  },
+  "packet_sha256": "sha256:7d8d31973dccc6eaaa2470ab046e3feb7518c74f0b05cd1281a37c04c095f08c",
+  "posture": "SYNTHETIC_FIXTURE_ONLY",
+  "presented_as": "observed_gauge_series",
+  "profile_sha256": "sha256:79edd8673a04b739d3fdbed8467e0b3d331f06b27227fdb820305da0621e6519",
+  "proof_record_hash": "sha256:b6d7f38a6c6f7aae96bcc9aa263008ed76e6c74d4c97c69ba46cf64e36d50e48",
+  "rollback_rehearsal": {
+    "dry_run": true,
+    "outcome": "PASS",
+    "pointer_after_publish": "release-candidate:hydrology:proof-slice:fixture-v1",
+    "pointer_after_rollback": "release:hydrology:proof-slice:fixture-v0",
+    "pointer_before": "release:hydrology:proof-slice:fixture-v0",
+    "release_candidate": "release-candidate:hydrology:proof-slice:fixture-v1",
+    "rollback_target": "release:hydrology:proof-slice:fixture-v0"
+  },
+  "scenarios": [
+    {
+      "envelope": {
+        "decision_id": "hydrology:proof-slice:01-answer-current",
+        "evaluated_at": "2026-09-29T00:00:00Z",
+        "evidence_refs": [
+          "hydrology:proof-slice:bundle:fixture-v1",
+          "fixture://hydrology/snapshot/watershed-reaches@fixture-v1",
+          "fixture:hydrology:living-waters:first-proof#series"
+        ],
+        "obligations": [
+          "CITE_SYNTHETIC_FIXTURE",
+          "LABEL_NOT_A_REAL_OBSERVATION"
+        ],
+        "outcome": "ANSWER",
+        "policy_family": "access",
+        "reason_code": "FIXTURE_EVIDENCE_RESOLVED",
+        "reasons": [
+          "Synthetic hydrograph available. Latest synthetic discharge 125.0 ft3/s at 2026-09-10T12:30:00Z (provisional)."
+        ],
+        "version": "hydrology-proof-slice-v1"
+      },
+      "id": "current"
+    },
+    {
+      "envelope": {
+        "decision_id": "hydrology:proof-slice:11-answer-stale",
+        "evaluated_at": "2026-09-29T00:00:00Z",
+        "evidence_refs": [
+          "hydrology:proof-slice:bundle:fixture-v1",
+          "fixture://hydrology/snapshot/watershed-reaches@fixture-v1",
+          "fixture:hydrology:living-waters:first-proof#series"
+        ],
+        "obligations": [
+          "CITE_SYNTHETIC_FIXTURE",
+          "LABEL_NOT_A_REAL_OBSERVATION",
+          "DISPLAY_STALE_BADGE"
+        ],
+        "outcome": "ANSWER",
+        "policy_family": "access",
+        "reason_code": "FRESHNESS_THRESHOLD_EXCEEDED",
+        "reasons": [
+          "Synthetic observations are stale. Latest synthetic discharge 125.0 ft3/s at 2026-09-10T12:30:00Z (provisional)."
+        ],
+        "version": "hydrology-proof-slice-v1"
+      },
+      "id": "stale"
+    },
+    {
+      "envelope": {
+        "decision_id": "hydrology:proof-slice:12-abstain-no-results",
+        "evaluated_at": "2026-09-29T00:00:00Z",
+        "evidence_refs": [
+          "hydrology:proof-slice:bundle:fixture-v1",
+          "fixture://hydrology/snapshot/watershed-reaches@fixture-v1",
+          "fixture:hydrology:living-waters:first-proof#series"
+        ],
+        "obligations": [],
+        "outcome": "ABSTAIN",
+        "policy_family": "access",
+        "reason_code": "BOUNDED_QUERY_EMPTY",
+        "reasons": [
+          "The bounded synthetic query returned no observations."
+        ],
+        "version": "hydrology-proof-slice-v1"
+      },
+      "id": "no-results"
+    },
+    {
+      "envelope": {
+        "decision_id": "hydrology:proof-slice:13-error-artifact-unavailable",
+        "evaluated_at": "2026-09-29T00:00:00Z",
+        "evidence_refs": [
+          "hydrology:proof-slice:bundle:fixture-v1",
+          "fixture://hydrology/snapshot/watershed-reaches@fixture-v1",
+          "fixture:hydrology:living-waters:first-proof#series"
+        ],
+        "obligations": [],
+        "outcome": "ERROR",
+        "policy_family": "access",
+        "reason_code": "ARTIFACT_UNAVAILABLE",
+        "reasons": [
+          "The synthetic artifact is unavailable."
+        ],
+        "version": "hydrology-proof-slice-v1"
+      },
+      "id": "unavailable"
+    },
+    {
+      "envelope": {
+        "decision_id": "hydrology:proof-slice:09-abstain-ambiguous-reach",
+        "evaluated_at": "2026-09-29T00:00:00Z",
+        "evidence_refs": [
+          "hydrology:proof-slice:bundle:fixture-v1",
+          "fixture://hydrology/snapshot/watershed-reaches@fixture-v1",
+          "fixture:hydrology:living-waters:first-proof#series"
+        ],
+        "obligations": [],
+        "outcome": "ABSTAIN",
+        "policy_family": "access",
+        "reason_code": "MULTIPLE_REACH_CANDIDATES",
+        "reasons": [
+          "The gauge-to-reach join is ambiguous; KFM abstains."
+        ],
+        "version": "hydrology-proof-slice-v1"
+      },
+      "id": "ambiguous-reach"
+    }
+  ],
+  "schema_version": "kfm.site-living-waters-synthetic/v1"
+}

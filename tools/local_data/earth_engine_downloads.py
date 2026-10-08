@@ -143,10 +143,16 @@ def handler(manager):
         def log_message(self,*args): pass
         def authorized(self):
             return self.headers.get("Host")==f"127.0.0.1:{PORT}" and self.headers.get("Origin") in ORIGINS
+        def safe_origin(self):
+            origin=self.headers.get("Origin")
+            if origin not in ORIGINS: return None
+            if any(ch in origin for ch in ("\r","\n")): return None
+            return origin
         def answer(self,status,body):
             encoded=json.dumps(body).encode()
             self.send_response(status)
-            if self.authorized(): self.send_header("Access-Control-Allow-Origin",self.headers["Origin"])
+            origin=self.safe_origin()
+            if origin is not None: self.send_header("Access-Control-Allow-Origin",origin)
             self.send_header("Vary","Origin")
             self.send_header("Cache-Control","no-store")
             self.send_header("Content-Type","application/json")
@@ -154,9 +160,10 @@ def handler(manager):
             self.end_headers()
             self.wfile.write(encoded)
         def do_OPTIONS(self):
-            if not self.authorized(): return self.answer(403,{"error":"ORIGIN_REJECTED"})
+            origin=self.safe_origin()
+            if self.headers.get("Host")!=f"127.0.0.1:{PORT}" or origin is None: return self.answer(403,{"error":"ORIGIN_REJECTED"})
             self.send_response(204)
-            self.send_header("Access-Control-Allow-Origin",self.headers["Origin"])
+            self.send_header("Access-Control-Allow-Origin",origin)
             self.send_header("Access-Control-Allow-Methods","GET, POST, OPTIONS")
             self.send_header("Access-Control-Allow-Headers","Content-Type, X-KFM-Session")
             self.send_header("Access-Control-Allow-Private-Network","true")
