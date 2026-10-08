@@ -13,7 +13,7 @@ responsibility: Replaceable lexical inventory and exact-source review aid; no po
 truth_posture: CONFIRMED tracked-blob visitation and classified lexical inventory at the pinned revision; UNKNOWN external/deployed state; no operational approval.
 generated_from: main@c90836cdb7a34791669907053522de0458f21ae9
 generator_identity: tools/qa/dp15_inventory_scan.py + tools/qa/dp15_inventory_classify.py v1.0.0 for machine inventory; AI-authored source-review narrative
-content_digests: data/receipts/generated/genrec-dp15-current-tree-inventory-20261007.json
+content_digests: data/receipts/generated/genrec-dp15-artifacts-placement-successor-20261008.json (current paths and bytes; supersedes the path bindings of genrec-dp15-current-tree-inventory-20261007.json, kept as historical provenance)
 edit_policy: Regenerate machine outputs; review narrative classifications against pinned bytes.
 [/KFM_META_BLOCK_V2] -->
 
@@ -211,7 +211,7 @@ print("DP-15 outputs reproduce")
 PY
 ```
 
-`hits.csv.gz` and `inventory.json.gz` were tracked in the original commit (their gzip-byte digests are recorded in the generation receipt). They are no longer tracked because `artifacts/` admits only provenance-bearing JSON payloads (KFM-TOPO-017) and the Directory Rules direct regenerable QA output toward ignored or external CI storage. The digests above are of their decompressed content; regenerating at the pinned commit reproduced both on 2026-10-08, differing only in the recorded tool versions and the gzip header OS byte.
+`hits.csv.gz` and `inventory.json.gz` were tracked in the original commit (their gzip-byte digests are recorded in the original generation receipt, [`genrec-dp15-current-tree-inventory-20261007.json`](../../../../data/receipts/generated/genrec-dp15-current-tree-inventory-20261007.json), which stays as historical provenance). The successor receipt [`genrec-dp15-artifacts-placement-successor-20261008.json`](../../../../data/receipts/generated/genrec-dp15-artifacts-placement-successor-20261008.json) binds the current paths and bytes. They are no longer tracked because `artifacts/` admits only provenance-bearing JSON payloads (KFM-TOPO-017) and the Directory Rules direct regenerable QA output toward ignored or external CI storage. The digests above are of their decompressed content; regenerating at the pinned commit reproduced both on 2026-10-08, differing only in the recorded tool versions and the gzip header OS byte.
 
 The scan also emits the complete raw tree and decoded-representation manifests into the temporary output, allowing all 14,164 paths and every content digest to be audited. The checked-in tree digest binds the full enumerated source set. Binary type descriptions are observations from `file`; machine output may vary if extractor/tool versions change.
 
