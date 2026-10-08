@@ -41,6 +41,15 @@ MAX_INPUT_BYTES = 1024 * 1024
 MAX_TOTAL_INPUT_BYTES = 16 * 1024 * 1024
 MAX_TOTAL_PHYSICAL_READ_BYTES = 2 * MAX_TOTAL_INPUT_BYTES
 SCAN_ROOTS = ("apps", "packages", "runtime", "scripts", "tests", "examples", "public")
+# Git-ignored Site build outputs copied from node_modules by its prepare scripts
+# (see apps/site/source/.gitignore). Exact prefixes only, so a local build cannot
+# turn the inventory into SCAN_INPUT_TOO_LARGE while other paths stay scanned.
+GENERATED_OUTPUT_PREFIXES = (
+    "apps/site/source/.sites-runtime/",
+    "apps/site/source/.wrangler/",
+    "apps/site/source/public/maplibre/",
+    "apps/site/source/public/vendor/h5wasm/",
+)
 RENDERER_PACKAGES = ("maplibre-gl", "mapbox-gl", "cesium", "leaflet", "ol", "openlayers")
 KFM_RENDERER_FACADES = ("@kfm/maplibre",)
 # ADR-0006 Site exception: exact files only; every other Site module must go through them.
@@ -452,6 +461,8 @@ def _iter_files(root: Path) -> tuple[list[Path], bool]:
             continue
         for path in sorted(base.rglob("*")):
             if any(part in ignored_parts for part in path.parts):
+                continue
+            if path.relative_to(root).as_posix().startswith(GENERATED_OUTPUT_PREFIXES):
                 continue
             if path.is_symlink():
                 files.append(path)

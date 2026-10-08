@@ -46,6 +46,20 @@ export function mapRuntimeErrorCode(stage: "event" | "start" | "load", sourceId?
   return sourceId ? "MAP_SOURCE_FAILED" : "MAP_RENDER_FAILED";
 }
 
+// Sources whose owning control listens for its own MapLibre errors and shows a
+// partial or unavailable state. A failed tile there is not a map runtime failure.
+// Prefixes cover the soil-moisture A/B buffers and per-layer Earth Engine sources.
+const CONTROL_OWNED_SOURCE_PREFIXES = [
+  "external-nasa-smap-soil-",
+  "external-crop-casma-1km",
+  "kfm-ee-context-source-",
+  "kfm-device-geopdf-source",
+] as const;
+
+export function controlOwnsMapSourceErrors(sourceId: string | undefined): boolean {
+  return Boolean(sourceId && CONTROL_OWNED_SOURCE_PREFIXES.some((prefix) => sourceId.startsWith(prefix)));
+}
+
 export type MapRuntimeCheckFailure =
   | "STYLE_CHECK_FAILED" | "SOURCE_CHECK_FAILED" | "CANVAS_CHECK_FAILED"
   | "PROJECTION_CHECK_FAILED" | "INTERACTION_CHECK_FAILED"

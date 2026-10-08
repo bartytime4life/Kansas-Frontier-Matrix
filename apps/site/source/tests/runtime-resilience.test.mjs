@@ -99,6 +99,41 @@ test("MapLibre event and startup telemetry uses finite classes without reading p
   assert.match(snapshot, /MAP_RENDER_FAILED/);
 });
 
+test("control-owned and buffered radar source failures never become a fatal map runtime error", async () => {
+  // Read each control's actual source IDs so a renamed source cannot silently
+  // fall through to "Map runtime error: MAP_SOURCE_FAILED" again.
+  const read = (file) => readFile(new URL(`../app/${file}`, import.meta.url), "utf8");
+  const [soil, crop, earthEngine, geopdf] = await Promise.all([
+    read("soil-moisture-control.tsx"), read("crop-casma-control.tsx"), read("earth-engine-display.tsx"), read("local-geopdf-map.ts"),
+  ]);
+  const soilSources = JSON.parse(soil.match(/const SOURCES = (\[[^\]]+\]) as const;/)[1]);
+  const cropSource = crop.match(/const SOURCE = "([^"]+)";/)[1];
+  const earthEnginePrefix = earthEngine.match(/const sourceId = \(id: string\) => `([^$`]+)\$\{id\}`;/)[1];
+  const geopdfSource = geopdf.match(/export const LOCAL_REVIEW_SOURCE = "([^"]+)";/)[1];
+  assert.equal(soilSources.length, 2);
+  for (const sourceId of [...soilSources, cropSource, `${earthEnginePrefix}ee-cdl`, geopdfSource, `${geopdfSource}-5-7-12`]) {
+    assert.equal(perf.controlOwnsMapSourceErrors(sourceId), true, sourceId);
+  }
+  for (const sourceId of [undefined, "", "openmaptiles", "osm-context", "kfm-terrain-dem", "external-nws-radar", "private-token-source"]) {
+    assert.equal(perf.controlOwnsMapSourceErrors(sourceId), false, String(sourceId));
+  }
+
+  const context = await import(await moduleUrl("app/live-context.ts"));
+  const radar = context.OFFICIAL_CONTEXT_BY_ID["nws-radar"];
+  assert.equal(context.officialContextForMapSource(radar.sourceId), radar);
+  assert.equal(context.officialContextForMapSource(`${radar.sourceId}-buffer`), radar);
+  assert.equal(context.officialContextForMapSource("external-usgs-earthquakes")?.id, "usgs-earthquakes");
+  assert.equal(context.officialContextForMapSource("osm-context"), undefined);
+  assert.equal(context.officialContextForMapSource(undefined), undefined);
+
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const eventHandler = page.slice(page.indexOf('map.on("error", (event) => {'));
+  const fatal = eventHandler.indexOf("Map runtime error:");
+  assert.ok(eventHandler.indexOf("if (controlOwnsMapSourceErrors(sourceId)) return;") > 0);
+  assert.ok(eventHandler.indexOf("if (controlOwnsMapSourceErrors(sourceId)) return;") < fatal);
+  assert.match(eventHandler.slice(0, fatal), /const affectedOfficialContext = officialContextForMapSource\(sourceId\);/);
+});
+
 test("map health treats a local source awaiting style installation as pending", () => {
   const enabled = { isEnabled: () => true };
   const map = {

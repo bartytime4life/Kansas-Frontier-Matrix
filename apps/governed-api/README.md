@@ -234,16 +234,16 @@ Temporal support must distinguish envelope issuance from observation, validity, 
 
 ### 11.1 Local quick start
 
-Use a full repository checkout and Python **3.11 or newer**, as declared by the [root Python manifest](../../pyproject.toml). From the repository root:
+Use a full repository checkout and Python **3.11 or newer** with the third-party dependencies declared by the [root Python manifest](../../pyproject.toml) installed. The workspace packages under `packages/` do not need to be installed. From the repository root:
 
 ```bash
 make governed-api-dev
 ```
 
-The [Makefile](../../Makefile) invokes the module directly with its source path. `make api-run` is an alias. The equivalent command is:
+The [Makefile](../../Makefile) invokes the module directly with its source path and the source paths of the `release`, `connectors-core`, `hashing`, `policy-runtime`, and `evidence-resolver` packages it imports. Without them, the repository-root `release/` directory shadows the `release` package and startup fails. `make api-run` is an alias. The equivalent command is:
 
 ```bash
-PYTHONPATH=apps/governed-api/src python -m governed_api.main
+PYTHONPATH=apps/governed-api/src:packages/release/src:packages/connectors-core/src:packages/hashing/src:packages/policy-runtime/src:packages/evidence-resolver/src python -m governed_api.main
 ```
 
 The development server binds to **`127.0.0.1:8000`**. Stop it with `Ctrl-C`. For deterministic example output, stop the first server and start:
