@@ -1031,6 +1031,13 @@ const radarBufferIds = () => {
   return { source: `${radar.sourceId}-buffer`, layer: `${radar.layerIds[0]}-buffer` };
 };
 
+/** Resolve a MapLibre source, including the radar's staging buffer, to its official context. */
+export const officialContextForMapSource = (sourceId: string | undefined): OfficialContextSource | undefined => {
+  if (!sourceId) return undefined;
+  return OFFICIAL_CONTEXT_BY_SOURCE_ID[sourceId]
+    ?? (sourceId === radarBufferIds().source ? OFFICIAL_CONTEXT_BY_ID["nws-radar"] : undefined);
+};
+
 /** Keep the inactive raster loading at zero opacity; only a settled exact frame is shown. */
 export const stageNoaaRadarObservationTime = (map: MapLibreMap, observedAt: string): string => {
   const radar = OFFICIAL_CONTEXT_BY_ID["nws-radar"];

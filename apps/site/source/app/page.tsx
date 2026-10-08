@@ -49,7 +49,7 @@ import { EarthEngineRasterFallback, type EarthEngineDisplayState } from "./earth
 import { useEarthEngineContext } from "./earth-engine-context-client";
 import { earthEngineSetYear } from "./earth-engine-context";
 import { applyProjectionNavigationLimits, GLOBE_VIEWPOINTS, REGIONAL_NAVIGATION_BOUNDS } from "./globe-context";
-import { browserRenderBudget, mapRuntimeErrorCode, readRenderQuality, sampleMapRuntimeHealth, QUALITY_STORAGE_KEY, type MapRuntimeCheckFailure, type RenderQuality } from "./map-performance";
+import { browserRenderBudget, controlOwnsMapSourceErrors, mapRuntimeErrorCode, readRenderQuality, sampleMapRuntimeHealth, QUALITY_STORAGE_KEY, type MapRuntimeCheckFailure, type RenderQuality } from "./map-performance";
 import type { Feature, FeatureCollection, Geometry } from "geojson";
 import { loadMapLibre, type GeoJSONSource, type Map as MapLibreMap, type MapSourceDataEvent, type ScaleControl } from "./maplibre-seam";
 import {
@@ -226,6 +226,7 @@ import {
   defaultOfficialContextVisibility,
   OFFICIAL_CONTEXT_BY_ID,
   OFFICIAL_CONTEXT_BY_SOURCE_ID,
+  officialContextForMapSource,
   OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS,
   OFFICIAL_CONTEXT_PRESENT_FRAME,
   OFFICIAL_CONTEXT_SOURCES,
@@ -5176,12 +5177,14 @@ export default function Home() {
         });
         map.on("error", (event) => {
           const sourceId = (event as typeof event & { sourceId?: string }).sourceId;
-          if (sourceId === "external-nasa-smap-soil") return;
+          // Soil moisture, Crop-CASMA, Earth Engine, and device GeoPDF controls
+          // report their own partial state; their tiles must not fail the map.
+          if (controlOwnsMapSourceErrors(sourceId)) return;
           // MapLibre error text can contain a provider URL or a query token.
           // Only the finite class and already registered source title enter UI state.
           const message = mapRuntimeErrorCode("event", sourceId);
           const affectedLayer = sourceId ? LAYER_REGISTRY.find((layer) => layer.sourceId === sourceId) : undefined;
-          const affectedOfficialContext = sourceId ? OFFICIAL_CONTEXT_BY_SOURCE_ID[sourceId] : undefined;
+          const affectedOfficialContext = officialContextForMapSource(sourceId);
           if (basemapRef.current === "standard" && !styleFallbackAttempted && shouldFallbackStandardBasemap(sourceId, Boolean(affectedLayer), Boolean(affectedOfficialContext))) {
             styleFallbackAttempted = true;
             runtimeError = null;
