@@ -68,9 +68,10 @@ or publicly serve arbitrary RAW/WORK/QUARANTINE contents.
   requirements and runbook into source control. Existing canonical local-store
   helpers remain authoritative. The operator is reachable; Google project login
   remains an owner step and no account authorization was performed here.
-- The standalone and canonical basemap-cache distributions now have identical
-  bytes, including bounded gzip decoding and header validation. The installed
-  PC service was updated to the tested implementation.
+- The installed PC basemap-cache service now matches the canonical local
+  operator, including bounded gzip decoding and header validation. Companion
+  code and tests stay in `tools/local_data` and `tests/local_data`; the Site
+  calls the loopback service and does not package a filesystem operator.
 - Reconciled lockfile metadata removes a malformed optional Sharp entry; the
   declared dependency versions and integrity pins are retained.
 
@@ -184,7 +185,7 @@ Final download-center checks:
 
 - Production build and all **673 Site tests** passed. TypeScript passed; full
   lint has zero errors and the same 45 existing warnings.
-- **193 local-data tests / 47 subtests**, **11 mirror/smoke-isolation tests** and
+- **192 local-data tests / 47 subtests**, **11 mirror/smoke-isolation tests** and
   the 56-check offline backend smoke passed. The real mirror receipt check
   separately retains `MIRROR_REVIEW_REQUIRED`.
 - Independent browser evaluation passed at 1440, 768 and 375 pixels. Search,
@@ -202,6 +203,10 @@ Final download-center checks:
   unchanged document registry (duplicate keys and malformed/incomplete entries).
   The two new documents are review-only registry addition candidates; this audit
   does not rewrite the governed registry to obtain a passing result.
+- Hosted topology validation caught duplicate basemap companion files inside
+  the deployable Site mirror. They were removed in favor of the existing
+  canonical operator/test locations; launch guidance was corrected. No topology
+  rule or baseline was weakened. The installed cache service is unchanged.
 
 Private file-level audit and recovery records remain under the owner's existing
 external catalog/receipt/recovery lanes. No secrets, absolute personal inventory
