@@ -5,6 +5,10 @@ import type { AtmospherePreset, TerrainPresentationState } from "./map-runtime";
 import type { OfficialContextId } from "./live-context";
 import { SOURCE_DOWNLOADS } from "./source-downloads";
 import { QUALITY_LABELS, type RenderQuality } from "./map-performance";
+import { currentUtcDay } from "./daily-baseline";
+import { eventDay } from "./event-atlas";
+import { readBoundedJson } from "./bounded-json";
+import { mapCachePath, saveFireDay } from "./map-context-cache";
 
 export const DOWNLOAD_NOTICES = [
   { id: "usgs-3dep-hillshade", title: "LiDAR point clouds & detailed elevation", format: "LAZ / GeoTIFF", detail: "Download a work unit with its acquisition date and metadata. The 3D display uses a separate elevation mosaic.", href: "https://apps.nationalmap.gov/lidar-explorer/" },
@@ -16,8 +20,24 @@ export const DOWNLOAD_NOTICES = [
   { id: "historical-networks", title: "Historical cities, roads & trade routes", format: "Map editions / shapefiles", detail: "Use dated USGS/Library of Congress map editions for historical interpretation; use TIGER/Line only as a labeled modern or vintage reference.", href: "https://ngmdb.usgs.gov/topoview/" },
 ] as const;
 export type SourceIssue = { id: OfficialContextId; title: string; detail?: string; downloadHref?: string };
-export function DataNotices({ issues = [], onRetry, onHide }: { issues?: SourceIssue[]; onRetry?: (id: OfficialContextId) => void; onHide?: (id: OfficialContextId) => void }) {
+export function DataNotices({ issues = [], onRetry, onHide, onFireSaved }: { issues?: SourceIssue[]; onRetry?: (id: OfficialContextId) => void; onHide?: (id: OfficialContextId) => void; onFireSaved?: (day: string) => void }) {
   const [open, setOpen] = useState(false); const root = useRef<HTMLDivElement>(null); const trigger = useRef<HTMLButtonElement>(null);
+  const [radarDay, setRadarDay] = useState(currentUtcDay), [fireDay, setFireDay] = useState(currentUtcDay);
+  const [fireBusy, setFireBusy] = useState(false), [fireStatus, setFireStatus] = useState("");
+  const saveSelectedFireDay = async () => {
+    if (!eventDay(fireDay) || fireDay < "2018-01-01" || fireDay > currentUtcDay()) { setFireStatus("Choose a supported exact UTC day."); return; }
+    setFireBusy(true); setFireStatus(`Checking NASA detections for ${fireDay} UTC…`);
+    try {
+      const response = await fetch(`/api/live-context?feed=nasa-gibs-fire-points&day=${encodeURIComponent(fireDay)}`, { cache: "no-store" });
+      const payload = await readBoundedJson(response, 8 * 1024 * 1024);
+      if (!response.ok) throw new Error("NASA detections are unavailable for this UTC day.");
+      const bytes = await saveFireDay(fireDay, payload);
+      const count = typeof payload === "object" && payload !== null && "featureCount" in payload ? Number(payload.featureCount) : 0;
+      setFireStatus(`${count} dated detections saved (${(bytes / 1024).toFixed(1)} KiB) to this browser's map directory. Empty or partial coverage is not an all-clear.`);
+      onFireSaved?.(fireDay);
+    } catch (error) { setFireStatus(error instanceof Error ? error.message : "Map download failed."); }
+    finally { setFireBusy(false); }
+  };
   useEffect(() => {
     if (!open) return;
     const outside = (event: PointerEvent) => { if (!root.current?.contains(event.target as Node)) setOpen(false); };
@@ -31,6 +51,12 @@ export function DataNotices({ issues = [], onRetry, onHide }: { issues?: SourceI
     {open && <aside id="data-notices-panel" className="data-notices-panel" aria-label="Data downloads and source notifications">
       <header><div><small>SOURCE NOTICES</small><h2>Data & downloads</h2></div><button type="button" onClick={() => { setOpen(false); trigger.current?.focus(); }} aria-label="Close data notifications">×</button></header>
       {issues.length > 0 && <section className="source-issue-list" aria-label="Sources needing attention">{issues.map(issue => <article key={issue.id}><strong>{issue.title}</strong><p>{issue.detail ?? "Some data or tiles could not load. Other layers remain available."}</p><div>{onRetry && <button type="button" onClick={() => onRetry(issue.id)}>Retry layer</button>}{onHide && <button type="button" onClick={() => onHide(issue.id)}>Hide layer</button>}<a href={issue.downloadHref ?? SOURCE_DOWNLOADS[issue.id].href} target="_blank" rel="noreferrer">Source data ↗</a></div></article>)}</section>}
+      <section className="map-downloads" aria-label="Map-ready downloads">
+        <h3>Save dated map context</h3>
+        <p>The selected data goes to a private directory in this browser, which the map reads when you check the same UTC day. It is separate from the PC's KFM_DATA_ROOT and from KFM evidence.</p>
+        <div className="map-download-choice"><strong>NOAA-derived radar mosaics</strong><label>Archive UTC day<input type="date" min="1995-01-01" max={currentUtcDay()} value={radarDay} onInput={event => setRadarDay(event.currentTarget.value)} onChange={event => setRadarDay(event.currentTarget.value)} /></label><Link href={eventDay(radarDay) && radarDay >= "1995-01-01" && radarDay <= currentUtcDay() ? `/observatory?start=${encodeURIComponent(`${radarDay}T00:00`)}&hours=24&layers=radar,counties&replay=radar` : "/observatory"}>Choose frames and download →</Link><small>Up to 288 exact five-minute frames in a full UTC day. Select a byte maximum in the replay view before transfer.</small></div>
+        <div className="map-download-choice"><strong>NASA thermal detections · not KFM evidence</strong><label>Checked UTC day<input type="date" min="2018-01-01" max={currentUtcDay()} value={fireDay} onInput={event => setFireDay(event.currentTarget.value)} onChange={event => setFireDay(event.currentTarget.value)} /></label><button type="button" disabled={fireBusy} onClick={() => void saveSelectedFireDay()}>{fireBusy ? "Saving…" : "Save day for map"}</button><small>One bounded Kansas response, 8 MiB maximum · {eventDay(fireDay) ? mapCachePath("fire", fireDay) : "choose a day"}. Exact point acquisition times remain attached.</small>{fireStatus && <output role="status">{fireStatus}</output>}</div>
+      </section>
       <p className="download-intro">Original files and older archives need a provider download. Some sources also offer live map services.</p>
       {DOWNLOAD_NOTICES.map(item => <article className="download-notice" key={item.id}><div><h3>{item.title}</h3><small>{item.format}</small></div><p>{item.detail}</p><div className="download-notice-actions"><a href={item.href} target="_blank" rel="noreferrer">Open downloads ↗</a><Link href={`/data?source=${item.id}`}>Propose an update</Link></div></article>)}
       <footer><Link href="/data">Contribute data</Link><Link href="/stewards">Steward review</Link></footer>

@@ -26,6 +26,13 @@
 .event-query { display: flex; align-items: flex-end; gap: 12px; padding: 12px 24px; background: #0a2023; border-bottom: 1px solid #b4d6bc28; flex-shrink: 0; }
 .event-query label { display: flex; flex-direction: column; gap: 6px; font-size: 10px; color: #a1b9ab; }
 .event-query input, .event-query select { font-size: 12px; }
+.event-radar-replay-note { flex-shrink: 0; margin: 0; padding: 8px 18px; border-bottom: 1px solid rgba(114, 221, 192, .3); background: #133235; color: #cfece0; font-size: 11px; line-height: 1.4; }
+.event-radar-download { display: flex; flex-wrap: wrap; align-items: end; gap: 8px 12px; padding: 10px 18px; border-bottom: 1px solid #315754; background: #153033; font-size: 12px; }
+.event-radar-download label { display: grid; gap: 3px; }
+.event-radar-download input { width: 90px; min-height: 38px; padding: 5px; color: #e7f3ed; background: #0b2528; border: 1px solid #6b8780; border-radius: 5px; }
+.event-radar-download select { min-height: 38px; padding: 5px; color: #e7f3ed; background: #0b2528; border: 1px solid #6b8780; border-radius: 5px; }
+.event-radar-download button { min-height: 38px; padding: 6px 10px; color: #112b26; background: #b4dfc9; border: 1px solid #b4dfc9; border-radius: 5px; font-weight: 700; }
+.event-radar-download output { flex-basis: 100%; color: #d4e4d9; }
 .event-query label:nth-child(3) input { width: 150px; }
 .event-calendar-sweep { flex-shrink: 0; padding: 12px 24px 10px; background: linear-gradient(180deg, #0b2528, #081f22); border-bottom: 1px solid #b4d6bc28; }
 .event-calendar-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; }
@@ -3839,6 +3846,12 @@ body { font-size: 14px; }
 .source-issue-list article+article{border-top:1px solid #715b44;padding-top:12px;margin-top:12px}
 .source-issue-list strong{font-size:15px;color:#f3d3a5}
 .source-issue-list button{padding:7px 9px;border:1px solid #7a735d;border-radius:5px;color:#ecdfc4;background:#3d4034;font-size:14px}
+.map-downloads{margin:15px 0;padding:12px;border:1px solid #587a72;border-radius:8px;background:#173439}
+.map-downloads h3{margin:0 0 5px;font-size:16px;color:#e2f1dc}.map-downloads p,.map-download-choice small{font-size:12px;line-height:1.5;color:#bfd1c9}
+.map-downloads p{margin:0 0 12px}.map-download-choice{display:grid;gap:7px;padding:10px 0;border-top:1px solid #41615c}
+.map-download-choice strong{font-size:13px;color:#f1dbab}.map-download-choice label{display:grid;gap:4px;font-size:12px}.map-download-choice input{min-height:42px;max-width:190px;padding:7px;color:#ecf3e9;background:#102a2d;border:1px solid #668880;border-radius:5px}
+.map-download-choice button,.map-download-choice a{display:inline-flex;align-items:center;justify-content:center;width:fit-content;min-height:42px;padding:6px 10px;border:1px solid #8a9e87;border-radius:5px;background:#315044;color:#f0ead6;text-decoration:none;font-size:13px;font-weight:700}
+.map-download-choice button:disabled{opacity:.6}.map-download-choice output{font-size:12px;line-height:1.5;color:#d1e4d9}
 .render-quality-control{display:flex;align-items:center;gap:7px;flex-shrink:0;color:#b8d3c9;font-size:14px;padding:0 6px}
 .render-quality-control select{background:#142f35;border:1px solid #496568;border-radius:5px;color:#e0ebe0;font-size:14px;min-height:44px;padding:4px 7px;max-width:140px}
 .terrain-quick-controls{flex-shrink:0;position:relative}

@@ -916,6 +916,11 @@ test("adds an exact-time NOAA nowCOAST radar loop and a fail-closed control surf
   assert.match(page, /aria-label="Previous NOAA radar observation"/);
   assert.match(page, /aria-label="Next NOAA radar observation"/);
   assert.match(page, /aria-label="Select an exact NOAA radar observation"/);
+  assert.match(page, /aria-label="NOAA radar playback"/);
+  assert.match(page, /Watch live loop/);
+  assert.match(page, /Archive UTC day<input type="date"/);
+  assert.match(page, /Watch selected day ↗/);
+  assert.match(page, /replay=radar/);
   assert.match(page, /<option value=\{30\}>30 min<\/option><option value=\{60\}>1 hour<\/option><option value=\{120\}>2 hours<\/option><option value="all">All available<\/option>/);
   assert.match(page, /<option value=\{0\.5\}>0\.5×<\/option><option value=\{1\}>1×<\/option><option value=\{2\}>2×<\/option>/);
   assert.match(page, /Reflectivity legend \+ source/);

@@ -20,12 +20,14 @@ import {
   eventHourAvailability,
   eventWeekDays,
   radarAt,
+  radarReplayFrames,
   smokeAt,
   type EventManifest,
 } from "../event-atlas";
 import { parseStreamflowBundle, buildStreamflowFrame, buildHydrographSegments, type StreamflowBundle } from "../streamflow";
 import { NEXRAD_EARLIEST_DAY, NEXRAD_SOURCE_PAGE, stormRadarSites, type StormAvailability, type StormFrame } from "../nexrad-storms";
 import { StormDetails, StormMapKey, stormHeadline } from "./storm-panel";
+import { mapCachePath, RADAR_DOWNLOAD_MAX_BYTES, radarManifestFromCache, readRadarFrame, readRadarIndex, saveRadarFrame, saveRadarIndex, type RadarCacheIndex } from "../map-context-cache";
 
 type TrackId = "storms" | "radar" | "smoke" | "river" | "geology" | "flora" | "fauna" | "resources" | "counties" | "weather" | "earthquakes" | "shake";
 type ContextTrack = "counties" | "weather" | "earthquakes" | "shake";
@@ -90,8 +92,13 @@ export default function EventObservatory() {
   const [mapReady, setMapReady] = useState(false), [mapMessage, setMapMessage] = useState("Opening the Kansas map…");
   const [start, setStart] = useState(currentDayStart), [hours, setHours] = useState(24), [station, setStation] = useState("USGS-06889000");
   const initialLoad = useRef(false), followTodayRef = useRef(true);
+  const radarReplayAutoStartRef = useRef(false);
+  const radarDownloadRef = useRef<AbortController | null>(null);
   const lastFollowRefreshAtRef = useRef(0);
   const [followToday, setFollowToday] = useState(true);
+  const [radarReplayMode, setRadarReplayMode] = useState(false);
+  const [radarDownloadMaxMiB, setRadarDownloadMaxMiB] = useState(64), [radarDownloadBusy, setRadarDownloadBusy] = useState(false), [radarDownloadStatus, setRadarDownloadStatus] = useState("");
+  const [radarSmooth, setRadarSmooth] = useState(false);
   const [manifest, setManifest] = useState<EventManifest | null>(null), [river, setRiver] = useState<StreamflowBundle | null>(null), [riverMessage, setRiverMessage] = useState("Not loaded");
   const [loading, setLoading] = useState(false), [error, setError] = useState(""), [index, setIndex] = useState(0), [cursor, setCursor] = useState<string | null>(null), [committed, setCommitted] = useState<string | null>(null), [buffering, setBuffering] = useState(false), [playing, setPlaying] = useState(false);
   const [speed, setSpeed] = useState(1), [loop, setLoop] = useState(false), [reduced, setReduced] = useState(false);
@@ -125,6 +132,7 @@ export default function EventObservatory() {
   }, []);
   const frames = useMemo(() => {
     if (!manifest) return [];
+    if (radarReplayMode) return radarReplayFrames(manifest);
     const earthquakeTimes = contextData.earthquakes?.date === manifest.start.slice(0, 10)
       ? contextData.earthquakes.data.features.flatMap((feature) => {
           const time = String(feature.properties?.observedAt ?? "");
@@ -137,7 +145,7 @@ export default function EventObservatory() {
       ? stormAvailability.radars.flatMap((radar) => radar.times).map((time) => new Date(Math.ceil(Date.parse(time) / 300_000) * 300_000).toISOString()).filter((time) => time < manifest.end)
       : [];
     return [...new Set([...eventFrames(manifest, loadedRiverResolution === "daily" ? [] : river?.observations), ...earthquakeTimes, ...stormTimes])].sort();
-  }, [contextData.earthquakes, loadedRiverResolution, manifest, river, stormAvailability, visible.storms]);
+  }, [contextData.earthquakes, loadedRiverResolution, manifest, radarReplayMode, river, stormAvailability, visible.storms]);
   const framesRef = useRef<string[]>([]);
   useEffect(() => { framesRef.current = frames; }, [frames]);
   // Later-arriving times (storm scans, earthquakes) extend the timeline; keep
@@ -216,6 +224,7 @@ export default function EventObservatory() {
       if (/^USGS-\d{8,15}$/.test(p.get("station") ?? "")) updateStation(p.get("station")!);
       if (p.has("station") && p.get("station") === "") updateStation("");
       if (p.has("layers")) { const ids = p.get("layers")!.split(","); setVisible(Object.fromEntries(TRACKS.map((t) => [t.id, ids.includes(t.id)])) as Record<TrackId,boolean>); }
+      if (p.get("replay") === "radar") { setRadarReplayMode(true); radarReplayAutoStartRef.current = true; setLoop(true); }
       if (p.get("base") === "satellite") setBase("satellite");
       if (p.get("resolution") === "daily") setRiverResolution("daily");
       if (["2010", "2020"].includes(p.get("county") ?? "")) setCountyEdition(p.get("county")!);
@@ -373,6 +382,7 @@ export default function EventObservatory() {
     const calendarDay = nextStart.slice(0, 10);
     const fullDaySweep = nextHours === EVENT_MAX_HOURS && nextStart === `${calendarDay}T00:00`;
     const token = ++generation.current; ++frameGeneration.current;
+    radarDownloadRef.current?.abort();
     requestRef.current?.abort(); frameRequest.current?.abort();
     setCalendarLedger((current) => Object.fromEntries(Object.entries(current).filter(([,entry]) => entry.status !== "checking")));
     setInspectedFeature(null);
@@ -386,9 +396,22 @@ export default function EventObservatory() {
     if (map?.getSource("ea-radar-image")) map.removeSource("ea-radar-image");
     for (const url of urls.current.values()) URL.revokeObjectURL(url); urls.current.clear();
     try {
-      const response = await fetch(`/api/event-atlas/manifest?${new URLSearchParams({ start: nextStart + ":00Z", hours: String(nextHours) })}`, { signal: controller.signal });
-      const data = await response.json();
-      if (!response.ok || data.format !== "kfm-event-atlas-v1") throw new Error(data.message ?? "The interval could not be loaded.");
+      const requestedStart = nextStart + ":00Z";
+      const requestedEnd = new Date(Date.parse(requestedStart) + nextHours * 3_600_000).toISOString();
+      let data: EventManifest;
+      try {
+        const response = await fetch(`/api/event-atlas/manifest?${new URLSearchParams({ start: requestedStart, hours: String(nextHours) })}`, { signal: controller.signal });
+        const candidate = await response.json();
+        if (!response.ok || candidate.format !== "kfm-event-atlas-v1") throw new Error(candidate.message ?? "The interval could not be loaded.");
+        data = candidate as EventManifest;
+      } catch (failure) {
+        if (controller.signal.aborted || !radarReplayMode) throw failure;
+        const saved = await readRadarIndex(calendarDay);
+        const local = saved && radarManifestFromCache(saved, new Date(requestedStart).toISOString(), requestedEnd);
+        if (!local) throw failure;
+        data = local;
+        setRadarDownloadStatus("Provider listing unavailable; replaying exact frames saved in this browser's private map directory. Other sources were not checked.");
+      }
       let bundle: StreamflowBundle | null = null;
       let message = "No station selected";
       if (station) {
@@ -400,7 +423,7 @@ export default function EventObservatory() {
       }
       if (token !== generation.current || controller.signal.aborted) return;
       setRiver(bundle); setLoadedRiverResolution(resolution); setRiverMessage(message); setManifest(data);
-      const sequence = eventFrames(data, resolution === "daily" ? [] : bundle?.observations);
+      const sequence = radarReplayMode ? radarReplayFrames(data) : eventFrames(data, resolution === "daily" ? [] : bundle?.observations);
       const linked = preferredCursor ?? new URLSearchParams(window.location.search).get("cursor");
       const validCursor = typeof linked === "string"
         && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?Z$/.test(linked)
@@ -408,8 +431,8 @@ export default function EventObservatory() {
         && linked >= data.start
         && linked < data.end;
       const nextCursor = validCursor && linked ? linked : data.start;
-      setCursor(nextCursor);
       const sequenceIndex = sequence.findIndex((time) => time >= nextCursor);
+      setCursor(radarReplayMode ? sequence[sequenceIndex >= 0 ? sequenceIndex : Math.max(0, sequence.length - 1)] ?? null : nextCursor);
       setIndex(sequenceIndex >= 0 ? sequenceIndex : Math.max(0, sequence.length - 1));
       if (fullDaySweep) {
         const availability = eventHourAvailability(data, resolution === "daily" ? [] : bundle?.observations, calendarDay);
@@ -431,7 +454,7 @@ export default function EventObservatory() {
       if (fullDaySweep) setCalendarLedger((current) => ({ ...current, [calendarDay]: { status: "failed", supportedHours: [], message } }));
     }
     finally { if (token === generation.current) setLoading(false); }
-  }, [start, hours, station, riverResolution, hideEventLayers]);
+  }, [start, hours, station, riverResolution, radarReplayMode, hideEventLayers]);
 
   const loadToday = useCallback(() => {
     const today = currentDayStart(); updateStart(today); setCalendarAnchor(today.slice(0,10)); setHours(24);
@@ -460,9 +483,16 @@ export default function EventObservatory() {
 
   const getRadarImage = useCallback(async (time: string, signal: AbortSignal) => {
     const cached = urls.current.get(time); if (cached) return cached;
-    const response = await fetch(`/api/event-atlas/radar-frame?time=${encodeURIComponent(time)}`, { signal });
-    if (!response.ok || response.headers.get("x-radar-mosaic-time") !== time) throw new Error("The exact radar image could not be confirmed.");
-    const blob = await response.blob();
+    let blob = await readRadarFrame(time);
+    if (blob) {
+      try { const image = await createImageBitmap(blob); const valid = image.width === 1024 && image.height === 600; image.close(); if (!valid) blob = null; }
+      catch { blob = null; }
+    }
+    if (!blob) {
+      const response = await fetch(`/api/event-atlas/radar-frame?time=${encodeURIComponent(time)}`, { signal });
+      if (!response.ok || response.headers.get("x-radar-mosaic-time") !== time) throw new Error("The exact radar image could not be confirmed.");
+      blob = await response.blob();
+    }
     const bitmap = await createImageBitmap(blob);
     if (bitmap.width !== 1024 || bitmap.height !== 600) { bitmap.close(); throw new Error("Unexpected radar dimensions."); }
     bitmap.close(); if (signal.aborted) throw new Error("Cancelled frame.");
@@ -607,15 +637,79 @@ export default function EventObservatory() {
     return () => window.clearTimeout(timer);
   }, [playing, buffering, loading, committed, requested, error, index, frames, loop, speed]);
 
+  useEffect(() => {
+    const map = mapRef.current;
+    if (map?.getLayer("ea-radar")) map.setPaintProperty("ea-radar", "raster-resampling", radarSmooth ? "linear" : "nearest");
+  }, [radarSmooth, committed]);
+
+  useEffect(() => {
+    if (!radarReplayAutoStartRef.current || !radarReplayMode || !manifest || loading || buffering || error) return;
+    if (frames.length < 2 || reduced) { radarReplayAutoStartRef.current = false; return; }
+    if (!committed || committed !== requested) return;
+    radarReplayAutoStartRef.current = false;
+    setPlaying(true);
+  }, [buffering, committed, error, frames.length, loading, manifest, radarReplayMode, reduced, requested]);
+
   const jump = (next: number) => {
     followTodayRef.current = false; setFollowToday(false);
     const target = Math.max(0, Math.min(frames.length - 1, next));
     setPlaying(false); setIndex(target); setCursor(frames[target] ?? null);
   };
+  const downloadRadarForMap = async () => {
+    if (!manifest || radarDownloadBusy || !manifest.radar.scans.length) return;
+    const day = manifest.start.slice(0, 10);
+    if (manifest.radar.scans.some((scan) => scan.time.slice(0, 10) !== day)) {
+      setRadarDownloadStatus("Choose an interval within one UTC day before saving radar frames."); return;
+    }
+    const selectedMaximum = Math.min(RADAR_DOWNLOAD_MAX_BYTES, radarDownloadMaxMiB * 1024 * 1024);
+    if (!Number.isInteger(radarDownloadMaxMiB) || selectedMaximum < 1024 * 1024) {
+      setRadarDownloadStatus("Choose a maximum from 1 to 500 MiB."); return;
+    }
+    const controller = new AbortController(); radarDownloadRef.current = controller;
+    setRadarDownloadBusy(true); setPlaying(false);
+    const old = await readRadarIndex(day);
+    const saved = new Map((old?.scans ?? []).map((scan) => [scan.time, scan]));
+    let bytes = old?.bytes ?? 0, failure = "";
+    try {
+      for (const scan of manifest.radar.scans) {
+        if (controller.signal.aborted) { failure = "Selection changed before download completed."; break; }
+        if (saved.has(scan.time)) continue;
+        const response = await fetch(`/api/event-atlas/radar-frame?time=${encodeURIComponent(scan.time)}`, { signal: controller.signal });
+        if (!response.ok || response.headers.get("x-radar-mosaic-time") !== scan.time
+          || response.headers.get("x-radar-product") !== scan.product
+          || response.headers.get("x-source-artifact") !== scan.artifact
+          || !response.headers.get("content-type")?.includes("image/png")) throw new Error(`Exact radar mosaic unavailable at ${scan.time}.`);
+        const blob = await response.blob();
+        if (!blob.size || blob.size > 4 * 1024 * 1024) throw new Error("Radar image exceeded its per-frame limit.");
+        if (bytes + blob.size > selectedMaximum) { failure = `Selected ${radarDownloadMaxMiB} MiB maximum reached; remaining frames were not downloaded.`; break; }
+        const bitmap = await createImageBitmap(blob);
+        const valid = bitmap.width === 1024 && bitmap.height === 600; bitmap.close();
+        if (!valid) throw new Error("Radar image dimensions did not match the map.");
+        await saveRadarFrame(scan.time, blob); bytes += blob.size; saved.set(scan.time, scan);
+        setRadarDownloadStatus(`Saving ${saved.size} of ${manifest.radar.scans.length} exact frames · ${(bytes / 1024 / 1024).toFixed(1)} MiB / ${radarDownloadMaxMiB} MiB maximum…`);
+      }
+    } catch (error) { failure = error instanceof Error ? error.message : "Radar download stopped."; }
+    try {
+      if (saved.size) {
+        const index: RadarCacheIndex = {
+          format: "kfm-radar-map-cache-v1", day,
+          start: old?.start && old.start < manifest.start ? old.start : manifest.start,
+          end: old?.end && old.end > manifest.end ? old.end : manifest.end,
+          retrievedAt: manifest.retrievedAt, savedAt: new Date().toISOString(), bytes,
+          partial: Boolean(failure || manifest.radar.gaps.length || saved.size < manifest.radar.scans.length),
+          scans: [...saved.values()].sort((a, b) => a.time.localeCompare(b.time)),
+        };
+        await saveRadarIndex(index);
+      }
+      setRadarDownloadStatus(`${saved.size} exact radar frames in this browser's map directory · ${(bytes / 1024 / 1024).toFixed(1)} MiB. ${failure || "The map now reads these saved frames for the selected UTC interval."} Missing frames do not imply clear weather.`);
+    } catch (error) { setRadarDownloadStatus(error instanceof Error ? error.message : "The radar cache index could not be saved."); }
+    finally { if (radarDownloadRef.current === controller) radarDownloadRef.current = null; setRadarDownloadBusy(false); }
+  };
+  useEffect(() => () => radarDownloadRef.current?.abort(), []);
   const share = async () => {
     if (!manifest) return;
     const loadedHours = Math.ceil((Date.parse(manifest.end) - Date.parse(manifest.start)) / 3_600_000);
-    const params = new URLSearchParams({ start: manifest.start.slice(0,16), hours: String(loadedHours <= 1 ? 1 : loadedHours <= 6 ? 6 : 24), station: river?.stations[0]?.stationId ?? "", resolution: loadedRiverResolution, county: countyEdition, base, edition: resourceEdition, order: order.join(","), opacity: TRACKS.map((t) => opacity[t.id]).join(","), layers: order.filter((id) => visible[id]).join(","), ...(committed ? { cursor: committed } : {}) });
+    const params = new URLSearchParams({ start: manifest.start.slice(0,16), hours: String(loadedHours <= 1 ? 1 : loadedHours <= 6 ? 6 : 24), station: river?.stations[0]?.stationId ?? "", resolution: loadedRiverResolution, county: countyEdition, base, edition: resourceEdition, order: order.join(","), opacity: TRACKS.map((t) => opacity[t.id]).join(","), layers: order.filter((id) => visible[id]).join(","), ...(radarReplayMode ? { replay: "radar" } : {}), ...(committed ? { cursor: committed } : {}) });
     const link = `${window.location.origin}/observatory?${params}`;
     const historyUpdated = replaceExplorerHistory(`/observatory?${params}`);
     try { await navigator.clipboard.writeText(link); setCopied(true); } catch { setCopied(false); setError(historyUpdated ? "The address bar now contains the replay link. Copy it to share this view." : "Clipboard access is unavailable here. Open the Site directly, then use Share again."); }
@@ -668,9 +762,10 @@ export default function EventObservatory() {
     setPlaying(false); updateStart(dayStart); setHours(EVENT_MAX_HOURS); setCalendarAnchor(day);
     const isLoadedDay = manifest?.start === `${dayStart}:00.000Z` && hours === EVENT_MAX_HOURS && !loading && riverResolution === loadedRiverResolution && (!station || river?.stations[0]?.stationId === station);
     if (isLoadedDay) {
-      setCursor(target);
       const matchingFrame = frames.findIndex((time) => time >= target);
-      if (matchingFrame >= 0) setIndex(matchingFrame);
+      const selectedIndex = matchingFrame >= 0 ? matchingFrame : Math.max(0, frames.length - 1);
+      setCursor(radarReplayMode ? frames[selectedIndex] ?? null : target);
+      if (frames.length) setIndex(selectedIndex);
       return;
     }
     void load(dayStart, EVENT_MAX_HOURS, target);
@@ -731,6 +826,8 @@ export default function EventObservatory() {
       <button type="button" onClick={() => { const value = new Date(Date.now() - 3_600_000); value.setUTCMinutes(Math.floor(value.getUTCMinutes()/5)*5,0,0); const s = value.toISOString().slice(0,16); updateStart(s); setHours(1); void load(s,1); }}>Recent hour</button>
       <button type="button" onClick={share} disabled={!committed}>{copied ? "Replay link copied" : "Share replay"}</button>
     </form>
+    {radarReplayMode && <p className="event-radar-replay-note" role="status">RADAR ARCHIVE REPLAY · NOAA/NWS mosaics served by Iowa State IEM. This UTC day plays only verified five-minute mosaic artifacts. It is separate from the live nowCOAST loop; gaps and unavailable dates are not clear weather.</p>}
+    {radarReplayMode && <section className="event-radar-download" aria-label="Save radar frames for this map"><div><strong>Save exact frames for replay</strong><br /><small>Private browser map directory · {mapCachePath("radar", start.slice(0, 10))}</small></div><label>Maximum download (MiB)<input type="number" min="1" max="500" step="1" value={radarDownloadMaxMiB} onChange={event => setRadarDownloadMaxMiB(Number(event.target.value))} /></label><label>Radar image display<select aria-label="Archive radar image display" value={radarSmooth ? "smooth" : "exact"} onChange={event => setRadarSmooth(event.target.value === "smooth")}><option value="exact">Exact pixels</option><option value="smooth">Smooth image</option></select></label><button type="button" disabled={!manifest?.radar.scans.length || radarDownloadBusy || !Number.isInteger(radarDownloadMaxMiB) || radarDownloadMaxMiB < 1 || radarDownloadMaxMiB > 500} onClick={() => void downloadRadarForMap()}>{radarDownloadBusy ? "Downloading…" : `Download ${manifest?.radar.scans.length ?? 0} listed frames`}</button><output role="status">{radarDownloadStatus || "Only listed exact mosaic times are downloaded. The map reads saved frames on this browser; this is separate from the PC's KFM_DATA_ROOT and KFM evidence."} Smoothing affects drawn pixels only; source scans and times stay exact.</output></section>}
     <div className="event-record-range"><span>{riverCoverage ? `${riverResolution === "daily" ? "Daily means" : "Continuous"}: ${riverCoverage[riverResolution]?.start.slice(0,10) ?? "no declared record"} → ${riverCoverage[riverResolution]?.end.slice(0,10) ?? "—"}${riverCoverage.partial ? " · partial metadata" : ""}` : coverageMessage || "Choose a station to discover its record"}</span><button type="button" disabled={!riverCoverage?.daily || loading} onClick={() => { const day = riverCoverage?.daily?.start.slice(0,10); if (!day) return; setRiverResolution("daily"); updateStart(`${day}T00:00`); setHours(24); void load(`${day}T00:00`,24,undefined,"daily"); }}>Oldest daily record</button><button type="button" disabled={!riverCoverage?.continuous || loading} onClick={() => { const day = riverCoverage?.continuous?.start.slice(0,10); if (!day) return; setRiverResolution("continuous"); updateStart(`${day}T00:00`); setHours(24); void load(`${day}T00:00`,24,undefined,"continuous"); }}>Oldest continuous</button><button type="button" disabled={loading} onClick={loadToday}>{followToday ? "Following today · refreshes every 5 min" : "Follow today / latest"}</button></div>
     <nav className="event-map-toolbar" aria-label="Map panels"><button type="button" aria-expanded={layersOpen} onClick={() => { setLayersOpen(!layersOpen); setDetailsOpen(false); setCalendarOpen(false); setScienceOpen(false); finishScienceProbe(); }}>Layers · {Object.values(visible).filter(Boolean).length}</button><button type="button" aria-expanded={calendarOpen} aria-controls="archive-calendar" onClick={() => { setCalendarOpen(!calendarOpen); setLayersOpen(false); setDetailsOpen(false); setScienceOpen(false); finishScienceProbe(); }}>Calendar</button><button type="button" onClick={() => { const day = advanceEventDay(selectedCalendarDay, -1); if (day && day >= EVENT_EARLIEST_DAY) selectCalendarSlot(day); }} disabled={selectedCalendarDay <= EVENT_EARLIEST_DAY}>← Day</button><button type="button" onClick={() => selectCalendarSlot(selectedCalendarDay)}>Load full 24 hours</button><button type="button" onClick={() => { const day = advanceEventDay(selectedCalendarDay, 1); if (day && day <= calendarToday) selectCalendarSlot(day); }} disabled={selectedCalendarDay >= calendarToday}>Day →</button><button type="button" aria-expanded={scienceOpen} aria-controls="science-lab" onClick={() => { setScienceOpen(!scienceOpen); setLayersOpen(false); setDetailsOpen(false); setCalendarOpen(false); finishScienceProbe(); }}>Science lab · {SCIENCE_EVENTS.length}</button><span /><button type="button" aria-expanded={chartsOpen} onClick={() => { setChartsOpen(!chartsOpen); setScienceOpen(false); }}>Timeline lanes</button><button type="button" aria-expanded={detailsOpen} onClick={() => { setDetailsOpen(!detailsOpen); setLayersOpen(false); setCalendarOpen(false); setScienceOpen(false); finishScienceProbe(); }}>Sources & quality</button></nav>
     <section className="event-body" data-layers-open={layersOpen} data-details-open={detailsOpen}>
@@ -751,6 +848,7 @@ export default function EventObservatory() {
         {visible.storms && manifest && committed && committed.slice(0, 10) >= NEXRAD_EARLIEST_DAY && <StormMapKey frame={stormFrame} onDetails={() => { setSelectedTrack("storms"); setDetailsOpen(true); setLayersOpen(false); }} />}
         {(loading || buffering) && <div className="event-buffer" role="status">{loading ? "Reading dated source records…" : `Buffering ${requested?.slice(11,19)} UTC · temporal pixels withheld`}</div>}
         {error && <div className="event-error" role="alert">{error}{manifest && <button type="button" onClick={() => { setVisible((current) => ({ ...current, radar: false })); setError(""); }}>Continue without radar</button>}</div>}
+        {radarReplayMode && manifest && !loading && frames.length === 0 && <div className="event-error" role="status">No archived radar mosaics were verified for this interval. Choose another date; no image was substituted.</div>}
         {!manifest && !loading && <div className="event-intro"><span>THE PAST, IN MOTION</span><h2>Layer an event.<br />See what changed.</h2><p>Choose a date or start with a Kansas archive window. Every layer states the time it actually represents.</p>{PRESETS.map((preset) => <button key={preset.start} type="button" disabled={!mapReady} onClick={() => { updateStart(preset.start); setHours(preset.hours); void load(preset.start,preset.hours); }}>{preset.label} <span>↗</span></button>)}</div>}
         <div className="event-map-legend"><span><i style={{background:"#70e0ef"}} />Discharge radius: log-scaled · color: sample trend</span><span><i style={{background:"#dca261"}} />HMS: light → medium → heavy · gray unknown</span><span>Radar colors: source reflectivity · <a href="https://mesonet.agron.iastate.edu/docs/nexrad_composites/" target="_blank" rel="noreferrer">product legend ↗</a></span></div>
         {(scienceProbeActive || scienceProbePoints.length > 0) && <aside className="event-science-probe-readout" role="status" aria-live="polite"><span>DISTANCE / BEARING · {scienceProbePoints.length}/2 POINTS</span><strong>{probeMeasurement ? `${probeMeasurement.miles.toFixed(2)} mi · ${probeMeasurement.kilometers.toFixed(2)} km · ${probeMeasurement.bearing.toFixed(0)}° ${compassPoint(probeMeasurement.bearing)}` : scienceProbeActive ? "Click two map locations" : "Probe paused"}</strong><small>Great-circle screen measurement · approximate, not survey or evidence. A third click starts a new line.</small><div>{scienceProbeActive ? <button type="button" onClick={finishScienceProbe}>Done</button> : <button type="button" onClick={beginScienceProbe}>Edit</button>}<button type="button" onClick={clearScienceProbe}>Clear</button></div></aside>}
@@ -786,7 +884,7 @@ export default function EventObservatory() {
         <div className="event-next"><h3>Source-grounded, not simulated</h3><p>No invented storms, smoke transport, animal paths, or resource deposits. Static and annual layers are pinned context alongside the event clock.</p><Link href="/observatory/sources">Research findings & remaining connections →</Link></div>
       </aside>
     </section>
-    <footer className="event-timeline"><section className="event-transport"><div><span className="event-kicker">SHARED EVENT CLOCK</span><strong>{timestamp(committed)}</strong><small>{buffering ? "Requested frame is still loading" : `${frames.length} observation times / interval boundaries · no interpolation`}</small></div><div className="event-play-buttons"><button type="button" onClick={() => jump(index-1)} disabled={!frames.length || index===0}>←</button><button type="button" className="event-primary" disabled={!frames.length || !mapReady || loading || !!error || reduced} onClick={() => { if (!playing && index === frames.length-1) { setIndex(0); setCursor(frames[0] ?? null); } setPlaying(!playing); }}>{playing ? "Pause" : "Play"}</button><button type="button" onClick={() => jump(index+1)} disabled={!frames.length || index===frames.length-1}>→</button><label>Speed<select value={speed} onChange={(event) => setSpeed(Number(event.target.value))}><option value={.5}>0.5×</option><option value={1}>1×</option><option value={2}>2×</option></select></label><label><input type="checkbox" checked={loop} onChange={(event) => setLoop(event.target.checked)} /> Loop</label></div></section>
+    <footer className="event-timeline"><section className="event-transport"><div><span className="event-kicker">{radarReplayMode ? "RADAR ARCHIVE CLOCK" : "SHARED EVENT CLOCK"}</span><strong>{timestamp(committed)}</strong><small>{buffering ? "Requested frame is still loading" : radarReplayMode ? `${frames.length} verified radar mosaics · no interpolation` : `${frames.length} observation times / interval boundaries · no interpolation`}</small></div><div className="event-play-buttons"><button type="button" onClick={() => jump(index-1)} disabled={!frames.length || index===0}>←</button><button type="button" className="event-primary" disabled={!frames.length || !mapReady || loading || !!error || reduced} onClick={() => { if (!playing && index === frames.length-1) { setIndex(0); setCursor(frames[0] ?? null); } setPlaying(!playing); }}>{playing ? "Pause" : "Play"}</button><button type="button" onClick={() => jump(index+1)} disabled={!frames.length || index===frames.length-1}>→</button><label>Speed<select value={speed} onChange={(event) => setSpeed(Number(event.target.value))}><option value={.5}>0.5×</option><option value={1}>1×</option><option value={2}>2×</option></select></label><label><input type="checkbox" checked={loop} onChange={(event) => setLoop(event.target.checked)} /> Loop</label></div></section>
       <input className="event-scrubber" type="range" min="0" max={Math.max(0,frames.length-1)} value={index} disabled={!frames.length} onChange={(event) => jump(Number(event.target.value))} aria-label="Scrub actual event times" aria-valuetext={requested ?? "No interval loaded"} />
       {chartsOpen && manifest && <div className="event-support-tracks" aria-label="Temporal coverage lanes; dark spans are gaps and hatched spans are pinned context">{timelineLanes.map((track) => <div key={track.name}><span title={track.detail}>{track.name}</span><div data-kind={track.kind}>{track.intervals.map(([from,to],i) => { const duration = Date.parse(manifest.end)-Date.parse(manifest.start), left = Math.max(0,Date.parse(from)-Date.parse(manifest.start))/duration*100, right = Math.min(duration,Date.parse(to)-Date.parse(manifest.start))/duration*100; return <button key={i} type="button" data-kind={track.kind} aria-label={`${track.name}: ${track.detail}. ${track.kind === "event" ? timestamp(from) : `${timestamp(from)} to ${timestamp(to)}`}`} title={`${track.detail} · ${track.kind === "event" ? timestamp(from) : `${timestamp(from)} → ${timestamp(to)}`}`} style={{left:`${left}%`,width:track.kind === "event" ? "3px" : `${Math.max(.15,right-left)}%`,background:track.color}} onClick={() => jump(Math.max(0,frames.findIndex((time) => time >= from)))} />; })}{committed && <i style={{left:`${(Date.parse(committed)-Date.parse(manifest.start))/(Date.parse(manifest.end)-Date.parse(manifest.start))*100}%`}} />}</div></div>)}</div>}
       <div className="event-range-labels"><span>{manifest?.start.slice(0,16).replace("T"," ")} UTC</span><span>{reduced ? "Reduced motion: use Previous, Next, or scrub" : "Pauses on map interaction, hidden tab, source failure, or Escape"}</span><span>{manifest?.end.slice(0,16).replace("T"," ")} UTC</span></div>

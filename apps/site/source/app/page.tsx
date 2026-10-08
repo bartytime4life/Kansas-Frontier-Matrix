@@ -30,6 +30,7 @@ import { catalogDisplayStatus, catalogFilterMatches, type CatalogFilter, type Ca
 import { BASELINE_STACKS, currentUtcDay } from "./daily-baseline";
 import { SourceQualityRow } from "./source-quality-row";
 import { sourceDownloadHref } from "./source-downloads";
+import { readFireDay } from "./map-context-cache";
 import { planOfficialRefresh } from "./official-refresh-plan";
 import { ArchiveDaySlider } from "./archive-day-slider";
 import { SoilMoistureControl, type SoilMoistureEngineContext } from "./soil-moisture-control";
@@ -1243,6 +1244,8 @@ export default function Home() {
   const [noaaRadarLoopSpan, setNoaaRadarLoopSpan] = useState<NoaaRadarLoopSpanMinutes>(60);
   const [noaaRadarPlaybackSpeed, setNoaaRadarPlaybackSpeed] = useState<NoaaRadarPlaybackSpeed>(1);
   const [noaaRadarPlaying, setNoaaRadarPlaying] = useState(false);
+  const [noaaRadarSmooth, setNoaaRadarSmooth] = useState(false);
+  const [fireVisualMode, setFireVisualMode] = useState<"exact" | "soft">("exact");
   const [noaaRadarFollowLatest, setNoaaRadarFollowLatest] = useState(true);
   const [noaaRadarFrameLoadState, setNoaaRadarFrameLoadState] = useState<NoaaRadarFrameLoadState>("idle");
   const [noaaRadarClock, setNoaaRadarClock] = useState(() => Date.now());
@@ -3390,12 +3393,13 @@ export default function Home() {
     if (feed === "noaa-hms-smoke") setSmokeArchiveFrameIndex(-1);
     try {
       const source = OFFICIAL_CONTEXT_BY_ID[feed];
-      const response = await fetch(`${source.apiPath!}&day=${encodeURIComponent(day)}`, { cache: "no-store", signal: controller.signal, headers: { Accept: "application/json" } });
-      const candidate = await readBoundedJson(response, 8 * 1024 * 1024) as Partial<OfficialContextPayload> & { error?: string };
+      const cached = feed === "nasa-gibs-fire-points" ? await readFireDay(day) : null;
+      const response = cached ? null : await fetch(`${source.apiPath!}&day=${encodeURIComponent(day)}`, { cache: "no-store", signal: controller.signal, headers: { Accept: "application/json" } });
+      const candidate = (cached ?? await readBoundedJson(response!, 8 * 1024 * 1024)) as Partial<OfficialContextPayload> & { error?: string };
       const validState = candidate.state === "ready" || candidate.state === "empty" || candidate.state === "partial";
-      if (!response.ok || candidate.feed !== feed || !validState || typeof candidate.featureCount !== "number"
+      if ((response && !response.ok) || candidate.feed !== feed || !validState || typeof candidate.featureCount !== "number"
         || !candidate.data || candidate.data.type !== "FeatureCollection" || !Array.isArray(candidate.data.features)) {
-        throw new Error(candidate.error ?? `Dated source adapter returned HTTP ${response.status}.`);
+        throw new Error(candidate.error ?? `Dated source adapter returned HTTP ${response?.status ?? "invalid cached response"}.`);
       }
       if (officialRequestsRef.current.get(feed) !== controller) return;
       const payload = candidate as OfficialContextPayload;
@@ -3412,7 +3416,7 @@ export default function Home() {
         setEarthquakeArchiveFrameIndex(times.length - 1);
       }
       announce(payload.featureCount
-        ? `${source.shortTitle}: ${payload.featureCount} dated source records loaded for ${day} UTC`
+        ? `${source.shortTitle}: ${payload.featureCount} dated source records loaded for ${day} UTC${cached ? " from this browser's map directory" : ""}`
         : `${source.shortTitle}: no mapped records returned for ${day} UTC; no earlier day was carried forward`);
     } catch (error) {
       if (controller.signal.aborted || officialRequestsRef.current.get(feed) !== controller) return;
@@ -5822,6 +5826,23 @@ export default function Home() {
 
   useEffect(() => {
     const map = mapRef.current;
+    if (!map || !styleReady || !styleGenerationReadyRef.current) return;
+    const resampling = noaaRadarSmooth ? "linear" : "nearest";
+    for (const id of ["external-nws-radar-raster", "external-nws-radar-raster-buffer"]) {
+      if (map.getLayer(id) && map.getPaintProperty(id, "raster-resampling") !== resampling) map.setPaintProperty(id, "raster-resampling", resampling);
+    }
+    const halo = "external-nasa-gibs-fire-points-halo";
+    if (map.getLayer(halo)) {
+      const radius: ["interpolate", ["linear"], ["zoom"], number, number, number, number] = fireVisualMode === "soft"
+        ? ["interpolate", ["linear"], ["zoom"], 4, 22, 10, 36]
+        : ["interpolate", ["linear"], ["zoom"], 4, 14, 10, 20];
+      map.setPaintProperty(halo, "circle-radius", radius);
+      map.setPaintProperty(halo, "circle-blur", fireVisualMode === "soft" ? 0.9 : 0.55);
+    }
+  }, [fireVisualMode, noaaRadarSmooth, noaaRadarFrameTime, noaaRadarPendingFrameTime, officialPayloads, styleReady]);
+
+  useEffect(() => {
+    const map = mapRef.current;
     if (!map || !styleGenerationReadyRef.current) return;
     runMapMutation("Scene-light update", () => {
       applySceneEnvironment(map, atmospherePreset, lightAzimuth);
@@ -8137,7 +8158,7 @@ export default function Home() {
             </div>
           </nav>
         <div className="top-actions">
-          <DataNotices issues={sourceIssues} onRetry={retryOfficialLayer} onHide={id => setOfficialContextVisible(id, false)} />
+          <DataNotices issues={sourceIssues} onRetry={retryOfficialLayer} onHide={id => setOfficialContextVisible(id, false)} onFireSaved={day => { setOfficialContextVisible("nasa-gibs-fire-points", true); void loadOfficialArchiveDay("nasa-gibs-fire-points", day); }} />
           <details className="header-overflow-menu" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) event.currentTarget.open = false; }} onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
             <summary aria-label="More site actions" title="More site actions">More <span aria-hidden="true">⌄</span></summary>
             <div className="header-overflow-panel">
@@ -8622,7 +8643,20 @@ export default function Home() {
               return <article key={source.id} className="official-context-row" style={{ borderInlineStart: "2px solid #8d4e37" }} data-state={state} data-visible={officialVisibility[source.id]} data-held={heldAtFrame}>
                     <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.shortTitle}</strong><small>{source.organization}{source.kind === "HISTORICAL_RASTER" ? " · historical composite" : ""}{source.id === "noaa-goes-geocolor" && noaaSatelliteManifest ? ` · ${noaaSatelliteManifest.product === "visible" ? "GOES visible fallback" : "GeoColor"}` : ""} · {catalogDisplayStatus(officialCatalogStatuses[source.id])}</small></div></div>
                 <span className={researchStyles.status}>Source time: {officialArchiveDays[source.id as OfficialContextFeedId] ? `${officialArchiveDays[source.id as OfficialContextFeedId]} UTC` : source.freshness}</span>
+                {source.id === "nws-radar" && <div className="noaa-radar-launch" aria-label="NOAA radar playback">
+                  <strong>Watch radar over time</strong>
+                  <p>Live nowCOAST scans use their exact observation times. Choose an older UTC day to watch NOAA/NWS-derived archive mosaics in Event Observatory.</p>
+                  <div>
+                    <button type="button" onClick={() => { setOfficialContextVisible("nws-radar", true); setLiveInstrument("radar"); setInstrumentOpen(true); }}>Watch live loop</button>
+                    <label>Archive UTC day<input type="date" min="1995-01-01" max={currentUtcDay()} value={radarArchiveDraftDay} onInput={(event) => setRadarArchiveDraftDay(event.currentTarget.value)} onChange={(event) => setRadarArchiveDraftDay(event.target.value)} /></label>
+                    <Link href={`/observatory?start=${encodeURIComponent(`${radarArchiveDraftDay || currentUtcDay()}T00:00`)}&hours=24&layers=radar,counties&replay=radar`}>Watch selected day ↗</Link>
+                  </div>
+                  <small>Archive coverage is checked after opening; unavailable dates and missing scans are shown as gaps, not clear weather.</small>
+                  <label className="map-visual-control">Radar image display<select aria-label="Radar image display" value={noaaRadarSmooth ? "smooth" : "exact"} onChange={event => setNoaaRadarSmooth(event.target.value === "smooth")}><option value="exact">Exact pixels</option><option value="smooth">Smooth image</option></select></label>
+                  <small>Spatial smoothing changes only drawn pixels; scan times and source data stay exact.</small>
+                </div>}
                 {(source.id === "nasa-firms-active-fire" || source.id === "nasa-gibs-fire-points") && <p className="thermal-context-note"><strong>NASA THERMAL CONTEXT · NOT KFM EVIDENCE</strong><span>{source.id === "nasa-firms-active-fire" ? "Provider-default daily raster; its exact UTC image date is unresolved." : "One checked UTC image day; each returned point keeps its own acquisition time."} Thermal anomalies do not confirm a wildfire incident, and blank coverage is not an all-clear.</span></p>}
+                {source.id === "nasa-gibs-fire-points" && <label className="map-visual-control map-fire-visual-control">Detection display<select aria-label="Fire detection display" value={fireVisualMode} onChange={event => setFireVisualMode(event.target.value as "exact" | "soft")}><option value="exact">Exact point halos</option><option value="soft">Soft visual halos</option></select><small>Visual halos do not change selectable points, acquisition times, or report records. NASA display context · not KFM evidence.</small></label>}
                 {(needsCloserView || needsFlatMap || heldAtFrame || source.minDisplayZoom !== undefined) && <div className="reference-layer-guidance">
                   <small>{heldAtFrame ? "This source is held at the selected map year." : needsFlatMap ? "This regional image layer requires the flat map." : `Visible at zoom ${minimumZoom}+ · your view ${view.zoom.toFixed(1)}. Source dates vary.`}</small>
                   {heldAtFrame && buildYearCurrent && <button type="button" onClick={() => { setPlaying(false); commitTemporalFrame(OFFICIAL_CONTEXT_PRESENT_FRAME, "Returned to Present; each layer retains its own source dates"); }}>Use Present</button>}
@@ -8660,9 +8694,7 @@ export default function Home() {
                     <input type="range" min="0" max={Math.max(0, noaaRadarLoopFrames.length - 1)} value={Math.max(0, noaaRadarFrameIndex)} disabled={!noaaRadarRenderable || noaaRadarLoopFrames.length < 2 || noaaRadarFrameLoadState === "loading" || !officialVisibility[source.id] || heldAtFrame} onChange={(event) => { const index = Number(event.target.value); const frame = noaaRadarLoopFrames[index]; if (!frame) return; setNoaaRadarPlaying(false); setNoaaRadarFollowLatest(index === noaaRadarLoopFrames.length - 1); applyNoaaRadarFrame(frame); }} aria-label="NOAA radar exact scan time" aria-valuetext={noaaRadarActiveFrame ?? "No confirmed radar scan"} />
                     <output>{noaaRadarFrameTime ? `${noaaRadarFrameTime.slice(0, 19).replace("T", " ")} UTC · ${noaaRadarFrameLoadState === "loading" ? "loading" : noaaRadarDisplayState.toLowerCase()}` : "No confirmed scan rendered"}</output>
                     <small>Rolling confirmed scans only. Older radar days open in the separate Event Observatory map; they are not replayed on this map.</small>
-                    <div className="source-time-actions"><label>Older UTC day<input type="date" min="1995-01-01" max={currentUtcDay()} value={radarArchiveDraftDay} onChange={(event) => setRadarArchiveDraftDay(event.target.value)} /></label><Link href={`/observatory?start=${encodeURIComponent(`${radarArchiveDraftDay || currentUtcDay()}T00:00`)}&hours=24&layers=radar,counties`}>Check in Observatory ↗</Link></div>
-                    <ArchiveDaySlider sourceLabel="NOAA radar" minDay="1995-01-01" maxDay={currentUtcDay()} day={radarArchiveDraftDay} onSelect={setRadarArchiveDraftDay} nextAction="Check in Observatory" />
-                    <small>1995 is the archive adapter’s earliest query bound, not proof that every day has radar imagery. The selected older day opens a separate map.</small>
+                    <small>Choose an archive UTC day in the playback controls above. 1995 is the archive adapter’s earliest query bound, not proof that every day has radar imagery. Older days use a separate map and source.</small>
                   </> : source.id === "noaa-lightning-density" ? <div className="lightning-source-control" data-signal={lightningPreview}>
                     <p>Ground-network strike density in 8 × 8 km cells for each advertised 15-minute interval.</p>
                     <output>{lightningFrame ? `Selected frame ${lightningFrame.slice(0, 16).replace("T", " ")} UTC` : "No NOAA frame loaded"}</output>

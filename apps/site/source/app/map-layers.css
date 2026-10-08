@@ -156,6 +156,20 @@
 .official-context-row .official-context-primary > div { min-width: 0; }
 .official-context-row .official-context-primary strong { color: #eef4ef; font-size: 14px; }
 .official-context-row .official-context-primary small { color: #a9c1ba; font-size: 11px; text-transform: none; letter-spacing: 0; }
+.noaa-radar-launch { display: grid; gap: 7px; padding: 10px 15px 12px; border-top: 1px solid #29474b; }
+.noaa-radar-launch > strong { color: #e9f3e9; font-size: 12px; }
+.noaa-radar-launch p,.noaa-radar-launch small { margin: 0; color: #b5d0c7; font-size: 11px; line-height: 1.45; }
+.noaa-radar-launch > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(120px, 1fr); gap: 7px; align-items: end; }
+.noaa-radar-launch button,.noaa-radar-launch a { display: grid; place-items: center; min-height: 38px; padding: 6px 8px; border: 1px solid #8a9d82; border-radius: 7px; background: #244143; color: #eef7e6; font: inherit; font-size: 11px; font-weight: 800; text-decoration: none; text-align: center; }
+.noaa-radar-launch a { grid-column: 1 / -1; border-color: #b59a5b; color: #ffe0a4; }
+.noaa-radar-launch label { display: grid; gap: 3px; color: #c8d7cd; font-size: 10px; font-weight: 800; }
+.noaa-radar-launch input { width: 100%; min-width: 0; min-height: 38px; border: 1px solid #617d7e; border-radius: 7px; background: #102b30; color: #f1f5ed; padding: 5px; color-scheme: dark; }
+.noaa-radar-launch :is(button,a,input):focus-visible { outline: 2px solid #f4d281; outline-offset: 2px; }
+.map-visual-control { display: grid; gap: 4px; color: #d7e5dc; font-size: 11px; font-weight: 700; }
+.map-visual-control select { width: 100%; min-height: 38px; padding: 5px 8px; border: 1px solid #6d8883; border-radius: 7px; color: #f1f5ed; background: #102b30; font: inherit; }
+.map-visual-control select:focus-visible { outline: 2px solid #f4d281; outline-offset: 2px; }
+.map-fire-visual-control { margin: 0 14px 10px; }
+.map-fire-visual-control small { font-size: 10px; font-weight: 400; line-height: 1.4; }
 .official-context-options > summary { position: absolute; top: 13px; right: 10px; display: grid; place-items: center; min-width: 65px; min-height: 44px; color: #8cddd7; font-size: 12px; font-weight: 750; list-style: none; cursor: pointer; }
 .official-context-options > summary::-webkit-details-marker { display: none; }
 .official-context-options[open] > summary { color: #edc67b; }
