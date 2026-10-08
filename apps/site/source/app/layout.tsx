@@ -25,10 +25,6 @@ export async function generateMetadata(): Promise<Metadata> {
       description: "Start on a real MapLibre Kansas vector context, inspect place and time context, and ask Qwen about bounded map context.",
       images: [socialImage],
     },
-    icons: {
-      icon: "/favicon.svg",
-      shortcut: "/favicon.ico",
-    },
   };
 }
 
@@ -39,6 +35,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Not metadata.icons: metadataBase would make these absolute URLs on the
+            canonical host, so every local or preview page load would fetch them
+            from the hosted Site. Icons are served by this deployment. */}
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+      </head>
       <body className="antialiased">{children}<PersistentSelectMenus /></body>
     </html>
   );

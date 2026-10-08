@@ -40,6 +40,10 @@ test("renders the map-first Kansas explorer shell", async () => {
   const html = await response.text();
   assert.match(html, /https:\/\/kansas-frontier-matrix-explorer\.blackbart-55\.chatgpt\.site\/og-guided\.png/);
   assert.doesNotMatch(html, /untrusted\.example/);
+  // Icons stay on this deployment; only social-card images use the canonical host.
+  assert.match(html, /<link rel="icon" href="\/favicon\.svg" type="image\/svg\+xml"\/>/);
+  assert.match(html, /<link rel="shortcut icon" href="\/favicon\.ico"\/>/);
+  assert.doesNotMatch(html, /<link[^>]*rel="(?:shortcut )?icon"[^>]*href="https?:/);
   assert.match(html, /Kansas Frontier Matrix Explorer/i);
   const buildYear = Math.max(2026, new Date().getUTCFullYear());
   assert.match(html, new RegExp(`Map time · <strong>${buildYear}</strong>`));
@@ -948,7 +952,7 @@ test("checks current GitHub main through one fixed read-only backend route", asy
   assert.doesNotMatch(route, /searchParams\.get\("url"\)/);
   assert.match(page, /LIVE READ-ONLY GITHUB CHECK/);
   assert.match(page, /no automatic code sync or mutation/i);
-  assert.match(layout, /shortcut: "\/favicon\.ico"/);
+  assert.match(layout, /<link rel="shortcut icon" href="\/favicon\.ico" \/>/);
   assert.match(favicon, /content-type.*image\/svg\+xml/i);
 });
 
