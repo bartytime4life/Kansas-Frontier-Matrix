@@ -44,6 +44,7 @@ export default function LocalMapArchiveBrowser({ renderPreparedReview }: LocalAr
   return <section className="local-map-archive" aria-labelledby="local-map-archive-title">
     <header><h4 id="local-map-archive-title">Local road &amp; bridge map archive</h4><span>{records.length} PDF records · 6 collections</span></header>
     <p>Find a source sheet, then check and open the original on your device. These reference PDFs are separate from the map timeline and georeferenced overlays.</p>
+    <p><a href="/downloads#public-maps">Browse Kansas mine maps &amp; geologic maps →</a></p>
     <div className="local-archive-filters">
       <label>Collection<select value={collection} onChange={e => { setCollection(e.target.value); setPage(0); }}><option value="all">All collections</option>{inventory.collections.map(name => <option key={name} value={name}>{collections[name]} · {records.filter(row => row.collection === name).length}</option>)}</select></label>
       <label>Find a sheet<input type="search" value={text} onChange={e => { setText(e.target.value); setPage(0); }} placeholder="County, city or filename" /></label>

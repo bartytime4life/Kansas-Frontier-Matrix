@@ -1,0 +1,42 @@
+.catalog { scroll-margin-top:20px; }
+.actions { display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin:16px 0; font-size:12px; }
+.actions span { color:var(--muted); }
+.coverage { margin:20px 0; padding:16px; border:1px solid var(--line); background:#102b2b; font-size:12px; }
+.coverage summary { font-size:14px; cursor:pointer; }
+.coverage ul { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); padding:0; gap:18px; list-style:none; }
+.coverage li strong,.coverage li span { display:block; }
+.coverage li span,.coverage p,.coverage small { color:var(--muted); }
+.filters { display:grid; grid-template-columns:2fr repeat(2,minmax(0,1fr)); gap:12px; margin:24px 0 12px; }
+.filters label,.selection label { display:grid; gap:7px; color:var(--muted); font-size:12px; }
+.results { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:26px; align-items:start; }
+.records,.assets { margin:0; padding:0; list-style:none; }
+.records li { margin-bottom:8px; }
+.records button { display:block; width:100%; text-align:left; padding:14px!important; }
+.records button[aria-pressed=true] { border-color:var(--gold); background:#28433a; }
+.records strong,.records span,.records small { display:block; overflow-wrap:anywhere; }
+.records strong { font-size:14px; }
+.records span,.records small { color:var(--muted); font-size:12px; margin-top:5px; }
+.detail { min-width:0; border:1px solid var(--line); background:#10292d; padding:22px; overflow-wrap:anywhere; }
+.detail h3 { margin:0 0 15px; line-height:1.4; font-size:21px; }
+.detail p,.detail dd { font-size:12px; color:#c4d2c2; }
+.detail dl { margin:20px 0; }
+.detail dl>div { margin:12px 0; }
+.detail dt { font-size:11px; color:var(--gold); }
+.detail dd { margin:3px 0; }
+.assets li { border-top:1px solid var(--line); padding:14px 0; }
+.assets strong,.assets span,.assets a { display:block; font-size:12px; margin-bottom:7px; }
+.assets span { color:var(--muted); }
+.assets button { font-size:12px; }
+.selection { border-top:2px solid var(--gold); margin-top:16px; padding-top:18px; }
+.selection small { display:block; color:var(--muted); font-size:11px; margin:9px 0 15px; }
+.downloads { border-top:1px solid var(--line); margin-top:25px; padding-top:15px; }
+@media(max-width:900px) { .coverage ul { grid-template-columns:1fr; gap:10px; } .filters { grid-template-columns:repeat(2,minmax(0,1fr)); } .results { grid-template-columns:1fr; } }
+@media(max-width:500px) { .filters { grid-template-columns:1fr; } .detail { padding:16px; } }
+
+/* Keep the embedded MapLibre controls legible inside the download workbench. */
+.catalog :global(.maplibregl-ctrl-group) button {
+  width: 44px; height: 44px; min-height: 44px; padding: 0;
+  border: 0; border-radius: 0; color: #102126; background-color: #fff !important;
+}
+.catalog :global(.maplibregl-ctrl-group) button:hover:not(:disabled),
+.catalog :global(.maplibregl-ctrl-group) button:focus-visible { background-color: #e4eeee !important; }

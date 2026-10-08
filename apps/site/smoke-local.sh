@@ -26,7 +26,7 @@ smoke_routes=(
   historical-topo/review "historical-topo/review/tiles/[scan]/[package]/[z]/[x]/[y]"
   historical-topo/stage "historical-topo/tiles/[scan]/[package]/[z]/[x]/[y]"
   hydrology/coverage hydrology/direction hydrology/noaa hydrology/streamflow
-  lightning/archive lightning/flashes live-context qwen
+  lightning/archive lightning/flashes live-context public-maps/preview qwen
   soil-moisture/availability soil-moisture/tile source-download subsurface/soil subsurface/resources
   terrain-tile wind-arrows
 )
@@ -163,6 +163,7 @@ expect GET /api/hydrology/streamflow 400 code USGS_STREAMFLOW_INVALID_QUERY
 expect GET /api/lightning/archive 400
 expect GET '/api/lightning/flashes?minutes=7' 400 state error
 expect GET /api/live-context 400
+expect GET /api/public-maps/preview 400
 expect GET '/api/soil-moisture/availability?retry=2' 400 code INVALID_REQUEST
 expect GET /api/soil-moisture/tile 400 code INVALID_TILE_REQUEST
 expect GET /api/source-download 400

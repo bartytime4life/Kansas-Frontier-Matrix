@@ -202,6 +202,10 @@ search with `State=KS` and `publisher_list=usgs`. It opens a provider catalog;
 individual records determine available files and formats. Selecting this link
 does not download or admit data automatically. Historical-route downloads and
 the historic topographic sheet browser retain their separate topoView links.
+The [public map library](docs/public-map-library.md) at `/downloads#public-maps`
+adds separately counted USGS/KGS catalog discovery, OSMRE mine-map references,
+selected bounded originals and opt-in source previews. The source publisher
+parameter is preserved, while discovery filters actual publisher metadata.
 Selected-source errors have Retry, Hide, and Source data actions. Optional tile
 failures no longer produce a map-wide degradation banner. Full renderer and
 basemap failures still retain their explicit recovery states.

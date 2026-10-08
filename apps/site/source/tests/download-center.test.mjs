@@ -123,7 +123,7 @@ test('download center exposes all collections through search/paging and separate
     'next/link': { default: 'a' }, '../use-local-downloads': { useLocalDownloads: () => state },
     '../earth-engine-context-client': { useEarthEngineContext: () => ({ manifests: [], loading: false, error: null, reload() {} }) },
     '../earth-engine-context': { earthEngineSetYear: () => 2024 }, '../earth-engine-data': { EARTH_ENGINE_DATASETS: [] }, '../local-download-client': client,
-    '../download-job': { DownloadJob: 'job' }, './workspace.module.css': css,
+    '../download-job': { DownloadJob: 'job' }, '../public-map-browser': { default: 'public-map-browser' }, './workspace.module.css': css,
   });
   const render = () => { const tree = h.render(h.exports.default); h.commit(); return tree; };
   let tree = render(); const list = () => findNode(tree, node => node.type === 'ul' && node.props.className === 'collections');

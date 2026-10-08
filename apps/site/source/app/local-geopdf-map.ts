@@ -50,7 +50,7 @@ export function attachLocalReview(map: MapLibreMap, runtime: MapLibreModule, pac
   });
   try {
     const paint = { "raster-opacity": opacity, "raster-fade-duration": 0, "raster-resampling": "nearest" as const };
-    const attribution = "KDOT Allen County · June 2025 planning map · device-only review, not released";
+    const attribution = pack.attribution;
     // A raster source hides below minzoom. Reuse the four *actual* coarsest
     // georeferenced tiles as image quads at overview zooms, so Fit works on small
     // screens too. There is no generated mosaic, color interpolation or new data.

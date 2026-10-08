@@ -1,0 +1,247 @@
+{
+  "receipt_id": "genrec-public-map-library-20261008-5cf43f0b7c907ddf",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/README.md",
+    "apps/site/source/app/api/public-maps/preview/route.ts",
+    "apps/site/source/app/downloads/workspace.tsx",
+    "apps/site/source/app/local-geopdf-map.ts",
+    "apps/site/source/app/local-geopdf-review-control.tsx",
+    "apps/site/source/app/local-geopdf-review.ts",
+    "apps/site/source/app/local-map-archive-browser.tsx",
+    "apps/site/source/app/local-map-archive-loader.tsx",
+    "apps/site/source/app/map-toolbar.tsx",
+    "apps/site/source/app/public-map-browser.module.css",
+    "apps/site/source/app/public-map-browser.tsx",
+    "apps/site/source/app/public-map-catalog.json",
+    "apps/site/source/app/public-map-catalog.ts",
+    "apps/site/source/app/public-map-client.ts",
+    "apps/site/source/app/public-map-preview-model.ts",
+    "apps/site/source/app/public-map-preview.tsx",
+    "apps/site/source/docs/public-map-library.md",
+    "apps/site/source/docs/public-map-validation-20261008.md",
+    "apps/site/source/tests/download-center.test.mjs",
+    "apps/site/source/tests/public-map-browser.test.mjs",
+    "apps/site/source/tests/public-map-catalog.test.mjs",
+    "apps/site/source/tests/public-map-preview-lifecycle.test.mjs",
+    "apps/site/source/tests/public-map-preview.test.mjs",
+    "tests/local_data/test_public_map_catalog.py",
+    "tests/local_data/test_public_map_control.py",
+    "tests/local_data/test_public_map_downloads.py",
+    "tools/local_data/catalogs/public-maps/README.md",
+    "tools/local_data/catalogs/public-maps/discovery-20261008.json",
+    "tools/local_data/catalogs/public-maps/public-map-metadata-20261008.jsonl",
+    "tools/local_data/earth_engine_downloads.py",
+    "tools/local_data/public_map_catalog.py",
+    "tools/local_data/public_map_downloads.py"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/README.md": "sha256:3e38e4e7c394bd7fe01eae8f5fa51a598ef7f42d18470eaf22b8876ec39e2c95",
+    "apps/site/source/app/api/public-maps/preview/route.ts": "sha256:9ec05a4af320493057f990285f9e1a5efbb5e91264463f06f442288c2e2e68d9",
+    "apps/site/source/app/downloads/workspace.tsx": "sha256:a48cee8a9a95623d4be60e709b70c3461e02bdd5cd9ecbea4ca70d0d37228df6",
+    "apps/site/source/app/local-geopdf-map.ts": "sha256:3522f71b60a99ee918a4c667b12c97030d2357d5e2570832d6dd61dac02b0b72",
+    "apps/site/source/app/local-geopdf-review-control.tsx": "sha256:067d4c2e1ca305b469339504ff7ca3511c6f417d26fd81baee7a1f3dbd082f7a",
+    "apps/site/source/app/local-geopdf-review.ts": "sha256:7c3118b905637e8159331ddbdf43043ddda478ca6d8e77453f71b4374f98e1be",
+    "apps/site/source/app/local-map-archive-browser.tsx": "sha256:d4d8900ebd6ffa0059024d7b5f16571c948584af78e79425fd5c02a96c3ab345",
+    "apps/site/source/app/local-map-archive-loader.tsx": "sha256:2afe685d17242c149faab5d7022532bf5c2b3f57071f0020c699d43b4de04f18",
+    "apps/site/source/app/map-toolbar.tsx": "sha256:af09c7136e841acb363b93d5252ba1f655d8373ffd299dc8c4d4a3e7524e0cc9",
+    "apps/site/source/app/public-map-browser.module.css": "sha256:37d845c1dcd52136e59c562d0e6ad0a6bb58941826b1d76e9f2410d89f9c7535",
+    "apps/site/source/app/public-map-browser.tsx": "sha256:b121121dc26bc1cff2e9dd349d6dc23d79dc30b43d54abeac6ea8fb630dcc74c",
+    "apps/site/source/app/public-map-catalog.json": "sha256:e8d2a02e3c89822c0379f3a4b352ccf6b2e1bf028f05a6fef334ff06b5f297bb",
+    "apps/site/source/app/public-map-catalog.ts": "sha256:782508fa742f9a01781cf7eab80ac38646d0fbc6d9f8c67896ccdba41d01de9a",
+    "apps/site/source/app/public-map-client.ts": "sha256:dc2dfe770ca57ab274852784287e0815c3fe14215ed20d038cca7e103194bd19",
+    "apps/site/source/app/public-map-preview-model.ts": "sha256:b343883638cfad1e2331ff8e491ea0ddc619fadeb2e77a4d622af05d6914e13f",
+    "apps/site/source/app/public-map-preview.tsx": "sha256:11cc6dddc55e1f77aa6cd1eba7e8d1845187e07a84c2a3856b79bf0008cfaa2d",
+    "apps/site/source/docs/public-map-library.md": "sha256:12b8c4158fee9ec3b9a6936351220bde50450b21aa59efb4d4cadb74d7d74a35",
+    "apps/site/source/docs/public-map-validation-20261008.md": "sha256:1a9cf5a21ed9aece1776524f6175d0ffbc590ef0ab1d3b8ec7390f54d99e96c1",
+    "apps/site/source/tests/download-center.test.mjs": "sha256:39d7ec9e2795d25cd282e15ffb00ec9936c083dd2c3d32ba4ae42848d36658d7",
+    "apps/site/source/tests/public-map-browser.test.mjs": "sha256:221164b4d9a3555e248bc204e8fd365993705b02bb6b5652ac638a7e589f02f0",
+    "apps/site/source/tests/public-map-catalog.test.mjs": "sha256:47525f41617c29381aea8a8f894c51c98de9cb5d9a38469af4e3e07bd23699a6",
+    "apps/site/source/tests/public-map-preview-lifecycle.test.mjs": "sha256:6d74ab896e47f71dc4bbafef0846c3b4d10dcd1d3d7d10031e258ceae6eb23cc",
+    "apps/site/source/tests/public-map-preview.test.mjs": "sha256:441ebd9509e56370d78a4fbb54eac2adc4bc2781988ab2a244eeac5d7aaff4c5",
+    "tests/local_data/test_public_map_catalog.py": "sha256:fc25b7331ec7e1665a898c42d084b835762e40bdb187a5a02daa170e74bd5fbb",
+    "tests/local_data/test_public_map_control.py": "sha256:d78163e6a42ae694674ac511a9ab717a8a38fe722569392630b9af4016835d63",
+    "tests/local_data/test_public_map_downloads.py": "sha256:bb82682fcc173b136c51cf68972dfcdb69aedd32b8da8d7f8f221d97816310db",
+    "tools/local_data/catalogs/public-maps/README.md": "sha256:c067abecfbd56acfa5807cb4d422a1485ca7b6300f8347f31dd536e7b9e13124",
+    "tools/local_data/catalogs/public-maps/discovery-20261008.json": "sha256:d577d79902852ea7ee13d332d609de5ae125c266030d3667c6889d5e0254d717",
+    "tools/local_data/catalogs/public-maps/public-map-metadata-20261008.jsonl": "sha256:480a6c2d92f294e37ee461afb5e55af8f2fa3c344b71d760621646351c89ad24",
+    "tools/local_data/earth_engine_downloads.py": "sha256:466dec0de46600b05dd222b9af99dca0bfd116247d8f785c7eced1c7c4cb99fb",
+    "tools/local_data/public_map_catalog.py": "sha256:e7315d1e2d97294a3934b701d5f90c9685561c04454fa7ca2f300e086afc19c2",
+    "tools/local_data/public_map_downloads.py": "sha256:7caec06ccc8fb8884738e892c4ac7ed96d94202378dd76041b2befdb229fc8fe"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Exact model build version not exposed by runtime"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "functions.exec",
+      "exec_command",
+      "apply_patch",
+      "web.run",
+      "cua_repl",
+      "collaboration"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a",
+      "sha256:1d2073f3f34d1d8a246e3ff4feaf9105f95585ae78e217796872726aec4cedb1",
+      "sha256:3c4ed28a1299785fa7aa14e6cb843ad4625c1eee3fe9e35f8b04297fbacc809f",
+      "sha256:1a9cf5a21ed9aece1776524f6175d0ffbc590ef0ab1d3b8ec7390f54d99e96c1",
+      "sha256:d577d79902852ea7ee13d332d609de5ae125c266030d3667c6889d5e0254d717",
+      "sha256:480a6c2d92f294e37ee461afb5e55af8f2fa3c344b71d760621646351c89ad24"
+    ],
+    "attached_docs": [
+      "docs/doctrine/ai-build-operating-contract.md@sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "schemas/contracts/v1/receipts/generated_receipt.schema.json@sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a",
+      "data/receipts/generated/README.md@sha256:1d2073f3f34d1d8a246e3ff4feaf9105f95585ae78e217796872726aec4cedb1",
+      ".github/PULL_REQUEST_TEMPLATE.md@sha256:3c4ed28a1299785fa7aa14e6cb843ad4625c1eee3fe9e35f8b04297fbacc809f",
+      "apps/site/source/docs/public-map-validation-20261008.md@sha256:1a9cf5a21ed9aece1776524f6175d0ffbc590ef0ab1d3b8ec7390f54d99e96c1",
+      "tools/local_data/catalogs/public-maps/discovery-20261008.json@sha256:d577d79902852ea7ee13d332d609de5ae125c266030d3667c6889d5e0254d717",
+      "tools/local_data/catalogs/public-maps/public-map-metadata-20261008.jsonl@sha256:480a6c2d92f294e37ee461afb5e55af8f2fa3c344b71d760621646351c89ad24"
+    ],
+    "evidence_refs": [
+      "git-commit:3b39b948919b51433db369b816e3ea748c54df1f",
+      "artifact-basis:current-workspace",
+      "https://mmr.osmre.gov/",
+      "https://experience.arcgis.com/experience/d84e5b88af674f588645f153e2127910",
+      "https://ngmdb.usgs.gov/"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/README.md": "PROPOSED",
+    "apps/site/source/app/api/public-maps/preview/route.ts": "PROPOSED",
+    "apps/site/source/app/downloads/workspace.tsx": "PROPOSED",
+    "apps/site/source/app/local-geopdf-map.ts": "PROPOSED",
+    "apps/site/source/app/local-geopdf-review-control.tsx": "PROPOSED",
+    "apps/site/source/app/local-geopdf-review.ts": "PROPOSED",
+    "apps/site/source/app/local-map-archive-browser.tsx": "PROPOSED",
+    "apps/site/source/app/local-map-archive-loader.tsx": "PROPOSED",
+    "apps/site/source/app/map-toolbar.tsx": "PROPOSED",
+    "apps/site/source/app/public-map-browser.module.css": "PROPOSED",
+    "apps/site/source/app/public-map-browser.tsx": "PROPOSED",
+    "apps/site/source/app/public-map-catalog.json": "PROPOSED",
+    "apps/site/source/app/public-map-catalog.ts": "PROPOSED",
+    "apps/site/source/app/public-map-client.ts": "PROPOSED",
+    "apps/site/source/app/public-map-preview-model.ts": "PROPOSED",
+    "apps/site/source/app/public-map-preview.tsx": "PROPOSED",
+    "apps/site/source/docs/public-map-library.md": "PROPOSED",
+    "apps/site/source/docs/public-map-validation-20261008.md": "PROPOSED",
+    "apps/site/source/tests/download-center.test.mjs": "PROPOSED",
+    "apps/site/source/tests/public-map-browser.test.mjs": "PROPOSED",
+    "apps/site/source/tests/public-map-catalog.test.mjs": "PROPOSED",
+    "apps/site/source/tests/public-map-preview-lifecycle.test.mjs": "PROPOSED",
+    "apps/site/source/tests/public-map-preview.test.mjs": "PROPOSED",
+    "tests/local_data/test_public_map_catalog.py": "PROPOSED",
+    "tests/local_data/test_public_map_control.py": "PROPOSED",
+    "tests/local_data/test_public_map_downloads.py": "PROPOSED",
+    "tools/local_data/catalogs/public-maps/README.md": "PROPOSED",
+    "tools/local_data/catalogs/public-maps/discovery-20261008.json": "PROPOSED",
+    "tools/local_data/catalogs/public-maps/public-map-metadata-20261008.jsonl": "PROPOSED",
+    "tools/local_data/earth_engine_downloads.py": "PROPOSED",
+    "tools/local_data/public_map_catalog.py": "PROPOSED",
+    "tools/local_data/public_map_downloads.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "artifact-inventory-and-sha256",
+      "outcome": "PASS",
+      "reason": "Bound all 32 modified/new implementation, test, documentation, and metadata files to current workspace bytes; this receipt excludes itself. Input base is 3b39b948919b51433db369b816e3ea748c54df1f."
+    },
+    {
+      "gate": "site-typescript-and-production-build",
+      "outcome": "PASS",
+      "reason": "Final TypeScript and production build passed, as reported by the coordinating agent and recorded in the bound validation document."
+    },
+    {
+      "gate": "site-test-suite",
+      "outcome": "PASS",
+      "reason": "Final Site suite: 709 tests passed, as reported by the coordinating agent and recorded in the bound validation document."
+    },
+    {
+      "gate": "public-map-python-suite",
+      "outcome": "PASS",
+      "reason": "Final backend suite: 63 tests and 96 subtests passed, as reported by the coordinating agent and recorded in the bound validation document."
+    },
+    {
+      "gate": "ngmdb-kansas-metadata-reconciliation",
+      "outcome": "PASS",
+      "reason": "Live metadata discovery reconciled 944 USGS and 741 KGS records; retained starting references are counted separately. No original map files were bulk acquired during discovery."
+    },
+    {
+      "gate": "osmre-nmmr-live-catalog",
+      "outcome": "FAIL",
+      "reason": "Provider TLS certificate-chain verification failed. NMMR coverage remains unknown with a starting reference retained; TLS verification was not bypassed and failure is not represented as zero records."
+    },
+    {
+      "gate": "bounded-local-browser-workflow",
+      "outcome": "PASS",
+      "reason": "Coordinating agent verified KGS preview with 5 features, CNGM Earth-surface preview with 5 features, Precambrian preview with 1 feature, original-document opening, selected-file download, and download cancellation. Evidence and limitations are recorded in the bound validation document."
+    },
+    {
+      "gate": "comprehensive-browser-and-geological-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Bounded browser checks do not establish comprehensive accessibility, mobile/touch, spatial accuracy, or geological acceptance."
+    },
+    {
+      "gate": "source-admission-and-release",
+      "outcome": "SKIPPED",
+      "reason": "No source or downloaded bytes admitted or released. Approximately 25.3 MB of external RAW test captures remain candidate-only, with receipts and provider-checksum verification separate. KGS rights hold remains."
+    },
+    {
+      "gate": "hosted-publication",
+      "outcome": "SKIPPED",
+      "reason": "Local Site implementation only; no hosted Site publication or audience change performed."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review pending; this receipt does not authorize merge, source admission, mirror-review clearance, release, or publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "operating-contract-3.0.0",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/ai-build-operating-contract.md@sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7"
+    },
+    {
+      "id": "generated-receipt-schema-and-guidance",
+      "validated": true,
+      "evidence_ref": "schemas/contracts/v1/receipts/generated_receipt.schema.json@sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a; data/receipts/generated/README.md@sha256:1d2073f3f34d1d8a246e3ff4feaf9105f95585ae78e217796872726aec4cedb1"
+    },
+    {
+      "id": "public-map-local-validation-20261008",
+      "validated": true,
+      "evidence_ref": "apps/site/source/docs/public-map-validation-20261008.md@sha256:1a9cf5a21ed9aece1776524f6175d0ffbc590ef0ab1d3b8ec7390f54d99e96c1"
+    },
+    {
+      "id": "public-map-metadata-discovery-20261008",
+      "validated": true,
+      "evidence_ref": "tools/local_data/catalogs/public-maps/discovery-20261008.json@sha256:d577d79902852ea7ee13d332d609de5ae125c266030d3667c6889d5e0254d717; tools/local_data/catalogs/public-maps/public-map-metadata-20261008.jsonl@sha256:480a6c2d92f294e37ee461afb5e55af8f2fa3c344b71d760621646351c89ad24"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-08T18:15:37Z",
+  "emitter": "codex/gpt-6/generated-work-receipt",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Generated-work provenance for the Kansas public-map catalog, contextual previews, selected-original acquisition controls, and local Site integration. Artifact hashes bind frozen implementation workspace bytes, not the input base commit. Exact model build and sampling parameters were not exposed and have not been invented. All artifacts remain PROPOSED pending human review. Test and browser gate outcomes are coordinating-agent reports corroborated by the bound local validation document; this emitter independently enumerated files and computed hashes. Citation validation means referenced repository evidence exists and its bytes were hashed, not that external geological claims or publication rights were accepted. No prompt text, hidden reasoning, secrets, or external RAW map payloads are included. Existing archive identity and source admission boundaries remain in force."
+}
