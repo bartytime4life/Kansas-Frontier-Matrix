@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 520" width="1280" height="520" role="img" aria-labelledby="t d">
+  <title id="t">Sensitive-material decision path</title>
+  <desc id="d">Six kinds of sensitive material — living-person and genetic records, rare-species records, archaeological and cultural sites, infrastructure records, land and community boundaries, credentials and private endpoints — flow into an authorized review, which selects one of five dispositions: restricted retention, generalized representation, omission, abstention or denial. Note: a generalized map is not enough if its download exposes original coordinates.</desc>
+  <defs>
+    <clipPath id="frame"><rect x="1" y="1" width="1278" height="518" rx="18"/></clipPath>
+    <style>
+      .serif{font-family:Georgia,'Times New Roman',serif}
+      .sans{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
+      .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+      .lbl{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;letter-spacing:2.5px;font-weight:700}
+      .mt{animation:mt 6s ease-in-out infinite}@keyframes mt{0%,100%{opacity:1}50%{opacity:.75}}
+      .pls{transform-box:fill-box;transform-origin:center;animation:pls 3s ease-out infinite}@keyframes pls{0%{transform:scale(.9);opacity:.8}100%{transform:scale(1.5);opacity:0}}
+      .dp{animation:dp 6s ease-out infinite}@keyframes dp{0%{opacity:0;transform:translateX(-10px)}8%,90%{opacity:1;transform:translateX(0)}100%{opacity:0}}
+      @media (prefers-reduced-motion: reduce){.mt,.pls,.dp{animation:none!important}.pls{opacity:.3}}
+    </style>
+  </defs>
+  <g clip-path="url(#frame)">
+    <rect width="1280" height="520" fill="#FAF7F0"/>
+<defs><marker id="ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#A33A3A"/></marker></defs>
+    <text x="40" y="48" class="lbl" fill="#A33A3A">SENSITIVE MATERIAL</text><text x="40" y="76" class="sans" font-size="17" fill="#1F3A66">Recognize the exposure, find the real authority, then choose a disposition it supports.</text>
+    <g class="mt" style="animation-delay:-0.0s"><rect x="40" y="100" width="420" height="52" rx="12" fill="#FFFFFF" stroke="#A33A3A" stroke-opacity=".35"/><text x="58" y="133" class="sans" font-size="20">🧬</text><text x="94" y="123" class="sans" font-size="14" font-weight="700" fill="#0E1F3A">Living-person &amp; genetic records</text><text x="94" y="141" class="sans" font-size="11.5" fill="#6B6B6B">identity · familial inference</text></g>
+    <g class="mt" style="animation-delay:-0.4s"><rect x="40" y="162" width="420" height="52" rx="12" fill="#FFFFFF" stroke="#A33A3A" stroke-opacity=".35"/><text x="58" y="195" class="sans" font-size="20">🦉</text><text x="94" y="185" class="sans" font-size="14" font-weight="700" fill="#0E1F3A">Rare-species records</text><text x="94" y="203" class="sans" font-size="11.5" fill="#6B6B6B">location precision · collection</text></g>
+    <g class="mt" style="animation-delay:-0.8s"><rect x="40" y="224" width="420" height="52" rx="12" fill="#FFFFFF" stroke="#A33A3A" stroke-opacity=".35"/><text x="58" y="257" class="sans" font-size="20">🏺</text><text x="94" y="247" class="sans" font-size="14" font-weight="700" fill="#0E1F3A">Archaeological &amp; cultural sites</text><text x="94" y="265" class="sans" font-size="11.5" fill="#6B6B6B">exact location · community authority</text></g>
+    <g class="mt" style="animation-delay:-1.2s"><rect x="40" y="286" width="420" height="52" rx="12" fill="#FFFFFF" stroke="#A33A3A" stroke-opacity=".35"/><text x="58" y="319" class="sans" font-size="20">🏗️</text><text x="94" y="309" class="sans" font-size="14" font-weight="700" fill="#0E1F3A">Infrastructure records</text><text x="94" y="327" class="sans" font-size="11.5" fill="#6B6B6B">condition · harmful precision</text></g>
+    <g class="mt" style="animation-delay:-1.6s"><rect x="40" y="348" width="420" height="52" rx="12" fill="#FFFFFF" stroke="#A33A3A" stroke-opacity=".35"/><text x="58" y="381" class="sans" font-size="20">🗺️</text><text x="94" y="371" class="sans" font-size="14" font-weight="700" fill="#0E1F3A">Land &amp; community boundaries</text><text x="94" y="389" class="sans" font-size="11.5" fill="#6B6B6B">title · sovereignty inference</text></g>
+    <g class="mt" style="animation-delay:-2.0s"><rect x="40" y="410" width="420" height="52" rx="12" fill="#FFFFFF" stroke="#A33A3A" stroke-opacity=".35"/><text x="58" y="443" class="sans" font-size="20">🔑</text><text x="94" y="433" class="sans" font-size="14" font-weight="700" fill="#0E1F3A">Credentials &amp; private endpoints</text><text x="94" y="451" class="sans" font-size="11.5" fill="#6B6B6B">account or service access</text></g>
+    <path d="M480,126 C560,126 560,300 620,300 M480,436 C560,436 560,300 620,300" fill="none" stroke="#A33A3A" stroke-opacity=".35" stroke-width="2"/>
+    <g><rect x="620" y="250" width="200" height="100" rx="16" fill="#0B1F3A"/><text x="720" y="284" text-anchor="middle" class="sans" font-size="13" font-weight="700" fill="#FFFFFE">Authorized review</text><text x="720" y="306" text-anchor="middle" class="sans" font-size="11.5" fill="#DCE6F3">audience · operation · joins</text><text x="720" y="326" text-anchor="middle" class="sans" font-size="11.5" fill="#DCE6F3">terms · real reviewer</text></g>
+    <circle class="pls" cx="720" cy="300" r="60" fill="none" stroke="#C9A227" stroke-width="2"/>
+    <path d="M820,300 C880,300 880,136 930,136" fill="none" stroke="#5E6E7C" stroke-opacity=".5" stroke-width="2" marker-end="url(#ar2)"/>
+    <g class="dp" style="animation-delay:0.30s"><rect x="940" y="110" width="300" height="52" rx="26" fill="#FFFFFF" stroke="#5E6E7C" stroke-width="2"/><circle cx="966" cy="136" r="8" fill="#5E6E7C"/><text x="986" y="141" class="sans" font-size="14.5" font-weight="700" fill="#0E1F3A">Restricted retention</text></g>
+    <path d="M820,300 C880,300 880,206 930,206" fill="none" stroke="#4A6FA5" stroke-opacity=".5" stroke-width="2" marker-end="url(#ar2)"/>
+    <g class="dp" style="animation-delay:0.65s"><rect x="940" y="180" width="300" height="52" rx="26" fill="#FFFFFF" stroke="#4A6FA5" stroke-width="2"/><circle cx="966" cy="206" r="8" fill="#4A6FA5"/><text x="986" y="211" class="sans" font-size="14.5" font-weight="700" fill="#0E1F3A">Generalized representation</text></g>
+    <path d="M820,300 C880,300 880,276 930,276" fill="none" stroke="#8E5A2A" stroke-opacity=".5" stroke-width="2" marker-end="url(#ar2)"/>
+    <g class="dp" style="animation-delay:1.00s"><rect x="940" y="250" width="300" height="52" rx="26" fill="#FFFFFF" stroke="#8E5A2A" stroke-width="2"/><circle cx="966" cy="276" r="8" fill="#8E5A2A"/><text x="986" y="281" class="sans" font-size="14.5" font-weight="700" fill="#0E1F3A">Omission</text></g>
+    <path d="M820,300 C880,300 880,346 930,346" fill="none" stroke="#9A7A12" stroke-opacity=".5" stroke-width="2" marker-end="url(#ar2)"/>
+    <g class="dp" style="animation-delay:1.35s"><rect x="940" y="320" width="300" height="52" rx="26" fill="#FFFFFF" stroke="#9A7A12" stroke-width="2"/><circle cx="966" cy="346" r="8" fill="#9A7A12"/><text x="986" y="351" class="sans" font-size="14.5" font-weight="700" fill="#0E1F3A">Abstention</text></g>
+    <path d="M820,300 C880,300 880,416 930,416" fill="none" stroke="#A33A3A" stroke-opacity=".5" stroke-width="2" marker-end="url(#ar2)"/>
+    <g class="dp" style="animation-delay:1.70s"><rect x="940" y="390" width="300" height="52" rx="26" fill="#FFFFFF" stroke="#A33A3A" stroke-width="2"/><circle cx="966" cy="416" r="8" fill="#A33A3A"/><text x="986" y="421" class="sans" font-size="14.5" font-weight="700" fill="#0E1F3A">Denial</text></g>
+    <text x="40" y="500" class="sans" font-size="12.5" fill="#A33A3A">A generalized map is not enough if its download still exposes the original coordinates.</text>
+  </g>
+  <rect x="1" y="1" width="1278" height="518" rx="18" fill="none" stroke="#D9CFBD" stroke-width="2"/>
+</svg>

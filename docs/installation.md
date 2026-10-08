@@ -25,9 +25,32 @@ related:
 > [the water runbook](runbooks/water-pilot.md). No service or timer is installed
 > merely by installing the packages.
 
+<!-- kfm-showcase:start -->
+<p align="center">
+  <a href="../README.md#see-it-in-action"><picture><source media="(prefers-color-scheme: dark)" srcset="brand/readme/kfm-banner-installation-dark.svg" /><img src="brand/readme/kfm-banner-installation.svg" alt="Installation banner: pick the piece you need, install only that." width="100%" /></picture></a>
+</p>
+<!-- kfm-showcase:end -->
+
 # Install and configure KFM locally
 
+<!-- kfm-showcase:start -->
+<p>
+  <a href="#install-and-configure-kfm-locally"><img src="https://img.shields.io/badge/guide-installation-1f3a66?style=flat-square" alt="guide page" /></a>
+  <a href="#install-and-configure-kfm-locally"><img src="https://img.shields.io/badge/read-~5%20min-6b6b6b?style=flat-square" alt="About 5 minutes to read" /></a>
+  <a href="../README.md"><img src="https://img.shields.io/badge/%E2%86%A9-project%20home-0b1f3a?style=flat-square" alt="Back to the project home" /></a>
+  <a href="../README.md#take-the-tour"><img src="https://img.shields.io/badge/tour-10%20workspaces-2f6f4e?style=flat-square" alt="Take the Explorer tour" /></a>
+</p>
+<!-- kfm-showcase:end -->
+
 This guide covers the current repository checkout. Choose the component you need; the root Python tools, root JavaScript workspace, and Explorer Site have separate dependency installs. Run commands from the repository root unless a step changes directory.
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="brand/readme/kfm-install-paths-dark.svg" /><img src="brand/readme/kfm-install-paths.svg" alt="Four installable components — local data store, validators and fixture API, shared JavaScript and MapLibre, and the Explorer Site — each with its tools and first command." width="100%" /></picture>
+</p>
+
+<sub>Illustration, not a data product — this page's text is authoritative. See <a href="brand/readme/README.md">README artwork</a>.</sub>
+<!-- kfm-showcase:end -->
 
 ## Prerequisites
 
@@ -100,3 +123,18 @@ Use [the local data runbook](runbooks/local-pc-data-store.md) before moving orig
 The root [`.env.example`](../.env.example) is a reference template, not an automatically loaded file. Export a value explicitly for the program that reads it. The current fixture API starts with `make governed-api-dev` on `127.0.0.1:8000`; `KFM_API_BIND` and `KFM_API_PORT` in the template are illustrative and do not change that listener. `KFM_MODEL_RUNTIME=mock` is the local readiness default; the template's `OLLAMA_HOST` is inactive under mock mode. Site runtime settings, such as the steward, Earth Engine and historical-map owner allowlists, the historical-map worker token and the Qwen endpoint, belong in private server configuration, never tracked files. The [Site setup](../apps/site/README.md#local-configuration) table lists each one and what its routes answer when it is unset. Site local D1/R2 bindings are simulated separately from production bindings.
 
 Do not commit `.env`, credentials, downloaded source files, local D1/R2 state, or external data archives. A successful install or local launch proves only that the named local command worked; it does not establish hosted availability, admitted data, release, or publication.
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <img src="brand/readme/kfm-divider.svg" alt="" width="100%" />
+</p>
+
+<p align="center">
+  <a href="../README.md"><b>↩ Project home</b></a> ·
+  <a href="../README.md#see-it-in-action">See it in action</a> ·
+  <a href="../README.md#take-the-tour">Tour</a> ·
+  <a href="../README.md#things-to-try">Things to try</a> ·
+  <a href="../README.md#faq">FAQ</a> ·
+  <a href="brand/readme/README.md">Artwork</a>
+</p>
+<!-- kfm-showcase:end -->

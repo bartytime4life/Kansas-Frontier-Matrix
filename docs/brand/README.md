@@ -1,4 +1,19 @@
+<!-- kfm-showcase:start -->
+<p align="center">
+  <a href="../../README.md#see-it-in-action"><picture><source media="(prefers-color-scheme: dark)" srcset="readme/kfm-banner-brand-dark.svg" /><img src="readme/kfm-banner-brand.svg" alt="Brand banner: make trust legible." width="100%" /></picture></a>
+</p>
+<!-- kfm-showcase:end -->
+
 # `docs/brand/` — Brand & Visual Language
+
+<!-- kfm-showcase:start -->
+<p>
+  <a href="#docsbrand--brand--visual-language"><img src="https://img.shields.io/badge/brand-brand-8e5a2a?style=flat-square" alt="brand page" /></a>
+  <a href="#docsbrand--brand--visual-language"><img src="https://img.shields.io/badge/read-~15%20min-6b6b6b?style=flat-square" alt="About 15 minutes to read" /></a>
+  <a href="../../README.md"><img src="https://img.shields.io/badge/%E2%86%A9-project%20home-0b1f3a?style=flat-square" alt="Back to the project home" /></a>
+  <a href="../../README.md#take-the-tour"><img src="https://img.shields.io/badge/tour-10%20workspaces-2f6f4e?style=flat-square" alt="Take the Explorer tour" /></a>
+</p>
+<!-- kfm-showcase:end -->
 
 > Human-facing style guide, voice & tone, and logo usage reference for the Kansas Frontier Matrix.
 > The verbal and visual rules that make **trust legible** on every KFM surface.
@@ -19,6 +34,14 @@
 **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs--what-belongs-here) · [Exclusions](#exclusions--what-does-not-belong-here) · [Directory tree](#directory-tree-proposed) · [Diagram](#how-brand-fits-the-trust-membrane) · [Trust-state visuals](#trust-state-visual-conventions) · [Voice & tone](#voice--tone-summary) · [Accessibility](#accessibility-commitments) · [Task list](#definition-of-done-for-content-landing-here) · [FAQ](#faq) · [Open questions](#open-questions--needs-verification)
 
 ---
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="readme/kfm-layer-stack-dark.svg" /><img src="readme/kfm-layer-stack.svg" alt="One place, many layers: six stylized Kansas map layers on one shared clock." width="100%" /></picture>
+</p>
+
+<sub>Illustration, not a data product — this page's text is authoritative. See <a href="readme/README.md">README artwork</a>.</sub>
+<!-- kfm-showcase:end -->
 
 ## Status
 
@@ -367,3 +390,18 @@ Asserting specific colors here without source evidence would create parallel aut
 ## Last reviewed
 
 `TODO — populate on first repo-mounted PR.` Per [Directory Rules §15](../doctrine/directory-rules.md), per-root READMEs older than six months are flagged for review.
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <img src="readme/kfm-divider.svg" alt="" width="100%" />
+</p>
+
+<p align="center">
+  <a href="../../README.md"><b>↩ Project home</b></a> ·
+  <a href="../../README.md#see-it-in-action">See it in action</a> ·
+  <a href="../../README.md#take-the-tour">Tour</a> ·
+  <a href="../../README.md#things-to-try">Things to try</a> ·
+  <a href="../../README.md#faq">FAQ</a> ·
+  <a href="readme/README.md">Artwork</a>
+</p>
+<!-- kfm-showcase:end -->

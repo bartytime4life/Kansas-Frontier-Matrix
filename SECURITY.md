@@ -35,7 +35,22 @@ notes:
 
 <a id="top"></a>
 
+<!-- kfm-showcase:start -->
+<p align="center">
+  <a href="README.md#see-it-in-action"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-banner-security-dark.svg" /><img src="docs/brand/readme/kfm-banner-security.svg" alt="Security banner: report privately, never in public." width="100%" /></picture></a>
+</p>
+<!-- kfm-showcase:end -->
+
 # Security policy
+
+<!-- kfm-showcase:start -->
+<p>
+  <a href="#security-policy"><img src="https://img.shields.io/badge/policy-security-a33a3a?style=flat-square" alt="policy page" /></a>
+  <a href="#security-policy"><img src="https://img.shields.io/badge/read-~9%20min-6b6b6b?style=flat-square" alt="About 9 minutes to read" /></a>
+  <a href="README.md"><img src="https://img.shields.io/badge/%E2%86%A9-project%20home-0b1f3a?style=flat-square" alt="Back to the project home" /></a>
+  <a href="README.md#take-the-tour"><img src="https://img.shields.io/badge/tour-10%20workspaces-2f6f4e?style=flat-square" alt="Take the Explorer tour" /></a>
+</p>
+<!-- kfm-showcase:end -->
 
 ![status](https://img.shields.io/badge/status-draft-orange)
 ![posture](https://img.shields.io/badge/posture-deny--by--default-critical)
@@ -268,3 +283,18 @@ These are checkable but not confirmed by this SECURITY.md update:
 | Date | Change | Status |
 |---|---|---|
 | 2026-07-08 | Replaced short placeholder with governed security policy and vulnerability disclosure entrypoint. Removed non-operational placeholder email and marked private reporting channel as NEEDS VERIFICATION. | **CONFIRMED README / controls NEEDS VERIFICATION** |
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <img src="docs/brand/readme/kfm-divider.svg" alt="" width="100%" />
+</p>
+
+<p align="center">
+  <a href="README.md"><b>↩ Project home</b></a> ·
+  <a href="README.md#see-it-in-action">See it in action</a> ·
+  <a href="README.md#take-the-tour">Tour</a> ·
+  <a href="README.md#things-to-try">Things to try</a> ·
+  <a href="README.md#faq">FAQ</a> ·
+  <a href="docs/brand/readme/README.md">Artwork</a>
+</p>
+<!-- kfm-showcase:end -->

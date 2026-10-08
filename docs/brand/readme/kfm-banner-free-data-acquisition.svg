@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 220" width="1280" height="220" role="img" aria-labelledby="t d">
+  <title id="t">Runbook · Acquisition — Choose exact bytes. Plan first. Stay under the cap.</title>
+  <desc id="d">Banner: a local cache meter filling toward a 500 GB cap beside selected source families: PRISM from 1895, Landsat from 1972, NLCD 1985–2025, and a 512 MiB National Water Model capture.</desc>
+  <defs>
+    <clipPath id="frame"><rect x="1" y="1" width="1278" height="218" rx="18"/></clipPath>
+    <style>
+      .serif{font-family:Georgia,'Times New Roman',serif}
+      .sans{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
+      .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+      .lbl{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;letter-spacing:2.5px;font-weight:700}
+      .fill{transform-box:fill-box;transform-origin:0 50%;animation:fillm 8s cubic-bezier(.3,.6,.3,1) infinite}@keyframes fillm{0%{transform:scaleX(.08)}60%,90%{transform:scaleX(.62)}100%{transform:scaleX(.08)}}
+      .pk{animation:pk 8s ease-out infinite}@keyframes pk{0%{opacity:.25}10%,90%{opacity:1}100%{opacity:.25}}
+      @media (prefers-reduced-motion: reduce){.fill,.pk{animation:none!important}.fill{transform:scaleX(.62)}}
+    </style>
+  </defs>
+  <g clip-path="url(#frame)">
+    <rect width="1280" height="220" fill="#FAF7F0"/>
+<rect width="1280" height="6" fill="#3B7A57"/>
+    <text x="48" y="60" class="lbl" fill="#3B7A57">RUNBOOK · ACQUISITION</text>
+    <text x="48" y="112" class="serif" font-size="27" fill="#0E1F3A">Choose exact bytes. Plan first. Stay under the cap.</text>
+    <text x="48" y="150" class="sans" font-size="16.5" fill="#4A4A4A">A 500 GB local cache limit, offline plans, and no paid storage, requester-pays</text><text x="48" y="172" class="sans" font-size="16.5" fill="#4A4A4A">or billing.</text>
+    <g transform="translate(48,202)" class="sans" font-size="12" fill="#6B6B6B"><circle cx="5" cy="-4" r="4" fill="#3B7A57"/><text x="16" y="0">Kansas Frontier Matrix</text></g>
+    <line x1="776" y1="34" x2="776" y2="186" stroke="#D9CFBD"/>
+<g class="sans" font-size="12.5"><text x="800" y="60" fill="#1F3A66" font-weight="700">local cache</text><text x="1240" y="60" text-anchor="end" fill="#6B6B6B">500 GB cap</text>
+    <rect x="800" y="72" width="440" height="26" rx="13" fill="#F2E6D2"/><g class="fill"><rect x="800" y="72" width="440" height="26" rx="13" fill="#3B7A57"/></g>
+    <line x1="1240" y1="64" x2="1240" y2="106" stroke="#A33A3A" stroke-width="2"/>
+    <g class="pk" style="animation-delay:0.0s"><rect x="800" y="120" width="100" height="56" rx="10" fill="#FFFFFF" stroke="#D9CFBD"/><text x="812" y="143" class="mono" font-size="11" fill="#0E1F3A">PRISM</text><text x="812" y="162" font-size="11" fill="#6B6B6B">from 1895</text></g><g class="pk" style="animation-delay:0.5s"><rect x="912" y="120" width="100" height="56" rx="10" fill="#FFFFFF" stroke="#D9CFBD"/><text x="924" y="143" class="mono" font-size="11" fill="#0E1F3A">Landsat</text><text x="924" y="162" font-size="11" fill="#6B6B6B">from 1972</text></g><g class="pk" style="animation-delay:1.0s"><rect x="1024" y="120" width="100" height="56" rx="10" fill="#FFFFFF" stroke="#D9CFBD"/><text x="1036" y="143" class="mono" font-size="11" fill="#0E1F3A">NLCD</text><text x="1036" y="162" font-size="11" fill="#6B6B6B">1985–2025</text></g><g class="pk" style="animation-delay:1.5s"><rect x="1136" y="120" width="100" height="56" rx="10" fill="#FFFFFF" stroke="#D9CFBD"/><text x="1148" y="143" class="mono" font-size="11" fill="#0E1F3A">NWM</text><text x="1148" y="162" font-size="11" fill="#6B6B6B">≤512 MiB</text></g></g>
+  </g>
+  <rect x="1" y="1" width="1278" height="218" rx="18" fill="none" stroke="#D9CFBD" stroke-width="2"/>
+</svg>

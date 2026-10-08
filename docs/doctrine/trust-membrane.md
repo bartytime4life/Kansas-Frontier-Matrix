@@ -40,7 +40,22 @@ notes:
   - v0 draft (2026-05-12) treated `STALE` as a fifth peer outcome; v1 reconciles to the canonical four-outcome model in `ai-build-operating-contract.md` §21.2. See §16 Changelog.
 [/KFM_META_BLOCK_V2] -->
 
+<!-- kfm-showcase:start -->
+<p align="center">
+  <a href="../../README.md#see-it-in-action"><picture><source media="(prefers-color-scheme: dark)" srcset="../brand/readme/kfm-banner-trust-membrane-dark.svg" /><img src="../brand/readme/kfm-banner-trust-membrane.svg" alt="Doctrine banner: public clients never reach inside." width="100%" /></picture></a>
+</p>
+<!-- kfm-showcase:end -->
+
 # Trust Membrane
+
+<!-- kfm-showcase:start -->
+<p>
+  <a href="#trust-membrane"><img src="https://img.shields.io/badge/doctrine-trust%20membrane-9a7a12?style=flat-square" alt="doctrine page" /></a>
+  <a href="#trust-membrane"><img src="https://img.shields.io/badge/read-~35%20min-6b6b6b?style=flat-square" alt="About 35 minutes to read" /></a>
+  <a href="../../README.md"><img src="https://img.shields.io/badge/%E2%86%A9-project%20home-0b1f3a?style=flat-square" alt="Back to the project home" /></a>
+  <a href="../../README.md#take-the-tour"><img src="https://img.shields.io/badge/tour-10%20workspaces-2f6f4e?style=flat-square" alt="Take the Explorer tour" /></a>
+</p>
+<!-- kfm-showcase:end -->
 
 > **The boundary across which material in Kansas Frontier Matrix acquires trust the system is willing to defend — and a precise statement of what that trust does, and does not, warrant.**
 
@@ -63,6 +78,14 @@ notes:
 > `[PROPOSED — the doctrine-doc name `docs/doctrine/trust-membrane.md` as a sibling of `lifecycle-law.md` / `trust-posture.md`. See §13 OQ-TM-01 for the consolidation-vs-triangulation question.]`
 
 ---
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="../brand/readme/kfm-trust-membrane-dark.svg" /><img src="../brand/readme/kfm-trust-membrane.svg" alt="The trust membrane: public clients and a Governed API on one side, internal stores on the other; a direct read is refused." width="100%" /></picture>
+</p>
+
+<sub>Illustration, not a data product — this page's text is authoritative. See <a href="../brand/readme/README.md">README artwork</a>.</sub>
+<!-- kfm-showcase:end -->
 
 ## Contents
 
@@ -711,3 +734,18 @@ Surface the conflict in an ADR and resolve it explicitly. Trust Membrane MUST NO
 **Last updated:** 2026-05-26 · **Version:** v1 (draft) · **Status:** awaiting review · **Pinned to:** `CONTRACT_VERSION = "3.0.0"`
 
 [⬆ Back to top](#trust-membrane)
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <img src="../brand/readme/kfm-divider.svg" alt="" width="100%" />
+</p>
+
+<p align="center">
+  <a href="../../README.md"><b>↩ Project home</b></a> ·
+  <a href="../../README.md#see-it-in-action">See it in action</a> ·
+  <a href="../../README.md#take-the-tour">Tour</a> ·
+  <a href="../../README.md#things-to-try">Things to try</a> ·
+  <a href="../../README.md#faq">FAQ</a> ·
+  <a href="../brand/readme/README.md">Artwork</a>
+</p>
+<!-- kfm-showcase:end -->

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 220" width="1280" height="220" role="img" aria-labelledby="t d">
+  <title id="t">Encyclopedia · Sensitive Material — When in doubt: generalize, withhold or deny.</title>
+  <desc id="d">Banner: an exact location fades, becomes a generalized hexagon, and finally is withheld behind a lock.</desc>
+  <defs>
+    <clipPath id="frame"><rect x="1" y="1" width="1278" height="218" rx="18"/></clipPath>
+    <style>
+      .serif{font-family:Georgia,'Times New Roman',serif}
+      .sans{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
+      .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+      .lbl{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;letter-spacing:2.5px;font-weight:700}
+      .pt{animation:pt 6s ease-in-out infinite}@keyframes pt{0%,30%{opacity:1}45%,100%{opacity:.15}}
+      .blur{transform-box:fill-box;transform-origin:center;animation:blur 6s ease-in-out infinite}@keyframes blur{0%,20%{opacity:0;transform:scale(.3)}40%,100%{opacity:1;transform:scale(1)}}
+      .hx{animation:hxa 6s ease-in-out infinite}@keyframes hxa{0%,35%{opacity:.15}55%,100%{opacity:1}}
+      .lk{animation:lka 6s ease-in-out infinite}@keyframes lka{0%,55%{opacity:.15}75%,100%{opacity:1}}
+      @media (prefers-reduced-motion: reduce){.pt,.blur,.hx,.lk{animation:none!important}.pt{opacity:.3}}
+    </style>
+  </defs>
+  <g clip-path="url(#frame)">
+    <rect width="1280" height="220" fill="#161B22"/>
+<rect width="1280" height="6" fill="#E27B7B"/>
+    <text x="48" y="60" class="lbl" fill="#E27B7B">ENCYCLOPEDIA · SENSITIVE MATERIAL</text>
+    <text x="48" y="112" class="serif" font-size="31" fill="#E6EDF3">When in doubt: generalize, withhold or deny.</text>
+    <text x="48" y="150" class="sans" font-size="16.5" fill="#B1BAC4">Living people, rare species, cultural sites and infrastructure fail closed.</text>
+    <g transform="translate(48,202)" class="sans" font-size="12" fill="#9198A1"><circle cx="5" cy="-4" r="4" fill="#E27B7B"/><text x="16" y="0">Kansas Frontier Matrix</text></g>
+    <line x1="776" y1="34" x2="776" y2="186" stroke="#30363D"/>
+<g class="sans" font-size="12">
+    <rect x="800" y="40" width="130" height="130" rx="12" fill="#0D1117" stroke="#30363D"/><text x="865" y="190" text-anchor="middle" fill="#9198A1">exact location</text>
+    <rect x="955" y="40" width="130" height="130" rx="12" fill="#0D1117" stroke="#30363D"/><text x="1020" y="190" text-anchor="middle" fill="#9198A1">generalized</text>
+    <rect x="1110" y="40" width="130" height="130" rx="12" fill="#0D1117" stroke="#30363D"/><text x="1175" y="190" text-anchor="middle" fill="#9198A1">withheld</text></g>
+    <g class="pt"><circle cx="865" cy="105" r="6" fill="#E27B7B"/><circle cx="865" cy="105" r="14" fill="none" stroke="#E27B7B" stroke-width="2"/></g>
+    <path class="blur" d="M865,105 m-40,0 l20,-35 h40 l20,35 l-20,35 h-40 Z" fill="none" stroke="#E27B7B" stroke-dasharray="3 3"/>
+    <path class="hx" d="M1020,105 m-42,0 l21,-36 h42 l21,36 l-21,36 h-42 Z" fill="#E27B7B" fill-opacity=".25" stroke="#E27B7B" stroke-width="2"/>
+    <g class="lk"><rect x="1159" y="102" width="32" height="26" rx="5" fill="#9AAABA"/><path d="M1166,102 v-9 a9,9 0 0 1 18,0 v9" fill="none" stroke="#9AAABA" stroke-width="4"/></g>
+    <path d="M932,105 h20 M1087,105 h20" stroke="#D2A06A" stroke-width="2" marker-end="url(#ga)"/>
+    <defs><marker id="ga" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#D2A06A"/></marker></defs>
+  </g>
+  <rect x="1" y="1" width="1278" height="218" rx="18" fill="none" stroke="#30363D" stroke-width="2"/>
+</svg>

@@ -1,4 +1,19 @@
+<!-- kfm-showcase:start -->
+<p align="center">
+  <a href="README.md#see-it-in-action"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-banner-changelog-dark.svg" /><img src="docs/brand/readme/kfm-banner-changelog.svg" alt="Changelog banner: what changed, and where to prove it." width="100%" /></picture></a>
+</p>
+<!-- kfm-showcase:end -->
+
 # Changelog
+
+<!-- kfm-showcase:start -->
+<p>
+  <a href="#changelog"><img src="https://img.shields.io/badge/history-changelog-4a6fa5?style=flat-square" alt="history page" /></a>
+  <a href="#changelog"><img src="https://img.shields.io/badge/read-~3%20min-6b6b6b?style=flat-square" alt="About 3 minutes to read" /></a>
+  <a href="README.md"><img src="https://img.shields.io/badge/%E2%86%A9-project%20home-0b1f3a?style=flat-square" alt="Back to the project home" /></a>
+  <a href="README.md#take-the-tour"><img src="https://img.shields.io/badge/tour-10%20workspaces-2f6f4e?style=flat-square" alt="Take the Explorer tour" /></a>
+</p>
+<!-- kfm-showcase:end -->
 
 KFM records notable repository changes in this file. It is a human-readable repository history, not a release manifest, promotion decision, proof pack, correction notice, rollback card, or publication record.
 
@@ -28,6 +43,12 @@ The previous changelog recorded only the initial implementation milestones throu
 
 ## Unreleased
 
+### Added
+
+- Illustrated, visitor-first project home with animated, theme-aware SVG artwork under [`docs/brand/readme/`](docs/brand/readme/README.md): Explorer walkthrough, feature tour, time depth, source lanes, Focus Mode gate trace, capability board, trust membrane and trust path ([#4942](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4942), [#4945](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4945)).
+- Social preview card, artwork gallery and encyclopedia cover visuals ([#4946](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4946)).
+- Page banners, badge rows, topic graphics and footer navigation for documents linked from the project home: doctrine, security, installation, local-data runbook and tools, acquisition runbook, verification backlog, brand, changelog, code of conduct and three encyclopedia chapters. Artwork is illustrative; each page's text remains authoritative, and no release or publication is implied.
+
 ### Changed
 
 - Modernized the root changelog into an evidence-bounded repository-history contract with entry categories, source-link expectations, security guidance, a historical coverage notice, and an explicit release/publication boundary.
@@ -48,3 +69,18 @@ These entries preserve the scope and wording of the original changelog as reposi
 ### Fixed
 
 - 2026-05-09 — `PR-003` ([`ccd3fe8`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/ccd3fe8c333b2d11ad5c1a4189f20821f2577e27)): corrected the **CONFIRMED** invalid-fixture/schema floor mismatch by tightening schemas and seeded the **PROPOSED** hydrology `wbd_huc12` source spine with ADR-0026.
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <img src="docs/brand/readme/kfm-divider.svg" alt="" width="100%" />
+</p>
+
+<p align="center">
+  <a href="README.md"><b>↩ Project home</b></a> ·
+  <a href="README.md#see-it-in-action">See it in action</a> ·
+  <a href="README.md#take-the-tour">Tour</a> ·
+  <a href="README.md#things-to-try">Things to try</a> ·
+  <a href="README.md#faq">FAQ</a> ·
+  <a href="docs/brand/readme/README.md">Artwork</a>
+</p>
+<!-- kfm-showcase:end -->
