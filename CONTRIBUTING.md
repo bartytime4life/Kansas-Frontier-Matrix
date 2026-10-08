@@ -2,6 +2,12 @@
 
 > KFM treats every consequential repository change as a governed, evidence-backed, reviewable, and reversible event.
 
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-contributor-paths-dark.svg" /><img src="docs/brand/readme/kfm-contributor-paths.svg" alt="Six contributor paths — Explorer developer, data engineer, historian and archivist, scientist and ecologist, cartographer and designer, accessibility reviewer — each flowing into a small draft pull request." width="100%" /></picture>
+</p>
+
+<sub>Every kind of expertise has a starting place; every path ends in a small, inspectable draft pull request. Illustration — see <a href="docs/brand/readme/README.md">README artwork</a>.</sub>
+
 This guide explains how to contribute code, documentation, schemas, policies, fixtures, tests, data-lifecycle artifacts, and release-supporting changes without weakening the Kansas Frontier Matrix trust membrane.
 
 ## Status and evidence boundary

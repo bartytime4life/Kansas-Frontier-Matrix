@@ -66,6 +66,12 @@ notes:
 
 > **One-line purpose.** `connectors/` owns source-specific fetch, probe, transport, source-native parsing, capture, and pre-RAW admission implementation. A connector may produce a governed RAW candidate, QUARANTINE candidate, or receipt-ready finite result; it never creates truth, evidence closure, promotion, release, publication, or a public client path.
 
+<p align="center">
+  <a href="../README.md#where-the-data-comes-from"><picture><source media="(prefers-color-scheme: dark)" srcset="../docs/brand/readme/kfm-source-lanes-dark.svg" /><img src="../docs/brand/readme/kfm-source-lanes.svg" alt="Seven themed clusters of public data providers — water, sky and air, earth and geology, land and agriculture, living things, history and people, built world and hazards — feeding one evidence gate." width="100%" /></picture></a>
+</p>
+
+<sub>Illustration of the source themes these lanes serve. A lane is a connector being built — not an admitted or published source. See the [project home](../README.md#where-the-data-comes-from) for which providers are live in the Explorer today.</sub>
+
 **Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Does not belong](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related roots](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Direct children](#direct-child-directory-map) · [Topology](#connector-topology-and-lane-classes) · [Lifecycle](#admission-and-lifecycle-flow) · [Conflicts](#current-conflicts-and-maturity-limits) · [Child contract](#child-readme-contract) · [Rollback](#correction-and-rollback) · [Open work](#open-verification-register)
 
 > [!IMPORTANT]
