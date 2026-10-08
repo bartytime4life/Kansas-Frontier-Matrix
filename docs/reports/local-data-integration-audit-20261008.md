@@ -20,6 +20,12 @@ The October 8 audit started from repository main
 Site's saved version 185, source `ecc8921b715959095bafcd7bc201bc4f14b5b7c6`.
 The primary PC checkout was clean and fast-forwarded from `ca790057d3` to that
 main. The independent working branch preserves other worktrees.
+During final review, main advanced to `55283f661bfa0e16e46da3ef303e1b8574321334`.
+The PR's concurrent header-safety fix and main merge were preserved, and the
+branch and clean primary checkout were brought forward to that latest main.
+The active local Site includes the tested PR changes; the primary checkout's
+main remains the latest merged repository state. Same-Site saved v185 was
+rechecked unchanged before the final local reconciliation.
 
 ## Storage decision and coverage
 
@@ -183,9 +189,10 @@ Initial verified checks:
 
 Final download-center checks:
 
-- Production build and all **673 Site tests** passed. TypeScript passed; full
+- Production build and all **684 Site tests** passed after main reconciliation.
+  TypeScript passed; full
   lint has zero errors and the same 45 existing warnings.
-- **192 local-data tests / 47 subtests**, **11 mirror/smoke-isolation tests** and
+- **193 local-data tests**, **11 mirror/smoke-isolation tests** and
   the 56-check offline backend smoke passed. The real mirror receipt check
   separately retains `MIRROR_REVIEW_REQUIRED`.
 - Independent browser evaluation passed at 1440, 768 and 375 pixels. Search,
@@ -207,6 +214,10 @@ Final download-center checks:
   the deployable Site mirror. They were removed in favor of the existing
   canonical operator/test locations; launch guidance was corrected. No topology
   rule or baseline was weakened. The installed cache service is unchanged.
+- The incoming header-safety fix was retained and regression-tested against
+  malformed Origin/Host requests and CR/LF header values. The idle local
+  Earth Engine operator was updated with its configuration and jobs preserved.
+  The final Site cutover also retains prior immutable asset URLs for open tabs.
 
 Private file-level audit and recovery records remain under the owner's existing
 external catalog/receipt/recovery lanes. No secrets, absolute personal inventory

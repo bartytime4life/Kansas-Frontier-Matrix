@@ -161,6 +161,40 @@ class OperatorTests(unittest.TestCase):
 
 
 class EnvelopeTests(unittest.TestCase):
+    def test_options_rejects_malformed_headers_without_reflecting_them(self):
+        Handler = operator.handler(SimpleNamespace())
+        origin = "http://127.0.0.1:4173"
+        host = f"127.0.0.1:{operator.PORT}"
+        def request(origin_value=origin, host_value=host):
+            h = Handler.__new__(Handler); h.headers = Message(); h.path = "/status"
+            h.request_version = "HTTP/1.1"; h.requestline = "OPTIONS /status HTTP/1.1"; h.command = "OPTIONS"
+            if origin_value is not None: h.headers["Origin"] = origin_value
+            if host_value is not None: h.headers["Host"] = host_value
+            h.wfile = io.BytesIO()
+            h.do_OPTIONS()
+            return h.wfile.getvalue()
+        accepted = request()
+        self.assertIn(b" 204 ", accepted.split(b"\r\n", 1)[0])
+        self.assertIn(b"Access-Control-Allow-Origin: " + origin.encode() + b"\r\n", accepted)
+        self.assertIn(b"Access-Control-Allow-Private-Network: true\r\n", accepted)
+        for bad_origin, bad_host in [(None, host), ("https://evil.example", host),
+                                      (origin + "\r\nX-Injected: true", host),
+                                      (origin, None), (origin, "localhost:8769"),
+                                      (origin, host + "\r\nX-Injected: true")]:
+            with self.subTest(origin=bad_origin, host=bad_host):
+                rejected = request(bad_origin, bad_host)
+                self.assertIn(b" 403 ", rejected.split(b"\r\n", 1)[0])
+                self.assertNotIn(b"X-Injected:", rejected)
+                if bad_origin != origin: self.assertNotIn(b"Access-Control-Allow-Origin:", rejected)
+        # Even an accidental unsafe allowlist entry must never become a response header.
+        for suffix in ("\rX-Injected: true", "\nX-Injected: true", "\r\nX-Injected: true"):
+            unsafe = origin + suffix
+            with patch.object(operator, "ORIGINS", {origin, unsafe}):
+                rejected = request(unsafe)
+                self.assertIn(b" 403 ", rejected.split(b"\r\n", 1)[0])
+                self.assertNotIn(b"Access-Control-Allow-Origin:", rejected)
+                self.assertNotIn(b"X-Injected:", rejected)
+
     def test_origin_host_session_and_body_limits_precede_actions(self):
         manager = SimpleNamespace(token="test-token", health=Mock(return_value={"configured": False}), start=Mock(return_value={"queued": True}), cancel=Mock())
         Handler = operator.handler(manager)
