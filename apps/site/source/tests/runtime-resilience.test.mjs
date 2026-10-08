@@ -233,3 +233,20 @@ test("every official connection has feature-level traceability", () => {
   assert.equal(registry.SITE_REGISTRY_COUNTS.connections, 48);
   assert.deepEqual(registry.SITE_REGISTRY_VALIDATION, { ok: true, errors: [] });
 });
+
+test("River Pulse lets an identical in-flight streamflow request finish instead of re-sending it", async () => {
+  // On load the polling effect and the view restore both request the statewide
+  // network. Aborting the first does not stop the adapter's upstream work, so a
+  // re-send got 429 USGS_STREAMFLOW_NETWORK_BUSY and the first result was lost.
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const refresh = page.slice(page.indexOf("const refreshStreamflow = useCallback(async ("), page.indexOf("const refreshNoaaHydrologyNetwork = useCallback("));
+  const skip = refresh.indexOf("streamflowRequestPathRef.current === path) {");
+  const abort = refresh.indexOf("streamflowRequestRef.current?.abort();");
+  assert.ok(skip > 0 && abort > skip, "the duplicate check runs before any abort or state reset");
+  assert.ok(refresh.indexOf("const path = archiveDay") < skip);
+  assert.ok(refresh.indexOf("streamflowArchiveDayRef.current = archiveDay;") > skip);
+  assert.match(refresh, /streamflowRequestPathRef\.current = path;\s*streamflowRequestStationRef\.current = stationId;/);
+  // The network path omits the station, so the newest caller's station is applied.
+  assert.match(refresh, /setStreamflowSelectedStationId\(streamflowRequestStationRef\.current\);/);
+  assert.doesNotMatch(refresh, /setStreamflowSelectedStationId\(stationId\);/);
+});

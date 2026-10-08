@@ -1139,6 +1139,8 @@ export default function Home() {
   const noaaSatelliteFrameRef = useRef<NoaaSatelliteFrame | null>(null);
   const noaaSatelliteFollowLatestRef = useRef(true);
   const streamflowRequestRef = useRef<AbortController | null>(null);
+  const streamflowRequestPathRef = useRef<string | null>(null);
+  const streamflowRequestStationRef = useRef<string | null>(null);
   const streamflowRequestGenerationRef = useRef(0);
   const streamflowBundleRef = useRef<StreamflowBundle | null>(null);
   const streamflowArchiveDayRef = useRef<string | null>(null);
@@ -3013,6 +3015,20 @@ export default function Home() {
       setStreamflowError("Choose a valid past UTC calendar day.");
       return;
     }
+    const path = archiveDay
+      ? `/api/hydrology/streamflow?mode=station&range=24h&station=${encodeURIComponent(stationId!)}&parameter=00060&end=${encodeURIComponent(new Date(archiveEndMilliseconds!).toISOString().replace(".000Z", "Z"))}&resolution=continuous`
+      : requestedRange === "24h"
+      ? "/api/hydrology/streamflow?mode=network&range=24h"
+      : `/api/hydrology/streamflow?mode=station&range=${requestedRange}&station=${encodeURIComponent(stationId!)}&parameter=00060`;
+    // The statewide adapter answers a second concurrent network request with 429,
+    // and aborting here does not stop its upstream work. Let an identical request
+    // that is already in flight finish instead of replacing it. The network path
+    // omits the station, so the newest caller's station still wins on completion.
+    const inFlight = streamflowRequestRef.current;
+    if (inFlight && !inFlight.signal.aborted && streamflowRequestPathRef.current === path) {
+      streamflowRequestStationRef.current = stationId;
+      return;
+    }
     streamflowArchiveDayRef.current = archiveDay;
     setStreamflowArchiveDay(archiveDay);
     if (archiveDay) {
@@ -3024,17 +3040,14 @@ export default function Home() {
     streamflowRequestRef.current?.abort();
     const controller = new AbortController();
     streamflowRequestRef.current = controller;
+    streamflowRequestPathRef.current = path;
+    streamflowRequestStationRef.current = stationId;
     const generation = ++streamflowRequestGenerationRef.current;
     setStreamflowPlaying(false);
     setStreamflowState("loading");
     setStreamflowError(null);
     setOfficialStates((current) => ({ ...current, "usgs-streamflow": "loading" }));
     setOfficialErrors((current) => ({ ...current, "usgs-streamflow": undefined }));
-    const path = archiveDay
-      ? `/api/hydrology/streamflow?mode=station&range=24h&station=${encodeURIComponent(stationId!)}&parameter=00060&end=${encodeURIComponent(new Date(archiveEndMilliseconds!).toISOString().replace(".000Z", "Z"))}&resolution=continuous`
-      : requestedRange === "24h"
-      ? "/api/hydrology/streamflow?mode=network&range=24h"
-      : `/api/hydrology/streamflow?mode=station&range=${requestedRange}&station=${encodeURIComponent(stationId!)}&parameter=00060`;
     try {
       const response = await fetch(path, { cache: "no-store", headers: { Accept: "application/json" }, signal: controller.signal });
       const candidate = await readBoundedJson(response, 64 * 1024 * 1024) as unknown;
@@ -3059,7 +3072,7 @@ export default function Home() {
       streamflowBundleRef.current = bundle;
       setStreamflowBundle(bundle);
       setStreamflowRange(requestedRange);
-      setStreamflowSelectedStationId(stationId);
+      setStreamflowSelectedStationId(streamflowRequestStationRef.current);
       setStreamflowFrameIndex(restoredIndex >= 0 ? restoredIndex : frames.length - 1);
       const nextState: HydrologyObservatoryState = bundle.state;
       setStreamflowState(nextState);
