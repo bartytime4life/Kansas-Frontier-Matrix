@@ -12,7 +12,7 @@ const materials=await module('subsurface-materials'),model=await module('subsurf
 const cutaway=await module('cutaway-model',{'./subsurface-model':model}),camera=await module('cutaway-camera');
 const volumeModel=await module('aquifer-volume',{'polygon-clipping':clipping});
 const viewSession=await module('aquifer-view-session',{'./aquifer-volume':volumeModel});
-const surfaceDetail=await module('cutaway-surface-detail',{'./maplibre-seam':{},'./selected-surface':{}});
+const surfaceDetail=await module('cutaway-surface-detail',{'./basemap-cache':{basemapCacheRequest:url=>({url})},'./maplibre-seam':{},'./selected-surface':{}});
 const style=new Proxy({},{get:(_,key)=>String(key)});
 const text=node=>typeof node==='string'||typeof node==='number'?String(node):[node?.props?.children].flat(Infinity).filter(Boolean).map(text).join(' ');
 const button=(tree,name)=>findNode(tree,n=>n.type==='button'&&text(n).replace(/\s+/g,' ').trim()===name);

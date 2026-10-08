@@ -1,3 +1,4 @@
+import { basemapCacheRequest } from "./basemap-cache";
 import { loadMapLibre, type Map as GLMap } from "./maplibre-seam";
 import { surfaceRasterSampling, type SurfaceBounds, type SurfaceCapture } from "./selected-surface";
 
@@ -51,7 +52,7 @@ export function startCutawaySurfaceDetail(options: {
     container.style.width = `${frame.width}px`; container.style.height = `${frame.height}px`;
     const style = JSON.parse(JSON.stringify(options.capture.style));
     for (const layer of style.layers) if (layer.type === "raster") layer.paint = { ...layer.paint, "raster-fade-duration": 0, "raster-resampling": "nearest" };
-    map = new lib.Map({ container, style, center: frame.center, zoom: frame.zoom, interactive: false, attributionControl: false,
+    map = new lib.Map({ transformRequest: basemapCacheRequest, container, style, center: frame.center, zoom: frame.zoom, interactive: false, attributionControl: false,
       pixelRatio: 1, maxTileCacheSize: 96, fadeDuration: 0, renderWorldCopies: false, canvasContextAttributes: { preserveDrawingBuffer: true } });
     const view = map;
     view.on("styleimagemissing", event => { const image = options.capture.images.find(i => i.id === event.id); if (image && !view.hasImage(image.id)) view.addImage(image.id, image.data, { pixelRatio: image.pixelRatio, sdf: image.sdf }); });

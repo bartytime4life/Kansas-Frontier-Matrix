@@ -1,4 +1,5 @@
 "use client";
+import { basemapCacheRequest } from "./basemap-cache";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { loadMapLibre, type Map as GLMap } from "./maplibre-seam";
 import { browserRenderBudget } from "./map-performance";
@@ -57,7 +58,7 @@ export default function SelectedSurfaceMap({ source, bounds, image, active, smoo
       if (disposed || !host.current) return;
       lib.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
       const budget = browserRenderBudget("detail");
-      map = new lib.Map({ container: host.current, style: surfaceSliceStyle(capture),
+      map = new lib.Map({ transformRequest: basemapCacheRequest, container: host.current, style: surfaceSliceStyle(capture),
         bounds: frame, fitBoundsOptions: { padding: 12, duration: 0 }, maxBounds: frame,
         // The opaque outside mask permits fitting the entire rectangle at any aspect ratio.
         // Constrain the center instead of cropping the slice to fill the viewport.

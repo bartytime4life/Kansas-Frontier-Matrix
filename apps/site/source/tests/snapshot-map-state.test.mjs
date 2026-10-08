@@ -22,6 +22,7 @@ async function harness() {
     jumpTo(camera) { moves.push(camera); this.listeners.move?.(); }
   }
   const h = await componentHarness("app/snapshot-map.tsx", {
+    "./basemap-cache": { basemapCacheRequest: url => ({url}) },
     "./maplibre-seam": { loadMapLibre: async () => ({ Map, setWorkerUrl() {}, NavigationControl: class {}, ScaleControl: class {} }) },
     "./explorer-data": { LAYER_REGISTRY: [] },
     "./map-runtime": { BASEMAPS: { standard: { style: "vector" }, imagery: { style: "imagery" } }, applyRegistryState() {}, updateAnalysisAreaSource() {}, updateSelectionSource() {},

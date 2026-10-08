@@ -1,4 +1,6 @@
 "use client";
+import { BasemapCacheControls } from "./basemap-cache-controls";
+import { basemapCacheRequest } from "./basemap-cache";
 import { GROUNDWATER_MANIFEST, safeKgsWellUrl } from "./aquifer-layers";
 import { DEFAULT_SOIL_MAP_STATE, hideSoilContext, restoreSoilMapState, serializeSoilMapState, visibleExternalContextCount, type SoilMapState } from "./soil-moisture";
 import { GovernedWaterControl } from "./governed-water-control";
@@ -4723,7 +4725,7 @@ export default function Home() {
         // Chromium runtimes treat that deliberate loss as a wider GPU failure.
         const initialView = pendingViewRef.current ?? KANSAS_VIEW;
         const renderBudget = browserRenderBudget();
-        const map = new mapLibre.Map({
+        const map = new mapLibre.Map({ transformRequest: basemapCacheRequest,
           container: mapContainerRef.current,
           style: BASEMAPS[basemapRef.current].style,
           center: initialView.center,
@@ -8766,6 +8768,7 @@ export default function Home() {
             <label><span>Basemap style</span><select value={basemap} onChange={(event) => setBasemap(event.target.value as BasemapKey)}>{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title} · {BASEMAPS[key].note}</option>)}</select></label>
           </div>
 
+                <BasemapCacheControls />
                 <button className="map-catalog-launch" type="button" onClick={(event) => openMapUtility("import", event.currentTarget)}>Preview local KML or GeoJSON</button>
                 <div className="panel-footer-actions"><button type="button" onClick={resetExplorer}>Reset map</button><Link href="/earth-engine">Earth Engine datasets</Link><Link href="/data">Propose a dataset</Link></div>
               </div>

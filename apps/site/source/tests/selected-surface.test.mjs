@@ -49,7 +49,7 @@ async function harness(){
   fitBounds(frame){this.fit=frame;this.jumpTo({center:[-100.5,38.5],zoom:10})}
   cameraForBounds(){return{zoom:10}}setMinZoom(value){this.minZoom=value}getMinZoom(){return this.minZoom??0}getMaxZoom(){return 22}resize(){}remove(){this.removed=true}
  }
- const h=await componentHarness('app/selected-surface-map.tsx',{'./maplibre-seam':{loadMapLibre:async()=>({Map:FakeMap,LngLat:class{constructor(lng,lat){this.lng=lng;this.lat=lat}},ScaleControl:class{},setWorkerUrl(){}})},'./selected-surface':m,'./map-performance':{browserRenderBudget:()=>({pixelRatio:1,tileCache:48})},'./subsurface.module.css':{default:styles}},{ResizeObserver:class{observe(){}disconnect(){}}});
+ const h=await componentHarness('app/selected-surface-map.tsx',{'./basemap-cache':{basemapCacheRequest:url=>({url})},'./maplibre-seam':{loadMapLibre:async()=>({Map:FakeMap,LngLat:class{constructor(lng,lat){this.lng=lng;this.lat=lat}},ScaleControl:class{},setWorkerUrl(){}})},'./selected-surface':m,'./map-performance':{browserRenderBudget:()=>({pixelRatio:1,tileCache:48})},'./subsurface.module.css':{default:styles}},{ResizeObserver:class{observe(){}disconnect(){}}});
  let props={source,bounds,image:null,active:true,smooth:true,onSmooth(){}};
  const render=async(patch={})=>{props={...props,...patch};tree=h.render(h.exports.default,props);findNode(tree,n=>n.props?.className==='surfaceMap').props.ref.current={};h.commit();await settle();return tree};
  await render();await render();maps.at(-1).emit('load');await render();
