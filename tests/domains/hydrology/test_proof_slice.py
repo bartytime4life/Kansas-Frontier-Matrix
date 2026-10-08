@@ -86,6 +86,68 @@ def test_record_spec_hash_covers_its_content(record: dict) -> None:
     assert proof_slice.compute_spec_hash(body) == record["spec_hash"]["value"]
 
 
+def test_site_carrier_is_current_and_deterministic() -> None:
+    first = proof_slice.render(proof_slice.build_site_carrier())
+    assert first == proof_slice.render(proof_slice.build_site_carrier())
+    assert first == (ROOT / proof_slice.SITE_CARRIER_PATH).read_text(encoding="utf-8")
+
+
+def test_site_carrier_preserves_packet_bundle_and_five_decisions(context: dict, record: dict) -> None:
+    carrier = proof_slice.build_site_carrier()
+    assert carrier["packet"] == context["packet"]
+    assert carrier["evidence_bundle"] == context["inputs"].load(context["base"]["evidence_bundle"])
+    assert carrier["packet_sha256"] == context["packet_digest"]
+    assert carrier["proof_record_hash"] == record["spec_hash"]["value"]
+    expected = {item["case_id"]: item["envelope"] for item in record["cases"]}
+    for item in carrier["scenarios"]:
+        assert item["envelope"] == expected[proof_slice.SITE_SCENARIO_CASES[item["id"]]]
+    assert [(item["id"], item["envelope"]["outcome"]) for item in carrier["scenarios"]] == [
+        ("current", "ANSWER"), ("stale", "ANSWER"), ("no-results", "ABSTAIN"),
+        ("unavailable", "ERROR"), ("ambiguous-reach", "ABSTAIN"),
+    ]
+    assert carrier["feature_source_role"] == "synthetic_observation"
+    assert carrier["presented_as"] == "observed_gauge_series"
+    assert carrier["rollback_rehearsal"] == record["rollback_rehearsal"]
+    assert set(carrier["effects"].values()) == {False}
+
+
+@pytest.mark.parametrize("mutation", ["failed", "network", "release"])
+def test_site_carrier_rejects_failed_or_effectful_proof(monkeypatch: pytest.MonkeyPatch, record: dict, mutation: str) -> None:
+    invalid = copy.deepcopy(record)
+    if mutation == "failed":
+        invalid["outcome"] = "FAIL"
+    else:
+        invalid["effects"]["network_accessed" if mutation == "network" else "released"] = True
+    monkeypatch.setattr(proof_slice, "build_record", lambda: invalid)
+    with pytest.raises(proof_slice.ProofSliceError):
+        proof_slice.build_site_carrier()
+
+
+def test_site_carrier_has_no_network_subprocess_or_write(monkeypatch: pytest.MonkeyPatch) -> None:
+    import socket
+    import subprocess
+
+    def forbidden(*args: object, **kwargs: object) -> None:
+        raise AssertionError("Site carrier attempted an external effect")
+
+    for name in ("getaddrinfo", "create_connection"):
+        monkeypatch.setattr(socket, name, forbidden)
+    monkeypatch.setattr(socket.socket, "connect", forbidden)
+    monkeypatch.setattr(subprocess, "Popen", forbidden)
+    monkeypatch.setattr(Path, "write_text", forbidden)
+    monkeypatch.setattr(Path, "write_bytes", forbidden)
+    assert proof_slice.build_site_carrier()["posture"] == "SYNTHETIC_FIXTURE_ONLY"
+
+
+@pytest.mark.parametrize("field", ["profile_sha256", "inputs"])
+def test_site_carrier_rejects_proof_profile_drift(monkeypatch: pytest.MonkeyPatch, record: dict, field: str) -> None:
+    invalid = copy.deepcopy(record)
+    invalid[field] = "sha256:" + "0" * 64 if field == "profile_sha256" else []
+    monkeypatch.setattr(proof_slice, "build_record", lambda: invalid)
+    with pytest.raises(proof_slice.ProofSliceError, match="profile changed"):
+        proof_slice.build_site_carrier()
+
+
 def test_run_is_deterministic_and_passes() -> None:
     code, first = proof_slice.run()
     again, second = proof_slice.run()

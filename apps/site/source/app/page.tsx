@@ -4,6 +4,8 @@ import { basemapCacheRequest } from "./basemap-cache";
 import { GROUNDWATER_MANIFEST, safeKgsWellUrl } from "./aquifer-layers";
 import { DEFAULT_SOIL_MAP_STATE, hideSoilContext, restoreSoilMapState, serializeSoilMapState, visibleExternalContextCount, type SoilMapState } from "./soil-moisture";
 import { GovernedWaterControl } from "./governed-water-control";
+import { LivingWatersControl } from "./living-waters-control";
+import { LIVING_WATERS_SOURCE } from "./living-waters-fixture";
 import { resizeMapAfterLayout } from "./cutaway-locator";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -4968,6 +4970,13 @@ export default function Home() {
             setTerrainElevationReading(null);
             setTerrainElevationUnavailable(null);
           }
+          if (map.queryRenderedFeatures(event.point)[0]?.source === LIVING_WATERS_SOURCE) {
+            map.getCanvas().style.cursor = "pointer";
+            if (hoveredRef.current) map.setFeatureState(hoveredRef.current, { hover: false });
+            hoveredRef.current = null;
+            clearHoverCandidate();
+            return;
+          }
           const availableLayers = interactiveLayerIds.filter((id) => map.getLayer(id));
           const availableOfficialLayers = OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS.filter((id) => map.getLayer(id));
           const officialFeatures = availableOfficialLayers.length ? map.queryRenderedFeatures(event.point, { layers: availableOfficialLayers }) : [];
@@ -5055,6 +5064,12 @@ export default function Home() {
           }
 
           const availableLayers = interactiveLayerIds.filter((id) => map.getLayer(id));
+          // The fixture control owns synthetic selection; never select provider
+          // context underneath its schematic as evidence for that schematic.
+          if (map.queryRenderedFeatures(event.point)[0]?.source === LIVING_WATERS_SOURCE) {
+            setLeftPanelMode("views"); setAtlasViewQuery(""); setLeftOpen(true);
+            return;
+          }
           const renderedCandidates = availableLayers.length ? map.queryRenderedFeatures(event.point, { layers: availableLayers }) : [];
           const availableOfficialLayers = OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS.filter((id) => map.getLayer(id));
           const officialFeatures = availableOfficialLayers.length ? map.queryRenderedFeatures(event.point, { layers: availableOfficialLayers }) : [];
@@ -8554,6 +8569,7 @@ export default function Home() {
                 <div className="atlas-view-domains" aria-label={`${atlasView.title} domains`}>{atlasView.domains.map((domain) => <span key={domain}>{domain}</span>)}</div>
                 <p className="atlas-view-note">{atlasView.note}</p>
                 <footer><span>{atlasView.report}</span><button type="button" onClick={() => applyLivingAtlasView(atlasView)}>Open on map</button></footer>
+                {atlasView.syntheticProof && <LivingWatersControl mapRef={mapRef} styleReady={styleReady} flatMap={projection === "mercator" && scenePreset !== "elevation-3d"} onFlatMap={() => activateMapRepresentation("2d")} onInspect={() => { setLeftPanelMode("views"); setAtlasViewQuery(""); setLeftOpen(true); }} />}
               </article>)}
               {filteredAtlasViews.length === 0 && <div className="catalog-empty"><strong>No matching investigations</strong><p>Try a place, domain, time, or question.</p></div>}
             </div>
