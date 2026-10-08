@@ -253,7 +253,7 @@ jobs:
             exit 1
           fi
 
-          if ! grep -Fq "Greenfield placeholder" "docs/domains/soil/RELEASE_INDEX.md"; then
+          if ! tr -s '[:space:]' ' ' < "docs/domains/soil/RELEASE_INDEX.md" | grep -Fq "No completed Soil-domain release is registered by this document."; then
             echo "::error::The Soil release index changed. Wire the accepted fail-closed release dry-run instead of retaining this hold."
             exit 1
           fi
