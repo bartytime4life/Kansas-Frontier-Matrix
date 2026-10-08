@@ -185,6 +185,13 @@ export function eventFrames(manifest: EventManifest, observations: readonly { ob
   return [...times].filter((t) => t >= manifest.start && t < manifest.end).sort();
 }
 
+/** Replay only the archive's advertised radar artifacts, without hourly filler or other sources' clocks. */
+export function radarReplayFrames(manifest: EventManifest): string[] {
+  return [...new Set(manifest.radar.scans.map((scan) => scan.time))]
+    .filter((time) => time >= manifest.start && time < manifest.end)
+    .sort();
+}
+
 /**
  * Resolves one full day's calendar ledger from the exact artifacts already
  * admitted into an EventManifest.  It is intentionally a coverage view, not

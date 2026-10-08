@@ -67,6 +67,15 @@ test("radar admits actual files only, on-grid, in the requested half-open interv
   assert.equal(atlas.radarProduct("2011-02-15T23:55:00Z"),"n0r"); assert.equal(atlas.radarProduct("2011-02-16T00:00:00Z"),"n0q");
 });
 
+test("radar replay advances only through advertised mosaic times", () => {
+  const manifest = manifestFixture();
+  const scans = atlas.radarReplayFrames(manifest);
+  assert.deepEqual(scans, ["2007-05-05T02:45:00.000Z", "2007-05-05T02:50:00.000Z"]);
+  assert.equal(atlas.eventFrames(manifest).includes("2007-05-05T02:00:00.000Z"), true);
+  assert.equal(scans.includes("2007-05-05T02:00:00.000Z"), false);
+  assert.deepEqual(atlas.radarReplayFrames({ ...manifest, radar: { ...manifest.radar, scans: [] } }), []);
+});
+
 test("HMS ordinal timestamps preserve leap years and reject invalid clock fields", () => {
   assert.equal(atlas.hmsTime("2023158 1310UTC"),"2023-06-07T13:10:00.000Z");
   assert.equal(atlas.hmsTime("2020366 2359"),"2020-12-31T23:59:00.000Z");
