@@ -24,6 +24,7 @@ related:
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/registers/source-corpus-reconciliation-2026-08-15.md
   - docs/registers/repository-gap-fill-goal-2026-10-02.md
+  - docs/registers/milestone-progress-2026-10-08.md
   - .github/CODEOWNERS
 notes:
   - "At main@5dc0ec2785663ea226a493a8f4ca7de6fe40e2e3 the machine verification backlog contains 747 partial projection entries; the earlier empty-backlog observation is historical and human-ledger parity remains unverified."
@@ -244,6 +245,7 @@ docs/registers/
 ├── RELEASE_STATE.md                     # substantial draft; machine entries are empty
 ├── SOURCE_AUTHORITY.md                  # substantial draft with unresolved metadata; machine entries are empty
 ├── VERIFICATION_BACKLOG.md              # dated human backlog; machine projection has 747 partial entries
+├── milestone-progress-2026-10-08.md     # dated milestone and issue progress ledger since the 2026-09-16 audit
 ├── repository-gap-fill-goal-2026-10-02.md # dated gap-fill goal, gap register, and fill procedures
 └── source-corpus-reconciliation-2026-08-15.md # dated repository-grounded source/proposal reconciliation ledger
 ```
@@ -253,7 +255,7 @@ docs/registers/
 | Group | Current members | What the group proves |
 |---|---|---|
 | Repository-grounded cross-register pointer | [`ADR_INDEX.md`](./ADR_INDEX.md) | Current path, canonical target, summary, and validator relationship are documented against repository evidence |
-| Dated human logs and baselines | [`DRIFT_REGISTER.md`](./DRIFT_REGISTER.md), [`VERIFICATION_BACKLOG.md`](./VERIFICATION_BACKLOG.md), [`source-corpus-reconciliation-2026-08-15.md`](./source-corpus-reconciliation-2026-08-15.md), [`repository-gap-fill-goal-2026-10-02.md`](./repository-gap-fill-goal-2026-10-02.md) | Historical observations, open checks, a dated source/proposal reconciliation ledger, and a dated gap-fill goal exist; completeness and machine parity are not implied |
+| Dated human logs and baselines | [`DRIFT_REGISTER.md`](./DRIFT_REGISTER.md), [`VERIFICATION_BACKLOG.md`](./VERIFICATION_BACKLOG.md), [`source-corpus-reconciliation-2026-08-15.md`](./source-corpus-reconciliation-2026-08-15.md), [`repository-gap-fill-goal-2026-10-02.md`](./repository-gap-fill-goal-2026-10-02.md), [`milestone-progress-2026-10-08.md`](./milestone-progress-2026-10-08.md) | Historical observations, open checks, a dated source/proposal reconciliation ledger, a dated gap-fill goal, and a dated milestone progress ledger exist; completeness and machine parity are not implied |
 | Small proposed scaffolds | [`AUTHORITY_LADDER.md`](./AUTHORITY_LADDER.md), [`CANONICAL_LINEAGE_EXPLORATORY.md`](./CANONICAL_LINEAGE_EXPLORATORY.md), [`CONTINUITY_INVENTORY.md`](./CONTINUITY_INVENTORY.md), [`OBJECT_FAMILY_MAP.md`](./OBJECT_FAMILY_MAP.md), [`RELEASE_REGISTER.md`](./RELEASE_REGISTER.md) | A named path and limited intent exist; operational maturity is not established |
 | Substantial draft narrative registers | [`CONTRADICTION.md`](./CONTRADICTION.md), [`DEPRECATION.md`](./DEPRECATION.md), [`DOCUMENT_REGISTRY.md`](./DOCUMENT_REGISTRY.md), [`DOMAIN_LANE.md`](./DOMAIN_LANE.md), [`OBJECT_FAMILY.md`](./OBJECT_FAMILY.md), [`POLICY_GATE.md`](./POLICY_GATE.md), [`RELEASE_STATE.md`](./RELEASE_STATE.md), [`SOURCE_AUTHORITY.md`](./SOURCE_AUTHORITY.md) | Detailed prose exists; current semantics, ownership, machine parity, and consumer readiness remain file-specific |
 
@@ -283,7 +285,7 @@ A human register and a machine projection are related surfaces, not interchangea
 | [`SOURCE_AUTHORITY.md`](./SOURCE_AUTHORITY.md) | [`control_plane/source_authority_register.yaml`](../../control_plane/source_authority_register.yaml) | Human draft exists; machine `entries` list is empty |
 | [`VERIFICATION_BACKLOG.md`](./VERIFICATION_BACKLOG.md) | [`control_plane/verification_backlog.yaml`](../../control_plane/verification_backlog.yaml) | The human backlog has open material; the machine projection has 747 partial entries, without proven human-ledger parity or closure |
 
-No direct machine counterpart is confirmed for `CANONICAL_LINEAGE_EXPLORATORY.md`, `CONTINUITY_INVENTORY.md`, `DRIFT_REGISTER.md`, `RELEASE_REGISTER.md`, `source-corpus-reconciliation-2026-08-15.md`, or `repository-gap-fill-goal-2026-10-02.md` on the evidence snapshot; the gap-fill goal's census baseline is the QA aid `tools/qa/gap_scan_baseline.json`, not a control-plane register. Do not invent one from naming symmetry.
+No direct machine counterpart is confirmed for `CANONICAL_LINEAGE_EXPLORATORY.md`, `CONTINUITY_INVENTORY.md`, `DRIFT_REGISTER.md`, `RELEASE_REGISTER.md`, `source-corpus-reconciliation-2026-08-15.md`, `repository-gap-fill-goal-2026-10-02.md`, or `milestone-progress-2026-10-08.md` on the evidence snapshot; the gap-fill goal's census baseline is the QA aid `tools/qa/gap_scan_baseline.json`, not a control-plane register. Do not invent one from naming symmetry.
 
 ### Conflict rule
 
