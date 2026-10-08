@@ -75,12 +75,15 @@ class Tests(unittest.TestCase):
             h.end_headers=lambda:None
             getattr(h,'do_'+method)();output['body']=h.wfile.getvalue()
             return output
-        for headers in [{},{'Origin':'https://evil.example'},{'Origin':origin,'Host':'evil.example'}]:
+        for headers in [{},{'Origin':'https://evil.example'},{'Origin':origin+'\r\nX-Injected: true'},{'Origin':origin,'Host':'evil.example'}]:
             self.assertEqual(request('/status',headers)['code'],403)
         self.assertEqual(json.loads(request('/status',{'Origin':origin})['body'])['schema'],'kfm-basemap-cache/v1')
         path='/resource?url='+urllib.parse.quote(self.url(1))
         self.assertEqual(request(path,{'Origin':origin})['code'],403)
         self.assertEqual(request(path,{'Origin':origin,'X-KFM-Session':self.cache.token})['body'],b'raw-provider-bytes')
         self.assertEqual(request('/status',{'Origin':origin},'OPTIONS')['headers']['Access-Control-Allow-Private-Network'],'true')
+        self.cache.fetch=lambda _: (b'bytes','image/png\r\nX-Injected: true',0,None,None)
+        bad=request('/resource?url='+urllib.parse.quote(self.url(7)),{'Origin':origin,'X-KFM-Session':self.cache.token})
+        self.assertEqual(bad['code'],502);self.assertEqual(bad['headers']['Content-Type'],'application/json')
 
 if __name__ == '__main__': unittest.main()

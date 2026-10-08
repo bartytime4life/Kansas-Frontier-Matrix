@@ -242,6 +242,10 @@ class Handler(BaseHTTPRequestHandler):
     def allowed(self):
         return self.headers.get('Host') == f'127.0.0.1:{PORT}' and self._safe_origin() is not None
     def reply(self, code, data, mime='application/json', cache=None):
+        # Validate all provider-derived header values before emitting any response bytes.
+        if mime not in {'application/json', 'image/png', 'image/jpeg', 'application/x-protobuf', 'application/vnd.mapbox-vector-tile', 'application/octet-stream'}:
+            code, data, mime = 502, b'{"error":"Unsupported provider content type"}', 'application/json'
+        if cache not in {'hit', 'stored', 'uncached'}: cache = None
         self.send_response(code)
         if self.allowed():
             self.send_header('Access-Control-Allow-Origin', self._safe_origin())
