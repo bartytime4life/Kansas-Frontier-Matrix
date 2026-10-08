@@ -53,3 +53,12 @@ test('preload tile errors stay visible after idle; timeout and late completion c
  controller.dispose();const count=h.frames.length;map.emit('idle');assert.equal(h.frames.length,count);
  const late=harness(),stopped=late.start();stopped.dispose();await Promise.resolve();assert.equal(late.maps.length,0);assert.ok(late.containers[0].removed);
 });
+
+test('a slow optional overlay cannot hold already rendered basemap detail until global load',async()=>{
+ const h=harness(),controller=h.start();await Promise.resolve();const map=h.maps[0];
+ map.emit('style.load');map.emit('render');map.emit('render');assert.equal([...h.timers.values()].filter(t=>t.ms===1000).length,1);
+ h.flush(1000);assert.equal(h.frames.length,1);assert.match(h.statuses.at(-1),/partial preview/);assert.match(h.statuses.at(-1),/Unfinished tiles are unknown/);
+ map.emit('error');map.emit('render');h.flush(1000);assert.equal(h.frames.length,2);
+ map.emit('idle');assert.match(h.statuses.at(-1),/Partial surface detail/);
+ controller.dispose();assert.equal(h.timers.size,0);
+});

@@ -27,7 +27,7 @@ export function detailBoundsFromSurface(area: SurfaceBounds, points: readonly { 
 export function startCutawaySurfaceDetail(options: {
   capture: SurfaceCapture; pixels: number; onFrame: (frame: SurfaceDetailFrame) => void; onStatus: (status: string) => void;
 }) {
-  let disposed = false, map: GLMap | null = null, timer: ReturnType<typeof setTimeout> | undefined, timeout: ReturnType<typeof setTimeout> | undefined;
+  let disposed = false, map: GLMap | null = null, timer: ReturnType<typeof setTimeout> | undefined, timeout: ReturnType<typeof setTimeout> | undefined, previewTimer: ReturnType<typeof setTimeout> | undefined;
   let requested = options.capture.bounds, key = "", pending = true, partial = false, ready = false;
   const container = document.createElement("div");
   container.setAttribute("aria-hidden", "true"); container.style.cssText = "position:fixed;left:-10000px;top:0;pointer-events:none;contain:strict;";
@@ -55,22 +55,30 @@ export function startCutawaySurfaceDetail(options: {
       pixelRatio: 1, maxTileCacheSize: 96, fadeDuration: 0, renderWorldCopies: false, canvasContextAttributes: { preserveDrawingBuffer: true } });
     const view = map;
     view.on("styleimagemissing", event => { const image = options.capture.images.find(i => i.id === event.id); if (image && !view.hasImage(image.id)) view.addImage(image.id, image.data, { pixelRatio: image.pixelRatio, sdf: image.sdf }); });
-    view.on("load", () => { if (disposed) return; ready = true; for (const sample of surfaceRasterSampling(options.capture.style, false)) view.setPaintProperty(sample.id, "raster-resampling", sample.value); apply(); });
+    const styleReady = () => { if (disposed || ready) return; ready = true; for (const sample of surfaceRasterSampling(options.capture.style, false)) view.setPaintProperty(sample.id, "raster-resampling", sample.value); apply(); };
+    view.on("style.load", styleReady); view.on("load", styleReady);
     view.on("error", () => { partial = true; if (!disposed) options.onStatus("Some surface tiles are unavailable. Blank patches are unknown, not clear conditions."); });
-    view.on("idle", () => {
-      if (disposed || !pending || !view.areTilesLoaded()) return;
+    const copyFrame = (settled: boolean) => {
+      if (disposed || !ready || !pending) return;
       try {
         const canvas = view.getCanvas(), image = document.createElement("canvas"); image.width = canvas.width; image.height = canvas.height;
         const context = image.getContext("2d"); if (!context) throw new Error("Surface copy unavailable");
         context.drawImage(canvas, 0, 0); context.getImageData(0, 0, 1, 1);
-        const b = view.getBounds(); pending = false; clearTimeout(timeout);
+        const b = view.getBounds();
+        if (settled) { pending = false; clearTimeout(timeout); clearTimeout(previewTimer); previewTimer = undefined; }
         options.onFrame({ image, bounds: [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()], zoom: view.getZoom() });
-        options.onStatus(`${partial ? "Partial surface detail" : "Surface detail ready"} · ${image.width} × ${image.height} pixels · map zoom ${view.getZoom().toFixed(1)}. Provider resolution and dates still apply.`);
+        options.onStatus(`${!settled ? "Loading surface detail · partial preview" : partial ? "Partial surface detail" : "Surface detail ready"} · ${image.width} × ${image.height} pixels · map zoom ${view.getZoom().toFixed(1)}. Provider resolution and dates still apply.${!settled ? " Unfinished tiles are unknown." : ""}`);
       } catch { pending = false; options.onStatus("Surface detail could not be drawn. The selector preview and source records remain available."); }
+    };
+    // A slow optional overlay must not hold back already rendered basemap tiles.
+    // Copy at most once per second during active loading; idle publishes the final frame.
+    view.on("render", () => {
+      if (!disposed && ready && pending && previewTimer === undefined) previewTimer = setTimeout(() => { previewTimer = undefined; copyFrame(false); }, 1000);
     });
+    view.on("idle", () => { if (view.areTilesLoaded()) copyFrame(true); });
   }).catch(() => { if (!disposed) options.onStatus("Surface detail is unavailable. Retry the surface or use the Surface map view."); });
   return {
     update(bounds: SurfaceBounds) { if(bounds.map(n=>n.toFixed(6)).join(",")===requested.map(n=>n.toFixed(6)).join(","))return; requested = bounds; clearTimeout(timer); timer = setTimeout(apply, 200); },
-    dispose() { disposed = true; clearTimeout(timer); clearTimeout(timeout); map?.remove(); container.remove(); },
+    dispose() { disposed = true; clearTimeout(timer); clearTimeout(timeout); clearTimeout(previewTimer); map?.remove(); container.remove(); },
   };
 }
