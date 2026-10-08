@@ -15,10 +15,6 @@ spec = importlib.util.spec_from_file_location('cache', str(Path(__file__).resolv
 m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
 
 class Tests(unittest.TestCase):
-    def test_standalone_site_distribution_matches_canonical_service(self):
-        root = Path(__file__).resolve().parents[2]
-        self.assertEqual((root / 'tools/local_data/basemap_cache.py').read_bytes(),
-                         (root / 'apps/site/source/scripts/basemap-cache.py').read_bytes())
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory(); self.root = Path(self.tmp.name)
         (self.root / '.kfm-local-store.json').write_text(json.dumps({'schema_version':'1','scope':'local-quarantine-store'}))

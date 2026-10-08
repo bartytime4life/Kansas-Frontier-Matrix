@@ -3,7 +3,6 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 import ts from 'typescript';
-import {existsSync} from 'node:fs';
 import {spawnSync} from 'node:child_process';
 const source=await readFile('app/basemap-cache.ts','utf8');
 const code=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
@@ -35,8 +34,7 @@ test('every map that supplies the cutaway uses the shared transport without chan
  const ui=await readFile('app/basemap-cache-controls.tsx','utf8');for(const label of ['Save Kansas overview','Stop download','10 GB','Display context, not KFM evidence.','Download time is not observation time.'])assert.ok(ui.includes(label));
 });
 test('local filesystem, eviction, provider and authorization regressions',()=>{
- const companionTest=existsSync('tests/basemap_cache_test.py')?'tests/basemap_cache_test.py':'../../../tests/local_data/test_basemap_cache.py';
- const r=spawnSync('python3',[companionTest],{encoding:'utf8'});assert.equal(r.status,0,r.stdout+r.stderr);
+ const r=spawnSync('python3',['../../../tests/local_data/test_basemap_cache.py'],{encoding:'utf8'});assert.equal(r.status,0,r.stdout+r.stderr);
 });
 
 test('rendered controls connect, toggle, start and cancel the bounded download',async()=>{

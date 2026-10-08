@@ -19,7 +19,6 @@ refreshes are not represented as current imagery or clear conditions.
 Run with Python 3.11 or newer (standard library only):
 
 ```sh
-python3 scripts/basemap-cache.py --root /absolute/path/to/KFM-data
 # From the KFM monorepo root:
 python3 tools/local_data/basemap_cache.py --root /absolute/path/to/KFM-data
 ```
@@ -49,7 +48,7 @@ After=network-online.target
 [Service]
 Type=simple
 UMask=0077
-ExecStart=/usr/bin/python3 /absolute/path/to/basemap-cache.py --root /absolute/path/to/KFM-data
+ExecStart=/usr/bin/python3 /absolute/path/to/KFM/tools/local_data/basemap_cache.py --root /absolute/path/to/KFM-data
 Restart=on-failure
 RestartSec=5
 NoNewPrivileges=true
@@ -103,8 +102,8 @@ activation, source-time, DB/R2 binding, or audience change is made.
 
 `node --test tests/basemap-cache.test.mjs` includes client transport/fallback,
 source exclusions, rendered GUI actions and Python filesystem/HTTP tests.
-`python3 tests/basemap_cache_test.py` runs the standalone companion tests.
-From the KFM repository root, use `python3 tests/local_data/test_basemap_cache.py`.
+From the KFM repository root, `python3 tests/local_data/test_basemap_cache.py`
+runs the companion tests directly.
 Tests use a temporary initialized root, fake provider bytes and in-memory
 HTTP requests; they never alter the installed cache or fetch live providers.
 Browser local-network access, actual provider availability and visual acceptance
