@@ -16,7 +16,7 @@ import { HmsFrameTransitions, hmsFade } from "./hms-smoke-playback";
 import { resetHmsSmokeFade, setHmsSmokeFade } from "./live-context";
 import { geoJSONHasData, waitForGeoJSON } from "./map-performance";
 import { readBoundedJson } from "./bounded-json";
-import { buildAvailabilityBins } from "./timeline-availability";
+import { buildAvailabilityBins, timelineLabelSteps } from "./timeline-availability";
 import { deriveMapSignals } from "./map-signals";
 import { parseRepositoryObservation, type RepositoryConnection } from "./repository-status";
 import { replaceExplorerHistory } from "./embed-runtime";
@@ -1655,6 +1655,7 @@ export default function Home() {
     temporalStepRule,
   ), [activeLayers, sweepRangeEnd, sweepRangeStart, temporalStepRule]);
   const timelineSteps = useMemo(() => [...new Set([...TIME_STEPS, ...temporalSequence])].sort((left, right) => left - right), [temporalSequence]);
+  const timelineLabels = useMemo(() => timelineLabelSteps(timelineSteps, TIMELINE_MAJOR_STEPS), [timelineSteps]);
   const temporalQuery = useMemo(() => buildTemporalQuery(
     temporalMode,
     temporalMode === "comparison" ? compareTimeB : year,
@@ -9623,7 +9624,7 @@ export default function Home() {
             </div>
             <div className="timeline-track">
               <input type="range" min="0" max={timelineSteps.length - 1} value={Math.max(0, timelineSteps.indexOf(previewYear))} onChange={(event) => { setPreviewYear(timelineSteps[Number(event.target.value)]); setPlaying(false); }} aria-label="Preview time before committing; every year from 1800 is selectable" aria-valuetext={`Preview ${formatTimelineStep(previewYear)}; committed ${temporalScopeLabel}`} />
-              <div className="timeline-ticks" style={{ "--timeline-columns": timelineSteps.length } as React.CSSProperties} aria-hidden="true">{timelineSteps.map((step) => <span key={step} className="timeline-tick" data-active={step === previewYear} data-committed={step === temporalQuery.frame} data-major={TIMELINE_MAJOR_STEPS.has(step)} data-in-range={step >= sweepRangeStart && step <= sweepRangeEnd} title={`${formatTimelineStep(step)} · ${timelineEraLabel(step, buildYearCurrent)}`}>{TIMELINE_MAJOR_STEPS.has(step) ? <b>{formatTimelineStep(step)}</b> : <i />}</span>)}</div>
+              <div className="timeline-ticks" style={{ "--timeline-columns": timelineSteps.length } as React.CSSProperties} aria-hidden="true">{timelineSteps.map((step) => <span key={step} className="timeline-tick" data-active={step === previewYear} data-committed={step === temporalQuery.frame} data-major={TIMELINE_MAJOR_STEPS.has(step)} data-in-range={step >= sweepRangeStart && step <= sweepRangeEnd} title={`${formatTimelineStep(step)} · ${timelineEraLabel(step, buildYearCurrent)}`}>{timelineLabels.has(step) ? <b>{formatTimelineStep(step)}</b> : <i />}</span>)}</div>
             </div>
             <div className="timeline-commit-actions">
               <button type="button" disabled={previewYear === temporalQuery.frame} onClick={() => { setPlaying(false); commitTemporalFrame(previewYear, `Committed ${formatTimelineStep(previewYear)} to the map, evidence, report, and story context`); }}>Commit</button>
