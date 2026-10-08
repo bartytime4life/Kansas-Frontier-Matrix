@@ -9,6 +9,7 @@ export async function componentHarness(file, imports, globals = {}, extra = "") 
   const same = (a, b) => a && b && a.length === b.length && a.every((value, i) => Object.is(value, b[i]));
   const hooks = {
     lazy: loader => ({ lazy: loader }), Suspense: "suspense",
+    useSyncExternalStore(_subscribe, getSnapshot) { return getSnapshot(); },
     useRef(value) { const i = cursor++; return slots[i] ??= { current: value }; },
     useState(value) {
       const i = cursor++;

@@ -1,4 +1,5 @@
 import importlib.util
+import gzip
 import json
 from pathlib import Path
 import tempfile
@@ -56,17 +57,17 @@ class Tests(unittest.TestCase):
         self.assertLess(len(m.overview()),512)
     def test_gzip_vector_tiles_are_decoded_within_bounds(self):
         raw=b'\x1a\x02pbf'*16
-        self.assertEqual(m.decode(m.zlib.compress(raw,wbits=31),'gzip','vector'),raw)
+        self.assertEqual(m.decode(gzip.compress(raw,mtime=0),'gzip','vector'),raw)
         self.assertEqual(m.decode(raw,None,'vector'),raw)
-        bomb=m.zlib.compress(b'\0'*(m.MAX_ITEM+1),wbits=31)
-        for data,encoding,provider in [(bomb,'gzip','vector'),(b'not-gzip','gzip','vector'),(m.zlib.compress(raw,wbits=31)[:-4],'gzip','vector'),
-                                       (m.zlib.compress(raw,wbits=31)+b'trailer','gzip','vector'),(m.zlib.compress(raw,wbits=31),'gzip','topo'),(raw,'br','vector')]:
+        bomb=gzip.compress(b'\0'*(m.MAX_ITEM+1),mtime=0)
+        for data,encoding,provider in [(bomb,'gzip','vector'),(b'not-gzip','gzip','vector'),(gzip.compress(raw,mtime=0)[:-4],'gzip','vector'),
+                                       (gzip.compress(raw,mtime=0)+b'trailer','gzip','vector'),(gzip.compress(raw,mtime=0),'gzip','topo'),(raw,'br','vector')]:
             with self.subTest(encoding=encoding,provider=provider,size=len(data)),self.assertRaises(ValueError): m.decode(data,encoding,provider)
         class Response:
             headers=Message()
             def __enter__(self): return self
             def __exit__(self,*_): return False
-            def read(self,_limit): return m.zlib.compress(raw,wbits=31)
+            def read(self,_limit): return gzip.compress(raw,mtime=0)
         Response.headers['Content-Type']='application/x-protobuf';Response.headers['Content-Encoding']='gzip'
         url='https://tiles.openfreemap.org/planet/latest/5/7/12.pbf'
         with patch.object(m,'build_opener',return_value=SimpleNamespace(open=lambda *_a,**_k:Response())):

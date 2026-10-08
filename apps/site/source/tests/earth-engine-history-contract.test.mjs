@@ -59,9 +59,9 @@ test("comparisons use installed years of a single mission or PRISM cadence inclu
 });
 
 async function harness() {
-  const objects = new Map(), calls = []; let override;
+  const objects = new Map(), calls = [], reads = []; let override, beforeRead;
   const bucket = {
-    async get(key) { const raw = objects.get(key); return raw ? { size: raw.byteLength, arrayBuffer: async () => raw.slice(0) } : null; },
+    async get(key) { reads.push(key); if (beforeRead) await beforeRead(key); const raw = objects.get(key); return raw ? { size: raw.byteLength, arrayBuffer: async () => raw.slice(0) } : null; },
     async put(key, raw) { objects.set(key, raw.slice(0)); },
     async list(options) {
       calls.push(options);
@@ -83,8 +83,55 @@ async function harness() {
     const year = context.earthEngineSetYear(value);
     objects.set(year === 2024 ? context.EARTH_ENGINE_CONTEXT_ACTIVE_KEY : context.earthEngineYearPointerKey(year), bytes({ schema: "kfm-earth-engine-context-pointer/v1", setId: value.setId, manifestSha256: hash(raw) }));
   }
-  return { objects, calls, server, stage, activate, install, override: value => { override = value; } };
+  return { objects, calls, reads, server, stage, activate, install, beforeRead: value => { beforeRead = value; }, override: value => { override = value; } };
 }
+
+test("the baseline catalog refuses another year's pointer while retaining legacy terrain", async () => {
+  const h = await harness(); h.install(manifest(2023));
+  h.objects.set(context.EARTH_ENGINE_CONTEXT_ACTIVE_KEY, h.objects.get(context.earthEngineYearPointerKey(2023)));
+  await assert.rejects(h.server.activeEarthEngineManifest(), /year pointer/);
+  await assert.rejects(h.server.activeEarthEngineCatalog(), /year pointer/);
+  const terrain = manifest(2024, "ee-3dep"); terrain.setId = "ks-terrain-synthetic";
+  const raw = bytes(terrain);
+  h.objects.set(context.earthEngineManifestKey(terrain.setId), raw);
+  h.objects.set(context.EARTH_ENGINE_CONTEXT_ACTIVE_KEY, bytes({ schema: "kfm-earth-engine-context-pointer/v1", setId: terrain.setId, manifestSha256: hash(raw) }));
+  assert.equal((await h.server.activeEarthEngineManifest()).setId, terrain.setId);
+});
+
+test("concurrent tile-index requests share validation, then recheck corruption and missing bytes", async () => {
+  const h = await harness(), value = manifest(2024), id = value.layers[0].id;
+  const png = Uint8Array.from(Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScL/nwAAAABJRU5ErkJggg==", "base64")).buffer;
+  const index = bytes({ tiles: { "0/0": hash(png) } });
+  value.layers[0].tileIndexes[0].sha256 = hash(index); h.install(value);
+  const indexKey = context.earthEngineIndexKey(value.setId, id, 0), tileKey = context.earthEngineTileKey(value.setId, id, 0, 0, 0);
+  h.objects.set(indexKey, index); h.objects.set(tileKey, png);
+  let release; const held = new Promise(resolve => { release = resolve; });
+  h.beforeRead(key => key === indexKey ? held : undefined);
+  const indexes = Promise.all(Array.from({ length: 12 }, () => h.server.earthEngineReadIndex(value.setId, id, 0, value.layers[0].tileIndexes[0])));
+  assert.equal(h.reads.filter(key => key === indexKey).length, 1);
+  release(); assert.equal((await indexes).length, 12);
+  const tiles = await Promise.all(Array.from({ length: 12 }, () => h.server.earthEngineTile(value.setId, id, "0", "0", "0.png")));
+  for (const tile of tiles) assert.deepEqual(tile, png);
+  assert.equal(h.reads.filter(key => key === tileKey).length, 12, "every tile still gets its own byte/hash verification");
+  h.beforeRead(undefined); h.objects.set(indexKey, bytes({ tiles: { "0/0": "f".repeat(64) } }));
+  await assert.rejects(h.server.earthEngineTile(value.setId, id, "0", "0", "0.png"), /tile index failed/);
+  h.objects.set(indexKey, index);
+  assert.deepEqual(await h.server.earthEngineTile(value.setId, id, "0", "0", "0.png"), png, "failed reads are evicted and can recover");
+  h.objects.delete(indexKey);
+  await assert.rejects(h.server.earthEngineTile(value.setId, id, "0", "0", "0.png"), /tile index failed/);
+});
+
+test("sharing index bytes never merges different expected index contracts", async () => {
+  const h = await harness(), value = manifest(2024), id = value.layers[0].id;
+  const raw = bytes({ tiles: { "0/0": "a".repeat(64) } });
+  h.objects.set(context.earthEngineIndexKey(value.setId, id, 0), raw);
+  const expected = { ...value.layers[0].tileIndexes[0], sha256: hash(raw) };
+  const results = await Promise.allSettled([
+    h.server.earthEngineReadIndex(value.setId, id, 0, expected),
+    h.server.earthEngineReadIndex(value.setId, id, 0, { ...expected, count: 2 }),
+  ]);
+  assert.equal(results[0].status, "fulfilled"); assert.equal(results[1].status, "rejected");
+});
 
 test("server reads all131 supported years through bounded pagination and rejects duplicate or stuck pages", async () => {
   const h = await harness(); for (let year = 1895; year <= 2025; year++) h.install(manifest(year));

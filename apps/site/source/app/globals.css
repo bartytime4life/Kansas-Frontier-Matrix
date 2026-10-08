@@ -4630,3 +4630,11 @@ body { font-size: 14px; }
 /* Long fixture identities remain readable in the narrow atlas card. */
 .official-context-row[aria-label="Synthetic Living Waters proof"] code { overflow-wrap: anywhere; }
 .official-context-row[aria-label="Synthetic Living Waters proof"] dd { margin: 0 0 0.5rem; overflow-wrap: anywhere; }
+
+/* Native action cues apply to controls; map canvases retain their own grab/gesture cursor. */
+html body :is(button:not(:disabled),a[href],summary,select:not(:disabled),input[type="checkbox"]:not(:disabled),input[type="radio"]:not(:disabled),input[type="button"]:not(:disabled),input[type="submit"]:not(:disabled),[role="button"],[role="link"]):not([aria-disabled="true"]){cursor:pointer}
+html body :is(textarea,input:not([type]),input[type="text"],input[type="search"],input[type="email"],input[type="password"],input[type="url"],input[type="tel"],input[type="number"]):not(:disabled){cursor:text}
+html body :is(button,input,select,textarea):disabled,html body :is(a,button,input,select,textarea,[role="button"],[role="link"])[aria-disabled="true"]{cursor:not-allowed}
+html body :is(button,a,[role="button"],input[type="submit"])[aria-busy="true"]{cursor:progress}
+input[type="file"]:not(:disabled)::file-selector-button{cursor:pointer}
+.download-center-entry{padding:16px;margin:14px 0;background:#16332d;border-left:3px solid #cbb582}.download-center-entry>small{color:#c2c9a5;font-size:9px;letter-spacing:1.3px}.download-center-entry h3{font-size:16px;line-height:1.35;margin:7px 0}.download-center-entry p{color:#c4d4c4;font-size:12px;line-height:1.6}.download-center-entry>a{display:inline-flex;align-items:center;min-height:44px;font-size:13px;color:#c4e6c7;text-underline-offset:4px}

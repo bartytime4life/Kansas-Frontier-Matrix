@@ -34,8 +34,9 @@ test('every map that supplies the cutaway uses the shared transport without chan
  for(const file of ['page.tsx','selected-surface-map.tsx','cutaway-surface-detail.ts','snapshot-map.tsx'])assert.match(await readFile('app/'+file,'utf8'),/transformRequest: basemapCacheRequest/);
  const ui=await readFile('app/basemap-cache-controls.tsx','utf8');for(const label of ['Save Kansas overview','Stop download','10 GB','Display context, not KFM evidence.','Download time is not observation time.'])assert.ok(ui.includes(label));
 });
-test('local filesystem, eviction, provider and authorization regressions',()=>{
- const companionTest=existsSync('tests/basemap_cache_test.py')?'tests/basemap_cache_test.py':'../../../tests/local_data/test_basemap_cache.py';
+test('local filesystem, eviction, provider and authorization regressions',t=>{
+ const companionTest=['../../../tests/local_data/test_basemap_cache.py','tests/basemap_cache_test.py'].find(path=>existsSync(path));
+ if(!companionTest){t.skip('External operator suite: run python3 tests/local_data/test_basemap_cache.py from the KFM monorepo root.');return;}
  const r=spawnSync('python3',[companionTest],{encoding:'utf8'});assert.equal(r.status,0,r.stdout+r.stderr);
 });
 

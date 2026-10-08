@@ -16,11 +16,10 @@ Provider imagery dates, attribution, unknown coverage and source resolution
 remain unchanged. Expired tiles require a successful provider refresh; failed
 refreshes are not represented as current imagery or clear conditions.
 
-Run with Python 3.11 or newer (standard library only):
+Run the canonical service from the KFM monorepo root with Python 3.11 or newer
+(standard library only):
 
 ```sh
-python3 scripts/basemap-cache.py --root /absolute/path/to/KFM-data
-# From the KFM monorepo root:
 python3 tools/local_data/basemap_cache.py --root /absolute/path/to/KFM-data
 ```
 
@@ -39,8 +38,9 @@ keeps maps usable when the service is stopped. The checkbox disables local
 reads/writes for subsequent browser map requests; it does not cancel a running
 overview job (use Stop download).
 
-For startup at sign-in, install a reviewed copy of the script under an
-owner-private stable directory, then create a user systemd unit:
+For startup at sign-in, install a reviewed copy of
+`tools/local_data/basemap_cache.py` under an owner-private stable directory,
+then create a user systemd unit:
 
 ```ini
 [Unit]
@@ -101,10 +101,14 @@ activation, source-time, DB/R2 binding, or audience change is made.
 
 ## Verification
 
-`node --test tests/basemap-cache.test.mjs` includes client transport/fallback,
-source exclusions, rendered GUI actions and Python filesystem/HTTP tests.
-`python3 tests/basemap_cache_test.py` runs the standalone companion tests.
-From the KFM repository root, use `python3 tests/local_data/test_basemap_cache.py`.
+From `apps/site/source`, `node --test tests/basemap-cache.test.mjs` includes
+client transport/fallback, source exclusions, rendered GUI actions and the
+canonical Python filesystem/HTTP tests. Run those companion tests directly
+from the KFM monorepo root with `python3 tests/local_data/test_basemap_cache.py`.
+Standalone Site packages run the five browser cache tests and explicitly skip
+the external operator suite when its Python tests are absent. This skip does
+not verify the local operator; use the canonical monorepo command above.
+When the canonical tests are available, their failures fail the Node suite.
 Tests use a temporary initialized root, fake provider bytes and in-memory
 HTTP requests; they never alter the installed cache or fetch live providers.
 Browser local-network access, actual provider availability and visual acceptance
