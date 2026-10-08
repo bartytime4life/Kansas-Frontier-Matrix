@@ -38,6 +38,28 @@ class AcquisitionInventoryTests(unittest.TestCase):
         self.assertFalse(payload["renderer_selected"])
         self.assertEqual(payload["findings"], [])
 
+    def test_ignored_site_build_outputs_are_not_scanned(self) -> None:
+        oversized = "x" * (MODULE.MAX_INPUT_BYTES + 1)
+        acquisition = 'import { Map } from "maplibre-gl";\n'
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(root, "apps/site/source/public/vendor/h5wasm/h5wasm.js", oversized)
+            self._write(root, "apps/site/source/public/maplibre/maplibre-gl.js", acquisition)
+            self._write(root, "apps/site/source/.wrangler/tmp/bundle.js", acquisition)
+            self._write(root, "apps/site/source/.sites-runtime/worker.js", acquisition)
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.PASS)
+        self.assertEqual(result.findings, ())
+
+        with self._root() as tmp:
+            root = Path(tmp)
+            self._write(root, "apps/site/source/public/vendor/other/h5wasm.js", oversized)
+            self._write(root, "apps/site/source/public/maplibre-copy/maplibre-gl.js", acquisition)
+            result = MODULE.scan(root)
+        self.assertEqual(result.outcome, MODULE.Outcome.ERROR)
+        self.assertIn("SCAN_INPUT_TOO_LARGE", result.reasons)
+        self.assertIn("ACQUISITION_OUTSIDE_CANDIDATE_SEAM", result.reasons)
+
     def test_kfm_facade_import_and_dependency_are_not_raw_acquisition(self) -> None:
         with self._root() as tmp:
             root = Path(tmp)
