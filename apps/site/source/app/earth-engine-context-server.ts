@@ -72,6 +72,10 @@ export async function activeEarthEngineManifest(): Promise<EarthEngineContextMan
   if (!pointerBytes) return null;
   const pointer = parseEarthEnginePointer(json(pointerBytes));
   if (!pointer) throw new EarthEngineContextError("Earth Engine context pointer failed validation.", 503);
+  // The legacy baseline key belongs to 2024 (or mixed-date terrain). A valid
+  // pointer for another year must not silently relabel that baseline.
+  const year = earthEngineSetYear(pointer);
+  if (year !== null && year !== 2024) throw new EarthEngineContextError("Earth Engine year pointer failed validation.", 503);
   return earthEngineManifestForPointer(pointer);
 }
 
@@ -141,12 +145,28 @@ export async function earthEngineTile(setId: string, layerId: string, zText: str
   return tile;
 }
 
+// A visible tile burst can ask for the same multi-megabyte index many times.
+// Share only in-flight validation, scoped to the bucket and the full expected
+// contract. Settled reads are removed so later corruption/deletion is detected.
+const pendingIndexes = new WeakMap<EarthEngineBucket, Map<string, Promise<Record<string, string>>>>();
 export async function earthEngineReadIndex(setId: string, layerId: string, z: number, expected: Parameters<typeof parseEarthEngineTileIndex>[1]) {
-  const indexBytes = await bytes(earthEngineIndexKey(setId, layerId, z), 4_000_000);
-  if (!indexBytes || await earthEngineDigest(indexBytes) !== expected.sha256) throw new EarthEngineContextError("Earth Engine tile index failed validation.", 503);
-  const index = parseEarthEngineTileIndex(json(indexBytes), expected, z);
-  if (!index) throw new EarthEngineContextError("Earth Engine tile index failed validation.", 503);
-  return index;
+  const bucket = earthEngineBucket();
+  let pending = pendingIndexes.get(bucket);
+  if (!pending) { pending = new Map(); pendingIndexes.set(bucket, pending); }
+  const key = JSON.stringify([setId, layerId, z, expected.sha256, expected.count, expected.minX, expected.maxX, expected.minY, expected.maxY]);
+  const current = pending.get(key);
+  if (current) return current;
+  const read = async () => {
+    const indexBytes = await bytes(earthEngineIndexKey(setId, layerId, z), 4_000_000);
+    if (!indexBytes || await earthEngineDigest(indexBytes) !== expected.sha256) throw new EarthEngineContextError("Earth Engine tile index failed validation.", 503);
+    const index = parseEarthEngineTileIndex(json(indexBytes), expected, z);
+    if (!index) throw new EarthEngineContextError("Earth Engine tile index failed validation.", 503);
+    return Object.freeze(index);
+  };
+  if (pending.size >= 64) return read();
+  const task = read(); pending.set(key, task);
+  try { return await task; }
+  finally { pending.delete(key); }
 }
 
 export function earthEngineFailure(error: unknown): Response {

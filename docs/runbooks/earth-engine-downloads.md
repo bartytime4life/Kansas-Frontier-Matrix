@@ -1,0 +1,137 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/runbooks/earth-engine-downloads
+title: Selected Earth Engine downloads and local library
+type: runbook
+version: v1.0
+status: implemented; local verification; provider authorization pending
+owners: ["@bartytime4life"]
+created: 2026-10-08
+updated: 2026-10-08
+policy_label: public-documentation
+owning_root: docs/
+responsibility: Explain bounded local library inspection, selected provider downloads, authorization, storage and recovery.
+truth_posture: Stored candidates and background jobs do not establish source admission or map readiness.
+[/KFM_META_BLOCK_V2] -->
+
+# Selected Earth Engine downloads
+
+The Earth Engine workspace has **Sign in with Google Earth Engine** and a
+dataset/year download control. It talks only to the owner-operated loopback
+service on `127.0.0.1:8769`. The hosted Site cannot write arbitrary local files.
+
+## Install once
+
+Use Python 3.11 or newer. From a checkout containing this change:
+
+```sh
+python3 -m venv "$HOME/Projects/KFM-ee-runtime"
+"$HOME/Projects/KFM-ee-runtime/bin/python" -m pip install -r connectors/google/earth_engine/requirements.txt
+"$HOME/Projects/KFM-ee-runtime/bin/python" tools/local_data/earth_engine_downloads.py serve --root "$HOME/Projects/KFM-data"
+```
+
+The root must already be an initialized, owner-private KFM local store. Keep the
+operator running, or install it as an owner user service. Both the local Site
+(`http://127.0.0.1:4173`) and the existing private hosted KFM Site are allowlisted.
+The browser may request local-network access. Other origins and Host values are
+denied; writes also require the short-lived in-memory session token.
+
+## Link Google and download
+
+Open **Data & downloads → Library & downloads** to search what is already stored,
+refresh its dated inventory, inspect approved map periods and follow all recent
+worker jobs. The established local Site connects automatically; hosted pages
+offer an explicit local connection. Library inspection does not require Google
+sign-in. From the center, **Choose data to download** opens the catalog below.
+
+1. Open **Earth Engine datasets & recipes**, choose a dataset and year.
+2. Enter the Google Cloud **project ID**, found in the account menu of the
+   [Earth Engine Code Editor](https://code.earthengine.google.com/).
+3. Press **Sign in with Google Earth Engine**, select the Google account, and
+   approve Google's consent screen. If a popup is blocked, use **Continue with
+   Google**. Return to KFM while it verifies access to the registered project.
+4. Select a maximum size, then **Download [year] to KFM**. One job runs at a time.
+   The page shows captured bytes, file progress, destination and failures.
+
+The project must be registered for Earth Engine and the account must have access.
+This does not enable billing, create a Cloud Storage bucket, or select a paid
+fallback. Google manages login; no password is submitted to KFM. The OAuth flow
+uses PKCE, a one-time state value and a ten-minute expiry. Refresh credentials
+stay in the private local store; they are not sent to the Site or GitHub.
+
+## Data paths and map handoff
+
+Directory Rules and accepted ADR-0029 place provider capture in
+`connectors/google/earth_engine`, local operation in `tools/local_data`, tests in
+`tests/local_data` and this operator guide in `docs/runbooks`. Payloads remain
+outside source checkouts, under the existing data lifecycle:
+
+| Relative to the chosen KFM data root | Purpose |
+| --- | --- |
+| `data/raw/earth-engine/<dataset>/<year-or-fixed>/<job-id>/` | Immutable candidate GeoTIFF tiles, source inventory and capture metadata |
+| `data/work/earth-engine-downloads/jobs/` | Mutable progress / failure states |
+| `data/work/earth-engine-downloads/credentials.json` | Owner-private Google refresh credential; never commit or upload |
+| `data/work/earth-engine-downloads/config.json` | Linked project ID |
+| `data/receipts/ingest/earth-engine/<job-id>.json` | Stored-byte hashes, partial outcomes and unreviewed receipt |
+
+Source IDs, date labels, processing choices, coordinate grid and file hashes
+travel with each product. Hashes verify locally captured bytes, not an independent
+provider checksum. **Downloaded is not map-ready:** coverage, processing, rights,
+review and release must be completed before preparing a display set in the
+existing Earth Engine map installer. This feature does not automatically promote
+raw files, replace approved map tiles, change active mirror review, or fabricate
+an EvidenceBundle. Existing `data/work/earth-engine/exports` remain untouched.
+
+## Limits and recovery
+
+The download center can inspect the local library without a Google account.
+An authorized `GET /library` starts its first background scan; subsequent reads
+return progress or the last complete snapshot. `POST /library/refresh` accepts
+only `{}` and the existing session token. Concurrent refreshes share one scan.
+The scan reads filesystem metadata under `data/raw`, `data/work`,
+`data/quarantine`, and `data/processed`; it never reads payloads or credentials.
+Only top-level collection labels, lifecycle lanes, file counts, and logical
+file bytes are returned. Individual file names and paths are not returned.
+
+Hidden entries, credentials/configuration files, runtime/environment directories,
+and the download operator's job/credential directory are excluded. Other symlinks
+and special files fail the scan without following them. Limits are 256
+collections, 500,000 examined entries, 32 nested levels, and 30 seconds. Unreadable,
+changed, unsafe, or excessive trees produce an explicit failed scan; partial
+totals never replace the last complete snapshot. A missing scan timestamp means
+the library has not yet been measured, even when its initial counters are zero.
+Scanning is independent of job polling and requires no download or source
+activation. These metadata totals are a dated inventory, not checksum verification,
+an atomic filesystem snapshot, source coverage, or map readiness.
+
+- The 17 catalog selections are supported, not the entire Earth Engine catalog.
+  Annual map composites/summaries are exported, not every original source scene.
+  MSS, ERA5 and ERA5-Land currently download source inventories only; selecting
+  variables, processing and bounded raster products is still required.
+- Kansas boundary: TIGER 2018, STATEFP 20. RGB/elevation use a 30 m EPSG:5070
+  display grid; Dynamic World uses 10 m. Climate grids follow the selected recipe;
+  PRISM checks its NAD83 grid. Categorical resampling stays nearest-neighbor.
+- Each synchronous Earth Engine tile is at most 1024×1024 pixels and 32 MiB;
+  maximum 4096 tiles, 4 billion pixels, 20,000 source IDs. The user chooses a total
+  limit up to 500 GB and adequate free disk space is required. New RAW captures
+  are protected candidates, separate from the existing replaceable 500 GB cache;
+  they are never silently evicted and repeated captures consume additional space.
+- Cancellation stops between bounded provider requests (up to 90 seconds each).
+  Partial files remain inspectable. Worker restart marks unfinished jobs
+  interrupted. There is no tile resume yet: a new download gets a new directory.
+  Retry after an uncertain start reuses the request ID to avoid duplicate jobs.
+- Google quotas and request/compute limits can still reject a large selection.
+  Failure does not substitute another year, provider, product or paid service.
+- To disconnect, stop the operator and remove only its private credential using
+  the owner's normal credential-management process. Revoke Earth Engine access
+  in the Google account when desired; deleting local credentials is not revocation.
+
+## Verification
+
+Deterministic tests cover bounds, caps, incomplete years, preserved partial
+captures, idempotent job starts, OAuth state/expiry, origin/Host/session checks and
+stored receipts. A real OAuth consent and authenticated raster capture require
+the owner's account and registered project; simulated tests do not prove them.
+
+References: [Google authentication](https://developers.google.com/earth-engine/guides/auth),
+[download request limits](https://developers.google.com/earth-engine/apidocs/ee-image-getdownloadurl),
+[export grids](https://developers.google.com/earth-engine/guides/exporting_images).
