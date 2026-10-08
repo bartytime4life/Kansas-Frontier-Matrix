@@ -1,9 +1,10 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runbooks/fauna/sensitive-occurrence-review
 title: Fauna — Sensitive Occurrence Review Runbook
-type: runbook; review-procedure; domain-lane; sensitive-domain; non-authoritative
-version: v0.1
-prior_version: inventory-generated proposed scaffold
+type: runbook
+classification: review-procedure; domain-lane; sensitive-domain; non-authoritative
+version: v0.2
+prior_version: v0.1 repository-grounded runbook
 status: draft; repository-grounded; fixture-first; manual-review-handoff; live-policy-and-public-release-held; non-publisher
 owners:
   - "@bartytime4life — verified GitHub review route only"
@@ -13,7 +14,7 @@ owner_status: >-
   and independent-review assignments remain NEEDS VERIFICATION; CODEOWNERS
   routing does not create those authorities.
 created: 2026-08-24
-updated: 2026-08-24
+updated: 2026-10-08
 policy_label: restricted-review; fauna; sensitive-occurrence; geoprivacy; fail-closed; no-live-source; no-release-authority; no-publication-authority
 current_path: docs/runbooks/fauna/SENSITIVE_OCCURRENCE_REVIEW.md
 owning_root: docs/
@@ -30,6 +31,7 @@ authority_class: explanatory operational documentation
 canonical_relationship: same-path completion of an existing tracked scaffold; no sibling authority created
 path_posture: PLACE
 prepared_under_prompt: KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0
+documentation_refresh: main@ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe on 2026-10-08; original evidence_snapshot retained below
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
@@ -101,6 +103,49 @@ notes:
 <a id="top"></a>
 
 # Fauna — Sensitive Occurrence Review Runbook
+
+## Operator quick start — source review 2026-10-08
+
+This section was rechecked against `main@ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe`. The metadata's original evidence snapshot and the detailed procedure below retain the v0.1 authoring history. The current inspection confirms that the public/restricted sibling schemas remain permissive and the rare-species policy remains a no-op draft; no production clearance is inferred.
+
+### First safe result
+
+Begin with the checked-in synthetic fixture family, using an isolated environment with the repository's declared test dependencies. From the repository root:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python tools/validators/domains/fauna/occurrence/validate_occurrence_evidence.py \
+  --fixtures
+
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 \
+  python -m unittest discover \
+  --start-directory tests/domains/fauna \
+  --pattern 'test_occurrence_evidence.py' \
+  --verbose
+```
+
+These commands are the [validator guide's](../../../tools/validators/domains/fauna/occurrence/README.md) existing no-network entry points. This documentation update verifies their source, not a fresh execution result. Record the exact tested revision, dependencies and command outcome when running them.
+
+A fixture replay result concerns exact expected fixture findings. A validator `PASS` concerns the bounded draft declaration; it does not authorize a sensitive real occurrence or transform. A candidate's own `quarantine` disposition can be internally consistent and still require a hold.
+
+### Triage without exposing the record
+
+| Situation | Next action |
+|---|---|
+| Missing dependency or unreadable fixture | Record environment/input failure and repair that prerequisite; do not call the scientific candidate invalid. |
+| Machine-shape or identity finding | Keep the original input; correct the candidate through its owning process and replay the relevant check. |
+| Unresolved rights, sensitivity or reviewer authority | Retain HOLD and identify the missing evidence or accountable role. |
+| Exact location withheld by the source | Preserve that restriction; do not derive or publish a near-exact substitute. |
+| A proposed public output depends on the permissive sibling schema or no-op policy | Stop before public release; a green parser cannot provide the missing protection. |
+| A public handoff needs a result | Share the opaque candidate reference, tested profile, finite outcome and safe reason codes; omit protected values. |
+
+### Ready-to-review packet
+
+Record candidate identity and digest, repository pin, source role, schema/profile, validation scope, evidence-closure state, rights/sensitivity labels, unresolved review, and the next owning action. Keep the restricted source location and transformation details in authorized storage. A complete packet is a review handoff, not a ReleaseManifest or permission to publish.
+
+Revisit this quick start when the validator interface, fixture manifest, public/restricted schemas, sensitivity policy or accountable review path changes.
+
+
 
 > **Review a potentially sensitive Fauna occurrence without exposing protected location detail, inventing a safe transform, or converting a fixture pass into policy or release authority.** The maximum result of this procedure is a bounded, public-safe review handoff.
 

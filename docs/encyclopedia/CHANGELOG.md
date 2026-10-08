@@ -7,7 +7,7 @@ status: active; repository-grounded; non-authoritative; no-publication
 owners:
   - "@bartytime4life via the current CODEOWNERS review route"
 created: 2026-05-15
-updated: 2026-08-14
+updated: 2026-10-08
 policy_label: public; planning-reference
 owning_root: docs/
 responsibility: >-
@@ -24,7 +24,17 @@ related:
 tags: [kfm, encyclopedia, changelog, lineage, scaffold, migration]
 notes:
   - "This changelog records repository documentation history. It is not a ReleaseManifest, CorrectionNotice, proof, or publication ledger."
+truth_posture: CONFIRMED documentation inventory; PROPOSED draft guidance; formal acceptance and publication remain unverified.
 [/KFM_META_BLOCK_V2] -->
+
+## 2026-10-08 — Substantive draft reference edition
+
+- Replaced sixteen one-line structural placeholders and the settlements/infrastructure scaffold with original source-grounded reference drafts.
+- Added useful reading routes, domain and feature matrices, a source ledger method, operator actions, cross-domain limits, sensitivity guidance and validation criteria.
+- Updated chapter navigation while preserving prior history, filenames and duplicate ordinal compatibility.
+- Retained the reserved assembly target, source-PDF carrier uncertainty, proposed ADR-0036 and formal placement hold.
+- Grounded implementation descriptions in `main@ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe`; no runtime behavior or governed decision changed.
+
 
 <a id="top"></a>
 

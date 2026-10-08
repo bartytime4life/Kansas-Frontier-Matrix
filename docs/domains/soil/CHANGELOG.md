@@ -2,13 +2,13 @@
 doc_id: kfm://doc/domains/soil/changelog
 title: Soil - Documentation Changelog
 type: domain-changelog
-version: v1.0
+version: v1.1
 status: active; append-only-summary
 owners:
   - OWNER_TBD - Soil domain steward
   - OWNER_TBD - Documentation steward
 created: 2026-05-19
-updated: 2026-08-28
+updated: 2026-10-08
 policy_label: public
 owning_root: docs/
 responsibility: Human summary of material Soil documentation changes; not a receipt, proof, release log, or Git history replacement
@@ -30,6 +30,7 @@ families.
 
 | Date | Version | Change | Evidence and limits |
 |---|---|---|---|
+| 2026-10-08 | `v1.1` | Replaced thin source, glossary, cross-lane, completion, expansion, placement, map/UI, preservation and release guides; expanded catalog-closure guidance and reconciled README navigation | Inspected source at `ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe`; retained historical snapshots and separated fixture declarations, Site context, admission, evidence resolution and release; no runtime or governance transition |
 | 2026-08-28 | `v1.0` | Replaced the greenfield placeholders for the verification backlog, missing/planned-file register, expansion backlog, and changelog with repository-grounded control surfaces | Pinned to `main@813ef14b1dbe5bd236fc902ce8fc3bb2e8ae7e80`; documentation-only; no source activation, lifecycle mutation, proof, release, deployment, promotion, or publication |
 | 2026-08-03 | `v0.x lineage` | Soil README was replaced with a repository-grounded entry point and three bounded fixture profiles | Preserved as prior document history; later Soil profiles require a new exact-main reconciliation |
 | 2026-05-19 | `greenfield lineage` | Initial Soil document family and placeholders were established from planning sources | Design lineage only; did not establish implementation |

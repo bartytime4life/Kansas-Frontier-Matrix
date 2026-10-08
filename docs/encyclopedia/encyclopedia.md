@@ -7,7 +7,7 @@ status: proposed; placeholder; generated-target-hold; non-authoritative; no-publ
 owners:
   - "@bartytime4life via the current CODEOWNERS review route"
 created: 2026-05-15
-updated: 2026-08-14
+updated: 2026-10-08
 policy_label: public; planning-reference
 owning_root: docs/
 responsibility: >-
@@ -26,7 +26,12 @@ related:
 tags: [kfm, encyclopedia, generated, placeholder, hold]
 notes:
   - "Do not hand-edit this path into a manuscript. ADR-0036 is proposed and no deterministic assembler is established."
+truth_posture: CONFIRMED documentation inventory; PROPOSED draft guidance; formal acceptance and publication remain unverified.
 [/KFM_META_BLOCK_V2] -->
+
+## Draft reading route — 2026-10-08
+
+The [chapter index](INDEX.md) now links seventeen substantive draft reference chapters. Read them individually while the assembly relationship remains unresolved. This file remains a reserved assembly target and contains no generated whole-book text. Draft authoring does not establish deterministic generation, parity, accepted carrier placement or publication.
 
 <a id="top"></a>
 

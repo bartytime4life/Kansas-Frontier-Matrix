@@ -8,7 +8,7 @@ owners:
   - "@bartytime4life"
 owner_status: "Verified GitHub review route only; no independent stewardship assignment, approval, canonicalization, source admission, release authority, or separation of duties is implied."
 created: 2026-05-08
-updated: 2026-09-27
+updated: 2026-10-08
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "Provide the human-facing landing page for exploratory documentation intake, source-map lineage, packet triage, carry-forward material, canonicalization guidance, and promotion-packet routing without becoming a source, contract, schema, policy, evidence, release, or publication authority."
@@ -51,6 +51,10 @@ notes:
   - "IDEA_INTAKE.md currently overlaps in title and purpose with NEW_IDEAS_INDEX.md and new-ideas-register.md; this README records the conflict without resolving it."
   - "triage-rules.md, promotion-criteria.md, and cards/README.md remain placeholder scaffolds and are not upgraded by this README."
 [/KFM_META_BLOCK_V2] -->
+
+## Usable intake guidance — 2026-10-08
+
+The [triage rules](triage-rules.md) and [card guide](cards/README.md) now provide substantive draft review procedures. The existing [promotion criteria](promotion-criteria.md) was already a detailed guide at the inspected base. Older inventory statements below that call those three files placeholders are historical and superseded by this readback. Intake classification and human documentation review do not themselves admit a source or promote/release lifecycle data.
 
 <a id="top"></a>
 <a id="-documentation-intake--docsintake"></a>

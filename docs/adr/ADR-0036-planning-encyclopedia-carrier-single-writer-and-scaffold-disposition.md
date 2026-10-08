@@ -8,7 +8,7 @@ effective_decision_status: proposed
 owners:
   - "@bartytime4life via the current CODEOWNERS review route"
 created: 2026-08-14
-updated: 2026-09-14
+updated: 2026-10-08
 policy_label: public
 owning_root: docs/
 responsibility: >-
@@ -70,8 +70,12 @@ superseded_by: []
 notes:
   - "This record is proposed. Filing, merging, indexing, or validating it does not accept the decision or authorize dependent migration."
   - "The source manuscript is the 82-page Kansas Frontier Matrix Domain and Capability Encyclopedia v0.1, SHA-256 cc899a7a57cbadb5870709be07d9b0dbfd01712cd794d63dc4d640485970419a, as recorded by docs/KFM-encyclopedia.md."
-  - "The current docs/encyclopedia tree is a scaffold: seven direct children, seventeen chapter files, sixteen generic placeholders, and one bounded settlements/infrastructure scaffold."
+  - "At the earlier v1.1 checkpoint, the docs/encyclopedia tree contained seven direct children, seventeen chapter files, sixteen generic placeholders, and one bounded settlements/infrastructure scaffold. The 2026-10-08 checkpoint records the new draft contents."
 [/KFM_META_BLOCK_V2] -->
+
+## Draft-authoring checkpoint — 2026-10-08
+
+The existing seventeen chapter paths have been populated with original, non-authoritative reference drafts in response to the documentation-enrichment request. See the [current chapter index](../encyclopedia/INDEX.md). This is a draft-content checkpoint, not acceptance of this ADR or its canonical carrier, writer, generation, migration or publication decision. The evidence inventory below records the earlier snapshot and is retained for lineage; its empty-chapter count is no longer a description of the new draft contents. Source-PDF placement, deterministic assembly and formal lane acceptance remain unresolved.
 
 <a id="top"></a>
 
