@@ -2,7 +2,7 @@
 doc_id: kfm://doc/root-readme
 title: Kansas Frontier Matrix — Project Home
 type: repository-readme
-version: v3.3.0
+version: v3.4.0
 status: repository-grounded draft
 owners: ["@bartytime4life"]
 created: 2026-05-11
@@ -15,7 +15,7 @@ truth_posture: cite-or-abstain; implementation claims require pinned repository 
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 347158aa3f19ac24fd2d0fd2fad9de7342d4a8f2
+  base_commit: 7d79ce10ace694e3bedb5e1a01b96bd479759577
 related:
   - docs/doctrine/directory-rules.md
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
@@ -25,12 +25,12 @@ related:
   - docs/doctrine/truth-posture.md
   - CONTRIBUTING.md
   - SECURITY.md
-  - .github/README.md
   - docs/runbooks/local-pc-data-store.md
   - apps/site/README.md
   - docs/brand/readme/README.md
 notes:
-  - "v3.3.0 is a visitor-first showcase refresh: illustrated feature tour, time-depth and source-lane graphics, and a build-status summary. Feature descriptions are drawn from the linked Site guides at the evidence commit; they do not add runtime, admission, release, or publication claims."
+  - "v3.4.0 adds an animated Explorer walkthrough, Focus Mode gate trace, layer stack, capability board built from apps/site/source/app/site-features.ts, trust-membrane diagram, by-the-numbers row, four more feature cards, guided explorations, an FAQ, theme-aware dark variants and section dividers. All figures are counted from the repository at the evidence commit; all artwork stays illustrative."
+  - "v3.3.0 was a visitor-first showcase refresh: illustrated feature tour, time-depth and source-lane graphics, and a build-status summary. Feature descriptions are drawn from the linked Site guides at the evidence commit; they do not add runtime, admission, release, or publication claims."
   - "All imagery under docs/brand/readme/ is illustrative artwork, not screenshots, map products, or data displays. Animations are slow, decorative-only, and stop under prefers-reduced-motion."
   - "The current standalone Site mirror, saved version, source parity and validation are pinned by apps/site/README.md and its linked delivery receipts. Private D1/R2 records remain excluded."
   - "The repository maturity table under Current posture remains a historical snapshot bounded to main@6c5be18cf8448654be95a6db688d98546cd5276e and the runs named in each row."
@@ -39,7 +39,7 @@ notes:
 [/KFM_META_BLOCK_V2] -->
 
 <p align="center">
-  <a href="#take-the-tour"><img src="docs/brand/readme/kfm-hero.svg" alt="Kansas Frontier Matrix — Place. Time. Evidence. An illustrated Kansas outline with flowing rivers, observation points and a time sweep from 1800 to today." width="100%" /></a>
+  <a href="#see-it-in-action"><img src="docs/brand/readme/kfm-hero.svg" alt="Kansas Frontier Matrix — Place. Time. Evidence. An illustrated Kansas outline with flowing rivers, observation points and a time sweep from 1800 to today." width="100%" /></a>
 </p>
 
 # Kansas Frontier Matrix
@@ -50,24 +50,50 @@ notes:
 </p>
 
 <p align="center">
-  <a href="#take-the-tour"><img src="https://img.shields.io/badge/Tour-6%20Explorer%20workspaces-2f6f4e?style=for-the-badge" alt="Take the feature tour" /></a>
-  <a href="#where-the-data-comes-from"><img src="https://img.shields.io/badge/Sources-7%20themes%20%C2%B7%20104%20connector%20lanes-1f3a66?style=for-the-badge" alt="Seven data themes and 104 connector lanes" /></a>
+  <a href="#see-it-in-action"><img src="https://img.shields.io/badge/Watch-60--second%20walkthrough-0b1f3a?style=for-the-badge" alt="Watch the walkthrough" /></a>
+  <a href="#take-the-tour"><img src="https://img.shields.io/badge/Tour-10%20workspaces-2f6f4e?style=for-the-badge" alt="Take the tour of ten workspaces" /></a>
+  <a href="#where-the-data-comes-from"><img src="https://img.shields.io/badge/Sources-7%20themes%20%C2%B7%20104%20lanes-1f3a66?style=for-the-badge" alt="Seven data themes and 104 connector lanes" /></a>
   <a href="#travel-through-time"><img src="https://img.shields.io/badge/Time%20depth-1800%20%E2%86%92%20today-8e5a2a?style=for-the-badge" alt="Time depth from 1800 to today" /></a>
-  <a href="#build-status-at-a-glance"><img src="https://img.shields.io/badge/Status-active%20build-b7791f?style=for-the-badge" alt="Active build" /></a>
 </p>
 
 <p align="center">
-  <a href="#try-it-yourself">Run it yourself</a> ·
+  <a href="#build-status-at-a-glance"><img src="https://img.shields.io/badge/status-active%20build-b7791f?style=flat-square" alt="Status: active build" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-3b7a57?style=flat-square" alt="License: Apache-2.0" /></a>
+  <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-4a6fa5?style=flat-square" alt="Pull requests welcome" /></a>
+  <a href="CITATION.cff"><img src="https://img.shields.io/badge/cite-CITATION.cff-8e5a2a?style=flat-square" alt="Citation metadata" /></a>
+</p>
+
+<p align="center">
+  <a href="#try-it-yourself"><b>Run it yourself</b></a> ·
+  <a href="#things-to-try">Things to try</a> ·
   <a href="https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site">Explorer (private preview)</a> ·
   <a href="apps/site/README.md">Explorer source</a> ·
-  <a href="CONTRIBUTING.md">Contribute</a> ·
-  <a href="SECURITY.md">Security</a>
+  <a href="#faq">FAQ</a> ·
+  <a href="CONTRIBUTING.md">Contribute</a>
 </p>
 
 > [!NOTE]
-> **KFM is an active build, and this page says so plainly.** The Explorer is real, runs locally, and connects to real public providers today — but it is currently an owner-only preview, its live layers are labelled *external context*, and nothing on the map is yet a released KFM dataset. See [Build status at a glance](#build-status-at-a-glance) for exactly what works now and what is still ahead.
+> **KFM is an active build, and this page says so plainly.** The Explorer is real, runs locally, and connects to real public providers today — but it is currently an owner-only preview, its live layers are labelled *external context*, and nothing on the map is yet a released KFM dataset. See [Build status at a glance](#build-status-at-a-glance) for exactly what works now and what is still ahead. Every picture on this page is an **illustration**, not a screenshot.
 
-**Jump to:** [Why KFM](#why-kfm) · [Tour](#take-the-tour) · [Time depth](#travel-through-time) · [Data sources](#where-the-data-comes-from) · [Trust path](#how-kfm-protects-meaning) · [Status](#build-status-at-a-glance) · [Run it](#try-it-yourself) · [North star](#a-finished-kfm-with-a-science-pack) · [Contribute](#contributing)
+<p align="center">
+  <img src="docs/brand/readme/kfm-divider.svg" alt="" width="100%" />
+</p>
+
+## See it in action
+
+From a place to a shareable, evidence-bounded result in eight moves. The walkthrough below loops through the journey the Explorer is built around.
+
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-explorer-walkthrough-dark.svg" /><img src="docs/brand/readme/kfm-explorer-walkthrough.svg" alt="Animated illustration of the KFM Explorer: open the map, frame an area, switch on layers, move the time control, inspect a stream gauge, read the Evidence Drawer, make a report draft from the map, and copy a share link." width="100%" /></picture>
+</p>
+
+| <kbd>1</kbd> Map | <kbd>2</kbd> Area | <kbd>3</kbd> Layers | <kbd>4</kbd> Time | <kbd>5</kbd> Inspect | <kbd>6</kbd> Evidence | <kbd>7</kbd> Report | <kbd>8</kbd> Share |
+|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+| Open on real county and water sources | Frame a place and choose **Show this area** | Turn on gauges, radar, geology, roads… | Sweep from 1800 or step through an archive | Click a gauge, quake or log interval | See source, clocks, role and limits | **New from map** builds a draft | Share the view, protected detail withheld |
+
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-by-the-numbers-dark.svg" /><img src="docs/brand/readme/kfm-by-the-numbers.svg" alt="By the numbers: 23 Explorer features in the Site registry; 104 connector lanes; 314,844 water-well records and 6,598 core locations in Underground 3D; 105 Kansas counties; 1800, the first year on the map clock." width="100%" /></picture>
+</p>
 
 ## Why KFM
 
@@ -85,49 +111,168 @@ Kansas is a landscape of layered stories — rivers that moved, prairies that be
 
 KFM's public value is not a bigger pile of layers. It is a more trustworthy path from **question → place and time → evidence → bounded answer**.
 
+<p align="center">
+  <img src="docs/brand/readme/kfm-divider.svg" alt="" width="100%" />
+</p>
+
 ## Take the tour
 
-The KFM Explorer is a MapLibre-based web app (source in [`apps/site/`](apps/site/README.md)). These six workspaces exist in the source today. The pictures below are **illustrations** of each workspace, not screenshots — follow the links for the real behavior, tests and limits.
+The KFM Explorer is a MapLibre-based web app (source in [`apps/site/`](apps/site/README.md)). These ten workspaces exist in the source today. Each picture is an **illustration** of the workspace, not a screenshot — follow the links for the real behavior, tests and limits.
 
 <table>
   <tr>
     <td width="50%" valign="top">
-      <a href="apps/site/source/docs/water-flow-paths.md"><img src="docs/brand/readme/kfm-feature-river-pulse.svg" alt="Illustration of River Pulse: Kansas rivers with pulsing stream-gauge points and a discharge chart that keeps a data gap visible." width="100%" /></a>
+      <a href="apps/site/source/docs/water-flow-paths.md"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-feature-river-pulse-dark.svg" /><img src="docs/brand/readme/kfm-feature-river-pulse.svg" alt="Illustration of River Pulse: Kansas rivers with pulsing stream-gauge points and a discharge chart that keeps a data gap visible." width="100%" /></picture></a>
       <p><strong>🌊 River Pulse</strong> — Live USGS discharge from Kansas stream gauges, replayed frame by frame, with 7-day, 30-day and 1-year station histories. NOAA river forecasts, National Water Model guidance and hydrography sit alongside as clearly separate roles. Gaps in a hydrograph stay gaps.<br/><sub><a href="apps/site/source/docs/water-flow-paths.md">Water guide</a> · <a href="apps/site/source/README.md#river-pulse-and-temporal-hydrology">River Pulse details</a></sub></p>
     </td>
     <td width="50%" valign="top">
-      <a href="apps/site/source/README.md#date-bound-event-observatory"><img src="docs/brand/readme/kfm-feature-observatory.svg" alt="Illustration of the Event Observatory: radar echoes crossing Kansas while a playhead moves along an hourly timeline from 1995." width="100%" /></a>
+      <a href="apps/site/source/README.md#date-bound-event-observatory"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-feature-observatory-dark.svg" /><img src="docs/brand/readme/kfm-feature-observatory.svg" alt="Illustration of the Event Observatory: radar echoes crossing Kansas while a playhead moves along an hourly timeline from 1995." width="100%" /></picture></a>
       <p><strong>⛈️ Event Observatory</strong> — Pick a date and replay it: archived NOAA radar mosaics back to 1995, HMS smoke polygons from 2005, USGS earthquakes, daily satellite backgrounds and streamflow — in 1, 6 or 24-hour steps with Central/UTC labels and a reduced-motion mode.<br/><sub><a href="apps/site/source/README.md#date-bound-event-observatory">Observatory details</a> · <a href="apps/site/source/docs/smoke-imagery-bridges.md">Smoke &amp; imagery</a></sub></p>
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
-      <a href="apps/site/source/docs/underground-explorer.md"><img src="docs/brand/readme/kfm-feature-underground.svg" alt="Illustration of the Underground 3D cutaway: a block of strata with recorded well columns on its cut faces and a moving slice plane." width="100%" /></a>
+      <a href="apps/site/source/docs/underground-explorer.md"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-feature-underground-dark.svg" /><img src="docs/brand/readme/kfm-feature-underground.svg" alt="Illustration of the Underground 3D cutaway: a block of strata with recorded well columns on its cut faces and a moving slice plane." width="100%" /></picture></a>
       <p><strong>⛏️ Underground 3D</strong> — Frame an area, then orbit a 3D cutaway of recorded water-well logs and cores from the Kansas Geological Survey: 314,844 mapped WWC5 records and 6,598 core locations, aquifer ranges, geophysical profiles and soil horizons. Only recorded columns are drawn — no geology is invented between them.<br/><sub><a href="apps/site/source/docs/underground-explorer.md">Underground guide</a> · <a href="apps/site/source/docs/subsurface-data.md">Subsurface data</a></sub></p>
     </td>
     <td width="50%" valign="top">
-      <a href="apps/site/source/README.md#official-kansas-context-adapters"><img src="docs/brand/readme/kfm-feature-evidence-drawer.svg" alt="Illustration of the Evidence Drawer listing source, observed time, retrieved time, role and limits for a selected map point." width="100%" /></a>
+      <a href="apps/site/source/README.md#official-kansas-context-adapters"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-feature-evidence-drawer-dark.svg" /><img src="docs/brand/readme/kfm-feature-evidence-drawer.svg" alt="Illustration of the Evidence Drawer listing source, observed time, retrieved time, role and limits for a selected map point." width="100%" /></picture></a>
       <p><strong>🧾 Evidence Drawer</strong> — Select a gauge, quake, fire detection or log interval and the drawer shows where it came from, when it was observed and retrieved, what role it plays, and what it cannot tell you. Live provider data is labelled <code>EXTERNAL_CONTEXT_ONLY</code> until it passes admission.<br/><sub><a href="docs/brand/evidence-drawer-microcopy.md">Drawer language</a> · <a href="apps/site/source/README.md#official-kansas-context-adapters">Context adapters</a></sub></p>
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
-      <a href="apps/site/source/docs/history-comparison.md"><img src="docs/brand/readme/kfm-feature-history.svg" alt="Illustration of history comparison: a swipe divider comparing a 1985 landscape with 2024." width="100%" /></a>
+      <a href="apps/site/source/docs/history-comparison.md"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-feature-history-dark.svg" /><img src="docs/brand/readme/kfm-feature-history.svg" alt="Illustration of history comparison: a swipe divider comparing a 1985 landscape with 2024." width="100%" /></picture></a>
       <p><strong>🕰️ Kansas through time</strong> — Sweep any year from 1800, step event by event, accumulate or A/B-compare. Prepare same-product Landsat 4/5/7/8/9 imagery, PRISM climate back to 1895, and annual land-cover and crop layers. Unavailable years stay unavailable; nothing is substituted.<br/><sub><a href="apps/site/source/docs/history-comparison.md">History comparison</a> · <a href="apps/site/source/README.md#temporal-sweep">Temporal sweep</a></sub></p>
     </td>
     <td width="50%" valign="top">
-      <a href="apps/site/source/README.md#nasa-smap-soil-moisture-display--september-29-2026"><img src="docs/brand/readme/kfm-feature-atmosphere.svg" alt="Illustration of sky-to-soil context: soil-moisture cells and drifting wind wisps over Kansas." width="100%" /></a>
+      <a href="apps/site/source/README.md#nasa-smap-soil-moisture-display--september-29-2026"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-feature-atmosphere-dark.svg" /><img src="docs/brand/readme/kfm-feature-atmosphere.svg" alt="Illustration of sky-to-soil context: soil-moisture cells and drifting wind wisps over Kansas." width="100%" /></picture></a>
       <p><strong>🌾 Sky to soil</strong> — NASA SMAP surface and root-zone soil moisture with uncertainty views (daily since 2015), GFS forecast wind flow, NOAA-20 thermal detections, smoke, NWS alerts and radar loops. Illustrative motion is labelled as such; color is never presented as a sensor reading.<br/><sub><a href="apps/site/source/README.md#nasa-smap-soil-moisture-display--september-29-2026">Soil moisture</a> · <a href="apps/site/source/docs/EARTH_ENGINE_DISCOVERY.md">Earth Engine discovery</a></sub></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="apps/site/source/docs/kansas-reference-layers.md"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-feature-roads-rail-dark.svg" /><img src="docs/brand/readme/kfm-feature-roads-rail.svg" alt="Illustration of roads, rail and bridges: a 1918-style road network drawing itself over today's grid while a train moves along a railroad line." width="100%" /></picture></a>
+      <p><strong>🛤️ Roads, rail &amp; bridges</strong> — Lay KDOT's georeferenced 1918 State Highway Commission map over today's public roads, with active and abandoned railroad references and state, local, historic and closed bridges — each with its own opacity and scale guidance.<br/><sub><a href="apps/site/source/docs/kansas-reference-layers.md">Reference layers</a> · <a href="docs/encyclopedia/chapters/11-settlements-infrastructure.md">Settlements &amp; infrastructure</a></sub></p>
+    </td>
+    <td width="50%" valign="top">
+      <a href="apps/site/source/docs/lightning-flash-loop.md"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-feature-hazards-dark.svg" /><img src="docs/brand/readme/kfm-feature-hazards.svg" alt="Illustration of hazards: declared counties glowing, flood-zone bands along rivers and flickering lightning-density cells." width="100%" /></picture></a>
+      <p><strong>⚡ Hazards &amp; disasters</strong> — FEMA disaster declarations by county, NFHL flood-zone imagery, NOAA 15-minute lightning density and NASA's 1995–2014 flash-rate climatology. A county designation is never drawn as an impact footprint, and no empty layer is an all-clear.<br/><sub><a href="apps/site/source/docs/lightning-flash-loop.md">Lightning loop</a> · <a href="apps/site/source/docs/kansas-reference-layers.md">Reference layers</a></sub></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="apps/site/source/docs/kansas-reference-layers.md"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-feature-survey-dark.svg" /><img src="docs/brand/readme/kfm-feature-survey.svg" alt="Illustration of survey records: a 36-section PLSS township numbered from the northeast corner with one section highlighted." width="100%" /></picture></a>
+      <p><strong>📐 Survey &amp; land records</strong> — Compare BLM Public Land Survey townships, sections and intersected survey at the right scales, inspect identifiers at the map center, and view direct-match oil and gas lease cases. Survey reference — never parcels, title or access.<br/><sub><a href="apps/site/source/docs/kansas-reference-layers.md">Reference layers</a></sub></p>
+    </td>
+    <td width="50%" valign="top">
+      <a href="apps/site/source/docs/map-research-tools.md"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-feature-reports-dark.svg" /><img src="docs/brand/readme/kfm-feature-reports.svg" alt="Illustration of reports and stories: the current map view fanning out into a report draft, a guided story and a saved workspace." width="100%" /></picture></a>
+      <p><strong>📝 Reports &amp; stories</strong> — <b>New from map</b> carries the current extent or selection, visible layers, time, representation and evidence posture into a report or guided story. Pinned place dossiers and saved workspaces stay on your device.<br/><sub><a href="apps/site/source/docs/map-research-tools.md">Research tools</a> · <a href="apps/site/source/README.md#current-public-scope">Public scope</a></sub></p>
     </td>
   </tr>
 </table>
 
-**Also in the Explorer:** a layer catalog with search and filters, pinned place dossiers, saved views, reports and guided stories built from the current map (“New from map”), an Earth Engine catalog with downloadable Kansas recipes, a private data-contribution and steward-review workflow, 2D / terrain / globe representations with natural and topographic 3D relief, and an opt-in **local** Qwen companion that reads only a bounded diagnostic context and never becomes a source of evidence. See the [feature matrix](docs/encyclopedia/chapters/09-master-feature-matrix.md) and [map research tools](apps/site/source/docs/map-research-tools.md).
+**Also in the Explorer:** a searchable layer catalog, a priority context deck, pinned place dossiers, an Earth Engine catalog with downloadable Kansas recipes, a private data-contribution and steward-review desk, 2D / Terrain 3D / Globe representations with natural and topographic relief and mapped 3D buildings, and an opt-in **local** Qwen companion that reads only a bounded context and never becomes a source of evidence. See the [feature matrix](docs/encyclopedia/chapters/09-master-feature-matrix.md) and the [feature, connection and action map](apps/site/source/docs/SITE_FEATURE_CONNECTION_ACTION_MAP.md).
+
+### One place, many layers
+
+Every theme lives on the same map and the same clock. Layers outside the active time step aside rather than pretending to be current, and each keeps its own source, clocks and limits.
+
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-layer-stack-dark.svg" /><img src="docs/brand/readme/kfm-layer-stack.svg" alt="Six stylized Kansas map layers — places and boundaries, water, geology and soils, land cover and crops, live observations, and evidence and limits — separate in perspective and settle back into one map beside a shared clock." width="100%" /></picture>
+</p>
+
+### Ask, and see why
+
+**Focus Mode** answers questions about what you selected — *Explain*, *Why*, *Lineage* or *Time* — but only after six gates have run. The gate trace is shown to you, and every answer ends in exactly one of four finite outcomes.
+
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-focus-mode-dark.svg" /><img src="docs/brand/readme/kfm-focus-mode.svg" alt="Focus Mode illustration: question intents feed a six-gate trace (context identity, temporal closure, evidence resolution, rights and policy, release posture, correction posture), which selects one of four finite outcomes: ANSWER, ABSTAIN, DENY or ERROR." width="100%" /></picture>
+</p>
+
+| Outcome | When it happens | Example code from the Explorer |
+|---|---|---|
+| ✅ **`ANSWER`** | Evidence resolves for the selected place and time | `CITATIONS_VALID` |
+| ⏸️ **`ABSTAIN`** | Support is missing, stale, generalized, superseded — or the time does not match | `TIME_SCOPE_MISMATCH`, `SUPPORT_INSUFFICIENT`, `GEOMETRY_IS_NOT_EVIDENCE` |
+| ⛔ **`DENY`** | Rights, sensitivity or policy forbid public disclosure | `PUBLIC_DISCLOSURE_BLOCKED` |
+| ⚠️ **`ERROR`** | Something failed — and nothing was substituted for it | `ADAPTER_UNAVAILABLE` |
+
+Focus Mode is a **bounded proof** today: it runs against site-local demonstration fixtures ([`focus-mode.ts`](apps/site/source/app/focus-mode.ts)). A model may explain a result only downstream of these gates, and never issues life-safety, regulatory, health or engineering instructions.
+
+## Things to try
+
+Run the Explorer locally ([two commands below](#try-it-yourself)) and try one of these. Labels in **bold** are the controls you'll see.
+
+<details>
+<summary>⛈️ <b>Replay a storm, hour by hour</b></summary>
+
+1. Open the **Event Observatory** (`/observatory`) from the Explorer's navigation.
+2. Pick a date — radar archives reach back to 1995, HMS smoke polygons to 2005.
+3. Choose **1 h** steps, then play. Radar frames, smoke footprints and that day's earthquakes advance together; gaps in coverage stay visible.
+4. Toggle **Central / UTC** labels, or switch on reduced motion to step frame by frame.
+
+[Observatory details →](apps/site/source/README.md#date-bound-event-observatory)
+</details>
+
+<details>
+<summary>⛏️ <b>Look underneath a place</b></summary>
+
+1. Open **Underground** from the map dock. The 2D selector fits Kansas.
+2. Pan and zoom to a place, then choose **Show this area**.
+3. Orbit, move and zoom the cutaway. Click a column to open its original interval in the Evidence Drawer.
+4. Scrub **record time** to see which well and core records existed by a given year, or open **Tools** for specialist views such as the 3D slice of one recorded column.
+
+[Underground guide →](apps/site/source/docs/underground-explorer.md)
+</details>
+
+<details>
+<summary>🛤️ <b>Drive the 1918 highways</b></summary>
+
+1. Open **Map layers** → **Roads, rail &amp; bridges**.
+2. Switch on **Historical roads · 1918**, then today's roads, and lower the opacity of one to compare.
+3. Add active and abandoned railroads and bridges, and read each layer's scale guidance and source limits.
+
+[Reference layers →](apps/site/source/docs/kansas-reference-layers.md)
+</details>
+
+<details>
+<summary>🌾 <b>Watch soil moisture breathe</b></summary>
+
+1. Under **Official sources**, switch on **Soil moisture** (it starts off).
+2. Pick surface (0–5 cm) or root-zone (0–100 cm) — or their uncertainty views.
+3. Play the daily loop, which reaches back to 31 March 2015. Use **Exact image cells** to turn off visual blending.
+
+[Soil moisture details →](apps/site/source/README.md#nasa-smap-soil-moisture-display--september-29-2026)
+</details>
+
+<details>
+<summary>🌊 <b>Follow one river gauge</b></summary>
+
+1. With **USGS River Pulse** on (it's on by default), click a gauge.
+2. Switch between 7-day, 30-day and 1-year views; note the gaps.
+3. Check one UTC day to see every returned observation timestamp for that station.
+
+[Water guide →](apps/site/source/docs/water-flow-paths.md)
+</details>
+
+<details>
+<summary>📝 <b>Turn your view into a report</b></summary>
+
+1. Frame an area and switch on the layers you care about.
+2. Choose **New from map** and pick a report or a guided story.
+3. The draft carries your extent, layers, time and evidence posture — and stays on your device until you decide otherwise.
+
+[Research tools →](apps/site/source/docs/map-research-tools.md)
+</details>
+
+<p align="center">
+  <img src="docs/brand/readme/kfm-divider.svg" alt="" width="100%" />
+</p>
 
 ## Travel through time
 
 <p align="center">
-  <img src="docs/brand/readme/kfm-time-depth.svg" alt="Timeline from 1800 to today: 1800 temporal sweep begins; 1895 PRISM monthly climate; 1934–1996 USGS mine-map editions; 1940 ERA5 reanalysis; 1972 Landsat MSS; 1985 annual land cover; 1995 radar archive replay; 2005 HMS smoke polygons; 2015 SMAP soil moisture; today live streamflow." width="100%" />
+  <picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-time-depth-dark.svg" /><img src="docs/brand/readme/kfm-time-depth.svg" alt="Timeline from 1800 to today: 1800 temporal sweep begins; 1895 PRISM monthly climate; 1934–1996 USGS mine-map editions; 1940 ERA5 reanalysis; 1972 Landsat MSS; 1985 annual land cover; 1995 radar archive replay; 2005 HMS smoke polygons; 2015 SMAP soil moisture; today live streamflow." width="100%" /></picture>
 </p>
 
 Every source has its own reach into the past, and KFM keeps those reaches honest. The shared map clock can step through every calendar year from 1800; individual sources answer only for the periods they actually cover. A provider's first year is not a promise of complete Kansas coverage, uninterrupted observations, or equivalent sensors — the [historical source review](apps/site/source/docs/free-data-history-delivery.md) records each family's real scope and caveats.
@@ -135,7 +280,7 @@ Every source has its own reach into the past, and KFM keeps those reaches honest
 ## Where the data comes from
 
 <p align="center">
-  <img src="docs/brand/readme/kfm-source-lanes.svg" alt="Seven themed clusters of public data providers — water, sky and air, earth and geology, land and agriculture, living things, history and people, built world and hazards — connected to a central evidence gate." width="100%" />
+  <picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-source-lanes-dark.svg" /><img src="docs/brand/readme/kfm-source-lanes.svg" alt="Seven themed clusters of public data providers — water, sky and air, earth and geology, land and agriculture, living things, history and people, built world and hazards — connected to a central evidence gate." width="100%" /></picture>
 </p>
 
 KFM draws on public data from federal, state, university and community sources. They reach KFM in two different ways, and the difference matters:
@@ -165,13 +310,23 @@ Live connections are listed in the Explorer's [official context adapters](apps/s
 > [!WARNING]
 > Exact archaeological, burial, sacred, rare-species, infrastructure, private-land, living-person, DNA/genomic and other harmful-precision details are not assumed to be public-safe. KFM defaults to quarantine, redaction, generalization, staged access, delay, abstention or denial when the required authority is unclear. See the [deny-by-default register](docs/encyclopedia/chapters/13-sensitive-deny-by-default-register.md).
 
+<p align="center">
+  <img src="docs/brand/readme/kfm-divider.svg" alt="" width="100%" />
+</p>
+
 ## How KFM protects meaning
 
 <p align="center">
-  <img src="docs/brand/readme/kfm-trust-path.svg" alt="The trust path: RAW, WORK or QUARANTINE, PROCESSED, CATALOG or TRIPLETS, PUBLISHED, separated by gates. One item reaches PUBLISHED, one is held at quarantine, one ends in ABSTAIN or DENY." width="100%" />
+  <picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-trust-membrane-dark.svg" /><img src="docs/brand/readme/kfm-trust-membrane.svg" alt="The trust membrane: public clients — the Explorer map, reports, exports and AI explanations — read released artifacts and call a Governed API that returns ANSWER, ABSTAIN, DENY or ERROR. Internal stores (RAW, WORK/QUARANTINE, PROCESSED, CATALOG/TRIPLETS, model runtime) stay behind a membrane that refuses direct reads." width="100%" /></picture>
 </p>
 
-A layer earns its way onto a public map. Every source moves through the same lifecycle:
+Public clients never reach into internal stores. Everything they show crosses a **trust membrane** through governed interfaces — and a layer earns its way onto a public map along the trust path below.
+
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-trust-path-dark.svg" /><img src="docs/brand/readme/kfm-trust-path.svg" alt="The trust path: RAW, WORK or QUARANTINE, PROCESSED, CATALOG or TRIPLETS, PUBLISHED, separated by gates. One item reaches PUBLISHED, one is held at quarantine, one ends in ABSTAIN or DENY." width="100%" /></picture>
+</p>
+
+Every source moves through the same lifecycle:
 
 **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLETS → PUBLISHED**
 
@@ -187,7 +342,13 @@ When KFM is asked something, it answers with one of a small set of finite outcom
 
 ## Build status at a glance
 
-A quick, honest read of where things stand at `main@347158aa`. Each row links to the record that carries its exact evidence.
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-capability-board-dark.svg" /><img src="docs/brand/readme/kfm-capability-board.svg" alt="Capability board: all 23 features in the Explorer's site-features registry grouped by declared status — 7 LIVE UI, 12 ACTIVE CONTEXT, 2 BOUNDED PROOF and 2 HELD." width="100%" /></picture>
+</p>
+
+The board above is drawn straight from the Explorer's own [feature registry](apps/site/source/app/site-features.ts). The table below summarizes the wider repository.
+
+A quick, honest read of where things stand at `main@7d79ce10`. Each row links to the record that carries its exact evidence.
 
 | | Capability | Where it stands |
 |---|---|---|
@@ -201,6 +362,10 @@ A quick, honest read of where things stand at `main@347158aa`. Each row links to
 | 🔭 | **Released KFM datasets and Science Pack** | Not yet. Releases, publication and the cross-domain [Science Pack](#a-finished-kfm-with-a-science-pack) are the north star. |
 
 ✅ works today in bounded form · 🟡 partially in place · 🔭 planned. Gaps and next slices are tracked in the [verification backlog](docs/registers/VERIFICATION_BACKLOG.md).
+
+<p align="center">
+  <img src="docs/brand/readme/kfm-divider.svg" alt="" width="100%" />
+</p>
 
 ## Try it yourself
 
@@ -304,6 +469,69 @@ The existing domain lanes, Explorer workspaces, contracts, schemas, policies, fi
 | **Understand evidence and public boundaries** | [Trust Membrane](docs/doctrine/trust-membrane.md), [Truth Posture](docs/doctrine/truth-posture.md), [Lifecycle Law](docs/doctrine/lifecycle-law.md) and [`SECURITY.md`](SECURITY.md). |
 | **Find the machine side** | [`contracts/`](contracts/), [`schemas/`](schemas/), [`policy/`](policy/), [`data/`](data/), [`pipelines/`](pipelines/), [`runtime/`](runtime/) and [`tools/`](tools/). |
 
+## Contributing
+
+<p align="center">
+  <a href="CONTRIBUTING.md"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-contributor-paths-dark.svg" /><img src="docs/brand/readme/kfm-contributor-paths.svg" alt="Six contributor paths — Explorer developer, data engineer, historian and archivist, scientist and ecologist, cartographer and designer, accessibility reviewer — each flowing into a small draft pull request." width="100%" /></picture></a>
+</p>
+
+The best contribution is a small, inspectable improvement that leaves the next step easier and safer — and there is room for many kinds of help: geographers, historians, ecologists, cartographers, accessibility reviewers, data engineers and front-end developers.
+
+1. Read [`CONTRIBUTING.md`](CONTRIBUTING.md), the applicable path-scoped README, and the [Directory Rules](docs/doctrine/directory-rules.md).
+2. Define one observable goal, its owning responsibility root, affected contracts or interfaces, validation, and rollback.
+3. Search for overlapping work and use a feature branch based on the current `main`.
+4. Preserve evidence, rights, sensitivity, time, correction, and release boundaries in code and documentation.
+5. Add focused tests, fixtures, receipts, or docs when they are direct dependencies of the change.
+6. Open a draft pull request with exact base/head evidence, performed and skipped checks, open unknowns, and a clear rollback path.
+
+Good first contributions:
+
+- 🧪 improve an existing validator or negative fixture;
+- ♿ make a trust-visible UI state more accessible;
+- 📍 document one verified path without promoting its maturity;
+- 🔗 close a small contract-to-test gap, or reconcile a stale link, anchor or status claim;
+- 🗂️ add a public-safe, deterministic example with its provenance and limitations.
+
+Please use [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) for community expectations and [`SECURITY.md`](SECURITY.md) for private security reporting. Do not put credentials, restricted geometry, living-person or genomic data, private review material, or sensitive exploit detail into public issues or pull requests.
+
+## FAQ
+
+<details>
+<summary><b>Can I use the Explorer right now?</b></summary>
+
+The hosted Explorer is an owner-only private preview. Anyone can run the same application locally from [`apps/site/`](apps/site/README.md) — see [Try it yourself](#try-it-yourself). Live provider data is fetched at runtime; private review records and uploads are never bundled.
+</details>
+
+<details>
+<summary><b>Is the data on the map official or “released”?</b></summary>
+
+Not yet. Today's map layers come straight from public providers and are labelled `EXTERNAL_CONTEXT_ONLY`: attributed, inspectable context — not a KFM release, an alert or an all-clear. Promotion to a released KFM dataset is a separate, governed decision ([lifecycle law](docs/doctrine/lifecycle-law.md)).
+</details>
+
+<details>
+<summary><b>Why would the map say “ABSTAIN” instead of answering?</b></summary>
+
+Because a confident guess is worse than an honest gap. When evidence is missing, stale, generalized or doesn't match the active time, KFM abstains and shows you which gate held. See [Ask, and see why](#ask-and-see-why).
+</details>
+
+<details>
+<summary><b>Does KFM use AI?</b></summary>
+
+Only downstream of evidence. The Explorer offers an opt-in **local** Qwen companion that runs on your own machine through a loopback bridge and reads a bounded context; the hosted model route is dormant and fails closed. Generated language is interpretation — never evidence, approval or publication. See the [AI build operating contract](docs/doctrine/ai-build-operating-contract.md).
+</details>
+
+<details>
+<summary><b>How are sensitive places protected?</b></summary>
+
+By default. Archaeology, burials, sacred places, rare species, living people, DNA and critical infrastructure are generalized, withheld or denied unless the required authority is clear — see the [deny-by-default register](docs/encyclopedia/chapters/13-sensitive-deny-by-default-register.md). Please never post exact sensitive locations in public issues; use [`SECURITY.md`](SECURITY.md) instead.
+</details>
+
+<details>
+<summary><b>Can I cite KFM or reuse its code?</b></summary>
+
+Yes. The repository is [Apache-2.0](LICENSE), and [`CITATION.cff`](CITATION.cff) gives citation metadata. Data shown in the Explorer stays under each provider's own terms; KFM does not relicense it.
+</details>
+
 ## Current posture
 
 The table below is the detailed maturity snapshot recorded for `main@6c5be18cf8448654be95a6db688d98546cd5276e`. It is historical; [Build status at a glance](#build-status-at-a-glance) gives the current summary, and the [Site checkpoint](apps/site/README.md#current-site-checkpoint) carries the newest Explorer evidence. Execution evidence remains bounded to the exact revisions and runs named in each row.
@@ -338,6 +566,20 @@ Implementation maturity and authority are separate axes. An implemented validato
 ## Repository map
 
 Child READMEs own deeper detail. Directory placement is part of the trust model: read the adopted [Directory Rules decision](docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) and the current [Directory Rules](docs/doctrine/directory-rules.md) before creating a path, reviving a deprecated root, or introducing a parallel authority.
+
+```mermaid
+flowchart LR
+    classDef src fill:#F2E6D2,stroke:#8E5A2A,color:#3A2410
+    classDef gov fill:#FFF8E6,stroke:#9A7A12,color:#3A2E05
+    classDef life fill:#DCE6F2,stroke:#4A6FA5,color:#0E1F3A
+    classDef pub fill:#E5F0E0,stroke:#3B7A57,color:#1B3A24
+    SRC["Public sources"]:::src --> CON["connectors/"]:::src
+    CON --> DATA["data/ lifecycle<br/>RAW → QUARANTINE → PROCESSED"]:::life
+    DATA --> PIPE["pipelines/"]:::life --> CAT["catalog/"]:::life
+    CAT --> REL["release/"]:::pub --> API["apps/governed-api"]:::pub --> APP["apps/site Explorer"]:::pub
+    CTR["contracts/ · schemas/"]:::gov -.-> CON & DATA & API
+    POL["policy/"]:::gov -.-> DATA & REL & API
+```
 
 | Responsibility | Home |
 |---|---|
@@ -400,27 +642,6 @@ make proof-slice
 
 Some Make targets are readiness lanes that exit with a named HOLD (status 3), and the root JavaScript `lint`, `test`, and `build` scripts intentionally report `WORKFLOW_HOLD`. A zero exit status from a marker is not validation evidence; a workflow pass proves only its declared job for its exact revision and inputs. The `explorer-site` workflow validates the standalone Site; other validators retain their own data, policy, MapLibre and Governed API scopes.
 
-## Contributing
-
-The best contribution is a small, inspectable improvement that leaves the next step easier and safer — and there is room for many kinds of help: geographers, historians, ecologists, cartographers, accessibility reviewers, data engineers and front-end developers.
-
-1. Read [`CONTRIBUTING.md`](CONTRIBUTING.md), the applicable path-scoped README, and the [Directory Rules](docs/doctrine/directory-rules.md).
-2. Define one observable goal, its owning responsibility root, affected contracts or interfaces, validation, and rollback.
-3. Search for overlapping work and use a feature branch based on the current `main`.
-4. Preserve evidence, rights, sensitivity, time, correction, and release boundaries in code and documentation.
-5. Add focused tests, fixtures, receipts, or docs when they are direct dependencies of the change.
-6. Open a draft pull request with exact base/head evidence, performed and skipped checks, open unknowns, and a clear rollback path.
-
-Good first contributions:
-
-- 🧪 improve an existing validator or negative fixture;
-- ♿ make a trust-visible UI state more accessible;
-- 📍 document one verified path without promoting its maturity;
-- 🔗 close a small contract-to-test gap, or reconcile a stale link, anchor or status claim;
-- 🗂️ add a public-safe, deterministic example with its provenance and limitations.
-
-Please use [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) for community expectations and [`SECURITY.md`](SECURITY.md) for private security reporting. Do not put credentials, restricted geometry, living-person or genomic data, private review material, or sensitive exploit detail into public issues or pull requests.
-
 ## Governing principles
 
 1. **Evidence outranks fluency.** If required support cannot be resolved, narrow, abstain, deny, hold, or report an error.
@@ -469,10 +690,14 @@ The illustrations on this page are artwork. They show the *kind* of experience e
 | Field | Value |
 |---|---|
 | Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Evidence snapshot | `main@347158aa3f19ac24fd2d0fd2fad9de7342d4a8f2` |
-| Reviewed | Root README, `apps/site/README.md` checkpoint stack, `apps/site/source/README.md` and its feature guides (water, Observatory, underground, history, soil moisture, context adapters), `connectors/` direct-child inventory, `docs/brand/` visual language and palette |
-| Change class | Visitor-first showcase refresh: illustrated feature tour, time-depth and source-lane graphics, trust-path diagram, and build-status summary |
+| Evidence snapshot | `main@7d79ce10ace694e3bedb5e1a01b96bd479759577` |
+| Reviewed | Root README, `apps/site/source/app/site-features.ts` and `focus-mode.ts`, `apps/site/README.md` checkpoint stack, `apps/site/source/README.md` and its feature guides (water, Observatory, underground, history, soil moisture, context adapters), `connectors/` direct-child inventory, `docs/brand/` visual language and palette |
+| Change class | Showcase expansion: animated walkthrough, Focus Mode, layer stack, capability board, trust membrane, by-the-numbers, four more feature cards, guided explorations, FAQ, theme-aware dark variants and dividers |
 | No mutation implied | No source activation, settings change, release, deployment, promotion, publication, or lifecycle transition |
 | Not proved | Hosted runtime health, public availability, complete provider coverage, source admission, scientific validity, rights clearance, human approval, release readiness, or public operation |
 
 Re-review this README when the Explorer audience or checkpoint, repository topology, authority boundaries, validation entry points, or the adopted Directory Rules change.
+
+<p align="center">
+  <a href="#kansas-frontier-matrix"><img src="docs/brand/readme/kfm-footer.svg" alt="Built in the open, for Kansas — an illustrated prairie at dusk with a windmill, a grain elevator and swaying grass." width="100%" /></a>
+</p>

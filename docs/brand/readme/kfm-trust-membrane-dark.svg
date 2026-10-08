@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 500" width="1280" height="500" role="img" aria-labelledby="t d">
+  <title id="t">The KFM trust membrane</title>
+  <desc id="d">Diagram: on the public side, the Explorer map, reports and stories, exports and AI explanations read released public-safe artifacts and call a Governed API that applies policy, evidence and release checks and returns ANSWER, ABSTAIN, DENY or ERROR. A gold membrane separates them from internal stores: RAW, WORK/QUARANTINE, PROCESSED, CATALOG/TRIPLETS and model runtime. An animated green request passes through the API gate and returns; a red direct read of an internal store is refused at the membrane.</desc>
+  <defs>
+    <clipPath id="frame"><rect x="1" y="1" width="1278" height="498" rx="18"/></clipPath>
+    <style>
+      .serif{font-family:Georgia,'Times New Roman',serif}
+      .sans{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
+      .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+      .lbl{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;letter-spacing:2.5px;font-weight:700}
+      .ok{animation:ok 10s cubic-bezier(.45,.05,.3,1) infinite}@keyframes ok{0.00%{transform:translate(264px,341px);opacity:0}14.00%{transform:translate(316px,348px);opacity:1}24.00%{transform:translate(578px,348px);opacity:1}32.00%{transform:translate(680px,348px);opacity:1}42.00%{transform:translate(800px,293px);opacity:1}48.00%{transform:translate(800px,293px);opacity:1}58.00%{transform:translate(680px,348px);opacity:1}66.00%{transform:translate(578px,348px);opacity:1}76.00%{transform:translate(264px,341px);opacity:1}82.00%{transform:translate(264px,341px);opacity:0}100.00%{transform:translate(264px,341px);opacity:0}}
+      .ok2{animation:ok2 10s ease-in-out infinite;animation-delay:-4s}@keyframes ok2{0.00%{transform:translate(560px,208px);opacity:0}10.00%{transform:translate(560px,208px);opacity:1}24.00%{transform:translate(264px,181px);opacity:1}30.00%{transform:translate(264px,181px);opacity:0}100.00%{transform:translate(264px,181px);opacity:0}}
+      .bad{animation:bad 10s cubic-bezier(.5,0,.3,1) infinite}@keyframes bad{0.00%{transform:translate(264px,211px);opacity:0}50.00%{transform:translate(264px,211px);opacity:1}64.00%{transform:translate(656px,211px);opacity:1}74.00%{transform:translate(560px,240px);opacity:1}80.00%{transform:translate(560px,240px);opacity:0}100.00%{transform:translate(560px,240px);opacity:0}}
+      .x{opacity:0;animation:x 10s ease-out infinite}@keyframes x{0%,63.00%{opacity:0}65.00%,84.00%{opacity:1}90.00%,100%{opacity:0}}
+      .mem{animation:mem 3s linear infinite}@keyframes mem{to{stroke-dashoffset:-40}}
+      @media (prefers-reduced-motion: reduce){.ok,.ok2,.bad,.x,.mem{animation:none!important}.ok{transform:translate(560px,348px)}.bad{transform:translate(656px,211px)}.x{opacity:1}}
+    </style>
+  </defs>
+  <g clip-path="url(#frame)">
+    <rect width="1280" height="500" fill="#161B22"/>
+<text x="40" y="48" class="lbl" fill="#DDBB55">THE TRUST MEMBRANE</text><text x="40" y="76" class="sans" font-size="17" fill="#A8C4EA">Public clients only ever cross through governed interfaces. Internal stores stay inside.</text>
+    <rect x="40" y="104" width="560" height="356" rx="16" fill="#0D1117" stroke="#30363D"/><text x="64" y="134" class="sans" font-size="12" font-weight="700" letter-spacing="1.6" fill="#62B487">OUTSIDE · PUBLIC</text>
+    <rect x="760" y="104" width="480" height="356" rx="16" fill="#1E232B" stroke="#30363D"/><text x="784" y="134" class="sans" font-size="12" font-weight="700" letter-spacing="1.6" fill="#D2A06A">INSIDE · GOVERNED</text>
+    <g transform="translate(64,154)"><rect width="200" height="54" rx="12" fill="#16263A" stroke="#7FA9E3" stroke-opacity=".6"/><text x="18" y="34" class="sans" font-size="18">🗺</text><text x="50" y="33" class="sans" font-size="14.5" font-weight="600" fill="#E6EDF3">Explorer map</text></g>
+    <g transform="translate(64,224)"><rect width="200" height="54" rx="12" fill="#16263A" stroke="#7FA9E3" stroke-opacity=".6"/><text x="18" y="34" class="sans" font-size="18">📄</text><text x="50" y="33" class="sans" font-size="14.5" font-weight="600" fill="#E6EDF3">Reports &amp; stories</text></g>
+    <g transform="translate(64,294)"><rect width="200" height="54" rx="12" fill="#16263A" stroke="#7FA9E3" stroke-opacity=".6"/><text x="18" y="34" class="sans" font-size="18">⬇</text><text x="50" y="33" class="sans" font-size="14.5" font-weight="600" fill="#E6EDF3">Exports</text></g>
+    <g transform="translate(64,364)"><rect width="200" height="54" rx="12" fill="#16263A" stroke="#7FA9E3" stroke-opacity=".6"/><text x="18" y="34" class="sans" font-size="18">💬</text><text x="50" y="33" class="sans" font-size="14.5" font-weight="600" fill="#E6EDF3">AI explanations</text></g>
+    <g transform="translate(316,170)"><rect width="262" height="76" rx="12" fill="#17261C" stroke="#62B487"/><text x="18" y="30" class="sans" font-size="14.5" font-weight="700" fill="#9FD3B0">Released public-safe artifacts</text><text x="18" y="52" class="sans" font-size="12.5" fill="#B1BAC4">tiles · manifests · bundles</text></g>
+    <g transform="translate(316,300)"><rect width="262" height="96" rx="12" fill="#0D1117" stroke="#D9B440" stroke-width="2"/><text x="18" y="30" class="sans" font-size="14.5" font-weight="700" fill="#E6EDF3">Governed API</text><text x="18" y="52" class="sans" font-size="12.5" fill="#B1BAC4">policy · evidence · release checks</text><text x="18" y="74" class="mono" font-size="12" fill="#DDBB55">ANSWER · ABSTAIN · DENY · ERROR</text></g>
+    <path d="M680,104 Q670,115 680,126 Q690,137 680,148 Q670,159 680,170 Q690,181 680,192 Q670,203 680,214 Q690,225 680,236 Q670,247 680,258 Q690,269 680,280 Q670,291 680,302 Q690,313 680,324 Q670,335 680,346 Q690,357 680,368 Q670,379 680,390 Q690,401 680,412 Q670,423 680,434 Q690,445 680,456" fill="none" stroke="#D9B440" stroke-width="5" stroke-linecap="round"/>
+    <path class="mem" d="M680,104 Q670,115 680,126 Q690,137 680,148 Q670,159 680,170 Q690,181 680,192 Q670,203 680,214 Q690,225 680,236 Q670,247 680,258 Q690,269 680,280 Q670,291 680,302 Q690,313 680,324 Q670,335 680,346 Q690,357 680,368 Q670,379 680,390 Q690,401 680,412 Q670,423 680,434 Q690,445 680,456" fill="none" stroke="#2E2716" stroke-width="2" stroke-dasharray="6 14"/>
+    <rect x="664" y="320" width="32" height="56" rx="8" fill="#D9B440"/><text x="680" y="353" text-anchor="middle" class="sans" font-size="16" fill="#0B1F3A">⇄</text>
+    <g transform="translate(800,154)"><rect width="400" height="46" rx="10" fill="#0D1117" stroke="#D2A06A" stroke-opacity=".45"/><text x="20" y="29" class="mono" font-size="14" fill="#E6EDF3">RAW</text><text x="380" y="29" text-anchor="end" class="sans" font-size="12" fill="#9198A1">internal</text></g>
+    <g transform="translate(800,212)"><rect width="400" height="46" rx="10" fill="#0D1117" stroke="#D2A06A" stroke-opacity=".45"/><text x="20" y="29" class="mono" font-size="14" fill="#E6EDF3">WORK / QUARANTINE</text><text x="380" y="29" text-anchor="end" class="sans" font-size="12" fill="#9198A1">internal</text></g>
+    <g transform="translate(800,270)"><rect width="400" height="46" rx="10" fill="#0D1117" stroke="#D2A06A" stroke-opacity=".45"/><text x="20" y="29" class="mono" font-size="14" fill="#E6EDF3">PROCESSED</text><text x="380" y="29" text-anchor="end" class="sans" font-size="12" fill="#9198A1">internal</text></g>
+    <g transform="translate(800,328)"><rect width="400" height="46" rx="10" fill="#0D1117" stroke="#D2A06A" stroke-opacity=".45"/><text x="20" y="29" class="mono" font-size="14" fill="#E6EDF3">CATALOG / TRIPLETS</text><text x="380" y="29" text-anchor="end" class="sans" font-size="12" fill="#9198A1">internal</text></g>
+    <g transform="translate(800,386)"><rect width="400" height="46" rx="10" fill="#0D1117" stroke="#D2A06A" stroke-opacity=".45"/><text x="20" y="29" class="mono" font-size="14" fill="#E6EDF3">Model runtime</text><text x="380" y="29" text-anchor="end" class="sans" font-size="12" fill="#9198A1">internal</text></g>
+    <g class="pk ok"><circle r="8" fill="#62B487" stroke="#0D1117" stroke-width="2"/></g>
+    <g class="pk ok2"><circle r="8" fill="#62B487" stroke="#0D1117" stroke-width="2"/></g>
+    <g class="pk bad"><circle r="8" fill="#E27B7B" stroke="#0D1117" stroke-width="2"/></g>
+    <g class="x"><circle cx="668" cy="210" r="13" fill="#E27B7B"/><path d="M662,204 l12,12 M674,204 l-12,12" stroke="#FFFFFE" stroke-width="2.6" stroke-linecap="round"/></g>
+    <text x="40" y="484" class="sans" font-size="12.5" fill="#9198A1">Green: a request crosses through the Governed API and returns a finite, policy-checked result. Red: a direct read of an internal store is refused at the membrane.</text>
+  </g>
+  <rect x="1" y="1" width="1278" height="498" rx="18" fill="none" stroke="#30363D" stroke-width="2"/>
+</svg>

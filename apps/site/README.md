@@ -1,3 +1,19 @@
+<p align="center">
+  <a href="../../README.md#see-it-in-action"><picture><source media="(prefers-color-scheme: dark)" srcset="../../docs/brand/readme/kfm-explorer-walkthrough-dark.svg" /><img src="../../docs/brand/readme/kfm-explorer-walkthrough.svg" alt="Animated illustration of the KFM Explorer: map, area, layers, time, inspect, evidence, report and share." width="100%" /></picture></a>
+</p>
+
+**The KFM Explorer** — a map-first Kansas workbench with live provider context, archive replay back to 1995, an Underground 3D cutaway, an Evidence Drawer on everything, and reports drawn straight from the map. Start with the [illustrated tour](../../README.md#take-the-tour) and [things to try](../../README.md#things-to-try), then use the checkpoints below for exact source, validation and limits.
+
+<details>
+<summary><b>Capability board</b> — all 23 registered features by declared status</summary>
+
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="../../docs/brand/readme/kfm-capability-board-dark.svg" /><img src="../../docs/brand/readme/kfm-capability-board.svg" alt="Capability board: 23 Explorer features grouped as 7 LIVE UI, 12 ACTIVE CONTEXT, 2 BOUNDED PROOF and 2 HELD." width="100%" /></picture>
+</p>
+
+Drawn from [`source/app/site-features.ts`](source/app/site-features.ts). Status is the code's own declaration — not hosted acceptance, source admission or release. Artwork is illustrative; see [README artwork](../../docs/brand/readme/README.md).
+</details>
+
 <a id="current-site-checkpoint"></a>
 
 > **Current Site checkpoint — v173 / 2026-10-07:** the [Kansas selector receipt](../../data/receipts/generated/site-v173-kansas-selector-20261007.json) records private deployment of source `e2e7ba5de69f14ac9d91587a8680b8fd40a4d4d4`. On fresh Underground entry, the 2D selector fits Kansas after its compact layout is ready. The statewide view is a navigation starting point; it does not apply a cutaway or imply statewide data coverage. A deliberate local selection still uses **Show this area**. Switching Underground tools keeps the moved map. Production build, TypeScript and the 17 focused slice/entry tests pass; browser visual acceptance remains unverified.

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 340" width="600" height="340" role="img" aria-labelledby="t d">
+  <title id="t">River Pulse — live streamflow</title>
+  <desc id="d">Illustration of the River Pulse view: stylized Kansas rivers with pulsing stream-gauge points and a 24-hour discharge chart that keeps a missing-data gap visible instead of drawing through it.</desc>
+  <defs>
+    <clipPath id="frame"><rect x="1" y="1" width="598" height="338" rx="18"/></clipPath>
+    <style>
+      .serif{font-family:Georgia,'Times New Roman',serif}
+      .sans{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
+      .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+      .lbl{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;letter-spacing:2.5px;font-weight:700}
+
+      .flow{fill:none;stroke:#161B22;stroke-linecap:round;stroke-dasharray:6 22;animation:flow 2.6s linear infinite}
+      @keyframes flow{to{stroke-dashoffset:-56}}
+      .ring{fill:none;stroke:#7FA9E3;stroke-width:3;transform-box:fill-box;transform-origin:center;opacity:0;animation:ring 4.2s ease-out infinite}
+      @keyframes ring{0%{transform:scale(.5);opacity:.85}100%{transform:scale(3.6);opacity:0}}
+      .hydro{stroke-dasharray:700;stroke-dashoffset:700;animation:draw 9s ease-out infinite;animation-delay:-7s}
+      .h2{animation-name:draw2}
+      @keyframes draw{0%{stroke-dashoffset:700}45%,100%{stroke-dashoffset:0}}
+      @keyframes draw2{0%,45%{stroke-dashoffset:700}75%,100%{stroke-dashoffset:0}}
+      @media (prefers-reduced-motion: reduce){.flow,.ring{animation:none}.hydro{animation:none;stroke-dashoffset:0}}
+    </style>
+  </defs>
+  <g clip-path="url(#frame)">
+    <rect width="600" height="340" fill="#161B22"/>
+    <rect width="600" height="6" fill="#7FA9E3"/>
+    <g transform="translate(28,100) scale(0.52)">
+      <path d="M0,0 H543 L551,10 548,24 558,36 570,48 566,62 580,74 590,84 600,93 V310 H0 Z" fill="#2B2519" stroke="#D2A06A" stroke-width="3.85" stroke-linejoin="round"/>
+      <polyline points="0,201.5 52.3,206.7 84.6,209.8 124.8,222.2 165.1,232.5 197.3,222.2 221.5,211.8 245.6,186 264.2,169.5 289.9,175.7 310.1,186 334.2,200.5 358.4,217 380.1,238.7 390.6,268.7 403.5,310" fill="none" stroke="#7FA9E3" stroke-width="3.85" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.75"/><polyline points="0,113.7 44.3,115.7 84.6,118.8 140.9,120.9 205.4,118.8 253.7,126.1 277.9,129.2 318.1,126.1 357.6,119.9 390.6,108.5 420.4,100.2 441.3,84.7 471.1,90.9 513,98.2 549.3,106.4 575.8,96.1 598.4,92" fill="none" stroke="#7FA9E3" stroke-width="3.85" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.75"/><polyline points="326.2,0 346.3,20.7 358.4,41.3 374.5,56.8 390.6,72.3 406.7,87.8 420.4,100.2" fill="none" stroke="#7FA9E3" stroke-width="2.50" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.75"/><polyline points="414.8,113.7 447,144.7 472.8,165.3 503.4,196.3 527.5,222.2 543.6,248 567.8,284.2 579.9,310" fill="none" stroke="#7FA9E3" stroke-width="2.50" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.75"/><polyline points="124.8,56.8 181.2,56.8 245.6,62 302,72.3 342.3,93 357.6,119.9" fill="none" stroke="#7FA9E3" stroke-width="2.50" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.75"/>
+      <polyline class="flow" points="0,201.5 52.3,206.7 84.6,209.8 124.8,222.2 165.1,232.5 197.3,222.2 221.5,211.8 245.6,186 264.2,169.5 289.9,175.7 310.1,186 334.2,200.5 358.4,217 380.1,238.7 390.6,268.7 403.5,310" stroke-width="4.23"/><polyline class="flow" points="0,113.7 44.3,115.7 84.6,118.8 140.9,120.9 205.4,118.8 253.7,126.1 277.9,129.2 318.1,126.1 357.6,119.9 390.6,108.5 420.4,100.2 441.3,84.7 471.1,90.9 513,98.2 549.3,106.4 575.8,96.1 598.4,92" stroke-width="4.23"/><circle cx="380.1" cy="238.7" r="6.5" fill="#A8C4EA"/><circle class="ring" style="animation-delay:-0.00s" cx="380.1" cy="238.7" r="7.7"/><circle cx="513" cy="98.2" r="6.5" fill="#A8C4EA"/><circle class="ring" style="animation-delay:-0.37s" cx="513" cy="98.2" r="7.7"/><circle cx="163.5" cy="232.5" r="6.5" fill="#A8C4EA"/><circle class="ring" style="animation-delay:-0.74s" cx="163.5" cy="232.5" r="7.7"/><circle cx="357.6" cy="119.9" r="6.5" fill="#A8C4EA"/><circle class="ring" style="animation-delay:-1.11s" cx="357.6" cy="119.9" r="7.7"/><circle cx="441.3" cy="84.7" r="6.5" fill="#A8C4EA"/><circle class="ring" style="animation-delay:-1.48s" cx="441.3" cy="84.7" r="7.7"/><circle cx="472.8" cy="165.3" r="6.5" fill="#A8C4EA"/><circle class="ring" style="animation-delay:-1.85s" cx="472.8" cy="165.3" r="7.7"/><circle cx="265" cy="169.5" r="6.5" fill="#A8C4EA"/><circle class="ring" style="animation-delay:-2.22s" cx="265" cy="169.5" r="7.7"/><circle cx="84.6" cy="118.8" r="6.5" fill="#A8C4EA"/><circle class="ring" style="animation-delay:-2.59s" cx="84.6" cy="118.8" r="7.7"/><circle cx="549.3" cy="106.4" r="6.5" fill="#A8C4EA"/><circle class="ring" style="animation-delay:-2.96s" cx="549.3" cy="106.4" r="7.7"/><circle cx="205.4" cy="118.8" r="6.5" fill="#A8C4EA"/><circle class="ring" style="animation-delay:-3.33s" cx="205.4" cy="118.8" r="7.7"/><circle cx="527.5" cy="222.2" r="6.5" fill="#A8C4EA"/><circle class="ring" style="animation-delay:-3.70s" cx="527.5" cy="222.2" r="7.7"/><circle cx="310.1" cy="186" r="6.5" fill="#A8C4EA"/><circle class="ring" style="animation-delay:-4.07s" cx="310.1" cy="186" r="7.7"/>
+    </g>
+    <g>
+      <rect x="350" y="118" width="232" height="196" rx="10" fill="#0D1117" stroke="#30363D"/>
+      <text x="362" y="140" class="sans" font-size="12" fill="#9198A1">Discharge · selected gauge · 24 h</text>
+      <path d="M360,300 H580" stroke="#30363D"/>
+      <polyline class="hydro" points="360.0,249.7 364.6,253.2 369.2,253.8 373.8,256.8 378.4,260.7 383.0,261.3 387.6,256.8 392.2,253.5 396.8,250.5 401.4,252.9 406.0,252.1 410.6,253.9 415.2,256.8 419.8,260.2 424.4,262.6 429.0,258.1 433.6,254.5 438.2,251.1 442.8,238.8 447.4,232.5 452.0,224.9 456.6,214.3 461.2,202.7 465.8,189.9 470.4,176.8 475.0,187.2 479.6,192.5 484.2,197.2 488.8,203.5 493.4,213.1" fill="none" stroke="#7FA9E3" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+      <polyline class="hydro h2" points="525.6,231.4 530.2,230.3 534.8,226.2 539.4,222.4 544.0,222.0 548.6,222.4 553.2,221.1 557.8,221.4 562.4,224.3 567.0,225.9 571.6,222.4 576.2,226.5 580.8,230.6" fill="none" stroke="#7FA9E3" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+      <rect x="497.4" y="168" width="19.6" height="132" fill="#21262D" stroke="#6E7681" stroke-dasharray="3 3"/>
+      <text x="509.5" y="162" text-anchor="middle" class="sans" font-size="11" fill="#9198A1">gap</text>
+    </g>
+  </g>
+  <rect x="1" y="1" width="598" height="338" rx="18" fill="none" stroke="#30363D" stroke-width="2"/>
+  <text x="28" y="44" class="lbl" fill="#7FA9E3">RIVER PULSE</text>
+  <text x="28" y="72" class="sans" font-size="17" fill="#A8C4EA">Kansas stream gauges, replayed frame by frame</text>
+</svg>
