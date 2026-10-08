@@ -1,0 +1,76 @@
+import { loadMapLibre, type Map as GLMap } from "./maplibre-seam";
+import { surfaceRasterSampling, type SurfaceBounds, type SurfaceCapture } from "./selected-surface";
+
+export type SurfaceDetailFrame = { image: HTMLCanvasElement; bounds: SurfaceBounds; zoom: number };
+const mercator = (lat: number) => Math.log(Math.tan(Math.PI / 4 + lat * Math.PI / 360));
+const latitude = (y: number) => (2 * Math.atan(Math.exp(y)) - Math.PI / 2) * 180 / Math.PI;
+
+/** The requested pixels cover real geographic bounds, never an enlarged locator screenshot. */
+export function surfaceRenderFrame(bounds: SurfaceBounds, pixels = 2048) {
+  const x = (bounds[2] - bounds[0]) / 360, y = (mercator(bounds[3]) - mercator(bounds[1])) / (2 * Math.PI);
+  const width = Math.max(64, Math.round(pixels * Math.min(1, x / y))), height = Math.max(64, Math.round(pixels * Math.min(1, y / x)));
+  return { width, height, center: [(bounds[0] + bounds[2]) / 2, latitude((mercator(bounds[1]) + mercator(bounds[3])) / 2)] as [number, number], zoom: Math.min(22, Math.log2(Math.min(width / x, height / y) / 512)) };
+}
+
+/** Map surface coordinates are linear in Web Mercator, as is the recorded cutaway. */
+export function detailBoundsFromSurface(area: SurfaceBounds, points: readonly { x: number; z: number }[]): SurfaceBounds | null {
+  if (!points.length) return null;
+  const span = (area[2] - area[0]) * Math.PI / 180, mid = (mercator(area[1]) + mercator(area[3])) / 2;
+  const west = Math.max(area[0], area[0] + (Math.min(...points.map(p => p.x)) / 6 + .5) * (area[2] - area[0]));
+  const east = Math.min(area[2], area[0] + (Math.max(...points.map(p => p.x)) / 6 + .5) * (area[2] - area[0]));
+  const south = Math.max(area[1], latitude(mid - Math.max(...points.map(p => p.z)) / 6 * span));
+  const north = Math.min(area[3], latitude(mid - Math.min(...points.map(p => p.z)) / 6 * span));
+  return east > west && north > south ? [west, south, east, north] : null;
+}
+
+/** One bounded, disposable renderer. It refreshes the visible surface only after camera motion settles. */
+export function startCutawaySurfaceDetail(options: {
+  capture: SurfaceCapture; pixels: number; onFrame: (frame: SurfaceDetailFrame) => void; onStatus: (status: string) => void;
+}) {
+  let disposed = false, map: GLMap | null = null, timer: ReturnType<typeof setTimeout> | undefined, timeout: ReturnType<typeof setTimeout> | undefined;
+  let requested = options.capture.bounds, key = "", pending = true, partial = false, ready = false;
+  const container = document.createElement("div");
+  container.setAttribute("aria-hidden", "true"); container.style.cssText = "position:fixed;left:-10000px;top:0;pointer-events:none;contain:strict;";
+  document.body.append(container);
+  const apply = () => {
+    if (disposed || !map || !ready) return;
+    const next = requested.map(n => n.toFixed(6)).join(","); if (next === key) return; key = next;
+    const frame = surfaceRenderFrame(requested, options.pixels);
+    container.style.width = `${frame.width}px`; container.style.height = `${frame.height}px`;
+    pending = true; clearTimeout(timeout);
+    options.onStatus(`Loading surface detail · ${frame.width} × ${frame.height} pixels…`);
+    map.resize(); map.jumpTo({ center: frame.center, zoom: frame.zoom, bearing: 0, pitch: 0 }); map.triggerRepaint();
+    timeout = setTimeout(() => { if (!disposed && pending) options.onStatus("Surface detail is incomplete. Missing tiles are unknown; move or retry the surface."); }, 12000);
+  };
+  options.onStatus("Preparing high-detail surface tiles…");
+  timeout = setTimeout(() => { if (!disposed && pending) options.onStatus("Surface tiles are taking longer to load. Coverage is unconfirmed; retry or choose another basemap."); }, 12000);
+  loadMapLibre().then(lib => {
+    if (disposed) return;
+    lib.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
+    const frame = surfaceRenderFrame(options.capture.bounds, options.pixels);
+    container.style.width = `${frame.width}px`; container.style.height = `${frame.height}px`;
+    const style = JSON.parse(JSON.stringify(options.capture.style));
+    for (const layer of style.layers) if (layer.type === "raster") layer.paint = { ...layer.paint, "raster-fade-duration": 0, "raster-resampling": "nearest" };
+    map = new lib.Map({ container, style, center: frame.center, zoom: frame.zoom, interactive: false, attributionControl: false,
+      pixelRatio: 1, maxTileCacheSize: 96, fadeDuration: 0, renderWorldCopies: false, canvasContextAttributes: { preserveDrawingBuffer: true } });
+    const view = map;
+    view.on("styleimagemissing", event => { const image = options.capture.images.find(i => i.id === event.id); if (image && !view.hasImage(image.id)) view.addImage(image.id, image.data, { pixelRatio: image.pixelRatio, sdf: image.sdf }); });
+    view.on("load", () => { if (disposed) return; ready = true; for (const sample of surfaceRasterSampling(options.capture.style, false)) view.setPaintProperty(sample.id, "raster-resampling", sample.value); apply(); });
+    view.on("error", () => { partial = true; if (!disposed) options.onStatus("Some surface tiles are unavailable. Blank patches are unknown, not clear conditions."); });
+    view.on("idle", () => {
+      if (disposed || !pending || !view.areTilesLoaded()) return;
+      try {
+        const canvas = view.getCanvas(), image = document.createElement("canvas"); image.width = canvas.width; image.height = canvas.height;
+        const context = image.getContext("2d"); if (!context) throw new Error("Surface copy unavailable");
+        context.drawImage(canvas, 0, 0); context.getImageData(0, 0, 1, 1);
+        const b = view.getBounds(); pending = false; clearTimeout(timeout);
+        options.onFrame({ image, bounds: [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()], zoom: view.getZoom() });
+        options.onStatus(`${partial ? "Partial surface detail" : "Surface detail ready"} · ${image.width} × ${image.height} pixels · map zoom ${view.getZoom().toFixed(1)}. Provider resolution and dates still apply.`);
+      } catch { pending = false; options.onStatus("Surface detail could not be drawn. The selector preview and source records remain available."); }
+    });
+  }).catch(() => { if (!disposed) options.onStatus("Surface detail is unavailable. Retry the surface or use the Surface map view."); });
+  return {
+    update(bounds: SurfaceBounds) { if(bounds.map(n=>n.toFixed(6)).join(",")===requested.map(n=>n.toFixed(6)).join(","))return; requested = bounds; clearTimeout(timer); timer = setTimeout(apply, 200); },
+    dispose() { disposed = true; clearTimeout(timer); clearTimeout(timeout); map?.remove(); container.remove(); },
+  };
+}

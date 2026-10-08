@@ -13,6 +13,7 @@ const AquiferView = lazy(() => import("./aquifer-volume-view"));
 const ThreeView = lazy(() => import("./subsurface-three"));
 export type SubsurfaceInspection = { record: Borehole; interval?: DepthInterval };
 type Props = {
+  basemap?: string; onBasemap?: (key: "standard"|"imagery"|"kansas-aerial"|"topo") => void; onLayers?: () => void;
   map: MapLibreMap | null; initialContext: SubsurfaceContext | null; year: number; redacted: boolean;
   onTerrain: () => void; onFlatMap: () => void; readElevation: (point: Position) => number | null;
   isDrawing: () => boolean; onDraw: () => void; readTransect: () => Position[];
@@ -179,9 +180,10 @@ export default function UndergroundPanel(props: Props) {
     if (!map) return;
     const stage = map.getContainer().closest<HTMLElement>(".map-stage");
     stage?.style.setProperty("--underground-height", `${height}%`);
-    const observer = new ResizeObserver(() => map.resize()); observer.observe(map.getContainer());
+    let resizeFrame:number|null=null;
+    const observer = new ResizeObserver(() => {if(resizeFrame!==null)cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(()=>{resizeFrame=null;map.resize();});}); observer.observe(map.getContainer());
     map.resize();
-    return () => { observer.disconnect(); stage?.style.removeProperty("--underground-height"); map.resize(); };
+    return () => { observer.disconnect(); if(resizeFrame!==null)cancelAnimationFrame(resizeFrame); stage?.style.removeProperty("--underground-height"); map.resize(); };
   }, [map, height, display]);
   useLayoutEffect(() => {
     if (!map || display !== "aquifer" || !locatorSlot) return;
@@ -195,7 +197,8 @@ export default function UndergroundPanel(props: Props) {
       stage.style.setProperty("--cutaway-locator-clip",`inset(${placement.clipTop}px 0 ${placement.clipBottom}px 0)`);
       stage.style.setProperty("--cutaway-locator-visibility",placement.visible?"visible":"hidden");
     };
-    const observer=new ResizeObserver(position);observer.observe(locatorSlot);observer.observe(stage);observer.observe(scroller);
+    let positionFrame:number|null=null;
+    const observer=new ResizeObserver(()=>{if(positionFrame!==null)cancelAnimationFrame(positionFrame);positionFrame=requestAnimationFrame(()=>{positionFrame=null;position();});});observer.observe(locatorSlot);observer.observe(stage);observer.observe(scroller);
     scroller.addEventListener("scroll",position,{passive:true});stage.addEventListener("scroll",position,{passive:true});window.addEventListener("resize",position);position();
     // Fit after the selector has its actual compact size. A fresh Underground
     // session starts with Kansas; tool switches keep the user's map position.
@@ -204,7 +207,7 @@ export default function UndergroundPanel(props: Props) {
       map.fitBounds([[-102.1,36.95],[-94.55,40.05]],{padding:18,duration:0});
       initialKansasLocator.current=true;
     }):null;
-    return()=>{if(initialFrame!==null)cancelAnimationFrame(initialFrame);observer.disconnect();scroller.removeEventListener("scroll",position);stage.removeEventListener("scroll",position);window.removeEventListener("resize",position);for(const key of ["left","top","width","height","clip","visibility"])stage.style.removeProperty(`--cutaway-locator-${key}`);};
+    return()=>{if(initialFrame!==null)cancelAnimationFrame(initialFrame);observer.disconnect();if(positionFrame!==null)cancelAnimationFrame(positionFrame);scroller.removeEventListener("scroll",position);stage.removeEventListener("scroll",position);window.removeEventListener("resize",position);for(const key of ["left","top","width","height","clip","visibility"])stage.style.removeProperty(`--cutaway-locator-${key}`);};
   },[map,display,locatorSlot]);
   useEffect(() => {
     if (!map || display !== "aquifer") return;
@@ -317,7 +320,7 @@ export default function UndergroundPanel(props: Props) {
       </div>
       {matches.length > 0 && <details open><summary>First {matches.length} matching records · choose to inspect</summary><div className={s.cards}>{matches.map(([id, county, coordinates]) => <button className={s.card} type="button" key={id} onClick={() => { setAnchor(coordinates); setSelectedId(id); setPinned(true); setMatches([]); map?.easeTo({ center: coordinates, zoom: 13, duration: 0 }); }}>{id} · {county}</button>)}</div></details>}
       </details>}
-      <div hidden={display !== "aquifer"}><Suspense fallback={<p>Preparing the 3D cutaway…</p>}><AquiferView active={display === "aquifer"} map={map} records={visibleRecords} onArea={applyArea} recordsLoading={loading} recordStatus={coverage} partial={partial} recordNavigation={recordNavigation} recordsAvailable={loadedColumns.length} onResetRecords={()=>{setRecordCutoff(null);setSources(["kgs-wwc5","kgs-core"]);setTimePlaying(false);}} locator={{anchor,pinned}} onLocatorSlot={setLocatorSlot} onFlatMap={props.onFlatMap} onLocate={(point,retainView) => { setAnchor(point); setPinned(true); if(!retainView)map?.easeTo({center:point,zoom:12,pitch:0,bearing:0,duration:reduceMotion?0:420}); }} onInspect={inspect} sliceEntry={<details className={s.areaRecordTools}><summary>Inspect an individual log</summary><div className={s.sliceEntry}>
+      <div hidden={display !== "aquifer"}><Suspense fallback={<p>Preparing the 3D cutaway…</p>}><AquiferView basemap={props.basemap} onBasemap={props.onBasemap} onLayers={props.onLayers} active={display === "aquifer"} map={map} records={visibleRecords} onArea={applyArea} recordsLoading={loading} recordStatus={coverage} partial={partial} recordNavigation={recordNavigation} recordsAvailable={loadedColumns.length} onResetRecords={()=>{setRecordCutoff(null);setSources(["kgs-wwc5","kgs-core"]);setTimePlaying(false);}} locator={{anchor,pinned}} onLocatorSlot={setLocatorSlot} onFlatMap={props.onFlatMap} onLocate={(point,retainView) => { setAnchor(point); setPinned(true); if(!retainView)map?.easeTo({center:point,zoom:12,pitch:0,bearing:0,duration:reduceMotion?0:420}); }} onInspect={inspect} sliceEntry={<details className={s.areaRecordTools}><summary>Inspect an individual log</summary><div className={s.sliceEntry}>
         <span className={s.cutawayEyebrow}>SOURCE DETAIL</span>
         <label>Source record <select aria-label="Source record to slice" value={selected?.id ?? ""} disabled={!columns.length || loading} onChange={e => chooseRecord(e.target.value)}>{!columns.length && <option value="">No loaded records</option>}{columns.map(c => <option key={c.record.id} value={c.record.id}>{c.record.name}{c.record.kind === "core" ? " · inventory envelope" : ""}</option>)}</select></label>
         <button type="button" disabled={!sliceFit || loading} onClick={openSlice}>Open selected log <span aria-hidden="true">↗</span></button>
