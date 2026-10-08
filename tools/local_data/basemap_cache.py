@@ -14,6 +14,7 @@ import sqlite3
 import stat
 import threading
 import time
+import zlib
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlsplit, parse_qs, urlencode
 from urllib.request import Request, build_opener, HTTPRedirectHandler
@@ -65,13 +66,28 @@ class NoRedirect(HTTPRedirectHandler):
         raise ValueError('Provider redirect rejected')
 
 
+def decode(data, encoding, provider):
+    """Undo transport compression. Only gzip vector tiles are accepted, and output stays within 8 MiB."""
+    encoding = (encoding or 'identity').strip().lower()
+    if encoding == 'identity': return data
+    # Vector tile hosts commonly serve pre-gzipped PBF whatever Accept-Encoding says.
+    if encoding != 'gzip' or provider != 'vector': raise ValueError('Unexpected compression')
+    try:
+        d = zlib.decompressobj(16 + zlib.MAX_WBITS)
+        out = d.decompress(data, MAX_ITEM + 1)
+    except zlib.error as error: raise ValueError('Invalid compressed tile') from error
+    if len(out) > MAX_ITEM or d.unconsumed_tail or not d.eof or d.unused_data: raise ValueError('Invalid or oversized compressed tile')
+    return out
+
+
 def download(url):
     provider, ttl = policy(url)
     with build_opener(NoRedirect()).open(Request(url, headers={'User-Agent': UA, 'Accept-Encoding':'identity'}), timeout=20) as r:
         kind = r.headers.get_content_type()
-        if r.headers.get('Content-Encoding', 'identity') != 'identity': raise ValueError('Unexpected compression')
         data = r.read(MAX_ITEM + 1)
         if not data or len(data) > MAX_ITEM: raise ValueError('Resource exceeds 8 MiB limit or is empty')
+        data = decode(data, r.headers.get('Content-Encoding'), provider)
+        if not data: raise ValueError('Resource is empty')
         if provider == 'vector':
             if kind not in ('application/x-protobuf', 'application/vnd.mapbox-vector-tile', 'application/octet-stream'): raise ValueError('Invalid vector content')
         elif not (data.startswith(b'\x89PNG\r\n\x1a\n') or data.startswith(b'\xff\xd8\xff')):

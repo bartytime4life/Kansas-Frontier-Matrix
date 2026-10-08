@@ -7,6 +7,8 @@ import time
 import unittest
 import urllib.request
 from unittest.mock import patch
+from email.message import Message
+from types import SimpleNamespace
 
 spec = importlib.util.spec_from_file_location('cache', str(Path(__file__).resolve().parents[2] / 'tools/local_data/basemap_cache.py'))
 m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
@@ -52,6 +54,23 @@ class Tests(unittest.TestCase):
         with self.assertRaises(ValueError): m.NoRedirect().redirect_request(None,None,None,None,None,None)
         for url in m.overview(): m.policy(url)
         self.assertLess(len(m.overview()),512)
+    def test_gzip_vector_tiles_are_decoded_within_bounds(self):
+        raw=b'\x1a\x02pbf'*16
+        self.assertEqual(m.decode(m.zlib.compress(raw,wbits=31),'gzip','vector'),raw)
+        self.assertEqual(m.decode(raw,None,'vector'),raw)
+        bomb=m.zlib.compress(b'\0'*(m.MAX_ITEM+1),wbits=31)
+        for data,encoding,provider in [(bomb,'gzip','vector'),(b'not-gzip','gzip','vector'),(m.zlib.compress(raw,wbits=31)[:-4],'gzip','vector'),
+                                       (m.zlib.compress(raw,wbits=31)+b'trailer','gzip','vector'),(m.zlib.compress(raw,wbits=31),'gzip','topo'),(raw,'br','vector')]:
+            with self.subTest(encoding=encoding,provider=provider,size=len(data)),self.assertRaises(ValueError): m.decode(data,encoding,provider)
+        class Response:
+            headers=Message()
+            def __enter__(self): return self
+            def __exit__(self,*_): return False
+            def read(self,_limit): return m.zlib.compress(raw,wbits=31)
+        Response.headers['Content-Type']='application/x-protobuf';Response.headers['Content-Encoding']='gzip'
+        url='https://tiles.openfreemap.org/planet/latest/5/7/12.pbf'
+        with patch.object(m,'build_opener',return_value=SimpleNamespace(open=lambda *_a,**_k:Response())):
+            self.assertEqual(m.download(url)[0],raw)
     def test_symlink_and_duplicate_service_denied(self):
         with self.assertRaises(BlockingIOError): m.Cache(self.root)
         other=self.root/'linked';other.symlink_to(self.root,target_is_directory=True)
