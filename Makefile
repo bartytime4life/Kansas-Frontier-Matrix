@@ -265,8 +265,12 @@ ui-build:
 
 api-run: governed-api-dev
 
+# A fresh checkout has no installed workspace packages, and the repository-root
+# release/ directory would otherwise shadow packages/release/src/release.
+GOVERNED_API_PYTHONPATH := apps/governed-api/src:packages/release/src:packages/connectors-core/src:packages/hashing/src:packages/policy-runtime/src:packages/evidence-resolver/src
+
 governed-api-dev:
-	PYTHONPATH=apps/governed-api/src python -m governed_api.main
+	PYTHONPATH=$(GOVERNED_API_PYTHONPATH) python -m governed_api.main
 
 governed-api-smoke:
 	python -m pytest apps/governed-api/tests -q
