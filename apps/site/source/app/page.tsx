@@ -1102,6 +1102,8 @@ export default function Home() {
   const earthEngineContext = useEarthEngineContext();
   const [earthEngineDisplay, setEarthEngineDisplay] = useState<EarthEngineDisplayState>({ visible: {}, opacity: {}, years: {} });
   const styleGenerationReadyRef = useRef(false);
+  // Set on each style.load and cleared by setStyle: overlays attach only after it.
+  const styleDocumentLoadedRef = useRef(false);
   const mapMutationErrorRef = useRef<string | null>(null);
   const scaleControlRef = useRef<ScaleControl | null>(null);
   const hoveredRef = useRef<{ source: string; id: string | number } | null>(null);
@@ -4820,6 +4822,7 @@ export default function Home() {
         };
 
         const syncStyle = (): boolean => {
+          styleDocumentLoadedRef.current = true;
           styleGenerationReadyRef.current = false;
           mapMutationErrorRef.current = null;
           if (hoverDrawerTimerRef.current !== null) window.clearTimeout(hoverDrawerTimerRef.current);
@@ -5185,7 +5188,7 @@ export default function Home() {
           const message = mapRuntimeErrorCode("event", sourceId);
           const affectedLayer = sourceId ? LAYER_REGISTRY.find((layer) => layer.sourceId === sourceId) : undefined;
           const affectedOfficialContext = officialContextForMapSource(sourceId);
-          if (basemapRef.current === "standard" && !styleFallbackAttempted && shouldFallbackStandardBasemap(sourceId, Boolean(affectedLayer), Boolean(affectedOfficialContext))) {
+          if (basemapRef.current === "standard" && !styleFallbackAttempted && shouldFallbackStandardBasemap(sourceId, Boolean(affectedLayer), Boolean(affectedOfficialContext), styleDocumentLoadedRef.current)) {
             styleFallbackAttempted = true;
             runtimeError = null;
             degradedReason = `Standard vector basemap unavailable; switched to the local MapLibre style. ${message}`;
@@ -5384,6 +5387,7 @@ export default function Home() {
       hoverDrawerTimerRef.current = null;
       hoverCandidateIdRef.current = null;
       resizeObserver?.disconnect();
+      styleDocumentLoadedRef.current = false;
       styleGenerationReadyRef.current = false;
       if (sceneOrbitTimerRef.current !== null) window.clearTimeout(sceneOrbitTimerRef.current);
       mapRef.current?.remove();
@@ -5760,6 +5764,7 @@ export default function Home() {
     noaaRadarFrameFailureRef.current = null;
     if (pendingRadarFrame) setNoaaRadarFrameLoadState("idle");
     if (!runMapMutation("Basemap style update", () => map.setStyle(BASEMAPS[basemap].style, { diff: false }))) return;
+    styleDocumentLoadedRef.current = false;
     styleGenerationReadyRef.current = false;
     attachedTerrainProviderRef.current = null;
     officialRasterFailuresRef.current.clear();
