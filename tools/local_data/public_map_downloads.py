@@ -249,6 +249,11 @@ class PublicMapDownloads:
             return
         job = self.jobs[identifier]
         destination = self._destination(job)
+        source_path = destination / "source.json"
+        provider_checksum = None
+        if source_path.exists() or source_path.is_symlink():
+            pinned = json.loads(read_regular(source_path, 1024 * 1024))
+            provider_checksum = pinned["asset"].get("providerChecksum")
         original_digest = job.get("sha256")
         files = []
         for path in sorted(destination.iterdir()):
@@ -265,6 +270,7 @@ class PublicMapDownloads:
             captured["complete"] = job["state"] == "downloaded"
         receipt = {"schema": "kfm-public-map-download-receipt/v1", "job": copy.deepcopy(job), "files": files,
                    "review": "UNREVIEWED", "admission": "NOT_ADMITTED", "release": "NOT_RELEASED",
+                   "providerChecksum": provider_checksum,
                    "providerChecksumVerified": False, "captureIntegrity": "sha256 and stored-byte readback",
                    "previousStoredSha256": original_digest}
         write_new(receipt_path, json.dumps(receipt, sort_keys=True).encode())

@@ -222,7 +222,11 @@
           "expectedBytes": 34235085,
           "kind": "download",
           "availability": "verified",
-          "checkedAt": "2026-10-08T18:00:31Z"
+          "checkedAt": "2026-10-08T18:00:31Z",
+          "providerChecksum": {
+            "algorithm": "MD5",
+            "value": "ef9a75a565139a8ffe1c6a5d79a13510"
+          }
         },
         {
           "id": "usgs-limon-geodatabase-zip",
@@ -232,7 +236,11 @@
           "expectedBytes": 2650659,
           "kind": "download",
           "availability": "verified",
-          "checkedAt": "2026-10-08T18:00:31Z"
+          "checkedAt": "2026-10-08T18:00:31Z",
+          "providerChecksum": {
+            "algorithm": "MD5",
+            "value": "873a4a6acc2f3e0cd5ee96456c1b79a4"
+          }
         }
       ],
       "crs": null,
@@ -267,7 +275,11 @@
           "expectedBytes": 12697837,
           "kind": "download",
           "availability": "verified",
-          "checkedAt": "2026-10-08T18:00:31Z"
+          "checkedAt": "2026-10-08T18:00:31Z",
+          "providerChecksum": {
+            "algorithm": "MD5",
+            "value": "f699d2f9bcd5dd92fdee7c94fb6c759f"
+          }
         },
         {
           "id": "usgs-lamar-open-zip",
@@ -277,7 +289,11 @@
           "expectedBytes": 2224028,
           "kind": "download",
           "availability": "verified",
-          "checkedAt": "2026-10-08T18:00:31Z"
+          "checkedAt": "2026-10-08T18:00:31Z",
+          "providerChecksum": {
+            "algorithm": "MD5",
+            "value": "c3746bb8995b5093fed63774126d9400"
+          }
         }
       ],
       "crs": null,

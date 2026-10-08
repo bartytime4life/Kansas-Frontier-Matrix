@@ -198,22 +198,12 @@
   "schema": "kfm-public-map-discovery-review/v1",
   "scope": "Kansas search results explicitly filtered to USGS and KGS publishers. NMMR coverage and failures are separate. Online/GIS metadata flags do not verify files, download rights, georeferencing, or local availability.",
   "seedAugmentation": {
-    "appliedAt": "2026-10-08T18:09:04.725142+00:00",
+    "appliedAt": "2026-10-08T18:29:28.910744+00:00",
     "discoveryRefreshed": false,
-    "normalizationDefaultsApplied": 1683,
+    "normalizationDefaultsApplied": 0,
     "seedGeneratedAt": "2026-10-08T18:07:23Z",
-    "seedSha256": "95e463617f90c406a190fcf5b019c8efd018fa864087b4eb24e91ae9bb4ebc35",
+    "seedSha256": "56879bf21ce9a03c9ffb4779b13c14631499f1974068bd3cd507eb097da3f076",
     "updatedRecordIds": [
-      "kgs-m118-2008",
-      "kgs-m97-bourbon-2020",
-      "ngmdb-10231",
-      "ngmdb-959",
-      "osmre-nmmr-index",
-      "usgs-cngm-earth-p146vgvm",
-      "usgs-cngm-precambrian-p13tsv2j",
-      "usgs-cngm-prequaternary-p147sgss",
-      "usgs-cngm-quaternary-p16sjac6",
-      "usgs-coal-fields-2013",
       "usgs-lamar-p9mnqfy6",
       "usgs-limon-p9djg0o3"
     ]
@@ -231,10 +221,10 @@
     "usgs-limon-p9djg0o3"
   ],
   "snapshot": {
-    "bytes": 2704234,
+    "bytes": 2704458,
     "recordCount": 1695,
     "schema": "kfm-public-map-catalog/v1",
-    "sha256": "0aaf56dcf7248947a775b37c47a71aa436e4bb50750f07e5082230979f28d14d"
+    "sha256": "aa1a6df511f89fdefa6e8011a4db3f8d044980f7505dd8977fd0e3d282b8c0ae"
   },
   "sourceUrls": [
     "https://mmr.osmre.gov/",

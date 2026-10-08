@@ -24,8 +24,11 @@ the adapter therefore checks each record's `published_by` field.
 
 The snapshot was subsequently augmented from the curated seed at
 2026-10-08T18:09:04Z with verified regional and national archive choices, CNGM
-service references, and explicit unknown CRS/spatial-accuracy defaults. Its
-`seedAugmentation` records that separate operation. The original discovery time,
+service references, and explicit unknown CRS/spatial-accuracy defaults. A further
+augmentation at 2026-10-08T18:29:28Z added the four ScienceBase provider MD5 checksums
+for Limon/Lamar ZIPs as metadata. These checksums are not a claim that local
+archive payloads were downloaded or verified. `seedAugmentation` records the
+latest separate operation. The original discovery time,
 coverage checks, response receipts, and 1,685 raw provider records are unchanged;
 the receipt binds the augmented snapshot bytes. Archive sizes were checked from
 response headers without downloading their payloads.

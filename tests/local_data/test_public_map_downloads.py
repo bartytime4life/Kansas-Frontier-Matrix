@@ -93,6 +93,18 @@ class DownloadTests(unittest.TestCase):
             self.start("b" * 32)
         self.assertNotIn("configured", self.manager.health())
 
+    def test_provider_checksum_uses_pinned_metadata_without_claiming_verification(self):
+        checksum = {"algorithm": "MD5", "value": "1" * 32}
+        self.manager._catalog["records"][0]["assets"][0]["providerChecksum"] = copy.deepcopy(checksum)
+        job = self.start()
+        self.manager._catalog["records"][0]["assets"][0]["providerChecksum"]["value"] = "2" * 32
+        with patch.object(downloads, "request_asset", return_value=Response()):
+            self.manager.run(job["id"])
+        receipt = self.receipt(job)
+        self.assertEqual(receipt["providerChecksum"], checksum)
+        self.assertFalse(receipt["providerChecksumVerified"])
+        self.assertEqual(receipt["files"][0]["sha256"], hashlib.sha256(PAYLOAD).hexdigest())
+
     def test_invalid_bounds_ids_extra_urls_and_unverified_assets_are_rejected_before_io(self):
         good = {"requestId": "a" * 32, "assetId": "test-pdf", "maxBytes": 1024}
         for changes in ({"maxBytes": True}, {"maxBytes": 0}, {"maxBytes": downloads.MAX_BYTES + 1},

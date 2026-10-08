@@ -32,3 +32,11 @@
 .downloads { border-top:1px solid var(--line); margin-top:25px; padding-top:15px; }
 @media(max-width:900px) { .coverage ul { grid-template-columns:1fr; gap:10px; } .filters { grid-template-columns:repeat(2,minmax(0,1fr)); } .results { grid-template-columns:1fr; } }
 @media(max-width:500px) { .filters { grid-template-columns:1fr; } .detail { padding:16px; } }
+
+/* Keep the embedded MapLibre controls legible inside the download workbench. */
+.catalog :global(.maplibregl-ctrl-group) button {
+  width: 44px; height: 44px; min-height: 44px; padding: 0;
+  border: 0; border-radius: 0; color: #102126; background-color: #fff !important;
+}
+.catalog :global(.maplibregl-ctrl-group) button:hover:not(:disabled),
+.catalog :global(.maplibregl-ctrl-group) button:focus-visible { background-color: #e4eeee !important; }

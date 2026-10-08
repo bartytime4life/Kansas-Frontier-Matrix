@@ -66,3 +66,59 @@ TypeScript and the production build passed. The final full Site suite passed
 709 tests. Focused backend checks passed 63 tests and 96 subtests, covering existing
 Earth Engine/library behavior plus discovery, streaming limits, cancellation,
 redirect rejection, checksums, missing receipts and interrupted workers.
+
+## Final follow-up checks
+
+After implementation commit `d22e013a9024894cb1374d34b414e9dd189d16b3`, scoped
+MapLibre control styles restore 44-pixel white buttons. The background override
+uses `!important` because the download workbench's global rule also uses it.
+The production build passed. On the final local installation (r4), browser
+inspection confirmed white `rgb(255, 255, 255)` zoom buttons measuring 44 by 44
+pixels with zero padding. The KGS preview loaded five features with source
+attribution visible.
+
+The four ScienceBase MD5 values for the Limon/Lamar ZIPs are preserved as provider
+metadata in the seed catalog and subsequent capture receipts. They remain
+unverified (`providerChecksumVerified: false`), separate from the local stored
+SHA-256 and byte-readback checks; none of these four ZIPs was downloaded for this
+metadata correction.
+
+Initial follow-up Python checks passed 24 tests and 80 subtests: 21
+download-manager tests and three smoke-runner startup tests. The new preview
+route is included in the smoke inventory with its offline missing-input `400`
+check, repairing the three introduced startup failures.
+
+The final follow-up rerun passed TypeScript, the production build, and all 709
+Site tests. The build and Site test logs are
+`/tmp/kfm-public-maps-final-build.log` and
+`/tmp/kfm-public-maps-final-tests.log`. Final focused Python checks passed 45 tests
+and 80 subtests: 18 catalog, 21 download-manager, three control, and three
+smoke-runner startup tests. The earlier 63-test/96-subtest backend regression
+result above remains evidence for the prior functional implementation; that
+broader backend selection was not rerun in this follow-up.
+
+The final installed local catalog returned 1,695 records and retained all four
+provider MD5 metadata values. The actual local Site smoke run passed 57 checks
+across 47 routes, with nine provider-only routes explicitly listed; its log is
+`/tmp/kfm-public-map-smoke-final.log`. These final installation and browser
+observations were verified by the coordinating agent and retain the bounded
+acceptance and admission limits above.
+
+The coordinating agent compared the remaining CI failures with prior main/base
+runs and identified four inherited failures:
+
+- Repository gap scan: main reports 139 broken links against a 138-link baseline.
+  `.github/workflows/README.md:392` still references `.github/README.md`, removed
+  by `ffe4216` / PR #4943. See [main run](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/37818760238).
+- Water lane: `MIRROR_REVIEW_REQUIRED`, present in the
+  [base run](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/37817906594)
+  and [main run](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/37818760514).
+- People lane: missing documentation-only marker, present in the
+  [base run](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/37817907173)
+  and [main run](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/37818760462).
+- Soil lane: changed release index, present in the
+  [base run](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/37817906861)
+  and [main run](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/37818760638).
+
+These findings do not clear the inherited gates or grant admission, release,
+mirror-review approval, or hosted publication.
