@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 340" width="600" height="340" role="img" aria-labelledby="t d">
+  <title id="t">Evidence Drawer — every feature shows its receipts</title>
+  <desc id="d">Illustration of the Evidence Drawer: selecting a point on a Kansas map opens a panel listing source, observed time, retrieved time, evidence role (external context only), and limits. Example values are illustrative.</desc>
+  <defs>
+    <clipPath id="frame"><rect x="1" y="1" width="598" height="338" rx="18"/></clipPath>
+    <style>
+      .serif{font-family:Georgia,'Times New Roman',serif}
+      .sans{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
+      .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+      .lbl{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;letter-spacing:2.5px;font-weight:700}
+
+      .drawer{animation:drawer 9s cubic-bezier(.2,.7,.3,1) infinite}
+      @keyframes drawer{0%,8%{transform:translate(620px,96px)}20%,92%{transform:translate(316px,96px)}100%{transform:translate(620px,96px)}}
+      .row{opacity:0;animation:row 9s ease-out infinite}
+      @keyframes row{0%,22%{opacity:0}30%,90%{opacity:1}100%{opacity:0}}
+      .pin{transform-box:fill-box;transform-origin:center;animation:pin 9s ease-out infinite}
+      .drawer,.row,.pin{animation-delay:-3.5s}
+      @keyframes pin{0%{transform:scale(.4);opacity:0}6%{transform:scale(1.4);opacity:1}14%,100%{transform:scale(1);opacity:1}}
+      @media (prefers-reduced-motion: reduce){.drawer,.row,.pin{animation:none}.row{opacity:1}}
+    </style>
+  </defs>
+  <g clip-path="url(#frame)">
+    <rect width="600" height="340" fill="#FAF7F0"/>
+    <rect width="600" height="6" fill="#A33A3A"/>
+    <g transform="translate(26,104) scale(0.45)">
+      <path d="M0,0 H543 L551,10 548,24 558,36 570,48 566,62 580,74 590,84 600,93 V310 H0 Z" fill="#F2E6D2" stroke="#8E5A2A" stroke-width="4.44" stroke-linejoin="round"/>
+      <polyline points="0,201.5 52.3,206.7 84.6,209.8 124.8,222.2 165.1,232.5 197.3,222.2 221.5,211.8 245.6,186 264.2,169.5 289.9,175.7 310.1,186 334.2,200.5 358.4,217 380.1,238.7 390.6,268.7 403.5,310" fill="none" stroke="#4A6FA5" stroke-width="4.44" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.75"/><polyline points="0,113.7 44.3,115.7 84.6,118.8 140.9,120.9 205.4,118.8 253.7,126.1 277.9,129.2 318.1,126.1 357.6,119.9 390.6,108.5 420.4,100.2 441.3,84.7 471.1,90.9 513,98.2 549.3,106.4 575.8,96.1 598.4,92" fill="none" stroke="#4A6FA5" stroke-width="4.44" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.75"/><polyline points="326.2,0 346.3,20.7 358.4,41.3 374.5,56.8 390.6,72.3 406.7,87.8 420.4,100.2" fill="none" stroke="#4A6FA5" stroke-width="2.89" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.75"/><polyline points="414.8,113.7 447,144.7 472.8,165.3 503.4,196.3 527.5,222.2 543.6,248 567.8,284.2 579.9,310" fill="none" stroke="#4A6FA5" stroke-width="2.89" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.75"/><polyline points="124.8,56.8 181.2,56.8 245.6,62 302,72.3 342.3,93 357.6,119.9" fill="none" stroke="#4A6FA5" stroke-width="2.89" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.75"/>
+      <circle cx="380.1" cy="238.7" r="14" fill="#A33A3A" fill-opacity=".18"/><circle cx="380.1" cy="238.7" r="7" fill="#A33A3A"/><circle class="pin" cx="380.1" cy="238.7" r="12" fill="none" stroke="#A33A3A" stroke-width="3"/>
+    </g>
+    <g class="drawer" transform="translate(316,96)">
+      <rect width="262" height="228" rx="12" fill="#FFFFFF" stroke="#D9CFBD"/>
+      <rect width="262" height="34" rx="12" fill="#1F3A66"/><rect y="20" width="262" height="14" fill="#1F3A66"/>
+      <text x="18" y="22" class="sans" font-size="13" fill="#FFFFFF" font-weight="600">Evidence Drawer</text>
+      <g transform="translate(0,6)"><g class="row" style="animation-delay:-3.50s"><text x="18" y="50" class="sans" font-size="12" fill="#6B6B6B">Source</text><text x="18" y="67" class="sans" font-size="14" fill="#0E1F3A">USGS Water Data API</text></g><g class="row" style="animation-delay:-3.20s"><text x="18" y="84" class="sans" font-size="12" fill="#6B6B6B">Observed</text><text x="18" y="101" class="sans" font-size="14" fill="#0E1F3A">2026-10-08 14:15 CDT</text></g><g class="row" style="animation-delay:-2.90s"><text x="18" y="118" class="sans" font-size="12" fill="#6B6B6B">Retrieved</text><text x="18" y="135" class="sans" font-size="14" fill="#0E1F3A">2026-10-08 14:21 CDT</text></g><g class="row" style="animation-delay:-2.60s"><text x="18" y="152" class="sans" font-size="12" fill="#6B6B6B">Role</text><text x="18" y="169" class="mono" font-size="13" fill="#0E1F3A">EXTERNAL_CONTEXT_ONLY</text></g><g class="row" style="animation-delay:-2.30s"><text x="18" y="186" class="sans" font-size="12" fill="#6B6B6B">Limits</text><text x="18" y="203" class="sans" font-size="14" fill="#0E1F3A">provisional · may be revised</text></g></g>
+    </g>
+  </g>
+  <rect x="1" y="1" width="598" height="338" rx="18" fill="none" stroke="#D9CFBD" stroke-width="2"/>
+  <text x="28" y="44" class="lbl" fill="#A33A3A">EVIDENCE DRAWER</text>
+  <text x="28" y="72" class="sans" font-size="17" fill="#1F3A66">Click anything; see its source, clocks, role and limits</text>
+</svg>

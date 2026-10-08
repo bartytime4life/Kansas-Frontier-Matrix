@@ -25,6 +25,22 @@ related:
   - tests/README.md
 [/KFM_META_BLOCK_V2] -->
 
+<p align="center">
+  <a href="../README.md#take-the-tour"><img src="brand/readme/kfm-hero.svg" alt="Kansas Frontier Matrix — Place. Time. Evidence. An illustrated Kansas outline with rivers and a time sweep." width="100%" /></a>
+</p>
+
+> **New to KFM?** Start with the illustrated [project home](../README.md): a [six-workspace feature tour](../README.md#take-the-tour), [two centuries of time depth](../README.md#travel-through-time), [where the data comes from](../README.md#where-the-data-comes-from), and an honest [build status](../README.md#build-status-at-a-glance). The pages below are the deeper library behind it.
+
+<table>
+  <tr>
+    <td width="33%" valign="top"><a href="../apps/site/source/docs/water-flow-paths.md"><img src="brand/readme/kfm-feature-river-pulse.svg" alt="Illustration of River Pulse streamflow replay." width="100%" /></a><br/><sub><strong>Water</strong> — <a href="../apps/site/source/docs/water-flow-paths.md">flow paths</a> · <a href="runbooks/water-pilot.md">water pilot</a></sub></td>
+    <td width="33%" valign="top"><a href="../apps/site/source/docs/underground-explorer.md"><img src="brand/readme/kfm-feature-underground.svg" alt="Illustration of the Underground 3D cutaway." width="100%" /></a><br/><sub><strong>Underground</strong> — <a href="../apps/site/source/docs/underground-explorer.md">explorer guide</a> · <a href="../apps/site/source/docs/aquifers-groundwater.md">aquifers</a></sub></td>
+    <td width="33%" valign="top"><a href="../apps/site/source/docs/history-comparison.md"><img src="brand/readme/kfm-feature-history.svg" alt="Illustration of comparing two years with a swipe divider." width="100%" /></a><br/><sub><strong>History</strong> — <a href="../apps/site/source/docs/history-comparison.md">comparison</a> · <a href="runbooks/free-data-acquisition.md">acquisition</a></sub></td>
+  </tr>
+</table>
+
+<sub>Illustrations, not screenshots or data products — see <a href="brand/readme/README.md">README artwork</a>.</sub>
+
 ## Practical reading routes — 2026-10-08
 
 | I want to… | Start here | Then use |
