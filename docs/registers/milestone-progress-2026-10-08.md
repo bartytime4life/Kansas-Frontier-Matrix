@@ -43,7 +43,7 @@ notes:
 | Merge commits since the 2026-09-16 audit (`fd03c91c88`) | 239 |
 | Open issues | 56 before this pass, 53 after |
 | Native milestones | 37 (MRTS milestone 1 plus M01–M36 as natives 2–37; native number = M-number + 1) |
-| Milestones at 100% by issue count | M07, M11, M16 (after this pass), and M31 once its stale counter is corrected (section 4) |
+| Milestones at 100% by issue count | M07, M11, M16 (after this pass), and M31 (after the counter recount in section 4) |
 
 [Back to top](#top)
 
@@ -95,7 +95,7 @@ GitHub counts are shown as reported on 2026-10-08, after this pass's closures. "
 | M20 — Source Rights, Health, Watchers & Change Detection | 0 / 1 | #3384 | Connector role and rights (#4779, #4780). Station health receipts (#4823, #4829). Source locator and freshness evidence (#4639). | OPEN / PARTIAL. |
 | M21 — Transportation, Infrastructure & Public-Safe Geometry | 0 / 2 | #3385, #2898 | No change. | OPEN. |
 | M22 — Drought, Water Supply, Soil & Agriculture Observation Proof | 0 / 2 | #3390, #2899 | PR #4669 gives the drought-family validator finite outcomes and runs it in CI. PR #4670 makes the soil validator CLIs fail closed. PR #4793 adds SMAP soil-moisture context. `make hazards-validate` passes. | OPEN / PARTIAL. |
-| M23 — MapLibre Runtime Admission, Accessibility & Performance | 1 / 0 as displayed; actually 1 / 1 | #2906 | PR #4784 confines Site MapLibre acquisition to one seam. PRs #4908 and #4909 fix the perf gate. | OPEN / HOLD. `packages/maplibre` pins `6.11.2`, while `apps/site` and the readiness classifier target `6.9.0`. All 12 probes are still NOT_RUN. **Counter is stale:** see section 4. |
+| M23 — MapLibre Runtime Admission, Accessibility & Performance | 1 / 1 (recounted; was displayed 1 / 0) | #2906 | PR #4784 confines Site MapLibre acquisition to one seam. PRs #4908 and #4909 fix the perf gate. | OPEN / HOLD. `packages/maplibre` pins `6.11.2`, while `apps/site` and the readiness classifier target `6.9.0`. All 12 probes are still NOT_RUN. The counter was corrected in this pass (section 4). |
 | M24 — GeoParquet, PMTiles & COG Cross-Engine Interoperability | 0 / 2 | #3386, #2907 | No change. | OPEN / HOLD. |
 | M25 — Program Decision Ledger, Ownership & Portfolio Closure | 0 / 3 | #3388, #2768, #3672 | Queue syncs on 2026-09-20, 10-03, and 10-07; this ledger. | OPEN. |
 | M26 — Trust Membrane, Sensitivity & Public-Path Closure | 0 / 2 | #3389, #3022 | PR #4679 recovers render failures without exposing raw errors. PR #4843 rejects undeclared Qwen context fields. | OPEN. #3022 stays HOLD. |
@@ -103,7 +103,7 @@ GitHub counts are shown as reported on 2026-10-08, after this pass's closures. "
 | M28 — Source Admission Operations, Rights & Freshness | 0 / 1 | #3393 | Connectors (section 2). Bounded captures: GHCN Daily (#4919, #4920), NEXRAD (#4921, #4924), NWM (#4922). | OPEN / PARTIAL. Captures are not admissions. |
 | M29 — Temporal Replay, Correction & Cross-Version Migration | 0 / 1 | #3394 | No change. | OPEN. |
 | M30 — Domain Convergence & Cross-Lane Join Governance | 0 / 1 | #3391 | No change. | OPEN. |
-| M31 — Catalog Graph, Provenance & Release Candidate Closure | 0 / 1 as displayed; actually 1 / 0 | — | — | **Counter is stale:** the only issue, #3395, is closed. True state is 100% by issue count. See section 4. |
+| M31 — Catalog Graph, Provenance & Release Candidate Closure | 1 / 0 (recounted; was displayed 0 / 1) | — | — | 100% by issue count; the only issue, #3395, is closed. The milestone is still open. Owner action: close the milestone or add successor work. |
 | M32 — Governed API, Query Semantics & Serving Readiness | 0 / 1 | #3400 | PR #4668 keeps timeout and cancellation out of generic 500 responses. PR #4926 fixes governed API startup. | OPEN. |
 | M33 — Explorer Web, Accessibility & Interaction Continuity | 1 / 1 | #3397 | Site Explorer work through v173. PR #4691 retired the legacy Explorer. | OPEN. Browser visual, touch, device WebGL, and full keyboard acceptance remain unverified. |
 | M34 — Observability, Incident, Correction & Recovery Rehearsal | 1 / 1 | #4416 | PRs #4668, #4670, #4672, #4673 (finite errors). PRs #4679 and #4681 (bounded Explorer error states). | OPEN / PARTIAL. Async rejection, workspace-preserving recovery, operator-health semantics, and independent review remain. |
@@ -118,8 +118,8 @@ Unassigned before this pass: #4613, now closed.
 
 ## 4. Counter anomalies and owner actions
 
-1. **Stale counters on M23 and M31.** #2906 was moved from M31 to M23 on 2026-09-15, but GitHub's denormalized counters were not recomputed. M23 displays 100% complete while #2906 is open. M31 displays 0% while its only issue, #3395, is closed. This pass re-asserted the milestone on #2906 (M23 → M31 → M23) to force a recount. If the counters still disagree, GitHub has to recompute them; no repository change can fix them.
-2. **Milestones at 100% that are still open:** M07, M11, M16, and M31 once its counter is corrected. Closing a native milestone is an owner action. The connector used in this pass cannot edit milestones.
+1. **Stale counters on M23 and M31, now corrected.** #2906 was moved from M31 to M23 on 2026-09-15, but GitHub's denormalized counters were not recomputed. M23 displayed 100% complete while #2906 was open. M31 displayed 0% while its only issue, #3395, was closed. This pass re-assigned #2906's milestone (M23 → M31 → M23), which forced a recount. The API now reports M23 at 1 closed / 1 open and M31 at 1 closed / 0 open.
+2. **Milestones at 100% that are still open:** M07, M11, M16, and M31. Closing a native milestone is an owner action. The connector used in this pass cannot edit milestones.
 3. **Overdue MRTS milestone:** due 2026-09-18, five of ten issues still open. Owner action: set a new due date or record the hold.
 4. **Repository-wide stale wording:** many issue checkpoints still say "inherited topology failures remain". On `main@897f0df195` that is no longer true for new drift (section 2). Update each one at its next checkpoint rather than in bulk.
 
@@ -134,7 +134,7 @@ Unassigned before this pass: #4613, now closed.
 | #4596 | M16 | Closed, completed | Repairs (#4604, #4607) and checklist v1.5 (#4867) are on `main`. `make normalized-summary-check` passes 75 tests. The owner listed it as a closure candidate on 2026-10-03. |
 | #4606 | M16 | Closed, completed | PR #4608 is merged and the same 75 tests pass. The owner listed it as a closure candidate on 2026-10-03. |
 | #4613 | none | Closed, completed | Decision subject `a313dee962` is an ancestor of `main`, and the schema SHA-256 `0f08e216…fcf59` is unchanged. |
-| #2906 | M23 | Milestone re-asserted | Counter recount only (section 4). No content change. |
+| #2906 | M23 | Milestone re-assigned (M23 → M31 → M23) | Counter recount only (section 4). No content change. |
 | #2768, #3364, #3369, #3372, #3382, #4416 | various | Progress comment | Material change since each issue's last checkpoint (sections 2 and 3). |
 
 Not closed: #3372 (map-carrier evidence was retired) and the M13 automation-design issues (owner scheduler disposition is required). Independent review is still outstanding for every closure above.
