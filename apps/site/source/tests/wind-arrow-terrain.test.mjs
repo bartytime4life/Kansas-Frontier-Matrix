@@ -309,4 +309,10 @@ test("terrain tile errors stay in terrain recovery instead of switching the base
   assert.equal(terrain.shouldFallbackStandardBasemap("ne2_shaded", false, false), true);
   assert.equal(terrain.shouldFallbackStandardBasemap("standard-vector-tiles", false, false), false);
   assert.equal(terrain.shouldFallbackStandardBasemap(undefined, false, false), false);
+  // Before the standard style document loads, an unidentified error is the style
+  // itself (JSON, sprite or glyphs), so the local style may replace it once.
+  assert.equal(terrain.shouldFallbackStandardBasemap(undefined, false, false, false), true);
+  assert.equal(terrain.shouldFallbackStandardBasemap(undefined, false, false, true), false);
+  assert.equal(terrain.shouldFallbackStandardBasemap("kfm-terrain-dem", false, false, false), false);
+  assert.equal(terrain.shouldFallbackStandardBasemap(undefined, true, false, false), false);
 });

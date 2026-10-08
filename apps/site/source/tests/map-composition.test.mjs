@@ -121,6 +121,20 @@ test("bounded time bins keep gaps and omit invented counts", async () => {
   ]);
 });
 
+test("time-sweep labels drop crowded interior text but keep the axis ends", async () => {
+  const { timelineLabelSteps } = await loadSource("../app/timeline-availability.ts");
+  // Twelve deep-time columns precede 1800, so 1800 sits 12 of 238 columns (5%)
+  // after the 4.54 Ga label and their text overlapped on a desktop-width axis.
+  const deepTime = [-4_540_000_000, -2_500_000_000, -541_000_000, -299_000_000, -66_000_000, -2_580_000, -11_700, -8_000, -3_000, 1, 1000, 1541];
+  const steps = [...deepTime, ...Array.from({ length: 2026 - 1800 + 1 }, (_, index) => 1800 + index)];
+  const majors = new Set([-4_540_000_000, 1800, 1850, 1900, 1950, 2000, 2026]);
+  assert.deepEqual([...timelineLabelSteps(steps, majors)].sort((a, b) => a - b), [-4_540_000_000, 1850, 1900, 1950, 2000, 2026]);
+  // A major too close to the last tick drops its text; the ends always stay.
+  assert.deepEqual([...timelineLabelSteps([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], new Set([1, 5, 10]), 0.5)].sort((a, b) => a - b), [1, 10]);
+  assert.deepEqual([...timelineLabelSteps([1, 2, 3], new Set([2]))], [2]);
+  assert.equal(timelineLabelSteps([1, 2, 3], new Set()).size, 0);
+});
+
 test("signals require comparable observed or provider forecast data", async () => {
   const { deriveMapSignals } = await loadSource("../app/map-signals.ts");
   const gauges = [

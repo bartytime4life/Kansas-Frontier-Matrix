@@ -14,3 +14,26 @@ export const buildAvailabilityBins = (
   }
   return bins;
 };
+
+/** Major ticks whose labels fit. Ticks are equal-width columns, so deep-time
+ * steps sit a few columns apart; an interior label closer than minGap (a share
+ * of the axis) to the previous shown label or to the last tick keeps its mark
+ * but drops its text. The first and last major ticks are always labelled. */
+export const timelineLabelSteps = (
+  steps: readonly number[], majors: ReadonlySet<number>, minGap = 0.06,
+): Set<number> => {
+  const indexes = steps.flatMap((step, index) => majors.has(step) ? [index] : []);
+  const shown = new Set<number>();
+  if (indexes.length === 0) return shown;
+  const span = Math.max(1, steps.length - 1);
+  const lastIndex = indexes[indexes.length - 1];
+  let previous = indexes[0];
+  shown.add(steps[previous]);
+  for (const index of indexes.slice(1, -1)) {
+    if ((index - previous) / span < minGap || (lastIndex - index) / span < minGap) continue;
+    shown.add(steps[index]);
+    previous = index;
+  }
+  shown.add(steps[lastIndex]);
+  return shown;
+};

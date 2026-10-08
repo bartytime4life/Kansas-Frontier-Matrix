@@ -647,6 +647,8 @@ export default function EventObservatory() {
     if (frames.length < 2 || reduced) { radarReplayAutoStartRef.current = false; return; }
     if (!committed || committed !== requested) return;
     radarReplayAutoStartRef.current = false;
+    // One-shot, ref-guarded start once the externally loaded replay frames are committed.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPlaying(true);
   }, [buffering, committed, error, frames.length, loading, manifest, radarReplayMode, reduced, requested]);
 

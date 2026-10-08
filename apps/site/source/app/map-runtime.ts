@@ -232,10 +232,12 @@ export const TERRAIN_HILLSHADE_SOURCE_ID = "kfm-terrain-shadow-dem";
 export const TERRAIN_HILLSHADE_LAYER_ID = "kfm-terrain-hillshade";
 export const TERRAIN_COLOR_SOURCE_ID = "kfm-terrain-color-dem";
 
-/** Only failures from the standard style's own tile sources may replace it.
- * Unidentified errors can also come from terrain, glyphs, or other overlays. */
-export const shouldFallbackStandardBasemap = (sourceId: string | undefined, localSource: boolean, officialSource: boolean): boolean =>
-  !localSource && !officialSource && (sourceId === "openmaptiles" || sourceId === "ne2_shaded");
+/** Only failures from the standard style itself may replace it: its own tile
+ * sources, or an unidentified error before its style document has loaded (the
+ * style JSON, sprite or glyphs are unreachable). After that, unidentified errors
+ * can also come from terrain, glyphs, or other overlays. */
+export const shouldFallbackStandardBasemap = (sourceId: string | undefined, localSource: boolean, officialSource: boolean, styleDocumentLoaded = true): boolean =>
+  !localSource && !officialSource && (sourceId === "openmaptiles" || sourceId === "ne2_shaded" || (!sourceId && !styleDocumentLoaded));
 export const TERRAIN_COLOR_RELIEF_LAYER_ID = "kfm-terrain-color-relief";
 export const DAYLIGHT_GEOJSON_SOURCE_ID = "kfm-daylight-context";
 export const DAYLIGHT_FILL_LAYER_ID = "kfm-daylight-context-fill";

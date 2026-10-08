@@ -16,7 +16,7 @@ import { HmsFrameTransitions, hmsFade } from "./hms-smoke-playback";
 import { resetHmsSmokeFade, setHmsSmokeFade } from "./live-context";
 import { geoJSONHasData, waitForGeoJSON } from "./map-performance";
 import { readBoundedJson } from "./bounded-json";
-import { buildAvailabilityBins } from "./timeline-availability";
+import { buildAvailabilityBins, timelineLabelSteps } from "./timeline-availability";
 import { deriveMapSignals } from "./map-signals";
 import { parseRepositoryObservation, type RepositoryConnection } from "./repository-status";
 import { replaceExplorerHistory } from "./embed-runtime";
@@ -1103,6 +1103,8 @@ export default function Home() {
   const earthEngineContext = useEarthEngineContext();
   const [earthEngineDisplay, setEarthEngineDisplay] = useState<EarthEngineDisplayState>({ visible: {}, opacity: {}, years: {} });
   const styleGenerationReadyRef = useRef(false);
+  // Set on each style.load and cleared by setStyle: overlays attach only after it.
+  const styleDocumentLoadedRef = useRef(false);
   const mapMutationErrorRef = useRef<string | null>(null);
   const scaleControlRef = useRef<ScaleControl | null>(null);
   const hoveredRef = useRef<{ source: string; id: string | number } | null>(null);
@@ -1138,6 +1140,8 @@ export default function Home() {
   const noaaSatelliteFrameRef = useRef<NoaaSatelliteFrame | null>(null);
   const noaaSatelliteFollowLatestRef = useRef(true);
   const streamflowRequestRef = useRef<AbortController | null>(null);
+  const streamflowRequestPathRef = useRef<string | null>(null);
+  const streamflowRequestStationRef = useRef<string | null>(null);
   const streamflowRequestGenerationRef = useRef(0);
   const streamflowBundleRef = useRef<StreamflowBundle | null>(null);
   const streamflowArchiveDayRef = useRef<string | null>(null);
@@ -1654,6 +1658,7 @@ export default function Home() {
     temporalStepRule,
   ), [activeLayers, sweepRangeEnd, sweepRangeStart, temporalStepRule]);
   const timelineSteps = useMemo(() => [...new Set([...TIME_STEPS, ...temporalSequence])].sort((left, right) => left - right), [temporalSequence]);
+  const timelineLabels = useMemo(() => timelineLabelSteps(timelineSteps, TIMELINE_MAJOR_STEPS), [timelineSteps]);
   const temporalQuery = useMemo(() => buildTemporalQuery(
     temporalMode,
     temporalMode === "comparison" ? compareTimeB : year,
@@ -3014,6 +3019,20 @@ export default function Home() {
       setStreamflowError("Choose a valid past UTC calendar day.");
       return;
     }
+    const path = archiveDay
+      ? `/api/hydrology/streamflow?mode=station&range=24h&station=${encodeURIComponent(stationId!)}&parameter=00060&end=${encodeURIComponent(new Date(archiveEndMilliseconds!).toISOString().replace(".000Z", "Z"))}&resolution=continuous`
+      : requestedRange === "24h"
+      ? "/api/hydrology/streamflow?mode=network&range=24h"
+      : `/api/hydrology/streamflow?mode=station&range=${requestedRange}&station=${encodeURIComponent(stationId!)}&parameter=00060`;
+    // The statewide adapter answers a second concurrent network request with 429,
+    // and aborting here does not stop its upstream work. Let an identical request
+    // that is already in flight finish instead of replacing it. The network path
+    // omits the station, so the newest caller's station still wins on completion.
+    const inFlight = streamflowRequestRef.current;
+    if (inFlight && !inFlight.signal.aborted && streamflowRequestPathRef.current === path) {
+      streamflowRequestStationRef.current = stationId;
+      return;
+    }
     streamflowArchiveDayRef.current = archiveDay;
     setStreamflowArchiveDay(archiveDay);
     if (archiveDay) {
@@ -3025,17 +3044,14 @@ export default function Home() {
     streamflowRequestRef.current?.abort();
     const controller = new AbortController();
     streamflowRequestRef.current = controller;
+    streamflowRequestPathRef.current = path;
+    streamflowRequestStationRef.current = stationId;
     const generation = ++streamflowRequestGenerationRef.current;
     setStreamflowPlaying(false);
     setStreamflowState("loading");
     setStreamflowError(null);
     setOfficialStates((current) => ({ ...current, "usgs-streamflow": "loading" }));
     setOfficialErrors((current) => ({ ...current, "usgs-streamflow": undefined }));
-    const path = archiveDay
-      ? `/api/hydrology/streamflow?mode=station&range=24h&station=${encodeURIComponent(stationId!)}&parameter=00060&end=${encodeURIComponent(new Date(archiveEndMilliseconds!).toISOString().replace(".000Z", "Z"))}&resolution=continuous`
-      : requestedRange === "24h"
-      ? "/api/hydrology/streamflow?mode=network&range=24h"
-      : `/api/hydrology/streamflow?mode=station&range=${requestedRange}&station=${encodeURIComponent(stationId!)}&parameter=00060`;
     try {
       const response = await fetch(path, { cache: "no-store", headers: { Accept: "application/json" }, signal: controller.signal });
       const candidate = await readBoundedJson(response, 64 * 1024 * 1024) as unknown;
@@ -3060,7 +3076,7 @@ export default function Home() {
       streamflowBundleRef.current = bundle;
       setStreamflowBundle(bundle);
       setStreamflowRange(requestedRange);
-      setStreamflowSelectedStationId(stationId);
+      setStreamflowSelectedStationId(streamflowRequestStationRef.current);
       setStreamflowFrameIndex(restoredIndex >= 0 ? restoredIndex : frames.length - 1);
       const nextState: HydrologyObservatoryState = bundle.state;
       setStreamflowState(nextState);
@@ -4824,6 +4840,7 @@ export default function Home() {
         };
 
         const syncStyle = (): boolean => {
+          styleDocumentLoadedRef.current = true;
           styleGenerationReadyRef.current = false;
           mapMutationErrorRef.current = null;
           if (hoverDrawerTimerRef.current !== null) window.clearTimeout(hoverDrawerTimerRef.current);
@@ -5189,7 +5206,7 @@ export default function Home() {
           const message = mapRuntimeErrorCode("event", sourceId);
           const affectedLayer = sourceId ? LAYER_REGISTRY.find((layer) => layer.sourceId === sourceId) : undefined;
           const affectedOfficialContext = officialContextForMapSource(sourceId);
-          if (basemapRef.current === "standard" && !styleFallbackAttempted && shouldFallbackStandardBasemap(sourceId, Boolean(affectedLayer), Boolean(affectedOfficialContext))) {
+          if (basemapRef.current === "standard" && !styleFallbackAttempted && shouldFallbackStandardBasemap(sourceId, Boolean(affectedLayer), Boolean(affectedOfficialContext), styleDocumentLoadedRef.current)) {
             styleFallbackAttempted = true;
             runtimeError = null;
             degradedReason = `Standard vector basemap unavailable; switched to the local MapLibre style. ${message}`;
@@ -5388,6 +5405,7 @@ export default function Home() {
       hoverDrawerTimerRef.current = null;
       hoverCandidateIdRef.current = null;
       resizeObserver?.disconnect();
+      styleDocumentLoadedRef.current = false;
       styleGenerationReadyRef.current = false;
       if (sceneOrbitTimerRef.current !== null) window.clearTimeout(sceneOrbitTimerRef.current);
       mapRef.current?.remove();
@@ -5764,6 +5782,7 @@ export default function Home() {
     noaaRadarFrameFailureRef.current = null;
     if (pendingRadarFrame) setNoaaRadarFrameLoadState("idle");
     if (!runMapMutation("Basemap style update", () => map.setStyle(BASEMAPS[basemap].style, { diff: false }))) return;
+    styleDocumentLoadedRef.current = false;
     styleGenerationReadyRef.current = false;
     attachedTerrainProviderRef.current = null;
     officialRasterFailuresRef.current.clear();
@@ -9637,7 +9656,7 @@ export default function Home() {
             </div>
             <div className="timeline-track">
               <input type="range" min="0" max={timelineSteps.length - 1} value={Math.max(0, timelineSteps.indexOf(previewYear))} onChange={(event) => { setPreviewYear(timelineSteps[Number(event.target.value)]); setPlaying(false); }} aria-label="Preview time before committing; every year from 1800 is selectable" aria-valuetext={`Preview ${formatTimelineStep(previewYear)}; committed ${temporalScopeLabel}`} />
-              <div className="timeline-ticks" style={{ "--timeline-columns": timelineSteps.length } as React.CSSProperties} aria-hidden="true">{timelineSteps.map((step) => <span key={step} className="timeline-tick" data-active={step === previewYear} data-committed={step === temporalQuery.frame} data-major={TIMELINE_MAJOR_STEPS.has(step)} data-in-range={step >= sweepRangeStart && step <= sweepRangeEnd} title={`${formatTimelineStep(step)} · ${timelineEraLabel(step, buildYearCurrent)}`}>{TIMELINE_MAJOR_STEPS.has(step) ? <b>{formatTimelineStep(step)}</b> : <i />}</span>)}</div>
+              <div className="timeline-ticks" style={{ "--timeline-columns": timelineSteps.length } as React.CSSProperties} aria-hidden="true">{timelineSteps.map((step) => <span key={step} className="timeline-tick" data-active={step === previewYear} data-committed={step === temporalQuery.frame} data-major={TIMELINE_MAJOR_STEPS.has(step)} data-in-range={step >= sweepRangeStart && step <= sweepRangeEnd} title={`${formatTimelineStep(step)} · ${timelineEraLabel(step, buildYearCurrent)}`}>{timelineLabels.has(step) ? <b>{formatTimelineStep(step)}</b> : <i />}</span>)}</div>
             </div>
             <div className="timeline-commit-actions">
               <button type="button" disabled={previewYear === temporalQuery.frame} onClick={() => { setPlaying(false); commitTemporalFrame(previewYear, `Committed ${formatTimelineStep(previewYear)} to the map, evidence, report, and story context`); }}>Commit</button>
