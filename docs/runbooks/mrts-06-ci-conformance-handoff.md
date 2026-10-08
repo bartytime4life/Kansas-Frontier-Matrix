@@ -33,6 +33,14 @@ notes:
 
 ## Current handoff
 
+The [2026-10-08 conformance refresh](mrts-06-conformance-refresh-2026-10-08.md)
+provides a separate successor report and execution evidence at
+`main@ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe`. Topology passes with zero
+new drift and zero stale fingerprints; governance parity retains its baseline
+warning hold. Four closure blockers remain. The historical report, receipts,
+and checkpoints below are preserved; their PASS results do not transfer to a
+later head.
+
 The [2026-09-21 successor currentness record](mrts-06-successor-currentness-2026-09-21.md)
 is an authored historical checkpoint. It was moved from `artifacts/qa/` to this
 documentation lane; it does not supply a current final-head conformance result.
