@@ -548,7 +548,7 @@ class QueueTests(unittest.TestCase):
     def test_the_idle_status_window_holds_one_hundred_jobs(self):
         for index in range(101):
             identifier = f"{index:032x}"
-            self.manager.jobs[identifier] = {"id": identifier, "state": "downloaded"}
+            self.manager.jobs[identifier] = {"id": identifier, "assetId": f"test-{index}", "state": "cancelled", "bytes": 0}
         self.assertIsNone(self.manager.active)
         self.assertEqual(len(self.manager.health()["jobs"]), 100)
 
