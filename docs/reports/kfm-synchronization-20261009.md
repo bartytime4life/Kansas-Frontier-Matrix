@@ -21,25 +21,28 @@ related:
 
 This is a one-time owner-authorized KFM synchronization. It excludes MEGALODON,
 plugin configuration, unfinished AI/installer work, dataset activation and
-recurring synchronization. Delivery is [draft PR #4959](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4959);
-the owner retains the merge decision.
+recurring synchronization. Source was delivered as [draft PR #4959](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4959).
+The owner independently merged it as `afabac19c602dffd09869310c47807bda6c514c5`
+and then merged PR #4958 while this synchronization was in progress. The assistant
+performed neither merge. This report is delivered through a separate draft
+follow-up on `codex/kfm-synchronization-records-20261009`.
 
 ## Source identities and reconciliation
 
 | Surface | Verified identity and disposition |
 |---|---|
-| GitHub `main` and primary PC checkout | `d07557107863f60a95b44c6d720147deb16a55b9`; primary clean checkout fast-forwarded 43 commits |
-| Repository source delivery | `8011ad127fae9b6f176ccf3022481bf70fc51fd4` on `codex/kfm-synchronization-20261009`; subsequent report-only commits do not change application bytes |
+| GitHub `main` and primary PC checkout | `e9860fc7c939a17d023f828f4f4683546406732d`; primary clean checkout first fast-forwarded 43 commits to `d07557107863`, then to this refreshed main |
+| Repository source delivery | Source delivery `8011ad127fae9b6f176ccf3022481bf70fc51fd4` is merged through PR #4959. Current application bytes include PR #4958 at main `e9860fc7c939a17d023f828f4f4683546406732d` |
 | Prior hosted Site | v186, source `83c81618b407675206ad880c8f9a607e36c23e6f`; existing project `appgprj_6aa0b1c41bc08191bfd86003920f1631` |
 | Prior installed Explorer | `c06c4716fe7ab1cc252db5ab940ef282dfacdfc8`, retained directory `KFM-Explorer-Site-download-workspace-20261008-r2` |
-| Reconciled standalone Site | `05dddb4e26daff98ea856ba03d34546afb503f81`; same Site history, based on v186 with selected download/timer commits |
-| Submitted archive | Compressed SHA-256 `8ce90d58ff5aec4d4d55b7966e97aba359a04d7208d8a6f3bcdeddd4b90fff46`; 31,278,296 bytes; 398 files |
-| Stored Site archive | Platform-returned tar SHA-256 `527b18e6a55d158a0a1b1901b4000ed5625588b589931253851ca79e6a534747`; 49,571,840 bytes; 398 files. This is the platform's stored representation, not the compressed upload digest |
-| Published Site | v187; source `05dddb4e26daff98ea856ba03d34546afb503f81`; deployment `appgdep_6ac87df097788191838db81c548d8cbd` succeeded; environment revision 5 |
-| Installed candidate | `KFM-Explorer-Site-sync-20261009`, all 810 tracked source files equal to the standalone commit |
+| Reconciled standalone Site | `bdea047f2f2738022f0d47433fca0bca73f5a331`; same Site history, first reconciliation `05dddb4e26daff98ea856ba03d34546afb503f81` followed by the merged WebGL lifecycle fix |
+| Submitted archive | Compressed SHA-256 `42314bd49a3d02e7454ad268e381a20f94505d8a761050b4a340cb9584d5dcdf`; 31,279,388 bytes; 398 files |
+| Stored Site archive | Platform-returned tar SHA-256 `16754e9172a6fda90165c7541585369d2cf56c377004b22cee42ef2751601d7e`; 49,571,840 bytes; 398 files. This is the platform's stored representation, not the compressed upload digest |
+| Published Site | v188; source `bdea047f2f2738022f0d47433fca0bca73f5a331`; deployment `appgdep_6ac880b666888191afc23a18dcb21b5f` succeeded; environment revision 5 |
+| Installed candidate | `KFM-Explorer-Site-sync-20261009-r2`, all 812 tracked source files equal to the standalone commit |
 
 GitHub and the standalone Site retain different Git histories. Byte comparison
-establishes parity: 808 standalone files match `apps/site/source` exactly. The
+establishes parity: 810 standalone files match `apps/site/source` exactly. The
 remaining two already have canonical repository homes: `scripts/basemap-cache.py`
 is byte-identical to `tools/local_data/basemap_cache.py`; its Python test matches
 `tests/local_data/test_basemap_cache.py` except for the import path. They remain in
@@ -53,7 +56,10 @@ resolved explicitly: pinned NMMR research links survive offline/empty discovery,
 failed catalog reads retry on the next healthy poll, previews reset immediately
 when the selected record changes, and library summary definitions retain valid
 HTML. GitHub's interface, scene-effects, accessibility and audit work is retained.
-No public API or saved-workspace format was introduced.
+No public API or saved-workspace format was introduced. The final readback caught
+merged PR #4958; its five application files and four test changes were carried into
+the standalone history. WebGL support probing now remembers success per page,
+and the Underground renderer releases its own context on teardown.
 
 ## Runtime and recovery
 
@@ -62,10 +68,12 @@ The stable local origin remains `http://127.0.0.1:4173`; the source alias is
 `/home/bartytime/Projects/KFM-Explorer-Site-v109/.wrangler/local-state`.
 The application source, source-history bundle, previous build, service unit and
 drop-ins, stopped-writer D1/R2 snapshot and file hashes are preserved outside app
-source under `/home/bartytime/KFM-site-recovery/kfm-sync-20261009`.
+source under `/home/bartytime/KFM-site-recovery/kfm-sync-20261009`. The second install
+retains v187 source/build in its original directory and another consistent snapshot
+under `/home/bartytime/KFM-site-recovery/kfm-sync-20261009-webgl`.
 
 The initial consistent snapshot verified 18,410 files and eight SQLite databases.
-The copied-state rehearsal used port 4187. Both selected submission indexes are
+Copied-state rehearsals used ports 4187 and 4188. Both selected submission indexes are
 present after migration, database integrity passes, and every user-table row is
 unchanged. Runtime `_cf_METADATA` bookkeeping may advance. The retained R2 store
 contains 15,840 object records; no dataset activation was performed.
@@ -87,8 +95,8 @@ existing local operator, displays 1,695 catalog records and 12 recent transfers;
 no new transfer was started.
 
 [The existing private Site](https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site/downloads)
-deployed successfully as v187, saved version
-`appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_6055ea04b7a88191a697a6ec0a3136e5`.
+deployed successfully first as v187 and then as v188, saved version
+`appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_80c9c1c90194819198afa8503c2e1904`.
 Fresh readback confirms the exact source commit, `DB`/`BUCKET` declarations,
 unchanged owner-only access policy revision 1, no viewers/groups, and anonymous
 HTTP 403. The owner's browser loads the new download interface and library/activity
@@ -99,7 +107,7 @@ queries, so independent hosted index introspection remains **unavailable**. This
 limitation is not presented as a migration failure or an index verification pass.
 
 Rollback selects the preserved local application source/build via the stable
-alias, or prior private Site v186. Compatible additive indexes can remain. Never
+alias, or prior private Site v187 (v186 is also retained). Compatible additive indexes can remain. Never
 restore an earlier database over later writes. Only the Explorer service may be
 restarted for this installation; companion services are outside the change.
 
@@ -108,7 +116,7 @@ restarted for this installation; companion services are outside the change.
 | Check | Evidence and limit |
 |---|---|
 | Site build, TypeScript and lint | Pass; zero lint errors, 45 existing warnings |
-| Site tests | 766 pass, zero failures/skips; includes download races/timer context, catalog recovery, cancellation, source links and pagination with 75 tied-timestamp rows |
+| Site tests | Final successor: 769 pass, zero failures/skips; includes download races/timer context, catalog recovery, cancellation, source links and pagination with 75 tied-timestamp rows |
 | Standalone cache tests | Eight Python tests pass; canonical repository implementation is unchanged |
 | `make site-check` | Build/lint/types/766 tests passed; its smoke step correctly refused occupied port 4173. The identical smoke step was replayed at 4186 and passed 57 assertions across 47 routes; nine provider-only routes remain outside smoke coverage |
 | Workflow security | Pass |
@@ -116,9 +124,10 @@ restarted for this installation; companion services are outside the change.
 | Governance parity | `LANE_OUTCOME_MISMATCH` for `root-registry`; reproduced on unchanged main at `d07557107863`, not introduced by synchronization |
 | Governed routes on copied state | Water/knowledge remain ABSTAIN with `NO_APPROVED_SNAPSHOT` / `NO_APPROVED_KNOWLEDGE`; Crop-CASMA remains `NO_APPROVED_SOIL_PACKAGE` |
 | Local access boundary | Anonymous submissions return 401; injected hosted identity headers return 403; direct runtime binds loopback |
-| Browser | Fresh download discovery, library/activity views, empty-search official links, keyboard activation, terrain/globe switching, scene preset and Escape, and Underground workspace exercised. Download and Underground layouts have no horizontal overflow at 390 pixels |
+| Browser | Fresh download discovery, library/activity views, empty-search official links, keyboard activation, terrain/globe switching, scene preset and Escape, and Underground workspace exercised. The final WebGL successor also reached MapLibre ready and completed terrain/globe transitions in a fresh tab; no console errors were observed. Download and Underground layouts have no horizontal overflow at 390 pixels |
 | Browser limits | CUA pointer activation was unreliable; keyboard activation worked. Real transfer progress/cancellation use deterministic harness coverage, not a newly acquired dataset. This is bounded interaction evidence, not exhaustive touch/visual/accessibility acceptance |
-| Security | Required delegated preflight passes; pinned diff scan `28ee056c-cd8d-42fb-af9a-e76bcfdfd77b` covers `ecc8921b715959095bafcd7bc201bc4f14b5b7c6..05dddb4e26daff98ea856ba03d34546afb503f81`; sealed and read back at 05:40:18 UTC. All 74 changed source items reviewed; zero new reportable findings |
+| Initial security review | Required delegated preflight passes; pinned diff scan `28ee056c-cd8d-42fb-af9a-e76bcfdfd77b` covers `ecc8921b715959095bafcd7bc201bc4f14b5b7c6..05dddb4e26daff98ea856ba03d34546afb503f81`; sealed and read back at 05:40:18 UTC. All 74 changed source items reviewed; zero new reportable findings |
+| Supplemental security review | Scan `4abd772f-5280-4f81-a829-6c0ad33df9cc` covers `05dddb4e26daff98ea856ba03d34546afb503f81..bdea047f2f2738022f0d47433fca0bca73f5a331`; sealed/read back at 05:50:07 UTC; five source and four test files reviewed, zero findings, 34 offline regressions pass |
 
 All 11 existing KFM security bundles validate without rewriting sealed results.
 The new review covers changes introduced to GitHub or either runtime plus needed
@@ -141,8 +150,8 @@ remain. Fresh GitHub readback confirms [PR #4941](https://github.com/bartytime4l
 merged as `3b39b948919b51433db369b816e3ea748c54df1f`; its earlier draft/open labels
 are historical.
 
-The primary checkout stays on GitHub main while local and hosted runtimes may use
-this unmerged draft source. AI worktree `8f5a` and installer worktree `998d` retain
+The primary checkout stays on GitHub main; the final local/hosted application
+source bytes match that refreshed main. The report follow-up remains a draft. AI worktree `8f5a` and installer worktree `998d` retain
 their independent unfinished work. `MIRROR_REVIEW_REQUIRED`, source-admission,
 activation and release decisions remain unchanged. Fresh comparison evidence is
 pending owner review and does not replace an approved receipt.

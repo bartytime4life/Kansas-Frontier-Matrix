@@ -8,7 +8,7 @@ prior_version: unversioned
 status: tracked; documentation-only; generated-report lane proposed; admission and writers held
 owner: "NEEDS VERIFICATION — the default CODEOWNERS route is @bartytime4life; no report-lane steward, generator owner, or independent reviewer assignment was verified"
 created: 2026-05-08
-updated: 2026-08-14
+updated: 2026-10-09
 policy_label: repository-facing
 current_path: docs/reports/README.md
 owning_root: docs/
@@ -86,6 +86,14 @@ notes:
 <a id="table-of-contents"></a>
 
 **Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Current tree](#current-direct-child-map) · [Boundary](#responsibility-boundary) · [Generation](#writer-and-generation-contract) · [Identity](#report-identity-and-minimum-shape) · [Exposure](#sensitivity-and-exposure) · [Correction](#correction-withdrawal-and-rollback) · [Reader workflow](#reader-workflow) · [Risks](#risks-and-anti-patterns) · [FAQ](#faq) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger)
+
+## Authored synchronization checkpoint
+
+The [KFM synchronization report for 2026-10-09](kfm-synchronization-20261009.md)
+records the owner-requested PC, GitHub, private Site and project-record alignment.
+It is an authored observation record, not a generated-report writer, review
+approval, admission decision or release authority. Historical lane statements
+below retain their pinned evidence dates.
 
 ---
 
