@@ -2,29 +2,53 @@
 KFM_WIKI_SOURCE
 page_id: Repository-Map
 title: Repository Map
-version: v0.2.0
-status: PROPOSED wiki source; review required
-created: 2026-08-07
-updated: 2026-08-15
-authority: orientation-only; canonical repository evidence, adopted KFM doctrine, accepted ADRs, owning root contracts, and reviewed machine projections outrank this page
+status: source-grounded orientation; independent review pending
+updated: 2026-10-09
+authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/Repository-Map.md
-owning_root: docs/
-responsibility: public orientation to KFM responsibility roots, root classes, path selection, lifecycle placement, scope segments, compatibility, and migration boundaries
-evidence_snapshot: main@2d7f3014d52cc51556f1ecb1660f8998e8654035
-prior_blob: e0772a42f11a61eb150c0c15cc45803145470417
-root_tree: d2ca3c5c24cea63f1b30f92cb69019c736d39275
-root_registry_blob: 024f668b5f0a9239bafa4f8b09e2afd86300ff8c
-directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-publication_effect: none until separately synchronized to the native GitHub Wiki
+evidence_checkpoint: main@9666e026682c514c0086155a8754cbe58abed0eb
+publication_effect: native wiki documentation only; no application deployment or data release
 -->
 
 <a id="top"></a>
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/main/docs/brand/logo/The-Kansas-Frontier-Matrix-Seal-transparent-cropped.png" alt="Kansas Frontier Matrix seal" width="150" />
-</p>
-
 # Repository Map
+
+## Find the owner of a change
+
+**Navigate by responsibility, then read the nearest contract.**
+
+| If you want to change… | Begin here | Read alongside it |
+|---|---|---|
+| Explorer interaction or rendering | [apps/site/source/app/](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/app) | Feature notes and tests under the same Site tree |
+| An application regression | [apps/site/source/tests/](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/tests) | The caller and actual user interaction being protected |
+| A developer's first run | [docs/installation.md](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/docs/installation.md) | Site package scripts and local launcher |
+| Source discovery or acquisition | [connectors/](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/connectors/README.md) | Source-specific runbook, terms, bounds and candidate state |
+| Object shape or meaning | [schemas/](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/schemas/README.md) and [contracts/](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/contracts/README.md) | Consumers, fixtures, and adopted definitions |
+| Public documentation | [docs/wiki/](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/docs/wiki/README.md) | The implementation behind every material claim |
+| AI-authored provenance | [data/receipts/generated/](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/data/receipts/generated/README.md) | Artifact hashes and actual review state |
+| Release decisions | [release/](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/release/README.md) | Applicable review, rights, policy and correction records |
+
+### Trace one feature in four steps
+
+For imagery comparison, read [the behavior guide](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/docs/history-comparison.md), then [pair selection and transport](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/app/earth-engine-comparison.ts), then [the panel](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/app/earth-engine-comparison-panel.tsx), then [regression tests](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/tests/earth-engine-comparison.test.mjs). The guide explains the user promise; the helper and panel implement it; the tests show which cases are protected.
+
+This is a practical review path, not a claim that every test has been executed in this documentation session.
+
+### Keep these boundaries intact
+
+A generated receipt is process memory, not a proof or release manifest. A display asset is not automatically an admitted dataset. A local runtime directory is not a canonical storage authority. The [Directory Rules](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/docs/doctrine/directory-rules.md) and accepted [ADR-0029](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) decide placement when labels or older documents disagree.
+
+**Next:** [Choose the appropriate checks](Development-and-Validation.md) or [prepare a reviewable change](Contributing.md).
+
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+
+---
+
+<details>
+<summary>Earlier reference edition — historical context and detailed background</summary>
+
+> **Historical material:** The retained text below predates this renovation. Its source pins, commands, runtime statements, counts and open questions apply only to their original checkpoints. Read the current introduction above and the linked source for present navigation. It does not update implementation or approval state.
 
 <p align="center"><strong>Responsibility first · Scope second · Evidence over convention · Reversible change</strong></p>
 
@@ -353,3 +377,5 @@ Reader routes: [Architecture](Architecture.md) · [Data Lifecycle](Data-Lifecycl
 > When this page and a current canonical source disagree, use the canonical source, record the drift, and correct this page.
 
 [Back to top](#top)
+
+</details>

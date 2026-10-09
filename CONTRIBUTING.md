@@ -446,6 +446,27 @@ For an AI-authored or substantively AI-modified artifact:
 8. Do not represent the receipt as proof, factual authority, policy permission, release approval, or publication authority.
 
 The current pull-request template requires this receipt. The breadth of automated enforcement remains **NEEDS VERIFICATION**.
+### Turn an AI-assisted result into a reviewable contribution
+
+A useful handoff connects the user's question to a concrete artifact and a check.
+For example, a historical-year control should preserve its selected product and
+report missing imagery without reusing another year's pixels. A change to that
+behavior should explain the trigger, identify the owning callback, protect its
+negative states, and show the actual validation performed.
+
+| Stage | Reviewable output |
+|---|---|
+| Human direction | User-visible outcome, constraints and acceptance criteria |
+| Source research | Exact component, revision, source semantics and unresolved assumptions |
+| AI-assisted implementation | Focused diff with its affected callers and recovery path |
+| Verification | Named commands and interaction observations tied to the tested revision |
+| Review | Actual GitHub review state and the generated-work receipt with honest review status |
+
+The [wiki contribution walkthrough](docs/wiki/Contributing.md) gives a worked
+example, and [development and validation](docs/wiki/Development-and-Validation.md)
+separates source, test, runtime and browser evidence. These reading aids do not
+replace the contribution requirements above or authorize a merge or release.
+
 
 ## Validation
 

@@ -2,26 +2,58 @@
 KFM_WIKI_SOURCE
 page_id: Security-and-Sensitivity
 title: Security and Sensitivity
-version: v0.2.0
-status: PROPOSED wiki source; review required
-created: 2026-08-07
-updated: 2026-08-15
-authority: orientation-only; canonical repository evidence, adopted KFM doctrine, accepted ADRs, contracts, schemas, policy, review, release, correction, and rollback records outrank this page
+status: source-grounded orientation; independent review pending
+updated: 2026-10-09
+authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/Security-and-Sensitivity.md
-owning_root: docs/
-responsibility: public orientation to KFM security, harmful-precision, sensitivity, rights, exposure, denial, reporting, correction, and rollback boundaries
-evidence_snapshot: main@dc5549980158a9df81d643e367dc9d861494f378
-prior_blob: 63a7ff26ca21fefdacc5267495e3e9732e5b6dfb
-publication_effect: none until separately synchronized to the native GitHub Wiki
+evidence_checkpoint: main@9666e026682c514c0086155a8754cbe58abed0eb
+publication_effect: native wiki documentation only; no application deployment or data release
 -->
 
 <a id="top"></a>
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/main/docs/brand/logo/The-Kansas-Frontier-Matrix-Seal-transparent-cropped.png" alt="Kansas Frontier Matrix seal" width="150" />
-</p>
-
 # Security and Sensitivity
+
+## Security as observable product behavior
+
+**A boundary is useful when its effect survives the full path to the user.**
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/9666e026682c514c0086155a8754cbe58abed0eb/docs/brand/readme/kfm-trust-membrane-dark.svg" /><img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/9666e026682c514c0086155a8754cbe58abed0eb/docs/brand/readme/kfm-trust-membrane.svg" alt="Conceptual separation of internal source material, review boundaries, and public-safe delivery." width="100%" /></picture>
+
+<sub>Illustrative project artwork; not a runtime screenshot or measured data.</sub>
+
+### Inspect a control, a failure, and its consequence
+
+| Boundary | Concrete implementation to inspect | Counterexample to test |
+|---|---|---|
+| Imagery transport | [Bounded same-origin tile reads](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/app/earth-engine-comparison.ts) | A sign-in HTML response must not be decoded as imagery |
+| Selection identity | [Reviewed-water control](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/app/governed-water-control.tsx) | A → B → A selection must not revive an older in-flight export |
+| Trusted release state | [Server-side snapshot reads](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/app/governed-water-server.ts) | Package-supplied claims must not replace trusted activation metadata |
+| Location privacy | [Research capture/redaction contract](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/docs/map-research-tools.md) | A saved report must not reintroduce a browser-location-derived dossier |
+| Negative results | [General API scaffold](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/governed-api/README.md) | HTTP success must not be interpreted as an available evidence answer |
+
+These are bounded source-review examples. They are not a repository-wide audit, a penetration-test result, or security certification.
+
+### Security and sensitivity answer different questions
+
+Security asks whether a caller can read, write, or influence something they should not. Sensitivity asks whether otherwise valid information can cause harm when disclosed at a particular precision or in combination with other information. Hiding a marker does not remove its coordinates from a payload. A citation does not grant redistribution rights.
+
+The [source reporting policy](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/SECURITY.md) is the place to begin a security-sensitive report. It explicitly leaves channel availability subject to verification; do not assume that an address or private reporting mechanism exists merely because a guide mentions it. Keep sensitive details out of public issues and wiki pages.
+
+### Review the claim at the right scope
+
+A focused security finding, an advisory dependency check, a synthetic negative-path test, and a rendered privacy interaction are different evidence. Record the revision, route, input, observed result and limitation. Codex Security can support a scoped assessment; it cannot turn documentation or a clean subset into whole-system clearance.
+
+**Next:** [Follow the evidence model](Governance-and-Evidence.md) or [read the export case study](Engineering-Case-Studies.md#03--protect-the-meaning-of-a-downloaded-result).
+
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+
+---
+
+<details>
+<summary>Earlier reference edition — historical context and detailed background</summary>
+
+> **Historical material:** The retained text below predates this renovation. Its source pins, commands, runtime statements, counts and open questions apply only to their original checkpoints. Read the current introduction above and the linked source for present navigation. It does not update implementation or approval state.
 
 <p align="center"><strong>How KFM protects its trust path—and protects people, places, communities, sources, and systems from harmful exposure.</strong></p>
 
@@ -505,3 +537,5 @@ For a source-only correction, restore the previous page blob:
 After merge, use a normal revert or reviewed forward fix. If these bytes are later synchronized to the native wiki, correct the main-repository source first, then revert or republish the native-wiki commit through the documented maintenance process. Do not force-push shared history merely to hide a correction.
 
 [Back to top](#top)
+
+</details>

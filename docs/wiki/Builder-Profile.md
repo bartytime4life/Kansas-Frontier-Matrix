@@ -28,13 +28,15 @@ That challenge connects interface design to data provenance, rendering performan
 
 | Capability | Observable work | Start with |
 |---|---|---|
-| Product definition | Area-first investigation, deliberate selection, source context, explicit unavailable states | [Map research tools](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/459ffbe892929cbe994add8665805549694740b6/apps/site/source/docs/map-research-tools.md) |
+| Product definition | Area-first investigation, deliberate selection, source context, explicit unavailable states | [Investigation workflow](Map-UI-and-AI.md) |
 | Interaction and information design | Linked 2D/3D inspection, depth controls, keyboard comparison divider, fallback views | [Visual tour](Visual-Tour.md) |
-| Full-stack development | React/TypeScript interface, Worker routes, D1/R2 integration, local runtime | [Application package](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/459ffbe892929cbe994add8665805549694740b6/apps/site/source/package.json) and [local operation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/459ffbe892929cbe994add8665805549694740b6/apps/site/source/docs/local-pc-consolidation.md) |
+| Full-stack development | React/TypeScript interface, Worker routes, D1/R2 integration, local runtime | [Architecture](Architecture.md) and [local operation](Development-and-Validation.md#local-operation-and-recovery) |
 | Geospatial and temporal reasoning | Recorded depth units, separate observation/retrieval times, compatible imagery pairs | [Cases 01 and 02](Engineering-Case-Studies.md) |
 | Reliability and security thinking | Bounded requests, cancellation, withheld stale results, privacy-aware exports | [Cases 02 and 03](Engineering-Case-Studies.md) |
-| AI-assisted delivery | Reviewable source changes, generated-artifact provenance, focused regression work | [AI contribution guidance](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/459ffbe892929cbe994add8665805549694740b6/CONTRIBUTING.md#ai-assisted-contributions) |
-| Cross-system coordination | GitHub implementation, Notion work coordination, Drive research and proposal lineage, Sites delivery | [Documented responsibility split](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/459ffbe892929cbe994add8665805549694740b6/CONTRIBUTING.md#documentation-authority-and-cross-system-roles) |
+| AI-assisted delivery | Reviewable source changes, generated-artifact provenance, focused regression work | [AI-assisted delivery](Contributing.md#ai-assisted-delivery) |
+| Cross-system coordination | GitHub implementation, Notion work coordination, Drive research and proposal lineage, Sites delivery | [Responsibility map](Repository-Map.md) |
+
+**Choose your depth:** [Product behavior](Map-UI-and-AI.md) → [system design](Architecture.md) → [validation](Development-and-Validation.md) → [security boundaries](Security-and-Sensitivity.md).
 
 Each row gives a reviewer a concrete artifact to inspect and a decision to discuss.
 

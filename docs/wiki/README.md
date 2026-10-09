@@ -94,6 +94,18 @@ Wiki pages use KFM's core truth labels:
 | `UNKNOWN` | Available evidence is insufficient |
 | `NEEDS VERIFICATION` | A concrete check remains before the claim can be relied upon |
 
+## October 9 technical reading paths
+
+The portfolio now leads into thirteen refreshed technical-reference introductions.
+Each introduction states its inspected source revision, gives a practical example
+or review path, and links onward to the responsible repository files. Older detail
+is retained in a labeled expandable historical section; it does not become a new
+current implementation or approval claim.
+
+The installation and root contribution guides have matching evaluation walkthroughs.
+Package manifests, application source, runtime settings, data and Site access are
+unchanged by this documentation edition.
+
 ## Page inventory
 
 ### Portfolio
