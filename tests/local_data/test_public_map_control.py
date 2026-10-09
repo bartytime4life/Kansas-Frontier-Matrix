@@ -13,7 +13,8 @@ from tools.local_data import earth_engine_downloads as service
 class PublicMapControlTests(unittest.TestCase):
     def setUp(self):
         self.maps = SimpleNamespace(catalog=Mock(return_value={"records": []}), health=Mock(return_value={"schema": "kfm-public-map-download-control/v1"}),
-                                    start=Mock(return_value={"id": "job"}), cancel=Mock(return_value={"cancelling": "job"}), refresh=Mock(return_value={"state": "running"}))
+                                    start=Mock(return_value={"id": "job"}), cancel=Mock(return_value={"cancelling": "job"}), refresh=Mock(return_value={"state": "running"}),
+                                    enqueue=Mock(return_value={"batchId": "b" * 32}), cancel_queue=Mock(return_value={"cancelledQueued": 0}))
         self.manager = SimpleNamespace(token="test-token", public_maps=self.maps, active=None, lock=threading.RLock(), start=Mock(), health=Mock(return_value={"configured": False}))
 
     def request(self, method, path, body=None, headers=None):
@@ -55,6 +56,21 @@ class PublicMapControlTests(unittest.TestCase):
         status, body = self.request("POST", "/public-maps/downloads")
         self.assertEqual(status, 400); self.assertEqual(body["error"], "DOWNLOAD_ALREADY_RUNNING")
         self.maps.start.assert_not_called()
+
+
+    def test_queue_routes_require_the_session_and_respect_earth_engine_transfers(self):
+        selection = {"requestId": "a" * 32, "assetIds": ["publisher-noaa-storm-events-2024-details"], "maxBytes": 80_000_000}
+        self.assertEqual(self.request("POST", "/public-maps/queue", selection, headers={"X-KFM-Session": "wrong"})[0], 403)
+        self.maps.enqueue.assert_not_called()
+        self.assertEqual(self.request("POST", "/public-maps/queue", selection)[0], 200)
+        self.maps.enqueue.assert_called_once_with(selection)
+        self.assertEqual(self.request("POST", "/public-maps/queue/cancel", {"unexpected": True})[0], 400)
+        self.assertEqual(self.request("POST", "/public-maps/queue/cancel")[0], 200)
+        self.maps.cancel_queue.assert_called_once_with()
+        self.manager.active = "earth-engine-job"
+        status, body = self.request("POST", "/public-maps/queue", selection)
+        self.assertEqual((status, body["error"]), (400, "DOWNLOAD_ALREADY_RUNNING"))
+        self.assertEqual(self.maps.enqueue.call_count, 1)
 
 
 if __name__ == "__main__": unittest.main()

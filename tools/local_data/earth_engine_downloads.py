@@ -91,7 +91,7 @@ class Downloads:
             if identifier in self.jobs:
                 if self.jobs[identifier]["selection"]!=value["selection"]: raise ValueError("REQUEST_ID_CONFLICT")
                 return dict(self.jobs[identifier])
-            if self.active or self.public_maps.active: raise ValueError("DOWNLOAD_ALREADY_RUNNING")
+            if self.active or self.public_maps.active or self.public_maps.queue: raise ValueError("DOWNLOAD_ALREADY_RUNNING")
             if self.signin.status() in {"waiting","validating"}: raise ValueError("SIGN_IN_IN_PROGRESS")
             if len(self.jobs)>=1000: raise ValueError("JOB_HISTORY_LIMIT")
             if not self.health()["configured"]: raise ValueError("EARTH_ENGINE_SETUP_REQUIRED")
@@ -202,6 +202,13 @@ def handler(manager):
                     with manager.lock:
                         if manager.active: raise ValueError("DOWNLOAD_ALREADY_RUNNING")
                         result=manager.public_maps.start(value)
+                elif self.path=="/public-maps/queue":
+                    with manager.lock:
+                        if manager.active: raise ValueError("DOWNLOAD_ALREADY_RUNNING")
+                        result=manager.public_maps.enqueue(value)
+                elif self.path=="/public-maps/queue/cancel":
+                    if not isinstance(value,dict) or value: raise ValueError("EMPTY_CANCEL_REQUIRED")
+                    result=manager.public_maps.cancel_queue()
                 elif self.path=="/public-maps/cancel" and isinstance(value,dict) and set(value)=={"id"}: result=manager.public_maps.cancel(value["id"])
                 elif self.path=="/public-maps/refresh":
                     if not isinstance(value,dict) or value: raise ValueError("EMPTY_REFRESH_REQUIRED")

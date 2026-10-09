@@ -5,6 +5,7 @@ import type { PublicMapDownloads } from "./use-public-map-downloads";
 import { formatDownloadBytes as bytes } from "./local-download-client";
 import { PublicMapPreview } from "./public-map-preview";
 import { revealTransferControls } from "./download-focus";
+import StormEventsQueue from "./storm-events-queue";
 import s from "./downloads/workspace.module.css";
 import p from "./public-map-browser.module.css";
 
@@ -83,6 +84,7 @@ export default function PublicMapBrowser({ downloads, blockedByOtherDownload = f
     <details className={p.coverage}><summary>Source coverage{unavailable.length ? <span>{unavailable.map(source => `${source.title}: ${source.state === "unavailable" ? "unknown" : "partial"}`).join(" · ")}</span> : <span>Check dates &amp; completeness</span>}</summary><ul>{coverage.map(source => <li key={source.sourceId}><strong>{source.title}</strong><span>{records.filter(row => row.sourceId === source.sourceId).length.toLocaleString()} downloadable records · {coverageLabels[source.state]} · {source.state === "unavailable" && (source.discoveredCount ?? source.recordCount) === 0 ? "Coverage unknown" : `${(source.discoveredCount ?? source.recordCount).toLocaleString()}${source.expectedCount === null ? " metadata records; total unknown" : ` / ${source.expectedCount.toLocaleString()} metadata records`}`}{source.seedReferenceCount ? ` + ${source.seedReferenceCount} starting references` : ""}</span><p>{coverageReason(source.reason)}</p>{source.checkedAt && <small>Checked {stamp(source.checkedAt)}</small>}
     </li>)}</ul><p>Only records with verified direct files appear in downloads. Missing results do not establish complete geological coverage.</p><button type="button" disabled={!connected || !!busy || status?.refresh.state === "running"} aria-busy={status?.refresh.state === "running"} onClick={() => void downloads.refreshCatalog()}>{status?.refresh.state === "running" ? "Refreshing catalog…" : "Refresh Kansas catalog"}</button></details>
     {stormsUnlisted && <div className={s.alert}><p>NOAA Storm Events files are listed from the NCEI directory when the catalog is refreshed on this computer, because NCEI renames a year&apos;s files when it reissues them.</p><button type="button" disabled={!connected || !!busy || status?.refresh.state === "running"} aria-busy={status?.refresh.state === "running"} onClick={() => void downloads.refreshCatalog()}>{status?.refresh.state === "running" ? "Listing storm event files…" : connected ? "List Storm Events files" : "Connect to list Storm Events files"}</button></div>}
+    {collection === "satellite" && <StormEventsQueue records={records} downloads={downloads} blocked={blockedByOtherDownload} showNotice={!selected} onViewActivity={onViewActivity} />}
     {downloads.catalogError && <p className={s.alert}>{downloads.catalogError}</p>}
     {status?.refresh.state === "failed" && <p className={s.alert}>Catalog refresh did not finish. Retained records remain available; current completeness is unknown.</p>}
     <div className={p.results} data-selection={Boolean(selected)}>

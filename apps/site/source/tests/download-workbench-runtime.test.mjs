@@ -149,3 +149,26 @@ test('default browser polling preserves the native Window timer receiver across 
   control.refresh(); await settle(); assert.equal(rounds, 4); assert.equal(timers.size, 1);
   control.dispose(); assert.equal(timers.size, 0); assert.equal(listeners.size, 0); assert.ok(cleared >= 3); h.dispose();
 });
+
+test('a Storm Events queue sends verified files under one maximum, blocks single starts and cancels the rest', async () => {
+  const storm = year => ({ id: `publisher-noaa-storm-events-${year}-details`, title: `StormEvents_details-ftp_v1.0_d${year}_c20250401.csv.gz`, format: 'GZIP',
+    url: `https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/StormEvents_details-ftp_v1.0_d${year}_c20250401.csv.gz`, expectedBytes: null, kind: 'download', availability: 'verified', checkedAt: '2026-10-09' });
+  const h = await mapHarness(); await h.connect();
+  const assets = [storm(2023), storm(2024)], maximum = 80 * 1_048_576;
+  const queued = h.render().startQueue(assets, maximum);
+  assert.equal(h.calls[2].path, '/queue'); const batch = h.calls[2].payload.requestId;
+  assert.deepEqual(JSON.parse(JSON.stringify(h.calls[2].payload)), { requestId: batch, assetIds: assets.map(a => a.id), maxBytes: maximum });
+  await h.respond(2, { batchId: batch, jobs: 2, queued: 1, active: '1'.repeat(32), mapReady: false }); await queued;
+  assert.match(h.render().notice, /2 files queued/);
+  await h.respond(3, status({ active: '1'.repeat(32), queued: 1, jobs: [job({ assetId: assets[0].id, expectedBytes: null })] }));
+  assert.equal(h.render().status.queued, 1);
+  await h.render().startDownload(asset, 40_000_000); assert.equal(h.calls.length, 4, 'a running queue blocks a single start');
+  const cancel = h.render().cancelQueue(); assert.equal(h.calls[4].path, '/queue/cancel'); assert.equal(JSON.stringify(h.calls[4].payload), '{}'); assert.equal(h.calls[4].token, status().sessionToken);
+  await h.respond(4, { cancelledQueued: 1, cancelling: '1'.repeat(32) }); await cancel; assert.match(h.render().notice, /Queued files cancelled/); h.dispose();
+});
+
+test('a queued count is valid only alongside a running job', () => {
+  assert.ok(client.parsePublicMapStatus(status({ active: '1'.repeat(32), queued: 3, jobs: [job()] })));
+  assert.ok(client.parsePublicMapStatus(status()), 'operators without a queue omit the count');
+  for (const queued of [2, -1, 1.5, 301]) assert.equal(client.parsePublicMapStatus(status({ queued, ...(queued === 2 ? {} : { active: '1'.repeat(32), jobs: [job()] }) })), null);
+});
