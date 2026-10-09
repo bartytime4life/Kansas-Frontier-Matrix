@@ -64,6 +64,14 @@ The first round focused on Terrain 3D. This round carries the look into every Ma
 
 **Defaults:** existing preferences keep their choices and gain the new effects at their defaults: glow, columns and buildings on; 2D relief off. Defaults add no new network requests. **Plain** switches every effect off and restores the original flat look.
 
+## Round 3 — Real night sky
+
+<p align="center">
+  <img src="images/night-sky-globe-sunrise-2026-10-09.jpg" alt="The globe from orbit with the Sun just past the left limb and catalog stars across black space." width="100%" />
+</p>
+
+A new **Real night sky** effect replaces the globe's decorative CSS star dots with the real sky, drawn by one custom WebGL2 layer beneath every other layer: the 2,851 brightest XHIP (Hipparcos-based) stars at their true positions for the current time, a Milky Way glow on the galactic plane and, from orbit, the Sun. On the globe the stars turn with the Earth and the planet hides everything behind it. On tilted maps and in Terrain 3D at night or dusk, stars rise above the true horizon at their real altitude and azimuth over the map centre, and twinkle and redden near the horizon. The catalog is a separate 70 KB chunk loaded on first use. On by default in the Cinematic and Natural looks; Battery saver hides it and reduced motion stops the twinkle. Method, data provenance, licence and validation: [night-sky.md](night-sky.md).
+
 **Underground is deliberately unchanged.** Its three.js cutaway uses material and aquifer colours as a legend; haze, tone mapping or coloured light would change what those colours say.
 
 ## Controls

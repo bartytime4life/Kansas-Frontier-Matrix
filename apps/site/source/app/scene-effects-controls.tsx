@@ -167,7 +167,7 @@ export function SceneEffectsControls({ settings, light, efficient, reducedMotion
       <div className="scene-effects-switches">
         {SCENE_EFFECT_OPTIONS.filter((option) => option.key !== "sunSync").map((option) => {
           const here = option.views.includes(view);
-          const held = efficient && (option.key === "curtain" || option.key === "columns");
+          const held = efficient && (option.key === "curtain" || option.key === "columns" || option.key === "stars");
           return <label key={option.key} data-here={here || undefined} data-held={held || undefined}>
             <input type="checkbox" role="switch" checked={settings[option.key]} onChange={() => onChange({ ...settings, [option.key]: !settings[option.key] })} />
             <span><strong>{option.label}{option.network && <i title="Requests display-DEM tiles while on"> · network</i>}</strong><small>{held ? "Paused while Battery saver is on" : option.detail}</small><b>{here ? "Shows in this view" : `Shows in ${option.views.map((key) => SCENE_VIEW_LABELS[key]).join(", ")}`}</b></span>
@@ -175,7 +175,7 @@ export function SceneEffectsControls({ settings, light, efficient, reducedMotion
         })}
       </div>
     </details>
-    <p>Presentation only. Looks change light, never source dates, weather or elevations. Enabled effects stay your choice. Columns use provider values.</p>
+    <p>Presentation only. Looks change light, never source dates, weather or elevations. Enabled effects stay your choice. Columns use provider values. Stars are placed from the Hipparcos-based catalog for the current time; the Milky Way and Sun glow are illustrative.</p>
   </section>;
 }
 

@@ -23,13 +23,14 @@ const effectsUrl = toUrl(transpile((await read("app/scene-effects.ts"))
 const effects = await import(effectsUrl);
 
 test("recipes coordinate presentation without enabling DEMs, camera changes or provider layers", () => {
-  for (const relief2d of [false, true]) {
-    const input = { ...effects.DEFAULT_SCENE_EFFECTS, relief2d, columns: false, buildings: false, curtain: false, sunSync: true };
+  for (const relief2d of [false, true]) for (const stars of [false, true]) {
+    const input = { ...effects.DEFAULT_SCENE_EFFECTS, relief2d, stars, columns: false, buildings: false, curtain: false, sunSync: true };
     for (const id of Object.keys(studio.SCENE_RECIPES)) {
       const before = structuredClone(input);
       const next = studio.sceneRecipePresentation(id, input);
       assert.deepEqual(input, before, "no in-place mutations");
       assert.equal(next.settings.relief2d, relief2d, "no additional DEM choice");
+      assert.equal(next.settings.stars, stars, "every recipe retains the independent night-sky choice");
       for (const key of ["columns", "buildings", "curtain"]) assert.equal(next.settings[key], false, "opted-out effects remain off");
       assert.deepEqual(Object.keys(next).sort(), ["atmosphere", "azimuth", "settings"], "only existing presentation state changes");
       assert.equal(studio.matchingSceneRecipe(next), id);
@@ -192,4 +193,53 @@ test("real controls dispatch recipe, light and camera changes; repeated panels h
   first[0].props.onPointerDown({ stopPropagation() { stopped++; } });
   first[0].props.onClick({ stopPropagation() { stopped++; } });
   assert.equal(stopped, 2, "controls do not leak pointer/click actions onto map features");
+});
+
+test("the merged studio retains the real night-sky toggle, catalog copy and Battery saver state", async () => {
+  const { SceneEffectsControls } = await controlsModule();
+  const textOf = (node) => Array.isArray(node) ? node.map(textOf).join("") : typeof node === "string" || typeof node === "number" ? String(node) : node && typeof node === "object" ? textOf(node.props?.children) : "";
+  for (const efficient of [false, true]) for (const stars of [false, true]) {
+    const changes = [];
+    const settings = { ...effects.DEFAULT_SCENE_EFFECTS, relief2d: false, columns: false, stars };
+    const props = { settings, light: null, efficient, reducedMotion: false, flyoverActive: false, view: "terrain", presentation: { atmosphere: "night", azimuth: 225 }, camera: { pitch: 48, bearing: 0, fieldOfView: 44 }, cameraReady: true, onRecipe() {}, onLight() {}, onCamera() {}, onFlyover() {}, onChange: (value) => changes.push(value) };
+    const tree = SceneEffectsControls(props), nodes = descendants(tree);
+    const label = nodes.find((node) => node.type === "label" && textOf(node).includes("Real night sky"));
+    assert.ok(label);
+    assert.equal(label.props["data-held"], efficient || undefined);
+    assert.ok(textOf(label).includes(efficient ? "Paused while Battery saver is on" : "Hipparcos stars where they are right now"));
+    assert.ok(textOf(tree).includes("Stars are placed from the Hipparcos-based catalog for the current time; the Milky Way and Sun glow are illustrative."));
+    const toggle = descendants(label).find((node) => node.type === "input");
+    assert.equal(toggle.props.checked, stars);
+    toggle.props.onChange();
+    assert.deepEqual(changes, [{ ...settings, stars: !stars }], "only the selected effect changes");
+  }
+});
+
+test("merged curtain and star callback shares bounded repaint timing and respects hidden, reduced-motion and efficient guards", async () => {
+  const tree = ts.createSourceFile("page.tsx", await read("app/page.tsx"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  const matches = [];
+  const walk = (node) => { if (ts.isCallExpression(node) && node.expression.getText(tree) === "useEffect" && node.arguments[0]?.getText(tree).includes("setNightSkyTwinkle(twinkle)")) matches.push(node); ts.forEachChild(node, walk); };
+  walk(tree); assert.equal(matches.length, 1, "one shared shimmer/twinkle loop");
+  const code = transpile(`const effect = ${matches[0].arguments[0].getText(tree)};`);
+  for (const mode of ["twinkle", "curtain", "off", "reduced", "efficient", "loading"]) {
+    let paints = 0, nextFrame = 0;
+    const frames = new Map(), shimmer = [], twinkle = [];
+    const context = {
+      mapRef: { current: { triggerRepaint() { paints += 1; } } }, runtime: { kind: mode === "loading" ? "loading" : "ready" },
+      dynamicEffects: true, reducedMotion: mode === "reduced", renderQuality: "auto", browserRenderBudget: () => ({ efficient: mode === "efficient" }),
+      sceneEffects: { curtain: mode === "curtain", stars: mode !== "curtain" && mode !== "off" },
+      setCurtainShimmer: (value) => shimmer.push(value), setNightSkyTwinkle: (value) => twinkle.push(value), curtainIsVisible: () => true, nightSkyIsTwinkling: () => true,
+      document: { hidden: false }, window: { requestAnimationFrame(callback) { const id = ++nextFrame; frames.set(id, callback); return id; }, cancelAnimationFrame(id) { frames.delete(id); } },
+    };
+    const cleanup = new Function(...Object.keys(context), `${code}; return effect;`)(...Object.values(context))();
+    const moving = mode === "twinkle" || mode === "curtain";
+    assert.deepEqual(shimmer, [mode === "curtain"]); assert.deepEqual(twinkle, [mode === "twinkle"]);
+    assert.equal(frames.size, moving ? 1 : 0);
+    if (!moving) continue;
+    const tick = (now) => { const [id, callback] = frames.entries().next().value; frames.delete(id); callback(now); };
+    tick(66); tick(100); tick(132);
+    assert.equal(paints, 2, "at most one repaint per66ms");
+    context.document.hidden = true; tick(200); assert.equal(paints, 2);
+    cleanup(); assert.equal(frames.size, 0); assert.equal(shimmer.at(-1), false); assert.equal(twinkle.at(-1), false);
+  }
 });

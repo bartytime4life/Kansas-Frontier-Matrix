@@ -19,6 +19,7 @@ async function loadOverlays() {
   const replacements = [
     ['from "./kansas-orientation";', `from "${toUrl(transpile(await read("app/kansas-orientation.ts")))}";`],
     ['from "./map-performance";', `from "${toUrl(transpile(await read("app/map-performance.ts")))}";`],
+    ['from "./night-sky";', `from "${toUrl(transpile(await read("app/night-sky.ts")))}";`],
     ['from "./scene-effects";', `from "${sceneEffectsStub}";`],
   ];
   for (const [before, after] of replacements) {
@@ -28,7 +29,7 @@ async function loadOverlays() {
   return import(toUrl(transpile(source)));
 }
 
-const ALL_ON = { cinematic: true, curtain: true, sunSync: false, kansasGlow: true, relief2d: true, columns: true, buildings: true };
+const ALL_ON = { cinematic: true, curtain: true, sunSync: false, kansasGlow: true, relief2d: true, columns: true, buildings: true, stars: true };
 
 /** A small in-memory stand-in for the MapLibre style API. */
 function fakeMap({ fx = ALL_ON, pitch = 50, projection = "mercator", terrain = null, layers = [], sources = {} } = {}) {
@@ -195,4 +196,61 @@ test("palette changes recolor decorative outlines in place, skip unchanged paint
   overlays.syncKansasGlow(map, "dusk", 210);
   assert.equal(map.getPaintProperty("orientation-kansas-glow", "line-color"), "#original-halo");
   assert.equal(map.getPaintProperty("orientation-kansas-outline", "line-color"), "#original-edge");
+});
+
+const STARS_ON = { ...ALL_ON, stars: true };
+const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
+
+test("the night sky sits beneath every layer and shows from orbit or under a dark tilted sky", async () => {
+  const overlays = await loadOverlays();
+  let loads = 0;
+  overlays.setNightSkyCatalogLoader(async () => { loads += 1; return { count: 1, stars: [101.287, -16.716, -1.44, 0.01] }; });
+  const base = [{ id: "background", type: "background" }, { id: "roads", type: "line" }];
+
+  const night = fakeMap({ fx: STARS_ON, pitch: 70, layers: base });
+  night.triggerRepaint = () => { night.repaints = (night.repaints ?? 0) + 1; };
+  assert.equal(overlays.syncNightSky(night, "night", 210, false), true);
+  assert.equal(night.style.layers[0].id, overlays.NIGHT_SKY_LAYER_ID, "below the basemap");
+  assert.equal(night.style.layers[0].type, "custom");
+  assert.equal(night.getLayoutProperty(overlays.NIGHT_SKY_LAYER_ID, "visibility"), "visible");
+  assert.equal(overlays.nightSkyIsTwinkling(night), true, "stars twinkle through air");
+  await tick();
+  assert.equal(loads, 1, "catalog fetched once, when first shown");
+  assert.ok(night.repaints >= 1, "map repaints once the catalog arrives");
+
+  const day = fakeMap({ fx: STARS_ON, pitch: 70, layers: base });
+  overlays.syncNightSky(day, "clear", 210, false);
+  assert.equal(day.getLayoutProperty(overlays.NIGHT_SKY_LAYER_ID, "visibility"), "none", "no stars in a blue sky");
+
+  const flat = fakeMap({ fx: STARS_ON, pitch: 20, layers: base });
+  overlays.syncNightSky(flat, "night", 210, false);
+  assert.equal(flat.getLayoutProperty(overlays.NIGHT_SKY_LAYER_ID, "visibility"), "none", "no horizon in view");
+
+  const orbit = fakeMap({ fx: STARS_ON, pitch: 0, projection: "globe", layers: base });
+  orbit.triggerRepaint = () => {};
+  overlays.syncNightSky(orbit, "clear", 210, false);
+  assert.equal(orbit.getLayoutProperty(overlays.NIGHT_SKY_LAYER_ID, "visibility"), "visible", "space is dark by day");
+  assert.equal(overlays.nightSkyIsTwinkling(orbit), false, "no twinkle above the atmosphere");
+
+  overlays.syncNightSky(orbit, "clear", 210, true);
+  assert.equal(orbit.getLayoutProperty(overlays.NIGHT_SKY_LAYER_ID, "visibility"), "none", "Battery saver");
+  await tick();
+  assert.equal(loads, 1, "a loaded catalog is reused");
+});
+
+test("the night sky is removed when switched off, and a failure to add it never breaks the map", async () => {
+  const overlays = await loadOverlays();
+  overlays.setNightSkyCatalogLoader(async () => ({ count: 0, stars: [] }));
+  const map = fakeMap({ fx: STARS_ON, pitch: 70, layers: [{ id: "background", type: "background" }] });
+  map.triggerRepaint = () => {};
+  overlays.syncNightSky(map, "night", 210, false);
+  assert.ok(map.getLayer(overlays.NIGHT_SKY_LAYER_ID));
+  map.fx = { ...STARS_ON, stars: false };
+  assert.equal(overlays.syncNightSky(map, "night", 210, false), true);
+  assert.equal(map.getLayer(overlays.NIGHT_SKY_LAYER_ID), undefined);
+
+  const broken = fakeMap({ fx: STARS_ON, pitch: 70 });
+  broken.addLayer = () => { throw new Error("WebGL context lost"); };
+  assert.equal(overlays.syncNightSky(broken, "night", 210, false), false);
+  assert.equal(broken.getLayer(overlays.NIGHT_SKY_LAYER_ID), undefined);
 });

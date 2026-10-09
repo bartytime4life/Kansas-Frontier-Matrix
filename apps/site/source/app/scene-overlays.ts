@@ -2,6 +2,7 @@ import type { Feature, FeatureCollection, Polygon } from "geojson";
 import type { GeoJSONSource, LayerSpecification, Map as MapLibreMap } from "./maplibre-seam";
 import { KANSAS_OUTLINE, ORIENTATION_SOURCE_ID } from "./kansas-orientation";
 import { uploadedGeoJSON } from "./map-performance";
+import { createNightSkyLayer, nightSkyShouldShow, SKY_DARKNESS, type NightSkyCatalog } from "./night-sky";
 import { CURTAIN_MIN_PITCH, effectiveSceneLight, sceneEffectsFor, type SceneLightPreset } from "./scene-effects";
 import type { TerrainSourceRecord } from "./terrain-sources";
 
@@ -347,5 +348,76 @@ export function syncBuildingStyle(map: MapLibreMap, light: SceneLightPreset, azi
   }
 }
 
+// ---------------------------------------------------------------------------
+// Real night sky
+// ---------------------------------------------------------------------------
+
+export const NIGHT_SKY_LAYER_ID = "scene-night-sky";
+
+// The catalog is a separate chunk, fetched the first time the sky is shown.
+let catalog: NightSkyCatalog | null = null;
+let catalogRequest: Promise<NightSkyCatalog | null> | null = null;
+let loadNightSkyCatalog = (): Promise<NightSkyCatalog> => import("./night-sky-catalog.json").then((module) => module.default as NightSkyCatalog);
+/** Test seam: replaces the catalog loader and forgets any loaded catalog. */
+export const setNightSkyCatalogLoader = (loader: () => Promise<NightSkyCatalog>): void => { loadNightSkyCatalog = loader; catalog = null; catalogRequest = null; };
+const requestCatalog = (map: MapLibreMap) => {
+  catalogRequest ??= loadNightSkyCatalog().then((loaded) => { catalog = loaded; return loaded; }, () => { catalogRequest = null; return null; });
+  void catalogRequest.then((loaded) => { if (loaded) { try { map.triggerRepaint(); } catch { /* map removed */ } } });
+};
+
+// One twinkle clock for the page; null holds the stars still (reduced
+// motion, ambient motion off, Battery saver or a hidden tab).
+let twinkleStartedAt: number | null = null;
+export const setNightSkyTwinkle = (active: boolean): void => {
+  twinkleStartedAt = active ? (twinkleStartedAt ?? performance.now()) : null;
+};
+const twinkleClock = (): number | null => twinkleStartedAt === null ? null : (performance.now() - twinkleStartedAt) / 1000;
+
+const skyDarkness = new WeakMap<object, number>();
+
+/**
+ * Adds (or removes) the night sky beneath every other layer, records how
+ * dark this view's sky is, and sets visibility for the current camera.
+ * Safe to call on every style load and light change.
+ */
+export function syncNightSky(map: MapLibreMap, light: SceneLightPreset, azimuth: number, efficient: boolean): boolean {
+  if (!sceneEffectsFor(map).stars) {
+    if (map.getLayer(NIGHT_SKY_LAYER_ID)) map.removeLayer(NIGHT_SKY_LAYER_ID);
+    return true;
+  }
+  skyDarkness.set(map, SKY_DARKNESS[effectiveSceneLight(map, light, azimuth).preset]);
+  // Decorative: a GPU or shader failure removes the sky and never degrades the map.
+  try {
+    if (!map.getLayer(NIGHT_SKY_LAYER_ID)) {
+      const order = typeof map.getLayersOrder === "function" ? map.getLayersOrder() : (map.getStyle().layers ?? []).map((layer) => layer.id);
+      map.addLayer(createNightSkyLayer({
+        id: NIGHT_SKY_LAYER_ID,
+        catalog: () => catalog,
+        darkness: () => skyDarkness.get(map) ?? 0,
+        clock: twinkleClock,
+      }), order.find((id) => id !== NIGHT_SKY_LAYER_ID));
+      map.setLayoutProperty(NIGHT_SKY_LAYER_ID, "visibility", "none");
+    }
+    syncNightSkyVisibility(map, efficient);
+    return true;
+  } catch {
+    try { if (map.getLayer(NIGHT_SKY_LAYER_ID)) map.removeLayer(NIGHT_SKY_LAYER_ID); } catch { /* already gone */ }
+    return false;
+  }
+}
+
+export function syncNightSkyVisibility(map: MapLibreMap, efficient: boolean): void {
+  if (!map.getLayer(NIGHT_SKY_LAYER_ID)) return;
+  const visible = nightSkyShouldShow(sceneEffectsFor(map).stars, efficient, projectionOf(map), map.getPitch(), skyDarkness.get(map) ?? 0);
+  if (visible && !catalog) requestCatalog(map);
+  setVisibility(map, NIGHT_SKY_LAYER_ID, visible);
+}
+
+export const nightSkyIsVisible = (map: MapLibreMap): boolean =>
+  Boolean(map.getLayer(NIGHT_SKY_LAYER_ID)) && map.getLayoutProperty(NIGHT_SKY_LAYER_ID, "visibility") === "visible";
+
+/** Stars twinkle only through air: on a tilted map, not from orbit. */
+export const nightSkyIsTwinkling = (map: MapLibreMap): boolean => nightSkyIsVisible(map) && projectionOf(map) !== "globe";
+
 /** IDs of every overlay this module may add, for tests and composition. */
-export const SCENE_OVERLAY_LAYER_IDS: readonly string[] = [...KANSAS_GLOW_LAYER_IDS, RELIEF_2D_LAYER_ID, COLUMNS_LAYER_ID];
+export const SCENE_OVERLAY_LAYER_IDS: readonly string[] = [...KANSAS_GLOW_LAYER_IDS, RELIEF_2D_LAYER_ID, COLUMNS_LAYER_ID, NIGHT_SKY_LAYER_ID];

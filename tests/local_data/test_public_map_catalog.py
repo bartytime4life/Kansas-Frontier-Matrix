@@ -258,6 +258,40 @@ def test_storm_events_listing_without_valid_current_files_offers_nothing(names):
     assert records == [] and expected is None and failure
 
 
+def test_storm_events_table_listing_keeps_sizes_uncaptured_and_coverage_honest():
+    # Compact synthetic table in the shape observed at NCEI on 2026-10-09;
+    # byte counts describe listing metadata, not a downloaded or hashed file.
+    names = [
+        "StormEvents_details-ftp_v1.0_d2026_c20260819.csv.gz",
+        "StormEvents_details-ftp_v1.0_d2026_c20260918.csv.gz",
+        "StormEvents_fatalities-ftp_v1.0_d1950_c20260323.csv.gz",
+        "StormEvents_locations-ftp_v1.0_d1950_c20260707.csv.gz",
+    ]
+    listing = ("<table><tbody>" + "".join(
+        f'<tr><td><a href="{name}">{name}</a></td>'
+        f'<td>2026-09-18 10:57</td><td align="right">{size}</td><td></td></tr>'
+        for name, size in zip(names, [7000000, 7490892, 398, 147])
+    ) + "</tbody></table>").encode()
+    calls = []
+    def transport(url):
+        calls.append(url)
+        if url == catalog.STORM_EVENTS:
+            return listing
+        raise OSError("other providers unavailable in this synthetic test")
+    result = catalog.discover_catalog(transport=transport)
+    records = [r for r in result["records"] if r["sourceId"] == "publisher-noaa-storm-events"]
+    assert [r["mapYear"] for r in records] == [2026, 1950]
+    assert [a["title"] for r in records for a in r["assets"]] == names[1:]
+    assert all(a["expectedBytes"] is None for r in records for a in r["assets"])
+    coverage = next(c for c in result["coverage"] if c["sourceId"] == "publisher-noaa-storm-events")
+    assert coverage["state"] == "complete" and coverage["expectedCount"] == 2
+    assert "File sizes are not captured by this catalog" in coverage["reason"]
+    assert "not listed exactly" not in coverage["reason"]
+    assert calls.count(catalog.STORM_EVENTS) == 1
+    assert result["discovery"]["mapBytesDownloaded"] == 0
+    assert result["discovery"]["receipts"][0]["sha256"] == hashlib.sha256(listing).hexdigest()
+
+
 def test_storm_events_listing_is_the_only_ncei_metadata_url():
     assert catalog.validate_metadata_url(catalog.STORM_EVENTS) == catalog.STORM_EVENTS
     for url in (catalog.STORM_EVENTS + "?C=M;O=D", catalog.STORM_EVENTS + "legacy/",
