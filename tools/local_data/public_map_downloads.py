@@ -30,6 +30,7 @@ CHUNK_BYTES = 1024 * 1024
 ID = re.compile(r"[a-f0-9]{32}\Z")
 SLUG = re.compile(r"[a-z0-9][a-z0-9._-]{0,127}\Z")
 TERMINAL = {"downloaded", "failed", "cancelled", "interrupted"}
+MAX_QUEUE = 300
 PUBLIC_ENDPOINTS = {
     "www.kgs.ku.edu": ("/General/Geology/", "/Publications/"),
     "pubs.usgs.gov": ("/gq/", "/of/", "/sim/", "/imap/", "/i/", "/ds/", "/dr/"),
@@ -195,6 +196,7 @@ class PublicMapDownloads:
         self.lock = threading.RLock()
         self.cancel_event = threading.Event()
         self.active = None
+        self.queue = []
         self.worker = None
         self.refresh_worker = None
         self.refresh_state = {"state": "idle"}
@@ -229,8 +231,10 @@ class PublicMapDownloads:
 
     def health(self):
         with self.lock:
-            return {"schema": "kfm-public-map-download-control/v1", "jobs": copy.deepcopy(list(self.jobs.values())[-100:]),
-                    "active": self.active, "limitBytes": MAX_BYTES, "refresh": dict(self.refresh_state)}
+            # Queued jobs are a count, so a long queue cannot push the running job out of the window.
+            jobs = [job for job in self.jobs.values() if job["id"] not in self.queue][-100:]
+            return {"schema": "kfm-public-map-download-control/v1", "jobs": copy.deepcopy(jobs),
+                    "active": self.active, "queued": len(self.queue), "limitBytes": MAX_BYTES, "refresh": dict(self.refresh_state)}
 
     def update(self, identifier, **fields):
         with self.lock:
@@ -268,43 +272,124 @@ class PublicMapDownloads:
                 if prior["assetId"] != value["assetId"] or prior["maxBytes"] != value["maxBytes"]:
                     raise ValueError("REQUEST_ID_CONFLICT")
                 return copy.deepcopy(prior)
-            if self.active:
+            if self.active or self.queue:
                 raise ValueError("DOWNLOAD_ALREADY_RUNNING")
             if len(self.jobs) >= 1000:
                 raise ValueError("JOB_HISTORY_LIMIT")
-            record, asset = self._asset(value["assetId"])
-            expected = asset.get("expectedBytes")
-            if expected is not None and expected > value["maxBytes"]:
-                raise ValueError("ASSET_EXCEEDS_SELECTED_LIMIT")
-            if shutil.disk_usage(self.root).free < (expected or value["maxBytes"]) + RESERVE_BYTES:
-                raise ValueError("INSUFFICIENT_FREE_SPACE_FOR_LIMIT")
-            parent = self.raw / record["id"]
-            check_directory(parent, create=True)
-            destination = parent / identifier
-            create_candidate(destination)
-            now = utc_now()
-            job = {"id": identifier, "assetId": value["assetId"], "title": record["title"], "state": "queued",
-                   "bytes": 0, "expectedBytes": expected, "maxBytes": value["maxBytes"], "sha256": None,
-                   "destination": str(destination), "mapReady": False, "createdAt": now, "updatedAt": now}
-            self.jobs[identifier] = job
-            try:
-                save_state(self.work / "jobs" / (identifier + ".json"), job)
-                # Pin identity independently of later catalog refreshes.
-                write_new(destination / "source.json", json.dumps({"record": record, "asset": asset}, sort_keys=True).encode())
-                self.active = identifier
-                self.cancel_event.clear()
-                self.worker = threading.Thread(target=self.run, args=(identifier,), daemon=True)
-                self.worker.start()
-            except Exception:
-                self.active = None
-                self.worker = None
-                self.update(identifier, state="failed", reason="PUBLIC_MAP_START_FAILED")
-                try:
-                    self._receipt(identifier)
-                except Exception:
-                    self.update(identifier, state="failed", reason="RECEIPT_WRITE_FAILED")
-                raise ValueError("PUBLIC_MAP_START_FAILED") from None
+            job = self._create(identifier, value["assetId"], value["maxBytes"])
+            self._launch(identifier)
             return copy.deepcopy(job)
+
+    def enqueue(self, value):
+        """Queue verified files to download one after another under one maximum each.
+
+        Every file is validated and pinned before any transfer starts. Queued jobs
+        are reported as a count; after a worker restart they become interrupted.
+        """
+        if (not isinstance(value, dict) or set(value) != {"requestId", "assetIds", "maxBytes"}
+                or not isinstance(value["requestId"], str) or not ID.fullmatch(value["requestId"])
+                or not isinstance(value["assetIds"], list) or not 0 < len(value["assetIds"]) <= MAX_QUEUE
+                or not all(isinstance(item, str) and SLUG.fullmatch(item) for item in value["assetIds"])
+                or len(set(value["assetIds"])) != len(value["assetIds"])
+                or type(value["maxBytes"]) is not int or not 0 < value["maxBytes"] <= MAX_BYTES):
+            raise ValueError("INVALID_PUBLIC_MAP_QUEUE")
+        batch = value["requestId"]
+        identifiers = [hashlib.sha256(f"{batch}:{asset}".encode()).hexdigest()[:32] for asset in value["assetIds"]]
+        with self.lock:
+            prior = [self.jobs.get(identifier) for identifier in identifiers]
+            if any(prior):
+                if not all(job and job.get("batchId") == batch and job["maxBytes"] == value["maxBytes"] for job in prior):
+                    raise ValueError("REQUEST_ID_CONFLICT")
+                return self._queue_summary(batch)
+            if self.active or self.queue:
+                raise ValueError("DOWNLOAD_ALREADY_RUNNING")
+            if len(self.jobs) + len(identifiers) > 1000:
+                raise ValueError("JOB_HISTORY_LIMIT")
+            # Validate the whole selection before creating any job.
+            if shutil.disk_usage(self.root).free < value["maxBytes"] + RESERVE_BYTES:
+                raise ValueError("INSUFFICIENT_FREE_SPACE_FOR_LIMIT")
+            for asset_id in value["assetIds"]:
+                expected = self._asset(asset_id)[1].get("expectedBytes")
+                if expected is not None and expected > value["maxBytes"]:
+                    raise ValueError("ASSET_EXCEEDS_SELECTED_LIMIT")
+            try:
+                for identifier, asset_id in zip(identifiers, value["assetIds"]):
+                    self._create(identifier, asset_id, value["maxBytes"], batch=batch)
+                    self.queue.append(identifier)
+                self._launch(self.queue.pop(0))
+            except Exception:
+                # Never leave a queue with nothing running: fail what was queued.
+                for identifier in self.queue:
+                    self.update(identifier, state="failed", reason="PUBLIC_MAP_START_FAILED")
+                    try:
+                        self._receipt(identifier)
+                    except Exception:
+                        self.update(identifier, state="failed", reason="RECEIPT_WRITE_FAILED")
+                self.queue.clear()
+                raise ValueError("PUBLIC_MAP_START_FAILED") from None
+            return self._queue_summary(batch)
+
+    def cancel_queue(self):
+        """Cancel every queued file and the running one; captured bytes stay for inspection."""
+        with self.lock:
+            cancelled = list(self.queue)
+            self.queue.clear()
+            for identifier in cancelled:
+                self.update(identifier, state="cancelled", reason="CANCELLED")
+                self._receipt(identifier)
+            if self.active:
+                self.cancel_event.set()
+            return {"cancelledQueued": len(cancelled), "cancelling": self.active}
+
+    def _queue_summary(self, batch):
+        jobs = [job for job in self.jobs.values() if job.get("batchId") == batch]
+        return {"batchId": batch, "jobs": len(jobs), "queued": sum(job["id"] in self.queue for job in jobs),
+                "active": self.active, "mapReady": False}
+
+    def _create(self, identifier, asset_id, maximum, batch=None):
+        record, asset = self._asset(asset_id)
+        expected = asset.get("expectedBytes")
+        if expected is not None and expected > maximum:
+            raise ValueError("ASSET_EXCEEDS_SELECTED_LIMIT")
+        if shutil.disk_usage(self.root).free < (expected or maximum) + RESERVE_BYTES:
+            raise ValueError("INSUFFICIENT_FREE_SPACE_FOR_LIMIT")
+        parent = self.raw / record["id"]
+        check_directory(parent, create=True)
+        destination = parent / identifier
+        create_candidate(destination)
+        now = utc_now()
+        job = {"id": identifier, "assetId": asset_id, "title": record["title"], "state": "queued",
+               "bytes": 0, "expectedBytes": expected, "maxBytes": maximum, "sha256": None,
+               "destination": str(destination), "mapReady": False, "createdAt": now, "updatedAt": now}
+        if batch is not None:
+            job["batchId"] = batch
+        self.jobs[identifier] = job
+        try:
+            save_state(self.work / "jobs" / (identifier + ".json"), job)
+            # Pin identity independently of later catalog refreshes.
+            write_new(destination / "source.json", json.dumps({"record": record, "asset": asset}, sort_keys=True).encode())
+        except Exception:
+            self._start_failed(identifier)
+        return job
+
+    def _launch(self, identifier):
+        try:
+            self.active = identifier
+            self.cancel_event.clear()
+            self.worker = threading.Thread(target=self.run, args=(identifier,), daemon=True)
+            self.worker.start()
+        except Exception:
+            self.active = None
+            self.worker = None
+            self._start_failed(identifier)
+
+    def _start_failed(self, identifier):
+        self.update(identifier, state="failed", reason="PUBLIC_MAP_START_FAILED")
+        try:
+            self._receipt(identifier)
+        except Exception:
+            self.update(identifier, state="failed", reason="RECEIPT_WRITE_FAILED")
+        raise ValueError("PUBLIC_MAP_START_FAILED") from None
 
     def _destination(self, job):
         directory = Path(job["destination"])
@@ -424,7 +509,17 @@ class PublicMapDownloads:
                 self.update(identifier, state="failed", reason="RECEIPT_WRITE_FAILED")
             finally:
                 with self.lock:
-                    self.active = None
+                    self._advance()
+
+    def _advance(self):
+        """Hand the transfer slot straight to the next queued job, never leaving an idle gap."""
+        while self.queue:
+            try:
+                self._launch(self.queue.pop(0))
+                return
+            except ValueError:
+                continue
+        self.active = None
 
     def cancel(self, identifier):
         with self.lock:
@@ -465,4 +560,6 @@ class PublicMapDownloads:
 
     def close(self):
         """Request transfer cancellation without deleting protected originals."""
+        with self.lock:
+            self.queue.clear()
         self.cancel_event.set()

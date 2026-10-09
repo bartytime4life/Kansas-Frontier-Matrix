@@ -10,6 +10,8 @@ export type PublicMapJob = {
 export type PublicMapStatus = {
   schema: "kfm-public-map-download-control/v1"; sessionToken: string; jobs: PublicMapJob[];
   active: string | null; limitBytes: number; refresh: { state: "idle" | "running" | "complete" | "failed"; reason?: string };
+  /** Files waiting behind the active one; absent from operators without a queue. */
+  queued?: number;
 };
 const object = (v: unknown): v is Record<string, unknown> => !!v && typeof v === "object" && !Array.isArray(v);
 const id = (v: unknown): v is string => typeof v === "string" && /^[a-f0-9]{32}$/.test(v);
@@ -18,7 +20,8 @@ export function parsePublicMapStatus(value: unknown): PublicMapStatus | null {
   if (!object(value) || value.schema !== "kfm-public-map-download-control/v1" || typeof value.sessionToken !== "string" || !/^[-_A-Za-z0-9]{43}$/.test(value.sessionToken)
     || !(value.active === null || id(value.active)) || !publicMapCount(value.limitBytes) || value.limitBytes < 1 || value.limitBytes > PUBLIC_MAP_DOWNLOAD_LIMIT
     || !Array.isArray(value.jobs) || value.jobs.length > 100 || !object(value.refresh) || !["idle", "running", "complete", "failed"].includes(String(value.refresh.state))
-    || value.refresh.reason !== undefined && !publicMapText(value.refresh.reason, 200)) return null;
+    || value.refresh.reason !== undefined && !publicMapText(value.refresh.reason, 200)
+    || value.queued !== undefined && (!publicMapCount(value.queued) || value.queued > 300 || value.queued > 0 && value.active === null)) return null;
   const seen = new Set<string>();
   for (const job of value.jobs) {
     if (!object(job) || !id(job.id) || seen.has(job.id) || !publicMapText(job.assetId, 500) || !job.assetId || !publicMapText(job.title, 2000)
@@ -34,8 +37,8 @@ export function parsePublicMapStatus(value: unknown): PublicMapStatus | null {
   if (value.active !== null && !seen.has(value.active)) return null;
   return value as unknown as PublicMapStatus;
 }
-export type PublicMapEndpoint = "/catalog" | "/status" | "/downloads" | "/cancel" | "/refresh";
-const endpoints = new Set<PublicMapEndpoint>(["/catalog", "/status", "/downloads", "/cancel", "/refresh"]);
+export type PublicMapEndpoint = "/catalog" | "/status" | "/downloads" | "/cancel" | "/refresh" | "/queue" | "/queue/cancel";
+const endpoints = new Set<PublicMapEndpoint>(["/catalog", "/status", "/downloads", "/cancel", "/refresh", "/queue", "/queue/cancel"]);
 /** Fixed existing local worker; reference links never become request destinations. */
 export async function publicMapRequest(path: PublicMapEndpoint, signal: AbortSignal, payload?: unknown, sessionToken?: string) {
   if (!endpoints.has(path) || payload !== undefined && (!sessionToken || !/^[-_A-Za-z0-9]{43}$/.test(sessionToken))) throw new Error("Connect to local map downloads first.");
@@ -56,4 +59,6 @@ export const publicMapReason = (reason: string) => ({
   DOWNLOAD_ALREADY_RUNNING: "A file is already downloading. Wait or cancel before starting another.", CANCELLED: "Any captured bytes remain for inspection.",
   SIZE_LIMIT_EXCEEDED: "The response exceeded the selected byte maximum.", WORKER_RESTARTED: "The local worker restarted; retained files need inspection.",
   ASSET_NOT_DOWNLOADABLE: "This source offers metadata or a request route, not a verified direct download.",
+  ASSET_FORMAT_MISMATCH: "The provider returned something other than the expected file type.", JOB_HISTORY_LIMIT: "The local download history is full; no more files can be queued.",
+  ASSET_EXCEEDS_SELECTED_LIMIT: "A file is larger than the selected maximum per file.",
 } as Record<string, string>)[reason] ?? "The local service could not finish this request. Reconnect to check its current state before retrying.";

@@ -64,7 +64,7 @@ export function usePublicMapDownloads(options: Options = {}) {
         if (!signal.aborted) { ready.current = false; setConnection("unavailable"); setAnnouncement("Map downloads are unavailable. Retained jobs may be out of date; the reference catalog remains available."); }
         return false;
       }
-      return parsed.active !== null || parsed.refresh.state === "running";
+      return parsed.active !== null || Boolean(parsed.queued) || parsed.refresh.state === "running";
     });
     poller.current = polling;
     return () => { polling.dispose(); if (poller.current === polling) poller.current = null; };
@@ -109,6 +109,30 @@ export function usePublicMapDownloads(options: Options = {}) {
       : `${body?.error ? publicMapReason(body.error) + " " : ""}Start was not confirmed. Check Activity before retrying; this selection retains its request ID.`);
     refresh();
   }, [action, refresh]);
+  /** Queue several verified files under one maximum per file; the local operator runs them in order. */
+  const startQueue = useCallback(async (assets: readonly PublicMapAsset[], maxBytes: number) => {
+    if (operation.current || acceptedStart.current || !ready.current || current.current?.active || current.current?.queued || callbacks.current.blockedByOtherDownload
+      || !assets.length || assets.length > 300 || !assets.every(canDownloadPublicMap) || !Number.isSafeInteger(maxBytes) || maxBytes < 1 || maxBytes > (current.current?.limitBytes ?? 0)
+      || assets.some(asset => asset.expectedBytes !== null && maxBytes < asset.expectedBytes)) return;
+    const key = JSON.stringify([assets.map(asset => asset.id), maxBytes]);
+    const request = pending.current?.key === key ? pending.current : { key, id: crypto.randomUUID().replaceAll("-", "") };
+    pending.current = request;
+    const result = await action("/queue", { requestId: request.id, assetIds: assets.map(asset => asset.id), maxBytes }, "download");
+    if (!result) { refresh(); return; }
+    const body = result.body as { batchId?: string; jobs?: number; mapReady?: boolean; error?: string } | null;
+    const confirmed = result.response.ok && body?.batchId === request.id && body.jobs === assets.length && body.mapReady === false;
+    if (confirmed && pending.current === request) pending.current = null;
+    if (confirmed) { acceptedStart.current = {}; setAwaitingStatus(true); }
+    setNotice(confirmed ? `${assets.length} files queued. They download one at a time; follow progress in Activity. Captured originals remain candidates.`
+      : `${body?.error ? publicMapReason(body.error) + " " : ""}The queue was not confirmed. Check Activity before retrying; this selection retains its request ID.`);
+    refresh();
+  }, [action, refresh]);
+  const cancelQueue = useCallback(async () => {
+    if (!current.current?.queued) return;
+    const result = await action("/queue/cancel", {}, "cancel");
+    if (result?.response.ok) { setNotice("Queued files cancelled and the running file is stopping. Captured bytes remain available for inspection."); refresh(); }
+    else if (result) setNotice("Cancelling the queue was not confirmed. Reconnect to inspect its current state.");
+  }, [action, refresh]);
   const refreshCatalog = useCallback(async () => {
     if (current.current?.refresh.state === "running") return;
     const result = await action("/refresh", {}, "refresh");
@@ -121,6 +145,6 @@ export function usePublicMapDownloads(options: Options = {}) {
     if (result?.response.ok) { setNotice("Cancellation requested. Captured bytes remain available for inspection."); refresh(); }
     else if (result) setNotice("Cancellation was not confirmed. Reconnect to inspect the active job.");
   }, [action, refresh]);
-  return { catalog, status, connection, catalogError, notice, announcement, lastChecked, connect, refresh, refreshCatalog, startDownload, cancelJob, selectAsset,
+  return { catalog, status, connection, catalogError, notice, announcement, lastChecked, connect, refresh, refreshCatalog, startDownload, startQueue, cancelQueue, cancelJob, selectAsset,
     busy: busy ?? (awaitingStatus ? "download" as const : null) };
 }

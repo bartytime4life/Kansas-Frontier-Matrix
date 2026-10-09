@@ -411,6 +411,82 @@ class StormEventsDownloadTests(unittest.TestCase):
         self.assertEqual((job["state"], job["reason"]), ("failed", "ASSET_FORMAT_MISMATCH"))
 
 
+class QueueTests(unittest.TestCase):
+    """Several verified files download one after another without an idle gap."""
+
+    def setUp(self):
+        from tools.local_data import public_map_catalog
+        seed = catalog()
+        for year in (2022, 2023, 2024):
+            record = public_map_catalog.storm_events_record(year, {"details": f"StormEvents_details-ftp_v1.0_d{year}_c20250401.csv.gz"}, "2026-10-09")
+            seed["records"].append(record)
+        seed["coverage"].append({"sourceId": "publisher-noaa-storm-events", "state": "complete", "recordCount": 3, "discoveredCount": 3,
+                                 "seedReferenceCount": 0, "expectedCount": 3, "reason": "Synthetic listing"})
+        self.temp = tempfile.TemporaryDirectory()
+        self.root = Path(self.temp.name) / "store"
+        init_store(self.root)
+        self.seed = patch.object(downloads.public_map_catalog, "load_seed", return_value=seed)
+        self.seed.start()
+        self.threads = patch.object(downloads.threading, "Thread")
+        self.threads.start()
+        self.manager = downloads.PublicMapDownloads(self.root)
+        self.assets = [f"publisher-noaa-storm-events-{year}-details" for year in (2022, 2023, 2024)]
+
+    def tearDown(self):
+        self.threads.stop()
+        self.manager.close()
+        self.seed.stop()
+        self.temp.cleanup()
+
+    def enqueue(self, assets=None, maximum=4096, request="c" * 32):
+        return self.manager.enqueue({"requestId": request, "assetIds": self.assets if assets is None else assets, "maxBytes": maximum})
+
+    def finish_active(self):
+        active = self.manager.active
+        url = downloads.public_map_catalog.STORM_EVENTS + json.loads((Path(self.manager.jobs[active]["destination"]) / "source.json").read_text())["asset"]["title"]
+        with patch.object(downloads, "request_asset", return_value=Response(b"\x1f\x8b\x08\x00 gzip", url=url)):
+            self.manager.run(active)
+        return active
+
+    def test_files_run_in_order_and_the_queue_is_reported_as_a_count(self):
+        summary = self.enqueue()
+        self.assertEqual((summary["jobs"], summary["queued"]), (3, 2))
+        health = self.manager.health()
+        self.assertEqual(health["queued"], 2)
+        self.assertEqual([job["id"] for job in health["jobs"]], [self.manager.active])
+        finished = [self.finish_active(), self.finish_active(), self.finish_active()]
+        self.assertEqual([self.manager.jobs[i]["assetId"] for i in finished], self.assets)
+        self.assertTrue(all(self.manager.jobs[i]["state"] == "downloaded" for i in finished))
+        self.assertIsNone(self.manager.active)
+        self.assertEqual(self.manager.health()["queued"], 0)
+
+    def test_a_retried_queue_request_is_idempotent_and_blocks_other_starts(self):
+        first = self.enqueue()
+        self.assertEqual(self.enqueue(), first)
+        with self.assertRaisesRegex(ValueError, "REQUEST_ID_CONFLICT"):
+            self.enqueue(maximum=8192)
+        with self.assertRaisesRegex(ValueError, "DOWNLOAD_ALREADY_RUNNING"):
+            self.manager.start({"requestId": "d" * 32, "assetId": "test-pdf", "maxBytes": 1024})
+        with self.assertRaisesRegex(ValueError, "DOWNLOAD_ALREADY_RUNNING"):
+            self.enqueue(request="e" * 32)
+
+    def test_cancelling_the_queue_stops_waiting_files_with_receipts(self):
+        self.enqueue()
+        running = self.manager.active
+        result = self.manager.cancel_queue()
+        self.assertEqual(result, {"cancelledQueued": 2, "cancelling": running})
+        self.assertTrue(self.manager.cancel_event.is_set())
+        waiting = [job for job in self.manager.jobs.values() if job["id"] != running and job.get("batchId")]
+        self.assertTrue(all(job["state"] == "cancelled" for job in waiting))
+        self.assertTrue(all((self.manager.receipts / (job["id"] + ".json")).exists() for job in waiting))
+
+    def test_one_invalid_file_rejects_the_whole_selection_before_any_job(self):
+        for assets in ([*self.assets, "unknown-asset"], [self.assets[0], self.assets[0]], []):
+            with self.assertRaises(ValueError):
+                self.enqueue(assets=assets)
+        self.assertEqual((self.manager.jobs, self.manager.queue, self.manager.active), ({}, [], None))
+
+
 if __name__ == "__main__":
     unittest.main()
 
