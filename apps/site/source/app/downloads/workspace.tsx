@@ -22,9 +22,10 @@ export default function DownloadsWorkspace() {
   const checked = local.lastChecked && maps.lastChecked ? new Date(Math.min(Date.parse(local.lastChecked), Date.parse(maps.lastChecked))).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }) : null;
   const connect = () => { local.connect(); maps.connect(); };
   const openActivity = () => setView("activity");
+  const openLibrary = () => setView("library");
   useEffect(() => {
-    const deepLink = () => { if (window.location.hash === "#public-maps") { setView("find"); setSource("maps"); } };
-    window.addEventListener("hashchange", deepLink); return () => window.removeEventListener("hashchange", deepLink);
+    const deepLink = () => { if (window.location.hash === "#library") setView("library"); else if (window.location.hash === "#public-maps") { setView("find"); setSource("maps"); } };
+    deepLink(); window.addEventListener("hashchange", deepLink); return () => window.removeEventListener("hashchange", deepLink);
   }, []);
   return <main className={styles.page} data-download-scroll data-transfer-active={active.length > 0 || local.starting || maps.busy === "download" || local.library?.state === "scanning" || maps.status?.refresh.state === "running"}>
     <div className={styles.wrap}>
@@ -36,6 +37,7 @@ export default function DownloadsWorkspace() {
       </div>
       <p className={styles.srOnly} role="status" aria-live="polite" aria-atomic="true">{local.announcement} {maps.announcement}</p>
       <nav className={styles.workspaceNav} aria-label="Download workspace"><button type="button" aria-controls="download-find" aria-current={view === "find" ? "page" : undefined} onClick={() => setView("find")}>Find data</button><button type="button" aria-controls="download-library" aria-current={view === "library" ? "page" : undefined} onClick={() => setView("library")}>My library</button><button type="button" aria-controls="download-activity" aria-current={view === "activity" ? "page" : undefined} onClick={openActivity}>Activity{active.length > 0 && <span>{active.length}</span>}</button></nav>
+      <div className={styles.libraryOverview}><button type="button" onClick={openLibrary}>View downloaded data →</button><span>{local.library?.generatedAt ? `${local.library.totalFiles.toLocaleString()} stored files · ${items.filter(item => item.state === "downloaded").length} completed recent transfers` : "My library shows stored files when this computer is connected."}{local.library?.generatedAt && (local.library.state !== "complete" || local.connection !== "connected") ? " · last completed scan" : ""}</span></div>
       <div className={styles.workbench}>
         <div className={styles.mainColumn}>
           <div id="download-find" hidden={view !== "find"}>
@@ -43,7 +45,7 @@ export default function DownloadsWorkspace() {
             <div hidden={source !== "maps"}><PublicMapBrowser downloads={maps} blockedByOtherDownload={Boolean(local.status?.active) || local.starting} onViewActivity={openActivity} /></div>
             <div hidden={source !== "satellite"}><EarthEnginePicker downloads={local} blockedByOtherDownload={Boolean(maps.status?.active) || maps.busy === "download"} onViewActivity={openActivity} /></div>
           </div>
-          <div id="download-library" hidden={view !== "library"}><DownloadLibrary downloads={local} reviewed={reviewed} /></div>
+          <div id="download-library" hidden={view !== "library"}><DownloadLibrary downloads={local} reviewed={reviewed} items={items} /></div>
           <div id="download-activity" hidden={view !== "activity"}><ActivityWorkspace items={items} local={local} maps={maps} /></div>
         </div>
         <TransferPanel items={items} local={local} maps={maps} onViewActivity={openActivity} />

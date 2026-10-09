@@ -242,3 +242,6 @@
  .workspaceNav { margin:10px 0 18px; }.sourceNav { margin-bottom:20px; }.page .sourceNav button { padding:11px 12px; }
  .connection { padding-block:5px; }.connectionDetails summary { padding-block:11px; }
 }
+
+.libraryOverview { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 18px 0; }
+.libraryOverview span { color: var(--muted, #a9bdbb); font-size: 12px; }

@@ -236,3 +236,64 @@ class SignInTests(unittest.TestCase):
 
 
 if __name__ == "__main__": unittest.main()
+
+class GoogleAccountTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.work = Path(self.tmp.name)
+        self.signin = auth.SignIn(self.work)
+        self.creds = SimpleNamespace(token='ACCESS_PRIVATE')
+
+    def tearDown(self): self.tmp.cleanup()
+
+    def test_sign_in_starts_without_project_and_scopes_do_not_include_drive_or_cloud_write(self):
+        oauth = SimpleNamespace(get_authorization_url=Mock(return_value='https://accounts.google.com/o/oauth2/auth?x=1'))
+        with patch.dict('sys.modules', {'ee': SimpleNamespace(oauth=oauth)}):
+            self.signin.start({})
+        self.assertIsNone(self.signin.pending['project'])
+        self.assertIn(auth.PROJECT_SCOPE, oauth.get_authorization_url.call_args.args[1])
+        self.assertNotIn('https://www.googleapis.com/auth/drive', auth.SCOPES)
+        for value in [{'project': True}, {'project':'../escape'}, {'callback':'https://evil.example'}]:
+            with self.assertRaises(ValueError): self.signin.start(value)
+
+    def test_successful_google_grant_is_saved_even_before_project_selection(self):
+        oauth = SimpleNamespace(CLIENT_ID='client', CLIENT_SECRET='client-secret', TOKEN_URI='https://oauth2.googleapis.com/token')
+        def response(url, **kw):
+            return {'refresh_token':'REFRESH_PRIVATE','scope':' '.join(auth.SCOPES)} if url == oauth.TOKEN_URI else {'email':'owner@example.test','email_verified':True}
+        with patch.dict('sys.modules', {'ee':SimpleNamespace(oauth=oauth)}), patch.object(auth, 'google_json', side_effect=response), patch.object(auth, 'make_credentials', return_value=self.creds), patch.object(auth, 'refresh_credentials'), patch.object(auth, 'discover_projects', return_value=(['example-project'],False)), patch.object(auth, 'verify_project') as verify:
+            self.signin.finish(({'verifier':'private','project':None},'CODE_PRIVATE'))
+        state=self.signin.snapshot()
+        self.assertTrue(state['signedIn']); self.assertFalse(state['configured'])
+        self.assertEqual(state['authentication'],'project-required')
+        self.assertEqual(state['accountEmail'],'owner@example.test')
+        self.assertEqual(state['projects'],['example-project'])
+        self.assertEqual(json.loads((self.work/'credentials.json').read_text())['refresh_token'],'REFRESH_PRIVATE')
+        self.assertEqual((self.work/'credentials.json').stat().st_mode & 0o777, 0o600)
+        verify.assert_not_called()
+        for secret in ['REFRESH_PRIVATE','ACCESS_PRIVATE','CODE_PRIVATE']: self.assertNotIn(secret,json.dumps(state))
+
+    def test_project_denial_preserves_signed_in_account_and_never_enables_download(self):
+        with patch.object(auth, 'google_json', return_value={}), patch.object(auth, 'discover_projects', side_effect=RuntimeError('PRIVATE')), patch.object(auth, 'verify_project', side_effect=RuntimeError('PRIVATE')):
+            self.signin.inspect(self.creds, 'example-project')
+        state=self.signin.snapshot()
+        self.assertTrue(state['signedIn']); self.assertFalse(state['configured'])
+        self.assertEqual(state['authError'],'PROJECT_ACCESS_REQUIRED')
+        self.assertEqual(state['projectDiscovery'],'unavailable')
+        self.assertNotIn('PRIVATE',json.dumps(state))
+
+    def test_stored_credentials_are_rechecked_and_only_real_project_check_enables_download(self):
+        with patch.object(auth, 'credentials', return_value=self.creds), patch.object(auth, 'refresh_credentials'), patch.object(auth, 'google_json', return_value={}), patch.object(auth, 'discover_projects', return_value=([],False)), patch.object(auth, 'verify_project') as verify:
+            self.signin.check({'project':'example-project'}); self.signin.worker.join(2)
+        verify.assert_called_once_with(self.creds,'example-project')
+        self.assertTrue(self.signin.snapshot()['configured'])
+        self.assertEqual(json.loads((self.work/'config.json').read_text())['project'],'example-project')
+        with patch.object(auth, 'credentials', side_effect=RuntimeError('SECRET')):
+            self.signin.check({}); self.signin.worker.join(2)
+        self.assertFalse(self.signin.snapshot()['configured'])
+        self.assertFalse(self.signin.snapshot()['signedIn'])
+
+    def test_project_discovery_follows_bounded_pages_and_deduplicates(self):
+        with patch.object(auth,'google_json',side_effect=[{'projects':[{'projectId':'first-project'},{'projectId':'../bad'}],'nextPageToken':'next&token'}, {'projects':[{'projectId':'first-project'},{'projectId':'other-project'}]}]) as provider:
+            self.assertEqual(auth.discover_projects(self.creds),(['first-project','other-project'],False))
+        self.assertIn('pageToken=next%26token',provider.call_args.args[0])
+        with self.assertRaisesRegex(ValueError,'REDIRECT'): auth.NoRedirect().redirect_request()

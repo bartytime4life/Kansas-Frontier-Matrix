@@ -135,3 +135,34 @@ the owner's account and registered project; simulated tests do not prove them.
 References: [Google authentication](https://developers.google.com/earth-engine/guides/auth),
 [download request limits](https://developers.google.com/earth-engine/apidocs/ee-image-getdownloadurl),
 [export grids](https://developers.google.com/earth-engine/guides/exporting_images).
+
+
+## Google account and local library update — 2026-10-09
+
+Sign in with Google before choosing a project. The local operator exchanges a
+one-time PKCE code, refreshes the grant and reports the account when Google
+provides a verified email. Project discovery uses the read-only Cloud project
+list scope; it does not create projects, enable APIs or billing, or grant IAM
+roles. Choose a project (or enter its ID if listing is unavailable) and use
+**Check download access**. A real Earth Engine scalar computation must succeed
+before the download control becomes ready. Saved credentials are rechecked on
+operator restart; a credential file alone does not establish access.
+
+OAuth additionally requests email/OpenID and read-only project listing alongside
+the existing Earth Engine scope. Tokens remain in private local credential
+storage and never appear in status responses or Site storage. Legacy grants can
+still be checked with a manually entered project; missing email/project-list
+permissions have an explicit fallback. Browser Google cookies alone are not an
+Earth Engine grant. Google consent and live account/project acceptance require
+the owner to complete sign-in.
+
+**View downloaded data** opens My library directly. It lists recent completed
+and partial transfers by source, with bytes and destination, plus the bounded
+filesystem metadata scan of all existing collections. Earth Engine raw files
+are grouped by dataset and period; empty directories are not downloaded data.
+Transfer history does not prove a file still exists, and stored bytes do not
+approve a dataset for map display. The existing refresh, stale-state, partial
+capture, size-cap and source-review protections remain in effect.
+
+References: [Google authentication](https://developers.google.com/earth-engine/guides/auth)
+and [read-only project discovery](https://docs.cloud.google.com/resource-manager/reference/rest/v1/projects/list).
