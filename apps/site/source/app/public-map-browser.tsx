@@ -29,7 +29,7 @@ export default function PublicMapBrowser({ downloads, blockedByOtherDownload = f
   const [filter, setFilter] = useState(defaultFilter), [page, setPage] = useState(0), [selectedId, setSelectedId] = useState("");
   const [assetId, setAssetId] = useState(""), [maximum, setMaximum] = useState("");
   const heading = useRef<HTMLHeadingElement>(null), resultsHeading = useRef<HTMLHeadingElement>(null), focusSelection = useRef(false), focusReturn = useRef(false), transfer = useRef<HTMLInputElement>(null), transferAction = useRef<HTMLButtonElement>(null), focusTransfer = useRef(false);
-  const records = useMemo(() => filterPublicMaps(catalog?.records ?? [], defaultFilter).filter(row => row.sourceId.startsWith("publisher-") === (collection === "satellite")), [catalog, collection]);
+  const records = useMemo(() => filterPublicMaps(catalog?.records ?? [], defaultFilter).filter(row => row.sourceId !== "history-originals").filter(row => row.sourceId.startsWith("publisher-") === (collection === "satellite")), [catalog, collection]);
   // A discovered source with no records yet (Storm Events before its first refresh) still shows its coverage.
   const coverage = catalog?.coverage.filter(source => records.some(row => row.sourceId === source.sourceId) || source.recordCount === 0 && source.sourceId.startsWith("publisher-") === (collection === "satellite")) ?? [];
   const stormsUnlisted = collection === "satellite" && coverage.some(source => source.sourceId === "publisher-noaa-storm-events" && source.recordCount === 0);

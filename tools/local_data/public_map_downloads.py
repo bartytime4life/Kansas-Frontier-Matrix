@@ -119,7 +119,12 @@ PUBLISHER_FILES = {'https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/
  'https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2024_30m_cdls.zip': '2024_30m_cdls.zip',
  'https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2025_10m_cdls.zip': '2025_10m_cdls.zip',
  'https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2025_30m_cdls.zip': '2025_30m_cdls.zip'}
-PINNED_FILES = {**SCIENCEBASE_FILES, **NGMDB_FILES, **PUBLISHER_FILES}
+# Exact researched originals only; no archive-wide or mirror-host wildcard.
+HISTORY_FILES = {
+    "https://dn721107.ca.archive.org/0/items/historyofkansas00pren_0/historyofkansas00pren_0.pdf": "historyofkansas00pren_0.pdf",
+    "https://www.latinamericanstudies.org/kansas/A_History_of_Kansas.pdf": "A_History_of_Kansas.pdf",
+}
+PINNED_FILES = {**SCIENCEBASE_FILES, **NGMDB_FILES, **PUBLISHER_FILES, **HISTORY_FILES}
 
 
 def validate_url(value):

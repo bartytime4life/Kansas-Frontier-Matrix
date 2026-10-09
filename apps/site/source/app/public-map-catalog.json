@@ -71,6 +71,17 @@
       "checkedAt": null,
       "discoveredCount": 0,
       "seedReferenceCount": 0
+    },
+    {
+      "sourceId": "history-originals",
+      "title": "Selected Kansas history books",
+      "state": "seed",
+      "recordCount": 2,
+      "discoveredCount": 0,
+      "seedReferenceCount": 2,
+      "expectedCount": null,
+      "reason": "Two selected direct PDF originals. Collection holdings are not enumerated; metadata and rights are item-specific.",
+      "checkedAt": "2026-10-09"
     }
   ],
   "records": [
@@ -2756,6 +2767,80 @@
           "format": "TIFF",
           "url": "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/chirps-v2.0.1981.tif",
           "expectedBytes": 57616550,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "history-prentis-1909",
+      "sourceId": "history-originals",
+      "publisher": "Library of Congress / Internet Archive",
+      "title": "Noble L. Prentis: A history of Kansas (1909)",
+      "counties": [],
+      "mapYear": null,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "crs": null,
+      "spatialAccuracy": null,
+      "metadataUrl": "https://archive.org/details/historyofkansas00pren_0",
+      "rights": {
+        "status": "no-known-restrictions",
+        "text": "1909 book. Internet Archive records the Library of Congress as unaware of copyright restrictions. Historical perspective and OCR errors require source interpretation.",
+        "url": "https://archive.org/details/historyofkansas00pren_0"
+      },
+      "description": "1909 book. Internet Archive records the Library of Congress as unaware of copyright restrictions. Historical perspective and OCR errors require source interpretation.",
+      "geometryRole": "Historical reference book; no geographic geometry or map alignment.",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "history-prentis-1909-pdf",
+          "title": "Noble L. Prentis: A history of Kansas (1909)",
+          "format": "PDF",
+          "url": "https://dn721107.ca.archive.org/0/items/historyofkansas00pren_0/historyofkansas00pren_0.pdf",
+          "expectedBytes": 26261072,
+          "kind": "download",
+          "availability": "verified",
+          "checkedAt": "2026-10-09",
+          "providerChecksum": {
+            "algorithm": "SHA1",
+            "value": "e216f4d62bde70ac3da18fca90383affb6ac13c2"
+          }
+        }
+      ]
+    },
+    {
+      "id": "history-arnold-history",
+      "sourceId": "history-originals",
+      "publisher": "Latin American Studies (scan host)",
+      "title": "Anna Estelle Arnold: A History of Kansas",
+      "counties": [],
+      "mapYear": null,
+      "digitalYear": null,
+      "scale": null,
+      "scaleUnit": null,
+      "crs": null,
+      "spatialAccuracy": null,
+      "metadataUrl": "https://www.latinamericanstudies.org/kansas/A_History_of_Kansas.pdf",
+      "rights": {
+        "status": "held",
+        "text": "The file identifies Anna Estelle Arnold; this scan edition and redistribution terms are not verified. Private reference capture only; do not infer rights from other editions.",
+        "url": "https://www.latinamericanstudies.org/kansas/A_History_of_Kansas.pdf"
+      },
+      "description": "The file identifies Anna Estelle Arnold; this scan edition and redistribution terms are not verified. Private reference capture only; do not infer rights from other editions.",
+      "geometryRole": "Historical reference book; no geographic geometry or map alignment.",
+      "bbox": null,
+      "point": null,
+      "assets": [
+        {
+          "id": "history-arnold-history-pdf",
+          "title": "Anna Estelle Arnold: A History of Kansas",
+          "format": "PDF",
+          "url": "https://www.latinamericanstudies.org/kansas/A_History_of_Kansas.pdf",
+          "expectedBytes": 24602998,
           "kind": "download",
           "availability": "verified",
           "checkedAt": "2026-10-09"
