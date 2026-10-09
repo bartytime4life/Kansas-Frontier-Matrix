@@ -2,7 +2,7 @@
 
 Open **Library & downloads → Mine maps & geologic maps** at
 `/downloads#public-maps`. Search by title, publication, county, publisher, map
-year, format or availability. Select a record to inspect its source, scale,
+year or direct-file format. Select a record to inspect its source, scale,
 dates and reuse terms. Metadata browsing requires no Google account.
 
 Choose **Connect map downloads**, then **Refresh all Kansas records** to ask
@@ -12,16 +12,17 @@ time; retained reference records are counted separately from discovered rows.
 A failed source keeps its prior records. Missing results never establish an
 absence of mines or complete geological coverage.
 
-The **Source coverage** section offers **Search official NMMR catalog** and
-**Request NMMR archival scans** directly, including when discovery is unavailable,
-the local operator is disconnected, or the current filters match no records.
-These keyboard-accessible links open a new tab and use the destinations already
-pinned in the reference catalog. A refreshed operator response cannot replace
-them. Search the official site by state (Kansas), county, commodity or document
-number; original scans require a separate request. Navigation neither submits
-an archival request nor starts a download. The official
-[search](https://mmr.osmre.gov/), [help](https://mmr.osmre.gov/Help) and
-[request page](https://mmr.osmre.gov/Request) describe that workflow.
+The download catalog includes only records with verified direct files. Entries
+with no files, unverified links, service-only access, archival requests or purchase
+requirements are excluded from results, publisher/format choices and source
+coverage. Archive-request links and non-download availability choices are removed.
+The same rule applies to the offline seed and refreshed local catalogs. Existing
+metadata snapshots, stored files, receipts and transfer history remain intact.
+
+The October 9, 2026 local snapshot contains 1,695 metadata records; eight records
+with twelve verified direct files are offered for download. Source coverage keeps
+its original metadata-inventory counts and dates distinct from downloadable
+record counts. Free original files can still carry reuse or redistribution holds.
 
 A failed local catalog read preserves the last checked metadata and its warning.
 The existing five-second status poll retries that read once the service responds;
@@ -49,7 +50,7 @@ require no Earth Engine setup or authentication.
   retain 1980/1976 map dates separately from their 2022 digital releases;
   publisher metadata and HEAD sizes verify the offered links, not extracted
   archive contents. Most discovered NGMDB records currently supply metadata
-  links only. GeMS releases, services, and unverified asset links do not become
+  links only and are excluded from download discovery. GeMS releases, services, and unverified asset links do not become
   downloadable simply because their publication appears in search results.
 - Four CNGM version 2 national GeMS ZIPs are also selectable: Earth surface
   (3,492,433,165 bytes), Quaternary (2,971,732,596), Pre-Quaternary
@@ -64,7 +65,7 @@ require no Earth Engine setup or authentication.
   boundaries or current hazard assessments. Source confidence, archive status,
   scene identity and feet-per-inch scale remain explicit. Provider-derived JPEG
   scene URLs start **unverified**. Archival TIFF originals may require the
-  repository's request process; no request is submitted by this feature.
+  repository's request process. Those request-only and unverified records are excluded from the download sources; no request is submitted by this feature.
 - Metadata requests use verified TLS, fixed endpoints, 4 MiB per response and a
   64 MiB total budget. Limits or unavailable services produce explicit partial
   or unavailable coverage. The October 8, 2026 discovery reconciled 2,270 NGMDB

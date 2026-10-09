@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
-import seed from "./public-map-catalog.json";
-import { parsePublicMapCatalog, publicMapNmmrLinks, canDownloadPublicMap, filterPublicMaps, publicMapSelectedLimit, type PublicMapFilter, type PublicMapRecord } from "./public-map-catalog";
+import { canDownloadPublicMap, filterPublicMaps, publicMapSelectedLimit, type PublicMapFilter, type PublicMapRecord } from "./public-map-catalog";
 import type { PublicMapDownloads } from "./use-public-map-downloads";
 import { formatDownloadBytes as bytes } from "./local-download-client";
 import { PublicMapPreview } from "./public-map-preview";
@@ -9,9 +8,8 @@ import { revealTransferControls } from "./download-focus";
 import s from "./downloads/workspace.module.css";
 import p from "./public-map-browser.module.css";
 
-const nmmrLinks = publicMapNmmrLinks(parsePublicMapCatalog(seed));
 const PUBLIC_MAP_PAGE_SIZE = 8;
-const defaultFilter: PublicMapFilter = { text: "", publisher: "all", county: "all", year: "all", format: "all", availability: "all" };
+const defaultFilter: PublicMapFilter = { text: "", publisher: "all", county: "all", year: "all", format: "all" };
 const stamp = (value: string) => new Date(value).toLocaleString();
 const size = (value: number | null) => value === null ? "Size unknown" : bytes(value);
 const coverageLabels = { seed: "Starting references", partial: "Partial catalog", complete: "Catalog checked", unavailable: "Coverage unknown" };
@@ -24,19 +22,22 @@ export default function PublicMapBrowser({ downloads, blockedByOtherDownload = f
   const [filter, setFilter] = useState(defaultFilter), [page, setPage] = useState(0), [selectedId, setSelectedId] = useState("");
   const [assetId, setAssetId] = useState(""), [maximum, setMaximum] = useState("");
   const heading = useRef<HTMLHeadingElement>(null), resultsHeading = useRef<HTMLHeadingElement>(null), focusSelection = useRef(false), focusReturn = useRef(false), transfer = useRef<HTMLInputElement>(null), transferAction = useRef<HTMLButtonElement>(null), focusTransfer = useRef(false);
-  const selected = catalog?.records.find(row => row.id === selectedId) ?? null;
-  const chosenAsset = selected?.assets.find(asset => asset.id === assetId);
+  const records = useMemo(() => filterPublicMaps(catalog?.records ?? [], defaultFilter), [catalog]);
+  const coverage = catalog?.coverage.filter(source => records.some(row => row.sourceId === source.sourceId)) ?? [];
+  const selected = records.find(row => row.id === selectedId) ?? null;
+  const files = selected?.assets.filter(canDownloadPublicMap) ?? [];
+  const chosenAsset = files.find(asset => asset.id === assetId);
   const limit = chosenAsset ? publicMapSelectedLimit(maximum, chosenAsset, status?.limitBytes) : null;
-  const rows = useMemo(() => filterPublicMaps(catalog?.records ?? [], filter), [catalog, filter]);
+  const rows = useMemo(() => filterPublicMaps(records, filter), [records, filter]);
   const pages = Math.max(1, Math.ceil(rows.length / PUBLIC_MAP_PAGE_SIZE)), currentPage = Math.min(page, pages - 1);
   const applied = Object.entries(filter).filter(([key, value]) => value !== (key === "text" ? "" : "all")).length;
-  const extraFilters = [filter.publisher, filter.county, filter.year, filter.format, filter.availability].filter(value => value !== "all").length;
+  const extraFilters = [filter.publisher, filter.county, filter.year, filter.format].filter(value => value !== "all").length;
   const options = useMemo(() => ({
-    publishers: [...new Set(catalog?.records.map(row => row.publisher) ?? [])].sort(), counties: [...new Set(catalog?.records.flatMap(row => row.counties) ?? [])].sort(),
-    years: [...new Set(catalog?.records.flatMap(row => row.mapYear === null ? [] : [row.mapYear]) ?? [])].sort((a, b) => b - a),
-    formats: [...new Set(catalog?.records.flatMap(row => row.assets.map(asset => asset.format)) ?? [])].sort(),
-  }), [catalog]);
-  const unavailable = catalog?.coverage.filter(source => source.state === "unavailable" || source.state === "partial") ?? [];
+    publishers: [...new Set(records.map(row => row.publisher))].sort(), counties: [...new Set(records.flatMap(row => row.counties))].sort(),
+    years: [...new Set(records.flatMap(row => row.mapYear === null ? [] : [row.mapYear]))].sort((a, b) => b - a),
+    formats: [...new Set(records.flatMap(row => row.assets.filter(canDownloadPublicMap).map(asset => asset.format)))].sort(),
+  }), [records]);
+  const unavailable = coverage.filter(source => source.state === "unavailable" || source.state === "partial");
   const existing = chosenAsset && status?.jobs.find(job => job.assetId === chosenAsset.id && job.state === "downloaded");
   const workerBusy = blockedByOtherDownload || Boolean(status?.active);
   useEffect(() => { selectAsset(chosenAsset?.id ?? null); }, [chosenAsset?.id, selectAsset]);
@@ -64,33 +65,25 @@ export default function PublicMapBrowser({ downloads, blockedByOtherDownload = f
   const choose = (row: PublicMapRecord | null) => { focusSelection.current = Boolean(row); focusReturn.current = !row; setSelectedId(row?.id ?? ""); setAssetId(""); setMaximum(""); };
   const changeFilter = (key: keyof PublicMapFilter, value: string) => { setFilter(old => ({ ...old, [key]: value })); setPage(0); };
   const selectFile = (id: string) => {
-    const asset = selected?.assets.find(item => item.id === id);
+    const asset = files.find(item => item.id === id);
     setAssetId(id); setMaximum(asset?.expectedBytes ? String(Math.ceil(asset.expectedBytes / 1_048_576)) : ""); focusTransfer.current = true;
   };
   return <section id="public-maps" className={p.catalog} aria-labelledby="public-map-heading">
-    <header className={p.catalogHeading}><div><h2 id="public-map-heading" ref={resultsHeading} tabIndex={-1}>Maps &amp; geology</h2><p>Published originals, mine-map records, and geologic context for Kansas.</p></div><span className={p.catalogCount}>{catalog ? catalog.records.length.toLocaleString() : "Unknown"}<small>indexed records</small></span></header>
+    <header className={p.catalogHeading}><div><h2 id="public-map-heading" ref={resultsHeading} tabIndex={-1}>Maps &amp; geology</h2><p>Free, directly downloadable maps and geologic files for Kansas.</p></div><span className={p.catalogCount}>{catalog ? records.length.toLocaleString() : "Unknown"}<small>downloadable records</small></span></header>
     <div className={p.searchRow} data-single><label>Search the map catalog<input type="search" placeholder="Title, county, publication or mine…" value={filter.text} onChange={e => changeFilter("text", e.target.value)} /></label></div>
     <div className={p.filterBar}><details className={p.filterDetails}><summary>More filters{extraFilters > 0 ? ` · ${extraFilters} applied` : ""}</summary><div className={p.filters}>
       <label>Publisher<select value={filter.publisher} onChange={e => changeFilter("publisher", e.target.value)}><option value="all">All publishers</option>{options.publishers.map(value => <option key={value}>{value}</option>)}</select></label>
       <label>County<select value={filter.county} onChange={e => changeFilter("county", e.target.value)}><option value="all">All counties</option><option value="unknown">County not specified</option>{options.counties.map(value => <option key={value}>{value}</option>)}</select></label>
       <label>Map publication year<select value={filter.year} onChange={e => changeFilter("year", e.target.value)}><option value="all">All years</option><option value="unknown">Year unknown</option>{options.years.map(value => <option key={value}>{value}</option>)}</select></label>
       <label>File format<select value={filter.format} onChange={e => changeFilter("format", e.target.value)}><option value="all">All formats</option>{options.formats.map(value => <option key={value}>{value}</option>)}</select></label>
-      <label>Availability<select value={filter.availability} onChange={e => changeFilter("availability", e.target.value)}><option value="all">All records</option><option value="download">Verified direct files</option><option value="service">Verified map services</option><option value="request">Request an original</option><option value="metadata">No verified direct file</option></select></label>
     </div></details>{applied > 0 && <button type="button" className={s.textButton} onClick={() => { setFilter(defaultFilter); setPage(0); }}>Clear {applied} {applied === 1 ? "filter" : "filters"}</button>}<span>{rows.length.toLocaleString()} results</span></div>
-    <details className={p.coverage}><summary>Source coverage{unavailable.length ? <span>{unavailable.map(source => `${source.title}: ${source.state === "unavailable" ? "unknown" : "partial"}`).join(" · ")}</span> : <span>Check dates &amp; completeness</span>}</summary><ul>{catalog?.coverage.map(source => <li key={source.sourceId}><strong>{source.title}</strong><span>{coverageLabels[source.state]} · {source.state === "unavailable" && (source.discoveredCount ?? source.recordCount) === 0 ? "Coverage unknown" : `${(source.discoveredCount ?? source.recordCount).toLocaleString()}${source.expectedCount === null ? " records; total unknown" : ` / ${source.expectedCount.toLocaleString()} records`}`}{source.seedReferenceCount ? ` + ${source.seedReferenceCount} starting references` : ""}</span><p>{coverageReason(source.reason)}</p>{source.checkedAt && <small>Checked {stamp(source.checkedAt)}</small>}
-      {source.sourceId === "osmre-nmmr" && <>
-        {(nmmrLinks.search || nmmrLinks.request) && <nav className={p.sourceLinks} aria-label="Official NMMR research">
-          {nmmrLinks.search && <a href={nmmrLinks.search} target="_blank" rel="noopener noreferrer" aria-label="Search official NMMR catalog (opens in a new tab)">Search official NMMR catalog ↗</a>}
-          {nmmrLinks.request && <a href={nmmrLinks.request} target="_blank" rel="noopener noreferrer" aria-label="Request NMMR archival scans (opens in a new tab)">Request NMMR archival scans ↗</a>}
-        </nav>}
-        <p>Search by state (Kansas), county, commodity or document number. Original archival scans require a separate request. NMMR index points are finding aids, not mine boundaries; search results do not establish complete Kansas coverage.</p>
-      </>}
-    </li>)}</ul><p>No matching records do not establish absence of mining or complete geological coverage.</p><button type="button" disabled={!connected || !!busy || status?.refresh.state === "running"} aria-busy={status?.refresh.state === "running"} onClick={() => void downloads.refreshCatalog()}>{status?.refresh.state === "running" ? "Refreshing catalog…" : "Refresh Kansas catalog"}</button></details>
+    <details className={p.coverage}><summary>Source coverage{unavailable.length ? <span>{unavailable.map(source => `${source.title}: ${source.state === "unavailable" ? "unknown" : "partial"}`).join(" · ")}</span> : <span>Check dates &amp; completeness</span>}</summary><ul>{coverage.map(source => <li key={source.sourceId}><strong>{source.title}</strong><span>{records.filter(row => row.sourceId === source.sourceId).length.toLocaleString()} downloadable records · {coverageLabels[source.state]} · {source.state === "unavailable" && (source.discoveredCount ?? source.recordCount) === 0 ? "Coverage unknown" : `${(source.discoveredCount ?? source.recordCount).toLocaleString()}${source.expectedCount === null ? " metadata records; total unknown" : ` / ${source.expectedCount.toLocaleString()} metadata records`}`}{source.seedReferenceCount ? ` + ${source.seedReferenceCount} starting references` : ""}</span><p>{coverageReason(source.reason)}</p>{source.checkedAt && <small>Checked {stamp(source.checkedAt)}</small>}
+    </li>)}</ul><p>Only records with verified direct files appear in downloads. Missing results do not establish complete geological coverage.</p><button type="button" disabled={!connected || !!busy || status?.refresh.state === "running"} aria-busy={status?.refresh.state === "running"} onClick={() => void downloads.refreshCatalog()}>{status?.refresh.state === "running" ? "Refreshing catalog…" : "Refresh Kansas catalog"}</button></details>
     {downloads.catalogError && <p className={s.alert}>{downloads.catalogError}</p>}
     {status?.refresh.state === "failed" && <p className={s.alert}>Catalog refresh did not finish. Retained records remain available; current completeness is unknown.</p>}
     <div className={p.results} data-selection={Boolean(selected)}>
-      <div className={p.resultColumn}><ul className={p.records}>{rows.slice(currentPage * PUBLIC_MAP_PAGE_SIZE, (currentPage + 1) * PUBLIC_MAP_PAGE_SIZE).map(row => <li key={row.id}><button type="button" aria-pressed={selectedId === row.id} onClick={() => choose(row)}><span className={p.recordMeta}>{row.publisher} <span>{row.mapYear ?? "Year unknown"}</span></span><strong>{row.title}</strong><small>{row.counties.join(", ") || "County not specified"}</small><span className={p.fileHint}>{row.assets.some(canDownloadPublicMap) ? "Original files available" : "Source record / request"}<span aria-hidden="true">↗</span></span></button></li>)}</ul>
-        {!rows.length && <div className={s.empty}><strong>No matching maps</strong><p>Try fewer filters or a broader search. Some source inventories are partial or unavailable.</p><button type="button" onClick={() => { setFilter(defaultFilter); setPage(0); }}>Reset search</button></div>}
+      <div className={p.resultColumn}><ul className={p.records}>{rows.slice(currentPage * PUBLIC_MAP_PAGE_SIZE, (currentPage + 1) * PUBLIC_MAP_PAGE_SIZE).map(row => <li key={row.id}><button type="button" aria-pressed={selectedId === row.id} onClick={() => choose(row)}><span className={p.recordMeta}>{row.publisher} <span>{row.mapYear ?? "Year unknown"}</span></span><strong>{row.title}</strong><small>{row.counties.join(", ") || "County not specified"}</small><span className={p.fileHint}>Direct files available<span aria-hidden="true">↗</span></span></button></li>)}</ul>
+        {!rows.length && <div className={s.empty}><strong>No matching maps</strong><p>Try fewer filters or a broader search. Only verified direct files are included.</p><button type="button" onClick={() => { setFilter(defaultFilter); setPage(0); }}>Reset search</button></div>}
         <nav className={s.pagination} aria-label="Public map catalog pages"><button type="button" disabled={currentPage === 0} onClick={() => setPage(currentPage - 1)}>Previous</button><span>{currentPage + 1} / {pages}</span><button type="button" disabled={currentPage + 1 >= pages} onClick={() => setPage(currentPage + 1)}>Next</button></nav>
       </div>
       <aside className={p.detail} aria-label="Selected public map">
@@ -98,9 +91,9 @@ export default function PublicMapBrowser({ downloads, blockedByOtherDownload = f
           <button type="button" className={s.textButton} onClick={() => choose(null)}>← Back to results</button><p className={s.eyebrow}>{selected.publisher} · {selected.mapYear ?? "Map year unknown"}{selected.scale ? ` · ${selected.scale}${selected.scaleUnit && !["ratio", "denominator"].includes(selected.scaleUnit) ? ` ${selected.scaleUnit}` : ""}` : ""}</p>
           <h3 ref={heading} tabIndex={-1}>{selected.title}</h3>
           {selected.rights.status === "held" && <p className={p.rightsNote}>Source reuse terms are held for review. A local capture does not grant redistribution or map-display approval.</p>}
-          <div className={p.fileSection}><h4>Available files &amp; services</h4><ul className={p.assets}>{selected.assets.map(asset => <li key={asset.id}><div><strong>{asset.title}</strong><span>{asset.format} · {size(asset.expectedBytes)} · {asset.availability === "verified" ? "Link checked" : asset.availability === "request-only" ? "Archive request" : "Unverified availability"}</span></div>
-            {canDownloadPublicMap(asset) ? <><button type="button" className={s.primaryButton} aria-pressed={assetId === asset.id} onClick={() => selectFile(asset.id)}>Download {asset.format}<span>{size(asset.expectedBytes)}</span></button><a href={asset.url} target="_blank" rel="noreferrer">{["PDF", "JPEG", "JPG", "TIFF", "TIF", "GEOTIFF", "PNG"].includes(asset.format.toUpperCase()) ? "Open original document" : "Open original file"} ↗</a></> : <a href={asset.url} target="_blank" rel="noreferrer">{asset.kind === "request" ? "Request from the archive" : asset.kind === "service" ? "Inspect source service" : "Check with publisher"} ↗</a>}
-          </li>)}</ul>{!selected.assets.length && <p>No direct files are listed. <a href={selected.metadataUrl} target="_blank" rel="noreferrer">Check the source record ↗</a></p>}</div>
+          <div className={p.fileSection}><h4>Available files</h4><ul className={p.assets}>{files.map(asset => <li key={asset.id}><div><strong>{asset.title}</strong><span>{asset.format} · {size(asset.expectedBytes)} · Link checked</span></div>
+            <><button type="button" className={s.primaryButton} aria-pressed={assetId === asset.id} onClick={() => selectFile(asset.id)}>Download {asset.format}<span>{size(asset.expectedBytes)}</span></button><a href={asset.url} target="_blank" rel="noreferrer">{["PDF", "JPEG", "JPG", "TIFF", "TIF", "GEOTIFF", "PNG"].includes(asset.format.toUpperCase()) ? "Open original document" : "Open original file"} ↗</a></>
+          </li>)}</ul></div>
           {chosenAsset && canDownloadPublicMap(chosenAsset) && <div className={p.selection} aria-label="Selected original transfer"><p className={s.eyebrow}>SAVE TO THIS COMPUTER</p><strong>{chosenAsset.title}</strong>
             {existing && <p className={p.storedNotice}>A copy is already stored ({bytes(existing.bytes)}). This starts a separate capture. <button type="button" className={s.textButton} onClick={onViewActivity}>View activity</button></p>}
             <p>{chosenAsset.expectedBytes === null ? "Size unknown. Enter a maximum before downloading." : `Reported file size ${bytes(chosenAsset.expectedBytes)}. A rounded-up maximum is ready for you to review.`}</p>
