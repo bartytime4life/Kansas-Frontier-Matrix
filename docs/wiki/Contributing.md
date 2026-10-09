@@ -45,7 +45,7 @@ The human defines the question, constraints and acceptance criteria. AI can draf
 
 ### Keep the contribution contract in one place
 
-The [root contribution guide](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/CONTRIBUTING.md) and [PR template](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/.github/PULL_REQUEST_TEMPLATE.md) govern repository delivery. This page explains a practical path; it does not create a competing approval policy. Draft, reviewed, merged, deployed and accepted remain distinct.
+The [root contribution guide](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/f06e477a30ee307d3f440d1f5141db47388ae7f1/CONTRIBUTING.md) and [PR template](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/.github/PULL_REQUEST_TEMPLATE.md) govern repository delivery. This page explains a practical path; it does not create a competing approval policy. Draft, reviewed, merged, deployed and accepted remain distinct.
 
 **Next:** [Choose checks](Development-and-Validation.md) → [find the owning files](Repository-Map.md) → [understand evidence and review](Governance-and-Evidence.md).
 

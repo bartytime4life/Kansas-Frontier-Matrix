@@ -24,7 +24,7 @@ publication_effect: native wiki documentation only; no application deployment or
 
 ### Run the right component
 
-The [installation guide](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/docs/installation.md) separates Python validators, shared JavaScript packages, local-data tools and the Explorer Site. The Site has its own npm lockfile; root pnpm commands do not install it. Root aggregate scripts include intentional workflow holds.
+The [installation guide](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/f06e477a30ee307d3f440d1f5141db47388ae7f1/docs/installation.md) separates Python validators, shared JavaScript packages, local-data tools and the Explorer Site. The Site has its own npm lockfile; root pnpm commands do not install it. Root aggregate scripts include intentional workflow holds.
 
 For a new local Site evaluation, the documented sequence from the repository root is:
 
@@ -48,7 +48,7 @@ Treat **source**, **origin**, and **physical storage** as separate identities. A
 | Documentation/navigation | Links, anchors, metadata, source citations and rendered page | Implementation or release acceptance |
 | Pure comparison behavior | [Comparison regressions](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/tests/earth-engine-comparison.test.mjs) | Real installed imagery and device rendering |
 | Application interaction | Build, typecheck, targeted regression plus the actual browser interaction | Broader accessibility/device coverage |
-| Local runtime | [Site check and smoke instructions](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/docs/installation.md#explorer-site-mirror) | Hosted bindings, private records and source admission |
+| Local runtime | [Site check and smoke instructions](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/f06e477a30ee307d3f440d1f5141db47388ae7f1/docs/installation.md#explorer-site-mirror) | Hosted bindings, private records and source admission |
 | AI-authored artifact | [Generated receipt validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/tools/validators/validate_generated_receipt.py) | Independent review and approval |
 
 ### Report a result someone else can assess

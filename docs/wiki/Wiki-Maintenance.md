@@ -42,7 +42,7 @@ Before publication, resolve local links and fragments, check pinned repository t
 
 Use a forward revert or corrected publication to recover from an incorrect page. Source rollback and native-wiki rollback are separate. The older detailed material below preserves original operational context, including historical commands and unresolved questions; use the current helper and selected immutable source when operating today.
 
-**Next:** [Source packet contract](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/docs/wiki/README.md) · [Contribution workflow](Contributing.md) · [Security reporting](Security-and-Sensitivity.md).
+**Next:** [Source packet contract](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/f06e477a30ee307d3f440d1f5141db47388ae7f1/docs/wiki/README.md) · [Contribution workflow](Contributing.md) · [Security reporting](Security-and-Sensitivity.md).
 
 <sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
 

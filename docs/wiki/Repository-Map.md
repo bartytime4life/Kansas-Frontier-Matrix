@@ -22,10 +22,10 @@ publication_effect: native wiki documentation only; no application deployment or
 |---|---|---|
 | Explorer interaction or rendering | [apps/site/source/app/](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/app) | Feature notes and tests under the same Site tree |
 | An application regression | [apps/site/source/tests/](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/tests) | The caller and actual user interaction being protected |
-| A developer's first run | [docs/installation.md](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/docs/installation.md) | Site package scripts and local launcher |
+| A developer's first run | [docs/installation.md](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/f06e477a30ee307d3f440d1f5141db47388ae7f1/docs/installation.md) | Site package scripts and local launcher |
 | Source discovery or acquisition | [connectors/](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/connectors/README.md) | Source-specific runbook, terms, bounds and candidate state |
 | Object shape or meaning | [schemas/](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/schemas/README.md) and [contracts/](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/contracts/README.md) | Consumers, fixtures, and adopted definitions |
-| Public documentation | [docs/wiki/](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/docs/wiki/README.md) | The implementation behind every material claim |
+| Public documentation | [docs/wiki/](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/f06e477a30ee307d3f440d1f5141db47388ae7f1/docs/wiki/README.md) | The implementation behind every material claim |
 | AI-authored provenance | [data/receipts/generated/](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/data/receipts/generated/README.md) | Artifact hashes and actual review state |
 | Release decisions | [release/](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/release/README.md) | Applicable review, rights, policy and correction records |
 
