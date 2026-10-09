@@ -8149,7 +8149,7 @@ export default function Home() {
     <div className="site-root">
       <a className="skip-link" href="#map-canvas">Skip to the map</a>
       <header className="topbar">
-        <div className="brand-lockup" aria-label="Kansas Frontier Matrix">
+        <div className="brand-lockup">
           <span className="mark" aria-hidden="true">KFM</span>
           <span><strong>Kansas Frontier Matrix</strong><small>Spatial evidence explorer</small></span>
         </div>
@@ -8969,7 +8969,7 @@ export default function Home() {
             <b aria-hidden="true">{qwenOpen ? "×" : "↗"}</b>
           </button>
           {qwenOpen && isCompact && <div className="qwen-modal-backdrop" aria-hidden="true" onPointerDown={() => closeQwenCompanion()} />}
-          {qwenOpen && <aside ref={qwenPanelRef} id="qwen-map-panel" className="qwen-panel" role="dialog" aria-modal={isCompact} aria-labelledby="qwen-panel-title">
+          {qwenOpen && <section ref={qwenPanelRef} id="qwen-map-panel" className="qwen-panel" role="dialog" aria-modal={isCompact} aria-labelledby="qwen-panel-title">
             <header className="qwen-panel-heading">
               <div><span className="qwen-eyebrow">QWEN · LOCAL ONLY</span><h2 id="qwen-panel-title">Ask about what you see</h2><p>MapLibre supplies the bounded context. The pinned local model may interpret it, but never establishes evidence.</p></div>
               <button className="icon-close" type="button" onClick={() => closeQwenCompanion()} aria-label="Close Qwen companion">×</button>
@@ -8999,7 +8999,7 @@ export default function Home() {
                 <p>The installer verifies Ollama {QWEN_LOCAL_OLLAMA_VERSION}, {QWEN_LOCAL_MODEL}, and the pinned model digest. It installs only the loopback companion; it does not enable hosted inference.</p>
               </div>}
             </section>
-            <div className="qwen-messages" aria-live="polite">
+            <div className="qwen-messages" aria-live="polite" aria-label="Qwen conversation" role="log" tabIndex={0}>
               {qwenMessages.map((message, index) => <article key={`${message.role}-${index}`} data-role={message.role}><span>{message.role === "assistant" ? "QWEN" : "YOU"}</span><p>{message.content}</p></article>)}
               {qwenBusy && <article data-role="assistant" className="qwen-thinking"><span>QWEN</span><p>Reading the current map context…</p></article>}
             </div>
@@ -9012,7 +9012,7 @@ export default function Home() {
               <div><span>LOCAL ONLY · NO HOSTED FALLBACK</span><button type="submit" disabled={!qwenQuestion.trim() || qwenBusy || !shouldUseLocalQwen(qwenBridgeState)}>{qwenBusy ? "Thinking…" : "Ask Qwen"}</button></div>
             </form>
             <footer className="qwen-panel-footer"><p>Qwen is interpretive only. It cannot establish evidence, policy, release, or publication authority.</p><button type="button" onClick={() => void copyQwenPrompt()}>Copy grounded prompt</button></footer>
-          </aside>}
+          </section>}
           <div id="map-canvas" ref={mapContainerRef} className="map-canvas" tabIndex={runtime.kind === "unsupported" ? -1 : 0} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." />
           <div className="map-effects" aria-hidden="true">
             <canvas ref={windArrowCanvasRef} className="wind-arrow-canvas" aria-hidden="true" />
@@ -9737,7 +9737,7 @@ export default function Home() {
             </section>
 
             <section className="timeline-frame-readout" aria-labelledby="timeline-frame-title">
-              <header role="status" aria-live="polite" aria-atomic="true"><span>COMMITTED FRAME</span><strong id="timeline-frame-title">{temporalScopeLabel}</strong><small>{playing ? `Playing ${playbackDirection}; pauses when hidden` : "Paused"} · {temporalFramePosition ?? "off-sequence"}/{temporalSequence.length}</small></header>
+              <div className="timeline-frame-status" role="status" aria-live="polite" aria-atomic="true"><span>COMMITTED FRAME</span><strong id="timeline-frame-title">{temporalScopeLabel}</strong><small>{playing ? `Playing ${playbackDirection}; pauses when hidden` : "Paused"} · {temporalFramePosition ?? "off-sequence"}/{temporalSequence.length}</small></div>
               <div className="timeline-frame-metrics">
                 <article><span>REGISTRY RECORDS</span><strong>{temporalFrameSummary.timedRecordCount}</strong></article>
                 <article><span>DOMAINS</span><strong>{temporalFrameSummary.activeDomainCount}</strong></article>

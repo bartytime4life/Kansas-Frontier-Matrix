@@ -14,6 +14,8 @@
 Drawn from [`source/app/site-features.ts`](source/app/site-features.ts). Status is the code's own declaration — not hosted acceptance, source admission or release. Artwork is illustrative; see [README artwork](../../docs/brand/readme/README.md).
 </details>
 
+> **Repository site audit — 2026-10-09:** a follow-up pass on `source/` adds two additive D1 indexes and a row-value page cursor for data submissions, a branded 404, baseline response headers, and accessibility fixes from an axe-core sweep of 13 routes. Like the refresh, it is repository source only. [Audit findings, validation and rollback](source/docs/explorer-site-audit-2026-10-09.md).
+
 > **Repository interface refresh — 2026-10-08:** `source/` now carries a sleeker theme, a first-visit quick start, offline Kansas orientation for the local basemaps and simpler map controls. This change is in the repository only; the owner-private Site continues to run its last deployed version until the same source is saved and deployed through Sites. [Refresh notes, validation and rollback](source/docs/explorer-interface-refresh.md).
 
 <a id="current-site-checkpoint"></a>

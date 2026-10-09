@@ -143,7 +143,7 @@
 .event-research h1 { font-size: 40px; line-height: 1.15; font-weight: 550; letter-spacing: -.045em; max-width: 800px; }
 .event-research h2 { font-size: 23px; margin: 35px 0 12px; line-height: 1.25; }
 .event-research h3 { font-size: 16px; margin-top: 25px; }
-.event-research a { color: #226553; }
+.event-research a { color: #226553; text-decoration: underline; text-underline-offset: 3px; }
 .event-research p, .event-research li { font-size: 14px; }
 .event-research table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 24px 0; }
 .event-research th, .event-research td { text-align: left; border: 1px solid #ccd4d0; padding: 11px 13px; vertical-align: top; }
@@ -2926,10 +2926,10 @@ body { font-size: 14px; }
   background: rgba(5, 31, 37, .62);
   padding: 11px;
 }
-.timeline-detail > section > header { display: grid; gap: 3px; padding-right: 4px; }
-.timeline-detail > section > header span { color: var(--water); font-size: 10px; letter-spacing: .12em; }
-.timeline-detail > section > header strong { color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-size: 15px; line-height: 1.2; }
-.timeline-detail > section > header small { color: var(--dim); font-size: 11px; line-height: 1.35; }
+.timeline-detail > section > :is(header, .timeline-frame-status) { display: grid; gap: 3px; padding-right: 4px; }
+.timeline-detail > section > :is(header, .timeline-frame-status) span { color: var(--water); font-size: 10px; letter-spacing: .12em; }
+.timeline-detail > section > :is(header, .timeline-frame-status) strong { color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-size: 15px; line-height: 1.2; }
+.timeline-detail > section > :is(header, .timeline-frame-status) small { color: var(--dim); font-size: 11px; line-height: 1.35; }
 .timeline-semantic-controls {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

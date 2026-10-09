@@ -35,9 +35,9 @@ export default function DownloadsWorkspace() {
       </section>
       <p className={styles.srOnly} role="status" aria-live="polite" aria-atomic="true">{downloads.announcement}</p>
       <dl className={styles.summary} aria-label="Library and activity summary">
-        <div><dt>Stored on this computer</dt><dd>{snapshot ? bytes(snapshot.totalBytes) : "Unknown"}</dd><small>{snapshot ? `${snapshot.totalFiles.toLocaleString()} files · ${snapshot.entries.length} collections` : scanning ? "First scan in progress" : "A completed local scan is required"}{snapshot && (scanning || stale) ? " · previous scan" : ""}</small></div>
-        <div><dt>Earth Engine downloads</dt><dd>{status ? jobs.filter(job => ["queued", "preparing", "downloading"].includes(job.state)).length : "Unknown"}</dd><small>{status ? `${jobs.filter(job => job.state === "downloaded").length} downloaded candidates${!connected ? " · last known" : ""}` : "Connect to read the worker"}</small></div>
-        <div><dt>Approved map periods</dt><dd>{reviewed.loading ? "Checking…" : reviewed.error ? "Unavailable" : approved.length}</dd><small>Reviewed periods available for display</small></div>
+        <div><dt>Stored on this computer</dt><dd>{snapshot ? bytes(snapshot.totalBytes) : "Unknown"}</dd><dd className={styles.summaryNote}>{snapshot ? `${snapshot.totalFiles.toLocaleString()} files · ${snapshot.entries.length} collections` : scanning ? "First scan in progress" : "A completed local scan is required"}{snapshot && (scanning || stale) ? " · previous scan" : ""}</dd></div>
+        <div><dt>Earth Engine downloads</dt><dd>{status ? jobs.filter(job => ["queued", "preparing", "downloading"].includes(job.state)).length : "Unknown"}</dd><dd className={styles.summaryNote}>{status ? `${jobs.filter(job => job.state === "downloaded").length} downloaded candidates${!connected ? " · last known" : ""}` : "Connect to read the worker"}</dd></div>
+        <div><dt>Approved map periods</dt><dd>{reviewed.loading ? "Checking…" : reviewed.error ? "Unavailable" : approved.length}</dd><dd className={styles.summaryNote}>Reviewed periods available for display</dd></div>
       </dl>
       <div className={styles.layout}>
         <section className={styles.library} aria-labelledby="library-heading">
