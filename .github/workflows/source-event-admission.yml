@@ -58,6 +58,7 @@ jobs:
       - name: Check out tested revision without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up repository Python
@@ -93,12 +94,15 @@ jobs:
             .github/workflows/source-event-admission.yml \
             tools/validators/validate_source_event_admission.py
 
-      - name: Validate generated authoring receipt integrity
+      # The authoring receipt records the original implementation. Current
+      # behavior is tested above; later fixes must not rewrite that history.
+      - name: Replay generated authoring receipt at its recorded revision
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-pass3-source-event-admission-20260808.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref 045ef1e4f82d28f9a315f8022892441911b131e8
 
       - name: Record trust boundary
         if: always()
