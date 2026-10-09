@@ -62,6 +62,10 @@ related:
 
 The [enrichment inventory and review report](reports/documentation-enrichment-20261008.md) accounts for the initial placeholder scan and validation limits.
 
+The [KFM synchronization checkpoint](reports/kfm-synchronization-20261009.md)
+records PC, GitHub, private Site and project-record alignment, recovery and
+remaining review limits from 2026-10-09.
+
 The encyclopedia links are draft reference aids; they do not alter the formal lane-placement hold or accepted Directory Rules. Source-specific guides and executable owning roots remain authoritative for their respective facts.
 
 <a id="top"></a>

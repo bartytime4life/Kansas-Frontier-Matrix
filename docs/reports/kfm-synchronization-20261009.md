@@ -25,7 +25,8 @@ recurring synchronization. Source was delivered as [draft PR #4959](https://gith
 The owner independently merged it as `afabac19c602dffd09869310c47807bda6c514c5`
 and then merged PR #4958 while this synchronization was in progress. The assistant
 performed neither merge. This report is delivered through a separate draft
-follow-up on `codex/kfm-synchronization-records-20261009`.
+follow-up [PR #4960](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4960)
+on `codex/kfm-synchronization-records-20261009`.
 
 ## Source identities and reconciliation
 
@@ -145,8 +146,13 @@ sealed review. These are bounded review results, not a general security guarante
 
 [KFM Repository Workbench](https://app.notion.com/p/3c9a92021bf68195b8b1f3a8d694b447)
 and [KFM System Chronicle](https://docs.google.com/document/d/1fBOUDqrcsHaPJiEfM5HmtJL7fBMKFr-rgoN2ge_uVrI/edit)
-receive one dated checkpoint with current navigation. Existing historical entries
-remain. Fresh GitHub readback confirms [PR #4941](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4941)
+each contain one dated checkpoint with current navigation, corrected in place
+after the concurrent owner merges. Destination readback confirms the entire prior
+Notion body and all 1,564 prior Chronicle paragraphs are preserved. Chronicle
+revision-guarded writes retain its existing native elements and add one native
+date (43 date elements and one rich link after writing). Fresh post-record GitHub
+and Site reads confirm main `e9860fc7c939`, draft/open PR #4960 and owner-private
+Site v188. Fresh GitHub readback confirms [PR #4941](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4941)
 merged as `3b39b948919b51433db369b816e3ea748c54df1f`; its earlier draft/open labels
 are historical.
 
