@@ -2,7 +2,7 @@
   "schema_version": 1,
   "release_tag": "curated-data-20261008",
   "snapshot_utc": "2026-10-09T00:04:29.016409+00:00",
-  "prepared_utc": "2026-10-09T00:08:48.952663+00:00",
+  "prepared_utc": "2026-10-09T00:12:58.883241+00:00",
   "status": "source-context-unadmitted",
   "storage_cap_bytes": 80000000000,
   "repository": "bartytime4life/Kansas-Frontier-Matrix",
@@ -17,10 +17,10 @@
         "https://data.prism.oregonstate.edu/",
         "https://prism.oregonstate.edu/terms/"
       ],
-      "license": "PRISM Group, Oregon State University, https://prism.oregonstate.edu/. Freely reproducible and distributable with attribution and original access dates, retained per grid in processed_utc; terms checked 2026-10-08. Ownership retained by PRISM.",
+      "license": "PRISM Group, Oregon State University, https://prism.oregonstate.edu/. Freely reproducible and distributable with attribution. Local holdings accessed 2026-10-08 (America/Chicago); original provider access times are not separately recorded. processed_utc records processing time. Terms checked 2026-10-08; ownership retained by PRISM.",
       "install_subdir": "prism",
       "files": 216764,
-      "bytes": 32116357803,
+      "bytes": 32116358678,
       "snapshot_at": "2026-10-09T00:04:29.016409+00:00",
       "assets": [
         {
@@ -138,10 +138,10 @@
           "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/prism-rasters-0019.tar.gz"
         },
         {
-          "name": "prism-catalog.tar.gz",
-          "bytes": 511493120,
-          "sha256": "3f224da9fc1c79cfa7465abb69a8fb3d890de771c56dcfb34ed8946462c06bd7",
-          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/prism-catalog.tar.gz"
+          "name": "prism-catalog-v2.tar.gz",
+          "bytes": 511510795,
+          "sha256": "850dd690e52bda1b25bd86f00a74d59c2fb69bf9a50d6f0dd227a3531ed80488",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/prism-catalog-v2.tar.gz"
         }
       ],
       "lifecycle": "SOURCE_CONTEXT_NOT_ADMITTED"
@@ -396,8 +396,8 @@
       "title": "USGS Kansas water pilot historical observations"
     }
   ],
-  "data_archive_bytes": 36615039211,
-  "expanded_payload_bytes": 38039311044,
+  "data_archive_bytes": 36615056886,
+  "expanded_payload_bytes": 38039311919,
   "source_currentness": "Frozen current validated local holdings at each recorded snapshot, not a provider refresh or assertion of complete upstream holdings. Historical periods and expired NWM forecast remain explicit.",
   "exclusions": [
     "KDOT PDF collections and map-derived vectors/OCR: current KDOT distribution terms require explicit permission",
@@ -446,9 +446,9 @@
     "cap_bytes": 80000000000,
     "repository_reported_bytes_before": 234924032,
     "release_assets_bytes_before": 0,
-    "data_assets_bytes": 36615039211,
+    "data_assets_bytes": 36615056886,
     "support_metadata_reserve_bytes": 10000000,
-    "projected_bytes_with_reserve": 36859963243
+    "projected_bytes_with_reserve": 36859980918
   },
   "validation": [
     "All archives round-trip checked for exact members, sizes and SHA-256.",
