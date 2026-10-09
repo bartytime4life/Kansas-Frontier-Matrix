@@ -23,3 +23,13 @@ test('layout resize suppression applies only to unchanged cutaway canvas dimensi
   assert.equal(resizeMapAfterLayout(map),false);container.clientWidth=400;assert.equal(resizeMapAfterLayout(map),true);assert.equal(calls,1);
   canvas.style.width='400px';cutaway=false;assert.equal(resizeMapAfterLayout(map),true);assert.equal(calls,2,'ordinary map behavior stays unchanged');
 });
+test('explicit unchanged-size protection preserves public canvas dimensions but never skips a real resize',()=>{
+  let calls=0;
+  const container={clientWidth:1440,clientHeight:856,closest:()=>null},canvas={style:{width:'1440px',height:'856px'}};
+  const map={getContainer:()=>container,getCanvas:()=>canvas,resize:()=>calls++};
+  assert.equal(resizeMapAfterLayout(map,true),false);assert.equal(calls,0);
+  container.clientHeight=812;assert.equal(resizeMapAfterLayout(map,true),true);assert.equal(calls,1);
+  canvas.style.height='812px';container.clientWidth=375;assert.equal(resizeMapAfterLayout(map,true),true);assert.equal(calls,2);
+  canvas.style.width='375px';assert.equal(resizeMapAfterLayout(map,true),false);
+  assert.equal(resizeMapAfterLayout(map),true);assert.equal(calls,3,'the optional flag does not change ordinary layout updates');
+});

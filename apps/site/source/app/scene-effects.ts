@@ -1,5 +1,5 @@
 import type { Map as MapLibreMap } from "./maplibre-seam";
-import { createAuroraCurtainLayer } from "./aurora-curtain-layer";
+import { createAuroraCurtainLayer, CURTAIN_PALETTES } from "./aurora-curtain-layer";
 import { solarPositionAt } from "./daylight-layer";
 import { KANSAS_OUTLINE } from "./kansas-orientation";
 import { terrainHillshadePaint } from "./terrain-relief-style";
@@ -245,6 +245,10 @@ export const applyTerrainReliefStyle = (map: MapLibreMap, look: ReliefLook, ligh
 // ---------------------------------------------------------------------------
 
 export const CURTAIN_LAYER_ID = "scene-kansas-aurora";
+// Updated with the same effective light used by the sky and buildings. This
+// registry is sampled by the existing layer, never by an extra repaint loop.
+const curtainLights = new WeakMap<object, SceneLightPreset>();
+export const registerCurtainLight = (map: object, preset: SceneLightPreset): void => { curtainLights.set(map, preset); };
 /** Hidden near top-down, where a wall reads as a doubled outline. */
 export const CURTAIN_MIN_PITCH = 12;
 
@@ -276,7 +280,9 @@ export function syncBorderCurtain(map: MapLibreMap, efficient: boolean): boolean
     if (!map.getLayer(CURTAIN_LAYER_ID)) {
       const beforeId = map.getStyle().layers?.find((layer) => layer.type === "symbol"
         || (layer.id.startsWith("kfm-") && layer.id !== "kfm-background") || layer.id.startsWith("external-"))?.id;
-      map.addLayer(createAuroraCurtainLayer({ id: CURTAIN_LAYER_ID, ring: KANSAS_OUTLINE, clock: shimmerClock }), beforeId);
+      map.addLayer(createAuroraCurtainLayer({ id: CURTAIN_LAYER_ID, ring: KANSAS_OUTLINE, clock: shimmerClock,
+        palette: () => CURTAIN_PALETTES[curtainLights.get(map) ?? "night"],
+      }), beforeId);
       map.setLayoutProperty(CURTAIN_LAYER_ID, "visibility", "none");
     }
     syncBorderCurtainVisibility(map, efficient);

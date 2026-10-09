@@ -14,7 +14,7 @@ import type { TemporalSweepQuery } from "./temporal-sweep";
 import { buildDaylightGeometry, solarPositionAt } from "./daylight-layer";
 import { createDaylightShaderLayer, DAYLIGHT_SHADE_STOPS, type DaylightShaderLayer } from "./daylight-shader-layer";
 import { ORIENTATION_SOURCE_ID, orientationLayers, orientationSource } from "./kansas-orientation";
-import { CINEMATIC_LIGHT_COLOR, CINEMATIC_LIGHT_INTENSITY, CINEMATIC_SKIES, GLOBE_ATMOSPHERE_BLEND, SELECTION_PULSE_LAYER_ID, effectiveSceneLight, reliefPaintFor, sceneEffectsFor } from "./scene-effects";
+import { CINEMATIC_LIGHT_COLOR, CINEMATIC_LIGHT_INTENSITY, CINEMATIC_SKIES, GLOBE_ATMOSPHERE_BLEND, SELECTION_PULSE_LAYER_ID, effectiveSceneLight, registerCurtainLight, reliefPaintFor, sceneEffectsFor } from "./scene-effects";
 
 export type BasemapKey = "standard" | "imagery" | "kansas-aerial" | "midnight" | "prairie" | "streets" | "topo";
 export type AtmospherePreset = "night" | "dusk" | "clear";
@@ -694,6 +694,7 @@ const SCENE_SKIES = Object.freeze({
 
 export const applySceneEnvironment = (map: MapLibreMap, preset: AtmospherePreset, lightAzimuth: number) => {
   const scene = effectiveSceneLight(map, preset, lightAzimuth);
+  registerCurtainLight(map, scene.preset);
   if (!sceneEffectsFor(map).cinematic) {
     map.setSky(SCENE_SKIES[scene.preset]);
     map.setLight({

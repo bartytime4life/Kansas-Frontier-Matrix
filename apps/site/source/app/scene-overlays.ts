@@ -44,6 +44,29 @@ const setVisibility = (map: MapLibreMap, id: string, visible: boolean) => {
 export const KANSAS_GLOW_SOURCE_ID = "scene-kansas-glow";
 export const KANSAS_GLOW_LAYER_IDS = ["scene-kansas-glow-halo", "scene-kansas-glow-edge", "scene-kansas-beacon"] as const;
 const KANSAS_CENTER: [number, number] = [-98.38, 38.48];
+export const KANSAS_GLOW_PALETTES: Record<SceneLightPreset, readonly [string, string, string]> = {
+  night: ["#508bd8", "#a2d9ff", "#85bbf5"],
+  dusk: ["#d68c49", "#ffe0a1", "#f3b56a"],
+  clear: ["#42b7c8", "#baf3f2", "#7edee8"],
+};
+// The offline outline keeps its source, widths and geometry. Plain restores
+// its original palette, including after a style switch (layer identity key).
+const offlineOutlineColors = new WeakMap<object, unknown>();
+function syncOfflineOutlineColor(map: MapLibreMap, enabled: boolean, colors: readonly string[]) {
+  ["orientation-kansas-glow", "orientation-kansas-outline"].forEach((id, index) => {
+    const layer = map.getLayer(id);
+    if (!layer) return;
+    if (!enabled) {
+      if (offlineOutlineColors.has(layer)) {
+        map.setPaintProperty(id, "line-color", offlineOutlineColors.get(layer) as never);
+        offlineOutlineColors.delete(layer);
+      }
+      return;
+    }
+    if (!offlineOutlineColors.has(layer)) offlineOutlineColors.set(layer, map.getPaintProperty(id, "line-color"));
+    if (map.getPaintProperty(id, "line-color") !== colors[index]) map.setPaintProperty(id, "line-color", colors[index]);
+  });
+}
 
 export const kansasGlowData = (): FeatureCollection => ({
   type: "FeatureCollection",
@@ -76,13 +99,23 @@ export function kansasGlowLayers(): LayerSpecification[] {
   ] as LayerSpecification[];
 }
 
-export function syncKansasGlow(map: MapLibreMap): void {
-  if (!sceneEffectsFor(map).kansasGlow) { removeLayers(map, KANSAS_GLOW_LAYER_IDS, KANSAS_GLOW_SOURCE_ID); return; }
+export function syncKansasGlow(map: MapLibreMap, light: SceneLightPreset = "night", azimuth = 210): void {
+  if (!sceneEffectsFor(map).kansasGlow) {
+    syncOfflineOutlineColor(map, false, []);
+    removeLayers(map, KANSAS_GLOW_LAYER_IDS, KANSAS_GLOW_SOURCE_ID);
+    return;
+  }
+  const colors = KANSAS_GLOW_PALETTES[effectiveSceneLight(map, light, azimuth).preset];
+  syncOfflineOutlineColor(map, true, colors);
   if (!map.getSource(KANSAS_GLOW_SOURCE_ID)) map.addSource(KANSAS_GLOW_SOURCE_ID, { type: "geojson", data: kansasGlowData(), attribution: "KFM simplified Kansas outline · display only" });
   if (!map.getLayer(KANSAS_GLOW_LAYER_IDS[0])) {
     const beforeId = firstOverlayId(map);
     for (const layer of kansasGlowLayers()) map.addLayer(layer, beforeId);
   }
+  KANSAS_GLOW_LAYER_IDS.forEach((id, index) => {
+    const property = index === 2 ? "circle-color" : "line-color";
+    if (map.getPaintProperty(id, property) !== colors[index]) map.setPaintProperty(id, property, colors[index]);
+  });
   // The offline styles already draw their own outline glow; keep only the beacon there.
   const offlineStyle = Boolean(map.getSource(ORIENTATION_SOURCE_ID));
   setVisibility(map, KANSAS_GLOW_LAYER_IDS[0], !offlineStyle);

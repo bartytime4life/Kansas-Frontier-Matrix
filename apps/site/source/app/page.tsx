@@ -225,8 +225,11 @@ import {
 } from "./workspace-model";
 import { ACTIVE_TERRAIN_SOURCE, STRUCTURE_3D_SOURCE, TERRAIN_SOURCES, TERRARIUM_RENDER_MAX_ZOOM, terrainSourceFor, type TerrainProvider } from "./terrain-sources";
 import { nightSkyIsTwinkling, setNightSkyTwinkle, syncBuildingStyle, syncKansasGlow, syncNightSky, syncNightSkyVisibility, syncRelief2d, syncValueColumns, syncValueColumnsVisibility, type ColumnFeed } from "./scene-overlays";
-import { CURTAIN_MIN_PITCH, DEFAULT_SCENE_EFFECTS, KANSAS_FLYOVER, SCENE_EFFECT_KEYS, SCENE_EFFECT_OPTIONS, SCENE_LOOK_PRESETS, matchingLookPreset, applySelectionPulse, applyTerrainReliefStyle, curtainIsVisible, readSceneEffects, setCurtainShimmer, registerSceneEffects, sunSceneLight, syncBorderCurtain, syncBorderCurtainVisibility, writeSceneEffects, type SceneEffectSettings, type SceneView } from "./scene-effects";
+import { CURTAIN_MIN_PITCH, DEFAULT_SCENE_EFFECTS, KANSAS_FLYOVER, SCENE_EFFECT_KEYS, SCENE_EFFECT_OPTIONS, SCENE_LOOK_PRESETS, matchingLookPreset, effectiveSceneLight, applySelectionPulse, applyTerrainReliefStyle, curtainIsVisible, readSceneEffects, setCurtainShimmer, registerSceneEffects, sunSceneLight, syncBorderCurtain, syncBorderCurtainVisibility, writeSceneEffects, type SceneEffectSettings, type SceneView } from "./scene-effects";
 import { SceneEffectsControls, ScenePanel } from "./scene-effects-controls";
+import { applySceneComposition, sceneRecipePresentation, SCENE_RECIPES, type SceneComposition, type ScenePresentation, type SceneRecipe } from "./scene-studio";
+import { createTerrainDrawing } from "./terrain-drawing-runtime";
+import { TERRAIN_DRAWING_INITIAL_STATUS, type TerrainDrawingConfig, type TerrainDrawingMode, type TerrainDrawingStatus, type TerrainSurfaceMode, type TerrainSurfaceProbe } from "./terrain-drawing";
 import { EXTERNAL_CONTEXT_SOURCES } from "./external-context-sources";
 import { DISASTER_COVERAGE_HOLDS, LAYER_WORKSPACES, filterOfficialSources, sourceMinimumZoom, sourceNeedsCloserView, type LayerWorkspace } from "./layer-workspaces";
 import {
@@ -558,7 +561,7 @@ const COLUMN_SOURCE_IDS = new Set(COLUMN_FEEDS.map((feed) => feed.sourceId));
  * fails on its own and never marks the map runtime degraded. */
 const syncSceneOverlays = (map: MapLibreMap, light: AtmospherePreset, azimuth: number, efficient: boolean) => {
   for (const step of [
-    () => syncKansasGlow(map),
+    () => syncKansasGlow(map, light, azimuth),
     () => syncRelief2d(map, ACTIVE_TERRAIN_SOURCE, light, azimuth),
     () => syncValueColumns(map, COLUMN_FEEDS, efficient),
     () => syncBuildingStyle(map, light, azimuth),
@@ -1214,6 +1217,10 @@ export default function Home() {
   const structures3DRef = useRef(false);
   const gestureModeRef = useRef<"cooperative" | "direct">("cooperative");
   const sceneOrbitTimerRef = useRef<number | null>(null);
+  const sceneOrbitCancelRef = useRef<(() => void) | null>(null);
+  const sceneOrbitContextRef = useRef("");
+  const terrainDrawingRef = useRef<ReturnType<typeof createTerrainDrawing> | null>(null);
+  const terrainDrawingConfigRef = useRef<TerrainDrawingConfig>({ mode: "off", surface: "off", surfaceOpacity: 0.55, probeEnabled: true, enabled: false, provider: "mapzen", efficient: false, detail: false, light: "night", azimuth: 210 });
   const sceneEffectsRef = useRef<SceneEffectSettings>(DEFAULT_SCENE_EFFECTS);
   const flyoverCancelRef = useRef<(() => void) | null>(null);
   const renderEfficientRef = useRef(false);
@@ -1332,6 +1339,13 @@ export default function Home() {
   const [structures3DState, setStructures3DState] = useState<Structures3DState>("OFF");
   const [gestureMode, setGestureMode] = useState<"cooperative" | "direct">("cooperative");
   const [sceneOrbiting, setSceneOrbiting] = useState(false);
+  const [terrainDrawingMode, setTerrainDrawingMode] = useState<TerrainDrawingMode>("off");
+  const [terrainDrawingDetail, setTerrainDrawingDetail] = useState(false);
+  const [terrainSurfaceMode, setTerrainSurfaceMode] = useState<TerrainSurfaceMode>("off");
+  const [terrainSurfaceOpacity, setTerrainSurfaceOpacity] = useState(0.55);
+  const [terrainSurfaceProbe, setTerrainSurfaceProbe] = useState<TerrainSurfaceProbe | null>(null);
+  const [scenePanelOpen, setScenePanelOpen] = useState(false);
+  const [terrainDrawingStatus, setTerrainDrawingStatus] = useState<TerrainDrawingStatus>(TERRAIN_DRAWING_INITIAL_STATUS);
   const [sceneEffects, setSceneEffects] = useState<SceneEffectSettings>(DEFAULT_SCENE_EFFECTS);
   const [flyoverStopIndex, setFlyoverStopIndex] = useState<number | null>(null);
   const [sunClock, setSunClock] = useState(() => Date.now());
@@ -3908,6 +3922,9 @@ export default function Home() {
   }, [qwenBridgeState, qwenBusy, qwenContext, qwenQuestion]);
 
   const stopSceneOrbit = useCallback((notify = true) => {
+    const cancel = sceneOrbitCancelRef.current;
+    sceneOrbitCancelRef.current = null;
+    cancel?.();
     if (sceneOrbitTimerRef.current !== null) {
       window.clearTimeout(sceneOrbitTimerRef.current);
       sceneOrbitTimerRef.current = null;
@@ -4814,6 +4831,11 @@ export default function Home() {
           },
         });
         mapRef.current = map;
+        terrainDrawingRef.current = createTerrainDrawing(map, (status) => {
+          if (!disposed && mapRef.current === map) setTerrainDrawingStatus(status);
+        }, (probe) => {
+          if (!disposed && mapRef.current === map) setTerrainSurfaceProbe(measureModeRef.current ? null : probe);
+        });
         registerSceneEffects(map, sceneEffectsRef.current);
         const mapCanvas = map.getCanvas();
         mapCanvas.addEventListener("webglcontextlost", (event) => {
@@ -5036,7 +5058,7 @@ export default function Home() {
           const officialCandidate = candidate ? null : fireCandidate ?? officialFeatures[0];
           const externalCandidate = candidate ? null : officialCandidate ?? map.queryRenderedFeatures(event.point).find((feature) => {
             const sourceId = typeof feature.source === "string" ? feature.source : "";
-            const isSiteLocal = sourceId.startsWith("kfm-") || LAYER_REGISTRY.some((layer) => layer.sourceId === sourceId);
+            const isSiteLocal = sourceId.startsWith("kfm-") || sourceId.startsWith("scene-") || LAYER_REGISTRY.some((layer) => layer.sourceId === sourceId);
             return !isSiteLocal && Boolean(feature.geometry) && Boolean(feature.properties && Object.keys(feature.properties).length);
           });
           if (!candidate && !externalCandidate) {
@@ -5131,7 +5153,7 @@ export default function Home() {
             const officialCandidate = fireCandidate ?? officialFeatures[0];
             const externalCandidate = officialCandidate ?? map.queryRenderedFeatures(event.point).find((feature) => {
               const sourceId = typeof feature.source === "string" ? feature.source : "";
-              const isSiteLocal = sourceId.startsWith("kfm-") || LAYER_REGISTRY.some((layer) => layer.sourceId === sourceId);
+              const isSiteLocal = sourceId.startsWith("kfm-") || sourceId.startsWith("scene-") || LAYER_REGISTRY.some((layer) => layer.sourceId === sourceId);
               return !isSiteLocal && Boolean(feature.geometry) && Boolean(feature.properties && Object.keys(feature.properties).length);
             });
             const context = externalCandidate
@@ -5268,6 +5290,9 @@ export default function Home() {
           const bounds = map.getBounds();
           setMapViewportBounds({ west: bounds.getWest(), south: bounds.getSouth(), east: bounds.getEast(), north: bounds.getNorth() });
           setView(nextView);
+          const cameraFov = map.getVerticalFieldOfView();
+          fieldOfViewRef.current = cameraFov;
+          setFieldOfView(cameraFov);
           if (replayingCameraHistoryRef.current) {
             replayingCameraHistoryRef.current = false;
           } else if (!locationDerivedViewRef.current) {
@@ -5503,7 +5528,13 @@ export default function Home() {
       resizeObserver?.disconnect();
       styleDocumentLoadedRef.current = false;
       styleGenerationReadyRef.current = false;
+      sceneOrbitCancelRef.current?.();
+      sceneOrbitCancelRef.current = null;
+      flyoverCancelRef.current?.();
+      flyoverCancelRef.current = null;
       if (sceneOrbitTimerRef.current !== null) window.clearTimeout(sceneOrbitTimerRef.current);
+      terrainDrawingRef.current?.destroy();
+      terrainDrawingRef.current = null;
       mapRef.current?.remove();
       mapRef.current = null;
     };
@@ -5988,6 +6019,58 @@ export default function Home() {
     syncSceneOverlays(map, atmospherePresetRef.current, lightAzimuthRef.current, renderEfficientRef.current);
   }, [atmospherePreset, basemap, effectiveOfficialVisibility, lightAzimuth, officialOpacity, officialPayloads, projection, renderQuality, sceneEffects, scenePreset, structures3DState, styleReady, sunClock, terrainState]);
 
+  // The renderer owns sampling, cancellation and source listeners. React only
+  // supplies explicit presentation choices; changing a palette never remounts it.
+  useEffect(() => {
+    const map = mapRef.current;
+    const light = map ? effectiveSceneLight(map, atmospherePreset, lightAzimuth, sunClock) : { preset: atmospherePreset, azimuth: lightAzimuth };
+    const config: TerrainDrawingConfig = {
+      mode: terrainDrawingMode, surface: terrainSurfaceMode, surfaceOpacity: terrainSurfaceOpacity, probeEnabled: !measureMode,
+      enabled: styleReady && styleGenerationReadyRef.current && scenePreset === "elevation-3d" && projection === "mercator" && !undergroundOpen,
+      provider: terrainProvider, efficient: browserRenderBudget(renderQuality).efficient,
+      detail: terrainDrawingDetail, light: light.preset, azimuth: light.azimuth,
+    };
+    terrainDrawingConfigRef.current = config;
+    terrainDrawingRef.current?.update(config);
+    if (measureMode) setTerrainSurfaceProbe(null);
+    if (!map && (terrainDrawingMode !== "off" || terrainSurfaceMode !== "off")) setTerrainDrawingStatus({ ...TERRAIN_DRAWING_INITIAL_STATUS, state: "unavailable", message: "Waiting for the map. Then choose Terrain 3D to draw its loaded elevations." });
+  }, [atmospherePreset, lightAzimuth, measureMode, projection, renderQuality, sceneEffects.sunSync, scenePreset, styleReady, sunClock, terrainDrawingDetail, terrainDrawingMode, terrainProvider, terrainState, terrainSurfaceMode, terrainSurfaceOpacity, undergroundOpen]);
+
+  const chooseTerrainDrawingMode = (mode: TerrainDrawingMode) => {
+    const config = { ...terrainDrawingConfigRef.current, mode };
+    terrainDrawingConfigRef.current = config;
+    terrainDrawingRef.current?.update(config);
+    setTerrainDrawingMode(mode);
+  };
+  const chooseTerrainSurfaceMode = (surface: TerrainSurfaceMode) => {
+    const config = { ...terrainDrawingConfigRef.current, surface };
+    terrainDrawingConfigRef.current = config;
+    terrainDrawingRef.current?.update(config);
+    if (surface === "off") setTerrainSurfaceProbe(null);
+    setTerrainSurfaceMode(surface);
+  };
+  const chooseTerrainSurfaceOpacity = (value: number) => {
+    const surfaceOpacity = Number.isFinite(value) ? clamp(value, 0.2, 0.75) : 0.55;
+    const config = { ...terrainDrawingConfigRef.current, surfaceOpacity };
+    terrainDrawingConfigRef.current = config;
+    terrainDrawingRef.current?.update(config);
+    setTerrainSurfaceOpacity(surfaceOpacity);
+  };
+  const sampleTerrainSurfaceCenter = () => {
+    if (!measureModeRef.current) terrainDrawingRef.current?.probeCenter();
+  };
+  const chooseTerrainDrawingDetail = (detail: boolean) => {
+    const config = { ...terrainDrawingConfigRef.current, detail };
+    terrainDrawingConfigRef.current = config;
+    terrainDrawingRef.current?.update(config);
+    setTerrainDrawingDetail(detail);
+  };
+
+  useEffect(() => {
+    if (sceneOrbitCancelRef.current && (reducedMotion || undergroundOpen || sceneOrbitContextRef.current !== `${projection}/${scenePreset}/${basemap}`)) stopSceneOrbit(false);
+    if (flyoverCancelRef.current && (reducedMotion || undergroundOpen || projection !== "mercator" || scenePreset !== "elevation-3d")) stopFlyover(false);
+  }, [basemap, projection, reducedMotion, scenePreset, stopFlyover, stopSceneOrbit, undergroundOpen]);
+
   // The curtain shimmer and star twinkle repaint at ~15 fps only while they
   // are on screen and ambient motion is allowed; otherwise they hold still.
   useEffect(() => {
@@ -6062,6 +6145,37 @@ export default function Home() {
     else if (preset) announce(`${SCENE_LOOK_PRESETS[preset].label} look applied · display only`);
   };
 
+  const chooseSceneRecipe = (recipe: SceneRecipe) => {
+    const next = sceneRecipePresentation(recipe, sceneEffectsRef.current);
+    atmospherePresetRef.current = next.atmosphere;
+    lightAzimuthRef.current = next.azimuth;
+    setAtmospherePreset(next.atmosphere);
+    setLightAzimuth(next.azimuth);
+    updateSceneEffects(next.settings);
+    announce(`${SCENE_RECIPES[recipe].label} presentation light applied · camera, sources and dates preserved`);
+  };
+
+  const changeStudioLight = (next: Omit<ScenePresentation, "settings">) => {
+    atmospherePresetRef.current = next.atmosphere;
+    lightAzimuthRef.current = next.azimuth;
+    setAtmospherePreset(next.atmosphere);
+    setLightAzimuth(next.azimuth);
+  };
+
+  const composeSceneCamera = (patch: Partial<SceneComposition>, reset = false) => {
+    const map = mapRef.current;
+    if (!map) return;
+    runMapMutation("Scene composition", () => {
+      const next = applySceneComposition(map, patch, {
+        view: sceneView, reducedMotion, reset,
+        interrupt: () => { stopFlyover(false); stopSceneOrbit(false); },
+      });
+      fieldOfViewRef.current = next.fieldOfView;
+      setFieldOfView(next.fieldOfView);
+    });
+    if (reset) announce("Composition reset · location, zoom and data preserved");
+  };
+
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -6074,8 +6188,14 @@ export default function Home() {
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    const first = window.requestAnimationFrame(() => runMapMutation("Map resize", () => { resizeMapAfterLayout(map); }));
-    const second = window.setTimeout(() => runMapMutation("Map resize", () => { resizeMapAfterLayout(map); }), 260);
+    const resize = () => {
+      const config = terrainDrawingConfigRef.current;
+      // A provider drawer overlays this map. Avoid synthetic movement clearing
+      // its tapped surface sample when the canvas dimensions did not change.
+      runMapMutation("Map resize", () => { resizeMapAfterLayout(map, config.enabled && (config.surface ?? "off") !== "off"); });
+    };
+    const first = window.requestAnimationFrame(resize);
+    const second = window.setTimeout(resize, 260);
     return () => { window.cancelAnimationFrame(first); window.clearTimeout(second); };
   }, [leftOpen, rightOpen, runMapMutation, timelineOpen]);
 
@@ -6457,13 +6577,17 @@ export default function Home() {
     return () => panel.removeEventListener("keydown", handleKey);
   }, [repositoryOpen, closeRepository]);
 
+  const surfaceInspectionOpen = scenePanelOpen && terrainSurfaceMode !== "off" && !measureMode && !undergroundOpen && runtime.kind !== "unsupported";
   useEffect(() => {
-    if (!isCompact) return;
+    if (!isCompact || (surfaceInspectionOpen && !mapUtilityOpen)) return;
     const openPanel = mapUtilityOpen ? mapUtilityPanelRef.current : rightOpen ? rightPanelRef.current : leftOpen ? leftPanelRef.current : timelineOpen ? timelineRef.current : null;
     if (!openPanel) return;
     const focusable = () => visibleFocusableElements(openPanel);
     const items = focusable();
-    items[0]?.focus({ preventScroll: true });
+    // A surface tap may open evidence behind Scene. Closing Scene with Escape
+    // returns focus to its trigger; let Tab then enter the still-open drawer.
+    const returningToScene = !mapUtilityOpen && rightOpen && terrainSurfaceMode !== "off" && document.activeElement instanceof Element && document.activeElement.closest(".scene-panel");
+    if (!returningToScene) items[0]?.focus({ preventScroll: true });
     const handleKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         if (mapUtilityOpen) closeMapUtility(); else if (rightOpen) closeRightPanel(); else if (leftOpen) closeLeftPanel(); else closeTimelinePanel();
@@ -6479,7 +6603,7 @@ export default function Home() {
     };
     openPanel.addEventListener("keydown", handleKey);
     return () => openPanel.removeEventListener("keydown", handleKey);
-  }, [isCompact, leftOpen, mapUtilityOpen, rightOpen, timelineOpen, closeLeftPanel, closeMapUtility, closeRightPanel, closeTimelinePanel]);
+  }, [isCompact, leftOpen, mapUtilityOpen, rightOpen, surfaceInspectionOpen, terrainSurfaceMode, timelineOpen, closeLeftPanel, closeMapUtility, closeRightPanel, closeTimelinePanel]);
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
@@ -6879,6 +7003,7 @@ export default function Home() {
   };
 
   const orientSceneCamera = (pitch: number, bearing = view.bearing) => {
+    stopFlyover(false);
     stopSceneOrbit(false);
     mapRef.current?.easeTo({ pitch, bearing, duration: motionDuration(450) });
   };
@@ -7094,30 +7219,66 @@ export default function Home() {
     announce(`${look === "natural" ? "Imagery with DEM relief" : look === "topographic" ? "Topographic map with DEM relief" : "Provider-height buildings; zoom in where mapped"} selected at ${verticalExaggerationRef.current.toFixed(1)}× display scale. Source elevations, data time, and camera center are preserved.`);
   };
 
+  const chooseLandscape = (id: string) => {
+    const stop = KANSAS_FLYOVER.find((candidate) => candidate.id === id && candidate.id !== "return");
+    const map = mapRef.current;
+    if (!map || !stop) return;
+    stopFlyover(false);
+    stopSceneOrbit(false);
+    // A viewpoint changes only representation and camera. In particular, do
+    // not use the general representation preset that resets light and scale.
+    projectionRef.current = "mercator";
+    scenePresetRef.current = "elevation-3d";
+    setProjection("mercator");
+    setScenePreset("elevation-3d");
+    replayingCameraHistoryRef.current = false;
+    runMapMutation("Landscape viewpoint", () => {
+      applyProjectionNavigationLimits(map, "mercator");
+      map.setMaxPitch(72);
+      if (styleGenerationReadyRef.current) {
+        map.setProjection({ type: "mercator" });
+        setTerrainState(setTerrainPresentation(map, true, verticalExaggerationRef.current));
+        setTerrainHeightOverlay(map, topographicOverlayRef.current);
+      }
+      map.easeTo({ center: [...stop.center] as [number, number], zoom: stop.zoom, pitch: stop.pitch, bearing: stop.bearing, duration: motionDuration(900), essential: false });
+    });
+    announce(`${stop.label} viewpoint · Terrain 3D; your light, lens, provider, scale and data are preserved`);
+  };
+
   const startSceneOrbit = () => {
     const map = mapRef.current;
-    if (!map) {
-      announce("The MapLibre camera is not ready yet");
+    if (!map) { announce("The MapLibre camera is not ready yet"); return; }
+    if (projectionRef.current === "globe") { announce("Choose Tilted map or Terrain 3D before orbiting"); return; }
+    if (document.hidden || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      announce("Orbit is paused while hidden or reduced motion is enabled");
       return;
     }
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      announce("Orbit is paused because reduced motion is enabled");
-      return;
-    }
+    stopFlyover(false);
     stopSceneOrbit(false);
+    const container = map.getContainer();
+    const inputs = ["pointerdown", "wheel", "touchstart", "keydown"] as const;
+    const interrupt = () => stopSceneOrbit();
+    const hidden = () => { if (document.hidden) stopSceneOrbit(false); };
+    const cleanup = () => {
+      for (const type of inputs) container.removeEventListener(type, interrupt);
+      document.removeEventListener("visibilitychange", hidden);
+      map.off("moveend", finish);
+      if (sceneOrbitTimerRef.current !== null) window.clearTimeout(sceneOrbitTimerRef.current);
+      sceneOrbitTimerRef.current = null;
+      if (sceneOrbitCancelRef.current === cleanup) sceneOrbitCancelRef.current = null;
+    };
+    const finish = () => { cleanup(); setSceneOrbiting(false); };
+    sceneOrbitCancelRef.current = cleanup;
+    sceneOrbitContextRef.current = `${projectionRef.current}/${scenePresetRef.current}/${basemapRef.current}`;
+    for (const type of inputs) container.addEventListener(type, interrupt, { passive: true });
+    document.addEventListener("visibilitychange", hidden);
     setSceneOrbiting(true);
     replayingCameraHistoryRef.current = true;
-    map.easeTo({
-      bearing: map.getBearing() + 90,
-      pitch: Math.max(46, map.getPitch()),
-      duration: 12_000,
-      easing: (progress) => progress,
-    });
-    sceneOrbitTimerRef.current = window.setTimeout(() => {
-      sceneOrbitTimerRef.current = null;
-      setSceneOrbiting(false);
-    }, 12_050);
-    announce("Started a reversible 90° MapLibre camera orbit");
+    map.easeTo({ bearing: map.getBearing() + 90, pitch: Math.max(46, map.getPitch()), duration: 12_000, easing: (progress) => progress, essential: false });
+    // Register after easeTo, whose initial stop can emit an older moveend.
+    map.once("moveend", finish);
+    sceneOrbitTimerRef.current = window.setTimeout(finish, 12_050);
+    announce("Orbit started · drag, scroll or press a key to take back the camera");
   };
 
   /** Camera-only tour of Kansas landscapes in Terrain 3D. Any direct map input
@@ -7139,12 +7300,15 @@ export default function Home() {
     const inputs = ["pointerdown", "wheel", "touchstart", "keydown"] as const;
     let cancelled = false;
     const interrupt = () => stopFlyover();
+    const hidden = () => { if (document.hidden) stopFlyover(false); };
     const cleanup = () => {
       cancelled = true;
       for (const type of inputs) container.removeEventListener(type, interrupt);
+      document.removeEventListener("visibilitychange", hidden);
       map.stop();
     };
     flyoverCancelRef.current = cleanup;
+    document.addEventListener("visibilitychange", hidden);
     for (const type of inputs) container.addEventListener(type, interrupt, { passive: true });
     const visit = (index: number) => {
       if (cancelled) return;
@@ -9024,7 +9188,7 @@ export default function Home() {
                 <details className="layer-scene-entry">
                   <summary>Terrain &amp; 3D appearance <span>{scenePreset === "elevation-3d" ? terrainState === "READY" ? "On" : terrainState === "ERROR" ? "Needs attention" : "Loading" : "Off"}</span></summary>
                   <LayerSceneControls active={scenePreset === "elevation-3d"} selectedLook={scenePreset !== "elevation-3d" ? null : structures3DEnabled ? "buildings" : basemap === "topo" ? "topographic" : basemap === "imagery" ? "natural" : null} terrainProvider={terrainProvider} state={terrainState} exaggeration={verticalExaggeration} lighting={atmospherePreset} azimuth={lightAzimuth} heightOverlay={topographicOverlay} onPreset={applyTerrainLook} onTerrainProvider={chooseTerrainProvider} on2D={() => activateMapRepresentation("2d")} onExaggeration={value => { verticalExaggerationRef.current = value; setVerticalExaggeration(value); }} onLighting={value => { atmospherePresetRef.current = value; setAtmospherePreset(value); }} onAzimuth={value => { lightAzimuthRef.current = value; setLightAzimuth(value); }} onHeight={toggleTopographicHeightOverlay} onRetry={retryTerrain} />
-                  <SceneEffectsControls view={sceneView} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
+                  <SceneEffectsControls view={sceneView} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
                 </details>
                 <div className="map-control-group"><header><strong>Rendering quality</strong><span>Applies to this map</span></header><RenderQualityControl value={renderQuality} onChange={chooseRenderQuality} /></div>
           <div className="basemap-control">
@@ -9256,7 +9420,6 @@ export default function Home() {
           </div>}
           {scenePreset === "elevation-3d" && flyoverStopIndex === null && !reducedMotion && runtime.kind === "ready" && !undergroundOpen
             && <button type="button" className="flyover-launch" onClick={startFlyover}><span aria-hidden="true">✈</span> Fly over Kansas</button>}
-          {runtime.kind !== "unsupported" && !undergroundOpen && <ScenePanel view={sceneView} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} onRepresentation={chooseSceneView} />}
           <div className="map-effects" aria-hidden="true">
             <canvas ref={windArrowCanvasRef} className="wind-arrow-canvas" aria-hidden="true" />
             <canvas ref={waterMotionCanvasRef} className="water-motion-canvas" style={{ opacity: officialOpacity["usgs-streamflow"] }} aria-hidden="true" />
@@ -9462,7 +9625,7 @@ export default function Home() {
                   ] as const).map(([id, title, detail]) => <button key={id} type="button" aria-pressed={id === "terrain" ? scenePreset === "elevation-3d" : id === "globe" ? projection === "globe" : projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => activateMapRepresentation(id)}><span>{id === "terrain" ? "3D" : id === "globe" ? "◎" : "2D"}</span><strong>{title}</strong><small>{detail}</small></button>)}
                 </section>
 
-                <SceneEffectsControls view={sceneView} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
+                <SceneEffectsControls view={sceneView} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
 
                 <section className="renderer-capability-list" aria-label="Renderer capability status">
                   <article data-state="ready"><span>WORKS NOW</span><strong>2D, globe, camera, measurement</strong><small>Direct MapLibre state changes</small></article>
@@ -9728,7 +9891,10 @@ export default function Home() {
           <div className="screenreader-status sr-only" aria-live="polite">{runtime.message}. Map center {formatCoordinate(view.center[1], "N", "S")}, {formatCoordinate(view.center[0], "E", "W")}. {visibleCount} layers visible. {selected ? `Selected ${selected.properties.title}; evidence state ${selectedEvidence?.label}.` : "No feature selected."}</div>
         </section>
 
-        <aside ref={rightPanelRef} className="evidence-drawer" data-open={rightOpen} data-state={selected?.properties.evidenceState ?? "EMPTY"} aria-label="Evidence Drawer" aria-hidden={!rightOpen} inert={!rightOpen} aria-modal={isCompact && rightOpen || undefined} role={isCompact && rightOpen ? "dialog" : undefined}>
+        {/* Share the shell stacking context with evidence, preserving map hit testing. */}
+        {runtime.kind !== "unsupported" && !undergroundOpen && <ScenePanel onOpenChange={setScenePanelOpen} view={sceneView} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} onRepresentation={chooseSceneView} />}
+
+        <aside ref={rightPanelRef} className="evidence-drawer" data-open={rightOpen} data-state={selected?.properties.evidenceState ?? "EMPTY"} aria-label="Evidence Drawer" aria-hidden={!rightOpen} inert={!rightOpen} aria-modal={isCompact && rightOpen && !surfaceInspectionOpen || undefined} role={isCompact && rightOpen ? "dialog" : undefined}>
           <div className="panel-heading drawer-heading">
             <div><p className="panel-kicker">EVIDENCE DRAWER</p><h2>{subsurfaceInspection ? subsurfaceInspection.record.name : researchOpen && researchAnchor ? `Near ${researchAnchor.title}` : selected?.properties.title ?? (hoverSummary ? "Map hover preview" : "Select a map feature")}</h2></div>
             <button className="icon-close" type="button" onClick={closeRightPanel} aria-label="Close Evidence Drawer">×</button>
