@@ -1,24 +1,20 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import type { ExpressionSpecification, FilterSpecification, GeoJSONSource, Map as MapLibreMap } from "./maplibre-seam";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { Map as MapLibreMap } from "./maplibre-seam";
 import { LightningArchiveControl } from "./lightning-archive-control";
 import { LightningYearControl } from "./lightning-year-control";
-import type { FeatureCollection, Point } from "geojson";
-import { GLM_FLASH_WINDOWS, GLM_NOAA_SOURCE, glmFlashPlaybackBounds, glmFlashBins, type GlmFlashSnapshot, type GlmFlashWindow } from "./lightning-flashes";
+import { GLM_FLASH_WINDOWS, GLM_NOAA_SOURCE, glmFlashPlaybackBounds, glmFlashBins, type GlmFlash, type GlmFlashSnapshot, type GlmFlashWindow } from "./lightning-flashes";
+import { createTimePointLayer, type TimePointLayer, type TimePointWindow } from "./time-point-layer";
 
-const SOURCE_ID = "external-noaa-glm-flash-centroids";
-const HALO_ID = "external-noaa-glm-flash-halo";
-const CORE_ID = "external-noaa-glm-flash-core";
-const empty: FeatureCollection<Point> = { type: "FeatureCollection", features: [] };
+// One GPU layer draws the halo and core passes. Flashes upload once per
+// snapshot; playback only changes the time window (shader uniforms), so the
+// cursor never re-filters, re-tiles or re-uploads features.
+const LAYER_ID = "external-noaa-glm-flashes";
+const FLASH_COLORS = { halo: "#a883ff", core: "#f6edff", stroke: "#a47dff" } as const;
+const HIDDEN_WINDOW: TimePointWindow = { visible: false, halo: false, opacity: 0, mode: "slice", start: 0, end: 0, endInclusive: false };
+const noFlashes: readonly GlmFlash[] = [];
 const utc = (ms: number) => new Date(ms).toISOString().slice(0, 19).replace("T", " ") + " UTC";
-
-function flashCollection(snapshot: GlmFlashSnapshot): FeatureCollection<Point> {
-  return { type: "FeatureCollection", features: snapshot.flashes.map((flash) => ({
-    type: "Feature", id: flash.id, geometry: { type: "Point", coordinates: [flash.longitude, flash.latitude] },
-    properties: { timeMs: flash.timeMs, observedAt: flash.observedAt, energyFj: flash.energyFj, areaKm2: flash.areaKm2 },
-  })) };
-}
 
 export function LightningFlashLoop({ map, enabled, reducedMotion, onClose }: {
   map: MapLibreMap | null; enabled: boolean; reducedMotion: boolean; onClose: () => void;
@@ -49,7 +45,9 @@ export function LightningFlashLoop({ map, enabled, reducedMotion, onClose }: {
   const bins = useMemo(() => snapshot ? glmFlashBins(snapshot, sliceMinutes) : [], [snapshot, sliceMinutes]);
   const selectedBin = bins.find((bin, index) => cursor >= bin.start && (cursor < bin.end || index === bins.length - 1 && cursor <= bin.end));
   const sliceMode = displayMode === "slice";
-  const collection = useMemo(() => snapshot ? flashCollection(snapshot) : empty, [snapshot]);
+  const flashes = snapshot?.flashes ?? noFlashes;
+  const layerRef = useRef<TimePointLayer | null>(null);
+  const windowRef = useRef<TimePointWindow>(HIDDEN_WINDOW);
 
   useEffect(() => {
     if (!enabled || sourceMode !== "recent") return;
@@ -84,31 +82,42 @@ export function LightningFlashLoop({ map, enabled, reducedMotion, onClose }: {
   useEffect(() => {
     if (!enabled || !map) return;
     const apply = () => {
-      if (!map.isStyleLoaded()) return;
-      if (!map.getSource(SOURCE_ID)) map.addSource(SOURCE_ID, { type: "geojson", data: collection });
-      else (map.getSource(SOURCE_ID) as GeoJSONSource).setData(collection);
-      if (!map.getLayer(HALO_ID)) map.addLayer({ id: HALO_ID, type: "circle", source: SOURCE_ID, paint: { "circle-color": "#a883ff", "circle-radius": 12, "circle-blur": 0.45, "circle-opacity": 0 } });
-      if (!map.getLayer(CORE_ID)) map.addLayer({ id: CORE_ID, type: "circle", source: SOURCE_ID, paint: { "circle-color": "#f6edff", "circle-radius": 3.5, "circle-opacity": 0, "circle-stroke-color": "#a47dff", "circle-stroke-width": 1.5 } });
+      // A style swap drops custom layers, so each new style gets a fresh instance.
+      // addLayer needs only the style document, not its tiles, so the flashes
+      // return at style.load instead of waiting for every basemap tile.
+      if (!map.getLayer(LAYER_ID) || !layerRef.current) {
+        const layer = createTimePointLayer({ id: LAYER_ID, colors: FLASH_COLORS });
+        layer.setPoints(flashes);
+        layer.setWindow(windowRef.current);
+        try { map.addLayer(layer); } catch { return; } // Style still loading; style.load retries.
+        if (layer.failed) {
+          // A shader this GPU cannot compile: say so instead of drawing nothing.
+          map.removeLayer(LAYER_ID);
+          layerRef.current = null;
+          setPlaying(false);
+          setLoadState("error");
+          setError("This device's graphics could not draw the flash layer; the flash counts above remain available.");
+          return;
+        }
+        layerRef.current = layer;
+      } else layerRef.current.setPoints(flashes);
     };
     const onStyleLoad = () => { apply(); setStyleRevision((revision) => revision + 1); };
     map.on("style.load", onStyleLoad);
     apply();
     return () => { map.off("style.load", onStyleLoad); };
-  }, [enabled, map, collection]);
+  }, [enabled, map, flashes]);
 
   useEffect(() => {
-    if (!map || !map.getLayer(HALO_ID) || !map.getLayer(CORE_ID)) return;
     const shown = displayReady && Boolean(snapshot?.flashes.length);
-    map.setLayoutProperty(HALO_ID, "visibility", shown && !reducedMotion ? "visible" : "none");
-    map.setLayoutProperty(CORE_ID, "visibility", shown ? "visible" : "none");
-    if (!shown) return;
-    const age: ExpressionSpecification = ["-", cursor, ["get", "timeMs"]];
-    const visible: FilterSpecification = sliceMode && selectedBin ? ["all", [">=", ["get", "timeMs"], selectedBin.start], [selectedBin.end === bounds?.end ? "<=" : "<", ["get", "timeMs"], selectedBin.end]] : ["all", ["<=", ["get", "timeMs"], cursor], [">=", ["get", "timeMs"], cursor - trailSeconds * 1000]];
-    map.setFilter(HALO_ID, visible);
-    map.setFilter(CORE_ID, visible);
-    map.setPaintProperty(HALO_ID, "circle-radius", sliceMode ? 10 : ["interpolate", ["linear"], age, 0, 6, trailSeconds * 1000, 23]);
-    map.setPaintProperty(HALO_ID, "circle-opacity", sliceMode ? opacity * 0.25 : ["interpolate", ["linear"], age, 0, opacity * 0.58, trailSeconds * 1000, 0]);
-    map.setPaintProperty(CORE_ID, "circle-opacity", sliceMode ? opacity : ["interpolate", ["linear"], age, 0, opacity, trailSeconds * 1000, opacity * 0.2]);
+    const trailMs = trailSeconds * 1000;
+    const next: TimePointWindow = !shown ? HIDDEN_WINDOW
+      : !sliceMode ? { visible: true, halo: !reducedMotion, opacity, mode: "pulse", cursor, trailMs }
+      : selectedBin ? { visible: true, halo: !reducedMotion, opacity, mode: "slice", start: selectedBin.start, end: selectedBin.end, endInclusive: selectedBin.end === bounds?.end }
+      // No bin under the cursor: keep the previous trail window, drawn in slice style.
+      : { visible: true, halo: !reducedMotion, opacity, mode: "slice", start: cursor - trailMs, end: cursor, endInclusive: true };
+    windowRef.current = next;
+    if (map && map.getLayer(LAYER_ID)) layerRef.current?.setWindow(next);
   }, [cursor, displayReady, map, opacity, reducedMotion, snapshot, styleRevision, trailSeconds, sliceMode, selectedBin, bounds]);
 
   useEffect(() => {
@@ -138,8 +147,8 @@ export function LightningFlashLoop({ map, enabled, reducedMotion, onClose }: {
   useEffect(() => {
     if (enabled) return;
     if (!map) return;
-    for (const id of [CORE_ID, HALO_ID]) if (map.getLayer(id)) map.removeLayer(id);
-    if (map.getSource(SOURCE_ID)) map.removeSource(SOURCE_ID);
+    if (map.getLayer(LAYER_ID)) map.removeLayer(LAYER_ID);
+    layerRef.current = null;
   }, [enabled, map]);
 
   const clearArchive = useCallback(() => { setPlaying(false); setSnapshot(null); setLoadState("idle"); }, []);
