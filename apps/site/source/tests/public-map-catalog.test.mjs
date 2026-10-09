@@ -9,7 +9,7 @@ const model = await import(modelUrl);
 const boundedUrl = moduleUrl(await compile('bounded-json.ts'));
 const client = await import(moduleUrl((await compile('public-map-client.ts')).replace('"./bounded-json"', JSON.stringify(boundedUrl)).replace('"./public-map-catalog"', JSON.stringify(modelUrl))));
 const seed = JSON.parse(await readFile('app/public-map-catalog.json', 'utf8'));
-const all = { text: '', publisher: 'all', county: 'all', year: 'all', format: 'all', availability: 'all' };
+const all = { text: '', publisher: 'all', county: 'all', year: 'all', format: 'all' };
 const catalog = overrides => ({ schema: 'kfm-public-map-catalog/v1', generatedAt: '2026-10-08T18:00:00Z', coverage: [{ sourceId: 'test', title: 'Synthetic catalog', state: 'complete', recordCount: 1, expectedCount: 1, reason: '', checkedAt: null }], records: [{ id: 'test-map', sourceId: 'test', publisher: 'USGS', title: 'Synthetic Kansas map', counties: ['Allen'], mapYear: 1930, digitalYear: 2020, scale: '1:24,000', scaleUnit: 'denominator', metadataUrl: 'https://pubs.usgs.gov/test/', rights: { status: 'unknown', text: 'Synthetic fixture only.', url: null }, description: 'A test record.', geometryRole: 'catalog extent, not workings', bbox: [-96,37,-95,38], point: null, assets: [{ id: 'test-pdf', title: 'Synthetic PDF', format: 'PDF', url: 'https://pubs.usgs.gov/test/map.pdf', expectedBytes: 100, kind: 'download', availability: 'verified', checkedAt: null }] }], ...overrides });
 test('checked seed is a bounded reference catalog, preserving unknown sizes, dates and source rights', () => {
   assert.ok(model.parsePublicMapCatalog(seed));
@@ -44,25 +44,31 @@ test('source navigation accepts bounded HTTPS references and older catalogs with
     assert.equal(model.parsePublicMapCatalog(catalog({ sourceUrls })), null);
   }
 });
-test('NMMR navigation uses only the pinned official search and request references', () => {
-  assert.deepEqual(model.publicMapNmmrLinks(model.parsePublicMapCatalog(seed)), {
-    search: 'https://mmr.osmre.gov/', request: 'https://mmr.osmre.gov/Request',
-  });
-  const input = structuredClone(seed);
-  input.sourceUrls = ['https://mmr.osmre.gov.attacker.example/', 'https://mmr.osmre.gov/?redirect=elsewhere'];
-  const request = input.records.find(r => r.sourceId === 'osmre-nmmr').assets.find(a => a.kind === 'request');
-  request.url = 'https://mmr.osmre.gov.attacker.example/Request';
-  assert.deepEqual(model.publicMapNmmrLinks(model.parsePublicMapCatalog(input)), { search: null, request: null });
-  assert.deepEqual(model.publicMapNmmrLinks(null), { search: null, request: null });
-  request.url = 'https://mmr.osmre.gov/Request'; request.kind = 'download'; request.availability = 'verified';
-  assert.equal(model.publicMapNmmrLinks(model.parsePublicMapCatalog(input)).request, null);
+test('download discovery excludes metadata, archive requests, services, unverified files and paid records', () => {
+  const first = catalog().records[0], asset = first.assets[0];
+  const excluded = [
+    { ...first, id: 'metadata', assets: [] },
+    { ...first, id: 'request', assets: [{ ...asset, kind: 'request', availability: 'request-only' }] },
+    { ...first, id: 'service', assets: [{ ...asset, kind: 'service', format: 'ArcGIS' }] },
+    { ...first, id: 'unchecked', assets: [{ ...asset, availability: 'unverified' }] },
+    ...['paid', 'purchase-required', 'request-only'].map(status => ({ ...first, id: status, rights: { ...first.rights, status } })),
+  ];
+  const records = [first, ...excluded], original = structuredClone(records);
+  assert.deepEqual(model.filterPublicMaps(records, all).map(r => r.id), ['test-map']);
+  assert.deepEqual(model.filterPublicMaps(records, { ...all, text: 'metadata' }), []);
+  assert.deepEqual(records, original, 'discovery filtering does not delete stored metadata or assets');
+  const eligible = model.filterPublicMaps(seed.records, all);
+  assert.equal(eligible.length, 8);
+  assert.ok(eligible.every(row => row.assets.some(model.canDownloadPublicMap)));
+  assert.ok(!eligible.some(row => row.sourceId === 'osmre-nmmr'));
 });
-test('filters distinguish publication year, unknown counties, available files and request-only originals', () => {
-  const first = catalog().records[0], other = { ...first, id: 'unknown', counties: [], mapYear: null, assets: [{ ...first.assets[0], kind: 'request', availability: 'request-only' }] };
+test('filters use publication year and direct-file formats without reopening excluded records', () => {
+  const first = catalog().records[0], other = { ...first, id: 'unknown', counties: [], mapYear: null };
+  first.assets.push({ ...first.assets[0], id: 'service', kind: 'service', format: 'ArcGIS' });
   assert.equal(model.filterPublicMaps([first, other], { ...all, year: '2020' }).length, 0, 'digital year does not substitute for map year');
-  assert.deepEqual(model.filterPublicMaps([first, other], { ...all, county: 'Allen', year: '1930', format: 'PDF', availability: 'download' }).map(r => r.id), ['test-map']);
-  assert.deepEqual(model.filterPublicMaps([first, other], { ...all, county: 'unknown', availability: 'request' }).map(r => r.id), ['unknown']);
-  assert.equal(model.canDownloadPublicMap(other.assets[0]), false);
+  assert.deepEqual(model.filterPublicMaps([first, other], { ...all, county: 'Allen', year: '1930', format: 'PDF' }).map(r => r.id), ['test-map']);
+  assert.deepEqual(model.filterPublicMaps([first, other], { ...all, county: 'unknown' }).map(r => r.id), ['unknown']);
+  assert.deepEqual(model.filterPublicMaps([first, other], { ...all, format: 'ArcGIS' }), []);
 });
 test('map CRS and spatial accuracy remain source metadata, including explicit unknowns', () => {
   const input = catalog(); Object.assign(input.records[0], { crs: null, spatialAccuracy: null });

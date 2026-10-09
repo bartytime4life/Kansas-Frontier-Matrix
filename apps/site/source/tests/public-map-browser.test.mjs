@@ -11,6 +11,7 @@ const css = { default: new Proxy({}, { get: (_target, key) => key }) };
 const catalog = { schema: 'kfm-public-map-catalog/v1', coverage: [{ sourceId: 'test', title: 'Test source', state: 'complete', recordCount: 22, expectedCount: 22, reason: 'Synthetic catalog.', checkedAt: '2026-10-08T18:00:00Z' }], records: Array.from({ length: 22 }, (_, i) => ({ id: `map-${i}`, sourceId: 'test', publisher: 'USGS', title: `Kansas test ${i}`, counties: ['Allen'], mapYear: 1900 + i, digitalYear: 2020, scale: '1:24,000', scaleUnit: 'denominator', metadataUrl: 'https://pubs.usgs.gov/test/', rights: { status: 'unknown', text: 'Synthetic fixture only.', url: null }, description: 'A test map.', geometryRole: 'catalog footprint', bbox: null, point: null, assets: [{ id: `asset-${i}`, title: `Original ${i}`, format: 'PDF', url: 'https://pubs.usgs.gov/test.pdf', expectedBytes: 100, kind: 'download', availability: 'verified', checkedAt: null }] })) };
 const status = () => ({ schema: 'kfm-public-map-download-control/v1', sessionToken: 'a'.repeat(43), active: null, limitBytes: 500_000_000_000, jobs: [], refresh: { state: 'idle' } });
 const content = node => JSON.stringify(node?.props?.children);
+const visibleText = node => typeof node === 'string' || typeof node === 'number' ? String(node) : [node?.props?.children].flat(Infinity).filter(child => child != null && child !== false).map(visibleText).join(' ');
 const button = (tree, text) => findNode(tree, node => node.type === 'button' && content(node).includes(text));
 async function harness(input = structuredClone(catalog)) {
   const calls = [], selected = [], focused = [], reveals = [], events = new Map(); const document = { activeElement: null };
@@ -68,12 +69,32 @@ test('file selection reveals the focused maximum and its final action together a
   p.h.dispose(); assert.equal(p.events.size, 0);
 });
 
-const researchLinks = tree => nodes(findNode(tree, n => n.type === 'details' && n.props.className === 'coverage'), n => n.type === 'a' && n.props['aria-label']?.includes('NMMR'));
-test('NMMR official research survives disconnection, zero search matches and untrusted live URLs', async () => {
-  const input = structuredClone(catalog); input.coverage = [{ sourceId: 'osmre-nmmr', title: 'OSMRE', state: 'unavailable', recordCount: 1, discoveredCount: 0, expectedCount: null, seedReferenceCount: 1, reason: 'CERTIFICATE_VERIFY_FAILED', checkedAt: null }];
-  const p = await harness(input); p.downloads.connection = 'unavailable'; let tree = p.render();
-  const verify = () => { const links = researchLinks(tree); assert.deepEqual(links.map(n => n.props.href), ['https://mmr.osmre.gov/', 'https://mmr.osmre.gov/Request']); for (const link of links) { assert.equal(link.props.target, '_blank'); assert.equal(link.props.rel, 'noopener noreferrer'); assert.match(link.props['aria-label'], /opens in a new tab/); } };
-  verify(); assert.match(JSON.stringify(tree), /index points are finding aids, not mine boundaries/); assert.match(JSON.stringify(tree), /Coverage unknown/);
-  findNode(tree, n => n.type === 'input' && n.props.type === 'search').props.onChange({ target: { value: 'no-such-map' } }); tree = p.render(); verify(); assert.deepEqual(p.calls, []);
-  p.downloads.catalog = { ...input, sourceUrls: ['https://mmr.osmre.gov.attacker.example/'] }; tree = p.render(); verify(); p.h.dispose();
+test('seed and refreshed catalogs show only direct files and omit request-only sources even offline', async () => {
+  const p = await harness(structuredClone(seed)); p.downloads.connection = 'unavailable';
+  let tree = p.render();
+  const records = () => nodes(findNode(tree, n => n.type === 'ul' && n.props.className === 'records'), n => n.type === 'li');
+  assert.equal(records().length, 8);
+  assert.doesNotMatch(JSON.stringify(tree), /NMMR|OSMRE|Request an original|No verified direct file|Source record \/ request/);
+  assert.equal(button(tree, 'Next').props.disabled, true);
+  const input = structuredClone(catalog);
+  input.records[0].assets.push({ ...input.records[0].assets[0], id: 'request', title: 'Purchase archival scan', kind: 'request', availability: 'request-only' });
+  input.records[1].assets = []; input.records[1].publisher = 'Metadata publisher';
+  input.records[2].assets[0].availability = 'unverified';
+  input.records[3].rights.status = 'purchase-required';
+  p.downloads.catalog = input; tree = p.render(); tree = p.choose(tree);
+  assert.doesNotMatch(visibleText(tree), /Purchase archival scan|Metadata publisher|Request from the archive|Check with publisher|No direct files/);
+  assert.equal(nodes(tree, n => n.type === 'a' && content(n).includes('Open original')).length, 1);
+  findNode(tree, n => n.type === 'input' && n.props.type === 'search').props.onChange({ target: { value: 'Kansas test 1' } });
+  tree = p.render(); assert.equal(records().length, 8); // Matches 10–19, not metadata-only record 1.
+  assert.ok(!records().some(row => nodes(row, n => n.type === 'strong').some(n => n.props.children === 'Kansas test 1')));
+  assert.deepEqual(p.calls, []); p.h.dispose();
+});
+test('a refreshed catalog that loses the selected direct file clears transfer controls', async () => {
+  const p = await harness(); let tree = p.choose(p.render()); button(tree, 'Download ').props.onClick(); tree = p.render();
+  assert.ok(button(tree, 'Download to this computer'));
+  const next = structuredClone(catalog); next.records[0].assets[0].availability = 'request-only';
+  p.downloads.catalog = next; tree = p.render();
+  assert.equal(button(tree, 'Download to this computer'), undefined);
+  assert.equal(findNode(tree, n => n.type === 'input' && n.props.type === 'number'), undefined);
+  assert.equal(p.selected.at(-1), null); assert.deepEqual(p.calls, []); p.h.dispose();
 });
