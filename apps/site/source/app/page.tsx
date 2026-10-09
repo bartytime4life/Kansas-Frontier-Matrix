@@ -1,5 +1,6 @@
 "use client";
 import { BasemapCacheControls } from "./basemap-cache-controls";
+import { ExplorerGuide, readExplorerGuideDismissed, writeExplorerGuideDismissed, type ExplorerGuideAction } from "./explorer-guide";
 import { basemapCacheRequest } from "./basemap-cache";
 import { GROUNDWATER_MANIFEST, safeKgsWellUrl } from "./aquifer-layers";
 import { DEFAULT_SOIL_MAP_STATE, hideSoilContext, restoreSoilMapState, serializeSoilMapState, visibleExternalContextCount, type SoilMapState } from "./soil-moisture";
@@ -1459,6 +1460,9 @@ export default function Home() {
   const [coordinateError, setCoordinateError] = useState("");
   const [projection, setProjection] = useState<"mercator" | "globe">("mercator");
   const [helpOpen, setHelpOpen] = useState(false);
+  const [guideOpen, setGuideOpen] = useState(false);
+  // First-visit quick start; device-local flag only, read after hydration.
+  useEffect(() => { if (!readExplorerGuideDismissed()) setGuideOpen(true); }, []);
   const [repositoryOpen, setRepositoryOpen] = useState(false);
   const [currentWorkspace, setCurrentWorkspace] = useState<PublicWorkspaceId>("explore");
   const [repositoryView, setRepositoryView] = useState<RepositoryView>("updates");
@@ -4792,7 +4796,7 @@ export default function Home() {
         const scaleControl = new mapLibre.ScaleControl({ unit: measureUnitRef.current, maxWidth: 110 });
         scaleControlRef.current = scaleControl;
         map.addControl(scaleControl, "bottom-left");
-        const navigationControl = new mapLibre.NavigationControl({ showCompass: true, showZoom: true, visualizePitch: true });
+        const navigationControl = new mapLibre.NavigationControl({ showCompass: true, showZoom: false, visualizePitch: true });
         const fullscreenControl = new mapLibre.FullscreenControl();
         const geolocateControl = new mapLibre.GeolocateControl({
           positionOptions: { enableHighAccuracy: false },
@@ -8122,8 +8126,16 @@ export default function Home() {
     }}>{instrument === "river" ? "River Pulse" : instrument === "radar" ? "Radar Loop" : "Lightning"}</button>)}
   </nav> : null;
 
+  const toggleUnderground = () => { if (!undergroundOpen) activateMapRepresentation("2d"); setUndergroundOpen(v => !v); setPlaying(false); setSubsurfacePrivate(v => v || locationCameraRedacted || locationDerivedViewRef.current); setTimelineOpen(false); setLeftOpen(false); setRightOpen(false); setMapUtilityOpen(false); };
+  const closeExplorerGuide = (rememberDismissal: boolean) => { setGuideOpen(false); writeExplorerGuideDismissed(rememberDismissal); };
+  const runExplorerGuideAction = (action: ExplorerGuideAction) => {
+    if (action === "layers") openAtlasPanel("layers");
+    else if (action === "time") setTimelineOpen(true);
+    else if (action === "underground") { if (!undergroundOpen) toggleUnderground(); }
+    else if (action === "qwen") openQwenCompanion(null);
+  };
   const mapRepresentationControls = () => <>
-              <button type="button" aria-label="Underground Logs & sections" title="Underground Logs & sections" aria-pressed={undergroundOpen} onClick={() => { if (!undergroundOpen) activateMapRepresentation("2d"); setUndergroundOpen(v => !v); setPlaying(false); setSubsurfacePrivate(v => v || locationCameraRedacted || locationDerivedViewRef.current); setTimelineOpen(false); setLeftOpen(false); setRightOpen(false); setMapUtilityOpen(false); }}><b>Underground</b><span className="sr-only">Logs &amp; sections</span></button>
+              <button type="button" aria-label="Underground Logs & sections" title="Underground Logs & sections" aria-pressed={undergroundOpen} onClick={toggleUnderground}><b>Underground</b><span className="sr-only">Logs &amp; sections</span></button>
               <button type="button" aria-pressed={projection === "mercator" && scenePreset !== "elevation-3d"} data-active={projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => activateMapRepresentation("2d")}><b>2D</b><span>Map</span></button>
               <button type="button" aria-pressed={scenePreset === "elevation-3d"} data-active={scenePreset === "elevation-3d"} onClick={() => { setUndergroundOpen(false); activateMapRepresentation("terrain"); }}><b>Terrain 3D</b><span>{verticalExaggeration.toFixed(1)}×</span></button>
               {scenePreset === "elevation-3d" && <output className="terrain-mode-source" data-state={terrainState.toLowerCase()} aria-live="polite">{terrainProvider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} · {terrainState === "READY" && attachedTerrainProviderRef.current === terrainProvider ? "DEM ready" : terrainState === "ERROR" ? "DEM unavailable" : "DEM loading"}{terrainProvider === "mapzen" && terrainState === "READY" && view.zoom > TERRARIUM_RENDER_MAX_ZOOM ? ` · coarse beyond z${TERRARIUM_RENDER_MAX_ZOOM}` : ""}</output>}
@@ -8182,6 +8194,7 @@ export default function Home() {
             </div>
           </nav>
         <div className="top-actions">
+          <button className="guide-trigger" type="button" aria-label="Open the quick start guide" title="Quick start guide" aria-expanded={guideOpen} onClick={() => setGuideOpen((open) => !open)}>?</button>
           <DataNotices issues={sourceIssues} onRetry={retryOfficialLayer} onHide={id => setOfficialContextVisible(id, false)} onFireSaved={day => { setOfficialContextVisible("nasa-gibs-fire-points", true); void loadOfficialArchiveDay("nasa-gibs-fire-points", day); }} />
           <details className="header-overflow-menu" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) event.currentTarget.open = false; }} onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
             <summary aria-label="More site actions" title="More site actions">More <span aria-hidden="true">⌄</span></summary>
@@ -8949,6 +8962,7 @@ export default function Home() {
             <footer>Situational display only · not an emergency warning service · time remains separate from the atlas year</footer>
           </aside>}
           <LightningFlashLoop key={glmFlashesEnabled && glmFlashesAllowed ? "enabled" : "disabled"} map={styleReady ? mapRef.current : null} enabled={glmFlashesEnabled && glmFlashesAllowed} reducedMotion={reducedMotion} onClose={() => setGlmFlashesEnabled(false)} />
+          <ExplorerGuide open={guideOpen} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} />
           <button className="qwen-map-launch" type="button" aria-label="Ask Qwen about this map view" title="Ask Qwen about this map view" onClick={(event) => qwenOpen ? closeQwenCompanion(event.currentTarget) : openQwenCompanion(event.currentTarget)} aria-expanded={qwenOpen} aria-controls="qwen-map-panel" data-open={qwenOpen}>
             <span className="qwen-launch-mark" aria-hidden="true">Q</span>
             <span><strong>Ask Qwen</strong><small>About this map view</small></span>
@@ -9016,7 +9030,6 @@ export default function Home() {
             <div className="map-tool-group" aria-label="Map navigation">
               <button type="button" onClick={() => mapRef.current?.zoomIn({ duration: motionDuration(250) })} aria-label="Zoom in"><span className="map-tool-glyph" aria-hidden="true">＋</span></button>
               <button type="button" onClick={() => mapRef.current?.zoomOut({ duration: motionDuration(250) })} aria-label="Zoom out"><span className="map-tool-glyph" aria-hidden="true">−</span></button>
-              <button className="mobile-hidden-control" type="button" onClick={() => mapRef.current?.resetNorthPitch({ duration: motionDuration(450) })} aria-label="Reset compass and pitch"><span className="map-tool-glyph" aria-hidden="true">N</span></button>
               <button type="button" onClick={fitKansasView} aria-label="Reset view to Kansas"><span className="map-tool-glyph" aria-hidden="true">KS</span></button>
             </div>
           </nav>

@@ -3,6 +3,7 @@ import { SITE_IDENTITY } from "./site-identity";
 import { PersistentSelectMenus } from "./persistent-select-menus";
 import "./globals.css";
 import "./map-layers.css";
+import "./explorer-theme.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   // Canonical metadata is deployment identity, never caller-controlled routing input.

@@ -57,6 +57,7 @@ This matrix routes readers to current source documentation. It describes the rep
 | Smoke and thermal context | [Imagery bridges](../../../apps/site/source/docs/smoke-imagery-bridges.md) | Product role and acquisition/valid times |
 | Local originals and receipts | [Local consolidation](../../../apps/site/source/docs/local-pc-consolidation.md) | Store identity, protected files and capture verification |
 | Display tile reuse | [Basemap cache](../../../apps/site/source/docs/basemap-cache.md) | 10 GB cap, expiry, partial coverage and service connection |
+| First use, theme and offline orientation | [Interface refresh](../../../apps/site/source/docs/explorer-interface-refresh.md) | Quick-start routes, deployed vs repository source, orientation outline is display only |
 
 ## How to read a capability claim
 
