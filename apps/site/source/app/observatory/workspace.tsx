@@ -6,10 +6,10 @@ import { currentDayStart, currentUtcDay, latestSafeCursor } from "../daily-basel
 import { shouldRefreshFollowToday } from "./follow-today";
 import { replaceExplorerHistory } from "../embed-runtime";
 import { browserRenderBudget, geoJSONHasData, updateGeoJSON, uploadedGeoJSON } from "../map-performance";
-import { reuseUnchanged } from "./frame-data";
+import { gaugeStates, gaugeStations, reuseUnchanged } from "./frame-data";
 import type { FeatureCollection } from "geojson";
 import { DataNotices } from "../map-toolbar";
-import { loadMapLibre, type Map as GLMap, type GeoJSONSource } from "../maplibre-seam";
+import { loadMapLibre, type ExpressionSpecification, type Map as GLMap, type GeoJSONSource } from "../maplibre-seam";
 import { BASEMAPS } from "../map-runtime";
 import { SCIENCE_EVENTS, SCIENCE_SUPPORT_LABELS, scienceMeasurement, scienceProbeGeoJSON, type ScienceTrackId } from "../science-events";
 import {
@@ -64,6 +64,15 @@ const PRESETS = [
   { label: "Smoke archive · June 2023", start: "2023-06-07T12:00", hours: 6 },
 ];
 const EMPTY = { type: "FeatureCollection" as const, features: [] };
+// River gauges carry each frame's reading as feature state. Filters cannot read
+// feature state, so a gauge without a reading for the frame is transparent.
+const GAUGE_LAYERS = new Set(LAYERS.river);
+const withReading = (value: number): ExpressionSpecification => ["case", ["==", ["feature-state", "missing"], false], value, 0];
+function setCircleOpacity(map: GLMap, id: string, value: number) {
+  const fill = value * (id.endsWith("glow") ? .2 : 1);
+  map.setPaintProperty(id, "circle-opacity", GAUGE_LAYERS.has(id) ? withReading(fill) : fill);
+  map.setPaintProperty(id, "circle-stroke-opacity", GAUGE_LAYERS.has(id) ? withReading(value) : value);
+}
 const timestamp = (value: string | null) => value ? value.replace("T", " · ").replace(".000Z", " UTC") : "No committed frame";
 const localTimestamp = (value: string | null) => value ? new Intl.DateTimeFormat("en-US", { timeZone: "America/Chicago", dateStyle: "medium", timeStyle: "short" }).format(new Date(value)) + " · Central" : "";
 const dayFormatter = new Intl.DateTimeFormat("en-US", { timeZone: "UTC", weekday: "short", month: "short", day: "numeric" });
@@ -162,6 +171,8 @@ export default function EventObservatory() {
   const activeSmoke = useMemo(() => manifest && committed ? smokeAt(manifest.smoke.data, committed) : EMPTY, [manifest, committed]);
   const riverFrame = useMemo(() => river && committed ? riverAt(river, committed, loadedRiverResolution) : null, [river, committed, loadedRiverResolution]);
   const gauge = riverFrame?.features[0]?.properties;
+  const riverFrameRef = useRef(riverFrame);
+  useEffect(() => { riverFrameRef.current = riverFrame; }, [riverFrame]);
   const series = useMemo(() => manifest ? river?.observations.filter((o) => o.observedAt >= manifest.start && o.observedAt < manifest.end) ?? [] : [], [river, manifest]);
   const graph = useMemo(() => buildHydrographSegments(series, { width: 520, height: 100, padding: 7, gapMinutes: 30 }), [series]);
   const numbers = series.flatMap((o) => o.value === null ? [] : [o.value]);
@@ -255,7 +266,7 @@ export default function EventObservatory() {
       if (layer.type === "raster") map.setPaintProperty(id, "raster-opacity", value);
       if (layer.type === "fill") map.setPaintProperty(id, "fill-opacity", value);
       if (layer.type === "line") map.setPaintProperty(id, "line-opacity", value);
-      if (layer.type === "circle") { map.setPaintProperty(id, "circle-opacity", value * (id.endsWith("glow") ? .2 : 1)); map.setPaintProperty(id, "circle-stroke-opacity", value); }
+      if (layer.type === "circle") setCircleOpacity(map, id, value);
     }
   }, [opacity, mapReady]);
   useEffect(() => { if (calendarOpen) document.querySelector<HTMLButtonElement>("#archive-calendar button")?.focus(); }, [calendarOpen]);
@@ -336,15 +347,18 @@ export default function EventObservatory() {
             return;
           }
           const features = map.queryRenderedFeatures(event.point, { layers: ["ea-storm-cells", "ea-storm-rotation-glow", "ea-storm-radars", "ea-weather", "ea-earthquakes", "ea-shake", "ea-counties", "ea-river"].filter((id) => map.getLayer(id)) });
-          const feature = features[0]; if (!feature) return;
+          // A gauge without a reading for the committed frame is transparent, not absent.
+          const feature = features.find((candidate) => candidate.layer.id !== "ea-river" || candidate.state.missing === false); if (!feature) return;
           const track = (feature.layer.id.startsWith("ea-storm") ? "storms" : feature.layer.id.replace("ea-", "")) as TrackId;
-          setInspectedFeature({ track, properties: feature.properties }); setSelectedTrack(track); setDetailsOpen(true); setLayersOpen(false); setScienceOpen(false); setPlaying(false);
+          const reading = track === "river" ? riverFrameRef.current?.features.find((gauge) => gauge.properties.stationId === feature.properties.stationId)?.properties : undefined;
+          setInspectedFeature({ track, properties: reading ?? feature.properties }); setSelectedTrack(track); setDetailsOpen(true); setLayersOpen(false); setScienceOpen(false); setPlaying(false);
         });
         map.addLayer({ id: "ea-smoke-fill", source: "ea-smoke", type: "fill", layout: { visibility: "none" }, paint: { "fill-color": ["match", ["get", "density"], "Light", "#e5d9b1", "Medium", "#dca261", "Heavy", "#bd6242", "#a6acaf"], "fill-opacity": .45 } });
         map.addLayer({ id: "ea-smoke-edge", source: "ea-smoke", type: "line", layout: { visibility: "none" }, paint: { "line-color": "#f0c89b", "line-width": 1.2, "line-opacity": .7 } });
-        map.addSource("ea-river-data", { type: "geojson", data: EMPTY });
-        map.addLayer({ id: "ea-river-glow", source: "ea-river-data", type: "circle", layout: { visibility: "none" }, filter: ["==", ["get", "missing"], false], paint: { "circle-radius": ["+", 12, ["*", 5, ["get", "visualMagnitude"]]], "circle-color": "#70e0ef", "circle-opacity": .2, "circle-blur": .6 } });
-        map.addLayer({ id: "ea-river", source: "ea-river-data", type: "circle", layout: { visibility: "none" }, filter: ["==", ["get", "missing"], false], paint: { "circle-radius": ["+", 4, ["*", 2.5, ["get", "visualMagnitude"]]], "circle-color": ["match", ["get", "trend"], "rising", "#5cf1da", "falling", "#729ffa", "#d8f6ff"], "circle-stroke-color": "#ffffff", "circle-stroke-width": 1.5 } });
+        map.addSource("ea-river-data", { type: "geojson", data: EMPTY, promoteId: "stationId" });
+        const magnitude: ExpressionSpecification = ["to-number", ["feature-state", "visualMagnitude"]];
+        map.addLayer({ id: "ea-river-glow", source: "ea-river-data", type: "circle", layout: { visibility: "none" }, paint: { "circle-radius": ["+", 12, ["*", 5, magnitude]], "circle-color": "#70e0ef", "circle-opacity": withReading(.2), "circle-blur": .6 } });
+        map.addLayer({ id: "ea-river", source: "ea-river-data", type: "circle", layout: { visibility: "none" }, paint: { "circle-radius": ["+", 4, ["*", 2.5, magnitude]], "circle-color": ["match", ["to-string", ["feature-state", "trend"]], "rising", "#5cf1da", "falling", "#729ffa", "#d8f6ff"], "circle-opacity": withReading(1), "circle-stroke-color": "#ffffff", "circle-stroke-width": 1.5, "circle-stroke-opacity": withReading(1) } });
         setMapReady(true); setMapMessage("Modern OpenStreetMap reference · not historical boundaries");
       });
       map.on("error", (event) => {
@@ -529,11 +543,13 @@ export default function EventObservatory() {
     setBuffering(true); setError("");
     const scan = visible.radar ? radarAt(manifest.radar.scans, requested) : null;
     const day = requested.slice(0,10), year = day.slice(0,4);
-    // This frame's local data. Content-equal frames (the streamflow frame is
-    // rebuilt with fresh objects every step) reuse the collection the source holds.
+    // This frame's local data. Content-equal frames reuse the collection the
+    // source holds. The gauge source holds station positions only; readings are
+    // applied as feature state when the frame commits.
+    const gauges = river ? riverAt(river, requested, loadedRiverResolution) : EMPTY;
     const frameData = new Map<string, FeatureCollection>([
       ["ea-smoke", smokeAt(manifest.smoke.data, requested)],
-      ["ea-river-data", river ? riverAt(river, requested, loadedRiverResolution) : EMPTY],
+      ["ea-river-data", gaugeStations(gauges)],
       ["ea-resource-data", resourceData ?? EMPTY],
     ]);
     for (const id of ["counties", "weather", "earthquakes", "shake"] as ContextTrack[]) {
@@ -610,6 +626,7 @@ export default function EventObservatory() {
         map.on("sourcedata", check); map.on("error", check); controller.signal.addEventListener("abort", fail, { once: true }); check();
       });
       if (token !== frameGeneration.current || controller.signal.aborted) return;
+      for (const [id, state] of gaugeStates(gauges)) map.setFeatureState({ source: "ea-river-data", id }, state);
       setBaseDay(satelliteDay);
       if (map.getLayer("ea-satellite")) map.setLayoutProperty("ea-satellite", "visibility", satelliteDay ? "visible" : "none");
       if (map.getLayer("ea-satellite")) { const firstOverlay = map.getStyle().layers.find((l) => l.id.startsWith("ea-") && l.id !== "ea-satellite"); if (firstOverlay) map.moveLayer("ea-satellite", firstOverlay.id); }
@@ -624,8 +641,7 @@ export default function EventObservatory() {
         if (type === "raster") map.setPaintProperty(layer, "raster-opacity", opacityRef.current[id]);
         if (type === "fill") map.setPaintProperty(layer, "fill-opacity", opacityRef.current[id]);
         if (type === "line") map.setPaintProperty(layer, "line-opacity", opacityRef.current[id]);
-        if (type === "circle") map.setPaintProperty(layer, "circle-opacity", opacityRef.current[id] * (layer.endsWith("glow") ? .2 : 1));
-        if (type === "circle") map.setPaintProperty(layer, "circle-stroke-opacity", opacityRef.current[id]);
+        if (type === "circle") setCircleOpacity(map, layer, opacityRef.current[id]);
       }
       if (map.getLayer("ea-science-probe-line")) map.moveLayer("ea-science-probe-line");
       if (map.getLayer("ea-science-probe-points")) map.moveLayer("ea-science-probe-points");
