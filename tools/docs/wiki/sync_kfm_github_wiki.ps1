@@ -48,6 +48,9 @@ $WikiRepo = "https://github.com/bartytime4life/Kansas-Frontier-Matrix.wiki.git"
 
 $Pages = @(
     "Home.md",
+    "Builder-Profile.md",
+    "Visual-Tour.md",
+    "Engineering-Case-Studies.md",
     "Getting-Started.md",
     "Project-Status.md",
     "Architecture.md",
@@ -64,6 +67,24 @@ $Pages = @(
     "_Sidebar.md",
     "_Footer.md"
 )
+
+function Convert-WikiLinks {
+    param([string]$Content, [string[]]$PageNames, [string]$SourceRef)
+
+    # Convert only exact, allowlisted local Markdown/HTML destinations.
+    # Repository source retains .md links; the native Wiki uses extensionless routes.
+    foreach ($Name in $PageNames) {
+        $Stem = [System.IO.Path]::GetFileNameWithoutExtension($Name)
+        $Target = "https://github.com/bartytime4life/Kansas-Frontier-Matrix/wiki/$Stem"
+        $Escaped = [regex]::Escape($Name)
+        $Content = [regex]::Replace($Content, '(\]\()' + $Escaped + '(?=[#)])', '${1}' + $Target)
+        $Content = [regex]::Replace($Content, '(href=")' + $Escaped + '(?=[#"])', '${1}' + $Target)
+    }
+    # README is the source contract, deliberately absent from the native page set.
+    $Readme = "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/$SourceRef/docs/wiki/README.md"
+    $Content = [regex]::Replace($Content, '(\]\()README\.md(?=[#)])', '${1}' + $Readme)
+    return $Content
+}
 
 function Invoke-Git {
     param(
@@ -120,7 +141,7 @@ try {
     Write-Host "Checking out reviewed source commit $SourceCommit..."
     Invoke-Git -WorkingDirectory $SourceDir -Arguments @("checkout", "--detach", $SourceCommit)
 
-    $ResolvedSourceCommit = (Get-GitLines -WorkingDirectory $SourceDir -Arguments @("rev-parse", "HEAD"))[0]
+    $ResolvedSourceCommit = @(Get-GitLines -WorkingDirectory $SourceDir -Arguments @("rev-parse", "HEAD"))[0]
     if ($ResolvedSourceCommit.ToLowerInvariant() -ne $SourceCommit.ToLowerInvariant()) {
         throw "Source checkout mismatch. Requested=$SourceCommit Resolved=$ResolvedSourceCommit"
     }
@@ -141,7 +162,9 @@ try {
             throw "Required source page is missing: $SourcePath"
         }
 
-        Copy-Item -LiteralPath $SourcePath -Destination $TargetPath -Force
+        $Content = [System.IO.File]::ReadAllText($SourcePath)
+        $Projected = Convert-WikiLinks -Content $Content -PageNames $Pages -SourceRef $ResolvedSourceCommit
+        [System.IO.File]::WriteAllText($TargetPath, $Projected, (New-Object System.Text.UTF8Encoding($false)))
     }
 
     $ChangedPaths = @(
@@ -189,7 +212,7 @@ try {
     Invoke-Git -WorkingDirectory $WikiDir -Arguments @("config", "user.email", "203533328+bartytime4life@users.noreply.github.com")
     Invoke-Git -WorkingDirectory $WikiDir -Arguments @("commit", "-m", $CommitMessage)
 
-    $WikiBranch = (Get-GitLines -WorkingDirectory $WikiDir -Arguments @("branch", "--show-current"))[0]
+    $WikiBranch = @(Get-GitLines -WorkingDirectory $WikiDir -Arguments @("branch", "--show-current"))[0]
     if ([string]::IsNullOrWhiteSpace($WikiBranch)) {
         throw "Unable to determine the native wiki branch."
     }
@@ -197,8 +220,8 @@ try {
     Write-Host "Pushing the reviewed page set to the native wiki..."
     Invoke-Git -WorkingDirectory $WikiDir -Arguments @("push", "origin", "HEAD:refs/heads/$WikiBranch")
 
-    $WikiCommit = (Get-GitLines -WorkingDirectory $WikiDir -Arguments @("rev-parse", "HEAD"))[0]
-    $RemoteReadback = Get-GitLines -WorkingDirectory $WikiDir -Arguments @("ls-remote", "--heads", "origin", "refs/heads/$WikiBranch")
+    $WikiCommit = @(Get-GitLines -WorkingDirectory $WikiDir -Arguments @("rev-parse", "HEAD"))[0]
+    $RemoteReadback = @(Get-GitLines -WorkingDirectory $WikiDir -Arguments @("ls-remote", "--heads", "origin", "refs/heads/$WikiBranch"))
     if ($RemoteReadback.Count -ne 1) {
         throw "Expected one remote branch readback entry for $WikiBranch; received $($RemoteReadback.Count)."
     }

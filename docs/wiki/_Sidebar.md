@@ -3,7 +3,7 @@ KFM_WIKI_SOURCE
 page_id: _Sidebar
 title: Kansas Frontier Matrix Wiki Navigation
 status: PROPOSED wiki source; review required
-updated: 2026-08-14
+updated: 2026-10-09
 authority: navigation-only; canonical repository evidence and adopted KFM authority outrank this page
 source_path: docs/wiki/_Sidebar.md
 publication_effect: none until separately synchronized to the native GitHub Wiki
@@ -13,7 +13,13 @@ publication_effect: none until separately synchronized to the native GitHub Wiki
 
 *Governed spatial evidence for Kansas. Orientation only—repository evidence and adopted authority win.*
 
-**Start here**
+**Portfolio tour**
+
+- [Builder profile](Builder-Profile.md) — capabilities and human–AI workflow
+- [Visual tour](Visual-Tour.md) — four illustrated product moments
+- [Engineering case studies](Engineering-Case-Studies.md) — decisions, code, and tests
+
+**Technical reference**
 
 - [Home](Home.md) — project purpose and public entry point
 - [Getting Started](Getting-Started.md) — first reading and contribution paths

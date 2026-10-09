@@ -9,6 +9,9 @@ SCRIPT = REPO_ROOT / "tools" / "docs" / "wiki" / "sync_kfm_github_wiki.ps1"
 EXPECTED_SOURCE_COMMIT = "3b2c4dc05a2a30ed045e7a04a6d15d103ce83a0d"
 EXPECTED_PAGES = [
     "Home.md",
+    "Builder-Profile.md",
+    "Visual-Tour.md",
+    "Engineering-Case-Studies.md",
     "Getting-Started.md",
     "Project-Status.md",
     "Architecture.md",
@@ -80,3 +83,35 @@ def test_wiki_sync_requires_remote_commit_readback() -> None:
     assert '@("ls-remote", "--heads", "origin", "refs/heads/$WikiBranch")' in text
     assert "Remote readback mismatch" in text
     assert "Outcome: APPLIED" in text
+
+
+def test_native_projection_rewrites_only_allowlisted_link_destinations(tmp_path) -> None:
+    import shutil
+    import subprocess
+    import pytest
+
+    pwsh = shutil.which("pwsh")
+    if not pwsh:
+        pytest.skip("PowerShell is required for the executable projection check")
+    source = _script_text()
+    function = source[source.index("function Convert-WikiLinks {"):source.index("function Invoke-Git {")]
+    probe = tmp_path / "probe.ps1"
+    probe.write_text(function + r'''
+$InputText = '[Home](Home.md) [section](Home.md#top) <a href="Home.md">home</a> [external](https://example.org/Home.md) [nested](nested/Home.md) [unknown](Other.md) [contract](README.md)'
+Convert-WikiLinks -Content $InputText -PageNames @("Home.md") -SourceRef "source-pin"
+''', encoding="utf-8")
+    result = subprocess.run([pwsh, "-NoProfile", "-File", str(probe)], capture_output=True, text=True, check=True).stdout
+    target = "https://github.com/bartytime4life/Kansas-Frontier-Matrix/wiki/Home"
+    assert f"[Home]({target})" in result
+    assert f"[section]({target}#top)" in result
+    assert f'<a href="{target}">' in result
+    assert "[external](https://example.org/Home.md)" in result
+    assert "[nested](nested/Home.md)" in result
+    assert "[unknown](Other.md)" in result
+    assert "/blob/source-pin/docs/wiki/README.md)" in result
+
+
+def test_scalar_git_outputs_are_wrapped_before_indexing() -> None:
+    text = _script_text()
+    for name in ("ResolvedSourceCommit", "WikiBranch", "WikiCommit", "RemoteReadback"):
+        assert f"${name} = @(Get-GitLines" in text
