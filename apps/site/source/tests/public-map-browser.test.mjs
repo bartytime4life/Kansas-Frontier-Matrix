@@ -15,7 +15,7 @@ const visibleText = node => typeof node === 'string' || typeof node === 'number'
 const button = (tree, text) => findNode(tree, node => node.type === 'button' && content(node).includes(text));
 async function harness(input = structuredClone(catalog), collection = "maps") {
   const calls = [], selected = [], focused = [], reveals = [], events = new Map(); const document = { activeElement: null };
-  const downloads = { catalog: input, status: status(), connection: 'connected', busy: null, catalogError: null, notice: '', selectAsset: id => selected.push(id), refreshCatalog: async () => calls.push('refresh'), startDownload: async (asset, maximum) => calls.push({ assetId: asset.id, maximum }) };
+  const downloads = { connect: () => calls.push('connect'), catalog: input, status: status(), connection: 'connected', busy: null, catalogError: null, notice: '', selectAsset: id => selected.push(id), refreshCatalog: async () => calls.push('refresh'), startDownload: async (asset, maximum) => calls.push({ assetId: asset.id, maximum }) };
   const h = await componentHarness('app/public-map-browser.tsx', { './public-map-catalog.json': { default: seed }, './public-map-catalog': model, './local-download-client': { formatDownloadBytes: value => `${value} bytes` }, './public-map-preview': { PublicMapPreview: 'preview' }, './download-focus': { revealTransferControls: (field, action) => reveals.push({ field, action }) }, './downloads/workspace.module.css': css, './public-map-browser.module.css': css }, { document, window: { matchMedia: () => ({ matches: true }), addEventListener: (name, callback) => events.set(name, callback), removeEventListener: name => events.delete(name) } });
   let blocked = false;
   const render = () => { const tree = h.render(h.exports.default, { downloads, collection, blockedByOtherDownload: blocked, onViewActivity: () => calls.push('activity') }); for (const node of nodes(tree, n => n.props?.ref)) node.props.ref.current = { focus() { focused.push(node.type); document.activeElement = this; }, scrollIntoView: () => focused.push('scroll') }; h.commit(); return tree; };
@@ -108,4 +108,29 @@ test('public climate collection exposes verified files without a Google sign-in 
  assert.ok(findNode(tree,n=>n.type==='input'&&n.props.type==='number').props.value);
  assert.deepEqual(p.calls,[]);
  p.h.dispose();
+});
+
+
+test('disconnected selected file offers inline connection and retains explicit transfer confirmation', async () => {
+  const p = await harness(); p.downloads.connection = 'idle';
+  let tree = p.choose(p.render()); button(tree, 'Download ').props.onClick(); tree = p.render();
+  button(tree, 'Connect downloads').props.onClick(); assert.deepEqual(p.calls, ['connect']);
+  assert.equal(button(tree, 'Download to this computer').props.disabled, true);
+  p.downloads.connection = 'connecting'; tree = p.render(); assert.equal(button(tree, 'Connecting…').props.disabled, true);
+  p.downloads.connection = 'unavailable'; tree = p.render();
+  assert.equal(findNode(tree, n => n.type === 'a' && content(n).includes('Open local KFM')).props.href, 'http://127.0.0.1:4173/downloads#public-maps');
+  p.downloads.connection = 'connected'; tree = p.render();
+  assert.equal(button(tree, 'Connect downloads'), undefined); assert.equal(button(tree, 'Download to this computer').props.disabled, false);
+  assert.deepEqual(p.calls, ['connect']); p.h.dispose();
+});
+
+test('catalog dates render identically in server UTC and Kansas browser timezones', async () => {
+  const original = process.env.TZ;
+  try {
+    const p = await harness(); process.env.TZ = 'UTC'; const server = JSON.stringify(p.render());
+    process.env.TZ = 'America/Chicago'; assert.equal(JSON.stringify(p.render()), server);
+    assert.match(server, /2026-10-08 18:00:00 UTC/); p.h.dispose();
+    const q = await harness(structuredClone(seed), 'satellite');
+    assert.match(JSON.stringify(q.render()), /2026-10-09/); q.h.dispose();
+  } finally { if (original === undefined) delete process.env.TZ; else process.env.TZ = original; }
 });

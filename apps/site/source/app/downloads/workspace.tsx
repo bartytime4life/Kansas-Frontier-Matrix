@@ -7,7 +7,6 @@ import { useEarthEngineContext } from "../earth-engine-context-client";
 import { normalizeDownloadActivity } from "../download-activity";
 import { ActivityWorkspace, TransferPanel } from "../download-activity-panel";
 import PublicMapBrowser from "../public-map-browser";
-import EarthEnginePicker from "../earth-engine-picker";
 import DownloadLibrary from "../download-library";
 import styles from "./workspace.module.css";
 
@@ -15,8 +14,7 @@ type View = "find" | "library" | "activity";
 export default function DownloadsWorkspace() {
   const local = useLocalDownloads(), reviewed = useEarthEngineContext();
   const maps = usePublicMapDownloads({ onTransferTerminal: local.refreshLibrary, blockedByOtherDownload: Boolean(local.status?.active) || local.starting });
-  const [earthEngine, setEarthEngine] = useState(false);
-  const [view, setView] = useState<View>("find"), [source, setSource] = useState<"maps" | "satellite">("maps");
+  const [view, setView] = useState<View>("find"), [source, setSource] = useState<"maps" | "satellite">("satellite");
   const items = useMemo(() => normalizeDownloadActivity(local.status, maps.status), [local.status, maps.status]);
   const active = items.filter(item => item.active), allConnected = local.connection === "connected" && maps.connection === "connected";
   const someConnected = local.connection === "connected" || maps.connection === "connected", connecting = local.connection === "connecting" || maps.connection === "connecting";
@@ -25,13 +23,13 @@ export default function DownloadsWorkspace() {
   const openActivity = () => setView("activity");
   const openLibrary = () => setView("library");
   useEffect(() => {
-    const deepLink = () => { if (window.location.hash === "#library") setView("library"); else if (window.location.hash === "#public-maps") { setView("find"); setSource("maps"); } };
+    const deepLink = () => { if (window.location.hash === "#library") setView("library"); else if (["#public-maps", "#public-climate"].includes(window.location.hash)) { setView("find"); setSource(window.location.hash === "#public-maps" ? "maps" : "satellite"); } };
     deepLink(); window.addEventListener("hashchange", deepLink); return () => window.removeEventListener("hashchange", deepLink);
   }, []);
   return <main className={styles.page} data-download-scroll data-transfer-active={active.length > 0 || local.starting || maps.busy === "download" || local.library?.state === "scanning" || maps.status?.refresh.state === "running"}>
     <div className={styles.wrap}>
-      <header className={styles.header}><Link href="/" className={styles.brand}>KFM <span>EXPLORER</span></Link><nav aria-label="Data navigation"><Link href="/">← Explorer map</Link><Link href="/earth-engine">Advanced recipes</Link><Link href="/acquisition">Receipts</Link></nav></header>
-      <section className={styles.intro}><div><p className={styles.eyebrow}>YOUR KANSAS DATA WORKBENCH</p><h1>Data &amp; downloads</h1><p>Source maps, satellite imagery, and your local library — in one place.</p></div><span className={styles.localBadge}>LOCAL WORKSPACE</span></section>
+      <header className={styles.header}><Link href="/" className={styles.brand}>KFM <span>EXPLORER</span></Link><nav aria-label="Data navigation"><Link href="/">← Explorer map</Link><Link href="/earth-engine">Earth Engine (Google sign-in)</Link><Link href="/acquisition">Receipts</Link></nav></header>
+      <section className={styles.intro}><div><p className={styles.eyebrow}>YOUR KANSAS DATA WORKBENCH</p><h1>Data &amp; downloads</h1><p>Free direct files for Kansas and your local library. No Google account needed.</p></div><span className={styles.localBadge}>LOCAL WORKSPACE</span></section>
       <div className={styles.connection} aria-label="Local service connection"><div><span className={styles.connectionDot} data-connected={allConnected} aria-hidden="true" /><strong>{allConnected ? "Connected to this computer" : connecting ? "Connecting to this computer…" : someConnected ? "Partly connected" : "Browse now. Connect to download."}</strong>{checked && allConnected && <span>Checked {checked}</span>}</div>
         {!allConnected && <button type="button" disabled={connecting} aria-busy={connecting} onClick={connect}>{connecting ? "Connecting…" : someConnected ? "Reconnect channels" : "Connect this computer"}</button>}
         <details className={styles.connectionDetails}><summary>Connection details</summary><p>Library &amp; Earth Engine: <strong>{local.connection}</strong><br />Public maps: <strong>{maps.connection}</strong></p><p>Catalog browsing works offline. Progress refreshes automatically while this page is visible; transfers continue in the local operator.</p><div className={styles.linkActions}><button type="button" disabled={connecting} onClick={connect}>Recheck connection</button><Link href="/earth-engine-downloads/setup">Setup help →</Link></div></details>
@@ -43,10 +41,10 @@ export default function DownloadsWorkspace() {
         <div className={styles.mainColumn}>
           <div id="download-find" hidden={view !== "find"}>
             <nav className={styles.sourceNav} aria-label="Source categories"><button type="button" aria-pressed={source === "maps"} onClick={() => setSource("maps")}><span>01</span><strong>Maps &amp; geology</strong><small>Free direct files</small></button><button type="button" aria-pressed={source === "satellite"} onClick={() => setSource("satellite")}><span>02</span><strong>Satellite &amp; climate</strong><small>Public files · no login</small></button></nav>
-            <div hidden={source !== "maps"}><PublicMapBrowser downloads={maps} blockedByOtherDownload={Boolean(local.status?.active) || local.starting} onViewActivity={openActivity} /></div>
-            <div hidden={source !== "satellite"}><div className={styles.libraryOverview}><button type="button" aria-pressed={!earthEngine} onClick={() => setEarthEngine(false)}>Public files · no login</button><button type="button" aria-pressed={earthEngine} onClick={() => setEarthEngine(true)}>Earth Engine exports · optional sign-in</button><a href="https://developers.google.com/earth-engine/datasets" target="_blank" rel="noreferrer">Official Earth Engine catalog ↗</a></div><div hidden={earthEngine}><PublicMapBrowser collection="satellite" downloads={maps} blockedByOtherDownload={Boolean(local.status?.active) || local.starting} onViewActivity={openActivity} /></div><div hidden={!earthEngine}><p>Google authorization is required only for these Earth Engine exports. Use Public files for downloads without an account.</p><EarthEnginePicker downloads={local} blockedByOtherDownload={Boolean(maps.status?.active) || maps.busy === "download"} onViewActivity={openActivity} /></div></div>
+            <div hidden={source !== "maps"}><PublicMapBrowser downloads={maps} onConnect={connect} blockedByOtherDownload={Boolean(local.status?.active) || local.starting} onViewActivity={openActivity} /></div>
+            <div hidden={source !== "satellite"}><PublicMapBrowser collection="satellite" downloads={maps} onConnect={connect} blockedByOtherDownload={Boolean(local.status?.active) || local.starting} onViewActivity={openActivity} /></div>
           </div>
-          <div id="download-library" hidden={view !== "library"}><DownloadLibrary downloads={local} reviewed={reviewed} items={items} /></div>
+          <div id="download-library" hidden={view !== "library"}><DownloadLibrary downloads={local} onConnect={connect} reviewed={reviewed} items={items} /></div>
           <div id="download-activity" hidden={view !== "activity"}><ActivityWorkspace items={items} local={local} maps={maps} /></div>
         </div>
         <TransferPanel items={items} local={local} maps={maps} onViewActivity={openActivity} />
