@@ -6,7 +6,7 @@ version: v0.4
 status: repository-integrated; private offline quarantine only
 owners: ["@bartytime4life"]
 created: 2026-09-17
-updated: 2026-09-25
+updated: 2026-10-09
 policy_label: public-documentation
 owning_root: docs/
 responsibility: Guide private local setup, offline quarantine capture, verification, backup, and update without granting downstream authority.
@@ -332,6 +332,10 @@ catalog/layer entries; evidence/proof and release closure; governed API and
 MapLibre loading; correction/rollback verification. PMTiles, COG, GeoParquet,
 imagery, and photos require their respective reviewed adapters. Sensitive exact
 locations and unclear rights stay held. No store path alone makes a layer visible.
+
+To see what the store holds and where each file belongs, run the
+[raw-data intake pipeline](raw-data-intake.md). It profiles stored files and
+recommends placements without promoting or publishing anything.
 
 ## Validation and placement
 

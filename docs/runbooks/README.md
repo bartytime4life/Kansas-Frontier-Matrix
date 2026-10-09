@@ -10,7 +10,7 @@ owners:
   - "@bartytime4life — verified GitHub review route"
   - "NEEDS VERIFICATION — accountable runbook, domain, security, release, and independent-review assignments"
 created: 2026-05-12
-updated: 2026-08-28
+updated: 2026-10-09
 policy_label: repository-facing; mixed child sensitivity
 current_path: docs/runbooks/README.md
 owning_root: docs/
@@ -220,6 +220,7 @@ docs/runbooks/
 ├── people-dna-land/
 ├── pipeline-resilience.md
 ├── pr-reliability-guide.md
+├── raw-data-intake.md
 ├── retention-agriculture.md
 ├── revocation.md
 ├── roads-rail-trade/
@@ -240,6 +241,9 @@ docs/runbooks/
 
 For workstation download, external storage paths, offline file synchronization,
 backfill preparation, and recovery, use [Prepare a local PC and maintain its data store](local-pc-data-store.md).
+To profile what is already stored and see where each file belongs — local store,
+intake database, WORK review lane, Git metadata card or GitHub release — use
+[Analyze raw data and route it to the right place](raw-data-intake.md).
 
 | Need | Current entry point | Boundary |
 |---|---|---|

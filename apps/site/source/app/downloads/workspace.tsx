@@ -9,6 +9,7 @@ import { ActivityWorkspace, TransferPanel } from "../download-activity-panel";
 import PublicMapBrowser from "../public-map-browser";
 import DownloadLibrary from "../download-library";
 import HistoryBrowser from "../history-browser";
+import IntakeDeskSummary from "../intake-desk-summary";
 import styles from "./workspace.module.css";
 
 type View = "find" | "library" | "activity";
@@ -46,7 +47,7 @@ export default function DownloadsWorkspace() {
             <div hidden={source !== "satellite"}><PublicMapBrowser collection="satellite" downloads={maps} onConnect={connect} blockedByOtherDownload={Boolean(local.status?.active) || local.starting} onViewActivity={openActivity} /></div>
             {source === "history" && <HistoryBrowser downloads={maps} onConnect={connect} blocked={Boolean(local.status?.active) || local.starting} onViewActivity={openActivity} />}
           </div>
-          <div id="download-library" hidden={view !== "library"}><DownloadLibrary downloads={local} onConnect={connect} reviewed={reviewed} items={items} /></div>
+          <div id="download-library" hidden={view !== "library"}><IntakeDeskSummary /><DownloadLibrary downloads={local} onConnect={connect} reviewed={reviewed} items={items} /></div>
           <div id="download-activity" hidden={view !== "activity"}><ActivityWorkspace items={items} local={local} maps={maps} /></div>
         </div>
         <TransferPanel items={items} local={local} maps={maps} onViewActivity={openActivity} />
