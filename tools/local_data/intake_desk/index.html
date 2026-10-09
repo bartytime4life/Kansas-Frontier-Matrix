@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="kfm-session" content="__KFM_SESSION__">
+<title>KFM Intake Desk</title>
+<link rel="stylesheet" href="/desk.css">
+</head>
+<body>
+<header class="bar">
+  <div class="brand">
+    <strong>KFM Intake Desk</strong>
+    <span class="muted">Analyze raw files and route them to the right place — local store, database, Git or a GitHub release</span>
+  </div>
+  <div class="run">
+    <label class="toggle"><input type="checkbox" id="include-inbox"> Include inbox downloads</label>
+    <button id="analyze" type="button" class="primary">Analyze store</button>
+    <button id="cancel" type="button" hidden>Cancel</button>
+    <span id="job" class="muted" role="status" aria-live="polite"></span>
+  </div>
+</header>
+
+<main>
+  <section class="cards" aria-label="Summary">
+    <article class="card"><h2>Files indexed</h2><p id="sum-files" class="big">–</p><p id="sum-bytes" class="muted"></p></article>
+    <article class="card"><h2>Ready</h2><p id="sum-ready" class="big ok">–</p><p class="muted">public rights, no review flags</p></article>
+    <article class="card"><h2>Needs review</h2><p id="sum-review" class="big warn">–</p><p class="muted">rights, sensitivity or domain to settle</p></article>
+    <article class="card"><h2>Blocked</h2><p id="sum-blocked" class="big bad">–</p><p class="muted">unsafe or unreadable content</p></article>
+    <article class="card wide">
+      <h2>GitHub storage <span id="budget-level" class="chip"></span></h2>
+      <div class="gauge" id="gauge" role="img" aria-label="GitHub storage usage"></div>
+      <ul class="legend" id="gauge-legend"></ul>
+    </article>
+  </section>
+
+  <section class="workspace">
+    <div class="map-panel">
+      <div class="panel-head">
+        <h2>Coverage</h2>
+        <span class="muted">Drag on the map to filter by area</span>
+        <button id="clear-area" type="button" class="link" hidden>Clear area</button>
+      </div>
+      <svg id="map" viewBox="0 0 800 420" role="img" aria-label="Extents of indexed files over an approximate Kansas outline"></svg>
+      <p class="fine">Outline is approximate. Boxes are file extents from analysis, not released map layers.</p>
+    </div>
+
+    <div class="list-panel">
+      <form id="filters" class="filters" autocomplete="off">
+        <input id="f-text" type="search" placeholder="Search path or source…" aria-label="Search">
+        <select id="f-status" aria-label="Status"><option value="">Any status</option><option>ready</option><option>review</option><option>blocked</option></select>
+        <select id="f-lane" aria-label="Lane"><option value="">Any lane</option><option>raw</option><option>quarantine</option><option>inbox</option></select>
+        <select id="f-family" aria-label="Format family"><option value="">Any format</option></select>
+        <select id="f-domain" aria-label="Domain"><option value="">Any domain</option></select>
+      </form>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>File</th><th>Format</th><th>Domain</th><th>Kansas</th><th>Time</th><th class="num">Size</th><th>Status</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <div class="pager"><button id="prev" type="button">‹ Prev</button><span id="page" class="muted"></span><button id="next" type="button">Next ›</button></div>
+    </div>
+  </section>
+
+  <section class="plan">
+    <div class="panel-head"><h2>GitHub release plan</h2><span class="muted">Plan only — nothing is uploaded</span></div>
+    <div id="plan"></div>
+  </section>
+</main>
+
+<aside id="drawer" class="drawer" hidden aria-labelledby="d-title">
+  <div class="drawer-head">
+    <h2 id="d-title"></h2>
+    <button id="d-close" type="button" class="link" aria-label="Close details">Close ✕</button>
+  </div>
+  <div id="d-body"></div>
+</aside>
+
+<div id="toast" class="toast" role="alert" hidden></div>
+<script src="/desk.js"></script>
+</body>
+</html>

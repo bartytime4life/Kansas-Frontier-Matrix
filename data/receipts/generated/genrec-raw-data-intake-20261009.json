@@ -1,0 +1,156 @@
+{
+  "receipt_id": "genrec-raw-data-intake-20261009",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/app/downloads/workspace.tsx",
+    "apps/site/source/app/intake-desk-client.ts",
+    "apps/site/source/app/intake-desk-summary.module.css",
+    "apps/site/source/app/intake-desk-summary.tsx",
+    "apps/site/source/app/site-features.ts",
+    "apps/site/source/tests/download-workspace-ui.test.mjs",
+    "apps/site/source/tests/intake-desk.test.mjs",
+    "docs/runbooks/README.md",
+    "docs/runbooks/local-pc-data-store.md",
+    "docs/runbooks/raw-data-intake.md",
+    "tests/local_data/intake_samples.py",
+    "tests/local_data/test_intake.py",
+    "tools/local_data/README.md",
+    "tools/local_data/catalogs/github-storage-budget.json",
+    "tools/local_data/intake.py",
+    "tools/local_data/intake_crs.py",
+    "tools/local_data/intake_desk/desk.css",
+    "tools/local_data/intake_desk/desk.js",
+    "tools/local_data/intake_desk/index.html",
+    "tools/local_data/intake_profile.py",
+    "tools/local_data/intake_route.py",
+    "tools/local_data/intake_service.py"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/app/downloads/workspace.tsx": "sha256:c7a1257ba8bd4c25cc39a448b4a1b37c675bfd071ab5166b55c0ca170f0ef834",
+    "apps/site/source/app/intake-desk-client.ts": "sha256:1d6183ad7bc19c78f4d4742d5a6b97485fe8b1cb46abd97be358bc71e1041f1c",
+    "apps/site/source/app/intake-desk-summary.module.css": "sha256:ba4a40291a820e95f0cbda87b535cf452be58639f00c7d9a4903c53da42d4faf",
+    "apps/site/source/app/intake-desk-summary.tsx": "sha256:4047bcd281b92ee8f124c02cbdd6b52e2f9e0eda008dc40b5345e8ac4ad8ca73",
+    "apps/site/source/app/site-features.ts": "sha256:bbcd3e1fbcbfe2f3c65247240b7bc08b52aaaa3cf3897a692d2de6e326c108ed",
+    "apps/site/source/tests/download-workspace-ui.test.mjs": "sha256:9fd26f8dbae97b4558f503bfe1d0251b707bdd3721b75a3ef7bd32ecea2804de",
+    "apps/site/source/tests/intake-desk.test.mjs": "sha256:fe111c54f6fb64c0af7be334513b516595072debe2da705819d4ba265d75ab0c",
+    "docs/runbooks/README.md": "sha256:00b945e3869738b0ba9d36b14cfa5df505cf3ef6f40f12b73017ce60cff4e4a9",
+    "docs/runbooks/local-pc-data-store.md": "sha256:7d352c75c6f47553d1642653a19406c39414311af50153df9168df3a62fd9aca",
+    "docs/runbooks/raw-data-intake.md": "sha256:3db258dadd07f87e67c9091edeb8991c5dbefcd4f2e80f21b6e2d66ce2aae2dd",
+    "tests/local_data/intake_samples.py": "sha256:e052186f9463c5130cc7b0bd3d0988ed8856afe3b2dc8c0b034b85aa9455da5d",
+    "tests/local_data/test_intake.py": "sha256:d3b98c88644f9534fd375325cb49092344189f3d80e8a4e1a10f38847b507ac4",
+    "tools/local_data/README.md": "sha256:d02927658d56b4c10647360e8de35ed7bd0e27d4494e17d926d700caf3fdca7c",
+    "tools/local_data/catalogs/github-storage-budget.json": "sha256:de8d9819aa6db35f33e3dee9e264a7adbaf31f7f7678df928e54926752e9f4fa",
+    "tools/local_data/intake.py": "sha256:788d399bc50d4097c8edbc71c861c4f0f78694d60efab3a9bd17bdfb3144483d",
+    "tools/local_data/intake_crs.py": "sha256:7b4eca16465dc58e706e1653621715a33f6f6e0f918aa07063e21c868034fcf0",
+    "tools/local_data/intake_desk/desk.css": "sha256:da75f9f458028658eaa4c2e5b6f3f1ed218ffaa772de7edc73b9faad674e27c1",
+    "tools/local_data/intake_desk/desk.js": "sha256:64d95fae41c1a56cab0fa20dc4f53603a17886d4e0961ca3e5f648421eb342c2",
+    "tools/local_data/intake_desk/index.html": "sha256:9c934e53585405226990172414cf22da2f0858f1ca18c9f42f0b38a08e619d08",
+    "tools/local_data/intake_profile.py": "sha256:252c57ae3673bc3b0a2e5db3f5887473476e3c7a7a01fe67228c03f57bf867bf",
+    "tools/local_data/intake_route.py": "sha256:98a3cf4f354163f2a2c0351c8a33524d94ab1bf2ae572f54f5732f90c8e70eba",
+    "tools/local_data/intake_service.py": "sha256:76cd8e21d521be62222f24321e857fff4ab2a93613ecbd53dfcd5ba6f5d70bc4"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code agent",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@13848164fdb4a6a989ca0ee3ce4f841ace45f938",
+      "docs/doctrine/directory-rules.md",
+      "docs/runbooks/local-pc-data-store.md",
+      "docs/runbooks/github-data-baseline.md",
+      "tools/local_data/catalogs/github-baseline/baseline-manifest.json",
+      "tools/local_data/earth_engine_downloads.py",
+      "tools/local_data/library.py"
+    ]
+  },
+  "citations": [
+    {
+      "id": "IOGP EPSG Guidance Note 7-2, Lambert Conic Conformal (2SP) worked example",
+      "evidence_ref": "https://epsg.org/guidance-notes.html",
+      "validated": true
+    },
+    {
+      "id": "Snyder (1987) Map Projections: A Working Manual, USGS PP 1395, Albers worked example",
+      "evidence_ref": "https://doi.org/10.3133/pp1395",
+      "validated": true
+    },
+    {
+      "id": "GitHub release asset limits",
+      "evidence_ref": "https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases",
+      "validated": true
+    }
+  ],
+  "truth_labels": {
+    "apps/site/source/app/downloads/workspace.tsx": "CONFIRMED",
+    "apps/site/source/app/intake-desk-client.ts": "CONFIRMED",
+    "apps/site/source/app/intake-desk-summary.module.css": "CONFIRMED",
+    "apps/site/source/app/intake-desk-summary.tsx": "CONFIRMED",
+    "apps/site/source/app/site-features.ts": "CONFIRMED",
+    "apps/site/source/tests/download-workspace-ui.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/intake-desk.test.mjs": "CONFIRMED",
+    "docs/runbooks/README.md": "CONFIRMED",
+    "docs/runbooks/local-pc-data-store.md": "CONFIRMED",
+    "docs/runbooks/raw-data-intake.md": "CONFIRMED",
+    "tests/local_data/intake_samples.py": "CONFIRMED",
+    "tests/local_data/test_intake.py": "CONFIRMED",
+    "tools/local_data/README.md": "CONFIRMED",
+    "tools/local_data/catalogs/github-storage-budget.json": "CONFIRMED",
+    "tools/local_data/intake.py": "CONFIRMED",
+    "tools/local_data/intake_crs.py": "CONFIRMED",
+    "tools/local_data/intake_desk/desk.css": "CONFIRMED",
+    "tools/local_data/intake_desk/desk.js": "CONFIRMED",
+    "tools/local_data/intake_desk/index.html": "CONFIRMED",
+    "tools/local_data/intake_profile.py": "CONFIRMED",
+    "tools/local_data/intake_route.py": "CONFIRMED",
+    "tools/local_data/intake_service.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "make local-data-check equivalent (Python 3.11 and 3.13, no-network shim)",
+      "outcome": "PASS",
+      "reason": "309 passed, 3 skipped, 153 subtests; 26 new intake tests."
+    },
+    {
+      "gate": "Explorer Site lint, typecheck and npm test",
+      "outcome": "PASS",
+      "reason": "tsc clean; eslint 0 errors (45 pre-existing warnings); intake and workbench tests pass; full suite rerun after harness update."
+    },
+    {
+      "gate": "Headless Chromium drive of the Intake Desk",
+      "outcome": "PASS",
+      "reason": "Analyze, filter, map brush, detail drawer and apply exercised in light and dark schemes with no console errors."
+    },
+    {
+      "gate": "gap-scan, scaffold-inventory, docs meta-block, link-check and document-graph",
+      "outcome": "PASS",
+      "reason": "No new findings; changed-document links resolve."
+    },
+    {
+      "gate": "repository-topology",
+      "outcome": "FAIL",
+      "reason": "Pre-existing on main: identical 113 findings and one stale-baseline drift item; no finding involves this change."
+    }
+  ],
+  "policy_decisions": [],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-09T18:58:42Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Local analysis, routing recommendations, explicit WORK staging and metadata cards only. No schema under schemas/contracts/v1, source admission, upload, release, map activation, deployment or publication is claimed. The GitHub storage policy (100 GB limit, 20 GB reserved for code and interface) awaits owner review."
+}
