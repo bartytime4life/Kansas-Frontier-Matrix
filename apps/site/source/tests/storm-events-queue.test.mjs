@@ -22,6 +22,8 @@ const button = (tree, label) => findNode(tree, n => n.type === 'button' && text(
 
 test('the queue defaults to the latest ten years of event details and needs an explicit per-file maximum', async () => {
   const q = await harness(); let tree = q.render();
+  assert.match(text(tree), /File sizes are not captured by this catalog/);
+  assert.doesNotMatch(text(tree), /NCEI does not list exact sizes/);
   const select = h => q.h.exports.stormEventsSelection(records, ...h);
   assert.deepEqual(select([['details'], 2023, 2024]).map(a => a.id), ['publisher-noaa-storm-events-2023-details', 'publisher-noaa-storm-events-2024-details']);
   assert.deepEqual(select([['locations', 'details'], 2024, 2024]).map(a => a.id), ['publisher-noaa-storm-events-2024-details', 'publisher-noaa-storm-events-2024-locations'], 'kind order is fixed');
