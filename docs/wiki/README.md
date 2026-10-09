@@ -6,7 +6,7 @@ version: v0.2.0
 status: proposed; review-required; not-native-wiki-published
 owners: ["@bartytime4life"]
 created: 2026-08-07
-updated: 2026-08-14
+updated: 2026-10-09
 policy_label: public-documentation
 current_path: docs/wiki/README.md
 owning_root: docs/
@@ -95,6 +95,14 @@ Wiki pages use KFM's core truth labels:
 | `NEEDS VERIFICATION` | A concrete check remains before the claim can be relied upon |
 
 ## Page inventory
+
+### Portfolio
+
+| Source page | Purpose |
+|---|---|
+| [`Builder-Profile.md`](Builder-Profile.md) | Recruiter-facing capabilities and AI-assisted workflow |
+| [`Visual-Tour.md`](Visual-Tour.md) | Illustrated product journey, with source links and artwork labels |
+| [`Engineering-Case-Studies.md`](Engineering-Case-Studies.md) | Implementation decisions and commit-pinned regression evidence |
 
 ### Orientation
 

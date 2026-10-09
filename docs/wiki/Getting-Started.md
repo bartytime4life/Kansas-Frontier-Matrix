@@ -21,6 +21,8 @@ publication_effect: none until separately synchronized to the native GitHub Wiki
   <img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/main/docs/brand/logo/The-Kansas-Frontier-Matrix-Seal-transparent-cropped.png" alt="Kansas Frontier Matrix seal" width="150" />
 </p>
 
+
+> **Exploring the portfolio?** Take the [visual tour](Visual-Tour.md), meet [the builder](Builder-Profile.md), or inspect the [engineering case studies](Engineering-Case-Studies.md).
 # Getting Started
 
 <p align="center"><strong>Read the system · Prove your environment · Choose a bounded change · Preserve the trust membrane</strong></p>

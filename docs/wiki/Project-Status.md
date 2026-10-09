@@ -21,6 +21,8 @@ publication_effect: none until separately synchronized to the native GitHub Wiki
   <img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/main/docs/brand/logo/The-Kansas-Frontier-Matrix-Seal-transparent-cropped.png" alt="Kansas Frontier Matrix seal" width="150" />
 </p>
 
+
+> **October 9, 2026 portfolio checkpoint:** Start with the [current showcase](Home.md) and [source-pinned engineering cases](Engineering-Case-Studies.md). The technical inventory below retains its original dated scope; it is not a fresh audit of repository snapshot `459ffbe89292`.
 # Project Status
 
 <p align="center"><strong>An evidence-pinned view of what KFM currently contains, what has bounded executable proof, what remains held, and what has not been established.</strong></p>

@@ -1,0 +1,128 @@
+{
+  "receipt_id": "genrec-wiki-capability-showcase-20261009",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/wiki/Builder-Profile.md",
+    "docs/wiki/Engineering-Case-Studies.md",
+    "docs/wiki/Getting-Started.md",
+    "docs/wiki/Home.md",
+    "docs/wiki/Map-UI-and-AI.md",
+    "docs/wiki/Project-Status.md",
+    "docs/wiki/README.md",
+    "docs/wiki/Visual-Tour.md",
+    "docs/wiki/_Footer.md",
+    "docs/wiki/_Sidebar.md",
+    "tests/ci/test_sync_kfm_github_wiki_contract.py",
+    "tools/docs/wiki/README.md",
+    "tools/docs/wiki/sync_kfm_github_wiki.ps1"
+  ],
+  "artifact_hashes": {
+    "docs/wiki/Builder-Profile.md": "sha256:5f4d91f6dcad7500ca8b5cfe0ade4390edc3a397befd08e7de6e2a68ae1eacd2",
+    "docs/wiki/Engineering-Case-Studies.md": "sha256:b9c9c3ab165be4a790e61c42d554afc899ee0a12b9b52815c33473e7ce01a52d",
+    "docs/wiki/Getting-Started.md": "sha256:f42c8a6785ac504843b78fd33b2e575806e250f07936b9867329214ee2764629",
+    "docs/wiki/Home.md": "sha256:83166e459ebfa4430d5e189930af26a9a80b8eb25ea874782140d2733187e8a9",
+    "docs/wiki/Map-UI-and-AI.md": "sha256:d6e42db039c02427376665790699291af029aab3f9338aa1351b1e5a6a2982d0",
+    "docs/wiki/Project-Status.md": "sha256:f96584a1d5a2bf75f2de2817ee476d57fdcb21e34cbeb42466e7f9a93fecc257",
+    "docs/wiki/README.md": "sha256:adf01042ba746ea38d88fdb8ca344dc1825f3b1c5a7cfeb0fe5789f120aab795",
+    "docs/wiki/Visual-Tour.md": "sha256:ec21770b98213ba50850ee55e7984ab6ca74004bfd1f747aa2ee254464d7d413",
+    "docs/wiki/_Footer.md": "sha256:9b70ecef257cf69540510e559290c7a5c9de2987706eb15c04abe0eeb9e98023",
+    "docs/wiki/_Sidebar.md": "sha256:4758696c3db38fd8e8c5f10bcdf2c0d4bb508c85f384b1b404caf44da2708e79",
+    "tests/ci/test_sync_kfm_github_wiki_contract.py": "sha256:8bc8859651734518f94d2804d1d57a539adfd64cfdf3b7bb59804c707460c575",
+    "tools/docs/wiki/README.md": "sha256:dc28b1a2264b7389e0618e7f3820bdba99e60b7c148402d3a9d62f8e50613fdf",
+    "tools/docs/wiki/sync_kfm_github_wiki.ps1": "sha256:a3c4e63d2e06ec64d1475b9ea9618cdc5ef132f0f06735976e74b57fc45f4b72"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "session-reported; exact build unavailable"
+  },
+  "prompt_or_contract": "sha256:b738bfaa1137c2f56270f0dea9421d776acc272be9fceb753e55a05534ab6eb6",
+  "parameters": {
+    "temperature": null,
+    "seed": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "git:459ffbe892929cbe994add8665805549694740b6",
+      "wiki:665959160c0921e9cf531ad0c71c60e258d588ea",
+      "Sites metadata checked 2026-10-09: owner-only; no audience mutation",
+      "Notion project hub and Google Drive roadmap consulted as context; no private contents copied"
+    ]
+  },
+  "truth_labels": {
+    "docs/wiki/Builder-Profile.md": "PROPOSED",
+    "docs/wiki/Engineering-Case-Studies.md": "PROPOSED",
+    "docs/wiki/Getting-Started.md": "PROPOSED",
+    "docs/wiki/Home.md": "PROPOSED",
+    "docs/wiki/Map-UI-and-AI.md": "PROPOSED",
+    "docs/wiki/Project-Status.md": "PROPOSED",
+    "docs/wiki/README.md": "PROPOSED",
+    "docs/wiki/Visual-Tour.md": "PROPOSED",
+    "docs/wiki/_Footer.md": "PROPOSED",
+    "docs/wiki/_Sidebar.md": "PROPOSED",
+    "tests/ci/test_sync_kfm_github_wiki_contract.py": "PROPOSED",
+    "tools/docs/wiki/README.md": "PROPOSED",
+    "tools/docs/wiki/sync_kfm_github_wiki.ps1": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "wiki-sync-contract",
+      "outcome": "PASS",
+      "reason": "7 focused tests, including executable PowerShell navigation projection"
+    },
+    {
+      "gate": "wiki-local-links",
+      "outcome": "PASS",
+      "reason": "20 documents; 625 local targets"
+    },
+    {
+      "gate": "documentation-metadata",
+      "outcome": "PASS",
+      "reason": "21 documents, 2 metadata blocks, 0 failures; legacy KFM_WIKI_SOURCE comments retained"
+    },
+    {
+      "gate": "documentation-graph",
+      "outcome": "PASS",
+      "reason": "0 failures; 2 warnings: source-only README is not reachable from public Home"
+    },
+    {
+      "gate": "showcase-pinned-paths-and-structure",
+      "outcome": "PASS",
+      "reason": "31 evidence/artwork paths exist at the inspected commit; heading/fence/sidebar checks pass"
+    },
+    {
+      "gate": "public-safety-review",
+      "outcome": "PASS",
+      "reason": "Bounded manual claim review and credential/private-identifier scan; public source only in published pages; not a repository security audit"
+    },
+    {
+      "gate": "application-suite-and-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "No application changes. Linked test source and historical results are not rerun claims."
+    },
+    {
+      "gate": "native-publication-and-rendering",
+      "outcome": "SKIPPED",
+      "reason": "To be verified after source push; this receipt records prepublication authoring checks."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "wiki-source-contract",
+      "validated": true,
+      "evidence_ref": "git:459ffbe892929cbe994add8665805549694740b6:docs/wiki/README.md"
+    },
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "git:459ffbe892929cbe994add8665805549694740b6:docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "created_at": "2026-10-09T17:26:13.387492+00:00",
+  "emitter": "Codex",
+  "notes": "User explicitly requested updating the public native wiki as a recruiter showcase. Source retained on a focused branch for review; no main merge or independent review claimed. Native wiki publication is authorized documentation delivery, separate from dataset publication, Site deployment, and source admission. Existing extra native pages are preserved. Rollback uses a normal wiki revert and source PR revert; never force push."
+}

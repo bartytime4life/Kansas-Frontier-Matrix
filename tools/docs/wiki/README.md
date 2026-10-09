@@ -1,12 +1,12 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/tools-docs-wiki-readme
 title: tools/docs/wiki — Native GitHub Wiki Synchronization Helper
-type: readme; directory-readme; documentation-tooling-contract
+type: readme
 version: v0.1.0
 status: proposed; review-required; manual-operator-tool; derived-mirror-only
 owners: OWNER_TBD — Docs steward · Documentation tooling steward · Repository owner
 created: 2026-08-07
-updated: 2026-08-07
+updated: 2026-10-09
 policy_label: public-documentation-tooling; explicit-remote-write; dry-run-first
 current_path: tools/docs/wiki/README.md
 owning_root: tools/
@@ -65,6 +65,18 @@ The default source revision is the reviewed wiki-foundation merge:
 ```
 
 Change that input only to another immutable commit whose `docs/wiki/` source set has completed the intended repository review.
+
+## Native navigation projection
+
+The finite page set includes the Builder Profile, Visual Tour, and Engineering Case Studies.
+Source links retain `.md` filenames for repository browsing. At synchronization,
+`Convert-WikiLinks` maps exact allowlisted local Markdown and HTML links to the
+native Wiki's extensionless routes, retaining fragments. External URLs and unknown
+paths stay unchanged. The source-only README link points to the selected immutable
+repository commit. Existing extra native pages are preserved.
+
+Single-line Git outputs are captured as arrays before indexing so a commit SHA
+cannot be truncated to its first character by PowerShell scalar enumeration.
 
 ## Requirements
 
