@@ -106,7 +106,7 @@ async function threeHarness(initialProps={}){
   const renders=[],renderers=[],inspected=[],listeners={};let rayHits=[];
   const T={...Three,WebGLRenderer:class{
     constructor(){this.domElement={tabIndex:0,setAttribute(){},remove(){},addEventListener:(key,fn)=>listeners[key]=fn,removeEventListener:(key)=>delete listeners[key],getBoundingClientRect:()=>({left:0,top:0,width:800,height:440})};renderers.push(this);}
-    setPixelRatio(){}setSize(){}dispose(){this.disposed=true;}render(scene,camera){renders.push({scene,camera});}
+    setPixelRatio(){}setSize(){}dispose(){this.disposed=true;}forceContextLoss(){this.contextReleased=true;}render(scene,camera){renders.push({scene,camera});}
   },Raycaster:class{setFromCamera(){}intersectObjects(objects){return rayHits.filter(hit=>objects.includes(hit.object));}}};
   class OrbitControls{constructor(camera){this.camera=camera;this.target=new Three.Vector3();}update(){}addEventListener(){}removeEventListener(){}dispose(){}}
   const h=await componentHarness('app/subsurface-three.tsx',{'./subsurface-model':model,'./subsurface-materials':materials,'./subsurface-slice':slices,'./subsurface.module.css':{default:style},three:T,'three/addons/controls/OrbitControls.js':{OrbitControls}},
@@ -124,7 +124,7 @@ test('actual slice slider, appearance and whole-column toggle retain renderer an
   assert.match(text(h.tree),/25.00/);button(h.tree,'Show whole column').props.onClick();await h.render();assert.equal(meshes[0].material.clippingPlanes.length,0);assert.equal(h.renderers.length,1);
   const opacity=findNode(h.tree,n=>n.type==='input'&&n.props.max==='100');opacity.props.onChange({target:{value:'50'}});await h.render();assert.equal(meshes[0].material.opacity,.5);assert.deepEqual(camera.position,position);
   button(h.tree,'Separate layers').props.onClick();await h.render();button(h.tree,'Start 3D slice').props.onClick();await h.render();assert.deepEqual(camera.position,position,'slice toggle must not reset a separated camera');assert.equal(h.renderers.length,1);
-  h.h.dispose();assert.equal(h.renderers[0].disposed,true);assert.equal(Object.keys(h.listeners).length,0);
+  h.h.dispose();assert.equal(h.renderers[0].disposed,true);assert.equal(h.renderers[0].contextReleased,true);assert.equal(Object.keys(h.listeners).length,0);
 });
 test('clipped ray hits are skipped; original interval identity is inspected and cut guide is never pickable',async()=>{
   const h=await threeHarness();await h.render({depth:25});const {scene}=h.renders.at(-1),meshes=[],guides=[];scene.traverse(node=>{if(node.isMesh)meshes.push(node);if(node.isLineLoop)guides.push(node);});assert.equal(guides.length,1);assert.equal(guides[0].position.y,-2.5);assert.equal(guides[0].visible,true);

@@ -6,6 +6,7 @@ import { EARTH_ENGINE_CONTEXT_LAYERS, EARTH_ENGINE_SOURCE_YEARS, type EarthEngin
 import { EARTH_ENGINE_DISPLAY_RAMPS, earthEngineLegendGradient } from "./earth-engine-data";
 import { comparisonCameraOptions, comparisonPair, comparisonTileUrl, comparisonYears, readComparisonTile, synchronizeComparisonMaps, type ComparisonPair } from "./earth-engine-comparison";
 import { installMapProtocol, loadMapLibre, type Map as MapLibreMap } from "./maplibre-seam";
+import { webgl2Available } from "./webgl-support";
 import styles from "./earth-engine-comparison.module.css";
 
 type ReadyPair = Extract<ComparisonPair, { kind: "ready" }>;
@@ -33,7 +34,7 @@ function ComparisonMaps({ pair, mode, divider, onFallback }: { pair: ReadyPair; 
     };
     loadMapLibre().then(lib => {
       if (disposed || !hostA.current || !hostB.current) return;
-      if (!document.createElement("canvas").getContext("webgl2")) { onFallback(); return; }
+      if (!webgl2Available()) { onFallback(); return; }
       lib.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
       installMapProtocol(lib, protocol, async (params, abort) => {
         const match = new RegExp(`^${protocol}://([ab])/(\\d+)/(\\d+)/(\\d+)$`).exec(params.url);
