@@ -46,7 +46,7 @@ import { drawWindFlowCanvas, nearestWindFlowSample, windToCompass } from "./wind
 import type { WaterPathAnalysis } from "./water-path-analysis";
 import { drawWaterMotionCanvas } from "./water-motion-canvas";
 import { readProgressiveDownstreamGuide, waterReadingCue, type DownstreamGuide, type DownstreamPath } from "./water-flow-context";
-import { applyTerrainReliefStyle, applyTopographicRasterDepth } from "./terrain-relief-style";
+import { applyTopographicRasterDepth } from "./terrain-relief-style";
 import { TerrainRasterViewTracker, terrainRasterErrorTile, terrainRasterTileInView, type TerrainRasterId } from "./terrain-raster-status";
 import type { WindArrowFrame, WindArrowSample } from "./wind-arrow-data";
 import { loadWindFlowFrame } from "./wind-flow-client";
@@ -222,6 +222,8 @@ import {
   type TrustState,
 } from "./workspace-model";
 import { STRUCTURE_3D_SOURCE, TERRAIN_SOURCES, TERRARIUM_RENDER_MAX_ZOOM, terrainSourceFor, type TerrainProvider } from "./terrain-sources";
+import { DEFAULT_SCENE_EFFECTS, KANSAS_FLYOVER, applySelectionPulse, applyTerrainReliefStyle, curtainIsVisible, readSceneEffects, setCurtainShimmer, registerSceneEffects, sunSceneLight, syncBorderCurtain, syncBorderCurtainVisibility, writeSceneEffects, type SceneEffectSettings } from "./scene-effects";
+import { SceneEffectsControls } from "./scene-effects-controls";
 import { EXTERNAL_CONTEXT_SOURCES } from "./external-context-sources";
 import { DISASTER_COVERAGE_HOLDS, LAYER_WORKSPACES, filterOfficialSources, sourceMinimumZoom, sourceNeedsCloserView, type LayerWorkspace } from "./layer-workspaces";
 import {
@@ -1190,6 +1192,9 @@ export default function Home() {
   const structures3DRef = useRef(false);
   const gestureModeRef = useRef<"cooperative" | "direct">("cooperative");
   const sceneOrbitTimerRef = useRef<number | null>(null);
+  const sceneEffectsRef = useRef<SceneEffectSettings>(DEFAULT_SCENE_EFFECTS);
+  const flyoverCancelRef = useRef<(() => void) | null>(null);
+  const renderEfficientRef = useRef(false);
   const placeTourTimerRef = useRef<number | null>(null);
   const selectedRef = useRef<SelectedContext | null>(null);
   const measureModeRef = useRef<MeasureMode>(null);
@@ -1305,6 +1310,9 @@ export default function Home() {
   const [structures3DState, setStructures3DState] = useState<Structures3DState>("OFF");
   const [gestureMode, setGestureMode] = useState<"cooperative" | "direct">("cooperative");
   const [sceneOrbiting, setSceneOrbiting] = useState(false);
+  const [sceneEffects, setSceneEffects] = useState<SceneEffectSettings>(DEFAULT_SCENE_EFFECTS);
+  const [flyoverStopIndex, setFlyoverStopIndex] = useState<number | null>(null);
+  const [sunClock, setSunClock] = useState(() => Date.now());
   const [dynamicEffects, setDynamicEffects] = useState(true);
   const [windArrowState, setWindArrowState] = useState<"OFF" | "LOADING" | "READY" | "ERROR">("OFF");
   const [windArrowFrame, setWindArrowFrame] = useState<WindArrowFrame | null>(null);
@@ -1372,6 +1380,7 @@ export default function Home() {
     apply(); window.addEventListener("resize", apply);
     return () => { disposed = true; window.removeEventListener("resize", apply); };
   }, [renderQuality, runMapMutation, styleReady]);
+  useEffect(() => { renderEfficientRef.current = browserRenderBudget(renderQuality).efficient; }, [renderQuality]);
   const chooseRenderQuality = (value: RenderQuality) => { setRenderQuality(value); try { localStorage.setItem(QUALITY_STORAGE_KEY, value); } catch { /* The current session still uses the selected quality. */ } };
   const [locationCameraRedacted, setLocationCameraRedacted] = useState(false);
   const [selected, setSelected] = useState<SelectedContext | null>(null);
@@ -3881,6 +3890,14 @@ export default function Home() {
     if (notify) announce("3D orbit stopped at the current camera");
   }, [announce]);
 
+  const stopFlyover = useCallback((notify = true) => {
+    const cancel = flyoverCancelRef.current;
+    flyoverCancelRef.current = null;
+    cancel?.();
+    setFlyoverStopIndex(null);
+    if (notify && cancel) announce("Flyover stopped · you have the camera");
+  }, [announce]);
+
   const applyComparisonTime = useCallback((nextYear: number, label: "A" | "B") => {
     setPlaying(false);
     setTemporalMode("snapshot");
@@ -4475,6 +4492,7 @@ export default function Home() {
       setCameraHistoryIndex(0);
       setCameraHistoryLength(1);
       if (mapRef.current) applyProjectionNavigationLimits(mapRef.current, restoringGlobe ? "globe" : "mercator");
+      if (params.get("scene") === "elevation-3d") mapRef.current?.setMaxPitch(72);
       mapRef.current?.jumpTo(restoredView);
       const analysisTokens = params.get("aoi")?.split(",").map((token) => token.trim() === "" ? Number.NaN : Number(token));
       const restoredAnalysisArea = !restoredCameraRedaction && analysisTokens?.length === 4 && analysisTokens.every(Number.isFinite)
@@ -4740,7 +4758,7 @@ export default function Home() {
           pitch: initialView.pitch,
           pixelRatio: renderBudget.pixelRatio,
           maxTileCacheSize: renderBudget.tileCache,
-          maxPitch: 60,
+          maxPitch: scenePresetRef.current === "elevation-3d" ? 72 : 60,
           renderWorldCopies: false,
           minZoom: projectionRef.current === "globe" ? 0 : 4,
           maxZoom: 16,
@@ -4771,6 +4789,7 @@ export default function Home() {
           },
         });
         mapRef.current = map;
+        registerSceneEffects(map, sceneEffectsRef.current);
         const mapCanvas = map.getCanvas();
         mapCanvas.addEventListener("webglcontextlost", (event) => {
           event.preventDefault();
@@ -4885,6 +4904,8 @@ export default function Home() {
             setTerrainState(setTerrainPresentation(map, scenePresetRef.current === "elevation-3d", verticalExaggerationRef.current));
             setTerrainHeightOverlay(map, scenePresetRef.current === "elevation-3d" && topographicOverlayRef.current);
             setStructures3DState(setStructureExtrusions(map, structures3DRef.current));
+            styleStep = "SCENE_EFFECTS";
+            syncBorderCurtain(map, renderEfficientRef.current);
             styleStep = "SELECTION";
             const currentSelection = selectedRef.current;
             if (currentSelection) {
@@ -5191,6 +5212,10 @@ export default function Home() {
             if (!failed) setOfficialErrors(current => current[id] ? ({ ...current, [id]: undefined }) : current);
           }
         };
+        // Cheap per-frame check; layout only changes when crossing the pitch threshold.
+        map.on("pitch", () => {
+          try { syncBorderCurtainVisibility(map, renderEfficientRef.current); } catch { /* decorative only */ }
+        });
         map.on("movestart", () => {
           const center = map.getCenter();
           lastKnownGoodViewRef.current = { center: [center.lng, center.lat], zoom: map.getZoom(), bearing: map.getBearing(), pitch: map.getPitch() };
@@ -5881,6 +5906,93 @@ export default function Home() {
       map.setVerticalFieldOfView(fieldOfView);
     });
   }, [atmospherePreset, basemap, fieldOfView, lightAzimuth, runMapMutation, scenePreset, styleReady, terrainState]);
+
+  useEffect(() => {
+    const stored = readSceneEffects();
+    sceneEffectsRef.current = stored;
+    setSceneEffects(stored);
+  }, []);
+
+  useEffect(() => {
+    if (!sceneEffects.sunSync) return;
+    setSunClock(Date.now());
+    const timer = window.setInterval(() => setSunClock(Date.now()), 60_000);
+    return () => window.clearInterval(timer);
+  }, [sceneEffects.sunSync]);
+
+  // Scene effects are display treatment; re-apply them whenever the settings,
+  // style generation, projection, render budget or (when following it) the sun changes.
+  useEffect(() => {
+    sceneEffectsRef.current = sceneEffects;
+    const map = mapRef.current;
+    if (!map) return;
+    registerSceneEffects(map, sceneEffects);
+    if (!styleGenerationReadyRef.current) return;
+    runMapMutation("Scene-effect update", () => {
+      applySceneEnvironment(map, atmospherePresetRef.current, lightAzimuthRef.current);
+      if (scenePresetRef.current === "elevation-3d") {
+        applyTerrainReliefStyle(map, basemapRef.current === "topo" ? "topographic" : "general", atmospherePresetRef.current, lightAzimuthRef.current);
+      }
+      syncBorderCurtain(map, renderEfficientRef.current);
+      map.triggerRepaint();
+    });
+  }, [projection, renderQuality, runMapMutation, sceneEffects, styleReady, sunClock]);
+
+  // The curtain shimmer repaints at ~15 fps only while the curtain is on
+  // screen and ambient motion is allowed; otherwise it holds still.
+  useEffect(() => {
+    const map = mapRef.current;
+    const animate = runtime.kind === "ready" && sceneEffects.curtain && dynamicEffects && !reducedMotion
+      && !browserRenderBudget(renderQuality).efficient && projection !== "globe";
+    setCurtainShimmer(animate);
+    if (!map || !animate) return;
+    let frame = 0;
+    let last = 0;
+    const tick = (now: number) => {
+      if (!document.hidden && now - last >= 66) {
+        last = now;
+        try { if (curtainIsVisible(map)) map.triggerRepaint(); } catch { /* style swap in progress */ }
+      }
+      frame = window.requestAnimationFrame(tick);
+    };
+    frame = window.requestAnimationFrame(tick);
+    return () => { window.cancelAnimationFrame(frame); setCurtainShimmer(false); };
+  }, [dynamicEffects, projection, reducedMotion, renderQuality, runtime.kind, sceneEffects.curtain]);
+
+  // Terrain 3D may tilt further so the sky and horizon come into view.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    runMapMutation("Camera pitch range update", () => map.setMaxPitch(scenePreset === "elevation-3d" ? 72 : 60));
+  }, [runMapMutation, scenePreset, styleReady]);
+
+  // A short ping marks a newly selected point. It stops by itself so the map
+  // returns to idle, and is skipped for reduced motion or with ambient motion off.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !styleGenerationReadyRef.current || !selected || selected.geometry.geometry.type !== "Point" || reducedMotion || !dynamicEffects) return;
+    let frame = 0;
+    const started = performance.now();
+    const step = (now: number) => {
+      let running = false;
+      try { running = applySelectionPulse(map, now - started); } catch { return; }
+      if (running) frame = window.requestAnimationFrame(step);
+    };
+    frame = window.requestAnimationFrame(step);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      try { applySelectionPulse(map, Number.POSITIVE_INFINITY); } catch { /* style may be gone */ }
+    };
+  }, [dynamicEffects, reducedMotion, selected, styleReady]);
+
+  const updateSceneEffects = (next: SceneEffectSettings) => {
+    sceneEffectsRef.current = next;
+    setSceneEffects(next);
+    writeSceneEffects(next);
+    const changed = (Object.keys(next) as (keyof SceneEffectSettings)[]).find((key) => next[key] !== sceneEffects[key]);
+    const labels: Record<keyof SceneEffectSettings, string> = { cinematic: "Cinematic relief and sky", curtain: "Kansas light curtain", sunSync: "Real-sun lighting" };
+    if (changed) announce(`${labels[changed]} ${next[changed] ? "on" : "off"} · display only`);
+  };
 
   useEffect(() => {
     const map = mapRef.current;
@@ -6743,6 +6855,7 @@ export default function Home() {
     }
 
     stopSceneOrbit(false);
+    stopFlyover(false);
     const map = mapRef.current;
     // A second representation choice must cancel the first camera transition.
     // Otherwise MapLibre can finish an older ease after React has already
@@ -6937,6 +7050,58 @@ export default function Home() {
       setSceneOrbiting(false);
     }, 12_050);
     announce("Started a reversible 90° MapLibre camera orbit");
+  };
+
+  /** Camera-only tour of Kansas landscapes in Terrain 3D. Any direct map input
+   * hands the camera back; nothing is selected, filtered or recorded. */
+  const startFlyover = () => {
+    const map = mapRef.current;
+    if (!map) {
+      announce("The MapLibre camera is not ready yet");
+      return;
+    }
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      announce("Flyover is unavailable because reduced motion is enabled");
+      return;
+    }
+    stopFlyover(false);
+    if (scenePresetRef.current !== "elevation-3d" || projectionRef.current === "globe") activateMapRepresentation("terrain");
+    else stopSceneOrbit(false);
+    const container = map.getContainer();
+    const inputs = ["pointerdown", "wheel", "touchstart", "keydown"] as const;
+    let cancelled = false;
+    const interrupt = () => stopFlyover();
+    const cleanup = () => {
+      cancelled = true;
+      for (const type of inputs) container.removeEventListener(type, interrupt);
+      map.stop();
+    };
+    flyoverCancelRef.current = cleanup;
+    for (const type of inputs) container.addEventListener(type, interrupt, { passive: true });
+    const visit = (index: number) => {
+      if (cancelled) return;
+      const stop = KANSAS_FLYOVER[index];
+      if (!stop) {
+        flyoverCancelRef.current = null;
+        cleanup();
+        setFlyoverStopIndex(null);
+        announce("Flyover complete · Terrain 3D stays on");
+        return;
+      }
+      setFlyoverStopIndex(index);
+      replayingCameraHistoryRef.current = true;
+      map.flyTo({ center: [...stop.center] as [number, number], zoom: stop.zoom, pitch: stop.pitch, bearing: stop.bearing, duration: stop.flightMs, curve: 1.5, essential: true });
+      // Register after starting: flyTo stops any earlier animation synchronously.
+      map.once("moveend", () => {
+        if (cancelled) return;
+        if (!stop.dwellMs) { visit(index + 1); return; }
+        replayingCameraHistoryRef.current = true;
+        map.easeTo({ bearing: stop.bearing + stop.drift, duration: stop.dwellMs, easing: (progress) => progress, essential: true });
+        map.once("moveend", () => visit(index + 1));
+      });
+    };
+    announce("Flyover started · drag, scroll or press any key to take back the camera");
+    visit(0);
   };
 
   const setMapGestureMode = (mode: "cooperative" | "direct") => {
@@ -8791,6 +8956,7 @@ export default function Home() {
                 <details className="layer-scene-entry">
                   <summary>Terrain &amp; 3D appearance <span>{scenePreset === "elevation-3d" ? terrainState === "READY" ? "On" : terrainState === "ERROR" ? "Needs attention" : "Loading" : "Off"}</span></summary>
                   <LayerSceneControls active={scenePreset === "elevation-3d"} selectedLook={scenePreset !== "elevation-3d" ? null : structures3DEnabled ? "buildings" : basemap === "topo" ? "topographic" : basemap === "imagery" ? "natural" : null} terrainProvider={terrainProvider} state={terrainState} exaggeration={verticalExaggeration} lighting={atmospherePreset} azimuth={lightAzimuth} heightOverlay={topographicOverlay} onPreset={applyTerrainLook} onTerrainProvider={chooseTerrainProvider} on2D={() => activateMapRepresentation("2d")} onExaggeration={value => { verticalExaggerationRef.current = value; setVerticalExaggeration(value); }} onLighting={value => { atmospherePresetRef.current = value; setAtmospherePreset(value); }} onAzimuth={value => { lightAzimuthRef.current = value; setLightAzimuth(value); }} onHeight={toggleTopographicHeightOverlay} onRetry={retryTerrain} />
+                  <SceneEffectsControls settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
                 </details>
                 <div className="map-control-group"><header><strong>Rendering quality</strong><span>Applies to this map</span></header><RenderQualityControl value={renderQuality} onChange={chooseRenderQuality} /></div>
           <div className="basemap-control">
@@ -9013,7 +9179,15 @@ export default function Home() {
             </form>
             <footer className="qwen-panel-footer"><p>Qwen is interpretive only. It cannot establish evidence, policy, release, or publication authority.</p><button type="button" onClick={() => void copyQwenPrompt()}>Copy grounded prompt</button></footer>
           </section>}
-          <div id="map-canvas" ref={mapContainerRef} className="map-canvas" tabIndex={runtime.kind === "unsupported" ? -1 : 0} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." />
+          <div id="map-canvas" ref={mapContainerRef} className="map-canvas" data-projection={projection} data-cinematic={sceneEffects.cinematic && scenePreset === "elevation-3d" ? "3d" : undefined} tabIndex={runtime.kind === "unsupported" ? -1 : 0} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." />
+          {flyoverStopIndex !== null && KANSAS_FLYOVER[flyoverStopIndex] && <div className="flyover-caption" role="status" aria-live="polite">
+            <span>FLYOVER · {flyoverStopIndex + 1}/{KANSAS_FLYOVER.length}</span>
+            <strong>{KANSAS_FLYOVER[flyoverStopIndex].label}</strong>
+            <small>{KANSAS_FLYOVER[flyoverStopIndex].region}</small>
+            <button type="button" onClick={() => stopFlyover()}>Stop</button>
+          </div>}
+          {scenePreset === "elevation-3d" && flyoverStopIndex === null && !reducedMotion && runtime.kind === "ready" && !undergroundOpen
+            && <button type="button" className="flyover-launch" onClick={startFlyover}><span aria-hidden="true">✈</span> Fly over Kansas</button>}
           <div className="map-effects" aria-hidden="true">
             <canvas ref={windArrowCanvasRef} className="wind-arrow-canvas" aria-hidden="true" />
             <canvas ref={waterMotionCanvasRef} className="water-motion-canvas" style={{ opacity: officialOpacity["usgs-streamflow"] }} aria-hidden="true" />
@@ -9218,6 +9392,8 @@ export default function Home() {
                     ["globe", "Globe", "Globe projection"],
                   ] as const).map(([id, title, detail]) => <button key={id} type="button" aria-pressed={id === "terrain" ? scenePreset === "elevation-3d" : id === "globe" ? projection === "globe" : projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => activateMapRepresentation(id)}><span>{id === "terrain" ? "3D" : id === "globe" ? "◎" : "2D"}</span><strong>{title}</strong><small>{detail}</small></button>)}
                 </section>
+
+                <SceneEffectsControls settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
 
                 <section className="renderer-capability-list" aria-label="Renderer capability status">
                   <article data-state="ready"><span>WORKS NOW</span><strong>2D, globe, camera, measurement</strong><small>Direct MapLibre state changes</small></article>

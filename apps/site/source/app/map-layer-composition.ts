@@ -5,8 +5,9 @@ const registryIds = new Set(LAYER_REGISTRY.flatMap((record) => record.renderers.
 const daylightLayerId = "kfm-daylight-context-fill";
 const systemIds = new Set([
   "kfm-import-preview-fill", "kfm-import-preview-line", "kfm-import-preview-point",
-  "kfm-analysis-area-fill", "kfm-analysis-area-line", "kfm-selection-fill",
-  "kfm-selection-line", "kfm-selection-point", "kfm-measure-fill",
+  "kfm-analysis-area-fill", "kfm-analysis-area-line", "kfm-selection-glow",
+  "kfm-selection-halo", "kfm-selection-fill", "kfm-selection-line",
+  "kfm-selection-point", "kfm-selection-pulse", "kfm-measure-fill",
   "kfm-measure-line", "kfm-measure-points",
 ]);
 

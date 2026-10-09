@@ -1,0 +1,190 @@
+/*
+ * Cinematic MapLibre scene effects — presentation only.
+ * Loaded after explorer-theme.css. Remove this file's import from layout.tsx
+ * (and switch the effects off) to return to the previous look.
+ */
+
+/* ---------- Globe: deep-space backdrop behind the transparent canvas ---------- */
+.map-canvas[data-projection="globe"] {
+  background-color: #01040b;
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(92, 162, 236, .18) 0, rgba(46, 104, 180, .07) 28%, transparent 52%),
+    radial-gradient(1.2px 1.2px at 12% 18%, rgba(255, 255, 255, .9) 50%, transparent 100%),
+    radial-gradient(1px 1px at 63% 9%, rgba(214, 232, 255, .8) 50%, transparent 100%),
+    radial-gradient(1.4px 1.4px at 82% 71%, rgba(255, 244, 214, .85) 50%, transparent 100%),
+    radial-gradient(1px 1px at 31% 77%, rgba(255, 255, 255, .7) 50%, transparent 100%),
+    radial-gradient(1px 1px at 47% 41%, rgba(200, 220, 255, .55) 50%, transparent 100%),
+    radial-gradient(.8px .8px at 24% 56%, rgba(255, 255, 255, .6) 50%, transparent 100%),
+    radial-gradient(.8px .8px at 71% 33%, rgba(255, 255, 255, .55) 50%, transparent 100%),
+    radial-gradient(.9px .9px at 91% 12%, rgba(255, 255, 255, .6) 50%, transparent 100%),
+    radial-gradient(ellipse at 30% 110%, rgba(38, 64, 120, .45), transparent 60%),
+    radial-gradient(ellipse at 85% -10%, rgba(90, 50, 120, .28), transparent 55%);
+  background-size: 100% 100%, 211px 211px, 263px 263px, 337px 337px, 181px 181px, 149px 149px, 97px 97px, 127px 127px, 173px 173px, 100% 100%, 100% 100%;
+  background-repeat: no-repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, no-repeat, no-repeat;
+}
+
+/* ---------- Terrain 3D: gentle lens vignette for depth ---------- */
+.map-canvas[data-cinematic="3d"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 120% 95% at 50% 46%, transparent 58%, rgba(2, 8, 18, .34) 100%),
+    linear-gradient(180deg, rgba(2, 8, 18, .16), transparent 18%);
+}
+
+/* ---------- Flyover caption ---------- */
+.flyover-caption {
+  position: absolute;
+  left: 50%;
+  bottom: 74px;
+  z-index: 6;
+  transform: translateX(-50%);
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-areas: "kicker button" "label button" "region button";
+  column-gap: 18px;
+  align-items: center;
+  min-width: min(360px, calc(100% - 32px));
+  max-width: calc(100% - 32px);
+  padding: 12px 14px 12px 18px;
+  border: 1px solid rgba(224, 186, 109, .38);
+  border-radius: var(--kfm-radius-l, 18px);
+  background: linear-gradient(180deg, rgba(10, 24, 40, .82), rgba(5, 14, 26, .86));
+  backdrop-filter: var(--kfm-glass-blur, blur(18px));
+  box-shadow: var(--kfm-shadow-2), 0 0 32px rgba(224, 186, 109, .12);
+  color: var(--ink, #eef3f8);
+  animation: flyover-caption-in 420ms var(--kfm-ease, ease-out);
+}
+.flyover-caption span { grid-area: kicker; font-size: 10.5px; font-weight: 800; letter-spacing: .16em; color: var(--gold, #e0ba6d); }
+.flyover-caption strong { grid-area: label; font: 600 22px/1.15 Georgia, "Times New Roman", serif; letter-spacing: .01em; }
+.flyover-caption small { grid-area: region; color: var(--muted, #aab9c9); font-size: 12.5px; }
+.flyover-caption button {
+  grid-area: button;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--line-strong, rgba(196, 216, 236, .22));
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .04);
+  color: var(--ink, #eef3f8);
+  font-weight: 700;
+  cursor: pointer;
+}
+.flyover-caption button:hover { border-color: rgba(224, 186, 109, .6); color: var(--gold-soft, #f4dfae); }
+@keyframes flyover-caption-in { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@media (prefers-reduced-motion: reduce) { .flyover-caption { animation: none; } }
+/* Phones: clear the attribution strip and the Qwen launcher. */
+@media (max-width: 760px) { .flyover-caption { bottom: 150px; } .flyover-caption strong { font-size: 18px; } }
+
+/* ---------- Scene effects controls ---------- */
+.scene-effects-controls {
+  display: grid;
+  gap: 10px;
+  margin: 10px 0;
+  padding: 12px;
+  border: 1px solid rgba(224, 186, 109, .24);
+  border-radius: var(--kfm-radius-m, 12px);
+  background:
+    radial-gradient(420px 160px at 100% 0%, rgba(224, 186, 109, .09), transparent 70%),
+    linear-gradient(180deg, rgba(14, 31, 49, .7), rgba(8, 20, 33, .7));
+}
+.scene-effects-controls > header { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.scene-effects-controls > header span { font-size: 10.5px; font-weight: 800; letter-spacing: .16em; color: var(--gold, #e0ba6d); }
+.scene-effects-controls > header strong { font-size: 14px; color: var(--ink, #eef3f8); }
+.scene-effects-switches { display: grid; gap: 6px; }
+.scene-effects-switches label {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: start;
+  padding: 8px 10px;
+  border-radius: var(--kfm-radius-s, 8px);
+  background: rgba(255, 255, 255, .025);
+  cursor: pointer;
+}
+.scene-effects-switches label:hover { background: rgba(255, 255, 255, .05); }
+.scene-effects-switches label[data-held] small { color: var(--orange, #e1a06b); }
+.scene-effects-switches span { display: grid; gap: 2px; }
+.scene-effects-switches strong { font-size: 13px; color: var(--ink, #eef3f8); }
+.scene-effects-switches small { font-size: 12px; color: var(--muted, #aab9c9); }
+.scene-effects-switches input[type="checkbox"] {
+  appearance: none;
+  position: relative;
+  width: 34px;
+  height: 20px;
+  margin: 1px 0 0;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong, rgba(196, 216, 236, .22));
+  background: rgba(255, 255, 255, .06);
+  cursor: pointer;
+  transition: background var(--kfm-fast, 160ms) var(--kfm-ease, ease), border-color var(--kfm-fast, 160ms);
+}
+.scene-effects-switches input[type="checkbox"]::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--muted, #aab9c9);
+  transition: transform var(--kfm-fast, 160ms) var(--kfm-ease, ease), background var(--kfm-fast, 160ms);
+}
+.scene-effects-switches input[type="checkbox"]:checked { background: rgba(224, 186, 109, .32); border-color: rgba(224, 186, 109, .7); }
+.scene-effects-switches input[type="checkbox"]:checked::after { transform: translateX(14px); background: var(--gold-soft, #f4dfae); }
+.scene-effects-switches input[type="checkbox"]:focus-visible { outline: 2px solid var(--gold, #e0ba6d); outline-offset: 2px; }
+.scene-effects-flyover {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 10px;
+  align-items: center;
+  text-align: left;
+  min-height: 52px;
+  padding: 8px 14px;
+  border: 1px solid rgba(224, 186, 109, .55);
+  border-radius: var(--kfm-radius-m, 12px);
+  background: var(--kfm-accent);
+  color: #1b1408;
+  font-weight: 800;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(224, 186, 109, .18);
+}
+.scene-effects-flyover > span { grid-row: 1 / 3; font-size: 18px; }
+.scene-effects-flyover small { font-size: 11.5px; font-weight: 600; opacity: .78; }
+.scene-effects-flyover[aria-pressed="true"] { background: rgba(255, 255, 255, .06); color: var(--ink, #eef3f8); box-shadow: none; }
+.scene-effects-flyover:disabled { opacity: .5; cursor: not-allowed; }
+.scene-effects-flyover:focus-visible { outline: 2px solid var(--gold-soft, #f4dfae); outline-offset: 2px; }
+.scene-effects-controls > p { margin: 0; font-size: 11.5px; color: var(--dim, #8698ab); }
+
+/* ---------- Flyover launcher (Terrain 3D only) ---------- */
+.flyover-launch {
+  position: absolute;
+  top: 18px;
+  right: 72px;
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid rgba(224, 186, 109, .55);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(14, 31, 49, .86), rgba(8, 20, 33, .9));
+  backdrop-filter: var(--kfm-glass-blur, blur(18px));
+  box-shadow: var(--kfm-shadow-1), 0 0 24px rgba(224, 186, 109, .14);
+  color: var(--gold-soft, #f4dfae);
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: .02em;
+  cursor: pointer;
+  transition: border-color var(--kfm-fast, 160ms) var(--kfm-ease, ease), box-shadow var(--kfm-fast, 160ms);
+}
+.flyover-launch:hover { border-color: var(--gold, #e0ba6d); box-shadow: var(--kfm-shadow-1), 0 0 30px rgba(224, 186, 109, .28); }
+.flyover-launch:focus-visible { outline: 2px solid var(--gold-soft, #f4dfae); outline-offset: 2px; }
+.flyover-launch span { font-size: 15px; }
+/* Phones: the top-centre gap between the zoom rail and map controls. */
+@media (max-width: 760px) { .flyover-launch { top: 14px; right: auto; left: 50%; transform: translateX(-50%); min-height: 38px; padding: 0 14px; } }

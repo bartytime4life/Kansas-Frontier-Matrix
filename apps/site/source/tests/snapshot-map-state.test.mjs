@@ -28,6 +28,7 @@ async function harness() {
     "./map-runtime": { BASEMAPS: { standard: { style: "vector" }, imagery: { style: "imagery" } }, applyRegistryState() {}, updateAnalysisAreaSource() {}, updateSelectionSource() {},
       setTerrainPresentation: (...args) => { terrain.push(args.slice(1)); return terrainState; } },
     "./terrain-sources": { terrainSourceFor: provider => ({ id: provider }) },
+    "./scene-effects": { readSceneEffects: () => ({ cinematic: true, curtain: true, sunSync: false }), registerSceneEffects() {} },
     "./temporal-sweep": { isFeatureAvailableForTemporalQuery: () => true },
     "./map-performance": { browserRenderBudget: () => ({ pixelRatio: 1, tileCache: 48 }) },
   }, { document: { createElement: () => ({ getContext: () => ({}) }) }, ResizeObserver: class { observe() {} disconnect() {} } });

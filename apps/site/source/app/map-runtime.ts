@@ -10,10 +10,10 @@ import { externalContextSource } from "./external-context-sources";
 import { LAYER_REGISTRY, type EvidenceState } from "./explorer-data";
 import { balanceMapFills, composeMapLayers, requestFillOpacity } from "./map-layer-composition";
 import { ACTIVE_TERRAIN_SOURCE, type TerrainSourceRecord } from "./terrain-sources";
-import { terrainHillshadePaint } from "./terrain-relief-style";
 import type { TemporalSweepQuery } from "./temporal-sweep";
 import { buildDaylightGeometry } from "./daylight-layer";
 import { ORIENTATION_SOURCE_ID, orientationLayers, orientationSource } from "./kansas-orientation";
+import { CINEMATIC_LIGHT_COLOR, CINEMATIC_LIGHT_INTENSITY, CINEMATIC_SKIES, GLOBE_ATMOSPHERE_BLEND, SELECTION_PULSE_LAYER_ID, effectiveSceneLight, reliefPaintFor, sceneEffectsFor } from "./scene-effects";
 
 export type BasemapKey = "standard" | "imagery" | "kansas-aerial" | "midnight" | "prairie" | "streets" | "topo";
 export type AtmospherePreset = "night" | "dusk" | "clear";
@@ -171,9 +171,12 @@ const SYSTEM_LAYER_IDS = [
   "kfm-measure-fill",
   "kfm-measure-line",
   "kfm-measure-points",
+  "kfm-selection-glow",
+  "kfm-selection-halo",
   "kfm-selection-fill",
   "kfm-selection-line",
   "kfm-selection-point",
+  SELECTION_PULSE_LAYER_ID,
 ];
 
 const addSystemLayers = (map: MapLibreMap) => {
@@ -203,6 +206,13 @@ const addSystemLayers = (map: MapLibreMap) => {
   if (!map.getSource("kfm-selection")) {
     map.addSource("kfm-selection", { type: "geojson", data: emptyCollection() });
   }
+  // Soft glow beneath the selection reads as emphasis without changing its geometry.
+  if (!map.getLayer("kfm-selection-glow")) {
+    map.addLayer({ id: "kfm-selection-glow", type: "line", source: "kfm-selection", filter: ["in", ["geometry-type"], ["literal", ["LineString", "MultiLineString", "Polygon", "MultiPolygon"]]], layout: { "line-join": "round", "line-cap": "round" }, paint: { "line-color": "#ffd98a", "line-width": 16, "line-blur": 10, "line-opacity": 0.5 } });
+  }
+  if (!map.getLayer("kfm-selection-halo")) {
+    map.addLayer({ id: "kfm-selection-halo", type: "circle", source: "kfm-selection", filter: ["==", ["geometry-type"], "Point"], paint: { "circle-color": "#ffd98a", "circle-radius": 26, "circle-blur": 0.85, "circle-opacity": 0.42 } });
+  }
   if (!map.getLayer("kfm-selection-fill")) {
     map.addLayer({ id: "kfm-selection-fill", type: "fill", source: "kfm-selection", filter: ["==", ["geometry-type"], "Polygon"], paint: { "fill-color": "#f4dfae", "fill-opacity": 0.18, "fill-outline-color": "#fff4ce" } });
   }
@@ -211,6 +221,10 @@ const addSystemLayers = (map: MapLibreMap) => {
   }
   if (!map.getLayer("kfm-selection-point")) {
     map.addLayer({ id: "kfm-selection-point", type: "circle", source: "kfm-selection", filter: ["==", ["geometry-type"], "Point"], paint: { "circle-color": "#fff4ce", "circle-radius": 11, "circle-opacity": 0.95, "circle-stroke-color": "#061416", "circle-stroke-width": 4 } });
+  }
+  // Expanding ping ring, animated briefly after a selection (see scene-effects).
+  if (!map.getLayer(SELECTION_PULSE_LAYER_ID)) {
+    map.addLayer({ id: SELECTION_PULSE_LAYER_ID, type: "circle", source: "kfm-selection", filter: ["==", ["geometry-type"], "Point"], paint: { "circle-color": "rgba(0, 0, 0, 0)", "circle-radius": 12, "circle-stroke-color": "#fff4ce", "circle-stroke-width": 2.5, "circle-stroke-opacity": 0 } });
   }
 
   if (!map.getSource("kfm-measure")) {
@@ -393,7 +407,7 @@ export const setTerrainPresentation = (
         source: TERRAIN_HILLSHADE_SOURCE_ID,
         layout: { visibility: "visible" },
         paint: {
-          ...terrainHillshadePaint("general", "clear", 235),
+          ...reliefPaintFor(map, "general", "clear", 235),
           "hillshade-illumination-anchor": "map",
         },
       }, overlay);
@@ -659,13 +673,24 @@ const SCENE_SKIES = Object.freeze({
 }) satisfies Record<AtmospherePreset, Parameters<MapLibreMap["setSky"]>[0]>;
 
 export const applySceneEnvironment = (map: MapLibreMap, preset: AtmospherePreset, lightAzimuth: number) => {
-  const safeAzimuth = ((Number.isFinite(lightAzimuth) ? lightAzimuth : 210) % 360 + 360) % 360;
-  map.setSky(SCENE_SKIES[preset]);
+  const scene = effectiveSceneLight(map, preset, lightAzimuth);
+  if (!sceneEffectsFor(map).cinematic) {
+    map.setSky(SCENE_SKIES[scene.preset]);
+    map.setLight({
+      anchor: "map",
+      position: [1.45, scene.azimuth, scene.source === "manual" ? (scene.preset === "night" ? 50 : 38) : 90 - scene.altitude],
+      color: scene.preset === "night" ? "#b9d5d8" : scene.preset === "dusk" ? "#ffd2a2" : "#fff8df",
+      intensity: scene.preset === "night" ? 0.42 : scene.preset === "dusk" ? 0.68 : 0.58,
+    });
+    return;
+  }
+  map.setSky({ ...CINEMATIC_SKIES[scene.preset], "atmosphere-blend": GLOBE_ATMOSPHERE_BLEND as unknown as number });
   map.setLight({
     anchor: "map",
-    position: [1.45, safeAzimuth, preset === "night" ? 50 : 38],
-    color: preset === "night" ? "#b9d5d8" : preset === "dusk" ? "#ffd2a2" : "#fff8df",
-    intensity: preset === "night" ? 0.42 : preset === "dusk" ? 0.68 : 0.58,
+    // MapLibre's polar angle is measured from straight overhead.
+    position: [1.5, scene.azimuth, Math.max(15, Math.min(84, 90 - scene.altitude))],
+    color: CINEMATIC_LIGHT_COLOR[scene.preset],
+    intensity: CINEMATIC_LIGHT_INTENSITY[scene.preset],
   });
 };
 
