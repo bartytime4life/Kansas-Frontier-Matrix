@@ -80,5 +80,7 @@ test('signed-in account still requires project verification and selected stored 
  let tree=render();assert.match(JSON.stringify(tree),/Signed in · owner@example.test/);assert.match(JSON.stringify(tree),/4 stored files/);
  assert.equal(findNode(tree,n=>n.type==='button'&&n.props.children==='Download 2023 to KFM').props.disabled,true);
  findNode(tree,n=>n.props?.['aria-label']==='Choose Earth Engine project').props.onChange({target:{value:'test-project'}});tree=render();await findNode(tree,n=>n.type==='button'&&n.props.children==='Check download access').props.onClick();await settle();assert.equal(calls[0].path,'/auth/check');assert.equal(calls[0].body.project,'test-project');
- state.status={...state.status,configured:true,project:'test-project',authentication:'connected'};tree=render();assert.equal(findNode(tree,n=>n.type==='button'&&n.props.children==='Download 2023 to KFM').props.disabled,false);h.dispose();
+ state.status={...state.status,configured:true,project:'test-project',authentication:'connected'};tree=render();assert.equal(findNode(tree,n=>n.type==='button'&&n.props.children==='Download 2023 to KFM').props.disabled,false);
+ findNode(tree,n=>n.props?.['aria-label']==='Earth Engine project ID').props.onChange({target:{value:'another-project'}});
+ state.status={...state.status};tree=render();assert.equal(findNode(tree,n=>n.props?.['aria-label']==='Earth Engine project ID').props.value,'another-project','status polling preserves a project being edited');h.dispose();
 });

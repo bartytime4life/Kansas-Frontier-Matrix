@@ -20,7 +20,13 @@ function StandaloneEarthEngineDownloads(props: Props) {
 export function EarthEngineDownloadForm({ dataset, year, invalid, downloads, blockedByOtherDownload = false, onViewActivity, compact = false, shared = false }: Props & { downloads: LocalDownloads; shared?: boolean }) {
   const { status, connection } = downloads;
   const [notice, setNotice] = useState(""), [busy, setBusy] = useState<"auth" | "check" | "start" | null>(null);
-  const [limit, setLimit] = useState(8_000_000_000), [project, setProject] = useState(""), [authUrl, setAuthUrl] = useState("");
+  const [limit, setLimit] = useState(8_000_000_000), [projectDraft, setProject] = useState<string | null>(null), [authUrl, setAuthUrl] = useState("");
+  const project = projectDraft ?? status?.project ?? "";
+  const [lastSignedIn, setLastSignedIn] = useState(Boolean(status?.signedIn));
+  if (lastSignedIn !== Boolean(status?.signedIn)) {
+    setLastSignedIn(Boolean(status?.signedIn));
+    if (status?.signedIn) { setAuthUrl(""); setNotice(""); }
+  }
   const alive = useRef(true), pending = useRef<{ key: string; id: string } | null>(null), operating = useRef(false), selection = useRef(0);
   useEffect(() => { alive.current = true; return () => { alive.current = false; }; }, []);
   const connected = connection === "connected", selectedYear = year ?? null;
@@ -32,8 +38,6 @@ export function EarthEngineDownloadForm({ dataset, year, invalid, downloads, blo
   const stored = downloads.library?.entries.filter(entry => entry.lane === "raw" && entry.dataset === dataset.id && entry.period === String(year ?? "fixed")) ?? [];
   const storedFiles = stored.reduce((sum, entry) => sum + entry.files, 0), storedBytes = stored.reduce((sum, entry) => sum + entry.bytes, 0);
   const authPending = ["waiting", "validating"].includes(status?.authentication ?? "");
-  useEffect(() => { if (status?.project) setProject(status.project); }, [status?.project]);
-  useEffect(() => { if (status?.signedIn) { setAuthUrl(""); setNotice(""); } }, [status?.signedIn]);
   const blocked = blockedByOtherDownload || Boolean(status?.active) || downloads.starting;
   const disabledReason = !connected ? "Connect the local service to begin." : invalid ? "Choose a valid source year above." : !status?.configured ? status?.signedIn ? "Choose a project and check download access." : "Sign in with Google to authorize Earth Engine downloads." : blocked ? "A background download is running or starting. View Activity before starting another." : "This selection starts only when you press Download.";
   async function signIn() {
