@@ -22,17 +22,19 @@ related:
 This is a one-time owner-authorized KFM synchronization. It excludes MEGALODON,
 plugin configuration, unfinished AI/installer work, dataset activation and
 recurring synchronization. Source was delivered as [draft PR #4959](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4959).
-The owner independently merged it as `afabac19c602dffd09869310c47807bda6c514c5`
-and then merged PR #4958 while this synchronization was in progress. The assistant
-performed neither merge. This report is delivered through a separate draft
-follow-up [PR #4960](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4960)
-on `codex/kfm-synchronization-records-20261009`.
+The owner independently merged it as `afabac19c602dffd09869310c47807bda6c514c5`,
+then merged PR #4958 and the draft report [PR #4960](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4960)
+while synchronization was in progress. The assistant performed none of these
+merges. PR #4960 merged report commit `c9f14b775cbe6de6ae7040c881bdaa103ac289f8`
+as main `41f599e290897a0255b1c71256aec2f654559251`. Final navigation, access-readback
+and merge-status corrections are delivered for review on
+`codex/kfm-synchronization-records-20261009`.
 
 ## Source identities and reconciliation
 
 | Surface | Verified identity and disposition |
 |---|---|
-| GitHub `main` and primary PC checkout | `e9860fc7c939a17d023f828f4f4683546406732d`; primary clean checkout first fast-forwarded 43 commits to `d07557107863`, then to this refreshed main |
+| GitHub `main` and primary PC checkout | `41f599e290897a0255b1c71256aec2f654559251`; primary clean checkout first fast-forwarded 43 commits to `d07557107863`, then through `e9860fc7c939` to this documentation-only successor |
 | Repository source delivery | Source delivery `8011ad127fae9b6f176ccf3022481bf70fc51fd4` is merged through PR #4959. Current application bytes include PR #4958 at main `e9860fc7c939a17d023f828f4f4683546406732d` |
 | Prior hosted Site | v186, source `83c81618b407675206ad880c8f9a607e36c23e6f`; existing project `appgprj_6aa0b1c41bc08191bfd86003920f1631` |
 | Prior installed Explorer | `c06c4716fe7ab1cc252db5ab940ef282dfacdfc8`, retained directory `KFM-Explorer-Site-download-workspace-20261008-r2` |
@@ -152,13 +154,15 @@ after the concurrent owner merges. Destination readback confirms the entire prio
 Notion body and all 1,564 prior Chronicle paragraphs are preserved. Chronicle
 revision-guarded writes retain its existing native elements and add one native
 date (43 date elements and one rich link after writing). Fresh post-record GitHub
-and Site reads confirm main `e9860fc7c939`, draft/open PR #4960 and owner-private
-Site v188. Fresh GitHub readback confirms [PR #4941](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4941)
+and Site reads confirm main `41f599e29089`, owner-merged PR #4960 and owner-private
+Site v188. Both records were corrected in place after that final owner merge.
+Fresh GitHub readback confirms [PR #4941](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4941)
 merged as `3b39b948919b51433db369b816e3ea748c54df1f`; its earlier draft/open labels
 are historical.
 
 The primary checkout stays on GitHub main; the final local/hosted application
-source bytes match that refreshed main. The report follow-up remains a draft. AI worktree `8f5a` and installer worktree `998d` retain
+source bytes match that refreshed main. Final report corrections remain pending
+owner review. AI worktree `8f5a` and installer worktree `998d` retain
 their independent unfinished work. `MIRROR_REVIEW_REQUIRED`, source-admission,
 activation and release decisions remain unchanged. Fresh comparison evidence is
 pending owner review and does not replace an approved receipt.
