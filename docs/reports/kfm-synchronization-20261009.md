@@ -99,8 +99,8 @@ no new transfer was started.
 deployed successfully first as v187 and then as v188, saved version
 `appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_80c9c1c90194819198afa8503c2e1904`.
 Fresh readback confirms the exact source commit, `DB`/`BUCKET` declarations,
-unchanged owner-only access policy revision 1, no viewers/groups, and anonymous
-HTTP 403. The owner's browser loads the new download interface and library/activity
+unchanged owner-only access policy revision 1, no viewers/groups, and denied
+anonymous requests (403 at the initial check; 401 at final v188 readback). The owner's browser loads the new download interface and library/activity
 views. Hosted `DB` retains its table inventory and empty submission list. The
 archive carries the selected migration and the deployment succeeded; the available
 Sites database tools expose tables/rows but not index metadata or migration-ledger
@@ -121,6 +121,7 @@ restarted for this installation; companion services are outside the change.
 | Standalone cache tests | Eight Python tests pass; canonical repository implementation is unchanged |
 | `make site-check` | Build/lint/types/766 tests passed; its smoke step correctly refused occupied port 4173. The identical smoke step was replayed at 4186 and passed 57 assertions across 47 routes; nine provider-only routes remain outside smoke coverage |
 | Workflow security | Pass |
+| Documentation | Three changed files pass local-link checks and have valid metadata; metadata and graph checks report zero failures. Existing nested-metadata and historical graph warnings remain |
 | Repository topology | Pass: zero invariants/new drift, 113 retained baseline warnings |
 | Governance parity | `LANE_OUTCOME_MISMATCH` for `root-registry`; reproduced on unchanged main at `d07557107863`, not introduced by synchronization |
 | Governed routes on copied state | Water/knowledge remain ABSTAIN with `NO_APPROVED_SNAPSHOT` / `NO_APPROVED_KNOWLEDGE`; Crop-CASMA remains `NO_APPROVED_SOIL_PACKAGE` |
