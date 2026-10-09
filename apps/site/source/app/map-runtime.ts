@@ -13,6 +13,7 @@ import { ACTIVE_TERRAIN_SOURCE, type TerrainSourceRecord } from "./terrain-sourc
 import { terrainHillshadePaint } from "./terrain-relief-style";
 import type { TemporalSweepQuery } from "./temporal-sweep";
 import { buildDaylightGeometry } from "./daylight-layer";
+import { ORIENTATION_SOURCE_ID, orientationLayers, orientationSource } from "./kansas-orientation";
 
 export type BasemapKey = "standard" | "imagery" | "kansas-aerial" | "midnight" | "prairie" | "streets" | "topo";
 export type AtmospherePreset = "night" | "dusk" | "clear";
@@ -78,22 +79,28 @@ export const BASEMAPS: Record<BasemapKey, { title: string; note: string; style: 
   },
   midnight: {
     title: "Midnight navy",
-    note: "High-contrast local style",
+    note: "High-contrast local style · simplified Kansas orientation, works offline",
     style: {
       version: 8,
       name: "KFM Midnight",
-      sources: {},
-      layers: [{ id: "kfm-background", type: "background", paint: { "background-color": "#07171a" } }],
+      sources: { [ORIENTATION_SOURCE_ID]: orientationSource() },
+      layers: [
+        { id: "kfm-background", type: "background", paint: { "background-color": "#081624" } },
+        ...orientationLayers({ land: "#0e2236", outline: "#d9b45f", river: "#5fa8c9", graticule: "#1b3550" }),
+      ],
     },
   },
   prairie: {
     title: "Prairie dusk",
-    note: "Low-glare earthen local style",
+    note: "Low-glare earthen local style · simplified Kansas orientation, works offline",
     style: {
       version: 8,
       name: "KFM Prairie Dusk",
-      sources: {},
-      layers: [{ id: "kfm-background", type: "background", paint: { "background-color": "#17231f" } }],
+      sources: { [ORIENTATION_SOURCE_ID]: orientationSource() },
+      layers: [
+        { id: "kfm-background", type: "background", paint: { "background-color": "#17231f" } },
+        ...orientationLayers({ land: "#22312a", outline: "#c9a466", river: "#7fb3b0", graticule: "#2b3d35" }),
+      ],
     },
   },
   streets: {

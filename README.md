@@ -172,7 +172,7 @@ The KFM Explorer is a MapLibre-based web app (source in [`apps/site/`](apps/site
   </tr>
 </table>
 
-**Also in the Explorer:** a searchable layer catalog, a priority context deck, pinned place dossiers, an Earth Engine catalog with downloadable Kansas recipes, a private data-contribution and steward-review desk, 2D / Terrain 3D / Globe representations with natural and topographic relief and mapped 3D buildings, and an opt-in **local** Qwen companion that reads only a bounded context and never becomes a source of evidence. See the [feature matrix](docs/encyclopedia/chapters/09-master-feature-matrix.md) and the [feature, connection and action map](apps/site/source/docs/SITE_FEATURE_CONNECTION_ACTION_MAP.md).
+**Also in the Explorer:** a first-visit quick start (reopen it with the **?** button), a Kansas orientation outline that still draws when the online basemap is unreachable, a searchable layer catalog, a priority context deck, pinned place dossiers, an Earth Engine catalog with downloadable Kansas recipes, a private data-contribution and steward-review desk, 2D / Terrain 3D / Globe representations with natural and topographic relief and mapped 3D buildings, and an opt-in **local** Qwen companion that reads only a bounded context and never becomes a source of evidence. See the [feature matrix](docs/encyclopedia/chapters/09-master-feature-matrix.md) and the [feature, connection and action map](apps/site/source/docs/SITE_FEATURE_CONNECTION_ACTION_MAP.md).
 
 ### One place, many layers
 
@@ -201,7 +201,7 @@ Focus Mode is a **bounded proof** today: it runs against site-local demonstratio
 
 ## Things to try
 
-Run the Explorer locally ([two commands below](#try-it-yourself)) and try one of these. Labels in **bold** are the controls you'll see.
+Run the Explorer locally ([two commands below](#try-it-yourself)) and try one of these — or press the **?** button for the built-in quick start. Labels in **bold** are the controls you'll see.
 
 <details>
 <summary>⛈️ <b>Replay a storm, hour by hour</b></summary>

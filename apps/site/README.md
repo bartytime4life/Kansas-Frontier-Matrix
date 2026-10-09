@@ -14,6 +14,8 @@
 Drawn from [`source/app/site-features.ts`](source/app/site-features.ts). Status is the code's own declaration — not hosted acceptance, source admission or release. Artwork is illustrative; see [README artwork](../../docs/brand/readme/README.md).
 </details>
 
+> **Repository interface refresh — 2026-10-08:** `source/` now carries a sleeker theme, a first-visit quick start, offline Kansas orientation for the local basemaps and simpler map controls. This change is in the repository only; the owner-private Site continues to run its last deployed version until the same source is saved and deployed through Sites. [Refresh notes, validation and rollback](source/docs/explorer-interface-refresh.md).
+
 <a id="current-site-checkpoint"></a>
 
 > **Current Site checkpoint — v173 / 2026-10-07:** the [Kansas selector receipt](../../data/receipts/generated/site-v173-kansas-selector-20261007.json) records private deployment of source `e2e7ba5de69f14ac9d91587a8680b8fd40a4d4d4`. On fresh Underground entry, the 2D selector fits Kansas after its compact layout is ready. The statewide view is a navigation starting point; it does not apply a cutaway or imply statewide data coverage. A deliberate local selection still uses **Show this area**. Switching Underground tools keeps the moved map. Production build, TypeScript and the 17 focused slice/entry tests pass; browser visual acceptance remains unverified.
