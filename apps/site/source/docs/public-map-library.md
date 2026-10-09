@@ -186,3 +186,25 @@ the failing connection, follow redirects or substitute an unverified endpoint.
 Focused offline tests cover default verifying TLS, a single failed request with
 no insecure retry, retained unavailable metadata, subsequent checked zero/point
 results, and denial of search/request URLs as metadata-transport destinations.
+
+
+### No-login Kansas catalog preference — 2026-10-09
+
+Satellite & climate defaults to public publisher files. Google sign-in is an
+optional Earth Engine export path. The initial public collection contains 20
+USDA NASS national CDL ZIPs (2008–2025, including the 2024/2025 10 m and
+resampled 30 m alternatives) and 44 CHIRPS v2 annual GeoTIFFs (1981–2024).
+Every offered URL was found in the publisher's listing and checked anonymously
+with a bounded byte-range read: file signature and total byte length matched.
+No full datasets were fetched as part of curation. The exact URLs are pinned in
+the local operator; redirect/query variants and arbitrary future URLs remain
+denied. Publisher originals include Kansas but are national/global files, not
+Kansas clips or byte-identical Earth Engine recipe outputs. Size and scope are
+visible before an explicit download. They use the existing local transfer,
+cancellation, history and library paths without Google credentials. The source
+coverage remains a curated subset; geology refreshes retain its separate check
+date and never mark it as a complete live Earth Engine catalog.
+
+Public sources: [USDA files](https://www.nass.usda.gov/Research_and_Science/Cropland/Release/),
+[CHIRPS annual files](https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/),
+and [Earth Engine catalog](https://developers.google.com/earth-engine/datasets).

@@ -3,8 +3,8 @@ import { readBoundedJson } from "./bounded-json";
 export const LOCAL_DOWNLOAD_ORIGIN = "http://127.0.0.1:8769";
 export const automaticLocalConnection = (origin: string) => origin === "http://127.0.0.1:4173";
 export type DownloadJob = { id: string; selection: { dataset: string; year: number | null; maxBytes: number }; state: "queued" | "preparing" | "downloading" | "downloaded" | "failed" | "cancelled" | "interrupted"; bytes: number; completed: number; total: number; destination: string; reason?: string; mapReady: false; createdAt: string };
-export type DownloadStatus = { schema: "kfm-ee-download-control/v1"; configured: boolean; project?: string | null; authentication?: string; destination: string; sessionToken: string; active: string | null; jobs: DownloadJob[] };
-export type LibraryEntry = { id: string; label: string; lane: "raw" | "work" | "quarantine" | "processed"; files: number; bytes: number; role: "stored-candidate" | "archive-context" | "review-material" };
+export type DownloadStatus = { schema: "kfm-ee-download-control/v1"; configured: boolean; project?: string | null; authentication?: string; signedIn?: boolean; accountEmail?: string | null; projects?: string[]; projectDiscovery?: "idle" | "complete" | "limited" | "unavailable"; authError?: string | null; destination: string; sessionToken: string; active: string | null; jobs: DownloadJob[] };
+export type LibraryEntry = { id: string; label: string; lane: "raw" | "work" | "quarantine" | "processed"; files: number; bytes: number; role: "stored-candidate" | "archive-context" | "review-material"; dataset?: string; period?: string };
 export type LocalLibrary = { schema: "kfm-local-library/v1"; state: "idle" | "scanning" | "complete" | "failed"; scannedFiles: number; generatedAt: string | null; entries: LibraryEntry[]; totalBytes: number; totalFiles: number; error: string | null };
 const object = (v: unknown): v is Record<string, unknown> => Boolean(v && typeof v === "object" && !Array.isArray(v));
 const text = (v: unknown, max = 1000): v is string => typeof v === "string" && v.length <= max && !/[\x00-\x1f\x7f]/.test(v);
@@ -16,6 +16,11 @@ export function parseDownloadStatus(value: unknown): DownloadStatus | null {
     || typeof value.sessionToken !== "string" || !/^[-_A-Za-z0-9]{43}$/.test(value.sessionToken)
     || !Array.isArray(value.jobs) || value.jobs.length > 100 || value.project !== undefined && value.project !== null && !text(value.project, 100)
     || value.authentication !== undefined && !text(value.authentication, 40)) return null;
+  if (value.signedIn !== undefined && typeof value.signedIn !== "boolean"
+    || value.accountEmail !== undefined && value.accountEmail !== null && !text(value.accountEmail, 254)
+    || value.projects !== undefined && (!Array.isArray(value.projects) || value.projects.length > 100 || !value.projects.every(p => typeof p === "string" && /^[a-z][a-z0-9-]{4,61}[a-z0-9]$/.test(p)))
+    || value.projectDiscovery !== undefined && !["idle", "complete", "limited", "unavailable"].includes(String(value.projectDiscovery))
+    || value.authError !== undefined && value.authError !== null && !["GOOGLE_SIGN_IN_FAILED", "GOOGLE_SIGN_IN_REQUIRED", "PROJECT_ACCESS_REQUIRED"].includes(String(value.authError))) return null;
   const ids = new Set<string>();
   for (const job of value.jobs) {
     if (!object(job) || typeof job.id !== "string" || !/^[a-f0-9]{32}$/.test(job.id) || ids.has(job.id) || !object(job.selection)
@@ -39,6 +44,7 @@ export function parseLocalLibrary(value: unknown): LocalLibrary | null {
   for (const entry of value.entries) {
     if (!object(entry) || typeof entry.id !== "string" || !/^[a-f0-9]{64}$/.test(entry.id) || ids.has(entry.id) || !text(entry.label, 300) || !entry.label
       || !["raw", "work", "quarantine", "processed"].includes(String(entry.lane)) || !["stored-candidate", "archive-context", "review-material"].includes(String(entry.role)) || !count(entry.files) || !count(entry.bytes)) return null;
+    if (entry.dataset !== undefined && (!text(entry.dataset, 100) || !/^ee-[a-z0-9-]+$/.test(entry.dataset)) || entry.period !== undefined && (!text(entry.period, 10) || !/^(?:[0-9]{4}|fixed)$/.test(entry.period))) return null;
     ids.add(entry.id); files += entry.files; bytes += entry.bytes;
   }
   if (!Number.isSafeInteger(files) || !Number.isSafeInteger(bytes) || files !== value.totalFiles || bytes !== value.totalBytes
@@ -47,7 +53,7 @@ export function parseLocalLibrary(value: unknown): LocalLibrary | null {
   return value as unknown as LocalLibrary;
 }
 
-export type DownloadEndpoint = "/status" | "/library" | "/library/refresh" | "/downloads" | "/cancel" | "/auth/start";
+export type DownloadEndpoint = "/status" | "/library" | "/library/refresh" | "/downloads" | "/cancel" | "/auth/start" | "/auth/check";
 /** The complete response, including a stalled body, shares one deadline and caller cancellation. */
 export async function localDownloadRequest(path: DownloadEndpoint, signal: AbortSignal, payload?: unknown, sessionToken?: string) {
   const combined = AbortSignal.any([signal, AbortSignal.timeout(path === "/downloads" ? 10_000 : 8_000)]);

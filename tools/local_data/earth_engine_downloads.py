@@ -61,6 +61,8 @@ class Downloads:
                 job.update(state="interrupted",reason="WORKER_RESTARTED",updatedAt=utc_now())
                 save_state(p,job)
             self.jobs[p.stem]=job
+        if (self.work/"credentials.json").is_file() or (Path.home()/".config/earthengine/credentials").is_file():
+            self.signin.check({})
 
     def configuration(self):
         config=self.work/"config.json"
@@ -71,10 +73,10 @@ class Downloads:
         credentials=self.work/"credentials.json"
         if not credentials.exists(): credentials=Path.home()/".config/earthengine/credentials"
         available=importlib.util.find_spec("ee") is not None
-        return {"schema":"kfm-ee-download-control/v1","configured":bool(project and credentials.is_file() and available),
+        return {"schema":"kfm-ee-download-control/v1","configured":False,
                 "project":project,"dependencyAvailable":available,"credentialsPresent":credentials.is_file(),
                 "destination":str(self.raw),"sessionToken":self.token,"active":self.active,
-                "authentication":self.signin.status(),"datasets":list(SPECS),"limitBytes":MAX_BYTES,"jobs":[dict(j) for j in list(self.jobs.values())[-100:]]}
+                **self.signin.snapshot(),"datasets":list(SPECS),"limitBytes":MAX_BYTES,"jobs":[dict(j) for j in list(self.jobs.values())[-100:]]}
 
     def update(self,identifier,**fields):
         with self.lock:
@@ -179,7 +181,7 @@ def handler(manager):
                     with manager.lock: claimed=manager.signin.claim(parsed.query)
                 except ValueError:return self.answer(403,{"error":"INVALID_OAUTH_RESPONSE"})
                 if claimed:threading.Thread(target=manager.signin.finish,args=(claimed,),daemon=True).start()
-                body=b"<!doctype html><title>KFM Google sign-in</title><h1>Return to KFM</h1><p>KFM is checking your Earth Engine project. The download panel will show the connection result.</p>"
+                body=b"<!doctype html><title>KFM Google sign-in</title><h1>Return to KFM</h1><p>KFM is checking your Google account. Select an Earth Engine project in the download panel after sign-in. The download panel will show the connection result.</p>"
                 self.send_response(200);self.send_header("Content-Type","text/html; charset=utf-8");self.send_header("Content-Length",str(len(body)));self.send_header("Cache-Control","no-store");self.send_header("Referrer-Policy","no-referrer");self.send_header("Content-Security-Policy","default-src 'none'; frame-ancestors 'none'");self.end_headers();self.wfile.write(body)
                 return
             if not self.authorized(): return self.answer(403,{"error":"ORIGIN_REJECTED"})
@@ -204,10 +206,10 @@ def handler(manager):
                 elif self.path=="/public-maps/refresh":
                     if not isinstance(value,dict) or value: raise ValueError("EMPTY_REFRESH_REQUIRED")
                     result=manager.public_maps.refresh()
-                elif self.path=="/auth/start":
+                elif self.path in {"/auth/start", "/auth/check"}:
                     with manager.lock:
                         if manager.active:raise ValueError("DOWNLOAD_ALREADY_RUNNING")
-                        result=manager.signin.start(value)
+                        result=manager.signin.start(value) if self.path=="/auth/start" else manager.signin.check(value)
                 elif self.path=="/downloads": result=manager.start(value)
                 elif self.path=="/library/refresh":
                     if not isinstance(value,dict) or value: raise ValueError("EMPTY_REFRESH_REQUIRED")

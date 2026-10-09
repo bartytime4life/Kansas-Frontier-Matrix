@@ -58,7 +58,7 @@ test('download discovery excludes metadata, archive requests, services, unverifi
   assert.deepEqual(model.filterPublicMaps(records, { ...all, text: 'metadata' }), []);
   assert.deepEqual(records, original, 'discovery filtering does not delete stored metadata or assets');
   const eligible = model.filterPublicMaps(seed.records, all);
-  assert.equal(eligible.length, 8);
+  assert.equal(eligible.length, 72);
   assert.ok(eligible.every(row => row.assets.some(model.canDownloadPublicMap)));
   assert.ok(!eligible.some(row => row.sourceId === 'osmre-nmmr'));
 });

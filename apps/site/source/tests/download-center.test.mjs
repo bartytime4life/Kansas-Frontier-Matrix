@@ -194,10 +194,23 @@ test('library view pages stored collections and keeps unknown totals separate fr
     './downloads/workspace.module.css': css,
   });
   const render = () => { const tree = h.render(h.exports.default, { downloads: state, reviewed }); h.commit(); return tree; };
-  let tree = render(); const list = () => findNode(tree, node => node.type === 'ul' && node.props.className === 'collections');
+  let tree = render(); const list = () => findNode(tree, node => node.type === 'ul' && node.props['aria-label'] === 'Stored collections');
   assert.equal(nodes(list(), node => node.type === 'li').length, 10); assert.match(JSON.stringify(tree), /No approved display periods/);
   const pages = findNode(tree, node => node.props?.['aria-label'] === 'Collection pages'); findNode(pages, node => node.type === 'button' && node.props.children === 'Next').props.onClick(); tree = render(); assert.match(JSON.stringify(list()), /Source 11/);
-  findNode(tree, node => node.type === 'input' && node.props.type === 'search').props.onChange({ target: { value: 'Source 40' } }); tree = render(); assert.equal(nodes(list(), node => node.type === 'li').length, 1); assert.match(JSON.stringify(list()), /Source 40/);
+  findNode(tree, node => node.type === 'input' && node.props['aria-label'] === 'Find a collection').props.onChange({ target: { value: 'Source 40' } }); tree = render(); assert.equal(nodes(list(), node => node.type === 'li').length, 1); assert.match(JSON.stringify(list()), /Source 40/);
   state = { ...state, library: library() }; tree = render(); assert.match(JSON.stringify(tree), /Unknown/); assert.match(JSON.stringify(tree), /first scan finishes/); const progress = findNode(tree, node => node.type === 'progress'); assert.equal(progress.props.value, undefined);
   state = { ...state, library: { ...snapshot(), state: 'failed', error: 'LIBRARY_SCAN_CHANGED' } }; tree = render(); assert.match(JSON.stringify(tree), /Previous completed scan/); assert.match(JSON.stringify(tree), /82.0 kB/); h.dispose();
+});
+
+test('Google account metadata is bounded and never substitutes for configured project access',()=>{
+ const value={...status(),configured:false,signedIn:true,accountEmail:'owner@example.test',projects:['test-project'],projectDiscovery:'complete',authError:null};
+ assert.equal(client.parseDownloadStatus(value).configured,false);
+ for(const extra of [{projects:['../bad']},{projects:Array(101).fill('test-project')},{accountEmail:'bad\nemail'},{signedIn:'yes'},{authError:'provider secret'}]) assert.equal(client.parseDownloadStatus({...value,...extra}),null);
+});
+
+test('My library shows completed and partial transfer names, sizes and storage locations',async()=>{
+ const state={status:status(),library:snapshot(),connection:'connected',libraryError:null,refreshLibrary(){}};
+ const h=await componentHarness('app/download-library.tsx',{'next/link':{default:'a'},'./earth-engine-context':{earthEngineSetYear:()=>2024},'./earth-engine-data':{EARTH_ENGINE_DATASETS:[]},'./local-download-client':client,'./downloads/workspace.module.css':css});
+ const items=[{key:'map:one',kind:'public-map',title:'Kansas geology file',state:'downloaded',bytes:1200,createdAt:'2026-10-09T12:00:00Z',job:{destination:'/private/download/one'}},{key:'map:two',kind:'public-map',title:'Partial imagery',state:'cancelled',bytes:400,createdAt:'2026-10-09T12:00:00Z',job:{destination:'/private/download/two'}},{key:'map:empty',kind:'public-map',title:'Empty failure',state:'failed',bytes:0,createdAt:'2026-10-09T12:00:00Z',job:{}}];
+ const tree=h.render(h.exports.default,{downloads:state,reviewed:{manifests:[],loading:false},items});h.commit();const text=JSON.stringify(tree);assert.match(text,/Kansas geology file/);assert.match(text,/Download completed/);assert.match(text,/Partial download/);assert.match(text,/\/private\/download\/one/);assert.doesNotMatch(text,/Empty failure/);h.dispose();
 });
