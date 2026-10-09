@@ -3,7 +3,7 @@ doc_id: kfm://doc/reports/kansas-history-library-20261009
 title: Kansas history library delivery
 type: report
 version: v1.0-draft
-status: privately deployed; locally installed; repository review pending
+status: feature merged; privately deployed; locally installed; reader correction review pending
 owners: ["@bartytime4life via CODEOWNERS"]
 created: 2026-10-09
 updated: 2026-10-09
@@ -56,12 +56,12 @@ numbers. Neither narrative nor private captures become governed map facts.
 |---|---|
 | Repository baseline | `cee21f885c60f55b3d6ec4582d8c0a650a407981` |
 | Authoritative starting Site | v197, source `a35bad43ca68f1eaee6f33176b8d992d05eab326` |
-| Delivered standalone source | `c8564ac15675c508079825bf8dcd84e049e82198` |
+| Delivered standalone source | `d40828815b8af85e60a798b3af83083b9dd5b5ed` |
 | Existing Site project | `appgprj_6aa0b1c41bc08191bfd86003920f1631` |
-| Published owner-private version | **v198**, `appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_2fa3b801a0488191bdf124939c5b0bb5` |
-| Successful deployment | `appgdep_6ac934a974d88191918c3fd6d891dfb1` |
-| Stored whole-application archive | `sha256:08037e638bad039d55367af1ec6842518f3ea557b9a3e279aca7fb72b4aabe0d`, 50,708,480 bytes, 409 files |
-| Local Site installation | `/home/bartytime/Projects/KFM-Explorer-Site-history-20261009` |
+| Published owner-private version | **v199**, `appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_c227789ba398819185d1a99de527a231` |
+| Successful deployment | `appgdep_6ac9374e4f8881919a802f292229aa40` |
+| Stored whole-application archive | `sha256:bbac12c17ab6b8b9ea9d764bdae441950a2ce81c59b64efd5c95bfd86f61518f`, 50,708,480 bytes, 409 files |
+| Local Site installation | `/home/bartytime/Projects/KFM-Explorer-Site-history-final-20261009` |
 | Local companion source | `/home/bartytime/Projects/KFM-History-Downloads-20261009/source` |
 
 All **16 changed Site paths** match the standalone source byte for byte. This
@@ -98,13 +98,15 @@ receipt. Its 2014 scan timestamp is not asserted as its publication year.
 Installation checks preserved all 82 prior job JSON hashes, 164 original-file
 and sidecar size/mtime records, 17 SQLite application-table digests, and 18,392
 blob size/mtime records. Size/mtime preservation is not a full byte rehash. The
-two new book captures were added after these comparisons. Existing application
-stores, originals and unfinished worktrees were retained.
+two new book captures were added after these comparisons. The final reader
+correction was installed into a fresh folder and preserved all 84 job hashes,
+168 original/sidecar size/mtime records, 17 application-table digests and 18,392
+blob size/mtime records. Existing stores and unfinished worktrees were retained.
 
 ## Validation and review boundaries
 
-- Production build and TypeScript pass.
-- All **808 Site tests** pass.
+- Production build and TypeScript pass. Lint has zero errors and 45 inherited warnings.
+- All **809 Site tests** pass.
 - **285 local-data tests plus 153 subtests** pass; three optional-reader tests
   are skipped. The isolated test environment supplied the existing RFC3339
   format-checker dependency; repository dependencies were not changed.
@@ -116,7 +118,10 @@ stores, originals and unfinished worktrees were retained.
   **zero reportable findings**, complete coverage of the 19 feature files,
   and an independent architecture review. Frozen snapshot digest:
   `codex-security-snapshot/v1:sha256:cd42a76f15d6ece044737e7a79c65866ec371e3306aff52877aa9d1f22132ff4`.
-  This delivery narrative was added after sealing; feature bytes are unchanged.
+  This delivery narrative was added after sealing. A subsequent two-file
+  supplement reviews the reader retry/lint correction and its callback test
+  with zero findings; final native snapshot digest:
+  `62b0c0292b7dd3f0e4d6236e28cb2ab5dae92f49a45762859817c72e66de36f3`.
   A report citation should end at `public-map-catalog.json:2851`, not 2854;
   the reviewed content and conclusion are unaffected.
 
@@ -124,3 +129,18 @@ GitHub review/checks and merge are separate from the installed and privately
 published result. The existing `MIRROR_REVIEW_REQUIRED` selector and receipts
 are unchanged. No source activation, independent mirror approval, data admission,
 public release or new redistribution permission is asserted by this report.
+
+The first GitHub run identified two reader lint errors, corrected in the final
+source above: retry clears errors in its event handler, and memoized values use
+separate declarations. A regression exercises the real retry callback after
+a failed response. Hosted `local-data-check` and `validate-docs-meta-block` pass.
+The initial `run-validators` failure has exactly the same uppercase-path
+fingerprint at baseline `cee21f885c`, main `1900750516`, and feature `bbfdd8c087`.
+It concerns pre-existing `docs/wiki/Builder-Profile.md`,
+`docs/wiki/Engineering-Case-Studies.md`, and `docs/wiki/Visual-Tour.md`; no waiver
+or rename is made here. The water check reports `MIRROR_REVIEW_REQUIRED`.
+The owner merged feature PR
+[#4982](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4982)
+as `13848164fdb4a6a989ca0ee3ce4f841ace45f938` while the correction was being
+verified. This task performed no merge. The reader correction is submitted
+separately from that merged feature; current GitHub checks remain authoritative.
