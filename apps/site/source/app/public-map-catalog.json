@@ -8,7 +8,8 @@
     "https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL",
     "https://www.nass.usda.gov/Research_and_Science/Cropland/Release/",
     "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
-    "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/"
+    "https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/",
+    "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/"
   ],
   "coverage": [
     {
@@ -59,6 +60,17 @@
       "checkedAt": "2026-10-09",
       "discoveredCount": 0,
       "seedReferenceCount": 44
+    },
+    {
+      "sourceId": "publisher-noaa-storm-events",
+      "title": "NOAA NCEI Storm Events \u00b7 national CSV files including Kansas",
+      "state": "unavailable",
+      "recordCount": 0,
+      "expectedCount": null,
+      "reason": "File names change when NCEI reissues a year, so they are read from the NCEI Storm Events CSV directory when the catalog is refreshed on this computer. No files are listed until then.",
+      "checkedAt": null,
+      "discoveredCount": 0,
+      "seedReferenceCount": 0
     }
   ],
   "records": [

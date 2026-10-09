@@ -368,6 +368,49 @@ class DownloadTests(unittest.TestCase):
         self.assertEqual((Path(job["destination"]) / "test.pdf").stat().st_size, size)
 
 
+class StormEventsDownloadTests(unittest.TestCase):
+    """A discovered Storm Events year downloads through the same bounded transfer."""
+
+    def setUp(self):
+        from tools.local_data import public_map_catalog
+        self.name = "StormEvents_details-ftp_v1.0_d2024_c20250401.csv.gz"
+        self.payload = b"\x1f\x8b\x08\x00" + b"synthetic gzip member" * 8
+        record = public_map_catalog.storm_events_record(2024, {"details": self.name}, "2026-10-09")
+        seed = catalog()
+        seed["records"].append(record)
+        seed["coverage"].append({"sourceId": record["sourceId"], "state": "complete", "recordCount": 1, "discoveredCount": 1,
+                                 "seedReferenceCount": 0, "expectedCount": 1, "reason": "Synthetic listing"})
+        self.temp = tempfile.TemporaryDirectory()
+        self.root = Path(self.temp.name) / "store"
+        init_store(self.root)
+        self.seed = patch.object(downloads.public_map_catalog, "load_seed", return_value=seed)
+        self.seed.start()
+        self.manager = downloads.PublicMapDownloads(self.root)
+        self.url = record["assets"][0]["url"]
+
+    def tearDown(self):
+        self.manager.close()
+        self.seed.stop()
+        self.temp.cleanup()
+
+    def run_storm(self, payload):
+        with patch.object(downloads.threading, "Thread"):
+            job = self.manager.start({"requestId": "b" * 32, "assetId": "publisher-noaa-storm-events-2024-details", "maxBytes": 4096})
+        with patch.object(downloads, "request_asset", return_value=Response(payload, url=self.url)):
+            self.manager.run(job["id"])
+        return self.manager.jobs[job["id"]]
+
+    def test_gzip_original_is_stored_under_its_ncei_name(self):
+        job = self.run_storm(self.payload)
+        self.assertEqual(job["state"], "downloaded")
+        self.assertEqual((Path(job["destination"]) / self.name).read_bytes(), self.payload)
+        self.assertEqual(job["sha256"], hashlib.sha256(self.payload).hexdigest())
+
+    def test_html_error_page_in_place_of_gzip_fails_closed(self):
+        job = self.run_storm(b"<!DOCTYPE html><title>Not Found</title>")
+        self.assertEqual((job["state"], job["reason"]), ("failed", "ASSET_FORMAT_MISMATCH"))
+
+
 if __name__ == "__main__":
     unittest.main()
 
@@ -385,3 +428,19 @@ def test_public_climate_downloads_are_exact_pinned_files_and_do_not_require_goog
         assert 'not clipped' in row['description']
         with pytest.raises(ValueError): download.validate_url(a['url']+'?redirect=https://evil.example')
     with pytest.raises(ValueError): download.validate_url('https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2099_30m_cdls.zip')
+
+
+def test_storm_events_files_are_admitted_only_by_exact_ncei_name_and_gzip_signature():
+    import pytest
+    from tools.local_data import public_map_downloads as download
+    base = "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/"
+    url = base + "StormEvents_fatalities-ftp_v1.0_d2024_c20250401.csv.gz"
+    assert download.validate_url(url) == url
+    for denied in (base + "Storm-Data-Bulk-csv-Format.pdf", base + "legacy/StormEvents_details-ftp_v1.0_d1999_c20250401.csv.gz",
+                   url + "?x=1", base + "StormEvents_details-ftp_v1.0_d2024_c20250401.csv",
+                   "https://www.ncei.noaa.gov/pub/data/other/StormEvents_details-ftp_v1.0_d2024_c20250401.csv.gz"):
+        with pytest.raises(ValueError):
+            download.validate_url(denied)
+    download._magic("GZIP", b"\x1f\x8b\x08\x00\x00\x00\x00\x00")
+    with pytest.raises(ValueError, match="ASSET_FORMAT_MISMATCH"):
+        download._magic("GZIP", b"<!DOCTYP")

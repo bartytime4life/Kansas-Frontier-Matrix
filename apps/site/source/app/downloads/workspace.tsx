@@ -40,7 +40,7 @@ export default function DownloadsWorkspace() {
       <div className={styles.workbench}>
         <div className={styles.mainColumn}>
           <div id="download-find" hidden={view !== "find"}>
-            <nav className={styles.sourceNav} aria-label="Source categories"><button type="button" aria-pressed={source === "maps"} onClick={() => setSource("maps")}><span>01</span><strong>Maps &amp; geology</strong><small>Free direct files</small></button><button type="button" aria-pressed={source === "satellite"} onClick={() => setSource("satellite")}><span>02</span><strong>Satellite &amp; climate</strong><small>Public files · no login</small></button></nav>
+            <nav className={styles.sourceNav} aria-label="Source categories"><button type="button" aria-pressed={source === "maps"} onClick={() => setSource("maps")}><span>01</span><strong>Maps &amp; geology</strong><small>Free direct files</small></button><button type="button" aria-pressed={source === "satellite"} onClick={() => setSource("satellite")}><span>02</span><strong>Satellite, climate &amp; storms</strong><small>Public files · no login</small></button></nav>
             <div hidden={source !== "maps"}><PublicMapBrowser downloads={maps} onConnect={connect} blockedByOtherDownload={Boolean(local.status?.active) || local.starting} onViewActivity={openActivity} /></div>
             <div hidden={source !== "satellite"}><PublicMapBrowser collection="satellite" downloads={maps} onConnect={connect} blockedByOtherDownload={Boolean(local.status?.active) || local.starting} onViewActivity={openActivity} /></div>
           </div>

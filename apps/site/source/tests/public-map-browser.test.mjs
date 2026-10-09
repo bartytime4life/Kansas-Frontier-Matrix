@@ -101,7 +101,7 @@ test('a refreshed catalog that loses the selected direct file clears transfer co
 
 
 test('public climate collection exposes verified files without a Google sign-in control', async()=>{
- const p=await harness(seed,'satellite');let tree=p.render();assert.match(visibleText(tree),/Kansas crops & climate · no login/);assert.match(visibleText(tree),/64/);assert.doesNotMatch(visibleText(tree),/Sign in with Google/);
+ const p=await harness(seed,'satellite');let tree=p.render();assert.match(visibleText(tree),/Kansas crops, climate & storms · no login/);assert.match(visibleText(tree),/64/);assert.doesNotMatch(visibleText(tree),/Sign in with Google/);
  button(tree,'Cropland Data Layer 2025').props.onClick();tree=p.render();assert.match(visibleText(tree),/not clipped to Kansas/);assert.equal(nodes(tree,n=>n.type==='preview').length,0);
  findNode(tree,n=>n.type==='button'&&visibleText(n).startsWith('Download  ZIP')).props.onClick();tree=p.render();
  assert.equal(button(tree,'Download to this computer').props.disabled,false);
@@ -133,4 +133,32 @@ test('catalog dates render identically in server UTC and Kansas browser timezone
     const q = await harness(structuredClone(seed), 'satellite');
     assert.match(JSON.stringify(q.render()), /2026-10-09/); q.h.dispose();
   } finally { if (original === undefined) delete process.env.TZ; else process.env.TZ = original; }
+});
+
+
+test('Storm Events years are listed by a catalog refresh and download as gzip files with an explicit maximum', async () => {
+  const unlisted = await harness(seed, 'satellite'); let tree = unlisted.render();
+  assert.match(visibleText(tree), /NOAA Storm Events files are listed from the NCEI directory/);
+  button(tree, 'List Storm Events files').props.onClick(); assert.deepEqual(unlisted.calls, ['refresh']); unlisted.h.dispose();
+  const name = 'StormEvents_details-ftp_v1.0_d2024_c20250401.csv.gz', url = `https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/${name}`;
+  const listed = structuredClone(seed);
+  listed.coverage = listed.coverage.map(row => row.sourceId === 'publisher-noaa-storm-events' ? { ...row, state: 'complete', recordCount: 1, discoveredCount: 1, seedReferenceCount: 0, expectedCount: 1, checkedAt: '2026-10-09' } : row);
+  listed.records.push({ id: 'publisher-noaa-storm-events-2024', sourceId: 'publisher-noaa-storm-events', publisher: 'NOAA NCEI', title: 'Storm Events 2024 · national CSV files including Kansas',
+    counties: [], mapYear: 2024, digitalYear: null, scale: null, scaleUnit: null, crs: null, spatialAccuracy: null, metadataUrl: 'https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/',
+    rights: { status: 'public-domain', text: 'U.S. Government work.', url: 'https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/' },
+    description: 'National files, not clipped to Kansas.', geometryRole: 'National files including Kansas; not a Kansas clip', bbox: null, point: null,
+    assets: [{ id: 'publisher-noaa-storm-events-2024-details', title: name, format: 'GZIP', url, expectedBytes: null, kind: 'download', availability: 'verified', checkedAt: '2026-10-09' }] });
+  assert.ok(model.parsePublicMapCatalog(listed), 'a discovered Storm Events year is a valid catalog record');
+  const p = await harness(listed, 'satellite'); tree = p.render();
+  assert.doesNotMatch(visibleText(tree), /NOAA Storm Events files are listed from the NCEI directory/);
+  findNode(tree, n => n.type === 'input' && n.props.type === 'search').props.onChange({ target: { value: 'storm events' } }); tree = p.render();
+  button(tree, 'Storm Events 2024').props.onClick(); tree = p.render();
+  findNode(tree, n => n.type === 'button' && visibleText(n).startsWith('Download  GZIP')).props.onClick(); tree = p.render();
+  const maximum = findNode(tree, n => n.type === 'input' && n.props.type === 'number');
+  assert.equal(maximum.props.value, '', 'NCEI does not list exact sizes, so no maximum is prefilled');
+  assert.equal(button(tree, 'Download to this computer').props.disabled, true);
+  maximum.props.onChange({ target: { value: '80' } }); tree = p.render();
+  button(tree, 'Download to this computer').props.onClick();
+  assert.deepEqual(p.calls, [{ assetId: 'publisher-noaa-storm-events-2024-details', maximum: 80 * 1048576 }]);
+  p.h.dispose();
 });

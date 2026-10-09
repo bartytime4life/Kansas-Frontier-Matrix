@@ -24,6 +24,14 @@ def point(oid, document=42, scenes=1):
             "geometry": {"x": -97, "y": 38}}
 
 
+CURATED_PUBLISHERS = {"publisher-cdl", "publisher-chirps"}
+
+
+def storm_listing(*names):
+    rows = "".join(f'<a href="{name}">{name}</a> 2025-05-20 13:53  9.4M\n' for name in names)
+    return f'<html><body><pre><a href="../">../</a>\n<a href="legacy/">legacy/</a>\n{rows}</pre></body></html>'.encode()
+
+
 def page(first, last, total, entries, next_start=None):
     return encoded({"ngmdb_catalog_search": {"filter": {"start": str(first), "end": str(last),
         "total_count": str(total), "State": "KS", "publisher_list": "usgs"},
@@ -119,7 +127,7 @@ def test_source_failure_preserves_existing_records_and_has_unavailable_coverage(
     result = catalog.discover_catalog(seed, transport=fail)
     assert seed == catalog.load_seed()
     assert {r["id"] for r in result["records"]} == {r["id"] for r in seed["records"]}
-    assert all(c["state"] == ("seed" if c["sourceId"].startswith("publisher-") else "unavailable") for c in result["coverage"])
+    assert all(c["state"] == ("seed" if c["sourceId"] in CURATED_PUBLISHERS else "unavailable") for c in result["coverage"])
     assert all(c["expectedCount"] is None for c in result["coverage"])
     assert all(c["recordCount"] == c["discoveredCount"] + c["seedReferenceCount"]
                for c in result["coverage"])
@@ -203,11 +211,13 @@ def test_complete_coverage_counts_discovered_rows_separately_from_seed_reference
         query = parse_qs(urlsplit(url).query)
         if url.startswith(catalog.NMMR):
             return encoded({"objectIds": []} if "returnIdsOnly" in query else {"count": 0})
+        if url == catalog.STORM_EVENTS:
+            return storm_listing("StormEvents_details-ftp_v1.0_d2024_c20250401.csv.gz")
         return page(1, 100, 2, [(12, "Regional geology", "U.S. Geological Survey"),
                                (13, "County geology", "Kansas Geological Survey")])
     result = catalog.discover_catalog(transport=transport)
     for coverage in result["coverage"]:
-        if coverage["sourceId"].startswith("publisher-"):
+        if coverage["sourceId"] in CURATED_PUBLISHERS:
             assert coverage["state"] == "seed" and coverage["discoveredCount"] == 0
             continue
         assert coverage["state"] == "complete"
@@ -215,7 +225,59 @@ def test_complete_coverage_counts_discovered_rows_separately_from_seed_reference
         assert coverage["recordCount"] == sum(r["sourceId"] == coverage["sourceId"] for r in result["records"])
     assert result["discovery"]["ngmdbTotalCount"] == 2
     assert result["discovery"]["ngmdbExcludedPublisherCount"] == 0
-    assert len(result["discovery"]["receipts"]) == 4
+    assert len(result["discovery"]["receipts"]) == 5
+
+
+def test_storm_events_offers_the_newest_listed_file_per_kind_and_year():
+    def transport(url):
+        assert url == catalog.STORM_EVENTS
+        return storm_listing(
+            "StormEvents_details-ftp_v1.0_d2023_c20240917.csv.gz",
+            "StormEvents_details-ftp_v1.0_d2023_c20250401.csv.gz",  # reissued
+            "StormEvents_fatalities-ftp_v1.0_d2023_c20250401.csv.gz",
+            "StormEvents_locations-ftp_v1.0_d2023_c20250401.csv.gz",
+            "StormEvents_details-ftp_v1.0_d1950_c20250401.csv.gz",
+            "Storm-Data-Bulk-csv-Format.pdf", "ugc_areas.csv", "StormEvents_details-ftp_v1.0_d2023_c20250401.csv")
+    records, expected, failure = catalog.discover_storm_events(catalog.Budget(transport))
+    assert failure is None and expected == 2
+    assert [r["id"] for r in records] == ["publisher-noaa-storm-events-2023", "publisher-noaa-storm-events-1950"]
+    latest = records[0]
+    assert [a["id"].rsplit("-", 1)[1] for a in latest["assets"]] == ["details", "fatalities", "locations"]
+    assert latest["assets"][0]["url"] == catalog.STORM_EVENTS + "StormEvents_details-ftp_v1.0_d2023_c20250401.csv.gz"
+    assert all(a["format"] == "GZIP" and a["kind"] == "download" and a["availability"] == "verified"
+               and a["expectedBytes"] is None for a in latest["assets"])
+    assert latest["mapYear"] == 2023 and latest["sourceId"] == "publisher-noaa-storm-events" and latest["discovered"]
+    assert "not clipped to Kansas" in latest["description"] and "STATE" in latest["description"]
+    assert [a["id"].rsplit("-", 1)[1] for a in records[1]["assets"]] == ["details"]
+
+
+@pytest.mark.parametrize("names", [(), ("StormEvents_details-ftp_v1.0_d2999_c20250401.csv.gz",),
+                                   ("StormEvents_details-ftp_v1.0_d2023_c20221301.csv.gz",)])
+def test_storm_events_listing_without_valid_current_files_offers_nothing(names):
+    records, expected, failure = catalog.discover_storm_events(catalog.Budget(lambda url: storm_listing(*names)))
+    assert records == [] and expected is None and failure
+
+
+def test_storm_events_listing_is_the_only_ncei_metadata_url():
+    assert catalog.validate_metadata_url(catalog.STORM_EVENTS) == catalog.STORM_EVENTS
+    for url in (catalog.STORM_EVENTS + "?C=M;O=D", catalog.STORM_EVENTS + "legacy/",
+                "https://www.ncei.noaa.gov/pub/data/swdi/"):
+        with pytest.raises(ValueError):
+            catalog.validate_metadata_url(url)
+
+
+def test_storm_events_refresh_failure_keeps_prior_years_and_marks_partial():
+    def listing(url):
+        if url == catalog.STORM_EVENTS:
+            return storm_listing("StormEvents_details-ftp_v1.0_d2024_c20250401.csv.gz")
+        raise OSError("offline")
+    first = catalog.discover_catalog(transport=listing)
+    def fail(_):
+        raise OSError("offline")
+    second = catalog.discover_catalog(first, transport=fail)
+    storm = next(c for c in second["coverage"] if c["sourceId"] == "publisher-noaa-storm-events")
+    assert storm["state"] == "partial" and storm["recordCount"] == 1
+    assert any(r["id"] == "publisher-noaa-storm-events-2024" for r in second["records"])
 
 
 def test_review_bundle_preserves_raw_metadata_and_binds_exact_bytes():
