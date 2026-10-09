@@ -1,6 +1,7 @@
 # KFM Soil domain CI workflow.
 # Status: validate-soil runs three bounded synthetic no-network validator
-# profiles plus the bounded SSURGO package-drift fixture proof;
+# profiles, release-readiness guard regressions, and the bounded SSURGO
+# package-drift fixture proof;
 # proof and release-dry-run producers remain explicit holds.
 #
 # Authority boundary:
@@ -67,6 +68,7 @@ jobs:
             "fixtures/domains/soil/soil_moisture/README.md"
             "fixtures/domains/soil/soil_moisture/smap_l4/README.md"
             "tests/domains/soil/test_smap_l4_anti_collapse.py"
+            "tests/domains/soil/test_release_readiness_hold.py"
             "data/registry/sources/soil/README.md"
             "release/candidates/soil/README.md"
             "tools/ingest/ssurgo_watch/README.md"
@@ -85,6 +87,7 @@ jobs:
           python tests/domains/soil/test_soil_smoke.py --verbose
           python tests/domains/soil/test_soil_moisture_qc.py --verbose
           python tests/domains/soil/test_smap_l4_anti_collapse.py --verbose
+          python tests/domains/soil/test_release_readiness_hold.py --verbose
 
       - name: Run bounded SSURGO package-drift fixture proof
         shell: bash
@@ -109,7 +112,14 @@ jobs:
           `tests/domains/soil/test_soil_moisture_qc.py`, and
           `tests/domains/soil/test_smap_l4_anti_collapse.py`, plus the bounded
           SSURGO comparator proof in
-          `tests/ingest/ssurgo_watch/test_ssurgo_watch.py`. The suites read only
+          `tests/ingest/ssurgo_watch/test_ssurgo_watch.py`. It also runs
+          `tests/domains/soil/test_release_readiness_hold.py`, which exercises the
+          actual release-readiness shell in an isolated synthetic repository:
+          exact protected marker bytes pass only with the explicit hold; marker
+          edits, missing boundaries, changed candidate posture, new candidate
+          records, and new release targets fail closed. These guard regressions
+          do not run a release producer or write to repository data stores.
+          The fixture suites read only
           small synthetic positive and fail-closed fixtures, exercise the repository
           validator at `tools/validators/domains/soil/validate_public_safe_fixture.py`,
           the bounded station profile at
@@ -253,9 +263,10 @@ jobs:
             exit 1
           fi
 
-          # Pinned to the reviewed no-release index from 5c5f6238df. Any edit,
+          # Pin the original no-release marker restored by PR #4941 (797de41d).
+          # Substantive guidance lives in CATALOG_CLOSURE.md; any marker edit,
           # including a new release row, must be re-reviewed here.
-          reviewed_release_index_sha256="e9f52167750346ef702bf8f7b2daa964953b5fb8470c609a47f34a1b1c34de26"
+          reviewed_release_index_sha256="3cc12c9dc5dd300d1c971ab8bedf365ce00bec97d812fe5609c1ecf44cdcc2b6"
           if ! echo "${reviewed_release_index_sha256}  docs/domains/soil/RELEASE_INDEX.md" | sha256sum --check --status; then
             echo "::error::The Soil release index changed. Wire the accepted fail-closed release dry-run instead of retaining this hold."
             exit 1
