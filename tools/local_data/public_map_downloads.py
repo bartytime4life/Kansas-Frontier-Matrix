@@ -368,7 +368,8 @@ class PublicMapDownloads:
         create_candidate(destination)
         now = utc_now()
         # A record with several files (a Storm Events year) names the file, so jobs stay distinguishable.
-        title = record["title"] if len(record.get("assets", [])) < 2 else f'{record["title"]} · {asset["title"]}'
+        files = [item for item in record.get("assets", []) if item.get("kind") == "download" and item.get("availability") == "verified"]
+        title = record["title"] if len(files) < 2 else f'{record["title"]} · {asset["title"]}'
         job = {"id": identifier, "assetId": asset_id, "title": title, "state": "queued",
                "bytes": 0, "expectedBytes": expected, "maxBytes": maximum, "sha256": None,
                "destination": str(destination), "mapReady": False, "createdAt": now, "updatedAt": now}

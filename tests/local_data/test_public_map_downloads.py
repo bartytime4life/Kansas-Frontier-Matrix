@@ -480,6 +480,19 @@ class QueueTests(unittest.TestCase):
         self.assertEqual(titles, ["Storm Events 2021 · national CSV files including Kansas · StormEvents_details-ftp_v1.0_d2021_c20250401.csv.gz",
                                   "Storm Events 2021 · national CSV files including Kansas · StormEvents_fatalities-ftp_v1.0_d2021_c20250401.csv.gz"])
 
+    def test_a_record_with_one_file_and_a_service_keeps_its_title(self):
+        seed = downloads.public_map_catalog.load_seed()
+        record = copy.deepcopy(next(r for r in seed["records"] if r["id"] == "publisher-noaa-storm-events-2022"))
+        record["id"] = "map-with-service"
+        record["assets"][0]["id"] = "map-with-service-file"
+        record["assets"].append({"id": "map-with-service-wms", "title": "WMS", "kind": "service", "availability": "verified",
+                                 "format": "WMS", "url": "https://example.invalid/wms", "expectedBytes": None})
+        seed["records"].append(record)
+        self.manager._catalog = seed
+        with patch.object(downloads, "validate_url"):
+            job = self.manager.start({"requestId": "f" * 32, "assetId": "map-with-service-file", "maxBytes": 4096})
+        self.assertEqual(job["title"], record["title"])
+
     def test_an_identical_retry_after_a_restart_returns_the_same_queue(self):
         assets = list(reversed(self.assets))
         first = self.enqueue(assets=assets)
