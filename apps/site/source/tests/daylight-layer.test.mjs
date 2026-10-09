@@ -26,6 +26,8 @@ async function moduleUrl(file) {
 
 const solar = await import(await moduleUrl("app/daylight-layer.ts"));
 const runtime = await import(await moduleUrl("app/map-runtime.ts"));
+const shader = await import(await moduleUrl("app/daylight-shader-layer.ts"));
+const composition = await import(await moduleUrl("app/map-layer-composition.ts"));
 
 const pointInRing = (point, ring) => {
   let inside = false;
@@ -261,40 +263,126 @@ test("polar twilight subtraction stays correct across every pole-enclosure thres
   }
 });
 
-test("daylight tints basemap and imagery, then yields to observation overlays and labels", () => {
+// A MapLibre stand-in. `glFor(layer)` lets a test run custom layers' onAdd against a fake GPU.
+function mockMap(initialLayers, { glFor } = {}) {
   const sources = new Map();
-  const layers = [
-    { id: "basemap-labels", type: "symbol" },
-    { id: "external-goes-geocolor", type: "raster" },
-    { id: "external-hydrology", type: "line" },
-    { id: "external-streamflow-observations", type: "circle" },
-  ];
+  const layers = [...initialLayers];
   const map = {
-    getStyle: () => ({ layers: [...layers] }),
+    sources, layers,
+    // Like MapLibre: getStyle() omits custom layers; getLayersOrder() lists every layer.
+    getStyle: () => ({ layers: layers.filter((layer) => layer.type !== "custom") }),
+    getLayersOrder: () => layers.map((layer) => layer.id),
     getSource: (id) => sources.get(id),
     addSource: (id, source) => sources.set(id, { ...source, setData(data) { this.data = data; } }),
     getLayer: (id) => layers.find((layer) => layer.id === id),
     addLayer: (layer, beforeId) => {
       const index = beforeId ? layers.findIndex((candidate) => candidate.id === beforeId) : layers.length;
       layers.splice(index < 0 ? layers.length : index, 0, layer);
+      if (layer.type === "custom" && glFor) layer.onAdd(map, glFor(layer));
     },
+    removeLayer: (id) => { const index = layers.findIndex((layer) => layer.id === id); if (index >= 0) layers.splice(index, 1); },
     moveLayer: (id) => {
       const index = layers.findIndex((layer) => layer.id === id);
       if (index < 0) return;
       layers.push(layers.splice(index, 1)[0]);
     },
-    setLayoutProperty: (id, name, value) => { map.getLayer(id).layout[name] = value; },
+    getLayoutProperty: (id, name) => map.getLayer(id)?.layout?.[name],
+    setLayoutProperty: (id, name, value) => { const layer = map.getLayer(id); layer.layout ??= {}; layer.layout[name] = value; },
+    triggerRepaint() {},
   };
+  return map;
+}
+const overlayLayers = [
+  { id: "basemap-labels", type: "symbol" },
+  { id: "external-goes-geocolor", type: "raster" },
+  { id: "external-hydrology", type: "line" },
+  { id: "external-streamflow-observations", type: "circle" },
+];
+
+test("daylight is drawn by the GPU layer: tints basemap and imagery, then yields to observation overlays", () => {
+  const map = mockMap(overlayLayers);
   assert.equal(runtime.setDaylightMapLayer(map, true, Date.parse("2026-06-21T12:00:00Z")), true);
-  const ids = layers.map(({ id }) => id);
+  const ids = map.layers.map(({ id }) => id);
+  assert.equal(map.getLayer(runtime.DAYLIGHT_FILL_LAYER_ID).type, "custom");
   assert.ok(ids.indexOf("basemap-labels") < ids.indexOf(runtime.DAYLIGHT_FILL_LAYER_ID));
   assert.ok(ids.indexOf("external-goes-geocolor") < ids.indexOf(runtime.DAYLIGHT_FILL_LAYER_ID));
   assert.ok(ids.indexOf(runtime.DAYLIGHT_FILL_LAYER_ID) < ids.indexOf("external-hydrology"));
   assert.ok(ids.indexOf(runtime.DAYLIGHT_FILL_LAYER_ID) < ids.indexOf("external-streamflow-observations"));
-  assert.equal(sources.get(runtime.DAYLIGHT_GEOJSON_SOURCE_ID).data.features.length, 4);
-  assert.equal(sources.get(runtime.DAYLIGHT_GEOJSON_SOURCE_ID).data.features[0].geometry.type, "MultiPolygon");
+  assert.equal(map.sources.size, 0, "no polygons are built or uploaded");
+  // Moving the clock reuses the same layer.
+  const layer = map.getLayer(runtime.DAYLIGHT_FILL_LAYER_ID);
+  assert.equal(runtime.setDaylightMapLayer(map, true, Date.parse("2026-06-21T18:00:00Z")), true);
+  assert.equal(map.getLayer(runtime.DAYLIGHT_FILL_LAYER_ID), layer);
   assert.equal(runtime.setDaylightMapLayer(map, false, 0), true);
-  assert.equal(map.getLayer(runtime.DAYLIGHT_FILL_LAYER_ID).layout.visibility, "none");
+  assert.equal(map.getLayoutProperty(runtime.DAYLIGHT_FILL_LAYER_ID, "visibility"), "none");
+  assert.equal(runtime.setDaylightMapLayer(map, true, 0), true);
+  assert.equal(map.getLayoutProperty(runtime.DAYLIGHT_FILL_LAYER_ID, "visibility"), "visible");
+});
+
+test("a GPU that cannot compile the daylight shader keeps the polygon overlay", () => {
+  const failingGl = { VERTEX_SHADER: 1, FRAGMENT_SHADER: 2, COMPILE_STATUS: 3, ARRAY_BUFFER: 4, STATIC_DRAW: 5,
+    createBuffer: () => ({}), bindBuffer() {}, bufferData() {}, createProgram: () => ({}), createShader: () => ({}), shaderSource() {}, compileShader() {},
+    getShaderParameter: () => false };
+  let attempts = 0;
+  const map = mockMap(overlayLayers, { glFor: () => { attempts += 1; return failingGl; } });
+  assert.equal(runtime.setDaylightMapLayer(map, true, Date.parse("2026-06-21T12:00:00Z")), true);
+  const layer = map.getLayer(runtime.DAYLIGHT_FILL_LAYER_ID);
+  assert.equal(layer.type, "fill");
+  assert.equal(map.sources.get(runtime.DAYLIGHT_GEOJSON_SOURCE_ID).data.features.length, 4);
+  assert.equal(map.sources.get(runtime.DAYLIGHT_GEOJSON_SOURCE_ID).data.features[0].geometry.type, "MultiPolygon");
+  const ids = map.layers.map(({ id }) => id);
+  assert.ok(ids.indexOf("external-goes-geocolor") < ids.indexOf(runtime.DAYLIGHT_FILL_LAYER_ID));
+  assert.ok(ids.indexOf(runtime.DAYLIGHT_FILL_LAYER_ID) < ids.indexOf("external-hydrology"));
+  // The fallback paint uses the same stops the shader colors are built from.
+  assert.deepEqual(layer.paint["fill-opacity"].slice(3), shader.DAYLIGHT_SHADE_STOPS.flatMap(({ shade, opacity }) => [shade, opacity]));
+  assert.equal(runtime.setDaylightMapLayer(map, true, Date.parse("2026-06-21T18:00:00Z")), true);
+  assert.equal(attempts, 1, "a failed GPU is not retried on every clock tick");
+  assert.equal(map.getLayer(runtime.DAYLIGHT_FILL_LAYER_ID).type, "fill");
+});
+
+test("the shader's per-pixel band agrees with NREL SPA and with the polygon overlay", () => {
+  const instants = ["2026-03-20T00:00:00Z", "2026-05-01T06:00:00Z", "2026-06-21T12:00:00Z", "2026-09-22T18:00:00Z", "2026-11-01T03:00:00Z", "2026-12-21T21:00:00Z"].map(Date.parse);
+  let compared = 0;
+  for (const instant of instants) {
+    const sun = solar.solarPositionAt(instant);
+    const geometry = solar.buildDaylightGeometry(instant);
+    for (let latitude = -84; latitude <= 84; latitude += 12) for (let longitude = -177; longitude <= 177; longitude += 15) {
+      const elevation = shader.solarElevationFromSubsolar(sun.subsolarLongitudeDegrees, sun.declinationDegrees, longitude, latitude);
+      const gpuBand = shader.daylightBandForElevation(elevation) ?? "day";
+      const spa = solar.solarPositionAt(instant, latitude, longitude).elevationDegrees;
+      if ([-18, -12, -6, -0.833].some((boundary) => Math.abs(spa - boundary) < 0.6 || Math.abs(elevation - boundary) < 0.6)) continue;
+      const spaBand = spa < -18 ? "night" : spa < -12 ? "astronomical" : spa < -6 ? "nautical" : spa < -0.833 ? "civil" : "day";
+      assert.equal(gpuBand, spaBand, `SPA band at ${longitude}°, ${latitude}° on ${new Date(instant).toISOString()}`);
+      assert.equal(gpuBand, bandAt(geometry, [longitude, latitude]), `polygon band at ${longitude}°, ${latitude}° on ${new Date(instant).toISOString()}`);
+      compared += 1;
+    }
+  }
+  assert.ok(compared > 1000, `compared ${compared} points`);
+});
+
+test("shader band colors are the fill paint's interpolated stops, premultiplied", () => {
+  const hex = (value) => [1, 3, 5].map((offset) => parseInt(value.slice(offset, offset + 2), 16) / 255);
+  const close = (actual, expected) => actual.forEach((value, index) => assert.ok(Math.abs(value - expected[index]) < 1e-9, `${actual} vs ${expected}`));
+  for (const stop of shader.DAYLIGHT_SHADE_STOPS) close(shader.daylightBandColor(stop.shade), [...hex(stop.color).map((v) => v * stop.opacity), stop.opacity]);
+  // The civil band's shade sits exactly halfway between the last two stops.
+  const [, , low, high] = shader.DAYLIGHT_SHADE_STOPS;
+  const opacity = (low.opacity + high.opacity) / 2;
+  close(shader.daylightBandColor(shader.DAYLIGHT_BANDS[3].shade), [...hex(low.color).map((v, i) => (v + hex(high.color)[i]) / 2 * opacity), opacity]);
+  close(shader.daylightBandColor(-40), shader.daylightBandColor(-18));
+  close(shader.daylightBandColor(5), shader.daylightBandColor(-0.833));
+});
+
+test("layer composition orders custom WebGL layers, which getStyle() leaves out", () => {
+  const order = ["basemap-labels", "external-noaa-glm-flashes", "external-goes-geocolor", "kfm-daylight-context-fill", "external-hydrology"];
+  const types = { "basemap-labels": "symbol", "external-noaa-glm-flashes": "custom", "external-goes-geocolor": "raster", "kfm-daylight-context-fill": "custom", "external-hydrology": "line" };
+  const map = {
+    getLayersOrder: () => [...order],
+    getLayer: (id) => ({ id, type: types[id] }),
+    getStyle: () => ({ layers: order.filter((id) => types[id] !== "custom").map((id) => ({ id, type: types[id] })) }),
+    moveLayer: (id) => { order.push(order.splice(order.indexOf(id), 1)[0]); },
+  };
+  composition.composeMapLayers(map);
+  assert.deepEqual(order, ["basemap-labels", "external-goes-geocolor", "kfm-daylight-context-fill", "external-hydrology", "external-noaa-glm-flashes"]);
 });
 
 test("page persists selected solar cursor and restores the layer paused with reduced-motion safeguards", async () => {
