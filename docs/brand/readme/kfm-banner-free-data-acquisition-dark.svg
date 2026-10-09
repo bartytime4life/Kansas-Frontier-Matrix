@@ -8,8 +8,8 @@
       .sans{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
       .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
       .lbl{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;letter-spacing:2.5px;font-weight:700}
-      .fill{transform-box:fill-box;transform-origin:0 50%;animation:fillm 8s cubic-bezier(.3,.6,.3,1) infinite}@keyframes fillm{0%{transform:scaleX(.08)}60%,90%{transform:scaleX(.62)}100%{transform:scaleX(.08)}}
-      .pk{animation:pk 8s ease-out infinite}@keyframes pk{0%{opacity:.25}10%,90%{opacity:1}100%{opacity:.25}}
+      .fill{transform-box:fill-box;transform-origin:0 50%;animation:fillm 4s cubic-bezier(.3,.6,.3,1) 1 both}@keyframes fillm{0%{transform:scaleX(.08)}60%,90%{transform:scaleX(.62)}100%{transform:scaleX(.08)}}
+      .pk{opacity:1}@keyframes pk{0%{opacity:.25}10%,90%{opacity:1}100%{opacity:.25}}
       @media (prefers-reduced-motion: reduce){.fill,.pk{animation:none!important}.fill{transform:scaleX(.62)}}
     </style>
   </defs>
@@ -24,7 +24,7 @@
 <g class="sans" font-size="12.5"><text x="800" y="60" fill="#A8C4EA" font-weight="700">local cache</text><text x="1240" y="60" text-anchor="end" fill="#9198A1">500 GB cap</text>
     <rect x="800" y="72" width="440" height="26" rx="13" fill="#2B2519"/><g class="fill"><rect x="800" y="72" width="440" height="26" rx="13" fill="#62B487"/></g>
     <line x1="1240" y1="64" x2="1240" y2="106" stroke="#E27B7B" stroke-width="2"/>
-    <g class="pk" style="animation-delay:0.0s"><rect x="800" y="120" width="100" height="56" rx="10" fill="#0D1117" stroke="#30363D"/><text x="812" y="143" class="mono" font-size="11" fill="#E6EDF3">PRISM</text><text x="812" y="162" font-size="11" fill="#9198A1">from 1895</text></g><g class="pk" style="animation-delay:0.5s"><rect x="912" y="120" width="100" height="56" rx="10" fill="#0D1117" stroke="#30363D"/><text x="924" y="143" class="mono" font-size="11" fill="#E6EDF3">Landsat</text><text x="924" y="162" font-size="11" fill="#9198A1">from 1972</text></g><g class="pk" style="animation-delay:1.0s"><rect x="1024" y="120" width="100" height="56" rx="10" fill="#0D1117" stroke="#30363D"/><text x="1036" y="143" class="mono" font-size="11" fill="#E6EDF3">NLCD</text><text x="1036" y="162" font-size="11" fill="#9198A1">1985–2025</text></g><g class="pk" style="animation-delay:1.5s"><rect x="1136" y="120" width="100" height="56" rx="10" fill="#0D1117" stroke="#30363D"/><text x="1148" y="143" class="mono" font-size="11" fill="#E6EDF3">NWM</text><text x="1148" y="162" font-size="11" fill="#9198A1">≤512 MiB</text></g></g>
+    <g class="pk" style="animation-delay:0s"><rect x="800" y="120" width="100" height="56" rx="10" fill="#0D1117" stroke="#30363D"/><text x="812" y="143" class="mono" font-size="11" fill="#E6EDF3">PRISM</text><text x="812" y="162" font-size="11" fill="#9198A1">from 1895</text></g><g class="pk" style="animation-delay:0s"><rect x="912" y="120" width="100" height="56" rx="10" fill="#0D1117" stroke="#30363D"/><text x="924" y="143" class="mono" font-size="11" fill="#E6EDF3">Landsat</text><text x="924" y="162" font-size="11" fill="#9198A1">from 1972</text></g><g class="pk" style="animation-delay:0s"><rect x="1024" y="120" width="100" height="56" rx="10" fill="#0D1117" stroke="#30363D"/><text x="1036" y="143" class="mono" font-size="11" fill="#E6EDF3">NLCD</text><text x="1036" y="162" font-size="11" fill="#9198A1">1985–2025</text></g><g class="pk" style="animation-delay:0s"><rect x="1136" y="120" width="100" height="56" rx="10" fill="#0D1117" stroke="#30363D"/><text x="1148" y="143" class="mono" font-size="11" fill="#E6EDF3">NWM</text><text x="1148" y="162" font-size="11" fill="#9198A1">≤512 MiB</text></g></g>
   </g>
   <rect x="1" y="1" width="1278" height="218" rx="18" fill="none" stroke="#30363D" stroke-width="2"/>
 </svg>

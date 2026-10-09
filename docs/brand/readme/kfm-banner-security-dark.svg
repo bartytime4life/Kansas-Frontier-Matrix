@@ -8,8 +8,8 @@
       .sans{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
       .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
       .lbl{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;letter-spacing:2.5px;font-weight:700}
-      .rng{transform-box:fill-box;transform-origin:center;animation:rng 3.2s ease-out infinite}@keyframes rng{0%{transform:scale(.9);opacity:.8}100%{transform:scale(1.5);opacity:0}}
-      .env{animation:env 5s cubic-bezier(.4,0,.3,1) infinite}@keyframes env{0%{transform:translate(840px,110px);opacity:0}12%{opacity:1}55%{transform:translate(1008px,118px) scale(.6);opacity:1}62%,100%{transform:translate(1010px,118px) scale(.3);opacity:0}}
+      .rng{transform-box:fill-box;transform-origin:center;animation:rng 3.2s ease-out 1 both}@keyframes rng{0%{transform:scale(.9);opacity:.8}100%{transform:scale(1.5);opacity:0}}
+      .env{animation:env 4s cubic-bezier(.4,0,.3,1) 1 both}@keyframes env{0%{transform:translate(840px,110px);opacity:0}12%{opacity:1}55%{transform:translate(1008px,118px) scale(.6);opacity:1}62%,100%{transform:translate(1010px,118px) scale(.3);opacity:0}}
       @media (prefers-reduced-motion: reduce){.rng,.env{animation:none!important}.env{transform:translate(840px,110px)}.rng{opacity:.4}}
     </style>
   </defs>

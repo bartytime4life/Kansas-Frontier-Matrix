@@ -1,37 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 300" width="1280" height="300" role="img" aria-labelledby="t d">
   <title id="t">Time depth in the KFM Explorer</title>
-  <desc id="d">A timeline from 1800 to today. A playhead moves forward and lights each milestone: 1800 temporal sweep begins, 1895 PRISM monthly climate, 1934 to 1996 USGS mine-map editions, 1940 ERA5 reanalysis, 1972 Landsat MSS, 1985 annual land cover, 1995 radar archive replay, 2005 HMS smoke polygons, 2015 SMAP soil moisture, and today live streamflow. Provider start dates do not promise complete Kansas coverage.</desc>
+  <desc id="d">A timeline from 1800 to today. A playhead moves forward once while every milestone stays visible: 1800 temporal sweep begins, 1895 PRISM monthly climate, 1934 to 1996 USGS mine-map editions, 1940 ERA5 reanalysis, 1972 Landsat MSS, 1985 annual land cover, 1995 radar archive replay, 2005 HMS smoke polygons, 2015 SMAP soil moisture, and today live streamflow. Provider start dates do not promise complete Kansas coverage.</desc>
   <defs>
-    <linearGradient id="trail" x1="0" x2="1"><stop offset="0" stop-color="#C9A227" stop-opacity="0"/><stop offset="1" stop-color="#C9A227" stop-opacity=".9"/></linearGradient>
+    <linearGradient id="trail" x1="0" x2="1"><stop offset="0" stop-color="#5E6E7C" stop-opacity="0"/><stop offset="1" stop-color="#5E6E7C" stop-opacity=".9"/></linearGradient>
     <clipPath id="frame"><rect x="1" y="1" width="1278" height="298" rx="18"/></clipPath>
     <style>
       .serif{font-family:Georgia,'Times New Roman',serif}
       .sans{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
       .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-      .head{animation:head 16.0s cubic-bezier(.35,.1,.45,1) infinite}
-      @keyframes head{0%{transform:translateX(0)}88%,100%{transform:translateX(1140px)}}
-      @keyframes m0{0%,0.0%{opacity:.4}0.5%,96%{opacity:1}100%{opacity:.4}}
-      .m0{animation:m0 16.0s linear infinite}
-      @keyframes m1{0%,17.8%{opacity:.4}18.4%,96%{opacity:1}100%{opacity:.4}}
-      .m1{animation:m1 16.0s linear infinite}
-      @keyframes m2{0%,29.4%{opacity:.4}30.0%,96%{opacity:1}100%{opacity:.4}}
-      .m2{animation:m2 16.0s linear infinite}
-      @keyframes m3{0%,31.3%{opacity:.4}31.9%,96%{opacity:1}100%{opacity:.4}}
-      .m3{animation:m3 16.0s linear infinite}
-      @keyframes m4{0%,42.4%{opacity:.4}43.0%,96%{opacity:1}100%{opacity:.4}}
-      .m4{animation:m4 16.0s linear infinite}
-      @keyframes m5{0%,53.3%{opacity:.4}53.9%,96%{opacity:1}100%{opacity:.4}}
-      .m5{animation:m5 16.0s linear infinite}
-      @keyframes m6{0%,61.6%{opacity:.4}62.2%,96%{opacity:1}100%{opacity:.4}}
-      .m6{animation:m6 16.0s linear infinite}
-      @keyframes m7{0%,69.9%{opacity:.4}70.5%,96%{opacity:1}100%{opacity:.4}}
-      .m7{animation:m7 16.0s linear infinite}
-      @keyframes m8{0%,78.2%{opacity:.4}78.8%,96%{opacity:1}100%{opacity:.4}}
-      .m8{animation:m8 16.0s linear infinite}
-      @keyframes m9{0%,87.4%{opacity:.4}88.0%,96%{opacity:1}100%{opacity:.4}}
-      .m9{animation:m9 16.0s linear infinite}
-
-      @media (prefers-reduced-motion: reduce){.head,[class^="m"]{animation:none!important;opacity:1}.head{transform:translateX(1140px)}}
+      .head{animation:head 4s ease-out 1 both}@keyframes head{from{transform:translateX(0)}to{transform:translateX(1140px)}}
+      @media (prefers-reduced-motion: reduce){.head{animation:none!important;transform:translateX(1140px)}}
     </style>
   </defs>
   <g clip-path="url(#frame)">
@@ -41,7 +19,7 @@
     <line x1="70" y1="170" x2="1210" y2="170" stroke="#8E5A2A" stroke-width="2" stroke-opacity=".6"/>
     <line x1="70.0" y1="161" x2="70.0" y2="179" stroke="#8E5A2A" stroke-opacity=".6"/><line x1="132.7" y1="166" x2="132.7" y2="174" stroke="#8E5A2A" stroke-opacity=".6"/><line x1="195.4" y1="161" x2="195.4" y2="179" stroke="#8E5A2A" stroke-opacity=".6"/><line x1="258.1" y1="166" x2="258.1" y2="174" stroke="#8E5A2A" stroke-opacity=".6"/><line x1="320.8" y1="161" x2="320.8" y2="179" stroke="#8E5A2A" stroke-opacity=".6"/><line x1="361.5" y1="166" x2="361.5" y2="174" stroke="#8E5A2A" stroke-opacity=".6"/><line x1="402.2" y1="166" x2="402.2" y2="174" stroke="#8E5A2A" stroke-opacity=".6"/><line x1="442.9" y1="166" x2="442.9" y2="174" stroke="#8E5A2A" stroke-opacity=".6"/><line x1="483.7" y1="166" x2="483.7" y2="174" stroke="#8E5A2A" stroke-opacity=".6"/><line x1="524.4" y1="161" x2="524.4" y2="179" stroke="#8E5A2A" stroke-opacity=".6"/><line x1="565.1" y1="166" x2="565.1" y2="174" stroke="#8E5A2A" stroke-opacity=".6"/><line x1="605.8" y1="166" x2="605.8" y2="174" stroke="#8E5A2A" stroke-opacity=".6"/><line x1="659.7" y1="166" x2="659.7" y2="174" stroke="#8E5A2A" stroke-opacity=".6"/><line x1="713.7" y1="166" x2="713.7" y2="174" stroke="#8E5A2A" stroke-opacity=".6"/><line x1="767.6" y1="166" x2="767.6" y2="174" stroke="#8E5A2A" stroke-opacity=".6"/><line x1="821.6" y1="166" x2="821.6" y2="174" stroke="#8E5A2A" stroke-opacity=".6"/><line x1="875.5" y1="166" x2="875.5" y2="174" stroke="#8E5A2A" stroke-opacity=".6"/><line x1="929.5" y1="161" x2="929.5" y2="179" stroke="#8E5A2A" stroke-opacity=".6"/><line x1="983.4" y1="166" x2="983.4" y2="174" stroke="#8E5A2A" stroke-opacity=".6"/><line x1="1037.4" y1="166" x2="1037.4" y2="174" stroke="#8E5A2A" stroke-opacity=".6"/><line x1="1091.3" y1="166" x2="1091.3" y2="174" stroke="#8E5A2A" stroke-opacity=".6"/><line x1="1145.3" y1="166" x2="1145.3" y2="174" stroke="#8E5A2A" stroke-opacity=".6"/><line x1="1199.2" y1="166" x2="1199.2" y2="174" stroke="#8E5A2A" stroke-opacity=".6"/>
     <text x="195.4" y="278" text-anchor="middle" class="sans" font-size="12" fill="#8E5A2A">1850</text><text x="320.8" y="278" text-anchor="middle" class="sans" font-size="12" fill="#8E5A2A">1900</text><text x="524.4" y="278" text-anchor="middle" class="sans" font-size="12" fill="#8E5A2A">1950</text><text x="713.7" y="278" text-anchor="middle" class="sans" font-size="12" fill="#8E5A2A">1980</text><text x="929.5" y="278" text-anchor="middle" class="sans" font-size="12" fill="#8E5A2A">2000</text><text x="1145.3" y="278" text-anchor="middle" class="sans" font-size="12" fill="#8E5A2A">2020</text>
-    <g class="head"><rect x="-50" y="167" width="120" height="6" fill="url(#trail)"/><circle cx="70" cy="170" r="5" fill="#C9A227"/></g>
+    <g class="head"><rect x="-50" y="167" width="120" height="6" fill="url(#trail)"/><circle cx="70" cy="170" r="5" fill="#5E6E7C"/></g>
     <g class="m0"><line x1="70.0" y1="130" x2="70.0" y2="162" stroke="#1F3A66" stroke-width="1.5"/><circle cx="70.0" cy="170" r="7" fill="#FAF7F0" stroke="#1F3A66" stroke-width="2.5"/><text x="70.0" y="112" text-anchor="start" class="serif" font-size="20" fill="#0E1F3A">1800</text><text x="70.0" y="132" text-anchor="start" class="sans" font-size="13" fill="#4A4A4A">Temporal sweep begins</text></g>
     <g class="m1"><line x1="308.3" y1="178" x2="308.3" y2="202" stroke="#1F3A66" stroke-width="1.5"/><circle cx="308.3" cy="170" r="7" fill="#FAF7F0" stroke="#1F3A66" stroke-width="2.5"/><text x="308.3" y="220" text-anchor="middle" class="serif" font-size="20" fill="#0E1F3A">1895</text><text x="308.3" y="240" text-anchor="middle" class="sans" font-size="13" fill="#4A4A4A">PRISM monthly climate</text></g>
     <g class="m2"><rect x="459.2" y="165" width="427.1" height="10" rx="5" fill="#8E5A2A" fill-opacity=".45"/><line x1="459.2" y1="130" x2="459.2" y2="162" stroke="#1F3A66" stroke-width="1.5"/><circle cx="459.2" cy="170" r="7" fill="#FAF7F0" stroke="#1F3A66" stroke-width="2.5"/><text x="459.2" y="112" text-anchor="middle" class="serif" font-size="20" fill="#0E1F3A">1934–1996</text><text x="459.2" y="132" text-anchor="middle" class="sans" font-size="13" fill="#4A4A4A">USGS mine-map editions</text></g>

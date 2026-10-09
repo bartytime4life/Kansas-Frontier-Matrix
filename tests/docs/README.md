@@ -265,3 +265,13 @@ object, release, deployment, promotion, or publication. Those require their
 own governed correction paths.
 
 [Back to top](#top)
+
+## Linked-document artwork regressions
+
+[`test_readme_artwork.py`](./test_readme_artwork.py) is a separate, offline source profile for the 14 linked-page banner pairs, four new topic pairs and six reused topic pairs introduced or embedded by PR #4947. It checks bounded autoplay, static governance signals, accessible SVG names, absence of active or remote SVG content, visible command/disposition labels and the brand palette role inventory, reserved non-STALE colors and decorative emoji.
+
+```bash
+python -m unittest discover -s tests/docs -p test_readme_artwork.py
+```
+
+These seven tests do not certify rendered contrast, screen-reader output, forced colors, GitHub rendering, design approval, independent human review or release acceptance. The original contract-navigation inventory above is pinned historical evidence for its own profile.
