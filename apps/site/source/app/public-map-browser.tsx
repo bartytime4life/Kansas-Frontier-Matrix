@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import seed from "./public-map-catalog.json";
 import { canDownloadPublicMap, filterPublicMaps, parsePublicMapCatalog, publicMapNmmrLinks, PUBLIC_MAP_PAGE_SIZE, publicMapSelectedLimit, type PublicMapCatalog, type PublicMapFilter, type PublicMapRecord } from "./public-map-catalog";
@@ -27,11 +28,11 @@ export default function PublicMapBrowser() {
   const alive = useRef(true), selection = useRef(0), operations = useRef(new Set<AbortController>()), operationBusy = useRef(false);
   useEffect(() => {
     alive.current = true;
-    if (window.location.origin === "http://127.0.0.1:4173") setEpoch(value => value + 1);
     return () => { alive.current = false; for (const controller of operations.current) controller.abort(); };
   }, []);
   useEffect(() => {
-    if (!epoch) return;
+    // The loopback Site connects on mount; elsewhere the person connects explicitly.
+    if (!epoch && window.location.origin !== "http://127.0.0.1:4173") return;
     const controller = new AbortController(); let timer: ReturnType<typeof setTimeout> | undefined, previousRefresh = "", first = true, catalogPending = true;
     const loadCatalog = async () => {
       try {
@@ -95,7 +96,7 @@ export default function PublicMapBrowser() {
   };
   const jobs = [...(status?.jobs ?? [])].sort((a, b) => Number(b.id === status?.active) - Number(a.id === status?.active) || b.createdAt.localeCompare(a.createdAt));
   return <section id="public-maps" className={`${s.jobs} ${p.catalog}`} aria-labelledby="public-map-heading">
-    <header className={s.sectionHeading}><div><p className={s.eyebrow}>KANSAS MAP COLLECTIONS</p><h2 id="public-map-heading">Mine maps &amp; geologic maps</h2></div><a href="/">Return to map →</a></header>
+    <header className={s.sectionHeading}><div><p className={s.eyebrow}>KANSAS MAP COLLECTIONS</p><h2 id="public-map-heading">Mine maps &amp; geologic maps</h2></div><Link href="/">Return to map →</Link></header>
     <p className={s.muted}>Search published map records from OSMRE, USGS and the Kansas Geological Survey. Browse the catalog, inspect a source, then select the files and download maximum that fit this computer.</p>
     <div className={p.actions}><button type="button" disabled={connecting} onClick={() => setEpoch(value => value + 1)}>{connecting ? "Connecting…" : connected ? "Reconnect map downloads" : "Connect map downloads"}</button><button type="button" disabled={!connected || !!busy || status?.refresh.state === "running"} onClick={() => void action("/refresh", {}, "Kansas catalog refresh requested. Source coverage is shown separately below.")}>{status?.refresh.state === "running" ? "Refreshing Kansas catalog…" : "Refresh all Kansas records"}</button><span>{connected ? "Connected to this computer" : "Reference catalog available"}</span></div>
     {failure && <p className={s.alert}>{failure}</p>}{catalogFailure && <p className={s.alert}>{catalogFailure}</p>}
