@@ -20,7 +20,7 @@ export type PublicMapCatalog = {
   schema: "kfm-public-map-catalog/v1"; generatedAt: string;
   records: PublicMapRecord[]; coverage: PublicMapCoverage[]; sourceUrls?: string[];
 };
-export type PublicMapFilter = { text: string; publisher: string; county: string; year: string; format: string; availability: string };
+export type PublicMapFilter = { text: string; publisher: string; county: string; year: string; format: string };
 export const PUBLIC_MAP_PAGE_SIZE = 20;
 export const PUBLIC_MAP_MAX_BYTES = 32 * 1024 * 1024;
 export const PUBLIC_MAP_DOWNLOAD_LIMIT = 500_000_000_000;
@@ -72,26 +72,17 @@ export function parsePublicMapCatalog(value: unknown): PublicMapCatalog | null {
   if (value.coverage.some(row => row.recordCount !== (counts.get(row.sourceId) ?? 0))) return null;
   return value as unknown as PublicMapCatalog;
 }
-/** Navigation from pinned references only; these destinations grant no transport permission. */
-export function publicMapNmmrLinks(catalog: PublicMapCatalog | null) {
-  return {
-    search: catalog?.sourceUrls?.find(url => url === "https://mmr.osmre.gov/") ?? null,
-    request: catalog?.records.filter(row => row.sourceId === "osmre-nmmr").flatMap(row => row.assets)
-      .find(asset => asset.kind === "request" && asset.availability === "request-only" && asset.url === "https://mmr.osmre.gov/Request")?.url ?? null,
-  };
-}
+/** Verified public files only. Metadata, shops, services and archive requests are not downloads. */
 export const canDownloadPublicMap = (asset: PublicMapAsset) => asset.kind === "download" && asset.availability === "verified";
 export function filterPublicMaps(records: readonly PublicMapRecord[], filter: PublicMapFilter) {
   const words = filter.text.trim().toLocaleLowerCase("en-US").split(/\s+/).filter(Boolean);
-  return records.filter(row => (filter.publisher === "all" || row.publisher === filter.publisher)
+  return records.filter(row => row.assets.some(canDownloadPublicMap)
+    && !["paid", "purchase-required", "request-only"].includes(row.rights.status)
+    && (filter.publisher === "all" || row.publisher === filter.publisher)
     && (filter.county === "all" || (filter.county === "unknown" ? row.counties.length === 0 : row.counties.includes(filter.county)))
     && (filter.year === "all" || (filter.year === "unknown" ? row.mapYear === null : row.mapYear === Number(filter.year)))
     && words.every(word => `${row.title} ${row.id} ${row.publisher} ${row.counties.join(" ")} ${row.description}`.toLocaleLowerCase("en-US").includes(word))
-    && (filter.format === "all" || row.assets.some(asset => asset.format === filter.format))
-    && (filter.availability === "all" || (filter.availability === "download" ? row.assets.some(canDownloadPublicMap)
-      : filter.availability === "service" ? row.assets.some(asset => asset.kind === "service" && asset.availability === "verified")
-        : filter.availability === "request" ? row.assets.some(asset => asset.kind === "request" || asset.availability === "request-only")
-          : !row.assets.some(canDownloadPublicMap))));
+    && (filter.format === "all" || row.assets.some(asset => canDownloadPublicMap(asset) && asset.format === filter.format)));
 }
 /** Explicit MiB limit; a known asset size is a lower bound, never automatic permission. */
 export function publicMapSelectedLimit(input: string, asset: PublicMapAsset, ceiling = PUBLIC_MAP_DOWNLOAD_LIMIT): number | null {

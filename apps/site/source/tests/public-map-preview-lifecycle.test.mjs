@@ -27,7 +27,7 @@ async function previewHarness({ deferRuntime = false } = {}) {
   const h = await componentHarness('app/public-map-preview.tsx', {
     './maplibre-seam': { loadMapLibre: () => { if (!deferRuntime) return Promise.resolve(runtime); const pending = deferred(); runtimes.push(pending); return pending.promise; } },
     './bounded-json': { readBoundedJson: response => response.json() }, './public-map-preview-model': model,
-  }, { URLSearchParams, fetch: (url, options) => { const pending = deferred(); requests.push({ url, options, ...pending }); return pending.promise; } });
+  }, { URLSearchParams, queueMicrotask, fetch: (url, options) => { const pending = deferred(); requests.push({ url, options, ...pending }); return pending.promise; } });
   let current = record('first'), lastContainer = null;
   const render = () => {
     const tree = h.render(h.exports.PublicMapPreview, { record: current });
@@ -62,7 +62,7 @@ test('closing a pending preview aborts its work; reopening releases busy state a
 test('changing records closes the old preview, aborts pending work and allows an independent new load', async () => {
   const p = await previewHarness(); let tree = await p.open();
   p.button(tree, 'Load this map area').props.onClick(); p.render();
-  p.setRecord(record('second')); p.render(); tree = p.render();
+  p.setRecord(record('second')); p.render(); await settle(); tree = p.render();
   assert.equal(p.requests[0].options.signal.aborted, true); assert.equal(p.maps[0].removed, 1);
   assert.ok(p.button(tree, 'Open source map preview')); assert.equal(p.button(tree, 'Loading source records…'), undefined);
   tree = await p.open(); assert.equal(p.button(tree, 'Load this map area').props.disabled, false);
