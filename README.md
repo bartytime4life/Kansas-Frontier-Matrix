@@ -65,6 +65,7 @@ notes:
 
 <p align="center">
   <a href="#try-it-yourself"><b>Run it yourself</b></a> ·
+  <a href="docs/runbooks/github-data-baseline.md">Download curated source data</a> ·
   <a href="#things-to-try">Things to try</a> ·
   <a href="https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site">Explorer (private preview)</a> ·
   <a href="apps/site/README.md">Explorer source</a> ·

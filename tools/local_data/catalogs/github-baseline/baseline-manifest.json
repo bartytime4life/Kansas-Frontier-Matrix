@@ -1,0 +1,459 @@
+{
+  "schema_version": 1,
+  "release_tag": "curated-data-20261008",
+  "snapshot_utc": "2026-10-09T00:04:29.016409+00:00",
+  "prepared_utc": "2026-10-09T00:12:58.883241+00:00",
+  "status": "source-context-unadmitted",
+  "storage_cap_bytes": 80000000000,
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "source_repository_base_commit": "a7c810e632b68a1d5eebc97cd12b109a759144f2",
+  "datasets": [
+    {
+      "id": "prism",
+      "title": "Kansas PRISM climate grids and county statistics",
+      "description": "216,758 validated completed current-release Kansas GeoTIFFs, 22,759,590 county summaries, and a new normalized analytical SQLite catalog. Normals, dated series, source networks, units and periods remain distinct.",
+      "source_urls": [
+        "https://prism.oregonstate.edu/",
+        "https://data.prism.oregonstate.edu/",
+        "https://prism.oregonstate.edu/terms/"
+      ],
+      "license": "PRISM Group, Oregon State University, https://prism.oregonstate.edu/. Freely reproducible and distributable with attribution. Local holdings accessed 2026-10-08 (America/Chicago); original provider access times are not separately recorded. processed_utc records processing time. Terms checked 2026-10-08; ownership retained by PRISM.",
+      "install_subdir": "prism",
+      "files": 216764,
+      "bytes": 32116358678,
+      "snapshot_at": "2026-10-09T00:04:29.016409+00:00",
+      "assets": [
+        {
+          "name": "prism-rasters-0001.tar.gz",
+          "bytes": 1642122772,
+          "sha256": "489651b8b4c40eaa9cedcee65f6cd69ba4e8cb06f46fe0030244fd9794dfb35a",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/prism-rasters-0001.tar.gz"
+        },
+        {
+          "name": "prism-rasters-0002.tar.gz",
+          "bytes": 1583321477,
+          "sha256": "dafaf91420a46dbdef839562e683bd90e64968aefaf0564b34957768487a94db",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/prism-rasters-0002.tar.gz"
+        },
+        {
+          "name": "prism-rasters-0003.tar.gz",
+          "bytes": 1594169731,
+          "sha256": "f1bb4c75639090eee73fac3280c80bbd9376bb452971cab1a474998d426689a2",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/prism-rasters-0003.tar.gz"
+        },
+        {
+          "name": "prism-rasters-0004.tar.gz",
+          "bytes": 1598010787,
+          "sha256": "91da7020c8f026813721d72941e875cf94f0c6d8cefe4cf2bfb42d9258137c6d",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/prism-rasters-0004.tar.gz"
+        },
+        {
+          "name": "prism-rasters-0005.tar.gz",
+          "bytes": 1603862319,
+          "sha256": "ff0d6f52174f64f21122f7224ef066562b10cf7f0a36331ad257f06b248494e5",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/prism-rasters-0005.tar.gz"
+        },
+        {
+          "name": "prism-rasters-0006.tar.gz",
+          "bytes": 1617382786,
+          "sha256": "27eb461b46ff25d0d352131c87799034bab774004d5e4253b5bcf956ea9c06f9",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/prism-rasters-0006.tar.gz"
+        },
+        {
+          "name": "prism-rasters-0007.tar.gz",
+          "bytes": 1618617117,
+          "sha256": "428dcc2c4ca00b9535ad0d1cbcd190ae84813b20b01afd3d055c1c93617700b3",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/prism-rasters-0007.tar.gz"
+        },
+        {
+          "name": "prism-rasters-0008.tar.gz",
+          "bytes": 1640729095,
+          "sha256": "efd14089a6c3adfd8fc9ad6532dc8041e549a7f71b912c542caf985bf54a0046",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/prism-rasters-0008.tar.gz"
+        },
+        {
+          "name": "prism-rasters-0009.tar.gz",
+          "bytes": 1644379716,
+          "sha256": "0e16624581dde457677f92a76e8c79553c565e45a1b62f12f154d81b24b0186a",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/prism-rasters-0009.tar.gz"
+        },
+        {
+          "name": "prism-rasters-0010.tar.gz",
+          "bytes": 1643462989,
+          "sha256": "26241aaddce3a604c734e39bb8bcc6fba9420a1de52b532189397a6f90358558",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/prism-rasters-0010.tar.gz"
+        },
+        {
+          "name": "prism-rasters-0011.tar.gz",
+          "bytes": 1642693132,
+          "sha256": "4763d13fe3f6c05226364e6d36421a60105e67b704bd755039a7046b650ba66f",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/prism-rasters-0011.tar.gz"
+        },
+        {
+          "name": "prism-rasters-0012.tar.gz",
+          "bytes": 1640528567,
+          "sha256": "751db01bfd0337729e1ad5c96b53dcbeb20f00e3db78acfa4c092d3da12ef6ae",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/prism-rasters-0012.tar.gz"
+        },
+        {
+          "name": "prism-rasters-0013.tar.gz",
+          "bytes": 1642635062,
+          "sha256": "dbe4601868d484501c529248365c169f9f06c0d13795e5007fc48f14521d0726",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/prism-rasters-0013.tar.gz"
+        },
+        {
+          "name": "prism-rasters-0014.tar.gz",
+          "bytes": 1644105969,
+          "sha256": "5ec36e480a8d51df04611570e18414e2df2968b6f51db4c97b4ff42196cb229d",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/prism-rasters-0014.tar.gz"
+        },
+        {
+          "name": "prism-rasters-0015.tar.gz",
+          "bytes": 1644384568,
+          "sha256": "a303caf8987de2c7f95fcf7d02ddbd1b7da13708b9613645d5450133343d95be",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/prism-rasters-0015.tar.gz"
+        },
+        {
+          "name": "prism-rasters-0016.tar.gz",
+          "bytes": 1640978520,
+          "sha256": "29bef68a209148522690788ebf3abe111eae2bce195e8ab35b60a61dcff35ce4",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/prism-rasters-0016.tar.gz"
+        },
+        {
+          "name": "prism-rasters-0017.tar.gz",
+          "bytes": 1640571820,
+          "sha256": "675d47a5ae6c0f812bfb4e502b58d959689642104a505b491df7c2fbfd23f66d",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/prism-rasters-0017.tar.gz"
+        },
+        {
+          "name": "prism-rasters-0018.tar.gz",
+          "bytes": 1644738363,
+          "sha256": "ce6d21d911c0f50b8ddbc6fe5d9d164945ef72deba3be8405f1f3e893211ac37",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/prism-rasters-0018.tar.gz"
+        },
+        {
+          "name": "prism-rasters-0019.tar.gz",
+          "bytes": 1027754999,
+          "sha256": "3e20708b964f6dadb4eb5f10546c20cad8db888dfaf6cbe17bc7187ac9d01a05",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/prism-rasters-0019.tar.gz"
+        },
+        {
+          "name": "prism-catalog-v2.tar.gz",
+          "bytes": 511510795,
+          "sha256": "850dd690e52bda1b25bd86f00a74d59c2fb69bf9a50d6f0dd227a3531ed80488",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/prism-catalog-v2.tar.gz"
+        }
+      ],
+      "lifecycle": "SOURCE_CONTEXT_NOT_ADMITTED"
+    },
+    {
+      "assets": [
+        {
+          "name": "earth-engine-display-001.tar.gz",
+          "bytes": 741934000,
+          "sha256": "437f91a16da5519717db8e650099165f5eb96a0c0b286c0914d5fbd56292bb55",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/earth-engine-display-001.tar.gz"
+        }
+      ],
+      "bytes": 754857881,
+      "description": "Five approved visual-context layers with 15,806 PNG tiles, 32 tile indexes, exact manifest and active pointer; 2024 imagery/climate plus mixed-date terrain.",
+      "files": 15843,
+      "id": "earth-engine-display",
+      "install_subdir": "earth-engine-display",
+      "license": "USDA CDL and CHIRPS public domain; TerraClimate CC0; USGS public domain; Sentinel open reuse with attribution: Contains modified Copernicus Sentinel data 2024.",
+      "lifecycle": "SOURCE_CONTEXT_NOT_ADMITTED",
+      "snapshot_at": "2026-10-09T00:02:47.453630+00:00",
+      "source_urls": [
+        "https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL",
+        "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+        "https://developers.google.com/earth-engine/datasets/catalog/IDAHO_EPSCOR_TERRACLIMATE",
+        "https://sentinels.copernicus.eu/documents/247904/690755/Sentinel_Data_Legal_Notice",
+        "https://www.usgs.gov/faqs/what-are-terms-uselicensing-map-services-and-data-national-map"
+      ],
+      "title": "Reviewed Kansas Earth Engine display context"
+    },
+    {
+      "assets": [
+        {
+          "name": "earth-engine-rasters-001.tar.gz",
+          "bytes": 563116584,
+          "sha256": "aedd848e63ddcaeff5c8f0238fa03f957d3557ff570605891a5d4b17befa2316",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/earth-engine-rasters-001.tar.gz"
+        },
+        {
+          "name": "earth-engine-rasters-002.tar.gz",
+          "bytes": 977533311,
+          "sha256": "fb675f480730ddb0f7bb30c06226ecc9fdad40486dba9b9c89d6438a1dc98fa5",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/earth-engine-rasters-002.tar.gz"
+        },
+        {
+          "name": "earth-engine-rasters-003.tar.gz",
+          "bytes": 1242598188,
+          "sha256": "f8d5f87f1541b8846a9334caf091763f898f5fd052da279c82698bfddaa986c5",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/earth-engine-rasters-003.tar.gz"
+        }
+      ],
+      "bytes": 2816277645,
+      "description": "Five source-attributed assembled statewide GeoTIFFs supporting the approved display context; separate source inventories and review metadata.",
+      "files": 25,
+      "id": "earth-engine-rasters",
+      "install_subdir": "earth-engine-rasters",
+      "license": "Same source-specific terms as earth-engine-display: public domain/CC0 and Copernicus attribution; Contains modified Copernicus Sentinel data 2024.",
+      "lifecycle": "SOURCE_CONTEXT_NOT_ADMITTED",
+      "reassemble": [
+        {
+          "bytes": 2244448612,
+          "parts": [
+            "earth-engine-rasters/exports/ee-sentinel2/statewide.tif.part000",
+            "earth-engine-rasters/exports/ee-sentinel2/statewide.tif.part001",
+            "earth-engine-rasters/exports/ee-sentinel2/statewide.tif.part002"
+          ],
+          "path": "earth-engine-rasters/exports/ee-sentinel2/statewide.tif",
+          "sha256": "51ad520c80f58442345d825d32c5259e0de412a286975e88a6a68dcb73773682"
+        }
+      ],
+      "snapshot_at": "2026-10-09T00:02:47.453630+00:00",
+      "source_urls": [
+        "https://developers.google.com/earth-engine/datasets/catalog/USDA_NASS_CDL",
+        "https://developers.google.com/earth-engine/datasets/catalog/UCSB-CHG_CHIRPS_DAILY",
+        "https://developers.google.com/earth-engine/datasets/catalog/IDAHO_EPSCOR_TERRACLIMATE",
+        "https://sentinels.copernicus.eu/documents/247904/690755/Sentinel_Data_Legal_Notice",
+        "https://www.usgs.gov/faqs/what-are-terms-uselicensing-map-services-and-data-national-map"
+      ],
+      "title": "Kansas assembled Earth Engine rasters"
+    },
+    {
+      "assets": [
+        {
+          "name": "noaa-ghcnd-001.tar.gz",
+          "bytes": 167654517,
+          "sha256": "87159f6e63d57d805acf78f5b3de1f76f6b325b61695ddec3b0a6334fb9edfae",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/noaa-ghcnd-001.tar.gz"
+        }
+      ],
+      "bytes": 236338112,
+      "description": "2,519 Kansas station histories, 51,522,960 station/date/element rows spanning collection bounds 1857-04-01 through 2026-10-04.",
+      "files": 2531,
+      "id": "noaa-ghcnd",
+      "install_subdir": "noaa-ghcnd",
+      "license": "NOAA United States station data; public-domain federal source, acknowledge NOAA NCEI. Selected observation station IDs are US stations; no foreign observations are included.",
+      "lifecycle": "SOURCE_CONTEXT_NOT_ADMITTED",
+      "snapshot_at": "2026-10-09T00:02:47.453630+00:00",
+      "source_urls": [
+        "https://www.ncei.noaa.gov/pub/data/ghcn/daily/",
+        "https://www.ncei.noaa.gov/pub/data/cdo/documentation/GHCND_documentation.pdf",
+        "https://www.noaa.gov/office-education/outreach-communication/faq"
+      ],
+      "title": "Kansas GHCN Daily station histories"
+    },
+    {
+      "assets": [
+        {
+          "name": "noaa-nwm-001.tar.gz",
+          "bytes": 65551475,
+          "sha256": "d3c91633258219fdadb9744b73c9a2f6c6f6ca621d8fa7ea844fad5a5d018672",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/noaa-nwm-001.tar.gz"
+        }
+      ],
+      "bytes": 65630855,
+      "description": "101,599 river reaches and 19 model frames with 1,930,381 reach-time rows; derived geometry, values, units, flags, times, and source hashes.",
+      "files": 7,
+      "id": "noaa-nwm",
+      "install_subdir": "noaa-nwm",
+      "license": "NOAA federal source data, public domain; acknowledge NOAA National Water Model.",
+      "lifecycle": "SOURCE_CONTEXT_NOT_ADMITTED",
+      "snapshot_at": "2026-10-09T00:02:47.453630+00:00",
+      "source_urls": [
+        "https://water.noaa.gov/about/nwm",
+        "https://nomads.ncep.noaa.gov/pub/data/nccf/com/nwm/prod/",
+        "https://www.noaa.gov/office-education/outreach-communication/faq"
+      ],
+      "title": "Kansas-envelope National Water Model context"
+    },
+    {
+      "assets": [
+        {
+          "name": "airport-wind-001.tar.gz",
+          "bytes": 67459552,
+          "sha256": "551045d83a40d5f1f717880b8f3c5871ef9d1ac99a1ff9bc67289897c34ca477",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/airport-wind-001.tar.gz"
+        }
+      ],
+      "bytes": 89712675,
+      "description": "68 Kansas IEM ASOS stations; 841,733 returned daily rows (1932–2026), partial observation detail 1932–2002, and October 6 latest local snapshot.",
+      "files": 343,
+      "id": "airport-wind",
+      "install_subdir": "airport-wind",
+      "license": "Iowa Environmental Mesonet, Iowa State University: public domain, lawful reuse; attribution requested.",
+      "lifecycle": "SOURCE_CONTEXT_NOT_ADMITTED",
+      "snapshot_at": "2026-10-09T00:02:47.453630+00:00",
+      "source_urls": [
+        "https://mesonet.agron.iastate.edu/geojson/network.py?network=KS_ASOS",
+        "https://mesonet.agron.iastate.edu/request/download.phtml?network=KS_ASOS",
+        "https://mesonet2.agron.iastate.edu/disclaimer.php"
+      ],
+      "title": "Kansas airport wind history"
+    },
+    {
+      "assets": [
+        {
+          "name": "census-tiger-001.tar.gz",
+          "bytes": 1331859957,
+          "sha256": "30b29e3914460179d3995e98d63ee141b16e563acf0848b39c9664842072990a",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/census-tiger-001.tar.gz"
+        },
+        {
+          "name": "census-tiger-002.tar.gz",
+          "bytes": 526782150,
+          "sha256": "0b46a543ae41145e6c8ff0f2f135149b6ff56cc705608f2671b46881a947a46d",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/census-tiger-002.tar.gz"
+        }
+      ],
+      "bytes": 1879540232,
+      "description": "1,083 exact original ZIPs plus derived Kansas county polygons, place/township reference points and feature inventories; originals reverified by SHA-256, size and ZIP CRC.",
+      "files": 1093,
+      "id": "census-tiger",
+      "install_subdir": "census-tiger",
+      "license": "United States Census Bureau federal data, public domain; cite Census Bureau. TIGER and Census trademarks retain their separate status.",
+      "lifecycle": "SOURCE_CONTEXT_NOT_ADMITTED",
+      "snapshot_at": "2026-10-09T00:02:47.453630+00:00",
+      "source_urls": [
+        "https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html",
+        "https://www2.census.gov/geo/tiger/TIGER2025/",
+        "https://www2.census.gov/geo/pdfs/maps-data/data/tiger/tgrshp2018/TGRSHP2018_TechDoc.pdf"
+      ],
+      "title": "Census TIGER 2025 Kansas and national reference geography"
+    },
+    {
+      "assets": [
+        {
+          "name": "noaa-history-001.tar.gz",
+          "bytes": 62415285,
+          "sha256": "a830ee8d53e10b61cd6b5b6616071a83c937917579e152cf5e6e65eadfdcb192",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/noaa-history-001.tar.gz"
+        }
+      ],
+      "bytes": 66953554,
+      "description": "Kansas source-native GHCNDEX annual indices, station geography/coverage, Kansas NEXRAD archive availability and year-2000 ASOS daily wind candidates.",
+      "files": 13,
+      "id": "noaa-history",
+      "install_subdir": "noaa-history",
+      "license": "NOAA federal source products, public domain for selected Kansas observations; acknowledge NOAA NCEI.",
+      "lifecycle": "SOURCE_CONTEXT_NOT_ADMITTED",
+      "snapshot_at": "2026-10-09T00:02:47.453630+00:00",
+      "source_urls": [
+        "https://www.ncei.noaa.gov/",
+        "https://www.ncei.noaa.gov/pub/data/ghcn/daily/",
+        "https://www.noaa.gov/office-education/outreach-communication/faq"
+      ],
+      "title": "Curated Kansas NOAA historical products"
+    },
+    {
+      "assets": [
+        {
+          "name": "noaa-normals-001.tar.gz",
+          "bytes": 2120435,
+          "sha256": "d0381147833cb898350328e7964c7bf0e59bf3650dffa272c5010c0bdbad206c",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/noaa-normals-001.tar.gz"
+        }
+      ],
+      "bytes": 13146258,
+      "description": "568 Kansas stations: original station CSVs, source inventory, capture manifest and curated monthly precipitation/temperature normals.",
+      "files": 574,
+      "id": "noaa-normals",
+      "install_subdir": "noaa-normals",
+      "license": "NOAA NCEI United States climate normals, public-domain federal source; acknowledge NOAA NCEI.",
+      "lifecycle": "SOURCE_CONTEXT_NOT_ADMITTED",
+      "snapshot_at": "2026-10-09T00:04:35.952990+00:00",
+      "source_urls": [
+        "https://noaa-normals-pds.s3.amazonaws.com/",
+        "https://www.ncei.noaa.gov/products/land-based-station/us-climate-normals",
+        "https://www.noaa.gov/office-education/outreach-communication/faq"
+      ],
+      "title": "Kansas NOAA 1991–2020 monthly normals"
+    },
+    {
+      "assets": [
+        {
+          "name": "usgs-water-pilot-001.tar.gz",
+          "bytes": 70848,
+          "sha256": "d78efdbc1293ca5cc68f9beca8ebc07396700bd2dc78a6fe067f800c036cf549",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/usgs-water-pilot-001.tar.gz"
+        }
+      ],
+      "bytes": 496029,
+      "description": "193 source-referenced provisional streamflow observations from gauges USGS-06892518 and USGS-07156900, including original provider JSON pages and the current corrected local candidate.",
+      "files": 10,
+      "id": "usgs-water-pilot",
+      "install_subdir": "usgs-water-pilot",
+      "license": "USGS-authored federal data are public domain absent identified third-party restrictions; acknowledge USGS Water Data.",
+      "lifecycle": "SOURCE_CONTEXT_NOT_ADMITTED",
+      "snapshot_at": "2026-10-09T00:04:35.952990+00:00",
+      "source_urls": [
+        "https://api.waterdata.usgs.gov/",
+        "https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits"
+      ],
+      "title": "USGS Kansas water pilot historical observations"
+    }
+  ],
+  "data_archive_bytes": 36615056886,
+  "expanded_payload_bytes": 38039311919,
+  "source_currentness": "Frozen current validated local holdings at each recorded snapshot, not a provider refresh or assertion of complete upstream holdings. Historical periods and expired NWM forecast remain explicit.",
+  "exclusions": [
+    "KDOT PDF collections and map-derived vectors/OCR: current KDOT distribution terms require explicit permission",
+    "KGS M118 maps: current terms restrict reuse and source downloads include partial files; omitted pending precise redistribution terms",
+    "Superseded Earth Engine display sets, duplicate export shards and samples",
+    "Private runtime databases, credentials, local references, recovery backups and local audit receipts",
+    "Active PRISM operational files and older snapshots: PRISM separately exported transactionally",
+    "Broad uncurated NOAA FTP mirror replaced here by selected Kansas historical derivatives",
+    "NWM raw CONUS source files: curated Kansas-envelope values/geometry and source hashes retained",
+    "Stale September 24 latest wind snapshot superseded by retained October 6 capture",
+    {
+      "dataset": "prism",
+      "excluded_completed_grids": [
+        {
+          "county_rows": 105,
+          "raster_bytes": 2536,
+          "reasons": [
+            "superseded_prior_version"
+          ],
+          "source_path": "prior_versions/ppt/daily_D1_201506/1981/PRISM_ppt_stable_4kmD1_19810101_bil.zip"
+        },
+        {
+          "county_rows": 105,
+          "raster_bytes": 776670,
+          "reasons": [
+            "missing_source_unit"
+          ],
+          "source_path": "time_series/us/lt/800m/ppt/monthly/2025/prism_ppt_us_30s_202510.zip"
+        },
+        {
+          "county_rows": 105,
+          "raster_bytes": 742588,
+          "reasons": [
+            "missing_source_unit"
+          ],
+          "source_path": "time_series/us/lt/800m/ppt/monthly/2025/prism_ppt_us_30s_202511.zip"
+        }
+      ],
+      "excluded_noncomplete_counts": {
+        "indexed": 241054
+      }
+    },
+    "Google Drive and Notion project records were consulted for context, not copied as source-data payloads. Hosted knowledge_public and water_active were empty when checked."
+  ],
+  "storage_budget": {
+    "cap_bytes": 80000000000,
+    "repository_reported_bytes_before": 234924032,
+    "release_assets_bytes_before": 0,
+    "data_assets_bytes": 36615056886,
+    "support_metadata_reserve_bytes": 10000000,
+    "projected_bytes_with_reserve": 36859980918
+  },
+  "validation": [
+    "All archives round-trip checked for exact members, sizes and SHA-256.",
+    "PRISM source identities, units and 105 finite ordered county summaries per grid; analytical SQLite integrity and foreign keys.",
+    "EE reviewed manifest/index/tile hashes; Census original ZIP hashes and CRC; GHCND and NWM capture receipts; gzip CRC; private-path and credential scans.",
+    "Installer synthetic tests cover limits, hashes, paths, no-overwrite behavior and split-file reconstruction."
+  ]
+}
