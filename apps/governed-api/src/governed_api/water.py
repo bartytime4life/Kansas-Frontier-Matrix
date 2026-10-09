@@ -41,6 +41,9 @@ def respond(environ, start_response, store):
         status, payload = "503 Service Unavailable", negative("RELEASE_STORE_UNAVAILABLE", now=now, outcome="ERROR")
     except Exception:
         status, payload = "503 Service Unavailable", negative("SAFE_RUNTIME_ERROR", now=now, outcome="ERROR")
+    # A projected ERROR (for example an evidence digest mismatch) is a defect, as on the legacy routes.
+    if status == "200 OK" and payload["envelope"]["outcome"] == "ERROR":
+        status = "500 Internal Server Error"
     # Fixed fields only: never reflect query strings, paths, evidence or errors.
     LOG.info(json.dumps({"event": "governed_read", "component": "governed-api", "build": "kfm-water-v1",
                          "correlation_id": correlation, "source_id": "usgs-nwis", "outcome": payload["envelope"]["outcome"],
