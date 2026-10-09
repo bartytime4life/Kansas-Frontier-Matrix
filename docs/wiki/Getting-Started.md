@@ -2,28 +2,53 @@
 KFM_WIKI_SOURCE
 page_id: Getting-Started
 title: Getting Started
-version: v0.3.0
-status: PROPOSED wiki source; review required
-created: 2026-08-07
-updated: 2026-09-27
-authority: orientation-only; canonical repository evidence, adopted KFM doctrine, accepted ADRs, contracts, schemas, policy, tests, lifecycle records, and release decisions outrank this page
+status: source-grounded orientation; independent review pending
+updated: 2026-10-09
+authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/Getting-Started.md
-owning_root: docs/
-responsibility: public onboarding for reading, verifying, running, changing, validating, and reviewing KFM without weakening the trust membrane
-evidence_snapshot: main@9cb437d803a431928d3b919d9a7814647f812583
-prior_blob: f40a2e8b8c84aa338da3ddbffb678b501d8ff222
-publication_effect: none until separately synchronized to the native GitHub Wiki
+evidence_checkpoint: main@9666e026682c514c0086155a8754cbe58abed0eb
+publication_effect: native wiki documentation only; no application deployment or data release
 -->
 
 <a id="top"></a>
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/main/docs/brand/logo/The-Kansas-Frontier-Matrix-Seal-transparent-cropped.png" alt="Kansas Frontier Matrix seal" width="150" />
-</p>
-
-
-> **Exploring the portfolio?** Take the [visual tour](Visual-Tour.md), meet [the builder](Builder-Profile.md), or inspect the [engineering case studies](Engineering-Case-Studies.md).
 # Getting Started
+
+## A guided first investigation
+
+**Choose a question. Follow the source. Keep the result understandable.**
+
+You can evaluate KFM without access to the private hosted Explorer. Use the public product walkthrough, then follow a single behavior into its implementation and tests.
+
+### Pick your route
+
+| You are here to… | First stop | One layer deeper |
+|---|---|---|
+| Evaluate the builder | [Builder profile](Builder-Profile.md) | [Engineering case studies](Engineering-Case-Studies.md) |
+| Understand the experience | [Visual tour](Visual-Tour.md) | [Map, UI, and AI](Map-UI-and-AI.md) |
+| Understand the software | [Architecture](Architecture.md) | [Repository map](Repository-Map.md) |
+| Run or contribute | [Development and validation](Development-and-Validation.md) | [Contribution walkthrough](Contributing.md) |
+
+### Walk through one useful question
+
+“Which available source records help me understand this area?” is a good start. Frame the area; choose an eligible source and time; inspect a record; read its units and limits; then save the investigation or capture a dated report. In the source, [map research tools](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/docs/map-research-tools.md) explains the differences between a nearby dossier, saved settings, and a captured report.
+
+A saved investigation restores settings and reloads eligible data. A report preserves the context captured at a particular time. Neither makes missing records appear or converts provider context into reviewed KFM evidence.
+
+### Know the three environments
+
+The **repository** supplies source and review history. A **local installation** has its own runtime and storage. The **hosted Explorer** is owner-private. Moving between them requires explicit source, storage, and access checks; a source checkout does not include the owner's private data.
+
+**Next:** [Explore the interaction model](Map-UI-and-AI.md) or [follow the installation path](Development-and-Validation.md#run-the-right-component).
+
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+
+---
+
+<details>
+<summary>Earlier reference edition — historical context and detailed background</summary>
+
+> **Historical material:** The retained text below predates this renovation. Its source pins, commands, runtime statements, counts and open questions apply only to their original checkpoints. Read the current introduction above and the linked source for present navigation. It does not update implementation or approval state.
 
 <p align="center"><strong>Read the system · Prove your environment · Choose a bounded change · Preserve the trust membrane</strong></p>
 
@@ -489,3 +514,5 @@ File presence is evidence of repository state. It is not a shortcut around the a
 ---
 
 [Home](Home.md) · [Architecture](Architecture.md) · [Development and Validation](Development-and-Validation.md) · [Contributing](Contributing.md) · [Back to top](#top)
+
+</details>

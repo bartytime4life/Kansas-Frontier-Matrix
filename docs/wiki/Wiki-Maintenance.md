@@ -2,26 +2,56 @@
 KFM_WIKI_SOURCE
 page_id: Wiki-Maintenance
 title: Wiki Maintenance
-version: v0.2.0
-status: PROPOSED wiki source; review required
-created: 2026-08-07
-updated: 2026-08-15
-authority: orientation-and-operations guidance only; canonical repository evidence, adopted KFM authority, repository security policy, and reviewed source bytes outrank this page
+status: source-grounded orientation; independent review pending
+updated: 2026-10-09
+authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/Wiki-Maintenance.md
-owning_root: docs/
-responsibility: public-safe maintenance guidance for authoring, reviewing, synchronizing, validating, correcting, and rolling back the KFM native GitHub Wiki projection
-evidence_snapshot: main@2be86d8d60ba2b33e724935208682153fc06d812
-prior_blob: 15401ed968973108bd5c957e4aa1450a949dfdef
-publication_effect: none until a separately authorized native-wiki synchronization succeeds and is read back
+evidence_checkpoint: main@9666e026682c514c0086155a8754cbe58abed0eb
+publication_effect: native wiki documentation only; no application deployment or data release
 -->
 
 <a id="top"></a>
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/main/docs/brand/logo/The-Kansas-Frontier-Matrix-Seal-transparent-cropped.png" alt="Kansas Frontier Matrix seal" width="150" />
-</p>
-
 # Wiki Maintenance
+
+## Keep the source and the public tour aligned
+
+**Author in the repository; publish an exact, inspectable projection.**
+
+### The current publishing path
+
+```mermaid
+flowchart LR
+    S[docs/wiki source] --> C[Immutable source commit]
+    C --> D[Dry-run projection and link checks]
+    D --> P[Authorized native wiki push]
+    P --> V[Remote readback and rendered review]
+```
+
+The [synchronization helper](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/tools/docs/wiki/sync_kfm_github_wiki.ps1) has a finite allowlist. It maps repository-style local `.md` links onto native wiki routes, retains fragments, and points source-contract README links to the selected source commit. Existing extra native pages remain preserved. The [helper guide](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/tools/docs/wiki/README.md) explains the transport boundary.
+
+### A reproducible publication record
+
+Record source SHA, previous wiki SHA, resulting wiki SHA, changed page set, validation and rendered observations. Keep authoring provenance and independent review state explicit. The first renovation was published under the owner's explicit wiki-update request while its source PR was pending. That was a recorded exception to the ordinary merge-first path; publication did not label the source merged or independently approved.
+
+For the first renovation, source `b279457d3c7f3562e9c7a75b23a901e207402df0` produced wiki `45b03bb48f4c15b2aa4552532d1355cec89e5335`. Its source PR #4979 subsequently merged as `9666e026682c514c0086155a8754cbe58abed0eb`. These are historical checkpoint identities, not automatic evidence of this edition's later publication.
+
+### What to verify before and after projection
+
+Before publication, resolve local links and fragments, check pinned repository targets, validate authoring receipts and inspect the staged allowlist. After publication, read back the remote wiki commit and inspect actual page navigation, images and diagrams. A successful Git push cannot prove rendering.
+
+Use a forward revert or corrected publication to recover from an incorrect page. Source rollback and native-wiki rollback are separate. The older detailed material below preserves original operational context, including historical commands and unresolved questions; use the current helper and selected immutable source when operating today.
+
+**Next:** [Source packet contract](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/f06e477a30ee307d3f440d1f5141db47388ae7f1/docs/wiki/README.md) · [Contribution workflow](Contributing.md) · [Security reporting](Security-and-Sensitivity.md).
+
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+
+---
+
+<details>
+<summary>Earlier reference edition — historical context and detailed background</summary>
+
+> **Historical material:** The retained text below predates this renovation. Its source pins, commands, runtime statements, counts and open questions apply only to their original checkpoints. Read the current introduction above and the linked source for present navigation. It does not update implementation or approval state.
 
 <p align="center"><strong>How KFM keeps a public GitHub Wiki useful without turning it into a second authority, an unreviewed publishing path, or a place where corrections disappear.</strong></p>
 
@@ -833,3 +863,5 @@ After native synchronization, source rollback and native-wiki rollback are separ
 Then rerun documentation metadata, links, graph, stale-reference, accessibility, and generated-receipt validation. If the reverted page was already synchronized, create a normal native-wiki revert or synchronize a reviewed corrected source commit—never rewrite shared history merely to make the timeline appear clean.
 
 [Back to top](#top)
+
+</details>

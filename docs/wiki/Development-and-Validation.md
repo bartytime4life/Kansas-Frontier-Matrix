@@ -2,16 +2,69 @@
 KFM_WIKI_SOURCE
 page_id: Development-and-Validation
 title: Development and Validation
-status: PROPOSED wiki source; review required
-updated: 2026-09-27
-authority: orientation-only; canonical repository evidence and adopted KFM authority outrank this page
+status: source-grounded orientation; independent review pending
+updated: 2026-10-09
+authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/Development-and-Validation.md
-publication_effect: none until separately synchronized to the native GitHub Wiki
-evidence_checkpoint: main@0abdce42ea0a41f88e86b7d97df0ebd79961e37b
+evidence_checkpoint: main@9666e026682c514c0086155a8754cbe58abed0eb
+publication_effect: native wiki documentation only; no application deployment or data release
 -->
+
 <a id="top"></a>
 
 # Development and Validation
+
+## A practical engineering evaluation path
+
+**Run the component you intend to evaluate, then match each check to its claim.**
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/9666e026682c514c0086155a8754cbe58abed0eb/docs/brand/readme/kfm-install-paths-dark.svg" /><img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/9666e026682c514c0086155a8754cbe58abed0eb/docs/brand/readme/kfm-install-paths.svg" alt="Four separate installation paths for local data tools, validators, shared JavaScript and the Explorer Site." width="100%" /></picture>
+
+<sub>Illustrative project artwork; not a runtime screenshot or measured data.</sub>
+
+### Run the right component
+
+The [installation guide](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/f06e477a30ee307d3f440d1f5141db47388ae7f1/docs/installation.md) separates Python validators, shared JavaScript packages, local-data tools and the Explorer Site. The Site has its own npm lockfile; root pnpm commands do not install it. Root aggregate scripts include intentional workflow holds.
+
+For a new local Site evaluation, the documented sequence from the repository root is:
+
+```bash
+cd apps/site/source
+npm run install:ci
+npm run build
+../serve-local.sh
+```
+
+Read prerequisites and state behavior in the installation guide first. Dependency installation may use the network; the launcher initializes local simulator state on first use. These are reader instructions, not commands run as part of this wiki update. A checkout does not contain hosted private rows, uploads or provider snapshots.
+
+### Local operation and recovery
+
+Treat **source**, **origin**, and **physical storage** as separate identities. An existing user's local installation may use a stable alias and a state directory outside the current source tree. Replacing a source folder must not select an empty store or discard browser-local records. Follow the [local operation and recovery guide](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/docs/local-pc-consolidation.md) before changing a running installation; its historical machine paths are examples, not a new machine's defaults.
+
+### Choose evidence proportionate to the change
+
+| Change | Useful check | What remains separate |
+|---|---|---|
+| Documentation/navigation | Links, anchors, metadata, source citations and rendered page | Implementation or release acceptance |
+| Pure comparison behavior | [Comparison regressions](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/tests/earth-engine-comparison.test.mjs) | Real installed imagery and device rendering |
+| Application interaction | Build, typecheck, targeted regression plus the actual browser interaction | Broader accessibility/device coverage |
+| Local runtime | [Site check and smoke instructions](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/f06e477a30ee307d3f440d1f5141db47388ae7f1/docs/installation.md#explorer-site-mirror) | Hosted bindings, private records and source admission |
+| AI-authored artifact | [Generated receipt validation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/tools/validators/validate_generated_receipt.py) | Independent review and approval |
+
+### Report a result someone else can assess
+
+Record the commit, working directory, command, result and relevant limits. “The comparison tests pass at this revision” is useful. “The whole system is complete” requires different evidence. Historical suite counts elsewhere in this wiki retain their original dates and scope.
+
+**Next:** [Create a reviewable contribution](Contributing.md) or [inspect the current evidence checkpoint](Project-Status.md).
+
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+
+---
+
+<details>
+<summary>Earlier reference edition — historical context and detailed background</summary>
+
+> **Historical material:** The retained text below predates this renovation. Its source pins, commands, runtime statements, counts and open questions apply only to their original checkpoints. Read the current introduction above and the linked source for present navigation. It does not update implementation or approval state.
 
 > **Run the smallest validation set that can prove the changed boundary, include its negative cases, and report exactly what the result does—and does not—establish.**
 
@@ -418,3 +471,5 @@ Avoid:
 ---
 
 [Contributing](Contributing.md) · [Wiki Maintenance](Wiki-Maintenance.md) · [Back to top](#top)
+
+</details>

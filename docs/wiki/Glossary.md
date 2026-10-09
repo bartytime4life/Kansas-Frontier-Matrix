@@ -2,17 +2,56 @@
 KFM_WIKI_SOURCE
 page_id: Glossary
 title: Glossary
-status: PROPOSED wiki source; review required
-updated: 2026-08-14
-authority: orientation-only; adopted doctrine, accepted ADRs, contracts, schemas, policy, and current repository evidence control exact meaning
+status: source-grounded orientation; independent review pending
+updated: 2026-10-09
+authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/Glossary.md
-publication_effect: none until separately synchronized to the native GitHub Wiki
-evidence_checkpoint: main@f26484bdf775c949be3031bd258ce113c1ad1cce
-prior_blob: 857f8b0cc26b1b02e97ea17635ff258d5934429b
+evidence_checkpoint: main@9666e026682c514c0086155a8754cbe58abed0eb
+publication_effect: native wiki documentation only; no application deployment or data release
 -->
+
 <a id="top"></a>
 
 # Glossary
+
+## A working vocabulary for reviewers
+
+**Use the term that matches the evidence.**
+
+| Term | Plain-language meaning | Example or next stop |
+|---|---|---|
+| Provider context | Information displayed with its original source role and limits | A map layer is not automatically claim evidence |
+| Observation time | When the source says the event or measurement occurred | Different from retrieval time |
+| Retrieval time | When the application obtained the response | A fresh fetch can contain old observations |
+| Record time | A date attached to a source record | Underground filtering is not geological reconstruction |
+| Snapshot identity | The exact captured artifact or source edition | [Imagery comparison](Engineering-Case-Studies.md#02--compare-time-without-substituting-history) |
+| EvidenceRef / EvidenceBundle | A reference to support / its resolvable evidence carrier under the governing contracts | [Governance and evidence](Governance-and-Evidence.md) |
+| Generated receipt | AI-authored artifact provenance and process memory | Not a human approval or release decision |
+| Source admission | Applicable decision that a source can enter a governed use | Different from download completion |
+| Activation | Selection of eligible material for a particular runtime use | Different from installing source code |
+| Release | A scoped, governed delivery decision | Different from an ordinary wiki publication |
+| ABSTAIN | A bounded response that does not provide an answer | Inspect the reason; a scaffold can use `NOT_IMPLEMENTED` |
+| DENY | A response withholding access under its applicable boundary | Not the same as a transport error |
+| ERROR | A failure in processing or delivery | Must not silently become an answer |
+| Mirror parity | Equality of identified source bytes across two copies | Does not establish review or acceptance |
+| Browser acceptance | Observed interaction behavior on a named source/device | More specific than a successful build |
+
+These are reading aids. Exact object shapes and normative meanings remain in the relevant [contracts](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/contracts/README.md), [schemas](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/schemas/README.md) and adopted doctrine.
+
+### Three easy mistakes to avoid
+
+A new download is not necessarily a new observation. A green check is not necessarily independent approval. A successful deployment is not necessarily an accepted investigation flow.
+
+**Next:** [Apply the vocabulary to project status](Project-Status.md) or [follow the lifecycle](Data-Lifecycle.md).
+
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+
+---
+
+<details>
+<summary>Earlier reference edition — historical context and detailed background</summary>
+
+> **Historical material:** The retained text below predates this renovation. Its source pins, commands, runtime statements, counts and open questions apply only to their original checkpoints. Read the current introduction above and the linked source for present navigation. It does not update implementation or approval state.
 
 <p align="center">
   <strong>Shared KFM vocabulary for readers, reviewers, contributors, and downstream wiki users</strong>
@@ -421,3 +460,5 @@ The non-public transformation and quality-assurance stage where RAW inputs becom
 ---
 
 [Home](Home.md) · [Architecture](Architecture.md) · [Governance and Evidence](Governance-and-Evidence.md) · [Data Lifecycle](Data-Lifecycle.md) · [Back to top](#top)
+
+</details>

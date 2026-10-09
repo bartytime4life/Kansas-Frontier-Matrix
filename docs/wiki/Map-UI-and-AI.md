@@ -2,41 +2,60 @@
 KFM_WIKI_SOURCE
 page_id: Map-UI-and-AI
 title: Map, UI, and AI
-version: v0.2.0
-status: PROPOSED wiki source; review required
-created: 2026-08-07
-updated: 2026-08-15
-authority: orientation-only; canonical repository evidence, adopted KFM authority, accepted ADRs, contracts, schemas, policy, and owning responsibility roots outrank this page
+status: source-grounded orientation; independent review pending
+updated: 2026-10-09
+authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/Map-UI-and-AI.md
-owning_root: docs/
-responsibility: public orientation to KFM's map-first experience, trust-visible UI, governed AI boundary, current bounded implementation, and safe graduation path
-evidence_checkpoint: main@85fa02e81d0e8ca0b746d5b659aa987b910aecd2
-prior_blob: 2ea777fa676cd1a95cb264fc81f9b20a5e9a88a3
-publication_effect: none until separately synchronized to the native GitHub Wiki
-related:
-  - README.md
-  - Architecture.md
-  - Governance-and-Evidence.md
-  - Data-Lifecycle.md
-  - Project-Status.md
-  - Security-and-Sensitivity.md
-  - ../architecture/maplibre.md
-  - ../architecture/ui/EVIDENCE_DRAWER.md
-  - ../architecture/governed-ai/FOCUS_FLOW.md
-  - ../adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md
-  - ../adr/ADR-0005-apps-explorer-web-is-the-canonical-map-first-shell.md
-  - ../adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md
+evidence_checkpoint: main@9666e026682c514c0086155a8754cbe58abed0eb
+publication_effect: native wiki documentation only; no application deployment or data release
 -->
 
 <a id="top"></a>
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/main/docs/brand/logo/The-Kansas-Frontier-Matrix-Seal-transparent-cropped.png" alt="Kansas Frontier Matrix seal" width="150" />
-</p>
-
-
-> **Exploring the portfolio?** Take the [visual tour](Visual-Tour.md), meet [the builder](Builder-Profile.md), or inspect the [engineering case studies](Engineering-Case-Studies.md).
 # Map, UI, and AI
+
+## From interaction to evidence
+
+**Design the investigation around place, time, and the selected source.**
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/9666e026682c514c0086155a8754cbe58abed0eb/docs/brand/readme/kfm-focus-mode-dark.svg" /><img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/9666e026682c514c0086155a8754cbe58abed0eb/docs/brand/readme/kfm-focus-mode.svg" alt="Illustrative map investigation with contextual controls and a focused explanation panel." width="100%" /></picture>
+
+<sub>Illustrative project artwork; not a runtime screenshot or measured data.</sub>
+
+### The user journey and the state it owns
+
+| Moment | User intent | State that must stay attached |
+|---|---|---|
+| Frame an area | Establish where to investigate | Accepted area, source selection and time |
+| Inspect a record | Understand an observation or interval | Stable record identity, units, original description and limitations |
+| Compare two years | Examine compatible historical views | Product identity and separate observation periods |
+| Save an investigation | Return to the same setup | Settings and eligible source IDs; fresh data is loaded on reopening |
+| Create a report | Keep a dated account | Captured context, provenance and privacy state |
+
+The [research tools guide](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/docs/map-research-tools.md) explains nearby dossiers, filtered source lists and report capture. The [research-context model](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/app/research-context.ts) and [its tests](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/tests/research-context.test.mjs) are a useful next step for technical readers.
+
+### Two interaction problems worth inspecting
+
+**The user moves on before the network finishes.** Selection identity and cancellation protect the next area, station or imagery pair from a late result. See [historical comparison and export case studies](Engineering-Case-Studies.md).
+
+**The visual channel fails.** Missing tiles and unavailable WebGL require a legible explanation and bounded fallback. The [comparison guide](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/docs/history-comparison.md) describes a 2D mosaic that keeps the selected source and time intact.
+
+### AI has two different roles
+
+**During development**, AI helps author, explain, and test artifacts under human direction. [Contributing](Contributing.md) describes that review workflow.
+
+**Inside an application**, any optional model integration has its own runtime, availability, evidence and privacy boundaries. The presence of [Qwen-related application code](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/README.md#local-qwen-companion-setup-opt-in) does not establish that a provider is connected or that an AI answer is governed evidence. This wiki renovation does not start a model or qualify its answers.
+
+**Next:** [Understand the architecture](Architecture.md) → [inspect privacy and trust](Security-and-Sensitivity.md) → [evaluate the product visually](Visual-Tour.md).
+
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+
+---
+
+<details>
+<summary>Earlier reference edition — historical context and detailed background</summary>
+
+> **Historical material:** The retained text below predates this renovation. Its source pins, commands, runtime statements, counts and open questions apply only to their original checkpoints. Read the current introduction above and the linked source for present navigation. It does not update implementation or approval state.
 
 <p align="center"><strong>How KFM turns released spatial evidence into a map-first, trust-visible, evidence-bounded experience.</strong></p>
 
@@ -689,3 +708,5 @@ A source-only change to this page:
 For projection and rollback procedure, read [Wiki Maintenance](Wiki-Maintenance.md).
 
 [Back to top](#top)
+
+</details>

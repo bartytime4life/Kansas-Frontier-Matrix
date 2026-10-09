@@ -6,7 +6,7 @@ version: v1
 status: repository-grounded; local-development-only
 owners: ["@bartytime4life"]
 created: 2026-09-27
-updated: 2026-10-05
+updated: 2026-10-09
 policy_label: public-documentation
 current_path: docs/installation.md
 owning_root: docs/
@@ -51,6 +51,27 @@ This guide covers the current repository checkout. Choose the component you need
 
 <sub>Illustration, not a data product — this page's text is authoritative. See <a href="brand/readme/README.md">README artwork</a>.</sub>
 <!-- kfm-showcase:end -->
+
+## Evaluate one component before installing everything
+
+For a first technical review, follow one feature from its guide to code and tests.
+The [wiki development guide](wiki/Development-and-Validation.md) connects the
+installation choices below to an evidence-based evaluation path; the
+[architecture guide](wiki/Architecture.md) explains the component boundaries.
+
+| Your immediate goal | Choose | A useful first result |
+|---|---|---|
+| Inspect a user flow | Public feature source and regression tests | Identify expected behavior and failure states before starting a runtime |
+| Run the map application | Explorer Site mirror | A locally built page with explicit unavailable-data states where assets are absent |
+| Check repository contracts | Hash-locked Python profile | A result tied to the selected validator and revision |
+| Examine local source holdings | Local-data tools | An inventory with source identity and bounded storage implications |
+
+For an existing installation, record the source revision, listening origin and
+physical state directory before making changes. A new source tree must not
+silently replace the persistent store or reset browser-local records. The
+[local operation guide](../apps/site/source/docs/local-pc-consolidation.md)
+contains dated recovery examples; inspect the actual service configuration
+instead of treating historical machine paths as defaults for your installation.
 
 ## Prerequisites
 

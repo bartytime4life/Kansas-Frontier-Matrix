@@ -2,26 +2,64 @@
 KFM_WIKI_SOURCE
 page_id: Governance-and-Evidence
 title: Governance and Evidence
-version: v0.2.0
-status: PROPOSED wiki source; review required
-created: 2026-08-07
-updated: 2026-08-15
-authority: orientation-only; canonical repository evidence, adopted KFM doctrine, accepted ADRs, semantic contracts, machine schemas, policy, review, and release records outrank this page
+status: source-grounded orientation; independent review pending
+updated: 2026-10-09
+authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/Governance-and-Evidence.md
-owning_root: docs/
-responsibility: public orientation to KFM truth posture, evidence closure, source-role discipline, policy and review boundaries, release separation, and correction
-evidence_snapshot: main@85fa02e81d0e8ca0b746d5b659aa987b910aecd2
-prior_blob: fb5bb7944c0d54c9a7ed93af73d8049cbf404939
-publication_effect: none until separately synchronized to the native GitHub Wiki
+evidence_checkpoint: main@9666e026682c514c0086155a8754cbe58abed0eb
+publication_effect: native wiki documentation only; no application deployment or data release
 -->
 
 <a id="top"></a>
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/main/docs/brand/logo/The-Kansas-Frontier-Matrix-Seal-transparent-cropped.png" alt="Kansas Frontier Matrix seal" width="150" />
-</p>
-
 # Governance and Evidence
+
+## What makes a claim inspectable
+
+**A result needs support, a scope, and a way to be corrected.**
+
+### Read a claim as a chain
+
+```mermaid
+flowchart LR
+    S[Source and time] --> T[Recorded transformations]
+    T --> E[Evidence and limitations]
+    E --> R[Applicable review and release]
+    R --> V[Scoped visible claim]
+    V --> C[Correction or withdrawal]
+```
+
+This is the governed claim model. It is not a statement that every application layer has completed every transition.
+
+### One observation, several different assertions
+
+Consider a water-station value. “The provider returned this observation” concerns transport and source identity. “This package passed its checks” concerns a bounded artifact. “This reviewed release is currently eligible” concerns separately trusted review/release state. “The station value answers this question” adds interpretation and scope. None is a substitute for the others.
+
+The [reviewed-water guide](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/docs/governed-water.md) and [server implementation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/app/governed-water-server.ts) show one concrete application of this distinction.
+
+| Artifact or signal | What it can establish | What it does not supply by itself |
+|---|---|---|
+| Source hash | Identity of inspected bytes | Truth, rights or approval |
+| Test result | Behavior of a named check at a revision | Universal correctness |
+| Generated receipt | Authorship/process record and artifact binding | Independent factual proof |
+| Review record | The recorded decision and scope | Permission outside that scope |
+| Deployment result | Delivery to a named runtime | Source admission or browser acceptance |
+| Wiki page | Explanation and navigation | A new source of governance authority |
+
+### Read the vocabulary precisely
+
+**CONFIRMED** needs evidence for the specific assertion. **PROPOSED** describes intended work. **UNKNOWN** identifies missing support. **NEEDS VERIFICATION** identifies a check still required. Capability maturity is a separate dimension: implemented source, tested behavior, deployed software and accepted operation can have different states.
+
+**Next:** [Follow the data lifecycle](Data-Lifecycle.md) → [read sensitivity boundaries](Security-and-Sensitivity.md) → [check the dated project snapshot](Project-Status.md).
+
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+
+---
+
+<details>
+<summary>Earlier reference edition — historical context and detailed background</summary>
+
+> **Historical material:** The retained text below predates this renovation. Its source pins, commands, runtime statements, counts and open questions apply only to their original checkpoints. Read the current introduction above and the linked source for present navigation. It does not update implementation or approval state.
 
 <p align="center"><strong>How KFM decides what a claim may say, show, cite, release, correct, or refuse.</strong></p>
 
@@ -572,3 +610,5 @@ Material changes should remain reviewable, receipt-bearing when AI-authored, and
 Before merge, close the pull request or update the feature branch. After an authorized merge, revert the documentation commit and its generated authoring receipt together, then rerun documentation metadata, graph, link, stale-reference, and receipt-integrity checks. If the native wiki was separately synchronized, correct or revert that projection independently and record the source and wiki commits.
 
 [Back to top](#top)
+
+</details>

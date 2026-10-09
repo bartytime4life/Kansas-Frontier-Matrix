@@ -2,16 +2,63 @@
 KFM_WIKI_SOURCE
 page_id: Data-Lifecycle
 title: Data Lifecycle
-status: PROPOSED wiki source; review required
-updated: 2026-08-14
-authority: orientation-only; canonical repository evidence and adopted KFM authority outrank this page
+status: source-grounded orientation; independent review pending
+updated: 2026-10-09
+authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/Data-Lifecycle.md
-publication_effect: none until separately synchronized to the native GitHub Wiki
-evidence_checkpoint: main@13f1a8e9bfbad807ab9131bd7c2972ed61a95918
+evidence_checkpoint: main@9666e026682c514c0086155a8754cbe58abed0eb
+publication_effect: native wiki documentation only; no application deployment or data release
 -->
+
 <a id="top"></a>
 
 # Data Lifecycle
+
+## From discovery to a defensible release
+
+**Keep acquisition, interpretation, and publication as separate decisions.**
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/9666e026682c514c0086155a8754cbe58abed0eb/docs/brand/readme/kfm-source-lanes-dark.svg" /><img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/9666e026682c514c0086155a8754cbe58abed0eb/docs/brand/readme/kfm-source-lanes.svg" alt="Illustrative source lanes preserving provenance and distinct roles on the way to reviewed use." width="100%" /></picture>
+
+<sub>Illustrative project artwork; not a runtime screenshot or measured data.</sub>
+
+```mermaid
+flowchart LR
+    D[Discovery candidate] --> R[RAW]
+    R --> W[WORK or QUARANTINE]
+    W --> P[PROCESSED]
+    P --> C[CATALOG and TRIPLET]
+    C --> U[PUBLISHED]
+```
+
+The arrows are governed transitions, not automatic file moves. The adopted [Lifecycle Law](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/docs/doctrine/lifecycle-law.md) supplies the authoritative interpretation.
+
+### A practical intake story
+
+A useful dataset is discovered. The operator first establishes publisher, terms, geography, time coverage and expected transfer size. Captured originals retain identity and provenance. Transformations record what changed, including units, clipping, generalization and exclusions. Review must establish which output is eligible for which audience before release.
+
+The [free-data acquisition runbook](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/docs/runbooks/free-data-acquisition.md) is a concrete entry point. A catalog entry or a download plan is not proof that bytes were retrieved. A successfully downloaded file is not proof of source admission. Displaying a derivative is not a declaration that it is KFM claim evidence.
+
+### The questions at each handoff
+
+| Before… | Establish… |
+|---|---|
+| Transfer | Exact source, terms, bounded scope and storage implications |
+| Transformation | Input identity, method, units and retained originals |
+| Evidence use | Relevant support, source role and limitations |
+| Public delivery | Rights, sensitivity, review and applicable release state |
+| Replacement or correction | Affected consumers, supersession and recovery path |
+
+**Next:** [Compare domain source roles](Domains.md) → [understand evidence](Governance-and-Evidence.md) → [locate each responsibility](Repository-Map.md).
+
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+
+---
+
+<details>
+<summary>Earlier reference edition — historical context and detailed background</summary>
+
+> **Historical material:** The retained text below predates this renovation. Its source pins, commands, runtime statements, counts and open questions apply only to their original checkpoints. Read the current introduction above and the linked source for present navigation. It does not update implementation or approval state.
 
 <p align="center">
   <strong>Governed admission · Traceable transformation · Fail-closed review · Reversible publication</strong>
@@ -303,3 +350,5 @@ File presence, a fixture, a passing validator, a generated receipt, or a polishe
 ---
 
 [Home](Home.md) · [Architecture](Architecture.md) · [Governance and Evidence](Governance-and-Evidence.md) · [Security and Sensitivity](Security-and-Sensitivity.md) · [Back to top](#top)
+
+</details>

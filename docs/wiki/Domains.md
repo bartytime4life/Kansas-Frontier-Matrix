@@ -2,28 +2,50 @@
 KFM_WIKI_SOURCE
 page_id: Domains
 title: Domains
-version: v0.2.0
-status: PROPOSED wiki source; review required
-created: 2026-08-07
-updated: 2026-08-14
-authority: orientation-only; canonical repository evidence, adopted KFM doctrine, accepted ADRs, contracts, schemas, policy, lifecycle records, and release decisions outrank this page
+status: source-grounded orientation; independent review pending
+updated: 2026-10-09
+authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/Domains.md
-owning_root: docs/
-responsibility: public orientation to KFM domain-lane identity, bounded-context scope, source-role boundaries, cross-domain seams, sensitivity posture, maturity, and governed delivery
-evidence_snapshot: main@0abdce42ea0a41f88e86b7d97df0ebd79961e37b
-prior_blob: 97f7edaba466934ec957d309c2cbf2ee6a296667
-domain_lane_register_blob: 1bfc6f91cfa713a5e3d51ece011b63b46310734f
-cross_domain_seam_register_blob: dc87ea9c2ab11cc10e51cf4e8284c030e7c9ab29
-publication_effect: none until separately synchronized to the native GitHub Wiki
+evidence_checkpoint: main@9666e026682c514c0086155a8754cbe58abed0eb
+publication_effect: native wiki documentation only; no application deployment or data release
 -->
 
 <a id="top"></a>
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/main/docs/brand/logo/The-Kansas-Frontier-Matrix-Seal-transparent-cropped.png" alt="Kansas Frontier Matrix seal" width="150" />
-</p>
-
 # Domains
+
+## Kansas questions across source boundaries
+
+**Connect domains through a question while preserving what each source means.**
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/9666e026682c514c0086155a8754cbe58abed0eb/docs/brand/readme/kfm-domain-constellation-dark.svg" /><img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/9666e026682c514c0086155a8754cbe58abed0eb/docs/brand/readme/kfm-domain-constellation.svg" alt="Illustrative constellation of Kansas knowledge domains and their connections." width="100%" /></picture>
+
+<sub>Illustrative project artwork; not a runtime screenshot or measured data.</sub>
+
+| Investigation | Useful source roles | A distinction to retain |
+|---|---|---|
+| Water and land | Station observations, watershed context, land-cover imagery | Network proximity is not proof of causation |
+| Subsurface and soil | Recorded intervals, inventory envelopes, soil-map components | A nearby record is not a complete description beneath the pointer |
+| Weather and hazards | Observations, forecasts, incident records and official notices | A forecast, detected event and warning have different meanings |
+| Roads and settlement | Mapped infrastructure, historical records and administrative context | A contemporary map does not reconstruct every historical state |
+| Habitat and heritage | Ecological or historical records with access and sensitivity constraints | Available information is not automatically safe at exact precision |
+
+### Work one seam deeply
+
+For a water-and-land investigation, start with a bounded question and time window. Identify which observations are available, how their dates differ, which spatial associations are justified, and which transformations were performed. Treat the resulting relationship as an interpretation that needs support, not as a fact created by layering two maps.
+
+The [domain documentation index](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/docs/domains/README.md) owns the broader domain map. The [Underground guide](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/docs/underground-explorer.md) and [historical comparison guide](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/docs/history-comparison.md) offer implemented application slices with explicit limits. Breadth of domain documentation does not imply equal runtime maturity or admitted data across every lane.
+
+**Next:** [Follow an investigation](Map-UI-and-AI.md) → [inspect source and lifecycle boundaries](Data-Lifecycle.md) → [read the evidence vocabulary](Glossary.md).
+
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+
+---
+
+<details>
+<summary>Earlier reference edition — historical context and detailed background</summary>
+
+> **Historical material:** The retained text below predates this renovation. Its source pins, commands, runtime statements, counts and open questions apply only to their original checkpoints. Read the current introduction above and the linked source for present navigation. It does not update implementation or approval state.
 
 <p align="center"><strong>Thirteen bounded knowledge lanes · One trust spine · Explicit seams · Fail-closed sensitivity</strong></p>
 
@@ -374,3 +396,5 @@ A detailed lane page, machine register, green workflow, generated receipt, or po
 ---
 
 [Home](Home.md) · [Architecture](Architecture.md) · [Governance and Evidence](Governance-and-Evidence.md) · [Data Lifecycle](Data-Lifecycle.md) · [Project Status](Project-Status.md) · [Back to top](#top)
+
+</details>

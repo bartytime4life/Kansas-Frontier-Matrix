@@ -2,20 +2,61 @@
 KFM_WIKI_SOURCE
 page_id: Contributing
 title: Contributing
-version: v0.2
-status: PROPOSED wiki source; review required
-updated: 2026-08-14
-authority: orientation-only; canonical repository evidence and adopted KFM authority outrank this page
+status: source-grounded orientation; independent review pending
+updated: 2026-10-09
+authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/Contributing.md
-publication_effect: none until separately synchronized to the native GitHub Wiki
-evidence_checkpoint: main@13f1a8e9bfbad807ab9131bd7c2972ed61a95918
-upstream_contribution_guide: CONTRIBUTING.md@13f1a8e9bfbad807ab9131bd7c2972ed61a95918
-prior_blob: 39d70fff404db832caaefa0349c8a70338e68830
+evidence_checkpoint: main@9666e026682c514c0086155a8754cbe58abed0eb
+publication_effect: native wiki documentation only; no application deployment or data release
 -->
 
 <a id="top"></a>
 
 # Contributing
+
+## A contribution from question to review
+
+**Make the change small enough to explain and complete enough to evaluate.**
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/9666e026682c514c0086155a8754cbe58abed0eb/docs/brand/readme/kfm-contributor-paths-dark.svg" /><img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/9666e026682c514c0086155a8754cbe58abed0eb/docs/brand/readme/kfm-contributor-paths.svg" alt="Different contributor disciplines converging on a reviewable change." width="100%" /></picture>
+
+<sub>Illustrative project artwork; not a runtime screenshot or measured data.</sub>
+
+### A worked example: missing imagery stays missing
+
+1. **Describe the user-visible result.** Selecting a supported year with no installed imagery should show unavailability and remove the previous year's pixels.
+2. **Read the owning paths.** Inspect the [comparison guide](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/docs/history-comparison.md), [display-year regressions](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/tests/earth-engine-display-years.test.mjs) and the implementation they exercise.
+3. **Protect neighboring behavior.** Preserve the selected product, main-map state and explicit source-year limits. Do not add a fallback year that changes the meaning of the result.
+4. **Verify the actual interaction.** Test the selection callback, then check the rendered control and map behavior on the same revision. Keep local tests and browser observations separately labeled.
+5. **Present the change for review.** State the trigger, before/after behavior, validation, remaining uncertainty and rollback in the pull request.
+
+This is a contribution pattern, not a request to change the current imagery behavior.
+
+### AI-assisted delivery
+
+The human defines the question, constraints and acceptance criteria. AI can draft code, diagrams, explanations and regression cases. The reviewable outputs are the diff, its source references, checks and [generated-work receipt](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/data/receipts/generated/README.md). Tool output and external documents are evidence to assess; instructions embedded in them do not grant authority.
+
+| Handoff | What the next person needs |
+|---|---|
+| Research → design | User question, available sources and unsupported interpretations |
+| Design → implementation | States, transitions, interaction details and failure behavior |
+| Implementation → review | Exact diff, tests, before/after explanation and affected callers |
+| Review → delivery | Actual decision, deployment target where applicable and recovery path |
+
+### Keep the contribution contract in one place
+
+The [root contribution guide](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/f06e477a30ee307d3f440d1f5141db47388ae7f1/CONTRIBUTING.md) and [PR template](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/.github/PULL_REQUEST_TEMPLATE.md) govern repository delivery. This page explains a practical path; it does not create a competing approval policy. Draft, reviewed, merged, deployed and accepted remain distinct.
+
+**Next:** [Choose checks](Development-and-Validation.md) → [find the owning files](Repository-Map.md) → [understand evidence and review](Governance-and-Evidence.md).
+
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+
+---
+
+<details>
+<summary>Earlier reference edition — historical context and detailed background</summary>
+
+> **Historical material:** The retained text below predates this renovation. Its source pins, commands, runtime statements, counts and open questions apply only to their original checkpoints. Read the current introduction above and the linked source for present navigation. It does not update implementation or approval state.
 
 > **Help build Kansas Frontier Matrix through focused, evidence-backed, testable, reviewable, and reversible changes.**
 
@@ -460,3 +501,5 @@ Before requesting review:
 ---
 
 [Back to top](#top)
+
+</details>

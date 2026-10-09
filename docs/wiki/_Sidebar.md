@@ -11,7 +11,7 @@ publication_effect: none until separately synchronized to the native GitHub Wiki
 
 **Kansas Frontier Matrix**
 
-*Governed spatial evidence for Kansas. Orientation only—repository evidence and adopted authority win.*
+*Place. Time. Evidence. Explore the product, then inspect how it works.*
 
 **Portfolio tour**
 
@@ -25,20 +25,20 @@ publication_effect: none until separately synchronized to the native GitHub Wiki
 - [Getting Started](Getting-Started.md) — first reading and contribution paths
 - [Project Status](Project-Status.md) — evidence-bounded implementation snapshot
 
-**Understand the system**
+**Go deeper · system design**
 
 - [Architecture](Architecture.md) — operating model and trust membrane
 - [Repository Map](Repository-Map.md) — responsibility roots and placement
 - [Governance and Evidence](Governance-and-Evidence.md) — cite-or-abstain, review, and correction
 - [Data Lifecycle](Data-Lifecycle.md) — Pre-RAW through governed publication
 
-**Explore knowledge and experience**
+**Go deeper · product and trust**
 
 - [Domains](Domains.md) — Kansas knowledge lanes and cross-domain seams
 - [Map, UI, and AI](Map-UI-and-AI.md) — MapLibre, Evidence Drawer, and Focus Mode
 - [Security and Sensitivity](Security-and-Sensitivity.md) — fail-closed public-safety posture
 
-**Build and maintain**
+**Build, verify, and contribute**
 
 - [Development and Validation](Development-and-Validation.md) — environment, tests, and CI
 - [Contributing](Contributing.md) — branches, pull requests, review, and rollback

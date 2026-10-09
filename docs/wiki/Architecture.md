@@ -2,26 +2,66 @@
 KFM_WIKI_SOURCE
 page_id: Architecture
 title: Architecture
-version: v0.2.0
-status: PROPOSED wiki source; review required
-created: 2026-08-07
-updated: 2026-08-14
-authority: orientation-only; canonical repository evidence, adopted KFM doctrine, accepted ADRs, and owning responsibility roots outrank this page
+status: source-grounded orientation; independent review pending
+updated: 2026-10-09
+authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/Architecture.md
-owning_root: docs/
-responsibility: public orientation to the KFM system architecture, trust membrane, responsibility handoffs, and bounded current implementation posture
-evidence_snapshot: main@695c4e67063481236e627f8652faf17619260a5a
-prior_blob: 44b30be37f609d0e2f1ccb69380b37b053cde554
-publication_effect: none until separately synchronized to the native GitHub Wiki
+evidence_checkpoint: main@9666e026682c514c0086155a8754cbe58abed0eb
+publication_effect: native wiki documentation only; no application deployment or data release
 -->
 
 <a id="top"></a>
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/main/docs/brand/logo/The-Kansas-Frontier-Matrix-Seal-transparent-cropped.png" alt="Kansas Frontier Matrix seal" width="150" />
-</p>
-
 # Architecture
+
+## Architecture at a glance
+
+**An investigative interface connected to distinct data and trust responsibilities.**
+
+<picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/9666e026682c514c0086155a8754cbe58abed0eb/docs/brand/readme/kfm-layer-stack-dark.svg" /><img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/9666e026682c514c0086155a8754cbe58abed0eb/docs/brand/readme/kfm-layer-stack.svg" alt="Conceptual layers connecting Explorer interaction, application services, and source context." width="100%" /></picture>
+
+<sub>Illustrative project artwork; not a runtime screenshot or measured data.</sub>
+
+### Follow a request through the application
+
+```mermaid
+flowchart LR
+    Q[Area, source and time] --> UI[Explorer interface]
+    UI --> C[Provider context adapters]
+    UI --> R[Reviewed snapshot readers]
+    C --> I[Inspect source and limitations]
+    R --> I
+    I --> S[Saved settings or dated report]
+```
+
+This diagram describes the application responsibilities at the inspected source revision. Provider display context and reviewed snapshot readers retain different eligibility rules; the arrows do not imply a universal release pipeline or an active dataset.
+
+| Layer | What it does | Inspect the implementation |
+|---|---|---|
+| Interaction | Map selection, panels, comparison and reports | [Explorer app](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/app) |
+| Rendering | MapLibre context and Three.js subsurface inspection | [Dependency manifest](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/package.json) · [cutaway model](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/app/cutaway-model.ts) |
+| Read boundaries | Validate source and release identity, produce bounded outcomes | [Reviewed-water server](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/app/governed-water-server.ts) |
+| Persistence | Distinguish local browser records, application DB/object storage and external source holdings | [Local operation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/docs/local-pc-consolidation.md) |
+| Governance | Define placement, lifecycle and the support required for claims | [Adopted Directory Rules](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/docs/doctrine/directory-rules.md) |
+
+### Three decisions that carry across the system
+
+**Identity travels with the result.** A chosen station, record, imagery year, or package is part of the result's meaning. A late response must not inherit a newer selection's label.
+
+**Unknowns remain visible.** Missing imagery, unsupported correlations, and expired releases need distinct behavior. A pretty fallback must not silently substitute another source or time.
+
+**Components have separate completion criteria.** The runnable Site mirror, shared packages, general governed API scaffold, local companion, and hosted Site are separate surfaces. The [general governed API](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/governed-api/README.md) remains a bounded scaffold; the Site's narrower readers do not establish completion of that service.
+
+**Next:** [Locate the code](Repository-Map.md) → [inspect the engineering cases](Engineering-Case-Studies.md) → [review the trust boundaries](Security-and-Sensitivity.md).
+
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+
+---
+
+<details>
+<summary>Earlier reference edition — historical context and detailed background</summary>
+
+> **Historical material:** The retained text below predates this renovation. Its source pins, commands, runtime statements, counts and open questions apply only to their original checkpoints. Read the current introduction above and the linked source for present navigation. It does not update implementation or approval state.
 
 <p align="center"><strong>How KFM turns sources into inspectable, policy-aware, correctable spatial claims.</strong></p>
 
@@ -387,3 +427,5 @@ Before merge, close the pull request or update the feature branch. After merge, 
 Correct the source page first, then perform any separately authorized native-wiki synchronization. Do not rewrite shared history merely to make the wiki appear clean.
 
 [Back to top](#top)
+
+</details>

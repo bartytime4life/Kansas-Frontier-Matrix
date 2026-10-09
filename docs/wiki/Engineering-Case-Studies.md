@@ -54,6 +54,10 @@ Evidence snapshot: [`459ffbe892929cbe994add8665805549694740b6`](https://github.c
 
 **What this demonstrates:** security-minded product engineering that connects backend validation to user-visible state. This case does not claim a currently active real-water release, completed hosted administration, or full security certification.
 
+## Follow the decisions one layer deeper
+
+[Architecture](Architecture.md) explains the component handoffs. [Map, UI, and AI](Map-UI-and-AI.md) follows the user state. [Security and Sensitivity](Security-and-Sensitivity.md) pairs controls with concrete counterexamples. [Development and Validation](Development-and-Validation.md) shows how to evaluate each claim.
+
 ## Inspect the work
 
 | Review layer | Evidence | What it establishes |

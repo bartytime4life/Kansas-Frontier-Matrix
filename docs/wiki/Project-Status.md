@@ -2,28 +2,51 @@
 KFM_WIKI_SOURCE
 page_id: Project-Status
 title: Project Status
-version: v0.2.1
-status: PROPOSED wiki source; review required
-created: 2026-08-07
-updated: 2026-09-17
-authority: orientation-only; current repository evidence, adopted KFM authority, and owning responsibility roots outrank this page
+status: source-grounded orientation; independent review pending
+updated: 2026-10-09
+authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/Project-Status.md
-owning_root: docs/
-responsibility: evidence-bounded reader snapshot of repository, validation, runtime, release, deployment, and native-wiki maturity
-evidence_snapshot: main@dbc60ae78be37133e791ed6d1b3fba267d9ecfe2
-prior_blob: 6b26366071a4086f57687569685d4da9c09456b5
-publication_effect: none until separately synchronized to the native GitHub Wiki; no KFM data publication effect
+evidence_checkpoint: main@9666e026682c514c0086155a8754cbe58abed0eb
+publication_effect: native wiki documentation only; no application deployment or data release
 -->
 
 <a id="top"></a>
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/main/docs/brand/logo/The-Kansas-Frontier-Matrix-Seal-transparent-cropped.png" alt="Kansas Frontier Matrix seal" width="150" />
-</p>
-
-
-> **October 9, 2026 portfolio checkpoint:** Start with the [current showcase](Home.md) and [source-pinned engineering cases](Engineering-Case-Studies.md). The technical inventory below retains its original dated scope; it is not a fresh audit of repository snapshot `459ffbe89292`.
 # Project Status
+
+## Current documentation checkpoint
+
+**Snapshot: October 9, 2026. Read completion at the level of the specific claim.**
+
+| Surface | Confirmed for this edition | What remains separate |
+|---|---|---|
+| Repository baseline | [main at `9666e026682c`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/README.md), including merged [PR #4979](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4979) | Subsequent main changes and their checks |
+| First wiki renovation | Native wiki commit `45b03bb48f4c15b2aa4552532d1355cec89e5335`; homepage, profile, tour and cases published | This deeper edition has its own source and native publication record |
+| Application source | Runnable Site mirror and feature tests under [apps/site/source](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/README.md) | Local installation, hosted source equivalence and device acceptance |
+| Hosted Site metadata | Latest saved version 197; owner-only access and zero external visitors rechecked | Metadata alone does not identify accepted browser behavior or prove source parity |
+| General governed API | [Bounded `ABSTAIN / NOT_IMPLEMENTED` scaffold](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/governed-api/README.md) | Production evidence resolution and policy evaluation |
+| Project coordination | Notion Workbench and Drive Chronicle were consulted as dated context | GitHub bytes and actual delivery/review records remain the evidence for implementation |
+
+### How to verify a claim
+
+Ask which component, revision, input and environment the claim concerns. Then inspect the named artifact: code for implementation, a run for a test result, GitHub metadata for a merge, a deployment record for delivery, or a browser observation for a particular interaction. If those identities differ, preserve the difference rather than combining the strongest result from each.
+
+### The most useful next evidence
+
+For a feature evaluation, exercise the interaction on the exact source and device under review. For data work, verify installed coverage and the applicable admission/release state. For an architecture claim, trace a real caller through the boundary. For repository contribution, inspect the PR's current state and checks directly.
+
+No application tests, source admission, Site deployment, private-store migration or security certification is claimed by this documentation edition.
+
+**Next:** [Inspect case-study evidence](Engineering-Case-Studies.md) or [choose a validation path](Development-and-Validation.md).
+
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+
+---
+
+<details>
+<summary>Earlier reference edition — historical context and detailed background</summary>
+
+> **Historical material:** The retained text below predates this renovation. Its source pins, commands, runtime statements, counts and open questions apply only to their original checkpoints. Read the current introduction above and the linked source for present navigation. It does not update implementation or approval state.
 
 <p align="center"><strong>An evidence-pinned view of what KFM currently contains, what has bounded executable proof, what remains held, and what has not been established.</strong></p>
 
@@ -459,3 +482,5 @@ current evidence changes
 Before merge, abandon or update the feature branch. After merge, revert or forward-fix the exact source commit. If the native wiki was synchronized, correct the source first and then revert or resynchronize the native commit through the reviewed maintenance workflow. Do not force-push merely to hide history.
 
 [Back to top](#top)
+
+</details>
