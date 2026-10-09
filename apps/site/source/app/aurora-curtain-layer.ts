@@ -145,6 +145,8 @@ export function createAuroraCurtainLayer(options: AuroraCurtainOptions): CustomL
   let buffer: WebGLBuffer | null = null;
   // One compiled program per projection variant ("mercator", "globe").
   const bundles = new Map<string, ProgramBundle>();
+  // Variants whose shader failed on this GPU; skipped instead of retried every frame.
+  const unsupported = new Set<string>();
   let groundDirty = true;
   let lastGroundUpdate = 0;
   const markDirty = () => { groundDirty = true; };
@@ -251,9 +253,16 @@ export function createAuroraCurtainLayer(options: AuroraCurtainOptions): CustomL
       const exaggeration = Number(map.getTerrain()?.exaggeration ?? 1);
       const height = curtainHeightMeters(map.getZoom()) * (Number.isFinite(exaggeration) && exaggeration > 0 ? Math.min(exaggeration, 1.6) : 1);
       const variant = input.shaderData?.variantName === "globe" ? "globe" : "mercator";
+      if (unsupported.has(variant)) return;
       let bundle = bundles.get(variant);
       if (!bundle) {
-        bundle = createBundle(gl, globeVertexShader(input.shaderData.vertexShaderPrelude, input.shaderData.define));
+        // Compiled lazily on first globe frame; a failure disables only this projection's curtain.
+        try {
+          bundle = createBundle(gl, globeVertexShader(input.shaderData.vertexShaderPrelude, input.shaderData.define));
+        } catch {
+          unsupported.add(variant);
+          return;
+        }
         bundles.set(variant, bundle);
       }
       const { program, vao, uniforms } = bundle;
