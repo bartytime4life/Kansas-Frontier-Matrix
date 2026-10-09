@@ -89,6 +89,19 @@ class SourceEventAdmissionTests(unittest.TestCase):
         )
         self.assertFalse(receipt["signature"]["production_signature_claimed"])
 
+    def test_unreadable_schema_fails_closed(self) -> None:
+        missing = self.root / "missing.schema.json"
+        undecodable = self.root / "undecodable.schema.json"
+        undecodable.write_bytes(b"\xff\xfe{}")
+        for schema in (missing, undecodable):
+            with self.subTest(schema=schema.name), mock.patch(
+                "tools.validators.validate_source_event_admission.PREFILTER_SCHEMA_PATH",
+                schema,
+            ):
+                result = validate_file(VALID_PREFILTER)
+                self.assertEqual(result.outcome, "ERROR")
+                self.assertEqual([item.code for item in result.findings], ["SCHEMA_UNAVAILABLE"])
+
     def test_validation_performs_no_network_io(self) -> None:
         with (
             mock.patch.object(socket.socket, "connect", _unexpected_network),
