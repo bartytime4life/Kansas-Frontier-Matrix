@@ -111,7 +111,8 @@ test("control-owned and buffered radar source failures never become a fatal map 
   const earthEnginePrefix = earthEngine.match(/const sourceId = \(id: string\) => `([^$`]+)\$\{id\}`;/)[1];
   const geopdfSource = geopdf.match(/export const LOCAL_REVIEW_SOURCE = "([^"]+)";/)[1];
   assert.equal(soilSources.length, 2);
-  for (const sourceId of [...soilSources, cropSource, `${earthEnginePrefix}ee-cdl`, geopdfSource, `${geopdfSource}-5-7-12`]) {
+  // Decorative scene overlays (2D relief DEM, Kansas glow, value columns) never fail the map runtime.
+  for (const sourceId of [...soilSources, cropSource, `${earthEnginePrefix}ee-cdl`, geopdfSource, `${geopdfSource}-5-7-12`, "scene-relief-dem", "scene-kansas-glow", "scene-value-columns"]) {
     assert.equal(perf.controlOwnsMapSourceErrors(sourceId), true, sourceId);
   }
   for (const sourceId of [undefined, "", "openmaptiles", "osm-context", "kfm-terrain-dem", "external-nws-radar", "private-token-source"]) {

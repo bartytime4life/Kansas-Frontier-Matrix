@@ -55,6 +55,9 @@ const CONTROL_OWNED_SOURCE_PREFIXES = [
   "kfm-ee-context-source-",
   "kfm-device-geopdf-source",
   "kfm-synthetic-living-waters",
+  // Decorative scene-effect overlays (Kansas glow, 2D relief DEM, value
+  // columns): a failed tile only leaves that effect blank.
+  "scene-",
 ] as const;
 
 export function controlOwnsMapSourceErrors(sourceId: string | undefined): boolean {

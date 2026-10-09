@@ -213,3 +213,30 @@ test("the curtain has a globe shader path that uses MapLibre's projection prelud
   assert.match(layer, /variantName === "globe"/);
   for (const uniform of ["u_projection_matrix", "u_projection_fallback_matrix", "u_projection_tile_mercator_coords", "u_projection_clipping_plane", "u_projection_transition"]) assert.match(layer, new RegExp(uniform));
 });
+
+test("a globe shader that fails to compile disables only the globe curtain, once", async () => {
+  const curtain = await import(toUrl(transpile(await read("app/aurora-curtain-layer.ts"))));
+  let compileAttempts = 0, globeCompiles = 0, draws = 0;
+  const gl = new Proxy({}, {
+    get(_target, name) {
+      if (name === "VERTEX_SHADER") return 1;
+      if (name === "FRAGMENT_SHADER") return 2;
+      if (name === "getShaderParameter") return () => { compileAttempts += 1; return !(globeCompiles > 0 && compileAttempts > 2); };
+      if (name === "shaderSource") return (_shader, source) => { if (source.includes("projectTileWithElevation")) globeCompiles += 1; };
+      if (name === "getProgramParameter") return () => true;
+      if (name === "getAttribLocation") return () => 0;
+      if (name === "drawArrays") return () => { draws += 1; };
+      return () => ({});
+    },
+  });
+  const map = { on() {}, off() {}, getTerrain: () => null, getZoom: () => 3, getBounds: () => ({ getWest: () => -110, getEast: () => -90, getSouth: () => 30, getNorth: () => 45 }) };
+  const layer = curtain.createAuroraCurtainLayer({ id: "test", ring: [[-100, 37], [-95, 37], [-95, 40], [-100, 37]], clock: () => null });
+  layer.onAdd(map, gl);
+  const globeFrame = { shaderData: { variantName: "globe", vertexShaderPrelude: "", define: "" }, defaultProjectionData: { mainMatrix: [], fallbackMatrix: [], tileMercatorCoords: [0, 0, 1, 1], clippingPlane: [0, 0, 0, 0], projectionTransition: 1 } };
+  assert.doesNotThrow(() => layer.render(gl, globeFrame));
+  assert.doesNotThrow(() => layer.render(gl, globeFrame));
+  assert.equal(globeCompiles, 1, "a failed globe shader is not recompiled every frame");
+  assert.equal(draws, 0);
+  layer.render(gl, { shaderData: { variantName: "mercator" }, modelViewProjectionMatrix: [] });
+  assert.equal(draws, 1, "the flat-map curtain still draws");
+});
