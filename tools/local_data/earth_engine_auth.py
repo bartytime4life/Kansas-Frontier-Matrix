@@ -200,8 +200,9 @@ class SignIn:
             if project is not None and (not isinstance(project, str) or not PROJECT.fullmatch(project)): raise ValueError("PROJECT_ID_REQUIRED")
             creds = credentials(self.work)
             refresh_credentials(creds)
+            # Bind the worker's consumed project before publishing readiness.
+            save_state(self.work / "config.json", {"project": project, "login": "google-oauth-pkce"})
             self.inspect(creds, project)
-            if self.ready: save_state(self.work / "config.json", {"project": project, "login": "google-oauth-pkce"})
         except Exception:
             with self.lock:
                 self.phase = "failed"; self.ready = False; self.signed_in = False; self.account = None; self.error = "GOOGLE_SIGN_IN_REQUIRED"

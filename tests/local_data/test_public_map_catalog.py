@@ -119,7 +119,7 @@ def test_source_failure_preserves_existing_records_and_has_unavailable_coverage(
     result = catalog.discover_catalog(seed, transport=fail)
     assert seed == catalog.load_seed()
     assert {r["id"] for r in result["records"]} == {r["id"] for r in seed["records"]}
-    assert all(c["state"] == "unavailable" for c in result["coverage"])
+    assert all(c["state"] == ("seed" if c["sourceId"].startswith("publisher-") else "unavailable") for c in result["coverage"])
     assert all(c["expectedCount"] is None for c in result["coverage"])
     assert all(c["recordCount"] == c["discoveredCount"] + c["seedReferenceCount"]
                for c in result["coverage"])
@@ -207,6 +207,9 @@ def test_complete_coverage_counts_discovered_rows_separately_from_seed_reference
                                (13, "County geology", "Kansas Geological Survey")])
     result = catalog.discover_catalog(transport=transport)
     for coverage in result["coverage"]:
+        if coverage["sourceId"].startswith("publisher-"):
+            assert coverage["state"] == "seed" and coverage["discoveredCount"] == 0
+            continue
         assert coverage["state"] == "complete"
         assert coverage["discoveredCount"] == coverage["expectedCount"]
         assert coverage["recordCount"] == sum(r["sourceId"] == coverage["sourceId"] for r in result["records"])

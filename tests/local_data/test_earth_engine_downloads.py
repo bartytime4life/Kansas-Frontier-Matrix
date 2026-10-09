@@ -297,3 +297,15 @@ class GoogleAccountTests(unittest.TestCase):
             self.assertEqual(auth.discover_projects(self.creds),(['first-project','other-project'],False))
         self.assertIn('pageToken=next%26token',provider.call_args.args[0])
         with self.assertRaisesRegex(ValueError,'REDIRECT'): auth.NoRedirect().redirect_request()
+
+
+class ProjectBindingTests(unittest.TestCase):
+    def test_ready_project_is_persisted_before_it_can_be_consumed_by_a_download(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            work=Path(tmp); signin=auth.SignIn(work)
+            def verify(creds,project):
+                self.assertEqual(json.loads((work/'config.json').read_text())['project'],project)
+                self.assertFalse(signin.snapshot()['configured'])
+            with patch.object(auth,'credentials',return_value=SimpleNamespace(token='synthetic')), patch.object(auth,'refresh_credentials'), patch.object(auth,'google_json',return_value={}), patch.object(auth,'discover_projects',return_value=([],False)), patch.object(auth,'verify_project',side_effect=verify):
+                signin.check({'project':'new-project'});signin.worker.join(2)
+            self.assertTrue(signin.snapshot()['configured'])

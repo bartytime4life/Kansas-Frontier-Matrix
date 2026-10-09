@@ -350,6 +350,7 @@ def discover_catalog(existing=None, *, transport=fetch):
     sources = [("osmre-nmmr", nmmr_records, nmmr_count, nmmr_error),
                ("ngmdb-usgs", [r for r in ngmdb_records if r["publisher"] == "USGS"], ngmdb_count, ngmdb_error),
                ("ngmdb-kgs", [r for r in ngmdb_records if r["publisher"] == "KGS"], ngmdb_count, ngmdb_error)]
+    discovered_sources = {row[0] for row in sources}
     coverage = []
     for source, records, count, error in sources:
         prior = [r for r in catalog["records"] if r["sourceId"] == source]
@@ -380,6 +381,7 @@ def discover_catalog(existing=None, *, transport=fetch):
             "seedReferenceCount": len(by_id) - discovered,
             "expectedCount": count if source == "osmre-nmmr" else len(records) if not error else None,
             "reason": reason, "checkedAt": catalog["generatedAt"]})
+    coverage.extend(copy.deepcopy(row) for row in catalog["coverage"] if row["sourceId"] not in discovered_sources)
     catalog["coverage"] = coverage
     catalog["discovery"] = {"metadataBytes": budget.total, "requests": budget.requests,
                             "mapBytesDownloaded": 0, "kansasBounds": BBOX,
