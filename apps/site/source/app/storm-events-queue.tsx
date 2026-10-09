@@ -19,7 +19,7 @@ export function stormEventsSelection(records: readonly PublicMapRecord[], kinds:
     .flatMap(row => KINDS.flatMap(([kind]) => kinds.includes(kind) ? row.assets.filter(asset => canDownloadPublicMap(asset) && asset.id === `${row.id}-${kind}`) : []));
 }
 
-/** A per-file maximum in MiB; Storm Events sizes are not listed exactly, so it is always explicit. */
+/** An explicit per-file maximum in MiB; this catalog does not capture Storm Events sizes. */
 export function stormEventsLimit(input: string, ceiling: number): number | null {
   if (!/^\d+(?:\.\d{1,3})?$/.test(input)) return null;
   const value = Math.floor(Number(input) * 1_048_576);
@@ -44,7 +44,7 @@ export default function StormEventsQueue({ records, downloads, blocked, showNoti
       <label>From year<select value={String(first)} onChange={e => setFrom(e.target.value)}>{[...years].reverse().map(year => <option key={year} value={year}>{year}</option>)}</select></label>
       <label>To year<select value={String(last)} onChange={e => setTo(e.target.value)}>{years.map(year => <option key={year} value={year}>{year}</option>)}</select></label>
       <label>Maximum per file (MiB)<input type="number" inputMode="decimal" min="0.001" step="0.001" value={maximum} onChange={e => setMaximum(e.target.value)} placeholder="Enter a maximum" /></label>
-      <p className={p.impact}>{first > last ? "Choose a start year before the end year." : `${selection.length.toLocaleString()} files selected`}{limit !== null && selection.length > 0 && first <= last ? ` · up to ${bytes(limit * selection.length)} in total` : ""}. NCEI does not list exact sizes; each file stops at the maximum.</p>
+      <p className={p.impact}>{first > last ? "Choose a start year before the end year." : `${selection.length.toLocaleString()} files selected`}{limit !== null && selection.length > 0 && first <= last ? ` · up to ${bytes(limit * selection.length)} in total` : ""}. File sizes are not captured by this catalog; each file stops at the maximum.</p>
       {selection.length > MAX_QUEUE && <p role="alert">Choose at most {MAX_QUEUE} files per queue.</p>}
       {maximum && limit === null && <p role="alert">Choose a positive maximum within {bytes(status?.limitBytes ?? 500_000_000_000)}.</p>}
       <button type="button" className={s.primaryButton} disabled={!connected || !!busy || running || limit === null || !selection.length || selection.length > MAX_QUEUE || first > last}

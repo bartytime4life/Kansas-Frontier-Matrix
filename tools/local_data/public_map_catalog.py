@@ -440,7 +440,7 @@ def discover_catalog(existing=None, *, transport=fetch):
         state = ("partial" if discovered else "unavailable") if error else "complete"
         if source == "publisher-noaa-storm-events":
             reason = ("Years listed in the NCEI Storm Events CSV directory; national files including Kansas, not "
-                      "clipped to the state. File sizes are not listed exactly; choose a download maximum. ")
+                      "clipped to the state. File sizes are not captured by this catalog; choose a download maximum. ")
             reason += error or f"Listed {len(records)} years."
         else:
             reason = ("Kansas bounding rectangle of index points; not exact state membership, "

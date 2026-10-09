@@ -157,7 +157,7 @@ test('Storm Events years are listed by a catalog refresh and download as gzip fi
   button(tree, 'Storm Events 2024').props.onClick(); tree = p.render();
   findNode(tree, n => n.type === 'button' && visibleText(n).startsWith('Download  GZIP')).props.onClick(); tree = p.render();
   const maximum = findNode(tree, n => n.type === 'input' && n.props.type === 'number');
-  assert.equal(maximum.props.value, '', 'NCEI does not list exact sizes, so no maximum is prefilled');
+  assert.equal(maximum.props.value, '', 'this catalog does not capture file sizes, so no maximum is prefilled');
   assert.equal(button(tree, 'Download to this computer').props.disabled, true);
   maximum.props.onChange({ target: { value: '80' } }); tree = p.render();
   button(tree, 'Download to this computer').props.onClick();
