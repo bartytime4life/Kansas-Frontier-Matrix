@@ -27,7 +27,7 @@ async function harness(origin = 'https://site.example', fixtures = { catalog, st
   const h = await componentHarness('app/public-map-browser.tsx', {
     './public-map-catalog.json': { default: fixtures.catalog }, './public-map-catalog': model,
     './public-map-client': { ...client, publicMapRequest: (path, signal, payload, token) => new Promise(resolve => calls.push({ path, signal, payload, token, resolve })) },
-    './local-download-client': { formatDownloadBytes: bytes => `${bytes} bytes` }, './public-map-preview': { PublicMapPreview: 'preview' },
+    './local-download-client': { formatDownloadBytes: bytes => `${bytes} bytes` }, './public-map-preview': { PublicMapPreview: 'preview' }, 'next/link': { default: 'a' },
     './downloads/workspace.module.css': css, './public-map-browser.module.css': css,
   }, { window: { location: { origin } }, crypto: { randomUUID: () => '11111111-1111-1111-1111-111111111111' }, setTimeout: fn => { timers.set(++timerId, fn); return timerId; }, clearTimeout: id => timers.delete(id) });
   const render = () => { const tree = h.render(h.exports.default); h.commit(); return tree; };
@@ -46,6 +46,13 @@ test('catalog renders 20 records per page, independent source coverage and no au
   const search = findNode(tree, n => n.type === 'input' && n.props.type === 'search'); search.props.onChange({ target: { value: 'Kansas test 21' } }); tree = render();
   assert.equal(nodes(findNode(tree, n => n.type === 'ul' && n.props.className === 'records'), n => n.type === 'li').length, 1);
   assert.equal(calls.length, 0); h.dispose();
+});
+test('the loopback Site connects to this computer on mount without a click', async () => {
+  const { h, render, respond, calls } = await harness('http://127.0.0.1:4173'); render(); render();
+  assert.equal(calls.length, 1, 'one status request on mount'); assert.equal(calls[0].path, '/status');
+  await respond(0, status()); await respond(1, catalog);
+  const tree = render(); assert.ok(findNode(tree, n => n.type === 'button' && n.props.children === 'Reconnect map downloads'));
+  h.dispose();
 });
 test('a selection change clears file/limit and discards a delayed download notice without duplicating the request', async () => {
   const { h, render, calls, respond, connect } = await harness(); let tree = await connect();

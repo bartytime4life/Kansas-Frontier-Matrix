@@ -11,7 +11,10 @@ export function PublicMapPreview({record}:{record:PublicMapRecord|null}) {
   const [opened,setOpened]=useState(false),[ready,setReady]=useState(false),[busy,setBusy]=useState(false),[message,setMessage]=useState("");
   const [data,setData]=useState<PublicPreview|null>(null),[selected,setSelected]=useState<PreviewFeature|null>(null);
   const container=useRef<HTMLDivElement|null>(null),map=useRef<MapLibreMap|null>(null),pending=useRef<AbortController|null>(null),latest=useRef<PublicPreview|null>(null);
-  useEffect(()=>{setOpened(false);setData(null);setSelected(null);setMessage("");setBusy(false);pending.current?.abort();pending.current=null;},[record?.id]);
+  // A new record resets the viewer during render; the effect only aborts the old record's work.
+  const [recordId,setRecordId]=useState(record?.id);
+  if (recordId!==record?.id) { setRecordId(record?.id);setOpened(false);setData(null);setSelected(null);setMessage("");setBusy(false); }
+  useEffect(()=>{pending.current?.abort();pending.current=null;},[record?.id]);
   useEffect(()=>{
     if (!opened || !container.current || !kind) return;
     let disposed=false;setReady(false);
