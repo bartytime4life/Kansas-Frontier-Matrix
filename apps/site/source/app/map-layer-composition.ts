@@ -47,8 +47,13 @@ export const orderedOverlayIds = (layers: readonly LayerLike[]): string[] => lay
   })
   .map(({ layer }) => layer.id);
 
+// getStyle() omits custom (WebGL) layers; the layer order includes them.
+const currentLayers = (map: MapLibreMap): LayerLike[] => typeof map.getLayersOrder === "function"
+  ? map.getLayersOrder().map((id) => ({ id, type: map.getLayer(id)?.type ?? "custom" }))
+  : map.getStyle().layers ?? [];
+
 export const composeMapLayers = (map: MapLibreMap): void => {
-  const layers = map.getStyle().layers ?? [];
+  const layers = currentLayers(map);
   const desired = orderedOverlayIds(layers);
   if (!desired.length || desired.every((id, index) => layers[layers.length - desired.length + index]?.id === id)) return;
   for (const id of desired) map.moveLayer(id);

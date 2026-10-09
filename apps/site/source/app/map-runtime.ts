@@ -11,7 +11,8 @@ import { LAYER_REGISTRY, type EvidenceState } from "./explorer-data";
 import { balanceMapFills, composeMapLayers, requestFillOpacity } from "./map-layer-composition";
 import { ACTIVE_TERRAIN_SOURCE, type TerrainSourceRecord } from "./terrain-sources";
 import type { TemporalSweepQuery } from "./temporal-sweep";
-import { buildDaylightGeometry } from "./daylight-layer";
+import { buildDaylightGeometry, solarPositionAt } from "./daylight-layer";
+import { createDaylightShaderLayer, DAYLIGHT_SHADE_STOPS, type DaylightShaderLayer } from "./daylight-shader-layer";
 import { ORIENTATION_SOURCE_ID, orientationLayers, orientationSource } from "./kansas-orientation";
 import { CINEMATIC_LIGHT_COLOR, CINEMATIC_LIGHT_INTENSITY, CINEMATIC_SKIES, GLOBE_ATMOSPHERE_BLEND, SELECTION_PULSE_LAYER_ID, effectiveSceneLight, reliefPaintFor, sceneEffectsFor } from "./scene-effects";
 
@@ -281,14 +282,48 @@ export const TERRAIN_COLOR_RELIEF_LAYER_ID = "kfm-terrain-color-relief";
 export const DAYLIGHT_GEOJSON_SOURCE_ID = "kfm-daylight-context";
 export const DAYLIGHT_FILL_LAYER_ID = "kfm-daylight-context-fill";
 
+const daylightShaderLayers = new WeakMap<MapLibreMap, DaylightShaderLayer>();
+// Maps whose GPU could not compile the overlay keep the polygon layer instead.
+const daylightShaderUnavailable = new WeakSet<MapLibreMap>();
+const firstOverlayLayer = (map: MapLibreMap) => map.getStyle().layers?.find((layer) =>
+  layer.id.startsWith("kfm-") && layer.id !== "kfm-background"
+  || layer.id.startsWith("external-"),
+)?.id;
+
+/** The GPU overlay: one solar position per call, no geometry. False means use polygons. */
+const setDaylightShader = (map: MapLibreMap, instant: Date | number): boolean => {
+  const existing = map.getLayer(DAYLIGHT_FILL_LAYER_ID);
+  if (existing && existing.type !== "custom") return false;
+  let layer = daylightShaderLayers.get(map);
+  if (!existing || !layer) {
+    // A style swap drops custom layers, so each new style gets a fresh instance.
+    layer = createDaylightShaderLayer(DAYLIGHT_FILL_LAYER_ID);
+    map.addLayer(layer, firstOverlayLayer(map));
+    if (layer.failed) {
+      map.removeLayer(DAYLIGHT_FILL_LAYER_ID);
+      daylightShaderUnavailable.add(map);
+      return false;
+    }
+    daylightShaderLayers.set(map, layer);
+    composeMapLayers(map);
+  } else if (map.getLayoutProperty(DAYLIGHT_FILL_LAYER_ID, "visibility") === "none") {
+    map.setLayoutProperty(DAYLIGHT_FILL_LAYER_ID, "visibility", "visible");
+  }
+  const sun = solarPositionAt(instant);
+  layer.setSun(sun.subsolarLongitudeDegrees, sun.declinationDegrees);
+  return true;
+};
+
 /** Adds or updates the calculated solar context without involving any source
- * registry, evidence state, or provider connection counts. */
+ * registry, evidence state, or provider connection counts. The GPU draws it per
+ * pixel; polygons are the fallback for a GPU that cannot compile the shader. */
 export const setDaylightMapLayer = (map: MapLibreMap, enabled: boolean, instant: Date | number): boolean => {
   try {
     if (!enabled) {
       if (map.getLayer(DAYLIGHT_FILL_LAYER_ID)) map.setLayoutProperty(DAYLIGHT_FILL_LAYER_ID, "visibility", "none");
       return true;
     }
+    if (!daylightShaderUnavailable.has(map) && setDaylightShader(map, instant)) return true;
     const data = buildDaylightGeometry(instant);
     const source = map.getSource(DAYLIGHT_GEOJSON_SOURCE_ID) as GeoJSONSource | undefined;
     if (!source) {
@@ -303,30 +338,15 @@ export const setDaylightMapLayer = (map: MapLibreMap, enabled: boolean, instant:
     }
     let createdLayer = false;
     if (!map.getLayer(DAYLIGHT_FILL_LAYER_ID)) {
-      const firstDataLayer = map.getStyle().layers?.find((layer) =>
-        layer.id.startsWith("kfm-") && layer.id !== "kfm-background"
-        || layer.id.startsWith("external-"),
-      )?.id;
+      const firstDataLayer = firstOverlayLayer(map);
       map.addLayer({
         id: DAYLIGHT_FILL_LAYER_ID,
         type: "fill",
         source: DAYLIGHT_GEOJSON_SOURCE_ID,
         layout: { visibility: "visible" },
         paint: {
-          "fill-color": [
-            "interpolate", ["linear"], ["get", "shade"],
-            -18, "#0b1b2d",
-            -12, "#1c3550",
-            -6, "#40546a",
-            -0.833, "#937c59",
-          ],
-          "fill-opacity": [
-            "interpolate", ["linear"], ["get", "shade"],
-            -18, 0.66,
-            -12, 0.48,
-            -6, 0.30,
-            -0.833, 0.16,
-          ],
+          "fill-color": ["interpolate", ["linear"], ["get", "shade"], ...DAYLIGHT_SHADE_STOPS.flatMap(({ shade, color }) => [shade, color])],
+          "fill-opacity": ["interpolate", ["linear"], ["get", "shade"], ...DAYLIGHT_SHADE_STOPS.flatMap(({ shade, opacity }) => [shade, opacity])],
           "fill-antialias": true,
         },
       } as LayerSpecification, firstDataLayer);

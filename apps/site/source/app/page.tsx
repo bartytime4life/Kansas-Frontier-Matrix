@@ -57,6 +57,7 @@ import { earthEngineSetYear } from "./earth-engine-context";
 import { applyProjectionNavigationLimits, GLOBE_VIEWPOINTS, REGIONAL_NAVIGATION_BOUNDS } from "./globe-context";
 import { browserRenderBudget, controlOwnsMapSourceErrors, mapRuntimeErrorCode, readRenderQuality, sampleMapRuntimeHealth, QUALITY_STORAGE_KEY, type MapRuntimeCheckFailure, type RenderQuality } from "./map-performance";
 import { webgl2Available } from "./webgl-support";
+import { sameRecord, sameValues } from "./state-equality";
 import type { Feature, FeatureCollection, Geometry } from "geojson";
 import { loadMapLibre, type GeoJSONSource, type Map as MapLibreMap, type MapSourceDataEvent, type ScaleControl } from "./maplibre-seam";
 import {
@@ -4883,9 +4884,9 @@ export default function Home() {
             failedChecks: health.failedChecks,
             error: runtimeError ?? mapMutationErrorRef.current,
           } satisfies Partial<MapLibreRuntimeProbe>;
-          setSourceStates(nextSourceStates);
+          setSourceStates((current) => sameRecord(current, nextSourceStates) ? current : nextSourceStates);
           setStyleReady(health.styleLoaded);
-          setMaplibreProbe((current) => ({ ...current, ...nextProbe }));
+          setMaplibreProbe((current) => sameValues(current, nextProbe) ? current : { ...current, ...nextProbe });
           return nextProbe;
         };
 
@@ -5471,10 +5472,12 @@ export default function Home() {
               && !mutationError;
             if (!ready) {
               const failedCheckMessage = probe.failedChecks.length ? `Map health checks need attention: ${probe.failedChecks.join(", ")}.` : null;
-              setRuntime({ kind: runtimeError || degradedReason || mutationError || failedCheckMessage ? "degraded" : "loading", message: failedCheckMessage ?? (runtimeError ? `MapLibre runtime proof is incomplete: ${runtimeError}` : degradedReason ?? mutationError ?? "MapLibre is waiting for all admitted local capabilities to settle…") });
+              const next: RuntimeState = { kind: runtimeError || degradedReason || mutationError || failedCheckMessage ? "degraded" : "loading", message: failedCheckMessage ?? (runtimeError ? `MapLibre runtime proof is incomplete: ${runtimeError}` : degradedReason ?? mutationError ?? "MapLibre is waiting for all admitted local capabilities to settle…") };
+              setRuntime((current) => sameValues(current, next) ? current : next);
               return;
             }
-            setRuntime({ kind: "ready", message: `MapLibre ${version} ready · ${LAYER_REGISTRY.length} local sources · interactions proven` });
+            const next: RuntimeState = { kind: "ready", message: `MapLibre ${version} ready · ${LAYER_REGISTRY.length} local sources · interactions proven` };
+            setRuntime((current) => sameValues(current, next) ? current : next);
           });
         });
       } catch {
