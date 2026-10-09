@@ -98,10 +98,10 @@ test("audit fixes keep landmarks, roles and in-text links valid", async () => {
   assert.match(await read("app/globals.css"), /\.timeline-detail > section > :is\(header, \.timeline-frame-status\) \{/);
   assert.match(await read("app/observatory/sources/page.tsx"), /return <main className="event-research">/);
 
-  const downloads = await read("app/downloads/workspace.tsx");
-  const summary = downloads.slice(downloads.indexOf("<dl className={styles.summary}"), downloads.indexOf("</dl>"));
+  const downloads = await read("app/download-library.tsx");
+  const summary = downloads.slice(downloads.indexOf("<dl className={s.librarySummary}"), downloads.indexOf("</dl>"));
   assert.doesNotMatch(summary, /<small>/, "dl groups hold only dt and dd");
-  assert.equal((summary.match(/<dd className=\{styles\.summaryNote\}>/g) ?? []).length, 3);
+  assert.equal((summary.match(/<dd className=\{s\.summaryNote\}>/g) ?? []).length, 2);
 
   assert.match(await read("app/acquisition/workspace.module.css"), /\.page :is\(p,li,dd,td\)>a\{text-decoration:underline\}/);
   assert.match(await read("app/data/workspace.module.css"), /\.page :is\(p,li,dd,section\)>a:not\(\.download,\.brand\)\{text-decoration:underline\}/);

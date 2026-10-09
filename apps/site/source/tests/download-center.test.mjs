@@ -7,6 +7,8 @@ const compile = async path => ts.transpileModule(await readFile(path, 'utf8'), {
 const url = value => `data:text/javascript;base64,${Buffer.from(value).toString('base64')}`;
 const bounded = url(await compile('app/bounded-json.ts'));
 const client = await import(url((await compile('app/local-download-client.ts')).replace('"./bounded-json"', JSON.stringify(bounded))));
+const activity = await import(url(await compile('app/download-activity.ts')));
+const polling = await import(url(await compile('app/download-polling.ts')));
 const status = () => ({ schema: 'kfm-ee-download-control/v1', configured: false, project: null, authentication: 'idle', destination: '/local/captures', sessionToken: 'a'.repeat(43), active: null, jobs: [] });
 const job = patch => ({ id: 'a'.repeat(32), selection: { dataset: 'ee-cdl', year: 2023, maxBytes: 8e9 }, state: 'downloading', bytes: 12345, completed: 0, total: 0, destination: '/local/captures/job', mapReady: false, createdAt: '2026-10-08T12:00:00Z', ...patch });
 const library = patch => ({ schema: 'kfm-local-library/v1', state: 'scanning', scannedFiles: 100, generatedAt: null, entries: [], totalFiles: 0, totalBytes: 0, error: null, ...patch });
@@ -38,8 +40,10 @@ test('library totals require complete dated identity and do not turn an unfinish
 async function hookHarness(origin = 'https://hosted.example') {
   const calls = [], timers = new Map(), listeners = new Map(); let nextTimer = 0;
   const document = { visibilityState: 'visible', addEventListener: (name, fn) => listeners.set(name, fn), removeEventListener: (name, fn) => { if (listeners.get(name) === fn) listeners.delete(name); } };
-  const h = await componentHarness('app/use-local-downloads.ts', { './local-download-client': { ...client, localDownloadRequest: (path, signal, payload, token) => { const d = deferred(); calls.push({ path, signal, payload, token, ...d }); return d.promise; } } },
-    { window: { location: { origin } }, document, queueMicrotask, setTimeout: (callback, delay) => { timers.set(++nextTimer, { callback, delay }); return nextTimer; }, clearTimeout: id => timers.delete(id) }, '\nexport function Probe(){return useLocalDownloads();}');
+  const environment = { document, setTimeout: (callback, delay) => { timers.set(++nextTimer, { callback, delay }); return nextTimer; }, clearTimeout: id => timers.delete(id) };
+  const h = await componentHarness('app/use-local-downloads.ts', { './local-download-client': { ...client, localDownloadRequest: (path, signal, payload, token) => { const d = deferred(); calls.push({ path, signal, payload, token, ...d }); return d.promise; } },
+    './download-activity': activity, './download-polling': { startDownloadPolling: run => polling.startDownloadPolling(run, environment) } },
+    { window: { location: { origin } }, document, queueMicrotask, ...environment }, '\nexport function Probe(){return useLocalDownloads();}');
   const render = () => { const value = h.render(h.exports.Probe); h.commit(); return value; };
   const respond = async (index, body, code = 200) => { calls[index].resolve({ response: { ok: code >= 200 && code < 300, status: code }, body }); await settle(); };
   const tick = async () => { assert.equal(timers.size, 1, 'only one polling timer'); const [id, task] = [...timers][0]; timers.delete(id); task.callback(); await settle(); return task.delay; };
@@ -89,6 +93,70 @@ test('background library refresh keeps prior results, uses session write check, 
   value = h.render(); assert.equal(value.connection, 'unavailable'); assert.equal(value.library.totalBytes, 82000); assert.equal(value.library.state, 'failed'); h.dispose();
 });
 
+test('Earth Engine terminal transfer refreshes the library once, without rescanning historical jobs on connection', async () => {
+  const h = await hookHarness('http://127.0.0.1:4173');
+  const historical = job({ state: 'cancelled' });
+  await h.respond(0, { ...status(), jobs: [historical] }); await h.respond(1, snapshot());
+  assert.equal(h.calls.filter(c => c.path === '/library/refresh').length, 0);
+  await h.tick();
+  const active = job({ id: 'b'.repeat(32) });
+  await h.respond(2, { ...status(), active: active.id, jobs: [historical, active] }); await h.respond(3, snapshot());
+  await h.tick();
+  const terminal = { ...active, state: 'cancelled' };
+  await h.respond(4, { ...status(), jobs: [historical, terminal] }); await h.respond(5, snapshot());
+  assert.equal(h.calls[6].path, '/library/refresh'); assert.equal(h.calls[6].token, status().sessionToken);
+  await h.respond(6, { ...snapshot(), state: 'scanning' });
+  await h.respond(7, { ...status(), jobs: [historical, terminal] }); await h.respond(8, snapshot());
+  await h.tick(); await h.respond(9, { ...status(), jobs: [historical, terminal] }); await h.respond(10, snapshot());
+  assert.equal(h.calls.filter(c => c.path === '/library/refresh').length, 1);
+  h.dispose();
+});
+
+test('accepted Earth Engine start keeps its shared lock until a status read issued after acknowledgement', async () => {
+  const h = await hookHarness('http://127.0.0.1:4173'); await h.respond(0, status()); await h.respond(1, snapshot());
+  await h.tick(); // This request began before the POST acknowledgement.
+  h.render().setStarting(true); h.render().confirmStart(); h.render().refresh();
+  await h.respond(2, status()); await h.respond(3, snapshot());
+  assert.equal(h.render().starting, true, 'an old empty snapshot cannot release the global pending lock');
+  assert.equal(await h.tick(), 0);
+  await h.respond(4, { ...status(), active: 'a'.repeat(32), jobs: [job()] }); await h.respond(5, snapshot());
+  assert.equal(h.render().starting, false); assert.equal(h.render().status.active, 'a'.repeat(32)); h.dispose();
+});
+
+test('terminal transfer during a running scan queues one trailing scan, shared by both providers', async () => {
+  const h = await hookHarness('http://127.0.0.1:4173');
+  await h.respond(0, { ...status(), active: 'a'.repeat(32), jobs: [job()] }); await h.respond(1, { ...snapshot(), state: 'scanning' });
+  await h.tick(); const terminal = { ...status(), jobs: [job({ state: 'cancelled' })] };
+  await h.respond(2, terminal); await h.respond(3, { ...snapshot(), state: 'scanning' });
+  await h.render().refreshLibrary(); // The public-map terminal callback uses this same API.
+  assert.equal(h.calls.filter(c => c.path === '/library/refresh').length, 0, 'avoid the backend no-op during a running scan');
+  await h.tick(); await h.respond(4, terminal); await h.respond(5, snapshot());
+  assert.equal(h.calls[6].path, '/library/refresh');
+  await h.respond(6, { ...snapshot(), state: 'scanning' });
+  await h.respond(7, terminal); await h.respond(8, snapshot());
+  await h.tick(); await h.respond(9, terminal); await h.respond(10, snapshot());
+  assert.equal(h.calls.filter(c => c.path === '/library/refresh').length, 1, 'the trailing scan does not queue itself again'); h.dispose();
+});
+
+test('library reads issued before refresh acknowledgement cannot overwrite scanning or consume the trailing refresh', async () => {
+  const h = await hookHarness('http://127.0.0.1:4173'); await h.respond(0, status()); await h.respond(1, snapshot());
+  const first = h.render().refreshLibrary(); assert.equal(h.calls[2].path, '/library/refresh');
+  h.render().refresh(); assert.deepEqual(h.calls.slice(3).map(c => c.path), ['/status', '/library']);
+  await h.render().refreshLibrary(); // A new terminal transfer queues behind the pending scan.
+  await h.respond(2, { ...snapshot(), state: 'scanning' }); await first;
+  await h.respond(3, status()); await h.respond(4, snapshot()); // This old read still says complete.
+  assert.equal(h.render().library.state, 'scanning');
+  assert.equal(h.calls.filter(c => c.path === '/library/refresh').length, 1, 'the old completed scan must not drain the queue');
+  assert.equal(await h.tick(), 0); await h.respond(5, status()); await h.respond(6, { ...snapshot(), state: 'scanning' });
+  assert.equal(h.calls.filter(c => c.path === '/library/refresh').length, 1);
+  assert.equal(await h.tick(), 2500); await h.respond(7, status()); await h.respond(8, snapshot());
+  assert.equal(h.calls[9].path, '/library/refresh');
+  await h.respond(9, { ...snapshot(), state: 'scanning' });
+  await h.respond(10, status()); await h.respond(11, snapshot());
+  await h.tick(); await h.respond(12, status()); await h.respond(13, snapshot());
+  assert.equal(h.calls.filter(c => c.path === '/library/refresh').length, 2, 'exactly the initial and trailing scans were requested'); h.dispose();
+});
+
 test('local transport sends no cookies, bounds streamed bytes, and cancels a stalled body', async () => {
   const previous = globalThis.fetch; let options;
   try {
@@ -117,20 +185,19 @@ test('job progress counts files, shows the byte cap separately, and keeps unknow
   tree = h.render(h.exports.DownloadJob, { ...props, job: job({ state: 'failed', bytes: 500 }) }); assert.match(JSON.stringify(tree), /captured files remain/); h.dispose();
 });
 
-test('download center exposes all collections through search/paging and separates stored bytes from map approval', async () => {
-  let state = { status: status(), library: snapshot(), connection: 'connected', libraryError: null, announcement: '', actionNotice: 'Cancellation was not confirmed.', lastChecked: '2026-10-08T12:00:00Z', connect() {}, refreshLibrary() {}, refreshingLibrary: false, cancelling: false, cancelJob() {} };
-  const h = await componentHarness('app/downloads/workspace.tsx', {
-    'next/link': { default: 'a' }, '../use-local-downloads': { useLocalDownloads: () => state },
-    '../earth-engine-context-client': { useEarthEngineContext: () => ({ manifests: [], loading: false, error: null, reload() {} }) },
-    '../earth-engine-context': { earthEngineSetYear: () => 2024 }, '../earth-engine-data': { EARTH_ENGINE_DATASETS: [] }, '../local-download-client': client,
-    '../download-job': { DownloadJob: 'job' }, '../public-map-browser': { default: 'public-map-browser' }, './workspace.module.css': css,
+test('library view pages stored collections and keeps unknown totals separate from map approval', async () => {
+  let state = { status: status(), library: snapshot(), connection: 'connected', libraryError: null, announcement: '', actionNotice: '', lastChecked: '2026-10-08T12:00:00Z', refreshLibrary() {}, refreshingLibrary: false };
+  const reviewed = { manifests: [], loading: false, error: null, reload() {} };
+  const h = await componentHarness('app/download-library.tsx', {
+    'next/link': { default: 'a' }, './earth-engine-context': { earthEngineSetYear: () => 2024 },
+    './earth-engine-data': { EARTH_ENGINE_DATASETS: [] }, './local-download-client': client,
+    './downloads/workspace.module.css': css,
   });
-  const render = () => { const tree = h.render(h.exports.default); h.commit(); return tree; };
+  const render = () => { const tree = h.render(h.exports.default, { downloads: state, reviewed }); h.commit(); return tree; };
   let tree = render(); const list = () => findNode(tree, node => node.type === 'ul' && node.props.className === 'collections');
-  assert.equal(nodes(list(), node => node.type === 'li').length, 12); assert.match(JSON.stringify(tree), /No approved display periods/);
-  assert.ok(findNode(tree, node => node.type === 'p' && node.props.children === 'Cancellation was not confirmed.'));
-  const pages = findNode(tree, node => node.props?.['aria-label'] === 'Collection pages'); findNode(pages, node => node.type === 'button' && node.props.children === 'Next').props.onClick(); tree = render(); assert.match(JSON.stringify(list()), /Source 13/);
+  assert.equal(nodes(list(), node => node.type === 'li').length, 10); assert.match(JSON.stringify(tree), /No approved display periods/);
+  const pages = findNode(tree, node => node.props?.['aria-label'] === 'Collection pages'); findNode(pages, node => node.type === 'button' && node.props.children === 'Next').props.onClick(); tree = render(); assert.match(JSON.stringify(list()), /Source 11/);
   findNode(tree, node => node.type === 'input' && node.props.type === 'search').props.onChange({ target: { value: 'Source 40' } }); tree = render(); assert.equal(nodes(list(), node => node.type === 'li').length, 1); assert.match(JSON.stringify(list()), /Source 40/);
-  state = { ...state, library: library(), actionNotice: '' }; tree = render(); assert.match(JSON.stringify(tree), /Unknown/); assert.match(JSON.stringify(tree), /first scan finishes/); const progress = findNode(tree, node => node.type === 'progress'); assert.equal(progress.props.value, undefined);
+  state = { ...state, library: library() }; tree = render(); assert.match(JSON.stringify(tree), /Unknown/); assert.match(JSON.stringify(tree), /first scan finishes/); const progress = findNode(tree, node => node.type === 'progress'); assert.equal(progress.props.value, undefined);
   state = { ...state, library: { ...snapshot(), state: 'failed', error: 'LIBRARY_SCAN_CHANGED' } }; tree = render(); assert.match(JSON.stringify(tree), /Previous completed scan/); assert.match(JSON.stringify(tree), /82.0 kB/); h.dispose();
 });

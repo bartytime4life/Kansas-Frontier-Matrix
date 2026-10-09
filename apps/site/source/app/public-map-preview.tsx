@@ -17,7 +17,7 @@ export function PublicMapPreview({record}:{record:PublicMapRecord|null}) {
   useEffect(()=>{pending.current?.abort();pending.current=null;},[record?.id]);
   useEffect(()=>{
     if (!opened || !container.current || !kind) return;
-    let disposed=false;setReady(false);
+    let disposed=false;
     void loadMapLibre().then(runtime=>{
       if(disposed || !container.current)return;
       runtime.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
@@ -50,7 +50,7 @@ export function PublicMapPreview({record}:{record:PublicMapRecord|null}) {
     finally{if(!request.signal.aborted)setBusy(false);}
   };
   if(!record)return null;
-  if(!kind)return <p>Open the original document or GIS release below. A georeferenced preview has not been verified for this record.</p>;
+  if(!kind)return <p>Open the original document or GIS release above. A georeferenced preview has not been verified for this record.</p>;
   return <section aria-label="Source map preview">
     <p>{PREVIEW_SOURCES[kind].limitation}</p>
     <button type="button" onClick={()=>setOpened(!opened)}>{opened?"Close map preview":"Open source map preview"}</button>
