@@ -231,8 +231,11 @@ class PublicMapDownloads:
 
     def health(self):
         with self.lock:
-            # Queued jobs are a count, so a long queue cannot push the running job out of the window.
-            jobs = [job for job in self.jobs.values() if job["id"] not in self.queue][-100:]
+            # Queued jobs are a count, and the running job is always listed: cancelled
+            # queue entries must not push it out of the window the site validates.
+            jobs = [job for job in self.jobs.values() if job["id"] not in self.queue and job["id"] != self.active][-99:]
+            if self.active:
+                jobs.append(self.jobs[self.active])
             return {"schema": "kfm-public-map-download-control/v1", "jobs": copy.deepcopy(jobs),
                     "active": self.active, "queued": len(self.queue), "limitBytes": MAX_BYTES, "refresh": dict(self.refresh_state)}
 
@@ -296,22 +299,27 @@ class PublicMapDownloads:
         batch = value["requestId"]
         identifiers = [hashlib.sha256(f"{batch}:{asset}".encode()).hexdigest()[:32] for asset in value["assetIds"]]
         with self.lock:
-            prior = [self.jobs.get(identifier) for identifier in identifiers]
-            if any(prior):
-                if not all(job and job.get("batchId") == batch and job["maxBytes"] == value["maxBytes"] for job in prior):
+            # A request ID names one exact, ordered selection under one maximum.
+            prior = [job for job in self.jobs.values() if job.get("batchId") == batch]
+            if prior or any(identifier in self.jobs for identifier in identifiers):
+                if ([job["id"] for job in prior] != identifiers
+                        or any(job["maxBytes"] != value["maxBytes"] for job in prior)):
                     raise ValueError("REQUEST_ID_CONFLICT")
                 return self._queue_summary(batch)
             if self.active or self.queue:
                 raise ValueError("DOWNLOAD_ALREADY_RUNNING")
             if len(self.jobs) + len(identifiers) > 1000:
                 raise ValueError("JOB_HISTORY_LIMIT")
-            # Validate the whole selection before creating any job.
-            if shutil.disk_usage(self.root).free < value["maxBytes"] + RESERVE_BYTES:
-                raise ValueError("INSUFFICIENT_FREE_SPACE_FOR_LIMIT")
+            # Validate the whole selection before creating any job. Completed files stay
+            # stored, so the queue reserves room for every file's upper bound at once.
+            reserved = 0
             for asset_id in value["assetIds"]:
                 expected = self._asset(asset_id)[1].get("expectedBytes")
                 if expected is not None and expected > value["maxBytes"]:
                     raise ValueError("ASSET_EXCEEDS_SELECTED_LIMIT")
+                reserved += expected or value["maxBytes"]
+            if shutil.disk_usage(self.root).free < reserved + RESERVE_BYTES:
+                raise ValueError("INSUFFICIENT_FREE_SPACE_FOR_LIMIT")
             try:
                 for identifier, asset_id in zip(identifiers, value["assetIds"]):
                     self._create(identifier, asset_id, value["maxBytes"], batch=batch)

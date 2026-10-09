@@ -470,6 +470,38 @@ class QueueTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "DOWNLOAD_ALREADY_RUNNING"):
             self.enqueue(request="e" * 32)
 
+    def test_a_request_id_names_one_exact_ordered_selection(self):
+        self.enqueue()
+        for changed in (self.assets[:2], list(reversed(self.assets)), [self.assets[0]]):
+            with self.assertRaisesRegex(ValueError, "REQUEST_ID_CONFLICT"):
+                self.enqueue(assets=changed)
+        self.assertEqual(sum(bool(job.get("batchId")) for job in self.manager.jobs.values()), 3)
+
+    def test_the_queue_reserves_disk_space_for_every_file(self):
+        usage = SimpleNamespace(free=downloads.RESERVE_BYTES + 2 * 4096)
+        with patch.object(downloads.shutil, "disk_usage", return_value=usage):
+            with self.assertRaisesRegex(ValueError, "INSUFFICIENT_FREE_SPACE_FOR_LIMIT"):
+                self.enqueue()
+            self.assertEqual(self.manager.jobs, {})
+            self.enqueue(assets=self.assets[:2])
+
+    def test_the_running_job_stays_listed_after_a_long_queue_is_cancelled(self):
+        from tools.local_data import public_map_catalog
+        seed = downloads.public_map_catalog.load_seed()
+        seed["records"] = [r for r in seed["records"] if r["sourceId"] != "publisher-noaa-storm-events"]
+        kinds = ("details", "fatalities", "locations")
+        for year in range(1950, 2025):
+            seed["records"].append(public_map_catalog.storm_events_record(
+                year, {kind: f"StormEvents_{kind}-ftp_v1.0_d{year}_c20250401.csv.gz" for kind in kinds}, "2026-10-09"))
+        self.manager._catalog = seed
+        self.enqueue(assets=[f"publisher-noaa-storm-events-{year}-{kind}" for year in range(1950, 2025) for kind in kinds])
+        running = self.manager.active
+        self.manager.cancel_queue()
+        health = self.manager.health()
+        self.assertEqual(len(health["jobs"]), 100)
+        self.assertEqual(health["jobs"][-1]["id"], running)
+        self.assertEqual(health["queued"], 0)
+
     def test_cancelling_the_queue_stops_waiting_files_with_receipts(self):
         self.enqueue()
         running = self.manager.active
