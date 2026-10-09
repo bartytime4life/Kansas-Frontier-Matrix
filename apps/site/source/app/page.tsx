@@ -56,6 +56,7 @@ import { useEarthEngineContext } from "./earth-engine-context-client";
 import { earthEngineSetYear } from "./earth-engine-context";
 import { applyProjectionNavigationLimits, GLOBE_VIEWPOINTS, REGIONAL_NAVIGATION_BOUNDS } from "./globe-context";
 import { browserRenderBudget, controlOwnsMapSourceErrors, mapRuntimeErrorCode, readRenderQuality, sampleMapRuntimeHealth, QUALITY_STORAGE_KEY, type MapRuntimeCheckFailure, type RenderQuality } from "./map-performance";
+import { webgl2Available } from "./webgl-support";
 import type { Feature, FeatureCollection, Geometry } from "geojson";
 import { loadMapLibre, type GeoJSONSource, type Map as MapLibreMap, type MapSourceDataEvent, type ScaleControl } from "./maplibre-seam";
 import {
@@ -4761,16 +4762,14 @@ export default function Home() {
       if (disposed || !mapContainerRef.current) return;
       setMaplibreProbe((current) => ({ ...current, version, workerConfigured: true, runtimeAssetsReady: true, error: null }));
       try {
-        const webgl2 = document.createElement("canvas").getContext("webgl2");
-        setMaplibreProbe((current) => ({ ...current, webgl2: Boolean(webgl2) }));
+        const webgl2 = webgl2Available();
+        setMaplibreProbe((current) => ({ ...current, webgl2 }));
         if (!webgl2) {
           setSourceStates(Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, "error"])));
           setMaplibreProbe((current) => ({ ...current, error: "WebGL2 is unavailable" }));
           setRuntime({ kind: "unsupported", message: "WebGL2 is unavailable in this browser. The Layer Catalog and trust metadata remain readable, but the interactive map cannot start." });
           return;
         }
-        // Do not force WEBGL_lose_context on the disposable probe. Some embedded
-        // Chromium runtimes treat that deliberate loss as a wider GPU failure.
         const initialView = pendingViewRef.current ?? KANSAS_VIEW;
         const renderBudget = browserRenderBudget();
         const map = new mapLibre.Map({ transformRequest: basemapCacheRequest,

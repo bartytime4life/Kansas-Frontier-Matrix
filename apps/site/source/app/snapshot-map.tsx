@@ -10,6 +10,7 @@ import type { MapSnapshot } from "./workspace-model";
 import { browserRenderBudget } from "./map-performance";
 import { terrainSourceFor } from "./terrain-sources";
 import { readSceneEffects, registerSceneEffects } from "./scene-effects";
+import { webgl2Available } from "./webgl-support";
 
 type Camera = { center: [number, number]; zoom: number; bearing: number; pitch: number };
 
@@ -104,13 +105,10 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
     const apply = () => { applySnapshot(); };
     loadMapLibre().then((lib) => {
       if (disposed || !container.current) return;
-      const probe = document.createElement("canvas").getContext("webgl2");
-      if (!probe) {
+      if (!webgl2Available()) {
         setStatus("Map unavailable: WebGL2 is not supported here. Scene details and evidence remain available below.");
         return;
       }
-      // A detached probe is enough. Forcing WEBGL_lose_context can destabilize
-      // the shared GPU surface in embedded Chromium hosts.
       lib.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
       const state = current.current;
       const safeCamera: Camera = state.camera.center === "WITHHELD_BROWSER_LOCATION"

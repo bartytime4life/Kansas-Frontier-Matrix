@@ -31,7 +31,8 @@ async function harness() {
     "./scene-effects": { readSceneEffects: () => ({ cinematic: true, curtain: true, sunSync: false }), registerSceneEffects() {} },
     "./temporal-sweep": { isFeatureAvailableForTemporalQuery: () => true },
     "./map-performance": { browserRenderBudget: () => ({ pixelRatio: 1, tileCache: 48 }) },
-  }, { document: { createElement: () => ({ getContext: () => ({}) }) }, ResizeObserver: class { observe() {} disconnect() {} } });
+    "./webgl-support": { webgl2Available: () => true },
+  }, { ResizeObserver: class { observe() {} disconnect() {} } });
   function render(state, onCameraChange = camera => statuses.push(camera)) {
     const tree = h.render(h.exports.default, { snapshot: state, label: "Test scene", onCameraChange });
     findNode(tree, n => n.props?.ref && n.type === "div").props.ref.current = {};

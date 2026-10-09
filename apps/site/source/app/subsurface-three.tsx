@@ -37,7 +37,9 @@ export default function SubsurfaceThree({ record, descriptionFilter, depthRange,
       try { renderer = new T.WebGLRenderer({ antialias: true }); } catch { setFailure("3D is unavailable on this device. Use the interval list or Columns & section."); return; }
       const resources: { dispose: () => void }[] = [];
       // Register partial cleanup before allocating scene resources so initialization failure is safe.
-      cleanup = () => { resources.forEach(r => r.dispose()); renderer.dispose(); renderer.domElement.remove(); };
+      // forceContextLoss releases the context now; dispose alone leaves it live until
+      // garbage collection, and rebuilds (record, depth, scale edits) would pile them up.
+      cleanup = () => { resources.forEach(r => r.dispose()); renderer.dispose(); renderer.forceContextLoss(); renderer.domElement.remove(); };
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); renderer.localClippingEnabled = true;
       renderer.domElement.tabIndex = 0; renderer.domElement.setAttribute("aria-label", "Underground recorded-depth material diagram. Drag to orbit, scroll to zoom. Camera buttons and the layer list offer keyboard alternatives.");
       container.current.append(renderer.domElement);

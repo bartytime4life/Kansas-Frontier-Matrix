@@ -131,7 +131,7 @@ const panel = { exports: {} };
 const datasets = await compile("earth-engine-data");
 new Function("require", "module", "exports", panelCode)(id => ({
   "./earth-engine-context": context, "./earth-engine-data": datasets, "./earth-engine-comparison": comparison,
-  "./maplibre-seam": {}, "./earth-engine-comparison.module.css": { default: new Proxy({}, { get: (_target, key) => String(key) }) },
+  "./maplibre-seam": {}, "./webgl-support": { webgl2Available: () => true }, "./earth-engine-comparison.module.css": { default: new Proxy({}, { get: (_target, key) => String(key) }) },
 }[id] ?? require(id)), panel, panel.exports);
 const render = manifests => renderToStaticMarkup(createElement(panel.exports.EarthEngineComparisonDialog, { manifests, loading: false, error: null, onClose() {} }));
 
