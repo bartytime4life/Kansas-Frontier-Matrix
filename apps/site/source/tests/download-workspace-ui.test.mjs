@@ -13,7 +13,7 @@ const datasets = await moduleAt('app/earth-engine-data.ts');
 const eeStatus = { schema: 'kfm-ee-download-control/v1', active: null, jobs: [], sessionToken: 'a'.repeat(43) };
 const mapStatus = { schema: 'kfm-public-map-download-control/v1', active: null, jobs: [], sessionToken: 'b'.repeat(43), refresh: { state: 'idle' } };
 
-test('one workbench keeps all source controllers and views mounted, defaults to Find data, and shares connect and pending state', async () => {
+test('no-login workbench defaults to public climate, retains controllers, and shares connection without starting transfers', async () => {
   const calls = [], events = new Map(); let options;
   const local = { status: eeStatus, connection: 'idle', starting: false, library: null, connect: () => calls.push('ee-connect'), refreshLibrary() {}, announcement: '' };
   const maps = { status: mapStatus, connection: 'idle', busy: null, connect: () => calls.push('maps-connect'), announcement: '' };
@@ -25,15 +25,17 @@ test('one workbench keeps all source controllers and views mounted, defaults to 
   const render = () => { const tree = h.render(h.exports.default); h.commit(); return tree; };
   let tree = render(); const view = id => findNode(tree, n => n.props?.id === id);
   assert.equal(view('download-find').props.hidden, false); assert.equal(view('download-library').props.hidden, true); assert.equal(view('download-activity').props.hidden, true);
-  assert.equal(findNode(tree, n => n.type === 'button' && n.props.children === 'Public files · no login').props['aria-pressed'], true);
-  assert.equal(button(tree, 'Earth Engine exports · optional sign-in').props['aria-pressed'], false);
+  assert.equal(button(tree, 'Satellite &').props['aria-pressed'], true);
+  assert.equal(findNode(tree, n => n.type === 'satellite'), undefined);
+  assert.equal(button(tree, 'Earth Engine exports · optional sign-in'), undefined);
   button(tree, 'Connect this computer').props.onClick(); assert.deepEqual(calls, ['ee-connect', 'maps-connect']);
-  const mounted = () => ['maps', 'satellite', 'library', 'activity', 'transfer-panel'].map(type => findNode(tree, n => n.type === type));
-  assert.ok(mounted().every(Boolean)); assert.equal(findNode(tree, n => n.type === 'maps').props.downloads, maps); assert.equal(findNode(tree, n => n.type === 'satellite').props.downloads, local);
+  const mounted = () => ['maps', 'library', 'activity', 'transfer-panel'].map(type => findNode(tree, n => n.type === type));
+  assert.ok(mounted().every(Boolean)); assert.equal(findNode(tree, n => n.type === 'maps').props.downloads, maps);
   button(tree, 'My library').props.onClick(); tree = render(); assert.equal(view('download-library').props.hidden, false); assert.equal(view('download-find').props.hidden, true); assert.ok(mounted().every(Boolean));
   button(tree, 'Activity').props.onClick(); tree = render(); assert.equal(view('download-activity').props.hidden, false); assert.ok(mounted().every(Boolean));
   local.starting = true; tree = render(); assert.equal(findNode(tree, n => n.type === 'maps').props.blockedByOtherDownload, true); assert.equal(options.blockedByOtherDownload, true);
-  maps.busy = 'download'; tree = render(); assert.equal(findNode(tree, n => n.type === 'satellite').props.blockedByOtherDownload, true);
+  findNode(tree, n => n.type === 'maps').props.onConnect(); assert.deepEqual(calls.slice(-2), ['ee-connect', 'maps-connect']);
+  findNode(tree, n => n.type === 'library').props.onConnect(); assert.deepEqual(calls.slice(-2), ['ee-connect', 'maps-connect']);
   h.dispose(); assert.equal(events.size, 0);
 });
 

@@ -10,13 +10,14 @@ import p from "./public-map-browser.module.css";
 
 const PUBLIC_MAP_PAGE_SIZE = 8;
 const defaultFilter: PublicMapFilter = { text: "", publisher: "all", county: "all", year: "all", format: "all" };
-const stamp = (value: string) => new Date(value).toLocaleString();
+// Catalog timestamps are server-rendered: preserve date precision and avoid locale/timezone hydration drift.
+const stamp = (value: string) => /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : `${new Date(value).toISOString().replace("T", " ").replace(".000Z", " UTC")}`;
 const size = (value: number | null) => value === null ? "Size unknown" : bytes(value);
 const coverageLabels = { seed: "Starting references", partial: "Partial catalog", complete: "Catalog checked", unavailable: "Coverage unknown" };
 const coverageReason = (reason: string) => /CERTIFICATE_VERIFY_FAILED|certificate verify failed|unable to get local issuer certificate/i.test(reason)
   ? "The provider’s secure connection could not be verified. Current coverage is unknown; retained references remain available." : reason;
 
-export default function PublicMapBrowser({ downloads, blockedByOtherDownload = false, onViewActivity, collection = "maps" }: { collection?: "maps" | "satellite"; downloads: PublicMapDownloads; blockedByOtherDownload?: boolean; onViewActivity?: () => void }) {
+export default function PublicMapBrowser({ downloads, blockedByOtherDownload = false, onViewActivity, onConnect, collection = "maps" }: { collection?: "maps" | "satellite"; downloads: PublicMapDownloads; blockedByOtherDownload?: boolean; onViewActivity?: () => void; onConnect?: () => void }) {
   const { catalog, status, connection, busy, selectAsset } = downloads;
   const connected = connection === "connected";
   const [filter, setFilter] = useState(defaultFilter), [page, setPage] = useState(0), [selectedId, setSelectedId] = useState("");
@@ -97,11 +98,12 @@ export default function PublicMapBrowser({ downloads, blockedByOtherDownload = f
           {chosenAsset && canDownloadPublicMap(chosenAsset) && <div className={p.selection} aria-label="Selected original transfer"><p className={s.eyebrow}>SAVE TO THIS COMPUTER</p><strong>{chosenAsset.title}</strong>
             {existing && <p className={p.storedNotice}>A copy is already stored ({bytes(existing.bytes)}). This starts a separate capture. <button type="button" className={s.textButton} onClick={onViewActivity}>View activity</button></p>}
             <p>{chosenAsset.expectedBytes === null ? "Size unknown. Enter a maximum before downloading." : `Reported file size ${bytes(chosenAsset.expectedBytes)}. A rounded-up maximum is ready for you to review.`}</p>
+            {!connected && <div className={s.alert}><p>{connection === "unavailable" ? "The local download service could not be reached. Open KFM on this computer or retry the connection." : "Connect to the download service on this computer. No Google account is needed."}</p><button type="button" className={s.primaryButton} disabled={connection === "connecting"} aria-busy={connection === "connecting"} onClick={onConnect ?? downloads.connect}>{connection === "connecting" ? "Connecting…" : "Connect downloads · no login"}</button>{connection === "unavailable" && <p><a href={`http://127.0.0.1:4173/downloads#${collection === "satellite" ? "public-climate" : "public-maps"}`}>Open local KFM downloads →</a></p>}</div>}
             <label>Maximum download (MiB)<input ref={transfer} type="number" inputMode="decimal" min="0.001" step="0.001" value={maximum} onChange={e => setMaximum(e.target.value)} placeholder="Enter a maximum" /></label>
             {limit !== null && <p className={p.impact}>Storage for this original: {chosenAsset.expectedBytes === null ? `up to ${bytes(limit)}` : `${bytes(chosenAsset.expectedBytes)} at the currently reported size`}. Transfer maximum: <strong>{bytes(limit)}</strong>. Preparation may need additional space.</p>}
             {maximum && limit === null && <p role="alert">Choose a positive maximum within {bytes(status?.limitBytes ?? 500_000_000_000)} and at least the known file size.</p>}
             <button ref={transferAction} type="button" className={s.primaryButton} disabled={!connected || !!busy || limit === null || workerBusy} aria-busy={busy === "download"} onClick={() => { if (limit !== null) void downloads.startDownload(chosenAsset, limit); }}>{busy === "download" ? "Starting transfer…" : existing ? "Download a new copy" : "Download to this computer"}</button>
-            {!connected ? <small>Connect this computer using the connection bar above.</small> : workerBusy && <small>A transfer is already running. <button type="button" className={s.textButton} onClick={onViewActivity}>View activity</button></small>}
+            {connected && workerBusy && <small>A transfer is already running. <button type="button" className={s.textButton} onClick={onViewActivity}>View activity</button></small>}
             <small>1 MiB = 1,048,576 bytes. The maximum is a stop limit. Originals remain private candidates.</small>
           </div>}
           {downloads.notice && <p className={s.alert} role="status">{downloads.notice}</p>}
