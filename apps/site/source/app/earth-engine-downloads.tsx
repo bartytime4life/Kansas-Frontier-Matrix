@@ -105,7 +105,7 @@ export function EarthEngineDownloadForm({ dataset, year, invalid, downloads, blo
         <small>Google requires a registered Earth Engine project. <a href="https://code.earthengine.google.com/" target="_blank" rel="noreferrer">Choose or register a project in Earth Engine ↗</a>. KFM checks access when you select Check download access.</small>
       </>}
       {!status?.signedIn && <button type="button" disabled={!connected || Boolean(busy) || blocked || authPending} onClick={() => void checkAccess()}>Check existing Google sign-in</button>}
-      <small>Google asks for Earth Engine access, your email and read-only access to your project list. Consent and credentials stay on this computer. Free direct-file maps do not need Google sign-in.</small>
+      <small>Google asks for Earth Engine access and your email. You enter your Cloud project ID once. Consent and credentials stay on this computer. Free direct-file maps do not need Google sign-in.</small>
     </section>
     <div className={styles.downloadConnection}><div><strong>Already on this computer</strong><p>{downloads.library?.generatedAt ? storedFiles ? `${storedFiles.toLocaleString()} stored files · ${bytes(storedBytes)} for ${year ?? "this period"}` : "No stored files found for this dataset and period in the last library scan." : "Connect and scan My library to check stored files."}</p>{storedFiles > 0 && <small>Stored files may include partial captures; map review is separate.</small>}</div><Link href="/downloads#library">View My library →</Link></div>
     {status && <p className={styles.destination}>Selected destination<code>{status.destination}/{dataset.id}/{year ?? "fixed"}/</code></p>}
