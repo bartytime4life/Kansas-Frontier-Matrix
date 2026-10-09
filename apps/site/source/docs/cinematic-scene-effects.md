@@ -112,3 +112,5 @@ During development, the curtain's first version re-sampled terrain under the who
 ## Rollback
 
 Choose **Plain** in the Scene panel (or switch effects off) to restore the previous relief palette, sky, border, 2D map and building paint. To remove the change entirely, revert the commit. No stored data, database schema, API, URL or saved-workspace format is affected; the only new storage is the device-local `kfm-scene-effects-v1` preference, which is ignored once the code is reverted.
+
+The [Scene Studio](scene-studio.md) adds coordinated presentation recipes, direct camera/lens controls and runtime curtain/outline palettes to these effects.

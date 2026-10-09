@@ -115,6 +115,18 @@ void main() {
 
 const FLOATS_PER_VERTEX = 5;
 
+export type CurtainPalette = Readonly<{
+  foot: readonly [number, number, number];
+  crest: readonly [number, number, number];
+  intensity: number;
+}>;
+/** Static palette objects are reused; selecting one never rebuilds GPU resources. */
+export const CURTAIN_PALETTES: Readonly<Record<"night" | "dusk" | "clear", CurtainPalette>> = {
+  night: { foot: [0.38, 0.76, 1], crest: [0.35, 0.48, 0.92], intensity: 0.76 },
+  dusk: { foot: [1, 0.66, 0.3], crest: [0.94, 0.32, 0.19], intensity: 0.8 },
+  clear: { foot: [0.5, 0.9, 0.97], crest: [0.2, 0.59, 0.86], intensity: 0.65 },
+};
+
 export type AuroraCurtainOptions = Readonly<{
   id: string;
   ring: readonly (readonly [number, number])[];
@@ -123,6 +135,8 @@ export type AuroraCurtainOptions = Readonly<{
   foot?: readonly [number, number, number];
   crest?: readonly [number, number, number];
   intensity?: number;
+  /** Sample the effective scene palette at render time without owning a loop. */
+  palette?: () => CurtainPalette;
 }>;
 
 export function createAuroraCurtainLayer(options: AuroraCurtainOptions): CustomLayerInterface {
@@ -280,9 +294,10 @@ export function createAuroraCurtainLayer(options: AuroraCurtainOptions): CustomL
       }
       gl.uniform1f(uniforms.u_height, height);
       gl.uniform1f(uniforms.u_time, options.clock() ?? 0);
-      gl.uniform1f(uniforms.u_intensity, options.intensity ?? 0.85);
-      gl.uniform3fv(uniforms.u_foot, options.foot ?? [1, 0.8, 0.42]);
-      gl.uniform3fv(uniforms.u_crest, options.crest ?? [0.45, 0.85, 0.95]);
+      const palette = options.palette?.();
+      gl.uniform1f(uniforms.u_intensity, palette?.intensity ?? options.intensity ?? 0.85);
+      gl.uniform3fv(uniforms.u_foot, palette?.foot ?? options.foot ?? [1, 0.8, 0.42]);
+      gl.uniform3fv(uniforms.u_crest, palette?.crest ?? options.crest ?? [0.45, 0.85, 0.95]);
       gl.enable(gl.BLEND);
       gl.blendFunc(gl.ONE, gl.ONE);
       gl.depthMask(false);

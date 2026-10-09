@@ -164,3 +164,35 @@ test("building styling uses provider heights only and restores the style's own p
   overlays.syncBuildingStyle(noBuildings, "dusk", 200);
   assert.equal(noBuildings.paint.size, 0, "styles without the provider layer are untouched");
 });
+
+test("palette changes recolor decorative outlines in place, skip unchanged paints and restore offline colors on Plain", async () => {
+  const overlays = await loadOverlays();
+  const map = fakeMap({ layers: [
+    { id: "orientation-kansas-glow", type: "line" },
+    { id: "orientation-kansas-outline", type: "line" },
+    { id: "provider-values", type: "circle" },
+  ], sources: { "orientation-kansas": {} } });
+  map.paint.set("orientation-kansas-glow:line-color", "#original-halo");
+  map.paint.set("orientation-kansas-outline:line-color", "#original-edge");
+  let writes = 0;
+  const write = map.setPaintProperty;
+  map.setPaintProperty = (...args) => { writes++; write(...args); };
+  overlays.syncKansasGlow(map, "clear", 210);
+  const source = map.getSource(overlays.KANSAS_GLOW_SOURCE_ID);
+  const layer = map.getLayer("scene-kansas-glow-edge");
+  for (const light of ["dusk", "night", "clear"]) {
+    overlays.syncKansasGlow(map, light, 210);
+    assert.equal(map.getSource(overlays.KANSAS_GLOW_SOURCE_ID), source);
+    assert.equal(map.getLayer("scene-kansas-glow-edge"), layer);
+    assert.equal(map.getPaintProperty("scene-kansas-glow-edge", "line-color"), overlays.KANSAS_GLOW_PALETTES[light][1]);
+    assert.equal(map.getPaintProperty("orientation-kansas-outline", "line-color"), overlays.KANSAS_GLOW_PALETTES[light][1]);
+    const unchanged = writes;
+    overlays.syncKansasGlow(map, light, 210);
+    assert.equal(writes, unchanged);
+  }
+  assert.equal(map.getPaintProperty("provider-values", "circle-color"), undefined, "provider palette never changes");
+  map.fx = { ...ALL_ON, kansasGlow: false };
+  overlays.syncKansasGlow(map, "dusk", 210);
+  assert.equal(map.getPaintProperty("orientation-kansas-glow", "line-color"), "#original-halo");
+  assert.equal(map.getPaintProperty("orientation-kansas-outline", "line-color"), "#original-edge");
+});

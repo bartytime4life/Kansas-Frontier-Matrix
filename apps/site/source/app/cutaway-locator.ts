@@ -4,10 +4,11 @@ type LayoutMap = {
   resize(): unknown;
 };
 
-/** MapLibre emits movement even for a no-op resize. A drawer must not invalidate a fixed selector. */
-export function resizeMapAfterLayout(map: LayoutMap) {
+/** MapLibre emits movement even for a no-op resize. Preserve fixed selectors
+ * and explicitly requested surface probes when a drawer leaves the size alone. */
+export function resizeMapAfterLayout(map: LayoutMap, skipUnchanged = false) {
   const container = map.getContainer();
-  if (container.closest(".map-stage")?.querySelector('[data-cutaway-panel="true"]')) {
+  if (skipUnchanged || container.closest(".map-stage")?.querySelector('[data-cutaway-panel="true"]')) {
     const canvas = map.getCanvas();
     // Match MapLibre's public canvas CSS size, including its hidden-container fallback.
     if (canvas.style.width === `${container.clientWidth || 400}px` && canvas.style.height === `${container.clientHeight || 300}px`) return false;

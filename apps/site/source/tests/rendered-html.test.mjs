@@ -121,7 +121,7 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   assert.match(page, /Verified renderer controls/);
   assert.match(page, /HMS smoke · Shake stations · hazard overlays/);
   assert.match(page, /setVerticalFieldOfView/);
-  assert.match(page, /Started a reversible 90° MapLibre camera orbit/);
+  assert.match(page, /Orbit started · drag, scroll or press a key to take back the camera/, "orbit announces how to interrupt the camera motion");
   assert.match(page, /External DEM; not KFM evidence/);
   assert.match(page, /new mapLibre\.NavigationControl/);
   assert.match(page, /new mapLibre\.FullscreenControl/);
