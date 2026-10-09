@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
 import seed from "./public-map-catalog.json";
-import { canDownloadPublicMap, filterPublicMaps, parsePublicMapCatalog, PUBLIC_MAP_PAGE_SIZE, publicMapSelectedLimit, type PublicMapCatalog, type PublicMapFilter, type PublicMapRecord } from "./public-map-catalog";
+import { canDownloadPublicMap, filterPublicMaps, parsePublicMapCatalog, publicMapNmmrLinks, PUBLIC_MAP_PAGE_SIZE, publicMapSelectedLimit, type PublicMapCatalog, type PublicMapFilter, type PublicMapRecord } from "./public-map-catalog";
 import { parsePublicMapStatus, publicMapJobLabels, publicMapReason, publicMapRequest, type PublicMapEndpoint, type PublicMapStatus } from "./public-map-client";
 import { formatDownloadBytes as bytes } from "./local-download-client";
 import { PublicMapPreview } from "./public-map-preview";
@@ -10,6 +10,7 @@ import p from "./public-map-browser.module.css";
 
 const defaultFilter: PublicMapFilter = { text: "", publisher: "all", county: "all", year: "all", format: "all", availability: "all" };
 const initialCatalog = parsePublicMapCatalog(seed);
+const nmmrLinks = publicMapNmmrLinks(initialCatalog);
 const stamp = (value: string) => new Date(value).toLocaleString();
 const size = (value: number | null) => value === null ? "Size unknown" : bytes(value);
 const coverageLabels = { seed: "Starting references · full catalog not checked", partial: "Partial catalog", complete: "Catalog checked", unavailable: "Catalog unavailable" };
@@ -31,14 +32,14 @@ export default function PublicMapBrowser() {
   }, []);
   useEffect(() => {
     if (!epoch) return;
-    const controller = new AbortController(); let timer: ReturnType<typeof setTimeout> | undefined, previousRefresh = "", first = true;
+    const controller = new AbortController(); let timer: ReturnType<typeof setTimeout> | undefined, previousRefresh = "", first = true, catalogPending = true;
     const loadCatalog = async () => {
       try {
         const result = await publicMapRequest("/catalog", controller.signal);
         const parsed = result.response.ok ? parsePublicMapCatalog(result.body) : null;
         if (!parsed) throw new Error("The returned map catalog could not be checked.");
-        if (!controller.signal.aborted) { setCatalog(parsed); setCatalogFailure(""); }
-      } catch { if (!controller.signal.aborted) setCatalogFailure("The current catalog is unavailable. Previously checked metadata remains visible; statewide completeness is unknown."); }
+        if (!controller.signal.aborted) { setCatalog(parsed); setCatalogFailure(""); catalogPending = false; }
+      } catch { if (!controller.signal.aborted) { catalogPending = true; setCatalogFailure("The current catalog is unavailable. Previously checked metadata remains visible; statewide completeness is unknown."); } }
     };
     const poll = async () => {
       if (first) setConnecting(true);
@@ -48,7 +49,7 @@ export default function PublicMapBrowser() {
         if (!parsed) throw new Error("Unrecognized local map service.");
         if (controller.signal.aborted) return;
         setStatus(parsed); setConnected(true); setFailure("");
-        if (first || parsed.refresh.state === "complete" && previousRefresh !== "complete") await loadCatalog();
+        if (catalogPending || parsed.refresh.state === "complete" && previousRefresh !== "complete") await loadCatalog();
         previousRefresh = parsed.refresh.state;
       } catch {
         if (!controller.signal.aborted) { setConnected(false); setFailure("Public-map downloads are unavailable on this computer. The catalog below remains browseable; reconnect after the local service is available."); }
@@ -99,7 +100,17 @@ export default function PublicMapBrowser() {
     <div className={p.actions}><button type="button" disabled={connecting} onClick={() => setEpoch(value => value + 1)}>{connecting ? "Connecting…" : connected ? "Reconnect map downloads" : "Connect map downloads"}</button><button type="button" disabled={!connected || !!busy || status?.refresh.state === "running"} onClick={() => void action("/refresh", {}, "Kansas catalog refresh requested. Source coverage is shown separately below.")}>{status?.refresh.state === "running" ? "Refreshing Kansas catalog…" : "Refresh all Kansas records"}</button><span>{connected ? "Connected to this computer" : "Reference catalog available"}</span></div>
     {failure && <p className={s.alert}>{failure}</p>}{catalogFailure && <p className={s.alert}>{catalogFailure}</p>}
     {status?.refresh.state === "failed" && <p className={s.alert}>Catalog refresh did not finish. The previous records remain visible; inspect each source’s coverage before drawing conclusions.</p>}
-    <details className={p.coverage} open><summary>Source coverage · {catalog?.records.length.toLocaleString() ?? 0} indexed records</summary><ul>{catalog?.coverage.map(source => <li key={source.sourceId}><strong>{source.title}</strong><span>{coverageLabels[source.state]} · {source.state === "unavailable" && (source.discoveredCount ?? source.recordCount) === 0 ? "Coverage unknown" : `${(source.discoveredCount ?? source.recordCount).toLocaleString()}${source.expectedCount === null ? " records; total unknown" : ` / ${source.expectedCount.toLocaleString()} records`}`}{source.seedReferenceCount ? ` + ${source.seedReferenceCount} starting references` : ""}</span><p>{coverageReason(source.reason)}</p>{source.checkedAt && <small>Checked {stamp(source.checkedAt)}</small>}</li>)}</ul><p>Catalog records are finding aids. No results do not establish absence of mining or a complete geological survey.</p></details>
+    <details className={p.coverage} open><summary>Source coverage · {catalog?.records.length.toLocaleString() ?? 0} indexed records</summary><ul>{catalog?.coverage.map(source => <li key={source.sourceId}>
+      <strong>{source.title}</strong><span>{coverageLabels[source.state]} · {source.state === "unavailable" && (source.discoveredCount ?? source.recordCount) === 0 ? "Coverage unknown" : `${(source.discoveredCount ?? source.recordCount).toLocaleString()}${source.expectedCount === null ? " records; total unknown" : ` / ${source.expectedCount.toLocaleString()} records`}`}{source.seedReferenceCount ? ` + ${source.seedReferenceCount} starting references` : ""}</span>
+      <p>{coverageReason(source.reason)}</p>{source.checkedAt && <small>Checked {stamp(source.checkedAt)}</small>}
+      {source.sourceId === "osmre-nmmr" && <>
+        {(nmmrLinks.search || nmmrLinks.request) && <nav className={p.sourceLinks} aria-label="Official NMMR research">
+          {nmmrLinks.search && <a href={nmmrLinks.search} target="_blank" rel="noopener noreferrer" aria-label="Search official NMMR catalog (opens in a new tab)">Search official NMMR catalog ↗</a>}
+          {nmmrLinks.request && <a href={nmmrLinks.request} target="_blank" rel="noopener noreferrer" aria-label="Request NMMR archival scans (opens in a new tab)">Request NMMR archival scans ↗</a>}
+        </nav>}
+        <p>Search by state (Kansas), county, commodity or document number. Original archival scans require a separate request. NMMR index points are finding aids, not mine boundaries; search results do not establish complete Kansas coverage.</p>
+      </>}
+    </li>)}</ul><p>Catalog records are finding aids. No results do not establish absence of mining or a complete geological survey.</p></details>
     <div className={p.filters}>
       <label>Find a map<input type="search" placeholder="Title, publication, county or mine" value={filter.text} onChange={e => changeFilter("text", e.target.value)} /></label>
       <label>Publisher<select value={filter.publisher} onChange={e => changeFilter("publisher", e.target.value)}><option value="all">All publishers</option>{options.publishers.map(value => <option key={value}>{value}</option>)}</select></label>

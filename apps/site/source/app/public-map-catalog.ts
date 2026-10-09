@@ -18,7 +18,7 @@ export type PublicMapCoverage = {
 };
 export type PublicMapCatalog = {
   schema: "kfm-public-map-catalog/v1"; generatedAt: string;
-  records: PublicMapRecord[]; coverage: PublicMapCoverage[];
+  records: PublicMapRecord[]; coverage: PublicMapCoverage[]; sourceUrls?: string[];
 };
 export type PublicMapFilter = { text: string; publisher: string; county: string; year: string; format: string; availability: string };
 export const PUBLIC_MAP_PAGE_SIZE = 20;
@@ -38,7 +38,8 @@ export function publicMapHttps(value: unknown): value is string {
 const position = (value: unknown): value is [number, number] => Array.isArray(value) && value.length === 2 && value.every(n => typeof n === "number" && Number.isFinite(n)) && Math.abs(value[0]) <= 180 && Math.abs(value[1]) <= 90;
 export function parsePublicMapCatalog(value: unknown): PublicMapCatalog | null {
   if (!object(value) || value.schema !== "kfm-public-map-catalog/v1" || !publicMapStamp(value.generatedAt)
-    || !Array.isArray(value.records) || value.records.length > 50_000 || !Array.isArray(value.coverage) || value.coverage.length > 32) return null;
+    || !Array.isArray(value.records) || value.records.length > 50_000 || !Array.isArray(value.coverage) || value.coverage.length > 32
+    || value.sourceUrls !== undefined && (!Array.isArray(value.sourceUrls) || value.sourceUrls.length > 32 || !value.sourceUrls.every(publicMapHttps))) return null;
   const records = new Set<string>(), assets = new Set<string>(), sources = new Set<string>();
   for (const row of value.coverage) {
     if (!object(row) || !nonempty(row.sourceId, 160) || sources.has(row.sourceId) || !nonempty(row.title, 500)
@@ -70,6 +71,14 @@ export function parsePublicMapCatalog(value: unknown): PublicMapCatalog | null {
   }
   if (value.coverage.some(row => row.recordCount !== (counts.get(row.sourceId) ?? 0))) return null;
   return value as unknown as PublicMapCatalog;
+}
+/** Navigation from pinned references only; these destinations grant no transport permission. */
+export function publicMapNmmrLinks(catalog: PublicMapCatalog | null) {
+  return {
+    search: catalog?.sourceUrls?.find(url => url === "https://mmr.osmre.gov/") ?? null,
+    request: catalog?.records.filter(row => row.sourceId === "osmre-nmmr").flatMap(row => row.assets)
+      .find(asset => asset.kind === "request" && asset.availability === "request-only" && asset.url === "https://mmr.osmre.gov/Request")?.url ?? null,
+  };
 }
 export const canDownloadPublicMap = (asset: PublicMapAsset) => asset.kind === "download" && asset.availability === "verified";
 export function filterPublicMaps(records: readonly PublicMapRecord[], filter: PublicMapFilter) {

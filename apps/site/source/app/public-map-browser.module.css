@@ -6,6 +6,9 @@
 .coverage ul { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); padding:0; gap:18px; list-style:none; }
 .coverage li strong,.coverage li span { display:block; }
 .coverage li span,.coverage p,.coverage small { color:var(--muted); }
+.sourceLinks { display:flex; flex-direction:column; align-items:flex-start; margin-top:8px; }
+.sourceLinks a { display:inline-flex; align-items:center; min-height:44px; text-decoration:underline; overflow-wrap:anywhere; }
+.sourceLinks a:focus-visible { outline:2px solid var(--gold); outline-offset:3px; }
 .filters { display:grid; grid-template-columns:2fr repeat(2,minmax(0,1fr)); gap:12px; margin:24px 0 12px; }
 .filters label,.selection label { display:grid; gap:7px; color:var(--muted); font-size:12px; }
 .results { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:26px; align-items:start; }
