@@ -24,7 +24,7 @@ def point(oid, document=42, scenes=1):
             "geometry": {"x": -97, "y": 38}}
 
 
-CURATED_PUBLISHERS = {"publisher-cdl", "publisher-chirps"}
+CURATED_PUBLISHERS = {"publisher-cdl", "publisher-chirps", "history-originals"}
 
 
 def storm_listing(*names):

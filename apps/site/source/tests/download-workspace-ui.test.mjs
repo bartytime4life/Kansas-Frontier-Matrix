@@ -20,7 +20,7 @@ test('no-login workbench defaults to public climate, retains controllers, and sh
   const h = await componentHarness('app/downloads/workspace.tsx', {
     'next/link': { default: 'a' }, '../use-local-downloads': { useLocalDownloads: () => local }, '../use-public-map-downloads': { usePublicMapDownloads: value => { options = value; return maps; } },
     '../earth-engine-context-client': { useEarthEngineContext: () => ({ manifests: [] }) }, '../download-activity': activity,
-    '../download-activity-panel': { ActivityWorkspace: 'activity', TransferPanel: 'transfer-panel' }, '../public-map-browser': { default: 'maps' }, '../earth-engine-picker': { default: 'satellite' }, '../download-library': { default: 'library' }, './workspace.module.css': css,
+    '../download-activity-panel': { ActivityWorkspace: 'activity', TransferPanel: 'transfer-panel' }, '../public-map-browser': { default: 'maps' }, '../earth-engine-picker': { default: 'satellite' }, '../history-browser': { default: 'history' }, '../download-library': { default: 'library' }, './workspace.module.css': css,
   }, { window: { location: { hash: '' }, addEventListener: (name, callback) => events.set(name, callback), removeEventListener: name => events.delete(name) } });
   const render = () => { const tree = h.render(h.exports.default); h.commit(); return tree; };
   let tree = render(); const view = id => findNode(tree, n => n.props?.id === id);
