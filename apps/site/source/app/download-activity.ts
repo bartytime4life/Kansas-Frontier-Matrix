@@ -17,7 +17,7 @@ export function normalizeDownloadActivity(local: DownloadStatus | null, maps: Pu
       state: job.state, createdAt: job.createdAt, active: job.id === local?.active, bytes: job.bytes, maxBytes: job.selection.maxBytes,
       progress: job.total > 0 ? { unit: "files", value: job.completed, total: job.total } : { unit: "unknown", value: null, total: null }, job })),
     ...(maps?.jobs ?? []).map((job): ActivityItem => ({ key: `public-map:${job.id}`, kind: "public-map", nativeId: job.id,
-      provider: "Public maps", label: "Maps & geology", title: job.title, state: job.state, createdAt: job.createdAt,
+      provider: "Public maps", label: job.assetId.startsWith("publisher-") ? "Satellite, climate & storms" : "Maps & geology", title: job.title, state: job.state, createdAt: job.createdAt,
       active: job.id === maps?.active, bytes: job.bytes, maxBytes: job.maxBytes,
       progress: job.expectedBytes !== null && job.expectedBytes > 0 ? { unit: "bytes", value: job.bytes, total: job.expectedBytes }
         : { unit: "unknown", value: null, total: null }, job })),

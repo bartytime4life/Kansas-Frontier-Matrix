@@ -470,6 +470,16 @@ class QueueTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "DOWNLOAD_ALREADY_RUNNING"):
             self.enqueue(request="e" * 32)
 
+    def test_jobs_from_a_record_with_several_files_name_their_file(self):
+        from tools.local_data import public_map_catalog
+        seed = downloads.public_map_catalog.load_seed()
+        seed["records"].append(public_map_catalog.storm_events_record(2021, {kind: f"StormEvents_{kind}-ftp_v1.0_d2021_c20250401.csv.gz" for kind in ("details", "fatalities")}, "2026-10-09"))
+        self.manager._catalog = seed
+        self.enqueue(assets=["publisher-noaa-storm-events-2021-details", "publisher-noaa-storm-events-2021-fatalities"])
+        titles = sorted(job["title"] for job in self.manager.jobs.values())
+        self.assertEqual(titles, ["Storm Events 2021 · national CSV files including Kansas · StormEvents_details-ftp_v1.0_d2021_c20250401.csv.gz",
+                                  "Storm Events 2021 · national CSV files including Kansas · StormEvents_fatalities-ftp_v1.0_d2021_c20250401.csv.gz"])
+
     def test_a_request_id_names_one_exact_ordered_selection(self):
         self.enqueue()
         for changed in (self.assets[:2], list(reversed(self.assets)), [self.assets[0]]):

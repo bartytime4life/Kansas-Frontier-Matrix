@@ -172,3 +172,8 @@ test('a queued count is valid only alongside a running job', () => {
   assert.ok(client.parsePublicMapStatus(status()), 'operators without a queue omit the count');
   for (const queued of [2, -1, 1.5, 301]) assert.equal(client.parsePublicMapStatus(status({ queued, ...(queued === 2 ? {} : { active: '1'.repeat(32), jobs: [job()] }) })), null);
 });
+
+test('public jobs from publisher sources are labelled with their collection', () => {
+  const rows = activity.normalizeDownloadActivity(null, status({ jobs: [job(), job({ id: '2'.repeat(32), assetId: 'publisher-noaa-storm-events-2024-details', state: 'downloaded', bytes: 100, expectedBytes: null, sha256: 'b'.repeat(64) })] }));
+  assert.deepEqual(rows.map(row => row.label).sort(), ['Maps & geology', 'Satellite, climate & storms']);
+});
