@@ -19,7 +19,7 @@ from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_ope
 
 from tools.local_data.acquisition import save_state, validate_root
 from tools.local_data.candidate_capture import create_candidate
-from tools.local_data.file_io import check_directory, fsync_directory, hash_regular, read_regular, write_new
+from tools.local_data.file_io import check_directory, fsync_directory, hash_regular, open_regular, read_regular, write_new
 from tools.local_data.manage import utc_now
 from tools.local_data import public_map_catalog
 
@@ -237,7 +237,49 @@ class PublicMapDownloads:
             if self.active:
                 jobs.append(self.jobs[self.active])
             return {"schema": "kfm-public-map-download-control/v1", "jobs": copy.deepcopy(jobs),
-                    "active": self.active, "queued": len(self.queue), "limitBytes": MAX_BYTES, "refresh": dict(self.refresh_state)}
+                    "active": self.active, "queued": len(self.queue), "limitBytes": MAX_BYTES, "refresh": dict(self.refresh_state),
+                    "assetStates": self._asset_states()}
+
+    def _stored_copy_present(self, job):
+        """Check a receipted file without reading large payloads or changing receipts."""
+        try:
+            destination = self._destination(job)
+            receipt = json.loads(read_regular(self.receipts / (job["id"] + ".json"), 128 * 1024))
+            files = receipt.get("files", [])
+            if len(files) != 1:
+                return False
+            captured = files[0]
+            name = captured.get("name", "")
+            if (not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,180}", name)
+                    or name.endswith(".part") or captured.get("complete") is not True
+                    or captured.get("bytes") != job["bytes"] or job["bytes"] < 1
+                    or not re.fullmatch(r"[a-f0-9]{64}", job.get("sha256") or "")
+                    or captured.get("sha256") != job["sha256"]):
+                return False
+            descriptor = open_regular(destination / name)
+            try:
+                return os.fstat(descriptor).st_size == job["bytes"]
+            finally:
+                os.close(descriptor)
+        except (OSError, ValueError, KeyError, TypeError, AttributeError):
+            return False
+
+    def _asset_states(self):
+        # Full bounded history, independent of the recent Activity window. A later
+        # failed retry must not hide a completed copy that is still present.
+        priority = {"downloaded": 7, "downloading": 6, "queued": 5, "partial": 4,
+                    "missing": 3, "failed": 2, "interrupted": 1, "cancelled": 0}
+        states = {}
+        for job in self.jobs.values():
+            state = job["state"]
+            if state == "downloaded":
+                state = "downloaded" if self._stored_copy_present(job) else "missing"
+            elif state in TERMINAL and job.get("bytes", 0) > 0:
+                state = "partial"
+            prior = states.get(job["assetId"])
+            if prior is None or priority[state] > priority[prior]:
+                states[job["assetId"]] = state
+        return [{"assetId": asset, "state": state} for asset, state in sorted(states.items())]
 
     def update(self, identifier, **fields):
         with self.lock:

@@ -195,3 +195,20 @@ date and never mark it as a complete live Earth Engine catalog.
 Public sources: [USDA files](https://www.nass.usda.gov/Research_and_Science/Cropland/Release/),
 [CHIRPS annual files](https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/),
 and [Earth Engine catalog](https://developers.google.com/earth-engine/datasets).
+
+### Download status on catalog cards
+
+Every public-map and no-login crop/climate/storm card includes a compact status
+footer; each original in its file list carries the same indicator. Complete
+copies use a checkmark and “Downloaded”; missing transfers say “Not downloaded.”
+Multi-file records count completed files and retain partial, queued and running
+states. These labels use exact asset identifiers and the local operator’s full
+bounded history, independently of the recent Activity window. A failed repeat
+capture does not hide an earlier complete copy that is still present.
+
+The operator checks each completed file against its receipt and current regular
+file size without reading large payloads or rewriting records. This establishes
+presence at the captured size, not a new checksum, admission or map approval.
+A missing/changed file says “Check local file.” Disconnected or older operators
+show unknown/unavailable status rather than asserting that nothing was downloaded.
+Files saved outside KFM are not tracked. Status inspection never starts a transfer.
