@@ -47,3 +47,16 @@ def test_http_selection_evidence_withdrawal_and_health(tmp_path, monkeypatch):
         finally:
             server.shutdown(); thread.join(timeout=2)
             assert not thread.is_alive()
+
+
+def test_projected_error_is_not_reported_as_success(monkeypatch):
+    class Store:
+        @staticmethod
+        def active():
+            return b"{}", {}
+    monkeypatch.setattr(water, "project", lambda *_args, **kwargs: water.negative("EVIDENCE_DIGEST_MISMATCH", now=kwargs["now"], outcome="ERROR"))
+    statuses = []
+    body = water.respond({"PATH_INFO": "/v1/evidence", "REQUEST_METHOD": "GET", "QUERY_STRING": ""},
+                         lambda status, _headers: statuses.append(status), Store())
+    assert statuses == ["500 Internal Server Error"]
+    assert json.loads(b"".join(body))["envelope"]["outcome"] == "ERROR"

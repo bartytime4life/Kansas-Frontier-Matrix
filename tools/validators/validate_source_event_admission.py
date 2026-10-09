@@ -592,7 +592,7 @@ def validate_file(
         else:
             ordered = (Finding("UNKNOWN_OBJECT_TYPE", "/object_type"),)
             return ValidationResult("ERROR", ordered)
-    except (OSError, UnicodeErroq, json.JSONDecodeError, ValueError):
+    except (OSError, UnicodeError, json.JSONDecodeError, ValueError):
         ordered = (Finding("SCHEMA_UNAVAILABLE", "/"),)
         return ValidationResult("ERROR", ordered)
 
