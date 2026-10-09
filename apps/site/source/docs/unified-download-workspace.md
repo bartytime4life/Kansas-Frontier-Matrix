@@ -148,18 +148,20 @@ admission, map-review approval or audience change is included.
 
 Sign in with Google before choosing a project. The local operator exchanges a
 one-time PKCE code, refreshes the grant and reports the account when Google
-provides a verified email. Project discovery uses the read-only Cloud project
-list scope; it does not create projects, enable APIs or billing, or grant IAM
-roles. Choose a project (or enter its ID if listing is unavailable) and use
+provides a verified email. Sign-in does not request project listing: Google
+rejects the Cloud project list scope for the shared Earth Engine OAuth client
+(403 `restricted_client`). Enter the Cloud project ID once; it is saved and
+prefilled afterwards. Grants that still carry the scope from before this change
+keep their project list. Nothing here creates projects, enables APIs or
+billing, or grants IAM roles. Enter or choose the project and use
 **Check download access**. A real Earth Engine scalar computation must succeed
 before the download control becomes ready. Saved credentials are rechecked on
 operator restart; a credential file alone does not establish access.
 
-OAuth additionally requests email/OpenID and read-only project listing alongside
-the existing Earth Engine scope. Tokens remain in private local credential
-storage and never appear in status responses or Site storage. Legacy grants can
-still be checked with a manually entered project; missing email/project-list
-permissions have an explicit fallback. Browser Google cookies alone are not an
+OAuth requests only the Earth Engine scope and email/OpenID. Tokens remain in
+private local credential storage and never appear in status responses or Site
+storage. Any grant can be checked with a manually entered project; a missing
+email permission has an explicit fallback. Browser Google cookies alone are not an
 Earth Engine grant. Google consent and live account/project acceptance require
 the owner to complete sign-in.
 
