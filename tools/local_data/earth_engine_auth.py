@@ -13,8 +13,11 @@ from tools.local_data.acquisition import save_state
 from tools.local_data.file_io import read_regular
 
 EE_SCOPE = "https://www.googleapis.com/auth/earthengine"
+# Google rejects this scope for the shared Earth Engine client (403 restricted_client),
+# so sign-in no longer requests it and the project ID is entered once instead.
+# Older grants that still carry it keep their project list.
 PROJECT_SCOPE = "https://www.googleapis.com/auth/cloudplatformprojects.readonly"
-SCOPES = [EE_SCOPE, PROJECT_SCOPE, "openid", "https://www.googleapis.com/auth/userinfo.email"]
+SCOPES = [EE_SCOPE, "openid", "https://www.googleapis.com/auth/userinfo.email"]
 CALLBACK = "http://127.0.0.1:8769/oauth/callback"
 PROJECT = re.compile(r"[a-z][a-z0-9-]{4,61}[a-z0-9]\Z")
 
@@ -167,6 +170,7 @@ class SignIn:
                 with self.lock: self.account = email
         except Exception: pass  # Legacy grants may not include email; never invent an identity.
         try:
+            if PROJECT_SCOPE not in (getattr(creds, "scopes", None) or ()): raise ValueError("PROJECT_LIST_NOT_GRANTED")
             projects, limited = discover_projects(creds)
             with self.lock: self.projects = projects; self.project_list = "limited" if limited else "complete"
         except Exception:

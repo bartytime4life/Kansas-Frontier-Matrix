@@ -251,7 +251,9 @@ class GoogleAccountTests(unittest.TestCase):
         with patch.dict('sys.modules', {'ee': SimpleNamespace(oauth=oauth)}):
             self.signin.start({})
         self.assertIsNone(self.signin.pending['project'])
-        self.assertIn(auth.PROJECT_SCOPE, oauth.get_authorization_url.call_args.args[1])
+        # Google rejects the project-list scope for the shared Earth Engine client.
+        self.assertNotIn(auth.PROJECT_SCOPE, oauth.get_authorization_url.call_args.args[1])
+        self.assertIn(auth.EE_SCOPE, oauth.get_authorization_url.call_args.args[1])
         self.assertNotIn('https://www.googleapis.com/auth/drive', auth.SCOPES)
         for value in [{'project': True}, {'project':'../escape'}, {'callback':'https://evil.example'}]:
             with self.assertRaises(ValueError): self.signin.start(value)
@@ -266,7 +268,7 @@ class GoogleAccountTests(unittest.TestCase):
         self.assertTrue(state['signedIn']); self.assertFalse(state['configured'])
         self.assertEqual(state['authentication'],'project-required')
         self.assertEqual(state['accountEmail'],'owner@example.test')
-        self.assertEqual(state['projects'],['example-project'])
+        self.assertEqual((state['projects'], state['projectDiscovery']), ([], 'unavailable'), 'new grants cannot list projects; the ID is entered once')
         self.assertEqual(json.loads((self.work/'credentials.json').read_text())['refresh_token'],'REFRESH_PRIVATE')
         self.assertEqual((self.work/'credentials.json').stat().st_mode & 0o777, 0o600)
         verify.assert_not_called()
@@ -309,3 +311,14 @@ class ProjectBindingTests(unittest.TestCase):
             with patch.object(auth,'credentials',return_value=SimpleNamespace(token='synthetic')), patch.object(auth,'refresh_credentials'), patch.object(auth,'google_json',return_value={}), patch.object(auth,'discover_projects',return_value=([],False)), patch.object(auth,'verify_project',side_effect=verify):
                 signin.check({'project':'new-project'});signin.worker.join(2)
             self.assertTrue(signin.snapshot()['configured'])
+
+
+class LegacyProjectListTests(unittest.TestCase):
+    def test_an_older_grant_with_the_project_scope_still_lists_projects(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            signin = auth.SignIn(Path(tmp))
+            creds = SimpleNamespace(token='ACCESS_PRIVATE', scopes=[auth.EE_SCOPE, auth.PROJECT_SCOPE])
+            with patch.object(auth, 'google_json', return_value={}), patch.object(auth, 'discover_projects', return_value=(['example-project'], False)) as listed:
+                signin.inspect(creds, None)
+            listed.assert_called_once_with(creds)
+            self.assertEqual((signin.snapshot()['projects'], signin.snapshot()['projectDiscovery']), (['example-project'], 'complete'))

@@ -98,7 +98,7 @@ export function EarthEngineDownloadForm({ dataset, year, invalid, downloads, blo
         {(status.projects?.length ?? 0) > 0 && <label>Your Google Cloud projects<select aria-label="Choose Earth Engine project" value={status.projects?.includes(project) ? project : ""} onChange={event => setProject(event.target.value)}><option value="">Choose a project</option>{status.projects?.map(id => <option key={id} value={id}>{id}</option>)}</select></label>}
         <label>Google Cloud project ID<input autoComplete="off" aria-label="Earth Engine project ID" placeholder="your-earth-engine-project" value={project} maxLength={63} onChange={event => setProject(event.target.value)} /></label>
         <button type="button" disabled={!connected || Boolean(busy) || blocked || authPending || !project.trim()} onClick={() => void checkAccess()}>Check download access</button>
-        {status.projectDiscovery === "unavailable" && <p>Google’s project list is unavailable. You can enter an existing project ID above.</p>}
+        {status.projectDiscovery === "unavailable" && <p>Enter the Google Cloud project ID you use with Earth Engine (shown in the Earth Engine Code Editor and the Cloud console). KFM saves it for next time and does not ask Google to list your projects.</p>}
         {status.projectDiscovery === "limited" && <p>Showing a limited project list. Enter another project ID if yours is missing.</p>}
         {status.projectDiscovery === "complete" && !status.projects?.length && <p>No accessible projects were found for this account.</p>}
         {status.authError === "PROJECT_ACCESS_REQUIRED" && <p>This account cannot yet use that project for Earth Engine. Check its Earth Engine registration, API and your project permissions.</p>}
