@@ -25,7 +25,7 @@ test('no-login workbench defaults to public climate, retains controllers, and sh
   const render = () => { const tree = h.render(h.exports.default); h.commit(); return tree; };
   let tree = render(); const view = id => findNode(tree, n => n.props?.id === id);
   assert.equal(view('download-find').props.hidden, false); assert.equal(view('download-library').props.hidden, true); assert.equal(view('download-activity').props.hidden, true);
-  assert.equal(button(tree, 'Satellite &').props['aria-pressed'], true);
+  assert.equal(button(tree, 'Satellite, climate &').props['aria-pressed'], true);
   assert.equal(findNode(tree, n => n.type === 'satellite'), undefined);
   assert.equal(button(tree, 'Earth Engine exports · optional sign-in'), undefined);
   button(tree, 'Connect this computer').props.onClick(); assert.deepEqual(calls, ['ee-connect', 'maps-connect']);

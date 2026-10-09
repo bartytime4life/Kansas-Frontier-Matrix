@@ -35,6 +35,7 @@ PUBLIC_ENDPOINTS = {
     "pubs.usgs.gov": ("/gq/", "/of/", "/sim/", "/imap/", "/i/", "/ds/", "/dr/"),
     "ngmdb.usgs.gov": ("/Prodesc/", "/GeMS/"),
     "mmr.osmre.gov": ("/images/",),
+    "www.ncei.noaa.gov": ("/pub/data/swdi/stormevents/csvfiles/",),
 }
 # Verified ScienceBase attachments need an opaque, percent-encoded file token.
 # Admit only these complete URLs, never arbitrary ScienceBase queries or paths.
@@ -134,6 +135,11 @@ def validate_url(value):
         raise ValueError("ASSET_URL_NOT_ALLOWLISTED")
     if parsed.hostname == "mmr.osmre.gov" and not re.fullmatch(r"/images/[0-9]{8,9}_web\.jpg", parsed.path):
         raise ValueError("ASSET_URL_NOT_ALLOWLISTED")
+    # Storm Events names carry NCEI's reissue date, so they are discovered from its
+    # listing; only that directory's exact bulk-CSV file pattern is admitted.
+    if (parsed.hostname == "www.ncei.noaa.gov" and not
+            public_map_catalog.STORM_EVENTS_FILE.fullmatch(parsed.path.removeprefix("/pub/data/swdi/stormevents/csvfiles/"))):
+        raise ValueError("ASSET_URL_NOT_ALLOWLISTED")
     return value
 
 
@@ -155,8 +161,9 @@ def _magic(format_name, prefix):
         "jpeg": lambda: prefix.startswith(b"\xff\xd8\xff"),
         "geotiff": lambda: prefix[:4] in {b"II*\0", b"MM\0*", b"II+\0", b"MM\0+"},
         "zip": lambda: prefix[:4] in {b"PK\x03\x04", b"PK\x05\x06", b"PK\x07\x08"},
+        "gzip": lambda: prefix.startswith(b"\x1f\x8b\x08"),
     }
-    format_name = {"TIFF": "geotiff", "PDF": "pdf", "JPEG": "jpeg", "ZIP": "zip"}.get(format_name, format_name)
+    format_name = {"TIFF": "geotiff", "PDF": "pdf", "JPEG": "jpeg", "ZIP": "zip", "GZIP": "gzip"}.get(format_name, format_name)
     if format_name not in checks or not checks[format_name]():
         raise ValueError("ASSET_FORMAT_MISMATCH")
 
@@ -238,7 +245,7 @@ class PublicMapDownloads:
         record, asset = found[0]
         if asset.get("kind") != "download" or asset.get("availability") != "verified":
             raise ValueError("ASSET_NOT_VERIFIED_DOWNLOAD")
-        if asset.get("format") not in {"PDF", "JPEG", "TIFF", "ZIP"}:
+        if asset.get("format") not in {"PDF", "JPEG", "TIFF", "ZIP", "GZIP"}:
             raise ValueError("ASSET_FORMAT_UNSUPPORTED")
         validate_url(asset.get("url"))
         expected = asset.get("expectedBytes")

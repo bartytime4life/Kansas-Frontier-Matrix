@@ -13,7 +13,9 @@ const all = { text: '', publisher: 'all', county: 'all', year: 'all', format: 'a
 const catalog = overrides => ({ schema: 'kfm-public-map-catalog/v1', generatedAt: '2026-10-08T18:00:00Z', coverage: [{ sourceId: 'test', title: 'Synthetic catalog', state: 'complete', recordCount: 1, expectedCount: 1, reason: '', checkedAt: null }], records: [{ id: 'test-map', sourceId: 'test', publisher: 'USGS', title: 'Synthetic Kansas map', counties: ['Allen'], mapYear: 1930, digitalYear: 2020, scale: '1:24,000', scaleUnit: 'denominator', metadataUrl: 'https://pubs.usgs.gov/test/', rights: { status: 'unknown', text: 'Synthetic fixture only.', url: null }, description: 'A test record.', geometryRole: 'catalog extent, not workings', bbox: [-96,37,-95,38], point: null, assets: [{ id: 'test-pdf', title: 'Synthetic PDF', format: 'PDF', url: 'https://pubs.usgs.gov/test/map.pdf', expectedBytes: 100, kind: 'download', availability: 'verified', checkedAt: null }] }], ...overrides });
 test('checked seed is a bounded reference catalog, preserving unknown sizes, dates and source rights', () => {
   assert.ok(model.parsePublicMapCatalog(seed));
-  assert.ok(seed.coverage.every(row => row.state === 'seed'));
+  // Curated sources start as references; a listing-only source (Storm Events) has no records until discovery.
+  assert.ok(seed.coverage.every(row => row.state === 'seed' || row.state === 'unavailable' && row.recordCount === 0 && row.checkedAt === null));
+  assert.equal(seed.coverage.find(row => row.sourceId === 'publisher-noaa-storm-events')?.state, 'unavailable');
   assert.ok(seed.records.some(row => row.rights.status === 'held'));
   assert.ok(seed.records.flatMap(row => row.assets).some(row => row.expectedBytes === null));
   assert.equal(model.parsePublicMapCatalog(catalog())?.records[0].digitalYear, 2020);

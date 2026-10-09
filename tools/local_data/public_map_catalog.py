@@ -25,6 +25,12 @@ SEED_PATH = ROOT / "apps/site/source/app/public-map-catalog.json"
 NMMR = "https://geodata.osmre.gov/arcgis/rest/services/NMMR/MineMap_Points/MapServer/0"
 NGMDB = "https://ngmdb.usgs.gov/ngm-bin/ngm_search_dbi.pl"
 NGMDB_JSON = "https://ngmdb.usgs.gov/ngm-bin/ngm_search_json.pl"
+# NCEI reissues Storm Events files under new creation dates (the _c suffix), so
+# the current names are read from the publisher's own listing, never guessed.
+STORM_EVENTS = "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/"
+STORM_EVENTS_FILE = re.compile(
+    r"StormEvents_(details|fatalities|locations)-ftp_v1\.0_d(\d{4})_c(\d{8})\.csv\.gz\Z")
+STORM_EVENTS_KINDS = ("details", "fatalities", "locations")
 BBOX = "-102.052,36.993,-94.588,40.003"
 PAGE_BYTES = 4 * 1024**2
 TOTAL_BYTES = 64 * 1024**2
@@ -111,10 +117,15 @@ def validate_metadata_url(url):
     parts = urlsplit(url)
     if (parts.scheme != "https" or parts.fragment or parts.username or parts.password
             or (parts.netloc, parts.path) not in {
+                ("www.ncei.noaa.gov", urlsplit(STORM_EVENTS).path),
                 ("geodata.osmre.gov", urlsplit(NMMR).path + "/query"),
                 ("ngmdb.usgs.gov", urlsplit(NGMDB).path),
                 ("ngmdb.usgs.gov", urlsplit(NGMDB_JSON).path)}):
         raise ValueError("METADATA_URL_DENIED")
+    if parts.netloc == "www.ncei.noaa.gov":
+        if parts.query:
+            raise ValueError("STORM_EVENTS_QUERY_DENIED")
+        return url
     query = parse_qs(parts.query, keep_blank_values=True, strict_parsing=True)
     if any(len(values) != 1 for values in query.values()):
         raise ValueError("DUPLICATE_QUERY_PARAMETER")
@@ -335,6 +346,60 @@ def discover_ngmdb(budget, seed):
         return records, expected, f"{type(exc).__name__}: {str(exc)[:220]}"
 
 
+def storm_events_record(year, files, checked_at):
+    """One Storm Events year: its listed details, fatalities and locations files."""
+    record_id = f"publisher-noaa-storm-events-{year}"
+    return {"id": record_id, "sourceId": "publisher-noaa-storm-events", "publisher": "NOAA NCEI",
+        "title": f"Storm Events {year} · national CSV files including Kansas", "counties": [],
+        "mapYear": year, "digitalYear": None, "scale": None, "scaleUnit": None,
+        "metadataUrl": STORM_EVENTS,
+        "rights": {"status": "public-domain",
+                   "text": "U.S. Government work; cite the NOAA NCEI Storm Events Database. Reports are compiled "
+                           "by the National Weather Service; magnitudes, damage estimates and locations are "
+                           "approximate, and reporting practices changed over time.",
+                   "url": STORM_EVENTS},
+        "description": f"NOAA NCEI Storm Events Database bulk CSV files for {year}, gzip-compressed. Each file "
+                       "covers the whole United States and is not clipped to Kansas: Kansas rows have STATE "
+                       "KANSAS in the details file, and the fatalities and locations files join to it by "
+                       "EVENT_ID. File names are read from the NCEI directory listing; the newest creation "
+                       "date (_c suffix) for each file is offered.",
+        "geometryRole": "National files including Kansas; not a Kansas clip",
+        "bbox": None, "point": None, "crs": None, "spatialAccuracy": None,
+        "assets": [{"id": f"{record_id}-{kind}", "title": name, "format": "GZIP", "url": STORM_EVENTS + name,
+                    "expectedBytes": None, "kind": "download", "availability": "verified",
+                    "checkedAt": checked_at} for kind, name in sorted(files.items(), key=lambda item: STORM_EVENTS_KINDS.index(item[0]))],
+        "rawMetadata": {"listing": STORM_EVENTS, "files": dict(sorted(files.items()))},
+        "discovered": True}
+
+
+def discover_storm_events(budget):
+    """Read the NCEI listing once; keep the newest file per kind and year."""
+    records, failure = [], None
+    try:
+        listing = budget.read(STORM_EVENTS).decode("utf-8")
+        latest = {}
+        for name in sorted(set(re.findall(r'href="([^"]+)"', listing))):
+            match = STORM_EVENTS_FILE.fullmatch(name)
+            if not match:
+                continue
+            kind, year, created = match.group(1), int(match.group(2)), match.group(3)
+            datetime.strptime(created, "%Y%m%d")
+            if not 1950 <= year <= datetime.now(timezone.utc).year or int(created[:4]) < year:
+                raise ValueError("STORM_EVENTS_FILE_DATE_INVALID")
+            key = (kind, year)
+            if key not in latest or created > latest[key][0]:
+                latest[key] = (created, name)
+        if not latest:
+            raise ValueError("STORM_EVENTS_LISTING_EMPTY")
+        checked_at = now()[:10]
+        for year in sorted({year for _, year in latest}, reverse=True):
+            files = {kind: latest[(kind, year)][1] for kind in STORM_EVENTS_KINDS if (kind, year) in latest}
+            records.append(storm_events_record(year, files, checked_at))
+    except (OSError, ValueError, UnicodeDecodeError) as exc:
+        records, failure = [], f"{type(exc).__name__}: {str(exc)[:220]}"
+    return records, len(records) if failure is None else None, failure
+
+
 def discover_catalog(existing=None, *, transport=fetch):
     """Discover serially; source failures retain prior records with honest coverage."""
     seed = load_seed()
@@ -346,10 +411,12 @@ def discover_catalog(existing=None, *, transport=fetch):
     curated_by_id = {record["id"]: record for record in seed["records"]}
     nmmr_records, nmmr_count, nmmr_error = discover_nmmr(budget)
     ngmdb_records, ngmdb_count, ngmdb_error = discover_ngmdb(budget, seed)
+    storm_records, storm_count, storm_error = discover_storm_events(budget)
     catalog["generatedAt"] = now()
     sources = [("osmre-nmmr", nmmr_records, nmmr_count, nmmr_error),
                ("ngmdb-usgs", [r for r in ngmdb_records if r["publisher"] == "USGS"], ngmdb_count, ngmdb_error),
-               ("ngmdb-kgs", [r for r in ngmdb_records if r["publisher"] == "KGS"], ngmdb_count, ngmdb_error)]
+               ("ngmdb-kgs", [r for r in ngmdb_records if r["publisher"] == "KGS"], ngmdb_count, ngmdb_error),
+               ("publisher-noaa-storm-events", storm_records, storm_count, storm_error)]
     discovered_sources = {row[0] for row in sources}
     coverage = []
     for source, records, count, error in sources:
@@ -371,15 +438,20 @@ def discover_catalog(existing=None, *, transport=fetch):
         catalog["records"] = [r for r in catalog["records"] if r["sourceId"] != source] + list(by_id.values())
         discovered = sum(bool(r.get("discovered")) for r in by_id.values())
         state = ("partial" if discovered else "unavailable") if error else "complete"
-        reason = ("Kansas bounding rectangle of index points; not exact state membership, "
-                  "mine footprints or exhaustive archival coverage. " if source == "osmre-nmmr" else
-                  "Explicit publisher subset of the full Kansas search; URL publisher filter is not trusted. ")
-        reason += error or (f"Reconciled {len(records)} point IDs." if source == "osmre-nmmr" else
-                           f"Reconciled {count} total search IDs; retained {len(records)} matching publications.")
+        if source == "publisher-noaa-storm-events":
+            reason = ("Years listed in the NCEI Storm Events CSV directory; national files including Kansas, not "
+                      "clipped to the state. File sizes are not listed exactly; choose a download maximum. ")
+            reason += error or f"Listed {len(records)} years."
+        else:
+            reason = ("Kansas bounding rectangle of index points; not exact state membership, "
+                      "mine footprints or exhaustive archival coverage. " if source == "osmre-nmmr" else
+                      "Explicit publisher subset of the full Kansas search; URL publisher filter is not trusted. ")
+            reason += error or (f"Reconciled {len(records)} point IDs." if source == "osmre-nmmr" else
+                               f"Reconciled {count} total search IDs; retained {len(records)} matching publications.")
         coverage.append({"sourceId": source, "title": next(c["title"] for c in seed["coverage"] if c["sourceId"] == source),
             "state": state, "recordCount": len(by_id), "discoveredCount": discovered,
             "seedReferenceCount": len(by_id) - discovered,
-            "expectedCount": count if source == "osmre-nmmr" else len(records) if not error else None,
+            "expectedCount": count if source in {"osmre-nmmr", "publisher-noaa-storm-events"} else len(records) if not error else None,
             "reason": reason, "checkedAt": catalog["generatedAt"]})
     coverage.extend(copy.deepcopy(row) for row in catalog["coverage"] if row["sourceId"] not in discovered_sources)
     catalog["coverage"] = coverage
