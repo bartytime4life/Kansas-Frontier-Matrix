@@ -2,6 +2,7 @@
 <p align="center">
   <a href="../../README.md#see-it-in-action"><picture><source media="(prefers-color-scheme: dark)" srcset="../brand/readme/kfm-banner-verification-backlog-dark.svg" /><img src="../brand/readme/kfm-banner-verification-backlog.svg" alt="Register banner: know it, propose it, or check it." width="100%" /></picture></a>
 </p>
+<sub>Illustration — no current trust, promotion or acceptance state is asserted.</sub>
 <!-- kfm-showcase:end -->
 
 # VERIFICATION_BACKLOG register

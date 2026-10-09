@@ -50,6 +50,7 @@ notes:
 <p align="center">
   <a href="../../README.md#see-it-in-action"><picture><source media="(prefers-color-scheme: dark)" srcset="../brand/readme/kfm-banner-lifecycle-law-dark.svg" /><img src="../brand/readme/kfm-banner-lifecycle-law.svg" alt="Doctrine banner: promotion is a decision, not a file move." width="100%" /></picture></a>
 </p>
+<sub>Illustration — no current trust, promotion or acceptance state is asserted.</sub>
 <!-- kfm-showcase:end -->
 
 # Lifecycle Law

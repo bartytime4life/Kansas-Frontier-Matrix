@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 220" width="1280" height="220" role="img" aria-labelledby="t d">
   <title id="t">Doctrine · Lifecycle Law — Promotion is a decision, not a file move.</title>
-  <desc id="d">Banner: five lifecycle stages separated by gates; one token reaches PUBLISHED while another is diverted to HOLD.</desc>
+  <desc id="d">Banner: five lifecycle stages separated by gates; a static HOLD alternative; no artifact promotion or release is asserted.</desc>
   <defs>
     <clipPath id="frame"><rect x="1" y="1" width="1278" height="218" rx="18"/></clipPath>
     <style>
@@ -8,9 +8,7 @@
       .sans{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
       .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
       .lbl{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;letter-spacing:2.5px;font-weight:700}
-      .tok{animation:tok 8s cubic-bezier(.45,.05,.3,1) infinite}@keyframes tok{0%{transform:translate(836px,74px)}20%{transform:translate(924px,74px)}40%{transform:translate(1012px,74px)}60%{transform:translate(1100px,74px)}80%{transform:translate(1188px,74px)}100%{transform:translate(1188px,74px)}}
-      .tok2{animation:tok2 8s ease-in-out infinite;animation-delay:-2s}@keyframes tok2{0%{transform:translate(836px,74px);opacity:1}25%{transform:translate(924px,74px)}40%{transform:translate(924px,146px)}55%,90%{transform:translate(970px,164px);opacity:1}100%{opacity:0;transform:translate(970px,164px)}}
-      @media (prefers-reduced-motion: reduce){.tok,.tok2{animation:none!important}.tok{transform:translate(1188px,74px)}.tok2{transform:translate(970px,164px)}}
+
     </style>
   </defs>
   <g clip-path="url(#frame)">
@@ -21,7 +19,8 @@
     <text x="48" y="150" class="sans" font-size="16.5" fill="#B1BAC4">RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLETS → PUBLISHED</text>
     <g transform="translate(48,202)" class="sans" font-size="12" fill="#9198A1"><circle cx="5" cy="-4" r="4" fill="#62B487"/><text x="16" y="0">Kansas Frontier Matrix</text></g>
     <line x1="776" y1="34" x2="776" y2="186" stroke="#30363D"/>
-<rect x="800" y="88" width="72" height="40" rx="10" fill="#0D1117" stroke="#A8C4EA"/><text x="836" y="113" text-anchor="middle" class="mono" font-size="12.5" font-weight="700" fill="#E6EDF3">RAW</text><rect x="876" y="96" width="8" height="24" rx="2" fill="#62B487"/><rect x="888" y="88" width="72" height="40" rx="10" fill="#0D1117" stroke="#A8C4EA"/><text x="924" y="113" text-anchor="middle" class="mono" font-size="12.5" font-weight="700" fill="#E6EDF3">WORK</text><rect x="964" y="96" width="8" height="24" rx="2" fill="#62B487"/><rect x="976" y="88" width="72" height="40" rx="10" fill="#0D1117" stroke="#A8C4EA"/><text x="1012" y="113" text-anchor="middle" class="mono" font-size="12.5" font-weight="700" fill="#E6EDF3">PROC</text><rect x="1052" y="96" width="8" height="24" rx="2" fill="#62B487"/><rect x="1064" y="88" width="72" height="40" rx="10" fill="#0D1117" stroke="#A8C4EA"/><text x="1100" y="113" text-anchor="middle" class="mono" font-size="12.5" font-weight="700" fill="#E6EDF3">CAT</text><rect x="1140" y="96" width="8" height="24" rx="2" fill="#62B487"/><rect x="1152" y="88" width="72" height="40" rx="10" fill="#0B1F3A" stroke="#A8C4EA"/><text x="1188" y="113" text-anchor="middle" class="mono" font-size="12.5" font-weight="700" fill="#FFFFFE">PUB</text><path d="M924,128 V164 H990" fill="none" stroke="#D9B440" stroke-dasharray="4 4"/><text x="996" y="168" class="sans" font-size="12" fill="#DDBB55">HOLD</text><circle class="tok" r="7" fill="#62B487" stroke="#0D1117" stroke-width="2"/><circle class="tok2" r="7" fill="#D9B440" stroke="#0D1117" stroke-width="2"/>
+<rect x="800" y="88" width="72" height="40" rx="10" fill="#0D1117" stroke="#A8C4EA"/><text x="836" y="113" text-anchor="middle" class="mono" font-size="12.5" font-weight="700" fill="#E6EDF3">RAW</text><rect x="876" y="96" width="8" height="24" rx="2" fill="#62B487"/><rect x="888" y="88" width="72" height="40" rx="10" fill="#0D1117" stroke="#A8C4EA"/><text x="924" y="113" text-anchor="middle" class="mono" font-size="12.5" font-weight="700" fill="#E6EDF3">WORK</text><rect x="964" y="96" width="8" height="24" rx="2" fill="#62B487"/><rect x="976" y="88" width="72" height="40" rx="10" fill="#0D1117" stroke="#A8C4EA"/><text x="1012" y="113" text-anchor="middle" class="mono" font-size="12.5" font-weight="700" fill="#E6EDF3">PROC</text><rect x="1052" y="96" width="8" height="24" rx="2" fill="#62B487"/><rect x="1064" y="88" width="72" height="40" rx="10" fill="#0D1117" stroke="#A8C4EA"/><text x="1100" y="113" text-anchor="middle" class="mono" font-size="12.5" font-weight="700" fill="#E6EDF3">CAT</text><rect x="1140" y="96" width="8" height="24" rx="2" fill="#62B487"/><rect x="1152" y="88" width="72" height="40" rx="10" fill="#0B1F3A" stroke="#A8C4EA"/><text x="1188" y="113" text-anchor="middle" class="mono" font-size="12.5" font-weight="700" fill="#FFFFFE">PUB</text><path d="M924,128 V164 H990" fill="none" stroke="#B1BAC4" stroke-dasharray="4 4"/><text x="996" y="168" class="sans" font-size="12" fill="#B1BAC4">HOLD</text>
+    <text x="800" y="198" class="sans" font-size="11.5" fill="#B1BAC4">Illustration · no promotion recorded</text>
   </g>
   <rect x="1" y="1" width="1278" height="218" rx="18" fill="none" stroke="#30363D" stroke-width="2"/>
 </svg>

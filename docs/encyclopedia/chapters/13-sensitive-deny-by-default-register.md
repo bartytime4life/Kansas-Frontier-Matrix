@@ -21,6 +21,7 @@ related:
 <p align="center">
   <a href="../../../README.md#see-it-in-action"><picture><source media="(prefers-color-scheme: dark)" srcset="../../brand/readme/kfm-banner-sensitive-material-dark.svg" /><img src="../../brand/readme/kfm-banner-sensitive-material.svg" alt="Encyclopedia banner: when in doubt, generalize, withhold or deny." width="100%" /></picture></a>
 </p>
+<sub>Illustration — no current trust, promotion or acceptance state is asserted.</sub>
 <!-- kfm-showcase:end -->
 
 # Sensitive-material decision guide

@@ -8,11 +8,7 @@
       .sans{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
       .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
       .lbl{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;letter-spacing:2.5px;font-weight:700}
-      .pt{animation:pt 6s ease-in-out infinite}@keyframes pt{0%,30%{opacity:1}45%,100%{opacity:.15}}
-      .blur{transform-box:fill-box;transform-origin:center;animation:blur 6s ease-in-out infinite}@keyframes blur{0%,20%{opacity:0;transform:scale(.3)}40%,100%{opacity:1;transform:scale(1)}}
-      .hx{animation:hxa 6s ease-in-out infinite}@keyframes hxa{0%,35%{opacity:.15}55%,100%{opacity:1}}
-      .lk{animation:lka 6s ease-in-out infinite}@keyframes lka{0%,55%{opacity:.15}75%,100%{opacity:1}}
-      @media (prefers-reduced-motion: reduce){.pt,.blur,.hx,.lk{animation:none!important}.pt{opacity:.3}}
+
     </style>
   </defs>
   <g clip-path="url(#frame)">
@@ -28,7 +24,7 @@
     <rect x="955" y="40" width="130" height="130" rx="12" fill="#0D1117" stroke="#30363D"/><text x="1020" y="190" text-anchor="middle" fill="#9198A1">generalized</text>
     <rect x="1110" y="40" width="130" height="130" rx="12" fill="#0D1117" stroke="#30363D"/><text x="1175" y="190" text-anchor="middle" fill="#9198A1">withheld</text></g>
     <g class="pt"><circle cx="865" cy="105" r="6" fill="#E27B7B"/><circle cx="865" cy="105" r="14" fill="none" stroke="#E27B7B" stroke-width="2"/></g>
-    <path class="blur" d="M865,105 m-40,0 l20,-35 h40 l20,35 l-20,35 h-40 Z" fill="none" stroke="#E27B7B" stroke-dasharray="3 3"/>
+
     <path class="hx" d="M1020,105 m-42,0 l21,-36 h42 l21,36 l-21,36 h-42 Z" fill="#E27B7B" fill-opacity=".25" stroke="#E27B7B" stroke-width="2"/>
     <g class="lk"><rect x="1159" y="102" width="32" height="26" rx="5" fill="#9AAABA"/><path d="M1166,102 v-9 a9,9 0 0 1 18,0 v9" fill="none" stroke="#9AAABA" stroke-width="4"/></g>
     <path d="M932,105 h20 M1087,105 h20" stroke="#D2A06A" stroke-width="2" marker-end="url(#ga)"/>

@@ -2,7 +2,7 @@
 doc_id: kfm://doc/brand/readme-artwork
 title: docs/brand/readme — README artwork
 type: readme
-version: v1.3
+version: v1.4
 status: draft
 owners: ["@bartytime4life"]
 created: 2026-10-08
@@ -31,7 +31,7 @@ Illustrative, animated SVG artwork for the repository's front doors: the [root R
 
 ## Gallery
 
-Every image follows your GitHub theme. Open the light or dark file directly to see it full size; on GitHub each one animates.
+Paired assets follow your GitHub theme. Open the light or dark file directly to see it full size; governance diagrams are static, and decorative motion on linked-page assets stops within four seconds.
 
 <p align="center">
   <img src="kfm-hero.svg" alt="Hero banner: Place. Time. Evidence." width="100%" />
@@ -141,15 +141,16 @@ Re-count these when their sources change, and update the images and the README t
 
 ## Design rules applied
 
-- **Palette** — the PROPOSED tokens in [`visual-language.md` §6.2](../visual-language.md#62-proposed-palette) plus the logo navy and gold from [`logo/tokens/colors.tokens.json`](../logo/tokens/colors.tokens.json). Each image carries its own background so it reads in GitHub light and dark themes.
-- **Motion** — CSS-only, slow, linear or single ease-out curves, no bounce. Looping animations start mid-cycle so the first frame is never empty; the walkthrough holds its finished state before it resets; the number odometer and capability board animate once, then rest. Every file includes `@media (prefers-reduced-motion: reduce)`, which stops motion and shows a complete still frame.
-- **Trust signals are never decorated** — outcome labels (`ABSTAIN`, `DENY`) are static text; no badge morphs between states, per [`trust-state-visuals.md`](../trust-state-visuals.md).
-- **Accessibility** — every SVG has `role="img"`, a `<title>` and a `<desc>`; the README `<img>` tags carry matching `alt` text. Text inside images duplicates content that also appears in the README.
-- **Self-contained** — no scripts, external fonts, `foreignObject` or remote references, so GitHub's image proxy renders them unchanged.
+- **Palette** — the PROPOSED roles in [`visual-language.md` §6.2](../visual-language.md#62-proposed-palette). Linked-document artwork uses neutral accents for holds, verification and other non-STALE motifs; it does not borrow the reserved amber/gold lane. The remaining front-door gallery also uses logo navy and gold from [`logo/tokens/colors.tokens.json`](../logo/tokens/colors.tokens.json) and requires separate design disposition. Each image carries its own background so it reads in GitHub light and dark themes.
+- **Motion** — linked-page banners and their topic graphics use either a complete still or CSS-only decorative motion that plays once and stops within four seconds. Command text and diagram labels stay visible throughout. Animated files retain `@media (prefers-reduced-motion: reduce)` for an instant still. Other front-door artwork has its own motion profile; this bounded review does not certify the entire gallery.
+- **Trust signals stay static** — lifecycle stages, membrane routes, verification cards, sensitive dispositions and capability labels do not animate or imply an automatic decision. Static branches describe possible dispositions; they record no promotion, release or acceptance, per [`trust-state-visuals.md`](../trust-state-visuals.md).
+- **Icons** — linked-document artwork uses its existing shapes and text labels; decorative emoji pictograms have been removed rather than substituted with unratified glyphs.
+- **Accessibility** — every SVG has `role="img"`, a `<title>` and a `<desc>`; embedding `<img>` tags supply the accessible alternative. An embedded image does not expose its inner SVG description as page text. The linked page remains the authoritative text alternative; governance headers explicitly identify their illustrative role.
+- **Self-contained** — no scripts, external fonts, `foreignObject` or remote references, for image embedding. GitHub rendering is checked separately from XML validity.
 
 ## Showcase blocks on linked pages
 
-Pages linked from the project home carry a banner above their H1, a badge row (family, reading time, project home, tour), an optional topic graphic, and a footer navigation strip. Each block is wrapped in `<!-- kfm-showcase:start -->` … `<!-- kfm-showcase:end -->` so it can be found, refreshed or removed without touching the page's own text.
+Pages linked from the project home carry a theme-aware illustrative banner above their H1, a badge row (family, reading time, project home, tour), an optional topic graphic, and a footer navigation strip. Each block is wrapped in `<!-- kfm-showcase:start -->` … `<!-- kfm-showcase:end -->` so it can be found, refreshed or removed without touching the page's own text.
 
 | Page | Banner | Topic graphic |
 |---|---|---|
@@ -176,4 +177,4 @@ Not decorated, on purpose:
 
 ## Changing an asset
 
-Keep claims inside an image in step with the README text and the linked source guides. If a feature's behavior or a quoted count changes, update both. Re-check each file still parses as XML and still honors reduced motion. These images may be reused in talks or posts with the caption “Illustration — not a data product”.
+Keep claims inside an image in step with the README text and the linked source guides. If a feature's behavior or a quoted count changes, update both. Run `python -m unittest discover -s tests/docs -p test_readme_artwork.py`, then check rendered light, dark and reduced-motion frames. Source tests establish bounded motion and self-contained SVG structure; they do not grant design, accessibility, review or merge acceptance. These images may be reused in talks or posts with the caption “Illustration — not a data product”.

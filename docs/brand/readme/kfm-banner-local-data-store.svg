@@ -8,7 +8,7 @@
       .sans{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
       .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
       .lbl{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;letter-spacing:2.5px;font-weight:700}
-      .f{animation:fly 6s cubic-bezier(.4,0,.3,1) infinite;opacity:0}.f1{animation-delay:-2s}.f2{animation-delay:-4s}
+      .f{animation:fly 4s cubic-bezier(.4,0,.3,1) 1 both;opacity:0}.f1{animation-delay:-1.33s}.f2{animation-delay:-2.67s}
       @keyframes fly{0%{transform:translate(860px,115px);opacity:0}10%{opacity:1}45%{transform:translate(1000px,96px) rotate(8deg)}75%{transform:translate(1150px,110px) scale(.5);opacity:1}85%,100%{transform:translate(1150px,110px) scale(.2);opacity:0}}
       @media (prefers-reduced-motion: reduce){.f{animation:none!important}.f0{opacity:1;transform:translate(1000px,96px)}}
     </style>

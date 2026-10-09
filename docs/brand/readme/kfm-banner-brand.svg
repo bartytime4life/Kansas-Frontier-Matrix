@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 220" width="1280" height="220" role="img" aria-labelledby="t d">
   <title id="t">Brand · Visual Language — Make trust legible.</title>
-  <desc id="d">Banner: seven brand palette swatches — ink, paper, prairie, cottonwood, river, ember and gold — gently rising and falling.</desc>
+  <desc id="d">Banner: seven brand palette swatches — ink, paper, prairie, cottonwood, river, ember and mute — shown as a static palette.</desc>
   <defs>
     <clipPath id="frame"><rect x="1" y="1" width="1278" height="218" rx="18"/></clipPath>
     <style>
@@ -8,8 +8,7 @@
       .sans{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
       .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
       .lbl{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;letter-spacing:2.5px;font-weight:700}
-      .sw{animation:sw 4.2s ease-in-out infinite}@keyframes sw{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-      @media (prefers-reduced-motion: reduce){.sw{animation:none!important}}
+
     </style>
   </defs>
   <g clip-path="url(#frame)">
@@ -20,7 +19,7 @@
     <text x="48" y="150" class="sans" font-size="16.5" fill="#4A4A4A">Calm colour, honest motion, and words that show why a claim is allowed, held</text><text x="48" y="172" class="sans" font-size="16.5" fill="#4A4A4A">or withheld.</text>
     <g transform="translate(48,202)" class="sans" font-size="12" fill="#6B6B6B"><circle cx="5" cy="-4" r="4" fill="#8E5A2A"/><text x="16" y="0">Kansas Frontier Matrix</text></g>
     <line x1="776" y1="34" x2="776" y2="186" stroke="#D9CFBD"/>
-<g class="sw" style="animation-delay:-0.00s"><rect x="800" y="50" width="54" height="96" rx="10" fill="#1F3A66" stroke="#D9CFBD"/></g><text x="827" y="168" text-anchor="middle" class="sans" font-size="11" fill="#6B6B6B">ink</text><g class="sw" style="animation-delay:-0.35s"><rect x="863" y="50" width="54" height="96" rx="10" fill="#FAF7F0" stroke="#D9CFBD"/></g><text x="890" y="168" text-anchor="middle" class="sans" font-size="11" fill="#6B6B6B">paper</text><g class="sw" style="animation-delay:-0.70s"><rect x="926" y="50" width="54" height="96" rx="10" fill="#8E5A2A" stroke="#D9CFBD"/></g><text x="953" y="168" text-anchor="middle" class="sans" font-size="11" fill="#6B6B6B">prairie</text><g class="sw" style="animation-delay:-1.05s"><rect x="989" y="50" width="54" height="96" rx="10" fill="#3B7A57" stroke="#D9CFBD"/></g><text x="1016" y="168" text-anchor="middle" class="sans" font-size="11" fill="#6B6B6B">cottonwood</text><g class="sw" style="animation-delay:-1.40s"><rect x="1052" y="50" width="54" height="96" rx="10" fill="#4A6FA5" stroke="#D9CFBD"/></g><text x="1079" y="168" text-anchor="middle" class="sans" font-size="11" fill="#6B6B6B">river</text><g class="sw" style="animation-delay:-1.75s"><rect x="1115" y="50" width="54" height="96" rx="10" fill="#A33A3A" stroke="#D9CFBD"/></g><text x="1142" y="168" text-anchor="middle" class="sans" font-size="11" fill="#6B6B6B">ember</text><g class="sw" style="animation-delay:-2.10s"><rect x="1178" y="50" width="54" height="96" rx="10" fill="#C9A227" stroke="#D9CFBD"/></g><text x="1205" y="168" text-anchor="middle" class="sans" font-size="11" fill="#6B6B6B">gold</text>
+<g class="sw"><rect x="800" y="50" width="54" height="96" rx="10" fill="#1F3A66" stroke="#D9CFBD"/></g><text x="827" y="168" text-anchor="middle" class="sans" font-size="11" fill="#6B6B6B">ink</text><g class="sw"><rect x="863" y="50" width="54" height="96" rx="10" fill="#FAF7F0" stroke="#D9CFBD"/></g><text x="890" y="168" text-anchor="middle" class="sans" font-size="11" fill="#6B6B6B">paper</text><g class="sw"><rect x="926" y="50" width="54" height="96" rx="10" fill="#8E5A2A" stroke="#D9CFBD"/></g><text x="953" y="168" text-anchor="middle" class="sans" font-size="11" fill="#6B6B6B">prairie</text><g class="sw"><rect x="989" y="50" width="54" height="96" rx="10" fill="#3B7A57" stroke="#D9CFBD"/></g><text x="1016" y="168" text-anchor="middle" class="sans" font-size="11" fill="#6B6B6B">cottonwood</text><g class="sw"><rect x="1052" y="50" width="54" height="96" rx="10" fill="#4A6FA5" stroke="#D9CFBD"/></g><text x="1079" y="168" text-anchor="middle" class="sans" font-size="11" fill="#6B6B6B">river</text><g class="sw"><rect x="1115" y="50" width="54" height="96" rx="10" fill="#A33A3A" stroke="#D9CFBD"/></g><text x="1142" y="168" text-anchor="middle" class="sans" font-size="11" fill="#6B6B6B">ember</text><g class="sw"><rect x="1178" y="50" width="54" height="96" rx="10" fill="#5E6E7C" stroke="#D9CFBD"/></g><text x="1205" y="168" text-anchor="middle" class="sans" font-size="11" fill="#6B6B6B">mute</text>
   </g>
   <rect x="1" y="1" width="1278" height="218" rx="18" fill="none" stroke="#D9CFBD" stroke-width="2"/>
 </svg>

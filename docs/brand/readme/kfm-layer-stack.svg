@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640" role="img" aria-labelledby="t d">
   <title id="t">One place, many layers</title>
-  <desc id="d">Illustration: six stylized Kansas map layers stacked in perspective — places and boundaries, water, geology and soils, land cover and crops, live observations, and evidence and limits — separate to reveal labels and then settle back into one map, beside a shared clock.</desc>
+  <desc id="d">Illustration: six stylized Kansas map layers stacked in perspective — places and boundaries, water, geology and soils, land cover and crops, live observations, and evidence and limits — remain separated with visible labels, beside a shared clock.</desc>
   <defs>
     <clipPath id="frame"><rect x="1" y="1" width="1278" height="638" rx="18"/></clipPath>
     <style>
@@ -8,21 +8,9 @@
       .sans{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
       .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
       .lbl{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;letter-spacing:2.5px;font-weight:700}
-      .p0{animation:pl0 14s cubic-bezier(.45,.05,.25,1) infinite}@keyframes pl0{0%,10%{transform:translateY(0)}35%,75%{transform:translateY(85px)}95%,100%{transform:translateY(0)}}
-      .l0{animation:lab 14s ease-out infinite;animation-delay:0.60s}
-      .p1{animation:pl1 14s cubic-bezier(.45,.05,.25,1) infinite}@keyframes pl1{0%,10%{transform:translateY(0)}35%,75%{transform:translateY(41px)}95%,100%{transform:translateY(0)}}
-      .l1{animation:lab 14s ease-out infinite;animation-delay:0.48s}
-      .p2{animation:pl2 14s cubic-bezier(.45,.05,.25,1) infinite}@keyframes pl2{0%,10%{transform:translateY(0)}35%,75%{transform:translateY(-3px)}95%,100%{transform:translateY(0)}}
-      .l2{animation:lab 14s ease-out infinite;animation-delay:0.36s}
-      .p3{animation:pl3 14s cubic-bezier(.45,.05,.25,1) infinite}@keyframes pl3{0%,10%{transform:translateY(0)}35%,75%{transform:translateY(-47px)}95%,100%{transform:translateY(0)}}
-      .l3{animation:lab 14s ease-out infinite;animation-delay:0.24s}
-      .p4{animation:pl4 14s cubic-bezier(.45,.05,.25,1) infinite}@keyframes pl4{0%,10%{transform:translateY(0)}35%,75%{transform:translateY(-91px)}95%,100%{transform:translateY(0)}}
-      .l4{animation:lab 14s ease-out infinite;animation-delay:0.12s}
-      .p5{animation:pl5 14s cubic-bezier(.45,.05,.25,1) infinite}@keyframes pl5{0%,10%{transform:translateY(0)}35%,75%{transform:translateY(-135px)}95%,100%{transform:translateY(0)}}
-      .l5{animation:lab 14s ease-out infinite;animation-delay:0.00s}
-      @keyframes lab{0%,28%{opacity:0}36%,72%{opacity:1}80%,100%{opacity:0}}
-      .hand{transform-box:fill-box;transform-origin:50% 100%;animation:hand 14s linear infinite}@keyframes hand{to{transform:rotate(360deg)}}
-      @media (prefers-reduced-motion: reduce){.pl,.lab,.hand{animation:none!important}.p0{transform:translateY(85px)}.p1{transform:translateY(41px)}.p2{transform:translateY(-3px)}.p3{transform:translateY(-47px)}.p4{transform:translateY(-91px)}.p5{transform:translateY(-135px)}.lab{opacity:1}}
+      .p0{transform:translateY(85px)}.p1{transform:translateY(41px)}.p2{transform:translateY(-3px)}.p3{transform:translateY(-47px)}.p4{transform:translateY(-91px)}.p5{transform:translateY(-135px)}.lab{opacity:1}
+      .hand{transform-box:fill-box;transform-origin:50% 100%;animation:hand 4s linear 1 both}@keyframes hand{to{transform:rotate(360deg)}}
+      @media (prefers-reduced-motion: reduce){.hand{animation:none!important}}
     </style>
   </defs>
   <g clip-path="url(#frame)">
@@ -41,7 +29,7 @@
     <g class="lab l4"><line x1="730" y1="217" x2="900" y2="217" stroke="#4A6FA5" stroke-width="1.4" stroke-dasharray="3 4"/><circle cx="900" cy="217" r="4" fill="#4A6FA5"/><text x="916" y="214" class="sans" font-size="17" font-weight="700" fill="#0E1F3A">Live observations</text><text x="916" y="234" class="sans" font-size="13" fill="#6B6B6B">gauges, radar, quakes, smoke</text></g>
     <g transform="translate(430,230)"><g class="pl p5"><g transform="matrix(0.5580,0.1984,-0.4464,0.2604,0,0)"><path d="M0,0 H543 L551,10 548,24 558,36 570,48 566,62 580,74 590,84 600,93 V310 H0 Z" fill="#FBEAEA" fill-opacity="0.85" stroke="#A33A3A" stroke-width="2" vector-effect="non-scaling-stroke"/><g clip-path="url(#kc)"><g><circle cx="380.1" cy="238.7" r="11" fill="#FFFFFF" stroke="#A33A3A" stroke-width="2" vector-effect="non-scaling-stroke"/><path d="M375.1,238.7 l4,4 l7,-8" fill="none" stroke="#A33A3A" stroke-width="2" vector-effect="non-scaling-stroke"/></g><g><circle cx="513" cy="98.2" r="11" fill="#FFFFFF" stroke="#A33A3A" stroke-width="2" vector-effect="non-scaling-stroke"/><path d="M508,98.2 l4,4 l7,-8" fill="none" stroke="#A33A3A" stroke-width="2" vector-effect="non-scaling-stroke"/></g><g><circle cx="219.1" cy="115.7" r="11" fill="#FFFFFF" stroke="#A33A3A" stroke-width="2" vector-effect="non-scaling-stroke"/><path d="M214.1,115.7 l4,4 l7,-8" fill="none" stroke="#A33A3A" stroke-width="2" vector-effect="non-scaling-stroke"/></g><g><circle cx="163.5" cy="232.5" r="11" fill="#FFFFFF" stroke="#A33A3A" stroke-width="2" vector-effect="non-scaling-stroke"/><path d="M158.5,232.5 l4,4 l7,-8" fill="none" stroke="#A33A3A" stroke-width="2" vector-effect="non-scaling-stroke"/></g><g><circle cx="357.6" cy="119.9" r="11" fill="#FFFFFF" stroke="#A33A3A" stroke-width="2" vector-effect="non-scaling-stroke"/><path d="M352.6,119.9 l4,4 l7,-8" fill="none" stroke="#A33A3A" stroke-width="2" vector-effect="non-scaling-stroke"/></g></g></g></g></g>
     <g class="lab l5"><line x1="730" y1="157" x2="900" y2="157" stroke="#A33A3A" stroke-width="1.4" stroke-dasharray="3 4"/><circle cx="900" cy="157" r="4" fill="#A33A3A"/><text x="916" y="154" class="sans" font-size="17" font-weight="700" fill="#0E1F3A">Evidence &amp; limits</text><text x="916" y="174" class="sans" font-size="13" fill="#6B6B6B">source, clocks, role, withheld detail</text></g>
-    <g transform="translate(40,500)"><circle cx="50" cy="50" r="46" fill="#FFFFFF" stroke="#D9CFBD" stroke-width="2"/><g class="hand"><line x1="50" y1="50" x2="50" y2="16" stroke="#0B1F3A" stroke-width="3" stroke-linecap="round"/></g><circle cx="50" cy="50" r="4" fill="#C9A227"/><text x="112" y="44" class="sans" font-size="15" font-weight="700" fill="#0E1F3A">One shared clock</text><text x="112" y="64" class="sans" font-size="13" fill="#6B6B6B">layers outside the active time</text><text x="112" y="82" class="sans" font-size="13" fill="#6B6B6B">step aside instead of pretending</text></g>
+    <g transform="translate(40,500)"><circle cx="50" cy="50" r="46" fill="#FFFFFF" stroke="#D9CFBD" stroke-width="2"/><g class="hand"><line x1="50" y1="50" x2="50" y2="16" stroke="#0B1F3A" stroke-width="3" stroke-linecap="round"/></g><circle cx="50" cy="50" r="4" fill="#5E6E7C"/><text x="112" y="44" class="sans" font-size="15" font-weight="700" fill="#0E1F3A">One shared clock</text><text x="112" y="64" class="sans" font-size="13" fill="#6B6B6B">layers outside the active time</text><text x="112" y="82" class="sans" font-size="13" fill="#6B6B6B">step aside instead of pretending</text></g>
   </g>
   <rect x="1" y="1" width="1278" height="638" rx="18" fill="none" stroke="#D9CFBD" stroke-width="2"/>
 </svg>
