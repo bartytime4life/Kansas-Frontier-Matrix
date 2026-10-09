@@ -5,8 +5,10 @@ import { KANSAS_OUTLINE } from "./kansas-orientation";
 import { terrainHillshadePaint } from "./terrain-relief-style";
 
 /**
- * Cinematic MapLibre presentation: relief lighting, sky, a Kansas border
- * curtain, sun-following light, selection glow and a camera flyover.
+ * Cinematic MapLibre presentation across 2D, tilted, Terrain 3D and globe
+ * views: relief lighting, sky, a Kansas border curtain and glow, 2D shaded
+ * relief, 3D value columns, lit buildings, sun-following light, selection
+ * glow and a camera flyover.
  *
  * Everything here is display treatment. No effect changes feature geometry,
  * evidence state, source values, reported elevations, time, or report
@@ -16,22 +18,57 @@ import { terrainHillshadePaint } from "./terrain-relief-style";
 export type SceneLightPreset = "night" | "dusk" | "clear";
 
 export type SceneEffectSettings = Readonly<{
-  /** Multidirectional relief, deeper sky and fog. Off restores the legacy single-light look. */
+  /** Deeper relief shading, richer sky and fog. Off restores the legacy look. */
   cinematic: boolean;
-  /** Translucent border walls around Kansas in pitched views. */
+  /** Glowing border walls around Kansas in tilted and globe views. */
   curtain: boolean;
   /** Light and sky follow the computed sun position over the map center. */
   sunSync: boolean;
+  /** Soft Kansas outline glow over every basemap, and a beacon from orbit. */
+  kansasGlow: boolean;
+  /** DEM shaded relief under 2D maps. Requests display-DEM tiles. */
+  relief2d: boolean;
+  /** 3D columns for provider point values (earthquake magnitude, streamflow) when tilted. */
+  columns: boolean;
+  /** Height-shaded, light-matched styling for provider 3D buildings. */
+  buildings: boolean;
 }>;
 
-export const DEFAULT_SCENE_EFFECTS: SceneEffectSettings = Object.freeze({ cinematic: true, curtain: true, sunSync: false });
+export type SceneEffectKey = keyof SceneEffectSettings;
+export const SCENE_EFFECT_KEYS: readonly SceneEffectKey[] = ["cinematic", "curtain", "sunSync", "kansasGlow", "relief2d", "columns", "buildings"];
+
+/** Defaults keep the previous behavior: no new network requests (2D relief off). */
+export const DEFAULT_SCENE_EFFECTS: SceneEffectSettings = Object.freeze({
+  cinematic: true, curtain: true, sunSync: false, kansasGlow: true, relief2d: false, columns: true, buildings: true,
+});
 export const SCENE_EFFECTS_STORAGE_KEY = "kfm-scene-effects-v1";
+
+export type SceneLookPreset = "cinematic" | "natural" | "plain";
+export const SCENE_LOOK_PRESETS: Readonly<Record<SceneLookPreset, Readonly<{ label: string; detail: string; settings: SceneEffectSettings }>>> = Object.freeze({
+  cinematic: { label: "Cinematic", detail: "Every effect, including 2D relief", settings: Object.freeze({ cinematic: true, curtain: true, sunSync: false, kansasGlow: true, relief2d: true, columns: true, buildings: true }) },
+  natural: { label: "Natural", detail: "Relief, sky and 3D data; no glow", settings: Object.freeze({ cinematic: true, curtain: false, sunSync: true, kansasGlow: false, relief2d: true, columns: true, buildings: true }) },
+  plain: { label: "Plain", detail: "The original flat look", settings: Object.freeze({ cinematic: false, curtain: false, sunSync: false, kansasGlow: false, relief2d: false, columns: false, buildings: false }) },
+});
+
+export const matchingLookPreset = (settings: SceneEffectSettings): SceneLookPreset | null =>
+  (Object.keys(SCENE_LOOK_PRESETS) as SceneLookPreset[]).find((id) => SCENE_EFFECT_KEYS.every((key) => SCENE_LOOK_PRESETS[id].settings[key] === settings[key])) ?? null;
+
+export type SceneView = "2d" | "tilted" | "terrain" | "globe";
+/** Which views each effect shows in, for the GUI. */
+export const SCENE_EFFECT_OPTIONS: readonly Readonly<{ key: SceneEffectKey; label: string; detail: string; views: readonly SceneView[]; network?: boolean; motion?: boolean }>[] = Object.freeze([
+  { key: "cinematic", label: "Cinematic relief & sky", detail: "Deeper relief shading, richer sky and distance haze", views: ["tilted", "terrain", "globe"] },
+  { key: "kansasGlow", label: "Kansas glow", detail: "Soft outline glow on every basemap; a beacon from orbit", views: ["2d", "tilted", "terrain", "globe"] },
+  { key: "relief2d", label: "Shaded relief in 2D", detail: "Display-DEM hillshade under flat maps", views: ["2d", "tilted"], network: true },
+  { key: "curtain", label: "Kansas light curtain", detail: "Glowing border walls when tilted and on the globe", views: ["tilted", "terrain", "globe"], motion: true },
+  { key: "columns", label: "3D data columns", detail: "Earthquake magnitude and streamflow as columns when tilted", views: ["tilted", "terrain", "globe"] },
+  { key: "buildings", label: "Lit 3D buildings", detail: "Height-shaded provider buildings matched to the scene light", views: ["tilted", "terrain"] },
+  { key: "sunSync", label: "Follow the real sun", detail: "Light and sky follow the sun over the map center", views: ["tilted", "terrain", "globe"] },
+]);
 
 export function parseSceneEffects(raw: unknown): SceneEffectSettings {
   if (!raw || typeof raw !== "object") return DEFAULT_SCENE_EFFECTS;
   const value = raw as Record<string, unknown>;
-  const flag = (key: keyof SceneEffectSettings) => typeof value[key] === "boolean" ? value[key] as boolean : DEFAULT_SCENE_EFFECTS[key];
-  return Object.freeze({ cinematic: flag("cinematic"), curtain: flag("curtain"), sunSync: flag("sunSync") });
+  return Object.freeze(Object.fromEntries(SCENE_EFFECT_KEYS.map((key) => [key, typeof value[key] === "boolean" ? value[key] : DEFAULT_SCENE_EFFECTS[key]])) as SceneEffectSettings);
 }
 
 /** Device-local preference. Blocked storage simply keeps the defaults. */
@@ -105,7 +142,8 @@ export function effectiveSceneLight(map: Pick<MapLibreMap, "getCenter">, preset:
 // ---------------------------------------------------------------------------
 
 /** Globe atmosphere fades out as the camera approaches the study area. */
-export const GLOBE_ATMOSPHERE_BLEND = ["interpolate", ["linear"], ["zoom"], 0, 1, 4, 0.9, 7, 0.25] as const;
+// Kept below full strength so the planet surface and Kansas glow stay legible.
+export const GLOBE_ATMOSPHERE_BLEND = ["interpolate", ["linear"], ["zoom"], 0, 0.62, 4, 0.55, 7, 0.2] as const;
 
 /** Deeper zenith, warmer horizons and ground fog for aerial perspective. */
 export const CINEMATIC_SKIES = Object.freeze({
@@ -215,8 +253,10 @@ export const setCurtainShimmer = (active: boolean): void => {
 };
 const shimmerClock = (): number | null => shimmerStartedAt === null ? null : (performance.now() - shimmerStartedAt) / 1000;
 
+/** On the globe the wall is seen against the planet's limb at any tilt;
+ * on flat maps it needs a tilt to read as a wall rather than a doubled line. */
 export const curtainShouldShow = (settings: SceneEffectSettings, pitch: number, efficient: boolean, projection: string | undefined): boolean =>
-  settings.curtain && !efficient && projection !== "globe" && Number.isFinite(pitch) && pitch >= CURTAIN_MIN_PITCH;
+  settings.curtain && !efficient && (projection === "globe" || (Number.isFinite(pitch) && pitch >= CURTAIN_MIN_PITCH));
 
 /**
  * Adds (or removes) the curtain beneath every data overlay and sets its

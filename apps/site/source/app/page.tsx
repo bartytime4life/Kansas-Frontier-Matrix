@@ -221,9 +221,10 @@ import {
   type StoryScene,
   type TrustState,
 } from "./workspace-model";
-import { STRUCTURE_3D_SOURCE, TERRAIN_SOURCES, TERRARIUM_RENDER_MAX_ZOOM, terrainSourceFor, type TerrainProvider } from "./terrain-sources";
-import { DEFAULT_SCENE_EFFECTS, KANSAS_FLYOVER, applySelectionPulse, applyTerrainReliefStyle, curtainIsVisible, readSceneEffects, setCurtainShimmer, registerSceneEffects, sunSceneLight, syncBorderCurtain, syncBorderCurtainVisibility, writeSceneEffects, type SceneEffectSettings } from "./scene-effects";
-import { SceneEffectsControls } from "./scene-effects-controls";
+import { ACTIVE_TERRAIN_SOURCE, STRUCTURE_3D_SOURCE, TERRAIN_SOURCES, TERRARIUM_RENDER_MAX_ZOOM, terrainSourceFor, type TerrainProvider } from "./terrain-sources";
+import { syncBuildingStyle, syncKansasGlow, syncRelief2d, syncValueColumns, syncValueColumnsVisibility, type ColumnFeed } from "./scene-overlays";
+import { CURTAIN_MIN_PITCH, DEFAULT_SCENE_EFFECTS, KANSAS_FLYOVER, SCENE_EFFECT_KEYS, SCENE_EFFECT_OPTIONS, SCENE_LOOK_PRESETS, matchingLookPreset, applySelectionPulse, applyTerrainReliefStyle, curtainIsVisible, readSceneEffects, setCurtainShimmer, registerSceneEffects, sunSceneLight, syncBorderCurtain, syncBorderCurtainVisibility, writeSceneEffects, type SceneEffectSettings, type SceneView } from "./scene-effects";
+import { SceneEffectsControls, ScenePanel } from "./scene-effects-controls";
 import { EXTERNAL_CONTEXT_SOURCES } from "./external-context-sources";
 import { DISASTER_COVERAGE_HOLDS, LAYER_WORKSPACES, filterOfficialSources, sourceMinimumZoom, sourceNeedsCloserView, type LayerWorkspace } from "./layer-workspaces";
 import {
@@ -545,6 +546,24 @@ const officialContextStateLabel = (state: OfficialContextState) => ({
 // Open on Kansas Overview: a paused, north-up 2D statewide orientation.
 // Terrain, globe, and local investigation cameras remain explicit actions.
 const KANSAS_VIEW: ViewState = { center: [-98.38, 38.48], zoom: 5.45, bearing: 0, pitch: 0 };
+// Official point feeds whose provider value is drawn as a 3D column when tilted.
+const COLUMN_FEEDS: readonly ColumnFeed[] = [
+  { kind: "earthquake", sourceId: OFFICIAL_CONTEXT_BY_ID["usgs-earthquakes"].sourceId, pointLayerId: OFFICIAL_CONTEXT_BY_ID["usgs-earthquakes"].layerIds[0] },
+  { kind: "streamflow", sourceId: OFFICIAL_CONTEXT_BY_ID["usgs-streamflow"].sourceId, pointLayerId: OFFICIAL_CONTEXT_BY_ID["usgs-streamflow"].layerIds[1] },
+];
+const COLUMN_SOURCE_IDS = new Set(COLUMN_FEEDS.map((feed) => feed.sourceId));
+/** Glow, 2D relief, value columns and building light. Decorative: each step
+ * fails on its own and never marks the map runtime degraded. */
+const syncSceneOverlays = (map: MapLibreMap, light: AtmospherePreset, azimuth: number, efficient: boolean) => {
+  for (const step of [
+    () => syncKansasGlow(map),
+    () => syncRelief2d(map, ACTIVE_TERRAIN_SOURCE, light, azimuth),
+    () => syncValueColumns(map, COLUMN_FEEDS, efficient),
+    () => syncBuildingStyle(map, light, azimuth),
+  ]) {
+    try { step(); } catch { /* one overlay failing never blocks the others */ }
+  }
+};
 const STRUCTURE_FOCUS_PRESETS = Object.freeze([
   Object.freeze({ id: "wichita", label: "Focus Wichita", center: [-97.3375, 37.6872] as [number, number], bearing: -24 }),
   Object.freeze({ id: "topeka", label: "Focus Topeka", center: [-95.689, 39.0473] as [number, number], bearing: 28 }),
@@ -2092,6 +2111,11 @@ export default function Home() {
     ));
     let state: "READY" | "REQUESTING" | "ERROR" | "NOT_SELECTED" = "NOT_SELECTED";
     if (source.id === "aws-mapzen-terrarium") {
+      // Scene effects' 2D shaded relief requests the same display DEM on flat maps.
+      const relief2dActive = sceneEffects.relief2d && scenePreset !== "elevation-3d" && projection !== "globe";
+      if (relief2dActive && !(active && terrainProvider === "mapzen")) {
+        return { source, active: true, state: styleReady && maplibreProbe.tilesLoaded ? "READY" as const : runtime.kind === "error" ? "ERROR" as const : "REQUESTING" as const };
+      }
       const mapzenSelected = active && terrainProvider === "mapzen";
       if (mapzenSelected) state = terrainState === "READY" && attachedTerrainProviderRef.current === "mapzen" ? "READY" : terrainState === "ERROR" ? "ERROR" : "REQUESTING";
       return { source, active: mapzenSelected, state };
@@ -2099,7 +2123,7 @@ export default function Home() {
       state = styleReady && maplibreProbe.tilesLoaded ? "READY" : runtime.kind === "error" ? "ERROR" : "REQUESTING";
     }
     return { source, active, state };
-  }), [basemap, maplibreProbe.tilesLoaded, runtime.kind, scenePreset, styleReady, terrainProvider, terrainState]);
+  }), [basemap, maplibreProbe.tilesLoaded, projection, runtime.kind, sceneEffects.relief2d, scenePreset, styleReady, terrainProvider, terrainState]);
   const filteredExternalContextConnections = useMemo(() => {
     const query = connectionQuery.trim().toLowerCase();
     return externalContextConnections.filter((connection) => {
@@ -4906,6 +4930,7 @@ export default function Home() {
             setStructures3DState(setStructureExtrusions(map, structures3DRef.current));
             styleStep = "SCENE_EFFECTS";
             syncBorderCurtain(map, renderEfficientRef.current);
+            syncSceneOverlays(map, atmospherePresetRef.current, lightAzimuthRef.current, renderEfficientRef.current);
             styleStep = "SELECTION";
             const currentSelection = selectedRef.current;
             if (currentSelection) {
@@ -5214,7 +5239,21 @@ export default function Home() {
         };
         // Cheap per-frame check; layout only changes when crossing the pitch threshold.
         map.on("pitch", () => {
-          try { syncBorderCurtainVisibility(map, renderEfficientRef.current); } catch { /* decorative only */ }
+          try {
+            syncBorderCurtainVisibility(map, renderEfficientRef.current);
+            syncValueColumnsVisibility(map, renderEfficientRef.current);
+          } catch { /* decorative only */ }
+        });
+        // Columns follow whatever data the official point sources hold (live
+        // feeds, streamflow frames, saved days); rebuild once per frame at most.
+        let columnsFrame = 0;
+        map.on("sourcedata", (event) => {
+          if (!event.sourceId || !COLUMN_SOURCE_IDS.has(event.sourceId) || event.sourceDataType === "metadata") return;
+          window.cancelAnimationFrame(columnsFrame);
+          columnsFrame = window.requestAnimationFrame(() => {
+            if (!styleGenerationReadyRef.current) return;
+            try { syncValueColumns(map, COLUMN_FEEDS, renderEfficientRef.current); } catch { /* decorative only */ }
+          });
         });
         map.on("movestart", () => {
           const center = map.getCenter();
@@ -5938,12 +5977,19 @@ export default function Home() {
     });
   }, [projection, renderQuality, runMapMutation, sceneEffects, styleReady, sunClock]);
 
+  // Overlays follow the view, light, terrain state and the official point layers.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !styleGenerationReadyRef.current) return;
+    syncSceneOverlays(map, atmospherePresetRef.current, lightAzimuthRef.current, renderEfficientRef.current);
+  }, [atmospherePreset, basemap, effectiveOfficialVisibility, lightAzimuth, officialOpacity, officialPayloads, projection, renderQuality, sceneEffects, scenePreset, structures3DState, styleReady, sunClock, terrainState]);
+
   // The curtain shimmer repaints at ~15 fps only while the curtain is on
   // screen and ambient motion is allowed; otherwise it holds still.
   useEffect(() => {
     const map = mapRef.current;
     const animate = runtime.kind === "ready" && sceneEffects.curtain && dynamicEffects && !reducedMotion
-      && !browserRenderBudget(renderQuality).efficient && projection !== "globe";
+      && !browserRenderBudget(renderQuality).efficient;
     setCurtainShimmer(animate);
     if (!map || !animate) return;
     let frame = 0;
@@ -5957,7 +6003,7 @@ export default function Home() {
     };
     frame = window.requestAnimationFrame(tick);
     return () => { window.cancelAnimationFrame(frame); setCurtainShimmer(false); };
-  }, [dynamicEffects, projection, reducedMotion, renderQuality, runtime.kind, sceneEffects.curtain]);
+  }, [dynamicEffects, reducedMotion, renderQuality, runtime.kind, sceneEffects.curtain]);
 
   // Terrain 3D may tilt further so the sky and horizon come into view.
   useEffect(() => {
@@ -5985,13 +6031,29 @@ export default function Home() {
     };
   }, [dynamicEffects, reducedMotion, selected, styleReady]);
 
+  const sceneView: SceneView = projection === "globe" ? "globe" : scenePreset === "elevation-3d" ? "terrain" : view.pitch >= CURTAIN_MIN_PITCH ? "tilted" : "2d";
+
+  const chooseSceneView = (mode: SceneView) => {
+    if (mode === "terrain" || mode === "globe" || mode === "2d") {
+      activateMapRepresentation(mode);
+      return;
+    }
+    // Tilted 2D keeps the flat evidence map but shows curtain, columns and buildings.
+    if (projectionRef.current === "globe" || scenePresetRef.current === "elevation-3d") activateMapRepresentation("2d");
+    replayingCameraHistoryRef.current = false;
+    mapRef.current?.easeTo({ pitch: 56, bearing: Math.abs(view.bearing) < 1 ? -14 : view.bearing, duration: motionDuration(650) });
+    announce("Tilted the 2D map · data, time and selection unchanged");
+  };
+
   const updateSceneEffects = (next: SceneEffectSettings) => {
     sceneEffectsRef.current = next;
     setSceneEffects(next);
     writeSceneEffects(next);
     const changed = (Object.keys(next) as (keyof SceneEffectSettings)[]).find((key) => next[key] !== sceneEffects[key]);
-    const labels: Record<keyof SceneEffectSettings, string> = { cinematic: "Cinematic relief and sky", curtain: "Kansas light curtain", sunSync: "Real-sun lighting" };
-    if (changed) announce(`${labels[changed]} ${next[changed] ? "on" : "off"} · display only`);
+    const label = SCENE_EFFECT_OPTIONS.find((option) => option.key === changed)?.label;
+    const preset = matchingLookPreset(next);
+    if (changed && label && SCENE_EFFECT_KEYS.filter((key) => next[key] !== sceneEffects[key]).length === 1) announce(`${label} ${next[changed] ? "on" : "off"} · display only`);
+    else if (preset) announce(`${SCENE_LOOK_PRESETS[preset].label} look applied · display only`);
   };
 
   useEffect(() => {
@@ -8956,7 +9018,7 @@ export default function Home() {
                 <details className="layer-scene-entry">
                   <summary>Terrain &amp; 3D appearance <span>{scenePreset === "elevation-3d" ? terrainState === "READY" ? "On" : terrainState === "ERROR" ? "Needs attention" : "Loading" : "Off"}</span></summary>
                   <LayerSceneControls active={scenePreset === "elevation-3d"} selectedLook={scenePreset !== "elevation-3d" ? null : structures3DEnabled ? "buildings" : basemap === "topo" ? "topographic" : basemap === "imagery" ? "natural" : null} terrainProvider={terrainProvider} state={terrainState} exaggeration={verticalExaggeration} lighting={atmospherePreset} azimuth={lightAzimuth} heightOverlay={topographicOverlay} onPreset={applyTerrainLook} onTerrainProvider={chooseTerrainProvider} on2D={() => activateMapRepresentation("2d")} onExaggeration={value => { verticalExaggerationRef.current = value; setVerticalExaggeration(value); }} onLighting={value => { atmospherePresetRef.current = value; setAtmospherePreset(value); }} onAzimuth={value => { lightAzimuthRef.current = value; setLightAzimuth(value); }} onHeight={toggleTopographicHeightOverlay} onRetry={retryTerrain} />
-                  <SceneEffectsControls settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
+                  <SceneEffectsControls view={sceneView} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
                 </details>
                 <div className="map-control-group"><header><strong>Rendering quality</strong><span>Applies to this map</span></header><RenderQualityControl value={renderQuality} onChange={chooseRenderQuality} /></div>
           <div className="basemap-control">
@@ -9188,6 +9250,7 @@ export default function Home() {
           </div>}
           {scenePreset === "elevation-3d" && flyoverStopIndex === null && !reducedMotion && runtime.kind === "ready" && !undergroundOpen
             && <button type="button" className="flyover-launch" onClick={startFlyover}><span aria-hidden="true">✈</span> Fly over Kansas</button>}
+          {runtime.kind !== "unsupported" && !undergroundOpen && <ScenePanel view={sceneView} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} onRepresentation={chooseSceneView} />}
           <div className="map-effects" aria-hidden="true">
             <canvas ref={windArrowCanvasRef} className="wind-arrow-canvas" aria-hidden="true" />
             <canvas ref={waterMotionCanvasRef} className="water-motion-canvas" style={{ opacity: officialOpacity["usgs-streamflow"] }} aria-hidden="true" />
@@ -9393,7 +9456,7 @@ export default function Home() {
                   ] as const).map(([id, title, detail]) => <button key={id} type="button" aria-pressed={id === "terrain" ? scenePreset === "elevation-3d" : id === "globe" ? projection === "globe" : projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => activateMapRepresentation(id)}><span>{id === "terrain" ? "3D" : id === "globe" ? "◎" : "2D"}</span><strong>{title}</strong><small>{detail}</small></button>)}
                 </section>
 
-                <SceneEffectsControls settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
+                <SceneEffectsControls view={sceneView} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
 
                 <section className="renderer-capability-list" aria-label="Renderer capability status">
                   <article data-state="ready"><span>WORKS NOW</span><strong>2D, globe, camera, measurement</strong><small>Direct MapLibre state changes</small></article>

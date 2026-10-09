@@ -34,9 +34,12 @@ async function loadSceneEffects(sun = [210, 35]) {
 
 test("scene-effect preferences parse defensively and default to the cinematic look", async () => {
   const effects = await loadSceneEffects();
-  assert.deepEqual({ ...effects.DEFAULT_SCENE_EFFECTS }, { cinematic: true, curtain: true, sunSync: false });
+  assert.deepEqual({ ...effects.DEFAULT_SCENE_EFFECTS }, { cinematic: true, curtain: true, sunSync: false, kansasGlow: true, relief2d: false, columns: true, buildings: true });
+  assert.equal(effects.DEFAULT_SCENE_EFFECTS.relief2d, false, "defaults add no new network requests");
   assert.deepEqual({ ...effects.parseSceneEffects(null) }, { ...effects.DEFAULT_SCENE_EFFECTS });
-  assert.deepEqual({ ...effects.parseSceneEffects({ cinematic: false, curtain: "yes", sunSync: true, extra: 1 }) }, { cinematic: false, curtain: true, sunSync: true });
+  // A preference saved before the new effects existed keeps its choices and gains the defaults.
+  assert.deepEqual({ ...effects.parseSceneEffects({ cinematic: false, curtain: "yes", sunSync: true, extra: 1 }) },
+    { cinematic: false, curtain: true, sunSync: true, kansasGlow: true, relief2d: false, columns: true, buildings: true });
   assert.ok(Object.isFrozen(effects.parseSceneEffects({})));
 });
 
@@ -101,13 +104,14 @@ test("relief paint follows the effect switch and only writes changed properties"
   assert.equal(paint.get("hillshade-exaggeration"), 0.66);
 });
 
-test("the curtain shows only in tilted Mercator views and never in Battery saver", async () => {
+test("the curtain shows in tilted and globe views and never in Battery saver", async () => {
   const effects = await loadSceneEffects();
-  const on = { cinematic: true, curtain: true, sunSync: false };
+  const on = { ...effects.DEFAULT_SCENE_EFFECTS };
   assert.equal(effects.curtainShouldShow(on, 45, false, "mercator"), true);
   assert.equal(effects.curtainShouldShow(on, effects.CURTAIN_MIN_PITCH - 1, false, "mercator"), false);
   assert.equal(effects.curtainShouldShow(on, 45, true, "mercator"), false);
-  assert.equal(effects.curtainShouldShow(on, 45, false, "globe"), false);
+  assert.equal(effects.curtainShouldShow(on, 0, false, "globe"), true, "the globe shows the wall at any tilt");
+  assert.equal(effects.curtainShouldShow(on, 0, true, "globe"), false);
   assert.equal(effects.curtainShouldShow({ ...on, curtain: false }, 45, false, "mercator"), false);
   assert.equal(effects.curtainShouldShow(on, Number.NaN, false, "mercator"), false);
 });
@@ -143,7 +147,8 @@ test("the curtain ring is a closed, densified display outline inside the Kansas 
     assert.ok(point.lng >= -102.06 && point.lng <= -94.58);
     assert.ok(point.lat >= 36.99 && point.lat <= 40.01);
   }
-  assert.equal(curtain.curtainHeightMeters(4), curtain.CURTAIN_HEIGHT_STOPS[0][1]);
+  assert.equal(curtain.curtainHeightMeters(0), curtain.CURTAIN_HEIGHT_STOPS[0][1]);
+  assert.ok(curtain.curtainHeightMeters(2) > curtain.curtainHeightMeters(4), "taller from orbit");
   assert.ok(curtain.curtainHeightMeters(7) < curtain.curtainHeightMeters(6));
   assert.ok(curtain.curtainHeightMeters(20) > 0);
 });
@@ -188,4 +193,23 @@ test("globe backdrop, vignette and effect styles load after the theme", async ()
   const page = await read("app/page.tsx");
   assert.match(page, /data-projection=\{projection\}/);
   assert.match(page, /registerSceneEffects\(map, sceneEffectsRef\.current\)/);
+});
+
+test("look presets are complete and recognised; Plain turns every effect off", async () => {
+  const effects = await loadSceneEffects();
+  for (const [id, preset] of Object.entries(effects.SCENE_LOOK_PRESETS)) {
+    assert.deepEqual(Object.keys(preset.settings).sort(), [...effects.SCENE_EFFECT_KEYS].sort(), `${id} sets every effect`);
+    assert.equal(effects.matchingLookPreset(preset.settings), id);
+  }
+  assert.ok(effects.SCENE_EFFECT_KEYS.every((key) => effects.SCENE_LOOK_PRESETS.plain.settings[key] === false));
+  assert.equal(effects.matchingLookPreset({ ...effects.SCENE_LOOK_PRESETS.plain.settings, columns: true }), null, "a mixed choice is Custom");
+  assert.deepEqual(effects.SCENE_EFFECT_OPTIONS.map((option) => option.key).sort(), [...effects.SCENE_EFFECT_KEYS].sort(), "every effect has a GUI row");
+  assert.deepEqual(effects.SCENE_EFFECT_OPTIONS.filter((option) => option.network).map((option) => option.key), ["relief2d"], "only 2D relief is labelled as making requests");
+});
+
+test("the curtain has a globe shader path that uses MapLibre's projection prelude", async () => {
+  const layer = await read("app/aurora-curtain-layer.ts");
+  assert.match(layer, /projectTileWithElevation\(a_pos/);
+  assert.match(layer, /variantName === "globe"/);
+  for (const uniform of ["u_projection_matrix", "u_projection_fallback_matrix", "u_projection_tile_mercator_coords", "u_projection_clipping_plane", "u_projection_transition"]) assert.match(layer, new RegExp(uniform));
 });

@@ -33,6 +33,39 @@ This repository change gives the Explorer's 3D views a finished, cinematic look 
   <img src="images/cinematic-pitched-2d-2026-10-09.jpg" alt="A tilted 2D view of the offline Kansas outline with the light curtain around it." width="34%" />
 </p>
 
+## Round 2 — effects in every view and a Scene panel
+
+The first round focused on Terrain 3D. This round carries the look into every MapLibre view and adds 3D treatment to the layers where it means something.
+
+<p align="center">
+  <img src="images/scene-panel-terrain-columns-2026-10-09.jpg" alt="Terrain 3D at dusk: earthquake magnitude columns standing on lit relief inside the glowing Kansas curtain, with the Scene panel open showing the 2D, Tilted, Terrain 3D and Globe switcher, Cinematic, Natural and Plain looks, and effect switches." width="100%" />
+</p>
+
+<sub>Earthquake features in these rendered checks are a synthetic test payload served only by the test harness, because the sandbox cannot reach USGS. The Site code path is the same one live data uses.</sub>
+
+| Addition | Views | What it does | Files |
+|---|---|---|---|
+| **Scene panel** (✦ on the map, under the map controls) | All | View switcher (2D map · Tilted map · Terrain 3D · Globe); look presets **Cinematic**, **Natural** and **Plain**; every effect switch with a "Shows in this view" hint; flyover. The same controls stay in Layers → Terrain & 3D appearance and in the Scene Lab. On phones it opens as a bottom sheet. | `app/scene-effects-controls.tsx`, `app/scene-effects.css`, `app/page.tsx` |
+| **Tilted map** | 2D | One click tilts the flat evidence map to 56° without terrain, so the curtain, columns and buildings read in 3D while the map stays the 2D evidence path | `app/page.tsx` |
+| **Light curtain on the globe** | Globe | The custom WebGL layer gains a globe shader path built on MapLibre's own projection prelude (`projectTileWithElevation`), so the wall stands on the sphere and is clipped by the planet's limb. It is taller from orbit. | `app/aurora-curtain-layer.ts` |
+| **Kansas glow and beacon** | All | Soft outline glow over every basemap (the offline styles keep their own), and a point of light marking Kansas from orbit that fades as you zoom in | `app/scene-overlays.ts` |
+| **Shaded relief in 2D** | 2D, tilted | Optional display-DEM hillshade under flat maps, lit by the scene light. **Off by default** because it requests Mapzen DEM tiles. The Source connections ledger reports the DEM carrier as active while it is on, and switching it off removes the source so requests stop. | `app/scene-overlays.ts`, `app/page.tsx` |
+| **3D data columns** | Tilted, Terrain 3D, globe | USGS earthquake magnitude and USGS streamflow (the existing `visualMagnitude`, log₁₀ of discharge) drawn as columns when the map is tilted. Each column uses the same colour as its point, sits under it, and follows that layer's visibility, time hold and data updates. Missing values and zero flow draw no column. | `app/scene-overlays.ts`, `app/map-performance.ts`, `app/page.tsx` |
+| **Lit 3D buildings** | Tilted, Terrain 3D | The OpenFreeMap building layer is coloured by its own `render_height`, matched to day, dusk or night light. Heights are never changed; switching off restores the style's own paint exactly. | `app/scene-overlays.ts` |
+| **Globe atmosphere** | Globe | Less washed out, so the surface and Kansas glow stay legible | `app/scene-effects.ts` |
+
+<p align="center">
+  <img src="images/scene-globe-curtain-2026-10-09.jpg" alt="Globe in a starfield with the Kansas light curtain glowing on the planet surface." width="40%" />
+  <img src="images/scene-relief-2d-2026-10-09.jpg" alt="Flat 2D map with display-DEM shaded relief and a gold Kansas outline glow over a plain raster basemap." width="40%" />
+  <img src="images/scene-panel-phone-2026-10-09.jpg" alt="Scene panel as a bottom sheet on a 390 px phone." width="15%" />
+</p>
+
+<sub>The 2D relief frame uses a flat placeholder in place of OpenStreetMap tiles, which the sandbox cannot reach, to show relief and glow on a non-offline raster basemap.</sub>
+
+**Defaults:** existing preferences keep their choices and gain the new effects at their defaults: glow, columns and buildings on; 2D relief off. Defaults add no new network requests. **Plain** switches every effect off and restores the original flat look.
+
+**Underground is deliberately unchanged.** Its three.js cutaway uses material and aquifer colours as a legend; haze, tone mapping or coloured light would change what those colours say.
+
 ## Controls
 
 <img src="images/cinematic-controls-2026-10-09.jpg" alt="Layers panel, Terrain and 3D appearance section, showing the Cinematic 3D switches: Kansas light curtain, Follow the real sun (reading: sun below the horizon, cool night fill), and a gold Fly over Kansas button." width="60%" align="right" />
@@ -56,12 +89,13 @@ This repository change gives the Explorer's 3D views a finished, cinematic look 
 |---|---|
 | Production build | PASS |
 | TypeScript (`tsc --noEmit`) | PASS |
-| Node test suite (`npm test`) | 737 tests: 735 pass, 0 fail, 2 skipped (Qwen installer tests intentionally refuse root execution) |
-| New `tests/cinematic-scene-effects.test.mjs` | 12/12 pass: preference parsing, sun-light mapping, manual vs. sun light, relief paint switching and change-only writes, curtain visibility rules, curtain failure isolation, densified ring, selection ping, flyover bounds, layer registration, stylesheet order |
+| Node test suite (`npm test`) | Round 2: 745 tests, 743 pass, 0 fail, 2 skipped (Qwen installer tests intentionally refuse root execution). Round 1: 737 / 735 / 0 / 2. |
+| New `tests/scene-overlays.test.mjs` (round 2) | 6/6 pass: column values (missing/zero draw nothing), footprints and cap, columns follow point-layer visibility/tilt/Battery saver and remove their source when off, 2D relief placement and DEM removal, Kansas glow vs. offline styles, building paint restore with heights untouched |
+| `tests/cinematic-scene-effects.test.mjs` | 14/14 pass (round 2 updates: new settings keys and migration, curtain on the globe, look presets, globe shader path). Round 1: preference parsing, sun-light mapping, manual vs. sun light, relief paint switching and change-only writes, curtain visibility rules, curtain failure isolation, densified ring, selection ping, flyover bounds, layer registration, stylesheet order |
 | Updated harness stubs | `tests/area-underlay.test.mjs` runs the real `activateMapRepresentation` body in a sandbox and now also stubs `stopFlyover` (a mode change cancels a running flyover). `tests/snapshot-map-state.test.mjs` stubs the new `./scene-effects` import. No assertions were removed or relaxed. |
 | ESLint on changed files | 0 errors; new files 0 warnings; `page.tsx` keeps its 25 existing warnings, none on changed lines |
 | `tools/validators/maplibre/assess_acquisition_inventory.py` | Same result and finding counts as the base commit (pre-existing `FAIL`); no new renderer acquisition. New modules take MapLibre types only through `app/maplibre-seam.ts`. |
-| Rendered checks (headless Chromium, SwiftShader WebGL, live Mapzen DEM) | Desktop 1440 × 900 and phone 390 × 844: 2D, tilted 2D, Terrain 3D at statewide and local zoom, globe, controls panel, sun-following toggle, flyover start/advance/stop by click. No page errors. Terrain views reach the runtime *ready* state and go idle when the shimmer is off. |
+| Rendered checks (headless Chromium, SwiftShader WebGL, live Mapzen DEM) | Round 2: Scene panel on desktop and phone; panel view switcher 2D → Tilted → Globe → Terrain 3D; columns in tilted 2D and Terrain 3D; curtain on the globe; 2D relief and glow on a raster basemap; no page errors. Round 1: desktop 1440 × 900 and phone 390 × 844: 2D, tilted 2D, Terrain 3D at statewide and local zoom, globe, controls panel, sun-following toggle, flyover start/advance/stop by click. No page errors. Terrain views reach the runtime *ready* state and go idle when the shimmer is off. |
 
 A curtain that cannot be created (for example a shader that fails to compile) is removed quietly; it never marks the map style or runtime as failed. Snapshot maps follow the same scene-effect preference.
 
@@ -70,10 +104,11 @@ During development, the curtain's first version re-sampled terrain under the who
 ## Not covered
 
 - Selection glow and ping were not seen rendered: the sandbox could not reach the provider feeds that supply selectable features, and the bundled local registry is empty. Their logic and layer wiring are unit-tested.
-- The standard OpenFreeMap and imagery basemaps were unreachable from the sandbox, so effects were viewed over the offline Midnight style only.
+- The standard OpenFreeMap and imagery basemaps were unreachable from the sandbox, so effects were viewed over the offline Midnight style and a placeholder raster only. **Lit 3D buildings** therefore were not seen rendered; their paint and restore logic are unit-tested.
+- Streamflow columns were not seen rendered (no streamflow feed in the sandbox); earthquake columns were, from a synthetic test payload.
 - Real GPU performance on phones and low-end laptops, touch gestures during a flyover, screen readers and physical hardware.
 - Saving, deploying or mirroring this source to the Site project.
 
 ## Rollback
 
-Switch the effects off in **Scene effects** to restore the previous relief palette, sky and border. To remove the change entirely, revert the commit. No stored data, database schema, API, URL or saved-workspace format is affected; the only new storage is the device-local `kfm-scene-effects-v1` preference, which is ignored once the code is reverted.
+Choose **Plain** in the Scene panel (or switch effects off) to restore the previous relief palette, sky, border, 2D map and building paint. To remove the change entirely, revert the commit. No stored data, database schema, API, URL or saved-workspace format is affected; the only new storage is the device-local `kfm-scene-effects-v1` preference, which is ignored once the code is reverted.
