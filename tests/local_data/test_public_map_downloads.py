@@ -470,6 +470,46 @@ class QueueTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "DOWNLOAD_ALREADY_RUNNING"):
             self.enqueue(request="e" * 32)
 
+    def test_jobs_from_a_record_with_several_files_name_their_file(self):
+        from tools.local_data import public_map_catalog
+        seed = downloads.public_map_catalog.load_seed()
+        seed["records"].append(public_map_catalog.storm_events_record(2021, {kind: f"StormEvents_{kind}-ftp_v1.0_d2021_c20250401.csv.gz" for kind in ("details", "fatalities")}, "2026-10-09"))
+        self.manager._catalog = seed
+        self.enqueue(assets=["publisher-noaa-storm-events-2021-details", "publisher-noaa-storm-events-2021-fatalities"])
+        titles = sorted(job["title"] for job in self.manager.jobs.values())
+        self.assertEqual(titles, ["Storm Events 2021 · national CSV files including Kansas · StormEvents_details-ftp_v1.0_d2021_c20250401.csv.gz",
+                                  "Storm Events 2021 · national CSV files including Kansas · StormEvents_fatalities-ftp_v1.0_d2021_c20250401.csv.gz"])
+
+    def test_a_record_with_one_file_and_a_service_keeps_its_title(self):
+        seed = downloads.public_map_catalog.load_seed()
+        record = copy.deepcopy(next(r for r in seed["records"] if r["id"] == "publisher-noaa-storm-events-2022"))
+        record["id"] = "map-with-service"
+        record["assets"][0]["id"] = "map-with-service-file"
+        record["assets"].append({"id": "map-with-service-wms", "title": "WMS", "kind": "service", "availability": "verified",
+                                 "format": "WMS", "url": "https://example.invalid/wms", "expectedBytes": None})
+        seed["records"].append(record)
+        self.manager._catalog = seed
+        with patch.object(downloads, "validate_url"):
+            job = self.manager.start({"requestId": "f" * 32, "assetId": "map-with-service-file", "maxBytes": 4096})
+        self.assertEqual(job["title"], record["title"])
+
+    def test_an_identical_retry_after_a_restart_returns_the_same_queue(self):
+        assets = list(reversed(self.assets))
+        first = self.enqueue(assets=assets)
+        self.manager.close()
+        self.manager = downloads.PublicMapDownloads(self.root)
+        retried = self.enqueue(assets=assets)
+        self.assertEqual((retried["batchId"], retried["jobs"]), (first["batchId"], 3))
+        with self.assertRaisesRegex(ValueError, "REQUEST_ID_CONFLICT"):
+            self.enqueue(assets=self.assets)
+
+    def test_the_idle_status_window_holds_one_hundred_jobs(self):
+        for index in range(101):
+            identifier = f"{index:032x}"
+            self.manager.jobs[identifier] = {"id": identifier, "state": "downloaded"}
+        self.assertIsNone(self.manager.active)
+        self.assertEqual(len(self.manager.health()["jobs"]), 100)
+
     def test_a_request_id_names_one_exact_ordered_selection(self):
         self.enqueue()
         for changed in (self.assets[:2], list(reversed(self.assets)), [self.assets[0]]):
