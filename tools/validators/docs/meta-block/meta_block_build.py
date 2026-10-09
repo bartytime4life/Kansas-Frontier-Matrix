@@ -9,7 +9,8 @@ from typing import Sequence
 from meta_block_core import (
     MAX_FINDINGS, MAX_REPORT_DOCUMENTS, PROFILE_PRESENT, PROFILE_REQUIRED,
     SEVERITY_FAIL, SEVERITY_INFO, SEVERITY_WARN, Finding, MetaBlockError,
-    MetaBlockResult, RegistryDelta, RegistryEntry, _digest, _inside,
+    DocumentRecord, MetaBlockResult, RegistryDelta, RegistryEntry, _digest,
+    _inside,
 )
 from meta_block_parse import _changed_documents, _collect_documents
 from meta_block_validate import _extract_record
