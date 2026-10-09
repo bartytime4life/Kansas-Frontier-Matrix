@@ -5,7 +5,7 @@ title: Engineering case studies — decisions you can inspect
 status: source-grounded showcase; independent review pending
 updated: 2026-10-09
 authority: orientation-only; repository evidence and adopted authority outrank this page
-source_path: docs/wiki/Engineering-Case-Studies.md
+source_path: docs/wiki/engineering-case-studies.md
 publication_effect: native wiki documentation only; no data admission or release
 evidence_checkpoint: main@459ffbe892929cbe994add8665805549694740b6
 -->
@@ -16,7 +16,7 @@ evidence_checkpoint: main@459ffbe892929cbe994add8665805549694740b6
 
 Evidence snapshot: [`459ffbe892929cbe994add8665805549694740b6`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/459ffbe892929cbe994add8665805549694740b6/README.md), inspected October 9, 2026. The links below identify implementation and regression-test source. Test presence is not a claim that this wiki refresh reran the application suite or established hosted acceptance.
 
-[Builder profile](Builder-Profile.md) · [Visual tour](Visual-Tour.md)
+[Builder profile](builder-profile.md) · [Visual tour](visual-tour.md)
 
 ## 01 · Make the underground readable
 
@@ -71,4 +71,4 @@ Evidence snapshot: [`459ffbe892929cbe994add8665805549694740b6`](https://github.c
 
 The wider [governed API](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/459ffbe892929cbe994add8665805549694740b6/apps/governed-api/README.md) still describes a bounded `ABSTAIN / NOT_IMPLEMENTED` scaffold. These specific application slices should not be mistaken for completion of that broader service.
 
-**The portfolio takeaway:** the interesting work is the connection between design choices, source semantics, implementation details, and the checks that keep them aligned. [Return to the builder profile](Builder-Profile.md).
+**The portfolio takeaway:** the interesting work is the connection between design choices, source semantics, implementation details, and the checks that keep them aligned. [Return to the builder profile](builder-profile.md).

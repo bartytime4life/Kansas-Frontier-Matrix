@@ -44,9 +44,9 @@ The [source reporting policy](https://github.com/bartytime4life/Kansas-Frontier-
 
 A focused security finding, an advisory dependency check, a synthetic negative-path test, and a rendered privacy interaction are different evidence. Record the revision, route, input, observed result and limitation. Codex Security can support a scoped assessment; it cannot turn documentation or a clean subset into whole-system clearance.
 
-**Next:** [Follow the evidence model](Governance-and-Evidence.md) or [read the export case study](Engineering-Case-Studies.md#03--protect-the-meaning-of-a-downloaded-result).
+**Next:** [Follow the evidence model](Governance-and-Evidence.md) or [read the export case study](engineering-case-studies.md#03--protect-the-meaning-of-a-downloaded-result).
 
-<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](builder-profile.md).</sub>
 
 ---
 

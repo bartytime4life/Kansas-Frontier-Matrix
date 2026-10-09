@@ -52,9 +52,9 @@ This diagram describes the application responsibilities at the inspected source 
 
 **Components have separate completion criteria.** The runnable Site mirror, shared packages, general governed API scaffold, local companion, and hosted Site are separate surfaces. The [general governed API](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/governed-api/README.md) remains a bounded scaffold; the Site's narrower readers do not establish completion of that service.
 
-**Next:** [Locate the code](Repository-Map.md) → [inspect the engineering cases](Engineering-Case-Studies.md) → [review the trust boundaries](Security-and-Sensitivity.md).
+**Next:** [Locate the code](Repository-Map.md) → [inspect the engineering cases](engineering-case-studies.md) → [review the trust boundaries](Security-and-Sensitivity.md).
 
-<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](builder-profile.md).</sub>
 
 ---
 

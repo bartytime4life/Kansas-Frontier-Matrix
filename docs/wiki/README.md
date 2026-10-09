@@ -112,9 +112,9 @@ unchanged by this documentation edition.
 
 | Source page | Purpose |
 |---|---|
-| [`Builder-Profile.md`](Builder-Profile.md) | Recruiter-facing capabilities and AI-assisted workflow |
-| [`Visual-Tour.md`](Visual-Tour.md) | Illustrated product journey, with source links and artwork labels |
-| [`Engineering-Case-Studies.md`](Engineering-Case-Studies.md) | Implementation decisions and commit-pinned regression evidence |
+| [`builder-profile.md`](builder-profile.md) | Recruiter-facing capabilities and AI-assisted workflow |
+| [`visual-tour.md`](visual-tour.md) | Illustrated product journey, with source links and artwork labels |
+| [`engineering-case-studies.md`](engineering-case-studies.md) | Implementation decisions and commit-pinned regression evidence |
 
 ### Orientation
 

@@ -115,3 +115,69 @@ def test_scalar_git_outputs_are_wrapped_before_indexing() -> None:
     text = _script_text()
     for name in ("ResolvedSourceCommit", "WikiBranch", "WikiCommit", "RemoteReadback"):
         assert f"${name} = @(Get-GitLines" in text
+
+
+def test_renamed_sources_keep_native_routes_and_historical_replay(tmp_path) -> None:
+    import json
+    import shutil
+    import subprocess
+    import pytest
+
+    pwsh = shutil.which("pwsh")
+    if not pwsh:
+        pytest.skip("PowerShell is required for the executable projection check")
+    source = _script_text()
+    functions = source[source.index("$SourcePageNames = @{"):source.index("function Invoke-Git {")]
+    old_dir = tmp_path / "historical"
+    new_dir = tmp_path / "current"
+    old_dir.mkdir()
+    new_dir.mkdir()
+    native_pages = ["Builder-Profile.md", "Visual-Tour.md", "Engineering-Case-Studies.md"]
+    for name in native_pages:
+        (old_dir / name).write_text("historical", encoding="utf-8")
+        # Prefer the canonical file even if both exist in a checkout.
+        (new_dir / name).write_text("legacy", encoding="utf-8")
+        (new_dir / name.lower()).write_text("canonical", encoding="utf-8")
+    probe = tmp_path / "renamed-sources.ps1"
+    probe.write_text(r'''param([string]$OldDir, [string]$NewDir)
+''' + functions + r'''
+$Results = foreach ($Page in @("Builder-Profile.md", "Visual-Tour.md", "Engineering-Case-Studies.md")) {
+    $OldPath = Resolve-WikiSourcePage -SourceWikiDir $OldDir -Page $Page -SourcePageNames $SourcePageNames
+    $NewPath = Resolve-WikiSourcePage -SourceWikiDir $NewDir -Page $Page -SourcePageNames $SourcePageNames
+    $Name = $SourcePageNames[$Page]
+    $InputText = "[current]($Name#top) [historical]($Page) <a href=`"$Name#anchor`">html</a> [external](https://example.org/$Name) [nested](nested/$Name) [unknown](other.md)"
+    @{
+        page = $Page
+        old = [System.IO.File]::ReadAllText($OldPath)
+        current = [System.IO.File]::ReadAllText($NewPath)
+        projected = Convert-WikiLinks -Content $InputText -PageNames @($Page) -SourceRef "source-pin" -SourcePageNames $SourcePageNames
+    }
+}
+ConvertTo-Json -InputObject @($Results)
+''', encoding="utf-8")
+    result = subprocess.run(
+        [pwsh, "-NoProfile", "-File", str(probe), str(old_dir), str(new_dir)],
+        capture_output=True, text=True, check=True,
+    )
+    rows = json.loads(result.stdout)
+    assert len(rows) == 3
+    for row in rows:
+        name = row["page"]
+        assert row["old"] == "historical"
+        assert row["current"] == "canonical"
+        target = f"https://github.com/bartytime4life/Kansas-Frontier-Matrix/wiki/{Path(name).stem}"
+        projected = row["projected"]
+        assert f"[current]({target}#top)" in projected
+        assert f"[historical]({target})" in projected
+        assert f'<a href="{target}#anchor">' in projected
+        assert f"[external](https://example.org/{name.lower()})" in projected
+        assert f"[nested](nested/{name.lower()})" in projected
+        assert "[unknown](other.md)" in projected
+
+
+def test_wiki_source_links_resolve_with_exact_case() -> None:
+    wiki = REPO_ROOT / "docs/wiki"
+    filenames = {path.name for path in wiki.glob("*.md")}
+    for page in wiki.glob("*.md"):
+        for target in re.findall(r'\]\(([A-Za-z0-9_-]+\.md)(?:#[^)]*)?\)', page.read_text(encoding="utf-8")):
+            assert target in filenames, f"{page.name} links to missing {target}"

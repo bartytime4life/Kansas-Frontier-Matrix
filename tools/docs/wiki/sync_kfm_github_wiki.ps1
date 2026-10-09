@@ -68,22 +68,48 @@ $Pages = @(
     "_Footer.md"
 )
 
+# Repository paths follow lowercase grammar; native page names remain stable.
+$SourcePageNames = @{
+    "Builder-Profile.md" = "builder-profile.md"
+    "Visual-Tour.md" = "visual-tour.md"
+    "Engineering-Case-Studies.md" = "engineering-case-studies.md"
+}
+
 function Convert-WikiLinks {
-    param([string]$Content, [string[]]$PageNames, [string]$SourceRef)
+    param([string]$Content, [string[]]$PageNames, [string]$SourceRef, [hashtable]$SourcePageNames = @{})
 
     # Convert only exact, allowlisted local Markdown/HTML destinations.
     # Repository source retains .md links; the native Wiki uses extensionless routes.
     foreach ($Name in $PageNames) {
         $Stem = [System.IO.Path]::GetFileNameWithoutExtension($Name)
         $Target = "https://github.com/bartytime4life/Kansas-Frontier-Matrix/wiki/$Stem"
-        $Escaped = [regex]::Escape($Name)
-        $Content = [regex]::Replace($Content, '(\]\()' + $Escaped + '(?=[#)])', '${1}' + $Target)
-        $Content = [regex]::Replace($Content, '(href=")' + $Escaped + '(?=[#"])', '${1}' + $Target)
+        $LinkNames = @($Name)
+        if ($SourcePageNames.ContainsKey($Name)) {
+            $LinkNames += $SourcePageNames[$Name]
+        }
+        foreach ($LinkName in $LinkNames) {
+            $Escaped = [regex]::Escape($LinkName)
+            $Content = [regex]::Replace($Content, '(\]\()' + $Escaped + '(?=[#)])', '${1}' + $Target)
+            $Content = [regex]::Replace($Content, '(href=")' + $Escaped + '(?=[#"])', '${1}' + $Target)
+        }
     }
     # README is the source contract, deliberately absent from the native page set.
     $Readme = "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/$SourceRef/docs/wiki/README.md"
     $Content = [regex]::Replace($Content, '(\]\()README\.md(?=[#)])', '${1}' + $Readme)
     return $Content
+}
+
+function Resolve-WikiSourcePage {
+    param([string]$SourceWikiDir, [string]$Page, [hashtable]$SourcePageNames = @{})
+
+    if ($SourcePageNames.ContainsKey($Page)) {
+        $CanonicalPath = Join-Path $SourceWikiDir $SourcePageNames[$Page]
+        if (Test-Path $CanonicalPath -PathType Leaf) {
+            return $CanonicalPath
+        }
+    }
+    # Keep explicitly selected historical source commits replayable.
+    return Join-Path $SourceWikiDir $Page
 }
 
 function Invoke-Git {
@@ -155,7 +181,7 @@ try {
     }
 
     foreach ($Page in $Pages) {
-        $SourcePath = Join-Path $SourceWikiDir $Page
+        $SourcePath = Resolve-WikiSourcePage -SourceWikiDir $SourceWikiDir -Page $Page -SourcePageNames $SourcePageNames
         $TargetPath = Join-Path $WikiDir $Page
 
         if (-not (Test-Path $SourcePath -PathType Leaf)) {
@@ -163,7 +189,7 @@ try {
         }
 
         $Content = [System.IO.File]::ReadAllText($SourcePath)
-        $Projected = Convert-WikiLinks -Content $Content -PageNames $Pages -SourceRef $ResolvedSourceCommit
+        $Projected = Convert-WikiLinks -Content $Content -PageNames $Pages -SourceRef $ResolvedSourceCommit -SourcePageNames $SourcePageNames
         [System.IO.File]::WriteAllText($TargetPath, $Projected, (New-Object System.Text.UTF8Encoding($false)))
     }
 

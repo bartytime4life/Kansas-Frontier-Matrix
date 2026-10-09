@@ -15,9 +15,9 @@ publication_effect: none until separately synchronized to the native GitHub Wiki
 
 **Portfolio tour**
 
-- [Builder profile](Builder-Profile.md) — capabilities and human–AI workflow
-- [Visual tour](Visual-Tour.md) — four illustrated product moments
-- [Engineering case studies](Engineering-Case-Studies.md) — decisions, code, and tests
+- [Builder profile](builder-profile.md) — capabilities and human–AI workflow
+- [Visual tour](visual-tour.md) — four illustrated product moments
+- [Engineering case studies](engineering-case-studies.md) — decisions, code, and tests
 
 **Technical reference**
 

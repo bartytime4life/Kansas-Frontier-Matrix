@@ -44,7 +44,7 @@ Use a forward revert or corrected publication to recover from an incorrect page.
 
 **Next:** [Source packet contract](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/f06e477a30ee307d3f440d1f5141db47388ae7f1/docs/wiki/README.md) · [Contribution workflow](Contributing.md) · [Security reporting](Security-and-Sensitivity.md).
 
-<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](builder-profile.md).</sub>
 
 ---
 

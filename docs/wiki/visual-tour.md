@@ -5,7 +5,7 @@ title: Visual tour — place, time, and evidence
 status: source-grounded showcase; independent review pending
 updated: 2026-10-09
 authority: orientation-only; repository evidence and adopted authority outrank this page
-source_path: docs/wiki/Visual-Tour.md
+source_path: docs/wiki/visual-tour.md
 publication_effect: native wiki documentation only; no data admission or release
 evidence_checkpoint: main@459ffbe892929cbe994add8665805549694740b6
 -->
@@ -16,7 +16,7 @@ evidence_checkpoint: main@459ffbe892929cbe994add8665805549694740b6
 
 This is an illustrated product walkthrough. The diagrams are original project artwork, not screenshots, live readings, or an assertion that every proposed capability is accepted. Each stop links to source documentation at the inspected repository revision.
 
-[Builder profile](Builder-Profile.md) · [Engineering case studies](Engineering-Case-Studies.md)
+[Builder profile](builder-profile.md) · [Engineering case studies](engineering-case-studies.md)
 
 ## 01 · Start with a place
 
@@ -61,4 +61,4 @@ The evidence interface gives the selected result a source and a context. The [re
 
 These are a review agenda, not a claim that this wiki refresh performed application acceptance. The hosted Explorer remains owner-private; the [installation guide](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/459ffbe892929cbe994add8665805549694740b6/docs/installation.md) and public source provide a separate route for technical evaluation.
 
-**Next:** [Read the engineering decisions](Engineering-Case-Studies.md). [Artwork inventory and limitations](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/459ffbe892929cbe994add8665805549694740b6/docs/brand/readme/README.md).
+**Next:** [Read the engineering decisions](engineering-case-studies.md). [Artwork inventory and limitations](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/459ffbe892929cbe994add8665805549694740b6/docs/brand/readme/README.md).

@@ -41,7 +41,7 @@ A generated receipt is process memory, not a proof or release manifest. A displa
 
 **Next:** [Choose the appropriate checks](Development-and-Validation.md) or [prepare a reviewable change](Contributing.md).
 
-<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](builder-profile.md).</sub>
 
 ---
 
