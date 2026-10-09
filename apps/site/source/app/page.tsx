@@ -224,7 +224,7 @@ import {
   type TrustState,
 } from "./workspace-model";
 import { ACTIVE_TERRAIN_SOURCE, STRUCTURE_3D_SOURCE, TERRAIN_SOURCES, TERRARIUM_RENDER_MAX_ZOOM, terrainSourceFor, type TerrainProvider } from "./terrain-sources";
-import { syncBuildingStyle, syncKansasGlow, syncRelief2d, syncValueColumns, syncValueColumnsVisibility, type ColumnFeed } from "./scene-overlays";
+import { nightSkyIsTwinkling, setNightSkyTwinkle, syncBuildingStyle, syncKansasGlow, syncNightSky, syncNightSkyVisibility, syncRelief2d, syncValueColumns, syncValueColumnsVisibility, type ColumnFeed } from "./scene-overlays";
 import { CURTAIN_MIN_PITCH, DEFAULT_SCENE_EFFECTS, KANSAS_FLYOVER, SCENE_EFFECT_KEYS, SCENE_EFFECT_OPTIONS, SCENE_LOOK_PRESETS, matchingLookPreset, applySelectionPulse, applyTerrainReliefStyle, curtainIsVisible, readSceneEffects, setCurtainShimmer, registerSceneEffects, sunSceneLight, syncBorderCurtain, syncBorderCurtainVisibility, writeSceneEffects, type SceneEffectSettings, type SceneView } from "./scene-effects";
 import { SceneEffectsControls, ScenePanel } from "./scene-effects-controls";
 import { EXTERNAL_CONTEXT_SOURCES } from "./external-context-sources";
@@ -562,6 +562,7 @@ const syncSceneOverlays = (map: MapLibreMap, light: AtmospherePreset, azimuth: n
     () => syncRelief2d(map, ACTIVE_TERRAIN_SOURCE, light, azimuth),
     () => syncValueColumns(map, COLUMN_FEEDS, efficient),
     () => syncBuildingStyle(map, light, azimuth),
+    () => syncNightSky(map, light, azimuth, efficient),
   ]) {
     try { step(); } catch { /* one overlay failing never blocks the others */ }
   }
@@ -5242,6 +5243,7 @@ export default function Home() {
           try {
             syncBorderCurtainVisibility(map, renderEfficientRef.current);
             syncValueColumnsVisibility(map, renderEfficientRef.current);
+            syncNightSkyVisibility(map, renderEfficientRef.current);
           } catch { /* decorative only */ }
         });
         // Columns follow whatever data the official point sources hold (live
@@ -5986,26 +5988,28 @@ export default function Home() {
     syncSceneOverlays(map, atmospherePresetRef.current, lightAzimuthRef.current, renderEfficientRef.current);
   }, [atmospherePreset, basemap, effectiveOfficialVisibility, lightAzimuth, officialOpacity, officialPayloads, projection, renderQuality, sceneEffects, scenePreset, structures3DState, styleReady, sunClock, terrainState]);
 
-  // The curtain shimmer repaints at ~15 fps only while the curtain is on
-  // screen and ambient motion is allowed; otherwise it holds still.
+  // The curtain shimmer and star twinkle repaint at ~15 fps only while they
+  // are on screen and ambient motion is allowed; otherwise they hold still.
   useEffect(() => {
     const map = mapRef.current;
-    const animate = runtime.kind === "ready" && sceneEffects.curtain && dynamicEffects && !reducedMotion
-      && !browserRenderBudget(renderQuality).efficient;
-    setCurtainShimmer(animate);
-    if (!map || !animate) return;
+    const motionAllowed = runtime.kind === "ready" && dynamicEffects && !reducedMotion && !browserRenderBudget(renderQuality).efficient;
+    const shimmer = motionAllowed && sceneEffects.curtain;
+    const twinkle = motionAllowed && sceneEffects.stars;
+    setCurtainShimmer(shimmer);
+    setNightSkyTwinkle(twinkle);
+    if (!map || !(shimmer || twinkle)) return;
     let frame = 0;
     let last = 0;
     const tick = (now: number) => {
       if (!document.hidden && now - last >= 66) {
         last = now;
-        try { if (curtainIsVisible(map)) map.triggerRepaint(); } catch { /* style swap in progress */ }
+        try { if ((shimmer && curtainIsVisible(map)) || (twinkle && nightSkyIsTwinkling(map))) map.triggerRepaint(); } catch { /* style swap in progress */ }
       }
       frame = window.requestAnimationFrame(tick);
     };
     frame = window.requestAnimationFrame(tick);
-    return () => { window.cancelAnimationFrame(frame); setCurtainShimmer(false); };
-  }, [dynamicEffects, reducedMotion, renderQuality, runtime.kind, sceneEffects.curtain]);
+    return () => { window.cancelAnimationFrame(frame); setCurtainShimmer(false); setNightSkyTwinkle(false); };
+  }, [dynamicEffects, reducedMotion, renderQuality, runtime.kind, sceneEffects.curtain, sceneEffects.stars]);
 
   // Terrain 3D may tilt further so the sky and horizon come into view.
   useEffect(() => {
@@ -9243,7 +9247,7 @@ export default function Home() {
             </form>
             <footer className="qwen-panel-footer"><p>Qwen is interpretive only. It cannot establish evidence, policy, release, or publication authority.</p><button type="button" onClick={() => void copyQwenPrompt()}>Copy grounded prompt</button></footer>
           </section>}
-          <div id="map-canvas" ref={mapContainerRef} className="map-canvas" data-projection={projection} data-cinematic={sceneEffects.cinematic && scenePreset === "elevation-3d" ? "3d" : undefined} tabIndex={runtime.kind === "unsupported" ? -1 : 0} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." />
+          <div id="map-canvas" ref={mapContainerRef} className="map-canvas" data-projection={projection} data-cinematic={sceneEffects.cinematic && scenePreset === "elevation-3d" ? "3d" : undefined} data-night-sky={sceneEffects.stars && !browserRenderBudget(renderQuality).efficient ? "on" : undefined} tabIndex={runtime.kind === "unsupported" ? -1 : 0} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." />
           {flyoverStopIndex !== null && KANSAS_FLYOVER[flyoverStopIndex] && <div className="flyover-caption" role="status" aria-live="polite">
             <span>FLYOVER · {flyoverStopIndex + 1}/{KANSAS_FLYOVER.length}</span>
             <strong>{KANSAS_FLYOVER[flyoverStopIndex].label}</strong>

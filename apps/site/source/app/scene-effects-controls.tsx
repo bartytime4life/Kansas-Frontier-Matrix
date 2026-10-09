@@ -34,7 +34,7 @@ export function SceneEffectsControls({ settings, light, efficient, reducedMotion
     <div className="scene-effects-switches">
       {SCENE_EFFECT_OPTIONS.map((option) => {
         const here = option.views.includes(view);
-        const held = efficient && (option.key === "curtain" || option.key === "columns");
+        const held = efficient && (option.key === "curtain" || option.key === "columns" || option.key === "stars");
         const detail = held ? "Paused while Battery saver is on"
           : option.key === "sunSync" && sunReading ? sunReading
           : option.detail;
@@ -52,7 +52,7 @@ export function SceneEffectsControls({ settings, light, efficient, reducedMotion
       <span aria-hidden="true">{flyoverActive ? "■" : "✈"}</span>{flyoverActive ? "Stop flyover" : "Fly over Kansas"}
       <small>{reducedMotion ? "Unavailable with reduced motion" : flyoverActive ? "Or drag, scroll or press a key" : "Six landscapes in Terrain 3D · about a minute"}</small>
     </button>
-    <p>Display effects only. Lighting, glow, relief and columns never change data, evidence, elevations or report values. Column heights encode the provider value shown on each point.</p>
+    <p>Display effects only. Lighting, glow, relief, columns and the night sky never change data, evidence, elevations or report values. Column heights encode the provider value shown on each point. Stars are placed from the Hipparcos-based catalog for the current time; the Milky Way and Sun glow are illustrative.</p>
   </section>;
 }
 
