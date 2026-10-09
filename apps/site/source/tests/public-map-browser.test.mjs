@@ -13,12 +13,12 @@ const status = () => ({ schema: 'kfm-public-map-download-control/v1', sessionTok
 const content = node => JSON.stringify(node?.props?.children);
 const visibleText = node => typeof node === 'string' || typeof node === 'number' ? String(node) : [node?.props?.children].flat(Infinity).filter(child => child != null && child !== false).map(visibleText).join(' ');
 const button = (tree, text) => findNode(tree, node => node.type === 'button' && content(node).includes(text));
-async function harness(input = structuredClone(catalog)) {
+async function harness(input = structuredClone(catalog), collection = "maps") {
   const calls = [], selected = [], focused = [], reveals = [], events = new Map(); const document = { activeElement: null };
   const downloads = { catalog: input, status: status(), connection: 'connected', busy: null, catalogError: null, notice: '', selectAsset: id => selected.push(id), refreshCatalog: async () => calls.push('refresh'), startDownload: async (asset, maximum) => calls.push({ assetId: asset.id, maximum }) };
   const h = await componentHarness('app/public-map-browser.tsx', { './public-map-catalog.json': { default: seed }, './public-map-catalog': model, './local-download-client': { formatDownloadBytes: value => `${value} bytes` }, './public-map-preview': { PublicMapPreview: 'preview' }, './download-focus': { revealTransferControls: (field, action) => reveals.push({ field, action }) }, './downloads/workspace.module.css': css, './public-map-browser.module.css': css }, { document, window: { matchMedia: () => ({ matches: true }), addEventListener: (name, callback) => events.set(name, callback), removeEventListener: name => events.delete(name) } });
   let blocked = false;
-  const render = () => { const tree = h.render(h.exports.default, { downloads, blockedByOtherDownload: blocked, onViewActivity: () => calls.push('activity') }); for (const node of nodes(tree, n => n.props?.ref)) node.props.ref.current = { focus() { focused.push(node.type); document.activeElement = this; }, scrollIntoView: () => focused.push('scroll') }; h.commit(); return tree; };
+  const render = () => { const tree = h.render(h.exports.default, { downloads, collection, blockedByOtherDownload: blocked, onViewActivity: () => calls.push('activity') }); for (const node of nodes(tree, n => n.props?.ref)) node.props.ref.current = { focus() { focused.push(node.type); document.activeElement = this; }, scrollIntoView: () => focused.push('scroll') }; h.commit(); return tree; };
   const choose = (tree, index = 0) => { button(tree, `Kansas test ${index}`).props.onClick(); return render(); };
   return { h, downloads, calls, selected, focused, reveals, events, document, render, choose, block: value => { blocked = value; } };
 }
@@ -97,4 +97,15 @@ test('a refreshed catalog that loses the selected direct file clears transfer co
   assert.equal(button(tree, 'Download to this computer'), undefined);
   assert.equal(findNode(tree, n => n.type === 'input' && n.props.type === 'number'), undefined);
   assert.equal(p.selected.at(-1), null); assert.deepEqual(p.calls, []); p.h.dispose();
+});
+
+
+test('public climate collection exposes verified files without a Google sign-in control', async()=>{
+ const p=await harness(seed,'satellite');let tree=p.render();assert.match(visibleText(tree),/Kansas crops & climate · no login/);assert.match(visibleText(tree),/64/);assert.doesNotMatch(visibleText(tree),/Sign in with Google/);
+ button(tree,'Cropland Data Layer 2025').props.onClick();tree=p.render();assert.match(visibleText(tree),/not clipped to Kansas/);assert.equal(nodes(tree,n=>n.type==='preview').length,0);
+ findNode(tree,n=>n.type==='button'&&visibleText(n).startsWith('Download  ZIP')).props.onClick();tree=p.render();
+ assert.equal(button(tree,'Download to this computer').props.disabled,false);
+ assert.ok(findNode(tree,n=>n.type==='input'&&n.props.type==='number').props.value);
+ assert.deepEqual(p.calls,[]);
+ p.h.dispose();
 });

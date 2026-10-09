@@ -159,3 +159,20 @@ class HandlerTests(unittest.TestCase):
 
 
 if __name__ == "__main__": unittest.main()
+
+class PeriodLibraryTests(unittest.TestCase):
+    setUp = ScanTests.setUp
+    tearDown = ScanTests.tearDown
+    put = ScanTests.put
+    def test_earth_engine_periods_are_separate_without_payload_or_empty_download_claims(self):
+        self.put('raw/earth-engine/ee-cdl/2024/job-a/tile.tif', b'1234')
+        self.put('raw/earth-engine/ee-cdl/2024/job-b/tile.tif', b'12')
+        self.put('raw/earth-engine/ee-cdl/2023/job-c/tile.tif', b'abc')
+        (self.root/'data/raw/earth-engine/ee-3dep/fixed/empty').mkdir(parents=True)
+        result=scan_library(self.root)
+        self.assertEqual(result['totalFiles'],3)
+        self.assertEqual(len(result['entries']),2)
+        years={entry['period']:entry for entry in result['entries']}
+        self.assertEqual(years['2024']['files'],2)
+        self.assertEqual(years['2024']['bytes'],6)
+        self.assertEqual(years['2023']['dataset'],'ee-cdl')

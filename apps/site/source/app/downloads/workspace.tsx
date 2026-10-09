@@ -15,6 +15,7 @@ type View = "find" | "library" | "activity";
 export default function DownloadsWorkspace() {
   const local = useLocalDownloads(), reviewed = useEarthEngineContext();
   const maps = usePublicMapDownloads({ onTransferTerminal: local.refreshLibrary, blockedByOtherDownload: Boolean(local.status?.active) || local.starting });
+  const [earthEngine, setEarthEngine] = useState(false);
   const [view, setView] = useState<View>("find"), [source, setSource] = useState<"maps" | "satellite">("maps");
   const items = useMemo(() => normalizeDownloadActivity(local.status, maps.status), [local.status, maps.status]);
   const active = items.filter(item => item.active), allConnected = local.connection === "connected" && maps.connection === "connected";
@@ -22,9 +23,10 @@ export default function DownloadsWorkspace() {
   const checked = local.lastChecked && maps.lastChecked ? new Date(Math.min(Date.parse(local.lastChecked), Date.parse(maps.lastChecked))).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }) : null;
   const connect = () => { local.connect(); maps.connect(); };
   const openActivity = () => setView("activity");
+  const openLibrary = () => setView("library");
   useEffect(() => {
-    const deepLink = () => { if (window.location.hash === "#public-maps") { setView("find"); setSource("maps"); } };
-    window.addEventListener("hashchange", deepLink); return () => window.removeEventListener("hashchange", deepLink);
+    const deepLink = () => { if (window.location.hash === "#library") setView("library"); else if (window.location.hash === "#public-maps") { setView("find"); setSource("maps"); } };
+    deepLink(); window.addEventListener("hashchange", deepLink); return () => window.removeEventListener("hashchange", deepLink);
   }, []);
   return <main className={styles.page} data-download-scroll data-transfer-active={active.length > 0 || local.starting || maps.busy === "download" || local.library?.state === "scanning" || maps.status?.refresh.state === "running"}>
     <div className={styles.wrap}>
@@ -36,14 +38,15 @@ export default function DownloadsWorkspace() {
       </div>
       <p className={styles.srOnly} role="status" aria-live="polite" aria-atomic="true">{local.announcement} {maps.announcement}</p>
       <nav className={styles.workspaceNav} aria-label="Download workspace"><button type="button" aria-controls="download-find" aria-current={view === "find" ? "page" : undefined} onClick={() => setView("find")}>Find data</button><button type="button" aria-controls="download-library" aria-current={view === "library" ? "page" : undefined} onClick={() => setView("library")}>My library</button><button type="button" aria-controls="download-activity" aria-current={view === "activity" ? "page" : undefined} onClick={openActivity}>Activity{active.length > 0 && <span>{active.length}</span>}</button></nav>
+      <div className={styles.libraryOverview}><button type="button" onClick={openLibrary}>View downloaded data →</button><span>{local.library?.generatedAt ? `${local.library.totalFiles.toLocaleString()} stored files · ${items.filter(item => item.state === "downloaded").length} completed recent transfers` : "My library shows stored files when this computer is connected."}{local.library?.generatedAt && (local.library.state !== "complete" || local.connection !== "connected") ? " · last completed scan" : ""}</span></div>
       <div className={styles.workbench}>
         <div className={styles.mainColumn}>
           <div id="download-find" hidden={view !== "find"}>
-            <nav className={styles.sourceNav} aria-label="Source categories"><button type="button" aria-pressed={source === "maps"} onClick={() => setSource("maps")}><span>01</span><strong>Maps &amp; geology</strong><small>Free direct files</small></button><button type="button" aria-pressed={source === "satellite"} onClick={() => setSource("satellite")}><span>02</span><strong>Satellite &amp; climate</strong><small>Earth Engine sources</small></button></nav>
+            <nav className={styles.sourceNav} aria-label="Source categories"><button type="button" aria-pressed={source === "maps"} onClick={() => setSource("maps")}><span>01</span><strong>Maps &amp; geology</strong><small>Free direct files</small></button><button type="button" aria-pressed={source === "satellite"} onClick={() => setSource("satellite")}><span>02</span><strong>Satellite &amp; climate</strong><small>Public files · no login</small></button></nav>
             <div hidden={source !== "maps"}><PublicMapBrowser downloads={maps} blockedByOtherDownload={Boolean(local.status?.active) || local.starting} onViewActivity={openActivity} /></div>
-            <div hidden={source !== "satellite"}><EarthEnginePicker downloads={local} blockedByOtherDownload={Boolean(maps.status?.active) || maps.busy === "download"} onViewActivity={openActivity} /></div>
+            <div hidden={source !== "satellite"}><div className={styles.libraryOverview}><button type="button" aria-pressed={!earthEngine} onClick={() => setEarthEngine(false)}>Public files · no login</button><button type="button" aria-pressed={earthEngine} onClick={() => setEarthEngine(true)}>Earth Engine exports · optional sign-in</button><a href="https://developers.google.com/earth-engine/datasets" target="_blank" rel="noreferrer">Official Earth Engine catalog ↗</a></div><div hidden={earthEngine}><PublicMapBrowser collection="satellite" downloads={maps} blockedByOtherDownload={Boolean(local.status?.active) || local.starting} onViewActivity={openActivity} /></div><div hidden={!earthEngine}><p>Google authorization is required only for these Earth Engine exports. Use Public files for downloads without an account.</p><EarthEnginePicker downloads={local} blockedByOtherDownload={Boolean(maps.status?.active) || maps.busy === "download"} onViewActivity={openActivity} /></div></div>
           </div>
-          <div id="download-library" hidden={view !== "library"}><DownloadLibrary downloads={local} reviewed={reviewed} /></div>
+          <div id="download-library" hidden={view !== "library"}><DownloadLibrary downloads={local} reviewed={reviewed} items={items} /></div>
           <div id="download-activity" hidden={view !== "activity"}><ActivityWorkspace items={items} local={local} maps={maps} /></div>
         </div>
         <TransferPanel items={items} local={local} maps={maps} onViewActivity={openActivity} />

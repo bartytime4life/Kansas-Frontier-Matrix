@@ -142,3 +142,56 @@ sequence locally. Unrelated repository gap, water mirror-review, People marker
 and soil-index checks are not waived. Exact-head hosted CI and human review are
 reported on the draft PR separately. No hosted Site publication, source
 admission, map-review approval or audience change is included.
+
+
+## Google account and local library update — 2026-10-09
+
+Sign in with Google before choosing a project. The local operator exchanges a
+one-time PKCE code, refreshes the grant and reports the account when Google
+provides a verified email. Project discovery uses the read-only Cloud project
+list scope; it does not create projects, enable APIs or billing, or grant IAM
+roles. Choose a project (or enter its ID if listing is unavailable) and use
+**Check download access**. A real Earth Engine scalar computation must succeed
+before the download control becomes ready. Saved credentials are rechecked on
+operator restart; a credential file alone does not establish access.
+
+OAuth additionally requests email/OpenID and read-only project listing alongside
+the existing Earth Engine scope. Tokens remain in private local credential
+storage and never appear in status responses or Site storage. Legacy grants can
+still be checked with a manually entered project; missing email/project-list
+permissions have an explicit fallback. Browser Google cookies alone are not an
+Earth Engine grant. Google consent and live account/project acceptance require
+the owner to complete sign-in.
+
+**View downloaded data** opens My library directly. It lists recent completed
+and partial transfers by source, with bytes and destination, plus the bounded
+filesystem metadata scan of all existing collections. Earth Engine raw files
+are grouped by dataset and period; empty directories are not downloaded data.
+Transfer history does not prove a file still exists, and stored bytes do not
+approve a dataset for map display. The existing refresh, stale-state, partial
+capture, size-cap and source-review protections remain in effect.
+
+References: [Google authentication](https://developers.google.com/earth-engine/guides/auth)
+and [read-only project discovery](https://docs.cloud.google.com/resource-manager/reference/rest/v1/projects/list).
+
+
+### No-login Kansas catalog preference — 2026-10-09
+
+Satellite & climate defaults to public publisher files. Google sign-in is an
+optional Earth Engine export path. The initial public collection contains 20
+USDA NASS national CDL ZIPs (2008–2025, including the 2024/2025 10 m and
+resampled 30 m alternatives) and 44 CHIRPS v2 annual GeoTIFFs (1981–2024).
+Every offered URL was found in the publisher's listing and checked anonymously
+with a bounded byte-range read: file signature and total byte length matched.
+No full datasets were fetched as part of curation. The exact URLs are pinned in
+the local operator; redirect/query variants and arbitrary future URLs remain
+denied. Publisher originals include Kansas but are national/global files, not
+Kansas clips or byte-identical Earth Engine recipe outputs. Size and scope are
+visible before an explicit download. They use the existing local transfer,
+cancellation, history and library paths without Google credentials. The source
+coverage remains a curated subset; geology refreshes retain its separate check
+date and never mark it as a complete live Earth Engine catalog.
+
+Public sources: [USDA files](https://www.nass.usda.gov/Research_and_Science/Cropland/Release/),
+[CHIRPS annual files](https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_annual/tifs/),
+and [Earth Engine catalog](https://developers.google.com/earth-engine/datasets).

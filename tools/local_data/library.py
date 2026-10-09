@@ -90,6 +90,9 @@ def scan_library(root: Path, progress=lambda _count: None, *, limits=ScanLimits(
             collections[key] = {"id": hashlib.sha256((lane + "\0" + name).encode()).hexdigest(),
                                 "label": label or "Local collection", "lane": lane, "files": 0,
                                 "bytes": 0, "role": LANES[lane]}
+            match = re.fullmatch(r"earth-engine/(ee-[a-z0-9-]+)/([0-9]{4}|fixed)", name)
+            if lane == "raw" and match:
+                collections[key].update(dataset=match[1], period=match[2], label=f"{match[1]} · {match[2]}")
         return collections[key]
 
     def walk(descriptor, lane, group=None, depth=0):
@@ -109,7 +112,10 @@ def scan_library(root: Path, progress=lambda _count: None, *, limits=ScanLimits(
                     raise LibraryScanError("LIBRARY_SCAN_UNSAFE")
                 if stat.S_ISDIR(info.st_mode):
                     name = entry.name if group is None else group
-                    collection(lane, name)
+                    if lane == "raw" and group == "earth-engine" and re.fullmatch(r"ee-[a-z0-9-]+", entry.name):
+                        name = group + "/" + entry.name
+                    elif lane == "raw" and group and re.fullmatch(r"earth-engine/ee-[a-z0-9-]+", group) and re.fullmatch(r"[0-9]{4}|fixed", entry.name):
+                        name = group + "/" + entry.name
                     child = os.open(entry.name, DIRECTORY_FLAGS, dir_fd=descriptor)
                     try:
                         opened = os.fstat(child)

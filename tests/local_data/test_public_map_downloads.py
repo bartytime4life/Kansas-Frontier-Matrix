@@ -370,3 +370,18 @@ class DownloadTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+def test_public_climate_downloads_are_exact_pinned_files_and_do_not_require_google():
+    import pytest
+    from tools.local_data import public_map_downloads as download, public_map_catalog as catalog
+    rows=[r for r in catalog.load_seed()['records'] if r['sourceId'].startswith('publisher-')]
+    assert len(rows)==64
+    assert len(download.PUBLISHER_FILES)==64
+    for row in rows:
+        a=row['assets'][0]
+        assert download.validate_url(a['url'])==a['url']
+        assert a['expectedBytes']>0 and a['availability']=='verified'
+        assert row['rights']['status']=='public-domain'
+        assert 'not clipped' in row['description']
+        with pytest.raises(ValueError): download.validate_url(a['url']+'?redirect=https://evil.example')
+    with pytest.raises(ValueError): download.validate_url('https://www.nass.usda.gov/Research_and_Science/Cropland/Release/datasets/2099_30m_cdls.zip')
