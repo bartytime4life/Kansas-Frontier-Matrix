@@ -23,6 +23,16 @@
   background-repeat: no-repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, repeat, no-repeat, no-repeat;
 }
 
+/* The real night sky draws catalog stars in WebGL; keep only the deep-space wash. */
+.map-canvas[data-projection="globe"][data-night-sky="on"] {
+  background-image:
+    radial-gradient(circle at 50% 50%, rgba(92, 162, 236, .16) 0, rgba(46, 104, 180, .06) 28%, transparent 52%),
+    radial-gradient(ellipse at 30% 110%, rgba(38, 64, 120, .38), transparent 60%),
+    radial-gradient(ellipse at 85% -10%, rgba(90, 50, 120, .22), transparent 55%);
+  background-size: 100% 100%, 100% 100%, 100% 100%;
+  background-repeat: no-repeat;
+}
+
 /* ---------- Terrain 3D: gentle lens vignette for depth ---------- */
 .map-canvas[data-cinematic="3d"]::before {
   content: "";

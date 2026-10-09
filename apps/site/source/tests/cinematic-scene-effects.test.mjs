@@ -34,12 +34,12 @@ async function loadSceneEffects(sun = [210, 35]) {
 
 test("scene-effect preferences parse defensively and default to the cinematic look", async () => {
   const effects = await loadSceneEffects();
-  assert.deepEqual({ ...effects.DEFAULT_SCENE_EFFECTS }, { cinematic: true, curtain: true, sunSync: false, kansasGlow: true, relief2d: false, columns: true, buildings: true });
+  assert.deepEqual({ ...effects.DEFAULT_SCENE_EFFECTS }, { cinematic: true, curtain: true, sunSync: false, kansasGlow: true, relief2d: false, columns: true, buildings: true, stars: true });
   assert.equal(effects.DEFAULT_SCENE_EFFECTS.relief2d, false, "defaults add no new network requests");
   assert.deepEqual({ ...effects.parseSceneEffects(null) }, { ...effects.DEFAULT_SCENE_EFFECTS });
   // A preference saved before the new effects existed keeps its choices and gains the defaults.
   assert.deepEqual({ ...effects.parseSceneEffects({ cinematic: false, curtain: "yes", sunSync: true, extra: 1 }) },
-    { cinematic: false, curtain: true, sunSync: true, kansasGlow: true, relief2d: false, columns: true, buildings: true });
+    { cinematic: false, curtain: true, sunSync: true, kansasGlow: true, relief2d: false, columns: true, buildings: true, stars: true });
   assert.ok(Object.isFrozen(effects.parseSceneEffects({})));
 });
 
