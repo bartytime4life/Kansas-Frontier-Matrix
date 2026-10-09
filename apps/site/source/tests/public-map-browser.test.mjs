@@ -103,6 +103,9 @@ test('a refreshed catalog that loses the selected direct file clears transfer co
 test('public climate collection exposes verified files without a Google sign-in control', async()=>{
  const p=await harness(seed,'satellite');let tree=p.render();assert.match(visibleText(tree),/Kansas crops & climate · no login/);assert.match(visibleText(tree),/64/);assert.doesNotMatch(visibleText(tree),/Sign in with Google/);
  button(tree,'Cropland Data Layer 2025').props.onClick();tree=p.render();assert.match(visibleText(tree),/not clipped to Kansas/);assert.equal(nodes(tree,n=>n.type==='preview').length,0);
- assert.ok(nodes(tree,n=>n.type==='button'&&content(n).includes('Select file')).length || visibleText(tree).includes('Select'));
+ findNode(tree,n=>n.type==='button'&&visibleText(n).startsWith('Download  ZIP')).props.onClick();tree=p.render();
+ assert.equal(button(tree,'Download to this computer').props.disabled,false);
+ assert.ok(findNode(tree,n=>n.type==='input'&&n.props.type==='number').props.value);
+ assert.deepEqual(p.calls,[]);
  p.h.dispose();
 });
