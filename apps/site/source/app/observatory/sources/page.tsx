@@ -28,7 +28,7 @@ const Cite = ({ n }: { n: number }) => <a href={refs[n-1][2]} target="_blank" re
 
 export const metadata = { title: "Temporal Sources & Coverage · KFM Event Observatory" };
 export default function SourcesPage() {
-  return <article className="event-research">
+  return <main className="event-research">
     <Link href="/observatory">← Event Observatory</Link>
     <h1>Temporal environmental layers for Kansas</h1>
     <p>The Event Observatory connects dated environmental observations and independently dated context on one Kansas map. Historical radar replay is immediately feasible; smoke footprints, streamflow, satellite acquisitions, geology and occurrence records need different time rules. A universal date slider is useful only if it preserves those distinctions.</p>
@@ -96,5 +96,5 @@ export default function SourcesPage() {
     <ol>{refs.map(([publisher,title,url,date]) => <li key={url}><strong>{publisher}.</strong> <a href={url} target="_blank" rel="noreferrer">{title}</a>. {date}.</li>)}</ol>
     <p>Private project sources may require their original access permissions. Service documentation and source data can change after this research checkpoint; the map’s requested interval and retrieved timestamp remain visible.</p>
     <Link href="/observatory">Return to the Event Observatory →</Link>
-  </article>;
+  </main>;
 }

@@ -42,7 +42,7 @@ const referenceSources = [
 export default function AboutPage() {
   return <div className="about-page">
     <nav className="about-nav" aria-label="About page navigation">
-      <div className="brand-lockup" aria-label="Kansas Frontier Matrix">
+      <div className="brand-lockup">
         <span className="mark" aria-hidden="true">KFM</span>
         <span><strong>Kansas Frontier Matrix</strong><small>Explorer guide + boundaries</small></span>
       </div>

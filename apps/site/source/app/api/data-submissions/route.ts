@@ -11,8 +11,8 @@ export async function GET(request: Request) {
     const cursor = params.get("before");
     if (cursor && !/^\d{4}-\d\d-\d\dT[\d:.]+Z\|[0-9a-f-]{36}$/.test(cursor)) throw new IntakeError("Invalid page cursor.");
     const [createdAt, id] = cursor?.split("|") ?? [];
-    const predicates = [queue ? "1=1" : "owner_key = ?", ...(cursor ? ["(created_at < ? OR (created_at = ? AND id < ?))"] : [])];
-    const args = [...(queue ? [] : [user.key]), ...(cursor ? [createdAt, createdAt, id] : [])];
+    const predicates = [queue ? "1=1" : "owner_key = ?", ...(cursor ? ["(created_at, id) < (?, ?)"] : [])];
+    const args = [...(queue ? [] : [user.key]), ...(cursor ? [createdAt, id] : [])];
     const rows = (await db.prepare(`SELECT ${submissionColumns} FROM data_submissions WHERE ${predicates.join(" AND ")} ORDER BY created_at DESC, id DESC LIMIT 31`).bind(...args).all<Submission>()).results;
     const items = rows.slice(0,30); const last = items.at(-1);
     return Response.json({ user: { name: user.name, steward: user.steward }, items, nextCursor: rows.length > 30 && last ? `${last.createdAt}|${last.id}` : null }, { headers: intakeHeaders });

@@ -51,6 +51,7 @@ The previous changelog recorded only the initial implementation milestones throu
 
 ### Changed
 
+- Explorer site audit in `apps/site/source` (repository source; not yet deployed): additive D1 indexes and a row-value cursor for the data-submission lists, a branded 404 page, baseline response headers, and fixes for the serious accessibility findings: link contrast, ARIA roles, keyboard access to the Qwen conversation, a `<dl>` structure and a missing `main` landmark. See [audit notes](apps/site/source/docs/explorer-site-audit-2026-10-09.md).
 - Explorer interface refresh in `apps/site/source` (repository source; not yet deployed to the Site): navy theme, first-visit quick start, offline Kansas orientation on the local basemaps, a single zoom control set, and removal of a fixed place label and two mobile layout overlaps. See [refresh notes](apps/site/source/docs/explorer-interface-refresh.md).
 - Modernized the root changelog into an evidence-bounded repository-history contract with entry categories, source-link expectations, security guidance, a historical coverage notice, and an explicit release/publication boundary.
 
