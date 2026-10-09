@@ -12,7 +12,7 @@ import type { LayerSpecification, SourceSpecification } from "maplibre-gl";
  */
 export const ORIENTATION_SOURCE_ID = "orientation-kansas";
 
-const KANSAS_OUTLINE: [number, number][] = [
+export const KANSAS_OUTLINE: readonly [number, number][] = [
   [-102.0517, 40.0], [-95.308, 40.0], [-95.2, 39.93], [-95.08, 39.87], [-94.99, 39.78],
   [-95.01, 39.68], [-95.1, 39.57], [-95.04, 39.47], [-94.96, 39.37], [-94.9, 39.3],
   [-94.8, 39.2], [-94.62, 39.115], [-94.608, 39.05], [-94.6178, 37.0], [-102.0418, 36.993],
@@ -35,12 +35,22 @@ function graticule(): { coordinates: [number, number][] }[] {
   return lines;
 }
 
+// A coarse 15° world graticule so the globe reads as a sphere offline.
+function worldGraticule(): { coordinates: [number, number][] }[] {
+  const lines: { coordinates: [number, number][] }[] = [];
+  const span = (from: number, to: number, step: number) => Array.from({ length: Math.round((to - from) / step) + 1 }, (_, index) => from + index * step);
+  for (const lon of span(-180, 165, 15)) lines.push({ coordinates: span(-80, 80, 5).map((lat) => [lon, lat] as [number, number]) });
+  for (const lat of span(-75, 75, 15)) lines.push({ coordinates: span(-180, 180, 5).map((lon) => [lon, lat] as [number, number]) });
+  return lines;
+}
+
 export const KANSAS_ORIENTATION: FeatureCollection<Polygon | LineString, { role: string; name?: string }> = Object.freeze({
   type: "FeatureCollection",
   features: [
-    { type: "Feature", properties: { role: "outline", name: "Kansas (simplified)" }, geometry: { type: "Polygon", coordinates: [KANSAS_OUTLINE] } },
+    { type: "Feature", properties: { role: "outline", name: "Kansas (simplified)" }, geometry: { type: "Polygon", coordinates: [[...KANSAS_OUTLINE]] } },
     ...RIVERS.map((river) => ({ type: "Feature" as const, properties: { role: "river", name: river.name }, geometry: { type: "LineString" as const, coordinates: river.coordinates } })),
     ...graticule().map((line) => ({ type: "Feature" as const, properties: { role: "graticule" }, geometry: { type: "LineString" as const, coordinates: line.coordinates } })),
+    ...worldGraticule().map((line) => ({ type: "Feature" as const, properties: { role: "world-graticule" }, geometry: { type: "LineString" as const, coordinates: line.coordinates } })),
   ],
 }) as FeatureCollection<Polygon | LineString, { role: string; name?: string }>;
 
@@ -52,8 +62,12 @@ export function orientationSource(): SourceSpecification {
 
 export function orientationLayers(palette: OrientationPalette): LayerSpecification[] {
   return [
+    { id: "orientation-world-graticule", type: "line", source: ORIENTATION_SOURCE_ID, maxzoom: 5, filter: ["==", ["get", "role"], "world-graticule"], paint: { "line-color": palette.river, "line-width": 0.8, "line-opacity": ["interpolate", ["linear"], ["zoom"], 0, 0.42, 3, 0.26, 4.6, 0] } },
     { id: "orientation-graticule", type: "line", source: ORIENTATION_SOURCE_ID, filter: ["==", ["get", "role"], "graticule"], paint: { "line-color": palette.graticule, "line-width": 0.6, "line-opacity": 0.55 } },
     { id: "orientation-kansas-land", type: "fill", source: ORIENTATION_SOURCE_ID, filter: ["==", ["get", "role"], "outline"], paint: { "fill-color": palette.land, "fill-opacity": 0.9 } },
+    // Soft blurred under-strokes give the offline style depth. Presentation only.
+    { id: "orientation-rivers-glow", type: "line", source: ORIENTATION_SOURCE_ID, filter: ["==", ["get", "role"], "river"], layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": palette.river, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 5, 9, 12], "line-blur": ["interpolate", ["linear"], ["zoom"], 4, 4, 9, 9], "line-opacity": 0.28 } },
+    { id: "orientation-kansas-glow", type: "line", source: ORIENTATION_SOURCE_ID, filter: ["==", ["get", "role"], "outline"], layout: { "line-join": "round" }, paint: { "line-color": palette.outline, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 9, 9, 18], "line-blur": ["interpolate", ["linear"], ["zoom"], 4, 7, 9, 14], "line-opacity": 0.32 } },
     { id: "orientation-rivers", type: "line", source: ORIENTATION_SOURCE_ID, filter: ["==", ["get", "role"], "river"], layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": palette.river, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 1, 9, 2.6], "line-opacity": 0.85 } },
     { id: "orientation-kansas-outline", type: "line", source: ORIENTATION_SOURCE_ID, filter: ["==", ["get", "role"], "outline"], layout: { "line-join": "round" }, paint: { "line-color": palette.outline, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 1.2, 9, 2.4], "line-opacity": 0.9 } },
   ];

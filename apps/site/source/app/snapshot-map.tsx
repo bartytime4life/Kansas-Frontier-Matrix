@@ -9,6 +9,7 @@ import { isFeatureAvailableForTemporalQuery, type TemporalSweepQuery } from "./t
 import type { MapSnapshot } from "./workspace-model";
 import { browserRenderBudget } from "./map-performance";
 import { terrainSourceFor } from "./terrain-sources";
+import { readSceneEffects, registerSceneEffects } from "./scene-effects";
 
 type Camera = { center: [number, number]; zoom: number; bearing: number; pitch: number };
 
@@ -118,6 +119,8 @@ export default function SnapshotMap({ snapshot, label, syncCamera, onCameraChang
       const key = Object.prototype.hasOwnProperty.call(BASEMAPS, state.basemap) ? state.basemap as keyof typeof BASEMAPS : "standard";
       const budget = browserRenderBudget();
       const map = new lib.Map({ transformRequest: basemapCacheRequest, container: container.current, style: BASEMAPS[key].style, ...safeCamera, attributionControl: { compact: true }, pixelRatio: budget.pixelRatio, maxTileCacheSize: Math.min(48, budget.tileCache), maxPitch: 60, renderWorldCopies: false });
+      // Snapshots honour the viewer's scene-effect preference for relief lighting.
+      registerSceneEffects(map, readSceneEffects());
       mapRef.current = map;
       appliedBasemap.current = key;
       map.addControl(new lib.NavigationControl(), "top-right");

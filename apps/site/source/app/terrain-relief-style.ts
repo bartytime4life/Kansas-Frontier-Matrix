@@ -23,21 +23,8 @@ export const terrainHillshadePaint = (look: TerrainReliefLook, light: TerrainRel
   "hillshade-illumination-direction": ((Number.isFinite(azimuth) ? azimuth : 235) % 360 + 360) % 360,
 });
 
-export const applyTerrainReliefStyle = (
-  map: MapLibreMap,
-  look: TerrainReliefLook,
-  light: TerrainReliefLight,
-  azimuth: number,
-): void => {
-  if (!map.getLayer("kfm-terrain-hillshade")) return;
-  const paint = terrainHillshadePaint(look, light, azimuth);
-  for (const property of Object.keys(paint) as Array<keyof typeof paint>) {
-    const value = paint[property];
-    if (map.getPaintProperty("kfm-terrain-hillshade", property) !== value) {
-      map.setPaintProperty("kfm-terrain-hillshade", property, value);
-    }
-  }
-};
+// applyTerrainReliefStyle lives in scene-effects.ts so cinematic relief and
+// sun-following light share one code path.
 
 /** The USGS topo tile remains unchanged. Removing these three paint overrides
  * returns the 2D raster layer to the original style's exact defaults. */
