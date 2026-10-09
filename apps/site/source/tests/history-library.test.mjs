@@ -3,12 +3,12 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import ts from 'typescript';
-import { componentHarness, findNode } from './component-harness.mjs';
+import { componentHarness, findNode, settle } from './component-harness.mjs';
 const moduleAt = async file => import(`data:text/javascript;base64,${Buffer.from(ts.transpileModule(await readFile(file, 'utf8'), { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText).toString('base64')}`);
 const model = await moduleAt('app/history-reader-model.ts'), maps = await moduleAt('app/public-map-catalog.ts');
 const sources = JSON.parse(await readFile('app/history-sources.json')), seed = JSON.parse(await readFile('app/public-map-catalog.json'));
 const text = await readFile('public/history/prentis-1909.txt');
-const inventory = JSON.parse(await readFile('public/history/sources.json', 'utf8')); 
+const inventory = JSON.parse(await readFile('public/history/sources.json', 'utf8'));
 const css = new Proxy({}, { get: (_, key) => String(key) });
 function nodes(tree, predicate) { const rows = []; function visit(node) { if (!node || typeof node !== 'object') return; if (predicate(node)) rows.push(node); for (const child of [node.props?.children].flat(Infinity)) visit(child); } visit(tree); return rows; }
 const button = (tree, label) => findNode(tree, node => node.type === 'button' && JSON.stringify(node.props.children).includes(label));
@@ -56,5 +56,24 @@ test('history browsing never transfers; selection requires connection and a vali
   maximum().props.onChange({ target: { value: '26' } }); tree = render(); button(tree, 'Download to this computer').props.onClick(); assert.deepEqual(calls.at(-1), ['download', 'history-prentis-1909-pdf', 26 * 1048576]);
   props.blocked = true; tree = render(); assert.equal(button(tree, 'Download to this computer').props.disabled, true);
   findNode(tree, n => n.type === 'select').props.onChange({ target: { value: 'book' } }); tree = render(); assert.equal(nodes(tree, n => n.type === 'article').length, 2);
+  harness.dispose();
+});
+
+
+test('reader retry clears the error before starting another verified fetch', async () => {
+  let attempts = 0;
+  const responses = [];
+  const harness = await componentHarness('app/history/prentis-1909/page.tsx', {
+    '../../history-reader-model': model, '../../downloads/workspace.module.css': css, '../../history.module.css': css,
+  }, { fetch: () => { attempts++; return new Promise(resolve => responses.push(resolve)); } });
+  const render = () => { const tree = harness.render(harness.exports.default, {}); harness.commit(); return tree; };
+  let tree = render();
+  assert.equal(attempts, 1);
+  responses.shift()(new Response('unavailable', { status: 503 })); await settle();
+  tree = render(); assert.ok(findNode(tree, n => n.props?.role === 'alert'));
+  button(tree, 'Retry loading').props.onClick();
+  tree = render(); assert.equal(attempts, 2);
+  assert.equal(findNode(tree, n => n.props?.role === 'alert'), undefined);
+  assert.match(findNode(tree, n => n.type === 'output').props.children, /Loading/);
   harness.dispose();
 });
