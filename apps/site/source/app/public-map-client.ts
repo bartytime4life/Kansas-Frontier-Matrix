@@ -7,11 +7,14 @@ export type PublicMapJob = {
   bytes: number; expectedBytes: number | null; maxBytes: number; sha256: string | null;
   destination: string; reason: string | null; mapReady: false; createdAt: string; updatedAt: string;
 };
+export type PublicMapAssetState = { assetId: string; state: PublicMapJob["state"] | "partial" | "missing" | "outdated" };
 export type PublicMapStatus = {
   schema: "kfm-public-map-download-control/v1"; sessionToken: string; jobs: PublicMapJob[];
   active: string | null; limitBytes: number; refresh: { state: "idle" | "running" | "complete" | "failed"; reason?: string };
   /** Files waiting behind the active one; absent from operators without a queue. */
   queued?: number;
+  /** Complete tracked history; completed copies passed a local presence/size check. */
+  assetStates?: PublicMapAssetState[];
 };
 const object = (v: unknown): v is Record<string, unknown> => !!v && typeof v === "object" && !Array.isArray(v);
 const id = (v: unknown): v is string => typeof v === "string" && /^[a-f0-9]{32}$/.test(v);
@@ -35,6 +38,15 @@ export function parsePublicMapStatus(value: unknown): PublicMapStatus | null {
     seen.add(job.id);
   }
   if (value.active !== null && !seen.has(value.active)) return null;
+  if (value.assetStates !== undefined) {
+    if (!Array.isArray(value.assetStates) || value.assetStates.length > 1000) return null;
+    const assets = new Set<string>();
+    for (const item of value.assetStates) {
+      if (!object(item) || !publicMapText(item.assetId, 500) || !item.assetId || assets.has(item.assetId)
+        || !["queued", "downloading", "downloaded", "failed", "cancelled", "interrupted", "partial", "missing", "outdated"].includes(String(item.state))) return null;
+      assets.add(item.assetId);
+    }
+  }
   return value as unknown as PublicMapStatus;
 }
 export type PublicMapEndpoint = "/catalog" | "/status" | "/downloads" | "/cancel" | "/refresh" | "/queue" | "/queue/cancel";
@@ -46,7 +58,7 @@ export async function publicMapRequest(path: PublicMapEndpoint, signal: AbortSig
   combined.throwIfAborted();
   const response = await fetch(`http://127.0.0.1:8769/public-maps${path}`, { signal: combined, credentials: "omit", cache: "no-store", redirect: "error",
     ...(payload === undefined ? {} : { method: "POST", headers: { "Content-Type": "application/json", "X-KFM-Session": sessionToken! }, body: JSON.stringify(payload) }) });
-  const body = await readBoundedJson(response, path === "/catalog" ? PUBLIC_MAP_MAX_BYTES : 256_000, combined);
+  const body = await readBoundedJson(response, path === "/catalog" ? PUBLIC_MAP_MAX_BYTES : path === "/status" ? 2_000_000 : 256_000, combined);
   combined.throwIfAborted();
   return { response, body };
 }

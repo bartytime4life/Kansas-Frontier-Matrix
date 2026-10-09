@@ -84,6 +84,48 @@ class DownloadTests(unittest.TestCase):
         self.assertEqual(receipt["files"][0]["sha256"], job["sha256"])
         self.assertEqual(json.loads((Path(job["destination"]) / "source.json").read_bytes())["record"]["rights"]["status"], "held")
 
+    def test_card_summary_checks_presence_and_survives_recent_history_window(self):
+        job = self.run_job()
+        payload = Path(job["destination"]) / "test.pdf"
+        def state():
+            return next(row["state"] for row in self.manager.health()["assetStates"] if row["assetId"] == "test-pdf")
+        self.assertEqual(state(), "downloaded")
+        before = (self.manager.receipts / (job["id"] + ".json")).read_bytes()
+        for i in range(120):
+            identifier = f"{i:032x}"
+            self.manager.jobs[identifier] = {**job, "id": identifier, "assetId": f"other-{i}", "state": "cancelled", "bytes": 0}
+        self.assertNotIn(job["id"], [row["id"] for row in self.manager.health()["jobs"]])
+        self.assertEqual(state(), "downloaded")
+        # A failed retry does not hide an existing complete capture.
+        self.manager.jobs["b" * 32] = {**job, "id": "b" * 32, "state": "failed", "bytes": 0}
+        self.assertEqual(state(), "downloaded")
+        payload.write_bytes(b"short")
+        self.assertEqual(state(), "missing")
+        payload.unlink()
+        self.assertEqual(state(), "missing")
+        payload.symlink_to(Path(job["destination"]) / "source.json")
+        self.assertEqual(state(), "missing")
+        self.assertEqual((self.manager.receipts / (job["id"] + ".json")).read_bytes(), before)
+
+    def test_card_summary_does_not_confuse_reissued_publisher_files_with_prior_copies(self):
+        job = self.run_job()
+        self.manager._catalog["records"][0]["assets"][0]["url"] = URL.replace("test.pdf", "reissued.pdf")
+        self.assertEqual(self.manager.health()["assetStates"][0]["state"], "outdated")
+        self.manager._catalog["records"][0]["assets"][0]["url"] = URL
+        self.assertEqual(self.manager.health()["assetStates"][0]["state"], "downloaded")
+        self.manager._catalog["records"][0]["assets"][0]["expectedBytes"] = len(PAYLOAD) + 1
+        self.assertEqual(self.manager.health()["assetStates"][0]["state"], "outdated")
+
+    def test_card_summary_tracks_queue_and_partial_without_promoting_them(self):
+        job = self.start()
+        self.assertEqual(self.manager.health()["assetStates"], [{"assetId": "test-pdf", "state": "queued"}])
+        self.manager.update(job["id"], state="downloading")
+        self.assertEqual(self.manager.health()["assetStates"][0]["state"], "downloading")
+        self.manager.update(job["id"], state="cancelled", bytes=12)
+        self.assertEqual(self.manager.health()["assetStates"][0]["state"], "partial")
+        self.manager.update(job["id"], bytes=0)
+        self.assertEqual(self.manager.health()["assetStates"][0]["state"], "cancelled")
+
     def test_starts_are_idempotent_and_single_concurrency_without_ee_configuration(self):
         first = self.start()
         self.assertEqual(self.manager.start({"requestId": first["id"], "assetId": "test-pdf", "maxBytes": 1024}), first)
@@ -506,7 +548,7 @@ class QueueTests(unittest.TestCase):
     def test_the_idle_status_window_holds_one_hundred_jobs(self):
         for index in range(101):
             identifier = f"{index:032x}"
-            self.manager.jobs[identifier] = {"id": identifier, "state": "downloaded"}
+            self.manager.jobs[identifier] = {"id": identifier, "assetId": f"test-{index}", "state": "cancelled", "bytes": 0}
         self.assertIsNone(self.manager.active)
         self.assertEqual(len(self.manager.health()["jobs"]), 100)
 

@@ -5,11 +5,16 @@ import type { PublicMapDownloads } from "./use-public-map-downloads";
 import { formatDownloadBytes as bytes } from "./local-download-client";
 import { PublicMapPreview } from "./public-map-preview";
 import { revealTransferControls } from "./download-focus";
+import { publicMapDownloadState, type CardDownloadState } from "./public-map-download-state";
 import StormEventsQueue from "./storm-events-queue";
 import s from "./downloads/workspace.module.css";
 import p from "./public-map-browser.module.css";
 
 const PUBLIC_MAP_PAGE_SIZE = 8;
+const downloadMark = (state: CardDownloadState) => <span className={p.downloadState} data-state={state.state} title={state.detail}>
+  <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6" />{state.state === "downloaded" ? <path d="m5 8 2 2 4-4" /> : state.state === "downloading" || state.state === "queued" ? <path d="M8 4v4l2 1" /> : state.state === "unknown" || state.state === "missing" ? <path d="M8 4.5v4M8 11v.5" /> : <path d="M5 8h6" />}</svg>
+  <span>{state.label}</span>
+</span>;
 const defaultFilter: PublicMapFilter = { text: "", publisher: "all", county: "all", year: "all", format: "all" };
 // Catalog timestamps are server-rendered: preserve date precision and avoid locale/timezone hydration drift.
 const stamp = (value: string) => /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : `${new Date(value).toISOString().replace("T", " ").replace(".000Z", " UTC")}`;
@@ -42,7 +47,7 @@ export default function PublicMapBrowser({ downloads, blockedByOtherDownload = f
     formats: [...new Set(records.flatMap(row => row.assets.filter(canDownloadPublicMap).map(asset => asset.format)))].sort(),
   }), [records]);
   const unavailable = coverage.filter(source => source.state === "unavailable" || source.state === "partial");
-  const existing = chosenAsset && status?.jobs.find(job => job.assetId === chosenAsset.id && job.state === "downloaded");
+  const existing = chosenAsset && publicMapDownloadState([chosenAsset.id], status, connection).state === "downloaded";
   const workerBusy = blockedByOtherDownload || Boolean(status?.active);
   useEffect(() => { selectAsset(chosenAsset?.id ?? null); }, [chosenAsset?.id, selectAsset]);
   useEffect(() => {
@@ -87,8 +92,9 @@ export default function PublicMapBrowser({ downloads, blockedByOtherDownload = f
     {collection === "satellite" && <StormEventsQueue records={records} downloads={downloads} blocked={blockedByOtherDownload} showNotice={!selected} onViewActivity={onViewActivity} />}
     {downloads.catalogError && <p className={s.alert}>{downloads.catalogError}</p>}
     {status?.refresh.state === "failed" && <p className={s.alert}>Catalog refresh did not finish. Retained records remain available; current completeness is unknown.</p>}
+    <p className={p.statusScope}>Download status · this computer{connected ? " · KFM-tracked files" : " · connect to check"}</p>
     <div className={p.results} data-selection={Boolean(selected)}>
-      <div className={p.resultColumn}><ul className={p.records}>{rows.slice(currentPage * PUBLIC_MAP_PAGE_SIZE, (currentPage + 1) * PUBLIC_MAP_PAGE_SIZE).map(row => <li key={row.id}><button type="button" aria-pressed={selectedId === row.id} onClick={() => choose(row)}><span className={p.recordMeta}>{row.publisher} <span>{row.mapYear ?? "Year unknown"}</span></span><strong>{row.title}</strong><small>{collection === "satellite" ? "No login · national/global original" : row.counties.join(", ") || "County not specified"}</small><span className={p.fileHint}>Direct files available<span aria-hidden="true">↗</span></span></button></li>)}</ul>
+      <div className={p.resultColumn}><ul className={p.records}>{rows.slice(currentPage * PUBLIC_MAP_PAGE_SIZE, (currentPage + 1) * PUBLIC_MAP_PAGE_SIZE).map(row => <li key={row.id}><button type="button" aria-pressed={selectedId === row.id} onClick={() => choose(row)}><span className={p.recordMeta}>{row.publisher} <span>{row.mapYear ?? "Year unknown"}</span></span><strong>{row.title}</strong><small>{collection === "satellite" ? "No login · national/global original" : row.counties.join(", ") || "County not specified"}</small><span className={p.fileHint}>{downloadMark(publicMapDownloadState(row.assets.filter(canDownloadPublicMap).map(asset => asset.id), status, connection))}<span className={p.cardArrow} aria-hidden="true">↗</span></span></button></li>)}</ul>
         {!rows.length && <div className={s.empty}><strong>No matching maps</strong><p>Try fewer filters or a broader search. Only verified direct files are included.</p><button type="button" onClick={() => { setFilter(defaultFilter); setPage(0); }}>Reset search</button></div>}
         <nav className={s.pagination} aria-label="Public map catalog pages"><button type="button" disabled={currentPage === 0} onClick={() => setPage(currentPage - 1)}>Previous</button><span>{currentPage + 1} / {pages}</span><button type="button" disabled={currentPage + 1 >= pages} onClick={() => setPage(currentPage + 1)}>Next</button></nav>
       </div>
@@ -97,11 +103,11 @@ export default function PublicMapBrowser({ downloads, blockedByOtherDownload = f
           <button type="button" className={s.textButton} onClick={() => choose(null)}>← Back to results</button><p className={s.eyebrow}>{selected.publisher} · {selected.mapYear ?? "Map year unknown"}{selected.scale ? ` · ${selected.scale}${selected.scaleUnit && !["ratio", "denominator"].includes(selected.scaleUnit) ? ` ${selected.scaleUnit}` : ""}` : ""}</p>
           <h3 ref={heading} tabIndex={-1}>{selected.title}</h3>
           {selected.rights.status === "held" && <p className={p.rightsNote}>Source reuse terms are held for review. A local capture does not grant redistribution or map-display approval.</p>}
-          <div className={p.fileSection}><h4>Available files</h4><ul className={p.assets}>{files.map(asset => <li key={asset.id}><div><strong>{asset.title}</strong><span>{asset.format} · {size(asset.expectedBytes)} · Link checked</span></div>
+          <div className={p.fileSection}><h4>Available files</h4><ul className={p.assets}>{files.map(asset => <li key={asset.id}><div><strong>{asset.title}</strong><span>{asset.format} · {size(asset.expectedBytes)} · Link checked</span>{downloadMark(publicMapDownloadState([asset.id], status, connection))}</div>
             <><button type="button" className={s.primaryButton} aria-pressed={assetId === asset.id} onClick={() => selectFile(asset.id)}>Download {asset.format}<span>{size(asset.expectedBytes)}</span></button><a href={asset.url} target="_blank" rel="noreferrer">{["PDF", "JPEG", "JPG", "TIFF", "TIF", "GEOTIFF", "PNG"].includes(asset.format.toUpperCase()) ? "Open original document" : "Open original file"} ↗</a></>
           </li>)}</ul></div>
           {chosenAsset && canDownloadPublicMap(chosenAsset) && <div className={p.selection} aria-label="Selected original transfer"><p className={s.eyebrow}>SAVE TO THIS COMPUTER</p><strong>{chosenAsset.title}</strong>
-            {existing && <p className={p.storedNotice}>A copy is already stored ({bytes(existing.bytes)}). This starts a separate capture. <button type="button" className={s.textButton} onClick={onViewActivity}>View activity</button></p>}
+            {existing && <p className={p.storedNotice}>A completed copy is already stored on this computer. This starts a separate capture. <button type="button" className={s.textButton} onClick={onViewActivity}>View activity</button></p>}
             <p>{chosenAsset.expectedBytes === null ? "Size unknown. Enter a maximum before downloading." : `Reported file size ${bytes(chosenAsset.expectedBytes)}. A rounded-up maximum is ready for you to review.`}</p>
             {!connected && <div className={s.alert}><p>{connection === "unavailable" ? "The local download service could not be reached. Open KFM on this computer or retry the connection." : "Connect to the download service on this computer. No Google account is needed."}</p><button type="button" className={s.primaryButton} disabled={connection === "connecting"} aria-busy={connection === "connecting"} onClick={onConnect ?? downloads.connect}>{connection === "connecting" ? "Connecting…" : "Connect downloads · no login"}</button>{connection === "unavailable" && <p><a href={`http://127.0.0.1:4173/downloads#${collection === "satellite" ? "public-climate" : "public-maps"}`}>Open local KFM downloads →</a></p>}</div>}
             <label>Maximum download (MiB)<input ref={transfer} type="number" inputMode="decimal" min="0.001" step="0.001" value={maximum} onChange={e => setMaximum(e.target.value)} placeholder="Enter a maximum" /></label>

@@ -30,7 +30,7 @@
 .recordMeta { display:flex; justify-content:space-between; color:#c4d6c5; font-size:10px; letter-spacing:.4px; }
 .recordMeta>span { font-variant-numeric:tabular-nums; color:var(--gold); }
 .fileHint { display:flex; justify-content:space-between; color:#a9d7bf; font-size:10px; margin-top:12px; }
-.fileHint>span { font-size:14px; }
+.fileHint .cardArrow { font-size:16px; color:#91ada5; }
 .detail { min-width:0; border:1px solid #426056; background:#112b2e; border-top:3px solid #9ab598; padding:22px; overflow-wrap:anywhere; scroll-margin-top:20px; }
 .detail h3 { margin:8px 0 24px; font-size:22px; line-height:1.25; font-weight:600; letter-spacing:-.4px; scroll-margin-top:24px; }
 .detail>button:first-child { margin:-8px 0 16px -4px; }
@@ -85,3 +85,15 @@
 .sourceLinks { display:flex; flex-direction:column; align-items:flex-start; margin-top:8px; }
 .sourceLinks a { display:inline-flex; align-items:center; min-height:44px; text-decoration:underline; overflow-wrap:anywhere; }
 .sourceLinks a:focus-visible { outline:2px solid var(--gold); outline-offset:3px; }
+
+/* Status is part of the card footer, with text and shape as well as color. */
+.statusScope { color:var(--muted); font-size:10px; letter-spacing:.2px; margin:0 0 12px; }
+.fileHint { align-items:center; gap:12px; padding-top:12px; border-top:1px solid #304844; }
+.downloadState { display:inline-flex!important; align-items:center; gap:7px; width:fit-content; max-width:100%; color:#b7c9c4; font-size:11px!important; line-height:1.4; font-weight:500; }
+.downloadState>span { font-size:inherit; }
+.downloadState svg { flex:0 0 16px; width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:1.4; stroke-linecap:round; stroke-linejoin:round; }
+.downloadState[data-state=downloaded] { color:#b8efc9; }
+.downloadState[data-state=downloaded] svg { fill:#244c3d; }
+.downloadState[data-state=downloading],.downloadState[data-state=queued] { color:#b5e6f2; }
+.downloadState[data-state=outdated],.downloadState[data-state=partial],.downloadState[data-state=missing],.downloadState[data-state=failed],.downloadState[data-state=interrupted] { color:#f0d39b; }
+.assets div>.downloadState { margin:0 0 14px; }

@@ -117,3 +117,12 @@ test('response bodies share the deadline and byte bound; oversized or stalled bo
     const waiting = client.publicMapRequest('/status', controller.signal); controller.abort(); await assert.rejects(waiting);
   } finally { globalThis.fetch = previous; }
 });
+
+test('full-history asset states are bounded, unique and reject unsupported state claims', () => {
+  const status = { schema: 'kfm-public-map-download-control/v1', sessionToken: 'a'.repeat(43), jobs: [], active: null, limitBytes: 500_000_000_000, refresh: { state: 'idle' } };
+  assert.ok(client.parsePublicMapStatus(status), 'legacy operators remain readable');
+  assert.ok(client.parsePublicMapStatus({ ...status, assetStates: [{ assetId: 'old-file', state: 'downloaded' }] }));
+  for (const assetStates of [null, {}, [{ assetId: '', state: 'downloaded' }], [{ assetId: 'x', state: 'approved' }], [{ assetId: 'x', state: 'downloaded' }, { assetId: 'x', state: 'missing' }], Array.from({ length: 1001 }, (_, i) => ({ assetId: String(i), state: 'queued' }))]) {
+    assert.equal(client.parsePublicMapStatus({ ...status, assetStates }), null);
+  }
+});
