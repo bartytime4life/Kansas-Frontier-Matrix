@@ -188,3 +188,100 @@
 .flyover-launch span { font-size: 15px; }
 /* Phones: the top-centre gap between the zoom rail and map controls. */
 @media (max-width: 760px) { .flyover-launch { top: 14px; right: auto; left: 50%; transform: translateX(-50%); min-height: 38px; padding: 0 14px; } }
+
+/* ---------- Look presets and per-view hints ---------- */
+.scene-effects-controls > header em {
+  margin-left: auto;
+  padding: 2px 8px;
+  border: 1px solid rgba(121, 198, 226, .35);
+  border-radius: 999px;
+  color: var(--water, #79c6e2);
+  font-size: 10.5px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+.scene-look-presets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.scene-look-presets button {
+  display: grid;
+  gap: 2px;
+  min-height: 52px;
+  padding: 7px 8px;
+  text-align: left;
+  border: 1px solid var(--line-strong, rgba(196, 216, 236, .22));
+  border-radius: var(--kfm-radius-s, 8px);
+  background: rgba(255, 255, 255, .03);
+  color: var(--ink, #eef3f8);
+  cursor: pointer;
+}
+.scene-look-presets button strong { font-size: 12.5px; }
+.scene-look-presets button small { font-size: 10.5px; color: var(--muted, #aab9c9); line-height: 1.25; }
+.scene-look-presets button[aria-checked="true"] { border-color: rgba(224, 186, 109, .75); background: rgba(224, 186, 109, .14); box-shadow: var(--kfm-gold-glow); }
+.scene-look-presets button:focus-visible { outline: 2px solid var(--gold, #e0ba6d); outline-offset: 2px; }
+.scene-effects-switches label > span > b { font-size: 10.5px; font-weight: 600; color: var(--dim, #8698ab); letter-spacing: .02em; }
+.scene-effects-switches label[data-here] > span > b { color: var(--water, #79c6e2); }
+.scene-effects-switches label > span > strong > i { font-style: normal; font-weight: 600; font-size: 11px; color: var(--orange, #e1a06b); }
+.scene-effects-switches label:not([data-here]) { opacity: .78; }
+
+/* ---------- Floating Scene panel (every view) ---------- */
+.scene-panel { position: absolute; top: 244px; right: 22px; z-index: 7; }
+/* Open above the Qwen launcher (z-index 15). */
+.scene-panel[data-open] { z-index: 16; }
+.scene-panel-trigger {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(224, 186, 109, .55);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(14, 31, 49, .92), rgba(8, 20, 33, .94));
+  box-shadow: var(--kfm-shadow-1), 0 0 22px rgba(224, 186, 109, .16);
+  color: var(--gold-soft, #f4dfae);
+  font-size: 19px;
+  cursor: pointer;
+  transition: box-shadow var(--kfm-fast, 160ms) var(--kfm-ease, ease), transform var(--kfm-fast, 160ms) var(--kfm-ease, ease);
+}
+.scene-panel-trigger:hover, .scene-panel[data-open] .scene-panel-trigger { box-shadow: var(--kfm-shadow-1), 0 0 30px rgba(224, 186, 109, .34); transform: translateY(-1px); }
+.scene-panel-trigger:focus-visible { outline: 2px solid var(--gold-soft, #f4dfae); outline-offset: 2px; }
+.scene-panel-body {
+  position: absolute;
+  /* Aligned with the top of the map so the panel has the full map height. */
+  top: -226px;
+  right: 56px;
+  width: min(360px, calc(100vw - 96px));
+  max-height: calc(100vh - 250px);
+  min-height: 220px;
+  overflow: auto;
+  padding: 10px;
+  border: 1px solid var(--line-strong, rgba(196, 216, 236, .22));
+  border-radius: var(--kfm-radius-l, 18px);
+  background: var(--kfm-glass);
+  backdrop-filter: var(--kfm-glass-blur, blur(18px));
+  box-shadow: var(--kfm-shadow-2);
+  animation: scene-panel-in 180ms var(--kfm-ease, ease-out);
+}
+.scene-panel-body .scene-effects-controls { margin: 8px 0 0; }
+.scene-panel-views { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; }
+.scene-panel-views button {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 6px 2px;
+  border: 1px solid transparent;
+  border-radius: var(--kfm-radius-s, 8px);
+  background: rgba(255, 255, 255, .03);
+  color: var(--muted, #aab9c9);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.scene-panel-views button span { font-size: 16px; color: var(--gold-soft, #f4dfae); }
+.scene-panel-views button[aria-pressed="true"] { border-color: rgba(121, 198, 226, .55); background: rgba(121, 198, 226, .12); color: var(--ink, #eef3f8); }
+.scene-panel-views button:focus-visible { outline: 2px solid var(--gold, #e0ba6d); outline-offset: 1px; }
+@keyframes scene-panel-in { from { opacity: 0; transform: translateX(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .scene-panel-body { animation: none; } .scene-panel-trigger { transition: none; } }
+/* Phones: under the map controls; the panel opens as a bottom sheet above the dock. */
+@media (max-width: 760px) {
+  .scene-panel { top: 236px; right: 12px; }
+  .scene-panel-body { position: fixed; top: auto; right: 8px; left: 8px; bottom: 150px; width: auto; max-height: 56vh; }
+}

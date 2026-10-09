@@ -129,6 +129,8 @@ export function geoJSONHasData(source: GeoJSONSource, data: FeatureCollection): 
   return prior === data || Boolean(prior && prior.features.length === data.features.length && prior.features.every((feature, index) => feature === data.features[index]));
 }
 export function rememberGeoJSON(source: GeoJSONSource, data: FeatureCollection) { uploaded.set(source, data); }
+/** The collection most recently handed to a source, for display-only derivatives. */
+export function uploadedGeoJSON(source: GeoJSONSource | undefined): FeatureCollection | undefined { return source ? uploaded.get(source) : undefined; }
 export function updateGeoJSON(source: GeoJSONSource | undefined, data: FeatureCollection): boolean {
   if (!source) return false;
   if (geoJSONHasData(source, data)) return false;
