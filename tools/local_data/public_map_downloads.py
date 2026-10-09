@@ -233,7 +233,7 @@ class PublicMapDownloads:
         with self.lock:
             # Queued jobs are a count, and the running job is always listed: cancelled
             # queue entries must not push it out of the window the site validates.
-            jobs = [job for job in self.jobs.values() if job["id"] not in self.queue and job["id"] != self.active][-99:]
+            jobs = [job for job in self.jobs.values() if job["id"] not in self.queue and job["id"] != self.active][-(99 if self.active else 100):]
             if self.active:
                 jobs.append(self.jobs[self.active])
             return {"schema": "kfm-public-map-download-control/v1", "jobs": copy.deepcopy(jobs),
@@ -300,7 +300,8 @@ class PublicMapDownloads:
         identifiers = [hashlib.sha256(f"{batch}:{asset}".encode()).hexdigest()[:32] for asset in value["assetIds"]]
         with self.lock:
             # A request ID names one exact, ordered selection under one maximum.
-            prior = [job for job in self.jobs.values() if job.get("batchId") == batch]
+            # Jobs reload in file-name order after a restart, so order by the stored position.
+            prior = sorted((job for job in self.jobs.values() if job.get("batchId") == batch), key=lambda job: job.get("batchIndex", -1))
             if prior or any(identifier in self.jobs for identifier in identifiers):
                 if ([job["id"] for job in prior] != identifiers
                         or any(job["maxBytes"] != value["maxBytes"] for job in prior)):
@@ -321,8 +322,8 @@ class PublicMapDownloads:
             if shutil.disk_usage(self.root).free < reserved + RESERVE_BYTES:
                 raise ValueError("INSUFFICIENT_FREE_SPACE_FOR_LIMIT")
             try:
-                for identifier, asset_id in zip(identifiers, value["assetIds"]):
-                    self._create(identifier, asset_id, value["maxBytes"], batch=batch)
+                for index, (identifier, asset_id) in enumerate(zip(identifiers, value["assetIds"])):
+                    self._create(identifier, asset_id, value["maxBytes"], batch=(batch, index))
                     self.queue.append(identifier)
                 self._launch(self.queue.pop(0))
             except Exception:
@@ -372,7 +373,7 @@ class PublicMapDownloads:
                "bytes": 0, "expectedBytes": expected, "maxBytes": maximum, "sha256": None,
                "destination": str(destination), "mapReady": False, "createdAt": now, "updatedAt": now}
         if batch is not None:
-            job["batchId"] = batch
+            job["batchId"], job["batchIndex"] = batch
         self.jobs[identifier] = job
         try:
             save_state(self.work / "jobs" / (identifier + ".json"), job)

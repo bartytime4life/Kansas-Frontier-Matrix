@@ -480,6 +480,23 @@ class QueueTests(unittest.TestCase):
         self.assertEqual(titles, ["Storm Events 2021 · national CSV files including Kansas · StormEvents_details-ftp_v1.0_d2021_c20250401.csv.gz",
                                   "Storm Events 2021 · national CSV files including Kansas · StormEvents_fatalities-ftp_v1.0_d2021_c20250401.csv.gz"])
 
+    def test_an_identical_retry_after_a_restart_returns_the_same_queue(self):
+        assets = list(reversed(self.assets))
+        first = self.enqueue(assets=assets)
+        self.manager.close()
+        self.manager = downloads.PublicMapDownloads(self.root)
+        retried = self.enqueue(assets=assets)
+        self.assertEqual((retried["batchId"], retried["jobs"]), (first["batchId"], 3))
+        with self.assertRaisesRegex(ValueError, "REQUEST_ID_CONFLICT"):
+            self.enqueue(assets=self.assets)
+
+    def test_the_idle_status_window_holds_one_hundred_jobs(self):
+        for index in range(101):
+            identifier = f"{index:032x}"
+            self.manager.jobs[identifier] = {"id": identifier, "state": "downloaded"}
+        self.assertIsNone(self.manager.active)
+        self.assertEqual(len(self.manager.health()["jobs"]), 100)
+
     def test_a_request_id_names_one_exact_ordered_selection(self):
         self.enqueue()
         for changed in (self.assets[:2], list(reversed(self.assets)), [self.assets[0]]):
