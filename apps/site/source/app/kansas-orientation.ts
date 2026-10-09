@@ -1,5 +1,5 @@
 import type { FeatureCollection, LineString, Polygon } from "geojson";
-import type { LayerSpecification, SourceSpecification } from "maplibre-gl";
+import type { LayerSpecification, SourceSpecification } from "./maplibre-seam";
 
 /**
  * Offline orientation for the local basemaps. When the standard vector
