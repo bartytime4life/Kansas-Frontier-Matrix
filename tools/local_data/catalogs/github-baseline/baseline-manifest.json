@@ -2,11 +2,11 @@
   "schema_version": 1,
   "release_tag": "curated-data-20261008",
   "snapshot_utc": "2026-10-09T00:04:29.016409+00:00",
-  "prepared_utc": "2026-10-09T00:12:58.883241+00:00",
+  "prepared_utc": "2026-10-09T00:57:19.698339+00:00",
   "status": "source-context-unadmitted",
   "storage_cap_bytes": 80000000000,
   "repository": "bartytime4life/Kansas-Frontier-Matrix",
-  "source_repository_base_commit": "a7c810e632b68a1d5eebc97cd12b109a759144f2",
+  "source_repository_base_commit": "5163738b6376358219875e30f6162382ac8af02f",
   "datasets": [
     {
       "id": "prism",
@@ -394,10 +394,83 @@
         "https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits"
       ],
       "title": "USGS Kansas water pilot historical observations"
+    },
+    {
+      "assets": [
+        {
+          "name": "nadcon5-grids-001.tar.gz",
+          "bytes": 95201702,
+          "sha256": "00caab4afbe0ebff1f20ffb699f77b932495e427e4d3ee099d3a0b0c08f81890",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/nadcon5-grids-001.tar.gz"
+        }
+      ],
+      "bytes": 95339109,
+      "description": "Four complete NOAA/PROJ CONUS grids used as offline datum-transformation dependencies, with the original public-domain licensing notice and exact source capture identities.",
+      "files": 9,
+      "id": "nadcon5-grids",
+      "install_subdir": "nadcon5-grids",
+      "license": "Public Domain, as recorded by PROJ for NOAA-origin NADCON5 grids. Retain NOAA/PROJ source attribution.",
+      "lifecycle": "SOURCE_CONTEXT_NOT_ADMITTED",
+      "snapshot_at": "2026-10-09T00:54:12.459858+00:00",
+      "source_urls": [
+        "https://cdn.proj.org/us_noaa_README.txt",
+        "https://www.ngs.noaa.gov/",
+        "https://cdn.proj.org/"
+      ],
+      "title": "NOAA NADCON5 coordinate transformation grids"
+    },
+    {
+      "assets": [
+        {
+          "name": "prism-gap-candidates-001.tar.gz",
+          "bytes": 385259,
+          "sha256": "96d27b82a1f9216f79d0e48daf0ea43d4eab5f2db4277b59186f415fa0fb7a7c",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/prism-gap-candidates-001.tar.gz"
+        }
+      ],
+      "bytes": 424360,
+      "description": "A separate 11-band Kansas precipitation candidate covering September 2026 monthly precipitation and daily labels September 24 through October 3, 2026, with exact band-order provenance and byte validation. Candidate only: -9999 denotes missing values without a nodata tag; band descriptions are absent, so use the supplied band-order provenance. Its TIGER 2018 mask differs from the main PRISM collection and does not establish native-grid equivalence.",
+      "files": 7,
+      "id": "prism-gap-candidates",
+      "install_subdir": "prism-gap-candidates",
+      "license": "PRISM Group, Oregon State University, https://prism.oregonstate.edu, accessed through Earth Engine 2026-10-06. PRISM permits reproduction and distribution with source/date attribution. Preserve original source rights.",
+      "lifecycle": "SOURCE_CONTEXT_NOT_ADMITTED",
+      "snapshot_at": "2026-10-09T00:54:12.459858+00:00",
+      "source_urls": [
+        "https://developers.google.com/earth-engine/datasets/catalog/OREGONSTATE_PRISM_ANm",
+        "https://developers.google.com/earth-engine/datasets/catalog/OREGONSTATE_PRISM_ANd",
+        "https://prism.oregonstate.edu/terms/"
+      ],
+      "title": "PRISM precipitation gap candidates via Earth Engine"
+    },
+    {
+      "assets": [
+        {
+          "name": "wind-summaries-001.tar.gz",
+          "bytes": 79699,
+          "sha256": "246a130e5d678dd29116c3b12c102a45173a413638b402eabfad986bd7ef6dd5",
+          "url": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases/download/curated-data-20261008/wind-summaries-001.tar.gz"
+        }
+      ],
+      "bytes": 280224,
+      "description": "Four current curated summary tables/geographic station coverage aids derived from the retained IEM Kansas airport history.",
+      "files": 7,
+      "id": "wind-summaries",
+      "install_subdir": "wind-summaries",
+      "license": "Iowa Environmental Mesonet, Iowa State University, public-domain data for lawful use; attribution requested.",
+      "lifecycle": "SOURCE_CONTEXT_NOT_ADMITTED",
+      "snapshot_at": "2026-10-09T00:54:12.459858+00:00",
+      "source_urls": [
+        "https://mesonet.agron.iastate.edu/geojson/network.py?network=KS_ASOS",
+        "https://mesonet.agron.iastate.edu/cgi-bin/request/daily.py?help=",
+        "https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?help=",
+        "https://mesonet2.agron.iastate.edu/disclaimer.php"
+      ],
+      "title": "Kansas airport wind coverage and annual summaries"
     }
   ],
-  "data_archive_bytes": 36615056886,
-  "expanded_payload_bytes": 38039311919,
+  "data_archive_bytes": 36710723546,
+  "expanded_payload_bytes": 38135355612,
   "source_currentness": "Frozen current validated local holdings at each recorded snapshot, not a provider refresh or assertion of complete upstream holdings. Historical periods and expired NWM forecast remain explicit.",
   "exclusions": [
     "KDOT PDF collections and map-derived vectors/OCR: current KDOT distribution terms require explicit permission",
@@ -408,6 +481,9 @@
     "Broad uncurated NOAA FTP mirror replaced here by selected Kansas historical derivatives",
     "NWM raw CONUS source files: curated Kansas-envelope values/geometry and source hashes retained",
     "Stale September 24 latest wind snapshot superseded by retained October 6 capture",
+    "No GNIS, BLM, Crop-CASMA or NEXRAD Level III completed payloads were found in the canonical RAW/WORK/PROCESSED roots; connector code and metadata discovery do not establish local captured data.",
+    "Public map catalog is discovery metadata, not downloaded map payloads; KGS completed M118 JPG/PDF and KDOT source/derived maps remain excluded on source-rights grounds; interrupted PDF .part files excluded.",
+    "Superseded PRISM/EE/wind snapshots, runtime caches and raw uncurated nationwide NOAA mirrors remain excluded.",
     {
       "dataset": "prism",
       "excluded_completed_grids": [
@@ -446,9 +522,9 @@
     "cap_bytes": 80000000000,
     "repository_reported_bytes_before": 234924032,
     "release_assets_bytes_before": 0,
-    "data_assets_bytes": 36615056886,
+    "data_assets_bytes": 36710723546,
     "support_metadata_reserve_bytes": 10000000,
-    "projected_bytes_with_reserve": 36859980918
+    "projected_bytes_with_reserve": 36955647578
   },
   "validation": [
     "All archives round-trip checked for exact members, sizes and SHA-256.",
