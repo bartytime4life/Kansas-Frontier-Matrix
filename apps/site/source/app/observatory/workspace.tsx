@@ -5,7 +5,9 @@ import Link from "next/link";
 import { currentDayStart, currentUtcDay, latestSafeCursor } from "../daily-baseline";
 import { shouldRefreshFollowToday } from "./follow-today";
 import { replaceExplorerHistory } from "../embed-runtime";
-import { browserRenderBudget, updateGeoJSON } from "../map-performance";
+import { browserRenderBudget, geoJSONHasData, updateGeoJSON, uploadedGeoJSON } from "../map-performance";
+import { reuseUnchanged } from "./frame-data";
+import type { FeatureCollection } from "geojson";
 import { DataNotices } from "../map-toolbar";
 import { loadMapLibre, type Map as GLMap, type GeoJSONSource } from "../maplibre-seam";
 import { BASEMAPS } from "../map-runtime";
@@ -524,10 +526,41 @@ export default function EventObservatory() {
     if (!map || !mapReady || !manifest || !requested || loading) return;
     const token = ++frameGeneration.current;
     frameRequest.current?.abort(); const controller = new AbortController(); frameRequest.current = controller;
-    setBuffering(true); setError(""); hideEventLayers(false);
+    setBuffering(true); setError("");
+    const scan = visible.radar ? radarAt(manifest.radar.scans, requested) : null;
+    const day = requested.slice(0,10), year = day.slice(0,4);
+    // This frame's local data. Content-equal frames (the streamflow frame is
+    // rebuilt with fresh objects every step) reuse the collection the source holds.
+    const frameData = new Map<string, FeatureCollection>([
+      ["ea-smoke", smokeAt(manifest.smoke.data, requested)],
+      ["ea-river-data", river ? riverAt(river, requested, loadedRiverResolution) : EMPTY],
+      ["ea-resource-data", resourceData ?? EMPTY],
+    ]);
+    for (const id of ["counties", "weather", "earthquakes", "shake"] as ContextTrack[]) {
+      const entry = contextData[id];
+      let data = entry?.date === (id === "counties" ? countyEdition : day) ? entry.data : EMPTY;
+      if (id === "earthquakes") data = { ...data, features: data.features.filter((feature) => Date.parse(String(feature.properties?.observedAt)) <= Date.parse(requested)) };
+      if (id === "shake") data = { ...data, features: data.features.filter((feature) => {
+        const start = String(feature.properties?.startTime ?? ""), end = String(feature.properties?.endTime ?? "");
+        const epoch = (value: string) => Date.parse(/(Z|[+-]\d{2}:\d{2})$/.test(value) ? value : value + "Z");
+        return (!start || epoch(start) <= Date.parse(requested)) && (!end || epoch(end) > Date.parse(requested));
+      }) };
+      frameData.set(`ea-${id}-data`, data);
+    }
+    const geoSource = (id: string) => map.getSource(id) as GeoJSONSource | undefined;
+    for (const [id, data] of frameData) frameData.set(id, reuseUnchanged(uploadedGeoJSON(geoSource(id)), data));
+    // No old pixels under the new time: tracks whose data changes are hidden
+    // until the frame commits. Unchanged tracks are correct for both times and
+    // stay visible; storms are fetched per frame and are always treated as changing.
+    const changing: TrackId[] = ["storms"];
+    if (!scan || scan.time !== radarSourceTime.current) changing.push("radar");
+    for (const [track, sourceId] of [["smoke", "ea-smoke"], ["river", "ea-river-data"], ["weather", "ea-weather-data"], ["earthquakes", "ea-earthquakes-data"], ["shake", "ea-shake-data"]] as const) {
+      const held = geoSource(sourceId);
+      if (!held || !geoJSONHasData(held, frameData.get(sourceId)!)) changing.push(track);
+    }
+    for (const track of changing) for (const layer of LAYERS[track]) if (map.getLayer(layer)) map.setLayoutProperty(layer, "visibility", "none");
     for (const id of order) if (!visible[id]) for (const layer of LAYERS[id]) if (map.getLayer(layer)) map.setLayoutProperty(layer,"visibility","none");
     const apply = async () => {
-      const scan = visible.radar ? radarAt(manifest.radar.scans, requested) : null;
       let imageUrl: string | null = null;
       try { if (scan) imageUrl = await getRadarImage(scan.time, controller.signal); }
       catch (failure) { if (controller.signal.aborted) return; throw failure; }
@@ -550,21 +583,7 @@ export default function EventObservatory() {
           map.addLayer({ id: "ea-radar", type: "raster", source: "ea-radar-image", layout: { visibility: "none" }, paint: { "raster-opacity": opacityRef.current.radar, "raster-fade-duration": 0 } });
           radarSourceTime.current = scan?.time ?? null;
       }
-      updateGeoJSON(map.getSource("ea-smoke") as GeoJSONSource, smokeAt(manifest.smoke.data, requested));
-      updateGeoJSON(map.getSource("ea-river-data") as GeoJSONSource, river ? riverAt(river, requested, loadedRiverResolution) : EMPTY);
-      updateGeoJSON(map.getSource("ea-resource-data") as GeoJSONSource, resourceData ?? EMPTY);
-      const day = requested.slice(0,10), year = day.slice(0,4);
-      for (const id of ["counties", "weather", "earthquakes", "shake"] as ContextTrack[]) {
-        const entry = contextData[id];
-        let data = entry?.date === (id === "counties" ? countyEdition : day) ? entry.data : EMPTY;
-        if (id === "earthquakes") data = { ...data, features: data.features.filter((feature) => Date.parse(String(feature.properties?.observedAt)) <= Date.parse(requested)) };
-        if (id === "shake") data = { ...data, features: data.features.filter((feature) => {
-          const start = String(feature.properties?.startTime ?? ""), end = String(feature.properties?.endTime ?? "");
-          const epoch = (value: string) => Date.parse(/(Z|[+-]\d{2}:\d{2})$/.test(value) ? value : value + "Z");
-          return (!start || epoch(start) <= Date.parse(requested)) && (!end || epoch(end) > Date.parse(requested));
-        }) };
-        updateGeoJSON(map.getSource(`ea-${id}-data`) as GeoJSONSource, data);
-      }
+      for (const [sourceId, data] of frameData) updateGeoJSON(geoSource(sourceId), data);
       for (const kind of ["flora", "fauna"] as const) {
         const id = `ea-${kind}`, marker = `${year}:${kind}`;
         const source = map.getSource(id) as (ReturnType<GLMap["getSource"]> & { _eventYear?: string });
