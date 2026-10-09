@@ -209,6 +209,8 @@ capture does not hide an earlier complete copy that is still present.
 The operator checks each completed file against its receipt and current regular
 file size without reading large payloads or rewriting records. This establishes
 presence at the captured size, not a new checksum, admission or map approval.
-A missing/changed file says “Check local file.” Disconnected or older operators
+A missing/changed file says “Check local file.” A publisher reissue with a new
+URL or known size says “Update available”; a historical copy cannot mark the
+currently listed version as downloaded. Disconnected or older operators
 show unknown/unavailable status rather than asserting that nothing was downloaded.
 Files saved outside KFM are not tracked. Status inspection never starts a transfer.

@@ -107,6 +107,15 @@ class DownloadTests(unittest.TestCase):
         self.assertEqual(state(), "missing")
         self.assertEqual((self.manager.receipts / (job["id"] + ".json")).read_bytes(), before)
 
+    def test_card_summary_does_not_confuse_reissued_publisher_files_with_prior_copies(self):
+        job = self.run_job()
+        self.manager._catalog["records"][0]["assets"][0]["url"] = URL.replace("test.pdf", "reissued.pdf")
+        self.assertEqual(self.manager.health()["assetStates"][0]["state"], "outdated")
+        self.manager._catalog["records"][0]["assets"][0]["url"] = URL
+        self.assertEqual(self.manager.health()["assetStates"][0]["state"], "downloaded")
+        self.manager._catalog["records"][0]["assets"][0]["expectedBytes"] = len(PAYLOAD) + 1
+        self.assertEqual(self.manager.health()["assetStates"][0]["state"], "outdated")
+
     def test_card_summary_tracks_queue_and_partial_without_promoting_them(self):
         job = self.start()
         self.assertEqual(self.manager.health()["assetStates"], [{"assetId": "test-pdf", "state": "queued"}])

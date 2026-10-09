@@ -95,5 +95,5 @@
 .downloadState[data-state=downloaded] { color:#b8efc9; }
 .downloadState[data-state=downloaded] svg { fill:#244c3d; }
 .downloadState[data-state=downloading],.downloadState[data-state=queued] { color:#b5e6f2; }
-.downloadState[data-state=partial],.downloadState[data-state=missing],.downloadState[data-state=failed],.downloadState[data-state=interrupted] { color:#f0d39b; }
+.downloadState[data-state=outdated],.downloadState[data-state=partial],.downloadState[data-state=missing],.downloadState[data-state=failed],.downloadState[data-state=interrupted] { color:#f0d39b; }
 .assets div>.downloadState { margin:0 0 14px; }

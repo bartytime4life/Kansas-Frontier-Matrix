@@ -190,7 +190,7 @@ test('card resolver never infers older downloads from the recent activity window
   const resolve = (ids, entries, connection = 'connected') => stateModel.publicMapDownloadState(ids, { ...status(), assetStates: entries }, connection);
   assert.equal(resolve(['a'], undefined).state, 'unknown');
   assert.equal(resolve(['a'], []).state, 'not-downloaded');
-  for (const state of ['downloaded', 'downloading', 'queued', 'partial', 'missing']) assert.equal(resolve(['a'], [{ assetId: 'a', state }]).state, state);
+  for (const state of ['downloaded', 'downloading', 'queued', 'partial', 'missing', 'outdated']) assert.equal(resolve(['a'], [{ assetId: 'a', state }]).state, state);
   for (const state of ['failed', 'cancelled', 'interrupted']) assert.equal(resolve(['a'], [{ assetId: 'a', state }]).label, 'Not downloaded');
   assert.equal(resolve(['a'], [{ assetId: 'different', state: 'downloaded' }]).state, 'not-downloaded');
   assert.equal(resolve(['a', 'a'], [{ assetId: 'a', state: 'downloaded' }]).total, 1);

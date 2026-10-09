@@ -1,7 +1,7 @@
 import type { PublicMapStatus } from "./public-map-client";
 
 export type CardDownloadState = {
-  state: "downloaded" | "not-downloaded" | "partial" | "downloading" | "queued" | "missing" | "failed" | "cancelled" | "interrupted" | "unknown";
+  state: "downloaded" | "not-downloaded" | "partial" | "downloading" | "queued" | "outdated" | "missing" | "failed" | "cancelled" | "interrupted" | "unknown";
   label: string; detail: string; downloaded: number; total: number;
 };
 
@@ -20,6 +20,7 @@ export function publicMapDownloadState(assetIds: readonly string[], status: Publ
   if (states.includes("downloading")) return result("downloading", "Downloading", total > 1 ? `${count} · a file is downloading.` : "Downloading to this computer.", downloaded);
   if (states.includes("queued")) return result("queued", "Queued", total > 1 ? `${count} · more files are queued.` : "Waiting in this computer’s download queue.", downloaded);
   if (downloaded || states.includes("partial")) return result("partial", downloaded ? `${downloaded} of ${total} downloaded` : "Partially downloaded", downloaded ? `${count}. Select this card to see each file’s status.` : "An incomplete transfer was recorded. A complete download is still needed.", downloaded);
+  if (states.includes("outdated")) return result("outdated", "Update available", "A previous version is stored. The file currently listed by the publisher has not been downloaded.");
   if (states.includes("missing")) return result("missing", "Check local file", "A completed download was recorded, but its local file could not be confirmed at the captured size.");
   for (const state of ["failed", "interrupted", "cancelled"] as const) {
     if (states.includes(state)) return result(state, "Not downloaded", `The previous transfer ${state === "failed" ? "failed" : `was ${state}`}; no complete copy is confirmed.`);

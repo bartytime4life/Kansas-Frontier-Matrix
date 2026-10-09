@@ -7,7 +7,7 @@ export type PublicMapJob = {
   bytes: number; expectedBytes: number | null; maxBytes: number; sha256: string | null;
   destination: string; reason: string | null; mapReady: false; createdAt: string; updatedAt: string;
 };
-export type PublicMapAssetState = { assetId: string; state: PublicMapJob["state"] | "partial" | "missing" };
+export type PublicMapAssetState = { assetId: string; state: PublicMapJob["state"] | "partial" | "missing" | "outdated" };
 export type PublicMapStatus = {
   schema: "kfm-public-map-download-control/v1"; sessionToken: string; jobs: PublicMapJob[];
   active: string | null; limitBytes: number; refresh: { state: "idle" | "running" | "complete" | "failed"; reason?: string };
@@ -43,7 +43,7 @@ export function parsePublicMapStatus(value: unknown): PublicMapStatus | null {
     const assets = new Set<string>();
     for (const item of value.assetStates) {
       if (!object(item) || !publicMapText(item.assetId, 500) || !item.assetId || assets.has(item.assetId)
-        || !["queued", "downloading", "downloaded", "failed", "cancelled", "interrupted", "partial", "missing"].includes(String(item.state))) return null;
+        || !["queued", "downloading", "downloaded", "failed", "cancelled", "interrupted", "partial", "missing", "outdated"].includes(String(item.state))) return null;
       assets.add(item.assetId);
     }
   }
