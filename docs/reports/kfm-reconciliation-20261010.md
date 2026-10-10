@@ -135,5 +135,25 @@ was installed by this reconciliation.
 
 Next: review the exact candidate and receipt, resolve the selected mirror checkpoint
 through its review process, monitor a compatible dependency fix, and measure map
-startup/interaction performance against a fixed device/view baseline. The repository
-changes remain a draft until independently reviewed and merged.
+startup/interaction performance against a fixed device/view baseline. The repository changes remain unmerged. GitHub now marks PR #5014 ready for
+review; this session did not change its draft status or merge it.
+
+## Final CI reconciliation: v214
+
+The final saved and privately deployed Site is **v214**, source
+`11f1c546d56dcaec08454f99130350ce536328a2`, deployment
+`appgdep_6aca9c6e29a48191aac22f020f764428` (succeeded, environment revision 5).
+It adds five narrowly documented `react-hooks/set-state-in-effect` exceptions
+for external-session invalidation, changed-request frame/catalog retirement,
+map suspension cleanup and stopping at the last accepted playback frame.
+Executable code is unchanged from v213; no broad lint rule was disabled.
+Required lint now passes with zero errors and 63 warnings; type checking,
+19 Atlas/control tests and the rebuild also pass. The earlier full 985-test
+execution belongs to the equivalent executable code before these comments.
+
+The [v214 candidate receipt](../../data/receipts/generated/site-v214-reconciliation-20261010.json)
+supersedes the v213 candidate for review and preserves that historical receipt.
+It records 921 exact application mirror paths plus the same two canonical tool
+mappings. The active v192 checker and its separate review hold remain unchanged.
+The completed security diff likewise precedes only these comments and the
+repository smoke-inventory correction; no new security scan is claimed.

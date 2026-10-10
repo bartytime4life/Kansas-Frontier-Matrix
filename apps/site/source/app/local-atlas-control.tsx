@@ -34,6 +34,7 @@ export function LocalAtlasControl({ map, styleReady, flatMap, suspended, compact
   const clear = useCallback(() => { gate.current.clear(); overlay.current?.dispose(); overlay.current = null; setPreview(null); setInspected(null); setBusy(false); setPlaying(false); setMapState(""); }, []);
   useEffect(() => () => { gate.current.clear(); overlay.current?.dispose(); }, []);
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Invalidate the prior external session before beginning its replacement handshake.
     const abort = new AbortController(); setConnection("connecting"); setToken(""); setFrames(null); setFrameId(""); setError("");
     atlasRequest("/api/status", abort.signal, atlasSession).then(async session => {
       if (abort.signal.aborted) return;
@@ -47,6 +48,7 @@ export function LocalAtlasControl({ map, styleReady, flatMap, suspended, compact
     return () => abort.abort();
   }, [connectionKey]);
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- A changed request scope must retire stale provider frames before the next response.
     setFrames(null); setFrameId(""); setCompareId(""); setListingBusy(false);
     if (!token || !groupId || section !== "climate" || (year.length > 0 && year.length !== 4)) return;
     const abort = new AbortController(); setListingBusy(true); setError("");
@@ -57,6 +59,7 @@ export function LocalAtlasControl({ map, styleReady, flatMap, suspended, compact
   }, [token, groupId, year, frameOffset, section]);
   useEffect(() => {
     if (!token || section === "climate") return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Synchronize loading and retire the external catalog for this new request scope.
     const abort = new AbortController(); setListingBusy(true); setCatalog(null); setCoverage(null); setError("");
     const params = new URLSearchParams({ text: query, family, offset: String(offset), limit: section === "coverage" ? "100" : "50" });
     const request = section === "coverage" ? atlasRequest(`/api/extents?${params}`, abort.signal, parseAtlasCoverage).then(v => { if (!abort.signal.aborted) setCoverage(v); })
@@ -73,6 +76,7 @@ export function LocalAtlasControl({ map, styleReady, flatMap, suspended, compact
     } catch (e) { if (ownership.current()) { setError(atlasErrorMessage(e)); setPlaying(false); } }
     finally { if (ownership.current()) setBusy(false); }
   }, [token]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- Suspension cancels the external request and removes its map overlay and selection together.
   useEffect(() => { if (suspended) clear(); }, [suspended, clear]);
   useEffect(() => {
     if (!preview || !map || !styleReady || suspended) return;
@@ -86,6 +90,7 @@ export function LocalAtlasControl({ map, styleReady, flatMap, suspended, compact
     if (!playing || busy || !preview || !frames || section !== "climate" || suspended) return;
     // A new timer starts only after the accepted response. Never accumulate requests.
     const next = frameIndex - 1;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Stop at the end of accepted provider frames; never schedule an invented next observation.
     if (next < 0) { setPlaying(false); return; }
     const timer = window.setTimeout(() => { const id = frames.frames[next].id; setFrameId(id); showFrame(id); }, 1800);
     return () => window.clearTimeout(timer);
