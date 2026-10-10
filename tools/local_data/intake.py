@@ -477,6 +477,8 @@ def _validated_identity(identity: str) -> str:
 
 def _receipt(root: Path, identity: str, action: str, body: dict) -> str:
     identity = _validated_identity(identity)
+    if not re.fullmatch(r"[A-Za-z0-9._-]+", identity) or "/" in identity or "\\" in identity:
+        raise IntakeError("ITEM_ID_INVALID")
     if action not in ("stage", "card"):
         raise IntakeError("ACTION_UNSUPPORTED")
     stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
