@@ -57,7 +57,7 @@ Record the commit, working directory, command, result and relevant limits. “Th
 
 **Next:** [Create a reviewable contribution](Contributing.md) or [inspect the current evidence checkpoint](Project-Status.md).
 
-<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](builder-profile.md).</sub>
 
 ---
 

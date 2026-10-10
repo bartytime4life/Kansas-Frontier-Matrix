@@ -24,8 +24,8 @@ You can evaluate KFM without access to the private hosted Explorer. Use the publ
 
 | You are here to… | First stop | One layer deeper |
 |---|---|---|
-| Evaluate the builder | [Builder profile](Builder-Profile.md) | [Engineering case studies](Engineering-Case-Studies.md) |
-| Understand the experience | [Visual tour](Visual-Tour.md) | [Map, UI, and AI](Map-UI-and-AI.md) |
+| Evaluate the builder | [Builder profile](builder-profile.md) | [Engineering case studies](engineering-case-studies.md) |
+| Understand the experience | [Visual tour](visual-tour.md) | [Map, UI, and AI](Map-UI-and-AI.md) |
 | Understand the software | [Architecture](Architecture.md) | [Repository map](Repository-Map.md) |
 | Run or contribute | [Development and validation](Development-and-Validation.md) | [Contribution walkthrough](Contributing.md) |
 
@@ -41,7 +41,7 @@ The **repository** supplies source and review history. A **local installation** 
 
 **Next:** [Explore the interaction model](Map-UI-and-AI.md) or [follow the installation path](Development-and-Validation.md#run-the-right-component).
 
-<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](builder-profile.md).</sub>
 
 ---
 

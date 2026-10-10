@@ -49,7 +49,7 @@ The [root contribution guide](https://github.com/bartytime4life/Kansas-Frontier-
 
 **Next:** [Choose checks](Development-and-Validation.md) → [find the owning files](Repository-Map.md) → [understand evidence and review](Governance-and-Evidence.md).
 
-<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](builder-profile.md).</sub>
 
 ---
 

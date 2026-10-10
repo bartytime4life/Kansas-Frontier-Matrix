@@ -52,7 +52,7 @@ The [reviewed-water guide](https://github.com/bartytime4life/Kansas-Frontier-Mat
 
 **Next:** [Follow the data lifecycle](Data-Lifecycle.md) → [read sensitivity boundaries](Security-and-Sensitivity.md) → [check the dated project snapshot](Project-Status.md).
 
-<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](builder-profile.md).</sub>
 
 ---
 

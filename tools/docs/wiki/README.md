@@ -75,6 +75,13 @@ native Wiki's extensionless routes, retaining fragments. External URLs and unkno
 paths stay unchanged. The source-only README link points to the selected immutable
 repository commit. Existing extra native pages are preserved.
 
+The three newer source files use lowercase paths: `builder-profile.md`,
+`visual-tour.md`, and `engineering-case-studies.md`. The explicit source-name
+map projects them to the existing `Builder-Profile`, `Visual-Tour`, and
+`Engineering-Case-Studies` native pages, so published URLs remain stable.
+Historical source commits with the former filenames remain replayable. Both
+old and current local link destinations resolve to the same native URLs.
+
 Single-line Git outputs are captured as arrays before indexing so a commit SHA
 cannot be truncated to its first character by PowerShell scalar enumeration.
 

@@ -24,7 +24,7 @@ publication_effect: native wiki documentation only; no application deployment or
 | Observation time | When the source says the event or measurement occurred | Different from retrieval time |
 | Retrieval time | When the application obtained the response | A fresh fetch can contain old observations |
 | Record time | A date attached to a source record | Underground filtering is not geological reconstruction |
-| Snapshot identity | The exact captured artifact or source edition | [Imagery comparison](Engineering-Case-Studies.md#02--compare-time-without-substituting-history) |
+| Snapshot identity | The exact captured artifact or source edition | [Imagery comparison](engineering-case-studies.md#02--compare-time-without-substituting-history) |
 | EvidenceRef / EvidenceBundle | A reference to support / its resolvable evidence carrier under the governing contracts | [Governance and evidence](Governance-and-Evidence.md) |
 | Generated receipt | AI-authored artifact provenance and process memory | Not a human approval or release decision |
 | Source admission | Applicable decision that a source can enter a governed use | Different from download completion |
@@ -44,7 +44,7 @@ A new download is not necessarily a new observation. A green check is not necess
 
 **Next:** [Apply the vocabulary to project status](Project-Status.md) or [follow the lifecycle](Data-Lifecycle.md).
 
-<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](builder-profile.md).</sub>
 
 ---
 

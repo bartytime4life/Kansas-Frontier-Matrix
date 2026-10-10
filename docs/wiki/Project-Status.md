@@ -37,9 +37,9 @@ For a feature evaluation, exercise the interaction on the exact source and devic
 
 No application tests, source admission, Site deployment, private-store migration or security certification is claimed by this documentation edition.
 
-**Next:** [Inspect case-study evidence](Engineering-Case-Studies.md) or [choose a validation path](Development-and-Validation.md).
+**Next:** [Inspect case-study evidence](engineering-case-studies.md) or [choose a validation path](Development-and-Validation.md).
 
-<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](builder-profile.md).</sub>
 
 ---
 

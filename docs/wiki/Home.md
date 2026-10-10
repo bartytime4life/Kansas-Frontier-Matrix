@@ -18,7 +18,7 @@ evidence_checkpoint: main@459ffbe892929cbe994add8665805549694740b6
 
 Led by [@bartytime4life](https://github.com/bartytime4life), KFM brings geospatial interfaces, public-source research, data engineering, software verification, and AI-assisted development into one ambitious project. It turns a question about a place into a path through maps, time, source records, and the limits of what those records can explain.
 
-**[Meet the builder](Builder-Profile.md) · [Take the visual tour](Visual-Tour.md) · [Inspect the engineering](Engineering-Case-Studies.md)**
+**[Meet the builder](builder-profile.md) · [Take the visual tour](visual-tour.md) · [Inspect the engineering](engineering-case-studies.md)**
 
 <sub>Illustrative artwork throughout this tour, not application screenshots or measured data. [Artwork and attribution](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/459ffbe892929cbe994add8665805549694740b6/docs/brand/readme/README.md).</sub>
 
@@ -26,9 +26,9 @@ Led by [@bartytime4life](https://github.com/bartytime4life), KFM brings geospati
 
 | Start with… | What you will see | Why it matters |
 |---|---|---|
-| **01 · Product judgment** | [Builder profile](Builder-Profile.md): the problem, the decisions, and the human–AI workflow | Turning an open-ended idea into an inspectable product |
-| **02 · Experience design** | [Visual tour](Visual-Tour.md): surface, subsurface, historical comparison, and evidence | Making a complex domain understandable without concealing uncertainty |
-| **03 · Engineering depth** | [Case studies](Engineering-Case-Studies.md): implementation choices, failure modes, and tests | Connecting a polished interface to behavior that can be checked |
+| **01 · Product judgment** | [Builder profile](builder-profile.md): the problem, the decisions, and the human–AI workflow | Turning an open-ended idea into an inspectable product |
+| **02 · Experience design** | [Visual tour](visual-tour.md): surface, subsurface, historical comparison, and evidence | Making a complex domain understandable without concealing uncertainty |
+| **03 · Engineering depth** | [Case studies](engineering-case-studies.md): implementation choices, failure modes, and tests | Connecting a polished interface to behavior that can be checked |
 
 ## One project, several kinds of craft
 
@@ -36,9 +36,9 @@ Led by [@bartytime4life](https://github.com/bartytime4life), KFM brings geospati
 
 **Design for investigation.** Begin with an area or question, reveal the relevant controls, and keep source context close to the visual result. KFM's Explorer includes recorded-column inspection, comparison views, saved investigations, and report workflows in its public source mirror.
 
-**Engineer the boundaries.** Missing years stay missing. A borehole remains a record with its own depth reference. An interrupted request must not repaint a newer investigation. Exported context must respect location privacy. These are product behaviors with corresponding implementation and tests, explored in the [case studies](Engineering-Case-Studies.md).
+**Engineer the boundaries.** Missing years stay missing. A borehole remains a record with its own depth reference. An interrupted request must not repaint a newer investigation. Exported context must respect location privacy. These are product behaviors with corresponding implementation and tests, explored in the [case studies](engineering-case-studies.md).
 
-**Use AI with accountability.** Human direction sets the questions and constraints; AI supports research synthesis, design, implementation, documentation, and regression work. Git history, source-linked explanations, and generated-work receipts make the resulting artifacts reviewable. [How the work is organized](Builder-Profile.md#how-human-direction-and-ai-work-together).
+**Use AI with accountability.** Human direction sets the questions and constraints; AI supports research synthesis, design, implementation, documentation, and regression work. Git history, source-linked explanations, and generated-work receipts make the resulting artifacts reviewable. [How the work is organized](builder-profile.md#how-human-direction-and-ai-work-together).
 
 ## What you can inspect today
 
@@ -55,6 +55,6 @@ This edition links implementation evidence to [repository snapshot `459ffbe89292
 
 [Getting started](Getting-Started.md) · [Architecture](Architecture.md) · [Domains](Domains.md) · [Data lifecycle](Data-Lifecycle.md) · [Security and sensitivity](Security-and-Sensitivity.md) · [Project status](Project-Status.md)
 
-**Evaluating the builder?** Start with [three engineering conversations](Builder-Profile.md#three-conversations-worth-having), then inspect the matching code. The [GitHub profile](https://github.com/bartytime4life) is the public point of reference for the project owner.
+**Evaluating the builder?** Start with [three engineering conversations](builder-profile.md#three-conversations-worth-having), then inspect the matching code. The [GitHub profile](https://github.com/bartytime4life) is the public point of reference for the project owner.
 
 > **Evidence standard:** This wiki explains the work. Repository evidence, adopted doctrine, and accountable review remain authoritative. Map display, AI output, tests, deployment, and data release each support different claims.

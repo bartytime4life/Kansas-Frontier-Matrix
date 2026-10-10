@@ -36,7 +36,7 @@ The [research tools guide](https://github.com/bartytime4life/Kansas-Frontier-Mat
 
 ### Two interaction problems worth inspecting
 
-**The user moves on before the network finishes.** Selection identity and cancellation protect the next area, station or imagery pair from a late result. See [historical comparison and export case studies](Engineering-Case-Studies.md).
+**The user moves on before the network finishes.** Selection identity and cancellation protect the next area, station or imagery pair from a late result. See [historical comparison and export case studies](engineering-case-studies.md).
 
 **The visual channel fails.** Missing tiles and unavailable WebGL require a legible explanation and bounded fallback. The [comparison guide](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/docs/history-comparison.md) describes a 2D mosaic that keeps the selected source and time intact.
 
@@ -46,9 +46,9 @@ The [research tools guide](https://github.com/bartytime4life/Kansas-Frontier-Mat
 
 **Inside an application**, any optional model integration has its own runtime, availability, evidence and privacy boundaries. The presence of [Qwen-related application code](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/apps/site/source/README.md#local-qwen-companion-setup-opt-in) does not establish that a provider is connected or that an AI answer is governed evidence. This wiki renovation does not start a model or qualify its answers.
 
-**Next:** [Understand the architecture](Architecture.md) → [inspect privacy and trust](Security-and-Sensitivity.md) → [evaluate the product visually](Visual-Tour.md).
+**Next:** [Understand the architecture](Architecture.md) → [inspect privacy and trust](Security-and-Sensitivity.md) → [evaluate the product visually](visual-tour.md).
 
-<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](builder-profile.md).</sub>
 
 ---
 

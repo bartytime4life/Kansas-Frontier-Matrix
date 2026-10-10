@@ -38,7 +38,7 @@ The [domain documentation index](https://github.com/bartytime4life/Kansas-Fronti
 
 **Next:** [Follow an investigation](Map-UI-and-AI.md) → [inspect source and lifecycle boundaries](Data-Lifecycle.md) → [read the evidence vocabulary](Glossary.md).
 
-<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](Builder-Profile.md).</sub>
+<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](builder-profile.md).</sub>
 
 ---
 
