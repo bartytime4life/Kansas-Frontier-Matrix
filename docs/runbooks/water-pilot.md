@@ -6,7 +6,22 @@ No real package has been released, activated or published yet.
 The first milestone remains open until the real reviewed package completes the
 local browser journey and private Site acceptance/rollback gates.
 
-## Current Site and mirror candidate — v214 / 2026-10-10
+## Current water rendering candidate — v215 / 2026-10-10
+
+Owner-private Site source `1d74c8ea4e4aff4eb14c62f7799ee65a3d36dcec` is deployed
+as `appgdep_6acaa14425988191a75b67a21fbdf46c`; the local copy uses the same
+source and build, with its original store and v214 recovery installation retained.
+The [new receipt](../../data/receipts/generated/site-v215-water-flow-performance-20261010.json)
+records 921 matching mirror files and two canonical tool mappings. The selector
+checks current content parity only; human review remains PENDING / NOT_EVALUATED.
+The change batches geometry from cell/gauge callbacks, rejects cancelled old
+responses and cleans up on map removal. All 990 Site tests pass; the
+[performance note](../../apps/site/source/docs/water-flow.md#frame-batching-follow-up--2026-10-10)
+separates synthetic work reduction from broader browser performance. No data
+admission, package release, activation or job installation occurred in this batch.
+The v215 repository candidate still needs its own exact-head review and checks.
+
+## Previous Site reconciliation — v214 / 2026-10-10
 
 The [reconciliation report](../reports/kfm-reconciliation-20261010.md) records
 owner-private v214 source `11f1c546d56dcaec08454f99130350ce536328a2`, deployed as
@@ -15,9 +30,8 @@ The checker selects the [921-file current receipt](../../data/receipts/generated
 for **CONTENT_PARITY_ONLY**, with two additional canonical local-tool mappings.
 All prior receipts remain historical. Source/overlay review is **PENDING**;
 `review_acceptance` is **NOT_EVALUATED**. No source admission, package approval,
-activation or hosted equivalence is inferred from this check. The PR remains
-subject to repository review and merge; the following audit explains the
-separation between content parity and acceptance.
+activation or hosted equivalence is inferred from this check. PR #5014 subsequently merged at `033f8466c28e7de32fcac95c441fa9f8cbeade2d`.
+The following audit explains the separation between content parity and acceptance.
 
 ## Mirror governance audit — 2026-10-10
 

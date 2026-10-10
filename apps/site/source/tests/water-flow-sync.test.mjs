@@ -28,6 +28,7 @@ export const effectiveSceneLight = (_map, preset) => ({ preset, azimuth: 0, alti
 }
 
 globalThis.requestAnimationFrame ??= (callback) => setTimeout(() => callback(performance.now()), 0);
+globalThis.cancelAnimationFrame ??= (handle) => clearTimeout(handle);
 const settle = () => new Promise((resolve) => setTimeout(resolve, 5));
 
 const GAUGE_SOURCE = "external-usgs-streamflow";
@@ -54,6 +55,7 @@ function fakeMap({ zoom = 11, center = [-97.2, 38.1], gaugeVisible = true, gauge
     setLayoutProperty: (id, key, value) => layout.set(`${id}:${key}`, value),
     getSource: (id) => map.sources[id],
     on: (event, handler) => handlers.set(event, [...(handlers.get(event) ?? []), handler]),
+    off: (event, handler) => handlers.set(event, (handlers.get(event) ?? []).filter((item) => item !== handler)),
     fire: (event, payload = {}) => (handlers.get(event) ?? []).forEach((handler) => handler(payload)),
     triggerRepaint() { map.repaints += 1; },
   };
@@ -64,6 +66,119 @@ const OPTIONS = { light: "night", azimuth: 210, efficient: false, gaugeSourceId:
 const payload = (key, reaches) => ({
   format: "kfm-3dhp-flowlines-v1", cell: key.split(",").map(Number), state: reaches.length ? "ready" : "empty", truncated: false, reaches,
   source: "https://3dhp.nationalmap.gov/arcgis/rest/services/usgs_3dhp_all/MapServer/50/query", retrievedAt: "2026-10-10T00:00:00Z", evidenceRole: "EXTERNAL_CONTEXT_ONLY", limitation: "fixture",
+});
+
+// Control display frames independently of promise settlement: several provider
+// responses may arrive before the browser can paint once.
+function displayFrames(t) {
+  let next = 1;
+  const pending = new Map();
+  t.mock.method(globalThis, "requestAnimationFrame", (callback) => { const id = next++; pending.set(id, callback); return id; });
+  t.mock.method(globalThis, "cancelAnimationFrame", (id) => pending.delete(id));
+  return {
+    pending,
+    flush() { const callbacks = [...pending.values()]; pending.clear(); callbacks.forEach((callback) => callback(performance.now())); },
+  };
+}
+const drain = () => new Promise((resolve) => setImmediate(resolve));
+const deferred = () => { let resolve, reject; const promise = new Promise((yes, no) => { resolve = yes; reject = no; }); return { promise, resolve, reject }; };
+
+test("cell and gauge bursts build once per display frame with byte-identical geometry", async (t) => {
+  const frames = displayFrames(t);
+  const flow = await loadSync();
+  const motion = await import(toUrl(transpile(await read("app/water-flow-motion.ts"))));
+  const requests = [];
+  flow.setWaterFlowFetcher((key) => { const request = { key, ...deferred() }; requests.push(request); return request.promise; });
+  const gauges = [
+    { type: "Feature", geometry: { type: "Point", coordinates: [-97.2, 38.1] }, properties: { value: 310, readingState: "measured", trend: "rising", visualMagnitude: 2.5 } },
+    { type: "Feature", geometry: { type: "Point", coordinates: [-97.19, 38.1] }, properties: { value: 0, readingState: "zero" } },
+  ];
+  const map = fakeMap({ gauges });
+  flow.syncWaterFlow(map, OPTIONS);
+  assert.equal(requests.length, 9);
+  const layer = map.getLayer(flow.WATER_FLOW_LAYER_ID);
+  const original = layer.setGeometry;
+  let builds = 0, submittedSegments = 0, finalGeometry;
+  layer.setGeometry = (geometry) => { builds++; submittedSegments += geometry?.count ?? 0; finalGeometry = geometry; original(geometry); };
+  const allReaches = requests.map(({ key }, cell) => Array.from({ length: 200 }, (_, i) => fixtureReach(`R${cell}X${i}`,
+    Array.from({ length: 16 }, (_, vertex) => [-97.2 + cell * 0.01 + vertex * 0.0001, 38.1 + i * 0.0001]))));
+  const started = performance.now();
+  for (let i = 0; i < requests.length; i++) {
+    requests[i].resolve(payload(requests[i].key, allReaches[i]));
+    await drain();
+    map.fire("sourcedata", { sourceId: GAUGE_SOURCE });
+  }
+  frames.flush();
+  const elapsed = performance.now() - started;
+  t.diagnostic(JSON.stringify({ case: "synthetic-nine-cell-burst", cells: 9, reaches: 1800, builds, submittedSegments, elapsedMs: Number(elapsed.toFixed(2)) }));
+  const expected = motion.buildFlowGeometry(allReaches.flat(), gauges.map((gauge) => motion.gaugeCue(gauge.properties, gauge.geometry.coordinates)));
+  assert.deepEqual(finalGeometry, expected, "positions, direction, gauge styling and vertex slots are identical");
+  assert.equal(flow.waterFlowStatus(map).reaches, 1800);
+  assert.equal(builds, 1, "provider and gauge callbacks share one pending display update");
+  map.fire("moveend");
+  frames.flush();
+  assert.equal(builds, 1, "unchanged cached cells do not rebuild");
+});
+
+test("a partial first cell appears on the next frame without waiting for slow cells", async (t) => {
+  const frames = displayFrames(t);
+  const flow = await loadSync();
+  const requests = [];
+  flow.setWaterFlowFetcher((key) => { const request = { key, ...deferred() }; requests.push(request); return request.promise; });
+  const map = fakeMap();
+  flow.syncWaterFlow(map, OPTIONS);
+  const first = requests[0];
+  first.resolve({ ...payload(first.key, [fixtureReach("FIRST", [[-97.2, 38.1], [-97.19, 38.1]])]), truncated: true });
+  await drain(); frames.flush();
+  assert.equal(flow.waterFlowStatus(map).state, "loading");
+  assert.equal(flow.waterFlowStatus(map).reaches, 1);
+  for (const request of requests.slice(1)) request.reject(new Error("provider unavailable"));
+  await drain(); frames.flush();
+  assert.equal(flow.waterFlowStatus(map).state, "partial");
+  assert.equal(flow.waterFlowStatus(map).failedCells, 8);
+  assert.equal(flow.waterFlowStatus(map).truncatedCells, 1);
+  assert.ok(map.getLayer(flow.WATER_FLOW_LAYER_ID).segmentCount > 0);
+});
+
+for (const outcome of ["resolve", "reject"]) test(`cancelled ${outcome} cannot replace a new request for the same cell`, async (t) => {
+  const frames = displayFrames(t);
+  const flow = await loadSync();
+  const requests = [];
+  flow.setWaterFlowFetcher((key, signal) => { const request = { key, signal, ...deferred() }; requests.push(request); return request.promise; });
+  const map = fakeMap();
+  flow.syncWaterFlow(map, OPTIONS);
+  const old = requests.splice(0);
+  map.fx = { waterFlow: false }; flow.syncWaterFlow(map, OPTIONS);
+  assert.ok(old.every((request) => request.signal.aborted));
+  map.fx = { waterFlow: true }; flow.syncWaterFlow(map, OPTIONS);
+  for (const request of old) request[outcome](outcome === "resolve" ? payload(request.key, [fixtureReach("OLD", [[-97.2, 38.1], [-97.19, 38.1]])]) : new Error("late failure"));
+  await drain(); frames.flush();
+  assert.equal(flow.waterFlowStatus(map).state, "loading");
+  assert.equal(flow.waterFlowStatus(map).reaches, 0);
+  for (const request of requests) request.resolve(payload(request.key, [fixtureReach("NEW", [[-97.2, 38.1], [-97.19, 38.1], [-97.18, 38.1]])]));
+  await drain(); frames.flush();
+  assert.equal(flow.waterFlowStatus(map).state, "ready");
+  assert.equal(map.getLayer(flow.WATER_FLOW_LAYER_ID).segmentCount, 2);
+});
+
+test("map removal cancels pending geometry and network work", async (t) => {
+  const frames = displayFrames(t);
+  const flow = await loadSync();
+  const requests = [];
+  flow.setWaterFlowFetcher((key, signal) => { const request = { key, signal, ...deferred() }; requests.push(request); return request.promise; });
+  const map = fakeMap();
+  flow.syncWaterFlow(map, OPTIONS);
+  requests[0].resolve(payload(requests[0].key, [fixtureReach("FIRST", [[-97.2, 38.1], [-97.19, 38.1]])]));
+  await drain();
+  map.fire("sourcedata", { sourceId: GAUGE_SOURCE });
+  assert.equal(frames.pending.size, 1);
+  map.fire("remove");
+  assert.equal(frames.pending.size, 0);
+  assert.ok(requests.slice(1).every((request) => request.signal.aborted));
+  for (const request of requests.slice(1)) request.resolve(payload(request.key, []));
+  await drain();
+  assert.equal(frames.pending.size, 0, "late promises cannot schedule work on a removed map");
+  assert.equal(flow.waterFlowStatus(map).state, "off");
 });
 const fixtureReach = (id, coordinates) => ({ id, sequence: 4, downstream: null, levelpath: 3, name: "Fixture Creek", featureType: 1, coordinates });
 

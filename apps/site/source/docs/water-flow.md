@@ -60,7 +60,12 @@ modelled discharge off ungauged reaches.
   `truncated` flag and the limitation text. Provider failure is a 503.
 - **Cells.** At zoom 10+, the view requests up to 9 cells nearest the map
   centre (within ±0.4° longitude and ±0.3° latitude). Results are kept in a
-  per-map cache of 36 cells; a failed cell waits 60 s before retrying.
+  per-map cache of 36 cells; a failed cell waits 60 s before retrying. Cell
+  completions and gauge updates share one geometry update on the next display
+  frame. A ready cell can appear while the others are still loading. Cancelled
+  responses cannot replace a newer request for the same cell. Switching off
+  cancels queued geometry work; removing the map also aborts requests and
+  detaches the synchronizer's listeners.
 - **Geometry.** `app/water-flow-motion.ts` turns reaches into segments
   carrying distance along the reach (so streaks run continuously across
   vertices), gauge intensity, a moving/still flag, a trend tint and a random
@@ -135,6 +140,42 @@ tests over fixtures.
   Midnight style; the clear-sky palette was not seen rendered.
 - Real GPU performance on phones and laptops.
 - Saving, deploying or mirroring this source to the Site project.
+
+### Frame-batching follow-up — 2026-10-10
+
+The initial validation table above describes the original implementation, not
+the subsequent Site delivery. A follow-up starts from Site v214 source
+`11f1c546d56dcaec08454f99130350ce536328a2` and repository
+`033f8466c28e7de32fcac95c441fa9f8cbeade2d`.
+
+A deterministic synthetic Kansas view at zoom 11, centred at −97.2°, 38.1°,
+delivers nine cells (1,800 reaches, 27,000 final segments) and gauge callbacks
+before one display frame. Previously this rebuilt geometry nine times and
+submitted 135,000 cumulative segments. It now builds once and submits 27,000:
+80% less repeated geometry work. The test compares the entire final geometry,
+including coordinates, downstream distance, gauge cues and terrain vertex
+slots, against the unchanged geometry builder.
+
+Five alternating Node trials on the same PC measured median completion work
+of 62.97 ms before and 31.96 ms after. This is a synthetic scheduler/geometry
+measurement, **not browser FPS, GPU time, provider latency or a general map-load
+benchmark**. Timing is reported, not used as a flaky test threshold. The stable
+acceptance checks are one update and byte-identical geometry.
+
+The regressions also cover first-cell progressive display, truncated coverage,
+failed cells, delayed responses after off/on, and removal with queued work.
+The old code fails the burst, stale-success and teardown cases. Source requests,
+cache limits, geometry simplification, gauge scope and motion speed are unchanged.
+No new data is acquired or approved by these deterministic tests.
+
+Executed follow-up checks: 26 focused tests and the full 990-test Site suite
+passed with no failures or skips; TypeScript, the production build and focused
+ESLint also passed. A separate browser smoke on the isolated local candidate
+rendered Kansas hydrography around 38.48° N, 98.4° W. Its panel reported 2,311
+directed reaches, one gauge cue and incomplete coverage, with no observed
+console errors. Browser-control calls were sometimes slow during startup;
+this is not a sustained responsiveness, mobile-device or hosted-browser pass.
+Publication and repository review are recorded separately in delivery receipts.
 
 ## Rollback
 
