@@ -71,7 +71,6 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
   useEffect(()=>{
     if(!active||surfaceMode||!detailCapture||detailCapture.bounds.join(",")!==volume?.bounds.join(","))return;
     api.current?.setSurface(null);
-    setDetailShown(false);
     const controller=startCutawaySurfaceDetail({capture:detailCapture,pixels:detailPixels,onFrame:frame=>{detailFrame.current=frame;setDetailShown(api.current?.setDetail(frame)??false);},onStatus:setDetailStatus});
     detailRenderer.current=controller;
     return()=>{controller.dispose();detailRenderer.current=null;detailFrame.current=null;api.current?.setDetail(null);setDetailShown(false);};
