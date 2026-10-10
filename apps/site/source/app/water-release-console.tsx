@@ -9,6 +9,7 @@ const reasonText: Record<string, string> = {
   WATER_RELEASE_NOT_CONFIGURED: "Set KFM_WATER_OWNER_IDS or KFM_WATER_OWNER_EMAILS in Sites runtime settings.",
   PACKAGE_NOT_STAGED: "Stage the package with tools/release/water_release.py stage-hosted first, or it was withdrawn.",
   ACTIVATION_CONFLICT: "The active package changed since this page loaded. Refresh and try again.",
+  WITHDRAW_CONFLICT: "The active package changed since this page loaded, so nothing was withdrawn. Check the active package and try again.",
   ROLLBACK_BINDING_MISMATCH: "This package was prepared for a different previous package. Prepare it again with the current active package as --rollback-target.",
   INDEPENDENT_REVIEW_REQUIRED: "Reviewer and releaser match, and this package is not an admitted public source. Name a different reviewer.",
   RELEASE_TIME_INVALID: "The decision is expired or not yet valid. Write a new decision.",
@@ -51,7 +52,7 @@ export default function WaterReleaseConsole() {
     { package_id: packageId, decision, expected_active: status?.active_package_id ?? null, rollback },
     rollback ? "Rolled back." : "Activated.");
   const withdraw = () => status?.active_package_id && send("/api/governed/water-admin/withdraw",
-    { package_id: status.active_package_id }, "Withdrawn; the layer stops serving now.");
+    { package_id: status.active_package_id, expected_active: status.active_package_id }, "Withdrawn; the layer stops serving now.");
 
   return <section aria-labelledby="water-release-heading" style={{ display: "grid", gap: 16 }}>
     <h2 id="water-release-heading" style={{ margin: 0 }}>Active water package</h2>

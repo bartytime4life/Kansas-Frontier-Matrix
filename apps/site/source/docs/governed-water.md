@@ -80,7 +80,8 @@ A prepared package reaches the hosted Site in two separate steps:
    package the page showed. Every activation, rollback and withdrawal is
    recorded in `water_activation_events`.
 
-**Withdraw active package** marks the package `WITHDRAWN`, and the read routes
-stop serving it immediately. Missing tokens or owner settings keep both steps
+**Withdraw active package** marks the package `WITHDRAWN` only if it is still the
+active package the page showed (otherwise `WITHDRAW_CONFLICT`), and the read
+routes stop serving it immediately. Missing tokens or owner settings keep both steps
 closed. See `docs/runbooks/water-pilot.md` in the repository for the full
 release procedure.

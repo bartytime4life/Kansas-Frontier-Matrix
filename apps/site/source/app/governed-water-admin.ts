@@ -65,22 +65,30 @@ export async function activateWaterPackage(store: WaterAdminStore, body: unknown
   const write = current
     ? store.db.prepare("UPDATE water_active SET package_id = ?, decision_json = ?, previous_package_id = ?, revision = ? WHERE singleton = 1 AND package_id = ? AND revision = ?").bind(packageId, decisionJson, expected, revision, current.package_id, current.revision)
     : store.db.prepare("INSERT INTO water_active (singleton, package_id, decision_json, previous_package_id, revision) VALUES (1, ?, ?, NULL, 1) ON CONFLICT(singleton) DO NOTHING").bind(packageId, decisionJson);
-  const event = store.db.prepare("INSERT INTO water_activation_events (event_id, package_id, previous_package_id, decision_json, occurred_at, action) SELECT ?, ?, ?, ?, ?, ? WHERE EXISTS (SELECT 1 FROM water_active WHERE singleton = 1 AND package_id = ? AND revision = ?)")
-    .bind(eventId, packageId, expected, decisionJson, now, rollback ? "ROLLBACK" : "ACTIVATE", packageId, revision);
+  // changes() is the row count of the pointer write just before it in this batch, so a losing
+  // concurrent request (same package, same new revision) records no event.
+  const event = store.db.prepare("INSERT INTO water_activation_events (event_id, package_id, previous_package_id, decision_json, occurred_at, action) SELECT ?, ?, ?, ?, ?, ? WHERE changes() = 1")
+    .bind(eventId, packageId, expected, decisionJson, now, rollback ? "ROLLBACK" : "ACTIVATE");
   const [written] = await store.db.batch([write, event]);
   if (written?.meta?.changes !== 1) throw new WaterAdminError("ACTIVATION_CONFLICT");
   return { event_id: eventId, package_id: packageId, previous_package_id: expected, revision, outcome: rollback ? "ROLLED_BACK" : "ACTIVATED" };
 }
 
 export async function withdrawWaterPackage(store: WaterAdminStore, body: unknown, now: string) {
-  const { package_id: packageId } = requestObject(body, "WITHDRAW_REQUEST_INVALID");
-  if (typeof packageId !== "string" || !DIGEST.test(packageId)) throw new WaterAdminError("WITHDRAW_REQUEST_INVALID", 400);
+  const request = requestObject(body, "WITHDRAW_REQUEST_INVALID");
+  const { package_id: packageId, expected_active: expected } = request;
+  if (typeof packageId !== "string" || !DIGEST.test(packageId) || !("expected_active" in request)
+    || !(expected === null || typeof expected === "string" && DIGEST.test(expected))) throw new WaterAdminError("WITHDRAW_REQUEST_INVALID", 400);
   const eventId = "water:" + crypto.randomUUID().replaceAll("-", "");
+  // The withdrawal applies only while the active pointer is still the one the caller saw.
   const [changed] = await store.db.batch([
-    store.db.prepare("UPDATE water_packages SET state = 'WITHDRAWN' WHERE package_id = ? AND state = 'STAGED'").bind(packageId),
+    store.db.prepare("UPDATE water_packages SET state = 'WITHDRAWN' WHERE package_id = ? AND state = 'STAGED' AND (SELECT package_id FROM water_active WHERE singleton = 1) IS ?").bind(packageId, expected),
     store.db.prepare("INSERT INTO water_activation_events (event_id, package_id, previous_package_id, decision_json, occurred_at, action) SELECT ?, ?, NULL, '{}', ?, 'WITHDRAW' WHERE changes() = 1").bind(eventId, packageId, now),
   ]);
-  if (changed?.meta?.changes !== 1) throw new WaterAdminError("PACKAGE_NOT_STAGED");
+  if (changed?.meta?.changes !== 1) {
+    const active = await currentActive(store);
+    throw new WaterAdminError((active?.package_id ?? null) !== expected ? "WITHDRAW_CONFLICT" : "PACKAGE_NOT_STAGED");
+  }
   return { event_id: eventId, package_id: packageId, outcome: "WITHDRAWN" };
 }
 

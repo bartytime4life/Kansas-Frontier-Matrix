@@ -92,9 +92,9 @@ test("withdrawal stops the active package and is logged once", async () => {
   const s = await store(), owner = JSON.parse(await fixture("owner-decision"));
   await admin.stageWaterPackage(s, await fixture("admitted-snapshot"), "staging-token", NOW);
   await admin.activateWaterPackage(s, { package_id: owner.package_id, decision: owner, expected_active: null }, NOW);
-  assert.equal((await admin.withdrawWaterPackage(s, { package_id: owner.package_id }, NOW)).outcome, "WITHDRAWN");
+  assert.equal((await admin.withdrawWaterPackage(s, { package_id: owner.package_id, expected_active: owner.package_id }, NOW)).outcome, "WITHDRAWN");
   assert.equal(s.sqlite.prepare("SELECT state FROM water_packages").get().state, "WITHDRAWN");
-  await rejects(admin.withdrawWaterPackage(s, { package_id: owner.package_id }, NOW), "PACKAGE_NOT_STAGED");
+  await rejects(admin.withdrawWaterPackage(s, { package_id: owner.package_id, expected_active: owner.package_id }, NOW), "PACKAGE_NOT_STAGED");
   assert.equal(s.sqlite.prepare("SELECT COUNT(*) AS n FROM water_activation_events WHERE action = 'WITHDRAW'").get().n, 1);
   await rejects(admin.activateWaterPackage(s, { package_id: owner.package_id, decision: owner, expected_active: owner.package_id }, NOW), "PACKAGE_NOT_STAGED");
 });
@@ -129,4 +129,33 @@ test("routes require the staging token, the owner and the Site origin", async ()
   const response = await activate.POST(post("activate", body, { Origin: "https://site.test" }));
   // The route stamps the real clock; the fixture decision expired on 2026-10-01, so the gate refuses it.
   assert.deepEqual([response.status, (await response.json()).reason_code], [409, "RELEASE_TIME_INVALID"]);
+});
+
+test("a losing concurrent activation logs no event", async () => {
+  const s = await store(), owner = JSON.parse(await fixture("owner-decision"));
+  await admin.stageWaterPackage(s, await fixture("admitted-snapshot"), "staging-token", NOW);
+  const request = { package_id: owner.package_id, decision: owner, expected_active: null };
+  // Hold both writes until both requests have read the same (empty) pointer.
+  const batch = s.db.batch, waiting = [];
+  s.db.batch = (statements) => new Promise((resolve, reject) => {
+    waiting.push(() => batch(statements).then(resolve, reject));
+    if (waiting.length === 2) void waiting.reduce((done, run) => done.then(run), Promise.resolve());
+  });
+  const results = await Promise.allSettled([admin.activateWaterPackage(s, request, NOW), admin.activateWaterPackage(s, request, NOW)]);
+  assert.deepEqual(results.map((r) => r.status).sort(), ["fulfilled", "rejected"]);
+  assert.equal(results.find((r) => r.status === "rejected").reason.message, "ACTIVATION_CONFLICT");
+  assert.equal(s.sqlite.prepare("SELECT COUNT(*) AS n FROM water_activation_events").get().n, 1);
+});
+
+test("withdrawal refuses when the active package changed since the page loaded", async () => {
+  const s = await store(), owner = JSON.parse(await fixture("owner-decision"));
+  await admin.stageWaterPackage(s, await fixture("admitted-snapshot"), "staging-token", NOW);
+  await admin.stageWaterPackage(s, await fixture("snapshot"), "staging-token", NOW);
+  const synthetic = JSON.parse(await fixture("decision"));
+  // The page loaded with nothing active; the admitted package was activated afterwards.
+  await admin.activateWaterPackage(s, { package_id: owner.package_id, decision: owner, expected_active: null }, NOW);
+  await rejects(admin.withdrawWaterPackage(s, { package_id: synthetic.package_id, expected_active: null }, NOW), "WITHDRAW_CONFLICT");
+  await rejects(admin.withdrawWaterPackage(s, { package_id: owner.package_id }, NOW), "WITHDRAW_REQUEST_INVALID");
+  assert.equal(s.sqlite.prepare("SELECT COUNT(*) AS n FROM water_packages WHERE state = 'WITHDRAWN'").get().n, 0);
+  assert.equal((await admin.withdrawWaterPackage(s, { package_id: owner.package_id, expected_active: owner.package_id }, NOW)).outcome, "WITHDRAWN");
 });
