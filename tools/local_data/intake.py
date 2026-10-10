@@ -521,12 +521,13 @@ def apply(root: Path, identity: str, action: str, *, stage_limit: int = DEFAULT_
             encoded = canonical(card)
             if len(encoded) > placement.get("max_bytes", 16384):
                 raise IntakeError("CARD_SIZE_LIMIT")
-            result_target = f"data/work/intake/cards/{identity}.json"
+            item_id = str(item["id"])
+            result_target = f"data/work/intake/cards/{item_id}.json"
             path = root / result_target
             if path.exists():
                 if read_regular(path, 1024 * 1024) == encoded:
                     return {"outcome": "ALREADY_WRITTEN", "target": result_target}
-                result_target = f"data/work/intake/cards/{identity}-{hashlib.sha256(encoded).hexdigest()[:12]}.json"
+                result_target = f"data/work/intake/cards/{item_id}-{hashlib.sha256(encoded).hexdigest()[:12]}.json"
                 path = root / result_target
             write_new(path, encoded)
             sha256 = hashlib.sha256(encoded).hexdigest()
