@@ -32,7 +32,7 @@ import { parseRepositoryObservation, type RepositoryConnection } from "./reposit
 import { replaceExplorerHistory } from "./embed-runtime";
 import { parseSavedWorkspaceList, writeSavedWorkspaceList } from "./saved-workspaces";
 import ResearchPanel from "./research-panel";
-import UndergroundPanel, { SubsurfaceInspector, type SubsurfaceInspection } from "./underground-panel";
+import UndergroundPanel, { SubsurfaceInspector, type SubsurfaceInspection } from "./underground-panel-loader";
 import { persistableSubsurface, validSubsurfaceContext, type SubsurfaceContext } from "./subsurface-model";
 import researchStyles from "./research.module.css";
 import { chooseResearchAnchor, readResearchInventory, nearbyResearch, providerResearchPoints, persistableResearch, researchIdentity, researchSourceUrl, validResearchRecord, validResearchContext, type ResearchContext, type ResearchCoverage, type ResearchRecord, type ResearchRadius } from "./research-context";
