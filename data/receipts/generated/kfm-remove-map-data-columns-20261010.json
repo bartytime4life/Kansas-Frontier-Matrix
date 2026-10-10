@@ -1,0 +1,95 @@
+{
+  "receipt_id": "kfm-remove-map-data-columns-20261010",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/app/page.tsx",
+    "apps/site/source/app/scene-effects-controls.tsx",
+    "apps/site/source/app/scene-effects.ts",
+    "apps/site/source/app/scene-overlays.ts",
+    "apps/site/source/app/water-flow-motion.ts",
+    "apps/site/source/tests/cinematic-scene-effects.test.mjs",
+    "apps/site/source/tests/scene-overlays.test.mjs",
+    "apps/site/source/tests/scene-studio.test.mjs"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/app/page.tsx": "sha256:fe7a0537a3f6e39f64012931f14cf3820656fc85824ba7a21d5fb714c97b2fd8",
+    "apps/site/source/app/scene-effects-controls.tsx": "sha256:1465d0f4e33336eb524d217d2355f359bb39655cf20f3790227ff019f49ce13c",
+    "apps/site/source/app/scene-effects.ts": "sha256:4c08c00b872e3bee29224a954afb91b85296388e961d10118b89c3379bfa85f3",
+    "apps/site/source/app/scene-overlays.ts": "sha256:a33640c3709002d34709f377547afde84060717857cea1ff91778dc8e9685b31",
+    "apps/site/source/app/water-flow-motion.ts": "sha256:0fc5a5add2b39db9a3ef0326d27a0744259a063c209cb608e16f27d87c4f2a4d",
+    "apps/site/source/tests/cinematic-scene-effects.test.mjs": "sha256:b1a81d4f46830537df2eb60edb627f06bb0704f6e00091ea283a783ccbaa6070",
+    "apps/site/source/tests/scene-overlays.test.mjs": "sha256:3910e7f60def6e33e958ba5135e6fc67fe6747918346e19c915880270d836c7d",
+    "apps/site/source/tests/scene-studio.test.mjs": "sha256:80d2e16cb982c5cd132e04a49f9eb7a22cc6fa2b23c4a94ae57cc68ea5ab9c41"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Codex",
+    "version": "active session; exact backend build unavailable"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "Sites",
+      "GitHub",
+      "CUA"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repository main@bac6a57b11b288486305ef27c3911fa8cf1f066a",
+      "Site v209@1f4a5277f58c661d2392ef753a98214d2ee7483a",
+      "User request to remove the effect that raises map dots into bars; supplied image used as visual context"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/app/page.tsx": "PROPOSED",
+    "apps/site/source/app/scene-effects-controls.tsx": "PROPOSED",
+    "apps/site/source/app/scene-effects.ts": "PROPOSED",
+    "apps/site/source/app/scene-overlays.ts": "PROPOSED",
+    "apps/site/source/app/water-flow-motion.ts": "PROPOSED",
+    "apps/site/source/tests/cinematic-scene-effects.test.mjs": "PROPOSED",
+    "apps/site/source/tests/scene-overlays.test.mjs": "PROPOSED",
+    "apps/site/source/tests/scene-studio.test.mjs": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Repository typecheck, build and Node suite",
+      "outcome": "PASS",
+      "reason": "tsc --noEmit; production build; 936 passing tests. Removed three obsolete column-generation tests and retained the saved-preference migration check."
+    },
+    {
+      "gate": "Same-Site typecheck, build and Node suite",
+      "outcome": "PASS",
+      "reason": "tsc --noEmit; build-site.mjs; 899 passing tests. Preserved each source tree independently."
+    },
+    {
+      "gate": "Published Terrain 3D browser check",
+      "outcome": "PASS",
+      "reason": "CUA on private Site v210: Mapzen DEM ready; earthquake and streamflow circles visible without value columns; selected gauge details remain accessible."
+    },
+    {
+      "gate": "Independent human review and merge",
+      "outcome": "SKIPPED",
+      "reason": "Review remains pending. No merge performed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "ADR-0029",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-10T15:08:35.892595Z",
+  "emitter": "Codex",
+  "notes": "Removed only the decorative value-column renderer, settings, controls and refresh hooks. Kept provider point data and other scene effects. Old columns preferences are ignored. Same private Site v210 deployed from fec4c05bf3385a9cca4dd749e0d30e74b06e8169. Existing mirror review receipts are unchanged."
+}

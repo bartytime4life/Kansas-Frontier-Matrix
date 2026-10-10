@@ -169,7 +169,7 @@ export function SceneEffectsControls({ settings, light, efficient, reducedMotion
       <div className="scene-effects-switches">
         {SCENE_EFFECT_OPTIONS.filter((option) => option.key !== "sunSync").map((option) => {
           const here = option.views.includes(view);
-          const held = efficient && (option.key === "curtain" || option.key === "columns" || option.key === "stars" || option.key === "waterFlow");
+          const held = efficient && (option.key === "curtain" || option.key === "stars" || option.key === "waterFlow");
           const reading = settings[option.key] ? readings?.[option.key] : null;
           return <label key={option.key} data-here={here || undefined} data-held={held || undefined}>
             <input type="checkbox" role="switch" checked={settings[option.key]} onChange={() => onChange({ ...settings, [option.key]: !settings[option.key] })} />
@@ -178,7 +178,7 @@ export function SceneEffectsControls({ settings, light, efficient, reducedMotion
         })}
       </div>
     </details>
-    <p>Presentation only. Looks change light, never source dates, weather or elevations. Enabled effects stay your choice. Columns use provider values. Stars are placed from the Hipparcos-based catalog for the current time; the Milky Way and Sun glow are illustrative. Flowing water moves only where USGS 3DHP maps a direction, at one display speed that is not water velocity; gauge readings light only their own reach.</p>
+    <p>Presentation only. Looks change light, never source dates, weather or elevations. Enabled effects stay your choice. Stars are placed from the Hipparcos-based catalog for the current time; the Milky Way and Sun glow are illustrative. Flowing water moves only where USGS 3DHP maps a direction, at one display speed that is not water velocity; gauge readings light only their own reach.</p>
   </section>;
 }
 

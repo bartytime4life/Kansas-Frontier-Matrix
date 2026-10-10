@@ -123,7 +123,7 @@ export const FLOW_TINT_INDEX: Readonly<Record<FlowTint, number>> = Object.freeze
 
 export type GaugeCue = Readonly<{
   coordinate: Coordinate;
-  /** 0–1 emphasis; follows the same visual magnitude the 3D columns use. */
+  /** 0–1 emphasis; follows the provider point visual magnitude. */
   intensity: number;
   /** False only for a measured zero: still water on this reach. */
   moving: boolean;

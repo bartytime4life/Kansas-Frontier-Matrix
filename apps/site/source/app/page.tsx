@@ -227,7 +227,7 @@ import {
 } from "./workspace-model";
 import { ACTIVE_TERRAIN_SOURCE, STRUCTURE_3D_SOURCE, TERRAIN_SOURCES, TERRARIUM_RENDER_MAX_ZOOM, terrainSourceFor, type TerrainProvider } from "./terrain-sources";
 import { setWaterFlowMotion, subscribeWaterFlowStatus, syncWaterFlow, waterFlowIsAnimating, waterFlowReading, type WaterFlowStatus } from "./water-flow-sync";
-import { nightSkyIsTwinkling, setNightSkyTwinkle, syncBuildingStyle, syncKansasGlow, syncNightSky, syncNightSkyVisibility, syncRelief2d, syncValueColumns, syncValueColumnsVisibility, type ColumnFeed } from "./scene-overlays";
+import { nightSkyIsTwinkling, setNightSkyTwinkle, syncBuildingStyle, syncKansasGlow, syncNightSky, syncNightSkyVisibility, syncRelief2d } from "./scene-overlays";
 import { CURTAIN_MIN_PITCH, DEFAULT_SCENE_EFFECTS, KANSAS_FLYOVER, SCENE_EFFECT_KEYS, SCENE_EFFECT_OPTIONS, SCENE_LOOK_PRESETS, matchingLookPreset, effectiveSceneLight, applySelectionPulse, applyTerrainReliefStyle, curtainIsVisible, readSceneEffects, setCurtainShimmer, registerSceneEffects, sunSceneLight, syncBorderCurtain, syncBorderCurtainVisibility, writeSceneEffects, type SceneEffectSettings, type SceneView } from "./scene-effects";
 import { SceneEffectsControls, ScenePanel } from "./scene-effects-controls";
 import { applySceneComposition, sceneRecipePresentation, SCENE_RECIPES, type SceneComposition, type ScenePresentation, type SceneRecipe } from "./scene-studio";
@@ -554,19 +554,12 @@ const officialContextStateLabel = (state: OfficialContextState) => ({
 // Open on Kansas Overview: a paused, north-up 2D statewide orientation.
 // Terrain, globe, and local investigation cameras remain explicit actions.
 const KANSAS_VIEW: ViewState = { center: [-98.38, 38.48], zoom: 5.45, bearing: 0, pitch: 0 };
-// Official point feeds whose provider value is drawn as a 3D column when tilted.
-const COLUMN_FEEDS: readonly ColumnFeed[] = [
-  { kind: "earthquake", sourceId: OFFICIAL_CONTEXT_BY_ID["usgs-earthquakes"].sourceId, pointLayerId: OFFICIAL_CONTEXT_BY_ID["usgs-earthquakes"].layerIds[0] },
-  { kind: "streamflow", sourceId: OFFICIAL_CONTEXT_BY_ID["usgs-streamflow"].sourceId, pointLayerId: OFFICIAL_CONTEXT_BY_ID["usgs-streamflow"].layerIds[1] },
-];
-const COLUMN_SOURCE_IDS = new Set(COLUMN_FEEDS.map((feed) => feed.sourceId));
-/** Glow, 2D relief, value columns and building light. Decorative: each step
+/** Glow, 2D relief and building light. Decorative: each step
  * fails on its own and never marks the map runtime degraded. */
 const syncSceneOverlays = (map: MapLibreMap, light: AtmospherePreset, azimuth: number, efficient: boolean) => {
   for (const step of [
     () => syncKansasGlow(map, light, azimuth),
     () => syncRelief2d(map, ACTIVE_TERRAIN_SOURCE, light, azimuth),
-    () => syncValueColumns(map, COLUMN_FEEDS, efficient),
     () => syncBuildingStyle(map, light, azimuth),
     () => syncNightSky(map, light, azimuth, efficient),
     () => syncWaterFlow(map, { light, azimuth, efficient, gaugeSourceId: OFFICIAL_CONTEXT_BY_ID["usgs-streamflow"].sourceId, gaugeLayerId: OFFICIAL_CONTEXT_BY_ID["usgs-streamflow"].layerIds[1] }),
@@ -5291,20 +5284,8 @@ export default function Home() {
         map.on("pitch", () => {
           try {
             syncBorderCurtainVisibility(map, renderEfficientRef.current);
-            syncValueColumnsVisibility(map, renderEfficientRef.current);
             syncNightSkyVisibility(map, renderEfficientRef.current);
           } catch { /* decorative only */ }
-        });
-        // Columns follow whatever data the official point sources hold (live
-        // feeds, streamflow frames, saved days); rebuild once per frame at most.
-        let columnsFrame = 0;
-        map.on("sourcedata", (event) => {
-          if (!event.sourceId || !COLUMN_SOURCE_IDS.has(event.sourceId) || event.sourceDataType === "metadata") return;
-          window.cancelAnimationFrame(columnsFrame);
-          columnsFrame = window.requestAnimationFrame(() => {
-            if (!styleGenerationReadyRef.current) return;
-            try { syncValueColumns(map, COLUMN_FEEDS, renderEfficientRef.current); } catch { /* decorative only */ }
-          });
         });
         map.on("movestart", () => {
           const center = map.getCenter();
@@ -6164,7 +6145,7 @@ export default function Home() {
       activateMapRepresentation(mode);
       return;
     }
-    // Tilted 2D keeps the flat evidence map but shows curtain, columns and buildings.
+    // Tilted 2D keeps the flat evidence map but shows curtain and buildings.
     if (projectionRef.current === "globe" || scenePresetRef.current === "elevation-3d") activateMapRepresentation("2d");
     replayingCameraHistoryRef.current = false;
     mapRef.current?.easeTo({ pitch: 56, bearing: Math.abs(view.bearing) < 1 ? -14 : view.bearing, duration: motionDuration(650) });

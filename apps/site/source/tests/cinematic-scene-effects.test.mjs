@@ -34,13 +34,15 @@ async function loadSceneEffects(sun = [210, 35]) {
 
 test("scene-effect preferences parse defensively and default to the cinematic look", async () => {
   const effects = await loadSceneEffects();
-  assert.deepEqual({ ...effects.DEFAULT_SCENE_EFFECTS }, { cinematic: true, curtain: true, sunSync: false, kansasGlow: true, relief2d: false, columns: true, buildings: true, stars: true, waterFlow: false });
+  assert.deepEqual({ ...effects.DEFAULT_SCENE_EFFECTS }, { cinematic: true, curtain: true, sunSync: false, kansasGlow: true, relief2d: false, buildings: true, stars: true, waterFlow: false });
   assert.equal(effects.DEFAULT_SCENE_EFFECTS.relief2d, false, "defaults add no new network requests");
   assert.equal(effects.DEFAULT_SCENE_EFFECTS.waterFlow, false, "flowing water requests 3DHP flowlines, so it is opt-in");
   assert.deepEqual({ ...effects.parseSceneEffects(null) }, { ...effects.DEFAULT_SCENE_EFFECTS });
   // A preference saved before the new effects existed keeps its choices and gains the defaults.
   assert.deepEqual({ ...effects.parseSceneEffects({ cinematic: false, curtain: "yes", sunSync: true, extra: 1 }) },
-    { cinematic: false, curtain: true, sunSync: true, kansasGlow: true, relief2d: false, columns: true, buildings: true, stars: true, waterFlow: false });
+    { cinematic: false, curtain: true, sunSync: true, kansasGlow: true, relief2d: false, buildings: true, stars: true, waterFlow: false });
+  assert.deepEqual({ ...effects.parseSceneEffects({ ...effects.DEFAULT_SCENE_EFFECTS, columns: true }) },
+    { ...effects.DEFAULT_SCENE_EFFECTS }, "legacy column preferences are discarded while other choices survive");
   assert.ok(Object.isFrozen(effects.parseSceneEffects({})));
 });
 
@@ -203,7 +205,7 @@ test("look presets are complete and recognised; Plain turns every effect off", a
     assert.equal(effects.matchingLookPreset(preset.settings), id);
   }
   assert.ok(effects.SCENE_EFFECT_KEYS.every((key) => effects.SCENE_LOOK_PRESETS.plain.settings[key] === false));
-  assert.equal(effects.matchingLookPreset({ ...effects.SCENE_LOOK_PRESETS.plain.settings, columns: true }), null, "a mixed choice is Custom");
+  assert.equal(effects.matchingLookPreset({ ...effects.SCENE_LOOK_PRESETS.plain.settings, buildings: true }), null, "a mixed choice is Custom");
   assert.deepEqual(effects.SCENE_EFFECT_OPTIONS.map((option) => option.key).sort(), [...effects.SCENE_EFFECT_KEYS].sort(), "every effect has a GUI row");
   assert.deepEqual(effects.SCENE_EFFECT_OPTIONS.filter((option) => option.network).map((option) => option.key), ["relief2d", "waterFlow"], "only 2D relief and flowing water are labelled as making requests");
 });
