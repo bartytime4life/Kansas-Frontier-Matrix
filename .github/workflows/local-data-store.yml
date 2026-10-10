@@ -2,24 +2,9 @@
 name: local-data-store
 
 "on":
+  # No path filter on pull requests: local-data-check is a required status
+  # check on main, and a filtered job never reports on unrelated PRs.
   pull_request:
-    paths:
-      - "tools/ci/**"
-      - "tools/validators/_common/**"
-      - ".github/workflows/local-data-store.yml"
-      - "tools/local_data/**"
-      - "connectors/local_upload/**"
-      - "connectors/noaa/src/noaa/nwm.py"
-      - "pipelines/domains/hydrology/nwm_subset.py"
-      - "tests/local_data/**"
-      - "schemas/contracts/v1/source/local_data_manifest.schema.json"
-      - "schemas/contracts/v1/source/ingest_receipt.schema.json"
-      - "contracts/source/local_data_manifest.md"
-      - "configs/examples/local-data-manifest.json"
-      - "fixtures/source/local_data/**"
-      - "docs/runbooks/local-pc-data-store.md"
-      - "Makefile"
-      - "pyproject.toml"
   push:
     branches:
       - main
