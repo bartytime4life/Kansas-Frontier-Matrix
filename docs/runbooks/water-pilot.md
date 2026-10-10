@@ -6,7 +6,30 @@ No real package has been released, activated or published yet.
 The first milestone remains open until the real reviewed package completes the
 local browser journey and private Site acceptance/rollback gates.
 
-## Current map loading candidate — v217 / 2026-10-10
+## Current cutaway rendering candidate — v218 / 2026-10-10
+
+Owner-private source `ca42e125009db406f9fa12700185559aac717008` deployed as
+`appgdep_6acab203acf88191b9383bffa79560e7`. Camera, appearance and surface
+redraws share one animation-frame request. Every input step still updates the
+camera, damping settles without an idle loop, and hidden/lost/disposed views
+cancel pending work. Geometry, source values, sampling and hit targets are unchanged.
+The synthetic 40-pose test reduced 80 draw calls to one with identical final pose;
+this does not measure real browser FPS or provider latency.
+All 1,004 Site tests, type checking and build pass, including 29 focused tests.
+The browser rendered one aquifer range and 28 columns from 50 records with partial
+coverage, then exercised Top view, sample selection, evidence drawer and Zoom to
+sample. Some browser-control calls timed out; the last Reset view attempt remains
+unverified and full device/accessibility/hosted acceptance remains open.
+All 928 source and 427 build files in the new local v218 installation checksum
+match; port 4173 returns HTTP 200. The original store and v217 installation remain
+available. Rollback was not re-rehearsed; no data migration occurred.
+The [926-file receipt](../../data/receipts/generated/site-v218-cutaway-render-20261010.json)
+retains two canonical tool mappings, PENDING human review and NOT_EVALUATED hosted
+equivalence. PR #5017 merged externally to `8d109497c04e34a25154de81b095bbb0deb6a5ad`
+with 107 successful checks and two skipped. This candidate requires its own checks.
+No new source admission, data release/activation or acquisition-job installation.
+
+## Previous map loading checkpoint — v217 / 2026-10-10
 
 Owner-private source `c1a192997c8ae94296756cc3406dd77b09eed880` deployed as
 `appgdep_6acaaa1f8a5c8191bcdf80c1bb44f1f8`. The map now downloads Underground
