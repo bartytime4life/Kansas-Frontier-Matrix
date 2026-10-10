@@ -1,0 +1,96 @@
+{
+  "receipt_id": "genrec-terrain-budget-handoff-20261010",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/docs/terrain-drawing.md"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/docs/terrain-drawing.md": "sha256:de6b6c988b6a7f348b973722a21fdb617a0293c3a0c7519782ba4beef95771d7"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "session-reported; exact build unavailable"
+  },
+  "prompt_or_contract": "sha256:13fc23bf58070bc9673207aa915ad7e1838f88bcd8c9a3f126feec71acfddfb4",
+  "parameters": {
+    "temperature": null,
+    "seed": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@945dc45e3232b4ca520f1a991874ac29b6c950a1",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4990",
+      "apps/site/source/app/terrain-drawing.ts@945dc45e3232b4ca520f1a991874ac29b6c950a1",
+      "apps/site/source/app/terrain-drawing-runtime.ts@945dc45e3232b4ca520f1a991874ac29b6c950a1",
+      "apps/site/source/tests/terrain-drawing.test.mjs@945dc45e3232b4ca520f1a991874ac29b6c950a1",
+      "Sites appgprj_6aa0b1c41bc08191bfd86003920f1631 v205 source f2859d518ce6d0951fbaef0863894e62ddf644b1"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/docs/terrain-drawing.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "node --test tests/terrain-drawing.test.mjs tests/terrain-surface.test.mjs tests/scene-landscape-integration.test.mjs",
+      "outcome": "PASS",
+      "reason": "45 tests passed on unchanged application bytes at the pinned base; documentation change does not alter runtime."
+    },
+    {
+      "gate": "Document source inspection and mode reproduction",
+      "outcome": "PASS",
+      "reason": "65x65 checkerboard at interval 1000: main contours 8192 unclipped; grid 8320 unclipped; both 16000 clipped. Same-Site v205 source still generates both roles for all mode options."
+    },
+    {
+      "gate": "python tools/validators/docs/link-check/check_links.py --repo-root . apps/site/source/docs/terrain-drawing.md",
+      "outcome": "PASS",
+      "reason": "One document, four local targets, no unresolved local links."
+    },
+    {
+      "gate": "git diff --check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Hosted exact-head documentation CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft PR; prior #4990 Site CI succeeds but is not this draft head."
+    },
+    {
+      "gate": "Site/source integration, browser/WebGL, device and long-session acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Same-Site v205 source was inspected read-only. No source push, publication, installed Explorer restart, or stored-data action."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "generator-mode-budget",
+      "validated": true,
+      "evidence_ref": "repo:apps/site/source/app/terrain-drawing.ts@945dc45e3232b4ca520f1a991874ac29b6c950a1"
+    },
+    {
+      "id": "controller-mode-cache",
+      "validated": true,
+      "evidence_ref": "repo:apps/site/source/app/terrain-drawing-runtime.ts@945dc45e3232b4ca520f1a991874ac29b6c950a1"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@945dc45e3232b4ca520f1a991874ac29b6c950a1"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-10T02:01:00.273214Z",
+  "emitter": "Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only follow-up to merged #4990. Existing apps/ responsibility and accepted ADR-0029 placement retained; receipt in existing data/receipts/generated lane. Historical #4990 receipt and pending human review are unchanged. Exact-head #4990 workflow readback: 40 success, 1 skipped, 1 water-pilot failure among 42 returned runs. Mirror failure reproduced as MIRROR_REVIEW_REQUIRED at current main. Site v205 source lacks the three-file mode-aware correction. No approval, merge, source admission, deployment, publication or storage mutation inferred. Revert this document and receipt to roll back."
+}

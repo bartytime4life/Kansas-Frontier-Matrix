@@ -14,6 +14,22 @@ Independent [Surface color lenses](terrain-surface.md) add slope, downhill facin
 
 The drawing uses normal terrain-draped GeoJSON lines. Stronger index contours occur every fifth interval. The grid joins only adjacent loaded samples. Colors follow the effective presentation light, including the existing real-sun option. No contour elevation, source observation date, terrain height or provider-value color is invented or changed.
 
+## Visible-line budget and mode changes
+
+The repository implementation generates only the line roles selected in Scene Studio. Every mode retains the same **16,000-segment total limit**; hidden line roles spend none of that budget.
+
+| Selected mode | Allocation |
+|---|---|
+| Contours | Contours may use the full segment limit; no grid edges are generated. |
+| Surface grid | Only adjacent loaded grid edges are generated. A fully populated 65×65 grid has 8,320 edges. |
+| Both | Grid edges are generated first, then contours use the remaining budget. A fully populated 65×65 grid leaves at most 7,680 segments for contours. |
+
+**Drawing detail capped** means at least one visible segment was omitted. Reaching the limit exactly is not clipping; an empty contour result or a hidden role does not create that warning. Missing elevations remain gaps in every mode.
+
+Switching modes rebuilds lines cooperatively from the bounded cached elevation samples and reuses the surface cells. It does not request fresh elevation readings merely because the mode changed. New DEM content, a changed camera footprint, provider/source replacement, and sampling-density changes still require fresh sampling. Light and surface-lens changes remain paint-only. Off cancels the controller's work when no surface lens is active.
+
+These rules describe the [repository generator](../app/terrain-drawing.ts) and [controller](../app/terrain-drawing-runtime.ts). Confirm the same source in a hosted or installed copy before claiming that copy has the correction; repository merge alone does not establish deployment parity.
+
 ## Viewpoint behavior
 
 The six shortcuts reuse the existing `KANSAS_FLYOVER` targets, excluding its return leg: Kansas overview, Arikaree Breaks, Smoky Hill chalk country, Red Hills, Flint Hills, and Kansas River valley. They switch to regional Terrain 3D and change the camera center, zoom, pitch and bearing. They preserve the chosen basemap, DEM provider, exaggeration, light, lens, selected feature, source dates, active layers and topographic-height preference. Entering Terrain 3D uses its normal existing tile loader; the terrain drawing itself introduces no request path or additional DEM source.
