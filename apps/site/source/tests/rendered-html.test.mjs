@@ -55,8 +55,11 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /Provider-default daily raster; its exact UTC image date is unresolved/);
   assert.match(html, /One checked UTC image day; each returned point keeps its own acquisition time/);
   assert.match(html, /Installed Earth Engine snapshots are visual display context, not KFM evidence/);
-  assert.match(html, /aria-label="Layer topics"/);
-  for (const label of ["Full archive → latest", "Bridges · historic designation", "Bridges · recorded closed", "Historical roads · 1918", "BLM land records", "BLM leases · authorized", "BLM leases · closed", "Roads, rail &amp; bridges", "Hazards", "Roads &amp; highways", "Railroads · active", "Railroads · abandoned", "FEMA flood zones"]) assert.ok(html.includes(label), `Missing discoverable layer control: ${label}`);
+  assert.match(html, /<nav[^>]+aria-label="Layer views"/);
+  for (const label of ["Browse", "On map", "Imagery"]) assert.ok(html.includes(label), `Missing layer view: ${label}`);
+  assert.match(html, /<select[^>]+aria-label="Layer topic"/);
+  for (const label of ["Water", "Terrain", "Weather &amp; hazards", "Places &amp; boundaries", "Land &amp; soil", "Roads &amp; rail", "Groundwater"]) assert.ok(html.includes(`>${label}</option>`), `Missing discoverable topic: ${label}`);
+  for (const label of ["Full archive → latest", "KDOT Kansas Bridges · historic designation", "KDOT Kansas Bridges · recorded closed", "KDOT Kansas historical roads · 1918", "BLM Kansas oil and gas leases · authorized", "BLM Kansas oil and gas leases · closed", "KDOT Kansas roads and highways", "KDOT Kansas active railroads", "KDOT Kansas abandoned railroads", "FEMA Kansas mapped flood hazard zones"]) assert.ok(html.includes(label), `Missing discoverable layer control: ${label}`);
   assert.doesNotMatch(html, /Hydrology context<|Watershed &amp; storage context<|demonstration · selected/i);
   assert.match(html, /Repository briefing/i);
   assert.match(html, /main@(?:<!-- -->)?bb08d3e/i);
@@ -117,8 +120,10 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   assert.match(runtime, /setSky/);
   assert.match(runtime, /setLight/);
   assert.match(runtime, /lngLatToTile/);
-  assert.match(page, /MAP REPRESENTATION/);
-  assert.match(page, /Verified renderer controls/);
+  assert.match(page, /aria-label="Verified map representations"/);
+  assert.match(page, /onClick=\{\(\) => activateMapRepresentation\(id\)\}/);
+  assert.match(page, /<summary>Terrain tools, sources &amp; rendering<\/summary>/);
+  assert.match(page, /aria-label="Renderer capability status"/);
   assert.match(page, /HMS smoke · Shake stations · hazard overlays/);
   assert.match(page, /setVerticalFieldOfView/);
   assert.match(page, /Orbit started · drag, scroll or press a key to take back the camera/, "orbit announces how to interrupt the camera motion");
@@ -553,7 +558,12 @@ test("keeps the MapLibre Workbench complete, bounded, and responsive", async () 
   const tsconfig = await readFile(new URL("../tsconfig.json", import.meta.url), "utf8");
 
   assert.match(source, /id="map-utility-panel"/);
-  for (const view of ["Navigate", "Inspect", "Import", "Compare", "Display", "Measure", "Export", "Diagnostics"]) assert.match(source, new RegExp(`${view}`));
+  const controlNavigation = await readFile(new URL("../app/explorer-controls-navigation.tsx", import.meta.url), "utf8");
+  assert.match(source, /<ExplorerControlsNavigation value=\{mapUtilityView\}/);
+  for (const [key, title] of [["navigate", "Explore"], ["scene", "Appearance"], ["measure", "Measure"], ["inspect", "Inspect records"], ["compare", "Compare"], ["report", "Reports"], ["export", "Export"], ["import", "Import a file"], ["connections", "Sources"], ["history", "Historic maps"], ["diagnostics", "Diagnostics"]]) {
+    assert.ok(controlNavigation.includes(`["${key}", "${title}"]`), `Missing named control route: ${title}`);
+  }
+  assert.match(controlNavigation, /<summary>Advanced tools/);
   assert.match(source, /kfm-map-context-receipt-v1/);
   assert.match(source, /kfm-map-diagnostics-v1/);
   assert.match(exportCenter, /kfm-public-safe-map-export-v2/);
