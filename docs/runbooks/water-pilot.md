@@ -6,7 +6,28 @@ No real package has been released, activated or published yet.
 The first milestone remains open until the real reviewed package completes the
 local browser journey and private Site acceptance/rollback gates.
 
-## Current map startup candidate — v216 / 2026-10-10
+## Current map loading candidate — v217 / 2026-10-10
+
+Owner-private source `c1a192997c8ae94296756cc3406dd77b09eed880` deployed as
+`appgdep_6acaaa1f8a5c8191bcdf80c1bb44f1f8`. The map now downloads Underground
+controls when requested. Shared imports, current privacy/context props, close,
+cancellation and retry preserve the original panel's boundaries. The initial
+map JavaScript list shrank from 1,637,812 to 1,591,522 bytes (14,293 gzip bytes
+saved); no whole-map startup or FPS improvement has been measured.
+All 999 Site tests, type checking and build pass; loader/test lint has zero errors
+or warnings. A built browser opened Underground, loaded the High Plains example,
+closed and reopened the panel. Source coverage remained explicit. Some browser
+control calls timed out; full device, accessibility and hosted acceptance remain
+open. The local PC has 927 source and 427 build files checksum matched, with HTTP
+200 on port 4173 and its original store. The v216 installation is retained;
+rollback was not re-rehearsed in this batch.
+The [925-file receipt](../../data/receipts/generated/site-v217-deferred-underground-20261010.json)
+keeps two canonical tool mappings, PENDING human review and NOT_EVALUATED hosted
+equivalence. PR #5016 merged externally to `23bdd31f8fd0ce9011c4a6206348c798aaefc38b`
+with 107 successful checks and two skipped; this candidate needs its own checks.
+No data admission, release, activation or acquisition-job installation occurred.
+
+## Previous map startup checkpoint — v216 / 2026-10-10
 
 Owner-private source `e7ec041d96fae5a4defc16b495d00ca817249da0` deployed as
 `appgdep_6acaa4eb66f4819191ea4102598f9459`. Its initial map load reuses the

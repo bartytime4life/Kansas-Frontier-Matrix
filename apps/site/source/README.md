@@ -150,6 +150,21 @@ improvement is one setup pass instead of two; it is not a wall-clock startup or
 frame-rate benchmark. Revert this guard to restore the prior behavior without
 changing data, browser preferences or storage.
 
+Underground controls are loaded on demand through `app/underground-panel-loader.tsx`.
+The ordinary 2D map does not import their implementation until Underground or a
+subsurface inspector mounts. A shared import is reused across both surfaces and
+later openings. The loading card can be closed; a failed chunk shows an inline
+retry while the map remains available. Late completion cannot update a closed
+surface. Current map/year, saved context and privacy props pass through unchanged;
+workers and source reads still belong to the original panel after it mounts.
+The inspector is immediately available after selecting a record from the loaded
+panel. Callback tests cover retry, cancellation, reuse and prop forwarding;
+the built dependency test keeps the implementation out of the initial map list.
+The v216-to-candidate comparison reduced that JavaScript list by 46,290 bytes
+(14,293 bytes using gzip), around 2.8 percent of uncompressed code. This is a
+build-size comparison, not a startup timing or frame-rate result. Revert the
+page's loader import to restore eager loading; no data migration is required.
+
 The next admitted-data sequence is recorded in
 `docs/KFM_SOURCE_GAP_REGISTER.md`: first complete a WebGL-capable GeoJSON/raster/
 selection/empty-refresh acceptance, then use a pinned generalized KGS GeMS layer as
