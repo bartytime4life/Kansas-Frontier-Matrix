@@ -178,6 +178,14 @@ UV mapping, source values and disposal behavior are retained. See
 [Three.js texture updates](https://threejs.org/docs/pages/Texture.html#needsUpdate).
 Rollback: restore the v218 application/source; no data or schema migration.
 
+The 3D depth caption follows the map image actually attached to the cutaway:
+HIGH-DETAIL MAP after a geographically intersecting detail frame, SELECTED-AREA
+MAP for the smaller verified fallback image, or FLAT REFERENCE PLANE · MAP IMAGE
+UNAVAILABLE when neither is shown. Loading or a provider status message alone
+does not make an image available. Clearing detail restores the appropriate
+fallback caption. This is display status only; it does not change source values,
+coverage, release state or the map image itself. Restore v219 to roll back.
+
 The Underground cutaway combines camera, appearance and surface updates into one
 requested animation-frame draw. OrbitControls still applies every input step;
 damping advances until it settles, then leaves no idle render loop. Duplicate

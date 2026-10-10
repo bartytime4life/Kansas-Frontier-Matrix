@@ -220,7 +220,9 @@ test('new and refreshed detail frames retain the chosen sampling and geography w
  button(h.tree,'Exact pixels').props.onClick();await h.render();
  const surface=findNode(h.tree,n=>typeof n.props?.onCapture==='function');surface.props.onCapture({bounds:volume.bounds,style:{version:8,sources:{},layers:[]},images:[]});await h.render();
  assert.equal(h.detailSessions.length,1);const detail=h.detailSessions[0],image={width:4096,height:3437};
- detail.onFrame({image,bounds:volume.bounds,zoom:12});h.flushFrame();
+ detail.onFrame({image,bounds:volume.bounds,zoom:12});h.flushFrame();await h.render();
+ assert.match(text(h.tree),/HIGH-DETAIL MAP/);
+ assert.doesNotMatch(text(h.tree),/MAP IMAGE UNAVAILABLE/,'a real detail plane overrides the missing fallback image');
  let [plane]=mappedPlanes(h),texture=plane.material.map;
  assert.equal(texture.magFilter,Three.LinearFilter,'late frame honors Smooth image');assert.equal(texture.minFilter,Three.LinearFilter);assert.equal(texture.image,image);
  const before=texture.version,geometry=Array.from(plane.geometry.attributes.position.array),uv=Array.from(plane.geometry.attributes.uv.array),offset=texture.offset.toArray(),repeat=texture.repeat.toArray();
@@ -232,6 +234,7 @@ test('new and refreshed detail frames retain the chosen sampling and geography w
  button(h.tree,'Smooth image').props.onClick();await h.render();assert.equal(texture.magFilter,Three.NearestFilter);assert.equal(texture.minFilter,Three.NearestFilter);
  detail.onFrame({image,bounds:volume.bounds,zoom:12});h.flushFrame();[plane]=mappedPlanes(h);assert.equal(plane.material.map.magFilter,Three.NearestFilter,'later frames also retain Exact pixels');
  const finalTexture=plane.material.map;let finalDisposed=0;finalTexture.addEventListener('dispose',()=>finalDisposed++);
- surface.props.onCapture(null);await h.render();assert.equal(finalDisposed,1);assert.equal(mappedPlanes(h).length,0);
+ surface.props.onCapture(null);await h.render();await h.render();assert.equal(finalDisposed,1);assert.equal(mappedPlanes(h).length,0);
+ assert.match(text(h.tree),/MAP IMAGE UNAVAILABLE/,'clearing the detail restores the truthful fallback caption');
  h.h.dispose();assert.equal(detail.disposed,true);assert.equal(h.prepares,0);
 });

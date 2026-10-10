@@ -22,7 +22,7 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
   const [snapshot,setSnapshot]=useState<Snapshot|null>(null),[status,setStatus]=useState("Preparing the current locator area…"),[retry,setRetry]=useState(0);
   const [surfaceStatus,setSurfaceStatus]=useState(""),[previewChanged,setPreviewChanged]=useState(false);
   const [surfaceMode,setSurfaceMode]=useState(false);
-  const [detailCapture,setDetailCapture]=useState<SurfaceCapture|null>(null),[detailStatus,setDetailStatus]=useState("Preparing high-detail surface…");
+  const [detailCapture,setDetailCapture]=useState<SurfaceCapture|null>(null),[detailStatus,setDetailStatus]=useState("Preparing high-detail surface…"),[detailShown,setDetailShown]=useState(false);
   const [detailPixels,setDetailPixels]=useState(4096),[detailRetry,setDetailRetry]=useState(0);
   const detailRenderer=useRef<ReturnType<typeof startCutawaySurfaceDetail>|null>(null),detailFrame=useRef<SurfaceDetailFrame|null>(null);
   const [frame,setFrame]=useState<VolumeBounds|null>(null);
@@ -33,7 +33,7 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
   const [surface,setSurface]=useState(1),[water,setWater]=useState(.22),[scale,setScale]=useState(25),[logs,setLogs]=useState(true),[smooth,setSmooth]=useState(false);
   const [failure,setFailure]=useState(""),[selection,setSelection]=useState<string|null>(null);
   const [pickedLog,setPickedLog]=useState<{label:string;recordId:string}|null>(null);
-  const host=useRef<HTMLDivElement>(null),api=useRef<{camera:(action:CameraAction)=>void;update:(v:Settings)=>void;setSurface:(image:HTMLCanvasElement|null)=>void;setDetail:(frame:SurfaceDetailFrame|null)=>void;highlightRecord:(id:string|null)=>void;focusRecord:(id:string)=>void}|null>(null);
+  const host=useRef<HTMLDivElement>(null),api=useRef<{camera:(action:CameraAction)=>void;update:(v:Settings)=>void;setSurface:(image:HTMLCanvasElement|null)=>void;setDetail:(frame:SurfaceDetailFrame|null)=>boolean;highlightRecord:(id:string|null)=>void;focusRecord:(id:string)=>void}|null>(null);
   const values=useRef<Settings>({surface,water,scale,logs,smooth,navigation});
   const inspectRef=useRef(onInspect);
   const snapshotRef=useRef(snapshot);
@@ -71,9 +71,10 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
   useEffect(()=>{
     if(!active||surfaceMode||!detailCapture||detailCapture.bounds.join(",")!==volume?.bounds.join(","))return;
     api.current?.setSurface(null);
-    const controller=startCutawaySurfaceDetail({capture:detailCapture,pixels:detailPixels,onFrame:frame=>{detailFrame.current=frame;api.current?.setDetail(frame);},onStatus:setDetailStatus});
+    setDetailShown(false);
+    const controller=startCutawaySurfaceDetail({capture:detailCapture,pixels:detailPixels,onFrame:frame=>{detailFrame.current=frame;setDetailShown(api.current?.setDetail(frame)??false);},onStatus:setDetailStatus});
     detailRenderer.current=controller;
-    return()=>{controller.dispose();detailRenderer.current=null;detailFrame.current=null;api.current?.setDetail(null);};
+    return()=>{controller.dispose();detailRenderer.current=null;detailFrame.current=null;api.current?.setDetail(null);setDetailShown(false);};
   },[active,surfaceMode,detailCapture,detailPixels,detailRetry,volume?.bounds]);
   useEffect(()=>{
     if(!active||surfaceMode||!sceneRenderable||!volume||!host.current)return;
@@ -266,15 +267,15 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
         update(values.current);
       };
       const setDetail=(frame:SurfaceDetailFrame|null)=>{
-        clearDetail();plane.visible=true;if(!frame){render();return;}
+        clearDetail();plane.visible=true;if(!frame){render();return false;}
         const [w,southLat,e,northLat]=frame.bounds,clipped:[number,number,number,number]=[Math.max(w,bounds[0]),Math.max(southLat,bounds[1]),Math.min(e,bounds[2]),Math.min(northLat,bounds[3])];
-        if(clipped[2]<=clipped[0]||clipped[3]<=clipped[1]){render();return;}
+        if(clipped[2]<=clipped[0]||clipped[3]<=clipped[1]){render();return false;}
         const nw=projectVolumePosition(clipped[0],clipped[3],bounds),se=projectVolumePosition(clipped[2],clipped[1],bounds),wholeNW=projectVolumePosition(w,northLat,bounds),wholeSE=projectVolumePosition(e,southLat,bounds);
         detailTexture=new T.CanvasTexture(frame.image);detailTexture.colorSpace=T.SRGBColorSpace;detailTexture.generateMipmaps=false;sampleTexture(detailTexture,values.current.smooth);detailTexture.anisotropy=renderer.capabilities?.getMaxAnisotropy?.()??1;
         detailTexture.repeat.set((se.x-nw.x)/(wholeSE.x-wholeNW.x),(se.z-nw.z)/(wholeSE.z-wholeNW.z));detailTexture.offset.set((nw.x-wholeNW.x)/(wholeSE.x-wholeNW.x),(wholeSE.z-se.z)/(wholeSE.z-wholeNW.z));
         const geometry=new T.PlaneGeometry(se.x-nw.x,se.z-nw.z);geometry.rotateX(-Math.PI/2);
         const paint=new T.MeshBasicMaterial({map:detailTexture,transparent:true,opacity:values.current.surface,side:T.DoubleSide,depthWrite:false});
-        detailMesh=new T.Mesh(geometry,paint);detailMesh.position.set((nw.x+se.x)/2,0,(nw.z+se.z)/2);detailMesh.renderOrder=3;scene.add(detailMesh);plane.visible=false;render();
+        detailMesh=new T.Mesh(geometry,paint);detailMesh.position.set((nw.x+se.x)/2,0,(nw.z+se.z)/2);detailMesh.renderOrder=3;scene.add(detailMesh);plane.visible=false;render();return true;
       };
       const focusRecord=(id:string)=>{
         const record=plotted.intervals.find(item=>item.record.id===id)?.record;if(!record)return;
@@ -282,7 +283,7 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
         const distance=Math.max(controls.minDistance,100*k/Math.tan(T.MathUtils.degToRad(camera.fov)/2));
         motion.move({target,position:new T.Vector3(0,1,.001).normalize().multiplyScalar(distance).add(new T.Vector3(...target)).toArray(),offset:[0,0]},motionPreference.matches?0:320);
       };
-      api.current={camera:action=>{interacted=true;orient(action);},update,setSurface,setDetail,highlightRecord:(id)=>{highlightedRecord=id;render();},focusRecord};setSurface(snapshotRef.current?.volume===volume?snapshotRef.current.image:null);if(detailFrame.current)setDetail(detailFrame.current);
+      api.current={camera:action=>{interacted=true;orient(action);},update,setSurface,setDetail,highlightRecord:(id)=>{highlightedRecord=id;render();},focusRecord};setSurface(snapshotRef.current?.volume===volume?snapshotRef.current.image:null);if(detailFrame.current)setDetailShown(setDetail(detailFrame.current));
       let firstSize=true;
       const resize=()=>{if(!host.current)return;motion.cancel();const pose=readPose(),w=Math.max(1,host.current.clientWidth),h=Math.max(1,host.current.clientHeight);renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();
         if(firstSize){firstSize=false;if(previousCamera&&!fitFirstEvidence)applyPose(previousCamera.pose);else orient("reset",true);}else applyPose(pose);
@@ -377,7 +378,7 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
           {failure&&<div className={s.cutawayEmpty}><h4>3D view unavailable</h4><p role="alert">{failure}</p><button type="button" onClick={()=>{setFailure("");setRetry(v=>v+1);}}>Retry 3D view</button></div>}
           {!failure&&<div className={s.cutawayCamera} aria-label="Area 3D navigation"><button type="button" aria-pressed={navigation==="orbit"} onClick={()=>setNavigation("orbit")}>Orbit</button><button type="button" aria-pressed={navigation==="pan"} onClick={()=>setNavigation("pan")}>Move</button><button type="button" onClick={()=>api.current?.camera("top")}>Top view</button><button type="button" aria-pressed={smooth} onClick={()=>setSmooth(v=>!v)}>{smooth?"Smooth image":"Exact pixels"}</button>{([['reset','Reset view'],['in','+'],['out','−']] as const).map(([action,label])=><button type="button" key={action} aria-label={action==='in'?'Zoom in':action==='out'?'Zoom out':label} onClick={()=>api.current?.camera(action)}>{label}</button>)}</div>}
           <div className={s.cutawaySceneLabel}><span>{navigation==="pan"?"Drag to move":"Drag to orbit"} · scroll to zoom · select a source</span></div>
-          <div className={s.cutawayStamp}>{scale}× DEPTH <span>·</span> {snapshot?.image?"SELECTED-AREA MAP":"FLAT REFERENCE PLANE · MAP IMAGE UNAVAILABLE"}</div>
+          <div className={s.cutawayStamp}>{scale}× DEPTH <span>·</span> {detailShown?"HIGH-DETAIL MAP":snapshot?.image?"SELECTED-AREA MAP":"FLAT REFERENCE PLANE · MAP IMAGE UNAVAILABLE"}</div>
         </div>}
         {!recordsLoading&&!drawn?.recordCount&&<div className={s.areaEmptyRecords} role="status"><strong>No recorded intervals at this time.</strong><p>{recordStatus}</p><button type="button" onClick={onResetRecords}>Reset record filters</button><button type="button" onClick={example}>Try High Plains example</button></div>}
         {recordsAvailable>0?recordNavigation:recordsLoading?<p className={s.areaLoading} role="status">Loading dated records for time navigation…</p>:null}
