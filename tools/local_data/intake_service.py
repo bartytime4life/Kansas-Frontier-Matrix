@@ -150,11 +150,16 @@ def handler(desk: Desk):
 
         def origin(self) -> str | None:
             value = self.headers.get("Origin")
-            return value if value in ORIGINS else None
+            if value not in ORIGINS:
+                return None
+            try:
+                return self._safe_header_value(value)
+            except ValueError:
+                return None
 
         def _safe_header_value(self, value: str) -> str:
-            # Prevent HTTP response splitting via CR/LF or other control chars.
-            if any((ord(ch) < 32 and ch != "\t") or ord(ch) == 127 for ch in value):
+            # Prevent HTTP response splitting via any control chars (including CR/LF/HTAB).
+            if any(ord(ch) < 32 or ord(ch) == 127 for ch in value):
                 raise ValueError("INVALID_HEADER_VALUE")
             return value
 
