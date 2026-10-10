@@ -249,3 +249,47 @@ test("merged curtain, star and water callback shares bounded repaint timing and 
     cleanup(); assert.equal(frames.size, 0); assert.equal(shimmer.at(-1), false); assert.equal(twinkle.at(-1), false); assert.equal(flow.at(-1), false);
   }
 });
+
+
+test("ground view moves closer without relocating or changing bearing, and obeys reduced motion", () => {
+  for (const reducedMotion of [false, true]) for (const zoom of [7, 12]) {
+    const state = { center: [-95.4, 38.2], bearing: 32, zoom, pitch: 48, fieldOfView: 44 };
+    const calls = [];
+    const map = { getZoom: () => state.zoom, getMaxPitch: () => 72, stop: () => calls.push("stop"), setVerticalFieldOfView: value => { state.fieldOfView = value; }, easeTo: options => { calls.push(options); Object.assign(state, options); } };
+    studio.applyGroundView(map, { reducedMotion, interrupt: () => calls.push("interrupt") });
+    assert.deepEqual(calls.slice(0, 2), ["interrupt", "stop"]);
+    assert.deepEqual(state.center, [-95.4, 38.2]); assert.equal(state.bearing, 32);
+    assert.equal(state.zoom, Math.max(10.5, zoom)); assert.equal(state.pitch, 66); assert.equal(state.fieldOfView, 50);
+    assert.equal(calls.at(-1).duration, reducedMotion ? 0 : 650); assert.equal(calls.at(-1).essential, false);
+  }
+});
+
+test("Scene depth controls dispatch the displayed scale and ground action from the real component", async () => {
+  const { SceneEffectsControls } = await controlsModule();
+  const calls = [];
+  const props = { settings: effects.DEFAULT_SCENE_EFFECTS, light: null, efficient: false, reducedMotion: false, flyoverActive: false, view: "terrain", presentation: { atmosphere: "clear", azimuth: 235 }, camera: studio.compositionDefaults("terrain"), cameraReady: true,
+    terrain: { scale: 2.5, available: true, onScale: value => calls.push(value), onGroundView: () => calls.push("ground") }, onRecipe() {}, onLight() {}, onCamera() {}, onChange() {}, onFlyover() {} };
+  const nodes = descendants(SceneEffectsControls(props));
+  const slider = nodes.find(n => n.type === "input" && n.props.id?.endsWith("-depth"));
+  slider.props.onChange({ target: { value: "3" } });
+  const presets = nodes.find(n => n.props?.["aria-label"] === "Terrain depth presets");
+  for (const button of descendants(presets).filter(n => n.type === "button")) button.props.onClick();
+  nodes.find(n => n.props?.className === "scene-ground-view").props.onClick();
+  assert.deepEqual(calls, [3, 1, 2.5, 3, "ground"]);
+  assert.equal(slider.props.value, 2.5); assert.equal(slider.props.max, "3");
+  const unavailable = descendants(SceneEffectsControls({ ...props, terrain: { ...props.terrain, available: false } }));
+  assert.equal(unavailable.find(n => n.props?.className === "scene-ground-view").props.disabled, true);
+  assert.equal(descendants(SceneEffectsControls({ ...props, view: "2d" })).some(n => n.props?.className === "scene-terrain-depth"), false);
+});
+
+test("actual shared-link and saved-view restoration retain the full terrain scale", async () => {
+  const source = await read("app/page.tsx");
+  const tree = ts.createSourceFile("page.tsx", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  const nodes = []; const visit = n => { if (ts.isVariableDeclaration(n) && n.name.getText(tree) === "nextVerticalExaggeration") nodes.push(n.initializer); ts.forEachChild(n, visit); }; visit(tree);
+  assert.equal(nodes.length, 2);
+  for (const scale of [1, 2.5, 3, 20]) for (const node of nodes) {
+    const ctx = { terrainDepth: studio.terrainDepth, DEFAULT_TERRAIN_DEPTH: studio.DEFAULT_TERRAIN_DEPTH, nextScenePreset: "elevation-3d", params: new URLSearchParams({ zscale: String(scale) }), savedScene: { verticalExaggeration: scale }, clamp: (v, lo, hi) => Math.max(lo, Math.min(hi, v)), parseNumber: (v, fallback) => v === null ? fallback : Number(v) };
+    const actual = new Function(...Object.keys(ctx), `return (${node.getText(tree)});`)(...Object.values(ctx));
+    assert.equal(actual, Math.min(3, scale));
+  }
+});

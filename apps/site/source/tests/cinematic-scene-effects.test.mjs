@@ -243,3 +243,16 @@ test("a globe shader that fails to compile disables only the globe curtain, once
   layer.render(gl, { shaderData: { variantName: "mercator" }, modelViewProjectionMatrix: [] });
   assert.equal(draws, 1, "the flat-map curtain still draws");
 });
+
+
+test("terrain relief uses grazing light while 2D and source elevations keep their existing behavior", async () => {
+  const effects = await loadSceneEffects();
+  let terrain = null;
+  const map = { getCenter: () => ({ lng: -98, lat: 38 }), getTerrain: () => terrain };
+  effects.registerSceneEffects(map, effects.DEFAULT_SCENE_EFFECTS);
+  assert.equal(effects.reliefPaintFor(map, "general", "clear", 235)["hillshade-illumination-altitude"], 45);
+  terrain = { source: "display-dem", exaggeration: 2.5 };
+  assert.equal(effects.reliefPaintFor(map, "general", "clear", 235)["hillshade-illumination-altitude"], 30);
+  assert.equal(effects.reliefPaintFor(map, "general", "dusk", 235)["hillshade-illumination-altitude"], 24);
+  assert.deepEqual(terrain, { source: "display-dem", exaggeration: 2.5 }, "light does not rewrite terrain heights");
+});

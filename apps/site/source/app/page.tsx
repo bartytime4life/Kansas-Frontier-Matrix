@@ -230,7 +230,7 @@ import { setWaterFlowMotion, subscribeWaterFlowStatus, syncWaterFlow, waterFlowI
 import { nightSkyIsTwinkling, setNightSkyTwinkle, syncBuildingStyle, syncKansasGlow, syncNightSky, syncNightSkyVisibility, syncRelief2d } from "./scene-overlays";
 import { CURTAIN_MIN_PITCH, DEFAULT_SCENE_EFFECTS, KANSAS_FLYOVER, SCENE_EFFECT_KEYS, SCENE_EFFECT_OPTIONS, SCENE_LOOK_PRESETS, matchingLookPreset, effectiveSceneLight, applySelectionPulse, applyTerrainReliefStyle, curtainIsVisible, readSceneEffects, setCurtainShimmer, registerSceneEffects, sunSceneLight, syncBorderCurtain, syncBorderCurtainVisibility, writeSceneEffects, type SceneEffectSettings, type SceneView } from "./scene-effects";
 import { SceneEffectsControls, ScenePanel } from "./scene-effects-controls";
-import { applySceneComposition, sceneRecipePresentation, SCENE_RECIPES, type SceneComposition, type ScenePresentation, type SceneRecipe } from "./scene-studio";
+import { DEFAULT_TERRAIN_DEPTH, terrainDepth, compositionDefaults, applyGroundView, applySceneComposition, sceneRecipePresentation, SCENE_RECIPES, type SceneComposition, type ScenePresentation, type SceneRecipe } from "./scene-studio";
 import { createTerrainDrawing } from "./terrain-drawing-runtime";
 import { TERRAIN_DRAWING_INITIAL_STATUS, type TerrainDrawingConfig, type TerrainDrawingMode, type TerrainDrawingStatus, type TerrainSurfaceMode, type TerrainSurfaceProbe } from "./terrain-drawing";
 import { EXTERNAL_CONTEXT_SOURCES } from "./external-context-sources";
@@ -4677,7 +4677,7 @@ export default function Home() {
       const nextScenePreset: ScenePresetId = restoredScene === "overview-2d" || restoredScene === "globe-overview" || restoredScene === "water-systems" || restoredScene === "smoke-context" || restoredScene === "elevation-3d" || restoredScene === "tile-grid" ? restoredScene : "overview-2d";
       scenePresetRef.current = nextScenePreset;
       setScenePreset(nextScenePreset);
-      const nextVerticalExaggeration = clamp(parseNumber(params.get("zscale"), 1), 0, 2);
+      const nextVerticalExaggeration = nextScenePreset === "elevation-3d" ? terrainDepth(parseNumber(params.get("zscale"), DEFAULT_TERRAIN_DEPTH)) : clamp(parseNumber(params.get("zscale"), 1), 0, 2);
       verticalExaggerationRef.current = nextVerticalExaggeration;
       setVerticalExaggeration(nextVerticalExaggeration);
       const restoredAtmosphere = params.get("sky");
@@ -4689,7 +4689,7 @@ export default function Home() {
       const nextLightAzimuth = clamp(parseNumber(params.get("light"), nextScenePreset === "elevation-3d" ? 235 : 210), 0, 359);
       lightAzimuthRef.current = nextLightAzimuth;
       setLightAzimuth(nextLightAzimuth);
-      const nextFieldOfView = clamp(parseNumber(params.get("fov"), nextScenePreset === "elevation-3d" ? 44 : 36), 20, 60);
+      const nextFieldOfView = clamp(parseNumber(params.get("fov"), nextScenePreset === "elevation-3d" ? compositionDefaults("terrain").fieldOfView : 36), 20, 60);
       fieldOfViewRef.current = nextFieldOfView;
       setFieldOfView(nextFieldOfView);
       const nextGestureMode = params.get("gestures") === "direct" ? "direct" : "cooperative";
@@ -6180,6 +6180,23 @@ export default function Home() {
     setLightAzimuth(next.azimuth);
   };
 
+  const changeTerrainDepth = (value: number) => {
+    const next = terrainDepth(value);
+    verticalExaggerationRef.current = next;
+    setVerticalExaggeration(next);
+  };
+
+  const exploreGround = () => {
+    const map = mapRef.current;
+    if (!map || scenePresetRef.current !== "elevation-3d") return;
+    runMapMutation("Ground view", () => {
+      applyGroundView(map, { reducedMotion, interrupt: () => { stopFlyover(false); stopSceneOrbit(false); } });
+      fieldOfViewRef.current = map.getVerticalFieldOfView();
+      setFieldOfView(fieldOfViewRef.current);
+    });
+    announce("Closer ground view · current map center, source heights and selection preserved");
+  };
+
   const composeSceneCamera = (patch: Partial<SceneComposition>, reset = false) => {
     const map = mapRef.current;
     if (!map) return;
@@ -7080,20 +7097,20 @@ export default function Home() {
     }
     const nextProjection = mode === "globe" ? "globe" : "mercator";
     const nextScenePreset: ScenePresetId = mode === "terrain" ? "elevation-3d" : mode === "globe" ? "globe-overview" : "overview-2d";
-    const nextAtmosphere: AtmospherePreset = mode === "terrain" ? "dusk" : mode === "globe" ? "clear" : "night";
-    const nextFieldOfView = mode === "terrain" ? 44 : mode === "globe" ? 42 : 36;
-    const nextPitch = mode === "terrain" ? Math.max(basemapRef.current === "topo" ? 58 : 48, currentPitch) : 0;
+    const nextAtmosphere: AtmospherePreset = mode === "terrain" || mode === "globe" ? "clear" : "night";
+    const nextFieldOfView = compositionDefaults(mode === "terrain" ? "terrain" : mode === "globe" ? "globe" : "2d").fieldOfView;
+    const nextPitch = mode === "terrain" ? Math.max(compositionDefaults("terrain").pitch, currentPitch) : 0;
     const nextBearing = mode === "2d" ? 0 : currentBearing;
 
     projectionRef.current = nextProjection;
     scenePresetRef.current = nextScenePreset;
     // Display emphasis is explicit; hover elevations and profile samples undo
     // this renderer scale before reporting DEM heights.
-    verticalExaggerationRef.current = mode === "terrain" ? 1.6 : 1;
+    verticalExaggerationRef.current = mode === "terrain" ? DEFAULT_TERRAIN_DEPTH : 1;
     atmospherePresetRef.current = nextAtmosphere;
     lightAzimuthRef.current = mode === "terrain" ? 235 : mode === "globe" ? 225 : 210;
     fieldOfViewRef.current = nextFieldOfView;
-    if (map) applyProjectionNavigationLimits(map, nextProjection);
+    if (map) { applyProjectionNavigationLimits(map, nextProjection); if (mode === "terrain") map.setMaxPitch(72); }
 
     // Commit renderer state as one transaction before scheduling React's
     // presentation updates. This makes repeated 2D ↔ terrain ↔ globe changes
@@ -7383,7 +7400,7 @@ export default function Home() {
     const nextScenePreset: ScenePresetId = profile.id === "smoke" ? "smoke-context" : profile.id === "elevation" ? "elevation-3d" : profile.projection === "globe" ? "globe-overview" : "overview-2d";
     const nextAtmosphere: AtmospherePreset = profile.id === "smoke" || profile.id === "hazards" || profile.id === "elevation" ? "dusk" : profile.projection === "globe" ? "clear" : "night";
     const nextLightAzimuth = profile.id === "elevation" ? 235 : profile.projection === "globe" ? 225 : 210;
-    const nextFieldOfView = profile.id === "elevation" ? 44 : profile.projection === "globe" ? 42 : 36;
+    const nextFieldOfView = profile.id === "elevation" ? compositionDefaults("terrain").fieldOfView : profile.projection === "globe" ? 42 : 36;
     stopSceneOrbit(false);
     mapRef.current?.stop();
     visibilityRef.current = nextVisibility;
@@ -7392,7 +7409,7 @@ export default function Home() {
     basemapRef.current = profileBasemap;
     projectionRef.current = profile.projection;
     scenePresetRef.current = nextScenePreset;
-    verticalExaggerationRef.current = 1;
+    verticalExaggerationRef.current = profile.id === "elevation" ? DEFAULT_TERRAIN_DEPTH : 1;
     atmospherePresetRef.current = nextAtmosphere;
     lightAzimuthRef.current = nextLightAzimuth;
     fieldOfViewRef.current = nextFieldOfView;
@@ -7404,7 +7421,7 @@ export default function Home() {
     setBasemap(profileBasemap);
     setProjection(profile.projection);
     setScenePreset(nextScenePreset);
-    setVerticalExaggeration(1);
+    setVerticalExaggeration(verticalExaggerationRef.current);
     setAtmospherePreset(nextAtmosphere);
     setLightAzimuth(nextLightAzimuth);
     setFieldOfView(nextFieldOfView);
@@ -7413,13 +7430,13 @@ export default function Home() {
     setLocationCameraRedacted(false);
     clearSelectionState();
     const map = mapRef.current;
-    if (map) applyProjectionNavigationLimits(map, profile.projection);
+    if (map) { applyProjectionNavigationLimits(map, profile.projection); if (profile.id === "elevation") map.setMaxPitch(72); }
     if (map?.isStyleLoaded()) {
       if (nextScenePreset !== "elevation-3d") {
         setTerrainState(setTerrainPresentation(map, false, 1));
         setTerrainHeightOverlay(map, false);
       } else {
-        setTerrainState(setTerrainPresentation(map, true, 1));
+        setTerrainState(setTerrainPresentation(map, true, verticalExaggerationRef.current));
         setTerrainHeightOverlay(map, topographicOverlayRef.current);
       }
       map.setProjection({ type: profile.projection });
@@ -7431,7 +7448,7 @@ export default function Home() {
     if (profile.id === "overview") {
       map?.easeTo({ center: [...KANSAS_VIEW.center] as [number, number], zoom: KANSAS_VIEW.zoom, bearing: KANSAS_VIEW.bearing, pitch: KANSAS_VIEW.pitch, duration: motionDuration(600) });
     } else {
-      map?.fitBounds([[-102.1, 36.95], [-94.55, 40.05]], { padding: 54, duration: motionDuration(600) });
+      map?.fitBounds([[-102.1, 36.95], [-94.55, 40.05]], { padding: 54, duration: motionDuration(600), ...(profile.id === "elevation" ? { pitch: compositionDefaults("terrain").pitch } : {}) });
     }
     announce(`${profile.title} applied · view state only`);
   };
@@ -7548,7 +7565,7 @@ export default function Home() {
     const restoredLocationCameraRedaction = snapshot.locationCameraRedacted !== false;
     const savedScene = snapshot.scene;
     const nextScenePreset: ScenePresetId = savedScene?.preset === "globe-overview" || savedScene?.preset === "water-systems" || savedScene?.preset === "smoke-context" || savedScene?.preset === "elevation-3d" || savedScene?.preset === "tile-grid" ? savedScene.preset : "overview-2d";
-    const nextVerticalExaggeration = clamp(Number(savedScene?.verticalExaggeration ?? 1), 0, 2);
+    const nextVerticalExaggeration = nextScenePreset === "elevation-3d" ? terrainDepth(Number(savedScene?.verticalExaggeration ?? DEFAULT_TERRAIN_DEPTH)) : clamp(Number(savedScene?.verticalExaggeration ?? 1), 0, 2);
     const nextAtmosphere: AtmospherePreset = savedScene?.atmosphere === "dusk" || savedScene?.atmosphere === "clear" ? savedScene.atmosphere : "night";
     const nextLightAzimuth = clamp(Number(savedScene?.lightAzimuth ?? 210), 0, 359);
     const nextFieldOfView = clamp(Number(savedScene?.fieldOfView ?? 36), 20, 60);
@@ -9205,7 +9222,7 @@ export default function Home() {
                 <details className="layer-scene-entry">
                   <summary>Terrain &amp; 3D appearance <span>{scenePreset === "elevation-3d" ? terrainState === "READY" ? "On" : terrainState === "ERROR" ? "Needs attention" : "Loading" : "Off"}</span></summary>
                   <LayerSceneControls active={scenePreset === "elevation-3d"} selectedLook={scenePreset !== "elevation-3d" ? null : structures3DEnabled ? "buildings" : basemap === "topo" ? "topographic" : basemap === "imagery" ? "natural" : null} terrainProvider={terrainProvider} state={terrainState} exaggeration={verticalExaggeration} lighting={atmospherePreset} azimuth={lightAzimuth} heightOverlay={topographicOverlay} onPreset={applyTerrainLook} onTerrainProvider={chooseTerrainProvider} on2D={() => activateMapRepresentation("2d")} onExaggeration={value => { verticalExaggerationRef.current = value; setVerticalExaggeration(value); }} onLighting={value => { atmospherePresetRef.current = value; setAtmospherePreset(value); }} onAzimuth={value => { lightAzimuthRef.current = value; setLightAzimuth(value); }} onHeight={toggleTopographicHeightOverlay} onRetry={retryTerrain} />
-                  <SceneEffectsControls readings={sceneReadings} view={sceneView} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
+                  <SceneEffectsControls readings={sceneReadings} view={sceneView} terrain={{ scale: verticalExaggeration, available: runtime.kind === "ready" && terrainState !== "ERROR", onScale: changeTerrainDepth, onGroundView: exploreGround }} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
                 </details>
                 <div className="map-control-group"><header><strong>Rendering quality</strong><span>Applies to this map</span></header><RenderQualityControl value={renderQuality} onChange={chooseRenderQuality} /></div>
           <div className="basemap-control">
@@ -9597,7 +9614,7 @@ export default function Home() {
                   ] as const).map(([id, title, detail]) => <button key={id} type="button" aria-pressed={id === "terrain" ? scenePreset === "elevation-3d" : id === "globe" ? projection === "globe" : projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => activateMapRepresentation(id)}><span>{id === "terrain" ? "3D" : id === "globe" ? "◎" : "2D"}</span><strong>{title}</strong><small>{detail}</small></button>)}
                 </section>
 
-                <SceneEffectsControls readings={sceneReadings} view={sceneView} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
+                <SceneEffectsControls readings={sceneReadings} view={sceneView} terrain={{ scale: verticalExaggeration, available: runtime.kind === "ready" && terrainState !== "ERROR", onScale: changeTerrainDepth, onGroundView: exploreGround }} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
 
                 <section className="renderer-capability-list" aria-label="Renderer capability status">
                   <article data-state="ready"><span>WORKS NOW</span><strong>2D, globe, camera, measurement</strong><small>Direct MapLibre state changes</small></article>
@@ -9635,10 +9652,10 @@ export default function Home() {
                 <div className="scene-control-grid">
                   <section className="scene-height-control" aria-labelledby="scene-height-title">
                     <header><div><strong id="scene-height-title">Terrain exaggeration</strong><small>{scenePreset === "elevation-3d" ? "External DEM display only" : "Enable Terrain 3D to adjust"}</small></div><output htmlFor="scene-height">{scenePreset === "elevation-3d" ? `${verticalExaggeration.toFixed(1)}×` : "OFF"}</output></header>
-                    <input id="scene-height" type="range" min="0.1" max="2" step="0.1" value={verticalExaggeration} disabled={scenePreset !== "elevation-3d" || terrainState === "ERROR"} onChange={(event) => { const next = Number(event.target.value); verticalExaggerationRef.current = next; setVerticalExaggeration(next); }} />
-                    <div><span>0.1×</span><span>1× physical</span><span>2×</span></div>
+                    <input id="scene-height" type="range" min="0.1" max="3" step="0.1" value={verticalExaggeration} disabled={scenePreset !== "elevation-3d" || terrainState === "ERROR"} onChange={(event) => { const next = Number(event.target.value); verticalExaggerationRef.current = next; setVerticalExaggeration(next); }} />
+                    <div><span>0.1×</span><span>1× physical</span><span>3×</span></div>
                     {scenePreset === "elevation-3d" && <div className="terrain-exaggeration-presets" role="group" aria-label="Terrain exaggeration presets">
-                      {[1, 1.35, 1.75, 2].map((scale) => <button key={scale} type="button" aria-pressed={verticalExaggeration === scale} onClick={() => { verticalExaggerationRef.current = scale; setVerticalExaggeration(scale); }}>{scale.toFixed(scale === 1 ? 0 : 2).replace(/0$/, "")}×</button>)}
+                      {[1, 2, 2.5, 3].map((scale) => <button key={scale} type="button" aria-pressed={verticalExaggeration === scale} onClick={() => { verticalExaggerationRef.current = scale; setVerticalExaggeration(scale); }}>{scale.toFixed(scale === 1 ? 0 : 2).replace(/0$/, "")}×</button>)}
                     </div>}
                   </section>
                   <section className="scene-camera-controls" aria-label="3D camera orientation">
@@ -9864,7 +9881,7 @@ export default function Home() {
         </section>
 
         {/* Share the shell stacking context with evidence, preserving map hit testing. */}
-        {runtime.kind !== "unsupported" && !undergroundOpen && <ScenePanel onOpenChange={setScenePanelOpen} readings={sceneReadings} view={sceneView} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} onRepresentation={chooseSceneView} />}
+        {runtime.kind !== "unsupported" && !undergroundOpen && <ScenePanel onOpenChange={setScenePanelOpen} readings={sceneReadings} view={sceneView} terrain={{ scale: verticalExaggeration, available: runtime.kind === "ready" && terrainState !== "ERROR", onScale: changeTerrainDepth, onGroundView: exploreGround }} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} onRepresentation={chooseSceneView} />}
 
           {qwenOpen && isCompact && <div className="qwen-modal-backdrop" aria-hidden="true" onPointerDown={() => closeQwenCompanion()} />}
           {qwenOpen && <section ref={qwenPanelRef} id="qwen-map-panel" className="qwen-panel" role="dialog" aria-modal={isCompact} aria-labelledby="qwen-panel-title">

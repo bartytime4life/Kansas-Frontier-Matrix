@@ -37,9 +37,9 @@ export type SceneComposition = Readonly<{ pitch: number; bearing: number; fieldO
 const bounded = (value: number, low: number, high: number, fallback: number) => Number.isFinite(value) ? Math.max(low, Math.min(high, value)) : fallback;
 export const normalizedBearing = (value: number): number => Number.isFinite(value) ? ((value + 180) % 360 + 360) % 360 - 180 : 0;
 export const compositionDefaults = (view: SceneView): SceneComposition => ({
-  pitch: view === "terrain" ? 48 : view === "tilted" ? 56 : 0,
+  pitch: view === "terrain" ? 62 : view === "tilted" ? 56 : 0,
   bearing: 0,
-  fieldOfView: view === "terrain" ? 44 : view === "globe" ? 42 : 36,
+  fieldOfView: view === "terrain" ? 50 : view === "globe" ? 42 : 36,
 });
 
 type CameraMap = Pick<MapLibreMap, "getPitch" | "getBearing" | "getVerticalFieldOfView" | "getMaxPitch" | "setVerticalFieldOfView" | "stop" | "easeTo">;
@@ -65,4 +65,20 @@ export function applySceneComposition(map: CameraMap, patch: Partial<SceneCompos
     map.easeTo({ pitch: next.pitch, bearing: next.bearing, duration: options.reset && !options.reducedMotion ? 300 : 0, essential: false });
   }
   return readSceneComposition(map);
+}
+
+/** Emphasize Kansas relief without altering the source elevation readouts. */
+export const DEFAULT_TERRAIN_DEPTH = 2.5;
+export const terrainDepth = (value: number, fallback = DEFAULT_TERRAIN_DEPTH): number =>
+  Number.isFinite(value) ? Math.max(0.1, Math.min(3, value)) : fallback;
+
+/** An explicit closer view of the current ground; never moves its center,
+ * bearing, source, selection or date, and never zooms a closer view back out. */
+export function applyGroundView(map: CameraMap & Pick<MapLibreMap, "getZoom">, options: {
+  reducedMotion: boolean; interrupt: () => void;
+}): void {
+  options.interrupt();
+  map.stop();
+  map.setVerticalFieldOfView(50);
+  map.easeTo({ zoom: Math.max(10.5, map.getZoom()), pitch: Math.min(66, map.getMaxPitch()), duration: options.reducedMotion ? 0 : 650, essential: false });
 }

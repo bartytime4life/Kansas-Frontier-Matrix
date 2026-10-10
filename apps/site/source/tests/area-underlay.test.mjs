@@ -10,6 +10,7 @@ const compile=source=>ts.transpileModule(source,{compilerOptions:{module:ts.Modu
 async function module(name,imports={}){const exports={};vm.runInNewContext(compile(await readFile(`app/${name}.ts`,'utf8')),{exports,require:name=>{assert.ok(name in imports,name);return imports[name];}});return exports;}
 const materials=await module('subsurface-materials'),model=await module('subsurface-model',{'./subsurface-materials':materials});
 const cutaway=await module('cutaway-model',{'./subsurface-model':model}),camera=await module('cutaway-camera');
+const studio=await module('scene-studio');
 const volumeModel=await module('aquifer-volume',{'polygon-clipping':clipping});
 const viewSession=await module('aquifer-view-session',{'./aquifer-volume':volumeModel});
 const surfaceDetail=await module('cutaway-surface-detail',{'./basemap-cache':{basemapCacheRequest:url=>({url})},'./maplibre-seam':{},'./selected-surface':{}});
@@ -26,7 +27,7 @@ function locator({pitch=0,extent=volume.bounds,reduced=false}={}){
 async function productionFlatMap(map,reduced=false){
  const page=await readFile('app/page.tsx','utf8'),start=page.indexOf('  const activateMapRepresentation ='),end=page.indexOf('\n  const startTerrainInvestigation',start),exports={};
  assert.ok(start>0&&end>start);
- const noop=()=>{},context={exports,mapRef:{current:map},view:{pitch:map.pitch,bearing:0},projectionRef:{current:'mercator'},scenePresetRef:{current:'overview-2d'},verticalExaggerationRef:{current:1},atmospherePresetRef:{current:'night'},lightAzimuthRef:{current:210},fieldOfViewRef:{current:36},basemapRef:{current:'standard'},regionalViewRef:{current:{}},pendingViewRef:{current:null},motionDuration:n=>reduced?0:n};
+ const noop=()=>{},context={exports,compositionDefaults:studio.compositionDefaults,mapRef:{current:map},view:{pitch:map.pitch,bearing:0},projectionRef:{current:'mercator'},scenePresetRef:{current:'overview-2d'},verticalExaggerationRef:{current:1},atmospherePresetRef:{current:'night'},lightAzimuthRef:{current:210},fieldOfViewRef:{current:36},basemapRef:{current:'standard'},regionalViewRef:{current:{}},pendingViewRef:{current:null},motionDuration:n=>reduced?0:n};
  for(const name of ['stopSceneOrbit','stopFlyover','applyProjectionNavigationLimits','setProjection','setScenePreset','setVerticalExaggeration','setAtmospherePreset','setLightAzimuth','setFieldOfView','announce'])context[name]=noop;
  vm.runInNewContext(compile(page.slice(start,end)+'\nexports.activate=activateMapRepresentation;'),context);return()=>exports.activate('2d');
 }

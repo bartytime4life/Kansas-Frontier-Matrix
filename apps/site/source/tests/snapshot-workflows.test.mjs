@@ -81,19 +81,19 @@ test("shared or stored snapshots reject unknown layers, references and invalid c
 });
 
 test("terrain snapshots preserve the selected DEM and display scale without changing legacy drafts", () => {
-  const terrain = { ...snapshot, representation: "Terrain 3D", terrainProvider: "usgs-3dep", terrainExaggeration: 1.35 };
+  const terrain = { ...snapshot, representation: "Terrain 3D", terrainProvider: "usgs-3dep", terrainExaggeration: 3 };
   assert.equal(storage.validMapSnapshot(terrain), true);
-  assert.match(model.terrainSnapshotDescription(terrain), /USGS 3DEP dynamic DEM mosaic at 1\.35×/);
-  assert.match(model.terrainSnapshotDescription({ ...terrain, terrainProvider: "mapzen" }), /Mapzen Terrarium DEM at 1\.35×/);
+  assert.match(model.terrainSnapshotDescription(terrain), /USGS 3DEP dynamic DEM mosaic at 3\.00×/);
+  assert.match(model.terrainSnapshotDescription({ ...terrain, terrainProvider: "mapzen" }), /Mapzen Terrarium DEM at 3\.00×/);
   const legacy = { ...snapshot, representation: "Terrain 3D" };
   assert.equal(storage.validMapSnapshot(legacy), true);
   assert.match(model.terrainSnapshotDescription(legacy), /not recorded in this saved snapshot/);
   assert.equal(model.terrainSnapshotDescription(snapshot), null);
   for (const invalid of [
     { ...terrain, terrainProvider: "other" },
-    { ...terrain, terrainExaggeration: 2.1 },
+    { ...terrain, terrainExaggeration: 3.1 },
     { ...terrain, terrainExaggeration: undefined },
-    { ...snapshot, terrainProvider: "usgs-3dep", terrainExaggeration: 1.35 },
+    { ...snapshot, terrainProvider: "usgs-3dep", terrainExaggeration: 3 },
   ]) assert.equal(storage.validMapSnapshot(invalid), false);
 });
 

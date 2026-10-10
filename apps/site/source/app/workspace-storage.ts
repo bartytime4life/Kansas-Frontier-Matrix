@@ -37,7 +37,7 @@ export function validMapSnapshot(value: unknown): value is MapSnapshot {
   if (hasTerrainProvider !== hasTerrainExaggeration) return false;
   if (hasTerrainProvider && (value.representation !== "Terrain 3D"
     || !["mapzen", "usgs-3dep"].includes(String(value.terrainProvider))
-    || !number(value.terrainExaggeration) || value.terrainExaggeration < 0.1 || value.terrainExaggeration > 2)) return false;
+    || !number(value.terrainExaggeration) || value.terrainExaggeration < 0.1 || value.terrainExaggeration > 3)) return false;
   if (value.evidenceFilter !== undefined && !["ALL", "ANSWER", "MISSING_EVIDENCE", "SOURCE_STALE", "GENERALIZED_GEOMETRY", "RESTRICTED_ACCESS", "DENIED_BY_POLICY", "CORRECTED", "SUPERSEDED", "ERROR"].includes(String(value.evidenceFilter))) return false;
   if (value.comparison !== undefined && (!object(value.comparison) || !layerIds.has(String(value.comparison.layerA)) || !layerIds.has(String(value.comparison.layerB)) || !number(value.comparison.timeA) || !number(value.comparison.timeB))) return false;
   if (value.temporalSweep !== undefined) {

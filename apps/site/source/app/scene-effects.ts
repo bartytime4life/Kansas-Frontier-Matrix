@@ -197,12 +197,12 @@ const RELIEF_PALETTES: Record<SceneLightPreset, ReliefPalette> = {
 
 export type ReliefLook = "general" | "topographic";
 
-export function cinematicHillshadePaint(look: ReliefLook, preset: SceneLightPreset, azimuth: number) {
+export function cinematicHillshadePaint(look: ReliefLook, preset: SceneLightPreset, azimuth: number, altitude = 45) {
   const palette = RELIEF_PALETTES[preset];
   return {
     "hillshade-method": "standard" as const,
     "hillshade-illumination-direction": normalizeDegrees(azimuth, 235),
-    "hillshade-illumination-altitude": 45,
+    "hillshade-illumination-altitude": altitude,
     "hillshade-highlight-color": palette.highlight,
     "hillshade-shadow-color": look === "topographic" ? "#16343c" : palette.shadow,
     "hillshade-accent-color": look === "topographic" ? "#9a8067" : palette.accent,
@@ -213,13 +213,17 @@ export function cinematicHillshadePaint(look: ReliefLook, preset: SceneLightPres
 /** Hillshade paint for this map's settings. Effects off restores the legacy
  * palette exactly; following the sun replaces the manual light direction. */
 export const reliefPaintFor = (
-  map: Pick<MapLibreMap, "getCenter">,
+  map: Pick<MapLibreMap, "getCenter"> & Partial<Pick<MapLibreMap, "getTerrain">>,
   look: ReliefLook,
   light: SceneLightPreset,
   azimuth: number,
 ): Record<string, unknown> => {
   const scene = effectiveSceneLight(map, light, azimuth);
-  if (sceneEffectsFor(map).cinematic) return cinematicHillshadePaint(look, scene.preset, scene.azimuth);
+  if (sceneEffectsFor(map).cinematic) {
+    // Grazing light separates valley floors and ridges on the 3D surface.
+    const altitude = map.getTerrain?.() ? scene.source === "sun" ? clamp(scene.altitude, 12, 60) : scene.preset === "dusk" ? 24 : 30 : 45;
+    return cinematicHillshadePaint(look, scene.preset, scene.azimuth, altitude);
+  }
   return { ...terrainHillshadePaint(look, scene.preset, scene.azimuth), "hillshade-method": "standard", "hillshade-illumination-altitude": 45 };
 };
 

@@ -461,3 +461,17 @@
 @media (max-width: 760px) {
   .scene-surface-modes button, .scene-surface-probe button { min-height: 44px; }
 }
+
+.scene-terrain-depth { margin: 14px 0 18px; padding: 14px; border: 1px solid #6b89985c; border-radius: 10px; background: #102e3dcc; }
+.scene-terrain-depth header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.scene-terrain-depth header strong { color: #e6edf0; font-size: 14px; }
+.scene-terrain-depth output { color: #ecd59a; font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.scene-terrain-depth input[type="range"] { width: 100%; min-height: 36px; accent-color: #d9bc75; }
+.scene-depth-presets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
+.scene-depth-presets button { min-height: 48px; padding: 6px 2px; border: 1px solid #7797a44d; border-radius: 6px; background: #081d28; color: #d9e4e7; font-size: 11px; }
+.scene-depth-presets small { display: block; margin-top: 3px; color: #a5bac3; }
+.scene-depth-presets button[aria-pressed="true"] { border-color: #dec184; color: #f2dba8; background: #51472c66; }
+.scene-ground-view { display: flex; justify-content: space-between; gap: 8px; width: 100%; min-height: 44px; margin-top: 10px; padding: 10px; background: #d6bb7b; color: #102331; border: 0; border-radius: 6px; font-weight: 800; }
+.scene-terrain-depth button:focus-visible { outline: 2px solid #f5dda4; outline-offset: 2px; }
+.scene-terrain-depth p { margin: 10px 0 0; font-size: 11px; line-height: 1.5; color: #b9cbd3; }
+.scene-terrain-depth button:disabled { opacity: .5; cursor: default; }
