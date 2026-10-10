@@ -6,7 +6,26 @@ No real package has been released, activated or published yet.
 The first milestone remains open until the real reviewed package completes the
 local browser journey and private Site acceptance/rollback gates.
 
-## Current water rendering candidate — v215 / 2026-10-10
+## Current map startup candidate — v216 / 2026-10-10
+
+Owner-private source `e7ec041d96fae5a4defc16b495d00ca817249da0` deployed as
+`appgdep_6acaa4eb66f4819191ea4102598f9459`. Its initial map load reuses the
+successful style setup instead of repeating all layer/terrain/overlay updates;
+failed setup retries and later style loads still rebuild their layers.
+All 994 Site tests pass, including four callback regression cases; type checking
+and build pass. Changed-area lint retains the same 41 warnings with zero errors.
+The built local browser reached ready, switched to Midnight navy, returned to
+standard and showed no console errors during that bounded journey. This proves
+neither full device acceptance nor an overall startup timing improvement.
+The local PC has all 924 source and 426 build files SHA-256 checked, HTTP 200 on
+port 4173 and its original store. The v215 installation remains the rollback;
+rollback was not re-rehearsed in this batch.
+The [current receipt](../../data/receipts/generated/site-v216-map-startup-20261010.json)
+records 922 matching mirror files and two canonical tool mappings. Content parity
+is separate from PENDING human review and NOT_EVALUATED hosted equivalence. No
+data release, activation, source admission or water-job installation occurred.
+
+## Previous water rendering checkpoint — v215 / 2026-10-10
 
 Owner-private Site source `1d74c8ea4e4aff4eb14c62f7799ee65a3d36dcec` is deployed
 as `appgdep_6acaa14425988191a75b67a21fbdf46c`; the local copy uses the same
@@ -19,14 +38,14 @@ responses and cleans up on map removal. All 990 Site tests pass; the
 [performance note](../../apps/site/source/docs/water-flow.md#frame-batching-follow-up--2026-10-10)
 separates synthetic work reduction from broader browser performance. No data
 admission, package release, activation or job installation occurred in this batch.
-The v215 repository candidate still needs its own exact-head review and checks.
+PR #5015 merged at `b20a692efd5b2882935682c2556a0dc670cb95f0`; its head finished with 107 successful checks and two skipped. Those checks do not release a data package.
 
 ## Previous Site reconciliation — v214 / 2026-10-10
 
 The [reconciliation report](../reports/kfm-reconciliation-20261010.md) records
 owner-private v214 source `11f1c546d56dcaec08454f99130350ce536328a2`, deployed as
 `appgdep_6aca9c6e29a48191aac22f020f764428`, and the matching local installation.
-The checker selects the [921-file current receipt](../../data/receipts/generated/site-v214-reconciliation-20261010.json)
+That checkpoint selected the [921-file receipt](../../data/receipts/generated/site-v214-reconciliation-20261010.json)
 for **CONTENT_PARITY_ONLY**, with two additional canonical local-tool mappings.
 All prior receipts remain historical. Source/overlay review is **PENDING**;
 `review_acceptance` is **NOT_EVALUATED**. No source admission, package approval,
