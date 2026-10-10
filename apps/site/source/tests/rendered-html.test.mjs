@@ -165,7 +165,7 @@ test("keeps representation switching atomic across 2D, terrain, and globe", asyn
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   assert.match(source, /map\?\.stop\(\)/);
   assert.match(source, /scenePresetRef\.current = nextScenePreset/);
-  assert.match(source, /setTerrainPresentation\(map, false, 1\)[\s\S]+map\.setProjection[\s\S]+setTerrainPresentation\(map, true, 1\)/);
+  assert.match(source, /setTerrainPresentation\(map, false, 1\)[\s\S]+map\.setProjection[\s\S]+setTerrainPresentation\(map, true, verticalExaggerationRef\.current\)/);
   assert.match(source, /map\.triggerRepaint\(\)/);
 });
 

@@ -27,6 +27,7 @@ type ControlsProps = Readonly<{
   onFlyover: () => void;
   /** Live status lines that replace an effect's description while present. */
   readings?: Readonly<Partial<Record<keyof SceneEffectSettings, string | null>>>;
+  terrain?: Readonly<{ scale: number; available: boolean; onScale: (scale: number) => void; onGroundView: () => void }>;
   drawing?: Readonly<{
     mode: TerrainDrawingMode;
     detail: boolean;
@@ -52,7 +53,7 @@ type ControlsProps = Readonly<{
 }>;
 
 /** An atlas cinematographer's studio. All controls share the real renderer state. */
-export function SceneEffectsControls({ settings, light, efficient, reducedMotion, flyoverActive, view, presentation, camera, cameraReady, onRecipe, onLight, onCamera, onChange, onFlyover, drawing, surface, exploration, readings }: ControlsProps) {
+export function SceneEffectsControls({ settings, light, efficient, reducedMotion, flyoverActive, view, presentation, camera, cameraReady, onRecipe, onLight, onCamera, onChange, onFlyover, drawing, surface, exploration, readings, terrain }: ControlsProps) {
   const id = useId();
   const mode = matchingLookPreset(settings);
   const recipe = matchingSceneRecipe({ ...presentation, settings });
@@ -73,6 +74,16 @@ export function SceneEffectsControls({ settings, light, efficient, reducedMotion
     onPointerDown={(event) => event.stopPropagation()} onClick={(event) => event.stopPropagation()}
     onDoubleClick={(event) => event.stopPropagation()} onWheel={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
     <header><div><span>LIGHT / LAND / LENS</span><strong id={`${id}-title`}>Scene studio</strong></div><em data-view={view}>{SCENE_VIEW_LABELS[view]}</em></header>
+    {view === "terrain" && terrain && <section className="scene-terrain-depth" aria-labelledby={`${id}-depth-title`}>
+      <header><strong id={`${id}-depth-title`}>Terrain depth</strong><output htmlFor={`${id}-depth`}>{terrain.scale.toFixed(1)}×</output></header>
+      <label className="sr-only" htmlFor={`${id}-depth`}>Terrain depth scale</label>
+      <input id={`${id}-depth`} type="range" min="0.1" max="3" step="0.1" value={terrain.scale} disabled={!terrain.available} aria-valuetext={`${terrain.scale.toFixed(1)} times source height, display only`} onChange={event => terrain.onScale(Number(event.target.value))} />
+      <div className="scene-depth-presets" role="group" aria-label="Terrain depth presets">
+        {([[1, "True scale"], [2.5, "Enhanced"], [3, "Strong"]] as const).map(([scale, label]) => <button key={scale} type="button" disabled={!terrain.available} aria-pressed={terrain.scale === scale} onClick={() => terrain.onScale(scale)}>{label}<small>{scale.toFixed(1)}×</small></button>)}
+      </div>
+      <button className="scene-ground-view" type="button" disabled={!cameraReady || !terrain.available} onClick={terrain.onGroundView}>Explore this ground <span aria-hidden="true">↘</span></button>
+      <p>1× uses source heights. Higher scales emphasize relief; elevation readings stay unscaled. Ground view moves closer to the current map center.</p>
+    </section>}
     <div className="scene-studio-status"><span>Presentation light</span><strong aria-live="polite">{settings.sunSync ? "Following the sun" : recipe ? SCENE_RECIPES[recipe].label : "Custom"}</strong></div>
     <div className="scene-recipe-grid" role="group" aria-label="Presentation looks">
       {(Object.keys(SCENE_RECIPES) as SceneRecipe[]).map((key) => <button key={key} type="button" data-look={key} aria-pressed={recipe === key} onClick={() => onRecipe(key)}>
