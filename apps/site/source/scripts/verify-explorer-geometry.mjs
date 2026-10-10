@@ -736,7 +736,7 @@ await reloadAt(390);
 await activateSelector(".qwen-map-launch", "Mobile Qwen launcher");
 await waitFor(`Boolean(document.querySelector("#qwen-map-panel") && document.activeElement?.getAttribute("aria-label") === "Close Qwen companion")`);
 assert.equal(await evaluate(`document.querySelector("#qwen-map-panel")?.getAttribute("aria-modal")`), "true");
-await waitFor(`document.querySelector(".topbar")?.inert === true && Boolean(document.querySelector(".map-chrome-dock")?.closest("[inert]")) && document.querySelector(".map-mobile-actions")?.inert === true`);
+await waitFor(`document.querySelector(".topbar")?.inert === true && Boolean(document.querySelector(".map-chrome-dock")?.closest("[inert]")) && Boolean(document.querySelector(".map-mobile-actions")?.closest("[inert]"))`);
 assert.deepEqual(await evaluate(`(() => {
   const panel = document.querySelector("#qwen-map-panel");
   const outsideButton = document.querySelector(".map-mobile-actions button");
@@ -746,7 +746,7 @@ assert.deepEqual(await evaluate(`(() => {
     focusStayedInPanel: Boolean(panel?.contains(document.activeElement)),
     topbarInert: document.querySelector(".topbar")?.inert === true,
     dockInert: Boolean(document.querySelector(".map-chrome-dock")?.closest("[inert]")),
-    mobileActionsInert: document.querySelector(".map-mobile-actions")?.inert === true,
+    mobileActionsInert: Boolean(document.querySelector(".map-mobile-actions")?.closest("[inert]")),
   };
 })()`), {
   panelHasInertAncestor: false,
@@ -772,10 +772,12 @@ await activateSelector('.qwen-runtime-actions button:first-child', "Close Qwen S
 await waitFor(`!document.querySelector("#qwen-setup-guidance")`);
 await focusSelector('.qwen-panel-footer button', "Copy grounded prompt");
 await pressKey("Tab");
-await waitFor(`document.activeElement?.getAttribute("aria-label") === "Close Qwen companion"`);
-assert.equal(await evaluate(`document.elementFromPoint(2, 2)?.classList.contains("qwen-modal-backdrop")`), true);
-await call("Input.dispatchMouseEvent", { type: "mousePressed", x: 2, y: 2, button: "left", clickCount: 1 });
-await call("Input.dispatchMouseEvent", { type: "mouseReleased", x: 2, y: 2, button: "left", clickCount: 1 });
+await waitFor(`document.activeElement === document.querySelector("#qwen-map-panel .inspection-panel-switch button")`);
+assert.equal(await evaluate(`document.querySelector(".site-root").scrollTop`), 0);
+await assertInViewport("#qwen-map-panel .inspection-close", "Sticky Qwen close");
+assert.equal(await evaluate(`document.elementFromPoint(2, 80)?.classList.contains("qwen-modal-backdrop")`), true);
+await call("Input.dispatchMouseEvent", { type: "mousePressed", x: 2, y: 80, button: "left", clickCount: 1 });
+await call("Input.dispatchMouseEvent", { type: "mouseReleased", x: 2, y: 80, button: "left", clickCount: 1 });
 await waitFor(`!document.querySelector("#qwen-map-panel")`);
 assert.equal(await evaluate(`document.activeElement === document.querySelector(".qwen-map-launch")`), true);
 covered("Mobile Qwen / Setup / Retry / Ask / Copy / modal isolation / focus trap", 390);
