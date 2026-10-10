@@ -6,7 +6,28 @@ No real package has been released, activated or published yet.
 The first milestone remains open until the real reviewed package completes the
 local browser journey and private Site acceptance/rollback gates.
 
-## Current cutaway texture candidate — v219 / 2026-10-10
+## Current cutaway image-status candidate — v220 / 2026-10-10
+
+Owner-private Site v220 source `19d19c2cb8ac02ba36389e863aba6d2e5b498878`
+deployed successfully as `appgdep_6acab87ad70081918a81cdfc918fc69e`.
+Underground now reports **HIGH-DETAIL MAP** only after an intersecting
+high-detail mesh attaches. If it clears or never attaches, the caption describes
+the selected-area fallback image or states that no map image is available.
+The actual component-callback regression failed on v219 and passes on v220.
+All 1,006 Site tests, type checking and the production build pass, including
+28 focused tests. The 928 source files and 427 build files checksum-match the
+new PC installation; port 4173 returns HTTP 200. The original persistent store
+and v219 installation remain intact. There is no data or storage migration.
+The [926-file receipt](../../data/receipts/generated/site-v220-cutaway-image-status-20261010.json)
+retains two canonical tool mappings and is REVIEW_ONLY with human acceptance
+pending. The built browser rendered a ready 4096 × 3437 surface, 28 recorded
+columns and one aquifer overlap with partial-coverage disclosure. Its caption
+visibly read **HIGH-DETAIL MAP** below the rendered model. Broader device and
+hosted acceptance remain open. Rollback to v219 was prepared, not rehearsed this batch.
+Source admission, data activation, acquisition jobs and infrastructure are
+unchanged.
+
+## Previous cutaway texture checkpoint — v219 / 2026-10-10
 
 Owner-private source `24b469fab699a04db1a0ce6730a9257b1b800a4c` deployed as
 `appgdep_6acab51384c8819192cfc1f570059373`. Appearance controls reuse the
