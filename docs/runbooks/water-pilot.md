@@ -6,7 +6,32 @@ No real package has been released, activated or published yet.
 The first milestone remains open until the real reviewed package completes the
 local browser journey and private Site acceptance/rollback gates.
 
-## Current cutaway image-status candidate — v220 / 2026-10-10
+## Current cutaway caption lint candidate — v221 / 2026-10-10
+
+The owner-private Site now serves v221 source
+`00b653cd4680965d4a311d3118442f9d40bc51de`, deployed as
+`appgdep_6acabe1a4c788191b54a53352f831a3f`. Merged PR #5019's
+Site CI failed only at lint: React disallows a synchronous `setDetailShown(false)`
+inside the detail effect. Its cleanup already clears the previous map detail.
+V221 removes that redundant call and adds a component-callback check that a
+pending surface refresh does not retain the old **HIGH-DETAIL MAP** caption.
+The full Site lint has zero errors (64 existing warnings), all 1,006 tests pass,
+and type checking and production build pass. The new PC installation contains
+928 checksum-matched source files and 427 build files, returns HTTP 200 at
+port 4173, and retains v220 and the original persistent store for rollback.
+The [926-file mirror receipt](../../data/receipts/generated/site-v221-cutaway-caption-lint-20261010.json)
+is REVIEW_ONLY with two canonical mappings and human acceptance pending.
+The owner-private hosted browser loaded 28 plotted columns from 50 records and
+one aquifer overlap with partial coverage disclosed. Its 4096 × 3437 surface
+reached ready and the corrected **HIGH-DETAIL MAP** caption was visible below
+the rendered cutaway. The screenshot is preserved in local recovery. This is a
+bounded browser journey, not broad device, accessibility or long-session
+acceptance. The local application rollback rehearsal switched v221 to the
+preserved v220 installation and back, returning HTTP 200 for both source
+identities; the original D1/R2 state path remained configured. It did not
+test a data snapshot rollback. There is no data, schema or release change.
+
+## Previous cutaway image-status checkpoint — v220 / 2026-10-10
 
 Owner-private Site v220 source `19d19c2cb8ac02ba36389e863aba6d2e5b498878`
 deployed successfully as `appgdep_6acab87ad70081918a81cdfc918fc69e`.

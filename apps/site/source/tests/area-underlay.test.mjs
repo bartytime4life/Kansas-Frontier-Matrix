@@ -234,7 +234,10 @@ test('new and refreshed detail frames retain the chosen sampling and geography w
  button(h.tree,'Smooth image').props.onClick();await h.render();assert.equal(texture.magFilter,Three.NearestFilter);assert.equal(texture.minFilter,Three.NearestFilter);
  detail.onFrame({image,bounds:volume.bounds,zoom:12});h.flushFrame();[plane]=mappedPlanes(h);assert.equal(plane.material.map.magFilter,Three.NearestFilter,'later frames also retain Exact pixels');
  const finalTexture=plane.material.map;let finalDisposed=0;finalTexture.addEventListener('dispose',()=>finalDisposed++);
- surface.props.onCapture(null);await h.render();await h.render();assert.equal(finalDisposed,1);assert.equal(mappedPlanes(h).length,0);
+ surface.props.onCapture({bounds:volume.bounds,style:{version:9,sources:{},layers:[]},images:[]});await h.render();await h.render();
+ assert.equal(finalDisposed,1);assert.equal(mappedPlanes(h).length,0);
+ assert.match(text(h.tree),/MAP IMAGE UNAVAILABLE/,'a pending refresh clears the former high-detail caption');
+ surface.props.onCapture(null);await h.render();await h.render();
  assert.match(text(h.tree),/MAP IMAGE UNAVAILABLE/,'clearing the detail restores the truthful fallback caption');
  h.h.dispose();assert.equal(detail.disposed,true);assert.equal(h.prepares,0);
 });
