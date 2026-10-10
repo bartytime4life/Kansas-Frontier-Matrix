@@ -152,12 +152,18 @@ def handler(desk: Desk):
             value = self.headers.get("Origin")
             return value if value in ORIGINS else None
 
+        def _safe_header_value(self, value: str) -> str:
+            # Prevent HTTP response splitting via CR/LF or other control chars.
+            if any((ord(ch) < 32 and ch != "\t") or ord(ch) == 127 for ch in value):
+                raise ValueError("INVALID_HEADER_VALUE")
+            return value
+
         def answer(self, status: int, body, *, content_type="application/json", extra=()):
             encoded = body if isinstance(body, bytes) else json.dumps(body, sort_keys=True).encode()
             self.send_response(status)
             origin = self.origin()
             if origin is not None and origin != SELF_ORIGIN:
-                self.send_header("Access-Control-Allow-Origin", origin)
+                self.send_header("Access-Control-Allow-Origin", self._safe_header_value(origin))
             self.send_header("Vary", "Origin")
             self.send_header("Cache-Control", "no-store")
             self.send_header("X-Content-Type-Options", "nosniff")
@@ -174,7 +180,7 @@ def handler(desk: Desk):
             if not self.host_ok() or origin is None or origin == SELF_ORIGIN:
                 return self.answer(403, {"error": "ORIGIN_REJECTED"})
             self.send_response(204)
-            self.send_header("Access-Control-Allow-Origin", origin)
+            self.send_header("Access-Control-Allow-Origin", self._safe_header_value(origin))
             self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
             self.send_header("Access-Control-Allow-Headers", "Content-Type, X-KFM-Session")
             self.send_header("Access-Control-Allow-Private-Network", "true")
