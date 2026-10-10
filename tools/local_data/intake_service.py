@@ -158,10 +158,12 @@ def handler(desk: Desk):
                 return None
 
         def _safe_header_value(self, value: str) -> str:
-            # Prevent HTTP response splitting via any control chars (including CR/LF/HTAB).
-            if any(ord(ch) < 32 or ord(ch) == 127 for ch in value):
+            # Prevent HTTP response splitting: canonicalize line breaks, then reject
+            # any remaining control chars (including HTAB) and DEL.
+            sanitized = value.replace("\r", "").replace("\n", "")
+            if any(ord(ch) < 32 or ord(ch) == 127 for ch in sanitized):
                 raise ValueError("INVALID_HEADER_VALUE")
-            return value
+            return sanitized
 
         def _safe_header_name(self, name: str) -> str:
             # Header field-names must not include control chars or ':'.
