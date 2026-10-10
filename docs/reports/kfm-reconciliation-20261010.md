@@ -71,6 +71,11 @@ approval, select itself, establish hosted equivalence, or authorize data release
 
 - TypeScript type checking and production build passed.
 - Focused tests: 81 passed. Full Site suite: 985 passed, zero failed or skipped.
+- Repository CI initially caught the restored Crop-CASMA preview route missing from
+  the smoke inventory. It now has an offline invalid-query assertion; all three
+  startup-isolation tests pass, and the running candidate returned HTTP 400 with
+  `INVALID_REQUEST`. The optional local Python mirror unit suite could not start
+  because pytest is absent; exact-head hosted validation remains separate.
 - `git diff --check` passed. Installation checksums match all 923 source files and
   all 426 build files; the dependency lock stayed unchanged.
 - A bounded live 3DHP route probe returned HTTP 200 in 1.602 seconds with 400

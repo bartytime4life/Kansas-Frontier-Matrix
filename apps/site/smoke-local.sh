@@ -15,7 +15,7 @@ api_root="$site_root/source/app/api"
 smoke_routes=(
   acquisition acquisition/terrain
   3dep-dem-tile airflow-tile blm-plss-records bridge-records
-  crop-casma/availability crop-casma/tile
+  crop-casma/availability crop-casma/preview crop-casma/tile
   daily-archive data-submissions "data-submissions/[id]"
   "earth-engine-context/[setId]/[layerId]/[...tile]" earth-engine-context/activate
   earth-engine-context/active earth-engine-context/catalog earth-engine-context/stage
@@ -151,6 +151,7 @@ expect GET /api/3dep-dem-tile 400
 expect GET /api/airflow-tile 400
 expect GET /api/blm-plss-records 400 state error
 expect GET /api/bridge-records 400 state error
+expect GET '/api/crop-casma/preview?unsupported=1' 400 code INVALID_REQUEST
 expect GET /api/crop-casma/tile 400 code INVALID_TILE_REQUEST
 expect GET '/api/event-atlas/counties?edition=1999' 400
 expect GET '/api/event-atlas/geology-legend?unsupported=1' 400
