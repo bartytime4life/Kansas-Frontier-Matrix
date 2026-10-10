@@ -104,16 +104,21 @@ def fsync_directory(path: Path) -> None:
 
 def write_new(path: Path, content: bytes) -> None:
     """Write an immutable metadata object; never replace an existing path."""
-    check_directory(path.parent, create=True)
-    fd, name = tempfile.mkstemp(prefix=".capture-", dir=path.parent)
+    target = path.resolve(strict=False)
+    if not target.is_absolute():
+        raise ValueError("UNSAFE_PATH")
+    if any(part in {".", ".."} for part in target.parts):
+        raise ValueError("UNSAFE_PATH")
+    check_directory(target.parent, create=True)
+    fd, name = tempfile.mkstemp(prefix=".capture-", dir=target.parent)
     temporary = Path(name)
     try:
         with os.fdopen(fd, "wb") as handle:
             handle.write(content)
             handle.flush()
             os.fsync(handle.fileno())
-        os.link(temporary, path)
-        fsync_directory(path.parent)
+        os.link(temporary, target)
+        fsync_directory(target.parent)
     finally:
         temporary.unlink(missing_ok=True)
 
