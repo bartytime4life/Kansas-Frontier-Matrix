@@ -9,7 +9,7 @@ import test from "node:test";
 import {
   QWEN_LOCAL_MODEL,
   QWEN_LOCAL_MODEL_DIGEST,
-  QWEN_LOCAL_OLLAMA_VERSION,
+  QWEN_LOCAL_OLLAMA_MIN_VERSION,
 } from "../scripts/qwen-local-contract.mjs";
 
 const installerPath = fileURLToPath(new URL("../scripts/install-local-qwen-macos.sh", import.meta.url));
@@ -27,7 +27,13 @@ test("installer pins Ollama CLI traffic and validates the copied runtime", () =>
   assert.match(installSource, /env OLLAMA_HOST="\$ollama_origin"/);
   assert.match(installSource, /Node\.js 22\.13\.0 or newer/);
   assert.match(installSource, /"\$installed_node" -e/);
-  assert.match(installSource, /QWEN_LOCAL_OLLAMA_VERSION/);
+  assert.match(installSource, /QWEN_LOCAL_OLLAMA_MIN_VERSION/);
+  assert.match(installSource, /contract\.isSupportedOllamaVersion\(payload\?\.version\)/);
+  assert.doesNotMatch(installSource, /payload\?\.version === expected/);
+  for (const file of ["scripts/qwen-knowledge.mjs", "scripts/qwen-knowledge-pack.mjs"]) {
+    assert.match(installSource, new RegExp(`install -m 0644 "\\$source_root/${file}" "\\$support_root/${file}"`), file);
+    assert.match(uninstallSource, new RegExp(`"\\$support_root/${file}"`), file);
+  }
   assert.match(installSource, /Run this installer as the signed-in macOS user/);
   assert.match(installSource, /escape_plist_text/);
   assert.match(installSource, /only current-user loopback listeners/);
@@ -144,7 +150,7 @@ test("an unload fault exits before any replacement command can run", async (cont
     await symlink(process.execPath, join(fakeBin, "node"));
     await fakeCommand("uname", "printf 'Darwin\\n'");
     await fakeCommand("ollama", `if [[ "$1" == "list" ]]; then printf 'NAME ID SIZE MODIFIED\\n%s id 5.2GB now\\n' '${QWEN_LOCAL_MODEL}'; exit 0; fi\nexit 1`);
-    await fakeCommand("curl", `case "$*" in\n  *'/api/version'*) printf '%s\\n' '${JSON.stringify({ version: QWEN_LOCAL_OLLAMA_VERSION })}' ;;\n  *'/api/tags'*) printf '%s\\n' '${JSON.stringify({ models: [{ name: QWEN_LOCAL_MODEL, digest: QWEN_LOCAL_MODEL_DIGEST }] })}' ;;\n  *) exit 1 ;;\nesac`);
+    await fakeCommand("curl", `case "$*" in\n  *'/api/version'*) printf '%s\\n' '${JSON.stringify({ version: QWEN_LOCAL_OLLAMA_MIN_VERSION })}' ;;\n  *'/api/tags'*) printf '%s\\n' '${JSON.stringify({ models: [{ name: QWEN_LOCAL_MODEL, digest: QWEN_LOCAL_MODEL_DIGEST }] })}' ;;\n  *) exit 1 ;;\nesac`);
     await fakeCommand("launchctl", "case \"$1\" in\n  print-disabled) exit 0 ;;\n  print) printf 'pid = 4242\\n'; exit 0 ;;\n  bootout) exit 37 ;;\n  *) exit 1 ;;\nesac");
     await fakeCommand("plutil", "exit 0");
     await fakeCommand("lsof", `if [[ "$*" == *"-iTCP:11434"* ]]; then printf 'p4241\\nu${process.getuid()}\\ncollama\\nn127.0.0.1:11434\\n'; exit 0; fi\nexit 1`);

@@ -16,7 +16,8 @@
     "test": "npm run build && node --test tests/*.test.mjs",
     "test:browser-geometry": "node scripts/verify-explorer-geometry.mjs",
     "lint": "bash scripts/sites-env.sh -- eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern public/maplibre",
-    "prepare:lightning": "node scripts/prepare-lightning-reader.mjs"
+    "prepare:lightning": "node scripts/prepare-lightning-reader.mjs",
+    "build:qwen-knowledge": "node scripts/build-qwen-knowledge-pack.mjs"
   },
   "dependencies": {
     "@mapbox/vector-tile": "2.0.4",

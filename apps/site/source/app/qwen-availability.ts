@@ -4,12 +4,12 @@ import {
   QWEN_LOCAL_BROWSER_HEALTH_TIMEOUT_MS,
   QWEN_LOCAL_MAX_REPLY_BYTES,
   QWEN_LOCAL_MODEL,
-  QWEN_LOCAL_OLLAMA_VERSION,
+  QWEN_LOCAL_OLLAMA_MIN_VERSION,
   localQwenHealthStatus,
   parseLocalQwenAskEnvelope,
 } from "../scripts/qwen-local-contract.mjs";
 
-export { QWEN_LOCAL_MODEL, QWEN_LOCAL_OLLAMA_VERSION };
+export { QWEN_LOCAL_MODEL, QWEN_LOCAL_OLLAMA_MIN_VERSION };
 
 export const QWEN_LOCAL_BROWSER_CONFIG = Object.freeze({
   bridgeOrigin: QWEN_LOCAL_BRIDGE_ORIGIN,
@@ -35,11 +35,22 @@ export type QwenBridgeState =
 export const isQwenHealthEnvelope = (value: unknown) => localQwenHealthStatus(value) !== null;
 export const isQwenAskEnvelope = (value: unknown) => parseLocalQwenAskEnvelope(value) !== null;
 
+/** Model language attached to an ABSTAIN; never evidence, never citable. */
+export type QwenInterpretation = Readonly<{
+  summary: string;
+  observations: readonly string[];
+  inferences: readonly string[];
+  gaps: readonly string[];
+  followUps: readonly string[];
+}>;
+
 export type QwenAskEnvelope = Readonly<{
   outcome: "ANSWER" | "ABSTAIN" | "DENY" | "ERROR";
   reasonCode: string;
   answer: string | null;
   evidenceRefs: readonly string[];
+  interpretation: QwenInterpretation | null;
+  requestId: string | null;
 }>;
 
 export const parseQwenAskEnvelope = (value: unknown): QwenAskEnvelope | null => {
@@ -50,6 +61,8 @@ export const parseQwenAskEnvelope = (value: unknown): QwenAskEnvelope | null => 
     reasonCode: envelope.reasonCode,
     answer: envelope.answer,
     evidenceRefs: envelope.evidenceRefs,
+    interpretation: envelope.interpretation,
+    requestId: envelope.receipt?.requestId ?? null,
   };
 };
 

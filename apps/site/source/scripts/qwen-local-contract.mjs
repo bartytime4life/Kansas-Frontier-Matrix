@@ -1,19 +1,31 @@
 /** Non-secret, local-only contract shared by the Qwen bridge and its tests. */
-export const QWEN_LOCAL_CONTRACT_VERSION = "kfm-qwen-local-v1";
-export const QWEN_LOCAL_BRIDGE_VERSION = "1.1.2";
+export const QWEN_LOCAL_CONTRACT_VERSION = "kfm-qwen-local-v2";
+export const QWEN_LOCAL_BRIDGE_VERSION = "2.0.0";
 export const QWEN_LOCAL_MODE = "local-only";
 export const QWEN_LOCAL_MODEL = "qwen3:8b";
 export const QWEN_LOCAL_MODEL_DIGEST = "sha256:500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41";
 export const QWEN_LOCAL_MODEL_FORMAT = "GGUF";
 export const QWEN_LOCAL_MODEL_QUANTIZATION = "Q4_K_M";
 export const QWEN_LOCAL_MODEL_PARAMETERS = "8.2B";
-export const QWEN_LOCAL_OLLAMA_VERSION = "0.35.1";
+// Ollama.app updates itself, so an exact runtime pin breaks the companion on
+// the next update. The tested release is a floor; the model digest stays exact.
+export const QWEN_LOCAL_OLLAMA_MIN_VERSION = "0.35.1";
 export const QWEN_LOCAL_OLLAMA_ORIGIN = "http://127.0.0.1:11434";
 export const QWEN_LOCAL_BRIDGE_PORT = 8768;
 export const QWEN_LOCAL_BRIDGE_ORIGIN = `http://127.0.0.1:${QWEN_LOCAL_BRIDGE_PORT}`;
 export const QWEN_LOCAL_MAX_REQUEST_BYTES = 32 * 1024;
 export const QWEN_LOCAL_MAX_REPLY_BYTES = 64 * 1024;
 export const QWEN_LOCAL_MAX_OUTPUT_TOKENS = 512;
+export const QWEN_LOCAL_MAX_INTERPRETATION_TOKENS = 900;
+// Ollama silently drops the start of a prompt (the system rules) when it
+// exceeds the runtime's default window, so the window is always explicit.
+export const QWEN_LOCAL_CONTEXT_WINDOW_TOKENS = 16_384;
+export const QWEN_LOCAL_KEEP_ALIVE = "15m";
+// Bytes of map context plus knowledge metadata sent with an interpretation.
+// JSON averages roughly 3.5 bytes per token, so 44 KiB leaves room inside the
+// window for the system rules, instructions and the interpretation itself.
+export const QWEN_LOCAL_INTERPRETATION_PROMPT_BUDGET_BYTES = 44 * 1024;
+export const QWEN_LOCAL_KNOWLEDGE_VERSION = "kfm-qwen-knowledge-v1";
 export const QWEN_LOCAL_BODY_TIMEOUT_MS = 5_000;
 export const QWEN_LOCAL_HEALTH_TIMEOUT_MS = 5_000;
 // The browser allows the companion's bounded Ollama probe to finish and return
@@ -49,6 +61,7 @@ export const QWEN_ASK_REASON_CODES = Object.freeze({
     "MODEL_ABSTAINED",
     "OVER_PRECISE_OUTPUT",
     "QUESTION_OUTSIDE_SELECTION_SCOPE",
+    "SENSITIVE_QUESTION_NOT_INTERPRETED",
   ]),
   DENY: Object.freeze(["ORIGIN_NOT_ALLOWED", "POLICY_WITHHELD"]),
   ERROR: Object.freeze([
@@ -69,7 +82,32 @@ export const QWEN_ASK_REASON_CODES = Object.freeze({
     "UNDECLARED_EVIDENCE_REFERENCE",
   ]),
 });
+/** ABSTAIN reasons that may carry a model interpretation; nothing else may. */
+export const QWEN_INTERPRETABLE_ABSTAIN_REASONS = Object.freeze([
+  "CONTEXT_ONLY_INTERPRETATION",
+  "EVIDENCE_NOT_SUPPORTIVE",
+  "QUESTION_OUTSIDE_SELECTION_SCOPE",
+]);
+export const QWEN_PROMPT_PROFILES = Object.freeze([
+  "none",
+  "selection-gate-v1",
+  "context-interpretation-v1",
+]);
 export const NO_EVIDENCE_REFERENCE = "No KFM EvidenceBundle attached";
+
+const SEMVER = /^(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?(?:\+[0-9A-Za-z.-]+)?$/;
+/** True when a reported Ollama release is at or above the tested floor. */
+export function isSupportedOllamaVersion(version, minimum = QWEN_LOCAL_OLLAMA_MIN_VERSION) {
+  const found = typeof version === "string" ? SEMVER.exec(version) : null;
+  const floor = SEMVER.exec(minimum);
+  if (!found || !floor) return false;
+  for (let part = 1; part <= 3; part++) {
+    const difference = Number(found[part]) - Number(floor[part]);
+    if (difference !== 0) return difference > 0;
+  }
+  // A pre-release of the floor itself (0.35.1-rc0) predates the tested release.
+  return found[4] === undefined || floor[4] !== undefined;
+}
 
 const EVIDENCE_STATES = new Set([
   "ANSWER", "MISSING_EVIDENCE", "SOURCE_STALE", "GENERALIZED_GEOMETRY",
@@ -251,9 +289,16 @@ const DEFAULT_HEALTH_REASON_CODE = Object.freeze({
   error: "OLLAMA_RUNTIME_ERROR",
 });
 
+const SHA256_DIGEST = /^sha256:[a-f0-9]{64}$/;
+const validObservedOllamaVersion = (value) => value === null
+  || (typeof value === "string" && value.length <= 64 && SEMVER.test(value));
+
 export const localQwenHealthStatus = (value) => {
   if (!record(value)
-    || Object.keys(value).sort().join(",") !== "bridgeVersion,contract,kind,mode,model,modelDigest,reasonCode,status"
+    || Object.keys(value).sort().join(",") !== "bridgeVersion,contract,kind,knowledgeDigest,knowledgeVersion,mode,model,modelDigest,ollamaVersion,reasonCode,status"
+    || value.knowledgeVersion !== QWEN_LOCAL_KNOWLEDGE_VERSION
+    || typeof value.knowledgeDigest !== "string" || !SHA256_DIGEST.test(value.knowledgeDigest)
+    || !validObservedOllamaVersion(value.ollamaVersion)
     || value.contract !== QWEN_LOCAL_CONTRACT_VERSION
     || value.kind !== "health"
     || value.mode !== QWEN_LOCAL_MODE
@@ -265,10 +310,14 @@ export const localQwenHealthStatus = (value) => {
   return value.status;
 };
 
-export const localQwenHealthEnvelope = (status, reasonCode = DEFAULT_HEALTH_REASON_CODE[status]) => {
+export const localQwenHealthEnvelope = (
+  status,
+  reasonCode = DEFAULT_HEALTH_REASON_CODE[status],
+  { knowledgeDigest = `sha256:${"0".repeat(64)}`, ollamaVersion = null } = {},
+) => {
   if (!QWEN_HEALTH_STATUSES.includes(status)) throw new TypeError("Unknown Qwen health status");
   if (!HEALTH_REASON_CODES[status].includes(reasonCode)) throw new TypeError("Invalid Qwen health reason code");
-  return Object.freeze({
+  const envelope = Object.freeze({
     contract: QWEN_LOCAL_CONTRACT_VERSION,
     kind: "health",
     mode: QWEN_LOCAL_MODE,
@@ -277,7 +326,12 @@ export const localQwenHealthEnvelope = (status, reasonCode = DEFAULT_HEALTH_REAS
     bridgeVersion: QWEN_LOCAL_BRIDGE_VERSION,
     model: QWEN_LOCAL_MODEL,
     modelDigest: QWEN_LOCAL_MODEL_DIGEST,
+    ollamaVersion,
+    knowledgeVersion: QWEN_LOCAL_KNOWLEDGE_VERSION,
+    knowledgeDigest,
   });
+  if (localQwenHealthStatus(envelope) === null) throw new TypeError("Invalid Qwen health envelope");
+  return envelope;
 };
 
 const validAnswerText = (value) => typeof value === "string"
@@ -285,9 +339,64 @@ const validAnswerText = (value) => typeof value === "string"
   && value.length <= 12_000
   && !/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/.test(value);
 
+const INTERPRETATION_LIMITS = Object.freeze({
+  summaryChars: 2_000,
+  itemChars: 400,
+  observations: 5,
+  inferences: 4,
+  gaps: 4,
+  followUps: 3,
+});
+const INTERPRETATION_LISTS = Object.freeze(["observations", "inferences", "gaps", "followUps"]);
+const validInterpretationText = (value, maximum) => typeof value === "string"
+  && value.trim().length > 0 && value.length <= maximum
+  && !/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/.test(value);
+
+/** Strict shape of the interpretation carried on an ABSTAIN envelope. */
+export function parseLocalQwenInterpretation(value) {
+  if (value === null) return null;
+  if (!record(value)
+    || Object.keys(value).sort().join(",") !== "followUps,gaps,inferences,observations,summary"
+    || !validInterpretationText(value.summary, INTERPRETATION_LIMITS.summaryChars)
+    || INTERPRETATION_LISTS.some((key) => !Array.isArray(value[key])
+      || value[key].length > INTERPRETATION_LIMITS[key]
+      || value[key].some((item) => !validInterpretationText(item, INTERPRETATION_LIMITS.itemChars)))) return undefined;
+  return Object.freeze({
+    summary: value.summary,
+    observations: Object.freeze([...value.observations]),
+    inferences: Object.freeze([...value.inferences]),
+    gaps: Object.freeze([...value.gaps]),
+    followUps: Object.freeze([...value.followUps]),
+  });
+}
+
+const RECEIPT_KEYS = "contextSha256,knowledgeDigest,knowledgeSourceIds,knowledgeVersion,latencyMs,modelInvoked,outputTokens,profile,promptTokens,requestId";
+const REQUEST_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+const nullableCount = (value) => value === null || count(value);
+
+/** Observability metadata: identifiers, digests, timing and token counts; never question or answer text. */
+export function parseLocalQwenReceipt(value) {
+  if (value === null) return null;
+  if (!record(value)
+    || Object.keys(value).sort().join(",") !== RECEIPT_KEYS
+    || typeof value.requestId !== "string" || !REQUEST_ID.test(value.requestId)
+    || !QWEN_PROMPT_PROFILES.includes(value.profile)
+    || typeof value.modelInvoked !== "boolean"
+    || (value.modelInvoked && value.profile === "none")
+    || !(value.contextSha256 === null || (typeof value.contextSha256 === "string" && SHA256_DIGEST.test(value.contextSha256)))
+    || !(value.knowledgeVersion === null || value.knowledgeVersion === QWEN_LOCAL_KNOWLEDGE_VERSION)
+    || !(value.knowledgeDigest === null || (typeof value.knowledgeDigest === "string" && SHA256_DIGEST.test(value.knowledgeDigest)))
+    || (value.knowledgeVersion === null) !== (value.knowledgeDigest === null)
+    || !Array.isArray(value.knowledgeSourceIds) || value.knowledgeSourceIds.length > 8
+    || value.knowledgeSourceIds.some((item) => typeof item !== "string" || !/^[a-z0-9][a-z0-9-]{0,63}$/.test(item))
+    || !count(value.latencyMs)
+    || !nullableCount(value.promptTokens) || !nullableCount(value.outputTokens)) return undefined;
+  return Object.freeze({ ...value, knowledgeSourceIds: Object.freeze([...value.knowledgeSourceIds]) });
+}
+
 export function parseLocalQwenAskEnvelope(value) {
   if (!record(value)
-    || Object.keys(value).sort().join(",") !== "answer,authority,bridgeVersion,contract,evidenceRefs,kind,mode,model,modelDigest,outcome,reasonCode"
+    || Object.keys(value).sort().join(",") !== "answer,authority,bridgeVersion,contract,evidenceRefs,interpretation,kind,mode,model,modelDigest,outcome,reasonCode,receipt"
     || value.contract !== QWEN_LOCAL_CONTRACT_VERSION
     || value.kind !== "ask"
     || value.mode !== QWEN_LOCAL_MODE
@@ -303,10 +412,27 @@ export function parseLocalQwenAskEnvelope(value) {
     || new Set(value.evidenceRefs).size !== value.evidenceRefs.length
     || (value.outcome === "ANSWER" && (value.answer === null || value.evidenceRefs.length !== 1))
     || (["ABSTAIN", "DENY", "ERROR"].includes(value.outcome) && (value.answer !== null || value.evidenceRefs.length !== 0))) return null;
-  return Object.freeze({ ...value, evidenceRefs: Object.freeze([...value.evidenceRefs]) });
+  const interpretation = parseLocalQwenInterpretation(value.interpretation);
+  const receipt = parseLocalQwenReceipt(value.receipt);
+  if (interpretation === undefined || receipt === undefined) return null;
+  // Model language rides only on an ABSTAIN that explains missing support. It
+  // never accompanies an evidence-bearing ANSWER, a DENY or an ERROR, and it
+  // may not carry an EvidenceRef or protected precision.
+  if (interpretation !== null) {
+    const text = [interpretation.summary, ...INTERPRETATION_LISTS.flatMap((key) => interpretation[key])];
+    if (value.outcome !== "ABSTAIN"
+      || !QWEN_INTERPRETABLE_ABSTAIN_REASONS.includes(value.reasonCode)
+      || text.some((item) => referencesInLocalQwenAnswer(item).length > 0
+        || localQwenAnswerHasOverPreciseLocation(item))) return null;
+  }
+  return Object.freeze({ ...value, evidenceRefs: Object.freeze([...value.evidenceRefs]), interpretation, receipt });
 }
 
-export const localQwenAskEnvelope = (outcome, reasonCode, { answer = null, evidenceRefs = [] } = {}) => {
+export const localQwenAskEnvelope = (
+  outcome,
+  reasonCode,
+  { answer = null, evidenceRefs = [], interpretation = null, receipt = null } = {},
+) => {
   if (!QWEN_ASK_OUTCOMES.includes(outcome)) throw new TypeError("Unknown Qwen ask outcome");
   if (!QWEN_ASK_REASON_CODES[outcome].includes(reasonCode)) throw new TypeError("Invalid Qwen reason code");
   const envelope = {
@@ -321,6 +447,8 @@ export const localQwenAskEnvelope = (outcome, reasonCode, { answer = null, evide
     authority: "INTERPRETIVE_ONLY",
     answer: typeof answer === "string" ? answer.trim() : answer,
     evidenceRefs,
+    interpretation,
+    receipt,
   };
   const parsed = parseLocalQwenAskEnvelope(envelope);
   if (!parsed) throw new TypeError("Invalid Qwen ask envelope");
@@ -416,4 +544,45 @@ export function parseLocalQwenModelResponse(value) {
     answer: value.answer.trim(),
     evidenceRefs: Object.freeze([...value.evidenceRefs]),
   });
+}
+
+const stringList = (maxItems) => Object.freeze({
+  type: "array",
+  items: Object.freeze({ type: "string" }),
+  maxItems,
+});
+
+/** Structured output for view-level interpretation: observation, inference and gaps stay separate. */
+export const QWEN_LOCAL_INTERPRETATION_SCHEMA = Object.freeze({
+  type: "object",
+  properties: Object.freeze({
+    summary: Object.freeze({ type: "string" }),
+    observations: stringList(INTERPRETATION_LIMITS.observations),
+    inferences: stringList(INTERPRETATION_LIMITS.inferences),
+    gaps: stringList(INTERPRETATION_LIMITS.gaps),
+    followUps: stringList(INTERPRETATION_LIMITS.followUps),
+  }),
+  required: Object.freeze(["summary", "observations", "inferences", "gaps", "followUps"]),
+  additionalProperties: false,
+});
+
+/**
+ * Normalize a raw model interpretation. Grammar-constrained decoding does not
+ * always honor maxItems, so lists are trimmed to their caps; any other shape
+ * deviation (missing or extra keys, non-strings, empty summary) is rejected.
+ */
+export function parseLocalQwenModelInterpretation(value) {
+  if (!record(value)
+    || Object.keys(value).sort().join(",") !== "followUps,gaps,inferences,observations,summary"
+    || typeof value.summary !== "string"
+    || INTERPRETATION_LISTS.some((key) => !Array.isArray(value[key]) || value[key].some((item) => typeof item !== "string"))) return null;
+  const clean = (item) => item.replace(/\s+/g, " ").trim();
+  const normalized = {
+    summary: value.summary.trim(),
+    ...Object.fromEntries(INTERPRETATION_LISTS.map((key) => [key, value[key]
+      .map(clean)
+      .filter(Boolean)
+      .slice(0, INTERPRETATION_LIMITS[key])])),
+  };
+  return parseLocalQwenInterpretation(normalized) ?? null;
 }
