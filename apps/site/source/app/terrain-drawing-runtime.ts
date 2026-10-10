@@ -7,7 +7,7 @@ import { orderedOverlayIds } from "./map-layer-composition";
 import {
   TERRAIN_DRAWING_INITIAL_STATUS, TERRAIN_DRAWING_MIN_ZOOM,
   terrainDrawingCoordinate, terrainDrawingFootprint, terrainDrawingGeometryBatches,
-  type TerrainDrawingConfig, type TerrainDrawingGeometry, type TerrainDrawingGrid, type TerrainDrawingStatus,
+  type TerrainDrawingConfig, type TerrainDrawingGeometry, type TerrainDrawingGrid, type TerrainDrawingMode, type TerrainDrawingStatus,
 } from "./terrain-drawing";
 import { terrainSurfaceGeometryBatches, terrainSurfaceCellAt, terrainSurfaceOpacity, type TerrainSurfaceGeometry, type TerrainSurfaceProbe } from "./terrain-surface";
 
@@ -35,7 +35,7 @@ export function createTerrainDrawing(map: MapLibreMap, onStatus: (status: Terrai
   let samplingCamera: Camera | undefined;
   let lastStarted = -Infinity;
   let contentPending = false;
-  let cache: { geometry: TerrainDrawingGeometry; surface: TerrainSurfaceGeometry; footprint: Omit<TerrainDrawingGrid, "heights">; camera: Camera; source: object } | undefined;
+  let cache: { geometry: TerrainDrawingGeometry; surface: TerrainSurfaceGeometry; grid: TerrainDrawingGrid; mode: TerrainDrawingMode; camera: Camera; source: object } | undefined;
   let probeId: number | undefined;
   const active = (value = config) => value.mode !== "off" || (value.surface ?? "off") !== "off";
   const surfaceOn = () => (config.surface ?? "off") !== "off";
@@ -81,13 +81,13 @@ export function createTerrainDrawing(map: MapLibreMap, onStatus: (status: Terrai
   const waiting = () => report({ ...TERRAIN_DRAWING_INITIAL_STATUS, state: "loading", message: "Settling the view · drawing follows loaded terrain" });
   const readyStatus = () => {
     if (!cache) return;
-    const { geometry, footprint, surface } = cache;
+    const { geometry, grid, surface, mode } = cache;
     const coverage = Math.round(geometry.coverage * 100);
     report({
       state: geometry.coverage > 0 ? "ready" : "loading",
       message: geometry.coverage === 0 ? "Waiting for loaded elevation tiles in the centered patch"
-        : `${coverage}% sampled coverage · centered patch${geometry.clipped ? " · drawing detail capped" : geometry.intervalMeters === null ? " · no contour crossings" : ""}`,
-      intervalMeters: geometry.intervalMeters, spacingMeters: footprint.spacingMeters,
+        : `${coverage}% sampled coverage · centered patch${geometry.clipped ? " · drawing detail capped" : (mode === "contours" || mode === "both") && geometry.intervalMeters === null ? " · no contour crossings" : ""}`,
+      intervalMeters: geometry.intervalMeters, spacingMeters: grid.spacingMeters,
       coverage: geometry.coverage, sampleCount: geometry.sampleCount,
       validCellCount: surface.cells.size, totalCellCount: surface.totalCellCount,
     });
@@ -144,7 +144,7 @@ export function createTerrainDrawing(map: MapLibreMap, onStatus: (status: Terrai
     } catch { /* Style replacement will retrigger sampling once ready. */ }
     finally { mutating = false; }
   };
-  const publish = (geometry: TerrainDrawingGeometry, surface: TerrainSurfaceGeometry, footprint: Omit<TerrainDrawingGrid, "heights">, sampledCamera: Camera, sampledSource: object, token: number) => {
+  const publish = (geometry: TerrainDrawingGeometry, surface: TerrainSurfaceGeometry, grid: TerrainDrawingGrid, mode: TerrainDrawingMode, sampledCamera: Camera, sampledSource: object, token: number) => {
     if (destroyed || token !== generation || source() !== sampledSource || !sameCamera(camera(), sampledCamera)) return;
     mutating = true;
     try {
@@ -171,7 +171,7 @@ export function createTerrainDrawing(map: MapLibreMap, onStatus: (status: Terrai
         { id: TERRAIN_DRAWING_LAYER_IDS[4], type: "line", source: TERRAIN_DRAWING_SOURCE_ID, filter: ["all", ["==", ["get", "role"], "contour"], ["==", ["get", "index"], true]], paint: { "line-width": 2.1 } },
       ];
       for (const layer of layers) if (!map.getLayer(layer.id)) map.addLayer(layer, before);
-      cache = { geometry, surface, footprint, camera: sampledCamera, source: sampledSource };
+      cache = { geometry, surface, grid, mode, camera: sampledCamera, source: sampledSource };
       samplingCamera = undefined;
       sampling = false;
     } catch {
@@ -199,14 +199,46 @@ export function createTerrainDrawing(map: MapLibreMap, onStatus: (status: Terrai
     activeSource = sampledSource;
     samplingCamera = sampledCamera;
     sampling = true;
+    // A mode-only update rebuilds lines from the bounded sampled grid. DEM
+    // arrivals still force fresh readings rather than reusing stale heights.
+    const cached = cache && !contentPending && source() === cache.source && sameCamera(cache.camera, sampledCamera) ? cache : undefined;
     contentPending = false;
     lastStarted = Date.now();
     const token = generation;
-    const heights: (number | null)[] = new Array(footprint.size ** 2);
-    let offset = 0;
     report({ ...TERRAIN_DRAWING_INITIAL_STATUS, state: "loading", message: "Tracing the loaded elevation surface…", spacingMeters: footprint.spacingMeters });
     const current = () => !destroyed && token === generation && source() === sampledSource && !moving && sameCamera(camera(), sampledCamera);
     const failClosed = () => { if (!destroyed && token === generation) { clear(); unavailable("Terrain changed · waiting for loaded elevation"); } };
+    const draw = (sampledGrid: TerrainDrawingGrid, cachedSurface?: TerrainSurfaceGeometry) => {
+      const mode = config.mode;
+      const geometry = terrainDrawingGeometryBatches(sampledGrid, { mode });
+      const drawBatch = () => {
+        timer = undefined;
+        if (!current()) { failClosed(); return; }
+        // A new mode invalidates only lines in flight, not the captured DEM.
+        if (mode !== config.mode) { draw(sampledGrid, cachedSurface); return; }
+        const batch = geometry.next();
+        if (batch.done) {
+          if (cachedSurface) { publish(batch.value, cachedSurface, sampledGrid, mode, sampledCamera, sampledSource, token); return; }
+          const surface = terrainSurfaceGeometryBatches(sampledGrid);
+          const surfaceBatch = () => {
+            timer = undefined;
+            if (!current()) { failClosed(); return; }
+            const cells = surface.next();
+            if (cells.done) {
+              if (mode !== config.mode) draw(sampledGrid, cells.value);
+              else publish(batch.value, cells.value, sampledGrid, mode, sampledCamera, sampledSource, token);
+            }
+            else timer = setTimeout(surfaceBatch, 0);
+          };
+          timer = setTimeout(surfaceBatch, 0);
+        }
+        else timer = setTimeout(drawBatch, 0);
+      };
+      timer = setTimeout(drawBatch, 0);
+    };
+    if (cached) { draw(cached.grid, cached.surface); return; }
+    const heights: (number | null)[] = new Array(footprint.size ** 2);
+    let offset = 0;
     const sampleBatch = () => {
       timer = undefined;
       if (!current()) { failClosed(); return; }
@@ -215,26 +247,7 @@ export function createTerrainDrawing(map: MapLibreMap, onStatus: (status: Terrai
         for (; offset < until; offset += 1) heights[offset] = unexaggeratedTerrainElevation(map, terrainDrawingCoordinate(footprint, offset));
       } catch { failClosed(); return; }
       if (offset < heights.length) { timer = setTimeout(sampleBatch, 0); return; }
-      const sampledGrid = { ...footprint, heights };
-      const geometry = terrainDrawingGeometryBatches(sampledGrid);
-      const drawBatch = () => {
-        timer = undefined;
-        if (!current()) { failClosed(); return; }
-        const batch = geometry.next();
-        if (batch.done) {
-          const surface = terrainSurfaceGeometryBatches(sampledGrid);
-          const surfaceBatch = () => {
-            timer = undefined;
-            if (!current()) { failClosed(); return; }
-            const cells = surface.next();
-            if (cells.done) publish(batch.value, cells.value, footprint, sampledCamera, sampledSource, token);
-            else timer = setTimeout(surfaceBatch, 0);
-          };
-          timer = setTimeout(surfaceBatch, 0);
-        }
-        else timer = setTimeout(drawBatch, 0);
-      };
-      timer = setTimeout(drawBatch, 0);
+      draw({ ...footprint, heights });
     };
     timer = setTimeout(sampleBatch, 0);
   };
@@ -258,7 +271,7 @@ export function createTerrainDrawing(map: MapLibreMap, onStatus: (status: Terrai
   const onMoveEnd = () => {
     moving = false;
     if (!active()) return;
-    if (cache && source() === cache.source && sameCamera(cache.camera, camera()) && !contentPending) { paint(); readyStatus(); }
+    if (cache && cache.mode === config.mode && source() === cache.source && sameCamera(cache.camera, camera()) && !contentPending) { paint(); readyStatus(); }
     else { if (cache && (!sameCamera(cache.camera, camera()) || source() !== cache.source)) clear(); schedule(); }
   };
   const onSourceData = (event: { sourceId?: string; sourceDataType?: string }) => {
@@ -278,7 +291,7 @@ export function createTerrainDrawing(map: MapLibreMap, onStatus: (status: Terrai
   const onStyleLoad = () => { if (!destroyed && active()) { clear(); activeSource = undefined; schedule(); } };
   const probeAt = (coordinate: [number, number]) => {
     if (destroyed || moving || !surfaceOn() || config.probeEnabled === false || !cache || source() !== cache.source || !sameCamera(camera(), cache.camera)) { clearProbe(); return null; }
-    const cell = terrainSurfaceCellAt(cache.footprint, cache.surface.cells, coordinate);
+    const cell = terrainSurfaceCellAt(cache.grid, cache.surface.cells, coordinate);
     if (!cell) { clearProbe(); return null; }
     const probe: TerrainSurfaceProbe = { slopeDegrees: cell.slopeDegrees, aspectDegrees: cell.aspectDegrees, elevationMeters: cell.elevationMeters, center: cell.center, spacingMeters: cell.spacingMeters };
     if (probeId !== cell.id) {
@@ -314,9 +327,11 @@ export function createTerrainDrawing(map: MapLibreMap, onStatus: (status: Terrai
         else { waiting(); schedule(); }
         return;
       }
-      // Modes and scene light only affect styling of the same sampled surface.
+      // Light and surface lenses are paint-only. Line modes rebuild visible
+      // roles cooperatively from cached samples, preserving the shared cap.
       if (cache) paint();
-      else if (config.enabled) schedule();
+      if (previous.mode !== config.mode) { waiting(); schedule(); }
+      else if (!cache && config.enabled) schedule();
     },
     probeCenter() {
       if (destroyed) return null;

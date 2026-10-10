@@ -36,6 +36,9 @@ export type TerrainDrawingGeometry = Readonly<{
   data: TerrainDrawingData; intervalMeters: number | null; coverage: number;
   sampleCount: number; segmentCount: number; clipped: boolean;
 }>;
+export type TerrainDrawingGeometryOptions = Readonly<{
+  mode?: TerrainDrawingMode; intervalMeters?: number; maxSegments?: number;
+}>;
 
 /** A bounded geographic footprint, independent of pitch and bearing. */
 export function terrainDrawingFootprint(center: DrawingPoint, zoom: number, efficient: boolean, detail: boolean): Omit<TerrainDrawingGrid, "heights"> | null {
@@ -88,7 +91,7 @@ export function contourCell(points: readonly DrawingPoint[], heights: readonly n
 }
 
 /** Bounded, resumable geometry work. The runtime yields between four-row batches. */
-export function* terrainDrawingGeometryBatches(grid: TerrainDrawingGrid, options: { intervalMeters?: number; maxSegments?: number } = {}): Generator<void, TerrainDrawingGeometry> {
+export function* terrainDrawingGeometryBatches(grid: TerrainDrawingGrid, options: TerrainDrawingGeometryOptions = {}): Generator<void, TerrainDrawingGeometry> {
   const empty = (): TerrainDrawingGeometry => ({ data: { type: "FeatureCollection", features: [] }, intervalMeters: null, coverage: 0, sampleCount: 0, segmentCount: 0, clipped: false });
   if (!Number.isInteger(grid.size) || grid.size < 2 || grid.size > 65 || grid.heights.length !== grid.size ** 2 || !grid.bounds.every(Number.isFinite)) return empty();
   const valid = grid.heights.filter((height): height is number => typeof height === "number" && Number.isFinite(height));
@@ -101,26 +104,32 @@ export function* terrainDrawingGeometryBatches(grid: TerrainDrawingGrid, options
   const contourKeys = new Map<number, Set<string>>();
   const gridLines: DrawingPoint[][] = [];
   const levels: number[] = [];
-  if (min !== max) for (let elevation = Math.ceil(min / interval) * interval; elevation <= max && levels.length < TERRAIN_DRAWING_MAX_LEVELS; elevation += interval) levels.push(elevation);
+  const mode = options.mode ?? "both";
+  const drawGrid = mode === "grid" || mode === "both";
+  const drawContours = mode === "contours" || mode === "both";
+  if (drawContours && min !== max) for (let elevation = Math.ceil(min / interval) * interval; elevation <= max && levels.length < TERRAIN_DRAWING_MAX_LEVELS; elevation += interval) levels.push(elevation);
   let segmentCount = 0, clipped = false;
   const add = (lines: DrawingPoint[][], segment: DrawingPoint[]) => {
-    if (segmentCount >= limit) { clipped = true; return; }
+    if (segmentCount >= limit) { clipped = true; return false; }
     lines.push(segment); segmentCount += 1;
+    return true;
   };
   const value = (index: number) => typeof grid.heights[index] === "number" && Number.isFinite(grid.heights[index]) ? grid.heights[index] as number : null;
   // Grid edges are adjacent loaded samples; absent points never get bridged.
-  for (let row = 0; row < grid.size; row += 1) {
+  // Only visible roles spend the shared cap. Both keeps its grid-first order;
+  // a single-role view can use the entire budget without hidden geometry.
+  gridRows: for (let row = 0; drawGrid && row < grid.size; row += 1) {
     for (let col = 0; col < grid.size; col += 1) {
       const index = row * grid.size + col;
       if (value(index) === null) continue;
       const point = terrainDrawingCoordinate(grid, index);
-      if (col < grid.size - 1 && value(index + 1) !== null) add(gridLines, [point, terrainDrawingCoordinate(grid, index + 1)]);
-      if (row < grid.size - 1 && value(index + grid.size) !== null) add(gridLines, [point, terrainDrawingCoordinate(grid, index + grid.size)]);
+      if (col < grid.size - 1 && value(index + 1) !== null && !add(gridLines, [point, terrainDrawingCoordinate(grid, index + 1)])) break gridRows;
+      if (row < grid.size - 1 && value(index + grid.size) !== null && !add(gridLines, [point, terrainDrawingCoordinate(grid, index + grid.size)])) break gridRows;
     }
     if (row % 4 === 3) yield;
   }
-  for (let row = 0; row < grid.size - 1 && segmentCount < limit; row += 1) {
-    for (let col = 0; col < grid.size - 1 && segmentCount < limit; col += 1) {
+  contourRows: for (let row = 0; drawContours && !clipped && row < grid.size - 1; row += 1) {
+    for (let col = 0; col < grid.size - 1; col += 1) {
       const nw = row * grid.size + col;
       const indices = [nw, nw + 1, nw + grid.size + 1, nw + grid.size];
       const heights = indices.map(value);
@@ -135,15 +144,19 @@ export function* terrainDrawingGeometryBatches(grid: TerrainDrawingGrid, options
           // An exact-level edge can belong to both adjacent cells. Keep one
           // copy, without rounding the geometry itself or joining any gaps.
           const key = segment.map(point => point.map(value => value.toFixed(12)).join(",")).sort().join(";");
-          if (!seen.has(key)) { add(lines, segment); seen.add(key); }
+          if (!seen.has(key)) {
+            if (!add(lines, segment)) break contourRows;
+            seen.add(key);
+            contourLines.set(level, lines);
+          }
         }
-        if (lines.length) contourLines.set(level, lines);
         contourKeys.set(level, seen);
       }
     }
     if (row % 4 === 3) yield;
   }
-  if (segmentCount >= limit) clipped = true;
+  // Reaching the cap exactly is not clipping; only an omitted visible segment
+  // sets the flag (including when the requested cap is zero).
   const features: TerrainDrawingData["features"] = [...contourLines].map(([elevation, coordinates]) => ({
     type: "Feature", properties: { role: "contour", elevation, index: Math.round(elevation / interval) % 5 === 0 }, geometry: { type: "MultiLineString", coordinates },
   }));
@@ -151,7 +164,7 @@ export function* terrainDrawingGeometryBatches(grid: TerrainDrawingGrid, options
   return { data: { type: "FeatureCollection", features }, intervalMeters: levels.length ? interval : null, coverage: valid.length / grid.heights.length, sampleCount: grid.heights.length, segmentCount, clipped };
 }
 
-export function buildTerrainDrawingGeometry(grid: TerrainDrawingGrid, options: { intervalMeters?: number; maxSegments?: number } = {}): TerrainDrawingGeometry {
+export function buildTerrainDrawingGeometry(grid: TerrainDrawingGrid, options: TerrainDrawingGeometryOptions = {}): TerrainDrawingGeometry {
   const batches = terrainDrawingGeometryBatches(grid, options);
   let next = batches.next();
   while (!next.done) next = batches.next();
