@@ -84,8 +84,10 @@ A QA report is a review aid. It is not final acceptance by itself.
 - Last-reviewed scans.
 - CI reviewer-summary renderers.
 - QA report formatters.
-- Read-only Site mirror drift diagnostics; reviewed receipt admission remains
-  with the existing conformance check and source owner.
+- Read-only Site mirror drift diagnostics and recorded-content parity checks.
+  `site_mirror.py --check` reports receipt review declarations independently;
+  review acceptance remains with the source owner and is not evaluated by the
+  parity check. `--check --format markdown` renders the same result for CI.
 
 ---
 

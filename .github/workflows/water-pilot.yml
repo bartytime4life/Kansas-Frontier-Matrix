@@ -23,8 +23,11 @@ jobs:
       - name: Install hash-locked water dependencies
         run: python tools/ci/install_python_ci.py water-pilot
       - name: Execute synthetic acquisition, serving, denial and recovery tests
-        run: python -m pytest -q tests/connectors/usgs/water_data tests/domains/hydrology/test_usgs_water_normalizer.py tests/packages/release tests/packages/connectors_core apps/governed-api/tests tests/tools/test_water_job.py tests/tools/test_water_release.py
+        run: python -m pytest -q tests/connectors/usgs/water_data tests/domains/hydrology/test_usgs_water_normalizer.py tests/packages/release tests/packages/connectors_core apps/governed-api/tests tests/tools/test_water_job.py tests/tools/test_water_release.py tests/qa/test_site_mirror.py
       - name: Regenerate isolated synthetic conformance fixtures
         run: python tools/fixtures/regenerate.py
-      - name: Check reviewed mirror digests
-        run: python tools/qa/site_mirror.py --check
+      # A successful job records synthetic conformance and content parity only.
+      # Review acceptance and hosted equivalence are independent dimensions.
+      - name: Check recorded mirror content parity and report review state
+        shell: bash
+        run: python tools/qa/site_mirror.py --check --format markdown | tee -a "$GITHUB_STEP_SUMMARY"
