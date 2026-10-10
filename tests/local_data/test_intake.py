@@ -2,6 +2,7 @@
 import io
 import json
 import os
+import sqlite3
 from email.message import Message
 from pathlib import Path
 import tempfile
@@ -9,7 +10,7 @@ import threading
 import time
 from types import SimpleNamespace
 import unittest
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 import zipfile
 
 from tests.local_data import intake_samples as samples
@@ -380,6 +381,167 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(intake.analyze(self.root, budget=self.budget, cancel=cancel)["state"], "cancelled")
 
 
+class BindingIsolationTests(unittest.TestCase):
+    def setUp(self):
+        self.temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temporary.cleanup)
+        self.root = Path(self.temporary.name) / "store"
+        init_store(self.root)
+        self.budget = budget(committed=[], min_release_candidate_bytes=1)
+
+    def capture(self, source, *, declaration=True, content=samples.GEOJSON, **overrides):
+        digest = __import__("hashlib").sha256(content).hexdigest()
+        relative = f"{source}/objects/sha256/{digest}/payload"
+        payload = self.root / "data/quarantine" / relative
+        payload.parent.mkdir(parents=True, exist_ok=True)
+        payload.write_bytes(content)
+        declared = dict(public_item()["declared"], source_id=source, sha256=digest,
+                        size_bytes=len(content), source_uri=f"https://example.test/{source}")
+        declared.update(overrides)
+        binding = self.root / f"data/quarantine/{source}/versions/{declared['dataset_id']}/v1/x.json"
+        if declaration:
+            binding.parent.mkdir(parents=True, exist_ok=True)
+            binding.write_bytes(canonical(declared))
+        return intake.item_id("quarantine", relative), binding
+
+    def assert_isolated(self, public_source, restricted_source):
+        public_id, _ = self.capture(public_source)
+        restricted_id, _ = self.capture(restricted_source, domain="geology",
+                                       rights={"license_id": "private", "redistribution": "restricted"},
+                                       sensitivity="restricted")
+        intake.analyze(self.root, budget=self.budget)
+        public = intake.get_item(self.root, public_id)
+        restricted = intake.get_item(self.root, restricted_id)
+        self.assertEqual(public["sha256"], restricted["sha256"])
+        for item, source, domain in ((public, public_source, "hydrology"), (restricted, restricted_source, "geology")):
+            self.assertEqual(item["declared"]["source_id"], source)
+            self.assertEqual(item["declared"]["source_uri"], f"https://example.test/{source}")
+            self.assertEqual(item["declared"]["binding_count"], 1)
+            self.assertEqual(item["decision"]["domain"], domain)
+            self.assertIn(f"/{domain}/{source}/", tiers(item["decision"])["work_lane"]["target"])
+        self.assertEqual(public["decision"]["status"], "ready")
+        self.assertEqual(restricted["declared"]["rights"]["redistribution"], "restricted")
+        self.assertEqual(restricted["declared"]["sensitivity"], "restricted")
+        self.assertIn("RIGHTS_RESTRICTED", restricted["decision"]["holds"])
+        self.assertIn("SENSITIVITY_RESTRICTED", restricted["decision"]["holds"])
+        self.assertEqual(tiers(restricted["decision"])["git_repo"]["action"], "hold")
+        self.assertEqual(tiers(restricted["decision"])["github_release"]["action"], "hold")
+        self.assertEqual([c["source_id"] for c in intake.cards(self.root)], [public_source])
+        self.assertEqual([c["id"] for c in intake.release_plan(self.root, self.budget)["selected"]], [public_id])
+        with self.assertRaisesRegex(intake.IntakeError, "CARD_NOT_RECOMMENDED"):
+            intake.apply(self.root, restricted_id, "card")
+        written = intake.apply(self.root, public_id, "card")
+        self.assertEqual(json.loads((self.root / written["target"]).read_text())["source_id"], public_source)
+        self.assertEqual(intake.analyze(self.root, budget=self.budget)["reused"], 2)
+
+    def test_public_source_sorts_before_restricted_source(self):
+        self.assert_isolated("a-public", "z-restricted")
+
+    def test_restricted_source_sorts_before_public_source(self):
+        self.assert_isolated("z-public", "a-restricted")
+
+    def test_missing_or_mismatched_binding_does_not_borrow_another_sources_rights(self):
+        public_id, _ = self.capture("a-public")
+        missing_id, _ = self.capture("b-missing", declaration=False)
+        mismatched_id, _ = self.capture("c-mismatched", source_id="a-public")
+        intake.analyze(self.root, budget=self.budget)
+        for identity in (missing_id, mismatched_id):
+            with self.subTest(identity=identity):
+                item = intake.get_item(self.root, identity)
+                self.assertIsNone(item["declared"])
+                self.assertIn("RIGHTS_UNKNOWN", item["decision"]["holds"])
+                self.assertEqual(tiers(item["decision"])["git_repo"]["action"], "hold")
+        self.assertEqual([c["item_id"] for c in intake.cards(self.root)], [public_id])
+        self.assertEqual([c["id"] for c in intake.release_plan(self.root, self.budget)["selected"]], [public_id])
+
+    def test_binding_count_and_sorting_are_local_to_the_source_and_digest(self):
+        identity, _ = self.capture("public", dataset_id="z-gauges")
+        self.capture("public", dataset_id="a-gauges")
+        self.capture("other", rights={"redistribution": "restricted"})
+        intake.analyze(self.root, budget=self.budget)
+        item = intake.get_item(self.root, identity)
+        self.assertEqual(item["declared"]["dataset_id"], "a-gauges")
+        self.assertEqual(item["declared"]["binding_count"], 2)
+
+    def test_changed_declaration_refreshes_cached_domain_and_name_review_hints(self):
+        identity, binding = self.capture("source")
+        intake.analyze(self.root, budget=self.budget)
+        declared = json.loads(binding.read_text())
+        declared.update(domain="geology", relative_path="archaeological-sites-1997.geojson")
+        binding.write_bytes(canonical(declared))
+        result = intake.analyze(self.root, budget=self.budget)
+        self.assertEqual((result["analyzed"], result["reused"]), (1, 0))
+        item = intake.get_item(self.root, identity)
+        self.assertEqual(item["decision"]["domain"], "geology")
+        self.assertTrue(item["decision"]["review_flags"])
+        self.assertEqual(item["profile"]["temporal"]["path_year_hint"], ["1997", "1997"])
+        self.assertEqual(intake.cards(self.root), [])
+        self.assertEqual(intake.release_plan(self.root, self.budget)["selected"], [])
+
+    def test_different_digests_within_one_source_keep_separate_declarations(self):
+        public_id, _ = self.capture("source", dataset_id="a-public")
+        restricted_id, _ = self.capture("source", dataset_id="z-restricted", content=samples.GEOJSON + b"\n",
+                                       rights={"redistribution": "restricted"})
+        intake.analyze(self.root, budget=self.budget)
+        restricted = intake.get_item(self.root, restricted_id)
+        self.assertEqual(restricted["declared"]["dataset_id"], "z-restricted")
+        self.assertEqual(restricted["declared"]["binding_count"], 1)
+        self.assertIn("RIGHTS_RESTRICTED", restricted["decision"]["holds"])
+        self.assertEqual([c["item_id"] for c in intake.cards(self.root)], [public_id])
+        self.assertEqual([c["id"] for c in intake.release_plan(self.root, self.budget)["selected"]], [public_id])
+
+    def test_legacy_index_is_held_until_complete_reanalysis_repairs_cached_provenance(self):
+        public_id, _ = self.capture("a-public")
+        restricted_id, _ = self.capture("z-restricted", domain="geology",
+                                       rights={"redistribution": "restricted"}, sensitivity="restricted")
+        discovered = list(intake.discover(self.root))
+        public = next(row for row in discovered if row["relative_path"].startswith("a-public/"))
+        restricted_declared = next(row["declared"] for row in discovered if row["relative_path"].startswith("z-restricted/"))
+        for row in discovered:
+            row["declared"] = dict(public["declared"], binding_count=2)
+        with patch.object(intake, "discover", return_value=iter(discovered)):
+            intake.analyze(self.root, budget=self.budget)
+        old_card = intake.apply(self.root, restricted_id, "card")
+        preserved = {path: (self.root / path).read_bytes() for path in (old_card["target"], old_card["receipt"])}
+        with sqlite3.connect(intake.intake_dir(self.root) / "index.sqlite") as conn:
+            conn.execute("DELETE FROM meta WHERE key='quarantine_binding_version'")
+            # Older reruns could update declarations while reusing another
+            # source's profile. Even a matching declaration must be reprofiled.
+            conn.execute("UPDATE items SET declared_json=? WHERE id=?", (json.dumps(restricted_declared), restricted_id))
+
+        readers = (lambda: intake.list_items(self.root), lambda: intake.get_item(self.root, restricted_id),
+                   lambda: intake.overview(self.root, self.budget), lambda: intake.cards(self.root),
+                   lambda: intake.release_plan(self.root, self.budget),
+                   lambda: intake.apply(self.root, restricted_id, "card"),
+                   lambda: intake.apply(self.root, restricted_id, "stage"))
+        for read in readers:
+            with self.assertRaisesRegex(intake.IntakeError, "INTAKE_REANALYSIS_REQUIRED"):
+                read()
+        cancel = threading.Event()
+        cancel.set()
+        self.assertEqual(intake.analyze(self.root, budget=self.budget, cancel=cancel)["state"], "cancelled")
+        with self.assertRaisesRegex(intake.IntakeError, "INTAKE_REANALYSIS_REQUIRED"):
+            intake.cards(self.root)
+        with patch.object(intake, "discover", side_effect=ValueError("SYNTHETIC_SCAN_FAILURE")):
+            with self.assertRaisesRegex(ValueError, "SYNTHETIC_SCAN_FAILURE"):
+                intake.analyze(self.root, budget=self.budget)
+        with self.assertRaisesRegex(intake.IntakeError, "INTAKE_REANALYSIS_REQUIRED"):
+            intake.release_plan(self.root, self.budget)
+
+        result = intake.analyze(self.root, budget=self.budget)
+        self.assertEqual((result["state"], result["analyzed"], result["reused"]), ("complete", 2, 0))
+        restricted = intake.get_item(self.root, restricted_id)
+        self.assertEqual(restricted["declared"]["source_id"], "z-restricted")
+        self.assertEqual(restricted["decision"]["domain"], "geology")
+        self.assertIn("RIGHTS_RESTRICTED", restricted["decision"]["holds"])
+        self.assertEqual([c["item_id"] for c in intake.cards(self.root)], [public_id])
+        self.assertEqual([c["id"] for c in intake.release_plan(self.root, self.budget)["selected"]], [public_id])
+        with self.assertRaisesRegex(intake.IntakeError, "CARD_NOT_RECOMMENDED"):
+            intake.apply(self.root, restricted_id, "card")
+        self.assertEqual({path: (self.root / path).read_bytes() for path in preserved}, preserved)
+        self.assertEqual(len(restricted["applications"]), 1, "existing receipt history is preserved")
+
+
 class ServiceTests(unittest.TestCase):
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
@@ -435,6 +597,33 @@ class ServiceTests(unittest.TestCase):
         self.assertNotIn("Access-Control-Allow-Origin", headers)
         for asset in ("/desk.js", "/desk.css"):
             self.assertEqual(self.request("GET", asset, headers={"Origin": None}, raw=True)[0], 200)
+
+    def test_legacy_index_api_holds_results_but_allows_reanalysis(self):
+        digest = __import__("hashlib").sha256(samples.GEOJSON).hexdigest()
+        relative = f"usgs/objects/sha256/{digest}/payload"
+        payload = self.root / "data/quarantine" / relative
+        payload.parent.mkdir(parents=True)
+        payload.write_bytes(samples.GEOJSON)
+        binding = self.root / "data/quarantine/usgs/versions/gauges/v1/x.json"
+        binding.parent.mkdir(parents=True)
+        binding.write_bytes(canonical(dict(public_item()["declared"], sha256=digest)))
+        identity = intake.item_id("quarantine", relative)
+        intake.analyze(self.root, budget=self.desk.budget)
+        with sqlite3.connect(intake.intake_dir(self.root) / "index.sqlite") as conn:
+            conn.execute("DELETE FROM meta WHERE key='quarantine_binding_version'")
+        for endpoint in ("/api/overview", "/api/items", f"/api/items/{identity}", "/api/extents", "/api/release-plan"):
+            with self.subTest(endpoint=endpoint):
+                status, body, _ = self.request("GET", endpoint)
+                self.assertEqual((status, body), (400, {"error": "INTAKE_REANALYSIS_REQUIRED"}))
+        for action in ("card", "stage"):
+            status, body, _ = self.request("POST", "/api/apply", {"id": identity, "action": action})
+            self.assertEqual((status, body), (400, {"error": "INTAKE_REANALYSIS_REQUIRED"}))
+        self.assertEqual(self.request("GET", "/api/status")[0], 200)
+        self.assertEqual(self.request("POST", "/api/analyze", {})[0], 200)
+        self.wait()
+        status, item, _ = self.request("GET", f"/api/items/{identity}")
+        self.assertEqual(status, 200)
+        self.assertEqual(item["declared"]["source_id"], "usgs")
 
     def test_host_origin_and_session_are_checked_before_any_effect(self):
         self.assertEqual(self.request("GET", "/api/overview", headers={"Host": "attacker.example:8771"})[0], 403)
