@@ -10,6 +10,8 @@ import { LIVING_WATERS_SOURCE } from "./living-waters-fixture";
 import { resizeMapAfterLayout } from "./cutaway-locator";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { InspectionPanelSwitch, useInspectionPanel } from "./inspection-panel";
+import "./inspection-panel.css";
 import Link from "next/link";
 import { LocalMapArchiveLoader } from "./local-map-archive-loader";
 import { BridgeRecordInspector } from "./bridge-record-inspector";
@@ -1449,7 +1451,7 @@ export default function Home() {
   const [officialSourceQuery, setOfficialSourceQuery] = useState("");
   const [officialCatalogFilter, setOfficialCatalogFilter] = useState<CatalogFilter>("all");
   const [officialWorkspace, setOfficialWorkspace] = useState<LayerWorkspace>("all");
-  const [rightOpen, setRightOpen] = useState(false);
+  const { inspectionPanel, rightOpen, qwenOpen, setRightOpen, setQwenOpen, previewEvidence } = useInspectionPanel();
   const [timelineOpen, setTimelineOpen] = useState(false);
   const [drawerView, setDrawerView] = useState<DrawerView>("evidence");
   const [focusStage, setFocusStage] = useState<FocusStage>("outcome");
@@ -1544,7 +1546,6 @@ export default function Home() {
   const [placeTourPlaying, setPlaceTourPlaying] = useState(false);
   const [runtimeSeamState, setRuntimeSeamState] = useState<RuntimeSeamState>("IDLE");
   const [runtimeSeamReason, setRuntimeSeamReason] = useState("Awaiting deterministic replay");
-  const [qwenOpen, setQwenOpen] = useState(false);
   const [qwenSetupOpen, setQwenSetupOpen] = useState(false);
   const [qwenHealthRetryToken, setQwenHealthRetryToken] = useState(0);
   const [qwenQuestion, setQwenQuestion] = useState("");
@@ -1564,6 +1565,18 @@ export default function Home() {
   const [sourceStates, setSourceStates] = useState<Record<string, "loading" | "ready" | "error">>(
     Object.fromEntries(LAYER_REGISTRY.map((layer) => [layer.id, "loading"])),
   );
+
+  const surfaceInspectionOpen = scenePanelOpen && terrainSurfaceMode !== "off" && !measureMode && !undergroundOpen && runtime.kind !== "unsupported";
+  const surfaceInspectionOpenRef = useRef(surfaceInspectionOpen);
+  surfaceInspectionOpenRef.current = surfaceInspectionOpen;
+  const surfaceEvidencePendingRef = useRef(false);
+
+  useEffect(() => {
+    if (surfaceInspectionOpen || !surfaceEvidencePendingRef.current) return;
+    surfaceEvidencePendingRef.current = false;
+    // Reveal the sampled selection after Scene closes, unless another tool won focus.
+    if (!qwenOpen && !leftOpen && !mapUtilityOpen && !timelineOpen && !sourceStatusOpen && !helpOpen && !repositoryOpen && !mapContextOpen) setRightOpen(true);
+  }, [surfaceInspectionOpen, qwenOpen, leftOpen, mapUtilityOpen, timelineOpen, sourceStatusOpen, helpOpen, repositoryOpen, mapContextOpen, setRightOpen]);
 
   const debouncedGlobalQuery = useDebounced(globalQuery, 140);
   const debouncedLayerQuery = useDebounced(layerQuery, 140);
@@ -3748,6 +3761,13 @@ export default function Home() {
     }, 0);
   }, [dismissMapUtilityWithoutFocus, isCompact]);
 
+  const openEvidencePanel = useCallback(() => {
+    dismissMapUtilityWithoutFocus();
+    setRightOpen(true);
+    if (isCompact) { setLeftOpen(false); setTimelineOpen(false); }
+    window.setTimeout(() => rightPanelRef.current?.querySelector<HTMLButtonElement>('[aria-label="Close Evidence Drawer"]')?.focus({ preventScroll: true }), 0);
+  }, [dismissMapUtilityWithoutFocus, isCompact, setRightOpen]);
+
   useEffect(() => {
     if (!qwenOpen) return;
     const controller = new AbortController();
@@ -3803,7 +3823,8 @@ export default function Home() {
       for (const element of activeContainer.children) {
         if (element !== activeBranch
           && !element.classList.contains("qwen-modal-backdrop")
-          && element instanceof HTMLElement) background.push(element);
+          && element instanceof HTMLElement && !element.inert
+          && element.getAttribute("aria-hidden") !== "true") background.push(element);
       }
       if (activeContainer === shell) break;
       activeBranch = activeContainer;
@@ -4251,13 +4272,17 @@ export default function Home() {
     setSelected(context);
     setResearchOpen(false);
     setDrawerView("evidence");
-    setRightOpen(true);
+    // A real canvas resize invalidates the Scene sample. Retain the selection
+    // now, but defer changing panel occupancy until active sampling finishes.
+    const deferSurfaceEvidence = surfaceInspectionOpen && returnElement === mapContainerRef.current;
+    surfaceEvidencePendingRef.current = deferSurfaceEvidence;
+    if (!deferSurfaceEvidence) setRightOpen(true);
     setCurrentWorkspace("trust");
-    if (isCompact) {
+    if (isCompact && !deferSurfaceEvidence) {
       setLeftOpen(false);
       setTimelineOpen(false);
     }
-  }, [isCompact]);
+  }, [isCompact, surfaceInspectionOpen, setRightOpen]);
   useEffect(() => { openSelectionRef.current = openSelection; }, [openSelection]);
 
   const selectStoredFeature = useCallback((layerId: string, featureId: string, returnElement?: HTMLElement | null) => {
@@ -5011,7 +5036,7 @@ export default function Home() {
             if (autoOpen && !compactRef.current && rightPanelRef.current?.dataset.open !== "true") {
               hoverDrawerTimerRef.current = window.setTimeout(() => {
                 hoverDrawerTimerRef.current = null;
-                if (hoverCandidateIdRef.current === summary.id && !compactRef.current) setRightOpen(true);
+                if (hoverCandidateIdRef.current === summary.id && !compactRef.current && !surfaceInspectionOpenRef.current) previewEvidence();
               }, 240);
             }
           }
@@ -6197,7 +6222,7 @@ export default function Home() {
     const first = window.requestAnimationFrame(resize);
     const second = window.setTimeout(resize, 260);
     return () => { window.cancelAnimationFrame(first); window.clearTimeout(second); };
-  }, [leftOpen, rightOpen, runMapMutation, timelineOpen]);
+  }, [leftOpen, rightOpen, qwenOpen, runMapMutation, timelineOpen]);
 
   useEffect(() => {
     if (!playing || reducedMotion || temporalMode === "snapshot" || temporalMode === "comparison") return;
@@ -6577,7 +6602,6 @@ export default function Home() {
     return () => panel.removeEventListener("keydown", handleKey);
   }, [repositoryOpen, closeRepository]);
 
-  const surfaceInspectionOpen = scenePanelOpen && terrainSurfaceMode !== "off" && !measureMode && !undergroundOpen && runtime.kind !== "unsupported";
   useEffect(() => {
     if (!isCompact || (surfaceInspectionOpen && !mapUtilityOpen)) return;
     const openPanel = mapUtilityOpen ? mapUtilityPanelRef.current : rightOpen ? rightPanelRef.current : leftOpen ? leftPanelRef.current : timelineOpen ? timelineRef.current : null;
@@ -8954,7 +8978,7 @@ export default function Home() {
         </aside>
       </div>
 
-      <main inert={primaryWorkspace !== "map"} className="explorer-shell" data-left={leftOpen} data-right={rightOpen} data-timeline={timelineOpen}>
+      <main inert={primaryWorkspace !== "map"} className="explorer-shell" data-inspector={inspectionPanel ?? "closed"} data-left={leftOpen} data-right={rightOpen} data-timeline={timelineOpen}>
         <aside ref={leftPanelRef} className="layer-panel" data-panel-mode={leftPanelMode} aria-label={leftPanelMode === "layers" || leftPanelMode === "live" ? "Map layers" : "Living Atlas navigation"} aria-hidden={!leftOpen} inert={!leftOpen} aria-modal={isCompact && leftOpen || undefined} role={isCompact && leftOpen ? "dialog" : undefined}>
           <div className="panel-heading">
             <div><p className="panel-kicker">{leftPanelMode === "views" ? "LIVING ATLAS" : leftPanelMode === "live" || leftPanelMode === "layers" ? "KANSAS FRONTIER MATRIX" : leftPanelMode === "places" ? "PLACES" : "STORY ATLAS"}</p><h1>{leftPanelMode === "views" ? "Investigate Kansas" : leftPanelMode === "live" || leftPanelMode === "layers" ? <>Map layers <span className="layer-panel-count">{selectedMapLayerCount} selected</span></> : leftPanelMode === "places" ? "Places + trails" : "Guided stories"}</h1></div>
@@ -9366,51 +9390,6 @@ export default function Home() {
             <span><strong>Ask Qwen</strong><small>About this map view</small></span>
             <b aria-hidden="true">{qwenOpen ? "×" : "↗"}</b>
           </button>
-          {qwenOpen && isCompact && <div className="qwen-modal-backdrop" aria-hidden="true" onPointerDown={() => closeQwenCompanion()} />}
-          {qwenOpen && <section ref={qwenPanelRef} id="qwen-map-panel" className="qwen-panel" role="dialog" aria-modal={isCompact} aria-labelledby="qwen-panel-title">
-            <header className="qwen-panel-heading">
-              <div><span className="qwen-eyebrow">QWEN · LOCAL ONLY</span><h2 id="qwen-panel-title">Ask about what you see</h2><p>MapLibre supplies the bounded context. The pinned local model may interpret it, but never establishes evidence.</p></div>
-              <button className="icon-close" type="button" onClick={() => closeQwenCompanion()} aria-label="Close Qwen companion">×</button>
-            </header>
-            <div className="qwen-context-strip" aria-label="Qwen context scope">
-              <span><small>VIEW</small><strong>{mapRepresentationLabel}</strong></span>
-              <span><small>TIME</small><strong>{temporalScopeLabel}</strong></span>
-              <span><small>LAYERS SELECTED</small><strong>{selectedMapLayerCount}</strong></span>
-              <span><small>SELECTION</small><strong>{selected ? "1" : "0"}</strong></span>
-            </div>
-            <section className="qwen-runtime-status" aria-label="Local Qwen runtime status">
-              <div role="status" aria-live="polite">
-                <strong data-bridge-state={qwenBridgeState}>{qwenStatusLabel(qwenBridgeState)}</strong>
-                <p>{qwenStateGuidance(qwenBridgeState)}</p>
-              </div>
-              <div className="qwen-runtime-actions">
-                <button type="button" aria-expanded={qwenSetupOpen} aria-controls="qwen-setup-guidance" onClick={() => setQwenSetupOpen((value) => !value)}>Setup</button>
-                <button type="button" onClick={() => setQwenHealthRetryToken((value) => value + 1)} disabled={qwenBridgeState === "checking" || qwenBusy}>Retry</button>
-              </div>
-              {qwenSetupOpen && <div id="qwen-setup-guidance" className="qwen-setup-guidance">
-                <strong>Owner-local setup on this Mac</strong>
-                <ol>
-                  <li>Open the official Ollama app.</li>
-                  <li>From the reviewed Site source, run <code>./scripts/install-local-qwen-macos.sh</code>.</li>
-                  <li>Allow Local Network access if the browser asks, then choose Retry.</li>
-                </ol>
-                <p>The installer verifies Ollama {QWEN_LOCAL_OLLAMA_VERSION}, {QWEN_LOCAL_MODEL}, and the pinned model digest. It installs only the loopback companion; it does not enable hosted inference.</p>
-              </div>}
-            </section>
-            <div className="qwen-messages" aria-live="polite" aria-label="Qwen conversation" role="log" tabIndex={0}>
-              {qwenMessages.map((message, index) => <article key={`${message.role}-${index}`} data-role={message.role}><span>{message.role === "assistant" ? "QWEN" : "YOU"}</span><p>{message.content}</p></article>)}
-              {qwenBusy && <article data-role="assistant" className="qwen-thinking"><span>QWEN</span><p>Reading the current map context…</p></article>}
-            </div>
-            <div className="qwen-quick-prompts" data-mode={qwenHasAnswerableSelection ? "selection" : "diagnostic"} aria-label={qwenHasAnswerableSelection ? "Selection-scoped Qwen questions" : "Diagnostic Qwen questions expected to abstain"}>
-              <span className="qwen-quick-label">{qwenHasAnswerableSelection ? "RELEASED SELECTION" : "DIAGNOSTIC · EXPECTED ABSTENTION"}</span>
-              {qwenQuickPrompts.map((prompt) => <button type="button" key={prompt} onClick={() => setQwenQuestion(prompt)}>{prompt}</button>)}
-            </div>
-            <form className="qwen-form" onSubmit={(event) => { event.preventDefault(); void askQwen(); }}>
-              <label><span className="sr-only">Ask Qwen about the map</span><textarea value={qwenQuestion} onChange={(event) => setQwenQuestion(event.target.value)} placeholder="Ask about this place, time, or layer context…" rows={3} maxLength={1200} /></label>
-              <div><span>LOCAL ONLY · NO HOSTED FALLBACK</span><button type="submit" disabled={!qwenQuestion.trim() || qwenBusy || !shouldUseLocalQwen(qwenBridgeState)}>{qwenBusy ? "Thinking…" : "Ask Qwen"}</button></div>
-            </form>
-            <footer className="qwen-panel-footer"><p>Qwen is interpretive only. It cannot establish evidence, policy, release, or publication authority.</p><button type="button" onClick={() => void copyQwenPrompt()}>Copy grounded prompt</button></footer>
-          </section>}
           <div id="map-canvas" ref={mapContainerRef} className="map-canvas" data-projection={projection} data-cinematic={sceneEffects.cinematic && scenePreset === "elevation-3d" ? "3d" : undefined} data-night-sky={sceneEffects.stars && !browserRenderBudget(renderQuality).efficient ? "on" : undefined} tabIndex={runtime.kind === "unsupported" ? -1 : 0} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." />
           {flyoverStopIndex !== null && KANSAS_FLYOVER[flyoverStopIndex] && <div className="flyover-caption" role="status" aria-live="polite">
             <span>FLYOVER · {flyoverStopIndex + 1}/{KANSAS_FLYOVER.length}</span>
@@ -9894,10 +9873,56 @@ export default function Home() {
         {/* Share the shell stacking context with evidence, preserving map hit testing. */}
         {runtime.kind !== "unsupported" && !undergroundOpen && <ScenePanel onOpenChange={setScenePanelOpen} view={sceneView} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} onRepresentation={chooseSceneView} />}
 
+          {qwenOpen && isCompact && <div className="qwen-modal-backdrop" aria-hidden="true" onPointerDown={() => closeQwenCompanion()} />}
+          {qwenOpen && <section ref={qwenPanelRef} id="qwen-map-panel" className="qwen-panel" role="dialog" aria-modal={isCompact} aria-labelledby="qwen-panel-title">
+            <InspectionPanelSwitch active="qwen" onEvidence={openEvidencePanel} onQwen={() => {}} onClose={() => closeQwenCompanion()} />
+            <header className="qwen-panel-heading">
+              <div><span className="qwen-eyebrow">QWEN · LOCAL ONLY</span><h2 id="qwen-panel-title">Ask about what you see</h2><p>MapLibre supplies the bounded context. The pinned local model may interpret it, but never establishes evidence.</p></div>
+            </header>
+            <div className="qwen-context-strip" aria-label="Qwen context scope">
+              <span><small>VIEW</small><strong>{mapRepresentationLabel}</strong></span>
+              <span><small>TIME</small><strong>{temporalScopeLabel}</strong></span>
+              <span><small>LAYERS SELECTED</small><strong>{selectedMapLayerCount}</strong></span>
+              <span><small>SELECTION</small><strong>{selected ? "1" : "0"}</strong></span>
+            </div>
+            <section className="qwen-runtime-status" aria-label="Local Qwen runtime status">
+              <div role="status" aria-live="polite">
+                <strong data-bridge-state={qwenBridgeState}>{qwenStatusLabel(qwenBridgeState)}</strong>
+                <p>{qwenStateGuidance(qwenBridgeState)}</p>
+              </div>
+              <div className="qwen-runtime-actions">
+                <button type="button" aria-expanded={qwenSetupOpen} aria-controls="qwen-setup-guidance" onClick={() => setQwenSetupOpen((value) => !value)}>Setup</button>
+                <button type="button" onClick={() => setQwenHealthRetryToken((value) => value + 1)} disabled={qwenBridgeState === "checking" || qwenBusy}>Retry</button>
+              </div>
+              {qwenSetupOpen && <div id="qwen-setup-guidance" className="qwen-setup-guidance">
+                <strong>Owner-local setup on this Mac</strong>
+                <ol>
+                  <li>Open the official Ollama app.</li>
+                  <li>From the reviewed Site source, run <code>./scripts/install-local-qwen-macos.sh</code>.</li>
+                  <li>Allow Local Network access if the browser asks, then choose Retry.</li>
+                </ol>
+                <p>The installer verifies Ollama {QWEN_LOCAL_OLLAMA_VERSION}, {QWEN_LOCAL_MODEL}, and the pinned model digest. It installs only the loopback companion; it does not enable hosted inference.</p>
+              </div>}
+            </section>
+            <div className="qwen-messages" aria-live="polite" aria-label="Qwen conversation" role="log" tabIndex={0}>
+              {qwenMessages.map((message, index) => <article key={`${message.role}-${index}`} data-role={message.role}><span>{message.role === "assistant" ? "QWEN" : "YOU"}</span><p>{message.content}</p></article>)}
+              {qwenBusy && <article data-role="assistant" className="qwen-thinking"><span>QWEN</span><p>Reading the current map context…</p></article>}
+            </div>
+            <div className="qwen-quick-prompts" data-mode={qwenHasAnswerableSelection ? "selection" : "diagnostic"} aria-label={qwenHasAnswerableSelection ? "Selection-scoped Qwen questions" : "Diagnostic Qwen questions expected to abstain"}>
+              <span className="qwen-quick-label">{qwenHasAnswerableSelection ? "RELEASED SELECTION" : "DIAGNOSTIC · EXPECTED ABSTENTION"}</span>
+              {qwenQuickPrompts.map((prompt) => <button type="button" key={prompt} onClick={() => setQwenQuestion(prompt)}>{prompt}</button>)}
+            </div>
+            <form className="qwen-form" onSubmit={(event) => { event.preventDefault(); void askQwen(); }}>
+              <label><span className="sr-only">Ask Qwen about the map</span><textarea value={qwenQuestion} onChange={(event) => setQwenQuestion(event.target.value)} placeholder="Ask about this place, time, or layer context…" rows={3} maxLength={1200} /></label>
+              <div><span>LOCAL ONLY · NO HOSTED FALLBACK</span><button type="submit" disabled={!qwenQuestion.trim() || qwenBusy || !shouldUseLocalQwen(qwenBridgeState)}>{qwenBusy ? "Thinking…" : "Ask Qwen"}</button></div>
+            </form>
+            <footer className="qwen-panel-footer"><p>Qwen is interpretive only. It cannot establish evidence, policy, release, or publication authority.</p><button type="button" onClick={() => void copyQwenPrompt()}>Copy grounded prompt</button></footer>
+          </section>}
+
         <aside ref={rightPanelRef} className="evidence-drawer" data-open={rightOpen} data-state={selected?.properties.evidenceState ?? "EMPTY"} aria-label="Evidence Drawer" aria-hidden={!rightOpen} inert={!rightOpen} aria-modal={isCompact && rightOpen && !surfaceInspectionOpen || undefined} role={isCompact && rightOpen ? "dialog" : undefined}>
+          <InspectionPanelSwitch active="evidence" onEvidence={() => {}} onQwen={() => openQwenCompanion()} onClose={closeRightPanel} />
           <div className="panel-heading drawer-heading">
             <div><p className="panel-kicker">EVIDENCE DRAWER</p><h2>{subsurfaceInspection ? subsurfaceInspection.record.name : researchOpen && researchAnchor ? `Near ${researchAnchor.title}` : selected?.properties.title ?? (hoverSummary ? "Map hover preview" : "Select a map feature")}</h2></div>
-            <button className="icon-close" type="button" onClick={closeRightPanel} aria-label="Close Evidence Drawer">×</button>
           </div>
           {subsurfaceInspection ? <SubsurfaceInspector inspection={subsurfaceInspection}
             onCenter={() => mapRef.current?.easeTo({ center: subsurfaceInspection.record.coordinates, zoom: 13, duration: motionDuration(400) })}
@@ -9907,7 +9932,7 @@ export default function Home() {
               onInspect={inspectResearchRecord} onCenter={centerResearchRecord} onSave={saveCurrentWorkspace}
               onReport={() => openPrimaryWorkspace("reports", true, null, researchContext)} redacted={researchLocationRedacted || locationCameraRedacted || locationDerivedViewRef.current} />
           </div> : <>
-          {hoverSummary && <section className="drawer-hover-preview" aria-label="Map hover preview">
+          {hoverSummary && !selected && <section className="drawer-hover-preview" aria-label="Map hover preview">
             <header><span>{hoverActive ? "MAP HOVER" : "LAST MAP HOVER"} · PREVIEW ONLY</span></header>
             <strong>{hoverSummary.title}</strong><span>{hoverSummary.subtitle}</span><p>{hoverSummary.state}</p>
             <small>Select the feature on the map for source details and evidence context.</small>
