@@ -484,7 +484,11 @@ def _receipt(root: Path, identity: str, action: str, body: dict) -> str:
     identity = _validated_identity(identity)
     stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
     relative = f"data/receipts/intake/{identity}/{stamp}-{action}-{uuid.uuid4().hex[:8]}.json"
-    write_new(root / relative, canonical(body))
+    root_resolved = root.resolve(strict=False)
+    target = (root / relative).resolve(strict=False)
+    if not target.is_relative_to(root_resolved):
+        raise IntakeError("UNSAFE_PATH")
+    write_new(target, canonical(body))
     return relative
 
 
