@@ -89,6 +89,8 @@ notes:
 
 ## Authored synchronization checkpoint
 
+The [v213 reconciliation report](kfm-reconciliation-20261010.md) records the next authored checkpoint: preserved local features, exact source parity, validation, recovery and pending review.
+
 The [KFM synchronization report for 2026-10-09](kfm-synchronization-20261009.md)
 records the owner-requested PC, GitHub, private Site and project-record alignment.
 It is an authored observation record, not a generated-report writer, review

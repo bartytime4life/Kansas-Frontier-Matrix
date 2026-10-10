@@ -4,7 +4,7 @@ export const EXPLORER_CONTROL_SECTIONS = [
   ["navigate", "Explore"], ["scene", "Appearance"], ["measure", "Measure"],
 ] as const;
 export const ADVANCED_CONTROL_SECTIONS = [
-  ["inspect", "Inspect records"], ["compare", "Compare"], ["report", "Reports"],
+  ["localAtlas", "Local atlas"], ["inspect", "Inspect records"], ["compare", "Compare"], ["report", "Reports"],
   ["export", "Export"], ["import", "Import a file"], ["connections", "Sources"],
   ["history", "Historic maps"], ["diagnostics", "Diagnostics"],
 ] as const;

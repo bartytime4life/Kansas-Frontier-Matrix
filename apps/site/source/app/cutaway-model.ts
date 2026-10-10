@@ -63,7 +63,39 @@ export function cutawayCameraFit(width: number, length: number, depth: number, a
   return { distance, offsetX:(b.minX+b.maxX)/2, offsetY:(b.minY+b.maxY)/2, near: Math.max(.000001, (distance - closest) / 100), far: Math.max(100, (distance - farthest) * 4) };
 }
 
-/** Pick only the source-owner meshes. Decorative interval edges are not evidence. */
-export function pickCutawaySource(ray: import("three").Raycaster, owners: import("three").Mesh[]) {
-  return ray.intersectObjects(owners, false)[0];
+/** Record diagrams take priority over translucent aquifer envelopes.
+ * The optional screen margin is a selection aid, never inferred source geometry. */
+export function pickCutawaySource(ray: import("three").Raycaster, owners: import("three").Mesh[], screen?: {
+  camera: import("three").Camera; width: number; height: number; x: number; y: number; radius?: number;
+}) {
+  const visible = owners.filter(owner => {
+    for (let node: import("three").Object3D | null = owner; node; node = node.parent) if (!node.visible) return false;
+    return true;
+  });
+  const hits = ray.intersectObjects(visible, false);
+  const recordHit = hits.find(hit => hit.object.userData.record);
+  if (recordHit) return recordHit;
+  if (screen && screen.width > 0 && screen.height > 0) {
+    let nearest: { object: import("three").Mesh; distance: number; depth: number } | undefined;
+    for (const object of visible) {
+      if (!object.userData.record || (!object.userData.interval && !object.userData.surfaceAnchor)) continue;
+      object.geometry.computeBoundingBox();
+      const box = object.geometry.boundingBox;
+      if (!box) continue;
+      const a = box.getCenter(ray.ray.origin.clone()), b = a.clone();
+      if (object.userData.interval) { a.y = box.min.y; b.y = box.max.y; }
+      a.applyMatrix4(object.matrixWorld).project(screen.camera);
+      b.applyMatrix4(object.matrixWorld).project(screen.camera);
+      // Do not project a segment through the camera or beyond the clipping planes.
+      if ([a, b].some(p => !Number.isFinite(p.x + p.y + p.z) || p.z < -1 || p.z > 1)) continue;
+      const ax = (a.x + 1) * screen.width / 2, ay = (1 - a.y) * screen.height / 2;
+      const bx = (b.x + 1) * screen.width / 2, by = (1 - b.y) * screen.height / 2;
+      const dx = bx - ax, dy = by - ay;
+      const t = Math.max(0, Math.min(1, ((screen.x - ax) * dx + (screen.y - ay) * dy) / (dx * dx + dy * dy || 1)));
+      const distance = Math.hypot(screen.x - ax - t * dx, screen.y - ay - t * dy), depth = a.z + t * (b.z - a.z);
+      if (distance <= (screen.radius ?? 10) && (!nearest || distance < nearest.distance - .01 || Math.abs(distance - nearest.distance) <= .01 && depth < nearest.depth)) nearest = { object, distance, depth };
+    }
+    if (nearest) return { object: nearest.object };
+  }
+  return hits[0];
 }

@@ -15,12 +15,12 @@ const mapStatus = { schema: 'kfm-public-map-download-control/v1', active: null, 
 
 test('no-login workbench defaults to public climate, retains controllers, and shares connection without starting transfers', async () => {
   const calls = [], events = new Map(); let options;
-  const local = { status: eeStatus, connection: 'idle', starting: false, library: null, connect: () => calls.push('ee-connect'), refreshLibrary() {}, announcement: '' };
-  const maps = { status: mapStatus, connection: 'idle', busy: null, connect: () => calls.push('maps-connect'), announcement: '' };
+  const local = { status: eeStatus, connection: 'idle', starting: false, library: null, connect: () => calls.push('ee-connect'), refresh: () => calls.push('ee-refresh'), refreshLibrary() {}, announcement: '' };
+  const maps = { status: mapStatus, connection: 'idle', busy: null, connect: () => calls.push('maps-connect'), refresh: () => calls.push('maps-refresh'), announcement: '' };
   const h = await componentHarness('app/downloads/workspace.tsx', {
     'next/link': { default: 'a' }, '../use-local-downloads': { useLocalDownloads: () => local }, '../use-public-map-downloads': { usePublicMapDownloads: value => { options = value; return maps; } },
     '../earth-engine-context-client': { useEarthEngineContext: () => ({ manifests: [] }) }, '../download-activity': activity,
-    '../download-activity-panel': { ActivityWorkspace: 'activity', TransferPanel: 'transfer-panel' }, '../public-map-browser': { default: 'maps' }, '../earth-engine-picker': { default: 'satellite' }, '../history-browser': { default: 'history' }, '../download-library': { default: 'library' }, '../intake-desk-summary': { default: 'intake-desk' }, './workspace.module.css': css,
+    '../download-activity-panel': { ActivityWorkspace: 'activity', TransferPanel: 'transfer-panel' }, '../public-map-browser': { default: 'maps' }, '../earth-engine-picker': { default: 'satellite' }, '../history-browser': { default: 'history' }, '../download-library': { default: 'library' }, '../intake-desk-summary': { default: 'intake-desk' }, '../local-cache-settings': { default: 'cache-budget' }, './workspace.module.css': css,
   }, { window: { location: { hash: '' }, addEventListener: (name, callback) => events.set(name, callback), removeEventListener: name => events.delete(name) } });
   const render = () => { const tree = h.render(h.exports.default); h.commit(); return tree; };
   let tree = render(); const view = id => findNode(tree, n => n.props?.id === id);
@@ -29,6 +29,7 @@ test('no-login workbench defaults to public climate, retains controllers, and sh
   assert.equal(findNode(tree, n => n.type === 'satellite'), undefined);
   assert.equal(button(tree, 'Earth Engine exports · optional sign-in'), undefined);
   button(tree, 'Connect this computer').props.onClick(); assert.deepEqual(calls, ['ee-connect', 'maps-connect']);
+  findNode(tree, n => n.type === 'cache-budget').props.onSaved(); assert.deepEqual(calls.slice(-2), ['ee-refresh', 'maps-refresh']);
   const mounted = () => ['maps', 'library', 'intake-desk', 'activity', 'transfer-panel'].map(type => findNode(tree, n => n.type === type));
   assert.ok(mounted().every(Boolean)); assert.equal(findNode(tree, n => n.type === 'maps').props.downloads, maps);
   button(tree, 'My library').props.onClick(); tree = render(); assert.equal(view('download-library').props.hidden, false); assert.equal(view('download-find').props.hidden, true); assert.ok(mounted().every(Boolean));

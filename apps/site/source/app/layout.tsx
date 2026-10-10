@@ -4,6 +4,7 @@ import { PersistentSelectMenus } from "./persistent-select-menus";
 import "./globals.css";
 import "./map-layers.css";
 import "./explorer-theme.css";
+import "./local-atlas.css";
 import "./scene-effects.css";
 
 export async function generateMetadata(): Promise<Metadata> {

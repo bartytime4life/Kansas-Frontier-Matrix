@@ -1,5 +1,5 @@
 import { readBoundedJson } from "./bounded-json";
-import { PUBLIC_MAP_DOWNLOAD_LIMIT, PUBLIC_MAP_MAX_BYTES, publicMapCount, publicMapStamp, publicMapText } from "./public-map-catalog";
+import { PUBLIC_MAP_MAX_BYTES, publicMapCount, publicMapStamp, publicMapText } from "./public-map-catalog";
 
 export type PublicMapJob = {
   id: string; assetId: string; title: string;
@@ -21,7 +21,7 @@ const id = (v: unknown): v is string => typeof v === "string" && /^[a-f0-9]{32}$
 const hash = (v: unknown) => typeof v === "string" && /^[a-f0-9]{64}$/.test(v);
 export function parsePublicMapStatus(value: unknown): PublicMapStatus | null {
   if (!object(value) || value.schema !== "kfm-public-map-download-control/v1" || typeof value.sessionToken !== "string" || !/^[-_A-Za-z0-9]{43}$/.test(value.sessionToken)
-    || !(value.active === null || id(value.active)) || !publicMapCount(value.limitBytes) || value.limitBytes < 1 || value.limitBytes > PUBLIC_MAP_DOWNLOAD_LIMIT
+    || !(value.active === null || id(value.active)) || !publicMapCount(value.limitBytes) || value.limitBytes < 1 || value.limitBytes > Number.MAX_SAFE_INTEGER
     || !Array.isArray(value.jobs) || value.jobs.length > 100 || !object(value.refresh) || !["idle", "running", "complete", "failed"].includes(String(value.refresh.state))
     || value.refresh.reason !== undefined && !publicMapText(value.refresh.reason, 200)
     || value.queued !== undefined && (!publicMapCount(value.queued) || value.queued > 300 || value.queued > 0 && value.active === null)) return null;
@@ -29,7 +29,7 @@ export function parsePublicMapStatus(value: unknown): PublicMapStatus | null {
   for (const job of value.jobs) {
     if (!object(job) || !id(job.id) || seen.has(job.id) || !publicMapText(job.assetId, 500) || !job.assetId || !publicMapText(job.title, 2000)
       || !["queued", "downloading", "downloaded", "failed", "cancelled", "interrupted"].includes(String(job.state))
-      || !publicMapCount(job.bytes) || !publicMapCount(job.maxBytes) || job.maxBytes < 1 || job.maxBytes > value.limitBytes || job.bytes > job.maxBytes
+      || !publicMapCount(job.bytes) || !publicMapCount(job.maxBytes) || job.maxBytes < 1 || job.bytes > job.maxBytes
       || !(job.expectedBytes === null || publicMapCount(job.expectedBytes) && job.expectedBytes > 0)
       || !(job.sha256 === null || hash(job.sha256)) || !publicMapText(job.destination, 2000)
       || !(job.reason === null || job.reason === undefined || publicMapText(job.reason, 300)) || job.mapReady !== false
@@ -67,6 +67,7 @@ export const publicMapJobLabels: Record<PublicMapJob["state"], string> = {
   cancelled: "Cancelled · partial files retained", interrupted: "Interrupted · partial files retained",
 };
 export const publicMapReason = (reason: string) => ({
+  CACHE_BUDGET_EXCEEDED: "The selected maximum exceeds your saved local cache budget. Update Local cache budget or select a smaller maximum.",
   SELECTED_LIMIT_TOO_SMALL: "The selected maximum is below the file size.", INSUFFICIENT_FREE_SPACE_FOR_LIMIT: "The selected maximum exceeds available disk capacity.",
   DOWNLOAD_ALREADY_RUNNING: "A file is already downloading. Wait or cancel before starting another.", CANCELLED: "Any captured bytes remain for inspection.",
   SIZE_LIMIT_EXCEEDED: "The response exceeded the selected byte maximum.", WORKER_RESTARTED: "The local worker restarted; retained files need inspection.",

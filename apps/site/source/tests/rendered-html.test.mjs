@@ -402,6 +402,7 @@ test("adds device-local Places trails and faster layer isolation controls", asyn
   assert.doesNotMatch(page, /MAP WORKBENCH|Map Workbench|map-tool-group-workbench|secondary-tools|More map tools/);
   assert.match(page, /<ExplorerControlsNavigation value=\{mapUtilityView\}/);
   assert.match(await readFile(new URL("../app/explorer-controls-navigation.tsx", import.meta.url), "utf8"), /Advanced tools/);
+  assert.match(await readFile(new URL("../app/explorer-controls-navigation.tsx", import.meta.url), "utf8"), /\["localAtlas", "Local atlas"\]/);
   assert.match(page, /onClick=\{clearSelection\} disabled=\{!selected\}>Clear selection/);
   assert.match(page, /mapUtilityView === "import"/);
   assert.match(page, /onClick=\{openMapSettings\}>Style/);

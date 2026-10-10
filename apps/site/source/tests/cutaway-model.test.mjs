@@ -77,3 +77,31 @@ test('source picking ignores broad decorative edge hits and returns the actual o
   const hit=pickCutawaySource(ray,[owner]);assert.equal(hit.object,owner);assert.equal(hit.object.userData.record.id,'source-record');
   geometry.dispose();paint.dispose();edgeGeometry.dispose();edgePaint.dispose();
 });
+
+test('record selection wins through translucent aquifer volumes',()=>{
+  const recordMesh=new THREE.Mesh(new THREE.CylinderGeometry(.1,.1,2,12),new THREE.MeshBasicMaterial());
+  recordMesh.userData.record={id:'core'};
+  const envelope=new THREE.Mesh(new THREE.BoxGeometry(4,4,1),new THREE.MeshBasicMaterial({transparent:true,opacity:.22}));
+  envelope.position.z=2;envelope.userData.envelope={id:'aquifer'};
+  recordMesh.updateMatrixWorld(true);envelope.updateMatrixWorld(true);
+  const ray=new THREE.Raycaster(new THREE.Vector3(0,0,5),new THREE.Vector3(0,0,-1));
+  assert.equal(pickCutawaySource(ray,[envelope,recordMesh]).object,recordMesh);
+});
+test('screen selection fills ring gaps, tolerates narrow columns, and excludes hidden records',()=>{
+  const camera=new THREE.PerspectiveCamera(40,2,.01,100);camera.position.set(0,4,6);camera.lookAt(0,0,0);camera.updateMatrixWorld(true);
+  const core=new THREE.Mesh(new THREE.CylinderGeometry(.015,.015,2,12),new THREE.MeshBasicMaterial());
+  core.userData.record={id:'core'};core.userData.interval={top:0,bottom:2};core.updateMatrixWorld(true);
+  const point=new THREE.Vector3(0,0,0).project(camera),x=(point.x+1)*400,y=(1-point.y)*200;
+  const ray=new THREE.Raycaster();ray.setFromCamera(new THREE.Vector2((x+8)/400-1,1-y/200),camera);
+  assert.equal(pickCutawaySource(ray,[core]),undefined);
+  const screen={camera,width:800,height:400,x:x+8,y};
+  assert.equal(pickCutawaySource(ray,[core],screen).object,core);
+  assert.equal(pickCutawaySource(ray,[core],{...screen,x:x+25}),undefined);
+  const parent=new THREE.Group();parent.add(core);parent.visible=false;
+  assert.equal(pickCutawaySource(ray,[core],screen),undefined);
+  const geometry=new THREE.RingGeometry(.034,.05,32);geometry.rotateX(-Math.PI/2);
+  const ring=new THREE.Mesh(geometry,new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));ring.userData.record={id:'collar'};ring.userData.surfaceAnchor=true;ring.updateMatrixWorld(true);
+  ray.setFromCamera(new THREE.Vector2(point.x,point.y),camera);
+  assert.equal(pickCutawaySource(ray,[ring]),undefined);
+  assert.equal(pickCutawaySource(ray,[ring],{...screen,x}).object,ring);
+});

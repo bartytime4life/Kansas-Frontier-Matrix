@@ -54,6 +54,7 @@ const CONTROL_OWNED_SOURCE_PREFIXES = [
   "external-crop-casma-1km",
   "kfm-ee-context-source-",
   "kfm-device-geopdf-source",
+  "kfm-local-atlas-",
   "kfm-synthetic-living-waters",
   // Decorative scene-effect overlays (Kansas glow, 2D relief DEM, value
   // columns): a failed tile only leaves that effect blank.

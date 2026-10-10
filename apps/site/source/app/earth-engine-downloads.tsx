@@ -32,14 +32,17 @@ export function EarthEngineDownloadForm({ dataset, year, invalid, downloads, blo
   const connected = connection === "connected", selectedYear = year ?? null;
   const job = status?.jobs.filter(item => item.selection.dataset === dataset.id && item.selection.year === selectedYear).sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0];
   const activeJob = status?.jobs.find(item => item.id === status.active);
+  const budget = status?.limitBytes ?? 500_000_000_000;
+  const limitOptions = [...new Set([32_000_000, 256_000_000, 2_000_000_000, 8_000_000_000, 32_000_000_000, 100_000_000_000, 500_000_000_000, budget].filter(value => value >= 1_048_576 && value <= budget).concat(limit))].sort((a, b) => a - b);
   const requestLimit = dataset.recipeKind === "inventory" ? 32_000_000 : limit;
+  const withinBudget = Number.isSafeInteger(requestLimit) && requestLimit >= 1_048_576 && requestLimit <= budget;
   const selectionKey = JSON.stringify([dataset.id, selectedYear, requestLimit]);
   useEffect(() => { selection.current++; if (pending.current?.key !== selectionKey) pending.current = null; }, [selectionKey]);
   const stored = downloads.library?.entries.filter(entry => entry.lane === "raw" && entry.dataset === dataset.id && entry.period === String(year ?? "fixed")) ?? [];
   const storedFiles = stored.reduce((sum, entry) => sum + entry.files, 0), storedBytes = stored.reduce((sum, entry) => sum + entry.bytes, 0);
   const authPending = ["waiting", "validating"].includes(status?.authentication ?? "");
   const blocked = blockedByOtherDownload || Boolean(status?.active) || downloads.starting;
-  const disabledReason = !connected ? "Connect the local service to begin." : invalid ? "Choose a valid source year above." : !status?.configured ? status?.signedIn ? "Choose a project and check download access." : "Sign in with Google to authorize Earth Engine downloads." : blocked ? "A background download is running or starting. View Activity before starting another." : "This selection starts only when you press Download.";
+  const disabledReason = !connected ? "Connect the local service to begin." : !withinBudget ? "Choose a maximum within your local cache budget, or increase the budget in Data & downloads." : invalid ? "Choose a valid source year above." : !status?.configured ? status?.signedIn ? "Choose a project and check download access." : "Sign in with Google to authorize Earth Engine downloads." : blocked ? "A background download is running or starting. View Activity before starting another." : "This selection starts only when you press Download.";
   async function signIn() {
     if (operating.current || blocked) return;
     operating.current = true;
@@ -66,7 +69,7 @@ export function EarthEngineDownloadForm({ dataset, year, invalid, downloads, blo
     finally { operating.current = false; if (alive.current) setBusy(null); }
   }
   async function start() {
-    if (!status || !status.configured || invalid || operating.current || blocked || !connected) return;
+    if (!status || !status.configured || invalid || !withinBudget || operating.current || blocked || !connected) return;
     operating.current = true; downloads.setStarting(true); setBusy("start"); setNotice("");
     const generation = selection.current, key = selectionKey;
     const request = pending.current?.key === key ? pending.current : { key, id: crypto.randomUUID().replaceAll("-", "") };
@@ -98,19 +101,19 @@ export function EarthEngineDownloadForm({ dataset, year, invalid, downloads, blo
         {(status.projects?.length ?? 0) > 0 && <label>Your Google Cloud projects<select aria-label="Choose Earth Engine project" value={status.projects?.includes(project) ? project : ""} onChange={event => setProject(event.target.value)}><option value="">Choose a project</option>{status.projects?.map(id => <option key={id} value={id}>{id}</option>)}</select></label>}
         <label>Google Cloud project ID<input autoComplete="off" aria-label="Earth Engine project ID" placeholder="your-earth-engine-project" value={project} maxLength={63} onChange={event => setProject(event.target.value)} /></label>
         <button type="button" disabled={!connected || Boolean(busy) || blocked || authPending || !project.trim()} onClick={() => void checkAccess()}>Check download access</button>
-        {status.projectDiscovery === "unavailable" && <p>Enter the Google Cloud project ID you use with Earth Engine (shown in the Earth Engine Code Editor and the Cloud console). KFM saves it for next time and does not ask Google to list your projects.</p>}
+        {status.projectDiscovery === "unavailable" && <p>Google’s project list is unavailable. You can enter an existing project ID above.</p>}
         {status.projectDiscovery === "limited" && <p>Showing a limited project list. Enter another project ID if yours is missing.</p>}
         {status.projectDiscovery === "complete" && !status.projects?.length && <p>No accessible projects were found for this account.</p>}
         {status.authError === "PROJECT_ACCESS_REQUIRED" && <p>This account cannot yet use that project for Earth Engine. Check its Earth Engine registration, API and your project permissions.</p>}
         <small>Google requires a registered Earth Engine project. <a href="https://code.earthengine.google.com/" target="_blank" rel="noreferrer">Choose or register a project in Earth Engine ↗</a>. KFM checks access when you select Check download access.</small>
       </>}
       {!status?.signedIn && <button type="button" disabled={!connected || Boolean(busy) || blocked || authPending} onClick={() => void checkAccess()}>Check existing Google sign-in</button>}
-      <small>Google asks for Earth Engine access and your email. You enter your Cloud project ID once. Consent and credentials stay on this computer. Free direct-file maps do not need Google sign-in.</small>
+      <small>Google asks for Earth Engine access, your email and read-only access to your project list. Consent and credentials stay on this computer. Free direct-file maps do not need Google sign-in.</small>
     </section>
     <div className={styles.downloadConnection}><div><strong>Already on this computer</strong><p>{downloads.library?.generatedAt ? storedFiles ? `${storedFiles.toLocaleString()} stored files · ${bytes(storedBytes)} for ${year ?? "this period"}` : "No stored files found for this dataset and period in the last library scan." : "Connect and scan My library to check stored files."}</p>{storedFiles > 0 && <small>Stored files may include partial captures; map review is separate.</small>}</div><Link href="/downloads#library">View My library →</Link></div>
     {status && <p className={styles.destination}>Selected destination<code>{status.destination}/{dataset.id}/{year ?? "fixed"}/</code></p>}
-    {dataset.recipeKind !== "inventory" ? <label>Maximum download size<select value={limit} onChange={event => setLimit(Number(event.target.value))}>{[32_000_000, 256_000_000, 2_000_000_000, 8_000_000_000, 32_000_000_000, 100_000_000_000, 500_000_000_000].map(value => <option key={value} value={value}>{bytes(value)}</option>)}</select><small>A stop limit you choose, not an estimate of final size.</small></label> : <p>Inventory transfer maximum: {bytes(requestLimit)}.</p>}
-    <button type="button" className={styles.primary} disabled={!connected || Boolean(busy) || invalid || !status?.configured || blocked} aria-busy={busy === "start"} aria-describedby="selected-download-reason" onClick={() => void start()}>{busy === "start" ? "Starting download…" : dataset.recipeKind === "inventory" ? "Download inventory" : `Download ${year ?? "dataset"} to KFM`}</button>
+    {dataset.recipeKind !== "inventory" ? <label>Maximum download size<select value={limit} onChange={event => setLimit(Number(event.target.value))}>{limitOptions.map(value => <option key={value} value={value} disabled={value > budget}>{bytes(value)}{value > budget ? " · above saved budget" : ""}</option>)}</select><small>A stop limit you choose, not an estimate of final size. Saved budget: {bytes(budget)}. <Link href="/downloads#cache-budget">Change budget</Link></small></label> : <p>Inventory transfer maximum: {bytes(requestLimit)}.</p>}
+    <button type="button" className={styles.primary} disabled={!connected || Boolean(busy) || invalid || !withinBudget || !status?.configured || blocked} aria-busy={busy === "start"} aria-describedby="selected-download-reason" onClick={() => void start()}>{busy === "start" ? "Starting download…" : dataset.recipeKind === "inventory" ? "Download inventory" : `Download ${year ?? "dataset"} to KFM`}</button>
     <small id="selected-download-reason">{disabledReason}</small>
     {blocked && onViewActivity && <button type="button" onClick={onViewActivity}>View activity</button>}
     {!shared && (activeJob ?? job) && <><p className={styles.downloadCurrent}>{activeJob && activeJob.id !== job?.id ? "Another selection is running in the background" : "This selection’s latest job"}{!connected ? " · last known status" : ""}</p><DownloadJob job={(activeJob ?? job)!} active={Boolean(activeJob)} connected={connected} cancelling={downloads.cancelling} onCancel={() => void downloads.cancelJob()} compact /></>}

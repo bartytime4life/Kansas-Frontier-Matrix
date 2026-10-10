@@ -10,7 +10,7 @@ const checkbox = tree => findNode(tree, node => node.type === "input" && node.pr
 const recheck = tree => findNode(tree, node => node.type === "button" && node.props.children === "Recheck release");
 const badge = tree => findNode(tree, node => node.type === "b");
 
-async function harness() {
+async function harness(mode = "reviewed") {
   const sources = new Map(), layers = new Map(), events = new Map(), calls = [];
   const map = {
     getSource: id => sources.get(id), removeSource: id => sources.delete(id), addSource: (id, value) => sources.set(id, value),
@@ -20,6 +20,7 @@ async function harness() {
     off(name, callback) { events.get(name)?.delete(callback); },
   };
   const h = await componentHarness("app/crop-casma-control.tsx", {
+    "./crop-casma-preview": { loadCropPreview: async () => ({ width: 1024, height: 512 }) },
     "./map-layer-composition": { balanceMapRasters() {}, syncMercatorRaster() {} },
     "./browser-json-request": { browserJsonRequest(url, options) { const request = deferred(); calls.push({ url, options, ...request }); return request.promise; } },
   });
@@ -27,7 +28,8 @@ async function harness() {
   const render = () => { const tree = h.render(h.exports.CropCasmaControl, props); h.commit(); return tree; };
   const respond = async (body, ok = true) => { calls.at(-1).resolve({ response: { ok }, body }); await settle(); return render(); };
   const loaded = () => { for (const fn of events.get("sourcedata") ?? []) fn({ sourceId, isSourceLoaded: true }); return render(); };
-  render();
+  const first = render();
+  if (mode === "reviewed") { findNode(first, n => n.type === "select").props.onChange({target:{value:"reviewed"}}); render(); calls.shift(); }
   return { ...h, render, respond, loaded, props, calls, sources, layers };
 }
 
@@ -95,6 +97,19 @@ test("cancelled release bodies cannot restore availability, and a lost map style
   assert.equal(badge(tree).props.children, "HELD"); assert.equal(tree.props["data-visible"], false);
   assert.equal(h.sources.size, 0); h.dispose();
 });
+
+ test("direct provider preview is the default and uses a reprojected canvas without a reviewed package", async () => {
+  const h = await harness("preview");
+  assert.equal(h.calls[0].url, "/api/crop-casma/preview");
+  let tree = await h.respond({state:"available",mode:"preview",role:"EXTERNAL_CONTEXT_ONLY",day:"2026-09-28"});
+  assert.equal(checkbox(tree).props.disabled,false);
+  checkbox(tree).props.onChange({target:{checked:true}});h.render();await settle();tree=h.render();
+  assert.equal(h.sources.get(sourceId).type,"canvas");
+  assert.equal(badge(tree).props.children,"RENDERED");
+  findNode(tree,n=>n.type==="select").props.onChange({target:{value:"reviewed"}});tree=h.render();
+  assert.equal(h.sources.size,0,"source switch removes preview before reviewed check completes");
+  assert.equal(h.calls.at(-1).url,"/api/crop-casma/availability");h.dispose();
+ });
 
 
 test("Crop catalog selection survives hidden details, globe and withdrawn release until explicitly hidden", async () => {

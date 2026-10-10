@@ -62,6 +62,8 @@ related:
 
 The [enrichment inventory and review report](reports/documentation-enrichment-20261008.md) accounts for the initial placeholder scan and validation limits.
 
+The [v213 reconciliation checkpoint](reports/kfm-reconciliation-20261010.md) records the 2026-10-10 Site/local delivery and pending repository review.
+
 The [KFM synchronization checkpoint](reports/kfm-synchronization-20261009.md)
 records PC, GitHub, private Site and project-record alignment, recovery and
 remaining review limits from 2026-10-09. The [reports index](reports/README.md)
