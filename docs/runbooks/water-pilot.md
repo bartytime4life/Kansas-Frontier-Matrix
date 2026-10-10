@@ -6,6 +6,110 @@ No real package has been released, activated or published yet.
 The first milestone remains open until the real reviewed package completes the
 local browser journey and private Site acceptance/rollback gates.
 
+## Mirror governance audit — 2026-10-10
+
+**CONFIRMED at repository `main@82dfddf806f0c0e0ab7c67b139d17490abb8352f`:**
+[PR #5010](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5010)
+merged at 18:01:01 UTC and selected the
+[896-file v192 refresh](../../data/receipts/generated/site-mirror-v192-repository-refresh-20261010.json).
+Before this audit, [PR #5012](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5012)
+merged at 19:18:14 UTC and selected the
+[907-file successor](../../data/receipts/generated/site-mirror-v192-water-release-20261010.json).
+Both retain the independently recorded
+[private v192 checkpoint](../reports/repo-live-alignment-20261009.md), source
+`424e62cd429ba3ea13a109e6e37953eea857857f`, as their Site basis.
+Neither receipt attests that its repository overlays are deployed.
+
+| Receipt | Identical to attested v192 bytes | Modified v192 files | Repository-only additions | Total overlays |
+|---|---:|---:|---:|---:|
+| #5010 refresh, now superseded | 761 | 56 | 79 | 135 |
+| #5012 successor, active at the audit head | 759 | 58 | 90 | 148 |
+
+Read-only Git-object verification recomputed every mirror digest at #5010's
+repository base `40302b708cacfa92ce7304b76cfb65e37ab7f403` and the audited
+current head, and every Site-basis digest at repository
+`899dc274ffe37d2900f49eabd66ea3c7b0b2a484`. All 896 and 907 recorded paths,
+digests and classifications matched, with zero errors. This verifies the
+recorded repository basis; the standalone Site and its current deployment were
+not re-read for this audit.
+
+Both receipts declare `status: review_pending`,
+`review.source_and_overlay_review: PENDING`, and the blocking items
+`repository_review` and `overlay_reconciliation_with_next_site_version`.
+The deployed-candidate flag refers to the historical v192 source checkpoint;
+it is not a deployment flag for any overlay.
+
+### Consumers and authority
+
+The only executable consumer found for `site_mirror.py --check` is
+[water-pilot.yml](../../.github/workflows/water-pilot.yml), job
+`water-conformance`. It consumes the exit status after the synthetic water tests
+and isolated fixture regeneration. At the audited head,
+[run 38079262403](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/38079262403/job/114292620519)
+passed: 287 water tests, eight regenerated synthetic outputs, and a mirror result
+of `PASS`, `files: 907`, `authority: CONTENT_PARITY_ONLY`,
+`hosted_equivalence: false`. The old step label, **Check reviewed mirror digests**,
+overstated what that step evaluated; its output omitted the receipt's review
+declarations. This is a reporting ambiguity, not a demonstrated defect in the
+content-parity algorithm.
+
+| Related readiness surface | Verified relationship to the mirror result |
+|---|---|
+| `water-pilot` / `water-conformance` | Exit-status consumer; green means its bounded tests, regeneration and recorded-content parity passed. It does not establish review acceptance or hosted equivalence. |
+| [policy-test](../../.github/workflows/policy-test.yml), [hydrology-proof-slice](../../.github/workflows/hydrology-proof-slice.yml) | Inspect the water workflow's test coverage paths; do not consume the mirror outcome or accept overlays. |
+| [Readiness lane registry](../../control_plane/readiness/lanes.json) / [runner](../../tools/readiness/run_lane.py) | No mirror-result consumer. Policy/proof-slice PASS retains explicit authority boundaries; fixtures/catalog remain separate HOLD lanes. |
+| [release-dry-run](../../.github/workflows/release-dry-run.yml), [validator-suite](../../.github/workflows/validator-suite.yml) | No mirror-result consumer or promotion from parity. Their own bounded checks do not establish Site deployment. |
+| [Water delivery settings proposal](../security/water-delivery-review.md#ruleset-correction-for-owner-review) | Names `water-conformance` as a proposed required CI context. The proposal is not an applied approval policy, and a CI conclusion cannot stand in for review acceptance. |
+
+No executable path was found that converts the mirror PASS into overlay
+acceptance, source admission, release, activation, or deployment. Existing
+dated mirror holds elsewhere remain historical observations, not claims about
+the current parity result.
+
+### Owner disposition and remaining reconciliation
+
+The [owner-account response on #5010](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5010#discussion_r4238649722)
+states that the owner's merge is the receipt review decision and that pending
+receipts have historically been checked for content parity. GitHub records
+the subsequent merge. The reply is AI-generated text posted under the owner
+account; it is recorded disposition, not proof of an independent file-by-file
+review. The receipt still carries the pending declarations above. This audit
+records both facts without changing either record or treating a parity result
+as approval.
+
+Remaining obligations are to reconcile the recorded PR disposition with the
+source/overlay review fields at the appropriate scope, and to reconcile the
+overlays against a later immutable Site source/version if deployment is chosen.
+Fresh hosted equivalence, browser acceptance and deployment/rollback evidence
+remain separate. The later #5012 source-admission and ADR-0044 decisions are
+outside this mirror audit and are not inferred from the mirror check.
+
+The reporting correction keeps the existing parity validation, allowed states,
+PASS/FAIL and exit codes. JSON now includes file-state counts and a separate
+`review_acceptance` projection: `outcome: NOT_EVALUATED`,
+`authority: RECEIPT_DECLARATION_ONLY`, and the receipt's status, source/overlay
+review and blocking declarations. Missing declarations are `null`; even an
+accepted declaration is not authenticated by this check. No external PR
+disposition is fetched or inferred at runtime.
+`python tools/qa/site_mirror.py --check --format markdown` renders these
+dimensions independently in the GitHub step summary. The workflow uses Bash
+with `pipefail`, so writing the summary cannot hide a parity failure. Its
+focused tests cover pending and absent declarations, all historical overlay
+states, and successful/failing execution of the actual summary command.
+
+Local validation of the reporting correction: 18 focused mirror tests and the
+complete 305-test water command passed; isolated fixture regeneration produced
+eight outputs without overwriting reviewed files. Workflow security passed
+28 tests and the 492-workflow scan with zero new drift. The documentation gap
+ratchet passed 13 tests and retained its 138-link historical baseline. Repository
+topology passed for 14,575 tracked paths with zero new drift. Hosted execution
+of this reporting correction remains pending; the hosted run cited above tests
+the pre-correction audit head.
+
+Rollback: revert the reporting changes to the tool, workflow, tests and guidance.
+Preserve both receipts and their selector; no private Site or data state is
+changed by this audit.
+
 ## Identity and placement
 
 Implementation starts at monorepo `6994a65843c4999313fda01183b63333213134f3`.

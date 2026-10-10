@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Read-only file comparison and reviewed receipt checks; never copy or delete."""
+"""Read-only recorded-content parity checks; review and deployment are separate."""
 from pathlib import Path, PurePosixPath
 import argparse
 import hashlib
+import html
 import json
 import subprocess
 
@@ -59,6 +60,11 @@ def compare(source):
 
 
 def reviewed_receipt():
+    """Validate recorded content, retaining the historical function name.
+
+    Receipt review declarations and external owner dispositions are not evaluated
+    by this content-parity validator.
+    """
     receipt = json.loads(RECEIPT.read_text())
     if receipt["profile"] != "kfm.site-mirror-receipt/v1" or receipt["destination"] != "apps/site/source":
         raise ValueError("MIRROR_RECEIPT_PROFILE_DRIFT")
@@ -92,7 +98,51 @@ def check():
     for name, digest in expected.items():
         if sha(safe(DESTINATION,name).read_bytes()) != digest:
             raise ValueError("MIRROR_CONTENT_DRIFT:"+name)
-    return {"outcome":"PASS","files":len(expected),"source_commit":receipt["site_candidate_commit"],"hosted_equivalence":False,"authority":"CONTENT_PARITY_ONLY"}
+    states = sorted({entry["state"] for entry in receipt["comparison"].values()})
+    file_states = {state: sum(entry["state"] == state for entry in receipt["comparison"].values())
+                   for state in states}
+    review = receipt.get("review")
+    review = review if isinstance(review, dict) else {}
+    return {"outcome":"PASS","files":len(expected),"source_commit":receipt["site_candidate_commit"],
+            "hosted_equivalence":False,"authority":"CONTENT_PARITY_ONLY",
+            "receipt_file": RECEIPT.name, "file_states": file_states,
+            "repository_overlay_files": sum(count for state, count in file_states.items() if state != "identical"),
+            "review_acceptance": {
+                "outcome": "NOT_EVALUATED", "authority": "RECEIPT_DECLARATION_ONLY",
+                "receipt_status": receipt.get("status"),
+                "source_and_overlay_review": review.get("source_and_overlay_review"),
+                "blocking_checks": review.get("blocking_checks"),
+            }}
+
+
+def markdown_report(result):
+    """Render CI evidence without converting parity PASS into review acceptance."""
+    review = result.get("review_acceptance", {})
+    rows = [
+        ("Recorded content parity", result["outcome"]),
+        ("Parity authority", result.get("authority", "CONTENT_PARITY_ONLY")),
+        ("Receipt file", result.get("receipt_file")),
+        ("Recorded file states", result.get("file_states")),
+        ("Repository overlay files", result.get("repository_overlay_files")),
+        ("Review acceptance evaluated by this check", review.get("outcome", "NOT_EVALUATED")),
+        ("Review reporting authority", review.get("authority", "RECEIPT_DECLARATION_ONLY")),
+        ("Declared receipt status", review.get("receipt_status")),
+        ("Declared source and overlay review", review.get("source_and_overlay_review")),
+        ("Declared blocking checks", review.get("blocking_checks")),
+        ("Hosted equivalence established by this check", result.get("hosted_equivalence", False)),
+    ]
+    if "reason_code" in result:
+        rows.append(("Parity failure reason", result["reason_code"]))
+    table = ["### Site mirror: content parity and review state", "", "| Dimension | Recorded result |",
+             "|---|---|"]
+    for label, value in rows:
+        rendered = html.escape(json.dumps(value, sort_keys=True), quote=False).replace("|", "&#124;")
+        table.append(f"| {label} | <code>{rendered}</code> |")
+    table.extend(["", "A content-parity PASS verifies recorded repository bytes only. "
+                  "It does not establish review acceptance, overlay deployment, or hosted equivalence. "
+                  "Owner PR dispositions and pending receipt declarations require separate reconciliation. "
+                  "Missing declarations are shown as null."])
+    return "\n".join(table)
 
 
 def diagnose():
@@ -118,14 +168,19 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     group=parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--source",type=Path);group.add_argument("--check",action="store_true");group.add_argument("--diagnose",action="store_true")
+    parser.add_argument("--format", choices=("json", "markdown"), default="json",
+                        help="Markdown renders the content-parity check for a CI step summary.")
     args=parser.parse_args()
+    if args.format == "markdown" and not args.check:
+        parser.error("--format markdown requires --check")
     try:
         result=check() if args.check else diagnose() if args.diagnose else compare(args.source)
+        code = 1 if args.diagnose and result["outcome"] == "REVIEW_REQUIRED" else 0
     except (OSError,ValueError,KeyError,subprocess.SubprocessError):
-        print('{"outcome":"FAIL","reason_code":"MIRROR_REVIEW_REQUIRED"}')
-        return 1
-    print(json.dumps(result,sort_keys=True))
-    return 1 if args.diagnose and result["outcome"] == "REVIEW_REQUIRED" else 0
+        result = {"outcome":"FAIL","reason_code":"MIRROR_REVIEW_REQUIRED"}
+        code = 1
+    print(markdown_report(result) if args.format == "markdown" else json.dumps(result,sort_keys=True))
+    return code
 
 
 if __name__=="__main__":

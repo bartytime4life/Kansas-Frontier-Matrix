@@ -3,17 +3,20 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
 
 import pytest
+import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 SPEC = importlib.util.spec_from_file_location("kfm_site_mirror", ROOT / "tools/qa/site_mirror.py")
 assert SPEC and SPEC.loader
 TOOL = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(TOOL)
+DEFAULT_RECEIPT_RELATIVE = TOOL.RECEIPT.relative_to(ROOT)
 
 
 def _git(root: Path, *args: str) -> str:
@@ -196,3 +199,107 @@ def test_repository_only_overlay_state_is_counted_and_unknown_states_fail(
     TOOL.RECEIPT.write_text(json.dumps(document), encoding="utf-8")
     with pytest.raises(ValueError, match="MIRROR_RECEIPT_STATE_INVALID"):
         TOOL.check()
+
+
+@pytest.mark.parametrize("status", ["review_pending", "accepted", None])
+def test_parity_reports_review_declarations_without_evaluating_acceptance(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], status: str | None
+) -> None:
+    _, _, commit = _repos(tmp_path, monkeypatch)
+    _receipt(tmp_path, monkeypatch, commit)
+    document = json.loads(TOOL.RECEIPT.read_text())
+    if status is not None:
+        document.update(status=status, review={
+            "source_and_overlay_review": "PENDING" if status == "review_pending" else "ACCEPTED",
+            "blocking_checks": ["repository_review", "overlay_reconciliation_with_next_site_version"],
+        })
+    TOOL.RECEIPT.write_text(json.dumps(document))
+    monkeypatch.setattr(sys, "argv", ["site_mirror.py", "--check"])
+
+    assert TOOL.main() == 0
+    result = json.loads(capsys.readouterr().out)
+    assert {key: result[key] for key in ("outcome", "files", "source_commit", "authority", "hosted_equivalence")} == {
+        "outcome": "PASS", "files": 1, "source_commit": commit,
+        "authority": "CONTENT_PARITY_ONLY", "hosted_equivalence": False,
+    }
+    assert result["review_acceptance"] == {
+        "outcome": "NOT_EVALUATED", "authority": "RECEIPT_DECLARATION_ONLY", "receipt_status": status,
+        "source_and_overlay_review": document.get("review", {}).get("source_and_overlay_review"),
+        "blocking_checks": document.get("review", {}).get("blocking_checks"),
+    }
+
+
+@pytest.mark.parametrize("state", [
+    "inherited_repository_overlay", "merged_water_overlay", "repository_only_water_overlay", "repository_only_overlay",
+])
+def test_overlay_parity_never_implies_overlay_review_or_hosted_equivalence(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, state: str
+) -> None:
+    _, _, commit = _repos(tmp_path, monkeypatch)
+    _receipt(tmp_path, monkeypatch, commit)
+    document = json.loads(TOOL.RECEIPT.read_text())
+    document["comparison"]["app/page.tsx"]["state"] = state
+    document["counts"].update(identical=0, **{state: 1})
+    document.update(status="review_pending", site_candidate_deployed=True,
+                    review={"source_and_overlay_review": "PENDING", "blocking_checks": ["repository_review"]})
+    TOOL.RECEIPT.write_text(json.dumps(document))
+
+    result = TOOL.check()
+    assert result["outcome"] == "PASS"
+    assert result["file_states"] == {state: 1}
+    assert result["repository_overlay_files"] == 1
+    assert result["review_acceptance"]["outcome"] == "NOT_EVALUATED"
+    assert result["review_acceptance"]["source_and_overlay_review"] == "PENDING"
+    assert result["hosted_equivalence"] is False
+
+
+@pytest.mark.parametrize("drift", [False, True])
+def test_workflow_summary_preserves_parity_exit_and_separate_review_state(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, drift: bool
+) -> None:
+    _, destination, commit = _repos(tmp_path, monkeypatch)
+    _receipt(tmp_path, monkeypatch, commit)
+    document = json.loads(TOOL.RECEIPT.read_text())
+    document.update(status="review_pending", review={"source_and_overlay_review": "PENDING",
+                    "blocking_checks": ["repository_review", "overlay_reconciliation_with_next_site_version"]})
+    repo = TOOL.ROOT
+    script = repo / "tools/qa/site_mirror.py"
+    script.parent.mkdir(parents=True)
+    script.write_bytes((ROOT / "tools/qa/site_mirror.py").read_bytes())
+    receipt = repo / DEFAULT_RECEIPT_RELATIVE
+    receipt.parent.mkdir(parents=True)
+    receipt.write_text(json.dumps(document))
+    if drift:
+        (destination / "app/page.tsx").write_text("new unrecorded bytes\n")
+
+    workflow = yaml.safe_load((ROOT / ".github/workflows/water-pilot.yml").read_text())
+    steps = workflow["jobs"]["water-conformance"]["steps"]
+    step = next(item for item in steps if "site_mirror.py --check" in item.get("run", ""))
+    assert step["shell"] == "bash"
+    test_step = next(item for item in steps if "pytest" in item.get("run", ""))
+    assert "tests/qa/test_site_mirror.py" in test_step["run"]
+    summary = tmp_path / "summary.md"
+    environment = {**os.environ, "GITHUB_STEP_SUMMARY": str(summary),
+                   "PATH": str(Path(sys.executable).parent) + os.pathsep + os.environ.get("PATH", "")}
+    run = subprocess.run(["bash", "--noprofile", "--norc", "-e", "-o", "pipefail", "-c", step["run"]],
+                         cwd=repo, env=environment, capture_output=True, text=True, timeout=30)
+    assert run.returncode == (1 if drift else 0), run.stderr
+    assert run.stdout == summary.read_text()
+    assert 'Review acceptance evaluated by this check | <code>"NOT_EVALUATED"</code>' in run.stdout
+    assert "Hosted equivalence established by this check | <code>false</code>" in run.stdout
+    if drift:
+        assert 'Recorded content parity | <code>"FAIL"</code>' in run.stdout
+        assert "MIRROR_REVIEW_REQUIRED" in run.stdout
+    else:
+        assert 'Recorded content parity | <code>"PASS"</code>' in run.stdout
+        assert 'Declared receipt status | <code>"review_pending"</code>' in run.stdout
+        assert 'Declared source and overlay review | <code>"PENDING"</code>' in run.stdout
+        assert "overlay_reconciliation_with_next_site_version" in run.stdout
+
+
+def test_summary_escapes_receipt_text_without_hiding_declared_review_state() -> None:
+    report = TOOL.markdown_report({"outcome": "PASS", "review_acceptance": {
+        "outcome": "NOT_EVALUATED", "receipt_status": '<script>bad</script>|\n# ACCEPTED',
+    }})
+    assert "<script>" not in report
+    assert "&lt;script&gt;bad&lt;/script&gt;&#124;\\n# ACCEPTED" in report
