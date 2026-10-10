@@ -62,10 +62,10 @@ The current inventory snapshot is prepared against `main@a920352e420229078ddc242
 
 | Surface | Verified state | Meaning |
 |---|---:|---|
-| Direct Markdown files | 59 | Complete direct-child inventory in the proposed tree |
-| Numbered records | 43 | Unique, contiguous IDs `ADR-0001` through `ADR-0043` |
-| Numbered source metadata | 27 `proposed`; 11 `draft`; 5 `accepted` | `draft` normalizes to `proposed`; accepted source and index status agree for five records |
-| Verified accepted decisions | 5 | ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 carry matching source/index `accepted` status in their stated scopes |
+| Direct Markdown files | 60 | Complete direct-child inventory in the proposed tree |
+| Numbered records | 44 | Unique, contiguous IDs `ADR-0001` through `ADR-0044` |
+| Numbered source metadata | 27 `proposed`; 11 `draft`; 6 `accepted` | `draft` normalizes to `proposed`; accepted source and index status agree for six records |
+| Verified accepted decisions | 6 | ADR-0006, ADR-0007, ADR-0029, ADR-0038, ADR-0040, and ADR-0044 carry matching source/index `accepted` status in their stated scopes |
 | Explicit `NNNN` / `XXXX` placeholders | 4 | Unassigned scaffolds; not ADR numbers |
 | Slug-only ADR scaffolds | 8 | Unassigned scaffolds; not accepted decision records |
 | Template | 1 | [`ADR-template.md`](./ADR-template.md) |
@@ -179,6 +179,7 @@ Rules:
 - Proposed [`ADR-0041`](./ADR-0041-proportional-handling-of-inherited-repository-holds.md) would classify only byte-identical inherited holds for unrelated changes; it remains under review and changes no validator, workflow, or merge authority.
 - Proposed [`ADR-0042`](./ADR-0042-people-dna-land-genealogy-validator-tooling-home.md) would make `tools/validators/domains/people-dna-land/` the sole home for People/DNA/Land genealogy validator tooling and retire `tools/validators/genealogy/`; it remains under review and authorizes no migration or implementation.
 - Proposed [`ADR-0043`](./ADR-0043-people-dna-land-genealogy-policy-tooling-home.md) would make `policy/domains/people-dna-land/` the sole home for People/DNA/Land genealogy policy scaffolding and retire `policy/genealogy/`, the policy-root sibling of ADR-0042; it remains under review and authorizes no migration or implementation.
+- Accepted [`ADR-0044`](./ADR-0044-owner-self-release-for-admitted-public-water-data.md) lets one person review and release a governed water package only when every evidence bundle is public and carries an admitted public-domain license; every other package keeps two-person review.
 
 Two numbered records use legacy filenames containing spaces and an em dash (`ADR-0007` and `ADR-0028`). Renaming them remains deferred pending inbound-link and history analysis.
 

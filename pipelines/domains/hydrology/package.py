@@ -15,7 +15,12 @@ from release.core import prepare_snapshot
 from pipelines.domains.hydrology.validate import validate_candidate
 
 
-def prepare_water_package(candidate: dict, *, rollback_target=None) -> dict:
+def prepare_water_package(candidate: dict, *, rollback_target=None, admission: dict | None = None) -> dict:
+    """Without ``admission`` every bundle carries the rights/sensitivity hold.
+
+    ``admission`` comes from ``admission.load_admission()`` and supplies the
+    admitted license and public sensitivity; it does not release anything.
+    """
     validation = validate_candidate(candidate)
     catalog = water_catalog(candidate, validation)
     entries = []
@@ -32,8 +37,10 @@ def prepare_water_package(candidate: dict, *, rollback_target=None) -> dict:
                   "evidence_refs": [ref] + [{"ref": r["evidence_ref"], "kind": "measurement", "bundle_ref": bundle_id} for r in records],
                   "source_records": sorted({station["page_digest"], *[r["page_digest"] for r in records]}),
                   "citations": ["https://waterdata.usgs.gov/monitoring-location/" + station["id"] + "/"],
-                  "rights": {"license": "USGS source terms; independent rights review required"},
-                  "sensitivity": {"level": "quarantine", "reason": "Candidate pending source, rights and sensitivity review", "applied_at": verified_at},
+                  "rights": {"license": admission["license"] if admission else "USGS source terms; independent rights review required"},
+                  "sensitivity": ({"level": "public", "reason": "Admitted public source " + admission["source_ref"], "applied_at": verified_at}
+                                  if admission else
+                                  {"level": "quarantine", "reason": "Candidate pending source, rights and sensitivity review", "applied_at": verified_at}),
                   "transforms": ["kfm:transform:usgs-water-pilot:v1"],
                   "checksums": {"candidate": candidate["candidate_id"], "validation": validation["receipt_digest"]}}
         bundle["spec_hash"] = {"value": compute_spec_hash(bundle)}

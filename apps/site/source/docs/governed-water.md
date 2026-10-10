@@ -62,3 +62,26 @@ Rollback before publication is to retain the current live Site and abandon the
 candidate. After an authorized publication, use the exact previous application
 version and eligible package with fresh validation. Local synthetic package
 rollback was rehearsed separately; hosted rollback was not.
+
+## Hosted release (ADR-0044)
+
+A prepared package reaches the hosted Site in two separate steps:
+
+1. **Staging.** The owner's local release tool posts the package to
+   `POST /api/governed/water-admin/stage` with the `KFM_WATER_WORKER_TOKEN`
+   bearer token. The route validates the package, stores it in R2 under
+   `governed-water/v1/objects/`, records it as `STAGED` in D1, and never
+   activates it.
+2. **Activation.** A signed-in owner listed in `KFM_WATER_OWNER_IDS` or
+   `KFM_WATER_OWNER_EMAILS` opens `/governed/water-release`, pastes the release
+   decision and presses **Activate package**. The activate route accepts only
+   same-origin requests, runs the decision through the same serving gate as the
+   read routes, and swaps the active pointer only if it still matches the
+   package the page showed. Every activation, rollback and withdrawal is
+   recorded in `water_activation_events`.
+
+**Withdraw active package** marks the package `WITHDRAWN` only if it is still the
+active package the page showed (otherwise `WITHDRAW_CONFLICT`), and the read
+routes stop serving it immediately. Missing tokens or owner settings keep both steps
+closed. See `docs/runbooks/water-pilot.md` in the repository for the full
+release procedure.

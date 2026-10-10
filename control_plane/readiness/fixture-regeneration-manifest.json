@@ -6,11 +6,13 @@
   "input_digest": "sha256:2928fc8a8b3ab134802d5d274e10bbea3b66f1b72d597c5ed066ada8ce51b5c2",
   "reviewed_root": "fixtures/packages/release/water-v1",
   "outputs": {
+    "admitted-snapshot.json": "sha256:f4b07ab5c125d5b8c35a249796fb42973ef9e86210aa7bc4d81c2c1d8f7508fe",
     "bootstrap.json": "sha256:3b8f8f893847ac82f37f6b3866b14c6a3b41cdf4fe20f505173e768051300777",
     "decision.json": "sha256:0eb0606e4b48bcc3809a3d2fb1e3193de0dd6989ce465ef403565607e8159c8f",
     "evidence.json": "sha256:28557dde8addaabb37b2a084850670f692728a2125d0828b7217fe9dee966c8f",
     "held-snapshot.json": "sha256:c3ead381a91831af161f8fdd7f9c43c1a26f22652e24d7a39e489aa210199b57",
     "layers.json": "sha256:1cc867a3f4621815269482ffd9c6cbf9e77e8c5e6fb0830150cf13bc905287ee",
+    "owner-decision.json": "sha256:63f2ea8df251ba2f7e90de6f3b9e8f14b087af067050ef801f1a8ce66b4707f1",
     "snapshot.json": "sha256:c5e9ab17e9ec6a6a1995c06ae3050e7e66d8e8c02db9736955911c31040930f1"
   }
 }
