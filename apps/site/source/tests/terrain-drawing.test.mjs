@@ -12,7 +12,88 @@ const surfaceUrl = toUrl(transpile((await read("app/terrain-surface.ts")).replac
 
 const grid = (size, height) => ({ size, bounds: [0, 0, size - 1, size - 1], spacingMeters: 100, heights: Array.from({ length: size ** 2 }, (_, index) => height(index % size, Math.floor(index / size))) });
 const contours = geometry => geometry.data.features.filter(feature => feature.properties.role === "contour");
-const segments = geometry => geometry.data.features.flatMap(feature => feature.geometry.coordinates);
+const segments = geometry => geometry.data.features.filter(feature => feature.geometry.type === "MultiLineString").flatMap(feature => feature.geometry.coordinates);
+const gridSegments = geometry => geometry.data.features.filter(feature => feature.properties.role === "grid").flatMap(feature => feature.geometry.coordinates);
+
+test("65 by 65 high-variation terrain gives only visible roles the shared segment budget", () => {
+  const input = grid(65, (col, row) => (col + row) % 2 ? 2000 : 100);
+  const contourOnly = model.buildTerrainDrawingGeometry(input, { mode: "contours" });
+  const gridOnly = model.buildTerrainDrawingGeometry(input, { mode: "grid" });
+  const both = model.buildTerrainDrawingGeometry(input, { mode: "both" });
+  for (const geometry of [contourOnly, gridOnly, both]) {
+    assert.equal(geometry.sampleCount, 4225);
+    assert.equal(geometry.coverage, 1);
+    assert.equal(geometry.segmentCount, segments(geometry).length);
+    assert.ok(geometry.segmentCount <= 16000);
+  }
+  assert.equal(gridSegments(contourOnly).length, 0);
+  assert.equal(segments(contourOnly).length, 16000, "hidden grid edges cannot spend the contour-only budget");
+  assert.equal(contourOnly.clipped, true, "visible high-variation contours exceed the full budget");
+  assert.equal(gridSegments(gridOnly).length, 8320);
+  assert.equal(contours(gridOnly).length, 0);
+  assert.equal(gridOnly.intervalMeters, null);
+  assert.equal(gridOnly.clipped, false, "hidden contours cannot report clipping in grid-only mode");
+  assert.equal(gridSegments(both).length, 8320);
+  assert.equal(contours(both).flatMap(feature => feature.geometry.coordinates).length, 7680);
+  assert.equal(both.clipped, true);
+  assert.deepEqual(gridSegments(both), gridSegments(gridOnly));
+  assert.deepEqual(model.buildTerrainDrawingGeometry(input), both, "the default remains combined rendering");
+  assert.deepEqual(model.buildTerrainDrawingGeometry(input, { mode: "contours" }), contourOnly);
+});
+
+test("hidden grid edges cannot clip a fully retained 8192-segment contour view", () => {
+  const input = grid(65, (col, row) => (col + row) % 2 ? 2000 : 100);
+  const contourOnly = model.buildTerrainDrawingGeometry(input, { mode: "contours", intervalMeters: 1000 });
+  assert.equal(contourOnly.segmentCount, 8192);
+  assert.equal(contourOnly.clipped, false);
+  const both = model.buildTerrainDrawingGeometry(input, { mode: "both", intervalMeters: 1000 });
+  assert.equal(both.segmentCount, 16000);
+  assert.equal(both.clipped, true, "combined visible roles still share the hard overall cap");
+  for (const [mode, limit, intervalMeters] of [["grid", 8320, 1000], ["contours", 8192, 1000]]) {
+    const exact = model.buildTerrainDrawingGeometry(input, { mode, maxSegments: limit, intervalMeters });
+    assert.equal(exact.segmentCount, limit);
+    assert.equal(exact.clipped, false, "an exact fit is not a truncated drawing");
+    const capped = model.buildTerrainDrawingGeometry(input, { mode, maxSegments: limit - 1, intervalMeters });
+    assert.equal(capped.segmentCount, limit - 1);
+    assert.equal(segments(capped).length, limit - 1);
+    assert.equal(capped.clipped, true);
+  }
+  const flat = grid(65, () => 100);
+  assert.equal(model.buildTerrainDrawingGeometry(flat, { mode: "both", maxSegments: 8320 }).clipped, false);
+  for (const mode of ["off", "contours", "grid", "both"]) {
+    const empty = model.buildTerrainDrawingGeometry(input, { mode, maxSegments: 0 });
+    assert.equal(empty.segmentCount, 0);
+    assert.equal(empty.data.features.length, 0);
+    assert.equal(empty.clipped, mode !== "off");
+    assert.equal(model.buildTerrainDrawingGeometry(flat, { mode: "contours", maxSegments: 0 }).clipped, false);
+    const large = model.buildTerrainDrawingGeometry(input, { mode, maxSegments: 1e9 });
+    assert.ok(large.segmentCount <= model.TERRAIN_DRAWING_MAX_SEGMENTS);
+  }
+});
+
+test("all line modes preserve missing-data holes and deterministic cooperative batches", () => {
+  const input = grid(3, (col, row) => 100 + col * 10 + row * 5);
+  input.heights[4] = null;
+  for (const mode of ["off", "contours", "grid", "both"]) {
+    const geometry = model.buildTerrainDrawingGeometry(input, { mode });
+    assert.equal(geometry.coverage, 8 / 9);
+    assert.equal(contours(geometry).length, 0);
+    assert.equal(gridSegments(geometry).length, mode === "grid" || mode === "both" ? 8 : 0);
+    for (const line of segments(geometry)) assert.ok(line.every(([x, y]) => x !== 1 || y !== 1));
+    input.heights[4] = NaN;
+    assert.deepEqual(model.buildTerrainDrawingGeometry(input, { mode }), geometry);
+    input.heights[4] = null;
+  }
+  const detailed = grid(65, (col, row) => 100 + col + row);
+  for (const mode of ["contours", "grid", "both"]) {
+    const options = { mode };
+    const batches = model.terrainDrawingGeometryBatches(detailed, options);
+    let yields = 0, next = batches.next();
+    while (!next.done) { yields += 1; next = batches.next(); }
+    assert.equal(yields, mode === "both" ? 32 : 16, "active rows yield in batches of four");
+    assert.deepEqual(next.value, model.buildTerrainDrawingGeometry(detailed, options));
+  }
+});
 
 test("terrain footprint is local, Kansas-bounded and quality-limited", () => {
   for (const [efficient, detail, size] of [[true, true, 33], [false, false, 49], [false, true, 65]]) {
@@ -178,6 +259,134 @@ function setup(t, config = activeConfig) {
   return { map, statuses, probes, controller, flush };
 }
 
+function variedDetailSamples(map) {
+  const query = map.queryTerrainElevation;
+  map.queryTerrainElevation = point => {
+    const col = map.state.queries % 65;
+    query(point);
+    return (Math.floor(col / 8) % 2 ? 2000 : 100) * map.state.exaggeration;
+  };
+}
+
+function afterSecondTimerTurn(t, action) {
+  const schedule = globalThis.setTimeout;
+  let turns = 0;
+  t.mock.method(globalThis, "setTimeout", (callback, delay, ...args) => schedule((...values) => {
+    callback(...values);
+    if (++turns === 2) action();
+  }, delay, ...args));
+}
+
+test("detail runtime switches Contours, Grid and Both with mode-specific clipping and cached 4225 samples", t => {
+  const config = { ...activeConfig, efficient: false, detail: true, mode: "contours" };
+  const { map, controller, statuses, flush } = setup(t, config);
+  variedDetailSamples(map);
+  flush();
+  const source = map.getSource(runtime.TERRAIN_DRAWING_SOURCE_ID);
+  const contourData = structuredClone(map.published.at(-1));
+  const contourCount = contours({ data: contourData }).flatMap(feature => feature.geometry.coordinates).length;
+  assert.equal(contourCount, 9728);
+  assert.equal(gridSegments({ data: contourData }).length, 0);
+  assert.doesNotMatch(statuses.at(-1).message, /capped/);
+  for (const mode of ["grid", "both", "contours"]) {
+    controller.update({ ...config, mode });
+    flush();
+    const geometry = { data: map.published.at(-1) };
+    const status = statuses.at(-1);
+    assert.equal(map.state.queries, 4225, "mode switches reuse the bounded loaded DEM snapshot");
+    assert.equal(map.getSource(runtime.TERRAIN_DRAWING_SOURCE_ID), source);
+    assert.equal(status.coverage, 1);
+    assert.equal(status.sampleCount, 4225);
+    assert.equal(status.state, "ready");
+    assert.equal(gridSegments(geometry).length, mode === "contours" ? 0 : 8320);
+    assert.equal(contours(geometry).flatMap(feature => feature.geometry.coordinates).length, mode === "grid" ? 0 : mode === "both" ? 7680 : contourCount);
+    assert.ok(segments(geometry).length <= 16000);
+    if (mode === "both") assert.match(status.message, /drawing detail capped/);
+    else assert.doesNotMatch(status.message, /capped|no contour crossings/);
+    if (mode === "grid") assert.equal(status.intervalMeters, null);
+  }
+  assert.deepEqual(map.published.at(-1), contourData, "returning to Contours restores the same deterministic lines");
+});
+
+test("mode changes during sampling and queued line work publish only the latest role without new DEM reads", t => {
+  const config = { ...activeConfig, efficient: false, detail: true, mode: "both" };
+  const { map, controller, flush } = setup(t, config);
+  variedDetailSamples(map);
+  map.state.afterQuery = count => { if (count === 128) controller.update({ ...config, mode: "contours" }); };
+  flush();
+  assert.equal(map.published.length, 1);
+  assert.equal(gridSegments({ data: map.published.at(-1) }).length, 0);
+  const publications = map.published.length;
+  afterSecondTimerTurn(t, () => {
+    assert.equal(map.published.length, publications, "the rebuild still has queued cooperative work");
+    controller.update({ ...config, mode: "grid" });
+  });
+  controller.update({ ...config, mode: "both" });
+  flush();
+  assert.equal(map.state.queries, 4225);
+  assert.equal(map.published.length, publications + 1);
+  assert.equal(contours({ data: map.published.at(-1) }).length, 0);
+  assert.equal(gridSegments({ data: map.published.at(-1) }).length, 8320);
+});
+
+test("orbit interruption resumes a cached mode rebuild; off cancels late line publication", t => {
+  const { map, controller, flush } = setup(t);
+  flush();
+  const queries = map.state.queries;
+  controller.update({ ...activeConfig, mode: "contours" });
+  map.emit("movestart"); map.emit("move"); map.emit("moveend");
+  flush();
+  assert.equal(map.state.queries, queries);
+  assert.equal(gridSegments({ data: map.published.at(-1) }).length, 0);
+  const publications = map.published.length;
+  afterSecondTimerTurn(t, () => {
+    assert.equal(map.published.length, publications);
+    controller.update({ ...activeConfig, mode: "off" });
+  });
+  controller.update({ ...activeConfig, mode: "grid" });
+  flush();
+  assert.equal(map.state.queries, queries);
+  assert.equal(map.published.length, publications);
+  assert.equal(map.getSource(runtime.TERRAIN_DRAWING_SOURCE_ID), undefined);
+});
+
+test("DEM arrivals during a cached mode rebuild retain the coalesced fresh-sample pass", t => {
+  const { map, controller, flush } = setup(t);
+  flush();
+  const queries = map.state.queries;
+  afterSecondTimerTurn(t, () => {
+    assert.equal(map.published.length, 1, "cached work is still queued when the DEM changes");
+    for (let i = 0; i < 100; i += 1) map.emit("sourcedata", { sourceId: "kfm-terrain-dem", sourceDataType: "content" });
+  });
+  controller.update({ ...activeConfig, mode: "contours" });
+  flush();
+  assert.equal(map.state.queries, queries + 1089);
+  assert.equal(map.published.length, 3, "cached lines finish before one fresh DEM pass");
+  flush();
+  assert.equal(map.state.queries, queries + 1089);
+  assert.equal(gridSegments({ data: map.published.at(-1) }).length, 0);
+});
+
+test("source replacement during a cached line rebuild cancels every old-provider publication", t => {
+  const { map, controller, flush } = setup(t);
+  flush();
+  const queries = map.state.queries;
+  afterSecondTimerTurn(t, () => {
+    map.sources.set("kfm-terrain-dem", { type: "raster-dem", tiles: ["usgs-3dep"] });
+    map.emit("styledata");
+  });
+  controller.update({ ...activeConfig, mode: "contours" });
+  flush();
+  assert.equal(map.published.length, 1);
+  assert.equal(map.getSource(runtime.TERRAIN_DRAWING_SOURCE_ID), undefined);
+  assert.equal(map.state.queries, queries);
+  controller.update({ ...activeConfig, mode: "contours", provider: "usgs-3dep" });
+  flush();
+  assert.equal(map.published.length, 2);
+  assert.equal(map.state.queries, queries + 1089);
+  assert.equal(gridSegments({ data: map.published.at(-1) }).length, 0);
+});
+
 test("runtime draws only loaded samples with one GeoJSON source, bounded work and no DEM acquisition", t => {
   const { map, statuses, flush } = setup(t);
   flush();
@@ -274,9 +483,11 @@ test("pan removes stale lines immediately; pure orbit keeps finished geographic 
   assert.ok(map.getSource(runtime.TERRAIN_DRAWING_SOURCE_ID));
 });
 
-test("light and mode changes restyle without sampling or replacing geometry", t => {
+test("light is paint-only; line modes rebuild visible roles without resampling or replacing the source", t => {
   const { map, controller, flush } = setup(t);
-  flush(); const queries = map.state.queries, source = map.getSource(runtime.TERRAIN_DRAWING_SOURCE_ID);
+  flush(); const queries = map.state.queries, source = map.getSource(runtime.TERRAIN_DRAWING_SOURCE_ID), publications = map.published.length;
+  controller.update({ ...activeConfig, light: "dusk" }); flush();
+  assert.equal(map.published.length, publications, "light does not rebuild scientific geometry");
   controller.update({ ...activeConfig, light: "dusk", mode: "contours" }); flush();
   assert.equal(map.state.queries, queries);
   assert.equal(map.getSource(runtime.TERRAIN_DRAWING_SOURCE_ID), source);
@@ -284,11 +495,15 @@ test("light and mode changes restyle without sampling or replacing geometry", t 
   assert.equal(map.getLayer("scene-terrain-grid-casing").layout.visibility, "none");
   assert.equal(map.paint.get("scene-terrain-index:line-color"), "#fff1c6");
   assert.equal(map.paint.get("scene-terrain-contour-casing:line-color"), "#493329");
+  assert.equal(gridSegments({ data: map.published.at(-1) }).length, 0);
+  assert.ok(contours({ data: map.published.at(-1) }).length > 0);
   controller.update({ ...activeConfig, mode: "grid" }); flush();
   assert.equal(map.getLayer("scene-terrain-grid").layout.visibility, "visible");
   assert.equal(map.getLayer("scene-terrain-contours").layout.visibility, "none");
   assert.equal(map.getLayer("scene-terrain-contour-casing").layout.visibility, "none");
   assert.equal(map.state.queries, queries);
+  assert.equal(contours({ data: map.published.at(-1) }).length, 0);
+  assert.equal(gridSegments({ data: map.published.at(-1) }).length, 2112);
 });
 
 test("only matching DEM content schedules work; burst events cannot starve or loop on setData", t => {
@@ -342,7 +557,10 @@ test("surface-only display shares sampling/source with contours; lens, opacity a
   assert.equal(data.features.filter(feature => feature.properties.role === "surface").length, 961);
   controller.update({ ...config, surface: "aspect", surfaceOpacity: .75, light: "night", mode: "contours" }); flush();
   assert.equal(map.state.queries, queries);
-  assert.deepEqual(map.published.at(-1), data, "fixed scientific classes and colors are unchanged by a scene look");
+  const surfaceFeatures = data => data.features.filter(feature => feature.properties.role === "surface");
+  assert.deepEqual(surfaceFeatures(map.published.at(-1)), surfaceFeatures(data), "fixed scientific classes and colors survive line mode changes");
+  assert.equal(gridSegments({ data: map.published.at(-1) }).length, 0);
+  assert.ok(contours({ data: map.published.at(-1) }).length > 0);
   assert.deepEqual(map.paint.get(`${runtime.TERRAIN_SURFACE_LAYER_ID}:fill-color`), ["get", "aspectColor"]);
   assert.equal(map.paint.get(`${runtime.TERRAIN_SURFACE_LAYER_ID}:fill-opacity`), .75);
   assert.equal(map.getLayer("scene-terrain-contours").layout.visibility, "visible");
