@@ -28,7 +28,8 @@ port 4173 returns HTTP 200. The original persistent store and v218 installation
 remain intact. No data migration; rollback has not been re-rehearsed this batch.
 The [926-file mirror receipt](../../data/receipts/generated/site-v219-cutaway-textures-20261010.json)
 retains two canonical mappings, PENDING human review and unevaluated hosted
-parity. PR #5018 remains a draft; predecessor head `c31f097bc4f25eb8731148097a87272997dec43e`
+parity. The owner marked PR #5018 ready for review at 21:55:13Z on October 10;
+this does not approve or merge it. Predecessor head `c31f097bc4f25eb8731148097a87272997dec43e`
 completed 107 checks successfully with two skipped. Updated-head checks are separate.
 No new source admission, data activation, acquisition jobs or infrastructure.
 
