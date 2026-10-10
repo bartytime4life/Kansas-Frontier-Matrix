@@ -1,19 +1,16 @@
-import type { Feature, FeatureCollection, Polygon } from "geojson";
-import type { GeoJSONSource, LayerSpecification, Map as MapLibreMap } from "./maplibre-seam";
+import type { FeatureCollection } from "geojson";
+import type { LayerSpecification, Map as MapLibreMap } from "./maplibre-seam";
 import { KANSAS_OUTLINE, ORIENTATION_SOURCE_ID } from "./kansas-orientation";
-import { uploadedGeoJSON } from "./map-performance";
 import { createNightSkyLayer, nightSkyShouldShow, SKY_DARKNESS, type NightSkyCatalog } from "./night-sky";
-import { CURTAIN_MIN_PITCH, effectiveSceneLight, sceneEffectsFor, type SceneLightPreset } from "./scene-effects";
+import { effectiveSceneLight, sceneEffectsFor, type SceneLightPreset } from "./scene-effects";
 import type { TerrainSourceRecord } from "./terrain-sources";
 
 /**
  * Scene overlays that carry the cinematic look into every view: a Kansas glow
- * and orbit beacon on any basemap, optional 2D shaded relief, 3D columns for
- * provider point values, and light-matched provider buildings.
+ * and orbit beacon on any basemap, optional 2D shaded relief,
+ * and light-matched provider buildings.
  *
- * All are display derivatives. Columns are drawn from the same features the
- * official layers already show and encode only a provider value; missing
- * values draw no column. Nothing here is queryable, reported or exported.
+ * All are display derivatives. Nothing here is queryable, reported or exported.
  */
 
 type MapProjection = string | undefined;
@@ -184,121 +181,6 @@ export function syncRelief2d(map: MapLibreMap, dem: TerrainSourceRecord, light: 
 }
 
 // ---------------------------------------------------------------------------
-// 3D value columns
-// ---------------------------------------------------------------------------
-
-export const COLUMNS_SOURCE_ID = "scene-value-columns";
-export const COLUMNS_LAYER_ID = "scene-value-columns";
-export const MAX_COLUMNS = 2000;
-
-export type ColumnFeed = Readonly<{
-  kind: "earthquake" | "streamflow";
-  sourceId: string;
-  /** The official point layer; columns follow its visibility. */
-  pointLayerId: string;
-}>;
-
-type ColumnProperties = Readonly<{ kind: ColumnFeed["kind"]; h: number; color: string; id: string }>;
-
-const hexToRgb = (hex: string) => [1, 3, 5].map((offset) => parseInt(hex.slice(offset, offset + 2), 16));
-const mixHex = (a: string, b: string, t: number) => {
-  const [ar, ag, ab] = hexToRgb(a), [br, bg, bb] = hexToRgb(b);
-  const channel = (x: number, y: number) => Math.round(x + (y - x) * t).toString(16).padStart(2, "0");
-  return `#${channel(ar, br)}${channel(ag, bg)}${channel(ab, bb)}`;
-};
-/** Same colour ramp as the earthquake points: 0 → 2 → 4 → 6 magnitude. */
-export function earthquakeColumnColor(magnitude: number): string {
-  const stops: [number, string][] = [[0, "#ffd7a8"], [2, "#f2a65a"], [4, "#ef6b45"], [6, "#d9364f"]];
-  if (magnitude <= stops[0][0]) return stops[0][1];
-  for (let index = 1; index < stops.length; index += 1) {
-    const [m1, c1] = stops[index];
-    if (magnitude <= m1) { const [m0, c0] = stops[index - 1]; return mixHex(c0, c1, (magnitude - m0) / (m1 - m0)); }
-  }
-  return stops[stops.length - 1][1];
-}
-const STREAMFLOW_TREND_COLORS: Record<string, string> = { rising: "#55e6ff", falling: "#a5b4ff", steady: "#73cfa8" };
-
-/** Column height as a 0–1 share of the zoom-scaled maximum, or null for no column. */
-export function columnValue(kind: ColumnFeed["kind"], properties: Record<string, unknown> | null | undefined): { h: number; color: string } | null {
-  if (!properties) return null;
-  if (kind === "earthquake") {
-    const magnitude = Number(properties.magnitude);
-    if (properties.magnitude === null || properties.magnitude === undefined || !Number.isFinite(magnitude) || magnitude < 0) return null;
-    return { h: Math.max(0.04, Math.min(1, magnitude / 6)), color: earthquakeColumnColor(magnitude) };
-  }
-  const value = Number(properties.value);
-  const visual = Number(properties.visualMagnitude);
-  if (properties.missing === true || !(value > 0) || !Number.isFinite(visual)) return null;
-  return { h: Math.max(0.04, Math.min(1, visual / 5)), color: STREAMFLOW_TREND_COLORS[String(properties.trend)] ?? "#67e8f9" };
-}
-
-/** A small hexagon footprint (metres) around a point. */
-export function hexagon(center: readonly [number, number], radiusMeters: number): Polygon {
-  const [lng, lat] = center;
-  const dLat = radiusMeters / 111_320;
-  const dLng = radiusMeters / (111_320 * Math.cos((lat * Math.PI) / 180));
-  const ring: [number, number][] = Array.from({ length: 6 }, (_, index) => {
-    const angle = (Math.PI / 3) * index + Math.PI / 6;
-    return [lng + Math.cos(angle) * dLng, lat + Math.sin(angle) * dLat];
-  });
-  ring.push(ring[0]);
-  return { type: "Polygon", coordinates: [ring] };
-}
-
-export function buildValueColumns(inputs: readonly Readonly<{ kind: ColumnFeed["kind"]; data: FeatureCollection | undefined }>[], radiusMeters = 3200): FeatureCollection<Polygon, ColumnProperties> {
-  const features: Feature<Polygon, ColumnProperties>[] = [];
-  for (const { kind, data } of inputs) {
-    for (const [index, feature] of (data?.features ?? []).entries()) {
-      if (features.length >= MAX_COLUMNS) break;
-      if (feature.geometry?.type !== "Point") continue;
-      const [lng, lat] = feature.geometry.coordinates;
-      if (!Number.isFinite(lng) || !Number.isFinite(lat) || Math.abs(lat) > 85) continue;
-      const value = columnValue(kind, feature.properties as Record<string, unknown> | null);
-      if (!value) continue;
-      features.push({ type: "Feature", properties: { kind, h: Number(value.h.toFixed(4)), color: value.color, id: String(feature.properties?.featureId ?? `${kind}-${index}`) }, geometry: hexagon([lng, lat], radiusMeters) });
-    }
-  }
-  return { type: "FeatureCollection", features };
-}
-
-export const COLUMN_HEIGHT = ["interpolate", ["linear"], ["zoom"],
-  4, ["*", ["get", "h"], 140000], 7, ["*", ["get", "h"], 52000], 10, ["*", ["get", "h"], 9000], 13, ["*", ["get", "h"], 1800]] as const;
-
-export const columnsShouldShow = (columns: boolean, pitch: number, efficient: boolean): boolean =>
-  columns && !efficient && Number.isFinite(pitch) && pitch >= CURTAIN_MIN_PITCH;
-
-const layerVisible = (map: MapLibreMap, id: string) => Boolean(map.getLayer(id)) && map.getLayoutProperty(id, "visibility") !== "none";
-
-/** Rebuilds columns from what the official point layers currently show. */
-export function syncValueColumns(map: MapLibreMap, feeds: readonly ColumnFeed[], efficient: boolean): void {
-  const settings = sceneEffectsFor(map);
-  if (!settings.columns) { removeLayers(map, [COLUMNS_LAYER_ID], COLUMNS_SOURCE_ID); return; }
-  const inputs = feeds.filter((feed) => layerVisible(map, feed.pointLayerId))
-    .map((feed) => ({ kind: feed.kind, data: uploadedGeoJSON(map.getSource(feed.sourceId) as GeoJSONSource | undefined) }));
-  const data = buildValueColumns(inputs);
-  const source = map.getSource(COLUMNS_SOURCE_ID) as GeoJSONSource | undefined;
-  if (!source) map.addSource(COLUMNS_SOURCE_ID, { type: "geojson", data, attribution: "Column heights encode provider values · display only" });
-  else source.setData(data);
-  if (!map.getLayer(COLUMNS_LAYER_ID)) {
-    // Under the official point symbols so each point stays visible on its column.
-    const beforeId = feeds.map((feed) => feed.pointLayerId).find((id) => map.getLayer(id)) ?? firstOverlayId(map);
-    map.addLayer({ id: COLUMNS_LAYER_ID, type: "fill-extrusion", source: COLUMNS_SOURCE_ID, layout: { visibility: "none" }, paint: {
-      "fill-extrusion-color": ["get", "color"],
-      "fill-extrusion-height": COLUMN_HEIGHT as unknown as number,
-      "fill-extrusion-base": 0,
-      "fill-extrusion-opacity": 0.92,
-      // A flat side tone keeps column colour close to the matching point colour.
-      "fill-extrusion-vertical-gradient": false,
-    } } as LayerSpecification, beforeId);
-  }
-  syncValueColumnsVisibility(map, efficient);
-}
-
-export function syncValueColumnsVisibility(map: MapLibreMap, efficient: boolean): void {
-  setVisibility(map, COLUMNS_LAYER_ID, columnsShouldShow(sceneEffectsFor(map).columns, map.getPitch(), efficient));
-}
-
-// ---------------------------------------------------------------------------
 // Lit provider buildings
 // ---------------------------------------------------------------------------
 
@@ -420,4 +302,4 @@ export const nightSkyIsVisible = (map: MapLibreMap): boolean =>
 export const nightSkyIsTwinkling = (map: MapLibreMap): boolean => nightSkyIsVisible(map) && projectionOf(map) !== "globe";
 
 /** IDs of every overlay this module may add, for tests and composition. */
-export const SCENE_OVERLAY_LAYER_IDS: readonly string[] = [...KANSAS_GLOW_LAYER_IDS, RELIEF_2D_LAYER_ID, COLUMNS_LAYER_ID, NIGHT_SKY_LAYER_ID];
+export const SCENE_OVERLAY_LAYER_IDS: readonly string[] = [...KANSAS_GLOW_LAYER_IDS, RELIEF_2D_LAYER_ID, NIGHT_SKY_LAYER_ID];

@@ -24,14 +24,14 @@ const effects = await import(effectsUrl);
 
 test("recipes coordinate presentation without enabling DEMs, camera changes or provider layers", () => {
   for (const relief2d of [false, true]) for (const stars of [false, true]) {
-    const input = { ...effects.DEFAULT_SCENE_EFFECTS, relief2d, stars, columns: false, buildings: false, curtain: false, sunSync: true };
+    const input = { ...effects.DEFAULT_SCENE_EFFECTS, relief2d, stars, buildings: false, curtain: false, sunSync: true };
     for (const id of Object.keys(studio.SCENE_RECIPES)) {
       const before = structuredClone(input);
       const next = studio.sceneRecipePresentation(id, input);
       assert.deepEqual(input, before, "no in-place mutations");
       assert.equal(next.settings.relief2d, relief2d, "no additional DEM choice");
       assert.equal(next.settings.stars, stars, "every recipe retains the independent night-sky choice");
-      for (const key of ["columns", "buildings", "curtain"]) assert.equal(next.settings[key], false, "opted-out effects remain off");
+      for (const key of ["buildings", "curtain"]) assert.equal(next.settings[key], false, "opted-out effects remain off");
       assert.deepEqual(Object.keys(next).sort(), ["atmosphere", "azimuth", "settings"], "only existing presentation state changes");
       assert.equal(studio.matchingSceneRecipe(next), id);
       assert.equal(studio.matchingSceneRecipe({ ...next, azimuth: next.azimuth + 1 }), null, "manual light changes produce Custom");
@@ -200,7 +200,7 @@ test("the merged studio retains the real night-sky toggle, catalog copy and Batt
   const textOf = (node) => Array.isArray(node) ? node.map(textOf).join("") : typeof node === "string" || typeof node === "number" ? String(node) : node && typeof node === "object" ? textOf(node.props?.children) : "";
   for (const efficient of [false, true]) for (const stars of [false, true]) {
     const changes = [];
-    const settings = { ...effects.DEFAULT_SCENE_EFFECTS, relief2d: false, columns: false, stars };
+    const settings = { ...effects.DEFAULT_SCENE_EFFECTS, relief2d: false, stars };
     const props = { settings, light: null, efficient, reducedMotion: false, flyoverActive: false, view: "terrain", presentation: { atmosphere: "night", azimuth: 225 }, camera: { pitch: 48, bearing: 0, fieldOfView: 44 }, cameraReady: true, onRecipe() {}, onLight() {}, onCamera() {}, onFlyover() {}, onChange: (value) => changes.push(value) };
     const tree = SceneEffectsControls(props), nodes = descendants(tree);
     const label = nodes.find((node) => node.type === "label" && textOf(node).includes("Real night sky"));

@@ -7,7 +7,7 @@ import { terrainHillshadePaint } from "./terrain-relief-style";
 /**
  * Cinematic MapLibre presentation across 2D, tilted, Terrain 3D and globe
  * views: relief lighting, sky, a Kansas border curtain and glow, 2D shaded
- * relief, 3D value columns, lit buildings, sun-following light, selection
+ * relief, lit buildings, sun-following light, selection
  * glow and a camera flyover.
  *
  * Everything here is display treatment. No effect changes feature geometry,
@@ -28,8 +28,6 @@ export type SceneEffectSettings = Readonly<{
   kansasGlow: boolean;
   /** DEM shaded relief under 2D maps. Requests display-DEM tiles. */
   relief2d: boolean;
-  /** 3D columns for provider point values (earthquake magnitude, streamflow) when tilted. */
-  columns: boolean;
   /** Height-shaded, light-matched styling for provider 3D buildings. */
   buildings: boolean;
   /** Real stars, the Milky Way and (from orbit) the Sun behind the globe and above a night horizon. */
@@ -39,19 +37,19 @@ export type SceneEffectSettings = Readonly<{
 }>;
 
 export type SceneEffectKey = keyof SceneEffectSettings;
-export const SCENE_EFFECT_KEYS: readonly SceneEffectKey[] = ["cinematic", "curtain", "sunSync", "kansasGlow", "relief2d", "columns", "buildings", "stars", "waterFlow"];
+export const SCENE_EFFECT_KEYS: readonly SceneEffectKey[] = ["cinematic", "curtain", "sunSync", "kansasGlow", "relief2d", "buildings", "stars", "waterFlow"];
 
 /** Defaults make no new network requests (2D relief and flowing water off; the star catalog is bundled). */
 export const DEFAULT_SCENE_EFFECTS: SceneEffectSettings = Object.freeze({
-  cinematic: true, curtain: true, sunSync: false, kansasGlow: true, relief2d: false, columns: true, buildings: true, stars: true, waterFlow: false,
+  cinematic: true, curtain: true, sunSync: false, kansasGlow: true, relief2d: false, buildings: true, stars: true, waterFlow: false,
 });
 export const SCENE_EFFECTS_STORAGE_KEY = "kfm-scene-effects-v1";
 
 export type SceneLookPreset = "cinematic" | "natural" | "plain";
 export const SCENE_LOOK_PRESETS: Readonly<Record<SceneLookPreset, Readonly<{ label: string; detail: string; settings: SceneEffectSettings }>>> = Object.freeze({
-  cinematic: { label: "Cinematic", detail: "Every effect, including 2D relief", settings: Object.freeze({ cinematic: true, curtain: true, sunSync: false, kansasGlow: true, relief2d: true, columns: true, buildings: true, stars: true, waterFlow: true }) },
-  natural: { label: "Natural", detail: "Relief, sky and 3D data; no glow", settings: Object.freeze({ cinematic: true, curtain: false, sunSync: true, kansasGlow: false, relief2d: true, columns: true, buildings: true, stars: true, waterFlow: true }) },
-  plain: { label: "Plain", detail: "The original flat look", settings: Object.freeze({ cinematic: false, curtain: false, sunSync: false, kansasGlow: false, relief2d: false, columns: false, buildings: false, stars: false, waterFlow: false }) },
+  cinematic: { label: "Cinematic", detail: "Every effect, including 2D relief", settings: Object.freeze({ cinematic: true, curtain: true, sunSync: false, kansasGlow: true, relief2d: true, buildings: true, stars: true, waterFlow: true }) },
+  natural: { label: "Natural", detail: "Relief, sky and buildings; no glow", settings: Object.freeze({ cinematic: true, curtain: false, sunSync: true, kansasGlow: false, relief2d: true, buildings: true, stars: true, waterFlow: true }) },
+  plain: { label: "Plain", detail: "The original flat look", settings: Object.freeze({ cinematic: false, curtain: false, sunSync: false, kansasGlow: false, relief2d: false, buildings: false, stars: false, waterFlow: false }) },
 });
 
 export const matchingLookPreset = (settings: SceneEffectSettings): SceneLookPreset | null =>
@@ -64,7 +62,6 @@ export const SCENE_EFFECT_OPTIONS: readonly Readonly<{ key: SceneEffectKey; labe
   { key: "kansasGlow", label: "Kansas glow", detail: "Soft outline glow on every basemap; a beacon from orbit", views: ["2d", "tilted", "terrain", "globe"] },
   { key: "relief2d", label: "Shaded relief in 2D", detail: "Display-DEM hillshade under flat maps", views: ["2d", "tilted"], network: true },
   { key: "curtain", label: "Kansas light curtain", detail: "Glowing border walls when tilted and on the globe", views: ["tilted", "terrain", "globe"], motion: true },
-  { key: "columns", label: "3D data columns", detail: "Earthquake magnitude and streamflow as columns when tilted", views: ["tilted", "terrain", "globe"] },
   { key: "buildings", label: "Lit 3D buildings", detail: "Height-shaded provider buildings matched to the scene light", views: ["tilted", "terrain"] },
   { key: "sunSync", label: "Follow the real sun", detail: "Light and sky follow the sun over the map center", views: ["tilted", "terrain", "globe"] },
   { key: "stars", label: "Real night sky", detail: "Hipparcos stars where they are right now, the Milky Way and the Sun from orbit; above the horizon at night", views: ["tilted", "terrain", "globe"], motion: true },
