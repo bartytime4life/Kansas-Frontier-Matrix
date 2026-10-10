@@ -15,7 +15,7 @@ test("mobile map keeps one header row with named menus and reachable map actions
   assert.match(page, /<nav className="map-mobile-actions" aria-label="Mobile map actions">/);
   for (const label of ["Map layers", "Places", "Sources", "Time", "Style"]) assert.match(page, new RegExp(`>${label}(?:\\s|<)`));
   assert.match(page, /onClick=\{openMapSettings\}>Style<\/button>/);
-  assert.match(page, /id="map-settings"/);
+  assert.match(page, /const openMapSettings = useCallback\(\(\) => \{\s*openMapUtility\("scene"\)/);
   assert.match(page, /<RenderQualityControl value=\{renderQuality\} onChange=\{chooseRenderQuality\} \/>/);
   assert.match(toolbar, /aria-label="Open data and download notices"/);
   assert.match(css, /safe-area-inset-bottom/);

@@ -50,13 +50,16 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /Layer Catalog/i);
   assert.match(html, /MapLibre/i);
   assert.match(html, /Reports/i);
-  assert.match(html, /Real data layers/i);
+  assert.match(html, /Browse/i);
   assert.match(html, /NASA THERMAL CONTEXT · NOT KFM EVIDENCE/);
   assert.match(html, /Provider-default daily raster; its exact UTC image date is unresolved/);
   assert.match(html, /One checked UTC image day; each returned point keeps its own acquisition time/);
   assert.match(html, /Installed Earth Engine snapshots are visual display context, not KFM evidence/);
-  assert.match(html, /aria-label="Layer topics"/);
-  for (const label of ["Full archive → latest", "Bridges · historic designation", "Bridges · recorded closed", "Historical roads · 1918", "BLM land records", "BLM leases · authorized", "BLM leases · closed", "Roads, rail &amp; bridges", "Hazards", "Roads &amp; highways", "Railroads · active", "Railroads · abandoned", "FEMA flood zones"]) assert.ok(html.includes(label), `Missing discoverable layer control: ${label}`);
+  assert.match(html, /<nav[^>]+aria-label="Layer views"/);
+  for (const label of ["Browse", "On map", "Imagery"]) assert.ok(html.includes(label), `Missing layer view: ${label}`);
+  assert.match(html, /<select[^>]+aria-label="Layer topic"/);
+  for (const label of ["Water", "Terrain", "Weather &amp; hazards", "Places &amp; boundaries", "Land &amp; soil", "Roads &amp; rail", "Groundwater"]) assert.ok(html.includes(`>${label}</option>`), `Missing discoverable topic: ${label}`);
+  for (const label of ["Full archive → latest", "KDOT Kansas Bridges · historic designation", "KDOT Kansas Bridges · recorded closed", "KDOT Kansas historical roads · 1918", "BLM Kansas oil and gas leases · authorized", "BLM Kansas oil and gas leases · closed", "KDOT Kansas roads and highways", "KDOT Kansas active railroads", "KDOT Kansas abandoned railroads", "FEMA Kansas mapped flood hazard zones"]) assert.ok(html.includes(label), `Missing discoverable layer control: ${label}`);
   assert.doesNotMatch(html, /Hydrology context<|Watershed &amp; storage context<|demonstration · selected/i);
   assert.match(html, /Repository briefing/i);
   assert.match(html, /main@(?:<!-- -->)?bb08d3e/i);
@@ -117,8 +120,10 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   assert.match(runtime, /setSky/);
   assert.match(runtime, /setLight/);
   assert.match(runtime, /lngLatToTile/);
-  assert.match(page, /MAP REPRESENTATION/);
-  assert.match(page, /Verified renderer controls/);
+  assert.match(page, /aria-label="Verified map representations"/);
+  assert.match(page, /onClick=\{\(\) => activateMapRepresentation\(id\)\}/);
+  assert.match(page, /<summary>Terrain tools, sources &amp; rendering<\/summary>/);
+  assert.match(page, /aria-label="Renderer capability status"/);
   assert.match(page, /HMS smoke · Shake stations · hazard overlays/);
   assert.match(page, /setVerticalFieldOfView/);
   assert.match(page, /Orbit started · drag, scroll or press a key to take back the camera/, "orbit announces how to interrupt the camera motion");
@@ -395,10 +400,10 @@ test("adds device-local Places trails and faster layer isolation controls", asyn
   assert.match(page, /leftPanelMode !== "places"/);
   assert.match(page, /<div className="place-trail-list" aria-label="Saved investigation places">/);
   assert.doesNotMatch(page, /MAP WORKBENCH|Map Workbench|map-tool-group-workbench|secondary-tools|More map tools/);
-  assert.match(page, /className="map-utility-tabs"/);
-  assert.match(page, /\["navigate", "inspect", "scene", "measure", "report", "export"\]/);
+  assert.match(page, /<ExplorerControlsNavigation value=\{mapUtilityView\}/);
+  assert.match(await readFile(new URL("../app/explorer-controls-navigation.tsx", import.meta.url), "utf8"), /Advanced tools/);
   assert.match(page, /onClick=\{clearSelection\} disabled=\{!selected\}>Clear selection/);
-  assert.match(page, /Preview local KML or GeoJSON/);
+  assert.match(page, /mapUtilityView === "import"/);
   assert.match(page, /onClick=\{openMapSettings\}>Style/);
   assert.match(page, /Google Earth–inspired, KFM-governed/);
   assert.match(page, /locationCameraRedacted \|\| locationDerivedViewRef\.current/);
@@ -553,7 +558,12 @@ test("keeps the MapLibre Workbench complete, bounded, and responsive", async () 
   const tsconfig = await readFile(new URL("../tsconfig.json", import.meta.url), "utf8");
 
   assert.match(source, /id="map-utility-panel"/);
-  for (const view of ["Navigate", "Inspect", "Import", "Compare", "Display", "Measure", "Export", "Diagnostics"]) assert.match(source, new RegExp(`${view}`));
+  const controlNavigation = await readFile(new URL("../app/explorer-controls-navigation.tsx", import.meta.url), "utf8");
+  assert.match(source, /<ExplorerControlsNavigation value=\{mapUtilityView\}/);
+  for (const [key, title] of [["navigate", "Explore"], ["scene", "Appearance"], ["measure", "Measure"], ["inspect", "Inspect records"], ["compare", "Compare"], ["report", "Reports"], ["export", "Export"], ["import", "Import a file"], ["connections", "Sources"], ["history", "Historic maps"], ["diagnostics", "Diagnostics"]]) {
+    assert.ok(controlNavigation.includes(`["${key}", "${title}"]`), `Missing named control route: ${title}`);
+  }
+  assert.match(controlNavigation, /<summary>Advanced tools/);
   assert.match(source, /kfm-map-context-receipt-v1/);
   assert.match(source, /kfm-map-diagnostics-v1/);
   assert.match(exportCenter, /kfm-public-safe-map-export-v2/);
@@ -764,10 +774,10 @@ test("connects bounded official context sources without admitting evidence", asy
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"].serviceUrl, /^https?:\/\/stationview\.raspberryshake\.org(?:\/|$)/);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"].boundary, /not realtime/i);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["usgs-3dep-slope"].mapUrl, /^\/api\/terrain-tile\?kind=slope&z=\{z\}&x=\{x\}&y=\{y\}$/);
-  assert.match(page, /Real data layers/);
+  assert.match(page, /Browse/);
   assert.match(page, /Operational sources have their own observation clocks/);
   assert.match(page, /Refresh \$\{officialRefreshPlan\.count\} selected/);
-  assert.match(page, /Find a source/);
+  assert.match(page, /Search layers, places, providers/);
   assert.match(page, /params\.set\("ctx"/);
   assert.match(page, /params\.set\("ctxo"/);
   assert.match(page, /zero mapped features[\s\S]*not an all-clear/i);
@@ -1191,7 +1201,7 @@ test("keeps the global header and map controls in one responsive toolbar", async
   assert.match(page, /className="map-dock-basemap map-dock-wide-only"/);
   assert.match(page, /className="map-dock-action map-dock-wide-only"[\s\S]*?<span aria-hidden="true">⌖<\/span><strong>Controls<\/strong>/);
   assert.match(page, /QUICK_LIVE_CONTEXT_IDS\.map/);
-  assert.match(page, /id="map-settings"[\s\S]*?<RenderQualityControl value=\{renderQuality\} onChange=\{chooseRenderQuality\} \/>/);
+  assert.match(page, /mapUtilityView === "scene"[\s\S]*?<RenderQualityControl value=\{renderQuality\} onChange=\{chooseRenderQuality\} \/>/);
   assert.doesNotMatch(page, /className="qwen-header-action"/);
   assert.match(page, /className="qwen-map-launch"/);
   assert.doesNotMatch(page, /["'`]\/api\/qwen/);
@@ -1289,20 +1299,18 @@ test("keeps layer controls direct and source clocks in progressive detail", asyn
   const css = await readFile(new URL("../app/map-layers.css", import.meta.url), "utf8");
 
   assert.match(page, /type LeftPanelMode = "views" \| "layers" \| "live"/);
-  assert.match(page, /aria-label="Layer sources"/);
-  assert.match(page, /Real data layers/);
-  assert.match(page, /Find a source/);
+  assert.match(page, /aria-label="Layer views"/);
+  assert.match(page, /Browse/);
+  assert.match(page, /Search layers, places, providers/);
   assert.match(page, /className="layer-map-time"/);
   assert.match(page, /Change time/);
-  assert.match(page, /className="official-context-catalog"[^>]*hidden=\{layerCatalogView !== "official"\}/);
-  assert.match(page, /className="local-layer-settings" hidden=\{layerCatalogView !== "local"\}/);
+  assert.match(page, /className="official-context-catalog"[^>]*hidden=\{layerCatalogView === "local"\}/);
+  assert.match(page, /className="local-layer-settings" hidden=\{layerCatalogView === "official"/);
   assert.match(page, /className="visibility-switch"/);
   assert.match(page, /className="official-context-options"/);
-  assert.match(page, /className="map-layer-advanced"/);
-  assert.match(page, /\{layerCatalogView === "official" && <nav className="official-workspace-tabs"/);
-  const mapSettingsStart = page.indexOf('<details className="map-layer-advanced" id="map-settings">');
-  const imageryEnd = page.indexOf("</div>", page.indexOf('<section className="reviewed-imagery-section"'));
-  assert.ok(mapSettingsStart > imageryEnd, "Map settings must follow the imagery section as a shared control");
+  assert.match(page, /className="layer-task-links"/);
+  assert.match(page, /aria-label="Layer topic"/);
+  assert.match(page, /openMapUtility\("scene", event.currentTarget\)/);
   const openMapSettings = page.slice(page.indexOf("const openMapSettings = useCallback"), page.indexOf("const openEarthEngineLayers = useCallback"));
   assert.doesNotMatch(openMapSettings, /setLayerCatalogView\("local"\)/);
   assert.match(page, /className="reviewed-imagery-section"/);

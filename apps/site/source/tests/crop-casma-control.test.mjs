@@ -95,3 +95,24 @@ test("cancelled release bodies cannot restore availability, and a lost map style
   assert.equal(badge(tree).props.children, "HELD"); assert.equal(tree.props["data-visible"], false);
   assert.equal(h.sources.size, 0); h.dispose();
 });
+
+
+test("Crop catalog selection survives hidden details, globe and withdrawn release until explicitly hidden", async () => {
+  const h = await harness(), selections = [];
+  h.props.onSelectionChange = selected => selections.push(selected);
+  let tree = await h.respond(available());
+  checkbox(tree).props.onChange({ target: { checked: true } }); h.render(); tree = h.loaded();
+  assert.equal(selections.at(-1), true);
+  const before = h.calls.length;
+  assert.equal(findNode(tree, node => node.type === "details").props.open, undefined, "closed disclosure retains mounted owner");
+  h.props.projection = "globe"; tree = h.render();
+  assert.equal(tree.props["data-state"], "held"); assert.equal(selections.at(-1), true);
+  const primary = findNode(tree, node => node.props?.className === "official-context-primary");
+  assert.match(findNode(primary, node => node.type === "small").props.children.flat(Infinity).join(""), /globe held/, "selected hold remains visible while source details are closed");
+  assert.equal(h.calls.length, before, "display projection causes no release recheck");
+  recheck(tree).props.onClick(); h.render(); tree = await h.respond({ state: "held" });
+  assert.equal(selections.at(-1), true); assert.equal(checkbox(tree).props.disabled, false);
+  checkbox(tree).props.onChange({ target: { checked: false } }); h.render();
+  assert.equal(selections.at(-1), false); assert.equal(h.layers.size, 0);
+  h.dispose();
+});

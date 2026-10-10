@@ -1,0 +1,110 @@
+{
+  "receipt_id": "kfm-layers-controls-20261010",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/app/crop-casma-control.tsx",
+    "apps/site/source/app/earth-engine-display.tsx",
+    "apps/site/source/app/explorer-controls-navigation.tsx",
+    "apps/site/source/app/explorer-controls.css",
+    "apps/site/source/app/governed-water-control.tsx",
+    "apps/site/source/app/layer-workspaces.ts",
+    "apps/site/source/app/page.tsx",
+    "apps/site/source/app/soil-moisture-control.tsx",
+    "apps/site/source/tests/crop-casma-control.test.mjs",
+    "apps/site/source/tests/earth-engine-display-years.test.mjs",
+    "apps/site/source/tests/layer-explorer.test.mjs",
+    "apps/site/source/tests/mobile-compatibility.test.mjs",
+    "apps/site/source/tests/rendered-html.test.mjs"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/app/crop-casma-control.tsx": "sha256:1053c9908c092a4b067871e80e3936ec9572f6c6be8b62e585f51402337aa9ba",
+    "apps/site/source/app/earth-engine-display.tsx": "sha256:b1ac3a05341665f563f8f82dce644fe4cd9c3a153c65a935286c89f4fc184961",
+    "apps/site/source/app/explorer-controls-navigation.tsx": "sha256:5c1a92569a1efe79661981c5c34d8fc0cda0e1076b8d9822618cdf7c1030d006",
+    "apps/site/source/app/explorer-controls.css": "sha256:d5f407c671b374276d98048d7a0059060ae0b191f4ccfe58ad50d26a5b14f07e",
+    "apps/site/source/app/governed-water-control.tsx": "sha256:6a1419a89510f3cf7b5918de7e45de4132748d7c030d949bce278172df118ed2",
+    "apps/site/source/app/layer-workspaces.ts": "sha256:0e99d6fbfd5b219bb4424818ad421f37e67232330d39ac417021b04515dc6eb5",
+    "apps/site/source/app/page.tsx": "sha256:131b2ced24a1a0e414a77c31872a216f2dff93dd67931fe36ef4c1b4cd280215",
+    "apps/site/source/app/soil-moisture-control.tsx": "sha256:e924eca35e734a016a610e47950a34e061be0fbba4e5d06c0f398e2bedcbf5ce",
+    "apps/site/source/tests/crop-casma-control.test.mjs": "sha256:946655595fb165b07d9fde5966d8b1f3ca73dd0b2ea5f0e729a1093523e0304e",
+    "apps/site/source/tests/earth-engine-display-years.test.mjs": "sha256:61ab41833f256875953321b39d3427268b588c6e11d15b6e9d556843e0a7a703",
+    "apps/site/source/tests/layer-explorer.test.mjs": "sha256:616021d4d7bc9c50f5ffd2780456c437b5ec9cf6c841c496ffa2550e25b7a7f4",
+    "apps/site/source/tests/mobile-compatibility.test.mjs": "sha256:bea4146f7fdcca9fe99ff7eb9b603cd54289927cac243096b84017b7103b64e3",
+    "apps/site/source/tests/rendered-html.test.mjs": "sha256:5be9c32691bb32a421358c31b136aff0c4e2b799318d351a174f8f527a6630b8"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "active session; exact backend build unavailable"
+  },
+  "prompt_or_contract": "sha256:8590b493348d7c4a59248dc886c198432cec8fecfcb46fe3e4491d81ea6f773a",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "Sites",
+      "GitHub",
+      "CUA"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repository main@38f74d86be1255d6f357d95651716e527a158df7",
+      "Site v211@4a19c123806417d51fbbc804786cbcf1c8a78fa3",
+      "User requested revamped layers and controls for general explorers, with advanced tools tucked away"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/app/crop-casma-control.tsx": "PROPOSED",
+    "apps/site/source/app/earth-engine-display.tsx": "PROPOSED",
+    "apps/site/source/app/explorer-controls-navigation.tsx": "PROPOSED",
+    "apps/site/source/app/explorer-controls.css": "PROPOSED",
+    "apps/site/source/app/governed-water-control.tsx": "PROPOSED",
+    "apps/site/source/app/layer-workspaces.ts": "PROPOSED",
+    "apps/site/source/app/page.tsx": "PROPOSED",
+    "apps/site/source/app/soil-moisture-control.tsx": "PROPOSED",
+    "apps/site/source/tests/crop-casma-control.test.mjs": "PROPOSED",
+    "apps/site/source/tests/earth-engine-display-years.test.mjs": "PROPOSED",
+    "apps/site/source/tests/layer-explorer.test.mjs": "PROPOSED",
+    "apps/site/source/tests/mobile-compatibility.test.mjs": "PROPOSED",
+    "apps/site/source/tests/rendered-html.test.mjs": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Repository typecheck, production build and full Node suite",
+      "outcome": "PASS",
+      "reason": "tsc --noEmit; npm run build; 954 passing tests after integrating current main."
+    },
+    {
+      "gate": "Same-Site typecheck, production build and full Node suite",
+      "outcome": "PASS",
+      "reason": "tsc --noEmit; build-site.mjs; 909 passing tests. Edits applied independently to each source tree."
+    },
+    {
+      "gate": "Browser and independent design review",
+      "outcome": "PASS",
+      "reason": "Desktop, tablet and mobile review passed. Search, reset, layer toggles, selection retention through Browse/On map/Imagery, counts, primary and advanced navigation, mobile closure and overflow checked. Independent available-model evaluator used; different-provider evaluator unavailable."
+    },
+    {
+      "gate": "Independent human review and merge",
+      "outcome": "SKIPPED",
+      "reason": "Human review pending. No merge of this branch performed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "ADR-0029",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-10T16:04:01.763053Z",
+  "emitter": "Codex",
+  "notes": "Browse, On map and Imagery share searchable topic filters without altering layer selection. Primary controls are Explore, Appearance and Measure; advanced sections remain reachable. Collapsed source rows retain selected/held status and independent source clocks. Same owner-private Site v212 published from 5a8478e93d6d3a4e859f0da9efe1ec892facc0f9; deployment appgdep_6aca61cb14708191a29ab03474c5d738 succeeded. Site and repository histories remain separate; current-main Qwen changes preserved in repository only. No data migration, source admission, activation, access expansion or model service operation. Existing generated and mirror-review receipts unchanged."
+}

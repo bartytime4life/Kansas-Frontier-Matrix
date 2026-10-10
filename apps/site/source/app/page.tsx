@@ -12,6 +12,7 @@ import { resizeMapAfterLayout } from "./cutaway-locator";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { InspectionPanelSwitch, useInspectionPanel } from "./inspection-panel";
 import "./inspection-panel.css";
+import "./explorer-controls.css";
 import Link from "next/link";
 import { LocalMapArchiveLoader } from "./local-map-archive-loader";
 import { BridgeRecordInspector } from "./bridge-record-inspector";
@@ -43,7 +44,7 @@ import { ArchiveDaySlider } from "./archive-day-slider";
 import { SoilMoistureControl, type SoilMoistureEngineContext } from "./soil-moisture-control";
 import { CropCasmaControl } from "./crop-casma-control";
 import { HistoricalTopoControl } from "./historical-topo-control";
-import { DataNotices, LayerSceneControls, RenderQualityControl } from "./map-toolbar";
+import { DataNotices, RenderQualityControl } from "./map-toolbar";
 import { drawWindFlowCanvas, nearestWindFlowSample, windToCompass } from "./wind-arrow-canvas";
 import type { WaterPathAnalysis } from "./water-path-analysis";
 import { drawWaterMotionCanvas } from "./water-motion-canvas";
@@ -55,7 +56,7 @@ import { loadWindFlowFrame } from "./wind-flow-client";
 import { EarthEngineDisplayControls } from "./earth-engine-display";
 import { EarthEngineRasterFallback, type EarthEngineDisplayState } from "./earth-engine-raster-fallback";
 import { useEarthEngineContext } from "./earth-engine-context-client";
-import { earthEngineSetYear } from "./earth-engine-context";
+import { EARTH_ENGINE_CONTEXT_LAYERS } from "./earth-engine-context";
 import { applyProjectionNavigationLimits, GLOBE_VIEWPOINTS, REGIONAL_NAVIGATION_BOUNDS } from "./globe-context";
 import { browserRenderBudget, controlOwnsMapSourceErrors, mapRuntimeErrorCode, readRenderQuality, sampleMapRuntimeHealth, QUALITY_STORAGE_KEY, type MapRuntimeCheckFailure, type RenderQuality } from "./map-performance";
 import { webgl2Available } from "./webgl-support";
@@ -235,6 +236,8 @@ import { DEFAULT_TERRAIN_DEPTH, terrainDepth, compositionDefaults, applyGroundVi
 import { createTerrainDrawing } from "./terrain-drawing-runtime";
 import { TERRAIN_DRAWING_INITIAL_STATUS, type TerrainDrawingConfig, type TerrainDrawingMode, type TerrainDrawingStatus, type TerrainSurfaceMode, type TerrainSurfaceProbe } from "./terrain-drawing";
 import { EXTERNAL_CONTEXT_SOURCES } from "./external-context-sources";
+import { ExplorerControlsNavigation } from "./explorer-controls-navigation";
+import { imageryTopics, layerEntryMatches, selectedCatalogCount, type LayerCatalogEntry, type LayerBrowseView } from "./layer-workspaces";
 import { DISASTER_COVERAGE_HOLDS, LAYER_WORKSPACES, filterOfficialSources, sourceMinimumZoom, sourceNeedsCloserView, type LayerWorkspace } from "./layer-workspaces";
 import {
   applyOfficialContextState,
@@ -618,9 +621,9 @@ const drawerViewLabels: Record<DrawerView, string> = {
 };
 const mapUtilityLabels: Record<MapUtilityView, string> = {
   report: "Report",
-  navigate: "Navigate",
+  navigate: "Explore",
   inspect: "Inspect",
-  scene: "Scene",
+  scene: "Appearance",
   history: "Kansas historic maps",
   connections: "Sources",
   import: "Import",
@@ -1457,7 +1460,7 @@ export default function Home() {
   const [sourceStatusOpen, setSourceStatusOpen] = useState(false);
   const [instrumentOpen, setInstrumentOpen] = useState(false);
   const [leftPanelMode, setLeftPanelMode] = useState<LeftPanelMode>("layers");
-  const [layerCatalogView, setLayerCatalogView] = useState<"local" | "official">("official");
+  const [layerCatalogView, setLayerCatalogView] = useState<LayerBrowseView>("official");
   const [officialSourceQuery, setOfficialSourceQuery] = useState("");
   const [officialCatalogFilter, setOfficialCatalogFilter] = useState<CatalogFilter>("all");
   const [officialWorkspace, setOfficialWorkspace] = useState<LayerWorkspace>("all");
@@ -1559,6 +1562,8 @@ export default function Home() {
   const [qwenSetupOpen, setQwenSetupOpen] = useState(false);
   const [qwenHealthRetryToken, setQwenHealthRetryToken] = useState(0);
   const [qwenQuestion, setQwenQuestion] = useState("");
+  const [cropSelected, setCropSelected] = useState(false);
+  const [reviewedWaterSelected, setReviewedWaterSelected] = useState(false);
   const [soilMapState, setSoilMapState] = useState<SoilMapState>(DEFAULT_SOIL_MAP_STATE);
   const changeSoilMapState = useCallback((next: Partial<SoilMapState>) => setSoilMapState(current => ({ ...current, ...next })), []);
   const [soilMoistureContext, setSoilMoistureContext] = useState<SoilMoistureEngineContext | null>(null);
@@ -1786,10 +1791,19 @@ export default function Home() {
   useEffect(() => { temporalQueryRef.current = temporalQuery; }, [temporalQuery]);
   const visibleOfficialSources = useMemo(() => OFFICIAL_CONTEXT_SOURCES.filter((source) => officialVisibility[source.id]), [officialVisibility]);
   const visibleOfficialCount = visibleExternalContextCount(visibleOfficialSources.length, soilMapState.visible);
-  const selectedEarthEngineCount = Object.entries(earthEngineDisplay.visible).filter(([id, selected]) => selected && earthEngineContext.manifests.some((manifest) =>
-    earthEngineSetYear(manifest) === (id === "ee-3dep" ? 2024 : earthEngineDisplay.years[id as keyof typeof earthEngineDisplay.years])
-    && manifest.layers.some((layer) => layer.id === id && layer.status === "approved"))).length;
-  const selectedMapLayerCount = visibleCount + visibleOfficialCount + selectedEarthEngineCount;
+  const selectedEarthEngineCount = Object.values(earthEngineDisplay.visible).filter(Boolean).length;
+  const catalogEntries: LayerCatalogEntry[] = [
+    ...OFFICIAL_CONTEXT_SOURCES.map(source => ({ id: source.id, title: source.title, keywords: `${source.shortTitle} ${source.organization} ${source.domain}`, selected: officialVisibility[source.id], topics: LAYER_WORKSPACES.filter(([topic]) => topic !== "all" && filterOfficialSources([source], topic, "").length > 0).map(([topic]) => topic) })),
+    { id: "daylight", title: "Daylight & twilight", keywords: "sun solar geometry calculated light", topics: ["terrain", "disaster"], selected: daylightEnabled },
+    { id: "soil", title: "Soil moisture", keywords: "NASA SMAP modeled surface root water", topics: ["water", "land"], selected: soilMapState.visible },
+    { id: "crop", title: "Soil moisture 1 km hybrid", keywords: "USDA NASS Crop-CASMA reviewed numeric cells", topics: ["water", "land"], selected: cropSelected },
+    { id: "reviewed-water", title: "Reviewed water stations", keywords: "USGS governed snapshot evidence", topics: ["water"], selected: reviewedWaterSelected },
+    ...EARTH_ENGINE_CONTEXT_LAYERS.map(layer => ({ id: layer.id, title: layer.title, keywords: `${layer.source} ${layer.attribution}`, topics: imageryTopics(layer.id), selected: Boolean(earthEngineDisplay.visible[layer.id]), imagery: true })),
+    ...LAYER_REGISTRY.map(layer => ({ id: layer.id, title: layer.title, keywords: `${layer.domain} ${layer.description}`, topics: ["places"] as const, selected: Boolean(visibility[layer.id]) })),
+  ];
+  const selectedMapLayerCount = selectedCatalogCount(catalogEntries);
+  const matchingCatalogEntries = catalogEntries.filter(entry => layerEntryMatches(entry, layerCatalogView, officialWorkspace, officialSourceQuery));
+  const shownCatalogIds = new Set(matchingCatalogEntries.map(entry => entry.id));
   const noaaRadarManifestFresh = noaaRadarManifestIsFresh(noaaRadarManifest, noaaRadarClock);
   const noaaRadarRenderable = Boolean(noaaRadarFrameTime && noaaRadarManifestFresh);
   useEffect(() => {
@@ -2416,10 +2430,8 @@ export default function Home() {
       return matchesQuery;
     }).map((layer) => layer.id));
   }, [debouncedLayerQuery]);
-  const listedOfficialSources = useMemo(() => {
-    return filterOfficialSources(OFFICIAL_CONTEXT_SOURCES, officialWorkspace, officialSourceQuery)
-      .filter(source => catalogFilterMatches(officialCatalogFilter, officialCatalogStatuses[source.id]));
-  }, [officialCatalogFilter, officialCatalogStatuses, officialSourceQuery, officialWorkspace]);
+  const listedOfficialSources = filterOfficialSources(OFFICIAL_CONTEXT_SOURCES, officialWorkspace, "")
+    .filter(source => shownCatalogIds.has(source.id) && catalogFilterMatches(officialCatalogFilter, officialCatalogStatuses[source.id]));
   const searchResults = useMemo<GlobalSearchItem[]>(() => {
     const query = debouncedGlobalQuery.trim().toLowerCase();
     if (!query) return [];
@@ -4164,6 +4176,7 @@ export default function Home() {
 
   const openMapUtility = useCallback((nextView: MapUtilityView, returnElement?: HTMLElement | null) => {
     mapUtilityReturnRef.current = returnElement ?? null;
+    setScenePanelOpen(false);
     setMapUtilityView(nextView);
     setMapUtilityOpen(true);
     setCurrentWorkspace("explore");
@@ -4197,15 +4210,8 @@ export default function Home() {
   }, [dismissMapUtilityWithoutFocus, isCompact]);
 
   const openMapSettings = useCallback(() => {
-    openAtlasPanel("layers");
-    window.setTimeout(() => {
-      const settings = leftPanelRef.current?.querySelector<HTMLDetailsElement>("#map-settings");
-      if (!settings) return;
-      settings.open = true;
-      settings.querySelector<HTMLElement>("summary")?.focus();
-      settings.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
-    }, 0);
-  }, [openAtlasPanel, reducedMotion]);
+    openMapUtility("scene");
+  }, [openMapUtility]);
 
   useEffect(() => {
     if (!pendingCatalogTarget || debouncedLayerQuery.trim()) return;
@@ -9065,59 +9071,30 @@ export default function Home() {
           </section>
 
           <div className="layer-panel-controls" hidden={leftPanelMode !== "layers" && leftPanelMode !== "live"}>
-            <nav className="layer-source-switch" aria-label="Layer sources">
-              <button type="button" aria-pressed={layerCatalogView === "official"} data-active={layerCatalogView === "official"} onClick={() => { setLayerCatalogView("official"); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body")?.scrollTo(0, 0); }}>Real data layers <span>{visibleOfficialCount} selected</span></button>
-              <button type="button" aria-pressed={layerCatalogView === "local"} data-active={layerCatalogView === "local"} onClick={() => { setLayerCatalogView("local"); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body")?.scrollTo(0, 0); }}>Earth Engine imagery <span>{selectedEarthEngineCount} selected</span></button>
+            <nav className="layer-source-switch" aria-label="Layer views">
+              {([["official", "Browse"], ["selected", "On map"], ["local", "Imagery"]] as const).map(([id, label]) => <button key={id} type="button" aria-pressed={layerCatalogView === id} data-active={layerCatalogView === id} onClick={() => { setLayerCatalogView(id); setOfficialCatalogFilter("all"); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body")?.scrollTo(0, 0); }}>{label}{id === "selected" && <span>{selectedMapLayerCount}</span>}</button>)}
             </nav>
-            {layerCatalogView === "official" && <nav className="official-workspace-tabs" aria-label="Layer topics">
-              {LAYER_WORKSPACES.map(([id, label]) => <button key={id} type="button" aria-pressed={layerCatalogView === "official" && officialWorkspace === id} onClick={() => { setLayerCatalogView("official"); setOfficialWorkspace(id); setOfficialSourceQuery(""); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body")?.scrollTo(0, 0); }}>{label}</button>)}
-            </nav>}
-            {layerCatalogView === "official" && <label className="catalog-search"><span aria-hidden="true">⌕</span><span className="sr-only">Find a provider source</span><input type="search" value={officialSourceQuery} onChange={(event) => setOfficialSourceQuery(event.target.value)} placeholder="Find a source" /></label>}
-            {layerCatalogView === "official" && <div className={researchStyles.filters} role="group" aria-label="Provider catalog filter">
-              {([["all", "All"], ["selected", "Selected"], ["attention", "Needs attention"]] as const).map(([filter, label]) => <button key={filter} type="button" aria-pressed={officialCatalogFilter === filter} onClick={() => setOfficialCatalogFilter(filter)}>{label}</button>)}
-              <small>{listedOfficialSources.length} sources · filtering keeps map selections</small>
-            </div>}
+            <label className="catalog-search"><span aria-hidden="true">⌕</span><span className="sr-only">Search map layers</span><input type="search" value={officialSourceQuery} onChange={event => setOfficialSourceQuery(event.target.value)} placeholder="Search layers, places, providers…" />{officialSourceQuery && <button type="button" aria-label="Clear layer search" onClick={() => setOfficialSourceQuery("")}>×</button>}</label>
 
           </div>
 
           <div className="layer-catalog-body" hidden={leftPanelMode !== "layers" && leftPanelMode !== "live"}>
+          <div className="layer-browse-context"><label><span className="sr-only">Layer topic</span><select aria-label="Layer topic" value={officialWorkspace} onChange={event => { setOfficialWorkspace(event.target.value as LayerWorkspace); setOfficialCatalogFilter("all"); }}>{LAYER_WORKSPACES.map(([id, title]) => <option key={id} value={id}>{title}</option>)}</select></label><span role="status">{layerCatalogView === "selected" ? `${matchingCatalogEntries.length} of ${selectedMapLayerCount} selected` : `${matchingCatalogEntries.length} ${matchingCatalogEntries.length === 1 ? "layer" : "layers"}`}</span></div>
+          {layerCatalogView === "selected" && <p className="layer-selection-note">Availability is shown on each layer.</p>}
+          {matchingCatalogEntries.length === 0 && <div className="catalog-empty" role="status"><strong>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Start with a layer" : "No matching layers"}</strong><p>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Browse topics and switch on a layer to build your map." : "Try another topic or search. Your map selections are unchanged."}</p><button type="button" onClick={() => { setOfficialSourceQuery(""); setOfficialWorkspace("all"); setOfficialCatalogFilter("all"); if (layerCatalogView === "selected" && selectedMapLayerCount === 0) setLayerCatalogView("official"); }}>{selectedMapLayerCount === 0 && layerCatalogView === "selected" ? "Browse layers" : "Reset filters"}</button></div>}
+
           <div className="layer-map-time" data-historical={!buildYearCurrent || year !== OFFICIAL_CONTEXT_PRESENT_FRAME}>
             <span><span aria-hidden="true">◷</span> Map time · <strong>{temporalScopeLabel}</strong>{!buildYearCurrent ? " · build year differs from UTC year" : ""}{withheldOfficialCount > 0 ? ` · ${withheldOfficialCount} current source${withheldOfficialCount === 1 ? "" : "s"} held` : ""}</span>
             <button type="button" onClick={() => { setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); dismissMapUtilityWithoutFocus(); announce(`Opened the map timeline at ${temporalScopeLabel}`); }}>Change time</button>
           </div>
-          {layerCatalogView === "official" && <p className="layer-journey-intro">Choose source backed layers and inspect their records. Each source keeps its own observation time and limits.</p>}
-          {layerCatalogView === "official" && <p className="layer-journey-intro"><Link href="/knowledge">Search steward-reviewed Kansas knowledge ↗</Link></p>}
-          {composedSurfaceCount > 1 && <p className="layer-balance-note">Multiple surfaces are active. The map balances their opacity so boundaries and points stay readable; each slider keeps your selected value.</p>}
-          {mapSignals.length > 0 && <section className="map-signal-panel" aria-label="Patterns supported by selected data"><strong>Signals in selected data</strong>{mapSignals.map((signal) => <article key={`${signal.kind}:${signal.title}`}><span>{signal.kind === "forecast" ? "PROVIDER FORECAST" : signal.kind === "observed" ? "OBSERVED" : "CATALOG TIME"}</span><b>{signal.title}</b><small>{signal.detail}</small></article>)}</section>}
-          <section className="official-context-catalog" id="official-context-catalog" tabIndex={-1} hidden={layerCatalogView !== "official"} aria-labelledby="official-context-title">
-            <header><div><h2 id="official-context-title">Real data layers</h2><small className="official-context-registry-summary">{visibleOfficialCount} selected · {officialReadyCount} settled</small></div></header>
-            {officialWorkspace === "disaster" && <section className="official-workspace-ledger" aria-label="Disaster source coverage">
-              <strong>Hazard source coverage</strong><p>Connected layers below keep independent visibility, opacity, source time, and quality settings. A missing feed is never an all-clear.</p>
-              <details><summary>{DISASTER_COVERAGE_HOLDS.length} source families held for verification</summary>{DISASTER_COVERAGE_HOLDS.map(item => <p key={item.title}><b>{item.title} · HELD</b><br />{item.detail} <a href={item.sourceUrl} target="_blank" rel="noreferrer">Source ↗</a></p>)}</details>
-            </section>}
-            {officialWorkspace === "groundwater" && <section className="official-workspace-ledger" aria-label="Aquifers and groundwater guide"><h3>Beneath Kansas</h3><p>Start with an aquifer extent, then select one High Plains map to explore depth to water, saturated thickness, or water-table elevation. Each overlay has independent opacity. Click a region for its range, or a monitoring point for its KGS well record.</p><p>High Plains maps: <strong>2022–2024</strong>. Monitoring locations: <strong>2026</strong>. Snapshots checked October 4, 2026. Overlapping aquifers may occupy different depths. These maps do not calculate underground flow.</p><button type="button" onClick={() => { setOfficialContextVisible("kgs-aquifer-high-plains", true); mapRef.current?.fitBounds([[-102.06, 36.99], [-97.1, 40.01]], { padding: 70, duration: reducedMotion ? 0 : 700 }); }}>Explore the High Plains aquifer</button><a href="https://www.kgs.ku.edu/HighPlains/HPA_Atlas/index.html" target="_blank" rel="noreferrer">KGS High Plains Atlas ↗</a></section>}
-            {officialWorkspace === "transport" && <p className="official-workspace-land-note">Kansas roads and active or abandoned railroad references from KDOT. Each overlay has its own visibility and opacity, over your chosen basemap. Source designations are not live traffic, train movement, public access, or historical reconstruction.</p>}
-            {officialWorkspace === "land" && <p className="official-workspace-land-note">BLM PLSS images are provider-current Kansas survey reference; inspect identifiers at the map center from a layer’s Options. The separate MLRS oil-and-gas lease overlays show only authorized or closed Kansas cases with direct PLSS match scores 0–3. They omit generalized and unmapped cases and are not exact lease boundaries, ownership, drilling, or production. <a href="https://glorecords.blm.gov/" target="_blank" rel="noreferrer">Search official GLO patents, plats, and field notes ↗</a> Reviewed GLO overlays and KFM land releases remain pending.</p>}
-            {officialWorkspace === "transport" && <button className="map-catalog-launch" type="button" onClick={(event) => openMapUtility("compare", event.currentTarget)}>Local road &amp; bridge map archive</button>}
-            {officialWorkspace === "transport" && <p className="layer-journey-intro">Bridge age, historic designation, and recorded closure are separate filters. Historical roads are KDOT’s 1918 map, not proof of present abandonment. A verified statewide closed-road history and demolished-bridge inventory are not connected yet; no missing route is inferred closed.</p>}
-            <p>{!buildYearCurrent ? `Current sources are held because this site was built for ${OFFICIAL_CONTEXT_PRESENT_FRAME}. NASA’s fixed lightning climatology remains available as historical context.` : year === OFFICIAL_CONTEXT_PRESENT_FRAME ? "Operational sources have their own observation clocks. NASA lightning climatology is a separate 1995–2014 historical composite. Both are map context only." : `Operational sources selected for the map are held at ${temporalScopeLabel}; choose Present to display them. NASA’s fixed climate field is independent of this atlas year.`}</p>
-            <div className="official-context-pulse" aria-label="Live source connection status">
-              <div><span><small>RETURNED FEATURES</small><strong>{officialFeatureCount.toLocaleString("en-US")}</strong></span><span><small>SELECTED SOURCES</small><strong>{officialReadyCount}/{visibleOfficialCount} settled</strong></span><span><small>LATEST RETRIEVAL</small><strong>{officialLatestRetrievedAt ? `${new Date(officialLatestRetrievedAt).toLocaleString("en-US", { timeZone: "UTC", year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "2-digit", hour12: false })} UTC` : "Not yet"}</strong></span></div>
-              <nav aria-label="Official data actions"><button type="button" disabled={!buildYearCurrent || officialRefreshPlan.count === 0 || officialLoadingCount > 0} onClick={refreshVisibleOfficialContext}>{!buildYearCurrent ? "Rebuild required" : officialRefreshPlan.reason === "historical" ? `Held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : officialLoadingCount > 0 ? "Refreshing…" : `Refresh ${officialRefreshPlan.count} selected`}</button><button type="button" disabled={visibleOfficialCount === 0} onClick={hideAllOfficialContext}>Hide all</button></nav>
-            </div>
-            <section className="daylight-layer-card" hidden={officialWorkspace !== "all"} aria-label="Daylight and twilight controls">
-              <header><div><strong>Daylight &amp; twilight</strong><small>Calculated solar geometry · map context</small></div><label className="visibility-switch"><input type="checkbox" checked={daylightEnabled} aria-label={daylightEnabled ? "Hide Daylight and twilight" : "Show Daylight and twilight"} onChange={(event) => toggleDaylightVisibility(event.target.checked)} /><span aria-hidden="true" /></label></header>
-              <p>Estimated Sun position and twilight boundaries. This is not measured ground-level brightness.</p>
-              <div className="daylight-date-range" aria-label="Kansas Central date range">
-                <label>From<input type="date" aria-label="Daylight loop start date" value={daylightDay} max={daylightToday} onChange={(event) => selectDaylightStart(event.target.value)} /></label>
-                <label>Through<input type="date" aria-label="Daylight loop end date" value={daylightThroughDay} min={daylightDay} max={daylightToday} onChange={(event) => selectDaylightThrough(event.target.value)} /></label>
-              </div>
-              <div className="daylight-clock-row"><button type="button" disabled={!daylightEnabled || reducedMotion} onClick={() => setDaylightPlayback(!daylightPlaying)}>{reducedMotion ? "Paused · reduced motion" : daylightPlaying ? "Pause" : "Resume"}</button><output aria-live="off" aria-label={`Kansas Central ${daylightDisplayTime.central}; ${daylightDisplayTime.utc}`}><strong>{daylightDisplayTime.central}</strong><small>{daylightDisplayTime.utc}</small></output></div>
-              <label className="daylight-scrubber"><span className="sr-only">Solar time from {daylightDay} through {daylightThroughDay}, Kansas Central time</span><input type="range" min="0" max="10000" step="1" value={daylightSliderValue} disabled={!daylightEnabled} aria-valuetext={`${daylightDisplayTime.central}; ${daylightDisplayTime.utc}`} onChange={(event) => seekDaylight(Number(event.target.value) / 10_000)} /><span><span>{daylightDay} · midnight</span><span>{daylightRangeSummary}</span><span>{daylightThroughDay} · end</span></span></label>
-              <small className="daylight-band-key"><i aria-hidden="true" /> Night <i aria-hidden="true" /> Astronomical twilight <i aria-hidden="true" /> Nautical twilight <i aria-hidden="true" /> Civil twilight · apparent sunrise/sunset</small>
-            </section>
-            {listedOfficialSources.length === 0 && <p className="layer-search-empty" role="status">No sources match these catalog filters. <button type="button" onClick={() => setOfficialSourceQuery("")}>Clear search</button></p>}
-            <div className="official-context-list"><div hidden={officialWorkspace !== "all"}><GovernedWaterControl mapRef={mapRef} styleReady={styleReady} /><SoilMoistureControl mapRef={mapRef} styleReady={styleReady} state={soilMapState} onChange={changeSoilMapState} onEngineContextChange={setSoilMoistureContext} /><CropCasmaControl mapRef={mapRef} styleReady={styleReady} projection={projection} /></div>{listedOfficialSources.map((source) => {
+
+
+
+
+          <section className="official-context-catalog" id="official-context-catalog" tabIndex={-1} hidden={layerCatalogView === "local"} aria-labelledby="official-context-title">
+            <h2 id="official-context-title" className="sr-only">Map layers</h2>
+
+            <div className="official-context-list">{filterOfficialSources(OFFICIAL_CONTEXT_SOURCES, "all", "").map((source) => {
               const state = officialStates[source.id];
               const heldAtFrame = officialVisibility[source.id] && !effectiveOfficialVisibility[source.id];
               const minimumZoom = sourceMinimumZoom(source);
@@ -9126,10 +9103,17 @@ export default function Home() {
               const riverArchiveSpan = streamflowCoverage?.station === streamflowSelectedStationId && !streamflowCoverage.partial ? streamflowCoverage.continuous : null;
               const riverArchiveMinDay = riverArchiveSpan?.start.slice(0, 10);
               const riverArchiveMaxDay = riverArchiveSpan ? [currentUtcDay(), riverArchiveSpan.end.slice(0, 10)].sort()[0] : undefined;
-              return <article key={source.id} className="official-context-row" style={{ borderInlineStart: "2px solid #8d4e37" }} data-state={state} data-visible={officialVisibility[source.id]} data-held={heldAtFrame}>
-                    <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.shortTitle}</strong><small>{source.organization}{source.kind === "HISTORICAL_RASTER" ? " · historical composite" : ""}{source.id === "noaa-goes-geocolor" && noaaSatelliteManifest ? ` · ${noaaSatelliteManifest.product === "visible" ? "GOES visible fallback" : "GeoColor"}` : ""} · {catalogDisplayStatus(officialCatalogStatuses[source.id])}</small></div></div>
-                <span className={researchStyles.status}>Source time: {officialArchiveDays[source.id as OfficialContextFeedId] ? `${officialArchiveDays[source.id as OfficialContextFeedId]} UTC` : source.freshness}</span>
-                {source.id === "nws-radar" && <div className="noaa-radar-launch" aria-label="NOAA radar playback">
+              return <article key={source.id} hidden={!listedOfficialSources.some(item => item.id === source.id)} className="official-context-row" data-state={state} data-visible={officialVisibility[source.id]} data-held={heldAtFrame}>
+                    <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={officialVisibility[source.id]} aria-label={`${officialVisibility[source.id] ? "Hide" : "Show"} ${source.title}`} onChange={(event) => setOfficialContextVisible(source.id, event.target.checked)} /><span aria-hidden="true" /></label><i style={{ "--swatch": source.color } as React.CSSProperties} /><div><strong>{source.title}</strong><small>{source.organization}{source.kind === "HISTORICAL_RASTER" ? " · historical composite" : ""}{source.id === "noaa-goes-geocolor" && noaaSatelliteManifest ? ` · ${noaaSatelliteManifest.product === "visible" ? "GOES visible fallback" : "GeoColor"}` : ""} · {catalogDisplayStatus(officialCatalogStatuses[source.id])}</small></div></div>
+                <span hidden={!officialVisibility[source.id]} className={researchStyles.status}>Source time: {officialArchiveDays[source.id as OfficialContextFeedId] ? `${officialArchiveDays[source.id as OfficialContextFeedId]} UTC` : source.freshness}</span>
+                {(needsCloserView || needsFlatMap || heldAtFrame) && <div className="reference-layer-guidance">
+                  <small>{heldAtFrame ? "This source is held at the selected map year." : needsFlatMap ? "This regional image layer requires the flat map." : `Visible at zoom ${minimumZoom}+ · your view ${view.zoom.toFixed(1)}. Source dates vary.`}</small>
+                  {heldAtFrame && buildYearCurrent && <button type="button" onClick={() => { setPlaying(false); commitTemporalFrame(OFFICIAL_CONTEXT_PRESENT_FRAME, "Returned to Present; each layer retains its own source dates"); }}>Use Present</button>}
+                  {needsFlatMap && <button type="button" onClick={() => activateMapRepresentation("2d")}>Use flat map</button>}
+                  {needsCloserView && <button type="button" onClick={() => { const map = mapRef.current; if (!map) return; const center = map.getCenter(); const inKansasView = center.lng >= -102.06 && center.lng <= -94.58 && center.lat >= 36.99 && center.lat <= 40.01; map.easeTo({ zoom: minimumZoom + 0.5, ...(inKansasView ? {} : { center: [-98.3, 38.5] as [number, number] }), duration: reducedMotion ? 0 : 600 }); announce(`Zooming to ${source.shortTitle}; provider coverage may still contain gaps`); }}>Zoom to layer</button>}
+                </div>}
+                {officialVisibility[source.id] && source.kind !== "MODEL_CANVAS" && <label className="opacity-control"><span>Opacity <b>{Math.round(officialOpacity[source.id] * 100)}%</b></span><input aria-label={`${source.shortTitle} opacity`} type="range" min="0" max="100" value={Math.round(officialOpacity[source.id] * 100)} onChange={(event) => setOfficialContextOpacity(source.id, Number(event.target.value) / 100)} /></label>}
+                <details className="official-context-options"><summary>Details &amp; controls</summary><div className="official-context-option-body">                {source.id === "nws-radar" && <div className="noaa-radar-launch" aria-label="NOAA radar playback">
                   <strong>Watch radar over time</strong>
                   <p>Live nowCOAST scans use their exact observation times. Choose an older UTC day to watch NOAA/NWS-derived archive mosaics in Event Observatory.</p>
                   <div>
@@ -9143,14 +9127,8 @@ export default function Home() {
                 </div>}
                 {(source.id === "nasa-firms-active-fire" || source.id === "nasa-gibs-fire-points") && <p className="thermal-context-note"><strong>NASA THERMAL CONTEXT · NOT KFM EVIDENCE</strong><span>{source.id === "nasa-firms-active-fire" ? "Provider-default daily raster; its exact UTC image date is unresolved." : "One checked UTC image day; each returned point keeps its own acquisition time."} Thermal anomalies do not confirm a wildfire incident, and blank coverage is not an all-clear.</span></p>}
                 {source.id === "nasa-gibs-fire-points" && <label className="map-visual-control map-fire-visual-control">Detection display<select aria-label="Fire detection display" value={fireVisualMode} onChange={event => setFireVisualMode(event.target.value as "exact" | "soft")}><option value="exact">Exact point halos</option><option value="soft">Soft visual halos</option></select><small>Visual halos do not change selectable points, acquisition times, or report records. NASA display context · not KFM evidence.</small></label>}
-                {(needsCloserView || needsFlatMap || heldAtFrame || source.minDisplayZoom !== undefined) && <div className="reference-layer-guidance">
-                  <small>{heldAtFrame ? "This source is held at the selected map year." : needsFlatMap ? "This regional image layer requires the flat map." : `Visible at zoom ${minimumZoom}+ · your view ${view.zoom.toFixed(1)}. Source dates vary.`}</small>
-                  {heldAtFrame && buildYearCurrent && <button type="button" onClick={() => { setPlaying(false); commitTemporalFrame(OFFICIAL_CONTEXT_PRESENT_FRAME, "Returned to Present; each layer retains its own source dates"); }}>Use Present</button>}
-                  {needsFlatMap && <button type="button" onClick={() => activateMapRepresentation("2d")}>Use flat map</button>}
-                  {needsCloserView && <button type="button" onClick={() => { const map = mapRef.current; if (!map) return; const center = map.getCenter(); const inKansasView = center.lng >= -102.06 && center.lng <= -94.58 && center.lat >= 36.99 && center.lat <= 40.01; map.easeTo({ zoom: minimumZoom + 0.5, ...(inKansasView ? {} : { center: [-98.3, 38.5] as [number, number] }), duration: reducedMotion ? 0 : 600 }); announce(`Zooming to ${source.shortTitle}; provider coverage may still contain gaps`); }}>Zoom to layer</button>}
-                </div>}
-                <details className="official-context-options"><summary>Options</summary><div className="official-context-option-body">
-                {source.kind !== "MODEL_CANVAS" && <label className="opacity-control"><span>Opacity <b>{Math.round(officialOpacity[source.id] * 100)}%</b></span><input aria-label={`${source.shortTitle} opacity`} type="range" min="0" max="100" value={Math.round(officialOpacity[source.id] * 100)} onChange={(event) => setOfficialContextOpacity(source.id, Number(event.target.value) / 100)} /></label>}
+
+
                 {source.legend && <p className="reference-layer-legend"><i style={{ backgroundColor: source.color }} aria-hidden="true" />{source.legend}</p>}
                 {isBridgeLayer(source.id) && <BridgeRecordInspector layer={source.id} mapRef={mapRef} enabled={Boolean(effectiveOfficialVisibility[source.id]) && projection !== "globe" && styleReady} reducedMotion={reducedMotion} />}
                 {isBlmPlssLayer(source.id) && <BlmPlssInspector layer={source.id} mapRef={mapRef} enabled={Boolean(effectiveOfficialVisibility[source.id]) && projection !== "globe" && styleReady} />}
@@ -9222,35 +9200,53 @@ export default function Home() {
                 <div className="official-context-actions"><button type="button" onClick={() => openSourceStatus(mapContainerRef.current)}>Source details & quality</button>{needsCloserView && <button type="button" onClick={() => { mapRef.current?.easeTo({ zoom: minimumZoom + 0.25, duration: motionDuration(600) }); announce(`${source.shortTitle}: zoomed in to its display range`); }}>Zoom to view</button>}{["usgs-streamflow", "noaa-hms-smoke", "raspberry-shake-stations", "usgs-earthquakes", "nws-radar", "census-counties"].includes(source.id) && <Link href={`/observatory?layers=${({ "usgs-streamflow": "river", "noaa-hms-smoke": "smoke", "raspberry-shake-stations": "shake", "usgs-earthquakes": "earthquakes", "nws-radar": "radar", "census-counties": "counties" } as Record<string,string>)[source.id]},counties`}>Explore dated records ↗</Link>}</div>
                 </div></details>
               </article>;
-            })}{listedOfficialSources.length === 0 && <div className="catalog-empty"><strong>No sources found</strong><p>Try a provider or source name.</p></div>}</div>
+            })}</div>
+            <section className="daylight-layer-card" hidden={!shownCatalogIds.has("daylight")} aria-label="Daylight and twilight controls">
+              <header><div><strong>Daylight &amp; twilight</strong><small>Calculated solar geometry · {daylightEnabled ? styleReady ? "Selected" : "Selected · map loading" : "Off"}</small></div><label className="visibility-switch"><input type="checkbox" checked={daylightEnabled} aria-label={daylightEnabled ? "Hide Daylight and twilight" : "Show Daylight and twilight"} onChange={(event) => toggleDaylightVisibility(event.target.checked)} /><span aria-hidden="true" /></label></header>
+              <details className="specialty-layer-details"><summary>Dates, playback &amp; details</summary><div className="official-context-option-body">
+              <p>Estimated Sun position and twilight boundaries. This is not measured ground-level brightness.</p>
+              <div className="daylight-date-range" aria-label="Kansas Central date range">
+                <label>From<input type="date" aria-label="Daylight loop start date" value={daylightDay} max={daylightToday} onChange={(event) => selectDaylightStart(event.target.value)} /></label>
+                <label>Through<input type="date" aria-label="Daylight loop end date" value={daylightThroughDay} min={daylightDay} max={daylightToday} onChange={(event) => selectDaylightThrough(event.target.value)} /></label>
+              </div>
+              <div className="daylight-clock-row"><button type="button" disabled={!daylightEnabled || reducedMotion} onClick={() => setDaylightPlayback(!daylightPlaying)}>{reducedMotion ? "Paused · reduced motion" : daylightPlaying ? "Pause" : "Resume"}</button><output aria-live="off" aria-label={`Kansas Central ${daylightDisplayTime.central}; ${daylightDisplayTime.utc}`}><strong>{daylightDisplayTime.central}</strong><small>{daylightDisplayTime.utc}</small></output></div>
+              <label className="daylight-scrubber"><span className="sr-only">Solar time from {daylightDay} through {daylightThroughDay}, Kansas Central time</span><input type="range" min="0" max="10000" step="1" value={daylightSliderValue} disabled={!daylightEnabled} aria-valuetext={`${daylightDisplayTime.central}; ${daylightDisplayTime.utc}`} onChange={(event) => seekDaylight(Number(event.target.value) / 10_000)} /><span><span>{daylightDay} · midnight</span><span>{daylightRangeSummary}</span><span>{daylightThroughDay} · end</span></span></label>
+              <small className="daylight-band-key"><i aria-hidden="true" /> Night <i aria-hidden="true" /> Astronomical twilight <i aria-hidden="true" /> Nautical twilight <i aria-hidden="true" /> Civil twilight · apparent sunrise/sunset</small>
+              </div></details>
+            </section>
+            <div hidden={!shownCatalogIds.has("reviewed-water")}><GovernedWaterControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedWaterSelected} /></div>
+            <div hidden={!shownCatalogIds.has("soil")}><SoilMoistureControl mapRef={mapRef} styleReady={styleReady} state={soilMapState} onChange={changeSoilMapState} onEngineContextChange={setSoilMoistureContext} /></div>
+            <div hidden={!shownCatalogIds.has("crop")}><CropCasmaControl mapRef={mapRef} styleReady={styleReady} projection={projection} onSelectionChange={setCropSelected} /></div>
+            {LAYER_REGISTRY.map(layer => <article key={layer.id} hidden={!shownCatalogIds.has(layer.id)} className="official-context-row" data-visible={visibility[layer.id]}><div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={visibility[layer.id]} aria-label={`${visibility[layer.id] ? "Hide" : "Show"} ${layer.title}`} onChange={event => setVisibility(current => ({ ...current, [layer.id]: event.target.checked }))} /><span aria-hidden="true" /></label><i style={{ "--swatch": layer.legend[0]?.color ?? "#8bbeb8" } as React.CSSProperties} /><div><strong>{layer.title}</strong><small>{layer.sourceId} · {visibility[layer.id] ? sourceStates[layer.id] : "Off"}</small></div></div><details className="specialty-layer-details"><summary>Source details</summary><div className="official-context-option-body"><p>{layer.description}</p><button type="button" onClick={() => zoomToLayer(layer)}>Fit layer</button><button type="button" onClick={() => inspectSourceConnection(layer)}>Inspect records</button></div></details></article>)}
+            <details className="layer-source-diagnostics"><summary>Source status &amp; coverage</summary>
+{composedSurfaceCount > 1 && <p className="layer-balance-note">Multiple surfaces are active. The map balances their opacity so boundaries and points stay readable; each slider keeps your selected value.</p>}
+          {mapSignals.length > 0 && <section className="map-signal-panel" aria-label="Patterns supported by selected data"><strong>Signals in selected data</strong>{mapSignals.map((signal) => <article key={`${signal.kind}:${signal.title}`}><span>{signal.kind === "forecast" ? "PROVIDER FORECAST" : signal.kind === "observed" ? "OBSERVED" : "CATALOG TIME"}</span><b>{signal.title}</b><small>{signal.detail}</small></article>)}</section>}
+            {officialWorkspace === "disaster" && <section className="official-workspace-ledger" aria-label="Disaster source coverage">
+              <strong>Hazard source coverage</strong><p>Connected layers below keep independent visibility, opacity, source time, and quality settings. A missing feed is never an all-clear.</p>
+              <details><summary>{DISASTER_COVERAGE_HOLDS.length} source families held for verification</summary>{DISASTER_COVERAGE_HOLDS.map(item => <p key={item.title}><b>{item.title} · HELD</b><br />{item.detail} <a href={item.sourceUrl} target="_blank" rel="noreferrer">Source ↗</a></p>)}</details>
+            </section>}
+            {officialWorkspace === "groundwater" && <section className="official-workspace-ledger" aria-label="Aquifers and groundwater guide"><h3>Beneath Kansas</h3><p>Start with an aquifer extent, then select one High Plains map to explore depth to water, saturated thickness, or water-table elevation. Each overlay has independent opacity. Click a region for its range, or a monitoring point for its KGS well record.</p><p>High Plains maps: <strong>2022–2024</strong>. Monitoring locations: <strong>2026</strong>. Snapshots checked October 4, 2026. Overlapping aquifers may occupy different depths. These maps do not calculate underground flow.</p><button type="button" onClick={() => { setOfficialContextVisible("kgs-aquifer-high-plains", true); mapRef.current?.fitBounds([[-102.06, 36.99], [-97.1, 40.01]], { padding: 70, duration: reducedMotion ? 0 : 700 }); }}>Explore the High Plains aquifer</button><a href="https://www.kgs.ku.edu/HighPlains/HPA_Atlas/index.html" target="_blank" rel="noreferrer">KGS High Plains Atlas ↗</a></section>}
+            {officialWorkspace === "transport" && <p className="official-workspace-land-note">Kansas roads and active or abandoned railroad references from KDOT. Each overlay has its own visibility and opacity, over your chosen basemap. Source designations are not live traffic, train movement, public access, or historical reconstruction.</p>}
+            {officialWorkspace === "land" && <p className="official-workspace-land-note">BLM PLSS images are provider-current Kansas survey reference; inspect identifiers at the map center from a layer’s Options. The separate MLRS oil-and-gas lease overlays show only authorized or closed Kansas cases with direct PLSS match scores 0–3. They omit generalized and unmapped cases and are not exact lease boundaries, ownership, drilling, or production. <a href="https://glorecords.blm.gov/" target="_blank" rel="noreferrer">Search official GLO patents, plats, and field notes ↗</a> Reviewed GLO overlays and KFM land releases remain pending.</p>}
+            {officialWorkspace === "transport" && <button className="map-catalog-launch" type="button" onClick={(event) => openMapUtility("compare", event.currentTarget)}>Local road &amp; bridge map archive</button>}
+            {officialWorkspace === "transport" && <p className="layer-journey-intro">Bridge age, historic designation, and recorded closure are separate filters. Historical roads are KDOT’s 1918 map, not proof of present abandonment. A verified statewide closed-road history and demolished-bridge inventory are not connected yet; no missing route is inferred closed.</p>}
+            <p>{!buildYearCurrent ? `Current sources are held because this site was built for ${OFFICIAL_CONTEXT_PRESENT_FRAME}. NASA’s fixed lightning climatology remains available as historical context.` : year === OFFICIAL_CONTEXT_PRESENT_FRAME ? "Operational sources have their own observation clocks. NASA lightning climatology is a separate 1995–2014 historical composite. Both are map context only." : `Operational sources selected for the map are held at ${temporalScopeLabel}; choose Present to display them. NASA’s fixed climate field is independent of this atlas year.`}</p>
+            <div className="official-context-pulse" aria-label="Live source connection status">
+              <div><span><small>RETURNED FEATURES</small><strong>{officialFeatureCount.toLocaleString("en-US")}</strong></span><span><small>SELECTED SOURCES</small><strong>{officialReadyCount}/{visibleOfficialCount} settled</strong></span><span><small>LATEST RETRIEVAL</small><strong>{officialLatestRetrievedAt ? `${new Date(officialLatestRetrievedAt).toLocaleString("en-US", { timeZone: "UTC", year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "2-digit", hour12: false })} UTC` : "Not yet"}</strong></span></div>
+              <nav aria-label="Official data actions"><button type="button" disabled={!buildYearCurrent || officialRefreshPlan.count === 0 || officialLoadingCount > 0} onClick={refreshVisibleOfficialContext}>{!buildYearCurrent ? "Rebuild required" : officialRefreshPlan.reason === "historical" ? `Held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : officialLoadingCount > 0 ? "Refreshing…" : `Refresh ${officialRefreshPlan.count} selected`}</button><button type="button" disabled={visibleOfficialCount === 0} onClick={hideAllOfficialContext}>Hide all</button></nav>
+            </div>
+            </details>
             <footer><code>EXTERNAL SOURCE → FIXED ADAPTER → MAP DISPLAY</code><span>Evidence held at admission, release, and EvidenceBundle gates · <a href="https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3393" target="_blank" rel="noreferrer">governance issue #3393 ↗</a></span></footer>
           </section>
 
-          <div className="local-layer-settings" hidden={layerCatalogView !== "local"}>
+          <div className="local-layer-settings" hidden={layerCatalogView === "official" || layerCatalogView === "selected" && !matchingCatalogEntries.some(entry => entry.imagery)}>
             <p className="layer-journey-intro">Reviewed Kansas imagery appears here when an approved display set is installed. Each layer has its own visibility, opacity, source period, and limits. <Link href="/earth-engine">Explore all source recipes ↗</Link></p>
             <section className="reviewed-imagery-section" aria-label="Earth Engine imagery layers">
-              <EarthEngineDisplayControls map={styleReady ? mapRef.current : null} mapYear={temporalMode === "snapshot" ? year : -1} manifests={earthEngineContext.manifests} loading={earthEngineContext.loading} error={earthEngineContext.error} rendererState={runtime.kind} onDisplayChange={setEarthEngineDisplay} onReload={earthEngineContext.reload} />
+              <EarthEngineDisplayControls catalogView={layerCatalogView} catalogTopic={officialWorkspace} catalogQuery={officialSourceQuery} map={styleReady ? mapRef.current : null} mapYear={temporalMode === "snapshot" ? year : -1} manifests={earthEngineContext.manifests} loading={earthEngineContext.loading} error={earthEngineContext.error} rendererState={runtime.kind} onDisplayChange={setEarthEngineDisplay} onReload={earthEngineContext.reload} />
             </section>
           </div>
-            <details className="map-layer-advanced" id="map-settings">
-              <summary>Tune this view</summary>
-              <div className="map-layer-advanced-body">
-                <p>Choose the basemap and display settings. Provider sources retain their own observation times and evidence limits.</p>
-                <details className="layer-scene-entry">
-                  <summary>Terrain &amp; 3D appearance <span>{scenePreset === "elevation-3d" ? terrainState === "READY" ? "On" : terrainState === "ERROR" ? "Needs attention" : "Loading" : "Off"}</span></summary>
-                  <LayerSceneControls active={scenePreset === "elevation-3d"} selectedLook={scenePreset !== "elevation-3d" ? null : structures3DEnabled ? "buildings" : basemap === "topo" ? "topographic" : basemap === "imagery" ? "natural" : null} terrainProvider={terrainProvider} state={terrainState} exaggeration={verticalExaggeration} lighting={atmospherePreset} azimuth={lightAzimuth} heightOverlay={topographicOverlay} onPreset={applyTerrainLook} onTerrainProvider={chooseTerrainProvider} on2D={() => activateMapRepresentation("2d")} onExaggeration={value => { verticalExaggerationRef.current = value; setVerticalExaggeration(value); }} onLighting={value => { atmospherePresetRef.current = value; setAtmospherePreset(value); }} onAzimuth={value => { lightAzimuthRef.current = value; setLightAzimuth(value); }} onHeight={toggleTopographicHeightOverlay} onRetry={retryTerrain} />
-                  <SceneEffectsControls readings={sceneReadings} view={sceneView} terrain={{ scale: verticalExaggeration, available: runtime.kind === "ready" && terrainState !== "ERROR", onScale: changeTerrainDepth, onGroundView: exploreGround }} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
-                </details>
-                <div className="map-control-group"><header><strong>Rendering quality</strong><span>Applies to this map</span></header><RenderQualityControl value={renderQuality} onChange={chooseRenderQuality} /></div>
-          <div className="basemap-control">
-            <label><span>Basemap style</span><select value={basemap} onChange={(event) => setBasemap(event.target.value as BasemapKey)}>{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title} · {BASEMAPS[key].note}</option>)}</select></label>
-          </div>
+            <nav className="layer-task-links" aria-label="Related map tools"><button type="button" onClick={event => openMapUtility("scene", event.currentTarget)}><span>Appearance</span><small>Basemap, terrain &amp; lighting</small><b aria-hidden="true">↗</b></button><button type="button" onClick={event => openMapUtility("connections", event.currentTarget)}><span>Source status</span><small>Connections &amp; coverage</small><b aria-hidden="true">↗</b></button></nav>
 
-                <BasemapCacheControls />
-                <button className="map-catalog-launch" type="button" onClick={(event) => openMapUtility("import", event.currentTarget)}>Preview local KML or GeoJSON</button>
-                <div className="panel-footer-actions"><button type="button" onClick={resetExplorer}>Reset map</button><Link href="/earth-engine">Earth Engine datasets</Link><Link href="/data">Propose a dataset</Link></div>
-              </div>
-            </details>
           </div>
           <details className="layer-panel-explore" hidden={leftPanelMode !== "layers" && leftPanelMode !== "live"}>
             <summary>Explore <span>Other map tools</span></summary>
@@ -9462,13 +9458,7 @@ export default function Home() {
               <div><p className="panel-kicker">MAP · {mapUtilityLabels[mapUtilityView].toUpperCase()}</p><h2 id="map-utility-title">{mapUtilityLabels[mapUtilityView]}</h2><span>{mapUtilityDescriptions[mapUtilityView]}</span></div>
               <button className="icon-close" type="button" onClick={closeMapUtility} aria-label={`Close ${mapUtilityLabels[mapUtilityView]}`}>×</button>
             </header>
-            <nav className="map-utility-tabs" aria-label="Map control sections">
-              {(["navigate", "inspect", "scene", "measure", "report", "export"] as const).map((viewId) => <button key={viewId} type="button" aria-pressed={mapUtilityView === viewId} onClick={() => {
-                setMapUtilityView(viewId);
-                if (viewId === "report") setReportGeneratedAt(new Date().toISOString());
-                if (viewId === "export") setExportGeneratedAt(new Date().toISOString());
-              }}>{mapUtilityLabels[viewId]}</button>)}
-            </nav>
+            <ExplorerControlsNavigation value={mapUtilityView} onChange={viewId => { setMapUtilityView(viewId); if (viewId === "report") setReportGeneratedAt(new Date().toISOString()); if (viewId === "export") setExportGeneratedAt(new Date().toISOString()); }} />
             <div className="map-utility-scroll">
               {mapUtilityView === "report" && <section id="map-utility-view-report" role="region" aria-labelledby="map-utility-title" className="map-utility-section report-builder-section">
                 <div className="map-utility-section-heading"><span>CUSTOM REPORT</span><h3>Build from the map you are using</h3><p>Filters apply immediately. The report uses current Explorer records and keeps evidence states, source roles, attribution, uncertainty, and time visible.</p></div>
@@ -9531,13 +9521,7 @@ export default function Home() {
               </section>}
 
               {mapUtilityView === "navigate" && <section id="map-utility-view-navigate" role="region" aria-labelledby="map-utility-title" className="map-utility-section">
-                <div className="map-utility-section-heading"><span>NAVIGATE</span><h3>Camera, coordinates + private location</h3><p>MapLibre camera actions change only this browser view. They never change evidence, policy, review, release, or publication state.</p></div>
-                <dl className="map-camera-facts">
-                  <div><dt>Center</dt><dd>{locationCameraRedacted ? "Private camera · redacted" : `${formatCoordinate(view.center[1], "N", "S")} · ${formatCoordinate(view.center[0], "E", "W")}`}</dd></div>
-                  <div><dt>Zoom</dt><dd>{view.zoom.toFixed(2)}</dd></div>
-                  <div><dt>Bearing / pitch</dt><dd>{Math.round(view.bearing)}° / {Math.round(view.pitch)}°</dd></div>
-                  <div><dt>Projection</dt><dd>{projection}</dd></div>
-                </dl>
+                <div className="map-utility-section-heading"><span>EXPLORE KANSAS</span><h3>Find your next view</h3><p>Move around the map, return to a place, or try a different perspective.</p></div>
                 <div className="map-utility-actions map-navigation-actions">
                   <button type="button" onClick={() => travelCameraHistory(-1)} disabled={cameraHistoryIndex === 0}>Previous view</button>
                   <button type="button" onClick={() => travelCameraHistory(1)} disabled={cameraHistoryIndex >= cameraHistoryLength - 1}>Next view</button>
@@ -9549,6 +9533,13 @@ export default function Home() {
                   <button type="button" onClick={locateUser}>Use my location</button>
                   <button type="button" onClick={() => void copyMapCenter()} disabled={locationCameraRedacted}>Copy center</button>
                 </div>
+                <details className="explorer-secondary"><summary>Coordinates, gestures &amp; analysis area</summary><div className="explorer-secondary-body">
+                <dl className="map-camera-facts">
+                  <div><dt>Center</dt><dd>{locationCameraRedacted ? "Private camera · redacted" : `${formatCoordinate(view.center[1], "N", "S")} · ${formatCoordinate(view.center[0], "E", "W")}`}</dd></div>
+                  <div><dt>Zoom</dt><dd>{view.zoom.toFixed(2)}</dd></div>
+                  <div><dt>Bearing / pitch</dt><dd>{Math.round(view.bearing)}° / {Math.round(view.pitch)}°</dd></div>
+                  <div><dt>Projection</dt><dd>{projection}</dd></div>
+                </dl>
                 <section className="analysis-area-card" data-active={Boolean(analysisArea)} aria-labelledby="analysis-area-title">
                   <header><div><span>MAPLIBRE VIEWPORT ANALYSIS</span><h4 id="analysis-area-title">Area of interest</h4></div><strong>{analysisArea ? "LOCKED" : "NOT SET"}</strong></header>
                   {analysisArea
@@ -9573,6 +9564,7 @@ export default function Home() {
                 <div className="map-control-group"><header><strong>Gesture mode</strong><span>One unified map control system</span></header><div className="map-segmented-control"><button type="button" aria-pressed={gestureMode === "cooperative"} onClick={() => setMapGestureMode("cooperative")}>Cooperative</button><button type="button" aria-pressed={gestureMode === "direct"} onClick={() => setMapGestureMode("direct")}>Direct</button></div><p className="map-control-note">Cooperative mode requires a modifier key for wheel zoom and two fingers for touch pan, reducing accidental page trapping. Direct mode gives the map immediate gesture control.</p></div>
                 <aside className="map-utility-boundary" data-tone="privacy"><strong>Location privacy</strong><p>Browser location is used only to move the local camera. While that camera remains location-derived, shared URLs use generalized Kansas defaults plus a redaction marker, receipts and exports use withheld markers, and diagnostics omit coordinates. Fit Kansas clears the private camera.</p></aside>
                 <aside className="map-utility-boundary"><strong>Keyboard alternative</strong><p>Use Inspect for a searchable feature list, Layer Catalog for visibility and opacity, and these controls for camera actions without relying on pointer gestures.</p></aside>
+                </div></details>
               </section>}
 
               {mapUtilityView === "history" && <HistoricalTopoControl map={mapRef.current} styleReady={styleReady} locationPrivate={locationCameraRedacted} flatMap={projection === "mercator" && scenePreset !== "elevation-3d"} onFlatMap={() => activateMapRepresentation("2d")} />}
@@ -9621,8 +9613,10 @@ export default function Home() {
               </section>}
 
               {mapUtilityView === "scene" && <section id="map-utility-view-scene" role="region" aria-labelledby="map-utility-title" className="map-utility-section scene-lab-section">
-                <div className="map-utility-section-heading"><span>MAP REPRESENTATION</span><h3>Verified renderer controls</h3><p>Change the live MapLibre canvas. Controls shown here either alter the renderer now or clearly report why a capability is unavailable.</p></div>
+                <div className="map-utility-section-heading"><span>APPEARANCE</span><h3>Make the map your own</h3><p>Choose a map style, then shape its perspective and light.</p></div>
+                <div className="appearance-basemap"><label><span>Basemap</span><select aria-label="Appearance basemap" value={basemap} onChange={event => setBasemap(event.target.value as BasemapKey)}>{(Object.keys(BASEMAPS) as BasemapKey[]).map(key => <option key={key} value={key}>{BASEMAPS[key].title}</option>)}</select></label></div>
 
+                <div className="appearance-quick-looks" role="group" aria-label="Terrain starting looks"><button type="button" onClick={() => applyTerrainLook("natural")}>Natural terrain</button><button type="button" onClick={() => applyTerrainLook("topographic")}>Topographic relief</button><button type="button" onClick={() => applyTerrainLook("buildings")}>3D buildings</button></div>
                 <section className="scene-preset-grid verified-representation-grid" aria-label="Verified map representations">
                   {([
                     ["2d", "2D map", "Mercator · terrain off"],
@@ -9633,6 +9627,10 @@ export default function Home() {
 
                 <SceneEffectsControls readings={sceneReadings} view={sceneView} terrain={{ scale: verticalExaggeration, available: runtime.kind === "ready" && terrainState !== "ERROR", onScale: changeTerrainDepth, onGroundView: exploreGround }} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
 
+                <details className="explorer-secondary"><summary>Terrain tools, sources &amp; rendering</summary><div className="explorer-secondary-body">
+                <RenderQualityControl value={renderQuality} onChange={chooseRenderQuality} />
+                <BasemapCacheControls />
+                <label className="appearance-basemap">Terrain elevation source<select aria-label="Terrain elevation source" disabled={scenePreset !== "elevation-3d"} value={terrainProvider} onChange={event => chooseTerrainProvider(event.target.value as "mapzen" | "usgs-3dep")}><option value="mapzen">Mapzen · display DEM</option><option value="usgs-3dep">USGS 3DEP · Kansas detail</option></select></label>
                 <section className="renderer-capability-list" aria-label="Renderer capability status">
                   <article data-state="ready"><span>WORKS NOW</span><strong>2D, globe, camera, measurement</strong><small>Direct MapLibre state changes</small></article>
                   <article data-state={terrainState === "ERROR" ? "held" : "context"}><span>{terrainState === "READY" ? "DISPLAY ONLY" : terrainState}</span><strong>Terrain relief + profile preview</strong><small>External DEM; not KFM evidence</small></article>
@@ -9706,6 +9704,7 @@ export default function Home() {
                 </section>
 
                 <aside className="map-utility-boundary" data-tone="warning"><strong>3D preserves the 2D evidence path.</strong><p>Terrain 3D samples an external raster DEM for display and may exaggerate it; Structures 3D extrudes only provider-supplied building heights. Neither changes evidence, fills missing heights, or asserts a KFM release. No synthetic elevation extrusion layer is offered. Select any visible feature to inspect the same Evidence Drawer used in 2D.</p></aside>
+                </div></details>
               </section>}
 
               {mapUtilityView === "connections" && <section id="map-utility-view-connections" role="region" aria-labelledby="map-utility-title" className="map-utility-section source-connections-section">
@@ -9898,7 +9897,7 @@ export default function Home() {
         </section>
 
         {/* Share the shell stacking context with evidence, preserving map hit testing. */}
-        {runtime.kind !== "unsupported" && !undergroundOpen && <ScenePanel onOpenChange={setScenePanelOpen} readings={sceneReadings} view={sceneView} terrain={{ scale: verticalExaggeration, available: runtime.kind === "ready" && terrainState !== "ERROR", onScale: changeTerrainDepth, onGroundView: exploreGround }} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} onRepresentation={chooseSceneView} />}
+        {runtime.kind !== "unsupported" && !undergroundOpen && !mapUtilityOpen && <ScenePanel onOpenChange={setScenePanelOpen} readings={sceneReadings} view={sceneView} terrain={{ scale: verticalExaggeration, available: runtime.kind === "ready" && terrainState !== "ERROR", onScale: changeTerrainDepth, onGroundView: exploreGround }} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} onRepresentation={chooseSceneView} />}
 
           {qwenOpen && isCompact && <div className="qwen-modal-backdrop" aria-hidden="true" onPointerDown={() => closeQwenCompanion()} />}
           {qwenOpen && <section ref={qwenPanelRef} id="qwen-map-panel" className="qwen-panel" role="dialog" aria-modal={isCompact} aria-labelledby="qwen-panel-title">
