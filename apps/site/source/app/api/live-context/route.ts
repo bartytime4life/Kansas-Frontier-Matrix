@@ -1,3 +1,4 @@
+import { env } from "cloudflare:workers";
 import { readBoundedJson } from "../../bounded-json";
 import { NextRequest, NextResponse } from "next/server";
 import type { Feature, FeatureCollection, Geometry, GeoJsonProperties } from "geojson";
@@ -76,9 +77,10 @@ const fetchBoundedJsonArray = async (url: string, timeoutMs: number, init?: Requ
   return parsed;
 };
 
-const collectionFeatures = (payload: JsonRecord): JsonRecord[] => Array.isArray(payload.features)
-  ? payload.features.filter(isRecord)
-  : [];
+const collectionFeatures = (payload: JsonRecord): JsonRecord[] => {
+  if (!Array.isArray(payload.features) || !payload.features.every(isRecord)) throw new UpstreamError("Official upstream response had an invalid feature collection.");
+  return payload.features;
+};
 
 const envelope = (
   feed: Feed,
@@ -131,7 +133,7 @@ const latestStreamflow = async () => {
   url.searchParams.set("site_type_code", "ST");
   url.searchParams.set("parameter_code", "00060");
   url.searchParams.set("datetime", `${start}/..`);
-  const payload = await fetchBoundedJson(url.toString(), 15_000);
+  const payload = await fetchBoundedJson(url.toString(), 15_000, { headers: { ...((env as { USGS_WATER_API_KEY?: string }).USGS_WATER_API_KEY ? { "X-Api-Key": String(env.USGS_WATER_API_KEY) } : {}) } });
   const newest = new Map<string, Feature<Geometry, GeoJsonProperties>>();
   let newestTimestamp: string | null = null;
 
