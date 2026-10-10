@@ -72,6 +72,14 @@ The first round focused on Terrain 3D. This round carries the look into every Ma
 
 A new **Real night sky** effect replaces the globe's decorative CSS star dots with the real sky, drawn by one custom WebGL2 layer beneath every other layer: the 2,851 brightest XHIP (Hipparcos-based) stars at their true positions for the current time, a Milky Way glow on the galactic plane and, from orbit, the Sun. On the globe the stars turn with the Earth and the planet hides everything behind it. On tilted maps and in Terrain 3D at night or dusk, stars rise above the true horizon at their real altitude and azimuth over the map centre, and twinkle and redden near the horizon. The catalog is a separate 70 KB chunk loaded on first use. On by default in the Cinematic and Natural looks; Battery saver hides it and reduced motion stops the twinkle. Method, data provenance, licence and validation: [night-sky.md](night-sky.md).
 
+## Round 4 — Flowing water
+
+<p align="center">
+  <img src="images/water-flow-terrain-2026-10-10.jpg" alt="Terrain 3D at dusk: a luminous stream network draped in the valleys of the Flint Hills; a banner marks the frame as a test harness with a DEM-derived network and synthetic gauges." width="100%" />
+</p>
+
+A new **Flowing water** effect animates rivers downstream on the terrain, only where USGS 3DHP flags a reach's downstream direction (`flowdirection = 1`); nothing else moves. Motion is one display speed everywhere, never water velocity. A USGS gauge reading styles only the reach the gauge sits on, fading out 2.5 km either side: a measured value widens, brightens and tints that stretch by trend, a measured zero stills it, and missing or stale readings change nothing. Readings follow the time slider. One custom WebGL2 layer draws the ribbons with terrain depth testing, below labels and data overlays. Off by default (it makes a new provider request); on in the Cinematic and Natural looks; zoom 10 and closer; Battery saver hides it and reduced motion holds it still. The frame above uses test harness inputs because the sandbox cannot reach 3DHP. Method, sources, limits and validation: [water-flow.md](water-flow.md).
+
 **Underground is deliberately unchanged.** Its three.js cutaway uses material and aquifer colours as a legend; haze, tone mapping or coloured light would change what those colours say.
 
 ## Controls

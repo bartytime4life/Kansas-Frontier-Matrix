@@ -226,6 +226,7 @@ import {
   type TrustState,
 } from "./workspace-model";
 import { ACTIVE_TERRAIN_SOURCE, STRUCTURE_3D_SOURCE, TERRAIN_SOURCES, TERRARIUM_RENDER_MAX_ZOOM, terrainSourceFor, type TerrainProvider } from "./terrain-sources";
+import { setWaterFlowMotion, subscribeWaterFlowStatus, syncWaterFlow, waterFlowIsAnimating, waterFlowReading, type WaterFlowStatus } from "./water-flow-sync";
 import { nightSkyIsTwinkling, setNightSkyTwinkle, syncBuildingStyle, syncKansasGlow, syncNightSky, syncNightSkyVisibility, syncRelief2d, syncValueColumns, syncValueColumnsVisibility, type ColumnFeed } from "./scene-overlays";
 import { CURTAIN_MIN_PITCH, DEFAULT_SCENE_EFFECTS, KANSAS_FLYOVER, SCENE_EFFECT_KEYS, SCENE_EFFECT_OPTIONS, SCENE_LOOK_PRESETS, matchingLookPreset, effectiveSceneLight, applySelectionPulse, applyTerrainReliefStyle, curtainIsVisible, readSceneEffects, setCurtainShimmer, registerSceneEffects, sunSceneLight, syncBorderCurtain, syncBorderCurtainVisibility, writeSceneEffects, type SceneEffectSettings, type SceneView } from "./scene-effects";
 import { SceneEffectsControls, ScenePanel } from "./scene-effects-controls";
@@ -568,6 +569,7 @@ const syncSceneOverlays = (map: MapLibreMap, light: AtmospherePreset, azimuth: n
     () => syncValueColumns(map, COLUMN_FEEDS, efficient),
     () => syncBuildingStyle(map, light, azimuth),
     () => syncNightSky(map, light, azimuth, efficient),
+    () => syncWaterFlow(map, { light, azimuth, efficient, gaugeSourceId: OFFICIAL_CONTEXT_BY_ID["usgs-streamflow"].sourceId, gaugeLayerId: OFFICIAL_CONTEXT_BY_ID["usgs-streamflow"].layerIds[1] }),
   ]) {
     try { step(); } catch { /* one overlay failing never blocks the others */ }
   }
@@ -6096,28 +6098,38 @@ export default function Home() {
     if (flyoverCancelRef.current && (reducedMotion || undergroundOpen || projection !== "mercator" || scenePreset !== "elevation-3d")) stopFlyover(false);
   }, [basemap, projection, reducedMotion, scenePreset, stopFlyover, stopSceneOrbit, undergroundOpen]);
 
-  // The curtain shimmer and star twinkle repaint at ~15 fps only while they
-  // are on screen and ambient motion is allowed; otherwise they hold still.
+  // The curtain shimmer and star twinkle repaint at ~15 fps, and flowing
+  // water at ~30 fps, only while they are on screen and ambient motion is
+  // allowed; otherwise they hold still.
   useEffect(() => {
     const map = mapRef.current;
     const motionAllowed = runtime.kind === "ready" && dynamicEffects && !reducedMotion && !browserRenderBudget(renderQuality).efficient;
     const shimmer = motionAllowed && sceneEffects.curtain;
     const twinkle = motionAllowed && sceneEffects.stars;
+    const flowing = motionAllowed && sceneEffects.waterFlow;
     setCurtainShimmer(shimmer);
     setNightSkyTwinkle(twinkle);
-    if (!map || !(shimmer || twinkle)) return;
+    setWaterFlowMotion(flowing);
+    if (!map || !(shimmer || twinkle || flowing)) return;
     let frame = 0;
     let last = 0;
     const tick = (now: number) => {
-      if (!document.hidden && now - last >= 66) {
+      let water = false;
+      try { water = flowing && waterFlowIsAnimating(map); } catch { /* style swap in progress */ }
+      if (!document.hidden && now - last >= (water ? 33 : 66)) {
         last = now;
-        try { if ((shimmer && curtainIsVisible(map)) || (twinkle && nightSkyIsTwinkling(map))) map.triggerRepaint(); } catch { /* style swap in progress */ }
+        try { if (water || (shimmer && curtainIsVisible(map)) || (twinkle && nightSkyIsTwinkling(map))) map.triggerRepaint(); } catch { /* style swap in progress */ }
       }
       frame = window.requestAnimationFrame(tick);
     };
     frame = window.requestAnimationFrame(tick);
-    return () => { window.cancelAnimationFrame(frame); setCurtainShimmer(false); setNightSkyTwinkle(false); };
-  }, [dynamicEffects, reducedMotion, renderQuality, runtime.kind, sceneEffects.curtain, sceneEffects.stars]);
+    return () => { window.cancelAnimationFrame(frame); setCurtainShimmer(false); setNightSkyTwinkle(false); setWaterFlowMotion(false); };
+  }, [dynamicEffects, reducedMotion, renderQuality, runtime.kind, sceneEffects.curtain, sceneEffects.stars, sceneEffects.waterFlow]);
+
+  // The Scene panel reports what the flowing-water layer could draw.
+  const [waterFlowState, setWaterFlowState] = useState<WaterFlowStatus | null>(null);
+  useEffect(() => subscribeWaterFlowStatus(setWaterFlowState), []);
+  const sceneReadings = useMemo(() => ({ waterFlow: waterFlowState ? waterFlowReading(waterFlowState) : null }), [waterFlowState]);
 
   // Terrain 3D may tilt further so the sky and horizon come into view.
   useEffect(() => {
@@ -9212,7 +9224,7 @@ export default function Home() {
                 <details className="layer-scene-entry">
                   <summary>Terrain &amp; 3D appearance <span>{scenePreset === "elevation-3d" ? terrainState === "READY" ? "On" : terrainState === "ERROR" ? "Needs attention" : "Loading" : "Off"}</span></summary>
                   <LayerSceneControls active={scenePreset === "elevation-3d"} selectedLook={scenePreset !== "elevation-3d" ? null : structures3DEnabled ? "buildings" : basemap === "topo" ? "topographic" : basemap === "imagery" ? "natural" : null} terrainProvider={terrainProvider} state={terrainState} exaggeration={verticalExaggeration} lighting={atmospherePreset} azimuth={lightAzimuth} heightOverlay={topographicOverlay} onPreset={applyTerrainLook} onTerrainProvider={chooseTerrainProvider} on2D={() => activateMapRepresentation("2d")} onExaggeration={value => { verticalExaggerationRef.current = value; setVerticalExaggeration(value); }} onLighting={value => { atmospherePresetRef.current = value; setAtmospherePreset(value); }} onAzimuth={value => { lightAzimuthRef.current = value; setLightAzimuth(value); }} onHeight={toggleTopographicHeightOverlay} onRetry={retryTerrain} />
-                  <SceneEffectsControls view={sceneView} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
+                  <SceneEffectsControls readings={sceneReadings} view={sceneView} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
                 </details>
                 <div className="map-control-group"><header><strong>Rendering quality</strong><span>Applies to this map</span></header><RenderQualityControl value={renderQuality} onChange={chooseRenderQuality} /></div>
           <div className="basemap-control">
@@ -9604,7 +9616,7 @@ export default function Home() {
                   ] as const).map(([id, title, detail]) => <button key={id} type="button" aria-pressed={id === "terrain" ? scenePreset === "elevation-3d" : id === "globe" ? projection === "globe" : projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => activateMapRepresentation(id)}><span>{id === "terrain" ? "3D" : id === "globe" ? "◎" : "2D"}</span><strong>{title}</strong><small>{detail}</small></button>)}
                 </section>
 
-                <SceneEffectsControls view={sceneView} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
+                <SceneEffectsControls readings={sceneReadings} view={sceneView} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
 
                 <section className="renderer-capability-list" aria-label="Renderer capability status">
                   <article data-state="ready"><span>WORKS NOW</span><strong>2D, globe, camera, measurement</strong><small>Direct MapLibre state changes</small></article>
@@ -9871,7 +9883,7 @@ export default function Home() {
         </section>
 
         {/* Share the shell stacking context with evidence, preserving map hit testing. */}
-        {runtime.kind !== "unsupported" && !undergroundOpen && <ScenePanel onOpenChange={setScenePanelOpen} view={sceneView} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} onRepresentation={chooseSceneView} />}
+        {runtime.kind !== "unsupported" && !undergroundOpen && <ScenePanel onOpenChange={setScenePanelOpen} readings={sceneReadings} view={sceneView} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={browserRenderBudget(renderQuality).efficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} onRepresentation={chooseSceneView} />}
 
           {qwenOpen && isCompact && <div className="qwen-modal-backdrop" aria-hidden="true" onPointerDown={() => closeQwenCompanion()} />}
           {qwenOpen && <section ref={qwenPanelRef} id="qwen-map-panel" className="qwen-panel" role="dialog" aria-modal={isCompact} aria-labelledby="qwen-panel-title">

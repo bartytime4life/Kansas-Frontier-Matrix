@@ -25,7 +25,7 @@ smoke_routes=(
   historical-topo historical-topo/activate historical-topo/overlay historical-topo/queue
   historical-topo/review "historical-topo/review/tiles/[scan]/[package]/[z]/[x]/[y]"
   historical-topo/stage "historical-topo/tiles/[scan]/[package]/[z]/[x]/[y]"
-  hydrology/coverage hydrology/direction hydrology/noaa hydrology/streamflow
+  hydrology/coverage hydrology/direction hydrology/flowlines hydrology/noaa hydrology/streamflow
   lightning/archive lightning/flashes live-context public-maps/preview qwen
   soil-moisture/availability soil-moisture/tile source-download subsurface/soil subsurface/resources
   terrain-tile wind-arrows
@@ -161,6 +161,8 @@ expect GET '/api/event-atlas/storms?time=1999-01-01T00%3A00%3A00Z' 400
 expect GET /api/historical-topo 400 state error
 expect GET /api/hydrology/coverage 400
 expect GET /api/hydrology/direction 400
+expect GET /api/hydrology/flowlines 400
+expect GET '/api/hydrology/flowlines?cell=-97.10,38.00' 400
 expect GET '/api/hydrology/noaa?mode=unsupported' 400 error.code INVALID_MODE
 expect GET /api/hydrology/streamflow 400 code USGS_STREAMFLOW_INVALID_QUERY
 expect GET /api/lightning/archive 400
