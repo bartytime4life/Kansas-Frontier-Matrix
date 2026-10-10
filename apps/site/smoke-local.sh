@@ -22,6 +22,7 @@ smoke_routes=(
   event-atlas/counties event-atlas/geology-legend event-atlas/manifest
   event-atlas/resources event-atlas/storms event-atlas/weather
   "governed/v1/[view]" governed/v1/knowledge
+  governed/water-admin/activate governed/water-admin/stage governed/water-admin/status governed/water-admin/withdraw
   historical-topo historical-topo/activate historical-topo/overlay historical-topo/queue
   historical-topo/review "historical-topo/review/tiles/[scan]/[package]/[z]/[x]/[y]"
   historical-topo/stage "historical-topo/tiles/[scan]/[package]/[z]/[x]/[y]"
@@ -193,16 +194,20 @@ expect GET /api/historical-topo/overlay 401
 expect GET /api/historical-topo/review 401
 expect GET /api/historical-topo/review/tiles/1/package/0/0/0.png 401
 expect GET /api/historical-topo/tiles/1/package/0/0/0.png 401
+expect GET /api/governed/water-admin/status 401 reason_code SIGN_IN_REQUIRED
 
 # Writes without this Site's origin are refused before authentication.
 expect POST /api/data-submissions 403
 expect PATCH /api/data-submissions/unknown 403
 expect POST /api/historical-topo/overlay 403
 expect POST /api/historical-topo/activate 403
+expect POST /api/governed/water-admin/activate 403 reason_code SAME_ORIGIN_REQUIRED
+expect POST /api/governed/water-admin/withdraw 403 reason_code SAME_ORIGIN_REQUIRED
 
 # Features whose secret or endpoint is unset stay closed.
 expect GET /api/historical-topo/queue 503
 expect PUT /api/historical-topo/stage 503
+expect POST /api/governed/water-admin/stage 503 reason_code WATER_STAGING_NOT_CONFIGURED
 expect POST /api/qwen 503 status disabled '{"question":"Where is Topeka?","context":{}}'
 
 if (( failures > 0 )); then
