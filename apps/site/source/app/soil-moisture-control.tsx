@@ -431,7 +431,7 @@ export function SoilMoistureControl({
       <i style={{ "--swatch": "#6dbb9d" } as React.CSSProperties} />
       <div><strong>Soil moisture</strong><small>NASA SMAP Level-4 · modeled surface context · {enabled ? displayState : "off"}</small></div>
     </div>
-    <div className="official-context-option-body">
+    <details className="specialty-layer-details"><summary>Dates, playback &amp; details</summary><div className="official-context-option-body">
       <div className="soil-display-panel">
         <div><span>SELECTED NASA FRAME</span><strong>{day || "No date loaded"}</strong><small>12:00 UTC · {SOIL_VIEWS[view].label}</small></div>
         <b data-state={displayState}>{displayState === "rendered" ? "ON MAP" : displayState === "partial" ? "PARTIAL" : displayState.toUpperCase()}</b>
@@ -478,6 +478,6 @@ export function SoilMoistureControl({
       </details>
       <small className="soil-data-boundary">Global mapped surface, approximately 9 km. Smooth display changes image colors only; it does not infer soil moisture from stations or create numeric measurements. The GIBS color tiles are visual context; numeric pixels are unavailable to the science companion. Native SPL4SMAU HDF5 analysis updates are 3-hourly. Blank coverage and failed tiles are unknown, not dry or safe. External context only; no KFM EvidenceBundle or release.</small>
       <div className="source-time-actions"><button type="button" disabled={!enabled || checking} onClick={() => void checkAvailability(true)}>Retry NASA check</button><a href={SOIL_METADATA_URL} target="_blank" rel="noreferrer">NASA layer metadata ↗</a><a href={SOIL_GUIDE_URL} target="_blank" rel="noreferrer">Native data guide ↗</a></div>
-    </div>
+    </div></details>
   </article>;
 }

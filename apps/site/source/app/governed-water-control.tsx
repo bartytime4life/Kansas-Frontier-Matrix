@@ -7,7 +7,7 @@ import { waterBrowserLabel, waterBrowserStateForResponse, waterEvidenceMatchesSe
 
 const SOURCE = "kfm-reviewed-water", LAYER = "kfm-reviewed-water-points";
 const reasonText: Record<string, string> = { NO_APPROVED_SNAPSHOT: "No reviewed water snapshot is active.", AUTHENTICATION_REQUIRED: "Sign in to check reviewed water.", RELEASE_STORE_UNAVAILABLE: "Reviewed water storage is unavailable.", REVIEW_REQUIRED: "This water package is waiting for review.", RIGHTS_OR_SENSITIVITY_HOLD: "Rights or sensitivity review is still required.", CORRECTION_HOLD: "This snapshot has been corrected or withdrawn.", RELEASE_TIME_INVALID: "The release approval has expired or is not yet valid." };
-export function GovernedWaterControl({ mapRef, styleReady }: { mapRef: RefObject<MapLibreMap | null>; styleReady: boolean }) {
+export function GovernedWaterControl({ mapRef, styleReady, onSelectionChange }: { mapRef: RefObject<MapLibreMap | null>; styleReady: boolean; onSelectionChange?: (selected: boolean) => void }) {
   const [response, setResponse] = useState<WaterResponse | null>(null), [status, setStatus] = useState("Not checked"), [loading, setLoading] = useState(false);
   const [clock, setClock] = useState(Date.now);
   const [browserState, setBrowserState] = useState<WaterBrowserState>("not-checked");
@@ -50,6 +50,7 @@ export function GovernedWaterControl({ mapRef, styleReady }: { mapRef: RefObject
   const shownStatus = expired ? "Release approval expired. Check for a reviewed update." : status;
   const shownBrowserState = expired ? "withheld" : browserState;
   const shownRender = !visible || !data ? "Hidden" : !styleReady ? "Not ready" : render;
+  useEffect(() => { onSelectionChange?.(visible); }, [visible, onSelectionChange]);
   const observations = data?.observations?.filter(r => r.station_id === selected) ?? [];
   const latest = [...observations].sort((a, b) => b.observed_at.localeCompare(a.observed_at))[0];
   useEffect(() => {
@@ -93,13 +94,16 @@ export function GovernedWaterControl({ mapRef, styleReady }: { mapRef: RefObject
     } catch { setExportStatus("Export withheld: current evidence or release could not be verified."); }
   }
   return <section className="official-context-row" aria-label="Reviewed water snapshot">
-    <header><strong>Reviewed water snapshot</strong><button type="button" onClick={() => void refresh()} disabled={loading}>{loading ? "Checking…" : "Check connection"}</button></header>
+    <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={visible} disabled={!visible && !data} aria-label={visible ? "Hide reviewed water stations" : "Show reviewed water stations"} onChange={event => { setVisible(event.target.checked); if (event.target.checked) setRender("Waiting for map frame"); }} /><span aria-hidden="true" /></label><i style={{ "--swatch": "#82c4d2" } as React.CSSProperties} /><div><strong>Reviewed water stations</strong><small>USGS · {visible ? !data ? "Selected · held" : shownRender : waterBrowserLabel(shownBrowserState)}</small></div></div>
+    <details className="specialty-layer-details"><summary>Evidence, source &amp; controls</summary><div className="official-context-option-body">
+    <button type="button" onClick={() => void refresh()} disabled={loading}>{loading ? "Checking…" : "Check connection"}</button>
     <p role="status">{shownStatus}</p><small>Acquisition: {data ? "Preserved capture" : "Not established"} · Browser: {waterBrowserLabel(shownBrowserState)} · Map: {shownRender} · Evidence: {evidence ? "Resolved and released" : "Withheld"}</small>
-    {data && <><label>Show reviewed stations <input type="checkbox" checked={visible} onChange={e => { setVisible(e.target.checked); if (e.target.checked) setRender("Waiting for map frame"); }} /></label>
+    {data && <>
       <label>Station<select value={selected} onChange={e => chooseStation(e.target.value)}>{data.stations?.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}</select></label>
       <p>Coverage: {String(data.coverage)} · Freshness: {String(response?.envelope.freshness)} · Correction: {String(data.correction_state)}</p>
       {latest && <p><strong>{latest.value === null ? "No reported value" : `${latest.value} ${latest.unit}`}</strong> {latest.provisional ? "· Provisional" : "· Provider approved"}</p>}
       <details><summary>Evidence and source times</summary><dl><dt>Provider observation</dt><dd>{latest?.observed_at ?? "Unavailable"}</dd><dt>Provider revision</dt><dd>{latest?.provider_revision_at ?? "Unavailable"}</dd><dt>KFM retrieval</dt><dd>{String(data.retrieved_at)}</dd><dt>Review</dt><dd>{String(data.reviewed_at)}</dd><dt>Release</dt><dd>{String(data.released_at)}</dd></dl><p>{String(data.attribution)}</p>{evidence?.data?.entries?.map(e => <p key={e.station_id}><a href={e.bundle.citations[0]} target="_blank" rel="noreferrer">USGS source</a><br /><code>{e.evidence_ref.ref}</code></p>)}</details>
       <button type="button" disabled={!station || !evidence} onClick={() => void exportObservation()}>Export selected station with evidence</button><p role="status">{exportStatus}</p></>}
+    </div></details>
   </section>;
 }

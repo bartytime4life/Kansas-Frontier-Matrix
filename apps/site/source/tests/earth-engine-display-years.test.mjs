@@ -16,6 +16,7 @@ async function compile(path, imports = {}) {
 }
 const context = await compile("../app/earth-engine-context.ts");
 const data = await compile("../app/earth-engine-data.ts");
+const catalog = await compile("../app/layer-workspaces.ts");
 const manifest = (id, year, status = "approved") => {
   const descriptor = context.EARTH_ENGINE_CONTEXT_LAYERS.find(item => item.id === id);
   return {
@@ -38,14 +39,15 @@ async function harness(manifests = [], map = null, initialYearChoice = {}) {
     }, useMemo: fn => fn(), useEffect: fn => effects.push(fn) },
     "next/link": { default: ({ children, ...props }) => React.createElement("a", props, children) },
     "../scripts/earth-engine/cdl_2024_palette.json": { default: { classes: {} } },
-    "./earth-engine-context": context, "./earth-engine-data": data,
+    "./earth-engine-context": context, "./earth-engine-data": data, "./layer-workspaces": catalog,
     "./earth-engine-display.module.css": { default: new Proxy({}, { get: (_target, key) => String(key) }) },
     "./map-layer-composition": { balanceMapRasters() {}, composeMapLayers() {}, requestRasterOpacity() {} },
     "./earth-engine-comparison-panel": { EarthEngineComparisonPanel: () => null },
   });
+  const catalogProps = {};
   const render = () => {
     hook = 0; effects = [];
-    tree = EarthEngineDisplayControls({ map, mapYear: 2024, manifests, loading: false, error: null, onReload() {}, onDisplayChange(value) { display = value; }, rendererState: "ready" });
+    tree = EarthEngineDisplayControls({ map, mapYear: 2024, manifests, loading: false, error: null, onReload() {}, onDisplayChange(value) { display = value; }, rendererState: "ready", ...catalogProps });
     for (const effect of effects) effect();
     return renderToStaticMarkup(tree);
   };
@@ -62,7 +64,7 @@ async function harness(manifests = [], map = null, initialYearChoice = {}) {
     return find(tree, item => item.type === "article" && Boolean(find(item, node => node.type === "select" && node.props["aria-label"] === `${title} image year`)));
   };
   return {
-    render, get display() { return display; }, row,
+    render, catalogProps, get display() { return display; }, row,
     select: id => find(row(id), item => item.type === "select"),
     checkbox: id => find(row(id), item => item.type === "input" && item.props.type === "checkbox"),
     rowHtml: id => renderToStaticMarkup(row(id)),
@@ -138,4 +140,26 @@ test("invalid in-memory year choices cannot create unsupported preparation links
   assert.match(ui.rowHtml("ee-landsat4"), /dataset=ee-landsat4&amp;year=1993/);
   assert.match(ui.rowHtml("ee-landsat5"), /dataset=ee-landsat5&amp;year=2012/);
   assert.deepEqual(ui.display.visible, {});
+});
+
+
+test("On map keeps selected imagery with an uninstalled year hideable; filters never change selection", async () => {
+  const map = mapStub(), ui = await harness([manifest("ee-landsat4", 1990)], map);
+  ui.render(); ui.checkbox("ee-landsat4").props.onChange({ target: { checked: true } }); ui.render();
+  assert.equal(ui.display.visible["ee-landsat4"], true);
+  ui.catalogProps.catalogView = "selected"; ui.render();
+  assert.equal(ui.row("ee-landsat4").props.hidden, false);
+  ui.select("ee-landsat4").props.onChange({ target: { value: "1991" } }); ui.render();
+  assert.equal(ui.display.visible["ee-landsat4"], true, "year availability must not erase selection intent");
+  assert.equal(ui.row("ee-landsat4").props.hidden, false);
+  assert.equal(ui.checkbox("ee-landsat4").props.disabled, false, "held selections must remain hideable");
+  assert.equal(map.layers.size, 0, "no substitute year imagery");
+  ui.catalogProps.catalogQuery = "unrelated"; ui.render();
+  assert.equal(ui.row("ee-landsat4").props.hidden, true);
+  assert.equal(ui.display.visible["ee-landsat4"], true);
+  ui.catalogProps.catalogQuery = "landsat usgs"; ui.render();
+  assert.equal(ui.row("ee-landsat4").props.hidden, false, "query terms match title and provider independently");
+  ui.checkbox("ee-landsat4").props.onChange({ target: { checked: false } }); ui.render();
+  assert.equal(ui.display.visible["ee-landsat4"], false);
+  assert.equal(ui.row("ee-landsat4").props.hidden, true);
 });

@@ -7,6 +7,7 @@ import cdlPalette from "../scripts/earth-engine/cdl_2024_palette.json";
 import { EARTH_ENGINE_DATASETS, EARTH_ENGINE_DISPLAY_RAMPS, earthEngineLegendGradient, earthEngineUrl } from "./earth-engine-data";
 import { EARTH_ENGINE_CONTEXT_LAYERS, EARTH_ENGINE_SOURCE_YEARS, earthEngineSetYear, type EarthEngineContextManifest, type EarthEngineContextLayerId } from "./earth-engine-context";
 import type { EarthEngineDisplayState } from "./earth-engine-raster-fallback";
+import { imageryTopics, layerEntryMatches, type LayerBrowseView, type LayerWorkspace } from "./layer-workspaces";
 import styles from "./earth-engine-display.module.css";
 import { balanceMapRasters, composeMapLayers, requestRasterOpacity } from "./map-layer-composition";
 import { EarthEngineComparisonPanel } from "./earth-engine-comparison-panel";
@@ -20,10 +21,11 @@ const isSourceYear = (id: EarthEngineContextLayerId, year: number | undefined): 
   return year !== undefined && Number.isInteger(year) && Boolean(bounds && year >= bounds[0] && year <= bounds[1]);
 };
 
-export function EarthEngineDisplayControls({ map, mapYear, manifests, loading, error, onReload, onDisplayChange, rendererState }: {
+export function EarthEngineDisplayControls({ map, mapYear, manifests, loading, error, onReload, onDisplayChange, rendererState, catalogView = "local", catalogTopic = "all", catalogQuery = "" }: {
   map: MapLibreMap | null; mapYear: number; manifests: EarthEngineContextManifest[];
   loading: boolean; error: string | null; onReload: () => void;
   onDisplayChange: (display: EarthEngineDisplayState) => void; rendererState: string;
+  catalogView?: LayerBrowseView; catalogTopic?: LayerWorkspace; catalogQuery?: string;
 }) {
   const [visible, setVisible] = useState<Partial<Record<EarthEngineContextLayerId, boolean>>>({});
   const [visibilityTouched, setVisibilityTouched] = useState(false);
@@ -118,7 +120,7 @@ export function EarthEngineDisplayControls({ map, mapYear, manifests, loading, e
     {!loading && !manifests.length && <p><Link href="/earth-engine">Prepare Kansas Earth Engine imagery ↗</Link> · <Link href="/earth-engine-context/install">Install a reviewed display set ↗</Link></p>}
     {rendererState === "unsupported" && <p role="status">WebGL2 is unavailable here. Selected snapshots open in the 2D image viewer.</p>}
     <details className={styles.boundary}><summary>Display context only</summary><p>Pixel colors are map context, not a KFM evidence claim. A source year is not an installed map year. Each layer uses its own selected year, which may differ from map time {mapYear > 0 ? mapYear : "range"}.</p></details>
-    <EarthEngineComparisonPanel manifests={manifests} loading={loading} error={error} />
+    <details className="explorer-secondary"><summary>Compare imagery snapshots</summary><EarthEngineComparisonPanel manifests={manifests} loading={loading} error={error} /></details>
     <div className={styles.rows}>{EARTH_ENGINE_CONTEXT_LAYERS.map((descriptor) => {
       const bounds = EARTH_ENGINE_SOURCE_YEARS[descriptor.id];
       const selectedYear = descriptor.id === "ee-3dep" ? 2024 : selectedYears[descriptor.id] ?? 2024;
@@ -131,8 +133,8 @@ export function EarthEngineDisplayControls({ map, mapYear, manifests, loading, e
       const years = bounds ? Array.from({ length: bounds[1] - bounds[0] + 1 }, (_, index) => bounds[1] - index) : [];
       const installedYears = manifests.filter((item) => item.layers.some((entry) => entry.id === descriptor.id && entry.status === "approved"))
         .map(earthEngineSetYear).filter((value): value is number => value !== null);
-      return <article key={descriptor.id} data-status={!installed || failed || mapUnavailable ? "held" : selected ? "visible" : "ready"}>
-        <div className={styles.rowHead}><label><input type="checkbox" checked={selected} disabled={!installed || failed} onChange={(event) => {
+      return <article key={descriptor.id} hidden={!layerEntryMatches({ id: descriptor.id, title: descriptor.title, keywords: `${descriptor.source} ${descriptor.attribution}`, topics: imageryTopics(descriptor.id), selected, imagery: true }, catalogView, catalogTopic, catalogQuery)} data-status={!installed || failed || mapUnavailable ? "held" : selected ? "visible" : "ready"}>
+        <div className={styles.rowHead}><label><input type="checkbox" checked={selected} disabled={!selected && (!installed || failed)} onChange={(event) => {
           setVisibilityTouched(true);
           setVisible((current) => ({ ...current, [descriptor.id]: event.target.checked }));
         }} /><strong>{descriptor.title}</strong></label><span>{!installed ? "YEAR NOT INSTALLED" : failed ? "TILE UNAVAILABLE" : selected ? mapUnavailable ? "SELECTED · MAP UNAVAILABLE" : rendererState === "unsupported" ? "SELECTED · 2D VIEWER" : "SELECTED" : "READY"}</span></div>

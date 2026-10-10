@@ -28,7 +28,7 @@ function checkedAvailability(value: unknown): Availability {
     coverageState: String(data.coverageState), coverageCheckpoints: checkpoints as Record<string, number | null> };
 }
 
-export function CropCasmaControl({ mapRef, styleReady, projection }: { mapRef: RefObject<MapLibreMap | null>; styleReady: boolean; projection: "mercator" | "globe" }) {
+export function CropCasmaControl({ mapRef, styleReady, projection, onSelectionChange }: { mapRef: RefObject<MapLibreMap | null>; styleReady: boolean; projection: "mercator" | "globe"; onSelectionChange?: (selected: boolean) => void }) {
   const [availability, setAvailability] = useState<Availability | null>(null);
   const [checking, setChecking] = useState(false);
   const [enabled, setEnabled] = useState(false);
@@ -114,6 +114,7 @@ export function CropCasmaControl({ mapRef, styleReady, projection }: { mapRef: R
     if (map?.getLayer(LAYER)) syncMercatorRaster(map, LAYER, opacity, projection);
   }, [mapRef, opacity, projection, styleReady]);
 
+  useEffect(() => { onSelectionChange?.(enabled); }, [enabled, onSelectionChange]);
   const globeHeld = projection === "globe";
   const available = availability?.state === "available";
   const displayState = enabled && (!available || globeHeld || !styleReady) ? "held" : renderState;
@@ -123,9 +124,9 @@ export function CropCasmaControl({ mapRef, styleReady, projection }: { mapRef: R
         aria-label={enabled ? "Hide Crop-CASMA 1 km soil moisture" : "Show Crop-CASMA 1 km soil moisture"}
         onChange={event => { setEnabled(event.target.checked); if (!event.target.checked) setRenderState("off"); }} /><span aria-hidden="true" /></label>
       <i style={{ "--swatch": "#77c5a6" } as React.CSSProperties} />
-      <div><strong>Soil moisture · 1 km hybrid</strong><small>USDA NASS Crop-CASMA · derived numeric cells · {checking ? "checking" : availability?.state ?? "unchecked"}</small></div>
+      <div><strong>Soil moisture · 1 km hybrid</strong><small>USDA NASS Crop-CASMA · derived numeric cells · {enabled ? globeHeld ? "selected · globe held" : displayState : checking ? "checking" : availability?.state ?? "unchecked"}</small></div>
     </div>
-    <div className="official-context-option-body">
+    <details className="specialty-layer-details"><summary>Source &amp; controls</summary><div className="official-context-option-body">
       <div className="soil-display-panel"><div><span>SEPARATE REVIEWED PRODUCT</span><strong>{availability?.day ?? "No active day"}</strong><small>1,000 m source grid · volumetric moisture (m³/m³) · no value interpolation</small></div><b data-state={displayState}>{enabled ? globeHeld && available ? "GLOBE HELD" : displayState.toUpperCase() : available ? "READY" : "HELD"}</b></div>
       {availability?.state === "available" ? <>
         <label className="crop-casma-opacity">Opacity <input type="range" min="0" max="100" value={Math.round(opacity * 100)} onChange={event => setOpacity(Number(event.target.value) / 100)} /><output>{Math.round(opacity * 100)}%</output></label>
@@ -134,6 +135,6 @@ export function CropCasmaControl({ mapRef, styleReady, projection }: { mapRef: R
       </> : <p>{availability?.state === "error" ? "The reviewed package could not be checked. No 1 km image is shown." : "A 1 km source candidate requires steward review and release before map tiles can be shown."}</p>}
       <div className="soil-source-actions"><button type="button" onClick={() => setRevision(value => value + 1)} disabled={checking}>Recheck release</button><a href="https://nassgeo.csiss.gmu.edu/Crop-CASMA-Developer/wcs/SMAP-HYB-1KM/" target="_blank" rel="noopener noreferrer">Provider guide ↗</a></div>
       <small>The palette colors exact nearest source cells. Zooming in cannot reveal detail below 1 km; this layer has no invented intermediate observations or missing-day loop.</small>
-    </div>
+    </div></details>
   </article>;
 }
