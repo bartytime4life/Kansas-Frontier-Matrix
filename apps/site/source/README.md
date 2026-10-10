@@ -703,8 +703,9 @@ into inferred facts.
   only the exact hosted Site, `http://127.0.0.1:5173`, and
   `http://127.0.0.1:4173` origins. A browser may require explicit loopback-network
   permission. Other devices cannot use this bridge.
-- The owner-observed, test-pinned local runtime profile is Ollama `0.35.1` with
-  `qwen3:8b`, GGUF Q4_K_M, 8.2B parameters, pinned to
+- The owner-observed, tested local runtime profile is Ollama `0.35.1` or newer
+  (Ollama.app updates itself, so the release is a floor rather than an exact
+  pin) with `qwen3:8b`, GGUF Q4_K_M, 8.2B parameters, pinned to
   `sha256:500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41`.
   This is an owner-local operating record, not model-registry admission,
   provider approval, or acceptance of the proposed AI ADRs. `/health` becomes
@@ -740,9 +741,10 @@ For a foreground check from this Site checkout, run:
 node scripts/local-qwen-bridge.mjs
 ```
 
-On macOS, the opt-in installer verifies the running Ollama service, exact model
-tag, and full digest before copying the resolved Node executable plus the three
-non-secret bridge files into the versioned user Application Support directory
+On macOS, the opt-in installer verifies the running Ollama service (at or above
+the tested release), exact model tag, and full digest before copying the
+resolved Node executable plus the five non-secret bridge files (bridge,
+contract, context validator, knowledge selector, and knowledge pack) into the versioned user Application Support directory
 and installing a loopback-only LaunchAgent. The agent therefore does not depend
 on a later shell `PATH` or the original Node installation path:
 
@@ -757,8 +759,10 @@ the bridge service without removing Ollama or its model with:
 scripts/uninstall-local-qwen-macos.sh
 ```
 
-Logs contain bridge lifecycle output only, never questions, prompts, map context,
-model answers, or raw Ollama responses. Add `--remove-logs` to the uninstall
+Logs contain bridge lifecycle output and one JSON receipt line per request
+(request id, route, outcome, reason code, prompt profile, latency, token counts,
+and which knowledge-pack sources were selected). They never contain questions,
+prompts, map context, model answers, or raw Ollama responses. Add `--remove-logs` to the uninstall
 command to remove those lifecycle logs too.
 
 `scripts/qwen-local-contract.mjs` is the single versioned, non-secret runtime
@@ -768,12 +772,16 @@ digest, Ollama version, loopback addresses, exact origin allowlist, versions,
 finite states, structured-response schema, and public envelope validators are
 not maintained as separate component-specific settings.
 
-`GET /health` returns contract `kfm-qwen-local-v1`, bridge version `1.1.2`, the
-pinned tag and digest, and exactly one bounded status: `ready`,
+`GET /health` returns contract `kfm-qwen-local-v2`, bridge version `2.0.0`, the
+pinned tag and digest, the observed Ollama release, the knowledge-pack version
+and digest, and exactly one bounded status: `ready`,
 `ollama_unavailable`, `model_missing`, or `error`. `POST /ask` repeats the model
 and digest metadata and returns exactly one finite outcome: `ANSWER`, `ABSTAIN`,
-`DENY`, or `ERROR`. The bridge rechecks the pinned Ollama version and model
-digest immediately before inference, permits one active `/ask` inference request, caps
+`DENY`, or `ERROR`, plus a `receipt` (request id, prompt profile, context and
+knowledge digests, selected knowledge sources, latency, token counts). The
+bridge rechecks the Ollama release floor and model digest immediately before
+inference, sets an explicit 16,384-token context window so Ollama never
+silently truncates the system rules, permits one active `/ask` inference request, caps
 request/reply sizes, times out inference, rejects
 redirects, disables model thinking and tools, and never returns raw upstream
 errors. Every request must carry an explicit boolean `camera.locationRedacted`
@@ -793,7 +801,7 @@ and undeclared model-produced EvidenceRefs fail closed.
 The model must return a bounded structured disposition. A model declaration of
 support is necessary but never sufficient: the bridge also requires a supported
 released selection, a question explicitly tied to that selection, and only its
-declared EvidenceRef. Model-authored prose is never returned to the browser. On
+declared EvidenceRef. Model-authored prose is never returned as an `ANSWER`. On
 `ANSWER`, the companion emits a deterministic projection of the already
 validated selection fields and EvidenceRef; unsupported, uncited, malformed,
 restricted, over-precise, or undeclared-reference output becomes `ABSTAIN`,
@@ -807,6 +815,38 @@ The current `LAYER_REGISTRY` is intentionally empty, so the live Site has no
 released feature selection that can pass these positive gates and must abstain.
 Positive `ANSWER` tests use explicitly synthetic future-release contract
 fixtures; they do not assert or invent a live released record.
+
+#### Interpretation and the KFM knowledge pack (contract v2)
+
+Because no released selection exists yet, contract v1 never reached the model:
+every view-level question abstained before inference. Contract v2 keeps that
+`ABSTAIN` but lets the local model attach an **interpretation** to it when the
+reason is `CONTEXT_ONLY_INTERPRETATION`, `EVIDENCE_NOT_SUPPORTIVE`, or
+`QUESTION_OUTSIDE_SELECTION_SCOPE`. The interpretation is structured as a
+summary, observations seen in the supplied context, cautious inferences, gaps
+(what KFM would need before it could answer with evidence), and follow-up
+questions. It is shown under "Interpretation · not evidence", may not contain a
+`kfm:` EvidenceRef (fails closed as `UNDECLARED_EVIDENCE_REFERENCE`) or precise
+coordinates (`OVER_PRECISE_OUTPUT`), and never accompanies `ANSWER`, `DENY`, or
+`ERROR`. Restrictive context still denies before Ollama. Questions about safety,
+emergencies, digging or excavation, legal or medical matters, or exact
+locations abstain as `SENSITIVE_QUESTION_NOT_INTERPRETED` without calling the
+model.
+
+The model is grounded in metadata rather than raw data.
+`scripts/qwen-knowledge-pack.mjs` is generated by
+`node scripts/build-qwen-knowledge-pack.mjs` from the Site's own
+`OFFICIAL_CONTEXT_SOURCES` and `EXTERNAL_CONTEXT_SOURCES` registries (title,
+organization, domain, cadence, freshness, `boundary` — what each source is
+*not* — and fallback), plus the curated `scripts/qwen-knowledge-curated.mjs`:
+KFM principles, a glossary of outcomes, evidence, release, and public states,
+per-domain exploration ideas, and project ideas. For each question the bridge
+ranks sources by what is displayed and what was asked, sends full metadata for
+at most eight of them and a one-line index of the rest, and trims to a fixed
+byte budget alongside the map context. The pack ships with the companion, so a
+browser cannot alter it. Its digest is recorded in `/health` and in every
+interpretation receipt. `tests/qwen-knowledge.test.mjs` fails when the
+committed pack drifts from the registries; regenerate it after editing either.
 
 Loopback and origin checks protect the browser-to-companion boundary, but they
 are not isolation from another process running as the same macOS user. The
@@ -839,7 +879,9 @@ origin allowlist, and pinned digest are transport and identity controls, not
 evidence resolution, model-registry admission, publication, or a verified
 Qwen/Focus transaction. The hosted `/api/qwen` route is not an availability
 fallback and no hosted model setting is changed. Tests use mocked model responses
-and do not prove a local Ollama installation or browser permission. Repository status responses now enforce
+and do not prove a local Ollama installation or browser permission. Contract v2
+interpretations are model language on an `ABSTAIN`; they are not evidence, are
+not admitted, and cannot change review, release, or publication state. Repository status responses now enforce
 their 512 KiB limit while streaming, rather than after buffering the entire body.
 Canonical social metadata uses the registered Site origin, not forwarded headers.
 

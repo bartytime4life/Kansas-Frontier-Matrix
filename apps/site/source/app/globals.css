@@ -2118,6 +2118,15 @@ body { font-size: 14px; }
 .qwen-messages article > span { color: var(--water); font-size: 12px; font-weight: 950; letter-spacing: .12em; }
 .qwen-messages article[data-role="user"] > span { color: var(--gold); }
 .qwen-messages article p { margin: 0; color: #d9e7e2; font-size: 14px; line-height: 1.45; }
+.qwen-interpretation { display: grid; gap: 7px; margin-top: 4px; border-left: 2px dashed rgba(224, 186, 109, .5); padding: 2px 0 2px 10px; }
+.qwen-interpretation header { color: var(--gold); font-size: 10px; font-weight: 900; letter-spacing: .1em; }
+.qwen-interpretation strong { display: block; color: var(--dim); font-size: 11px; font-weight: 850; letter-spacing: .04em; }
+.qwen-interpretation ul { margin: 3px 0 0; padding-left: 17px; color: #cfdeda; font-size: 13px; line-height: 1.4; }
+.qwen-interpretation small { color: var(--dim); font-size: 10px; letter-spacing: .06em; }
+.qwen-follow-ups { display: flex; flex-wrap: wrap; gap: 5px; }
+.qwen-follow-ups strong { flex-basis: 100%; }
+.qwen-follow-ups button { min-width: 0; max-width: 100%; border: 1px solid rgba(115, 199, 210, .25); border-radius: 999px; background: rgba(115, 199, 210, .06); color: #b9edf1; padding: 2px 10px; font-size: 12px; text-align: left; overflow-wrap: anywhere; }
+.qwen-follow-ups button:hover { border-color: var(--water); background: rgba(115, 199, 210, .13); }
 .qwen-thinking p { color: var(--water) !important; }
 .qwen-quick-prompts { display: flex; gap: 6px; overflow-x: auto; flex: none; border-top: 1px solid var(--line); padding: 9px 12px 3px; scrollbar-width: thin; }
 .qwen-quick-label { align-self: center; flex: none; color: var(--dim); font-size: 10px; font-weight: 900; letter-spacing: .08em; white-space: nowrap; }

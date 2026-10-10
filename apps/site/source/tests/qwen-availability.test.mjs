@@ -71,6 +71,8 @@ test("ask envelopes share the pinned contract and map only finite local outcomes
     reasonCode: "SUPPORTED_SELECTION_INTERPRETATION",
     answer: "Supported by kfm:evidence:test:one.",
     evidenceRefs: ["kfm:evidence:test:one"],
+    interpretation: null,
+    requestId: null,
   });
   assert.equal(qwenStateFromAsk(answered), "answered");
   assert.equal(qwenStateFromAsk(localQwenAskEnvelope("ABSTAIN", "MODEL_ABSTAINED")), "abstained");
@@ -82,6 +84,44 @@ test("ask envelopes share the pinned contract and map only finite local outcomes
   assert.equal(isQwenAskEnvelope({ ...answered, endpoint: "https://model.test" }), false);
 });
 
+test("interpretations ride only on explanatory ABSTAIN envelopes and never cite or locate", () => {
+  const interpretation = {
+    summary: "The view shows river gauges as external context.",
+    observations: ["USGS River Pulse is displayed."],
+    inferences: [],
+    gaps: ["A released EvidenceBundle for one reach."],
+    followUps: ["Which watersheds lack a gauge?"],
+  };
+  const receipt = {
+    requestId: "00000000-0000-4000-8000-000000000000",
+    profile: "context-interpretation-v1",
+    modelInvoked: true,
+    contextSha256: `sha256:${"a".repeat(64)}`,
+    knowledgeVersion: "kfm-qwen-knowledge-v1",
+    knowledgeDigest: `sha256:${"b".repeat(64)}`,
+    knowledgeSourceIds: ["usgs-streamflow"],
+    latencyMs: 1200,
+    promptTokens: 3000,
+    outputTokens: 120,
+  };
+  const abstained = localQwenAskEnvelope("ABSTAIN", "CONTEXT_ONLY_INTERPRETATION", { interpretation, receipt });
+  assert.deepEqual(parseQwenAskEnvelope(abstained)?.interpretation, interpretation);
+  assert.equal(parseQwenAskEnvelope(abstained)?.requestId, receipt.requestId);
+  assert.equal(qwenStateFromAsk(abstained), "abstained");
+  for (const [outcome, reasonCode] of [["DENY", "POLICY_WITHHELD"], ["ERROR", "LOCAL_MODEL_UNAVAILABLE"], ["ABSTAIN", "SENSITIVE_QUESTION_NOT_INTERPRETED"]]) {
+    assert.equal(isQwenAskEnvelope({ ...localQwenAskEnvelope(outcome, reasonCode), interpretation }), false, reasonCode);
+  }
+  for (const unsafe of [
+    { ...interpretation, summary: "Supported by kfm:evidence:invented." },
+    { ...interpretation, observations: ["At 38.12345, -98.54321."] },
+    { ...interpretation, followUps: ["a", "b", "c", "d"] },
+    { ...interpretation, extra: "field" },
+  ]) assert.equal(isQwenAskEnvelope({ ...abstained, interpretation: unsafe }), false);
+  assert.equal(isQwenAskEnvelope({ ...abstained, receipt: { ...receipt, question: "leak" } }), false);
+  assert.equal(isQwenAskEnvelope({ ...abstained, receipt: { ...receipt, profile: "none" } }), false);
+  assert.equal(isQwenAskEnvelope({ ...abstained, contract: "kfm-qwen-local-v1" }), false);
+});
+
 test("hosted, malformed and extended envelopes are never assumed as fallback state", () => {
   for (const value of [
     null,
@@ -89,6 +129,9 @@ test("hosted, malformed and extended envelopes are never assumed as fallback sta
     { ...health("ready"), model: "qwen2.5:7b-instruct-fp16" },
     { ...health("ready"), modelDigest: "sha256:" + "0".repeat(64) },
     { ...health("ready"), bridgeVersion: "1.0.0" },
+    { ...health("ready"), contract: "kfm-qwen-local-v1" },
+    { ...health("ready"), knowledgeDigest: "not-a-digest" },
+    { ...health("ready"), ollamaVersion: "latest" },
     { ...health("ready"), endpoint: "https://model.test" },
     { ...health("ready"), status: "hosted-answered" },
   ]) {
