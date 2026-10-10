@@ -1,6 +1,9 @@
 # Kansas history and archive library
 
 Open **Data & downloads → History & archives**, `/downloads#history`.
+The linked [people and history research index](people-history-research.md) adds
+2,886 entries from a separate 15-source request at `/history/people-events`, with
+search, source/kind filters, JSON/CSV exports and explicit acquisition limits.
 The 17 supplied URLs are retained in `public/history/sources.json` with access,
 coverage, rights, checked time, source evidence and size findings. Two malformed
 combined links were split into four individual URLs. Source guides and GIS
