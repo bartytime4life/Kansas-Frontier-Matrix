@@ -61,10 +61,10 @@ only changes the import path to the repository's canonical tool home. No unexpec
 mirror deletion or unexplained difference remains. Inventory digest:
 `ed093291ffe37e0ebe2ef0376a797f89710134f20451273b798aa6962cc274aa`.
 
-The selected v192 receipt in `tools/qa/site_mirror.py` remains unchanged. Main's
-content-parity check passed before this change. The new candidate intentionally
-requires reconciliation review; a resulting `MIRROR_REVIEW_REQUIRED` is attributable
-to this candidate, not an inherited failure. The v213 receipt does not record human
+Initially the selector retained v192 and the new paths produced
+`MIRROR_REVIEW_REQUIRED`; this was candidate drift, not an inherited base failure.
+The final v214 checkpoint below resolves recorded-content parity separately
+from pending human review, following the current mirror governance audit. The v213 receipt does not record human
 approval, select itself, establish hosted equivalence, or authorize data release.
 
 ## Executed validation
@@ -133,8 +133,8 @@ settings, staging, review, activation, withdrawal and publication of data remain
 separate operations. No new water acquisition schedule or operational service
 was installed by this reconciliation.
 
-Next: review the exact candidate and receipt, resolve the selected mirror checkpoint
-through its review process, monitor a compatible dependency fix, and measure map
+Next: review the exact candidate and its selected receipt, monitor a compatible
+dependency fix, and measure map
 startup/interaction performance against a fixed device/view baseline. The repository changes remain unmerged. GitHub now marks PR #5014 ready for
 review; this session did not change its draft status or merge it.
 
@@ -154,7 +154,9 @@ execution belongs to the equivalent executable code before these comments.
 The [v214 candidate receipt](../../data/receipts/generated/site-v214-reconciliation-20261010.json)
 supersedes the v213 candidate for review and preserves that historical receipt.
 It records 921 exact application mirror paths plus the same two canonical tool
-mappings. The active v192 checker and its separate review hold remain unchanged.
+mappings. The checker now selects this exact current receipt for content parity
+only; the historical v192 receipt remains unchanged. Review stays PENDING and
+`review_acceptance.outcome` remains NOT_EVALUATED.
 The completed security diff likewise precedes only these comments and the
 repository smoke-inventory correction; no new security scan is claimed.
 
@@ -164,4 +166,5 @@ port 4173 returned HTTP 200 after the switch. Both v213 and the original v4
 installation remain available; the original D1/R2 state path is unchanged.
 The recovery directory now includes `installation-v214.json` and
 `switch-v214.json`. The v214 candidate content-parity check passes when read
-explicitly, with human review `NOT_EVALUATED`; the selected receipt is untouched.
+by the normal check, with human review `NOT_EVALUATED`. No validation rule,
+allowed state or fail-closed condition was weakened.

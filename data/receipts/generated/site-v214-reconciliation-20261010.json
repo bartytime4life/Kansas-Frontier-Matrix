@@ -4636,7 +4636,10 @@
   "recorded_at": "2026-10-10",
   "repository_base": "631e8f6a93d1fdf053bedbd980b4bd7a5b77748c",
   "review": {
-    "blocking_checks": "See exact PR head checks; this receipt is not selected by tools/qa/site_mirror.py.",
+    "blocking_checks": [
+      "repository_review",
+      "human_acceptance"
+    ],
     "hosted_equivalence": false,
     "human_acceptance": false,
     "source_and_overlay_review": "PENDING"
@@ -4654,6 +4657,7 @@
     "scan_id": "8cc59242-fea4-49c3-bf55-382012bc5474",
     "snapshot_digest": "9272702ba11ac175de2dd6580b1497e77577a903211a2e60f487ff61c5efb86b"
   },
+  "selector_authority": "CONTENT_PARITY_ONLY; selecting this receipt does not evaluate or grant human acceptance.",
   "site_audience": "owner-only",
   "site_candidate_commit": "11f1c546d56dcaec08454f99130350ce536328a2",
   "site_deployment_id": "appgdep_6aca9c6e29a48191aac22f020f764428",

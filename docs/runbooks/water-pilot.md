@@ -6,6 +6,19 @@ No real package has been released, activated or published yet.
 The first milestone remains open until the real reviewed package completes the
 local browser journey and private Site acceptance/rollback gates.
 
+## Current Site and mirror candidate — v214 / 2026-10-10
+
+The [reconciliation report](../reports/kfm-reconciliation-20261010.md) records
+owner-private v214 source `11f1c546d56dcaec08454f99130350ce536328a2`, deployed as
+`appgdep_6aca9c6e29a48191aac22f020f764428`, and the matching local installation.
+The checker selects the [921-file current receipt](../../data/receipts/generated/site-v214-reconciliation-20261010.json)
+for **CONTENT_PARITY_ONLY**, with two additional canonical local-tool mappings.
+All prior receipts remain historical. Source/overlay review is **PENDING**;
+`review_acceptance` is **NOT_EVALUATED**. No source admission, package approval,
+activation or hosted equivalence is inferred from this check. The PR remains
+subject to repository review and merge; the following audit explains the
+separation between content parity and acceptance.
+
 ## Mirror governance audit — 2026-10-10
 
 **CONFIRMED at repository `main@82dfddf806f0c0e0ab7c67b139d17490abb8352f`:**
