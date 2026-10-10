@@ -104,11 +104,11 @@ def fsync_directory(path: Path) -> None:
 
 def write_new(path: Path, content: bytes) -> None:
     """Write an immutable metadata object; never replace an existing path."""
-    target = path.resolve(strict=False)
-    if not target.is_absolute():
+    # Lexical only: resolve() would follow symlinks and hide them from the
+    # real-directory chain check below.
+    if any(part in {".", ".."} for part in path.parts):
         raise ValueError("UNSAFE_PATH")
-    if any(part in {".", ".."} for part in target.parts):
-        raise ValueError("UNSAFE_PATH")
+    target = path.absolute()
     check_directory(target.parent, create=True)
     fd, name = tempfile.mkstemp(prefix=".capture-", dir=target.parent)
     temporary = Path(name)

@@ -465,30 +465,23 @@ def release_plan(root: Path, budget: dict | None = None) -> dict:
 
 # --- apply ----------------------------------------------------------------
 
-IDENTITY_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")
+# Matches item_id(): the first 32 lowercase hex digits of a SHA-256 digest.
+IDENTITY_RE = re.compile(r"[0-9a-f]{32}")
 
 
 def _validated_identity(identity: str) -> str:
     if not isinstance(identity, str) or not IDENTITY_RE.fullmatch(identity):
-        raise IntakeError("IDENTITY_INVALID")
-    try:
-        parsed = uuid.UUID(identity)
-    except (ValueError, AttributeError, TypeError):
-        raise IntakeError("IDENTITY_INVALID") from None
-    if str(parsed) != identity:
         raise IntakeError("IDENTITY_INVALID")
     return identity
 
 
 def _receipt(root: Path, identity: str, action: str, body: dict) -> str:
     identity = _validated_identity(identity)
+    if action not in ("stage", "card"):
+        raise IntakeError("ACTION_UNSUPPORTED")
     stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
     relative = f"data/receipts/intake/{identity}/{stamp}-{action}-{uuid.uuid4().hex[:8]}.json"
-    root_resolved = root.resolve(strict=False)
-    target = (root / relative).resolve(strict=False)
-    if not target.is_relative_to(root_resolved):
-        raise IntakeError("UNSAFE_PATH")
-    write_new(target, canonical(body))
+    write_new(root / relative, canonical(body))
     return relative
 
 
