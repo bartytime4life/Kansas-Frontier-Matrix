@@ -6,7 +6,33 @@ No real package has been released, activated or published yet.
 The first milestone remains open until the real reviewed package completes the
 local browser journey and private Site acceptance/rollback gates.
 
-## Current cutaway rendering candidate — v218 / 2026-10-10
+## Current cutaway texture candidate — v219 / 2026-10-10
+
+Owner-private source `24b469fab699a04db1a0ce6730a9257b1b800a4c` deployed as
+`appgdep_6acab51384c8819192cfc1f570059373`. Appearance controls reuse the
+current map texture; changing its sampling mode or replacing its image still
+updates it. New high-detail frames retain Exact pixels/Smooth image. Source
+pixels, geographic mapping, camera behavior, data and release boundaries remain
+unchanged. The 24-update regression now marks zero extra texture uploads,
+previously 24; this is work-count evidence, not browser FPS or provider latency.
+Both added regressions failed before the fix. All 1,006 Site tests, type checking
+and production build pass, including 28 focused tests. The built browser rendered
+one aquifer range and 28 columns from 50 records, disclosed partial coverage,
+selected Smooth image and changed opacity by keyboard and pointer. Surface
+refresh reached ready at 4096 × 3437 pixels, retaining Smooth image and 65%
+opacity. Intermittent browser-control timeouts recovered. Broader acceptance
+remains open. An older MAP IMAGE UNAVAILABLE caption remains below the rendered
+detail; diagnosis and correction of that fallback-image status are separate.
+All 928 source and 427 build files checksum-match the new v219 PC installation;
+port 4173 returns HTTP 200. The original persistent store and v218 installation
+remain intact. No data migration; rollback has not been re-rehearsed this batch.
+The [926-file mirror receipt](../../data/receipts/generated/site-v219-cutaway-textures-20261010.json)
+retains two canonical mappings, PENDING human review and unevaluated hosted
+parity. PR #5018 remains a draft; predecessor head `c31f097bc4f25eb8731148097a87272997dec43e`
+completed 107 checks successfully with two skipped. Updated-head checks are separate.
+No new source admission, data activation, acquisition jobs or infrastructure.
+
+## Previous cutaway rendering checkpoint — v218 / 2026-10-10
 
 Owner-private source `ca42e125009db406f9fa12700185559aac717008` deployed as
 `appgdep_6acab203acf88191b9383bffa79560e7`. Camera, appearance and surface

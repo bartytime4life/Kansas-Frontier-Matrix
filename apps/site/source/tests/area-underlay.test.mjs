@@ -31,8 +31,8 @@ async function productionFlatMap(map,reduced=false){
  for(const name of ['stopSceneOrbit','stopFlyover','applyProjectionNavigationLimits','setProjection','setScenePreset','setVerticalExaggeration','setAtmospherePreset','setLightAzimuth','setFieldOfView','announce'])context[name]=noop;
  vm.runInNewContext(compile(page.slice(start,end)+'\nexports.activate=activateMapRepresentation;'),context);return()=>exports.activate('2d');
 }
-async function harness({reduced=true,map=locator(),actualSession=false,failWorker=false,onFlatMap=()=>{},onArea=()=>{}}={}){
- const renders=[],renderers=[],controls=[],inspections=[],events=new Map(),tasks=new Map(),frames=new Map(),requests=[];let session,prepares=0,rayHits=[],timerId=0,frameId=0;const worker={terminate(){},postMessage:value=>requests.push(value)};
+async function harness({reduced=true,map=locator(),actualSession=false,failWorker=false,fakeDetail=false,onFlatMap=()=>{},onArea=()=>{}}={}){
+ const renders=[],renderers=[],controls=[],inspections=[],detailSessions=[],events=new Map(),tasks=new Map(),frames=new Map(),requests=[];let session,prepares=0,rayHits=[],timerId=0,frameId=0;const worker={terminate(){},postMessage:value=>requests.push(value)};
  const flushFrame=()=>{const pending=[...frames.values()];frames.clear();pending.forEach(callback=>callback(performance.now()));};
  const T={...Three,WebGLRenderer:class{
   constructor(){this.domElement={clientWidth:700,clientHeight:430,tabIndex:0,setAttribute(){},remove(){},addEventListener:(name,fn)=>events.set(name,fn),removeEventListener:name=>events.delete(name),getBoundingClientRect:()=>({left:0,top:0,width:700,height:430})};renderers.push(this);}
@@ -40,12 +40,12 @@ async function harness({reduced=true,map=locator(),actualSession=false,failWorke
  },Raycaster:class extends Three.Raycaster{intersectObjects(owners){return rayHits.filter(h=>owners.includes(h.object));}}};
  class OrbitControls{constructor(camera){this.camera=camera;this.target=new Three.Vector3();this.mouseButtons={};this.touches={};controls.push(this);}update(){this.camera.lookAt(this.target);}addEventListener(){}removeEventListener(){}listenToKeyEvents(){}dispose(){}}
  const h=await componentHarness('app/aquifer-volume-view.tsx',{
-  './selected-surface-map':{default:()=>null},'./cutaway-surface-detail':surfaceDetail,'./subsurface-workers':{startAquiferVolumeWorker:()=>{if(failWorker)throw new Error('worker unavailable');return worker;}},'./aquifer-volume':volumeModel,'./subsurface-materials':materials,'./cutaway-model':cutaway,'./cutaway-camera':camera,'./aquifer-layers':{KGS_ATLAS_URL:'https://example.test/'},'./subsurface.module.css':{default:style},'./aquifer-volume-mesh':{aquiferGeometries:()=>[]},'./aquifer-view-session':{locatorBounds:viewSession.locatorBounds,startAquiferView:options=>{session=options;if(actualSession)return viewSession.startAquiferView({...options,timers:{set:(cb,delay)=>{const id=++timerId;tasks.set(id,{cb,delay});return id},clear:id=>tasks.delete(id)}});return Object.assign(()=>{},{prepare:()=>prepares++});}},three:T,'three/addons/controls/OrbitControls.js':{OrbitControls}
+  './selected-surface-map':{default:()=>null},'./cutaway-surface-detail':fakeDetail?{...surfaceDetail,startCutawaySurfaceDetail:options=>{const session={...options,update(){},dispose(){this.disposed=true;}};detailSessions.push(session);return session;}}:surfaceDetail,'./subsurface-workers':{startAquiferVolumeWorker:()=>{if(failWorker)throw new Error('worker unavailable');return worker;}},'./aquifer-volume':volumeModel,'./subsurface-materials':materials,'./cutaway-model':cutaway,'./cutaway-camera':camera,'./aquifer-layers':{KGS_ATLAS_URL:'https://example.test/'},'./subsurface.module.css':{default:style},'./aquifer-volume-mesh':{aquiferGeometries:()=>[]},'./aquifer-view-session':{locatorBounds:viewSession.locatorBounds,startAquiferView:options=>{session=options;if(actualSession)return viewSession.startAquiferView({...options,timers:{set:(cb,delay)=>{const id=++timerId;tasks.set(id,{cb,delay});return id},clear:id=>tasks.delete(id)}});return Object.assign(()=>{},{prepare:()=>prepares++});}},three:T,'three/addons/controls/OrbitControls.js':{OrbitControls}
  },{devicePixelRatio:1,performance,queueMicrotask,matchMedia:()=>({matches:reduced,addEventListener(){},removeEventListener(){}}),document:{hidden:false,createElement:()=>({getContext:()=>({fillRect(){},fillText(){}})}),addEventListener(){},removeEventListener(){}},ResizeObserver:class{observe(){}disconnect(){}},requestAnimationFrame:callback=>{const id=++frameId;frames.set(id,callback);return id},cancelAnimationFrame:id=>frames.delete(id)});
  let props={map,records:[record,later],onFlatMap,onLocate(){},onInspect:(...args)=>inspections.push(args),locator:{anchor:record.coordinates,pinned:false},onLocatorSlot(){},sliceEntry:{type:'details',props:{children:'Inspect an individual log'}},onArea,recordsAvailable:2,onResetRecords(){},recordsLoading:false,recordStatus:'2 loaded records in selected area',partial:false,recordNavigation:{type:'nav',props:{'aria-label':'Record time navigation',children:'Record time'}}},tree;
  const host={clientWidth:700,clientHeight:430,append(){}};
  const render=async(patch={})=>{props={...props,...patch};tree=h.render(h.exports.default,props);const canvas=findNode(tree,n=>n.props?.className==='cutawayCanvas');if(canvas)canvas.props.ref.current=host;h.commit();await settle();flushFrame();return tree;};await render();await render();
- return{h,render,renders,renderers,controls,inspections,events,map,worker,requests,flushFrame,flush(delay){for(const [id,task] of [...tasks])if(task.delay===delay){tasks.delete(id);task.cb()}},get tree(){return tree;},get session(){return session;},get prepares(){return prepares;},setHits:h=>rayHits=h};
+ return{h,render,renders,renderers,controls,inspections,detailSessions,events,map,worker,requests,flushFrame,flush(delay){for(const [id,task] of [...tasks])if(task.delay===delay){tasks.delete(id);task.cb()}},get tree(){return tree;},get session(){return session;},get prepares(){return prepares;},setHits:h=>rayHits=h};
 }
 test('area selection starts without an empty canvas or disabled timeline, then reveals the model and disclosed tools',async()=>{
  const h=await harness();assert.equal(h.session.manual,true);assert.equal(h.prepares,0);assert.equal(h.renderers.length,0);
@@ -195,4 +195,43 @@ test('Top view targets the surface so close zoom never dives under a deep exagge
  button(h.tree,'Top view').props.onClick();const c=h.renders.at(-1).camera,target=h.controls.at(-1).target;assert.equal(target.y,0);
  for(let i=0;i<100;i++)findNode(h.tree,n=>n.props?.['aria-label']==='Zoom in').props.onClick();
  assert.ok(c.position.y>0,'camera stays above the geographic surface');assert.equal(target.y,0);assert.equal(h.prepares,0);h.h.dispose();
+});
+
+
+const mappedPlanes=h=>{
+ const result=[];h.renders.at(-1).scene.traverse(node=>{if(node.geometry?.type==='PlaneGeometry'&&node.material?.map)result.push(node)});return result;
+};
+test('appearance controls reuse the captured surface without marking its unchanged pixels for upload',async()=>{
+ const h=await harness(),image={width:4096,height:3437};h.session.onSnapshot({volume,image});await h.render();
+ const [plane]=mappedPlanes(h),texture=plane.material.map,version=texture.version,camera=h.renders.at(-1).camera;
+ const input=label=>findNode(h.tree,n=>n.props?.['aria-label']===label);
+ for(let i=1;i<=20;i++){input('Basemap opacity').props.onChange({target:{value:String(i*5)}});await h.render();assert.equal(plane.material.opacity,i/20);}
+ input('Aquifer opacity').props.onChange({target:{value:'40'}});await h.render();
+ input('Cutaway vertical scale').props.onChange({target:{value:'50'}});await h.render();
+ button(h.tree,'Move').props.onClick();await h.render();button(h.tree,'Show recorded columns').props.onClick();await h.render();
+ assert.equal(texture.version,version,'24 appearance changes cause zero additional texture upload requests');
+ assert.equal(texture.image,image);assert.equal(plane.material.map,texture);assert.equal(h.renders.at(-1).camera,camera);
+ button(h.tree,'Exact pixels').props.onClick();await h.render();assert.equal(texture.version,version+1);assert.equal(texture.magFilter,Three.LinearFilter);assert.equal(texture.minFilter,Three.LinearFilter);
+ button(h.tree,'Smooth image').props.onClick();await h.render();assert.equal(texture.version,version+2);assert.equal(texture.magFilter,Three.NearestFilter);
+ let disposed=0;texture.addEventListener('dispose',()=>disposed++);h.h.dispose();assert.equal(disposed,1);
+});
+test('new and refreshed detail frames retain the chosen sampling and geography without opacity uploads',async()=>{
+ const h=await harness({fakeDetail:true});h.session.onSnapshot({volume,image:null});await h.render();
+ button(h.tree,'Exact pixels').props.onClick();await h.render();
+ const surface=findNode(h.tree,n=>typeof n.props?.onCapture==='function');surface.props.onCapture({bounds:volume.bounds,style:{version:8,sources:{},layers:[]},images:[]});await h.render();
+ assert.equal(h.detailSessions.length,1);const detail=h.detailSessions[0],image={width:4096,height:3437};
+ detail.onFrame({image,bounds:volume.bounds,zoom:12});h.flushFrame();
+ let [plane]=mappedPlanes(h),texture=plane.material.map;
+ assert.equal(texture.magFilter,Three.LinearFilter,'late frame honors Smooth image');assert.equal(texture.minFilter,Three.LinearFilter);assert.equal(texture.image,image);
+ const before=texture.version,geometry=Array.from(plane.geometry.attributes.position.array),uv=Array.from(plane.geometry.attributes.uv.array),offset=texture.offset.toArray(),repeat=texture.repeat.toArray();
+ for(let i=1;i<=20;i++){findNode(h.tree,n=>n.props?.['aria-label']==='Basemap opacity').props.onChange({target:{value:String(i*5)}});await h.render();assert.equal(plane.material.opacity,i/20);}
+ assert.equal(texture.version,before);assert.deepEqual(Array.from(plane.geometry.attributes.position.array),geometry);assert.deepEqual(Array.from(plane.geometry.attributes.uv.array),uv);assert.deepEqual(texture.offset.toArray(),offset);assert.deepEqual(texture.repeat.toArray(),repeat);
+ let disposed=0;texture.addEventListener('dispose',()=>disposed++);
+ const refreshed={width:2048,height:1719};detail.onFrame({image:refreshed,bounds:volume.bounds,zoom:13});h.flushFrame();assert.equal(disposed,1);
+ [plane]=mappedPlanes(h);texture=plane.material.map;assert.equal(texture.magFilter,Three.LinearFilter);assert.equal(texture.image,refreshed);assert.deepEqual(Array.from(plane.geometry.attributes.position.array),geometry);
+ button(h.tree,'Smooth image').props.onClick();await h.render();assert.equal(texture.magFilter,Three.NearestFilter);assert.equal(texture.minFilter,Three.NearestFilter);
+ detail.onFrame({image,bounds:volume.bounds,zoom:12});h.flushFrame();[plane]=mappedPlanes(h);assert.equal(plane.material.map.magFilter,Three.NearestFilter,'later frames also retain Exact pixels');
+ const finalTexture=plane.material.map;let finalDisposed=0;finalTexture.addEventListener('dispose',()=>finalDisposed++);
+ surface.props.onCapture(null);await h.render();assert.equal(finalDisposed,1);assert.equal(mappedPlanes(h).length,0);
+ h.h.dispose();assert.equal(detail.disposed,true);assert.equal(h.prepares,0);
 });

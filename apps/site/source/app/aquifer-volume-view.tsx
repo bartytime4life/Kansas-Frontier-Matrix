@@ -239,6 +239,13 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
         motion.move(next,immediate||action==="in"||action==="out"?0:320);
       };
       let lastScale=values.current.scale;
+      const sampleTexture=(texture:InstanceType<typeof T.CanvasTexture>|null,smooth:boolean)=>{
+        if(!texture)return;
+        const filter=smooth?T.LinearFilter:T.NearestFilter;
+        // Appearance-only changes must not re-upload the unchanged map pixels.
+        if(texture.magFilter===filter&&texture.minFilter===filter)return;
+        texture.magFilter=filter;texture.minFilter=filter;texture.needsUpdate=true;
+      };
       const update=(v:Settings)=>{
         controls.mouseButtons.LEFT=v.navigation==="pan"?T.MOUSE.PAN:T.MOUSE.ROTATE;
         controls.touches.ONE=v.navigation==="pan"?T.TOUCH.PAN:T.TOUCH.ROTATE;
@@ -246,8 +253,7 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
         tickSprites.forEach(({sprite,fraction})=>sprite.position.set(-3.42,-frameDepth*fraction*v.scale,south));
         planePaint.opacity=v.surface*(surfaceTexture?1:.15);waters.forEach(m=>{m.opacity=v.water;});
         if(detailMesh)(detailMesh.material as InstanceType<typeof T.MeshBasicMaterial>).opacity=v.surface;
-        if(detailTexture){detailTexture.magFilter=v.smooth?T.LinearFilter:T.NearestFilter;detailTexture.minFilter=v.smooth?T.LinearFilter:T.NearestFilter;detailTexture.needsUpdate=true;}
-        if(surfaceTexture){surfaceTexture.magFilter=v.smooth?T.LinearFilter:T.NearestFilter;surfaceTexture.minFilter=v.smooth?T.LinearFilter:T.NearestFilter;surfaceTexture.needsUpdate=true;}
+        sampleTexture(detailTexture,v.smooth);sampleTexture(surfaceTexture,v.smooth);
         if(lastScale!==v.scale){
           motion.cancel();cancelDamping();const pose=readPose(),delta=controls.target.y===0?0:-deepest*k*(v.scale-lastScale)/2;
           pose.position[1]+=delta;pose.target[1]+=delta;lastScale=v.scale;applyPose(pose);
@@ -264,7 +270,7 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
         const [w,southLat,e,northLat]=frame.bounds,clipped:[number,number,number,number]=[Math.max(w,bounds[0]),Math.max(southLat,bounds[1]),Math.min(e,bounds[2]),Math.min(northLat,bounds[3])];
         if(clipped[2]<=clipped[0]||clipped[3]<=clipped[1]){render();return;}
         const nw=projectVolumePosition(clipped[0],clipped[3],bounds),se=projectVolumePosition(clipped[2],clipped[1],bounds),wholeNW=projectVolumePosition(w,northLat,bounds),wholeSE=projectVolumePosition(e,southLat,bounds);
-        detailTexture=new T.CanvasTexture(frame.image);detailTexture.colorSpace=T.SRGBColorSpace;detailTexture.generateMipmaps=false;detailTexture.minFilter=T.NearestFilter;detailTexture.magFilter=T.NearestFilter;detailTexture.anisotropy=renderer.capabilities?.getMaxAnisotropy?.()??1;
+        detailTexture=new T.CanvasTexture(frame.image);detailTexture.colorSpace=T.SRGBColorSpace;detailTexture.generateMipmaps=false;sampleTexture(detailTexture,values.current.smooth);detailTexture.anisotropy=renderer.capabilities?.getMaxAnisotropy?.()??1;
         detailTexture.repeat.set((se.x-nw.x)/(wholeSE.x-wholeNW.x),(se.z-nw.z)/(wholeSE.z-wholeNW.z));detailTexture.offset.set((nw.x-wholeNW.x)/(wholeSE.x-wholeNW.x),(wholeSE.z-se.z)/(wholeSE.z-wholeNW.z));
         const geometry=new T.PlaneGeometry(se.x-nw.x,se.z-nw.z);geometry.rotateX(-Math.PI/2);
         const paint=new T.MeshBasicMaterial({map:detailTexture,transparent:true,opacity:values.current.surface,side:T.DoubleSide,depthWrite:false});

@@ -165,6 +165,19 @@ The v216-to-candidate comparison reduced that JavaScript list by 46,290 bytes
 build-size comparison, not a startup timing or frame-rate result. Revert the
 page's loader import to restore eager loading; no data migration is required.
 
+Cutaway surface textures are uploaded again only when their image or sampling
+mode changes. Opacity, aquifer opacity, vertical scale, column visibility and
+Orbit/Move changes reuse the current pixels. Newly arriving high-detail images
+honor the current Exact pixels/Smooth image choice, including after refresh.
+Exact pixels remains the default; optional smoothing is a display preference,
+not additional source resolution. Tests use real Three.js texture versions and
+the actual component callbacks: 24 appearance changes now produce zero extra
+upload requests (previously 24), while a filter change still requests an update.
+This is a bounded work-count regression, not a browser FPS measurement. Images,
+UV mapping, source values and disposal behavior are retained. See
+[Three.js texture updates](https://threejs.org/docs/pages/Texture.html#needsUpdate).
+Rollback: restore the v218 application/source; no data or schema migration.
+
 The Underground cutaway combines camera, appearance and surface updates into one
 requested animation-frame draw. OrbitControls still applies every input step;
 damping advances until it settles, then leaves no idle render loop. Duplicate
