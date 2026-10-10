@@ -1,6 +1,6 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/reports/kfm-reconciliation-20261010
-title: KFM Site v213, local installation and repository reconciliation
+title: KFM Site v213-v214, local installation and repository reconciliation
 type: report
 version: v1.0-draft
 status: draft; deployed-owner-private; repository-review-pending
@@ -26,7 +26,7 @@ it creates no generated-report writer or release authority. Directory Rules and
 ADR-0029 place application behavior in `apps/site/source`, canonical local tooling
 in `tools/local_data`, and candidate comparison receipts in `data/receipts/generated`.
 
-## Identities and retained work
+## Initial v213 identities and retained work
 
 | Surface | Observed identity |
 |---|---|
@@ -157,3 +157,11 @@ It records 921 exact application mirror paths plus the same two canonical tool
 mappings. The active v192 checker and its separate review hold remain unchanged.
 The completed security diff likewise precedes only these comments and the
 repository smoke-inventory correction; no new security scan is claimed.
+
+The final local alias selects `KFM-Explorer-Site-reconciled-20261010-v214`.
+All 923 source files and 426 build files match the final Site checkout, and
+port 4173 returned HTTP 200 after the switch. Both v213 and the original v4
+installation remain available; the original D1/R2 state path is unchanged.
+The recovery directory now includes `installation-v214.json` and
+`switch-v214.json`. The v214 candidate content-parity check passes when read
+explicitly, with human review `NOT_EVALUATED`; the selected receipt is untouched.
