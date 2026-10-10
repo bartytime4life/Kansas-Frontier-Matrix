@@ -62,7 +62,7 @@ contract_values="$("$node_bin" --input-type=module -e '
   const values = [
     contract.QWEN_LOCAL_MODEL,
     contract.QWEN_LOCAL_MODEL_DIGEST,
-    contract.QWEN_LOCAL_OLLAMA_VERSION,
+    contract.QWEN_LOCAL_OLLAMA_MIN_VERSION,
     contract.QWEN_LOCAL_OLLAMA_ORIGIN,
     contract.QWEN_LOCAL_BRIDGE_ORIGIN,
     contract.QWEN_LOCAL_SITE_ORIGIN,
@@ -70,8 +70,8 @@ contract_values="$("$node_bin" --input-type=module -e '
   if (values.some((value) => typeof value !== "string" || !value || value.includes("\t"))) process.exit(1);
   process.stdout.write(values.join("\t"));
 ' "$contract_path")"
-IFS=$'\t' read -r model_name model_digest ollama_version ollama_origin bridge_origin site_origin <<< "$contract_values"
-if [[ -z "$model_name" || -z "$model_digest" || -z "$ollama_version" \
+IFS=$'\t' read -r model_name model_digest ollama_min_version ollama_origin bridge_origin site_origin <<< "$contract_values"
+if [[ -z "$model_name" || -z "$model_digest" || -z "$ollama_min_version" \
   || -z "$ollama_origin" || -z "$bridge_origin" || -z "$site_origin" ]]; then
   printf 'The local Qwen contract is incomplete. The bridge was not installed.\n' >&2
   exit 1
@@ -126,13 +126,15 @@ if ! printf '%s\n' "$ollama_listeners" | "$node_bin" -e '
 fi
 
 version_json="$(curl -sS --max-time 3 "$ollama_origin/api/version")"
-if ! printf '%s' "$version_json" | "$node_bin" -e '
-  const fs = require("node:fs");
-  const expected = process.argv[1];
-  const payload = JSON.parse(fs.readFileSync(0, "utf8"));
-  process.exit(payload?.version === expected ? 0 : 1);
-' "$ollama_version"; then
-  printf 'Running Ollama does not match the test-pinned version %s. The bridge was not installed.\n' "$ollama_version" >&2
+# Ollama.app updates itself; the contract's tested release is a floor, not an exact pin.
+if ! printf '%s' "$version_json" | "$node_bin" --input-type=module -e '
+  import { readFileSync } from "node:fs";
+  import { pathToFileURL } from "node:url";
+  const contract = await import(pathToFileURL(process.argv[1]).href);
+  const payload = JSON.parse(readFileSync(0, "utf8"));
+  process.exit(contract.isSupportedOllamaVersion(payload?.version) ? 0 : 1);
+' "$contract_path"; then
+  printf 'Running Ollama is older than the tested %s. Update Ollama; the bridge was not installed.\n' "$ollama_min_version" >&2
   exit 1
 fi
 if ! ollama_cli list | awk 'NR > 1 { print $1 }' | grep -Fxq "$model_name"; then
@@ -160,6 +162,8 @@ fi
 for required_file in \
   "$source_root/scripts/local-qwen-bridge.mjs" \
   "$source_root/scripts/qwen-local-contract.mjs" \
+  "$source_root/scripts/qwen-knowledge.mjs" \
+  "$source_root/scripts/qwen-knowledge-pack.mjs" \
   "$source_root/app/qwen-context-safety.mjs"; do
   if [[ ! -f "$required_file" ]]; then
     printf 'Required bridge file is missing: %s\n' "$required_file" >&2
@@ -264,6 +268,8 @@ restore_previous_installation() {
     "$support_root/bin/node" \
     "$support_root/scripts/local-qwen-bridge.mjs" \
     "$support_root/scripts/qwen-local-contract.mjs" \
+    "$support_root/scripts/qwen-knowledge.mjs" \
+    "$support_root/scripts/qwen-knowledge-pack.mjs" \
     "$support_root/app/qwen-context-safety.mjs"; then
     rollback_incomplete 'Rollback is incomplete because refreshed runtime files could not be cleared.'
     exit "$failure_status"
@@ -384,6 +390,8 @@ mkdir -p "$agent_dir" "$support_root/bin" "$support_root/scripts" "$support_root
 install -m 0755 "$node_bin" "$installed_node"
 install -m 0644 "$source_root/scripts/local-qwen-bridge.mjs" "$support_root/scripts/local-qwen-bridge.mjs"
 install -m 0644 "$source_root/scripts/qwen-local-contract.mjs" "$support_root/scripts/qwen-local-contract.mjs"
+install -m 0644 "$source_root/scripts/qwen-knowledge.mjs" "$support_root/scripts/qwen-knowledge.mjs"
+install -m 0644 "$source_root/scripts/qwen-knowledge-pack.mjs" "$support_root/scripts/qwen-knowledge-pack.mjs"
 install -m 0644 "$source_root/app/qwen-context-safety.mjs" "$support_root/app/qwen-context-safety.mjs"
 install -m 0600 "$new_plist" "$plist_path"
 plutil -lint "$plist_path" >/dev/null

@@ -9,6 +9,7 @@ import {
   createLocalQwenBridge,
   createLocalQwenDeadlineSignal,
   isDirectEntryPoint,
+  isSensitiveQwenQuestion,
   LOCAL_EXPLORER_ORIGIN,
   LOCAL_PREVIEW_ORIGIN,
   LOCAL_QWEN_MODEL,
@@ -18,17 +19,23 @@ import {
 } from "../scripts/local-qwen-bridge.mjs";
 import {
   QWEN_LOCAL_ACCEPTED_REVIEW_STATE,
+  QWEN_LOCAL_CONTEXT_WINDOW_TOKENS,
+  QWEN_LOCAL_INTERPRETATION_SCHEMA,
+  QWEN_LOCAL_KNOWLEDGE_VERSION,
+  QWEN_LOCAL_MAX_INTERPRETATION_TOKENS,
   QWEN_LOCAL_MAX_OFFICIAL_SOURCES,
   QWEN_LOCAL_MAX_OUTPUT_TOKENS,
   QWEN_LOCAL_MAX_REQUEST_BYTES,
   QWEN_LOCAL_MODEL_RESPONSE_SCHEMA,
-  QWEN_LOCAL_OLLAMA_VERSION,
+  QWEN_LOCAL_OLLAMA_MIN_VERSION,
   hasRequiredLocalQwenContext,
   inspectLocalQwenEvidence,
   localQwenAnswerHasOverPreciseLocation,
   localQwenAskEnvelope,
   localQwenHealthEnvelope,
+  parseLocalQwenAskEnvelope,
 } from "../scripts/qwen-local-contract.mjs";
+import { QWEN_KNOWLEDGE_DIGEST } from "../scripts/qwen-knowledge.mjs";
 import { hasSafeQwenContextShape } from "../app/qwen-context-safety.mjs";
 
 test("direct startup follows the stable Site symlink without starting on import", async () => {
@@ -174,8 +181,33 @@ const modelContent = (disposition, answer, evidenceRefs = []) => JSON.stringify(
   evidenceRefs,
 });
 
+const interpretationContent = (overrides = {}) => JSON.stringify({
+  summary: "The view shows statewide USGS River Pulse context without a selected KFM record.",
+  observations: ["USGS is selected and displayed with 2 features."],
+  inferences: ["The gauges may help orient a river question."],
+  gaps: ["A released EvidenceBundle for a selected reach."],
+  followUps: ["Which watersheds have no active gauge?"],
+  ...overrides,
+});
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+const withoutReceipt = (payload) => {
+  const copy = { ...payload };
+  delete copy.receipt;
+  return copy;
+};
+
+/** Compare an ask reply to its finite envelope; receipts are per request, so check their shape separately. */
+async function assertAskEnvelope(response, outcome, reasonCode, message, extras = {}) {
+  const payload = await response.json();
+  assert.notEqual(parseLocalQwenAskEnvelope(payload), null, message);
+  assert.deepEqual(withoutReceipt(payload), withoutReceipt(localQwenAskEnvelope(outcome, reasonCode, extras)), message);
+  assert.match(payload.receipt.requestId, UUID, message);
+  return payload;
+}
+
 const readyOllamaResponse = (url) => {
-  if (url.endsWith("/api/version")) return Response.json({ version: QWEN_LOCAL_OLLAMA_VERSION });
+  if (url.endsWith("/api/version")) return Response.json({ version: QWEN_LOCAL_OLLAMA_MIN_VERSION });
   if (url.endsWith("/api/tags")) {
     return Response.json({ models: [{ name: LOCAL_QWEN_MODEL, digest: LOCAL_QWEN_MODEL_DIGEST }] });
   }
@@ -280,8 +312,8 @@ test("every restrictive evidence and release combination takes deny precedence",
   }
 });
 
-async function withBridge(fetcher, exercise) {
-  const server = createLocalQwenBridge({ fetcher });
+async function withBridge(fetcher, exercise, options = {}) {
+  const server = createLocalQwenBridge({ fetcher, ...options });
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
   try {
     await exercise(`http://127.0.0.1:${server.address().port}`);
@@ -298,10 +330,10 @@ const localFetch = (base, path, options = {}) => fetch(`${base}${path}`, {
 test("health exposes only finite local-only states for the pinned qwen3:8b model", async () => {
   for (const [upstream, expectedStatus, expectedReason, expectedHttp] of [
     [async (url) => url.endsWith("/api/version")
-      ? Response.json({ version: QWEN_LOCAL_OLLAMA_VERSION })
+      ? Response.json({ version: QWEN_LOCAL_OLLAMA_MIN_VERSION })
       : Response.json({ models: [{ name: LOCAL_QWEN_MODEL, digest: LOCAL_QWEN_MODEL_DIGEST.replace("sha256:", "") }] }), "ready", "READY", 200],
     [async (url) => url.endsWith("/api/version")
-      ? Response.json({ version: QWEN_LOCAL_OLLAMA_VERSION })
+      ? Response.json({ version: QWEN_LOCAL_OLLAMA_MIN_VERSION })
       : Response.json({ models: [{ name: "other:latest", digest: LOCAL_QWEN_MODEL_DIGEST }] }), "model_missing", "MODEL_MISSING", 503],
     [async () => { throw ollamaNetworkError("ECONNREFUSED"); }, "ollama_unavailable", "OLLAMA_UNAVAILABLE", 503],
     [async () => { throw ollamaNetworkError("EHOSTUNREACH"); }, "ollama_unavailable", "OLLAMA_UNAVAILABLE", 503],
@@ -309,7 +341,7 @@ test("health exposes only finite local-only states for the pinned qwen3:8b model
     [async () => { throw new DOMException("probe timed out", "TimeoutError"); }, "error", "OLLAMA_RUNTIME_ERROR", 503],
     [async () => new Response("private failure", { status: 503 }), "error", "OLLAMA_RUNTIME_ERROR", 503],
     [async (url) => url.endsWith("/api/version")
-      ? Response.json({ version: QWEN_LOCAL_OLLAMA_VERSION })
+      ? Response.json({ version: QWEN_LOCAL_OLLAMA_MIN_VERSION })
       : Response.json({ models: [{ name: LOCAL_QWEN_MODEL, digest: "sha256:" + "0".repeat(64) }] }), "error", "MODEL_DIGEST_MISMATCH", 503],
     [async (url) => url.endsWith("/api/version")
       ? Response.json({ version: "0.35.0" })
@@ -324,22 +356,22 @@ test("health exposes only finite local-only states for the pinned qwen3:8b model
       ? Response.json({ version: "not-semver" })
       : Response.json({ models: [] }), "error", "OLLAMA_RUNTIME_ERROR", 503],
     [async (url) => url.endsWith("/api/version")
-      ? Response.json({ version: QWEN_LOCAL_OLLAMA_VERSION })
+      ? Response.json({ version: QWEN_LOCAL_OLLAMA_MIN_VERSION })
       : new Response("{", { headers: { "content-type": "application/json" } }), "error", "OLLAMA_RUNTIME_ERROR", 503],
     [async (url) => url.endsWith("/api/version")
-      ? Response.json({ version: QWEN_LOCAL_OLLAMA_VERSION })
+      ? Response.json({ version: QWEN_LOCAL_OLLAMA_MIN_VERSION })
       : new Response("private failure", { status: 500 }), "error", "OLLAMA_RUNTIME_ERROR", 503],
     [async (url) => url.endsWith("/api/version")
-      ? Response.json({ version: QWEN_LOCAL_OLLAMA_VERSION })
+      ? Response.json({ version: QWEN_LOCAL_OLLAMA_MIN_VERSION })
       : Response.json({ models: {} }), "error", "OLLAMA_RUNTIME_ERROR", 503],
     [async (url) => url.endsWith("/api/version")
-      ? Response.json({ version: QWEN_LOCAL_OLLAMA_VERSION })
+      ? Response.json({ version: QWEN_LOCAL_OLLAMA_MIN_VERSION })
       : Response.json({ models: [{}] }), "error", "OLLAMA_RUNTIME_ERROR", 503],
     [async (url) => url.endsWith("/api/version")
-      ? Response.json({ version: QWEN_LOCAL_OLLAMA_VERSION })
+      ? Response.json({ version: QWEN_LOCAL_OLLAMA_MIN_VERSION })
       : Response.json({ models: [{ name: "", digest: LOCAL_QWEN_MODEL_DIGEST }] }), "error", "OLLAMA_RUNTIME_ERROR", 503],
     [async (url) => url.endsWith("/api/version")
-      ? Response.json({ version: QWEN_LOCAL_OLLAMA_VERSION })
+      ? Response.json({ version: QWEN_LOCAL_OLLAMA_MIN_VERSION })
       : Response.json({ models: [{ name: LOCAL_QWEN_MODEL, digest: "not-a-digest" }] }), "error", "OLLAMA_RUNTIME_ERROR", 503],
   ]) {
     await withBridge(upstream, async (base) => {
@@ -347,7 +379,12 @@ test("health exposes only finite local-only states for the pinned qwen3:8b model
       assert.equal(response.status, expectedHttp);
       assert.equal(response.headers.get("access-control-allow-origin"), SITE_ORIGIN);
       assert.equal(response.headers.get("cache-control"), "no-store");
-      assert.deepEqual(await response.json(), localQwenHealthEnvelope(expectedStatus, expectedReason));
+      const payload = await response.json();
+      assert.deepEqual(
+        { ...payload, ollamaVersion: null },
+        localQwenHealthEnvelope(expectedStatus, expectedReason, { knowledgeDigest: QWEN_KNOWLEDGE_DIGEST }),
+      );
+      assert.equal(payload.knowledgeVersion, QWEN_LOCAL_KNOWLEDGE_VERSION);
     });
   }
 });
@@ -366,7 +403,7 @@ test("ask distinguishes unreachable Ollama from runtime probe faults", async () 
         body: JSON.stringify({ question: "What does the selected feature support?", context: supported }),
       });
       assert.equal(response.status, 503);
-      assert.deepEqual(await response.json(), localQwenAskEnvelope("ERROR", expectedReason));
+      await assertAskEnvelope(response, "ERROR", expectedReason);
     });
   }
 });
@@ -393,21 +430,105 @@ test("exact origins receive private-network preflight and foreign origins receiv
   });
 });
 
-test("context-only evidence abstains deterministically without contacting Ollama", async () => {
-  let calls = 0;
-  await withBridge(async () => {
-    calls++;
-    throw new Error("context-only requests must not reach Ollama");
+test("context-only questions reach Ollama with knowledge metadata and stay ABSTAIN interpretations", async () => {
+  const calls = [];
+  const logged = [];
+  await withBridge(async (url, options) => {
+    calls.push({ url, options });
+    return readyOllamaResponse(url) ?? Response.json({
+      message: { content: interpretationContent() },
+      prompt_eval_count: 2048,
+      eval_count: 96,
+    });
   }, async (base) => {
     const response = await localFetch(base, "/ask", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ question: "What is visible?", context }),
+      body: JSON.stringify({ question: "What do the river gauges in this view tell me?", context }),
     });
     assert.equal(response.status, 200);
-    assert.deepEqual(await response.json(), localQwenAskEnvelope("ABSTAIN", "CONTEXT_ONLY_INTERPRETATION"));
+    const payload = await assertAskEnvelope(response, "ABSTAIN", "CONTEXT_ONLY_INTERPRETATION", undefined, {
+      interpretation: JSON.parse(interpretationContent()),
+    });
+    assert.equal(payload.answer, null);
+    assert.deepEqual(payload.evidenceRefs, []);
+    assert.equal(payload.authority, "INTERPRETIVE_ONLY");
+    assert.equal(payload.receipt.profile, "context-interpretation-v1");
+    assert.equal(payload.receipt.modelInvoked, true);
+    assert.equal(payload.receipt.knowledgeDigest, QWEN_KNOWLEDGE_DIGEST);
+    assert.equal(payload.receipt.knowledgeVersion, QWEN_LOCAL_KNOWLEDGE_VERSION);
+    assert.ok(payload.receipt.knowledgeSourceIds.includes("usgs-streamflow"));
+    assert.match(payload.receipt.contextSha256, /^sha256:[a-f0-9]{64}$/);
+    assert.equal(payload.receipt.promptTokens, 2048);
+    assert.equal(payload.receipt.outputTokens, 96);
+  }, { logger: (entry) => logged.push(entry) });
+  assert.equal(calls.length, 3);
+  assert.equal(calls[2].url, "http://127.0.0.1:11434/api/chat");
+  const sent = JSON.parse(calls[2].options.body);
+  assert.deepEqual(sent.format, QWEN_LOCAL_INTERPRETATION_SCHEMA);
+  assert.equal(sent.options.temperature, 0);
+  assert.equal(sent.options.num_ctx, QWEN_LOCAL_CONTEXT_WINDOW_TOKENS);
+  assert.equal(sent.options.num_predict, QWEN_LOCAL_MAX_INTERPRETATION_TOKENS);
+  assert.equal(typeof sent.keep_alive, "string");
+  assert.match(sent.messages[0].content, /not evidence about any place/);
+  assert.match(sent.messages[1].content, /Prompt profile: context-interpretation-v1/);
+  assert.match(sent.messages[1].content, /METADATA_NOT_EVIDENCE/);
+  assert.match(sent.messages[1].content, /Discharge is not comparable across differently sized basins/);
+  assert.match(sent.messages[1].content, /No KFM feature is selected/);
+  assert.equal(logged.length, 1);
+  assert.equal(logged[0].event, "kfm.qwen.request");
+  assert.equal(logged[0].route, "/ask");
+  assert.equal(logged[0].interpretation, true);
+  assert.doesNotMatch(JSON.stringify(logged), /river gauges|statewide USGS River Pulse/);
+});
+
+test("sensitive questions abstain before any Ollama call", async () => {
+  let calls = 0;
+  await withBridge(async () => { calls++; throw new Error("must not call"); }, async (base) => {
+    for (const question of ["Is it safe to swim here?", "Where should I dig for artifacts?", "Give me the GPS coordinates."]) {
+      const response = await localFetch(base, "/ask", {
+        method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ question, context }),
+      });
+      assert.equal(response.status, 200, question);
+      const payload = await assertAskEnvelope(response, "ABSTAIN", "SENSITIVE_QUESTION_NOT_INTERPRETED", question);
+      assert.equal(payload.receipt.modelInvoked, false);
+    }
   });
   assert.equal(calls, 0);
+  assert.equal(isSensitiveQwenQuestion("Which PUBLIC_SAFE layers are visible?"), false);
+});
+
+test("interpretations cannot carry EvidenceRefs, precise locations, or malformed shapes", async () => {
+  for (const [content, status, outcome, reasonCode] of [
+    [interpretationContent({ observations: ["Supported by kfm:evidence:invented"] }), 502, "ERROR", "UNDECLARED_EVIDENCE_REFERENCE"],
+    [interpretationContent({ inferences: ["The gauge sits at 38.12345, -98.54321."] }), 200, "ABSTAIN", "OVER_PRECISE_OUTPUT"],
+    [interpretationContent({ summary: "   " }), 502, "ERROR", "INVALID_MODEL_RESPONSE"],
+    [JSON.stringify({ ...JSON.parse(interpretationContent()), extra: "field" }), 502, "ERROR", "INVALID_MODEL_RESPONSE"],
+    [modelContent("UNSUPPORTED", "Wrong schema."), 502, "ERROR", "INVALID_MODEL_RESPONSE"],
+  ]) {
+    await withBridge(withReadyOllama(async () => Response.json({ message: { content } })), async (base) => {
+      const response = await localFetch(base, "/ask", {
+        method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ question: "What is visible?", context }),
+      });
+      assert.equal(response.status, status, content);
+      const payload = await assertAskEnvelope(response, outcome, reasonCode, content);
+      assert.equal(payload.interpretation, null);
+      assert.doesNotMatch(JSON.stringify(payload), /invented|38\.12345/);
+    });
+  }
+  // Grammar decoding may overrun list caps; the bridge trims instead of failing.
+  await withBridge(withReadyOllama(async () => Response.json({ message: { content: interpretationContent({
+    followUps: ["One?", "Two?", "Three?", "Four?", "Five?"],
+  }) } })), async (base) => {
+    const response = await localFetch(base, "/ask", {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ question: "What is visible?", context }),
+    });
+    const payload = await response.json();
+    assert.deepEqual(payload.interpretation.followUps, ["One?", "Two?", "Three?"]);
+  });
 });
 
 test("supported answers must cite the exact declared EvidenceRef", async () => {
@@ -450,6 +571,7 @@ test("supported answers must cite the exact declared EvidenceRef", async () => {
   assert.deepEqual(sent.format, QWEN_LOCAL_MODEL_RESPONSE_SCHEMA);
   assert.equal(sent.options.temperature, 0);
   assert.equal(sent.options.num_predict, QWEN_LOCAL_MAX_OUTPUT_TOKENS);
+  assert.equal(sent.options.num_ctx, QWEN_LOCAL_CONTEXT_WINDOW_TOKENS);
   assert.match(sent.messages[0].content, /answer field MUST end with the exact allowed EvidenceRef/);
   assert.match(sent.messages[1].content, /SITE_LOCAL_REDACTED_DIAGNOSTIC/);
   assert.match(sent.messages[1].content, new RegExp(`Allowed EvidenceRefs \\(exact strings only\\): \\["${reference}"\\]`));
@@ -465,7 +587,7 @@ test("supported answers must cite the exact declared EvidenceRef", async () => {
       method: "POST", headers: { "content-type": "application/json" },
       body: JSON.stringify({ question: "What does the selected feature support?", context: supported }),
     });
-    assert.deepEqual(await response.json(), localQwenAskEnvelope("ABSTAIN", "CITATION_REQUIRED"));
+    await assertAskEnvelope(response, "ABSTAIN", "CITATION_REQUIRED");
   });
 });
 
@@ -492,47 +614,63 @@ test("a model cannot replace the deterministic supported-selection answer with a
 test("a positive model response cannot bridge a missing release-linked visible layer", async () => {
   const reference = "kfm:evidence:synthetic:future-release-2026";
   const unlinked = selectionContext("ANSWER", reference, { visibleLayers: [] });
-  let calls = 0;
-  await withBridge(async () => {
-    calls++;
-    throw new Error("unsupported evidence must not reach Ollama");
-  }, async (base) => {
+  const formats = [];
+  await withBridge(withReadyOllama(async (_url, options) => {
+    formats.push(JSON.parse(options.body).format);
+    return Response.json({ message: { content: interpretationContent() } });
+  }), async (base) => {
     const response = await localFetch(base, "/ask", {
       method: "POST", headers: { "content-type": "application/json" },
       body: JSON.stringify({ question: "What does the selected feature support?", context: unlinked }),
     });
     assert.equal(response.status, 200);
-    assert.deepEqual(await response.json(), localQwenAskEnvelope("ABSTAIN", "EVIDENCE_NOT_SUPPORTIVE"));
+    const payload = await assertAskEnvelope(response, "ABSTAIN", "EVIDENCE_NOT_SUPPORTIVE", undefined, {
+      interpretation: JSON.parse(interpretationContent()),
+    });
+    assert.equal(payload.answer, null);
+    assert.deepEqual(payload.evidenceRefs, []);
   });
-  assert.equal(calls, 0);
+  // The unsupported selection only ever reaches the interpretation profile, never the citation gate.
+  assert.deepEqual(formats, [QWEN_LOCAL_INTERPRETATION_SCHEMA]);
 });
 
 test("a cited model echo cannot turn an unrelated question into an ANSWER", async () => {
   const reference = "kfm:evidence:synthetic:atmo-2026";
   const supported = selectionContext("ANSWER", reference);
-  let calls = 0;
-  await withBridge(async () => {
-    calls++;
-    throw new Error("out-of-scope questions must not reach Ollama");
-  }, async (base) => {
-    for (const [label, question, candidate] of [
-      ["unrelated weather", "What is today's statewide weather forecast?", supported],
-      ["substring collision", "Summarize Arkansas.", selectionContext("ANSWER", reference, { selection: { title: "Kansas" } })],
-      ["unsupported deictic safety request", "Is it safe to excavate the selected feature?", supported],
+  const formats = [];
+  // Even a model that echoes the allowed reference only produces an interpretation, which may not cite.
+  await withBridge(withReadyOllama(async (_url, options) => {
+    formats.push(JSON.parse(options.body).format);
+    return Response.json({ message: { content: interpretationContent() } });
+  }), async (base) => {
+    for (const [label, question, candidate, reasonCode] of [
+      ["unrelated weather", "What is today's statewide weather forecast?", supported, "QUESTION_OUTSIDE_SELECTION_SCOPE"],
+      ["substring collision", "Summarize Arkansas.", selectionContext("ANSWER", reference, { selection: { title: "Kansas" } }), "QUESTION_OUTSIDE_SELECTION_SCOPE"],
+      ["unsupported deictic safety request", "Is it safe to excavate the selected feature?", supported, "SENSITIVE_QUESTION_NOT_INTERPRETED"],
     ]) {
       const response = await localFetch(base, "/ask", {
         method: "POST", headers: { "content-type": "application/json" },
         body: JSON.stringify({ question, context: candidate }),
       });
       assert.equal(response.status, 200, label);
-      assert.deepEqual(
-        await response.json(),
-        localQwenAskEnvelope("ABSTAIN", "QUESTION_OUTSIDE_SELECTION_SCOPE"),
-        label,
-      );
+      const payload = await response.json();
+      assert.equal(payload.outcome, "ABSTAIN", label);
+      assert.equal(payload.reasonCode, reasonCode, label);
+      assert.equal(payload.answer, null, label);
+      assert.deepEqual(payload.evidenceRefs, [], label);
     }
   });
-  assert.equal(calls, 0);
+  assert.deepEqual(formats, [QWEN_LOCAL_INTERPRETATION_SCHEMA, QWEN_LOCAL_INTERPRETATION_SCHEMA]);
+  await withBridge(withReadyOllama(async () => Response.json({ message: { content: interpretationContent({
+    summary: `Supported by ${reference}.`,
+  }) } })), async (base) => {
+    const response = await localFetch(base, "/ask", {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ question: "What is today's statewide weather forecast?", context: supported }),
+    });
+    assert.equal(response.status, 502);
+    await assertAskEnvelope(response, "ERROR", "UNDECLARED_EVIDENCE_REFERENCE");
+  });
 });
 
 test("undeclared model references fail closed and are not returned", async () => {
@@ -587,11 +725,7 @@ test("all restrictive prompt carriers deny before any Ollama chat call", async (
         body: JSON.stringify({ question: "What does this context show?", context: scenario.context }),
       });
       assert.equal(response.status, 200, scenario.label);
-      assert.deepEqual(
-        await response.json(),
-        localQwenAskEnvelope("DENY", "POLICY_WITHHELD"),
-        scenario.label,
-      );
+      await assertAskEnvelope(response, "DENY", "POLICY_WITHHELD", scenario.label);
     }
   });
   assert.equal(chatCalls, 0);
@@ -685,14 +819,14 @@ test("a streaming non-2xx inference response is canceled before the finite error
       body: JSON.stringify({ question: "What does the selected feature support?", context: supported }),
     });
     assert.equal(response.status, 502);
-    assert.deepEqual(await response.json(), localQwenAskEnvelope("ERROR", "LOCAL_MODEL_UNAVAILABLE"));
+    await assertAskEnvelope(response, "ERROR", "LOCAL_MODEL_UNAVAILABLE");
   });
   assert.equal(canceled, true);
 });
 
 test("the one-request lock is acquired before a streamed request body finishes", async () => {
   await withBridge(withReadyOllama(async () => Response.json({
-    message: { content: modelContent("UNSUPPORTED", "Context only.") },
+    message: { content: interpretationContent() },
   })), async (base) => {
     const encoded = new TextEncoder().encode(JSON.stringify({ question: "x", context }));
     let requestController;
@@ -756,9 +890,7 @@ test("request body and request deadline timers are finite", async () => {
 });
 
 test("declared oversized bodies are drained before the bridge lock is released", async () => {
-  await withBridge(withReadyOllama(async () => Response.json({ message: { content: modelContent(
-    "UNSUPPORTED", "The safe context does not support an answer.",
-  ) } })), async (base) => {
+  await withBridge(withReadyOllama(async () => Response.json({ message: { content: interpretationContent() } })), async (base) => {
     const oversized = await localFetch(base, "/ask", {
       method: "POST", headers: { "content-type": "application/json" },
       body: "x".repeat(QWEN_LOCAL_MAX_REQUEST_BYTES + 1),
@@ -800,12 +932,10 @@ test("bounded coordinate detection covers DMS and grid references without classi
 
 test("unsupported prose and over-precise model output are never returned fluently", async () => {
   for (const [modelResponse, expectedReason] of [
-    [modelContent("UNSUPPORTED", "Invented claim: a secret depot is present."), "CONTEXT_ONLY_INTERPRETATION"],
+    [modelContent("UNSUPPORTED", "Invented claim: a secret depot is present."), "MODEL_ABSTAINED"],
     [modelContent("SUPPORTED", "The selection is at 38.12345, -98.54321 and is supported by kfm:evidence:synthetic:atmo-2026.", ["kfm:evidence:synthetic:atmo-2026"]), "OVER_PRECISE_OUTPUT"],
   ]) {
-    const safeContext = expectedReason === "OVER_PRECISE_OUTPUT"
-      ? selectionContext("ANSWER", "kfm:evidence:synthetic:atmo-2026")
-      : context;
+    const safeContext = selectionContext("ANSWER", "kfm:evidence:synthetic:atmo-2026");
     await withBridge(withReadyOllama(async () => Response.json({ message: { content: modelResponse } })), async (base) => {
       const response = await localFetch(base, "/ask", {
         method: "POST", headers: { "content-type": "application/json" },
@@ -873,7 +1003,7 @@ test("plain text and extended model replies fail the structured response contrac
         body: JSON.stringify({ question: "What does the selected feature support?", context: supported }),
       });
       assert.equal(response.status, 502);
-      assert.deepEqual(await response.json(), localQwenAskEnvelope("ERROR", "INVALID_MODEL_RESPONSE"));
+      await assertAskEnvelope(response, "ERROR", "INVALID_MODEL_RESPONSE");
     });
   }
 });
@@ -882,7 +1012,7 @@ test("ask re-verifies the installed digest and never invokes a changed model", a
   let chatCalls = 0;
   const supported = selectionContext("ANSWER", "kfm:evidence:synthetic:digest-check");
   await withBridge(async (url) => {
-    if (url.endsWith("/api/version")) return Response.json({ version: QWEN_LOCAL_OLLAMA_VERSION });
+    if (url.endsWith("/api/version")) return Response.json({ version: QWEN_LOCAL_OLLAMA_MIN_VERSION });
     if (url.endsWith("/api/tags")) {
       return Response.json({ models: [{ name: LOCAL_QWEN_MODEL, digest: "sha256:" + "f".repeat(64) }] });
     }
@@ -902,7 +1032,19 @@ test("ask re-verifies the installed digest and never invokes a changed model", a
   assert.equal(chatCalls, 0);
 });
 
-test("ask re-verifies the pinned Ollama runtime version before tags or inference", async () => {
+test("Ollama releases at or above the tested floor are accepted; older ones are refused", async () => {
+  for (const [version, expectedStatus] of [["0.35.1", "ready"], ["0.36.4", "ready"], ["1.2.0", "ready"], ["0.35.0", "error"], ["0.35.1-rc2", "error"]]) {
+    await withBridge(async (url) => url.endsWith("/api/version")
+      ? Response.json({ version })
+      : Response.json({ models: [{ name: LOCAL_QWEN_MODEL, digest: LOCAL_QWEN_MODEL_DIGEST }] }), async (base) => {
+      const payload = await (await localFetch(base, "/health")).json();
+      assert.equal(payload.status, expectedStatus, version);
+      assert.equal(payload.ollamaVersion, version);
+    });
+  }
+});
+
+test("ask re-verifies the Ollama runtime floor before tags or inference", async () => {
   const calls = [];
   const supported = selectionContext("ANSWER", "kfm:evidence:synthetic:version-check");
   await withBridge(async (url) => {
@@ -914,7 +1056,7 @@ test("ask re-verifies the pinned Ollama runtime version before tags or inference
       body: JSON.stringify({ question: "What does the selected feature support?", context: supported }),
     });
     assert.equal(response.status, 503);
-    assert.deepEqual(await response.json(), localQwenAskEnvelope("ERROR", "OLLAMA_VERSION_MISMATCH"));
+    await assertAskEnvelope(response, "ERROR", "OLLAMA_VERSION_MISMATCH");
   });
   assert.deepEqual(calls, ["http://127.0.0.1:11434/api/version"]);
 });

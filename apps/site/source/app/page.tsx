@@ -196,10 +196,11 @@ import {
   qwenStatusLabel,
   QWEN_LOCAL_BROWSER_CONFIG,
   QWEN_LOCAL_MODEL,
-  QWEN_LOCAL_OLLAMA_VERSION,
+  QWEN_LOCAL_OLLAMA_MIN_VERSION,
   shouldUseLocalQwen,
   type QwenAskEnvelope,
   type QwenBridgeState,
+  type QwenInterpretation,
 } from "./qwen-availability";
 import {
   buildLocalImportPreview,
@@ -435,7 +436,7 @@ type MapQueryCandidate = Readonly<{
   sourceYear: number;
 }>;
 type ScenePresetId = "overview-2d" | "globe-overview" | "water-systems" | "smoke-context" | "elevation-3d" | "tile-grid";
-type QwenMessage = Readonly<{ role: "user" | "assistant"; content: string }>;
+type QwenMessage = Readonly<{ role: "user" | "assistant"; content: string; interpretation?: QwenInterpretation | null; requestId?: string | null }>;
 type HoverSummary = Readonly<{
   id: string;
   title: string;
@@ -694,8 +695,9 @@ const loadConfiguredMapLibre = async () => {
 const WORKSPACE_STORAGE_KEY = "kfm-map-workspaces-v1";
 const QWEN_DIAGNOSTIC_PROMPTS = Object.freeze([
   "What is visible in this map view?",
+  "Which sources here are observed and which are modeled?",
+  "What could I explore next with these layers?",
   "Which evidence gate is missing for this map view?",
-  "Why should this context abstain?",
 ]);
 const QWEN_SELECTION_PROMPTS = Object.freeze([
   "Summarize the selected feature.",
@@ -707,10 +709,23 @@ const LOCAL_QWEN_HEALTH_TIMEOUT_MS = QWEN_LOCAL_BROWSER_CONFIG.healthTimeoutMs;
 const LOCAL_QWEN_ASK_TIMEOUT_MS = QWEN_LOCAL_BROWSER_CONFIG.askTimeoutMs;
 const LOCAL_QWEN_REPLY_MAX_BYTES = QWEN_LOCAL_BROWSER_CONFIG.maxReplyBytes;
 
+const QWEN_ABSTAIN_GUIDANCE: Record<string, string> = {
+  CONTEXT_ONLY_INTERPRETATION: "No KFM record is selected, so there is no evidence-backed answer for this view.",
+  EVIDENCE_NOT_SUPPORTIVE: "The selected record is not released, reviewed and linked to a public layer, so it cannot support an answer.",
+  QUESTION_OUTSIDE_SELECTION_SCOPE: "The question goes beyond what the selected released record states.",
+  SENSITIVE_QUESTION_NOT_INTERPRETED: "Questions about safety, digging, emergencies, legal or medical matters, or exact locations are not interpreted by the local model. Use the official source directly.",
+  OVER_PRECISE_OUTPUT: "The model's reply contained precise location detail, so it was withheld.",
+  CITATION_REQUIRED: "The model did not cite the selected record's exact EvidenceRef, so no answer was shown.",
+  MODEL_ABSTAINED: "The model judged that the selected record does not answer the question.",
+};
+
 const qwenReplyFromEnvelope = (envelope: QwenAskEnvelope) => {
   if (envelope.outcome === "ANSWER") return envelope.answer ?? "The local response was empty, so no answer was shown.";
   if (envelope.outcome === "ABSTAIN") {
-    return `ABSTAIN · ${envelope.answer ?? "The released map context does not support an answer to that question."}`;
+    const reason = QWEN_ABSTAIN_GUIDANCE[envelope.reasonCode] ?? "The released map context does not support an answer to that question.";
+    return envelope.interpretation
+      ? `ABSTAIN · ${reason} The interpretation below is local model language drawn from the map context and KFM source metadata. It is not evidence.`
+      : `ABSTAIN · ${reason}`;
   }
   if (envelope.outcome === "DENY") {
     return envelope.reasonCode === "POLICY_WITHHELD"
@@ -727,7 +742,7 @@ const qwenReplyFromEnvelope = (envelope: QwenAskEnvelope) => {
     MODEL_DIGEST_MISMATCH: `The installed model does not match the pinned ${QWEN_LOCAL_MODEL} digest. Re-run Setup before retrying.`,
     MODEL_MISSING: `The pinned ${QWEN_LOCAL_MODEL} model is missing. Re-run Setup, then retry.`,
     OLLAMA_RUNTIME_ERROR: "Ollama responded, but its local health or model inventory could not be validated. Check Ollama, then Retry.",
-    OLLAMA_VERSION_MISMATCH: "The Ollama runtime version does not match the tested local configuration. Re-run Setup before retrying.",
+    OLLAMA_VERSION_MISMATCH: `This Ollama release is older than the tested ${QWEN_LOCAL_OLLAMA_MIN_VERSION}. Update Ollama, then Retry.`,
     OLLAMA_UNAVAILABLE: "Ollama is not available on this Mac. Open Ollama, then retry.",
     REQUEST_TIMEOUT: "The local request exceeded its bounded deadline. Check Ollama, then retry.",
     UNDECLARED_EVIDENCE_REFERENCE: "Qwen cited evidence that was not supplied by the map, so the companion withheld the answer.",
@@ -740,7 +755,7 @@ const qwenStateGuidance = (state: QwenBridgeState) => {
     case "checking": return "Checking the loopback companion and pinned model on this Mac…";
     case "ready": return `${QWEN_LOCAL_MODEL} is ready locally; its pinned digest was verified.`;
     case "answered": return "The last local response passed the finite outcome and evidence-reference checks.";
-    case "abstained": return "The local companion abstained because the released map context did not support the question.";
+    case "abstained": return "No evidence-backed answer. Any interpretation shown is model language from the map context and source metadata.";
     case "busy": return "One local request is already running. Wait a moment, then Retry.";
     case "timeout": return "The local request timed out without a hosted fallback. Check Ollama, then Retry.";
     case "ollama-unavailable": return "The companion is running, but Ollama is not. Open Ollama, then Retry.";
@@ -3931,6 +3946,8 @@ export default function Home() {
       setQwenMessages((current) => [...current, {
         role: "assistant" as const,
         content: qwenReplyFromEnvelope(envelope),
+        interpretation: envelope.interpretation,
+        requestId: envelope.requestId,
       }].slice(-8));
     } catch {
       const timedOut = controller.signal.aborted;
@@ -9910,15 +9927,25 @@ export default function Home() {
                   <li>From the reviewed Site source, run <code>./scripts/install-local-qwen-macos.sh</code>.</li>
                   <li>Allow Local Network access if the browser asks, then choose Retry.</li>
                 </ol>
-                <p>The installer verifies Ollama {QWEN_LOCAL_OLLAMA_VERSION}, {QWEN_LOCAL_MODEL}, and the pinned model digest. It installs only the loopback companion; it does not enable hosted inference.</p>
+                <p>The installer verifies Ollama {QWEN_LOCAL_OLLAMA_MIN_VERSION} or newer, {QWEN_LOCAL_MODEL}, and the pinned model digest. It installs only the loopback companion and its KFM source-metadata pack; it does not enable hosted inference.</p>
               </div>}
             </section>
             <div className="qwen-messages" aria-live="polite" aria-label="Qwen conversation" role="log" tabIndex={0}>
-              {qwenMessages.map((message, index) => <article key={`${message.role}-${index}`} data-role={message.role}><span>{message.role === "assistant" ? "QWEN" : "YOU"}</span><p>{message.content}</p></article>)}
+              {qwenMessages.map((message, index) => <article key={`${message.role}-${index}`} data-role={message.role}><span>{message.role === "assistant" ? "QWEN" : "YOU"}</span><p>{message.content}</p>
+                {message.interpretation && <section className="qwen-interpretation" aria-label="Model interpretation, not evidence">
+                  <header>INTERPRETATION · NOT EVIDENCE</header>
+                  <p>{message.interpretation.summary}</p>
+                  {([["Seen in this view", message.interpretation.observations], ["Possible readings", message.interpretation.inferences], ["Needed before KFM could answer", message.interpretation.gaps]] as const)
+                    .filter(([, items]) => items.length > 0)
+                    .map(([heading, items]) => <div key={heading}><strong>{heading}</strong><ul>{items.map((item) => <li key={item}>{item}</li>)}</ul></div>)}
+                  {message.interpretation.followUps.length > 0 && <div className="qwen-follow-ups"><strong>Ask next</strong>{message.interpretation.followUps.map((prompt) => <button type="button" key={prompt} onClick={() => setQwenQuestion(prompt.slice(0, 1200))}>{prompt}</button>)}</div>}
+                  {message.requestId && <small>Receipt {message.requestId.slice(0, 8)}</small>}
+                </section>}
+              </article>)}
               {qwenBusy && <article data-role="assistant" className="qwen-thinking"><span>QWEN</span><p>Reading the current map context…</p></article>}
             </div>
-            <div className="qwen-quick-prompts" data-mode={qwenHasAnswerableSelection ? "selection" : "diagnostic"} aria-label={qwenHasAnswerableSelection ? "Selection-scoped Qwen questions" : "Diagnostic Qwen questions expected to abstain"}>
-              <span className="qwen-quick-label">{qwenHasAnswerableSelection ? "RELEASED SELECTION" : "DIAGNOSTIC · EXPECTED ABSTENTION"}</span>
+            <div className="qwen-quick-prompts" data-mode={qwenHasAnswerableSelection ? "selection" : "diagnostic"} aria-label={qwenHasAnswerableSelection ? "Selection-scoped Qwen questions" : "View questions answered as interpretation, not evidence"}>
+              <span className="qwen-quick-label">{qwenHasAnswerableSelection ? "RELEASED SELECTION" : "VIEW · INTERPRETATION, NOT EVIDENCE"}</span>
               {qwenQuickPrompts.map((prompt) => <button type="button" key={prompt} onClick={() => setQwenQuestion(prompt)}>{prompt}</button>)}
             </div>
             <form className="qwen-form" onSubmit={(event) => { event.preventDefault(); void askQwen(); }}>

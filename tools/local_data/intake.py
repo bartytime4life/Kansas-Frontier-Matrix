@@ -465,6 +465,10 @@ def release_plan(root: Path, budget: dict | None = None) -> dict:
 # --- apply ----------------------------------------------------------------
 
 def _receipt(root: Path, identity: str, action: str, body: dict) -> str:
+    if not isinstance(identity, str) or not uuid.UUID(identity).version:
+        raise IntakeError("IDENTITY_INVALID")
+    if str(uuid.UUID(identity)) != identity:
+        raise IntakeError("IDENTITY_INVALID")
     stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
     relative = f"data/receipts/intake/{identity}/{stamp}-{action}-{uuid.uuid4().hex[:8]}.json"
     write_new(root / relative, canonical(body))
@@ -473,6 +477,10 @@ def _receipt(root: Path, identity: str, action: str, body: dict) -> str:
 
 def apply(root: Path, identity: str, action: str, *, stage_limit: int = DEFAULT_STAGE_LIMIT) -> dict:
     """Explicitly apply one recommended placement: ``stage`` (WORK copy) or ``card`` (metadata card)."""
+    if not isinstance(identity, str) or not uuid.UUID(identity).version:
+        raise IntakeError("IDENTITY_INVALID")
+    if str(uuid.UUID(identity)) != identity:
+        raise IntakeError("IDENTITY_INVALID")
     if action not in ("stage", "card"):
         raise IntakeError("ACTION_UNSUPPORTED")
     with writer_lock(root):
@@ -513,12 +521,13 @@ def apply(root: Path, identity: str, action: str, *, stage_limit: int = DEFAULT_
             encoded = canonical(card)
             if len(encoded) > placement.get("max_bytes", 16384):
                 raise IntakeError("CARD_SIZE_LIMIT")
-            result_target = f"data/work/intake/cards/{identity}.json"
+            item_id = str(item["id"])
+            result_target = f"data/work/intake/cards/{item_id}.json"
             path = root / result_target
             if path.exists():
                 if read_regular(path, 1024 * 1024) == encoded:
                     return {"outcome": "ALREADY_WRITTEN", "target": result_target}
-                result_target = f"data/work/intake/cards/{identity}-{hashlib.sha256(encoded).hexdigest()[:12]}.json"
+                result_target = f"data/work/intake/cards/{item_id}-{hashlib.sha256(encoded).hexdigest()[:12]}.json"
                 path = root / result_target
             write_new(path, encoded)
             sha256 = hashlib.sha256(encoded).hexdigest()

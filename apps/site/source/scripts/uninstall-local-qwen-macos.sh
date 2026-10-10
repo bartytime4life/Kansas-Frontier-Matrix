@@ -100,6 +100,8 @@ rm -f \
   "$support_root/bin/node" \
   "$support_root/scripts/local-qwen-bridge.mjs" \
   "$support_root/scripts/qwen-local-contract.mjs" \
+  "$support_root/scripts/qwen-knowledge.mjs" \
+  "$support_root/scripts/qwen-knowledge-pack.mjs" \
   "$support_root/app/qwen-context-safety.mjs"
 rmdir "$support_root/bin" "$support_root/scripts" "$support_root/app" "$support_root" 2>/dev/null || true
 
