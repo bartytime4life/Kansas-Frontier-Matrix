@@ -158,20 +158,29 @@ def handler(desk: Desk):
                 raise ValueError("INVALID_HEADER_VALUE")
             return value
 
+        def _safe_header_name(self, name: str) -> str:
+            # Header field-names must not include control chars or ':'.
+            if any(ord(ch) < 33 or ord(ch) == 127 or ch == ":" for ch in name):
+                raise ValueError("INVALID_HEADER_NAME")
+            return name
+
+        def _send_header_safe(self, name: str, value: str) -> None:
+            self.send_header(self._safe_header_name(name), self._safe_header_value(value))
+
         def answer(self, status: int, body, *, content_type="application/json", extra=()):
             encoded = body if isinstance(body, bytes) else json.dumps(body, sort_keys=True).encode()
             self.send_response(status)
             origin = self.origin()
             if origin is not None and origin != SELF_ORIGIN:
-                self.send_header("Access-Control-Allow-Origin", self._safe_header_value(origin))
-            self.send_header("Vary", "Origin")
-            self.send_header("Cache-Control", "no-store")
-            self.send_header("X-Content-Type-Options", "nosniff")
-            self.send_header("Referrer-Policy", "no-referrer")
-            self.send_header("Content-Type", content_type)
-            self.send_header("Content-Length", str(len(encoded)))
+                self._send_header_safe("Access-Control-Allow-Origin", origin)
+            self._send_header_safe("Vary", "Origin")
+            self._send_header_safe("Cache-Control", "no-store")
+            self._send_header_safe("X-Content-Type-Options", "nosniff")
+            self._send_header_safe("Referrer-Policy", "no-referrer")
+            self._send_header_safe("Content-Type", content_type)
+            self._send_header_safe("Content-Length", str(len(encoded)))
             for key, value in extra:
-                self.send_header(key, value)
+                self._send_header_safe(key, value)
             self.end_headers()
             self.wfile.write(encoded)
 
@@ -180,12 +189,12 @@ def handler(desk: Desk):
             if not self.host_ok() or origin is None or origin == SELF_ORIGIN:
                 return self.answer(403, {"error": "ORIGIN_REJECTED"})
             self.send_response(204)
-            self.send_header("Access-Control-Allow-Origin", self._safe_header_value(origin))
-            self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-            self.send_header("Access-Control-Allow-Headers", "Content-Type, X-KFM-Session")
-            self.send_header("Access-Control-Allow-Private-Network", "true")
-            self.send_header("Access-Control-Max-Age", "600")
-            self.send_header("Vary", "Origin")
+            self._send_header_safe("Access-Control-Allow-Origin", origin)
+            self._send_header_safe("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+            self._send_header_safe("Access-Control-Allow-Headers", "Content-Type, X-KFM-Session")
+            self._send_header_safe("Access-Control-Allow-Private-Network", "true")
+            self._send_header_safe("Access-Control-Max-Age", "600")
+            self._send_header_safe("Vary", "Origin")
             self.end_headers()
 
         def do_GET(self):
