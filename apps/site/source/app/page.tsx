@@ -5055,7 +5055,11 @@ export default function Home() {
 
         map.on("style.load", syncStyle);
         map.once("load", () => {
-          if (!syncStyle()) return;
+          // style.load already installed this generation. Reapplying every
+          // source, terrain and overlay here queues another round of worker
+          // updates just as the initial map settles. Retry only if setup failed
+          // or did not run; later style.load events still rebuild every style.
+          if (!styleGenerationReadyRef.current && !syncStyle()) return;
           if (!runMapMutation("Map load finalization", () => {
             map.setProjection({ type: projectionRef.current });
             map.resize();

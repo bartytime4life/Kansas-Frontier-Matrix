@@ -139,6 +139,17 @@ Route and global recovery surfaces keep navigation, data status, and a lighter r
 available if another client error occurs. The normal test command runs the complete
 test inventory rather than only the rendered-shell file.
 
+The October 10 startup repair reuses the successful `style.load` setup when the
+initial `load` event arrives, avoiding a second complete layer/terrain/overlay
+synchronization. Failed or missing setup is retried; every later style load still
+rebuilds the current layers. Initial resize, projection and idle-time readiness
+checks remain separate: installing layers does not establish tile availability
+or evidence eligibility. `tests/map-startup.test.mjs` executes the actual page
+callbacks across startup, retry, style replacement and failure. Its confirmed
+improvement is one setup pass instead of two; it is not a wall-clock startup or
+frame-rate benchmark. Revert this guard to restore the prior behavior without
+changing data, browser preferences or storage.
+
 The next admitted-data sequence is recorded in
 `docs/KFM_SOURCE_GAP_REGISTER.md`: first complete a WebGL-capable GeoJSON/raster/
 selection/empty-refresh acceptance, then use a pinned generalized KGS GeMS layer as
