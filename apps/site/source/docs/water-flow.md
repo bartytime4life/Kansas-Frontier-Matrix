@@ -105,7 +105,7 @@ modelled discharge off ungauged reaches.
 |---|---|
 | Production build | PASS |
 | TypeScript (`tsc --noEmit`) | PASS |
-| Node test suite | 922 tests: 920 pass, 0 fail, 2 skipped (existing Qwen installer tests that refuse root) |
+| Node test suite (`npm test`) | 939 tests: 937 pass, 0 fail, 2 skipped (existing Qwen installer tests that refuse root) |
 | New `tests/water-flow-motion.test.mjs` | 9/9 pass: cell parsing and grid, cells for a view, strict payload parsing, gauge cues (missing, stale, zero, measured, trend), gauge snapping and falloff, geometry (continuous distance, dedupe, cue only on the gauged reach) |
 | New `tests/water-flow-sync.test.mjs` | 4/4 pass: off makes no requests, zoom gate, placement below labels, gauge lighting, cache reuse, hidden gauge layer, failure state and retry wait, abort on switch-off, add failure isolated |
 | Updated `tests/cinematic-scene-effects.test.mjs`, `tests/scene-studio.test.mjs` | New `waterFlow` key, looks, and the 33 ms motion tick |
