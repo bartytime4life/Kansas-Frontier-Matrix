@@ -465,6 +465,10 @@ def release_plan(root: Path, budget: dict | None = None) -> dict:
 # --- apply ----------------------------------------------------------------
 
 def _receipt(root: Path, identity: str, action: str, body: dict) -> str:
+    if not isinstance(identity, str) or not uuid.UUID(identity).version:
+        raise IntakeError("IDENTITY_INVALID")
+    if str(uuid.UUID(identity)) != identity:
+        raise IntakeError("IDENTITY_INVALID")
     stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
     relative = f"data/receipts/intake/{identity}/{stamp}-{action}-{uuid.uuid4().hex[:8]}.json"
     write_new(root / relative, canonical(body))
@@ -473,6 +477,10 @@ def _receipt(root: Path, identity: str, action: str, body: dict) -> str:
 
 def apply(root: Path, identity: str, action: str, *, stage_limit: int = DEFAULT_STAGE_LIMIT) -> dict:
     """Explicitly apply one recommended placement: ``stage`` (WORK copy) or ``card`` (metadata card)."""
+    if not isinstance(identity, str) or not uuid.UUID(identity).version:
+        raise IntakeError("IDENTITY_INVALID")
+    if str(uuid.UUID(identity)) != identity:
+        raise IntakeError("IDENTITY_INVALID")
     if action not in ("stage", "card"):
         raise IntakeError("ACTION_UNSUPPORTED")
     with writer_lock(root):
