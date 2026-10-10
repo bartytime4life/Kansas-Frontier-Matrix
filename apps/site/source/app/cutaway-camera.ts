@@ -1,5 +1,31 @@
 export type CameraPose = { position: [number, number, number]; target: [number, number, number]; offset: [number, number] };
 
+/** Coalesce view changes; advance damping only while controls still change. */
+export function createCutawayRenderSchedule(options: {
+  draw: () => void; updateControls: () => void; damping: () => boolean; active: () => boolean;
+  request: (callback: () => void) => number; cancel: (id: number) => void;
+}) {
+  let frame: number | null = null, generation = 0, disposed = false, drawing = false, controlsChanged = false;
+  const invalidate = () => {
+    if (disposed || drawing || frame !== null || !options.active()) return;
+    const token = generation;
+    frame = options.request(() => {
+      if (disposed || token !== generation) return;
+      frame = null;
+      if (!options.active()) { controlsChanged = false; return; }
+      const advance = controlsChanged; controlsChanged = false; drawing = true;
+      try {
+        if (advance && options.damping()) options.updateControls();
+        options.draw();
+      } finally { drawing = false; }
+      if (controlsChanged && options.damping()) invalidate();
+    });
+  };
+  const cancel = () => { generation++; if (frame !== null) options.cancel(frame); frame = null; controlsChanged = false; };
+  return { invalidate, changed: () => { controlsChanged = true; invalidate(); }, cancel,
+    dispose: () => { cancel(); disposed = true; } };
+}
+
 /** OrbitControls handles arrows without emitting its pointer `start` event. */
 export function bindCameraKeyboardInterruption(target: EventTarget, cancel: () => void) {
   const keydown = (event: Event) => {
