@@ -22,6 +22,7 @@ import fcntl
 import hashlib
 import json
 import os
+import re
 import shutil
 import sqlite3
 import stat
@@ -464,11 +465,23 @@ def release_plan(root: Path, budget: dict | None = None) -> dict:
 
 # --- apply ----------------------------------------------------------------
 
+IDENTITY_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")
+
+
+def _validated_identity(identity: str) -> str:
+    if not isinstance(identity, str) or not IDENTITY_RE.fullmatch(identity):
+        raise IntakeError("IDENTITY_INVALID")
+    try:
+        parsed = uuid.UUID(identity)
+    except (ValueError, AttributeError, TypeError):
+        raise IntakeError("IDENTITY_INVALID") from None
+    if str(parsed) != identity:
+        raise IntakeError("IDENTITY_INVALID")
+    return identity
+
+
 def _receipt(root: Path, identity: str, action: str, body: dict) -> str:
-    if not isinstance(identity, str) or not uuid.UUID(identity).version:
-        raise IntakeError("IDENTITY_INVALID")
-    if str(uuid.UUID(identity)) != identity:
-        raise IntakeError("IDENTITY_INVALID")
+    identity = _validated_identity(identity)
     stamp = time.strftime("%Y%m%dT%H%M%SZ", time.gmtime())
     relative = f"data/receipts/intake/{identity}/{stamp}-{action}-{uuid.uuid4().hex[:8]}.json"
     write_new(root / relative, canonical(body))
@@ -477,10 +490,7 @@ def _receipt(root: Path, identity: str, action: str, body: dict) -> str:
 
 def apply(root: Path, identity: str, action: str, *, stage_limit: int = DEFAULT_STAGE_LIMIT) -> dict:
     """Explicitly apply one recommended placement: ``stage`` (WORK copy) or ``card`` (metadata card)."""
-    if not isinstance(identity, str) or not uuid.UUID(identity).version:
-        raise IntakeError("IDENTITY_INVALID")
-    if str(uuid.UUID(identity)) != identity:
-        raise IntakeError("IDENTITY_INVALID")
+    identity = _validated_identity(identity)
     if action not in ("stage", "card"):
         raise IntakeError("ACTION_UNSUPPORTED")
     with writer_lock(root):
