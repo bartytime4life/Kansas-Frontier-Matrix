@@ -39,7 +39,7 @@ type FlowState = {
   geometryKey: string;
   status: WaterFlowStatus;
   listening: boolean;
-  gaugeFrame: number;
+  rebuildFrame: number;
   layer: WaterFlowLayer | null;
 };
 const states = new WeakMap<object, FlowState>();
@@ -119,6 +119,28 @@ const rebuild = (map: MapLibreMap, state: FlowState) => {
   });
 };
 
+const cancelRebuild = (state: FlowState) => {
+  if (state.rebuildFrame) cancelAnimationFrame(state.rebuildFrame);
+  state.rebuildFrame = 0;
+};
+
+/** Coalesce cell completions and gauge playback before the next visible frame. */
+const scheduleRebuild = (map: MapLibreMap, state: FlowState) => {
+  if (states.get(map) !== state || state.rebuildFrame || !state.wanted.length) return;
+  state.rebuildFrame = requestAnimationFrame(() => {
+    state.rebuildFrame = 0;
+    if (states.get(map) !== state) return;
+    try { rebuild(map, state); } catch { /* decorative */ }
+  });
+};
+
+const clearPendingWork = (state: FlowState) => {
+  cancelRebuild(state);
+  for (const cell of state.cache.values()) if (cell.state === "loading") cell.controller.abort();
+  state.cache.clear(); state.wanted = []; state.geometryKey = "";
+  setStatus(state, OFF);
+};
+
 const requestCells = (map: MapLibreMap, state: FlowState) => {
   const bounds = map.getBounds();
   const center = map.getCenter();
@@ -140,11 +162,22 @@ const requestCells = (map: MapLibreMap, state: FlowState) => {
       continue;
     }
     const controller = new AbortController();
-    state.cache.set(key, { state: "loading", controller });
+    const request = { state: "loading" as const, controller };
+    state.cache.set(key, request);
     void fetchCell(key, controller.signal).then(
-      (payload) => { if (state.cache.get(key)?.state === "loading") state.cache.set(key, { state: "ready", payload }); },
-      () => { if (!controller.signal.aborted && state.cache.get(key)?.state === "loading") state.cache.set(key, { state: "failed", at: Date.now() }); },
-    ).finally(() => { try { rebuild(map, state); } catch { /* decorative */ } });
+      (payload) => {
+        // Abort is advisory: a resolved old request must not replace a new one
+        // for the same cell after a rapid pan or off/on toggle.
+        if (!controller.signal.aborted && state.cache.get(key) === request) {
+          state.cache.set(key, { state: "ready", payload }); scheduleRebuild(map, state);
+        }
+      },
+      () => {
+        if (!controller.signal.aborted && state.cache.get(key) === request) {
+          state.cache.set(key, { state: "failed", at: Date.now() }); scheduleRebuild(map, state);
+        }
+      },
+    );
   }
   while (state.cache.size > CACHE_LIMIT) {
     const oldest = [...state.cache.keys()].find((key) => !wanted.includes(key));
@@ -171,15 +204,11 @@ export function syncWaterFlow(map: MapLibreMap, options: WaterFlowSyncOptions): 
   let state = states.get(map);
   if (!sceneEffectsFor(map).waterFlow) {
     if (map.getLayer(WATER_FLOW_LAYER_ID)) map.removeLayer(WATER_FLOW_LAYER_ID);
-    if (state) {
-      for (const cell of state.cache.values()) if (cell.state === "loading") cell.controller.abort();
-      state.cache.clear(); state.wanted = []; state.geometryKey = "";
-      setStatus(state, OFF);
-    }
+    if (state) clearPendingWork(state);
     return true;
   }
   if (!state) {
-    state = { cache: new Map(), wanted: [], preset: options.light, efficient: options.efficient, gaugeSourceId: options.gaugeSourceId, gaugeLayerId: options.gaugeLayerId, geometryKey: "", status: OFF, listening: false, gaugeFrame: 0, layer: null };
+    state = { cache: new Map(), wanted: [], preset: options.light, efficient: options.efficient, gaugeSourceId: options.gaugeSourceId, gaugeLayerId: options.gaugeLayerId, geometryKey: "", status: OFF, listening: false, rebuildFrame: 0, layer: null };
     states.set(map, state);
   }
   const current = state;
@@ -189,12 +218,19 @@ export function syncWaterFlow(map: MapLibreMap, options: WaterFlowSyncOptions): 
   current.gaugeLayerId = options.gaugeLayerId;
   if (!current.listening) {
     current.listening = true;
-    map.on("moveend", () => { try { requestCells(map, current); syncWaterFlowVisibility(map, current.efficient); } catch { /* decorative */ } });
-    map.on("sourcedata", (event: { sourceId?: string }) => {
-      if (event.sourceId !== current.gaugeSourceId || current.gaugeFrame) return;
-      // Gauge frames can arrive many times a second during playback; rebuild once per frame.
-      current.gaugeFrame = requestAnimationFrame(() => { current.gaugeFrame = 0; try { rebuild(map, current); } catch { /* decorative */ } });
-    });
+    const move = () => { try { requestCells(map, current); syncWaterFlowVisibility(map, current.efficient); } catch { /* decorative */ } };
+    const source = (event: { sourceId?: string }) => {
+      if (event.sourceId === current.gaugeSourceId) scheduleRebuild(map, current);
+    };
+    const remove = () => {
+      states.delete(map);
+      clearPendingWork(current);
+      current.layer = null;
+      map.off("moveend", move); map.off("sourcedata", source); map.off("remove", remove);
+    };
+    map.on("moveend", move);
+    map.on("sourcedata", source);
+    map.on("remove", remove);
   }
   // Decorative: a GPU or shader failure removes the layer and never degrades the map.
   try {
