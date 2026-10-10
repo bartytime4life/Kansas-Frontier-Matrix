@@ -25,6 +25,8 @@ type ControlsProps = Readonly<{
   onCamera: (patch: Partial<SceneComposition>, reset?: boolean) => void;
   onChange: (next: SceneEffectSettings) => void;
   onFlyover: () => void;
+  /** Live status lines that replace an effect's description while present. */
+  readings?: Readonly<Partial<Record<keyof SceneEffectSettings, string | null>>>;
   drawing?: Readonly<{
     mode: TerrainDrawingMode;
     detail: boolean;
@@ -50,7 +52,7 @@ type ControlsProps = Readonly<{
 }>;
 
 /** An atlas cinematographer's studio. All controls share the real renderer state. */
-export function SceneEffectsControls({ settings, light, efficient, reducedMotion, flyoverActive, view, presentation, camera, cameraReady, onRecipe, onLight, onCamera, onChange, onFlyover, drawing, surface, exploration }: ControlsProps) {
+export function SceneEffectsControls({ settings, light, efficient, reducedMotion, flyoverActive, view, presentation, camera, cameraReady, onRecipe, onLight, onCamera, onChange, onFlyover, drawing, surface, exploration, readings }: ControlsProps) {
   const id = useId();
   const mode = matchingLookPreset(settings);
   const recipe = matchingSceneRecipe({ ...presentation, settings });
@@ -167,15 +169,16 @@ export function SceneEffectsControls({ settings, light, efficient, reducedMotion
       <div className="scene-effects-switches">
         {SCENE_EFFECT_OPTIONS.filter((option) => option.key !== "sunSync").map((option) => {
           const here = option.views.includes(view);
-          const held = efficient && (option.key === "curtain" || option.key === "columns" || option.key === "stars");
+          const held = efficient && (option.key === "curtain" || option.key === "columns" || option.key === "stars" || option.key === "waterFlow");
+          const reading = settings[option.key] ? readings?.[option.key] : null;
           return <label key={option.key} data-here={here || undefined} data-held={held || undefined}>
             <input type="checkbox" role="switch" checked={settings[option.key]} onChange={() => onChange({ ...settings, [option.key]: !settings[option.key] })} />
-            <span><strong>{option.label}{option.network && <i title="Requests display-DEM tiles while on"> · network</i>}</strong><small>{held ? "Paused while Battery saver is on" : option.detail}</small><b>{here ? "Shows in this view" : `Shows in ${option.views.map((key) => SCENE_VIEW_LABELS[key]).join(", ")}`}</b></span>
+            <span><strong>{option.label}{option.network && <i title={option.key === "waterFlow" ? "Requests USGS 3DHP flowlines while on" : "Requests display-DEM tiles while on"}> · network</i>}</strong><small aria-live={option.key === "waterFlow" ? "polite" : undefined}>{held ? "Paused while Battery saver is on" : reading ?? option.detail}</small><b>{here ? "Shows in this view" : `Shows in ${option.views.map((key) => SCENE_VIEW_LABELS[key]).join(", ")}`}</b></span>
           </label>;
         })}
       </div>
     </details>
-    <p>Presentation only. Looks change light, never source dates, weather or elevations. Enabled effects stay your choice. Columns use provider values. Stars are placed from the Hipparcos-based catalog for the current time; the Milky Way and Sun glow are illustrative.</p>
+    <p>Presentation only. Looks change light, never source dates, weather or elevations. Enabled effects stay your choice. Columns use provider values. Stars are placed from the Hipparcos-based catalog for the current time; the Milky Way and Sun glow are illustrative. Flowing water moves only where USGS 3DHP maps a direction, at one display speed that is not water velocity; gauge readings light only their own reach.</p>
   </section>;
 }
 

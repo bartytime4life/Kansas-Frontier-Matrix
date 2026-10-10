@@ -215,31 +215,37 @@ test("the merged studio retains the real night-sky toggle, catalog copy and Batt
   }
 });
 
-test("merged curtain and star callback shares bounded repaint timing and respects hidden, reduced-motion and efficient guards", async () => {
+test("merged curtain, star and water callback shares bounded repaint timing and respects hidden, reduced-motion and efficient guards", async () => {
   const tree = ts.createSourceFile("page.tsx", await read("app/page.tsx"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
   const matches = [];
   const walk = (node) => { if (ts.isCallExpression(node) && node.expression.getText(tree) === "useEffect" && node.arguments[0]?.getText(tree).includes("setNightSkyTwinkle(twinkle)")) matches.push(node); ts.forEachChild(node, walk); };
   walk(tree); assert.equal(matches.length, 1, "one shared shimmer/twinkle loop");
   const code = transpile(`const effect = ${matches[0].arguments[0].getText(tree)};`);
-  for (const mode of ["twinkle", "curtain", "off", "reduced", "efficient", "loading"]) {
+  for (const mode of ["twinkle", "curtain", "water", "off", "reduced", "efficient", "loading"]) {
     let paints = 0, nextFrame = 0;
-    const frames = new Map(), shimmer = [], twinkle = [];
+    const frames = new Map(), shimmer = [], twinkle = [], flow = [];
     const context = {
       mapRef: { current: { triggerRepaint() { paints += 1; } } }, runtime: { kind: mode === "loading" ? "loading" : "ready" },
       dynamicEffects: true, reducedMotion: mode === "reduced", renderQuality: "auto", browserRenderBudget: () => ({ efficient: mode === "efficient" }),
-      sceneEffects: { curtain: mode === "curtain", stars: mode !== "curtain" && mode !== "off" },
+      sceneEffects: { curtain: mode === "curtain", stars: mode !== "curtain" && mode !== "off" && mode !== "water", waterFlow: mode === "water" },
       setCurtainShimmer: (value) => shimmer.push(value), setNightSkyTwinkle: (value) => twinkle.push(value), curtainIsVisible: () => true, nightSkyIsTwinkling: () => true,
+      setWaterFlowMotion: (value) => flow.push(value), waterFlowIsAnimating: () => mode === "water",
       document: { hidden: false }, window: { requestAnimationFrame(callback) { const id = ++nextFrame; frames.set(id, callback); return id; }, cancelAnimationFrame(id) { frames.delete(id); } },
     };
     const cleanup = new Function(...Object.keys(context), `${code}; return effect;`)(...Object.values(context))();
-    const moving = mode === "twinkle" || mode === "curtain";
-    assert.deepEqual(shimmer, [mode === "curtain"]); assert.deepEqual(twinkle, [mode === "twinkle"]);
+    const moving = mode === "twinkle" || mode === "curtain" || mode === "water";
+    assert.deepEqual(shimmer, [mode === "curtain"]); assert.deepEqual(twinkle, [mode === "twinkle"]); assert.deepEqual(flow, [mode === "water"]);
     assert.equal(frames.size, moving ? 1 : 0);
     if (!moving) continue;
     const tick = (now) => { const [id, callback] = frames.entries().next().value; frames.delete(id); callback(now); };
-    tick(66); tick(100); tick(132);
-    assert.equal(paints, 2, "at most one repaint per66ms");
+    if (mode === "water") {
+      tick(33); tick(66); tick(80);
+      assert.equal(paints, 2, "flowing water repaints at most once per 33 ms");
+    } else {
+      tick(66); tick(100); tick(132);
+      assert.equal(paints, 2, "at most one repaint per66ms");
+    }
     context.document.hidden = true; tick(200); assert.equal(paints, 2);
-    cleanup(); assert.equal(frames.size, 0); assert.equal(shimmer.at(-1), false); assert.equal(twinkle.at(-1), false);
+    cleanup(); assert.equal(frames.size, 0); assert.equal(shimmer.at(-1), false); assert.equal(twinkle.at(-1), false); assert.equal(flow.at(-1), false);
   }
 });
