@@ -837,7 +837,7 @@
       "state": "repository_only_overlay"
     },
     "app/governed-water-admin.ts": {
-      "mirror_sha256": "2cbd1686cdb6b32d175b9dadceeffd7267989ccf2392de830b7cb0fdfa159eaa",
+      "mirror_sha256": "7f7a0fc61d78b360254574d943e92a13ff1c3a978d23ba7a0635fbf9a2afdf00",
       "state": "repository_only_overlay"
     },
     "app/governed-water-availability.ts": {
@@ -1691,7 +1691,7 @@
       "state": "identical"
     },
     "app/water-release-console.tsx": {
-      "mirror_sha256": "62890e32cdf031a46aa22d47f25b38ee73b96f84b24b60050e8c430d7beed29e",
+      "mirror_sha256": "7efb34b32c0ff92ab865ab9a40f9c9e57f376a634936980dfd1127661123d409",
       "state": "repository_only_overlay"
     },
     "app/water-terrain-profile.tsx": {
@@ -1834,7 +1834,7 @@
       "state": "identical"
     },
     "docs/governed-water.md": {
-      "mirror_sha256": "54a72c6d1d0a642bc14e5e1cc4a266e6037fd82fe70e0dd0a233de02de34331e",
+      "mirror_sha256": "37e96ed6a426d01927bf7b848225226a81587f3c9d438e31da2908de02ec48b9",
       "site_sha256": "34621ee62ee4a1da9b4f54517b60c5214800d39fe9e6653af3b44765e8a58b5d",
       "state": "inherited_repository_overlay"
     },
@@ -3929,7 +3929,7 @@
       "state": "identical"
     },
     "tests/governed-water-admin.test.mjs": {
-      "mirror_sha256": "16060dcb3cb61421978128efdfda50c9556a4bfc0d2d7324a69811136a938e99",
+      "mirror_sha256": "7787ccc810b51e0addf7937571cafa602e5b6d8b5760211bdf2cdaee69e6b45c",
       "state": "repository_only_overlay"
     },
     "tests/governed-water-availability.test.mjs": {
@@ -4627,7 +4627,7 @@
         "state": "repository_only_overlay"
       },
       {
-        "mirror_sha256": "2cbd1686cdb6b32d175b9dadceeffd7267989ccf2392de830b7cb0fdfa159eaa",
+        "mirror_sha256": "7f7a0fc61d78b360254574d943e92a13ff1c3a978d23ba7a0635fbf9a2afdf00",
         "path": "app/governed-water-admin.ts",
         "previous_state": "unrecorded",
         "state": "repository_only_overlay"
@@ -4909,7 +4909,7 @@
         "state": "repository_only_overlay"
       },
       {
-        "mirror_sha256": "62890e32cdf031a46aa22d47f25b38ee73b96f84b24b60050e8c430d7beed29e",
+        "mirror_sha256": "7efb34b32c0ff92ab865ab9a40f9c9e57f376a634936980dfd1127661123d409",
         "path": "app/water-release-console.tsx",
         "previous_state": "unrecorded",
         "state": "repository_only_overlay"
@@ -4942,7 +4942,7 @@
         "state": "inherited_repository_overlay"
       },
       {
-        "mirror_sha256": "54a72c6d1d0a642bc14e5e1cc4a266e6037fd82fe70e0dd0a233de02de34331e",
+        "mirror_sha256": "37e96ed6a426d01927bf7b848225226a81587f3c9d438e31da2908de02ec48b9",
         "path": "docs/governed-water.md",
         "previous_state": "identical",
         "site_sha256": "34621ee62ee4a1da9b4f54517b60c5214800d39fe9e6653af3b44765e8a58b5d",
@@ -5241,7 +5241,7 @@
         "state": "repository_only_overlay"
       },
       {
-        "mirror_sha256": "16060dcb3cb61421978128efdfda50c9556a4bfc0d2d7324a69811136a938e99",
+        "mirror_sha256": "7787ccc810b51e0addf7937571cafa602e5b6d8b5760211bdf2cdaee69e6b45c",
         "path": "tests/governed-water-admin.test.mjs",
         "previous_state": "unrecorded",
         "state": "repository_only_overlay"
@@ -5409,7 +5409,7 @@
     "classification": "A file still byte-equal to its v192 bytes is identical. A v192 file changed in the repository since then is inherited_repository_overlay and keeps the v192 digest as site_sha256. A file added in the repository after v192 is repository_only_overlay with no site_sha256.",
     "requested_by": "@bartytime4life (repository owner), 2026-10-10, with the ADR-0044 water release change"
   },
-  "repository_base": "49b8e155c3f3fae5cadf29df32f399b324ca4983",
+  "repository_base": "44b1b206bd8508fa35dc31e73ecfbef52ecaf09b",
   "review": {
     "activation": "NOT REQUESTED",
     "blocking_checks": [
@@ -5441,6 +5441,6 @@
   },
   "validation": {
     "hosted_equivalence": false,
-    "mirror_check": "python tools/qa/site_mirror.py --check against this receipt at 49b8e155c3f3fae5cadf29df32f399b324ca4983"
+    "mirror_check": "python tools/qa/site_mirror.py --check against this receipt at 44b1b206bd8508fa35dc31e73ecfbef52ecaf09b"
   }
 }
