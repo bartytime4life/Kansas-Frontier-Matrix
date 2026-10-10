@@ -9,6 +9,7 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 from connectors_core.captured_json import canonical_bytes, decode_object, digest_bytes
+from pipelines.domains.hydrology.admission import load_admission
 from pipelines.domains.hydrology.normalize import normalize_capture
 from pipelines.domains.hydrology.package import prepare_water_package
 from hashing import compute_spec_hash
@@ -42,7 +43,12 @@ def generated(profile):
                 "correction_state": "ACTIVE", "correction_ref": None, "reviewer": "synthetic-reviewer", "releaser": "synthetic-releaser"}
     for name in ("source_admission", "rights", "sensitivity", "policy", "review", "release"):
         decision[name + "_ref"] = "kfm://synthetic/" + name
-    values = {"snapshot.json": snapshot, "held-snapshot.json": held, "decision.json": decision}
+    # ADR-0044: the admitted license on synthetic input, released by one person.
+    admitted = prepare_water_package(candidate, admission=load_admission())
+    owner_decision = dict(decision, package_id=admitted["manifest"]["package_id"],
+                          reviewer="synthetic-owner", releaser="synthetic-owner")
+    values = {"snapshot.json": snapshot, "held-snapshot.json": held, "decision.json": decision,
+              "admitted-snapshot.json": admitted, "owner-decision.json": owner_decision}
     for view in ("bootstrap", "layers", "evidence"):
         values[view + ".json"] = project(canonical_bytes(snapshot), decision, view=view, now=profile["evaluated_at"])
     return {name: canonical_bytes(value) for name, value in values.items()}

@@ -6,8 +6,9 @@
   "max_interval_seconds": 86400,
   "stale_after_seconds": 7200,
   "source_descriptor": "data/registry/sources/hydrology/usgs_nwis.yaml",
-  "source_admission": "PENDING",
-  "review_state": "PENDING",
+  "source_admission": "ADMITTED",
+  "source_admission_ref": "kfm://source/usgs-nwis",
+  "review_state": "APPROVED",
   "release_state": "UNRELEASED",
   "attribution": "U.S. Geological Survey. Provisional observations are subject to revision.",
   "provider_documentation": "https://api.waterdata.usgs.gov/docs/ogcapi/migration/"

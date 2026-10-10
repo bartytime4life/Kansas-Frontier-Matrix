@@ -90,6 +90,10 @@ export async function parseWaterPackage(text: string): Promise<WaterPackage> {
   return { manifest: manifest as WaterPackage["manifest"], candidate, evidence, validation };
 }
 const REF_KEYS = ["source_admission_ref", "rights_ref", "sensitivity_ref", "policy_ref", "review_ref", "release_ref"];
+// ADR-0044: licenses of admitted public sources whose owner may review and release the same package.
+// Must match SELF_RELEASE_LICENSES in packages/policy-runtime/src/policy_runtime/core.py.
+export const SELF_RELEASE_LICENSES: readonly string[] = ["U.S. Public Domain (USGS-authored data, 17 U.S.C. 105); provisional data subject to revision"];
+const selfReleaseEligible = (pkg: WaterPackage) => pkg.evidence.entries.length > 0 && pkg.evidence.entries.every(e => e.bundle.sensitivity.level === "public" && SELF_RELEASE_LICENSES.includes(e.bundle.rights.license));
 export function waterGate(pkg: WaterPackage, decision: Obj | null, now: string): string {
   if (!decision) return "REVIEW_REQUIRED";
   if (!same(Object.keys(decision).sort(), ["profile", "package_id", "decision", "reviewed_at", "released_at", "expires_at", "correction_state", "correction_ref", "reviewer", "releaser", ...REF_KEYS].sort())) return "RELEASE_METADATA_INVALID";
@@ -97,7 +101,8 @@ export function waterGate(pkg: WaterPackage, decision: Obj | null, now: string):
   if (decision.correction_state !== "ACTIVE") return "CORRECTION_HOLD";
   if (decision.correction_ref !== null || decision.decision !== "APPROVED") return "RELEASE_NOT_APPROVED";
   if (REF_KEYS.some(k => typeof decision[k] !== "string" || !/^kfm:\/\/[A-Za-z0-9._~:/-]{1,240}$/.test(decision[k] as string))) return "REVIEW_REFERENCE_MISSING";
-  if (["reviewer", "releaser"].some(k => typeof decision[k] !== "string" || !(decision[k] as string).length || (decision[k] as string).length > 128) || decision.reviewer === decision.releaser) return "INDEPENDENT_REVIEW_REQUIRED";
+  if (["reviewer", "releaser"].some(k => typeof decision[k] !== "string" || !(decision[k] as string).length || (decision[k] as string).length > 128)) return "INDEPENDENT_REVIEW_REQUIRED";
+  if (decision.reviewer === decision.releaser && !selfReleaseEligible(pkg)) return "INDEPENDENT_REVIEW_REQUIRED";
   try { if (!(time(pkg.manifest.created_at) <= time(decision.reviewed_at) && time(decision.reviewed_at) <= time(decision.released_at) && time(decision.released_at) <= time(now) && time(now) < time(decision.expires_at))) return "RELEASE_TIME_INVALID"; } catch { return "RELEASE_TIME_INVALID"; }
   if (pkg.evidence.entries.some(e => e.bundle.sensitivity.level !== "public" || e.bundle.rights.license.toLowerCase().includes("review required"))) return "RIGHTS_OR_SENSITIVITY_HOLD";
   return "ELIGIBLE";

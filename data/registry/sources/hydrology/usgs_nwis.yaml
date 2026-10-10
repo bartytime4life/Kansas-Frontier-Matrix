@@ -1,5 +1,99 @@
-status: PROPOSED
-source_doc: docs/domains/hydrology/CANONICAL_PATHS.md
-path: data/registry/sources/hydrology/usgs_nwis.yaml
-notes:
-  - Placeholder created from docs/domains markdown inventory.
+{
+  "object_type": "SourceDescriptor",
+  "schema_version": "v1",
+  "source_id": "kfm://source/usgs-nwis",
+  "descriptor_version": "1.0.0",
+  "title": "USGS Water Data for the Nation: Kansas discharge pilot",
+  "description": "Admitted scope: provisional instantaneous discharge (parameter 00060) for stations USGS-06892518 and USGS-07156900, read through the USGS OGC API v1 by connectors/usgs/water_data. Pipeline records carry the short source_id usgs-nwis. Admitted by the repository owner on 2026-10-10. Stored as JSON, which is valid YAML, so the shared SourceDescriptor validator reads it directly.",
+  "domain_scope": ["hydrology"],
+  "source_type": "official_government_dataset",
+  "source_role": "observation",
+  "authority_rank": "primary_authority",
+  "authority_notes": "USGS operates both stations and publishes their discharge record. Values are provisional until USGS approves them.",
+  "publisher": {
+    "name": "U.S. Geological Survey",
+    "jurisdiction": "United States",
+    "contact": {
+      "contact_status": "public_contact",
+      "contact_url": "https://www.usgs.gov/"
+    }
+  },
+  "owner_or_steward": {
+    "name": "USGS Water Resources Mission Area",
+    "jurisdiction": "United States",
+    "contact": {
+      "contact_status": "public_contact",
+      "contact_url": "https://www.usgs.gov/mission-areas/water-resources"
+    }
+  },
+  "rights": {
+    "rights_status": "verified_open",
+    "license_or_terms": "U.S. Public Domain (USGS-authored data, 17 U.S.C. 105); provisional data subject to revision",
+    "attribution_required": true,
+    "attribution_text": "U.S. Geological Survey. Provisional observations are subject to revision.",
+    "redistribution_allowed": "yes",
+    "commercial_use_allowed": "yes",
+    "last_verified_at": "2026-10-10T18:30:00Z",
+    "verified_by": "@bartytime4life"
+  },
+  "sensitivity_default": "public",
+  "sensitivity_notes": "Public stream gauges at published station locations. No living-person, cultural or restricted-infrastructure content in the admitted scope.",
+  "cadence": {
+    "update_cadence": "subdaily",
+    "freshness_expectation": "Instantaneous values arrive about every 15 minutes; the pilot treats a station as stale two hours after its latest non-null discharge value.",
+    "staleness_policy": "mark_stale"
+  },
+  "access": {
+    "access_method": "ogc_api",
+    "access_posture": "open",
+    "endpoints": [
+      {
+        "label": "USGS Water Data OGC API v1 collections",
+        "uri": "https://api.waterdata.usgs.gov/ogcapi/v1/collections",
+        "purpose": "query",
+        "version": "v1"
+      },
+      {
+        "label": "USGS OGC API migration documentation",
+        "uri": "https://api.waterdata.usgs.gov/docs/ogcapi/migration/",
+        "purpose": "documentation"
+      }
+    ]
+  },
+  "citation": {
+    "citation_required": true,
+    "citation_template": "U.S. Geological Survey, Water Data for the Nation, station {station_id}, parameter 00060, accessed {accessed_at}.",
+    "citation_guidance": "Cite the station identifier and retrieval time; state that values are provisional."
+  },
+  "source_head": {
+    "observed_at": "2026-09-30T18:00:00Z",
+    "method": "api_metadata",
+    "content_identity": {
+      "upstream_version": "ogcapi/v1",
+      "source_head_uri": "https://api.waterdata.usgs.gov/ogcapi/v1/collections"
+    }
+  },
+  "admissibility_limits": {
+    "allowed_claim_roles": ["observation", "observed_event", "map_display", "citation_support"],
+    "prohibited_claim_roles": ["not_for_life_safety"],
+    "limitations": "Admission covers only parameter 00060 at USGS-06892518 and USGS-07156900. Values are provisional and may be revised or removed by USGS. Not a flood warning, emergency, navigation, engineering or regulatory product. A null reading stays missing and never counts as zero or as current.",
+    "confidence_posture": "source_authoritative_within_role"
+  },
+  "public_release": {
+    "allowed": true,
+    "requires_review": true,
+    "redaction_required": false,
+    "release_conditions": [
+      "Each package needs a kfm.water-release-decision/v1 record that passes the serving gate.",
+      "Owner self-release applies only under ADR-0044: public sensitivity and this admitted license.",
+      "Every release keeps the USGS attribution and the provisional-data notice."
+    ]
+  },
+  "review_state": "approved",
+  "release_state": "candidate",
+  "lifecycle": {
+    "registry_state": "active",
+    "created_at": "2026-10-10T18:30:00Z",
+    "updated_at": "2026-10-10T18:30:00Z"
+  }
+}

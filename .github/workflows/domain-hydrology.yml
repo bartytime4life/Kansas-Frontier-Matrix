@@ -201,8 +201,9 @@ jobs:
               if not isinstance(payload, (dict, list)):
                   raise SystemExit(f"Hydrology valid fixture must be a JSON object or array: {path}")
 
+          # usgs_nwis.yaml is an admitted SourceDescriptor (ADR-0044); it is
+          # validated against the shared schema in the next step instead.
           placeholder_source_yaml_paths = (
-              Path("data/registry/sources/hydrology/usgs_nwis.yaml"),
               Path("data/registry/sources/hydrology/wbd.source.yaml"),
           )
           for path in placeholder_source_yaml_paths:
@@ -590,6 +591,9 @@ jobs:
           python tools/validators/domains/hydrology/validate_catalog_matrix.py --fixtures
           python tools/validators/domains/hydrology/validate_schema.py
           python tools/validators/domains/hydrology/validate_source_descriptor.py --fixtures
+          # Admitted source (ADR-0044): must stay schema-valid.
+          python tools/validators/domains/hydrology/validate_source_descriptor.py \
+            data/registry/sources/hydrology/usgs_nwis.yaml
 
           echo "WORKFLOW_CHECK_EXECUTED: hydrology-exact-option-adapters"
 

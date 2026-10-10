@@ -1,7 +1,8 @@
 # Water pilot: acquisition, candidate review and governed reads
 
-Status: implemented delivery candidate, pending independent review and deployment.
-No real water source was admitted, released, activated or published by this batch.
+Status: implemented delivery candidate. On 2026-10-10 the owner admitted the USGS
+discharge source and accepted ADR-0044; see [Releasing the discharge layer](#releasing-the-discharge-layer).
+No real package has been released, activated or published yet.
 The first milestone remains open until the real reviewed package completes the
 local browser journey and private Site acceptance/rollback gates.
 
@@ -572,6 +573,73 @@ candidate commits. Do not reset the active checkout. Preserve immutable raw,
 validation and historical receipt bytes. A deployed rollback requires exact
 previous package/application identities, renewed eligibility and separately
 recorded operator action. Never activate a withdrawn package to make a test pass.
+
+## Releasing the discharge layer
+
+**Admitted 2026-10-10 by @bartytime4life.** The
+[USGS source descriptor](../../data/registry/sources/hydrology/usgs_nwis.yaml)
+admits provisional discharge (00060) at USGS-06892518 and USGS-07156900 as U.S.
+public domain, provisional data subject to revision. Under
+[ADR-0044](../adr/ADR-0044-owner-self-release-for-admitted-public-water-data.md)
+the owner may review and release a package alone, but only when every bundle is
+public and carries that admitted license. Anything else still needs a second
+reviewer.
+
+Run these on the computer that holds the private data root. Live capture needs
+network access to `api.waterdata.usgs.gov`.
+
+```bash
+ROOT=/absolute/private/KFM-data
+# 1. Capture, replay and prepare with the admitted license.
+.venv/bin/python tools/local_data/water_pilot.py --root $ROOT capture --start START --end END
+.venv/bin/python tools/local_data/water_pilot.py --root $ROOT replay --capture-id sha256:CAPTURE
+.venv/bin/python tools/release/water_snapshot.py --root $ROOT --candidate-id sha256:CANDIDATE --admitted-source
+# 2. Write the release decision. It is written only if the serving gate answers.
+.venv/bin/python tools/release/water_release.py decide --root $ROOT --package-id sha256:PACKAGE \
+  --reviewer @bartytime4life --releaser @bartytime4life --valid-days 7
+```
+
+A package prepared without `--admitted-source` keeps the rights hold, and
+`decide` refuses it with `INDEPENDENT_REVIEW_REQUIRED`. Use `--rollback-target`
+with the currently active package when you prepare a replacement.
+
+**Local serving.** Stage and activate into a private serving store, then start
+the governed API against it:
+
+```bash
+STORE=/absolute/private/KFM-release-serving
+.venv/bin/python tools/release/water_release.py stage --root $ROOT --store $STORE --package-id sha256:PACKAGE --actor @bartytime4life
+.venv/bin/python tools/release/water_release.py activate --root $ROOT --store $STORE --decision release/decisions/hydrology/HASH/STAMP.json --expected-active none
+KFM_RELEASE_STORE=$STORE .venv/bin/kfm-governed-api   # /v1/layers now answers
+```
+
+**Hosted Site.** One-time setup in the Site's runtime settings:
+`KFM_WATER_WORKER_TOKEN` (32+ random characters, staging only) and
+`KFM_WATER_OWNER_IDS` or `KFM_WATER_OWNER_EMAILS` (who may activate). Confirm the
+deployed Site has applied `drizzle/0001_governed_water.sql`. Then:
+
+```bash
+KFM_WATER_WORKER_TOKEN=... KFM_SITES_BYPASS_TOKEN=... \
+  .venv/bin/python tools/release/water_release.py stage-hosted --root $ROOT --package-id sha256:PACKAGE \
+  --site-url https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site
+```
+
+Staging stores the package and cannot activate it. Open `/governed/water-release`
+on the Site, paste the decision file, and press **Activate package**. The page
+shows the active and previous package; **Withdraw active package** stops serving
+at once, and **Roll back to previous** reactivates the earlier package with its
+decision. Activation is compare-and-swap: if the active package changed since
+the page loaded, it refuses with `ACTIVATION_CONFLICT`.
+
+Decisions expire (7 days by default, 30 at most). An expired decision stops the
+layer from answering; write a new decision and activate again.
+
+Validation: `tests/packages/release/test_water_self_release.py` (gate and
+admission), `tests/tools/test_water_release.py` (decide, stage, activate,
+loopback `/v1/layers`, hosted staging request) and the Site's
+`tests/governed-water-admin.test.mjs` (staging, compare-and-swap activation,
+withdrawal and route authorization against the real D1 migration on SQLite).
+Hosted staging and activation have not yet been run against the deployed Site.
 
 ## Completion queue and next gates
 
