@@ -22,17 +22,28 @@ const supplied = [
   'https://legendsofkansas.com/historic-people-of-kansas/',
 ];
 
-test('supplied URLs remain exact and inaccessible sources do not acquire invented records', () => {
+test('supplied URLs remain exact and recovered index counts match observed coverage', () => {
   assert.deepEqual(data.sources.map(source => source.url), supplied);
-  assert.equal(data.records.length, 1448);
+  assert.equal(data.records.length, 2886);
+  assert.ok(data.sources.every(source => source.access === 'readable'));
   for (const source of data.sources.filter(source => source.access === 'blocked')) {
     assert.equal(source.recordCount, 0);
     assert.ok(!data.records.some(record => record.sourceId === source.id));
   }
   const ranker = data.sources.find(source => source.id === 'ranker');
-  assert.equal(ranker.access, 'partial');
-  assert.equal(ranker.recordCount, 6);
+  assert.equal(ranker.access, 'readable');
+  assert.equal(ranker.recordCount, 583);
   assert.equal(ranker.provenance.completeness.publisherDeclaredTotal, 583);
+  assert.deepEqual(ranker.provenance.completeness.recordsPerPage, [120, 120, 120, 120, 103]);
+  assert.equal(data.records.filter(record => record.sourceId === 'ksnt').length, 25);
+  const memorials = data.records.filter(record => record.sourceId === 'findagrave');
+  assert.equal(memorials.length, 405);
+  assert.equal(new Set(memorials.map(record => record.targetUrl)).size, 405);
+  assert.deepEqual(memorials.filter(record => record.kind === 'topic').map(record => record.title).sort(), ['Chief', 'Comanche', 'Insco', 'Lawrin']);
+  assert.equal(memorials.filter(record => record.details.cenotaphLabelPresent).length, 6);
+  assert.ok(memorials.every(record => record.details.burialStatus === 'not_verified'));
+  assert.equal(data.sources.find(source => source.id === 'onthisday').recordCount, 218);
+  assert.equal(data.sources.find(source => source.id === 'kansashistory').recordCount, 213);
 });
 
 test('conflicts, fictional entries and regional geography retain their distinct source roles', () => {

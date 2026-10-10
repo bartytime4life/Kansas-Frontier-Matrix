@@ -19,13 +19,13 @@
     "apps/site/source/app/history-research-model.ts": "sha256:0d4f3fded4cf315e7fe387523d5845b73f310e3258877c90c24ed8d5ae090acd",
     "apps/site/source/app/history-research.module.css": "sha256:2083884905a0565c08b29f40a7c3e88550f4b6286577c482afff608b73a16182",
     "apps/site/source/app/history/people-events/page.tsx": "sha256:a59846a654990bb88d7a5e74d576f43aa9aa5224fe79202c2557ee7d797e7825",
-    "apps/site/source/public/history/people-events.json": "sha256:bf677b107af50bcbfd18dce62ed8269e9112bb55fb75c2a9375c330973f8f42a",
-    "apps/site/source/public/history/people-events.csv": "sha256:5c9fdff3a1c495c68518eda425780e8c395b1b598d60d926eace8f1484a5d24f",
+    "apps/site/source/public/history/people-events.json": "sha256:abf8c0432b6757b5b98930860576e8ab9163d76abf4f9b19deac294755c9277e",
+    "apps/site/source/public/history/people-events.csv": "sha256:cc2c60a61704fb29135fc011c1be03090a9af63932ee2b8611392920c085ec64",
     "apps/site/source/scripts/export-history-research.mjs": "sha256:7a56c7cbaf9706c92206bb02a7fcaa4694bab3260ab0e2c56631530ed155a83e",
-    "apps/site/source/tests/history-research.test.mjs": "sha256:263a5e9ebee546e5e41811993d4a2e3e3920502c13c5f062f47dcd1c4765d732",
-    "apps/site/source/tests/history-research-data.test.mjs": "sha256:ea28acaa96c86692efe4928aa914e836049dbfa92f3faa64682deda358460070",
-    "apps/site/source/docs/people-history-research.md": "sha256:80189d8d5c57e9dec0ec41826be2a5708f8b60301e8a3a617df2770799c57148",
-    "apps/site/source/docs/kansas-history-library.md": "sha256:844f308a980f80dae19b6c86b91ded825b9fbd57f0708cbcf33f8fd4a6fd44ea"
+    "apps/site/source/tests/history-research.test.mjs": "sha256:c1bdbbc7d1bd7d96f018523da61d911c6c14495e98ca6e9f572b37805013699d",
+    "apps/site/source/tests/history-research-data.test.mjs": "sha256:8629579b3a7c9575575f33ffe712dc81e90105a89d5603b429bc33ec1a99620d",
+    "apps/site/source/docs/people-history-research.md": "sha256:14dc8de16ed4a693ee6f00751ac47dbe6404ba62c3c561fbf790310f3c7e3ea4",
+    "apps/site/source/docs/kansas-history-library.md": "sha256:19d8b909b42c2d1f2c11a8060a9cdf5cc02c019f63ea36a9d14612f7b8de7ceb"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -65,7 +65,8 @@
       "https://www.ranker.com/list/famous-people-from-kansas/reference",
       "https://www.travelks.com/things-to-do/history-and-culture/famous-kansans/",
       "https://www.kansashistory.gov/kansapedia/notable-kansans/16875",
-      "https://legendsofkansas.com/historic-people-of-kansas/"
+      "https://legendsofkansas.com/historic-people-of-kansas/",
+      "Site v207@6a726b3b3773ae5488061e10d934bebee7b127a6; full index recovery successor"
     ]
   },
   "truth_labels": {
@@ -118,7 +119,27 @@
     {
       "gate": "Codex Security diff scan f9ec422b-7f08-440d-8f4b-5109924f8295",
       "outcome": "PASS",
-      "reason": "Completed; zero findings; all six native inventory items and five supplemental docs/tests/CSV covered. Scan snapshot ae1ec1cbeaac303a88dc81e6411bf853d66a997ccc3d898940a0141fe9a2ef5d. Unrelated newer Site changes excluded."
+      "reason": "Completed; zero findings; all six native inventory items and five supplemental docs/tests/CSV covered. Scan snapshot ae1ec1cbeaac303a88dc81e6411bf853d66a997ccc3d898940a0141fe9a2ef5d. Unrelated newer Site changes excluded. This initial scan predates the recovered metadata; successor scan covers the six-file recovery delta."
+    },
+    {
+      "gate": "Expanded catalogue production build",
+      "outcome": "PASS",
+      "reason": "Site v207 plus six-file metadata/docs/tests delta; application code unchanged."
+    },
+    {
+      "gate": "Expanded catalogue integrity and UI tests",
+      "outcome": "PASS",
+      "reason": "13 focused tests; 2886 records/15 readable sources; all original1448records semantically preserved; reproducible2886row CSV; zero unsafe formula-like cells; JSON3144125bytes below existing3MiBguard."
+    },
+    {
+      "gate": "Expanded catalogue browser smoke",
+      "outcome": "PASS",
+      "reason": "Local rendered2886entries/15sources/0blocked; all four animal memorials and recovered final-page Ranker record findable."
+    },
+    {
+      "gate": "Codex Security recovery scan 7d0f84ca-f65b-4126-ad17-13b8afc384be",
+      "outcome": "PASS",
+      "reason": "Complete, zero findings. One native JSON inventory item plus five supplemental CSV/docs/tests files reviewed. Snapshot491f7449a893fa236daa328bfa0a99e8ac7b37dff85a95f8355dda3f6a486e5e. Supplied historical threat model retained unchanged with current scope overlay; no full repo audit."
     }
   ],
   "policy_decisions": [],
@@ -130,7 +151,7 @@
     },
     {
       "id": "ksnt",
-      "validated": false,
+      "validated": true,
       "evidence_ref": "https://www.ksnt.com/news/top-stories/famous-actors-from-kansas/"
     },
     {
@@ -145,12 +166,12 @@
     },
     {
       "id": "onthisday",
-      "validated": false,
+      "validated": true,
       "evidence_ref": "https://www.onthisday.com/countries/usa/kansas"
     },
     {
       "id": "kansashistory",
-      "validated": false,
+      "validated": true,
       "evidence_ref": "http://www.kansashistory.us/"
     },
     {
@@ -165,7 +186,7 @@
     },
     {
       "id": "findagrave",
-      "validated": false,
+      "validated": true,
       "evidence_ref": "https://www.findagrave.com/geographic/4?state=18"
     },
     {
@@ -180,7 +201,7 @@
     },
     {
       "id": "ranker",
-      "validated": false,
+      "validated": true,
       "evidence_ref": "https://www.ranker.com/list/famous-people-from-kansas/reference"
     },
     {
@@ -207,5 +228,5 @@
   "override_record": null,
   "created_at": "2026-10-10T04:29:24.326618+00:00",
   "emitter": "Codex task 01a123ff-bf33-7800-be89-13e8f4e76afe",
-  "notes": "1448 source records from 15 seed pages; 10 readable, 1 partial, 4 blocked. No full article/media replication. Citation validated means seed-page metadata was observed, not that every assertion is true. No source admission, canonical identity merge, geocoding, map activation, merge approval or MIRROR_REVIEW_REQUIRED waiver. Data JSON 1938848 bytes; CSV 715166 bytes; total2654014 bytes. Supplemental source-reading and data QA are distinct from security scan."
+  "notes": "2886 source records across all15 supplied sources; 15readable,0partial,0blocked at observation. Visible pagination exhausted: Ranker583/5pages, Find a Grave405/21pages, OnThisDay215events/people plus3citylinks across2pages. KansasHistory213directory/milestone entries; KSNT25actors. Metadata only; no full article/media replication or linked-collection crawl. Source assertions remain NOT_ADMITTED/PENDING/NONE. No canonical identity merge, geocoding, map activation, merge approval or MIRROR_REVIEW_REQUIRED waiver. JSON3144125bytes+CSV1499360bytes=4643485bytes. Exact duplicate details fields stored once at record level; all original1448record facts preserved. Human review remains pending. Security scan usage reported1861846total tokens including1833856cached-input tokens; not a source truth certificate."
 }

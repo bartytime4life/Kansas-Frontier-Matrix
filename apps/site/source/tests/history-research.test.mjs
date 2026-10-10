@@ -48,8 +48,8 @@ test('bundled research catalogue is valid, fits the byte budget and retains all 
   assert.ok(bytes.length <= model.HISTORY_RESEARCH_MAX_BYTES);
   const parsed = await model.readHistoryResearchCatalog(new Response(bytes));
   assert.equal(parsed.sources.length, 15);
-  assert.equal(parsed.sources.filter(source => source.access === 'blocked').length, 4);
-  assert.equal(parsed.records.length, 1448);
+  assert.equal(parsed.sources.filter(source => source.access === 'blocked').length, 0);
+  assert.equal(parsed.records.length, 2886);
   assert.equal(parsed.sources.reduce((total, source) => total + source.recordCount, 0), parsed.records.length);
 });
 
