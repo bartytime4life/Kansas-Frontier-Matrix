@@ -20,7 +20,7 @@ test("submission list indexes are additive and journaled", async () => {
   assert.equal(statements.length, 2);
   for (const statement of statements) assert.match(statement, /^CREATE INDEX IF NOT EXISTS idx_submissions_\w+ ON data_submissions \(/);
   const journal = JSON.parse(await read("drizzle/meta/_journal.json"));
-  assert.deepEqual(journal.entries.at(-1), { idx: 4, version: "6", when: 1790797081529, tag: "0004_submission_list_order", breakpoints: true });
+  assert.deepEqual(journal.entries.find(entry => entry.tag === "0004_submission_list_order"), { idx: 4, version: "6", when: 1790797081529, tag: "0004_submission_list_order", breakpoints: true });
   journal.entries.forEach((entry, position) => assert.equal(entry.idx, position));
 });
 

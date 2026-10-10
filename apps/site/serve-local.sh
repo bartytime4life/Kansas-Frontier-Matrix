@@ -36,6 +36,10 @@ fi
 # Later journal entries back the governed water, Kansas knowledge and crop
 # CASMA routes. They are additive, so reapply them on every launch; refuse any
 # entry whose statements are not all CREATE ... IF NOT EXISTS.
+# The already-published archive migration stays immutable; a hash-bound local
+# replay adds only IF NOT EXISTS so fresh and repeated local starts are safe.
+migration_workspace="$(mktemp -d)"
+trap 'rm -rf "$migration_workspace"' EXIT
 additive_migrations="$(node -e '
 const fs = require("fs");
 const journal = JSON.parse(fs.readFileSync("drizzle/meta/_journal.json", "utf8"));
@@ -58,7 +62,16 @@ if (unlisted.length || missing.length || misnumbered.length) {
 }
 for (const { idx, tag } of [...journal.entries].sort((a, b) => a.idx - b.idx)) {
   if (idx === 0) continue;
-  const file = `drizzle/${tag}.sql`;
+  let file = `drizzle/${tag}.sql`;
+  if (tag === "0005_daily_archive") {
+    const original = fs.readFileSync(file, "utf8");
+    const expected = "669ca0011a044c77479ea842c1fabd040f344a4d49826949a43fbd882f34801c";
+    if (require("crypto").createHash("sha256").update(original).digest("hex") !== expected) {
+      throw new Error("Published daily archive migration changed; review before local replay.");
+    }
+    file = require("path").join(process.argv[1], `${tag}.sql`);
+    fs.writeFileSync(file, original.replace(/CREATE (TABLE|INDEX) /g, "CREATE $1 IF NOT EXISTS "), { flag: "wx", mode: 0o600 });
+  }
   const statements = fs.readFileSync(file, "utf8").replace(/^\s*--(?! *> *statement-breakpoint).*$/gm, "")
     .split(/--> *statement-breakpoint|;/).map((part) => part.trim()).filter(Boolean);
   if (!statements.length || statements.some((sql) => !/^CREATE\s+(?:TABLE|(?:UNIQUE\s+)?INDEX)\s+IF\s+NOT\s+EXISTS\s/i.test(sql))) {
@@ -66,13 +79,15 @@ for (const { idx, tag } of [...journal.entries].sort((a, b) => a.idx - b.idx)) {
     process.exit(2);
   }
   process.stdout.write(`${file}\n`);
-}')"
+}' "$migration_workspace")"
 
 while IFS= read -r migration; do
   [[ -n "$migration" ]] || continue
   "$wrangler" d1 execute "$database" --local --config "$config" \
     --persist-to "$local_state" --file "$migration" >/dev/null
 done <<<"$additive_migrations"
+rm -rf "$migration_workspace"
+trap - EXIT
 
 host="${SITE_HOST:-127.0.0.1}"
 port="${SITE_PORT:-4173}"

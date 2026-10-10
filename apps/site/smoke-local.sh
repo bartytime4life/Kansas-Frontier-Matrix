@@ -16,7 +16,7 @@ smoke_routes=(
   acquisition acquisition/terrain
   3dep-dem-tile airflow-tile blm-plss-records bridge-records
   crop-casma/availability crop-casma/tile
-  data-submissions "data-submissions/[id]"
+  daily-archive data-submissions "data-submissions/[id]"
   "earth-engine-context/[setId]/[layerId]/[...tile]" earth-engine-context/activate
   earth-engine-context/active earth-engine-context/catalog earth-engine-context/stage
   event-atlas/counties event-atlas/geology-legend event-atlas/manifest
@@ -133,6 +133,9 @@ expect() {
 }
 
 expect GET / 200
+expect GET /daily-archive 200
+expect GET /api/daily-archive 200 storage.used 0
+expect POST /api/daily-archive 403
 
 # Storage-backed reads answer from the empty migrated D1 schema.
 expect GET /api/governed/v1/bootstrap 200 envelope.reason_code NO_APPROVED_SNAPSHOT

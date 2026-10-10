@@ -10144,7 +10144,7 @@ export default function Home() {
               </div>
               <div className="timeline-era-jumps" aria-label="Preview named time ranges">{TIMELINE_JUMPS.map((jump) => <button key={jump.label} type="button" data-active={jump.year === previewYear} onClick={() => { setPreviewYear(jump.year); setPlaying(false); }}>{jump.label}<small>{formatTimelineStep(jump.year)}</small></button>)}</div>
               </details>
-              <div className="timeline-primary-actions"><Link href="/observatory">Daily archive ↗</Link><button type="button" onClick={() => openPrimaryWorkspace("stories", true)}>Capture frame for story</button></div>
+              <div className="timeline-primary-actions"><Link href="/daily-archive">Daily archive ↗</Link><Link href="/observatory">Provider history ↗</Link><button type="button" onClick={() => openPrimaryWorkspace("stories", true)}>Capture frame for story</button></div>
             </section>
 
             <section className="timeline-frame-readout" aria-labelledby="timeline-frame-title">
