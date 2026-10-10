@@ -42,6 +42,7 @@ from tools.local_data.library import EXCLUDED_DIRECTORIES, EXCLUDED_FILES  # noq
 from tools.local_data.manage import canonical, external_root, utc_now  # noqa: E402
 
 INDEX_SCHEMA_VERSION = "1"
+QUARANTINE_BINDING_VERSION = "source-and-digest/v1"
 DEFAULT_HASH_LIMIT = 4 * 1024 ** 3
 DEFAULT_STAGE_LIMIT = 8 * 1024 ** 3
 FREE_SPACE_RESERVE = 1024 ** 3
@@ -96,9 +97,9 @@ def _walk(base: Path, prefix: str = "", *, skip: set[str] | None = None, counter
                 counters["special_skipped"] = counters.get("special_skipped", 0) + 1
 
 
-def quarantine_bindings(root: Path) -> dict[str, list[dict]]:
-    """Map payload digest to its declared capture bindings (``versions/**/<hash>.json``)."""
-    found: dict[str, list[dict]] = {}
+def quarantine_bindings(root: Path) -> dict[tuple[str, str], list[dict]]:
+    """Map (source directory, digest) to that source's declared capture bindings."""
+    found: dict[tuple[str, str], list[dict]] = {}
     base = root / "data/quarantine"
     if not base.is_dir():
         return found
@@ -113,8 +114,9 @@ def quarantine_bindings(root: Path) -> dict[str, list[dict]]:
                 value = json.loads(read_regular(path, 64 * 1024))
             except (ValueError, OSError):
                 continue
-            if isinstance(value, dict) and isinstance(value.get("sha256"), str):
-                found.setdefault(value["sha256"], []).append(value)
+            if (isinstance(value, dict) and isinstance(value.get("sha256"), str)
+                    and value.get("source_id") == source.name):
+                found.setdefault((source.name, value["sha256"]), []).append(value)
     for rows in found.values():
         rows.sort(key=lambda r: (str(r.get("source_id")), str(r.get("dataset_id")), str(r.get("version")), str(r.get("relative_path"))))
     return found
@@ -143,7 +145,7 @@ def discover(root: Path, inbox: Path | None = None, counters: dict | None = None
         if len(parts) != 5 or parts[1:3] != ["objects", "sha256"] or parts[4] != "payload":
             continue
         bump()
-        declared_rows = bindings.get(parts[3], [])
+        declared_rows = bindings.get((parts[0], parts[3]), [])
         declared = dict(declared_rows[0]) if declared_rows else None
         if declared is not None:
             declared["binding_count"] = len(declared_rows)
@@ -183,7 +185,7 @@ CREATE TABLE IF NOT EXISTS applications (
 
 
 @contextmanager
-def open_index(root: Path):
+def open_index(root: Path, *, allow_stale_bindings: bool = False):
     """Open (and create) the private intake index inside the validated store."""
     base = intake_dir(root)
     check_directory(base, create=True)
@@ -203,6 +205,12 @@ def open_index(root: Path):
         version = conn.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0]
         if version != INDEX_SCHEMA_VERSION:
             raise IntakeError("INDEX_SCHEMA_UNSUPPORTED")
+        binding_version = conn.execute("SELECT value FROM meta WHERE key='quarantine_binding_version'").fetchone()
+        if (not allow_stale_bindings and binding_version != (QUARANTINE_BINDING_VERSION,)
+                and conn.execute("SELECT 1 FROM items WHERE lane='quarantine' LIMIT 1").fetchone()):
+            # Digest-only indexes may contain another source's permissions.
+            # Only a complete analysis can make their decisions usable again.
+            raise IntakeError("INTAKE_REANALYSIS_REQUIRED")
         yield conn
         conn.commit()
     finally:
@@ -249,7 +257,8 @@ def analyze(root: Path, *, inbox: Path | None = None, budget: dict | None = None
     counters: dict = {}
     summary = {"run_id": run_id, "started_at": utc_now(), "discovered": 0, "analyzed": 0, "reused": 0, "failed": 0,
                "by_status": {}, "by_family": {}, "by_lane": {}, "skipped": counters}
-    with writer_lock(root), open_index(root) as conn:
+    with writer_lock(root), open_index(root, allow_stale_bindings=True) as conn:
+        current_bindings = conn.execute("SELECT value FROM meta WHERE key='quarantine_binding_version'").fetchone() == (QUARANTINE_BINDING_VERSION,)
         conn.execute("INSERT INTO runs(run_id, started_at, state) VALUES (?, ?, 'running')", (run_id, summary["started_at"]))
         conn.commit()
         seen: set[str] = set()
@@ -263,9 +272,16 @@ def analyze(root: Path, *, inbox: Path | None = None, budget: dict | None = None
                 info = found["stat"]
                 identity = item_id(found["lane"], found["relative_path"])
                 seen.add(identity)
-                previous = conn.execute("SELECT size_bytes, mtime_ns, analyzer_version, profile_json, sha256 FROM items WHERE id=?", (identity,)).fetchone()
+                previous = conn.execute("SELECT size_bytes, mtime_ns, analyzer_version, profile_json, sha256, declared_json FROM items WHERE id=?", (identity,)).fetchone()
                 sha256 = found["sha256"]
-                if previous and previous[0] == info.st_size and previous[1] == info.st_mtime_ns and previous[2] == ANALYZER_VERSION:
+                # Domain, filename hints and review flags also depend on the
+                # declaration, even when the payload bytes have not changed.
+                # Legacy profiles may already be stale relative to their saved
+                # declaration, so refresh all quarantine profiles on upgrade.
+                if (previous and previous[0] == info.st_size and previous[1] == info.st_mtime_ns
+                        and previous[2] == ANALYZER_VERSION
+                        and (found["lane"] != "quarantine" or current_bindings)
+                        and (json.loads(previous[5]) if previous[5] else None) == found["declared"]):
                     profile = json.loads(previous[3])
                     sha256 = sha256 or previous[4]
                     summary["reused"] += 1
@@ -301,6 +317,8 @@ def analyze(root: Path, *, inbox: Path | None = None, budget: dict | None = None
                 for (identity,) in conn.execute(f"SELECT id FROM items WHERE present=1 AND lane IN ({','.join('?' * len(scanned))})", scanned).fetchall():
                     if identity not in seen:
                         conn.execute("UPDATE items SET present=0 WHERE id=?", (identity,))
+                conn.execute("INSERT INTO meta(key, value) VALUES ('quarantine_binding_version', ?) "
+                             "ON CONFLICT(key) DO UPDATE SET value=excluded.value", (QUARANTINE_BINDING_VERSION,))
         except Exception:
             state = "failed"
             raise

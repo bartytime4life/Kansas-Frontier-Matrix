@@ -63,14 +63,18 @@ the same totals and GitHub budget with a link to the desk.
 | Lane | Included | Notes |
 |---|---|---|
 | `data/raw/**` | Every regular file | Hashed up to `--hash-limit` (default 4 GiB) |
-| `data/quarantine/<source>/objects/sha256/<digest>/payload` | Captured payloads | Declared source, dataset, version, rights and sensitivity come from the capture bindings |
+| `data/quarantine/<source>/objects/sha256/<digest>/payload` | Captured payloads | Declarations come only from bindings with the same source directory and digest; the declared source must match the directory |
 | `--inbox DIR` | Downloads not yet captured | Read-only; always routed to **capture first** |
 
 Hidden names, credential/config names and runtime folders are skipped, as in the
 library scan. Symbolic links and special files are counted and skipped, never
 followed. `data/work/intake/` (the desk's own output) is not rescanned. A rerun
-reuses the stored profile of any file whose size and modification time are
-unchanged. A file that disappears is marked missing; its history stays.
+reuses the stored profile of any file whose size, modification time and capture
+declaration are unchanged. Changed declarations refresh source-derived domain,
+filename and review hints too. Identical bytes captured by different sources
+retain separate provenance, rights, sensitivity and binding counts. A payload
+without a matching source binding has unknown rights and stays held for sharing.
+A file that disappears is marked missing; its history stays.
 
 Recognized formats: GeoTIFF/TIFF and BigTIFF, zipped or loose shapefiles
 (`.shp` header, `.prj`, `.dbf` fields), GeoPackage and SQLite (opened read-only,
@@ -183,6 +187,25 @@ encoding. The browser never chooses a file-system path; the inbox is fixed when
 the service starts.
 
 ## Outputs and recovery
+
+### Refresh indexes created before source-scoped bindings
+
+Earlier Intake Desk versions matched quarantine declarations by digest alone.
+Identical bytes captured under different sources could inherit another source's
+provenance and permissions. This confirms a code defect, not that any particular
+store or output was affected.
+
+After updating the code, stop the old desk service and restart it with the updated
+code. Choose **Analyze store** (or run `python3 tools/local_data/intake.py analyze`
+with the correct `KFM_DATA_ROOT`). Existing indexes containing quarantine records
+return `INTAKE_REANALYSIS_REQUIRED` for item views, overview, cards, release plans
+and apply actions until a complete pass has refreshed their bindings. Cancelled
+or failed passes leave this hold in place. Source bytes, existing cards, staged
+copies and immutable receipts are preserved. Previously exported cards or plans
+need regeneration and review before use; reanalysis does not validate or rewrite
+those older outputs.
+
+### Stored outputs
 
 | Path under `KFM_DATA_ROOT` | Content |
 |---|---|
