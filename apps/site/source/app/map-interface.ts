@@ -1,7 +1,7 @@
 import type { LayerRecord } from "./explorer-data";
 import { BUILD_UTC_YEAR } from "./build-clock";
 
-export type MapUtilityView = "report" | "inspect" | "navigate" | "scene" | "history" | "connections" | "import" | "compare" | "measure" | "export" | "diagnostics";
+export type MapUtilityView = "report" | "inspect" | "navigate" | "scene" | "history" | "connections" | "import" | "compare" | "localAtlas" | "measure" | "export" | "diagnostics";
 export type MeasureUnit = "imperial" | "metric";
 
 export type MapViewProfile = Readonly<{

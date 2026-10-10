@@ -73,7 +73,7 @@ test("Explore, Appearance and Measure are primary; every advanced view invokes t
     }
   }
   assert.deepEqual(Array.from(h.exports.EXPLORER_CONTROL_SECTIONS, ([id]) => id), ["navigate", "scene", "measure"]);
-  assert.equal(new Set(changes).size, 11, "all existing control views remain reachable");
+  assert.equal(new Set(changes).size, 12, "all existing control views remain reachable");
   h.dispose();
 });
 

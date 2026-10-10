@@ -33,15 +33,18 @@ successful response that reports no active reviewed release. It labels other
 successful negative responses as withheld; none establishes that no source
 observation exists.
 
-Do not stage or activate a package via an ordinary client. Hosted authenticated
-staging, review and activation operations are still pending. A manifest does not
-supply its own trusted approvals. Applying SQL or receiving HTTP 200 cannot
-establish admission, evidence eligibility or a reviewed release.
+Ordinary clients cannot stage or activate a package. The authenticated staging
+and owner activation routes described below are implemented; deployment-specific
+owner/token configuration and a real approved package remain separate gates.
+A manifest does not supply its own trusted approvals. Applying SQL or receiving
+HTTP 200 cannot establish admission, evidence eligibility or a reviewed release.
 
 Local conformance: `node --test tests/governed-water.test.mjs`; full validation:
-`npm test` and `npx tsc --noEmit`. Browser visual acceptance remains unverified
-because the admin security check was unavailable. Synthetic fixture approval is
-explicitly synthetic and must never be copied onto the captured real package.
+`npm test` and `npx tsc --noEmit`. The 2026-10-10 reconciliation passed 985 tests,
+type checking, production build and a local map/flow browser smoke check. This
+does not establish hosted water activation, complete accessibility or sustained
+device acceptance. Synthetic fixture approval is explicitly synthetic and must
+never be copied onto the captured real package.
 
 Dependency fixes reconcile Next 16.3.7, Undici 7.29.1 and fast-uri 3.1.8. A
 fresh 2026-10-03 lockfile audit reports eight high findings in development

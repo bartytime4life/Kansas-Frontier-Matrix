@@ -276,21 +276,22 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
       const resize=()=>{if(!host.current)return;motion.cancel();const pose=readPose(),w=Math.max(1,host.current.clientWidth),h=Math.max(1,host.current.clientHeight);renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();
         if(firstSize){firstSize=false;if(previousCamera&&!fitFirstEvidence)applyPose(previousCamera.pose);else orient("reset",true);}else applyPose(pose);
       };
-      const ray=new T.Raycaster(),point=new T.Vector2();let down=[0,0];
-      const pointerDown=(e:PointerEvent)=>{interrupt();down=[e.clientX,e.clientY];};
-      const pointerUp=(e:PointerEvent)=>{if(Math.hypot(e.clientX-down[0],e.clientY-down[1])>5)return;const b=renderer.domElement.getBoundingClientRect();point.set((e.clientX-b.left)/b.width*2-1,-(e.clientY-b.top)/b.height*2+1);ray.setFromCamera(point,camera);
-        const hit=pickCutawaySource(ray,pickable.filter(m=>m.userData.record?values.current.logs:values.current.water>0));if(!hit)return;
+      const ray=new T.Raycaster(),point=new T.Vector2();let down:{id:number;x:number;y:number}|null=null;
+      const pointerDown=(e:PointerEvent)=>{interrupt();down=e.isPrimary && e.button===0?{id:e.pointerId,x:e.clientX,y:e.clientY}:null;};
+      const pointerCancel=()=>{down=null;};
+      const pointerUp=(e:PointerEvent)=>{const start=down;down=null;if(!start||start.id!==e.pointerId||e.button!==0||Math.hypot(e.clientX-start.x,e.clientY-start.y)>5)return;const b=renderer.domElement.getBoundingClientRect();point.set((e.clientX-b.left)/b.width*2-1,-(e.clientY-b.top)/b.height*2+1);ray.setFromCamera(point,camera);
+        const hit=pickCutawaySource(ray,pickable.filter(m=>m.userData.record?values.current.logs:values.current.water>0),{camera,width:b.width,height:b.height,x:e.clientX-b.left,y:e.clientY-b.top,radius:e.pointerType==="touch"?16:10});if(!hit)return;
         if(hit.object.userData.record){const r=hit.object.userData.record as Borehole,i=hit.object.userData.interval as DepthInterval|undefined;setSelection(null);setPickedLog({recordId:r.id,label:`${r.name}${i?` · ${i.top}–${i.bottom} ${r.depthUnit}: ${i.description}`:""}`});inspectRef.current(r,i);}else{setPickedLog(null);setSelection(hit.object.userData.envelope.id);}
       };
       const lost=(e:Event)=>{e.preventDefault();motion.cancel();setFailure("3D interrupted. The 2D locator and source ranges remain available below.");};
-      renderer.domElement.addEventListener("pointerdown",pointerDown);renderer.domElement.addEventListener("pointerup",pointerUp);renderer.domElement.addEventListener("webglcontextlost",lost);controls.addEventListener("start",interrupt);
+      renderer.domElement.addEventListener("pointerdown",pointerDown);renderer.domElement.addEventListener("pointerup",pointerUp);renderer.domElement.addEventListener("pointercancel",pointerCancel);renderer.domElement.addEventListener("webglcontextlost",lost);controls.addEventListener("start",interrupt);
       const changed=()=>{render();if(controls.enableDamping&&dampingFrame===null&&!document.hidden)dampingFrame=requestAnimationFrame(()=>{dampingFrame=null;if(!disposed)controls.update();});};
       const preferenceChanged=()=>{motion.cancel();cancelDamping();};
       const visibilityChanged=()=>{if(document.hidden){motion.cancel();cancelDamping();}else render();};
       controls.addEventListener("change",changed);motionPreference.addEventListener("change",preferenceChanged);document.addEventListener("visibilitychange",visibilityChanged);
       let resizeFrame:number|null=null;
       const observer=new ResizeObserver(()=>{if(resizeFrame!==null)cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(()=>{resizeFrame=null;if(!disposed)resize();});});observer.observe(host.current);resize();const disposeResources=cleanup;
-      cleanup=()=>{cameraMemory.current={area,pose:readPose(),awaitingRecords,awaitingAquifer,interacted};stopKeyboardInterruption();motion.dispose();if(dampingFrame!==null)cancelAnimationFrame(dampingFrame);observer.disconnect();if(resizeFrame!==null)cancelAnimationFrame(resizeFrame);controls.removeEventListener("start",interrupt);controls.removeEventListener("change",changed);motionPreference.removeEventListener("change",preferenceChanged);document.removeEventListener("visibilitychange",visibilityChanged);renderer.domElement.removeEventListener("pointerdown",pointerDown);renderer.domElement.removeEventListener("pointerup",pointerUp);renderer.domElement.removeEventListener("webglcontextlost",lost);disposeResources();};
+      cleanup=()=>{cameraMemory.current={area,pose:readPose(),awaitingRecords,awaitingAquifer,interacted};stopKeyboardInterruption();motion.dispose();if(dampingFrame!==null)cancelAnimationFrame(dampingFrame);observer.disconnect();if(resizeFrame!==null)cancelAnimationFrame(resizeFrame);controls.removeEventListener("start",interrupt);controls.removeEventListener("change",changed);motionPreference.removeEventListener("change",preferenceChanged);document.removeEventListener("visibilitychange",visibilityChanged);renderer.domElement.removeEventListener("pointerdown",pointerDown);renderer.domElement.removeEventListener("pointerup",pointerUp);renderer.domElement.removeEventListener("pointercancel",pointerCancel);renderer.domElement.removeEventListener("webglcontextlost",lost);disposeResources();};
     }).catch(()=>{cleanup?.();cleanup=undefined;if(!disposed)setFailure("Aquifer 3D is unavailable on this device. Read the source ranges below and continue on the 2D locator.");});
     return()=>{disposed=true;api.current=null;cleanup?.();};
   },[volume,records,recordsLoading,aquiferLoading,retry,active,sceneRenderable,surfaceMode]);

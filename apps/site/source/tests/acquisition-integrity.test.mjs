@@ -28,13 +28,13 @@ test("calendar normalization cannot turn impossible dates into valid receipt chr
   for (const generated_at of ["2024-02-29T12:00:00Z", "2026-10-06T07:00:00.123456-05:00"]) assert.ok(schema.parseAcquisitionInventory({ ...inventory(), generated_at }), generated_at);
 });
 
-test("500 GB is the ceiling while historical budgets and their per-file bounds stay unchanged", () => {
+test("500 GB is the default while configurable and historical receipt budgets are preserved", () => {
   assert.equal(schema.ACQUISITION_CACHE_LIMIT, 500_000_000_000);
-  for (const limit_bytes of [100_000_000_000, 500_000_000_000]) {
+  for (const limit_bytes of [100_000_000_000, 500_000_000_000, 2_000_000_000_000]) {
     const value = inventory(); value.cache.limit_bytes = limit_bytes;
     assert.equal(schema.parseAcquisitionInventory(value).cache.limit_bytes, limit_bytes);
   }
-  for (const limit_bytes of [0, -1, 500_000_000_001, 500_000_000_000.5, "500000000000", null]) {
+  for (const limit_bytes of [0, -1, Number.MAX_SAFE_INTEGER + 1, 500_000_000_000.5, "500000000000", null]) {
     const value = inventory(); value.cache.limit_bytes = limit_bytes;
     assert.equal(schema.parseAcquisitionInventory(value), null, String(limit_bytes));
   }
@@ -42,6 +42,8 @@ test("500 GB is the ceiling while historical budgets and their per-file bounds s
   assert.ok(schema.parseAcquisitionInventory(value), "current receipts can select a bound above the old ceiling");
   value.cache.limit_bytes = 100_000_000_000;
   assert.equal(schema.parseAcquisitionInventory(value), null, "new policy cannot retroactively expand a historical receipt's file bound");
+  value.cache.budget_scope = "new-cache-transfers";
+  assert.equal(schema.parseAcquisitionInventory(value).jobs[0].approved_max_bytes, 200_000_000_000, "a new inventory can retain older selections after the owner lowers the active budget");
   value.jobs[0].approved_max_bytes = 100_000_000_000;
   assert.ok(schema.parseAcquisitionInventory(value));
 });

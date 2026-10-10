@@ -15,6 +15,8 @@ import "./inspection-panel.css";
 import "./explorer-controls.css";
 import Link from "next/link";
 import { LocalMapArchiveLoader } from "./local-map-archive-loader";
+import { LocalAtlasControl } from "./local-atlas-control";
+import { localAtlasHit } from "./local-atlas-map";
 import { BridgeRecordInspector } from "./bridge-record-inspector";
 import { isBridgeLayer } from "./kansas-bridge-records";
 import { BlmPlssInspector } from "./blm-plss-inspector";
@@ -628,6 +630,7 @@ const mapUtilityLabels: Record<MapUtilityView, string> = {
   connections: "Sources",
   import: "Import",
   compare: "Compare",
+  localAtlas: "Local Atlas",
   measure: "Measure",
   export: "Export",
   diagnostics: "Diagnostics",
@@ -641,6 +644,7 @@ const mapUtilityDescriptions: Record<MapUtilityView, string> = {
   connections: "Check the sources behind the current map.",
   import: "Preview a local KML or GeoJSON file in this browser.",
   compare: "Compare selected layers and times.",
+  localAtlas: "Explore climate, local features, and raster data on this PC.",
   measure: "Draw and measure on this map.",
   export: "Review what the map can safely export.",
   diagnostics: "Check map health and recovery options.",
@@ -1496,6 +1500,7 @@ export default function Home() {
   const [measurement, setMeasurement] = useState("Select a measurement tool");
   const [terrainProfile, setTerrainProfile] = useState<readonly TerrainProfileSample[]>([]);
   const [mapUtilityOpen, setMapUtilityOpen] = useState(false);
+  const [localAtlasPeek, setLocalAtlasPeek] = useState(false);
   const [mapContextOpen, setMapContextOpen] = useState(false);
   const composerRef = useRef<HTMLElement>(null);
   const composerTriggerRef = useRef<HTMLButtonElement>(null);
@@ -1796,7 +1801,7 @@ export default function Home() {
     ...OFFICIAL_CONTEXT_SOURCES.map(source => ({ id: source.id, title: source.title, keywords: `${source.shortTitle} ${source.organization} ${source.domain}`, selected: officialVisibility[source.id], topics: LAYER_WORKSPACES.filter(([topic]) => topic !== "all" && filterOfficialSources([source], topic, "").length > 0).map(([topic]) => topic) })),
     { id: "daylight", title: "Daylight & twilight", keywords: "sun solar geometry calculated light", topics: ["terrain", "disaster"], selected: daylightEnabled },
     { id: "soil", title: "Soil moisture", keywords: "NASA SMAP modeled surface root water", topics: ["water", "land"], selected: soilMapState.visible },
-    { id: "crop", title: "Soil moisture 1 km hybrid", keywords: "USDA NASS Crop-CASMA reviewed numeric cells", topics: ["water", "land"], selected: cropSelected },
+    { id: "crop", title: "Soil moisture 1 km hybrid", keywords: "USDA NASS Crop-CASMA direct provider preview reviewed numeric cells", topics: ["water", "land"], selected: cropSelected },
     { id: "reviewed-water", title: "Reviewed water stations", keywords: "USGS governed snapshot evidence", topics: ["water"], selected: reviewedWaterSelected },
     ...EARTH_ENGINE_CONTEXT_LAYERS.map(layer => ({ id: layer.id, title: layer.title, keywords: `${layer.source} ${layer.attribution}`, topics: imageryTopics(layer.id), selected: Boolean(earthEngineDisplay.visible[layer.id]), imagery: true })),
     ...LAYER_REGISTRY.map(layer => ({ id: layer.id, title: layer.title, keywords: `${layer.domain} ${layer.description}`, topics: ["places"] as const, selected: Boolean(visibility[layer.id]) })),
@@ -4164,6 +4169,7 @@ export default function Home() {
   }, []);
 
   const closeMapUtility = useCallback(() => {
+    setLocalAtlasPeek(false);
     setMapUtilityOpen(false);
     setMapQueryCandidates([]);
     const returnTarget = mapUtilityReturnRef.current;
@@ -4177,6 +4183,7 @@ export default function Home() {
   const openMapUtility = useCallback((nextView: MapUtilityView, returnElement?: HTMLElement | null) => {
     mapUtilityReturnRef.current = returnElement ?? null;
     setScenePanelOpen(false);
+    setLocalAtlasPeek(false);
     setMapUtilityView(nextView);
     setMapUtilityOpen(true);
     setCurrentWorkspace("explore");
@@ -4198,6 +4205,22 @@ export default function Home() {
     }, 0);
     return () => window.clearTimeout(timer);
   }, [mapUtilityOpen, mapUtilityView]);
+
+  useEffect(() => {
+    if (!isCompact || !mapUtilityOpen || mapUtilityView !== "localAtlas") setLocalAtlasPeek(false);
+    if (isCompact && mapUtilityOpen && mapUtilityView === "localAtlas") {
+      setTimelineOpen(false); setLeftOpen(false); setRightOpen(false);
+    }
+  }, [isCompact, mapUtilityOpen, mapUtilityView]);
+
+  const showLocalAtlasMap = useCallback(() => {
+    setLocalAtlasPeek(true);
+    window.requestAnimationFrame(() => mapContainerRef.current?.focus({ preventScroll: true }));
+  }, []);
+  const restoreLocalAtlasControls = useCallback(() => {
+    setLocalAtlasPeek(false);
+    window.requestAnimationFrame(() => mapUtilityPanelRef.current?.querySelector<HTMLElement>(".local-atlas-peek-toggle")?.focus({ preventScroll: true }));
+  }, []);
 
   const openAtlasPanel = useCallback((mode: LeftPanelMode) => {
     setMapContextOpen(false);
@@ -4726,7 +4749,7 @@ export default function Home() {
       const restoredMapUtilityView = params.get("maptab");
       const nextMapUtilityView: MapUtilityView = nextTemporalMode === "comparison"
         ? "compare"
-        : restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "scene" || restoredMapUtilityView === "history" || restoredMapUtilityView === "connections" || restoredMapUtilityView === "import" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "navigate";
+        : restoredMapUtilityView === "localAtlas" || restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "scene" || restoredMapUtilityView === "history" || restoredMapUtilityView === "connections" || restoredMapUtilityView === "import" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "navigate";
       setMapUtilityView(nextMapUtilityView);
       const restoredComparisonTimes = params.get("times")?.split(",").map(Number) ?? [];
       if (restoredComparisonTimes.length === 2 && restoredComparisonTimes.every((value) => TIME_STEPS.includes(value as (typeof TIME_STEPS)[number]))) {
@@ -5093,6 +5116,14 @@ export default function Home() {
             clearHoverCandidate();
             return;
           }
+          // Local previews own their hover; clear any older official candidate.
+          if (localAtlasHit(map, event.point)) {
+            if (hoveredRef.current) map.setFeatureState(hoveredRef.current, { hover: false });
+            hoveredRef.current = null;
+            map.getCanvas().style.cursor = "pointer";
+            clearHoverCandidate();
+            return;
+          }
           const availableLayers = interactiveLayerIds.filter((id) => map.getLayer(id));
           const availableOfficialLayers = OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS.filter((id) => map.getLayer(id));
           const officialFeatures = availableOfficialLayers.length ? map.queryRenderedFeatures(event.point, { layers: availableOfficialLayers }) : [];
@@ -5179,6 +5210,8 @@ export default function Home() {
             return;
           }
 
+          // Local previews own their selection; never inspect official features beneath them.
+          if (localAtlasHit(map, event.point)) return;
           const availableLayers = interactiveLayerIds.filter((id) => map.getLayer(id));
           // The fixture control owns synthetic selection; never select provider
           // context underneath its schematic as evidence for that schematic.
@@ -6636,7 +6669,7 @@ export default function Home() {
   }, [repositoryOpen, closeRepository]);
 
   useEffect(() => {
-    if (!isCompact || (surfaceInspectionOpen && !mapUtilityOpen)) return;
+    if (!isCompact || (surfaceInspectionOpen && !mapUtilityOpen) || (mapUtilityOpen && mapUtilityView === "localAtlas" && localAtlasPeek)) return;
     const openPanel = mapUtilityOpen ? mapUtilityPanelRef.current : rightOpen ? rightPanelRef.current : leftOpen ? leftPanelRef.current : timelineOpen ? timelineRef.current : null;
     if (!openPanel) return;
     const focusable = () => visibleFocusableElements(openPanel);
@@ -6660,7 +6693,7 @@ export default function Home() {
     };
     openPanel.addEventListener("keydown", handleKey);
     return () => openPanel.removeEventListener("keydown", handleKey);
-  }, [isCompact, leftOpen, mapUtilityOpen, rightOpen, surfaceInspectionOpen, terrainSurfaceMode, timelineOpen, closeLeftPanel, closeMapUtility, closeRightPanel, closeTimelinePanel]);
+  }, [isCompact, leftOpen, mapUtilityOpen, mapUtilityView, localAtlasPeek, rightOpen, surfaceInspectionOpen, terrainSurfaceMode, timelineOpen, closeLeftPanel, closeMapUtility, closeRightPanel, closeTimelinePanel]);
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
@@ -8600,7 +8633,7 @@ export default function Home() {
   </>;
 
   return (
-    <div className="site-root">
+    <div className="site-root" data-local-atlas-open={mapUtilityOpen && mapUtilityView === "localAtlas" || undefined}>
       <a className="skip-link" href="#map-canvas">Skip to the map</a>
       <header className="topbar">
         <div className="brand-lockup">
@@ -8630,6 +8663,7 @@ export default function Home() {
               <button className="map-dock-action" type="button" onClick={() => openAtlasPanel("places")} aria-pressed={leftOpen && leftPanelMode === "places"}><strong>Places</strong><b>{savedWorkspaces.length}</b></button>
               <label className="map-dock-basemap map-dock-wide-only"><span>Basemap</span><select value={basemap} onChange={(event) => setBasemap(event.target.value as BasemapKey)} aria-label="Choose basemap style">{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title}</option>)}</select></label>
               <button className="map-dock-action map-dock-wide-only" type="button" onClick={(event) => openMapUtility("navigate", event.currentTarget)}><span aria-hidden="true">⌖</span><strong>Controls</strong></button>
+              <button className="map-dock-action map-dock-wide-only" type="button" aria-pressed={mapUtilityOpen && mapUtilityView === "localAtlas"} onClick={(event) => openMapUtility("localAtlas", event.currentTarget)}><strong>Local Atlas</strong><b>PC</b></button>
               <details className="map-dock-menu map-dock-map-menu" name="map-dock-menu" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) event.currentTarget.open = false; }} onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
                 <summary aria-label="Map views and controls">Map <span aria-hidden="true">⌄</span></summary>
                 <div className="map-dock-menu-panel">
@@ -8641,8 +8675,9 @@ export default function Home() {
                     <button type="button" aria-pressed={leftOpen && leftPanelMode === "layers"} onClick={(event) => { closeHeaderOverflow(event.currentTarget); openAtlasPanel("layers"); }}>Layers · {selectedMapLayerCount}</button>
                     <button type="button" aria-pressed={leftOpen && leftPanelMode === "places"} onClick={(event) => { closeHeaderOverflow(event.currentTarget); openAtlasPanel("places"); }}>Places · {savedWorkspaces.length}</button>
                   </div>
-                  <button className="map-dock-compact-only" type="button" onClick={(event) => { event.currentTarget.closest("details")?.removeAttribute("open"); openMapSettings(); }}><strong>Style &amp; basemap</strong><small>Rendering quality, terrain, and background</small></button>
-                  <button className="map-dock-compact-only" type="button" onClick={(event) => { const summary = event.currentTarget.closest("details")?.querySelector<HTMLElement>("summary"); event.currentTarget.closest("details")?.removeAttribute("open"); openMapUtility("navigate", summary); }}><strong>Map controls</strong><small>Coordinates, camera, and navigation</small></button>
+                  <button type="button" aria-label="Local Atlas: climate, local files, and data coverage" onClick={(event) => { const summary = event.currentTarget.closest("details")?.querySelector<HTMLElement>("summary"); event.currentTarget.closest("details")?.removeAttribute("open"); openMapUtility("localAtlas", summary); }}><strong>Local Atlas</strong><small>Climate, local files, and data coverage on this PC</small></button>
+                  <button className="map-dock-compact-only" type="button" aria-label="Style and basemap" onClick={(event) => { event.currentTarget.closest("details")?.removeAttribute("open"); openMapSettings(); }}><strong>Style &amp; basemap</strong><small>Rendering quality, terrain, and background</small></button>
+                  <button className="map-dock-compact-only" type="button" aria-label="Map controls: coordinates, camera, and navigation" onClick={(event) => { const summary = event.currentTarget.closest("details")?.querySelector<HTMLElement>("summary"); event.currentTarget.closest("details")?.removeAttribute("open"); openMapUtility("navigate", summary); }}><strong>Map controls</strong><small>Coordinates, camera, and navigation</small></button>
                 </div>
               </details>
             </div>
@@ -9448,18 +9483,21 @@ export default function Home() {
             className="map-utility-panel"
             data-open={mapUtilityOpen}
             data-view={mapUtilityView}
+            data-peek={isCompact && mapUtilityView === "localAtlas" && localAtlasPeek || undefined}
             aria-hidden={!mapUtilityOpen}
             inert={!mapUtilityOpen}
-            aria-modal={isCompact && mapUtilityOpen || undefined}
-            role={isCompact && mapUtilityOpen ? "dialog" : undefined}
+            aria-modal={isCompact && mapUtilityOpen && !(mapUtilityView === "localAtlas" && localAtlasPeek) || undefined}
+            role={isCompact && mapUtilityOpen && !(mapUtilityView === "localAtlas" && localAtlasPeek) ? "dialog" : undefined}
             aria-labelledby="map-utility-title"
           >
             <header className="map-utility-heading">
               <div><p className="panel-kicker">MAP · {mapUtilityLabels[mapUtilityView].toUpperCase()}</p><h2 id="map-utility-title">{mapUtilityLabels[mapUtilityView]}</h2><span>{mapUtilityDescriptions[mapUtilityView]}</span></div>
+              {isCompact && mapUtilityView === "localAtlas" && <button className="local-atlas-peek-toggle" type="button" onClick={localAtlasPeek ? restoreLocalAtlasControls : showLocalAtlasMap} aria-expanded={!localAtlasPeek} aria-controls="local-atlas-controls">{localAtlasPeek ? "Show controls" : "View map"}</button>}
               <button className="icon-close" type="button" onClick={closeMapUtility} aria-label={`Close ${mapUtilityLabels[mapUtilityView]}`}>×</button>
             </header>
             <ExplorerControlsNavigation value={mapUtilityView} onChange={viewId => { setMapUtilityView(viewId); if (viewId === "report") setReportGeneratedAt(new Date().toISOString()); if (viewId === "export") setExportGeneratedAt(new Date().toISOString()); }} />
             <div className="map-utility-scroll">
+              {mapUtilityOpen && mapUtilityView === "localAtlas" && <LocalAtlasControl map={mapRef.current} styleReady={styleReady} flatMap={projection === "mercator" && scenePreset !== "elevation-3d"} suspended={Boolean(measureMode) || undergroundOpen} compact={isCompact} collapsed={isCompact && localAtlasPeek} onViewMap={showLocalAtlasMap} onExpand={restoreLocalAtlasControls} reducedMotion={reducedMotion} onFlatMap={() => activateMapRepresentation("2d")} onArchive={() => setMapUtilityView("compare")} />}
               {mapUtilityView === "report" && <section id="map-utility-view-report" role="region" aria-labelledby="map-utility-title" className="map-utility-section report-builder-section">
                 <div className="map-utility-section-heading"><span>CUSTOM REPORT</span><h3>Build from the map you are using</h3><p>Filters apply immediately. The report uses current Explorer records and keeps evidence states, source roles, attribution, uncertainty, and time visible.</p></div>
 

@@ -9,6 +9,7 @@ import { ActivityWorkspace, TransferPanel } from "../download-activity-panel";
 import PublicMapBrowser from "../public-map-browser";
 import DownloadLibrary from "../download-library";
 import HistoryBrowser from "../history-browser";
+import LocalCacheSettings from "../local-cache-settings";
 import IntakeDeskSummary from "../intake-desk-summary";
 import styles from "./workspace.module.css";
 
@@ -36,6 +37,7 @@ export default function DownloadsWorkspace() {
         {!allConnected && <button type="button" disabled={connecting} aria-busy={connecting} onClick={connect}>{connecting ? "Connecting…" : someConnected ? "Reconnect channels" : "Connect this computer"}</button>}
         <details className={styles.connectionDetails}><summary>Connection details</summary><p>Library &amp; Earth Engine: <strong>{local.connection}</strong><br />Public maps: <strong>{maps.connection}</strong></p><p>Catalog browsing works offline. Progress refreshes automatically while this page is visible; transfers continue in the local operator.</p><div className={styles.linkActions}><button type="button" disabled={connecting} onClick={connect}>Recheck connection</button><Link href="/earth-engine-downloads/setup">Setup help →</Link></div></details>
       </div>
+      <LocalCacheSettings onSaved={() => { local.refresh(); maps.refresh(); }} />
       <p className={styles.srOnly} role="status" aria-live="polite" aria-atomic="true">{local.announcement} {maps.announcement}</p>
       <nav className={styles.workspaceNav} aria-label="Download workspace"><button type="button" aria-controls="download-find" aria-current={view === "find" ? "page" : undefined} onClick={() => setView("find")}>Find data</button><button type="button" aria-controls="download-library" aria-current={view === "library" ? "page" : undefined} onClick={() => setView("library")}>My library</button><button type="button" aria-controls="download-activity" aria-current={view === "activity" ? "page" : undefined} onClick={openActivity}>Activity{active.length > 0 && <span>{active.length}</span>}</button></nav>
       <div className={styles.libraryOverview}><button type="button" onClick={openLibrary}>View downloaded data →</button><span>{local.library?.generatedAt ? `${local.library.totalFiles.toLocaleString()} stored files · ${items.filter(item => item.state === "downloaded").length} completed recent transfers` : "My library shows stored files when this computer is connected."}{local.library?.generatedAt && (local.library.state !== "complete" || local.connection !== "connected") ? " · last completed scan" : ""}</span></div>

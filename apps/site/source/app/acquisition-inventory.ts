@@ -15,14 +15,14 @@ export type AcquisitionJob = {
 };
 export type AcquisitionInventory = {
   schema_version: "kfm-acquisition-inventory-v1"; generated_at: string; lifecycle: "candidate-only";
-  cache: { limit_bytes: number; used_bytes: number; temporary_bytes: number; replaceable_bytes: number; inspected?: boolean };
+  cache: { limit_bytes: number; used_bytes: number; temporary_bytes: number; replaceable_bytes: number; inspected?: boolean; budget_scope?: "new-cache-transfers" };
   jobs: AcquisitionJob[];
 };
 const record = (v: unknown): v is Record<string, unknown> => Boolean(v && typeof v === "object" && !Array.isArray(v));
 const text = (v: unknown, max = 300): v is string => typeof v === "string" && v.length > 0 && v.length <= max && !/[\x00-\x1f\x7f]/.test(v);
 const digest = (v: unknown): v is string => typeof v === "string" && /^[a-f0-9]{64}$/.test(v);
 const bytes = (v: unknown): v is number => Number.isSafeInteger(v) && Number(v) >= 0;
-const byteBound = (v: unknown, maximum = ACQUISITION_CACHE_LIMIT): v is number => bytes(v) && v > 0 && v <= maximum;
+const byteBound = (v: unknown, maximum = Number.MAX_SAFE_INTEGER): v is number => bytes(v) && v > 0 && v <= maximum;
 const calendarDay = (v: string): boolean => {
   const parsed = Date.parse(`${v}T00:00:00Z`);
   return /^\d{4}-\d{2}-\d{2}$/.test(v) && Number.isFinite(parsed) && new Date(parsed).toISOString().slice(0, 10) === v;
@@ -40,7 +40,8 @@ export function parseAcquisitionInventory(value: unknown): AcquisitionInventory 
     || !record(value.cache) || !Array.isArray(value.jobs) || value.jobs.length > 2000) return null;
   const cache = value.cache;
   const recordedLimit = cache.limit_bytes;
-  if (!byteBound(recordedLimit)) return null;
+  if (!byteBound(recordedLimit) || cache.budget_scope !== undefined && cache.budget_scope !== "new-cache-transfers") return null;
+  const jobLimit = cache.budget_scope === "new-cache-transfers" ? Number.MAX_SAFE_INTEGER : recordedLimit;
   if (![cache.used_bytes, cache.temporary_bytes, cache.replaceable_bytes].every(bytes)) return null;
   if (cache.inspected !== undefined && typeof cache.inspected !== "boolean") return null;
   if (Number(cache.temporary_bytes) > Number(cache.used_bytes) || Number(cache.replaceable_bytes) > Number(cache.used_bytes) - Number(cache.temporary_bytes)) return null;
@@ -50,8 +51,8 @@ export function parseAcquisitionInventory(value: unknown): AcquisitionInventory 
     if (!record(item) || !text(item.job_id) || ids.has(item.job_id) || !text(item.source_id) || !text(item.dataset_id) || !text(item.label)
       || !["planned", "blocked", "running", "complete", "captured", "failed"].includes(String(item.state))
       || !(item.reason === null || (typeof item.reason === "string" && item.reason.length <= 1200 && !/[\x00-\x1f\x7f]/.test(item.reason)))
-      || !(item.expected_bytes === null || byteBound(item.expected_bytes, recordedLimit)) || !bytes(item.downloaded_bytes)
-      || !(item.approved_max_bytes === undefined || item.approved_max_bytes === null || byteBound(item.approved_max_bytes, recordedLimit))
+      || !(item.expected_bytes === null || byteBound(item.expected_bytes, jobLimit)) || !bytes(item.downloaded_bytes)
+      || !(item.approved_max_bytes === undefined || item.approved_max_bytes === null || byteBound(item.approved_max_bytes, jobLimit))
       || (item.protected !== undefined && typeof item.protected !== "boolean")
       || !(item.sha256 === null || digest(item.sha256))
       || (item.checksum_basis !== undefined && !["provider-expected", "capture-readback"].includes(String(item.checksum_basis)))
@@ -68,7 +69,7 @@ export function parseAcquisitionInventory(value: unknown): AcquisitionInventory 
     if (typeof item.approved_max_bytes === "number" && (item.downloaded_bytes > item.approved_max_bytes || (item.expected_bytes !== null && item.expected_bytes > item.approved_max_bytes))) return null;
     // Capture-readback is a separate protected candidate, never expected-provider verification.
     if (item.state === "captured" && (item.checksum_basis !== "capture-readback" || item.provider_digest !== null
-      || !digest(item.sha256) || item.checksum_verified !== false || !byteBound(item.bytes_received, recordedLimit)
+      || !digest(item.sha256) || item.checksum_verified !== false || !byteBound(item.bytes_received, jobLimit)
       || item.storage !== "local-protected-candidate" || item.protected !== true || item.intended_destination !== "local-pc"
       || (item.expected_bytes === null && typeof item.approved_max_bytes !== "number"))) return null;
     if (item.checksum_basis === "capture-readback" && item.state !== "captured") return null;
@@ -92,7 +93,7 @@ export function parseAcquisitionInventory(value: unknown): AcquisitionInventory 
       estimate_basis: item.estimate_basis as AcquisitionJob["estimate_basis"], ...(item.rights_url ? {rights_url: item.rights_url} : {}) });
   }
   return { schema_version: "kfm-acquisition-inventory-v1", lifecycle: "candidate-only", generated_at: value.generated_at,
-    cache: { limit_bytes: recordedLimit, used_bytes: cache.used_bytes as number, temporary_bytes: cache.temporary_bytes as number, replaceable_bytes: cache.replaceable_bytes as number, ...(cache.inspected !== undefined ? { inspected: cache.inspected } : {}) }, jobs };
+    cache: { limit_bytes: recordedLimit, used_bytes: cache.used_bytes as number, temporary_bytes: cache.temporary_bytes as number, replaceable_bytes: cache.replaceable_bytes as number, ...(cache.inspected !== undefined ? { inspected: cache.inspected } : {}), ...(cache.budget_scope === "new-cache-transfers" ? { budget_scope: cache.budget_scope } : {}) }, jobs };
 }
 export function formatAcquisitionBytes(value: number | null) {
   if (value === null) return "Unknown — selection required";
