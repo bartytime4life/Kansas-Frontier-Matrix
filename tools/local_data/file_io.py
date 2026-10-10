@@ -109,6 +109,8 @@ def write_new(path: Path, content: bytes) -> None:
     if any(part in {".", ".."} for part in path.parts):
         raise ValueError("UNSAFE_PATH")
     target = path.absolute()
+    if target.parent == target:
+        raise ValueError("UNSAFE_PATH")
     check_directory(target.parent, create=True)
     fd, name = tempfile.mkstemp(prefix=".capture-", dir=target.parent)
     temporary = Path(name)
