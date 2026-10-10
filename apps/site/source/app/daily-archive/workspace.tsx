@@ -20,8 +20,8 @@ const write = (query: string, body?: unknown) => api(query, { method: "POST", he
 
 function ArchiveMap({ payload, counties }: { payload: ArchivePayload | null; counties: FeatureCollection | null }) {
   const container = useRef<HTMLDivElement>(null); const map = useRef<MapLibreMap | null>(null);
-  const current = useRef({payload,counties}); current.current = {payload,counties};
-  const [mapError, setMapError] = useState(""); const [feature, setFeature] = useState<Record<string,unknown> | null>(null);
+  const current = useRef({payload,counties});
+  const [mapError, setMapError] = useState(""); const [feature, setFeature] = useState<{ payload: ArchivePayload | null; properties: Record<string,unknown> } | null>(null);
   const update = useCallback(() => {
     const m = map.current; if (!m) return;
     applyArchiveMapData(m, current.current.payload, current.current.counties);
@@ -42,22 +42,23 @@ function ArchiveMap({ payload, counties }: { payload: ArchivePayload | null; cou
       map.current=m; m.addControl(new lib.NavigationControl(),"top-right");
       m.addControl(new lib.AttributionControl({compact:false,customAttribution:"Stored source snapshots · county reference edition: 2020 Census"}));
       m.on("load",update); m.on("error",()=>setMapError("Map rendering is unavailable. Source details and stored-file downloads remain available."));
-      m.on("click",event=>{ const found=m.queryRenderedFeatures(event.point,{layers:["capture-point","capture-fill","capture-line"]})[0];setFeature(found?.properties??null); });
+      m.on("click",event=>{ const found=m.queryRenderedFeatures(event.point,{layers:["capture-point","capture-fill","capture-line"]})[0];setFeature(found ? { payload: current.current.payload, properties: found.properties } : null); });
     }).catch(()=>setMapError("Map could not start. Use the stored-file download and source details below."));
     return ()=>{disposed=true;map.current?.remove();map.current=null;};
   },[update]);
-  useEffect(()=>{update();setFeature(null);},[payload,counties,update]);
-  return <><div className={styles.map} ref={container} role="region" aria-label="Stored daily capture map of Kansas" />{mapError&&<p role="status">{mapError}</p>}{feature&&<div className={styles.details}><h2>Selected feature</h2><pre>{JSON.stringify(feature,null,2)}</pre></div>}</>;
+  useEffect(()=>{current.current = {payload,counties};update();},[payload,counties,update]);
+  return <><div className={styles.map} ref={container} role="region" aria-label="Stored daily capture map of Kansas" />{mapError&&<p role="status">{mapError}</p>}{feature && payload && feature.payload === payload && <div className={styles.details}><h2>Selected feature</h2><pre>{JSON.stringify(feature.properties,null,2)}</pre></div>}</>;
 }
 
 export default function DailyArchive() {
   const [day,setDay]=useState(today);const [feed,setFeed]=useState<DailyFeed>("usgs-streamflow");const [id,setId]=useState("");
   const [catalog,setCatalog]=useState<ArchiveCatalog|null>(null);const [stored,setStored]=useState<Stored|null>(null);const [counties,setCounties]=useState<FeatureCollection|null>(null);
-  const [message,setMessage]=useState("");const [busy,setBusy]=useState(false);const [budget,setBudget]=useState("2000000000");const [paused,setPaused]=useState(false);const [note,setNote]=useState("");const [review,setReview]=useState("reviewed");
+  const [message,setMessage]=useState("Reading stored coverage…");const [busy,setBusy]=useState(false);const [budget,setBudget]=useState("2000000000");const [paused,setPaused]=useState(false);const [note,setNote]=useState("");const [review,setReview]=useState("reviewed");
   const [revision,setRevision]=useState(0);
-  const chooseDay=(value:string)=>{setDay(value);setCatalog(null);setStored(null);setCounties(null);setId("");};
+  const refresh=()=>{setCatalog(null);setStored(null);setCounties(null);setNote("");setMessage("Reading stored coverage…");setRevision(value=>value+1);};
+  const chooseDay=(value:string)=>{setDay(value);setId("");refresh();};
   useEffect(()=>{
-    const controller=new AbortController();setStored(null);setCounties(null);setCatalog(null);setMessage("Reading stored coverage…");
+    const controller=new AbortController();
     void api(`?day=${day}`,{signal:controller.signal}).then((result:ArchiveCatalog)=>{if(controller.signal.aborted)return;setCatalog(result);setBudget(String(result.storage.budget));setPaused(result.storage.paused);setMessage(result.entries.length?"":"No captures for this day. Live data is never substituted.");}).catch(error=>{if(!controller.signal.aborted)setMessage(error.message);});
     return ()=>controller.abort();
   },[day,revision]);
@@ -65,12 +66,12 @@ export default function DailyArchive() {
   const selected=entries.find(entry=>entry.id===id)??entries.find(entry=>["ready","empty","partial"].includes(entry.status))??entries[0];
   const selectedId=selected?.id;
   useEffect(()=>{
-    const controller=new AbortController();setStored(null);setNote("");
+    const controller=new AbortController();
     if(selectedId&&selected&&["ready","empty","partial"].includes(selected.status)&&selected.review!=="held") void api(`?id=${selectedId}`,{signal:controller.signal}).then(result=>{if(!controller.signal.aborted)setStored(result);}).catch(error=>{if(!controller.signal.aborted)setMessage(error.message);});
     return ()=>controller.abort();
   },[selectedId,selected,revision]);
   useEffect(()=>{
-    const controller=new AbortController();setCounties(null);
+    const controller=new AbortController();
     const entry=catalog?.entries.find(entry=>entry.feed==="census-counties"&&["ready","partial"].includes(entry.status)&&entry.review!=="held");
     if(entry) void api(`?id=${entry.id}`,{signal:controller.signal}).then(result=>{if(!controller.signal.aborted)setCounties(result.payload.data);}).catch(()=>{});
     return ()=>controller.abort();
@@ -78,23 +79,23 @@ export default function DailyArchive() {
   async function capture() {
     setBusy(true);const results:string[]=[];
     for(const source of DAILY_FEEDS){setMessage(`Capturing ${source.title}…`);try{const result=await write(`?action=capture&feed=${source.id}`);results.push(`${source.title}: ${result.status??result.outcome}`);}catch(error){results.push(`${source.title}: ${error instanceof Error?error.message:"failed"}`);}}
-    chooseDay(today());setRevision(value=>value+1);setBusy(false);setMessage(results.join(" · "));
+    chooseDay(today());setBusy(false);setMessage(results.join(" · "));
   }
-  async function saveReview(){if(!selected)return;setBusy(true);try{await write("?action=review",{id:selected.id,state:review,note});setStored(null);setRevision(value=>value+1);setMessage("Review recorded. Earlier decisions and source bytes are preserved.");}catch(error){setMessage((error as Error).message);}finally{setBusy(false);}}
-  async function saveSettings(){setBusy(true);try{await write("?action=settings",{budget:Number(budget),paused});setRevision(value=>value+1);setMessage("Capture settings saved.");}catch(error){setMessage((error as Error).message);}finally{setBusy(false);}}
+  async function saveReview(){if(!selected)return;setBusy(true);try{await write("?action=review",{id:selected.id,state:review,note});refresh();setMessage("Review recorded. Earlier decisions and source bytes are preserved.");}catch(error){setMessage((error as Error).message);}finally{setBusy(false);}}
+  async function saveSettings(){setBusy(true);try{await write("?action=settings",{budget:Number(budget),paused});refresh();setMessage("Capture settings saved.");}catch(error){setMessage((error as Error).message);}finally{setBusy(false);}}
   const source=DAILY_FEEDS.find(source=>source.id===feed)!;
   return <main className={styles.workspace}>
     <header className={styles.header}><div><span className={styles.kicker}>Kansas · retained source snapshots</span><h1>Daily archive</h1></div><nav className={styles.actions}><Link href="/">Explorer</Link><Link href="/observatory">Provider history</Link></nav></header>
     <p>Choose a capture day, inspect its saved map, and record your review. A daily snapshot preserves what the source returned at that moment; it does not guarantee a full day of observations. Capture time, provider time, and review time remain separate.</p>
-    <div className={styles.controls}><label>Capture day (UTC)<input type="date" value={day} min={catalog?.earliestDay??undefined} max={today()} onChange={event=>chooseDay(event.target.value)} /></label><button onClick={()=>chooseDay(today())}>Today</button><button disabled={busy||catalog?.storage.paused} onClick={()=>void capture()}>Capture today’s sources</button><button disabled={busy} onClick={()=>setRevision(value=>value+1)}>Refresh archive</button></div>
+    <div className={styles.controls}><label>Capture day (UTC)<input type="date" value={day} min={catalog?.earliestDay??undefined} max={today()} onChange={event=>chooseDay(event.target.value)} /></label><button onClick={()=>chooseDay(today())}>Today</button><button disabled={busy||catalog?.storage.paused} onClick={()=>void capture()}>Capture today’s sources</button><button disabled={busy} onClick={refresh}>Refresh archive</button></div>
     <div role="status" className={styles.status}>{message}</div>
     <details><summary>Stored dates · {catalog?.days.length??0} recent capture days</summary><p>Up to 366 recent dates are listed. Older captures remain available through the date field. Gaps are not filled.</p><div className={styles.dates}>{catalog?.days.map(item=><button key={item.day} onClick={()=>chooseDay(item.day)}>{item.day}</button>)}</div></details>
     <div className={styles.grid}>
-      <aside className={styles.sources} aria-label="Daily source captures">{DAILY_FEEDS.map(source=>{const rows=catalog?.entries.filter(entry=>entry.feed===source.id)??[];const capture=rows.find(entry=>["ready","empty","partial"].includes(entry.status))??rows[0];return <button className={styles.source} key={source.id} aria-pressed={feed===source.id} onClick={()=>{setFeed(source.id);setId("");setStored(null);}}><strong>{source.title}</strong><small>{capture?`${capture.status} · ${capture.feature_count??0} features · review ${capture.review}`:"Missing · no capture"}</small></button>;})}</aside>
+      <aside className={styles.sources} aria-label="Daily source captures">{DAILY_FEEDS.map(source=>{const rows=catalog?.entries.filter(entry=>entry.feed===source.id)??[];const capture=rows.find(entry=>["ready","empty","partial"].includes(entry.status))??rows[0];return <button className={styles.source} key={source.id} aria-pressed={feed===source.id} onClick={()=>{if(feed===source.id)return;setFeed(source.id);setId("");setStored(null);setNote("");}}><strong>{source.title}</strong><small>{capture?`${capture.status} · ${capture.feature_count??0} features · review ${capture.review}`:"Missing · no capture"}</small></button>;})}</aside>
       <section className={styles.viewer} aria-label="Capture review"><h2>{source.title} · {day}</h2><p>{source.scope}. Map symbols locate returned records; they do not estimate conditions between observations.</p>
         <ArchiveMap payload={stored && stored.entry.id===selectedId?stored.payload:null} counties={counties}/>
         {!stored&&<p className={styles.empty}>{selected?.review==="held"?"This capture is held and hidden from the map. Its stored file remains inspectable.":selected?.status==="failed"?`Capture failed: ${selected.message}`:selected?.status==="running"?"Capture is running. A completed, verified file is required for display.":selected?"Loading verified stored data…":"No saved data for this source and day."}</p>}
-        {selected&&<article className={styles.details}><label>Capture attempt<select value={selected.id} onChange={event=>{setStored(null);setId(event.target.value);}}>{entries.map(entry=><option key={entry.id} value={entry.id}>Attempt {entry.attempt} · {entry.status} · {entry.started_at}</option>)}</select></label><dl><dt>Captured</dt><dd>{selected.started_at}</dd><dt>Provider time</dt><dd>{selected.source_time??"Not supplied; see feature timestamps"}</dd><dt>Source day</dt><dd>{selected.source_day??"See source window and edition"}</dd><dt>Stored bytes</dt><dd>{selected.bytes.toLocaleString()}</dd><dt>SHA-256</dt><dd>{selected.sha256??"No completed payload"}</dd><dt>Review</dt><dd>{selected.review}{selected.review_note?` · ${selected.review_note}`:" · awaiting human review"}</dd></dl>
+        {selected&&<article className={styles.details}><label>Capture attempt<select value={selected.id} onChange={event=>{setStored(null);setNote("");setId(event.target.value);}}>{entries.map(entry=><option key={entry.id} value={entry.id}>Attempt {entry.attempt} · {entry.status} · {entry.started_at}</option>)}</select></label><dl><dt>Captured</dt><dd>{selected.started_at}</dd><dt>Provider time</dt><dd>{selected.source_time??"Not supplied; see feature timestamps"}</dd><dt>Source day</dt><dd>{selected.source_day??"See source window and edition"}</dd><dt>Stored bytes</dt><dd>{selected.bytes.toLocaleString()}</dd><dt>SHA-256</dt><dd>{selected.sha256??"No completed payload"}</dd><dt>Review</dt><dd>{selected.review}{selected.review_note?` · ${selected.review_note}`:" · awaiting human review"}</dd></dl>
           <p>{stored?.payload.source}</p><p>{selected.message}</p>{selected.object_key&&["ready","empty","partial"].includes(selected.status)&&<a href={`/api/daily-archive?id=${selected.id}&action=download`}>Download retained adapter response</a>}
           {stored&&<details><summary>Feature records · keyboard-accessible map alternative</summary><p>First 100 records below; the download contains all {stored.payload.featureCount}.</p><pre>{JSON.stringify(stored.payload.data.features.slice(0,100),null,2)}</pre></details>}
           {["ready","empty","partial"].includes(selected.status)&&<div className={styles.review}><h2>Record archive review</h2><label>Decision<select value={review} onChange={event=>setReview(event.target.value)}><option value="reviewed">Reviewed for archive context</option><option value="held">Hold and hide from map</option><option value="pending">Return to pending review</option></select></label><label>Review note<textarea maxLength={1000} value={note} onChange={event=>setNote(event.target.value)} /></label><button disabled={busy||!note.trim()} onClick={()=>void saveReview()}>Save review</button><p>This decision applies to this exact capture. It does not admit a source or authorize evidence, reports, or release.</p>{stored?.reviews.map((item,index)=><p key={index}>{item.reviewed_at} · {item.state} · {item.note}</p>)}</div>}

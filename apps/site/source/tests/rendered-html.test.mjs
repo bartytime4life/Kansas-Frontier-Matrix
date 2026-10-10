@@ -1035,7 +1035,7 @@ test("the built official-context adapter joins dated Census population and bound
     if (parsedUrl.hostname === "earthquake.usgs.gov") return new Response(JSON.stringify({
       type: "FeatureCollection",
       metadata: { count: 1 },
-      features: [{ type: "Feature", id: "us-test", geometry: { type: "Point", coordinates: [-98.1, 38.7, 5.4] }, properties: { title: "M 2.1 - central Kansas", place: "central Kansas", mag: 2.1, magType: "ml", time: 1789000000000, updated: 1789000300000, status: "reviewed", type: "earthquake", url: "https://earthquake.usgs.gov/earthquakes/eventpage/us-test" } }],
+      features: [{ type: "Feature", id: "us-test", geometry: { type: "Point", coordinates: [-98.1, 38.7, 5.4] }, properties: { title: "M 2.1 - central Kansas", place: "central Kansas", mag: 2.1, magType: "ml", time: Date.now() - 86400000, updated: Date.now() - 86100000, status: "reviewed", type: "earthquake", url: "https://earthquake.usgs.gov/earthquakes/eventpage/us-test" } }],
     }), { headers: { "content-type": "application/json" } });
     throw new Error(`Unexpected upstream request: ${url}`);
   };
