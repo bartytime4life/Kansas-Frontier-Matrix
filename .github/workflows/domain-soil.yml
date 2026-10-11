@@ -116,7 +116,8 @@ jobs:
           python -m pytest -q \
             tests/domains/soil/test_uscrn_daily_candidate.py \
             tests/tools/test_uscrn_daily_pilot.py \
-            tests/tools/test_soil_release.py
+            tests/tools/test_soil_release.py \
+            tests/tools/test_soil_serving.py
 
       - name: Record Soil validation scope
         if: always()
@@ -129,10 +130,11 @@ jobs:
 
           It also runs the USCRN daily soil pilot candidate and release tests
           (`tests/domains/soil/test_uscrn_daily_candidate.py`,
-          `tests/tools/test_uscrn_daily_pilot.py`, `tests/tools/test_soil_release.py`)
+          `tests/tools/test_uscrn_daily_pilot.py`, `tests/tools/test_soil_release.py`,
+          `tests/tools/test_soil_serving.py`)
           on synthetic daily01 fixtures with no network, and validates the admitted
           `data/registry/sources/soil/noaa-uscrn.yaml` descriptor (ADR-0046). The
-          release tests write decisions only into temporary stores; nothing is served.
+          release and serving tests use only temporary stores and a loopback server.
 
           This job runs only the three bounded deterministic standard-library suites in
           `tests/domains/soil/test_soil_smoke.py`,

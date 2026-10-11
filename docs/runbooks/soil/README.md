@@ -195,6 +195,7 @@ select a Soil target or execute rollback.
 | [`PROMOTION_RUNBOOK.md`](./PROMOTION_RUNBOOK.md) | **Repository-grounded promotion preflight; execution held** | Assess one immutable candidate against source, support-type, evidence, validation, policy, proof, review, release, correction, and rollback gates; stop at `READY_FOR_ACCOUNTABLE_RELEASE_REVIEW` or a fail-closed result |
 | [`ROLLBACK_RUNBOOK.md`](./ROLLBACK_RUNBOOK.md) | **Repository-grounded candidate assessment; execution held** | Determine whether an exact Soil release exists, classify a defect, assemble a non-executing rollback/withdrawal/hold candidate, run bounded checks, and hand off |
 | [`SOURCE_REFRESH_RUNBOOK.md`](./SOURCE_REFRESH_RUNBOOK.md) | **Proposal-era watcher and lifecycle model; live refresh held** | Review source-role and support-profile questions only; illustrative live commands are not established entry points |
+| [`uscrn-daily-pilot.md`](./uscrn-daily-pilot.md) | **Implemented and tested offline (2026-10-11)** | Capture, package, decide (ADR-0046), stage and activate the admitted USCRN daily soil pilot for the two Kansas reference stations, and serve it locally at `/v1/soil/*` |
 | `README.md` | **Repository-grounded boundary** | This navigation, authority, command, and maturity index |
 
 When a child claim conflicts with current files, workflows, contracts, schemas,

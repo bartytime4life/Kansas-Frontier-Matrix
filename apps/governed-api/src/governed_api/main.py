@@ -55,6 +55,9 @@ def app(environ, start_response):
     if path in {"/v1/weather/bootstrap", "/v1/weather/layers", "/v1/weather/evidence"}:
         from governed_api import weather
         return weather.respond(environ, start_response, _RELEASE_STORE)
+    if path in {"/v1/soil/bootstrap", "/v1/soil/layers", "/v1/soil/evidence"}:
+        from governed_api import soil
+        return soil.respond(environ, start_response, _RELEASE_STORE)
     method = environ.get("REQUEST_METHOD", "GET")
 
     if path in ROUTES and method != "GET":
