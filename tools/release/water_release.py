@@ -137,7 +137,7 @@ def stage_hosted(root: Path, package_id: str, site_url: str, *, opener=None) -> 
     return {"outcome": "STAGED_HOSTED", "package_id": package_id, "site": netloc, "activated": False}
 
 
-def cycle(root: Path, *, start: str, end: str, owner: str, valid_days: int, now: datetime,
+def cycle(root: Path, *, start: str, end: str, owner: str, valid_days: int, clock=None,
           site_url: str | None = None, rollback_target: str | None = None, acquire=None, opener=None) -> dict:
     """Capture -> candidate -> admitted package -> decision [-> hosted staging]. Never activates.
 
@@ -157,6 +157,9 @@ def cycle(root: Path, *, start: str, end: str, owner: str, valid_days: int, now:
     if run["outcome"] != "CANDIDATE_READY":
         raise ValueError("CAPTURE_NOT_READY")
     package = prepare(root, run["candidate_id"], rollback_target=rollback_target, admitted_source=True)
+    # The package is stamped with the capture's retrieval time, and the gate requires
+    # created_at <= reviewed_at, so the decision time is read only after capture.
+    now = (clock or (lambda: datetime.now(timezone.utc)))()
     decided = decide(root, package["package_id"], reviewer=owner, releaser=owner, valid_days=valid_days, now=now)
     result = {"profile": "kfm.water-release-cycle/v1", "outcome": "DECIDED", "start": start, "end": end, "capture_id": run["capture_id"],
               "candidate_id": run["candidate_id"], "package_id": package["package_id"], "rollback_target": rollback_target,
@@ -214,7 +217,7 @@ def main(argv=None) -> int:
             init_store(root)
             end = args.end or _utc(now.replace(minute=0, second=0, microsecond=0))
             start = args.start or _utc(datetime.strptime(end, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc) - timedelta(hours=24))
-            result = cycle(root, start=start, end=end, owner=args.owner, valid_days=args.valid_days, now=now,
+            result = cycle(root, start=start, end=end, owner=args.owner, valid_days=args.valid_days,
                            site_url=args.site_url, rollback_target=args.rollback_target)
         elif args.command == "decide":
             result = decide(root, args.package_id, reviewer=args.reviewer, releaser=args.releaser,

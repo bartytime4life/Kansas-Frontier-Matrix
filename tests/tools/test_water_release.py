@@ -158,7 +158,7 @@ def cycle(tmp_path, *, acquire=acquired, now=None, **options):
     init_store(root)
     now = now or datetime(2026, 9, 30, 19, 0, tzinfo=timezone.utc)
     return root, water_release.cycle(root, start="2026-09-30T00:00:00Z", end="2026-09-30T18:00:00Z", owner=OWNER,
-                                     valid_days=7, now=now, acquire=lambda *_: acquire(), **options)
+                                     valid_days=7, clock=lambda: now, acquire=lambda *_: acquire(), **options)
 
 
 def snapshot(root, package_id):
@@ -183,6 +183,23 @@ def test_cycle_binds_the_site_active_package_and_stages_there(tmp_path, monkeypa
     assert result["next"] == "https://kfm.example.test/governed/water-release"
     assert snapshot(root, result["package_id"])["manifest"]["rollback_target"] == active == result["rollback_target"]
     assert [(r.get_method(), r.full_url.rsplit("/", 1)[1]) for r in opener.requests] == [("GET", "status"), ("POST", "stage")]
+
+
+def test_cycle_decides_after_the_capture_it_packages(tmp_path):
+    # A live capture is stamped when it finishes (the fixture's retrieved_at is 18:01Z);
+    # a decision timed before that would fail the gate with RELEASE_TIME_INVALID.
+    events = []
+
+    def clock():
+        events.append("clock")
+        return datetime(2026, 9, 30, 18, 1, 5, tzinfo=timezone.utc)
+    root = tmp_path / "store"
+    init_store(root)
+    result = water_release.cycle(root, start="2026-09-29T18:00:00Z", end="2026-09-30T18:00:00Z", owner=OWNER,
+                                 valid_days=7, clock=clock, acquire=lambda *_: events.append("capture") or acquired())
+    assert events == ["capture", "clock"]
+    decision = json.loads((root / result["decision_path"]).read_text())
+    assert snapshot(root, result["package_id"])["manifest"]["created_at"] <= decision["reviewed_at"]
 
 
 def test_cycle_checks_the_site_before_capturing(tmp_path, monkeypatch):
@@ -218,7 +235,7 @@ def test_a_second_cycle_replaces_the_first_through_compare_and_swap(tmp_path, ca
     decided_at = datetime.now(timezone.utc) - timedelta(minutes=1)
     root, first = cycle(tmp_path, now=decided_at)
     second = water_release.cycle(root, start="2026-09-30T00:00:00Z", end="2026-09-30T18:00:00Z", owner=OWNER, valid_days=7,
-                                 now=decided_at + timedelta(seconds=30), rollback_target=first["package_id"],
+                                 clock=lambda: decided_at + timedelta(seconds=30), rollback_target=first["package_id"],
                                  acquire=lambda *_: acquired())
     serving = tmp_path / "serving"
     for result in (first, second):
