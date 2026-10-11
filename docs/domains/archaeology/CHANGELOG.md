@@ -2,7 +2,7 @@
 doc_id: kfm://doc/docs-domains-archaeology-changelog
 title: Archaeology and Cultural Heritage — Changelog
 type: standard
-version: v1.0.3
+version: v1.0.4
 status: draft
 owners: <archaeology-domain-steward> + <docs-steward> (PLACEHOLDER — confirm)
 created: 2026-05-28
@@ -128,7 +128,7 @@ The documents this changelog tracks, with versions read from their current metad
 | `cross-lane-relations.md` | v1 | `CONFIRMED` tracked · content `draft` |
 | `governed-ai-behavior.md` | v1 | `CONFIRMED` tracked · content `draft` |
 | `verification-backlog.md` | v2.1.1 | `CONFIRMED` tracked · content `draft` |
-| `CHANGELOG.md` (this file) | v1.0.3 | `PROPOSED` in this change · content `draft` |
+| `CHANGELOG.md` (this file) | v1.0.4 | `PROPOSED` in this change · content `draft` |
 
 [↑ Back to top](#top)
 
@@ -144,9 +144,9 @@ On owner direction, the three `PROPOSED` greenfield descriptor templates in `dat
 
 | Document | Version delta | §37 type | Change |
 |---|---|---|---|
-| `SOURCE_REGISTRY.md` | v0.2.2 → v0.2.3 | PATCH | `OQ-ARCH-SR-08` notes the migration; the §6 placement warning separates the CONFIRMED canonical registry home from the still-PROPOSED implementation paths. |
+| `SOURCE_REGISTRY.md` | v0.2.2 → v0.2.4 | PATCH | v0.2.4 also sets the registry-home badge and §3 tree label to `CONFIRMED`. `OQ-ARCH-SR-08` notes the migration; the §6 placement warning separates the CONFIRMED canonical registry home from the still-PROPOSED implementation paths. |
 | `SOURCES.md` | v1.0.2 (unchanged) | PATCH (wording) | Verification item 1 says the three descriptors were migrated. |
-| `CHANGELOG.md` (this file) | v1.0.2 → v1.0.3 | PATCH | This entry and the 2026-10-11 source-registry entry below, which was added without a self-version bump. |
+| `CHANGELOG.md` (this file) | v1.0.2 → v1.0.4 | PATCH | This entry and the 2026-10-11 source-registry entry below, which was added without a self-version bump; v1.0.4 records the `SOURCE_REGISTRY.md` v0.2.4 badge correction. |
 
 ### 2026-10-11 — Source-registry path reconciliation — PATCH
 

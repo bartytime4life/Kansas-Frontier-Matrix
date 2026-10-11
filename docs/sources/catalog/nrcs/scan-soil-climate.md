@@ -2,12 +2,15 @@
 doc_id: kfm://doc/docs-sources-catalog-nrcs-scan-soil-climate
 title: NRCS SCAN (Soil Climate Analysis Network)
 type: product-page
-version: v0.2
+version: v0.2.1
 status: draft
 owners: <PLACEHOLDER — Docs steward + Source steward for nrcs>
 created: 2026-05-20
-updated: 2026-05-22
+updated: 2026-10-11
 policy_label: public
+owning_root: docs/
+responsibility: Human-readable product page for the NRCS Soil Climate Analysis Network (SCAN); does not admit, activate, or publish a source.
+truth_posture: cite-or-abstain; source facts NEEDS VERIFICATION; repository paths PROPOSED unless stated
 related:
   - docs/sources/catalog/nrcs/README.md
   - docs/sources/catalog/nrcs/ssurgo.md
@@ -26,6 +29,7 @@ related:
   - policy/sensitivity/
 tags: [kfm, docs, sources, catalog, nrcs, soil, atmosphere, agriculture, observed, station, watcher, scan, awdb, soil-moisture]
 notes:
+  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001 (source-first capture; physical placement HOLD; data/raw/soil/ is a compatibility/reference lane); required meta-block fields added."
   - "PROPOSED product-page scaffold; sibling-link presence verified in Claude Code session."
   - "Source role at admission is observed (station readings); watcher signals at Pre-RAW are candidate, not published."
   - "Heartbeat freshness: no new readings within tolerance → stale source."
@@ -99,7 +103,7 @@ notes:
 | Soil-moisture validator stack (rules, fixtures, envelope, API, tests) | ❌ | Idea Index cards `KFM-P23-PROG-0044`…`KFM-P23-PROG-0050`; runtime homes `pipelines/`, `tests/`, `apps/governed-api/` |
 | Machine shape | ❌ | `schemas/contracts/v1/...` (ADR-0001) |
 | Fetch + admission code | ❌ | `connectors/nrcs/` (Directory Rules §7.3) |
-| Lifecycle data | ❌ | `data/raw/soil/nrcs.scan/<run_id>/` |
+| Lifecycle data | ❌ | Source-first capture for `nrcs.scan` (physical source-first RAW placement **HOLD** under `DIR-SOURCE-001`; `data/raw/soil/` is a compatibility/reference lane, not a payload destination) |
 
 > [!NOTE]
 > This is a **product page**, not a `SourceDescriptor`. The family-level overview lives in [`./README.md`](./README.md); identity rules in [`../IDENTITY.md`](../IDENTITY.md); rights and sensitivity guidance in [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md). Do not duplicate descriptor or policy fields here.
@@ -322,7 +326,7 @@ flowchart LR
   end
 
   subgraph LIFECYCLE["KFM lifecycle"]
-    RAW["data/raw/soil/<br/>nrcs.scan/&lt;run_id&gt;/"]
+    RAW["RAW: source-first capture<br/>nrcs.scan (placement HOLD)"]
     WQ["WORK / QUARANTINE<br/>(timezone harmonized,<br/>QA flags resolved)"]
     VAL["Validator stack<br/>(rules → orchestration →<br/>finite outcomes:<br/>PASS / FAIL / ABSTAIN / ERROR)"]
     PROC["PROCESSED<br/>(SoilMoistureObservation)"]
@@ -405,7 +409,7 @@ Field shape for every entry is **NEEDS VERIFICATION** against any mounted schema
 | **Single-station as area-wide truth** | A SCAN reading cited as "soil moisture at <county / region>" | DENY; require `modeled` derivative + `ModelRunReceipt`, or aggregation + `AggregationReceipt` |
 | **Silent fusion** with SMAP / Mesonet | A composite "soil-moisture surface" combines SCAN with gridded sources without declaring methodology | Per `KFM-P15-PROG-0009`, fusion must declare cadence, depth, grid, QA, and output format; receipts mandatory |
 | **Role collapse: SCAN-fed fusion cited as observed** | Public surface labels a modelled fusion raster as an observed station reading | Preserve `source_role`; require `role_model_run_ref`; AI ABSTAIN if role missing |
-| **Connector publishes** | `connectors/nrcs/` writes under `data/processed/`, `data/catalog/`, or `data/published/` | Move output to `data/raw/soil/nrcs.scan/<run_id>/`; connectors do not publish |
+| **Connector publishes** | `connectors/nrcs/` writes under `data/processed/`, `data/catalog/`, or `data/published/` | Emit only to the accepted source-first RAW home (path HOLD) or QUARANTINE, never to `data/raw/soil/` as a payload lane; connectors do not publish |
 | **Lifecycle skip** | A pipeline writes to `data/published/` directly from `data/raw/` | All lifecycle phases run including the validator stack; promotion is a governed state transition |
 | **Timezone misalignment** | Hourly reading attributed to the wrong hour because source timezone was not harmonized | Per `KFM-P23-PROG-0040`, declare and harmonize `source_timezone` at admission |
 | **Preliminary cited as final** | A preliminary reading is published or cited without its `qa_state` flag | Preserve `qa_state` through admission and catalog projection; surface in Evidence Drawer |
