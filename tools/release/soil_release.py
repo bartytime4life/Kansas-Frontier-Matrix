@@ -82,6 +82,17 @@ def _snapshot(root: Path, package_id: str) -> tuple[dict, dict]:
         raise
     if normalize_capture(capture.manifest, capture.objects) != values["candidate.json"]:
         raise ValueError("CANDIDATE_CAPTURE_MISMATCH")
+    # Evidence: bundle rights, sensitivity and hashes are unkeyed, so the package must be exactly
+    # what the trusted builder makes from this candidate, either on hold or under the current admission.
+    builds = [prepare_soil_package(values["candidate.json"], rollback_target=manifest["rollback_target"], admission=None)]
+    try:
+        admission = load_admission()
+    except ValueError:
+        admission = None
+    if admission is not None:
+        builds.append(prepare_soil_package(values["candidate.json"], rollback_target=manifest["rollback_target"], admission=admission))
+    if all(canonical_bytes(build) != raw for build in builds):
+        raise ValueError("PACKAGE_NOT_REPRODUCIBLE")
     return manifest, values
 
 

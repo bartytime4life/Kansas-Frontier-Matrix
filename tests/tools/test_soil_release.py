@@ -172,7 +172,7 @@ def test_preparation_is_deterministic(tmp_path):
     assert canonical_bytes(json.loads(path.read_text())) == path.read_bytes()
 
 
-def test_decide_replays_evidence_and_refuses_a_rehashed_package_with_stale_bundles(tmp_path):
+def test_decide_refuses_a_rehashed_package_with_stale_bundles(tmp_path):
     root, preparation = prepared(tmp_path, admitted=True)
     snapshot = json.loads(snapshot_path(root, preparation["package_id"]).read_text())
     evidence = json.loads(snapshot["artifacts"]["evidence.json"])
@@ -182,7 +182,8 @@ def test_decide_replays_evidence_and_refuses_a_rehashed_package_with_stale_bundl
     forged = snapshot_path(root, package_id)
     forged.parent.mkdir(parents=True)
     forged.write_bytes(raw)
-    with pytest.raises(ValueError, match="EVIDENCE_DIGEST_MISMATCH"):
+    # Refused before replay: the package is not what the trusted builder makes.
+    with pytest.raises(ValueError, match="PACKAGE_NOT_REPRODUCIBLE"):
         soil_release.decide(root, package_id, reviewer=OWNER, releaser=OWNER, valid_days=7, now=NOW)
     assert not (root / "release/decisions").exists()
 
@@ -275,3 +276,27 @@ def test_decide_refuses_a_package_whose_capture_is_not_in_the_store(tmp_path):
     shutil.rmtree(runs)  # a store that never held the capture
     with pytest.raises(ValueError, match="CAPTURE_NOT_IN_STORE"):
         soil_release.decide(root, preparation["package_id"], reviewer=OWNER, releaser=OWNER, valid_days=7, now=NOW)
+
+
+def test_a_held_package_resealed_as_admitted_cannot_be_self_released(tmp_path):
+    # Genuine candidate and receipt; only the bundles' rights and sensitivity are rewritten and rehashed.
+    root, preparation = prepared(tmp_path, admitted=False)
+    snapshot = json.loads(snapshot_path(root, preparation["package_id"]).read_text())
+    evidence = json.loads(snapshot["artifacts"]["evidence.json"])
+    license_text = uscrn_daily_admission.load_admission()["license"]
+    for entry in evidence["entries"]:
+        bundle = entry["bundle"]
+        bundle["rights"] = {"license": license_text}
+        bundle["sensitivity"] = {**bundle["sensitivity"], "level": "public", "reason": "forged"}
+        bundle["spec_hash"] = {"value": compute_spec_hash({k: v for k, v in bundle.items() if k != "spec_hash"})}
+    raw = reseal(snapshot, evidence)
+    package_id = snapshot["manifest"]["package_id"]
+    manifest, values = validate_snapshot(raw, profile=SOIL)  # the carrier checks alone accept it
+    decision = soil_release.build_decision(package_id, reviewer=OWNER, releaser=OWNER, now=NOW, valid_days=7)
+    assert serving_gate(manifest, values["evidence.json"], decision, now=decision["released_at"], **SOIL_GATE) == "ELIGIBLE"
+    path = snapshot_path(root, package_id)
+    path.parent.mkdir(parents=True)
+    path.write_bytes(raw)
+    with pytest.raises(ValueError, match="PACKAGE_NOT_REPRODUCIBLE"):
+        soil_release.decide(root, package_id, reviewer=OWNER, releaser=OWNER, valid_days=7, now=NOW)
+    assert not (root / "release/decisions").exists()

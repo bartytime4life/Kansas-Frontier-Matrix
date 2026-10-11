@@ -116,7 +116,7 @@ def test_preparation_is_deterministic(tmp_path):
     assert canonical_bytes(json.loads(path.read_text())) == path.read_bytes()
 
 
-def test_decide_replays_evidence_and_refuses_a_rehashed_package_with_stale_bundles(tmp_path):
+def test_decide_refuses_a_rehashed_package_with_stale_bundles(tmp_path):
     # Outer artifact and package hashes are regenerated, but one bundle's spec_hash is stale.
     from connectors_core.captured_json import digest_bytes
     from hashing import compute_spec_hash
@@ -133,7 +133,8 @@ def test_decide_replays_evidence_and_refuses_a_rehashed_package_with_stale_bundl
     forged = root / "release/candidates/atmosphere" / manifest["package_id"].split(":")[1] / "snapshot.json"
     forged.parent.mkdir(parents=True)
     forged.write_bytes(canonical_bytes(snapshot))
-    with pytest.raises(ValueError, match="EVIDENCE_DIGEST_MISMATCH"):
+    # Refused before replay: the package is not what the trusted builder makes.
+    with pytest.raises(ValueError, match="PACKAGE_NOT_REPRODUCIBLE"):
         weather_release.decide(root, manifest["package_id"], reviewer=OWNER, releaser=OWNER, valid_days=7, now=NOW)
     assert not (root / "release/decisions").exists()
 
@@ -181,3 +182,29 @@ def test_decide_requires_the_candidate_to_match_its_stored_capture(tmp_path):
     path.write_bytes(canonical_bytes(snapshot))
     with pytest.raises(ValueError, match="CANDIDATE_CAPTURE_MISMATCH"):
         weather_release.decide(root, package_id, reviewer=OWNER, releaser=OWNER, valid_days=7, now=NOW)
+
+
+def test_a_held_package_resealed_as_admitted_cannot_be_self_released(tmp_path):
+    from connectors_core.captured_json import digest_bytes
+    from hashing import compute_spec_hash
+    root, preparation = prepared(tmp_path, admitted=False)
+    path = root / "release/candidates/atmosphere" / preparation["package_id"].split(":")[1] / "snapshot.json"
+    snapshot = json.loads(path.read_text())
+    evidence = json.loads(snapshot["artifacts"]["evidence.json"])
+    license_text = ghcnd_daily_admission.load_admission()["license"]
+    for entry in evidence["entries"]:
+        bundle = entry["bundle"]
+        bundle["rights"] = {"license": license_text}
+        bundle["sensitivity"] = {**bundle["sensitivity"], "level": "public", "reason": "forged"}
+        bundle["spec_hash"] = {"value": compute_spec_hash({k: v for k, v in bundle.items() if k != "spec_hash"})}
+    text = canonical_bytes(evidence).decode()
+    manifest = snapshot["manifest"]
+    manifest["artifacts"]["evidence.json"] = digest_bytes(text.encode())
+    snapshot["artifacts"]["evidence.json"] = text
+    manifest["package_id"] = compute_spec_hash({k: v for k, v in manifest.items() if k != "package_id"})
+    forged = root / "release/candidates/atmosphere" / manifest["package_id"].split(":")[1] / "snapshot.json"
+    forged.parent.mkdir(parents=True)
+    forged.write_bytes(canonical_bytes(snapshot))
+    with pytest.raises(ValueError, match="PACKAGE_NOT_REPRODUCIBLE"):
+        weather_release.decide(root, manifest["package_id"], reviewer=OWNER, releaser=OWNER, valid_days=7, now=NOW)
+    assert not (root / "release/decisions").exists()
