@@ -360,7 +360,10 @@ jobs:
             tests/domains/atmosphere/test_ghcnd_daily_candidate.py \
             tests/tools/test_ghcnd_daily_pilot.py \
             tests/tools/test_weather_release.py \
-            tests/tools/test_weather_serving.py
+            tests/tools/test_weather_serving.py \
+            tests/tools/test_weather_hosted.py
+          # The Site's weather fixtures must still be what the Python release code produces.
+          python tools/fixtures/weather_site_fixtures.py
           python -m pytest -q \
             tests/validators/domains/atmosphere/test_atmosphere_catalog_matrix_validator_entrypoint.py \
             tests/validators/domains/atmosphere/test_domain_schema_validator.py \

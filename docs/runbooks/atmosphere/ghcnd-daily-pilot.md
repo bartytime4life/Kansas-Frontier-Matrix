@@ -62,10 +62,35 @@ sha256:ACTIVE`. Re-activating the package that is already active is refused
 (`ROLLBACK_BINDING_MISMATCH`), because a package cannot name itself as its
 rollback target.
 
+## Hosted release on the Site
+
+The Site's weather routes accept only weather packages and weather decisions,
+and use the Site's existing owner list and staging token
+(`KFM_WATER_WORKER_TOKEN`); no new Site setting is needed. Apply the additive
+D1 migration `apps/site/source/drizzle/0006_governed_weather.sql` with the Site
+version that carries the weather routes.
+
+```bash
+export KFM_WATER_WORKER_TOKEN=...          # the Site's staging token
+# Capture the 30 days ending yesterday (UTC), package, decide and stage on the Site.
+# The rollback target is read from the Site first, so a replacement binds to what is active.
+.venv/bin/python tools/release/weather_release.py cycle --root $ROOT --owner @bartytime4life \
+  --site-url https://YOUR-SITE
+```
+
+`cycle` never activates. It prints the decision path and the release page URL.
+Open `/governed/weather-release`, paste the decision file and press
+**Activate package**. **Withdraw active package** stops the layer at once.
+`stage-hosted --package-id` uploads an already prepared package instead. Run
+`cycle` again before the decision expires (default 7 days); the release page
+warns two days ahead.
+
 ## Validation
 
 All offline: `tests/domains/atmosphere/test_ghcnd_daily_candidate.py`
 (capture and candidate), `tests/tools/test_ghcnd_daily_pilot.py` (private
 store), `tests/tools/test_weather_release.py` (package, gate, decision and
-water/weather isolation) and `tests/tools/test_weather_serving.py` (stage,
-activate and loopback `/v1/weather/*`). The hosted Site layer is not built yet.
+water/weather isolation), `tests/tools/test_weather_serving.py` (stage,
+activate and loopback `/v1/weather/*`), `tests/tools/test_weather_hosted.py`
+(hosted staging and `cycle`), and the Site's `tests/governed-weather*.test.mjs`
+(parser, gate, Python parity, D1/R2 admin, read route and map control).

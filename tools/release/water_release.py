@@ -92,8 +92,14 @@ def _site_origin(site_url: str) -> str:
     return parts.netloc
 
 
-def _site_call(netloc: str, path: str, *, data: bytes | None = None, opener=None) -> dict:
-    """One bounded request to a water-admin route with the staging token; no redirects followed."""
+def _site_call(netloc: str, path: str, *, data: bytes | None = None, opener=None, admin: str = "water-admin") -> dict:
+    """One bounded request to a release-admin route with the staging token; no redirects followed.
+
+    ``admin`` names the family's route prefix (``water-admin`` or ``weather-admin``); the Site holds
+    one staging token, and each family's routes accept only that family's package profile.
+    """
+    if admin not in ("water-admin", "weather-admin"):
+        raise ValueError("ADMIN_ROUTE_INVALID")
     token = os.environ.get("KFM_WATER_WORKER_TOKEN", "")
     if len(token) < 32:
         raise ValueError("WATER_WORKER_TOKEN_REQUIRED")
@@ -103,7 +109,7 @@ def _site_call(netloc: str, path: str, *, data: bytes | None = None, opener=None
     bypass = os.environ.get("KFM_SITES_BYPASS_TOKEN")
     if bypass:
         headers["OAI-Sites-Authorization"] = f"Bearer {bypass}"
-    request = Request(f"https://{netloc}/api/governed/water-admin/{path}", data=data, headers=headers,
+    request = Request(f"https://{netloc}/api/governed/{admin}/{path}", data=data, headers=headers,
                       method="GET" if data is None else "POST")
     try:
         with (opener or build_opener(_NoRedirect())).open(request, timeout=60) as response:
