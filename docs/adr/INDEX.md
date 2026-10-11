@@ -15,7 +15,7 @@ responsibility_root: docs/
 owning_root: docs/
 responsibility: canonical human ADR file inventory and decision-status crosswalk without independent acceptance or implementation authority
 canonical_for: human ADR file inventory and decision-status crosswalk
-numbered_records: 45
+numbered_records: 46
 unassigned_scaffolds: 11
 related:
   - docs/adr/README.md
@@ -27,6 +27,7 @@ tags: [kfm, adr, index, governance, decisions]
 notes:
   - "ADR-0044 is accepted by the repository owner on 2026-10-10; it allows owner self-release of governed water packages only when every evidence bundle is public and carries an admitted public-domain license, and changes no other release path."
   - "ADR-0045 is accepted by the repository owner on 2026-10-11; it extends the same rule to the GHCN-Daily weather gate with its own license list, and does not widen water self-release."
+  - "ADR-0046 is accepted by the repository owner on 2026-10-11; it extends the same rule to the USCRN daily soil gate with its own license list, and does not widen water or weather self-release."
   - "ADR-0043 is registered as proposed; registration assigns inventory identity only and does not accept the People/DNA/Land genealogy policy tooling-placement decision or authorize any migration."
   - "ADR-0042 is registered as proposed; registration assigns inventory identity only and does not accept the People/DNA/Land genealogy validator tooling-placement decision or authorize any migration."
   - "ADR-0006 and ADR-0007 transition to accepted together with their source records under the binding maintainer disposition in issue #2957; this records architecture only and does not admit MapLibre, implement a runtime, or change release, deployment, or publication state."
@@ -42,7 +43,7 @@ notes:
 
 # Architecture Decision Record Index
 
-[![numbered records](https://img.shields.io/badge/numbered_records-45-0969da)](#numbered-records)
+[![numbered records](https://img.shields.io/badge/numbered_records-46-0969da)](#numbered-records)
 [![effective status](https://img.shields.io/badge/effective_status-5_accepted_%7C_38_proposed-1a7f37)](#status-interpretation)
 [![scaffolds](https://img.shields.io/badge/unassigned_scaffolds-11-6e7781)](#unassigned-scaffolds)
 [![coherence](https://img.shields.io/badge/coherence-machine_checked-1a7f37)](../../tools/validators/validate_adr_index.py)
@@ -50,7 +51,7 @@ notes:
 This file is the canonical human inventory for direct ADR records and unassigned ADR scaffolds under `docs/adr/`. It records what exists and how each record is classified; it cannot accept or promote a decision independently.
 
 > [!IMPORTANT]
-> ADR-0006, ADR-0007, ADR-0029, ADR-0038, ADR-0040, ADR-0044, and ADR-0045 have effective status `accepted`. The other 38 numbered records remain `proposed`; no numbered record is `superseded` or `rejected`. ADR-0006 and ADR-0007 accept architecture only—their status does not admit `maplibre-gl`, prove implementation or browser readiness, or authorize release, deployment, or publication. ADR-0038 accepts only the trusted-base correction mechanism. ADR-0040 accepts only seven exact target catalog redirect-document blobs; every register entry remains proposed and unbound, Stage 1B remains held, and Stage 2 remains unauthorized. ADR-0041 remains a proposal and changes no check behavior. ADR-0042 remains a proposal and changes no validator-tooling placement. ADR-0043 remains a proposal and changes no policy-tooling placement. ADR-0044 accepts owner self-release only for admitted public water data; all other water packages keep two-person review. ADR-0045 accepts the same rule for admitted public GHCN-Daily weather data only.
+> ADR-0006, ADR-0007, ADR-0029, ADR-0038, ADR-0040, ADR-0044, ADR-0045, and ADR-0046 have effective status `accepted`. The other 38 numbered records remain `proposed`; no numbered record is `superseded` or `rejected`. ADR-0006 and ADR-0007 accept architecture only—their status does not admit `maplibre-gl`, prove implementation or browser readiness, or authorize release, deployment, or publication. ADR-0038 accepts only the trusted-base correction mechanism. ADR-0040 accepts only seven exact target catalog redirect-document blobs; every register entry remains proposed and unbound, Stage 1B remains held, and Stage 2 remains unauthorized. ADR-0041 remains a proposal and changes no check behavior. ADR-0042 remains a proposal and changes no validator-tooling placement. ADR-0043 remains a proposal and changes no policy-tooling placement. ADR-0044 accepts owner self-release only for admitted public water data; all other water packages keep two-person review. ADR-0045 accepts the same rule for admitted public GHCN-Daily weather data only. ADR-0046 accepts it for admitted public USCRN daily soil data only.
 
 ## Status interpretation
 
@@ -64,7 +65,7 @@ This file is the canonical human inventory for direct ADR records and unassigned
 
 ## Numbered records
 
-The numbered sequence is complete and unique from `ADR-0001` through `ADR-0045`. ADR-0006, ADR-0007, ADR-0029, ADR-0038, ADR-0040, ADR-0044, and ADR-0045 are `accepted`; all other numbered records remain effectively `proposed`.
+The numbered sequence is complete and unique from `ADR-0001` through `ADR-0046`. ADR-0006, ADR-0007, ADR-0029, ADR-0038, ADR-0040, ADR-0044, ADR-0045, and ADR-0046 are `accepted`; all other numbered records remain effectively `proposed`.
 
 <!-- ADR_INDEX_TABLE_START -->
 | ID | Record | Effective status | Source metadata | Supersedes | Superseded by |
@@ -114,6 +115,7 @@ The numbered sequence is complete and unique from `ADR-0001` through `ADR-0045`.
 | `ADR-0043` | [People/DNA/Land genealogy policy scaffolding uses `policy/domains/people-dna-land/`, not a genealogy sublane](./ADR-0043-people-dna-land-genealogy-policy-tooling-home.md) | `proposed` | `proposed` | — | — |
 | `ADR-0044` | [Owner Self-Release for Admitted Public Water Data](./ADR-0044-owner-self-release-for-admitted-public-water-data.md) | `accepted` | `accepted` | — | — |
 | `ADR-0045` | [Owner Self-Release for Admitted Public Weather Data](./ADR-0045-owner-self-release-for-admitted-public-weather-data.md) | `accepted` | `accepted` | — | — |
+| `ADR-0046` | [Owner Self-Release for Admitted Public Soil Data](./ADR-0046-owner-self-release-for-admitted-public-soil-data.md) | `accepted` | `accepted` | — | — |
 <!-- ADR_INDEX_TABLE_END -->
 
 ## Unassigned scaffolds

@@ -104,18 +104,19 @@ jobs:
       - name: Install USCRN daily soil pilot dependencies
         run: python tools/ci/install_python_ci.py water-pilot
 
-      - name: Run the USCRN daily soil pilot candidate tests
+      - name: Run the USCRN daily soil pilot candidate and release tests
         shell: bash
         env:
           KFM_NO_NETWORK: "1"
           PYTHONDONTWRITEBYTECODE: "1"
         run: |
           set -euo pipefail
-          # Proposed NOAA USCRN descriptor: must stay schema-valid and unadmitted until the owner decides.
+          # Admitted NOAA USCRN descriptor (ADR-0046): must stay schema-valid.
           python tools/validators/domains/soil/validate_source_descriptor.py data/registry/sources/soil/noaa-uscrn.yaml
           python -m pytest -q \
             tests/domains/soil/test_uscrn_daily_candidate.py \
-            tests/tools/test_uscrn_daily_pilot.py
+            tests/tools/test_uscrn_daily_pilot.py \
+            tests/tools/test_soil_release.py
 
       - name: Record Soil validation scope
         if: always()
@@ -126,11 +127,12 @@ jobs:
 
           `VALIDATION_SCOPE: synthetic-public-safe-station-smap-l4-and-ssurgo-drift-fixtures-only`
 
-          It also runs the USCRN daily soil pilot candidate tests
+          It also runs the USCRN daily soil pilot candidate and release tests
           (`tests/domains/soil/test_uscrn_daily_candidate.py`,
-          `tests/tools/test_uscrn_daily_pilot.py`) on synthetic daily01 fixtures with no
-          network, and validates the proposed `data/registry/sources/soil/noaa-uscrn.yaml`
-          descriptor. Neither admits the source, approves review or releases data.
+          `tests/tools/test_uscrn_daily_pilot.py`, `tests/tools/test_soil_release.py`)
+          on synthetic daily01 fixtures with no network, and validates the admitted
+          `data/registry/sources/soil/noaa-uscrn.yaml` descriptor (ADR-0046). The
+          release tests write decisions only into temporary stores; nothing is served.
 
           This job runs only the three bounded deterministic standard-library suites in
           `tests/domains/soil/test_soil_smoke.py`,

@@ -63,9 +63,9 @@ The current inventory snapshot is prepared against `main@a920352e420229078ddc242
 | Surface | Verified state | Meaning |
 |---|---:|---|
 | Direct Markdown files | 60 | Complete direct-child inventory in the proposed tree |
-| Numbered records | 45 | Unique, contiguous IDs `ADR-0001` through `ADR-0045` |
+| Numbered records | 46 | Unique, contiguous IDs `ADR-0001` through `ADR-0046` |
 | Numbered source metadata | 27 `proposed`; 11 `draft`; 6 `accepted` | `draft` normalizes to `proposed`; accepted source and index status agree for six records |
-| Verified accepted decisions | 7 | ADR-0006, ADR-0007, ADR-0029, ADR-0038, ADR-0040, ADR-0044, and ADR-0045 carry matching source/index `accepted` status in their stated scopes |
+| Verified accepted decisions | 8 | ADR-0006, ADR-0007, ADR-0029, ADR-0038, ADR-0040, ADR-0044, ADR-0045, and ADR-0046 carry matching source/index `accepted` status in their stated scopes |
 | Explicit `NNNN` / `XXXX` placeholders | 4 | Unassigned scaffolds; not ADR numbers |
 | Slug-only ADR scaffolds | 8 | Unassigned scaffolds; not accepted decision records |
 | Template | 1 | [`ADR-template.md`](./ADR-template.md) |
@@ -181,6 +181,7 @@ Rules:
 - Proposed [`ADR-0043`](./ADR-0043-people-dna-land-genealogy-policy-tooling-home.md) would make `policy/domains/people-dna-land/` the sole home for People/DNA/Land genealogy policy scaffolding and retire `policy/genealogy/`, the policy-root sibling of ADR-0042; it remains under review and authorizes no migration or implementation.
 - Accepted [`ADR-0044`](./ADR-0044-owner-self-release-for-admitted-public-water-data.md) lets one person review and release a governed water package only when every evidence bundle is public and carries an admitted public-domain license; every other package keeps two-person review.
 - Accepted [`ADR-0045`](./ADR-0045-owner-self-release-for-admitted-public-weather-data.md) applies the same rule to the GHCN-Daily weather gate, with its own license list; it does not widen water self-release.
+- Accepted [`ADR-0046`](./ADR-0046-owner-self-release-for-admitted-public-soil-data.md) applies the same rule to the USCRN daily soil gate, with its own license list; it does not widen water or weather self-release.
 
 Two numbered records use legacy filenames containing spaces and an em dash (`ADR-0007` and `ADR-0028`). Renaming them remains deferred pending inbound-link and history analysis.
 

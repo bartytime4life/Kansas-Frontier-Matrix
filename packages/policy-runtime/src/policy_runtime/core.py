@@ -19,8 +19,14 @@ SELF_RELEASE_LICENSES = frozenset({
 WEATHER_SELF_RELEASE_LICENSES = frozenset({
     "U.S. Public Domain (NOAA federal station data, 17 U.S.C. 105); preliminary data subject to revision",
 })
+# ADR-0046: the admitted USCRN license, used only by the soil gate; disjoint from
+# the water and weather lists for the same reason.
+SOIL_SELF_RELEASE_LICENSES = frozenset({
+    "U.S. Public Domain (NOAA federal station data, 17 U.S.C. 105); USCRN data subject to revision",
+})
 WATER_DECISION_PROFILE = "kfm.water-release-decision/v1"
 WEATHER_DECISION_PROFILE = "kfm.weather-release-decision/v1"
+SOIL_DECISION_PROFILE = "kfm.soil-release-decision/v1"
 
 
 def _self_release_eligible(evidence: dict, licenses=SELF_RELEASE_LICENSES) -> bool:
@@ -32,7 +38,7 @@ def _self_release_eligible(evidence: dict, licenses=SELF_RELEASE_LICENSES) -> bo
 
 def serving_gate(manifest: dict, evidence: dict, decision: dict | None, *, now: str,
                  decision_profile: str = WATER_DECISION_PROFILE, licenses=SELF_RELEASE_LICENSES) -> str:
-    """Water by default; the weather gate passes WEATHER_DECISION_PROFILE and WEATHER_SELF_RELEASE_LICENSES."""
+    """Water by default; the weather and soil gates pass their own decision profile and license list."""
     if decision is None:
         return "REVIEW_REQUIRED"
     if not isinstance(decision, dict) or set(decision) != DECISION_KEYS:

@@ -136,3 +136,28 @@ def test_decide_replays_evidence_and_refuses_a_rehashed_package_with_stale_bundl
     with pytest.raises(ValueError, match="EVIDENCE_DIGEST_MISMATCH"):
         weather_release.decide(root, manifest["package_id"], reviewer=OWNER, releaser=OWNER, valid_days=7, now=NOW)
     assert not (root / "release/decisions").exists()
+
+
+def test_decide_revalidates_the_candidate_and_refuses_a_resealed_semantic_change(tmp_path, monkeypatch):
+    from connectors_core.captured_json import digest_bytes
+    from pipelines.domains.atmosphere import ghcnd_daily_package
+    root, preparation = prepared(tmp_path, admitted=True)
+    _, values = weather_release._snapshot(root, preparation["package_id"])
+    candidate = values["candidate.json"]
+    candidate["coverage"] = "EMPTY"
+    candidate["candidate_id"] = digest_bytes(canonical_bytes({k: v for k, v in candidate.items() if k != "candidate_id"}))
+
+    def lenient(value):
+        report = {**values["validation.json"], "candidate_id": value["candidate_id"]}
+        report.pop("receipt_digest")
+        report["receipt_digest"] = digest_bytes(canonical_bytes(report))
+        return report
+    monkeypatch.setattr(ghcnd_daily_package, "validate_candidate", lenient)
+    snapshot = ghcnd_daily_package.prepare_weather_package(candidate, admission=ghcnd_daily_admission.load_admission())
+    package_id = snapshot["manifest"]["package_id"]
+    path = root / "release/candidates/atmosphere" / package_id.split(":")[1] / "snapshot.json"
+    path.parent.mkdir(parents=True)
+    path.write_bytes(canonical_bytes(snapshot))
+    with pytest.raises(ValueError, match="COVERAGE_OR_FRESHNESS_MISMATCH"):
+        weather_release.decide(root, package_id, reviewer=OWNER, releaser=OWNER, valid_days=7, now=NOW)
+    assert not (root / "release/decisions").exists()

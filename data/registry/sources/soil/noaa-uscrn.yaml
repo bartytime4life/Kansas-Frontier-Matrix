@@ -2,10 +2,12 @@
   "object_type": "SourceDescriptor",
   "schema_version": "v1",
   "source_id": "kfm://source/noaa-uscrn",
-  "descriptor_version": "0.1.0",
+  "descriptor_version": "1.0.0",
   "title": "NOAA USCRN daily01: Kansas reference-station soil pilot",
-  "description": "Proposed scope: daily volumetric soil moisture and soil temperature at 5, 10, 20, 50 and 100 cm for the two U.S. Climate Reference Network stations in Kansas (WBAN 53974 Manhattan 6 SSW, WBAN 03067 Oakley 19 SSW), read from the NCEI daily01 (CRND0103) station-year files by connectors/noaa/src/noaa/uscrn_daily_capture.py. Pipeline records carry the short source_id noaa-uscrn. Awaiting the repository owner's admission decision; until review_state is approved and public_release.allowed is true, pipelines/domains/soil/uscrn_daily_admission.py refuses it. Stored as JSON, which is valid YAML, so the shared SourceDescriptor validator reads it directly.",
-  "domain_scope": ["soil"],
+  "description": "Admitted scope: daily volumetric soil moisture and soil temperature at 5, 10, 20, 50 and 100 cm for the two U.S. Climate Reference Network stations in Kansas (WBAN 53974 Manhattan 6 SSW, WBAN 03067 Oakley 19 SSW), read from the NCEI daily01 (CRND0103) station-year files by connectors/noaa/src/noaa/uscrn_daily_capture.py. Pipeline records carry the short source_id noaa-uscrn. Admitted by the repository owner on 2026-10-11. Stored as JSON, which is valid YAML, so the shared SourceDescriptor validator reads it directly.",
+  "domain_scope": [
+    "soil"
+  ],
   "source_type": "official_government_dataset",
   "source_role": "observation",
   "authority_rank": "primary_authority",
@@ -33,8 +35,8 @@
     "attribution_text": "NOAA National Centers for Environmental Information, U.S. Climate Reference Network (USCRN) daily01 product. Values may be revised.",
     "redistribution_allowed": "yes",
     "commercial_use_allowed": "yes",
-    "last_verified_at": "2026-10-11T22:30:00Z",
-    "verified_by": "repository owner NOAA rights decision of 2026-09-28 (connectors/noaa/README.md: public-domain-us-government-work; USCRN role observed); daily01 scope confirmation pending"
+    "last_verified_at": "2026-10-11T22:50:00Z",
+    "verified_by": "@bartytime4life"
   },
   "sensitivity_default": "public",
   "sensitivity_notes": "Two public federal reference stations at published locations. No living-person, cultural or restricted-infrastructure content in the proposed scope.",
@@ -78,26 +80,32 @@
     }
   },
   "admissibility_limits": {
-    "allowed_claim_roles": ["observation", "map_display", "citation_support"],
-    "prohibited_claim_roles": ["not_for_life_safety"],
-    "limitations": "Proposed scope covers only daily soil moisture (m3/m3) and soil temperature (degC) at the five standard depths at the two listed stations. Values describe a single station point and local-standard-time day, not an area, field or county. A missing value stays missing and never counts as zero; a physically impossible value is withheld. Not an agronomic, drought-declaration or regulatory product.",
+    "allowed_claim_roles": [
+      "observation",
+      "map_display",
+      "citation_support"
+    ],
+    "prohibited_claim_roles": [
+      "not_for_life_safety"
+    ],
+    "limitations": "Admission covers only daily soil moisture (m3/m3) and soil temperature (degC) at the five standard depths at the two listed stations. Values describe a single station point and local-standard-time day, not an area, field or county. A missing value stays missing and never counts as zero; a physically impossible value is withheld. Not an agronomic, drought-declaration or regulatory product.",
     "confidence_posture": "source_authoritative_within_role"
   },
   "public_release": {
-    "allowed": false,
+    "allowed": true,
     "requires_review": true,
     "redaction_required": false,
     "release_conditions": [
-      "The repository owner approves this admission (review_state approved, registry_state active, public_release.allowed true).",
-      "Owner self-release requires its own accepted ADR; ADR-0044 covers water and ADR-0045 covers GHCN-Daily weather only.",
+      "Each package needs a kfm.soil-release-decision/v1 record that passes the serving gate.",
+      "Owner self-release applies only under ADR-0046: public sensitivity and this admitted license.",
       "Every release keeps the NCEI citation and the revision notice."
     ]
   },
-  "review_state": "needs_review",
-  "release_state": "not_released",
+  "review_state": "approved",
+  "release_state": "candidate",
   "lifecycle": {
-    "registry_state": "proposed",
+    "registry_state": "active",
     "created_at": "2026-10-11T22:30:00Z",
-    "updated_at": "2026-10-11T22:30:00Z"
+    "updated_at": "2026-10-11T22:50:00Z"
   }
 }
