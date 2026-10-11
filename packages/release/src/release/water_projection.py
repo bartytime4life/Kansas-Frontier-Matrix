@@ -14,6 +14,29 @@ def negative(reason: str, *, now: str, outcome="ABSTAIN") -> dict:
     return {"envelope": envelope}
 
 
+def replay_evidence(selected: list, decision: dict, now: str):
+    """Every read replays verification and checks bundle membership and identity.
+
+    Returns None when every entry resolves, else (reason_code, outcome). Shared by
+    the water and weather projections.
+    """
+    second = utc_time(now).strftime("%Y-%m-%dT%H:%M:%SZ")
+    for entry in selected:
+        bundle = entry["bundle"]
+        if bundle["spec_hash"]["value"] != compute_spec_hash({k: v for k, v in bundle.items() if k != "spec_hash"}):
+            return "EVIDENCE_DIGEST_MISMATCH", "ERROR"
+        resolution = evaluate_resolution_candidate({
+            "profile": PROFILE, "evidence_ref": entry["evidence_ref"], "bundle_candidate": bundle,
+            "lookup_context": {"bundle_id": bundle["bundle_id"], "current_head": True,
+                               "policy_outcome": "ANSWER", "policy_decision_ref": decision["policy_ref"],
+                               "correction_state": "ACTIVE", "correction_ref": None},
+            "verification_history": entry["verification_history"],
+            "verification_as_of": {"effective_as_of": second, "recorded_as_of": second}})
+        if resolution.status != "RESOLVED":
+            return "EVIDENCE_UNRESOLVED", "ABSTAIN"
+    return None
+
+
 def project(raw: bytes, decision: dict | None, *, view: str, now: str, station_id: str | None = None) -> dict:
     manifest, values = validate_snapshot(raw)
     candidate, evidence = values["candidate.json"], values["evidence.json"]
@@ -26,21 +49,9 @@ def project(raw: bytes, decision: dict | None, *, view: str, now: str, station_i
     selected = [entry for entry in evidence["entries"] if station_id is None or entry["station_id"] == station_id]
     if not selected:
         return negative("EVIDENCE_NOT_FOUND", now=now)
-    # Every read replays verification and checks bundle membership and identity.
-    second = utc_time(now).strftime("%Y-%m-%dT%H:%M:%SZ")
-    for entry in selected:
-        bundle = entry["bundle"]
-        if bundle["spec_hash"]["value"] != compute_spec_hash({k: v for k, v in bundle.items() if k != "spec_hash"}):
-            return negative("EVIDENCE_DIGEST_MISMATCH", now=now, outcome="ERROR")
-        resolution = evaluate_resolution_candidate({
-            "profile": PROFILE, "evidence_ref": entry["evidence_ref"], "bundle_candidate": bundle,
-            "lookup_context": {"bundle_id": bundle["bundle_id"], "current_head": True,
-                               "policy_outcome": "ANSWER", "policy_decision_ref": decision["policy_ref"],
-                               "correction_state": "ACTIVE", "correction_ref": None},
-            "verification_history": entry["verification_history"],
-            "verification_as_of": {"effective_as_of": second, "recorded_as_of": second}})
-        if resolution.status != "RESOLVED":
-            return negative("EVIDENCE_UNRESOLVED", now=now)
+    failure = replay_evidence(selected, decision, now)
+    if failure:
+        return negative(failure[0], now=now, outcome=failure[1])
     refs = [entry["evidence_ref"] for entry in selected]
     observations = [r for r in candidate["observations"] if r["station_id"] in {e["station_id"] for e in selected}]
     # A timestamp with no discharge value cannot make a measurement current.

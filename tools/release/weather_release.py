@@ -20,6 +20,7 @@ from pipelines.domains.atmosphere.ghcnd_daily_admission import SOURCE_REF, load_
 from pipelines.domains.atmosphere.ghcnd_daily_package import prepare_weather_package
 from policy_runtime.core import WEATHER_DECISION_PROFILE, WEATHER_SELF_RELEASE_LICENSES, serving_gate
 from release.core import DIGEST, WEATHER, validate_snapshot
+from release.water_projection import replay_evidence
 from tools.local_data.file_io import read_regular
 from tools.local_data.manage import external_root, store_lock
 from tools.local_data.water_pilot import immutable
@@ -86,6 +87,11 @@ def decide(root: Path, package_id: str, *, reviewer: str, releaser: str, valid_d
                            decision_profile=WEATHER_DECISION_PROFILE, licenses=WEATHER_SELF_RELEASE_LICENSES)
     if outcome != "ELIGIBLE":
         raise ValueError(outcome)
+    # The gate checks release metadata, rights and sensitivity; serving also replays
+    # every bundle's integrity and resolution, so a decision is written only if it would.
+    failure = replay_evidence(values["evidence.json"]["entries"], decision, decision["released_at"])
+    if failure:
+        raise ValueError(failure[0])
     relative = DECISIONS / package_id.split(":")[1] / (decision["released_at"].replace(":", "") + ".json")
     with store_lock(root):
         immutable(root / relative, canonical_bytes(decision))

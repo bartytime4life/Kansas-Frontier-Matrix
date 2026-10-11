@@ -114,3 +114,25 @@ def test_preparation_is_deterministic(tmp_path):
     assert again == first
     path = root / "release/candidates/atmosphere" / first["package_id"].split(":")[1] / "snapshot.json"
     assert canonical_bytes(json.loads(path.read_text())) == path.read_bytes()
+
+
+def test_decide_replays_evidence_and_refuses_a_rehashed_package_with_stale_bundles(tmp_path):
+    # Outer artifact and package hashes are regenerated, but one bundle's spec_hash is stale.
+    from connectors_core.captured_json import digest_bytes
+    from hashing import compute_spec_hash
+    root, preparation = prepared(tmp_path, admitted=True)
+    path = root / "release/candidates/atmosphere" / preparation["package_id"].split(":")[1] / "snapshot.json"
+    snapshot = json.loads(path.read_text())
+    evidence = json.loads(snapshot["artifacts"]["evidence.json"])
+    evidence["entries"][0]["bundle"]["spec_hash"]["value"] = "sha256:" + "0" * 64
+    text = canonical_bytes(evidence).decode()
+    manifest = snapshot["manifest"]
+    manifest["artifacts"]["evidence.json"] = digest_bytes(text.encode())
+    snapshot["artifacts"]["evidence.json"] = text
+    manifest["package_id"] = compute_spec_hash({k: v for k, v in manifest.items() if k != "package_id"})
+    forged = root / "release/candidates/atmosphere" / manifest["package_id"].split(":")[1] / "snapshot.json"
+    forged.parent.mkdir(parents=True)
+    forged.write_bytes(canonical_bytes(snapshot))
+    with pytest.raises(ValueError, match="EVIDENCE_DIGEST_MISMATCH"):
+        weather_release.decide(root, manifest["package_id"], reviewer=OWNER, releaser=OWNER, valid_days=7, now=NOW)
+    assert not (root / "release/decisions").exists()
