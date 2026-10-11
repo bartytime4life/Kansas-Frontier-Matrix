@@ -1,6 +1,6 @@
 /** Reviewed GHCN-Daily weather snapshot carrier (ADR-0045). Never acquires or approves source data.
  *  Mirrors packages/release/src/release/core.py (WEATHER profile) and weather_projection.py. */
-import { canonical, digest, object, parseWaterJson, releaseGate, same, time, verified, without, type Entry } from "./governed-water";
+import { canonical, capturedCanonical, capturedObject, codepointOrder, digest, object, parseCapturedObject, parseWaterJson, releaseGate, same, time, verified, without, type CapturedObject, type Entry } from "./governed-water";
 
 export const WEATHER_PACKAGE_LIMIT = 8 * 1024 * 1024;
 const NAMES = ["candidate.json", "catalog.json", "evidence.json", "validation.json"] as const;
@@ -35,26 +35,53 @@ export function day(value: unknown): number {
   return instant;
 }
 
-/** Digest of a canonical JSON object's text with one top-level member removed. Artifact text is the
- *  Python canonical serialization (sorted keys, no whitespace; its digest is checked first), so this
- *  reproduces digest_bytes(canonical_bytes({k: v ... if k != key})) without re-serializing numbers,
- *  which JavaScript would print differently (25.0 becomes 25). Non-canonical text fails closed. */
-export async function digestWithout(text: string, key: string): Promise<string> {
-  if (text.length < 2 || text[0] !== "{" || text[text.length - 1] !== "}") throw new Error("CANONICAL_OBJECT_REQUIRED");
-  const members: [number, number][] = [];
-  let depth = 0, inString = false, escaped = false, start = 1;
-  for (let i = 1; i < text.length - 1; i++) {
-    const c = text[i];
-    if (inString) { if (escaped) escaped = false; else if (c === "\\") escaped = true; else if (c === '"') inString = false; continue; }
-    if (c === '"') inString = true;
-    else if (c === "{" || c === "[") depth++;
-    else if (c === "}" || c === "]") depth--;
-    else if (c === "," && depth === 0) { members.push([start, i]); start = i + 1; }
+type WeatherRecord = WeatherObservation & Obj;
+
+/** (value, trace, withheld) for one raw tenths value, as ghcnd_daily_normalize._reading. */
+function reading(raw: number, mflag: string, qflag: string): [number | null, boolean, string | null] {
+  if (raw === -9999) return [null, false, "MISSING"];
+  if (qflag) return [null, false, "QUALITY_FLAG"];
+  if (mflag === "T") return [0, true, null];
+  if (mflag === "P") return [null, false, "MISSING"];
+  return [raw / 10, false, null];
+}
+
+/** Inner provenance and record rules, as release/core.py and ghcnd_daily_validate.validate_candidate.
+ *  Digests are recomputed over the captured Python serialization (strict canonical text, numbers kept
+ *  as written), so 16.0 is hashed as 16.0, not as JavaScript's 16. */
+async function validateWeatherIdentities(candidate: WeatherCandidate, captured: CapturedObject, validation: Obj, capturedValidation: CapturedObject) {
+  if (await digest(capturedCanonical(captured, "candidate_id")) !== candidate.candidate_id) throw new Error("CANDIDATE_IDENTITY_MISMATCH");
+  const records = candidate.observations as WeatherRecord[], capturedRecords = captured.observations;
+  if (!Array.isArray(capturedRecords) || capturedRecords.length !== records.length) throw new Error("OBSERVATION_COUNT_INVALID");
+  const seen = new Set<string>();
+  for (let i = 0; i < records.length; i++) {
+    const record = records[i];
+    if (await digest(capturedCanonical(capturedObject(capturedRecords[i]), "record_digest")) !== record.record_digest) throw new Error("OBSERVATION_DIGEST_MISMATCH");
+    const identity = (await digest(canonical([record.station_id, record.element, record.observation_date]))).slice(7);
+    if (record.id !== "kfm:weather:" + identity || record.evidence_ref !== "kfm:evidence:weather:" + identity) throw new Error("OBSERVATION_IDENTITY_MISMATCH");
+    if (!Number.isInteger(record.raw_value) || typeof record.measurement_flag !== "string" || typeof record.quality_flag !== "string"
+        || !same([record.value, record.trace, record.withheld], reading(record.raw_value, record.measurement_flag, record.quality_flag))) throw new Error("OBSERVATION_VALUE_MISMATCH");
+    if (record.retrieved_at > candidate.retrieved_at) throw new Error("OBSERVATION_DATE_INVALID");
+    const key = canonical([record.station_id, record.element, record.observation_date]);
+    if (seen.has(key)) throw new Error("DUPLICATE_STATION_DAY_ELEMENT");
+    seen.add(key);
+    // Station ids, dates and elements are fixed-width ASCII, so this orders as Python's tuple sort.
+    const previous = records[i - 1];
+    if (previous && codepointOrder(canonical([previous.station_id, previous.observation_date, previous.element]), canonical([record.station_id, record.observation_date, record.element])) >= 0) throw new Error("OBSERVATION_ORDER_INVALID");
   }
-  members.push([start, text.length - 1]);
-  const name = JSON.stringify(key) + ":", kept = members.filter(([from]) => !text.startsWith(name, from));
-  if (depth !== 0 || inString || kept.length !== members.length - 1) throw new Error("CANONICAL_MEMBER_INVALID");
-  return digest("{" + kept.map(([from, to]) => text.slice(from, to)).join(",") + "}");
+  // Capture-time freshness, coverage and withheld counts must be what the records say.
+  const states = Object.fromEntries(WEATHER_STATIONS.map(id => {
+    const dates = records.filter(r => r.station_id === id && r.value !== null).map(r => r.observation_date).sort();
+    return [id, !dates.length ? "EMPTY" : (day(candidate.end) - day(dates[dates.length - 1])) / 86400000 > 3 ? "STALE" : "RECENT"];
+  }));
+  const values = new Set(Object.values(states));
+  const counts = Object.fromEntries(WEATHER_STATIONS.map(id => [id, Object.fromEntries(["MISSING", "QUALITY_FLAG"].map(reason => [reason, records.filter(r => r.station_id === id && r.withheld === reason).length]))]));
+  if (!same(candidate.freshness_at_capture, states) || (candidate as unknown as Obj).coverage !== (values.size === 1 && values.has("EMPTY") ? "EMPTY" : values.has("EMPTY") ? "PARTIAL" : "COMPLETE")
+      || !same((candidate as unknown as Obj).withheld_counts, counts)) throw new Error("COVERAGE_OR_FRESHNESS_MISMATCH");
+  if (await digest(capturedCanonical(capturedValidation, "receipt_digest")) !== validation.receipt_digest) throw new Error("VALIDATION_RECEIPT_INVALID");
+  const expected = { profile: "kfm.ghcnd-daily-validation/v1", candidate_id: candidate.candidate_id, outcome: "PASS", observations: records.length,
+    withheld: records.filter(r => r.withheld).length, review_required: true, promotion_authorized: false, release_authorized: false, publication_authorized: false };
+  if (!same(validation, { ...expected, receipt_digest: await digest(canonical(expected)) })) throw new Error("VALIDATION_RECEIPT_MISMATCH");
 }
 
 export async function parseWeatherPackage(text: string): Promise<WeatherPackage> {
@@ -72,10 +99,6 @@ export async function parseWeatherPackage(text: string): Promise<WeatherPackage>
   for (const name of NAMES) { const raw = artifacts[name]; if (typeof raw !== "string" || await digest(raw) !== hashes[name]) throw new Error("ARTIFACT_DIGEST_MISMATCH"); values[name] = object(parseWaterJson(raw)); if (values[name].candidate_id !== manifest.candidate_id) throw new Error("CANDIDATE_BINDING_MISMATCH"); }
   const candidate = values["candidate.json"] as WeatherCandidate, evidence = values["evidence.json"] as { entries: Entry[] }, validation = values["validation.json"];
   if (candidate.release_state !== "UNRELEASED" || values["catalog.json"].authoritative !== false || validation.outcome !== "PASS") throw new Error("CARRIER_CANNOT_SELF_APPROVE");
-  // Inner provenance, as release/core.py validate_snapshot: the candidate id and validation receipt
-  // digest must describe the artifacts they label, not only match each other.
-  if (await digestWithout(artifacts["candidate.json"] as string, "candidate_id") !== manifest.candidate_id) throw new Error("CANDIDATE_IDENTITY_MISMATCH");
-  if (await digestWithout(artifacts["validation.json"] as string, "receipt_digest") !== validation.receipt_digest) throw new Error("VALIDATION_RECEIPT_INVALID");
   if (candidate.start !== manifest.start || candidate.end !== manifest.end || candidate.retrieved_at !== manifest.created_at || candidate.stale_after_days !== 3) throw new Error("CANDIDATE_IDENTITY_MISMATCH");
   if (!Array.isArray(candidate.stations) || !same(candidate.stations.map(s => s.id).sort(), [...WEATHER_STATIONS].sort()) || !Array.isArray(candidate.observations) || candidate.observations.length > 360 || !Array.isArray(evidence.entries) || evidence.entries.length !== WEATHER_STATIONS.length) throw new Error("STATION_SCOPE_INVALID");
   for (const s of candidate.stations) { if (typeof s.name !== "string" || s.name.length > 64 || s.geometry.type !== "Point" || s.geometry.coordinates.length !== 2 || !s.geometry.coordinates.every(Number.isFinite) || Math.abs(s.geometry.coordinates[0]) > 180 || Math.abs(s.geometry.coordinates[1]) > 90) throw new Error("STATION_GEOMETRY_INVALID"); }
@@ -85,6 +108,7 @@ export async function parseWeatherPackage(text: string): Promise<WeatherPackage>
         || r.value !== null && (!Number.isFinite(r.value) || Math.abs(r.value) > 1e4) || r.withheld !== null && r.value !== null
         || day(r.observation_date) < start || day(r.observation_date) > end) throw new Error("OBSERVATION_INVALID");
   }
+  await validateWeatherIdentities(candidate, parseCapturedObject(artifacts["candidate.json"] as string), validation, parseCapturedObject(artifacts["validation.json"] as string));
   if (!same(evidence.entries.map(e => e.station_id).sort(), candidate.stations.map(s => s.id).sort())) throw new Error("STATION_EVIDENCE_MISMATCH");
   for (const entry of evidence.entries) {
     const station = candidate.stations.find(s => s.id === entry.station_id)!;
