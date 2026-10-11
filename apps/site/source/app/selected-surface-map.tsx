@@ -3,7 +3,7 @@ import { basemapCacheRequest } from "./basemap-cache";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { loadMapLibre, type Map as GLMap } from "./maplibre-seam";
 import { browserRenderBudget } from "./map-performance";
-import { captureSelectedSurface, surfaceBoundsMatch, surfaceCameraBounds, surfaceSliceStyle, surfaceRasterSampling, constrainSurfaceCenter, type SurfaceCapture, type SurfaceBounds } from "./selected-surface";
+import { captureSelectedSurface, sameSurfaceContent, surfaceBoundsMatch, surfaceCameraBounds, surfaceSliceStyle, surfaceRasterSampling, constrainSurfaceCenter, type SurfaceCapture, type SurfaceBounds } from "./selected-surface";
 import s from "./subsurface.module.css";
 
 export default function SelectedSurfaceMap({ source, bounds, image, active, smooth, onSmooth, onCapture, opacity = 1, refreshKey = "" }: {
@@ -15,6 +15,7 @@ export default function SelectedSurfaceMap({ source, bounds, image, active, smoo
   const camera = useRef<{ area: string; center: [number, number]; zoom: number } | null>(null);
   const area = bounds.join(","), capturedArea = capture?.bounds.join(",");
   const selectedBounds = useRef(bounds), smoothRef = useRef(smooth);
+  const captureRequest = useRef<{ source: GLMap; area: string; reload: number; refreshKey: string } | null>(null);
   useEffect(() => { selectedBounds.current = bounds; smoothRef.current = smooth; }, [bounds, smooth]);
   useEffect(() => {
     if (!source) return;
@@ -33,7 +34,13 @@ export default function SelectedSurfaceMap({ source, bounds, image, active, smoo
     if (!source) return;
     try {
       const next = captureSelectedSurface(source, selectedBounds.current);
-      if (next) setCapture(next);
+      const request = captureRequest.current;
+      const screenshotOnly = request?.source === source && request.area === area && request.reload === reload && request.refreshKey === refreshKey;
+      captureRequest.current = { source, area, reload, refreshKey };
+      // A late locator screenshot is only a fallback. Reuse identical frozen
+      // content (and its original copy time) instead of restarting map tiles.
+      // Explicit retry, style reload, or any changed source content still applies.
+      if (next) setCapture(previous => screenshotOnly && sameSurfaceContent(previous, next) ? previous : next);
       else setCapture(previous => previous?.bounds.join(",") === area ? previous : null);
     } catch { setStatus("Surface layers could not be copied. Return the selector to this slice and reload layers."); }
   }, [source, area, image, reload, refreshKey]);

@@ -23,6 +23,16 @@ test('preview extent drift cannot replace the fixed selected slice or its time-b
  const source=sourceMap();source.extent=[-99,38,-98.7,38.3];assert.equal(m.captureSelectedSurface(source,bounds),null);
  source.getBounds=()=>{throw new Error('style unavailable')};assert.equal(m.captureSelectedSurface(source,bounds),null);
 });
+test('surface reuse compares all source values, clocks, geometry and image bytes without treating copy time as new data',()=>{
+ const previous=m.captureSelectedSurface(sourceMap(),bounds),same=m.captureSelectedSurface(sourceMap(),bounds);same.copiedAt='2099-01-01T00:00:00Z';
+ same.style.sources=Object.fromEntries(Object.entries(same.style.sources).reverse());
+ assert.equal(m.sameSurfaceContent(previous,same),true,'object key order and copy time are not source changes');assert.equal(m.sameSurfaceContent(null,same),false);
+ for(const change of [
+  c=>c.bounds[0]-=.01,c=>c.omitted++,c=>c.style.sources.fire.data.features[0].properties.acquisitionTime='changed',
+  c=>c.style.sources.fire.data.features[0].geometry.coordinates[0]-=.01,c=>c.style.layers.reverse(),
+  c=>c.images[0].data.data[0]++,c=>c.images[0].data.width++,c=>c.images[0].pixelRatio++,c=>c.images[0].sdf=true,c=>c.images[0].id='other',
+ ]){const next=m.captureSelectedSurface(sourceMap(),bounds);change(next);assert.equal(m.sameSurfaceContent(previous,next),false)}
+});
 test('mask and camera constraints use exactly the accepted bounds; crisp display preserves categorical sampling',()=>{
  const copy=m.captureSelectedSurface(sourceMap(),bounds),render=m.surfaceSliceStyle(copy);
  assert.deepEqual(m.constrainSurfaceCenter(bounds,{lng:-120,lat:55}),[-100.7,38.7]);
@@ -86,4 +96,14 @@ test('surface opacity changes only the map canvas presentation without recreatin
  const h=await harness(),map=h.maps[0],before=JSON.stringify(map.options.style);await h.render({opacity:.35});
  assert.equal(h.maps.length,1);const surface=findNode(h.tree,n=>n.props?.className==='surfaceMap');
  assert.equal(surface.props.style['--surface-map-opacity'],.35);assert.equal(JSON.stringify(map.options.style),before);h.h.dispose();
+});
+test('late locator screenshot preserves identical source capture but real changes and explicit reload still apply',async()=>{
+ const h=await harness(),first=h.maps[0];first.zoom=12;
+ await h.render({image:{width:1024,height:600}});await h.render();
+ assert.equal(h.maps.length,1,'a locator screenshot does not restart unchanged tiles');assert.ok(!first.removed);
+ h.source.style.sources.satellite.tiles[0]='/image/{z}/{x}/{y}?TIME=2007-05-05T12:40:00Z';
+ await h.render({image:{width:1024,height:600}});await h.render();assert.equal(h.maps.length,2,'changed provider frame must be copied');
+ h.maps.at(-1).emit('load');assert.equal(h.maps.at(-1).zoom,12);
+ button(h.tree,'Reload surface layers').props.onClick();await h.render();await h.render();assert.equal(h.maps.length,3,'explicit retry works even when content is unchanged');
+ h.h.dispose();
 });

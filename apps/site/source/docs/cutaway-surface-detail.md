@@ -71,3 +71,26 @@ physical-device and long-session acceptance remain separate.
 Inherited `MIRROR_REVIEW_REQUIRED` remains pending. Build/test success does not
 approve historical receipts or merge the PR. Deployment source/version/access
 readbacks belong in the PR delivery record.
+
+## Loading continuity — 2026-10-11
+
+A follow-up from Site v225 keeps the independent detail renderer alive when the
+worker returns another bounds array for the same geographic slice. The late
+locator screenshot no longer replaces an identical frozen surface capture;
+object field ordering is ignored, while layer order, source clocks, source
+values and registered image bytes remain significant.
+
+Overlay data and styling updates use MapLibre's style diff when the geographic
+scope, provider tile sources and image bytes are unchanged. This includes the
+Underground point overlay and decorative gauge opacity. The full copied layer
+order, paints, filters and GeoJSON data still apply. Changed raster timestamps,
+vector/raster URLs, images, geography or chosen pixel budget rebuild the detail
+renderer. Explicit Refresh surface still retries the captured sources. A
+previous complete image remains visible during an overlay update until its new
+tiles/records settle; a failed update cannot be labeled complete.
+
+The default remains 2048 pixels, with 4096 available; native source resolution,
+record limits, depth values, date filters and partial-coverage disclosures are
+unchanged. No new provider, data release, dependency or storage authority is
+introduced. Revert this follow-up or restore the retained v225 application to
+roll back; data stores require no migration.

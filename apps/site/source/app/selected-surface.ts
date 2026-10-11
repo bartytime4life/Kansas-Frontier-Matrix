@@ -6,6 +6,30 @@ export type SurfaceCapture = {
   images: { id: string; data: { width: number; height: number; data: Uint8Array }; pixelRatio: number; sdf: boolean }[];
 };
 const clone = <T,>(value: T): T => JSON.parse(JSON.stringify(value));
+// Object field insertion order is not map content; array/layer order remains significant.
+const contentJson = (value: unknown) => JSON.stringify(value, (_key, item) =>
+  item && typeof item === "object" && !Array.isArray(item) ? Object.fromEntries(Object.entries(item).sort(([a], [b]) => a.localeCompare(b))) : item);
+
+/** Exact render content, excluding the act of recopying it. No source clocks are ignored. */
+export function sameSurfaceContent(previous: SurfaceCapture | null, next: SurfaceCapture) {
+  if (!previous || previous.bounds.join(",") !== next.bounds.join(",") || previous.omitted !== next.omitted ||
+      previous.images.length !== next.images.length || contentJson(previous.style) !== contentJson(next.style)) return false;
+  return previous.images.every((image, index) => {
+    const other = next.images[index];
+    return image.id === other.id && image.pixelRatio === other.pixelRatio && image.sdf === other.sdf &&
+      image.data.width === other.data.width && image.data.height === other.data.height &&
+      image.data.data.length === other.data.data.length && image.data.data.every((value, i) => value === other.data.data[i]);
+  });
+}
+
+/** MapLibre can diff overlay/style updates without reloading unchanged provider tiles. */
+export function canUpdateSurfaceCapture(previous: SurfaceCapture, next: SurfaceCapture) {
+  const tileSources = (capture: SurfaceCapture) => Object.fromEntries(Object.entries(capture.style.sources).filter(([, source]) => source.type !== "geojson"));
+  return sameSurfaceContent(
+    { ...previous, style: { ...previous.style, sources: tileSources(previous), layers: [] } },
+    { ...next, style: { ...next.style, sources: tileSources(next), layers: [] } },
+  );
+}
 
 export function surfaceBoundsMatch(map: Pick<GLMap, "getBounds">, bounds: SurfaceBounds) {
   try {
