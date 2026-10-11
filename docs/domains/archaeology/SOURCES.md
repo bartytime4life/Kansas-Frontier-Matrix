@@ -6,15 +6,16 @@
 doc_id: kfm://doc/archaeology-sources
 title: Archaeology — Sources
 type: standard
-version: v1
+version: v1.0.1
 status: draft
 owners: TODO — archaeology source steward; archaeology domain steward; sensitivity reviewer; rights-holder representative; AI surface steward; docs steward
 created: 2026-05-28
-updated: 2026-05-28
+updated: 2026-10-11
 policy_label: public
 related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
+  - data/raw/README.md
   - docs/domains/archaeology/README.md
   - docs/domains/archaeology/OBJECT_FAMILIES.md
   - docs/domains/archaeology/PIPELINE.md
@@ -32,6 +33,7 @@ notes:
   - Sensitive-domain doc; archaeology default tier is T4 (DENY) for site location, human remains, sacred sites.
   - All repo-state and path claims are PROPOSED until repo is mounted.
   - Companion to OBJECT_FAMILIES.md, PIPELINE.md, PRESERVATION_MATRIX.md, PUBLICATION_AND_POLICY.md, RELEASE_INDEX.md, and SENSITIVITY.md.
+  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001; physical source-first placement is HOLD and data/raw/archaeology/ is a compatibility/reference lane; documentation only."
 owning_root: docs/
 responsibility: "Documentation for Archaeology — Sources; not evidence, policy, release, or publication authority."
 truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
@@ -45,9 +47,9 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 ![role: fixed at admission](https://img.shields.io/badge/source__role-fixed_at_admission-purple)
 ![watcher: non-publisher](https://img.shields.io/badge/watcher-non--publisher-purple)
 ![validators: ETag · Last-Modified · checksum](https://img.shields.io/badge/validators-ETag_%C2%B7_Last--Modified_%C2%B7_checksum-1f6feb)
-![last updated](https://img.shields.io/badge/last__updated-2026--05--28-lightgrey)
+![last updated](https://img.shields.io/badge/last__updated-2026--10--11-lightgrey)
 
-**Status:** draft &nbsp;·&nbsp; **Owners:** *TODO — archaeology source steward; archaeology domain steward; sensitivity reviewer; rights-holder rep; AI surface steward; docs steward* &nbsp;·&nbsp; **Last updated:** 2026-05-28
+**Status:** draft &nbsp;·&nbsp; **Owners:** *TODO — archaeology source steward; archaeology domain steward; sensitivity reviewer; rights-holder rep; AI surface steward; docs steward* &nbsp;·&nbsp; **Last updated:** 2026-10-11
 **`CONTRACT_VERSION = "3.0.0"`** _(per `docs/doctrine/ai-build-operating-contract.md`)._
 
 > [!CAUTION]
@@ -117,7 +119,7 @@ flowchart LR
   EXT[(External source<br/>SHPO · NRHP · field forms ·<br/>excavation · collections · lab ·<br/>historic maps · oral history)] --> WAT[Watcher<br/>EventEnvelope + EventRunReceipt]:::pre
   WAT --> SD[SourceDescriptor<br/>admission gate A]:::adm
   SD --> CONS{rights_status<br/>+ source_role<br/>+ sensitivity_rank<br/>+ sovereignty labels<br/>resolved?}
-  CONS -- yes --> RAW[(RAW<br/>data/raw/archaeology/)]:::raw
+  CONS -- yes --> RAW[("RAW<br/>source-first capture,<br/>placement HOLD")]:::raw
   CONS -- no --> Q[QUARANTINE<br/>HOLD until resolved]:::q
   RAW --> downstream[Downstream lifecycle<br/>see PIPELINE.md]
   classDef pre fill:#fff7e6,stroke:#d48806,color:#000
@@ -1174,6 +1176,7 @@ These items remain `NEEDS VERIFICATION` before promotion from `draft` to `publis
 | Made the **admission posture summary** explicit (§16) with ten closure conditions and reason codes. | gap closure | Atlas v1.1 §15.H lists `SourceDescriptor exists` as the RAW-stage gate; this doc decomposes the gate into ten conditions and a reason-code catalog. |
 | Made the **supersession and source-stale** rules explicit per family (§17). | gap closure | Atlas v1.1 §24.8 specifies stale-state markers at the cross-cutting level; this doc binds them per family. |
 | Added a **worked admission walkthrough** (§19). | gap closure | Mirrors the worked-workflow pattern in the sibling docs; threads §4–§16 into one concrete admission path with sovereignty escalation. |
+| **v1.0.1 (2026-10-11):** §1 admission diagram RAW node now reads source-first capture with placement **HOLD** instead of `data/raw/archaeology/`; added `data/raw/README.md` to `related` and Related docs. | reconciliation (PATCH) | Aligns with accepted Directory Rules `DIR-SOURCE-001` (one capture per registered `source_id`, no duplicated RAW bytes across domains); no placement was accepted. Admission gate A, source-role fixity, T4 default, consent, sovereignty, and cultural-review rules are unchanged. Documentation only. |
 
 > **Backward compatibility.** This is a new file; no anchors are at risk. Future edits SHOULD preserve anchors under §1–§19 to keep cross-links stable. The eight family IDs (`state_site_inventory`, `public_nrhp_listings`, `field_survey_forms`, `excavation_provenience`, `artifact_collection_repository`, `lab_reports`, `historic_documentary`, `oral_history_cultural`), the source-role names in §5.1, and the closure-condition reason codes in §16 MUST NOT be renamed without an accepted ADR.
 
@@ -1199,7 +1202,8 @@ This document is done enough to enter the repository when:
 ## Related docs
 
 - [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — v3.0 operating law (`CONTRACT_VERSION = "3.0.0"`).
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Placement law; §4 Step 3, §6.1, §9 release/data planes, §15 README contract.
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Placement law; §4 Step 3, §6.1, §9 release/data planes, §12.3 `DIR-SOURCE-001`–`004` source identity, §15 README contract.
+- [`data/raw/README.md`](../../../data/raw/README.md) — source-first RAW contract; physical placement HOLD; `data/raw/archaeology/` is a compatibility/reference lane.
 - [`docs/domains/archaeology/README.md`](./README.md) — *(PROPOSED — link target)* domain landing.
 - [`docs/domains/archaeology/OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) — Identity-bearing archaeology objects.
 - [`docs/domains/archaeology/PIPELINE.md`](./PIPELINE.md) — Lifecycle and Gates A–G.
@@ -1220,7 +1224,7 @@ This document is done enough to enter the repository when:
 
 ---
 
-_Last updated: 2026-05-28 · `CONTRACT_VERSION = "3.0.0"` · Version v1 (draft)_
+_Last updated: 2026-10-11 · `CONTRACT_VERSION = "3.0.0"` · Version v1.0.1 (draft)_
 _Next review trigger: KHRI / NRHP / SHPO data-sharing agreement confirmation; authoring of `schemas/contracts/v1/source_descriptor.schema.json`; first mounted-repo inspection of `data/registry/archaeology/sources/`._
 
 [⬆ Back to top](#archaeology--sources)

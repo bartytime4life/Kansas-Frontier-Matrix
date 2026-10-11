@@ -2,15 +2,16 @@
 doc_id: kfm://doc/archaeology/SOURCE_REGISTRY
 title: Archaeology Source Registry — Human Guide
 type: standard
-version: v0.2
+version: v0.2.1
 status: draft
 owners: <archaeology-source-steward> · <archaeology-domain-steward> · <sensitivity-reviewer> · <rights-holder-representative> · <release-authority> · <docs-steward>   # NEEDS VERIFICATION — assign via CODEOWNERS / control_plane/source_authority_register.yaml before promotion
 created: 2026-05-15
-updated: 2026-05-28
+updated: 2026-10-11
 policy_label: public
 related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
+  - data/raw/README.md
   - docs/doctrine/truth-posture.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/lifecycle-law.md
@@ -46,6 +47,7 @@ notes:
   - All listed candidate source families are PROPOSED / NEEDS VERIFICATION.
   - Exact site geometry is DENY by default; cultural / sovereignty / steward review governs disclosure.
   - This file is the **human guide** to the source registry; SOURCES.md is the **source-family catalogue**. The two are companion docs and MUST agree.
+  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001; physical source-first placement is HOLD and data/raw/archaeology/ is a compatibility/reference lane; documentation only."
 owning_root: docs/
 responsibility: "Documentation for Archaeology Source Registry — Human Guide; not evidence, policy, release, or publication authority."
 truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
@@ -77,7 +79,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 [![registry home: PROPOSED](https://img.shields.io/badge/registry_home-PROPOSED-yellow.svg)](#3-repo-fit)
 [![last updated](https://img.shields.io/badge/last__updated-2026--05--28-lightgrey.svg)](#)
 
-**Status:** `draft` · **Version:** `v0.2` · **Owners:** archaeology source steward · archaeology domain steward · sensitivity reviewer · rights-holder representative · release authority · docs steward *(placeholders — confirm via CODEOWNERS)* · **Last updated:** 2026-05-28
+**Status:** `draft` · **Version:** `v0.2.1` · **Owners:** archaeology source steward · archaeology domain steward · sensitivity reviewer · rights-holder representative · release authority · docs steward *(placeholders — confirm via CODEOWNERS)* · **Last updated:** 2026-10-11
 **`CONTRACT_VERSION = "3.0.0"`** _(per [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md))._
 
 > [!IMPORTANT]
@@ -648,7 +650,7 @@ flowchart TD
   G -- restricted --> I[SourceActivationDecision = RESTRICTED<br/>internal / steward-only use]:::res
   G -- allowed --> J[SourceActivationDecision = ALLOWED<br/>admission fixture published<br/>watcher may activate]:::allow
   G -- needs review --> NR[SourceActivationDecision = NEEDS_REVIEW<br/>HOLD until resolved]:::deny
-  J --> K[Connector emits to<br/>data/raw/archaeology/<br/>or data/quarantine/archaeology/]:::raw
+  J --> K["Connector emits to source-first RAW<br/>(placement HOLD) or<br/>data/quarantine/archaeology/"]:::raw
   I --> K
   K --> L[Lifecycle: RAW → WORK / QUARANTINE → PROCESSED →<br/>CATALOG / TRIPLET → PUBLISHED<br/>see PIPELINE.md]:::raw
   L --> M[Public-safe derivatives ONLY after<br/>ReleaseManifest + RedactionReceipt +<br/>four-role SoD per PUBLICATION_AND_POLICY.md §8]:::pub
@@ -881,7 +883,8 @@ the sibling docs.
 
 - [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — v3.0 operating law (`CONTRACT_VERSION = "3.0.0"`)
 - [`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`](../../sources/SOURCE_DESCRIPTOR_STANDARD.md) — cross-domain descriptor contract
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — §11 source-registry architecture, §12 domain placement law
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — §11 source-registry architecture, §12 domain placement law, §12.3 `DIR-SOURCE-001`–`004` source identity
+- [`data/raw/README.md`](../../../data/raw/README.md) — source-first RAW contract; physical placement HOLD; `data/raw/archaeology/` is a compatibility/reference lane
 - [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — cite-or-abstain, EvidenceBundle outranks generated text
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — no public read of RAW / WORK / QUARANTINE
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → … → PUBLISHED invariant
@@ -939,6 +942,7 @@ the sibling docs.
 | §15 Related docs — restructured into four labeled subsections (Sibling archaeology docs · Cross-cutting doctrine · Runbooks and registers · ADRs · Machine truth); added the seven sibling docs, three registers, two runbooks, the SMART_SYNC standard, the operating contract, the `SourceActivationDecision` schema home, and the `control_plane/source_authority_register.yaml`. | clarification | Reflects the now-authored sibling set and the schema / register / runbook expansion. |
 | Added a **Changelog v0.1 → v0.2** companion section and a **Definition of done** companion section after §15. | clarification | Doctrine-adjacent docs adopt the companion-section pattern used in the sibling docs. |
 | Refreshed badge row: added `version: v0.2`, `CONTRACT_VERSION`, `role: fixed at admission`, `watcher: non-publisher`; updated `last updated`. | housekeeping | Reflects new content; no doctrine change. |
+| **v0.2.1 (2026-10-11):** §9 admission flow node K now reads "Connector emits to source-first RAW (placement HOLD) or `data/quarantine/archaeology/`" instead of `data/raw/archaeology/`; added `data/raw/README.md` to `related` and §15. | reconciliation (PATCH) | Aligns with accepted Directory Rules `DIR-SOURCE-001`; no placement was accepted. `SourceActivationDecision` outcomes, fail-closed descriptor rules, sovereignty inheritance, and cultural/steward review are unchanged. Documentation only. |
 
 > **Backward compatibility.** All §1–§15 anchors are **preserved exactly**.
 > New material is added either inside existing sections (§§1–13 strengthened in
@@ -966,4 +970,4 @@ This document is done enough to enter the repository when:
 
 ---
 
-**Last updated:** 2026-05-28 · **Version:** `v0.2 (draft)` · **`CONTRACT_VERSION = "3.0.0"`** · **Doc class:** standard companion guide · **Authority:** human-facing admission contract; machine truth lives in `data/registry/sources/archaeology/*.yaml`; canonical source-family catalogue is [`SOURCES.md`](./SOURCES.md) · [↑ Back to top](#archaeology-source-registry--human-guide)
+**Last updated:** 2026-10-11 · **Version:** `v0.2.1 (draft)` · **`CONTRACT_VERSION = "3.0.0"`** · **Doc class:** standard companion guide · **Authority:** human-facing admission contract; machine truth lives in `data/registry/sources/archaeology/*.yaml`; canonical source-family catalogue is [`SOURCES.md`](./SOURCES.md) · [↑ Back to top](#archaeology-source-registry--human-guide)

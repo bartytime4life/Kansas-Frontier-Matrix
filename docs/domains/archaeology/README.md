@@ -2,18 +2,19 @@
 doc_id: kfm://doc/docs-domains-archaeology-readme
 title: Archaeology and Cultural Heritage — Domain Documentation
 type: standard
-version: v2.2.3
+version: v2.2.4
 owning_root: docs/
 responsibility: "Document Archaeology and Cultural Heritage domain boundaries, current evidence, holds, and non-effects."
 truth_posture: "Mixed: confirmed repository evidence with proposed, unverified, and held domain controls."
 status: draft
 owners: NEEDS VERIFICATION — CODEOWNERS routes this lane to @bartytime4life; archaeology, cultural-review, and docs steward authority remains unverified
 created: 2026-05-15
-updated: 2026-08-28
+updated: 2026-10-11
 policy_label: public
 related:
   - docs/domains/README.md
   - docs/doctrine/directory-rules.md
+  - data/raw/README.md
   - contracts/domains/archaeology/
   - schemas/contracts/v1/domains/archaeology/
   - policy/domains/archaeology/
@@ -25,6 +26,7 @@ notes:
   - Repository paths were inspected at main@eab60b430fe7557142a766402dff08945d880156; presence, implementation, evaluator binding, review, release, and publication remain separate states.
   - Sensitivity defaults follow Atlas v1.1 §24.5 (T0–T4); see Sensitivity section.
   - Per-source tier assignments in the Source families table are INFERRED, not Atlas §15.D doctrine (which leaves rights NEEDS VERIFICATION).
+  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001; physical source-first placement is HOLD and data/raw/archaeology/ is a compatibility/reference lane; documentation only."
 [/KFM_META_BLOCK_V2] -->
 
 # Archaeology and Cultural Heritage — Domain Documentation
@@ -165,7 +167,7 @@ fixtures/domains/archaeology/              ← golden / valid / invalid samples
 packages/domains/archaeology/              ← shared library code, if any
 pipelines/domains/archaeology/             ← executable pipeline logic
 pipeline_specs/archaeology/                ← declarative pipeline config
-data/raw/archaeology/                      ← admitted RAW payloads
+data/raw/archaeology/README.md             ← compatibility/reference lane; no payloads (source-first RAW placement HOLD)
 data/work/archaeology/                     ← in-process normalization
 data/quarantine/archaeology/               ← failed-gate holds
 data/processed/archaeology/                ← validated normalized objects
@@ -175,7 +177,7 @@ data/registry/sources/archaeology/         ← source descriptors
 release/candidates/archaeology/            ← release decisions, manifests
 ```
 
-All listed responsibility-root paths are present on the observed main snapshot. Presence establishes repository placement only; each lane retains its own maturity, authority, sensitivity, review, release, correction, and rollback state.
+All listed responsibility-root paths are present on the observed main snapshot. RAW capture itself is source-first under a `source_id` registered once in `data/registry/sources/` (Directory Rules §12.3 `DIR-SOURCE-001`); its physical placement is **HOLD** pending an accepted decision, and every Archaeology deny-by-default, exact-location, cultural-review, sovereignty, and consent control binds that capture wherever it is placed. Presence establishes repository placement only; each lane retains its own maturity, authority, sensitivity, review, release, correction, and rollback state.
 
 [Back to top](#contents)
 
@@ -570,6 +572,7 @@ CODEOWNERS currently routes `docs/domains/archaeology/` to `@bartytime4life`. Th
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — adopted placement standard via ADR-0029.
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — public-path discipline.
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED lifecycle discipline.
+- [`data/raw/README.md`](../../../data/raw/README.md) — source-first RAW contract (`DIR-SOURCE-001`; physical placement HOLD) · [`data/raw/archaeology/README.md`](../../../data/raw/archaeology/README.md) — compatibility/reference lane; no payloads.
 - [`docs/domains/archaeology/ubiquitous-language.md`](./ubiquitous-language.md) — full glossary.
 - [`docs/domains/archaeology/source-families.md`](./source-families.md) — source families.
 - [`docs/domains/archaeology/sensitivity-and-publication-posture.md`](./sensitivity-and-publication-posture.md) — tiers + CARE.
@@ -648,6 +651,7 @@ The live repository resolves several former path questions while leaving authori
 | v2.2.0 → v2.2.1 | Reclassified no-network fixture execution after the shared guard's post-merge review identified a `socket.SocketType` bypass; completed required ownership/truth metadata and repaired two repository-root related targets | evidence correction | Preserve the passed named-command proof while preventing it from being read as complete Python no-egress enforcement, and keep changed-path documentation QA reviewable. |
 | v2.2.1 → v2.2.2 | Reconciled the merged public constructor repair against the remaining direct private `_socket.socket` bypass on current main | evidence correction | Credit the bounded fix without overstating Python no-egress coverage or importing unmerged dependency bytes. |
 | v2.2.2 → v2.2.3 | Reconciled merged PR #3718 and current guard bytes after the direct private constructor repair | evidence correction | Mark the named Python-process proof confirmed and bounded while preserving runner-wide, non-Python, dependency-install, and non-named API holds. |
+| v2.2.3 → v2.2.4 | 2026-10-11: Repo-fit tree now lists `data/raw/archaeology/README.md` as a compatibility/reference lane (no payloads) instead of the RAW payload home; added the source-first RAW note and `data/raw/README.md` link | reconciliation (PATCH) | Aligns with accepted Directory Rules `DIR-SOURCE-001`; physical source-first placement is HOLD. No sensitivity, sovereignty, cultural-review, or consent rule changed. Documentation only. |
 
 > **Backward compatibility.** Renamed sections retain explicit aliases for the three v1 anchors (`#directory-tree-proposed`, `#api-contract-and-schema-surfaces-proposed`, and `#validators-tests-fixtures-proposed`). New sections (Open questions register, Changelog, Definition of done) remain before FAQ and Appendix; the Contents list is renumbered accordingly. Content was reconciled in v2.1.0, so compatibility here means stable legacy link targets rather than byte-for-byte preservation.
 

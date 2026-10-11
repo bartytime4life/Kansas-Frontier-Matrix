@@ -2,11 +2,11 @@
 doc_id: kfm://doc/archaeology-api-contracts
 title: Archaeology — API Contracts
 type: standard
-version: v0.3.1
+version: v0.3.2
 status: draft
 owners: <TODO: archaeology-domain-steward; cultural-review-board; governed-API-owner; security-steward; docs-steward>
 created: 2026-05-15
-updated: 2026-08-28
+updated: 2026-10-11
 policy_label: public
 owning_root: docs/
 responsibility: "Explain the Archaeology governed-API contract, finite outcomes, evidence and source-role constraints, and fail-closed sensitivity boundary for human readers."
@@ -14,6 +14,7 @@ truth_posture: "Mixed: confirmed current repository placement and mixed-maturity
 related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
+  - data/raw/README.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/truth-posture.md
   - docs/doctrine/lifecycle-law.md
@@ -42,6 +43,7 @@ notes:
   - Source-role anti-collapse (Atlas v1.1 §24.1) is load-bearing for this lane; threaded throughout §§3, 5, 6, 8. Chapter 24 master tables are navigational, not authoritative — EvidenceBundle, source dossiers, and schemas/contracts remain canonical (Atlas v1.1 Ch. 24 authority rule).
   - Inherits Archaeology sensitivity envelope: T4 site coords default (T1 generalized only after steward review, Atlas §24.14); T4 forever for human remains / sacred sites (Atlas §24.5.2). The §23.2 sensitive-domain matrix is itself PROPOSED in v3.0 pending steward ratification; most-restrictive-row applies until then.
   - source_role enum values are lowercase (observed | regulatory | modeled | aggregate | administrative | candidate | synthetic) per Atlas §24.1.3.
+  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001; physical source-first placement is HOLD and data/raw/archaeology/ is a compatibility/reference lane; documentation only."
 [/KFM_META_BLOCK_V2] -->
 
 # Archaeology — API Contracts
@@ -75,7 +77,7 @@ notes:
 | Field | Value |
 |---|---|
 | **Document type** | API-contracts reference (standard doc, doctrine-adjacent, domain-scoped). |
-| **Edition** | v0.3.1 draft (repository-evidence correction; see [§15 Changelog](#15-changelog)). |
+| **Edition** | v0.3.2 draft (RAW placement wording reconciliation; see [§15 Changelog](#15-changelog)). |
 | **Current repo path** | `docs/domains/archaeology/API_CONTRACTS.md` (`CONFIRMED` path; casing convergence remains an open documentation question, not an absence claim). |
 | **Placement basis** | **CONFIRMED** — Directory Rules §12 (Domain Placement Law; domain segment under responsibility root `docs/domains/<domain>/`); KFM Encyclopedia §7.13 (per-domain dossier). |
 | **Operating contract** | `docs/doctrine/ai-build-operating-contract.md` — `CONTRACT_VERSION = "3.0.0"`. |
@@ -140,7 +142,7 @@ The archaeology API obeys KFM's universal trust-membrane rules. Recapped here fo
 
 | Rule | Source | Domain-specific consequence |
 |---|---|---|
-| Public clients **MUST** consume governed APIs, not canonical or internal stores. | Directory Rules §7.1; trust-membrane doctrine; contract §10.2 | No archaeology browser code reads `data/raw/archaeology/` or `data/catalog/`. |
+| Public clients **MUST** consume governed APIs, not canonical or internal stores. | Directory Rules §7.1; trust-membrane doctrine; contract §10.2 | No archaeology browser code reads RAW (the source-first capture or the legacy `data/raw/archaeology/` compatibility lane) or `data/catalog/`. |
 | **MUST NOT** instantiate a direct model client. Focus Mode **MUST** go through governed API. | Whole-UI Governed AI Expansion; Master MapLibre §10; contract §21 | Archaeology Focus Mode answers carry `AIReceipt` and finite outcomes. |
 | **MUST NOT** load an unreleased tile. `addSource` / `addLayer` is blocked unless `LayerManifest`, `TileArtifactManifest`, `MapReleaseManifest`, `PolicyDecision`, and release status allow it. | Master MapLibre §10 | Archaeology layers require explicit release status, even for steward consoles. |
 | **MUST NOT** hide sensitive geometry only by style. | Master MapLibre §10; Atlas v1.1 §24.5.1 | Exact archaeology geometry is **generalized at the data layer** (e.g., H3 r7 cell or coarser; threshold NEEDS VERIFICATION — see [§8](#8-sensitivity-gates-baked-into-the-contract-surface)), not at the style layer. |
@@ -547,6 +549,7 @@ Per `ai-build-operating-contract.md` §37 lifecycle (MAJOR / MINOR / PATCH).
 | v0.2 (draft) | 2026-05-27 | Threaded **source-role anti-collapse** (Atlas v1.1 §24.1) through §§2, 3, 5, 6, 8, 9, 10. Added §0 Status & Authority table. Added `CONTRACT_VERSION = "3.0.0"` pin. RFC 2119 conformance pass. Added §13 Open questions, §14 Open verification backlog, §15 Changelog, §16 Definition of done. Added `GENERATED_RECEIPT.json` row to §5 and §11. Added `source-role-collapse` and `synthetic-as-observed` DENY codes. Added `jcs:sha256:<hex>` notation. Added `NARROWED` / `BOUNDED` extensions. | MINOR — clarification + new sections + threading existing doctrine | Aligns with operating contract v3.0; closes gap on source-role doctrine; adds companion sections. |
 | v0.3 (draft) | 2026-05-29 | **Citation-correction pass.** Corrected contract section references to the verified v3.0 map: cite-or-abstain → §10.3 (was §1.5); governed AI → §21 (was §22); finite-outcome extensions → §8 (was §21.2); `SOURCE_STALE`/freshness → §22.2 (was §9.2); trust-membrane → §10.2; lifecycle → §10.1; current-session evidence limit → §7; chain-of-thought-not-authority → §26.2. Renumbered §38 anti-pattern references to the verified list (§38.2, §38.15, §38.18, §38.21, §38.25). Normalized `source_role` enum to **lowercase** values per Atlas §24.1.3 (was Title-Case). Labeled the §23.2 matrix PROPOSED with most-restrictive-row fallback in §8. Added the **navigational-not-authoritative** note for Chapter 24 tables. Added `synthetic-as-observed` grounding from Atlas §24.1.2. Corrected placement basis to Directory Rules §12 (was §4 Step 3) and Encyclopedia §7.13 (was §6.2). Added `OQ-AR-API-08` (receipt reconciliation) and `OQ-AR-API-09` (runbooks placement); aligned `OQ-AR-API-07` with the sibling UPPER_SNAKE casing conflict. Added sibling docs (`ARCHITECTURE.md`, `CANONICAL_PATHS.md`, `CROSS_DOMAIN.md`) to `related` and §12. Added health-signal backlog item (§35). | PATCH — citation accuracy; no semantic doctrine change | Prior draft cited several non-existent contract sections (§1.5, §5.1.1, §9.2, §21.2, §22) and Title-Cased the enum; corrected to the verified section map and Atlas enum casing. No outcomes, gates, or invariants changed. |
 | v0.3.1 (draft) | 2026-08-28 | Reconciled repository placement and mixed-maturity path evidence; retained route and runtime claims as proposed/unverified. | PATCH — status accuracy; no semantic doctrine change | Removes stale repository-unavailable and blanket-`PROPOSED` path claims without activating policy, runtime, review, release, or publication. |
+| v0.3.2 (draft) | 2026-10-11 | Generalized the §2 trust-membrane check so it names RAW as the source-first capture or the legacy `data/raw/archaeology/` compatibility lane (accepted Directory Rules `DIR-SOURCE-001`; physical source-first placement is **HOLD**); added `data/raw/README.md` to `related` and §17. | PATCH — wording alignment; no outcome, gate, or invariant changed | The prohibition on public clients reading RAW is unchanged and now covers both the legacy lane and the future source-first home. Documentation only. |
 
 > **Backward compatibility.** §§1–17 anchors are unchanged from v0.2. The `source_role` values changed case (Title-Case → lowercase); any code keyed to the Title-Case strings MUST migrate to the canonical lowercase enum, and the migration is logged in `docs/registers/DRIFT_REGISTER.md`. No section was renumbered in this PATCH.
 
@@ -580,6 +583,7 @@ Repository paths below are confirmed unless explicitly qualified; maturity and a
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — membrane in human terms.
 - [`docs/doctrine/truth-posture.md`](../../doctrine/truth-posture.md) — cite-or-abstain.
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — `RAW → PUBLISHED`.
+- [`data/raw/README.md`](../../../data/raw/README.md) — source-first RAW contract (`DIR-SOURCE-001`; physical placement HOLD); `data/raw/archaeology/` is a compatibility/reference lane, not a capture home.
 - [`./README.md`](./README.md) — Archaeology domain landing and lane pattern.
 - [`./ARCHITECTURE.md`](./ARCHITECTURE.md) — Archaeology domain architecture (sibling; path namespace authority).
 - [`./CANONICAL_PATHS.md`](./CANONICAL_PATHS.md) — Archaeology canonical paths (sibling).
@@ -596,6 +600,6 @@ Repository paths below are confirmed unless explicitly qualified; maturity and a
 ---
 
 > [!NOTE]
-> **Last updated:** 2026-08-28 · **Edition:** v0.3.1 draft · **`CONTRACT_VERSION = "3.0.0"`** · **Authority:** explanation only — canonical homes named above govern. **Repository evidence:** mixed maturity; handlers and runtime binding unverified. **Conformance:** RFC 2119 / RFC 8174.
+> **Last updated:** 2026-10-11 · **Edition:** v0.3.2 draft · **`CONTRACT_VERSION = "3.0.0"`** · **Authority:** explanation only — canonical homes named above govern. **Repository evidence:** mixed maturity; handlers and runtime binding unverified. **Conformance:** RFC 2119 / RFC 8174.
 
 [↑ Back to top](#contents)

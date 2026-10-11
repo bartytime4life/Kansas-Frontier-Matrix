@@ -2,16 +2,17 @@
 doc_id: kfm://doc/docs/domains/archaeology/missing_or_planned_files
 title: Archaeology — Missing or Planned Files
 type: standard
-version: v1.2
+version: v1.2.1
 status: draft
 owners: TODO/REVIEW — Archaeology domain stewards · Docs steward · Directory Rules reviewers
 created: 2026-05-15
-updated: 2026-05-29
+updated: 2026-10-11
 policy_label: public
 contract_version: "3.0.0"
 related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
+  - data/raw/README.md
   - docs/doctrine/lifecycle-law.md
   - docs/doctrine/trust-membrane.md
   - docs/doctrine/authority-ladder.md
@@ -28,6 +29,7 @@ notes:
   - v1.2 corrects the Directory Rules edition reference from v1.2 to the live v1.3 (renderer-decision refresh) and reconciles the §23.2 generalization-floor claim with the operating contract (county/region) versus the lane-local H3-r7 proposal.
   - v1.2 is a MINOR bump per contract §37 (clarifications, reconciliations, gap closures; no breaking anchor changes — §§1–13 anchors preserved from v1.1).
   - This is a planning ledger, not a publication artifact. Promotion of any row from PLANNED to PRESENT requires mounted-repo evidence.
+  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001; physical source-first placement is HOLD and data/raw/archaeology/ is a compatibility/reference lane; documentation only."
 owning_root: docs/
 responsibility: "Documentation for Archaeology — Missing or Planned Files; not evidence, policy, release, or publication authority."
 truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
@@ -51,7 +53,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
   <img alt="Mounted repo" src="https://img.shields.io/badge/repo-NOT_MOUNTED-lightgrey">
 </p>
 
-**Status:** `draft` · **Owners:** _TODO/REVIEW_ — Archaeology domain stewards · Docs steward · Directory Rules reviewers _(placeholder pending CODEOWNERS)_ · **Last updated:** 2026-05-29 · **Operating contract:** `ai-build-operating-contract.md` v3.0.0 · **Directory Rules:** v1.3
+**Status:** `draft` · **Owners:** _TODO/REVIEW_ — Archaeology domain stewards · Docs steward · Directory Rules reviewers _(placeholder pending CODEOWNERS)_ · **Last updated:** 2026-10-11 · **Operating contract:** `ai-build-operating-contract.md` v3.0.0 · **Directory Rules:** v1.3
 
 > [!IMPORTANT]
 > The Kansas Frontier Matrix repository is **not mounted in this session**. Every path and file in this ledger is **PROPOSED** under Directory Rules §12 and **NEEDS VERIFICATION** against the live repo before any row may be promoted to `🟢 PRESENT`. Do not treat this document as proof that any file exists.
@@ -151,6 +153,7 @@ Per `ai-build-operating-contract.md` §8 and `directory-rules.md` §2.2:
 | 🔴 MISSING | Doctrine implies the file should exist but no expected path has been settled here. |
 | ⚪ DEFERRED | Explicitly out of scope for the current phase; recorded for traceability. |
 | ❓ UNKNOWN | Status not verifiable without mounted-repo evidence. **Default in this session.** |
+| ⏸ HOLD | Expected path superseded or blocked by an accepted rule; replacement placement undecided. Row retained for traceability. |
 
 > [!NOTE]
 > Because the repo is not mounted, every row's **Present?** column reads `❓ UNKNOWN`. The **Plan status** column expresses doctrine-derived intent and is the actionable signal for now.
@@ -181,7 +184,7 @@ fixtures/domains/archaeology/                  # OR tests/fixtures/domains/archa
 packages/domains/archaeology/
 pipelines/domains/archaeology/
 pipeline_specs/archaeology/
-data/raw/archaeology/
+data/raw/archaeology/README.md                 # compatibility/reference lane; no payloads (source-first RAW placement HOLD)
 data/work/archaeology/
 data/quarantine/archaeology/
 data/processed/archaeology/
@@ -221,7 +224,7 @@ flowchart LR
     PS1["pipeline_specs/archaeology/"]
   end
   subgraph DATA["data/ lifecycle"]
-    DRA["data/raw/archaeology/"]
+    DRA["RAW (source-first capture,<br/>placement HOLD)"]
     DWO["data/work/archaeology/"]
     DQU["data/quarantine/archaeology/"]
     DPR["data/processed/archaeology/"]
@@ -445,7 +448,7 @@ Executable pipeline logic — *how* archaeology data is admitted, normalized, va
 | Proposed path | Purpose | Plan status | Present? | Truth label |
 |---|---|---|---|---|
 | `pipelines/domains/archaeology/README.md` | Pipeline inventory, stages, dependencies. | 🟡 PLANNED | ❓ | PROPOSED |
-| `pipelines/domains/archaeology/ingest/` | Connector-emitted raw admission into `data/raw/archaeology/`. | 🟡 PLANNED | ❓ | PROPOSED |
+| `pipelines/domains/archaeology/ingest/` | Connector-emitted raw admission into the accepted source-first RAW home (exact path HOLD); never payloads into the `data/raw/archaeology/` compatibility lane. | 🟡 PLANNED | ❓ | PROPOSED |
 | `pipelines/domains/archaeology/normalize/` | Schema, geometry, time, identity, evidence, rights, and policy normalization with quarantine on failure. | 🟡 PLANNED | ❓ | PROPOSED |
 | `pipelines/domains/archaeology/validate/` | Validation pass → `ValidationReport`; closure checks before promotion. | 🟡 PLANNED | ❓ | PROPOSED |
 | `pipelines/domains/archaeology/catalog/` | Catalog / proof closure; `EvidenceBundle` and graph / triplet projection emission. | 🟡 PLANNED | ❓ | PROPOSED |
@@ -473,8 +476,8 @@ Lifecycle data for archaeology. **Public clients and normal UI surfaces MUST rea
 
 | Proposed path | Purpose | Plan status | Present? | Truth label |
 |---|---|---|---|---|
-| `data/raw/archaeology/README.md` | Raw admission rules; immutable payload + `SourceDescriptor` contract. | 🟡 PLANNED | ❓ | PROPOSED |
-| `data/raw/archaeology/<source_id>/<run_id>/` | Per-source, per-run raw payload tree. | 🟡 PLANNED | ❓ | PROPOSED |
+| `data/raw/archaeology/README.md` | Compatibility/reference lane README (v0.2.0, 2026-10-11): not a physical capture home; Archaeology deny-by-default, exact-location, cultural-review, sovereignty, and consent controls bind any source-first capture that supports Archaeology. | 🟢 PRESENT | 🟢 | CONFIRMED (file exists on branch) |
+| `data/raw/archaeology/<source_id>/<run_id>/` | Per-source, per-run raw payload tree. | ⏸ HOLD — superseded by DIR-SOURCE-001; physical source-first placement undecided | ❓ | HOLD |
 | `data/work/archaeology/README.md` | In-flight normalization workspace. | 🟡 PLANNED | ❓ | PROPOSED |
 | `data/quarantine/archaeology/README.md` | Quarantine bucket; reason files, hold-until conditions. | 🟡 PLANNED | ❓ | PROPOSED |
 | `data/processed/archaeology/README.md` | Validated normalized objects with `EvidenceRef`, `ValidationReport`, digest closure. | 🟡 PLANNED | ❓ | PROPOSED |
@@ -647,6 +650,13 @@ These items remain `NEEDS VERIFICATION` before promoting individual rows from PL
 
 ## 9. Changelog
 
+### v1.2 → v1.2.1
+
+| Change | Type (per contract §37) | Reason |
+|---|---|---|
+| **2026-10-11:** §4.10 `data/raw/archaeology/README.md` row updated to `🟢 PRESENT` (compatibility/reference lane, v0.2.0); the per-run payload-tree row set to `⏸ HOLD — superseded by DIR-SOURCE-001; physical source-first placement undecided` (row retained); §4.8 ingest row, §3 tree, and §3 diagram now point at source-first RAW (placement HOLD); added the `⏸ HOLD` legend entry | reconciliation (PATCH) | Accepted Directory Rules `DIR-SOURCE-001` makes capture identity source-first; no physical placement is accepted. No row deleted; every sensitivity, sovereignty, and cultural-review rule unchanged. Documentation only. |
+| Added `data/raw/README.md` to `related` and §12 | gap closure (PATCH) | Points readers at the source-first RAW contract. |
+
 ### v1.1 → v1.2
 
 | Change | Type (per contract §37) | Reason |
@@ -736,7 +746,8 @@ update protocol
 > Links are **PROPOSED** — verify each target exists at the path shown before promoting this doc.
 
 - [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract v3.0 (`CONTRACT_VERSION = "3.0.0"`)
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules **v1.3** §§4, 6, 7.4, 9, 11, 12, 15, 16, 18.e
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Directory Rules **v1.3** §§4, 6, 7.4, 9, 11, 12 (incl. §12.3 `DIR-SOURCE-001`–`004`), 15, 16, 18.e
+- [`data/raw/README.md`](../../../data/raw/README.md) — source-first RAW contract; physical placement HOLD; `data/raw/archaeology/` is a compatibility/reference lane
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Public-path discipline; governed API as sole route to canonical truth
 - [`docs/doctrine/authority-ladder.md`](../../doctrine/authority-ladder.md) — Truth labels and authority precedence
@@ -893,6 +904,6 @@ Per Atlas §15.D, every archaeology source family carries the same four candidat
 
 **Related:** [Directory Rules v1.3](../../doctrine/directory-rules.md) · [Operating contract v3.0](../../doctrine/ai-build-operating-contract.md) · [Verification Backlog](../../registers/VERIFICATION_BACKLOG.md) · [Drift Register](../../registers/DRIFT_REGISTER.md) · [Archaeology README](./README.md) _(PLANNED)_ · [MAP_UI_CONTRACTS.md](./MAP_UI_CONTRACTS.md)
 
-**Last updated:** 2026-05-29 · **Status:** `draft` · **Version:** v1.2 · **CONTRACT_VERSION:** 3.0.0 · **Directory Rules:** v1.3 · **Next review:** when repo is mounted, or within 6 months — whichever comes first.
+**Last updated:** 2026-10-11 · **Status:** `draft` · **Version:** v1.2.1 · **CONTRACT_VERSION:** 3.0.0 · **Directory Rules:** v1.3 · **Next review:** when repo is mounted, or within 6 months — whichever comes first.
 
 [⬆ Back to top](#-archaeology--missing-or-planned-files)
