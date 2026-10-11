@@ -2,8 +2,8 @@
 doc_id: kfm://doc/domains/soil/changelog
 title: Soil - Documentation Changelog
 type: domain-changelog
-version: v1.1.2
-prior_version: v1.1.1
+version: v1.1.3
+prior_version: v1.1.2
 status: active; append-only-summary
 owners:
   - OWNER_TBD - Soil domain steward
@@ -31,6 +31,7 @@ families.
 
 | Date | Version | Change | Evidence and limits |
 |---|---|---|---|
+| 2026-10-11 | `v1.1.3` | Reconciled Soil documentation drift recorded as `DLC-03`: `CANONICAL_PATHS.md` (v1.2) now places catalog projections subtype-first under `data/catalog/domains/soil/` and rollback under `release/rollback_cards/` plus `data/receipts/rollback/` (`DIR-RELEASE-003`), with `data/catalog/domain/soil/` a migration candidate and `data/rollback/soil/` deprecated (`DIR-RELEASE-004`), both disposition HOLD and tracked as `OPEN-SOIL-10`; the `data/work/soil/` (v0.1.1), `data/processed/soil/` (v0.1.1) and `data/registry/sources/soil/` (v0.2.1) READMEs draw RAW as a source-first capture with placement HOLD; `SOURCE_REGISTRY.md` (v1.2.0) records the admitted `noaa-uscrn.yaml` while the other eight records stay `PROPOSED` placeholders; `data/proofs/soil/README.md` (v0.2.1) matches the current `domain-soil.yml` jobs; `DATA_LIFECYCLE.md` (v2.0.1) marks `DLC-03` resolved | Directory Rules §12.3, `DIR-RELEASE-003`/`004`, `DIR-SOURCE-001`; `noaa-uscrn.yaml` and ADR-0046 read at `main@b2f62f6f`; documentation only; no file moved or deleted; no source, payload, writer, workflow, or release state changed; admission is not release activation or publication |
 | 2026-10-11 | `v1.1.2` | Rewrote `DATA_LIFECYCLE.md` (v2.0.0): the placeholder body, a verbatim copy of `CONTINUITY_INVENTORY.md`, is replaced with Soil lifecycle doctrine — phase contracts and gates, trust objects and their homes, support-type and knowledge-character rules, receipt-bearing Soil transforms (component and depth weighting, resampling, station QC, yearly diff), the bounded USCRN daily pilot, freshness and supersession, correction and rollback, rights posture, anti-patterns and verification status; placeholder note removed | Grounded in Lifecycle Law, Directory Rules §§11–12, ADR-0046 and inspected pilot, validator, contract and data-lane files; documentation only; no source, payload, lifecycle, policy, release or publication state changed; RAW placement remains HOLD; `CONTINUITY_INVENTORY.md` remains the authoritative inventory and the two files now carry distinct `doc_id`s and content |
 | 2026-10-11 | `v1.1.1` | Aligned RAW placement wording in `ARCHITECTURE.md`, `CANONICAL_PATHS.md`, `CONTINUITY_INVENTORY.md`, `DATA_LIFECYCLE.md`, and `docs/runbooks/soil/SOURCE_REFRESH_RUNBOOK.md` to accepted `DIR-SOURCE-001`: RAW capture is source-first under one registered `source_id`; physical source-first placement is HOLD; `data/raw/soil/` is a compatibility/reference lane, not a payload destination; connector, lifecycle-skip, and public-read prohibitions kept and generalized; runbook RAW targets replaced with a HOLD placeholder | Accepted Directory Rules §12.3; no placement decision accepted as of `main@9e8bf3e6`; documentation only; no payload, path, writer, connector, or release state changed; pre-existing duplicate `doc_id` between `CONTINUITY_INVENTORY.md` and `DATA_LIFECYCLE.md` not resolved |
 | 2026-10-08 | `v1.1` | Replaced thin source, glossary, cross-lane, completion, expansion, placement, map/UI, preservation and release guides; expanded catalog-closure guidance and reconciled README navigation | Inspected source at `ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe`; retained historical snapshots and separated fixture declarations, Site context, admission, evidence resolution and release; no runtime or governance transition |

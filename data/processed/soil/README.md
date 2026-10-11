@@ -1,13 +1,13 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/data-processed-soil-readme
 title: data/processed/soil/README.md — Soil Processed Data README
-version: v0.1
+version: v0.1.1
 type: readme; data-lifecycle-domain-lane; processed-stage-guide; soil-domain-root; soil-survey-observation-interpretation-lane-index
 status: draft; PROPOSED; data-root; processed-stage; soil; ssurgo; sda; gssurgo; gnatsgo; soil-moisture; pedon; horizon; component; suitability; erosion; support-type-aware; source-role-aware; sensitivity-aware; release-gated; evidence-first
 authors: ChatGPT-5.5 Thinking; reviewed_by: OWNER_TBD
 owners: OWNER_TBD — Soil steward · Soil survey steward · Soil moisture steward · Interpretation steward · Sensitivity reviewer · Rights steward · Data steward · Pipeline steward · Evidence steward · Policy steward · Release steward · Docs steward
 created: NEEDS VERIFICATION — greenfield stub existed before v0.1 expansion
-updated: 2026-06-25
+updated: 2026-10-11
 policy_label: public-doc; data; processed; soil; lifecycle; governed; support-type-aware; source-role-aware; release-gated
 tags: [kfm, data, processed, soil, SoilMapUnit, SoilComponent, Horizon, SoilProperty, HydrologicSoilGroup, SoilMoistureObservation, Pedon, SoilProfileView, ErosionRisk, SuitabilityRating, ComponentHorizonJoin, SoilTimeCaveat, SSURGO, SDA, gSSURGO, gNATSGO, Mesonet, SCAN, USCRN, SMAP, SoilGrids, source-role, support-type, EvidenceBundle, SourceDescriptor, ValidationReport, PolicyDecision, ReviewRecord, RedactionReceipt, AggregationReceipt, ReleaseManifest, RollbackCard, RAW, WORK, QUARANTINE, PROCESSED, CATALOG, TRIPLET, PUBLISHED]
 related:
@@ -56,6 +56,7 @@ notes:
   - "Soil products are usually public-safe at appropriate scale, but field-/owner-specific, unpublished, proprietary, or operational sensor data require rights and sensitivity review before release."
   - "This README is a parent lane guide and index. Child lane READMEs define local boundaries; contracts define semantic object meaning; schemas define machine shape; policy decides admissibility; release records decide publication."
   - "Rollback target for this expansion is previous greenfield stub blob SHA `fdd457e66826407f4dc54422be6f019bb3e2e695`."
+  - "2026-10-11 (v0.1.1): RAW node and repo-fit row aligned to accepted DIR-SOURCE-001 (source-first capture; physical placement HOLD; data/raw/soil/ is a compatibility/reference lane); catalog destination aligned to subtype-first data/catalog/ (Directory Rules §12.3; data/catalog/domain/soil/ is a migration candidate); documentation only."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -110,11 +111,11 @@ RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED
 
 ```mermaid
 flowchart LR
-  RAW[data/raw/soil] --> WORK[data/work/soil]
+  RAW["RAW: source-first capture (placement HOLD)"] --> WORK[data/work/soil]
   WORK --> QUAR[data/quarantine/soil]
   WORK --> PROC[data/processed/soil]
   QUAR --> PROC
-  PROC --> CAT[data/catalog/domain/soil]
+  PROC --> CAT["data/catalog/ (subtype-first projections)"]
   PROC --> TRIP[data/triplets/.../soil]
   PROC -. supports .-> PROOF[data/proofs]
   PROC -. emits / references .-> RECEIPT[data/receipts]
@@ -129,11 +130,11 @@ flowchart LR
 
 | Responsibility | Correct home | Rule |
 |---|---|---|
-| Raw SSURGO/SDA/gSSURGO/gNATSGO/source files, sensor feeds, satellite downloads, source logs, source identifiers, source-native geometries, original tables, or unprocessed partner materials | `data/raw/soil/` | Not this lane. |
+| Raw SSURGO/SDA/gSSURGO/gNATSGO/source files, sensor feeds, satellite downloads, source logs, source identifiers, source-native geometries, original tables, or unprocessed partner materials | The accepted source-first RAW home (physical placement HOLD; `data/raw/soil/` is a compatibility/reference lane) | Not this lane. |
 | In-process joins, MUKEY/COKEY/CHKEY reconciliation, geometry repair, raster/vector derivation, observation QA, support-type assignment, interpretation experiments, notebooks, or scratch products | `data/work/soil/` | Not this lane. |
 | Unresolved rights, unresolved source role, missing support type, failed joins, malformed geometry, unresolved time caveat, field-/owner-specific exposure risk, proprietary source risk, or not-yet-reviewed material | `data/quarantine/soil/` | Not this lane until review/admission allows. |
 | Normalized Soil processed artifacts | `data/processed/soil/` | This parent lane and verified child lanes. |
-| Soil catalog records | `data/catalog/domain/soil/` | Downstream catalog stage. |
+| Soil catalog records | Subtype-first `data/catalog/` lanes (`data/catalog/domains/soil/`, `data/catalog/{stac,dcat,prov}/` per Directory Rules §12.3; the tracked `data/catalog/domain/soil/` lane is a migration candidate, disposition HOLD) | Downstream catalog stage. |
 | Triplet/graph records | `data/triplets/.../soil/` | Downstream graph stage; must preserve support type, evidence, restrictions, and ownership boundaries. |
 | Published public-safe products | `data/published/.../soil/` or `data/published/layers/soil/` | Downstream only after release. |
 | EvidenceBundle/proof records | `data/proofs/` | Separate proof family. |

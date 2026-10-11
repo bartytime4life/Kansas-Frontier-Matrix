@@ -2,8 +2,8 @@
 doc_id: kfm://doc/soil-data-lifecycle
 title: Soil Domain — Data Lifecycle
 type: standard
-version: v2.0.0
-prior_version: v1.0.2
+version: v2.0.1
+prior_version: v2.0.0
 status: draft
 owners: <TODO: soil domain steward; data-lifecycle steward>
 created: 2026-05-19
@@ -43,6 +43,7 @@ notes:
   - "Repository facts were read from the working tree on 2026-10-11 (main lineage through c64ee431); every path below was checked for presence, and implementation claims cite the inspected file."
   - "This document applies docs/doctrine/lifecycle-law.md and Directory Rules sections 11 and 12 to Soil; it does not amend them, select a RAW placement, admit a source, or authorize release."
   - "Data stores written by the USCRN pilot live in an operator-private store outside the Git checkout; paths shown for that slice are relative to that external root."
+  - "v2.0.1 (2026-10-11): DLC-03 resolved after the Soil drift reconciliation (CANONICAL_PATHS.md v1.2, SOURCE_REGISTRY.md v1.2.0, and the work, processed, source-registry and proofs READMEs); legacy catalog links labelled as a migration-candidate lane; documentation only."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -222,7 +223,7 @@ Object names follow Lifecycle Law §9. Where the repository uses a different emi
 | `TransformReceipt` / `AggregationReceipt` / `RedactionReceipt` | WORK | `data/receipts/` | **PROPOSED** for Soil; required by the yearly-diff profile whenever normalization changes geometry or attributes |
 | `ValidationReport` | WORK → PROCESSED | `data/receipts/` / `data/proofs/` | **CONFIRMED in pilot code:** `kfm.uscrn-daily-validation/v1` under the external store's `data/receipts/validation/soil/` |
 | `EvidenceRef` / `EvidenceBundle` | PROCESSED → CATALOG | `data/proofs/` | **CONFIRMED in pilot code:** one evidence bundle per station and depth (`kfm.soil-evidence-candidate/v1`). No Soil `EvidenceBundle` exists in the repository (`SOIL-VB-009`) |
-| Catalog record | CATALOG | `data/catalog/` | **CONFIRMED in pilot code:** `kfm.soil-catalog-candidate/v1`, `authoritative: false`, `release_state: UNRELEASED`. [`data/catalog/domain/soil/`](../../../data/catalog/domain/soil/README.md) is README-only |
+| Catalog record | CATALOG | `data/catalog/` | **CONFIRMED in pilot code:** `kfm.soil-catalog-candidate/v1`, `authoritative: false`, `release_state: UNRELEASED`. [`data/catalog/domain/soil/`](../../../data/catalog/domain/soil/README.md) is README-only and a migration candidate against `data/catalog/domains/` (Directory Rules §12.3; disposition HOLD, `OPEN-SOIL-10`) |
 | `ReleaseManifest` / release snapshot | Release gate | `release/manifests/`, `release/candidates/soil/` | **CONFIRMED in pilot code:** immutable `kfm.soil-snapshot/v1` written to the external store's `release/candidates/soil/`. Soil `release_manifest.schema.json` is a greenfield stub |
 | Release decision | Release gate | `release/` decision plane | **CONFIRMED in pilot code:** `kfm.soil-release-decision/v1` written to the external store's `release/decisions/soil/` only if the serving gate answers `ELIGIBLE` (ADR-0046) |
 | `CorrectionNotice` | Post-PUBLISHED | `release/correction_notices/` | **PROPOSED**; decision carries `correction_state: ACTIVE` and `correction_ref: null` |
@@ -327,7 +328,7 @@ Sensitive joins fail closed regardless of source openness: soil × private parce
 
 ## 11. Catalog and triplet closure; governed delivery
 
-- **Closure set (CONFIRMED doctrine):** processed artifact + digest → domain catalog record → STAC / DCAT / PROV where applicable → triplet where applicable → `SourceDescriptor` + `EvidenceBundle` + validation + policy + review → `PromotionDecision` / `ReleaseManifest` → released carrier → correction and rollback target ([`data/catalog/domain/soil/`](../../../data/catalog/domain/soil/README.md#projection-and-release-closure)).
+- **Closure set (CONFIRMED doctrine):** processed artifact + digest → domain catalog record → STAC / DCAT / PROV where applicable → triplet where applicable → `SourceDescriptor` + `EvidenceBundle` + validation + policy + review → `PromotionDecision` / `ReleaseManifest` → released carrier → correction and rollback target (closure section of the [`data/catalog/domain/soil/`](../../../data/catalog/domain/soil/README.md#projection-and-release-closure) README, a migration-candidate lane).
 - **CONFIRMED fixture check:** the [catalog-closure assessment](CATALOG_CLOSURE.md) validates eleven declared dimensions (`READY_FOR_REVIEW`, `HOLD`, `ERROR`) but does not dereference references.
 - **Placement notes:** `data/catalog/domain/` is a migration candidate against the canonical `data/catalog/domains/` (Directory Rules §12.3); Soil triplet shape is open (`OPEN-SOIL-02`) and `data/triplets/soil/` holds only `.gitkeep`.
 - **Delivery (CONFIRMED doctrine):** public clients consume Soil only through governed API surfaces (S1–S5 in [API contracts](API_CONTRACTS.md#4-api-surface-table)); all Soil routes are **UNKNOWN**. The Site's NASA GIBS imagery and USDA subsurface query are visual context, not a governed Soil release ([Map/UI contracts](MAP_UI_CONTRACTS.md)).
@@ -399,7 +400,7 @@ A pass is QA evidence for the declared profile, not admission, evidence closure,
 | `OQ-LL-04` | Canonical receipt names (`IntakeReceipt` vs `IngestReceipt` vs emitted run-receipt profiles) | NEEDS VERIFICATION |
 | DLC-01 | How a USCRN release decision becomes a served, activated carrier, and where the soil serving projection lives (water and weather have projection modules; Soil reuses `water_projection.replay_evidence`) | NEEDS VERIFICATION |
 | DLC-02 | Whether the pilot's capture-in-QUARANTINE pattern is the accepted interim for source-first RAW | NEEDS VERIFICATION |
-| DLC-03 | Drift: `CANONICAL_PATHS.md` still lists `data/rollback/soil/` and `data/catalog/domain/soil/`; the work, processed and source-registry READMEs still draw `data/raw/soil` as a RAW node; `SOURCE_REGISTRY.md` predates the USCRN admission | NEEDS VERIFICATION (documentation follow-up) |
+| DLC-03 | Drift: `CANONICAL_PATHS.md` listed `data/rollback/soil/` and `data/catalog/domain/soil/`; the work, processed and source-registry READMEs drew `data/raw/soil` as a RAW node; `SOURCE_REGISTRY.md` predated the USCRN admission; the proofs README described older workflow jobs | **RESOLVED (2026-10-11).** `CANONICAL_PATHS.md` v1.2 uses subtype-first `data/catalog/domains/soil/` and `release/rollback_cards/` + `data/receipts/rollback/`, labels both legacy lanes migration candidate / deprecated with disposition HOLD, and tracks them as `OPEN-SOIL-10`; the work (v0.1.1), processed (v0.1.1) and source-registry (v0.2.1) READMEs draw RAW as a source-first capture with placement HOLD; `SOURCE_REGISTRY.md` v1.2.0 records the admitted `noaa-uscrn.yaml`; the proofs README (v0.2.1) matches the current `domain-soil.yml`. No file was moved |
 | `OPEN-SOIL-04` | Canonical resolution for derived Soil products | OPEN |
 
 [Back to top](#top)
@@ -412,7 +413,7 @@ A pass is QA evidence for the declared profile, not admission, evidence closure,
 - [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) · [ADR-0046](../../adr/ADR-0046-owner-self-release-for-admitted-public-soil-data.md)
 - Soil: [README](README.md) · [Canonical paths](CANONICAL_PATHS.md) · [Continuity inventory](CONTINUITY_INVENTORY.md) · [Architecture](ARCHITECTURE.md) · [Identity model](IDENTITY_MODEL.md) · [Sources](SOURCES.md) · [Source registry](SOURCE_REGISTRY.md) · [Catalog closure](CATALOG_CLOSURE.md) · [Cross lanes](CROSS_LANES.md) · [Preservation matrix](PRESERVATION_MATRIX.md) · [Definition of done](DEFINITION_OF_DONE.md)
 - Runbooks: [Source refresh](../../runbooks/soil/SOURCE_REFRESH_RUNBOOK.md) · [Promotion](../../runbooks/soil/PROMOTION_RUNBOOK.md) · [Rollback](../../runbooks/soil/ROLLBACK_RUNBOOK.md) · [No-network tests](../../runbooks/soil/NO_NETWORK_TEST_RUNBOOK.md)
-- Data lanes: [RAW root](../../../data/raw/README.md) · [Soil RAW reference lane](../../../data/raw/soil/README.md) · [WORK](../../../data/work/soil/README.md) · [QUARANTINE](../../../data/quarantine/soil/README.md) · [PROCESSED](../../../data/processed/soil/README.md) · [Catalog](../../../data/catalog/domain/soil/README.md) · [Receipts](../../../data/receipts/soil/README.md) · [Proofs](../../../data/proofs/soil/README.md) · [Published](../../../data/published/soil/README.md) · [Source registry](../../../data/registry/sources/soil/README.md) · [Release candidates](../../../release/candidates/soil/README.md)
+- Data lanes: [RAW root](../../../data/raw/README.md) · [Soil RAW reference lane](../../../data/raw/soil/README.md) · [WORK](../../../data/work/soil/README.md) · [QUARANTINE](../../../data/quarantine/soil/README.md) · [PROCESSED](../../../data/processed/soil/README.md) · [Catalog (migration-candidate lane)](../../../data/catalog/domain/soil/README.md) · [Receipts](../../../data/receipts/soil/README.md) · [Proofs](../../../data/proofs/soil/README.md) · [Published](../../../data/published/soil/README.md) · [Source registry](../../../data/registry/sources/soil/README.md) · [Release candidates](../../../release/candidates/soil/README.md)
 
 [Back to top](#top)
 
@@ -422,6 +423,7 @@ A pass is QA evidence for the declared profile, not admission, evidence closure,
 
 | Version | Date | Change |
 |---|---|---|
+| v2.0.1 | 2026-10-11 | Marked `DLC-03` resolved after the Soil drift reconciliation; labelled the legacy `data/catalog/domain/soil/` links as a migration-candidate lane. Documentation only. |
 | v2.0.0 | 2026-10-11 | Replaced the placeholder body (a verbatim copy of `CONTINUITY_INVENTORY.md`) with Soil lifecycle doctrine: phase contracts, trust objects, support types, receipt-bearing transforms, the USCRN daily pilot, freshness, correction/rollback, rights posture, anti-patterns and verification status. Removed the placeholder note. |
 | v1.0.2 | 2026-10-11 | Title and responsibility marked the file as a placeholder holding a copy of the inventory. |
 | earlier | 2026-05-19 to 2026-10-11 | Placeholder lineage; see [CHANGELOG.md](CHANGELOG.md) and Git history. |
