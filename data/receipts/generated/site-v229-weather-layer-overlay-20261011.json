@@ -4965,9 +4965,10 @@
     "python_release_tests": "141 passed (release, governed API, water/weather release, serving, hosted, site mirror)",
     "python_weather_parity": "tools/fixtures/weather_site_fixtures.py PASS on Python 3.11 and 3.13 (stored-block gzip makes fixture digests interpreter-independent)",
     "repository_topology": "PASS",
-    "site_full_suite": "npm test: build PASS; 1041 tests, 1039 passed, 2 skipped (installer refuses root), 0 failed",
+    "site_full_suite": "npm test: build PASS; 1043 tests, 1041 passed, 2 skipped (installer refuses root), 0 failed",
     "site_inner_provenance": "Site parser recomputes candidate_id and the validation receipt digest from the canonical artifact text, matching release/core.py",
-    "site_lint_changed_files": "PASS",
+    "site_lint": "npm run lint PASS (0 errors; no warnings in changed files)",
+    "site_local_smoke": "apps/site/smoke-local.sh PASS: 76 checks across 59 routes, including the weather read and admin routes",
     "site_station_local_freshness": "Site projection compares each station's latest day with its local standard time day, matching weather_projection.py (parity test on the offsets)",
     "site_typecheck": "PASS"
   }
