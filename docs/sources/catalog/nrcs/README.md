@@ -157,7 +157,7 @@ The table below enumerates the NRCS-issued data products KFM intends to treat as
 | Web Soil Survey — interactive download portal for SSURGO | `nrcs.wss` | Soil | `observed` (manual download path; same underlying authority as SSURGO) | UNKNOWN |
 | NASIS-derived component / horizon / pedon tables | `nrcs.nasis` | Soil | `observed` for survey observations; `modeled` where interpretations are layered | UNKNOWN |
 | SCAN — Soil Climate Analysis Network (automated stations, hourly) | `nrcs.scan` | Soil (joins to Atmosphere/Air, Agriculture) | `observed` (station readings); watcher emits **candidate** signals at Pre-RAW | UNKNOWN |
-| Conservation practice records (NRCS field implementation records) | `nrcs.conservation` | Agriculture (links to Soil) | `administrative` (compilation of agency-implemented practice records) | UNKNOWN |
+| Conservation practice records (NRCS field implementation records) — [product page](conservation-practice-records.md) | `nrcs.conservation` | Agriculture (links to Soil) | `administrative` (compilation of agency-implemented practice records) | UNKNOWN |
 | Soil suitability and erosion-risk ratings derived from SSURGO/SDA | `nrcs.suitability` | Soil (consumer: Agriculture) | `modeled` (interpretation layered on observations; requires `role_model_run_ref`) | UNKNOWN |
 
 > [!CAUTION]

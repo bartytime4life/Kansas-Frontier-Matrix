@@ -1,486 +1,375 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/sources-catalog-nrcs-conservation-practice-records
-title: NRCS — Conservation Practice Records (placeholder holding a copy of the NRCS family entry)
-type: standard
-version: v0.2.1
+title: NRCS — Conservation Practice Records
+type: product-page
+version: v0.3.0
+prior_version: v0.2.1
 status: draft
 owners: TODO — Source registry steward + Soil domain steward + Agriculture domain steward
 created: 2026-10-09
 updated: 2026-10-11
 policy_label: public
 owning_root: docs/
-responsibility: Placeholder for the NRCS conservation-practice-records product page; its body is currently a verbatim copy of the NRCS family entry (nrcs/README.md); does not admit, activate, or publish a source.
-truth_posture: cite-or-abstain; source facts NEEDS VERIFICATION; repository paths PROPOSED unless stated
+responsibility: Human-readable product page for NRCS conservation-practice records (administrative practice records) as a candidate KFM source; does not admit, activate, or publish a source.
+truth_posture: cite-or-abstain; repository claims cite the file read; upstream product facts, rights, and Section 1619 applicability NEEDS VERIFICATION; repository paths PROPOSED unless stated; sensitivity fail-closed
 related:
+  - docs/sources/catalog/nrcs/README.md
+  - docs/sources/catalog/nrcs.md
+  - docs/sources/catalog/README.md
+  - docs/sources/catalog/IDENTITY.md
+  - docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md
+  - docs/sources/catalog/OPEN-QUESTIONS.md
   - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
   - docs/doctrine/directory-rules.md
-  - docs/domains/soil/README.md
   - docs/domains/agriculture/README.md
+  - docs/domains/agriculture/SOURCE_REGISTRY.md
+  - docs/domains/agriculture/SENSITIVITY.md
+  - docs/domains/agriculture/OBJECTS.md
+  - docs/domains/agriculture/RELEASE_INDEX.md
+  - docs/domains/agriculture/CROSS_LANE.md
+  - docs/domains/soil/README.md
   - connectors/nrcs/README.md
-  - schemas/contracts/v1/source/source-descriptor.schema.json
-  - data/registry/sources/soil/
-  - data/registry/source_descriptors/
-tags: [kfm, sources, soil, agriculture, nrcs, ssurgo, gssurgo, gnatsgo, scan, source-role]
+  - data/raw/README.md
+  - data/registry/sources/agriculture/nrcs.yaml
+  - data/registry/sources/soil/README.md
+  - schemas/contracts/v1/agriculture/README.md
+  - policy/sensitivity/
+tags: [kfm, sources, catalog, nrcs, agriculture, soil, conservation-practice, administrative, privacy, fail-closed, product-page]
 notes:
-  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001 (source-first capture; physical placement HOLD; data/raw/soil/ is a compatibility/reference lane); required meta-block fields added."
+  - "v0.3.0 (2026-10-11): replaced the placeholder body, which was a verbatim copy of the NRCS family entry (nrcs/README.md), with product-specific content; the placeholder NOTE was removed."
   - "created was TODO; 2026-10-09 is the earliest commit in available history containing this file, not a known authoring date."
-  - Human-readable catalog entry. Does NOT decide source admission.
-  - Admission and activation live in the source registry and policy/, not in docs/.
-  - Aligns to canonical KFM source-role vocabulary (observed | regulatory | modeled | aggregate | administrative | candidate | synthetic).
+  - "RAW placement wording follows accepted DIR-SOURCE-001 (source-first capture; physical placement HOLD; data/raw/agriculture/ and data/raw/soil/ are compatibility/reference lanes, not payload destinations)."
+  - "Section 1619 (7 U.S.C. 8791) is not documented anywhere in the repository; its scope and applicability are NEEDS VERIFICATION and KFM handling is PROPOSED."
+  - "Human-readable catalog page. Does NOT decide source admission; admission and activation live in the source registry and policy/."
 [/KFM_META_BLOCK_V2] -->
 
-> [!NOTE]
-> **Placeholder.** This page holds the NRCS conservation-practice-records product identity, but its body below is currently a verbatim copy of the NRCS family entry, [`README.md`](README.md). Product-specific conservation-practice content is **NEEDS VERIFICATION** / pending.
+# 🌱 NRCS — Conservation Practice Records
 
-# 🌱 NRCS — Source Catalog Entry
-
-> Human-readable catalog page describing the **USDA Natural Resources Conservation Service** as a source family for the Kansas Frontier Matrix. It documents intent, roles, governance posture, and domain links. It is **not** a `SourceDescriptor` record, **not** a `SourceActivationDecision`, and **not** authority for any specific release.
+> Records of NRCS conservation practices associated with agricultural land — an **`administrative`** candidate source for the Agriculture lane (with Soil and Habitat adjacencies) whose public value lies in **aggregate context** and whose producer-, landowner-, and field-level detail is **denied for public exposure by default**.
 
 ![status: draft](https://img.shields.io/badge/status-draft-yellow)
-![doc class: standard](https://img.shields.io/badge/doc--class-standard-blue)
-![authority: documentation](https://img.shields.io/badge/authority-documentation-lightgrey)
+![version: v0.3.0](https://img.shields.io/badge/version-v0.3.0-blue)
+![doc class: product-page](https://img.shields.io/badge/doc--class-product--page-blue)
+![family: nrcs](https://img.shields.io/badge/family-nrcs-2E8B57)
+![source role: administrative](https://img.shields.io/badge/source%20role-administrative-6E5494)
+![primary domain: agriculture](https://img.shields.io/badge/primary%20domain-agriculture-228B22)
+![secondary domain: soil](https://img.shields.io/badge/secondary%20domain-soil-8B4513)
 ![lifecycle stage: pre-activation](https://img.shields.io/badge/lifecycle-pre--activation-orange)
-![policy class: public](https://img.shields.io/badge/policy--class-public-brightgreen)
-![truth label: PROPOSED](https://img.shields.io/badge/truth--label-PROPOSED-yellow)
-![primary domain: soil](https://img.shields.io/badge/primary%20domain-soil-8B4513)
-![secondary domain: agriculture](https://img.shields.io/badge/secondary%20domain-agriculture-228B22)
+![sensitivity: fail-closed](https://img.shields.io/badge/sensitivity-fail--closed-red)
 
 | Field | Value |
 |---|---|
-| **Status** | `draft` (PROPOSED). Not yet reviewed by source registry steward. |
-| **Owners** | _TODO_ — Source registry steward + Soil domain steward + Agriculture domain steward |
-| **Last updated** | _TODO-YYYY-MM-DD_ |
-| **Doc class** | Standard reference doc (per-source-family catalog entry) |
-| **Authority level** | Documentation. Explains intent; does not decide admission, rights, sensitivity, or release. |
-| **Lifecycle phase** | Pre-RAW (catalog only — no NRCS source is admitted by this document) |
+| **Status** | `draft` v0.3.0 — PROPOSED product page; source **not** admitted or activated |
+| **Family** | [`nrcs`](./README.md) |
+| **Short ref** | `nrcs.conservation` (PROPOSED — as listed in the family table, [`README.md` §3](./README.md#3--nrcs-source-families)) |
+| **Proposed `source_role`** | `administrative` (family entry §3–§4); vocabulary conflict recorded in [§3](#3--source-role-and-support-type) |
+| **Primary domain** | Agriculture (`[DOM-AG]`) — owns `ConservationPractice` |
+| **Adjacent domains** | Soil (context; never soil-property truth) · Habitat (framing only) · Hydrology (riparian edge, PROPOSED) |
+| **Owners** | TODO — Source registry steward + Soil domain steward + Agriculture domain steward |
+| **Last updated** | 2026-10-11 |
 
 ---
 
 ### Quick jump
 
 - [§0 — Status & Authority](#0--status--authority)
-- [§1 — Purpose & Scope](#1--purpose--scope)
-- [§2 — Repo Fit & Authority Placement](#2--repo-fit--authority-placement)
-- [§3 — NRCS Source Families](#3--nrcs-source-families)
-- [§4 — Source Roles at Admission](#4--source-roles-at-admission)
-- [§5 — Rights, Sensitivity & Public-Safe Posture](#5--rights-sensitivity--public-safe-posture)
-- [§6 — Cadence & Freshness Expectations](#6--cadence--freshness-expectations)
-- [§7 — Domain Links](#7--domain-links)
-- [§8 — Admission Flow](#8--admission-flow)
-- [§9 — Object Families Touched](#9--object-families-touched)
-- [§10 — Anti-Patterns to Watch For](#10--anti-patterns-to-watch-for)
-- [§11 — Open Verification Items](#11--open-verification-items)
-- [§12 — Related Docs](#12--related-docs)
+- [§1 — Identity](#1--identity)
+- [§2 — What this product is and is not](#2--what-this-product-is-and-is-not)
+- [§3 — Source role and support type](#3--source-role-and-support-type)
+- [§4 — Knowledge-character cautions](#4--knowledge-character-cautions)
+- [§5 — Spatial and temporal granularity](#5--spatial-and-temporal-granularity)
+- [§6 — Access and retrieval posture](#6--access-and-retrieval-posture)
+- [§7 — Rights and sensitivity](#7--rights-and-sensitivity)
+- [§8 — Lifecycle and admission flow](#8--lifecycle-and-admission-flow)
+- [§9 — Cross-lane use and object families](#9--cross-lane-use-and-object-families)
+- [§10 — Connector and registry status](#10--connector-and-registry-status)
+- [§11 — Anti-patterns](#11--anti-patterns)
+- [§12 — Open questions and verification register](#12--open-questions-and-verification-register)
+- [§13 — Related docs](#13--related-docs)
+- [§14 — Changelog](#14--changelog)
 
 ---
 
 ## 0 — Status & Authority
 
-| Field | Value | Label |
+| Aspect | This product page | Authoritative home |
 |---|---|---|
-| **Document type** | Per-source catalog entry under `docs/sources/catalog/` | PROPOSED |
-| **Proposed canonical home** | `docs/sources/catalog/nrcs.md` | PROPOSED — `docs/sources/` appears in proposed sub-areas of the Whole-UI / Governed AI Expansion tree; the `catalog/` subfolder is an additional structuring choice |
-| **Authority of this document** | Explanatory. Refines but cannot contradict doctrine, ADRs, or the source registry | CONFIRMED doctrine |
-| **Authority of any specific path quoted here** | PROPOSED until verified against mounted-repo evidence | PROPOSED |
-| **Owner** | Source registry steward (co-owners: Soil domain steward, Agriculture domain steward) | PROPOSED |
-| **Source registry record(s)** | _TODO_ — anchor `SourceDescriptor` record(s) under `data/registry/sources/soil/` and `data/registry/source_descriptors/`, per Directory Rules §9.1 / §12 | CONFIRMED home pattern / NEEDS VERIFICATION per record |
-| **Connector home** | `connectors/nrcs/` per Directory Rules §7.3 (canonical connector root; connectors do not publish) | PROPOSED for `nrcs/`; CONFIRMED for `connectors/` |
-| **Primary domain** | Soil (`[DOM-SOIL]`) | CONFIRMED doctrine |
-| **Secondary domain** | Agriculture (`[DOM-AG]`); adjacency to Hydrology (`[DOM-HYD]`), Habitat (`[DOM-HAB]`) | CONFIRMED doctrine |
-| **Lifecycle invariant** | Pre-RAW → RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED | CONFIRMED doctrine |
-| **Truth posture** | Cite-or-abstain. `EvidenceBundle` outranks generated language. | CONFIRMED doctrine |
-| **Implementation maturity** | No mounted-repo evidence in this session — paths, schemas, validators, and connector code are unverified | UNKNOWN / NEEDS VERIFICATION |
+| Human explanation of `nrcs.conservation` in KFM | ✅ This file | `docs/` |
+| Source identity, role, rights, cadence, sensitivity record | ❌ | `SourceDescriptor` — only a status-`PROPOSED` placeholder exists at [`data/registry/sources/agriculture/nrcs.yaml`](../../../../data/registry/sources/agriculture/nrcs.yaml) |
+| Admission decision (allow / restrict / deny / hold) | ❌ | `SourceActivationDecision` under `policy/` (none located for this product) |
+| Sensitivity tiers and deny rules | ❌ | [`policy/sensitivity/`](../../../../policy/sensitivity/) and Agriculture [`SENSITIVITY.md`](../../../domains/agriculture/SENSITIVITY.md) |
+| Object meaning / machine shape | ❌ | `contracts/` and `schemas/contracts/v1/...` (`ConservationPractice` schema NEEDS VERIFICATION) |
+| Fetch + admission code | ❌ | [`connectors/nrcs/`](../../../../connectors/nrcs/README.md) — no conservation-practice lane exists |
+| Lifecycle data | ❌ | Source-first capture for `nrcs.conservation` (physical source-first RAW placement **HOLD** under `DIR-SOURCE-001`; `data/raw/agriculture/` and `data/raw/soil/` are compatibility/reference lanes, not payload destinations) |
 
 > [!NOTE]
-> The atlas-confirmed lifecycle now distinguishes a **Pre-RAW** stage (source events and watcher signals emitted before any source material is admitted) from **RAW** (captured source material with a `SourceDescriptor`). Pre-RAW signals from a SCAN or SMAP watcher do not become public truth by virtue of being captured — they enter the lifecycle as candidate producers.
+> This is a **product page**, not a `SourceDescriptor`. The family overview is [`./README.md`](./README.md); the family-wide catalog profile is [`../nrcs.md`](../nrcs.md); identity rules are in [`../IDENTITY.md`](../IDENTITY.md). If anything here conflicts with the registry or `policy/`, those win.
+
+[↥ Back to top](#-nrcs--conservation-practice-records)
 
 ---
 
-## 1 — Purpose & Scope
+## 1 — Identity
 
-NRCS — the **U.S. Department of Agriculture Natural Resources Conservation Service** — is one of the most consequential upstream source families for KFM's Soil and Agriculture lanes. It supplies the canonical U.S. soil survey, a gridded national soil-mapping product, a national soil-climate observation network, and conservation-practice records that downstream KFM lanes (Soil, Agriculture, and adjacent Hydrology / Habitat surfaces) depend on.
-
-This document records:
-
-- **what NRCS products KFM intends to admit**, by name and role,
-- **how those products map to KFM domains and object families**,
-- **what governance constraints apply** (rights, sensitivity, cadence, public-safe posture),
-- **what is doctrine vs. what is unverified** in the current session.
+| Identity element | Value | Label | Basis |
+|---|---|---|---|
+| Product short ref | `nrcs.conservation` | PROPOSED | [`README.md` §3](./README.md#3--nrcs-source-families) |
+| Page slug | `conservation-practice-records` | CONFIRMED (file path) | This file |
+| Collection id | `kfm-nrcs-conservation` | PROPOSED | `kfm-<org>-<product>` pattern, [`../IDENTITY.md`](../IDENTITY.md) |
+| Namespace | `kfm:` | PROPOSED — unresolved | OPEN-DSC-03, [`../IDENTITY.md`](../IDENTITY.md) |
+| Native record key | Unknown (practice id / contract id / plan id?) | NEEDS VERIFICATION | [`../IDENTITY.md`](../IDENTITY.md) lists `nrcs` native ids only for SSURGO keys |
+| Practice code | NRCS practice code where applicable (`practice_code`) | PROPOSED | [`OBJECTS.md` §6.6](../../../domains/agriculture/OBJECTS.md#66-conservationpractice); [`../nrcs.md`](../nrcs.md) descriptor template |
+| Object identity | `source_id` + role + practice period + normalized digest | PROPOSED | [`IDENTITY_MODEL.md`](../../../domains/agriculture/IDENTITY_MODEL.md) |
 
 > [!IMPORTANT]
-> This catalog entry is **documentation**, not admission. It does not allow, deny, restrict, or abstain. A KFM workflow must not treat this page as the source registry. The authoritative records are `SourceDescriptor` instances and the `SourceActivationDecision` for each NRCS product, held under the source registry — not here.
-
-The scope is intentionally narrow: this page describes NRCS as a **source family** for KFM ingest planning. It does not describe NRCS soil science, does not republish NRCS schemas, and does not stand in for upstream NRCS documentation.
-
-[↥ Back to top](#-nrcs--source-catalog-entry)
+> **Records are not standards.** [`../nrcs.md`](../nrcs.md) separately profiles `nrcs:conservation-practice-standards` — public NRCS technical standards — and states that a standard "does not prove implementation on land". This page covers **records of practices associated with land or operations**. A standard citation must never be used to imply that a practice exists on a particular property, and a practice record must never be cited as the standard.
 
 ---
 
-## 2 — Repo Fit & Authority Placement
+## 2 — What this product is and is not
 
-### 2.1 Where this file lives
+### 2.1 What it IS (PROPOSED reading of repo doctrine)
 
-`docs/sources/catalog/nrcs.md` is **PROPOSED**. The placement basis is:
+- An agency **record of program/practice activity** — the family entry calls it a "compilation of agency-implemented practice records" ([`README.md` §3](./README.md#3--nrcs-source-families)); the Agriculture registry calls it a "conservation-practice roster" ([`SOURCE_REGISTRY.md` §6](../../../domains/agriculture/SOURCE_REGISTRY.md)).
+- The intended upstream for the Agriculture-owned object family `ConservationPractice` (cover crop, no-till, contour, riparian buffer, terrace — examples from [`OBJECTS.md` §6.6](../../../domains/agriculture/OBJECTS.md#66-conservationpractice)).
+- A source whose public use is **aggregate context**: "Conservation practices where permitted — `ConservationPractice` aggregate — Operator joins denied" ([`RELEASE_INDEX.md` §13](../../../domains/agriculture/RELEASE_INDEX.md)).
 
-1. `docs/` is the canonical responsibility root for human-readable explanation (Directory Rules §3 / §4 Step 1: *Explains something to humans → `docs/`*).
-2. `docs/sources/` already appears as a proposed sub-area in the Whole-UI + Governed AI Expansion proposed tree (`docs/sources/SOURCE_DESCRIPTOR_STANDARD.md`).
-3. Adding `catalog/` as a per-source-family subfolder keeps individual source pages off the `docs/sources/` root and makes room for cross-cutting standards documents (e.g., the source descriptor standard) alongside them.
+### 2.2 What it IS NOT
 
-> [!NOTE]
-> The `catalog/` subdirectory choice is **PROPOSED**, not doctrine. If the mounted repo or an ADR establishes a different convention (for example, flat `docs/sources/<name>.md`, or per-domain `docs/domains/<domain>/sources/<name>.md`), follow that convention and log the discrepancy in `docs/registers/DRIFT_REGISTER.md` rather than letting two homes evolve in parallel. Compatibility roots are not parallel authority (Directory Rules §8.3).
+- ❌ **Not observed soil properties.** "These are agency records of activity, not direct soil observations. They must never be cited as observed soil events" ([`README.md` §4](./README.md#4--source-roles-at-admission)); "not soil property truth or public compliance finding" ([`data/registry/sources/soil/README.md`](../../../../data/registry/sources/soil/README.md)).
+- ❌ **Not proof of current practice or effectiveness.** The NRCS connector boundary: Agriculture use "does not prove current practice, yield, management effectiveness, compliance, or private-land conditions" ([`connectors/nrcs/README.md`](../../../../connectors/nrcs/README.md)).
+- ❌ **Not an instruction to land managers.** Conservation-practice surfaces "MUST NOT be presented as alerts, regulatory guidance, or instructions to land managers" ([`agriculture/policy/README.md`](../../../domains/agriculture/policy/README.md)).
+- ❌ **Not a compliance, eligibility, payment, or program-participation determination.** [`../nrcs.md`](../nrcs.md) withholds USDA program participation, eligibility, payment, contract, and compliance status.
+- ❌ **Not parcel, ownership, or tenancy truth.**
 
-### 2.2 What this doc IS and IS NOT
-
-| Aspect | This doc | Authoritative home (CONFIRMED responsibility roots) |
-|---|---|---|
-| Human explanation of NRCS in KFM | ✅ This file | `docs/` |
-| Source identity, role, rights, cadence, sensitivity record | ❌ | `SourceDescriptor` under the source registry — `data/registry/sources/<domain>/` + `data/registry/source_descriptors/` (Directory Rules §9.1) |
-| Decision: admit / restrict / quarantine / deny / hold | ❌ | `SourceActivationDecision` (policy + steward review) under `policy/sources/` and `release/` artifacts |
-| Machine shape of object families | ❌ | `schemas/contracts/v1/...` (Directory Rules §7.4, ADR-0001) |
-| Allow / deny / abstain logic | ❌ | `policy/` (canonical singular root) |
-| Fetch + admission code | ❌ | `connectors/nrcs/` (Directory Rules §7.3 — connectors emit to `data/raw/...` or `data/quarantine/...`; never publish) |
-| Lifecycle data | ❌ | One source-first capture per `nrcs.<product>` `source_id` (physical source-first RAW placement **HOLD** under `DIR-SOURCE-001`; `data/raw/soil/` is a compatibility/reference lane, not a payload destination), then governed promotion |
-
-If any of the right-hand cells in this table conflict with this catalog entry, the right-hand cell wins. Catalog entries refine; they do not decide.
-
-[↥ Back to top](#-nrcs--source-catalog-entry)
+[↥ Back to top](#-nrcs--conservation-practice-records)
 
 ---
 
-## 3 — NRCS Source Families
+## 3 — Source role and support type
 
-The table below enumerates the NRCS-issued data products KFM intends to treat as in-scope source candidates. Inclusion in this table is **not** activation — each row requires its own `SourceDescriptor`, rights review, and `SourceActivationDecision` before any connector is enabled.
+The family entry proposes `administrative`. Other repo documents describe the role differently; the conflict is **unresolved** and must be settled in the `SourceDescriptor` (ADR-S-04 is named as the resolution path in [`SOURCE_REGISTRY.md` §5](../../../domains/agriculture/SOURCE_REGISTRY.md)).
 
-| Product (CONFIRMED upstream) | Short ref | Primary KFM domain | Proposed `source_role` at admission | Implementation maturity |
-|---|---|---|---|---|
-| SSURGO (Soil Survey Geographic Database) — vector map units + tabular soil properties | `nrcs.ssurgo` | Soil | `observed` (with authority characteristics for canonical soil mapping) | UNKNOWN — no mounted connector evidence |
-| gSSURGO — gridded raster version of SSURGO | `nrcs.gssurgo` | Soil | `observed` (derived raster of canonical survey) | UNKNOWN |
-| gNATSGO — gridded National Soil Geographic Database (nationally seamless soil layer) | `nrcs.gnatsgo` | Soil | `observed` (with `modeled` characteristics where it fills gaps from STATSGO2) — admission must record which | UNKNOWN |
-| Soil Data Access (SDA) — programmatic SSURGO/NASIS access | `nrcs.sda` | Soil | `observed` (access surface for SSURGO/NASIS-derived rows) | UNKNOWN |
-| Web Soil Survey — interactive download portal for SSURGO | `nrcs.wss` | Soil | `observed` (manual download path; same underlying authority as SSURGO) | UNKNOWN |
-| NASIS-derived component / horizon / pedon tables | `nrcs.nasis` | Soil | `observed` for survey observations; `modeled` where interpretations are layered | UNKNOWN |
-| SCAN — Soil Climate Analysis Network (automated stations, hourly) | `nrcs.scan` | Soil (joins to Atmosphere/Air, Agriculture) | `observed` (station readings); watcher emits **candidate** signals at Pre-RAW | UNKNOWN |
-| Conservation practice records (NRCS field implementation records) | `nrcs.conservation` | Agriculture (links to Soil) | `administrative` (compilation of agency-implemented practice records) | UNKNOWN |
-| Soil suitability and erosion-risk ratings derived from SSURGO/SDA | `nrcs.suitability` | Soil (consumer: Agriculture) | `modeled` (interpretation layered on observations; requires `role_model_run_ref`) | UNKNOWN |
+| Repo source | Role statement for NRCS conservation-practice data |
+|---|---|
+| [`nrcs/README.md` §3–§4](./README.md#4--source-roles-at-admission) | `administrative`; descriptor field `role_authority` |
+| [`agriculture/SOURCE_REGISTRY.md` §5](../../../domains/agriculture/SOURCE_REGISTRY.md) | primary `administrative`; secondary `observed` per practice record |
+| [`schemas/contracts/v1/agriculture/README.md`](../../../../schemas/contracts/v1/agriculture/README.md) | `administrative` or `observed`, source dependent |
+| [`data/registry/sources/soil/README.md`](../../../../data/registry/sources/soil/README.md) | `administrative` |
+| [`agriculture/RELEASE_INDEX.md` §10](../../../domains/agriculture/RELEASE_INDEX.md) | observation · context |
+| [`agriculture/OBJECTS.md` §6.6](../../../domains/agriculture/OBJECTS.md#66-conservationpractice) | `authority` (when public) · `model` (RS-classified) · `context` |
+
+**Page posture (PROPOSED):** admit as `administrative`. A secondary `observed` reading is not accepted by this page until a steward shows that a specific record type documents an on-site verification — and even then it is an observation of a *recorded status*, not of soil condition or outcome. A remote-sensing-classified practice (CDL/HLS) is a separate `modeled` source, not this product.
+
+**Support type (PROPOSED):** a practice record attached to an administrative unit — a field, tract, contract, or plan (exact unit **NEEDS VERIFICATION**; [`OBJECTS.md`](../../../domains/agriculture/OBJECTS.md) lists `support_geometry` and [`RELEASE_INDEX.md`](../../../domains/agriculture/RELEASE_INDEX.md) lists polygon / point). Support is not a survey sample, station, or grid cell, and it must travel with every derivative.
 
 > [!CAUTION]
-> The `source_role` column is **PROPOSED at admission time only**. Per the Source-Role Anti-Collapse rule, source role is fixed when a `SourceDescriptor` is admitted; promotion never upgrades it (e.g., `modeled` does not become `observed`). Corrections produce a **new descriptor** and a `CorrectionNotice`.
-
-<details>
-<summary><strong>Existing KFM Idea Index entries for NRCS source descriptors</strong> (Pass 32 atlas — reference cards, not implementation)</summary>
-
-The KFM Idea Index already preserves the following catalog-discovery cards for NRCS products. These are reference items, not asserted mounted-repo artifacts.
-
-| Stable ID | Card | Class · Category | Notes |
-|---|---|---|---|
-| `KFM-P24-PROG-0004` | SSURGO / gSSURGO source descriptor | programming · CAT (Catalog, Discovery, Registration) | PROPOSED: records mukey, mapunit symbol, component, horizon attributes, hydrologic group, geometry, `source_uri`, annual refresh expectation. |
-| `KFM-P24-PROG-0005` | gNATSGO source descriptor | programming · CAT | PROPOSED: anchors gNATSGO admission as a distinct descriptor from SSURGO/gSSURGO. |
-| `KFM-P23-PROG-0040` | SCAN soil-moisture watcher descriptor | programming · PIP (Pipelines, Specs, Validators) | PROPOSED: SCAN watcher emits candidate signals; not a publisher. |
-| `KFM-P23-PROG-0043` | SSURGO static soil descriptor | programming · PIP | PROPOSED: SSURGO via SDA SQL/WFS/WMS vectors and tabular joins. |
-| `KFM-P23-PROG-0029` | Soil moisture source inventory descriptor | programming · CAT | PROPOSED: Mesonet, SCAN, USCRN, SSURGO, SMAP as first-wave soil-moisture source families. |
-| `KFM-P28-PROG-0012` | `source_descriptor.schema.json` | programming · MDP (Metadata, Profiles, Crosswalks) | PROPOSED: schema with `source_uri`, ETag, Last-Modified, retrieval window, source posture, `kfm:spec_hash`. |
-
-Implementation status of each card is **UNKNOWN** until mounted-repo evidence is inspected.
-
-</details>
-
-[↥ Back to top](#-nrcs--source-catalog-entry)
+> Source role is **fixed at admission and never edited in place**; aggregation produces a new `aggregate` derivative carrying `role_aggregation_unit` + `AggregationReceipt` ([`README.md` §4](./README.md#4--source-roles-at-admission)). It does not relabel the underlying records.
 
 ---
 
-## 4 — Source Roles at Admission
+## 4 — Knowledge-character cautions
 
-The KFM source-role vocabulary (`observed | regulatory | modeled | aggregate | administrative | candidate | synthetic`) is intentionally rigid, because the public meaning of a layer depends on its role. The table below makes explicit which NRCS products map to which roles and what each role requires at admission.
+| Caution | Rule | Label |
+|---|---|---|
+| **Record ≠ implementation** | A recorded practice shows that an agency record exists, not that the practice is on the ground today. | CONFIRMED doctrine (connector + catalog sources in §2.2) |
+| **Record ≠ outcome** | No erosion, water-quality, habitat, or yield effect may be inferred from a practice record alone; any such claim is `modeled` with a `ModelRunReceipt`. | PROPOSED (follows the anti-collapse rule in [`README.md` §4](./README.md#4--source-roles-at-admission)) |
+| **Status must not collapse** | If upstream distinguishes planned, applied, and certified (or similar) practice states, each is preserved as a separate field; a planned practice is never rendered as applied, and an applied practice is never rendered as certified. | PROPOSED — upstream status vocabulary NEEDS VERIFICATION |
+| **Standard ≠ record** | Practice-standard text does not show adoption on any property. | CONFIRMED ([`../nrcs.md`](../nrcs.md)) |
+| **Time-bound** | A practice has a valid period (installation, lifespan, contract term); stale records are badged, not silently carried forward. | PROPOSED (`valid_time_range` in [`OBJECTS.md` §6.6](../../../domains/agriculture/OBJECTS.md#66-conservationpractice)) |
+| **Non-instructional** | Practice context is framing for analysis, never guidance. | CONFIRMED ([`CROSS_LANE.md`](../../../domains/agriculture/CROSS_LANE.md); [`agriculture/policy/README.md`](../../../domains/agriculture/policy/README.md)) |
 
-| Role | NRCS products that use it | Required descriptor fields at admission (PROPOSED) | Why this matters |
-|---|---|---|---|
-| `observed` | SSURGO, gSSURGO, gNATSGO, SDA results, NASIS observations, SCAN readings | `source_role` | A SSURGO map unit is an observation of soil mapping; it must not be re-cited as a regulatory determination. |
-| `modeled` | SSURGO/SDA-derived suitability ratings, erosion-risk derivatives; gap-filled portions of gNATSGO where applicable | `role_model_run_ref → ModelRunReceipt` | Interpretations carry assumptions; the model run must be pinned (inputs, parameters, version). |
-| `administrative` | Conservation practice records (compilations of agency program activity) | `role_authority` | These are agency records of activity, not direct soil observations. They must never be cited as observed soil events. |
-| `aggregate` | County- / HUC- / decade-level rollups of any NRCS product (e.g., county SSURGO summaries for the Frontier Matrix) | `role_aggregation_unit` | Aggregates require an explicit geometry-scope token to prevent matrix-cell-to-single-record join drift. |
-| `candidate` | SCAN / SMAP watcher signals at Pre-RAW; unresolved NASIS rows | `role_candidate_disposition` (pending / merged / rejected / quarantined) | Candidates must not appear in PUBLISHED. Watchers say "something changed"; they do not publish. |
+[↥ Back to top](#-nrcs--conservation-practice-records)
+
+---
+
+## 5 — Spatial and temporal granularity
+
+| Dimension | What the repo says | Label |
+|---|---|---|
+| Native spatial unit | Polygon / point practice geometry tied to a field or operation | PROPOSED ([`RELEASE_INDEX.md`](../../../domains/agriculture/RELEASE_INDEX.md)); upstream unit NEEDS VERIFICATION |
+| Public spatial unit | County / HUC / grid aggregate meeting thresholds; field-level detail denied by default | CONFIRMED doctrine ([`README.md` §5.2](./README.md#52-sensitivity-posture-soil--agriculture-lanes)); thresholds open (`AG-EXP-ME01`) |
+| Native temporal unit | Practice period / contract or plan dates | NEEDS VERIFICATION |
+| Cadence | "Agency-program-driven; variable" — per-program cadence in descriptor | NEEDS VERIFICATION ([`README.md` §6](./README.md#6--cadence--freshness-expectations)) |
+| Temporal columns | Keep source, valid (practice period), retrieval, release, and correction times distinct | PROPOSED (sibling page convention) |
+| Coverage | Kansas; national extracts would be clipped at admission | NEEDS VERIFICATION |
+
+---
+
+## 6 — Access and retrieval posture
+
+- **Endpoint / distribution:** NOT recorded in the repo. The family register leaves "conservation practice data" URLs intentionally unpinned (V1 in [`README.md` §11](./README.md#11--open-verification-items)). **NEEDS VERIFICATION.**
+- **Public vs restricted distribution:** UNKNOWN. Whether any record-level conservation-practice data is publicly distributed, or only aggregate summaries, has not been established in the repo; `AG-EXP-ME03` in [`EXPANSION_BACKLOG.md`](../../../domains/agriculture/EXPANSION_BACKLOG.md) asks for rights clarification "at public-release granularity" (priority H).
+- **Restricted-access data** (cooperator, agreement, or FOIA-style access) is out of scope for this page. It must not enter KFM without a named agreement, a `SourceActivationDecision`, and steward review.
+- **Retrieval discipline (PROPOSED):** no-network-by-default, fixture-first, descriptor-gated retrieval, consistent with the [`connectors/nrcs/`](../../../../connectors/nrcs/README.md) boundary.
+
+[↥ Back to top](#-nrcs--conservation-practice-records)
+
+---
+
+## 7 — Rights and sensitivity
+
+Default posture: **fail closed.** Unknown rights deny admission; producer-, landowner-, operator-, and field-level exposure is denied publicly unless a ratified policy says otherwise. **Do not restate policy here** — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md).
 
 > [!WARNING]
-> A `modeled` derivative of SSURGO never becomes `observed` because it is useful. If a public surface needs to present a suitability rating as if it were an observed soil property, the answer is **abstain** or **redesign**, not role-collapse. The same applies to gNATSGO's gap-filled cells, which are not observations of those locations.
+> The `nrcs` row in [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) gives a **T0** default only for SSURGO / gSSURGO / gNATSGO / SCAN public layers. It does **not** cover conservation-practice records, so it must not be read as a T0 grant for this product.
 
-[↥ Back to top](#-nrcs--source-catalog-entry)
+### 7.1 Repo-documented sensitivity rules
 
----
-
-## 5 — Rights, Sensitivity & Public-Safe Posture
-
-### 5.1 Rights posture (general, NEEDS VERIFICATION per product)
-
-Most NRCS soil products are produced by a U.S. federal agency; project-knowledge material describes SSURGO and gSSURGO as openly downloadable data products. KFM doctrine, however, is explicit that **unknown rights fail closed** — including the case where rights look obviously public but have not been recorded in a `SourceDescriptor` and confirmed by a steward.
-
-> [!IMPORTANT]
-> Apparent public-domain status is **not** a substitute for a recorded rights decision. Until each NRCS product has a verified rights field in its `SourceDescriptor` and a corresponding `SourceActivationDecision`, KFM treats it as **not yet activated**. Do not enable a connector ahead of activation.
-
-For SCAN station data specifically, project-knowledge material notes that ingest terms and any required attribution should be confirmed before storage and re-distribution. This catalog page records that requirement; it does not resolve it.
-
-### 5.2 Sensitivity posture (Soil + Agriculture lanes)
-
-NRCS source products as such are not inherently sensitive, but the **joins** they enable are. Agriculture-domain doctrine is explicit that aggregate statistics and satellite products must not become field / operator truth, and that farm / operator private data, proprietary yield, pesticide records, and private-sensitive joins fail closed.
-
-| Risk | Default outcome | Required controls |
+| Case | Repo outcome | Source |
 |---|---|---|
-| Private agricultural **field-level** detail (boundaries, owner identity, operations) joined onto SSURGO | DENY public exact / public if private or rights unclear | Aggregation (county / HUC / grid thresholds); `AggregationReceipt`; field-level details denied by default per Agriculture lane doctrine |
-| Person–parcel joins (private landowner-sensitive data) | DENY by default | Permissions; policy review; fail-closed join policy |
-| Single-record cite from an aggregated matrix cell | DENY join from aggregate cell to single record; ABSTAIN at AI | `AggregationReceipt`; geometry-scope guard; matrix-cell semantics |
-| SCAN station observation cited as life-safety / regulatory advisory | DENY life-safety replacement | Not-for-life-safety disclaimer; redirection to the official source |
-| gNATSGO gap-filled cell cited as observation at that location | DENY observation claim for gap-filled cells | Preserve `source_role`; surface uncertainty; `role_model_run_ref` where modeled |
+| Conservation Practice — aggregate context | `T0` | [`SENSITIVITY.md`](../../../domains/agriculture/SENSITIVITY.md) |
+| Conservation Practice — operator-supplied detail | **`T4`**; `RedactionReceipt` + steward review → at most `T2` | [`SENSITIVITY.md`](../../../domains/agriculture/SENSITIVITY.md) |
+| Operator-supplied practice detail attached to an identifiable parcel | **DENY** | [`SENSITIVITY.md`](../../../domains/agriculture/SENSITIVITY.md) |
+| `ConservationPractice` operator-identified | `T4`; aggregation / de-identification → `T1` | [`RELEASE_INDEX.md` §12.1](../../../domains/agriculture/RELEASE_INDEX.md) |
+| `ConservationPractice` default | `T1`; `T2` if operator-resolvable | [`OBJECTS.md` §6.6](../../../domains/agriculture/OBJECTS.md#66-conservationpractice) |
+| Private farm/producer/landowner/tenant/tract info; practice locations tied to private land; program participation, payment, contract, compliance status | Withhold / quarantine | [`../nrcs.md`](../nrcs.md) |
+| Person–parcel joins | DENY by default | [`README.md` §5.2](./README.md#52-sensitivity-posture-soil--agriculture-lanes) |
 
-> [!NOTE]
-> Public-safe Agriculture surfaces aggregate to county / HUC / grid thresholds and deny field-level detail by default. NRCS-sourced layers must respect that posture even when the underlying NRCS product would technically permit finer resolution.
+> [!CAUTION]
+> The tier defaults above differ between documents (`T1` vs `T4` for operator-resolvable records; `T1` vs `T2` as the post-transform ceiling). Until `OQ-AG-01` in [`RELEASE_INDEX.md`](../../../domains/agriculture/RELEASE_INDEX.md) is ratified, this page applies the **most restrictive** reading: any record that can resolve to a producer, operator, landowner, tenant, tract, or field is `T4` and denied public exposure.
 
-### 5.3 Attribution
+### 7.2 Farm Bill Section 1619 (statutory disclosure limit)
 
-Attribution requirements per NRCS product are **NEEDS VERIFICATION**. They belong in the `SourceDescriptor` for each product, not in this catalog page. Public-facing surfaces should consult the descriptor and the released `LayerManifest`, not this document, for citation text.
+The repo does **not** document Section 1619. Web search in this session pointed to Section 1619 of the Food, Conservation, and Energy Act of 2008, codified at 7 U.S.C. 8791 ("Information gathering"), which limits USDA disclosure of information that producers or owners provide to take part in USDA programs and of related geospatial information about their land or operations. Search results also described exceptions for cooperating parties and for statistical or aggregate releases. The official text could not be retrieved from this environment (egress to `govinfo.gov` and `ecfr.gov` was denied), so the statute's **scope, exceptions, and applicability to any KFM-held data are NEEDS VERIFICATION**:
 
-[↥ Back to top](#-nrcs--source-catalog-entry)
+- Official text to check: <https://www.govinfo.gov/link/uscode/7/8791> (7 U.S.C. 8791; not read in the drafting session because the network proxy blocked it — **NEEDS VERIFICATION** against the statute text).
 
----
+**KFM handling (PROPOSED):** treat any record-level conservation-practice data as presumptively Section 1619–protected until a rights reviewer records otherwise in the `SourceDescriptor`. Admit only publicly released or aggregate material. Never reconstruct record-level detail by joining aggregates to parcels, imagery, or other sources. Quarantine anything that arrives with producer, landowner, contract, or precise practice-location fields.
 
-## 6 — Cadence & Freshness Expectations
+### 7.3 Public-safe transform requirements (PROPOSED)
 
-Cadence drives stale-state markers. When a product's declared cadence elapses without a new admission, the Evidence Drawer shows a **stale source** badge, and dependent claims may become stale (without becoming wrong).
+1. Strip direct identifiers (names, contract/plan ids, tract/field ids) in QUARANTINE.
+2. Aggregate to county / HUC / grid only when thresholds are met (`AG-EXP-ME01` open); suppress small cells.
+3. Emit `AggregationReceipt` or `RedactionReceipt`, plus `ReviewRecord` and `PolicyDecision` for any tier transition.
+4. Deny aggregate-to-record joins at the trust membrane; AI ABSTAINs on per-place questions.
 
-| Product | Expected cadence character | Stale-state marker basis | Status |
-|---|---|---|---|
-| SSURGO | Survey-area-driven; updates released by soil survey area; not synchronized nationwide | `source_freshness_expired` when survey-area cadence passes without new admission | NEEDS VERIFICATION per area |
-| gSSURGO | Tracks SSURGO; raster release cycle | Inherits SSURGO cadence | NEEDS VERIFICATION |
-| gNATSGO | National annual release cycle (per Idea Index card `KFM-P24-PROG-0004`'s "annual refresh expectation" for the SSURGO descriptor family) | Annual cadence in descriptor; surveys-area drift surfaces beneath | NEEDS VERIFICATION |
-| SDA | API-side; canonical content tracks SSURGO / NASIS | Inherits underlying SSURGO / NASIS cadence | NEEDS VERIFICATION |
-| Web Soil Survey | Same underlying release cycle as SSURGO | Inherits SSURGO cadence | NEEDS VERIFICATION |
-| NASIS-derived tables | Variable; periodic compilation | Per-table cadence in descriptor | NEEDS VERIFICATION |
-| SCAN | Hourly station observations | Heartbeat freshness; "no new readings within tolerance" → stale | NEEDS VERIFICATION |
-| Conservation practice records | Agency-program-driven; variable | Per-program cadence in descriptor | NEEDS VERIFICATION |
-| Suitability / erosion derivatives | Tied to underlying SSURGO release + model version | Stale when either underlying SSURGO or pinned model run goes stale | NEEDS VERIFICATION |
-
-> [!TIP]
-> Where the upstream publisher exposes a checksums manifest (project-knowledge material notes USDA-NRCS does so for SSURGO), a manifest checksum verification step belongs in the connector gate. Recording manifest availability in the `SourceDescriptor` (`has_manifest`) surfaces it in the catalog and supports refusing promotion when bytes do not match.
-
-[↥ Back to top](#-nrcs--source-catalog-entry)
+[↥ Back to top](#-nrcs--conservation-practice-records)
 
 ---
 
-## 7 — Domain Links
+## 8 — Lifecycle and admission flow
 
-NRCS sits across the KFM domain lattice. The **primary** domain is Soil; **secondary** is Agriculture. Adjacencies extend to Hydrology and Habitat through governed relationships, never through informal data sharing.
-
-| KFM domain | Relationship to NRCS | Citation (CONFIRMED doctrine) |
-|---|---|---|
-| **Soil** (`[DOM-SOIL]`) | Primary. NRCS SSURGO / gSSURGO / gNATSGO / SDA / NASIS / SCAN feed `SoilMapUnit`, `SoilComponent`, `Horizon`, `SoilProperty`, `HydrologicSoilGroup`, `SoilMoistureObservation`, `Pedon`, `ErosionRisk`, `SuitabilityRating`, `ComponentHorizonJoin`, `SoilTimeCaveat`. | Encyclopedia §7.3 (Soil) |
-| **Agriculture** (`[DOM-AG]`) | Secondary. NRCS conservation practice data plus SSURGO suitability ratings feed `ConservationPractice`, `SoilCropSuitability`, and crop-soil-weather views — **never** field-level publication by default. | Encyclopedia §7.7 (Agriculture); Atlas §24.4.7 (edges owned by Agriculture) |
-| **Hydrology** (`[DOM-HYD]`) | Adjacent. Hydrologic soil groups (HSG) flow from Soil to Hydrology for governed joins. | Encyclopedia §7.2 / §7.3 |
-| **Habitat** (`[DOM-HAB]`) | Adjacent. SSURGO appears in the Habitat lane's context-layer source family. | Encyclopedia §7.4 (Habitat) |
-
-### 7.1 Ubiquitous-language mapping (NRCS ↔ KFM)
-
-These KFM canonical terms (CONFIRMED in the Soil and Agriculture domain dossiers) describe how NRCS material is referred to inside the system. Field realization is PROPOSED.
-
-| NRCS concept | KFM term (Soil) | KFM term (Agriculture) |
-|---|---|---|
-| SSURGO / Web Soil Survey | `authoritative_static_soil` | — (joined via Soil) |
-| gSSURGO / gNATSGO | `gridded_derivative_soil` | — (joined via Soil) |
-| SCAN station record | `station_soil_moisture` | — (advisory context only) |
-| Map-unit key (SSURGO) | (within `SoilMapUnit`) | `MUKEY` |
-| Component % per map unit | (within `SoilComponent`) | `Component percentage` |
-| Hydrologic Soil Group | `HydrologicSoilGroup` | `Hydrologic group` |
-| Volumetric water content | (within `SoilProperty` / `SoilMoistureObservation`) | `VWC` |
-| Soil survey "as of" date / vintage | `SoilTimeCaveat` | (preserved on join) |
-
-> [!NOTE]
-> Cross-lane joins are inference-risk multipliers. Any join from an NRCS-sourced soil layer onto a People/Land or Archaeology layer must pass the cross-lane join policy and the trust membrane before becoming public.
-
-[↥ Back to top](#-nrcs--source-catalog-entry)
-
----
-
-## 8 — Admission Flow
-
-The diagram below sketches how NRCS source material is expected to move through the KFM lifecycle. It reflects **doctrine** (the lifecycle invariant, watcher-as-non-publisher, cite-or-abstain). It does **not** assert that any specific connector or pipeline currently exists in the mounted repository.
+The flow is **doctrine**, not evidence that any connector or pipeline exists.
 
 ```mermaid
 flowchart LR
-  subgraph UPSTREAM["NRCS upstream (external)"]
-    SSURGO[(SSURGO / gSSURGO)]
-    GNATSGO[(gNATSGO)]
-    SDA[(Soil Data Access)]
-    WSS[(Web Soil Survey)]
-    NASIS[(NASIS tables)]
-    SCAN[(SCAN stations)]
-    CONS[(Conservation practice records)]
+  UP[(NRCS conservation-practice<br/>records — distribution<br/>NEEDS VERIFICATION)]
+
+  subgraph ADM["Admission (governed)"]
+    DESC["SourceDescriptor<br/>(role=administrative,<br/>rights, 1619 review,<br/>status vocabulary)"]
+    ACT["SourceActivationDecision<br/>(allow | restrict | deny | hold)"]
   end
 
-  subgraph PRERAW["Pre-RAW (watcher / drift detector — candidate producer only)"]
-    EVT["event_envelope<br/>+ event_run_receipt"]
+  subgraph LIFE["KFM lifecycle"]
+    RAW["RAW: source-first capture<br/>nrcs.conservation (placement HOLD)"]
+    QW["QUARANTINE / WORK<br/>(identifier strip,<br/>status preserved,<br/>sensitivity tiering)"]
+    PROC["PROCESSED<br/>ConservationPractice (restricted)"]
+    AGG["Aggregate derivative<br/>+ AggregationReceipt<br/>+ ReviewRecord"]
+    PUB["PUBLISHED<br/>(aggregate context only;<br/>non-instructional)"]
   end
 
-  subgraph ADMISSION["Admission (governed)"]
-    DESC["SourceDescriptor<br/>(role, rights, cadence,<br/>sensitivity, attribution)"]
-    ACT["SourceActivationDecision<br/>(allow | restrict | deny | review)"]
-  end
-
-  subgraph CONNECTOR["connectors/nrcs/ (PROPOSED — connectors do not publish)"]
-    FETCH["Fetch + verify<br/>(checksums, validators)"]
-    CGATE["Connector gate<br/>(fail-closed)"]
-  end
-
-  subgraph LIFECYCLE["KFM lifecycle"]
-    RAW["RAW: source-first capture per source_id (placement HOLD)"]
-    WQ["WORK / QUARANTINE"]
-    PROC["PROCESSED"]
-    CAT["CATALOG / TRIPLET"]
-    PUB["PUBLISHED<br/>(public-safe only)"]
-  end
-
-  SCAN --> EVT
-  EVT --> DESC
-  SSURGO --> DESC
-  GNATSGO --> DESC
-  SDA --> DESC
-  WSS --> DESC
-  NASIS --> DESC
-  CONS --> DESC
-  DESC --> ACT
-  ACT -->|allow| FETCH
-  ACT -.->|restrict / deny / review| WQ
-  FETCH --> CGATE
-  CGATE --> RAW
-  RAW --> WQ
-  WQ --> PROC
-  PROC --> CAT
-  CAT -->|"governed promotion<br/>(policy + evidence + release)"| PUB
-
-  classDef extern fill:#f7f7f7,stroke:#888,stroke-dasharray: 3 3;
-  classDef preraw fill:#f3e8ff,stroke:#8b5cf6;
-  classDef gov fill:#fff7e6,stroke:#cc7a00;
-  classDef life fill:#e9f5ff,stroke:#1f6feb;
-  class UPSTREAM extern;
-  class PRERAW preraw;
-  class ADMISSION,CONNECTOR gov;
-  class LIFECYCLE life;
+  UP --> DESC --> ACT
+  ACT -->|allow| RAW
+  ACT -.->|restrict / deny / hold| QW
+  RAW --> QW --> PROC --> AGG
+  AGG -->|"governed promotion<br/>(policy + evidence + release)"| PUB
 ```
 
-> [!IMPORTANT]
-> Connectors MUST emit to `data/raw/...` or `data/quarantine/...` only. A connector that writes under `data/processed/`, `data/catalog/`, or `data/published/` violates the watcher-as-non-publisher invariant. **Promotion is a governed state transition, not a file move** (Directory Rules §9.1). Watchers and drift detectors are candidate producers; a watcher can say "something changed" and emit receipts, but it cannot make a public release true by itself.
-
-[↥ Back to top](#-nrcs--source-catalog-entry)
-
----
-
-## 9 — Object Families Touched
-
-NRCS source admission flows into the following KFM canonical object families. Object **meaning** lives in `contracts/`; machine **shape** lives in `schemas/contracts/v1/...` (default schema home per ADR-0001).
-
-<details>
-<summary><strong>Soil domain — object families fed by NRCS</strong></summary>
-
-| Object family | NRCS contribution | Notes |
-|---|---|---|
-| `SoilMapUnit` | SSURGO / gSSURGO / gNATSGO map units (polygon + grid) | Canonical per Encyclopedia §7.3 |
-| `SoilComponent` | NASIS-derived component records inside a map unit | Canonical |
-| `Horizon` | NASIS horizon depth intervals and properties | Canonical |
-| `SoilProperty` | Texture, chemistry, physical / hydraulic properties from SSURGO / NASIS | Canonical |
-| `HydrologicSoilGroup` | HSG attribute joined to map units (downstream consumer: Hydrology) | Canonical |
-| `SoilMoistureObservation` | SCAN hourly soil moisture / soil temperature readings | Canonical |
-| `Pedon` | Pedon database records (NASIS-derived) | Canonical |
-| `ErosionRisk` | `modeled` — derived from SSURGO + erosion model | Canonical; requires `role_model_run_ref` |
-| `SuitabilityRating` | `modeled` — derived from SSURGO + interpretive model | Canonical; requires `role_model_run_ref` |
-| `ComponentHorizonJoin` | Join object pinning component-to-horizon linkage | Canonical (atlas: "Component Horizon Join") |
-| `SoilTimeCaveat` | Temporal caveat object for static survey data | Canonical |
-| `SoilProfileView` | Composite view of components + horizons | **PROPOSED — not enumerated in Encyclopedia §7.3 core list; may belong to a UI / view layer rather than a domain object family** |
-
-Field shape for every entry is **NEEDS VERIFICATION** against any mounted schema.
-
-</details>
-
-<details>
-<summary><strong>Agriculture domain — object families fed by NRCS</strong></summary>
-
-| Object family | NRCS contribution | Notes |
-|---|---|---|
-| `ConservationPractice` | NRCS conservation practice records (`administrative` role; never an instruction to land managers) | Canonical per Encyclopedia §7.7 |
-| `SoilCropSuitability` | SSURGO-derived suitability ratings (`modeled`) used in agriculture crop-soil-weather views | Canonical |
-| `AggregationReceipt` | Mandatory when NRCS-derived data is aggregated to county / HUC / grid for public surfaces | Canonical |
-| `CropObservation` (joined context) | NRCS layers may provide soil context to crop-year panels (public-safe aggregation only) | Canonical |
-| `FieldCandidate` | NRCS layers may be joined to field candidates **only inside the trust membrane**; field-level publication denied by default | Canonical |
-
-Field shape for every entry is **NEEDS VERIFICATION** against any mounted schema.
-
-</details>
-
-[↥ Back to top](#-nrcs--source-catalog-entry)
+- **RAW:** one source-first capture identity per `DIR-SOURCE-001` ([`directory-rules.md`](../../../doctrine/directory-rules.md)); physical placement **HOLD** ([`data/raw/README.md`](../../../../data/raw/README.md)). `data/raw/agriculture/` and `data/raw/soil/` are compatibility/reference lanes and must not receive these payloads or duplicate bytes.
+- **QUARANTINE / WORK:** the default landing for any record carrying identifying or precise-location fields.
+- **Receipts:** capture/ingest receipt at RAW; `RedactionReceipt` / `AggregationReceipt` at transforms; `ReviewRecord` + `PolicyDecision` on tier change; `ReleaseManifest` + `EvidenceBundle` at release.
+- **Release target (PROPOSED):** `data/published/layers/agriculture/conservation_practice/` with operator-resolvable variants DENY ([`PIPELINE.md`](../../../domains/agriculture/PIPELINE.md), `OF-AG-06`). The public map feature uses indicator key `conservation_practice_context_class` ([`schemas/contracts/v1/domains/agriculture/public_safe_map_feature.schema.json`](../../../../schemas/contracts/v1/domains/agriculture/public_safe_map_feature.schema.json)).
 
 ---
 
-## 10 — Anti-Patterns to Watch For
+## 9 — Cross-lane use and object families
 
-> [!WARNING]
-> The patterns below have all been called out in project doctrine and source-role anti-collapse material. Each one degrades trust in a way that is hard to recover from after public release. A PR that lands one of these warrants a refusal at code review or a rollback drill.
-
-| Anti-pattern | Symptom | Required fix |
-|---|---|---|
-| Role collapse: SSURGO suitability rating cited as observed soil property | A public surface labels a `modeled` derivative as `observed` | Preserve `source_role`; require `role_model_run_ref`; AI ABSTAIN if role missing |
-| Role collapse: gNATSGO gap-fill cited as observation at that point | A public layer treats every gNATSGO cell as a survey observation | Surface gap-fill provenance; record `modeled` portions; uncertainty visible |
-| Connector publishes | `connectors/nrcs/` writes under `data/processed/`, `data/catalog/`, or `data/published/` | Move output to `data/raw/<domain>/<source_id>/<run_id>/`; connectors do not publish |
-| Watcher publishes | A SCAN watcher writes promotion decisions directly | Watcher-as-non-publisher: emit observations, receipts, and candidate decisions only |
-| Lifecycle skip | A pipeline writes directly to `data/published/` from `data/raw/` | All lifecycle phases run; promotion is a governed state transition |
-| Aggregate cited as per-place truth | A county SSURGO-derived value is cited as a single-field observation | DENY join from aggregate cell to single record; `AggregationReceipt`; geometry-scope guard |
-| Private field-level publication | A field boundary, owner identity, or operation detail is exposed via an NRCS-context layer | DENY by default; aggregation; permissions; policy review |
-| Manifest skip | Promotion proceeds when upstream checksums do not match | Connector gate refuses promotion; record manifest availability in `SourceDescriptor` |
-| Stale source masked | A public layer renders without surfacing that SSURGO / SCAN cadence has expired | Stale source badge in Evidence Drawer; cadence captured in `SourceDescriptor` |
-| Rights-unknown promotion | An NRCS product reaches PUBLISHED before its rights field and `SourceActivationDecision` are confirmed | Fail closed; quarantine; rights register entry first |
-| AI rendering NRCS-derived text as evidence | AI / Focus Mode answer cites NRCS material without an `EvidenceBundle` | `EvidenceBundle` outranks AI text; AI ABSTAIN if `EvidenceRef` does not resolve |
-| Two homes for the same authority | A second NRCS source registry mirror appears under `docs/sources/registry/` or similar | Compatibility roots are not parallel authority (Directory Rules §8.3); ADR + migration plan required |
-
-[↥ Back to top](#-nrcs--source-catalog-entry)
-
----
-
-## 11 — Open Verification Items
-
-| # | Item | Owner (PROPOSED) | Label |
+| Lane | Use | Constraint | Source |
 |---|---|---|---|
-| V1 | Canonical access URLs / endpoints for SSURGO, gSSURGO, gNATSGO, SDA, Web Soil Survey, NASIS, SCAN, conservation practice data (URLs intentionally not pinned here) | Source registry steward | NEEDS VERIFICATION |
-| V2 | Current rights / licensing / attribution per NRCS product | Source registry steward + legal review | NEEDS VERIFICATION |
-| V3 | SCAN ingest-and-store terms; any written-consent or attribution requirements | Source registry steward | NEEDS VERIFICATION |
-| V4 | Manifest / checksum availability per product (`has_manifest` flag in `SourceDescriptor`) | Source registry steward + connector author | NEEDS VERIFICATION |
-| V5 | Cadence values per product (declared freshness window) | Source registry steward + Soil domain steward | NEEDS VERIFICATION |
-| V6 | Connector home: does `connectors/nrcs/` exist in the mounted repository, and what does it currently contain? | Connector steward | UNKNOWN |
-| V7 | `SourceDescriptor` schema presence at `schemas/contracts/v1/source/source-descriptor.schema.json` (the file name `.schema.json` is used here; Atlas §24.1.3 informally references `source-descriptor.json` — naming discrepancy is **NEEDS VERIFICATION** against ADR-0001 / mounted repo) | Schema steward | NEEDS VERIFICATION |
-| V8 | `SourceActivationDecision` per NRCS product — drafted / approved / denied state | Source registry steward + reviewer | UNKNOWN |
-| V9 | Validator coverage for the role-pair `(modeled, observed)` specifically for SSURGO suitability vs. SSURGO map unit, and for gNATSGO observed vs. gap-fill | Validator steward | UNKNOWN |
-| V10 | Per-product fixtures (valid + invalid) under `tests/fixtures/...` | Test steward | UNKNOWN |
-| V11 | Whether `docs/sources/catalog/` is the correct home, or whether a flat `docs/sources/nrcs.md`, a per-domain `docs/domains/<domain>/sources/`, or a registry-side README is preferred | Docs steward | PROPOSED |
-| V12 | Whether this page should be split per NRCS product (e.g., `nrcs/ssurgo.md`, `nrcs/scan.md`) once activation grows | Docs steward | PROPOSED |
-| V13 | Whether `SoilProfileView` belongs to the Soil domain object family list, a UI / view layer, or should be retired | Soil domain steward | NEEDS VERIFICATION |
-| V14 | Reconcile NRCS Idea Index entries (`KFM-P24-PROG-0004`, `KFM-P24-PROG-0005`, `KFM-P23-PROG-0040`, `KFM-P23-PROG-0043`, `KFM-P23-PROG-0029`, `KFM-P28-PROG-0012`) with any mounted-repo `SourceDescriptor` records | Source registry steward | NEEDS VERIFICATION |
+| **Agriculture** (owner) | `ConservationPractice` aggregate context; cropland practice context | Context only; operator joins denied | [`OBJECTS.md`](../../../domains/agriculture/OBJECTS.md); [`RELEASE_INDEX.md`](../../../domains/agriculture/RELEASE_INDEX.md) |
+| **Soil** | Context for erosion-related analysis (`OBJECTS.md` lists a Soil "erosion outcomes" edge) | Not soil-property truth; any outcome claim is `modeled` | [`data/registry/sources/soil/README.md`](../../../../data/registry/sources/soil/README.md); [`README.md` §4](./README.md#4--source-roles-at-admission) |
+| **Habitat** | Habitat-quality scores *frame* practice candidates | Never instruction; validator `validate_conservation_practice_not_instruction` PROPOSED | [`CROSS_LANE.md`](../../../domains/agriculture/CROSS_LANE.md) |
+| **Hydrology / water quality** | Riparian edge listed in `OBJECTS.md` §6.6 | PROPOSED only; no water-quality use is documented in the repo; NEEDS VERIFICATION | [`OBJECTS.md` §6.6](../../../domains/agriculture/OBJECTS.md#66-conservationpractice) |
+| **People / land** | None | Person–parcel and operator joins DENY | [`README.md` §5.2](./README.md#52-sensitivity-posture-soil--agriculture-lanes) |
 
-> [!NOTE]
-> Items V1–V5 are deliberately not resolved by external research from this catalog page. They belong in the per-product `SourceDescriptor` records — that is where they can be reviewed, signed, and stale-checked.
-
-[↥ Back to top](#-nrcs--source-catalog-entry)
+[↥ Back to top](#-nrcs--conservation-practice-records)
 
 ---
 
-## 12 — Related Docs
+## 10 — Connector and registry status
 
-- `docs/sources/SOURCE_DESCRIPTOR_STANDARD.md` _(PROPOSED — source descriptor field and admission standard)_
-- `docs/doctrine/directory-rules.md` _(canonical placement, lifecycle, and domain-placement doctrine; §7.3, §7.4, §8.3, §9.1, §12)_
-- `docs/domains/soil/README.md` _(PROPOSED — Soil domain README)_
-- `docs/domains/agriculture/README.md` _(PROPOSED — Agriculture domain README)_
-- `docs/architecture/contract-schema-policy-split.md` _(PROPOSED — split between meaning, shape, and decision)_
-- `connectors/nrcs/README.md` _(PROPOSED — per-connector README per Directory Rules §7.3)_
-- `schemas/contracts/v1/source/source-descriptor.schema.json` _(PROPOSED — `SourceDescriptor` schema; file-name discrepancy noted in §11 V7)_
-- `policy/sources/` _(PROPOSED — `SourceActivationDecision` lives here)_
-- `data/registry/sources/soil/` and `data/registry/source_descriptors/` _(CONFIRMED home patterns per Directory Rules §9.1 / §12; per-record presence NEEDS VERIFICATION)_
-- `docs/registers/DRIFT_REGISTER.md` _(log discrepancies between this catalog and mounted-repo reality here)_
-- `docs/registers/VERIFICATION_BACKLOG.md` _(if V1–V14 above need register entries)_
+| Surface | Observed state | Label |
+|---|---|---|
+| [`connectors/nrcs/`](../../../../connectors/nrcs/README.md) | Product lanes are `sda/`, `scan/`, `ssurgo/`, `gssurgo/`, `gnatsgo/` only; "other NRCS programs or documents do not become connector lanes merely because they exist in source documentation" | CONFIRMED — **no conservation-practice connector** |
+| [`data/registry/sources/agriculture/nrcs.yaml`](../../../../data/registry/sources/agriculture/nrcs.yaml) | `status: PROPOSED`; "Placeholder created from docs/domains markdown inventory"; mapped to NRCS conservation-practice data by [`FILE_SYSTEM_PLAN.md`](../../../domains/agriculture/FILE_SYSTEM_PLAN.md) | CONFIRMED placeholder — not a descriptor |
+| `data/registry/sources/soil/` | No conservation-practice descriptor | CONFIRMED absent |
+| Agriculture refresh profile | "Conservation-practice … sources" are `HOLD` until source-specific review ([`SOURCE_REFRESH_RUNBOOK.md`](../../../runbooks/agriculture/SOURCE_REFRESH_RUNBOOK.md)) | CONFIRMED HOLD |
+| `ConservationPractice` schema | "None by that name"; schema NEEDS VERIFICATION ([`schemas/contracts/v1/agriculture/README.md`](../../../../schemas/contracts/v1/agriculture/README.md)) | NEEDS VERIFICATION |
+| Cross-domain descriptor duplication risk | Agriculture/Soil placeholder duplication logged in [`DRIFT_REGISTER.md`](../../../registers/DRIFT_REGISTER.md) | Do not create a second descriptor under `soil/` |
+
+A new connector lane requires verified identity, Directory Rules review, a descriptor and activation, rights/sensitivity review, fixture-first tests, CI, and migration notes ([`connectors/nrcs/README.md`](../../../../connectors/nrcs/README.md)).
 
 ---
 
-<sub>**Status:** draft (PROPOSED, v0.2). **Owners:** _TODO_. **Last updated:** _TODO-YYYY-MM-DD_. This file is human-readable catalog documentation and does not decide source admission. For activation, see the source registry.</sub>
+## 11 — Anti-patterns
 
-[↥ Back to top](#-nrcs--source-catalog-entry)
+| Anti-pattern | Required response |
+|---|---|
+| Practice record cited as an observed soil event or soil property | DENY; role stays `administrative` |
+| Planned/applied/certified status collapsed into "has practice" | DENY at validation; preserve status field |
+| Practice standard used to imply a practice exists on private land | Suppress implementation claim ([`../nrcs.md`](../nrcs.md)) |
+| Practice record presented as proof of erosion or water-quality outcome | DENY or require `modeled` derivative + `ModelRunReceipt` |
+| Field-, tract-, producer-, or landowner-level practice published | DENY; quarantine; `T4` |
+| Aggregate cell joined back to a parcel or operator | DENY at trust membrane; AI ABSTAIN |
+| Practice context rendered as instruction or advice | DENY (`agriculture-no-instructional-surface-tests`, PROPOSED) |
+| Program participation, payment, or compliance status inferred or displayed | Withhold |
+| Payload written to `data/raw/agriculture/` or `data/raw/soil/` | Reject; source-first capture only, placement HOLD |
+| Connector writes to processed / catalog / published | Reject; connectors do not publish |
+
+[↥ Back to top](#-nrcs--conservation-practice-records)
+
+---
+
+## 12 — Open questions and verification register
+
+| # | Item | Label | Owner / route |
+|---|---|---|---|
+| CP-1 | Which upstream NRCS dataset(s) does this product mean, and where are they distributed? | NEEDS VERIFICATION | Source registry steward (family V1) |
+| CP-2 | Is any record-level data publicly distributed, or only aggregates? | UNKNOWN | Rights reviewer (`AG-EXP-ME03`) |
+| CP-3 | Section 1619 / 7 U.S.C. 8791 scope, exceptions, and applicability to each candidate dataset | NEEDS VERIFICATION | Rights / privacy reviewer |
+| CP-4 | Settle `source_role` (`administrative` vs `observed` vs `authority`/`context` vocabularies) | OPEN — CONFLICTED | ADR-S-04 |
+| CP-5 | Ratify sensitivity tier defaults for operator-resolvable records | OPEN | `OQ-AG-01` |
+| CP-6 | Upstream practice-status vocabulary (planned / applied / certified or other) and its mapping | NEEDS VERIFICATION | Agriculture domain steward |
+| CP-7 | Native record key and support unit (practice, contract, plan, field, tract) | NEEDS VERIFICATION | Source registry steward |
+| CP-8 | Public aggregation thresholds and small-cell suppression rules | OPEN | `AG-EXP-ME01` |
+| CP-9 | Short ref `nrcs.conservation` vs page slug `conservation-practice-records` — align identity | OPEN | Source registry steward |
+| CP-10 | Whether a Hydrology / water-quality edge is in scope | NEEDS VERIFICATION | Hydrology + Agriculture stewards |
+| CP-11 | Accepted source-first RAW placement for NRCS captures | HOLD | `DIR-SOURCE-001` placement decision |
+| CP-12 | Accountable owners for this page | UNKNOWN | Docs steward |
+
+---
+
+## 13 — Related docs
+
+- [`./README.md`](./README.md) — NRCS family entry (§3 product table, §4 roles, §5.2 sensitivity).
+- [`../nrcs.md`](../nrcs.md) — NRCS family catalog profile; practice-standards vs private-record withholding.
+- Sibling product pages: [`ssurgo.md`](./ssurgo.md) · [`gssurgo.md`](./gssurgo.md) · [`soil-data-access.md`](./soil-data-access.md) · [`scan-soil-climate.md`](./scan-soil-climate.md) · [`web-soil-survey.md`](./web-soil-survey.md).
+- [`../IDENTITY.md`](../IDENTITY.md) · [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) · [`../OPEN-QUESTIONS.md`](../OPEN-QUESTIONS.md).
+- Agriculture: [`SOURCE_REGISTRY.md`](../../../domains/agriculture/SOURCE_REGISTRY.md) · [`SENSITIVITY.md`](../../../domains/agriculture/SENSITIVITY.md) · [`OBJECTS.md`](../../../domains/agriculture/OBJECTS.md) · [`RELEASE_INDEX.md`](../../../domains/agriculture/RELEASE_INDEX.md) · [`CROSS_LANE.md`](../../../domains/agriculture/CROSS_LANE.md).
+- Soil: [`docs/domains/soil/README.md`](../../../domains/soil/README.md) · [`data/registry/sources/soil/README.md`](../../../../data/registry/sources/soil/README.md).
+- Lifecycle: [`data/raw/README.md`](../../../../data/raw/README.md) · [`directory-rules.md`](../../../doctrine/directory-rules.md).
+- Connector: [`connectors/nrcs/README.md`](../../../../connectors/nrcs/README.md).
+
+---
+
+## 14 — Changelog
+
+| Version | Date | Change |
+|---|---|---|
+| v0.3.0 | 2026-10-11 | Replaced the placeholder body (a verbatim copy of the NRCS family entry) with product-specific content: identity, role/support, knowledge-character cautions, granularity, access posture, fail-closed sensitivity including a Section 1619 note (NEEDS VERIFICATION), lifecycle, cross-lane use, connector/registry status, and a verification register. Placeholder NOTE removed. |
+| v0.2.1 | 2026-10-11 | Placeholder state: RAW placement wording aligned to `DIR-SOURCE-001`; required meta-block fields added. |
+
+<sub>**Status:** draft (PROPOSED, v0.3.0; updated 2026-10-11). **Owners:** TODO — Source registry steward + Soil domain steward + Agriculture domain steward. This is human-readable product-page documentation; it does not decide source admission, rights, sensitivity, or release. For activation, see the source registry and `policy/`.</sub>
+
+[↥ Back to top](#-nrcs--conservation-practice-records)
