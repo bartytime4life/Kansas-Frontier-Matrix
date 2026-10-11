@@ -1,19 +1,20 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/soil-data-lifecycle
-title: Soil Domain — Continuity Inventory
+title: Soil Domain — Data Lifecycle (placeholder holding a copy of the Continuity Inventory)
 type: standard
-version: v1.0.1
-prior_version: v1
+version: v1.0.2
+prior_version: v1.0.1
 status: draft
 owners: <TODO: soil domain steward; data-lifecycle steward>
 created: 2026-05-19
 updated: 2026-10-11
 policy_label: public
 owning_root: docs/
-responsibility: Navigational continuity register for Soil-domain artifacts across responsibility roots; not evidence, policy, release, or publication authority.
+responsibility: Hold the Soil data-lifecycle document identity; the body is currently a verbatim copy of CONTINUITY_INVENTORY.md pending distinct lifecycle content, and CONTINUITY_INVENTORY.md remains the authoritative inventory; not evidence, policy, release, or publication authority.
 truth_posture: cite-or-abstain; CONFIRMED accepted DIR-SOURCE-001 source-first capture identity / HOLD exact physical source-first RAW placement / PROPOSED or NEEDS VERIFICATION implementation continuity unless mounted-repo evidence is cited
 related:
   - docs/domains/soil/README.md
+  - docs/domains/soil/CONTINUITY_INVENTORY.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf
@@ -22,10 +23,14 @@ related:
   - data/raw/soil/README.md
 tags: [kfm, domain, soil, continuity, inventory, register]
 notes:
+  - "2026-10-11 (v1.0.2): title and responsibility now say this file is a placeholder for the Soil data-lifecycle identity whose body is a copy of CONTINUITY_INVENTORY.md; distinct lifecycle content is pending."
   - PROPOSED location under docs/domains/soil/; verify against mounted repo and ADRs.
   - Inventory is doctrine-grounded; implementation maturity is bounded to PROPOSED / NEEDS VERIFICATION unless mounted-repo evidence is supplied.
   - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001; physical source-first placement is HOLD and data/raw/soil/ is a compatibility/reference lane; documentation only."
 [/KFM_META_BLOCK_V2] -->
+
+> [!NOTE]
+> **Placeholder.** This file holds the Soil data-lifecycle document identity (`kfm://doc/soil-data-lifecycle`), but its body below is currently a verbatim copy of [`CONTINUITY_INVENTORY.md`](CONTINUITY_INVENTORY.md), which is the authoritative inventory. Where the text says "this document" or "this inventory", it means `CONTINUITY_INVENTORY.md`. Distinct lifecycle content is **NEEDS VERIFICATION** / pending.
 
 # Soil Domain — Continuity Inventory
 

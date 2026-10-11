@@ -144,7 +144,7 @@ Follow-up to the RAW placement reconciliation below, from review of that change.
 
 | Document | Version delta | §37 type | Change |
 |---|---|---|---|
-| `MISSING_OR_PLANNED_FILES.md` | v1.2.1 → v1.2.2 | PATCH | The `data/raw/archaeology/README.md` row is back to `🟡 PLANNED` / `❓` / `NEEDS VERIFICATION` (authored on `main` in #5040), because this ledger's evidence rules forbid `🟢 PRESENT` without a mounted-repo verification pass. The version badge now matches the metadata. |
+| `MISSING_OR_PLANNED_FILES.md` | v1.2.1 → v1.2.3 | PATCH | The `data/raw/archaeology/README.md` row moves to `❓ UNKNOWN` / `❓` / `NEEDS VERIFICATION` (tracked on `main` since #5040; v1.2.2 briefly used `🟡 PLANNED`, which wrongly implied it was unimplemented), because this ledger's evidence rules forbid `🟢 PRESENT` without a mounted-repo verification pass. The version badge now matches the metadata. |
 | `API_CONTRACTS.md`, `ARCHITECTURE.md`, `CANONICAL_PATHS.md`, `SOURCE_REGISTRY.md`, `README.md` | none (same edition) | PATCH | Visible badges, status rows, and "Last updated" fields now match the metadata-block version and `updated` date from the reconciliation. |
 
 ### 2026-10-11 — RAW placement reconciliation (lane-wide) — PATCH / MINOR
