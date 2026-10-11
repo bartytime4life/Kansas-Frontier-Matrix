@@ -55,8 +55,12 @@ Routes: `/v1/weather/bootstrap`, `/v1/weather/layers` and `/v1/weather/evidence`
 each optionally filtered with `?station_id=` (one of the four stations).
 Activation is compare-and-swap (`ACTIVATION_CONFLICT` if the active package
 changed). `rollback` reactivates the previous package with its decision. An
-expired decision stops the layer from answering; write a new decision and
-activate again.
+expired decision stops the layer from answering. To renew, capture again and
+prepare a replacement bound to the active package (`prepare ... --rollback-target
+sha256:ACTIVE`), then `decide`, `stage` and `activate --expected-active
+sha256:ACTIVE`. Re-activating the package that is already active is refused
+(`ROLLBACK_BINDING_MISMATCH`), because a package cannot name itself as its
+rollback target.
 
 ## Validation
 
