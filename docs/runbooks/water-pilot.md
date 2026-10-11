@@ -867,7 +867,9 @@ KFM_WATER_WORKER_TOKEN=... KFM_SITES_BYPASS_TOKEN=... \
   --site-url https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site
 ```
 
-It captures the 24 hours ending at the current hour unless you pass `--start` and
+The release page shows when the active decision expires and warns two days
+before; an expired decision stops the layer from answering. It captures the 24
+hours ending at the current hour unless you pass `--start` and
 `--end` (UTC, at most 24 hours apart). It prints `decision_path` and the release
 page URL in `next`. Open that page,
 paste `$ROOT/<decision_path>` and press **Activate package**. Without

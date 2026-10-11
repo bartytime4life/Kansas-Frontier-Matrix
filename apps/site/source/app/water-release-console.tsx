@@ -1,16 +1,34 @@
 "use client";
 import { useEffect, useState } from "react";
 
-type Status = { active_package_id: string | null; previous_package_id: string | null; revision: number };
+type Status = { active_package_id: string | null; previous_package_id: string | null; revision: number; decision_expires_at: string | null; checked_at: number };
+
+const REFRESH_WARNING_MS = 2 * 24 * 60 * 60 * 1000;
+
+function expiryText(status: Status | null) {
+  if (!status?.active_package_id || !status.decision_expires_at) return "–";
+  const remaining = Date.parse(status.decision_expires_at) - status.checked_at;
+  if (remaining <= 0) return `${status.decision_expires_at} (expired; the layer is not serving)`;
+  const hours = Math.floor(remaining / 3_600_000);
+  return `${status.decision_expires_at} (in ${hours >= 48 ? `${Math.floor(hours / 24)} days` : `${hours} hours`})`;
+}
+
+function statusMessage(status: Status) {
+  if (!status.active_package_id) return "No water package is active yet.";
+  const remaining = status.decision_expires_at ? Date.parse(status.decision_expires_at) - status.checked_at : Infinity;
+  if (remaining <= 0) return "The active decision has expired, so the layer is not serving. Run water_release.py cycle and activate the new package.";
+  if (remaining <= REFRESH_WARNING_MS) return "The active decision expires soon. Run water_release.py cycle and activate the new package before it does.";
+  return "A water package is active.";
+}
 type Result = { outcome: string; reason_code?: string; package_id?: string; revision?: number };
 
 const reasonText: Record<string, string> = {
   OWNER_REQUIRED: "This account is not on the water release owner list.",
   WATER_RELEASE_NOT_CONFIGURED: "Set KFM_WATER_OWNER_IDS or KFM_WATER_OWNER_EMAILS in Sites runtime settings.",
-  PACKAGE_NOT_STAGED: "Stage the package with tools/release/water_release.py stage-hosted first, or it was withdrawn.",
+  PACKAGE_NOT_STAGED: "Stage the package first (water_release.py cycle --site-url or stage-hosted), or it was withdrawn.",
   ACTIVATION_CONFLICT: "The active package changed since this page loaded. Refresh and try again.",
   WITHDRAW_CONFLICT: "The active package changed since this page loaded, so nothing was withdrawn. Check the active package and try again.",
-  ROLLBACK_BINDING_MISMATCH: "This package was prepared for a different previous package. Prepare it again with the current active package as --rollback-target.",
+  ROLLBACK_BINDING_MISMATCH: "This package was prepared for a different previous package. Run water_release.py cycle --site-url again so it binds the current active package.",
   INDEPENDENT_REVIEW_REQUIRED: "Reviewer and releaser match, and this package is not an admitted public source. Name a different reviewer.",
   RELEASE_TIME_INVALID: "The decision is expired or not yet valid. Write a new decision.",
 };
@@ -19,7 +37,8 @@ async function fetchStatus(): Promise<{ status: Status | null; message: string }
   const response = await fetch("/api/governed/water-admin/status", { cache: "no-store" });
   const body = await response.json();
   if (!response.ok) return { status: null, message: reasonText[body.reason_code] ?? `Status unavailable (${body.reason_code}).` };
-  return { status: body, message: body.active_package_id ? "A water package is active." : "No water package is active yet." };
+  const status: Status = { ...body, checked_at: Date.now() };
+  return { status, message: statusMessage(status) };
 }
 
 export default function WaterReleaseConsole() {
@@ -60,6 +79,7 @@ export default function WaterReleaseConsole() {
       <dt>Active</dt><dd style={{ margin: 0, overflowWrap: "anywhere" }}><code>{status?.active_package_id ?? "none"}</code></dd>
       <dt>Previous</dt><dd style={{ margin: 0, overflowWrap: "anywhere" }}><code>{status?.previous_package_id ?? "none"}</code></dd>
       <dt>Revision</dt><dd style={{ margin: 0 }}>{status?.revision ?? "–"}</dd>
+      <dt>Decision expires</dt><dd style={{ margin: 0 }}>{expiryText(status)}</dd>
     </dl>
     <label htmlFor="water-decision" style={{ fontWeight: 600 }}>Release decision (paste the file written by <code>water_release.py decide</code>)</label>
     <textarea id="water-decision" rows={10} value={decisionText} onChange={(event) => setDecisionText(event.target.value)}
