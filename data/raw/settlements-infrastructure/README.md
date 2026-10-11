@@ -1,9 +1,10 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://data/raw/settlements-infrastructure/readme
-name: Settlements Infrastructure Raw README
+title: Settlements Infrastructure Raw README
 path: data/raw/settlements-infrastructure/README.md
 type: data-raw-domain-index-readme
-version: v0.1.0
+version: v0.2.0
+prior_version: v0.1.0
 status: draft
 owners:
   - <settlements-infrastructure-domain-steward>
@@ -14,18 +15,19 @@ owners:
   - <sensitivity-reviewer>
   - <release-steward>
 created: 2026-06-27
-updated: 2026-06-27
+updated: 2026-10-11
 policy_label: restricted-review
 truth_posture: cite-or-abstain
 lifecycle_phase: raw
-responsibility_root: data/
+owning_root: data/
+responsibility: Preserve the tracked Settlements/Infrastructure RAW compatibility and reference index without treating this domain subtree as a physical source-first capture home or duplicating RAW bytes.
 domain: settlements-infrastructure
-artifact_family: immutable-settlements-infrastructure-source-capture-index
+artifact_family: settlements-infrastructure-raw-compatibility-reference-index
 sensitivity_posture: raw-internal; source-role-preserving; no-public-path; critical-asset-detail-fail-closed; cultural-sovereignty-review-where-applicable; rights-needs-verification; release-blocked
 related:
   - ../README.md
   - ../../README.md
-  - ../../raw/settlement/README.md
+  - ../settlement/README.md
   - ../../quarantine/settlements-infrastructure/README.md
   - ../../quarantine/settlement/README.md
   - ../../processed/settlements-infrastructure/README.md
@@ -62,21 +64,24 @@ tags:
   - condition-observation
   - source-capture
   - source-role
+  - compatibility-reference
+  - source-first
   - no-public-path
   - evidence-first
 notes:
   - "This README replaces the greenfield stub at `data/raw/settlements-infrastructure/README.md`."
-  - "The canonical data RAW lane is documented as `data/raw/settlements-infrastructure/`."
+  - "`data/raw/settlements-infrastructure/` is documented as the canonical domain segment for Settlements/Infrastructure RAW documentation; under DIR-SOURCE-001 that does not make it a physical source-first capture home."
   - "The singular `data/raw/settlement/README.md` file exists as compatibility context, not as the canonical parent lane."
   - "No child RAW README lanes under `data/raw/settlements-infrastructure/` were confirmed during this edit."
   - "README presence confirms documentation only; it does not prove payloads, SourceDescriptor records, connector activation, receipts, validators, fixtures, CI checks, review controls, or release readiness."
+  - "2026-10-11 reconciliation: aligned to accepted DIR-SOURCE-001 and the parent data/raw/README.md source-first contract; this lane is compatibility/reference documentation, not a physical capture home; metadata normalized to the required profile; no payload, path, writer, or release state changed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Settlements / Infrastructure RAW
 
-Parent RAW lifecycle index for immutable Settlements/Infrastructure source captures and source-admission sidecars.
+Compatibility and reference index for legacy Settlements/Infrastructure-scoped RAW documentation; not a physical source-capture home.
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
@@ -89,15 +94,17 @@ Parent RAW lifecycle index for immutable Settlements/Infrastructure source captu
 **Quick links:** [Scope](#scope) · [Repo fit](#repo-fit) · [Domain halves](#domain-halves) · [Source-family posture](#source-family-posture) · [RAW source posture](#raw-source-posture) · [Accepted material](#accepted-material) · [Exclusions](#exclusions) · [Directory map](#directory-map) · [Exit gates](#exit-gates) · [Required checks](#required-checks-before-use) · [Status notes](#status-notes)
 
 > [!CAUTION]
-> `data/raw/settlements-infrastructure/` is a no-public-path RAW lifecycle lane. It is not processed Settlements/Infrastructure truth, catalog truth, proof, receipt authority, source registry authority, rights authority, policy authority, release authority, public API/UI material, public PMTiles material, critical-asset detail authority, place-status authority, or generated-answer authority.
+> `data/raw/settlements-infrastructure/` is a no-public-path compatibility/reference index inside the RAW lifecycle boundary. Accepted Directory Rules require one source-first capture identity, so this domain subtree and any children are not default physical capture homes and must not receive duplicate RAW payloads. It is not processed Settlements/Infrastructure truth, catalog truth, proof, receipt authority, source registry authority, rights authority, policy authority, release authority, public API/UI material, public PMTiles material, critical-asset detail authority, place-status authority, or generated-answer authority.
 
 ---
 
 ## Scope
 
-This directory indexes immutable RAW source captures and RAW-local sidecars for the Settlements/Infrastructure domain.
+This directory indexes tracked Settlements/Infrastructure-facing source documentation and legacy domain-scoped RAW topology. It may reference one governed source-first capture, but it does not establish where that capture is stored.
 
-RAW exists for preservation, replay, and audit. It records what was admitted, where it came from, what source role it carried, and which identifiers, versions, vintages, source times, retrieval times, rights notes, citations, geometry/support metadata, source-head metadata, hashes, sensitivity notes, review notes, and caveats must travel downstream.
+The singular [`data/raw/settlement/`](../settlement/README.md) compatibility index documents settlement-place sources for the same domain. Both lanes must reference the same single source-first capture for any shared upstream source, never two copies.
+
+The canonical RAW boundary exists for preservation, replay, and audit. A governed source-first capture records what was admitted, where it came from, what source role it carried, and which identifiers, versions, vintages, source times, retrieval times, rights notes, citations, geometry/support metadata, source-head metadata, hashes, sensitivity notes, review notes, and caveats must travel downstream.
 
 RAW does not decide whether a settlement, municipality, census place, historic townsite, facility, service area, operator, condition observation, dependency, boundary, status event, asset relation, map layer, public claim, or generated answer is true or release-ready.
 
@@ -111,12 +118,12 @@ RAW does not decide whether a settlement, municipality, census place, historic t
 | Responsibility root | `data/` |
 | Lifecycle phase | `raw` |
 | Domain lane | `settlements-infrastructure` |
-| Artifact role | Parent RAW domain index for source captures and RAW-local sidecars |
+| Artifact role | Compatibility/reference index for Settlements/Infrastructure-facing source documentation and unresolved legacy RAW topology |
 | Related compatibility path | `data/raw/settlement/` |
 | Confirmed child README lanes | None confirmed during this edit |
 | Public access posture | No public path; no normal UI; no governed-public API exposure |
-| Upstream | Explicitly admitted connector/source-admission output only |
-| Downstream | `data/work/settlements-infrastructure/` or `data/quarantine/settlements-infrastructure/` after governed triage |
+| Upstream | References to an admitted source-first capture only; physical placement remains **NEEDS VERIFICATION** |
+| Downstream | Governed Settlements/Infrastructure WORK (`data/work/settlements-infrastructure/`) or QUARANTINE (`data/quarantine/settlements-infrastructure/`) procedures consume references or approved handoffs, not assumed domain-local copies, after governed triage |
 | Release authority | `release/`, not this directory |
 | Proof authority | `data/proofs/`, not this directory |
 | Receipt authority | `data/receipts/`, not this directory |
@@ -128,7 +135,7 @@ RAW does not decide whether a settlement, municipality, census place, historic t
 
 ## Domain halves
 
-The domain owns both settlement/place identity and infrastructure-side object families. This parent RAW index does not create two domains; it preserves source-role and sensitivity boundaries inside one domain lane.
+The domain owns both settlement/place identity and infrastructure-side object families. This compatibility/reference index does not create two domains; it preserves source-role and sensitivity boundaries inside one domain lane.
 
 | Group | Object families | RAW boundary |
 |---|---|---|
@@ -139,9 +146,9 @@ The domain owns both settlement/place identity and infrastructure-side object fa
 
 ## Source-family posture
 
-The domain docs identify source families that may feed this RAW lane after governed admission. This README does not prove that any payloads or source-family folders exist.
+The domain docs identify source families that may feed Settlements/Infrastructure work after governed admission. Each admitted source keeps one source-first capture identity; this README does not prove that any payloads or source-family folders exist, and it does not authorize creating them here.
 
-| Source family | Typical RAW posture | Boundary |
+| Source family | Typical source-first capture posture | Boundary |
 |---|---|---|
 | Census TIGER / census place geography | Authority for `CensusPlace`; observation/context for boundary by vintage. | Census identity is statistical, not legal municipal status. |
 | GNIS and gazetteers | Authority/context for place names and identity reconciliation. | Name evidence is not legal incorporation or current settlement status by itself. |
@@ -159,7 +166,9 @@ The domain docs identify source families that may feed this RAW lane after gover
 
 | Rule | Handling |
 |---|---|
-| RAW is immutable source capture | Payloads or payload references must be hash-bound and should not be overwritten in place. |
+| Capture identity is source-first | Register one `source_id` and preserve one immutable capture identity; domain references may support Settlements/Infrastructure without duplicating RAW bytes. |
+| Physical placement is held | Do not infer `data/raw/settlements-infrastructure/` or a child directory as the capture home. Use only an accepted writer/path contract; none is established by this README. |
+| RAW is immutable source capture | Payloads or payload references at the accepted source-first home must be hash-bound and should not be overwritten in place. |
 | Source role is preserved | Observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic roles must not be flattened. |
 | Time kinds stay distinct | Source time, observed time, valid/effective time, retrieval time, release time, and correction time remain separate where material. |
 | Census is not legal status | Census enumeration is not a municipal incorporation, annexation, or dissolution record. |
@@ -171,7 +180,15 @@ The domain docs identify source families that may feed this RAW lane after gover
 
 ## Accepted material
 
-Accepted content is limited to source-capture material and RAW-local sidecars:
+Accepted content is limited to documentation and governed references that do not duplicate source-first captures:
+
+- this README;
+- links to canonical SourceDescriptor, source-admission, rights, sensitivity, and connector authority;
+- references to a governed source-first capture or quarantine handoff when an accepted contract defines their shape;
+- migration or correction notes that label legacy topology without moving or copying payloads;
+- an optional local documentation index only after its schema, producer, owner, and non-authoritative role are accepted.
+
+The governed source-first capture or reference (never a duplicate in this subtree) must carry:
 
 - source-reference manifests;
 - raw payloads or raw payload references;
@@ -180,12 +197,15 @@ Accepted content is limited to source-capture material and RAW-local sidecars:
 - source-head records, retrieval metadata, status metadata, row counts, feature counts, asset counts, place counts, geometry counts, or package metadata where applicable, and checksums;
 - local README or index sidecars that help a steward understand capture state without becoming proof, catalog, receipt, registry, policy, release, public artifact, place-status authority, infrastructure-authority, or answer authority.
 
+Do not place raw payloads, copied source runs, source-head records, checksums, or other capture sidecars in this subtree merely because they support Settlements/Infrastructure. Exact physical placement and legacy migration remain **HOLD**.
+
 ---
 
 ## Exclusions
 
 | Do not place here | Correct authority home |
 |---|---|
+| Domain-scoped copies of source captures or new source-run directories | One accepted source-first RAW home after a reviewed placement decision; exact path remains **NEEDS VERIFICATION** |
 | Settlements/Infrastructure doctrine | `docs/domains/settlements-infrastructure/` |
 | Source-family doctrine | `docs/sources/catalog/` or `docs/domains/settlements-infrastructure/` |
 | Connector code or connector decisions | `connectors/` |
@@ -208,15 +228,12 @@ Accepted content is limited to source-capture material and RAW-local sidecars:
 
 ```text
 data/raw/settlements-infrastructure/
-├── README.md
-├── <future-source-family>/
-│   └── README.md
-└── index.local.json
+└── README.md
 ```
 
-Potential future source-family folders must be created only after admission/path review. Examples may include `census-places/`, `gnis-gazetteers/`, `state-local-gis/`, `municipal-legal-records/`, `historic-gazetteers-maps/`, `tribal-public-registries/`, `infrastructure-inventories/`, `operator-records/`, `condition-inspections/`, and `service-areas/`, but none are confirmed by this README.
+This is the confirmed documentation topology, not a storage specification. Do not add a future source directory, payload, or local index here until an accepted source-first placement or compatibility decision defines its role.
 
-`index.local.json` is optional and must remain RAW-local. It is not a public index, catalog record, registry record, release manifest, graph source, layer pointer, search index, vector index, map source, public-output authority, or retrieval source for generated answers.
+Earlier drafts named possible source-family folders such as `census-places/`, `gnis-gazetteers/`, `state-local-gis/`, `municipal-legal-records/`, `historic-gazetteers-maps/`, `tribal-public-registries/`, `infrastructure-inventories/`, `operator-records/`, `condition-inspections/`, and `service-areas/`. Those names are a proposed shape for source families at a future accepted source-first home, not this subtree, and none are confirmed by this README. An optional RAW-local index there would be RAW-local only. It would not be a public index, catalog record, registry record, release manifest, graph source, layer pointer, search index, vector index, map source, public-output authority, or retrieval source for generated answers.
 
 ---
 
@@ -224,10 +241,10 @@ Potential future source-family folders must be created only after admission/path
 
 | Exit route | Minimum requirement |
 |---|---|
-| Stay RAW | Source was admitted and captured, but no downstream normalization decision has been made. |
-| Quarantine | Source role, rights, source family, product/vintage identity, citation, geometry/support, schema, sensitivity, or activation is unresolved. |
-| Return / reject | Admission decision or steward review says the source should not be retained in this RAW lane. |
-| Move to work | SourceDescriptor, rights posture, source role, source-family/product identity, citation, hash, source-head metadata, and minimal validation support are sufficient for normalization. |
+| Remain at the source-first RAW home | Source was admitted and captured, but no downstream normalization decision has been made. This index may retain a governed reference only. |
+| Quarantine | Source role, rights, source family, product/vintage identity, citation, geometry/support, schema, sensitivity, activation, or physical placement is unresolved. |
+| Return / reject | Admission decision or steward review says the capture must not be retained; correction occurs through the owning source-first or quarantine procedure. |
+| Move to work | A governed reference or approved handoff may enter Settlements/Infrastructure WORK only when SourceDescriptor, rights posture, source role, source-family/product identity, citation, hash, source-head metadata, and minimal validation support are sufficient for normalization. |
 | Promote downstream | Only after later WORK/PROCESSED/CATALOG/RELEASE gates close with receipts, EvidenceBundle support, review/generalization/redaction/model receipts where required, correction path, rollback target, and release manifest where applicable. |
 
 ---
@@ -235,7 +252,7 @@ Potential future source-family folders must be created only after admission/path
 ## Forbidden shortcut
 
 ```text
-data/raw/settlements-infrastructure/
+source-first RAW capture (physical path NEEDS VERIFICATION)
 → data/processed/settlements-infrastructure/
 → data/catalog/ or data/triplets/
 → data/published/
@@ -248,7 +265,9 @@ This is forbidden unless each governed lifecycle transition has actually happene
 
 ## Required checks before use
 
-- [ ] Confirm the source belongs to the Settlements/Infrastructure lane and a documented source family.
+- [ ] Confirm one registered `source_id` and one immutable source-first capture identity; do not create a second Settlements/Infrastructure-scoped copy.
+- [ ] Treat this README as compatibility/reference documentation only; do not create a child directory as a payload destination.
+- [ ] Confirm the source maps to a documented Settlements/Infrastructure source family.
 - [ ] Confirm SourceDescriptor or admission ticket records source ID, source role, rights, citation, product/vintage identity, retrieval time, sensitivity posture, and hash posture.
 - [ ] Confirm settlement/place and infrastructure-side object families are not collapsed.
 - [ ] Confirm CensusPlace, Municipality, Settlement, Townsite, GhostTown, Fort, Mission, and ReservationCommunity identities stay distinct where evidence requires it.
@@ -266,13 +285,17 @@ This is forbidden unless each governed lifecycle transition has actually happene
 |---|---|
 | This README replaces the greenfield stub at `data/raw/settlements-infrastructure/README.md`. | **CONFIRMED authored** |
 | The target path existed in the live repository as a greenfield stub before this edit. | **CONFIRMED by GitHub contents API during this edit** |
-| `data/raw/settlements-infrastructure/` is the documented canonical RAW lane for the domain. | **CONFIRMED by GitHub contents API during this edit** |
+| `data/raw/settlements-infrastructure/` is the documented canonical domain segment for the domain's RAW documentation. | **CONFIRMED by GitHub contents API during the v0.1.0 edit; under `DIR-SOURCE-001` this does not make it a physical capture home** |
 | `data/raw/settlement/README.md` exists as related compatibility context, not as the canonical parent lane. | **CONFIRMED by GitHub contents API during this edit** |
 | Child RAW README lanes under `data/raw/settlements-infrastructure/` were confirmed during this edit. | **UNKNOWN / not confirmed** |
 | README presence proves payloads, SourceDescriptors, connectors, validators, fixtures, CI checks, receipts, review controls, or release readiness. | **DENY** |
 | Domain doctrine covers both settlement/place families and infrastructure-side families. | **CONFIRMED by GitHub contents API during this edit** |
-| Actual Settlements/Infrastructure RAW payloads exist under this subtree. | **UNKNOWN** |
-| SourceDescriptor records, connector activation, receipts, validators, fixtures, CI checks, review controls, and downstream receipts are wired for this exact canonical lane. | **NEEDS VERIFICATION** |
+| Actual Settlements/Infrastructure RAW payloads exist under this subtree. | **UNKNOWN; none added or moved by this documentation correction** — no payload files are tracked under this subtree at `main@9e8bf3e6`; external or untracked stores remain UNKNOWN |
+| Accepted Directory Rules require one source-first capture identity and prohibit duplicated RAW bytes across domains. | **CONFIRMED** (`DIR-SOURCE-001`) |
+| This subtree is an accepted physical source-first capture home. | **DENY — no placement decision found as of 2026-10-11** |
+| `data/raw/settlement/` documents settlement-place sources for the same domain; both lanes must reference one source-first capture, never two copies. | **CONFIRMED sibling README at `main@9e8bf3e6`** |
+| This README is reconciled to the parent source-first contract. | **CONFIRMED authored 2026-10-11** |
+| SourceDescriptor records, connector activation, receipts, validators, fixtures, CI checks, review controls, and downstream receipts are wired to an accepted source-first RAW writer. | **NEEDS VERIFICATION** |
 | This README is proof, receipt authority, release authority, catalog authority, registry authority, policy authority, public artifact authority, place-status authority, infrastructure authority, or generated-answer authority. | **DENY** |
 
 ---
@@ -281,7 +304,7 @@ This is forbidden unless each governed lifecycle transition has actually happene
 
 - [`../README.md`](../README.md)
 - [`../../README.md`](../../README.md)
-- [`../../raw/settlement/README.md`](../../raw/settlement/README.md)
+- [`../settlement/README.md`](../settlement/README.md)
 - [`../../quarantine/settlements-infrastructure/README.md`](../../quarantine/settlements-infrastructure/README.md)
 - [`../../quarantine/settlement/README.md`](../../quarantine/settlement/README.md)
 - [`../../processed/settlements-infrastructure/README.md`](../../processed/settlements-infrastructure/README.md)
@@ -301,6 +324,6 @@ This is forbidden unless each governed lifecycle transition has actually happene
 
 ---
 
-KFM rule: this directory is a Settlements/Infrastructure RAW domain index for source capture only. It is not source-family doctrine, registry authority, rights authority, policy authority, proof authority, receipt authority, release authority, catalog authority, place-status authority, infrastructure authority, public artifact authority, UI authority, graph authority, vector-index authority, or generated-answer truth.
+KFM rule: this directory is a Settlements/Infrastructure-facing compatibility/reference index. One governed source-first capture may support Settlements/Infrastructure without duplicated RAW bytes; this subtree does not establish physical placement. It is not source-family doctrine, registry authority, rights authority, policy authority, proof authority, receipt authority, release authority, catalog authority, place-status authority, infrastructure authority, public artifact authority, UI authority, graph authority, vector-index authority, or generated-answer truth.
 
 [Back to top](#top)
