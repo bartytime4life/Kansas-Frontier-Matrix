@@ -6,7 +6,7 @@ import math
 
 from jsonschema import Draft202012Validator, FormatChecker
 from connectors_core.captured_json import canonical_bytes, digest_bytes
-from connectors.noaa.src.noaa.uscrn_daily import DEPTHS_CM
+from connectors.noaa.src.noaa.uscrn_daily import DEPTHS_CM, MOISTURE_TOKEN, TEMP_TOKEN
 from connectors.noaa.src.noaa.uscrn_daily_capture import SOURCE_ID, STALE_AFTER_DAYS, STATIONS, VARIABLES, WINDOW_DAYS, window
 from pipelines.domains.soil.uscrn_daily_normalize import (
     CANDIDATE_PROFILE, DIGEST, LAT, LON, UNITS, WITHHELD, coverage, freshness, reading, station_name, withheld_counts,
@@ -71,6 +71,9 @@ def validate_candidate(candidate: dict) -> dict:
             raise ValueError("OBSERVATION_DATE_INVALID") from None
         if not start <= day <= end or record["retrieved_at"] > candidate["retrieved_at"]:
             raise ValueError("OBSERVATION_DATE_INVALID")
+        # The token must be in NOAA's daily01 form for its variable (0.280, not 0.28; 21.5, not 21.50).
+        if not (MOISTURE_TOKEN if record["variable"] == "SOIL_MOISTURE" else TEMP_TOKEN).fullmatch(record["source_token"]):
+            raise ValueError("OBSERVATION_TOKEN_INVALID")
         if record["unit"] != UNITS[record["variable"]]:
             raise ValueError("OBSERVATION_UNIT_MISMATCH")
         if (record["value"], record["withheld"]) != reading(record["variable"], record["source_token"]):
@@ -78,6 +81,13 @@ def validate_candidate(candidate: dict) -> dict:
         if tuple(key) in seen:
             raise ValueError("DUPLICATE_STATION_DAY_VALUE")
         seen.add(tuple(key))
+    # A source row yields every variable at every depth: a represented station-day must be complete.
+    complete = {(variable, depth) for variable in VARIABLES for depth in DEPTHS_CM}
+    days = {}
+    for record in observations:
+        days.setdefault((record["station_id"], record["observation_date"]), set()).add((record["variable"], record["depth_cm"]))
+    if any(values != complete for values in days.values()):
+        raise ValueError("STATION_DAY_INCOMPLETE")
     order = [(r["station_id"], r["observation_date"], r["variable"], r["depth_cm"]) for r in observations]
     if order != sorted(order):
         raise ValueError("OBSERVATION_ORDER_INVALID")
