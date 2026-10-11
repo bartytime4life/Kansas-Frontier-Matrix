@@ -12,7 +12,7 @@ import uuid
 from typing import Callable
 
 from connectors_core.captured_json import canonical_bytes
-from .core import MAX_PACKAGE_BYTES, WATER, WEATHER, validate_snapshot
+from .core import MAX_PACKAGE_BYTES, SOIL, WATER, WEATHER, validate_snapshot
 from .local_store import FAMILIES, LocalReleaseStore, family_names, regular_bytes
 
 SCHEMA = "".join(f"""
@@ -20,12 +20,14 @@ CREATE TABLE IF NOT EXISTS {n['packages']}(package_id TEXT PRIMARY KEY, object_k
 CREATE TABLE IF NOT EXISTS {n['active']}(singleton INTEGER PRIMARY KEY CHECK(singleton=1), package_id TEXT NOT NULL, decision_json TEXT NOT NULL, previous_package_id TEXT, revision INTEGER NOT NULL);
 CREATE TABLE IF NOT EXISTS {n['events']}(event_id TEXT PRIMARY KEY, package_id TEXT NOT NULL, previous_package_id TEXT, decision_json TEXT NOT NULL, occurred_at TEXT NOT NULL, action TEXT NOT NULL);
 """ for n in FAMILIES.values())
-PROFILES = {"water": WATER, "weather": WEATHER}
+PROFILES = {"water": WATER, "weather": WEATHER, "soil": SOIL}
 
 
 def _project(family: str):
     if family == "weather":
         from .weather_projection import project
+    elif family == "soil":
+        from .soil_projection import project
     else:
         from .water_projection import project
     return project

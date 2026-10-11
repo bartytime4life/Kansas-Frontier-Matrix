@@ -5,7 +5,9 @@
 (with the admitted license only when ``--admitted-source`` is given).
 ``decide`` writes a kfm.soil-release-decision/v1 record only when the soil
 serving gate (ADR-0046) answers ELIGIBLE for it and every evidence bundle
-replays. Nothing here fetches source data, stages, activates or serves.
+replays. ``stage``/``activate``/``rollback`` operate the soil tables of a local
+serving store (the one ``KFM_RELEASE_STORE`` points kfm-governed-api at, which
+serves /v1/soil/*). Nothing here fetches source data or touches the Site.
 """
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -22,6 +24,7 @@ from pipelines.domains.soil.uscrn_daily_validate import validate_candidate
 from policy_runtime.core import SOIL_DECISION_PROFILE, SOIL_SELF_RELEASE_LICENSES, serving_gate
 from release.core import DIGEST, SOIL, validate_snapshot
 from release.water_projection import replay_evidence
+from release.local_admin import activate, stage
 from pipelines.domains.soil.uscrn_daily_normalize import normalize_capture
 from tools.local_data.file_io import read_regular
 from tools.local_data.manage import external_root, store_lock
@@ -129,6 +132,13 @@ def decide(root: Path, package_id: str, *, reviewer: str, releaser: str, valid_d
             "decision_path": relative.as_posix(), "expires_at": decision["expires_at"], "activated": False}
 
 
+def _decision(path: Path) -> dict:
+    decision = decode_object(read_regular(path, 64 * 1024), limit=64 * 1024)
+    if decision.get("profile") != SOIL_DECISION_PROFILE:
+        raise ValueError("DECISION_PROFILE_INVALID")
+    return decision
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -144,14 +154,40 @@ def main(argv=None) -> int:
     rule.add_argument("--reviewer", required=True)
     rule.add_argument("--releaser", required=True)
     rule.add_argument("--valid-days", type=int, default=7)
+    for name in ("stage", "activate", "rollback"):
+        sub = commands.add_parser(name)
+        sub.add_argument("--root", required=True, help="private acquisition/candidate store")
+        sub.add_argument("--store", required=True, help="private serving store (KFM_RELEASE_STORE)")
+        if name == "stage":
+            sub.add_argument("--package-id", required=True)
+            sub.add_argument("--actor", required=True)
+        else:
+            sub.add_argument("--decision", required=True, help="decision path relative to --root")
+            sub.add_argument("--expected-active", required=True, help="currently active soil package id, or 'none'")
     args = parser.parse_args(argv)
+    now = datetime.now(timezone.utc)
     try:
         root = external_root(args.root)
+        if args.command == "stage":
+            # The same checks as decide: carrier, domain revalidation and the stored capture.
+            _snapshot(root, args.package_id)
+            raw = read_regular(root / SNAPSHOTS / _short(args.package_id, "PACKAGE_ID_INVALID") / "snapshot.json", MAX_SNAPSHOT_BYTES)
+            package_id = stage(external_root(args.store), raw, actor=args.actor, now=_utc(now),
+                               validator=validate_candidate, family="soil")
+            print(canonical_bytes({"outcome": "STAGED", "package_id": package_id, "activated": False}).decode())
+            return 0
+        if args.command in ("activate", "rollback"):
+            decision = _decision(root / args.decision)
+            expected = None if args.expected_active == "none" else args.expected_active
+            result = activate(external_root(args.store), decision["package_id"], decision, expected_active=expected, now=_utc(now),
+                              validator=validate_candidate, rollback=args.command == "rollback", family="soil")
+            print(canonical_bytes({"outcome": "ROLLED_BACK" if args.command == "rollback" else "ACTIVATED", **result}).decode())
+            return 0
         if args.command == "prepare":
             result = prepare(root, args.candidate_id, rollback_target=args.rollback_target, admitted_source=args.admitted_source)
         else:
             result = decide(root, args.package_id, reviewer=args.reviewer, releaser=args.releaser,
-                            valid_days=args.valid_days, now=datetime.now(timezone.utc))
+                            valid_days=args.valid_days, now=now)
     except (ValueError, OSError, KeyError, TypeError) as exc:
         reason = str(exc) if isinstance(exc, ValueError) and CODE.fullmatch(str(exc)) else "SOIL_RELEASE_STEP_FAILED"
         print(canonical_bytes({"outcome": "ERROR", "reason_code": reason}).decode())

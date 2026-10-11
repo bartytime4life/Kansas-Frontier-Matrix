@@ -17,6 +17,7 @@ from .core import MAX_PACKAGE_BYTES
 FAMILIES = {
     "water": {"packages": "water_packages", "active": "water_active", "events": "water_activation_events", "objects": "objects"},
     "weather": {"packages": "weather_packages", "active": "weather_active", "events": "weather_activation_events", "objects": "weather-objects"},
+    "soil": {"packages": "soil_packages", "active": "soil_active", "events": "soil_activation_events", "objects": "soil-objects"},
 }
 
 
