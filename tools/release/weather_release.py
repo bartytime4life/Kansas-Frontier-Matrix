@@ -72,6 +72,10 @@ def _snapshot(root: Path, package_id: str) -> tuple[dict, dict]:
     manifest, values = validate_snapshot(raw, profile=WEATHER)
     if manifest["package_id"] != package_id:
         raise ValueError("PACKAGE_PATH_ID_MISMATCH")
+    # validate_snapshot checks hashes and bindings only; a resealed package must also
+    # pass the domain validator and carry exactly the receipt it produces.
+    if validate_candidate(values["candidate.json"]) != values["validation.json"]:
+        raise ValueError("VALIDATION_RECEIPT_MISMATCH")
     return manifest, values
 
 

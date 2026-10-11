@@ -18,6 +18,7 @@ sys.path.insert(0, str(ROOT))
 from connectors_core.captured_json import canonical_bytes, decode_object
 from pipelines.domains.soil.uscrn_daily_admission import SOURCE_REF, load_admission
 from pipelines.domains.soil.uscrn_daily_package import prepare_soil_package
+from pipelines.domains.soil.uscrn_daily_validate import validate_candidate
 from policy_runtime.core import SOIL_DECISION_PROFILE, SOIL_SELF_RELEASE_LICENSES, serving_gate
 from release.core import DIGEST, SOIL, validate_snapshot
 from release.water_projection import replay_evidence
@@ -64,6 +65,10 @@ def _snapshot(root: Path, package_id: str) -> tuple[dict, dict]:
     manifest, values = validate_snapshot(raw, profile=SOIL)
     if manifest["package_id"] != package_id:
         raise ValueError("PACKAGE_PATH_ID_MISMATCH")
+    # validate_snapshot checks hashes and bindings only; a resealed package must also
+    # pass the domain validator and carry exactly the receipt it produces.
+    if validate_candidate(values["candidate.json"]) != values["validation.json"]:
+        raise ValueError("VALIDATION_RECEIPT_MISMATCH")
     return manifest, values
 
 

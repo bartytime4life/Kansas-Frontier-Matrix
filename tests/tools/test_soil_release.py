@@ -192,3 +192,51 @@ def test_cli_reports_a_reason_code_on_refusal(tmp_path, capsys):
     code = soil_release.main(["decide", "--root", str(root), "--package-id", preparation["package_id"],
                               "--reviewer", OWNER, "--releaser", OWNER])
     assert (code, json.loads(capsys.readouterr().out)) == (1, {"outcome": "ERROR", "reason_code": "INDEPENDENT_REVIEW_REQUIRED"})
+
+
+def test_decide_revalidates_the_candidate_and_refuses_a_resealed_semantic_change(tmp_path, monkeypatch):
+    # A faulty producer packages a candidate whose coverage contradicts its observations,
+    # with every identity, receipt, binding and outer hash recomputed.
+    from pipelines.domains.soil import uscrn_daily_package
+    root, preparation = prepared(tmp_path, admitted=True)
+    _, values = soil_release._snapshot(root, preparation["package_id"])
+    candidate = values["candidate.json"]
+    candidate["coverage"] = "EMPTY"
+    candidate["candidate_id"] = digest_bytes(canonical_bytes({k: v for k, v in candidate.items() if k != "candidate_id"}))
+
+    def lenient(value):
+        report = {**values["validation.json"], "candidate_id": value["candidate_id"]}
+        report.pop("receipt_digest")
+        report["receipt_digest"] = digest_bytes(canonical_bytes(report))
+        return report
+    monkeypatch.setattr(uscrn_daily_package, "validate_candidate", lenient)
+    snapshot = uscrn_daily_package.prepare_soil_package(candidate, admission=uscrn_daily_admission.load_admission())
+    package_id = snapshot["manifest"]["package_id"]
+    validate_snapshot(canonical_bytes(snapshot), profile=SOIL)  # the carrier checks alone accept it
+    path = snapshot_path(root, package_id)
+    path.parent.mkdir(parents=True)
+    path.write_bytes(canonical_bytes(snapshot))
+    with pytest.raises(ValueError, match="COVERAGE_OR_FRESHNESS_MISMATCH"):
+        soil_release.decide(root, package_id, reviewer=OWNER, releaser=OWNER, valid_days=7, now=NOW)
+    assert not (root / "release/decisions").exists()
+
+
+def test_decide_refuses_a_package_whose_receipt_differs_from_revalidation(tmp_path, monkeypatch):
+    # The candidate is genuine, but the packaged (and bundle-bound) receipt is not the one it produces.
+    from pipelines.domains.soil import uscrn_daily_package
+    root, preparation = prepared(tmp_path, admitted=True)
+    _, values = soil_release._snapshot(root, preparation["package_id"])
+
+    def miscounting(value):
+        report = {k: v for k, v in values["validation.json"].items() if k != "receipt_digest"}
+        report["withheld"] += 1
+        report["receipt_digest"] = digest_bytes(canonical_bytes(report))
+        return report
+    monkeypatch.setattr(uscrn_daily_package, "validate_candidate", miscounting)
+    snapshot = uscrn_daily_package.prepare_soil_package(values["candidate.json"], admission=uscrn_daily_admission.load_admission())
+    package_id = snapshot["manifest"]["package_id"]
+    path = snapshot_path(root, package_id)
+    path.parent.mkdir(parents=True)
+    path.write_bytes(canonical_bytes(snapshot))
+    with pytest.raises(ValueError, match="VALIDATION_RECEIPT_MISMATCH"):
+        soil_release.decide(root, package_id, reviewer=OWNER, releaser=OWNER, valid_days=7, now=NOW)
