@@ -227,6 +227,14 @@ test("flowing water stays off, waits for river zoom, and draws provider reaches 
   map.fire("moveend");
   await settle();
   assert.equal(requested.length, before, "cached cells are not fetched again");
+  const gaugeStatuses = [];
+  const stopGaugeStatus = flow.subscribeWaterFlowStatus(status => gaugeStatuses.push(status.gaugedReaches));
+  map.layout.set(`${GAUGE_LAYER}:visibility`, "none");
+  map.fire("sourcedata", { sourceId: GAUGE_SOURCE });
+  await settle();
+  assert.equal(flow.waterFlowStatus(map).gaugedReaches, 0);
+  assert.deepEqual(gaugeStatuses, [0], "changed gauge counts notify the panel even when cell and ready state stay the same");
+  stopGaugeStatus();
   unsubscribe();
 });
 

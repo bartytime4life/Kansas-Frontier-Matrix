@@ -205,8 +205,9 @@ test("the merged studio retains the real night-sky toggle, catalog copy and Batt
     const tree = SceneEffectsControls(props), nodes = descendants(tree);
     const label = nodes.find((node) => node.type === "label" && textOf(node).includes("Real night sky"));
     assert.ok(label);
-    assert.equal(label.props["data-held"], efficient || undefined);
-    assert.ok(textOf(label).includes(efficient ? "Paused while Battery saver is on" : "Hipparcos stars where they are right now"));
+    assert.equal(label.props["data-held"], efficient && stars || undefined);
+    assert.ok(textOf(label).includes(efficient && stars ? "Paused while Battery saver is on" : "Hipparcos stars where they are right now"));
+    assert.ok(textOf(label).includes(!stars ? "Off" : efficient ? "Paused · Battery saver" : "Needs a dark sky and a tilted horizon"));
     assert.ok(textOf(tree).includes("Stars are placed from the Hipparcos-based catalog for the current time; the Milky Way and Sun glow are illustrative."));
     const toggle = descendants(label).find((node) => node.type === "input");
     assert.equal(toggle.props.checked, stars);

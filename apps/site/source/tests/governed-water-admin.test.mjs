@@ -67,6 +67,27 @@ test("staging stores a validated package once and never activates it", async () 
   await rejects(admin.stageWaterPackage(s, text, "staging-token", NOW), "IMMUTABLE_OBJECT_CONFLICT");
 });
 
+test("staging and activation both reject changed measurements with resealed outer hashes", async () => {
+  const s = await store(), snapshot = JSON.parse(await fixture("admitted-snapshot"));
+  const candidate = JSON.parse(snapshot.artifacts["candidate.json"]);
+  candidate.observations[0].value = 17.5;
+  snapshot.artifacts["candidate.json"] = water.canonical(candidate);
+  snapshot.manifest.artifacts["candidate.json"] = await water.digest(snapshot.artifacts["candidate.json"]);
+  const manifest = Object.fromEntries(Object.entries(snapshot.manifest).filter(([name]) => name !== "package_id"));
+  snapshot.manifest.package_id = await water.digest(water.canonical(manifest));
+  const text = JSON.stringify(snapshot), id = snapshot.manifest.package_id;
+  await rejects(admin.stageWaterPackage(s, text, "staging-token", NOW), "PACKAGE_INVALID");
+  assert.equal(s.objects.size, 0);
+  assert.equal(s.sqlite.prepare("SELECT COUNT(*) AS n FROM water_packages").get().n, 0);
+  // An object left by an older parser is rechecked before activation, too.
+  s.objects.set(admin.waterObjectKey(id), text);
+  s.sqlite.prepare("INSERT INTO water_packages (package_id, object_key, staged_at, staged_by, state) VALUES (?, ?, ?, ?, 'STAGED')")
+    .run(id, admin.waterObjectKey(id), NOW, "synthetic-legacy-stage");
+  const owner = { ...JSON.parse(await fixture("owner-decision")), package_id: id };
+  await rejects(admin.activateWaterPackage(s, { package_id: id, decision: owner, expected_active: null }, NOW), "CANDIDATE_DIGEST_MISMATCH");
+  assert.equal(s.sqlite.prepare("SELECT COUNT(*) AS n FROM water_active").get().n, 0);
+});
+
 test("activation is compare-and-swap, gate-checked and logged", async () => {
   const s = await store(), owner = JSON.parse(await fixture("owner-decision"));
   const id = owner.package_id;

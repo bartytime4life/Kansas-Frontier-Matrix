@@ -180,11 +180,17 @@ export function SceneEffectsControls({ settings, light, efficient, reducedMotion
       <div className="scene-effects-switches">
         {SCENE_EFFECT_OPTIONS.filter((option) => option.key !== "sunSync").map((option) => {
           const here = option.views.includes(view);
-          const held = efficient && (option.key === "curtain" || option.key === "stars" || option.key === "waterFlow");
+          const enabled = settings[option.key];
+          const held = enabled && efficient && (option.key === "curtain" || option.key === "stars" || option.key === "waterFlow");
           const reading = settings[option.key] ? readings?.[option.key] : null;
-          return <label key={option.key} data-here={here || undefined} data-held={held || undefined}>
-            <input type="checkbox" role="switch" checked={settings[option.key]} onChange={() => onChange({ ...settings, [option.key]: !settings[option.key] })} />
-            <span><strong>{option.label}{option.network && <i title={option.key === "waterFlow" ? "Requests USGS 3DHP flowlines while on" : "Requests display-DEM tiles while on"}> · network</i>}</strong><small aria-live={option.key === "waterFlow" ? "polite" : undefined}>{held ? "Paused while Battery saver is on" : reading ?? option.detail}</small><b>{here ? "Shows in this view" : `Shows in ${option.views.map((key) => SCENE_VIEW_LABELS[key]).join(", ")}`}</b></span>
+          const status = !enabled ? "Off" : held ? "Paused · Battery saver" : !cameraReady ? "Waiting for map"
+            : !here ? `Available in ${option.views.map((key) => SCENE_VIEW_LABELS[key]).join(", ")}`
+            : option.key === "stars" && view !== "globe" ? "Needs a dark sky and a tilted horizon"
+            : option.key === "waterFlow" ? "Direction cue · display speed"
+            : "Enabled for this view";
+          return <label key={option.key} data-here={enabled && here || undefined} data-held={held || undefined} data-enabled={enabled}>
+            <input type="checkbox" role="switch" aria-label={option.label} aria-describedby={`${id}-${option.key}-detail ${id}-${option.key}-status`} checked={enabled} onChange={() => onChange({ ...settings, [option.key]: !settings[option.key] })} />
+            <span><strong>{option.label}{option.network && <i title={option.key === "waterFlow" ? "Requests USGS 3DHP flowlines while on" : "Requests display-DEM tiles while on"}> · network</i>}</strong><small id={`${id}-${option.key}-detail`} aria-live={option.key === "waterFlow" ? "polite" : undefined}>{held ? "Paused while Battery saver is on" : reading ?? option.detail}</small><b id={`${id}-${option.key}-status`}>{status}{enabled && !held && option.motion && reducedMotion ? " · motion paused" : ""}</b></span>
           </label>;
         })}
       </div>

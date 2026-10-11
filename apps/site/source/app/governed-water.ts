@@ -42,6 +42,153 @@ export function approvalRemainingMs(expiry: unknown, nowMs: number): number {
   }
 }
 export function same(a: unknown, b: unknown) { return canonical(a) === canonical(b); }
+
+// Captured JSON uses Python json.dumps, not RFC 8785/JCS. Keep numeric tokens
+// losslessly: 1.0, 1e-07 and -0.0 must not become 1, 1e-7 and 0 in an identity.
+class CapturedNumber { constructor(readonly token: string) {} }
+type CapturedValue = null | boolean | string | CapturedNumber | CapturedValue[] | { [key: string]: CapturedValue };
+type CapturedObject = { [key: string]: CapturedValue };
+function capturedObject(value: CapturedValue): CapturedObject {
+  if (!value || typeof value !== "object" || Array.isArray(value) || value instanceof CapturedNumber) throw new Error("OBJECT_REQUIRED");
+  return value;
+}
+function codepointOrder(a: string, b: string): number {
+  const left = Array.from(a), right = Array.from(b);
+  for (let i = 0; i < Math.min(left.length, right.length); i++) {
+    const difference = left[i].codePointAt(0)! - right[i].codePointAt(0)!;
+    if (difference) return difference;
+  }
+  return left.length - right.length;
+}
+function capturedCanonical(value: CapturedValue, omit?: string): string {
+  if (value instanceof CapturedNumber) return value.token;
+  if (value === null || typeof value === "string" || typeof value === "boolean") return JSON.stringify(value);
+  if (Array.isArray(value)) return `[${value.map(item => capturedCanonical(item)).join(",")}]`;
+  return `{${Object.keys(value).filter(key => key !== omit).sort(codepointOrder).map(key => `${JSON.stringify(key)}:${capturedCanonical(value[key])}`).join(",")}}`;
+}
+function pythonFloatToken(value: number): string {
+  if (value === 0) return Object.is(value, -0) ? "-0.0" : "0.0";
+  const [mantissa, exponent = "0"] = Math.abs(value).toString().split("e");
+  let digits = mantissa.replace(".", ""), magnitude = Number(exponent) + (mantissa.includes(".") ? mantissa.indexOf(".") : mantissa.length) - 1;
+  while (digits.startsWith("0")) { digits = digits.slice(1); magnitude--; }
+  digits = digits.replace(/0+$/, "");
+  const sign = value < 0 ? "-" : "";
+  if (magnitude < -4 || magnitude >= 16) return `${sign}${digits[0]}${digits.length > 1 ? "." + digits.slice(1) : ""}e${magnitude < 0 ? "-" : "+"}${String(Math.abs(magnitude)).padStart(2, "0")}`;
+  const point = magnitude + 1;
+  return sign + (point <= 0 ? "0." + "0".repeat(-point) + digits : point >= digits.length ? digits + "0".repeat(point - digits.length) + ".0" : digits.slice(0, point) + "." + digits.slice(point));
+}
+function parseCapturedObject(text: string): CapturedObject {
+  // The producer writes compact, sorted artifacts. Only that representation is
+  // admitted; numeric aliases are rejected rather than silently recanonicalized.
+  // Integer tokens remain exact even when they exceed JavaScript's safe range.
+  let cursor = 0;
+  const number = /-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/y;
+  function string(): string {
+    const start = cursor++;
+    while (cursor < text.length && text[cursor] !== '"') { if (text[cursor] === "\\") cursor++; cursor++; }
+    if (cursor >= text.length) throw new Error("INVALID_JSON");
+    const value = JSON.parse(text.slice(start, ++cursor)) as string;
+    for (let i = 0; i < value.length; i++) {
+      const unit = value.charCodeAt(i);
+      if (unit >= 0xd800 && unit <= 0xdbff) {
+        const next = value.charCodeAt(++i);
+        if (!(next >= 0xdc00 && next <= 0xdfff)) throw new Error("INVALID_JSON_UNICODE");
+      } else if (unit >= 0xdc00 && unit <= 0xdfff) throw new Error("INVALID_JSON_UNICODE");
+    }
+    return value;
+  }
+  function read(depth: number): CapturedValue {
+    if (depth > 32) throw new Error("JSON_DEPTH_LIMIT");
+    const char = text[cursor];
+    if (char === " " || char === "\t" || char === "\r" || char === "\n") throw new Error("CAPTURED_JSON_NOT_CANONICAL");
+    if (char === '"') return string();
+    if (char === "{") {
+      cursor++;
+      const value: CapturedObject = Object.create(null);
+      if (text[cursor] === "}") { cursor++; return value; }
+      while (true) {
+        if (text[cursor] !== '"') throw new Error("CAPTURED_JSON_NOT_CANONICAL");
+        const key = string();
+        if (key.length > 256 || Object.hasOwn(value, key)) throw new Error("DUPLICATE_JSON_KEY");
+        if (text[cursor++] !== ":") throw new Error("INVALID_JSON");
+        value[key] = read(depth + 1);
+        const delimiter = text[cursor++];
+        if (delimiter === "}") return value;
+        if (delimiter !== ",") throw new Error("INVALID_JSON");
+      }
+    }
+    if (char === "[") {
+      cursor++;
+      const values: CapturedValue[] = [];
+      if (text[cursor] === "]") { cursor++; return values; }
+      while (true) {
+        values.push(read(depth + 1));
+        const delimiter = text[cursor++];
+        if (delimiter === "]") return values;
+        if (delimiter !== ",") throw new Error("INVALID_JSON");
+      }
+    }
+    for (const [token, value] of [["null", null], ["true", true], ["false", false]] as const) {
+      if (text.startsWith(token, cursor)) { cursor += token.length; return value; }
+    }
+    number.lastIndex = cursor;
+    const match = number.exec(text);
+    if (!match || match[0].length > 128 || !Number.isFinite(Number(match[0]))) throw new Error("INVALID_JSON_NUMBER");
+    const token = match[0];
+    cursor = number.lastIndex;
+    // Integer tokens need no Number conversion. Floats must use the producer's
+    // shortest spelling and exponent thresholds, including two-digit exponents.
+    if (token === "-0" || /[.eE]/.test(token) && token !== pythonFloatToken(Number(token))) throw new Error("CAPTURED_JSON_NOT_CANONICAL");
+    return new CapturedNumber(token);
+  }
+  const value = capturedObject(read(0));
+  if (cursor !== text.length || capturedCanonical(value) !== text) throw new Error("CAPTURED_JSON_NOT_CANONICAL");
+  return value;
+}
+function microseconds(value: unknown): bigint {
+  time(value);
+  const stamp = value as string, fraction = /\.(\d{1,6})Z$/.exec(stamp)?.[1] ?? "";
+  return BigInt(Date.parse(stamp.slice(0, 19) + "Z")) * 1000n + BigInt(fraction.padEnd(6, "0"));
+}
+async function validateWaterIdentities(candidate: WaterCandidate, captured: CapturedObject, validation: Obj, capturedValidation: CapturedObject) {
+  if (await digest(capturedCanonical(captured, "candidate_id")) !== candidate.candidate_id) throw new Error("CANDIDATE_DIGEST_MISMATCH");
+  const revisions = object(candidate).revision_history;
+  if (!Array.isArray(revisions) || revisions.length > 4000) throw new Error("OBSERVATION_COUNT_INVALID");
+  const history = new Map<string, WaterObservation & Obj>(), start = microseconds(candidate.start), end = microseconds(candidate.end), retrieved = microseconds(candidate.retrieved_at);
+  for (const field of ["revision_history", "observations"] as const) {
+    const records = field === "revision_history" ? revisions : candidate.observations;
+    const capturedRecords = captured[field];
+    if (!Array.isArray(capturedRecords) || capturedRecords.length !== records.length) throw new Error("OBSERVATION_COUNT_INVALID");
+    for (let i = 0; i < records.length; i++) {
+      const record = object(records[i]) as WaterObservation & Obj;
+      if (await digest(capturedCanonical(capturedObject(capturedRecords[i]), "record_digest")) !== record.record_digest) throw new Error("OBSERVATION_DIGEST_MISMATCH");
+      if (!candidate.stations.some(station => station.id === record.station_id) || typeof record.time_series_id !== "string" || !record.time_series_id.length || record.time_series_id.length > 256
+          || record.parameter_code !== "00060" || record.unit !== "ft^3/s" || record.value !== null && (!Number.isFinite(record.value) || Math.abs(record.value) > 1e9)) throw new Error("OBSERVATION_INVALID");
+      const identity = (await digest(canonical([record.station_id, record.time_series_id, "00060", record.observed_at]))).slice(7);
+      if (record.id !== "kfm:flow:" + identity || record.evidence_ref !== "kfm:evidence:flow:" + identity) throw new Error("OBSERVATION_IDENTITY_MISMATCH");
+      const observed = microseconds(record.observed_at), revised = microseconds(record.provider_revision_at), recordRetrieved = microseconds(record.retrieved_at);
+      if (!(start <= observed && observed <= end && observed <= revised && revised <= recordRetrieved && recordRetrieved <= retrieved)) throw new Error("OBSERVATION_TIME_MISMATCH");
+      if (!["P", "Provisional", "A", "Approved"].includes(record.approval_status as string) || record.provisional !== ["P", "Provisional"].includes(record.approval_status as string)) throw new Error("PROVISIONAL_STATUS_MISMATCH");
+      if (field === "revision_history") {
+        const key = canonical([record.id, record.provider_revision_at]);
+        if (history.has(key)) throw new Error("DUPLICATE_REVISION");
+        history.set(key, record);
+      }
+    }
+  }
+  const latest = new Map<string, WaterObservation & Obj>();
+  const orderedHistory = [...history.values()].sort((a, b) => {
+    const left = microseconds(a.provider_revision_at), right = microseconds(b.provider_revision_at);
+    return left < right ? -1 : left > right ? 1 : codepointOrder(a.record_digest as string, b.record_digest as string);
+  });
+  for (const record of orderedHistory) latest.set(record.id, record);
+  const observations = [...latest.values()].sort((a, b) => codepointOrder(a.station_id, b.station_id) || codepointOrder(a.observed_at, b.observed_at) || codepointOrder(a.id, b.id));
+  if (!same(candidate.observations, observations)) throw new Error("LATEST_REVISION_MISMATCH");
+  if (await digest(capturedCanonical(capturedValidation, "receipt_digest")) !== validation.receipt_digest) throw new Error("VALIDATION_RECEIPT_INVALID");
+  const expected = { profile: "kfm.water-pilot-validation/v1", candidate_id: candidate.candidate_id, outcome: "PASS", observations: candidate.observations.length,
+    review_required: true, promotion_authorized: false, release_authorized: false, publication_authorized: false };
+  if (!same(validation, { ...expected, receipt_digest: await digest(canonical(expected)) })) throw new Error("VALIDATION_RECEIPT_MISMATCH");
+}
 export function parseWaterJson(text: string): unknown {
   // Linear duplicate-key/depth guard, followed by the platform JSON grammar.
   const stack: { keys: Set<string> | null; key: boolean }[] = [];
@@ -77,6 +224,7 @@ export async function parseWaterPackage(text: string): Promise<WaterPackage> {
   if (candidate.release_state !== "UNRELEASED" || values["catalog.json"].authoritative !== false || validation.outcome !== "PASS") throw new Error("CARRIER_CANNOT_SELF_APPROVE");
   if (candidate.start !== manifest.start || candidate.end !== manifest.end || candidate.retrieved_at !== manifest.created_at || candidate.stale_after_seconds !== 7200) throw new Error("CANDIDATE_IDENTITY_MISMATCH");
   if (!Array.isArray(candidate.stations) || !same(candidate.stations.map(s => s.id).sort(), ["USGS-06892518", "USGS-07156900"]) || !Array.isArray(candidate.observations) || candidate.observations.length > 4000 || !Array.isArray(evidence.entries) || evidence.entries.length !== 2) throw new Error("STATION_SCOPE_INVALID");
+  await validateWaterIdentities(candidate, parseCapturedObject(artifacts["candidate.json"] as string), validation, parseCapturedObject(artifacts["validation.json"] as string));
   for (const s of candidate.stations) { if (typeof s.name !== "string" || s.name.length > 256 || s.geometry.type !== "Point" || s.geometry.coordinates.length !== 2 || !s.geometry.coordinates.every(Number.isFinite) || Math.abs(s.geometry.coordinates[0]) > 180 || Math.abs(s.geometry.coordinates[1]) > 90) throw new Error("STATION_GEOMETRY_INVALID"); }
   for (const r of candidate.observations) { if (!candidate.stations.some(s => s.id === r.station_id) || r.unit !== "ft^3/s" || r.value !== null && (!Number.isFinite(r.value) || Math.abs(r.value) > 1e9) || time(r.observed_at) < time(candidate.start) || time(r.observed_at) > time(candidate.end)) throw new Error("OBSERVATION_INVALID"); }
   if (!same(evidence.entries.map(e => e.station_id).sort(), candidate.stations.map(s => s.id).sort())) throw new Error("STATION_EVIDENCE_MISMATCH");

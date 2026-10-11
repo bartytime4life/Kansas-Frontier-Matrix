@@ -2573,7 +2573,7 @@ export default function Home() {
 
   const buildExportReview = useCallback((exportedAt: string) => buildPublicSafeExport({
     exportedAt,
-    locationCameraRedacted,
+    locationCameraRedacted: locationCameraRedacted || locationDerivedViewRef.current,
     view,
     projection,
     basemap,
@@ -4354,7 +4354,7 @@ export default function Home() {
         : projection === "globe"
           ? "Globe"
           : "2D";
-    const redactCamera = locationCameraRedacted;
+    const redactCamera = locationCameraRedacted || locationDerivedViewRef.current;
     // Report snapshots persist only registry identities; external provider picks
     // travel in a separate, explicitly non-evidentiary context record.
     const capturedSelection = selected?.kind === "registry" && !selectedTimeMismatch ? selected : null;
@@ -7586,7 +7586,7 @@ export default function Home() {
       measurement: redactWorkspaceCamera || !measurementGeometryMode
         ? null
         : { mode: measurementGeometryMode, unit: measureUnit, label: measurement, coordinates: measureCoordinatesRef.current.map(([longitude, latitude]) => [longitude, latitude] as [number, number]) },
-      analysisArea: analysisArea ? { ...analysisArea } : null,
+      analysisArea: !redactWorkspaceCamera && analysisArea ? { ...analysisArea } : null,
       temporalComparison: { timeA: compareTimeA, timeB: compareTimeB },
       temporalSweep: {
         mode: temporalMode,
@@ -8350,6 +8350,9 @@ export default function Home() {
   };
 
   const buildCustomReportPayload = (generatedAt: string) => {
+    // The ref is immediate: exports must be private even before the GPS state
+    // update renders. Bounds and point labels can reconstruct a withheld center.
+    const redactReportLocation = locationCameraRedacted || locationDerivedViewRef.current;
     const recordLimit = reportDetail === "EXECUTIVE" ? 8 : reportDetail === "STANDARD" ? 30 : reportRecords.length;
     const heightOverlayRendered = scenePreset === "elevation-3d" && terrainState === "READY"
       && attachedTerrainProviderRef.current === terrainProvider && topographicOverlay;
@@ -8387,8 +8390,8 @@ export default function Home() {
       },
       temporalComparison: reportTemporalComparison,
       mapContext: {
-        center: locationCameraRedacted ? "WITHHELD_BROWSER_LOCATION" : view.center,
-        camera: locationCameraRedacted
+        center: redactReportLocation ? "WITHHELD_BROWSER_LOCATION" : view.center,
+        camera: redactReportLocation
           ? { zoom: "WITHHELD", bearing: "WITHHELD", pitch: "WITHHELD" }
           : { zoom: view.zoom, bearing: view.bearing, pitch: view.pitch },
         representation: mapRepresentationLabel,
@@ -8405,20 +8408,20 @@ export default function Home() {
               elevationMeters: lockedTerrainElevation.meters,
               elevationFeet: lockedTerrainElevation.feet,
               provider: lockedTerrainElevation.provider,
-              coordinate: locationCameraRedacted ? "WITHHELD_BROWSER_LOCATION" : [lockedTerrainElevation.longitude, lockedTerrainElevation.latitude],
+              coordinate: redactReportLocation ? "WITHHELD_BROWSER_LOCATION" : [lockedTerrainElevation.longitude, lockedTerrainElevation.latitude],
             } : null,
           },
         },
         projection,
         basemap,
-        viewport: reportScope === "VIEWPORT" ? mapViewportBounds : null,
-        analysisArea: reportScope === "ANALYSIS_AREA" ? analysisArea : null,
+        viewport: reportScope === "VIEWPORT" ? redactReportLocation ? "WITHHELD_BROWSER_LOCATION" : mapViewportBounds : null,
+        analysisArea: reportScope === "ANALYSIS_AREA" ? redactReportLocation ? "WITHHELD_BROWSER_LOCATION" : analysisArea : null,
       },
       measurements: measurementGeometryMode ? {
         mode: measurementGeometryMode,
         unit: measureUnit,
-        label: measurement,
-        coordinates: locationCameraRedacted ? "WITHHELD_BROWSER_LOCATION" : measureCoordinatesRef.current.map(([longitude, latitude]) => [longitude, latitude] as [number, number]),
+        label: redactReportLocation ? "WITHHELD_BROWSER_LOCATION" : measurement,
+        coordinates: redactReportLocation ? "WITHHELD_BROWSER_LOCATION" : measureCoordinatesRef.current.map(([longitude, latitude]) => [longitude, latitude] as [number, number]),
         approximation: "Browser-local screen measurement; not survey-grade or evidence.",
       } : null,
       selection: selected && !selectedTimeMismatch ? { id: selected.featureId, kind: selected.kind, title: selected.properties.title, layer: selected.layer.title, evidenceState: selected.properties.evidenceState, evidenceReference: selected.properties.citation, timeCompatible: true } : null,

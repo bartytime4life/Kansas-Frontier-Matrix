@@ -173,6 +173,8 @@ export type FlowGeometry = Readonly<{
   vertices: readonly Readonly<{ lng: number; lat: number; slots: readonly number[] }>[];
   reaches: number;
   gauged: number;
+  availableReaches: number;
+  truncated: boolean;
 }>;
 
 /** Snap a gauge to the nearest reach segment within the snap distance. */
@@ -220,9 +222,12 @@ export function buildFlowGeometry(reaches: readonly FlowReach[], gauges: readonl
   const segments = new Float32Array(total * FLOW_SEGMENT_FLOATS);
   const vertices: { lng: number; lat: number; slots: number[] }[] = [];
   let count = 0;
+  let drawnReaches = 0, drawnGauged = 0;
   for (let reachIndex = 0; reachIndex < unique.length && count < total; reachIndex += 1) {
     const reach = unique[reachIndex];
     const marks = snapped.get(reachIndex) ?? [];
+    drawnReaches += 1;
+    if (marks.length) drawnGauged += 1;
     // A stable per-reach phase keeps neighbouring streams from pulsing in step.
     const phase = [...reach.id].reduce((sum, character) => (sum * 31 + character.charCodeAt(0)) % 1000, 7) / 1000;
     let along = 0;
@@ -252,5 +257,7 @@ export function buildFlowGeometry(reaches: readonly FlowReach[], gauges: readonl
       count += 1;
     }
   }
-  return { segments, count, vertices, reaches: unique.length, gauged: snapped.size };
+  return { segments, count, vertices, reaches: drawnReaches, gauged: drawnGauged,
+    availableReaches: unique.length,
+    truncated: unique.reduce((sum, reach) => sum + reach.coordinates.length - 1, 0) > count };
 }
