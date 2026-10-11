@@ -223,6 +223,9 @@ Several tracked lanes document the same upstream source from different domains. 
 | NatureServe | [`fauna/natureserve/`](fauna/natureserve/README.md) · [`habitat/natureserve/`](habitat/natureserve/README.md) · `flora/natureserve/` |
 | USFWS ECOS | [`fauna/usfws_ecos/`](fauna/usfws_ecos/README.md) · [`habitat/usfws-ecos/`](habitat/usfws-ecos/README.md) · `flora/usfws_ecos/` |
 | GBIF / iNaturalist occurrences | [`fauna/gbif/`](fauna/gbif/README.md) · [`fauna/inaturalist/`](fauna/inaturalist/README.md) · `flora/gbif/` · `flora/inaturalist/` · [`habitat/occurrence-context/`](habitat/occurrence-context/README.md) |
+| VIIRS active-fire / FIRMS hotspots | [`atmosphere/observed/viirs/`](atmosphere/observed/viirs/README.md) · [`hazards/firms/`](hazards/firms/README.md) — shared capture identity `NEEDS VERIFICATION` |
+| USGS 3DEP terrain | [`hydrology/usgs_3dep/`](hydrology/usgs_3dep/README.md) · [`geology/`](geology/README.md) (source-family backlog) |
+| Soil and climate-station families (SSURGO, Mesonet, SCAN, USCRN, SMAP) | [`soil/`](soil/README.md) · [`agriculture/`](agriculture/README.md) |
 | Settlement sources | [`settlement/`](settlement/README.md) · [`settlements-infrastructure/`](settlements-infrastructure/README.md) |
 | People / DNA / land sources | [`people/`](people/README.md) · [`people-dna-land/`](people-dna-land/README.md) |
 
