@@ -424,6 +424,6 @@ See [`../_examples/stac-item-example.json`](../_examples/stac-item-example.json)
 
 ---
 
-<sub>**Status:** draft (PROPOSED, v0.2). **Owners:** _PLACEHOLDER — Docs steward + Source steward for nrcs_. **Last reviewed:** 2026-05-22 *(Claude Code product-page scaffold session)*. This file is human-readable product-page documentation and does not decide source admission. For activation, see the source registry.</sub>
+<sub>**Status:** draft (PROPOSED, v0.2.1; updated 2026-10-11). **Owners:** _PLACEHOLDER — Docs steward + Source steward for nrcs_. **Last reviewed:** 2026-05-22 *(Claude Code product-page scaffold session)*. This file is human-readable product-page documentation and does not decide source admission. For activation, see the source registry.</sub>
 
 [↥ Back to top](#-gssurgo)

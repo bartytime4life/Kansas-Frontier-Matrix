@@ -46,7 +46,7 @@ notes:
 |---|---|
 | **Status** | `draft` (PROPOSED). Not yet reviewed by source registry steward. |
 | **Owners** | _TODO_ — Source registry steward + Soil domain steward + Agriculture domain steward |
-| **Last updated** | _TODO-YYYY-MM-DD_ |
+| **Last updated** | 2026-10-11 |
 | **Doc class** | Standard reference doc (per-source-family catalog entry) |
 | **Authority level** | Documentation. Explains intent; does not decide admission, rights, sensitivity, or release. |
 | **Lifecycle phase** | Pre-RAW (catalog only — no NRCS source is admitted by this document) |
@@ -478,6 +478,6 @@ Field shape for every entry is **NEEDS VERIFICATION** against any mounted schema
 
 ---
 
-<sub>**Status:** draft (PROPOSED, v0.2). **Owners:** _TODO_. **Last updated:** _TODO-YYYY-MM-DD_. This file is human-readable catalog documentation and does not decide source admission. For activation, see the source registry.</sub>
+<sub>**Status:** draft (PROPOSED, v0.2.1). **Owners:** _TODO_. **Last updated:** 2026-10-11. This file is human-readable catalog documentation and does not decide source admission. For activation, see the source registry.</sub>
 
 [↥ Back to top](#-nrcs--source-catalog-entry)
