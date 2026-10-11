@@ -6,11 +6,11 @@
 doc_id: kfm://doc/archaeology-publication-and-policy
 title: Archaeology — Publication and Policy
 type: standard
-version: v1
+version: v1.0.1
 status: draft
 owners: TODO — archaeology domain steward; sensitivity reviewer; rights-holder representative; release authority; AI surface steward; correction reviewer; docs steward
 created: 2026-05-28
-updated: 2026-05-28
+updated: 2026-10-11
 policy_label: public
 related:
   - docs/doctrine/ai-build-operating-contract.md
@@ -28,6 +28,7 @@ related:
   - data/published/layers/archaeology/
 tags: [kfm, domain, archaeology, publication, policy, release, governed-api, doctrine]
 notes:
+  - "2026-10-11: source-registry paths aligned to accepted DIR-SOURCE-002..004: data/registry/sources/archaeology/ is the canonical SourceDescriptor writer; data/registry/archaeology/sources/ is a read-only compatibility view, never an independent writer."
   - CONTRACT_VERSION pinned to "3.0.0"
   - Sensitive-domain doc; archaeology default tier is T4 (DENY) for site location, human remains, sacred sites
   - All repo-state and path claims are PROPOSED until repo is mounted
@@ -45,9 +46,9 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 ![release: separation of duties](https://img.shields.io/badge/release-separation%20of%20duties-blueviolet)
 ![outcomes: ANSWER/ABSTAIN/DENY/ERROR](https://img.shields.io/badge/outcomes-ANSWER%20%C2%B7%20ABSTAIN%20%C2%B7%20DENY%20%C2%B7%20ERROR-1f6feb)
 ![watcher: non-publisher](https://img.shields.io/badge/watcher-non--publisher-purple)
-![last updated](https://img.shields.io/badge/last__updated-2026--05--28-lightgrey)
+![last updated](https://img.shields.io/badge/last__updated-2026--10--11-lightgrey)
 
-**Status:** draft &nbsp;·&nbsp; **Owners:** *TODO — archaeology steward; sensitivity reviewer; rights-holder rep; release authority; AI surface steward; correction reviewer; docs steward* &nbsp;·&nbsp; **Last updated:** 2026-05-28
+**Status:** draft &nbsp;·&nbsp; **Owners:** *TODO — archaeology steward; sensitivity reviewer; rights-holder rep; release authority; AI surface steward; correction reviewer; docs steward* &nbsp;·&nbsp; **Last updated:** 2026-10-11
 **`CONTRACT_VERSION = "3.0.0"`** _(per `docs/doctrine/ai-build-operating-contract.md`)._
 
 > [!CAUTION]
@@ -494,7 +495,7 @@ A correction MAY demote any published archaeology object to T4 with a single `Co
 
 | Object class | Supersession rule | Required lineage artifact |
 |---|---|---|
-| `SourceDescriptor` | Replaced by a newer descriptor; old descriptor retained with `superseded_by`. | Supersession entry in `data/registry/archaeology/sources/`. |
+| `SourceDescriptor` | Replaced by a newer descriptor; old descriptor retained with `superseded_by`. | Supersession entry in the canonical `data/registry/sources/archaeology/` lane (`DIR-SOURCE-003`); never in the `data/registry/archaeology/sources/` compatibility view. |
 | `EvidenceBundle` | Replaced when corrected; old bundle retained for audit. | `EvidenceBundle` + `CorrectionNotice` + supersession link. |
 | `GeographyVersion` | Replaced by a newer version; both versions remain queryable for time-bound claims. | Version register entry + crosswalk. |
 | `LayerManifest` / `StyleManifest` / `TileArtifactManifest` | Replaced by next release; rollback target remains valid. | Manifest history + rollback chain. |
@@ -771,6 +772,7 @@ These items remain `NEEDS VERIFICATION` before promotion from `draft` to `publis
 | Made the **separation-of-duties** matrix archaeology-specific (sensitive-lane release is a four-role action). | gap closure | Atlas v1.1 §24.7.2 specifies the requirement; this doc instantiates it for the archaeology lane. |
 | Made the **override-and-emergency-bypass** discipline explicit. | gap closure | KFM-P3-IDEA-0003 defines first-class override records; this doc pins them as never-silent in the archaeology lane. |
 | Added a **worked release walkthrough** (§16). | gap closure | Mirrors the worked-workflow pattern in `PRESERVATION_MATRIX.md` §12; threads §3–§14 into one concrete release path. |
+| **v1.0.1 (2026-10-11):** `SourceDescriptor` supersession row now points at the canonical `data/registry/sources/archaeology/` lane instead of the `data/registry/archaeology/sources/` compatibility view. | reconciliation (PATCH) | Accepted Directory Rules `DIR-SOURCE-002`–`004` (ADR-0029) make `data/registry/sources/` the canonical descriptor writer and allow `data/registry/<domain>/sources/` only as a generated view. Documentation only; no registry record moved. |
 
 > **Backward compatibility.** This is a new file; no anchors are at risk. Future edits SHOULD preserve anchors under §1–§16. The deny-rule names in §5 (`deny.no_exact_coords`, `deny.candidate_as_site`, etc.) and the Gate G reason codes in §7.2 MUST NOT be renamed without an accepted ADR.
 
@@ -813,7 +815,7 @@ This document is done enough to enter the repository when:
 
 ---
 
-_Last updated: 2026-05-28 · `CONTRACT_VERSION = "3.0.0"` · Version v1 (draft)_
+_Last updated: 2026-10-11 · `CONTRACT_VERSION = "3.0.0"` · Version v1.0.1 (draft)_
 _Next review trigger: ADR ratification of archaeology-lane responsibility-root paths; first mounted-repo inspection; first parity test of CI policy bundle vs runtime bundle._
 
 [⬆ Back to top](#archaeology--publication-and-policy)

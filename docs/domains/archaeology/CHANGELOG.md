@@ -138,6 +138,19 @@ The documents this changelog tracks, with versions read from their current metad
 
 Entries are newest-first. Each names the document, version delta, §37 type, and reason. KFM casing and terminology are preserved.
 
+### 2026-10-11 — Source-registry path reconciliation — PATCH
+
+Aligned source-registry paths to accepted Directory Rules `DIR-SOURCE-002`–`004` (ADR-0029): `data/registry/sources/archaeology/` is the canonical `SourceDescriptor` writer, and `data/registry/archaeology/sources/` is a read-only compatibility view that must never become an independent writer. Three unmigrated descriptors remain in the compatibility view (`ahgp.yaml`, `khri_archaeology.yaml`, `tribal_consultation_register.yaml`); this entry records them and moves no registry record.
+
+| Document | Version delta | §37 type | Change |
+|---|---|---|---|
+| `PIPELINE.md` | v1.0.1 → v1.0.2 | PATCH | Scope list, §6 and §17 path trees, verification item, and `related` name the canonical lane; the domain-first parent is labelled compatibility-only. |
+| `OBJECT_FAMILIES.md` | v1 → v1.0.1 | PATCH | Out-of-scope list and path tree name the canonical lane; visible dates synced. |
+| `SOURCES.md` | v1.0.1 → v1.0.2 | PATCH | Doctrine-surface callout, §11 tree, KHRI open question, verification item, review trigger, and `related` name the canonical lane; the v1 changelog row that adopted the domain-first path is superseded. |
+| `SOURCE_REGISTRY.md` | v0.2.1 → v0.2.2 | PATCH | `OQ-ARCH-SR-08` resolved by `DIR-SOURCE-003`/`004`. |
+| `RELEASE_INDEX.md` | v2.0.1 → v2.0.2 | PATCH | `SourceDescriptor` supersession row points at the canonical lane. |
+| `PUBLICATION_AND_POLICY.md` | v1 → v1.0.1 | PATCH | Same supersession-row fix; visible dates synced. |
+
 ### 2026-10-11 — Header sync and ledger evidence correction — PATCH
 
 Follow-up to the RAW placement reconciliation below, from review of that change.

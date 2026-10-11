@@ -6,7 +6,7 @@
 doc_id: kfm://doc/archaeology-sources
 title: Archaeology — Sources
 type: standard
-version: v1.0.1
+version: v1.0.2
 status: draft
 owners: TODO — archaeology source steward; archaeology domain steward; sensitivity reviewer; rights-holder representative; AI surface steward; docs steward
 created: 2026-05-28
@@ -25,10 +25,12 @@ related:
   - docs/domains/archaeology/SENSITIVITY.md
   - docs/standards/SMART_SYNC.md
   - control_plane/source_authority_register.yaml
+  - data/registry/sources/archaeology/
   - data/registry/archaeology/sources/
   - policy/domains/archaeology/
 tags: [kfm, domain, archaeology, sources, source-descriptor, doctrine, admission]
 notes:
+  - "2026-10-11: source-registry paths aligned to accepted DIR-SOURCE-002..004: data/registry/sources/archaeology/ is the canonical SourceDescriptor writer; data/registry/archaeology/sources/ is a read-only compatibility view, never an independent writer."
   - CONTRACT_VERSION pinned to "3.0.0"
   - Sensitive-domain doc; archaeology default tier is T4 (DENY) for site location, human remains, sacred sites.
   - All repo-state and path claims are PROPOSED until repo is mounted.
@@ -112,7 +114,7 @@ It does **not** redefine:
 - The detailed transform catalogue and consent / sovereignty / revocation machinery — see [`SENSITIVITY.md`](./SENSITIVITY.md).
 
 > [!IMPORTANT]
-> This document is the **doctrine surface** for archaeology source admission. The actual `SourceDescriptor` ledger under `data/registry/archaeology/sources/` (PROPOSED) and the JSON schema at `schemas/contracts/v1/source_descriptor.schema.json` (PROPOSED) are the machine-readable counterparts that govern actual admission decisions. Where this doc and those artifacts disagree, the machine-readable artifact wins and the conflict is filed against `docs/registers/DRIFT_REGISTER.md` per Directory Rules §2.5.
+> This document is the **doctrine surface** for archaeology source admission. The actual `SourceDescriptor` ledger under `data/registry/sources/archaeology/` (canonical writer per `DIR-SOURCE-003`; `data/registry/archaeology/sources/` is a read-only compatibility view per `DIR-SOURCE-004`) and the JSON schema at `schemas/contracts/v1/source_descriptor.schema.json` (PROPOSED) are the machine-readable counterparts that govern actual admission decisions. Where this doc and those artifacts disagree, the machine-readable artifact wins and the conflict is filed against `docs/registers/DRIFT_REGISTER.md` per Directory Rules §2.5.
 
 ```mermaid
 flowchart LR
@@ -1038,7 +1040,7 @@ docs/domains/archaeology/
   ├── SENSITIVITY.md                         # CONFIRMED draft sibling
   └── SOURCES.md                             # this file
 
-data/registry/archaeology/sources/           # PROPOSED — SourceDescriptor ledger
+data/registry/sources/archaeology/           # canonical SourceDescriptor ledger (DIR-SOURCE-003); family names below are illustrative
   ├── state_site_inventory/
   ├── public_nrhp_listings/
   ├── field_survey_forms/
@@ -1133,7 +1135,7 @@ The walk-through below threads §4–§16 into a single end-to-end source admiss
 
 | ID | Question | Owner role | Resolution path |
 |---|---|---|---|
-| `OQ-ARCH-SRC-01` | What is the **canonical KHRI access endpoint and data-sharing agreement** under which Kansas-first archaeology sources are admitted? | Source steward + rights-holder rep (KSHS-SHPO) | Author / sign data-sharing agreement; populate `data/registry/archaeology/sources/state_site_inventory/`. |
+| `OQ-ARCH-SRC-01` | What is the **canonical KHRI access endpoint and data-sharing agreement** under which Kansas-first archaeology sources are admitted? | Source steward + rights-holder rep (KSHS-SHPO) | Author / sign data-sharing agreement; populate `data/registry/sources/archaeology/state_site_inventory.source.yaml` (canonical lane). |
 | `OQ-ARCH-SRC-02` | What is the **canonical NRHP API or bulk-download endpoint** that supports HTTP validators? | Source steward + CI owner | Verify against NPS public endpoints; pin in watcher config. |
 | `OQ-ARCH-SRC-03` | What is the **SHPO data-sharing agreement** scope, term, and renewal cadence? Same question applies to other state SHPOs admitted under the same family. | Source steward + rights-holder rep | Author / sign agreement; record in `control_plane/source_authority_register.yaml`. |
 | `OQ-ARCH-SRC-04` | Is the `context` source-role admissible as a peer of the seven roles in §5.1 (for the historic-documentary family), or should historic context records use `observed` / `regulatory` / `administrative` exclusively? | Domain steward + schema-home owner | ADR — pair with Atlas v1.1 §24.12 ADR-S-04 (source-role vocabulary). |
@@ -1150,7 +1152,7 @@ The walk-through below threads §4–§16 into a single end-to-end source admiss
 
 These items remain `NEEDS VERIFICATION` before promotion from `draft` to `published`:
 
-1. Mounted-repo inspection of `data/registry/archaeology/sources/`, `tools/ingest/watchers/`, `pipeline_specs/archaeology/`, `schemas/contracts/v1/source_descriptor.schema.json`, `docs/standards/SMART_SYNC.md`, `docs/runbooks/archaeology/source_refresh.md`, `docs/runbooks/archaeology/sovereignty_review.md`, `control_plane/source_authority_register.yaml`.
+1. Mounted-repo inspection of `data/registry/sources/archaeology/` (canonical) and migration or retirement of the three unmigrated descriptors still in the `data/registry/archaeology/sources/` compatibility view (`ahgp.yaml`, `khri_archaeology.yaml`, `tribal_consultation_register.yaml`), `tools/ingest/watchers/`, `pipeline_specs/archaeology/`, `schemas/contracts/v1/source_descriptor.schema.json`, `docs/standards/SMART_SYNC.md`, `docs/runbooks/archaeology/source_refresh.md`, `docs/runbooks/archaeology/sovereignty_review.md`, `control_plane/source_authority_register.yaml`.
 2. Confirmation of the KHRI access endpoint, data-sharing agreement, and rights status (`OQ-ARCH-SRC-01` / `OQ-ARCH-SRC-03`).
 3. Confirmation of NRHP API / bulk-download endpoint and validator support (`OQ-ARCH-SRC-02`).
 4. Confirmation of per-family watcher cadences in production (`OQ-ARCH-SRC-08`).
@@ -1177,6 +1179,7 @@ These items remain `NEEDS VERIFICATION` before promotion from `draft` to `publis
 | Made the **supersession and source-stale** rules explicit per family (§17). | gap closure | Atlas v1.1 §24.8 specifies stale-state markers at the cross-cutting level; this doc binds them per family. |
 | Added a **worked admission walkthrough** (§19). | gap closure | Mirrors the worked-workflow pattern in the sibling docs; threads §4–§16 into one concrete admission path with sovereignty escalation. |
 | **v1.0.1 (2026-10-11):** §1 admission diagram RAW node now reads source-first capture with placement **HOLD** instead of `data/raw/archaeology/`; added `data/raw/README.md` to `related` and Related docs. | reconciliation (PATCH) | Aligns with accepted Directory Rules `DIR-SOURCE-001` (one capture per registered `source_id`, no duplicated RAW bytes across domains); no placement was accepted. Admission gate A, source-role fixity, T4 default, consent, sovereignty, and cultural-review rules are unchanged. Documentation only. |
+| **v1.0.2 (2026-10-11):** the doctrine-surface callout, §11 path tree, and verification item 1 now name `data/registry/sources/archaeology/` as the canonical SourceDescriptor ledger; `data/registry/archaeology/sources/` is a read-only compatibility view whose three unmigrated descriptors need migration or retirement. Supersedes the v1 row that adopted the segmented domain-first registry path. | reconciliation (PATCH) | Accepted Directory Rules `DIR-SOURCE-002`–`004` (ADR-0029) make `data/registry/sources/` the canonical descriptor writer and allow `data/registry/<domain>/sources/` only as a generated view. Documentation only; no registry record moved. |
 
 > **Backward compatibility.** This is a new file; no anchors are at risk. Future edits SHOULD preserve anchors under §1–§19 to keep cross-links stable. The eight family IDs (`state_site_inventory`, `public_nrhp_listings`, `field_survey_forms`, `excavation_provenience`, `artifact_collection_repository`, `lab_reports`, `historic_documentary`, `oral_history_cultural`), the source-role names in §5.1, and the closure-condition reason codes in §16 MUST NOT be renamed without an accepted ADR.
 
@@ -1224,7 +1227,7 @@ This document is done enough to enter the repository when:
 
 ---
 
-_Last updated: 2026-10-11 · `CONTRACT_VERSION = "3.0.0"` · Version v1.0.1 (draft)_
-_Next review trigger: KHRI / NRHP / SHPO data-sharing agreement confirmation; authoring of `schemas/contracts/v1/source_descriptor.schema.json`; first mounted-repo inspection of `data/registry/archaeology/sources/`._
+_Last updated: 2026-10-11 · `CONTRACT_VERSION = "3.0.0"` · Version v1.0.2 (draft)_
+_Next review trigger: KHRI / NRHP / SHPO data-sharing agreement confirmation; authoring of `schemas/contracts/v1/source_descriptor.schema.json`; first mounted-repo inspection of `data/registry/sources/archaeology/`._
 
 [⬆ Back to top](#archaeology--sources)

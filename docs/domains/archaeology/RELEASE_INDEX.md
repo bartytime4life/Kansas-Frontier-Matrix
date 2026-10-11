@@ -2,7 +2,7 @@
 doc_id: kfm://doc/docs-domains-archaeology-release-index
 title: Archaeology · Release Index
 type: index
-version: v2.0.1
+version: v2.0.2
 status: draft
 owners: docs steward + archaeology domain steward + sensitivity reviewer + release authority + correction reviewer + AI surface steward
 created: 2026-05-15
@@ -34,6 +34,7 @@ related:
   - schemas/contracts/v1/release/
 tags: [kfm, archaeology, release, index, governance, sensitivity, doctrine]
 notes:
+  - "2026-10-11: source-registry paths aligned to accepted DIR-SOURCE-002..004: data/registry/sources/archaeology/ is the canonical SourceDescriptor writer; data/registry/archaeology/sources/ is a read-only compatibility view, never an independent writer."
   - CONTRACT_VERSION pinned to "3.0.0"
   - Repository not mounted; all path-shaped artifact claims are PROPOSED.
   - Sensitive geometry MUST NOT appear in this index.
@@ -50,7 +51,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 > Single point of inspection for **released Archaeology artifacts**, **active release candidates**, **correction notices**, **rollback cards**, **override records**, **stale-state markers**, and **supersession lineage** — without exposing exact sensitive geometry.
 
 ![status](https://img.shields.io/badge/status-draft-orange)
-![version: v2.0.1](https://img.shields.io/badge/version-v2.0.1-informational)
+![version: v2.0.2](https://img.shields.io/badge/version-v2.0.2-informational)
 ![contract: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
 ![authority](https://img.shields.io/badge/authority-docs%20index-blue)
 ![lifecycle](https://img.shields.io/badge/lifecycle-PUBLISHED%20%E2%86%94%20CATALOG-informational)
@@ -653,7 +654,7 @@ _Source: Atlas v1.1 §24.8.1; [`PUBLICATION_AND_POLICY.md` §10.1](./PUBLICATION
 
 | Object class | Supersession rule | Required lineage artifact |
 |---|---|---|
-| `SourceDescriptor` | Replaced by a newer descriptor; old descriptor retained with `superseded_by`. | Supersession entry in `data/registry/archaeology/sources/`. |
+| `SourceDescriptor` | Replaced by a newer descriptor; old descriptor retained with `superseded_by`. | Supersession entry in the canonical `data/registry/sources/archaeology/` lane (`DIR-SOURCE-003`); never in the `data/registry/archaeology/sources/` compatibility view. |
 | `EvidenceBundle` | Replaced when corrected; old bundle retained for audit. | `EvidenceBundle` + `CorrectionNotice` + supersession link. |
 | `GeographyVersion` | Replaced by a newer version; both versions remain queryable for time-bound claims. | Version register entry + crosswalk. |
 | `LayerManifest` / `StyleManifest` / `TileArtifactManifest` | Replaced by next release; rollback target remains valid. | Manifest history + rollback chain. |
@@ -792,6 +793,7 @@ These items remain `NEEDS VERIFICATION` before promotion from `draft` to `publis
 | New companion sections — **Open questions register** (8 IDs `OQ-ARCH-RI-01..08`), **Open verification backlog** (11 numbered items), **Changelog**, **Definition of done**. | clarification | Aligns with the doctrine-adjacent companion-section pattern adopted in the four sibling docs. |
 | Refreshed badge row: added `version: v2`, `CONTRACT_VERSION`, `watcher: non-publisher`; updated `last updated`. | housekeeping | Reflects new content; no doctrine change. |
 | **v2.0.1 (2026-10-11):** §6 diagram RAW node now reads source-first capture with placement **HOLD**; §16.I rule 8 generalized to RAW (legacy `data/raw/` lanes or the accepted source-first RAW home); added `data/raw/README.md` to `related` and §15; refreshed version and dates. | reconciliation (PATCH) | Aligns with accepted Directory Rules `DIR-SOURCE-001`; no placement was accepted. The no-RAW-in-index rule, T4 default, and every sensitivity, sovereignty, and cultural-review rule are unchanged. Documentation only. |
+| **v2.0.2 (2026-10-11):** `SourceDescriptor` supersession row now points at the canonical `data/registry/sources/archaeology/` lane instead of the `data/registry/archaeology/sources/` compatibility view. | reconciliation (PATCH) | Accepted Directory Rules `DIR-SOURCE-002`–`004` (ADR-0029) make `data/registry/sources/` the canonical descriptor writer and allow `data/registry/<domain>/sources/` only as a generated view. Documentation only; no registry record moved. |
 
 > **Backward compatibility.** All §1–§16 anchors are preserved exactly. New material is added either inside existing sections (§§1–14 strengthened in place; §16 gains subsections E–I under the existing `#16-appendix--minimum-recorded-fields` anchor) or as **unnumbered** companion sections after §16 (Open questions register, Open verification backlog, Changelog, Definition of done). No previously-published anchor in this file is retired or renamed.
 
@@ -814,7 +816,7 @@ This document is done enough to enter the repository when:
 
 ---
 
-> **Last updated:** `2026-10-11` · **Version:** `v2.0.1 (draft)` · **`CONTRACT_VERSION = "3.0.0"`** · **Repository state:** not mounted in drafting session — all release-plane row values are `PROPOSED` / `NEEDS VERIFICATION`.
+> **Last updated:** `2026-10-11` · **Version:** `v2.0.2 (draft)` · **`CONTRACT_VERSION = "3.0.0"`** · **Repository state:** not mounted in drafting session — all release-plane row values are `PROPOSED` / `NEEDS VERIFICATION`.
 >
 > Related: [`README.md`](./README.md) · [`OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) · [`PIPELINE.md`](./PIPELINE.md) · [`PRESERVATION_MATRIX.md`](./PRESERVATION_MATRIX.md) · [`PUBLICATION_AND_POLICY.md`](./PUBLICATION_AND_POLICY.md) · [`directory-rules.md`](../../doctrine/directory-rules.md) · [`release/README.md`](../../../release/README.md) · [`policy/domains/archaeology/`](../../../policy/domains/archaeology/)
 >
