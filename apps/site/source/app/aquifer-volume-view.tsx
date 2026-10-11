@@ -18,6 +18,11 @@ type VolumeBounds = [number,number,number,number];
 type Snapshot = AquiferViewSnapshot<HTMLCanvasElement>;
 type CameraAction="reset"|"top"|"side"|"left"|"right"|"in"|"out";
 type Settings={surface:number;water:number;scale:number;logs:boolean;smooth:boolean;navigation:"orbit"|"pan"};
+let sceneModules: Promise<[typeof import("three"), typeof import("three/addons/controls/OrbitControls.js")]> | null = null;
+function prepareSceneModules() {
+  return sceneModules ??= Promise.all([import("three"), import("three/addons/controls/OrbitControls.js")]).catch(error => { sceneModules=null; throw error; });
+}
+
 export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=true,map,records,onFlatMap,onInspect,onLocatorSlot,sliceEntry,resourcePanel,onArea,recordsLoading,recordStatus,partial,recordNavigation,recordsAvailable,onResetRecords}:{basemap?:string;onBasemap?:(key:"standard"|"imagery"|"kansas-aerial"|"topo")=>void;onLayers?:()=>void;active?:boolean;map:MapLibreMap|null;records:Borehole[];onFlatMap:()=>void;onLocate:(point:[number,number],retainView?:boolean)=>void;onInspect:(record:Borehole,interval?:DepthInterval)=>void;locator:{anchor:[number,number];pinned:boolean};onLocatorSlot:(slot:HTMLDivElement|null)=>void;sliceEntry?:ReactNode;resourcePanel?:ReactNode;onArea:(bounds:VolumeBounds|null)=>void;recordsLoading:boolean;recordStatus:string;partial:boolean;recordNavigation:ReactNode;recordsAvailable:number;onResetRecords:()=>void}){
   const [snapshot,setSnapshot]=useState<Snapshot|null>(null),[status,setStatus]=useState("Preparing the current locator area…"),[retry,setRetry]=useState(0);
   const [surfaceStatus,setSurfaceStatus]=useState(""),[previewChanged,setPreviewChanged]=useState(false);
@@ -41,6 +46,8 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
   const snapshotRef=useRef(snapshot);
   const pickedLogRef=useRef(pickedLog);
   const cameraMemory=useRef<{area:string;pose:CameraPose;awaitingRecords:boolean;awaitingAquifer:boolean;interacted:boolean}|null>(null);
+  // Prepare code only after Underground opens; no WebGL context or source query yet.
+  useEffect(()=>{if(active&&!surfaceMode)void prepareSceneModules().catch(()=>{});},[active,surfaceMode]);
   const volume=snapshot?.volume;
   const surfaceArea=volume?.bounds.join(",");
   const aquiferLoading=snapshot?.aquiferState==="loading";
@@ -89,7 +96,7 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
     if(!active||surfaceMode||!sceneRenderable||!volume||!host.current)return;
     setFailure("");
     let disposed=false,cleanup:(()=>void)|undefined;
-    void Promise.all([import("three"),import("three/addons/controls/OrbitControls.js")]).then(([T,{OrbitControls}])=>{
+    void prepareSceneModules().then(([T,{OrbitControls}])=>{
       if(disposed||!host.current)return;
       const renderer=new T.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));
       const resources:{dispose:()=>void}[]=[];cleanup=()=>{resources.forEach(r=>r.dispose());renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove();};

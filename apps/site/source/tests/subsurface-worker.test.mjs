@@ -78,3 +78,11 @@ test('a canceled area cannot replace later area or source-filter results',async(
  const latest=[-95.1,38.9,-94.9,39.1];h.send({id:11,kind:'area',bounds:latest,sources:[]});const r=await wait(h);assert.equal(r.id,11);assert.deepEqual(Array.from(r.bounds),latest);assert.equal(r.columns.length,0);
  releaseOld(new Response(JSON.stringify(manifest)));await sleep();await sleep();assert.equal(h.messages.length,1);
 });
+
+test('opening Underground warms only the manifest; the exact area still controls tile reads',async()=>{
+ const reads=[],h=harness(async url=>{reads.push(url);return new Response(url.endsWith('manifest.json')?JSON.stringify(manifest):bytes);});
+ h.send({id:0,kind:'prepare'});const prepared=await wait(h);assert.equal(prepared.prepared,true);assert.equal('columns' in prepared,false);
+ assert.deepEqual(reads,['/data/subsurface/manifest.json']);
+ h.send({id:1,kind:'area',bounds:[-95.2,38.8,-94.8,39.2]});const result=await wait(h,2);
+ assert.deepEqual(reads,['/data/subsurface/manifest.json','/data/subsurface/tile-one.json.gz']);assert.equal(result.columns.length,3);assert.equal(result.rejected,1);
+});

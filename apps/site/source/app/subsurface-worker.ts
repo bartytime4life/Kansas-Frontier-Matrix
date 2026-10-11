@@ -1,6 +1,6 @@
 import { inKansas, nearbyColumns, areaColumns, validAreaBounds, validBorehole, validPosition, type AreaBounds, type Borehole, type Position, type SubsurfaceManifest } from "./subsurface-model";
 
-type Query = { id: number; kind: "probe" | "search" | "area"; bounds?: AreaBounds; anchor: Position; route: Position[]; sources: string[]; year: number; search?: string };
+type Query = { id: number; kind: "probe" | "search" | "area" | "prepare"; bounds?: AreaBounds; anchor: Position; route: Position[]; sources: string[]; year: number; search?: string };
 const scope = self as unknown as { onmessage: ((event: MessageEvent<Query>) => void) | null; postMessage: (message: unknown) => void };
 let controller: AbortController | null = null;
 let manifest: SubsurfaceManifest | null = null;
@@ -29,6 +29,8 @@ async function run(q: Query, signal: AbortSignal) {
     if (m.version !== 1 || !Array.isArray(m.tiles) || !Array.isArray(m.sources) || m.tiles.some(t => !safeAsset(t.url))) throw new Error("Unsupported source manifest");
     manifest = m;
   }
+  // Opening this tool warms only its bounded local manifest, never source tiles.
+  if (q.kind === "prepare") return { manifest, prepared: true };
   if (q.kind === "search") {
     const term = q.search?.trim().toLowerCase() ?? "";
     if (term.length < 2 || term.length > 100) return { matches: [], manifest };
