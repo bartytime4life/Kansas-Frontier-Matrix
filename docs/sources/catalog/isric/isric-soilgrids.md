@@ -24,12 +24,12 @@ related:
   - docs/domains/soil/README.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - schemas/contracts/v1/source/source_descriptor.schema.json
-  - schemas/contracts/v1/receipts/model_run_receipt.schema.json
   - connectors/isric/
   - data/registry/sources/
   - policy/sensitivity/
 tags: [kfm, docs, sources, catalog, isric, soilgrids, soil, modeled-source]
 notes:
+  - "2026-10-11: removed schemas/contracts/v1/receipts/model_run_receipt.schema.json from related because no such schema exists; the only tracked model-run receipt schema is habitat-specific."
   - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001 (source-first capture; physical placement HOLD; data/raw/soil/ is a compatibility/reference lane); required meta-block fields added."
   - "Product-page scope: this doc covers ONE product within the ISRIC source family — SoilGrids global ML-modelled soil-property grids at 250 m. ISRIC is NOT a `directory-rules.md` §7.3 canonical family (see OPEN-DSC-14 in the family README)."
   - "Description grounded in docs/domains soil registry and atlas idea cards KFM-P24-PROG-0006 (SoilGrids descriptor — 250 m depth bands, model version, uncertainty notes) and KFM-P12-PROG-0003 (ML-predicted with uncertainty framing). License CC-BY-4.0 and 250 m resolution are CONFIRMED at family level per Pass-10 C10-01."
