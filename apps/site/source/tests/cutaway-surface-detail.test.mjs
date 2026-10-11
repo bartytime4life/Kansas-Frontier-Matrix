@@ -11,8 +11,9 @@ function harness(){
  const canvas=()=>({width:0,height:0,getContext:()=>({drawImage(){},getImageData(){return{data:[0,0,0,255]}}})});
  const document={body:{append(node){containers.push(node)}},createElement(tag){return tag==='canvas'?canvas():{style:{},setAttribute(){},remove(){this.removed=true}}}};
  class FakeMap{
-  constructor(options){this.options=options;this.zoom=options.zoom;this.extent=bounds;this.events={};this.jumps=[];maps.push(this)}
+  constructor(options){this.options=options;this.zoom=options.zoom;this.extent=bounds;this.events={};this.jumps=[];this.styles=[];maps.push(this)}
   on(name,fn){this.events[name]=fn}emit(name,event){this.events[name]?.(event)}
+  setStyle(style,options){this.styles.push({style,options})}
   setPaintProperty(){}resize(){}triggerRepaint(){}hasImage(){return false}addImage(){}
   jumpTo(frame){this.zoom=frame.zoom;this.jumps.push(frame)}getZoom(){return this.zoom}areTilesLoaded(){return true}
   getBounds(){return{getWest:()=>this.extent[0],getSouth:()=>this.extent[1],getEast:()=>this.extent[2],getNorth:()=>this.extent[3]}}
@@ -61,6 +62,26 @@ test('a slow optional overlay cannot hold already rendered basemap detail until 
  map.emit('error');map.emit('render');h.flush(1000);assert.equal(h.frames.length,2);
  map.emit('idle');assert.match(h.statuses.at(-1),/Partial surface detail/);
  controller.dispose();assert.equal(h.timers.size,0);
+});
+test('same-area manual refresh retains the previous surface until replacement tiles render',async()=>{
+ const h=harness(),controller=h.start();await Promise.resolve();const map=h.maps[0];
+ assert.equal(controller.refresh(),true,'a click during initial tile preparation is harmless');
+ assert.equal(map.styles.length,0,'pending preparation is not restarted');
+ map.emit('style.load');map.emit('idle');const first=h.frames[0];
+ assert.equal(controller.refresh(),true);assert.equal(h.frames.length,1,'the existing image is not cleared');
+ assert.equal(map.styles.length,1,'refresh reloads provider tiles without changing capture identity');
+ assert.equal(map.styles[0].options.diff,false);assert.equal(map.styles[0].style.sources.radar.tiles[0],h.capture.style.sources.radar.tiles[0]);
+ assert.match(h.statuses.at(-1),/Previous surface remains visible/);
+ map.emit('error');assert.match(h.statuses.at(-1),/previous surface remains visible/i);
+ map.emit('style.load');assert.equal(h.frames.length,1,'style loading does not replace the old image');
+ map.emit('render');assert.equal(h.frames.length,1,'a partial preview cannot replace the complete old image');
+ map.emit('idle');assert.equal(h.frames.length,1,'failed new tiles leave the old image in place');
+ assert.match(h.statuses.at(-1),/previous complete surface remains visible/i);
+ assert.equal(controller.refresh(),true,'a failed refresh can be retried');
+ map.emit('style.load');map.emit('render');assert.equal(h.frames.length,1,'the old image remains through the next partial render');
+ map.emit('idle');assert.equal(h.frames.length,2);assert.notEqual(h.frames[1],first);
+ assert.match(h.statuses.at(-1),/Surface detail ready/);
+ controller.dispose();assert.equal(controller.refresh(),false);
 });
 
 test('continuous camera movement cannot postpone the pending detail request and uses the latest footprint',async()=>{

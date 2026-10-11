@@ -29,7 +29,7 @@ export function startCutawaySurfaceDetail(options: {
   capture: SurfaceCapture; pixels: number; onFrame: (frame: SurfaceDetailFrame) => void; onStatus: (status: string) => void;
 }) {
   let disposed = false, map: GLMap | null = null, timer: ReturnType<typeof setTimeout> | undefined, timeout: ReturnType<typeof setTimeout> | undefined, previewTimer: ReturnType<typeof setTimeout> | undefined;
-  let requested = options.capture.bounds, key = "", pending = true, partial = false, ready = false;
+  let requested = options.capture.bounds, key = "", pending = true, partial = false, ready = false, hasFrame = false, refreshing = false;
   const container = document.createElement("div");
   container.setAttribute("aria-hidden", "true"); container.style.cssText = "position:fixed;left:-10000px;top:0;pointer-events:none;contain:strict;";
   document.body.append(container);
@@ -39,9 +39,9 @@ export function startCutawaySurfaceDetail(options: {
     const frame = surfaceRenderFrame(requested, options.pixels);
     container.style.width = `${frame.width}px`; container.style.height = `${frame.height}px`;
     pending = true; clearTimeout(timeout);
-    options.onStatus(`Loading surface detail · ${frame.width} × ${frame.height} pixels…`);
+    options.onStatus(`Loading surface detail · ${frame.width} × ${frame.height} pixels…${refreshing ? " Previous surface remains visible until a replacement is drawn." : ""}`);
     map.resize(); map.jumpTo({ center: frame.center, zoom: frame.zoom, bearing: 0, pitch: 0 }); map.triggerRepaint();
-    timeout = setTimeout(() => { if (!disposed && pending) options.onStatus("Surface detail is incomplete. Missing tiles are unknown; move or retry the surface."); }, 12000);
+    timeout = setTimeout(() => { if (!disposed && pending) options.onStatus(refreshing ? "Surface refresh is incomplete. The previous surface remains visible; missing new tiles are unknown." : "Surface detail is incomplete. Missing tiles are unknown; move or retry the surface."); }, 12000);
   };
   options.onStatus("Preparing high-detail surface tiles…");
   timeout = setTimeout(() => { if (!disposed && pending) options.onStatus("Surface tiles are taking longer to load. Coverage is unconfirmed; retry or choose another basemap."); }, 12000);
@@ -50,17 +50,23 @@ export function startCutawaySurfaceDetail(options: {
     lib.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
     const frame = surfaceRenderFrame(options.capture.bounds, options.pixels);
     container.style.width = `${frame.width}px`; container.style.height = `${frame.height}px`;
-    const style = JSON.parse(JSON.stringify(options.capture.style));
-    for (const layer of style.layers) if (layer.type === "raster") layer.paint = { ...layer.paint, "raster-fade-duration": 0, "raster-resampling": "nearest" };
+    const style = detailStyle();
     map = new lib.Map({ transformRequest: basemapCacheRequest, container, style, center: frame.center, zoom: frame.zoom, interactive: false, attributionControl: false,
       pixelRatio: 1, maxTileCacheSize: 96, fadeDuration: 0, renderWorldCopies: false, canvasContextAttributes: { preserveDrawingBuffer: true } });
     const view = map;
     view.on("styleimagemissing", event => { const image = options.capture.images.find(i => i.id === event.id); if (image && !view.hasImage(image.id)) view.addImage(image.id, image.data, { pixelRatio: image.pixelRatio, sdf: image.sdf }); });
     const styleReady = () => { if (disposed || ready) return; ready = true; for (const sample of surfaceRasterSampling(options.capture.style, false)) view.setPaintProperty(sample.id, "raster-resampling", sample.value); apply(); };
     view.on("style.load", styleReady); view.on("load", styleReady);
-    view.on("error", () => { partial = true; if (!disposed) options.onStatus("Some surface tiles are unavailable. Blank patches are unknown, not clear conditions."); });
+    view.on("error", () => { partial = true; if (!disposed) options.onStatus(refreshing ? "New surface tiles are unavailable. The previous surface remains visible; new blank patches are unknown." : "Some surface tiles are unavailable. Blank patches are unknown, not clear conditions."); });
     const copyFrame = (settled: boolean) => {
       if (disposed || !ready || !pending) return;
+      if (refreshing && (!settled || partial)) {
+        if (settled && partial) {
+          pending = false; clearTimeout(timeout); clearTimeout(previewTimer); previewTimer = undefined;
+          options.onStatus("New surface tiles are incomplete. The previous complete surface remains visible; retry the refresh.");
+        }
+        return;
+      }
       try {
         const canvas = view.getCanvas(), image = document.createElement("canvas"); image.width = canvas.width; image.height = canvas.height;
         const context = image.getContext("2d"); if (!context) throw new Error("Surface copy unavailable");
@@ -68,6 +74,7 @@ export function startCutawaySurfaceDetail(options: {
         const b = view.getBounds();
         if (settled) { pending = false; clearTimeout(timeout); clearTimeout(previewTimer); previewTimer = undefined; }
         options.onFrame({ image, bounds: [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()], zoom: view.getZoom() });
+        hasFrame = true; refreshing = false;
         options.onStatus(`${!settled ? "Loading surface detail · partial preview" : partial ? "Partial surface detail" : "Surface detail ready"} · ${image.width} × ${image.height} pixels · map zoom ${view.getZoom().toFixed(1)}. Provider resolution and dates still apply.${!settled ? " Unfinished tiles are unknown." : ""}`);
       } catch { pending = false; options.onStatus("Surface detail could not be drawn. The selector preview and source records remain available."); }
     };
@@ -81,7 +88,26 @@ export function startCutawaySurfaceDetail(options: {
     });
     view.on("idle", () => { if (view.areTilesLoaded()) copyFrame(true); });
   }).catch(() => { if (!disposed) options.onStatus("Surface detail is unavailable. Retry the surface or use the Surface map view."); });
+  function detailStyle() {
+    const style = JSON.parse(JSON.stringify(options.capture.style));
+    for (const layer of style.layers) if (layer.type === "raster") layer.paint = { ...layer.paint, "raster-fade-duration": 0, "raster-resampling": "nearest" };
+    return style;
+  }
   return {
+    refresh() {
+      if (disposed || !map) return false;
+      if (!ready) { options.onStatus("Surface tiles are already preparing. The current cutaway remains available."); return true; }
+      clearTimeout(timer); timer = undefined; clearTimeout(timeout); clearTimeout(previewTimer); previewTimer = undefined;
+      key = ""; pending = true; partial = false; ready = false; refreshing = hasFrame;
+      options.onStatus(refreshing ? "Refreshing surface tiles… Previous surface remains visible until a replacement is drawn." : "Refreshing surface tiles…");
+      timeout = setTimeout(() => { if (!disposed && pending) options.onStatus(refreshing ? "Surface refresh is taking longer. The previous surface remains visible; new coverage is unconfirmed." : "Surface tiles are taking longer to load. Coverage is unconfirmed; retry or choose another basemap."); }, 12000);
+      try { map.setStyle(detailStyle(), { diff: false }); }
+      catch {
+        ready = true; pending = false; clearTimeout(timeout);
+        options.onStatus(hasFrame ? "Surface refresh unavailable. The previous surface remains visible; retry or choose another basemap." : "Surface refresh unavailable. Retry or choose another basemap.");
+      }
+      return true;
+    },
     update(bounds: SurfaceBounds) { if(bounds.map(n=>n.toFixed(6)).join(",")===requested.map(n=>n.toFixed(6)).join(","))return; requested = bounds; if (timer === undefined) timer = setTimeout(() => { timer = undefined; apply(); }, 200); },
     dispose() { disposed = true; clearTimeout(timer); clearTimeout(timeout); clearTimeout(previewTimer); map?.remove(); container.remove(); },
   };
