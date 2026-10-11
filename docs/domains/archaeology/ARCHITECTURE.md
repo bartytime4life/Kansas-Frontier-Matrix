@@ -52,18 +52,18 @@ Governed, evidence-first, sensitivity-bounded architecture for KFM's Archaeology
 ![lifecycle: RAW%E2%86%92PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-success)
 ![paths: reconciled to DR §12](https://img.shields.io/badge/contracts%2Fschemas%20paths-reconciled%20to%20DR%20%C2%A712-2da44e)
 ![conformance: RFC 2119](https://img.shields.io/badge/conformance-RFC%202119-555)
-![last updated: 2026--05--29](https://img.shields.io/badge/last%20updated-2026--05--29-informational)
+![last updated: 2026--10--11](https://img.shields.io/badge/last%20updated-2026--10--11-informational)
 
 | Field | Value |
 |---|---|
-| **Status** | Draft · doctrine CONFIRMED · implementation PROPOSED · path namespace RECONCILED to Directory Rules §12 (v1.2) |
+| **Status** | Draft · doctrine CONFIRMED · implementation PROPOSED · path namespace RECONCILED to Directory Rules §12 (in v1.2; current edition v1.2.1) |
 | **Pinned contract** | `CONTRACT_VERSION = "3.0.0"` (per `ai-build-operating-contract.md` §1.3 / §8, §37) |
 | **Owners** | TODO — Archaeology domain steward · Sensitivity reviewer · Cultural/sovereignty review liaison |
 | **Required additional reviewer (§23.2)** | Tribal/cultural reviewer · rights-holder representative |
 | **Authority basis** | `[CONTRACT v3.0]` §23.2 · `[ENCY]` §7.13 · Atlas v1.1 §24.13, §24.14 · `[DOM-ARCH]` · `[DIRRULES]` §12, §13 · `[GAI]` |
 | **Public posture** | `DENY` exact site coordinates by default · generalize to county/region · `RedactionReceipt` required before any release |
 | **Lifecycle** | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED |
-| **Last updated** | 2026-05-29 |
+| **Last updated** | 2026-10-11 |
 
 > [!CAUTION]
 > This domain is on the **sensitive lane**. Per `ai-build-operating-contract.md` §23.2 (sensitive-domain decision matrix), the default disposition for archaeology site locations is **`DENY` exact coordinates** — generalize to county/region. The §23.2 matrix is **PROPOSED** as of v3.0 (steward ratification pending); until ratified, the **most restrictive applicable row applies**, which only strengthens the gate. Burial / human-remains records and sacred-place attributes are **`DENY` exact location** with cultural reviewer and rights-holder rep gates. **No section of this document authorizes a release**; releases are governed by `ReleaseManifest`, `MapReleaseManifest`, `EvidenceBundle`, `RedactionReceipt`, `PolicyDecision`, and an explicit cultural / steward `ReviewRecord`.

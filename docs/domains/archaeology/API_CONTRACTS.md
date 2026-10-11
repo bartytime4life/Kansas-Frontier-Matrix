@@ -51,7 +51,7 @@ notes:
 > Governed API surface, DTOs, finite outcomes, source-role discipline, and sensitivity gates for the Archaeology and Cultural Heritage domain. This document **explains**; canonical authority lives in `contracts/`, `schemas/`, `policy/`, and `tests/`.
 
 <p align="left">
-  <img alt="Edition" src="https://img.shields.io/badge/edition-v0.3.1%20draft-1f6feb">
+  <img alt="Edition" src="https://img.shields.io/badge/edition-v0.3.2%20draft-1f6feb">
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-lightgrey">
   <img alt="Authority: explanation only" src="https://img.shields.io/badge/authority-explanation%20only-blue">
   <img alt="Policy label: public" src="https://img.shields.io/badge/policy_label-public-2e7d32">
@@ -65,7 +65,7 @@ notes:
   <!-- Static badges describe this document only; they are not runtime, policy, review, or release evidence. -->
 </p>
 
-**Status:** draft · **Owners:** _TODO: archaeology-domain-steward · cultural-review-board · governed-API-owner · security-steward · docs-steward_ · **Last updated:** 2026‑08‑28
+**Status:** draft · **Owners:** _TODO: archaeology-domain-steward · cultural-review-board · governed-API-owner · security-steward · docs-steward_ · **Last updated:** 2026‑10‑11
 
 > [!IMPORTANT]
 > Archaeology is a **deny-by-default** domain. Exact site locations, burial, human remains, sacred sites, unresolved cultural sensitivity, collection security, private-landowner details, and looting-risk exposure **MUST fail closed** at the API boundary. No request, regardless of authentication tier, releases unredacted exact geometry at T0 (Open) without explicit sovereignty / cultural review and an attached `RedactionReceipt`. See [§8](#8-sensitivity-gates-baked-into-the-contract-surface).

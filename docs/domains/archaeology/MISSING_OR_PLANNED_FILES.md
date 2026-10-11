@@ -2,7 +2,7 @@
 doc_id: kfm://doc/docs/domains/archaeology/missing_or_planned_files
 title: Archaeology — Missing or Planned Files
 type: standard
-version: v1.2.1
+version: v1.2.2
 status: draft
 owners: TODO/REVIEW — Archaeology domain stewards · Docs steward · Directory Rules reviewers
 created: 2026-05-15
@@ -42,7 +42,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 <p align="left">
   <img alt="doc class" src="https://img.shields.io/badge/doc-standard-blue">
   <img alt="Status" src="https://img.shields.io/badge/status-draft-orange">
-  <img alt="Version" src="https://img.shields.io/badge/version-v1.2-lightgrey">
+  <img alt="Version" src="https://img.shields.io/badge/version-v1.2.2-lightgrey">
   <img alt="CONTRACT_VERSION" src="https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-1f6feb">
   <img alt="Directory Rules" src="https://img.shields.io/badge/Directory%20Rules-v1.3-purple">
   <img alt="Authority" src="https://img.shields.io/badge/authority-planning_ledger-blue">
@@ -476,7 +476,7 @@ Lifecycle data for archaeology. **Public clients and normal UI surfaces MUST rea
 
 | Proposed path | Purpose | Plan status | Present? | Truth label |
 |---|---|---|---|---|
-| `data/raw/archaeology/README.md` | Compatibility/reference lane README (v0.2.0, 2026-10-11): not a physical capture home; Archaeology deny-by-default, exact-location, cultural-review, sovereignty, and consent controls bind any source-first capture that supports Archaeology. | 🟢 PRESENT | 🟢 | CONFIRMED (file exists on branch) |
+| `data/raw/archaeology/README.md` | Compatibility/reference lane README (v0.2.0, 2026-10-11): not a physical capture home; Archaeology deny-by-default, exact-location, cultural-review, sovereignty, and consent controls bind any source-first capture that supports Archaeology. | 🟡 PLANNED — authored on `main` 2026-10-11 ([#5040](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5040)); promotion to `🟢 PRESENT` waits for this ledger's mounted-repo verification pass | ❓ | NEEDS VERIFICATION |
 | `data/raw/archaeology/<source_id>/<run_id>/` | Per-source, per-run raw payload tree. | ⏸ HOLD — superseded by DIR-SOURCE-001; physical source-first placement undecided | ❓ | HOLD |
 | `data/work/archaeology/README.md` | In-flight normalization workspace. | 🟡 PLANNED | ❓ | PROPOSED |
 | `data/quarantine/archaeology/README.md` | Quarantine bucket; reason files, hold-until conditions. | 🟡 PLANNED | ❓ | PROPOSED |
@@ -655,6 +655,7 @@ These items remain `NEEDS VERIFICATION` before promoting individual rows from PL
 | Change | Type (per contract §37) | Reason |
 |---|---|---|
 | **2026-10-11:** §4.10 `data/raw/archaeology/README.md` row updated to `🟢 PRESENT` (compatibility/reference lane, v0.2.0); the per-run payload-tree row set to `⏸ HOLD — superseded by DIR-SOURCE-001; physical source-first placement undecided` (row retained); §4.8 ingest row, §3 tree, and §3 diagram now point at source-first RAW (placement HOLD); added the `⏸ HOLD` legend entry | reconciliation (PATCH) | Accepted Directory Rules `DIR-SOURCE-001` makes capture identity source-first; no physical placement is accepted. No row deleted; every sensitivity, sovereignty, and cultural-review rule unchanged. Documentation only. |
+| **2026-10-11 (v1.2.2):** §4.10 `data/raw/archaeology/README.md` row returned from `🟢 PRESENT` / `CONFIRMED` to `🟡 PLANNED` with `❓` presence and `NEEDS VERIFICATION`, noting that it was authored on `main` in #5040; the visible version badge now matches the metadata block | correction (PATCH) | This ledger's own evidence rules (§2.2 legend and the unmounted-repo notes) forbid promoting a row to `🟢 PRESENT` without a mounted-repo verification pass. Documentation only. |
 | Added `data/raw/README.md` to `related` and §12 | gap closure (PATCH) | Points readers at the source-first RAW contract. |
 
 ### v1.1 → v1.2

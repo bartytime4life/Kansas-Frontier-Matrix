@@ -43,7 +43,7 @@ notes:
 ![CARE: required](https://img.shields.io/badge/CARE-required-purple)
 ![lifecycle: RAW→PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-success)
 ![CONTRACT_VERSION: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
-![updated: 2026-08-28](https://img.shields.io/badge/updated-2026--08--28-informational)
+![updated: 2026-10-11](https://img.shields.io/badge/updated-2026--10--11-informational)
 
 **Status:** draft · **Authority level:** canonical documentation lane; implementation is mixed and release remains held · **Review route:** `@bartytime4life` via CODEOWNERS; specialist stewardship remains `NEEDS VERIFICATION` · **Last reviewed:** 2026-08-28
 
