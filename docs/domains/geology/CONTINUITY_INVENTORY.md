@@ -1,22 +1,28 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/geology-canonical-paths
-title: Geology — Canonical Paths
+doc_id: kfm://doc/geology-continuity-inventory
+title: Geology — Continuity Inventory (placeholder holding a copy of Canonical Paths)
 type: standard
-version: v1.1
+version: v1.1.1
+prior_version: v1.1
 status: draft
 owners: TODO — Geology domain steward; Directory Rules owner
 created: 2026-05-16
-updated: 2026-06-03
+updated: 2026-10-11
 policy_label: public
+owning_root: docs/
+responsibility: Hold the Geology continuity-inventory document identity; the body is currently a verbatim copy of CANONICAL_PATHS.md pending distinct inventory content, and CANONICAL_PATHS.md remains authoritative for placement; not evidence, policy, release, or publication authority.
+truth_posture: cite-or-abstain; placeholder copy; placement claims defer to CANONICAL_PATHS.md
 related:
-  - directory-rules.md
+  - docs/doctrine/directory-rules.md
   - docs/domains/geology/README.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md
-  - ai-build-operating-contract.md
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/domains/geology/CANONICAL_PATHS.md
 tags: [kfm, geology, directory-rules, canonical-paths, domain-placement-law]
 notes:
+  - "2026-10-11 (v1.1.1): this file was a byte-for-byte copy of CANONICAL_PATHS.md sharing its doc_id; it now has its own identity and a placeholder note; distinct continuity-inventory content is pending."
   - Doctrine-adjacent; CONTRACT_VERSION pinned to 3.0.0 per ai-build-operating-contract.md.
   - Applies Directory Rules §12 (Domain Placement Law) to the Geology lane.
   - Surfaces a NEEDS VERIFICATION drift between Dir Rules §12 path form and Atlas v1.1 §24.13 crosswalk form (Atlas uses the short geology/ form — see §11).
@@ -24,6 +30,9 @@ notes:
   - Repo not mounted in this session; file-presence claims are PROPOSED / NEEDS VERIFICATION.
   - Placement-law location (directory-rules.md root vs docs/doctrine/) is itself OPEN/CONFLICTED — see §13.
 [/KFM_META_BLOCK_V2] -->
+
+> [!NOTE]
+> **Placeholder.** This file holds the Geology continuity-inventory document identity (`kfm://doc/geology-continuity-inventory`), but its body below is currently a verbatim copy of [`CANONICAL_PATHS.md`](CANONICAL_PATHS.md), which remains authoritative for Geology placement. Where the text says "this document", it means `CANONICAL_PATHS.md`. Distinct continuity-inventory content is **NEEDS VERIFICATION** / pending.
 
 # Geology — Canonical Paths
 
@@ -35,13 +44,13 @@ notes:
 ![lifecycle: RAW→PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-success)
 ![contract: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
 ![CI](https://img.shields.io/badge/ci-TODO-lightgrey)
-![last updated: 2026-06-03](https://img.shields.io/badge/updated-2026--06--03-blue)
+![last updated: 2026-10-11](https://img.shields.io/badge/updated-2026--10--11-blue)
 
 | Field | Value |
 |---|---|
 | **Status** | `draft` |
 | **Owners** | TODO — Geology domain steward; Directory Rules owner |
-| **Last updated** | 2026-06-03 |
+| **Last updated** | 2026-10-11 |
 | **Authority basis** | `directory-rules.md` §12 (lane pattern) · §6.4 + ADR-0001 (schema home) |
 | **Domain dossier** | `[DOM-GEOL]` (Geology / Natural Resources) |
 | **Contract** | Pinned `CONTRACT_VERSION = "3.0.0"` per `ai-build-operating-contract.md` |
@@ -558,4 +567,4 @@ This document is done enough to enter the repository when:
 
 ---
 
-<sub>Doc: `docs/domains/geology/CANONICAL_PATHS.md` · Version: v1.1 (draft) · Last updated: 2026-06-03 · `CONTRACT_VERSION = "3.0.0"` · Authority: Directory Rules §12 · [Back to top](#contents)</sub>
+<sub>Doc: `docs/domains/geology/CONTINUITY_INVENTORY.md` (placeholder copy of `CANONICAL_PATHS.md`) · Version: v1.1.1 (draft) · Last updated: 2026-10-11 · `CONTRACT_VERSION = "3.0.0"` · Authority: Directory Rules §12 · [Back to top](#contents)</sub>

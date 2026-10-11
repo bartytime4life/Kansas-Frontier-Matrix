@@ -2,8 +2,8 @@
 doc_id: kfm://doc/domains/soil/changelog
 title: Soil - Documentation Changelog
 type: domain-changelog
-version: v1.1.1
-prior_version: v1.1
+version: v1.1.2
+prior_version: v1.1.1
 status: active; append-only-summary
 owners:
   - OWNER_TBD - Soil domain steward
@@ -31,6 +31,7 @@ families.
 
 | Date | Version | Change | Evidence and limits |
 |---|---|---|---|
+| 2026-10-11 | `v1.1.2` | Rewrote `DATA_LIFECYCLE.md` (v2.0.0): the placeholder body, a verbatim copy of `CONTINUITY_INVENTORY.md`, is replaced with Soil lifecycle doctrine — phase contracts and gates, trust objects and their homes, support-type and knowledge-character rules, receipt-bearing Soil transforms (component and depth weighting, resampling, station QC, yearly diff), the bounded USCRN daily pilot, freshness and supersession, correction and rollback, rights posture, anti-patterns and verification status; placeholder note removed | Grounded in Lifecycle Law, Directory Rules §§11–12, ADR-0046 and inspected pilot, validator, contract and data-lane files; documentation only; no source, payload, lifecycle, policy, release or publication state changed; RAW placement remains HOLD; `CONTINUITY_INVENTORY.md` remains the authoritative inventory and the two files now carry distinct `doc_id`s and content |
 | 2026-10-11 | `v1.1.1` | Aligned RAW placement wording in `ARCHITECTURE.md`, `CANONICAL_PATHS.md`, `CONTINUITY_INVENTORY.md`, `DATA_LIFECYCLE.md`, and `docs/runbooks/soil/SOURCE_REFRESH_RUNBOOK.md` to accepted `DIR-SOURCE-001`: RAW capture is source-first under one registered `source_id`; physical source-first placement is HOLD; `data/raw/soil/` is a compatibility/reference lane, not a payload destination; connector, lifecycle-skip, and public-read prohibitions kept and generalized; runbook RAW targets replaced with a HOLD placeholder | Accepted Directory Rules §12.3; no placement decision accepted as of `main@9e8bf3e6`; documentation only; no payload, path, writer, connector, or release state changed; pre-existing duplicate `doc_id` between `CONTINUITY_INVENTORY.md` and `DATA_LIFECYCLE.md` not resolved |
 | 2026-10-08 | `v1.1` | Replaced thin source, glossary, cross-lane, completion, expansion, placement, map/UI, preservation and release guides; expanded catalog-closure guidance and reconciled README navigation | Inspected source at `ebcc4988a08a3b96d10ee65ae9b4b09a37af5ebe`; retained historical snapshots and separated fixture declarations, Site context, admission, evidence resolution and release; no runtime or governance transition |
 | 2026-08-28 | `v1.0` | Replaced the greenfield placeholders for the verification backlog, missing/planned-file register, expansion backlog, and changelog with repository-grounded control surfaces | Pinned to `main@813ef14b1dbe5bd236fc902ce8fc3bb2e8ae7e80`; documentation-only; no source activation, lifecycle mutation, proof, release, deployment, promotion, or publication |

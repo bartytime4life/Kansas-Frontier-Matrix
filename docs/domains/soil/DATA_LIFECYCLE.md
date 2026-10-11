@@ -1,569 +1,429 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/soil-data-lifecycle
-title: Soil Domain — Data Lifecycle (placeholder holding a copy of the Continuity Inventory)
+title: Soil Domain — Data Lifecycle
 type: standard
-version: v1.0.2
-prior_version: v1.0.1
+version: v2.0.0
+prior_version: v1.0.2
 status: draft
 owners: <TODO: soil domain steward; data-lifecycle steward>
 created: 2026-05-19
 updated: 2026-10-11
 policy_label: public
 owning_root: docs/
-responsibility: Hold the Soil data-lifecycle document identity; the body is currently a verbatim copy of CONTINUITY_INVENTORY.md pending distinct lifecycle content, and CONTINUITY_INVENTORY.md remains the authoritative inventory; not evidence, policy, release, or publication authority.
-truth_posture: cite-or-abstain; CONFIRMED accepted DIR-SOURCE-001 source-first capture identity / HOLD exact physical source-first RAW placement / PROPOSED or NEEDS VERIFICATION implementation continuity unless mounted-repo evidence is cited
+responsibility: Soil-specific application of the KFM lifecycle law — phase entry and exit gates, trust objects, support-type handling, receipt-bearing transforms, freshness, correction and rollback; not evidence, policy, release, or publication authority.
+truth_posture: cite-or-abstain; CONFIRMED lifecycle doctrine, DIR-SOURCE-001 source-first capture identity and the bounded USCRN daily pilot code paths cited here / HOLD physical source-first RAW placement and Soil proof and release-dry-run automation / PROPOSED or NEEDS VERIFICATION every other Soil lifecycle implementation
 related:
-  - docs/domains/soil/README.md
-  - docs/domains/soil/CONTINUITY_INVENTORY.md
-  - docs/registers/DRIFT_REGISTER.md
-  - docs/registers/VERIFICATION_BACKLOG.md
-  - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf
+  - docs/doctrine/lifecycle-law.md
   - docs/doctrine/directory-rules.md
+  - docs/doctrine/trust-membrane.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - docs/adr/ADR-0046-owner-self-release-for-admitted-public-soil-data.md
+  - docs/domains/soil/README.md
+  - docs/domains/soil/CANONICAL_PATHS.md
+  - docs/domains/soil/CONTINUITY_INVENTORY.md
+  - docs/domains/soil/SOURCES.md
+  - docs/domains/soil/SOURCE_REGISTRY.md
+  - docs/domains/soil/IDENTITY_MODEL.md
+  - docs/domains/soil/CATALOG_CLOSURE.md
+  - docs/domains/soil/API_CONTRACTS.md
+  - docs/domains/soil/PRESERVATION_MATRIX.md
+  - docs/domains/soil/VERIFICATION.md
+  - docs/domains/soil/VERIFICATION_BACKLOG.md
+  - docs/runbooks/soil/SOURCE_REFRESH_RUNBOOK.md
   - data/raw/README.md
   - data/raw/soil/README.md
-tags: [kfm, domain, soil, continuity, inventory, register]
+  - data/registry/sources/soil/README.md
+  - data/registry/sources/soil/noaa-uscrn.yaml
+  - tools/local_data/uscrn_daily_pilot.py
+  - tools/release/soil_release.py
+  - .github/workflows/domain-soil.yml
+tags: [kfm, domain, soil, lifecycle, support-type, receipts, release, rollback]
 notes:
-  - "2026-10-11 (v1.0.2): title and responsibility now say this file is a placeholder for the Soil data-lifecycle identity whose body is a copy of CONTINUITY_INVENTORY.md; distinct lifecycle content is pending."
-  - PROPOSED location under docs/domains/soil/; verify against mounted repo and ADRs.
-  - Inventory is doctrine-grounded; implementation maturity is bounded to PROPOSED / NEEDS VERIFICATION unless mounted-repo evidence is supplied.
-  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001; physical source-first placement is HOLD and data/raw/soil/ is a compatibility/reference lane; documentation only."
+  - "v2.0.0 (2026-10-11): replaces the placeholder body, which was a verbatim copy of CONTINUITY_INVENTORY.md, with Soil lifecycle doctrine; CONTINUITY_INVENTORY.md remains the authoritative artifact inventory."
+  - "Repository facts were read from the working tree on 2026-10-11 (main lineage through c64ee431); every path below was checked for presence, and implementation claims cite the inspected file."
+  - "This document applies docs/doctrine/lifecycle-law.md and Directory Rules sections 11 and 12 to Soil; it does not amend them, select a RAW placement, admit a source, or authorize release."
+  - "Data stores written by the USCRN pilot live in an operator-private store outside the Git checkout; paths shown for that slice are relative to that external root."
 [/KFM_META_BLOCK_V2] -->
 
-> [!NOTE]
-> **Placeholder.** This file holds the Soil data-lifecycle document identity (`kfm://doc/soil-data-lifecycle`), but its body below is currently a verbatim copy of [`CONTINUITY_INVENTORY.md`](CONTINUITY_INVENTORY.md), which is the authoritative inventory. Where the text says "this document" or "this inventory", it means `CONTINUITY_INVENTORY.md`. Distinct lifecycle content is **NEEDS VERIFICATION** / pending.
+<a id="top"></a>
 
-# Soil Domain — Continuity Inventory
+# Soil Domain — Data Lifecycle
 
-> A lane-by-lane register of every artifact the Soil domain owns or is expected to own across KFM responsibility roots — with its **continuity state**, **evidence basis**, and **verification posture**. This is a navigational and audit surface, not an implementation claim.
+> How Soil material moves through **RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED**: what each phase accepts, which gate lets it leave, which trust object proves the move, and which Soil-specific distinctions (support type, survey lineage, depth, vintage) must survive every step.
 
-<!-- Badges: placeholders until CI/owners verified -->
-![Status: draft](https://img.shields.io/badge/status-draft-orange)
-![Authority: navigational](https://img.shields.io/badge/authority-navigational-lightgrey)
-![Policy label: public](https://img.shields.io/badge/policy-public-blue)
-![Truth posture: cite--or--abstain](https://img.shields.io/badge/truth-cite--or--abstain-success)
-![Repo presence: NEEDS VERIFICATION](https://img.shields.io/badge/repo--presence-NEEDS%20VERIFICATION-yellow)
-![Build: TODO](https://img.shields.io/badge/build-TODO-lightgrey)
-![Last updated: 2026--10--11](https://img.shields.io/badge/last%20updated-2026--10--11-informational)
+![status: draft](https://img.shields.io/badge/status-draft-orange)
+![lifecycle: RAW→PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-blue)
+![RAW placement: HOLD](https://img.shields.io/badge/RAW%20placement-HOLD-critical)
+![support types: never collapse](https://img.shields.io/badge/support%20types-never%20collapse-critical)
+![updated: 2026-10-11](https://img.shields.io/badge/updated-2026--10--11-lightgrey)
 
 | Field | Value |
 |---|---|
-| **Status** | `draft` |
-| **Owners** | `<TODO: soil domain steward>`, `<TODO: data-lifecycle steward>` |
-| **Last updated** | 2026-10-11 |
-| **Authority class** | Navigational register (not canonical authority) |
-| **Canonical authority** | EvidenceBundle, source dossiers, Directory Rules, ADRs |
-| **Citation tag** | `[DOM-SOIL]`, `[ENCY]`, `[DIRRULES]` |
-
----
-
-## Mini-TOC
-
-1. [Scope](#1-scope)
-2. [At a glance](#2-at-a-glance)
-3. [Repo fit — lane map](#3-repo-fit--lane-map)
-4. [Continuity legend](#4-continuity-legend)
-5. [Inventory by responsibility root](#5-inventory-by-responsibility-root)
-6. [Owned object families — continuity](#6-owned-object-families--continuity)
-7. [Source family continuity](#7-source-family-continuity)
-8. [Cross-lane relations — continuity](#8-cross-lane-relations--continuity)
-9. [Pipeline shape — RAW → PUBLISHED](#9-pipeline-shape--raw--published)
-10. [Validators, tests, fixtures](#10-validators-tests-fixtures)
-11. [Sensitivity, rights, publication](#11-sensitivity-rights-publication)
-12. [Governed AI behavior](#12-governed-ai-behavior)
-13. [Open questions & verification backlog](#13-open-questions--verification-backlog)
-14. [Related docs](#14-related-docs)
-15. [Appendix — change discipline & lineage](#15-appendix--change-discipline--lineage)
-
----
-
-## 1. Scope
-
-**This document inventories** every Soil-domain artifact KFM doctrine expects to live across the responsibility roots (`docs/`, `contracts/`, `schemas/`, `policy/`, `tests/`, `fixtures/`, `packages/`, `pipelines/`, `pipeline_specs/`, `data/`, `release/`, `connectors/`), records each item's **continuity state** (whether it is `UNCHANGED`, `EXPANDED`, `NEW`, `PROPOSED`, or `NEEDS VERIFICATION`), and notes its evidence basis. The inventory is doctrine-grounded; the existence of any specific file, route, schema, validator, or release artifact in a live KFM repository is **`NEEDS VERIFICATION`** until a mounted repo is inspected.
-
-`CONFIRMED doctrine` — Soil owns the static survey, gridded derivative, station soil-moisture, satellite-grid, pedon, interpretation, suitability, and erosion-context surfaces, plus the public-safe Soil map/API products. `[DOM-SOIL] [ENCY]`
-
-`CONFIRMED doctrine` — Soil **does not** own crop/yield (Agriculture), streamflow/groundwater/floods (Hydrology/Hazards), or lithology/boreholes/stratigraphy (Geology). `[DOM-SOIL] [ENCY]`
+| Status | `draft` |
+| Owners | `<TODO: soil domain steward>`, `<TODO: data-lifecycle steward>` — unassigned (`SOIL-VB-001`) |
+| Governing doctrine | [Lifecycle Law](../../doctrine/lifecycle-law.md), [Directory Rules](../../doctrine/directory-rules.md) §§11–12, [Trust Membrane](../../doctrine/trust-membrane.md) |
+| Inventory of Soil artifacts | [Continuity Inventory](CONTINUITY_INVENTORY.md) (authoritative register; this file does not repeat it) |
+| Last updated | 2026-10-11 |
 
 > [!IMPORTANT]
-> **This is not an authority surface.** EvidenceBundle, source dossiers, `schemas/contracts/v1/soil/...` (PROPOSED), accepted ADRs, and the Soil dossier `[DOM-SOIL]` remain canonical. This inventory is a navigational register and must not be cited as proof that a path, schema, validator, or release artifact exists in the live repository.
+> **Current determination (2026-10-11).** One Soil source is admitted: NOAA USCRN daily soil moisture and soil temperature for two Kansas reference stations ([`noaa-uscrn.yaml`](../../../data/registry/sources/soil/noaa-uscrn.yaml), `review_state: approved`, `registry_state: active`, `release_state: candidate`). Its pilot code can capture, normalize, validate, package and write a release **decision**, but it writes nothing to PROCESSED or PUBLISHED and activates nothing. Every other Soil source is a `PROPOSED` placeholder. No released Soil carrier, Soil proof producer or Soil governed-API route was found. RAW physical placement is **HOLD**.
 
 ---
 
-## 2. At a glance
+## Contents
 
-| Lane attribute | Value | Status |
-|---|---|---|
-| Owned object families | 11 (SoilMapUnit, SoilComponent, Horizon, SoilProperty, Hydrologic Soil Group, Soil Moisture Observation, ErosionRisk, SuitabilityRating, Pedon / SoilProfileView, Component Horizon Join, SoilTimeCaveat) | `CONFIRMED` doctrine `[DOM-SOIL] [ENCY]` |
-| Source families on the ledger | 8 (NRCS SSURGO, USDA NRCS SDA, NRCS gSSURGO, NRCS gNATSGO, Kansas Mesonet soil moisture, NRCS SCAN, NOAA USCRN, NASA SMAP) | `CONFIRMED` doctrine `[DOM-SOIL] [ENCY]` |
-| Cross-lane relations | Agriculture, Hydrology, Habitat/Fauna/Flora, Geology | `CONFIRMED` doctrine `[DOM-SOIL] [ENCY]` |
-| Sensitivity default | Public-safe at appropriate scale; farm-/owner-specific or operational sensor data requires review | `CONFIRMED` doctrine `[DOM-SOIL]` `[KFM-UIAB §6.2]` |
-| Schema home (PROPOSED) | `schemas/contracts/v1/soil/...` | `PROPOSED` per Directory Rules §4 Step 3 + Atlas Ch. 24.13 |
-| Promotion model | RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED (governed state transition) | `CONFIRMED` doctrine `[DIRRULES] [DOM-SOIL] [ENCY]` |
-| Implementation maturity | `NEEDS VERIFICATION` (no mounted repo this session) | `UNKNOWN` per `<repository_preflight>` |
-
----
-
-## 3. Repo fit — lane map
-
-`CONFIRMED rule` — Soil is a **domain segment** inside each responsibility root, never a root folder. `[DIRRULES §12]`
-
-```mermaid
-flowchart TB
-    subgraph CANON["Responsibility roots (canonical)"]
-      direction TB
-      DOCS["docs/domains/soil/"]
-      CONTRACTS["contracts/domains/soil/"]
-      SCHEMAS["schemas/contracts/v1/domains/soil/"]
-      POLICY["policy/domains/soil/"]
-      TESTS["tests/domains/soil/"]
-      FIXTURES["fixtures/domains/soil/"]
-      PKGS["packages/domains/soil/"]
-      PIPES["pipelines/domains/soil/"]
-      SPECS["pipeline_specs/soil/"]
-      CONN["connectors/&lt;source&gt;/"]
-    end
-
-    subgraph DATA["data/ lifecycle"]
-      direction LR
-      RAW["RAW (source-first capture; placement HOLD)"] --> WORK["data/work/soil/"]
-      WORK --> QUAR["data/quarantine/soil/"]
-      WORK --> PROC["data/processed/soil/"]
-      PROC --> CAT["data/catalog/domain/soil/"]
-      CAT --> PUB["data/published/layers/soil/"]
-      PROC --> REG["data/registry/sources/soil/"]
-    end
-
-    subgraph REL["release/"]
-      CANDS["release/candidates/soil/"]
-      RM["ReleaseManifest"]
-      RC["RollbackCard"]
-    end
-
-    CONTRACTS -. defines meaning .-> SCHEMAS
-    SCHEMAS -. validates .-> PROC
-    POLICY -. gates .-> PROC
-    POLICY -. gates .-> PUB
-    PIPES -. uses .-> SPECS
-    PIPES -. consumes .-> RAW
-    CONN -. emits .-> RAW
-    CAT -. cited by .-> RM
-    RM -. publishes .-> PUB
-    RC -. repoints .-> RM
-
-    classDef proposed fill:#fff3bf,stroke:#a67c00,color:#3a2c00;
-    class DOCS,CONTRACTS,SCHEMAS,POLICY,TESTS,FIXTURES,PKGS,PIPES,SPECS,CONN,RAW,WORK,QUAR,PROC,CAT,PUB,REG,CANDS,RM,RC proposed;
-```
-
-> [!NOTE]
-> Every path shown above is **`PROPOSED`** under Directory Rules §4 Step 3 and Atlas Ch. 24.13. Confirmation requires a mounted-repo inspection plus the relevant per-root README contract (Directory Rules §15).
-
-[↑ Back to top](#mini-toc)
+1. [Purpose, scope, and authority](#1-purpose-scope-and-authority)
+2. [Lifecycle at a glance](#2-lifecycle-at-a-glance)
+3. [Support types and knowledge character](#3-support-types-and-knowledge-character)
+4. [Phase contracts](#4-phase-contracts)
+5. [Trust objects and their homes](#5-trust-objects-and-their-homes)
+6. [Soil transforms that require receipts](#6-soil-transforms-that-require-receipts)
+7. [Implemented slice: USCRN daily soil pilot](#7-implemented-slice-uscrn-daily-soil-pilot)
+8. [Versioning, freshness, and supersession](#8-versioning-freshness-and-supersession)
+9. [Correction, withdrawal, and rollback](#9-correction-withdrawal-and-rollback)
+10. [Rights, sensitivity, and publication posture](#10-rights-sensitivity-and-publication-posture)
+11. [Catalog and triplet closure; governed delivery](#11-catalog-and-triplet-closure-governed-delivery)
+12. [Anti-patterns](#12-anti-patterns)
+13. [Validation and verification](#13-validation-and-verification)
+14. [Open questions and verification items](#14-open-questions-and-verification-items)
+15. [Related docs](#15-related-docs)
+16. [Changelog](#16-changelog)
 
 ---
 
-## 4. Continuity legend
+## 1. Purpose, scope, and authority
 
-| Symbol / label | Meaning | Source |
-|---|---|---|
-| `CONFIRMED` | Verified in this session from attached KFM doctrine, dossiers, or supplied artifacts. | `<truth_labels>` |
-| `INFERRED` | Reasonably derivable from visible evidence but not directly stated. | `<truth_labels>` |
-| `PROPOSED` | Design / path / placement / behavior not yet verified in implementation. | `<truth_labels>` |
-| `NEEDS VERIFICATION` | Checkable, but not checked strongly enough this session. | `<truth_labels>` |
-| `UNKNOWN` | Not resolvable without more evidence. | `<truth_labels>` |
-| `UNCHANGED` | Carry-forward state — retained verbatim from a prior pass / baseline. | Pass 32 atlas carry-forward register |
-| `EXPANDED` | Carry-forward state — prior body retained with new addendum. | Pass 32 atlas carry-forward register |
-| `NEW` | Carry-forward state — minted in the current pass; no prior body replaced. | Pass 32 atlas carry-forward register |
-| `SUPERSEDED` | Carry-forward state — replaced by a newer card; retained in supersession appendix. | Pass 32 atlas carry-forward register |
-| `QUARANTINED` | Held out of active promotion pending review. | Pass 32 atlas carry-forward register |
-| `HOLD` | Rule is accepted but the concrete path or decision it needs is not; do not act on a placement until an accepted decision exists. | `docs/doctrine/directory-rules.md` §12.3; `data/raw/README.md` |
+This document answers one question for Soil: *what has to be true before Soil material may cross each lifecycle boundary, and what record proves that it did?*
 
----
+| This document decides | It defers to |
+|---|---|
+| How the lifecycle invariant applies to Soil support types, survey hierarchy (MUKEY → COKEY → CHKEY), depth, vintage and station time | [Lifecycle Law](../../doctrine/lifecycle-law.md) for stage names, the publication transition and failure outcomes |
+| Which Soil transforms must leave a receipt | [Canonical Paths](CANONICAL_PATHS.md) and Directory Rules for where any file lives |
+| Soil-specific entry and exit expectations per phase | `contracts/` and `schemas/` for object meaning and shape; `policy/` for allow/deny |
+| How freshness, correction and rollback apply to Soil sources | `release/` for every release, correction, withdrawal and rollback **decision** |
+| Which lifecycle claims are implemented versus proposed | [Verification](VERIFICATION.md) and [Verification backlog](VERIFICATION_BACKLOG.md) for test evidence and open items |
 
-## 5. Inventory by responsibility root
+Out of scope: source admission procedure ([Source registry guide](SOURCE_REGISTRY.md)), operational refresh steps ([Source refresh runbook](../../runbooks/soil/SOURCE_REFRESH_RUNBOOK.md)), API envelopes ([API contracts](API_CONTRACTS.md)) and the per-artifact register ([Continuity Inventory](CONTINUITY_INVENTORY.md)).
 
-Each row reflects KFM doctrine for the Soil lane. Path columns are **`PROPOSED`** until mounted-repo inspection confirms presence.
-
-### 5.1 `docs/domains/soil/`
-
-| Item | PROPOSED path | Continuity | Evidence basis |
-|---|---|---|---|
-| Soil README | `docs/domains/soil/README.md` | `PROPOSED` / `NEW` | Directory Rules §15 README contract |
-| **This inventory** | `docs/domains/soil/CONTINUITY_INVENTORY.md` | `PROPOSED` / `NEW` | This document |
-| Soil glossary excerpt | `docs/domains/soil/GLOSSARY.md` | `PROPOSED` | Atlas v1.0 §5.C ubiquitous language `[DOM-SOIL]` |
-| Soil cross-lane relations note | `docs/domains/soil/CROSS_LANES.md` | `PROPOSED` | Atlas v1.0 §5.F + Ch. 24.4.3 `[DOM-SOIL]` |
-| Soil verification backlog excerpt | `docs/domains/soil/VERIFICATION.md` | `PROPOSED` | Atlas v1.0 §5.N `[DOM-SOIL]` |
-
-### 5.2 `contracts/domains/soil/` — object meaning
-
-`CONFIRMED rule` — `contracts/` owns object **meaning**; semantic Markdown only after ADR-0001. `[DIRRULES §3, §13.1]`
-
-| Item | PROPOSED path | Continuity | Notes |
-|---|---|---|---|
-| SoilMapUnit contract | `contracts/domains/soil/soil_map_unit.md` | `PROPOSED` | Owned object `[DOM-SOIL] [ENCY]` |
-| SoilComponent contract | `contracts/domains/soil/soil_component.md` | `PROPOSED` | Owned object |
-| Horizon contract | `contracts/domains/soil/horizon.md` | `PROPOSED` | Owned object |
-| SoilProperty contract | `contracts/domains/soil/soil_property.md` | `PROPOSED` | Owned object |
-| Hydrologic Soil Group contract | `contracts/domains/soil/hydrologic_soil_group.md` | `PROPOSED` | Owned object |
-| Soil Moisture Observation contract | `contracts/domains/soil/soil_moisture_observation.md` | `PROPOSED` | Owned object |
-| Pedon / SoilProfileView contract | `contracts/domains/soil/pedon_soil_profile_view.md` | `PROPOSED` | Owned object |
-| ErosionRisk contract | `contracts/domains/soil/erosion_risk.md` | `PROPOSED` | Owned object |
-| SuitabilityRating contract | `contracts/domains/soil/suitability_rating.md` | `PROPOSED` | Owned object |
-| Component Horizon Join contract | `contracts/domains/soil/component_horizon_join.md` | `PROPOSED` | Owned object |
-| SoilTimeCaveat contract | `contracts/domains/soil/soil_time_caveat.md` | `PROPOSED` | Owned object; supports cross-lane join discipline `[DOM-SOIL]` |
-
-### 5.3 `schemas/contracts/v1/domains/soil/` — machine shape
-
-`CONFIRMED rule` — Canonical schema home defaults to `schemas/contracts/v1/...` per Directory Rules §4 Step 4 + ADR-0001; any divergence requires an ADR. `[DIRRULES]`
-
-| Item | PROPOSED path | Continuity | Source card |
-|---|---|---|---|
-| Soil moisture reading schema | `schemas/contracts/v1/domains/soil/soil_moisture_reading.schema.json` | `PROPOSED` / `NEW` | KFM-P23-PROG-0031 |
-| Soil moisture unit & time rules | `schemas/contracts/v1/domains/soil/soil_moisture_units_time.schema.json` | `PROPOSED` / `NEW` | KFM-P23-PROG-0032 |
-| Soil moisture de-duplication key | `schemas/contracts/v1/domains/soil/soil_moisture_dedupe_key.schema.json` | `PROPOSED` / `NEW` | KFM-P23-PROG-0035 |
-| SSURGO static source descriptor | `schemas/contracts/v1/domains/soil/ssurgo_source_descriptor.schema.json` | `PROPOSED` / `NEW` | KFM-P23-PROG-0043 |
-| SoilMapUnit / SoilComponent / Horizon / SoilProperty / SuitabilityRating / ErosionRisk / Pedon / Component Horizon Join object schemas | `schemas/contracts/v1/domains/soil/<object>.schema.json` (one per owned object) | `PROPOSED` | Atlas v1.0 §5.E `[DOM-SOIL]` |
-| Soil EvidenceBundle projection | `schemas/contracts/v1/domains/soil/soil_evidencebundle.schema.json` | `PROPOSED` | Atlas v1.0 §5.J + EvidenceBundle doctrine `[ENCY]` |
-| Soil DecisionEnvelope | `schemas/contracts/v1/domains/soil/soil_decision_envelope.schema.json` | `PROPOSED` | Atlas v1.0 §5.J `[DOM-SOIL] [GAI]` |
-
-### 5.4 `policy/domains/soil/` — admissibility & release
-
-| Item | PROPOSED path | Continuity | Notes |
-|---|---|---|---|
-| Soil release policy bundle | `policy/domains/soil/release.rego` | `PROPOSED` | Cite-or-abstain; deny-by-default per `[DIRRULES] [ENCY]` |
-| Support-type separation policy | `policy/domains/soil/support_type_separation.rego` | `PROPOSED` | Static survey / gridded derivative / station / satellite / pedon / interpretation must not collapse `[DOM-SOIL]` |
-| Soil moisture validator gate | `policy/domains/soil/soil_moisture_validator.rego` | `PROPOSED` / `NEW` | KFM-P25-PROG-0030 fail-closed conditions |
-| Sensitivity overlay (farm-/owner-specific) | `policy/sensitivity/soil/` (if created — requires ADR per §3) | `PROPOSED` / `NEEDS VERIFICATION` | Atlas v1.1 Ch. 24.13 notes no required sensitivity sublane for Soil; sensitive joins still fail closed |
-
-### 5.5 `tests/domains/soil/` & `fixtures/domains/soil/`
-
-| Item | PROPOSED path | Continuity | Source |
-|---|---|---|---|
-| MUKEY / COKEY / CHKEY lineage tests | `tests/domains/soil/test_mukey_cokey_chkey_lineage.py` | `PROPOSED` | Atlas v1.0 §5.K |
-| Horizon depth sanity tests | `tests/domains/soil/test_horizon_depth_sanity.py` | `PROPOSED` | Atlas v1.0 §5.K |
-| Soil moisture unit / depth / QC tests | `tests/domains/soil/test_soil_moisture_qc.py` | `PROPOSED` | Atlas v1.0 §5.K |
-| Support-type separation denial tests | `tests/domains/soil/test_support_type_separation.py` | `PROPOSED` | Atlas v1.0 §5.K |
-| Dual-hash stability tests | `tests/domains/soil/test_dual_hash_stability.py` | `PROPOSED` | Atlas v1.0 §5.K |
-| Catalog closure + Evidence Drawer tests | `tests/domains/soil/test_catalog_closure_evidence_drawer.py` | `PROPOSED` | Atlas v1.0 §5.K |
-| Golden SSURGO mapunit fixture | `fixtures/domains/soil/ssurgo_mapunit/golden/` | `PROPOSED` | Atlas v1.0 §5.D, §5.E |
-| Invalid soil-moisture row fixtures | `fixtures/domains/soil/soil_moisture/invalid/` | `PROPOSED` | KFM-P25-PROG-0030 fail-closed cases |
-
-### 5.6 `packages/domains/soil/`, `pipelines/domains/soil/`, `pipeline_specs/soil/`, `connectors/...`
-
-| Item | PROPOSED path | Continuity | Source card / dossier |
-|---|---|---|---|
-| SSURGO ingest pipeline | `pipelines/domains/soil/ssurgo_ingest/` | `PROPOSED` | KFM-P10-PROG-0019, KFM-P2-PROG-0003 |
-| SCAN / AWDB ingest pipeline | `pipelines/domains/soil/scan_awdb_ingest/` | `PROPOSED` | KFM-P10-PROG-0019 |
-| USCRN soil-station ingest pipeline | `pipelines/domains/soil/uscrn_ingest/` | `PROPOSED` | KFM-P10-PROG-0019 |
-| SMAP gridded ingest pipeline | `pipelines/domains/soil/smap_ingest/` | `PROPOSED` | Atlas v1.0 §5.D `[DOM-SOIL]` |
-| Kansas Mesonet long-form normalizer | `pipelines/domains/soil/mesonet_normalizer/` | `PROPOSED` / `EXPANDED` | KFM-P19-PROG-0015 |
-| Soil moisture validator orchestration | `pipelines/domains/soil/moisture_validator/` | `PROPOSED` / `UNCHANGED` | KFM-P23-PROG-0045 |
-| Connectors — `connectors/nrcs-ssurgo/`, `connectors/nrcs-scan/`, `connectors/noaa-uscrn/`, `connectors/nasa-smap/`, `connectors/ks-mesonet/` | `connectors/<source>/` | `PROPOSED` | Directory Rules §3 (connectors emit only to the accepted source-first RAW home — exact path HOLD per `DIR-SOURCE-001` — or to `data/quarantine/`; never to processed/catalog/published) |
-| Pipeline specs (declarative) | `pipeline_specs/soil/*.yaml` | `PROPOSED` | Directory Rules §4 Step 1 |
-| Soil domain package | `packages/domains/soil/` | `PROPOSED` | Directory Rules §12 |
-
-### 5.7 `data/.../soil/` — lifecycle
-
-| Phase | PROPOSED path | Continuity | Gate |
-|---|---|---|---|
-| RAW (source-first capture; placement HOLD) | HOLD — superseded by `DIR-SOURCE-001`; physical source-first placement undecided. [`data/raw/soil/README.md`](../../../data/raw/soil/README.md) EXISTS as a compatibility/reference lane (v0.2.0, 2026-10-11); no payloads | `HOLD` (path) / `CONFIRMED` (immutability, descriptor, hash, no-publish rule) | SourceDescriptor exists for one registered `source_id` under `data/registry/sources/` `[DOM-SOIL]` |
-| WORK | `data/work/soil/` | `PROPOSED` | Validation + policy pass, or QUARANTINE reason recorded |
-| QUARANTINE | `data/quarantine/soil/` | `PROPOSED` | Held-failure store |
-| PROCESSED | `data/processed/soil/` | `PROPOSED` | EvidenceRef + ValidationReport + digest closure |
-| CATALOG / TRIPLET | `data/catalog/domain/soil/` | `PROPOSED` | Catalog/proof closure passes |
-| PUBLISHED | `data/published/layers/soil/` | `PROPOSED` | ReleaseManifest + correction + rollback target + review/policy state |
-| Registry (sources) | `data/registry/sources/soil/` | `PROPOSED` | Source descriptor index |
-
-### 5.8 `release/candidates/soil/`
-
-| Item | PROPOSED path | Continuity | Notes |
-|---|---|---|---|
-| Soil release candidates | `release/candidates/soil/` | `PROPOSED` | Release decisions, manifests, rollback cards |
-| Per-release ReleaseManifest | `release/candidates/soil/<release-id>/release_manifest.json` | `PROPOSED` | `[ENCY Appendix E]` |
-| Per-release RollbackCard | `release/candidates/soil/<release-id>/rollback_card.json` | `PROPOSED` | `[ENCY Appendix E]` |
-
-[↑ Back to top](#mini-toc)
+[Back to top](#top)
 
 ---
 
-## 6. Owned object families — continuity
+## 2. Lifecycle at a glance
 
-`CONFIRMED scope` — Soil owns the following object families. `[DOM-SOIL] [ENCY]`
-
-| Object | Identity rule (PROPOSED) | Temporal handling | Continuity |
-|---|---|---|---|
-| SoilMapUnit | source id + object role + temporal scope + normalized digest | source / observed / valid / retrieval / release / correction times distinct | `CONFIRMED` term · `PROPOSED` field realization |
-| SoilComponent | same deterministic basis | same | `CONFIRMED` term · `PROPOSED` field realization |
-| Horizon | same deterministic basis | same | `CONFIRMED` term · `PROPOSED` field realization |
-| SoilProperty | same deterministic basis | same | `CONFIRMED` term · `PROPOSED` field realization |
-| Hydrologic Soil Group | same deterministic basis | same | `CONFIRMED` term · `PROPOSED` field realization |
-| Soil Moisture Observation | same deterministic basis | same | `CONFIRMED` term · `PROPOSED` field realization |
-| Pedon / SoilProfileView | same deterministic basis | same | `CONFIRMED` term · `PROPOSED` field realization |
-| ErosionRisk | same deterministic basis | same | `CONFIRMED` term · `PROPOSED` field realization |
-| SuitabilityRating | same deterministic basis | same | `CONFIRMED` term · `PROPOSED` field realization |
-| Component Horizon Join | same deterministic basis | same | `CONFIRMED` term · `PROPOSED` field realization |
-| SoilTimeCaveat | same deterministic basis | carries support-type and snapshot-date caveat | `CONFIRMED` term · `PROPOSED` field realization |
-
-> [!TIP]
-> **`SoilTimeCaveat` is the load-bearing time object** for cross-lane joins. Atlas Ch. 24.4.3 records that Soil suitability and hydrologic group bound crop suitability *only when the soil time caveat is carried forward*. Pipelines that drop it break the cross-lane contract.
-
-`PROPOSED` ubiquitous-language helpers (used inside the lane, not separate object families): `authoritative_static_soil`, `gridded_derivative_soil`, `station_soil_moisture`. `[DOM-SOIL] [ENCY]`
-
----
-
-## 7. Source family continuity
-
-`CONFIRMED ledger` — eight source families on the Soil dossier ledger. Rights and current terms are `NEEDS VERIFICATION` for every entry; sensitive joins fail closed by default. `[DOM-SOIL] [ENCY]`
-
-| # | Source family | Role pattern | Freshness | Rights / sensitivity | Carry-forward state |
-|---|---|---|---|---|---|
-| 1 | NRCS SSURGO | authority / observation / context as role requires | source-vintage; annual NRCS Oct 1 refresh cadence (PROPOSED, KFM-P2-PROG-0003) | `NEEDS VERIFICATION` | `UNCHANGED` doctrine |
-| 2 | USDA NRCS Soil Data Access (SDA) | authority / observation | source-vintage | `NEEDS VERIFICATION` | `UNCHANGED` doctrine |
-| 3 | NRCS gSSURGO | authority / observation / context | source-vintage | `NEEDS VERIFICATION` | `UNCHANGED` doctrine |
-| 4 | NRCS gNATSGO | authority / observation / context | source-vintage | `NEEDS VERIFICATION` | `UNCHANGED` doctrine |
-| 5 | Kansas Mesonet soil moisture | observation (station) | high cadence (per station, sub-hourly typical — `NEEDS VERIFICATION`) | `NEEDS VERIFICATION` | `EXPANDED` per KFM-P19-PROG-0015 |
-| 6 | NRCS SCAN | observation (station) | sub-daily | `NEEDS VERIFICATION` | `EXPANDED` per KFM-P10-PROG-0019 |
-| 7 | NOAA USCRN | observation (station) | sub-daily | `NEEDS VERIFICATION` | `EXPANDED` per KFM-P10-PROG-0019 |
-| 8 | NASA SMAP | observation (satellite grid) | daily L4 surface-moisture (PROPOSED, KFM-P27-IDEA-0006) | `NEEDS VERIFICATION` (Earthdata credentials per KFM Components Pass 10 C10-01) | `UNCHANGED` doctrine |
-
-> [!WARNING]
-> **Support-type separation is mandatory.** Static survey, gridded derivative, station reading, satellite grid, pedon evidence, and interpretation must never masquerade as one surface. A pipeline that publishes them under a single layer descriptor is a release-blocking violation. `[DOM-SOIL] [ENCY]`
-
-`PROPOSED watcher pattern` (KFM-P2-PROG-0003): SSURGO/gSSURGO weekly metadata checks plus annual full refresh aligned to the NRCS Oct 1 cycle; SoilGrids monthly metadata checks with irregular model releases. **Not yet implemented in mounted repo (UNKNOWN).**
-
-[↑ Back to top](#mini-toc)
-
----
-
-## 8. Cross-lane relations — continuity
-
-`CONFIRMED relations` from Soil dossier §F and Atlas Ch. 24.4.3 — each must preserve ownership, source role, sensitivity, and EvidenceBundle support. `[DOM-SOIL] [ENCY]`
+**CONFIRMED doctrine.** Soil follows the shared invariant; promotion is a governed state transition, never a copy, move, filename, job completion or alias change (Lifecycle Law §6; `DIR-DATA-004`). The lifecycle is a state machine, not a demand that every artifact visit every directory: valid material need not pass through QUARANTINE, and TRIPLETS are optional (`DIR-DATA-002`, `DIR-DATA-003`).
 
 ```mermaid
 flowchart LR
-    SOIL((Soil))
-    AG[Agriculture]
-    HYD[Hydrology]
-    HAB[Habitat]
-    FAU[Fauna]
-    FLO[Flora]
-    GEO[Geology]
-    SET[Settlements]
-    HAZ[Hazards]
-
-    SOIL -- "soil-crop suitability, irrigation, drought stress\n(carry SoilTimeCaveat)" --> AG
-    SOIL -- "infiltration, runoff, hydrologic group, soil moisture" --> HYD
-    SOIL -- "substrate & moisture context\n(no rare-location exposure)" --> HAB
-    SOIL -- "substrate & moisture context" --> FAU
-    SOIL -- "substrate & moisture context" --> FLO
-    SOIL -- "parent material relation\n(does not replace lithology truth)" --> GEO
-    SOIL -.->|"townsite footing / drainage (advisory)"| SET
-    SOIL -.->|"erosion risk → flood & dust hazard context"| HAZ
-
-    classDef owned fill:#d3f9d8,stroke:#2f9e44,color:#1b4332;
-    classDef cite fill:#fff3bf,stroke:#a67c00,color:#3a2c00;
-    class SOIL owned;
-    class AG,HYD,HAB,FAU,FLO,GEO,SET,HAZ cite;
+  SD["SourceDescriptor (data/registry/sources/)"] --> PRE["Pre-RAW (watcher signal; conditional lane)"]
+  PRE -->|"admission"| RAW["RAW (source-first capture; placement HOLD)"]
+  RAW --> WORK["WORK (normalize, aggregate, QA)"]
+  RAW -->|"hold"| QUAR["QUARANTINE (reason-coded hold)"]
+  WORK -->|"fails"| QUAR
+  QUAR -->|"remediate + review"| WORK
+  WORK -->|"validation report"| PROC["PROCESSED (validated Soil objects)"]
+  PROC --> CAT["CATALOG / TRIPLET (closure, EvidenceBundle)"]
+  CAT --> GATE{"Policy + review + ReleaseManifest + rollback target"}
+  GATE -->|"ALLOW"| PUB["PUBLISHED (public-safe carrier)"]
+  GATE -.->|"DENY / ABSTAIN / HOLD"| QUAR
+  PUB --> API["Governed API (Soil route UNKNOWN)"]
+  PUB -.->|"CorrectionNotice / RollbackCard (release/)"| CAT
 ```
 
-| Related lane | Relation | Constraint | Continuity |
-|---|---|---|---|
-| Agriculture | soil-crop suitability, irrigation, drought stress | preserve `SoilTimeCaveat`; preserve EvidenceBundle support | `CONFIRMED` doctrine; cross-lane join ADR open (ADR-S-14) |
-| Hydrology | infiltration, runoff, hydrologic group, soil moisture | preserve HUC / Watershed / Reach owner authority (Hydrology) | `CONFIRMED` doctrine |
-| Habitat / Fauna / Flora | substrate and moisture context | no rare-location exposure; deny sensitive joins | `CONFIRMED` doctrine |
-| Geology | parent-material relation | does not replace lithology truth (Geology owns lithology) | `CONFIRMED` doctrine |
-| Settlements | townsite footing / drainage context | **advisory only**, never regulatory | `CONFIRMED` doctrine |
-| Hazards | erosion risk informs flood & dust hazard analyses | KFM is never an alert authority | `CONFIRMED` doctrine |
+Reading rules for Soil:
+
+- **Support type is set at the edge and travels.** It is recorded at capture and never upgraded by a later phase ([§3](#3-support-types-and-knowledge-character)).
+- **Receipts, proofs and registry records run alongside the phases;** they are not phases (Directory Rules §11.1).
+- **Public reach exists only at PUBLISHED, through a governed interface.** Pre-RAW, RAW, WORK, QUARANTINE, PROCESSED and unreleased CATALOG / TRIPLET records are `DENY` for public clients (Lifecycle Law §4).
+
+[Back to top](#top)
 
 ---
 
-## 9. Pipeline shape — RAW → PUBLISHED
+## 3. Support types and knowledge character
 
-`CONFIRMED doctrine / PROPOSED lane application` — Soil follows the canonical lifecycle; promotion is a governed state transition, not a file move. `[DIRRULES] [DOM-SOIL] [ENCY]`
+Support type is the Soil lane's anti-collapse control: static survey, gridded derivative, station observation, satellite or model grid, pedon evidence and interpretation **cannot masquerade as one surface** (README; [Canonical Paths §9](CANONICAL_PATHS.md#9-sensitivity-rights-and-publication-posture)). The lifecycle consequence is that every phase must be able to say which support a value has, at what scale, depth and time.
 
-| Stage | Handling | Gate | Status |
-|---|---|---|---|
-| **RAW** | Capture immutable source payload or reference with source role, rights, sensitivity, citation, time, and hash. | SourceDescriptor exists. | `PROPOSED` |
-| **WORK / QUARANTINE** | Normalize schema, geometry, time, identity, evidence, rights, and policy; hold failures. | Validation + policy gate pass, or quarantine reason is recorded. | `PROPOSED` |
-| **PROCESSED** | Emit validated normalized objects, receipts, public-safe candidates. | EvidenceRef, ValidationReport, digest closure exist. | `PROPOSED` |
-| **CATALOG / TRIPLET** | Emit catalog records, EvidenceBundles, graph/triplet projections, release candidates. | Catalog/proof closure passes. | `PROPOSED` |
-| **PUBLISHED** | Serve released public-safe artifacts through governed APIs and manifests. | ReleaseManifest, correction path, rollback target, review/policy state exist. | `PROPOSED` |
+| Support family | Sources (repository records) | Knowledge character | Must travel through every phase | Must never become |
+|---|---|---|---|---|
+| Static survey polygons | NRCS SSURGO; SDA query results | Surveyed, mapped interpretation of components within map units — not a point measurement | MUKEY / COKEY / CHKEY lineage, component percent, horizon top/bottom depth and unit, survey vintage; for SDA also query text, query hash and retrieval time | A field-uniform property, a station reading, or a parcel attribute |
+| Gridded survey derivatives | gSSURGO, gNATSGO | Rasterized survey; precision is the underlying survey's, not the cell's | Product and edition, cell size, CRS, resampling method, derivation lineage, inherited survey vintage | Authoritative keyed SSURGO evidence (the yearly-diff contract denies this explicitly) |
+| Station point-at-depth observations | Kansas Mesonet, NRCS SCAN, NOAA USCRN | Observed, single point, single depth, single interval | Station identity, sensor depth, unit, observation time and source timezone, QC flags, withheld/missing state | An area, field, county or map-unit value |
+| Satellite / model grids | NASA SMAP (L4 is model assimilation) | Modeled or retrieved grid; surface (0–5 cm) and root zone (0–100 cm) are different supports | Product version, cadence class (NRT vs standard quality), grid identity, QA, uncertainty, surface vs root-zone label | A station or in-situ field measurement |
+| Modeled property grids | ISRIC SoilGrids | ML prediction with uncertainty layers (250 m, per its catalog page) | Model/release version, depth band, uncertainty reference, attribution | Observed soil property |
+| Pedon / profile evidence | Pedon and NASIS-type profiles (runbook source table) | Local vertical evidence | Sample identity, sampling date, lab/source lineage | Regional or map-unit truth without a declared derivation |
+| Interpretations | Hydrologic soil group, erosion risk, suitability | Method- and purpose-bound derivative | Derivation rule, inputs, scope of validity, caveats | Streamflow, hazard, crop, engineering or legal truth |
 
 > [!CAUTION]
-> **No lifecycle skip.** A pipeline that writes directly to `data/published/layers/soil/` from RAW (the source-first capture or the legacy `data/raw/soil/` lane) violates Directory Rules §13.5 ("Lifecycle skip") and §13.4 ("Domain folders becoming root folders"). Promotion is a governed transition; every phase runs.
+> **Vocabulary is not converged (`SOIL-VB-002`, `PARTIAL / CONFLICTED`).** The public-safe smoke profile accepts `static_survey`, `station_observation`, `satellite_grid` and `modeled_derivative`; richer profiles use `authoritative_static_soil`, `station_soil_moisture`, `satellite_grid_soil_moisture` and others; the yearly-diff profile uses `AUTHORITATIVE_STATIC_SOIL_SURVEY` and `GRIDDED_DERIVATIVE_SOIL`. Use the exact token of the bound schema at each phase and do not invent aliases (see [Glossary](GLOSSARY.md#vocabulary-conflicts)).
+
+Two time axes are also lifecycle-critical and must not be swapped: **vintage / observation time** (what the value represents) and **retrieval time** (when the bytes were obtained). A fresh retrieval can carry an old survey ([Glossary](GLOSSARY.md#time-quality-and-identity)).
+
+[Back to top](#top)
 
 ---
 
-## 10. Validators, tests, fixtures
+## 4. Phase contracts
 
-`PROPOSED tests` from Atlas v1.0 §5.K plus carried-forward Pass 23/32 cards:
+Status labels: **CONFIRMED** = doctrine or inspected code; **PROPOSED** = described but not implemented; **HOLD** = deliberately unresolved.
 
-| Test class | Purpose | Source card | Continuity |
+| Phase | Soil material that enters | Entry gate | Exit gate | Required trust objects | Must not read it |
+|---|---|---|---|---|---|
+| **Pre-RAW** (conditional) | Watcher change signals (e.g. SSURGO package drift), admission candidates | Registered or proposed `SourceDescriptor` | Admission decision | `EventRunReceipt` (Lifecycle Law name; OQ-LL-04 open) | Public, AI, UI |
+| **RAW** | Source-native SSURGO exports, SDA query payloads, gridded rasters, station files, SMAP granules, SoilGrids tiles — once each, source-first | Admitted `SourceDescriptor`; digest | Normalization decision or quarantine | `IntakeReceipt` / ingest run receipt; payload digest | Public, AI context, UI layers, normalized records |
+| **WORK** | Normalized intermediates: key reconciliation, unit/depth conversion, aggregation, resampling, generalization trials | Governed reference to a RAW capture | `ValidationReport` pass, or quarantine reason | `TransformReceipt` (plus `AggregationReceipt` / `RedactionReceipt` where applied) | Public API/UI, release aliases |
+| **QUARANTINE** | Unresolved rights, missing support type, broken survey lineage, unit/depth/QC defects, unreviewed cross-support aggregation | Any failed gate, from any phase | Remediation through WORK **plus** review, or denial | `QuarantineReceipt` with reason code | Public (`DENY`); stewards and reviewers only |
+| **PROCESSED** | Validated Soil objects (map units, components, horizons, properties, moisture series, interpretations) | Validation pass, policy pass | Catalog closure | `ProcessingReceipt` **and** `ValidationReport`; `EvidenceRef`; digest closure | Public (`DENY` until release) |
+| **CATALOG / TRIPLET** | Domain catalog records, STAC/DCAT/PROV projections, `EvidenceBundle`, optional graph projections | Processed artifact + digest | Release gate | `CatalogBuildReceipt` / `GraphBuildReceipt`; resolvable `EvidenceBundle` | Public except released records |
+| **PUBLISHED** | Released public-safe Soil carriers, support-type separated | `ReleaseManifest`, `PolicyDecision`, review, correction path, rollback target | Correction, supersession or withdrawal **with notice** | `PublicationReceipt`; `ReleaseManifest` + proof under `release/` | — (public via governed routes only) |
+
+### 4.1 Pre-RAW and admission
+
+- **CONFIRMED doctrine:** watchers report change; they never promote (Lifecycle Law §3.0; README invariants).
+- **CONFIRMED code:** the SSURGO watcher at [`tools/ingest/ssurgo_watch/`](../../../tools/ingest/ssurgo_watch/ssurgo_watch.py) is fixture-only and no-network; it separates `spec_hash` from `content_hash` so a new retrieval timestamp alone is not a material change ([Identity model §4.2](IDENTITY_MODEL.md#42-fixture-only-ssurgo-watcher-hashes)).
+- **CONFIRMED:** no `data/pre_raw/` lane exists; per `DIR-DATA-001` it stays absent until a durable pre-RAW queue is implemented.
+- Admission is a registry decision under `data/registry/sources/` (`DIR-SOURCE-003`), not a lifecycle write. A placeholder YAML is not admission ([Sources](SOURCES.md)).
+
+### 4.2 RAW — source-first, placement HOLD
+
+- **CONFIRMED rule (`DIR-SOURCE-001`, `DIR-SOURCE-002`):** one registered `source_id`, one source-first capture; a capture used by Soil and Agriculture (SSURGO, Kansas Mesonet, SCAN, USCRN, SMAP) is stored once and referenced by both ([`data/raw/README.md`](../../../data/raw/README.md#overlapping-lanes-that-must-share-one-capture)).
+- **HOLD:** the physical source-first RAW home is undecided (`OPEN-SOIL-09`). No RAW path is named here, and none may be inferred.
+- **CONFIRMED:** [`data/raw/soil/`](../../../data/raw/soil/README.md) is a compatibility/reference lane holding a README only; it must not receive payloads, copies, checksums or source-run directories.
+- RAW is append-only. A unit fix, re-projection or key repair is a WORK derivation with a receipt, never an in-place RAW edit (Lifecycle Law §14).
+
+### 4.3 WORK and QUARANTINE
+
+- WORK holds candidates only; every Soil-specific transform in [§6](#6-soil-transforms-that-require-receipts) runs here and leaves a receipt.
+- [`data/quarantine/soil/`](../../../data/quarantine/soil/README.md) lists **PROPOSED** quarantine classes: source activation unresolved, rights unknown, support type missing or collapsed, survey lineage defect, observation unit/depth/QC defect, cross-support aggregation unreviewed, evidence open, temporal/scale/caveat defect. No child lanes are confirmed.
+- Exit from QUARANTINE is remediation back through WORK plus a review record; quarantine → PROCESSED directly is a doctrine violation (Lifecycle Law §3.3).
+
+### 4.4 PROCESSED
+
+- [`data/processed/soil/`](../../../data/processed/soil/README.md) holds a README only. Its lane index (`map-units/`, `components/`, `horizons/`, `moisture/`, `gridded/`, `public/`, `restricted/` …) is **PROPOSED**; `public/` there would mean public-*candidate*, not published.
+- A moisture value without depth, unit, time, support type, source and evidence posture fails closed (processed README guardrails).
+
+### 4.5 CATALOG / TRIPLET and PUBLISHED
+
+- Catalog closure for Soil is defined in [Catalog closure](CATALOG_CLOSURE.md) (eleven dimensions) and summarized in [§11](#11-catalog-and-triplet-closure-governed-delivery).
+- `data/published/layers/soil/` carries README-only support-type families (`static_survey/`, `gridded_derivative/`, `satellite_grid/`, `suitability/`). Presence of these READMEs is not publication.
+
+[Back to top](#top)
+
+---
+
+## 5. Trust objects and their homes
+
+Object names follow Lifecycle Law §9. Where the repository uses a different emitted name, both are shown; naming convergence is **NEEDS VERIFICATION**.
+
+| Trust object | Phase | Home (Directory Rules) | Soil state found 2026-10-11 |
 |---|---|---|---|
-| MUKEY / COKEY / CHKEY lineage | Enforce SSURGO key chain across map unit → component → horizon | Atlas v1.0 §5.K | `PROPOSED` |
-| Horizon depth sanity | Reject inverted or out-of-range depth ranges | Atlas v1.0 §5.K | `PROPOSED` |
-| Soil moisture unit / depth / QC | Volumetric m³/m³; depths in cm; ISO-UTC timestamps; preserve source timezone | KFM-P23-PROG-0032 | `PROPOSED` / `NEW` |
-| Soil moisture de-duplication | Dedupe on station_id × variable × depth_cm × timestamp_iso; retain source + QC context | KFM-P23-PROG-0035 | `PROPOSED` / `NEW` |
-| Soil moisture validator fail-closed | DENY on missing required columns, nulls, invalid datetime, value ∉ [0, 0.6] m³/m³, invalid unit, unapproved source, invalid qa_flag, missing spec_hash, out-of-bounds coords | KFM-P25-PROG-0030 | `PROPOSED` / `UNCHANGED` |
-| Support-type separation denial | Reject merging static survey / gridded derivative / station / satellite / pedon / interpretation surfaces | Atlas v1.0 §5.K | `PROPOSED` |
-| Dual-hash stability | Verify `spec_hash` (JCS+SHA-256) stability across replays | Atlas v1.0 §5.K + KFM-P5-PROG-0010 (replay verification) | `PROPOSED` |
-| Catalog closure + Evidence Drawer | Verify catalog records resolve EvidenceRef → EvidenceBundle | Atlas v1.0 §5.K | `PROPOSED` |
-| SMAP × Mesonet cross-check | Anomaly, consistency, unit, fail-closed QA before promotion | KFM-P27-IDEA-0006 | `PROPOSED` / `UNCHANGED` |
-| Validator finite outcomes | PASS / FAIL / ABSTAIN / ERROR with reason codes (validator entrypoint) | KFM-P23-PROG-0045 | `PROPOSED` / `UNCHANGED` |
+| `SourceDescriptor` | Pre-RAW / admission | `data/registry/sources/soil/` | **CONFIRMED:** one admitted descriptor (`noaa-uscrn.yaml`); eight `PROPOSED` placeholders. Domain-first `data/registry/soil/sources/` is a compatibility view, not a writer (`DIR-SOURCE-004`) |
+| Ingest / intake receipt | RAW (or capture hold) | `data/receipts/` | **CONFIRMED in pilot code:** `kfm.uscrn-daily-pilot-run/v1` under the external store's `data/receipts/ingest/noaa-uscrn-daily/`. Doctrine name `IntakeReceipt`; Canonical Paths says `IngestReceipt` |
+| `TransformReceipt` / `AggregationReceipt` / `RedactionReceipt` | WORK | `data/receipts/` | **PROPOSED** for Soil; required by the yearly-diff profile whenever normalization changes geometry or attributes |
+| `ValidationReport` | WORK → PROCESSED | `data/receipts/` / `data/proofs/` | **CONFIRMED in pilot code:** `kfm.uscrn-daily-validation/v1` under the external store's `data/receipts/validation/soil/` |
+| `EvidenceRef` / `EvidenceBundle` | PROCESSED → CATALOG | `data/proofs/` | **CONFIRMED in pilot code:** one evidence bundle per station and depth (`kfm.soil-evidence-candidate/v1`). No Soil `EvidenceBundle` exists in the repository (`SOIL-VB-009`) |
+| Catalog record | CATALOG | `data/catalog/` | **CONFIRMED in pilot code:** `kfm.soil-catalog-candidate/v1`, `authoritative: false`, `release_state: UNRELEASED`. [`data/catalog/domain/soil/`](../../../data/catalog/domain/soil/README.md) is README-only |
+| `ReleaseManifest` / release snapshot | Release gate | `release/manifests/`, `release/candidates/soil/` | **CONFIRMED in pilot code:** immutable `kfm.soil-snapshot/v1` written to the external store's `release/candidates/soil/`. Soil `release_manifest.schema.json` is a greenfield stub |
+| Release decision | Release gate | `release/` decision plane | **CONFIRMED in pilot code:** `kfm.soil-release-decision/v1` written to the external store's `release/decisions/soil/` only if the serving gate answers `ELIGIBLE` (ADR-0046) |
+| `CorrectionNotice` | Post-PUBLISHED | `release/correction_notices/` | **PROPOSED**; decision carries `correction_state: ACTIVE` and `correction_ref: null` |
+| `RollbackCard` | Release readiness | `release/rollback_cards/` (`DIR-RELEASE-003`) | **PROPOSED**; snapshot accepts an optional `rollback_target`. Soil `rollback_card.schema.json` is a stub |
+| `PublicationReceipt` | PUBLISHED | `data/receipts/` | **UNKNOWN** — no Soil publication path found |
 
-`PROPOSED fixtures` (paths PROPOSED):
-
-- `fixtures/domains/soil/ssurgo_mapunit/golden/` — known-good SSURGO map unit + component + horizon chain
-- `fixtures/domains/soil/soil_moisture/valid/` — Mesonet / SCAN / USCRN normalized rows
-- `fixtures/domains/soil/soil_moisture/invalid/` — fail-closed cases per KFM-P25-PROG-0030
-- `fixtures/domains/soil/smap/golden/` — SMAP L4 sample tile
-- `fixtures/domains/soil/spec_hash/` — JCS-canonicalized samples for replay verification
-
-[↑ Back to top](#mini-toc)
+[Back to top](#top)
 
 ---
 
-## 11. Sensitivity, rights, publication
+## 6. Soil transforms that require receipts
 
-| Posture item | Doctrine | Status |
+Every transform below changes what a value means or which support it stands on, so each must leave a receipt naming inputs, method, parameters and outputs (Lifecycle Law §3.2). Status reflects the inspected repository.
+
+| Transform | Why it is lifecycle-significant | Receipt / record | Repository status |
+|---|---|---|---|
+| **Component aggregation** (map unit from components) | A dominant-component pick hides minor components; weighted averages depend on component-percent closure | `AggregationReceipt` (PROPOSED); method recorded on the candidate | **CONFIRMED fixture profile:** [`MukeyProperties`](../../../contracts/domains/soil/mukey_properties.md) uses component-percent weighting with 99–101 % closure; the contract says it is not an accepted real-data rule |
+| **Horizon depth-weighting** | Values apply to depth intervals; windows (0–100 cm root zone, 0–5 cm surface) change the answer | Same as above | **CONFIRMED fixture profile:** arithmetic depth weighting, then component weighting; horizons must be ordered, gap-free and non-overlapping ([validator](../../../tools/validators/domains/soil/mukey_properties/validate_mukey_properties.py)) |
+| **Hydrologic soil group** | Interpretation, not observation | Source-carried basis | **CONFIRMED:** `hydrologic_group` stays source-carried (`source_muaggatt`); no Ksat threshold is invented |
+| **Raster resampling, reprojection, zonal statistics** | ~10 m SSURGO, ~30 m gSSURGO/gNATSGO, ~250 m SoilGrids and ~1 km SMAP cannot be silently put on one grid | `TransformReceipt` with source resolution and resampling method | **PROPOSED** only ([Canonical Paths §7 note](CANONICAL_PATHS.md#7-source-families); runbook §3). No Soil resampling code found |
+| **Station unit, QC and time handling** | Missing sentinels, impossible values, local-standard-time days vs UTC instants | Validation report | **CONFIRMED (USCRN):** missing sentinels become `MISSING`, out-of-range values `OUT_OF_RANGE`, never zero; `observation_date` is the station's local-standard-time day ([contract](../../../contracts/domains/soil/daily_soil_observation.md)). **CONFIRMED fixture profile** for the generic station moisture validator |
+| **Version diff** (survey refresh) | A refreshed survey changes keyed records; a mutable "current" view hides which edition was used | Snapshot receipts, validation receipt, `TransformReceipt` when normalized | **CONFIRMED fixture-only:** [yearly-diff profile](../../../contracts/domains/soil/ssurgo_yearly_diff_profile.md), [builder](../../../tools/generators/build_soil_yearly_diff.py) and [validator](../../../tools/validators/domains/soil/validate_ssurgo_yearly_diff_profile.py); output limited to WORK or QUARANTINE; consecutive years only |
+| **SDA micro-snapshot diff** | Separates material change from a new retrieval timestamp | Diff report | **CONFIRMED fixture-only:** [contract](../../../contracts/domains/soil/ssurgo_sda_micro_snapshot.md); `content_spec_hash` vs `retrieval_hash`; outcomes `NO_MATERIAL_CHANGE`, `PROPOSED_WORK_RECORD`, `VALIDATION_HOLD`, `ERROR` |
+| **Generalization / redaction** | Precision reduction before public use | `RedactionReceipt` | **PROPOSED** (runbook §10.2); public-safe fixture profile denies precise-location aliases |
+
+> [!WARNING]
+> Cross-support aggregation (for example a "soil-condition view" mixing survey, station and satellite values) is denied unless an explicit, reviewed derivation step exists and every contributing value keeps its support-type and resolution tag ([Architecture §6](ARCHITECTURE.md#6-support-type-separation--the-soil-specific-invariant)).
+
+[Back to top](#top)
+
+---
+
+## 7. Implemented slice: USCRN daily soil pilot
+
+**CONFIRMED code, bounded scope.** This is the only Soil path that runs end to end through capture, candidate, package and release decision. It operates on an operator-private store that must be outside the Git checkout (`external_root` refuses the repository and its parents). Paths are relative to that store.
+
+| Step | Code | Writes (external store) | Lifecycle meaning |
+|---|---|---|---|
+| Capture | [`uscrn_daily_capture.py`](../../../connectors/noaa/src/noaa/uscrn_daily_capture.py) | — (returns bytes and a digest-closed manifest) | Connector selects and admits nothing |
+| Stage captured bytes | [`uscrn_daily_pilot.py`](../../../tools/local_data/uscrn_daily_pilot.py) | `data/quarantine/noaa-uscrn-daily/objects/sha256/<digest>/payload`, `…/runs/<run>/manifest.json` | Source-first, digest-addressed **QUARANTINE** capture — not RAW |
+| Normalize + validate | `uscrn_daily_normalize.py`, `uscrn_daily_validate.py` | `data/work/soil/noaa-uscrn-daily/<id>/candidate.json`, `data/receipts/validation/soil/<id>/validation.json` | WORK candidate (`review_state: PENDING`, `release_state: UNRELEASED`) |
+| Run receipt | same | `data/receipts/ingest/noaa-uscrn-daily/<run>/…json` | `promoted`, `released`, `published` all `false` |
+| Package | [`soil_release.py`](../../../tools/release/soil_release.py) `prepare` | `release/candidates/soil/<package>/snapshot.json` | Catalog candidate + evidence bundles + validation, one bundle per station-depth |
+| Decide | `soil_release.py` `decide` | `release/decisions/soil/<package>/<released_at>.json` | Written only if the serving gate answers `ELIGIBLE` and every bundle replays; `activated: false` |
+
+Gate conditions **CONFIRMED** from code and [ADR-0046](../../adr/ADR-0046-owner-self-release-for-admitted-public-soil-data.md): admission is read only when the descriptor is approved, active, `verified_open`, `public` and release-allowed (otherwise `SOURCE_NOT_ADMITTED`); without `--admitted-source` packages keep the rights hold; owner self-release requires every bundle to be `public` and carry the single admitted NOAA licence, otherwise `INDEPENDENT_REVIEW_REQUIRED`; a decision is valid for 1–30 days (default 7).
+
+**Not established:** a PROCESSED artifact, a PUBLISHED carrier, an activated release pointer, a Soil governed-API route, or hosted serving. Tests: `tests/domains/soil/test_uscrn_daily_candidate.py`, `tests/tools/test_uscrn_daily_pilot.py`, `tests/tools/test_soil_release.py` (run by `domain-soil.yml` with `KFM_NO_NETWORK=1` on synthetic fixtures).
+
+[Back to top](#top)
+
+---
+
+## 8. Versioning, freshness, and supersession
+
+| Source family | Version / cadence posture | Freshness rule | Supersession | Status |
+|---|---|---|---|---|
+| SSURGO | Annual Soils Refresh aligned to the NRCS Oct 1 cycle; weekly metadata watcher | Survey-area refresh lapse | New edition is a new capture; yearly diff binds two consecutive editions | PROPOSED ([catalog page](../../sources/catalog/nrcs/ssurgo.md)) |
+| SDA live query | Query-time results over survey tables | Reproducible only with query text, query hash and retrieval time | ASR snapshots and SDA live queries emit **separate receipts** | PROPOSED (`query_hash` rule open, Architecture `OPEN-SOIL-02`) |
+| gSSURGO / gNATSGO | Tracks the SSURGO release cycle; inherits survey vintage | Requires `SoilTimeCaveat` on join | Edition-pinned | PROPOSED ([gSSURGO page](../../sources/catalog/nrcs/gssurgo.md)) |
+| NOAA USCRN daily01 | Daily; NOAA may revise values | Stale three days after the latest moisture value (`mark_stale`) | Record `id` stable across revisions; `record_digest` changes when a value is revised | **CONFIRMED** (descriptor + contract) |
+| Kansas Mesonet, SCAN | 5-minute / hourly / daily native resolution | Heartbeat freshness per station | Native resolution preserved; roll-ups need an aggregation receipt | PROPOSED |
+| NASA SMAP | NRT (LANCE) and standard quality | Cadence class carried on every value | NRT superseded by reprocessed standard quality | PROPOSED ([SMAP page](../../sources/catalog/nasa/nasa-smap.md)) |
+| ISRIC SoilGrids | Versioned releases | Static between releases | One descriptor per release; source role never edited in place | PROPOSED ([SoilGrids page](../../sources/catalog/isric/isric-soilgrids.md)) |
+
+Rules that apply to every family: historical readers see the edition they cite, not a silently refreshed current; stale material yields `ABSTAIN freshness.stale` with a `SOURCE_STALE` UI state (Lifecycle Law §8); a changed retrieval timestamp alone is not a new product ([Sources](SOURCES.md#refresh-and-troubleshooting)); the time-caveat profile holds an over-age current-condition candidate and denies one declared `FRESH` despite its age ([contract](../../../contracts/domains/soil/time_caveat_profile.md)).
+
+[Back to top](#top)
+
+---
+
+## 9. Correction, withdrawal, and rollback
+
+- **CONFIRMED doctrine:** a published artifact without a correction path is an `ERROR`; a manifest without `correction_path` or rollback target is `DENY release.unreviewed` (Lifecycle Law §6.1).
+- **CONFIRMED placement:** `RollbackCard` lives only under `release/rollback_cards/`; executed rollback and cache-invalidation records go to `data/receipts/rollback/`; generic `data/rollback/` is deprecated (`DIR-RELEASE-003`, `DIR-RELEASE-004`). [`data/rollback/soil/`](../../../data/rollback/soil/README.md) exists as a README describing data-plane support under draft ADR-0015; treat it as a classification candidate, not a rollback authority.
+- **Soil-specific correction scope:** a correction must enumerate dependents — tiles, COGs, catalog projections, graph edges, exports and cached answers — that carry the corrected MUKEY, edition, station series or derived metric ([Preservation matrix](PRESERVATION_MATRIX.md); runbook §11).
+- **Rollback is not deletion or erasure;** prior meanings stay inspectable. A Site deployment rollback, a Git revert and a governed data rollback are separate operations ([Catalog closure — Correction and rollback](CATALOG_CLOSURE.md#correction-and-rollback)).
+- **Gate behaviour (CONFIRMED, `policy_runtime.serving_gate`):** a soil decision whose `correction_state` is not `ACTIVE` returns `CORRECTION_HOLD`; a non-null `correction_ref` or non-`APPROVED` decision returns `RELEASE_NOT_APPROVED`.
+- **Policy rollback (CONFIRMED, ADR-0046):** emptying `SOIL_SELF_RELEASE_LICENSES` returns owner-only soil decisions to `INDEPENDENT_REVIEW_REQUIRED`.
+
+[Back to top](#top)
+
+---
+
+## 10. Rights, sensitivity, and publication posture
+
+Quoted from repository records; nothing here verifies live terms.
+
+| Source | Documented posture | Lifecycle effect |
 |---|---|---|
-| Default exposure | Public-safe at appropriate scale | `CONFIRMED` doctrine `[DOM-SOIL]` |
-| Sensitive lane triggers | Farm-/owner-specific, unpublished, proprietary, or operational sensor data | `CONFIRMED` doctrine — requires rights + sensitivity review before release |
-| Support-type separation | Static survey · gridded derivative · station · satellite · pedon · interpretation must not collapse | `CONFIRMED` rule `[DOM-SOIL]` |
-| Promotion-blocking conditions | Unclear rights · unresolved source role · missing evidence · unresolved sensitivity · absent release state | `CONFIRMED` doctrine `[ENCY] [DIRRULES]` |
-| Trust-membrane discipline | Public routes go through `apps/governed-api/`, not direct reads of `data/processed/soil/` | `CONFIRMED` rule `[DIRRULES §13.5]` |
+| NOAA USCRN (admitted scope) | `verified_open`; "U.S. Public Domain (NOAA federal station data, 17 U.S.C. 105); USCRN data subject to revision"; attribution and NCEI citation required; `sensitivity_default: public` | May reach a release decision under ADR-0046; every release keeps citation and revision notice |
+| SSURGO, SDA, gSSURGO | "Public; verify publisher terms" (runbook); rights NEEDS VERIFICATION | No admission → no capture beyond fixtures |
+| ISRIC SoilGrids | CC-BY-4.0 at family level (catalog page); attribution required | Per-release terms NEEDS VERIFICATION at refresh |
+| Kansas Mesonet | Written operator consent required; unknown rights default to DENY (catalog page) | Held until consent is recorded in the descriptor |
+| NASA SMAP | Earthdata credentials required (runbook) | Credentials stay in `infra/` / `configs/`, never in lifecycle data |
 
-### Governed API surfaces (PROPOSED)
+Sensitive joins fail closed regardless of source openness: soil × private parcel or owner, soil × archaeology site, soil × rare-species location, and soil × critical infrastructure are `DENY` or `RESTRICT` for exact public combination (runbook §10). Style filters are not policy; sensitive geometry is generalized or removed before tile generation. Field-specific, owner-specific, proprietary or operational sensor data requires rights and sensitivity review before release (Architecture §9).
 
-| Endpoint / artifact | DTO / schema | Finite outcomes | Status |
-|---|---|---|---|
-| Soil feature/detail resolver (route TBD) | `SoilDecisionEnvelope` | ANSWER · ABSTAIN · DENY · ERROR | `PROPOSED`; exact route `UNKNOWN` |
-| Soil layer manifest resolver | `LayerManifest` / domain layer descriptor | ANSWER · DENY · ERROR | `PROPOSED`; public-safe release only |
-| Soil Evidence Drawer payload | `EvidenceDrawerPayload` + EvidenceBundle projection | ANSWER · ABSTAIN · DENY · ERROR | `PROPOSED`; evidence + policy filtered |
-| Soil Focus Mode answer | `RuntimeResponseEnvelope` + `AIReceipt` | ANSWER · ABSTAIN · DENY · ERROR | `PROPOSED`; AI never root truth `[GAI]` |
+[Back to top](#top)
 
 ---
 
-## 12. Governed AI behavior
+## 11. Catalog and triplet closure; governed delivery
 
-`CONFIRMED doctrine / PROPOSED implementation` — AI may summarize released Soil EvidenceBundles, compare evidence, explain limitations, and draft steward-review notes. AI must:
+- **Closure set (CONFIRMED doctrine):** processed artifact + digest → domain catalog record → STAC / DCAT / PROV where applicable → triplet where applicable → `SourceDescriptor` + `EvidenceBundle` + validation + policy + review → `PromotionDecision` / `ReleaseManifest` → released carrier → correction and rollback target ([`data/catalog/domain/soil/`](../../../data/catalog/domain/soil/README.md#projection-and-release-closure)).
+- **CONFIRMED fixture check:** the [catalog-closure assessment](CATALOG_CLOSURE.md) validates eleven declared dimensions (`READY_FOR_REVIEW`, `HOLD`, `ERROR`) but does not dereference references.
+- **Placement notes:** `data/catalog/domain/` is a migration candidate against the canonical `data/catalog/domains/` (Directory Rules §12.3); Soil triplet shape is open (`OPEN-SOIL-02`) and `data/triplets/soil/` holds only `.gitkeep`.
+- **Delivery (CONFIRMED doctrine):** public clients consume Soil only through governed API surfaces (S1–S5 in [API contracts](API_CONTRACTS.md#4-api-surface-table)); all Soil routes are **UNKNOWN**. The Site's NASA GIBS imagery and USDA subsurface query are visual context, not a governed Soil release ([Map/UI contracts](MAP_UI_CONTRACTS.md)).
 
-- **ABSTAIN** when evidence is insufficient.
-- **DENY** where policy, rights, sensitivity, or release state blocks the request.
-- Never present synthetic content as observed.
-- Carry `AIReceipt` on every Focus Mode answer (100% rate target, Ch. 24.11.4).
-
-`[GAI] [DOM-SOIL] [ENCY]`
+[Back to top](#top)
 
 ---
 
-## 13. Open questions & verification backlog
+## 12. Anti-patterns
 
-| ID | Item | Evidence that would settle it | Status |
-|---|---|---|---|
-| `VB-SOIL-01` | Soil schema home is `schemas/contracts/v1/domains/soil/...` and ADR-0001 governs it | Mounted repo + accepted ADR-0001 | `NEEDS VERIFICATION` |
-| `VB-SOIL-02` | Per-root README present for `docs/domains/soil/` per Directory Rules §15 | Mounted repo tree | `NEEDS VERIFICATION` |
-| `VB-SOIL-03` | SSURGO / SDA / gSSURGO / gNATSGO connectors exist under `connectors/<source>/` and emit only to the accepted source-first RAW home (exact path HOLD; never the legacy `data/raw/soil/` compatibility/reference lane) or `data/quarantine/soil/` | Mounted repo + connector code | `NEEDS VERIFICATION` |
-| `VB-SOIL-04` | Kansas Mesonet long-form normalizer matches KFM-P19-PROG-0015 field set (station_id, obs_time, depth_cm, sensor_type, value, source_uri, checksum, run_receipt) | Pipeline code + validator + sample rows | `NEEDS VERIFICATION` |
-| `VB-SOIL-05` | Soil moisture validator returns finite outcomes (PASS / FAIL / ABSTAIN / ERROR) per KFM-P23-PROG-0045 | Validator code + receipts | `NEEDS VERIFICATION` |
-| `VB-SOIL-06` | Soil moisture validator fail-closed conditions per KFM-P25-PROG-0030 are enforced | Tests + fixtures + receipts | `NEEDS VERIFICATION` |
-| `VB-SOIL-07` | SMAP × Mesonet cross-check gate is wired into promotion (KFM-P27-IDEA-0006) | Pipeline + policy + tests | `NEEDS VERIFICATION` |
-| `VB-SOIL-08` | Soil governed API and MapLibre layer adapter exist and return `SoilDecisionEnvelope` | API routes + tests + Evidence Drawer fixtures | `NEEDS VERIFICATION` |
-| `VB-SOIL-09` | `SoilTimeCaveat` is carried across the Soil → Agriculture join (Atlas Ch. 24.4.3) | Schema + join validator + tests | `NEEDS VERIFICATION` |
-| `VB-SOIL-10` | Support-type separation policy denies merged surfaces | Policy + tests + DRIFT_REGISTER entries | `NEEDS VERIFICATION` |
-| `VB-SOIL-11` | Watcher cadence (KFM-P2-PROG-0003): SSURGO weekly metadata + annual Oct-1 refresh; SoilGrids monthly metadata | Watcher config + run receipts | `NEEDS VERIFICATION` |
-| `VB-SOIL-12` | Per-source rights & sensitivity terms verified for all eight source families | Rights review records + policy bundle | `NEEDS VERIFICATION` |
-| `VB-SOIL-13` | Per-domain Definition of Done exists for Soil (Pass 10 C14-05) | `docs/domains/soil/DEFINITION_OF_DONE.md` or equivalent | `NEEDS VERIFICATION` / `PROPOSED` |
-| `VB-SOIL-14` | Drift register entry exists if soil schema/policy/contract authority is split | `docs/registers/DRIFT_REGISTER.md` | `NEEDS VERIFICATION` |
-| `VB-SOIL-15` | Cross-domain `SoilTimeCaveat` validator (ADR-S-14 cross-lane join policy) | ADR + validator + tests | `NEEDS VERIFICATION` / `PROPOSED` |
-| `VB-SOIL-16` | Physical source-first RAW placement for Soil captures and disposition of the legacy `data/raw/soil/` compatibility/reference lane | Accepted placement decision under `DIR-SOURCE-001` + migration and rollback plan (none accepted as of `main@9e8bf3e6`) | `HOLD` |
+Wording follows [Canonical Paths §11](CANONICAL_PATHS.md#11-anti-patterns-specific-to-soil) where it applies.
 
-**Open ADR backlog touchpoints (`PROPOSED`):**
-
-- **ADR-S-01** — Schema home confirmation for `schemas/contracts/v1/domains/soil/...`
-- **ADR-S-04** — Source-role vocabulary (`authority` / `observation` / `context` / `model`)
-- **ADR-S-05** — Sensitivity tier scheme (T0–T4) adoption — affects Mesonet operational sensor data and farm-specific joins
-- **ADR-S-14** — Cross-lane join policy (Soil → Agriculture specifically, given the `SoilTimeCaveat` constraint)
-- **ADR-S-15** — Atlas / supplement lifecycle (governs the cadence at which this inventory itself is reviewed)
-
-[↑ Back to top](#mini-toc)
-
----
-
-## 14. Related docs
-
-- `<TODO>` `docs/domains/soil/README.md` — Soil lane README per Directory Rules §15
-- `<TODO>` `docs/domains/soil/CROSS_LANES.md` — Soil↔Agriculture / ↔Hydrology / ↔Habitat-Fauna-Flora / ↔Geology relations
-- `<TODO>` `docs/domains/soil/VERIFICATION.md` — domain-scoped verification backlog (mirrors §13 above)
-- `<TODO>` `docs/domains/agriculture/CONTINUITY_INVENTORY.md` — adjacent lane that cites Soil via `SoilTimeCaveat`
-- `<TODO>` `docs/domains/hydrology/CONTINUITY_INVENTORY.md` — adjacent lane (HUC / hydrologic group)
-- `<TODO>` `docs/registers/DRIFT_REGISTER.md` — Directory Rules §2.5 drift register
-- `<TODO>` `docs/registers/VERIFICATION_BACKLOG.md` — repo-wide verification backlog
-- `<TODO>` `docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf` — Atlas v1.1 (Soil = Ch. 5; cross-lane edges = Ch. 24.4.3)
-- `<TODO>` `directory-rules.md` — Directory Rules (placement authority for every path above; §12.3 source identity `DIR-SOURCE-001`…`004`)
-- [`data/raw/README.md`](../../../data/raw/README.md) — RAW root contract; source-first capture identity, physical placement HOLD
-- [`data/raw/soil/README.md`](../../../data/raw/soil/README.md) — Soil RAW compatibility/reference lane; no payloads
-
----
-
-## 15. Appendix — change discipline & lineage
-
-<details>
-<summary><strong>Change discipline for this document</strong></summary>
-
-This is a navigational register, not a doctrine surface. It updates when:
-
-| Trigger | Update required |
-|---|---|
-| Soil dossier `[DOM-SOIL]` is revised | Re-extract §5.B, §5.C, §5.D, §5.E, §5.F, §5.K language; bump `updated:` in the meta block |
-| Atlas Ch. 24.4.3 (cross-lane edges) is revised | Re-render the Mermaid diagram in §8 and re-extract §8 table |
-| ADR-S-01, ADR-S-04, ADR-S-05, ADR-S-14, or ADR-S-15 is accepted | Replace the relevant `PROPOSED` cells; add an entry below |
-| Repo is mounted and verified | Flip `NEEDS VERIFICATION` rows to `CONFIRMED` (or open DRIFT_REGISTER entries) |
-| New soil source family is added to the dossier ledger | Add a row in §7 with carry-forward state |
-
-Per Directory Rules §17, this register itself is governance: routine changes go through PR with reviewer sign-off; placement changes (e.g., moving this file out of `docs/domains/soil/`) require an ADR.
-
-</details>
-
-<details>
-<summary><strong>Source ledger — what this inventory was synthesized from</strong></summary>
-
-| Short-name | Source | Role here |
+| Anti-pattern | Why it fails | Correct shape |
 |---|---|---|
-| `[DOM-SOIL]` | Soil dossier (Atlas v1.0 §5) | Owned objects, source families, cross-lane relations, validators |
-| `[ENCY]` | KFM Encyclopedia | Object family spine, EvidenceBundle / EvidenceRef / Runtime Response Envelope doctrine |
-| `[DIRRULES]` | Directory Rules | Placement authority, lifecycle invariants, anti-patterns |
-| `[GAI]` | Governed AI dossier | AI ABSTAIN/DENY behavior, AIReceipt |
-| `[MAP-MASTER]` | Master MapLibre Components | Soil COG/raster handling (ML-061-095, ML-062-028 through ML-062-033) |
-| Atlas v1.1 Ch. 24.4.3 | Cross-lane edges owned by Soil | §8 diagram + table |
-| Atlas v1.1 Ch. 24.13 | Atlas ↔ Dossier ↔ Responsibility Root crosswalk | §3, §5 PROPOSED paths |
-| Pass 23 / Pass 32 atlas cards | KFM-P10-PROG-0019, KFM-P19-PROG-0015, KFM-P23-PROG-0031, KFM-P23-PROG-0032, KFM-P23-PROG-0035, KFM-P23-PROG-0043, KFM-P23-PROG-0045, KFM-P25-PROG-0030, KFM-P27-IDEA-0006, KFM-P2-PROG-0003 | §5, §10 inventory rows |
-| KFM Components Pass 10 §C10-01 | Soil source stack rationale | §7 context (Mesonet/SMAP cadences are PROPOSED, not implementation) |
+| **Lifecycle skip** — RAW (the source-first capture or the legacy `data/raw/soil/` lane) written straight to `data/published/layers/soil/` | Bypasses validation, evidence, catalog, policy and release | Every applicable phase runs; promotion is a governed transition |
+| **Connector publishes** — an NRCS connector writing to processed, catalog or published | Connectors may emit only to the accepted source-first RAW home (path HOLD) or QUARANTINE | Pipelines promote; connectors capture |
+| **Watcher publishes** — an SSURGO ETag poller writing catalog records | Watcher-as-non-publisher | Watchers emit receipts and candidate signals |
+| **Support-type fusion** — one layer mixing SSURGO, gNATSGO, Mesonet and SMAP without per-value badges | Collapses observed, modeled and survey knowledge | Separate layer families or per-value support and resolution tags |
+| **Silent resampling** to a 10 m surface | Overstates precision | Tag source resolution and resampling method; expose in catalog |
+| **Dominant-component shortcut** presented as map-unit truth | Hides component mixture | Declare the method; component-weight with closure, or label the dominant-component basis |
+| **Duplicated RAW** — a Soil-scoped copy of a capture Agriculture also uses | Violates `DIR-SOURCE-001` | One capture, referenced by both domains |
+| **Fresh retrieval treated as new edition** | Retrieval time is not vintage | Compare edition and content hashes, not timestamps |
+| **Missing value stored as zero** | Fabricates dry soil | Keep `MISSING` / `OUT_OF_RANGE` withheld states |
+| **Public route reads a canonical store** | Trust-membrane breach | Reads go through the governed API only |
 
-</details>
-
-<details>
-<summary><strong>Glossary excerpt (Soil-specific terms)</strong></summary>
-
-- **`SoilMapUnit` / `SoilComponent` / `Horizon`** — SSURGO chain; MUKEY → COKEY → CHKEY identity contract
-- **`SoilTimeCaveat`** — temporal caveat object that must be carried when Soil products are joined to time-sensitive consumers (Agriculture especially)
-- **`authoritative_static_soil`** — static SSURGO/SDA-style survey surface (one of six support types)
-- **`gridded_derivative_soil`** — gSSURGO / gNATSGO / SoilGrids gridded derivative surface
-- **`station_soil_moisture`** — Mesonet / SCAN / USCRN per-station observation surface
-- **Support-type separation** — mandatory rule: the six support types (static survey, gridded derivative, station, satellite, pedon, interpretation) must not collapse into one published layer
-- **Cite-or-abstain** — default truth posture; promotion blocks if evidence is missing
-- **Promotion** — governed state transition between lifecycle phases; not a file move
-
-Full ubiquitous-language table lives in the Soil dossier `[DOM-SOIL]` and Atlas v1.0 §5.C.
-
-</details>
+[Back to top](#top)
 
 ---
 
-### Related docs
+## 13. Validation and verification
 
-- `<TODO>` `docs/domains/soil/README.md`
-- `<TODO>` `docs/registers/DRIFT_REGISTER.md`
-- `<TODO>` `docs/registers/VERIFICATION_BACKLOG.md`
-- `<TODO>` `directory-rules.md`
+**CONFIRMED present (executable, no-network, synthetic):**
 
-**Last updated:** 2026-10-11 · **Maintainer:** `<TODO: soil domain steward>` · [↑ Back to top](#soil-domain--continuity-inventory)
+| Check | Path | Lifecycle concern |
+|---|---|---|
+| Public-safe fixture profile | `tools/validators/domains/soil/validate_public_safe_fixture.py` | Support type, generalized geometry, depth order, non-release state |
+| Station moisture profile | `tools/validators/domains/soil/moisture/validate_soil_moisture.py` | Unit, depth, UTC + source timezone, QC, dedupe |
+| SMAP L4 anti-collapse | `tools/validators/domains/soil/moisture/validate_smap_l4_fixture.py` | Surface vs root zone, NRT vs standard, grid vs station |
+| MUKEY properties | `tools/validators/domains/soil/mukey_properties/validate_mukey_properties.py` | Component closure, horizon continuity, weighting recomputation |
+| Yearly diff | `tools/validators/domains/soil/validate_ssurgo_yearly_diff_profile.py` | Edition pinning; WORK/QUARANTINE-only output |
+| Time caveat, support type, promotion materiality, catalog closure, identity | `tools/validators/domains/soil/` (see [Verification](VERIFICATION.md)) | Time axes, vocabulary, materiality, closure declarations |
+| USCRN descriptor + pilot | `validate_source_descriptor.py` on `noaa-uscrn.yaml`; pilot and release tests | Admission shape, candidate validation, serving gate |
+| Release-readiness hold | `tests/domains/soil/test_release_readiness_hold.py` | Holds cannot be removed silently |
+
+**HOLD (explicit in [`domain-soil.yml`](../../../.github/workflows/domain-soil.yml)):** `build-proof-soil` ("no accepted Soil proof producer or deterministic proof command") and `publish-dry-run-soil` ("no accepted Soil release dry-run command or candidate manifest contract").
+
+**PROPOSED (not found):** Soil resampling/zonal-statistics checks, a bound Rego policy runtime for Soil (`SOIL-VB-008`), receipt-schema validation (Soil receipt, manifest, rollback and correction schemas are greenfield stubs), and public-surface checks for a Soil route.
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 KFM_NO_NETWORK=1 python -m pytest -q \
+  tests/domains/soil tests/validators/domains/soil \
+  tests/tools/test_uscrn_daily_pilot.py tests/tools/test_soil_release.py
+```
+
+A pass is QA evidence for the declared profile, not admission, evidence closure, policy approval or release.
+
+[Back to top](#top)
+
+---
+
+## 14. Open questions and verification items
+
+| ID | Item | State |
+|---|---|---|
+| `OPEN-SOIL-09` | Physical source-first RAW placement; disposition of `data/raw/soil/` | HOLD |
+| `SOIL-VB-002` | Converge support-type vocabulary across profiles | PARTIAL / CONFLICTED |
+| `SOIL-VB-009`, `SOIL-VB-010` | Soil `EvidenceBundle`, proof producer and release dry-run | OPEN / HOLD |
+| `SOIL-VB-011` | Governed API, MapLibre and Evidence Drawer for a released Soil carrier | OPEN / HOLD |
+| `OQ-LL-04` | Canonical receipt names (`IntakeReceipt` vs `IngestReceipt` vs emitted run-receipt profiles) | NEEDS VERIFICATION |
+| DLC-01 | How a USCRN release decision becomes a served, activated carrier, and where the soil serving projection lives (water and weather have projection modules; Soil reuses `water_projection.replay_evidence`) | NEEDS VERIFICATION |
+| DLC-02 | Whether the pilot's capture-in-QUARANTINE pattern is the accepted interim for source-first RAW | NEEDS VERIFICATION |
+| DLC-03 | Drift: `CANONICAL_PATHS.md` still lists `data/rollback/soil/` and `data/catalog/domain/soil/`; the work, processed and source-registry READMEs still draw `data/raw/soil` as a RAW node; `SOURCE_REGISTRY.md` predates the USCRN admission | NEEDS VERIFICATION (documentation follow-up) |
+| `OPEN-SOIL-04` | Canonical resolution for derived Soil products | OPEN |
+
+[Back to top](#top)
+
+---
+
+## 15. Related docs
+
+- [Lifecycle Law](../../doctrine/lifecycle-law.md) · [Directory Rules](../../doctrine/directory-rules.md) · [Trust Membrane](../../doctrine/trust-membrane.md) · [Corrections first-class](../../doctrine/corrections-first-class.md) · [Derived stays derived](../../doctrine/derived-stays-derived.md)
+- [ADR-0029](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) · [ADR-0046](../../adr/ADR-0046-owner-self-release-for-admitted-public-soil-data.md)
+- Soil: [README](README.md) · [Canonical paths](CANONICAL_PATHS.md) · [Continuity inventory](CONTINUITY_INVENTORY.md) · [Architecture](ARCHITECTURE.md) · [Identity model](IDENTITY_MODEL.md) · [Sources](SOURCES.md) · [Source registry](SOURCE_REGISTRY.md) · [Catalog closure](CATALOG_CLOSURE.md) · [Cross lanes](CROSS_LANES.md) · [Preservation matrix](PRESERVATION_MATRIX.md) · [Definition of done](DEFINITION_OF_DONE.md)
+- Runbooks: [Source refresh](../../runbooks/soil/SOURCE_REFRESH_RUNBOOK.md) · [Promotion](../../runbooks/soil/PROMOTION_RUNBOOK.md) · [Rollback](../../runbooks/soil/ROLLBACK_RUNBOOK.md) · [No-network tests](../../runbooks/soil/NO_NETWORK_TEST_RUNBOOK.md)
+- Data lanes: [RAW root](../../../data/raw/README.md) · [Soil RAW reference lane](../../../data/raw/soil/README.md) · [WORK](../../../data/work/soil/README.md) · [QUARANTINE](../../../data/quarantine/soil/README.md) · [PROCESSED](../../../data/processed/soil/README.md) · [Catalog](../../../data/catalog/domain/soil/README.md) · [Receipts](../../../data/receipts/soil/README.md) · [Proofs](../../../data/proofs/soil/README.md) · [Published](../../../data/published/soil/README.md) · [Source registry](../../../data/registry/sources/soil/README.md) · [Release candidates](../../../release/candidates/soil/README.md)
+
+[Back to top](#top)
+
+---
+
+## 16. Changelog
+
+| Version | Date | Change |
+|---|---|---|
+| v2.0.0 | 2026-10-11 | Replaced the placeholder body (a verbatim copy of `CONTINUITY_INVENTORY.md`) with Soil lifecycle doctrine: phase contracts, trust objects, support types, receipt-bearing transforms, the USCRN daily pilot, freshness, correction/rollback, rights posture, anti-patterns and verification status. Removed the placeholder note. |
+| v1.0.2 | 2026-10-11 | Title and responsibility marked the file as a placeholder holding a copy of the inventory. |
+| earlier | 2026-05-19 to 2026-10-11 | Placeholder lineage; see [CHANGELOG.md](CHANGELOG.md) and Git history. |
+
+[Back to top](#top)
