@@ -1,6 +1,6 @@
 import { basemapCacheRequest } from "./basemap-cache";
 import { loadMapLibre, type Map as GLMap } from "./maplibre-seam";
-import { surfaceRasterSampling, type SurfaceBounds, type SurfaceCapture } from "./selected-surface";
+import { canUpdateSurfaceCapture, sameSurfaceContent, surfaceRasterSampling, type SurfaceBounds, type SurfaceCapture } from "./selected-surface";
 
 export type SurfaceDetailFrame = { image: HTMLCanvasElement; bounds: SurfaceBounds; zoom: number };
 const mercator = (lat: number) => Math.log(Math.tan(Math.PI / 4 + lat * Math.PI / 360));
@@ -30,6 +30,7 @@ export function startCutawaySurfaceDetail(options: {
 }) {
   let disposed = false, map: GLMap | null = null, timer: ReturnType<typeof setTimeout> | undefined, timeout: ReturnType<typeof setTimeout> | undefined, previewTimer: ReturnType<typeof setTimeout> | undefined;
   let requested = options.capture.bounds, key = "", pending = true, partial = false, ready = false, displayedFrameComplete = false, refreshing = false;
+  let capture = options.capture;
   const container = document.createElement("div");
   container.setAttribute("aria-hidden", "true"); container.style.cssText = "position:fixed;left:-10000px;top:0;pointer-events:none;contain:strict;";
   document.body.append(container);
@@ -48,14 +49,14 @@ export function startCutawaySurfaceDetail(options: {
   loadMapLibre().then(lib => {
     if (disposed) return;
     lib.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
-    const frame = surfaceRenderFrame(options.capture.bounds, options.pixels);
+    const frame = surfaceRenderFrame(requested, options.pixels);
     container.style.width = `${frame.width}px`; container.style.height = `${frame.height}px`;
     const style = detailStyle();
     map = new lib.Map({ transformRequest: basemapCacheRequest, container, style, center: frame.center, zoom: frame.zoom, interactive: false, attributionControl: false,
       pixelRatio: 1, maxTileCacheSize: 96, fadeDuration: 0, renderWorldCopies: false, canvasContextAttributes: { preserveDrawingBuffer: true } });
     const view = map;
-    view.on("styleimagemissing", event => { const image = options.capture.images.find(i => i.id === event.id); if (image && !view.hasImage(image.id)) view.addImage(image.id, image.data, { pixelRatio: image.pixelRatio, sdf: image.sdf }); });
-    const styleReady = () => { if (disposed || ready) return; ready = true; for (const sample of surfaceRasterSampling(options.capture.style, false)) view.setPaintProperty(sample.id, "raster-resampling", sample.value); apply(); };
+    view.on("styleimagemissing", event => { const image = capture.images.find(i => i.id === event.id); if (image && !view.hasImage(image.id)) view.addImage(image.id, image.data, { pixelRatio: image.pixelRatio, sdf: image.sdf }); });
+    const styleReady = () => { if (disposed || ready) return; ready = true; for (const sample of surfaceRasterSampling(capture.style, false)) view.setPaintProperty(sample.id, "raster-resampling", sample.value); apply(); };
     view.on("style.load", styleReady); view.on("load", styleReady);
     view.on("error", () => { partial = true; if (!disposed) options.onStatus(refreshing ? "New surface tiles are unavailable. The previous surface remains visible; new blank patches are unknown." : "Some surface tiles are unavailable. Blank patches are unknown, not clear conditions."); });
     const copyFrame = (settled: boolean) => {
@@ -91,11 +92,25 @@ export function startCutawaySurfaceDetail(options: {
     view.on("idle", () => { if (view.areTilesLoaded()) copyFrame(true); });
   }).catch(() => { if (!disposed) options.onStatus("Surface detail is unavailable. Retry the surface or use the Surface map view."); });
   function detailStyle() {
-    const style = JSON.parse(JSON.stringify(options.capture.style));
+    const style = JSON.parse(JSON.stringify(capture.style));
     for (const layer of style.layers) if (layer.type === "raster") layer.paint = { ...layer.paint, "raster-fade-duration": 0, "raster-resampling": "nearest" };
     return style;
   }
   return {
+    updateCapture(next: SurfaceCapture) {
+      if (disposed || !map || !ready) return false;
+      if (sameSurfaceContent(capture, next)) return true;
+      if (!canUpdateSurfaceCapture(capture, next)) return false;
+      capture = next;
+      pending = true; refreshing = displayedFrameComplete; clearTimeout(timeout);
+      options.onStatus("Updating surface layers… Loaded basemap tiles are retained; coverage is pending.");
+      timeout = setTimeout(() => { if (!disposed && pending) options.onStatus("Surface layer update is incomplete. Existing pixels may show the prior layers; retry the surface."); }, 12000);
+      // Diff applies exact paint, layer order, additions/removals and GeoJSON data.
+      // Raster/vector sources, source clocks and image bytes must match first.
+      try { map.setStyle(detailStyle(), { diff: true }); map.triggerRepaint(); }
+      catch { return false; }
+      return true;
+    },
     refresh() {
       if (disposed || !map) return false;
       if (!ready) { options.onStatus("Surface tiles are already preparing. The current cutaway remains available."); return true; }

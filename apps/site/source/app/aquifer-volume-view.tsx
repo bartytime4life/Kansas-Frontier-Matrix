@@ -42,6 +42,7 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
   const pickedLogRef=useRef(pickedLog);
   const cameraMemory=useRef<{area:string;pose:CameraPose;awaitingRecords:boolean;awaitingAquifer:boolean;interacted:boolean}|null>(null);
   const volume=snapshot?.volume;
+  const surfaceArea=volume?.bounds.join(",");
   const aquiferLoading=snapshot?.aquiferState==="loading";
   useEffect(()=>{if(!map)return;const read=()=>{try{setFrame(locatorBounds(map));}catch{setFrame(null);}};read();map.on("moveend",read);map.on("resize",read);map.on("load",read);return()=>{map.off("moveend",read);map.off("resize",read);map.off("load",read);};},[map]);
   useEffect(()=>{if(volume&&focusAfterApply.current){focusAfterApply.current=false;modelFocus.current?.focus({preventScroll:false});}},[volume]);
@@ -70,13 +71,20 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
     return()=>{areaSession.current=null;stop();worker?.terminate();};
   },[map,retry,active]);
 
+  // Dispose on actual scope/quality/view changes, but not when a capture only
+  // updates overlay records or styling. The latter can retain parsed basemap tiles.
+  useEffect(()=>()=>{detailRenderer.current?.dispose();detailRenderer.current=null;detailFrame.current=null;api.current?.setDetail(null);setDetailShown(false);},[active,surfaceMode,detailPixels,detailRetry,surfaceArea]);
   useEffect(()=>{
-    if(!active||surfaceMode||!detailCapture||detailCapture.bounds.join(",")!==volume?.bounds.join(","))return;
+    if(!active||surfaceMode)return;
+    if(detailCapture&&detailCapture.bounds.join(",")===surfaceArea&&detailRenderer.current?.updateCapture(detailCapture))return;
+    detailRenderer.current?.dispose();detailRenderer.current=null;detailFrame.current=null;api.current?.setDetail(null);setDetailShown(false);
+    if(!detailCapture||detailCapture.bounds.join(",")!==surfaceArea)return;
     api.current?.setSurface(null);
     const controller=startCutawaySurfaceDetail({capture:detailCapture,pixels:detailPixels,onFrame:frame=>{detailFrame.current=frame;setDetailShown(api.current?.setDetail(frame)??false);},onStatus:setDetailStatus});
     detailRenderer.current=controller;
-    return()=>{controller.dispose();detailRenderer.current=null;detailFrame.current=null;api.current?.setDetail(null);setDetailShown(false);};
-  },[active,surfaceMode,detailCapture,detailPixels,detailRetry,volume?.bounds]);
+  // Worker geometry replaces the bounds array without changing the geographic slice.
+  // Keep the independent tile renderer and completed frame through that arrival.
+  },[active,surfaceMode,detailCapture,detailPixels,detailRetry,surfaceArea]);
   useEffect(()=>{
     if(!active||surfaceMode||!sceneRenderable||!volume||!host.current)return;
     setFailure("");
