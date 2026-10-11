@@ -74,7 +74,9 @@ A prepared package reaches the hosted Site in two separate steps:
    `POST /api/governed/water-admin/stage` with the `KFM_WATER_WORKER_TOKEN`
    bearer token. The route validates the package, stores it in R2 under
    `governed-water/v1/objects/`, records it as `STAGED` in D1, and never
-   activates it.
+   activates it. The same token may read `GET /api/governed/water-admin/status`
+   (active and previous package ids only), so the tool can bind a replacement's
+   rollback target to the package that is active now.
 2. **Activation.** A signed-in owner listed in `KFM_WATER_OWNER_IDS` or
    `KFM_WATER_OWNER_EMAILS` opens `/governed/water-release`, pastes the release
    decision and presses **Activate package**. The activate route accepts only
