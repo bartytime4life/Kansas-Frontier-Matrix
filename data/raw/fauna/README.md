@@ -1,10 +1,10 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://data/raw/fauna/readme
-name: Fauna Raw README
+title: Fauna Raw README
 path: data/raw/fauna/README.md
 type: data-raw-domain-index-readme
-version: v0.1.1
-prior_version: v0.1.0
+version: v0.1.2
+prior_version: v0.1.1
 status: draft
 owners:
   - <fauna-domain-steward>
@@ -14,11 +14,11 @@ owners:
   - <sensitivity-reviewer>
   - <release-steward>
 created: 2026-06-27
-updated: 2026-08-28
+updated: 2026-10-11
 policy_label: restricted-review
 truth_posture: cite-or-abstain
 lifecycle_phase: raw
-responsibility_root: data/
+owning_root: data/
 responsibility: Preserve the tracked Fauna RAW compatibility and reference index without treating this domain subtree or its source-named children as physical capture homes.
 domain: fauna
 artifact_family: fauna-raw-compatibility-reference-index
@@ -55,12 +55,15 @@ tags:
   - geoprivacy
   - no-public-path
   - evidence-first
+  - compatibility-reference
+  - source-first
 notes:
   - "This README replaces the greenfield stub at `data/raw/fauna/README.md`."
   - "Confirmed child source-family README references during this reconciliation: `ebird/`, `eddmaps/`, `gbif/`, `inaturalist/`, `natureserve/`, and `usfws_ecos/`."
   - "Accepted Directory Rules require one source-first capture identity; these domain-scoped documentation lanes do not authorize duplicated RAW bytes or establish physical capture placement."
   - "Child README presence does not prove payloads, SourceDescriptor records, connector activation, receipts, validators, fixtures, CI enforcement, sensitivity controls, or release readiness."
   - "Payload presence, SourceDescriptor records, connector activation, receipts, validators, fixtures, CI enforcement, geoprivacy controls, review completion, and release readiness remain UNKNOWN or NEEDS VERIFICATION unless separately verified."
+  - "2026-10-11 reconciliation: aligned to accepted DIR-SOURCE-001 and the parent data/raw/README.md source-first contract; this lane is compatibility/reference documentation, not a physical capture home; metadata normalized to the required profile; the six child READMEs were reconciled in the same documentation correction; no payload, path, writer, or release state changed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -253,7 +256,7 @@ This is forbidden unless each governed lifecycle transition has actually happene
 | Accepted Directory Rules require one source-first capture identity and prohibit duplicated RAW bytes across domains. | **CONFIRMED** |
 | This subtree is an accepted physical source-first capture home. | **DENY — no placement decision found** |
 | Actual Fauna RAW payloads exist under this subtree. | **UNKNOWN; do not add or move any during this documentation correction** |
-| Child README content is fully reconciled to the source-first parent contract. | **HOLD — child documents retain legacy physical-lane language and require separate review** |
+| Child README content is fully reconciled to the source-first parent contract. | **CONFIRMED authored 2026-10-11** — children reconciled in the same documentation correction; payloads, writers, and enforcement remain unverified |
 | SourceDescriptor records, connector activation, receipts, validators, fixtures, CI checks, geoprivacy controls, and downstream receipts are wired to an accepted source-first RAW writer. | **NEEDS VERIFICATION** |
 | This README is proof, receipt, release, catalog, registry, policy, public artifact authority, or generated-answer authority. | **DENY** |
 

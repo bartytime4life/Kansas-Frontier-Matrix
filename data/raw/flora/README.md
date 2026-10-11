@@ -2,11 +2,12 @@
 doc_id: kfm://data/raw/flora/readme
 title: data/raw/flora/ — Flora RAW Compatibility and Reference Hold
 type: data-lifecycle-domain-readme
-version: v0.1.1
+version: v0.1.2
+prior_version: v0.1.1
 status: repository-grounded; compatibility-and-reference boundary; payload-empty; source-first-placement-unresolved; live-ingest-hold; no-direct-public-path; non-release; non-publication
 owner: NEEDS VERIFICATION — repository review routing does not establish Flora source, rights, sensitivity, storage, operations, evidence, release, or publication authority
 created: 2026-08-28
-updated: 2026-09-21
+updated: 2026-10-11
 current_path: data/raw/flora/README.md
 owning_root: data/
 policy_label: restricted-review; raw; flora; compatibility-projection; immutable-reference; source-first; live-ingest-hold; rare-plant-sensitive; non-public
@@ -16,6 +17,11 @@ prior_blob: 5a43f1788b887bd38fc54e593c566a915976413b
 truth_posture: CONFIRMED accepted Directory Rules require source-first capture identity so one capture can support several domains without duplicated RAW bytes / CONFIRMED this tracked domain lane contains only this README, one root .gitkeep, and four source-label subdirectories containing .gitkeep files / CONFIRMED no payload, admitted live source, accepted source-first physical placement, writer, restricted storage contract, independent readback, capture receipt, live connector command, or public consumer is established / HOLD live Flora retrieval and all writes / UNKNOWN accountable stewards, source-specific activation decisions, and disposition of this compatibility lane
 related:
   - ../README.md
+  - ../fauna/README.md
+  - ../fauna/gbif/README.md
+  - ../fauna/inaturalist/README.md
+  - ../fauna/natureserve/README.md
+  - ../fauna/usfws_ecos/README.md
   - ../../registry/sources/flora/README.md
   - ../../registry/flora/sources/README.md
   - ../../work/flora/README.md
@@ -102,6 +108,12 @@ active, licensed for a proposed use, connected, retrieved, retained, reviewed, o
 public-safe. They must not receive domain-scoped copies of cross-domain captures.
 No source payload, immutable capture reference, or capture receipt is tracked in
 this lane.
+
+The same upstream source families are documented by the Fauna-facing compatibility
+lanes [`gbif/`](../fauna/gbif/README.md), [`inaturalist/`](../fauna/inaturalist/README.md),
+[`natureserve/`](../fauna/natureserve/README.md), and [`usfws_ecos/`](../fauna/usfws_ecos/README.md)
+under the [Fauna RAW index](../fauna/README.md). Each Flora label and its Fauna
+sibling must reference the same single source-first capture, never two copies.
 
 ## Admission and write prerequisites
 
@@ -235,6 +247,7 @@ withdraw evidence, reverse a lifecycle transition, or roll back a release.
 
 | Version | Date | Change | Runtime effect |
 |---|---|---|---|
+| v0.1.2 | 2026-10-11 | Re-verified the `.gitkeep`-only child inventory at `main@9e8bf3e6`; cross-linked the Fauna sibling compatibility lanes for the same source families. | None; documentation only. |
 | v0.1.1 | 2026-09-21 | Reconciled the parent RAW operating-contract pointer with the corrected source-first parent and bounded external local-data capture. | None; documentation only. |
 | v0.1.0 | 2026-08-28 | Replaced the greenfield stub with a source-first-safe compatibility/reference hold; prohibited domain-scoped copies of cross-domain source captures. | None; documentation only. |
 
