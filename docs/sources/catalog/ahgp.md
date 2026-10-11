@@ -1,14 +1,17 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://docs/sources/catalog/ahgp-flat-index
 title: AHGP Source-Family Catalog — Flat-Path Navigation Boundary
-type: source-catalog index; compatibility navigation; implementation-status boundary
+type: source-catalog-index
+secondary_type: compatibility navigation; implementation-status boundary
 version: v1.0.1
 status: repository-grounded; navigation-only; source-not-admitted; connector-placeholder
 owners: NEEDS VERIFICATION — source, archaeology, people/genealogy, rights, sensitivity, and connector stewards
+created: 2026-08-29
 updated: 2026-10-11
 policy_label: source-candidate; rights-review-required; sensitivity-review-required; non-publisher
 current_path: docs/sources/catalog/ahgp.md
 owning_root: docs/
+responsibility: Flat-path navigation boundary for the AHGP source family, pointing to the family page, product pages, canonical registry template, and placeholder connector; not source admission, activation, or publication authority.
 truth_posture: >
   CONFIRMED flat path, detailed AHGP directory, five product pages, proposed
   archaeology registry template, and placeholder connector package at the
@@ -21,6 +24,7 @@ evidence_snapshot:
   prior_blob: 3cf7b62914a0ffeff41d37e7bfe59aba6f19aae8
   method: complete target read; catalog family, product pages, registry template, connector tree, schema index, open-PR, Drive, and Notion inspection
 notes:
+  - "2026-10-11 (v1.0.1): added required created/responsibility fields and a single-token type; created is the v1.0.0 authoring date of this document identity, since the earlier proposal-era stub date is not recoverable."
   - "2026-10-11 (v1.0.1): AHGP descriptor links now point at data/registry/sources/archaeology/ahgp.source.yaml after the owner-directed migration from the compatibility view."
   - "Replaces proposal-era prose at the same path without declaring a document-identity supersession relationship."
   - "No source, descriptor, connector, lifecycle, release, or publication state is superseded."
