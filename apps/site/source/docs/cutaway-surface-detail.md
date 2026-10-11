@@ -128,3 +128,12 @@ the user chooses an area. It allocates no WebGL context or geometry in this
 step, remains outside the initial main-map bundle, and retries a failed module
 preparation when a scene is requested. This moves code preparation off the
 committed-area path; it does not remove detail or change source membership.
+
+### Overlapping inline captures · 2026-10-11
+
+Compatible updates arriving during a pending attempt retain only the latest
+capture. They start after MapLibre reports that the prior requests have settled,
+so delayed errors from that attempt cannot contaminate a concurrently started
+style. The last complete pixels remain visible. A stuck request exposes the
+existing incomplete status; Refresh surface retries the latest captured data.
+Disposal cancels queued work. This does not blend frames or change source values.

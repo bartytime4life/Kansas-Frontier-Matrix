@@ -127,12 +127,12 @@ test('inline record updates preserve the loaded basemap and complete pixels unti
  for(const change of [c=>c.bounds[0]-=.01,c=>c.style.sources.radar.tiles[0]='/new-frame',c=>c.images.push({id:'new'})]){
   const changed=structuredClone(next);change(changed);assert.equal(controller.updateCapture(changed),false,'other content requires a fresh renderer');
  }
- const styled=structuredClone(next);styled.style.layers[0].paint={'raster-opacity':.5};assert.equal(controller.updateCapture(styled),true,'styling changes are applied exactly without losing unchanged tiles');assert.equal(map.styles.at(-1).style.layers[0].paint['raster-opacity'],.5);
+ const styled=structuredClone(next);styled.style.layers[0].paint={'raster-opacity':.5};assert.equal(controller.updateCapture(styled),true,'styling changes are applied exactly without losing unchanged tiles');assert.equal(map.styles.at(-1).style.layers[0].paint['raster-opacity'],.5);map.emit('idle');
  const added=structuredClone(next);added.style.sources.records={type:'geojson',data:{type:'FeatureCollection',features:[]}};added.style.layers.unshift({id:'new-records',type:'circle',source:'records'});
- assert.equal(controller.updateCapture(added),true,'new overlay layers retain unchanged tile sources');assert.equal(map.styles.at(-1).style.layers[0].id,'new-records');
- assert.equal(controller.updateCapture(next),true,'removing an overlay also applies without reloading tiles');assert.equal(map.styles.at(-1).style.sources.records,undefined);
- const latest=structuredClone(next);latest.style.sources.fire.data.features=[];assert.equal(controller.updateCapture(latest),true);
- map.emit('error');map.emit('render');map.emit('idle');assert.equal(h.frames.length,2,'failed new records cannot replace the complete image');assert.match(h.statuses.at(-1),/previous complete surface/);
+ assert.equal(controller.updateCapture(added),true,'new overlay layers retain unchanged tile sources');assert.equal(map.styles.at(-1).style.layers[0].id,'new-records');map.emit('idle');
+ assert.equal(controller.updateCapture(next),true,'removing an overlay also applies without reloading tiles');assert.equal(map.styles.at(-1).style.sources.records,undefined);map.emit('idle');
+ const completed=h.frames.length,latest=structuredClone(next);latest.style.sources.fire.data.features=[];assert.equal(controller.updateCapture(latest),true);
+ map.emit('error');map.emit('render');map.emit('idle');assert.equal(h.frames.length,completed,'failed new records cannot replace the complete image');assert.match(h.statuses.at(-1),/previous complete surface/);
  controller.refresh();assert.deepEqual(JSON.parse(JSON.stringify(map.styles.at(-1).style.sources.fire.data)),latest.style.sources.fire.data,'manual retry uses the newest capture');
  controller.dispose();assert.equal(h.timers.size,0);assert.equal(controller.updateCapture(latest),false);
 });
@@ -157,4 +157,27 @@ test('a later inline capture recovers from a failed update without publishing in
  // A new error still prevents replacement: recovery never suppresses this attempt's failures.
  assert.equal(controller.updateCapture(failed),true);map.emit('error');map.emit('idle');assert.equal(h.frames.length,2);
  controller.dispose();assert.equal(h.timers.size,0);
+});
+
+test('overlapping inline captures wait for old errors to settle and apply only the latest exact data',async()=>{
+ const h=harness(),controller=h.start(2048);await Promise.resolve();const map=h.maps[0];map.emit('style.load');map.emit('idle');
+ const first=structuredClone(h.capture);first.style.sources.fire.data.features=[];
+ const second=structuredClone(h.capture);second.style.sources.fire.data.features[0].properties.acquisitionTime='2026-10-07T13:32:00Z';
+ const latest=structuredClone(second);latest.style.sources.fire.data.features[0].properties.acquisitionTime='2026-10-07T13:47:00Z';
+ controller.updateCapture(first);controller.updateCapture(second);controller.updateCapture(latest);
+ assert.equal(map.styles.length,1,'do not start a newer style while errors from the first attempt remain in flight');
+ map.emit('error');map.emit('render');assert.equal(h.frames.length,1);
+ map.emit('idle');assert.equal(map.styles.length,2,'old error belongs to the settled first attempt');assert.equal(h.frames.length,1);
+ assert.deepEqual(JSON.parse(JSON.stringify(map.styles.at(-1).style.sources.fire.data)),latest.style.sources.fire.data);
+ map.emit('render');assert.equal(h.frames.length,1);map.emit('idle');assert.equal(h.frames.length,2);assert.match(h.statuses.at(-1),/Surface detail ready/);
+ controller.updateCapture(first);controller.updateCapture(second);controller.dispose();const styles=map.styles.length;map.emit('idle');assert.equal(map.styles.length,styles);assert.equal(h.timers.size,0);
+});
+
+test('a held queue keeps prior pixels and manual retry uses the newest capture',async()=>{
+ const h=harness(),controller=h.start();await Promise.resolve();const map=h.maps[0];map.emit('style.load');map.emit('idle');
+ const first=structuredClone(h.capture);first.style.sources.fire.data.features=[];
+ const latest=structuredClone(h.capture);latest.style.sources.fire.data.features[0].properties.acquisitionTime='2026-10-07T14:02:00Z';
+ controller.updateCapture(first);controller.updateCapture(latest);h.flush(12000);assert.equal(map.styles.length,1);assert.equal(h.frames.length,1);assert.match(h.statuses.at(-1),/incomplete/);
+ controller.refresh();assert.deepEqual(JSON.parse(JSON.stringify(map.styles.at(-1).style.sources.fire.data)),latest.style.sources.fire.data);
+ map.emit('style.load');map.emit('idle');assert.equal(h.frames.length,2);controller.dispose();assert.equal(h.timers.size,0);
 });

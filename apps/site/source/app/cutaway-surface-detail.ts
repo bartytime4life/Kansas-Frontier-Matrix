@@ -30,7 +30,7 @@ export function startCutawaySurfaceDetail(options: {
 }) {
   let disposed = false, map: GLMap | null = null, timer: ReturnType<typeof setTimeout> | undefined, timeout: ReturnType<typeof setTimeout> | undefined, previewTimer: ReturnType<typeof setTimeout> | undefined;
   let requested = options.capture.bounds, key = "", pending = true, partial = false, ready = false, displayedFrameComplete = false, refreshing = false;
-  let capture = options.capture;
+  let capture = options.capture, queuedCapture: SurfaceCapture | null = null;
   const container = document.createElement("div");
   container.setAttribute("aria-hidden", "true"); container.style.cssText = "position:fixed;left:-10000px;top:0;pointer-events:none;contain:strict;";
   document.body.append(container);
@@ -89,34 +89,53 @@ export function startCutawaySurfaceDetail(options: {
         copyFrame(false); previewTimer = setTimeout(() => { previewTimer = undefined; }, 1000);
       }
     });
-    view.on("idle", () => { if (view.areTilesLoaded()) copyFrame(true); });
+    view.on("idle", () => {
+      if (!view.areTilesLoaded()) return;
+      copyFrame(true);
+      // Idle drains the current style/source requests, including their errors.
+      // Only then can the latest queued capture get its own error state.
+      if (!disposed && !pending && queuedCapture) {
+        const next = queuedCapture; queuedCapture = null;
+        if (!beginCapture(next)) options.onStatus("Surface layer update could not start. The previous surface remains visible; retry the surface.");
+      }
+    });
   }).catch(() => { if (!disposed) options.onStatus("Surface detail is unavailable. Retry the surface or use the Surface map view."); });
   function detailStyle() {
     const style = JSON.parse(JSON.stringify(capture.style));
     for (const layer of style.layers) if (layer.type === "raster") layer.paint = { ...layer.paint, "raster-fade-duration": 0, "raster-resampling": "nearest" };
     return style;
   }
+  function beginCapture(next: SurfaceCapture) {
+    if (disposed || !map || !ready) return false;
+    capture = next;
+    // Errors describe one attempt; a later exact capture may recover. Keep
+    // the last complete pixels until this attempt settles without new errors.
+    pending = true; partial = false; refreshing = displayedFrameComplete; clearTimeout(timeout);
+    options.onStatus("Updating surface layers… Loaded basemap tiles are retained; coverage is pending.");
+    timeout = setTimeout(() => { if (!disposed && pending) options.onStatus("Surface layer update is incomplete. Existing pixels may show the prior layers; retry the surface."); }, 12000);
+    // Diff applies exact paint, layer order, additions/removals and GeoJSON data.
+    // Raster/vector sources, source clocks and image bytes must match first.
+    try { map.setStyle(detailStyle(), { diff: true }); map.triggerRepaint(); }
+    catch { pending = false; partial = true; return false; }
+    return true;
+  }
   return {
     updateCapture(next: SurfaceCapture) {
       if (disposed || !map || !ready) return false;
-      if (sameSurfaceContent(capture, next)) return true;
+      if (sameSurfaceContent(capture, next)) { queuedCapture = null; return true; }
       if (!canUpdateSurfaceCapture(capture, next)) return false;
-      capture = next;
-      // Errors describe one attempt; a later exact capture may recover. Keep
-      // the last complete pixels until this attempt settles without new errors.
-      pending = true; partial = false; refreshing = displayedFrameComplete; clearTimeout(timeout);
-      options.onStatus("Updating surface layers… Loaded basemap tiles are retained; coverage is pending.");
-      timeout = setTimeout(() => { if (!disposed && pending) options.onStatus("Surface layer update is incomplete. Existing pixels may show the prior layers; retry the surface."); }, 12000);
-      // Diff applies exact paint, layer order, additions/removals and GeoJSON data.
-      // Raster/vector sources, source clocks and image bytes must match first.
-      try { map.setStyle(detailStyle(), { diff: true }); map.triggerRepaint(); }
-      catch { return false; }
-      return true;
+      if (pending) {
+        queuedCapture = next;
+        options.onStatus("Surface layer update queued while the previous attempt settles. The last complete surface remains visible when available.");
+        return true;
+      }
+      return beginCapture(next);
     },
     refresh() {
       if (disposed || !map) return false;
       if (!ready) { options.onStatus("Surface tiles are already preparing. The current cutaway remains available."); return true; }
       clearTimeout(timer); timer = undefined; clearTimeout(timeout); clearTimeout(previewTimer); previewTimer = undefined;
+      if (queuedCapture) { capture = queuedCapture; queuedCapture = null; }
       key = ""; pending = true; partial = false; ready = false; refreshing = displayedFrameComplete;
       options.onStatus(refreshing ? "Refreshing surface tiles… Previous surface remains visible until a replacement is drawn." : "Refreshing surface tiles… Existing preview may be incomplete; missing tiles are unknown.");
       timeout = setTimeout(() => { if (!disposed && pending) options.onStatus(refreshing ? "Surface refresh is taking longer. The previous surface remains visible; new coverage is unconfirmed." : "Surface tiles are taking longer to load. Coverage is unconfirmed; retry or choose another basemap."); }, 12000);
@@ -128,6 +147,6 @@ export function startCutawaySurfaceDetail(options: {
       return true;
     },
     update(bounds: SurfaceBounds) { if(bounds.map(n=>n.toFixed(6)).join(",")===requested.map(n=>n.toFixed(6)).join(","))return; requested = bounds; if (timer === undefined) timer = setTimeout(() => { timer = undefined; apply(); }, 200); },
-    dispose() { disposed = true; clearTimeout(timer); clearTimeout(timeout); clearTimeout(previewTimer); map?.remove(); container.remove(); },
+    dispose() { disposed = true; queuedCapture = null; clearTimeout(timer); clearTimeout(timeout); clearTimeout(previewTimer); map?.remove(); container.remove(); },
   };
 }
