@@ -1,9 +1,10 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://data/raw/atmosphere/administrative/readme
-name: Atmosphere Administrative Raw README
+title: Atmosphere Administrative Raw README
 path: data/raw/atmosphere/administrative/README.md
 type: data-raw-source-role-lane-readme
-version: v0.1.0
+version: v0.2.0
+prior_version: v0.1.0
 status: draft
 owners:
   - <atmosphere-domain-steward>
@@ -13,14 +14,15 @@ owners:
   - <sensitivity-reviewer>
   - <release-steward>
 created: 2026-06-27
-updated: 2026-06-27
+updated: 2026-10-11
 policy_label: restricted-review
 truth_posture: cite-or-abstain
 lifecycle_phase: raw
-responsibility_root: data/
+owning_root: data/
+responsibility: Preserve the tracked Atmosphere administrative RAW compatibility and reference documentation without treating this subtree as a physical source-first capture home or duplicating RAW bytes.
 domain: atmosphere
 source_role: administrative
-artifact_family: immutable-atmosphere-administrative-source-capture
+artifact_family: atmosphere-administrative-raw-compatibility-reference
 sensitivity_posture: raw-internal; source-role-preserving; no-public-path; advisory-not-life-safety; rights-needs-verification; release-blocked
 related:
   - ../README.md
@@ -49,19 +51,22 @@ tags:
   - no-public-path
   - not-life-safety
   - evidence-first
+  - compatibility-reference
+  - source-first
 notes:
   - "This README documents the requested Atmosphere RAW administrative source-role lane."
   - "The target file existed as an empty file before this edit."
-  - "Parent `data/raw/atmosphere/README.md` is currently a greenfield stub, so this child file stays source-role-lane bounded."
-  - "Administrative Atmosphere records are source captures, not observations, not model fields, not AQI concentration truth, not official emergency instructions, and not public KFM products."
+  - "Parent `data/raw/atmosphere/README.md` was a greenfield stub when this lane was first authored; it now exists as a compatibility/reference index. This child file stays source-role-lane bounded."
+  - "Administrative Atmosphere records are source-first captures referenced (not held) by this compatibility lane; they are not observations, not model fields, not AQI concentration truth, not official emergency instructions, and not public KFM products."
   - "Source rights, current terms, payload presence, source descriptors, connector activation, validator wiring, CI enforcement, review completion, and release readiness remain UNKNOWN or NEEDS VERIFICATION unless separately verified."
+  - "2026-10-11 reconciliation: aligned to accepted DIR-SOURCE-001 and the parent data/raw/README.md source-first contract; this lane is compatibility/reference documentation, not a physical capture home; metadata normalized to the required profile; no payload, path, writer, or release state changed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Atmosphere Administrative RAW Lane
 
-Source-role RAW lane for immutable Atmosphere administrative records and advisory-context captures.
+Compatibility and reference documentation for Atmosphere-facing administrative and advisory-context RAW topology; not a physical source-capture home.
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
@@ -75,13 +80,13 @@ Source-role RAW lane for immutable Atmosphere administrative records and advisor
 **Quick links:** [Scope](#scope) · [Repo fit](#repo-fit) · [Administrative source posture](#administrative-source-posture) · [Accepted material](#accepted-material) · [Exclusions](#exclusions) · [Directory map](#directory-map) · [Exit gates](#exit-gates) · [Forbidden shortcuts](#forbidden-shortcuts) · [Required checks](#required-checks-before-use) · [Status notes](#status-notes)
 
 > [!CAUTION]
-> `data/raw/atmosphere/administrative/` is a RAW source-role capture lane. Material here is not public, not processed Atmosphere truth, not catalog truth, not proof, not receipt authority, not source registry authority, not rights authority, not sensitivity authority, not policy authority, not observed sensor truth, not model truth, not AQI concentration truth, not official life-safety instruction, not emergency alerting, not public API/UI material, and not release authority. No public client or normal UI surface may read this lane directly.
+> `data/raw/atmosphere/administrative/` is a no-public-path compatibility/reference lane inside the RAW lifecycle boundary. Accepted Directory Rules require one source-first capture identity, so this source-role lane is not a default physical capture home and must not receive duplicate RAW payloads. Material here is not public, not processed Atmosphere truth, not catalog truth, not proof, not receipt authority, not source registry authority, not rights authority, not sensitivity authority, not policy authority, not observed sensor truth, not model truth, not AQI concentration truth, not official life-safety instruction, not emergency alerting, not public API/UI material, and not release authority. No public client or normal UI surface may read this lane directly.
 
 ---
 
 ## Scope
 
-This directory holds immutable RAW captures and source-admission sidecars for Atmosphere material whose source role is administrative, or whose source-role review is expected to resolve as administrative.
+This directory documents tracked Atmosphere-facing RAW topology for material whose source role is administrative, or whose source-role review is expected to resolve as administrative. It may reference one governed source-first capture, but it does not hold that capture or establish where it is stored.
 
 Typical administrative Atmosphere material includes agency bulletin captures, advisory-context records, state-issued context summaries, administrative compilations, network/site administrative metadata, and issue/expiry-bounded context records. Some sources may also carry `regulatory` role from the issuing body; this lane must preserve that distinction instead of collapsing roles.
 
@@ -98,10 +103,10 @@ RAW is for preservation, replay, and audit. It does not decide what a source mea
 | Lifecycle phase | `raw/` |
 | Domain lane | `atmosphere` |
 | Source role | `administrative` |
-| Artifact role | RAW source-role lane for administrative/advisory-context captures and RAW-local sidecars |
+| Artifact role | Compatibility/reference lane for administrative/advisory-context Atmosphere source documentation and unresolved legacy RAW topology |
 | Public access posture | No public path; no normal UI; no governed-public API exposure |
-| Upstream | Accepted connector/source-admission output only |
-| Downstream | `data/work/atmosphere/` or `data/quarantine/atmosphere/` after governed admission/triage |
+| Upstream | References to an admitted source-first capture only; physical placement remains **NEEDS VERIFICATION** |
+| Downstream | Governed Atmosphere WORK or QUARANTINE procedures consume references or approved handoffs, not assumed domain-local copies |
 | Release authority | `release/`, not this directory |
 | Proof authority | `data/proofs/`, not this directory |
 | Receipt authority | `data/receipts/`, not this directory |
@@ -115,6 +120,8 @@ RAW is for preservation, replay, and audit. It does not decide what a source mea
 
 | Source / knowledge character | Role handling | RAW rule |
 |---|---|---|
+| Capture identity is source-first | All roles and components | Register one `source_id` and preserve one immutable capture identity; domain references may support Atmosphere without duplicating RAW bytes. |
+| Physical placement is held | All roles and components | Do not infer `data/raw/atmosphere/administrative/` or a child directory as the capture home. Use only an accepted writer/path contract; none is established by this README. |
 | KDHE bulletin or state advisory context | `administrative`; may also cite a `regulatory` issuing authority where documented | Preserve issuer, issue time, expiry/effective window, citation, source URL/reference, digest, attribution, and caveats. |
 | Forecast / advisory context | `administrative` or `regulatory` depending on issuing body | Preserve issue/expiry, official-source redirection, and not-life-safety caveat. Do not turn KFM into an alerting surface. |
 | Network or site administrative metadata | `administrative` / `network_and_site_context` | Preserve operator/network identity, metadata vintage, rights, and sensitivity. Do not imply sensor observation values. |
@@ -125,14 +132,23 @@ RAW is for preservation, replay, and audit. It does not decide what a source mea
 
 ## Accepted material
 
-Accepted content is limited to source-capture material and RAW-local sidecars:
+Accepted content is limited to documentation and governed references that do not duplicate source-first captures:
+
+- this README;
+- links to canonical SourceDescriptor, source-admission, rights, and connector authority;
+- references to a governed source-first capture or quarantine handoff when an accepted contract defines their shape;
+- migration or correction notes that label legacy topology without moving or copying payloads;
+- an optional local documentation index only after its schema, producer, owner, and non-authoritative role are accepted; like any README, it must help a steward understand capture state without becoming proof, catalog, receipt, registry, policy, release, observation, model, alert, or public authority.
+
+The governed source-first capture or reference (not this subtree) must carry or point to the administrative and advisory-context capture material below:
 
 - source-reference manifests;
 - bulletin/advisory/source packet snapshots or stable source references;
 - raw payloads or raw payload references;
 - issue time, expiry time, effective window, retrieval time, source vintage, issuer, source URL/reference, attribution, and digest sidecars;
-- source-head records, response metadata, status codes, row counts where applicable, and checksums;
-- minimal README or index sidecars that help a steward understand capture state without becoming proof, catalog, receipt, registry, policy, release, observation, model, alert, or public authority.
+- source-head records, response metadata, status codes, row counts where applicable, and checksums.
+
+Do not place raw payloads, copied source runs, source-head records, checksums, or other capture sidecars in this subtree merely because they support Atmosphere. Exact physical placement and legacy migration remain **HOLD**.
 
 ---
 
@@ -140,6 +156,7 @@ Accepted content is limited to source-capture material and RAW-local sidecars:
 
 | Do not place here | Correct authority home |
 |---|---|
+| Domain-scoped copies of source captures or new source-run directories | One accepted source-first RAW home after a reviewed placement decision; exact path remains **NEEDS VERIFICATION** |
 | Atmosphere source-family doctrine | `docs/domains/atmosphere/` |
 | Connector code or connector decisions | `connectors/` |
 | Authoritative SourceDescriptor records or activation decisions | `data/registry/sources/` or accepted source-registry lane |
@@ -162,18 +179,12 @@ Accepted content is limited to source-capture material and RAW-local sidecars:
 
 ```text
 data/raw/atmosphere/administrative/
-├── README.md
-├── <source_id>/
-│   └── <run_id>/
-│       ├── source_reference.json
-│       ├── advisory_or_bulletin_ref.json
-│       ├── manifest.json
-│       ├── checksums.sha256
-│       └── README.md
-└── index.local.json
+└── README.md
 ```
 
-`index.local.json` is optional and must remain RAW-local. It is not a public index, catalog record, registry record, release manifest, graph edge source, layer/story/report pointer, search index, vector index, map source, observation index, advisory authority, alerting source, or retrieval source for generated answers.
+This is the confirmed documentation topology, not a storage specification. The per-run layout previously sketched here (`<source_id>/<run_id>/` holding `source_reference.json`, `advisory_or_bulletin_ref.json`, `manifest.json`, `checksums.sha256`, and a run `README.md`) is a proposed shape for a future accepted source-first home, not this subtree. Do not add a source directory, payload, or local index here until an accepted source-first placement or compatibility decision defines its role.
+
+An optional local documentation index, if ever accepted, would not be a public index, catalog record, registry record, release manifest, graph edge source, layer/story/report pointer, search index, vector index, map source, observation index, advisory authority, alerting source, or retrieval source for generated answers.
 
 ---
 
@@ -181,10 +192,10 @@ data/raw/atmosphere/administrative/
 
 | Exit route | Minimum requirement |
 |---|---|
-| Stay RAW | Source was admitted and captured, but no downstream normalization decision has been made. |
-| Quarantine | Rights, source role, issue/expiry, attribution, freshness, citation, digest, sensitivity, schema, source activation, or advisory framing is unresolved. |
-| Return / reject | Admission decision or steward review says the source should not be retained in this RAW lane. |
-| Move to work | SourceDescriptor, rights posture, source role, issue/expiry handling, citation, hash, and minimal validation support are sufficient for normalization. |
+| Remain at the source-first RAW home | Source was admitted and captured, but no downstream normalization decision has been made. This lane may retain a governed reference only. |
+| Quarantine | Rights, source role, issue/expiry, attribution, freshness, citation, digest, sensitivity, schema, source activation, advisory framing, or physical placement is unresolved. |
+| Return / reject | Admission decision or steward review says the capture must not be retained; correction occurs through the owning source-first or quarantine procedure. |
+| Move to work | A governed reference or approved handoff may enter Atmosphere WORK only when SourceDescriptor, rights posture, source role, issue/expiry handling, citation, hash, and minimal validation support are sufficient for normalization. |
 | Promote downstream | Only after later WORK/PROCESSED/CATALOG/RELEASE gates close with receipts, EvidenceBundle support, correction path, rollback target, and release manifest where applicable. |
 
 ---
@@ -192,7 +203,7 @@ data/raw/atmosphere/administrative/
 ## Forbidden shortcuts
 
 ```text
-data/raw/atmosphere/administrative/
+source-first RAW capture (physical path NEEDS VERIFICATION)
 → data/processed/atmosphere/
 → data/catalog/ or data/triplets/
 → data/published/
@@ -205,7 +216,9 @@ is forbidden unless each governed lifecycle transition has actually happened and
 
 ## Required checks before use
 
-- [ ] Confirm the source belongs to the Atmosphere lane and is administrative or expected to resolve as administrative.
+- [ ] Confirm one registered `source_id` and one immutable source-first capture identity; do not create a second Atmosphere-scoped copy.
+- [ ] Treat this README as compatibility/reference documentation only; do not create a child directory as a payload destination.
+- [ ] Confirm the source role is administrative or expected to resolve as administrative; role classification does not make this lane a capture home.
 - [ ] Confirm a SourceDescriptor or admission ticket identifies source ID, source role, authority, rights, sensitivity, cadence, citation, issue/expiry posture, and hash posture.
 - [ ] Confirm administrative material is not being cited as observed sensor evidence, model evidence, AQI concentration truth, or emergency/life-safety instruction.
 - [ ] Confirm official-source redirection and not-life-safety caveats are preserved for advisory-context material.
@@ -223,13 +236,16 @@ is forbidden unless each governed lifecycle transition has actually happened and
 |---|---|
 | This README defines the requested Atmosphere administrative RAW source-role lane boundary. | **CONFIRMED authored** |
 | The target path existed in the live repository as an empty file before this edit. | **CONFIRMED by GitHub contents API during this edit** |
-| Parent `data/raw/atmosphere/README.md` is currently a greenfield stub. | **CONFIRMED by GitHub contents API during this edit** |
+| Parent `data/raw/atmosphere/README.md` was a greenfield stub when this lane was first authored. | **CONFIRMED at original authoring; SUPERSEDED — parent README is present at `main@9e8bf3e6` and was reconciled as a compatibility/reference index on 2026-10-11** |
 | Atmosphere source registry doctrine lists KDHE bulletins as administrative/regulatory state advisory context. | **CONFIRMED by GitHub contents API during this edit** |
 | Atmosphere source registry doctrine lists forecast/advisory context as administrative/regulatory and explicitly not life-safety. | **CONFIRMED by GitHub contents API during this edit** |
 | Atmosphere source-role doctrine says an administrative compilation must not be cited as observation, and source role is fixed at admission. | **CONFIRMED by GitHub contents API during this edit** |
 | Atmosphere lifecycle doctrine says RAW captures immutable source payload/reference, requires SourceDescriptor/RawCaptureReceipt, and is denied to public access. | **CONFIRMED by GitHub contents API during this edit** |
-| Actual administrative Atmosphere RAW payloads exist under this subtree. | **UNKNOWN** |
-| SourceDescriptor records, connector activation, validators, fixtures, CI checks, and downstream receipts are wired for this exact lane. | **NEEDS VERIFICATION** |
+| Accepted Directory Rules require one source-first capture identity and prohibit duplicated RAW bytes across domains. | **CONFIRMED** (`DIR-SOURCE-001`) |
+| This subtree is an accepted physical source-first capture home. | **DENY — no placement decision found as of 2026-10-11** |
+| Actual administrative Atmosphere RAW payloads exist under this subtree. | **UNKNOWN; none added or moved by this documentation correction.** No payload files are tracked under this subtree at `main@9e8bf3e6`; external or untracked stores remain UNKNOWN |
+| SourceDescriptor records, connector activation, validators, fixtures, CI checks, and downstream receipts are wired to an accepted source-first RAW writer. | **NEEDS VERIFICATION** |
+| This README is reconciled to the parent source-first contract. | **CONFIRMED authored 2026-10-11** |
 | This README is proof, receipt, release, catalog, registry, policy, observation truth, model truth, advisory authority, emergency guidance, public artifact authority, or generated-answer authority. | **DENY** |
 
 ---
@@ -254,6 +270,6 @@ is forbidden unless each governed lifecycle transition has actually happened and
 
 ---
 
-KFM rule: this directory is an Atmosphere administrative RAW source-role lane only. It is not source-family doctrine, source registry authority, rights authority, sensitivity authority, proof authority, receipt authority, release authority, catalog authority, observation truth, model truth, AQI concentration truth, advisory authority, emergency guidance, public artifact authority, UI authority, graph authority, vector-index authority, or generated-answer truth.
+KFM rule: this directory is an Atmosphere-facing administrative compatibility/reference lane. One governed source-first capture may support Atmosphere without duplicated RAW bytes; this subtree does not establish physical placement. It is not source-family doctrine, source registry authority, rights authority, sensitivity authority, proof authority, receipt authority, release authority, catalog authority, observation truth, model truth, AQI concentration truth, advisory authority, emergency guidance, public artifact authority, UI authority, graph authority, vector-index authority, or generated-answer truth.
 
 [Back to top](#top)

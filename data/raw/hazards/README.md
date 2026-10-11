@@ -1,9 +1,10 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://data/raw/hazards/readme
-name: Hazards Raw README
+title: Hazards Raw README
 path: data/raw/hazards/README.md
 type: data-raw-domain-index-readme
-version: v0.1.0
+version: v0.2.0
+prior_version: v0.1.0
 status: draft
 owners:
   - <hazards-domain-steward>
@@ -13,13 +14,14 @@ owners:
   - <sensitivity-reviewer>
   - <release-steward>
 created: 2026-06-27
-updated: 2026-06-27
+updated: 2026-10-11
 policy_label: restricted-review
 truth_posture: cite-or-abstain
 lifecycle_phase: raw
-responsibility_root: data/
+owning_root: data/
+responsibility: Preserve the tracked Hazards RAW compatibility and reference documentation without treating this subtree or its source-named children as a physical source-first capture home or duplicating RAW bytes.
 domain: hazards
-artifact_family: immutable-hazards-source-capture
+artifact_family: hazards-raw-compatibility-reference-index
 sensitivity_posture: raw-internal; source-role-preserving; no-public-path; not-an-alert-system; freshness-bound; rights-needs-verification; release-blocked
 related:
   - fema/README.md
@@ -50,18 +52,21 @@ tags:
   - not-an-alert-system
   - no-public-path
   - evidence-first
+  - compatibility-reference
+  - source-first
 notes:
   - "This README replaces the greenfield stub at `data/raw/hazards/README.md`."
   - "Confirmed child README lanes during this edit: `fema/`, `firms/`, and `nfhl/`."
   - "README presence confirms documentation lanes only; it does not prove payloads, SourceDescriptor records, connector activation, receipts, validators, fixtures, CI enforcement, review controls, or release readiness."
-  - "Hazards RAW records remain source captures until governed downstream lifecycle transitions close."
+  - "Hazards-relevant source captures remain at one source-first RAW home until governed downstream lifecycle transitions close; this subtree and its children hold compatibility/reference documentation only."
+  - "2026-10-11 reconciliation: aligned to accepted DIR-SOURCE-001 and the parent data/raw/README.md source-first contract; this lane is compatibility/reference documentation, not a physical capture home; metadata normalized to the required profile; no payload, path, writer, or release state changed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Hazards RAW
 
-Parent RAW lifecycle index for immutable Hazards source captures and source-admission sidecars.
+Compatibility and reference index for legacy Hazards-scoped RAW documentation; not a physical source-capture home.
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
@@ -75,15 +80,15 @@ Parent RAW lifecycle index for immutable Hazards source captures and source-admi
 **Quick links:** [Scope](#scope) · [Repo fit](#repo-fit) · [Confirmed source-family lanes](#confirmed-source-family-lanes) · [RAW source posture](#raw-source-posture) · [Accepted material](#accepted-material) · [Exclusions](#exclusions) · [Directory map](#directory-map) · [Exit gates](#exit-gates) · [Required checks](#required-checks-before-use) · [Status notes](#status-notes)
 
 > [!CAUTION]
-> `data/raw/hazards/` is a no-public-path RAW lifecycle lane. It is not processed Hazards truth, catalog truth, proof, receipt authority, source registry authority, rights authority, policy authority, release authority, public API/UI material, public PMTiles material, live alert material, emergency guidance, or generated-answer authority.
+> `data/raw/hazards/` is a no-public-path compatibility/reference index inside the RAW lifecycle boundary. Accepted Directory Rules require one source-first capture identity, so this domain subtree and its source-named children are not default physical capture homes and must not receive duplicate RAW payloads. It is not processed Hazards truth, catalog truth, proof, receipt authority, source registry authority, rights authority, policy authority, release authority, public API/UI material, public PMTiles material, live alert material, emergency guidance, or generated-answer authority.
 
 ---
 
 ## Scope
 
-This directory indexes immutable RAW source captures and source-admission sidecars for the Hazards domain.
+This directory indexes tracked Hazards-facing source documentation and legacy domain-scoped RAW topology. It may reference one governed source-first capture, but it does not establish where that capture is stored.
 
-RAW exists for preservation, replay, and audit. It records what was admitted, where it came from, what source role it carried, and which identifiers, versions, times, rights notes, citations, geometry/support metadata, source-head metadata, freshness posture, hashes, review notes, and caveats must travel downstream.
+The canonical RAW boundary exists for preservation, replay, and audit. A governed source-first capture records what was admitted, where it came from, what source role it carried, and which identifiers, versions, times, rights notes, citations, geometry/support metadata, source-head metadata, freshness posture, hashes, review notes, and caveats must travel downstream.
 
 RAW does not decide what a hazard means, whether a detection is confirmed, whether a regulatory layer describes observed conditions, whether an operational product is current, whether rights permit reuse, whether a downstream claim can publish, or whether an answer may be generated.
 
@@ -97,10 +102,10 @@ RAW does not decide what a hazard means, whether a detection is confirmed, wheth
 | Responsibility root | `data/` |
 | Lifecycle phase | `raw` |
 | Domain lane | `hazards` |
-| Artifact role | Parent RAW domain index for Hazards source captures and RAW-local sidecars |
+| Artifact role | Compatibility/reference index for Hazards-facing source documentation and unresolved legacy RAW topology |
 | Public access posture | No public path; no normal UI; no governed-public API exposure |
-| Upstream | Accepted connector/source-admission output only |
-| Downstream | `data/work/hazards/` or `data/quarantine/hazards/` after governed admission/triage |
+| Upstream | References to an admitted source-first capture only; physical placement remains **NEEDS VERIFICATION** |
+| Downstream | Governed Hazards WORK or QUARANTINE procedures consume references or approved handoffs, not assumed domain-local copies |
 | Release authority | `release/`, not this directory |
 | Proof authority | `data/proofs/`, not this directory |
 | Receipt authority | `data/receipts/`, not this directory |
@@ -112,13 +117,15 @@ RAW does not decide what a hazard means, whether a detection is confirmed, wheth
 
 ## Confirmed source-family lanes
 
-The child lanes below are README paths confirmed by current-session GitHub fetches. This table confirms README presence only; it does **not** prove payloads, SourceDescriptors, connectors, validators, fixtures, receipts, CI checks, review controls, or release readiness.
+The child lanes below are confirmed README paths. Treat them as compatibility/reference documentation or unresolved legacy topology, not source-first capture homes. Their presence does **not** prove or authorize payloads, SourceDescriptors, connectors, validators, fixtures, receipts, CI checks, review controls, migration, or release readiness.
 
 | Source-family lane | Status | Parent boundary |
 |---|---|---|
-| [`fema/`](fema/README.md) | **CONFIRMED README** | FEMA requires per-product role handling: administrative declarations and regulatory flood context are separate. |
-| [`firms/`](firms/README.md) | **CONFIRMED README** | FIRMS is remote-sensing detection source capture; detection is not confirmed event truth by itself. |
-| [`nfhl/`](nfhl/README.md) | **CONFIRMED README** | NFHL is regulatory flood-hazard context; not observed inundation, not model output, and not release authority by itself. |
+| [`fema/`](fema/README.md) | **CONFIRMED README / COMPATIBILITY REFERENCE** | FEMA requires per-product role handling: administrative declarations and regulatory flood context are separate; not a capture home. |
+| [`firms/`](firms/README.md) | **CONFIRMED README / COMPATIBILITY REFERENCE** | FIRMS remote-sensing detection source documentation; detection is not confirmed event truth by itself, and the lane is not a capture home. |
+| [`nfhl/`](nfhl/README.md) | **CONFIRMED README / COMPATIBILITY REFERENCE** | NFHL is regulatory flood-hazard context; not observed inundation, not model output, not a capture home, and not release authority by itself. |
+
+FEMA NFHL is also documented by the Hydrology-facing lane [`../hydrology/fema_nfhl/`](../hydrology/fema_nfhl/README.md). Both lanes must reference the same single source-first NFHL capture, never two copies.
 
 ---
 
@@ -126,7 +133,9 @@ The child lanes below are README paths confirmed by current-session GitHub fetch
 
 | Rule | Handling |
 |---|---|
-| RAW is immutable source capture | Payloads or payload references must be hash-bound and should not be overwritten in place. |
+| Capture identity is source-first | Register one `source_id` and preserve one immutable capture identity; domain references may support Hazards without duplicating RAW bytes. |
+| Physical placement is held | Do not infer `data/raw/hazards/` or a child directory as the capture home. Use only an accepted writer/path contract; none is established by this README. |
+| RAW is immutable source capture | Payloads or payload references at the accepted source-first home must be hash-bound and should not be overwritten in place. |
 | Source role is preserved | Observed, regulatory, modeled, aggregate, administrative, candidate, and synthetic roles must not be flattened. |
 | Candidate remains candidate | Remote-sensing detections, unmerged reports, and preliminary materials require disposition before publication. |
 | Regulatory is not observed | FEMA NFHL / MSC flood context must not be reframed as observed inundation or modeled flood output. |
@@ -139,14 +148,17 @@ The child lanes below are README paths confirmed by current-session GitHub fetch
 
 ## Accepted material
 
-Accepted content is limited to source-capture material and RAW-local sidecars:
+Accepted content is limited to documentation and governed references that do not duplicate source-first captures:
 
-- source-reference manifests;
-- raw payloads or raw payload references;
-- SourceDescriptor references or admission-ticket references;
-- source identity, source family, source role, source time, retrieval time, product version/vintage, source-head metadata, geometry/support metadata, citation, attribution, rights posture, freshness posture, review notes, and digest sidecars;
-- source-head records, retrieval metadata, status metadata, row counts where applicable, and checksums;
-- local README or index sidecars that help a steward understand capture state without becoming proof, catalog, receipt, registry, policy, release, public artifact, alert authority, or answer authority.
+- the tracked README files listed below;
+- links to canonical SourceDescriptor, source-admission, rights, freshness, review, and connector authority;
+- references to a governed source-first capture or quarantine handoff when an accepted contract defines their shape;
+- migration or correction notes that label legacy topology without moving or copying payloads;
+- an optional local documentation index only after its schema, producer, owner, and non-authoritative role are accepted; it would not be a public index, catalog record, registry record, release manifest, graph source, layer pointer, search index, vector index, map source, public-output authority, alert authority, or retrieval source for generated answers.
+
+The governed source-first capture or reference that supports Hazards must carry: source-reference manifests; raw payloads or raw payload references; SourceDescriptor or admission-ticket references; source identity, source family, source role, source time, retrieval time, product version/vintage, source-head metadata, geometry/support metadata, citation, attribution, rights posture, freshness posture, review notes, and digests; and source-head records, retrieval metadata, status metadata, row counts where applicable, and checksums. None of these becomes proof, catalog, receipt, registry, policy, release, public artifact, alert authority, or answer authority.
+
+Do not place raw payloads, copied source runs, source-head records, checksums, or other capture sidecars in this subtree merely because they support Hazards. Exact physical placement and legacy migration remain **HOLD**.
 
 ---
 
@@ -154,6 +166,7 @@ Accepted content is limited to source-capture material and RAW-local sidecars:
 
 | Do not place here | Correct authority home |
 |---|---|
+| Domain-scoped copies of source captures or new source-run directories | One accepted source-first RAW home after a reviewed placement decision; exact path remains **NEEDS VERIFICATION** |
 | Hazards domain doctrine | `docs/domains/hazards/` |
 | Source-family doctrine | `docs/sources/catalog/` or `docs/domains/hazards/` |
 | Connector code or connector decisions | `connectors/` |
@@ -177,18 +190,12 @@ Accepted content is limited to source-capture material and RAW-local sidecars:
 ```text
 data/raw/hazards/
 ├── README.md
-├── fema/
-│   └── README.md
-├── firms/
-│   └── README.md
-├── nfhl/
-│   └── README.md
-├── <future-source-family>/
-│   └── README.md
-└── index.local.json
+├── fema/README.md
+├── firms/README.md
+└── nfhl/README.md
 ```
 
-`index.local.json` is optional and must remain RAW-local. It is not a public index, catalog record, registry record, release manifest, graph source, layer pointer, search index, vector index, map source, public-output authority, or retrieval source for generated answers.
+This is the confirmed documentation topology, not a storage specification. Do not add a future source directory, payload, or local index here until an accepted source-first placement or compatibility decision defines its role.
 
 ---
 
@@ -196,10 +203,10 @@ data/raw/hazards/
 
 | Exit route | Minimum requirement |
 |---|---|
-| Stay RAW | Source was admitted and captured, but no downstream normalization decision has been made. |
-| Quarantine | Source role, rights, source family, product/version identity, citation, geometry/support, schema, freshness, or source activation is unresolved. |
-| Return / reject | Admission decision or steward review says the source should not be retained in this RAW lane. |
-| Move to work | SourceDescriptor, rights posture, source role, source-family/product identity, citation, hash, source-head metadata, and minimal validation support are sufficient for normalization. |
+| Remain at the source-first RAW home | Source was admitted and captured, but no downstream normalization decision has been made. This index may retain a governed reference only. |
+| Quarantine | Source role, rights, source family, product/version identity, citation, geometry/support, schema, freshness, source activation, or physical placement is unresolved. |
+| Return / reject | Admission decision or steward review says the capture must not be retained; correction occurs through the owning source-first or quarantine procedure. |
+| Move to work | A governed reference or approved handoff may enter Hazards WORK only when SourceDescriptor, rights posture, source role, source-family/product identity, citation, hash, source-head metadata, and minimal validation support are sufficient for normalization. |
 | Promote downstream | Only after later WORK/PROCESSED/CATALOG/RELEASE gates close with receipts, EvidenceBundle support, review/generalization/model/freshness receipts where required, correction path, rollback target, and release manifest where applicable. |
 
 ---
@@ -207,7 +214,7 @@ data/raw/hazards/
 ## Forbidden shortcut
 
 ```text
-data/raw/hazards/
+source-first RAW capture (physical path NEEDS VERIFICATION)
 → data/processed/hazards/
 → data/catalog/ or data/triplets/
 → data/published/
@@ -220,7 +227,8 @@ This is forbidden unless each governed lifecycle transition has actually happene
 
 ## Required checks before use
 
-- [ ] Confirm the source belongs to the Hazards lane and a documented source-family subfolder.
+- [ ] Confirm one registered `source_id` and one immutable source-first capture identity; do not create a second Hazards-scoped copy.
+- [ ] Treat this README and any source-named child README as compatibility/reference documentation only; do not create a child directory as a payload destination.
 - [ ] Confirm SourceDescriptor or admission ticket records source ID, source role, product identity, rights, cadence, citation, freshness posture, and hash posture.
 - [ ] Confirm source roles are not collapsed across observed, regulatory, modeled, aggregate, administrative, candidate, or synthetic products.
 - [ ] Confirm candidate detections are not treated as confirmed event truth.
@@ -244,8 +252,12 @@ This is forbidden unless each governed lifecycle transition has actually happene
 | Child README presence proves payloads, SourceDescriptors, connectors, validators, fixtures, CI checks, receipts, review controls, or release readiness. | **DENY** |
 | Hazards source-registry doctrine lists source roles and marks live descriptor activation as needing verification. | **CONFIRMED by GitHub contents API during this edit** |
 | Hazards source-role doctrine says role is first-class, set at admission, and preserved through promotion. | **CONFIRMED by GitHub contents API during this edit** |
-| Actual Hazards RAW payloads exist under this subtree. | **UNKNOWN** |
-| SourceDescriptor records, connector activation, receipts, validators, fixtures, CI checks, review controls, and downstream receipts are wired for this exact parent lane. | **NEEDS VERIFICATION** |
+| Accepted Directory Rules require one source-first capture identity and prohibit duplicated RAW bytes across domains. | **CONFIRMED** (`DIR-SOURCE-001`) |
+| This subtree is an accepted physical source-first capture home. | **DENY — no placement decision found as of 2026-10-11** |
+| Actual Hazards RAW payloads exist under this subtree. | **UNKNOWN; none added or moved by this documentation correction.** No payload files are tracked under this subtree at `main@9e8bf3e6`; external or untracked stores remain UNKNOWN |
+| This README is reconciled to the parent source-first contract. | **CONFIRMED authored 2026-10-11** |
+| Child READMEs `fema/`, `firms/`, and `nfhl/` are reconciled to the source-first parent contract as compatibility/reference documentation. | **CONFIRMED authored 2026-10-11 (documentation only)** |
+| SourceDescriptor records, connector activation, receipts, validators, fixtures, CI checks, review controls, and downstream receipts are wired to an accepted source-first RAW writer. | **NEEDS VERIFICATION** |
 | This README is proof, receipt, release, catalog, registry, policy, public artifact authority, alert authority, or generated-answer authority. | **DENY** |
 
 ---
@@ -271,6 +283,6 @@ This is forbidden unless each governed lifecycle transition has actually happene
 
 ---
 
-KFM rule: this directory is a Hazards RAW domain index for source capture only. It is not source-family doctrine, registry authority, rights authority, policy authority, proof authority, receipt authority, release authority, catalog authority, alert authority, observed-event truth, regulatory truth, model truth, public artifact authority, UI authority, graph authority, vector-index authority, or generated-answer truth.
+KFM rule: this directory is a Hazards-facing compatibility/reference index. One governed source-first capture may support Hazards without duplicated RAW bytes; this subtree does not establish physical placement. It is not source-family doctrine, registry authority, rights authority, policy authority, proof authority, receipt authority, release authority, catalog authority, alert authority, observed-event truth, regulatory truth, model truth, public artifact authority, UI authority, graph authority, vector-index authority, or generated-answer truth.
 
 [Back to top](#top)

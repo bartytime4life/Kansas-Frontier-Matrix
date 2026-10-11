@@ -1,9 +1,10 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://data/raw/agriculture/usda-nass/readme
-name: USDA NASS Raw Agriculture README
+title: USDA NASS Raw Agriculture README
 path: data/raw/agriculture/usda-nass/README.md
 type: data-raw-source-lane-readme
-version: v0.2.0
+version: v0.3.0
+prior_version: v0.2.0
 status: draft
 owners:
   - "NEEDS VERIFICATION: agriculture domain steward"
@@ -12,21 +13,21 @@ owners:
   - "NEEDS VERIFICATION: data steward"
   - "NEEDS VERIFICATION: rights and sensitivity reviewers"
 created: 2026-06-27
-updated: 2026-07-26
+updated: 2026-10-11
 policy_label: restricted-review
 truth_posture: cite-or-abstain
 lifecycle_phase: raw
-responsibility_root: data/
+owning_root: data/
+responsibility: Preserve the tracked USDA NASS Agriculture-facing RAW compatibility and reference documentation without treating this subtree as a physical source-first capture home or duplicating RAW bytes.
 domain: agriculture
 source_family: usda-nass
-artifact_family: immutable-source-capture
+artifact_family: usda-nass-raw-compatibility-reference
 sensitivity_posture: raw-internal; source-role-preserving; rights-needs-verification; aggregate-only-guard-required; field-level-claims-deny; release-blocked
 prepared_under_prompt: KFM Markdown Modernization & GitHub Documentation Implementation Agent v4.0.0
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  base_commit: 2cf6f4322d34adcd441835cb969563b5f64f99b6
-  target_blob: 1c6f863bf59b63b4b916957c2ad609df346e86b8
-  method: complete target read; bounded repository contents and code-search inspection; no external USDA endpoint or runtime request
+evidence_snapshot_repository: bartytime4life/Kansas-Frontier-Matrix
+evidence_snapshot_base_commit: 2cf6f4322d34adcd441835cb969563b5f64f99b6
+evidence_snapshot_target_blob: 1c6f863bf59b63b4b916957c2ad609df346e86b8
+evidence_snapshot_method: complete target read; bounded repository contents and code-search inspection; no external USDA endpoint or runtime request
 related:
   - ../README.md
   - ../../README.md
@@ -63,13 +64,16 @@ tags:
   - rights-review
   - immutable-capture
   - evidence-first
+  - compatibility-reference
+  - source-first
 notes:
-  - "This same-path revision preserves the USDA NASS RAW Agriculture source-lane identity and strengthens its evidence boundary."
+  - "The v0.2.0 same-path revision preserved the USDA NASS RAW Agriculture lane identity and strengthened its evidence boundary; v0.3.0 reclassifies it as compatibility/reference documentation."
   - "The parent `data/raw/` and `data/raw/agriculture/` READMEs are now substantive; the earlier greenfield-stub statement is superseded."
   - "ADR-0029 is accepted and adopts the exact v2 blob at `docs/doctrine/directory-rules.md`; the legacy v1.3.1 architecture body is restored as a read-only compatibility dependency pending a separate tombstone migration."
-  - "Directory Rules v2 `DIR-SOURCE-001` requires source-first capture identity, so the final canonical payload home for USDA NASS requires migration review; this README does not move data or reinterpret the existing compatibility lane."
+  - "Directory Rules v2 `DIR-SOURCE-001` requires source-first capture identity, so the final canonical payload home for USDA NASS requires migration review; this README does not move data, and both this lane and `data/raw/usda-nass/` are compatibility/reference documentation that must reference one source-first capture."
   - "QuickStats, Crop Progress, and CDL remain separate product surfaces; no source role, cadence, geometry, parser, or receipt lineage is inherited across products."
   - "Current USDA endpoints, terms, rights, source activation, payload inventory, executable validation, release readiness, and public suitability remain UNKNOWN or NEEDS VERIFICATION unless separately evidenced."
+  - "2026-10-11 reconciliation: aligned to accepted DIR-SOURCE-001 and the parent data/raw/README.md source-first contract; this lane is compatibility/reference documentation, not a physical capture home; metadata normalized to the required profile; no payload, path, writer, or release state changed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -82,10 +86,12 @@ notes:
 [![Rights: needs verification](https://img.shields.io/badge/rights-needs%20verification-b54708?style=flat-square)](#authority-and-evidence-snapshot)
 [![Publication authority: none](https://img.shields.io/badge/publication%20authority-none-b91c1c?style=flat-square)](#forbidden-shortcuts)
 
-**Purpose:** preserve immutable USDA National Agricultural Statistics Service source captures or immutable references, with enough admission context to replay and audit them without turning RAW bytes into Agriculture truth or publication authority.
+Compatibility/reference documentation for Agriculture-facing USDA NASS RAW topology; not a physical source-capture home.
+
+**Purpose:** document how immutable USDA National Agricultural Statistics Service source-first captures or immutable references must carry enough admission context to be replayed and audited without turning RAW bytes into Agriculture truth or publication authority.
 
 > [!CAUTION]
-> `data/raw/agriculture/usda-nass/` is an internal RAW source-capture lane. It is not processed truth, catalog truth, proof, receipt authority, source-registry authority, rights or policy authority, crop or field truth, a public API/UI source, or release authority. Public clients and ordinary UI surfaces must never read this lane directly.
+> `data/raw/agriculture/usda-nass/` is an internal, no-public-path RAW compatibility/reference lane. Accepted Directory Rules require one source-first capture identity, so this subtree is not a default physical capture home and must not receive duplicate RAW payloads. It is not processed truth, catalog truth, proof, receipt authority, source-registry authority, rights or policy authority, crop or field truth, a public API/UI source, or release authority. Public clients and ordinary UI surfaces must never read this lane directly.
 
 ## Navigation
 
@@ -98,9 +104,11 @@ notes:
 
 ## Scope
 
-This directory is the Agriculture-domain RAW landing lane for separately admitted USDA NASS product captures. It may preserve source-native payloads, immutable payload references, request or package identity, source-head metadata, capture context, checksums, and minimal RAW-local sidecars.
+This directory describes tracked Agriculture-facing USDA NASS documentation and legacy domain-scoped RAW topology. It may reference one governed source-first capture of separately admitted USDA NASS products, but it does not establish where that capture is stored. The source-first capture (not this subtree) preserves source-native payloads, immutable payload references, request or package identity, source-head metadata, capture context, and checksums.
 
-The lane supports preservation, replay, audit, and later governed processing. It does not:
+The top-level [`../../usda-nass/README.md`](../../usda-nass/README.md) documents the same upstream source as a compatibility lane. Both lanes must reference the same single source-first capture, never two copies.
+
+The lane supports preservation, replay, audit, and later governed processing by documenting boundaries. It does not:
 
 - activate a source or choose the canonical NASS connector path;
 - decide the meaning, reliability, rights, sensitivity, or public suitability of source material;
@@ -120,11 +128,11 @@ USDA NASS is a provider family, not one homogeneous dataset. QuickStats, Crop Pr
 | Lifecycle phase | `raw/` |
 | Domain lane | `agriculture` |
 | Source family | `usda-nass` |
-| Artifact role | Immutable source captures or immutable references plus RAW-local admission context |
+| Artifact role | Compatibility/reference documentation for USDA NASS source-first captures or immutable references and their admission context |
 | Placement basis | Repository-present Agriculture RAW lane plus confirmed parent contracts; accepted Directory Rules v2 requires source-first capture identity, so final canonical payload placement is **NEEDS VERIFICATION** |
-| Compatibility path | `data/raw/usda-nass/` remains documented as compatibility-only pending a separate v2-conformant migration decision |
-| Upstream | A governed source-admission process through an accepted connector home; current NASS connector placement is unresolved |
-| Normal exit | Governed handoff to `data/work/agriculture/` or `data/quarantine/agriculture/` |
+| Compatibility path | `data/raw/usda-nass/` is a sibling compatibility/reference lane; both lanes reference one source-first capture pending a separate v2-conformant placement and migration decision |
+| Upstream | References to an admitted source-first capture only; physical placement remains **NEEDS VERIFICATION**; current NASS connector placement is unresolved |
+| Normal exit | Governed Agriculture WORK or QUARANTINE procedures consume references or approved handoffs, not assumed domain-local copies |
 | Direct public access | **DENY** |
 | Release authority | `release/`, not this directory |
 | Proof / receipt authority | `data/proofs/` and `data/receipts/`, not this directory |
@@ -152,6 +160,8 @@ The table below records repository evidence at `main@2cf6f4322d34adcd441835cb969
 | Fixtures and tests | NASS fixture READMEs exist, but payload inventory and no-network execution remain unverified; inspected tests are documentation-only | Fixture presence and filenames are not validation proof |
 | External USDA facts | No live endpoint, current terms, rights record, cadence, or source response was checked for this revision | Those facts remain **NEEDS VERIFICATION** at admission and release time |
 
+**2026-10-11 reconciliation update** (at `main@9e8bf3e6`): the parent `data/raw/README.md` and `data/raw/agriculture/README.md` now classify this subtree as compatibility/reference documentation under accepted `DIR-SOURCE-001`. Exact physical source-first placement and legacy lane disposition remain **HOLD**; no placement decision was found. The pinned rows above remain historical evidence.
+
 > [!IMPORTANT]
 > Repository documentation can establish the intended boundary and expose conflicts. It cannot substitute for a valid SourceDescriptor, activation decision, rights review, policy decision, substantive tests, observed run receipt, EvidenceBundle, release decision, correction path, or rollback target.
 
@@ -172,7 +182,7 @@ The provider name does not collapse product identity. A correction or role chang
 
 ## Capture contract
 
-Before material is relied on as an admitted RAW capture, its owning contract or sidecars should make the following review surface inspectable. Exact field names and filenames remain contract-controlled.
+Before material is relied on as an admitted source-first RAW capture, its owning contract or sidecars at the accepted source-first home (not this subtree) should make the following review surface inspectable. Exact field names and filenames remain contract-controlled.
 
 | Concern | Minimum inspectable record |
 |---|---|
@@ -194,14 +204,16 @@ Unknown or missing fields must remain visible. Do not fill gaps with plausible d
 
 ## Accepted material
 
-Accepted content is limited to source-capture material and RAW-local aids:
+Accepted content is limited to documentation and governed references that do not duplicate source-first captures:
 
-- immutable source-native payloads or immutable references to controlled payload storage;
-- sanitized request/query snapshots and package/distribution identity;
-- source-head, manifest, response-inventory, pagination/chunking, and retrieval records;
-- checksums, content hashes, byte counts, and product-vintage metadata;
-- product-specific spatial, temporal, aggregation, class-map, suppression, and revision context;
-- minimal README, inventory, or index sidecars that explain capture state without becoming registry, policy, receipt, proof, catalog, release, or public authority.
+- this README;
+- links to canonical SourceDescriptor, source-admission, rights, sensitivity, and connector authority;
+- references to a governed source-first capture or quarantine handoff when an accepted contract defines their shape;
+- migration or correction notes that label legacy topology without moving or copying payloads.
+
+The source-first capture or its governed reference must carry, where material: immutable source-native payloads or immutable references to controlled payload storage; sanitized request/query snapshots and package/distribution identity; source-head, manifest, response-inventory, pagination/chunking, and retrieval records; checksums, content hashes, byte counts, and product-vintage metadata; and product-specific spatial, temporal, aggregation, class-map, suppression, and revision context. Any README, inventory, or index sidecar must explain capture state without becoming registry, policy, receipt, proof, catalog, release, or public authority.
+
+Do not place raw payloads, copied source runs, source-head records, checksums, or other capture sidecars in this subtree merely because they support Agriculture. Exact physical placement and legacy migration remain **HOLD**.
 
 Credentials, tokens, cookies, signed URLs, private endpoints, and unsafe logs are never accepted content.
 
@@ -211,6 +223,7 @@ Credentials, tokens, cookies, signed URLs, private endpoints, and unsafe logs ar
 
 | Do not place here | Owning surface or action |
 |---|---|
+| Domain-scoped copies of source captures or new source-run directories | One accepted source-first RAW home after a reviewed placement decision; exact path remains **NEEDS VERIFICATION** |
 | USDA/NASS product doctrine | `docs/sources/catalog/usda/` |
 | Agriculture source-role and sensitivity doctrine | `docs/domains/agriculture/` |
 | Connector implementation or connector-alias decision | `connectors/` plus an accepted placement decision |
@@ -231,33 +244,16 @@ Credentials, tokens, cookies, signed URLs, private endpoints, and unsafe logs ar
 
 ## Directory map
 
-The bounded repository search used for this revision confirmed only this README under the exact target prefix:
+A recursive `find` at `main@9e8bf3e6` confirmed only this README under the exact target prefix:
 
 ```text
 data/raw/agriculture/usda-nass/
 └── README.md
 ```
 
-That search is not a recursive tree receipt. Payload existence therefore remains **UNKNOWN**.
+This is the confirmed documentation topology, not a storage specification. Do not add a source or run directory, payload, or local index here until an accepted source-first placement or compatibility decision defines its role. External or untracked payload stores remain **UNKNOWN**.
 
-<details>
-<summary>Proposed logical capture grouping</summary>
-
-When an accepted contract and implementation establish a concrete layout, preserve the existing source/run grouping intent without treating these placeholders as current files:
-
-```text
-data/raw/agriculture/usda-nass/
-└── <source-id>/
-    └── <run-id>/
-        ├── <immutable payload or immutable reference>
-        ├── <capture and source-head metadata>
-        ├── <digests and response inventory>
-        └── README.md
-```
-
-If a RAW-local index is introduced, it must remain non-authoritative and must not become a public index, source registry, catalog, release manifest, graph edge source, search/vector index, map source, or generated-answer retrieval source.
-
-</details>
+The earlier logical capture grouping (one directory per source ID, then per run ID, holding the immutable payload or immutable reference, capture and source-head metadata, digests and response inventory, and a README) is retained only as a proposed shape for a future accepted source-first home, not this subtree. If a RAW-local index is introduced there, it must remain non-authoritative and must not become a public index, source registry, catalog, release manifest, graph edge source, search/vector index, map source, or generated-answer retrieval source.
 
 ---
 
@@ -265,10 +261,10 @@ If a RAW-local index is introduced, it must remain non-authoritative and must no
 
 | Route | Minimum evidence |
 |---|---|
-| Retain in RAW | Capture is admitted and hash-bound, but no downstream normalization decision has closed |
-| Route to QUARANTINE | Rights, role, product identity, producer path, query lineage, support, sensitivity, citation, integrity, schema, or activation state is unresolved |
-| Reject or return | Admission decision says the material does not belong in this lane; preserve the decision and any required audit record |
-| Advance to WORK | Descriptor/activation, rights, role, product separation, citation, integrity, and minimum validation evidence are sufficient for governed normalization |
+| Remain at the source-first RAW home | Capture is admitted and hash-bound, but no downstream normalization decision has closed; this lane may retain a governed reference only |
+| Route to QUARANTINE | Rights, role, product identity, producer path, query lineage, support, sensitivity, citation, integrity, schema, activation state, or physical placement is unresolved |
+| Reject or return | Admission decision says the capture must not be retained; correction occurs through the owning source-first or quarantine procedure; preserve the decision and any required audit record |
+| Advance to WORK | A governed reference or approved handoff may enter Agriculture WORK only when descriptor/activation, rights, role, product separation, citation, integrity, and minimum validation evidence are sufficient for governed normalization |
 | Promote beyond WORK | Later PROCESSING, CATALOG/TRIPLETS, evidence, policy, review, and RELEASE gates close with correction and rollback support |
 
 No route is proven by moving files. The decision, evidence, receipts, and resulting state must remain inspectable.
@@ -280,7 +276,7 @@ No route is proven by moving files. The decision, evidence, receipts, and result
 The following direct path is forbidden:
 
 ```text
-data/raw/agriculture/usda-nass/
+source-first RAW capture (physical path NEEDS VERIFICATION)
   -> data/processed/agriculture/
   -> data/catalog/ or data/triplets/
   -> data/published/
@@ -296,7 +292,8 @@ Each arrow requires its own governed transition. A connector, watcher, README, w
 Use this as a review checklist, not as a substitute for a recorded admission decision:
 
 - [ ] Confirm the provider and exact NASS product identity.
-- [ ] Confirm the material belongs in the Agriculture domain and this source lane rather than the compatibility path.
+- [ ] Confirm one registered `source_id` and one immutable source-first capture identity; do not create a second Agriculture-scoped copy.
+- [ ] Treat this README (and the sibling `data/raw/usda-nass/` README) as compatibility/reference documentation only; do not create a child directory as a payload destination.
 - [ ] Resolve the actual producer/connector identity without claiming that the connector-path conflict is settled.
 - [ ] Resolve the SourceDescriptor revision, activation/admission decision, source role, authority, rights, sensitivity, cadence, citation, and integrity posture.
 - [ ] Preserve QuickStats, Crop Progress, CDL, and future products as separate capture and receipt lineages.
@@ -340,17 +337,20 @@ Use this as a review checklist, not as a substitute for a recorded admission dec
 
 | Claim | Current status |
 |---|---|
-| This README exists at the requested Agriculture RAW source-lane path | **CONFIRMED** at the pinned base |
+| This README exists at the requested Agriculture RAW path | **CONFIRMED** at the pinned base |
 | The same `doc_id`, path, created date, lifecycle phase, and source-family identity are preserved | **CONFIRMED** in this revision |
 | Parent RAW and Agriculture READMEs are substantive rather than greenfield stubs | **CONFIRMED** at the pinned base |
-| `data/raw/usda-nass/` is documented as a compatibility pointer to this lane | **CONFIRMED** at the pinned base |
+| `data/raw/usda-nass/` is documented as a compatibility pointer to this lane | **CONFIRMED** at the pinned base; superseded 2026-10-11 — both lanes are compatibility/reference documentation for one source-first capture |
 | QuickStats is aggregate and field-level inference fails closed in current KFM source documentation | **CONFIRMED documentation posture** |
 | Crop Progress and CDL require product-specific descriptors and must not inherit QuickStats semantics | **CONFIRMED documentation posture** |
 | ADR-0029 accepts exact Directory Rules v2 bytes at the doctrine path | **CONFIRMED / ACCEPTED** |
 | The legacy v1.3.1 architecture rules body is restored as a read-only compatibility dependency | **CONFIRMED** at the pinned base |
-| This target's domain-first payload placement is fully reconciled with v2 `DIR-SOURCE-001` source-first identity | **CONFLICTED / NEEDS VERIFICATION** |
+| Accepted Directory Rules require one source-first capture identity and prohibit duplicated RAW bytes across domains. | **CONFIRMED** (`DIR-SOURCE-001`) |
+| This subtree is an accepted physical source-first capture home. | **DENY — no placement decision found as of 2026-10-11** |
+| This README is reconciled to the parent source-first contract. | **CONFIRMED authored 2026-10-11** |
+| Exact physical source-first placement for USDA NASS captures and disposition of this legacy domain-first lane | **HOLD / NEEDS VERIFICATION** |
 | A canonical executable NASS connector home and active source admission are established | **NEEDS VERIFICATION** |
-| Non-README payloads exist beneath this exact target | **UNKNOWN** after bounded search |
+| Actual USDA NASS RAW payloads exist under this subtree. | **UNKNOWN; none added or moved by this documentation correction.** No payload files are tracked under this subtree at `main@9e8bf3e6`; external or untracked stores remain UNKNOWN |
 | Current USDA endpoints, terms, rights, cadence, or response behavior were verified for this revision | **NOT RUN / NEEDS VERIFICATION** |
 | NASS fixtures contain payloads and no-network tests execute substantively | **NEEDS VERIFICATION** |
 | Current documentation workflows prove links, citation closure, accessibility, or rendering | **DENY** — inspected workflows are readiness holds or non-enforcing scaffolds |
@@ -362,10 +362,10 @@ Use this as a review checklist, not as a substitute for a recorded admission dec
 
 ### Lifecycle and compatibility
 
-- [`../README.md`](../README.md) — Agriculture RAW parent lane
+- [`../README.md`](../README.md) — Agriculture RAW compatibility/reference index
 - [`../../README.md`](../../README.md) — RAW root contract
 - [`../../../README.md`](../../../README.md) — governed `data/` root
-- [`../../usda-nass/README.md`](../../usda-nass/README.md) — compatibility pointer
+- [`../../usda-nass/README.md`](../../usda-nass/README.md) — sibling compatibility lane for the same source
 - [`../../../quarantine/agriculture/README.md`](../../../quarantine/agriculture/README.md)
 - [`../../../processed/agriculture/README.md`](../../../processed/agriculture/README.md)
 - [`../../../catalog/domain/agriculture/README.md`](../../../catalog/domain/agriculture/README.md)
@@ -393,6 +393,6 @@ Use this as a review checklist, not as a substitute for a recorded admission dec
 
 ---
 
-**KFM boundary:** this directory preserves USDA NASS RAW source material and admission context only. It does not own source doctrine, source activation, product meaning, rights, sensitivity, policy, proof, receipts, catalogs, releases, crop or field truth, public artifacts, UI/API behavior, or generated-answer truth.
+**KFM boundary:** this directory is a USDA NASS Agriculture-facing compatibility/reference lane. One governed source-first capture may support Agriculture without duplicated RAW bytes; this subtree does not establish physical placement. It does not own source doctrine, source activation, product meaning, rights, sensitivity, policy, proof, receipts, catalogs, releases, crop or field truth, public artifacts, UI/API behavior, or generated-answer truth.
 
 [Back to top](#top)
