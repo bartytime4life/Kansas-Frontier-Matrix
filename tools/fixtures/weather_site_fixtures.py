@@ -11,7 +11,10 @@ rewrites them after an intended change.
 """
 from pathlib import Path
 import argparse
+import gzip
+import struct
 import sys
+import zlib
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
@@ -21,7 +24,8 @@ from pipelines.domains.atmosphere.ghcnd_daily_normalize import normalize_capture
 from pipelines.domains.atmosphere.ghcnd_daily_package import prepare_weather_package
 from policy_runtime.core import WEATHER_DECISION_PROFILE
 from release.weather_projection import project
-from tests.domains.atmosphere.ghcnd_daily_fixtures import acquired
+from connectors.noaa.src.noaa.ghcnd_daily_capture import STATION_LIST_KEY, capture
+from tests.domains.atmosphere.ghcnd_daily_fixtures import CAPTURED_AT, END, fetcher
 
 SITE_FIXTURES = ROOT / "apps/site/source/tests/fixtures/governed-weather"
 EVALUATED_AT = "2026-10-11T13:00:00Z"
@@ -43,8 +47,29 @@ def _sparse(key: str, text: str) -> str:
     return text.replace("USW00003928,20261010,TMAX,160,,,W,", "USW00003928,20261010,TMAX,160,,I,W,")
 
 
+def _stored_gzip(raw: bytes) -> bytes:
+    """gzip with stored (uncompressed) deflate blocks and a fixed header.
+
+    gzip.compress writes a different OS byte on Python 3.11/3.12 and 3.13, and every
+    capture digest chains from these bytes, so the fixtures must not depend on it.
+    """
+    chunks = [raw[i:i + 65535] for i in range(0, len(raw), 65535)] or [b""]
+    blocks = b"".join(bytes([i == len(chunks) - 1]) + struct.pack("<HH", len(c), len(c) ^ 0xFFFF) + c
+                      for i, c in enumerate(chunks))
+    return b"\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff" + blocks + struct.pack("<II", zlib.crc32(raw), len(raw) & 0xFFFFFFFF)
+
+
+def _acquired():
+    fetch = fetcher(_sparse)
+
+    def deterministic(key, limit):
+        raw, meta = fetch(key, limit)
+        return (raw if key == STATION_LIST_KEY else _stored_gzip(gzip.decompress(raw))), meta
+    return capture(END, fetcher=deterministic, clock=lambda: CAPTURED_AT)
+
+
 def generated() -> dict[str, bytes]:
-    source = acquired(_sparse)
+    source = _acquired()
     candidate = normalize_capture(source.manifest, source.objects)
     admitted = prepare_weather_package(candidate, admission=load_admission())
     decision = {"profile": WEATHER_DECISION_PROFILE, "package_id": admitted["manifest"]["package_id"],

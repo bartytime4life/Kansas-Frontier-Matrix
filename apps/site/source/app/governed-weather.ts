@@ -35,6 +35,28 @@ export function day(value: unknown): number {
   return instant;
 }
 
+/** Digest of a canonical JSON object's text with one top-level member removed. Artifact text is the
+ *  Python canonical serialization (sorted keys, no whitespace; its digest is checked first), so this
+ *  reproduces digest_bytes(canonical_bytes({k: v ... if k != key})) without re-serializing numbers,
+ *  which JavaScript would print differently (25.0 becomes 25). Non-canonical text fails closed. */
+export async function digestWithout(text: string, key: string): Promise<string> {
+  if (text.length < 2 || text[0] !== "{" || text[text.length - 1] !== "}") throw new Error("CANONICAL_OBJECT_REQUIRED");
+  const members: [number, number][] = [];
+  let depth = 0, inString = false, escaped = false, start = 1;
+  for (let i = 1; i < text.length - 1; i++) {
+    const c = text[i];
+    if (inString) { if (escaped) escaped = false; else if (c === "\\") escaped = true; else if (c === '"') inString = false; continue; }
+    if (c === '"') inString = true;
+    else if (c === "{" || c === "[") depth++;
+    else if (c === "}" || c === "]") depth--;
+    else if (c === "," && depth === 0) { members.push([start, i]); start = i + 1; }
+  }
+  members.push([start, text.length - 1]);
+  const name = JSON.stringify(key) + ":", kept = members.filter(([from]) => !text.startsWith(name, from));
+  if (depth !== 0 || inString || kept.length !== members.length - 1) throw new Error("CANONICAL_MEMBER_INVALID");
+  return digest("{" + kept.map(([from, to]) => text.slice(from, to)).join(",") + "}");
+}
+
 export async function parseWeatherPackage(text: string): Promise<WeatherPackage> {
   if (!text || new TextEncoder().encode(text).length > WEATHER_PACKAGE_LIMIT) throw new Error("PACKAGE_LIMIT");
   const snapshot = object(parseWaterJson(text));
@@ -50,6 +72,10 @@ export async function parseWeatherPackage(text: string): Promise<WeatherPackage>
   for (const name of NAMES) { const raw = artifacts[name]; if (typeof raw !== "string" || await digest(raw) !== hashes[name]) throw new Error("ARTIFACT_DIGEST_MISMATCH"); values[name] = object(parseWaterJson(raw)); if (values[name].candidate_id !== manifest.candidate_id) throw new Error("CANDIDATE_BINDING_MISMATCH"); }
   const candidate = values["candidate.json"] as WeatherCandidate, evidence = values["evidence.json"] as { entries: Entry[] }, validation = values["validation.json"];
   if (candidate.release_state !== "UNRELEASED" || values["catalog.json"].authoritative !== false || validation.outcome !== "PASS") throw new Error("CARRIER_CANNOT_SELF_APPROVE");
+  // Inner provenance, as release/core.py validate_snapshot: the candidate id and validation receipt
+  // digest must describe the artifacts they label, not only match each other.
+  if (await digestWithout(artifacts["candidate.json"] as string, "candidate_id") !== manifest.candidate_id) throw new Error("CANDIDATE_IDENTITY_MISMATCH");
+  if (await digestWithout(artifacts["validation.json"] as string, "receipt_digest") !== validation.receipt_digest) throw new Error("VALIDATION_RECEIPT_INVALID");
   if (candidate.start !== manifest.start || candidate.end !== manifest.end || candidate.retrieved_at !== manifest.created_at || candidate.stale_after_days !== 3) throw new Error("CANDIDATE_IDENTITY_MISMATCH");
   if (!Array.isArray(candidate.stations) || !same(candidate.stations.map(s => s.id).sort(), [...WEATHER_STATIONS].sort()) || !Array.isArray(candidate.observations) || candidate.observations.length > 360 || !Array.isArray(evidence.entries) || evidence.entries.length !== WEATHER_STATIONS.length) throw new Error("STATION_SCOPE_INVALID");
   for (const s of candidate.stations) { if (typeof s.name !== "string" || s.name.length > 64 || s.geometry.type !== "Point" || s.geometry.coordinates.length !== 2 || !s.geometry.coordinates.every(Number.isFinite) || Math.abs(s.geometry.coordinates[0]) > 180 || Math.abs(s.geometry.coordinates[1]) > 90) throw new Error("STATION_GEOMETRY_INVALID"); }
