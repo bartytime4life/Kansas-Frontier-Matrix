@@ -112,6 +112,8 @@ test("inner provenance and record rules match the Python validator", async () =>
     await rejects(await forge("candidate.json", t => t.replace(from, to), { reseal: true }), "WEATHER_OBSERVATION_SCHEMA_INVALID");
   }
   await rejects(await forge("candidate.json", t => t.replace('"geometry":{"coordinates"', '"extra":1,"geometry":{"coordinates"'), { reseal: true }), "STATION_GEOMETRY_INVALID");
+  // Retrieval after capture is caught to the microsecond (Date.parse would truncate .000001Z to the capture millisecond).
+  await rejects(await forge("candidate.json", t => t.replace('"retrieved_at":"2026-10-11T12:00:00Z","source_flag"', '"retrieved_at":"2026-10-11T12:00:00.000001Z","source_flag"'), { reseal: true }), "OBSERVATION_DATE_INVALID");
   // Number aliases are refused before any digest is compared.
   await rejects(await forge("candidate.json", t => t.replace('"value":0.8,', '"value":0.80,')), "CAPTURED_JSON_NOT_CANONICAL");
   // The unedited fixture, resealed the same way, still parses: the forger's path is the honest one.
