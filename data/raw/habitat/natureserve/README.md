@@ -1,9 +1,10 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://data/raw/habitat/natureserve/readme
-name: Habitat NatureServe Raw README
+title: Habitat NatureServe Raw README
 path: data/raw/habitat/natureserve/README.md
 type: data-raw-source-family-lane-readme
-version: v0.1.0
+version: v0.2.0
+prior_version: v0.1.0
 status: draft
 owners:
   - <habitat-domain-steward>
@@ -12,18 +13,20 @@ owners:
   - <rights-reviewer>
   - <release-steward>
 created: 2026-06-27
-updated: 2026-06-27
+updated: 2026-10-11
 policy_label: restricted-review
 truth_posture: cite-or-abstain
 lifecycle_phase: raw
-responsibility_root: data/
+owning_root: data/
+responsibility: Preserve the tracked Habitat NatureServe RAW compatibility and reference documentation without treating this lane as a physical source-first capture home or duplicating RAW bytes.
 domain: habitat
 source_family: natureserve
 source_role: administrative-aggregate-context
-artifact_family: immutable-habitat-natureserve-source-capture
+artifact_family: habitat-natureserve-raw-compatibility-reference
 sensitivity_posture: raw-internal; source-role-preserving; no-public-path; review-required; release-blocked
 related:
   - ../README.md
+  - ../../fauna/natureserve/README.md
   - ../../README.md
   - ../../../quarantine/habitat/README.md
   - ../../../processed/habitat/README.md
@@ -46,17 +49,20 @@ tags:
   - source-capture
   - no-public-path
   - evidence-first
+  - compatibility-reference
+  - source-first
 notes:
   - "This README replaces placeholder content at `data/raw/habitat/natureserve/README.md`."
-  - "Parent `data/raw/habitat/README.md` is currently a greenfield stub."
-  - "This lane is source capture only; implementation wiring and payload presence remain unverified."
+  - "Parent `data/raw/habitat/README.md` was a greenfield stub when this README was first authored; it now exists as the Habitat RAW compatibility/reference index."
+  - "This lane is compatibility/reference documentation only; implementation wiring, capture placement, and payload presence remain unverified."
+  - "2026-10-11 reconciliation: aligned to accepted DIR-SOURCE-001 and the parent data/raw/README.md source-first contract; this lane is compatibility/reference documentation, not a physical capture home; metadata normalized to the required profile; no payload, path, writer, or release state changed."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Habitat NatureServe RAW Lane
 
-RAW source-family lane for NatureServe Habitat source captures and source-admission sidecars.
+Compatibility/reference lane for Habitat-facing NatureServe source documentation and legacy RAW topology; not a physical source-capture home.
 
 <p>
   <img alt="Status: draft" src="https://img.shields.io/badge/status-draft-yellow">
@@ -67,17 +73,19 @@ RAW source-family lane for NatureServe Habitat source captures and source-admiss
 </p>
 
 > [!CAUTION]
-> `data/raw/habitat/natureserve/` is a RAW source-capture lane. It is not processed truth, catalog truth, proof, receipt authority, registry authority, policy authority, release authority, public UI/API material, or generated-answer authority.
+> `data/raw/habitat/natureserve/` is a no-public-path compatibility/reference lane inside the RAW lifecycle boundary. Accepted Directory Rules require one source-first capture identity, so this source-named directory is not a default physical capture home and must not receive duplicate RAW payloads. It is not processed truth, catalog truth, proof, receipt authority, registry authority, policy authority, release authority, public UI/API material, or generated-answer authority.
 
 ---
 
 ## Scope
 
-This directory is for immutable NatureServe-related Habitat source captures and RAW-local sidecars.
+This directory documents NatureServe material as it bears on Habitat and the legacy Habitat-scoped RAW topology. It may reference one governed source-first capture, but it does not establish where that capture is stored.
 
 KFM treats this source family as Habitat context for ecological-system definitions, conservation context, and related review workflows. The repository docs classify NatureServe ecological systems as administrative/aggregate context, with rights still needing verification. The exact admitted role must be set by SourceDescriptor.
 
-RAW records what was captured, where it came from, what source role it carried, and which identifiers, times, rights notes, citations, version fields, hashes, and caveats must travel downstream.
+A governed source-first capture records what was captured, where it came from, what source role it carried, and which identifiers, times, rights notes, citations, version fields, hashes, and caveats must travel downstream.
+
+Cross-domain overlap: [`data/raw/fauna/natureserve/`](../../fauna/natureserve/README.md) documents the same upstream source for Fauna; `data/raw/flora/natureserve/` holds only a `.gitkeep` placeholder. All of these lanes must reference the same single source-first capture, never two copies.
 
 ---
 
@@ -91,8 +99,10 @@ RAW records what was captured, where it came from, what source role it carried, 
 | Domain lane | `habitat` |
 | Source family | `natureserve` |
 | Source role | `administrative` / `aggregate`; exact role set by SourceDescriptor |
+| Artifact role | Compatibility/reference lane for Habitat-facing NatureServe source documentation and unresolved legacy RAW topology |
 | Public access posture | No public path; no normal UI; no governed-public API exposure |
-| Downstream | `data/work/habitat/` or `data/quarantine/habitat/` after governed admission/triage |
+| Upstream | References to an admitted source-first capture only; physical placement remains **NEEDS VERIFICATION** |
+| Downstream | Governed Habitat WORK or QUARANTINE procedures consume references or approved handoffs, not assumed domain-local copies |
 | Release authority | `release/`, not this directory |
 | Registry authority | `data/registry/`, not this directory |
 | Policy authority | `policy/`, not this directory |
@@ -104,6 +114,8 @@ RAW records what was captured, where it came from, what source role it carried, 
 
 | Source condition | RAW handling | Boundary |
 |---|---|---|
+| Capture identity is source-first | Register one `source_id` and preserve one immutable capture identity; references may support Habitat without duplicating RAW bytes. | This lane does not create a second Habitat-scoped copy. |
+| Physical placement is held | Do not infer `data/raw/habitat/natureserve/` as the capture home; use only an accepted writer/path contract. | None is established by this README. |
 | Ecological-system definition material | Capture as administrative/context source material when admitted. | Native source classification remains visible. |
 | Conservation context material | Capture as aggregate/context source material when admitted. | Context does not become public-release authority by itself. |
 | Review-gated package | Hold for source and rights review before downstream use. | Review state must be recorded before use outside RAW. |
@@ -114,11 +126,22 @@ RAW records what was captured, where it came from, what source role it carried, 
 
 ## Accepted material
 
+Accepted content is limited to documentation and governed references that do not duplicate source-first captures:
+
+- this tracked README;
+- links to canonical SourceDescriptor, admission-ticket, source-admission, rights, sensitivity, and connector authority;
+- references to a governed source-first capture or quarantine handoff when an accepted contract defines their shape;
+- migration or correction notes that label legacy topology without moving or copying payloads;
+- an optional local documentation index only after its schema, producer, owner, and non-authoritative role are accepted; it must not become proof, catalog, receipt, registry, policy, release, public artifact, or answer authority.
+
+The governed source-first capture or reference for NatureServe material, not this lane, must carry:
+
 - source-reference manifests;
 - release references, definition references, context references, steward-provided file references, service references, or raw payload references;
 - product type, terms reference, source identifiers, source time, retrieval time, source vintage, citation, attribution, rights posture, review notes, and digest sidecars;
-- source-head records, retrieval metadata, status metadata, row counts where applicable, and checksums;
-- local README or index sidecars that do not become proof, catalog, registry, policy, release, public artifact, or answer authority.
+- source-head records, retrieval metadata, status metadata, row counts where applicable, and checksums.
+
+Do not place raw payloads, copied source runs, source-head records, checksums, or other capture sidecars in this subtree merely because they support Habitat. Exact physical placement and legacy migration remain **HOLD**.
 
 ---
 
@@ -126,6 +149,7 @@ RAW records what was captured, where it came from, what source role it carried, 
 
 | Do not place here | Correct authority home |
 |---|---|
+| Domain-scoped copies of source captures or new source-run directories | One accepted source-first RAW home after a reviewed placement decision; exact path remains **NEEDS VERIFICATION** |
 | Source-family doctrine | `docs/sources/catalog/` or `docs/domains/habitat/` |
 | Connector code or connector decisions | `connectors/` |
 | Authoritative SourceDescriptor records | `data/registry/sources/` |
@@ -145,16 +169,14 @@ RAW records what was captured, where it came from, what source role it carried, 
 
 ```text
 data/raw/habitat/natureserve/
-├── README.md
-├── <run_id>/
-│   ├── source_reference.json
-│   ├── payload_ref.json
-│   ├── checksums.sha256
-│   └── README.md
-└── index.local.json
+└── README.md
 ```
 
-`index.local.json` is optional and RAW-local only.
+This is the confirmed documentation topology, not a storage specification. Do not add a source-run directory, payload, or local index here until an accepted source-first placement or compatibility decision defines its role.
+
+The earlier version of this map sketched `<run_id>/` folders holding `source_reference.json`, `payload_ref.json`, `checksums.sha256`, and a run `README.md`, plus an optional local index. Treat that layout as a proposed shape for a future accepted source-first home, not this subtree.
+
+Any local documentation index accepted later must remain non-authoritative and RAW-local; it must not become proof, catalog, registry, policy, release, public artifact, or answer authority.
 
 ---
 
@@ -162,9 +184,10 @@ data/raw/habitat/natureserve/
 
 | Exit route | Minimum requirement |
 |---|---|
-| Stay RAW | Source was captured, but no downstream decision has been made. |
-| Quarantine | Source role, rights, citation, schema, or source activation is unresolved. |
-| Move to work | SourceDescriptor, rights posture, source role, citation, hash, and minimal validation support are sufficient. |
+| Remain at the source-first RAW home | Source was captured, but no downstream decision has been made. This lane may retain a governed reference only. |
+| Quarantine | Source role, rights, citation, schema, source activation, or physical placement is unresolved. |
+| Return / reject | Admission decision or steward review says the capture must not be retained; correction occurs through the owning source-first or quarantine procedure. |
+| Move to work | A governed reference or approved handoff may enter Habitat WORK only when SourceDescriptor, rights posture, source role, citation, hash, and minimal validation support are sufficient. |
 | Promote downstream | Only after later WORK, PROCESSED, CATALOG, and RELEASE gates close with inspectable evidence. |
 
 ---
@@ -172,7 +195,7 @@ data/raw/habitat/natureserve/
 ## Forbidden shortcut
 
 ```text
-data/raw/habitat/natureserve/
+source-first RAW capture (physical path NEEDS VERIFICATION)
 → data/processed/habitat/
 → data/catalog/ or data/triplets/
 → data/published/
@@ -185,7 +208,8 @@ This is forbidden unless each governed lifecycle transition has actually happene
 
 ## Required checks before use
 
-- [ ] Confirm the source belongs to the Habitat lane and NatureServe source family.
+- [ ] Confirm one registered `source_id` and one immutable source-first capture identity; do not create a second Habitat-scoped copy.
+- [ ] Treat this README as compatibility/reference documentation only; do not create a child directory under this lane as a payload destination.
 - [ ] Confirm a SourceDescriptor or admission ticket identifies source ID, source role, rights, citation, review posture, and hash posture.
 - [ ] Confirm the source role is not collapsed across products.
 - [ ] Confirm source classification and advisory crosswalks remain separate.
@@ -201,10 +225,14 @@ This is forbidden unless each governed lifecycle transition has actually happene
 |---|---|
 | This README replaces placeholder content at `data/raw/habitat/natureserve/README.md`. | **CONFIRMED authored** |
 | The target path existed and contained only placeholder content before this edit. | **CONFIRMED by GitHub contents API during this edit** |
-| Parent `data/raw/habitat/README.md` is currently a greenfield stub. | **CONFIRMED by GitHub contents API during this edit** |
+| Parent `data/raw/habitat/README.md` was a greenfield stub when this README was first authored; it now exists as the Habitat RAW compatibility/reference index. | **CONFIRMED at reconciliation base `main@9e8bf3e6` (2026-10-11)** |
 | Habitat docs identify NatureServe / Natural Heritage as ecological-system and conservation context. | **CONFIRMED by GitHub contents API during this edit** |
-| Actual NatureServe RAW payloads exist under this subtree. | **UNKNOWN** |
-| SourceDescriptor records, connector activation, receipts, validators, fixtures, CI checks, and downstream receipts are wired for this exact lane. | **NEEDS VERIFICATION** |
+| Accepted Directory Rules require one source-first capture identity and prohibit duplicated RAW bytes across domains. | **CONFIRMED** (`DIR-SOURCE-001`) |
+| This subtree is an accepted physical source-first capture home. | **DENY — no placement decision found as of 2026-10-11** |
+| Actual NatureServe RAW payloads exist under this subtree. | **UNKNOWN; none added or moved by this documentation correction.** No payload files are tracked under this subtree at `main@9e8bf3e6`; external or untracked stores remain UNKNOWN |
+| `data/raw/fauna/natureserve/` documents the same upstream source for Fauna; both sides must reference one source-first capture, never two copies. | **CONFIRMED README presence at `main@9e8bf3e6`** |
+| This README is reconciled to the parent source-first contract. | **CONFIRMED authored 2026-10-11** |
+| SourceDescriptor records, connector activation, receipts, validators, fixtures, CI checks, and downstream receipts are wired to an accepted source-first RAW writer for this source family. | **NEEDS VERIFICATION** |
 | This README is proof, receipt, release, catalog, registry, policy, public artifact authority, or generated-answer authority. | **DENY** |
 
 ---
@@ -212,6 +240,7 @@ This is forbidden unless each governed lifecycle transition has actually happene
 ## Related files
 
 - [`../README.md`](../README.md)
+- [`../../fauna/natureserve/README.md`](../../fauna/natureserve/README.md)
 - [`../../README.md`](../../README.md)
 - [`../../../quarantine/habitat/README.md`](../../../quarantine/habitat/README.md)
 - [`../../../processed/habitat/README.md`](../../../processed/habitat/README.md)
@@ -227,6 +256,6 @@ This is forbidden unless each governed lifecycle transition has actually happene
 
 ---
 
-KFM rule: this directory is a Habitat NatureServe RAW source-family lane for source capture only. It is not source-family doctrine, registry authority, rights authority, policy authority, proof authority, receipt authority, release authority, catalog authority, public artifact authority, UI authority, graph authority, vector-index authority, or generated-answer truth.
+KFM rule: this directory is a Habitat-facing NatureServe compatibility/reference lane. One governed source-first capture may support Habitat without duplicated RAW bytes; this lane does not establish physical placement. It is not source-family doctrine, registry authority, rights authority, policy authority, proof authority, receipt authority, release authority, catalog authority, public artifact authority, UI authority, graph authority, vector-index authority, or generated-answer truth.
 
 [Back to top](#top)
