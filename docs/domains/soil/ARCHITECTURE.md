@@ -2,15 +2,18 @@
 doc_id: kfm://doc/domains/soil/architecture
 title: Soil — Domain Architecture
 type: standard
-version: v0.1
+version: v0.1.1
+prior_version: v0.1
 status: draft
 owners: <TBD — Soil lane stewards>
 created: 2026-05-19
-updated: 2026-05-19
+updated: 2026-10-11
 policy_label: public
 related:
   - docs/domains/soil/README.md
   - docs/doctrine/directory-rules.md
+  - data/raw/README.md
+  - data/raw/soil/README.md
   - docs/doctrine/lifecycle-law.md
   - docs/architecture/contract-schema-policy-split.md
   - contracts/domains/soil/
@@ -20,6 +23,7 @@ tags: [kfm, domain, soil, architecture, lane]
 notes:
   - Greenfield placeholder; doctrine-grounded, implementation-unverified.
   - Path PROPOSED per Directory Rules §3 (domain-as-lane, not as root).
+  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001; physical source-first placement is HOLD and data/raw/soil/ is a compatibility/reference lane; documentation only."
 owning_root: docs/
 responsibility: "Documentation for Soil — Domain Architecture; not evidence, policy, release, or publication authority."
 truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
@@ -34,9 +38,9 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 [![lifecycle: RAW→PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-success.svg)](#7-pipeline-shape-raw--published)
 [![policy: deny-by-default](https://img.shields.io/badge/policy-deny--by--default-critical.svg)](#9-sensitivity-rights--publication-posture)
 [![ci: TODO](https://img.shields.io/badge/ci-TODO-lightgrey.svg)](#)
-[![last-updated: 2026-05-19](https://img.shields.io/badge/last--updated-2026--05--19-informational.svg)](#)
+[![last-updated: 2026-10-11](https://img.shields.io/badge/last--updated-2026--10--11-informational.svg)](#)
 
-**Status:** draft · **Owners:** `<TBD — Soil lane stewards>` · **Last updated:** 2026-05-19
+**Status:** draft · **Owners:** `<TBD — Soil lane stewards>` · **Last updated:** 2026-10-11
 
 > [!IMPORTANT]
 > This document is a **greenfield architecture draft**. Doctrine and structure are grounded in attached KFM corpus material ([DOM-SOIL], [ENCY], [DIRRULES], [BLD-MANUAL]). Repository implementation — exact paths, routes, schemas, validators, CI, release wiring — is **UNKNOWN / NEEDS VERIFICATION** until checked against the mounted repo. See [§14](#14-verification-backlog--open-questions).
@@ -132,7 +136,7 @@ flowchart LR
   RE --> RE1["release/candidates/soil/"]:::proof
 ```
 
-<sub><em>Diagram shows the PROPOSED placement pattern derived from Directory Rules §4 Step 3. Actual presence in the mounted repo is NEEDS VERIFICATION.</em></sub>
+<sub><em>Diagram shows the PROPOSED placement pattern derived from Directory Rules §4 Step 3. Actual presence in the mounted repo is NEEDS VERIFICATION. The RAW phase is not covered by <code>data/&lt;phase&gt;/soil/</code>: RAW capture is source-first per <code>DIR-SOURCE-001</code> and its physical placement is HOLD (see §2.2).</em></sub>
 
 ### 2.2 Path lattice for the Soil lane (PROPOSED)
 
@@ -147,7 +151,9 @@ packages/domains/soil/                   # shared soil libraries (if any)
 pipelines/domains/soil/                  # executable pipeline logic
 pipeline_specs/soil/                     # declarative pipeline config
 connectors/<ssurgo|sda|mesonet|smap|...> # source-specific fetchers
-data/raw/soil/        data/quarantine/soil/
+# RAW (source-first capture; placement HOLD) — registered source_id in data/registry/sources/
+data/raw/soil/README.md                  # compatibility/reference lane; no payloads
+data/quarantine/soil/
 data/work/soil/       data/processed/soil/
 data/catalog/domain/soil/
 data/triplets/soil/
@@ -158,7 +164,7 @@ release/candidates/soil/                 # release decisions + manifests
 ```
 
 > [!NOTE]
-> Every path above is **PROPOSED**. None is asserted as present in the mounted repo. Per Directory Rules §2.5, if the repo diverges, open a drift entry in `docs/registers/DRIFT_REGISTER.md` rather than silently conforming.
+> Every path above is **PROPOSED**. None is asserted as present in the mounted repo. RAW is the exception to the domain-segment pattern: under accepted `DIR-SOURCE-001` (Directory Rules §12.3) capture identity is source-first (one registered `source_id`, no duplicated RAW bytes across domains), and the exact physical source-first RAW placement is **HOLD** pending an accepted placement decision. `data/raw/soil/` is a tracked compatibility/reference documentation lane, not a payload destination. Per Directory Rules §2.5, if the repo diverges, open a drift entry in `docs/registers/DRIFT_REGISTER.md` rather than silently conforming.
 
 [↑ back to top](#-contents)
 
@@ -483,7 +489,9 @@ flowchart LR
 ## 15. Related docs
 
 - [`docs/domains/soil/README.md`](./README.md) — Lane landing page (TODO if absent)
-- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Placement authority
+- [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — Placement authority (§12.3 source identity: `DIR-SOURCE-001`…`004`)
+- [`data/raw/README.md`](../../../data/raw/README.md) — RAW root contract; source-first capture identity, placement HOLD
+- [`data/raw/soil/README.md`](../../../data/raw/soil/README.md) — Soil RAW compatibility/reference lane (no payloads)
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — RAW → PUBLISHED invariant
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — Governed-API rule
 - [`docs/architecture/contract-schema-policy-split.md`](../../architecture/contract-schema-policy-split.md) — Contract / Schema / Policy split
@@ -506,7 +514,7 @@ flowchart LR
 
 <div align="center">
 
-**Status:** draft · **Owners:** `<TBD — Soil lane stewards>` · **Last updated:** 2026-05-19
+**Status:** draft · **Owners:** `<TBD — Soil lane stewards>` · **Last updated:** 2026-10-11
 
 [↑ back to top](#soil--domain-architecture)
 
