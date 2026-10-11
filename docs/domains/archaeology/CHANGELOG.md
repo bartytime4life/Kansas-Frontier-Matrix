@@ -138,6 +138,10 @@ The documents this changelog tracks, with versions read from their current metad
 
 Entries are newest-first. Each names the document, version delta, §37 type, and reason. KFM casing and terminology are preserved.
 
+### 2026-10-11 — Compatibility-view descriptor migration — PATCH
+
+On owner direction, the three `PROPOSED` greenfield descriptor templates in `data/registry/archaeology/sources/` moved to the canonical lane as `data/registry/sources/archaeology/{ahgp,khri_archaeology,tribal_consultation_register}.source.yaml` (`git mv`; field values unchanged and still `TBD`; nothing admitted). The crosswalk and rollback are in `data/registry/archaeology/sources/README.md` (Migration record). `SOURCES.md` verification item 1 and `SOURCE_REGISTRY.md` `OQ-ARCH-SR-08` now say the migration is done. AHGP keeps its archaeology assignment, flagged for source-admission review because it is a genealogy transcription source.
+
 ### 2026-10-11 — Source-registry path reconciliation — PATCH
 
 Aligned source-registry paths to accepted Directory Rules `DIR-SOURCE-002`–`004` (ADR-0029): `data/registry/sources/archaeology/` is the canonical `SourceDescriptor` writer, and `data/registry/archaeology/sources/` is a read-only compatibility view that must never become an independent writer. Three unmigrated descriptors remain in the compatibility view (`ahgp.yaml`, `khri_archaeology.yaml`, `tribal_consultation_register.yaml`); this entry records them and moves no registry record.

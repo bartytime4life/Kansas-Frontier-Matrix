@@ -258,7 +258,7 @@ Accountable ownership and required reviewers remain **NEEDS VERIFICATION**. CODE
 |---|---:|---|
 | Canonical record shape beneath `data/registry/sources/` | `HOLD` | Accepted source-ID/path decision and existing-record inventory |
 | Active writer and generated views | `UNKNOWN` | Writer configuration, deterministic generation contract, and single-writer proof |
-| Parallel-layout equivalence and migration | `HOLD` | Identity crosswalk, byte/field comparison, consumers, migration, readback, rollback |
+| Parallel-layout equivalence and migration | `HOLD` (archaeology descriptors migrated 2026-10-11; see [its record](../archaeology/sources/README.md#migration-record-2026-10-11)) | Identity crosswalk, byte/field comparison, consumers, migration, readback, rollback |
 | `source_descriptors/` disposition | `NEEDS VERIFICATION` | Compatibility references, consumer search, and accepted retirement or retention plan |
 | Complete descriptor inventory | `UNKNOWN` | Recursive tracked/external inventory with rights and sensitivity classification |
 | Source activation binding | `UNKNOWN` | Accepted decision object, writer, receipts, negative cases, and runtime enforcement |

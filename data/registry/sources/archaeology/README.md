@@ -3,7 +3,7 @@ doc_id: kfm://data/registry/sources/archaeology/readme
 name: Archaeology Source Registry README
 path: data/registry/sources/archaeology/README.md
 type: data-registry-source-domain-readme
-version: v0.2.0
+version: v0.2.1
 status: draft
 owners:
   - <registry-steward>
@@ -17,7 +17,7 @@ owners:
   - <release-steward>
   - <docs-steward>
 created: 2026-06-29
-updated: 2026-06-29
+updated: 2026-10-11
 policy_label: restricted-review
 truth_posture: cite-or-abstain
 responsibility_root: data/
@@ -72,6 +72,7 @@ tags:
   - rollback
   - no-public-path
 notes:
+  - "2026-10-11 (v0.2.1): received ahgp, khri_archaeology, and tribal_consultation_register from data/registry/archaeology/sources/ (owner-directed migration, field values unchanged, still PROPOSED and unadmitted)."
   - "This README replaces the scaffold at `data/registry/sources/archaeology/README.md`."
   - "This lane is a domain segment of the canonical source registry parent at `data/registry/sources/`."
   - "Archaeology source descriptors are admission/control records. They do not store source payloads, exact site geometry, sacred-site knowledge, burial/human-remains detail, policy decisions, receipts, proofs, catalog closure, release decisions, or public map/API material."
@@ -298,7 +299,7 @@ The exact schema remains governed by the accepted SourceDescriptor schema. Archa
 | `docs/domains/archaeology/README.md` identifies archaeology as T4/default sensitive and includes `data/registry/sources/archaeology/` as the source-descriptor lane in the domain pattern. | CONFIRMED by GitHub contents API during this edit |
 | `docs/domains/archaeology/MISSING_OR_PLANNED_FILES.md` warns that exact archaeological geometry, burial/human-remains, sacred-site, collection-security, looting-risk, and private-landowner detail must not be exposed in public-readable paths. | CONFIRMED by GitHub contents API during this edit |
 | The attached Directory Rules copy includes `data/registry/<domain>/` or `data/registry/sources/<domain>/` as valid registry/domain shapes. | CONFIRMED by local PDF text extraction during this edit |
-| Concrete archaeology SourceDescriptor payloads exist under this lane. | UNKNOWN |
+| Concrete archaeology SourceDescriptor payloads exist under this lane. | CONFIRMED placeholders only: `PROPOSED` `*.source.yaml` files, including `ahgp`, `khri_archaeology`, and `tribal_consultation_register` migrated from the compatibility view on 2026-10-11 ([migration record](../../archaeology/sources/README.md#migration-record-2026-10-11)); none is admitted or reviewed |
 | Archaeology descriptor schema home, filename convention, validator discovery, and CI enforcement are verified. | NEEDS VERIFICATION |
 | Archaeology rights/sensitivity/cultural-review policy profiles are complete. | UNKNOWN |
 | Archaeology catalog/proof/release wiring is implemented. | UNKNOWN |

@@ -2,10 +2,10 @@
 doc_id: kfm://docs/sources/catalog/ahgp-flat-index
 title: AHGP Source-Family Catalog — Flat-Path Navigation Boundary
 type: source-catalog index; compatibility navigation; implementation-status boundary
-version: v1.0.0
+version: v1.0.1
 status: repository-grounded; navigation-only; source-not-admitted; connector-placeholder
 owners: NEEDS VERIFICATION — source, archaeology, people/genealogy, rights, sensitivity, and connector stewards
-updated: 2026-08-29
+updated: 2026-10-11
 policy_label: source-candidate; rights-review-required; sensitivity-review-required; non-publisher
 current_path: docs/sources/catalog/ahgp.md
 owning_root: docs/
@@ -21,6 +21,7 @@ evidence_snapshot:
   prior_blob: 3cf7b62914a0ffeff41d37e7bfe59aba6f19aae8
   method: complete target read; catalog family, product pages, registry template, connector tree, schema index, open-PR, Drive, and Notion inspection
 notes:
+  - "2026-10-11 (v1.0.1): AHGP descriptor links now point at data/registry/sources/archaeology/ahgp.source.yaml after the owner-directed migration from the compatibility view."
   - "Replaces proposal-era prose at the same path without declaring a document-identity supersession relationship."
   - "No source, descriptor, connector, lifecycle, release, or publication state is superseded."
 [/KFM_META_BLOCK_V2] -->
@@ -45,7 +46,7 @@ The prior page contained two materially stale directions:
 
 | Prior direction | Current repository evidence |
 |---|---|
-| Use `data/registry/sources/ahgp.yaml` as the source descriptor. | That path does not exist. The committed AHGP registry candidate is [`data/registry/archaeology/sources/ahgp.yaml`](../../../data/registry/archaeology/sources/ahgp.yaml). |
+| Use `data/registry/sources/ahgp.yaml` as the source descriptor. | That path does not exist. The committed AHGP registry candidate is [`data/registry/sources/archaeology/ahgp.source.yaml`](../../../data/registry/sources/archaeology/ahgp.source.yaml) (moved on 2026-10-11 from the `data/registry/archaeology/sources/` compatibility view). |
 | Replace this file with a full source-family page. | A substantive [AHGP family page](./ahgp/README.md) and five product pages already exist in the adjacent directory. |
 
 The existing registry YAML is explicitly a **PROPOSED greenfield template**.
@@ -63,7 +64,7 @@ admit or activate AHGP.
 | [County and town histories](./ahgp/county-town-histories.md) | Product-family catalog page | Candidate documentation only |
 | [Family trees](./ahgp/family-trees.md) | Product-family catalog page | Candidate documentation only |
 | [Newspaper and obituary transcriptions](./ahgp/newspaper-obituary-transcriptions.md) | Product-family catalog page | Candidate documentation only |
-| [Archaeology registry candidate](../../../data/registry/archaeology/sources/ahgp.yaml) | Proposed AHGP source metadata template | Unresolved `TBD` fields; not admitted |
+| [Archaeology registry candidate](../../../data/registry/sources/archaeology/ahgp.source.yaml) | Proposed AHGP source metadata template in the canonical lane | Unresolved `TBD` fields; not admitted; archaeology domain assignment flagged for source-admission review |
 | [AHGP connector lane](../../../connectors/ahgp/README.md) | Source-specific connector boundary | Draft, placeholder-only implementation |
 | [Connector source inventory](../../../connectors/ahgp/src/README.md) | Exact package and module status | `0.0.0`; empty or comment-only Python modules |
 | [Connector-local descriptor placeholder](../../../connectors/ahgp/src/ahgp/descriptor.yaml) | Package-local placeholder metadata | `role: TBD`, `rights: TBD`; not a registry decision |
@@ -80,7 +81,7 @@ Use the narrowest current surface for the task:
   [AHGP family page](./ahgp/README.md);
 - product-specific source limitations: the relevant product page listed above;
 - current proposed domain registry bytes:
-  [archaeology AHGP YAML](../../../data/registry/archaeology/sources/ahgp.yaml);
+  [archaeology AHGP YAML](../../../data/registry/sources/archaeology/ahgp.source.yaml);
 - connector implementation status:
   [AHGP connector](../../../connectors/ahgp/README.md) and
   [source inventory](../../../connectors/ahgp/src/README.md);
