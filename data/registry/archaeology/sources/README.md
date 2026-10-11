@@ -3,7 +3,7 @@ doc_id: kfm://data/registry/archaeology/sources/readme
 name: Archaeology Source Registry README
 path: data/registry/archaeology/sources/README.md
 type: data-registry-domain-sources-readme
-version: v0.3.0
+version: v0.4.0
 status: draft
 owners:
   - "NEEDS VERIFICATION: source-registry steward"
@@ -12,13 +12,13 @@ owners:
   - "NEEDS VERIFICATION: rights and sensitivity reviewers"
   - "NEEDS VERIFICATION: policy and validation stewards"
 created: 2026-06-28
-updated: 2026-07-27
+updated: 2026-10-11
 policy_label: restricted-review
 truth_posture: cite-or-abstain
 responsibility_root: data/
 artifact_family: registry
 registry_scope: archaeology-source-descriptor-compatibility-view
-path_posture: confirmed-live-domain-first-path; conflicted-duplicate-writer-risk; independent-writes-denied; migration-needs-accepted-decision
+path_posture: confirmed-live-domain-first-path; descriptors-migrated-2026-10-11; pointer-only; independent-writes-denied
 sensitivity_posture: restricted-by-default; protected-location-deny-default; cultural-review-required; rights-and-current-terms-required-before-activation; no-public-path; release-blocked-until-redaction-review-release
 related:
   - ../README.md
@@ -74,9 +74,10 @@ evidence_snapshot:
   parent_blob: d5ab80475accb0fde7077774e3e884c3f99821a0
   inspection_date: 2026-07-27
 notes:
+  - "2026-10-11 (v0.4.0): records the owner-directed migration of ahgp, khri_archaeology, and tribal_consultation_register to data/registry/sources/archaeology/ with crosswalk and rollback; this path now holds only this README and a pointer-only migration_crosswalk.yaml."
   - "This README preserves the stable identity of the existing domain-first Archaeology source-registry path."
   - "The subtype-first lane at data/registry/sources/archaeology/ contains the current SourceDescriptor records and is the canonical lane under adopted Directory Rules v2."
-  - "No accepted migration, redirect, or retirement record was verified for this domain-first path. It must not evolve as an independent writer."
+  - "The three greenfield descriptor templates formerly held here were migrated to the canonical lane on 2026-10-11 under an owner decision; see Migration record. This path now holds only this README and the pointer-only migration_crosswalk.yaml, and must not evolve as an independent writer."
   - "This directory is not raw source storage, a site inventory, proof, catalog, release state, policy source, public output, or protected-location authority."
 [/KFM_META_BLOCK_V2] -->
 
@@ -113,7 +114,7 @@ notes:
 | README profile | Sensitive `BOUNDARY_COMPACT` compatibility boundary |
 | Path class | **Compatibility view / duplicate-writer risk** |
 | Canonical source-descriptor writer | [`data/registry/sources/archaeology/`](../../sources/archaeology/README.md) |
-| Local descriptor payloads | None confirmed in this path |
+| Local descriptor payloads | None. The three greenfield templates formerly here were migrated to the canonical lane on 2026-10-11 (see [Migration record](#migration-record-2026-10-11)) |
 | Independent-write posture | **DENY** |
 | Source admission or activation | Not established by this README |
 | Direct public access | **DENY** |
@@ -144,7 +145,7 @@ Two tracked Archaeology registry shapes are relevant:
 
 | Path | Verified repository state | Bounded posture |
 |---|---|---|
-| `data/registry/archaeology/sources/` | This README; no descriptor payloads were confirmed in the inspected path | Domain-first compatibility view; independent writes denied |
+| `data/registry/archaeology/sources/` | This README and the pointer-only [`migration_crosswalk.yaml`](migration_crosswalk.yaml), after the 2026-10-11 migration | Domain-first compatibility view; independent writes denied |
 | [`data/registry/sources/archaeology/`](../../sources/archaeology/README.md) | README, registry YAML files, and source-family descriptor records | Canonical subtype-first source-registry lane under adopted Directory Rules v2 |
 
 Accepted ADR-0029 adopts the exact Directory Rules v2 bytes and makes `docs/doctrine/directory-rules.md` the placement authority. Directory Rules v2 defines the canonical source registry as subtype-first—`data/registry/sources/<source_id or domain lane>/`—and prohibits generated, compatibility, or alternate paths from becoming independent writers.
@@ -179,10 +180,29 @@ The inspected path confirms only this README. No source descriptor, activation d
 
 ```text
 data/registry/archaeology/sources/
-└── README.md
+├── README.md
+└── migration_crosswalk.yaml   # pointer-only identity crosswalk; not a descriptor
 ```
 
 The canonical subtype-first lane contains the current Archaeology registry files. That inventory must be maintained by its own README and validators rather than duplicated here.
+
+### Migration record (2026-10-11)
+
+Before 2026-10-11 this path also held three `PROPOSED` greenfield descriptor templates (`ahgp.yaml`, `khri_archaeology.yaml`, `tribal_consultation_register.yaml`); earlier versions of this README did not list them. The repository owner directed their move into the canonical lane under accepted Directory Rules `DIR-SOURCE-003` / `DIR-SOURCE-004`; this record is that decision's written trace.
+
+| Prior path (compatibility view) | Canonical path | `source_id` | Field values |
+|---|---|---|---|
+| `data/registry/archaeology/sources/ahgp.yaml` | [`data/registry/sources/archaeology/ahgp.source.yaml`](../../sources/archaeology/ahgp.source.yaml) | `ahgp` (unchanged) | Unchanged; provenance and domain-review comment lines added |
+| `data/registry/archaeology/sources/khri_archaeology.yaml` | [`data/registry/sources/archaeology/khri_archaeology.source.yaml`](../../sources/archaeology/khri_archaeology.source.yaml) | `khri_archaeology` (unchanged) | Unchanged; provenance comment line added |
+| `data/registry/archaeology/sources/tribal_consultation_register.yaml` | [`data/registry/sources/archaeology/tribal_consultation_register.source.yaml`](../../sources/archaeology/tribal_consultation_register.source.yaml) | `tribal_consultation_register` (unchanged) | Unchanged; provenance comment line added |
+
+- **Identity:** each prior identity maps to exactly one canonical `source_id`; no collision existed in the canonical lane.
+- **Bytes:** files were moved with `git mv`; every field value is unchanged, so every role, rights, sensitivity, cadence, access, and citation field remains `TBD`. The move admits, activates, or reviews nothing.
+- **Naming:** targets follow the `<source_id>.source.yaml` convention already used by the other descriptors in the canonical lane. This does not settle the canonical record shape, which remains `HOLD` in [`data/registry/sources/README.md`](../../sources/README.md).
+- **Consumers:** no code, test, workflow, or validator read the prior paths. Human links were repointed in `docs/sources/catalog/ahgp.md`, `docs/domains/archaeology/SOURCES.md`, and `docs/domains/archaeology/SOURCE_REGISTRY.md`.
+- **Domain review:** AHGP is a genealogy transcription source; its `archaeology` assignment was kept on owner direction and is flagged in the descriptor for source-admission review.
+- **Machine-readable crosswalk:** [`migration_crosswalk.yaml`](migration_crosswalk.yaml) records each identity, prior blob, and target path. It is pointer-only, not a descriptor or writer.
+- **Rollback:** revert the migration commit, or `git mv` each canonical file back to its prior path and drop the added comment lines.
 
 ---
 
@@ -299,7 +319,7 @@ Re-review this README when the registry topology, Directory Rules, source contra
 
 ## Rollback
 
-This change modifies documentation only.
+The 2026-10-11 change moved three descriptor templates to the canonical lane and updated this README; see [Migration record](#migration-record-2026-10-11) for the per-file rollback.
 
 Before merge, close the draft pull request and leave the branch unmerged. After merge, revert the implementation commit to restore the prior README, then re-run the same Markdown, link, sensitive-content, and changed-path checks.
 

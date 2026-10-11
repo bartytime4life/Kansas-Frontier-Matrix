@@ -2,7 +2,7 @@
 doc_id: kfm://doc/docs-domains-archaeology-changelog
 title: Archaeology and Cultural Heritage — Changelog
 type: standard
-version: v1.0.2
+version: v1.0.3
 status: draft
 owners: <archaeology-domain-steward> + <docs-steward> (PLACEHOLDER — confirm)
 created: 2026-05-28
@@ -128,7 +128,7 @@ The documents this changelog tracks, with versions read from their current metad
 | `cross-lane-relations.md` | v1 | `CONFIRMED` tracked · content `draft` |
 | `governed-ai-behavior.md` | v1 | `CONFIRMED` tracked · content `draft` |
 | `verification-backlog.md` | v2.1.1 | `CONFIRMED` tracked · content `draft` |
-| `CHANGELOG.md` (this file) | v1.0.2 | `PROPOSED` in this change · content `draft` |
+| `CHANGELOG.md` (this file) | v1.0.3 | `PROPOSED` in this change · content `draft` |
 
 [↑ Back to top](#top)
 
@@ -137,6 +137,16 @@ The documents this changelog tracks, with versions read from their current metad
 ## 5. Changelog entries
 
 Entries are newest-first. Each names the document, version delta, §37 type, and reason. KFM casing and terminology are preserved.
+
+### 2026-10-11 — Compatibility-view descriptor migration — PATCH
+
+On owner direction, the three `PROPOSED` greenfield descriptor templates in `data/registry/archaeology/sources/` moved to the canonical lane as `data/registry/sources/archaeology/{ahgp,khri_archaeology,tribal_consultation_register}.source.yaml` (`git mv`; field values unchanged and still `TBD`; nothing admitted). The crosswalk and rollback are in `data/registry/archaeology/sources/README.md` (Migration record). `SOURCES.md` verification item 1 and `SOURCE_REGISTRY.md` `OQ-ARCH-SR-08` now say the migration is done. AHGP keeps its archaeology assignment, flagged for source-admission review because it is a genealogy transcription source.
+
+| Document | Version delta | §37 type | Change |
+|---|---|---|---|
+| `SOURCE_REGISTRY.md` | v0.2.2 → v0.2.3 | PATCH | `OQ-ARCH-SR-08` notes the migration; the §6 placement warning separates the CONFIRMED canonical registry home from the still-PROPOSED implementation paths. |
+| `SOURCES.md` | v1.0.2 (unchanged) | PATCH (wording) | Verification item 1 says the three descriptors were migrated. |
+| `CHANGELOG.md` (this file) | v1.0.2 → v1.0.3 | PATCH | This entry and the 2026-10-11 source-registry entry below, which was added without a self-version bump. |
 
 ### 2026-10-11 — Source-registry path reconciliation — PATCH
 

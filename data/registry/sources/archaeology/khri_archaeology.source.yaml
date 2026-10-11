@@ -1,7 +1,8 @@
-# source descriptor: ahgp
+# source descriptor: khri_archaeology
 # domain: archaeology
 # status: PROPOSED — greenfield template
-id: ahgp
+# migrated: 2026-10-11 from data/registry/archaeology/sources/khri_archaeology.yaml (owner-directed move under DIR-SOURCE-003/004; field values unchanged; not admitted)
+id: khri_archaeology
 domain: archaeology
 role: TBD            # primary | corroborating | context | restricted
 authority: TBD
@@ -13,4 +14,4 @@ sensitivity_floor: TBD
 update_cadence: TBD
 access_posture: TBD   # public | api_key | steward_only
 citation_template: "TBD"
-ingest_receipt_template: "data/receipts/ingest/archaeology/ahgp/<run_id>.json"
+ingest_receipt_template: "data/receipts/ingest/archaeology/khri_archaeology/<run_id>.json"

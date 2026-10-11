@@ -1152,7 +1152,7 @@ The walk-through below threads §4–§16 into a single end-to-end source admiss
 
 These items remain `NEEDS VERIFICATION` before promotion from `draft` to `published`:
 
-1. Mounted-repo inspection of `data/registry/sources/archaeology/` (canonical) and migration or retirement of the three unmigrated descriptors still in the `data/registry/archaeology/sources/` compatibility view (`ahgp.yaml`, `khri_archaeology.yaml`, `tribal_consultation_register.yaml`), `tools/ingest/watchers/`, `pipeline_specs/archaeology/`, `schemas/contracts/v1/source_descriptor.schema.json`, `docs/standards/SMART_SYNC.md`, `docs/runbooks/archaeology/source_refresh.md`, `docs/runbooks/archaeology/sovereignty_review.md`, `control_plane/source_authority_register.yaml`.
+1. Mounted-repo inspection of `data/registry/sources/archaeology/` (canonical) (the three descriptors formerly in the `data/registry/archaeology/sources/` compatibility view, `ahgp`, `khri_archaeology`, and `tribal_consultation_register`, were migrated there on 2026-10-11 with all fields still `TBD`), `tools/ingest/watchers/`, `pipeline_specs/archaeology/`, `schemas/contracts/v1/source_descriptor.schema.json`, `docs/standards/SMART_SYNC.md`, `docs/runbooks/archaeology/source_refresh.md`, `docs/runbooks/archaeology/sovereignty_review.md`, `control_plane/source_authority_register.yaml`.
 2. Confirmation of the KHRI access endpoint, data-sharing agreement, and rights status (`OQ-ARCH-SRC-01` / `OQ-ARCH-SRC-03`).
 3. Confirmation of NRHP API / bulk-download endpoint and validator support (`OQ-ARCH-SRC-02`).
 4. Confirmation of per-family watcher cadences in production (`OQ-ARCH-SRC-08`).
