@@ -94,3 +94,10 @@ record limits, depth values, date filters and partial-coverage disclosures are
 unchanged. No new provider, data release, dependency or storage authority is
 introduced. Revert this follow-up or restore the retained v225 application to
 roll back; data stores require no migration.
+### Inline update recovery · 2026-10-11
+
+Each new inline capture starts its own tile-error state. An earlier failed
+update keeps the previous complete surface visible, but does not prevent a
+later successfully settled capture from replacing it. Errors in the new
+attempt still withhold replacement. The tile cache, exact source values,
+geographic bounds and 2048/4096 resolution choices are preserved.

@@ -142,3 +142,19 @@ test('detail construction starts at the latest requested geographic footprint be
  assert.deepEqual(Array.from(h.maps[0].options.center),Array.from(h.m.surfaceRenderFrame(close,2048).center));
  assert.equal(h.maps[0].options.zoom,h.m.surfaceRenderFrame(close,2048).zoom);controller.dispose();
 });
+
+test('a later inline capture recovers from a failed update without publishing incomplete pixels',async()=>{
+ const h=harness(),controller=h.start(2048);await Promise.resolve();const map=h.maps[0];map.emit('style.load');map.emit('idle');
+ const failed=structuredClone(h.capture);failed.style.sources.fire.data.features=[];
+ assert.equal(controller.updateCapture(failed),true);map.emit('error');map.emit('idle');
+ assert.equal(h.frames.length,1);assert.match(h.statuses.at(-1),/previous complete surface/);
+ const recovered=structuredClone(h.capture);recovered.style.sources.fire.data.features[0].properties.acquisitionTime='2026-10-07T13:32:00Z';
+ assert.equal(controller.updateCapture(recovered),true);map.emit('render');
+ assert.equal(h.frames.length,1,'hold the previous complete frame until new data settles');
+ map.emit('idle');assert.equal(h.frames.length,2);assert.match(h.statuses.at(-1),/Surface detail ready/);
+ assert.deepEqual(JSON.parse(JSON.stringify(map.styles.at(-1).style.sources.fire.data)),recovered.style.sources.fire.data);
+ assert.equal(h.maps.length,1);assert.equal(map.options.pixelRatio,1);assert.equal(Math.max(h.frames.at(-1).image.width,h.frames.at(-1).image.height),2048);
+ // A new error still prevents replacement: recovery never suppresses this attempt's failures.
+ assert.equal(controller.updateCapture(failed),true);map.emit('error');map.emit('idle');assert.equal(h.frames.length,2);
+ controller.dispose();assert.equal(h.timers.size,0);
+});

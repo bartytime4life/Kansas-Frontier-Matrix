@@ -102,7 +102,9 @@ export function startCutawaySurfaceDetail(options: {
       if (sameSurfaceContent(capture, next)) return true;
       if (!canUpdateSurfaceCapture(capture, next)) return false;
       capture = next;
-      pending = true; refreshing = displayedFrameComplete; clearTimeout(timeout);
+      // Errors describe one attempt; a later exact capture may recover. Keep
+      // the last complete pixels until this attempt settles without new errors.
+      pending = true; partial = false; refreshing = displayedFrameComplete; clearTimeout(timeout);
       options.onStatus("Updating surface layers… Loaded basemap tiles are retained; coverage is pending.");
       timeout = setTimeout(() => { if (!disposed && pending) options.onStatus("Surface layer update is incomplete. Existing pixels may show the prior layers; retry the surface."); }, 12000);
       // Diff applies exact paint, layer order, additions/removals and GeoJSON data.
