@@ -23,7 +23,8 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
   const [surfaceStatus,setSurfaceStatus]=useState(""),[previewChanged,setPreviewChanged]=useState(false);
   const [surfaceMode,setSurfaceMode]=useState(false);
   const [detailCapture,setDetailCapture]=useState<SurfaceCapture|null>(null),[detailStatus,setDetailStatus]=useState("Preparing high-detail surface…"),[detailShown,setDetailShown]=useState(false);
-  const [detailPixels,setDetailPixels]=useState(4096),[detailRetry,setDetailRetry]=useState(0);
+  // Start with the bounded high-detail view; keep the maximum tile budget opt-in.
+  const [detailPixels,setDetailPixels]=useState(2048),[detailRetry,setDetailRetry]=useState(0);
   const detailRenderer=useRef<ReturnType<typeof startCutawaySurfaceDetail>|null>(null),detailFrame=useRef<SurfaceDetailFrame|null>(null);
   const [frame,setFrame]=useState<VolumeBounds|null>(null);
   const modelFocus=useRef<HTMLElement|null>(null),focusAfterApply=useRef(false);
