@@ -4691,7 +4691,7 @@
   "site_version": 224,
   "status": "REVIEW_ONLY",
   "validation": {
-    "browser_smoke": "A fresh local v224 test build at port 4174 rendered the High Plains 3D cutaway with 28 plotted columns, 50 loaded records, one aquifer overlap, partial-coverage disclosure, and a settled 2048 \u00d7 1718 surface. A screenshot showed the source markers and surface. Browser inspection timed out during initial 3D loading, then recovered; hosted v224 visual, keyboard, device and long-session acceptance remain open.",
+    "browser_smoke": "Fresh local v224 and owner-private hosted v224 browser runs rendered the High Plains 3D cutaway with 28 plotted columns, 50 loaded records, one aquifer overlap, partial-coverage disclosure, and a settled 2048 \u00d7 1718 surface. Hosted screenshot and accessibility tree confirmed the completed surface and selectable 4096-pixel Maximum option. Browser inspection paused during initial 3D loading and later recovered; FPS improvement, full keyboard, device and long-session acceptance remain unverified.",
     "build": "PASS",
     "data_activation": false,
     "focused_tests": 25,
