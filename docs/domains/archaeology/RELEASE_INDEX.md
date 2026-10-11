@@ -2,15 +2,16 @@
 doc_id: kfm://doc/docs-domains-archaeology-release-index
 title: Archaeology · Release Index
 type: index
-version: v2
+version: v2.0.1
 status: draft
 owners: docs steward + archaeology domain steward + sensitivity reviewer + release authority + correction reviewer + AI surface steward
 created: 2026-05-15
-updated: 2026-05-28
+updated: 2026-10-11
 policy_label: public
 related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
+  - data/raw/README.md
   - docs/doctrine/lifecycle-law.md
   - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - docs/domains/archaeology/README.md
@@ -38,6 +39,7 @@ notes:
   - Sensitive geometry MUST NOT appear in this index.
   - Sensitive-domain doc; archaeology default tier is T4 (DENY) for exact site location, human remains, sacred sites.
   - Companion to OBJECT_FAMILIES.md, PIPELINE.md, PRESERVATION_MATRIX.md, and PUBLICATION_AND_POLICY.md.
+  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001; physical source-first placement is HOLD and data/raw/archaeology/ is a compatibility/reference lane; documentation only."
 owning_root: docs/
 responsibility: "Documentation for Archaeology · Release Index; not evidence, policy, release, or publication authority."
 truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-09-29 link repair; the document's claims were not re-reviewed.
@@ -48,7 +50,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 > Single point of inspection for **released Archaeology artifacts**, **active release candidates**, **correction notices**, **rollback cards**, **override records**, **stale-state markers**, and **supersession lineage** — without exposing exact sensitive geometry.
 
 ![status](https://img.shields.io/badge/status-draft-orange)
-![version: v2](https://img.shields.io/badge/version-v2-informational)
+![version: v2.0.1](https://img.shields.io/badge/version-v2.0.1-informational)
 ![contract: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
 ![authority](https://img.shields.io/badge/authority-docs%20index-blue)
 ![lifecycle](https://img.shields.io/badge/lifecycle-PUBLISHED%20%E2%86%94%20CATALOG-informational)
@@ -56,13 +58,13 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 ![sensitivity](https://img.shields.io/badge/sensitivity-T4%20default%20for%20site%20locations-critical)
 ![watcher](https://img.shields.io/badge/watcher-non--publisher-purple)
 ![ADR](https://img.shields.io/badge/ADR-0001%20schema--home-lightgrey)
-![last%20updated](https://img.shields.io/badge/last%20updated-2026--05--28-lightgrey)
+![last%20updated](https://img.shields.io/badge/last%20updated-2026--10--11-lightgrey)
 
 | Field        | Value                                                                                          |
 | ------------ | ---------------------------------------------------------------------------------------------- |
 | **Status**   | `draft` — PROPOSED structure; rows are placeholders until release plane is inspected           |
 | **Owners**   | docs steward · archaeology domain steward · sensitivity reviewer · release authority · correction reviewer · AI surface steward *(placeholders — confirm via CODEOWNERS)* |
-| **Updated**  | `2026-05-28`                                                                                   |
+| **Updated**  | `2026-10-11`                                                                                   |
 | **Contract** | `CONTRACT_VERSION = "3.0.0"` (per [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md)) |
 | **Audience** | Reviewers, stewards, and public clients reading via the governed API                           |
 
@@ -276,7 +278,7 @@ schemas/
 flowchart LR
     subgraph LC["Lifecycle (data/)"]
         PRR["Pre-RAW<br/>(EventEnvelope · EventRunReceipt)"]
-        RAW["RAW<br/>data/raw/archaeology/"]
+        RAW["RAW<br/>(source-first capture,<br/>placement HOLD)"]
         WORK["WORK / QUARANTINE<br/>data/work/archaeology/<br/>data/quarantine/archaeology/"]
         PROC["PROCESSED<br/>data/processed/archaeology/"]
         CAT["CATALOG / TRIPLET<br/>data/catalog/domain/archaeology/"]
@@ -537,6 +539,7 @@ mkdir -p release/candidates/archaeology/<candidate_id>
 - [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — v3.0 operating law (`CONTRACT_VERSION = "3.0.0"`).
 - [`docs/doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — §4 placement protocol, §9.2 release plane, §12 domain placement, §13.2 drift patterns, §15 README contract.
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — *(PROPOSED — link target)* RAW → … → PUBLISHED invariant.
+- [`data/raw/README.md`](../../../data/raw/README.md) — source-first RAW contract (Directory Rules §12.3 `DIR-SOURCE-001`); physical placement HOLD; never a release target.
 - [`docs/adr/ADR-0001-schema-home.md`](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema canonicality.
 - [`docs/domains/archaeology/README.md`](./README.md) — *(PROPOSED — link target)* domain identity, ubiquitous language, source families.
 - [`docs/domains/archaeology/OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) — Companion register of identity-bearing archaeology objects and source-role anti-collapse posture.
@@ -717,7 +720,7 @@ A nightly (PROPOSED) consistency check verifies:
 5. Every §9 row points to a `CorrectionNotice` whose `superseded_by` resolves.
 6. Every §10 row's `rollback_to` resolves to a reachable prior release.
 7. No T3 / T4 row carries a public link.
-8. No row points to an artifact under `data/raw/`, `data/work/`, `data/quarantine/`, `data/processed/`, or `data/catalog/`.
+8. No row points to an artifact under RAW (the legacy `data/raw/` lanes or the accepted source-first RAW home), `data/work/`, `data/quarantine/`, `data/processed/`, or `data/catalog/`.
 9. Any row whose underlying release carries `override_record_ref` is flagged "override active."
 10. Any divergence between this index and the four sibling archaeology docs is filed in `docs/registers/DRIFT_REGISTER.md`.
 
@@ -788,6 +791,7 @@ These items remain `NEEDS VERIFICATION` before promotion from `draft` to `publis
 | §16.C — added `review_records[]`, `derivative_invalidation_list[]`, and `cache_keys[]` to the minimum-fields lists. | clarification | Reflects the correction / rollback discipline in [`PUBLICATION_AND_POLICY.md` §9](./PUBLICATION_AND_POLICY.md#9--correction-and-rollback-discipline). |
 | New companion sections — **Open questions register** (8 IDs `OQ-ARCH-RI-01..08`), **Open verification backlog** (11 numbered items), **Changelog**, **Definition of done**. | clarification | Aligns with the doctrine-adjacent companion-section pattern adopted in the four sibling docs. |
 | Refreshed badge row: added `version: v2`, `CONTRACT_VERSION`, `watcher: non-publisher`; updated `last updated`. | housekeeping | Reflects new content; no doctrine change. |
+| **v2.0.1 (2026-10-11):** §6 diagram RAW node now reads source-first capture with placement **HOLD**; §16.I rule 8 generalized to RAW (legacy `data/raw/` lanes or the accepted source-first RAW home); added `data/raw/README.md` to `related` and §15; refreshed version and dates. | reconciliation (PATCH) | Aligns with accepted Directory Rules `DIR-SOURCE-001`; no placement was accepted. The no-RAW-in-index rule, T4 default, and every sensitivity, sovereignty, and cultural-review rule are unchanged. Documentation only. |
 
 > **Backward compatibility.** All §1–§16 anchors are preserved exactly. New material is added either inside existing sections (§§1–14 strengthened in place; §16 gains subsections E–I under the existing `#16-appendix--minimum-recorded-fields` anchor) or as **unnumbered** companion sections after §16 (Open questions register, Open verification backlog, Changelog, Definition of done). No previously-published anchor in this file is retired or renamed.
 
@@ -810,7 +814,7 @@ This document is done enough to enter the repository when:
 
 ---
 
-> **Last updated:** `2026-05-28` · **Version:** `v2 (draft)` · **`CONTRACT_VERSION = "3.0.0"`** · **Repository state:** not mounted in drafting session — all release-plane row values are `PROPOSED` / `NEEDS VERIFICATION`.
+> **Last updated:** `2026-10-11` · **Version:** `v2.0.1 (draft)` · **`CONTRACT_VERSION = "3.0.0"`** · **Repository state:** not mounted in drafting session — all release-plane row values are `PROPOSED` / `NEEDS VERIFICATION`.
 >
 > Related: [`README.md`](./README.md) · [`OBJECT_FAMILIES.md`](./OBJECT_FAMILIES.md) · [`PIPELINE.md`](./PIPELINE.md) · [`PRESERVATION_MATRIX.md`](./PRESERVATION_MATRIX.md) · [`PUBLICATION_AND_POLICY.md`](./PUBLICATION_AND_POLICY.md) · [`directory-rules.md`](../../doctrine/directory-rules.md) · [`release/README.md`](../../../release/README.md) · [`policy/domains/archaeology/`](../../../policy/domains/archaeology/)
 >

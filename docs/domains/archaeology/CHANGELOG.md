@@ -2,11 +2,11 @@
 doc_id: kfm://doc/docs-domains-archaeology-changelog
 title: Archaeology and Cultural Heritage — Changelog
 type: standard
-version: v1.0.1
+version: v1.0.2
 status: draft
 owners: <archaeology-domain-steward> + <docs-steward> (PLACEHOLDER — confirm)
 created: 2026-05-28
-updated: 2026-08-28
+updated: 2026-10-11
 policy_label: public
 owning_root: docs/
 responsibility: "Record the versioned history and repository-evidence posture of human-facing Archaeology lane documentation without granting policy, runtime, release, or publication authority."
@@ -27,6 +27,7 @@ notes:
   - CONTRACT_VERSION = "3.0.0" pinned; versioning follows operating contract §37 (MAJOR/MINOR/PATCH).
   - Repository history and current document metadata were inspected on 2026-08-28; tracked presence and listed versions are confirmed at the observed main revision.
   - Tracked presence is not review, acceptance, policy activation, release, promotion, or publication evidence.
+  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001 across thirteen lane docs; physical source-first placement is HOLD and data/raw/archaeology/ is a compatibility/reference lane; documentation only."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -41,7 +42,7 @@ notes:
 ![contract](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational)
 ![repo--state](https://img.shields.io/badge/repository_evidence-CONFIRMED-green)
 
-**Status:** `draft` · **Owners:** `<archaeology-domain-steward>` + `<docs-steward>` (PLACEHOLDER) · **Updated:** 2026-08-28
+**Status:** `draft` · **Owners:** `<archaeology-domain-steward>` + `<docs-steward>` (PLACEHOLDER) · **Updated:** 2026-10-11
 
 > [!NOTE]
 > This changelog tracks the **Archaeology lane documentation** under `docs/domains/archaeology/`. It does not track the canonical operating contract (see `ai-build-operating-contract.md` §52) or repo-wide doctrine. Each entry records a documentation change classified by the contract's §37 MAJOR / MINOR / PATCH model.
@@ -119,7 +120,7 @@ The documents this changelog tracks, with versions read from their current metad
 
 | Document | Current version | Repository state |
 |---|---|---|
-| `README.md` | v2.2.3 | `CONFIRMED` tracked · content `draft` |
+| `README.md` | v2.2.4 | `CONFIRMED` tracked · content `draft` |
 | `ubiquitous-language.md` | v1.0.1 | `CONFIRMED` tracked · content `draft` |
 | `source-families.md` | v1.0.1 | `CONFIRMED` tracked · content `draft` |
 | `sensitivity-and-publication-posture.md` | v1.0.1 | `CONFIRMED` tracked · content `draft` |
@@ -127,7 +128,7 @@ The documents this changelog tracks, with versions read from their current metad
 | `cross-lane-relations.md` | v1 | `CONFIRMED` tracked · content `draft` |
 | `governed-ai-behavior.md` | v1 | `CONFIRMED` tracked · content `draft` |
 | `verification-backlog.md` | v2.1.1 | `CONFIRMED` tracked · content `draft` |
-| `CHANGELOG.md` (this file) | v1.0.1 | `PROPOSED` in this change · content `draft` |
+| `CHANGELOG.md` (this file) | v1.0.2 | `PROPOSED` in this change · content `draft` |
 
 [↑ Back to top](#top)
 
@@ -136,6 +137,27 @@ The documents this changelog tracks, with versions read from their current metad
 ## 5. Changelog entries
 
 Entries are newest-first. Each names the document, version delta, §37 type, and reason. KFM casing and terminology are preserved.
+
+### 2026-10-11 — RAW placement reconciliation (lane-wide) — PATCH / MINOR
+
+Aligned RAW placement wording to accepted Directory Rules `DIR-SOURCE-001`–`004` (`docs/doctrine/directory-rules.md` §12.3): RAW capture identity is source-first under a `source_id` registered once in `data/registry/sources/`; one capture may support several domains without duplicated RAW bytes. Physical source-first RAW placement is **HOLD** (no accepted placement decision), and `data/raw/archaeology/` is a compatibility/reference lane (`data/raw/archaeology/README.md` v0.2.0) that receives no payloads. Connector rules now read "emit only to the accepted source-first RAW home or QUARANTINE; never to processed, catalog, or published." Every deny-by-default, exact-location, sovereignty, cultural-review, and consent rule is preserved unchanged. Documentation only; no payload, path, writer, policy, or release state changed.
+
+| Document | Version delta | §37 type | Change |
+|---|---|---|---|
+| `CANONICAL_PATHS.md` | v1.1 → v1.2 | MINOR | Normative §3 placement table: `data/raw/` row now CONFIRMED rule / HOLD path; connector row and anti-pattern A7 retargeted; tree, diagram, and no-public-surface WARNING generalized. |
+| `API_CONTRACTS.md` | v0.3.1 → v0.3.2 | PATCH | Trust-membrane check covers RAW as source-first capture or the legacy lane. |
+| `ARCHITECTURE.md` | v1.2 → v1.2.1 | PATCH | Lane map, path list, and watcher-as-non-publisher callout. |
+| `CONTINUITY_INVENTORY.md` | v1.1 → v1.1.2 | PATCH | Watcher row, lifecycle-skip rule, backlog item 14; required metadata added. |
+| `DATA_LIFECYCLE.md` | v2.1 → v2.1.1 | PATCH | §2 `Data — raw` row set to HOLD. |
+| `EXPANSION_PLAN.md` | v0.3 → v0.3.1 | PATCH | Scaffolding tree and diagram. |
+| `FILE_SYSTEM_PLAN.md` | v1.2 → v1.2.1 | PATCH | Lane-map rows 11 and 19, diagram and NOTE, §5.3/§5.4, Appendix A; required metadata added. |
+| `MISSING_OR_PLANNED_FILES.md` | v1.2 → v1.2.1 | PATCH | `data/raw/archaeology/README.md` now PRESENT; per-run payload-tree row HOLD (retained); `⏸ HOLD` legend added. |
+| `PIPELINE.md` | v1 → v1.0.1 | PATCH | §6 RAW placement uses a HOLD placeholder; §5 anti-pattern generalized; §17 tree; required metadata added. |
+| `README.md` | v2.2.3 → v2.2.4 | PATCH | Repo-fit tree and source-first RAW note. |
+| `RELEASE_INDEX.md` | v2 → v2.0.1 | PATCH | Diagram node; index-consistency rule 8 generalized. |
+| `SOURCES.md` | v1 → v1.0.1 | PATCH | Admission diagram RAW node. |
+| `SOURCE_REGISTRY.md` | v0.2 → v0.2.1 | PATCH | Admission-flow connector node. |
+| `CHANGELOG.md` (this file) | v1.0.1 → v1.0.2 | PATCH | This entry; inventory version refresh. |
 
 ### `CHANGELOG.md` v1 → v1.0.1 — PATCH
 
@@ -255,6 +277,6 @@ This changelog is done enough to enter the repository when:
 - `docs/doctrine/ai-build-operating-contract.md` — §37 versioning, §52 contract changelog (canonical)
 - `docs/registers/DRIFT_REGISTER.md` — divergence log (`PROPOSED`)
 
-**Last updated:** 2026-08-28 · `CONTRACT_VERSION = "3.0.0"`
+**Last updated:** 2026-10-11 · `CONTRACT_VERSION = "3.0.0"`
 
 [↑ Back to top](#top)

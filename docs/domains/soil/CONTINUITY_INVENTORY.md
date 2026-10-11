@@ -2,22 +2,29 @@
 doc_id: kfm://doc/soil-continuity-inventory
 title: Soil Domain — Continuity Inventory
 type: standard
-version: v1
+version: v1.0.1
+prior_version: v1
 status: draft
 owners: <TODO: soil domain steward; data-lifecycle steward>
 created: 2026-05-19
-updated: 2026-05-19
+updated: 2026-10-11
 policy_label: public
+owning_root: docs/
+responsibility: Navigational continuity register for Soil-domain artifacts across responsibility roots; not evidence, policy, release, or publication authority.
+truth_posture: cite-or-abstain; CONFIRMED accepted DIR-SOURCE-001 source-first capture identity / HOLD exact physical source-first RAW placement / PROPOSED or NEEDS VERIFICATION implementation continuity unless mounted-repo evidence is cited
 related:
   - docs/domains/soil/README.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf
   - directory-rules.md
+  - data/raw/README.md
+  - data/raw/soil/README.md
 tags: [kfm, domain, soil, continuity, inventory, register]
 notes:
   - PROPOSED location under docs/domains/soil/; verify against mounted repo and ADRs.
   - Inventory is doctrine-grounded; implementation maturity is bounded to PROPOSED / NEEDS VERIFICATION unless mounted-repo evidence is supplied.
+  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001; physical source-first placement is HOLD and data/raw/soil/ is a compatibility/reference lane; documentation only."
 [/KFM_META_BLOCK_V2] -->
 
 # Soil Domain — Continuity Inventory
@@ -31,13 +38,13 @@ notes:
 ![Truth posture: cite--or--abstain](https://img.shields.io/badge/truth-cite--or--abstain-success)
 ![Repo presence: NEEDS VERIFICATION](https://img.shields.io/badge/repo--presence-NEEDS%20VERIFICATION-yellow)
 ![Build: TODO](https://img.shields.io/badge/build-TODO-lightgrey)
-![Last updated: 2026--05--19](https://img.shields.io/badge/last%20updated-2026--05--19-informational)
+![Last updated: 2026--10--11](https://img.shields.io/badge/last%20updated-2026--10--11-informational)
 
 | Field | Value |
 |---|---|
 | **Status** | `draft` |
 | **Owners** | `<TODO: soil domain steward>`, `<TODO: data-lifecycle steward>` |
-| **Last updated** | 2026-05-19 |
+| **Last updated** | 2026-10-11 |
 | **Authority class** | Navigational register (not canonical authority) |
 | **Canonical authority** | EvidenceBundle, source dossiers, Directory Rules, ADRs |
 | **Citation tag** | `[DOM-SOIL]`, `[ENCY]`, `[DIRRULES]` |
@@ -113,7 +120,7 @@ flowchart TB
 
     subgraph DATA["data/ lifecycle"]
       direction LR
-      RAW["data/raw/soil/"] --> WORK["data/work/soil/"]
+      RAW["RAW (source-first capture; placement HOLD)"] --> WORK["data/work/soil/"]
       WORK --> QUAR["data/quarantine/soil/"]
       WORK --> PROC["data/processed/soil/"]
       PROC --> CAT["data/catalog/domain/soil/"]
@@ -163,6 +170,7 @@ flowchart TB
 | `NEW` | Carry-forward state — minted in the current pass; no prior body replaced. | Pass 32 atlas carry-forward register |
 | `SUPERSEDED` | Carry-forward state — replaced by a newer card; retained in supersession appendix. | Pass 32 atlas carry-forward register |
 | `QUARANTINED` | Held out of active promotion pending review. | Pass 32 atlas carry-forward register |
+| `HOLD` | Rule is accepted but the concrete path or decision it needs is not; do not act on a placement until an accepted decision exists. | `docs/doctrine/directory-rules.md` §12.3; `data/raw/README.md` |
 
 ---
 
@@ -244,7 +252,7 @@ Each row reflects KFM doctrine for the Soil lane. Path columns are **`PROPOSED`*
 | SMAP gridded ingest pipeline | `pipelines/domains/soil/smap_ingest/` | `PROPOSED` | Atlas v1.0 §5.D `[DOM-SOIL]` |
 | Kansas Mesonet long-form normalizer | `pipelines/domains/soil/mesonet_normalizer/` | `PROPOSED` / `EXPANDED` | KFM-P19-PROG-0015 |
 | Soil moisture validator orchestration | `pipelines/domains/soil/moisture_validator/` | `PROPOSED` / `UNCHANGED` | KFM-P23-PROG-0045 |
-| Connectors — `connectors/nrcs-ssurgo/`, `connectors/nrcs-scan/`, `connectors/noaa-uscrn/`, `connectors/nasa-smap/`, `connectors/ks-mesonet/` | `connectors/<source>/` | `PROPOSED` | Directory Rules §3 (connectors emit only to `data/raw/` or `data/quarantine/`) |
+| Connectors — `connectors/nrcs-ssurgo/`, `connectors/nrcs-scan/`, `connectors/noaa-uscrn/`, `connectors/nasa-smap/`, `connectors/ks-mesonet/` | `connectors/<source>/` | `PROPOSED` | Directory Rules §3 (connectors emit only to the accepted source-first RAW home — exact path HOLD per `DIR-SOURCE-001` — or to `data/quarantine/`; never to processed/catalog/published) |
 | Pipeline specs (declarative) | `pipeline_specs/soil/*.yaml` | `PROPOSED` | Directory Rules §4 Step 1 |
 | Soil domain package | `packages/domains/soil/` | `PROPOSED` | Directory Rules §12 |
 
@@ -252,7 +260,7 @@ Each row reflects KFM doctrine for the Soil lane. Path columns are **`PROPOSED`*
 
 | Phase | PROPOSED path | Continuity | Gate |
 |---|---|---|---|
-| RAW | `data/raw/soil/` | `PROPOSED` | SourceDescriptor exists `[DOM-SOIL]` |
+| RAW (source-first capture; placement HOLD) | HOLD — superseded by `DIR-SOURCE-001`; physical source-first placement undecided. [`data/raw/soil/README.md`](../../../data/raw/soil/README.md) EXISTS as a compatibility/reference lane (v0.2.0, 2026-10-11); no payloads | `HOLD` (path) / `CONFIRMED` (immutability, descriptor, hash, no-publish rule) | SourceDescriptor exists for one registered `source_id` under `data/registry/sources/` `[DOM-SOIL]` |
 | WORK | `data/work/soil/` | `PROPOSED` | Validation + policy pass, or QUARANTINE reason recorded |
 | QUARANTINE | `data/quarantine/soil/` | `PROPOSED` | Held-failure store |
 | PROCESSED | `data/processed/soil/` | `PROPOSED` | EvidenceRef + ValidationReport + digest closure |
@@ -376,7 +384,7 @@ flowchart LR
 | **PUBLISHED** | Serve released public-safe artifacts through governed APIs and manifests. | ReleaseManifest, correction path, rollback target, review/policy state exist. | `PROPOSED` |
 
 > [!CAUTION]
-> **No lifecycle skip.** A pipeline that writes directly to `data/published/layers/soil/` from `data/raw/soil/` violates Directory Rules §13.5 ("Lifecycle skip") and §13.4 ("Domain folders becoming root folders"). Promotion is a governed transition; every phase runs.
+> **No lifecycle skip.** A pipeline that writes directly to `data/published/layers/soil/` from RAW (the source-first capture or the legacy `data/raw/soil/` lane) violates Directory Rules §13.5 ("Lifecycle skip") and §13.4 ("Domain folders becoming root folders"). Promotion is a governed transition; every phase runs.
 
 ---
 
@@ -449,7 +457,7 @@ flowchart LR
 |---|---|---|---|
 | `VB-SOIL-01` | Soil schema home is `schemas/contracts/v1/domains/soil/...` and ADR-0001 governs it | Mounted repo + accepted ADR-0001 | `NEEDS VERIFICATION` |
 | `VB-SOIL-02` | Per-root README present for `docs/domains/soil/` per Directory Rules §15 | Mounted repo tree | `NEEDS VERIFICATION` |
-| `VB-SOIL-03` | SSURGO / SDA / gSSURGO / gNATSGO connectors exist under `connectors/<source>/` and emit only to `data/raw/soil/` or `data/quarantine/soil/` | Mounted repo + connector code | `NEEDS VERIFICATION` |
+| `VB-SOIL-03` | SSURGO / SDA / gSSURGO / gNATSGO connectors exist under `connectors/<source>/` and emit only to the accepted source-first RAW home (exact path HOLD; never the legacy `data/raw/soil/` compatibility/reference lane) or `data/quarantine/soil/` | Mounted repo + connector code | `NEEDS VERIFICATION` |
 | `VB-SOIL-04` | Kansas Mesonet long-form normalizer matches KFM-P19-PROG-0015 field set (station_id, obs_time, depth_cm, sensor_type, value, source_uri, checksum, run_receipt) | Pipeline code + validator + sample rows | `NEEDS VERIFICATION` |
 | `VB-SOIL-05` | Soil moisture validator returns finite outcomes (PASS / FAIL / ABSTAIN / ERROR) per KFM-P23-PROG-0045 | Validator code + receipts | `NEEDS VERIFICATION` |
 | `VB-SOIL-06` | Soil moisture validator fail-closed conditions per KFM-P25-PROG-0030 are enforced | Tests + fixtures + receipts | `NEEDS VERIFICATION` |
@@ -462,6 +470,7 @@ flowchart LR
 | `VB-SOIL-13` | Per-domain Definition of Done exists for Soil (Pass 10 C14-05) | `docs/domains/soil/DEFINITION_OF_DONE.md` or equivalent | `NEEDS VERIFICATION` / `PROPOSED` |
 | `VB-SOIL-14` | Drift register entry exists if soil schema/policy/contract authority is split | `docs/registers/DRIFT_REGISTER.md` | `NEEDS VERIFICATION` |
 | `VB-SOIL-15` | Cross-domain `SoilTimeCaveat` validator (ADR-S-14 cross-lane join policy) | ADR + validator + tests | `NEEDS VERIFICATION` / `PROPOSED` |
+| `VB-SOIL-16` | Physical source-first RAW placement for Soil captures and disposition of the legacy `data/raw/soil/` compatibility/reference lane | Accepted placement decision under `DIR-SOURCE-001` + migration and rollback plan (none accepted as of `main@9e8bf3e6`) | `HOLD` |
 
 **Open ADR backlog touchpoints (`PROPOSED`):**
 
@@ -485,7 +494,9 @@ flowchart LR
 - `<TODO>` `docs/registers/DRIFT_REGISTER.md` — Directory Rules §2.5 drift register
 - `<TODO>` `docs/registers/VERIFICATION_BACKLOG.md` — repo-wide verification backlog
 - `<TODO>` `docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf` — Atlas v1.1 (Soil = Ch. 5; cross-lane edges = Ch. 24.4.3)
-- `<TODO>` `directory-rules.md` — Directory Rules (placement authority for every path above)
+- `<TODO>` `directory-rules.md` — Directory Rules (placement authority for every path above; §12.3 source identity `DIR-SOURCE-001`…`004`)
+- [`data/raw/README.md`](../../../data/raw/README.md) — RAW root contract; source-first capture identity, physical placement HOLD
+- [`data/raw/soil/README.md`](../../../data/raw/soil/README.md) — Soil RAW compatibility/reference lane; no payloads
 
 ---
 
@@ -550,4 +561,4 @@ Full ubiquitous-language table lives in the Soil dossier `[DOM-SOIL]` and Atlas 
 - `<TODO>` `docs/registers/VERIFICATION_BACKLOG.md`
 - `<TODO>` `directory-rules.md`
 
-**Last updated:** 2026-05-19 · **Maintainer:** `<TODO: soil domain steward>` · [↑ Back to top](#soil-domain--continuity-inventory)
+**Last updated:** 2026-10-11 · **Maintainer:** `<TODO: soil domain steward>` · [↑ Back to top](#soil-domain--continuity-inventory)

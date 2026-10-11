@@ -2,15 +2,16 @@
 doc_id: kfm://doc/docs-domains-archaeology-canonical-paths
 title: Canonical Paths — Archaeology Domain
 type: standard
-version: v1.1
+version: v1.2
 status: draft
 owners: TODO — Docs steward + Archaeology domain steward
 created: 2026-05-15
-updated: 2026-05-29
+updated: 2026-10-11
 policy_label: public
 related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
+  - data/raw/README.md
   - docs/doctrine/authority-ladder.md
   - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - docs/domains/archaeology/ARCHITECTURE.md
@@ -24,6 +25,7 @@ notes:
   - "Authority of placement rules: CONFIRMED (Directory Rules §12 Domain Placement Law; [CONTRACT v3.0] §11)."
   - "Authority of any specific path quoted: PROPOSED until verified against mounted-repo evidence ([CONTRACT v3.0] §7 current-session evidence limit)."
   - "Surfaces and resolves the contracts/domains/archaeology/ vs contracts/archaeology/ form-conflict in favor of Directory Rules §12 per the §2.1 authority order — see §2.4. The Atlas v1.1 §24.13 row 15 and ENCY §7.13 both use the no-domains/ shorthand."
+  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001; physical source-first placement is HOLD and data/raw/archaeology/ is a compatibility/reference lane; documentation only."
   - "§6.1 quotes [CONTRACT v3.0] §23.2 (Archaeology — site locations) verbatim; the §23.2 matrix is itself PROPOSED in v3.0 pending steward ratification, with most-restrictive-applicable-row fallback. RedactionReceipt and MapReleaseManifest threaded through §3, §5.7, §5.8, §6, and §8."
 owning_root: docs/
 responsibility: "Documentation for Canonical Paths — Archaeology Domain; not evidence, policy, release, or publication authority."
@@ -174,8 +176,8 @@ The Directory Rules §12 lane pattern, with `<domain>` substituted by **`archaeo
 | `packages/` | `packages/domains/archaeology/` | Shared library code that is archaeology-specific and reused by multiple deployables. | CONFIRMED rule / PROPOSED path |
 | `pipelines/` | `pipelines/domains/archaeology/` *(or phase-first form — see `OQ-CP-06`)* | Executable pipeline logic for archaeology ingest, normalize, validate, catalog, publish. | CONFIRMED rule / PROPOSED path |
 | `pipeline_specs/` | `pipeline_specs/archaeology/` | Declarative pipeline configuration for the archaeology lane. | CONFIRMED rule / PROPOSED path |
-| `connectors/` *(domain-bounded outputs only)* | `connectors/<source_org>/...` → emit into `data/raw/archaeology/...` | Source-specific fetchers / admitters. **Connectors do not publish.** | CONFIRMED rule |
-| `data/raw/` | `data/raw/archaeology/<source_id>/<run_id>/` | Immutable source-edge captures with retrieval metadata + checksums. | CONFIRMED rule / PROPOSED path |
+| `connectors/` *(domain-bounded outputs only)* | `connectors/<source_org>/...` → emit into the accepted source-first RAW home or QUARANTINE (exact RAW path **HOLD**); never into `data/raw/archaeology/` | Source-specific fetchers / admitters. **Connectors do not publish.** | CONFIRMED rule / HOLD target path |
+| `data/raw/` | Source-first capture under a `source_id` registered once in `data/registry/sources/` (`DIR-SOURCE-001`–`004`); physical placement **HOLD**. `data/raw/archaeology/` is a compatibility/reference lane (README only; no payloads). | Immutable source-edge captures with retrieval metadata + checksums; one capture may support several domains without duplicated RAW bytes. | CONFIRMED rule / HOLD path |
 | `data/work/` | `data/work/archaeology/<run_id>/` | Normalized intermediates and candidate assertions. | CONFIRMED rule / PROPOSED path |
 | `data/quarantine/` | `data/quarantine/archaeology/<reason>/<run_id>/` | Failed validation, unresolved rights/sensitivity, over-precise geometry. | CONFIRMED rule / PROPOSED path |
 | `data/processed/` | `data/processed/archaeology/<dataset_id>/<version>/` | Validated canonical records (not public yet). | CONFIRMED rule / PROPOSED path |
@@ -222,7 +224,7 @@ flowchart LR
 
   subgraph DataLifecycle[Data Lifecycle — promotion is a governed state transition]
     direction LR
-    Raw[data/raw/archaeology/]
+    Raw["RAW (source-first capture,<br/>placement HOLD)"]
     Work[data/work/archaeology/]
     Quar[data/quarantine/archaeology/]
     Proc[data/processed/archaeology/]
@@ -419,7 +421,7 @@ fixtures/
 pipelines/
 └── domains/
     └── archaeology/
-        ├── ingest/             # PROPOSED — connector → data/raw/archaeology/
+        ├── ingest/             # PROPOSED — connector → source-first RAW (placement HOLD)
         ├── normalize/          # PROPOSED — work-phase normalization
         ├── validate/           # PROPOSED — schema + policy + evidence gates
         ├── catalog/            # PROPOSED — STAC/DCAT/PROV emission
@@ -444,7 +446,7 @@ pipeline_specs/
 
 ```text
 data/
-├── raw/archaeology/<source_id>/<run_id>/                  # PROPOSED — immutable captures
+├── raw/archaeology/README.md                               # compatibility/reference lane; no payloads (source-first RAW placement HOLD, DIR-SOURCE-001)
 ├── work/archaeology/<run_id>/                             # PROPOSED — normalized intermediates
 ├── quarantine/archaeology/<reason>/<run_id>/              # PROPOSED — failed validation / sensitivity
 ├── processed/archaeology/<dataset_id>/<version>/          # PROPOSED — validated canonical records
@@ -482,7 +484,7 @@ data/
 ```
 
 > [!WARNING]
-> **`data/raw/archaeology/` and `data/quarantine/archaeology/` are never public surfaces.** They **MUST NOT** be served by `apps/explorer-web/`, **MUST NOT** feed AI context directly, and **MUST NOT** be exposed by any route. Public clients reach archaeology data only via `apps/governed-api/` after promotion to `data/published/layers/archaeology/`. (Directory Rules §7.1 trust membrane; §9 lifecycle phase rules; `[CONTRACT v3.0]` §10.2.)
+> **RAW (the source-first capture or the legacy `data/raw/archaeology/` lane) and `data/quarantine/archaeology/` are never public surfaces.** They **MUST NOT** be served by `apps/explorer-web/`, **MUST NOT** feed AI context directly, and **MUST NOT** be exposed by any route. Public clients reach archaeology data only via `apps/governed-api/` after promotion to `data/published/layers/archaeology/`. (Directory Rules §7.1 trust membrane; §9 lifecycle phase rules; `[CONTRACT v3.0]` §10.2.)
 
 ### 5.8 `release/candidates/archaeology/` and siblings
 
@@ -610,7 +612,7 @@ Directory Rules §13 and `[CONTRACT v3.0]` §38 list general placement anti-patt
 | A4 | **Candidate anomaly published as confirmed site** | LiDAR / geophysics anomaly in `data/published/layers/archaeology/` labeled as a site. | Send back to `data/work/archaeology/` as `CandidateFeature`; require steward review and `EvidenceBundle` closure. | Atlas §15-E / DOM-ARCH §E; ML-061-167 |
 | A5 | **Sensitivity rule in `policy/domains/archaeology/` instead of `policy/sensitivity/archaeology/`** | Exact-coord denial / CARE rules sit beside generic admissibility, weakening cross-lane reuse. | Split: keep admissibility in `policy/domains/archaeology/`, sensitivity in `policy/sensitivity/archaeology/`. | Directory Rules §12; Atlas §24.13 |
 | A6 | **AI receipt in `release/`** | An `AIReceipt` about archaeology lands under `release/` (which is for release decisions). | Move to `data/receipts/ai/...`. Release-decision artifacts only in `release/`. | Directory Rules §13.2; `[CONTRACT v3.0]` §34 |
-| A7 | **Connector / watcher publishing archaeology directly to `processed/` or `published/`** | An ingestion script or watcher writes outside `data/raw/archaeology/`. | Per Directory Rules §13.5 (watcher-as-non-publisher; connector-publishes anti-pattern), connectors and watchers emit only to `data/raw/<...>/` or `data/quarantine/`; pipelines promote. | Directory Rules §13.5; `[CONTRACT v3.0]` §10.2, §38.11 |
+| A7 | **Connector / watcher publishing archaeology directly to `processed/` or `published/`** | An ingestion script or watcher writes outside RAW (the accepted source-first capture home; exact path HOLD) or QUARANTINE. | Per Directory Rules §13.5 (watcher-as-non-publisher; connector-publishes anti-pattern), connectors and watchers emit only to the accepted source-first RAW home or QUARANTINE (exact RAW path **HOLD** pending an accepted placement decision; `data/raw/archaeology/` is a compatibility/reference lane and receives no payloads); never to `processed/`, `catalog/`, or `published/`; pipelines promote. | Directory Rules §13.5; `[CONTRACT v3.0]` §10.2, §38.11 |
 | A8 | **Schemas under `contracts/domains/archaeology/`** | JSON Schema files in the contracts root (Markdown home), conflicting with ADR-0001. | Migrate `.schema.json` to `schemas/contracts/v1/domains/archaeology/`. `contracts/` retains semantic Markdown only. | ADR-0001; Directory Rules §6, §13.1 |
 | A9 | **MapLibre archaeology layer reads `data/processed/archaeology/` directly** | `apps/explorer-web/` bypasses the governed API. | Public path goes through `apps/governed-api/`. Renderer is downstream of trust. | Directory Rules §7.1, §13.5; Encyclopedia §4; `[CONTRACT v3.0]` §10.2 |
 | A10 | **`GENERATED_RECEIPT.json` missing for AI-authored archaeology Markdown** | An AI-authored archaeology doc lands in the repo without an accompanying `GENERATED_RECEIPT.json` under `data/receipts/generated/`. | Block merge; emit the receipt with `contract_version: "3.0.0"`, model identity, validation gates, and human-review state. | `[CONTRACT v3.0]` §34, §38.21 |
@@ -700,6 +702,7 @@ Open items that **MUST** be settled by **mounted-repo inspection or accepted ADR
 | Added `redaction_receipt.md`, `redaction_receipt.schema.json`, `redaction_receipt_required.rego`, `test_redaction_receipt_required.py`, `test_map_release_manifest_required.py`, `test_watcher_non_publisher.py`, `redaction/` and `generated/` receipt subtrees, `publication_transform/` proof subtree, `map_release_manifest.json` to per-root trees | gap closure | `[CONTRACT v3.0]` §23.2 and §34 receipt requirements. |
 | Updated `related` block to include `ai-build-operating-contract.md`, `authority-ladder.md`, `ARCHITECTURE.md`, `CONTINUITY_INVENTORY.md`, `CROSS_DOMAIN.md` | new | Doctrine-adjacent linkage; sibling cross-references. |
 | Renumbered §10 Related docs → §13 | housekeeping | Companion sections inserted between Verification backlog and Related docs. |
+| **v1.2 RAW placement reconciliation (2026-10-11):** §3 `data/raw/` row now records source-first capture under a registered `source_id` (`DIR-SOURCE-001`–`004`) with physical placement **HOLD** (rule stays CONFIRMED); §3 `connectors/` row, §5.6 ingest comment, and §8 A7 now name the accepted source-first RAW home (path HOLD) or QUARANTINE; §4 diagram node relabeled; §5.7 tree keeps `raw/archaeology/README.md` as a compatibility/reference lane with no payloads; §5.7 WARNING generalized to RAW (source-first capture or legacy lane). | reconciliation (MINOR) | Normative placement table changed. No placement was accepted; every no-public-path, exact-location, sensitivity, sovereignty, and cultural-review MUST/MUST NOT is unchanged. Documentation only. |
 | **v1.1.1 correction pass:** corrected contract section citations (no §0; `CONTRACT_VERSION` pinning is §37; lifecycle invariant is §10.1 not §10.4; chain-of-thought exclusion is §26.2; current-session evidence limit is §7; watcher-as-non-publisher is Directory Rules §13.5 + contract §38.11; ADR-S-14 reframed as PROPOSED backlog, not OPEN). | correction | Prior draft cited non-existent §0, §10.4-lifecycle, §13.4-as-only-domain-anti-pattern, §34.7; aligned to the verified v3.0 and Directory Rules section maps. |
 
 > **Backward compatibility.** Anchors `#1-` through `#8-` are unchanged. `#9-verification-backlog` is now `#9-open-verification-backlog` — minor anchor change. `#10-related-docs` is now `#13-related-docs` — **anchor change**; inbound links from companion docs SHOULD be updated. The path forms in the body (`contracts/domains/archaeology/`, etc.) are **unchanged** — this revision preserves the v1.0 resolution of §2.4.
@@ -734,7 +737,8 @@ This document is done enough to enter the repository when:
 
 - **Doctrine roots** (CONFIRMED rule / PROPOSED placement):
   [`../../doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — operating contract (CONFIRMED; pinned `CONTRACT_VERSION = "3.0.0"`) ·
-  [`../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement rules (CONFIRMED) ·
+  [`../../doctrine/directory-rules.md`](../../doctrine/directory-rules.md) — placement rules (CONFIRMED; §12.3 `DIR-SOURCE-001`–`004`) ·
+  [`../../../data/raw/README.md`](../../../data/raw/README.md) — source-first RAW contract (physical placement HOLD) ·
   [`../../doctrine/authority-ladder.md`](../../doctrine/authority-ladder.md) — truth labels and authority order ·
   [`../../doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) ·
   [`../../doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) ·
@@ -772,4 +776,4 @@ This document is done enough to enter the repository when:
 
 ---
 
-<sub>📍 <strong>Last updated:</strong> 2026-05-29 · <strong>Pinned:</strong> <code>CONTRACT_VERSION = "3.0.0"</code> · <strong>Authority:</strong> placement rules CONFIRMED (Directory Rules §12; <code>[CONTRACT v3.0]</code> §11) · specific paths PROPOSED · <strong>§23.2 row:</strong> Archaeology — site locations (matrix PROPOSED) · <strong>Owners:</strong> <code>TODO</code> Docs steward + Archaeology domain steward · <a href="#canonical-paths--archaeology-domain">⬆ Back to top</a></sub>
+<sub>📍 <strong>Last updated:</strong> 2026-10-11 · <strong>Pinned:</strong> <code>CONTRACT_VERSION = "3.0.0"</code> · <strong>Authority:</strong> placement rules CONFIRMED (Directory Rules §12; <code>[CONTRACT v3.0]</code> §11) · specific paths PROPOSED · <strong>§23.2 row:</strong> Archaeology — site locations (matrix PROPOSED) · <strong>Owners:</strong> <code>TODO</code> Docs steward + Archaeology domain steward · <a href="#canonical-paths--archaeology-domain">⬆ Back to top</a></sub>
