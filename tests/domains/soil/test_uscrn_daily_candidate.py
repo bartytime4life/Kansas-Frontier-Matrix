@@ -179,6 +179,33 @@ def test_tampered_candidates_are_refused(tamper, reason):
         validate_candidate(reseal(value))
 
 
+def reseal_record(record):
+    record["record_digest"] = digest_bytes(canonical_bytes({k: v for k, v in record.items() if k != "record_digest"}))
+    return record
+
+
+@pytest.mark.parametrize("variable, token, reason", [
+    ("SOIL_MOISTURE", "0.28", "OBSERVATION_TOKEN_INVALID"),
+    ("SOIL_TEMP", "21.50", "OBSERVATION_TOKEN_INVALID"),
+])
+def test_tokens_keep_the_daily01_form_for_their_variable(variable, token, reason):
+    value = candidate()
+    record = next(r for r in value["observations"] if r["variable"] == variable and r["withheld"] is None)
+    record["source_token"], record["value"] = token, float(token)
+    reseal_record(record)
+    with pytest.raises(ValueError, match=reason):
+        validate_candidate(reseal(value))
+
+
+def test_a_partial_station_day_is_refused():
+    # Dropping one of a day's ten values, even with counts and digests recomputed, is refused.
+    value = candidate()
+    dropped = next(i for i, r in enumerate(value["observations"]) if r["station_id"] == "53974" and r["withheld"] is None)
+    del value["observations"][dropped]
+    with pytest.raises(ValueError, match="STATION_DAY_INCOMPLETE"):
+        validate_candidate(reseal(value))
+
+
 def test_a_reported_value_that_disagrees_with_its_token_is_refused():
     value = candidate()
     record = next(r for r in value["observations"] if r["withheld"] == "OUT_OF_RANGE")

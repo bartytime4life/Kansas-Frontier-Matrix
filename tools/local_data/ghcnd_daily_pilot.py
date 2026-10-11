@@ -56,6 +56,9 @@ def stage(root: Path, acquired: Capture) -> dict:
     run = str(manifest.get("capture_id", "")).removeprefix("sha256:")
     if not re.fullmatch(r"[0-9a-f]{64}", run):
         raise ValueError("INVALID_CAPTURE_ID")
+    # Quarantine runs are digest-addressed: the manifest must hash to its id before anything is written.
+    if digest_bytes(canonical_bytes({k: v for k, v in manifest.items() if k != "capture_id"})) != manifest["capture_id"]:
+        raise ValueError("CAPTURE_DIGEST_MISMATCH")
     with store_lock(root):
         for digest, raw in acquired.objects.items():
             object_path(root, digest)

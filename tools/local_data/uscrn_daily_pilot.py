@@ -14,7 +14,7 @@ import sys
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
-from connectors_core.captured_json import canonical_bytes, decode_object, digest_bytes
+from connectors_core.captured_json import canonical_bytes, decode_object, digest_bytes, digest_bytes
 from connectors.noaa.src.noaa.uscrn_daily_capture import Capture, capture, capture_keys, object_limit
 from pipelines.domains.soil.uscrn_daily_normalize import normalize_capture
 from pipelines.domains.soil.uscrn_daily_validate import validate_candidate
@@ -56,6 +56,9 @@ def stage(root: Path, acquired: Capture) -> dict:
     run = str(manifest.get("capture_id", "")).removeprefix("sha256:")
     if not re.fullmatch(r"[0-9a-f]{64}", run):
         raise ValueError("INVALID_CAPTURE_ID")
+    # Quarantine runs are digest-addressed: the manifest must hash to its id before anything is written.
+    if digest_bytes(canonical_bytes({k: v for k, v in manifest.items() if k != "capture_id"})) != manifest["capture_id"]:
+        raise ValueError("CAPTURE_DIGEST_MISMATCH")
     with store_lock(root):
         for digest, raw in acquired.objects.items():
             object_path(root, digest)
