@@ -55,6 +55,15 @@ def test_stage_writes_nothing_unless_the_objects_are_exactly_the_manifest_pages(
         assert not (root / "data/quarantine/noaa-ghcnd-daily").exists(), label
 
 
+def test_a_manifest_that_does_not_hash_to_its_id_writes_nothing(tmp_path):
+    root = store(tmp_path)
+    source = acquired()
+    forged = type(source)({**source.manifest, "end": "2026-10-09"}, source.objects)
+    with pytest.raises(ValueError, match="CAPTURE_DIGEST_MISMATCH"):
+        pilot.stage(root, forged)
+    assert not (root / "data/quarantine/noaa-ghcnd-daily").exists()
+
+
 def test_replay_refuses_unknown_or_malformed_ids(tmp_path):
     root = store(tmp_path)
     with pytest.raises(ValueError, match="INVALID_CAPTURE_ID"):
