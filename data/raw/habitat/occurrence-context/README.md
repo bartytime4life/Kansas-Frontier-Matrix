@@ -92,7 +92,7 @@ KFM treats occurrence providers such as GBIF, iNaturalist, and iDigBio as observ
 
 A governed source-first capture records what was captured, where it came from, what provider supplied it, what source role it carried, and which Darwin Core fields, license terms, geoprivacy status, public-safe geometry state, source URI, timestamps, citations, hashes, and caveats must travel downstream.
 
-Cross-domain overlap: [`data/raw/fauna/gbif/`](../../fauna/gbif/README.md) and [`data/raw/fauna/inaturalist/`](../../fauna/inaturalist/README.md) document the same upstream sources for Fauna; `data/raw/flora/gbif/` and `data/raw/flora/inaturalist/` hold only `.gitkeep` placeholders. All of these lanes must reference the same single source-first capture, never two copies.
+Cross-domain overlap: [`data/raw/fauna/gbif/`](../../fauna/gbif/README.md) and [`data/raw/fauna/inaturalist/`](../../fauna/inaturalist/README.md) document the same upstream sources for Fauna; `data/raw/flora/gbif/` and `data/raw/flora/inaturalist/` hold only `.gitkeep` placeholders. GBIF and iNaturalist remain distinct sources with their own `source_id`, rights, and retrieval lineage; every lane that uses one of them must reference that source's single source-first capture, never a second copy.
 
 ---
 
@@ -244,7 +244,7 @@ This is forbidden unless each governed lifecycle transition has actually happene
 | Accepted Directory Rules require one source-first capture identity and prohibit duplicated RAW bytes across domains. | **CONFIRMED** (`DIR-SOURCE-001`) |
 | This subtree is an accepted physical source-first capture home. | **DENY — no placement decision found as of 2026-10-11** |
 | Actual occurrence-context RAW payloads exist under this subtree. | **UNKNOWN; none added or moved by this documentation correction.** No payload files are tracked under this subtree at `main@9e8bf3e6`; external or untracked stores remain UNKNOWN |
-| `data/raw/fauna/gbif/` and `data/raw/fauna/inaturalist/` document the same upstream sources for Fauna; both sides must reference one source-first capture, never two copies. | **CONFIRMED README presence at `main@9e8bf3e6`** |
+| `data/raw/fauna/gbif/` and `data/raw/fauna/inaturalist/` document the same upstream sources for Fauna; GBIF and iNaturalist keep separate `source_id`s, and each lane must reference the one source-first capture of each source it uses, never two copies. | **CONFIRMED README presence at `main@9e8bf3e6`** |
 | This README is reconciled to the parent source-first contract. | **CONFIRMED authored 2026-10-11** |
 | SourceDescriptor records, connector activation, receipts, validators, fixtures, CI checks, review controls, and downstream receipts are wired to an accepted source-first RAW writer for this source family. | **NEEDS VERIFICATION** |
 | This README is proof, receipt, release, catalog, registry, policy, occurrence truth, public artifact authority, or generated-answer authority. | **DENY** |

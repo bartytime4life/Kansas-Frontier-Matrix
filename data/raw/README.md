@@ -214,20 +214,21 @@ As of the 2026-10-11 subtree refresh, every child README below states that compa
 
 ### Overlapping lanes that must share one capture
 
-Several tracked lanes document the same upstream source from different domains. Under `DIR-SOURCE-001` each pair or group resolves to **one** registered `source_id` and **one** source-first capture; the lanes may reference it but must never hold separate copies.
+Several tracked lanes document the same upstream source from different domains. Under `DIR-SOURCE-001` and `DIR-SOURCE-002`, **each distinct upstream source** in a row resolves to **one** registered `source_id` and **one** source-first capture; every lane listed for that source may reference it but must never hold a separate copy. A row that names several sources does not merge them: each keeps its own `source_id`, rights, and retrieval lineage.
 
 | Upstream source | Overlapping lanes |
 |---|---|
 | USDA NASS | [`usda-nass/`](usda-nass/README.md) · [`agriculture/usda-nass/`](agriculture/usda-nass/README.md) |
-| FEMA NFHL | [`hazards/nfhl/`](hazards/nfhl/README.md) · [`hydrology/fema_nfhl/`](hydrology/fema_nfhl/README.md) |
+| FEMA NFHL | [`hazards/nfhl/`](hazards/nfhl/README.md) · [`hazards/fema/`](hazards/fema/README.md) (NFHL material within the broader FEMA lane) · [`hydrology/fema_nfhl/`](hydrology/fema_nfhl/README.md) |
 | NatureServe | [`fauna/natureserve/`](fauna/natureserve/README.md) · [`habitat/natureserve/`](habitat/natureserve/README.md) · `flora/natureserve/` |
 | USFWS ECOS | [`fauna/usfws_ecos/`](fauna/usfws_ecos/README.md) · [`habitat/usfws-ecos/`](habitat/usfws-ecos/README.md) · `flora/usfws_ecos/` |
-| GBIF / iNaturalist occurrences | [`fauna/gbif/`](fauna/gbif/README.md) · [`fauna/inaturalist/`](fauna/inaturalist/README.md) · `flora/gbif/` · `flora/inaturalist/` · [`habitat/occurrence-context/`](habitat/occurrence-context/README.md) |
+| GBIF occurrences | [`fauna/gbif/`](fauna/gbif/README.md) · `flora/gbif/` · [`habitat/occurrence-context/`](habitat/occurrence-context/README.md) |
+| iNaturalist observations | [`fauna/inaturalist/`](fauna/inaturalist/README.md) · `flora/inaturalist/` · [`habitat/occurrence-context/`](habitat/occurrence-context/README.md) |
 | VIIRS active-fire / FIRMS hotspots | [`atmosphere/observed/viirs/`](atmosphere/observed/viirs/README.md) · [`hazards/firms/`](hazards/firms/README.md) — shared capture identity `NEEDS VERIFICATION` |
 | USGS 3DEP terrain | [`hydrology/usgs_3dep/`](hydrology/usgs_3dep/README.md) · [`geology/`](geology/README.md) (source-family backlog) |
-| Soil and climate-station families (SSURGO, Mesonet, SCAN, USCRN, SMAP) | [`soil/`](soil/README.md) · [`agriculture/`](agriculture/README.md) |
-| Settlement sources | [`settlement/`](settlement/README.md) · [`settlements-infrastructure/`](settlements-infrastructure/README.md) |
-| People / DNA / land sources | [`people/`](people/README.md) · [`people-dna-land/`](people-dna-land/README.md) |
+| Each of SSURGO, Kansas Mesonet, SCAN, USCRN, and SMAP (separate sources, one capture each) | [`soil/`](soil/README.md) · [`agriculture/`](agriculture/README.md) |
+| Each settlement source documented by both lanes | [`settlement/`](settlement/README.md) · [`settlements-infrastructure/`](settlements-infrastructure/README.md) |
+| Each People/DNA/Land source documented by both lanes | [`people/`](people/README.md) · [`people-dna-land/`](people-dna-land/README.md) |
 
 Which lane names survive, and how references are shaped, remains part of the **HOLD** placement and migration decision.
 

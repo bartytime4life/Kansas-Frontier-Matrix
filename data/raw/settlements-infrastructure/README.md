@@ -293,7 +293,7 @@ This is forbidden unless each governed lifecycle transition has actually happene
 | Actual Settlements/Infrastructure RAW payloads exist under this subtree. | **UNKNOWN; none added or moved by this documentation correction** — no payload files are tracked under this subtree at `main@9e8bf3e6`; external or untracked stores remain UNKNOWN |
 | Accepted Directory Rules require one source-first capture identity and prohibit duplicated RAW bytes across domains. | **CONFIRMED** (`DIR-SOURCE-001`) |
 | This subtree is an accepted physical source-first capture home. | **DENY — no placement decision found as of 2026-10-11** |
-| `data/raw/settlement/` documents settlement-place sources for the same domain; both lanes must reference one source-first capture, never two copies. | **CONFIRMED sibling README at `main@9e8bf3e6`** |
+| `data/raw/settlement/` documents settlement-place sources for the same domain; both lanes must reference the one source-first capture of each shared upstream source, never two copies. | **CONFIRMED sibling README at `main@9e8bf3e6`** |
 | This README is reconciled to the parent source-first contract. | **CONFIRMED authored 2026-10-11** |
 | SourceDescriptor records, connector activation, receipts, validators, fixtures, CI checks, review controls, and downstream receipts are wired to an accepted source-first RAW writer. | **NEEDS VERIFICATION** |
 | This README is proof, receipt authority, release authority, catalog authority, registry authority, policy authority, public artifact authority, place-status authority, infrastructure authority, or generated-answer authority. | **DENY** |

@@ -137,7 +137,7 @@ The child lanes below are README paths confirmed by current-session GitHub fetch
 | [`pad-us/`](pad-us/README.md) | **CONFIRMED README / COMPATIBILITY REFERENCE** | PAD-US is administrative stewardship context source documentation, not a capture home or public artifact authority. |
 | [`usfws-ecos/`](usfws-ecos/README.md) | **CONFIRMED README / COMPATIBILITY REFERENCE** | USFWS ECOS is regulatory/context source documentation; SourceDescriptor and source-catalog boundaries decide downstream use; not a capture home. |
 
-Cross-domain overlaps: `natureserve/` and `usfws-ecos/` document the same upstream sources as [`../fauna/natureserve/`](../fauna/natureserve/README.md) and [`../fauna/usfws_ecos/`](../fauna/usfws_ecos/README.md), and `occurrence-context/` overlaps [`../fauna/gbif/`](../fauna/gbif/README.md) and [`../fauna/inaturalist/`](../fauna/inaturalist/README.md). Each pair must reference the same single source-first capture, never two copies.
+Cross-domain overlaps: `natureserve/` and `usfws-ecos/` document the same upstream sources as [`../fauna/natureserve/`](../fauna/natureserve/README.md) and [`../fauna/usfws_ecos/`](../fauna/usfws_ecos/README.md), and `occurrence-context/` overlaps [`../fauna/gbif/`](../fauna/gbif/README.md) and [`../fauna/inaturalist/`](../fauna/inaturalist/README.md). Each upstream source keeps its own `source_id`; every lane that uses it must reference that source's single source-first capture, never two copies.
 
 ---
 
@@ -280,7 +280,7 @@ This is forbidden unless each governed lifecycle transition has actually happene
 | Accepted Directory Rules require one source-first capture identity and prohibit duplicated RAW bytes across domains. | **CONFIRMED** (`DIR-SOURCE-001`) |
 | This subtree is an accepted physical source-first capture home. | **DENY — no placement decision found as of 2026-10-11** |
 | Actual Habitat RAW payloads exist under this subtree. | **UNKNOWN; none added or moved by this documentation correction.** No payload files are tracked under this subtree at `main@9e8bf3e6`; external or untracked stores remain UNKNOWN |
-| `natureserve/`, `usfws-ecos/`, and `occurrence-context/` overlap Fauna source-named lanes for the same upstream sources. | **CONFIRMED README presence; both sides must reference one source-first capture, never two copies** |
+| `natureserve/`, `usfws-ecos/`, and `occurrence-context/` overlap Fauna source-named lanes for the same upstream sources. | **CONFIRMED README presence; each upstream source keeps its own `source_id`, and both sides must reference that source's single source-first capture, never two copies** |
 | This README and its nine child READMEs are reconciled to the parent source-first contract. | **CONFIRMED authored 2026-10-11** |
 | SourceDescriptor records, connector activation, receipts, validators, fixtures, CI checks, review controls, and downstream receipts are wired to an accepted source-first RAW writer for Habitat-relevant sources. | **NEEDS VERIFICATION** |
 | This README is proof, receipt, release, catalog, registry, policy, public artifact authority, or generated-answer authority. | **DENY** |

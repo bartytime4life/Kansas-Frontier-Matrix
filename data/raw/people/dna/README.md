@@ -271,7 +271,7 @@ This is forbidden unless each governed lifecycle transition has actually happene
 | Actual DNA RAW payloads exist under this subtree. | **UNKNOWN; none added or moved by this documentation correction** — no payload files are tracked under this subtree at `main@9e8bf3e6`; external or untracked stores remain UNKNOWN |
 | Accepted Directory Rules require one source-first capture identity and prohibit duplicated RAW bytes across domains. | **CONFIRMED** (`DIR-SOURCE-001`) |
 | This subtree is an accepted physical source-first capture home. | **DENY — no placement decision found as of 2026-10-11** |
-| `data/raw/people-dna-land/` documents the same domain candidate; both lanes must reference one source-first capture, never two copies. | **CONFIRMED sibling README at `main@9e8bf3e6`** |
+| `data/raw/people-dna-land/` documents the same domain candidate; both lanes must reference the one source-first capture of each shared upstream source, never two copies. | **CONFIRMED sibling README at `main@9e8bf3e6`** |
 | This README is reconciled to the parent source-first contract. | **CONFIRMED authored 2026-10-11** |
 | Encryption/storage implementation, ConsentGrant records, RevocationReceipt records, SourceDescriptor records, policy automation, validators, fixtures, CI checks, review controls, and release readiness are wired for this exact lane. | **NEEDS VERIFICATION** |
 | This README is proof, consent authority, receipt authority, release authority, catalog authority, registry authority, policy authority, public artifact authority, person identity truth, relationship truth, DNA/genomic truth, or generated-answer authority. | **DENY** |
