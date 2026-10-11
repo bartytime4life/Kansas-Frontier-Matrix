@@ -1,7 +1,7 @@
 # KFM Soil domain CI workflow.
 # Status: validate-soil runs three bounded synthetic no-network validator
 # profiles, release-readiness guard regressions, and the bounded SSURGO
-# package-drift fixture proof;
+# package-drift fixture proof, plus the USCRN daily soil pilot candidate tests;
 # proof and release-dry-run producers remain explicit holds.
 #
 # Authority boundary:
@@ -33,7 +33,7 @@ env:
 jobs:
   validate-soil:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
       - name: Check out Soil boundaries
@@ -98,6 +98,25 @@ jobs:
           set -euo pipefail
           python -m unittest tests.ingest.ssurgo_watch.test_ssurgo_watch --verbose
 
+      # The USCRN daily soil pilot uses the shared capture, hashing and release
+      # packages, so it installs the hash-locked water-pilot profile. The suites
+      # above remain standard-library only and run before this install.
+      - name: Install USCRN daily soil pilot dependencies
+        run: python tools/ci/install_python_ci.py water-pilot
+
+      - name: Run the USCRN daily soil pilot candidate tests
+        shell: bash
+        env:
+          KFM_NO_NETWORK: "1"
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: |
+          set -euo pipefail
+          # Proposed NOAA USCRN descriptor: must stay schema-valid and unadmitted until the owner decides.
+          python tools/validators/domains/soil/validate_source_descriptor.py data/registry/sources/soil/noaa-uscrn.yaml
+          python -m pytest -q \
+            tests/domains/soil/test_uscrn_daily_candidate.py \
+            tests/tools/test_uscrn_daily_pilot.py
+
       - name: Record Soil validation scope
         if: always()
         shell: bash
@@ -106,6 +125,12 @@ jobs:
           ### Soil validation status
 
           `VALIDATION_SCOPE: synthetic-public-safe-station-smap-l4-and-ssurgo-drift-fixtures-only`
+
+          It also runs the USCRN daily soil pilot candidate tests
+          (`tests/domains/soil/test_uscrn_daily_candidate.py`,
+          `tests/tools/test_uscrn_daily_pilot.py`) on synthetic daily01 fixtures with no
+          network, and validates the proposed `data/registry/sources/soil/noaa-uscrn.yaml`
+          descriptor. Neither admits the source, approves review or releases data.
 
           This job runs only the three bounded deterministic standard-library suites in
           `tests/domains/soil/test_soil_smoke.py`,
