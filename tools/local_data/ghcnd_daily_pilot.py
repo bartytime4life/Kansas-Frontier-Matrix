@@ -14,7 +14,7 @@ import sys
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
-from connectors_core.captured_json import canonical_bytes, decode_object
+from connectors_core.captured_json import canonical_bytes, decode_object, digest_bytes
 from connectors.noaa.src.noaa.ghcnd_daily_capture import Capture, capture, capture_keys, object_limit
 from pipelines.domains.atmosphere.ghcnd_daily_normalize import normalize_capture
 from pipelines.domains.atmosphere.ghcnd_daily_validate import validate_candidate
@@ -33,8 +33,23 @@ def object_path(root: Path, digest: str) -> Path:
     return root / "data/quarantine" / LANE / "objects/sha256" / digest.split(":")[1] / "payload"
 
 
+def _check_object_closure(manifest: dict, objects: dict) -> None:
+    """Objects must be exactly the manifest's pages, each hashing to its key and within its limit."""
+    pages = manifest.get("pages")
+    try:
+        expected = {page["sha256"]: object_limit(page["key"]) for page in pages}
+    except (KeyError, TypeError):
+        raise ValueError("CAPTURE_OBJECT_CLOSURE_INVALID") from None
+    if (not isinstance(objects, dict) or set(objects) != set(expected) or len(expected) != len(pages)
+            or any(not isinstance(raw, bytes) or not 0 < len(raw) <= expected[digest] or digest_bytes(raw) != digest
+                   for digest, raw in objects.items())):
+        raise ValueError("CAPTURE_OBJECT_CLOSURE_INVALID")
+
+
 def stage(root: Path, acquired: Capture) -> dict:
     manifest = acquired.manifest
+    # Checked before any write: the quarantine store is immutable and digest-addressed.
+    _check_object_closure(manifest, acquired.objects)
     manifest_bytes = canonical_bytes(manifest)
     if len(manifest_bytes) > MANIFEST_BYTES:
         raise ValueError("CAPTURE_MANIFEST_BYTE_LIMIT")

@@ -146,6 +146,7 @@ def test_capture_closure_is_checked():
     (lambda c: c.update(coverage="PARTIAL"), "COVERAGE_OR_FRESHNESS_MISMATCH"),
     (lambda c: c["stations"].pop(), "STATION_SCOPE_INVALID"),
     (lambda c: c["observations"].reverse(), "OBSERVATION_ORDER_INVALID"),
+    (lambda c: c.update(capture_id="not-a-capture"), "CANDIDATE_AUTHORITY_OR_PROFILE_INVALID"),
 ])
 def test_tampered_candidates_are_refused(tamper, reason):
     value = candidate()
@@ -160,6 +161,16 @@ def test_a_reported_value_that_disagrees_with_its_flags_is_refused():
     record["value"], record["withheld"] = 41.2, None
     record["record_digest"] = digest_bytes(canonical_bytes({k: v for k, v in record.items() if k != "record_digest"}))
     with pytest.raises(ValueError, match="OBSERVATION_VALUE_MISMATCH"):
+        validate_candidate(reseal(value))
+
+
+@pytest.mark.parametrize("element, unit", [("TMAX", "mm"), ("PRCP", "degC")])
+def test_a_unit_that_does_not_match_its_element_is_refused(element, unit):
+    value = candidate()
+    record = next(r for r in value["observations"] if r["element"] == element)
+    record["unit"] = unit
+    record["record_digest"] = digest_bytes(canonical_bytes({k: v for k, v in record.items() if k != "record_digest"}))
+    with pytest.raises(ValueError, match="OBSERVATION_UNIT_MISMATCH"):
         validate_candidate(reseal(value))
 
 

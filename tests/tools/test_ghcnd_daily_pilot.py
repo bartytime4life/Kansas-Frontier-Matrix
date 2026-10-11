@@ -37,6 +37,24 @@ def test_a_capture_that_does_not_normalize_is_quarantined(tmp_path):
     assert (root / "data/receipts/ingest/noaa-ghcnd-daily" / run / "quarantined.json").is_file()
 
 
+def test_stage_writes_nothing_unless_the_objects_are_exactly_the_manifest_pages(tmp_path):
+    from connectors_core.captured_json import digest_bytes
+    from connectors.noaa.src.noaa.ghcnd_daily_capture import Capture
+    good = acquired()
+    stray = b"not in the manifest"
+    first = next(iter(good.objects))
+    cases = {
+        "extra object": {**good.objects, digest_bytes(stray): stray},
+        "missing object": {k: v for k, v in good.objects.items() if k != first},
+        "key does not hash to bytes": {**good.objects, first: b"substituted bytes"},
+    }
+    for label, objects in cases.items():
+        root = store(tmp_path / label.replace(" ", "-"))
+        with pytest.raises(ValueError, match="CAPTURE_OBJECT_CLOSURE_INVALID"):
+            pilot.stage(root, Capture(good.manifest, objects))
+        assert not (root / "data/quarantine/noaa-ghcnd-daily").exists(), label
+
+
 def test_replay_refuses_unknown_or_malformed_ids(tmp_path):
     root = store(tmp_path)
     with pytest.raises(ValueError, match="INVALID_CAPTURE_ID"):

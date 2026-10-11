@@ -8,7 +8,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 from connectors_core.captured_json import canonical_bytes, digest_bytes
 from connectors.noaa.src.noaa.ghcnd_daily_capture import ELEMENTS, SOURCE_ID, STALE_AFTER_DAYS, STATIONS, WINDOW_DAYS, window
 from pipelines.domains.atmosphere.ghcnd_daily_normalize import (
-    CANDIDATE_PROFILE, DIGEST, LAT, LON, _reading, coverage, freshness, withheld_counts,
+    CANDIDATE_PROFILE, DIGEST, LAT, LON, UNITS, _reading, coverage, freshness, withheld_counts,
 )
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -28,6 +28,7 @@ def validate_candidate(candidate: dict) -> dict:
     if len(canonical_bytes(candidate)) > 8 * 1024 * 1024:
         raise ValueError("CANDIDATE_BYTE_LIMIT")
     if (candidate["profile"] != CANDIDATE_PROFILE or candidate["source_id"] != SOURCE_ID
+            or not DIGEST.fullmatch(str(candidate["capture_id"]))
             or candidate["source_admission"] != "PENDING" or candidate["review_state"] != "PENDING"
             or candidate["release_state"] != "UNRELEASED" or candidate["stale_after_days"] != STALE_AFTER_DAYS):
         raise ValueError("CANDIDATE_AUTHORITY_OR_PROFILE_INVALID")
@@ -68,6 +69,8 @@ def validate_candidate(candidate: dict) -> dict:
             raise ValueError("OBSERVATION_DATE_INVALID") from None
         if not start <= day <= end or record["retrieved_at"] > candidate["retrieved_at"]:
             raise ValueError("OBSERVATION_DATE_INVALID")
+        if record["unit"] != UNITS[record["element"]]:
+            raise ValueError("OBSERVATION_UNIT_MISMATCH")
         if (record["value"], record["trace"], record["withheld"]) != _reading(record["raw_value"], record["measurement_flag"], record["quality_flag"]):
             raise ValueError("OBSERVATION_VALUE_MISMATCH")
         key = (record["station_id"], record["element"], record["observation_date"])
