@@ -138,3 +138,42 @@ def test_no_active_weather_package_abstains(tmp_path, monkeypatch):
             server.shutdown()
             thread.join(timeout=2)
     assert (status, body["envelope"]["outcome"], body["envelope"]["reason_code"]) == (200, "ABSTAIN", "NO_APPROVED_SNAPSHOT")
+
+
+def test_freshness_uses_the_station_local_day_not_the_utc_date(tmp_path):
+    from connectors.noaa.src.noaa.ghcnd_daily_capture import STATIONS
+    from release.weather_projection import STANDARD_OFFSET_HOURS, project
+    assert set(STANDARD_OFFSET_HOURS) == set(STATIONS)
+    root = tmp_path / "store"
+    init_store(root)
+    candidate_id = ghcnd_daily_pilot.stage(root, acquired())["candidate_id"]
+    package_id = weather_release.prepare(root, candidate_id, admitted_source=True)["package_id"]
+    decision = weather_release.build_decision(package_id, reviewer=OWNER, releaser=OWNER, valid_days=7,
+                                              now=datetime(2026, 10, 11, 13, 0, tzinfo=timezone.utc))
+    raw = (root / "release/candidates/atmosphere" / package_id.split(":")[1] / "snapshot.json").read_bytes()
+    fresh = lambda now, station=None: project(raw, decision, view="layers", now=now, station_id=station)["envelope"]["freshness"]
+    # Wichita's latest value is 2026-10-10. At 03:00Z on the 14th it is still the 13th in Kansas (UTC-6): 3 days old.
+    assert fresh("2026-10-14T03:00:00Z", "USW00003928") == "current"
+    assert fresh("2026-10-14T03:00:00Z") == "current"
+    # From 06:00Z it is the 14th locally, 4 days after the last value.
+    assert fresh("2026-10-14T06:00:00Z", "USW00003928") == "stale-accepted"
+    # Goodland stopped reporting on 2026-10-05 and stays stale.
+    assert fresh("2026-10-14T03:00:00Z", "USW00023065") == "stale-accepted"
+
+
+def test_a_partial_weather_schema_is_a_store_failure_not_an_empty_store(tmp_path):
+    import sqlite3
+    from release.local_admin import initialize
+    serving = tmp_path / "serving"
+    serving.mkdir(mode=0o700)
+    initialize(serving)
+    with sqlite3.connect(serving / "activation.sqlite") as connection:
+        connection.execute("DROP TABLE weather_packages")
+    with pytest.raises(sqlite3.OperationalError):
+        LocalReleaseStore(str(serving)).active("weather")
+    # A store from before weather existed (no weather tables at all) has nothing active.
+    with sqlite3.connect(serving / "activation.sqlite") as connection:
+        connection.execute("DROP TABLE weather_active")
+        connection.execute("DROP TABLE weather_activation_events")
+    assert LocalReleaseStore(str(serving)).active("weather") is None
+    assert LocalReleaseStore(str(serving)).active() is None

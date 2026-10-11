@@ -4,7 +4,7 @@ Same contract as water_projection: the weather serving gate (ADR-0045) must
 answer ELIGIBLE and every read replays evidence verification before any
 observation is returned. Observations are station-local daily values.
 """
-from datetime import date
+from datetime import date, timedelta
 
 from connectors_core.captured_json import utc_time
 from hashing import compute_spec_hash
@@ -13,6 +13,9 @@ from .core import WEATHER, validate_snapshot
 from .water_projection import replay_evidence
 
 VERSION = "kfm-weather-v1"
+# GHCN-Daily first-order stations report midnight-to-midnight local standard time days
+# (no daylight saving): Central for Wichita, Dodge City and Topeka, Mountain for Goodland.
+STANDARD_OFFSET_HOURS = {"USW00003928": -6, "USW00013985": -6, "USW00013996": -6, "USW00023065": -7}
 ATTRIBUTION = ("Menne et al. (2012), Global Historical Climatology Network - Daily (GHCN-Daily), Version 3, "
                "NOAA NCEI, doi:10.7289/V5D21VHZ. Values are preliminary and may be revised.")
 
@@ -44,11 +47,16 @@ def project(raw: bytes, decision: dict | None, *, view: str, now: str, station_i
     refs = [entry["evidence_ref"] for entry in selected]
     station_ids = {e["station_id"] for e in selected}
     observations = [r for r in candidate["observations"] if r["station_id"] in station_ids]
-    # A withheld value cannot make a day current.
-    latest = max((r["observation_date"] for r in observations if r["value"] is not None), default=None)
-    today = utc_time(now).date()
-    freshness = ("unknown" if latest is None else
-                 "stale-accepted" if (today - date.fromisoformat(latest)).days > candidate["stale_after_days"] else "current")
+    # A withheld value cannot make a day current. Each station's latest day is compared with
+    # the current day in that station's local standard time, not the UTC date.
+    latest: dict[str, str] = {}
+    for r in observations:
+        if r["value"] is not None and r["observation_date"] > latest.get(r["station_id"], ""):
+            latest[r["station_id"]] = r["observation_date"]
+    instant = utc_time(now)
+    ages = [((instant + timedelta(hours=STANDARD_OFFSET_HOURS[s])).date() - date.fromisoformat(d)).days for s, d in latest.items()]
+    freshness = ("unknown" if not ages else
+                 "current" if min(ages) <= candidate["stale_after_days"] else "stale-accepted")
     precision = {"spatial": {"representation": "point", "resolution": "Provider station coordinates, EPSG:4326",
                              "accuracy": "GHCN-Daily station list coordinates; no inferred positional accuracy", "generalization_applied": False},
                  "temporal": {"granularity": "Station-local observation days, not UTC instants",

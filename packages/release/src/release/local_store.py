@@ -64,9 +64,13 @@ class LocalReleaseStore:
                 row = connection.execute(f"SELECT a.package_id, a.decision_json, p.state FROM {names['active']} a "
                                          f"LEFT JOIN {names['packages']} p ON p.package_id=a.package_id WHERE a.singleton=1").fetchone()
             except sqlite3.OperationalError:
-                if family == "water":
+                # Only a store initialized before this family existed (none of its tables) has nothing
+                # active for it; a partial or malformed schema is a store failure, not an empty store.
+                present = connection.execute("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name IN (?, ?, ?)",
+                                             (names["active"], names["packages"], names["events"])).fetchone()[0]
+                if family == "water" or present:
                     raise
-                return None  # a store initialized before this family existed has nothing active for it
+                return None
         if row is None:
             return None
         package_id, text, state = row
