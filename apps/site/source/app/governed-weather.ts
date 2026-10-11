@@ -46,6 +46,29 @@ function reading(raw: number, mflag: string, qflag: string): [number | null, boo
   return [raw / 10, false, null];
 }
 
+const OBSERVATION_KEYS = ["element", "evidence_ref", "id", "measurement_flag", "observation_date", "observation_time", "page_digest", "preliminary", "profile",
+  "quality_flag", "raw_value", "record_digest", "retrieved_at", "source_flag", "source_role", "station_id", "trace", "unit", "value", "withheld"];
+const STATION_KEYS = ["elevation_m", "geometry", "id", "name", "page_digest", "retrieved_at"];
+const FLAG = /^[A-Z0-9]?$/, HASH = /^[a-f0-9]{64}$/;
+const isTime = (value: unknown) => { try { time(value); return true; } catch { return false; } };
+
+/** Closed schemas/contracts/v1/domains/atmosphere/daily_weather_observation.schema.json, applied first as the Python validator does. */
+function observationShapeValid(r: WeatherRecord): boolean {
+  return same(Object.keys(r).sort(), OBSERVATION_KEYS) && r.profile === "kfm.daily-weather-observation/v1"
+    && typeof r.id === "string" && r.id.startsWith("kfm:weather:") && HASH.test(r.id.slice(12))
+    && WEATHER_STATIONS.includes(r.station_id) && UNITS[r.element] !== undefined
+    && typeof r.observation_date === "string" && /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(r.observation_date)
+    && Number.isInteger(r.raw_value) && r.raw_value >= -9999 && r.raw_value <= 999999
+    && (r.value === null || typeof r.value === "number") && (r.unit === "mm" || r.unit === "degC")
+    && [r.measurement_flag, r.quality_flag, r.source_flag].every(flag => typeof flag === "string" && FLAG.test(flag))
+    && (r.observation_time === null || typeof r.observation_time === "string" && /^[0-9]{4}$/.test(r.observation_time))
+    && typeof r.trace === "boolean" && [null, "MISSING", "QUALITY_FLAG"].includes(r.withheld)
+    && r.preliminary === true && r.source_role === "observed_station"
+    && typeof r.page_digest === "string" && DIGEST.test(r.page_digest) && isTime(r.retrieved_at)
+    && typeof r.evidence_ref === "string" && r.evidence_ref.startsWith("kfm:evidence:weather:") && HASH.test(r.evidence_ref.slice(21))
+    && typeof r.record_digest === "string" && DIGEST.test(r.record_digest);
+}
+
 /** Inner provenance and record rules, as release/core.py and ghcnd_daily_validate.validate_candidate.
  *  Digests are recomputed over the captured Python serialization (strict canonical text, numbers kept
  *  as written), so 16.0 is hashed as 16.0, not as JavaScript's 16. */
@@ -56,12 +79,13 @@ async function validateWeatherIdentities(candidate: WeatherCandidate, captured: 
   const seen = new Set<string>();
   for (let i = 0; i < records.length; i++) {
     const record = records[i];
+    if (!observationShapeValid(record)) throw new Error("WEATHER_OBSERVATION_SCHEMA_INVALID");
     if (await digest(capturedCanonical(capturedObject(capturedRecords[i]), "record_digest")) !== record.record_digest) throw new Error("OBSERVATION_DIGEST_MISMATCH");
     const identity = (await digest(canonical([record.station_id, record.element, record.observation_date]))).slice(7);
     if (record.id !== "kfm:weather:" + identity || record.evidence_ref !== "kfm:evidence:weather:" + identity) throw new Error("OBSERVATION_IDENTITY_MISMATCH");
     if (!Number.isInteger(record.raw_value) || typeof record.measurement_flag !== "string" || typeof record.quality_flag !== "string"
         || !same([record.value, record.trace, record.withheld], reading(record.raw_value, record.measurement_flag, record.quality_flag))) throw new Error("OBSERVATION_VALUE_MISMATCH");
-    if (record.retrieved_at > candidate.retrieved_at) throw new Error("OBSERVATION_DATE_INVALID");
+    if (time(record.retrieved_at) > time(candidate.retrieved_at)) throw new Error("OBSERVATION_DATE_INVALID");
     const key = canonical([record.station_id, record.element, record.observation_date]);
     if (seen.has(key)) throw new Error("DUPLICATE_STATION_DAY_ELEMENT");
     seen.add(key);
@@ -101,7 +125,10 @@ export async function parseWeatherPackage(text: string): Promise<WeatherPackage>
   if (candidate.release_state !== "UNRELEASED" || values["catalog.json"].authoritative !== false || validation.outcome !== "PASS") throw new Error("CARRIER_CANNOT_SELF_APPROVE");
   if (candidate.start !== manifest.start || candidate.end !== manifest.end || candidate.retrieved_at !== manifest.created_at || candidate.stale_after_days !== 3) throw new Error("CANDIDATE_IDENTITY_MISMATCH");
   if (!Array.isArray(candidate.stations) || !same(candidate.stations.map(s => s.id).sort(), [...WEATHER_STATIONS].sort()) || !Array.isArray(candidate.observations) || candidate.observations.length > 360 || !Array.isArray(evidence.entries) || evidence.entries.length !== WEATHER_STATIONS.length) throw new Error("STATION_SCOPE_INVALID");
-  for (const s of candidate.stations) { if (typeof s.name !== "string" || s.name.length > 64 || s.geometry.type !== "Point" || s.geometry.coordinates.length !== 2 || !s.geometry.coordinates.every(Number.isFinite) || Math.abs(s.geometry.coordinates[0]) > 180 || Math.abs(s.geometry.coordinates[1]) > 90) throw new Error("STATION_GEOMETRY_INVALID"); }
+  for (const s of candidate.stations) { if (!same(Object.keys(s).sort(), STATION_KEYS) || !same(Object.keys(object(s.geometry)).sort(), ["coordinates", "type"]) || typeof s.page_digest !== "string" || !DIGEST.test(s.page_digest)
+    || !isTime(s.retrieved_at) || time(s.retrieved_at) > time(candidate.retrieved_at) || !Array.isArray(s.geometry.coordinates)
+    || s.geometry.coordinates[0] < -102.2 || s.geometry.coordinates[0] > -94.4 || s.geometry.coordinates[1] < 36.9 || s.geometry.coordinates[1] > 40.1
+    || typeof s.name !== "string" || !s.name.length || s.name.length > 64 || s.geometry.type !== "Point" || s.geometry.coordinates.length !== 2 || !s.geometry.coordinates.every(Number.isFinite) || Math.abs(s.geometry.coordinates[0]) > 180 || Math.abs(s.geometry.coordinates[1]) > 90) throw new Error("STATION_GEOMETRY_INVALID"); }
   const start = day(candidate.start), end = day(candidate.end);
   for (const r of candidate.observations) {
     if (!WEATHER_STATIONS.includes(r.station_id) || UNITS[r.element] === undefined || r.unit !== UNITS[r.element]

@@ -78,11 +78,16 @@ test("inner provenance and record rules match the Python validator", async () =>
   const shared = await import(waterUrl);
   const hex = value => value.slice(7);
   // Edit an artifact, then rehash every digest a forger can recompute, as the Python release code would.
-  const forge = async (name, edit, { reseal = false } = {}) => {
+  const forge = async (name, edit, { reseal = false, records = true } = {}) => {
     const snapshot = await fixture("admitted-snapshot"), texts = snapshot.artifacts;
     texts[name] = edit(texts[name]);
     if (reseal) {
       const swap = (from, to) => { for (const key of Object.keys(texts)) texts[key] = texts[key].replaceAll(from, to); };
+      // Recompute every record digest too: the strongest forgery the outer and inner digests allow.
+      if (records) for (const record of shared.parseCapturedObject(texts["candidate.json"]).observations) {
+        const fresh = await shared.digest(shared.capturedCanonical(record, "record_digest"));
+        if (fresh !== record.record_digest) swap(hex(record.record_digest), hex(fresh));
+      }
       const oldId = snapshot.manifest.candidate_id;
       const newId = await shared.digest(shared.capturedCanonical(shared.parseCapturedObject(texts["candidate.json"]), "candidate_id"));
       swap(hex(oldId), hex(newId)); snapshot.manifest.candidate_id = newId;
@@ -97,8 +102,16 @@ test("inner provenance and record rules match the Python validator", async () =>
   await rejects(await forge("candidate.json", t => t.replace("WICHITA DWIGHT D EISENHOWER NA", "WICHITA RENAMED")), "CANDIDATE_IDENTITY_MISMATCH");
   await rejects(await forge("validation.json", t => t.replace(/"receipt_digest":"sha256:[0-9a-f]{64}"/, `"receipt_digest":"sha256:${"0".repeat(64)}"`)), "VALIDATION_RECEIPT_INVALID");
   // A resealed candidate id still cannot hide an edited record, a mismatched reading or a false freshness claim.
-  await rejects(await forge("candidate.json", t => t.replace('"value":0.8,', '"value":0.9,'), { reseal: true }), "OBSERVATION_DIGEST_MISMATCH");
+  await rejects(await forge("candidate.json", t => t.replace('"value":0.8,', '"value":0.9,'), { reseal: true }), "OBSERVATION_VALUE_MISMATCH");
+  await rejects(await forge("candidate.json", t => t.replace('"value":0.8,', '"value":0.9,'), { reseal: true, records: false }), "OBSERVATION_DIGEST_MISMATCH");
   await rejects(await forge("candidate.json", t => t.replace('"USW00023065":"STALE"', '"USW00023065":"RECENT"'), { reseal: true }), "COVERAGE_OR_FRESHNESS_MISMATCH");
+  // The closed observation and station schemas apply before any digest, as in the Python validator.
+  for (const [from, to] of [['"preliminary":true', '"preliminary":false'], ['"source_role":"observed_station"', '"source_role":"modeled"'],
+                            ['"source_flag":"W"', '"source_flag":"WX"'], ['"retrieved_at":"2026-10-11T12:00:00Z","source_flag"', '"retrieved_at":null,"source_flag"']]) {
+    assert.ok((await fixture("admitted-snapshot")).artifacts["candidate.json"].includes(from), from);
+    await rejects(await forge("candidate.json", t => t.replace(from, to), { reseal: true }), "WEATHER_OBSERVATION_SCHEMA_INVALID");
+  }
+  await rejects(await forge("candidate.json", t => t.replace('"geometry":{"coordinates"', '"extra":1,"geometry":{"coordinates"'), { reseal: true }), "STATION_GEOMETRY_INVALID");
   // Number aliases are refused before any digest is compared.
   await rejects(await forge("candidate.json", t => t.replace('"value":0.8,', '"value":0.80,')), "CAPTURED_JSON_NOT_CANONICAL");
   // The unedited fixture, resealed the same way, still parses: the forger's path is the honest one.

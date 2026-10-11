@@ -948,7 +948,7 @@
       "state": "repository_only_overlay"
     },
     "app/governed-weather.ts": {
-      "mirror_sha256": "9f8730323a183958450b96998741663c2977989f1c338768196bbdbfa8a1096d",
+      "mirror_sha256": "f1dfa16e255d49dcf7f8b77ba74b66b3c0b99615a4c78da3dfead3d969acf01d",
       "state": "repository_only_overlay"
     },
     "app/governed/water-release/page.tsx": {
@@ -4222,7 +4222,7 @@
       "state": "repository_only_overlay"
     },
     "tests/governed-weather.test.mjs": {
-      "mirror_sha256": "947fd6e34438215d24fcb0b33d63b993e4149d15207e30f93a707f1b323f68a8",
+      "mirror_sha256": "b1cc33a9d838096527f5bdc6f4e0aebdca1346baea2ce0734559548fdec8fccd",
       "state": "repository_only_overlay"
     },
     "tests/historical-topo-overlay.test.mjs": {
@@ -4776,9 +4776,9 @@
     "unexpected_difference": 0
   },
   "destination": "apps/site/source",
-  "followup_scope": "Repository-only overlay ahead of the next Site version: the weather package parser now applies the Python validator's inner rules (captured candidate and receipt digests, per-record digests and identities, readings, ordering, capture-time freshness/coverage/withheld counts, exact validation receipt) using the captured-JSON helpers the v232 water parser introduced, now exported. Water behaviour is unchanged. Site v232 source and deployment are unchanged.",
+  "followup_scope": "Repository-only overlay ahead of the next Site version: the weather package parser now applies the Python validator's inner rules (the closed daily_weather_observation schema and station shape, captured candidate and receipt digests, per-record digests and identities, readings, ordering, capture-time freshness/coverage/withheld counts, exact validation receipt) using the captured-JSON helpers the v232 water parser introduced, now exported. Water behaviour is unchanged. Site v232 source and deployment are unchanged.",
   "inventory_digest_basis": "UTF-8 JSON of comparison, sorted keys, separators comma and colon, no trailing newline",
-  "inventory_sha256": "050a1a2efac2ed4f7611bf1cd8d74beaa41acc819ead0f9509259d38e400847a",
+  "inventory_sha256": "5889c8f4f0d8267e81776941c2909440c3d0b7ab8660e90ad5e3269740f363fa",
   "overlay": {
     "changed_paths": [
       {
@@ -4789,13 +4789,13 @@
         "site_sha256": "159598d2c9db789c59778dee7b5322f7d75728d06d2a30e1f6364bec98d0275d"
       },
       {
-        "mirror_sha256": "9f8730323a183958450b96998741663c2977989f1c338768196bbdbfa8a1096d",
+        "mirror_sha256": "f1dfa16e255d49dcf7f8b77ba74b66b3c0b99615a4c78da3dfead3d969acf01d",
         "path": "app/governed-weather.ts",
         "previous_mirror_sha256": "a3fde049550be7c0f745809bffedc85eed6ecf7cd225e00414eb33ffd3346b32",
         "previous_state": "repository_only_overlay"
       },
       {
-        "mirror_sha256": "947fd6e34438215d24fcb0b33d63b993e4149d15207e30f93a707f1b323f68a8",
+        "mirror_sha256": "b1cc33a9d838096527f5bdc6f4e0aebdca1346baea2ce0734559548fdec8fccd",
         "path": "tests/governed-weather.test.mjs",
         "previous_mirror_sha256": "a41ce4804531aa75c0dd4167011b5c0ebc40c7140dc8be354e65c6df6ff649c5",
         "previous_state": "repository_only_overlay"
