@@ -855,6 +855,28 @@ reviewer.
 Run these on the computer that holds the private data root. Live capture needs
 network access to `api.waterdata.usgs.gov`.
 
+**Routine refresh (one command).** Decisions expire, so the layer needs a fresh
+release at least every 7 days by default. `cycle` captures, prepares the admitted
+package, writes your decision and stages it on the Site. It reads the Site's
+active package first and binds it as the rollback target, so activation accepts
+the replacement. It never activates:
+
+```bash
+KFM_WATER_WORKER_TOKEN=... KFM_SITES_BYPASS_TOKEN=... \
+  .venv/bin/python tools/release/water_release.py cycle --root $ROOT --owner @bartytime4life \
+  --site-url https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site
+```
+
+It captures the 24 hours ending at the current hour unless you pass `--start` and
+`--end` (UTC, at most 24 hours apart). It prints `decision_path` and the release
+page URL in `next`. Open that page,
+paste `$ROOT/<decision_path>` and press **Activate package**. Without
+`--site-url`, `cycle` stops after the decision (use `--rollback-target` with the
+locally active package). A capture that does not normalize stops with
+`CAPTURE_NOT_READY` before any package or decision is written.
+
+The individual steps, for inspection or recovery:
+
 ```bash
 ROOT=/absolute/private/KFM-data
 # 1. Capture, replay and prepare with the admitted license.
@@ -903,7 +925,8 @@ layer from answering; write a new decision and activate again.
 
 Validation: `tests/packages/release/test_water_self_release.py` (gate and
 admission), `tests/tools/test_water_release.py` (decide, stage, activate,
-loopback `/v1/layers`, hosted staging request) and the Site's
+loopback `/v1/layers`, hosted staging request, and `cycle` including the
+rollback binding of a replacement) and the Site's
 `tests/governed-water-admin.test.mjs` (staging, compare-and-swap activation,
 withdrawal and route authorization against the real D1 migration on SQLite).
 Hosted staging and activation have not yet been run against the deployed Site.
