@@ -2,12 +2,15 @@
 doc_id: kfm://doc/docs-sources-catalog-isric-isric-soilgrids
 title: ISRIC SoilGrids
 type: product-page
-version: v0.2
+version: v0.2.1
 status: draft
 owners: <PLACEHOLDER — Docs steward + Source steward for isric>
 created: 2026-05-21
-updated: 2026-05-21
+updated: 2026-10-11
 policy_label: public
+owning_root: docs/
+responsibility: Human-readable product page for ISRIC SoilGrids modeled soil-property grids; does not admit, activate, or publish a source.
+truth_posture: cite-or-abstain; source facts NEEDS VERIFICATION; repository paths PROPOSED unless stated
 related:
   - docs/sources/catalog/isric/README.md
   - docs/sources/catalog/README.md
@@ -27,20 +30,10 @@ related:
   - policy/sensitivity/
 tags: [kfm, docs, sources, catalog, isric, soilgrids, soil, modeled-source]
 notes:
-  - >-
-    Product-page scope: this doc covers ONE product within the ISRIC source
-    family — SoilGrids global ML-modelled soil-property grids at 250 m. ISRIC
-    is NOT a `directory-rules.md` §7.3 canonical family (see OPEN-DSC-14 in
-    the family README).
-  - >-
-    Description grounded in docs/domains soil registry and atlas idea cards
-    KFM-P24-PROG-0006 (SoilGrids descriptor — 250 m depth bands, model version,
-    uncertainty notes) and KFM-P12-PROG-0003 (ML-predicted with uncertainty
-    framing). License CC-BY-4.0 and 250 m resolution are CONFIRMED at family
-    level per Pass-10 C10-01.
-  - >-
-    `connectors/isric/` is reported as a currently empty stub (PROPOSED — NEEDS
-    VERIFICATION against mounted-repo evidence).
+  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001 (source-first capture; physical placement HOLD; data/raw/soil/ is a compatibility/reference lane); required meta-block fields added."
+  - "Product-page scope: this doc covers ONE product within the ISRIC source family — SoilGrids global ML-modelled soil-property grids at 250 m. ISRIC is NOT a `directory-rules.md` §7.3 canonical family (see OPEN-DSC-14 in the family README)."
+  - "Description grounded in docs/domains soil registry and atlas idea cards KFM-P24-PROG-0006 (SoilGrids descriptor — 250 m depth bands, model version, uncertainty notes) and KFM-P12-PROG-0003 (ML-predicted with uncertainty framing). License CC-BY-4.0 and 250 m resolution are CONFIRMED at family level per Pass-10 C10-01."
+  - "`connectors/isric/` is reported as a currently empty stub (PROPOSED — NEEDS VERIFICATION against mounted-repo evidence)."
 [/KFM_META_BLOCK_V2] -->
 
 # ISRIC SoilGrids
@@ -132,7 +125,7 @@ flowchart LR
     end
 
     subgraph KFM["KFM admission (PROPOSED)"]
-        RAW["data/raw/soil/EXT-SOILGRIDS/&lt;run_id&gt;/"]
+        RAW["RAW: source-first capture EXT-SOILGRIDS (placement HOLD)"]
         MRR["ModelRunReceipt<br/>(model_id, version, inputs[], params, uncertainty_surface_ref)"]
         SD["SourceDescriptor<br/>source_role: modeled<br/>role_model_run_ref → MRR"]
         RASTER --> RAW
@@ -394,7 +387,7 @@ Inheritance: every family-level OPEN item from [`./README.md`](./README.md#11-op
 | Item | Evidence that would settle it | Status |
 |---|---|---|
 | OPEN-DSC-14 — ADR for `isric/` family promotion to §7.3 | Accepted ADR | OPEN (inherited from family) |
-| `connectors/isric/` content present and producing `data/raw/soil/EXT-SOILGRIDS/<run_id>/` | Mounted-repo connector dir + run output | NEEDS VERIFICATION (reported empty stub) |
+| `connectors/isric/` content present and producing source-first RAW captures for `EXT-SOILGRIDS` (physical RAW placement HOLD; not `data/raw/soil/`) | Mounted-repo connector dir + run output | NEEDS VERIFICATION (reported empty stub) |
 | `data/registry/sources/` descriptor instance for SoilGrids (`source_role: modeled`, `role_model_run_ref` populated) | Mounted registry + descriptor file | NEEDS VERIFICATION |
 | `ModelRunReceipt` schema present at `schemas/contracts/v1/receipts/model_run_receipt.schema.json` | Mounted schema | NEEDS VERIFICATION |
 | Confirmation that current SoilGrids release remains CC-BY-4.0 | Source steward + ISRIC current terms | NEEDS VERIFICATION (CONFIRMED at family level in `C10-01`; per-release check required) |

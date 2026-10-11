@@ -164,13 +164,6 @@
       "subject": "data/reports/"
     },
     {
-      "evidence_sha256": "sha256:996cefb7e0aea5709a4c8d9610178a1687d46ef9997249309818708142883ab7",
-      "evidence_zlib_base64": "eNpLyU8u1i/OLy1KTi3WT04sSczJT9fPK0ou1stNYUjBJakf5Oro4uuKX01yfl5xalFZYklmfp5uQVFicklmcqpuUWpyflEKyHgAGc0uHQ==",
-      "fingerprint": "sha256:3a6cd6375025692309d45fa77c85d7247391c0d72604a440a24d694743e1a08a",
-      "rule_id": "KFM-TOPO-016",
-      "subject": "doc-id:kfm://doc/sources-catalog-nrcs"
-    },
-    {
       "evidence_sha256": "sha256:0273d7c5584cf504833372a53205e8b8f63c2075676e6efd00ba30f7af2e9017",
       "evidence_zlib_base64": "eNrLzCtLzMlMsUpNySyJL8jPyUyuZMiEiqWn5qUWJZakpsSnFeXnogvnF8WXpRYVZ+bnwWWKMxKNTM0AVBIf4Q==",
       "fingerprint": "sha256:3b57fc23adb261e9d606e06c8e40c9a7e700f4fd270cce16d74fe35926c04327",

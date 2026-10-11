@@ -2,12 +2,15 @@
 doc_id: kfm://doc/docs-sources-catalog-nasa-nasa-smap
 title: NASA SMAP Soil Moisture
 type: product-page
-version: v0.2
+version: v0.2.1
 status: draft
 owners: <PLACEHOLDER — Docs steward + Source steward for nasa>
 created: 2026-05-21
-updated: 2026-05-22
+updated: 2026-10-11
 policy_label: public
+owning_root: docs/
+responsibility: Human-readable product page for NASA SMAP soil moisture; does not admit, activate, or publish a source.
+truth_posture: cite-or-abstain; source facts NEEDS VERIFICATION; repository paths PROPOSED unless stated
 related:
   - docs/sources/catalog/nasa/README.md
   - docs/sources/catalog/nasa/nasa-earthdata.md
@@ -21,6 +24,7 @@ related:
   - docs/doctrine/directory-rules.md
 tags: [kfm, docs, sources, catalog, nasa, smap, soil-moisture, ldas, ease-grid, agriculture, soil]
 notes:
+  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001 (source-first capture; physical placement HOLD; data/raw/soil/ is a compatibility/reference lane); required meta-block fields added."
   - "PROPOSED product-page scaffold. Framing as model-assimilated LDAS/EnKF reference product (not raw observation) grounded in KFM-P15-PROG-0010. Pair-with-Mesonet rule (no silent merge) grounded in KFM-P2-IDEA-0023."
   - "v0.2: full presentation polish; surface vs root-zone separation, NRT/reprocessed cadence, EASE-Grid + COG/GeoParquet pipeline, independent-comparator role, resolution-mismatch governance, acceptance section."
 [/KFM_META_BLOCK_V2] -->
@@ -155,7 +159,7 @@ flowchart TB
     C["Fetch + admission<br/>(HDF/NetCDF · ETag · Last-Modified)<br/>watcher per KFM-P23-PROG-0042"]
   end
 
-  subgraph Raw["data/raw/soil/nasa-smap/&lt;run&gt;/"]
+  subgraph Raw["RAW: source-first capture nasa-smap (placement HOLD)"]
     R["Raw HDF/NetCDF granules<br/>+ extraction_timestamp · source_uri · dataset_version · QA-flag"]
   end
 

@@ -1,13 +1,16 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/sources-catalog-nrcs
+doc_id: kfm://doc/sources-catalog-nrcs-family-readme
 title: NRCS — Source Catalog Entry
 type: standard
-version: v0.2
+version: v0.2.1
 status: draft
 owners: TODO — Source registry steward + Soil domain steward + Agriculture domain steward
-created: TODO-YYYY-MM-DD
-updated: TODO-YYYY-MM-DD
+created: 2026-10-09
+updated: 2026-10-11
 policy_label: public
+owning_root: docs/
+responsibility: Human-readable NRCS source-family catalog entry for Soil and Agriculture; does not admit, activate, or publish a source.
+truth_posture: cite-or-abstain; source facts NEEDS VERIFICATION; repository paths PROPOSED unless stated
 related:
   - docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
   - docs/doctrine/directory-rules.md
@@ -19,6 +22,8 @@ related:
   - data/registry/source_descriptors/
 tags: [kfm, sources, soil, agriculture, nrcs, ssurgo, gssurgo, gnatsgo, scan, source-role]
 notes:
+  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001 (source-first capture; physical placement HOLD; data/raw/soil/ is a compatibility/reference lane); required meta-block fields added."
+  - "created was TODO; 2026-10-09 is the earliest commit in available history containing this file, not a known authoring date."
   - Human-readable catalog entry. Does NOT decide source admission.
   - Admission and activation live in the source registry and policy/, not in docs/.
   - Aligns to canonical KFM source-role vocabulary (observed | regulatory | modeled | aggregate | administrative | candidate | synthetic).
@@ -131,7 +136,7 @@ The scope is intentionally narrow: this page describes NRCS as a **source family
 | Machine shape of object families | ❌ | `schemas/contracts/v1/...` (Directory Rules §7.4, ADR-0001) |
 | Allow / deny / abstain logic | ❌ | `policy/` (canonical singular root) |
 | Fetch + admission code | ❌ | `connectors/nrcs/` (Directory Rules §7.3 — connectors emit to `data/raw/...` or `data/quarantine/...`; never publish) |
-| Lifecycle data | ❌ | `data/raw/soil/nrcs.<product>/<run_id>/`, then governed promotion |
+| Lifecycle data | ❌ | One source-first capture per `nrcs.<product>` `source_id` (physical source-first RAW placement **HOLD** under `DIR-SOURCE-001`; `data/raw/soil/` is a compatibility/reference lane, not a payload destination), then governed promotion |
 
 If any of the right-hand cells in this table conflict with this catalog entry, the right-hand cell wins. Catalog entries refine; they do not decide.
 
@@ -320,7 +325,7 @@ flowchart LR
   end
 
   subgraph LIFECYCLE["KFM lifecycle"]
-    RAW["data/raw/soil/&lt;source_id&gt;/&lt;run_id&gt;/"]
+    RAW["RAW: source-first capture per source_id (placement HOLD)"]
     WQ["WORK / QUARANTINE"]
     PROC["PROCESSED"]
     CAT["CATALOG / TRIPLET"]

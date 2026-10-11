@@ -2,12 +2,15 @@
 doc_id: kfm://doc/docs-sources-catalog-nrcs-ssurgo
 title: SSURGO (Soil Survey Geographic Database)
 type: product-page
-version: v0.3
+version: v0.3.1
 status: draft
 owners: <PLACEHOLDER — Docs steward + Source steward for `nrcs`>
 created: 2026-05-20
-updated: 2026-08-02
+updated: 2026-10-11
 policy_label: public
+owning_root: docs/
+responsibility: Human-readable product page for NRCS SSURGO; does not admit, activate, or publish a source.
+truth_posture: cite-or-abstain; source facts NEEDS VERIFICATION; repository paths PROPOSED unless stated
 related:
   - docs/sources/catalog/nrcs/README.md
   - docs/sources/catalog/nrcs/soil-data-access.md
@@ -22,6 +25,7 @@ related:
   - tests/ingest/ssurgo_watch/README.md
 tags: [kfm, docs, sources, catalog, nrcs, soil, ssurgo, mukey, asr]
 notes:
+  - "2026-10-11: RAW placement wording aligned to accepted DIR-SOURCE-001 (source-first capture; physical placement HOLD; data/raw/soil/ is a compatibility/reference lane); required meta-block fields added."
   - "The existing lowercase product-page path was verified at main@b8837b19b8d4615760e5ba1c6fb8c9a6617b23cb."
   - "Directory Rules treat this page as human guidance and `data/registry/sources/` as the authoritative SourceDescriptor home; no live SSURGO descriptor was admitted by the fixture helper change."
   - "SSURGO is the canonical static vector source; the sibling soil-data-access.md page covers the SDA API surface."
@@ -166,7 +170,7 @@ The shape below describes the **PROPOSED** lifecycle for an SSURGO-derived produ
 flowchart LR
     A[USDA NRCS SSURGO<br/>Soil Survey Geographic DB<br/><i>FGDB / SHP / GeoPackage</i>]:::ext
     A -->|HEAD / ETag / Last-Modified<br/>+ product version + SDA micro-snapshot| W[Watcher<br/>connectors/nrcs/<br/><b>PROPOSED</b>]
-    W -->|EventRunReceipt<br/>+ delta_manifest| RAW[(data/raw/soil/ssurgo/<br/><b>PROPOSED</b>)]
+    W -->|EventRunReceipt<br/>+ delta_manifest| RAW[("RAW: source-first capture<br/>ssurgo · <b>placement HOLD</b>")]
     RAW -->|extract FGDB · normalize tables| WORK[(data/work/soil/<br/><b>PROPOSED</b>)]
     WORK -->|join MUKEY · component-weighted<br/>property rollup| PROC[(data/processed/soil/<br/>GeoPackage · Parquet · COG<br/><b>PROPOSED</b>)]
     PROC -->|STAC + DCAT + PROV-O<br/>+ SoilTimeCaveat| CAT[(data/catalog/stac · dcat · prov/<br/><b>PROPOSED</b>)]
