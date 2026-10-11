@@ -74,25 +74,35 @@ test("the Site and Python weather license lists agree", async () => {
   assert.ok(block); assert.deepEqual([...weather.WEATHER_SELF_RELEASE_LICENSES], [block[1]]);
 });
 
-test("inner provenance digests are recomputed from the artifact text", async () => {
+test("inner provenance and record rules match the Python validator", async () => {
   const shared = await import(waterUrl);
-  // Rehash the outer artifact and package digests around an edited inner artifact, as a forger would.
-  const forge = async (name, edit) => {
-    const snapshot = await fixture("admitted-snapshot");
-    snapshot.artifacts[name] = edit(snapshot.artifacts[name]);
-    snapshot.manifest.artifacts[name] = await shared.digest(snapshot.artifacts[name]);
+  const hex = value => value.slice(7);
+  // Edit an artifact, then rehash every digest a forger can recompute, as the Python release code would.
+  const forge = async (name, edit, { reseal = false } = {}) => {
+    const snapshot = await fixture("admitted-snapshot"), texts = snapshot.artifacts;
+    texts[name] = edit(texts[name]);
+    if (reseal) {
+      const swap = (from, to) => { for (const key of Object.keys(texts)) texts[key] = texts[key].replaceAll(from, to); };
+      const oldId = snapshot.manifest.candidate_id;
+      const newId = await shared.digest(shared.capturedCanonical(shared.parseCapturedObject(texts["candidate.json"]), "candidate_id"));
+      swap(hex(oldId), hex(newId)); snapshot.manifest.candidate_id = newId;
+      const oldReceipt = JSON.parse(texts["validation.json"]).receipt_digest;
+      swap(hex(oldReceipt), hex(await shared.digest(shared.capturedCanonical(shared.parseCapturedObject(texts["validation.json"]), "receipt_digest"))));
+    }
+    for (const key of Object.keys(texts)) snapshot.manifest.artifacts[key] = await shared.digest(texts[key]);
     snapshot.manifest.package_id = await shared.digest(shared.canonical(shared.without(snapshot.manifest, "package_id")));
     return JSON.stringify(snapshot);
   };
-  const renamed = await forge("candidate.json", text => text.replace("WICHITA DWIGHT D EISENHOWER NA", "WICHITA RENAMED"));
-  await assert.rejects(weather.parseWeatherPackage(renamed), /CANDIDATE_IDENTITY_MISMATCH/);
-  const receipt = await forge("validation.json", text => text.replace(/"receipt_digest":"sha256:[0-9a-f]{64}"/, `"receipt_digest":"sha256:${"0".repeat(64)}"`));
-  await assert.rejects(weather.parseWeatherPackage(receipt), /VALIDATION_RECEIPT_INVALID/);
-  // Only the top-level member is removed; escaped quotes and nested keys of the same name are kept.
-  const text = '{"a":"x\\",\\"candidate_id\\":1","candidate_id":"z","n":{"candidate_id":[2,{"b":"}"}]}}';
-  assert.equal(await weather.digestWithout(text, "candidate_id"), await shared.digest('{"a":"x\\",\\"candidate_id\\":1","n":{"candidate_id":[2,{"b":"}"}]}}'));
-  await assert.rejects(weather.digestWithout('{"a":1}', "candidate_id"), /CANONICAL_MEMBER_INVALID/);
-  await assert.rejects(weather.digestWithout("[1]", "candidate_id"), /CANONICAL_OBJECT_REQUIRED/);
+  const rejects = async (text, reason) => assert.rejects(weather.parseWeatherPackage(text), new RegExp(reason));
+  await rejects(await forge("candidate.json", t => t.replace("WICHITA DWIGHT D EISENHOWER NA", "WICHITA RENAMED")), "CANDIDATE_IDENTITY_MISMATCH");
+  await rejects(await forge("validation.json", t => t.replace(/"receipt_digest":"sha256:[0-9a-f]{64}"/, `"receipt_digest":"sha256:${"0".repeat(64)}"`)), "VALIDATION_RECEIPT_INVALID");
+  // A resealed candidate id still cannot hide an edited record, a mismatched reading or a false freshness claim.
+  await rejects(await forge("candidate.json", t => t.replace('"value":0.8,', '"value":0.9,'), { reseal: true }), "OBSERVATION_DIGEST_MISMATCH");
+  await rejects(await forge("candidate.json", t => t.replace('"USW00023065":"STALE"', '"USW00023065":"RECENT"'), { reseal: true }), "COVERAGE_OR_FRESHNESS_MISMATCH");
+  // Number aliases are refused before any digest is compared.
+  await rejects(await forge("candidate.json", t => t.replace('"value":0.8,', '"value":0.80,')), "CAPTURED_JSON_NOT_CANONICAL");
+  // The unedited fixture, resealed the same way, still parses: the forger's path is the honest one.
+  assert.equal((await weather.parseWeatherPackage(await forge("candidate.json", t => t, { reseal: true }))).manifest.candidate_id, (await pkg()).manifest.candidate_id);
 });
 
 test("the Site and Python station-local offsets agree", async () => {

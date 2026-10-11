@@ -46,13 +46,13 @@ export function same(a: unknown, b: unknown) { return canonical(a) === canonical
 // Captured JSON uses Python json.dumps, not RFC 8785/JCS. Keep numeric tokens
 // losslessly: 1.0, 1e-07 and -0.0 must not become 1, 1e-7 and 0 in an identity.
 class CapturedNumber { constructor(readonly token: string) {} }
-type CapturedValue = null | boolean | string | CapturedNumber | CapturedValue[] | { [key: string]: CapturedValue };
-type CapturedObject = { [key: string]: CapturedValue };
-function capturedObject(value: CapturedValue): CapturedObject {
+export type CapturedValue = null | boolean | string | CapturedNumber | CapturedValue[] | { [key: string]: CapturedValue };
+export type CapturedObject = { [key: string]: CapturedValue };
+export function capturedObject(value: CapturedValue): CapturedObject {
   if (!value || typeof value !== "object" || Array.isArray(value) || value instanceof CapturedNumber) throw new Error("OBJECT_REQUIRED");
   return value;
 }
-function codepointOrder(a: string, b: string): number {
+export function codepointOrder(a: string, b: string): number {
   const left = Array.from(a), right = Array.from(b);
   for (let i = 0; i < Math.min(left.length, right.length); i++) {
     const difference = left[i].codePointAt(0)! - right[i].codePointAt(0)!;
@@ -60,7 +60,7 @@ function codepointOrder(a: string, b: string): number {
   }
   return left.length - right.length;
 }
-function capturedCanonical(value: CapturedValue, omit?: string): string {
+export function capturedCanonical(value: CapturedValue, omit?: string): string {
   if (value instanceof CapturedNumber) return value.token;
   if (value === null || typeof value === "string" || typeof value === "boolean") return JSON.stringify(value);
   if (Array.isArray(value)) return `[${value.map(item => capturedCanonical(item)).join(",")}]`;
@@ -77,7 +77,7 @@ function pythonFloatToken(value: number): string {
   const point = magnitude + 1;
   return sign + (point <= 0 ? "0." + "0".repeat(-point) + digits : point >= digits.length ? digits + "0".repeat(point - digits.length) + ".0" : digits.slice(0, point) + "." + digits.slice(point));
 }
-function parseCapturedObject(text: string): CapturedObject {
+export function parseCapturedObject(text: string): CapturedObject {
   // The producer writes compact, sorted artifacts. Only that representation is
   // admitted; numeric aliases are rejected rather than silently recanonicalized.
   // Integer tokens remain exact even when they exceed JavaScript's safe range.
