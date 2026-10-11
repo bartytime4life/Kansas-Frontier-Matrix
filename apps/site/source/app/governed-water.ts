@@ -145,7 +145,7 @@ export function parseCapturedObject(text: string): CapturedObject {
   if (cursor !== text.length || capturedCanonical(value) !== text) throw new Error("CAPTURED_JSON_NOT_CANONICAL");
   return value;
 }
-function microseconds(value: unknown): bigint {
+export function microseconds(value: unknown): bigint {
   time(value);
   const stamp = value as string, fraction = /\.(\d{1,6})Z$/.exec(stamp)?.[1] ?? "";
   return BigInt(Date.parse(stamp.slice(0, 19) + "Z")) * 1000n + BigInt(fraction.padEnd(6, "0"));

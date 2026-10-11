@@ -1,6 +1,6 @@
 /** Reviewed GHCN-Daily weather snapshot carrier (ADR-0045). Never acquires or approves source data.
  *  Mirrors packages/release/src/release/core.py (WEATHER profile) and weather_projection.py. */
-import { canonical, capturedCanonical, capturedObject, codepointOrder, digest, object, parseCapturedObject, parseWaterJson, releaseGate, same, time, verified, without, type CapturedObject, type Entry } from "./governed-water";
+import { canonical, capturedCanonical, capturedObject, codepointOrder, digest, microseconds, object, parseCapturedObject, parseWaterJson, releaseGate, same, time, verified, without, type CapturedObject, type Entry } from "./governed-water";
 
 export const WEATHER_PACKAGE_LIMIT = 8 * 1024 * 1024;
 const NAMES = ["candidate.json", "catalog.json", "evidence.json", "validation.json"] as const;
@@ -85,7 +85,8 @@ async function validateWeatherIdentities(candidate: WeatherCandidate, captured: 
     if (record.id !== "kfm:weather:" + identity || record.evidence_ref !== "kfm:evidence:weather:" + identity) throw new Error("OBSERVATION_IDENTITY_MISMATCH");
     if (!Number.isInteger(record.raw_value) || typeof record.measurement_flag !== "string" || typeof record.quality_flag !== "string"
         || !same([record.value, record.trace, record.withheld], reading(record.raw_value, record.measurement_flag, record.quality_flag))) throw new Error("OBSERVATION_VALUE_MISMATCH");
-    if (time(record.retrieved_at) > time(candidate.retrieved_at)) throw new Error("OBSERVATION_DATE_INVALID");
+    // Microseconds, not Date.parse milliseconds: .000002Z after .000001Z is later.
+    if (microseconds(record.retrieved_at) > microseconds(candidate.retrieved_at)) throw new Error("OBSERVATION_DATE_INVALID");
     const key = canonical([record.station_id, record.element, record.observation_date]);
     if (seen.has(key)) throw new Error("DUPLICATE_STATION_DAY_ELEMENT");
     seen.add(key);
@@ -126,7 +127,7 @@ export async function parseWeatherPackage(text: string): Promise<WeatherPackage>
   if (candidate.start !== manifest.start || candidate.end !== manifest.end || candidate.retrieved_at !== manifest.created_at || candidate.stale_after_days !== 3) throw new Error("CANDIDATE_IDENTITY_MISMATCH");
   if (!Array.isArray(candidate.stations) || !same(candidate.stations.map(s => s.id).sort(), [...WEATHER_STATIONS].sort()) || !Array.isArray(candidate.observations) || candidate.observations.length > 360 || !Array.isArray(evidence.entries) || evidence.entries.length !== WEATHER_STATIONS.length) throw new Error("STATION_SCOPE_INVALID");
   for (const s of candidate.stations) { if (!same(Object.keys(s).sort(), STATION_KEYS) || !same(Object.keys(object(s.geometry)).sort(), ["coordinates", "type"]) || typeof s.page_digest !== "string" || !DIGEST.test(s.page_digest)
-    || !isTime(s.retrieved_at) || time(s.retrieved_at) > time(candidate.retrieved_at) || !Array.isArray(s.geometry.coordinates)
+    || !isTime(s.retrieved_at) || microseconds(s.retrieved_at) > microseconds(candidate.retrieved_at) || !Array.isArray(s.geometry.coordinates)
     || s.geometry.coordinates[0] < -102.2 || s.geometry.coordinates[0] > -94.4 || s.geometry.coordinates[1] < 36.9 || s.geometry.coordinates[1] > 40.1
     || typeof s.name !== "string" || !s.name.length || s.name.length > 64 || s.geometry.type !== "Point" || s.geometry.coordinates.length !== 2 || !s.geometry.coordinates.every(Number.isFinite) || Math.abs(s.geometry.coordinates[0]) > 180 || Math.abs(s.geometry.coordinates[1]) > 90) throw new Error("STATION_GEOMETRY_INVALID"); }
   const start = day(candidate.start), end = day(candidate.end);
