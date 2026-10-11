@@ -215,19 +215,24 @@ def test_a_reported_value_that_disagrees_with_its_token_is_refused():
         validate_candidate(reseal(value))
 
 
-def test_descriptor_is_schema_valid_and_not_admitted_until_the_owner_approves(tmp_path):
-    with pytest.raises(ValueError, match="SOURCE_NOT_ADMITTED"):
-        uscrn_daily_admission.load_admission()
-    descriptor = json.loads(uscrn_daily_admission.DESCRIPTOR.read_text())
-    assert descriptor["review_state"] == "needs_review" and descriptor["public_release"]["allowed"] is False
-    approved = deepcopy(descriptor)
-    approved["review_state"], approved["public_release"]["allowed"] = "approved", True
-    approved["lifecycle"]["registry_state"] = "active"
-    path = tmp_path / "noaa-uscrn.yaml"
-    path.write_text(json.dumps(approved))
-    admission = uscrn_daily_admission.load_admission(path)
+def test_descriptor_is_admitted_and_admission_refuses_anything_less(tmp_path):
+    admission = uscrn_daily_admission.load_admission()
     assert admission["source_ref"] == "kfm://source/noaa-uscrn"
-    assert admission["license"].startswith("U.S. Public Domain")
+    assert admission["license"].startswith("U.S. Public Domain (NOAA")
+    descriptor = json.loads(uscrn_daily_admission.DESCRIPTOR.read_text())
+    for field, value in (("review_state", "needs_review"), ("sensitivity_default", "restricted")):
+        weakened = deepcopy(descriptor)
+        weakened[field] = value
+        path = tmp_path / f"{field}.yaml"
+        path.write_text(json.dumps(weakened))
+        with pytest.raises(ValueError, match="SOURCE_NOT_ADMITTED"):
+            uscrn_daily_admission.load_admission(path)
+    closed = deepcopy(descriptor)
+    closed["public_release"]["allowed"] = False
+    path = tmp_path / "closed.yaml"
+    path.write_text(json.dumps(closed))
+    with pytest.raises(ValueError, match="SOURCE_NOT_ADMITTED"):
+        uscrn_daily_admission.load_admission(path)
 
 
 def test_two_captures_of_the_same_bytes_have_the_same_identity():

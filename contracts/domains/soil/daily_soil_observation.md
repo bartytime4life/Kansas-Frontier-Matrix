@@ -60,9 +60,12 @@ layout change fails closed instead of mislabeling a column.
 
 A record is a review candidate. It carries no source admission, review,
 release or publication authority. The source descriptor
-`data/registry/sources/soil/noaa-uscrn.yaml` is proposed until the repository
-owner admits it, and releasing any package still requires a release decision
-that passes the serving gate.
+`data/registry/sources/soil/noaa-uscrn.yaml` was admitted by the repository
+owner on 2026-10-11; releasing a package still requires a
+`kfm.soil-release-decision/v1` record that passes the soil serving gate
+([ADR-0046](../../../docs/adr/ADR-0046-owner-self-release-for-admitted-public-soil-data.md)).
+`pipelines/domains/soil/uscrn_daily_package.py` packages a candidate with one
+evidence bundle per station and depth.
 
 ## Validation
 

@@ -79,7 +79,7 @@ notes:
   - "The nested and flat USCRN connector paths are both repository-present and README-only in bounded inspection; this file does not ratify, migrate, deprecate, delete, or supersede either path."
   - "Directory Rules place NOAA under the connectors/noaa family spine, but final duplicate-lane disposition still requires an accepted ADR or migration note with compatibility and rollback."
   - "The central NOAA Python package remains a 0.0.0 empty shell, and the proposed products/uscrn.py module was not found."
-  - "The Soil and Agriculture registry YAMLs are inventory placeholders; the source-authority register has no entries. Source activation is not established."
+  - "Update 2026-10-11: the Soil registry YAML is now an admitted SourceDescriptor for the daily01 Kansas soil pilot (ADR-0046), implemented in connectors/noaa/src/noaa/uscrn_daily.py and uscrn_daily_capture.py with tests under tests/domains/soil/. The Agriculture YAML remains a placeholder; the source-authority register has no entries."
   - "External USCRN product details such as endpoints, station inventory, variables, units, depths, cadences, file formats, quality flags, rights, and attribution are version-sensitive and are not pinned as implementation facts here."
   - "A USCRN station record remains station-, product-, variable-, time-, cadence-, unit-, quality-, and where applicable depth-scoped. It is not area, soil-column, regulatory, forecast, alert, or life-safety truth."
   - "Connector activity is limited to explicit source admission and RAW or QUARANTINE handoff. It does not promote, publish, close evidence, or serve public clients."
@@ -163,7 +163,7 @@ This README does not activate USCRN, select current endpoints, certify current p
 | `connectors/noaa/tests/test_uscrn.py` | **NOT FOUND in bounded check** | No product-specific connector test module was established at that path. |
 | `connectors/noaa/pyproject.toml` | **CONFIRMED placeholder** | Project name is `kfm-connector-noaa`; version is `0.0.0`. |
 | `docs/sources/catalog/noaa/noaa-uscrn.md` | **CONFIRMED draft product page** | Product doctrine exists but labels implementation details and current external facts as proposed or needing verification. |
-| Soil registry YAML | **CONFIRMED placeholder** | Status is `PROPOSED`; it does not establish a mature SourceDescriptor or activation. |
+| Soil registry YAML | **Admitted (2026-10-11)** | Approved, active SourceDescriptor for the daily01 Kansas soil pilot only; release follows ADR-0046. |
 | Agriculture registry YAML | **CONFIRMED placeholder** | Status is `PROPOSED`; it does not establish a mature SourceDescriptor or activation. |
 | Source-authority register | **CONFIRMED proposed and empty** | `entries: []`; no USCRN activation is established. |
 | `connector-gate` workflow | **CONFIRMED TODO-only** | Green workflow execution cannot prove USCRN connector behavior. |

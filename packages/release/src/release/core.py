@@ -39,6 +39,23 @@ class SnapshotProfile:
     evidence_prefix: str
     max_observations: int
     interval_ok: Callable[[str, str], bool]
+    # A profile with series splits each station's evidence into one bundle per
+    # value of ``series_field`` (the resolver caps a bundle at 128 members).
+    series_field: str | None = None
+    series_values: tuple = ()  # integers
+    series_label: str = ""
+
+    def evidence_keys(self) -> list[tuple]:
+        """(station_id, series) for every evidence entry the profile requires; series is None without series."""
+        return [(station, value) for station in sorted(self.station_ids) for value in (self.series_values or (None,))]
+
+    def entry_ref(self, station_id: str, series, candidate_id: str) -> str:
+        middle = "" if series is None else self.series_label.format(series) + "/"
+        return self.evidence_prefix + station_id + "/" + middle + candidate_id.split(":")[1]
+
+    def entry_records(self, observations: list, station_id: str, series) -> list:
+        return [r for r in observations if r["station_id"] == station_id
+                and (series is None or r[self.series_field] == series)]
 
 
 WATER = SnapshotProfile("kfm.water-snapshot/v1", "usgs-nwis", frozenset({"USGS-06892518", "USGS-07156900"}),
@@ -47,6 +64,11 @@ WATER = SnapshotProfile("kfm.water-snapshot/v1", "usgs-nwis", frozenset({"USGS-0
 WEATHER = SnapshotProfile("kfm.weather-snapshot/v1", "noaa-ghcnd",
                           frozenset({"USW00003928", "USW00013985", "USW00013996", "USW00023065"}),
                           "kfm://weather/station/", 360, _thirty_day_interval)
+# USCRN daily soil pilot: two reference stations, 30 days, moisture and temperature
+# at five depths; one evidence bundle per station and depth (61 members each).
+SOIL = SnapshotProfile("kfm.soil-snapshot/v1", "noaa-uscrn", frozenset({"03067", "53974"}),
+                       "kfm://soil/station/", 600, _thirty_day_interval,
+                       series_field="depth_cm", series_values=(5, 10, 20, 50, 100), series_label="depth-{}cm")
 
 
 def prepare_snapshot(candidate: dict, catalog: dict, evidence: dict, validation: dict, *, rollback_target=None,
@@ -111,19 +133,25 @@ def validate_snapshot(raw: bytes, profile: SnapshotProfile = WATER) -> tuple[dic
         raise ValueError("CARRIER_CANNOT_SELF_APPROVE")
     if not isinstance(candidate.get("observations"), list) or len(candidate["observations"]) > profile.max_observations:
         raise ValueError("OBSERVATION_LIMIT")
-    if not isinstance(evidence.get("entries"), list) or len(evidence["entries"]) != len(profile.station_ids):
+    if not isinstance(evidence.get("entries"), list) or len(evidence["entries"]) != len(profile.evidence_keys()):
         raise ValueError("EVIDENCE_CLOSURE_INVALID")
     if {e["station_id"] for e in evidence["entries"]} != {s["id"] for s in candidate["stations"]}:
         raise ValueError("STATION_EVIDENCE_MISMATCH")
+    if profile.series_field is not None:
+        keys = [(e["station_id"], e.get("series")) for e in evidence["entries"]]
+        if (any(type(series) is not int for _, series in keys) or len(set(keys)) != len(keys)
+                or set(keys) != set(profile.evidence_keys())):
+            raise ValueError("SERIES_EVIDENCE_MISMATCH")
     stations = candidate["stations"]
     if len(stations) != len(profile.station_ids) or {s["id"] for s in stations} != profile.station_ids:
         raise ValueError("STATION_SCOPE_INVALID")
     for entry in evidence["entries"]:
         station = next(s for s in stations if s["id"] == entry["station_id"])
-        records = [r for r in candidate["observations"] if r["station_id"] == station["id"]]
+        series = entry["series"] if profile.series_field is not None else None
+        records = profile.entry_records(candidate["observations"], station["id"], series)
         bundle = entry["bundle"]
         ref = entry["evidence_ref"]
-        expected_ref = profile.evidence_prefix + station["id"] + "/" + candidate["candidate_id"].split(":")[1]
+        expected_ref = profile.entry_ref(station["id"], series, candidate["candidate_id"])
         if ref != {"ref": expected_ref, "kind": "dataset", "bundle_ref": bundle["bundle_id"]}:
             raise ValueError("DATASET_EVIDENCE_MISMATCH")
         members = [ref] + [{"ref": r["evidence_ref"], "kind": "measurement", "bundle_ref": bundle["bundle_id"]} for r in records]
