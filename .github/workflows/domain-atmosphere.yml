@@ -47,7 +47,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install Atmosphere validation dependencies
-        run: python tools/ci/install_python_ci.py project-test
+        run: python tools/ci/install_python_ci.py water-pilot
 
       - name: Inspect Atmosphere validation boundaries
         shell: bash
@@ -163,6 +163,8 @@ jobs:
                   "tests/domains/atmosphere/"
                   "test_pm25_trigger_candidate_assessment.py"
               ),
+              Path("tests/domains/atmosphere/ghcnd_daily_fixtures.py"),
+              Path("tests/domains/atmosphere/test_ghcnd_daily_candidate.py"),
           }
           accepted_validators = {
               Path(
@@ -351,6 +353,12 @@ jobs:
           python tools/validators/domains/atmosphere/validate_catalog_matrix.py --fixtures
           python tools/validators/domains/atmosphere/validate_schema.py
           python tools/validators/domains/atmosphere/validate_source_descriptor.py --fixtures
+          # Proposed GHCN-Daily pilot source: schema-valid, not admitted until the owner approves it.
+          python tools/validators/domains/atmosphere/validate_source_descriptor.py \
+            data/registry/sources/atmosphere/noaa_ghcnd.yaml
+          python -m pytest -q \
+            tests/domains/atmosphere/test_ghcnd_daily_candidate.py \
+            tests/tools/test_ghcnd_daily_pilot.py
           python -m pytest -q \
             tests/validators/domains/atmosphere/test_atmosphere_catalog_matrix_validator_entrypoint.py \
             tests/validators/domains/atmosphere/test_domain_schema_validator.py \
@@ -366,6 +374,7 @@ jobs:
           echo "WORKFLOW_CHECK_EXECUTED: atmosphere-airnow-aqs-reconciliation"
           echo "WORKFLOW_CHECK_EXECUTED: atmosphere-prescribed-burn-quality-flag"
           echo "WORKFLOW_CHECK_EXECUTED: atmosphere-exact-option-adapters"
+          echo "WORKFLOW_CHECK_EXECUTED: atmosphere-ghcnd-daily-pilot-candidate"
 
       - name: Record Atmosphere validation result and broader hold
         if: always()

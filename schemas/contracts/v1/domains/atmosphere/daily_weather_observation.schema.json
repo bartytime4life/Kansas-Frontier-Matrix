@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/schemas/contracts/v1/domains/atmosphere/daily_weather_observation.schema.json",
+  "title": "Daily Weather Observation",
+  "description": "Closed v1 projection of one GHCN-Daily station-day element (PRCP, TMAX or TMIN) for the Kansas first-order station pilot. observation_date is the station's local observation day, not a UTC instant. Values are preliminary. A missing or quality-flagged value has value null and a withheld reason; it never counts as zero. Source authority and release eligibility require separate evidence, policy and review checks. See contracts/domains/atmosphere/daily_weather_observation.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile", "id", "station_id", "element", "observation_date", "raw_value", "value", "unit",
+    "measurement_flag", "quality_flag", "source_flag", "observation_time", "trace", "withheld",
+    "preliminary", "source_role", "page_digest", "retrieved_at", "evidence_ref", "record_digest"
+  ],
+  "properties": {
+    "profile": {"const": "kfm.daily-weather-observation/v1"},
+    "id": {"type": "string", "pattern": "^kfm:weather:[a-f0-9]{64}$"},
+    "station_id": {"enum": ["USW00003928", "USW00013985", "USW00013996", "USW00023065"]},
+    "element": {"enum": ["PRCP", "TMAX", "TMIN"]},
+    "observation_date": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+    "raw_value": {"type": "integer", "minimum": -9999, "maximum": 999999},
+    "value": {"type": ["number", "null"]},
+    "unit": {"enum": ["mm", "degC"]},
+    "measurement_flag": {"type": "string", "pattern": "^[A-Z0-9]?$"},
+    "quality_flag": {"type": "string", "pattern": "^[A-Z0-9]?$"},
+    "source_flag": {"type": "string", "pattern": "^[A-Z0-9]?$"},
+    "observation_time": {"type": ["string", "null"], "pattern": "^[0-9]{4}$"},
+    "trace": {"type": "boolean"},
+    "withheld": {"enum": [null, "MISSING", "QUALITY_FLAG"]},
+    "preliminary": {"const": true},
+    "source_role": {"const": "observed_station"},
+    "page_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "retrieved_at": {"type": "string", "format": "date-time"},
+    "evidence_ref": {"type": "string", "pattern": "^kfm:evidence:weather:[a-f0-9]{64}$"},
+    "record_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+  }
+}
